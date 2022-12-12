@@ -1,0 +1,33 @@
+<span class="p-inputnumber p-component p-inputnumber-buttons-stacked">
+  <input
+    #input
+    pInputText
+    [id]="inputId"
+    type="text"
+    [class.hidden-buttons]="hideButtons"
+    [style.width]="width"
+    [ngModel]="value"
+    labValidateNumber
+    [labValidateMinimum]="minimum"
+    (input)="changeValue(input.value)"
+  />
+  <span *ngIf="!hideButtons" class="p-inputnumber-button-group">
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-inputnumber-button p-inputnumber-button-up"
+      icon="fa-solid fa-angle-up"
+      (click)="increase()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-inputnumber-button p-inputnumber-button-down"
+      icon="fa-solid fa-angle-down"
+      [disabled]="isMinimum"
+      (click)="decrease()"
+    ></button>
+  </span>
+</span>

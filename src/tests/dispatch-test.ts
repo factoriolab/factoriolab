@@ -67,4 +67,19 @@ export class DispatchTest<T> {
       new action({ id: 'id', value: 'value', def: 'def' })
     );
   }
+
+  idValDefAlt(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
+    (
+      this.component[key] as unknown as (
+        id: string,
+        value: string,
+        def: string,
+        alt: boolean
+      ) => void
+    )('id', 'value', 'def', true);
+    expect(this.mockStore.dispatch).toHaveBeenCalledWith(
+      new action({ id: 'id', value: 'value', def: 'def' })
+    );
+  }
 }

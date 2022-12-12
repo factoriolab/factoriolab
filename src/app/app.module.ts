@@ -1,56 +1,67 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { EffectsModule } from '@ngrx/effects';
-import { StoreModule } from '@ngrx/store';
+import { Action, ActionReducerMap, StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import {
+  TranslateLoader,
+  TranslateModule,
+  TranslateService,
+} from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { loadModule } from 'glpk-ts';
 import {
   NgxGoogleAnalyticsModule,
   NgxGoogleAnalyticsRouterModule,
 } from 'ngx-google-analytics';
+import { PrimeNGConfig } from 'primeng/api';
 
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
+import { AppSharedModule } from './app-shared.module';
 import { AppComponent } from './app.component';
-import { ProductsComponent, SettingsComponent } from './components';
-import { FlowComponent, ListComponent, MatrixComponent } from './routes';
 import { LabErrorHandler } from './services';
-import { SharedModule } from './shared/shared.module';
-import { metaReducers, reducers } from './store';
+import { ThemeService } from './services/theme.service';
+import { LabState, metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
 import { ProductsEffects } from './store/products/products.effects';
 
-function initializeApp(): Promise<any> {
-  // Load glpk-wasm
-  return loadModule('assets/glpk-wasm/glpk.all.wasm');
+function initializeApp(
+  primengConfig: PrimeNGConfig,
+  translateSvc: TranslateService
+): () => Promise<unknown> {
+  return () => {
+    // Enable ripple
+    primengConfig.ripple = true;
+
+    // Set up initial theme
+    ThemeService.appInitTheme();
+
+    // Initialize translate service with default to English
+    translateSvc.setDefaultLang('en');
+
+    // Load glpk-wasm
+    return loadModule('assets/glpk-wasm/glpk.all.wasm');
+  };
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    ListComponent,
-    FlowComponent,
-    ProductsComponent,
-    SettingsComponent,
-    MatrixComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     /** Angular modules */
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
     /** Vendor modules */
-    StoreModule.forRoot(reducers, { metaReducers }),
+    StoreModule.forRoot(reducers as ActionReducerMap<LabState, Action>, {
+      metaReducers,
+    }),
     StoreDevtoolsModule.instrument({
       logOnly: environment.production,
     }),
@@ -74,14 +85,21 @@ function initializeApp(): Promise<any> {
     NgxGoogleAnalyticsRouterModule,
     /** App modules */
     AppRoutingModule,
-    SharedModule,
+    AppSharedModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000',
+    }),
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },
     { provide: ErrorHandler, useClass: LabErrorHandler },
     {
       provide: APP_INITIALIZER,
-      useFactory: (): (() => Promise<any>) => initializeApp,
+      deps: [PrimeNGConfig, TranslateService],
+      useFactory: initializeApp,
       multi: true,
     },
   ],

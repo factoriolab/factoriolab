@@ -35,11 +35,11 @@ export function itemsReducer(
       delete newState[action.payload];
       return newState;
     }
-    case ItemsActionType.RESET_IGNORE:
+    case ItemsActionType.RESET_IGNORES:
       return StoreUtility.resetField(state, 'ignore');
-    case ItemsActionType.RESET_BELT:
+    case ItemsActionType.RESET_BELTS:
       return StoreUtility.resetField(state, 'beltId');
-    case ItemsActionType.RESET_WAGON:
+    case ItemsActionType.RESET_WAGONS:
       return StoreUtility.resetField(state, 'wagonId');
     default:
       return state;

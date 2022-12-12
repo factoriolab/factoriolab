@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { RateType } from '~/models';
+import { Product, RateType } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './products.actions';
 import {
@@ -41,27 +41,6 @@ describe('Products Reducer', () => {
     });
   });
 
-  describe('RESET', () => {
-    it('should reset the reducer', () => {
-      const result = productsReducer(
-        undefined,
-        new Actions.ResetAction(ItemId.Coal)
-      );
-      expect(result).toEqual({
-        ids: ['0'],
-        entities: {
-          ['0']: {
-            id: '0',
-            itemId: ItemId.Coal,
-            rate: '60',
-            rateType: RateType.Items,
-          },
-        },
-        index: 1,
-      });
-    });
-  });
-
   describe('ADD', () => {
     it('should add a new product', () => {
       expect(state.ids.length).toEqual(1);
@@ -87,6 +66,27 @@ describe('Products Reducer', () => {
         rate: '30',
         rateType: RateType.Wagons,
       });
+    });
+  });
+
+  describe('CREATE', () => {
+    it('should create a new product', () => {
+      const product: Product = {
+        id: '1',
+        itemId: ItemId.IronPlate,
+        rate: '2',
+        rateType: RateType.Items,
+        viaId: ItemId.IronOre,
+      };
+      const result = productsReducer(state, new Actions.CreateAction(product));
+      expect(result.entities['0']).toEqual({
+        id: '0',
+        itemId: ItemId.IronPlate,
+        rate: '2',
+        rateType: RateType.Items,
+        viaId: ItemId.IronOre,
+      });
+      expect(result.index).toEqual(1);
     });
   });
 
@@ -179,100 +179,6 @@ describe('Products Reducer', () => {
         new Actions.ResetViaAction(Mocks.Product1.id)
       );
       expect(result.entities[Mocks.Product1.id].viaId).toBeUndefined();
-    });
-  });
-
-  describe('SET_VIA_SETTING', () => {
-    it('should set the via setting of a product', () => {
-      const value = ItemId.OilRefinery;
-      const result = productsReducer(
-        state,
-        new Actions.SetViaSettingAction({
-          id: Mocks.Product1.id,
-          value,
-          def: undefined,
-        })
-      );
-      expect(result.entities[Mocks.Product1.id].viaSetting).toEqual(value);
-    });
-  });
-
-  describe('SET_VIA_FACTORY_MODULES', () => {
-    it('should set the via factory modules of a product', () => {
-      const value = [ItemId.ProductivityModule];
-      const result = productsReducer(
-        state,
-        new Actions.SetViaFactoryModulesAction({
-          id: Mocks.Product1.id,
-          value,
-          def: undefined,
-        })
-      );
-      expect(result.entities[Mocks.Product1.id].viaFactoryModuleIds).toEqual(
-        value
-      );
-    });
-  });
-
-  describe('SET_VIA_BEACON_COUNT', () => {
-    it('should set the via beacon count of a product', () => {
-      const value = '12';
-      const result = productsReducer(
-        state,
-        new Actions.SetViaBeaconCountAction({
-          id: Mocks.Product1.id,
-          value,
-          def: '8',
-        })
-      );
-      expect(result.entities[Mocks.Product1.id].viaBeaconCount).toEqual(value);
-    });
-  });
-
-  describe('SET_VIA_BEACON_COUNT', () => {
-    it('should set the via beacon of a product', () => {
-      const value = ItemId.Beacon;
-      const result = productsReducer(
-        state,
-        new Actions.SetViaBeaconAction({
-          id: Mocks.Product1.id,
-          value,
-          def: undefined,
-        })
-      );
-      expect(result.entities[Mocks.Product1.id].viaBeaconId).toEqual(value);
-    });
-  });
-
-  describe('SET_VIA_BEACON_MODULES', () => {
-    it('should set the via beacon modules of a product', () => {
-      const value = [ItemId.SpeedModule];
-      const result = productsReducer(
-        state,
-        new Actions.SetViaBeaconModulesAction({
-          id: Mocks.Product1.id,
-          value,
-          def: undefined,
-        })
-      );
-      expect(result.entities[Mocks.Product1.id].viaBeaconModuleIds).toEqual(
-        value
-      );
-    });
-  });
-
-  describe('SET_VIA_OVERCLOCK', () => {
-    it('should set the via overclock of a product', () => {
-      const value = 200;
-      const result = productsReducer(
-        state,
-        new Actions.SetViaOverclockAction({
-          id: Mocks.Product1.id,
-          value,
-          def: undefined,
-        })
-      );
-      expect(result.entities[Mocks.Product1.id].viaOverclock).toEqual(value);
     });
   });
 

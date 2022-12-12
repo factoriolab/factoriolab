@@ -8,16 +8,12 @@ import {
   Observable,
   of,
   shareReplay,
-  skip,
+  startWith,
   tap,
 } from 'rxjs';
 
 import { Entities, ModData, ModHash, ModI18n } from '~/models';
-import { LabState } from '~/store';
-import * as Datasets from '~/store/datasets';
-import * as Products from '~/store/products';
-import * as Settings from '~/store/settings';
-import { BrowserUtility } from '~/utilities';
+import { Datasets, LabState, Settings } from '~/store';
 
 @Injectable({
   providedIn: 'root',
@@ -31,35 +27,15 @@ export class DataService {
     private http: HttpClient,
     private store: Store<LabState>,
     private translateSvc: TranslateService
-  ) {
-    this.initialize(
-      BrowserUtility.zip,
-      BrowserUtility.storedState,
-      Settings.initialSettingsState
-    );
+  ) {}
+
+  initialize(): void {
     combineLatest([
       this.store.select(Settings.getModId),
-      this.translateSvc.onLangChange,
-    ])
-      .pipe(skip(1))
-      .subscribe(([id]) => {
-        this.requestData(id).subscribe();
-      });
-  }
-
-  initialize(
-    zip: string,
-    stored: Partial<LabState> | null,
-    initial: Settings.SettingsState
-  ): void {
-    if (!zip) {
-      const id = stored?.settingsState?.modId || initial.modId;
-      this.requestData(id).subscribe(([data]) => {
-        if (!stored?.productsState) {
-          this.store.dispatch(new Products.ResetAction(data.items[0].id));
-        }
-      });
-    }
+      this.translateSvc.onLangChange.pipe(startWith('en')),
+    ]).subscribe(([id]) => {
+      this.requestData(id).subscribe();
+    });
   }
 
   requestData(id: string): Observable<[ModData, ModHash, ModI18n | null]> {
@@ -78,6 +54,7 @@ export class DataService {
         shareReplay()
       );
     }
+
     const data$ = this.cacheData[id];
 
     /** Setup observable for hash */
@@ -89,6 +66,7 @@ export class DataService {
         shareReplay()
       );
     }
+
     const hash$ = this.cacheHash[id];
 
     /** Setup observable for i18n */

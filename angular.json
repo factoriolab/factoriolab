@@ -7,6 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
+          "changeDetection": "OnPush",
           "style": "scss"
         }
       },
@@ -30,18 +31,33 @@
                 "glob": "glpk.all.wasm",
                 "input": "node_modules/glpk-wasm/dist/",
                 "output": "/assets/glpk-wasm/"
-              }
+              },
+              "src/manifest.webmanifest"
             ],
             "styles": [
-              "node_modules/material-design-icons/iconfont/material-icons.css",
-              "src/styles.scss"
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
+              "src/styles.scss",
+              {
+                "input": "src/styles/themes/dark.scss",
+                "bundleName": "theme-dark",
+                "inject": false
+              },
+              {
+                "input": "src/styles/themes/light.scss",
+                "bundleName": "theme-light",
+                "inject": false
+              }
             ],
             "stylePreprocessorOptions": {
-              "includePaths": ["src/styles"]
+              "includePaths": ["node_modules"]
             },
             "scripts": [],
             "allowedCommonJsDependencies": [
-              "elementary-circuits-directed-graph",
+              "component-emitter",
+              "elkjs/lib/elk.bundled",
+              "file-saver",
               "glpk-ts"
             ],
             "vendorChunk": true,
@@ -49,7 +65,9 @@
             "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "serviceWorker": true,
+            "ngswConfigPath": "ngsw-config.json"
           },
           "configurations": {
             "production": {
@@ -69,8 +87,9 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500mb",
-                  "maximumError": "1mb"
+                  "baseline": "1.4mb",
+                  "maximumWarning": "100kb",
+                  "maximumError": "200kb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -96,8 +115,37 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500mb",
-                  "maximumError": "1mb"
+                  "baseline": "1.4mb",
+                  "maximumWarning": "100kb",
+                  "maximumError": "200kb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ]
+            },
+            "next": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.next.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "baseline": "1.4mb",
+                  "maximumWarning": "100kb",
+                  "maximumError": "200kb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -138,9 +186,16 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": ["src/favicon.ico", "src/assets", "src/data"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/data",
+              "src/manifest.webmanifest"
+            ],
             "styles": [
-              "node_modules/material-design-icons/iconfont/material-icons.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/primeicons/primeicons.css",
+              "node_modules/primeng/resources/primeng.min.css",
               "src/styles.scss"
             ],
             "codeCoverage": true,

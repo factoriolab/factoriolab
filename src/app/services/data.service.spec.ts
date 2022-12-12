@@ -6,10 +6,7 @@ import { EMPTY, of } from 'rxjs';
 
 import { Mocks, TestModule } from 'src/tests';
 import { ModData, ModHash, ModI18n } from '~/models';
-import { LabState } from '~/store';
-import * as Datasets from '~/store/datasets';
-import * as Products from '~/store/products';
-import * as Settings from '~/store/settings';
+import { Datasets, LabState } from '~/store';
 import { DataService } from './data.service';
 
 describe('DataService', () => {
@@ -24,6 +21,7 @@ describe('DataService', () => {
     http = TestBed.inject(HttpTestingController);
     mockStore = TestBed.inject(MockStore);
     translateSvc = TestBed.inject(TranslateService);
+    service.initialize();
   });
 
   it('should be created', () => {
@@ -33,26 +31,8 @@ describe('DataService', () => {
   describe('constructor', () => {
     it('should watch for language changes', () => {
       spyOn(service, 'requestData').and.returnValue(EMPTY);
-      translateSvc.use('test'); // Skips one
-      translateSvc.use('test2');
+      translateSvc.use('test');
       expect(service.requestData).toHaveBeenCalledWith('1.1');
-    });
-  });
-
-  describe('initialize', () => {
-    it('should load stored mod', () => {
-      spyOn(service, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, Mocks.I18n])
-      );
-      spyOn(mockStore, 'dispatch');
-      service.initialize(
-        '',
-        { settingsState: { modId: Mocks.Mod.id } as any },
-        Settings.initialSettingsState
-      );
-      expect(mockStore.dispatch).toHaveBeenCalledWith(
-        new Products.ResetAction(Mocks.Mod.items[0].id)
-      );
     });
   });
 

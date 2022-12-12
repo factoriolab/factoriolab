@@ -8,7 +8,6 @@ import { DatasetsState } from './datasets.reducer';
 export const datasetsState = (state: LabState): DatasetsState =>
   state.datasetsState;
 
-export const getAppData = createSelector(datasetsState, (state) => state.app);
 export const getModSets = createSelector(datasetsState, (state) => state.mods);
 export const getDataEntities = createSelector(
   datasetsState,

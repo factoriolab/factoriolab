@@ -1,4 +1,5 @@
-import { IdName } from '../id-name';
+import { SelectItem } from 'primeng/api';
+
 import { Rational } from '../rational';
 
 export enum DisplayRate {
@@ -7,20 +8,32 @@ export enum DisplayRate {
   PerHour = 3600,
 }
 
-export const DisplayRateOptions: IdName<DisplayRate>[] = [
-  { id: DisplayRate.PerSecond, name: 'options.DisplayRate.PerSecond' },
-  { id: DisplayRate.PerMinute, name: 'options.DisplayRate.PerMinute' },
-  { id: DisplayRate.PerHour, name: 'options.DisplayRate.PerHour' },
+export const displayRateOptions: SelectItem<DisplayRate>[] = [
+  { value: DisplayRate.PerSecond, label: 'options.displayRate.perSecond' },
+  { value: DisplayRate.PerMinute, label: 'options.displayRate.perMinute' },
+  { value: DisplayRate.PerHour, label: 'options.displayRate.perHour' },
 ];
 
-export const DisplayRateVal = {
-  [DisplayRate.PerSecond]: new Rational(BigInt(DisplayRate.PerSecond)),
-  [DisplayRate.PerMinute]: new Rational(BigInt(DisplayRate.PerMinute)),
-  [DisplayRate.PerHour]: new Rational(BigInt(DisplayRate.PerHour)),
-};
+export interface DisplayRateInfo {
+  option: DisplayRate;
+  label: string;
+  value: Rational;
+}
 
-export const DisplayRateLabel = {
-  [DisplayRate.PerHour]: '/h',
-  [DisplayRate.PerMinute]: '/m',
-  [DisplayRate.PerSecond]: '/s',
+export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
+  [DisplayRate.PerSecond]: {
+    option: DisplayRate.PerSecond,
+    label: '/s',
+    value: Rational.from(DisplayRate.PerSecond),
+  },
+  [DisplayRate.PerMinute]: {
+    option: DisplayRate.PerMinute,
+    label: '/m',
+    value: Rational.from(DisplayRate.PerMinute),
+  },
+  [DisplayRate.PerHour]: {
+    option: DisplayRate.PerHour,
+    label: '/h',
+    value: Rational.from(DisplayRate.PerHour),
+  },
 };

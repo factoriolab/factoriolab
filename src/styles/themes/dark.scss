@@ -1,0 +1,5855 @@
+@use 'sass:color';
+
+/* Based on PrimeNG Arya Orange theme
+ * Removed styles: p-organizationchart, p-carousel, p-galleria, p-avatar, fc, p-datepicker,
+ * p-calendar, p-terminal, p-fileupload, p-image, p-toast, p-message, p-inline-message */
+
+// Defined in root
+$surface-a: #1e1e1e;
+$surface-b: #121212;
+$surface-c: rgba(255, 255, 255, 0.03);
+$surface-d: #383838;
+$text-color: rgba(255, 255, 255, 0.87);
+$text-color-secondary: rgba(255, 255, 255, 0.6);
+$primary-color: #ffa64d; // hsl(30, 100, 65)
+$primary-color-text: #212529;
+$maskbg: rgba(0, 0, 0, 0.4);
+$button-size: 2.571rem;
+
+// Not defined in root, based on primary
+$shadow-color: color.adjust($primary-color, $lightness: +11%);
+$primary-light: color.adjust($primary-color, $lightness: -6%);
+$primary-lighter: color.adjust($primary-color, $lightness: -13%);
+
+// Not defined in root
+$error-color: #ef9a9a;
+$secondary-color: #78909c;
+$secondary-hover-color: #69838f;
+$secondary-focus-color: #a1b1ba;
+$secondary-active-color: #5d747f;
+$info-color: #81d4fa;
+$info-hover-color: #5dc8f9;
+$info-focus-color: #a7e1fc;
+$info-active-color: #38bbf7;
+$success-color: #c5e1a5;
+$success-hover-color: #b2d788;
+$success-focus-color: #d6eac0;
+$success-active-color: #9fce6b;
+$warning-color: #ffe082;
+$warning-hover-color: #ffd65c;
+$warning-focus-color: #ffe9a8;
+$warning-active-color: #ffcd35;
+$help-color: #ce93d8;
+$help-hover-color: #c278ce;
+$help-focus-color: #ddb3e4;
+$help-active-color: #b65ec5;
+$danger-color: #f48fb1;
+$danger-hover-color: #f16c98;
+$danger-focus-color: #f7b1c8;
+$danger-active-color: #ed4980;
+$datatable-stripe-color: #242424;
+$overlaypanel-before-border-color: #353535;
+$gray-30: rgba(30, 30, 30, 0);
+$gray-56: rgba(56, 56, 56, 0);
+
+// Variants
+$black: #000000;
+$black-a12: rgba($black, 0.12);
+$black-a14: rgba($black, 0.14);
+$black-a20: rgba($black, 0.2);
+
+$white: #ffffff;
+$white-a00: rgba($white, 0);
+$white-a01: rgba($white, 0.01);
+$white-a04: rgba($white, 0.04);
+$white-a06: rgba($white, 0.06);
+$white-a10: rgba($white, 0.1);
+$white-a16: rgba($white, 0.16);
+$white-a20: rgba($white, 0.2);
+
+$primary-a04: rgba($primary-color, 0.04);
+$primary-a16: rgba($primary-color, 0.16);
+$primary-a3616: rgba($primary-color, 0.3616);
+$primary-lighter-a16: rgba($primary-lighter, 0.16);
+$secondary-a04: rgba($secondary-color, 0.04);
+$secondary-a16: rgba($secondary-color, 0.16);
+$info-a04: rgba($info-color, 0.04);
+$info-a16: rgba($info-color, 0.16);
+$success-a04: rgba($success-color, 0.04);
+$success-a16: rgba($success-color, 0.16);
+$warning-a04: rgba($warning-color, 0.04);
+$warning-a16: rgba($warning-color, 0.16);
+$help-a04: rgba($help-color, 0.04);
+$help-a16: rgba($help-color, 0.16);
+$danger-a04: rgba($danger-color, 0.04);
+$danger-a16: rgba($danger-color, 0.16);
+
+:root {
+  --header-sticky-color: #0000004d;
+  --surface-a: #1e1e1e;
+  --surface-b: #121212;
+  --surface-c: rgba(255, 255, 255, 0.03);
+  --surface-d: #383838;
+  --surface-e: #1e1e1e;
+  --surface-f: #1e1e1e;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --text-color-secondary: rgba(255, 255, 255, 0.6);
+  --primary-color: #{$primary-color};
+  --primary-color-text: #212529;
+  --font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
+    Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  --content-padding: 1rem;
+  --inline-spacing: 0.5rem;
+  --border-radius: 3px;
+  --surface-ground: #121212;
+  --surface-section: #121212;
+  --surface-card: #1e1e1e;
+  --surface-overlay: #1e1e1e;
+  --surface-border: #383838;
+  --surface-hover: rgba(255, 255, 255, 0.03);
+  --maskbg: rgba(0, 0, 0, 0.4);
+  --focus-ring: 0 0 0 1px #{$shadow-color};
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.p-component {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.p-component-overlay {
+  background-color: $maskbg;
+  transition-duration: 0.2s;
+}
+
+.p-disabled,
+.p-component:disabled {
+  opacity: 0.4;
+}
+
+.p-error {
+  color: $error-color;
+}
+
+.p-text-secondary {
+  color: $text-color-secondary;
+}
+
+.pi {
+  font-size: 1rem;
+}
+
+.p-link {
+  font-size: 1rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  border-radius: 3px;
+}
+.p-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+
+.p-component-overlay-enter {
+  animation: p-component-overlay-enter-animation 150ms forwards;
+}
+
+.p-component-overlay-leave {
+  animation: p-component-overlay-leave-animation 150ms forwards;
+}
+
+@keyframes p-component-overlay-enter-animation {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: var(--maskbg);
+  }
+}
+@keyframes p-component-overlay-leave-animation {
+  from {
+    background-color: var(--maskbg);
+  }
+  to {
+    background-color: transparent;
+  }
+}
+
+.p-autocomplete .p-autocomplete-loader {
+  right: 0.5rem;
+}
+.p-autocomplete.p-autocomplete-dd .p-autocomplete-loader {
+  right: 2.857rem;
+}
+.p-autocomplete .p-autocomplete-multiple-container {
+  padding: 0.25rem 0.5rem;
+}
+.p-autocomplete .p-autocomplete-multiple-container:not(.p-disabled):hover {
+  border-color: $primary-color;
+}
+.p-autocomplete .p-autocomplete-multiple-container:not(.p-disabled).p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+  border-color: $primary-color;
+}
+.p-autocomplete .p-autocomplete-multiple-container .p-autocomplete-input-token {
+  padding: 0.25rem 0;
+}
+.p-autocomplete
+  .p-autocomplete-multiple-container
+  .p-autocomplete-input-token
+  input {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 1rem;
+  color: $text-color;
+  padding: 0;
+  margin: 0;
+}
+.p-autocomplete .p-autocomplete-multiple-container .p-autocomplete-token {
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.5rem;
+  background: $primary-a16;
+  color: $text-color;
+  border-radius: 3px;
+}
+.p-autocomplete
+  .p-autocomplete-multiple-container
+  .p-autocomplete-token
+  .p-autocomplete-token-icon {
+  margin-left: 0.5rem;
+}
+
+p-autocomplete.ng-dirty.ng-invalid > .p-autocomplete > .p-inputtext {
+  border-color: $error-color;
+}
+
+.p-autocomplete-panel {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-autocomplete-panel .p-autocomplete-items {
+  padding: 0.5rem 0;
+}
+.p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border: 0 none;
+  color: $text-color;
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+}
+.p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item:hover {
+  color: $text-color;
+  background: $surface-c;
+}
+.p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item.p-highlight {
+  color: $text-color;
+  background: $primary-a16;
+}
+.p-autocomplete-panel .p-autocomplete-items .p-autocomplete-empty-message {
+  padding: 0.5rem 1rem;
+  color: $text-color;
+  background: transparent;
+}
+.p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item-group {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  background: $surface-a;
+  font-weight: 600;
+}
+
+p-autocomplete.p-autocomplete-clearable .p-inputtext {
+  padding-right: 2rem;
+}
+p-autocomplete.p-autocomplete-clearable .p-autocomplete-clear-icon {
+  color: $text-color-secondary;
+  right: 0.5rem;
+}
+
+p-autocomplete.p-autocomplete-clearable
+  .p-autocomplete-dd
+  .p-autocomplete-clear-icon {
+  color: $text-color-secondary;
+  right: 2.857rem;
+}
+
+.p-cascadeselect {
+  background: $surface-b;
+  border: 1px solid $surface-d;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  border-radius: 3px;
+}
+.p-cascadeselect:not(.p-disabled):hover {
+  border-color: $primary-color;
+}
+.p-cascadeselect:not(.p-disabled).p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+  border-color: $primary-color;
+}
+.p-cascadeselect .p-cascadeselect-label {
+  background: transparent;
+  border: 0 none;
+  padding: 0.5rem 0.5rem;
+}
+.p-cascadeselect .p-cascadeselect-label.p-placeholder {
+  color: $text-color-secondary;
+}
+.p-cascadeselect .p-cascadeselect-label:enabled:focus {
+  outline: 0 none;
+  box-shadow: none;
+}
+.p-cascadeselect .p-cascadeselect-trigger {
+  background: transparent;
+  color: $text-color-secondary;
+  width: $button-size;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.p-cascadeselect-panel {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-cascadeselect-panel .p-cascadeselect-items {
+  padding: 0.5rem 0;
+}
+.p-cascadeselect-panel .p-cascadeselect-items .p-cascadeselect-item {
+  margin: 0;
+  border: 0 none;
+  color: $text-color;
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+}
+.p-cascadeselect-panel
+  .p-cascadeselect-items
+  .p-cascadeselect-item
+  .p-cascadeselect-item-content {
+  padding: 0.5rem 1rem;
+}
+.p-cascadeselect-panel
+  .p-cascadeselect-items
+  .p-cascadeselect-item
+  .p-cascadeselect-item-content:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-cascadeselect-panel
+  .p-cascadeselect-items
+  .p-cascadeselect-item.p-highlight {
+  color: $text-color;
+  background: $primary-a16;
+}
+.p-cascadeselect-panel
+  .p-cascadeselect-items
+  .p-cascadeselect-item:not(.p-highlight):not(.p-disabled):hover {
+  color: $text-color;
+  background: $surface-c;
+}
+.p-cascadeselect-panel
+  .p-cascadeselect-items
+  .p-cascadeselect-item
+  .p-cascadeselect-group-icon {
+  font-size: 0.875rem;
+}
+
+p-cascadeselect.ng-dirty.ng-invalid > .p-cascadeselect {
+  border-color: $error-color;
+}
+
+.p-input-filled .p-cascadeselect {
+  background: $surface-d;
+}
+.p-input-filled .p-cascadeselect:not(.p-disabled):hover {
+  background-color: $surface-d;
+}
+.p-input-filled .p-cascadeselect:not(.p-disabled).p-focus {
+  background-color: $surface-d;
+}
+
+p-cascadeselect.p-cascadeselect-clearable .p-cascadeselect-label {
+  padding-right: 0.5rem;
+}
+p-cascadeselect.p-cascadeselect-clearable .p-cascadeselect-clear-icon {
+  color: $text-color-secondary;
+  right: $button-size;
+}
+
+.p-checkbox {
+  width: 20px;
+  height: 20px;
+}
+.p-checkbox .p-checkbox-box {
+  border: 2px solid $surface-d;
+  background: $surface-b;
+  width: 20px;
+  height: 20px;
+  color: $text-color;
+  border-radius: 3px;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+}
+.p-checkbox .p-checkbox-box .p-checkbox-icon {
+  transition-duration: 0.2s;
+  color: $primary-color-text;
+  font-size: 14px;
+}
+.p-checkbox .p-checkbox-box.p-highlight {
+  border-color: $primary-color;
+  background: $primary-color;
+}
+.p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+  border-color: $primary-color;
+}
+.p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+  border-color: $primary-color;
+}
+.p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box.p-highlight:hover {
+  border-color: $primary-lighter;
+  background: $primary-lighter;
+  color: $primary-color-text;
+}
+
+p-checkbox.ng-dirty.ng-invalid > .p-checkbox > .p-checkbox-box {
+  border-color: $error-color;
+}
+
+.p-input-filled .p-checkbox .p-checkbox-box {
+  background-color: $surface-d;
+}
+.p-input-filled .p-checkbox .p-checkbox-box.p-highlight {
+  background: $primary-color;
+}
+.p-input-filled .p-checkbox:not(.p-checkbox-disabled) .p-checkbox-box:hover {
+  background-color: $surface-d;
+}
+.p-input-filled
+  .p-checkbox:not(.p-checkbox-disabled)
+  .p-checkbox-box.p-highlight:hover {
+  background: $primary-lighter;
+}
+
+.p-checkbox-label {
+  margin-left: 0.5rem;
+}
+
+.p-chips .p-chips-multiple-container {
+  padding: 0.25rem 0.5rem;
+}
+.p-chips .p-chips-multiple-container:not(.p-disabled):hover {
+  border-color: $primary-color;
+}
+.p-chips .p-chips-multiple-container:not(.p-disabled).p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+  border-color: $primary-color;
+}
+.p-chips .p-chips-multiple-container .p-chips-token {
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.5rem;
+  background: $primary-a16;
+  color: $text-color;
+  border-radius: 3px;
+}
+.p-chips .p-chips-multiple-container .p-chips-token .p-chips-token-icon {
+  margin-left: 0.5rem;
+}
+.p-chips .p-chips-multiple-container .p-chips-input-token {
+  padding: 0.25rem 0;
+}
+.p-chips .p-chips-multiple-container .p-chips-input-token input {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 1rem;
+  color: $text-color;
+  padding: 0;
+  margin: 0;
+}
+
+p-chips.ng-dirty.ng-invalid > .p-chips > .p-inputtext {
+  border-color: $error-color;
+}
+
+p-chips.p-chips-clearable .p-inputtext {
+  padding-right: 1.5rem;
+}
+p-chips.p-chips-clearable .p-chips-clear-icon {
+  color: $text-color-secondary;
+  right: 0.5rem;
+}
+
+.p-colorpicker-preview,
+.p-fluid .p-colorpicker-preview.p-inputtext {
+  width: 2rem;
+  height: 2rem;
+}
+
+.p-colorpicker-panel {
+  background: $surface-a;
+  border: 1px solid $surface-d;
+}
+.p-colorpicker-panel .p-colorpicker-color-handle,
+.p-colorpicker-panel .p-colorpicker-hue-handle {
+  border-color: $text-color;
+}
+
+.p-colorpicker-overlay-panel {
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+
+.p-dropdown {
+  background: $surface-b;
+  border: 1px solid $surface-d;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  border-radius: 3px;
+}
+.p-dropdown:not(.p-disabled):hover {
+  border-color: $primary-color;
+}
+.p-dropdown:not(.p-disabled).p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+  border-color: $primary-color;
+}
+.p-dropdown.p-dropdown-clearable .p-dropdown-label {
+  padding-right: 1.5rem;
+}
+.p-dropdown .p-dropdown-label {
+  background: transparent;
+  border: 0 none;
+}
+.p-dropdown .p-dropdown-label.p-placeholder {
+  color: $text-color-secondary;
+}
+.p-dropdown .p-dropdown-label:enabled:focus {
+  outline: 0 none;
+  box-shadow: none;
+}
+.p-dropdown .p-dropdown-trigger {
+  background: transparent;
+  color: $text-color-secondary;
+  width: $button-size;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.p-dropdown .p-dropdown-clear-icon {
+  color: $text-color-secondary;
+  right: $button-size;
+}
+
+.p-dropdown-panel {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-dropdown-panel .p-dropdown-header {
+  padding: 0.5rem 1rem;
+  border-bottom: 0 none;
+  color: $text-color;
+  background: $surface-a;
+  margin: 0;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-dropdown-panel .p-dropdown-header .p-dropdown-filter {
+  padding-right: 1.5rem;
+  margin-right: -1.5rem;
+}
+.p-dropdown-panel .p-dropdown-header .p-dropdown-filter-icon {
+  right: 0.5rem;
+  color: $text-color-secondary;
+}
+.p-dropdown-panel .p-dropdown-items {
+  padding: 0.5rem 0;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border: 0 none;
+  color: $text-color;
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+  color: $text-color;
+  background: $primary-a16;
+}
+.p-dropdown-panel
+  .p-dropdown-items
+  .p-dropdown-item:not(.p-highlight):not(.p-disabled):hover {
+  color: $text-color;
+  background: $surface-c;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-empty-message {
+  padding: 0.5rem 1rem;
+  color: $text-color;
+  background: transparent;
+}
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item-group {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  background: $surface-a;
+  font-weight: 600;
+}
+
+p-dropdown.ng-dirty.ng-invalid > .p-dropdown {
+  border-color: $error-color;
+}
+
+.p-input-filled .p-dropdown {
+  background: $surface-d;
+}
+.p-input-filled .p-dropdown:not(.p-disabled):hover {
+  background-color: $surface-d;
+}
+.p-input-filled .p-dropdown:not(.p-disabled).p-focus {
+  background-color: $surface-d;
+}
+.p-input-filled .p-dropdown:not(.p-disabled).p-focus .p-inputtext {
+  background-color: transparent;
+}
+
+.p-editor-container .p-editor-toolbar {
+  background: $surface-a;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-editor-container .p-editor-toolbar.ql-snow {
+  border: 1px solid $surface-d;
+}
+.p-editor-container .p-editor-toolbar.ql-snow .ql-stroke {
+  stroke: $text-color-secondary;
+}
+.p-editor-container .p-editor-toolbar.ql-snow .ql-fill {
+  fill: $text-color-secondary;
+}
+.p-editor-container .p-editor-toolbar.ql-snow .ql-picker .ql-picker-label {
+  border: 0 none;
+  color: $text-color-secondary;
+}
+.p-editor-container
+  .p-editor-toolbar.ql-snow
+  .ql-picker
+  .ql-picker-label:hover {
+  color: $text-color;
+}
+.p-editor-container
+  .p-editor-toolbar.ql-snow
+  .ql-picker
+  .ql-picker-label:hover
+  .ql-stroke {
+  stroke: $text-color;
+}
+.p-editor-container
+  .p-editor-toolbar.ql-snow
+  .ql-picker
+  .ql-picker-label:hover
+  .ql-fill {
+  fill: $text-color;
+}
+.p-editor-container
+  .p-editor-toolbar.ql-snow
+  .ql-picker.ql-expanded
+  .ql-picker-label {
+  color: $text-color;
+}
+.p-editor-container
+  .p-editor-toolbar.ql-snow
+  .ql-picker.ql-expanded
+  .ql-picker-label
+  .ql-stroke {
+  stroke: $text-color;
+}
+.p-editor-container
+  .p-editor-toolbar.ql-snow
+  .ql-picker.ql-expanded
+  .ql-picker-label
+  .ql-fill {
+  fill: $text-color;
+}
+.p-editor-container
+  .p-editor-toolbar.ql-snow
+  .ql-picker.ql-expanded
+  .ql-picker-options {
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+  border-radius: 3px;
+  padding: 0.5rem 0;
+}
+.p-editor-container
+  .p-editor-toolbar.ql-snow
+  .ql-picker.ql-expanded
+  .ql-picker-options
+  .ql-picker-item {
+  color: $text-color;
+}
+.p-editor-container
+  .p-editor-toolbar.ql-snow
+  .ql-picker.ql-expanded
+  .ql-picker-options
+  .ql-picker-item:hover {
+  color: $text-color;
+  background: $surface-c;
+}
+.p-editor-container
+  .p-editor-toolbar.ql-snow
+  .ql-picker.ql-expanded:not(.ql-icon-picker)
+  .ql-picker-item {
+  padding: 0.5rem 1rem;
+}
+.p-editor-container .p-editor-content {
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-editor-container .p-editor-content.ql-snow {
+  border: 1px solid $surface-d;
+}
+.p-editor-container .p-editor-content .ql-editor {
+  background: $surface-b;
+  color: $text-color;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-editor-container .ql-snow.ql-toolbar button:hover,
+.p-editor-container .ql-snow.ql-toolbar button:focus {
+  color: $text-color;
+}
+.p-editor-container .ql-snow.ql-toolbar button:hover .ql-stroke,
+.p-editor-container .ql-snow.ql-toolbar button:focus .ql-stroke {
+  stroke: $text-color;
+}
+.p-editor-container .ql-snow.ql-toolbar button:hover .ql-fill,
+.p-editor-container .ql-snow.ql-toolbar button:focus .ql-fill {
+  fill: $text-color;
+}
+.p-editor-container .ql-snow.ql-toolbar button.ql-active,
+.p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active,
+.p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected {
+  color: $primary-color;
+}
+.p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-stroke,
+.p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-stroke,
+.p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-stroke {
+  stroke: $primary-color;
+}
+.p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-fill,
+.p-editor-container .ql-snow.ql-toolbar .ql-picker-label.ql-active .ql-fill,
+.p-editor-container .ql-snow.ql-toolbar .ql-picker-item.ql-selected .ql-fill {
+  fill: $primary-color;
+}
+.p-editor-container .ql-snow.ql-toolbar button.ql-active .ql-picker-label,
+.p-editor-container
+  .ql-snow.ql-toolbar
+  .ql-picker-label.ql-active
+  .ql-picker-label,
+.p-editor-container
+  .ql-snow.ql-toolbar
+  .ql-picker-item.ql-selected
+  .ql-picker-label {
+  color: $primary-color;
+}
+
+.p-inputgroup-addon {
+  background: $surface-a;
+  color: $text-color-secondary;
+  border-top: 1px solid $surface-d;
+  border-left: 1px solid $surface-d;
+  border-bottom: 1px solid $surface-d;
+  padding: 0.5rem 0.5rem;
+  min-width: $button-size;
+}
+.p-inputgroup-addon:last-child {
+  border-right: 1px solid $surface-d;
+}
+
+.p-inputgroup > .p-component,
+.p-inputgroup > .p-element,
+.p-inputgroup > .p-inputwrapper > .p-component > .p-inputtext,
+.p-inputgroup > .p-float-label > .p-component {
+  border-radius: 0;
+  margin: 0;
+}
+.p-inputgroup > .p-component + .p-inputgroup-addon,
+.p-inputgroup > .p-element + .p-inputgroup-addon,
+.p-inputgroup
+  > .p-inputwrapper
+  > .p-component
+  > .p-inputtext
+  + .p-inputgroup-addon,
+.p-inputgroup > .p-float-label > .p-component + .p-inputgroup-addon {
+  border-left: 0 none;
+}
+.p-inputgroup > .p-component:focus,
+.p-inputgroup > .p-element:focus,
+.p-inputgroup > .p-inputwrapper > .p-component > .p-inputtext:focus,
+.p-inputgroup > .p-float-label > .p-component:focus {
+  z-index: 1;
+}
+.p-inputgroup > .p-component:focus ~ label,
+.p-inputgroup > .p-element:focus ~ label,
+.p-inputgroup > .p-inputwrapper > .p-component > .p-inputtext:focus ~ label,
+.p-inputgroup > .p-float-label > .p-component:focus ~ label {
+  z-index: 1;
+}
+
+.p-inputgroup-addon:first-child,
+.p-inputgroup button:first-child,
+.p-inputgroup input:first-child,
+.p-inputgroup > .p-inputwrapper:first-child > .p-component,
+.p-inputgroup > .p-inputwrapper:first-child > .p-component > .p-inputtext {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.p-inputgroup .p-float-label:first-child input {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.p-inputgroup-addon:last-child,
+.p-inputgroup button:last-child,
+.p-inputgroup input:last-child,
+.p-inputgroup > .p-inputwrapper:last-child > .p-component,
+.p-inputgroup > .p-inputwrapper:last-child > .p-component > .p-inputtext {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.p-inputgroup .p-float-label:last-child input {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.p-fluid .p-inputgroup .p-button {
+  width: auto;
+}
+.p-fluid .p-inputgroup .p-button.p-button-icon-only {
+  width: $button-size;
+}
+
+p-inputmask.ng-dirty.ng-invalid > .p-inputtext {
+  border-color: $error-color;
+}
+
+p-inputmask.p-inputmask-clearable .p-inputtext {
+  padding-right: 2rem;
+}
+p-inputmask.p-inputmask-clearable .p-inputmask-clear-icon {
+  color: $text-color-secondary;
+  right: 0.5rem;
+}
+
+p-inputnumber.ng-dirty.ng-invalid > .p-inputnumber > .p-inputtext {
+  border-color: $error-color;
+}
+
+p-inputnumber.p-inputnumber-clearable .p-inputnumber-input {
+  padding-right: 2rem;
+}
+p-inputnumber.p-inputnumber-clearable .p-inputnumber-clear-icon {
+  color: $text-color-secondary;
+  right: 0.5rem;
+}
+
+p-inputnumber.p-inputnumber-clearable
+  .p-inputnumber-buttons-stacked
+  .p-inputnumber-clear-icon {
+  right: 2.857rem;
+}
+p-inputnumber.p-inputnumber-clearable
+  .p-inputnumber-buttons-horizontal
+  .p-inputnumber-clear-icon {
+  right: 2.857rem;
+}
+
+.p-inputswitch {
+  width: 3rem;
+  height: 1.75rem;
+}
+.p-inputswitch .p-inputswitch-slider {
+  background: $surface-d;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  border-radius: 30px;
+}
+.p-inputswitch .p-inputswitch-slider:before {
+  background: $text-color-secondary;
+  width: 1.25rem;
+  height: 1.25rem;
+  left: 0.25rem;
+  margin-top: -0.625rem;
+  border-radius: 50%;
+  transition-duration: 0.2s;
+}
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
+  transform: translateX(1.25rem);
+}
+.p-inputswitch.p-focus .p-inputswitch-slider {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-inputswitch:not(.p-disabled):hover .p-inputswitch-slider {
+  background: $surface-c;
+}
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+  background: $primary-color;
+}
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider:before {
+  background: $text-color;
+}
+.p-inputswitch.p-inputswitch-checked:not(.p-disabled):hover
+  .p-inputswitch-slider {
+  background: $primary-light;
+}
+
+p-inputswitch.ng-dirty.ng-invalid > .p-inputswitch {
+  border-color: $error-color;
+}
+
+.p-inputtext {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-size: 1rem;
+  color: $text-color;
+  background: $surface-b;
+  padding: 0.5rem 0.5rem;
+  border: 1px solid $surface-d;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  appearance: none;
+  border-radius: 3px;
+}
+.p-inputtext:enabled:hover {
+  border-color: $primary-color;
+}
+.p-inputtext:enabled:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+  border-color: $primary-color;
+}
+.p-inputtext.ng-dirty.ng-invalid {
+  border-color: $error-color;
+}
+.p-inputtext.p-inputtext-sm {
+  font-size: 0.875rem;
+  padding: 0.4375rem 0.4375rem;
+}
+.p-inputtext.p-inputtext-lg {
+  font-size: 1.25rem;
+  padding: 0.625rem 0.625rem;
+}
+
+.p-float-label > label {
+  left: 0.5rem;
+  color: $text-color-secondary;
+  transition-duration: 0.2s;
+}
+
+.p-float-label > .ng-invalid.ng-dirty + label {
+  color: $error-color;
+}
+
+.p-input-icon-left > i:first-of-type {
+  left: 0.5rem;
+  color: $text-color-secondary;
+}
+
+.p-input-icon-left > .p-inputtext {
+  padding-left: 2rem;
+}
+
+.p-input-icon-left.p-float-label > label {
+  left: 2rem;
+}
+
+.p-input-icon-right > i:last-of-type {
+  right: 0.5rem;
+  color: $text-color-secondary;
+}
+
+.p-input-icon-right > .p-inputtext {
+  padding-right: 2rem;
+}
+
+::-webkit-input-placeholder {
+  color: $text-color-secondary;
+}
+
+:-moz-placeholder {
+  color: $text-color-secondary;
+}
+
+::-moz-placeholder {
+  color: $text-color-secondary;
+}
+
+:-ms-input-placeholder {
+  color: $text-color-secondary;
+}
+
+.p-input-filled .p-inputtext {
+  background-color: $surface-d;
+}
+.p-input-filled .p-inputtext:enabled:hover {
+  background-color: $surface-d;
+}
+.p-input-filled .p-inputtext:enabled:focus {
+  background-color: $surface-d;
+}
+
+.p-inputtext-sm .p-inputtext {
+  font-size: 0.875rem;
+  padding: 0.4375rem 0.4375rem;
+}
+
+.p-inputtext-lg .p-inputtext {
+  font-size: 1.25rem;
+  padding: 0.625rem 0.625rem;
+}
+
+.p-listbox {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+}
+.p-listbox .p-listbox-header {
+  padding: 0.5rem 1rem;
+  border-bottom: 0 none;
+  color: $text-color;
+  background: $surface-a;
+  margin: 0;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-listbox .p-listbox-header .p-listbox-filter {
+  padding-right: 1.5rem;
+}
+.p-listbox .p-listbox-header .p-listbox-filter-icon {
+  right: 0.5rem;
+  color: $text-color-secondary;
+}
+.p-listbox .p-listbox-header .p-checkbox {
+  margin-right: 0.5rem;
+}
+.p-listbox .p-listbox-list {
+  padding: 0.5rem 0;
+}
+.p-listbox .p-listbox-list .p-listbox-item {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border: 0 none;
+  color: $text-color;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+}
+.p-listbox .p-listbox-list .p-listbox-item.p-highlight {
+  color: $text-color;
+  background: $primary-a16;
+}
+.p-listbox .p-listbox-list .p-listbox-item:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-listbox .p-listbox-list .p-listbox-item .p-checkbox {
+  margin-right: 0.5rem;
+}
+.p-listbox .p-listbox-list .p-listbox-item-group {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  background: $surface-a;
+  font-weight: 600;
+}
+.p-listbox .p-listbox-list .p-listbox-empty-message {
+  padding: 0.5rem 1rem;
+  color: $text-color;
+  background: transparent;
+}
+.p-listbox:not(.p-disabled)
+  .p-listbox-item:not(.p-highlight):not(.p-disabled):hover {
+  color: $text-color;
+  background: $surface-c;
+}
+
+p-listbox.ng-dirty.ng-invalid > .p-listbox {
+  border-color: $error-color;
+}
+
+.p-multiselect {
+  background: $surface-b;
+  border: 1px solid $surface-d;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  border-radius: 3px;
+}
+.p-multiselect:not(.p-disabled):hover {
+  border-color: $primary-color;
+}
+.p-multiselect:not(.p-disabled).p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+  border-color: $primary-color;
+}
+.p-multiselect .p-multiselect-label {
+  padding: 0.5rem 0.5rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+}
+.p-multiselect .p-multiselect-label.p-placeholder {
+  color: $text-color-secondary;
+}
+.p-multiselect.p-multiselect-chip .p-multiselect-token {
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.5rem;
+  background: $primary-a16;
+  color: $text-color;
+  border-radius: 3px;
+}
+.p-multiselect.p-multiselect-chip
+  .p-multiselect-token
+  .p-multiselect-token-icon {
+  margin-left: 0.5rem;
+}
+.p-multiselect .p-multiselect-trigger {
+  background: transparent;
+  color: $text-color-secondary;
+  width: $button-size;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.p-inputwrapper-filled .p-multiselect.p-multiselect-chip .p-multiselect-label {
+  padding: 0.25rem 0.5rem;
+}
+
+.p-multiselect-panel {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-multiselect-panel .p-multiselect-header {
+  padding: 0.5rem 1rem;
+  border-bottom: 0 none;
+  color: $text-color;
+  background: $surface-a;
+  margin: 0;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-multiselect-panel
+  .p-multiselect-header
+  .p-multiselect-filter-container
+  .p-inputtext {
+  padding-right: 1.5rem;
+}
+.p-multiselect-panel
+  .p-multiselect-header
+  .p-multiselect-filter-container
+  .p-multiselect-filter-icon {
+  right: 0.5rem;
+  color: $text-color-secondary;
+}
+.p-multiselect-panel .p-multiselect-header .p-checkbox {
+  margin-right: 0.5rem;
+}
+.p-multiselect-panel .p-multiselect-header .p-multiselect-close {
+  margin-left: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  color: $text-color-secondary;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-multiselect-panel .p-multiselect-header .p-multiselect-close:enabled:hover {
+  color: $text-color;
+  border-color: transparent;
+  background: $surface-c;
+}
+.p-multiselect-panel .p-multiselect-header .p-multiselect-close:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-multiselect-panel .p-multiselect-items {
+  padding: 0.5rem 0;
+}
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border: 0 none;
+  color: $text-color;
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+}
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item.p-highlight {
+  color: $text-color;
+  background: $primary-a16;
+}
+.p-multiselect-panel
+  .p-multiselect-items
+  .p-multiselect-item:not(.p-highlight):not(.p-disabled):hover {
+  color: $text-color;
+  background: $surface-c;
+}
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item .p-checkbox {
+  margin-right: 0.5rem;
+}
+.p-multiselect-panel .p-multiselect-items .p-multiselect-item-group {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  background: $surface-a;
+  font-weight: 600;
+}
+.p-multiselect-panel .p-multiselect-items .p-multiselect-empty-message {
+  padding: 0.5rem 1rem;
+  color: $text-color;
+  background: transparent;
+}
+
+p-multiselect.ng-dirty.ng-invalid > .p-multiselect {
+  border-color: $error-color;
+}
+
+.p-input-filled .p-multiselect {
+  background: $surface-d;
+}
+.p-input-filled .p-multiselect:not(.p-disabled):hover {
+  background-color: $surface-d;
+}
+.p-input-filled .p-multiselect:not(.p-disabled).p-focus {
+  background-color: $surface-d;
+}
+
+p-multiselect.p-multiselect-clearable .p-multiselect-label-container {
+  padding-right: 1.5rem;
+}
+p-multiselect.p-multiselect-clearable .p-multiselect-clear-icon {
+  color: $text-color-secondary;
+  right: $button-size;
+}
+
+p-password.ng-invalid.ng-dirty > .p-password > .p-inputtext {
+  border-color: $error-color;
+}
+
+.p-password-panel {
+  padding: 1rem;
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+  border-radius: 3px;
+}
+.p-password-panel .p-password-meter {
+  margin-bottom: 0.5rem;
+  background: $surface-d;
+}
+.p-password-panel .p-password-meter .p-password-strength.weak {
+  background: $danger-color;
+}
+.p-password-panel .p-password-meter .p-password-strength.medium {
+  background: $warning-color;
+}
+.p-password-panel .p-password-meter .p-password-strength.strong {
+  background: $success-color;
+}
+
+p-password.p-password-clearable .p-password-input {
+  padding-right: 2rem;
+}
+p-password.p-password-clearable .p-password-clear-icon {
+  color: $text-color-secondary;
+  right: 0.5rem;
+}
+
+p-password.p-password-clearable.p-password-mask .p-password-input {
+  padding-right: 3.5rem;
+}
+p-password.p-password-clearable.p-password-mask .p-password-clear-icon {
+  color: $text-color-secondary;
+  right: 2rem;
+}
+
+.p-radiobutton {
+  width: 20px;
+  height: 20px;
+}
+.p-radiobutton .p-radiobutton-box {
+  border: 2px solid $surface-d;
+  background: $surface-b;
+  width: 20px;
+  height: 20px;
+  color: $text-color;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+}
+.p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
+  border-color: $primary-color;
+}
+.p-radiobutton .p-radiobutton-box:not(.p-disabled).p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+  border-color: $primary-color;
+}
+.p-radiobutton .p-radiobutton-box .p-radiobutton-icon {
+  width: 12px;
+  height: 12px;
+  transition-duration: 0.2s;
+  background-color: $primary-color-text;
+}
+.p-radiobutton .p-radiobutton-box.p-highlight {
+  border-color: $primary-color;
+  background: $primary-color;
+}
+.p-radiobutton .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
+  border-color: $primary-lighter;
+  background: $primary-lighter;
+  color: $primary-color-text;
+}
+
+p-radiobutton.ng-dirty.ng-invalid > .p-radiobutton > .p-radiobutton-box {
+  border-color: $error-color;
+}
+
+.p-input-filled .p-radiobutton .p-radiobutton-box {
+  background-color: $surface-d;
+}
+.p-input-filled .p-radiobutton .p-radiobutton-box:not(.p-disabled):hover {
+  background-color: $surface-d;
+}
+.p-input-filled .p-radiobutton .p-radiobutton-box.p-highlight {
+  background: $primary-color;
+}
+.p-input-filled
+  .p-radiobutton
+  .p-radiobutton-box.p-highlight:not(.p-disabled):hover {
+  background: $primary-lighter;
+}
+
+.p-radiobutton-label {
+  margin-left: 0.5rem;
+}
+
+.p-rating .p-rating-icon {
+  color: $text-color;
+  margin-left: 0.5rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  font-size: 1.143rem;
+}
+.p-rating .p-rating-icon.p-rating-cancel {
+  color: $danger-color;
+}
+.p-rating .p-rating-icon:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-rating .p-rating-icon:first-child {
+  margin-left: 0;
+}
+.p-rating .p-rating-icon.pi-star-fill {
+  color: $primary-color;
+}
+.p-rating:not(.p-disabled):not(.p-readonly) .p-rating-icon:hover {
+  color: $primary-color;
+}
+.p-rating:not(.p-disabled):not(.p-readonly)
+  .p-rating-icon.p-rating-cancel:hover {
+  color: $danger-color;
+}
+
+.p-selectbutton .p-button {
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  color: $text-color;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+}
+.p-selectbutton .p-button .p-button-icon-left,
+.p-selectbutton .p-button .p-button-icon-right {
+  color: $text-color-secondary;
+}
+.p-selectbutton .p-button:not(.p-disabled):not(.p-highlight):hover {
+  background: $surface-c;
+  border-color: $surface-d;
+  color: $text-color;
+}
+.p-selectbutton
+  .p-button:not(.p-disabled):not(.p-highlight):hover
+  .p-button-icon-left,
+.p-selectbutton
+  .p-button:not(.p-disabled):not(.p-highlight):hover
+  .p-button-icon-right {
+  color: $text-color-secondary;
+}
+.p-selectbutton .p-button.p-highlight {
+  background: $primary-color;
+  border-color: $primary-color;
+  color: $primary-color-text;
+}
+.p-selectbutton .p-button.p-highlight .p-button-icon-left,
+.p-selectbutton .p-button.p-highlight .p-button-icon-right {
+  color: $primary-color-text;
+}
+.p-selectbutton .p-button.p-highlight:hover {
+  background: $primary-light;
+  border-color: $primary-light;
+  color: $primary-color-text;
+}
+.p-selectbutton .p-button.p-highlight:hover .p-button-icon-left,
+.p-selectbutton .p-button.p-highlight:hover .p-button-icon-right {
+  color: $primary-color-text;
+}
+
+p-selectbutton.ng-dirty.ng-invalid > .p-selectbutton > .p-button {
+  border-color: $error-color;
+}
+
+.p-slider {
+  background: $surface-d;
+  border: 0 none;
+  border-radius: 3px;
+}
+.p-slider.p-slider-horizontal {
+  height: 0.286rem;
+}
+.p-slider.p-slider-horizontal .p-slider-handle {
+  margin-top: -0.5715rem;
+  margin-left: -0.5715rem;
+}
+.p-slider.p-slider-vertical {
+  width: 0.286rem;
+}
+.p-slider.p-slider-vertical .p-slider-handle {
+  margin-left: -0.5715rem;
+  margin-bottom: -0.5715rem;
+}
+.p-slider .p-slider-handle {
+  height: 1.143rem;
+  width: 1.143rem;
+  background: $surface-d;
+  border: 2px solid $primary-color;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+}
+.p-slider .p-slider-handle:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-slider .p-slider-range {
+  background: $primary-color;
+}
+.p-slider:not(.p-disabled) .p-slider-handle:hover {
+  background: $primary-color;
+  border-color: $primary-color;
+}
+.p-slider.p-slider-animate.p-slider-horizontal .p-slider-handle {
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s, left 0.2s;
+}
+.p-slider.p-slider-animate.p-slider-horizontal .p-slider-range {
+  transition: width 0.2s;
+}
+.p-slider.p-slider-animate.p-slider-vertical .p-slider-handle {
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s, bottom 0.2s;
+}
+.p-slider.p-slider-animate.p-slider-vertical .p-slider-range {
+  transition: height 0.2s;
+}
+
+.p-togglebutton.p-button {
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  color: $text-color;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+}
+.p-togglebutton.p-button .p-button-icon-left,
+.p-togglebutton.p-button .p-button-icon-right {
+  color: $text-color-secondary;
+}
+.p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover {
+  background: $surface-c;
+  border-color: $surface-d;
+  color: $text-color;
+}
+.p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover
+  .p-button-icon-left,
+.p-togglebutton.p-button:not(.p-disabled):not(.p-highlight):hover
+  .p-button-icon-right {
+  color: $text-color-secondary;
+}
+.p-togglebutton.p-button.p-highlight {
+  background: $primary-color;
+  border-color: $primary-color;
+  color: $primary-color-text;
+}
+.p-togglebutton.p-button.p-highlight .p-button-icon-left,
+.p-togglebutton.p-button.p-highlight .p-button-icon-right {
+  color: $primary-color-text;
+}
+.p-togglebutton.p-button.p-highlight:hover {
+  background: $primary-light;
+  border-color: $primary-light;
+  color: $primary-color-text;
+}
+.p-togglebutton.p-button.p-highlight:hover .p-button-icon-left,
+.p-togglebutton.p-button.p-highlight:hover .p-button-icon-right {
+  color: $primary-color-text;
+}
+
+p-togglebutton.ng-dirty.ng-invalid > .p-togglebutton.p-button {
+  border-color: $error-color;
+}
+
+.p-treeselect {
+  background: $surface-b;
+  border: 1px solid $surface-d;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  border-radius: 3px;
+}
+.p-treeselect:not(.p-disabled):hover {
+  border-color: $primary-color;
+}
+.p-treeselect:not(.p-disabled).p-focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+  border-color: $primary-color;
+}
+.p-treeselect .p-treeselect-label {
+  padding: 0.5rem 0.5rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+}
+.p-treeselect .p-treeselect-label.p-placeholder {
+  color: $text-color-secondary;
+}
+.p-treeselect.p-treeselect-chip .p-treeselect-token {
+  padding: 0.25rem 0.5rem;
+  margin-right: 0.5rem;
+  background: $surface-d;
+  color: $text-color;
+  border-radius: 16px;
+}
+.p-treeselect .p-treeselect-trigger {
+  background: transparent;
+  color: $text-color-secondary;
+  width: $button-size;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+p-treeselect.ng-invalid.ng-dirty > .p-treeselect {
+  border-color: $error-color;
+}
+
+.p-inputwrapper-filled .p-treeselect.p-treeselect-chip .p-treeselect-label {
+  padding: 0.25rem 0.5rem;
+}
+
+.p-treeselect-panel {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-treeselect-panel .p-treeselect-header {
+  padding: 0.5rem 1rem;
+  border-bottom: 0 none;
+  color: $text-color;
+  background: $surface-a;
+  margin: 0;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-treeselect-panel .p-treeselect-header .p-treeselect-filter-container {
+  margin-right: 0.5rem;
+}
+.p-treeselect-panel
+  .p-treeselect-header
+  .p-treeselect-filter-container
+  .p-treeselect-filter {
+  padding-right: 1.5rem;
+}
+.p-treeselect-panel
+  .p-treeselect-header
+  .p-treeselect-filter-container
+  .p-treeselect-filter-icon {
+  right: 0.5rem;
+  color: $text-color-secondary;
+}
+.p-treeselect-panel
+  .p-treeselect-header
+  .p-treeselect-filter-container.p-treeselect-clearable-filter
+  .p-treeselect-filter {
+  padding-right: 3rem;
+}
+.p-treeselect-panel
+  .p-treeselect-header
+  .p-treeselect-filter-container.p-treeselect-clearable-filter
+  .p-treeselect-filter-clear-icon {
+  right: 2rem;
+}
+.p-treeselect-panel .p-treeselect-header .p-treeselect-close {
+  width: 2rem;
+  height: 2rem;
+  color: $text-color-secondary;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-treeselect-panel .p-treeselect-header .p-treeselect-close:enabled:hover {
+  color: $text-color;
+  border-color: transparent;
+  background: $surface-c;
+}
+.p-treeselect-panel .p-treeselect-header .p-treeselect-close:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-treeselect-panel .p-treeselect-items-wrapper .p-tree {
+  border: 0 none;
+}
+.p-treeselect-panel .p-treeselect-items-wrapper .p-treeselect-empty-message {
+  padding: 0.5rem 1rem;
+  color: $text-color;
+  background: transparent;
+}
+
+.p-input-filled .p-treeselect {
+  background: $surface-d;
+}
+.p-input-filled .p-treeselect:not(.p-disabled):hover {
+  background-color: $surface-d;
+}
+.p-input-filled .p-treeselect:not(.p-disabled).p-focus {
+  background-color: $surface-d;
+}
+
+p-treeselect.p-treeselect-clearable .p-treeselect-label-container {
+  padding-right: 1.5rem;
+}
+p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
+  color: $text-color-secondary;
+  right: $button-size;
+}
+
+.p-button {
+  color: $primary-color-text;
+  background: $primary-color;
+  border: 1px solid $primary-color;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+  border-radius: 3px;
+}
+.p-button:enabled:hover {
+  background: $primary-light;
+  color: $primary-color-text;
+  border-color: $primary-light;
+}
+.p-button:enabled:active {
+  background: $primary-lighter;
+  color: $primary-color-text;
+  border-color: $primary-lighter;
+}
+.p-button.p-button-outlined {
+  background-color: transparent;
+  color: $primary-color;
+  border: 1px solid;
+}
+.p-button.p-button-outlined:enabled:hover {
+  background: $primary-a04;
+  color: $primary-color;
+  border: 1px solid;
+}
+.p-button.p-button-outlined:enabled:active {
+  background: $primary-a16;
+  color: $primary-color;
+  border: 1px solid;
+}
+.p-button.p-button-outlined.p-button-plain {
+  color: $text-color-secondary;
+  border-color: $text-color-secondary;
+}
+.p-button.p-button-outlined.p-button-plain:enabled:hover {
+  background: $surface-c;
+  color: $text-color-secondary;
+}
+.p-button.p-button-outlined.p-button-plain:enabled:active {
+  background: $white-a16;
+  color: $text-color-secondary;
+}
+.p-button.p-button-text {
+  background-color: transparent;
+  color: $primary-color;
+  border-color: transparent;
+}
+.p-button.p-button-text:enabled:hover {
+  background: $primary-a04;
+  color: $primary-color;
+  border-color: transparent;
+}
+.p-button.p-button-text:enabled:active {
+  background: $primary-a16;
+  color: $primary-color;
+  border-color: transparent;
+}
+.p-button.p-button-text.p-button-plain {
+  color: $text-color-secondary;
+}
+.p-button.p-button-text.p-button-plain:enabled:hover {
+  background: $surface-c;
+  color: $text-color-secondary;
+}
+.p-button.p-button-text.p-button-plain:enabled:active {
+  background: $white-a16;
+  color: $text-color-secondary;
+}
+.p-button:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-button .p-button-icon-left {
+  margin-right: 0.5rem;
+}
+.p-button .p-button-icon-right {
+  margin-left: 0.5rem;
+}
+.p-button .p-button-icon-bottom {
+  margin-top: 0.5rem;
+}
+.p-button .p-button-icon-top {
+  margin-bottom: 0.5rem;
+}
+.p-button .p-badge {
+  margin-left: 0.5rem;
+  min-width: 1rem;
+  height: 1rem;
+  line-height: 1rem;
+  color: $primary-color;
+  background-color: $primary-color-text;
+}
+.p-button.p-button-raised {
+  box-shadow: 0px 3px 1px -2px $black-a20, 0px 2px 2px 0px $black-a14,
+    0px 1px 5px 0px $black-a12;
+}
+.p-button.p-button-rounded {
+  border-radius: 2rem;
+}
+.p-button.p-button-icon-only {
+  width: $button-size;
+  padding: 0.5rem 0;
+}
+.p-button.p-button-icon-only .p-button-icon-left,
+.p-button.p-button-icon-only .p-button-icon-right {
+  margin: 0;
+}
+.p-button.p-button-icon-only.p-button-rounded {
+  border-radius: 50%;
+  height: $button-size;
+}
+.p-button.p-button-sm {
+  font-size: 0.875rem;
+  padding: 0.4375rem 0.875rem;
+}
+.p-button.p-button-sm .p-button-icon {
+  font-size: 0.875rem;
+}
+.p-button.p-button-lg {
+  font-size: 1.25rem;
+  padding: 0.625rem 1.25rem;
+}
+.p-button.p-button-lg .p-button-icon {
+  font-size: 1.25rem;
+}
+.p-button.p-button-loading-label-only .p-button-label {
+  margin-left: 0.5rem;
+}
+.p-button.p-button-loading-label-only .p-button-loading-icon {
+  margin-right: 0;
+}
+
+.p-fluid .p-button {
+  width: 100%;
+}
+.p-fluid .p-button-icon-only {
+  width: $button-size;
+}
+.p-fluid .p-buttonset {
+  display: flex;
+}
+.p-fluid .p-buttonset .p-button {
+  flex: 1;
+}
+
+.p-button.p-button-secondary,
+.p-buttonset.p-button-secondary > .p-button,
+.p-splitbutton.p-button-secondary > .p-button {
+  color: $white;
+  background: $secondary-color;
+  border: 1px solid $secondary-color;
+}
+.p-button.p-button-secondary:enabled:hover,
+.p-buttonset.p-button-secondary > .p-button:enabled:hover,
+.p-splitbutton.p-button-secondary > .p-button:enabled:hover {
+  background: $secondary-hover-color;
+  color: $white;
+  border-color: $secondary-hover-color;
+}
+.p-button.p-button-secondary:enabled:focus,
+.p-buttonset.p-button-secondary > .p-button:enabled:focus,
+.p-splitbutton.p-button-secondary > .p-button:enabled:focus {
+  box-shadow: 0 0 0 1px $secondary-focus-color;
+}
+.p-button.p-button-secondary:enabled:active,
+.p-buttonset.p-button-secondary > .p-button:enabled:active,
+.p-splitbutton.p-button-secondary > .p-button:enabled:active {
+  background: $secondary-active-color;
+  color: $white;
+  border-color: $secondary-active-color;
+}
+.p-button.p-button-secondary.p-button-outlined,
+.p-buttonset.p-button-secondary > .p-button.p-button-outlined,
+.p-splitbutton.p-button-secondary > .p-button.p-button-outlined {
+  background-color: transparent;
+  color: $secondary-color;
+  border: 1px solid;
+}
+.p-button.p-button-secondary.p-button-outlined:enabled:hover,
+.p-buttonset.p-button-secondary > .p-button.p-button-outlined:enabled:hover,
+.p-splitbutton.p-button-secondary > .p-button.p-button-outlined:enabled:hover {
+  background: $secondary-a04;
+  color: $secondary-color;
+  border: 1px solid;
+}
+.p-button.p-button-secondary.p-button-outlined:enabled:active,
+.p-buttonset.p-button-secondary > .p-button.p-button-outlined:enabled:active,
+.p-splitbutton.p-button-secondary > .p-button.p-button-outlined:enabled:active {
+  background: $secondary-a16;
+  color: $secondary-color;
+  border: 1px solid;
+}
+.p-button.p-button-secondary.p-button-text,
+.p-buttonset.p-button-secondary > .p-button.p-button-text,
+.p-splitbutton.p-button-secondary > .p-button.p-button-text {
+  background-color: transparent;
+  color: $secondary-color;
+  border-color: transparent;
+}
+.p-button.p-button-secondary.p-button-text:enabled:hover,
+.p-buttonset.p-button-secondary > .p-button.p-button-text:enabled:hover,
+.p-splitbutton.p-button-secondary > .p-button.p-button-text:enabled:hover {
+  background: $secondary-a04;
+  border-color: transparent;
+  color: $secondary-color;
+}
+.p-button.p-button-secondary.p-button-text:enabled:active,
+.p-buttonset.p-button-secondary > .p-button.p-button-text:enabled:active,
+.p-splitbutton.p-button-secondary > .p-button.p-button-text:enabled:active {
+  background: $secondary-a16;
+  border-color: transparent;
+  color: $secondary-color;
+}
+
+.p-button.p-button-info,
+.p-buttonset.p-button-info > .p-button,
+.p-splitbutton.p-button-info > .p-button {
+  color: $surface-b;
+  background: $info-color;
+  border: 1px solid $info-color;
+}
+.p-button.p-button-info:enabled:hover,
+.p-buttonset.p-button-info > .p-button:enabled:hover,
+.p-splitbutton.p-button-info > .p-button:enabled:hover {
+  background: $info-hover-color;
+  color: $surface-b;
+  border-color: $info-hover-color;
+}
+.p-button.p-button-info:enabled:focus,
+.p-buttonset.p-button-info > .p-button:enabled:focus,
+.p-splitbutton.p-button-info > .p-button:enabled:focus {
+  box-shadow: 0 0 0 1px $info-focus-color;
+}
+.p-button.p-button-info:enabled:active,
+.p-buttonset.p-button-info > .p-button:enabled:active,
+.p-splitbutton.p-button-info > .p-button:enabled:active {
+  background: $info-active-color;
+  color: $surface-b;
+  border-color: $info-active-color;
+}
+.p-button.p-button-info.p-button-outlined,
+.p-buttonset.p-button-info > .p-button.p-button-outlined,
+.p-splitbutton.p-button-info > .p-button.p-button-outlined {
+  background-color: transparent;
+  color: $info-color;
+  border: 1px solid;
+}
+.p-button.p-button-info.p-button-outlined:enabled:hover,
+.p-buttonset.p-button-info > .p-button.p-button-outlined:enabled:hover,
+.p-splitbutton.p-button-info > .p-button.p-button-outlined:enabled:hover {
+  background: $info-a04;
+  color: $info-color;
+  border: 1px solid;
+}
+.p-button.p-button-info.p-button-outlined:enabled:active,
+.p-buttonset.p-button-info > .p-button.p-button-outlined:enabled:active,
+.p-splitbutton.p-button-info > .p-button.p-button-outlined:enabled:active {
+  background: $info-a16;
+  color: $info-color;
+  border: 1px solid;
+}
+.p-button.p-button-info.p-button-text,
+.p-buttonset.p-button-info > .p-button.p-button-text,
+.p-splitbutton.p-button-info > .p-button.p-button-text {
+  background-color: transparent;
+  color: $info-color;
+  border-color: transparent;
+}
+.p-button.p-button-info.p-button-text:enabled:hover,
+.p-buttonset.p-button-info > .p-button.p-button-text:enabled:hover,
+.p-splitbutton.p-button-info > .p-button.p-button-text:enabled:hover {
+  background: $info-a04;
+  border-color: transparent;
+  color: $info-color;
+}
+.p-button.p-button-info.p-button-text:enabled:active,
+.p-buttonset.p-button-info > .p-button.p-button-text:enabled:active,
+.p-splitbutton.p-button-info > .p-button.p-button-text:enabled:active {
+  background: $info-a16;
+  border-color: transparent;
+  color: $info-color;
+}
+
+.p-button.p-button-success,
+.p-buttonset.p-button-success > .p-button,
+.p-splitbutton.p-button-success > .p-button {
+  color: $surface-b;
+  background: $success-color;
+  border: 1px solid $success-color;
+}
+.p-button.p-button-success:enabled:hover,
+.p-buttonset.p-button-success > .p-button:enabled:hover,
+.p-splitbutton.p-button-success > .p-button:enabled:hover {
+  background: $success-hover-color;
+  color: $surface-b;
+  border-color: $success-hover-color;
+}
+.p-button.p-button-success:enabled:focus,
+.p-buttonset.p-button-success > .p-button:enabled:focus,
+.p-splitbutton.p-button-success > .p-button:enabled:focus {
+  box-shadow: 0 0 0 1px $success-focus-color;
+}
+.p-button.p-button-success:enabled:active,
+.p-buttonset.p-button-success > .p-button:enabled:active,
+.p-splitbutton.p-button-success > .p-button:enabled:active {
+  background: $success-active-color;
+  color: $surface-b;
+  border-color: $success-active-color;
+}
+.p-button.p-button-success.p-button-outlined,
+.p-buttonset.p-button-success > .p-button.p-button-outlined,
+.p-splitbutton.p-button-success > .p-button.p-button-outlined {
+  background-color: transparent;
+  color: $success-color;
+  border: 1px solid;
+}
+.p-button.p-button-success.p-button-outlined:enabled:hover,
+.p-buttonset.p-button-success > .p-button.p-button-outlined:enabled:hover,
+.p-splitbutton.p-button-success > .p-button.p-button-outlined:enabled:hover {
+  background: $success-a04;
+  color: $success-color;
+  border: 1px solid;
+}
+.p-button.p-button-success.p-button-outlined:enabled:active,
+.p-buttonset.p-button-success > .p-button.p-button-outlined:enabled:active,
+.p-splitbutton.p-button-success > .p-button.p-button-outlined:enabled:active {
+  background: $success-a16;
+  color: $success-color;
+  border: 1px solid;
+}
+.p-button.p-button-success.p-button-text,
+.p-buttonset.p-button-success > .p-button.p-button-text,
+.p-splitbutton.p-button-success > .p-button.p-button-text {
+  background-color: transparent;
+  color: $success-color;
+  border-color: transparent;
+}
+.p-button.p-button-success.p-button-text:enabled:hover,
+.p-buttonset.p-button-success > .p-button.p-button-text:enabled:hover,
+.p-splitbutton.p-button-success > .p-button.p-button-text:enabled:hover {
+  background: $success-a04;
+  border-color: transparent;
+  color: $success-color;
+}
+.p-button.p-button-success.p-button-text:enabled:active,
+.p-buttonset.p-button-success > .p-button.p-button-text:enabled:active,
+.p-splitbutton.p-button-success > .p-button.p-button-text:enabled:active {
+  background: $success-a16;
+  border-color: transparent;
+  color: $success-color;
+}
+
+.p-button.p-button-warning,
+.p-buttonset.p-button-warning > .p-button,
+.p-splitbutton.p-button-warning > .p-button {
+  color: $surface-b;
+  background: $warning-color;
+  border: 1px solid $warning-color;
+}
+.p-button.p-button-warning:enabled:hover,
+.p-buttonset.p-button-warning > .p-button:enabled:hover,
+.p-splitbutton.p-button-warning > .p-button:enabled:hover {
+  background: $warning-hover-color;
+  color: $surface-b;
+  border-color: $warning-hover-color;
+}
+.p-button.p-button-warning:enabled:focus,
+.p-buttonset.p-button-warning > .p-button:enabled:focus,
+.p-splitbutton.p-button-warning > .p-button:enabled:focus {
+  box-shadow: 0 0 0 1px $warning-focus-color;
+}
+.p-button.p-button-warning:enabled:active,
+.p-buttonset.p-button-warning > .p-button:enabled:active,
+.p-splitbutton.p-button-warning > .p-button:enabled:active {
+  background: $warning-active-color;
+  color: $surface-b;
+  border-color: $warning-active-color;
+}
+.p-button.p-button-warning.p-button-outlined,
+.p-buttonset.p-button-warning > .p-button.p-button-outlined,
+.p-splitbutton.p-button-warning > .p-button.p-button-outlined {
+  background-color: transparent;
+  color: $warning-color;
+  border: 1px solid;
+}
+.p-button.p-button-warning.p-button-outlined:enabled:hover,
+.p-buttonset.p-button-warning > .p-button.p-button-outlined:enabled:hover,
+.p-splitbutton.p-button-warning > .p-button.p-button-outlined:enabled:hover {
+  background: $warning-a04;
+  color: $warning-color;
+  border: 1px solid;
+}
+.p-button.p-button-warning.p-button-outlined:enabled:active,
+.p-buttonset.p-button-warning > .p-button.p-button-outlined:enabled:active,
+.p-splitbutton.p-button-warning > .p-button.p-button-outlined:enabled:active {
+  background: $warning-a16;
+  color: $warning-color;
+  border: 1px solid;
+}
+.p-button.p-button-warning.p-button-text,
+.p-buttonset.p-button-warning > .p-button.p-button-text,
+.p-splitbutton.p-button-warning > .p-button.p-button-text {
+  background-color: transparent;
+  color: $warning-color;
+  border-color: transparent;
+}
+.p-button.p-button-warning.p-button-text:enabled:hover,
+.p-buttonset.p-button-warning > .p-button.p-button-text:enabled:hover,
+.p-splitbutton.p-button-warning > .p-button.p-button-text:enabled:hover {
+  background: $warning-a04;
+  border-color: transparent;
+  color: $warning-color;
+}
+.p-button.p-button-warning.p-button-text:enabled:active,
+.p-buttonset.p-button-warning > .p-button.p-button-text:enabled:active,
+.p-splitbutton.p-button-warning > .p-button.p-button-text:enabled:active {
+  background: $warning-a16;
+  border-color: transparent;
+  color: $warning-color;
+}
+
+.p-button.p-button-help,
+.p-buttonset.p-button-help > .p-button,
+.p-splitbutton.p-button-help > .p-button {
+  color: $surface-b;
+  background: $help-color;
+  border: 1px solid $help-color;
+}
+.p-button.p-button-help:enabled:hover,
+.p-buttonset.p-button-help > .p-button:enabled:hover,
+.p-splitbutton.p-button-help > .p-button:enabled:hover {
+  background: $help-hover-color;
+  color: $surface-b;
+  border-color: $help-hover-color;
+}
+.p-button.p-button-help:enabled:focus,
+.p-buttonset.p-button-help > .p-button:enabled:focus,
+.p-splitbutton.p-button-help > .p-button:enabled:focus {
+  box-shadow: 0 0 0 1px $help-focus-color;
+}
+.p-button.p-button-help:enabled:active,
+.p-buttonset.p-button-help > .p-button:enabled:active,
+.p-splitbutton.p-button-help > .p-button:enabled:active {
+  background: $help-active-color;
+  color: $surface-b;
+  border-color: $help-active-color;
+}
+.p-button.p-button-help.p-button-outlined,
+.p-buttonset.p-button-help > .p-button.p-button-outlined,
+.p-splitbutton.p-button-help > .p-button.p-button-outlined {
+  background-color: transparent;
+  color: $help-color;
+  border: 1px solid;
+}
+.p-button.p-button-help.p-button-outlined:enabled:hover,
+.p-buttonset.p-button-help > .p-button.p-button-outlined:enabled:hover,
+.p-splitbutton.p-button-help > .p-button.p-button-outlined:enabled:hover {
+  background: $help-a04;
+  color: $help-color;
+  border: 1px solid;
+}
+.p-button.p-button-help.p-button-outlined:enabled:active,
+.p-buttonset.p-button-help > .p-button.p-button-outlined:enabled:active,
+.p-splitbutton.p-button-help > .p-button.p-button-outlined:enabled:active {
+  background: $help-a16;
+  color: $help-color;
+  border: 1px solid;
+}
+.p-button.p-button-help.p-button-text,
+.p-buttonset.p-button-help > .p-button.p-button-text,
+.p-splitbutton.p-button-help > .p-button.p-button-text {
+  background-color: transparent;
+  color: $help-color;
+  border-color: transparent;
+}
+.p-button.p-button-help.p-button-text:enabled:hover,
+.p-buttonset.p-button-help > .p-button.p-button-text:enabled:hover,
+.p-splitbutton.p-button-help > .p-button.p-button-text:enabled:hover {
+  background: $help-a04;
+  border-color: transparent;
+  color: $help-color;
+}
+.p-button.p-button-help.p-button-text:enabled:active,
+.p-buttonset.p-button-help > .p-button.p-button-text:enabled:active,
+.p-splitbutton.p-button-help > .p-button.p-button-text:enabled:active {
+  background: $help-a16;
+  border-color: transparent;
+  color: $help-color;
+}
+
+.p-button.p-button-danger,
+.p-buttonset.p-button-danger > .p-button,
+.p-splitbutton.p-button-danger > .p-button {
+  color: $surface-b;
+  background: $danger-color;
+  border: 1px solid $danger-color;
+}
+.p-button.p-button-danger:enabled:hover,
+.p-buttonset.p-button-danger > .p-button:enabled:hover,
+.p-splitbutton.p-button-danger > .p-button:enabled:hover {
+  background: $danger-hover-color;
+  color: $surface-b;
+  border-color: $danger-hover-color;
+}
+.p-button.p-button-danger:enabled:focus,
+.p-buttonset.p-button-danger > .p-button:enabled:focus,
+.p-splitbutton.p-button-danger > .p-button:enabled:focus {
+  box-shadow: 0 0 0 1px $danger-focus-color;
+}
+.p-button.p-button-danger:enabled:active,
+.p-buttonset.p-button-danger > .p-button:enabled:active,
+.p-splitbutton.p-button-danger > .p-button:enabled:active {
+  background: $danger-active-color;
+  color: $surface-b;
+  border-color: $danger-active-color;
+}
+.p-button.p-button-danger.p-button-outlined,
+.p-buttonset.p-button-danger > .p-button.p-button-outlined,
+.p-splitbutton.p-button-danger > .p-button.p-button-outlined {
+  background-color: transparent;
+  color: $danger-color;
+  border: 1px solid;
+}
+.p-button.p-button-danger.p-button-outlined:enabled:hover,
+.p-buttonset.p-button-danger > .p-button.p-button-outlined:enabled:hover,
+.p-splitbutton.p-button-danger > .p-button.p-button-outlined:enabled:hover {
+  background: $danger-a04;
+  color: $danger-color;
+  border: 1px solid;
+}
+.p-button.p-button-danger.p-button-outlined:enabled:active,
+.p-buttonset.p-button-danger > .p-button.p-button-outlined:enabled:active,
+.p-splitbutton.p-button-danger > .p-button.p-button-outlined:enabled:active {
+  background: $danger-a16;
+  color: $danger-color;
+  border: 1px solid;
+}
+.p-button.p-button-danger.p-button-text,
+.p-buttonset.p-button-danger > .p-button.p-button-text,
+.p-splitbutton.p-button-danger > .p-button.p-button-text {
+  background-color: transparent;
+  color: $danger-color;
+  border-color: transparent;
+}
+.p-button.p-button-danger.p-button-text:enabled:hover,
+.p-buttonset.p-button-danger > .p-button.p-button-text:enabled:hover,
+.p-splitbutton.p-button-danger > .p-button.p-button-text:enabled:hover {
+  background: $danger-a04;
+  border-color: transparent;
+  color: $danger-color;
+}
+.p-button.p-button-danger.p-button-text:enabled:active,
+.p-buttonset.p-button-danger > .p-button.p-button-text:enabled:active,
+.p-splitbutton.p-button-danger > .p-button.p-button-text:enabled:active {
+  background: $danger-a16;
+  border-color: transparent;
+  color: $danger-color;
+}
+
+.p-button.p-button-link {
+  color: $primary-color;
+  background: transparent;
+  border: transparent;
+}
+.p-button.p-button-link:enabled:hover {
+  background: transparent;
+  color: $primary-color;
+  border-color: transparent;
+}
+.p-button.p-button-link:enabled:hover .p-button-label {
+  text-decoration: underline;
+}
+.p-button.p-button-link:enabled:focus {
+  background: transparent;
+  box-shadow: 0 0 0 1px $shadow-color;
+  border-color: transparent;
+}
+.p-button.p-button-link:enabled:active {
+  background: transparent;
+  color: $primary-color;
+  border-color: transparent;
+}
+
+.p-speeddial-button.p-button.p-button-icon-only {
+  width: 4rem;
+  height: 4rem;
+}
+.p-speeddial-button.p-button.p-button-icon-only .p-button-icon {
+  font-size: 1.3rem;
+}
+
+.p-speeddial-action {
+  width: 3rem;
+  height: 3rem;
+  background: $text-color;
+  color: $surface-b;
+}
+.p-speeddial-action:hover {
+  background: $text-color-secondary;
+  color: $surface-b;
+}
+
+.p-speeddial-direction-up .p-speeddial-item {
+  margin: 0.25rem 0;
+}
+.p-speeddial-direction-up .p-speeddial-item:first-child {
+  margin-bottom: 0.5rem;
+}
+
+.p-speeddial-direction-down .p-speeddial-item {
+  margin: 0.25rem 0;
+}
+.p-speeddial-direction-down .p-speeddial-item:first-child {
+  margin-top: 0.5rem;
+}
+
+.p-speeddial-direction-left .p-speeddial-item {
+  margin: 0 0.25rem;
+}
+.p-speeddial-direction-left .p-speeddial-item:first-child {
+  margin-right: 0.5rem;
+}
+
+.p-speeddial-direction-right .p-speeddial-item {
+  margin: 0 0.25rem;
+}
+.p-speeddial-direction-right .p-speeddial-item:first-child {
+  margin-left: 0.5rem;
+}
+
+.p-speeddial-circle .p-speeddial-item,
+.p-speeddial-semi-circle .p-speeddial-item,
+.p-speeddial-quarter-circle .p-speeddial-item {
+  margin: 0;
+}
+.p-speeddial-circle .p-speeddial-item:first-child,
+.p-speeddial-circle .p-speeddial-item:last-child,
+.p-speeddial-semi-circle .p-speeddial-item:first-child,
+.p-speeddial-semi-circle .p-speeddial-item:last-child,
+.p-speeddial-quarter-circle .p-speeddial-item:first-child,
+.p-speeddial-quarter-circle .p-speeddial-item:last-child {
+  margin: 0;
+}
+
+.p-speeddial-mask {
+  background-color: $maskbg;
+}
+
+.p-splitbutton {
+  border-radius: 3px;
+}
+.p-splitbutton.p-button-outlined > .p-button {
+  background-color: transparent;
+  color: $primary-color;
+  border: 1px solid;
+}
+.p-splitbutton.p-button-outlined > .p-button:enabled:hover,
+.p-splitbutton.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $primary-a04;
+  color: $primary-color;
+}
+.p-splitbutton.p-button-outlined > .p-button:enabled:active,
+.p-splitbutton.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $primary-a16;
+  color: $primary-color;
+}
+.p-splitbutton.p-button-outlined.p-button-plain > .p-button {
+  color: $text-color-secondary;
+  border-color: $text-color-secondary;
+}
+.p-splitbutton.p-button-outlined.p-button-plain > .p-button:enabled:hover,
+.p-splitbutton.p-button-outlined.p-button-plain
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $surface-c;
+  color: $text-color-secondary;
+}
+.p-splitbutton.p-button-outlined.p-button-plain > .p-button:enabled:active,
+.p-splitbutton.p-button-outlined.p-button-plain
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $white-a16;
+  color: $text-color-secondary;
+}
+.p-splitbutton.p-button-text > .p-button {
+  background-color: transparent;
+  color: $primary-color;
+  border-color: transparent;
+}
+.p-splitbutton.p-button-text > .p-button:enabled:hover,
+.p-splitbutton.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $primary-a04;
+  color: $primary-color;
+  border-color: transparent;
+}
+.p-splitbutton.p-button-text > .p-button:enabled:active,
+.p-splitbutton.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $primary-a16;
+  color: $primary-color;
+  border-color: transparent;
+}
+.p-splitbutton.p-button-text.p-button-plain > .p-button {
+  color: $text-color-secondary;
+}
+.p-splitbutton.p-button-text.p-button-plain > .p-button:enabled:hover,
+.p-splitbutton.p-button-text.p-button-plain
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $surface-c;
+  color: $text-color-secondary;
+}
+.p-splitbutton.p-button-text.p-button-plain > .p-button:enabled:active,
+.p-splitbutton.p-button-text.p-button-plain
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $white-a16;
+  color: $text-color-secondary;
+}
+.p-splitbutton.p-button-raised {
+  box-shadow: 0px 3px 1px -2px $black-a20, 0px 2px 2px 0px $black-a14,
+    0px 1px 5px 0px $black-a12;
+}
+.p-splitbutton.p-button-rounded {
+  border-radius: 2rem;
+}
+.p-splitbutton.p-button-rounded > .p-button {
+  border-radius: 2rem;
+}
+.p-splitbutton.p-button-sm > .p-button {
+  font-size: 0.875rem;
+  padding: 0.4375rem 0.875rem;
+}
+.p-splitbutton.p-button-sm > .p-button .p-button-icon {
+  font-size: 0.875rem;
+}
+.p-splitbutton.p-button-lg > .p-button {
+  font-size: 1.25rem;
+  padding: 0.625rem 1.25rem;
+}
+.p-splitbutton.p-button-lg > .p-button .p-button-icon {
+  font-size: 1.25rem;
+}
+
+.p-splitbutton.p-button-secondary.p-button-outlined > .p-button {
+  background-color: transparent;
+  color: $secondary-color;
+  border: 1px solid;
+}
+.p-splitbutton.p-button-secondary.p-button-outlined > .p-button:enabled:hover,
+.p-splitbutton.p-button-secondary.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $secondary-a04;
+  color: $secondary-color;
+}
+.p-splitbutton.p-button-secondary.p-button-outlined > .p-button:enabled:active,
+.p-splitbutton.p-button-secondary.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $secondary-a16;
+  color: $secondary-color;
+}
+.p-splitbutton.p-button-secondary.p-button-text > .p-button {
+  background-color: transparent;
+  color: $secondary-color;
+  border-color: transparent;
+}
+.p-splitbutton.p-button-secondary.p-button-text > .p-button:enabled:hover,
+.p-splitbutton.p-button-secondary.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $secondary-a04;
+  border-color: transparent;
+  color: $secondary-color;
+}
+.p-splitbutton.p-button-secondary.p-button-text > .p-button:enabled:active,
+.p-splitbutton.p-button-secondary.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $secondary-a16;
+  border-color: transparent;
+  color: $secondary-color;
+}
+
+.p-splitbutton.p-button-info.p-button-outlined > .p-button {
+  background-color: transparent;
+  color: $info-color;
+  border: 1px solid;
+}
+.p-splitbutton.p-button-info.p-button-outlined > .p-button:enabled:hover,
+.p-splitbutton.p-button-info.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $info-a04;
+  color: $info-color;
+}
+.p-splitbutton.p-button-info.p-button-outlined > .p-button:enabled:active,
+.p-splitbutton.p-button-info.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $info-a16;
+  color: $info-color;
+}
+.p-splitbutton.p-button-info.p-button-text > .p-button {
+  background-color: transparent;
+  color: $info-color;
+  border-color: transparent;
+}
+.p-splitbutton.p-button-info.p-button-text > .p-button:enabled:hover,
+.p-splitbutton.p-button-info.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $info-a04;
+  border-color: transparent;
+  color: $info-color;
+}
+.p-splitbutton.p-button-info.p-button-text > .p-button:enabled:active,
+.p-splitbutton.p-button-info.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $info-a16;
+  border-color: transparent;
+  color: $info-color;
+}
+
+.p-splitbutton.p-button-success.p-button-outlined > .p-button {
+  background-color: transparent;
+  color: $success-color;
+  border: 1px solid;
+}
+.p-splitbutton.p-button-success.p-button-outlined > .p-button:enabled:hover,
+.p-splitbutton.p-button-success.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $success-a04;
+  color: $success-color;
+}
+.p-splitbutton.p-button-success.p-button-outlined > .p-button:enabled:active,
+.p-splitbutton.p-button-success.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $success-a16;
+  color: $success-color;
+}
+.p-splitbutton.p-button-success.p-button-text > .p-button {
+  background-color: transparent;
+  color: $success-color;
+  border-color: transparent;
+}
+.p-splitbutton.p-button-success.p-button-text > .p-button:enabled:hover,
+.p-splitbutton.p-button-success.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $success-a04;
+  border-color: transparent;
+  color: $success-color;
+}
+.p-splitbutton.p-button-success.p-button-text > .p-button:enabled:active,
+.p-splitbutton.p-button-success.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $success-a16;
+  border-color: transparent;
+  color: $success-color;
+}
+
+.p-splitbutton.p-button-warning.p-button-outlined > .p-button {
+  background-color: transparent;
+  color: $warning-color;
+  border: 1px solid;
+}
+.p-splitbutton.p-button-warning.p-button-outlined > .p-button:enabled:hover,
+.p-splitbutton.p-button-warning.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $warning-a04;
+  color: $warning-color;
+}
+.p-splitbutton.p-button-warning.p-button-outlined > .p-button:enabled:active,
+.p-splitbutton.p-button-warning.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $warning-a16;
+  color: $warning-color;
+}
+.p-splitbutton.p-button-warning.p-button-text > .p-button {
+  background-color: transparent;
+  color: $warning-color;
+  border-color: transparent;
+}
+.p-splitbutton.p-button-warning.p-button-text > .p-button:enabled:hover,
+.p-splitbutton.p-button-warning.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $warning-a04;
+  border-color: transparent;
+  color: $warning-color;
+}
+.p-splitbutton.p-button-warning.p-button-text > .p-button:enabled:active,
+.p-splitbutton.p-button-warning.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $warning-a16;
+  border-color: transparent;
+  color: $warning-color;
+}
+
+.p-splitbutton.p-button-help.p-button-outlined > .p-button {
+  background-color: transparent;
+  color: $help-color;
+  border: 1px solid;
+}
+.p-splitbutton.p-button-help.p-button-outlined > .p-button:enabled:hover,
+.p-splitbutton.p-button-help.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $help-a04;
+  color: $help-color;
+}
+.p-splitbutton.p-button-help.p-button-outlined > .p-button:enabled:active,
+.p-splitbutton.p-button-help.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $help-a16;
+  color: $help-color;
+}
+.p-splitbutton.p-button-help.p-button-text > .p-button {
+  background-color: transparent;
+  color: $help-color;
+  border-color: transparent;
+}
+.p-splitbutton.p-button-help.p-button-text > .p-button:enabled:hover,
+.p-splitbutton.p-button-help.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $help-a04;
+  border-color: transparent;
+  color: $help-color;
+}
+.p-splitbutton.p-button-help.p-button-text > .p-button:enabled:active,
+.p-splitbutton.p-button-help.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $help-a16;
+  border-color: transparent;
+  color: $help-color;
+}
+
+.p-splitbutton.p-button-danger.p-button-outlined > .p-button {
+  background-color: transparent;
+  color: $danger-color;
+  border: 1px solid;
+}
+.p-splitbutton.p-button-danger.p-button-outlined > .p-button:enabled:hover,
+.p-splitbutton.p-button-danger.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $danger-a04;
+  color: $danger-color;
+}
+.p-splitbutton.p-button-danger.p-button-outlined > .p-button:enabled:active,
+.p-splitbutton.p-button-danger.p-button-outlined
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $danger-a16;
+  color: $danger-color;
+}
+.p-splitbutton.p-button-danger.p-button-text > .p-button {
+  background-color: transparent;
+  color: $danger-color;
+  border-color: transparent;
+}
+.p-splitbutton.p-button-danger.p-button-text > .p-button:enabled:hover,
+.p-splitbutton.p-button-danger.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):hover {
+  background: $danger-a04;
+  border-color: transparent;
+  color: $danger-color;
+}
+.p-splitbutton.p-button-danger.p-button-text > .p-button:enabled:active,
+.p-splitbutton.p-button-danger.p-button-text
+  > .p-button:not(button):not(a):not(.p-disabled):active {
+  background: $danger-a16;
+  border-color: transparent;
+  color: $danger-color;
+}
+
+.p-datatable .p-paginator-top {
+  border-width: 1px 0 1px 0;
+  border-radius: 0;
+}
+.p-datatable .p-paginator-bottom {
+  border-width: 0 0 1px 0;
+  border-radius: 0;
+}
+.p-datatable .p-datatable-header {
+  background: $surface-a;
+  color: $text-color-secondary;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 600;
+}
+.p-datatable .p-datatable-footer {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 600;
+}
+.p-datatable .p-datatable-thead > tr > th {
+  text-align: left;
+  padding: 1rem 1rem;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  font-weight: 600;
+  color: $text-color;
+  background: $surface-a;
+  transition: box-shadow 0.2s;
+}
+.p-datatable .p-datatable-tfoot > tr > td {
+  text-align: left;
+  padding: 1rem 1rem;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  font-weight: 600;
+  color: $text-color;
+  background: $surface-a;
+}
+.p-datatable .p-sortable-column .p-sortable-column-icon {
+  color: $text-color-secondary;
+  margin-left: 0.5rem;
+}
+.p-datatable .p-sortable-column .p-sortable-column-badge {
+  border-radius: 50%;
+  height: 1.143rem;
+  min-width: 1.143rem;
+  line-height: 1.143rem;
+  color: $text-color;
+  background: $primary-a16;
+  margin-left: 0.5rem;
+}
+.p-datatable .p-sortable-column:not(.p-highlight):hover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-datatable
+  .p-sortable-column:not(.p-highlight):hover
+  .p-sortable-column-icon {
+  color: $text-color;
+}
+.p-datatable .p-sortable-column.p-highlight {
+  background: $surface-a;
+  color: $primary-color;
+}
+.p-datatable .p-sortable-column.p-highlight .p-sortable-column-icon {
+  color: $primary-color;
+}
+.p-datatable .p-sortable-column.p-highlight:hover {
+  background: $surface-c;
+  color: $primary-color;
+}
+.p-datatable .p-sortable-column.p-highlight:hover .p-sortable-column-icon {
+  color: $primary-color;
+}
+.p-datatable .p-sortable-column:focus {
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+  outline: 0 none;
+}
+.p-datatable .p-datatable-tbody > tr {
+  background: $surface-a;
+  color: $text-color;
+  transition: box-shadow 0.2s;
+}
+.p-datatable .p-datatable-tbody > tr > td {
+  text-align: left;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+}
+.p-datatable .p-datatable-tbody > tr > td .p-row-toggler,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-init,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-save,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-cancel {
+  width: 2rem;
+  height: 2rem;
+  color: $text-color-secondary;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-datatable .p-datatable-tbody > tr > td .p-row-toggler:enabled:hover,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-init:enabled:hover,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-save:enabled:hover,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-cancel:enabled:hover {
+  color: $text-color;
+  border-color: transparent;
+  background: $surface-c;
+}
+.p-datatable .p-datatable-tbody > tr > td .p-row-toggler:focus,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-init:focus,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-save:focus,
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-cancel:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-datatable .p-datatable-tbody > tr > td .p-row-editor-save {
+  margin-right: 0.5rem;
+}
+.p-datatable .p-datatable-tbody > tr:focus {
+  outline: 0.15rem solid $shadow-color;
+  outline-offset: 0.15rem;
+}
+.p-datatable .p-datatable-tbody > tr.p-highlight {
+  background: $primary-a16;
+  color: $text-color;
+}
+.p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-top > td {
+  box-shadow: inset 0 2px 0 0 $primary-a16;
+}
+.p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-bottom > td {
+  box-shadow: inset 0 -2px 0 0 $primary-a16;
+}
+.p-datatable.p-datatable-hoverable-rows
+  .p-datatable-tbody
+  > tr:not(.p-highlight):hover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-datatable .p-column-resizer-helper {
+  background: $primary-color;
+}
+.p-datatable .p-datatable-scrollable-header,
+.p-datatable .p-datatable-scrollable-footer {
+  background: $surface-a;
+}
+.p-datatable.p-datatable-scrollable
+  > .p-datatable-wrapper
+  > .p-datatable-table
+  > .p-datatable-thead,
+.p-datatable.p-datatable-scrollable
+  > .p-datatable-wrapper
+  > .p-datatable-table
+  > .p-datatable-tfoot,
+.p-datatable.p-datatable-scrollable
+  > .p-datatable-wrapper
+  > .p-scroller-viewport
+  > .p-scroller
+  > .p-datatable-table
+  > .p-datatable-thead,
+.p-datatable.p-datatable-scrollable
+  > .p-datatable-wrapper
+  > .p-scroller-viewport
+  > .p-scroller
+  > .p-datatable-table
+  > .p-datatable-tfoot {
+  background-color: $surface-a;
+}
+.p-datatable .p-datatable-loading-icon {
+  font-size: 2rem;
+}
+.p-datatable.p-datatable-gridlines .p-datatable-header {
+  border-width: 1px 1px 0 1px;
+}
+.p-datatable.p-datatable-gridlines .p-datatable-footer {
+  border-width: 0 1px 1px 1px;
+}
+.p-datatable.p-datatable-gridlines .p-paginator-top {
+  border-width: 0 1px 0 1px;
+}
+.p-datatable.p-datatable-gridlines .p-paginator-bottom {
+  border-width: 0 1px 1px 1px;
+}
+.p-datatable.p-datatable-gridlines .p-datatable-thead > tr > th {
+  border-width: 1px 1px 1px 1px;
+}
+.p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td {
+  border-width: 1px;
+}
+.p-datatable.p-datatable-gridlines .p-datatable-tfoot > tr > td {
+  border-width: 1px;
+}
+.p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
+  background: $datatable-stripe-color;
+}
+.p-datatable.p-datatable-striped
+  .p-datatable-tbody
+  > tr:nth-child(even).p-highlight {
+  background: $primary-a16;
+  color: $text-color;
+}
+.p-datatable.p-datatable-striped
+  .p-datatable-tbody
+  > tr:nth-child(even).p-highlight
+  .p-row-toggler {
+  color: $text-color;
+}
+.p-datatable.p-datatable-striped
+  .p-datatable-tbody
+  > tr:nth-child(even).p-highlight
+  .p-row-toggler:hover {
+  color: $text-color;
+}
+.p-datatable.p-datatable-sm .p-datatable-header {
+  padding: 0.5rem 0.5rem;
+}
+.p-datatable.p-datatable-sm .p-datatable-thead > tr > th {
+  padding: 0.5rem 0.5rem;
+}
+.p-datatable.p-datatable-sm .p-datatable-tbody > tr > td {
+  padding: 0.5rem 0.5rem;
+}
+.p-datatable.p-datatable-sm .p-datatable-tfoot > tr > td {
+  padding: 0.5rem 0.5rem;
+}
+.p-datatable.p-datatable-sm .p-datatable-footer {
+  padding: 0.5rem 0.5rem;
+}
+.p-datatable.p-datatable-lg .p-datatable-header {
+  padding: 1.25rem 1.25rem;
+}
+.p-datatable.p-datatable-lg .p-datatable-thead > tr > th {
+  padding: 1.25rem 1.25rem;
+}
+.p-datatable.p-datatable-lg .p-datatable-tbody > tr > td {
+  padding: 1.25rem 1.25rem;
+}
+.p-datatable.p-datatable-lg .p-datatable-tfoot > tr > td {
+  padding: 1.25rem 1.25rem;
+}
+.p-datatable.p-datatable-lg .p-datatable-footer {
+  padding: 1.25rem 1.25rem;
+}
+
+.p-dataview .p-paginator-top {
+  border-width: 1px 0 1px 0;
+  border-radius: 0;
+}
+.p-dataview .p-paginator-bottom {
+  border-width: 0 0 1px 0;
+  border-radius: 0;
+}
+.p-dataview .p-dataview-header {
+  background: $surface-a;
+  color: $text-color-secondary;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 600;
+}
+.p-dataview .p-dataview-content {
+  background: $surface-a;
+  color: $text-color;
+  border: 0 none;
+  padding: 0;
+}
+.p-dataview.p-dataview-list .p-dataview-content > .p-grid > div {
+  border: solid $surface-d;
+  border-width: 0 0 1px 0;
+}
+.p-dataview .p-dataview-footer {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 600;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.p-dataview .p-dataview-loading-icon {
+  font-size: 2rem;
+}
+.p-dataview .p-dataview-emptymessage {
+  padding: 1rem;
+}
+
+.p-column-filter-row .p-column-filter-menu-button,
+.p-column-filter-row .p-column-filter-clear-button {
+  margin-left: 0.5rem;
+}
+
+.p-column-filter-menu-button {
+  width: 2rem;
+  height: 2rem;
+  color: $text-color-secondary;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-column-filter-menu-button:hover {
+  color: $text-color;
+  border-color: transparent;
+  background: $surface-c;
+}
+.p-column-filter-menu-button.p-column-filter-menu-button-open,
+.p-column-filter-menu-button.p-column-filter-menu-button-open:hover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-column-filter-menu-button.p-column-filter-menu-button-active,
+.p-column-filter-menu-button.p-column-filter-menu-button-active:hover {
+  background: $primary-a16;
+  color: $text-color;
+}
+.p-column-filter-menu-button:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+
+.p-column-filter-clear-button {
+  width: 2rem;
+  height: 2rem;
+  color: $text-color-secondary;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-column-filter-clear-button:hover {
+  color: $text-color;
+  border-color: transparent;
+  background: $surface-c;
+}
+.p-column-filter-clear-button:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+
+.p-column-filter-overlay {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+  min-width: 12.5rem;
+}
+.p-column-filter-overlay .p-column-filter-row-items {
+  padding: 0.5rem 0;
+}
+.p-column-filter-overlay .p-column-filter-row-items .p-column-filter-row-item {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  border: 0 none;
+  color: $text-color;
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 0;
+}
+.p-column-filter-overlay
+  .p-column-filter-row-items
+  .p-column-filter-row-item.p-highlight {
+  color: $text-color;
+  background: $primary-a16;
+}
+.p-column-filter-overlay
+  .p-column-filter-row-items
+  .p-column-filter-row-item:not(.p-highlight):not(.p-disabled):hover {
+  color: $text-color;
+  background: $surface-c;
+}
+.p-column-filter-overlay
+  .p-column-filter-row-items
+  .p-column-filter-row-item:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-column-filter-overlay .p-column-filter-row-items .p-column-filter-separator {
+  border-top: 1px solid $surface-d;
+  margin: 0.25rem 0;
+}
+
+.p-column-filter-overlay-menu .p-column-filter-operator {
+  padding: 0.5rem 1rem;
+  border-bottom: 0 none;
+  color: $text-color;
+  background: $surface-a;
+  margin: 0;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-column-filter-overlay-menu .p-column-filter-constraint {
+  padding: 1rem;
+  border-bottom: 1px solid $surface-d;
+}
+.p-column-filter-overlay-menu
+  .p-column-filter-constraint
+  .p-column-filter-matchmode-dropdown {
+  margin-bottom: 0.5rem;
+}
+.p-column-filter-overlay-menu
+  .p-column-filter-constraint
+  .p-column-filter-remove-button {
+  margin-top: 0.5rem;
+}
+.p-column-filter-overlay-menu .p-column-filter-constraint:last-child {
+  border-bottom: 0 none;
+}
+.p-column-filter-overlay-menu .p-column-filter-add-rule {
+  padding: 0.5rem 1rem;
+}
+.p-column-filter-overlay-menu .p-column-filter-buttonbar {
+  padding: 1rem;
+}
+
+.p-orderlist .p-orderlist-controls {
+  padding: 1rem;
+}
+.p-orderlist .p-orderlist-controls .p-button {
+  margin-bottom: 0.5rem;
+}
+.p-orderlist .p-orderlist-header {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  padding: 1rem;
+  border-bottom: 0 none;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-orderlist .p-orderlist-header .p-orderlist-title {
+  font-weight: 600;
+}
+.p-orderlist .p-orderlist-filter-container {
+  padding: 1rem;
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  border-bottom: 0 none;
+}
+.p-orderlist .p-orderlist-filter-container .p-orderlist-filter-input {
+  padding-right: 1.5rem;
+}
+.p-orderlist .p-orderlist-filter-container .p-orderlist-filter-icon {
+  right: 0.5rem;
+  color: $text-color-secondary;
+}
+.p-orderlist .p-orderlist-list {
+  border: 1px solid $surface-d;
+  background: $surface-a;
+  color: $text-color;
+  padding: 0.5rem 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-orderlist .p-orderlist-list .p-orderlist-item {
+  padding: 0.5rem 1rem;
+  margin: 0;
+  border: 0 none;
+  color: $text-color;
+  background: transparent;
+  transition: box-shadow 0.2s;
+}
+.p-orderlist .p-orderlist-list .p-orderlist-item:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-orderlist .p-orderlist-list .p-orderlist-item.p-highlight {
+  color: $text-color;
+  background: $primary-a16;
+}
+.p-orderlist .p-orderlist-list .p-orderlist-empty-message {
+  padding: 0.5rem 1rem;
+  color: $text-color;
+}
+.p-orderlist
+  .p-orderlist-list:not(.cdk-drop-list-dragging)
+  .p-orderlist-item:not(.p-highlight):hover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-orderlist.p-orderlist-striped
+  .p-orderlist-list
+  .p-orderlist-item:nth-child(even) {
+  background: $white-a01;
+}
+.p-orderlist.p-orderlist-striped
+  .p-orderlist-list
+  .p-orderlist-item:nth-child(even):hover {
+  background: $surface-c;
+}
+
+.p-orderlist-item.cdk-drag-preview {
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+  border: 0 none;
+  color: $text-color;
+  background: $surface-a;
+  margin: 0;
+}
+
+.p-paginator {
+  background: $surface-a;
+  color: $text-color-secondary;
+  border: solid $surface-d;
+  border-width: 1px;
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+}
+.p-paginator .p-paginator-first,
+.p-paginator .p-paginator-prev,
+.p-paginator .p-paginator-next,
+.p-paginator .p-paginator-last {
+  background-color: transparent;
+  border: 0 none;
+  color: $text-color-secondary;
+  min-width: 2.286em;
+  height: 2.286em;
+  margin: 0.143rem;
+  transition: box-shadow 0.2s;
+  border-radius: 3px;
+}
+.p-paginator .p-paginator-first:not(.p-disabled):not(.p-highlight):hover,
+.p-paginator .p-paginator-prev:not(.p-disabled):not(.p-highlight):hover,
+.p-paginator .p-paginator-next:not(.p-disabled):not(.p-highlight):hover,
+.p-paginator .p-paginator-last:not(.p-disabled):not(.p-highlight):hover {
+  background: $surface-c;
+  border-color: transparent;
+  color: $text-color;
+}
+.p-paginator .p-paginator-first {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-paginator .p-paginator-last {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.p-paginator .p-dropdown {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  height: 2.286em;
+}
+.p-paginator .p-dropdown .p-dropdown-label {
+  padding-right: 0;
+}
+.p-paginator .p-paginator-page-input {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+.p-paginator .p-paginator-page-input .p-inputtext {
+  max-width: 2.286em;
+}
+.p-paginator .p-paginator-current {
+  background-color: transparent;
+  border: 0 none;
+  color: $text-color-secondary;
+  min-width: 2.286em;
+  height: 2.286em;
+  margin: 0.143rem;
+  padding: 0 0.5rem;
+}
+.p-paginator .p-paginator-pages .p-paginator-page {
+  background-color: transparent;
+  border: 0 none;
+  color: $text-color-secondary;
+  min-width: 2.286em;
+  height: 2.286em;
+  margin: 0.143rem;
+  transition: box-shadow 0.2s;
+  border-radius: 3px;
+}
+.p-paginator .p-paginator-pages .p-paginator-page.p-highlight {
+  background: $primary-a16;
+  border-color: $primary-a16;
+  color: $text-color;
+}
+.p-paginator .p-paginator-pages .p-paginator-page:not(.p-highlight):hover {
+  background: $surface-c;
+  border-color: transparent;
+  color: $text-color;
+}
+
+.p-picklist .p-picklist-buttons {
+  padding: 1rem;
+}
+.p-picklist .p-picklist-buttons .p-button {
+  margin-bottom: 0.5rem;
+}
+.p-picklist .p-picklist-header {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  padding: 1rem;
+  border-bottom: 0 none;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-picklist .p-picklist-header .p-picklist-title {
+  font-weight: 600;
+}
+.p-picklist .p-picklist-filter-container {
+  padding: 1rem;
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  border-bottom: 0 none;
+}
+.p-picklist .p-picklist-filter-container .p-picklist-filter-input {
+  padding-right: 1.5rem;
+}
+.p-picklist .p-picklist-filter-container .p-picklist-filter-icon {
+  right: 0.5rem;
+  color: $text-color-secondary;
+}
+.p-picklist .p-picklist-list {
+  border: 1px solid $surface-d;
+  background: $surface-a;
+  color: $text-color;
+  padding: 0.5rem 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-picklist .p-picklist-list .p-picklist-item {
+  padding: 0.5rem 1rem;
+  margin: 0;
+  border: 0 none;
+  color: $text-color;
+  background: transparent;
+  transition: box-shadow 0.2s;
+}
+.p-picklist .p-picklist-list .p-picklist-item:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-picklist .p-picklist-list .p-picklist-item.p-highlight {
+  color: $text-color;
+  background: $primary-a16;
+}
+.p-picklist .p-picklist-list .p-picklist-empty-message {
+  padding: 0.5rem 1rem;
+  color: $text-color;
+}
+.p-picklist
+  .p-picklist-list:not(.cdk-drop-list-dragging)
+  .p-picklist-item:not(.p-highlight):hover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-picklist.p-picklist-striped
+  .p-picklist-list
+  .p-picklist-item:nth-child(even) {
+  background: $white-a01;
+}
+.p-picklist.p-picklist-striped
+  .p-picklist-list
+  .p-picklist-item:nth-child(even):hover {
+  background: $surface-c;
+}
+
+.p-picklist-item.cdk-drag-preview {
+  padding: 0.5rem 1rem;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+  border: 0 none;
+  color: $text-color;
+  background: $surface-a;
+  margin: 0;
+}
+
+.p-timeline .p-timeline-event-marker {
+  border: 2px solid $primary-color;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  background-color: $surface-a;
+}
+.p-timeline .p-timeline-event-connector {
+  background-color: $surface-d;
+}
+.p-timeline.p-timeline-vertical .p-timeline-event-opposite,
+.p-timeline.p-timeline-vertical .p-timeline-event-content {
+  padding: 0 1rem;
+}
+.p-timeline.p-timeline-vertical .p-timeline-event-connector {
+  width: 2px;
+}
+.p-timeline.p-timeline-horizontal .p-timeline-event-opposite,
+.p-timeline.p-timeline-horizontal .p-timeline-event-content {
+  padding: 1rem 0;
+}
+.p-timeline.p-timeline-horizontal .p-timeline-event-connector {
+  height: 2px;
+}
+
+.p-tree {
+  border: 1px solid $surface-d;
+  background: $surface-a;
+  color: $text-color;
+  padding: 1rem;
+  border-radius: 3px;
+}
+.p-tree .p-tree-container .p-treenode {
+  padding: 0.143rem;
+}
+.p-tree .p-tree-container .p-treenode .p-treenode-content {
+  border-radius: 3px;
+  transition: box-shadow 0.2s;
+  padding: 0;
+}
+.p-tree .p-tree-container .p-treenode .p-treenode-content .p-tree-toggler {
+  margin-right: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  color: $text-color-secondary;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-tree
+  .p-tree-container
+  .p-treenode
+  .p-treenode-content
+  .p-tree-toggler:enabled:hover {
+  color: $text-color;
+  border-color: transparent;
+  background: $surface-c;
+}
+.p-tree
+  .p-tree-container
+  .p-treenode
+  .p-treenode-content
+  .p-tree-toggler:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-tree .p-tree-container .p-treenode .p-treenode-content .p-treenode-icon {
+  margin-right: 0.5rem;
+  color: $text-color-secondary;
+}
+.p-tree .p-tree-container .p-treenode .p-treenode-content .p-checkbox {
+  margin-right: 0.5rem;
+}
+.p-tree
+  .p-tree-container
+  .p-treenode
+  .p-treenode-content
+  .p-checkbox
+  .p-indeterminate
+  .p-checkbox-icon {
+  color: $text-color;
+}
+.p-tree .p-tree-container .p-treenode .p-treenode-content:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-tree .p-tree-container .p-treenode .p-treenode-content.p-highlight {
+  background: $primary-a16;
+  color: $text-color;
+}
+.p-tree
+  .p-tree-container
+  .p-treenode
+  .p-treenode-content.p-highlight
+  .p-tree-toggler,
+.p-tree
+  .p-tree-container
+  .p-treenode
+  .p-treenode-content.p-highlight
+  .p-treenode-icon {
+  color: $text-color;
+}
+.p-tree
+  .p-tree-container
+  .p-treenode
+  .p-treenode-content.p-highlight
+  .p-tree-toggler:hover,
+.p-tree
+  .p-tree-container
+  .p-treenode
+  .p-treenode-content.p-highlight
+  .p-treenode-icon:hover {
+  color: $text-color;
+}
+.p-tree
+  .p-tree-container
+  .p-treenode
+  .p-treenode-content.p-treenode-selectable:not(.p-highlight):hover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-tree .p-tree-container .p-treenode .p-treenode-content.p-treenode-dragover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-tree .p-tree-filter-container {
+  margin-bottom: 0.5rem;
+}
+.p-tree .p-tree-filter-container .p-tree-filter {
+  width: 100%;
+  padding-right: 1.5rem;
+}
+.p-tree .p-tree-filter-container .p-tree-filter-icon {
+  right: 0.5rem;
+  color: $text-color-secondary;
+}
+.p-tree .p-treenode-children {
+  padding: 0 0 0 1rem;
+}
+.p-tree .p-tree-loading-icon {
+  font-size: 2rem;
+}
+.p-tree .p-treenode-droppoint.p-treenode-droppoint-active {
+  background-color: $primary-lighter-a16;
+}
+.p-tree.p-tree-horizontal .p-treenode .p-treenode-content {
+  border-radius: 3px;
+  border: 1px solid $surface-d;
+  background-color: $surface-a;
+  color: $text-color;
+  padding: 0;
+  transition: box-shadow 0.2s;
+}
+.p-tree.p-tree-horizontal .p-treenode .p-treenode-content.p-highlight {
+  background-color: $primary-a16;
+  color: $text-color;
+}
+.p-tree.p-tree-horizontal
+  .p-treenode
+  .p-treenode-content.p-highlight
+  .p-treenode-icon {
+  color: $text-color;
+}
+.p-tree.p-tree-horizontal .p-treenode .p-treenode-content .p-tree-toggler {
+  margin-right: 0.5rem;
+}
+.p-tree.p-tree-horizontal .p-treenode .p-treenode-content .p-treenode-icon {
+  color: $text-color-secondary;
+  margin-right: 0.5rem;
+}
+.p-tree.p-tree-horizontal .p-treenode .p-treenode-content .p-checkbox {
+  margin-right: 0.5rem;
+}
+.p-tree.p-tree-horizontal
+  .p-treenode
+  .p-treenode-content
+  .p-treenode-label:not(.p-highlight):hover {
+  background-color: inherit;
+  color: inherit;
+}
+.p-tree.p-tree-horizontal
+  .p-treenode
+  .p-treenode-content.p-treenode-selectable:not(.p-highlight):hover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-tree.p-tree-horizontal .p-treenode .p-treenode-content:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+
+.p-treetable .p-paginator-top {
+  border-width: 1px 0 1px 0;
+  border-radius: 0;
+}
+.p-treetable .p-paginator-bottom {
+  border-width: 0 0 1px 0;
+  border-radius: 0;
+}
+.p-treetable .p-treetable-header {
+  background: $surface-a;
+  color: $text-color-secondary;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 600;
+}
+.p-treetable .p-treetable-footer {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 600;
+}
+.p-treetable .p-treetable-thead > tr > th {
+  text-align: left;
+  padding: 1rem 1rem;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  font-weight: 600;
+  color: $text-color;
+  background: $surface-a;
+  transition: box-shadow 0.2s;
+}
+.p-treetable .p-treetable-tfoot > tr > td {
+  text-align: left;
+  padding: 1rem 1rem;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  font-weight: 600;
+  color: $text-color;
+  background: $surface-a;
+}
+.p-treetable .p-sortable-column {
+  outline-color: $shadow-color;
+}
+.p-treetable .p-sortable-column .p-sortable-column-icon {
+  color: $text-color-secondary;
+  margin-left: 0.5rem;
+}
+.p-treetable .p-sortable-column .p-sortable-column-badge {
+  border-radius: 50%;
+  height: 1.143rem;
+  min-width: 1.143rem;
+  line-height: 1.143rem;
+  color: $text-color;
+  background: $primary-a16;
+  margin-left: 0.5rem;
+}
+.p-treetable .p-sortable-column:not(.p-highlight):hover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-treetable
+  .p-sortable-column:not(.p-highlight):hover
+  .p-sortable-column-icon {
+  color: $text-color;
+}
+.p-treetable .p-sortable-column.p-highlight {
+  background: $surface-a;
+  color: $primary-color;
+}
+.p-treetable .p-sortable-column.p-highlight .p-sortable-column-icon {
+  color: $primary-color;
+}
+.p-treetable .p-treetable-tbody > tr {
+  background: $surface-a;
+  color: $text-color;
+  transition: box-shadow 0.2s;
+}
+.p-treetable .p-treetable-tbody > tr > td {
+  text-align: left;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+}
+.p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler {
+  width: 2rem;
+  height: 2rem;
+  color: $text-color-secondary;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  margin-right: 0.5rem;
+}
+.p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler:enabled:hover {
+  color: $text-color;
+  border-color: transparent;
+  background: $surface-c;
+}
+.p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-treetable .p-treetable-tbody > tr > td p-treetablecheckbox .p-checkbox {
+  margin-right: 0.5rem;
+}
+.p-treetable
+  .p-treetable-tbody
+  > tr
+  > td
+  p-treetablecheckbox
+  .p-checkbox
+  .p-indeterminate
+  .p-checkbox-icon {
+  color: $text-color;
+}
+.p-treetable .p-treetable-tbody > tr:focus {
+  outline: 0.15rem solid $shadow-color;
+  outline-offset: -0.15rem;
+}
+.p-treetable .p-treetable-tbody > tr.p-highlight {
+  background: $primary-a16;
+  color: $text-color;
+}
+.p-treetable .p-treetable-tbody > tr.p-highlight .p-treetable-toggler {
+  color: $text-color;
+}
+.p-treetable .p-treetable-tbody > tr.p-highlight .p-treetable-toggler:hover {
+  color: $text-color;
+}
+.p-treetable.p-treetable-hoverable-rows
+  .p-treetable-tbody
+  > tr:not(.p-highlight):hover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-treetable.p-treetable-hoverable-rows
+  .p-treetable-tbody
+  > tr:not(.p-highlight):hover
+  .p-treetable-toggler {
+  color: $text-color;
+}
+.p-treetable .p-column-resizer-helper {
+  background: $primary-color;
+}
+.p-treetable .p-treetable-scrollable-header,
+.p-treetable .p-treetable-scrollable-footer {
+  background: $surface-a;
+}
+.p-treetable .p-treetable-loading-icon {
+  font-size: 2rem;
+}
+.p-treetable.p-treetable-gridlines .p-datatable-header {
+  border-width: 1px 1px 0 1px;
+}
+.p-treetable.p-treetable-gridlines .p-treetable-footer {
+  border-width: 0 1px 1px 1px;
+}
+.p-treetable.p-treetable-gridlines .p-treetable-top {
+  border-width: 0 1px 0 1px;
+}
+.p-treetable.p-treetable-gridlines .p-treetable-bottom {
+  border-width: 0 1px 1px 1px;
+}
+.p-treetable.p-treetable-gridlines .p-treetable-thead > tr > th {
+  border-width: 1px;
+}
+.p-treetable.p-treetable-gridlines .p-treetable-tbody > tr > td {
+  border-width: 1px;
+}
+.p-treetable.p-treetable-gridlines .p-treetable-tfoot > tr > td {
+  border-width: 1px;
+}
+.p-treetable.p-treetable-sm .p-treetable-header {
+  padding: 0.875rem 0.875rem;
+}
+.p-treetable.p-treetable-sm .p-treetable-thead > tr > th {
+  padding: 0.5rem 0.5rem;
+}
+.p-treetable.p-treetable-sm .p-treetable-tbody > tr > td {
+  padding: 0.5rem 0.5rem;
+}
+.p-treetable.p-treetable-sm .p-treetable-tfoot > tr > td {
+  padding: 0.5rem 0.5rem;
+}
+.p-treetable.p-treetable-sm .p-treetable-footer {
+  padding: 0.5rem 0.5rem;
+}
+.p-treetable.p-treetable-lg .p-treetable-header {
+  padding: 1.25rem 1.25rem;
+}
+.p-treetable.p-treetable-lg .p-treetable-thead > tr > th {
+  padding: 1.25rem 1.25rem;
+}
+.p-treetable.p-treetable-lg .p-treetable-tbody > tr > td {
+  padding: 1.25rem 1.25rem;
+}
+.p-treetable.p-treetable-lg .p-treetable-tfoot > tr > td {
+  padding: 1.25rem 1.25rem;
+}
+.p-treetable.p-treetable-lg .p-treetable-footer {
+  padding: 1.25rem 1.25rem;
+}
+
+.p-virtualscroller .p-virtualscroller-header {
+  background: $surface-a;
+  color: $text-color-secondary;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 600;
+}
+.p-virtualscroller .p-virtualscroller-content {
+  background: $surface-a;
+  color: $text-color;
+  border: 0 none;
+  padding: 0;
+}
+.p-virtualscroller .p-virtualscroller-footer {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-width: 0 0 1px 0;
+  padding: 1rem 1rem;
+  font-weight: 600;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+
+.p-accordion .p-accordion-header .p-accordion-header-link {
+  padding: 1rem;
+  border: 1px solid $surface-d;
+  color: $text-color;
+  background: $surface-a;
+  font-weight: 600;
+  border-radius: 3px;
+  transition: box-shadow 0.2s;
+}
+.p-accordion
+  .p-accordion-header
+  .p-accordion-header-link
+  .p-accordion-toggle-icon {
+  margin-right: 0.5rem;
+}
+.p-accordion
+  .p-accordion-header:not(.p-disabled)
+  .p-accordion-header-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-accordion
+  .p-accordion-header:not(.p-highlight):not(.p-disabled):hover
+  .p-accordion-header-link {
+  background: $surface-c;
+  border-color: $surface-d;
+  color: $text-color;
+}
+.p-accordion
+  .p-accordion-header:not(.p-disabled).p-highlight
+  .p-accordion-header-link {
+  background: $surface-a;
+  border-color: $surface-d;
+  color: $text-color;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.p-accordion
+  .p-accordion-header:not(.p-disabled).p-highlight:hover
+  .p-accordion-header-link {
+  border-color: $surface-d;
+  background: $surface-c;
+  color: $text-color;
+}
+.p-accordion .p-accordion-content {
+  padding: 1rem;
+  border: 1px solid $surface-d;
+  background: $surface-a;
+  color: $text-color;
+  border-top: 0;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-accordion p-accordiontab .p-accordion-tab {
+  margin-bottom: 0;
+}
+.p-accordion p-accordiontab .p-accordion-header .p-accordion-header-link {
+  border-radius: 0;
+}
+.p-accordion p-accordiontab .p-accordion-content {
+  border-radius: 0;
+}
+.p-accordion
+  p-accordiontab:not(:first-child)
+  .p-accordion-header
+  .p-accordion-header-link {
+  border-top: 0 none;
+}
+.p-accordion
+  p-accordiontab:not(:first-child)
+  .p-accordion-header:not(.p-highlight):not(.p-disabled):hover
+  .p-accordion-header-link,
+.p-accordion
+  p-accordiontab:not(:first-child)
+  .p-accordion-header:not(.p-disabled).p-highlight:hover
+  .p-accordion-header-link {
+  border-top: 0 none;
+}
+.p-accordion
+  p-accordiontab:first-child
+  .p-accordion-header
+  .p-accordion-header-link {
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-accordion
+  p-accordiontab:last-child
+  .p-accordion-header:not(.p-highlight)
+  .p-accordion-header-link {
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-accordion p-accordiontab:last-child .p-accordion-content {
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.p-card {
+  background: $surface-a;
+  color: $text-color;
+  box-shadow: 0 2px 1px -1px $black-a20, 0 1px 1px 0 $black-a14,
+    0 1px 3px 0 $black-a12;
+  border-radius: 3px;
+}
+.p-card .p-card-body {
+  padding: 1rem;
+}
+.p-card .p-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.p-card .p-card-subtitle {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: $text-color-secondary;
+}
+.p-card .p-card-content {
+  padding: 1rem 0;
+}
+.p-card .p-card-footer {
+  padding: 1rem 0 0 0;
+}
+
+.p-divider .p-divider-content {
+  background-color: $surface-a;
+}
+.p-divider.p-divider-horizontal {
+  margin: 1rem 0;
+  padding: 0 1rem;
+}
+.p-divider.p-divider-horizontal:before {
+  border-top: 1px $surface-d;
+}
+.p-divider.p-divider-horizontal .p-divider-content {
+  padding: 0 0.5rem;
+}
+.p-divider.p-divider-vertical {
+  margin: 0 1rem;
+  padding: 1rem 0;
+}
+.p-divider.p-divider-vertical:before {
+  border-left: 1px $surface-d;
+}
+.p-divider.p-divider-vertical .p-divider-content {
+  padding: 0.5rem 0;
+}
+
+.p-fieldset {
+  border: 1px solid $surface-d;
+  background: $surface-a;
+  color: $text-color;
+  border-radius: 3px;
+}
+.p-fieldset .p-fieldset-legend {
+  padding: 1rem;
+  border: 1px solid $surface-d;
+  color: $text-color;
+  background: $surface-a;
+  font-weight: 600;
+  border-radius: 3px;
+}
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend {
+  padding: 0;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend a {
+  padding: 1rem;
+  color: $text-color;
+  border-radius: 3px;
+  transition: box-shadow 0.2s;
+}
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend a .p-fieldset-toggler {
+  margin-right: 0.5rem;
+}
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend a:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-fieldset.p-fieldset-toggleable .p-fieldset-legend:hover {
+  background: $surface-c;
+  border-color: $surface-d;
+  color: $text-color;
+}
+.p-fieldset .p-fieldset-content {
+  padding: 1rem;
+}
+
+.p-panel .p-panel-header {
+  border: 1px solid $surface-d;
+  padding: 1rem;
+  background: $surface-a;
+  color: $text-color;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-panel .p-panel-header .p-panel-title {
+  font-weight: 600;
+}
+.p-panel .p-panel-header .p-panel-header-icon {
+  width: 2rem;
+  height: 2rem;
+  color: $text-color-secondary;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-panel .p-panel-header .p-panel-header-icon:enabled:hover {
+  color: $text-color;
+  border-color: transparent;
+  background: $surface-c;
+}
+.p-panel .p-panel-header .p-panel-header-icon:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-panel.p-panel-toggleable .p-panel-header {
+  padding: 0.5rem 1rem;
+}
+.p-panel .p-panel-content {
+  padding: 1rem;
+  border: 1px solid $surface-d;
+  background: $surface-a;
+  color: $text-color;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+  border-top: 0 none;
+}
+.p-panel .p-panel-footer {
+  padding: 0.5rem 1rem;
+  border: 1px solid $surface-d;
+  background: $surface-a;
+  color: $text-color;
+  border-top: 0 none;
+}
+.p-panel .p-panel-icons-end {
+  order: 2;
+  margin-left: auto;
+}
+.p-panel .p-panel-icons-start {
+  order: 0;
+  margin-right: 0.5rem;
+}
+.p-panel .p-panel-icons-center {
+  order: 2;
+  width: 100%;
+  text-align: center;
+}
+
+.p-scrollpanel .p-scrollpanel-bar {
+  background: $surface-d;
+  border: 0 none;
+}
+
+.p-splitter {
+  border: 1px solid $surface-d;
+  background: $surface-a;
+  border-radius: 3px;
+  color: $text-color;
+}
+.p-splitter .p-splitter-gutter {
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  background: $surface-c;
+}
+.p-splitter .p-splitter-gutter .p-splitter-gutter-handle {
+  background: $surface-d;
+}
+.p-splitter .p-splitter-gutter-resizing {
+  background: $surface-d;
+}
+
+.p-tabview .p-tabview-nav {
+  background: transparent;
+  border: 1px solid $surface-d;
+  border-width: 0 0 2px 0;
+}
+.p-tabview .p-tabview-nav li {
+  margin-right: 0;
+}
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  border: solid $surface-d;
+  border-width: 0 0 2px 0;
+  border-color: transparent transparent $surface-d transparent;
+  background: $surface-a;
+  color: $text-color-secondary;
+  padding: 1rem;
+  font-weight: 600;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  transition: box-shadow 0.2s;
+  margin: 0 0 -2px 0;
+}
+.p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 1px $shadow-color;
+}
+.p-tabview
+  .p-tabview-nav
+  li:not(.p-highlight):not(.p-disabled):hover
+  .p-tabview-nav-link {
+  background: $surface-a;
+  border-color: $primary-color;
+  color: $text-color;
+}
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  background: $surface-a;
+  border-color: $primary-color;
+  color: $primary-color;
+}
+.p-tabview .p-tabview-left-icon {
+  margin-right: 0.5rem;
+}
+.p-tabview .p-tabview-right-icon {
+  margin-left: 0.5rem;
+}
+.p-tabview .p-tabview-close {
+  margin-left: 0.5rem;
+}
+.p-tabview .p-tabview-nav-btn.p-link {
+  background: $surface-a;
+  color: $primary-color;
+  width: $button-size;
+  box-shadow: 0px 3px 1px -2px $black-a20, 0px 2px 2px 0px $black-a14,
+    0px 1px 5px 0px $black-a12;
+  border-radius: 0;
+}
+.p-tabview .p-tabview-nav-btn.p-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 1px $shadow-color;
+}
+.p-tabview .p-tabview-panels {
+  background: $surface-a;
+  padding: 1rem;
+  border: 0 none;
+  color: $text-color;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.p-toolbar {
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  padding: 1rem;
+  border-radius: 3px;
+}
+.p-toolbar .p-toolbar-separator {
+  margin: 0 0.5rem;
+}
+
+.p-confirm-popup {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  box-shadow: 0px 11px 15px -7px $black-a20, 0px 24px 38px 3px $black-a14,
+    0px 9px 46px 8px $black-a12;
+}
+.p-confirm-popup .p-confirm-popup-content {
+  padding: 1rem;
+}
+.p-confirm-popup .p-confirm-popup-footer {
+  text-align: right;
+  padding: 0.5rem 1rem;
+}
+.p-confirm-popup .p-confirm-popup-footer button {
+  margin: 0 0.5rem 0 0;
+  width: auto;
+}
+.p-confirm-popup .p-confirm-popup-footer button:last-child {
+  margin: 0;
+}
+.p-confirm-popup:after {
+  border: solid transparent;
+  border-color: $gray-30;
+  border-bottom-color: $surface-a;
+}
+.p-confirm-popup:before {
+  border: solid transparent;
+  border-color: $gray-56;
+  border-bottom-color: $surface-d;
+}
+.p-confirm-popup.p-confirm-popup-flipped:after {
+  border-top-color: $surface-a;
+}
+.p-confirm-popup.p-confirm-popup-flipped:before {
+  border-top-color: $surface-d;
+}
+.p-confirm-popup .p-confirm-popup-icon {
+  font-size: 1.5rem;
+}
+.p-confirm-popup .p-confirm-popup-message {
+  margin-left: 1rem;
+}
+
+.p-dialog {
+  border-radius: 3px;
+  box-shadow: 0px 11px 15px -7px $black-a20, 0px 24px 38px 3px $black-a14,
+    0px 9px 46px 8px $black-a12;
+  border: 1px solid $surface-d;
+}
+.p-dialog .p-dialog-header {
+  border-bottom: 0 none;
+  background: $surface-a;
+  color: $text-color;
+  padding: 1.5rem;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-dialog .p-dialog-header .p-dialog-title {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+.p-dialog .p-dialog-header .p-dialog-header-icon {
+  width: 2rem;
+  height: 2rem;
+  color: $text-color-secondary;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  margin-right: 0.5rem;
+}
+.p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
+  color: $text-color;
+  border-color: transparent;
+  background: $surface-c;
+}
+.p-dialog .p-dialog-header .p-dialog-header-icon:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-dialog .p-dialog-header .p-dialog-header-icon:last-child {
+  margin-right: 0;
+}
+.p-dialog .p-dialog-content {
+  background: $surface-a;
+  color: $text-color;
+  padding: 0 1.5rem 2rem 1.5rem;
+}
+.p-dialog .p-dialog-content:last-of-type {
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-dialog .p-dialog-footer {
+  border-top: 0 none;
+  background: $surface-a;
+  color: $text-color;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  text-align: right;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-dialog .p-dialog-footer button {
+  margin: 0 0.5rem 0 0;
+  width: auto;
+}
+.p-dialog.p-confirm-dialog .p-confirm-dialog-icon {
+  font-size: 2rem;
+}
+.p-dialog.p-confirm-dialog .p-confirm-dialog-message {
+  margin-left: 1rem;
+}
+
+.p-overlaypanel {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  box-shadow: 0px 11px 15px -7px $black-a20, 0px 24px 38px 3px $black-a14,
+    0px 9px 46px 8px $black-a12;
+}
+.p-overlaypanel .p-overlaypanel-content {
+  padding: 1rem;
+}
+.p-overlaypanel .p-overlaypanel-close {
+  background: $primary-color;
+  color: $primary-color-text;
+  width: 2rem;
+  height: 2rem;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  border-radius: 50%;
+  position: absolute;
+  top: -1rem;
+  right: -1rem;
+}
+.p-overlaypanel .p-overlaypanel-close:enabled:hover {
+  background: $primary-light;
+  color: $primary-color-text;
+}
+.p-overlaypanel:after {
+  border: solid transparent;
+  border-color: $gray-30;
+  border-bottom-color: $surface-a;
+}
+.p-overlaypanel:before {
+  border: solid transparent;
+  border-color: $gray-56;
+  border-bottom-color: $overlaypanel-before-border-color;
+}
+.p-overlaypanel.p-overlaypanel-flipped:after {
+  border-top-color: $surface-a;
+}
+.p-overlaypanel.p-overlaypanel-flipped:before {
+  border-top-color: $surface-d;
+}
+
+.p-sidebar {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  box-shadow: 0px 11px 15px -7px $black-a20, 0px 24px 38px 3px $black-a14,
+    0px 9px 46px 8px $black-a12;
+}
+.p-sidebar .p-sidebar-header {
+  padding: 1rem;
+}
+.p-sidebar .p-sidebar-header .p-sidebar-close,
+.p-sidebar .p-sidebar-header .p-sidebar-icon {
+  width: 2rem;
+  height: 2rem;
+  color: $text-color-secondary;
+  border: 0 none;
+  background: transparent;
+  border-radius: 50%;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-sidebar .p-sidebar-header .p-sidebar-close:enabled:hover,
+.p-sidebar .p-sidebar-header .p-sidebar-icon:enabled:hover {
+  color: $text-color;
+  border-color: transparent;
+  background: $surface-c;
+}
+.p-sidebar .p-sidebar-header .p-sidebar-close:focus,
+.p-sidebar .p-sidebar-header .p-sidebar-icon:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-sidebar .p-sidebar-header + .p-sidebar-content {
+  padding-top: 0;
+}
+.p-sidebar .p-sidebar-content {
+  padding: 1rem;
+}
+
+.p-tooltip .p-tooltip-text {
+  background: $surface-d;
+  color: $text-color;
+  padding: 0.5rem 0.5rem;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+  border-radius: 3px;
+}
+.p-tooltip.p-tooltip-right .p-tooltip-arrow {
+  border-right-color: $surface-d;
+}
+.p-tooltip.p-tooltip-left .p-tooltip-arrow {
+  border-left-color: $surface-d;
+}
+.p-tooltip.p-tooltip-top .p-tooltip-arrow {
+  border-top-color: $surface-d;
+}
+.p-tooltip.p-tooltip-bottom .p-tooltip-arrow {
+  border-bottom-color: $surface-d;
+}
+
+.p-breadcrumb {
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  padding: 1rem;
+}
+.p-breadcrumb ul li .p-menuitem-link {
+  transition: box-shadow 0.2s;
+  border-radius: 3px;
+}
+.p-breadcrumb ul li .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-breadcrumb ul li .p-menuitem-link .p-menuitem-text {
+  color: $text-color;
+}
+.p-breadcrumb ul li .p-menuitem-link .p-menuitem-icon {
+  color: $text-color-secondary;
+}
+.p-breadcrumb ul li.p-breadcrumb-chevron {
+  margin: 0 0.5rem 0 0.5rem;
+  color: $text-color;
+}
+.p-breadcrumb ul li:last-child .p-menuitem-text {
+  color: $text-color;
+}
+.p-breadcrumb ul li:last-child .p-menuitem-icon {
+  color: $text-color-secondary;
+}
+
+.p-contextmenu {
+  padding: 0.25rem 0;
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+  border-radius: 3px;
+  width: 12.5rem;
+}
+.p-contextmenu .p-menuitem-link {
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  border-radius: 0;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}
+.p-contextmenu .p-menuitem-link .p-menuitem-text {
+  color: $text-color;
+}
+.p-contextmenu .p-menuitem-link .p-menuitem-icon {
+  color: $text-color-secondary;
+  margin-right: 0.5rem;
+}
+.p-contextmenu .p-menuitem-link .p-submenu-icon {
+  color: $text-color-secondary;
+}
+.p-contextmenu .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-contextmenu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
+  color: $text-color;
+}
+.p-contextmenu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
+  color: $text-color;
+}
+.p-contextmenu .p-menuitem-link:not(.p-disabled):hover .p-submenu-icon {
+  color: $text-color;
+}
+.p-contextmenu .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-contextmenu .p-submenu-list {
+  padding: 0.25rem 0;
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+  border-radius: 3px;
+}
+.p-contextmenu .p-menuitem {
+  margin: 0;
+}
+.p-contextmenu .p-menuitem:last-child {
+  margin: 0;
+}
+.p-contextmenu .p-menuitem.p-menuitem-active > .p-menuitem-link {
+  background: $surface-c;
+}
+.p-contextmenu
+  .p-menuitem.p-menuitem-active
+  > .p-menuitem-link
+  .p-menuitem-text {
+  color: $text-color;
+}
+.p-contextmenu
+  .p-menuitem.p-menuitem-active
+  > .p-menuitem-link
+  .p-menuitem-icon,
+.p-contextmenu
+  .p-menuitem.p-menuitem-active
+  > .p-menuitem-link
+  .p-submenu-icon {
+  color: $text-color;
+}
+.p-contextmenu .p-menu-separator {
+  border-top: 1px solid $surface-d;
+  margin: 0.25rem 0;
+}
+.p-contextmenu .p-submenu-icon {
+  font-size: 0.875rem;
+}
+.p-contextmenu .p-menuitem-badge {
+  background: $primary-color;
+  color: $primary-color-text;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.p-dock .p-dock-list {
+  background: $white-a10;
+  border: 1px solid $white-a20;
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.5rem;
+}
+.p-dock .p-dock-item {
+  padding: 0.5rem;
+}
+.p-dock .p-dock-action {
+  width: 4rem;
+  height: 4rem;
+}
+.p-dock.p-dock-top .p-dock-item-second-prev,
+.p-dock.p-dock-top .p-dock-item-second-next,
+.p-dock.p-dock-bottom .p-dock-item-second-prev,
+.p-dock.p-dock-bottom .p-dock-item-second-next {
+  margin: 0 0.9rem;
+}
+.p-dock.p-dock-top .p-dock-item-prev,
+.p-dock.p-dock-top .p-dock-item-next,
+.p-dock.p-dock-bottom .p-dock-item-prev,
+.p-dock.p-dock-bottom .p-dock-item-next {
+  margin: 0 1.3rem;
+}
+.p-dock.p-dock-top .p-dock-item-current,
+.p-dock.p-dock-bottom .p-dock-item-current {
+  margin: 0 1.5rem;
+}
+.p-dock.p-dock-left .p-dock-item-second-prev,
+.p-dock.p-dock-left .p-dock-item-second-next,
+.p-dock.p-dock-right .p-dock-item-second-prev,
+.p-dock.p-dock-right .p-dock-item-second-next {
+  margin: 0.9rem 0;
+}
+.p-dock.p-dock-left .p-dock-item-prev,
+.p-dock.p-dock-left .p-dock-item-next,
+.p-dock.p-dock-right .p-dock-item-prev,
+.p-dock.p-dock-right .p-dock-item-next {
+  margin: 1.3rem 0;
+}
+.p-dock.p-dock-left .p-dock-item-current,
+.p-dock.p-dock-right .p-dock-item-current {
+  margin: 1.5rem 0;
+}
+
+@media screen and (max-width: 960px) {
+  .p-dock.p-dock-top .p-dock-list-container,
+  .p-dock.p-dock-bottom .p-dock-list-container {
+    overflow-x: auto;
+    width: 100%;
+  }
+  .p-dock.p-dock-top .p-dock-list-container .p-dock-list,
+  .p-dock.p-dock-bottom .p-dock-list-container .p-dock-list {
+    margin: 0 auto;
+  }
+  .p-dock.p-dock-left .p-dock-list-container,
+  .p-dock.p-dock-right .p-dock-list-container {
+    overflow-y: auto;
+    height: 100%;
+  }
+  .p-dock.p-dock-left .p-dock-list-container .p-dock-list,
+  .p-dock.p-dock-right .p-dock-list-container .p-dock-list {
+    margin: auto 0;
+  }
+  .p-dock .p-dock-list .p-dock-item {
+    transform: none;
+    margin: 0;
+  }
+}
+.p-megamenu {
+  padding: 0.5rem;
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+}
+.p-megamenu .p-megamenu-root-list > .p-menuitem > .p-menuitem-link {
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  border-radius: 3px;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem
+  > .p-menuitem-link
+  .p-menuitem-text {
+  color: $text-color;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem
+  > .p-menuitem-link
+  .p-menuitem-icon {
+  color: $text-color-secondary;
+  margin-right: 0.5rem;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem
+  > .p-menuitem-link
+  .p-submenu-icon {
+  color: $text-color-secondary;
+  margin-left: 0.5rem;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem
+  > .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-menuitem-text {
+  color: $text-color;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-menuitem-icon {
+  color: $text-color;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-submenu-icon {
+  color: $text-color;
+}
+.p-megamenu .p-megamenu-root-list > .p-menuitem > .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link,
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link
+  .p-menuitem-text,
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-menuitem-text {
+  color: $text-color;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link
+  .p-menuitem-icon,
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-menuitem-icon {
+  color: $text-color;
+}
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link
+  .p-submenu-icon,
+.p-megamenu
+  .p-megamenu-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-submenu-icon {
+  color: $text-color;
+}
+.p-megamenu .p-menuitem-link {
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  border-radius: 0;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}
+.p-megamenu .p-menuitem-link .p-menuitem-text {
+  color: $text-color;
+}
+.p-megamenu .p-menuitem-link .p-menuitem-icon {
+  color: $text-color-secondary;
+  margin-right: 0.5rem;
+}
+.p-megamenu .p-menuitem-link .p-submenu-icon {
+  color: $text-color-secondary;
+}
+.p-megamenu .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-megamenu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
+  color: $text-color;
+}
+.p-megamenu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
+  color: $text-color;
+}
+.p-megamenu .p-menuitem-link:not(.p-disabled):hover .p-submenu-icon {
+  color: $text-color;
+}
+.p-megamenu .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-megamenu .p-megamenu-panel {
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-megamenu .p-megamenu-submenu-header {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  background: $surface-a;
+  font-weight: 600;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-megamenu .p-megamenu-submenu {
+  padding: 0.25rem 0;
+  width: 12.5rem;
+}
+.p-megamenu .p-megamenu-submenu .p-menu-separator {
+  border-top: 1px solid $surface-d;
+  margin: 0.25rem 0;
+}
+.p-megamenu .p-megamenu-submenu .p-menuitem {
+  margin: 0;
+}
+.p-megamenu .p-megamenu-submenu .p-menuitem:last-child {
+  margin: 0;
+}
+.p-megamenu .p-menuitem.p-menuitem-active > .p-menuitem-link {
+  background: $surface-c;
+}
+.p-megamenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text {
+  color: $text-color;
+}
+.p-megamenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon,
+.p-megamenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
+  color: $text-color;
+}
+.p-megamenu.p-megamenu-vertical {
+  width: 12.5rem;
+  padding: 0.25rem 0;
+}
+.p-megamenu.p-megamenu-vertical .p-menuitem {
+  margin: 0;
+}
+.p-megamenu.p-megamenu-vertical .p-menuitem:last-child {
+  margin: 0;
+}
+.p-megamenu .p-menuitem-badge {
+  background: $primary-color;
+  color: $primary-color-text;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.p-menu {
+  padding: 0.25rem 0;
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  width: 12.5rem;
+}
+.p-menu .p-menuitem-link {
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  border-radius: 0;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}
+.p-menu .p-menuitem-link .p-menuitem-text {
+  color: $text-color;
+}
+.p-menu .p-menuitem-link .p-menuitem-icon {
+  color: $text-color-secondary;
+  margin-right: 0.5rem;
+}
+.p-menu .p-menuitem-link .p-submenu-icon {
+  color: $text-color-secondary;
+}
+.p-menu .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-menu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
+  color: $text-color;
+}
+.p-menu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
+  color: $text-color;
+}
+.p-menu .p-menuitem-link:not(.p-disabled):hover .p-submenu-icon {
+  color: $text-color;
+}
+.p-menu .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-menu.p-menu-overlay {
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-menu .p-submenu-header {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  background: $surface-a;
+  font-weight: 600;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+.p-menu .p-menu-separator {
+  border-top: 1px solid $surface-d;
+  margin: 0.25rem 0;
+}
+.p-menu .p-menuitem {
+  margin: 0;
+}
+.p-menu .p-menuitem:last-child {
+  margin: 0;
+}
+.p-menu .p-menuitem-badge {
+  background: $primary-color;
+  color: $primary-color-text;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.p-menubar {
+  padding: 0.5rem;
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+}
+.p-menubar .p-menuitem-link {
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  border-radius: 0;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}
+.p-menubar .p-menuitem-link .p-menuitem-text {
+  color: $text-color;
+}
+.p-menubar .p-menuitem-link .p-menuitem-icon {
+  color: $text-color-secondary;
+  margin-right: 0.5rem;
+}
+.p-menubar .p-menuitem-link .p-submenu-icon {
+  color: $text-color-secondary;
+}
+.p-menubar .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-menubar .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
+  color: $text-color;
+}
+.p-menubar .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
+  color: $text-color;
+}
+.p-menubar .p-menuitem-link:not(.p-disabled):hover .p-submenu-icon {
+  color: $text-color;
+}
+.p-menubar .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  border-radius: 3px;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-link
+  .p-menuitem-text {
+  color: $text-color;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-link
+  .p-menuitem-icon {
+  color: $text-color-secondary;
+  margin-right: 0.5rem;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-link
+  .p-submenu-icon {
+  color: $text-color-secondary;
+  margin-left: 0.5rem;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-menuitem-text {
+  color: $text-color;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-menuitem-icon {
+  color: $text-color;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-submenu-icon {
+  color: $text-color;
+}
+.p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link,
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link
+  .p-menuitem-text,
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-menuitem-text {
+  color: $text-color;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link
+  .p-menuitem-icon,
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-menuitem-icon {
+  color: $text-color;
+}
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link
+  .p-submenu-icon,
+.p-menubar
+  .p-menubar-root-list
+  > .p-menuitem.p-menuitem-active
+  > .p-menuitem-link:not(.p-disabled):hover
+  .p-submenu-icon {
+  color: $text-color;
+}
+.p-menubar .p-submenu-list {
+  padding: 0.25rem 0;
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+  width: 12.5rem;
+}
+.p-menubar .p-submenu-list .p-menu-separator {
+  border-top: 1px solid $surface-d;
+  margin: 0.25rem 0;
+}
+.p-menubar .p-submenu-list .p-submenu-icon {
+  font-size: 0.875rem;
+}
+.p-menubar .p-submenu-list .p-menuitem {
+  margin: 0;
+}
+.p-menubar .p-submenu-list .p-menuitem:last-child {
+  margin: 0;
+}
+.p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link {
+  background: $surface-c;
+}
+.p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-text {
+  color: $text-color;
+}
+.p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon,
+.p-menubar .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
+  color: $text-color;
+}
+.p-menubar .p-menuitem-badge {
+  background: $primary-color;
+  color: $primary-color-text;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+@media screen and (max-width: 960px) {
+  .p-menubar {
+    position: relative;
+  }
+  .p-menubar .p-menubar-button {
+    display: flex;
+    width: 2rem;
+    height: 2rem;
+    color: $text-color-secondary;
+    border-radius: 50%;
+    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  }
+  .p-menubar .p-menubar-button:hover {
+    color: $text-color;
+    background: $surface-c;
+  }
+  .p-menubar .p-menubar-button:focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: 0 0 0 1px $shadow-color;
+  }
+  .p-menubar .p-menubar-root-list {
+    position: absolute;
+    display: none;
+    padding: 0.25rem 0;
+    background: $surface-a;
+    border: 1px solid $surface-d;
+    box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+      0 1px 10px 0 $black-a12;
+    width: 100%;
+  }
+  .p-menubar .p-menubar-root-list .p-menu-separator {
+    border-top: 1px solid $surface-d;
+    margin: 0.25rem 0;
+  }
+  .p-menubar .p-menubar-root-list .p-submenu-icon {
+    font-size: 0.875rem;
+  }
+  .p-menubar .p-menubar-root-list > .p-menuitem {
+    width: 100%;
+    position: static;
+  }
+  .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link {
+    padding: 0.75rem 1rem;
+    color: $text-color;
+    border-radius: 0;
+    transition: box-shadow 0.2s;
+    user-select: none;
+  }
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link
+    .p-menuitem-text {
+    color: $text-color;
+  }
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link
+    .p-menuitem-icon {
+    color: $text-color-secondary;
+    margin-right: 0.5rem;
+  }
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link
+    .p-submenu-icon {
+    color: $text-color-secondary;
+  }
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link:not(.p-disabled):hover {
+    background: $surface-c;
+  }
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link:not(.p-disabled):hover
+    .p-menuitem-text {
+    color: $text-color;
+  }
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link:not(.p-disabled):hover
+    .p-menuitem-icon {
+    color: $text-color;
+  }
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link:not(.p-disabled):hover
+    .p-submenu-icon {
+    color: $text-color;
+  }
+  .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:focus {
+    outline: 0 none;
+    outline-offset: 0;
+    box-shadow: inset 0 0 0 0.15rem $shadow-color;
+  }
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem
+    > .p-menuitem-link
+    > .p-submenu-icon {
+    margin-left: auto;
+    transition: transform 0.2s;
+  }
+  .p-menubar
+    .p-menubar-root-list
+    > .p-menuitem.p-menuitem-active
+    > .p-menuitem-link
+    > .p-submenu-icon {
+    transform: rotate(-180deg);
+  }
+  .p-menubar .p-menubar-root-list .p-submenu-list {
+    width: 100%;
+    position: static;
+    box-shadow: none;
+    border: 0 none;
+  }
+  .p-menubar .p-menubar-root-list .p-submenu-list .p-submenu-icon {
+    transition: transform 0.2s;
+    transform: rotate(90deg);
+  }
+  .p-menubar
+    .p-menubar-root-list
+    .p-submenu-list
+    .p-menuitem-active
+    > .p-menuitem-link
+    > .p-submenu-icon {
+    transform: rotate(-90deg);
+  }
+  .p-menubar .p-menubar-root-list .p-menuitem {
+    width: 100%;
+    position: static;
+  }
+  .p-menubar .p-menubar-root-list ul li a {
+    padding-left: 2.25rem;
+  }
+  .p-menubar .p-menubar-root-list ul li ul li a {
+    padding-left: 3.75rem;
+  }
+  .p-menubar .p-menubar-root-list ul li ul li ul li a {
+    padding-left: 5.25rem;
+  }
+  .p-menubar .p-menubar-root-list ul li ul li ul li ul li a {
+    padding-left: 6.75rem;
+  }
+  .p-menubar .p-menubar-root-list ul li ul li ul li ul li ul li a {
+    padding-left: 8.25rem;
+  }
+  .p-menubar.p-menubar-mobile-active .p-menubar-root-list {
+    display: flex;
+    flex-direction: column;
+    top: 100%;
+    left: 0;
+    z-index: 1;
+  }
+}
+.p-panelmenu .p-panelmenu-header > a {
+  padding: 1rem;
+  border: 1px solid $surface-d;
+  color: $text-color;
+  background: $surface-a;
+  font-weight: 600;
+  border-radius: 3px;
+  transition: box-shadow 0.2s;
+}
+.p-panelmenu .p-panelmenu-header > a .p-panelmenu-icon {
+  margin-right: 0.5rem;
+}
+.p-panelmenu .p-panelmenu-header > a .p-menuitem-icon {
+  margin-right: 0.5rem;
+}
+.p-panelmenu .p-panelmenu-header > a:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-panelmenu .p-panelmenu-header:not(.p-highlight):not(.p-disabled) > a:hover {
+  background: $surface-c;
+  border-color: $surface-d;
+  color: $text-color;
+}
+.p-panelmenu .p-panelmenu-header.p-highlight {
+  margin-bottom: 0;
+}
+.p-panelmenu .p-panelmenu-header.p-highlight > a {
+  background: $surface-a;
+  border-color: $surface-d;
+  color: $text-color;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.p-panelmenu .p-panelmenu-header.p-highlight:not(.p-disabled) > a:hover {
+  border-color: $surface-d;
+  background: $surface-c;
+  color: $text-color;
+}
+.p-panelmenu .p-panelmenu-content {
+  padding: 0.25rem 0;
+  border: 1px solid $surface-d;
+  background: $surface-a;
+  color: $text-color;
+  margin-bottom: 0;
+  border-top: 0;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-panelmenu .p-panelmenu-content .p-menuitem .p-menuitem-link {
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  border-radius: 0;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}
+.p-panelmenu
+  .p-panelmenu-content
+  .p-menuitem
+  .p-menuitem-link
+  .p-menuitem-text {
+  color: $text-color;
+}
+.p-panelmenu
+  .p-panelmenu-content
+  .p-menuitem
+  .p-menuitem-link
+  .p-menuitem-icon {
+  color: $text-color-secondary;
+  margin-right: 0.5rem;
+}
+.p-panelmenu .p-panelmenu-content .p-menuitem .p-menuitem-link .p-submenu-icon {
+  color: $text-color-secondary;
+}
+.p-panelmenu
+  .p-panelmenu-content
+  .p-menuitem
+  .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-panelmenu
+  .p-panelmenu-content
+  .p-menuitem
+  .p-menuitem-link:not(.p-disabled):hover
+  .p-menuitem-text {
+  color: $text-color;
+}
+.p-panelmenu
+  .p-panelmenu-content
+  .p-menuitem
+  .p-menuitem-link:not(.p-disabled):hover
+  .p-menuitem-icon {
+  color: $text-color;
+}
+.p-panelmenu
+  .p-panelmenu-content
+  .p-menuitem
+  .p-menuitem-link:not(.p-disabled):hover
+  .p-submenu-icon {
+  color: $text-color;
+}
+.p-panelmenu .p-panelmenu-content .p-menuitem .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-panelmenu
+  .p-panelmenu-content
+  .p-menuitem
+  .p-menuitem-link
+  .p-panelmenu-icon {
+  margin-right: 0.5rem;
+}
+.p-panelmenu
+  .p-panelmenu-content
+  .p-submenu-list:not(.p-panelmenu-root-submenu) {
+  padding: 0 0 0 1rem;
+}
+.p-panelmenu .p-panelmenu-panel {
+  margin-bottom: 0;
+}
+.p-panelmenu .p-panelmenu-panel .p-panelmenu-header > a {
+  border-radius: 0;
+}
+.p-panelmenu .p-panelmenu-panel .p-panelmenu-content {
+  border-radius: 0;
+}
+.p-panelmenu .p-panelmenu-panel:not(:first-child) .p-panelmenu-header > a {
+  border-top: 0 none;
+}
+.p-panelmenu
+  .p-panelmenu-panel:not(:first-child)
+  .p-panelmenu-header:not(.p-highlight):not(.p-disabled):hover
+  > a,
+.p-panelmenu
+  .p-panelmenu-panel:not(:first-child)
+  .p-panelmenu-header:not(.p-disabled).p-highlight:hover
+  > a {
+  border-top: 0 none;
+}
+.p-panelmenu .p-panelmenu-panel:first-child .p-panelmenu-header > a {
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+}
+.p-panelmenu
+  .p-panelmenu-panel:last-child
+  .p-panelmenu-header:not(.p-highlight)
+  > a {
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-panelmenu .p-panelmenu-panel:last-child .p-panelmenu-content {
+  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+.p-panelmenu .p-menuitem-badge {
+  background: $primary-color;
+  color: $primary-color-text;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.p-slidemenu {
+  padding: 0.25rem 0;
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  width: 12.5rem;
+}
+.p-slidemenu .p-menuitem-link {
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  border-radius: 0;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}
+.p-slidemenu .p-menuitem-link .p-menuitem-text {
+  color: $text-color;
+}
+.p-slidemenu .p-menuitem-link .p-menuitem-icon {
+  color: $text-color-secondary;
+  margin-right: 0.5rem;
+}
+.p-slidemenu .p-menuitem-link .p-submenu-icon {
+  color: $text-color-secondary;
+}
+.p-slidemenu .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-slidemenu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
+  color: $text-color;
+}
+.p-slidemenu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
+  color: $text-color;
+}
+.p-slidemenu .p-menuitem-link:not(.p-disabled):hover .p-submenu-icon {
+  color: $text-color;
+}
+.p-slidemenu .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-slidemenu.p-slidemenu-overlay {
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-slidemenu .p-slidemenu-list {
+  padding: 0.25rem 0;
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-slidemenu .p-slidemenu.p-slidemenu-active > .p-slidemenu-link {
+  background: $surface-c;
+}
+.p-slidemenu
+  .p-slidemenu.p-slidemenu-active
+  > .p-slidemenu-link
+  .p-slidemenu-text {
+  color: $text-color;
+}
+.p-slidemenu
+  .p-slidemenu.p-slidemenu-active
+  > .p-slidemenu-link
+  .p-slidemenu-icon,
+.p-slidemenu
+  .p-slidemenu.p-slidemenu-active
+  > .p-slidemenu-link
+  .p-slidemenu-icon {
+  color: $text-color;
+}
+.p-slidemenu .p-slidemenu-separator {
+  border-top: 1px solid $surface-d;
+  margin: 0.25rem 0;
+}
+.p-slidemenu .p-slidemenu-icon {
+  font-size: 0.875rem;
+}
+.p-slidemenu .p-slidemenu-backward {
+  padding: 0.75rem 1rem;
+  color: $text-color;
+}
+.p-slidemenu .p-menuitem-badge {
+  background: $primary-color;
+  color: $primary-color-text;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.p-steps .p-steps-item .p-menuitem-link {
+  background: transparent;
+  transition: box-shadow 0.2s;
+  border-radius: 3px;
+  background: transparent;
+}
+.p-steps .p-steps-item .p-menuitem-link .p-steps-number {
+  color: $text-color;
+  border: 0 none;
+  background: transparent;
+  min-width: 2rem;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: 1.143rem;
+  z-index: 1;
+  border-radius: 50%;
+}
+.p-steps .p-steps-item .p-menuitem-link .p-steps-title {
+  margin-top: 0.5rem;
+  color: $text-color-secondary;
+}
+.p-steps .p-steps-item .p-menuitem-link:not(.p-disabled):focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-steps .p-steps-item.p-highlight .p-steps-number {
+  background: $primary-a16;
+  color: $text-color;
+}
+.p-steps .p-steps-item.p-highlight .p-steps-title {
+  font-weight: 600;
+  color: $text-color;
+}
+.p-steps .p-steps-item:before {
+  content: ' ';
+  border-top: 1px solid $surface-d;
+  width: 100%;
+  top: 50%;
+  left: 0;
+  display: block;
+  position: absolute;
+  margin-top: -1rem;
+}
+
+.p-tabmenu .p-tabmenu-nav {
+  background: transparent;
+  border: 1px solid $surface-d;
+  border-width: 0 0 2px 0;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem {
+  margin-right: 0;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link {
+  border: solid $surface-d;
+  border-width: 0 0 2px 0;
+  border-color: transparent transparent $surface-d transparent;
+  background: $surface-a;
+  color: $text-color-secondary;
+  padding: 1rem;
+  font-weight: 600;
+  border-top-right-radius: 3px;
+  border-top-left-radius: 3px;
+  transition: box-shadow 0.2s;
+  margin: 0 0 -2px 0;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem .p-menuitem-link .p-menuitem-icon {
+  margin-right: 0.5rem;
+}
+.p-tabmenu
+  .p-tabmenu-nav
+  .p-tabmenuitem
+  .p-menuitem-link:not(.p-disabled):focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 1px $shadow-color;
+}
+.p-tabmenu
+  .p-tabmenu-nav
+  .p-tabmenuitem:not(.p-highlight):not(.p-disabled):hover
+  .p-menuitem-link {
+  background: $surface-a;
+  border-color: $primary-color;
+  color: $text-color;
+}
+.p-tabmenu .p-tabmenu-nav .p-tabmenuitem.p-highlight .p-menuitem-link {
+  background: $surface-a;
+  border-color: $primary-color;
+  color: $primary-color;
+}
+.p-tabmenu .p-tabmenu-left-icon {
+  margin-right: 0.5rem;
+}
+.p-tabmenu .p-tabmenu-right-icon {
+  margin-left: 0.5rem;
+}
+.p-tabmenu .p-tabmenu-nav-btn.p-link {
+  background: $surface-a;
+  color: $primary-color;
+  width: $button-size;
+  box-shadow: 0px 3px 1px -2px $black-a20, 0px 2px 2px 0px $black-a14,
+    0px 1px 5px 0px $black-a12;
+  border-radius: 0;
+}
+.p-tabmenu .p-tabmenu-nav-btn.p-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 1px $shadow-color;
+}
+
+.p-tieredmenu {
+  padding: 0.25rem 0;
+  background: $surface-a;
+  color: $text-color;
+  border: 1px solid $surface-d;
+  border-radius: 3px;
+  width: 12.5rem;
+}
+.p-tieredmenu .p-menuitem-link {
+  padding: 0.75rem 1rem;
+  color: $text-color;
+  border-radius: 0;
+  transition: box-shadow 0.2s;
+  user-select: none;
+}
+.p-tieredmenu .p-menuitem-link .p-menuitem-text {
+  color: $text-color;
+}
+.p-tieredmenu .p-menuitem-link .p-menuitem-icon {
+  color: $text-color-secondary;
+  margin-right: 0.5rem;
+}
+.p-tieredmenu .p-menuitem-link .p-submenu-icon {
+  color: $text-color-secondary;
+}
+.p-tieredmenu .p-menuitem-link:not(.p-disabled):hover {
+  background: $surface-c;
+}
+.p-tieredmenu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
+  color: $text-color;
+}
+.p-tieredmenu .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
+  color: $text-color;
+}
+.p-tieredmenu .p-menuitem-link:not(.p-disabled):hover .p-submenu-icon {
+  color: $text-color;
+}
+.p-tieredmenu .p-menuitem-link:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: inset 0 0 0 0.15rem $shadow-color;
+}
+.p-tieredmenu.p-tieredmenu-overlay {
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-tieredmenu .p-submenu-list {
+  padding: 0.25rem 0;
+  background: $surface-a;
+  border: 1px solid $surface-d;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+}
+.p-tieredmenu .p-menuitem {
+  margin: 0;
+}
+.p-tieredmenu .p-menuitem:last-child {
+  margin: 0;
+}
+.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link {
+  background: $surface-c;
+}
+.p-tieredmenu
+  .p-menuitem.p-menuitem-active
+  > .p-menuitem-link
+  .p-menuitem-text {
+  color: $text-color;
+}
+.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-menuitem-icon,
+.p-tieredmenu .p-menuitem.p-menuitem-active > .p-menuitem-link .p-submenu-icon {
+  color: $text-color;
+}
+.p-tieredmenu .p-menu-separator {
+  border-top: 1px solid $surface-d;
+  margin: 0.25rem 0;
+}
+.p-tieredmenu .p-submenu-icon {
+  font-size: 0.875rem;
+}
+.p-tieredmenu .p-menuitem-badge {
+  background: $primary-color;
+  color: $primary-color-text;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.p-badge {
+  background: $primary-color;
+  color: $primary-color-text;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+}
+.p-badge.p-badge-secondary {
+  background-color: $secondary-color;
+  color: $white;
+}
+.p-badge.p-badge-success {
+  background-color: $success-color;
+  color: $surface-b;
+}
+.p-badge.p-badge-info {
+  background-color: $info-color;
+  color: $surface-b;
+}
+.p-badge.p-badge-warning {
+  background-color: $warning-color;
+  color: $surface-b;
+}
+.p-badge.p-badge-danger {
+  background-color: $danger-color;
+  color: $surface-b;
+}
+.p-badge.p-badge-lg {
+  font-size: 1.125rem;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  line-height: 2.25rem;
+}
+.p-badge.p-badge-xl {
+  font-size: 1.5rem;
+  min-width: 3rem;
+  height: 3rem;
+  line-height: 3rem;
+}
+
+.p-chip {
+  background-color: $surface-d;
+  color: $text-color;
+  border-radius: 16px;
+  padding: 0 0.5rem;
+}
+.p-chip .p-chip-text {
+  line-height: 1.5;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+.p-chip .p-chip-icon {
+  margin-right: 0.5rem;
+}
+.p-chip .pi-chip-remove-icon {
+  margin-left: 0.5rem;
+}
+.p-chip img {
+  width: 2rem;
+  height: 2rem;
+  margin-left: -0.5rem;
+  margin-right: 0.5rem;
+}
+.p-chip .pi-chip-remove-icon {
+  border-radius: 3px;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-chip .pi-chip-remove-icon:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+
+.p-inplace .p-inplace-display {
+  padding: 0.5rem 0.5rem;
+  border-radius: 3px;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+    box-shadow 0.2s;
+}
+.p-inplace .p-inplace-display:not(.p-disabled):hover {
+  background: $surface-c;
+  color: $text-color;
+}
+.p-inplace .p-inplace-display:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+
+.p-progressbar {
+  border: 0 none;
+  height: 1.5rem;
+  background: $surface-d;
+  border-radius: 3px;
+}
+.p-progressbar .p-progressbar-value {
+  border: 0 none;
+  margin: 0;
+  background: $primary-color;
+}
+.p-progressbar .p-progressbar-label {
+  color: $primary-color-text;
+  line-height: 1.5rem;
+}
+
+.p-scrolltop {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    0 1px 10px 0 $black-a12;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-scrolltop.p-link {
+  background: $primary-a16;
+}
+.p-scrolltop.p-link:hover {
+  background: $primary-a3616;
+}
+.p-scrolltop .p-scrolltop-icon {
+  font-size: 1.5rem;
+  color: $text-color;
+}
+
+.p-skeleton {
+  background-color: $white-a06;
+  border-radius: 3px;
+}
+.p-skeleton:after {
+  background: linear-gradient(90deg, $white-a00, $white-a04, $white-a00);
+}
+
+.p-tag {
+  background: $primary-color;
+  color: $primary-color-text;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.4rem;
+  border-radius: 3px;
+}
+.p-tag.p-tag-success {
+  background-color: $success-color;
+  color: $surface-b;
+}
+.p-tag.p-tag-info {
+  background-color: $info-color;
+  color: $surface-b;
+}
+.p-tag.p-tag-warning {
+  background-color: $warning-color;
+  color: $surface-b;
+}
+.p-tag.p-tag-danger {
+  background-color: $danger-color;
+  color: $surface-b;
+}
+.p-tag .p-tag-icon {
+  margin-right: 0.25rem;
+  font-size: 0.75rem;
+}
+
+/* Customizations to the designer theme should be defined here */
+.p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-top > td {
+  box-shadow: inset 0 2px 0 0 $primary-color;
+}
+.p-datatable .p-datatable-tbody > tr.p-datatable-dragpoint-bottom > td {
+  box-shadow: inset 0 -2px 0 0 $primary-color;
+}

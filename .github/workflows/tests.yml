@@ -1,9 +1,9 @@
 name: tests
 on:
   push:
-    branches: [main]
+    branches: [main, next]
   pull_request:
-    branches: [main]
+    branches: [main, next]
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -12,7 +12,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Run linting
-        run: npm run lint
+        run: npm run lint-build
       - name: Run tests
         run: npm run test-build
       - uses: codecov/codecov-action@v2

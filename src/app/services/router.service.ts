@@ -3,8 +3,8 @@ import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { deflate, inflate } from 'pako';
-import { debounceTime, Observable } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
+import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
 import {
@@ -13,20 +13,25 @@ import {
   FactorySettings,
   ItemSettings,
   ModHash,
+  Producer,
   Product,
   RateType,
   Rational,
   RecipeSettings,
   Step,
 } from '~/models';
-import { LabState } from '~/store';
-import * as App from '~/store/app.actions';
-import * as Datasets from '~/store/datasets';
-import * as Factories from '~/store/factories';
-import * as Items from '~/store/items';
-import * as Products from '~/store/products';
-import * as Recipes from '~/store/recipes';
-import * as Settings from '~/store/settings';
+import {
+  App,
+  Datasets,
+  Factories,
+  Items,
+  LabState,
+  Producers,
+  Products,
+  Recipes,
+  Settings,
+} from '~/store';
+import { BrowserUtility } from '~/utilities';
 import { DataService } from './data.service';
 
 export const NULL = '?'; // Encoded, previously 'n'
@@ -52,6 +57,7 @@ export enum Section {
   Version = 'v',
   Mod = 'b',
   Products = 'p',
+  Producers = 'q',
   Items = 'i',
   Recipes = 'r',
   Factories = 'f',
@@ -81,7 +87,7 @@ export interface Zip {
 })
 export class RouterService {
   zip: string | undefined;
-  zipPartial: Zip = { bare: '', hash: '' };
+  zipPartial$ = new BehaviorSubject<Zip>({ bare: '', hash: '' });
   base64codes: Uint8Array;
   // Intended to denote hashing algorithm version
   bareVersion = ZipVersion.Version4;
@@ -91,6 +97,7 @@ export class RouterService {
     hash: `&${Section.Version}${this.hashVersion}`,
   };
   first = true;
+  ready$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -107,68 +114,68 @@ export class RouterService {
       this.base64codes[BASE64ABC.charCodeAt(i)] = i;
     }
     this.base64codes['_'.charCodeAt(0)] = 0;
+  }
 
+  initialize(): void {
     this.router.events.subscribe((e) => this.updateState(e));
 
-    this.store
-      .select(Products.getZipState)
-      .pipe(debounceTime(0))
-      .subscribe((s) => {
-        let skip = false;
-        if (this.first) {
-          // First update: if there are no modified settings, leave base URL.
-          if (
-            Object.keys(s.items).length === 0 &&
-            Object.keys(s.recipes).length === 0 &&
-            JSON.stringify(s.factories) ===
-              JSON.stringify(Factories.initialFactoriesState) &&
-            JSON.stringify(s.settings) ===
-              JSON.stringify(Settings.initialSettingsState)
-          ) {
-            // No modified settings, skip first update.
-            skip = true;
-          }
-          // Don't check again later, always update.
-          this.first = false;
-        }
-        if (!skip) {
+    this.ready$
+      .pipe(
+        first(),
+        tap(() => this.dataSvc.initialize()),
+        switchMap(() => this.store.select(Products.getZipState)),
+        debounceTime(0),
+        tap((s) =>
           this.updateUrl(
             s.products,
+            s.producers,
             s.items,
             s.recipes,
             s.factories,
             s.settings
-          );
-        }
-      });
+          )
+        )
+      )
+      .subscribe();
   }
 
   updateUrl(
     products: Products.ProductsState,
+    producers: Producers.ProducersState,
     items: Items.ItemsState,
     recipes: Recipes.RecipesState,
     factories: Factories.FactoriesState,
     settings: Settings.SettingsState
   ): void {
-    this.zipState(products, items, recipes, factories, settings).subscribe(
-      (zState) => {
-        this.zip = this.getHash(zState);
-        const hash = this.router.url.split('#');
-        const url = `${hash[0].split('?')[0]}?${this.zip}${
-          (hash[1] && `#${hash[1]}`) || ''
-        }`;
-        this.router.navigateByUrl(url);
+    this.zipState(
+      products,
+      producers,
+      items,
+      recipes,
+      factories,
+      settings
+    ).subscribe((zState) => {
+      this.zip = this.getHash(...zState);
+      const hash = this.router.url.split('#');
+      const url = `${hash[0].split('?')[0]}?${this.zip}${
+        (hash[1] && `#${hash[1]}`) || ''
+      }`;
+      this.router.navigateByUrl(url);
+      // Don't cache landing or wizard
+      if (!url.startsWith('/?') && !url.startsWith('/wizard')) {
+        BrowserUtility.routerState = url;
       }
-    );
+    });
   }
 
   zipState(
     products: Products.ProductsState,
+    producers: Producers.ProducersState,
     items: Items.ItemsState,
     recipes: Recipes.RecipesState,
     factories: Factories.FactoriesState,
     settings: Settings.SettingsState
-  ): Observable<Zip> {
+  ): Observable<[Zip, Zip]> {
     return this.store.select(Datasets.getHashEntities).pipe(
       map((hashEntities) => hashEntities[settings.modId]),
       filter((hash): hash is ModHash => hash != null),
@@ -188,18 +195,25 @@ export class RouterService {
         // Products
         const p = products.ids.map((i) => products.entities[i]);
         const zState = this.zipProducts(p, hash);
+        // Producers
+        const q = producers.ids.map((i) => producers.entities[i]);
+        this.zipProducers(zState, q, hash);
         // Settings
         this.zipItems(zipPartial, items, hash);
         this.zipRecipes(zipPartial, recipes, hash);
         this.zipFactories(zipPartial, factories, hash);
         this.zipSettings(zipPartial, settings, hash);
-        this.zipPartial = zipPartial;
-        return zState;
+        this.zipPartial$.next(zipPartial);
+        return [zState, zipPartial];
       })
     );
   }
 
-  stepHref(step: Step, hash: ModHash | undefined): string | null {
+  stepHref(
+    step: Step,
+    zipPartial: Zip,
+    hash: ModHash | undefined
+  ): string | null {
     if (step.items == null || step.itemId == null || hash == null) {
       return null;
     }
@@ -211,14 +225,16 @@ export class RouterService {
         rateType: RateType.Items,
       },
     ];
-    return '?' + this.getHash(this.zipProducts(products, hash));
+    return '?' + this.getHash(this.zipProducts(products, hash), zipPartial);
   }
 
-  getHash(zProducts: Zip): string {
-    const bare = zProducts.bare + this.zipPartial.bare + this.zipTail.bare;
-    const hash = zProducts.hash + this.zipPartial.hash + this.zipTail.hash;
+  getHash(zProducts: Zip, zipPartial: Zip): string {
+    const bare = zProducts.bare + zipPartial.bare + this.zipTail.bare;
+    const hash = zProducts.hash + zipPartial.hash + this.zipTail.hash;
     const zip = `z=${this.bytesToBase64(deflate(hash))}`;
-    return bare.length < Math.max(zip.length, MIN_ZIP) ? bare : zip;
+    return bare.length < Math.max(zip.length, MIN_ZIP)
+      ? bare.replace(/^&/, '')
+      : zip;
   }
 
   getParams(zip: string): Entities {
@@ -236,86 +252,94 @@ export class RouterService {
       if (e instanceof NavigationEnd) {
         const [prehash, ...posthash] = e.urlAfterRedirects.split('#');
         const hash = posthash.join('#'); // Preserve # after first instance
-        const [prequery, ...postquery] = prehash.split('?');
+        const [_, ...postquery] = prehash.split('?');
         let query = postquery.join('?'); // Preserve ? after first instance
         if (!query.length && hash.length > 1 && hash[1] === '=') {
           // Try to recognize and handle old hash style navigation
           query = hash;
         }
-        if (query) {
+
+        if (query && this.zip !== query) {
           let zip = query;
-          if (this.zip !== zip) {
-            if (zip.startsWith('z=')) {
-              // Upgrade V0 query-unsafe zipped characters
-              const z = zip
-                .substring(2)
-                .replace(/\+/g, '-')
-                .replace(/\//g, '.')
-                .replace(/=/g, '_');
-              zip = this.inflateSafe(z);
-            }
-            // Upgrade V0 query-unsafe delimiters
-            zip = zip.replace(/,/g, LISTSEP).replace(/\+/g, ARRAYSEP);
-            // Upgrade V0 null/empty values
-            zip = zip
-              .replace(/\*n\*/g, `*${NULL}*`)
-              .replace(/\*e\*/g, `*${EMPTY}*`);
-            let params = this.getParams(zip);
-            let warnings: string[] = [];
-            [params, warnings] = this.migrate(params);
-            this.displayWarnings(warnings);
-            const v = params[Section.Version] as ZipVersion;
-            const state: App.PartialState = {};
-            if (v == this.bareVersion) {
-              Object.keys(params).forEach((k) => {
-                params[k] = decodeURIComponent(params[k]);
-              });
-              if (params[Section.Products]) {
-                state.productsState = this.unzipProducts(params);
-              }
-              if (params[Section.Items]) {
-                state.itemsState = this.unzipItems(params);
-              }
-              if (params[Section.Recipes]) {
-                state.recipesState = this.unzipRecipes(params);
-              }
-              if (params[Section.Factories]) {
-                state.factoriesState = this.unzipFactories(params);
-              }
-              if (params[Section.Settings]) {
-                state.settingsState = this.unzipSettings(params);
-              }
-              this.dispatch(zip, state);
-            } else {
-              const modId = this.parseNString(params[Section.Mod], data.hash);
-              this.dataSvc
-                .requestData(modId || Settings.initialSettingsState.modId)
-                .subscribe(([_, hash]) => {
-                  if (params[Section.Products]) {
-                    state.productsState = this.unzipProducts(params, hash);
-                  }
-                  if (params[Section.Items]) {
-                    state.itemsState = this.unzipItems(params, hash);
-                  }
-                  if (params[Section.Recipes]) {
-                    state.recipesState = this.unzipRecipes(params, hash);
-                  }
-                  if (params[Section.Factories]) {
-                    state.factoriesState = this.unzipFactories(params, hash);
-                  }
-                  if (params[Section.Settings]) {
-                    state.settingsState = this.unzipSettings(params, hash);
-                  }
-                  if (modId != null) {
-                    state.settingsState = {
-                      ...state.settingsState,
-                      ...{ modId },
-                    };
-                  }
-                  this.dispatch(zip, state);
-                });
-            }
+          if (zip.startsWith('z=')) {
+            // Upgrade V0 query-unsafe zipped characters
+            const z = zip
+              .substring(2)
+              .replace(/\+/g, '-')
+              .replace(/\//g, '.')
+              .replace(/=/g, '_');
+            zip = this.inflateSafe(z);
           }
+          // Upgrade V0 query-unsafe delimiters
+          zip = zip.replace(/,/g, LISTSEP).replace(/\+/g, ARRAYSEP);
+          // Upgrade V0 null/empty values
+          zip = zip
+            .replace(/\*n\*/g, `*${NULL}*`)
+            .replace(/\*e\*/g, `*${EMPTY}*`);
+          let params = this.getParams(zip);
+          let warnings: string[] = [];
+          [params, warnings] = this.migrate(params);
+          this.displayWarnings(warnings);
+          const v = params[Section.Version] as ZipVersion;
+          const state: App.PartialState = {};
+          if (v == this.bareVersion) {
+            Object.keys(params).forEach((k) => {
+              params[k] = decodeURIComponent(params[k]);
+            });
+            if (params[Section.Products]) {
+              state.productsState = this.unzipProducts(params);
+            }
+            if (params[Section.Producers]) {
+              state.producersState = this.unzipProducers(params);
+            }
+            if (params[Section.Items]) {
+              state.itemsState = this.unzipItems(params);
+            }
+            if (params[Section.Recipes]) {
+              state.recipesState = this.unzipRecipes(params);
+            }
+            if (params[Section.Factories]) {
+              state.factoriesState = this.unzipFactories(params);
+            }
+            if (params[Section.Settings]) {
+              state.settingsState = this.unzipSettings(params);
+            }
+            this.dispatch(zip, state);
+          } else {
+            const modId = this.parseNString(params[Section.Mod], data.hash);
+            this.dataSvc
+              .requestData(modId || Settings.initialSettingsState.modId)
+              .subscribe(([_, hash]) => {
+                if (params[Section.Products]) {
+                  state.productsState = this.unzipProducts(params, hash);
+                }
+                if (params[Section.Producers]) {
+                  state.producersState = this.unzipProducers(params, hash);
+                }
+                if (params[Section.Items]) {
+                  state.itemsState = this.unzipItems(params, hash);
+                }
+                if (params[Section.Recipes]) {
+                  state.recipesState = this.unzipRecipes(params, hash);
+                }
+                if (params[Section.Factories]) {
+                  state.factoriesState = this.unzipFactories(params, hash);
+                }
+                if (params[Section.Settings]) {
+                  state.settingsState = this.unzipSettings(params, hash);
+                }
+                if (modId != null) {
+                  state.settingsState = {
+                    ...state.settingsState,
+                    ...{ modId },
+                  };
+                }
+                this.dispatch(zip, state);
+              });
+          }
+        } else {
+          // No app state to dispatch, ready to load
+          this.ready$.next();
         }
       }
     } catch (err) {
@@ -327,6 +351,7 @@ export class RouterService {
   dispatch(zip: string, state: App.PartialState): void {
     this.zip = zip;
     this.store.dispatch(new App.LoadAction(state));
+    this.ready$.next();
   }
 
   /** Migrates older zip params to latest bare/hash formats */
@@ -502,12 +527,6 @@ export class RouterService {
             r,
             t,
             this.zipTruthyString(obj.viaId),
-            this.zipTruthyString(obj.viaSetting),
-            this.zipTruthyArray(obj.viaFactoryModuleIds),
-            this.zipTruthyString(obj.viaBeaconCount),
-            this.zipTruthyArray(obj.viaBeaconModuleIds),
-            this.zipTruthyString(obj.viaBeaconId),
-            this.zipTruthyNumber(obj.viaOverclock),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(obj.itemId, hash.items),
@@ -517,37 +536,29 @@ export class RouterService {
               obj.viaId,
               obj.rateType === RateType.Factories ? hash.recipes : hash.items
             ),
-            this.zipTruthyNString(
-              obj.viaSetting,
-              obj.rateType === RateType.Belts
-                ? hash.belts
-                : obj.rateType === RateType.Wagons
-                ? hash.wagons
-                : obj.rateType === RateType.Factories
-                ? hash.factories
-                : hash.items
-            ),
-            this.zipTruthyNArray(obj.viaFactoryModuleIds, hash.modules),
-            this.zipTruthyString(obj.viaBeaconCount),
-            this.zipTruthyNArray(obj.viaBeaconModuleIds, hash.modules),
-            this.zipTruthyNString(obj.viaBeaconId, hash.beacons),
-            this.zipTruthyNumber(obj.viaOverclock),
           ]),
         };
       })
     );
 
-    return {
-      bare: `${Section.Products}=${z.bare}`,
-      hash: `${Section.Products}${z.hash}`,
-    };
+    if (z.bare.length) {
+      return {
+        bare: `${Section.Products}=${z.bare}`,
+        hash: `${Section.Products}${z.hash}`,
+      };
+    } else {
+      return {
+        bare: '',
+        hash: '',
+      };
+    }
   }
 
   unzipProducts(params: Entities, hash?: ModHash): Products.ProductsState {
     const list = params[Section.Products].split(LISTSEP);
     const ids: string[] = [];
     const entities: Entities<Product> = {};
-    let index = 0;
+    let index = 1;
     for (const product of list) {
       const s = product.split(FIELDSEP);
       let i = 0;
@@ -565,21 +576,6 @@ export class RouterService {
           s[i++],
           obj.rateType === RateType.Factories ? hash.recipes : hash.items
         );
-        obj.viaSetting = this.parseNString(
-          s[i++],
-          obj.rateType === RateType.Belts
-            ? hash.belts
-            : obj.rateType === RateType.Wagons
-            ? hash.wagons
-            : obj.rateType === RateType.Factories
-            ? hash.factories
-            : hash.items
-        );
-        obj.viaFactoryModuleIds = this.parseNArray(s[i++], hash.modules);
-        obj.viaBeaconCount = this.parseString(s[i++]);
-        obj.viaBeaconModuleIds = this.parseNArray(s[i++], hash.modules);
-        obj.viaBeaconId = this.parseNString(s[i++], hash.beacons);
-        obj.viaOverclock = this.parseNumber(s[i++]);
       } else {
         obj = {
           id,
@@ -587,19 +583,99 @@ export class RouterService {
           rate: s[i++],
           rateType: Number(s[i++]) | RateType.Items,
           viaId: this.parseString(s[i++]),
-          viaSetting: this.parseString(s[i++]),
-          viaFactoryModuleIds: this.parseArray(s[i++]),
-          viaBeaconCount: this.parseString(s[i++]),
-          viaBeaconModuleIds: this.parseArray(s[i++]),
-          viaBeaconId: this.parseString(s[i++]),
-          viaOverclock: this.parseNumber(s[i++]),
         };
       }
 
-      Object.keys(obj)
-        .filter((k) => (obj as Record<string, any>)[k] === undefined)
+      (Object.keys(obj) as (keyof Product)[])
+        .filter((k) => obj[k] === undefined)
         .forEach((k) => {
-          delete (obj as Record<string, any>)[k];
+          delete obj[k];
+        });
+
+      ids.push(id);
+      entities[id] = obj;
+      index++;
+    }
+    return { ids, index, entities };
+  }
+
+  zipProducers(zip: Zip, producers: Producer[], hash: ModHash): void {
+    const z = this.zipList(
+      producers.map((obj) => {
+        const r = Rational.fromString(obj.count).toString();
+
+        return {
+          bare: this.zipFields([
+            obj.recipeId,
+            r,
+            this.zipTruthyString(obj.factoryId),
+            this.zipTruthyArray(obj.factoryModuleIds),
+            this.zipTruthyString(obj.beaconCount),
+            this.zipTruthyArray(obj.beaconModuleIds),
+            this.zipTruthyString(obj.beaconId),
+            this.zipTruthyNumber(obj.overclock),
+          ]),
+          hash: this.zipFields([
+            this.zipTruthyNString(obj.recipeId, hash.recipes),
+            r,
+            this.zipTruthyNString(obj.factoryId, hash.factories),
+            this.zipTruthyNArray(obj.factoryModuleIds, hash.modules),
+            this.zipTruthyString(obj.beaconCount),
+            this.zipTruthyNArray(obj.beaconModuleIds, hash.modules),
+            this.zipTruthyNString(obj.beaconId, hash.beacons),
+            this.zipTruthyNumber(obj.overclock),
+          ]),
+        };
+      })
+    );
+
+    if (z.bare.length) {
+      zip.bare += `&${Section.Producers}=${z.bare}`;
+      zip.hash += `&${Section.Producers}${z.hash}`;
+    }
+  }
+
+  unzipProducers(params: Entities, hash?: ModHash): Producers.ProducersState {
+    const list = params[Section.Producers].split(LISTSEP);
+    const ids: string[] = [];
+    const entities: Entities<Producer> = {};
+    let index = 1;
+    for (const producer of list) {
+      const s = producer.split(FIELDSEP);
+      let i = 0;
+      const id = index.toString();
+      let obj: Producer;
+
+      if (hash) {
+        obj = {
+          id,
+          recipeId: this.parseNString(s[i++], hash.recipes) ?? '',
+          count: s[i++],
+          factoryId: this.parseNString(s[i++], hash.factories),
+          factoryModuleIds: this.parseNArray(s[i++], hash.modules),
+          beaconCount: this.parseString(s[i++]),
+          beaconModuleIds: this.parseNArray(s[i++], hash.modules),
+          beaconId: this.parseNString(s[i++], hash.beacons),
+          overclock: this.parseNumber(s[i++]),
+        };
+      } else {
+        obj = {
+          id,
+          recipeId: s[i++],
+          count: s[i++],
+          factoryId: this.parseString(s[i++]),
+          factoryModuleIds: this.parseArray(s[i++]),
+          beaconCount: this.parseString(s[i++]),
+          beaconModuleIds: this.parseArray(s[i++]),
+          beaconId: this.parseString(s[i++]),
+          overclock: this.parseNumber(s[i++]),
+        };
+      }
+
+      (Object.keys(obj) as (keyof Producer)[])
+        .filter((k) => obj[k] === undefined)
+        .forEach((k) => {
+          delete obj[k];
         });
 
       ids.push(id);
@@ -667,10 +743,10 @@ export class RouterService {
         };
       }
 
-      Object.keys(obj)
-        .filter((k) => (obj as Record<string, any>)[k] === undefined)
+      (Object.keys(obj) as (keyof ItemSettings)[])
+        .filter((k) => obj[k] === undefined)
         .forEach((k) => {
-          delete (obj as Record<string, any>)[k];
+          delete obj[k];
         });
 
       entities[id] = obj;
@@ -751,10 +827,10 @@ export class RouterService {
         };
       }
 
-      Object.keys(obj)
-        .filter((k) => (obj as Record<string, any>)[k] === undefined)
+      (Object.keys(obj) as (keyof RecipeSettings)[])
+        .filter((k) => obj[k] === undefined)
         .forEach((k) => {
-          delete (obj as Record<string, any>)[k];
+          delete obj[k];
         });
 
       entities[id] = obj;
@@ -781,7 +857,7 @@ export class RouterService {
             i,
             this.zipTruthyArray(obj.moduleRankIds),
             this.zipTruthyString(obj.beaconCount),
-            this.zipTruthyString(obj.beaconModuleId),
+            this.zipTruthyArray(obj.beaconModuleRankIds),
             this.zipTruthyString(obj.beaconId),
             this.zipTruthyNumber(obj.overclock),
           ]),
@@ -789,7 +865,7 @@ export class RouterService {
             h ? this.zipTruthyNString(i, hash.factories) : i,
             this.zipTruthyNArray(obj.moduleRankIds, hash.modules),
             this.zipTruthyString(obj.beaconCount),
-            this.zipTruthyNString(obj.beaconModuleId, hash.modules),
+            this.zipTruthyNArray(obj.beaconModuleRankIds, hash.modules),
             this.zipTruthyNString(obj.beaconId, hash.beacons),
             this.zipTruthyNumber(obj.overclock),
           ]),
@@ -820,7 +896,7 @@ export class RouterService {
         obj = {
           moduleRankIds: this.parseNArray(s[i++], hash.modules),
           beaconCount: this.parseString(s[i++]),
-          beaconModuleId: this.parseNString(s[i++], hash.modules),
+          beaconModuleRankIds: this.parseNArray(s[i++], hash.modules),
           beaconId: this.parseNString(s[i++], hash.beacons),
           overclock: this.parseNumber(s[i++]),
         };
@@ -841,7 +917,7 @@ export class RouterService {
         obj = {
           moduleRankIds: this.parseArray(s[i++]),
           beaconCount: this.parseString(s[i++]),
-          beaconModuleId: this.parseString(s[i++]),
+          beaconModuleRankIds: this.parseArray(s[i++]),
           beaconId: this.parseString(s[i++]),
           overclock: this.parseNumber(s[i++]),
         };
@@ -854,10 +930,10 @@ export class RouterService {
         }
       }
 
-      Object.keys(obj)
-        .filter((k) => (obj as Record<string, any>)[k] === undefined)
+      (Object.keys(obj) as (keyof FactorySettings)[])
+        .filter((k) => obj[k] === undefined)
         .forEach((k) => {
-          delete (obj as Record<string, any>)[k];
+          delete obj[k];
         });
 
       if (Object.keys(obj).length) {
@@ -989,10 +1065,10 @@ export class RouterService {
       };
     }
 
-    Object.keys(obj)
-      .filter((k) => (obj as Record<string, any>)[k] === undefined)
+    (Object.keys(obj) as (keyof Settings.SettingsState)[])
+      .filter((k) => obj[k] === undefined)
       .forEach((k) => {
-        delete (obj as Record<string, any>)[k];
+        delete obj[k];
       });
 
     return obj;
@@ -1288,10 +1364,14 @@ export class RouterService {
     }
     try {
       return this.inflateMend(str, '-');
-    } catch {}
+    } catch {
+      // ignore error
+    }
     try {
       return this.inflateMend(str, '.');
-    } catch {}
+    } catch {
+      // ignore error
+    }
     return this.inflateMend(str, '_');
   }
 

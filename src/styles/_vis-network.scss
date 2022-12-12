@@ -1,0 +1,24 @@
+// vis-network recommends importing vis-network/styles/vis-network.min.css, a 216 KB file
+// Most of the styles appear to be data for button images which are not used by this project
+// The main requirement for this project appears to be this (overridden) snippet for tooltips
+// If the graph appears broken, this project may be missing other styles from that source
+div.vis-tooltip {
+  position: absolute;
+  visibility: hidden;
+  padding: 5px;
+  white-space: nowrap;
+
+  font-family: var(--font-family);
+  font-size: 1rem;
+  color: var(--text-color);
+  background-color: var(--surface-d);
+
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+
+  z-index: 5;
+}

@@ -205,6 +205,10 @@ describe('Rational', () => {
       it('should handle fractions', () => {
         expect(Rational.from(3, 2).ceil()).toEqual(Rational.from(2, 1));
       });
+
+      it('should handle small negative values', () => {
+        expect(Rational.from(-1, 10).ceil()).toEqual(Rational.minusOne);
+      });
     });
 
     describe('floor', () => {

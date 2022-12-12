@@ -1,0 +1,43 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <button
+    *ngIf="vm.settingsXlHidden"
+    pButton
+    pRipple
+    type="button"
+    class="d-inline-flex d-none d-xl-flex p-button-lg settings-button me-3"
+    icon="fa-solid fa-bars"
+    (click)="contentSvc.toggleSettingsXl()"
+  ></button
+  ><button
+    pButton
+    pRipple
+    type="button"
+    class="d-inline-flex d-xl-none p-button-lg settings-button"
+    icon="fa-solid fa-bars"
+    (click)="contentSvc.toggleSettings()"
+  ></button>
+  <a [routerLink]="vm.gameInfo.route">
+    <p-splitButton
+      styleClass="p-button-lg"
+      [icon]="vm.gameInfo.icon | iconSmClass"
+      [model]="vm.gameOptions"
+      (onDropdownClick)="cancelRouterLink($event)"
+    >
+    </p-splitButton
+  ></a>
+
+  <ul class="header-menu mb-1 mb-xl-0 px-0 px-sm-4 px-xl-0">
+    <li *ngFor="let link of links">
+      <a class="w-100" target="_blank" [href]="link.href">
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="p-button-text p-button-secondary p-button-sm d-flex justify-content-center w-100"
+          [icon]="link.icon"
+          [label]="link.label"
+        ></button>
+      </a>
+    </li>
+  </ul>
+</ng-container>

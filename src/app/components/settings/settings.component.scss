@@ -1,149 +1,56 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins/_breakpoints';
+
+$width: 320px;
+
 :host {
-  flex-grow: 1;
-  width: 20.75rem;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  z-index: 4;
+  top: 0;
+  left: 0;
 
-  > .flex {
-    justify-content: space-between;
+  transition: transform 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
 
-    > * {
-      margin-bottom: 0.75rem;
-    }
+  width: $width;
+  height: 100%;
 
-    > .flex > * + * {
-      margin-left: 0.25rem;
+  background-color: var(--surface-overlay);
+
+  @include media-breakpoint-down(xl) {
+    transform: translate(-100%);
+
+    &.active {
+      transform: translate(0);
     }
   }
 
-  > .panel {
-    padding: 0.125rem;
-  }
-}
-
-.hole {
-  padding: 0.125rem;
-  margin: 0.25rem;
-  background-color: var(--color-back);
-  box-shadow: var(--shadow-hole);
-
-  > * {
-    padding: 0.5rem;
-    margin: 1px 0;
-    background-color: var(--color-light);
-    box-shadow: var(--shadow-inner);
-
-    .header {
-      margin-bottom: 0.25rem;
-    }
-
-    table {
-      width: 100%;
-
-      &.factories {
-        width: auto;
-      }
-
-      td > div.flex {
-        > * + * {
-          margin-left: 0.5rem;
-        }
-      }
-
-      td.center {
-        text-align: center;
-      }
-
-      &.factories td {
-        min-width: 2.5rem;
-      }
-
-      &.thin > tr > :first-child {
-        width: 35%;
-      }
-
-      &.wide > tr > :first-child {
-        width: 42%;
-      }
-
-      &.x-wide > tr > :first-child {
-        width: 50%;
-      }
-
-      &.icons td:last-child:not(:first-child) > div {
-        display: flex;
-        justify-content: flex-end;
-      }
+  @include media-breakpoint-up(xl) {
+    &.hidden {
+      transform: translate(-100%);
     }
   }
 }
 
-.small {
-  font-size: small;
-}
-
-.states {
-  flex-grow: 1;
-
-  > :first-child {
-    flex-grow: 1;
-  }
-
-  lab-options {
-    display: flex;
-    > :first-child {
-      flex-grow: 1;
-    }
-  }
-
-  > * + * {
-    margin-left: 0.25rem;
+/** Avoid changing width to accomodate scrollbar */
+:host ::ng-deep {
+  .p-scrollpanel .p-scrollpanel-content {
+    overflow-y: scroll;
   }
 }
 
-table + table {
-  margin-top: 0.5rem;
+.settings-container {
+  width: $width;
 }
 
-.right {
-  text-align: right;
-}
-
-.option {
-  cursor: pointer;
-  padding: 0.375rem 0;
-  user-select: none;
-
-  > * + * {
-    margin-left: 0.375rem;
+/** Factory InputGroup styles */
+.p-inputgroup.factory-preference {
+  p-dropdown,
+  p-multiselect {
+    flex-basis: 36px;
+    flex-grow: 0;
+    flex-shrink: 0;
   }
-}
-
-.version-scroll {
-  max-height: 10rem;
-  max-width: 13rem;
-  overflow-y: auto;
-  margin: 0.25rem 0;
-  padding: 0.25rem 0;
-
-
-  td {
-    padding-bottom: 0.5rem;
-  }
-
-  tr:last-child {
-    td {
-      padding-bottom: 0;
-    }
-  }
-
-  td:first-child {
-    hyphens: auto;
-  }
-
-  td:last-child {
-    text-align: right;
-  }
-}
-
-.message {
-  padding: 0.5rem 0;
 }

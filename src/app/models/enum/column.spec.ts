@@ -16,7 +16,7 @@ describe('Column', () => {
     });
 
     it('should return the correct options for Satisfactory', () => {
-      expect(columnOptions(Game.Satisfactory).length).toEqual(8);
+      expect(columnOptions(Game.Satisfactory).length).toEqual(7);
     });
 
     it('should return an empty array for an unrecognized game value', () => {

@@ -1,5 +1,11 @@
 import { Rational } from '../rational';
 
+export type ModuleEffect =
+  | 'speed'
+  | 'productivity'
+  | 'consumption'
+  | 'pollution';
+
 export interface Module {
   speed?: number;
   productivity?: number;

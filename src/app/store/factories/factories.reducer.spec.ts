@@ -116,6 +116,40 @@ describe('Factories Reducer', () => {
     });
   });
 
+  describe('LOWER', () => {
+    it('should lower the rank of a factory', () => {
+      const result = factoriesReducer(
+        { ids: undefined, entities: {} },
+        new Actions.LowerAction({ value, def: [value, def] })
+      );
+      expect(result.ids).toEqual([def, value]);
+    });
+
+    it('should do nothing if rank is already lowest', () => {
+      const result = factoriesReducer(
+        { ids: undefined, entities: {} },
+        new Actions.LowerAction({ value: def, def: [value, def] })
+      );
+      expect(result.ids).toBeUndefined();
+    });
+
+    it('should handle no match in ids', () => {
+      const result = factoriesReducer(
+        { ids: [], entities: {} },
+        new Actions.LowerAction({ value: def, def: [value, def] })
+      );
+      expect(result.ids).toEqual([]);
+    });
+
+    it('should handle undefined ids and default', () => {
+      const result = factoriesReducer(
+        { ids: undefined, entities: {} },
+        new Actions.LowerAction({ value: def, def: undefined })
+      );
+      expect(result.ids).toBeUndefined();
+    });
+  });
+
   describe('SET_FACTORY', () => {
     it('should replace an id in the rank list', () => {
       const result = factoriesReducer(
@@ -188,13 +222,13 @@ describe('Factories Reducer', () => {
     it('should set the beacon module for a factory', () => {
       const result = factoriesReducer(
         undefined,
-        new Actions.SetBeaconModuleAction({
+        new Actions.SetBeaconModuleRankAction({
           id,
-          value,
-          def: ItemId.SpeedModule,
+          value: [value],
+          def: [],
         })
       );
-      expect(result.entities[id].beaconModuleId).toEqual(value);
+      expect(result.entities[id].beaconModuleRankIds).toEqual([value]);
     });
   });
 

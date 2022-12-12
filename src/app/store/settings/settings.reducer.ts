@@ -63,12 +63,13 @@ export function settingsReducer(
       return initialSettingsState;
     case SettingsActionType.SET_PRESET:
       return { ...state, ...{ preset: action.payload } };
-    case SettingsActionType.SET_MOD:
+    case SettingsActionType.SET_MOD: {
       const newState = {
         ...state,
         ...{
           modId: action.payload,
           preset: Preset.Minimum,
+          beaconReceivers: null,
           miningBonus: 0,
           researchSpeed: ResearchSpeed.Speed6,
         },
@@ -80,6 +81,7 @@ export function settingsReducer(
       delete newState.cargoWagonId;
       delete newState.fluidWagonId;
       return newState;
+    }
     case SettingsActionType.SET_DISABLED_RECIPES:
       return {
         ...state,

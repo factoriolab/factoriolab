@@ -1,0 +1,14 @@
+th,
+td {
+  width: 115px;
+
+  &.colspan-3 {
+    width: 345px;
+  }
+}
+
+:host ::ng-deep {
+  .p-dialog-content {
+    padding-bottom: 1rem;
+  }
+}
