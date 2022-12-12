@@ -5,13 +5,10 @@ import { TranslateService } from '@ngx-translate/core';
 import {
   catchError,
   combineLatest,
-  first,
   Observable,
   of,
   shareReplay,
   startWith,
-  Subject,
-  switchMap,
   tap,
 } from 'rxjs';
 
@@ -26,26 +23,19 @@ export class DataService {
   cacheHash: Entities<Observable<ModHash>> = {};
   cacheI18n: Entities<Observable<ModI18n | null>> = {};
 
-  routerReady$ = new Subject<void>();
-
   constructor(
     private http: HttpClient,
     private store: Store<LabState>,
     private translateSvc: TranslateService
-  ) {
-    this.routerReady$
-      .pipe(
-        first(),
-        switchMap(() =>
-          combineLatest([
-            this.store.select(Settings.getModId),
-            this.translateSvc.onLangChange.pipe(startWith('en')),
-          ])
-        )
-      )
-      .subscribe(([id]) => {
-        this.requestData(id).subscribe();
-      });
+  ) {}
+
+  initialize(): void {
+    combineLatest([
+      this.store.select(Settings.getModId),
+      this.translateSvc.onLangChange.pipe(startWith('en')),
+    ]).subscribe(([id]) => {
+      this.requestData(id).subscribe();
+    });
   }
 
   requestData(id: string): Observable<[ModData, ModHash, ModI18n | null]> {

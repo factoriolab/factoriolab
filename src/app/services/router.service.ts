@@ -3,8 +3,8 @@ import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { deflate, inflate } from 'pako';
-import { BehaviorSubject, debounceTime, Observable } from 'rxjs';
-import { filter, first, map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
 import {
@@ -97,6 +97,7 @@ export class RouterService {
     hash: `&${Section.Version}${this.hashVersion}`,
   };
   first = true;
+  ready$ = new Subject<void>();
 
   constructor(
     private router: Router,
@@ -118,23 +119,24 @@ export class RouterService {
   initialize(): void {
     this.router.events.subscribe((e) => this.updateState(e));
 
-    this.router.events
+    this.ready$
       .pipe(
-        filter((e) => e instanceof NavigationEnd),
         first(),
+        tap(() => this.dataSvc.initialize()),
         switchMap(() => this.store.select(Products.getZipState)),
-        debounceTime(0)
+        debounceTime(0),
+        tap((s) =>
+          this.updateUrl(
+            s.products,
+            s.producers,
+            s.items,
+            s.recipes,
+            s.factories,
+            s.settings
+          )
+        )
       )
-      .subscribe((s) => {
-        this.updateUrl(
-          s.products,
-          s.producers,
-          s.items,
-          s.recipes,
-          s.factories,
-          s.settings
-        );
-      });
+      .subscribe();
   }
 
   updateUrl(
@@ -337,7 +339,7 @@ export class RouterService {
           }
         } else {
           // No app state to dispatch, ready to load
-          this.dataSvc.routerReady$.next();
+          this.ready$.next();
         }
       }
     } catch (err) {
@@ -349,7 +351,7 @@ export class RouterService {
   dispatch(zip: string, state: App.PartialState): void {
     this.zip = zip;
     this.store.dispatch(new App.LoadAction(state));
-    this.dataSvc.routerReady$.next();
+    this.ready$.next();
   }
 
   /** Migrates older zip params to latest bare/hash formats */
