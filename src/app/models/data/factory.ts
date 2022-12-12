@@ -1,5 +1,6 @@
 import { Entities } from '../entities';
 import { Rational } from '../rational';
+import { ModuleEffect } from './module';
 import { RationalSilo, Silo } from './silo';
 
 export interface Factory {
@@ -18,8 +19,8 @@ export interface Factory {
   mining?: boolean;
   research?: boolean;
   silo?: Silo;
-  overclockFactor?: number;
   consumption?: Entities<number | string>;
+  disallowEffects?: ModuleEffect[];
 }
 
 export class RationalFactory {
@@ -36,8 +37,8 @@ export class RationalFactory {
   mining?: boolean;
   research?: boolean;
   silo?: RationalSilo;
-  overclockFactor?: number;
   consumption?: Entities<Rational>;
+  disallowEffects?: ModuleEffect[];
 
   constructor(data: Factory) {
     if (data.speed != null) {
@@ -74,9 +75,6 @@ export class RationalFactory {
     if (data.silo) {
       this.silo = new RationalSilo(data.silo);
     }
-    if (data.overclockFactor) {
-      this.overclockFactor = data.overclockFactor;
-    }
     if (data.consumption) {
       const consumption = data.consumption;
       this.consumption = Object.keys(consumption).reduce(
@@ -86,6 +84,9 @@ export class RationalFactory {
         },
         {}
       );
+    }
+    if (data.disallowEffects) {
+      this.disallowEffects = data.disallowEffects;
     }
   }
 }

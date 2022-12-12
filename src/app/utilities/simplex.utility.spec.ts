@@ -1,18 +1,20 @@
-import { loadModule } from 'glpk-ts';
-
-import { ItemId, Mocks, RecipeId } from 'src/tests';
+import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   MatrixResultType,
+  RateType,
   Rational,
+  RationalProduct,
   RationalRecipe,
   SimplexType,
-  Step,
 } from '~/models';
 import { RateUtility } from './rate.utility';
 import { MatrixSolution, MatrixState, SimplexUtility } from './simplex.utility';
 
 describe('SimplexUtility', () => {
   const getState = (): MatrixState => ({
+    products: [],
+    producers: [],
+    steps: [],
     recipes: {},
     items: {},
     inputIds: [],
@@ -94,19 +96,20 @@ describe('SimplexUtility', () => {
     A: [],
     O: [],
     itemIds: [],
+    producers: [],
     recipeIds: [],
     inputIds: [],
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     SimplexUtility.cache = {};
-    await loadModule('node_modules/glpk-wasm/dist/glpk.all.wasm');
   });
 
   describe('solve', () => {
-    it('should handle empty list of steps', () => {
+    it('should handle empty list of products', () => {
       expect(
         SimplexUtility.solve(
+          [],
           [],
           {},
           [],
@@ -121,66 +124,17 @@ describe('SimplexUtility', () => {
       });
     });
 
-    it('should handle fully solved steps', () => {
-      spyOn(SimplexUtility, 'getState').and.returnValue(null);
-      expect(
-        SimplexUtility.solve(
-          Mocks.Steps,
-          {},
-          [],
-          Rational.zero,
-          Rational.zero,
-          SimplexType.JsBigIntRational,
-          Mocks.AdjustedData
-        )
-      ).toEqual({
-        steps: Mocks.Steps,
-        resultType: MatrixResultType.Skipped,
-      });
-    });
-
-    it('should handle failure of simplex method', () => {
-      spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
-      spyOn(SimplexUtility, 'getSolution').and.returnValue(
-        getResult(MatrixResultType.Failed)
-      );
-      spyOn(console, 'error');
-      spyOn(window, 'alert');
-      expect(
-        SimplexUtility.solve(
-          Mocks.Steps,
-          {},
-          [],
-          Rational.zero,
-          Rational.zero,
-          SimplexType.JsBigIntRational,
-          Mocks.AdjustedData
-        )
-      ).toEqual({
-        steps: Mocks.Steps,
-        resultType: MatrixResultType.Failed,
-        pivots: 1,
-        time: 2,
-        A: [],
-        O: [],
-        itemIds: [],
-        recipeIds: [],
-        inputIds: [],
-      });
-      expect(console.error).toHaveBeenCalled();
-      expect(window.alert).toHaveBeenCalled();
-    });
-
     it('should handle timeout and quit in simplex method', () => {
-      spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
+      spyOn(SimplexUtility, 'getState').and.returnValue({
+        steps: Mocks.Steps,
+      } as any);
       spyOn(SimplexUtility, 'getSolution').and.returnValue(
         getResult(MatrixResultType.Cancelled)
       );
-      spyOn(console, 'error');
-      spyOn(window, 'alert');
       expect(
         SimplexUtility.solve(
-          Mocks.Steps,
+          Mocks.RationalProducts,
+          [],
           {},
           [],
           Rational.zero,
@@ -196,21 +150,23 @@ describe('SimplexUtility', () => {
         A: [],
         O: [],
         itemIds: [],
+        producers: [],
         recipeIds: [],
         inputIds: [],
       });
-      expect(console.error).not.toHaveBeenCalled();
-      expect(window.alert).not.toHaveBeenCalled();
     });
 
     it('should update steps with solution from simplex method', () => {
-      spyOn(SimplexUtility, 'getState').and.returnValue(true as any);
+      spyOn(SimplexUtility, 'getState').and.returnValue({
+        steps: Mocks.Steps,
+      } as any);
       const result = getResult(MatrixResultType.Solved);
       spyOn(SimplexUtility, 'getSolution').and.returnValue(result);
       spyOn(SimplexUtility, 'updateSteps');
       expect(
         SimplexUtility.solve(
-          Mocks.Steps,
+          Mocks.RationalProducts,
+          [],
           {},
           [],
           Rational.zero,
@@ -226,24 +182,24 @@ describe('SimplexUtility', () => {
         A: [],
         O: [],
         itemIds: [],
+        producers: [],
         recipeIds: [],
         inputIds: [],
       });
-      expect(SimplexUtility.updateSteps).toHaveBeenCalledWith(
-        Mocks.Steps,
-        result,
-        true as any
-      );
+      expect(SimplexUtility.updateSteps).toHaveBeenCalled();
     });
 
     it('should include heavy oil cracking', () => {
-      const step: Step = {
-        id: 'id',
-        itemId: ItemId.PetroleumGas,
-        items: Rational.one,
-      };
       const result = SimplexUtility.solve(
-        [step],
+        [
+          {
+            id: '1',
+            itemId: ItemId.PetroleumGas,
+            rate: Rational.one,
+            rateType: RateType.Items,
+          },
+        ],
+        [],
         Mocks.ItemSettingsInitial,
         [],
         Rational.from(1000000),
@@ -277,63 +233,31 @@ describe('SimplexUtility', () => {
       ]);
     });
 
-    it('should not call simplex solver when disabled', () => {
-      spyOn(SimplexUtility, 'getSolution');
-      SimplexUtility.getSteps(
-        ItemId.CopperPlate,
-        Mocks.ItemSettingsInitial,
-        [],
-        Rational.from(1000000),
-        Rational.zero,
-        SimplexType.Disabled,
-        Mocks.AdjustedData,
-        true
-      );
-      expect(SimplexUtility.getSolution).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('getState', () => {
-    it('should return null for fully solved steps', () => {
-      spyOn(SimplexUtility, 'unsolvedSteps').and.returnValue([]);
+    it('should get recipe step information for an item', () => {
       expect(
-        SimplexUtility.getState(
-          Mocks.Steps,
+        SimplexUtility.getSteps(
+          ItemId.CopperPlate,
           Mocks.ItemSettingsInitial,
           [],
           Rational.from(1000000),
           Rational.zero,
           SimplexType.JsBigIntRational,
-          Mocks.Dataset
+          Mocks.AdjustedData,
+          true
         )
-      ).toBeNull();
+      ).toEqual([
+        [ItemId.CopperPlate, Rational.from(40, 141)],
+        [ItemId.CopperOre, Rational.from(1000, 3549)],
+      ]);
     });
+  });
 
-    it('should parse unsolved steps', () => {
-      const id = 'id';
-      const step: any = { itemId: id, items: Rational.one };
-      spyOn(SimplexUtility, 'unsolvedSteps').and.returnValue([step]);
-      spyOn(SimplexUtility, 'parseItemRecursively');
-      spyOn(SimplexUtility, 'addSurplusVariables');
-      const result = SimplexUtility.getState(
-        Mocks.Steps,
-        Mocks.ItemSettingsInitial,
-        [],
-        Rational.from(1000000),
-        Rational.zero,
-        SimplexType.JsBigIntRational,
-        Mocks.Dataset
-      );
-      expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
-      expect(SimplexUtility.addSurplusVariables).toHaveBeenCalledTimes(1);
-      expect(result!.items[id]).toEqual(Rational.one);
-    });
-
+  describe('getState', () => {
     it('should build full state object', () => {
-      spyOn(SimplexUtility, 'unsolvedSteps').and.returnValue([Mocks.Step1]);
       spyOn(SimplexUtility, 'parseItemRecursively');
       const result = SimplexUtility.getState(
-        Mocks.Steps,
+        [Mocks.RationalProduct],
+        [Mocks.RationalProducer],
         Mocks.ItemSettingsInitial,
         [],
         Rational.from(1000000),
@@ -341,11 +265,17 @@ describe('SimplexUtility', () => {
         SimplexType.JsBigIntRational,
         Mocks.Dataset
       );
-      expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledTimes(1);
       expect(result).toEqual({
+        products: [Mocks.RationalProduct],
+        producers: [Mocks.RationalProducer],
+        steps: [],
         recipes: {},
-        items: { [Mocks.Step1.itemId!]: Mocks.Step1.items! },
-        inputIds: [Mocks.Step1.itemId!],
+        items: {
+          [ItemId.WoodenChest]: Mocks.RationalProduct.rate,
+          [ItemId.IronPlate]: Rational.zero,
+          [ItemId.IronOre]: Rational.zero,
+        },
+        inputIds: [ItemId.WoodenChest, ItemId.IronPlate, ItemId.IronOre],
         recipeIds: Mocks.Dataset.recipeIds,
         itemIds: Mocks.Dataset.itemIds,
         data: Mocks.Dataset,
@@ -354,41 +284,29 @@ describe('SimplexUtility', () => {
         simplexType: SimplexType.JsBigIntRational,
       });
     });
-  });
 
-  describe('unsolvedSteps', () => {
-    const control: any = {
-      itemId: ItemId.Coal,
-    };
+    it('should handle adjusted product', () => {
+      const result = SimplexUtility.getState(
+        [
+          new RationalProduct({
+            id: '1',
+            itemId: ItemId.MiningProductivity,
+            rate: '60',
+            rateType: RateType.Items,
+          }),
+        ],
+        [],
+        Mocks.ItemSettingsInitial,
+        [],
+        Rational.from(1000000),
+        Rational.zero,
+        SimplexType.JsBigIntRational,
+        Mocks.AdjustedData
+      );
 
-    it('should filter for steps that have no recipe', () => {
-      const filter: any = {
-        itemId: ItemId.Coal,
-        recipeId: RecipeId.Coal,
-      };
-      const steps = [control, filter];
-      const result = SimplexUtility.unsolvedSteps(steps, getState());
-      expect(result).toEqual([control]);
-    });
-
-    it('should filter for steps that match an item', () => {
-      const filter: any = {
-        itemId: 'itemId',
-      };
-      const steps = [control, filter];
-      const result = SimplexUtility.unsolvedSteps(steps, getState());
-      expect(result).toEqual([control]);
-    });
-
-    it('should filter for steps that match a recipe id', () => {
-      const filter: any = {
-        itemId: ItemId.IronOre,
-      };
-      const state = getState();
-      state.recipeIds = [RecipeId.Coal];
-      const steps = [control, filter];
-      const result = SimplexUtility.unsolvedSteps(steps, state);
-      expect(result).toEqual([control]);
+      expect(result.items[ItemId.MiningProductivity]).toEqual(
+        Rational.from(72)
+      );
     });
   });
 
@@ -589,6 +507,13 @@ describe('SimplexUtility', () => {
       );
       expect(result.resultType).toEqual(MatrixResultType.Cached);
     });
+
+    it('should handle glpk failure', () => {
+      spyOn(SimplexUtility, 'glpk').and.returnValue({ error: true } as any);
+      const state = getState();
+      const result = SimplexUtility.getSolution(state);
+      expect(result.resultType).toEqual(MatrixResultType.Failed);
+    });
   });
 
   describe('glpk', () => {
@@ -596,26 +521,65 @@ describe('SimplexUtility', () => {
       const state = getState();
       // Coal = ignored input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.inputIds = [ItemId.Wood, ItemId.Coal];
-      state.recipes[ItemId.CopperPlate] = new RationalRecipe({
+      state.inputIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
+      state.recipes[RecipeId.CopperPlate] = new RationalRecipe({
         id: 'id',
         name: 'name',
         time: 1,
         in: {},
         out: { [ItemId.CopperPlate]: 1 },
         producers: [],
+        row: 0,
+        category: CategoryId.Logistics,
       });
+      state.recipes[RecipeId.IronPlate] =
+        Mocks.Dataset.recipeR[RecipeId.IronPlate];
       state.items[ItemId.Wood] = Rational.one;
       state.items[ItemId.Coal] = Rational.one;
+      state.items[ItemId.IronPlate] = Rational.zero;
+      state.items[ItemId.IronOre] = Rational.zero;
+      state.producers = [
+        {
+          id: '0',
+          recipeId: RecipeId.IronPlate,
+          count: Rational.one,
+          recipe: Mocks.Dataset.recipeR[RecipeId.IronPlate],
+        },
+      ];
       const result = SimplexUtility.glpk(state);
       expect(result.returnCode).toEqual('ok');
+      expect(result.status).toEqual('optimal');
     });
 
     it('should handle glpk failure', () => {
-      spyOn(SimplexUtility, 'glpkSimplex').and.returnValue('failure');
+      spyOn(SimplexUtility, 'glpkSimplex').and.returnValue([
+        'failure',
+        'infeasible',
+      ]);
       const state = getState();
       const result = SimplexUtility.glpk(state);
       expect(result.returnCode).toEqual('failure');
+    });
+
+    it('should add surplus items from non-default recipes', () => {
+      const state = getState();
+      state.recipes[RecipeId.IronOre] = Mocks.Dataset.recipeR[RecipeId.IronOre];
+      state.recipes[RecipeId.Coal] = new RationalRecipe({
+        id: RecipeId.Coal,
+        name: 'coal with byproduct',
+        time: 1,
+        in: {},
+        out: { [ItemId.Coal]: 1, [ItemId.IronOre]: 0.1 },
+        producers: [],
+        row: 0,
+        category: CategoryId.Intermediate,
+      });
+      state.items[ItemId.IronOre] = Rational.one;
+      state.items[ItemId.Coal] = Rational.one;
+
+      const result = SimplexUtility.glpk(state);
+      // Expect result to include surplus iron ore from coal recipe
+      expect(result.O[1]).toEqual(Rational.from(1, 10));
     });
   });
 
@@ -634,6 +598,8 @@ describe('SimplexUtility', () => {
         in: {},
         out: { [ItemId.CopperPlate]: 1 },
         producers: [],
+        row: 0,
+        category: CategoryId.Logistics,
       });
       state.recipes[ItemId.Water] = Mocks.AdjustedData.recipeR[RecipeId.Water];
       state.recipes[ItemId.IronOre] =
@@ -642,6 +608,10 @@ describe('SimplexUtility', () => {
       state.items[ItemId.CopperPlate] = Rational.zero;
       state.items[ItemId.Wood] = Rational.zero;
       state.items[ItemId.Coal] = Rational.zero;
+      state.items[ItemId.IronOre] = Rational.zero;
+      state.items[ItemId.IronPlate] = Rational.zero;
+      const alt = { ...Mocks.RationalProducer, ...{ id: '2' } };
+      state.producers = [Mocks.RationalProducer, alt];
       const result = SimplexUtility.canonical(state);
       expect(result).toEqual([
         [
@@ -650,6 +620,46 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.minusOne,
+          Rational.minusOne,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+        ],
+        [
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.from(-5, 16),
+          Rational.from(5, 16),
+          Rational.one,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+        ],
+        [
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.from(-5, 16),
+          Rational.from(5, 16),
+          Rational.zero,
+          Rational.one,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -664,6 +674,10 @@ describe('SimplexUtility', () => {
           Rational.from(-11),
           Rational.zero,
           Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
           Rational.one,
           Rational.zero,
           Rational.zero,
@@ -679,6 +693,10 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
           Rational.one,
           Rational.zero,
           Rational.zero,
@@ -687,6 +705,10 @@ describe('SimplexUtility', () => {
           Rational.zero,
         ],
         [
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -703,6 +725,10 @@ describe('SimplexUtility', () => {
         [
           Rational.zero,
           Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.from(1183, 400),
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -724,6 +750,10 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
           Rational.one,
           Rational.zero,
           Rational.from(1000000),
@@ -734,6 +764,10 @@ describe('SimplexUtility', () => {
           Rational.zero,
           Rational.zero,
           Rational.one,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -750,6 +784,8 @@ describe('SimplexUtility', () => {
     it('should return presolve result', () => {
       const result = SimplexUtility.simplexType([[]], SimplexType.WasmFloat64, {
         returnCode: 'ok',
+        status: 'optimal',
+        error: false,
         time: 0,
         O: [],
       });
@@ -866,7 +902,6 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'addItemStep');
       spyOn(SimplexUtility, 'assignRecipes');
       spyOn(SimplexUtility, 'addRecipeStep');
-      spyOn(SimplexUtility, 'updateParents');
       const state = getState();
       state.items[ItemId.Coal] = Rational.zero;
       state.items[ItemId.IronOre] = Rational.zero;
@@ -874,95 +909,21 @@ describe('SimplexUtility', () => {
       state.recipes[ItemId.Wood] = { id: null } as any;
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
+      state.producers = [Mocks.RationalProducer];
       const solution: any = {
         surplus: { [ItemId.IronOre]: Rational.one },
         inputs: { [ItemId.Wood]: Rational.one },
         recipes: { [RecipeId.IronOre]: Rational.two },
       };
-      SimplexUtility.updateSteps(Mocks.Steps, solution, state);
+      SimplexUtility.updateSteps(solution, state);
       expect(SimplexUtility.addItemStep).toHaveBeenCalledTimes(2);
       expect(SimplexUtility.assignRecipes).toHaveBeenCalledTimes(1);
-      expect(SimplexUtility.addRecipeStep).toHaveBeenCalledTimes(1);
-      expect(SimplexUtility.updateParents).toHaveBeenCalledTimes(1);
+      expect(SimplexUtility.addRecipeStep).toHaveBeenCalledTimes(2);
     });
   });
 
   describe('addItemStep', () => {
-    it('should update an existing step with items', () => {
-      const step: Step = {
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.one,
-      };
-      const solution: any = {
-        surplus: {},
-        inputs: {},
-        recipes: { [RecipeId.Coal]: Rational.two },
-      };
-      const state = getState();
-      state.items[ItemId.Coal] = Rational.from(3);
-      state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
-      expect(step).toEqual({
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.from(1183, 200),
-      });
-    });
-
-    it('should add to an input step', () => {
-      const step: Step = {
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.one,
-      };
-      const solution: any = {
-        surplus: {},
-        inputs: { [ItemId.Coal]: Rational.two },
-        recipes: {},
-      };
-      const state = getState();
-      state.items[ItemId.Coal] = Rational.zero;
-      state.recipes[ItemId.Coal] = new RationalRecipe({
-        id: 'id',
-        name: 'name',
-        time: 1,
-        in: {},
-        out: { [ItemId.Coal]: 1 },
-        producers: [],
-      });
-      SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
-      expect(step).toEqual({
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.from(3),
-      });
-    });
-
-    it('should ignore an item with no output', () => {
-      const step: Step = {
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.one,
-      };
-      const solution: any = {
-        surplus: { [ItemId.Coal]: Rational.zero },
-        inputs: { [ItemId.Coal]: Rational.zero },
-        recipes: { [RecipeId.Coal]: Rational.zero },
-      };
-      const state = getState();
-      state.items[ItemId.Coal] = Rational.one;
-      state.recipes[ItemId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
-      expect(step).toEqual({
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.one,
-      });
-    });
-
     it('should add a new step', () => {
-      const steps: Step[] = [];
       const solution: any = {
         surplus: {},
         inputs: {},
@@ -971,18 +932,45 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.items[ItemId.Coal] = Rational.from(3);
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      SimplexUtility.addItemStep(ItemId.Coal, steps, solution, state);
-      expect(steps).toEqual([
+      state.producers = [Mocks.RationalProducer];
+      SimplexUtility.addItemStep(ItemId.Coal, solution, state);
+      expect(state.steps).toEqual([
         {
           id: '0',
           itemId: ItemId.Coal,
           items: Rational.from(1183, 200),
+          output: Rational.from(3),
+        },
+      ]);
+    });
+
+    it('should include producer output a new step', () => {
+      const solution: any = {
+        surplus: {},
+        inputs: {},
+        recipes: {},
+      };
+      const state = getState();
+      state.items[ItemId.IronPlate] = Rational.zero;
+      state.producers = [Mocks.RationalProducer];
+      SimplexUtility.addItemStep(ItemId.IronPlate, solution, state);
+      expect(state.steps).toEqual([
+        {
+          id: '0',
+          itemId: ItemId.IronPlate,
+          items: Rational.from(5, 16),
         },
       ]);
     });
 
     it('should place a new step next to related steps', () => {
-      const steps: Step[] = [
+      const solution: any = {
+        surplus: {},
+        inputs: { [ItemId.HeavyOil]: Rational.one },
+        recipes: {},
+      };
+      const state = getState();
+      state.steps = [
         {
           id: '0',
           itemId: ItemId.PetroleumGas,
@@ -994,16 +982,11 @@ describe('SimplexUtility', () => {
           items: Rational.zero,
         },
       ];
-      const solution: any = {
-        surplus: {},
-        inputs: { [ItemId.HeavyOil]: Rational.one },
-        recipes: {},
-      };
-      const state = getState();
+      state.items[ItemId.HeavyOil] = Rational.zero;
       state.recipes[RecipeId.AdvancedOilProcessing] =
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing];
-      SimplexUtility.addItemStep(ItemId.HeavyOil, steps, solution, state);
-      expect(steps).toEqual([
+      SimplexUtility.addItemStep(ItemId.HeavyOil, solution, state);
+      expect(state.steps).toEqual([
         {
           id: '0',
           itemId: ItemId.PetroleumGas,
@@ -1023,10 +1006,6 @@ describe('SimplexUtility', () => {
     });
 
     it('should assign a surplus value', () => {
-      const step: Step = {
-        id: 'id',
-        itemId: ItemId.Coal,
-      };
       const solution: any = {
         surplus: { [ItemId.Coal]: Rational.from(3) },
         inputs: {},
@@ -1035,20 +1014,18 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.items[ItemId.Coal] = Rational.zero;
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
-      expect(step).toEqual({
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.from(1183, 100),
-        surplus: Rational.from(3),
-      });
+      SimplexUtility.addItemStep(ItemId.Coal, solution, state);
+      expect(state.steps).toEqual([
+        {
+          id: '0',
+          itemId: ItemId.Coal,
+          items: Rational.from(1183, 100),
+          surplus: Rational.from(3),
+        },
+      ]);
     });
 
     it('should negate a surplus for a disabled item', () => {
-      const step: Step = {
-        id: 'id',
-        itemId: ItemId.Coal,
-      };
       const solution: any = {
         surplus: { [ItemId.Coal]: Rational.from(3) },
         inputs: {},
@@ -1058,19 +1035,31 @@ describe('SimplexUtility', () => {
       state.items[ItemId.Coal] = Rational.zero;
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      SimplexUtility.addItemStep(ItemId.Coal, [step], solution, state);
-      expect(step).toEqual({
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.zero,
-        surplus: Rational.from(17, 400),
-      });
+      SimplexUtility.addItemStep(ItemId.Coal, solution, state);
+      expect(state.steps).toEqual([
+        {
+          id: '0',
+          itemId: ItemId.Coal,
+          items: Rational.zero,
+          surplus: Rational.from(17, 400),
+        },
+      ]);
     });
   });
 
   describe('assignRecipes', () => {
     it('should assign recipes to appropriate steps', () => {
-      const steps: Step[] = [
+      const solution: any = {
+        surplus: {},
+        inputs: {},
+        recipes: {
+          [RecipeId.CopperCable]: Rational.one,
+          [RecipeId.AdvancedOilProcessing]: Rational.one,
+          [RecipeId.BasicOilProcessing]: Rational.one,
+        },
+      };
+      const state = getState();
+      state.steps = [
         {
           id: '0',
           itemId: ItemId.CopperCable,
@@ -1092,24 +1081,15 @@ describe('SimplexUtility', () => {
           items: Rational.zero,
         },
       ];
-      const solution: any = {
-        surplus: {},
-        inputs: {},
-        recipes: {
-          [RecipeId.CopperCable]: Rational.one,
-          [RecipeId.AdvancedOilProcessing]: Rational.one,
-          [RecipeId.BasicOilProcessing]: Rational.one,
-        },
-      };
-      const state = getState();
       state.recipes[RecipeId.CopperCable] =
         Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       state.recipes[RecipeId.AdvancedOilProcessing] =
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing];
       state.recipes[RecipeId.BasicOilProcessing] =
         Mocks.AdjustedData.recipeR[RecipeId.BasicOilProcessing];
-      SimplexUtility.assignRecipes(steps, solution, state);
-      expect(steps).toEqual([
+      state.producers = [Mocks.RationalProducer];
+      SimplexUtility.assignRecipes(solution, state);
+      expect(state.steps).toEqual([
         {
           id: '0',
           itemId: ItemId.CopperCable,
@@ -1140,11 +1120,14 @@ describe('SimplexUtility', () => {
   describe('addRecipeStep', () => {
     it('should update an existing step', () => {
       spyOn(RateUtility, 'adjustPowerPollution');
-      const step: Step = {
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.one,
-      };
+      const state = getState();
+      state.steps = [
+        {
+          id: 'id',
+          itemId: ItemId.Coal,
+          items: Rational.one,
+        },
+      ];
       const solution: any = {
         surplus: {},
         inputs: {},
@@ -1152,48 +1135,25 @@ describe('SimplexUtility', () => {
       };
       SimplexUtility.addRecipeStep(
         Mocks.AdjustedData.recipeR[RecipeId.Coal],
-        [step],
-        solution
+        solution,
+        state
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
-      expect(step).toEqual({
-        id: 'id',
-        itemId: ItemId.Coal,
-        recipeId: RecipeId.Coal,
-        items: Rational.one,
-        factories: Rational.one,
-      });
-    });
-
-    it('should find a matching step by recipe existing step', () => {
-      spyOn(RateUtility, 'adjustPowerPollution');
-      const step: Step = {
-        id: 'id',
-        recipeId: RecipeId.Coal,
-        items: Rational.one,
-      };
-      const solution: any = {
-        surplus: {},
-        inputs: {},
-        recipes: { [RecipeId.Coal]: Rational.one },
-      };
-      SimplexUtility.addRecipeStep(
-        Mocks.AdjustedData.recipeR[RecipeId.Coal],
-        [step],
-        solution
-      );
-      expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
-      expect(step).toEqual({
-        id: 'id',
-        recipeId: RecipeId.Coal,
-        items: Rational.one,
-        factories: Rational.one,
-      });
+      expect(state.steps).toEqual([
+        {
+          id: 'id',
+          itemId: ItemId.Coal,
+          recipeId: RecipeId.Coal,
+          items: Rational.one,
+          factories: Rational.one,
+          recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
+        },
+      ]);
     });
 
     it('should add a new step', () => {
       spyOn(RateUtility, 'adjustPowerPollution');
-      const steps: Step[] = [];
+      const state = getState();
       const solution: any = {
         surplus: {},
         inputs: {},
@@ -1201,22 +1161,50 @@ describe('SimplexUtility', () => {
       };
       SimplexUtility.addRecipeStep(
         Mocks.AdjustedData.recipeR[RecipeId.Coal],
-        steps,
-        solution
+        solution,
+        state
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
-      expect(steps).toEqual([
+      expect(state.steps).toEqual([
         {
           id: '0',
           recipeId: RecipeId.Coal,
           factories: Rational.one,
+          recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
+        },
+      ]);
+    });
+
+    it('should add a producer step', () => {
+      spyOn(RateUtility, 'adjustPowerPollution');
+      const state = getState();
+      const solution: any = {
+        surplus: {},
+        inputs: {},
+        recipes: { [RecipeId.Coal]: Rational.one },
+      };
+      SimplexUtility.addRecipeStep(
+        Mocks.AdjustedData.recipeR[RecipeId.Coal],
+        solution,
+        state,
+        Mocks.RationalProducer
+      );
+      expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
+      expect(state.steps).toEqual([
+        {
+          id: '0',
+          recipeId: RecipeId.Coal,
+          factories: Rational.one,
+          recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
+          producerId: Mocks.RationalProducer.id,
         },
       ]);
     });
 
     it('should place a new step next to related steps', () => {
       spyOn(RateUtility, 'adjustPowerPollution');
-      const steps: Step[] = [
+      const state = getState();
+      state.steps = [
         {
           id: '0',
           itemId: ItemId.PetroleumGas,
@@ -1236,11 +1224,11 @@ describe('SimplexUtility', () => {
       };
       SimplexUtility.addRecipeStep(
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing],
-        steps,
-        solution
+        solution,
+        state
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
-      expect(steps).toEqual([
+      expect(state.steps).toEqual([
         {
           id: '0',
           itemId: ItemId.PetroleumGas,
@@ -1251,34 +1239,10 @@ describe('SimplexUtility', () => {
           id: '2',
           recipeId: RecipeId.AdvancedOilProcessing,
           factories: Rational.one,
+          recipe: Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing],
         },
         { id: '1', itemId: ItemId.Wood, items: Rational.zero },
       ]);
-    });
-  });
-
-  describe('updateParents', () => {
-    it('should update parents for steps solved by matrix', () => {
-      spyOn(RateUtility, 'addParentValue');
-      const step: Step = {
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: Rational.one,
-      };
-      const solution: any = {
-        surplus: {},
-        inputs: {},
-        recipes: { [RecipeId.PlasticBar]: Rational.one },
-      };
-      const state = getState();
-      state.recipes[RecipeId.PlasticBar] =
-        Mocks.AdjustedData.recipeR[RecipeId.PlasticBar];
-      SimplexUtility.updateParents([step], solution, state);
-      expect(RateUtility.addParentValue).toHaveBeenCalledWith(
-        step,
-        RecipeId.PlasticBar,
-        Rational.from(91, 20)
-      );
     });
   });
 

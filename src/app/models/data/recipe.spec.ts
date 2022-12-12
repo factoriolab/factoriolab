@@ -1,4 +1,4 @@
-import { ItemId, RecipeId } from 'src/tests';
+import { CategoryId, ItemId, RecipeId } from 'src/tests';
 import { Rational } from '../rational';
 import { RationalRecipe } from './recipe';
 
@@ -18,6 +18,8 @@ describe('RationalRecipe', () => {
         cost: 100,
         usage: 10,
         producers: [ItemId.AssemblingMachine1],
+        row: 0,
+        category: CategoryId.Logistics,
       });
       expect(result.id).toEqual(RecipeId.AdvancedOilProcessing);
       expect(result.name).toEqual('name');
@@ -37,6 +39,8 @@ describe('RationalRecipe', () => {
         in: {},
         out: {},
         producers: [ItemId.AssemblingMachine1],
+        row: 0,
+        category: CategoryId.Logistics,
       });
       expect(result.id).toEqual(RecipeId.AdvancedOilProcessing);
       expect(result.name).toEqual('name');
@@ -56,6 +60,8 @@ describe('RationalRecipe', () => {
         in: {},
         out: {},
         producers: [ItemId.AssemblingMachine1],
+        row: 0,
+        category: CategoryId.Logistics,
       });
       expect(result.usage).toEqual(Rational.two);
     });
@@ -125,6 +131,8 @@ describe('RationalRecipe', () => {
         producers: [],
         in: {},
         out: {},
+        row: 0,
+        category: CategoryId.Logistics,
       });
       expect(recipe.output(id)).toEqual(Rational.zero);
     });
@@ -137,6 +145,8 @@ describe('RationalRecipe', () => {
         in: { [id]: 1 },
         out: { [id]: 2 },
         producers: [],
+        row: 0,
+        category: CategoryId.Logistics,
       });
       expect(recipe.output(id)).toEqual(Rational.one);
     });

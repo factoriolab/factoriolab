@@ -1,0 +1,66 @@
+<p-dialog
+  *ngIf="vm$ | async as vm"
+  styleClass="picker-dialog"
+  [(visible)]="visible"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  appendTo="body"
+  [style]="{ height: '500px', width: '415px' }"
+  [breakpoints]="{ '415px': '100vw' }"
+>
+  <ng-template pTemplate="header">
+    <span class="w-100 me-3 p-input-icon-right">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input
+        #inputFilter
+        pInputText
+        type="text"
+        class="w-100"
+        pAutoFocus
+        [autofocus]="true"
+        [formControl]="searchCtrl"
+      />
+    </span>
+  </ng-template>
+  <p-tabView [(activeIndex)]="activeIndex">
+    <ng-container *ngFor="let categoryId of categoryIds; let i = index">
+      <p-tabPanel
+        *ngIf="categoryEntities[categoryId] as category"
+        [tooltip]="category.name"
+        [selected]="i === activeIndex"
+      >
+        <ng-template pTemplate="header">
+          <i [class]="categoryId | iconSmClass : 'category'"></i>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <p-scrollPanel [style]="{ height: '363px' }">
+            <div
+              *ngFor="let ids of categoryRows[categoryId]"
+              class="d-flex flex-wrap"
+            >
+              <ng-container *ngFor="let id of ids">
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="me-1 mb-1"
+                  [class.p-button-text]="id !== selectedId"
+                  [icon]="id | iconSmClass : type"
+                  [pTooltip]="
+                    type === 'item'
+                      ? (id | itemTooltip : vm.data)
+                      : (id | recipeTooltip : vm.data)
+                  "
+                  [escape]="false"
+                  (click)="clickId(id)"
+                ></button>
+              </ng-container>
+            </div>
+          </p-scrollPanel>
+        </ng-template>
+      </p-tabPanel>
+    </ng-container>
+  </p-tabView>
+</p-dialog>

@@ -1,34 +1,33 @@
-import { IdName } from '../id-name';
+import { SelectItem } from 'primeng/api';
+
 import { Game } from './game';
 
 export enum Column {
-  Tree = 'Tree',
-  Surplus = 'Surplus',
-  Items = 'Items',
-  Belts = 'Belts',
-  Wagons = 'Wagons',
-  Factories = 'Factories',
-  Overclock = 'Overclock',
-  Beacons = 'Beacons',
-  Power = 'Power',
-  Pollution = 'Pollution',
-  Link = 'Link',
+  Tree = 'tree',
+  Surplus = 'surplus',
+  Items = 'items',
+  Belts = 'belts',
+  Wagons = 'wagons',
+  Factories = 'factories',
+  Beacons = 'beacons',
+  Power = 'power',
+  Pollution = 'pollution',
+  Link = 'link',
 }
 
-export const AllColumns = [
+export const allColumns = [
   Column.Tree,
   Column.Items,
   Column.Belts,
   Column.Wagons,
   Column.Factories,
-  Column.Overclock,
   Column.Beacons,
   Column.Power,
   Column.Pollution,
   Column.Link,
 ];
 
-export const PrecisionColumns = [
+export const precisionColumns = [
   Column.Items,
   Column.Belts,
   Column.Wagons,
@@ -37,35 +36,36 @@ export const PrecisionColumns = [
   Column.Pollution,
 ];
 
-export function columnOptions(game: Game): IdName<Column>[] {
-  const result = AllColumns.map((id) => ({
-    id,
-    name: id,
-  }));
+export function columnOptions(game: Game): SelectItem<Column>[] {
+  const result = allColumns.map(
+    (id): SelectItem<Column> => ({
+      label: `options.column.${id}`,
+      value: id,
+      disabled: id === Column.Items || id === Column.Factories,
+    })
+  );
 
   switch (game) {
     case Game.Factorio:
-      return result.filter((i) => i.id !== Column.Overclock);
+      return result;
     case Game.CaptainOfIndustry:
       return result.filter(
         (i) =>
-          i.id !== Column.Beacons &&
-          i.id !== Column.Overclock &&
-          i.id !== Column.Power &&
-          i.id !== Column.Pollution &&
-          i.id !== Column.Wagons
+          i.value !== Column.Beacons &&
+          i.value !== Column.Power &&
+          i.value !== Column.Pollution &&
+          i.value !== Column.Wagons
       );
     case Game.DysonSphereProgram:
       return result.filter(
         (i) =>
-          i.id !== Column.Beacons &&
-          i.id !== Column.Overclock &&
-          i.id !== Column.Pollution &&
-          i.id !== Column.Wagons
+          i.value !== Column.Beacons &&
+          i.value !== Column.Pollution &&
+          i.value !== Column.Wagons
       );
     case Game.Satisfactory:
       return result.filter(
-        (i) => i.id !== Column.Beacons && i.id !== Column.Pollution
+        (i) => i.value !== Column.Beacons && i.value !== Column.Pollution
       );
   }
 

@@ -1,0 +1,110 @@
+.lab-icon,
+.lab-icon-sm {
+  position: relative;
+  flex-shrink: 0;
+
+  display: inline-block;
+
+  margin: 1px;
+  width: 32px;
+  height: 32px;
+
+  &::before {
+    content: '';
+
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    transform: scale(0.5);
+    transform-origin: 0 0;
+
+    width: 64px;
+    height: 64px;
+  }
+
+  > span {
+    // Styles for text overlay
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+
+    font-size: 1rem;
+    line-height: 1rem;
+    font-weight: 700;
+    font-style: normal;
+    color: white;
+
+    white-space: nowrap;
+    text-shadow: 0px 2px 2px black, 0px -2px 2px black, 2px 0px 2px black,
+      -2px 0px 2px black;
+    pointer-events: none;
+  }
+}
+
+.lab-icon-sm {
+  margin: 0;
+  width: 20px;
+  height: 20px;
+
+  &::before {
+    top: -6px;
+    left: -6px;
+  }
+
+  &.padded {
+    margin: 7px;
+  }
+}
+
+/** Set up base app related icons sprite sheet */
+.lab-icon,
+.lab-icon-sm {
+  &::before {
+    background-image: url('../assets/icons/icons.png');
+  }
+}
+
+.captain-of-industry::before {
+  background-position: -1px -1px;
+}
+
+.dyson-sphere-program::before {
+  background-position: -66px -1px;
+}
+
+.factorio::before {
+  background-position: -131px -1px;
+}
+
+.fast-inserter::before {
+  background-position: -196px -1px;
+}
+
+.inserter::before {
+  background-position: -1px -66px;
+}
+
+.long-handed-inserter::before {
+  background-position: -66px -66px;
+}
+
+.module::before {
+  background-position: -131px -66px;
+}
+
+.pipe::before {
+  background-position: -196px -66px;
+}
+
+.satisfactory::before {
+  background-position: -1px -131px;
+}
+
+.stack-inserter::before {
+  background-position: -66px -131px;
+}
+
+.time::before {
+  background-position: -131px -131px;
+}

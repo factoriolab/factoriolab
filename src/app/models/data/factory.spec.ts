@@ -16,10 +16,10 @@ describe('RationalFactory', () => {
         pollution: 4,
         mining: true,
         research: true,
-        overclockFactor: 1,
         consumption: {
           [ItemId.Coal]: 1,
         },
+        disallowEffects: ['productivity'],
       });
       expect(result.speed).toEqual(Rational.one);
       expect(result.modules).toEqual(2);
@@ -30,8 +30,8 @@ describe('RationalFactory', () => {
       expect(result.pollution).toEqual(Rational.from(4));
       expect(result.mining).toBeTrue();
       expect(result.research).toBeTrue();
-      expect(result.overclockFactor).toEqual(1);
       expect(result.consumption).toEqual({ [ItemId.Coal]: Rational.one });
+      expect(result.disallowEffects).toEqual(['productivity']);
     });
 
     it('should handle string for drain', () => {
@@ -58,7 +58,6 @@ describe('RationalFactory', () => {
       expect(result.pollution).toBeUndefined();
       expect(result.mining).toBeUndefined();
       expect(result.research).toBeUndefined();
-      expect(result.overclockFactor).toBeUndefined();
       expect(result.consumption).toBeUndefined();
     });
   });

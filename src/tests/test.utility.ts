@@ -3,16 +3,16 @@ import { ComponentFixture } from '@angular/core/testing';
 /* Don't care about coverage on test tools */
 /* istanbul ignore next */
 export class TestUtility {
-  static getDt(
-    fixture: ComponentFixture<any>,
+  static getDt<T>(
+    fixture: ComponentFixture<T>,
     dt: string,
     index = 0
   ): HTMLElement {
     return this.getSelector(fixture, `[data-test="${dt}"]`, index);
   }
 
-  static getSelector(
-    fixture: ComponentFixture<any>,
+  static getSelector<T>(
+    fixture: ComponentFixture<T>,
     selector: string,
     index = 0
   ): HTMLElement {
@@ -21,28 +21,28 @@ export class TestUtility {
     ] as HTMLElement;
   }
 
-  static clickDt(fixture: ComponentFixture<any>, dt: string, index = 0): void {
+  static clickDt<T>(fixture: ComponentFixture<T>, dt: string, index = 0): void {
     return this.getDt(fixture, dt, index).click();
   }
 
-  static clickSelector(
-    fixture: ComponentFixture<any>,
+  static clickSelector<T>(
+    fixture: ComponentFixture<T>,
     selector: string,
     index = 0
   ): void {
     return this.getSelector(fixture, selector, index).click();
   }
 
-  static altClickDt(
-    fixture: ComponentFixture<any>,
+  static altClickDt<T>(
+    fixture: ComponentFixture<T>,
     dt: string,
     preventDefault = false
   ): void {
     return this.altClick(this.getDt(fixture, dt), preventDefault);
   }
 
-  static altClickSelector(
-    fixture: ComponentFixture<any>,
+  static altClickSelector<T>(
+    fixture: ComponentFixture<T>,
     selector: string,
     index = 0,
     preventDefault = false
@@ -53,8 +53,8 @@ export class TestUtility {
     );
   }
 
-  static setTextDt(
-    fixture: ComponentFixture<any>,
+  static setTextDt<T>(
+    fixture: ComponentFixture<T>,
     dt: string,
     value: string,
     index = 0
@@ -62,8 +62,8 @@ export class TestUtility {
     return this.setText(this.getDt(fixture, dt, index), value);
   }
 
-  static setTextSelector(
-    fixture: ComponentFixture<any>,
+  static setTextSelector<T>(
+    fixture: ComponentFixture<T>,
     selector: string,
     value: string,
     index = 0
@@ -71,8 +71,8 @@ export class TestUtility {
     return this.setText(this.getSelector(fixture, selector, index), value);
   }
 
-  static selectDt(
-    fixture: ComponentFixture<any>,
+  static selectDt<T>(
+    fixture: ComponentFixture<T>,
     dt: string,
     value: string,
     index = 0
@@ -80,8 +80,8 @@ export class TestUtility {
     return this.select(this.getDt(fixture, dt, index), value);
   }
 
-  static selectSelector(
-    fixture: ComponentFixture<any>,
+  static selectSelector<T>(
+    fixture: ComponentFixture<T>,
     selector: string,
     value: string,
     index = 0
@@ -89,8 +89,8 @@ export class TestUtility {
     return this.select(this.getSelector(fixture, selector, index), value);
   }
 
-  static keyPressDt(
-    fixture: ComponentFixture<any>,
+  static keyPressDt<T>(
+    fixture: ComponentFixture<T>,
     dt: string,
     value: string,
     index = 0
@@ -98,8 +98,8 @@ export class TestUtility {
     return this.keyPress(this.getDt(fixture, dt, index), value);
   }
 
-  static keyPressSelector(
-    fixture: ComponentFixture<any>,
+  static keyPressSelector<T>(
+    fixture: ComponentFixture<T>,
     selector: string,
     value: string,
     index = 0
@@ -107,8 +107,8 @@ export class TestUtility {
     return this.keyPress(this.getSelector(fixture, selector, index), value);
   }
 
-  static dispatchDt(
-    fixture: ComponentFixture<any>,
+  static dispatchDt<T>(
+    fixture: ComponentFixture<T>,
     dt: string,
     event: string,
     index = 0
@@ -156,8 +156,8 @@ export class TestUtility {
     element.dispatchEvent(event);
   }
 
-  static dragAndDropSelector(
-    fixture: ComponentFixture<any>,
+  static dragAndDropSelector<T>(
+    fixture: ComponentFixture<T>,
     selector: string,
     xOffset: number,
     yOffset: number

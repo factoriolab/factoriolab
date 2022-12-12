@@ -1,45 +1,52 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
-import { FlowComponent, ListComponent, MatrixComponent } from './routes';
-
-const routes: Routes = [
+export const routes: Routes = [
   {
-    path: 'list',
-    component: ListComponent,
+    path: 'wizard',
+    loadChildren: () =>
+      import('./routes/wizard/wizard.module').then((m) => m.WizardModule),
   },
   {
-    path: 'flow',
-    component: FlowComponent,
+    path: '',
+    pathMatch: 'full',
+    loadChildren: () =>
+      import('./routes/landing/landing.module').then((m) => m.LandingModule),
   },
   {
-    path: 'matrix',
-    component: MatrixComponent,
+    path: '',
+    loadChildren: () =>
+      import('./routes/main/main.module').then((m) => m.MainModule),
   },
   {
     path: 'factorio',
-    redirectTo: '/list?s=&v=4',
+    redirectTo: '/?s=&v=4',
   },
   {
     path: 'coi',
-    redirectTo: '/list?s=coi&v=4',
+    redirectTo: '/?s=coi&v=4',
   },
   {
     path: 'dsp',
-    redirectTo: '/list?s=dsp&v=4',
+    redirectTo: '/?s=dsp&v=4',
   },
   {
     path: 'satisfactory',
-    redirectTo: '/list?s=sfy&v=4',
+    redirectTo: '/?s=sfy&v=4',
   },
   {
     path: '**',
-    redirectTo: 'list',
+    redirectTo: '',
   },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {
+      preloadingStrategy: PreloadAllModules,
+      paramsInheritanceStrategy: 'always',
+    }),
+  ],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

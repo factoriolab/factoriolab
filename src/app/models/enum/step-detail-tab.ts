@@ -1,7 +1,7 @@
 export enum StepDetailTab {
-  None,
-  Item,
-  Recipe,
-  Factory,
-  Recipes,
+  None = 'none',
+  Item = 'item',
+  Recipe = 'recipe',
+  Factory = 'factory',
+  Recipes = 'recipes',
 }

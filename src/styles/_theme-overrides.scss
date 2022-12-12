@@ -1,0 +1,86 @@
+// InputGroup fixes
+.p-inputgroup {
+  > .p-inputwrapper {
+    display: inline-flex;
+
+    > .p-dropdown,
+    .p-multiselect {
+      border-radius: 0;
+    }
+
+    > .p-inputnumber,
+    > .p-inputnumber > .p-inputtext {
+      border-radius: 0;
+    }
+
+    .p-dropdown-panel .p-dropdown-header {
+      display: flex;
+
+      .p-dropdown-filter {
+        margin-right: 0;
+      }
+    }
+
+    .p-dropdown-filter-container {
+      display: inline-flex;
+      flex-grow: 1;
+    }
+
+    &:not(:last-child) {
+      > .p-component
+        > .p-inputnumber-buttons-stacked
+        > .p-inputnumber-button-group
+        > .p-button,
+      > .p-component > .p-inputnumber-button-group > .p-button {
+        border-radius: 0;
+      }
+    }
+  }
+}
+
+// Prevent horizontal scroll in virtual scroll dropdown
+.p-dropdown-panel .p-dropdown-items,
+.p-multiselect-panel .p-multiselect-items {
+  max-width: 100%;
+}
+
+// Imitate .p-float-label without using input field
+.p-static-label {
+  font-size: 12px;
+  margin-left: 0.5rem;
+  padding-bottom: 0.25rem;
+  color: var(--text-color-secondary);
+}
+
+table p-dropdown {
+  max-height: 36px; // Prevents icon dropdown from expanding table cell size
+}
+
+// Remove table footer style overrides
+.p-datatable .p-datatable-tfoot > tr > td.inherit {
+  text-align: inherit;
+  font-weight: inherit;
+  color: inherit;
+}
+
+// Fix width of large icon buttons
+.p-button-lg > .p-button.p-button-icon-only,
+.p-button.p-button-lg.p-button-icon-only {
+  width: 42.5px;
+}
+
+// Button label text should ellipsis
+.p-button > .p-button-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.p-dropdown-panel.tooltip,
+.p-multiselect-panel.tooltip {
+  .p-dropdown-item,
+  .p-multiselect-item {
+    // Want full-size tooltip select item, items must manage their own padding
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+}

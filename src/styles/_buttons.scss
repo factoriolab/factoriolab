@@ -1,0 +1,59 @@
+// Hover icon button styles (e.g. item exclude button)
+.p-button.hover-action {
+  > .p-button-icon {
+    transition: all 300ms ease;
+  }
+
+  > .hover-icon {
+    position: absolute;
+    z-index: 1;
+
+    opacity: 0;
+
+    transition: opacity 300ms ease;
+  }
+
+  &:hover,
+  &.hover-active {
+    > .p-button-icon {
+      opacity: 0.3;
+    }
+
+    > .hover-icon {
+      opacity: 1;
+    }
+  }
+}
+
+// Icon dropdown styles
+.p-dropdown.icon,
+.p-multiselect.icon {
+  .lab-icon,
+  .lab-icon-sm,
+  .fa-solid {
+    transition: opacity 300ms ease;
+  }
+
+  .p-dropdown-trigger,
+  .p-multiselect-trigger {
+    position: absolute;
+    bottom: 10px;
+
+    opacity: 0;
+
+    transition: opacity 300ms ease;
+  }
+
+  &:hover {
+    .lab-icon,
+    .lab-icon-sm,
+    .fa-solid {
+      opacity: 0.3;
+    }
+
+    .p-dropdown-trigger,
+    .p-multiselect-trigger {
+      opacity: 1;
+    }
+  }
+}

@@ -1,12 +1,12 @@
 import {
-  AllColumns,
+  allColumns,
   Column,
   ColumnSettings,
   Entities,
-  LinkValue,
+  Language,
   PowerUnit,
-  SankeyAlign,
   SimplexType,
+  Theme,
 } from '~/models';
 import * as App from '../app.actions';
 import {
@@ -19,15 +19,13 @@ export type ColumnsState = Entities<ColumnSettings>;
 export interface PreferencesState {
   states: Entities<string>;
   columns: ColumnsState;
-  linkSize: LinkValue;
-  linkText: LinkValue;
-  sankeyAlign: SankeyAlign;
   simplexType: SimplexType;
-  language: string;
+  language: Language;
   powerUnit: PowerUnit;
+  theme: Theme;
 }
 
-export const initialColumnsState: ColumnsState = AllColumns.reduce(
+export const initialColumnsState: ColumnsState = allColumns.reduce(
   (e: ColumnsState, c) => {
     e[c] = { show: true, precision: 1 };
     return e;
@@ -38,12 +36,10 @@ export const initialColumnsState: ColumnsState = AllColumns.reduce(
 export const initialPreferencesState: PreferencesState = {
   states: {},
   columns: initialColumnsState,
-  linkSize: LinkValue.Items,
-  linkText: LinkValue.Items,
-  sankeyAlign: SankeyAlign.Justify,
-  simplexType: SimplexType.JsBigIntRational,
-  language: 'en',
+  simplexType: SimplexType.WasmFloat64,
+  language: Language.English,
   powerUnit: PowerUnit.Auto,
+  theme: Theme.System,
 };
 
 export function preferencesReducer(
@@ -75,18 +71,14 @@ export function preferencesReducer(
             : PowerUnit.Auto,
         },
       };
-    case PreferencesActionType.SET_LINK_SIZE:
-      return { ...state, ...{ linkSize: action.payload } };
-    case PreferencesActionType.SET_LINK_TEXT:
-      return { ...state, ...{ linkText: action.payload } };
-    case PreferencesActionType.SET_SANKEY_ALIGN:
-      return { ...state, ...{ sankeyAlign: action.payload } };
     case PreferencesActionType.SET_SIMPLEX_TYPE:
       return { ...state, ...{ simplexType: action.payload } };
     case PreferencesActionType.SET_LANGUAGE:
       return { ...state, ...{ language: action.payload } };
     case PreferencesActionType.SET_POWER_UNIT:
       return { ...state, ...{ powerUnit: action.payload } };
+    case PreferencesActionType.SET_THEME:
+      return { ...state, ...{ theme: action.payload } };
     default:
       return state;
   }

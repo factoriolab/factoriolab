@@ -1,4 +1,4 @@
-import { Column, PowerUnit, SimplexType } from '~/models';
+import { Column, Language, PowerUnit, SimplexType, Theme } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
@@ -56,43 +56,13 @@ describe('Preferences Reducer', () => {
     });
   });
 
-  describe('SET_LINK_SIZE', () => {
-    it('should set the link size', () => {
-      const result = preferencesReducer(
-        undefined,
-        new Actions.SetLinkSizeAction(value as any)
-      );
-      expect(result.linkSize).toEqual(value as any);
-    });
-  });
-
-  describe('SET_LINK_TEXT', () => {
-    it('should set the link text', () => {
-      const result = preferencesReducer(
-        undefined,
-        new Actions.SetLinkTextAction(value as any)
-      );
-      expect(result.linkText).toEqual(value as any);
-    });
-  });
-
-  describe('SET_SANKEY_ALIGN', () => {
-    it('should set the sankey alignment', () => {
-      const result = preferencesReducer(
-        undefined,
-        new Actions.SetSankeyAlignAction(value as any)
-      );
-      expect(result.sankeyAlign).toEqual(value as any);
-    });
-  });
-
   describe('SET_SIMPLEX_TYPE', () => {
     it('should set the simplex type', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetSimplexTypeAction(SimplexType.Disabled)
+        new Actions.SetSimplexTypeAction(SimplexType.JsBigIntRational)
       );
-      expect(result.simplexType).toEqual(SimplexType.Disabled);
+      expect(result.simplexType).toEqual(SimplexType.JsBigIntRational);
     });
   });
 
@@ -100,9 +70,9 @@ describe('Preferences Reducer', () => {
     it('should set the language', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetLanguageAction(value)
+        new Actions.SetLanguageAction(Language.Chinese)
       );
-      expect(result.language).toEqual(value);
+      expect(result.language).toEqual(Language.Chinese);
     });
   });
 
@@ -113,6 +83,16 @@ describe('Preferences Reducer', () => {
         new Actions.SetPowerUnitAction(PowerUnit.MW)
       );
       expect(result.powerUnit).toEqual(PowerUnit.MW);
+    });
+  });
+
+  describe('SET_THEME', () => {
+    it('should set the power unit', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetThemeAction(Theme.Dark)
+      );
+      expect(result.theme).toEqual(Theme.Dark);
     });
   });
 

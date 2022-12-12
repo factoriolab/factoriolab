@@ -4,6 +4,8 @@ import { Rational } from '../rational';
 export interface Recipe {
   id: string;
   name: string;
+  category: string;
+  row: number;
   time: number;
   producers: string[];
   in: Entities<number | string>;
@@ -22,6 +24,8 @@ export interface Recipe {
 export class RationalRecipe {
   id: string;
   name: string;
+  category: string;
+  row: number;
   time: Rational;
   producers: string[];
   productivity = Rational.one;
@@ -41,6 +45,8 @@ export class RationalRecipe {
   constructor(data: Recipe) {
     this.id = data.id;
     this.name = data.name;
+    this.category = data.category;
+    this.row = Math.round(data.row);
     this.time = Rational.fromNumber(data.time);
     this.producers = data.producers;
     this.in = Object.keys(data.in).reduce((e: Entities<Rational>, i) => {

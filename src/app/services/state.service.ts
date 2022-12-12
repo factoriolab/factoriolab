@@ -1,19 +1,49 @@
 import { Injectable } from '@angular/core';
+import { Meta } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { combineLatest } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 
 import { environment } from 'src/environments';
-import { Entities, FuelType, ModHash } from '~/models';
-import { LabState } from '~/store';
-import * as Products from '~/store/products';
-import * as Settings from '~/store/settings';
+import { FuelType, gameInfo, ModHash } from '~/models';
+import { LabState, Preferences, Products, Settings } from '~/store';
+import { BrowserUtility } from '~/utilities';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StateService {
-  constructor(private store: Store<LabState>) {
+  constructor(
+    private meta: Meta,
+    private gaSvc: GoogleAnalyticsService,
+    private store: Store<LabState>,
+    private translateSvc: TranslateService
+  ) {}
+
+  initialize(): void {
+    this.gaSvc.event('version', environment.version);
+
+    this.store.select(Settings.getGame).subscribe((game) => {
+      this.gaSvc.event('set_game', game);
+      this.meta.updateTag({
+        name: 'description',
+        content: `A feature-rich production calculator for ${gameInfo[game].meta} and similar games.
+Determine resource and factory requirements for your desired output products.`,
+      });
+    });
+
+    this.store.select(Preferences.getLanguage).subscribe((lang) => {
+      this.translateSvc.use(lang);
+      this.gaSvc.event('set_lang', lang);
+    });
+
+    this.store.select(Settings.getModId).subscribe((modId) => {
+      this.gaSvc.event('set_mod_id', modId);
+      BrowserUtility.modState = modId;
+    });
+
     this.store.select(Products.checkViaState).subscribe((s) => {
       for (const product of s.products) {
         if (
@@ -28,6 +58,10 @@ export class StateService {
           this.store.dispatch(new Products.ResetViaAction(product.id));
         }
       }
+    });
+
+    this.store.select(Preferences.preferencesState).subscribe((s) => {
+      BrowserUtility.preferencesState = s;
     });
 
     // Used only in development to update hash files
@@ -45,28 +79,11 @@ export class StateService {
       this.store.select(Settings.getDataset),
     ])
       .pipe(
-        filter(
-          ([modId, data]) => data.categoryIds.length > 0 && data.hash != null
-        ),
+        filter(([_, data]) => data.categoryIds.length > 0 && data.hash != null),
         first()
       )
       .subscribe(([modId, data]) => {
         console.log(modId);
-        const oldDisabled = data.defaults?.disabledRecipeIds ?? [];
-        const neededRecipes = Object.keys(data.itemRecipeId).map(
-          (i) => data.itemRecipeId[i]
-        );
-        const suggestedDisabled = data.complexRecipeIds.filter(
-          (i) => neededRecipes.indexOf(i) === -1 && !data.itemEntities[i]
-        );
-        if (JSON.stringify(oldDisabled) !== JSON.stringify(suggestedDisabled)) {
-          console.log(
-            `Suggested disabled recipes (${suggestedDisabled.length}):`
-          );
-          console.log(JSON.stringify(suggestedDisabled));
-        } else {
-          console.log('No suggested changes to default disabled recipes');
-        }
         if (data.hash) {
           const hash: ModHash = {
             items: [...data.hash.items],
