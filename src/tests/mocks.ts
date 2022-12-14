@@ -32,7 +32,7 @@ export function getDataset(): M.Dataset {
   return Settings.getDataset.projector(
     Mod,
     null,
-    null,
+    Hash,
     Defaults,
     M.Game.Factorio
   );
@@ -162,9 +162,15 @@ export const ItemSettingsInitial = Items.getItemSettings.projector(
   {},
   Dataset,
   {
-    beltId: ItemId.TransportBelt,
-    cargoWagonId: ItemId.CargoWagon,
-    fluidWagonId: ItemId.FluidWagon,
+    ...Settings.initialSettingsState,
+    ...{
+      beltId: ItemId.TransportBelt,
+      pipeId: ItemId.Pipe,
+      fuelId: ItemId.Coal,
+      cargoWagonId: ItemId.CargoWagon,
+      fluidWagonId: ItemId.FluidWagon,
+      disabledRecipeIds: [],
+    },
   }
 );
 export const FactorySettingsInitial = Factories.getFactories.projector(
@@ -194,6 +200,7 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
   Defaults!.disabledRecipeIds,
   {
     fuelId: ItemId.Coal,
+    proliferatorSprayId: ItemId.Module,
     miningBonus: M.Rational.zero,
     researchSpeed: M.Rational.one,
     costFactor: M.Rational.one,
