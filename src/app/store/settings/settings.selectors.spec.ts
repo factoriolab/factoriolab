@@ -6,6 +6,7 @@ import {
   InserterCapacity,
   InserterData,
   InserterTarget,
+  Language,
   Preset,
   Rational,
   ResearchSpeed,
@@ -102,7 +103,10 @@ describe('Settings Selectors', () => {
 
   describe('getDefaults', () => {
     it('should handle null base data', () => {
-      const result = Selectors.getDefaults.projector(null, null);
+      const result = Selectors.getDefaults.projector(
+        Preset.Minimum,
+        null as any
+      );
       expect(result).toBeNull();
     });
 
@@ -182,12 +186,12 @@ describe('Settings Selectors', () => {
         beaconId: 'beacon',
         beaconModuleId: 'beaconModule',
       };
-      const result = Selectors.getSettings.projector(value, Mocks.Mod.defaults);
+      const result = Selectors.getSettings.projector(value, Mocks.Defaults);
       expect(result).toEqual(value);
     });
 
     it('should use defaults', () => {
-      const result = Selectors.getSettings.projector({}, Mocks.Defaults);
+      const result = Selectors.getSettings.projector({} as any, Mocks.Defaults);
       expect(result).toEqual({
         beltId: Mocks.Defaults.beltId,
         pipeId: undefined,
@@ -199,7 +203,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should handle null defaults', () => {
-      const result = Selectors.getSettings.projector({}, null);
+      const result = Selectors.getSettings.projector({} as any, null);
       expect(result).toEqual({
         beltId: undefined,
         pipeId: undefined,
@@ -213,15 +217,16 @@ describe('Settings Selectors', () => {
 
   describe('getFuelId', () => {
     it('should return fuel from settings', () => {
-      const result = Selectors.getFuelId.projector(initialSettingsState);
+      const result = Selectors.getFuelId.projector(initialSettingsState as any);
       expect(result).toEqual(initialSettingsState.fuelId);
     });
   });
 
   describe('getDisabledRecipeIds', () => {
     it('should return disabledRecipes from settings', () => {
-      const result =
-        Selectors.getDisabledRecipeIds.projector(initialSettingsState);
+      const result = Selectors.getDisabledRecipeIds.projector(
+        initialSettingsState as any
+      );
       expect(result).toEqual(initialSettingsState.disabledRecipeIds!);
     });
   });
@@ -249,7 +254,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should handle null setting', () => {
-      const result = Selectors.getRationalBeaconReceivers.projector(undefined);
+      const result = Selectors.getRationalBeaconReceivers.projector(null);
       expect(result).toBeNull();
     });
   });
@@ -281,13 +286,17 @@ describe('Settings Selectors', () => {
       const result = Selectors.getI18n.projector(
         Mocks.Mod,
         { [`${Mocks.Mod.id}-zh`]: Mocks.I18n },
-        'zh'
+        Language.Chinese
       );
       expect(result).toEqual(Mocks.I18n);
     });
 
     it('should handle data not loaded yet', () => {
-      const result = Selectors.getI18n.projector(null, null, null);
+      const result = Selectors.getI18n.projector(
+        null as any,
+        null as any,
+        Language.English
+      );
       expect(result).toBeNull();
     });
   });
@@ -312,7 +321,7 @@ describe('Settings Selectors', () => {
       const result = Selectors.getDataset.projector(
         mod,
         Mocks.I18n,
-        null,
+        null as any,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -378,7 +387,7 @@ describe('Settings Selectors', () => {
       const result = Selectors.getDataset.projector(
         mod,
         null,
-        null,
+        null as any,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -418,7 +427,7 @@ describe('Settings Selectors', () => {
       const result = Selectors.getDataset.projector(
         mod,
         null,
-        null,
+        null as any,
         Mocks.Defaults,
         Game.DysonSphereProgram
       );
@@ -449,7 +458,7 @@ describe('Settings Selectors', () => {
       const result = Selectors.getDataset.projector(
         mod,
         null,
-        null,
+        null as any,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -469,7 +478,7 @@ describe('Settings Selectors', () => {
       const result = Selectors.getDataset.projector(
         mod,
         null,
-        null,
+        null as any,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -480,9 +489,9 @@ describe('Settings Selectors', () => {
 
     it('should handle data not loaded yet', () => {
       const result = Selectors.getDataset.projector(
+        null as any,
         null,
-        null,
-        null,
+        null as any,
         Mocks.Defaults,
         Game.Factorio
       );
@@ -501,7 +510,7 @@ describe('Settings Selectors', () => {
 
   describe('getBeltSpeed', () => {
     it('should handle null/empty inputs', () => {
-      const result = Selectors.getBeltSpeed.projector({}, null);
+      const result = Selectors.getBeltSpeed.projector({} as any, null as any);
       expect(Object.keys(result).length).toEqual(1); // Always includes pipe
     });
 
@@ -540,7 +549,10 @@ describe('Settings Selectors', () => {
   describe('getSettingsModified', () => {
     it('should determine whether any settings are modified', () => {
       const result = Selectors.getSettingsModified.projector({
-        costIgnored: true,
+        ...initialSettingsState,
+        ...{
+          costIgnored: '100',
+        },
       });
       expect(result.cost).toBeTrue();
     });

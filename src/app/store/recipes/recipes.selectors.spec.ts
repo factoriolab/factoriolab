@@ -1,6 +1,7 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { Producer, Rational } from '~/models';
 import { RecipeUtility } from '~/utilities';
+import * as Factories from '../factories';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
 
@@ -19,14 +20,25 @@ describe('Recipes Selectors', () => {
 
   describe('getRecipeSettings', () => {
     it('should handle null/empty values', () => {
-      const result = Selectors.getRecipeSettings.projector({}, null, null);
+      const result = Selectors.getRecipeSettings.projector(
+        {},
+        Factories.initialFactoriesState,
+        Mocks.Dataset
+      );
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should handle empty recipes', () => {
-      const result = Selectors.getRecipeSettings.projector({}, null, {
-        recipeIds: [],
-      });
+      const result = Selectors.getRecipeSettings.projector(
+        {},
+        Factories.initialFactoriesState,
+        {
+          ...Mocks.Dataset,
+          ...{
+            recipeIds: [],
+          },
+        }
+      );
       expect(Object.keys(result).length).toEqual(0);
     });
 
@@ -141,7 +153,7 @@ describe('Recipes Selectors', () => {
             },
           },
         },
-      };
+      } as any;
       const result = Selectors.getRecipeSettings.projector(
         state,
         factories,
@@ -192,7 +204,7 @@ describe('Recipes Selectors', () => {
             beaconId: undefined,
             beaconModuleIds: undefined,
             beaconCount: undefined,
-            beaconTotal: true,
+            beaconTotal: '1',
           },
         },
         []
