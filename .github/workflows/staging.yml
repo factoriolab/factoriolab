@@ -28,5 +28,5 @@ jobs:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           REPOSITORY_NAME: factoriolab/staging
           BRANCH: main
-          FOLDER: dist/scully
+          FOLDER: dist/static
           CLEAN: true
