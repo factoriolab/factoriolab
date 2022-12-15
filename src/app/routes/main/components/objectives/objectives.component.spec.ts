@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, TestModule } from 'src/tests';
-import { AppSharedModule } from '~/shared';
+import { AppSharedModule } from '~/app-shared.module';
 import { LabState, Producers, Products, Settings } from '~/store';
 import { ObjectivesComponent } from './objectives.component';
 

@@ -5,7 +5,6 @@ import { MockStore } from '@ngrx/store/testing';
 import { Mocks, TestModule } from 'src/tests';
 import { Game } from '~/models';
 import { Producers, Products } from '~/store';
-import { modules } from '../../main.module';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -17,7 +16,7 @@ describe('HeaderComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [HeaderComponent],
-      imports: [TestModule, ...modules],
+      imports: [TestModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);

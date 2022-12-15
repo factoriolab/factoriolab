@@ -2,6 +2,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { EffectsModule } from '@ngrx/effects';
 import { Action, ActionReducerMap, StoreModule } from '@ngrx/store';
@@ -56,7 +57,7 @@ function initializeApp(
   imports: [
     /** Angular modules */
     BrowserModule,
-    // BrowserAnimationsModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     /** Vendor modules */
     StoreModule.forRoot(reducers as ActionReducerMap<LabState, Action>, {

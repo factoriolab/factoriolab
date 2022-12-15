@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestModule } from 'src/tests';
-import { AppSharedModule } from '~/shared';
+import { AppSharedModule } from '~/app-shared.module';
 import { ListComponent } from '../list/list.component';
 import { FlowComponent } from './flow.component';
 

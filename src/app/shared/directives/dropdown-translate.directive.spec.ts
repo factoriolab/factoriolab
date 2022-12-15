@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectItem } from 'primeng/api';
 
 import { TestModule } from 'src/tests';
-import { components } from '~/components';
 
 @Component({
   template: `<p-dropdown
@@ -26,7 +25,7 @@ describe('DropdownTranslateDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [...components, TestDropdownTranslateDirectiveComponent],
+      declarations: [TestDropdownTranslateDirectiveComponent],
       imports: [TestModule],
     }).compileComponents();
 

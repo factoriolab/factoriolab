@@ -11,10 +11,9 @@ import {
   TestUtility,
 } from 'src/tests';
 import { Game } from '~/models';
+import { ContentService } from '~/services';
 import { App, Factories, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
-import { modules } from '../../main.module';
-import { pipes } from '../../pipes';
 import { SettingsComponent } from './settings.component';
 
 describe('SettingsComponent', () => {
@@ -22,13 +21,14 @@ describe('SettingsComponent', () => {
   let fixture: ComponentFixture<SettingsComponent>;
   let router: Router;
   let mockStore: MockStore<LabState>;
+  let contentSvc: ContentService;
   const id = 'id';
   const value = 'value';
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [...pipes, SettingsComponent],
-      imports: [TestModule, ...modules],
+      declarations: [SettingsComponent],
+      imports: [TestModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsComponent);
@@ -38,6 +38,7 @@ describe('SettingsComponent', () => {
       Preferences.getStates,
       Mocks.PreferencesState.states
     );
+    contentSvc = TestBed.inject(ContentService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -83,10 +84,7 @@ describe('SettingsComponent', () => {
   describe('clickResetSettings', () => {
     it('should set up a confirmation dialog and clear settings', () => {
       let confirm: Confirmation | undefined;
-      spyOn(component['confirmationSvc'], 'confirm').and.callFake((c) => {
-        confirm = c;
-        return component['confirmationSvc'];
-      });
+      spyOn(contentSvc, 'confirm').and.callFake((c) => (confirm = c));
       component.clickResetSettings();
       TestUtility.assert(confirm?.accept != null);
       spyOn(localStorage, 'clear');
