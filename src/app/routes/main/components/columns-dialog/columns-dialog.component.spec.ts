@@ -6,6 +6,8 @@ import { TestModule } from 'src/tests';
 import { Column } from '~/models';
 import { ContentService } from '~/services';
 import { Preferences } from '~/store';
+import { modules } from '../../main.module';
+import { pipes } from '../../pipes';
 import { ColumnsDialogComponent } from './columns-dialog.component';
 
 describe('ColumnsDialogComponent', () => {
@@ -17,8 +19,8 @@ describe('ColumnsDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ColumnsDialogComponent],
-      imports: [TestModule],
+      declarations: [...pipes, ColumnsDialogComponent],
+      imports: [TestModule, ...modules],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ColumnsDialogComponent);

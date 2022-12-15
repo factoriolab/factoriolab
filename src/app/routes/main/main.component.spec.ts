@@ -8,11 +8,15 @@ import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 
 import { TestModule } from 'src/tests';
-import { AppSharedModule } from '~/app-shared.module';
 import { Game } from '~/models';
 import { ErrorService } from '~/services';
+import { AppSharedModule } from '~/shared';
 import { App, LabState } from '~/store';
+import { components } from './components';
 import { MainComponent } from './main.component';
+import { modules } from './main.module';
+import { pipes } from './pipes';
+import { MainSharedModule } from './shared/main-shared.module';
 
 describe('MainComponent', () => {
   let component: MainComponent;
@@ -23,8 +27,8 @@ describe('MainComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MainComponent],
-      imports: [TestModule, AppSharedModule],
+      declarations: [...components, ...pipes, MainComponent],
+      imports: [TestModule, AppSharedModule, MainSharedModule, ...modules],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MainComponent);

@@ -13,16 +13,20 @@ import { MainRoutingModule } from './main.routes';
 import { pipes } from './pipes';
 import { MainSharedModule } from './shared/main-shared.module';
 
+export const modules = [
+  CheckboxModule,
+  ConfirmDialogModule,
+  MenuModule,
+  MultiSelectModule,
+  SplitButtonModule,
+];
+
 @NgModule({
   imports: [
     CommonModule,
     AppSharedModule,
     MainSharedModule,
-    CheckboxModule,
-    ConfirmDialogModule,
-    MenuModule,
-    MultiSelectModule,
-    SplitButtonModule,
+    ...modules,
     MainRoutingModule,
   ],
   declarations: [...components, ...pipes, MainComponent],
