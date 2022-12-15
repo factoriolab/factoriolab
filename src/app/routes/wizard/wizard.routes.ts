@@ -1,4 +1,3 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { WizardComponent } from './wizard.component';
@@ -10,8 +9,4 @@ const routes: Routes = [
   },
 ];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class WizardRoutingModule {}
+export const WizardRoutingModule = RouterModule.forChild(routes);

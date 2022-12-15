@@ -7,8 +7,8 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { routes } from '~/app-routing.module';
 import { AppSharedModule } from '~/app-shared.module';
+import { routes } from '~/app.routes';
 import { initialState } from './state';
 
 @NgModule({
