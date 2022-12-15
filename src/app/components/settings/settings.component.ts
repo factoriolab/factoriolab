@@ -9,7 +9,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { ConfirmationService, MenuItem } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
 import {
@@ -49,7 +49,6 @@ import { BrowserUtility } from '~/utilities';
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
 })
 export class SettingsComponent implements OnInit {
   @HostBinding('class.active') @Input() active = false;
@@ -126,7 +125,6 @@ export class SettingsComponent implements OnInit {
   constructor(
     public contentSvc: ContentService,
     public displaySvc: DisplayService,
-    private confirmationSvc: ConfirmationService,
     private router: Router,
     private store: Store<LabState>,
     private translateSvc: TranslateService,
@@ -168,7 +166,7 @@ export class SettingsComponent implements OnInit {
   }
 
   clickResetSettings(): void {
-    this.confirmationSvc.confirm({
+    this.contentSvc.confirm({
       icon: 'fa-solid fa-exclamation-triangle',
       header: this.translateSvc.instant('settings.reset'),
       message: this.translateSvc.instant('settings.resetWarning'),

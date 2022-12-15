@@ -1,36 +1,45 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
+import { CheckboxModule } from 'primeng/checkbox';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
-import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { MenuModule } from 'primeng/menu';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { TableModule } from 'primeng/table';
+import { TabMenuModule } from 'primeng/tabmenu';
 import { TabViewModule } from 'primeng/tabview';
 import { TooltipModule } from 'primeng/tooltip';
-
-import { components } from './components';
-import { directives } from './directives';
-import { pipes } from './pipes';
 
 const modules = [
   // primeng
   AutoFocusModule,
   ButtonModule,
   CardModule,
+  CheckboxModule,
+  ConfirmDialogModule,
   DialogModule,
-  DividerModule,
   DropdownModule,
+  InputNumberModule,
   InputTextModule,
+  MenuModule,
+  MultiSelectModule,
   ProgressSpinnerModule,
   RippleModule,
   ScrollPanelModule,
+  SplitButtonModule,
+  TableModule,
+  TabMenuModule,
   TabViewModule,
   TooltipModule,
 
@@ -39,15 +48,7 @@ const modules = [
 ];
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ...modules],
-  declarations: [...components, ...directives, ...pipes],
-  exports: [
-    FormsModule,
-    ReactiveFormsModule,
-    ...modules,
-    ...components,
-    ...directives,
-    ...pipes,
-  ],
+  imports: [CommonModule, ...modules],
+  exports: [...modules],
 })
-export class AppSharedModule {}
+export class VendorModule {}
