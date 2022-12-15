@@ -875,7 +875,7 @@
             </tr>
             <ng-container
               *ngFor="
-                let parent of step.parents | keyvalue: trackSvc.sortByValue
+                let parent of step.parents | keyvalue: trackSvc.sortRationalsByValue
               "
             >
               <ng-container *ngIf="step.itemId">
@@ -929,7 +929,7 @@
                 </tr>
                 <ng-container
                   *ngFor="
-                    let output of step.outputs | keyvalue: trackSvc.sortByValue
+                    let output of step.outputs | keyvalue: trackSvc.sortRationalsByValue
                   "
                 >
                   <ng-container
@@ -968,7 +968,7 @@
                 </tr>
                 <ng-container
                   *ngFor="
-                    let input of step.recipe.in | keyvalue: trackSvc.sortByValue
+                    let input of step.recipe.in | keyvalue: trackSvc.sortRationalsByValue
                   "
                 >
                   <ng-container
@@ -1013,7 +1013,7 @@
               <ng-container
                 *ngFor="
                   let output of vm.data.recipeR[step.recipeId].out
-                    | keyvalue: trackSvc.sortByValue
+                    | keyvalue: trackSvc.sortRationalsByValue
                 "
               >
                 <ng-container
@@ -1063,7 +1063,7 @@
                   <ng-container
                     *ngFor="
                       let input of vm.data.recipeR[step.recipeId].in
-                        | keyvalue: trackSvc.sortByValue
+                        | keyvalue: trackSvc.sortRationalsByValue
                     "
                   >
                     <ng-container
@@ -1179,7 +1179,7 @@
                   <ng-container
                     *ngFor="
                       let output of vm.data.recipeR[step.recipeId].out
-                        | keyvalue: trackSvc.sortByValue
+                        | keyvalue: trackSvc.sortRationalsByValue
                     "
                   >
                     <tr
@@ -1584,7 +1584,11 @@
         <ng-container
           *ngTemplateOutlet="
             totalCell;
-            context: { column: Column.Factories, totals: vm.totals.factories }
+            context: {
+              column: Column.Factories,
+              totals: vm.totals.factories,
+              modulesTotals: vm.totals.modules
+            }
           "
         >
         </ng-container>
@@ -1608,27 +1612,40 @@
         </td>
         <td *ngIf="vm.columns[Column.Link].show"></td>
       </tr>
-      <ng-template #totalCell let-column="column" let-totals="totals">
+      <ng-template #totalCell let-column="column" let-totals="totals" let-modulesTotals="modulesTotals">
         <ng-container *ngIf="vm.columns[column].show">
           <td class="w-0 text-end inherit">
             <div
-              *ngFor="let tot of totals | keyvalue: trackSvc.sortByValue"
+              *ngFor="let tot of totals | keyvalue: trackSvc.sortRationalsByValue"
               class="py-2 icon-height"
             >
               <span class="monospace">{{
                 tot.value | rate: vm.effectivePrecision[column]
               }}</span>
             </div>
+            <div
+              *ngFor="let tot of modulesTotals | keyvalue: trackSvc.sortNumbersByValue"
+              class="py-2 icon-height" 
+            >
+              <span class="monospace">{{ tot.value }}</span>
+            </div>
           </td>
           <td class="ps-0 inherit">
             <i
-              *ngFor="let tot of totals | keyvalue: trackSvc.sortByValue"
+              *ngFor="let tot of totals | keyvalue: trackSvc.sortRationalsByValue"
               class="d-block"
               [class]="tot.key | iconClass: 'item'"
               [pTooltip]="
                 vm.data.itemEntities[tot.key]?.name ||
                 vm.data.recipeEntities[tot.key].name
               "
+            ></i>
+            <i
+              *ngFor="let tot of modulesTotals | keyvalue: trackSvc.sortNumbersByValue"
+              class="d-block"
+              [class]="tot.key | iconClass: 'item'"
+              [escape]="false"
+              [pTooltip]="tot.key | moduleTooltip: vm.data"
             ></i>
           </td>
         </ng-container>

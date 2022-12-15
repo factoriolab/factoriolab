@@ -657,6 +657,7 @@ describe('Products Selectors', () => {
         wagons: { [ItemId.CargoWagon]: Rational.one },
         factories: { [ItemId.ElectricMiningDrill]: Rational.one },
         beacons: { [ItemId.Beacon]: Rational.one },
+        modules: { [ItemId.Module]: Rational.zero },
         power: Rational.one,
         pollution: Rational.one,
       });
@@ -679,6 +680,7 @@ describe('Products Selectors', () => {
         wagons: {},
         factories: { [RecipeId.Coal]: Rational.one },
         beacons: {},
+        modules: { [ItemId.Module]: Rational.zero },
         power: Rational.zero,
         pollution: Rational.zero,
       });
