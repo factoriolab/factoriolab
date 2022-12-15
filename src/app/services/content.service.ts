@@ -1,6 +1,5 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Confirmation } from 'primeng/api';
 import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
 
 @Injectable({
@@ -24,11 +23,6 @@ export class ContentService {
 
   // Dialogs
   showColumns$ = new Subject<void>();
-  showConfirm$ = new Subject<Confirmation>();
-
-  confirm(confirmation: Confirmation): void {
-    this.showConfirm$.next(confirmation);
-  }
 
   // Templates
   translateSelectedItem$ = new BehaviorSubject<

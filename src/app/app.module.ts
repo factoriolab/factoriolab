@@ -21,11 +21,12 @@ import {
 import { PrimeNGConfig } from 'primeng/api';
 
 import { environment } from '../environments/environment';
-import { AppSharedModule } from './app-shared.module';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app.routes';
+import { components } from './components';
 import { LabErrorHandler } from './services';
 import { ThemeService } from './services/theme.service';
+import { AppSharedModule } from './shared';
 import { LabState, metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
@@ -52,7 +53,7 @@ function initializeApp(
 }
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [...components, AppComponent],
   imports: [
     /** Angular modules */
     BrowserModule,
