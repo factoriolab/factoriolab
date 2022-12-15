@@ -177,7 +177,7 @@ export class RouterService {
     factories: Factories.FactoriesState,
     settings: Settings.SettingsState
   ): Observable<[Zip, Zip]> {
-    return this.store.select(Datasets.getHashEntities).pipe(
+    return this.store.select(Datasets.getHashRecord).pipe(
       map((hashEntities) => hashEntities[settings.modId]),
       filter((hash): hash is ModHash => hash != null),
       first(),

@@ -96,10 +96,14 @@ export const ProductIds = ProductsList.map((p) => p.id);
 export const ProductEntities =
   Products.getProductsBy.projector(RationalProducts);
 export const ProductSteps = {
-  [Product1.id]: [],
-  [Product2.id]: [],
-  [Product3.id]: [[ItemId.PetroleumGas, M.Rational.one]],
-  [Product4.id]: [[RecipeId.TransportBelt, M.Rational.one]],
+  [Product1.id]: <[string, M.Rational][]>[],
+  [Product2.id]: <[string, M.Rational][]>[],
+  [Product3.id]: <[string, M.Rational][]>[
+    [ItemId.PetroleumGas, M.Rational.one],
+  ],
+  [Product4.id]: <[string, M.Rational][]>[
+    [RecipeId.TransportBelt, M.Rational.one],
+  ],
 };
 export const ItemSettings1: M.ItemSettings = {
   ignore: false,
@@ -157,7 +161,10 @@ export const RecipeSettingsEntities: M.Entities<M.RecipeSettings> = {};
 for (const recipe of Dataset.recipeIds.map((i) => Dataset.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
-export const SettingsState1 = { ...Settings.initialSettingsState, ...Defaults };
+export const SettingsStateInitial = Settings.getSettings.projector(
+  Settings.initialSettingsState,
+  Defaults
+);
 export const ItemSettingsInitial = Items.getItemSettings.projector(
   {},
   Dataset,
@@ -216,7 +223,6 @@ export const PreferencesState: Preferences.PreferencesState = {
   language: M.Language.English,
   theme: M.Theme.System,
 };
-
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
   resultType: M.MatrixResultType.Solved,
@@ -231,7 +237,6 @@ export const MatrixResultSolved: M.MatrixResult = {
   recipeIds: [RecipeId.WoodenChest],
   inputIds: [],
 };
-
 export const Flow: M.FlowData = {
   theme: M.themeMap[M.Theme.Light],
   nodes: [
@@ -265,4 +270,18 @@ export const Flow: M.FlowData = {
       target: 'b',
     },
   ],
+};
+export const SimplexModifiers = {
+  costInput: M.Rational.from(1000000),
+  costIgnored: M.Rational.zero,
+  simplexType: M.SimplexType.WasmFloat64,
+};
+export const AdjustmentData = {
+  fuelId: ItemId.Coal,
+  proliferatorSprayId: ItemId.Module,
+  miningBonus: M.Rational.zero,
+  researchSpeed: M.Rational.one,
+  costFactor: M.Rational.one,
+  costFactory: M.Rational.one,
+  data: Dataset,
 };

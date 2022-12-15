@@ -28,7 +28,7 @@ describe('Factories Selectors', () => {
     it('should read number of beacons', () => {
       const result = Selectors.getFactories.projector(
         {
-          ids: null,
+          ids: undefined,
           entities: { [ItemId.AssemblingMachine2]: { beaconCount: '0' } },
         },
         null,
@@ -81,7 +81,7 @@ describe('Factories Selectors', () => {
             ...{
               '': {
                 ...initialFactoriesState.entities[''],
-                ...{ overclock: null },
+                ...{ overclock: undefined },
               },
             },
           },

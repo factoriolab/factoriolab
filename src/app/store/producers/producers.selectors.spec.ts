@@ -51,7 +51,7 @@ describe('Producers Selectors', () => {
       spyOn(RecipeUtility, 'adjustRecipe');
       Selectors.getRationalProducers.projector(
         [Mocks.Producer],
-        {},
+        Mocks.AdjustmentData,
         Mocks.ItemSettingsInitial
       );
       expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(1);

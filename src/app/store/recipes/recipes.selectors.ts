@@ -25,73 +25,71 @@ export const getRecipeSettings = createSelector(
   Settings.getDataset,
   (state, factories, data) => {
     const value: Entities<RecipeSettings> = {};
-    if (data?.recipeIds?.length) {
-      for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
-        const s: RecipeSettings = { ...state[recipe.id] };
+    for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
+      const s: RecipeSettings = { ...state[recipe.id] };
 
-        if (s.factoryId == null) {
-          s.factoryId = RecipeUtility.bestMatch(
-            recipe.producers,
-            factories.ids ?? []
+      if (s.factoryId == null) {
+        s.factoryId = RecipeUtility.bestMatch(
+          recipe.producers,
+          factories.ids ?? []
+        );
+      }
+
+      const factory = data.factoryEntities[s.factoryId];
+      const def = factories.entities[s.factoryId];
+      if (factory != null && RecipeUtility.allowsModules(recipe, factory)) {
+        s.factoryModuleOptions = RecipeUtility.moduleOptions(
+          factory,
+          recipe.id,
+          data
+        );
+
+        if (s.factoryModuleIds == null) {
+          s.factoryModuleIds = RecipeUtility.defaultModules(
+            s.factoryModuleOptions,
+            def.moduleRankIds ?? [],
+            factory.modules ?? 0
           );
         }
 
-        const factory = data.factoryEntities[s.factoryId];
-        const def = factories.entities[s.factoryId];
-        if (factory != null && RecipeUtility.allowsModules(recipe, factory)) {
-          s.factoryModuleOptions = RecipeUtility.moduleOptions(
-            factory,
+        s.beaconCount = s.beaconCount ?? def.beaconCount;
+        s.beaconId = s.beaconId ?? def.beaconId;
+
+        if (s.beaconId != null) {
+          const beacon = data.beaconEntities[s.beaconId];
+          s.beaconModuleOptions = RecipeUtility.moduleOptions(
+            beacon,
             recipe.id,
             data
           );
 
-          if (s.factoryModuleIds == null) {
-            s.factoryModuleIds = RecipeUtility.defaultModules(
-              s.factoryModuleOptions,
-              def.moduleRankIds ?? [],
-              factory.modules ?? 0
+          if (s.beaconModuleIds == null) {
+            s.beaconModuleIds = RecipeUtility.defaultModules(
+              s.beaconModuleOptions,
+              def.beaconModuleRankIds ?? [],
+              beacon.modules
             );
           }
-
-          s.beaconCount = s.beaconCount ?? def.beaconCount;
-          s.beaconId = s.beaconId ?? def.beaconId;
-
-          if (s.beaconId != null) {
-            const beacon = data.beaconEntities[s.beaconId];
-            s.beaconModuleOptions = RecipeUtility.moduleOptions(
-              beacon,
-              recipe.id,
-              data
-            );
-
-            if (s.beaconModuleIds == null) {
-              s.beaconModuleIds = RecipeUtility.defaultModules(
-                s.beaconModuleOptions,
-                def.beaconModuleRankIds ?? [],
-                beacon.modules
-              );
-            }
-          }
-        } else {
-          // Factory doesn't support modules, remove any
-          delete s.factoryModuleIds;
-          delete s.beaconCount;
-          delete s.beaconId;
-          delete s.beaconModuleIds;
         }
-
-        if (
-          s.beaconTotal &&
-          (!s.beaconCount || Rational.fromString(s.beaconCount).isZero())
-        ) {
-          // No actual beacons, ignore the total beacons
-          delete s.beaconTotal;
-        }
-
-        s.overclock = s.overclock ?? def?.overclock;
-
-        value[recipe.id] = s;
+      } else {
+        // Factory doesn't support modules, remove any
+        delete s.factoryModuleIds;
+        delete s.beaconCount;
+        delete s.beaconId;
+        delete s.beaconModuleIds;
       }
+
+      if (
+        s.beaconTotal &&
+        (!s.beaconCount || Rational.fromString(s.beaconCount).isZero())
+      ) {
+        // No actual beacons, ignore the total beacons
+        delete s.beaconTotal;
+      }
+
+      s.overclock = s.overclock ?? def?.overclock;
+
+      value[recipe.id] = s;
     }
 
     return value;

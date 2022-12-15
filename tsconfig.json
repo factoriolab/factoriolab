@@ -16,8 +16,8 @@
     "moduleResolution": "node",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "es2020",
-    "lib": ["es2020", "dom"],
+    "module": "ES2022",
+    "lib": ["ES2020", "dom"],
     "paths": {
       "~/*": ["src/app/*"]
     },

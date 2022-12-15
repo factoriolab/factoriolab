@@ -95,20 +95,20 @@ export const getProliferatorSprayId = createSelector(
 /* Complex selectors */
 export const getMod = createSelector(
   getModId,
-  Datasets.getModEntities,
+  Datasets.getModRecord,
   (id, data) => data[id]
 );
 
 export const getHash = createSelector(
   getModId,
-  Datasets.getHashEntities,
+  Datasets.getHashRecord,
   (id, hashEntities) => hashEntities[id]
 );
 
 export const getGame = createSelector(
   getModId,
-  Datasets.getModInfoEntities,
-  (id, data) => data[id].game
+  Datasets.getModInfoRecord,
+  (id, data) => data[id]?.game ?? Game.None
 );
 
 export const getColumnOptions = createSelector(getGame, (game) =>
@@ -307,7 +307,7 @@ export const getSimplexModifiers = createSelector(
 
 export const getI18n = createSelector(
   getMod,
-  Datasets.getI18nEntities,
+  Datasets.getI18nRecord,
   Preferences.getLanguage,
   (base, i18n, lang) => (base ? i18n[`${base.id}-${lang}`] : null)
 );
@@ -340,7 +340,7 @@ export const getDataset = createSelector(
       {},
       environment.debug
     );
-    const limitations = reduceEntities(mod?.limitations ?? []);
+    const limitations = reduceEntities(mod?.limitations ?? {});
 
     // Apply localization
     if (i18n) {
@@ -568,7 +568,7 @@ export const getDataset = createSelector(
 
     const dataset: Dataset = {
       game,
-      version: mod?.version,
+      version: mod?.version ?? {},
       categoryIds,
       categoryEntities,
       categoryItemRows,
