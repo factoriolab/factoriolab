@@ -46,3 +46,10 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+scully.log
+scullyStats.json
+.scully
+/scully/**/*.js
+/scully/**/*.js.map
+/scully/**/*.d.ts

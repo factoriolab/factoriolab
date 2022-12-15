@@ -14,17 +14,19 @@ jobs:
         run: npm ci
       - name: Run build
         run: npm run build -- -c=staging
-      - name: Copy index to list
-        run: cp dist/index.html dist/list.html
-      - name: Copy index to flow
-        run: cp dist/index.html dist/flow.html
-      - name: Copy index to 404
-        run: cp dist/index.html dist/404.html
+      - name: Run scully
+        run: npm run scully
+      # - name: Copy index to list
+      #   run: cp dist/index.html dist/list.html
+      # - name: Copy index to flow
+      #   run: cp dist/index.html dist/flow.html
+      # - name: Copy index to 404
+      #   run: cp dist/index.html dist/404.html
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@3.4.8
         with:
           ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
           REPOSITORY_NAME: factoriolab/staging
           BRANCH: main
-          FOLDER: dist
+          FOLDER: dist/scully
           CLEAN: true
