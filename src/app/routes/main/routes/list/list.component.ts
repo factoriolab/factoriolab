@@ -480,6 +480,10 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new Items.ResetWagonsAction());
   }
 
+  resetRecipes(): void {
+    this.store.dispatch(new Items.ResetRecipesAction());
+  }
+
   resetFactories(): void {
     this.store.dispatch(new Recipes.ResetFactoriesAction());
   }

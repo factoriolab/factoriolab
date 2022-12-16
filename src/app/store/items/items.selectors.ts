@@ -49,4 +49,5 @@ export const getItemsModified = createSelector(itemsState, (state) => ({
   ignore: Object.keys(state).some((id) => state[id].ignore != null),
   belts: Object.keys(state).some((id) => state[id].beltId != null),
   wagons: Object.keys(state).some((id) => state[id].wagonId != null),
+  recipe: Object.keys(state).some((id) => state[id].recipeId != null),
 }));

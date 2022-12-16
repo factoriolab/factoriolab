@@ -41,6 +41,8 @@ export function itemsReducer(
       return StoreUtility.resetField(state, 'beltId');
     case ItemsActionType.RESET_WAGONS:
       return StoreUtility.resetField(state, 'wagonId');
+    case ItemsActionType.RESET_RECIPES:
+      return StoreUtility.resetField(state, 'recipeId');
     default:
       return state;
   }
