@@ -233,7 +233,7 @@
     "rateTypeTooltip": "Select rate type",
     "viaPlaceholder": "Select limit step",
     "viaTooltip": "Limit item production by rate of a specific step",
-    "noEnabledRecipes": "No matching enabled recipes",
+    "noEnabledRecipes": "No recipes, try enabling item or its recipes",
     "producers": "Producers",
     "removeProducerTooltip": "Remove producer",
     "recipeTooltip": "Select producer recipe",
