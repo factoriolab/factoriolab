@@ -227,11 +227,8 @@ export const getNormalizedRatesByWagons = createSelector(
 export const getNormalizedRatesByFactories = createSelector(
   getProductsByFactories,
   getProductSteps,
-  Recipes.getRationalRecipeSettings,
-  Items.getItemSettings,
-  Settings.getAdjustmentData,
   Recipes.getAdjustedDataset,
-  (products, productSteps, recipeSettings, itemSettings, adj, data) =>
+  (products, productSteps, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
       let recipeId = data.itemRecipeId[p.itemId];
       if (recipeId && p.viaId === recipeId) {

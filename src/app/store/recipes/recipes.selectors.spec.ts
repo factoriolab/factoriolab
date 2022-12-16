@@ -18,18 +18,6 @@ describe('Recipes Selectors', () => {
   });
 
   describe('getRecipeSettings', () => {
-    it('should handle null/empty values', () => {
-      const result = Selectors.getRecipeSettings.projector({}, null, null);
-      expect(Object.keys(result).length).toEqual(0);
-    });
-
-    it('should handle empty recipes', () => {
-      const result = Selectors.getRecipeSettings.projector({}, null, {
-        recipeIds: [],
-      });
-      expect(Object.keys(result).length).toEqual(0);
-    });
-
     it('should return the recipe settings', () => {
       const result = Selectors.getRecipeSettings.projector(
         initialRecipesState,
@@ -135,7 +123,7 @@ describe('Recipes Selectors', () => {
                   ItemId.AssemblingMachine3
                 ],
                 ...{
-                  beaconModuleRankIds: null,
+                  beaconModuleRankIds: undefined,
                 },
               },
             },
@@ -192,7 +180,7 @@ describe('Recipes Selectors', () => {
             beaconId: undefined,
             beaconModuleIds: undefined,
             beaconCount: undefined,
-            beaconTotal: true,
+            beaconTotal: '1',
           },
         },
         []

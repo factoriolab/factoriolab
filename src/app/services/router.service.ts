@@ -62,6 +62,7 @@ export enum Section {
   Recipes = 'r',
   Factories = 'f',
   Settings = 's',
+  Zip = 'z',
 }
 
 export enum ZipVersion {
@@ -176,7 +177,7 @@ export class RouterService {
     factories: Factories.FactoriesState,
     settings: Settings.SettingsState
   ): Observable<[Zip, Zip]> {
-    return this.store.select(Datasets.getHashEntities).pipe(
+    return this.store.select(Datasets.getHashRecord).pipe(
       map((hashEntities) => hashEntities[settings.modId]),
       filter((hash): hash is ModHash => hash != null),
       first(),
@@ -231,10 +232,10 @@ export class RouterService {
   getHash(zProducts: Zip, zipPartial: Zip): string {
     const bare = zProducts.bare + zipPartial.bare + this.zipTail.bare;
     const hash = zProducts.hash + zipPartial.hash + this.zipTail.hash;
-    const zip = `z=${this.bytesToBase64(deflate(hash))}`;
-    return bare.length < Math.max(zip.length, MIN_ZIP)
-      ? bare.replace(/^&/, '')
-      : zip;
+    const zip = `z=${this.bytesToBase64(deflate(hash))}&${Section.Version}=${
+      this.hashVersion
+    }`;
+    return bare.length < Math.max(zip.length, MIN_ZIP) ? bare : zip;
   }
 
   getParams(zip: string): Entities {
@@ -261,10 +262,10 @@ export class RouterService {
 
         if (query && this.zip !== query) {
           let zip = query;
-          if (zip.startsWith('z=')) {
+          const zipSection = new URLSearchParams(zip).get(Section.Zip);
+          if (zipSection != null) {
             // Upgrade V0 query-unsafe zipped characters
-            const z = zip
-              .substring(2)
+            const z = zipSection
               .replace(/\+/g, '-')
               .replace(/\//g, '.')
               .replace(/=/g, '_');

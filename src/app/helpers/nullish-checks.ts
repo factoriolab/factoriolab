@@ -10,10 +10,7 @@ export function notNullish<T>(value: T): value is NonNullable<T> {
 }
 
 /** Filters an Observable for only values which are not nullish */
-export function filterNullish<T>(): OperatorFunction<
-  T,
-  Exclude<T, null | undefined>
-> {
+export function filterNullish<T>(): OperatorFunction<T, NonNullable<T>> {
   return filter(notNullish);
 }
 

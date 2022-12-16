@@ -41,7 +41,7 @@ export class StoreUtility {
   }
 
   /** Resets a passed fields of the state */
-  static resetFields<T>(
+  static resetFields<T extends object>(
     state: Entities<T>,
     fields: (keyof T)[],
     id?: string
@@ -55,7 +55,7 @@ export class StoreUtility {
   }
 
   /** Resets a passed field of the state */
-  static resetField<T>(
+  static resetField<T extends object>(
     state: Entities<T>,
     field: keyof T,
     id?: string
@@ -76,7 +76,7 @@ export class StoreUtility {
     return newState;
   }
 
-  static compareReset<T, P>(
+  static compareReset<T extends object, P>(
     state: Entities<T>,
     field: keyof T,
     payload: DefaultIdPayload<P>,

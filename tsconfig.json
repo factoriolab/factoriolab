@@ -15,12 +15,16 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "es2020",
-    "module": "es2020",
-    "lib": ["es2020", "dom"],
-    "paths": { "~/*": ["src/app/*"] },
+    "target": "ES2022",
+    "module": "ES2022",
+    "lib": ["ES2020", "dom"],
+    "paths": {
+      "~/*": ["src/app/*"]
+    },
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "useDefineForClassFields": false,
+    "skipLibCheck": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

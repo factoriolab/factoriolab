@@ -21,9 +21,9 @@ import {
 import { PrimeNGConfig } from 'primeng/api';
 
 import { environment } from '../environments/environment';
-import { AppRoutingModule } from './app-routing.module';
 import { AppSharedModule } from './app-shared.module';
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app.routes';
 import { LabErrorHandler } from './services';
 import { ThemeService } from './services/theme.service';
 import { LabState, metaReducers, reducers } from './store';

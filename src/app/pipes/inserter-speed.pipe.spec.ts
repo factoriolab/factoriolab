@@ -18,11 +18,13 @@ describe('InserterSpeedPipe', () => {
 
   describe('transform', () => {
     it('should return matching inserter data', () => {
-      expect(pipe.transform(Rational.one, Mocks.SettingsState1)).toEqual({
+      expect(pipe.transform(Rational.one, Mocks.SettingsStateInitial)).toEqual({
         id: ItemId.Inserter,
         value: Rational.from(100, 243),
       });
-      expect(pipe.transform(Rational.thousand, Mocks.SettingsState1)).toEqual({
+      expect(
+        pipe.transform(Rational.thousand, Mocks.SettingsStateInitial)
+      ).toEqual({
         id: ItemId.StackInserter,
         value: Rational.from(20000, 277),
       });
@@ -37,7 +39,7 @@ describe('InserterSpeedPipe', () => {
     });
 
     it('should handle null value', () => {
-      expect(pipe.transform(undefined, Mocks.SettingsState1)).toBeNull();
+      expect(pipe.transform(undefined, Mocks.SettingsStateInitial)).toBeNull();
     });
   });
 });
