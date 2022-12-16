@@ -86,26 +86,14 @@ tr.detail {
   background-color: var(--surface-ground);
 }
 
-div.icon-height {
+.icon-height {
   height: 32px;
   margin-top: 1px;
   margin-bottom: 1px;
 }
 
-div.pseudo-column {
-  display: flex;
-}
-
-div.icons-column {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: fit-content;
-}
-
-div.modules-column {
+.modules-column {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: fit-content;
   margin: auto;
 }
