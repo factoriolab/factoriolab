@@ -1623,30 +1623,36 @@
                 tot.value | rate: vm.effectivePrecision[column]
               }}</span>
             </div>
-            <div
-              *ngFor="let tot of modulesTotals | keyvalue: trackSvc.sortByNumberValue"
-              class="py-2 icon-height" 
-            >
-              <span class="monospace">{{ tot.value }}</span>
-            </div>
           </td>
           <td class="ps-0 inherit">
-            <i
-              *ngFor="let tot of totals | keyvalue: trackSvc.sortByRationalValue"
-              class="d-block"
-              [class]="tot.key | iconClass: 'item'"
-              [pTooltip]="
-                vm.data.itemEntities[tot.key]?.name ||
-                vm.data.recipeEntities[tot.key].name
-              "
-            ></i>
-            <i
-              *ngFor="let tot of modulesTotals | keyvalue: trackSvc.sortByNumberValue"
-              class="d-block"
-              [class]="tot.key | iconClass: 'item'"
-              [escape]="false"
-              [pTooltip]="tot.key | moduleTooltip: vm.data"
-            ></i>
+            <div class="pseudo-column">
+              <div class="icons-column">
+                <i
+                  *ngFor="let tot of totals | keyvalue: trackSvc.sortByRationalValue"
+                  class="d-block"
+                  [class]="tot.key | iconClass: 'item'"
+                  [pTooltip]="
+                    vm.data.itemEntities[tot.key]?.name ||
+                    vm.data.recipeEntities[tot.key].name
+                  "
+                ></i>
+              </div>
+              <div class="modules-column">
+                <ng-container
+                  *ngFor="let tot of modulesTotals | keyvalue:
+                  trackSvc.sortByNumberValue">
+                  <div class="py-2 icon-height">
+                    <span class="monospace">{{ tot.value }}</span>
+                  </div>
+                  <i
+                    class="d-block"
+                    [class]="tot.key | iconClass: 'item'"
+                    [escape]="false"
+                    [pTooltip]="tot.key | moduleTooltip: vm.data"
+                  ></i>
+                </ng-container>
+              </div>
+            </div>
           </td>
         </ng-container>
       </ng-template>
