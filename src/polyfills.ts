@@ -58,9 +58,3 @@ import bigInt from 'big-integer';
 if (typeof BigInt === 'undefined') {
   window.BigInt = bigInt as unknown as BigIntConstructor;
 }
-
-/***************************************************************************************************
-* SCULLY IMPORTS
-*/
-// tslint:disable-next-line: align
-import 'zone.js/dist/task-tracking';

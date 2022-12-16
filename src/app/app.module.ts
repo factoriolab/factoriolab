@@ -31,7 +31,6 @@ import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { FactoriesEffects } from './store/factories/factories.effects';
 import { ProductsEffects } from './store/products/products.effects';
-import { ScullyLibModule } from '@scullyio/ng-lib';
 
 function initializeApp(
   primengConfig: PrimeNGConfig,
@@ -93,7 +92,6 @@ function initializeApp(
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000',
     }),
-    ScullyLibModule,
   ],
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },

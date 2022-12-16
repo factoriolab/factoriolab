@@ -22,9 +22,7 @@
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "process-mod": "ts-node scripts/process-mod.ts",
     "lint": "ng lint",
-    "lint-build": "ng lint --max-warnings 0",
-    "scully": "npx scully --project factoriolab",
-    "scully:serve": "npx scully serve --project factoriolab"
+    "lint-build": "ng lint --max-warnings 0"
   },
   "dependencies": {
     "@angular/animations": "^15.0.3",
@@ -43,10 +41,6 @@
     "@ngrx/store-devtools": "^15.0.0",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
-    "@scullyio/init": "^2.1.41",
-    "@scullyio/ng-lib": "^2.1.0",
-    "@scullyio/scully": "^2.1.0",
-    "@scullyio/scully-plugin-puppeteer": "^2.1.0",
     "big-integer": "^1.6.51",
     "bootstrap": "^5.2.0",
     "elkjs": "^0.8.1",
