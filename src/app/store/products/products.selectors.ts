@@ -388,6 +388,7 @@ export const getTotals = createSelector(
     const wagons: Entities<Rational> = {};
     const factories: Entities<Rational> = {};
     const beacons: Entities<Rational> = {};
+    const modules: Entities<number> = {};
     let power = Rational.zero;
     let pollution = Rational.zero;
 
@@ -462,9 +463,26 @@ export const getTotals = createSelector(
       if (step.pollution != null) {
         pollution = pollution.add(step.pollution);
       }
+
+      // Total Modules
+      if (step.recipeSettings != null) {
+        const allModules = [
+          ...(step.recipeSettings.factoryModuleIds ?? []),
+          ...(step.recipeSettings.beaconModuleIds ?? []),
+        ];
+        for (const moduleId of allModules) {
+          if (moduleId === 'module') {
+            continue;
+          }
+          if (!Object.prototype.hasOwnProperty.call(modules, moduleId)) {
+            modules[moduleId] = 0;
+          }
+          modules[moduleId] += 1;
+        }
+      }
     }
 
-    return { belts, wagons, factories, beacons, power, pollution };
+    return { belts, wagons, factories, beacons, power, modules, pollution };
   }
 );
 
