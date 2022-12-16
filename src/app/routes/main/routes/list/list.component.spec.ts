@@ -147,7 +147,7 @@ describe('ListComponent', () => {
         ItemId.Coal,
         RecipeId.Coal,
         Mocks.ItemSettingsInitial,
-        Mocks.SettingsState1,
+        Mocks.SettingsStateInitial,
         Mocks.AdjustedData
       );
       expect(component.setDefaultRecipe).toHaveBeenCalledWith(

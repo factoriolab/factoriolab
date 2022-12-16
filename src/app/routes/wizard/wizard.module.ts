@@ -5,8 +5,8 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { WizardRoutingModule } from './wizard-routing.module';
 import { WizardComponent } from './wizard.component';
+import { WizardRoutingModule } from './wizard.routes';
 
 @NgModule({
   imports: [

@@ -1,0 +1,11 @@
+identifier: l4bepeh6d933ia4b
+appPort: 1864
+staticPort: 1668
+reloadPort: 2667
+hostName: localhost
+projectName: factoriolab
+homeFolder: C:\Git\factoriolab
+distFolder: dist/build
+outDir: C:\Git\factoriolab\dist\static
+handle404: ''
+allowErrorCollect: true

@@ -24,7 +24,7 @@
       />
     </span>
   </ng-template>
-  <p-tabView [(activeIndex)]="activeIndex">
+  <p-tabView *ngIf="visible" [(activeIndex)]="activeIndex">
     <ng-container *ngFor="let categoryId of categoryIds; let i = index">
       <p-tabPanel
         *ngIf="categoryEntities[categoryId] as category"

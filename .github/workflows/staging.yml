@@ -7,7 +7,7 @@ jobs:
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           persist-credentials: false
       - name: Install dependencies
@@ -21,10 +21,10 @@ jobs:
       - name: Copy index to 404
         run: cp dist/index.html dist/404.html
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@3.4.8
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-          REPOSITORY_NAME: factoriolab/staging
-          BRANCH: main
-          FOLDER: dist
-          CLEAN: true
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository-name: factoriolab/staging
+          branch: main
+          folder: dist
+          clean: true
