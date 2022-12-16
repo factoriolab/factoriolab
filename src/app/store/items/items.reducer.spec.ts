@@ -96,7 +96,7 @@ describe('Items Reducer', () => {
     });
   });
 
-  describe('RESET_IGNORE', () => {
+  describe('RESET_IGNORES', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
       itemsReducer(undefined, new Actions.ResetIgnoresAction());
@@ -104,7 +104,7 @@ describe('Items Reducer', () => {
     });
   });
 
-  describe('RESET_BELT', () => {
+  describe('RESET_BELTS', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
       itemsReducer(undefined, new Actions.ResetBeltsAction());
@@ -112,13 +112,24 @@ describe('Items Reducer', () => {
     });
   });
 
-  describe('RESET_WAGON', () => {
+  describe('RESET_WAGONS', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
       itemsReducer(undefined, new Actions.ResetWagonsAction());
       expect(StoreUtility.resetField).toHaveBeenCalledWith(
         {},
         'wagonId' as any
+      );
+    });
+  });
+
+  describe('RESET_RECIPES', () => {
+    it('should call resetField', () => {
+      spyOn(StoreUtility, 'resetField');
+      itemsReducer(undefined, new Actions.ResetRecipesAction());
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(
+        {},
+        'recipeId' as any
       );
     });
   });

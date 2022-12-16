@@ -251,6 +251,7 @@
     "tree": "Tree",
     "items": "Items",
     "itemsUndoTooltip": "Undo all ignored items",
+    "itemRecipesUndoTooltip": "Undo all default recipes",
     "belts": "Belts",
     "beltsUndoTooltip": "Undo all belt modifications",
     "wagons": "Wagons",
