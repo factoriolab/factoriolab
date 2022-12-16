@@ -1,4 +1,3 @@
-import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ListComponent } from './list.component';
@@ -10,8 +9,4 @@ const routes: Routes = [
   },
 ];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class ListRoutingModule {}
+export const ListRoutingModule = RouterModule.forChild(routes);

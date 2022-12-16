@@ -162,7 +162,7 @@ describe('RouterService', () => {
     service = TestBed.inject(RouterService);
     service.initialize();
     mockStore = TestBed.inject(MockStore);
-    mockStore.overrideSelector(Datasets.getHashEntities, {
+    mockStore.overrideSelector(Datasets.getHashRecord, {
       [Settings.initialSettingsState.modId]: Mocks.Hash,
       [mockSettingsState.modId]: Mocks.Hash,
     });
@@ -310,7 +310,7 @@ describe('RouterService', () => {
       spyOn(service, 'bytesToBase64').and.returnValue('test');
       service.zipTail.bare = 'a'.repeat(MIN_ZIP);
       const result = service.getHash(mockZip, mockEmptyZip);
-      expect(result).toEqual('z=test');
+      expect(result).toEqual('z=test&v=5');
     });
   });
 

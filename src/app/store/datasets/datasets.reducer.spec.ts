@@ -13,9 +13,9 @@ describe('Dataset Reducer', () => {
           i18n: null,
         })
       );
-      expect(result.dataEntities).toEqual({});
-      expect(result.hashEntities).toEqual({});
-      expect(result.i18nEntities).toEqual({});
+      expect(result.dataRecord).toEqual({});
+      expect(result.hashRecord).toEqual({});
+      expect(result.i18nRecord).toEqual({});
     });
 
     it('should load mod data', () => {
@@ -28,9 +28,9 @@ describe('Dataset Reducer', () => {
           i18n: { id, value: Mocks.I18n },
         })
       );
-      expect(result.dataEntities[id]).toEqual(Mocks.Data);
-      expect(result.hashEntities[id]).toEqual(Mocks.Hash);
-      expect(result.i18nEntities[id]).toEqual(Mocks.I18n);
+      expect(result.dataRecord[id]).toEqual(Mocks.Data);
+      expect(result.hashRecord[id]).toEqual(Mocks.Hash);
+      expect(result.i18nRecord[id]).toEqual(Mocks.I18n);
     });
   });
 

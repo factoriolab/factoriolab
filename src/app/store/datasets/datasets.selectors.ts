@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { Entities, Mod, ModInfo } from '~/models';
+import { Mod, ModInfo } from '~/models';
 import { LabState } from '../';
 import { DatasetsState } from './datasets.reducer';
 
@@ -9,34 +9,35 @@ export const datasetsState = (state: LabState): DatasetsState =>
   state.datasetsState;
 
 export const getModSets = createSelector(datasetsState, (state) => state.mods);
-export const getDataEntities = createSelector(
+export const getDataRecord = createSelector(
   datasetsState,
-  (state) => state.dataEntities
+  (state) => state.dataRecord
 );
-export const getI18nEntities = createSelector(
+export const getI18nRecord = createSelector(
   datasetsState,
-  (state) => state.i18nEntities
+  (state) => state.i18nRecord
 );
-export const getHashEntities = createSelector(
+export const getHashRecord = createSelector(
   datasetsState,
-  (state) => state.hashEntities
+  (state) => state.hashRecord
 );
 
 /* Complex selectors */
-export const getModInfoEntities = createSelector(getModSets, (mods) =>
-  mods.reduce((e: Entities<ModInfo>, m) => {
+export const getModInfoRecord = createSelector(getModSets, (mods) =>
+  mods.reduce((e: Record<string, ModInfo | undefined>, m) => {
     e[m.id] = m;
     return e;
   }, {})
 );
 
-export const getModEntities = createSelector(
+export const getModRecord = createSelector(
   getModSets,
-  getDataEntities,
+  getDataRecord,
   (mods, entities) =>
-    mods.reduce((e: Entities<Mod>, m) => {
-      if (entities[m.id]) {
-        e[m.id] = { ...m, ...entities[m.id] };
+    mods.reduce((e: Record<string, Mod | undefined>, m) => {
+      const data = entities[m.id];
+      if (data != null) {
+        e[m.id] = { ...m, ...data };
       }
       return e;
     }, {})

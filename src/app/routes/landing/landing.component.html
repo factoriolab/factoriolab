@@ -1,7 +1,12 @@
 <p-card *ngIf="vm$ | async as vm">
   <div class="d-flex flex-column">
     <div class="d-flex justify-content-center">
-      <img src="assets/icons/icon-128x128.png" />
+      <img
+        src="assets/icons/icon-128x128.png"
+        alt="FactorioLab"
+        height="128"
+        width="128"
+      />
     </div>
     <div class="mt-2" [innerHTML]="'landing.welcome' | translate"></div>
     <p-dropdown
