@@ -535,10 +535,12 @@ describe('Products Selectors', () => {
         belts: { [ItemId.TransportBelt]: Rational.one },
         wagons: { [ItemId.CargoWagon]: Rational.one },
         factories: { [ItemId.ElectricMiningDrill]: Rational.one },
+        factoryModules: {
+          [ItemId.ProductivityModule3]: Rational.from(3),
+        },
         beacons: { [ItemId.Beacon]: Rational.one },
-        modules: {
-          [ItemId.SpeedModule3]: 2,
-          [ItemId.ProductivityModule3]: 1,
+        beaconModules: {
+          [ItemId.SpeedModule3]: Rational.two,
         },
         power: Rational.one,
         pollution: Rational.one,
@@ -562,8 +564,9 @@ describe('Products Selectors', () => {
         belts: {},
         wagons: {},
         factories: { [RecipeId.Coal]: Rational.one },
+        factoryModules: {},
         beacons: {},
-        modules: {},
+        beaconModules: {},
         power: Rational.zero,
         pollution: Rational.zero,
       });

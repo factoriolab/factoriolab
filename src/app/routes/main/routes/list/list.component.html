@@ -178,7 +178,7 @@
               <i
                 *ngIf="step.itemId; else recipeIcon"
                 [class]="step.itemId | iconSmClass"
-                [pTooltip]="step.itemId | itemTooltip: vm.data"
+                [pTooltip]="step.itemId | itemTooltip : vm.data"
                 [escape]="false"
               >
                 <span *ngIf="step.producerId != null"
@@ -187,8 +187,8 @@
               </i>
               <ng-template #recipeIcon>
                 <i
-                  [class]="step.recipeId | iconSmClass: 'recipe'"
-                  [pTooltip]="step.recipeId | recipeTooltip: vm.data"
+                  [class]="step.recipeId | iconSmClass : 'recipe'"
+                  [pTooltip]="step.recipeId | recipeTooltip : vm.data"
                   [escape]="false"
                 >
                   <span *ngIf="step.producerId != null"
@@ -206,12 +206,12 @@
               *ngIf="step.surplus && step.surplus.nonzero()"
               class="monospace"
               >(+{{
-                step.surplus | rate: vm.effectivePrecision[Column.Surplus]
+                step.surplus | rate : vm.effectivePrecision[Column.Surplus]
               }})
             </span>
             <span class="monospace">{{
               step.items.sub(step.surplus || Rational.zero)
-                | rate: vm.effectivePrecision[Column.Items]
+                | rate : vm.effectivePrecision[Column.Items]
             }}</span>
           </td>
           <td class="ps-0">
@@ -222,7 +222,7 @@
               class="hover-action p-button-text"
               [class.hover-active]="vm.itemSettings[step.itemId].ignore"
               [icon]="step.itemId | iconSmClass"
-              [pTooltip]="step.itemId | itemTooltip: vm.data"
+              [pTooltip]="step.itemId | itemTooltip : vm.data"
               [escape]="false"
               (click)="ignoreItem(step.itemId)"
             >
@@ -236,7 +236,7 @@
             <ng-container *ngIf="vm.itemSettings[step.itemId].beltId as beltId">
               <td class="w-0 text-end">
                 <span class="monospace">{{
-                  step.belts | rate: vm.effectivePrecision[Column.Belts]
+                  step.belts | rate : vm.effectivePrecision[Column.Belts]
                 }}</span>
               </td>
               <td class="ps-0">
@@ -371,7 +371,7 @@
           >
             <td class="w-0 text-end">
               <span class="monospace">{{
-                step.wagons | rate: vm.effectivePrecision[Column.Wagons]
+                step.wagons | rate : vm.effectivePrecision[Column.Wagons]
               }}</span>
             </td>
             <td class="ps-0">
@@ -496,7 +496,7 @@
               *ngIf="
                 step.factories &&
                 step.factories.nonzero() &&
-                (factoryId | factoryShowRate: vm.data.game)
+                (factoryId | factoryShowRate : vm.data.game)
               "
               class="monospace"
               >{{
@@ -508,15 +508,15 @@
             >
           </td>
           <td class="ps-0">
-            <ng-container *ngIf="factoryId | factoryShow: vm.data.game">
+            <ng-container *ngIf="factoryId | factoryShow : vm.data.game">
               <div
                 *ngIf="step.recipeId && step.recipe && step.recipeSettings"
                 class="d-flex align-items-center"
               >
                 <i
                   class="padded"
-                  [class]="step.recipeId | iconSmClass: 'recipe'"
-                  [pTooltip]="step.recipeId | recipeTooltip: vm.data"
+                  [class]="step.recipeId | iconSmClass : 'recipe'"
+                  [pTooltip]="step.recipeId | recipeTooltip : vm.data"
                   [escape]="false"
                   ><span *ngIf="step.producerId"
                     >#{{ step.producerId }}</span
@@ -525,10 +525,10 @@
                 <p-dropdown
                   *ngIf="vm.data.factoryEntities[factoryId] as factory"
                   labDropdownBase="icon"
-                  [pTooltip]="factoryId | factoryTooltip: vm.data"
+                  [pTooltip]="factoryId | factoryTooltip : vm.data"
                   [escape]="false"
                   [options]="
-                    step.recipe.producers | options: vm.data.itemEntities
+                    step.recipe.producers | options : vm.data.itemEntities
                   "
                   [ngModel]="factoryId"
                   (onChange)="
@@ -549,7 +549,7 @@
                   <ng-template pTemplate="item" let-item>
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="item.value | factoryTooltip: vm.data"
+                      [pTooltip]="item.value | factoryTooltip : vm.data"
                       [escape]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
@@ -588,7 +588,7 @@
                     labDropdownBase="icon"
                     class="module-dropdown"
                     [class.last]="last"
-                    [pTooltip]="moduleId | moduleTooltip: vm.data"
+                    [pTooltip]="moduleId | moduleTooltip : vm.data"
                     tooltipPosition="top"
                     [escape]="false"
                     [options]="step.recipeSettings.factoryModuleOptions ?? []"
@@ -612,7 +612,7 @@
                     <ng-template pTemplate="item" let-item>
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="item.value | moduleTooltip: vm.data"
+                        [pTooltip]="item.value | moduleTooltip : vm.data"
                         [escape]="false"
                       >
                         <i [class]="item.value | iconSmClass"></i>
@@ -661,7 +661,7 @@
                   *ngIf="step.recipeSettings.beaconId"
                   labDropdownBase="icon"
                   [pTooltip]="
-                    step.recipeSettings.beaconId | beaconTooltip: vm.data
+                    step.recipeSettings.beaconId | beaconTooltip : vm.data
                   "
                   [escape]="false"
                   [options]="vm.options.beacons"
@@ -684,7 +684,7 @@
                   <ng-template pTemplate="item" let-item>
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="item.value | beaconTooltip: vm.data"
+                      [pTooltip]="item.value | beaconTooltip : vm.data"
                       [escape]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
@@ -703,7 +703,7 @@
                   labDropdownBase="icon"
                   class="module-dropdown"
                   [class.last]="last"
-                  [pTooltip]="moduleId | moduleTooltip: vm.data"
+                  [pTooltip]="moduleId | moduleTooltip : vm.data"
                   tooltipPosition="top"
                   [escape]="false"
                   [options]="step.recipeSettings.beaconModuleOptions ?? []"
@@ -727,7 +727,7 @@
                   <ng-template pTemplate="item" let-item>
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="item.value | moduleTooltip: vm.data"
+                      [pTooltip]="item.value | moduleTooltip : vm.data"
                       [escape]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
@@ -754,7 +754,9 @@
         <td *ngIf="vm.columns[Column.Power].show" class="text-end">
           <span *ngIf="step.power && step.power.nonzero()" class="monospace">{{
             step.power
-              | power: vm.effectivePrecision[Column.Power]:vm.effectivePowerUnit
+              | power
+                : vm.effectivePrecision[Column.Power]
+                : vm.effectivePowerUnit
           }}</span>
         </td>
         <!-- Pollution -->
@@ -763,7 +765,7 @@
             *ngIf="step.pollution && step.pollution.nonzero()"
             class="monospace"
             >{{
-              step.pollution | rate: vm.effectivePrecision[Column.Pollution]
+              step.pollution | rate : vm.effectivePrecision[Column.Pollution]
             }}</span
           >
         </td>
@@ -773,7 +775,7 @@
             <a
               class="text-decoration-none"
               target="_blank"
-              [href]="step | stepHref: vm.zipPartial:vm.data"
+              [href]="step | stepHref : vm.zipPartial : vm.data"
             >
               <button
                 pButton
@@ -875,7 +877,7 @@
             </tr>
             <ng-container
               *ngFor="
-                let parent of step.parents | keyvalue: trackSvc.sortByRationalValue
+                let parent of step.parents | keyvalue : trackSvc.sortByValue
               "
             >
               <ng-container *ngIf="step.itemId">
@@ -929,7 +931,7 @@
                 </tr>
                 <ng-container
                   *ngFor="
-                    let output of step.outputs | keyvalue: trackSvc.sortByRationalValue
+                    let output of step.outputs | keyvalue : trackSvc.sortByValue
                   "
                 >
                   <ng-container
@@ -968,7 +970,8 @@
                 </tr>
                 <ng-container
                   *ngFor="
-                    let input of step.recipe.in | keyvalue: trackSvc.sortByRationalValue
+                    let input of step.recipe.in
+                      | keyvalue : trackSvc.sortByValue
                   "
                 >
                   <ng-container
@@ -1013,7 +1016,7 @@
               <ng-container
                 *ngFor="
                   let output of vm.data.recipeR[step.recipeId].out
-                    | keyvalue: trackSvc.sortByRationalValue
+                    | keyvalue : trackSvc.sortByValue
                 "
               >
                 <ng-container
@@ -1063,7 +1066,7 @@
                   <ng-container
                     *ngFor="
                       let input of vm.data.recipeR[step.recipeId].in
-                        | keyvalue: trackSvc.sortByRationalValue
+                        | keyvalue : trackSvc.sortByValue
                     "
                   >
                     <ng-container
@@ -1083,7 +1086,8 @@
                                     row.step.items
                                       .mul(row.percent)
                                       .div(step.factories)
-                                    | rate: vm.effectivePrecision[Column.Items],
+                                    | rate
+                                      : vm.effectivePrecision[Column.Items],
                                   itemId: input.key
                                 }
                               "
@@ -1130,14 +1134,14 @@
                                     .mul(row.percent)
                                     .div(step.factories)
                                     .div(vm.dispRateInfo.value)
-                                    | inserterSpeed: vm.settings as ins
+                                    | inserterSpeed : vm.settings as ins
                                 "
                               >
                                 <ng-container
                                   *ngTemplateOutlet="
                                     factoryValueCell;
                                     context: {
-                                      value: ins.value | rate: 1,
+                                      value: ins.value | rate : 1,
                                       itemId: ins.id
                                     }
                                   "
@@ -1161,13 +1165,13 @@
                         class="d-flex align-items-center"
                       >
                         <i
-                          [class]="step.recipeId | iconClass: 'recipe'"
-                          [pTooltip]="step.recipeId | recipeTooltip: vm.data"
+                          [class]="step.recipeId | iconClass : 'recipe'"
+                          [pTooltip]="step.recipeId | recipeTooltip : vm.data"
                           [escape]="false"
                         ></i>
                         <i
                           [class]="factoryId | iconClass"
-                          [pTooltip]="factoryId | factoryTooltip: vm.data"
+                          [pTooltip]="factoryId | factoryTooltip : vm.data"
                           [escape]="false"
                         ></i>
                       </div>
@@ -1179,7 +1183,7 @@
                   <ng-container
                     *ngFor="
                       let output of vm.data.recipeR[step.recipeId].out
-                        | keyvalue: trackSvc.sortByRationalValue
+                        | keyvalue : trackSvc.sortByValue
                     "
                   >
                     <tr
@@ -1197,13 +1201,13 @@
                             "
                           >
                             <ng-container
-                              *ngIf="items | inserterSpeed: vm.settings as ins"
+                              *ngIf="items | inserterSpeed : vm.settings as ins"
                             >
                               <ng-container
                                 *ngTemplateOutlet="
                                   factoryValueCell;
                                   context: {
-                                    value: ins.value | rate: 1,
+                                    value: ins.value | rate : 1,
                                     itemId: ins.id
                                   }
                                 "
@@ -1223,7 +1227,7 @@
                               context: {
                                 value:
                                   items.div(vm.beltSpeed[beltId])
-                                  | rate: vm.effectivePrecision[Column.Belts],
+                                  | rate : vm.effectivePrecision[Column.Belts],
                                 itemId: beltId
                               }
                             "
@@ -1238,7 +1242,7 @@
                             context: {
                               value:
                                 items.mul(vm.dispRateInfo.value)
-                                | rate: vm.effectivePrecision[Column.Items],
+                                | rate : vm.effectivePrecision[Column.Items],
                               itemId: output.key
                             }
                           "
@@ -1257,7 +1261,7 @@
                     <span class="monospace">{{ value }}</span>
                     <i
                       [class]="itemId | iconClass"
-                      [pTooltip]="itemId | itemTooltip: vm.data"
+                      [pTooltip]="itemId | itemTooltip : vm.data"
                       [escape]="false"
                     ></i>
                   </div>
@@ -1320,8 +1324,8 @@
                         [class.p-button-text]="
                           vm.data.itemRecipeId[step.itemId] !== recipeId
                         "
-                        [icon]="recipeId | iconSmClass: 'recipe'"
-                        [pTooltip]="recipeId | recipeTooltip: vm.data"
+                        [icon]="recipeId | iconSmClass : 'recipe'"
+                        [pTooltip]="recipeId | recipeTooltip : vm.data"
                         [escape]="false"
                         (click)="
                           toggleDefaultRecipe(
@@ -1363,8 +1367,8 @@
                       [class.hover-active]="
                         vm.settings.disabledRecipeIds.indexOf(recipeId) !== -1
                       "
-                      [icon]="recipeId | iconSmClass: 'recipe'"
-                      [pTooltip]="recipeId | recipeTooltip: vm.data"
+                      [icon]="recipeId | iconSmClass : 'recipe'"
+                      [pTooltip]="recipeId | recipeTooltip : vm.data"
                       [escape]="false"
                       (click)="toggleRecipe(recipeId, vm.settings, vm.data)"
                     >
@@ -1408,14 +1412,14 @@
           <ng-template *ngTemplateOutlet="leftPad"></ng-template>
           <td class="w-0 text-end">
             <span class="monospace">{{
-              items | rate: vm.effectivePrecision[Column.Items]
+              items | rate : vm.effectivePrecision[Column.Items]
             }}</span>
           </td>
           <td class="ps-0">
             <div class="d-flex">
               <i
                 [class]="itemId | iconClass"
-                [pTooltip]="itemId | itemTooltip: vm.data"
+                [pTooltip]="itemId | itemTooltip : vm.data"
                 [escape]="false"
               ></i>
             </div>
@@ -1424,7 +1428,7 @@
             <ng-container *ngIf="belts && beltId">
               <td class="w-0 text-end">
                 <span class="monospace">{{
-                  belts | rate: vm.effectivePrecision[Column.Belts]
+                  belts | rate : vm.effectivePrecision[Column.Belts]
                 }}</span>
               </td>
               <td class="ps-0">
@@ -1449,7 +1453,7 @@
             <ng-container *ngIf="wagons && wagonId">
               <td class="w-0 text-end">
                 <span class="monospace">{{
-                  wagons | rate: vm.effectivePrecision[Column.Wagons]
+                  wagons | rate : vm.effectivePrecision[Column.Wagons]
                 }}</span>
               </td>
               <td class="ps-0">
@@ -1494,7 +1498,7 @@
               *ngIf="
                 factories &&
                 factories.nonzero() &&
-                (factoryId | factoryShowRate: vm.data.game)
+                (factoryId | factoryShowRate : vm.data.game)
               "
               class="monospace"
               >{{
@@ -1508,17 +1512,17 @@
           <td class="p-0" colspan="100">
             <div class="d-flex align-items-center">
               <ng-container
-                *ngIf="factoryId | factoryShow: vm.data.game; else factoryFill"
+                *ngIf="factoryId | factoryShow : vm.data.game; else factoryFill"
               >
                 <i
-                  [class]="recipeId | iconClass: 'recipe'"
-                  [pTooltip]="recipeId | recipeTooltip: vm.data"
+                  [class]="recipeId | iconClass : 'recipe'"
+                  [pTooltip]="recipeId | recipeTooltip : vm.data"
                   [escape]="false"
                   ><span *ngIf="producerId">#{{ producerId }}</span></i
                 >
                 <i
                   [class]="factoryId | iconClass"
-                  [pTooltip]="factoryId | factoryTooltip: vm.data"
+                  [pTooltip]="factoryId | factoryTooltip : vm.data"
                   [escape]="false"
                 ></i>
               </ng-container>
@@ -1536,7 +1540,7 @@
                   *ngIf="percentOnDest"
                 ></i>
                 <span class="monospace"
-                  >{{ percent | rate: -2 | leftPad }}%</span
+                  >{{ percent | rate : -2 | leftPad }}%</span
                 >
                 <i
                   class="m-1 p-2 fa-solid fa-arrow-right"
@@ -1544,12 +1548,12 @@
                 ></i>
                 <i
                   [class]="
-                    destId | iconClass: (destIsRecipe ? 'recipe' : 'item')
+                    destId | iconClass : (destIsRecipe ? 'recipe' : 'item')
                   "
                   [pTooltip]="
                     destIsRecipe
-                      ? (destId | recipeTooltip: vm.data)
-                      : (destId | itemTooltip: vm.data)
+                      ? (destId | recipeTooltip : vm.data)
+                      : (destId | itemTooltip : vm.data)
                   "
                   [escape]="false"
                   ><span *ngIf="destProducerId">#{{ destProducerId }}</span></i
@@ -1587,7 +1591,7 @@
             context: {
               column: Column.Factories,
               totals: vm.totals.factories,
-              modulesTotals: vm.totals.modules
+              modulesTotals: vm.totals.factoryModules
             }
           "
         >
@@ -1595,42 +1599,53 @@
         <ng-container
           *ngTemplateOutlet="
             totalCell;
-            context: { column: Column.Beacons, totals: vm.totals.beacons }
+            context: {
+              column: Column.Beacons,
+              totals: vm.totals.beacons,
+              modulesTotals: vm.totals.beaconModules
+            }
           "
         >
         </ng-container>
         <td *ngIf="vm.columns[Column.Power].show" class="text-end inherit">
           <span class="monospace">{{
             vm.totals.power
-              | power: vm.effectivePrecision[Column.Power]:vm.effectivePowerUnit
+              | power
+                : vm.effectivePrecision[Column.Power]
+                : vm.effectivePowerUnit
           }}</span>
         </td>
         <td *ngIf="vm.columns[Column.Pollution].show" class="text-end inherit">
           <span class="monospace">{{
-            vm.totals.pollution | rate: vm.effectivePrecision[Column.Pollution]
+            vm.totals.pollution | rate : vm.effectivePrecision[Column.Pollution]
           }}</span>
         </td>
         <td *ngIf="vm.columns[Column.Link].show"></td>
       </tr>
-      <ng-template #totalCell let-column="column" let-totals="totals" let-modulesTotals="modulesTotals">
+      <ng-template
+        #totalCell
+        let-column="column"
+        let-totals="totals"
+        let-modulesTotals="modulesTotals"
+      >
         <ng-container *ngIf="vm.columns[column].show">
           <td class="w-0 text-end inherit">
             <div
-              *ngFor="let tot of totals | keyvalue: trackSvc.sortByRationalValue"
+              *ngFor="let tot of totals | keyvalue : trackSvc.sortByValue"
               class="py-2 icon-height"
             >
               <span class="monospace">{{
-                tot.value | rate: vm.effectivePrecision[column]
+                tot.value | rate : vm.effectivePrecision[column]
               }}</span>
             </div>
           </td>
           <td class="ps-0 inherit">
-            <div class="pseudo-column">
-              <div class="icons-column">
+            <div class="d-flex">
+              <div class="d-flex flex-column">
                 <i
-                  *ngFor="let tot of totals | keyvalue: trackSvc.sortByRationalValue"
+                  *ngFor="let tot of totals | keyvalue : trackSvc.sortByValue"
                   class="d-block"
-                  [class]="tot.key | iconClass: 'item'"
+                  [class]="tot.key | iconClass : 'item'"
                   [pTooltip]="
                     vm.data.itemEntities[tot.key]?.name ||
                     vm.data.recipeEntities[tot.key].name
@@ -1639,16 +1654,18 @@
               </div>
               <div class="modules-column">
                 <ng-container
-                  *ngFor="let tot of modulesTotals | keyvalue:
-                  trackSvc.sortByNumberValue">
+                  *ngFor="
+                    let tot of modulesTotals | keyvalue : trackSvc.sortByValue
+                  "
+                >
                   <div class="py-2 icon-height">
                     <span class="monospace">{{ tot.value }}</span>
                   </div>
                   <i
                     class="d-block"
-                    [class]="tot.key | iconClass: 'item'"
+                    [class]="tot.key | iconClass : 'item'"
                     [escape]="false"
-                    [pTooltip]="tot.key | moduleTooltip: vm.data"
+                    [pTooltip]="tot.key | moduleTooltip : vm.data"
                   ></i>
                 </ng-container>
               </div>
