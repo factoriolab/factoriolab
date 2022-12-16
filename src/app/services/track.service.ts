@@ -22,14 +22,14 @@ export class TrackService {
     return r.key;
   }
 
-  sortRationalsByValue(
+  sortByRationalValue(
     a: KeyValue<string, Rational>,
     b: KeyValue<string, Rational>
   ): number {
     return b.value.sub(a.value).toNumber();
   }
 
-  sortNumbersByValue(
+  sortByNumberValue(
     a: KeyValue<string, number>,
     b: KeyValue<string, number>
   ): number {

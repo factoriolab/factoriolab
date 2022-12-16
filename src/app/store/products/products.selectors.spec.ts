@@ -504,6 +504,9 @@ describe('Products Selectors', () => {
             id: '0',
             itemId: ItemId.Coal,
             recipeId: RecipeId.Coal,
+            recipeSettings: {
+              factoryModuleIds: [ItemId.ProductivityModule3],
+            },
           },
           {
             id: '1',
@@ -515,6 +518,13 @@ describe('Products Selectors', () => {
             beacons: Rational.one,
             power: Rational.one,
             pollution: Rational.one,
+            recipeSettings: {
+              factoryModuleIds: [
+                ItemId.Module,
+                ItemId.SpeedModule3,
+                ItemId.SpeedModule3,
+              ],
+            },
           },
         ],
         Mocks.ItemSettingsInitial,
@@ -526,7 +536,10 @@ describe('Products Selectors', () => {
         wagons: { [ItemId.CargoWagon]: Rational.one },
         factories: { [ItemId.ElectricMiningDrill]: Rational.one },
         beacons: { [ItemId.Beacon]: Rational.one },
-        modules: { [ItemId.Module]: Rational.zero },
+        modules: {
+          [ItemId.SpeedModule3]: 2,
+          [ItemId.ProductivityModule3]: 1,
+        },
         power: Rational.one,
         pollution: Rational.one,
       });
@@ -550,7 +563,7 @@ describe('Products Selectors', () => {
         wagons: {},
         factories: { [RecipeId.Coal]: Rational.one },
         beacons: {},
-        modules: { [ItemId.Module]: Rational.zero },
+        modules: {},
         power: Rational.zero,
         pollution: Rational.zero,
       });

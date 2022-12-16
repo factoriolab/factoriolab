@@ -470,7 +470,6 @@ export const getTotals = createSelector(
           ...(step.recipeSettings.factoryModuleIds ?? []),
           ...(step.recipeSettings.beaconModuleIds ?? []),
         ];
-        console.log(allModules);
         for (const moduleId of allModules) {
           if (moduleId === 'module') {
             continue;
@@ -480,8 +479,6 @@ export const getTotals = createSelector(
           }
           modules[moduleId] += 1;
         }
-
-        console.log(modules);
       }
     }
 
