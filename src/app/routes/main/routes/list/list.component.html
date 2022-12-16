@@ -41,6 +41,16 @@
               [pTooltip]="'list.itemsUndoTooltip' | translate"
               (click)="resetIgnores()"
             ></button>
+            <button
+              *ngIf="vm.itemsModified.recipe"
+              pButton
+              pRipple
+              type="button"
+              class="ms-2 p-button-outlined p-button-rounded"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'list.itemRecipesUndoTooltip' | translate"
+              (click)="resetRecipes()"
+            ></button>
           </div>
         </th>
         <!-- Belts -->

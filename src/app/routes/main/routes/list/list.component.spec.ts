@@ -351,6 +351,7 @@ describe('ListComponent', () => {
     dispatch.void('resetIgnores', Items.ResetIgnoresAction);
     dispatch.void('resetBelts', Items.ResetBeltsAction);
     dispatch.void('resetWagons', Items.ResetWagonsAction);
+    dispatch.void('resetRecipes', Items.ResetRecipesAction);
     dispatch.void('resetFactories', Recipes.ResetFactoriesAction);
     dispatch.void('resetBeacons', Recipes.ResetBeaconsAction);
     dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
