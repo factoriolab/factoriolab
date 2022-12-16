@@ -65,7 +65,7 @@
             >
               <ng-template pTemplate="selectedItem" let-item>
                 <div *ngIf="vm.mobile; else desktopSelectedItem" class="d-flex">
-                  <i [class]="item.value | iconSmClass: dropdownType"></i>
+                  <i [class]="item.value | iconSmClass : dropdownType"></i>
                 </div>
                 <ng-template #desktopSelectedItem>
                   <span *ngIf="item.value === product.itemId; else viaSelected">
@@ -73,7 +73,7 @@
                   </span>
                   <ng-template #viaSelected>
                     <div class="d-flex align-items-center h-100">
-                      <i [class]="item.value | iconSmClass: dropdownType"></i>
+                      <i [class]="item.value | iconSmClass : dropdownType"></i>
                       <div class="ms-3 text-truncate">
                         {{ item.label }}
                       </div>
@@ -86,12 +86,12 @@
                   class="d-flex align-items-center py-2 w-100 h-100"
                   [pTooltip]="
                     dropdownType === 'recipe'
-                      ? (item.value | recipeTooltip: vm.data)
-                      : (item.value | itemTooltip: vm.data)
+                      ? (item.value | recipeTooltip : vm.data)
+                      : (item.value | itemTooltip : vm.data)
                   "
                   [escape]="false"
                 >
-                  <i [class]="item.value | iconSmClass: dropdownType"></i>
+                  <i [class]="item.value | iconSmClass : dropdownType"></i>
                   <div class="ms-3 text-truncate">
                     {{ item.label }}
                   </div>
@@ -139,7 +139,7 @@
       >
         <i
           class="p-button-icon"
-          [class]="producer.recipeId | iconSmClass: 'recipe'"
+          [class]="producer.recipeId | iconSmClass : 'recipe'"
           ><span>#{{ producer.id }}</span></i
         >
       </button>

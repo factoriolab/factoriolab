@@ -85,7 +85,7 @@ table p-dropdown {
   }
 }
 
-// Center text inside dropdowns
-.p-dropdown {
-  align-items: center;
+// InputNumber buttons should not grow height of inputs
+.p-inputnumber-button {
+  max-height: 18px;
 }
