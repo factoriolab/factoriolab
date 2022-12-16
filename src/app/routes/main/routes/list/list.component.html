@@ -877,8 +877,7 @@
             </tr>
             <ng-container
               *ngFor="
-                let parent of step.parents
-                  | keyvalue : trackSvc.sortByRationalValue
+                let parent of step.parents | keyvalue : trackSvc.sortByValue
               "
             >
               <ng-container *ngIf="step.itemId">
@@ -932,8 +931,7 @@
                 </tr>
                 <ng-container
                   *ngFor="
-                    let output of step.outputs
-                      | keyvalue : trackSvc.sortByRationalValue
+                    let output of step.outputs | keyvalue : trackSvc.sortByValue
                   "
                 >
                   <ng-container
@@ -973,7 +971,7 @@
                 <ng-container
                   *ngFor="
                     let input of step.recipe.in
-                      | keyvalue : trackSvc.sortByRationalValue
+                      | keyvalue : trackSvc.sortByValue
                   "
                 >
                   <ng-container
@@ -1018,7 +1016,7 @@
               <ng-container
                 *ngFor="
                   let output of vm.data.recipeR[step.recipeId].out
-                    | keyvalue : trackSvc.sortByRationalValue
+                    | keyvalue : trackSvc.sortByValue
                 "
               >
                 <ng-container
@@ -1068,7 +1066,7 @@
                   <ng-container
                     *ngFor="
                       let input of vm.data.recipeR[step.recipeId].in
-                        | keyvalue : trackSvc.sortByRationalValue
+                        | keyvalue : trackSvc.sortByValue
                     "
                   >
                     <ng-container
@@ -1185,7 +1183,7 @@
                   <ng-container
                     *ngFor="
                       let output of vm.data.recipeR[step.recipeId].out
-                        | keyvalue : trackSvc.sortByRationalValue
+                        | keyvalue : trackSvc.sortByValue
                     "
                   >
                     <tr
@@ -1593,7 +1591,7 @@
             context: {
               column: Column.Factories,
               totals: vm.totals.factories,
-              modulesTotals: vm.totals.modules
+              modulesTotals: vm.totals.factoryModules
             }
           "
         >
@@ -1601,7 +1599,11 @@
         <ng-container
           *ngTemplateOutlet="
             totalCell;
-            context: { column: Column.Beacons, totals: vm.totals.beacons }
+            context: {
+              column: Column.Beacons,
+              totals: vm.totals.beacons,
+              modulesTotals: vm.totals.beaconModules
+            }
           "
         >
         </ng-container>
@@ -1629,9 +1631,7 @@
         <ng-container *ngIf="vm.columns[column].show">
           <td class="w-0 text-end inherit">
             <div
-              *ngFor="
-                let tot of totals | keyvalue : trackSvc.sortByRationalValue
-              "
+              *ngFor="let tot of totals | keyvalue : trackSvc.sortByValue"
               class="py-2 icon-height"
             >
               <span class="monospace">{{
@@ -1643,9 +1643,7 @@
             <div class="d-flex">
               <div class="d-flex flex-column">
                 <i
-                  *ngFor="
-                    let tot of totals | keyvalue : trackSvc.sortByRationalValue
-                  "
+                  *ngFor="let tot of totals | keyvalue : trackSvc.sortByValue"
                   class="d-block"
                   [class]="tot.key | iconClass : 'item'"
                   [pTooltip]="
@@ -1657,8 +1655,7 @@
               <div class="modules-column">
                 <ng-container
                   *ngFor="
-                    let tot of modulesTotals
-                      | keyvalue : trackSvc.sortByNumberValue
+                    let tot of modulesTotals | keyvalue : trackSvc.sortByValue
                   "
                 >
                   <div class="py-2 icon-height">

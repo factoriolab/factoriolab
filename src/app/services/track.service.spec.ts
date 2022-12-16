@@ -32,7 +32,7 @@ describe('TrackService', () => {
   describe('sortByValue', () => {
     it('should return a diff', () => {
       expect(
-        service.sortByRationalValue(
+        service.sortByValue(
           { key: 'a', value: Rational.one },
           { key: 'b', value: Rational.two }
         )

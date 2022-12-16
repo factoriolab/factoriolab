@@ -384,11 +384,12 @@ export const getTotals = createSelector(
   Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
   (steps, itemSettings, recipeSettings, data) => {
-    const belts: Entities<Rational> = {};
-    const wagons: Entities<Rational> = {};
-    const factories: Entities<Rational> = {};
-    const beacons: Entities<Rational> = {};
-    const modules: Entities<number> = {};
+    const belts: Record<string, Rational> = {};
+    const wagons: Record<string, Rational> = {};
+    const factories: Record<string, Rational> = {};
+    const factoryModules: Record<string, Rational> = {};
+    const beacons: Record<string, Rational> = {};
+    const beaconModules: Record<string, Rational> = {};
     let power = Rational.zero;
     let pollution = Rational.zero;
 
@@ -418,12 +419,13 @@ export const getTotals = createSelector(
       }
 
       if (step.recipeId != null) {
-        // Total Factories
+        // Total Factories & Modules
         if (step.factories?.nonzero()) {
           const recipe = data.recipeEntities[step.recipeId];
           // Don't include silos from launch recipes
           if (!recipe.part) {
-            let factory = recipeSettings[step.recipeId].factoryId;
+            const settings = recipeSettings[step.recipeId];
+            let factory = settings.factoryId;
             if (
               data.game === Game.DysonSphereProgram &&
               factory === ItemId.MiningDrill
@@ -435,21 +437,42 @@ export const getTotals = createSelector(
               if (!Object.prototype.hasOwnProperty.call(factories, factory)) {
                 factories[factory] = Rational.zero;
               }
-              factories[factory] = factories[factory].add(
-                step.factories.ceil()
-              );
+
+              const value = step.factories.ceil();
+              factories[factory] = factories[factory].add(value);
+
+              // Check for modules to add
+              if (settings.factoryModuleIds) {
+                addValueToRecordByIds(
+                  factoryModules,
+                  settings.factoryModuleIds.filter((i) => i !== ItemId.Module),
+                  value
+                );
+              }
             }
           }
         }
 
         // Total Beacons
         if (step.beacons?.nonzero()) {
-          const beacon = recipeSettings[step.recipeId].beaconId;
+          const settings = recipeSettings[step.recipeId];
+          const beacon = settings.beaconId;
           if (beacon != null) {
             if (!Object.prototype.hasOwnProperty.call(beacons, beacon)) {
               beacons[beacon] = Rational.zero;
             }
-            beacons[beacon] = beacons[beacon].add(step.beacons.ceil());
+
+            const value = step.beacons.ceil();
+            beacons[beacon] = beacons[beacon].add(value);
+
+            // Check for modules to add
+            if (settings.beaconModuleIds) {
+              addValueToRecordByIds(
+                beaconModules,
+                settings.beaconModuleIds.filter((i) => i !== ItemId.Module),
+                value
+              );
+            }
           }
         }
       }
@@ -463,28 +486,34 @@ export const getTotals = createSelector(
       if (step.pollution != null) {
         pollution = pollution.add(step.pollution);
       }
-
-      // Total Modules
-      if (step.recipeSettings != null) {
-        const allModules = [
-          ...(step.recipeSettings.factoryModuleIds ?? []),
-          ...(step.recipeSettings.beaconModuleIds ?? []),
-        ];
-        for (const moduleId of allModules) {
-          if (moduleId === 'module') {
-            continue;
-          }
-          if (!Object.prototype.hasOwnProperty.call(modules, moduleId)) {
-            modules[moduleId] = 0;
-          }
-          modules[moduleId] += 1;
-        }
-      }
     }
 
-    return { belts, wagons, factories, beacons, power, modules, pollution };
+    return {
+      belts,
+      wagons,
+      factories,
+      factoryModules,
+      beacons,
+      beaconModules,
+      power,
+      pollution,
+    };
   }
 );
+
+function addValueToRecordByIds(
+  record: Record<string, Rational>,
+  ids: string[],
+  value: Rational
+): void {
+  ids.forEach((id) => {
+    if (!Object.prototype.hasOwnProperty.call(record, id)) {
+      record[id] = Rational.zero;
+    }
+
+    record[id] = record[id].add(value);
+  });
+}
 
 export const getStepDetails = createSelector(
   getSteps,
