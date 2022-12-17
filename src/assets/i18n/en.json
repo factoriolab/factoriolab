@@ -115,6 +115,9 @@
     "example": "Example",
     "notApplicable": "N/A"
   },
+  "picker": {
+    "toggleAll": "Toggle all"
+  },
   "landing": {
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work.",
     "addAProduct": "Add a product",
@@ -161,8 +164,7 @@
     "mod": "Mod",
     "version": "Version",
     "modVersionsTooltip": "Versions of game / mods in this data set",
-    "optionalRecipes": "Optional recipes",
-    "recipesEnabled": "recipe(s) enabled",
+    "optionalRecipesEnabled": "{{ count }} optional recipes enabled",
     "optionalRecipesTooltip": "Click to modify which optional recipes are enabled. Disabled recipes will not be used in the solution.",
     "factory": "Factory",
     "preset": "Preset",

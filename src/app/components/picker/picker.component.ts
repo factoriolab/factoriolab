@@ -31,16 +31,19 @@ export class PickerComponent implements OnInit {
     | undefined;
 
   @Output() selectId = new EventEmitter<string>();
+  @Output() selectIds = new EventEmitter<string[]>();
 
   vm$ = this.store
     .select(Recipes.getAdjustedDataset)
     .pipe(map((data) => ({ data })));
 
   searchCtrl = new FormControl('');
+  selectAllCtrl = new FormControl(false);
 
   visible = false;
   type: 'item' | 'recipe' = 'item';
-  selectedId: string | undefined;
+  isMultiselect = false;
+  selection: string | string[] | undefined;
   categoryEntities: Entities<Category> = {};
   categoryIds: string[] = [];
   categoryRows: Entities<string[][]> = {};
@@ -62,9 +65,27 @@ export class PickerComponent implements OnInit {
       .subscribe((s) => this.inputSearch(s));
   }
 
-  clickOpen(data: Dataset, type: 'item' | 'recipe', selectedId?: string): void {
+  selectAll(value: boolean): void {
+    if (value) {
+      this.selection = [];
+    } else {
+      this.selection = this.allSelectItems.map((i) => i.value);
+    }
+  }
+
+  clickOpen(
+    data: Dataset,
+    type: 'item' | 'recipe',
+    selection?: string | string[]
+  ): void {
     this.type = type;
-    this.selectedId = selectedId;
+    if (Array.isArray(selection)) {
+      this.isMultiselect = true;
+      this.selection = [...selection];
+    } else {
+      this.isMultiselect = false;
+      this.selection = selection;
+    }
     this.searchCtrl.setValue('');
     // Wait for input field to appear before attempting to focus
     setTimeout(() => {
@@ -73,9 +94,9 @@ export class PickerComponent implements OnInit {
     this.categoryEntities = data.categoryEntities;
     if (type === 'item') {
       this.categoryRows = data.categoryItemRows;
-      if (this.selectedId) {
+      if (selection && !Array.isArray(selection)) {
         const index = data.categoryIds.indexOf(
-          data.itemEntities[this.selectedId].category
+          data.itemEntities[selection].category
         );
         this.activeIndex = index;
       }
@@ -87,20 +108,53 @@ export class PickerComponent implements OnInit {
         })
       );
     } else {
-      this.categoryRows = data.categoryRecipeRows;
-      if (this.selectedId) {
-        const index = data.categoryIds.indexOf(
-          data.recipeEntities[this.selectedId].category
+      if (Array.isArray(selection)) {
+        this.allSelectItems = data.complexRecipeIds.map(
+          (i): SelectItem => ({
+            label: data.recipeEntities[i].name,
+            value: i,
+            title: data.recipeEntities[i].category,
+          })
         );
-        this.activeIndex = index;
+
+        // Find categories that have complex recipes
+        const categoryIds = data.categoryIds.filter((c) =>
+          this.allSelectItems.some((i) => i.title === c)
+        );
+
+        // Filter category rows
+        this.categoryRows = {};
+        const ids = this.allSelectItems.map((i) => i.value);
+        for (const c of categoryIds) {
+          // Filter each category row
+          this.categoryRows[c] = [];
+          for (const r of data.categoryRecipeRows[c]) {
+            this.categoryRows[c].push(r.filter((i) => ids.indexOf(i) !== -1));
+          }
+          // Filter out empty category rows
+          this.categoryRows[c] = this.categoryRows[c].filter(
+            (r) => r.length > 0
+          );
+        }
+
+        console.log('selection length', selection.length);
+        this.selectAllCtrl.setValue(selection.length === 0);
+      } else {
+        this.categoryRows = data.categoryRecipeRows;
+        if (selection) {
+          const index = data.categoryIds.indexOf(
+            data.recipeEntities[selection].category
+          );
+          this.activeIndex = index;
+        }
+        this.allSelectItems = data.recipeIds.map(
+          (i): SelectItem => ({
+            label: data.recipeEntities[i].name,
+            value: i,
+            title: data.recipeEntities[i].category,
+          })
+        );
       }
-      this.allSelectItems = data.recipeIds.map(
-        (i): SelectItem => ({
-          label: data.recipeEntities[i].name,
-          value: i,
-          title: data.recipeEntities[i].category,
-        })
-      );
     }
     this.categoryIds = data.categoryIds.filter((c) => this.categoryRows[c]);
     this.allCategoryIds = this.categoryIds;
@@ -110,8 +164,24 @@ export class PickerComponent implements OnInit {
   }
 
   clickId(id: string): void {
-    this.selectId.emit(id);
-    this.visible = false;
+    if (Array.isArray(this.selection)) {
+      const index = this.selection.indexOf(id);
+      if (index === -1) {
+        this.selection.push(id);
+      } else {
+        this.selection.splice(index, 1);
+      }
+      this.selectAllCtrl.setValue(this.selection.length === 0);
+    } else {
+      this.selectId.emit(id);
+      this.visible = false;
+    }
+  }
+
+  onHide(): void {
+    if (Array.isArray(this.selection)) {
+      this.selectIds.emit(this.selection);
+    }
   }
 
   inputSearch(search: string | null): void {
@@ -135,11 +205,11 @@ export class PickerComponent implements OnInit {
       filteredItems.some((i) => i.title === c)
     );
 
-    // Filter category item rows
+    // Filter category rows
     this.categoryRows = {};
     const ids = filteredItems.map((i) => i.value);
     for (const c of this.categoryIds) {
-      // Filter each category item row
+      // Filter each category row
       this.categoryRows[c] = [];
       for (const r of this.allCategoryRows[c]) {
         this.categoryRows[c].push(r.filter((i) => ids.indexOf(i) !== -1));
