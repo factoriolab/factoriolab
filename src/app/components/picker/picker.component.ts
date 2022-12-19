@@ -65,14 +65,6 @@ export class PickerComponent implements OnInit {
       .subscribe((s) => this.inputSearch(s));
   }
 
-  selectAll(value: boolean): void {
-    if (value) {
-      this.selection = [];
-    } else {
-      this.selection = this.allSelectItems.map((i) => i.value);
-    }
-  }
-
   clickOpen(
     data: Dataset,
     type: 'item' | 'recipe',
@@ -137,7 +129,6 @@ export class PickerComponent implements OnInit {
           );
         }
 
-        console.log('selection length', selection.length);
         this.selectAllCtrl.setValue(selection.length === 0);
       } else {
         this.categoryRows = data.categoryRecipeRows;
@@ -161,6 +152,14 @@ export class PickerComponent implements OnInit {
     this.allCategoryRows = this.categoryRows;
     this.visible = true;
     this.ref.markForCheck();
+  }
+
+  selectAll(value: boolean): void {
+    if (value) {
+      this.selection = [];
+    } else {
+      this.selection = this.allSelectItems.map((i) => i.value);
+    }
   }
 
   clickId(id: string): void {

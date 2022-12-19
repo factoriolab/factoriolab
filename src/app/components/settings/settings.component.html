@@ -207,12 +207,10 @@
             type="button"
             [pTooltip]="'settings.optionalRecipesTooltip' | translate"
             [label]="
-              'settings.optionalRecipesEnabled'
+              'settings.optionalRecipesDisabled'
                 | translate
                   : {
-                      count:
-                        vm.data.complexRecipeIds.length -
-                        vm.settings.disabledRecipeIds.length
+                      count: vm.settings.disabledRecipeIds.length
                     }
             "
             (click)="

@@ -164,7 +164,7 @@
     "mod": "Mod",
     "version": "Version",
     "modVersionsTooltip": "Versions of game / mods in this data set",
-    "optionalRecipesEnabled": "{{ count }} optional recipes enabled",
+    "optionalRecipesDisabled": "{{ count }} optional recipes disabled",
     "optionalRecipesTooltip": "Click to modify which optional recipes are enabled. Disabled recipes will not be used in the solution.",
     "factory": "Factory",
     "preset": "Preset",
@@ -282,7 +282,7 @@
     "defaultRecipeInfo1": "Click to set a recipe as the default for this item. If set, the default recipe is treated as the only way to produce this item.",
     "defaultRecipeInfo2": "The recipe must be enabled and must only produce this item.",
     "defaultRecipeInfo3": "Default was ignored due to a detected circular loop.",
-    "enabledRecipes": "Enabled Recipes",
+    "enabledRecipes": "Enabled recipes",
     "enabledRecipesInfo": "Click recipes to enable or disable them. Disabled recipes will not be used in the solution.",
     "total": "Total"
   },
