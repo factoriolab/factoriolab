@@ -58,8 +58,4 @@ export class DisplayService {
       .join('');
     return `${timeHtml}${inHtml}<i class="m-1 me-2 fa-solid fa-arrow-right"></i>${outHtml}`;
   }
-
-  invertArray(value: string[], all: string[]): string[] {
-    return all.filter((a) => !value.some((v) => v === a));
-  }
 }

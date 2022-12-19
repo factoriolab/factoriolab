@@ -867,7 +867,7 @@
                       wagons: step.wagons?.mul(output.value),
                       wagonId: vm.itemSettings[step.itemId].wagonId,
                       factories: output.factories,
-                      factoryId: step.recipeSettings?.factoryId,
+                      factoryId: vm.recipeSettings[output.recipeId].factoryId,
                       recipeId: output.recipeId,
                       producerId: output.producerId,
                       percent: output.value,
