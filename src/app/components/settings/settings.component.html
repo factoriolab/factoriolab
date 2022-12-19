@@ -200,53 +200,33 @@
             </button>
           </span>
         </div>
-        <div class="mt-3 py-2">
-          <span
-            class="p-float-label"
+        <div class="py-2">
+          <button
+            pButton
+            pRipple
+            type="button"
             [pTooltip]="'settings.optionalRecipesTooltip' | translate"
-          >
-            <p-multiSelect
-              inputId="optional-recipes"
-              appendTo="body"
-              scrollHeight="40vh"
-              [virtualScroll]="true"
-              [virtualScrollItemSize]="48"
-              [ngModel]="
+            [label]="
+              'settings.optionalRecipesDisabled'
+                | translate
+                  : {
+                      count: vm.settings.disabledRecipeIds.length
+                    }
+            "
+            (click)="
+              optionalRecipesPicker.clickOpen(
+                vm.data,
+                'recipe',
                 vm.settings.disabledRecipeIds
-                  | invertArray : vm.data.complexRecipeIds
-              "
-              [options]="vm.options.complexRecipes"
-              (onChange)="
-                setDisabledRecipes(
-                  displaySvc.invertArray(
-                    $event.value,
-                    vm.data.complexRecipeIds
-                  ),
-                  vm.data.defaults?.disabledRecipeIds
-                )
-              "
-            >
-              <ng-template pTemplate="selectedItems" let-items>
-                {{ items?.length ?? 0 }}
-                {{ 'settings.recipesEnabled' | translate }}
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                <div
-                  class="d-flex align-items-center w-100 h-100"
-                  [pTooltip]="item.value | recipeTooltip : vm.data"
-                  [escape]="false"
-                >
-                  <i [class]="item.value | iconSmClass : 'recipe'"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
-            </p-multiSelect>
-            <label for="optional-recipes">{{
-              'settings.optionalRecipes' | translate
-            }}</label>
-          </span>
+              )
+            "
+          ></button>
+          <lab-picker
+            #optionalRecipesPicker
+            (selectIds)="
+              setDisabledRecipes($event, vm.data.defaults?.disabledRecipeIds)
+            "
+          ></lab-picker>
         </div>
       </div>
       <div class="mb-2">

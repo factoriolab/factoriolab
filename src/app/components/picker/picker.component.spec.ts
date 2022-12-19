@@ -46,6 +46,28 @@ describe('PickerComponent', () => {
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();
     });
+
+    it('should open as multiselect', () => {
+      component.clickOpen(Mocks.Dataset, 'recipe', [RecipeId.IronPlate]);
+      expect(component.visible).toBeTrue();
+      expect(component.isMultiselect).toBeTrue();
+      expect(component.selection?.length).toEqual(1);
+    });
+  });
+
+  describe('selectAll', () => {
+    it('should set the selection to empty', () => {
+      component.selection = [RecipeId.AdvancedCircuit];
+      component.selectAll(true);
+      expect(component.selection).toEqual([]);
+    });
+
+    it('should set the selection to all', () => {
+      component.selection = [];
+      component.allSelectItems = [{ value: RecipeId.AdvancedCircuit }];
+      component.selectAll(false);
+      expect(component.selection.length).toEqual(1);
+    });
   });
 
   describe('clickId', () => {
@@ -55,6 +77,25 @@ describe('PickerComponent', () => {
       component.clickId(ItemId.IronPlate);
       expect(component.selectId.emit).toHaveBeenCalledWith(ItemId.IronPlate);
       expect(component.visible).toBeFalse();
+    });
+
+    it('should toggle when opened as a multiselect', () => {
+      component.selection = [];
+      component.clickId(RecipeId.AdvancedCircuit);
+      expect(component.selection).toEqual([RecipeId.AdvancedCircuit]);
+      component.clickId(RecipeId.AdvancedCircuit);
+      expect(component.selection).toEqual([]);
+    });
+  });
+
+  describe('onHide', () => {
+    it('should emit selected ids if array', () => {
+      spyOn(component.selectIds, 'emit');
+      component.selection = [RecipeId.AdvancedCircuit];
+      component.onHide();
+      expect(component.selectIds.emit).toHaveBeenCalledWith([
+        RecipeId.AdvancedCircuit,
+      ]);
     });
   });
 
