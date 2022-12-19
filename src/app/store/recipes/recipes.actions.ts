@@ -1,6 +1,11 @@
 import { Action } from '@ngrx/store';
 
-import { DefaultIdPayload, IdPayload } from '~/models';
+import {
+  IdDefaultPayload,
+  IdIndexDefaultPayload,
+  IdIndexPayload,
+  IdPayload,
+} from '~/models';
 
 export const enum RecipesActionType {
   SET_FACTORY = '[Recipes] Set Factory',
@@ -20,37 +25,37 @@ export const enum RecipesActionType {
 
 export class SetFactoryAction implements Action {
   readonly type = RecipesActionType.SET_FACTORY;
-  constructor(public payload: DefaultIdPayload) {}
+  constructor(public payload: IdDefaultPayload) {}
 }
 
 export class SetFactoryModulesAction implements Action {
   readonly type = RecipesActionType.SET_FACTORY_MODULES;
-  constructor(public payload: DefaultIdPayload<string[]>) {}
+  constructor(public payload: IdDefaultPayload<string[]>) {}
 }
 
 export class SetBeaconCountAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_COUNT;
-  constructor(public payload: DefaultIdPayload) {}
+  constructor(public payload: IdIndexDefaultPayload) {}
 }
 
 export class SetBeaconAction implements Action {
   readonly type = RecipesActionType.SET_BEACON;
-  constructor(public payload: DefaultIdPayload) {}
+  constructor(public payload: IdIndexDefaultPayload) {}
 }
 
 export class SetBeaconModulesAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_MODULES;
-  constructor(public payload: DefaultIdPayload<string[]>) {}
+  constructor(public payload: IdIndexDefaultPayload<string[]>) {}
 }
 
 export class SetBeaconTotalAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_TOTAL;
-  constructor(public payload: IdPayload) {}
+  constructor(public payload: IdIndexPayload) {}
 }
 
 export class SetOverclockAction implements Action {
   readonly type = RecipesActionType.SET_OVERCLOCK;
-  constructor(public payload: DefaultIdPayload<number>) {}
+  constructor(public payload: IdDefaultPayload<number>) {}
 }
 
 export class SetCostAction implements Action {

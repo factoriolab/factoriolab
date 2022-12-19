@@ -1,4 +1,4 @@
-import { DefaultIdPayload, Entities, RecipeSettings } from '~/models';
+import { Entities, IdDefaultPayload, RecipeSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
@@ -21,7 +21,7 @@ export function recipesReducer(
     case RecipesActionType.SET_FACTORY:
       return StoreUtility.resetFields(
         StoreUtility.compareReset(state, 'factoryId', action.payload),
-        ['factoryModuleIds', 'beaconCount', 'beaconId', 'beaconModuleIds'],
+        ['factoryModuleIds', 'beacons'],
         action.payload.id
       );
     case RecipesActionType.SET_FACTORY_MODULES:
@@ -52,7 +52,7 @@ export function recipesReducer(
       return StoreUtility.compareReset(
         state,
         'cost',
-        action.payload as DefaultIdPayload
+        action.payload as IdDefaultPayload
       );
     case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
@@ -62,13 +62,7 @@ export function recipesReducer(
     case RecipesActionType.RESET_RECIPE_MODULES:
       return StoreUtility.resetFields(
         state,
-        [
-          'factoryModuleIds',
-          'beaconCount',
-          'beaconId',
-          'beaconModuleIds',
-          'beaconTotal',
-        ],
+        ['factoryModuleIds', 'beacons'],
         action.payload
       );
     case RecipesActionType.RESET_FACTORIES:
@@ -76,18 +70,10 @@ export function recipesReducer(
         'factoryId',
         'overclock',
         'factoryModuleIds',
-        'beaconCount',
-        'beaconId',
-        'beaconModuleIds',
-        'beaconTotal',
+        'beacons',
       ]);
     case RecipesActionType.RESET_BEACONS:
-      return StoreUtility.resetFields(state, [
-        'beaconCount',
-        'beaconId',
-        'beaconModuleIds',
-        'beaconTotal',
-      ]);
+      return StoreUtility.resetFields(state, ['beacons']);
     case RecipesActionType.RESET_COST:
       return StoreUtility.resetFields(state, ['cost']);
     default:

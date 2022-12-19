@@ -1,7 +1,7 @@
 import {
-  DefaultIdPayload,
   DefaultPayload,
   Entities,
+  IdDefaultPayload,
   IdPayload,
 } from '~/models';
 
@@ -26,7 +26,7 @@ export class StoreUtility {
     return this.rankEquals([...a].sort(), [...b].sort());
   }
 
-  static payloadEquals<T>(payload: DefaultIdPayload<T>, rank = false): boolean {
+  static payloadEquals<T>(payload: IdDefaultPayload<T>, rank = false): boolean {
     return Array.isArray(payload.value) && Array.isArray(payload.def)
       ? rank
         ? this.rankEquals(
@@ -79,7 +79,7 @@ export class StoreUtility {
   static compareReset<T extends object, P>(
     state: Entities<T>,
     field: keyof T,
-    payload: DefaultIdPayload<P>,
+    payload: IdDefaultPayload<P>,
     rank = false
   ): Entities<T> {
     // Spread into new state

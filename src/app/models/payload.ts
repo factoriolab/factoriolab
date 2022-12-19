@@ -3,7 +3,20 @@ export interface IdPayload<T = string> {
   value: T;
 }
 
-export interface DefaultIdPayload<T = string, D = T> {
+export interface IdIndexPayload<T = string> {
+  id: string;
+  index: number;
+  value: T;
+}
+
+export interface IdIndexDefaultPayload<T = string, D = T> {
+  id: string;
+  index: number;
+  value: T;
+  def: D | undefined;
+}
+
+export interface IdDefaultPayload<T = string, D = T> {
   id: string;
   value: T;
   def: D | undefined;

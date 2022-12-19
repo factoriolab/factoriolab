@@ -2,6 +2,10 @@ import { SelectItem } from 'primeng/api';
 
 import { RationalRecipe } from './data';
 import { Rational } from './rational';
+import {
+  BeaconSettings,
+  RationalBeaconSettings,
+} from './settings/beacon-settings';
 
 export interface Producer {
   id: string;
@@ -11,11 +15,7 @@ export interface Producer {
   factoryModuleIds?: string[];
   /** Calculated, not configurable */
   factoryModuleOptions?: SelectItem[];
-  beaconCount?: string;
-  beaconId?: string;
-  beaconModuleIds?: string[];
-  /** Calculated, not configurable */
-  beaconModuleOptions?: SelectItem[];
+  beacons?: BeaconSettings[];
   overclock?: number;
 }
 
@@ -27,11 +27,7 @@ export class RationalProducer {
   factoryModuleIds?: string[];
   /** Calculated, not configurable */
   factoryModuleOptions?: SelectItem[];
-  beaconCount?: Rational;
-  beaconId?: string;
-  beaconModuleIds?: string[];
-  /** Calculated, not configurable */
-  beaconModuleOptions?: SelectItem[];
+  beacons?: RationalBeaconSettings[];
   overclock?: Rational;
   recipe: RationalRecipe;
 
@@ -45,20 +41,11 @@ export class RationalProducer {
     if (data.factoryModuleIds != null) {
       this.factoryModuleIds = data.factoryModuleIds;
     }
-    if (data.factoryModuleOptions) {
+    if (data.factoryModuleOptions != null) {
       this.factoryModuleOptions = data.factoryModuleOptions;
     }
-    if (data.beaconCount != null) {
-      this.beaconCount = Rational.fromString(data.beaconCount);
-    }
-    if (data.beaconId != null) {
-      this.beaconId = data.beaconId;
-    }
-    if (data.beaconModuleIds != null) {
-      this.beaconModuleIds = data.beaconModuleIds;
-    }
-    if (data.beaconModuleOptions) {
-      this.beaconModuleOptions = data.beaconModuleOptions;
+    if (data.beacons) {
+      this.beacons = data.beacons.map((b) => new RationalBeaconSettings(b));
     }
     if (data.overclock != null) {
       this.overclock = Rational.fromNumber(data.overclock);
