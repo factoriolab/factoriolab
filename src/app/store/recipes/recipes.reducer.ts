@@ -31,21 +31,33 @@ export function recipesReducer(
         action.payload
       );
     case RecipesActionType.SET_BEACON_COUNT:
-      return StoreUtility.compareReset(state, 'beaconCount', action.payload);
+      return StoreUtility.compareResetIndex(
+        state,
+        'beacons',
+        'count',
+        action.payload
+      );
     case RecipesActionType.SET_BEACON:
       return StoreUtility.resetField(
-        StoreUtility.compareReset(state, 'beaconId', action.payload),
-        'beaconModuleIds',
+        StoreUtility.compareResetIndex(state, 'beacons', 'id', action.payload),
+        'beacons',
+
         action.payload.id
       );
     case RecipesActionType.SET_BEACON_MODULES:
-      return StoreUtility.compareReset(
+      return StoreUtility.compareResetIndex(
         state,
-        'beaconModuleIds',
+        'beacons',
+        'moduleIds',
         action.payload
       );
     case RecipesActionType.SET_BEACON_TOTAL:
-      return StoreUtility.assignValue(state, 'beaconTotal', action.payload);
+      return StoreUtility.assignIndexValue(
+        state,
+        'beacons',
+        'total',
+        action.payload
+      );
     case RecipesActionType.SET_OVERCLOCK:
       return StoreUtility.compareReset(state, 'overclock', action.payload);
     case RecipesActionType.SET_COST:

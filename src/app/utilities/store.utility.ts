@@ -2,6 +2,8 @@ import {
   DefaultPayload,
   Entities,
   IdDefaultPayload,
+  IdIndexDefaultPayload,
+  IdIndexPayload,
   IdPayload,
 } from '~/models';
 
@@ -76,10 +78,10 @@ export class StoreUtility {
     return newState;
   }
 
-  static compareReset<T extends object, P>(
+  static compareReset<T extends object, K extends keyof T>(
     state: Entities<T>,
-    field: keyof T,
-    payload: IdDefaultPayload<P>,
+    field: K,
+    payload: IdDefaultPayload<T[K]>,
     rank = false
   ): Entities<T> {
     // Spread into new state
@@ -102,15 +104,77 @@ export class StoreUtility {
     }
   }
 
-  static assignValue<T, P>(
+  static assignValue<T, K extends keyof T>(
     state: Entities<T>,
-    field: keyof T,
-    payload: IdPayload<P>
+    field: K,
+    payload: IdPayload<T[K]>
   ): Entities<T> {
     return {
       ...state,
       ...{
         [payload.id]: { ...state[payload.id], ...{ [field]: payload.value } },
+      },
+    };
+  }
+
+  static compareResetIndex<
+    T extends { [key in K]?: Partial<P>[] },
+    P,
+    K extends keyof T,
+    L extends keyof P
+  >(
+    state: Entities<T>,
+    field: K & keyof T,
+    subfield: L & keyof P,
+    payload: IdIndexDefaultPayload<P[L]>,
+    rank = false
+  ): Entities<T> {
+    // Spread into new state
+    if (this.payloadEquals(payload, rank)) {
+      // Resetting to null
+      const newState = { ...state };
+      if (newState[payload.id] !== undefined) {
+        newState[payload.id] = { ...newState[payload.id] };
+        if (newState[payload.id][field] !== undefined) {
+          delete newState[payload.id][field];
+        }
+        if (Object.keys(newState[payload.id]).length === 0) {
+          delete newState[payload.id];
+        }
+      }
+      return newState;
+    } else {
+      // Setting field
+      return this.assignIndexValue(state, field, subfield, payload);
+    }
+  }
+
+  static assignIndexValue<
+    T extends { [key in K]?: Partial<P>[] },
+    P,
+    K extends keyof T,
+    L extends keyof P
+  >(
+    state: Entities<T>,
+    field: K & keyof T,
+    subfield: L & keyof P,
+    payload: IdIndexPayload<P[L]>
+  ): Entities<T> {
+    return {
+      ...state,
+      ...{
+        [payload.id]: {
+          ...state[payload.id],
+          ...{
+            [field]: state[payload.id][field]?.map((v, i) => {
+              if (i === payload.index) {
+                return { ...v, ...{ [subfield]: payload.value } };
+              } else {
+                return v;
+              }
+            }),
+          },
+        },
       },
     };
   }
