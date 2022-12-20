@@ -643,7 +643,7 @@
             *ngIf="step.recipeId && step.recipeSettings; else emptyCol2"
           >
             <td class="w-0">
-              <lab-input-number
+              <!-- <lab-input-number
                 *ngIf="
                   step.recipeSettings.beaconId &&
                   step.recipeSettings.beaconCount
@@ -663,11 +663,11 @@
                     RecipeField.BeaconCount
                   )
                 "
-              ></lab-input-number>
+              ></lab-input-number> -->
             </td>
             <td class="ps-0">
               <div class="d-flex">
-                <p-dropdown
+                <!-- <p-dropdown
                   *ngIf="step.recipeSettings.beaconId"
                   labDropdownBase="icon"
                   [pTooltip]="
@@ -755,7 +755,7 @@
                   [value]="step.beacons.toString()"
                   [hideButtons]="true"
                   (setValue)="setBeaconTotal(step.recipeId, $event)"
-                ></lab-input-number>
+                ></lab-input-number> -->
               </div>
             </td>
           </ng-container>

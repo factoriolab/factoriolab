@@ -38,10 +38,10 @@ export function recipesReducer(
         action.payload
       );
     case RecipesActionType.SET_BEACON:
-      return StoreUtility.resetField(
+      return StoreUtility.resetFieldIndex(
         StoreUtility.compareResetIndex(state, 'beacons', 'id', action.payload),
         'beacons',
-
+        'moduleIds',
         action.payload.id
       );
     case RecipesActionType.SET_BEACON_MODULES:

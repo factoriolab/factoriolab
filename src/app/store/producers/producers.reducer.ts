@@ -93,14 +93,7 @@ export function producersReducer(
         ...{
           entities: StoreUtility.resetFields(
             entities,
-            [
-              'factoryId',
-              'factoryModuleIds',
-              'beaconCount',
-              'beaconId',
-              'beaconModuleIds',
-              'overclock',
-            ],
+            ['factoryId', 'factoryModuleIds', 'beacons', 'overclock'],
             action.payload.id
           ),
         },
@@ -127,7 +120,7 @@ export function producersReducer(
               'factoryId',
               action.payload
             ),
-            ['factoryModuleIds', 'beaconCount', 'beaconId', 'beaconModuleIds'],
+            ['factoryModuleIds', 'beacons'],
             action.payload.id
           ),
         },
@@ -147,9 +140,10 @@ export function producersReducer(
       return {
         ...state,
         ...{
-          entities: StoreUtility.compareReset(
+          entities: StoreUtility.compareResetIndex(
             state.entities,
-            'beaconCount',
+            'beacons',
+            'count',
             action.payload
           ),
         },
@@ -158,13 +152,15 @@ export function producersReducer(
       return {
         ...state,
         ...{
-          entities: StoreUtility.resetField(
-            StoreUtility.compareReset(
+          entities: StoreUtility.resetFieldIndex(
+            StoreUtility.compareResetIndex(
               state.entities,
-              'beaconId',
+              'beacons',
+              'id',
               action.payload
             ),
-            'beaconModuleIds',
+            'beacons',
+            'moduleIds',
             action.payload.id
           ),
         },
@@ -173,9 +169,10 @@ export function producersReducer(
       return {
         ...state,
         ...{
-          entities: StoreUtility.compareReset(
+          entities: StoreUtility.compareResetIndex(
             state.entities,
-            'beaconModuleIds',
+            'beacons',
+            'moduleIds',
             action.payload
           ),
         },
@@ -197,14 +194,7 @@ export function producersReducer(
         ...{
           entities: StoreUtility.resetFields(
             state.entities,
-            [
-              'factoryId',
-              'overclock',
-              'factoryModuleIds',
-              'beaconCount',
-              'beaconId',
-              'beaconModuleIds',
-            ],
+            ['factoryId', 'overclock', 'factoryModuleIds', 'beacons'],
             action.payload
           ),
         },
@@ -217,9 +207,7 @@ export function producersReducer(
             'factoryId',
             'overclock',
             'factoryModuleIds',
-            'beaconCount',
-            'beaconId',
-            'beaconModuleIds',
+            'beacons',
           ]),
         },
       };
@@ -227,11 +215,7 @@ export function producersReducer(
       return {
         ...state,
         ...{
-          entities: StoreUtility.resetFields(state.entities, [
-            'beaconCount',
-            'beaconId',
-            'beaconModuleIds',
-          ]),
+          entities: StoreUtility.resetFields(state.entities, ['beacons']),
         },
       };
 

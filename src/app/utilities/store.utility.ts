@@ -117,6 +117,49 @@ export class StoreUtility {
     };
   }
 
+  /** Resets a passed field of the state */
+  static resetFieldIndex<
+    T extends { [key in K]?: U[] },
+    U extends object,
+    V extends Exclude<T[K], undefined>[number],
+    K extends keyof T,
+    L extends keyof V
+  >(
+    state: Record<string, T>,
+    field: K,
+    subfield: L,
+    id?: string,
+    index?: number
+  ): Record<string, T> {
+    // Spread into new state
+    const newState = { ...state };
+    for (const i of Object.keys(newState).filter(
+      (j) => (!id || id === j) && newState[j][field] != null
+    )) {
+      const newArr = newState[i][field]
+        ?.map((v, i) => {
+          if (index == null || i === index) {
+            // Spread into new state
+            const newV = { ...v } as unknown as V;
+            delete newV[subfield];
+            return newV;
+          } else {
+            return v;
+          }
+        })
+        .filter((v) => Object.keys(v).length > 0);
+      if (newArr != null && newArr.length > 0) {
+        newState[i] = { ...newState[i], ...{ [field]: newArr } };
+      } else {
+        delete newState[i][field];
+      }
+      if (Object.keys(newState[i]).length === 1) {
+        delete newState[i];
+      }
+    }
+    return newState;
+  }
+
   static compareResetIndex<
     T extends { [key in K]?: U[] },
     U,

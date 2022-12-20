@@ -2,10 +2,7 @@ import { SelectItem } from 'primeng/api';
 
 import { RationalRecipe } from './data';
 import { Rational } from './rational';
-import {
-  BeaconSettings,
-  RationalBeaconSettings,
-} from './settings/beacon-settings';
+import { BeaconSettings, RationalBeaconSettings } from './settings';
 
 export interface Producer {
   id: string;

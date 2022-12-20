@@ -8,6 +8,7 @@ import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
 import {
+  BeaconSettings,
   DisplayRate,
   Entities,
   FactorySettings,
@@ -1073,6 +1074,31 @@ export class RouterService {
       });
 
     return obj;
+  }
+
+  zipBeacons(beacons: BeaconSettings[] | undefined, hash: ModHash): Zip {
+    return this.zipList(
+      (beacons ?? []).map((obj) => {
+        return {
+          bare: this.zipFields([
+            this.zipTruthyString(obj.id),
+            this.zipTruthyString(obj.count),
+            this.zipTruthyArray(obj.moduleIds),
+            this.zipTruthyString(obj.total),
+          ]),
+          hash: this.zipFields([
+            this.zipTruthyNString(obj.id, hash.modules),
+            this.zipTruthyString(obj.count),
+            this.zipTruthyNArray(obj.moduleIds, hash.modules),
+            this.zipTruthyString(obj.total),
+          ]),
+        };
+      })
+    );
+  }
+
+  unzipBeacons(): void {
+    // TODO
   }
 
   zipList(list: Zip[]): Zip {

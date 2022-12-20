@@ -9,22 +9,22 @@ export interface IdIndexPayload<T = string> {
   value: T;
 }
 
-export interface IdIndexDefaultPayload<T = string> {
+export interface IdIndexDefaultPayload<T = string, D = T> {
   id: string;
   index: number;
   value: T;
-  def: T | undefined;
+  def: D | undefined;
 }
 
-export interface IdDefaultPayload<T = string> {
+export interface IdDefaultPayload<T = string, D = T> {
   id: string;
   value: T;
-  def: T | undefined;
+  def: D | undefined;
 }
 
-export interface DefaultPayload<T = string> {
+export interface DefaultPayload<T = string, D = T> {
   value: T;
-  def: T | undefined;
+  def: D | undefined;
 }
 
 export interface PreviousPayload<T = string> {
