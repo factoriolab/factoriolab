@@ -118,17 +118,18 @@ export class StoreUtility {
   }
 
   static compareResetIndex<
-    T extends { [key in K]?: Partial<P>[] },
-    P,
+    T extends { [key in K]?: U[] },
+    U,
+    V extends Exclude<T[K], undefined>[number],
     K extends keyof T,
-    L extends keyof P
+    L extends keyof V
   >(
-    state: Entities<T>,
-    field: K & keyof T,
-    subfield: L & keyof P,
-    payload: IdIndexDefaultPayload<P[L]>,
+    state: Record<string, T>,
+    field: K,
+    subfield: L,
+    payload: IdIndexDefaultPayload<V[L]>,
     rank = false
-  ): Entities<T> {
+  ): Record<string, T> {
     // Spread into new state
     if (this.payloadEquals(payload, rank)) {
       // Resetting to null
@@ -150,16 +151,17 @@ export class StoreUtility {
   }
 
   static assignIndexValue<
-    T extends { [key in K]?: Partial<P>[] },
-    P,
+    T extends { [key in K]?: U[] },
+    U,
+    V extends Exclude<T[K], undefined>[number],
     K extends keyof T,
-    L extends keyof P
+    L extends keyof V
   >(
-    state: Entities<T>,
-    field: K & keyof T,
-    subfield: L & keyof P,
-    payload: IdIndexPayload<P[L]>
-  ): Entities<T> {
+    state: Record<string, T>,
+    field: K,
+    subfield: L,
+    payload: IdIndexPayload<V[L]>
+  ): Record<string, T> {
     return {
       ...state,
       ...{
