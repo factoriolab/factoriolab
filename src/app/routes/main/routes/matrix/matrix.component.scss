@@ -12,11 +12,10 @@ table.result-info {
   .p-datatable {
     .p-datatable-thead {
       th {
-        position: -webkit-sticky;
         position: sticky;
-        top: 5rem;
       }
     }
+
     .p-datatable-tfoot {
       th {
         border-bottom: 1px solid var(--surface-border);
