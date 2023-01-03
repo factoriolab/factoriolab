@@ -10,7 +10,7 @@
     <tr *ngIf="vm.result.time != null">
       <th>{{ 'matrix.runtime' | translate }}</th>
       <td>
-        {{ 'matrix.runtimeValue' | translate: { value: vm.result.time } }}
+        {{ 'matrix.runtimeValue' | translate : { value: vm.result.time } }}
       </td>
     </tr>
     <tr *ngIf="vm.result.pivots != null">
@@ -22,7 +22,7 @@
       <td>
         {{
           'matrix.sizeValue'
-            | translate: { rows: vm.result.A.length, cols: vm.result.O.length }
+            | translate : { rows: vm.result.A.length, cols: vm.result.O.length }
         }}
       </td>
     </tr>
@@ -116,7 +116,7 @@
           </th>
         </tr>
         <tr>
-          <th style="width: 8rem"></th>
+          <th style="width: 8rem" colspan="2"></th>
           <th
             [colSpan]="vm.result.itemIds.length"
             [style.width.rem]="4 * vm.result.itemIds.length"
@@ -163,15 +163,16 @@
           </th>
           <th *ngFor="let p of vm.result.producers" style="width: 4rem">
             <i
-              [class]="p.recipeId | iconClass: 'recipe'"
-              [pTooltip]="p.recipeId | recipeTooltip: vm.data"
+              [class]="p.recipeId | iconClass : 'recipe'"
+              [pTooltip]="p.recipeId | recipeTooltip : vm.data"
               [escape]="false"
-            ></i>
+              ><span>#{{ p.id }}</span></i
+            >
           </th>
           <th *ngFor="let i of vm.result.recipeIds" style="width: 4rem">
             <i
-              [class]="i | iconClass: 'recipe'"
-              [pTooltip]="i | recipeTooltip: vm.data"
+              [class]="i | iconClass : 'recipe'"
+              [pTooltip]="i | recipeTooltip : vm.data"
               [escape]="false"
             ></i>
           </th>
@@ -209,8 +210,8 @@
               *ngIf="vm.result.producers[rowIndex - 1] as p; else notProducer"
             >
               <i
-                [class]="p.recipeId | iconClass: 'recipe'"
-                [pTooltip]="p.recipeId | recipeTooltip: vm.data"
+                [class]="p.recipeId | iconClass : 'recipe'"
+                [pTooltip]="p.recipeId | recipeTooltip : vm.data"
                 [escape]="false"
               ></i>
             </ng-container>
@@ -224,8 +225,8 @@
                 "
               >
                 <i
-                  [class]="id | iconClass: 'recipe'"
-                  [pTooltip]="id | recipeTooltip: vm.data"
+                  [class]="id | iconClass : 'recipe'"
+                  [pTooltip]="id | recipeTooltip : vm.data"
                   [escape]="false"
                 ></i>
               </ng-container>
@@ -311,7 +312,7 @@
           </th>
         </tr>
         <tr>
-          <th style="width: 8rem"></th>
+          <th style="width: 8rem" colspan="2"></th>
           <th
             [colSpan]="vm.result.itemIds.length"
             [style.width.rem]="4 * vm.result.itemIds.length"
@@ -354,14 +355,15 @@
           </th>
           <th *ngFor="let p of vm.result.producers" style="width: 4rem">
             <i
-              [class]="p.recipeId | iconClass: 'recipe'"
-              [pTooltip]="p.recipeId | recipeTooltip: vm.data"
+              [class]="p.recipeId | iconClass : 'recipe'"
+              [pTooltip]="p.recipeId | recipeTooltip : vm.data"
               [escape]="false"
-            ></i>
+              ><span>#{{ p.id }}</span></i
+            >
           </th>
           <th *ngFor="let i of vm.result.recipeIds" style="width: 4rem">
             <i
-              [class]="i | iconClass: 'recipe'"
+              [class]="i | iconClass : 'recipe'"
               [pTooltip]="vm.data.recipeEntities[i].name"
             ></i>
           </th>
