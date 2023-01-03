@@ -57,6 +57,10 @@ export class ThemeService {
       data.iconIds.forEach((i) => {
         const icon = data.iconEntities[i];
         css += `.${i}::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+
+        if (icon.invertLight) {
+          css += `body.light .${i}::before { filter: invert(1); } `;
+        }
       });
       data.itemIds
         .map((i) => data.itemEntities[i])
@@ -64,6 +68,10 @@ export class ThemeService {
         .forEach((item) => {
           const icon = data.iconEntities[item.icon];
           css += `.${item.id}.item::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+
+          if (icon.invertLight) {
+            css += `body.light .${item.id}.item::before { filter: invert(1); } `;
+          }
         });
       data.recipeIds
         .map((r) => data.recipeEntities[r])
@@ -71,6 +79,10 @@ export class ThemeService {
         .forEach((recipe) => {
           const icon = data.iconEntities[recipe.icon];
           css += `.${recipe.id}.recipe::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+
+          if (icon.invertLight) {
+            css += `body.light .${recipe.id}.recipe::before { filter: invert(1); } `;
+          }
         });
       data.categoryIds
         .map((c) => data.categoryEntities[c])
@@ -78,6 +90,10 @@ export class ThemeService {
         .forEach((category) => {
           const icon = data.iconEntities[category.icon];
           css += `.${category.id}.category::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+
+          if (icon.invertLight) {
+            css += `body.light .${category.id}.category::before { filter: invert(1); } `;
+          }
         });
       style.innerText = css;
       this.head.appendChild(style);
@@ -104,6 +120,14 @@ export class ThemeService {
           };
           this.head.appendChild(tempLink);
         }
+      }
+
+      if (theme === Theme.Light) {
+        this.document.body.classList.remove('dark');
+        this.document.body.classList.add('light');
+      } else {
+        this.document.body.classList.remove('light');
+        this.document.body.classList.add('dark');
       }
     });
   }

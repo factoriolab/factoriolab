@@ -20,6 +20,9 @@ describe('ThemeService', () => {
     const data = Mocks.getDataset();
     data.itemEntities[ItemId.Coal].icon = 'coal';
     data.categoryEntities[CategoryId.Combat].icon = 'pistol';
+    data.iconEntities['coal'].invertLight = true;
+    data.iconEntities['pistol'].invertLight = true;
+    data.iconEntities['nuclear-fuel|recipe'].invertLight = true;
     mockStore.overrideSelector(Settings.getDataset, data);
     mockStore.refreshState();
     service.initialize();
