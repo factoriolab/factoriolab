@@ -1,7 +1,7 @@
 name: staging
 on:
   pull_request:
-    branches: [main, next]
+    branches: [main]
 jobs:
   build:
     if: github.event.pull_request.head.repo.full_name == github.repository
