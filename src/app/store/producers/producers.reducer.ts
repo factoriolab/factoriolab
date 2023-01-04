@@ -177,6 +177,18 @@ export function producersReducer(
           ),
         },
       };
+    case ProducersActionType.SET_BEACON_TOTAL:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.compareResetIndex(
+            state.entities,
+            'beacons',
+            'total',
+            action.payload
+          ),
+        },
+      };
     case ProducersActionType.SET_OVERCLOCK:
       return {
         ...state,

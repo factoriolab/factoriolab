@@ -14,6 +14,7 @@ export const enum ProducersActionType {
   SET_BEACON_COUNT = '[Producers] Set Beacon Count',
   SET_BEACON = '[Producers] Set Beacon',
   SET_BEACON_MODULES = '[Producers] Set Beacon Modules',
+  SET_BEACON_TOTAL = '[Recipes] Set Beacon Total',
   SET_OVERCLOCK = '[Producers] Set Overclock',
   RESET_PRODUCER = '[Producers] Reset Producer',
 }
@@ -68,6 +69,11 @@ export class SetBeaconModulesAction implements Action {
   constructor(public payload: IdIndexDefaultPayload<string[]>) {}
 }
 
+export class SetBeaconTotalAction implements Action {
+  readonly type = ProducersActionType.SET_BEACON_TOTAL;
+  constructor(public payload: IdIndexDefaultPayload) {}
+}
+
 export class SetOverclockAction implements Action {
   readonly type = ProducersActionType.SET_OVERCLOCK;
   constructor(public payload: IdDefaultPayload<number>) {}
@@ -89,5 +95,6 @@ export type ProducersAction =
   | SetBeaconCountAction
   | SetBeaconAction
   | SetBeaconModulesAction
+  | SetBeaconTotalAction
   | SetOverclockAction
   | ResetProducerAction;

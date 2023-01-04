@@ -62,17 +62,20 @@ export enum Section {
   Items = 'i',
   Recipes = 'r',
   Factories = 'f',
+  Beacons = 'e',
   Settings = 's',
   Zip = 'z',
 }
 
 export enum ZipVersion {
-  Version0 = '0',
-  Version1 = '1',
-  Version2 = '2',
-  Version3 = '3',
-  Version4 = '4',
-  Version5 = '5',
+  Version0 = '0', // Bare
+  Version1 = '1', // Bare
+  Version2 = '2', // Hash
+  Version3 = '3', // Hash
+  Version4 = '4', // Bare
+  Version5 = '5', // Hash
+  Version6 = '6', // Bare
+  Version7 = '7', // Hash
 }
 
 export enum MigrationWarning {
@@ -84,6 +87,12 @@ export interface Zip {
   hash: string;
 }
 
+export interface BeaconData {
+  list: Zip[];
+  producerMap: Record<string, number[]>;
+  recipeMap: Record<string, number[]>;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -92,8 +101,8 @@ export class RouterService {
   zipPartial$ = new BehaviorSubject<Zip>({ bare: '', hash: '' });
   base64codes: Uint8Array;
   // Intended to denote hashing algorithm version
-  bareVersion = ZipVersion.Version4;
-  hashVersion = ZipVersion.Version5;
+  bareVersion = ZipVersion.Version6;
+  hashVersion = ZipVersion.Version7;
   zipTail: Zip = {
     bare: `&${Section.Version}=${this.bareVersion}`,
     hash: `&${Section.Version}${this.hashVersion}`,
@@ -119,7 +128,7 @@ export class RouterService {
   }
 
   initialize(): void {
-    this.router.events.subscribe((e) => this.updateState(e));
+    // this.router.events.subscribe((e) => this.updateState(e));
 
     this.ready$
       .pipe(
@@ -139,6 +148,9 @@ export class RouterService {
         )
       )
       .subscribe();
+
+    // TODO: Remove this
+    this.ready$.next();
   }
 
   updateUrl(
@@ -194,16 +206,23 @@ export class RouterService {
             data.hash.indexOf(zMod)
           )}`;
         }
-        // Products
+
+        // Setup object lists
         const p = products.ids.map((i) => products.entities[i]);
+        const q = producers.ids.map((i) => producers.entities[i]);
+
+        // Beacons
+        const beaconsData = this.buildBeaconsData(q, recipes, hash);
+
+        // Products
         const zState = this.zipProducts(p, hash);
         // Producers
-        const q = producers.ids.map((i) => producers.entities[i]);
-        this.zipProducers(zState, q, hash);
+        this.zipProducers(zState, q, beaconsData.producerMap, hash);
         // Settings
         this.zipItems(zipPartial, items, hash);
-        this.zipRecipes(zipPartial, recipes, hash);
+        this.zipRecipes(zipPartial, recipes, beaconsData.recipeMap, hash);
         this.zipFactories(zipPartial, factories, hash);
+        this.zipBeacons(zipPartial, beaconsData);
         this.zipSettings(zipPartial, settings, hash);
         this.zipPartial$.next(zipPartial);
         return [zState, zipPartial];
@@ -249,106 +268,106 @@ export class RouterService {
     return params;
   }
 
-  updateState(e: Event): void {
-    try {
-      if (e instanceof NavigationEnd) {
-        const [prehash, ...posthash] = e.urlAfterRedirects.split('#');
-        const hash = posthash.join('#'); // Preserve # after first instance
-        const [_, ...postquery] = prehash.split('?');
-        let query = postquery.join('?'); // Preserve ? after first instance
-        if (!query.length && hash.length > 1 && hash[1] === '=') {
-          // Try to recognize and handle old hash style navigation
-          query = hash;
-        }
+  // updateState(e: Event): void {
+  //   try {
+  //     if (e instanceof NavigationEnd) {
+  //       const [prehash, ...posthash] = e.urlAfterRedirects.split('#');
+  //       const hash = posthash.join('#'); // Preserve # after first instance
+  //       const [_, ...postquery] = prehash.split('?');
+  //       let query = postquery.join('?'); // Preserve ? after first instance
+  //       if (!query.length && hash.length > 1 && hash[1] === '=') {
+  //         // Try to recognize and handle old hash style navigation
+  //         query = hash;
+  //       }
 
-        if (query && this.zip !== query) {
-          let zip = query;
-          const zipSection = new URLSearchParams(zip).get(Section.Zip);
-          if (zipSection != null) {
-            // Upgrade V0 query-unsafe zipped characters
-            const z = zipSection
-              .replace(/\+/g, '-')
-              .replace(/\//g, '.')
-              .replace(/=/g, '_');
-            zip = this.inflateSafe(z);
-          }
-          // Upgrade V0 query-unsafe delimiters
-          zip = zip.replace(/,/g, LISTSEP).replace(/\+/g, ARRAYSEP);
-          // Upgrade V0 null/empty values
-          zip = zip
-            .replace(/\*n\*/g, `*${NULL}*`)
-            .replace(/\*e\*/g, `*${EMPTY}*`);
-          let params = this.getParams(zip);
-          let warnings: string[] = [];
-          [params, warnings] = this.migrate(params);
-          this.displayWarnings(warnings);
-          const v = params[Section.Version] as ZipVersion;
-          const state: App.PartialState = {};
-          if (v == this.bareVersion) {
-            Object.keys(params).forEach((k) => {
-              params[k] = decodeURIComponent(params[k]);
-            });
-            if (params[Section.Products]) {
-              state.productsState = this.unzipProducts(params);
-            }
-            if (params[Section.Producers]) {
-              state.producersState = this.unzipProducers(params);
-            }
-            if (params[Section.Items]) {
-              state.itemsState = this.unzipItems(params);
-            }
-            if (params[Section.Recipes]) {
-              state.recipesState = this.unzipRecipes(params);
-            }
-            if (params[Section.Factories]) {
-              state.factoriesState = this.unzipFactories(params);
-            }
-            if (params[Section.Settings]) {
-              state.settingsState = this.unzipSettings(params);
-            }
-            this.dispatch(zip, state);
-          } else {
-            const modId = this.parseNString(params[Section.Mod], data.hash);
-            this.dataSvc
-              .requestData(modId || Settings.initialSettingsState.modId)
-              .subscribe(([_, hash]) => {
-                if (params[Section.Products]) {
-                  state.productsState = this.unzipProducts(params, hash);
-                }
-                if (params[Section.Producers]) {
-                  state.producersState = this.unzipProducers(params, hash);
-                }
-                if (params[Section.Items]) {
-                  state.itemsState = this.unzipItems(params, hash);
-                }
-                if (params[Section.Recipes]) {
-                  state.recipesState = this.unzipRecipes(params, hash);
-                }
-                if (params[Section.Factories]) {
-                  state.factoriesState = this.unzipFactories(params, hash);
-                }
-                if (params[Section.Settings]) {
-                  state.settingsState = this.unzipSettings(params, hash);
-                }
-                if (modId != null) {
-                  state.settingsState = {
-                    ...state.settingsState,
-                    ...{ modId },
-                  };
-                }
-                this.dispatch(zip, state);
-              });
-          }
-        } else {
-          // No app state to dispatch, ready to load
-          this.ready$.next();
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      throw new Error('RouterService failed to parse url');
-    }
-  }
+  //       if (query && this.zip !== query) {
+  //         let zip = query;
+  //         const zipSection = new URLSearchParams(zip).get(Section.Zip);
+  //         if (zipSection != null) {
+  //           // Upgrade V0 query-unsafe zipped characters
+  //           const z = zipSection
+  //             .replace(/\+/g, '-')
+  //             .replace(/\//g, '.')
+  //             .replace(/=/g, '_');
+  //           zip = this.inflateSafe(z);
+  //         }
+  //         // Upgrade V0 query-unsafe delimiters
+  //         zip = zip.replace(/,/g, LISTSEP).replace(/\+/g, ARRAYSEP);
+  //         // Upgrade V0 null/empty values
+  //         zip = zip
+  //           .replace(/\*n\*/g, `*${NULL}*`)
+  //           .replace(/\*e\*/g, `*${EMPTY}*`);
+  //         let params = this.getParams(zip);
+  //         let warnings: string[] = [];
+  //         [params, warnings] = this.migrate(params);
+  //         this.displayWarnings(warnings);
+  //         const v = params[Section.Version] as ZipVersion;
+  //         const state: App.PartialState = {};
+  //         if (v == this.bareVersion) {
+  //           Object.keys(params).forEach((k) => {
+  //             params[k] = decodeURIComponent(params[k]);
+  //           });
+  //           if (params[Section.Products]) {
+  //             state.productsState = this.unzipProducts(params);
+  //           }
+  //           if (params[Section.Producers]) {
+  //             state.producersState = this.unzipProducers(params);
+  //           }
+  //           if (params[Section.Items]) {
+  //             state.itemsState = this.unzipItems(params);
+  //           }
+  //           if (params[Section.Recipes]) {
+  //             state.recipesState = this.unzipRecipes(params);
+  //           }
+  //           if (params[Section.Factories]) {
+  //             state.factoriesState = this.unzipFactories(params);
+  //           }
+  //           if (params[Section.Settings]) {
+  //             state.settingsState = this.unzipSettings(params);
+  //           }
+  //           this.dispatch(zip, state);
+  //         } else {
+  //           const modId = this.parseNString(params[Section.Mod], data.hash);
+  //           this.dataSvc
+  //             .requestData(modId || Settings.initialSettingsState.modId)
+  //             .subscribe(([_, hash]) => {
+  //               if (params[Section.Products]) {
+  //                 state.productsState = this.unzipProducts(params, hash);
+  //               }
+  //               if (params[Section.Producers]) {
+  //                 state.producersState = this.unzipProducers(params, hash);
+  //               }
+  //               if (params[Section.Items]) {
+  //                 state.itemsState = this.unzipItems(params, hash);
+  //               }
+  //               if (params[Section.Recipes]) {
+  //                 state.recipesState = this.unzipRecipes(params, hash);
+  //               }
+  //               if (params[Section.Factories]) {
+  //                 state.factoriesState = this.unzipFactories(params, hash);
+  //               }
+  //               if (params[Section.Settings]) {
+  //                 state.settingsState = this.unzipSettings(params, hash);
+  //               }
+  //               if (modId != null) {
+  //                 state.settingsState = {
+  //                   ...state.settingsState,
+  //                   ...{ modId },
+  //                 };
+  //               }
+  //               this.dispatch(zip, state);
+  //             });
+  //         }
+  //       } else {
+  //         // No app state to dispatch, ready to load
+  //         this.ready$.next();
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.error(err);
+  //     throw new Error('RouterService failed to parse url');
+  //   }
+  // }
 
   dispatch(zip: string, state: App.PartialState): void {
     this.zip = zip;
@@ -517,6 +536,78 @@ export class RouterService {
     }
   }
 
+  buildBeaconsData(
+    producers: Producer[],
+    recipes: Recipes.RecipesState,
+    hash: ModHash
+  ): BeaconData {
+    const list: Zip[] = [];
+    const beaconsIdMap: Record<string, number> = {};
+    const producerMap: Record<string, number[]> = {};
+    const recipeMap: Record<string, number[]> = {};
+
+    for (const producer of producers) {
+      if (producer.beacons != null) {
+        const ids = producer.beacons.map((b) =>
+          this.zipBeacon(b, beaconsIdMap, list, hash)
+        );
+
+        producerMap[producer.id] = ids;
+      }
+    }
+
+    for (const recipeId of Object.keys(recipes)) {
+      const recipe = recipes[recipeId];
+      if (recipe.beacons != null) {
+        const ids = recipe.beacons.map((b) =>
+          this.zipBeacon(b, beaconsIdMap, list, hash)
+        );
+
+        recipeMap[recipeId] = ids;
+      }
+    }
+
+    return { list, producerMap, recipeMap };
+  }
+
+  zipBeacon(
+    obj: BeaconSettings,
+    beaconsIdMap: Record<string, number>,
+    list: Zip[],
+    hash: ModHash
+  ): number {
+    const zip: Zip = {
+      bare: this.zipFields([
+        this.zipTruthyString(obj.count),
+        this.zipTruthyArray(obj.moduleIds),
+        this.zipTruthyString(obj.id),
+        this.zipTruthyString(obj.total),
+      ]),
+      hash: this.zipFields([
+        this.zipTruthyString(obj.count),
+        this.zipTruthyNArray(obj.moduleIds, hash.modules),
+        this.zipTruthyNString(obj.id, hash.beacons),
+        this.zipTruthyString(obj.total),
+      ]),
+    };
+
+    if (beaconsIdMap[zip.bare] == null) {
+      beaconsIdMap[zip.bare] = list.length;
+      list.push(zip);
+    }
+
+    return beaconsIdMap[zip.bare];
+  }
+
+  zipBeacons(zip: Zip, data: BeaconData): void {
+    const z = this.zipList(data.list);
+
+    if (z.bare.length) {
+      zip.bare += `&${Section.Beacons}=${z.bare}`;
+      zip.hash += `&${Section.Beacons}${z.hash}`;
+    }
+  }
+
   zipProducts(products: Product[], hash: ModHash): Zip {
     const z = this.zipList(
       products.map((obj) => {
@@ -601,7 +692,12 @@ export class RouterService {
     return { ids, index, entities };
   }
 
-  zipProducers(zip: Zip, producers: Producer[], hash: ModHash): void {
+  zipProducers(
+    zip: Zip,
+    producers: Producer[],
+    beaconMap: Record<string, number[]>,
+    hash: ModHash
+  ): void {
     const z = this.zipList(
       producers.map((obj) => {
         const r = Rational.fromString(obj.count).toString();
@@ -612,9 +708,7 @@ export class RouterService {
             r,
             this.zipTruthyString(obj.factoryId),
             this.zipTruthyArray(obj.factoryModuleIds),
-            this.zipTruthyString(obj.beaconCount),
-            this.zipTruthyArray(obj.beaconModuleIds),
-            this.zipTruthyString(obj.beaconId),
+            this.zipTruthyArray(beaconMap[obj.recipeId]),
             this.zipTruthyNumber(obj.overclock),
           ]),
           hash: this.zipFields([
@@ -622,9 +716,7 @@ export class RouterService {
             r,
             this.zipTruthyNString(obj.factoryId, hash.factories),
             this.zipTruthyNArray(obj.factoryModuleIds, hash.modules),
-            this.zipTruthyString(obj.beaconCount),
-            this.zipTruthyNArray(obj.beaconModuleIds, hash.modules),
-            this.zipTruthyNString(obj.beaconId, hash.beacons),
+            this.zipTruthyArray(beaconMap[obj.recipeId]),
             this.zipTruthyNumber(obj.overclock),
           ]),
         };
@@ -637,55 +729,55 @@ export class RouterService {
     }
   }
 
-  unzipProducers(params: Entities, hash?: ModHash): Producers.ProducersState {
-    const list = params[Section.Producers].split(LISTSEP);
-    const ids: string[] = [];
-    const entities: Entities<Producer> = {};
-    let index = 1;
-    for (const producer of list) {
-      const s = producer.split(FIELDSEP);
-      let i = 0;
-      const id = index.toString();
-      let obj: Producer;
+  // unzipProducers(params: Entities, hash?: ModHash): Producers.ProducersState {
+  //   const list = params[Section.Producers].split(LISTSEP);
+  //   const ids: string[] = [];
+  //   const entities: Entities<Producer> = {};
+  //   let index = 1;
+  //   for (const producer of list) {
+  //     const s = producer.split(FIELDSEP);
+  //     let i = 0;
+  //     const id = index.toString();
+  //     let obj: Producer;
 
-      if (hash) {
-        obj = {
-          id,
-          recipeId: this.parseNString(s[i++], hash.recipes) ?? '',
-          count: s[i++],
-          factoryId: this.parseNString(s[i++], hash.factories),
-          factoryModuleIds: this.parseNArray(s[i++], hash.modules),
-          beaconCount: this.parseString(s[i++]),
-          beaconModuleIds: this.parseNArray(s[i++], hash.modules),
-          beaconId: this.parseNString(s[i++], hash.beacons),
-          overclock: this.parseNumber(s[i++]),
-        };
-      } else {
-        obj = {
-          id,
-          recipeId: s[i++],
-          count: s[i++],
-          factoryId: this.parseString(s[i++]),
-          factoryModuleIds: this.parseArray(s[i++]),
-          beaconCount: this.parseString(s[i++]),
-          beaconModuleIds: this.parseArray(s[i++]),
-          beaconId: this.parseString(s[i++]),
-          overclock: this.parseNumber(s[i++]),
-        };
-      }
+  //     if (hash) {
+  //       obj = {
+  //         id,
+  //         recipeId: this.parseNString(s[i++], hash.recipes) ?? '',
+  //         count: s[i++],
+  //         factoryId: this.parseNString(s[i++], hash.factories),
+  //         factoryModuleIds: this.parseNArray(s[i++], hash.modules),
+  //         beaconCount: this.parseString(s[i++]),
+  //         beaconModuleIds: this.parseNArray(s[i++], hash.modules),
+  //         beaconId: this.parseNString(s[i++], hash.beacons),
+  //         overclock: this.parseNumber(s[i++]),
+  //       };
+  //     } else {
+  //       obj = {
+  //         id,
+  //         recipeId: s[i++],
+  //         count: s[i++],
+  //         factoryId: this.parseString(s[i++]),
+  //         factoryModuleIds: this.parseArray(s[i++]),
+  //         beaconCount: this.parseString(s[i++]),
+  //         beaconModuleIds: this.parseArray(s[i++]),
+  //         beaconId: this.parseString(s[i++]),
+  //         overclock: this.parseNumber(s[i++]),
+  //       };
+  //     }
 
-      (Object.keys(obj) as (keyof Producer)[])
-        .filter((k) => obj[k] === undefined)
-        .forEach((k) => {
-          delete obj[k];
-        });
+  //     (Object.keys(obj) as (keyof Producer)[])
+  //       .filter((k) => obj[k] === undefined)
+  //       .forEach((k) => {
+  //         delete obj[k];
+  //       });
 
-      ids.push(id);
-      entities[id] = obj;
-      index++;
-    }
-    return { ids, index, entities };
-  }
+  //     ids.push(id);
+  //     entities[id] = obj;
+  //     index++;
+  //   }
+  //   return { ids, index, entities };
+  // }
 
   zipItems(partial: Zip, state: Items.ItemsState, hash: ModHash): void {
     const z = this.zipList(
@@ -756,7 +848,12 @@ export class RouterService {
     return entities;
   }
 
-  zipRecipes(partial: Zip, state: Recipes.RecipesState, hash: ModHash): void {
+  zipRecipes(
+    partial: Zip,
+    state: Recipes.RecipesState,
+    beaconMap: Record<string, number[]>,
+    hash: ModHash
+  ): void {
     const z = this.zipList(
       Object.keys(state).map((i) => {
         const obj = state[i];
@@ -766,23 +863,17 @@ export class RouterService {
             i,
             this.zipTruthyString(obj.factoryId),
             this.zipTruthyArray(obj.factoryModuleIds),
-            this.zipTruthyString(obj.beaconCount),
-            this.zipTruthyArray(obj.beaconModuleIds),
-            this.zipTruthyString(obj.beaconId),
+            this.zipTruthyArray(beaconMap[i]),
             this.zipTruthyNumber(obj.overclock),
             this.zipTruthyString(obj.cost),
-            this.zipTruthyString(obj.beaconTotal),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(i, hash.recipes),
             this.zipTruthyNString(obj.factoryId, hash.factories),
             this.zipTruthyNArray(obj.factoryModuleIds, hash.modules),
-            this.zipTruthyString(obj.beaconCount),
-            this.zipTruthyNArray(obj.beaconModuleIds, hash.modules),
-            this.zipTruthyNString(obj.beaconId, hash.beacons),
+            this.zipTruthyArray(beaconMap[i]),
             this.zipTruthyNumber(obj.overclock),
             this.zipTruthyString(obj.cost),
-            this.zipTruthyString(obj.beaconTotal),
           ]),
         };
       })
@@ -794,51 +885,51 @@ export class RouterService {
     }
   }
 
-  unzipRecipes(params: Entities, hash?: ModHash): Recipes.RecipesState {
-    const list = params[Section.Recipes].split(LISTSEP);
-    const entities: Recipes.RecipesState = {};
-    for (const recipe of list) {
-      const s = recipe.split(FIELDSEP);
-      let i = 0;
-      let id: string;
-      let obj: RecipeSettings;
+  // unzipRecipes(params: Entities, hash?: ModHash): Recipes.RecipesState {
+  //   const list = params[Section.Recipes].split(LISTSEP);
+  //   const entities: Recipes.RecipesState = {};
+  //   for (const recipe of list) {
+  //     const s = recipe.split(FIELDSEP);
+  //     let i = 0;
+  //     let id: string;
+  //     let obj: RecipeSettings;
 
-      if (hash) {
-        id = this.parseNString(s[i++], hash.recipes) ?? '';
-        obj = {
-          factoryId: this.parseNString(s[i++], hash.factories),
-          factoryModuleIds: this.parseNArray(s[i++], hash.modules),
-          beaconCount: this.parseString(s[i++]),
-          beaconModuleIds: this.parseNArray(s[i++], hash.modules),
-          beaconId: this.parseNString(s[i++], hash.beacons),
-          overclock: this.parseNumber(s[i++]),
-          cost: this.parseString(s[i++]),
-          beaconTotal: this.parseString(s[i++]),
-        };
-      } else {
-        id = s[i++];
-        obj = {
-          factoryId: this.parseString(s[i++]),
-          factoryModuleIds: this.parseArray(s[i++]),
-          beaconCount: this.parseString(s[i++]),
-          beaconModuleIds: this.parseArray(s[i++]),
-          beaconId: this.parseString(s[i++]),
-          overclock: this.parseNumber(s[i++]),
-          cost: this.parseString(s[i++]),
-          beaconTotal: this.parseString(s[i++]),
-        };
-      }
+  //     if (hash) {
+  //       id = this.parseNString(s[i++], hash.recipes) ?? '';
+  //       obj = {
+  //         factoryId: this.parseNString(s[i++], hash.factories),
+  //         factoryModuleIds: this.parseNArray(s[i++], hash.modules),
+  //         beaconCount: this.parseString(s[i++]),
+  //         beaconModuleIds: this.parseNArray(s[i++], hash.modules),
+  //         beaconId: this.parseNString(s[i++], hash.beacons),
+  //         overclock: this.parseNumber(s[i++]),
+  //         cost: this.parseString(s[i++]),
+  //         beaconTotal: this.parseString(s[i++]),
+  //       };
+  //     } else {
+  //       id = s[i++];
+  //       obj = {
+  //         factoryId: this.parseString(s[i++]),
+  //         factoryModuleIds: this.parseArray(s[i++]),
+  //         beaconCount: this.parseString(s[i++]),
+  //         beaconModuleIds: this.parseArray(s[i++]),
+  //         beaconId: this.parseString(s[i++]),
+  //         overclock: this.parseNumber(s[i++]),
+  //         cost: this.parseString(s[i++]),
+  //         beaconTotal: this.parseString(s[i++]),
+  //       };
+  //     }
 
-      (Object.keys(obj) as (keyof RecipeSettings)[])
-        .filter((k) => obj[k] === undefined)
-        .forEach((k) => {
-          delete obj[k];
-        });
+  //     (Object.keys(obj) as (keyof RecipeSettings)[])
+  //       .filter((k) => obj[k] === undefined)
+  //       .forEach((k) => {
+  //         delete obj[k];
+  //       });
 
-      entities[id] = obj;
-    }
-    return entities;
-  }
+  //     entities[id] = obj;
+  //   }
+  //   return entities;
+  // }
 
   zipFactories(
     partial: Zip,
@@ -1076,31 +1167,6 @@ export class RouterService {
     return obj;
   }
 
-  zipBeacons(beacons: BeaconSettings[] | undefined, hash: ModHash): Zip {
-    return this.zipList(
-      (beacons ?? []).map((obj) => {
-        return {
-          bare: this.zipFields([
-            this.zipTruthyString(obj.id),
-            this.zipTruthyString(obj.count),
-            this.zipTruthyArray(obj.moduleIds),
-            this.zipTruthyString(obj.total),
-          ]),
-          hash: this.zipFields([
-            this.zipTruthyNString(obj.id, hash.modules),
-            this.zipTruthyString(obj.count),
-            this.zipTruthyNArray(obj.moduleIds, hash.modules),
-            this.zipTruthyString(obj.total),
-          ]),
-        };
-      })
-    );
-  }
-
-  unzipBeacons(): void {
-    // TODO
-  }
-
   zipList(list: Zip[]): Zip {
     return {
       bare: encodeURIComponent(list.map((i) => i.bare).join(LISTSEP)),
@@ -1124,7 +1190,7 @@ export class RouterService {
     return value == null ? '' : value ? TRUE : FALSE;
   }
 
-  zipTruthyArray(value: string[] | undefined): string {
+  zipTruthyArray(value: string[] | number[] | undefined): string {
     return value == null ? '' : value.length ? value.join(ARRAYSEP) : EMPTY;
   }
 

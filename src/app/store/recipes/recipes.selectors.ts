@@ -56,6 +56,8 @@ export const getRecipeSettings = createSelector(
           s.beacons = [{}];
         }
 
+        s.beacons = s.beacons.map((b) => ({ ...b }));
+
         for (const beaconSettings of s.beacons) {
           beaconSettings.count = beaconSettings.count ?? def.beaconCount;
           beaconSettings.id = beaconSettings.id ?? def.beaconId;

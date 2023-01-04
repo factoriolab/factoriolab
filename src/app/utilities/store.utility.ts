@@ -173,9 +173,8 @@ export class StoreUtility {
     payload: IdIndexDefaultPayload<V[L]>,
     rank = false
   ): Record<string, T> {
-    // Spread into new state
     if (this.payloadEquals(payload, rank)) {
-      // Resetting to null
+      // Resetting to null, spread into new state
       const newState = { ...state };
       if (newState[payload.id] !== undefined) {
         newState[payload.id] = { ...newState[payload.id] };
@@ -211,7 +210,11 @@ export class StoreUtility {
         [payload.id]: {
           ...state[payload.id],
           ...{
-            [field]: state[payload.id][field]?.map((v, i) => {
+            [field]: (
+              state[payload.id]?.[field] ??
+              // Generate default empty object array
+              new Array(payload.index + 1).fill({})
+            ).map((v, i) => {
               if (i === payload.index) {
                 return { ...v, ...{ [subfield]: payload.value } };
               } else {

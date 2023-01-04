@@ -643,27 +643,29 @@
             *ngIf="step.recipeId && step.recipeSettings; else emptyCol2"
           >
             <td class="w-0">
-              <!-- <lab-input-number
-                *ngIf="
-                  step.recipeSettings.beaconId &&
-                  step.recipeSettings.beaconCount
-                "
-                [pTooltip]="'list.beaconEachTooltip' | translate"
-                tooltipPosition="left"
-                class="text-end"
-                width="3rem"
-                [value]="step.recipeSettings.beaconCount.toString()"
-                [hideButtons]="true"
-                (setValue)="
-                  changeRecipeField(
-                    step,
-                    $event,
-                    vm.factories,
-                    vm.data,
-                    RecipeField.BeaconCount
-                  )
-                "
-              ></lab-input-number> -->
+              <ng-container
+                *ngFor="let beacon of step.recipeSettings.beacons; index as i"
+              >
+                <lab-input-number
+                  *ngIf="beacon.count"
+                  [pTooltip]="'list.beaconEachTooltip' | translate"
+                  tooltipPosition="left"
+                  class="text-end"
+                  width="3rem"
+                  [value]="beacon.count.toString()"
+                  [hideButtons]="true"
+                  (setValue)="
+                    changeRecipeField(
+                      step,
+                      $event,
+                      vm.factories,
+                      vm.data,
+                      RecipeField.BeaconCount,
+                      i
+                    )
+                  "
+                ></lab-input-number>
+              </ng-container>
             </td>
             <td class="ps-0">
               <div class="d-flex">
