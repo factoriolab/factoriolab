@@ -580,8 +580,10 @@ export class SimplexUtility {
       }
     }
 
-    // Ignore results for producers
-    O.push(...new Array(state.producers.length).fill(Rational.zero));
+    // Add producer counts
+    for (const producer of state.producers) {
+      O.push(producer.count);
+    }
 
     // Clean up inputs
     state.inputIds = state.inputIds.filter((i) => state.items[i] != null);
