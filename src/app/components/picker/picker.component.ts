@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Input,
   OnInit,
   Output,
   ViewChild,
@@ -30,6 +31,7 @@ export class PickerComponent implements OnInit {
     | ElementRef<HTMLInputElement>
     | undefined;
 
+  @Input() header = '';
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<string[]>();
 
