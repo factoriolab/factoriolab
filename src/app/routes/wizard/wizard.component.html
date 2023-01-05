@@ -49,6 +49,7 @@
     ></button>
     <lab-picker
       #addProductPicker
+      [header]="'wizard.produceItemsButton' | translate"
       (selectId)="selectId($event, WizardState.ProductType)"
     ></lab-picker>
     <p-divider></p-divider>
@@ -64,6 +65,7 @@
     ></button>
     <lab-picker
       #addRecipePicker
+      [header]="'wizard.runFactoriesButton' | translate"
       (selectId)="selectId($event, WizardState.Producer)"
     ></lab-picker>
     <p-divider></p-divider>

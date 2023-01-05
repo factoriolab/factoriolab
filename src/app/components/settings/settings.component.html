@@ -223,6 +223,7 @@
           ></button>
           <lab-picker
             #optionalRecipesPicker
+            [header]="'settings.optionalRecipesHeader' | translate"
             (selectIds)="
               setDisabledRecipes($event, vm.data.defaults?.disabledRecipeIds)
             "

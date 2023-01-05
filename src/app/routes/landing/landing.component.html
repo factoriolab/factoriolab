@@ -61,10 +61,12 @@
     ></button>
     <lab-picker
       #addProductPicker
+      [header]="'landing.addAProduct' | translate"
       (selectId)="selectProduct($event)"
     ></lab-picker>
     <lab-picker
       #addRecipePicker
+      [header]="'landing.addAProducer' | translate"
       (selectId)="selectProducer($event)"
     ></lab-picker>
     <p-divider
