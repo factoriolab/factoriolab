@@ -67,7 +67,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getBeltSpeed),
     this.store.select(Settings.getBeltSpeedTxt),
-    this.routerSvc.zipPartial$,
+    this.routerSvc.zipConfig$,
   ]).pipe(
     map(
       ([
