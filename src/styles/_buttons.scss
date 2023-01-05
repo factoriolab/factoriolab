@@ -13,10 +13,11 @@
     transition: opacity 300ms ease;
   }
 
+  // These styles for hover/active
   &:hover,
   &.hover-active {
     > .p-button-icon {
-      opacity: 0.3;
+      opacity: 0.4;
     }
 
     > .hover-icon {
@@ -24,15 +25,17 @@
     }
   }
 
+  // These styles for hover & inactive
   &:hover:not(.hover-active) {
     > .p-button-icon {
-      opacity: 0.7;
-    }
-
-    > .hover-icon {
-      opacity: 0.4;
+      opacity: 1;
     }
   }
+}
+
+// Adjust opacity for light mode
+body.light .p-button.hover-action.hover-active .p-button-icon {
+  opacity: 0.6;
 }
 
 // Icon dropdown styles
