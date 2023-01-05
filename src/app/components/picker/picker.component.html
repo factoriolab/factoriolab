@@ -7,20 +7,20 @@
   [draggable]="false"
   [resizable]="false"
   appendTo="body"
+  [header]="header"
   [style]="{ height: '500px', width: '415px' }"
   [breakpoints]="{ '415px': '100vw' }"
   (onHide)="onHide()"
 >
-  <ng-template pTemplate="header">
+  <div class="d-flex w-100 my-1">
     <p-checkbox
       *ngIf="isMultiselect"
-      styleClass="me-2"
       [binary]="true"
-      [pTooltip]="'picker.toggleAll' | translate"
+      [label]="'picker.enableAll' | translate"
       [formControl]="selectAllCtrl"
       (onChange)="selectAll($event.checked)"
     ></p-checkbox>
-    <span class="w-100 me-3 p-input-icon-right">
+    <span class="flex-grow-1 p-input-icon-right" [class.ms-2]="isMultiselect">
       <i class="fa-solid fa-magnifying-glass"></i>
       <input
         #inputFilter
@@ -32,7 +32,7 @@
         [formControl]="searchCtrl"
       />
     </span>
-  </ng-template>
+  </div>
   <p-tabView *ngIf="visible" [(activeIndex)]="activeIndex">
     <ng-container *ngFor="let categoryId of categoryIds; let i = index">
       <p-tabPanel
