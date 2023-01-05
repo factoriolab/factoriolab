@@ -181,7 +181,7 @@ export function producersReducer(
       return {
         ...state,
         ...{
-          entities: StoreUtility.compareResetIndex(
+          entities: StoreUtility.assignIndexValue(
             state.entities,
             'beacons',
             'total',

@@ -1,6 +1,11 @@
 import { Action } from '@ngrx/store';
 
-import { IdDefaultPayload, IdIndexDefaultPayload, IdPayload } from '~/models';
+import {
+  IdDefaultPayload,
+  IdIndexDefaultPayload,
+  IdIndexPayload,
+  IdPayload,
+} from '~/models';
 import { Producer } from '~/models/producer';
 
 export const enum ProducersActionType {
@@ -71,7 +76,7 @@ export class SetBeaconModulesAction implements Action {
 
 export class SetBeaconTotalAction implements Action {
   readonly type = ProducersActionType.SET_BEACON_TOTAL;
-  constructor(public payload: IdIndexDefaultPayload) {}
+  constructor(public payload: IdIndexPayload) {}
 }
 
 export class SetOverclockAction implements Action {

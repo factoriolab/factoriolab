@@ -357,6 +357,12 @@ export class ListComponent implements OnInit, AfterViewInit {
           }
           break;
         }
+        case RecipeField.BeaconTotal: {
+          if (typeof event === 'string' && index != null) {
+            this.setBeaconTotal(id, index, event, isProducer);
+          }
+          break;
+        }
         case RecipeField.Overclock: {
           if (typeof event === 'number') {
             const def = factorySettings.overclock;
@@ -453,13 +459,12 @@ export class ListComponent implements OnInit, AfterViewInit {
     id: string,
     index: number,
     value: string,
-    def: string | undefined,
     producer = false
   ): void {
     const action = producer
       ? Producers.SetBeaconTotalAction
       : Recipes.SetBeaconTotalAction;
-    this.store.dispatch(new action({ id, index, value, def }));
+    this.store.dispatch(new action({ id, index, value }));
   }
 
   setOverclock(
