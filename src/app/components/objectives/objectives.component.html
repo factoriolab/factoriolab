@@ -29,6 +29,7 @@
       ></button>
       <lab-picker
         #editPicker
+        [header]="'objectives.itemTooltip' | translate"
         (selectId)="setItem(product.id, $event)"
       ></lab-picker>
       <lab-input-number
@@ -147,6 +148,7 @@
       </button>
       <lab-picker
         #editPicker
+        [header]="'objectives.recipeTooltip' | translate"
         (selectId)="setRecipe(producer.id, $event)"
       ></lab-picker>
       <lab-input-number
@@ -226,6 +228,14 @@
       </p-dropdown>
     </div>
   </div>
-  <lab-picker #addProductPicker (selectId)="addProduct($event)"></lab-picker>
-  <lab-picker #addRecipePicker (selectId)="addProducer($event)"></lab-picker>
+  <lab-picker
+    #addProductPicker
+    [header]="'objectives.addAProductTooltip' | translate"
+    (selectId)="addProduct($event)"
+  ></lab-picker>
+  <lab-picker
+    #addRecipePicker
+    [header]="'objectives.addAProducerTooltip' | translate"
+    (selectId)="addProducer($event)"
+  ></lab-picker>
 </p-card>
