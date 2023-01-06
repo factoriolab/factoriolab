@@ -16,6 +16,8 @@ export const enum ProducersActionType {
   SET_COUNT = '[Producers] Set Count',
   SET_FACTORY = '[Producers] Set Factory',
   SET_FACTORY_MODULES = '[Producers] Set Modules',
+  ADD_BEACON = '[Producers] Add Beacon',
+  REMOVE_BEACON = '[Producers] Remove Beacon',
   SET_BEACON_COUNT = '[Producers] Set Beacon Count',
   SET_BEACON = '[Producers] Set Beacon',
   SET_BEACON_MODULES = '[Producers] Set Beacon Modules',
@@ -57,6 +59,16 @@ export class SetFactoryAction implements Action {
 export class SetFactoryModulesAction implements Action {
   readonly type = ProducersActionType.SET_FACTORY_MODULES;
   constructor(public payload: IdDefaultPayload<string[]>) {}
+}
+
+export class AddBeaconAction implements Action {
+  readonly type = ProducersActionType.ADD_BEACON;
+  constructor(public payload: string) {}
+}
+
+export class RemoveBeaconAction implements Action {
+  readonly type = ProducersActionType.REMOVE_BEACON;
+  constructor(public payload: string) {}
 }
 
 export class SetBeaconCountAction implements Action {
