@@ -1,6 +1,6 @@
 {
   "categories": {
-    "parts": "pièces",
+    "parts": "Pièces",
     "components": "composants",
     "equipment": "équipements"
   },
@@ -302,15 +302,15 @@
     "packaged-nitric-acid": "包装硝酸",
     "non-fissile-uranium": "非可裂变铀",
     "non-fissile-uranium-fertile": "Fertile Uranium",
-    "nuclear-pasta": "核物质",
+    "nuclear-pasta": "pâte nucléaire",
     "plutonium-fuel-rod": "钸燃料棒",
     "plutonium-fuel-rod-unit": "Plutonium Fuel Unit",
     "plutonium-pellet": "钚丸",
     "plutonium-waste": "déchets de plutonium",
     "pressure-conversion-cube": "压力转换立方体",
-    "thermal-propulsion-rocket": "热推进火箭",
-    "turbo-motor": "turbomoteur",
-    "turbo-motor-electric": "Turbo Electric Motor",
+    "thermal-propulsion-rocket": "fusée à propulsion thermique",
+    "turbo-motor": "Moteur turbo",
+    "turbo-motor-electric": "Moteur turbo électrique",
     "turbo-motor-pressure": "Turbo Pressure Motor",
     "uranium-fuel-rod": "铀燃料棒",
     "uranium-fuel-rod-unit": "Uranium Fuel Unit",
@@ -352,6 +352,6 @@
     "nobelisk": "nobelisk",
     "nobelisk-seismic": "Seismic Nobelisk",
     "spiked-rebar": "尖刺钢筋",
-    "rifle-cartridge": "步枪子弹"
+    "rifle-cartridge": "munition de fusil"
   }
 }
