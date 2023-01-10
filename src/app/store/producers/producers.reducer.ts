@@ -136,6 +136,45 @@ export function producersReducer(
           ),
         },
       };
+    case ProducersActionType.ADD_BEACON:
+      return {
+        ...state,
+        ...{
+          entities: {
+            ...state.entities,
+            ...{
+              [action.payload]: {
+                ...(state.entities[action.payload] ?? {}),
+                ...{
+                  beacons: [
+                    ...(state.entities[action.payload]?.beacons ?? [{}]),
+                    {},
+                  ],
+                },
+              },
+            },
+          },
+        },
+      };
+    case ProducersActionType.REMOVE_BEACON:
+      return {
+        ...state,
+        ...{
+          entities: {
+            ...state.entities,
+            ...{
+              [action.payload.id]: {
+                ...state.entities[action.payload.id],
+                ...{
+                  beacons: (
+                    state.entities[action.payload.id].beacons ?? [{}]
+                  ).filter((v, i) => i !== action.payload.value),
+                },
+              },
+            },
+          },
+        },
+      };
     case ProducersActionType.SET_BEACON_COUNT:
       return {
         ...state,

@@ -173,7 +173,7 @@
           </div>
         </td>
         <!-- Tree -->
-        <td *ngIf="vm.columns[Column.Tree].show" class="p-0">
+        <td *ngIf="vm.columns[Column.Tree].show" class="overflow-hidden p-0">
           <div class="d-flex align-items-center links">
             <ng-container *ngIf="vm.stepTree[step.id]?.length">
               <div
@@ -648,13 +648,35 @@
                 *ngFor="let beacon of step.recipeSettings.beacons; index as i"
               >
                 <button
-                  *ngIf="i === 0"
+                  *ngIf="i === 0; else deleteBeaconBtn"
                   pButton
                   pRipple
                   type="button"
                   class="p-button-text p-button-rounded"
                   icon="fa-solid fa-plus"
+                  (click)="
+                    addBeacon(
+                      step.producerId ?? step.recipeId,
+                      step.producerId != null
+                    )
+                  "
                 ></button>
+                <ng-template #deleteBeaconBtn>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text p-button-rounded"
+                    icon="fa-solid fa-minus"
+                    (click)="
+                      removeBeacon(
+                        step.producerId ?? step.recipeId,
+                        i,
+                        step.producerId != null
+                      )
+                    "
+                  ></button>
+                </ng-template>
                 <lab-input-number
                   *ngIf="beacon.count"
                   [pTooltip]="'list.beaconEachTooltip' | translate"

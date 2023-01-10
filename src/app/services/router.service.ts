@@ -791,7 +791,7 @@ export class RouterService {
           factoryId: this.parseNString(s[i++], hash.factories),
           factoryModuleIds: this.parseNArray(s[i++], hash.modules),
           beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)]
+            (i) => beaconSettings[Number(i)] ?? {}
           ),
           overclock: this.parseNumber(s[i++]),
         };
@@ -803,7 +803,7 @@ export class RouterService {
           factoryId: this.parseString(s[i++]),
           factoryModuleIds: this.parseArray(s[i++]),
           beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)]
+            (i) => beaconSettings[Number(i)] ?? {}
           ),
           overclock: this.parseNumber(s[i++]),
         };
@@ -932,7 +932,7 @@ export class RouterService {
           factoryId: this.parseNString(s[i++], hash.factories),
           factoryModuleIds: this.parseNArray(s[i++], hash.modules),
           beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)]
+            (i) => beaconSettings[Number(i)] ?? {}
           ),
           overclock: this.parseNumber(s[i++]),
           cost: this.parseString(s[i++]),
@@ -943,7 +943,7 @@ export class RouterService {
           factoryId: this.parseString(s[i++]),
           factoryModuleIds: this.parseArray(s[i++]),
           beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)]
+            (i) => beaconSettings[Number(i)] ?? {}
           ),
           overclock: this.parseNumber(s[i++]),
           cost: this.parseString(s[i++]),

@@ -30,6 +30,32 @@ export function recipesReducer(
         'factoryModuleIds',
         action.payload
       );
+    case RecipesActionType.ADD_BEACON:
+      return {
+        ...state,
+        ...{
+          [action.payload]: {
+            ...(state[action.payload] ?? {}),
+            ...{
+              beacons: [...(state[action.payload]?.beacons ?? [{}]), {}],
+            },
+          },
+        },
+      };
+    case RecipesActionType.REMOVE_BEACON:
+      return {
+        ...state,
+        ...{
+          [action.payload.id]: {
+            ...state[action.payload.id],
+            ...{
+              beacons: (state[action.payload.id].beacons ?? [{}]).filter(
+                (v, i) => i !== action.payload.value
+              ),
+            },
+          },
+        },
+      };
     case RecipesActionType.SET_BEACON_COUNT:
       return StoreUtility.compareResetIndex(
         state,

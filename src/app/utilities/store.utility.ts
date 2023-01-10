@@ -162,7 +162,7 @@ export class StoreUtility {
 
   static compareResetIndex<
     T extends { [key in K]?: U[] },
-    U,
+    U extends object,
     V extends Exclude<T[K], undefined>[number],
     K extends keyof T,
     L extends keyof V
@@ -178,10 +178,28 @@ export class StoreUtility {
       const newState = { ...state };
       if (newState[payload.id] !== undefined) {
         newState[payload.id] = { ...newState[payload.id] };
-        if (newState[payload.id][field] !== undefined) {
-          delete newState[payload.id][field];
+        const arr = newState[payload.id][field];
+        if (arr != null) {
+          const newArr = arr.map((a) => ({ ...a }));
+
+          // Reset the specific subfield
+          delete (newArr[payload.index] as unknown as V)[subfield];
+
+          if (
+            newArr.length === 1 &&
+            Object.keys(newArr[payload.index]).length === 0
+          ) {
+            // Delete this field from the entity
+            delete newState[payload.id][field];
+          } else {
+            // Set this field on the entity
+            newState[payload.id][field] = newArr as unknown as T[K];
+          }
         }
+
+        // Check whether whole entity has keys
         if (Object.keys(newState[payload.id]).length === 0) {
+          // Delete the whole entity
           delete newState[payload.id];
         }
       }
@@ -194,7 +212,7 @@ export class StoreUtility {
 
   static assignIndexValue<
     T extends { [key in K]?: U[] },
-    U,
+    U extends object,
     V extends Exclude<T[K], undefined>[number],
     K extends keyof T,
     L extends keyof V

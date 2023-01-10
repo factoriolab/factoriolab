@@ -416,6 +416,20 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new action({ id, value, def }));
   }
 
+  addBeacon(id: string, producer = false): void {
+    const action = producer
+      ? Producers.AddBeaconAction
+      : Recipes.AddBeaconAction;
+    this.store.dispatch(new action(id));
+  }
+
+  removeBeacon(id: string, value: number, producer = false): void {
+    const action = producer
+      ? Producers.RemoveBeaconAction
+      : Recipes.RemoveBeaconAction;
+    this.store.dispatch(new action({ id, value }));
+  }
+
   setBeaconCount(
     id: string,
     index: number,
@@ -434,9 +448,9 @@ export class ListComponent implements OnInit, AfterViewInit {
     index: number,
     value: string,
     def: string | undefined,
-    isProducer = false
+    producer = false
   ): void {
-    const action = isProducer
+    const action = producer
       ? Producers.SetBeaconAction
       : Recipes.SetBeaconAction;
     this.store.dispatch(new action({ id, index, value, def }));

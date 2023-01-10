@@ -9,7 +9,9 @@ import {
 
 export const enum RecipesActionType {
   SET_FACTORY = '[Recipes] Set Factory',
-  SET_FACTORY_MODULES = '[Recipes] Set Modules',
+  SET_FACTORY_MODULES = '[Recipes] Set Factory Modules',
+  ADD_BEACON = '[Recipes] Add Beacon',
+  REMOVE_BEACON = '[Recipes] Remove Beacon',
   SET_BEACON_COUNT = '[Recipes] Set Beacon Count',
   SET_BEACON = '[Recipes] Set Beacon',
   SET_BEACON_MODULES = '[Recipes] Set Beacon Modules',
@@ -31,6 +33,16 @@ export class SetFactoryAction implements Action {
 export class SetFactoryModulesAction implements Action {
   readonly type = RecipesActionType.SET_FACTORY_MODULES;
   constructor(public payload: IdDefaultPayload<string[]>) {}
+}
+
+export class AddBeaconAction implements Action {
+  readonly type = RecipesActionType.ADD_BEACON;
+  constructor(public payload: string) {}
+}
+
+export class RemoveBeaconAction implements Action {
+  readonly type = RecipesActionType.REMOVE_BEACON;
+  constructor(public payload: IdPayload<number>) {}
 }
 
 export class SetBeaconCountAction implements Action {
@@ -88,6 +100,8 @@ export class ResetCostAction implements Action {
 export type RecipesAction =
   | SetFactoryAction
   | SetFactoryModulesAction
+  | AddBeaconAction
+  | RemoveBeaconAction
   | SetBeaconCountAction
   | SetBeaconAction
   | SetBeaconModulesAction
