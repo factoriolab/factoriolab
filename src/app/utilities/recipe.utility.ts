@@ -607,6 +607,8 @@ export class RecipeUtility {
 
       if (producer.beacons == null) {
         producer.beacons = [{}];
+      } else {
+        producer.beacons = producer.beacons.map((b) => ({ ...b }));
       }
 
       for (const beaconSettings of producer.beacons) {

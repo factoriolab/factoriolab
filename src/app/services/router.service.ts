@@ -747,7 +747,7 @@ export class RouterService {
             r,
             this.zipTruthyString(obj.factoryId),
             this.zipTruthyArray(obj.factoryModuleIds),
-            this.zipTruthyArray(data.producerBeaconMap[obj.recipeId]),
+            this.zipTruthyArray(data.producerBeaconMap[obj.id]),
             this.zipTruthyNumber(obj.overclock),
           ]),
           hash: this.zipFields([
@@ -755,7 +755,7 @@ export class RouterService {
             r,
             this.zipTruthyNString(obj.factoryId, hash.factories),
             this.zipTruthyNArray(obj.factoryModuleIds, hash.modules),
-            this.zipTruthyArray(data.producerBeaconMap[obj.recipeId]),
+            this.zipTruthyArray(data.producerBeaconMap[obj.id]),
             this.zipTruthyNumber(obj.overclock),
           ]),
         };
