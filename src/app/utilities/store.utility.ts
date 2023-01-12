@@ -125,12 +125,12 @@ export class StoreUtility {
     K extends keyof T,
     L extends keyof V
   >(
-    state: Record<string, T>,
+    state: Entities<T>,
     field: K,
     subfield: L,
     id?: string,
     index?: number
-  ): Record<string, T> {
+  ): Entities<T> {
     // Spread into new state
     const newState = { ...state };
     for (const i of Object.keys(newState).filter(
@@ -167,12 +167,12 @@ export class StoreUtility {
     K extends keyof T,
     L extends keyof V
   >(
-    state: Record<string, T>,
+    state: Entities<T>,
     field: K,
     subfield: L,
     payload: IdIndexDefaultPayload<V[L]>,
     rank = false
-  ): Record<string, T> {
+  ): Entities<T> {
     if (this.payloadEquals(payload, rank)) {
       // Resetting to null, spread into new state
       const newState = { ...state };
@@ -217,11 +217,11 @@ export class StoreUtility {
     K extends keyof T,
     L extends keyof V
   >(
-    state: Record<string, T>,
+    state: Entities<T>,
     field: K,
     subfield: L,
     payload: IdIndexPayload<V[L]>
-  ): Record<string, T> {
+  ): Entities<T> {
     return {
       ...state,
       ...{

@@ -9,7 +9,7 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { DataSet } from 'vis-data/esnext';
 import { Data, Edge, Network, Node, Options } from 'vis-network/esnext';
 
-import { FlowData } from '~/models';
+import { Entities, FlowData } from '~/models';
 import { DisplayService, FlowService } from '~/services';
 
 @UntilDestroy()
@@ -70,7 +70,7 @@ export class FlowComponent implements AfterViewInit {
     );
 
     const edges = new DataSet<Edge>();
-    const duplicateMap: Record<string, number> = {};
+    const duplicateMap: Entities<number> = {};
     edges.add(
       flowData.links.map((l) => {
         const id = `${l.source}|${l.target}`;

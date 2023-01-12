@@ -90,8 +90,8 @@ export interface Zip {
 export interface ZipData {
   objectives: Zip;
   config: Zip;
-  producerBeaconMap: Record<string, number[]>;
-  recipeBeaconMap: Record<string, number[]>;
+  producerBeaconMap: Entities<number[]>;
+  recipeBeaconMap: Entities<number[]>;
 }
 
 @Injectable({
@@ -265,7 +265,7 @@ export class RouterService {
   getParams(zip: string): Entities {
     const sections = zip.split('&');
     const substr = sections[0][1] === '=' ? 2 : 1;
-    const params = sections.reduce((e: Entities<string>, v) => {
+    const params = sections.reduce((e: Entities, v) => {
       e[v[0]] = v.substring(substr);
       return e;
     }, {});
@@ -393,7 +393,7 @@ export class RouterService {
   }
 
   /** Migrates older zip params to latest bare/hash formats */
-  migrate(params: Entities<string>): [Entities<string>, string[]] {
+  migrate(params: Entities): [Entities<string>, string[]] {
     const warnings: string[] = [];
     const v = (params[Section.Version] as ZipVersion) ?? ZipVersion.Version0;
     this.gaSvc.event('unzip_version', v);
@@ -406,6 +406,10 @@ export class RouterService {
         return this.migrateV2(params, warnings);
       case ZipVersion.Version3:
         return this.migrateV3(params, warnings);
+      case ZipVersion.Version4:
+        return this.migrateV4(params, warnings);
+      case ZipVersion.Version5:
+        return this.migrateV5(params, warnings);
       default:
         return [params, warnings];
     }
@@ -413,7 +417,7 @@ export class RouterService {
 
   /** Migrates V0 bare zip to latest bare format */
   migrateV0(
-    params: Entities<string>,
+    params: Entities,
     warnings: string[]
   ): [Entities<string>, string[]] {
     if (params[Section.Settings]) {
@@ -454,13 +458,14 @@ export class RouterService {
         params[Section.Mod], // Legacy preset
       ]);
     }
+
     params[Section.Version] = ZipVersion.Version1;
     return this.migrateV1(params, warnings);
   }
 
   /** Migrates V1 bare zip to latest bare format */
   migrateV1(
-    params: Entities<string>,
+    params: Entities,
     warnings: string[]
   ): [Entities<string>, string[]] {
     if (params[Section.Settings]) {
@@ -475,10 +480,12 @@ export class RouterService {
           warnings.push(MigrationWarning.ExpensiveDeprecation);
         }
       }
+
       params[Section.Settings] = this.zipFields(s);
     }
+
     params[Section.Version] = ZipVersion.Version4;
-    return [params, warnings];
+    return this.migrateV4(params, warnings);
   }
 
   /** Migrates V2 hash zip to latest hash format */
@@ -499,15 +506,18 @@ export class RouterService {
           const asString = this.parseNNumber(s[index])?.toString();
           s[index] = this.zipTruthyString(asString);
         }
+
         migrated.push(this.zipFields(s));
       }
+
       params[Section.Recipes] = migrated.join(LISTSEP);
     }
+
     if (params[Section.Factories]) {
       // Convert factory settings
       const zip = params[Section.Factories];
       const list = zip.split(LISTSEP);
-      const migrated = [];
+      const migrated: string[] = [];
       const index = 2; // Index of beaconCount field
       for (const factory of list) {
         const s = factory.split(FIELDSEP);
@@ -516,10 +526,13 @@ export class RouterService {
           const asString = this.parseNNumber(s[index])?.toString();
           s[index] = this.zipTruthyString(asString);
         }
+
         migrated.push(this.zipFields(s));
       }
+
       params[Section.Factories] = migrated.join(LISTSEP);
     }
+
     params[Section.Version] = ZipVersion.Version3;
     return this.migrateV3(params, warnings);
   }
@@ -541,10 +554,99 @@ export class RouterService {
           warnings.push(MigrationWarning.ExpensiveDeprecation);
         }
       }
+
       params[Section.Settings] = this.zipFields(s);
     }
+
     params[Section.Version] = ZipVersion.Version5;
+    return this.migrateV5(params, warnings);
+  }
+
+  private migrateInlineBeaconsSection(
+    params: Entities,
+    section: Section,
+    countIndex: number,
+    beacons: string[]
+  ): void {
+    if (params[section]) {
+      const zip = params[section];
+      const list = zip.split(LISTSEP);
+      const migrated: string[] = [];
+
+      for (const s of list.map((z) => z.split(FIELDSEP))) {
+        const moduleIdsIndex = countIndex + 1;
+        const idIndex = moduleIdsIndex + 1;
+
+        if (s.length > countIndex) {
+          let id: string | undefined;
+          let moduleIds: string | undefined;
+
+          if (s.length > idIndex) {
+            // Remove beaconId field
+            id = s.splice(idIndex, 1)[0];
+          }
+
+          if (s.length > moduleIdsIndex) {
+            // Remove modules field
+            moduleIds = s.splice(moduleIdsIndex, 1)[0];
+          }
+
+          // Get beaconCount field
+          const count = s[countIndex];
+
+          // Replace beaconCount field with beacons field
+          s[countIndex] = this.zipTruthyArray([beacons.length]);
+
+          // Add beacon settings
+          beacons.push(
+            this.zipFields([
+              count,
+              this.zipTruthyString(moduleIds),
+              this.zipTruthyString(id),
+            ])
+          );
+        }
+
+        migrated.push(this.zipFields(s));
+      }
+
+      params[section] = migrated.join(LISTSEP);
+    }
+  }
+
+  private migrateInlineBeacons(
+    params: Entities,
+    warnings: string[],
+    version: ZipVersion
+  ): [Entities<string>, string[]] {
+    const list: string[] = [];
+
+    this.migrateInlineBeaconsSection(params, Section.Producers, 4, list);
+    this.migrateInlineBeaconsSection(params, Section.Recipes, 3, list);
+
+    if (list.length) {
+      // Add beacon settings
+      params[Section.Beacons] = list.join(LISTSEP);
+    }
+
+    params[Section.Version] = version;
     return [params, warnings];
+  }
+
+  /** Migrates V4 bare zip to latest bare format */
+  migrateV4(
+    params: Entities,
+    warnings: string[]
+  ): [Entities<string>, string[]] {
+    return this.migrateInlineBeacons(params, warnings, ZipVersion.Version6);
+  }
+
+  /** Migrates V5 hash zip to latest hash format */
+  migrateV5(
+    params: Entities<string>,
+    warnings: string[]
+  ): [Entities<string>, string[]] {
+    return this.migrateInlineBeacons(params, warnings, ZipVersion.Version7);
   }
 
   displayWarnings(warnings: string[]): void {
@@ -559,9 +661,9 @@ export class RouterService {
     hash: ModHash
   ): ZipData {
     const list: Zip[] = [];
-    const beaconsIdMap: Record<string, number> = {};
-    const producerBeaconMap: Record<string, number[]> = {};
-    const recipeBeaconMap: Record<string, number[]> = {};
+    const beaconsIdMap: Entities<number> = {};
+    const producerBeaconMap: Entities<number[]> = {};
+    const recipeBeaconMap: Entities<number[]> = {};
 
     for (const producer of producers) {
       if (producer.beacons != null) {
@@ -604,7 +706,7 @@ export class RouterService {
 
   zipBeaconArray(
     beacons: BeaconSettings[],
-    beaconsIdMap: Record<string, number>,
+    beaconsIdMap: Entities<number>,
     list: Zip[],
     hash: ModHash
   ): number[] {

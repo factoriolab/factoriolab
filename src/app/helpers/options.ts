@@ -1,10 +1,10 @@
 import { SelectItem } from 'primeng/api';
 
-import { ItemId } from '~/models';
+import { Entities, ItemId } from '~/models';
 
 export function getIdOptions(
   ids: string[],
-  entities: Record<string, { name: string }>,
+  entities: Entities<{ name: string }>,
   emptyModule = false
 ): SelectItem[] {
   const list = ids.map(

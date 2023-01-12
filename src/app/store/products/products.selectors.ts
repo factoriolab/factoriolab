@@ -382,12 +382,12 @@ export const getTotals = createSelector(
   Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
   (steps, itemSettings, recipeSettings, data) => {
-    const belts: Record<string, Rational> = {};
-    const wagons: Record<string, Rational> = {};
-    const factories: Record<string, Rational> = {};
-    const factoryModules: Record<string, Rational> = {};
-    const beacons: Record<string, Rational> = {};
-    const beaconModules: Record<string, Rational> = {};
+    const belts: Entities<Rational> = {};
+    const wagons: Entities<Rational> = {};
+    const factories: Entities<Rational> = {};
+    const factoryModules: Entities<Rational> = {};
+    const beacons: Entities<Rational> = {};
+    const beaconModules: Entities<Rational> = {};
     let power = Rational.zero;
     let pollution = Rational.zero;
 
@@ -504,7 +504,7 @@ export const getTotals = createSelector(
 );
 
 function addValueToRecordByIds(
-  record: Record<string, Rational>,
+  record: Entities<Rational>,
   ids: string[],
   value: Rational
 ): void {

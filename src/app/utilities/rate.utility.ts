@@ -242,7 +242,7 @@ export class RateUtility {
 
   static calculateHierarchy(steps: Step[]): Step[] {
     // Determine parents
-    const parents: Record<string, string> = {};
+    const parents: Entities<string> = {};
     for (const step of steps) {
       if (step.parents && Object.keys(step.parents).length === 1) {
         const stepId = Object.keys(step.parents)[0];
