@@ -31,9 +31,9 @@
       "link": "Lien"
     },
     "displayRate": {
-      "perSecond": "unités par seconde",
-      "perMinute": "unités par minute",
-      "perHour": "unités par heure"
+      "perSecond": "Unités par seconde",
+      "perMinute": "Unités par minute",
+      "perHour": "Unités par heure"
     },
     "game": {
       "factorio": "Factorio",
@@ -90,11 +90,11 @@
     "flowRate": "Débit",
     "craftingSpeed": "Vitesse de fabrication",
     "modules": "Modules",
-    "disallowEffects": "effets Interdit",
+    "disallowEffects": "Effets Interdit",
     "energyType": "Type d'énergie",
     "fuelCategory": "Catégorie de carburant",
     "energyUsage": "Utilisation d'énergie",
-    "drain": "consommation passive",
+    "drain": "Consommation passive",
     "pollution": "Pollution",
     "rocketPartsRequired": "Pièces de fusée requise",
     "launchTime": "Temps de lancement",
@@ -102,7 +102,7 @@
     "productivity": "Productivité",
     "sprays": "Sprays",
     "effectivity": "Efficacité",
-    "range": "portée",
+    "range": "Portée",
     "belt": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Vitesse</td><td>{{ speed }}</td></tr></table></small>",
     "pipe": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Débit</td><td>{{ speed }}</td></tr></table></small>",
     "cargoWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Inventaire</td><td>{{ size }} stacks</td></tr></table></small>",
@@ -284,7 +284,7 @@
     "ignored": "Ignoré",
     "tableauPrecisionNote": "Remarque : Ce tableau utilise la précision de la colonne des articles",
     "simplexCanonicalTableau": "Tableau canonique simplexe",
-    "items": "articles/s",
+    "items": "Articles/s",
     "producers": "Producteurs",
     "recipes": "Recettes",
     "inputs": "Entrées",
