@@ -13,7 +13,7 @@
     "simplexSolved": "Simplexe {{ resultType }}: {{ time }}ms, {{ pivots }} pivots, taille: {{ rows }} x {{ cols }}, Coût: {{ cost }}",
     "simplexUnsolved": "Simplexe {{ resultType }}",
     "simplexError": "Pas de solution trouvé",
-    "simplexErrorDetail": "Essayez d'utiliser le solveur simplexe WASM Float64 avec toutes les recettes activés, ou vérifiez les recettes désactivés pour être sur qu'une solution est possible'.\n\nE.G. Si une plaque de fer requiert deux engrenages, et un engrenage requiert deux plaques de fer, alors il n'y a pas de solutions pour les plaques de fers.",
+    "simplexErrorDetail": "Essayez d'utiliser le solveur simplexe WASM Float64 avec toutes les recettes activés, ou vérifiez les recettes désactivés pour être sûre qu'une solution est possible'.\n\nE.G. Si une plaque de fer requiert deux engrenages, et un engrenage requiert deux plaques de fer, alors il n'y a pas de solutions pour les plaques de fers.",
     "dontShowAgain": "Ne plus afficher",
     "trySuggestedFix": "Essayez le correctif suggéré"
   },
