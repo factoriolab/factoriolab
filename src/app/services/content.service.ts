@@ -1,4 +1,5 @@
-import { Injectable, TemplateRef } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable, TemplateRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Confirmation } from 'primeng/api';
 import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
@@ -8,13 +9,13 @@ import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
 })
 export class ContentService {
   // Responsive
-  scrollTop$ = fromEvent(window, 'scroll').pipe(
+  scrollTop$ = fromEvent(this.document.body, 'scroll').pipe(
     map(
       // Don't test fromEvent
       // istanbul ignore next
-      () => window.scrollY
+      () => this.document.body.scrollTop
     ),
-    startWith(window.scrollY)
+    startWith(this.document.body.scrollTop)
   );
   windowInnerWidth = (): number => window.innerWidth;
   width$ = fromEvent(window, 'resize').pipe(
@@ -53,5 +54,8 @@ export class ContentService {
   // Watch all language changes
   lang$ = this.translateSvc.onLangChange.pipe(startWith(''));
 
-  constructor(private translateSvc: TranslateService) {}
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private translateSvc: TranslateService
+  ) {}
 }

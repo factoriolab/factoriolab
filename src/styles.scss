@@ -10,6 +10,10 @@
 @import 'styles/utils';
 
 html {
+  overflow: hidden;
+
+  height: 100vh;
+
   font-size: 14px;
 }
 
