@@ -21,8 +21,8 @@
     "packaged-nitrogen-gas": "Azote gazeux conditionnée",
     "water": "Eau",
     "packaged-water": "Eau conditionnée",
-    "alien-carapace": "Carapace extraterrestre",
-    "alien-organs": "Organe extraterrestre",
+    "alien-carapace": "Carapace extraterrestre",+
+    "alien-organs": "Organe extraterrestre",+
     "flower-petals": "Pétales de fleur",
     "leaves": "Feuilles",
     "mycelia": "Mycélium",
@@ -51,7 +51,7 @@
     "versatile-framework": "Structure polyvalente",
     "automated-wiring": "Câblage automatisée",
     "encased-industrial-beam": "Poutre en béton armé",
-    "heavy-modular-frame": "Cadre modulaire lourd",
+    "heavy-modular-frame": "Cadre modulaire lourd",+
     "motor": "Moteur",
     "stator": "Stator",
     "adaptive-control-unit": "Unité de contrôle adaptative",
@@ -74,21 +74,21 @@
     "aluminum-casing": "Boîtier en aluminium",
     "alclad-aluminum-sheet": "Tôle d'aluminium en alliage Alclad",
     "aluminum-ingot": "Lingot d'aluminium",
-    "aluminum-scrap": "Rebuts d'aluminium",
-    "assembly-director-system": "Système de Directeur d'Assemblage",
+    "aluminum-scrap": "Rebuts d'aluminium",+
+    "assembly-director-system": "Système de Directeur d'Assemblage",+
     "battery": "Batterie",
     "radio-control-unit": "Unité de contrôle radio",
     "sulfuric-acid": "Acide sulfurique",
     "packaged-sulfuric-acid": "Acide sulfurique conditionné",
-    "cooling-system": "Système de refroidissement",
-    "copper-powder": "Poudre de cuivre",
-    "electromagnetic-control-rod": "Tige de contrôle électromagnétique",
-    "empty-fluid-tank": "Réservoir de fluide vide",
-    "encased-plutonium-cell": "Cellule de plutonium",
-    "encased-uranium-cell": "Cellule d'uranium",
+    "cooling-system": "Système de refroidissement",+
+    "copper-powder": "Poudre de cuivre",+
+    "electromagnetic-control-rod": "Tige de contrôle électromagnétique",+
+    "empty-fluid-tank": "Réservoir de fluide vide",+
+    "encased-plutonium-cell": "Cellule de plutonium",+
+    "encased-uranium-cell": "Cellule d'uranium",+
     "fused-modular-frame": "Cadre modulaire fusionné",
     "heat-sink": "Dissipateur thermique",
-    "magnetic-field-generator": "Générateur de champ magnétique",
+    "magnetic-field-generator": "Générateur de champ magnétique",+
     "nitric-acid": "Acide nitrique",
     "packaged-nitric-acid": "Acide nitrique conditionné",
     "non-fissile-uranium": "Uranium non-fissile",
@@ -96,8 +96,8 @@
     "plutonium-fuel-rod": "Barre de plutonium",
     "plutonium-pellet": "Granulé de plutonium",
     "plutonium-waste": "Déchets de plutonium",
-    "pressure-conversion-cube": "Cube de conversion de pression",
-    "thermal-propulsion-rocket": "Fusée à propulsion thermique",
+    "pressure-conversion-cube": "Cube de conversion de pression",+
+    "thermal-propulsion-rocket": "Fusée à propulsion thermique",+
     "turbo-motor": "Moteur turbo",
     "uranium-fuel-rod": "Barre de combustible à l'uranium",
     "uranium-waste": "Déchets d'uranium",
@@ -112,16 +112,16 @@
     "quartz-crystal": "Cristal de quartz",
     "silica": "Silice",
     "crystal-oscillator": "Oscillateur à crystal",
-    "supercomputer": "超级",
-    "turbofuel": "涡轮燃料",
-    "packaged-turbofuel": "包装涡轮燃料",
-    "portable-miner": "",
-    "beacon": "信标",
+    "supercomputer": "Superordinateur",
+    "turbofuel": "Turbocarburant",
+    "packaged-turbofuel": "Turbocarburant conditionné",
+    "portable-miner": "Foreuse portable",
+    "beacon": "Balise",
     "gas-filter": "Filtre à gaz",
     "iodine-infused-filter": "Filtre à infusion d'iode",
     "color-cartridge": "Cartouche de couleur",
     "nobelisk": "Nobelisk",
-    "spiked-rebar": "",
+    "spiked-rebar": "Barre d'armature à pointe",
     "rifle-cartridge": "Munittions de fusil",
     "conveyor-belt-mk1": "Convoyeur Mk.1",
     "conveyor-belt-mk2": "Convoyeur Mk.2",
@@ -134,7 +134,7 @@
     "water-extractor": "Pompe à eau",
     "oil-extractor": "Pompe à pétrole",
     "resource-well-pressurizer": "Pressuriseur",
-    "resource-well-extractor": "资源井提取器",
+    "resource-well-extractor": "Extracteur de puits de ressources",
     "constructor": "Constructeur",
     "assembler": "Assembleuses",
     "manufacturer": "Façonneuse",
@@ -146,7 +146,7 @@
     "miner-mk2": "Foreuse Mk.2",
     "miner-mk3": "Foreuse Mk.3",
     "smelter": "Fonderie",
-    "foundry": "Fonderie",
+    "foundry": "Fonderie avancée",
     "nuclear-power-plant": "Centrale nucléaire",
     "purity-0": "Impure",
     "purity-1": "Normal",
