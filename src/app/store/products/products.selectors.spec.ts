@@ -515,7 +515,6 @@ describe('Products Selectors', () => {
             belts: Rational.one,
             wagons: Rational.one,
             factories: Rational.one,
-            beacons: Rational.one,
             power: Rational.one,
             pollution: Rational.one,
             recipeSettings: {

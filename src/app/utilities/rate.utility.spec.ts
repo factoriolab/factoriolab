@@ -2,7 +2,6 @@ import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   DisplayRate,
   displayRateInfo,
-  Entities,
   Game,
   Rational,
   RationalProducer,
@@ -205,7 +204,6 @@ describe('RateUtility', () => {
       RateUtility.calculateBelts(
         step,
         Mocks.ItemSettingsInitial,
-        Mocks.RationalRecipeSettingsInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -222,7 +220,6 @@ describe('RateUtility', () => {
       RateUtility.calculateBelts(
         step,
         Mocks.ItemSettingsInitial,
-        Mocks.RationalRecipeSettingsInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -240,7 +237,6 @@ describe('RateUtility', () => {
       RateUtility.calculateBelts(
         step,
         Mocks.ItemSettingsInitial,
-        Mocks.RationalRecipeSettingsInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -259,7 +255,6 @@ describe('RateUtility', () => {
       RateUtility.calculateBelts(
         step,
         Mocks.ItemSettingsInitial,
-        Mocks.RationalRecipeSettingsInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -279,7 +274,6 @@ describe('RateUtility', () => {
       RateUtility.calculateBelts(
         step,
         Mocks.ItemSettingsInitial,
-        Mocks.RationalRecipeSettingsInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -314,13 +308,7 @@ describe('RateUtility', () => {
         factories: Rational.one,
         power: Rational.zero,
       };
-      RateUtility.calculateBeacons(
-        step,
-        Rational.one,
-        Mocks.RationalRecipeSettingsInitial,
-        Mocks.AdjustedData
-      );
-      expect(step.beacons).toEqual(Rational.from(8));
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
       expect(step.power).toEqual(Rational.from(3840));
     });
 
@@ -333,13 +321,7 @@ describe('RateUtility', () => {
         factories: Rational.one,
         power: Rational.zero,
       };
-      RateUtility.calculateBeacons(
-        step,
-        Rational.hundred,
-        Mocks.RationalRecipeSettingsInitial,
-        Mocks.AdjustedData
-      );
-      expect(step.beacons).toEqual(Rational.from(8));
+      RateUtility.calculateBeacons(step, Rational.hundred, Mocks.AdjustedData);
     });
 
     it('should handle undefined step power', () => {
@@ -350,23 +332,19 @@ describe('RateUtility', () => {
         recipeId: RecipeId.Coal,
         factories: Rational.one,
       };
-      RateUtility.calculateBeacons(
-        step,
-        Rational.one,
-        Mocks.RationalRecipeSettingsInitial,
-        Mocks.AdjustedData
-      );
-      expect(step.beacons).toEqual(Rational.from(8));
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
       expect(step.power).toEqual(Rational.from(3840));
     });
 
     it('should override from recipe settings', () => {
-      const settings: Entities<RationalRecipeSettings> = {
-        [RecipeId.Coal]: {
-          beaconCount: Rational.from(8),
-          beaconId: ItemId.Beacon,
-          beaconTotal: Rational.one,
-        },
+      const recipeSettings: RationalRecipeSettings = {
+        beacons: [
+          {
+            count: Rational.from(8),
+            id: ItemId.Beacon,
+            total: Rational.one,
+          },
+        ],
       };
       const step: Step = {
         id: 'id',
@@ -375,14 +353,9 @@ describe('RateUtility', () => {
         recipeId: RecipeId.Coal,
         factories: Rational.one,
         power: Rational.zero,
+        recipeSettings,
       };
-      RateUtility.calculateBeacons(
-        step,
-        Rational.one,
-        settings,
-        Mocks.AdjustedData
-      );
-      expect(step.beacons).toEqual(Rational.one);
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
       expect(step.power).toEqual(Rational.from(480));
     });
   });

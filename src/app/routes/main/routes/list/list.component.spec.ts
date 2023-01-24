@@ -265,6 +265,7 @@ describe('ListComponent', () => {
       );
       expect(component.setBeaconCount).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
+        0,
         '4',
         '8',
         false
@@ -282,6 +283,7 @@ describe('ListComponent', () => {
       );
       expect(component.setBeacon).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
+        0,
         ItemId.Beacon,
         ItemId.Beacon,
         false
@@ -300,6 +302,7 @@ describe('ListComponent', () => {
       );
       expect(component.setBeaconModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
+        0,
         new Array(2).fill(ItemId.SpeedModule3),
         new Array(2).fill(ItemId.SpeedModule3),
         false

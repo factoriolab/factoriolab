@@ -113,16 +113,24 @@ export const ItemSettings1: M.ItemSettings = {
 export const RecipeSettings1: M.RecipeSettings = {
   factoryId: ItemId.AssemblingMachine2,
   factoryModuleIds: [ItemId.Module, ItemId.Module],
-  beaconId: ItemId.Beacon,
-  beaconModuleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
-  beaconCount: '0',
+  beacons: [
+    {
+      id: ItemId.Beacon,
+      moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+      count: '0',
+    },
+  ],
 };
 export const RecipeSettings2: M.RecipeSettings = {
   factoryId: ItemId.AssemblingMachine2,
   factoryModuleIds: [ItemId.Module, ItemId.Module],
-  beaconId: ItemId.Beacon,
-  beaconModuleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
-  beaconCount: '0',
+  beacons: [
+    {
+      id: ItemId.Beacon,
+      moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+      count: '0',
+    },
+  ],
 };
 export const Step1: M.Step = {
   id: `${Item1.id}.${Item1.id}`,
@@ -134,7 +142,6 @@ export const Step1: M.Step = {
   factories: M.Rational.one,
   power: M.Rational.one,
   pollution: M.Rational.one,
-  beacons: M.Rational.from(4),
 };
 export const Step2: M.Step = {
   id: `${Item2.id}.${Item2.id}`,
@@ -146,7 +153,6 @@ export const Step2: M.Step = {
   factories: M.Rational.two,
   power: M.Rational.zero,
   pollution: M.Rational.zero,
-  beacons: M.Rational.from(4),
 };
 export const Steps = [Step1, Step2];
 export const BeltSpeed: M.Entities<M.Rational> = {

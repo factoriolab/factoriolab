@@ -65,9 +65,7 @@ describe('ExportService', () => {
     const fullRecipe: RecipeSettings = {
       factoryId: ItemId.AssemblingMachine2,
       factoryModuleIds: ['a', 'b'],
-      beaconCount: '8',
-      beaconId: 'beacon',
-      beaconModuleIds: ['c', 'd'],
+      beacons: [{ count: '8', id: 'beacon', moduleIds: ['c', 'd'] }],
     };
 
     it('should fill in all fields', () => {
@@ -95,7 +93,7 @@ describe('ExportService', () => {
         Factory: fullRecipe.factoryId,
         FactoryModules: '"a,b"',
         Beacons: '8',
-        Beacon: fullRecipe.beaconId,
+        Beacon: ItemId.Beacon,
         BeaconModules: '"c,d"',
         Power: '=6',
         Pollution: '=7',

@@ -152,13 +152,21 @@ describe('StoreUtility', () => {
 
     it('should set field when not equal to default', () => {
       const payload = { id, value: 'a', def: 'b' };
-      const result = StoreUtility.compareReset({}, field, payload);
+      const result = StoreUtility.compareReset(
+        { [id]: { [field]: '' } },
+        field,
+        payload
+      );
       expect(result[id][field]).toEqual('a');
     });
 
     it('should do nothing if null and equal to default', () => {
       const payload = { id, value: 'a', def: 'a' };
-      const result = StoreUtility.compareReset({}, field, payload);
+      const result = StoreUtility.compareReset(
+        { [id]: { [field]: '' } },
+        field,
+        payload
+      );
       expect(result).toEqual({});
     });
 

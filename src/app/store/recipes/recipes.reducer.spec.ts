@@ -44,9 +44,7 @@ describe('Recipes Reducer', () => {
           ...{
             [Mocks.Recipe1.id]: {
               factoryModuleIds: ['test'],
-              beaconCount: '20',
-              beaconId: 'test',
-              beaconModuleIds: ['test'],
+              beacons: [{ count: '20', id: 'test', moduleIds: ['test'] }],
             },
           },
         },
@@ -82,11 +80,12 @@ describe('Recipes Reducer', () => {
         initialRecipesState,
         new Actions.SetBeaconCountAction({
           id: Mocks.Recipe1.id,
+          index: 0,
           value: '2',
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].beaconCount).toEqual('2');
+      expect(result[Mocks.Recipe1.id].beacons?.[0].count).toEqual('2');
     });
   });
 
@@ -96,26 +95,30 @@ describe('Recipes Reducer', () => {
         initialRecipesState,
         new Actions.SetBeaconAction({
           id: Mocks.Recipe1.id,
+          index: 0,
           value: ItemId.Beacon,
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].beaconId).toEqual(ItemId.Beacon);
+      expect(result[Mocks.Recipe1.id].beacons?.[0].id).toEqual(ItemId.Beacon);
     });
 
     it('should reset the beacon modules', () => {
       const result = recipesReducer(
         {
           ...initialRecipesState,
-          ...{ [Mocks.Recipe1.id]: { beaconModuleIds: ['test'] } },
+          ...{ [Mocks.Recipe1.id]: { beacons: [{ moduleIds: ['test'] }] } },
         },
         new Actions.SetBeaconAction({
           id: Mocks.Recipe1.id,
+          index: 0,
           value: ItemId.Beacon,
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id]).toEqual({ beaconId: ItemId.Beacon });
+      expect(result[Mocks.Recipe1.id]).toEqual({
+        beacons: [{ id: ItemId.Beacon }],
+      });
     });
   });
 
@@ -125,11 +128,12 @@ describe('Recipes Reducer', () => {
         initialRecipesState,
         new Actions.SetBeaconModulesAction({
           id: Mocks.Recipe1.id,
+          index: 0,
           value: [Mocks.Item1.id],
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].beaconModuleIds).toEqual([
+      expect(result[Mocks.Recipe1.id].beacons?.[0].moduleIds).toEqual([
         Mocks.Item1.id,
       ]);
     });
@@ -141,10 +145,11 @@ describe('Recipes Reducer', () => {
         initialRecipesState,
         new Actions.SetBeaconTotalAction({
           id: Mocks.Recipe1.id,
+          index: 0,
           value: '200',
         })
       );
-      expect(result[Mocks.Recipe1.id].beaconTotal).toEqual('200');
+      expect(result[Mocks.Recipe1.id].beacons?.[0].total).toEqual('200');
     });
   });
 

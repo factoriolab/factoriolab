@@ -97,20 +97,20 @@ describe('Recipes Selectors', () => {
     it('should use beacon count override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beaconCount: stringValue } },
+        ...{ [Mocks.Item1.id]: { beacons: [{ count: stringValue }] } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
         Mocks.Dataset
       );
-      expect(result[Mocks.Item1.id].beaconCount).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].beacons?.[0].count).toEqual(stringValue);
     });
 
     it('should use beacon module override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beaconModuleIds: [stringValue] } },
+        ...{ [Mocks.Item1.id]: { beacons: [{ moduleIds: [stringValue] }] } },
       };
       const factories = {
         ...Mocks.FactorySettingsInitial,
@@ -135,20 +135,22 @@ describe('Recipes Selectors', () => {
         factories,
         Mocks.Dataset
       );
-      expect(result[Mocks.Item1.id].beaconModuleIds).toEqual([stringValue]);
+      expect(result[Mocks.Item1.id].beacons?.[0].moduleIds).toEqual([
+        stringValue,
+      ]);
     });
 
     it('should reset invalid beacon totals', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beaconTotal: '8', beaconCount: '0' } },
+        ...{ [Mocks.Item1.id]: { beacons: [{ total: '8', count: '0' }] } },
       };
       const result = Selectors.getRecipeSettings.projector(
         state,
         Mocks.FactorySettingsInitial,
         Mocks.Dataset
       );
-      expect(result[Mocks.Item1.id].beaconTotal).toBeUndefined();
+      expect(result[Mocks.Item1.id].beacons?.[0].total).toBeUndefined();
     });
   });
 
@@ -177,10 +179,7 @@ describe('Recipes Selectors', () => {
             factoryId: undefined,
             factoryModuleIds: undefined,
             overclock: 100,
-            beaconId: undefined,
-            beaconModuleIds: undefined,
-            beaconCount: undefined,
-            beaconTotal: '1',
+            beacons: [{ total: '1' }],
           },
         },
         []
@@ -196,7 +195,7 @@ describe('Recipes Selectors', () => {
         recipeId: RecipeId.Coal,
         count: '1',
         overclock: 100,
-        beaconModuleIds: [],
+        beacons: [{ moduleIds: [] }],
       };
       const result = Selectors.getRecipesModified.projector(
         {
