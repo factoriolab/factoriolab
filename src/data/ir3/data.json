@@ -27721,8 +27721,8 @@
         ],
         "maxFactoryRank": [
             "assembling-machine-3",
-            "electric-furnace",
-            "electric-mining-drill",
+            "steel-furnace",
+            "advanced-mining-drill",
             "steel-grinder",
             "steel-mixer"
         ],
