@@ -199,13 +199,7 @@ describe('Recipes Reducer', () => {
       );
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(
         {},
-        [
-          'factoryModuleIds',
-          'beaconCount',
-          'beaconId',
-          'beaconModuleIds',
-          'beaconTotal',
-        ] as any,
+        ['factoryModuleIds', 'beacons'] as any,
         Mocks.Recipe1.id
       );
     });
@@ -219,10 +213,7 @@ describe('Recipes Reducer', () => {
         'factoryId',
         'overclock',
         'factoryModuleIds',
-        'beaconCount',
-        'beaconId',
-        'beaconModuleIds',
-        'beaconTotal',
+        'beacons',
       ] as any);
     });
   });
@@ -232,10 +223,7 @@ describe('Recipes Reducer', () => {
       spyOn(StoreUtility, 'resetFields');
       recipesReducer(undefined, new Actions.ResetBeaconsAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
-        'beaconCount',
-        'beaconId',
-        'beaconModuleIds',
-        'beaconTotal',
+        'beacons',
       ] as any);
     });
   });

@@ -200,6 +200,7 @@ export function producersReducer(
             ),
             'beacons',
             'moduleIds',
+            action.payload.index,
             action.payload.id
           ),
         },

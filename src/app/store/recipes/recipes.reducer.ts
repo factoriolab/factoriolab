@@ -68,6 +68,7 @@ export function recipesReducer(
         StoreUtility.compareResetIndex(state, 'beacons', 'id', action.payload),
         'beacons',
         'moduleIds',
+        action.payload.index,
         action.payload.id
       );
     case RecipesActionType.SET_BEACON_MODULES:

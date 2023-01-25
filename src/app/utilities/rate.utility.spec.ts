@@ -251,6 +251,8 @@ describe('RateUtility', () => {
         items: Rational.one,
         belts: Rational.one,
         wagons: Rational.one,
+        recipeSettings:
+          Mocks.RationalRecipeSettingsInitial[RecipeId.ArtilleryShellRange],
       };
       RateUtility.calculateBelts(
         step,
@@ -270,6 +272,8 @@ describe('RateUtility', () => {
         items: Rational.one,
         belts: Rational.one,
         wagons: Rational.one,
+        recipeSettings:
+          Mocks.RationalRecipeSettingsInitial[RecipeId.ArtilleryShellRange],
       };
       RateUtility.calculateBelts(
         step,
@@ -307,6 +311,7 @@ describe('RateUtility', () => {
         recipeId: RecipeId.Coal,
         factories: Rational.one,
         power: Rational.zero,
+        recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.Coal],
       };
       RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
       expect(step.power).toEqual(Rational.from(3840));
@@ -320,8 +325,10 @@ describe('RateUtility', () => {
         recipeId: RecipeId.Coal,
         factories: Rational.one,
         power: Rational.zero,
+        recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.Coal],
       };
       RateUtility.calculateBeacons(step, Rational.hundred, Mocks.AdjustedData);
+      expect(step.recipeSettings?.beacons?.[0].total).toEqual(Rational.from(8));
     });
 
     it('should handle undefined step power', () => {
@@ -331,6 +338,7 @@ describe('RateUtility', () => {
         items: Rational.one,
         recipeId: RecipeId.Coal,
         factories: Rational.one,
+        recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.Coal],
       };
       RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
       expect(step.power).toEqual(Rational.from(3840));

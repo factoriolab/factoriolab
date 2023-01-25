@@ -92,9 +92,9 @@ describe('ExportService', () => {
         Factories: '=5',
         Factory: fullRecipe.factoryId,
         FactoryModules: '"a,b"',
-        Beacons: '8',
-        Beacon: ItemId.Beacon,
-        BeaconModules: '"c,d"',
+        Beacons: '"8"',
+        Beacon: '"beacon"',
+        BeaconModules: '"c|d"',
         Power: '=6',
         Pollution: '=7',
       });
@@ -116,9 +116,9 @@ describe('ExportService', () => {
         Recipe: recipeId,
         Factory: ItemId.AssemblingMachine2,
         FactoryModules: '"a,b"',
-        Beacons: '8',
-        Beacon: ItemId.Beacon,
-        BeaconModules: '"c,d"',
+        Beacons: '"8"',
+        Beacon: '"beacon"',
+        BeaconModules: '"c|d"',
       });
     });
   });

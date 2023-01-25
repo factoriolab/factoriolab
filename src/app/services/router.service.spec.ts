@@ -128,10 +128,15 @@ const mockZip: Zip = {
 };
 const mockZipPartial: Zip = {
   bare:
-    '&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module' +
-    '~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*%3D*tran' +
-    'sport-belt*coal*1200*100*0*0*0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
-  hash: '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D',
+    '&e=1*speed-module~speed-module*beacon*8&i=steel-chest*1*transport-belt*c' +
+    'argo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effecti' +
+    'vity-module*0*200*100&f=1*productivity-module~speed-module*1*speed-modul' +
+    'e*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*%3D*transport-belt' +
+    '*coal*1200*100*0*0*0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-' +
+    'module',
+  hash:
+    '&e1*G~G*A*8&bB&iC6*1*C*A&rDB*B*A~A*0*200*100&f1*D~G*1*G*A_B_Q&s2*1*=*C*A' +
+    '*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D',
 };
 const mockState: LabState = {
   productsState: mockProductsState,
@@ -322,7 +327,7 @@ describe('RouterService', () => {
       spyOn(service, 'bytesToBase64').and.returnValue('test');
       service.zipTail.bare = 'a'.repeat(MIN_ZIP);
       const result = service.getHash(mockEmptyZipData());
-      expect(result).toEqual('z=test&v=5');
+      expect(result).toEqual('z=test&v=' + service.hashVersion);
     });
   });
 
@@ -515,7 +520,7 @@ describe('RouterService', () => {
 
   describe('migrate', () => {
     it('should return latest version without alteration', () => {
-      const originalParams = { [Section.Version]: ZipVersion.Version4 };
+      const originalParams = { [Section.Version]: ZipVersion.Version6 };
       const [params, _] = service.migrate({ ...originalParams });
       expect(params).toEqual(originalParams);
     });

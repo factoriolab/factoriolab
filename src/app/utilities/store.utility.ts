@@ -128,32 +128,33 @@ export class StoreUtility {
     state: Entities<T>,
     field: K,
     subfield: L,
-    id?: string,
-    index?: number
+    index: number,
+    id?: string
   ): Entities<T> {
     // Spread into new state
     const newState = { ...state };
     for (const i of Object.keys(newState).filter(
       (j) => (!id || id === j) && newState[j][field] != null
     )) {
-      const newArr = newState[i][field]
-        ?.map((v, i) => {
-          if (index == null || i === index) {
-            // Spread into new state
-            const newV = { ...v } as unknown as V;
-            delete newV[subfield];
-            return newV;
-          } else {
-            return v;
-          }
-        })
-        .filter((v) => Object.keys(v).length > 0);
-      if (newArr != null && newArr.length > 0) {
-        newState[i] = { ...newState[i], ...{ [field]: newArr } };
-      } else {
-        delete newState[i][field];
+      const arr = newState[i][field];
+      if (arr != null) {
+        const newArr = arr.map((a) => ({ ...a }));
+
+        // Reset the specific subfield
+        delete (newArr[index] as unknown as V)[subfield];
+
+        if (newArr.length === 1 && Object.keys(newArr[index]).length === 0) {
+          // Delete this field from the entity
+          delete newState[i][field];
+        } else {
+          // Set this field on the entitiy
+          newState[i][field] = newArr as unknown as T[K];
+        }
       }
-      if (Object.keys(newState[i]).length === 1) {
+
+      // Check whether whole entity has keys
+      if (Object.keys(newState[i]).length === 0) {
+        // Delete the whole entity
         delete newState[i];
       }
     }
