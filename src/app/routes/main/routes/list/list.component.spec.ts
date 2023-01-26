@@ -312,6 +312,24 @@ describe('ListComponent', () => {
       );
     });
 
+    it('should call to set the beacon total', () => {
+      spyOn(component, 'setBeaconTotal');
+      component.changeRecipeField(
+        step,
+        '8',
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.BeaconTotal,
+        0
+      );
+      expect(component.setBeaconTotal).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        0,
+        '8',
+        false
+      );
+    });
+
     it('should set up default for overclock', () => {
       spyOn(component, 'setOverclock');
       component.changeRecipeField(
@@ -342,6 +360,10 @@ describe('ListComponent', () => {
       'setFactoryModules',
       Producers.SetFactoryModulesAction
     );
+    dispatch.val('addBeacon', Recipes.AddBeaconAction);
+    dispatch.valAlt('addBeacon', Producers.AddBeaconAction);
+    dispatch.idVal('removeBeacon', Recipes.RemoveBeaconAction);
+    dispatch.idValAlt('removeBeacon', Producers.RemoveBeaconAction);
     dispatch.idIndValDef('setBeaconCount', Recipes.SetBeaconCountAction);
     dispatch.idIndValDefAlt('setBeaconCount', Producers.SetBeaconCountAction);
     dispatch.idIndValDef('setBeacon', Recipes.SetBeaconAction);
@@ -352,6 +374,7 @@ describe('ListComponent', () => {
       Producers.SetBeaconModulesAction
     );
     dispatch.idIndVal('setBeaconTotal', Recipes.SetBeaconTotalAction);
+    dispatch.idIndValAlt('setBeaconTotal', Producers.SetBeaconTotalAction);
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
     dispatch.idValDefAlt('setOverclock', Producers.SetOverclockAction);
     dispatch.val('resetItem', Items.ResetItemAction);

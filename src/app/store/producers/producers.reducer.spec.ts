@@ -145,6 +145,23 @@ describe('Producers Reducer', () => {
     });
   });
 
+  describe('ADD_BEACON', () => {
+    it('should add a beacon to a producer', () => {
+      const result = producersReducer(state, new Actions.AddBeaconAction('0'));
+      expect(result.entities['0'].beacons?.length).toEqual(2);
+    });
+  });
+
+  describe('REMOVE_BEACON', () => {
+    it('should remove a beacon from a producer', () => {
+      const result = producersReducer(
+        state,
+        new Actions.RemoveBeaconAction({ id: '0', value: 0 })
+      );
+      expect(result.entities['0'].beacons?.length).toEqual(0);
+    });
+  });
+
   describe('SET_BEACON_COUNT', () => {
     it('should set beacon count on a producer', () => {
       const result = producersReducer(
@@ -189,6 +206,20 @@ describe('Producers Reducer', () => {
       expect(result.entities['0'].beacons?.[0].moduleIds).toEqual([
         ItemId.SpeedModule,
       ]);
+    });
+  });
+
+  describe('SET_BEACON_TOTAL', () => {
+    it('should set the beacon total', () => {
+      const result = producersReducer(
+        state,
+        new Actions.SetBeaconTotalAction({
+          id: '0',
+          index: 0,
+          value: '200',
+        })
+      );
+      expect(result.entities['0'].beacons?.[0].total).toEqual('200');
     });
   });
 

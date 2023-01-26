@@ -144,7 +144,7 @@ export function producersReducer(
             ...state.entities,
             ...{
               [action.payload]: {
-                ...(state.entities[action.payload] ?? {}),
+                ...state.entities[action.payload],
                 ...{
                   beacons: [
                     ...(state.entities[action.payload]?.beacons ?? [{}]),
@@ -213,7 +213,8 @@ export function producersReducer(
             state.entities,
             'beacons',
             'moduleIds',
-            action.payload
+            action.payload,
+            true
           ),
         },
       };

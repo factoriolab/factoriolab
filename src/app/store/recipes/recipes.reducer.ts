@@ -76,7 +76,8 @@ export function recipesReducer(
         state,
         'beacons',
         'moduleIds',
-        action.payload
+        action.payload,
+        true
       );
     case RecipesActionType.SET_BEACON_TOTAL:
       return StoreUtility.assignIndexValue(

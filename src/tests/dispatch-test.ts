@@ -21,6 +21,15 @@ export class DispatchTest<T> {
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(new action('value'));
   }
 
+  valAlt(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
+    (this.component[key] as unknown as (value: string, alt: boolean) => void)(
+      'value',
+      true
+    );
+    expect(this.mockStore.dispatch).toHaveBeenCalledWith(new action('value'));
+  }
+
   valDef(key: keyof T, action: Type<Action>): void {
     this.spy.calls.reset();
     (this.component[key] as unknown as (value: string, def: string) => void)(
@@ -49,6 +58,20 @@ export class DispatchTest<T> {
       'id',
       'value'
     );
+    expect(this.mockStore.dispatch).toHaveBeenCalledWith(
+      new action({ id: 'id', value: 'value' })
+    );
+  }
+
+  idValAlt(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
+    (
+      this.component[key] as unknown as (
+        id: string,
+        value: string,
+        alt: boolean
+      ) => void
+    )('id', 'value', true);
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
       new action({ id: 'id', value: 'value' })
     );
@@ -92,6 +115,21 @@ export class DispatchTest<T> {
         value: string
       ) => void
     )('id', 0, 'value');
+    expect(this.mockStore.dispatch).toHaveBeenCalledWith(
+      new action({ id: 'id', index: 0, value: 'value' })
+    );
+  }
+
+  idIndValAlt(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
+    (
+      this.component[key] as unknown as (
+        id: string,
+        index: number,
+        value: string,
+        alt: boolean
+      ) => void
+    )('id', 0, 'value', true);
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
       new action({ id: 'id', index: 0, value: 'value' })
     );

@@ -117,6 +117,25 @@ export class StoreUtility {
     };
   }
 
+  static compareValue<T>(payload: DefaultPayload<T>): T | undefined {
+    return payload.value === payload.def ? undefined : payload.value;
+  }
+
+  static compareValues(
+    payload: DefaultPayload<string[]>
+  ): string[] | undefined {
+    return this.arrayEquals(payload.value, payload.def)
+      ? undefined
+      : payload.value;
+  }
+
+  static compareRank(
+    value: string[],
+    def: string[] | undefined
+  ): string[] | undefined {
+    return this.rankEquals(value, def) ? undefined : value;
+  }
+
   /** Resets a passed field of the state */
   static resetFieldIndex<
     T extends { [key in K]?: U[] },
@@ -244,24 +263,5 @@ export class StoreUtility {
         },
       },
     };
-  }
-
-  static compareValue<T>(payload: DefaultPayload<T>): T | undefined {
-    return payload.value === payload.def ? undefined : payload.value;
-  }
-
-  static compareValues(
-    payload: DefaultPayload<string[]>
-  ): string[] | undefined {
-    return this.arrayEquals(payload.value, payload.def)
-      ? undefined
-      : payload.value;
-  }
-
-  static compareRank(
-    value: string[],
-    def: string[] | undefined
-  ): string[] | undefined {
-    return this.rankEquals(value, def) ? undefined : value;
   }
 }
