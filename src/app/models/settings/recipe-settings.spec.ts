@@ -8,20 +8,13 @@ describe('RationalRecipeSettings', () => {
       const result = new RationalRecipeSettings({
         factoryId: ItemId.AssemblingMachine1,
         factoryModuleIds: [],
-        beacons: [{ count: '2', id: ItemId.Beacon, moduleIds: [], total: '8' }],
+        beacons: [],
         overclock: 200,
         cost: '100',
       });
       expect(result.factoryId).toEqual(ItemId.AssemblingMachine1);
       expect(result.factoryModuleIds).toEqual([]);
-      expect(result.beacons).toEqual([
-        {
-          count: Rational.from(2),
-          id: ItemId.Beacon,
-          moduleIds: [],
-          total: Rational.from(8),
-        },
-      ]);
+      expect(result.beacons).toEqual([]);
       expect(result.overclock).toEqual(Rational.from(200));
       expect(result.cost).toEqual(Rational.hundred);
     });

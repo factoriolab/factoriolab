@@ -523,6 +523,13 @@ describe('Products Selectors', () => {
                 ItemId.SpeedModule3,
                 ItemId.SpeedModule3,
               ],
+              beacons: [
+                {
+                  total: Rational.one,
+                  id: ItemId.Beacon,
+                  moduleIds: [ItemId.SpeedModule3, ItemId.SpeedModule3],
+                },
+              ],
             },
           },
         ],

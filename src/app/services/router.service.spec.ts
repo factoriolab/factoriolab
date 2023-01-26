@@ -149,10 +149,10 @@ const mockState: LabState = {
 function mockEmptyZip(): Zip {
   return { bare: '', hash: '' };
 }
-function mockEmptyZipData(): ZipData {
+function mockZipData(objectives?: Zip, config?: Zip): ZipData {
   return {
-    objectives: mockEmptyZip(),
-    config: mockEmptyZip(),
+    objectives: objectives ?? mockEmptyZip(),
+    config: config ?? mockEmptyZip(),
     producerBeaconMap: {},
     recipeBeaconMap: {},
   };
@@ -228,7 +228,7 @@ describe('RouterService', () => {
 
   describe('updateUrl', () => {
     it('should update url with products', () => {
-      spyOn(service, 'zipState').and.returnValue(of(mockEmptyZipData()));
+      spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
       spyOn(service, 'getHash').and.returnValue('test');
       spyOn(router, 'navigateByUrl');
       service.updateUrl(
@@ -243,7 +243,7 @@ describe('RouterService', () => {
     });
 
     it('should preserve a hash', () => {
-      spyOn(service, 'zipState').and.returnValue(of(mockEmptyZipData()));
+      spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
       spyOn(service, 'getHash').and.returnValue('test');
       spyOn(router, 'navigateByUrl');
       spyOnProperty(router, 'url').and.returnValue('path#hash');
@@ -272,7 +272,7 @@ describe('RouterService', () => {
           Settings.initialSettingsState
         )
         .subscribe((z) => (zip = z));
-      expect(zip).toEqual(mockEmptyZipData());
+      expect(zip).toEqual(mockZipData());
     });
 
     it('should zip full state', () => {
@@ -319,14 +319,14 @@ describe('RouterService', () => {
   describe('getHash', () => {
     it('should preserve a small state', () => {
       spyOn(service, 'bytesToBase64').and.returnValue('');
-      const result = service.getHash(mockEmptyZipData());
+      const result = service.getHash(mockZipData(mockZip));
       expect(result).toEqual(`${mockZip.bare}&v=${service.bareVersion}`);
     });
 
     it('should zip a large state', () => {
       spyOn(service, 'bytesToBase64').and.returnValue('test');
       service.zipTail.bare = 'a'.repeat(MIN_ZIP);
-      const result = service.getHash(mockEmptyZipData());
+      const result = service.getHash(mockZipData());
       expect(result).toEqual('z=test&v=' + service.hashVersion);
     });
   });
@@ -554,7 +554,7 @@ describe('RouterService', () => {
 
   describe('zipProducts', () => {
     it('should handle RateType Items', () => {
-      const zip = mockEmptyZipData();
+      const zip = mockZipData();
       service.zipProducts(
         zip,
         [
@@ -575,7 +575,7 @@ describe('RouterService', () => {
     });
 
     it('should handle RateType Belts', () => {
-      const zip = mockEmptyZipData();
+      const zip = mockZipData();
       service.zipProducts(
         zip,
         [
@@ -596,7 +596,7 @@ describe('RouterService', () => {
     });
 
     it('should handle RateType Wagons', () => {
-      const zip = mockEmptyZipData();
+      const zip = mockZipData();
       service.zipProducts(
         zip,
         [
@@ -617,7 +617,7 @@ describe('RouterService', () => {
     });
 
     it('should handle RateType Factories', () => {
-      const zip = mockEmptyZipData();
+      const zip = mockZipData();
       service.zipProducts(
         zip,
         [
@@ -802,15 +802,16 @@ describe('RouterService', () => {
 
   describe('zipFactories', () => {
     it('should handle null ids', () => {
+      const zip = mockZipData();
       service.zipFactories(
-        mockEmptyZipData(),
+        zip,
         {
           ids: undefined,
           entities: { ['']: {} },
         },
         Mocks.Hash
       );
-      expect(mockEmptyZipData).toEqual({ bare: '', hash: '' });
+      expect(zip.config).toEqual({ bare: '', hash: '' });
     });
   });
 

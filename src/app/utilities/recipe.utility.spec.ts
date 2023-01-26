@@ -149,7 +149,8 @@ describe('RecipeUtility', () => {
       ];
       settings.beacons = [
         {
-          count: Rational.zero,
+          id: ItemId.Beacon,
+          count: Rational.one,
           moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
         },
       ];

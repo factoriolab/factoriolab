@@ -576,10 +576,18 @@ export class RouterService {
       for (const s of list.map((z) => z.split(FIELDSEP))) {
         const moduleIdsIndex = countIndex + 1;
         const idIndex = moduleIdsIndex + 1;
+        const totalIndex = idIndex + 3; // Only ever applied to recipes
 
         if (s.length > countIndex) {
           let id: string | undefined;
           let moduleIds: string | undefined;
+          let total: string | undefined;
+
+          // Move backwards from the last index, removing found properties
+          if (s.length > totalIndex) {
+            // Remove total field
+            total = s.splice(totalIndex, 1)[0];
+          }
 
           if (s.length > idIndex) {
             // Remove beaconId field
@@ -603,6 +611,7 @@ export class RouterService {
               count,
               this.zipTruthyString(moduleIds),
               this.zipTruthyString(id),
+              this.zipTruthyString(total),
             ])
           );
         }
