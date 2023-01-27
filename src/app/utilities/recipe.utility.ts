@@ -371,10 +371,6 @@ export class RecipeUtility {
       }
     }
 
-    if (recipeId === 'iron-ore') {
-      console.log(recipe);
-    }
-
     return recipe;
   }
 

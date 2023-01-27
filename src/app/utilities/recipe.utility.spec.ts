@@ -375,6 +375,34 @@ describe('RecipeUtility', () => {
       expect(result).toEqual(expected);
     });
 
+    it('should adjust a power producer based on overclock', () => {
+      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      settings.overclock = Rational.from(200);
+      const data = Mocks.getDataset();
+      data.factoryEntities[ItemId.AssemblingMachine2].usage =
+        Rational.from(-10);
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        ItemId.Coal,
+        ItemId.Module,
+        Rational.zero,
+        Rational.zero,
+        settings,
+        Mocks.ItemSettingsInitial,
+        data
+      );
+      const expected = new RationalRecipe(
+        Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
+      );
+      expected.out = { [ItemId.SteelChest]: Rational.one };
+      expected.time = Rational.from(1, 3);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(-20);
+      expected.pollution = Rational.from(1, 20);
+      expected.productivity = Rational.one;
+      expect(result).toEqual(expected);
+    });
+
     it('should use a recipe specific usage', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       const data = {
