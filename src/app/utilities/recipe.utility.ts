@@ -258,10 +258,14 @@ export class RecipeUtility {
       recipe.drain = factory.drain;
       let usage =
         (recipe.usage ? recipe.usage : factory.usage) || Rational.zero;
-      if (oc && factory.usage?.gt(Rational.zero)) {
-        // Polynomial effect only on production buildings, not power generation
-        const factor = Math.pow(oc.toNumber(), 1.321928);
-        usage = usage.mul(Rational.fromNumber(factor));
+      if (oc) {
+        if (factory.usage?.gt(Rational.zero)) {
+          // Polynomial effect only on production buildings, not power generation
+          const factor = Math.pow(oc.toNumber(), 1.321928);
+          usage = usage.mul(Rational.fromNumber(factor));
+        } else {
+          usage = usage.mul(oc);
+        }
       }
       recipe.consumption =
         factory.type === EnergyType.Electric
@@ -365,6 +369,10 @@ export class RecipeUtility {
           }
         }
       }
+    }
+
+    if (recipeId === 'iron-ore') {
+      console.log(recipe);
     }
 
     return recipe;
