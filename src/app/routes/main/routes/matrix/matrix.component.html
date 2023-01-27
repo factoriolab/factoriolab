@@ -213,7 +213,8 @@
                 [class]="p.recipeId | iconClass : 'recipe'"
                 [pTooltip]="p.recipeId | recipeTooltip : vm.data"
                 [escape]="false"
-              ></i>
+                ><span>#{{ p.id }}</span></i
+              >
             </ng-container>
             <ng-template #notProducer>
               <ng-container
@@ -259,7 +260,10 @@
           >
             <div
               *ngIf="
-                last && vm.result.recipeIds[rowIndex - 1] as id;
+                last &&
+                  vm.result.recipeIds[
+                    rowIndex - 1 - vm.result.producers.length
+                  ] as id;
                 else valueCell
               "
               class="d-flex align-items-center justify-content-between"
