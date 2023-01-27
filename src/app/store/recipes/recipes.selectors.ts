@@ -52,39 +52,50 @@ export const getRecipeSettings = createSelector(
           );
         }
 
-        s.beaconCount = s.beaconCount ?? def.beaconCount;
-        s.beaconId = s.beaconId ?? def.beaconId;
+        if (s.beacons == null) {
+          s.beacons = [{}];
+        }
 
-        if (s.beaconId != null) {
-          const beacon = data.beaconEntities[s.beaconId];
-          s.beaconModuleOptions = RecipeUtility.moduleOptions(
-            beacon,
-            recipe.id,
-            data
-          );
+        s.beacons = s.beacons.map((b) => ({ ...b }));
 
-          if (s.beaconModuleIds == null) {
-            s.beaconModuleIds = RecipeUtility.defaultModules(
-              s.beaconModuleOptions,
-              def.beaconModuleRankIds ?? [],
-              beacon.modules
+        for (const beaconSettings of s.beacons) {
+          beaconSettings.count = beaconSettings.count ?? def.beaconCount;
+          beaconSettings.id = beaconSettings.id ?? def.beaconId;
+
+          if (beaconSettings.id != null) {
+            const beacon = data.beaconEntities[beaconSettings.id];
+            beaconSettings.moduleOptions = RecipeUtility.moduleOptions(
+              beacon,
+              recipe.id,
+              data
             );
+
+            if (beaconSettings.moduleIds == null) {
+              beaconSettings.moduleIds = RecipeUtility.defaultModules(
+                beaconSettings.moduleOptions,
+                def.beaconModuleRankIds ?? [],
+                beacon.modules
+              );
+            }
           }
         }
       } else {
         // Factory doesn't support modules, remove any
         delete s.factoryModuleIds;
-        delete s.beaconCount;
-        delete s.beaconId;
-        delete s.beaconModuleIds;
+        delete s.beacons;
       }
 
-      if (
-        s.beaconTotal &&
-        (!s.beaconCount || Rational.fromString(s.beaconCount).isZero())
-      ) {
-        // No actual beacons, ignore the total beacons
-        delete s.beaconTotal;
+      if (s.beacons) {
+        for (const beaconSettings of s.beacons) {
+          if (
+            beaconSettings.total != null &&
+            (beaconSettings.count == null ||
+              Rational.fromString(beaconSettings.count).isZero())
+          ) {
+            // No actual beacons, ignore the total beacons
+            delete beaconSettings.total;
+          }
+        }
       }
 
       s.overclock = s.overclock ?? def?.overclock;
@@ -159,19 +170,8 @@ export const getRecipesModified = createSelector(
           p.overclock != null
       ),
     beacons:
-      Object.keys(state).some(
-        (id) =>
-          state[id].beaconCount != null ||
-          state[id].beaconId != null ||
-          state[id].beaconModuleIds != null ||
-          state[id].beaconTotal != null
-      ) ||
-      producers.some(
-        (p) =>
-          p.beaconCount != null ||
-          p.beaconId != null ||
-          p.beaconModuleIds != null
-      ),
+      Object.keys(state).some((id) => state[id].beacons != null) ||
+      producers.some((p) => p.beacons != null),
     cost: Object.keys(state).some((id) => state[id].cost),
   })
 );

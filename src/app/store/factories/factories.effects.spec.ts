@@ -73,7 +73,7 @@ describe('FactoriesEffects', () => {
         ...initialState,
         ...{
           recipesState: {
-            [RecipeId.Coal]: { beaconModuleIds: [ItemId.SpeedModule] },
+            [RecipeId.Coal]: { beacons: [{ moduleIds: [ItemId.SpeedModule] }] },
           },
         },
       });

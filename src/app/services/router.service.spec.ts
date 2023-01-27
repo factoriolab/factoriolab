@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
+  BeaconSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
@@ -38,6 +39,7 @@ import {
   Section,
   TRUE,
   Zip,
+  ZipData,
   ZipVersion,
 } from './router.service';
 
@@ -77,12 +79,16 @@ const mockRecipesState: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
     factoryId: ItemId.AssemblingMachine2,
     factoryModuleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
-    beaconCount: '1',
-    beaconId: ItemId.Beacon,
-    beaconModuleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+    beacons: [
+      {
+        count: '1',
+        id: ItemId.Beacon,
+        moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+        total: '8',
+      },
+    ],
     overclock: 200,
     cost: '100',
-    beaconTotal: '8',
   },
 };
 const mockFactoriesState: Factories.FactoriesState = {
@@ -117,17 +123,21 @@ const mockSettingsState: Settings.SettingsState = {
   costIgnored: '100',
   proliferatorSprayId: ItemId.ProductivityModule,
 };
-const mockEmptyZip: Zip = { bare: '', hash: '' };
 const mockZip: Zip = {
   bare: 'p=steel-chest*1*1&q=steel-chest*1',
   hash: 'pC6*1*1&qDB*1',
 };
 const mockZipPartial: Zip = {
   bare:
-    '&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module' +
-    '~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*%3D*tran' +
-    'sport-belt*coal*1200*100*0*0*0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
-  hash: '&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D',
+    '&e=1*speed-module~speed-module*beacon*8&i=steel-chest*1*transport-belt*c' +
+    'argo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effecti' +
+    'vity-module*0*200*100&f=1*productivity-module~speed-module*1*speed-modul' +
+    'e*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*%3D*transport-belt' +
+    '*coal*1200*100*0*0*0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-' +
+    'module',
+  hash:
+    '&e1*G~G*A*8&bB&iC6*1*C*A&rDB*B*A~A*0*200*100&f1*D~G*1*G*A_B_Q&s2*1*=*C*A' +
+    '*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D',
 };
 const mockState: LabState = {
   productsState: mockProductsState,
@@ -137,6 +147,17 @@ const mockState: LabState = {
   factoriesState: mockFactoriesState,
   settingsState: mockSettingsState,
 } as any;
+function mockEmptyZip(): Zip {
+  return { bare: '', hash: '' };
+}
+function mockZipData(objectives?: Zip, config?: Zip): ZipData {
+  return {
+    objectives: objectives ?? mockEmptyZip(),
+    config: config ?? mockEmptyZip(),
+    producerBeaconMap: {},
+    recipeBeaconMap: {},
+  };
+}
 
 describe('RouterService', () => {
   let service: RouterService;
@@ -208,9 +229,7 @@ describe('RouterService', () => {
 
   describe('updateUrl', () => {
     it('should update url with products', () => {
-      spyOn(service, 'zipState').and.returnValue(
-        of([mockEmptyZip, mockEmptyZip])
-      );
+      spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
       spyOn(service, 'getHash').and.returnValue('test');
       spyOn(router, 'navigateByUrl');
       service.updateUrl(
@@ -225,9 +244,7 @@ describe('RouterService', () => {
     });
 
     it('should preserve a hash', () => {
-      spyOn(service, 'zipState').and.returnValue(
-        of([mockEmptyZip, mockEmptyZip])
-      );
+      spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
       spyOn(service, 'getHash').and.returnValue('test');
       spyOn(router, 'navigateByUrl');
       spyOnProperty(router, 'url').and.returnValue('path#hash');
@@ -245,7 +262,7 @@ describe('RouterService', () => {
 
   describe('zipState', () => {
     it('should zip state', () => {
-      let zip: [Zip, Zip] | undefined;
+      let zip: ZipData | undefined;
       service
         .zipState(
           Products.initialProductsState,
@@ -256,11 +273,11 @@ describe('RouterService', () => {
           Settings.initialSettingsState
         )
         .subscribe((z) => (zip = z));
-      expect(zip).toEqual([mockEmptyZip, mockEmptyZip]);
+      expect(zip).toEqual(mockZipData());
     });
 
     it('should zip full state', () => {
-      let zip: [Zip, Zip] | undefined;
+      let zip: ZipData | undefined;
       service
         .zipState(
           mockProductsState,
@@ -271,7 +288,8 @@ describe('RouterService', () => {
           mockSettingsState
         )
         .subscribe((z) => (zip = z));
-      expect(zip).toEqual([mockZip, mockZipPartial]);
+      expect(zip?.objectives).toEqual(mockZip);
+      expect(zip?.config).toEqual(mockZipPartial);
     });
   });
 
@@ -280,19 +298,19 @@ describe('RouterService', () => {
       expect(
         service.stepHref(
           { id: '', itemId: ItemId.Wood },
-          mockEmptyZip,
+          mockEmptyZip(),
           Mocks.Hash
         )
       ).toBeNull();
     });
 
     it('should return get the hash for a specific step', () => {
-      spyOn(service, 'zipProducts').and.returnValue(mockEmptyZip);
+      spyOn(service, 'zipProducts');
       spyOn(service, 'getHash').and.returnValue('test');
       expect(
         service.stepHref(
           { id: '', itemId: ItemId.Wood, items: Rational.one },
-          mockEmptyZip,
+          mockEmptyZip(),
           Mocks.Hash
         )
       ).toEqual('?test');
@@ -302,15 +320,15 @@ describe('RouterService', () => {
   describe('getHash', () => {
     it('should preserve a small state', () => {
       spyOn(service, 'bytesToBase64').and.returnValue('');
-      const result = service.getHash(mockZip, mockEmptyZip);
+      const result = service.getHash(mockZipData(mockZip));
       expect(result).toEqual(`${mockZip.bare}&v=${service.bareVersion}`);
     });
 
     it('should zip a large state', () => {
       spyOn(service, 'bytesToBase64').and.returnValue('test');
       service.zipTail.bare = 'a'.repeat(MIN_ZIP);
-      const result = service.getHash(mockZip, mockEmptyZip);
-      expect(result).toEqual('z=test&v=5');
+      const result = service.getHash(mockZipData());
+      expect(result).toEqual('z=test&v=' + service.hashVersion);
     });
   });
 
@@ -488,6 +506,93 @@ describe('RouterService', () => {
       );
       expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
     });
+
+    it('should unzip empty v4', () => {
+      const v4Empty = 'p=&v=4';
+      const url = `/?${v4Empty}`;
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith(v4Empty, {} as any);
+    });
+
+    it('should unzip v4', () => {
+      const v4Full =
+        'p=steel-chest*1*1&q=steel-chest*1&i=steel-chest*1*transport-belt*car' +
+        'go-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effec' +
+        'tivity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*produ' +
+        'ctivity-module~speed-module*1*speed-module*beacon_assembling-machine' +
+        '-2_steel-furnace&s=1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
+        'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module&v=4';
+      const url = `/?${v4Full}`;
+      (router.events as any).next(new NavigationEnd(2, url, url));
+
+      const mockStateV4 = { ...mockState } as Partial<LabState>;
+      expect(service.dispatch).toHaveBeenCalledWith(v4Full, mockStateV4);
+    });
+
+    it('should unzip empty v5', () => {
+      const url = '/?z=eJwrUCszBQADVwFC&v=5';
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.Data, Mocks.Hash, null])
+      );
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith('p&v5', {} as any);
+    });
+
+    it('should unzip v5', () => {
+      const url =
+        '/?z=eJwdjDsKgDAQRG-zxVRJQLGx2E0gtXiAgIUgNn5Au5zdiSz7mTfMHrGHh5czGedi' +
+        'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4DZYwb' +
+        'BA__&v=5';
+
+      // const newZip = service.bytesToBase64(
+      //   deflate(
+      //     'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G**' +
+      //       'G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D&v5'
+      //   )
+      // );
+      // console.log(newZip);
+
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.Data, Mocks.Hash, null])
+      );
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith(
+        'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_' +
+          'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D&v5',
+        mockState
+      );
+    });
+  });
+
+  describe('zipBeacons', () => {
+    it('should generate maps for producer and recipe beacons', () => {
+      const beacons: BeaconSettings[] = [
+        {
+          count: '1',
+          id: ItemId.Beacon,
+          moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+        },
+      ];
+      const result = service.zipBeacons(
+        [
+          {
+            id: '0',
+            recipeId: RecipeId.IronPlate,
+            count: '1',
+            beacons,
+          },
+        ],
+        { [RecipeId.IronPlate]: { beacons } },
+        Mocks.Hash
+      );
+      expect(result.objectives).toEqual(service.empty);
+      expect(result.config).toEqual({
+        bare: '&e=1*speed-module~speed-module*beacon',
+        hash: '&e1*G~G*A',
+      });
+      expect(result.producerBeaconMap).toEqual({ ['0']: [0] });
+      expect(result.recipeBeaconMap).toEqual({ [RecipeId.IronPlate]: [0] });
+    });
   });
 
   describe('dispatch', () => {
@@ -503,7 +608,7 @@ describe('RouterService', () => {
 
   describe('migrate', () => {
     it('should return latest version without alteration', () => {
-      const originalParams = { [Section.Version]: ZipVersion.Version4 };
+      const originalParams = { [Section.Version]: ZipVersion.Version6 };
       const [params, _] = service.migrate({ ...originalParams });
       expect(params).toEqual(originalParams);
     });
@@ -537,7 +642,9 @@ describe('RouterService', () => {
 
   describe('zipProducts', () => {
     it('should handle RateType Items', () => {
-      const result = service.zipProducts(
+      const zip = mockZipData();
+      service.zipProducts(
+        zip,
         [
           {
             id: '0',
@@ -549,14 +656,16 @@ describe('RouterService', () => {
         ],
         Mocks.Hash
       );
-      expect(result).toEqual({
+      expect(zip.objectives).toEqual({
         bare: 'p=steel-chest*1**iron-ore',
         hash: 'pC6*1**Bd',
       });
     });
 
     it('should handle RateType Belts', () => {
-      const result = service.zipProducts(
+      const zip = mockZipData();
+      service.zipProducts(
+        zip,
         [
           {
             id: '0',
@@ -568,14 +677,16 @@ describe('RouterService', () => {
         ],
         Mocks.Hash
       );
-      expect(result).toEqual({
+      expect(zip.objectives).toEqual({
         bare: 'p=steel-chest*1*1*iron-ore',
         hash: 'pC6*1*1*Bd',
       });
     });
 
     it('should handle RateType Wagons', () => {
-      const result = service.zipProducts(
+      const zip = mockZipData();
+      service.zipProducts(
+        zip,
         [
           {
             id: '0',
@@ -587,14 +698,16 @@ describe('RouterService', () => {
         ],
         Mocks.Hash
       );
-      expect(result).toEqual({
+      expect(zip.objectives).toEqual({
         bare: 'p=steel-chest*1*2*iron-ore',
         hash: 'pC6*1*2*Bd',
       });
     });
 
     it('should handle RateType Factories', () => {
-      const result = service.zipProducts(
+      const zip = mockZipData();
+      service.zipProducts(
+        zip,
         [
           {
             id: '0',
@@ -606,7 +719,7 @@ describe('RouterService', () => {
         ],
         Mocks.Hash
       );
-      expect(result).toEqual({
+      expect(zip.objectives).toEqual({
         bare: 'p=steel-chest*1*3*iron-ore',
         hash: 'pC6*1*3*Bl',
       });
@@ -721,7 +834,7 @@ describe('RouterService', () => {
 
   describe('unzipProducers', () => {
     it('hash should map values to empty strings if null', () => {
-      const result = service.unzipProducers({ ['q']: '*1' }, Mocks.Hash);
+      const result = service.unzipProducers({ ['q']: '*1' }, [], Mocks.Hash);
       expect(result).toEqual({
         ids: ['1'],
         entities: {
@@ -729,6 +842,42 @@ describe('RouterService', () => {
             id: '1',
             recipeId: '',
             count: '1',
+          },
+        },
+        index: 2,
+      });
+    });
+
+    it('bare should map beacons', () => {
+      const result = service.unzipProducers({ ['q']: '*1***0' }, []);
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            recipeId: '',
+            count: '1',
+            beacons: [{}],
+          },
+        },
+        index: 2,
+      });
+    });
+
+    it('hash should map beacons', () => {
+      const result = service.unzipProducers(
+        { ['q']: '*1***0' },
+        [],
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            recipeId: '',
+            count: '1',
+            beacons: [{}],
           },
         },
         index: 2,
@@ -756,25 +905,46 @@ describe('RouterService', () => {
 
   describe('unzipRecipes', () => {
     it('should remove unspecified fields', () => {
-      const result = service.unzipRecipes({
-        ['r']: 'steel-chest*assembling-machine-2*',
-      });
+      const result = service.unzipRecipes(
+        {
+          ['r']: 'steel-chest*assembling-machine-2*',
+        },
+        []
+      );
       expect(result).toEqual({
         [RecipeId.SteelChest]: { factoryId: ItemId.AssemblingMachine2 },
       });
     });
 
     it('hash should map values to empty strings if null', () => {
-      const result = service.unzipRecipes({ ['r']: '*A*' }, Mocks.Hash);
+      const result = service.unzipRecipes({ ['r']: '*A*' }, [], Mocks.Hash);
       expect(result).toEqual({
         ['']: { factoryId: ItemId.AssemblingMachine1 },
+      });
+    });
+
+    it('bare should map beacons', () => {
+      const result = service.unzipRecipes({ ['r']: 'iron-plate***0' }, []);
+      expect(result).toEqual({
+        [ItemId.IronPlate]: {
+          beacons: [{}],
+        },
+      });
+    });
+
+    it('hash should map beacons', () => {
+      const result = service.unzipRecipes({ ['r']: 'B***0' }, [], Mocks.Hash);
+      expect(result).toEqual({
+        [RecipeId.AdvancedCircuit]: {
+          beacons: [{}],
+        },
       });
     });
   });
 
   describe('zipFactories', () => {
     it('should handle null ids', () => {
-      const zip: Zip = { bare: '', hash: '' };
+      const zip = mockZipData();
       service.zipFactories(
         zip,
         {
@@ -783,7 +953,7 @@ describe('RouterService', () => {
         },
         Mocks.Hash
       );
-      expect(zip).toEqual({ bare: '', hash: '' });
+      expect(zip.config).toEqual({ bare: '', hash: '' });
     });
   });
 

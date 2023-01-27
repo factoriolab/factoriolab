@@ -261,10 +261,12 @@ describe('ListComponent', () => {
         '4',
         Mocks.FactorySettingsInitial,
         Mocks.Dataset,
-        RecipeField.BeaconCount
+        RecipeField.BeaconCount,
+        0
       );
       expect(component.setBeaconCount).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
+        0,
         '4',
         '8',
         false
@@ -278,10 +280,12 @@ describe('ListComponent', () => {
         ItemId.Beacon,
         Mocks.FactorySettingsInitial,
         Mocks.Dataset,
-        RecipeField.Beacon
+        RecipeField.Beacon,
+        0
       );
       expect(component.setBeacon).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
+        0,
         ItemId.Beacon,
         ItemId.Beacon,
         false
@@ -296,12 +300,32 @@ describe('ListComponent', () => {
         Mocks.FactorySettingsInitial,
         Mocks.Dataset,
         RecipeField.BeaconModules,
+        0,
         0
       );
       expect(component.setBeaconModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
+        0,
         new Array(2).fill(ItemId.SpeedModule3),
         new Array(2).fill(ItemId.SpeedModule3),
+        false
+      );
+    });
+
+    it('should call to set the beacon total', () => {
+      spyOn(component, 'setBeaconTotal');
+      component.changeRecipeField(
+        step,
+        '8',
+        Mocks.FactorySettingsInitial,
+        Mocks.Dataset,
+        RecipeField.BeaconTotal,
+        0
+      );
+      expect(component.setBeaconTotal).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        0,
+        '8',
         false
       );
     });
@@ -336,13 +360,21 @@ describe('ListComponent', () => {
       'setFactoryModules',
       Producers.SetFactoryModulesAction
     );
-    dispatch.idValDef('setBeaconCount', Recipes.SetBeaconCountAction);
-    dispatch.idValDefAlt('setBeaconCount', Producers.SetBeaconCountAction);
-    dispatch.idValDef('setBeacon', Recipes.SetBeaconAction);
-    dispatch.idValDefAlt('setBeacon', Producers.SetBeaconAction);
-    dispatch.idValDef('setBeaconModules', Recipes.SetBeaconModulesAction);
-    dispatch.idValDefAlt('setBeaconModules', Producers.SetBeaconModulesAction);
-    dispatch.idVal('setBeaconTotal', Recipes.SetBeaconTotalAction);
+    dispatch.val('addBeacon', Recipes.AddBeaconAction);
+    dispatch.valAlt('addBeacon', Producers.AddBeaconAction);
+    dispatch.idVal('removeBeacon', Recipes.RemoveBeaconAction);
+    dispatch.idValAlt('removeBeacon', Producers.RemoveBeaconAction);
+    dispatch.idIndValDef('setBeaconCount', Recipes.SetBeaconCountAction);
+    dispatch.idIndValDefAlt('setBeaconCount', Producers.SetBeaconCountAction);
+    dispatch.idIndValDef('setBeacon', Recipes.SetBeaconAction);
+    dispatch.idIndValDefAlt('setBeacon', Producers.SetBeaconAction);
+    dispatch.idIndValDef('setBeaconModules', Recipes.SetBeaconModulesAction);
+    dispatch.idIndValDefAlt(
+      'setBeaconModules',
+      Producers.SetBeaconModulesAction
+    );
+    dispatch.idIndVal('setBeaconTotal', Recipes.SetBeaconTotalAction);
+    dispatch.idIndValAlt('setBeaconTotal', Producers.SetBeaconTotalAction);
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
     dispatch.idValDefAlt('setOverclock', Producers.SetOverclockAction);
     dispatch.val('resetItem', Items.ResetItemAction);

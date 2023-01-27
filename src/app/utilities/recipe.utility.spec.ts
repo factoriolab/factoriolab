@@ -42,8 +42,7 @@ describe('RecipeUtility', () => {
     it('should adjust a standard recipe', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       settings.factoryModuleIds = undefined;
-      settings.beaconModuleIds = [ItemId.SpeedModule];
-      settings.beaconCount = undefined;
+      settings.beacons = [{ moduleIds: [ItemId.SpeedModule] }];
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
@@ -148,8 +147,13 @@ describe('RecipeUtility', () => {
         ItemId.ProductivityModule,
         ItemId.EfficiencyModule,
       ];
-      settings.beaconCount = Rational.one;
-      settings.beaconModuleIds = [ItemId.SpeedModule, ItemId.SpeedModule];
+      settings.beacons = [
+        {
+          id: ItemId.Beacon,
+          count: Rational.one,
+          moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+        },
+      ];
       const data = {
         ...Mocks.Dataset,
         ...{
@@ -223,8 +227,7 @@ describe('RecipeUtility', () => {
           },
         },
       };
-      settings.beaconCount = Rational.zero;
-      settings.beaconModuleIds = [ItemId.Module];
+      settings.beacons = [{ count: Rational.zero, moduleIds: [ItemId.Module] }];
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Coal,
@@ -994,10 +997,10 @@ describe('RecipeUtility', () => {
         ItemId.ProductivityModule3,
         ItemId.ProductivityModule3,
       ]);
-      expect(result.beaconCount).toEqual('8');
-      expect(result.beaconId).toEqual(ItemId.Beacon);
-      expect(result.beaconModuleOptions?.length).toEqual(7);
-      expect(result.beaconModuleIds).toEqual([
+      expect(result.beacons?.[0].count).toEqual('8');
+      expect(result.beacons?.[0].id).toEqual(ItemId.Beacon);
+      expect(result.beacons?.[0].moduleOptions?.length).toEqual(7);
+      expect(result.beacons?.[0].moduleIds).toEqual([
         ItemId.SpeedModule3,
         ItemId.SpeedModule3,
       ]);
@@ -1050,14 +1053,17 @@ describe('RecipeUtility', () => {
           id: '1',
           recipeId: RecipeId.IronPlate,
           count: '1',
-          beaconId: ItemId.Beacon,
+          beacons: [{ id: ItemId.Beacon }],
         },
         factories,
         data
       );
       expect(result.factoryId).toEqual(ItemId.StoneFurnace);
       expect(result.factoryModuleIds).toEqual([]);
-      expect(result.beaconModuleIds).toEqual([ItemId.Module, ItemId.Module]);
+      expect(result.beacons?.[0].moduleIds).toEqual([
+        ItemId.Module,
+        ItemId.Module,
+      ]);
     });
   });
 

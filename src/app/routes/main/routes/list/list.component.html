@@ -162,7 +162,7 @@
               pButton
               pRipple
               type="button"
-              class="p-button-text p-button-rounded p-button-plain transition-ease"
+              class="p-button-text p-button-rounded transition-ease"
               [class.fa-rotate-90]="expanded"
               icon="fa-solid fa-angle-right"
               [pTooltip]="
@@ -173,7 +173,7 @@
           </div>
         </td>
         <!-- Tree -->
-        <td *ngIf="vm.columns[Column.Tree].show" class="p-0">
+        <td *ngIf="vm.columns[Column.Tree].show" class="overflow-hidden p-0">
           <div class="d-flex align-items-center links">
             <ng-container *ngIf="vm.stepTree[step.id]?.length">
               <div
@@ -185,16 +185,23 @@
               <div class="indent"></div>
             </ng-container>
             <div class="icon">
-              <i
+              <button
                 *ngIf="step.itemId; else recipeIcon"
-                [class]="step.itemId | iconSmClass"
+                pButton
+                pRipple
+                type="button"
+                class="hover-action p-button-text"
+                [class.hover-active]="vm.itemSettings[step.itemId].ignore"
+                [icon]="step.itemId | iconSmClass"
                 [pTooltip]="step.itemId | itemTooltip : vm.data"
                 [escape]="false"
+                (click)="ignoreItem(step.itemId)"
               >
+                <i class="hover-icon fa-solid fa-eye-slash"></i>
                 <span *ngIf="step.producerId != null"
                   >#{{ step.producerId }}</span
                 >
-              </i>
+              </button>
               <ng-template #recipeIcon>
                 <i
                   [class]="step.recipeId | iconSmClass : 'recipe'"
@@ -642,47 +649,82 @@
           <ng-container
             *ngIf="step.recipeId && step.recipeSettings; else emptyCol2"
           >
-            <td class="w-0">
-              <lab-input-number
-                *ngIf="
-                  step.recipeSettings.beaconId &&
-                  step.recipeSettings.beaconCount
-                "
-                [pTooltip]="'list.beaconEachTooltip' | translate"
-                tooltipPosition="left"
-                class="text-end"
-                width="3rem"
-                [value]="step.recipeSettings.beaconCount.toString()"
-                [hideButtons]="true"
-                (setValue)="
-                  changeRecipeField(
-                    step,
-                    $event,
-                    vm.factories,
-                    vm.data,
-                    RecipeField.BeaconCount
-                  )
-                "
-              ></lab-input-number>
+            <td class="w-0 pe-0">
+              <div
+                class="d-flex"
+                *ngFor="let beacon of step.recipeSettings.beacons; index as i"
+              >
+                <button
+                  *ngIf="i === 0; else deleteBeaconBtn"
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text p-button-rounded"
+                  icon="fa-solid fa-plus"
+                  (click)="
+                    addBeacon(
+                      step.producerId ?? step.recipeId,
+                      step.producerId != null
+                    )
+                  "
+                ></button>
+                <ng-template #deleteBeaconBtn>
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text p-button-rounded"
+                    icon="fa-solid fa-minus"
+                    (click)="
+                      removeBeacon(
+                        step.producerId ?? step.recipeId,
+                        i,
+                        step.producerId != null
+                      )
+                    "
+                  ></button>
+                </ng-template>
+                <lab-input-number
+                  *ngIf="beacon.count"
+                  [pTooltip]="'list.beaconEachTooltip' | translate"
+                  tooltipPosition="left"
+                  class="text-end"
+                  width="2.5rem"
+                  [value]="beacon.count.toString()"
+                  [textButtons]="true"
+                  (setValue)="
+                    changeRecipeField(
+                      step,
+                      $event,
+                      vm.factories,
+                      vm.data,
+                      RecipeField.BeaconCount,
+                      i
+                    )
+                  "
+                ></lab-input-number>
+              </div>
             </td>
             <td class="ps-0">
-              <div class="d-flex">
+              <div
+                *ngFor="let beacon of step.recipeSettings.beacons; index as i"
+                class="d-flex"
+              >
                 <p-dropdown
-                  *ngIf="step.recipeSettings.beaconId"
+                  *ngIf="beacon.id"
                   labDropdownBase="icon"
-                  [pTooltip]="
-                    step.recipeSettings.beaconId | beaconTooltip : vm.data
-                  "
+                  [pTooltip]="beacon.id | beaconTooltip : vm.data"
                   [escape]="false"
                   [options]="vm.options.beacons"
-                  [ngModel]="step.recipeSettings.beaconId"
+                  [ngModel]="beacon.id"
                   (onChange)="
                     changeRecipeField(
                       step,
                       $event.value,
                       vm.factories,
                       vm.data,
-                      RecipeField.Beacon
+                      RecipeField.Beacon,
+                      i
                     )
                   "
                 >
@@ -706,8 +748,8 @@
                 </p-dropdown>
                 <p-dropdown
                   *ngFor="
-                    let moduleId of step.recipeSettings.beaconModuleIds;
-                    index as i;
+                    let moduleId of beacon.moduleIds;
+                    index as j;
                     last as last
                   "
                   labDropdownBase="icon"
@@ -716,7 +758,7 @@
                   [pTooltip]="moduleId | moduleTooltip : vm.data"
                   tooltipPosition="top"
                   [escape]="false"
-                  [options]="step.recipeSettings.beaconModuleOptions ?? []"
+                  [options]="beacon.moduleOptions ?? []"
                   [ngModel]="moduleId"
                   (onChange)="
                     changeRecipeField(
@@ -725,7 +767,8 @@
                       vm.factories,
                       vm.data,
                       RecipeField.BeaconModules,
-                      i
+                      i,
+                      j
                     )
                   "
                 >
@@ -748,13 +791,22 @@
                   </ng-template>
                 </p-dropdown>
                 <lab-input-number
-                  *ngIf="step.beacons"
+                  *ngIf="beacon.total"
                   [pTooltip]="'list.beaconTotalTooltip' | translate"
                   class="text-end"
-                  width="4rem"
-                  [value]="step.beacons.toString()"
-                  [hideButtons]="true"
-                  (setValue)="setBeaconTotal(step.recipeId, $event)"
+                  width="3rem"
+                  [value]="beacon.total.toString()"
+                  [textButtons]="true"
+                  (setValue)="
+                    changeRecipeField(
+                      step,
+                      $event,
+                      vm.factories,
+                      vm.data,
+                      RecipeField.BeaconTotal,
+                      i
+                    )
+                  "
                 ></lab-input-number>
               </div>
             </td>
@@ -791,7 +843,7 @@
                 pButton
                 pRipple
                 type="button"
-                class="p-button-text p-button-rounded p-button-plain"
+                class="p-button-text p-button-rounded"
                 icon="fa-solid fa-arrow-up-right-from-square"
                 [pTooltip]="'list.openNewTabTooltip' | translate"
                 tooltipPosition="left"
@@ -806,7 +858,7 @@
               pButton
               pRipple
               type="button"
-              class="p-button-text p-button-rounded p-button-plain"
+              class="p-button-text p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.stepUndoTooltip' | translate"
               tooltipPosition="left"
@@ -826,7 +878,7 @@
                 pButton
                 pRipple
                 type="button"
-                class="p-button-text p-button-rounded p-button-plain"
+                class="p-button-text p-button-rounded"
                 icon="fa-solid fa-link"
               ></button>
             </a>
@@ -1651,7 +1703,7 @@
           </td>
           <td class="ps-0 inherit">
             <div class="d-flex">
-              <div class="d-flex flex-column">
+              <div class="d-flex flex-column justify-content-center">
                 <i
                   *ngFor="let tot of totals | keyvalue : trackSvc.sortByValue"
                   class="d-block"

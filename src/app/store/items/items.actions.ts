@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { DefaultIdPayload } from '~/models';
+import { IdDefaultPayload } from '~/models';
 
 export const enum ItemsActionType {
   IGNORE_ITEM = '[Items] Ignore Item',
@@ -21,17 +21,17 @@ export class IgnoreItemAction implements Action {
 
 export class SetBeltAction implements Action {
   readonly type = ItemsActionType.SET_BELT;
-  constructor(public payload: DefaultIdPayload) {}
+  constructor(public payload: IdDefaultPayload) {}
 }
 
 export class SetWagonAction implements Action {
   readonly type = ItemsActionType.SET_WAGON;
-  constructor(public payload: DefaultIdPayload) {}
+  constructor(public payload: IdDefaultPayload) {}
 }
 
 export class SetRecipeAction implements Action {
   readonly type = ItemsActionType.SET_RECIPE;
-  constructor(public payload: DefaultIdPayload<string | undefined>) {}
+  constructor(public payload: IdDefaultPayload<string | undefined>) {}
 }
 
 export class ResetItemAction implements Action {

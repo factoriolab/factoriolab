@@ -1,6 +1,11 @@
 import { Action } from '@ngrx/store';
 
-import { DefaultIdPayload, IdPayload } from '~/models';
+import {
+  IdDefaultPayload,
+  IdIndexDefaultPayload,
+  IdIndexPayload,
+  IdPayload,
+} from '~/models';
 import { Producer } from '~/models/producer';
 
 export const enum ProducersActionType {
@@ -10,10 +15,13 @@ export const enum ProducersActionType {
   SET_RECIPE = '[Producers] Set Recipe',
   SET_COUNT = '[Producers] Set Count',
   SET_FACTORY = '[Producers] Set Factory',
-  SET_FACTORY_MODULES = '[Producers] Set Modules',
+  SET_FACTORY_MODULES = '[Producers] Set Factory Modules',
+  ADD_BEACON = '[Producers] Add Beacon',
+  REMOVE_BEACON = '[Producers] Remove Beacon',
   SET_BEACON_COUNT = '[Producers] Set Beacon Count',
   SET_BEACON = '[Producers] Set Beacon',
   SET_BEACON_MODULES = '[Producers] Set Beacon Modules',
+  SET_BEACON_TOTAL = '[Recipes] Set Beacon Total',
   SET_OVERCLOCK = '[Producers] Set Overclock',
   RESET_PRODUCER = '[Producers] Reset Producer',
 }
@@ -45,32 +53,47 @@ export class SetCountAction implements Action {
 
 export class SetFactoryAction implements Action {
   readonly type = ProducersActionType.SET_FACTORY;
-  constructor(public payload: DefaultIdPayload) {}
+  constructor(public payload: IdDefaultPayload) {}
 }
 
 export class SetFactoryModulesAction implements Action {
   readonly type = ProducersActionType.SET_FACTORY_MODULES;
-  constructor(public payload: DefaultIdPayload<string[]>) {}
+  constructor(public payload: IdDefaultPayload<string[]>) {}
+}
+
+export class AddBeaconAction implements Action {
+  readonly type = ProducersActionType.ADD_BEACON;
+  constructor(public payload: string) {}
+}
+
+export class RemoveBeaconAction implements Action {
+  readonly type = ProducersActionType.REMOVE_BEACON;
+  constructor(public payload: IdPayload<number>) {}
 }
 
 export class SetBeaconCountAction implements Action {
   readonly type = ProducersActionType.SET_BEACON_COUNT;
-  constructor(public payload: DefaultIdPayload) {}
+  constructor(public payload: IdIndexDefaultPayload) {}
 }
 
 export class SetBeaconAction implements Action {
   readonly type = ProducersActionType.SET_BEACON;
-  constructor(public payload: DefaultIdPayload) {}
+  constructor(public payload: IdIndexDefaultPayload) {}
 }
 
 export class SetBeaconModulesAction implements Action {
   readonly type = ProducersActionType.SET_BEACON_MODULES;
-  constructor(public payload: DefaultIdPayload<string[]>) {}
+  constructor(public payload: IdIndexDefaultPayload<string[]>) {}
+}
+
+export class SetBeaconTotalAction implements Action {
+  readonly type = ProducersActionType.SET_BEACON_TOTAL;
+  constructor(public payload: IdIndexPayload) {}
 }
 
 export class SetOverclockAction implements Action {
   readonly type = ProducersActionType.SET_OVERCLOCK;
-  constructor(public payload: DefaultIdPayload<number>) {}
+  constructor(public payload: IdDefaultPayload<number>) {}
 }
 
 export class ResetProducerAction implements Action {
@@ -86,8 +109,11 @@ export type ProducersAction =
   | SetCountAction
   | SetFactoryAction
   | SetFactoryModulesAction
+  | AddBeaconAction
+  | RemoveBeaconAction
   | SetBeaconCountAction
   | SetBeaconAction
   | SetBeaconModulesAction
+  | SetBeaconTotalAction
   | SetOverclockAction
   | ResetProducerAction;

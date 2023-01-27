@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { DefaultIdPayload, DefaultPayload } from '~/models';
+import { DefaultPayload, IdDefaultPayload } from '~/models';
 
 export const enum FactoriesActionType {
   ADD = '[Factories] Add',
@@ -37,32 +37,32 @@ export class LowerAction implements Action {
 
 export class SetFactoryAction implements Action {
   readonly type = FactoriesActionType.SET_FACTORY;
-  constructor(public payload: DefaultIdPayload<string, string[]>) {}
+  constructor(public payload: IdDefaultPayload<string, string[]>) {}
 }
 
 export class SetModuleRankAction implements Action {
   readonly type = FactoriesActionType.SET_MODULE_RANK;
-  constructor(public payload: DefaultIdPayload<string[]>) {}
+  constructor(public payload: IdDefaultPayload<string[]>) {}
 }
 
 export class SetBeaconCountAction implements Action {
   readonly type = FactoriesActionType.SET_BEACON_COUNT;
-  constructor(public payload: DefaultIdPayload<string>) {}
+  constructor(public payload: IdDefaultPayload<string>) {}
 }
 
 export class SetBeaconAction implements Action {
   readonly type = FactoriesActionType.SET_BEACON;
-  constructor(public payload: DefaultIdPayload) {}
+  constructor(public payload: IdDefaultPayload) {}
 }
 
 export class SetBeaconModuleRankAction implements Action {
   readonly type = FactoriesActionType.SET_BEACON_MODULE_RANK;
-  constructor(public payload: DefaultIdPayload<string[]>) {}
+  constructor(public payload: IdDefaultPayload<string[]>) {}
 }
 
 export class SetOverclockAction implements Action {
   readonly type = FactoriesActionType.SET_OVERCLOCK;
-  constructor(public payload: DefaultIdPayload<number>) {}
+  constructor(public payload: IdDefaultPayload<number>) {}
 }
 
 export type FactoriesAction =

@@ -4,5 +4,6 @@ export enum RecipeField {
   BeaconCount,
   Beacon,
   BeaconModules,
+  BeaconTotal,
   Overclock,
 }

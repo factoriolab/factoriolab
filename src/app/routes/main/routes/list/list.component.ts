@@ -67,7 +67,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getBeltSpeed),
     this.store.select(Settings.getBeltSpeedTxt),
-    this.routerSvc.zipPartial$,
+    this.routerSvc.zipConfig$,
   ]).pipe(
     map(
       ([
@@ -254,7 +254,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     factories: Factories.FactoriesState,
     data: Dataset,
     field: RecipeField,
-    index?: number
+    index?: number,
+    subindex?: number
   ): void {
     if (step.recipeId == null) return;
 
@@ -309,16 +310,16 @@ export class ListComponent implements OnInit, AfterViewInit {
           break;
         }
         case RecipeField.BeaconCount: {
-          if (typeof event === 'string') {
+          if (typeof event === 'string' && index != null) {
             const def = factorySettings.beaconCount;
-            this.setBeaconCount(id, event, def, isProducer);
+            this.setBeaconCount(id, index, event, def, isProducer);
           }
           break;
         }
         case RecipeField.Beacon: {
-          if (typeof event === 'string') {
+          if (typeof event === 'string' && index != null) {
             const def = factorySettings.beaconId;
-            this.setBeacon(id, event, def, isProducer);
+            this.setBeacon(id, index, event, def, isProducer);
           }
           break;
         }
@@ -327,27 +328,38 @@ export class ListComponent implements OnInit, AfterViewInit {
             factorySettings.beaconModuleRankIds != null &&
             typeof event === 'string' &&
             index != null &&
-            settings.beaconId != null &&
-            settings.beaconModuleIds != null
+            subindex != null
           ) {
-            const beacon = data.beaconEntities[settings.beaconId];
-            const count = settings.beaconModuleIds.length;
-            const options = RecipeUtility.moduleOptions(
-              beacon,
-              step.recipeId,
-              data
-            );
-            const def = RecipeUtility.defaultModules(
-              options,
-              factorySettings.beaconModuleRankIds,
-              count
-            );
-            const value = this.generateModules(
-              index,
-              event,
-              settings.beaconModuleIds
-            );
-            this.setBeaconModules(id, value, def, isProducer);
+            const beaconSettings = settings.beacons?.[index];
+            if (
+              beaconSettings?.id != null &&
+              beaconSettings?.moduleIds != null
+            ) {
+              const beacon = data.beaconEntities[beaconSettings.id];
+              const count = beaconSettings.moduleIds.length;
+              const options = RecipeUtility.moduleOptions(
+                beacon,
+                step.recipeId,
+                data
+              );
+              const def = RecipeUtility.defaultModules(
+                options,
+                factorySettings.beaconModuleRankIds,
+                count
+              );
+              const value = this.generateModules(
+                subindex,
+                event,
+                beaconSettings.moduleIds
+              );
+              this.setBeaconModules(id, index, value, def, isProducer);
+            }
+          }
+          break;
+        }
+        case RecipeField.BeaconTotal: {
+          if (typeof event === 'string' && index != null) {
+            this.setBeaconTotal(id, index, event, isProducer);
           }
           break;
         }
@@ -404,8 +416,23 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new action({ id, value, def }));
   }
 
+  addBeacon(id: string, producer = false): void {
+    const action = producer
+      ? Producers.AddBeaconAction
+      : Recipes.AddBeaconAction;
+    this.store.dispatch(new action(id));
+  }
+
+  removeBeacon(id: string, value: number, producer = false): void {
+    const action = producer
+      ? Producers.RemoveBeaconAction
+      : Recipes.RemoveBeaconAction;
+    this.store.dispatch(new action({ id, value }));
+  }
+
   setBeaconCount(
     id: string,
+    index: number,
     value: string,
     def: string | undefined,
     producer = false
@@ -413,23 +440,25 @@ export class ListComponent implements OnInit, AfterViewInit {
     const action = producer
       ? Producers.SetBeaconCountAction
       : Recipes.SetBeaconCountAction;
-    this.store.dispatch(new action({ id, value, def }));
+    this.store.dispatch(new action({ id, index, value, def }));
   }
 
   setBeacon(
     id: string,
+    index: number,
     value: string,
     def: string | undefined,
-    isProducer = false
+    producer = false
   ): void {
-    const action = isProducer
+    const action = producer
       ? Producers.SetBeaconAction
       : Recipes.SetBeaconAction;
-    this.store.dispatch(new action({ id, value, def }));
+    this.store.dispatch(new action({ id, index, value, def }));
   }
 
   setBeaconModules(
     id: string,
+    index: number,
     value: string[],
     def: string[] | undefined,
     producer = false
@@ -437,11 +466,19 @@ export class ListComponent implements OnInit, AfterViewInit {
     const action = producer
       ? Producers.SetBeaconModulesAction
       : Recipes.SetBeaconModulesAction;
-    this.store.dispatch(new action({ id, value, def }));
+    this.store.dispatch(new action({ id, index, value, def }));
   }
 
-  setBeaconTotal(id: string, value: string): void {
-    this.store.dispatch(new Recipes.SetBeaconTotalAction({ id, value }));
+  setBeaconTotal(
+    id: string,
+    index: number,
+    value: string,
+    producer = false
+  ): void {
+    const action = producer
+      ? Producers.SetBeaconTotalAction
+      : Recipes.SetBeaconTotalAction;
+    this.store.dispatch(new action({ id, index, value }));
   }
 
   setOverclock(

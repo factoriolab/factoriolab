@@ -32,13 +32,7 @@ export class FactoriesEffects {
         // Look for recipe settings with module effects specified
         for (const i of Object.keys(rawSettings)) {
           const r = rawSettings[i];
-          if (
-            r &&
-            (r.factoryModuleIds != null ||
-              r.beaconCount != null ||
-              r.beaconId != null ||
-              r.beaconModuleIds != null)
-          ) {
+          if (r && (r.factoryModuleIds != null || r.beacons != null)) {
             // Check that these recipe settings are still valid
             const factoryId = recipeSettings[i].factoryId;
             if (factoryId) {

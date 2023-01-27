@@ -6,7 +6,7 @@
   .connect {
     position: relative;
 
-    height: 100%;
+    height: 100vh;
     margin-left: 16px;
 
     // Segment contains trail
@@ -17,8 +17,8 @@
 
     // Segment ends at this row
     &.last:not(.trail) {
-      margin-bottom: 25px;
-      height: 25px;
+      margin-bottom: 50vh;
+      height: 50vh;
     }
 
     // Segments should pad between

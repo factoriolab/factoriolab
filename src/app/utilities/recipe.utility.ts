@@ -180,29 +180,33 @@ export class RecipeUtility {
       }
 
       // Beacons
-      const beaconModules = settings.beaconModuleIds?.filter(
-        (m) => m !== ItemId.Module && data.moduleEntities[m]
-      );
-      if (
-        beaconModules?.length &&
-        settings.beaconId &&
-        settings.beaconCount?.nonzero()
-      ) {
-        for (const id of beaconModules) {
-          const module = data.moduleEntities[id];
-          const beacon = data.beaconEntities[settings.beaconId];
-          const factor = settings.beaconCount.mul(beacon.effectivity);
-          if (module.speed) {
-            speed = speed.add(module.speed.mul(factor));
-          }
-          if (module.productivity) {
-            prod = prod.add(module.productivity.mul(factor));
-          }
-          if (module.consumption) {
-            consumption = consumption.add(module.consumption.mul(factor));
-          }
-          if (module.pollution) {
-            pollution = pollution.add(module.pollution.mul(factor));
+      if (settings.beacons != null) {
+        for (const beaconSettings of settings.beacons) {
+          const beaconModules = beaconSettings.moduleIds?.filter(
+            (m) => m !== ItemId.Module && data.moduleEntities[m]
+          );
+          if (
+            beaconModules?.length &&
+            beaconSettings.id &&
+            beaconSettings.count?.nonzero()
+          ) {
+            for (const id of beaconModules) {
+              const module = data.moduleEntities[id];
+              const beacon = data.beaconEntities[beaconSettings.id];
+              const factor = beaconSettings.count.mul(beacon.effectivity);
+              if (module.speed) {
+                speed = speed.add(module.speed.mul(factor));
+              }
+              if (module.productivity) {
+                prod = prod.add(module.productivity.mul(factor));
+              }
+              if (module.consumption) {
+                consumption = consumption.add(module.consumption.mul(factor));
+              }
+              if (module.pollution) {
+                pollution = pollution.add(module.pollution.mul(factor));
+              }
+            }
           }
         }
       }
@@ -601,31 +605,37 @@ export class RecipeUtility {
         );
       }
 
-      producer.beaconCount = producer.beaconCount ?? def.beaconCount;
-      producer.beaconId = producer.beaconId ?? def.beaconId;
+      if (producer.beacons == null) {
+        producer.beacons = [{}];
+      } else {
+        producer.beacons = producer.beacons.map((b) => ({ ...b }));
+      }
 
-      if (producer.beaconId != null) {
-        const beacon = data.beaconEntities[producer.beaconId];
-        producer.beaconModuleOptions = this.moduleOptions(
-          beacon,
-          producer.recipeId,
-          data
-        );
+      for (const beaconSettings of producer.beacons) {
+        beaconSettings.count = beaconSettings.count ?? def.beaconCount;
+        beaconSettings.id = beaconSettings.id ?? def.beaconId;
 
-        if (producer.beaconModuleIds == null) {
-          producer.beaconModuleIds = RecipeUtility.defaultModules(
-            producer.beaconModuleOptions,
-            def.beaconModuleRankIds ?? [],
-            beacon.modules
+        if (beaconSettings.id != null) {
+          const beacon = data.beaconEntities[beaconSettings.id];
+          beaconSettings.moduleOptions = this.moduleOptions(
+            beacon,
+            producer.recipeId,
+            data
           );
+
+          if (beaconSettings.moduleIds == null) {
+            beaconSettings.moduleIds = RecipeUtility.defaultModules(
+              beaconSettings.moduleOptions,
+              def.beaconModuleRankIds ?? [],
+              beacon.modules
+            );
+          }
         }
       }
     } else {
       // Factory doesn't support modules, remove any
       delete producer.factoryModuleIds;
-      delete producer.beaconCount;
-      delete producer.beaconId;
-      delete producer.beaconModuleIds;
+      delete producer.beacons;
     }
 
     producer.overclock = producer.overclock ?? def.overclock;

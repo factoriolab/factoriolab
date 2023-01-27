@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 
-import { ItemId } from '~/models';
+import { Entities, ItemId } from '~/models';
 
 @Pipe({ name: 'options' })
 export class OptionsPipe implements PipeTransform {
   transform(
     value: string[] | null | undefined,
-    entities: Record<string, { name: string }>,
+    entities: Entities<{ name: string }>,
     includeEmptyModule = false
   ): SelectItem[] {
     if (value == null) {

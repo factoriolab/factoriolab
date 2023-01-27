@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { Mod, ModInfo } from '~/models';
+import { Entities, Mod, ModInfo } from '~/models';
 import { LabState } from '../';
 import { DatasetsState } from './datasets.reducer';
 
@@ -24,7 +24,7 @@ export const getHashRecord = createSelector(
 
 /* Complex selectors */
 export const getModInfoRecord = createSelector(getModSets, (mods) =>
-  mods.reduce((e: Record<string, ModInfo | undefined>, m) => {
+  mods.reduce((e: Entities<ModInfo | undefined>, m) => {
     e[m.id] = m;
     return e;
   }, {})
@@ -34,7 +34,7 @@ export const getModRecord = createSelector(
   getModSets,
   getDataRecord,
   (mods, entities) =>
-    mods.reduce((e: Record<string, Mod | undefined>, m) => {
+    mods.reduce((e: Entities<Mod | undefined>, m) => {
       const data = entities[m.id];
       if (data != null) {
         e[m.id] = { ...m, ...data };

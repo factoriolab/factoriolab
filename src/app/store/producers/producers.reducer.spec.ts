@@ -145,17 +145,35 @@ describe('Producers Reducer', () => {
     });
   });
 
+  describe('ADD_BEACON', () => {
+    it('should add a beacon to a producer', () => {
+      const result = producersReducer(state, new Actions.AddBeaconAction('0'));
+      expect(result.entities['0'].beacons?.length).toEqual(2);
+    });
+  });
+
+  describe('REMOVE_BEACON', () => {
+    it('should remove a beacon from a producer', () => {
+      const result = producersReducer(
+        state,
+        new Actions.RemoveBeaconAction({ id: '0', value: 0 })
+      );
+      expect(result.entities['0'].beacons?.length).toEqual(0);
+    });
+  });
+
   describe('SET_BEACON_COUNT', () => {
     it('should set beacon count on a producer', () => {
       const result = producersReducer(
         state,
         new Actions.SetBeaconCountAction({
           id: '0',
+          index: 0,
           value: '8',
           def: '0',
         })
       );
-      expect(result.entities['0'].beaconCount).toEqual('8');
+      expect(result.entities['0'].beacons?.[0].count).toEqual('8');
     });
   });
 
@@ -165,11 +183,12 @@ describe('Producers Reducer', () => {
         state,
         new Actions.SetBeaconAction({
           id: '0',
+          index: 0,
           value: ItemId.Beacon,
           def: ItemId.AssemblingMachine1,
         })
       );
-      expect(result.entities['0'].beaconId).toEqual(ItemId.Beacon);
+      expect(result.entities['0'].beacons?.[0].id).toEqual(ItemId.Beacon);
     });
   });
 
@@ -179,13 +198,28 @@ describe('Producers Reducer', () => {
         state,
         new Actions.SetBeaconModulesAction({
           id: '0',
+          index: 0,
           value: [ItemId.SpeedModule],
           def: [ItemId.Module],
         })
       );
-      expect(result.entities['0'].beaconModuleIds).toEqual([
+      expect(result.entities['0'].beacons?.[0].moduleIds).toEqual([
         ItemId.SpeedModule,
       ]);
+    });
+  });
+
+  describe('SET_BEACON_TOTAL', () => {
+    it('should set the beacon total', () => {
+      const result = producersReducer(
+        state,
+        new Actions.SetBeaconTotalAction({
+          id: '0',
+          index: 0,
+          value: '200',
+        })
+      );
+      expect(result.entities['0'].beacons?.[0].total).toEqual('200');
     });
   });
 
@@ -214,9 +248,13 @@ describe('Producers Reducer', () => {
             count: '30',
             factoryId: 'factoryId',
             overclock: 100,
-            beaconCount: 'beaconCount',
-            beaconId: 'beaconId',
-            beaconModuleIds: ['beaconModuleIds'],
+            beacons: [
+              {
+                count: 'beaconCount',
+                id: 'beaconId',
+                moduleIds: ['beaconModuleIds'],
+              },
+            ],
           },
         },
         index: 1,
@@ -244,9 +282,13 @@ describe('Producers Reducer', () => {
             count: '30',
             factoryId: 'factoryId',
             overclock: 100,
-            beaconCount: 'beaconCount',
-            beaconId: 'beaconId',
-            beaconModuleIds: ['beaconModuleIds'],
+            beacons: [
+              {
+                count: 'beaconCount',
+                id: 'beaconId',
+                moduleIds: ['beaconModuleIds'],
+              },
+            ],
           },
         },
         index: 1,
@@ -274,9 +316,13 @@ describe('Producers Reducer', () => {
             count: '30',
             factoryId: 'factoryId',
             overclock: 100,
-            beaconCount: 'beaconCount',
-            beaconId: 'beaconId',
-            beaconModuleIds: ['beaconModuleIds'],
+            beacons: [
+              {
+                count: 'beaconCount',
+                id: 'beaconId',
+                moduleIds: ['beaconModuleIds'],
+              },
+            ],
           },
         },
         index: 1,

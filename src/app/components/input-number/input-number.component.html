@@ -17,6 +17,7 @@
       pRipple
       type="button"
       class="p-inputnumber-button p-inputnumber-button-up"
+      [class.p-button-text]="textButtons"
       icon="fa-solid fa-angle-up"
       (click)="increase()"
     ></button>
@@ -25,6 +26,7 @@
       pRipple
       type="button"
       class="p-inputnumber-button p-inputnumber-button-down"
+      [class.p-button-text]="textButtons"
       icon="fa-solid fa-angle-down"
       [disabled]="isMinimum"
       (click)="decrease()"
