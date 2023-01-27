@@ -506,6 +506,11 @@ describe('Products Selectors', () => {
             recipeId: RecipeId.Coal,
             recipeSettings: {
               factoryModuleIds: [ItemId.ProductivityModule3],
+              beacons: [
+                {
+                  id: ItemId.Beacon,
+                },
+              ],
             },
           },
           {

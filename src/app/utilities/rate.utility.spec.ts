@@ -273,7 +273,7 @@ describe('RateUtility', () => {
         belts: Rational.one,
         wagons: Rational.one,
         recipeSettings:
-          Mocks.RationalRecipeSettingsInitial[RecipeId.ArtilleryShellRange],
+          Mocks.RationalRecipeSettingsInitial[RecipeId.RocketPart],
       };
       RateUtility.calculateBelts(
         step,
@@ -365,6 +365,26 @@ describe('RateUtility', () => {
       };
       RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
       expect(step.power).toEqual(Rational.from(480));
+    });
+
+    it('should do nothing if beaconReceivers is unset', () => {
+      const step: Step = { id: 'id' };
+      RateUtility.calculateBeacons(step, null, Mocks.AdjustedData);
+      expect(step).toEqual({ id: 'id' });
+    });
+
+    it('should do nothing if step beacons is null', () => {
+      const step: Step = {
+        id: 'id',
+        recipeId: RecipeId.IronOre,
+        factories: Rational.one,
+        recipeSettings: {
+          beacons: undefined,
+        },
+      };
+      const stepExpect = { ...step };
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
+      expect(step).toEqual(stepExpect);
     });
   });
 
