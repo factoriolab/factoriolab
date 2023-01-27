@@ -11,6 +11,8 @@
     opacity: 0;
 
     transition: opacity 300ms ease;
+
+    text-shadow: 0 0 3px var(--surface-card);
   }
 
   // These styles for hover/active
@@ -28,7 +30,7 @@
   // These styles for hover & inactive
   &:hover:not(.hover-active) {
     > .p-button-icon {
-      opacity: 1;
+      opacity: 0.8;
     }
   }
 }

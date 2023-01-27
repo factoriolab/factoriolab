@@ -87,7 +87,10 @@ describe('Recipes Reducer', () => {
   describe('REMOVE_BEACON', () => {
     it('should remove a beacon from a recipe', () => {
       const result = recipesReducer(
-        { ...initialRecipesState, ...{ [Mocks.Recipe1.id]: { beacons: [] } } },
+        {
+          ...initialRecipesState,
+          ...{ [Mocks.Recipe1.id]: { beacons: undefined } },
+        },
         new Actions.RemoveBeaconAction({ id: Mocks.Recipe1.id, value: 0 })
       );
       expect(result[Mocks.Recipe1.id].beacons?.length).toEqual(0);

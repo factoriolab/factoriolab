@@ -185,16 +185,23 @@
               <div class="indent"></div>
             </ng-container>
             <div class="icon">
-              <i
+              <button
                 *ngIf="step.itemId; else recipeIcon"
-                [class]="step.itemId | iconSmClass"
+                pButton
+                pRipple
+                type="button"
+                class="hover-action p-button-text"
+                [class.hover-active]="vm.itemSettings[step.itemId].ignore"
+                [icon]="step.itemId | iconSmClass"
                 [pTooltip]="step.itemId | itemTooltip : vm.data"
                 [escape]="false"
+                (click)="ignoreItem(step.itemId)"
               >
+                <i class="hover-icon fa-solid fa-eye-slash"></i>
                 <span *ngIf="step.producerId != null"
                   >#{{ step.producerId }}</span
                 >
-              </i>
+              </button>
               <ng-template #recipeIcon>
                 <i
                   [class]="step.recipeId | iconSmClass : 'recipe'"

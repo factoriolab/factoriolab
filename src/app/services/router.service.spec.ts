@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
+  BeaconSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
@@ -505,6 +506,93 @@ describe('RouterService', () => {
       );
       expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
     });
+
+    it('should unzip empty v4', () => {
+      const v4Empty = 'p=&v=4';
+      const url = `/?${v4Empty}`;
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith(v4Empty, {} as any);
+    });
+
+    it('should unzip v4', () => {
+      const v4Full =
+        'p=steel-chest*1*1&q=steel-chest*1&i=steel-chest*1*transport-belt*car' +
+        'go-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effec' +
+        'tivity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*produ' +
+        'ctivity-module~speed-module*1*speed-module*beacon_assembling-machine' +
+        '-2_steel-furnace&s=1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
+        'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module&v=4';
+      const url = `/?${v4Full}`;
+      (router.events as any).next(new NavigationEnd(2, url, url));
+
+      const mockStateV4 = { ...mockState } as Partial<LabState>;
+      expect(service.dispatch).toHaveBeenCalledWith(v4Full, mockStateV4);
+    });
+
+    it('should unzip empty v5', () => {
+      const url = '/?z=eJwrUCszBQADVwFC&v=5';
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.Data, Mocks.Hash, null])
+      );
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith('p&v5', {} as any);
+    });
+
+    it('should unzip v5', () => {
+      const url =
+        '/?z=eJwdjDsKgDAQRG-zxVRJQLGx2E0gtXiAgIUgNn5Au5zdiSz7mTfMHrGHh5czGedi' +
+        'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4DZYwb' +
+        'BA__&v=5';
+
+      // const newZip = service.bytesToBase64(
+      //   deflate(
+      //     'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G**' +
+      //       'G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D&v5'
+      //   )
+      // );
+      // console.log(newZip);
+
+      spyOn(dataSvc, 'requestData').and.returnValue(
+        of([Mocks.Data, Mocks.Hash, null])
+      );
+      (router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith(
+        'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_' +
+          'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D&v5',
+        mockState
+      );
+    });
+  });
+
+  describe('zipBeacons', () => {
+    it('should generate maps for producer and recipe beacons', () => {
+      const beacons: BeaconSettings[] = [
+        {
+          count: '1',
+          id: ItemId.Beacon,
+          moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+        },
+      ];
+      const result = service.zipBeacons(
+        [
+          {
+            id: '0',
+            recipeId: RecipeId.IronPlate,
+            count: '1',
+            beacons,
+          },
+        ],
+        { [RecipeId.IronPlate]: { beacons } },
+        Mocks.Hash
+      );
+      expect(result.objectives).toEqual(service.empty);
+      expect(result.config).toEqual({
+        bare: '&e=1*speed-module~speed-module*beacon',
+        hash: '&e1*G~G*A',
+      });
+      expect(result.producerBeaconMap).toEqual({ ['0']: [0] });
+      expect(result.recipeBeaconMap).toEqual({ [RecipeId.IronPlate]: [0] });
+    });
   });
 
   describe('dispatch', () => {
@@ -759,6 +847,42 @@ describe('RouterService', () => {
         index: 2,
       });
     });
+
+    it('bare should map beacons', () => {
+      const result = service.unzipProducers({ ['q']: '*1***0' }, []);
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            recipeId: '',
+            count: '1',
+            beacons: [{}],
+          },
+        },
+        index: 2,
+      });
+    });
+
+    it('hash should map beacons', () => {
+      const result = service.unzipProducers(
+        { ['q']: '*1***0' },
+        [],
+        Mocks.Hash
+      );
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            recipeId: '',
+            count: '1',
+            beacons: [{}],
+          },
+        },
+        index: 2,
+      });
+    });
   });
 
   describe('unzipItems', () => {
@@ -796,6 +920,24 @@ describe('RouterService', () => {
       const result = service.unzipRecipes({ ['r']: '*A*' }, [], Mocks.Hash);
       expect(result).toEqual({
         ['']: { factoryId: ItemId.AssemblingMachine1 },
+      });
+    });
+
+    it('bare should map beacons', () => {
+      const result = service.unzipRecipes({ ['r']: 'iron-plate***0' }, []);
+      expect(result).toEqual({
+        [ItemId.IronPlate]: {
+          beacons: [{}],
+        },
+      });
+    });
+
+    it('hash should map beacons', () => {
+      const result = service.unzipRecipes({ ['r']: 'B***0' }, [], Mocks.Hash);
+      expect(result).toEqual({
+        [RecipeId.AdvancedCircuit]: {
+          beacons: [{}],
+        },
       });
     });
   });
