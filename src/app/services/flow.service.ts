@@ -6,23 +6,14 @@ import {
   Column,
   Dataset,
   DisplayRateInfo,
-  Entities,
   FlowData,
   FlowStyle,
-  ItemSettings,
   NodeType,
   Rational,
   Step,
   themeMap,
 } from '~/models';
-import {
-  Items,
-  LabState,
-  Preferences,
-  Products,
-  Recipes,
-  Settings,
-} from '~/store';
+import { LabState, Preferences, Products, Recipes, Settings } from '~/store';
 import { ColumnsState } from '~/store/preferences';
 import { ThemeService } from './theme.service';
 
@@ -35,28 +26,19 @@ export class FlowService {
   constructor(private store: Store<LabState>, private theme: ThemeService) {
     this.flowData$ = combineLatest([
       this.store.select(Products.getSteps),
-      this.store.select(Items.getItemSettings),
       this.store.select(Recipes.getAdjustedDataset),
       this.store.select(Settings.getDisplayRateInfo),
       this.store.select(Preferences.getColumns),
       this.theme.theme$,
     ]).pipe(
-      map(([steps, itemSettings, data, dispRateInfo, columns, theme]) =>
-        this.buildGraph(
-          steps,
-          itemSettings,
-          data,
-          dispRateInfo,
-          columns,
-          themeMap[theme]
-        )
+      map(([steps, data, dispRateInfo, columns, theme]) =>
+        this.buildGraph(steps, data, dispRateInfo, columns, themeMap[theme])
       )
     );
   }
 
   buildGraph(
     steps: Step[],
-    itemSettings: Entities<ItemSettings>,
     data: Dataset,
     dispRateInfo: DisplayRateInfo,
     columns: ColumnsState,
@@ -69,6 +51,7 @@ export class FlowService {
     };
 
     const itemPrec = columns[Column.Items].precision;
+    const factoryPrec = columns[Column.Factories].precision;
     const rateLbl = dispRateInfo.label;
 
     for (const step of steps) {
@@ -87,12 +70,10 @@ export class FlowService {
               ? NodeType.Input
               : NodeType.Recipe,
             name: recipe.name,
-            text: `${step.factories.toString(itemPrec)} ${factory.name}`,
+            text: `${step.factories.toString(factoryPrec)} ${factory.name}`,
             recipe,
             factoryId: settings.factoryId,
-            factories: step.factories.toString(
-              columns[Column.Factories].precision
-            ),
+            factories: step.factories.toString(factoryPrec),
           });
         }
       }
