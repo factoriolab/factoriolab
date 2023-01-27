@@ -337,8 +337,8 @@
     "crystal-oscillator": "Oscillateur à cristal",
     "crystal-oscillator-insulated": "Oscillateur à cristal isolé",
     "supercomputer": "Superordinateur",
-    "supercomputer-oc": "",+
-    "supercomputer-super-state": "",+
+    "supercomputer-oc": "+",
+    "supercomputer-super-state": "+",
     "turbofuel": "Turbocarburant",
     "turbofuel-heavy": "Turbocarburant lourd",
     "turbofuel-blend": "Turbocarburant mélangé",
