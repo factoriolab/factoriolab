@@ -1,11 +1,11 @@
 import { data } from 'src/data';
-import { AppData, ModData, ModHash, ModI18n } from '~/models';
+import { AppData, Entities, ModData, ModHash, ModI18n } from '~/models';
 import { DatasetsAction, DatasetsActionType } from './datasets.actions';
 
 export interface DatasetsState extends AppData {
-  dataRecord: Record<string, ModData | undefined>;
-  hashRecord: Record<string, ModHash | undefined>;
-  i18nRecord: Record<string, ModI18n | undefined>;
+  dataRecord: Entities<ModData | undefined>;
+  hashRecord: Entities<ModHash | undefined>;
+  i18nRecord: Entities<ModI18n | undefined>;
 }
 
 export const initialDatasetsState: DatasetsState = {

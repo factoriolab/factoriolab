@@ -1,7 +1,9 @@
 import {
-  DefaultIdPayload,
   DefaultPayload,
   Entities,
+  IdDefaultPayload,
+  IdIndexDefaultPayload,
+  IdIndexPayload,
   IdPayload,
 } from '~/models';
 
@@ -26,7 +28,7 @@ export class StoreUtility {
     return this.rankEquals([...a].sort(), [...b].sort());
   }
 
-  static payloadEquals<T>(payload: DefaultIdPayload<T>, rank = false): boolean {
+  static payloadEquals<T>(payload: IdDefaultPayload<T>, rank = false): boolean {
     return Array.isArray(payload.value) && Array.isArray(payload.def)
       ? rank
         ? this.rankEquals(
@@ -76,10 +78,10 @@ export class StoreUtility {
     return newState;
   }
 
-  static compareReset<T extends object, P>(
+  static compareReset<T extends object, K extends keyof T>(
     state: Entities<T>,
-    field: keyof T,
-    payload: DefaultIdPayload<P>,
+    field: K,
+    payload: IdDefaultPayload<T[K]>,
     rank = false
   ): Entities<T> {
     // Spread into new state
@@ -102,10 +104,10 @@ export class StoreUtility {
     }
   }
 
-  static assignValue<T, P>(
+  static assignValue<T, K extends keyof T>(
     state: Entities<T>,
-    field: keyof T,
-    payload: IdPayload<P>
+    field: K,
+    payload: IdPayload<T[K]>
   ): Entities<T> {
     return {
       ...state,
@@ -132,5 +134,134 @@ export class StoreUtility {
     def: string[] | undefined
   ): string[] | undefined {
     return this.rankEquals(value, def) ? undefined : value;
+  }
+
+  /** Resets a passed field of the state */
+  static resetFieldIndex<
+    T extends { [key in K]?: U[] },
+    U extends object,
+    V extends Exclude<T[K], undefined>[number],
+    K extends keyof T,
+    L extends keyof V
+  >(
+    state: Entities<T>,
+    field: K,
+    subfield: L,
+    index: number,
+    id?: string
+  ): Entities<T> {
+    // Spread into new state
+    const newState = { ...state };
+    for (const i of Object.keys(newState).filter(
+      (j) => (!id || id === j) && newState[j][field] != null
+    )) {
+      const arr = newState[i][field];
+      if (arr != null) {
+        const newArr = arr.map((a) => ({ ...a }));
+
+        // Reset the specific subfield
+        delete (newArr[index] as unknown as V)[subfield];
+
+        if (newArr.length === 1 && Object.keys(newArr[index]).length === 0) {
+          // Delete this field from the entity
+          delete newState[i][field];
+        } else {
+          // Set this field on the entitiy
+          newState[i][field] = newArr as unknown as T[K];
+        }
+      }
+
+      // Check whether whole entity has keys
+      if (Object.keys(newState[i]).length === 0) {
+        // Delete the whole entity
+        delete newState[i];
+      }
+    }
+    return newState;
+  }
+
+  static compareResetIndex<
+    T extends { [key in K]?: U[] },
+    U extends object,
+    V extends Exclude<T[K], undefined>[number],
+    K extends keyof T,
+    L extends keyof V
+  >(
+    state: Entities<T>,
+    field: K,
+    subfield: L,
+    payload: IdIndexDefaultPayload<V[L]>,
+    rank = false
+  ): Entities<T> {
+    if (this.payloadEquals(payload, rank)) {
+      // Resetting to null, spread into new state
+      const newState = { ...state };
+      if (newState[payload.id] !== undefined) {
+        newState[payload.id] = { ...newState[payload.id] };
+        const arr = newState[payload.id][field];
+        if (arr != null) {
+          const newArr = arr.map((a) => ({ ...a }));
+
+          // Reset the specific subfield
+          delete (newArr[payload.index] as unknown as V)[subfield];
+
+          if (
+            newArr.length === 1 &&
+            Object.keys(newArr[payload.index]).length === 0
+          ) {
+            // Delete this field from the entity
+            delete newState[payload.id][field];
+          } else {
+            // Set this field on the entity
+            newState[payload.id][field] = newArr as unknown as T[K];
+          }
+        }
+
+        // Check whether whole entity has keys
+        if (Object.keys(newState[payload.id]).length === 0) {
+          // Delete the whole entity
+          delete newState[payload.id];
+        }
+      }
+      return newState;
+    } else {
+      // Setting field
+      return this.assignIndexValue(state, field, subfield, payload);
+    }
+  }
+
+  static assignIndexValue<
+    T extends { [key in K]?: U[] },
+    U extends object,
+    V extends Exclude<T[K], undefined>[number],
+    K extends keyof T,
+    L extends keyof V
+  >(
+    state: Entities<T>,
+    field: K,
+    subfield: L,
+    payload: IdIndexPayload<V[L]>
+  ): Entities<T> {
+    return {
+      ...state,
+      ...{
+        [payload.id]: {
+          ...state[payload.id],
+          ...{
+            [field]: (
+              state[payload.id]?.[field] ??
+              // Generate default empty object array
+              new Array(payload.index + 1).fill({})
+            ).map((v, i) => {
+              if (i === payload.index) {
+                return { ...v, ...{ [subfield]: payload.value } };
+              } else {
+                return v;
+              }
+            }),
+          },
+        },
+      },
+    };
   }
 }

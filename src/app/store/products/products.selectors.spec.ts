@@ -506,6 +506,11 @@ describe('Products Selectors', () => {
             recipeId: RecipeId.Coal,
             recipeSettings: {
               factoryModuleIds: [ItemId.ProductivityModule3],
+              beacons: [
+                {
+                  id: ItemId.Beacon,
+                },
+              ],
             },
           },
           {
@@ -515,7 +520,6 @@ describe('Products Selectors', () => {
             belts: Rational.one,
             wagons: Rational.one,
             factories: Rational.one,
-            beacons: Rational.one,
             power: Rational.one,
             pollution: Rational.one,
             recipeSettings: {
@@ -523,6 +527,13 @@ describe('Products Selectors', () => {
                 ItemId.Module,
                 ItemId.SpeedModule3,
                 ItemId.SpeedModule3,
+              ],
+              beacons: [
+                {
+                  total: Rational.one,
+                  id: ItemId.Beacon,
+                  moduleIds: [ItemId.SpeedModule3, ItemId.SpeedModule3],
+                },
               ],
             },
           },

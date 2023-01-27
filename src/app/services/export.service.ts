@@ -140,11 +140,11 @@ export class ExportService {
           }
         }
         if (columns[Column.Beacons].show && allowsModules) {
-          exp.Beacons = settings.beaconCount;
-          exp.Beacon = settings.beaconId;
-          if (settings.beaconModuleIds != null) {
-            exp.BeaconModules = `"${settings.beaconModuleIds.join(',')}"`;
-          }
+          exp.Beacons = `"${settings.beacons?.map((b) => b.count).join(',')}"`;
+          exp.Beacon = `"${settings.beacons?.map((b) => b.id).join(',')}"`;
+          exp.BeaconModules = `"${settings.beacons
+            ?.map((b) => b.moduleIds?.join('|'))
+            .join(',')}"`;
         }
         if (columns[Column.Power].show) {
           if (step.power != null) {

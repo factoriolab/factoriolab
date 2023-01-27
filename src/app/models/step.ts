@@ -19,7 +19,6 @@ export interface Step {
   recipe?: RationalRecipe;
   recipeSettings?: RationalRecipeSettings;
   factories?: Rational;
-  beacons?: Rational;
   power?: Rational;
   pollution?: Rational;
   producerId?: string;

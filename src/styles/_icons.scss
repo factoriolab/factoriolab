@@ -93,6 +93,10 @@
   background-position: -131px -66px;
 }
 
+body.light .module::before {
+  filter: invert(1);
+}
+
 .pipe::before {
   background-position: -196px -66px;
 }

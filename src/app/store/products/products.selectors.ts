@@ -357,9 +357,7 @@ export const getStepsModified = createSelector(
       e[p.id] =
         p.factoryId != null ||
         p.factoryModuleIds != null ||
-        p.beaconCount != null ||
-        p.beaconId != null ||
-        p.beaconModuleIds != null ||
+        p.beacons != null ||
         p.overclock != null;
       return e;
     }, {}),
@@ -384,12 +382,12 @@ export const getTotals = createSelector(
   Recipes.getRecipeSettings,
   Recipes.getAdjustedDataset,
   (steps, itemSettings, recipeSettings, data) => {
-    const belts: Record<string, Rational> = {};
-    const wagons: Record<string, Rational> = {};
-    const factories: Record<string, Rational> = {};
-    const factoryModules: Record<string, Rational> = {};
-    const beacons: Record<string, Rational> = {};
-    const beaconModules: Record<string, Rational> = {};
+    const belts: Entities<Rational> = {};
+    const wagons: Entities<Rational> = {};
+    const factories: Entities<Rational> = {};
+    const factoryModules: Entities<Rational> = {};
+    const beacons: Entities<Rational> = {};
+    const beaconModules: Entities<Rational> = {};
     let power = Rational.zero;
     let pollution = Rational.zero;
 
@@ -454,22 +452,26 @@ export const getTotals = createSelector(
         }
 
         // Total Beacons
-        if (step.beacons?.nonzero()) {
-          const settings = recipeSettings[step.recipeId];
-          const beacon = settings.beaconId;
-          if (beacon != null) {
-            if (!Object.prototype.hasOwnProperty.call(beacons, beacon)) {
-              beacons[beacon] = Rational.zero;
+        const stepBeacons = step.recipeSettings?.beacons;
+        if (stepBeacons != null) {
+          for (const beacon of stepBeacons) {
+            const beaconId = beacon.id;
+            const total = beacon.total;
+
+            if (beaconId == null || !total?.nonzero()) continue;
+
+            if (!Object.prototype.hasOwnProperty.call(beacons, beaconId)) {
+              beacons[beaconId] = Rational.zero;
             }
 
-            const value = step.beacons.ceil();
-            beacons[beacon] = beacons[beacon].add(value);
+            const value = total.ceil();
+            beacons[beaconId] = beacons[beaconId].add(value);
 
             // Check for modules to add
-            if (settings.beaconModuleIds) {
+            if (beacon.moduleIds != null) {
               addValueToRecordByIds(
                 beaconModules,
-                settings.beaconModuleIds.filter((i) => i !== ItemId.Module),
+                beacon.moduleIds.filter((i) => i !== ItemId.Module),
                 value
               );
             }
@@ -502,7 +504,7 @@ export const getTotals = createSelector(
 );
 
 function addValueToRecordByIds(
-  record: Record<string, Rational>,
+  record: Entities<Rational>,
   ids: string[],
   value: Rational
 ): void {

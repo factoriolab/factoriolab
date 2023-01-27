@@ -77,8 +77,8 @@ export class RateUtility {
 
     for (const step of _steps) {
       this.calculateSettings(step, producers, recipeSettings);
-      this.calculateBelts(step, itemSettings, recipeSettings, beltSpeed, data);
-      this.calculateBeacons(step, beaconReceivers, recipeSettings, data);
+      this.calculateBelts(step, itemSettings, beltSpeed, data);
+      this.calculateBeacons(step, beaconReceivers, data);
       this.calculateDisplayRate(step, dispRateInfo);
     }
 
@@ -115,13 +115,12 @@ export class RateUtility {
   static calculateBelts(
     step: Step,
     itemSettings: Entities<ItemSettings>,
-    recipeSettings: Entities<RationalRecipeSettings>,
     beltSpeed: Entities<Rational>,
     data: Dataset
   ): void {
     let noItems = false;
-    if (step.recipeId != null) {
-      const factoryId = recipeSettings[step.recipeId].factoryId;
+    if (step.recipeId != null && step.recipeSettings != null) {
+      const factoryId = step.recipeSettings.factoryId;
       if (factoryId != null) {
         const factory = data.factoryEntities[factoryId];
         const recipe = data.recipeEntities[step.recipeId];
@@ -173,39 +172,49 @@ export class RateUtility {
   static calculateBeacons(
     step: Step,
     beaconReceivers: Rational | null,
-    recipeSettings: Entities<RationalRecipeSettings>,
     data: Dataset
   ): void {
     if (
-      beaconReceivers?.nonzero() &&
-      step.recipeId &&
-      step.factories?.nonzero() &&
-      !data.recipeEntities[step.recipeId].part &&
-      recipeSettings[step.recipeId].beaconCount?.nonzero()
+      !beaconReceivers?.nonzero() ||
+      step.recipeId == null ||
+      !step.factories?.nonzero() ||
+      data.recipeEntities[step.recipeId].part ||
+      step.recipeSettings == null
     ) {
-      const settings = recipeSettings[step.recipeId];
-      if (settings.beaconId != null) {
-        if (settings.beaconTotal != null) {
-          step.beacons = settings.beaconTotal;
-        } else if (settings.beaconCount != null) {
-          step.beacons = step.factories
-            .ceil()
-            .mul(settings.beaconCount)
-            .div(beaconReceivers);
-          if (step.beacons.lt(settings.beaconCount)) {
-            // Can't be less than beacon count
-            step.beacons = settings.beaconCount;
-          }
-        }
-
-        const beacon = data.beaconEntities[settings.beaconId];
-        if (beacon.usage?.nonzero() && step.beacons != null) {
-          step.power = (step.power ?? Rational.zero).add(
-            step.beacons.mul(beacon.usage)
-          );
-        }
-      }
+      return;
     }
+
+    const factories = step.factories;
+
+    const settings = step.recipeSettings;
+    if (settings.beacons == null) return;
+
+    step.recipeSettings = {
+      ...step.recipeSettings,
+      ...{
+        beacons: settings.beacons.map((b) => {
+          let total = b.total;
+          if (b.id != null) {
+            if (b.count != null && total == null) {
+              total = factories.ceil().mul(b.count).div(beaconReceivers);
+              if (total.lt(b.count)) {
+                // Can't be less than beacon count
+                total = b.count;
+              }
+            }
+
+            const beacon = data.beaconEntities[b.id];
+            if (beacon.usage?.nonzero() && total != null) {
+              step.power = (step.power ?? Rational.zero).add(
+                total.mul(beacon.usage)
+              );
+            }
+          }
+
+          return { ...b, total };
+        }),
+      },
+    };
   }
 
   static calculateDisplayRate(step: Step, dispRateInfo: DisplayRateInfo): void {
@@ -233,7 +242,7 @@ export class RateUtility {
 
   static calculateHierarchy(steps: Step[]): Step[] {
     // Determine parents
-    const parents: Record<string, string> = {};
+    const parents: Entities<string> = {};
     for (const step of steps) {
       if (step.parents && Object.keys(step.parents).length === 1) {
         const stepId = Object.keys(step.parents)[0];

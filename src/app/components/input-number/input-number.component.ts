@@ -28,6 +28,7 @@ export class InputNumberComponent implements OnInit, OnChanges {
   @Input() width = '';
   @Input() inputId = 'inputnumber';
   @Input() hideButtons = false;
+  @Input() textButtons = false;
 
   @Output() setValue = new EventEmitter<string>();
 

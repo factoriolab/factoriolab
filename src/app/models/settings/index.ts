@@ -1,3 +1,4 @@
+export * from './beacon-settings';
 export * from './column-settings';
 export * from './factory-settings';
 export * from './item-settings';
