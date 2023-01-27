@@ -8,6 +8,6 @@ export enum Language {
 
 export const languageOptions: SelectItem<Language>[] = [
   { label: 'English', value: Language.English },
-  { label: 'Française', value: Language.French },
+  { label: 'Français', value: Language.French },
   { label: '简体中文', value: Language.Chinese },
 ];
