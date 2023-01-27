@@ -186,7 +186,7 @@
             </ng-container>
             <div class="icon">
               <button
-                *ngIf="step.itemId; else recipeIcon"
+                *ngIf="step.itemId && step.producerId == null; else recipeIcon"
                 pButton
                 pRipple
                 type="button"
@@ -198,9 +198,6 @@
                 (click)="ignoreItem(step.itemId)"
               >
                 <i class="hover-icon fa-solid fa-eye-slash"></i>
-                <span *ngIf="step.producerId != null"
-                  >#{{ step.producerId }}</span
-                >
               </button>
               <ng-template #recipeIcon>
                 <i
