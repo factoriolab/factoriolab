@@ -586,9 +586,10 @@ export class SimplexUtility {
       }
     }
 
-    // Add producer counts
-    for (const producer of state.producers) {
-      O.push(producer.count);
+    // Add producer columns (0 means balanced solution was found / assumed)
+    for (let i = 0; i < state.producers.length; i++) {
+      O.push(Rational.zero);
+      O.push(Rational.zero);
     }
 
     // Clean up inputs
@@ -638,7 +639,8 @@ export class SimplexUtility {
 
     for (const producer of state.producers) {
       // Add producer columns
-      O.push(producer.count.inverse());
+      O.push(producer.count.inverse()); // Lower boundary
+      O.push(producer.count); // Upper boundary
     }
 
     // Add recipe columns, input columns, and cost
@@ -670,7 +672,10 @@ export class SimplexUtility {
 
       // Add producer columns
       for (const other of state.producers) {
+        // Lower boundary
         R.push(producer.id === other.id ? Rational.one : Rational.zero);
+        // Upper boundary
+        R.push(producer.id === other.id ? Rational.minusOne : Rational.zero);
       }
 
       // Add recipe columns
@@ -703,8 +708,8 @@ export class SimplexUtility {
         R.push(val.div(recipe.time));
       }
 
-      // Add producer columns
-      R.push(...new Array(state.producers.length).fill(Rational.zero));
+      // Add producer columns (2 each, LB + UB)
+      R.push(...new Array(state.producers.length * 2).fill(Rational.zero));
 
       // Add recipe columns
       for (const other of recipes) {
@@ -729,8 +734,8 @@ export class SimplexUtility {
         R.push(itemId === other ? Rational.one : Rational.zero);
       }
 
-      // Add producer columns
-      R.push(...new Array(state.producers.length).fill(Rational.zero));
+      // Add producer columns (2 each, LB + UB)
+      R.push(...new Array(state.producers.length * 2).fill(Rational.zero));
 
       // Add recipe columns
       R.push(...new Array(recipes.length).fill(Rational.zero));
@@ -898,11 +903,13 @@ export class SimplexUtility {
       }
     }
 
+    const nextCols = 1 + itemIds.length + state.producers.length * 2;
+
     // Parse recipes
     const recipes: Entities<Rational> = {};
     const inputs: Entities<Rational> = {};
     for (let i = 0; i < recipeIds.length; i++) {
-      const c = 1 + itemIds.length + state.producers.length + i;
+      const c = nextCols + i;
       if (O[c].gt(Rational.zero)) {
         recipes[recipeIds[i]] = O[c];
       }
@@ -910,8 +917,7 @@ export class SimplexUtility {
 
     // Parse inputs
     for (let i = 0; i < state.inputIds.length; i++) {
-      const c =
-        i + itemIds.length + state.producers.length + recipeIds.length + 1;
+      const c = nextCols + recipeIds.length + i;
       if (O[c].gt(Rational.zero)) {
         inputs[state.inputIds[i]] = O[c];
       }
