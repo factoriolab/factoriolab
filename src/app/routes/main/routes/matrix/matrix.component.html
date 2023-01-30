@@ -126,8 +126,8 @@
             </div>
           </th>
           <th
-            [colSpan]="vm.result.producers.length"
-            [style.width.rem]="4 * vm.result.producers.length"
+            [colSpan]="vm.result.producers.length * 2"
+            [style.width.rem]="4 * vm.result.producers.length * 2"
           >
             <div class="text-truncate">
               {{ 'matrix.producers' | translate }}
@@ -161,7 +161,11 @@
               [pTooltip]="vm.data.itemEntities[i].name"
             ></i>
           </th>
-          <th *ngFor="let p of vm.result.producers" style="width: 4rem">
+          <th
+            *ngFor="let p of vm.result.producers"
+            colspan="2"
+            style="width: 8rem"
+          >
             <i
               [class]="p.recipeId | iconClass : 'recipe'"
               [pTooltip]="p.recipeId | recipeTooltip : vm.data"
@@ -324,8 +328,8 @@
             {{ 'matrix.surplus' | translate }}
           </th>
           <th
-            [colSpan]="vm.result.producers.length"
-            [style.width.rem]="4 * vm.result.producers.length"
+            [colSpan]="vm.result.producers.length * 2"
+            [style.width.rem]="4 * vm.result.producers.length * 2"
           >
             <div class="text-truncate">
               {{ 'matrix.producers' | translate }}
@@ -357,7 +361,11 @@
               [pTooltip]="vm.data.itemEntities[i].name"
             ></i>
           </th>
-          <th *ngFor="let p of vm.result.producers" style="width: 4rem">
+          <th
+            *ngFor="let p of vm.result.producers"
+            colspan="2"
+            style="width: 8rem"
+          >
             <i
               [class]="p.recipeId | iconClass : 'recipe'"
               [pTooltip]="p.recipeId | recipeTooltip : vm.data"
