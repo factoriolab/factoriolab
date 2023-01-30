@@ -269,12 +269,12 @@ export class Rational {
     return this.mul(round).ceil().div(round).toNumber();
   }
 
-  toFraction(): string {
+  toFraction(mixed = true): string {
     if (this.isInteger()) {
       return this.p.toString();
     }
 
-    if (Rational.abs(this.p) > Rational.abs(this.q)) {
+    if (mixed && Rational.abs(this.p) > Rational.abs(this.q)) {
       const whole = this.p / this.q;
       const mod = this.p % this.q;
       return `${whole} + ${mod}/${this.q}`;
@@ -287,14 +287,14 @@ export class Rational {
    * Converts rational to string
    * * Default: Use decimals if 2 or less, use num/den otherwise
    * * Custom:
-   *   * Specify null to use num/den
+   *   * Specify null to use mixed fraction
    *   * Specify number to specify number of decimals
    */
   toString(precision?: number | null): string {
     if (precision) return this.toPrecision(precision).toString();
 
     if (precision === null || this.toDecimals() > 2) {
-      return `${this.p.toString()}/${this.q.toString()}`;
+      return this.toFraction(precision !== undefined);
     } else {
       return this.toNumber().toString();
     }

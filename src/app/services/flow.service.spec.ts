@@ -74,7 +74,6 @@ describe('FlowService', () => {
               Mocks.RationalRecipeSettingsInitial[RecipeId.IronPlate],
           },
         ],
-        Mocks.ItemSettingsInitial,
         Mocks.Dataset,
         displayRateInfo[DisplayRate.PerMinute],
         Mocks.PreferencesState.columns,
