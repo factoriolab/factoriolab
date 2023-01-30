@@ -1,118 +1,124 @@
-<p-card *ngIf="vm$ | async as vm">
-  <div class="d-flex flex-column">
-    <div class="d-flex justify-content-center">
-      <img
-        src="assets/icons/icon-128x128.png"
-        alt="FactorioLab"
-        height="128"
-        width="128"
-      />
-    </div>
-    <div class="mt-2" [innerHTML]="'landing.welcome' | translate"></div>
-    <p-dropdown
-      styleClass="my-2 w-100"
-      [ngModel]="vm.data.game"
-      [options]="gameOptions"
-      (onChange)="setGame($event.value)"
-    >
-      <ng-template pTemplate="selectedItem">
-        <div
-          *ngIf="gameInfo[vm.data.game] as info"
-          class="d-flex align-items-center"
-        >
-          <i class="mx-1" [class]="info.icon | iconSmClass"></i>
-          <span class="ms-3">{{ info.label | translate }}</span>
-        </div>
-      </ng-template>
-      <ng-template pTemplate="item" let-item>
-        <div
-          *ngIf="$any(gameInfo)[item.value] as info"
-          class="d-flex align-items-center"
-        >
-          <i [class]="info.icon | iconSmClass"></i>
-          <span class="ms-3">{{ info.label | translate }}</span>
-        </div>
-      </ng-template>
-    </p-dropdown>
-    <p-dropdown
-      *ngIf="vm.data.game === Game.Factorio"
-      styleClass="mb-2 w-100"
-      [filter]="true"
-      [ngModel]="vm.settings.modId"
-      [options]="vm.modOptions"
-      (onChange)="setMod($event.value)"
-    ></p-dropdown>
-    <button
-      pButton
-      pRipple
-      type="button"
-      icon="fa-solid fa-box"
-      [label]="'landing.addAProduct' | translate"
-      (click)="addProductPicker.clickOpen(vm.data, 'item')"
-    ></button>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-industry"
-      [label]="'landing.addAProducer' | translate"
-      (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
-    ></button>
-    <lab-picker
-      #addProductPicker
-      [header]="'landing.addAProduct' | translate"
-      (selectId)="selectProduct($event)"
-    ></lab-picker>
-    <lab-picker
-      #addRecipePicker
-      [header]="'landing.addAProducer' | translate"
-      (selectId)="selectProducer($event)"
-    ></lab-picker>
-    <p-divider
-      *ngIf="vm.savedStates.length || BrowserUtility.routerState"
-    ></p-divider>
-    <span *ngIf="vm.savedStates.length" class="p-inputgroup">
-      <span class="p-inputgroup-addon">
-        <i class="fa-solid fa-file-import"></i>
-      </span>
+<ng-container *ngIf="vm$ | async as vm">
+  <p-card *ngIf="vm.mod != null; else spinner">
+    <div class="d-flex flex-column">
+      <div class="d-flex justify-content-center">
+        <img
+          src="assets/icons/icon-128x128.png"
+          alt="FactorioLab"
+          height="128"
+          width="128"
+        />
+      </div>
+      <div class="mt-2" [innerHTML]="'landing.welcome' | translate"></div>
       <p-dropdown
-        [placeholder]="'landing.loadSavedState' | translate"
-        styleClass="w-100"
-        [options]="vm.savedStates"
-        (onChange)="setState($event.value, vm.preferences)"
+        styleClass="my-2 w-100"
+        [ngModel]="vm.data.game"
+        [options]="gameOptions"
+        (onChange)="setGame($event.value)"
+      >
+        <ng-template pTemplate="selectedItem">
+          <div
+            *ngIf="gameInfo[vm.data.game] as info"
+            class="d-flex align-items-center"
+          >
+            <i class="mx-1" [class]="info.icon | iconSmClass"></i>
+            <span class="ms-3">{{ info.label | translate }}</span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="item" let-item>
+          <div
+            *ngIf="$any(gameInfo)[item.value] as info"
+            class="d-flex align-items-center"
+          >
+            <i [class]="info.icon | iconSmClass"></i>
+            <span class="ms-3">{{ info.label | translate }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
+      <p-dropdown
+        *ngIf="vm.data.game === Game.Factorio"
+        styleClass="mb-2 w-100"
+        [filter]="true"
+        [ngModel]="vm.settings.modId"
+        [options]="vm.modOptions"
+        (onChange)="setMod($event.value)"
       ></p-dropdown>
-    </span>
-    <button
-      *ngIf="BrowserUtility.routerState"
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-clock-rotate-left"
-      [label]="'landing.loadLastState' | translate"
-      (click)="router.navigateByUrl(BrowserUtility.routerState)"
-    ></button>
-    <p-divider></p-divider>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2 p-button-help"
-      icon="fa-solid fa-question"
-      [label]="'landing.help' | translate"
-      routerLink="wizard"
-      queryParamsHandling="preserve"
-    ></button>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2 p-button-outlined"
-      icon="fa-solid fa-forward"
-      [label]="'landing.skip' | translate"
-      routerLink="list"
-      queryParamsHandling="preserve"
-    ></button>
-  </div>
-</p-card>
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-solid fa-box"
+        [label]="'landing.addAProduct' | translate"
+        (click)="addProductPicker.clickOpen(vm.data, 'item')"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="mt-2"
+        icon="fa-solid fa-industry"
+        [label]="'landing.addAProducer' | translate"
+        (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
+      ></button>
+      <lab-picker
+        #addProductPicker
+        [header]="'landing.addAProduct' | translate"
+        (selectId)="selectProduct($event)"
+      ></lab-picker>
+      <lab-picker
+        #addRecipePicker
+        [header]="'landing.addAProducer' | translate"
+        (selectId)="selectProducer($event)"
+      ></lab-picker>
+      <p-divider
+        *ngIf="vm.savedStates.length || BrowserUtility.routerState"
+      ></p-divider>
+      <span *ngIf="vm.savedStates.length" class="p-inputgroup">
+        <span class="p-inputgroup-addon">
+          <i class="fa-solid fa-file-import"></i>
+        </span>
+        <p-dropdown
+          [placeholder]="'landing.loadSavedState' | translate"
+          styleClass="w-100"
+          [options]="vm.savedStates"
+          (onChange)="setState($event.value, vm.preferences)"
+        ></p-dropdown>
+      </span>
+      <button
+        *ngIf="BrowserUtility.routerState"
+        pButton
+        pRipple
+        type="button"
+        class="mt-2"
+        icon="fa-solid fa-clock-rotate-left"
+        [label]="'landing.loadLastState' | translate"
+        (click)="router.navigateByUrl(BrowserUtility.routerState)"
+      ></button>
+      <p-divider></p-divider>
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="mt-2 p-button-help"
+        icon="fa-solid fa-question"
+        [label]="'landing.help' | translate"
+        routerLink="wizard"
+        queryParamsHandling="preserve"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="mt-2 p-button-outlined"
+        icon="fa-solid fa-forward"
+        [label]="'landing.skip' | translate"
+        routerLink="list"
+        queryParamsHandling="preserve"
+      ></button>
+    </div>
+  </p-card>
+</ng-container>
+
+<ng-template #spinner>
+  <p-progressSpinner></p-progressSpinner>
+</ng-template>
