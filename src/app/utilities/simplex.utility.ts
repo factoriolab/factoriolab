@@ -476,12 +476,18 @@ export class SimplexUtility {
           val = val.sub(recipe.in[itemId]);
         }
 
-        // If a default recipe is specified for this item, don't include output
-        // from other recipes in simplex model. If this recipe is included
-        // incidentally, output is added as a surplus in IBFS.
+        /**
+         * If a default recipe is specified for this item, don't include output
+         * from other recipes in simplex model. If this recipe is included
+         * incidentally, output is added as a surplus in IBFS.
+         * If output is less than input (`produces` is false), always include
+         * the output from this recipe, even though there may be a different
+         * dedicated recipe for production of this item.
+         */
         if (
           recipe.out[itemId] &&
-          (state.data.itemRecipeId[itemId] == null ||
+          (!recipe.produces(itemId) ||
+            state.data.itemRecipeId[itemId] == null ||
             state.data.itemRecipeId[itemId] === recipe.id)
         ) {
           val = val.add(recipe.out[itemId]);
