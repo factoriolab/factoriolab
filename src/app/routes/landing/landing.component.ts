@@ -19,13 +19,15 @@ export class LandingComponent {
     this.store.select(Settings.getSettings),
     this.store.select(Settings.getModOptions),
     this.store.select(Settings.getDataset),
+    this.store.select(Settings.getMod),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
   ]).pipe(
-    map(([settings, modOptions, data, preferences, savedStates]) => ({
+    map(([settings, modOptions, data, mod, preferences, savedStates]) => ({
       settings,
       modOptions,
       data,
+      mod,
       preferences,
       savedStates,
     }))
