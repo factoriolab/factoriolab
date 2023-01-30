@@ -147,7 +147,7 @@ export class FlowService {
                   source: `i|${step.itemId}`,
                   target: `r|${targetId}`,
                   name: item.name,
-                  text: `${targetAmount.toString(itemPrec)}${rateLbl}`,
+                  text: `${amount.toString(itemPrec)}${rateLbl}`,
                 });
               }
             }
