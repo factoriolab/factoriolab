@@ -38,5 +38,5 @@ The app will reload automatically if source code is changed.
 
 To run the automated unit tests:
 
-1. Install NodeJs and Angular CLI as described above
+1. Install NodeJs, Angular CLI, and the dependencies as described above
 2. Build and run the tests, using `npm test`
