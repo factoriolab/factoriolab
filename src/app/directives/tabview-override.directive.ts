@@ -9,12 +9,12 @@ export class TabViewOverrideDirective {
     // Override PrimeNG function to use >= in place of === when checking
     // whether to show forward button
     tabView.updateButtonState = (): void => {
-      const content = tabView.content.nativeElement;
+      const content = tabView.content.nativeElement as HTMLElement;
       const { scrollLeft, scrollWidth } = content;
       const width = DomHandler.getWidth(content);
 
       tabView.backwardIsDisabled = scrollLeft === 0;
-      tabView.forwardIsDisabled = parseInt(scrollLeft) >= scrollWidth - width;
+      tabView.forwardIsDisabled = scrollLeft >= scrollWidth - width;
     };
   }
 }
