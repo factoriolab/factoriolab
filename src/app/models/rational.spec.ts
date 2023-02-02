@@ -276,6 +276,14 @@ describe('Rational', () => {
       it('should handle fractions', () => {
         expect(Rational.from(1, 3).toString()).toEqual('1/3');
       });
+
+      it('should handle very small numbers', () => {
+        expect(Rational.from(3, 10000000).toString()).toEqual('3/10000000');
+      });
+
+      it('should use specified precision', () => {
+        expect(Rational.from(1, 3).toString(2)).toEqual('0.34');
+      });
     });
 
     describe('toDecimals', () => {
@@ -285,6 +293,10 @@ describe('Rational', () => {
 
       it('should determine number of decimals', () => {
         expect(Rational.one.div(Rational.two).toDecimals()).toEqual(1);
+      });
+
+      it('should handle very small numbers', () => {
+        expect(Rational.from(3, 10000000).toDecimals()).toEqual(7);
       });
     });
 
