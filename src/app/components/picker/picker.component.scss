@@ -15,22 +15,4 @@
     padding-top: 0.5rem;
     padding-left: 1px;
   }
-
-  .p-tabview-nav {
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: thin;
-
-    // Rough equivalent to Firefox `scrollbar-width: thin` for webkit
-    &::-webkit-scrollbar {
-      height: 8px;
-    }
-    &::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    &::-webkit-scrollbar-thumb {
-      background-color: rgba(155, 155, 155, 0.5);
-      border: transparent;
-    }
-  }
 }

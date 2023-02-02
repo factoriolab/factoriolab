@@ -11,10 +11,9 @@
   [style]="{
     minHeight: '528px',
     height: '80vh',
-    minWidth: '415px',
     width: '50vw'
   }"
-  [breakpoints]="{ '415px': '100vw' }"
+  [breakpoints]="{ '768px': '80vw', '576px': '100vw' }"
   (onHide)="onHide()"
 >
   <div class="d-flex w-100 my-1">
@@ -38,7 +37,7 @@
       />
     </span>
   </div>
-  <p-tabView *ngIf="visible" [(activeIndex)]="activeIndex">
+  <p-tabView *ngIf="visible" [(activeIndex)]="activeIndex" [scrollable]="true">
     <ng-container *ngFor="let categoryId of categoryIds; let i = index">
       <p-tabPanel
         *ngIf="categoryEntities[categoryId] as category"
@@ -49,7 +48,9 @@
           <i [class]="categoryId | iconSmClass : 'category'"></i>
         </ng-template>
         <ng-template pTemplate="content">
-          <p-scrollPanel [style]="{ height: '363px' }">
+          <p-scrollPanel
+            [style]="{ height: 'calc(80vh - 165px)', minHeight: '363px' }"
+          >
             <div
               *ngFor="let ids of categoryRows[categoryId]"
               class="d-flex flex-wrap"
