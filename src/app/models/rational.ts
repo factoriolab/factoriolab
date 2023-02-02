@@ -303,7 +303,27 @@ export class Rational {
   toDecimals(): number {
     const num = this.toNumber();
     if (num % 1 !== 0) {
-      return num.toString().split('.')[1].length;
+      // Pick apart complex numbers, looking for decimal and negative exponent
+      // 3.33e-6 => ["3.33e-6", ".33", "33", "e-6", "6"]
+      const match = num.toString().match(/\d+?(\.(\d+))?(e-(\d+))?/);
+      let decimals = 0;
+      // Regex pattern should match all known number toString formats
+      // istanbul ignore else
+      if (match) {
+        if (match[2]) {
+          // Found decimal portion, add length
+          decimals += match[2].length;
+        }
+
+        if (match[4]) {
+          // Found negative exponent, add value
+          decimals += Number(match[4]);
+        }
+      } else {
+        console.warn('Number did not match expected pattern', num);
+      }
+
+      return decimals;
     }
 
     return 0;
