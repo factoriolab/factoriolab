@@ -560,27 +560,6 @@ describe('SimplexUtility', () => {
       const result = SimplexUtility.glpk(state);
       expect(result.returnCode).toEqual('failure');
     });
-
-    it('should add surplus items from non-default recipes', () => {
-      const state = getState();
-      state.recipes[RecipeId.IronOre] = Mocks.Dataset.recipeR[RecipeId.IronOre];
-      state.recipes[RecipeId.Coal] = new RationalRecipe({
-        id: RecipeId.Coal,
-        name: 'coal with byproduct',
-        time: 1,
-        in: {},
-        out: { [ItemId.Coal]: 1, [ItemId.IronOre]: 0.1 },
-        producers: [],
-        row: 0,
-        category: CategoryId.Intermediate,
-      });
-      state.items[ItemId.IronOre] = Rational.one;
-      state.items[ItemId.Coal] = Rational.one;
-
-      const result = SimplexUtility.glpk(state);
-      // Expect result to include surplus iron ore from coal recipe
-      expect(result.O[1]).toEqual(Rational.from(1, 10));
-    });
   });
 
   describe('canonical', () => {
@@ -697,7 +676,7 @@ describe('SimplexUtility', () => {
         [
           Rational.zero,
           Rational.zero,
-          Rational.one,
+          Rational.zero,
           Rational.zero,
           Rational.zero,
           Rational.zero,
@@ -1039,6 +1018,30 @@ describe('SimplexUtility', () => {
           itemId: ItemId.Coal,
           items: Rational.from(1183, 100),
           surplus: Rational.from(3),
+        },
+      ]);
+    });
+
+    it('should include surplus from non-default recipes', () => {
+      const solution: any = {
+        surplus: {},
+        inputs: {},
+        recipes: { [RecipeId.Coal]: Rational.two },
+      };
+      const state = getState();
+      state.data = Mocks.getDataset();
+      state.data.itemRecipeId[ItemId.Coal] = 'other';
+      state.items[ItemId.Coal] = Rational.from(3);
+      state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
+      state.producers = [Mocks.RationalProducer];
+      SimplexUtility.addItemStep(ItemId.Coal, solution, state);
+      expect(state.steps).toEqual([
+        {
+          id: '0',
+          itemId: ItemId.Coal,
+          items: Rational.from(1183, 200),
+          surplus: Rational.from(1183, 200),
+          output: Rational.from(3),
         },
       ]);
     });
