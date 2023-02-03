@@ -39,7 +39,7 @@ export const initialPreferencesState: PreferencesState = {
   simplexType: SimplexType.WasmFloat64,
   language: Language.English,
   powerUnit: PowerUnit.Auto,
-  theme: Theme.System,
+  theme: Theme.Dark,
 };
 
 export function preferencesReducer(

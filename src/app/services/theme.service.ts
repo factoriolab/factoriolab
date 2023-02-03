@@ -1,7 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, fromEvent, map, Observable, startWith } from 'rxjs';
+import { map } from 'rxjs';
 
 import { fnPropsNotNullish } from '~/helpers';
 import { Theme } from '~/models';
@@ -16,33 +16,15 @@ const LAB_THEME_STYLE_ID = 'lab-theme-css';
 })
 export class ThemeService {
   head = this.document.getElementsByTagName('head')[0];
-  theme$: Observable<Theme.Light | Theme.Dark>;
+  theme$ = this.store
+    .select(Preferences.getTheme)
+    // Map to handle legacy dark theme value (value 2)
+    .pipe(map((theme) => (theme === Theme.Light ? Theme.Light : Theme.Dark)));
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private store: Store<LabState>
-  ) {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-    const prefersDark$ = fromEvent<MediaQueryList>(prefersDark, 'change').pipe(
-      startWith(prefersDark),
-      map((list) => list.matches)
-    );
-
-    this.theme$ = combineLatest([
-      this.store.select(Preferences.getTheme),
-      prefersDark$,
-    ]).pipe(
-      map(([theme, prefersDark]) => {
-        if (theme === Theme.System) {
-          // Don't need to test media query specifically
-          // istanbul ignore next
-          return prefersDark ? Theme.Dark : Theme.Light;
-        }
-
-        return theme;
-      })
-    );
-  }
+  ) {}
 
   initialize(): void {
     this.store.select(Settings.getDataset).subscribe((data) => {
@@ -105,7 +87,7 @@ export class ThemeService {
       ) as HTMLLinkElement | null;
       if (themeLink) {
         const href =
-          theme === Theme.Dark ? 'theme-dark.css' : 'theme-light.css';
+          theme === Theme.Light ? 'theme-light.css' : 'theme-dark.css';
         if (!themeLink.href.endsWith(href)) {
           // Need to switch theme, href has changed
           // Create a temporary link tag to load the new style sheet
@@ -141,18 +123,13 @@ export class ThemeService {
     const state = BrowserUtility.preferencesState;
     const theme = state?.theme ?? Preferences.initialPreferencesState.theme;
 
-    if (theme === Theme.Light) return; // No action required
-
-    if (
-      theme === Theme.Dark ||
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      // Need to switch to dark theme before app starts
+    if (theme === Theme.Light) {
+      // Need to switch to light theme before app starts
       const themeLink = window.document.getElementById(
         LAB_THEME_STYLE_ID
       ) as HTMLLinkElement | null;
       if (themeLink) {
-        themeLink.href = 'theme-dark.css';
+        themeLink.href = 'theme-light.css';
       }
     }
   }
