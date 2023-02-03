@@ -4,16 +4,18 @@
     pButton
     pRipple
     type="button"
-    class="d-inline-flex d-none d-xl-flex p-button-lg settings-button me-3"
+    class="d-inline-flex d-none d-xl-flex p-button-lg p-button-text settings-button me-3"
     icon="fa-solid fa-bars"
+    [label]="'settings.header' | translate"
     (click)="contentSvc.toggleSettingsXl()"
   ></button
   ><button
     pButton
     pRipple
     type="button"
-    class="d-inline-flex d-xl-none p-button-lg settings-button"
+    class="d-inline-flex d-xl-none p-button-lg p-button-text settings-button"
     icon="fa-solid fa-bars"
+    [label]="'settings.header' | translate"
     (click)="contentSvc.toggleSettings()"
   ></button>
   <div class="d-none d-sm-flex p-inputgroup w-auto">
@@ -21,17 +23,19 @@
       type="button"
       pButton
       pRipple
-      class="p-button-lg"
+      class="p-button-lg p-button-text"
       [icon]="vm.gameInfo.icon | iconSmClass"
       [label]="vm.gameInfo.label | translate"
       [routerLink]="vm.gameInfo.route"
+      [pTooltip]="'app.resetTooltip' | translate"
+      tooltipPosition="bottom"
     ></button>
     <ng-container *ngFor="let game of vm.gameOptions">
       <button
         type="button"
         pButton
         pRipple
-        class="p-button-lg p-button-outlined"
+        class="p-button-lg p-button-text"
         [icon]="game.icon | iconSmClass"
         [routerLink]="game.routerLink"
         [pTooltip]="game.label ?? ''"
@@ -41,7 +45,7 @@
   </div>
   <a class="d-sm-none" [routerLink]="vm.gameInfo.route">
     <p-splitButton
-      styleClass="p-button-lg"
+      styleClass="p-button-lg p-button-text"
       [icon]="vm.gameInfo.icon | iconSmClass"
       [model]="vm.gameOptions"
       (onDropdownClick)="cancelRouterLink($event)"

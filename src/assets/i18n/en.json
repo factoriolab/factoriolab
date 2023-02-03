@@ -10,6 +10,7 @@
     "error": "Error",
     "errorDetail": "The application has encountered an error:",
     "reset": "Reset",
+    "resetTooltip": "Click to reset",
     "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, {{ pivots }} pivots, size: {{ rows }} x {{ cols }}, cost: {{ cost }}",
     "simplexUnsolved": "Simplex {{ resultType }}",
     "simplexError": "No solution found",
