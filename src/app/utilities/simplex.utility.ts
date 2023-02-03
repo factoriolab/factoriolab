@@ -476,20 +476,7 @@ export class SimplexUtility {
           val = val.sub(recipe.in[itemId]);
         }
 
-        /**
-         * If a default recipe is specified for this item, don't include output
-         * from other recipes in simplex model. If this recipe is included
-         * incidentally, output is added as a surplus in IBFS.
-         * If output is less than input (`produces` is false), always include
-         * the output from this recipe, even though there may be a different
-         * dedicated recipe for production of this item.
-         */
-        if (
-          recipe.out[itemId] &&
-          (!recipe.produces(itemId) ||
-            state.data.itemRecipeId[itemId] == null ||
-            state.data.itemRecipeId[itemId] === recipe.id)
-        ) {
+        if (this.includeRecipeOutput(itemId, recipe, state)) {
           val = val.add(recipe.out[itemId]);
         }
 
@@ -559,25 +546,9 @@ export class SimplexUtility {
         )
       ) {
         // Recipes for this item are part of the solution, include result
-        let val = Rational.fromNumber(itemConstrEntities[itemId].value).sub(
+        const val = Rational.fromNumber(itemConstrEntities[itemId].value).sub(
           state.items[itemId]
         );
-
-        if (state.data.itemRecipeId[itemId]) {
-          // A default recipe is specified for this item. Need to check whether
-          // any non-default recipes were included that incidentally produce
-          // this item, and add the amount as a surplus.
-          for (const recipeId of recipeIds) {
-            if (
-              recipeId !== state.data.itemRecipeId[itemId] &&
-              !this.isFloatZero(recipeVarEntities[recipeId].value) &&
-              state.recipes[recipeId].out[itemId]
-            ) {
-              const recipe = state.recipes[recipeId];
-              val = val.add(recipe.out[itemId].div(recipe.time));
-            }
-          }
-        }
 
         O.push(val);
       } else {
@@ -701,7 +672,7 @@ export class SimplexUtility {
           val = val.sub(recipe.in[itemId]);
         }
 
-        if (recipe.out[itemId]) {
+        if (this.includeRecipeOutput(itemId, recipe, state)) {
           val = val.add(recipe.out[itemId]);
         }
 
@@ -758,6 +729,27 @@ export class SimplexUtility {
     }
 
     return A;
+  }
+
+  /**
+   * If a default recipe is specified for this item, don't include output
+   * from other recipes in simplex model. If this recipe is included
+   * incidentally, output is added as a surplus in IBFS.
+   * If output is less than input (`produces` is false), always include
+   * the output from this recipe, even though there may be a different
+   * dedicated recipe for production of this item.
+   */
+  static includeRecipeOutput(
+    itemId: string,
+    recipe: RationalRecipe,
+    state: MatrixState
+  ): boolean {
+    return (
+      recipe.out[itemId] &&
+      (!recipe.produces(itemId) ||
+        state.data.itemRecipeId[itemId] == null ||
+        state.data.itemRecipeId[itemId] === recipe.id)
+    );
   }
 
   /** Solve the canonical tableau using the selected simplex type */
@@ -954,12 +946,23 @@ export class SimplexUtility {
   ): void {
     const steps = state.steps;
     let output = Rational.zero;
+    let surplus = Rational.zero; // Used only to track incidental surplus
     for (const recipe of Object.keys(solution.recipes)
       .map((r) => state.recipes[r])
       .filter((r) => r.out[itemId])) {
-      output = output.add(
-        recipe.out[itemId].mul(solution.recipes[recipe.id]).div(recipe.time)
-      );
+      const amount = recipe.out[itemId]
+        .mul(solution.recipes[recipe.id])
+        .div(recipe.time);
+      output = output.add(amount);
+
+      if (
+        state.data.itemRecipeId[itemId] &&
+        state.data.itemRecipeId[itemId] !== recipe.id
+      ) {
+        // This recipe produces the item but does not match the default recipe
+        // Include this amount as part of the surplus
+        surplus = surplus.add(amount);
+      }
     }
 
     for (const producer of state.producers) {
@@ -999,7 +1002,13 @@ export class SimplexUtility {
       }
 
       if (solution.surplus[itemId]?.nonzero()) {
-        step.surplus = solution.surplus[itemId];
+        // Add any simplex-recognized surplus to the incidental surplus
+        surplus = surplus.add(solution.surplus[itemId]);
+      }
+
+      if (surplus.nonzero()) {
+        // Assign total surplus to the step, if present
+        step.surplus = surplus;
       }
     }
   }
