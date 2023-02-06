@@ -80,6 +80,19 @@
       border-left-color: transparent;
     }
   }
+
+  // Allow sticky headers in table
+  .p-datatable > .p-datatable-wrapper {
+    overflow: visible; // Override PrimeNG inline style
+  }
+
+  // Sticky table header
+  .p-datatable .p-datatable-thead > tr > th {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 4rem;
+    z-index: 1;
+  }
 }
 
 tr.detail {
