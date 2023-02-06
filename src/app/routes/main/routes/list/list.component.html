@@ -155,7 +155,13 @@
     <ng-template pTemplate="body" let-_step let-expanded="expanded">
       <tr *ngIf="_step | asStep as step">
         <!-- Expand row -->
-        <td [id]="step.id" class="w-0">
+        <td class="w-0 position-relative">
+          <div [id]="'step_' + step.id" class="fragment"></div>
+          <div
+            *ngFor="let item of vm.stepDetails[step.id].tabs"
+            [id]="'step_' + step.id + '_' + item.label"
+            class="fragment"
+          ></div>
           <div class="d-flex">
             <button
               pButton
@@ -870,7 +876,7 @@
       <ng-container *ngIf="_step | asStep as step">
         <tr>
           <td>
-            <a class="text-decoration-none" [href]="'#' + step.id">
+            <a class="text-decoration-none" [href]="'#step_' + step.id">
               <button
                 pButton
                 pRipple

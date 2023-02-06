@@ -156,19 +156,33 @@ export class ListComponent implements OnInit, AfterViewInit {
     // Now that component is loaded, try navigating to the fragment
     try {
       if (this.fragmentId) {
-        document.querySelector('#\\' + this.fragmentId)?.scrollIntoView();
+        const [_, stepId, tabId] = this.fragmentId.split('_');
         combineLatest([
           this.store.select(Products.getSteps),
           this.store.select(Products.getStepDetails),
         ])
           .pipe(first())
           .subscribe(([steps, stepDetails]) => {
-            const step = steps.find((s) => s.id === this.fragmentId);
+            const step = steps.find((s) => s.id === stepId);
             if (step) {
               const tabs = stepDetails[step.id].tabs;
               if (tabs.length) {
                 if (this.stepsTable) {
                   this.stepsTable.toggleRow(step);
+                  setTimeout(() => {
+                    if (tabId) {
+                      const tab = document.querySelector(
+                        '#' + this.fragmentId + '_tab'
+                      ) as HTMLElement | null;
+                      if (tab) {
+                        tab.click();
+                      }
+                    } else {
+                      document
+                        .querySelector('#' + this.fragmentId)
+                        ?.scrollIntoView();
+                    }
+                  }, 10);
                 }
               }
             }

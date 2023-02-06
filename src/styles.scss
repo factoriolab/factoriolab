@@ -10,7 +10,7 @@
 @import 'styles/utils';
 
 html {
-  overflow: hidden;
+  overflow: auto;
 
   height: 100vh;
 
@@ -18,9 +18,6 @@ html {
 }
 
 body {
-  overflow-x: hidden;
-  overflow-y: auto;
-
   margin: 0;
   height: 100%;
   line-height: 20px;

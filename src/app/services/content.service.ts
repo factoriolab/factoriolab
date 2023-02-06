@@ -9,13 +9,13 @@ import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
 })
 export class ContentService {
   // Responsive
-  scrollTop$ = fromEvent(this.document.body, 'scroll').pipe(
+  scrollTop$ = fromEvent(window, 'scroll').pipe(
     map(
       // Don't test fromEvent
       // istanbul ignore next
-      () => this.document.body.scrollTop
+      () => window.scrollY
     ),
-    startWith(this.document.body.scrollTop)
+    startWith(window.scrollY)
   );
   windowInnerWidth = (): number => window.innerWidth;
   width$ = fromEvent(window, 'resize').pipe(

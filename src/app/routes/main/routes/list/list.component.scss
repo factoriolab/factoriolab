@@ -1,3 +1,7 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins/_breakpoints';
+
 .links {
   // Tree container
   height: 50px;
@@ -92,6 +96,10 @@
     position: sticky;
     top: 4rem;
     z-index: 1;
+
+    @include media-breakpoint-down(xl) {
+      top: 6rem;
+    }
   }
 }
 
@@ -109,4 +117,11 @@ tr.detail {
   display: grid;
   grid-template-columns: 1fr 1fr;
   margin: auto;
+}
+
+.fragment {
+  position: absolute;
+  top: -10rem;
+
+  visibility: hidden;
 }

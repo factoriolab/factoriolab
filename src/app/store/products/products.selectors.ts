@@ -569,7 +569,12 @@ export const getStepDetails = createSelector(
       }
 
       e[s.id] = {
-        tabs: tabs.map((t) => ({ label: t })),
+        tabs: tabs.map((t) => ({
+          id: `step_${s.id}_${t}_tab`,
+          label: t,
+          url: `#step_${s.id}_${t}`,
+          target: '_self',
+        })),
         outputs,
         recipeIds,
         defaultableRecipeIds,
