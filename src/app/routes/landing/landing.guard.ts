@@ -22,7 +22,6 @@ export class LandingGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> {
-    console.log(route, state);
     return this.store.select(Preferences.getBypassLanding).pipe(
       map((bypassLanding) => {
         if (bypassLanding) {
