@@ -6,8 +6,8 @@ import { ValidateNumberDirective } from './validate-number.directive';
 
 export const directives = [
   DropdownBaseDirective,
-  OverlayHideOnWindowScrollDirective,
   DropdownTranslateDirective,
+  OverlayHideOnWindowScrollDirective,
   TabViewOverrideDirective,
   ValidateNumberDirective,
 ];
