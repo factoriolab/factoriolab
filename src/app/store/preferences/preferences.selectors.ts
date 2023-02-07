@@ -32,6 +32,10 @@ export const getTheme = createSelector(
   preferencesState,
   (state) => state.theme
 );
+export const getBypassLanding = createSelector(
+  preferencesState,
+  (state) => state.bypassLanding
+);
 
 /** Complex selectors */
 export const getSavedStates = createSelector(getStates, (states) =>

@@ -23,6 +23,7 @@ export interface PreferencesState {
   language: Language;
   powerUnit: PowerUnit;
   theme: Theme;
+  bypassLanding: boolean;
 }
 
 export const initialColumnsState: ColumnsState = allColumns.reduce(
@@ -40,6 +41,7 @@ export const initialPreferencesState: PreferencesState = {
   language: Language.English,
   powerUnit: PowerUnit.Auto,
   theme: Theme.Dark,
+  bypassLanding: false,
 };
 
 export function preferencesReducer(
@@ -79,6 +81,8 @@ export function preferencesReducer(
       return { ...state, ...{ powerUnit: action.payload } };
     case PreferencesActionType.SET_THEME:
       return { ...state, ...{ theme: action.payload } };
+    case PreferencesActionType.SET_BYPASS_LANDING:
+      return { ...state, ...{ bypassLanding: action.payload } };
     default:
       return state;
   }

@@ -370,4 +370,8 @@ export class SettingsComponent implements OnInit {
   setSimplexType(value: SimplexType): void {
     this.store.dispatch(new Preferences.SetSimplexTypeAction(value));
   }
+
+  setBypassLanding(value: boolean): void {
+    this.store.dispatch(new Preferences.SetBypassLandingAction(value));
+  }
 }

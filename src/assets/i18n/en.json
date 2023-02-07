@@ -126,7 +126,8 @@
     "loadSavedState": "Load a saved state",
     "loadLastState": "Load last state",
     "help": "Help me get started",
-    "skip": "Skip"
+    "skip": "Skip",
+    "bypass": "Don't show this screen again"
   },
   "wizard": {
     "back": "Back",
@@ -226,7 +227,8 @@
     "themeTooltip": "Select theme",
     "advanced": "Advanced",
     "simplexSolver": "Simplex solver",
-    "simplexSolverTooltip": "Select the simplex solver algorithm; JS BigInt Rational is slower but maintains full precision"
+    "simplexSolverTooltip": "Select the simplex solver algorithm; JS BigInt Rational is slower but maintains full precision",
+    "bypassLanding": "Always skip landing page"
   },
   "objectives": {
     "title": "Objectives",

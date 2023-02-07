@@ -109,12 +109,18 @@
         pButton
         pRipple
         type="button"
-        class="mt-2 p-button-outlined"
+        class="mt-2 mb-3 p-button-outlined"
         icon="fa-solid fa-forward"
         [label]="'landing.skip' | translate"
         routerLink="list"
         queryParamsHandling="preserve"
       ></button>
+      <p-checkbox
+        [binary]="true"
+        [label]="'landing.bypass' | translate"
+        [ngModel]="vm.preferences.bypassLanding"
+        (onChange)="setBypassLanding($event.checked)"
+      ></p-checkbox>
     </div>
   </p-card>
 </ng-container>

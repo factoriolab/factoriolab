@@ -1109,6 +1109,14 @@
             <label for="theme">{{ 'settings.theme' | translate }}</label>
           </div>
         </div>
+        <div class="py-2">
+          <p-checkbox
+            [binary]="true"
+            [label]="'settings.bypassLanding' | translate"
+            [ngModel]="vm.preferences.bypassLanding"
+            (onChange)="setBypassLanding($event.checked)"
+          ></p-checkbox>
+        </div>
       </div>
       <div class="mb-2">
         <p-divider>
