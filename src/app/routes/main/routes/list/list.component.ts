@@ -1,7 +1,9 @@
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  Inject,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -134,6 +136,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   constructor(
     public contentSvc: ContentService,
     public trackSvc: TrackService,
+    @Inject(DOCUMENT) private document: Document,
     private route: ActivatedRoute,
     private store: Store<LabState>,
     private exportSvc: ExportService,
@@ -171,14 +174,14 @@ export class ListComponent implements OnInit, AfterViewInit {
                   this.stepsTable.toggleRow(step);
                   setTimeout(() => {
                     if (tabId) {
-                      const tab = document.querySelector(
+                      const tab = this.document.querySelector(
                         '#' + this.fragmentId + '_tab'
                       ) as HTMLElement | null;
                       if (tab) {
                         tab.click();
                       }
                     } else {
-                      document
+                      this.document
                         .querySelector('#' + this.fragmentId)
                         ?.scrollIntoView();
                     }

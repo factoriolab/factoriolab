@@ -26,6 +26,7 @@ describe('ThemeService', () => {
     mockStore.overrideSelector(Settings.getDataset, data);
     mockStore.refreshState();
     service.initialize();
+    localStorage.clear();
   });
 
   it('should be created', () => {
@@ -72,21 +73,22 @@ describe('ThemeService', () => {
   });
 
   describe('appInitTheme', () => {
-    it('should switch to dark theme if preferred', () => {
-      localStorage.clear();
+    it('should switch to light theme if preferred', () => {
       const themeLink = { href: '' };
-      spyOn(window, 'matchMedia').and.returnValue({ matches: true } as any);
+      spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue({
+        theme: Theme.Light,
+      } as any);
       spyOn(window.document, 'getElementById').and.returnValue(
         themeLink as any
       );
       ThemeService.appInitTheme();
-      expect(themeLink.href).toEqual('theme-dark.css');
+      expect(themeLink.href).toEqual('theme-light.css');
     });
 
-    it('should skip if specifying to use light theme', () => {
+    it('should skip if specifying to use dark theme', () => {
       const themeLink = { href: '' };
       spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue({
-        theme: Theme.Light,
+        theme: Theme.Dark,
       } as any);
       ThemeService.appInitTheme();
       expect(themeLink.href).toEqual('');

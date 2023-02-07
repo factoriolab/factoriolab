@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
 import {
@@ -72,17 +77,31 @@ describe('ListComponent', () => {
   });
 
   describe('ngAfterViewInit', () => {
-    it('should scroll to and expand the fragment id', () => {
+    it('should scroll to and expand the fragment id', fakeAsync(() => {
       const domEl = { scrollIntoView: (): void => {} };
       spyOn(domEl, 'scrollIntoView');
       spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
       TestUtility.assert(component.stepsTable != null);
       spyOn(component.stepsTable, 'toggleRow');
-      component.fragmentId = Mocks.Step1.id;
+      component.fragmentId = 'step_' + Mocks.Step1.id;
       component.ngAfterViewInit();
-      expect(domEl.scrollIntoView).toHaveBeenCalled();
+      tick(100);
       expect(component.stepsTable.toggleRow).toHaveBeenCalled();
-    });
+      expect(domEl.scrollIntoView).toHaveBeenCalled();
+    }));
+
+    it('should scroll to and open tab for the fragment id', fakeAsync(() => {
+      const domEl = { click: (): void => {} };
+      spyOn(domEl, 'click');
+      spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
+      TestUtility.assert(component.stepsTable != null);
+      spyOn(component.stepsTable, 'toggleRow');
+      component.fragmentId = 'step_' + Mocks.Step1.id + '_item';
+      component.ngAfterViewInit();
+      tick(100);
+      expect(component.stepsTable.toggleRow).toHaveBeenCalled();
+      expect(domEl.click).toHaveBeenCalled();
+    }));
 
     it('should handle element not found', () => {
       component.fragmentId = Mocks.Step1.id;
