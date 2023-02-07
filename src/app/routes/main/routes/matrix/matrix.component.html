@@ -277,6 +277,7 @@
                 tooltipPosition="left"
                 width="6rem"
                 [hideButtons]="true"
+                [eventTypes]="['blur']"
                 [value]="c.toString()"
                 (setValue)="setRecipeCost(id, $event)"
               ></lab-input-number>

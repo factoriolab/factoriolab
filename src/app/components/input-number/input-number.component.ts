@@ -10,10 +10,17 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { debounceTime, Subject } from 'rxjs';
+import { debounce, filter, map, of, Subject, timer } from 'rxjs';
 
 import { filterNullish } from '~/helpers';
 import { Rational } from '~/models';
+
+type EventType = 'input' | 'blur';
+
+interface Event {
+  value: string | null;
+  type: EventType;
+}
 
 @UntilDestroy(this)
 @Component({
@@ -29,21 +36,29 @@ export class InputNumberComponent implements OnInit, OnChanges {
   @Input() inputId = 'inputnumber';
   @Input() hideButtons = false;
   @Input() textButtons = false;
+  @Input() debounceTime = 300;
+  @Input() eventTypes: EventType[] = ['input', 'blur'];
 
   @Output() setValue = new EventEmitter<string>();
 
   @HostBinding('class') classAttr = 'p-element p-inputwrapper';
 
-  setValue$ = new Subject<string | null>();
+  setValue$ = new Subject<Event>();
   isMinimum = false;
   min = Rational.zero;
 
   ngOnInit(): void {
     // Watch for all value changes to input field
-    // Debounce by 300ms to avoid rapid updates
+    // Debounce to avoid rapid updates
     // If last value is nullish (invalid), do not emit
     this.setValue$
-      .pipe(untilDestroyed(this), debounceTime(300), filterNullish())
+      .pipe(
+        untilDestroyed(this),
+        filter((e) => this.eventTypes.indexOf(e.type) !== -1),
+        debounce((e) => (e.type === 'input' ? timer(300) : of({}))),
+        map((e) => e.value),
+        filterNullish()
+      )
       .subscribe((v) => this.setValue.emit(v));
   }
 
@@ -60,17 +75,17 @@ export class InputNumberComponent implements OnInit, OnChanges {
     }
   }
 
-  changeValue(value: string): void {
+  changeValue(value: string, type: EventType): void {
     try {
       const rational = Rational.fromString(value);
       if (rational.gte(this.min)) {
-        this.setValue$.next(value);
+        this.setValue$.next({ value, type });
         return;
       }
     } catch {
       // ignore error
     }
-    this.setValue$.next(null);
+    this.setValue$.next({ value: null, type });
   }
 
   increase(): void {
