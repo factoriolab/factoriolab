@@ -234,19 +234,24 @@
             }}</span>
           </td>
           <td class="ps-0">
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="hover-action p-button-text"
-              [class.hover-active]="vm.itemSettings[step.itemId].ignore"
-              [icon]="step.itemId | iconSmClass"
-              [pTooltip]="step.itemId | itemTooltip : vm.data"
-              [escape]="false"
-              (click)="ignoreItem(step.itemId)"
-            >
-              <i class="hover-icon fa-solid fa-eye-slash"></i>
-            </button>
+            <div class="d-flex align-items-center">
+              <span class="find-text">{{
+                vm.data.itemEntities[step.itemId].name
+              }}</span>
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="hover-action p-button-text"
+                [class.hover-active]="vm.itemSettings[step.itemId].ignore"
+                [icon]="step.itemId | iconSmClass"
+                [pTooltip]="step.itemId | itemTooltip : vm.data"
+                [escape]="false"
+                (click)="ignoreItem(step.itemId)"
+              >
+                <i class="hover-icon fa-solid fa-eye-slash"></i>
+              </button>
+            </div>
           </td>
         </ng-container>
         <!-- Belts -->
@@ -532,6 +537,9 @@
                 *ngIf="step.recipeId && step.recipe && step.recipeSettings"
                 class="d-flex align-items-center"
               >
+                <span class="find-text">{{
+                  vm.data.recipeEntities[step.recipeId].name
+                }}</span>
                 <i
                   class="padded"
                   [class]="step.recipeId | iconSmClass : 'recipe'"
