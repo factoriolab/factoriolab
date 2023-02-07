@@ -227,7 +227,8 @@ export const PreferencesState: Preferences.PreferencesState = {
   simplexType: M.SimplexType.JsBigIntRational,
   powerUnit: M.PowerUnit.Auto,
   language: M.Language.English,
-  theme: M.Theme.System,
+  theme: M.Theme.Dark,
+  bypassLanding: false,
 };
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,

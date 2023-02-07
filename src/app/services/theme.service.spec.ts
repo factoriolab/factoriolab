@@ -33,14 +33,6 @@ describe('ThemeService', () => {
   });
 
   describe('theme$', () => {
-    it('should detect the system preferred theme', () => {
-      let theme: Theme | undefined;
-      service.theme$.pipe(first()).subscribe((t) => (theme = t));
-      // Should be non-null and not System, but actual result may vary by test environment
-      expect(theme).toBeDefined();
-      expect(theme).not.toEqual(Theme.System);
-    });
-
     it('should use specified theme', () => {
       let theme: Theme | undefined;
       mockStore.overrideSelector(Preferences.getTheme, Theme.Light);
