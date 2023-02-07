@@ -82,7 +82,6 @@
             (click)="openEditState()"
           ></button>
           <p-dropdown
-            labOverlayHideOnWindowScroll
             [placeholder]="'settings.selectSavedState' | translate"
             [pTooltip]="'settings.selectSavedState' | translate"
             tooltipPosition="top"
@@ -115,7 +114,6 @@
           >
             <p-dropdown
               labDropdownTranslate
-              labOverlayHideOnWindowScroll
               inputId="game"
               [ngModel]="vm.data.game"
               [options]="gameOptions"
@@ -149,7 +147,6 @@
           </small>
           <span class="p-inputgroup">
             <p-dropdown
-              labOverlayHideOnWindowScroll
               inputId="mod"
               styleClass="w-100"
               [filter]="true"
@@ -256,7 +253,6 @@
           >
             <p-dropdown
               labDropdownTranslate
-              labOverlayHideOnWindowScroll
               inputId="preset"
               [ngModel]="vm.settings.preset"
               [options]="vm.presetOptions"
@@ -283,7 +279,6 @@
                   <p-dropdown
                     *ngIf="index === 0; else removeButton"
                     labDropdownBase="icon"
-                    labOverlayHideOnWindowScroll
                     [pTooltip]="'settings.addFactoryTooltip' | translate"
                     [options]="vm.factoryOptions"
                     (onChange)="
@@ -331,7 +326,6 @@
                   <p-dropdown
                     *ngIf="factoryId; else factoryIcon"
                     labDropdownBase="icon"
-                    labOverlayHideOnWindowScroll
                     [pTooltip]="'settings.factoryTooltip' | translate"
                     [ngModel]="factoryId"
                     [options]="vm.factoryOptions"
@@ -372,7 +366,6 @@
                   <!-- Modifiers multiselect -->
                   <p-multiSelect
                     *ngIf="settings.moduleRankIds"
-                    labOverlayHideOnWindowScroll
                     appendTo="body"
                     scrollHeight="40vh"
                     styleClass="icon"
@@ -461,7 +454,6 @@
                       <!-- Beacon dropdown -->
                       <p-dropdown
                         labDropdownBase="icon"
-                        labOverlayHideOnWindowScroll
                         [pTooltip]="'settings.beaconTooltip' | translate"
                         tooltipPosition="top"
                         [ngModel]="settings.beaconId"
@@ -491,7 +483,6 @@
                       <!-- Beacon module dropdown -->
                       <p-multiSelect
                         *ngIf="settings.beaconModuleRankIds"
-                        labOverlayHideOnWindowScroll
                         appendTo="body"
                         scrollHeight="40vh"
                         styleClass="icon"
@@ -553,7 +544,6 @@
                   >
                     <p-menu
                       #factoryMenu
-                      labOverlayHideOnWindowScroll
                       appendTo="body"
                       [popup]="true"
                       [model]="vm.factoryMenuItems[index]"
@@ -593,7 +583,6 @@
           >
             <p-dropdown
               labDropdownBase
-              labOverlayHideOnWindowScroll
               inputId="proliferator-self-spray"
               [autoDisplayFirst]="false"
               [ngModel]="vm.settings.proliferatorSprayId"
@@ -633,7 +622,6 @@
           >
             <p-dropdown
               labDropdownBase
-              labOverlayHideOnWindowScroll
               inputId="default-transport-belt"
               [ngModel]="vm.settings.beltId"
               [options]="vm.options.belts"
@@ -679,7 +667,6 @@
           >
             <p-dropdown
               labDropdownBase
-              labOverlayHideOnWindowScroll
               inputId="default-pipe"
               [ngModel]="vm.settings.pipeId"
               [options]="vm.options.pipes"
@@ -725,7 +712,6 @@
           >
             <p-dropdown
               labDropdownBase
-              labOverlayHideOnWindowScroll
               inputId="default-cargo-wagon"
               [ngModel]="vm.settings.cargoWagonId"
               [options]="vm.options.cargoWagons"
@@ -773,7 +759,6 @@
           >
             <p-dropdown
               labDropdownBase
-              labOverlayHideOnWindowScroll
               inputId="default-fluid-wagon"
               [ngModel]="vm.settings.fluidWagonId"
               [options]="vm.options.fluidWagons"
@@ -829,7 +814,6 @@
           >
             <p-dropdown
               labDropdownBase
-              labOverlayHideOnWindowScroll
               inputId="chemical-fuel"
               [ngModel]="vm.settings.fuelId"
               [options]="vm.options.chemicalFuels"
@@ -902,7 +886,6 @@
             >
               <p-dropdown
                 labDropdownTranslate
-                labOverlayHideOnWindowScroll
                 inputId="inserter-target"
                 [ngModel]="vm.settings.inserterTarget"
                 [options]="inserterTargetOptions"
@@ -980,7 +963,6 @@
             >
               <p-dropdown
                 labDropdownTranslate
-                labOverlayHideOnWindowScroll
                 inputId="research-speed"
                 [ngModel]="vm.settings.researchSpeed"
                 [options]="researchSpeedOptions"
@@ -999,7 +981,6 @@
             >
               <p-dropdown
                 labDropdownTranslate
-                labOverlayHideOnWindowScroll
                 inputId="inserter-capacity"
                 [ngModel]="vm.settings.inserterCapacity"
                 [options]="inserterCapacityOptions"
@@ -1036,7 +1017,6 @@
           >
             <p-dropdown
               labDropdownTranslate
-              labOverlayHideOnWindowScroll
               inputId="display-rate"
               [ngModel]="vm.settings.displayRate"
               [options]="displayRateOptions"
@@ -1055,7 +1035,6 @@
           >
             <p-dropdown
               labDropdownTranslate
-              labOverlayHideOnWindowScroll
               inputId="power-unit"
               [ngModel]="vm.preferences.powerUnit"
               [options]="powerUnitOptions"
@@ -1075,7 +1054,6 @@
           >
             <p-dropdown
               labDropdownTranslate
-              labOverlayHideOnWindowScroll
               inputId="language"
               [ngModel]="vm.preferences.language"
               [options]="languageOptions"
@@ -1099,7 +1077,6 @@
           >
             <p-dropdown
               labDropdownTranslate
-              labOverlayHideOnWindowScroll
               inputId="theme"
               [ngModel]="vm.preferences.theme"
               [options]="themeOptions"
@@ -1132,7 +1109,6 @@
           >
             <p-dropdown
               labDropdownTranslate
-              labOverlayHideOnWindowScroll
               inputId="simplex-solver"
               [ngModel]="vm.preferences.simplexType"
               [options]="simplexTypeOptions"
