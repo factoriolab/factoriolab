@@ -8,6 +8,12 @@ describe('Preferences Selectors', () => {
         Mocks.PreferencesState.states
       );
     });
+
+    it('should get bypass landing value', () => {
+      expect(
+        Selectors.getBypassLanding.projector(Mocks.PreferencesState)
+      ).toEqual(false);
+    });
   });
 
   describe('getSavedStates', () => {

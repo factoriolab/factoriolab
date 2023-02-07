@@ -87,9 +87,9 @@ describe('ThemeService', () => {
 
     it('should skip if specifying to use dark theme', () => {
       const themeLink = { href: '' };
-      spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue({
-        theme: Theme.Dark,
-      } as any);
+      spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue(
+        null as any
+      );
       ThemeService.appInitTheme();
       expect(themeLink.href).toEqual('');
     });

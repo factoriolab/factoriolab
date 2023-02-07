@@ -4,7 +4,7 @@ import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { Game } from '~/models';
-import { LabState, Producers, Products, Settings } from '~/store';
+import { LabState, Preferences, Producers, Products, Settings } from '~/store';
 import { LandingComponent } from './landing.component';
 import { LandingModule } from './landing.module';
 
@@ -73,5 +73,6 @@ describe('LandingComponent', () => {
     dispatch.val('setMod', Settings.SetModAction);
     dispatch.val('addProduct', Products.AddAction);
     dispatch.val('addProducer', Producers.AddAction);
+    dispatch.val('setBypassLanding', Preferences.SetBypassLandingAction);
   });
 });

@@ -226,5 +226,6 @@ describe('SettingsComponent', () => {
     dispatch.val('setLanguage', Preferences.SetLanguageAction);
     dispatch.val('setTheme', Preferences.SetThemeAction);
     dispatch.val('setSimplexType', Preferences.SetSimplexTypeAction);
+    dispatch.val('setBypassLanding', Preferences.SetBypassLandingAction);
   });
 });

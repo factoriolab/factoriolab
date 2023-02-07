@@ -7,7 +7,7 @@ import {
   UrlTree,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { map, Observable } from 'rxjs';
+import { first, map, Observable } from 'rxjs';
 
 import { LabState, Preferences } from '~/store';
 import { BrowserUtility } from '~/utilities';
@@ -23,6 +23,7 @@ export class LandingGuard implements CanActivate {
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> {
     return this.store.select(Preferences.getBypassLanding).pipe(
+      first(),
       map((bypassLanding) => {
         if (bypassLanding) {
           if (BrowserUtility.routerState && state.url === '/') {
