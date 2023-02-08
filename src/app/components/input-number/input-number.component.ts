@@ -36,7 +36,6 @@ export class InputNumberComponent implements OnInit, OnChanges {
   @Input() inputId = 'inputnumber';
   @Input() hideButtons = false;
   @Input() textButtons = false;
-  @Input() debounceTime = 300;
 
   @Output() setValue = new EventEmitter<string>();
 
