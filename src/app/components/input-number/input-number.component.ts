@@ -47,7 +47,7 @@ export class InputNumberComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     // Watch for all value changes to input field
-    // Debounce to avoid rapid updates
+    // Debounce input events by 300ms to avoid rapid updates
     // If last value is nullish (invalid), do not emit
     this.setValue$
       .pipe(
