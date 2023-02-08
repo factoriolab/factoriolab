@@ -3,7 +3,6 @@
     #stepsTable
     dataKey="id"
     [rowTrackBy]="trackSvc.trackStep"
-    responsiveLayout="scroll"
     styleClass="p-datatable-sm"
     [value]="vm.steps"
   >
@@ -156,7 +155,13 @@
     <ng-template pTemplate="body" let-_step let-expanded="expanded">
       <tr *ngIf="_step | asStep as step">
         <!-- Expand row -->
-        <td [id]="step.id" class="w-0">
+        <td class="w-0 position-relative">
+          <div [id]="'step_' + step.id" class="fragment"></div>
+          <div
+            *ngFor="let item of vm.stepDetails[step.id].tabs"
+            [id]="'step_' + step.id + '_' + item.label"
+            class="fragment"
+          ></div>
           <div class="d-flex">
             <button
               pButton
@@ -229,19 +234,24 @@
             }}</span>
           </td>
           <td class="ps-0">
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="hover-action p-button-text"
-              [class.hover-active]="vm.itemSettings[step.itemId].ignore"
-              [icon]="step.itemId | iconSmClass"
-              [pTooltip]="step.itemId | itemTooltip : vm.data"
-              [escape]="false"
-              (click)="ignoreItem(step.itemId)"
-            >
-              <i class="hover-icon fa-solid fa-eye-slash"></i>
-            </button>
+            <div class="d-flex align-items-center">
+              <span class="find-text">{{
+                vm.data.itemEntities[step.itemId].name
+              }}</span>
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="hover-action p-button-text"
+                [class.hover-active]="vm.itemSettings[step.itemId].ignore"
+                [icon]="step.itemId | iconSmClass"
+                [pTooltip]="step.itemId | itemTooltip : vm.data"
+                [escape]="false"
+                (click)="ignoreItem(step.itemId)"
+              >
+                <i class="hover-icon fa-solid fa-eye-slash"></i>
+              </button>
+            </div>
           </td>
         </ng-container>
         <!-- Belts -->
@@ -527,6 +537,9 @@
                 *ngIf="step.recipeId && step.recipe && step.recipeSettings"
                 class="d-flex align-items-center"
               >
+                <span class="find-text">{{
+                  vm.data.recipeEntities[step.recipeId].name
+                }}</span>
                 <i
                   class="padded"
                   [class]="step.recipeId | iconSmClass : 'recipe'"
@@ -581,6 +594,7 @@
                   [max]="250"
                   [step]="10"
                   [size]="2"
+                  inputStyleClass="text-end"
                   [pTooltip]="'list.overclockTooltip' | translate"
                   [ngModel]="step.recipeSettings.overclock"
                   (onBlur)="
@@ -649,7 +663,11 @@
             <td class="w-0 pe-0">
               <div
                 class="d-flex"
-                *ngFor="let beacon of step.recipeSettings.beacons; index as i"
+                *ngFor="
+                  let beacon of step.recipeSettings.beacons;
+                  index as i;
+                  trackBy: trackSvc.trackByIndex
+                "
               >
                 <button
                   *ngIf="i === 0; else deleteBeaconBtn"
@@ -870,7 +888,7 @@
       <ng-container *ngIf="_step | asStep as step">
         <tr>
           <td>
-            <a class="text-decoration-none" [href]="'#' + step.id">
+            <a class="text-decoration-none" [href]="'#step_' + step.id">
               <button
                 pButton
                 pRipple

@@ -1,7 +1,9 @@
+import { DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  Inject,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -134,6 +136,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   constructor(
     public contentSvc: ContentService,
     public trackSvc: TrackService,
+    @Inject(DOCUMENT) private document: Document,
     private route: ActivatedRoute,
     private store: Store<LabState>,
     private exportSvc: ExportService,
@@ -156,19 +159,33 @@ export class ListComponent implements OnInit, AfterViewInit {
     // Now that component is loaded, try navigating to the fragment
     try {
       if (this.fragmentId) {
-        document.querySelector('#\\' + this.fragmentId)?.scrollIntoView();
+        const [_, stepId, tabId] = this.fragmentId.split('_');
         combineLatest([
           this.store.select(Products.getSteps),
           this.store.select(Products.getStepDetails),
         ])
           .pipe(first())
           .subscribe(([steps, stepDetails]) => {
-            const step = steps.find((s) => s.id === this.fragmentId);
+            const step = steps.find((s) => s.id === stepId);
             if (step) {
               const tabs = stepDetails[step.id].tabs;
               if (tabs.length) {
                 if (this.stepsTable) {
                   this.stepsTable.toggleRow(step);
+                  setTimeout(() => {
+                    if (tabId) {
+                      const tab = this.document.querySelector(
+                        '#' + this.fragmentId + '_tab'
+                      ) as HTMLElement | null;
+                      if (tab) {
+                        tab.click();
+                      }
+                    } else {
+                      this.document
+                        .querySelector('#' + this.fragmentId)
+                        ?.scrollIntoView();
+                    }
+                  }, 10);
                 }
               }
             }

@@ -618,10 +618,30 @@ describe('Products Selectors', () => {
       expect(result).toEqual({
         ['0']: {
           tabs: [
-            { label: StepDetailTab.Item },
-            { label: StepDetailTab.Recipe },
-            { label: StepDetailTab.Factory },
-            { label: StepDetailTab.Recipes },
+            {
+              label: StepDetailTab.Item,
+              id: 'step_0_item_tab',
+              url: '#step_0_item',
+              target: '_self',
+            },
+            {
+              label: StepDetailTab.Recipe,
+              id: 'step_0_recipe_tab',
+              url: '#step_0_recipe',
+              target: '_self',
+            },
+            {
+              label: StepDetailTab.Factory,
+              id: 'step_0_factory_tab',
+              url: '#step_0_factory',
+              target: '_self',
+            },
+            {
+              label: StepDetailTab.Recipes,
+              id: 'step_0_recipes_tab',
+              url: '#step_0_recipes',
+              target: '_self',
+            },
           ],
           outputs: [
             {
@@ -651,8 +671,18 @@ describe('Products Selectors', () => {
         },
         ['1']: {
           tabs: [
-            { label: StepDetailTab.Recipe },
-            { label: StepDetailTab.Factory },
+            {
+              label: StepDetailTab.Recipe,
+              id: 'step_1_recipe_tab',
+              url: '#step_1_recipe',
+              target: '_self',
+            },
+            {
+              label: StepDetailTab.Factory,
+              id: 'step_1_factory_tab',
+              url: '#step_1_factory',
+              target: '_self',
+            },
           ],
           outputs: [],
           recipeIds: [],

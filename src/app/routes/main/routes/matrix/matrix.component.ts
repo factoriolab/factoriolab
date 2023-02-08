@@ -3,6 +3,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { Column } from '~/models';
+import { TrackService } from '~/services';
 import { LabState, Preferences, Products, Recipes, Settings } from '~/store';
 
 @Component({
@@ -42,7 +43,7 @@ export class MatrixComponent {
     )
   );
 
-  constructor(private store: Store<LabState>) {}
+  constructor(public trackSvc: TrackService, private store: Store<LabState>) {}
 
   /** Action Dispatch Methods */
   setCostFactor(data: string): void {
