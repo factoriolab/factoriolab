@@ -4,12 +4,14 @@
     pInputText
     [id]="inputId"
     type="text"
+    class="text-end"
     [class.hidden-buttons]="hideButtons"
     [style.width]="width"
     [ngModel]="value"
     labValidateNumber
     [labValidateMinimum]="minimum"
-    (input)="changeValue(input.value)"
+    (input)="changeValue(input.value, 'input')"
+    (blur)="changeValue(input.value, 'blur')"
   />
   <span *ngIf="!hideButtons" class="p-inputnumber-button-group">
     <button

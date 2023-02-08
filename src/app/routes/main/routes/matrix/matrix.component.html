@@ -105,6 +105,7 @@
       scrollHeight="80vh"
       styleClass="p-datatable-sm"
       [value]="vm.result.A"
+      [rowTrackBy]="trackSvc.trackByIndex"
     >
       <ng-template pTemplate="header">
         <tr>
@@ -259,7 +260,7 @@
             </td>
           </ng-template>
           <td
-            *ngFor="let c of row; last as last"
+            *ngFor="let c of row; last as last; trackBy: trackSvc.trackByIndex"
             [style.width.rem]="last ? 8 : 4"
           >
             <div
@@ -309,6 +310,7 @@
       scrollDirection="both"
       styleClass="p-datatable-sm"
       [value]="[vm.result.O]"
+      [rowTrackBy]="trackSvc.trackByIndex"
     >
       <ng-template pTemplate="header">
         <tr>

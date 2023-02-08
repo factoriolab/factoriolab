@@ -19,19 +19,19 @@ export const routes: Routes = [
   },
   {
     path: 'factorio',
-    redirectTo: '/?s=&v=4',
+    redirectTo: '/?s=&v=6',
   },
   {
     path: 'coi',
-    redirectTo: '/?s=coi&v=4',
+    redirectTo: '/?s=coi&v=6',
   },
   {
     path: 'dsp',
-    redirectTo: '/?s=dsp&v=4',
+    redirectTo: '/?s=dsp&v=6',
   },
   {
     path: 'satisfactory',
-    redirectTo: '/?s=sfy&v=4',
+    redirectTo: '/?s=sfy&v=6',
   },
   {
     path: '**',

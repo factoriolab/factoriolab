@@ -22,6 +22,10 @@ export class TrackService {
     return r.key;
   }
 
+  trackByIndex<T>(i: number, _: T): string {
+    return i.toString();
+  }
+
   sortByValue(
     a: KeyValue<string, Rational>,
     b: KeyValue<string, Rational>

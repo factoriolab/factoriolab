@@ -97,3 +97,10 @@ tr.detail {
   grid-template-columns: 1fr 1fr;
   margin: auto;
 }
+
+.fragment {
+  position: absolute;
+  top: -10rem;
+
+  visibility: hidden;
+}

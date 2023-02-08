@@ -26,6 +26,7 @@ describe('ThemeService', () => {
     mockStore.overrideSelector(Settings.getDataset, data);
     mockStore.refreshState();
     service.initialize();
+    localStorage.clear();
   });
 
   it('should be created', () => {
@@ -33,14 +34,6 @@ describe('ThemeService', () => {
   });
 
   describe('theme$', () => {
-    it('should detect the system preferred theme', () => {
-      let theme: Theme | undefined;
-      service.theme$.pipe(first()).subscribe((t) => (theme = t));
-      // Should be non-null and not System, but actual result may vary by test environment
-      expect(theme).toBeDefined();
-      expect(theme).not.toEqual(Theme.System);
-    });
-
     it('should use specified theme', () => {
       let theme: Theme | undefined;
       mockStore.overrideSelector(Preferences.getTheme, Theme.Light);
@@ -80,22 +73,23 @@ describe('ThemeService', () => {
   });
 
   describe('appInitTheme', () => {
-    it('should switch to dark theme if preferred', () => {
-      localStorage.clear();
-      const themeLink = { href: '' };
-      spyOn(window, 'matchMedia').and.returnValue({ matches: true } as any);
-      spyOn(window.document, 'getElementById').and.returnValue(
-        themeLink as any
-      );
-      ThemeService.appInitTheme();
-      expect(themeLink.href).toEqual('theme-dark.css');
-    });
-
-    it('should skip if specifying to use light theme', () => {
+    it('should switch to light theme if preferred', () => {
       const themeLink = { href: '' };
       spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue({
         theme: Theme.Light,
       } as any);
+      spyOn(window.document, 'getElementById').and.returnValue(
+        themeLink as any
+      );
+      ThemeService.appInitTheme();
+      expect(themeLink.href).toEqual('theme-light.css');
+    });
+
+    it('should skip if specifying to use dark theme', () => {
+      const themeLink = { href: '' };
+      spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue(
+        null as any
+      );
       ThemeService.appInitTheme();
       expect(themeLink.href).toEqual('');
     });

@@ -18,6 +18,7 @@ export const enum PreferencesActionType {
   SET_LANGUAGE = '[Preferences] Set Display Language',
   SET_POWER_UNIT = '[Preferences] Set Power Unit',
   SET_THEME = '[Preferences] Set Theme',
+  SET_BYPASS_LANDING = '[Preferences] Set Bypass Landing',
 }
 
 export class SaveStateAction implements Action {
@@ -55,6 +56,11 @@ export class SetThemeAction implements Action {
   constructor(public payload: Theme) {}
 }
 
+export class SetBypassLandingAction implements Action {
+  readonly type = PreferencesActionType.SET_BYPASS_LANDING;
+  constructor(public payload: boolean) {}
+}
+
 export type PreferencesAction =
   | SaveStateAction
   | RemoveStateAction
@@ -62,4 +68,5 @@ export type PreferencesAction =
   | SetSimplexTypeAction
   | SetLanguageAction
   | SetPowerUnitAction
-  | SetThemeAction;
+  | SetThemeAction
+  | SetBypassLandingAction;

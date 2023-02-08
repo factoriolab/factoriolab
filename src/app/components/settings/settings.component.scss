@@ -36,8 +36,14 @@ $width: 320px;
 
 /** Avoid changing width to accomodate scrollbar */
 :host ::ng-deep {
-  .p-scrollpanel .p-scrollpanel-content {
-    overflow-y: scroll;
+  .p-scrollpanel {
+    .p-scrollpanel-content {
+      overflow-y: scroll;
+    }
+
+    .p-scrollpanel-bar-x {
+      visibility: hidden;
+    }
   }
 }
 

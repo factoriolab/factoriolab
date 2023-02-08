@@ -29,6 +29,14 @@ describe('TrackService', () => {
     });
   });
 
+  describe('trackByIndex', () => {
+    it('should return a string by index only', () => {
+      expect(service.trackByIndex(0, { key: 'key', value: 'value' })).toEqual(
+        '0'
+      );
+    });
+  });
+
   describe('sortByValue', () => {
     it('should return a diff', () => {
       expect(

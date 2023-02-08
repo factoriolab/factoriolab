@@ -96,6 +96,16 @@ describe('Preferences Reducer', () => {
     });
   });
 
+  describe('SET_BYPASS_LANDING', () => {
+    it('should set the bypass landing preference', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetBypassLandingAction(true)
+      );
+      expect(result.bypassLanding).toEqual(true);
+    });
+  });
+
   it('should return the default state', () => {
     expect(preferencesReducer(undefined, { type: 'Test' } as any)).toEqual(
       initialPreferencesState

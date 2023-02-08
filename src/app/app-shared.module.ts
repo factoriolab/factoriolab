@@ -12,9 +12,9 @@ import { VendorModule } from './vendor.module';
   imports: [CommonModule, FormsModule, ReactiveFormsModule, VendorModule],
   declarations: [...components, ...directives, ...pipes],
   exports: [
-    VendorModule,
     FormsModule,
     ReactiveFormsModule,
+    VendorModule,
     ...components,
     ...directives,
     ...pipes,

@@ -79,4 +79,8 @@ export class LandingComponent {
   addProducer(value: string): void {
     this.store.dispatch(new Producers.AddAction(value));
   }
+
+  setBypassLanding(value: boolean): void {
+    this.store.dispatch(new Preferences.SetBypassLandingAction(value));
+  }
 }

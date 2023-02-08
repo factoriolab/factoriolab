@@ -64,16 +64,23 @@ describe('InputNumberComponent', () => {
   });
 
   describe('changeValue', () => {
-    it('should emit a value', fakeAsync(() => {
+    it('should emit an input value', fakeAsync(() => {
       spyOn(component, 'setValue');
-      component.child.changeValue('1 1/3');
+      component.child.changeValue('1 1/3', 'input');
+      tick(500);
+      expect(component.setValue).toHaveBeenCalledWith('1 1/3');
+    }));
+
+    it('should emit a blur value', fakeAsync(() => {
+      spyOn(component, 'setValue');
+      component.child.changeValue('1 1/3', 'blur');
       tick(500);
       expect(component.setValue).toHaveBeenCalledWith('1 1/3');
     }));
 
     it('should not emit invalid values', fakeAsync(() => {
       spyOn(component, 'setValue');
-      component.child.changeValue('abc');
+      component.child.changeValue('abc', 'input');
       tick(500);
       expect(component.setValue).not.toHaveBeenCalled();
     }));

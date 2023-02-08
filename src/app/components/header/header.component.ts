@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, Game, gameInfo, games } from '~/models';
+import { APP, Game, gameInfo, gameOptions, games } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Producers, Products, Settings } from '~/store';
 
@@ -66,6 +66,8 @@ export class HeaderComponent implements OnInit {
       href: 'https://ko-fi.com/dcbroad3',
     },
   ];
+  gameInfo = gameInfo;
+  gameOptions = gameOptions;
 
   constructor(
     public contentSvc: ContentService,
