@@ -956,6 +956,7 @@ export class SimplexUtility {
       output = output.add(amount);
 
       if (
+        recipe.produces(itemId) &&
         state.data.itemRecipeId[itemId] &&
         state.data.itemRecipeId[itemId] !== recipe.id
       ) {
