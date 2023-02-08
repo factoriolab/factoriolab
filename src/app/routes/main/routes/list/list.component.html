@@ -663,7 +663,11 @@
             <td class="w-0 pe-0">
               <div
                 class="d-flex"
-                *ngFor="let beacon of step.recipeSettings.beacons; index as i"
+                *ngFor="
+                  let beacon of step.recipeSettings.beacons;
+                  index as i;
+                  trackBy: trackSvc.trackByIndex
+                "
               >
                 <button
                   *ngIf="i === 0; else deleteBeaconBtn"

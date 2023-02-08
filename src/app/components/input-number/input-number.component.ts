@@ -10,7 +10,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { debounce, filter, map, of, Subject, timer } from 'rxjs';
+import { debounce, map, of, Subject, timer } from 'rxjs';
 
 import { filterNullish } from '~/helpers';
 import { Rational } from '~/models';
@@ -37,7 +37,6 @@ export class InputNumberComponent implements OnInit, OnChanges {
   @Input() hideButtons = false;
   @Input() textButtons = false;
   @Input() debounceTime = 300;
-  @Input() eventTypes: EventType[] = ['input', 'blur'];
 
   @Output() setValue = new EventEmitter<string>();
 
@@ -54,7 +53,6 @@ export class InputNumberComponent implements OnInit, OnChanges {
     this.setValue$
       .pipe(
         untilDestroyed(this),
-        filter((e) => this.eventTypes.indexOf(e.type) !== -1),
         debounce((e) => (e.type === 'input' ? timer(300) : of({}))),
         map((e) => e.value),
         filterNullish()
