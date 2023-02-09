@@ -955,10 +955,7 @@ export class SimplexUtility {
         .div(recipe.time);
       output = output.add(amount);
 
-      if (
-        state.data.itemRecipeId[itemId] &&
-        state.data.itemRecipeId[itemId] !== recipe.id
-      ) {
+      if (!this.includeRecipeOutput(itemId, recipe, state)) {
         // This recipe produces the item but does not match the default recipe
         // Include this amount as part of the surplus
         surplus = surplus.add(amount);
