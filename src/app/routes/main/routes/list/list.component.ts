@@ -200,11 +200,11 @@ export class ListComponent implements OnInit, AfterViewInit {
     if (step.itemId) {
       this.resetItem(step.itemId);
     }
-    if (step.recipeId) {
-      this.resetRecipe(step.recipeId);
-    }
+
     if (step.producerId) {
       this.resetProducer(step.producerId);
+    } else if (step.recipeId) {
+      this.resetRecipe(step.recipeId);
     }
   }
 
@@ -401,6 +401,17 @@ export class ListComponent implements OnInit, AfterViewInit {
     return modules;
   }
 
+  changeStepChecked(step: Step, checked: boolean): void {
+    // Priority: 1) Item state, 2) Producer state, 3) Recipe state
+    if (step.itemId != null) {
+      this.setItemChecked(step.itemId, checked);
+    } else if (step.producerId != null) {
+      this.setRecipeChecked(step.producerId, checked, true);
+    } else if (step.recipeId != null) {
+      this.setRecipeChecked(step.recipeId, checked);
+    }
+  }
+
   /** Action Dispatch Methods */
   ignoreItem(value: string): void {
     this.store.dispatch(new Items.IgnoreItemAction(value));
@@ -412,6 +423,10 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   setWagon(id: string, value: string, def: string): void {
     this.store.dispatch(new Items.SetWagonAction({ id, value, def }));
+  }
+
+  setItemChecked(id: string, value: boolean): void {
+    this.store.dispatch(new Items.SetCheckedAction({ id, value }));
   }
 
   setFactory(id: string, value: string, def: string, producer = false): void {
@@ -510,6 +525,13 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new action({ id, value, def }));
   }
 
+  setRecipeChecked(id: string, value: boolean, producer = false): void {
+    const action = producer
+      ? Producers.SetCheckedAction
+      : Recipes.SetCheckedAction;
+    this.store.dispatch(new action({ id, value }));
+  }
+
   resetItem(value: string): void {
     this.store.dispatch(new Items.ResetItemAction(value));
   }
@@ -520,6 +542,10 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   resetProducer(value: string): void {
     this.store.dispatch(new Producers.ResetProducerAction(value));
+  }
+
+  resetChecked(): void {
+    this.store.dispatch(new Items.ResetCheckedAction());
   }
 
   resetIgnores(): void {

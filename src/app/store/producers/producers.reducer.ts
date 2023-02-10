@@ -1,5 +1,6 @@
 import { Entities, Producer } from '~/models';
 import { StoreUtility } from '~/utilities';
+import { Items } from '../';
 import * as App from '../app.actions';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -25,6 +26,7 @@ export function producersReducer(
     | Settings.SetModAction
     | Recipes.ResetFactoriesAction
     | Recipes.ResetBeaconsAction
+    | Items.ResetCheckedAction
 ): ProducersState {
   switch (action.type) {
     case App.AppActionType.LOAD:
@@ -241,6 +243,17 @@ export function producersReducer(
           ),
         },
       };
+    case ProducersActionType.SET_CHECKED:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.compareReset(state.entities, 'checked', {
+            id: action.payload.id,
+            value: action.payload.value,
+            def: false,
+          }),
+        },
+      };
     case ProducersActionType.RESET_PRODUCER:
       return {
         ...state,
@@ -268,10 +281,16 @@ export function producersReducer(
       return {
         ...state,
         ...{
-          entities: StoreUtility.resetFields(state.entities, ['beacons']),
+          entities: StoreUtility.resetField(state.entities, 'beacons'),
         },
       };
-
+    case Items.ItemsActionType.RESET_CHECKED:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.resetField(state.entities, 'checked'),
+        },
+      };
     default:
       return state;
   }

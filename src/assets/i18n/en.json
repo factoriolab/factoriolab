@@ -20,6 +20,7 @@
   },
   "options": {
     "column": {
+      "checkbox": "Checkbox",
       "tree": "Tree",
       "surplus": "Surplus",
       "items": "Items",
@@ -254,6 +255,7 @@
   },
   "list": {
     "openColumnSettings": "Open column settings",
+    "checkedUndoTooltip": "Undo all checkmarks",
     "tree": "Tree",
     "items": "Items",
     "itemsUndoTooltip": "Undo all ignored items",
