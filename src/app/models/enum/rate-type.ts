@@ -18,7 +18,7 @@ export function rateTypeOptions(
     { value: RateType.Items, label: `Items${dispRateInfo.label}` },
     { value: RateType.Belts, label: 'Belts' },
     { value: RateType.Wagons, label: `Wagons${dispRateInfo.label}` },
-    { value: RateType.Factories, label: 'Factories' },
+    { value: RateType.Factories, label: 'Machines' },
   ];
 
   if (game === Game.DysonSphereProgram || game === Game.CaptainOfIndustry) {
