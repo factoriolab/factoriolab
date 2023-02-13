@@ -643,7 +643,8 @@
                       | translate
                         : {
                             name: vm.data.itemEntities[item.value].name,
-                            speed: vm.beltSpeedTxt[item.value]
+                            speed: vm.beltSpeedTxt[item.value],
+                            suffix: vm.dispRateInfo.suffix | translate
                           }
                   "
                   [escape]="false"
@@ -688,7 +689,8 @@
                       | translate
                         : {
                             name: vm.data.itemEntities[item.value].name,
-                            speed: vm.beltSpeedTxt[item.value]
+                            speed: vm.beltSpeedTxt[item.value],
+                            suffix: vm.dispRateInfo.suffix | translate
                           }
                   "
                   [escape]="false"

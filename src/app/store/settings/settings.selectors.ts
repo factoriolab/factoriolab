@@ -653,9 +653,7 @@ export const getBeltSpeedTxt = createSelector(
   (beltSpeed, dispRateInfo) =>
     Object.keys(beltSpeed).reduce((e: Entities<string>, beltId) => {
       const speed = beltSpeed[beltId].mul(dispRateInfo.value);
-      const speedTxt = Number(speed.toNumber().toFixed(2));
-      const rateTxt = dispRateInfo.label;
-      e[beltId] = speedTxt + rateTxt;
+      e[beltId] = Number(speed.toNumber().toFixed(2)).toString();
       return e;
     }, {})
 );
