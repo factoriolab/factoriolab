@@ -1,5 +1,6 @@
 import { ItemId, Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
+import { Items } from '../';
 import * as App from '../app.actions';
 import * as Actions from './recipes.actions';
 import { initialRecipesState, recipesReducer } from './recipes.reducer';
@@ -203,6 +204,19 @@ describe('Recipes Reducer', () => {
     });
   });
 
+  describe('SET_CHECKED', () => {
+    it('should set the checked state', () => {
+      const result = recipesReducer(
+        initialRecipesState,
+        new Actions.SetCheckedAction({
+          id: Mocks.Recipe1.id,
+          value: true,
+        })
+      );
+      expect(result[Mocks.Recipe1.id].checked).toBeTrue();
+    });
+  });
+
   describe('RESET_RECIPE', () => {
     it('should reset a recipe', () => {
       const result = recipesReducer(
@@ -257,6 +271,17 @@ describe('Recipes Reducer', () => {
       spyOn(StoreUtility, 'resetField');
       recipesReducer(undefined, new Actions.ResetCostAction());
       expect(StoreUtility.resetField).toHaveBeenCalledWith({}, 'cost' as any);
+    });
+  });
+
+  describe('Items RESET_CHECKED', () => {
+    it('should call resetField', () => {
+      spyOn(StoreUtility, 'resetField');
+      recipesReducer(undefined, new Items.ResetCheckedAction());
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(
+        {},
+        'checked' as any
+      );
     });
   });
 

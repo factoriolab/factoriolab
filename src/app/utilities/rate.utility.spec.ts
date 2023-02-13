@@ -413,6 +413,45 @@ describe('RateUtility', () => {
     });
   });
 
+  describe('calculateChecked', () => {
+    it('should set the checked state for an item step', () => {
+      const step: Step = { id: '0', itemId: ItemId.Coal };
+      RateUtility.calculateChecked(
+        step,
+        { [ItemId.Coal]: { checked: true } },
+        {},
+        {}
+      );
+      expect(step.checked).toBeTrue();
+    });
+
+    it('should set the checked state for a producer step', () => {
+      const step: Step = { id: '0', producerId: '1' };
+      RateUtility.calculateChecked(
+        step,
+        {},
+        {},
+        {
+          ['1']: {
+            checked: true,
+          } as any,
+        }
+      );
+      expect(step.checked).toBeTrue();
+    });
+
+    it('should set the checked state for a recipe step', () => {
+      const step: Step = { id: '0', recipeId: RecipeId.Coal };
+      RateUtility.calculateChecked(
+        step,
+        {},
+        { [RecipeId.Coal]: { checked: true } },
+        {}
+      );
+      expect(step.checked).toBeTrue();
+    });
+  });
+
   describe('calculateHierarchy', () => {
     it('should set up groups by parents', () => {
       spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
