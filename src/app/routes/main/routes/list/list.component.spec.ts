@@ -110,10 +110,13 @@ describe('ListComponent', () => {
   });
 
   describe('resetStep', () => {
-    it('should reset a step', () => {
+    beforeEach(() => {
       spyOn(component, 'resetItem');
       spyOn(component, 'resetRecipe');
       spyOn(component, 'resetProducer');
+    });
+
+    it('should reset a producer step', () => {
       const step: Step = {
         id: '0',
         itemId: ItemId.Coal,
@@ -122,8 +125,20 @@ describe('ListComponent', () => {
       };
       component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
-      expect(component.resetRecipe).toHaveBeenCalled();
+      expect(component.resetRecipe).not.toHaveBeenCalled();
       expect(component.resetProducer).toHaveBeenCalled();
+    });
+
+    it('should reset a recipe step', () => {
+      const step: Step = {
+        id: '0',
+        itemId: ItemId.Coal,
+        recipeId: RecipeId.Coal,
+      };
+      component.resetStep(step);
+      expect(component.resetItem).toHaveBeenCalled();
+      expect(component.resetRecipe).toHaveBeenCalled();
+      expect(component.resetProducer).not.toHaveBeenCalled();
     });
   });
 
@@ -367,11 +382,38 @@ describe('ListComponent', () => {
     });
   });
 
+  describe('changeStepChecked', () => {
+    it('should set for an item step', () => {
+      spyOn(component, 'setItemChecked');
+      component.changeStepChecked({ id: '0', itemId: ItemId.Coal }, true);
+      expect(component.setItemChecked).toHaveBeenCalledWith(ItemId.Coal, true);
+    });
+
+    it('should set for a producer step', () => {
+      spyOn(component, 'setRecipeChecked');
+      component.changeStepChecked(
+        { id: '0', producerId: '1', recipeId: RecipeId.Coal },
+        true
+      );
+      expect(component.setRecipeChecked).toHaveBeenCalledWith('1', true, true);
+    });
+
+    it('should set for a recipe step', () => {
+      spyOn(component, 'setRecipeChecked');
+      component.changeStepChecked({ id: '0', recipeId: RecipeId.Coal }, true);
+      expect(component.setRecipeChecked).toHaveBeenCalledWith(
+        RecipeId.Coal,
+        true
+      );
+    });
+  });
+
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.val('ignoreItem', Items.IgnoreItemAction);
     dispatch.idValDef('setBelt', Items.SetBeltAction);
     dispatch.idValDef('setWagon', Items.SetWagonAction);
+    dispatch.idVal('setItemChecked', Items.SetCheckedAction);
     dispatch.idValDef('setFactory', Recipes.SetFactoryAction);
     dispatch.idValDefAlt('setFactory', Producers.SetFactoryAction);
     dispatch.idValDef('setFactoryModules', Recipes.SetFactoryModulesAction);
@@ -396,9 +438,12 @@ describe('ListComponent', () => {
     dispatch.idIndValAlt('setBeaconTotal', Producers.SetBeaconTotalAction);
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
     dispatch.idValDefAlt('setOverclock', Producers.SetOverclockAction);
+    dispatch.idVal('setRecipeChecked', Recipes.SetCheckedAction);
+    dispatch.idValAlt('setRecipeChecked', Producers.SetCheckedAction);
     dispatch.val('resetItem', Items.ResetItemAction);
     dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
     dispatch.val('resetProducer', Producers.ResetProducerAction);
+    dispatch.void('resetChecked', Items.ResetCheckedAction);
     dispatch.void('resetIgnores', Items.ResetIgnoresAction);
     dispatch.void('resetBelts', Items.ResetBeltsAction);
     dispatch.void('resetWagons', Items.ResetWagonsAction);

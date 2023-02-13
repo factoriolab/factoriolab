@@ -1,5 +1,6 @@
 import { Entities, IdDefaultPayload, RecipeSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
+import { Items } from '../';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
 import { RecipesAction, RecipesActionType } from './recipes.actions';
@@ -10,7 +11,11 @@ export const initialRecipesState: RecipesState = {};
 
 export function recipesReducer(
   state: RecipesState = initialRecipesState,
-  action: RecipesAction | App.AppAction | Settings.SetModAction
+  action:
+    | RecipesAction
+    | App.AppAction
+    | Settings.SetModAction
+    | Items.ResetCheckedAction
 ): RecipesState {
   switch (action.type) {
     case App.AppActionType.LOAD:
@@ -94,6 +99,12 @@ export function recipesReducer(
         'cost',
         action.payload as IdDefaultPayload
       );
+    case RecipesActionType.SET_CHECKED:
+      return StoreUtility.compareReset(state, 'checked', {
+        id: action.payload.id,
+        value: action.payload.value,
+        def: false,
+      });
     case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
       delete newState[action.payload];
@@ -113,9 +124,11 @@ export function recipesReducer(
         'beacons',
       ]);
     case RecipesActionType.RESET_BEACONS:
-      return StoreUtility.resetFields(state, ['beacons']);
+      return StoreUtility.resetField(state, 'beacons');
     case RecipesActionType.RESET_COST:
-      return StoreUtility.resetFields(state, ['cost']);
+      return StoreUtility.resetField(state, 'cost');
+    case Items.ItemsActionType.RESET_CHECKED:
+      return StoreUtility.resetField(state, 'checked');
     default:
       return state;
   }

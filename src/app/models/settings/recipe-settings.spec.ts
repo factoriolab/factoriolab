@@ -11,12 +11,14 @@ describe('RationalRecipeSettings', () => {
         beacons: [],
         overclock: 200,
         cost: '100',
+        checked: true,
       });
       expect(result.factoryId).toEqual(ItemId.AssemblingMachine1);
       expect(result.factoryModuleIds).toEqual([]);
       expect(result.beacons).toEqual([]);
       expect(result.overclock).toEqual(Rational.from(200));
       expect(result.cost).toEqual(Rational.hundred);
+      expect(result.checked).toBeTrue();
     });
 
     it('should ignore undefined fields', () => {

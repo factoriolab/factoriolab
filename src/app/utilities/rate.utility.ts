@@ -9,6 +9,7 @@ import {
   RationalRecipe,
   RationalRecipeSettings,
   Step,
+  toEntities,
 } from '~/models';
 
 const ROOT_ID = '';
@@ -75,11 +76,19 @@ export class RateUtility {
       this.calculateOutputs(step, _steps);
     }
 
+    const producerEntities = toEntities(producers);
+
     for (const step of _steps) {
-      this.calculateSettings(step, producers, recipeSettings);
+      this.calculateSettings(step, producerEntities, recipeSettings);
       this.calculateBelts(step, itemSettings, beltSpeed, data);
       this.calculateBeacons(step, beaconReceivers, data);
       this.calculateDisplayRate(step, dispRateInfo);
+      this.calculateChecked(
+        step,
+        itemSettings,
+        recipeSettings,
+        producerEntities
+      );
     }
 
     return this.calculateHierarchy(_steps);
@@ -100,12 +109,12 @@ export class RateUtility {
 
   static calculateSettings(
     step: Step,
-    producers: RationalProducer[],
+    producerEntities: Entities<RationalProducer>,
     recipeSettings: Entities<RationalRecipeSettings>
   ): void {
     if (step.recipeId) {
       if (step.producerId) {
-        step.recipeSettings = producers.find((p) => p.id === step.producerId);
+        step.recipeSettings = producerEntities[step.producerId];
       } else {
         step.recipeSettings = recipeSettings[step.recipeId];
       }
@@ -237,6 +246,22 @@ export class RateUtility {
     }
     if (step.output) {
       step.output = step.output.mul(dispRateInfo.value);
+    }
+  }
+
+  static calculateChecked(
+    step: Step,
+    itemSettings: Entities<ItemSettings>,
+    recipeSettings: Entities<RationalRecipeSettings>,
+    producerEntities: Entities<RationalProducer>
+  ): void {
+    // Priority: 1) Item state, 2) Producer state, 3) Recipe state
+    if (step.itemId != null) {
+      step.checked = itemSettings[step.itemId].checked;
+    } else if (step.producerId != null) {
+      step.checked = producerEntities[step.producerId].checked;
+    } else if (step.recipeId != null) {
+      step.checked = recipeSettings[step.recipeId].checked;
     }
   }
 

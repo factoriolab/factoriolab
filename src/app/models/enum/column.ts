@@ -3,7 +3,9 @@ import { SelectItem } from 'primeng/api';
 import { Game } from './game';
 
 export enum Column {
+  Checkbox = 'checkbox',
   Tree = 'tree',
+  /** Not a real column, just used as a key to store effective precision */
   Surplus = 'surplus',
   Items = 'items',
   Belts = 'belts',
@@ -16,6 +18,19 @@ export enum Column {
 }
 
 export const allColumns = [
+  Column.Checkbox,
+  Column.Tree,
+  Column.Items,
+  Column.Belts,
+  Column.Wagons,
+  Column.Factories,
+  Column.Beacons,
+  Column.Power,
+  Column.Pollution,
+  Column.Link,
+];
+
+export const initialColumns = [
   Column.Tree,
   Column.Items,
   Column.Belts,

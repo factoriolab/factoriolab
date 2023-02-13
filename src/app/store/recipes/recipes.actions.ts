@@ -18,6 +18,7 @@ export const enum RecipesActionType {
   SET_BEACON_TOTAL = '[Recipes] Set Beacon Total',
   SET_OVERCLOCK = '[Recipes] Set Overclock',
   SET_COST = '[Recipes] Set Cost',
+  SET_CHECKED = '[Recipes] Set Checked',
   RESET_RECIPE = '[Recipes] Reset Recipe',
   RESET_RECIPE_MODULES = '[Recipes] Reset Recipe Modules',
   RESET_FACTORIES = '[Recipes] Reset Factories',
@@ -75,6 +76,11 @@ export class SetCostAction implements Action {
   constructor(public payload: IdPayload<string | undefined>) {}
 }
 
+export class SetCheckedAction implements Action {
+  readonly type = RecipesActionType.SET_CHECKED;
+  constructor(public payload: IdPayload<boolean>) {}
+}
+
 export class ResetRecipeAction implements Action {
   readonly type = RecipesActionType.RESET_RECIPE;
   constructor(public payload: string) {}
@@ -108,6 +114,7 @@ export type RecipesAction =
   | SetBeaconTotalAction
   | SetOverclockAction
   | SetCostAction
+  | SetCheckedAction
   | ResetRecipeAction
   | ResetRecipeModulesAction
   | ResetFactoriesAction

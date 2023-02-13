@@ -156,6 +156,9 @@ export const getRecipesModified = createSelector(
   recipesState,
   Producers.getBaseProducers,
   (state, producers) => ({
+    checked:
+      Object.keys(state).some((id) => state[id].checked != null) ||
+      producers.some((p) => p.checked != null),
     factories:
       Object.keys(state).some(
         (id) =>

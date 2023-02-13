@@ -2,6 +2,7 @@ import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   DisplayRate,
   displayRateInfo,
+  Entities,
   Game,
   Rational,
   RationalProducer,
@@ -164,7 +165,7 @@ describe('RateUtility', () => {
       };
       RateUtility.calculateSettings(
         step,
-        [],
+        {},
         Mocks.RationalRecipeSettingsInitial
       );
       expect(step.recipeSettings).toEqual(
@@ -178,14 +179,14 @@ describe('RateUtility', () => {
         recipeId: RecipeId.Coal,
         producerId: '0',
       };
-      const producers: RationalProducer[] = [
-        {
+      const producers: Entities<RationalProducer> = {
+        ['0']: {
           id: '0',
           recipeId: RecipeId.Coal,
           count: Rational.one,
           recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
         },
-      ];
+      };
       RateUtility.calculateSettings(
         step,
         producers,
@@ -409,6 +410,45 @@ describe('RateUtility', () => {
       expect(step.pollution).toEqual(Rational.from(240));
       expect(step.output).toEqual(Rational.from(300));
       expect(step.parents?.['id']).toEqual(Rational.from(6));
+    });
+  });
+
+  describe('calculateChecked', () => {
+    it('should set the checked state for an item step', () => {
+      const step: Step = { id: '0', itemId: ItemId.Coal };
+      RateUtility.calculateChecked(
+        step,
+        { [ItemId.Coal]: { checked: true } },
+        {},
+        {}
+      );
+      expect(step.checked).toBeTrue();
+    });
+
+    it('should set the checked state for a producer step', () => {
+      const step: Step = { id: '0', producerId: '1' };
+      RateUtility.calculateChecked(
+        step,
+        {},
+        {},
+        {
+          ['1']: {
+            checked: true,
+          } as any,
+        }
+      );
+      expect(step.checked).toBeTrue();
+    });
+
+    it('should set the checked state for a recipe step', () => {
+      const step: Step = { id: '0', recipeId: RecipeId.Coal };
+      RateUtility.calculateChecked(
+        step,
+        {},
+        { [RecipeId.Coal]: { checked: true } },
+        {}
+      );
+      expect(step.checked).toBeTrue();
     });
   });
 
