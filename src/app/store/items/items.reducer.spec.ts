@@ -86,6 +86,19 @@ describe('Items Reducer', () => {
     });
   });
 
+  describe('SET_CHECKED', () => {
+    it('should set the checked state', () => {
+      const result = itemsReducer(
+        initialItemsState,
+        new Actions.SetCheckedAction({
+          id: Mocks.Item1.id,
+          value: true,
+        })
+      );
+      expect(result[Mocks.Item1.id].checked).toBeTrue();
+    });
+  });
+
   describe('RESET_ITEM', () => {
     it('should reset an item', () => {
       const result = itemsReducer(
@@ -130,6 +143,17 @@ describe('Items Reducer', () => {
       expect(StoreUtility.resetField).toHaveBeenCalledWith(
         {},
         'recipeId' as any
+      );
+    });
+  });
+
+  describe('RESET_CHECKED', () => {
+    it('should call resetField', () => {
+      spyOn(StoreUtility, 'resetField');
+      itemsReducer(undefined, new Actions.ResetCheckedAction());
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(
+        {},
+        'checked' as any
       );
     });
   });

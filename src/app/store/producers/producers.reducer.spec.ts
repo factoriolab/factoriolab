@@ -1,5 +1,6 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { Producer } from '~/models';
+import { Items } from '../';
 import * as App from '../app.actions';
 import * as Recipes from '../recipes';
 import * as Actions from './producers.actions';
@@ -237,6 +238,19 @@ describe('Producers Reducer', () => {
     });
   });
 
+  describe('SET_CHECKED', () => {
+    it('should set checked state on a producer', () => {
+      const result = producersReducer(
+        state,
+        new Actions.SetCheckedAction({
+          id: '0',
+          value: true,
+        })
+      );
+      expect(result.entities['0'].checked).toBeTrue();
+    });
+  });
+
   describe('RESET_PRODUCER', () => {
     it('should reset a producer', () => {
       const state: ProducersState = {
@@ -334,6 +348,29 @@ describe('Producers Reducer', () => {
         count: '30',
         factoryId: 'factoryId',
         overclock: 100,
+      });
+    });
+  });
+
+  describe('Items RESET_CHECKED', () => {
+    it('should reset checked on all producers', () => {
+      const state: ProducersState = {
+        ids: ['0'],
+        entities: {
+          ['0']: {
+            id: '0',
+            recipeId: RecipeId.WoodenChest,
+            count: '30',
+            checked: true,
+          },
+        },
+        index: 1,
+      };
+      const result = producersReducer(state, new Items.ResetCheckedAction());
+      expect(result.entities['0']).toEqual({
+        id: '0',
+        recipeId: RecipeId.WoodenChest,
+        count: '30',
       });
     });
   });

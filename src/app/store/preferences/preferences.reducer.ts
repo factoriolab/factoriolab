@@ -3,6 +3,7 @@ import {
   Column,
   ColumnSettings,
   Entities,
+  initialColumns,
   Language,
   PowerUnit,
   SimplexType,
@@ -28,7 +29,7 @@ export interface PreferencesState {
 
 export const initialColumnsState: ColumnsState = allColumns.reduce(
   (e: ColumnsState, c) => {
-    e[c] = { show: true, precision: 1 };
+    e[c] = { show: initialColumns.indexOf(c) !== -1, precision: 1 };
     return e;
   },
   {}
