@@ -11,6 +11,7 @@ export interface RecipeSettings {
   beacons?: BeaconSettings[];
   overclock?: number;
   cost?: string;
+  checked?: boolean;
 }
 
 export class RationalRecipeSettings {
@@ -21,6 +22,7 @@ export class RationalRecipeSettings {
   beacons?: RationalBeaconSettings[];
   overclock?: Rational;
   cost?: Rational;
+  checked?: boolean;
 
   constructor(data: RecipeSettings) {
     if (data.factoryId != null) {
@@ -40,6 +42,9 @@ export class RationalRecipeSettings {
     }
     if (data.cost != null) {
       this.cost = Rational.fromString(data.cost);
+    }
+    if (data.checked != null) {
+      this.checked = data.checked;
     }
   }
 }

@@ -1,17 +1,19 @@
 import { Action } from '@ngrx/store';
 
-import { IdDefaultPayload } from '~/models';
+import { IdDefaultPayload, IdPayload } from '~/models';
 
 export const enum ItemsActionType {
   IGNORE_ITEM = '[Items] Ignore Item',
   SET_BELT = '[Items] Set Belt',
   SET_WAGON = '[Items] Set Wagon',
   SET_RECIPE = '[Items] Set Recipe',
+  SET_CHECKED = '[Items] Set Checked',
   RESET_ITEM = '[Items] Reset Item',
   RESET_IGNORES = '[Items] Reset Ignores',
   RESET_BELTS = '[Items] Reset Belts',
   RESET_WAGONS = '[Items] Reset Wagon',
   RESET_RECIPES = '[Items] Reset Recipes',
+  RESET_CHECKED = '[Items] Reset Checked',
 }
 
 export class IgnoreItemAction implements Action {
@@ -32,6 +34,11 @@ export class SetWagonAction implements Action {
 export class SetRecipeAction implements Action {
   readonly type = ItemsActionType.SET_RECIPE;
   constructor(public payload: IdDefaultPayload<string | undefined>) {}
+}
+
+export class SetCheckedAction implements Action {
+  readonly type = ItemsActionType.SET_CHECKED;
+  constructor(public payload: IdPayload<boolean>) {}
 }
 
 export class ResetItemAction implements Action {
@@ -55,13 +62,19 @@ export class ResetRecipesAction implements Action {
   readonly type = ItemsActionType.RESET_RECIPES;
 }
 
+export class ResetCheckedAction implements Action {
+  readonly type = ItemsActionType.RESET_CHECKED;
+}
+
 export type ItemsAction =
   | IgnoreItemAction
   | SetBeltAction
   | SetWagonAction
   | SetRecipeAction
+  | SetCheckedAction
   | ResetItemAction
   | ResetIgnoresAction
   | ResetBeltsAction
   | ResetWagonsAction
-  | ResetRecipesAction;
+  | ResetRecipesAction
+  | ResetCheckedAction;

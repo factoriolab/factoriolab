@@ -3,4 +3,5 @@ export interface ItemSettings {
   beltId?: string;
   wagonId?: string;
   recipeId?: string;
+  checked?: boolean;
 }

@@ -5,6 +5,14 @@ import { RationalRecipeSettings } from './settings';
 
 export interface Step {
   id: string;
+  /**
+   * Priority: 1) Item state, 2) Producer state, 3) Recipe state
+   *
+   * If an item is ignored, step should still be checked, therefore item state
+   * must be highest priority. Producer state takes priority over recipe since
+   * recipe state may be present on a separate step.
+   */
+  checked?: boolean;
   itemId?: string;
   items?: Rational;
   output?: Rational;
