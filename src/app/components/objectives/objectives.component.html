@@ -40,6 +40,7 @@
         (setValue)="setRate(product.id, $event)"
       ></lab-input-number>
       <p-dropdown
+        labDropdownTranslate
         [tooltip]="'objectives.rateTypeTooltip' | translate"
         tooltipPosition="top"
         [options]="vm.rateTypeOptions"

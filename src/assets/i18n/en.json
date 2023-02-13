@@ -34,8 +34,11 @@
     },
     "displayRate": {
       "perSecond": "Units per second",
+      "perSecondSuffix": "/s",
       "perMinute": "Units per minute",
-      "perHour": "Units per hour"
+      "perMinuteSuffix": "/m",
+      "perHour": "Units per hour",
+      "perHourSuffix": "/h"
     },
     "game": {
       "factorio": "Factorio",
@@ -61,6 +64,19 @@
       "beacon12": "12 Beacons",
       "upgraded": "Upgraded",
       "proliferated": "Proliferated"
+    },
+    "rateType": {
+      "itemsPerSecond": "Items/s",
+      "itemsPerMinute": "Items/m",
+      "itemsPerHour": "Items/h",
+      "belts": "Belts",
+      "wagonsPerSecond": "Wagons/s",
+      "wagonsPerMinute": "Wagons/m",
+      "wagonsPerHour": "Wagons/h",
+      "factories": "Machines",
+      "pollutionPerSecond": "Pollution/s",
+      "pollutionPerMinute": "Pollution/m",
+      "pollutionPerHour": "Pollution/h"
     },
     "researchSpeed": {
       "speed0": "No research bonus",
@@ -101,8 +117,8 @@
     "sprays": "Sprays",
     "effectivity": "Effectivity",
     "range": "Range",
-    "belt": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Speed</td><td>{{ speed }}</td></tr></table></small>",
-    "pipe": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Flow rate</td><td>{{ speed }}</td></tr></table></small>",
+    "belt": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Speed</td><td>{{ speed }}{{ suffix }}</td></tr></table></small>",
+    "pipe": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Flow rate</td><td>{{ speed }}{{ suffix }}</td></tr></table></small>",
     "cargoWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Inventory</td><td>{{ size }} stacks</td></tr></table></small>",
     "fluidWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Capacity</td><td>{{ size }}</td></tr></table></small>",
     "fuel": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Category</td><td>{{ category }}</td></tr><tr><td>Value</td><td>{{ value }} MJ</td></tr></table></small>"
