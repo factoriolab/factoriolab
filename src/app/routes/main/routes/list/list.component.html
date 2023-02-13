@@ -27,9 +27,7 @@
         <!-- Items (Value / Icon)-->
         <th colspan="2">
           <div class="d-flex align-items-center">
-            <span>{{
-              ('list.items' | translate) + vm.dispRateInfo.label
-            }}</span>
+            <span>{{ vm.dispRateInfo.itemsLabel | translate }}</span>
             <button
               *ngIf="vm.itemsModified.ignore"
               pButton
@@ -71,9 +69,7 @@
         <!-- Wagons -->
         <th *ngIf="vm.columns[Column.Wagons].show" colspan="2">
           <div class="d-flex align-items-center">
-            <span>{{
-              ('list.wagons' | translate) + vm.dispRateInfo.label
-            }}</span>
+            <span>{{ vm.dispRateInfo.wagonsLabel | translate }}</span>
             <button
               *ngIf="vm.itemsModified.wagons"
               pButton
@@ -124,9 +120,7 @@
         </th>
         <!-- Pollution -->
         <th *ngIf="vm.columns[Column.Pollution].show">
-          <span>{{
-            ('list.pollution' | translate) + vm.dispRateInfo.label
-          }}</span>
+          <span>{{ vm.dispRateInfo.pollutionLabel | translate }}</span>
         </th>
         <!-- Link -->
         <th *ngIf="vm.columns[Column.Link].show" class="w-0">
@@ -278,7 +272,8 @@
                         | translate
                           : {
                               name: vm.data.itemEntities[beltId].name,
-                              speed: vm.beltSpeedTxt[beltId]
+                              speed: vm.beltSpeedTxt[beltId],
+                              suffix: vm.dispRateInfo.suffix | translate
                             }
                     "
                     [escape]="false"
@@ -301,7 +296,8 @@
                             | translate
                               : {
                                   name: vm.data.itemEntities[item.value].name,
-                                  speed: vm.beltSpeedTxt[item.value]
+                                  speed: vm.beltSpeedTxt[item.value],
+                                  suffix: vm.dispRateInfo.suffix | translate
                                 }
                         "
                         [escape]="false"
@@ -327,7 +323,8 @@
                           | translate
                             : {
                                 name: vm.data.itemEntities[beltId].name,
-                                speed: vm.beltSpeedTxt[beltId]
+                                speed: vm.beltSpeedTxt[beltId],
+                                suffix: vm.dispRateInfo.suffix | translate
                               }
                       "
                       [escape]="false"
@@ -350,7 +347,8 @@
                               | translate
                                 : {
                                     name: vm.data.itemEntities[item.value].name,
-                                    speed: vm.beltSpeedTxt[item.value]
+                                    speed: vm.beltSpeedTxt[item.value],
+                                    suffix: vm.dispRateInfo.suffix | translate
                                   }
                           "
                           [escape]="false"
@@ -372,7 +370,8 @@
                           | translate
                             : {
                                 name: vm.data.itemEntities[beltId].name,
-                                speed: vm.beltSpeedTxt[beltId]
+                                speed: vm.beltSpeedTxt[beltId],
+                                suffix: vm.dispRateInfo.suffix | translate
                               }
                       "
                       [escape]="false"
@@ -1517,7 +1516,8 @@
                         | translate
                           : {
                               name: vm.data.itemEntities[beltId].name,
-                              speed: vm.beltSpeedTxt[beltId]
+                              speed: vm.beltSpeedTxt[beltId],
+                              suffix: vm.dispRateInfo.suffix | translate
                             }
                     "
                     [escape]="false"

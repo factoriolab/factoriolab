@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, Observable } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
+import { combineLatest, map, Observable, switchMap } from 'rxjs';
 
 import {
   Column,
   Dataset,
-  DisplayRateInfo,
   FlowData,
   FlowStyle,
   NodeType,
@@ -23,16 +23,22 @@ import { ThemeService } from './theme.service';
 export class FlowService {
   flowData$: Observable<FlowData>;
 
-  constructor(private store: Store<LabState>, private theme: ThemeService) {
+  constructor(
+    private translateSvc: TranslateService,
+    private store: Store<LabState>,
+    private theme: ThemeService
+  ) {
     this.flowData$ = combineLatest([
       this.store.select(Products.getSteps),
       this.store.select(Recipes.getAdjustedDataset),
-      this.store.select(Settings.getDisplayRateInfo),
+      this.store
+        .select(Settings.getDisplayRateInfo)
+        .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
       this.store.select(Preferences.getColumns),
       this.theme.theme$,
     ]).pipe(
-      map(([steps, data, dispRateInfo, columns, theme]) =>
-        this.buildGraph(steps, data, dispRateInfo, columns, themeMap[theme])
+      map(([steps, data, suffix, columns, theme]) =>
+        this.buildGraph(steps, data, suffix, columns, themeMap[theme])
       )
     );
   }
@@ -40,7 +46,7 @@ export class FlowService {
   buildGraph(
     steps: Step[],
     data: Dataset,
-    dispRateInfo: DisplayRateInfo,
+    suffix: string,
     columns: ColumnsState,
     theme: FlowStyle
   ): FlowData {
@@ -52,7 +58,6 @@ export class FlowService {
 
     const itemPrec = columns[Column.Items].precision;
     const factoryPrec = columns[Column.Factories].precision;
-    const rateLbl = dispRateInfo.label;
 
     for (const step of steps) {
       if (step.recipeId && step.factories) {
@@ -86,7 +91,7 @@ export class FlowService {
             id: `s|${step.itemId}`,
             type: NodeType.Surplus,
             name: item.name,
-            text: `${step.surplus.toString(itemPrec)}${rateLbl}`,
+            text: `${step.surplus.toString(itemPrec)}${suffix}`,
           });
           // Links to surplus node
           for (const sourceStep of steps) {
@@ -100,7 +105,7 @@ export class FlowService {
                   source: `r|${sourceStep.id}`,
                   target: `s|${step.itemId}`,
                   name: item.name,
-                  text: `${sourceAmount.toString(itemPrec)}${rateLbl}`,
+                  text: `${sourceAmount.toString(itemPrec)}${suffix}`,
                 });
               }
             }
@@ -134,7 +139,7 @@ export class FlowService {
                       source: `r|${sourceStep.id}`,
                       target: `r|${targetId}`,
                       name: item.name,
-                      text: `${sourceAmount.toString(itemPrec)}${rateLbl}`,
+                      text: `${sourceAmount.toString(itemPrec)}${suffix}`,
                     });
                   }
                 }
@@ -147,7 +152,7 @@ export class FlowService {
                   source: `i|${step.itemId}`,
                   target: `r|${targetId}`,
                   name: item.name,
-                  text: `${amount.toString(itemPrec)}${rateLbl}`,
+                  text: `${amount.toString(itemPrec)}${suffix}`,
                 });
               }
             }
@@ -158,7 +163,7 @@ export class FlowService {
                 id: `i|${step.itemId}`,
                 type: NodeType.Input,
                 name: item.name,
-                text: `${inputAmount.toString(itemPrec)}${rateLbl}`,
+                text: `${inputAmount.toString(itemPrec)}${suffix}`,
               });
             }
           }
@@ -169,7 +174,7 @@ export class FlowService {
               id: `o|${step.itemId}`,
               type: NodeType.Output,
               name: item.name,
-              text: `${step.output.toString(itemPrec)}${rateLbl}`,
+              text: `${step.output.toString(itemPrec)}${suffix}`,
             });
             for (const sourceStep of steps) {
               if (sourceStep.recipeId && sourceStep.outputs) {
@@ -181,7 +186,7 @@ export class FlowService {
                     name: item.name,
                     text: `${step.output
                       .mul(sourceStep.outputs[step.itemId])
-                      .toString(itemPrec)}${rateLbl}`,
+                      .toString(itemPrec)}${suffix}`,
                   });
                 }
               }

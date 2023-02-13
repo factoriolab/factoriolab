@@ -16,24 +16,36 @@ export const displayRateOptions: SelectItem<DisplayRate>[] = [
 
 export interface DisplayRateInfo {
   option: DisplayRate;
-  label: string;
+  suffix: string;
+  itemsLabel: string;
+  wagonsLabel: string;
+  pollutionLabel: string;
   value: Rational;
 }
 
 export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
   [DisplayRate.PerSecond]: {
     option: DisplayRate.PerSecond,
-    label: '/s',
+    suffix: 'options.displayRate.perSecondSuffix',
+    itemsLabel: 'options.rateType.itemsPerSecond',
+    wagonsLabel: 'options.rateType.wagonsPerSecond',
+    pollutionLabel: 'options.rateType.pollutionPerSecond',
     value: Rational.from(DisplayRate.PerSecond),
   },
   [DisplayRate.PerMinute]: {
     option: DisplayRate.PerMinute,
-    label: '/m',
+    suffix: 'options.displayRate.perMinuteSuffix',
+    itemsLabel: 'options.rateType.itemsPerMinute',
+    wagonsLabel: 'options.rateType.wagonsPerMinute',
+    pollutionLabel: 'options.rateType.pollutionPerMinute',
     value: Rational.from(DisplayRate.PerMinute),
   },
   [DisplayRate.PerHour]: {
     option: DisplayRate.PerHour,
-    label: '/h',
+    suffix: 'options.displayRate.perHourSuffix',
+    itemsLabel: 'options.rateType.itemsPerHour',
+    wagonsLabel: 'options.rateType.wagonsPerHour',
+    pollutionLabel: 'options.rateType.pollutionPerHour',
     value: Rational.from(DisplayRate.PerHour),
   },
 };
