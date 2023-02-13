@@ -243,21 +243,20 @@ describe('Recipes Reducer', () => {
 
   describe('RESET_BEACONS', () => {
     it('should call resetField', () => {
-      spyOn(StoreUtility, 'resetFields');
+      spyOn(StoreUtility, 'resetField');
       recipesReducer(undefined, new Actions.ResetBeaconsAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
-        'beacons',
-      ] as any);
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(
+        {},
+        'beacons' as any
+      );
     });
   });
 
   describe('RESET_COST', () => {
     it('should call resetField', () => {
-      spyOn(StoreUtility, 'resetFields');
+      spyOn(StoreUtility, 'resetField');
       recipesReducer(undefined, new Actions.ResetCostAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
-        'cost',
-      ] as any);
+      expect(StoreUtility.resetField).toHaveBeenCalledWith({}, 'cost' as any);
     });
   });
 

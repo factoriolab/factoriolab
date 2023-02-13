@@ -110,10 +110,13 @@ describe('ListComponent', () => {
   });
 
   describe('resetStep', () => {
-    it('should reset a step', () => {
+    beforeEach(() => {
       spyOn(component, 'resetItem');
       spyOn(component, 'resetRecipe');
       spyOn(component, 'resetProducer');
+    });
+
+    it('should reset a producer step', () => {
       const step: Step = {
         id: '0',
         itemId: ItemId.Coal,
@@ -122,8 +125,20 @@ describe('ListComponent', () => {
       };
       component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
-      expect(component.resetRecipe).toHaveBeenCalled();
+      expect(component.resetRecipe).not.toHaveBeenCalled();
       expect(component.resetProducer).toHaveBeenCalled();
+    });
+
+    it('should reset a recipe step', () => {
+      const step: Step = {
+        id: '0',
+        itemId: ItemId.Coal,
+        recipeId: RecipeId.Coal,
+      };
+      component.resetStep(step);
+      expect(component.resetItem).toHaveBeenCalled();
+      expect(component.resetRecipe).toHaveBeenCalled();
+      expect(component.resetProducer).not.toHaveBeenCalled();
     });
   });
 
