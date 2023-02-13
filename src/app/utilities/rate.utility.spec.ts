@@ -2,6 +2,7 @@ import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   DisplayRate,
   displayRateInfo,
+  Entities,
   Game,
   Rational,
   RationalProducer,
@@ -164,7 +165,7 @@ describe('RateUtility', () => {
       };
       RateUtility.calculateSettings(
         step,
-        [],
+        {},
         Mocks.RationalRecipeSettingsInitial
       );
       expect(step.recipeSettings).toEqual(
@@ -178,14 +179,14 @@ describe('RateUtility', () => {
         recipeId: RecipeId.Coal,
         producerId: '0',
       };
-      const producers: RationalProducer[] = [
-        {
+      const producers: Entities<RationalProducer> = {
+        ['0']: {
           id: '0',
           recipeId: RecipeId.Coal,
           count: Rational.one,
           recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
         },
-      ];
+      };
       RateUtility.calculateSettings(
         step,
         producers,
