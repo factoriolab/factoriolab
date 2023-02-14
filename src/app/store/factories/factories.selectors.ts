@@ -23,7 +23,11 @@ export const getFactories = createSelector(
     const entities: Entities<FactorySettings> = {};
     const def: FactorySettings = { ...state.entities[''] };
     def.moduleRankIds = def.moduleRankIds ?? defaults?.moduleRankIds ?? [];
-    def.moduleOptions = getIdOptions(data.moduleIds, data.itemEntities, true);
+    def.moduleOptions = getIdOptions(
+      data.moduleIds,
+      data.itemEntities,
+      data.game !== Game.Satisfactory
+    );
     if (data.game === Game.Factorio) {
       def.beaconCount = def.beaconCount ?? defaults?.beaconCount;
     }

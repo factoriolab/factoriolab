@@ -365,15 +365,17 @@
                   </ng-template>
                   <!-- Modifiers multiselect -->
                   <p-multiSelect
-                    *ngIf="settings.moduleRankIds"
+                    *ngIf="
+                      settings.moduleRankIds &&
+                        vm.data.game !== Game.Satisfactory;
+                      else satisfactoryPurityPicker
+                    "
                     appendTo="body"
                     scrollHeight="40vh"
                     styleClass="icon"
                     panelStyleClass="tooltip"
                     placeholder="unused"
-                    [selectionLimit]="
-                      vm.data.game === Game.Satisfactory ? 1 : 2
-                    "
+                    [selectionLimit]="2"
                     [pTooltip]="'settings.modifierTooltip' | translate"
                     tooltipPosition="top"
                     [ngModel]="settings.moduleRankIds"
@@ -414,6 +416,39 @@
                       </div>
                     </ng-template>
                   </p-multiSelect>
+                  <ng-template #satisfactoryPurityPicker>
+                    <p-dropdown
+                      labDropdownBase="icon"
+                      [pTooltip]="'settings.modifierTooltip' | translate"
+                      [ngModel]="settings.moduleRankIds?.[0]"
+                      [options]="settings.moduleOptions ?? []"
+                      (onChange)="
+                        setModuleRank(
+                          factoryId,
+                          [$event.value],
+                          vm.data.defaults?.moduleRankIds
+                        )
+                      "
+                    >
+                      <ng-template pTemplate="selectedItem" let-item>
+                        <div class="d-flex">
+                          <i [class]="item.value | iconSmClass"></i>
+                        </div>
+                      </ng-template>
+                      <ng-template pTemplate="item" let-item>
+                        <div
+                          class="d-flex align-items-center py-2 w-100 h-100"
+                          [pTooltip]="item.value | moduleTooltip : vm.data"
+                          [escape]="false"
+                        >
+                          <i [class]="item.value | iconSmClass"></i>
+                          <div class="ms-3 text-truncate">
+                            {{ item.label }}
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
+                  </ng-template>
                   <!-- Overclock input -->
                   <ng-container *ngIf="vm.data.game === Game.Satisfactory">
                     <p-inputNumber
