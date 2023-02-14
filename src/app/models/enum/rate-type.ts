@@ -15,10 +15,10 @@ export function rateTypeOptions(
   game: Game
 ): SelectItem<RateType>[] {
   const result = [
-    { value: RateType.Items, label: `Items${dispRateInfo.label}` },
-    { value: RateType.Belts, label: 'Belts' },
-    { value: RateType.Wagons, label: `Wagons${dispRateInfo.label}` },
-    { value: RateType.Factories, label: 'Machines' },
+    { value: RateType.Items, label: dispRateInfo.itemsLabel },
+    { value: RateType.Belts, label: 'options.rateType.belts' },
+    { value: RateType.Wagons, label: dispRateInfo.wagonsLabel },
+    { value: RateType.Factories, label: 'options.rateType.factories' },
   ];
 
   if (game === Game.DysonSphereProgram || game === Game.CaptainOfIndustry) {

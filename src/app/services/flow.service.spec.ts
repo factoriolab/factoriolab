@@ -1,13 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
-import {
-  DisplayRate,
-  displayRateInfo,
-  Rational,
-  Theme,
-  themeMap,
-} from '~/models';
+import { Rational, Theme, themeMap } from '~/models';
 import { FlowService } from './flow.service';
 
 describe('FlowService', () => {
@@ -75,7 +69,7 @@ describe('FlowService', () => {
           },
         ],
         Mocks.Dataset,
-        displayRateInfo[DisplayRate.PerMinute],
+        '/m',
         Mocks.PreferencesState.columns,
         themeMap[Theme.Light]
       );
