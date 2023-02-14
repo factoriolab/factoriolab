@@ -8,6 +8,7 @@ import {
   Entities,
   Factory,
   FuelType,
+  Game,
   ItemId,
   ItemSettings,
   Producer,
@@ -68,7 +69,9 @@ export class RecipeUtility {
     }
 
     const options = allowed.map((m) => ({ value: m.id, label: m.name }));
-    options.unshift({ label: 'None', value: ItemId.Module });
+    if (data.game !== Game.Satisfactory) {
+      options.unshift({ label: 'None', value: ItemId.Module });
+    }
     return options;
   }
 
