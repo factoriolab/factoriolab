@@ -46,8 +46,7 @@
         [options]="vm.rateTypeOptions"
         [ngModel]="product.rateType"
         (onChange)="setRateType(product.id, $event.value)"
-      >
-      </p-dropdown>
+      ></p-dropdown>
       <ng-container
         *ngIf="vm.viaOptions[product.id].length > 0; else recipeNone"
       >
