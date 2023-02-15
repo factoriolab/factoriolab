@@ -40,14 +40,19 @@
         (setValue)="setRate(product.id, $event)"
       ></lab-input-number>
       <p-dropdown
-        labDropdownTranslate
-        appendTo="body"
         [tooltip]="'objectives.rateTypeTooltip' | translate"
         tooltipPosition="top"
         [options]="vm.rateTypeOptions"
         [ngModel]="product.rateType"
         (onChange)="setRateType(product.id, $event.value)"
-      ></p-dropdown>
+      >
+        <ng-template pTemplate="selectedItem" let-item>
+          {{ item.label | translate }}
+        </ng-template>
+        <ng-template pTemplate="item" let-item>
+          {{ item.label | translate }}
+        </ng-template>
+      </p-dropdown>
       <ng-container
         *ngIf="vm.viaOptions[product.id].length > 0; else recipeNone"
       >
