@@ -10,6 +10,7 @@ export class DropdownBaseDirective implements OnInit, OnChanges {
   constructor(@Self() private readonly pDropdown: Dropdown) {}
 
   ngOnInit(): void {
+    this.pDropdown.appendTo = 'body';
     this.pDropdown.filter = true;
     this.pDropdown.scrollHeight = '40vh';
     this.pDropdown.panelStyleClass = 'tooltip';
