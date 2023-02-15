@@ -83,7 +83,7 @@
           ></button>
           <p-dropdown
             [placeholder]="'settings.selectSavedState' | translate"
-            [pTooltip]="'settings.selectSavedState' | translate"
+            [tooltip]="'settings.selectSavedState' | translate"
             tooltipPosition="top"
             [ngModel]="state"
             [options]="vm.savedStates"
@@ -108,13 +108,11 @@
           </span>
         </p-divider>
         <div class="mt-3 py-2">
-          <span
-            class="p-float-label"
-            [pTooltip]="'settings.gameTooltip' | translate"
-          >
+          <span class="p-float-label">
             <p-dropdown
               labDropdownTranslate
               inputId="game"
+              [tooltip]="'settings.gameTooltip' | translate"
               [ngModel]="vm.data.game"
               [options]="gameOptions"
               (onChange)="setGame($event.value)"
@@ -150,7 +148,7 @@
               inputId="mod"
               styleClass="w-100"
               [filter]="true"
-              [pTooltip]="'settings.modSetTooltip' | translate"
+              [tooltip]="'settings.modSetTooltip' | translate"
               [ngModel]="vm.settings.modId"
               [options]="vm.modOptions"
               (onChange)="setMod($event.value)"
@@ -247,13 +245,11 @@
           </span>
         </p-divider>
         <div class="mt-3 py-2 mb-1">
-          <span
-            class="p-float-label"
-            [pTooltip]="'settings.presetTooltip' | translate"
-          >
+          <span class="p-float-label">
             <p-dropdown
               labDropdownTranslate
               inputId="preset"
+              [tooltip]="'settings.presetTooltip' | translate"
               [ngModel]="vm.settings.preset"
               [options]="vm.presetOptions"
               (onChange)="setPreset($event.value)"
@@ -279,7 +275,7 @@
                   <p-dropdown
                     *ngIf="index === 0; else removeButton"
                     labDropdownBase="icon"
-                    [pTooltip]="'settings.addFactoryTooltip' | translate"
+                    [tooltip]="'settings.addFactoryTooltip' | translate"
                     [options]="vm.factoryOptions"
                     (onChange)="
                       addFactory($event.value, vm.data.defaults?.factoryRankIds)
@@ -326,7 +322,7 @@
                   <p-dropdown
                     *ngIf="factoryId; else factoryIcon"
                     labDropdownBase="icon"
-                    [pTooltip]="'settings.factoryTooltip' | translate"
+                    [tooltip]="'settings.factoryTooltip' | translate"
                     [ngModel]="factoryId"
                     [options]="vm.factoryOptions"
                     (onChange)="
@@ -364,75 +360,43 @@
                     </span>
                   </ng-template>
                   <!-- Modifiers multiselect -->
-                  <p-multiSelect
-                    *ngIf="
-                      settings.moduleRankIds &&
+                  <ng-container *ngIf="settings.moduleRankIds">
+                    <p-multiSelect
+                      *ngIf="
                         vm.data.game !== Game.Satisfactory;
-                      else satisfactoryPurityPicker
-                    "
-                    appendTo="body"
-                    scrollHeight="40vh"
-                    styleClass="icon"
-                    panelStyleClass="tooltip"
-                    placeholder="unused"
-                    [selectionLimit]="2"
-                    [pTooltip]="'settings.modifierTooltip' | translate"
-                    tooltipPosition="top"
-                    [ngModel]="settings.moduleRankIds"
-                    [options]="settings.moduleOptions ?? []"
-                    (onChange)="
-                      setModuleRank(
-                        factoryId,
-                        $event.value,
-                        defaults?.moduleRankIds
-                      )
-                    "
-                  >
-                    <ng-template pTemplate="selectedItems" let-items>
-                      <div class="d-flex">
-                        <i
-                          *ngIf="items && items.length; else noModifiers"
-                          [class]="items[0] | iconSmClass"
-                        >
-                          <span *ngIf="items.length > 1"
-                            >+{{ items.length - 1 }}</span
-                          >
-                        </i>
-                        <ng-template #noModifiers>
-                          <i [class]="ItemId.Module | iconSmClass"></i>
-                        </ng-template>
-                      </div>
-                    </ng-template>
-                    <ng-template pTemplate="item" let-item>
-                      <div
-                        class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="item.value | moduleTooltip : vm.data"
-                        [escape]="false"
-                      >
-                        <i [class]="item.value | iconSmClass"></i>
-                        <div class="ms-3 text-truncate">
-                          {{ item.label }}
-                        </div>
-                      </div>
-                    </ng-template>
-                  </p-multiSelect>
-                  <ng-template #satisfactoryPurityPicker>
-                    <p-dropdown
-                      labDropdownBase="icon"
-                      [pTooltip]="'settings.modifierTooltip' | translate"
-                      [ngModel]="settings.moduleRankIds?.[0]"
+                        else satisfactoryPurityPicker
+                      "
+                      appendTo="body"
+                      scrollHeight="40vh"
+                      styleClass="icon"
+                      panelStyleClass="tooltip"
+                      placeholder="unused"
+                      [selectionLimit]="2"
+                      [tooltip]="'settings.modifierTooltip' | translate"
+                      tooltipPosition="top"
+                      [ngModel]="settings.moduleRankIds"
                       [options]="settings.moduleOptions ?? []"
                       (onChange)="
                         setModuleRank(
                           factoryId,
-                          [$event.value],
-                          vm.data.defaults?.moduleRankIds
+                          $event.value,
+                          defaults?.moduleRankIds
                         )
                       "
                     >
-                      <ng-template pTemplate="selectedItem" let-item>
+                      <ng-template pTemplate="selectedItems" let-items>
                         <div class="d-flex">
-                          <i [class]="item.value | iconSmClass"></i>
+                          <i
+                            *ngIf="items && items.length; else noModifiers"
+                            [class]="items[0] | iconSmClass"
+                          >
+                            <span *ngIf="items.length > 1"
+                              >+{{ items.length - 1 }}</span
+                            >
+                          </i>
+                          <ng-template #noModifiers>
+                            <i [class]="ItemId.Module | iconSmClass"></i>
+                          </ng-template>
                         </div>
                       </ng-template>
                       <ng-template pTemplate="item" let-item>
@@ -447,8 +411,41 @@
                           </div>
                         </div>
                       </ng-template>
-                    </p-dropdown>
-                  </ng-template>
+                    </p-multiSelect>
+                    <ng-template #satisfactoryPurityPicker>
+                      <p-dropdown
+                        labDropdownBase="icon"
+                        [tooltip]="'settings.modifierTooltip' | translate"
+                        [ngModel]="settings.moduleRankIds?.[0]"
+                        [options]="settings.moduleOptions ?? []"
+                        (onChange)="
+                          setModuleRank(
+                            factoryId,
+                            [$event.value],
+                            vm.data.defaults?.moduleRankIds
+                          )
+                        "
+                      >
+                        <ng-template pTemplate="selectedItem" let-item>
+                          <div class="d-flex">
+                            <i [class]="item.value | iconSmClass"></i>
+                          </div>
+                        </ng-template>
+                        <ng-template pTemplate="item" let-item>
+                          <div
+                            class="d-flex align-items-center py-2 w-100 h-100"
+                            [pTooltip]="item.value | moduleTooltip : vm.data"
+                            [escape]="false"
+                          >
+                            <i [class]="item.value | iconSmClass"></i>
+                            <div class="ms-3 text-truncate">
+                              {{ item.label }}
+                            </div>
+                          </div>
+                        </ng-template>
+                      </p-dropdown>
+                    </ng-template>
+                  </ng-container>
                   <!-- Overclock input -->
                   <ng-container *ngIf="vm.data.game === Game.Satisfactory">
                     <p-inputNumber
@@ -489,7 +486,7 @@
                       <!-- Beacon dropdown -->
                       <p-dropdown
                         labDropdownBase="icon"
-                        [pTooltip]="'settings.beaconTooltip' | translate"
+                        [tooltip]="'settings.beaconTooltip' | translate"
                         tooltipPosition="top"
                         [ngModel]="settings.beaconId"
                         [options]="vm.options.beacons"
@@ -524,7 +521,7 @@
                         panelStyleClass="tooltip"
                         placeholder="unused"
                         [selectionLimit]="2"
-                        [pTooltip]="'settings.beaconModuleTooltip' | translate"
+                        [tooltip]="'settings.beaconModuleTooltip' | translate"
                         tooltipPosition="top"
                         [ngModel]="settings.beaconModuleRankIds"
                         [options]="settings.beaconModuleOptions ?? []"
@@ -612,14 +609,12 @@
           ></lab-input-number>
         </div>
         <div *ngIf="vm.data.game === Game.DysonSphereProgram" class="mt-4 py-2">
-          <div
-            class="p-float-label"
-            [pTooltip]="'settings.proliferatorSelfSprayTooltip' | translate"
-          >
+          <div class="p-float-label">
             <p-dropdown
               labDropdownBase
               inputId="proliferator-self-spray"
               [autoDisplayFirst]="false"
+              [tooltip]="'settings.proliferatorSelfSprayTooltip' | translate"
               [ngModel]="vm.settings.proliferatorSprayId"
               [options]="vm.options.proliferatorModules"
               (onChange)="setProliferatorSpray($event.value)"
@@ -651,13 +646,11 @@
           </div>
         </div>
         <div class="mt-3 py-2">
-          <div
-            class="p-float-label"
-            [pTooltip]="'settings.defaultTransportBeltTooltip' | translate"
-          >
+          <div class="p-float-label">
             <p-dropdown
               labDropdownBase
               inputId="default-transport-belt"
+              [tooltip]="'settings.defaultTransportBeltTooltip' | translate"
               [ngModel]="vm.settings.beltId"
               [options]="vm.options.belts"
               (onChange)="setBelt($event.value, vm.data.defaults?.beltId)"
@@ -697,13 +690,11 @@
           </div>
         </div>
         <div *ngIf="vm.data.pipeIds.length > 1" class="mt-3 py-2">
-          <div
-            class="p-float-label"
-            [pTooltip]="'settings.defaultPipeTooltip' | translate"
-          >
+          <div class="p-float-label">
             <p-dropdown
               labDropdownBase
               inputId="default-pipe"
+              [tooltip]="'settings.defaultPipeTooltip' | translate"
               [ngModel]="vm.settings.pipeId"
               [options]="vm.options.pipes"
               (onChange)="setPipe($event.value, vm.data.defaults?.pipeId)"
@@ -743,13 +734,11 @@
           </div>
         </div>
         <div *ngIf="vm.data.cargoWagonIds.length > 1" class="mt-3 py-2">
-          <div
-            class="p-float-label"
-            [pTooltip]="'settings.defaultCargoWagonTooltip' | translate"
-          >
+          <div class="p-float-label">
             <p-dropdown
               labDropdownBase
               inputId="default-cargo-wagon"
+              [tooltip]="'settings.defaultCargoWagonTooltip' | translate"
               [ngModel]="vm.settings.cargoWagonId"
               [options]="vm.options.cargoWagons"
               (onChange)="
@@ -790,13 +779,11 @@
           </div>
         </div>
         <div *ngIf="vm.data.fluidWagonIds.length > 1" class="mt-3 py-2">
-          <div
-            class="p-float-label"
-            [pTooltip]="'settings.defaultFluidWagonTooltip' | translate"
-          >
+          <div class="p-float-label">
             <p-dropdown
               labDropdownBase
               inputId="default-fluid-wagon"
+              [tooltip]="'settings.defaultFluidWagonTooltip' | translate"
               [ngModel]="vm.settings.fluidWagonId"
               [options]="vm.options.fluidWagons"
               (onChange)="
@@ -845,13 +832,11 @@
           "
           class="mt-3 py-2"
         >
-          <div
-            class="p-float-label"
-            [pTooltip]="'settings.chemicalFuelTooltip' | translate"
-          >
+          <div class="p-float-label">
             <p-dropdown
               labDropdownBase
               inputId="chemical-fuel"
+              [tooltip]="'settings.chemicalFuelTooltip' | translate"
               [ngModel]="vm.settings.fuelId"
               [options]="vm.options.chemicalFuels"
               (onChange)="setFuel($event.value, vm.data.defaults?.fuelId)"
@@ -917,13 +902,11 @@
             </div>
           </div>
           <div class="mt-3 py-2">
-            <div
-              class="p-float-label"
-              [pTooltip]="'settings.inserterTargetTooltip' | translate"
-            >
+            <div class="p-float-label">
               <p-dropdown
                 labDropdownTranslate
                 inputId="inserter-target"
+                [tooltip]="'settings.inserterTargetTooltip' | translate"
                 [ngModel]="vm.settings.inserterTarget"
                 [options]="inserterTargetOptions"
                 (onChange)="setInserterTarget($event.value)"
@@ -951,10 +934,7 @@
         </p-divider>
         <ng-container *ngIf="vm.data.game === Game.DysonSphereProgram">
           <div class="mt-3 py-2">
-            <div
-              class="p-float-label"
-              [pTooltip]="'settings.miningSpeedTooltip' | translate"
-            >
+            <div class="p-float-label">
               <p-inputNumber
                 #miningBonusInput
                 inputId="mining-speed"
@@ -962,6 +942,7 @@
                 [min]="100"
                 [step]="10"
                 [showButtons]="true"
+                [pTooltip]="'settings.miningSpeedTooltip' | translate"
                 [ngModel]="vm.settings.miningBonus + 100"
                 (onBlur)="setMiningBonus(miningBonusInput.value - 100)"
               ></p-inputNumber>
@@ -973,10 +954,7 @@
         </ng-container>
         <ng-container *ngIf="vm.data.game === Game.Factorio">
           <div class="mt-3 py-2">
-            <div
-              class="p-float-label"
-              [pTooltip]="'settings.miningProductivityTooltip' | translate"
-            >
+            <div class="p-float-label">
               <p-inputNumber
                 #miningProdInput
                 inputId="mining-productivity"
@@ -985,6 +963,7 @@
                 [min]="0"
                 [step]="10"
                 [showButtons]="true"
+                [pTooltip]="'settings.miningProductivityTooltip' | translate"
                 [ngModel]="vm.settings.miningBonus"
                 (onBlur)="setMiningBonus(miningProdInput.value)"
               ></p-inputNumber>
@@ -994,13 +973,11 @@
             </div>
           </div>
           <div class="mt-3 py-2">
-            <div
-              class="p-float-label"
-              [pTooltip]="'settings.researchSpeedTooltip' | translate"
-            >
+            <div class="p-float-label">
               <p-dropdown
                 labDropdownTranslate
                 inputId="research-speed"
+                [pTooltip]="'settings.researchSpeedTooltip' | translate"
                 [ngModel]="vm.settings.researchSpeed"
                 [options]="researchSpeedOptions"
                 (onChange)="setResearchSpeed($event.value)"
@@ -1012,13 +989,11 @@
             </div>
           </div>
           <div class="mt-3 py-2">
-            <div
-              class="p-float-label"
-              [pTooltip]="'settings.inserterCapacityTooltip' | translate"
-            >
+            <div class="p-float-label">
               <p-dropdown
                 labDropdownTranslate
                 inputId="inserter-capacity"
+                [tooltip]="'settings.inserterCapacityTooltip' | translate"
                 [ngModel]="vm.settings.inserterCapacity"
                 [options]="inserterCapacityOptions"
                 (onChange)="setInserterCapacity($event.value)"
@@ -1048,13 +1023,11 @@
           (click)="contentSvc.showColumns$.next()"
         ></button>
         <div class="mt-3 py-2">
-          <span
-            class="p-float-label"
-            [pTooltip]="'settings.displayRateTooltip' | translate"
-          >
+          <span class="p-float-label">
             <p-dropdown
               labDropdownTranslate
               inputId="display-rate"
+              [tooltip]="'settings.displayRateTooltip' | translate"
               [ngModel]="vm.settings.displayRate"
               [options]="displayRateOptions"
               (onChange)="setDisplayRate($event.value, vm.settings.displayRate)"
@@ -1066,13 +1039,11 @@
           </span>
         </div>
         <div *ngIf="vm.columns[Column.Power].show" class="mt-3 py-2">
-          <span
-            class="p-float-label"
-            [pTooltip]="'settings.powerUnitTooltip' | translate"
-          >
+          <span class="p-float-label">
             <p-dropdown
               labDropdownTranslate
               inputId="power-unit"
+              [tooltip]="'settings.powerUnitTooltip' | translate"
               [ngModel]="vm.preferences.powerUnit"
               [options]="powerUnitOptions"
               (onChange)="setPowerUnit($event.value)"
@@ -1085,13 +1056,11 @@
         </div>
         <div class="mt-3 py-2">
           <div class="text-end"></div>
-          <div
-            class="p-float-label"
-            [pTooltip]="'settings.languageTooltip' | translate"
-          >
+          <div class="p-float-label">
             <p-dropdown
               labDropdownTranslate
               inputId="language"
+              [tooltip]="'settings.languageTooltip' | translate"
               [ngModel]="vm.preferences.language"
               [options]="languageOptions"
               (onChange)="setLanguage($event.value)"
@@ -1108,13 +1077,11 @@
           </div>
         </div>
         <div class="mt-3 py-2">
-          <div
-            class="p-float-label"
-            [pTooltip]="'settings.themeTooltip' | translate"
-          >
+          <div class="p-float-label">
             <p-dropdown
               labDropdownTranslate
               inputId="theme"
+              [tooltip]="'settings.themeTooltip' | translate"
               [ngModel]="vm.preferences.theme"
               [options]="themeOptions"
               (onChange)="setTheme($event.value)"
@@ -1140,13 +1107,11 @@
           </span>
         </p-divider>
         <div class="mt-3 py-2">
-          <div
-            class="p-float-label"
-            [pTooltip]="'settings.simplexSolverTooltip' | translate"
-          >
+          <div class="p-float-label">
             <p-dropdown
               labDropdownTranslate
               inputId="simplex-solver"
+              [tooltip]="'settings.simplexSolverTooltip' | translate"
               [ngModel]="vm.preferences.simplexType"
               [options]="simplexTypeOptions"
               (onChange)="setSimplexType($event.value)"
