@@ -279,6 +279,7 @@
                   <p-dropdown
                     *ngIf="index === 0; else removeButton"
                     labDropdownBase="icon"
+                    appendTo="body"
                     [pTooltip]="'settings.addFactoryTooltip' | translate"
                     [options]="vm.factoryOptions"
                     (onChange)="
@@ -326,6 +327,7 @@
                   <p-dropdown
                     *ngIf="factoryId; else factoryIcon"
                     labDropdownBase="icon"
+                    appendTo="body"
                     [pTooltip]="'settings.factoryTooltip' | translate"
                     [ngModel]="factoryId"
                     [options]="vm.factoryOptions"
@@ -419,6 +421,7 @@
                     <ng-template #satisfactoryPurityPicker>
                       <p-dropdown
                         labDropdownBase="icon"
+                        appendTo="body"
                         [pTooltip]="'settings.modifierTooltip' | translate"
                         [ngModel]="settings.moduleRankIds?.[0]"
                         [options]="settings.moduleOptions ?? []"
@@ -490,6 +493,7 @@
                       <!-- Beacon dropdown -->
                       <p-dropdown
                         labDropdownBase="icon"
+                        appendTo="body"
                         [pTooltip]="'settings.beaconTooltip' | translate"
                         tooltipPosition="top"
                         [ngModel]="settings.beaconId"
