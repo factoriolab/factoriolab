@@ -307,7 +307,7 @@ export class RouterService {
           this.displayWarnings(warnings);
           const v = params[Section.Version] as ZipVersion;
           const state: App.PartialState = {};
-          if (v == this.bareVersion) {
+          if (v === this.bareVersion) {
             Object.keys(params).forEach((k) => {
               params[k] = decodeURIComponent(params[k]);
             });
