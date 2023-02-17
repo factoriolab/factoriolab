@@ -128,19 +128,40 @@ export class FlowService {
               for (const sourceStep of steps) {
                 if (sourceStep.recipeId && sourceStep.outputs) {
                   if (sourceStep.outputs[step.itemId]) {
-                    // This source step produces this item
-                    const sourceAmount = targetAmount.mul(
-                      sourceStep.outputs[step.itemId]
-                    );
-                    amount = amount.sub(sourceAmount);
+                    if (!sourceStep.recipe?.produces(item.id)) {
+                      // This step does not actually produce this item
+                      // All of this item output should feed into itself
+                      if (sourceStep.id === targetId) {
+                        // Target and source step match, put all output here
+                        // Ignore parents in this case, we want all output
+                        const sourceAmount = step.items.mul(
+                          sourceStep.outputs[step.itemId]
+                        );
+                        amount = amount.sub(sourceAmount);
 
-                    // CREATE LINK: Recipe -> Recipe
-                    flow.links.push({
-                      source: `r|${sourceStep.id}`,
-                      target: `r|${targetId}`,
-                      name: item.name,
-                      text: `${sourceAmount.toString(itemPrec)}${suffix}`,
-                    });
+                        // CREATE LINK: Recipe -> Recipe (Self-link)
+                        flow.links.push({
+                          source: `r|${sourceStep.id}`,
+                          target: `r|${targetId}`,
+                          name: item.name,
+                          text: `${sourceAmount.toString(itemPrec)}${suffix}`,
+                        });
+                      }
+                    } else {
+                      // This source step produces this item
+                      const sourceAmount = targetAmount.mul(
+                        sourceStep.outputs[step.itemId]
+                      );
+                      amount = amount.sub(sourceAmount);
+
+                      // CREATE LINK: Recipe -> Recipe
+                      flow.links.push({
+                        source: `r|${sourceStep.id}`,
+                        target: `r|${targetId}`,
+                        name: item.name,
+                        text: `${sourceAmount.toString(itemPrec)}${suffix}`,
+                      });
+                    }
                   }
                 }
               }

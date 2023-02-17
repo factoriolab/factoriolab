@@ -15,14 +15,19 @@ import {
 const ROOT_ID = '';
 
 export class RateUtility {
-  static addParentValue(step: Step, parentId: string, rate: Rational): void {
-    if (!step.parents) {
-      step.parents = {};
-    }
-    if (step.parents[parentId]) {
-      step.parents[parentId] = step.parents[parentId].add(rate);
+  static addEntityValue(
+    step: Step,
+    key: 'parents' | 'outputs',
+    parentId: string,
+    rate: Rational
+  ): void {
+    const obj = step[key];
+    if (!obj) {
+      step[key] = { [parentId]: rate };
+    } else if (obj[parentId]) {
+      obj[parentId] = obj[parentId].add(rate);
     } else {
-      step.parents[parentId] = rate;
+      obj[parentId] = rate;
     }
   }
 
@@ -72,8 +77,7 @@ export class RateUtility {
     const _steps = this.copy(steps);
 
     for (const step of _steps) {
-      this.calculateParents(step, _steps);
-      this.calculateOutputs(step, _steps);
+      this.calculateParentsOutputs(step, _steps);
     }
 
     const producerEntities = toEntities(producers);
@@ -94,14 +98,31 @@ export class RateUtility {
     return this.calculateHierarchy(_steps);
   }
 
-  static calculateParents(step: Step, steps: Step[]): void {
-    if (step.recipe && step.factories) {
-      const quantity = step.factories.div(step.recipe.time);
-      for (const itemId of Object.keys(step.recipe.in)) {
-        const rate = step.recipe.in[itemId];
-        const itemStep = steps.find((s) => s.itemId === itemId);
-        if (quantity.nonzero() && rate.nonzero() && itemStep != null) {
-          this.addParentValue(itemStep, step.id, rate.mul(quantity));
+  static calculateParentsOutputs(step: Step, steps: Step[]): void {
+    if (step.recipe && step.factories?.nonzero()) {
+      const recipe = step.recipe;
+      const quantity = step.factories.div(recipe.time);
+      for (const itemId of Object.keys(recipe.in)) {
+        if (recipe.in[itemId].nonzero()) {
+          const rate = recipe.in[itemId].mul(quantity);
+          const itemStep = steps.find((s) => s.itemId === itemId);
+          if (itemStep != null) {
+            this.addEntityValue(itemStep, 'parents', step.id, rate);
+          }
+        }
+      }
+      for (const itemId of Object.keys(recipe.out)) {
+        if (recipe.out[itemId].nonzero()) {
+          const rate = recipe.out[itemId].mul(quantity);
+          const itemStep = steps.find((s) => s.itemId === itemId);
+          if (itemStep?.items?.nonzero()) {
+            this.addEntityValue(
+              step,
+              'outputs',
+              itemId,
+              rate.div(itemStep.items)
+            );
+          }
         }
       }
     }
@@ -155,25 +176,6 @@ export class RateUtility {
         } else {
           step.wagons = step.items.div(data.fluidWagonEntities[wagon].capacity);
         }
-      }
-    }
-  }
-
-  static calculateOutputs(step: Step, steps: Step[]): void {
-    if (step.recipe && step.factories?.nonzero()) {
-      const recipe = step.recipe;
-      const outputs: Entities<Rational> = {};
-      for (const id of Object.keys(recipe.out)) {
-        if (recipe.out[id].nonzero()) {
-          const val = recipe.out[id].mul(step.factories).div(recipe.time);
-          const outStep = steps.find((s) => s.itemId === id);
-          if (outStep?.items?.nonzero()) {
-            outputs[id] = val.div(outStep.items);
-          }
-        }
-      }
-      if (Object.keys(outputs).length > 0) {
-        step.outputs = outputs;
       }
     }
   }
