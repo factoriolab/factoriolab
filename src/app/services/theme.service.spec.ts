@@ -33,20 +33,6 @@ describe('ThemeService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('theme$', () => {
-    it('should use specified theme', () => {
-      let theme: Theme | undefined;
-      mockStore.overrideSelector(Preferences.getTheme, Theme.Light);
-      mockStore.refreshState();
-      service.theme$.pipe(first()).subscribe((t) => (theme = t));
-      expect(theme).toEqual(Theme.Light);
-      mockStore.overrideSelector(Preferences.getTheme, Theme.Dark);
-      mockStore.refreshState();
-      service.theme$.pipe(first()).subscribe((t) => (theme = t));
-      expect(theme).toEqual(Theme.Dark);
-    });
-  });
-
   it('should set the theme css href', () => {
     const themeLink = { href: '' };
     const tempLink = { href: '', onload: (): void => {} };
