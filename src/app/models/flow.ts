@@ -38,9 +38,20 @@ const lightTheme: FlowStyle = {
   edge: '#495057',
 };
 
-export const themeMap: Record<Theme.Light | Theme.Dark, FlowStyle> = {
+const blackTheme: FlowStyle = {
+  node: {
+    [NodeType.Input]: { color: '#044868', background: '#B3E5FC' },
+    [NodeType.Recipe]: { color: '#060606', background: '#D58739' },
+    [NodeType.Surplus]: { color: '#73000c', background: '#FFCDD2' },
+    [NodeType.Output]: { color: '#224a23', background: '#C8E6C9' },
+  },
+  edge: 'rgba(255, 255, 255, 0.87)',
+};
+
+export const themeMap: Record<Theme, FlowStyle> = {
   [Theme.Light]: lightTheme,
   [Theme.Dark]: darkTheme,
+  [Theme.Black]: blackTheme,
 };
 
 export interface FlowData {

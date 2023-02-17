@@ -1,7 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs';
 
 import { fnPropsNotNullish } from '~/helpers';
 import { Theme } from '~/models';
@@ -16,10 +15,6 @@ const LAB_THEME_STYLE_ID = 'lab-theme-css';
 })
 export class ThemeService {
   head = this.document.getElementsByTagName('head')[0];
-  theme$ = this.store
-    .select(Preferences.getTheme)
-    // Map to handle legacy dark theme value (value 2)
-    .pipe(map((theme) => (theme === Theme.Light ? Theme.Light : Theme.Dark)));
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -81,13 +76,12 @@ export class ThemeService {
       this.head.appendChild(style);
     });
 
-    this.theme$.subscribe((theme) => {
+    this.store.select(Preferences.getTheme).subscribe((theme) => {
       const themeLink = this.document.getElementById(
         LAB_THEME_STYLE_ID
       ) as HTMLLinkElement | null;
       if (themeLink) {
-        const href =
-          theme === Theme.Light ? 'theme-light.css' : 'theme-dark.css';
+        const href = this.themePath(theme);
         if (!themeLink.href.endsWith(href)) {
           // Need to switch theme, href has changed
           // Create a temporary link tag to load the new style sheet
@@ -104,14 +98,25 @@ export class ThemeService {
         }
       }
 
-      if (theme === Theme.Light) {
-        this.document.body.classList.remove('dark');
-        this.document.body.classList.add('light');
-      } else {
-        this.document.body.classList.remove('light');
-        this.document.body.classList.add('dark');
+      for (const t in [Theme.Light, Theme.Dark, Theme.Black]) {
+        if (t === theme) {
+          this.document.body.classList.add(t);
+        } else {
+          this.document.body.classList.remove(t);
+        }
       }
     });
+  }
+
+  themePath(theme: Theme): string {
+    switch (theme) {
+      case Theme.Light:
+        return 'theme-light.css';
+      case Theme.Black:
+        return 'theme-black.css';
+      default:
+        return 'theme-dark.css';
+    }
   }
 
   /**

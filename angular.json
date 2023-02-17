@@ -48,6 +48,11 @@
                 "input": "src/styles/themes/light.scss",
                 "bundleName": "theme-light",
                 "inject": false
+              },
+              {
+                "input": "src/styles/themes/black.scss",
+                "bundleName": "theme-black",
+                "inject": false
               }
             ],
             "stylePreprocessorOptions": {
