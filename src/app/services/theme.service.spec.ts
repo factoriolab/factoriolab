@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-import { first } from 'rxjs';
 
 import { CategoryId, ItemId, Mocks, TestModule } from 'src/tests';
 import { Theme } from '~/models';
