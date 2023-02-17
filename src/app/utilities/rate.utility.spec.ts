@@ -12,19 +12,28 @@ import {
 import { RateUtility } from './rate.utility';
 
 describe('RateUtility', () => {
-  describe('addParentValue', () => {
+  describe('addEntityValue', () => {
     it('should add parents field to step', () => {
       const step = { ...Mocks.Step1 };
-      RateUtility.addParentValue(step, ItemId.Coal, Rational.one);
+      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, Rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
     });
 
-    it('should add to existing parents object', () => {
+    it('should add to existing parents object value', () => {
       const step = {
         ...Mocks.Step1,
         ...{ parents: { [ItemId.Coal]: Rational.zero } },
       };
-      RateUtility.addParentValue(step, ItemId.Coal, Rational.one);
+      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, Rational.one);
+      expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
+    });
+
+    it('should add a new key to an existing parents object', () => {
+      const step = {
+        ...Mocks.Step1,
+        ...{ parents: {} },
+      };
+      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, Rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
     });
   });
@@ -112,8 +121,7 @@ describe('RateUtility', () => {
 
   describe('normalizeSteps', () => {
     it('should update update various step fields after solution is found', () => {
-      spyOn(RateUtility, 'calculateParents');
-      spyOn(RateUtility, 'calculateOutputs');
+      spyOn(RateUtility, 'calculateParentsOutputs');
       spyOn(RateUtility, 'calculateSettings');
       spyOn(RateUtility, 'calculateBelts');
       spyOn(RateUtility, 'calculateBeacons');
@@ -129,8 +137,7 @@ describe('RateUtility', () => {
         displayRateInfo[DisplayRate.PerMinute],
         Mocks.Dataset
       );
-      expect(RateUtility.calculateParents).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateOutputs).toHaveBeenCalledTimes(2);
+      expect(RateUtility.calculateParentsOutputs).toHaveBeenCalledTimes(2);
       expect(RateUtility.calculateSettings).toHaveBeenCalledTimes(2);
       expect(RateUtility.calculateBelts).toHaveBeenCalledTimes(2);
       expect(RateUtility.calculateBeacons).toHaveBeenCalledTimes(2);
@@ -139,19 +146,28 @@ describe('RateUtility', () => {
     });
   });
 
-  describe('calculateParents', () => {
+  describe('calculateParentsOutputs', () => {
     it('should add parent values for relevant steps', () => {
-      spyOn(RateUtility, 'addParentValue');
+      spyOn(RateUtility, 'addEntityValue');
       const stepA: Step = {
         id: '0',
+        items: Rational.one,
+        itemId: ItemId.IronPlate,
         recipe: Mocks.Dataset.recipeR[RecipeId.IronPlate],
         factories: Rational.one,
       };
       const stepB: Step = { id: '1', itemId: ItemId.IronOre };
-      RateUtility.calculateParents(stepA, [stepA, stepB]);
-      expect(RateUtility.addParentValue).toHaveBeenCalledWith(
+      RateUtility.calculateParentsOutputs(stepA, [stepA, stepB]);
+      expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
         stepB,
+        'parents',
         '0',
+        Rational.from(5, 16)
+      );
+      expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
+        stepA,
+        'outputs',
+        'iron-plate',
         Rational.from(5, 16)
       );
     });
@@ -284,22 +300,6 @@ describe('RateUtility', () => {
       );
       expect(step.belts).toBeUndefined();
       expect(step.wagons).toBeUndefined();
-    });
-  });
-
-  describe('calculateOutputs', () => {
-    it('should calculate step output percentages', () => {
-      const step: Step = {
-        id: '0',
-        itemId: ItemId.Coal,
-        items: Rational.one,
-        factories: Rational.one,
-        recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
-      };
-      RateUtility.calculateOutputs(step, [step]);
-      expect(step.outputs).toEqual({
-        [ItemId.Coal]: Rational.one,
-      });
     });
   });
 

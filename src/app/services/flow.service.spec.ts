@@ -18,6 +18,9 @@ describe('FlowService', () => {
 
   describe('buildGraph', () => {
     it('should handle various link and node types', () => {
+      const data = Mocks.getDataset();
+      const loopRecipe = data.recipeR[RecipeId.IronOre];
+      loopRecipe.in[ItemId.IronOre] = Rational.ten;
       const result = service.buildGraph(
         [
           {
@@ -25,6 +28,7 @@ describe('FlowService', () => {
             itemId: ItemId.CrudeOil,
             items: Rational.ten,
             recipeId: RecipeId.CrudeOil,
+            recipe: Mocks.AdjustedData.recipeR[RecipeId.CrudeOil],
             recipeSettings:
               Mocks.RationalRecipeSettingsInitial[RecipeId.CrudeOil],
             factories: Rational.one,
@@ -67,6 +71,16 @@ describe('FlowService', () => {
             recipeSettings:
               Mocks.RationalRecipeSettingsInitial[RecipeId.IronPlate],
           },
+          // Step that feeds itself
+          {
+            id: '5',
+            itemId: ItemId.IronOre,
+            items: Rational.one,
+            recipeId: RecipeId.IronOre,
+            recipe: loopRecipe,
+            parents: { ['5']: Rational.one },
+            outputs: { [ItemId.IronOre]: Rational.one },
+          },
         ],
         Mocks.Dataset,
         '/m',
@@ -75,7 +89,7 @@ describe('FlowService', () => {
       );
 
       expect(result.nodes.length).toEqual(6);
-      expect(result.links.length).toEqual(4);
+      expect(result.links.length).toEqual(5);
     });
   });
 });
