@@ -97,7 +97,7 @@
       "factory": "Machine",
       "recipes": "Recipes"
     },
-    "theme": { "system": "System", "light": "Light", "dark": "Dark" }
+    "theme": { "light": "Light", "dark": "Dark (Default)", "black": "Black" }
   },
   "tooltip": {
     "speed": "Speed",
