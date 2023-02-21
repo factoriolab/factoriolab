@@ -35,7 +35,7 @@ export class FlowService {
         .select(Settings.getDisplayRateInfo)
         .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
       this.store.select(Preferences.getColumns),
-      this.theme.theme$,
+      this.store.select(Preferences.getTheme),
     ]).pipe(
       map(([steps, data, suffix, columns, theme]) =>
         this.buildGraph(steps, data, suffix, columns, themeMap[theme])

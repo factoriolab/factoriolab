@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-import { first } from 'rxjs';
 
 import { CategoryId, ItemId, Mocks, TestModule } from 'src/tests';
 import { Theme } from '~/models';
@@ -33,20 +32,6 @@ describe('ThemeService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('theme$', () => {
-    it('should use specified theme', () => {
-      let theme: Theme | undefined;
-      mockStore.overrideSelector(Preferences.getTheme, Theme.Light);
-      mockStore.refreshState();
-      service.theme$.pipe(first()).subscribe((t) => (theme = t));
-      expect(theme).toEqual(Theme.Light);
-      mockStore.overrideSelector(Preferences.getTheme, Theme.Dark);
-      mockStore.refreshState();
-      service.theme$.pipe(first()).subscribe((t) => (theme = t));
-      expect(theme).toEqual(Theme.Dark);
-    });
-  });
-
   it('should set the theme css href', () => {
     const themeLink = { href: '' };
     const tempLink = { href: '', onload: (): void => {} };
@@ -70,6 +55,15 @@ describe('ThemeService', () => {
     expect(themeLink.href).toEqual('theme-light.css');
     tempLink.onload();
     expect(themeLink.href).toEqual('theme-dark.css');
+  });
+
+  describe('themePath', () => {
+    it('should handle various themes', () => {
+      expect(service.themePath(Theme.Light)).toEqual('theme-light.css');
+      expect(service.themePath(Theme.Black)).toEqual('theme-black.css');
+      expect(service.themePath(Theme.Dark)).toEqual('theme-dark.css');
+      expect(service.themePath('other' as any)).toEqual('theme-dark.css');
+    });
   });
 
   describe('appInitTheme', () => {

@@ -15,6 +15,8 @@ $primary-color: #eb9947; // hsl(30, 80, 60)
 $primary-color-text: #212529;
 $maskbg: rgba(0, 0, 0, 0.4);
 $button-size: 2.571rem;
+$font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
+  Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 
 // Not defined in root, based on primary
 $shadow-color: color.adjust($primary-color, $lightness: +11%);
@@ -86,28 +88,27 @@ $danger-a16: rgba($danger-color, 0.16);
 
 :root {
   --header-sticky-color: #0000004d;
-  --surface-a: #1e1e1e;
-  --surface-b: #121212;
-  --surface-c: rgba(255, 255, 255, 0.03);
-  --surface-d: #383838;
-  --surface-e: #1e1e1e;
-  --surface-f: #1e1e1e;
-  --text-color: rgba(255, 255, 255, 0.87);
-  --text-color-secondary: rgba(255, 255, 255, 0.6);
+  --surface-a: #{$surface-a};
+  --surface-b: #{$surface-b};
+  --surface-c: #{$surface-c};
+  --surface-d: #{$surface-d};
+  --surface-e: #{$surface-a};
+  --surface-f: #{$surface-a};
+  --text-color: #{$text-color};
+  --text-color-secondary: #{$text-color-secondary};
   --primary-color: #{$primary-color};
-  --primary-color-text: #212529;
-  --font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
-    Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  --primary-color-text: #{$primary-color-text};
+  --font-family: #{$font-family};
   --content-padding: 1rem;
   --inline-spacing: 0.5rem;
   --border-radius: 3px;
-  --surface-ground: #121212;
-  --surface-section: #121212;
-  --surface-card: #1e1e1e;
-  --surface-overlay: #1e1e1e;
-  --surface-border: #383838;
-  --surface-hover: rgba(255, 255, 255, 0.03);
-  --maskbg: rgba(0, 0, 0, 0.4);
+  --surface-ground: #{$surface-b};
+  --surface-section: #{$surface-b};
+  --surface-card: #{$surface-a};
+  --surface-overlay: #{$surface-a};
+  --surface-border: #{$surface-d};
+  --surface-hover: #{$surface-c};
+  --maskbg: #{$maskbg};
   --focus-ring: 0 0 0 1px #{$shadow-color};
   color-scheme: dark;
 }
@@ -117,8 +118,7 @@ $danger-a16: rgba($danger-color, 0.16);
 }
 
 .p-component {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: $font-family;
   font-size: 1rem;
   font-weight: normal;
 }
@@ -147,8 +147,7 @@ $danger-a16: rgba($danger-color, 0.16);
 
 .p-link {
   font-size: 1rem;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: $font-family;
   border-radius: 3px;
 }
 .p-link:focus {
@@ -207,8 +206,7 @@ $danger-a16: rgba($danger-color, 0.16);
   .p-autocomplete-multiple-container
   .p-autocomplete-input-token
   input {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: $font-family;
   font-size: 1rem;
   color: $text-color;
   padding: 0;
@@ -485,8 +483,7 @@ p-checkbox.ng-dirty.ng-invalid > .p-checkbox > .p-checkbox-box {
   padding: 0.25rem 0;
 }
 .p-chips .p-chips-multiple-container .p-chips-input-token input {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: $font-family;
   font-size: 1rem;
   color: $text-color;
   padding: 0;
@@ -945,8 +942,7 @@ p-inputswitch.ng-dirty.ng-invalid > .p-inputswitch {
 }
 
 .p-inputtext {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-family: $font-family;
   font-size: 1rem;
   color: $text-color;
   background: $surface-b;
