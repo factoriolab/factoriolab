@@ -57,6 +57,15 @@ describe('ThemeService', () => {
     expect(themeLink.href).toEqual('theme-dark.css');
   });
 
+  describe('themePath', () => {
+    it('should handle various themes', () => {
+      expect(service.themePath(Theme.Light)).toEqual('theme-light.css');
+      expect(service.themePath(Theme.Black)).toEqual('theme-black.css');
+      expect(service.themePath(Theme.Dark)).toEqual('theme-dark.css');
+      expect(service.themePath('other' as any)).toEqual('theme-dark.css');
+    });
+  });
+
   describe('appInitTheme', () => {
     it('should switch to light theme if preferred', () => {
       const themeLink = { href: '' };

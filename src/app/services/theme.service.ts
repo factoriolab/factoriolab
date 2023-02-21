@@ -98,7 +98,7 @@ export class ThemeService {
         }
       }
 
-      for (const t in [Theme.Light, Theme.Dark, Theme.Black]) {
+      for (const t of [Theme.Light, Theme.Dark, Theme.Black]) {
         if (t === theme) {
           this.document.body.classList.add(t);
         } else {
