@@ -13,41 +13,43 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 export interface SettingsState {
   modId: string;
   disabledRecipeIds?: string[];
-  displayRate: DisplayRate;
+  netProductionOnly: boolean;
   preset: Preset;
   beaconReceivers: string | null;
+  proliferatorSprayId: string;
   beltId?: string;
   pipeId?: string;
   fuelId?: string;
   cargoWagonId?: string;
   fluidWagonId?: string;
   flowRate: number;
+  inserterTarget: InserterTarget;
   miningBonus: number;
   researchSpeed: ResearchSpeed;
-  inserterTarget: InserterTarget;
   inserterCapacity: InserterCapacity;
+  displayRate: DisplayRate;
   costFactor: string;
   costFactory: string;
   costInput: string;
   costIgnored: string;
-  proliferatorSprayId: string;
 }
 
 export const initialSettingsState: SettingsState = {
   modId: '1.1',
-  displayRate: DisplayRate.PerMinute,
+  netProductionOnly: false,
   preset: Preset.Minimum,
   beaconReceivers: null,
+  proliferatorSprayId: ItemId.Module,
   flowRate: 1500,
+  inserterTarget: InserterTarget.ExpressTransportBelt,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
-  inserterTarget: InserterTarget.ExpressTransportBelt,
   inserterCapacity: InserterCapacity.Capacity7,
+  displayRate: DisplayRate.PerMinute,
   costFactor: '1',
   costFactory: '1',
   costInput: '1000000',
   costIgnored: '0',
-  proliferatorSprayId: ItemId.Module,
 };
 
 export function settingsReducer(
@@ -61,8 +63,6 @@ export function settingsReducer(
         : initialSettingsState;
     case App.AppActionType.RESET:
       return initialSettingsState;
-    case SettingsActionType.SET_PRESET:
-      return { ...state, ...{ preset: action.payload } };
     case SettingsActionType.SET_MOD: {
       const newState = {
         ...state,
@@ -89,8 +89,14 @@ export function settingsReducer(
           disabledRecipeIds: StoreUtility.compareValues(action.payload),
         },
       };
+    case SettingsActionType.SET_NET_PRODUCTION_ONLY:
+      return { ...state, ...{ netProductionOnly: action.payload } };
+    case SettingsActionType.SET_PRESET:
+      return { ...state, ...{ preset: action.payload } };
     case SettingsActionType.SET_BEACON_RECEIVERS:
       return { ...state, ...{ beaconReceivers: action.payload } };
+    case SettingsActionType.SET_PROLIFERATOR_SPRAY:
+      return { ...state, ...{ proliferatorSprayId: action.payload } };
     case SettingsActionType.SET_BELT:
       return {
         ...state,
@@ -106,8 +112,6 @@ export function settingsReducer(
         ...state,
         ...{ fuelId: StoreUtility.compareValue(action.payload) },
       };
-    case SettingsActionType.SET_FLOW_RATE:
-      return { ...state, ...{ flowRate: action.payload } };
     case SettingsActionType.SET_CARGO_WAGON:
       return {
         ...state,
@@ -118,16 +122,18 @@ export function settingsReducer(
         ...state,
         ...{ fluidWagonId: StoreUtility.compareValue(action.payload) },
       };
-    case SettingsActionType.SET_DISPLAY_RATE:
-      return { ...state, ...{ displayRate: action.payload.value } };
+    case SettingsActionType.SET_FLOW_RATE:
+      return { ...state, ...{ flowRate: action.payload } };
+    case SettingsActionType.SET_INSERTER_TARGET:
+      return { ...state, ...{ inserterTarget: action.payload } };
     case SettingsActionType.SET_MINING_BONUS:
       return { ...state, ...{ miningBonus: action.payload } };
     case SettingsActionType.SET_RESEARCH_SPEED:
       return { ...state, ...{ researchSpeed: action.payload } };
-    case SettingsActionType.SET_INSERTER_TARGET:
-      return { ...state, ...{ inserterTarget: action.payload } };
     case SettingsActionType.SET_INSERTER_CAPACITY:
       return { ...state, ...{ inserterCapacity: action.payload } };
+    case SettingsActionType.SET_DISPLAY_RATE:
+      return { ...state, ...{ displayRate: action.payload.value } };
     case SettingsActionType.SET_COST_FACTOR:
       return { ...state, ...{ costFactor: action.payload } };
     case SettingsActionType.SET_COST_FACTORY:
@@ -136,8 +142,6 @@ export function settingsReducer(
       return { ...state, ...{ costInput: action.payload } };
     case SettingsActionType.SET_COST_IGNORED:
       return { ...state, ...{ costIgnored: action.payload } };
-    case SettingsActionType.SET_PROLIFERATOR_SPRAY:
-      return { ...state, ...{ proliferatorSprayId: action.payload } };
     case SettingsActionType.RESET_COST:
       return {
         ...state,

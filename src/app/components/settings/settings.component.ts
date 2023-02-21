@@ -255,6 +255,10 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
   }
 
+  setNetProductionOnly(value: boolean): void {
+    this.store.dispatch(new Settings.SetNetProductionOnlyAction(value));
+  }
+
   setPreset(value: Preset): void {
     this.store.dispatch(new Settings.SetPresetAction(value));
   }
