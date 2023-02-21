@@ -172,6 +172,7 @@ export class RouterService {
       settings
     ).subscribe((zData) => {
       this.zip = this.getHash(zData);
+      console.log('updateUrl', this.zip);
       const hash = this.router.url.split('#');
       const url = `${hash[0].split('?')[0]}?${this.zip}${
         (hash[1] && `#${hash[1]}`) || ''
@@ -285,6 +286,7 @@ export class RouterService {
         }
 
         if (query && this.zip !== query) {
+          console.log('updateState', query, this.zip);
           let zip = query;
           const zipSection = new URLSearchParams(zip).get(Section.Zip);
           if (zipSection != null) {
@@ -387,6 +389,7 @@ export class RouterService {
   }
 
   dispatch(zip: string, state: App.PartialState): void {
+    console.log('dispatch', zip);
     this.zip = zip;
     this.store.dispatch(new App.LoadAction(state));
     this.ready$.next();
@@ -876,8 +879,9 @@ export class RouterService {
     );
 
     if (z.bare.length) {
-      data.objectives.bare += `&${Section.Producers}=${z.bare}`;
-      data.objectives.hash += `&${Section.Producers}${z.hash}`;
+      const prefix = data.objectives.bare.length ? '&' : '';
+      data.objectives.bare += `${prefix}${Section.Producers}=${z.bare}`;
+      data.objectives.hash += `${prefix}${Section.Producers}${z.hash}`;
     }
   }
 
