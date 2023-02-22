@@ -195,6 +195,7 @@ describe('SettingsComponent', () => {
     dispatch.val('removeState', Preferences.RemoveStateAction);
     dispatch.val('setMod', Settings.SetModAction);
     dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
+    dispatch.val('setNetProductionOnly', Settings.SetNetProductionOnlyAction);
     dispatch.val('setPreset', Settings.SetPresetAction);
     dispatch.valDef('removeFactory', Factories.RemoveAction);
     dispatch.idValDef('setFactory', Factories.SetFactoryAction);

@@ -674,6 +674,63 @@ describe('RecipeUtility', () => {
       expected.in[ItemId.Coal] = Rational.from(1, 90);
       expect(result).toEqual(expected);
     });
+
+    it('should reduce net production to output only', () => {
+      const data = Mocks.getDataset();
+      data.recipeEntities[RecipeId.CoalLiquefaction].in[ItemId.HeavyOil] = 1;
+      data.recipeEntities[RecipeId.CoalLiquefaction].out[ItemId.HeavyOil] = 2;
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.CoalLiquefaction,
+        ItemId.Coal,
+        ItemId.Module,
+        Rational.zero,
+        Rational.zero,
+        true,
+        Mocks.RationalRecipeSettings[RecipeId.CoalLiquefaction],
+        Mocks.ItemSettingsInitial,
+        data
+      );
+      expect(result.in[ItemId.HeavyOil]).toBeUndefined();
+      expect(result.out[ItemId.HeavyOil]).toEqual(Rational.one);
+    });
+
+    it('should reduce net production to input only', () => {
+      const data = Mocks.getDataset();
+      data.recipeEntities[RecipeId.CoalLiquefaction].in[ItemId.HeavyOil] = 2;
+      data.recipeEntities[RecipeId.CoalLiquefaction].out[ItemId.HeavyOil] = 1;
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.CoalLiquefaction,
+        ItemId.Coal,
+        ItemId.Module,
+        Rational.zero,
+        Rational.zero,
+        true,
+        Mocks.RationalRecipeSettings[RecipeId.CoalLiquefaction],
+        Mocks.ItemSettingsInitial,
+        data
+      );
+      expect(result.in[ItemId.HeavyOil]).toEqual(Rational.one);
+      expect(result.out[ItemId.HeavyOil]).toBeUndefined();
+    });
+
+    it('should reduce net production to no input/output', () => {
+      const data = Mocks.getDataset();
+      data.recipeEntities[RecipeId.CoalLiquefaction].in[ItemId.HeavyOil] = 1;
+      data.recipeEntities[RecipeId.CoalLiquefaction].out[ItemId.HeavyOil] = 1;
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.CoalLiquefaction,
+        ItemId.Coal,
+        ItemId.Module,
+        Rational.zero,
+        Rational.zero,
+        true,
+        Mocks.RationalRecipeSettings[RecipeId.CoalLiquefaction],
+        Mocks.ItemSettingsInitial,
+        data
+      );
+      expect(result.in[ItemId.HeavyOil]).toBeUndefined();
+      expect(result.out[ItemId.HeavyOil]).toBeUndefined();
+    });
   });
 
   describe('adjustSiloRecipes', () => {
