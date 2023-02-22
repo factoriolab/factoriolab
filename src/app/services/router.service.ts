@@ -876,8 +876,9 @@ export class RouterService {
     );
 
     if (z.bare.length) {
-      data.objectives.bare += `&${Section.Producers}=${z.bare}`;
-      data.objectives.hash += `&${Section.Producers}${z.hash}`;
+      const prefix = data.objectives.bare.length ? '&' : '';
+      data.objectives.bare += `${prefix}${Section.Producers}=${z.bare}`;
+      data.objectives.hash += `${prefix}${Section.Producers}${z.hash}`;
     }
   }
 
@@ -1207,6 +1208,7 @@ export class RouterService {
         this.zipDiffString(state.costIgnored, init.costIgnored),
         this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
         this.zipDiffString(state.proliferatorSprayId, init.proliferatorSprayId),
+        this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
       ]),
       hash: this.zipFields([
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
@@ -1236,6 +1238,7 @@ export class RouterService {
           init.proliferatorSprayId,
           hash.modules
         ),
+        this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
       ]),
     };
 
@@ -1275,6 +1278,7 @@ export class RouterService {
         costIgnored: this.parseString(s[i++]),
         beaconReceivers: this.parseString(s[i++]),
         proliferatorSprayId: this.parseNString(s[i++], hash.modules),
+        netProductionOnly: this.parseBool(s[i++]),
       };
     } else {
       obj = {
@@ -1298,6 +1302,7 @@ export class RouterService {
         costIgnored: this.parseString(s[i++]),
         beaconReceivers: this.parseString(s[i++]),
         proliferatorSprayId: this.parseString(s[i++]),
+        netProductionOnly: this.parseBool(s[i++]),
       };
     }
 

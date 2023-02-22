@@ -94,6 +94,7 @@ export class RecipeUtility {
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
+    netProductionOnly: boolean,
     settings: RationalRecipeSettings,
     itemSettings: Entities<ItemSettings>,
     data: Dataset
@@ -374,6 +375,30 @@ export class RecipeUtility {
       }
     }
 
+    if (netProductionOnly) {
+      for (const outId of Object.keys(recipe.out)) {
+        const output = recipe.out[outId];
+        if (recipe.in[outId] != null) {
+          // Recipe contains loop; reduce to net production
+          const input = recipe.in[outId];
+
+          if (input.gt(output)) {
+            // More input, delete the output
+            recipe.in[outId] = input.sub(output);
+            delete recipe.out[outId];
+          } else if (input.lt(output)) {
+            // More output, delete the input
+            recipe.out[outId] = output.sub(input);
+            delete recipe.in[outId];
+          } else {
+            // Equal amounts, remove both
+            delete recipe.in[outId];
+            delete recipe.out[outId];
+          }
+        }
+      }
+    }
+
     return recipe;
   }
 
@@ -444,6 +469,7 @@ export class RecipeUtility {
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
+    netProductionOnly: boolean,
     costFactor: Rational,
     costFactory: Rational,
     data: Dataset
@@ -455,6 +481,7 @@ export class RecipeUtility {
       proliferatorSprayId,
       miningBonus,
       researchSpeed,
+      netProductionOnly,
       data
     );
     this.adjustCost(recipeR, recipeSettings, costFactor, costFactory);
@@ -509,6 +536,7 @@ export class RecipeUtility {
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
+    netProductionOnly: boolean,
     data: Dataset
   ): Entities<RationalRecipe> {
     return this.adjustSiloRecipes(
@@ -519,6 +547,7 @@ export class RecipeUtility {
           proliferatorSprayId,
           miningBonus,
           researchSpeed,
+          netProductionOnly,
           recipeSettings[i],
           itemSettings,
           data

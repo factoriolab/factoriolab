@@ -245,7 +245,9 @@
     "advanced": "Advanced",
     "simplexSolver": "Simplex solver",
     "simplexSolverTooltip": "Select the simplex solver algorithm; JS BigInt Rational is slower but maintains full precision",
-    "bypassLanding": "Always skip landing page"
+    "bypassLanding": "Always skip landing page",
+    "netProductionOnly": "Net production only",
+    "netProductionOnlyTooltip": "If checked, recipes that both produce and consume the same item are reduced to the net production only"
   },
   "objectives": {
     "title": "Objectives",

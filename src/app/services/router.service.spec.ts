@@ -105,23 +105,24 @@ const mockFactoriesState: Factories.FactoriesState = {
 const mockSettingsState: Settings.SettingsState = {
   modId: '1.0',
   disabledRecipeIds: [],
-  displayRate: DisplayRate.PerHour,
+  netProductionOnly: true,
   preset: Preset.Modules,
   beaconReceivers: '1',
+  proliferatorSprayId: ItemId.ProductivityModule,
   beltId: ItemId.TransportBelt,
   fuelId: ItemId.Coal,
   cargoWagonId: ItemId.CargoWagon,
   fluidWagonId: ItemId.FluidWagon,
   flowRate: 1200,
+  inserterTarget: InserterTarget.Chest,
   miningBonus: 100,
   researchSpeed: ResearchSpeed.Speed0,
-  inserterTarget: InserterTarget.Chest,
   inserterCapacity: InserterCapacity.Capacity0,
+  displayRate: DisplayRate.PerHour,
   costFactor: '2',
   costFactory: '10',
   costInput: '0',
   costIgnored: '100',
-  proliferatorSprayId: ItemId.ProductivityModule,
 };
 const mockZip: Zip = {
   bare: 'p=steel-chest*1*1&q=steel-chest*1',
@@ -134,10 +135,10 @@ const mockZipPartial: Zip = {
     'vity-module*0*200*100&f=1*productivity-module~speed-module*1*speed-modul' +
     'e*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*%3D*transport-belt' +
     '*coal*1200*100*0*0*0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-' +
-    'module',
+    'module*1',
   hash:
     '&e1*G~G*A*8&bB&iC6*1*C*A&rDB*B*A~A*0*200*100&f1*D~G*1*G*A_B_Q&s2*1*=*C*A' +
-    '*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D',
+    '*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D*1',
 };
 const mockState: LabState = {
   productsState: mockProductsState,
@@ -386,18 +387,11 @@ describe('RouterService', () => {
     it('should unzip v0', () => {
       spyOn(window, 'alert');
       const url =
-        '/#z=eJxtUNsKwyAM.Zr5EHDUFsZeZC.7j6E2toJVp3ZjL.v2dbSD2pUQyOXk5CSBp4xoqeoxZWDAyL2sEMkZMRtUjsKl4GOmEm0GJWLn6VN03pFYQEVKOEhrXEcHoXrjkNaAWqPK5mHyiw6-HS2-.0vTlhQQ2x9inYBEobyDuqqATX4mmjMIcWpueIupknEhue1JvM036DE6oZAkzo4VHJrrzuleWGBfIc1pUTPb6ieg7WjaJb58AJs7glk_';
+        '/#z=eJxtUNsKwyAM.Zr5EHDUFsZeZC.7j6E2toJVp3ZjL.v2dbSD2pUQyOXk5CSBp4xo' +
+        'qeoxZWDAyL2sEMkZMRtUjsKl4GOmEm0GJWLn6VN03pFYQEVKOEhrXEcHoXrjkNaAWqPK' +
+        '5mHyiw6-HS2-.0vTlhQQ2x9inYBEobyDuqqATX4mmjMIcWpueIupknEhue1JvM036DE6' +
+        'oZAkzo4VHJrrzuleWGBfIc1pUTPb6ieg7WjaJb58AJs7glk_';
       (router.events as any).next(new NavigationEnd(2, url, url));
-
-      // const newZip = service.bytesToBase64(
-      //   deflate(
-      //     mockZip.bare +
-      //       '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
-      //       'ity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
-      //       '_steel-furnace&s=1.0*%3D*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?'
-      //   )
-      // );
-      // console.log(newZip);
 
       const mockStateV0: App.PartialState = {
         ...mockState,
@@ -409,11 +403,15 @@ describe('RouterService', () => {
       delete mockStateV0.settingsState?.costInput;
       delete mockStateV0.settingsState?.costIgnored;
       delete mockStateV0.settingsState?.proliferatorSprayId;
+      delete mockStateV0.settingsState?.netProductionOnly;
       expect(service.dispatch).toHaveBeenCalledWith(
         mockZip.bare +
-          '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectiv' +
-          'ity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2' +
-          '_steel-furnace&s=1.0*%3D*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-wagon*?',
+          '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*asse' +
+          'mbling-machine-2*effectivity-module~effectivity-module*1*speed-mod' +
+          'ule~speed-module*beacon*200*100*8&f=1*productivity-module~speed-mo' +
+          'dule*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.' +
+          '0*%3D*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-' +
+          'wagon*?',
         mockStateV0
       );
       expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
@@ -429,14 +427,21 @@ describe('RouterService', () => {
     it('should unzip v1', () => {
       spyOn(window, 'alert');
       const v1Full =
-        'p=steel-chest*1*1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module' +
-        '~speed-module*beacon*200*100*8&f=1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.0*2*1*=*tran' +
-        'sport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon*?*2*10*0*100*1*productivity-module&v=1';
+        'p=steel-chest*1*1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel' +
+        '-chest*assembling-machine-2*effectivity-module~effectivity-module*1*' +
+        'speed-module~speed-module*beacon*200*100*8&f=1*productivity-module~s' +
+        'peed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace' +
+        '&s=1.0*2*1*=*transport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-' +
+        'wagon*?*2*10*0*100*1*productivity-module&v=1';
       const url = `/?${v1Full}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
 
-      const mockStateV1 = { ...mockState } as Partial<LabState>;
+      const mockStateV1: App.PartialState = {
+        ...mockState,
+        ...{ settingsState: { ...mockState.settingsState } },
+      };
       delete mockStateV1.producersState;
+      delete mockStateV1.settingsState?.netProductionOnly;
       expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockStateV1);
       expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
     });
@@ -453,23 +458,22 @@ describe('RouterService', () => {
     it('should unzip v2', () => {
       spyOn(window, 'alert');
       const url =
-        '/?z=eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78mmFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSMGkU_';
-
-      // const newZip = service.bytesToBase64(
-      //   deflate(
-      //     'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2'
-      //   )
-      // );
-      // console.log(newZip);
+        '/?z=eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78m' +
+        'mFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSMGkU_';
 
       spyOn(dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
-      const mockStateV2 = { ...mockState } as Partial<LabState>;
+      const mockStateV2: App.PartialState = {
+        ...mockState,
+        ...{ settingsState: { ...mockState.settingsState } },
+      };
       delete mockStateV2.producersState;
+      delete mockStateV2.settingsState?.netProductionOnly;
       expect(service.dispatch).toHaveBeenCalledWith(
-        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
+        'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2' +
+          '*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
         mockStateV2
       );
       expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
@@ -487,22 +491,25 @@ describe('RouterService', () => {
     it('should unzip v3', () => {
       spyOn(window, 'alert');
       const url =
-        '/?z=eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6AbeMG5w_';
-
-      // const newZip = service.bytesToBase64(
-      //   deflate(
-      //     'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3'
-      //   )
-      // );
-      // console.log(newZip);
+        '/?z=eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX' +
+        '5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6AbeM' +
+        'G5w_';
 
       spyOn(dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
+
+      const mockStateV3: App.PartialState = {
+        ...mockState,
+        ...{ settingsState: { ...mockState.settingsState } },
+      };
+      delete mockStateV3.settingsState?.netProductionOnly;
+
       expect(service.dispatch).toHaveBeenCalledWith(
-        'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
-        mockState
+        'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_' +
+          'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
+        mockStateV3
       );
       expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
     });
@@ -525,7 +532,11 @@ describe('RouterService', () => {
       const url = `/?${v4Full}`;
       (router.events as any).next(new NavigationEnd(2, url, url));
 
-      const mockStateV4 = { ...mockState } as Partial<LabState>;
+      const mockStateV4: App.PartialState = {
+        ...mockState,
+        ...{ settingsState: { ...mockState.settingsState } },
+      };
+      delete mockStateV4.settingsState?.netProductionOnly;
       expect(service.dispatch).toHaveBeenCalledWith(v4Full, mockStateV4);
     });
 
@@ -544,22 +555,20 @@ describe('RouterService', () => {
         'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4DZYwb' +
         'BA__&v=5';
 
-      // const newZip = service.bytesToBase64(
-      //   deflate(
-      //     'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G**' +
-      //       'G*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D&v5'
-      //   )
-      // );
-      // console.log(newZip);
-
       spyOn(dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null])
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
+
+      const mockStateV5: App.PartialState = {
+        ...mockState,
+        ...{ settingsState: { ...mockState.settingsState } },
+      };
+      delete mockStateV5.settingsState?.netProductionOnly;
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_' +
           'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D&v5',
-        mockState
+        mockStateV5
       );
     });
   });
@@ -829,6 +838,15 @@ describe('RouterService', () => {
         },
         index: 2,
       });
+    });
+  });
+
+  describe('zipProducers', () => {
+    it('should exclude leading ampersand if products are empty', () => {
+      const data = mockZipData();
+      service.zipProducers(data, [Mocks.Producer], Mocks.Hash);
+      expect(data.objectives.bare.startsWith('&')).toBeFalse();
+      expect(data.objectives.hash.startsWith('&')).toBeFalse();
     });
   });
 

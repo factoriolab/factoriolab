@@ -50,6 +50,7 @@ export const getRationalProducers = createSelector(
             adj.proliferatorSprayId,
             adj.miningBonus,
             adj.researchSpeed,
+            adj.netProductionOnly,
             new RationalRecipeSettings(p),
             itemSettings,
             adj.data
