@@ -49,6 +49,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
@@ -72,6 +73,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         Mocks.RationalRecipeSettings[RecipeId.CopperCable],
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
@@ -98,6 +100,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.two,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
@@ -124,6 +127,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.two,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
@@ -180,6 +184,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         data
@@ -234,6 +239,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         data
@@ -261,6 +267,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
@@ -289,6 +296,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
@@ -315,6 +323,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         Mocks.RationalRecipeSettingsInitial[RecipeId.UsedUpUraniumFuelCell],
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
@@ -343,6 +352,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         Mocks.RationalRecipeSettingsInitial[RecipeId.UsedUpUraniumFuelCell],
         Mocks.ItemSettingsInitial,
         data
@@ -359,6 +369,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
@@ -387,6 +398,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         data
@@ -427,6 +439,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         data
@@ -469,6 +482,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         data
@@ -535,6 +549,7 @@ describe('RecipeUtility', () => {
         ItemId.ProductivityModule,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         data
@@ -601,6 +616,7 @@ describe('RecipeUtility', () => {
         ItemId.SpeedModule,
         Rational.zero,
         Rational.zero,
+        false,
         settings,
         Mocks.ItemSettingsInitial,
         data
@@ -642,6 +658,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.zero,
+        false,
         Mocks.RationalRecipeSettings[RecipeId.CopperCable],
         Mocks.ItemSettingsInitial,
         data
@@ -671,6 +688,7 @@ describe('RecipeUtility', () => {
             ItemId.Module,
             Rational.zero,
             Rational.one,
+            false,
             Mocks.RationalRecipeSettingsInitial[i],
             Mocks.ItemSettingsInitial,
             Mocks.Dataset
@@ -802,6 +820,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.one,
+        false,
         Rational.one,
         Rational.one,
         Mocks.Dataset
@@ -831,6 +850,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.one,
+        false,
         Rational.one,
         Rational.one,
         Mocks.Dataset
@@ -849,6 +869,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.one,
+        false,
         Rational.one,
         Rational.one,
         Mocks.Dataset
@@ -890,6 +911,7 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         Rational.zero,
         Rational.one,
+        false,
         Mocks.Dataset
       );
     });

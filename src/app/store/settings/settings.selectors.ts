@@ -663,29 +663,29 @@ export const getBeltSpeedTxt = createSelector(
 );
 
 export const getAdjustmentData = createSelector(
-  getFuelId,
+  getNetProductionOnly,
   getProliferatorSprayId,
+  getFuelId,
   getRationalMiningBonus,
   getResearchFactor,
-  getNetProductionOnly,
   getRationalCostFactor,
   getRationalCostFactory,
   getDataset,
   (
-    fuelId,
+    netProductionOnly,
     proliferatorSprayId,
+    fuelId,
     miningBonus,
     researchSpeed,
-    netProductionOnly,
     costFactor,
     costFactory,
     data
   ) => ({
-    fuelId,
+    netProductionOnly,
     proliferatorSprayId,
+    fuelId,
     miningBonus,
     researchSpeed,
-    netProductionOnly,
     costFactor,
     costFactory,
     data,
