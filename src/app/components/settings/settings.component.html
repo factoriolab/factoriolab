@@ -236,6 +236,15 @@
             "
           ></lab-picker>
         </div>
+        <div class="py-2">
+          <p-checkbox
+            [ngModel]="vm.settings.netProductionOnly"
+            [binary]="true"
+            [label]="'settings.netProductionOnly' | translate"
+            [pTooltip]="'settings.netProductionOnlyTooltip' | translate"
+            (onChange)="setNetProductionOnly($event.checked)"
+          ></p-checkbox>
+        </div>
       </div>
       <div class="mb-2">
         <p-divider>

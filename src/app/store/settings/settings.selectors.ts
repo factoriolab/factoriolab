@@ -41,19 +41,27 @@ import { initialSettingsState, SettingsState } from './settings.reducer';
 export const settingsState = (state: LabState): SettingsState =>
   state.settingsState;
 
-export const getPreset = createSelector(settingsState, (state) => state.preset);
 export const getModId = createSelector(settingsState, (state) => state.modId);
+export const getNetProductionOnly = createSelector(
+  settingsState,
+  (state) => state.netProductionOnly
+);
+export const getPreset = createSelector(settingsState, (state) => state.preset);
 export const getBeaconReceivers = createSelector(
   settingsState,
   (state) => state.beaconReceivers
+);
+export const getProliferatorSprayId = createSelector(
+  settingsState,
+  (state) => state.proliferatorSprayId
 );
 export const getFlowRate = createSelector(
   settingsState,
   (state) => state.flowRate
 );
-export const getDisplayRate = createSelector(
+export const getInserterTarget = createSelector(
   settingsState,
-  (state) => state.displayRate
+  (state) => state.inserterTarget
 );
 export const getMiningBonus = createSelector(
   settingsState,
@@ -63,13 +71,13 @@ export const getResearchSpeed = createSelector(
   settingsState,
   (state) => state.researchSpeed
 );
-export const getInserterTarget = createSelector(
-  settingsState,
-  (state) => state.inserterTarget
-);
 export const getInserterCapacity = createSelector(
   settingsState,
   (state) => state.inserterCapacity
+);
+export const getDisplayRate = createSelector(
+  settingsState,
+  (state) => state.displayRate
 );
 export const getCostFactor = createSelector(
   settingsState,
@@ -86,10 +94,6 @@ export const getCostInput = createSelector(
 export const getCostIgnored = createSelector(
   settingsState,
   (state) => state.costIgnored
-);
-export const getProliferatorSprayId = createSelector(
-  settingsState,
-  (state) => state.proliferatorSprayId
 );
 
 /* Complex selectors */
@@ -659,24 +663,27 @@ export const getBeltSpeedTxt = createSelector(
 );
 
 export const getAdjustmentData = createSelector(
-  getFuelId,
+  getNetProductionOnly,
   getProliferatorSprayId,
+  getFuelId,
   getRationalMiningBonus,
   getResearchFactor,
   getRationalCostFactor,
   getRationalCostFactory,
   getDataset,
   (
-    fuelId,
+    netProductionOnly,
     proliferatorSprayId,
+    fuelId,
     miningBonus,
     researchSpeed,
     costFactor,
     costFactory,
     data
   ) => ({
-    fuelId,
+    netProductionOnly,
     proliferatorSprayId,
+    fuelId,
     miningBonus,
     researchSpeed,
     costFactor,

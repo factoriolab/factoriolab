@@ -212,8 +212,9 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
   ItemSettingsInitial,
   Defaults!.disabledRecipeIds,
   {
-    fuelId: ItemId.Coal,
+    netProductionOnly: false,
     proliferatorSprayId: ItemId.Module,
+    fuelId: ItemId.Coal,
     miningBonus: M.Rational.zero,
     researchSpeed: M.Rational.one,
     costFactor: M.Rational.one,
@@ -284,8 +285,9 @@ export const SimplexModifiers = {
   simplexType: M.SimplexType.WasmFloat64,
 };
 export const AdjustmentData = {
-  fuelId: ItemId.Coal,
+  netProductionOnly: false,
   proliferatorSprayId: ItemId.Module,
+  fuelId: ItemId.Coal,
   miningBonus: M.Rational.zero,
   researchSpeed: M.Rational.one,
   costFactor: M.Rational.one,

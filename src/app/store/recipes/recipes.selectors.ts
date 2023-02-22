@@ -146,6 +146,7 @@ export const getAdjustedDataset = createSelector(
       adj.proliferatorSprayId,
       adj.miningBonus,
       adj.researchSpeed,
+      adj.netProductionOnly,
       adj.costFactor,
       adj.costFactory,
       adj.data

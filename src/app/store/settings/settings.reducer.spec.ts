@@ -38,19 +38,8 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_PRESET', () => {
-    it('should set the preset', () => {
-      const value = Preset.Modules;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetPresetAction(value)
-      );
-      expect(result.preset).toEqual(value);
-    });
-  });
-
-  describe('SET_BASE', () => {
-    it('should set the base id', () => {
+  describe('SET_MOD', () => {
+    it('should set the mod id', () => {
       const value = 'dsp';
       const result = settingsReducer(
         initialSettingsState,
@@ -71,6 +60,28 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_NET_PRODUCTION_ONLY', () => {
+    it('should set the net production only value', () => {
+      const value = true;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetNetProductionOnlyAction(value)
+      );
+      expect(result.netProductionOnly).toEqual(value);
+    });
+  });
+
+  describe('SET_PRESET', () => {
+    it('should set the preset', () => {
+      const value = Preset.Modules;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetPresetAction(value)
+      );
+      expect(result.preset).toEqual(value);
+    });
+  });
+
   describe('SET_BEACON_RECEIVERS', () => {
     it('should set default beacon receivers', () => {
       const value = '1';
@@ -79,6 +90,17 @@ describe('Settings Reducer', () => {
         new Actions.SetBeaconReceiversAction(value)
       );
       expect(result.beaconReceivers).toEqual(value);
+    });
+  });
+
+  describe('SET_PROLIFERATOR_SPRAY', () => {
+    it('should set the proliferator spray', () => {
+      const value = ItemId.ProductivityModule;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetProliferatorSprayAction(value)
+      );
+      expect(result.proliferatorSprayId).toEqual(value);
     });
   });
 
@@ -115,17 +137,6 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_FLOW_RATE', () => {
-    it('should set the flow rate', () => {
-      const value = 6000;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFlowRateAction(value)
-      );
-      expect(result.flowRate).toEqual(value);
-    });
-  });
-
   describe('SET_CARGO_WAGON', () => {
     it('should set the default cargo wagon', () => {
       const value = ItemId.CargoWagon;
@@ -148,14 +159,25 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_DISPLAY_RATE', () => {
-    it('should set the display rate', () => {
-      const value = DisplayRate.PerHour;
+  describe('SET_FLOW_RATE', () => {
+    it('should set the flow rate', () => {
+      const value = 6000;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetDisplayRateAction({ value, prev: DisplayRate.PerSecond })
+        new Actions.SetFlowRateAction(value)
       );
-      expect(result.displayRate).toEqual(value);
+      expect(result.flowRate).toEqual(value);
+    });
+  });
+
+  describe('SET_INSERTER_TARGET', () => {
+    it('should set the inserter target', () => {
+      const value = InserterTarget.Chest;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetInserterTargetAction(value)
+      );
+      expect(result.inserterTarget).toEqual(value);
     });
   });
 
@@ -180,18 +202,6 @@ describe('Settings Reducer', () => {
       expect(result.researchSpeed).toEqual(value);
     });
   });
-
-  describe('SET_INSERTER_TARGET', () => {
-    it('should set the inserter target', () => {
-      const value = InserterTarget.Chest;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetInserterTargetAction(value)
-      );
-      expect(result.inserterTarget).toEqual(value);
-    });
-  });
-
   describe('SET_INSERTER_CAPACITY', () => {
     it('should set the inserter capacity', () => {
       const value = InserterCapacity.Capacity2;
@@ -200,6 +210,17 @@ describe('Settings Reducer', () => {
         new Actions.SetInserterCapacityAction(value)
       );
       expect(result.inserterCapacity).toEqual(value);
+    });
+  });
+
+  describe('SET_DISPLAY_RATE', () => {
+    it('should set the display rate', () => {
+      const value = DisplayRate.PerHour;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetDisplayRateAction({ value, prev: DisplayRate.PerSecond })
+      );
+      expect(result.displayRate).toEqual(value);
     });
   });
 
@@ -244,17 +265,6 @@ describe('Settings Reducer', () => {
         new Actions.SetCostIgnoredAction(value)
       );
       expect(result.costIgnored).toEqual(value);
-    });
-  });
-
-  describe('SET_PROLIFERATOR_SPRAY', () => {
-    it('should set the proliferator spray', () => {
-      const value = ItemId.ProductivityModule;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetProliferatorSprayAction(value)
-      );
-      expect(result.proliferatorSprayId).toEqual(value);
     });
   });
 
