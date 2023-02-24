@@ -298,6 +298,10 @@ describe('Rational', () => {
       it('should handle very small numbers', () => {
         expect(Rational.from(3, 10000000).toDecimals()).toEqual(7);
       });
+
+      it('should handle large numbers', () => {
+        expect(Rational.from(2000001, 100000).toDecimals()).toEqual(5);
+      });
     });
 
     describe('constructor', () => {
