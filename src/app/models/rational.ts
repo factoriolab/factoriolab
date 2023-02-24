@@ -305,7 +305,7 @@ export class Rational {
     if (num % 1 !== 0) {
       // Pick apart complex numbers, looking for decimal and negative exponent
       // 3.33e-6 => ["3.33e-6", ".33", "33", "e-6", "6"]
-      const match = num.toString().match(/\d+?(\.(\d+))?(e-(\d+))?/);
+      const match = num.toString().match(/\d+(\.(\d+))?(e-(\d+))?/);
       let decimals = 0;
       // Regex pattern should match all known number toString formats
       // istanbul ignore else
