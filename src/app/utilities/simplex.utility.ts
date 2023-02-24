@@ -289,18 +289,9 @@ export class SimplexUtility {
 
   /** Look for recipes that output a passed item, recursively */
   static parseItemRecursively(itemId: string, state: MatrixState): void {
-    const simpleRecipeId = state.data.itemRecipeId[itemId];
-    if (simpleRecipeId) {
-      if (!state.recipes[simpleRecipeId]) {
-        const recipe = state.data.recipeR[simpleRecipeId];
-        state.recipes[simpleRecipeId] = recipe;
-        this.parseRecipeRecursively(recipe, state);
-      }
-    } else {
-      const matches = this.recipeMatches(itemId, state);
-      for (const recipe of matches) {
-        this.parseRecipeRecursively(recipe, state);
-      }
+    const matches = this.recipeMatches(itemId, state);
+    for (const recipe of matches) {
+      this.parseRecipeRecursively(recipe, state);
     }
   }
 
@@ -476,7 +467,7 @@ export class SimplexUtility {
           val = val.sub(recipe.in[itemId]);
         }
 
-        if (this.includeRecipeOutput(itemId, recipe, state)) {
+        if (recipe.out[itemId]) {
           val = val.add(recipe.out[itemId]);
         }
 
@@ -672,7 +663,7 @@ export class SimplexUtility {
           val = val.sub(recipe.in[itemId]);
         }
 
-        if (this.includeRecipeOutput(itemId, recipe, state)) {
+        if (recipe.out[itemId]) {
           val = val.add(recipe.out[itemId]);
         }
 
@@ -729,27 +720,6 @@ export class SimplexUtility {
     }
 
     return A;
-  }
-
-  /**
-   * If a default recipe is specified for this item, don't include output
-   * from other recipes in simplex model. If this recipe is included
-   * incidentally, output is added as a surplus in IBFS.
-   * If output is less than input (`produces` is false), always include
-   * the output from this recipe, even though there may be a different
-   * dedicated recipe for production of this item.
-   */
-  static includeRecipeOutput(
-    itemId: string,
-    recipe: RationalRecipe,
-    state: MatrixState
-  ): boolean {
-    return (
-      recipe.out[itemId] &&
-      (!recipe.produces(itemId) ||
-        state.data.itemRecipeId[itemId] == null ||
-        state.data.itemRecipeId[itemId] === recipe.id)
-    );
   }
 
   /** Solve the canonical tableau using the selected simplex type */
@@ -946,7 +916,6 @@ export class SimplexUtility {
   ): void {
     const steps = state.steps;
     let output = Rational.zero;
-    let surplus = Rational.zero; // Used only to track incidental surplus
     for (const recipe of Object.keys(solution.recipes)
       .map((r) => state.recipes[r])
       .filter((r) => r.out[itemId])) {
@@ -954,12 +923,6 @@ export class SimplexUtility {
         .mul(solution.recipes[recipe.id])
         .div(recipe.time);
       output = output.add(amount);
-
-      if (!this.includeRecipeOutput(itemId, recipe, state)) {
-        // This recipe produces the item but does not match the default recipe
-        // Include this amount as part of the surplus
-        surplus = surplus.add(amount);
-      }
     }
 
     for (const producer of state.producers) {
@@ -999,13 +962,7 @@ export class SimplexUtility {
       }
 
       if (solution.surplus[itemId]?.nonzero()) {
-        // Add any simplex-recognized surplus to the incidental surplus
-        surplus = surplus.add(solution.surplus[itemId]);
-      }
-
-      if (surplus.nonzero()) {
-        // Assign total surplus to the step, if present
-        step.surplus = surplus;
+        step.surplus = solution.surplus[itemId];
       }
     }
   }

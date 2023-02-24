@@ -54,16 +54,6 @@
               [pTooltip]="'list.itemsUndoTooltip' | translate"
               (click)="resetIgnores()"
             ></button>
-            <button
-              *ngIf="vm.itemsModified.recipe"
-              pButton
-              pRipple
-              type="button"
-              class="ms-2 p-button-text p-button-rounded"
-              icon="fa-solid fa-rotate-left"
-              [pTooltip]="'list.itemRecipesUndoTooltip' | translate"
-              (click)="resetRecipes()"
-            ></button>
           </div>
         </th>
         <!-- Belts -->
@@ -1379,70 +1369,6 @@
           <!-- Recipes row details -->
           <ng-container *ngSwitchCase="StepDetailTab.Recipes">
             <ng-container *ngIf="step.itemId">
-              <ng-container
-                *ngIf="vm.stepDetails[step.id].defaultableRecipeIds.length"
-              >
-                <tr class="detail">
-                  <td></td>
-                  <td colspan="100">
-                    <div>
-                      <div class="fw-bold">
-                        {{ 'list.defaultRecipe' | translate }}
-                      </div>
-                      <div>
-                        <small>{{
-                          'list.defaultRecipeInfo1' | translate
-                        }}</small>
-                      </div>
-                      <div>
-                        <small>{{
-                          'list.defaultRecipeInfo2' | translate
-                        }}</small>
-                      </div>
-                      <div
-                        class="p-error"
-                        *ngIf="vm.data.itemRecipeId[step.itemId] === null"
-                      >
-                        <small>{{
-                          'list.defaultRecipeInfo3' | translate
-                        }}</small>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                <tr class="detail">
-                  <td></td>
-                  <td colspan="100">
-                    <div class="d-flex flex-wrap">
-                      <button
-                        *ngFor="
-                          let recipeId of vm.stepDetails[step.id]
-                            .defaultableRecipeIds
-                        "
-                        pButton
-                        pRipple
-                        type="button"
-                        class="me-2"
-                        [class.p-button-text]="
-                          vm.data.itemRecipeId[step.itemId] !== recipeId
-                        "
-                        [icon]="recipeId | iconSmClass : 'recipe'"
-                        [pTooltip]="recipeId | recipeTooltip : vm.data"
-                        [escape]="false"
-                        (click)="
-                          toggleDefaultRecipe(
-                            step.itemId,
-                            recipeId,
-                            vm.itemSettings,
-                            vm.settings,
-                            vm.data
-                          )
-                        "
-                      ></button>
-                    </div>
-                  </td>
-                </tr>
-              </ng-container>
               <tr class="detail">
                 <td></td>
                 <td colspan="100">

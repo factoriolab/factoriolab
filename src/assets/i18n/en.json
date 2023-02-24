@@ -302,10 +302,6 @@
     "inputs": "Inputs",
     "outputs": "Outputs",
     "inserterCountInfo": "* Inserters are calculated using target/capacity settings and 0.18 experimental data from the <a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">wiki.</a>",
-    "defaultRecipe": "Default recipe",
-    "defaultRecipeInfo1": "Click to set a recipe as the default for this item. If set, the default recipe is treated as the only way to produce this item.",
-    "defaultRecipeInfo2": "The recipe must be enabled and must only produce this item.",
-    "defaultRecipeInfo3": "Default was ignored due to a detected circular loop.",
     "enabledRecipes": "Enabled recipes",
     "enabledRecipesInfo": "Click recipes to enable or disable them. Disabled recipes will not be used in the solution.",
     "total": "Total"

@@ -135,13 +135,11 @@ export const getSrc = createSelector(
 export const getAdjustedDataset = createSelector(
   getRationalRecipeSettings,
   Items.getItemSettings,
-  Settings.getDisabledRecipeIds,
   Settings.getAdjustmentData,
-  (recipeSettings, itemSettings, disabledRecipeIds, adj) =>
+  (recipeSettings, itemSettings, adj) =>
     RecipeUtility.adjustDataset(
       recipeSettings,
       itemSettings,
-      disabledRecipeIds,
       adj.fuelId,
       adj.proliferatorSprayId,
       adj.miningBonus,

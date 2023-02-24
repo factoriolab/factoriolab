@@ -945,7 +945,6 @@ export class RouterService {
             g,
             this.zipTruthyString(obj.beltId),
             this.zipTruthyString(obj.wagonId),
-            this.zipTruthyString(obj.recipeId),
             this.zipTruthyBool(obj.checked),
           ]),
           hash: this.zipFields([
@@ -953,7 +952,6 @@ export class RouterService {
             g,
             this.zipTruthyNString(obj.beltId, hash.belts),
             this.zipTruthyNString(obj.wagonId, hash.wagons),
-            this.zipTruthyNString(obj.recipeId, hash.recipes),
             this.zipTruthyBool(obj.checked),
           ]),
         };
@@ -981,7 +979,6 @@ export class RouterService {
           ignore: this.parseBool(s[i++]),
           beltId: this.parseNString(s[i++], hash.belts),
           wagonId: this.parseNString(s[i++], hash.wagons),
-          recipeId: this.parseNString(s[i++], hash.recipes),
           checked: this.parseBool(s[i++]),
         };
       } else {
@@ -990,7 +987,6 @@ export class RouterService {
           ignore: this.parseBool(s[i++]),
           beltId: this.parseString(s[i++]),
           wagonId: this.parseString(s[i++]),
-          recipeId: this.parseString(s[i++]),
           checked: this.parseBool(s[i++]),
         };
       }

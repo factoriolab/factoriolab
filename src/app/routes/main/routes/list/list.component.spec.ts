@@ -151,63 +151,6 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('toggleDefaultRecipe', () => {
-    it('should reset a default recipe to null', () => {
-      spyOn(component, 'setDefaultRecipe');
-      const itemSettings = {
-        ...Mocks.ItemSettingsInitial,
-        ...{
-          [ItemId.Coal]: {
-            ...Mocks.ItemSettingsInitial[ItemId.Coal],
-            ...{
-              recipeId: RecipeId.Coal,
-            },
-          },
-        },
-      };
-      component.toggleDefaultRecipe(
-        ItemId.Coal,
-        RecipeId.Coal,
-        itemSettings,
-        Settings.initialSettingsState,
-        Mocks.AdjustedData
-      );
-      expect(component.setDefaultRecipe).toHaveBeenCalledWith(ItemId.Coal);
-    });
-
-    it('should set a default recipe', () => {
-      spyOn(component, 'setDefaultRecipe');
-      component.toggleDefaultRecipe(
-        ItemId.Coal,
-        RecipeId.Coal,
-        Mocks.ItemSettingsInitial,
-        Mocks.SettingsStateInitial,
-        Mocks.AdjustedData
-      );
-      expect(component.setDefaultRecipe).toHaveBeenCalledWith(
-        ItemId.Coal,
-        RecipeId.Coal,
-        RecipeId.Coal
-      );
-    });
-
-    it('should handle null disabled recipes', () => {
-      spyOn(component, 'setDefaultRecipe');
-      component.toggleDefaultRecipe(
-        ItemId.Coal,
-        RecipeId.Coal,
-        Mocks.ItemSettingsInitial,
-        Settings.initialSettingsState,
-        Mocks.AdjustedData
-      );
-      expect(component.setDefaultRecipe).toHaveBeenCalledWith(
-        ItemId.Coal,
-        RecipeId.Coal,
-        RecipeId.Coal
-      );
-    });
-  });
-
   describe('toggleRecipe', () => {
     it('should enable a recipe', () => {
       spyOn(component, 'setDisabledRecipes');
@@ -447,10 +390,8 @@ describe('ListComponent', () => {
     dispatch.void('resetIgnores', Items.ResetIgnoresAction);
     dispatch.void('resetBelts', Items.ResetBeltsAction);
     dispatch.void('resetWagons', Items.ResetWagonsAction);
-    dispatch.void('resetRecipes', Items.ResetRecipesAction);
     dispatch.void('resetFactories', Recipes.ResetFactoriesAction);
     dispatch.void('resetBeacons', Recipes.ResetBeaconsAction);
     dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
-    dispatch.idValDef('setDefaultRecipe', Items.SetRecipeAction);
   });
 });

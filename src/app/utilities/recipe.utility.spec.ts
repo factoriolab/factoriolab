@@ -872,7 +872,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustDataset(
         Mocks.RationalRecipeSettingsInitial,
         Mocks.ItemSettingsInitial,
-        Mocks.Defaults.disabledRecipeIds,
         ItemId.Coal,
         ItemId.Module,
         Rational.zero,
@@ -902,7 +901,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustDataset(
         Mocks.RationalRecipeSettingsInitial,
         itemSettings,
-        Mocks.Defaults.disabledRecipeIds,
         ItemId.Coal,
         ItemId.Module,
         Rational.zero,
@@ -921,7 +919,6 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustDataset(
         Mocks.RationalRecipeSettingsInitial,
         Mocks.ItemSettingsInitial,
-        [RecipeId.SolidFuelFromHeavyOil, RecipeId.SolidFuelFromPetroleumGas],
         ItemId.Coal,
         ItemId.Module,
         Rational.zero,
@@ -934,26 +931,6 @@ describe('RecipeUtility', () => {
       expect(result.itemRecipeId[ItemId.SolidFuel]).toEqual(
         RecipeId.SolidFuelFromLightOil
       );
-    });
-  });
-
-  describe('defaultRecipe', () => {
-    it('should find a default recipe for an item', () => {
-      const result = RecipeUtility.defaultRecipe(
-        ItemId.Coal,
-        [],
-        Mocks.AdjustedData
-      );
-      expect(result).toEqual(RecipeId.Coal);
-    });
-
-    it('should handle disabled recipes', () => {
-      const result = RecipeUtility.defaultRecipe(
-        ItemId.Coal,
-        [RecipeId.Coal],
-        Mocks.AdjustedData
-      );
-      expect(result).toBeUndefined();
     });
   });
 
@@ -1171,29 +1148,6 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         ItemId.Module,
       ]);
-    });
-  });
-
-  describe('cleanCircularRecipes', () => {
-    it('should do nothing for items with no default recipe', () => {
-      const itemRecipeIds = {};
-      RecipeUtility.cleanCircularRecipes(
-        ItemId.Wood,
-        Mocks.AdjustedData.recipeR,
-        itemRecipeIds
-      );
-      expect(itemRecipeIds).toEqual({});
-    });
-
-    it('should clean up when a circular loop is detected', () => {
-      const itemRecipeIds: Entities = { [ItemId.Wood]: RecipeId.WoodenChest };
-      RecipeUtility.cleanCircularRecipes(
-        ItemId.Wood,
-        Mocks.AdjustedData.recipeR,
-        itemRecipeIds,
-        [ItemId.Wood]
-      );
-      expect(itemRecipeIds).toEqual({});
     });
   });
 });

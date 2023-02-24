@@ -28,8 +28,6 @@ export function itemsReducer(
       return StoreUtility.compareReset(state, 'beltId', action.payload);
     case ItemsActionType.SET_WAGON:
       return StoreUtility.compareReset(state, 'wagonId', action.payload);
-    case ItemsActionType.SET_RECIPE:
-      return StoreUtility.compareReset(state, 'recipeId', action.payload);
     case ItemsActionType.SET_CHECKED:
       return StoreUtility.compareReset(state, 'checked', {
         id: action.payload.id,
@@ -47,8 +45,6 @@ export function itemsReducer(
       return StoreUtility.resetField(state, 'beltId');
     case ItemsActionType.RESET_WAGONS:
       return StoreUtility.resetField(state, 'wagonId');
-    case ItemsActionType.RESET_RECIPES:
-      return StoreUtility.resetField(state, 'recipeId');
     case ItemsActionType.RESET_CHECKED:
       return StoreUtility.resetField(state, 'checked');
     default:

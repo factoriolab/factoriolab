@@ -224,30 +224,6 @@ export class ListComponent implements OnInit, AfterViewInit {
     );
   }
 
-  toggleDefaultRecipe(
-    itemId: string,
-    recipeId: string,
-    itemSettings: Items.ItemsState,
-    settings: Settings.SettingsState,
-    data: Dataset
-  ): void {
-    if (itemSettings[itemId].recipeId === recipeId) {
-      // Reset to null
-      this.setDefaultRecipe(itemId);
-    } else {
-      // Set default recipe
-      this.setDefaultRecipe(
-        itemId,
-        recipeId,
-        RecipeUtility.defaultRecipe(
-          itemId,
-          settings.disabledRecipeIds ?? [],
-          data
-        )
-      );
-    }
-  }
-
   toggleRecipe(
     id: string,
     settings: Settings.SettingsState,
@@ -560,10 +536,6 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new Items.ResetWagonsAction());
   }
 
-  resetRecipes(): void {
-    this.store.dispatch(new Items.ResetRecipesAction());
-  }
-
   resetFactories(): void {
     this.store.dispatch(new Recipes.ResetFactoriesAction());
   }
@@ -574,9 +546,5 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   setDisabledRecipes(value: string[], def: string[] | undefined): void {
     this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
-  }
-
-  setDefaultRecipe(id: string, value?: string, def?: string): void {
-    this.store.dispatch(new Items.SetRecipeAction({ id, value, def }));
   }
 }

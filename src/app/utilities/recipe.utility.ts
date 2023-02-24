@@ -464,7 +464,6 @@ export class RecipeUtility {
   static adjustDataset(
     recipeSettings: Entities<RationalRecipeSettings>,
     itemSettings: Entities<ItemSettings>,
-    disabledRecipeIds: string[],
     fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
@@ -485,48 +484,7 @@ export class RecipeUtility {
       data
     );
     this.adjustCost(recipeR, recipeSettings, costFactor, costFactory);
-    const itemRecipeId = { ...data.itemRecipeId };
-
-    // Check for calculated default recipe ids
-    for (const id of data.itemIds.filter((i) => !data.itemRecipeId[i])) {
-      const rec = itemSettings[id].recipeId;
-      if (rec && disabledRecipeIds.indexOf(rec) === -1) {
-        itemRecipeId[id] = rec;
-      } else {
-        const recipes = data.recipeIds
-          .map((r) => recipeR[r])
-          .filter(
-            (r) => r.produces(id) && disabledRecipeIds.indexOf(r.id) === -1
-          );
-        if (recipes.length === 1) {
-          itemRecipeId[id] = recipes[0].id;
-        }
-      }
-    }
-
-    // Check for loops in default recipes
-    for (const id of Object.keys(data.itemRecipeId)) {
-      this.cleanCircularRecipes(id, recipeR, itemRecipeId);
-    }
-
-    return { ...data, ...{ recipeR, itemRecipeId } };
-  }
-
-  static defaultRecipe(
-    itemId: string,
-    disabledRecipeIds: string[],
-    data: Dataset
-  ): string | undefined {
-    let recipeId: string | undefined;
-    const recipes = data.recipeIds
-      .map((r) => data.recipeR[r])
-      .filter(
-        (r) => r.produces(itemId) && disabledRecipeIds.indexOf(r.id) === -1
-      );
-    if (recipes.length === 1 && Object.keys(recipes[0].out).length === 1) {
-      recipeId = recipes[0].id;
-    }
-    return recipeId;
+    return { ...data, ...{ recipeR } };
   }
 
   static adjustRecipes(
@@ -677,36 +635,5 @@ export class RecipeUtility {
     producer.overclock = producer.overclock ?? def.overclock;
 
     return producer;
-  }
-
-  static cleanCircularRecipes(
-    itemId: string,
-    recipeR: Entities<RationalRecipe>,
-    itemRecipeId: Entities,
-    itemIds: string[] = []
-  ): void {
-    const recipeId = itemRecipeId[itemId];
-    if (recipeId) {
-      if (itemIds.indexOf(itemId) !== -1) {
-        // Found a circular loop
-        delete itemRecipeId[itemId];
-      } else {
-        const recipe = recipeR[recipeId];
-        if (recipe.produces(itemId) && recipe.in) {
-          // Need to check recipe inputs for circular loops
-          itemIds = [...itemIds, itemId];
-          for (const ingredient of Object.keys(recipe.in).filter(
-            (i) => i !== itemId
-          )) {
-            this.cleanCircularRecipes(
-              ingredient,
-              recipeR,
-              itemRecipeId,
-              itemIds
-            );
-          }
-        }
-      }
-    }
   }
 }
