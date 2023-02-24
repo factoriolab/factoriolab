@@ -64,7 +64,7 @@ export const Product4: M.Product = {
   id: '3',
   itemId: ItemId.TransportBelt,
   rate: '4',
-  rateType: M.RateType.Factories,
+  rateType: M.RateType.Items,
 };
 export const ProductsList = [Product1, Product2, Product3, Product4];
 export const ProductsState: Products.ProductsState = {
@@ -74,7 +74,6 @@ export const ProductsState: Products.ProductsState = {
 };
 export const RationalProducts = ProductsList.map((p) => {
   const rp = new M.RationalProduct(p);
-  rp.viaId = rp.itemId;
   return rp;
 });
 export const RationalProduct = RationalProducts[0];
@@ -210,7 +209,6 @@ export const RationalRecipeSettingsInitial = getRationalRecipeSettings();
 export const AdjustedData = Recipes.getAdjustedDataset.projector(
   RationalRecipeSettingsInitial,
   ItemSettingsInitial,
-  Defaults!.disabledRecipeIds,
   {
     netProductionOnly: false,
     proliferatorSprayId: ItemId.Module,

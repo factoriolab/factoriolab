@@ -12,13 +12,10 @@ import {
   ItemId,
   ItemSettings,
   Producer,
-  Product,
-  RateType,
   Rational,
   RationalBeacon,
   RationalBelt,
   RationalFactory,
-  RationalProduct,
   RationalRecipe,
   RationalRecipeSettings,
   Recipe,
@@ -436,20 +433,6 @@ export class RecipeUtility {
     return recipeR;
   }
 
-  static getProductStepData(
-    productSteps: Entities<[string, Rational][]>,
-    product: Product | RationalProduct
-  ): [string, Rational] | null {
-    const steps = productSteps[product.id];
-    if (steps.length === 0) {
-      return null;
-    } else if (product.viaId) {
-      return steps.find((r) => r[0] === product.viaId) ?? null;
-    } else {
-      return steps[0];
-    }
-  }
-
   static allowsModules(
     recipe: Recipe | RationalRecipe,
     factory: RationalFactory
@@ -539,32 +522,6 @@ export class RecipeUtility {
         recipe.cost = costFactory;
       }
     }
-  }
-
-  static adjustProduct(
-    product: Product,
-    productSteps: Entities<[string, Rational][]>,
-    data: Dataset
-  ): Product {
-    if (product.rateType === RateType.Factories) {
-      product = { ...product };
-
-      if (!product.viaId) {
-        const simpleRecipeId = data.itemRecipeId[product.itemId];
-        if (simpleRecipeId) {
-          product.viaId = simpleRecipeId;
-        } else {
-          const via = this.getProductStepData(productSteps, product);
-          if (via) {
-            product.viaId = via[0];
-          }
-        }
-      }
-    } else if (!product.viaId) {
-      product = { ...product, ...{ viaId: product.itemId } };
-    }
-
-    return product;
   }
 
   static adjustProducer(

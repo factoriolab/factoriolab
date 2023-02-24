@@ -1,4 +1,4 @@
-import { ItemId, Mocks, RecipeId } from 'src/tests';
+import { ItemId, Mocks } from 'src/tests';
 import { Product, RateType } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './products.actions';
@@ -76,7 +76,6 @@ describe('Products Reducer', () => {
         itemId: ItemId.IronPlate,
         rate: '2',
         rateType: RateType.Items,
-        viaId: ItemId.IronOre,
       };
       const result = productsReducer(state, new Actions.CreateAction(product));
       expect(result.entities['0']).toEqual({
@@ -84,7 +83,6 @@ describe('Products Reducer', () => {
         itemId: ItemId.IronPlate,
         rate: '2',
         rateType: RateType.Items,
-        viaId: ItemId.IronOre,
       });
       expect(result.index).toEqual(1);
     });
@@ -110,26 +108,6 @@ describe('Products Reducer', () => {
         Mocks.Product2.itemId
       );
     });
-
-    it('should reset Factories RateType', () => {
-      let result = productsReducer(
-        state,
-        new Actions.SetRateTypeAction({
-          id: Mocks.Product1.id,
-          value: RateType.Factories,
-        })
-      );
-      result = productsReducer(
-        result,
-        new Actions.SetItemAction({
-          id: Mocks.Product1.id,
-          value: Mocks.Product2.itemId,
-        })
-      );
-      expect(result.entities[Mocks.Product1.id].rateType).toEqual(
-        RateType.Items
-      );
-    });
   });
 
   describe('SET_RATE', () => {
@@ -151,34 +129,6 @@ describe('Products Reducer', () => {
         new Actions.SetRateTypeAction({ id: Mocks.Product1.id, value })
       );
       expect(result.entities[Mocks.Product1.id].rateType).toEqual(value);
-    });
-  });
-
-  describe('SET_VIA', () => {
-    it('should set the via of a product', () => {
-      const value = RecipeId.AdvancedOilProcessing;
-      const result = productsReducer(
-        state,
-        new Actions.SetViaAction({ id: Mocks.Product1.id, value })
-      );
-      expect(result.entities[Mocks.Product1.id].viaId).toEqual(value);
-    });
-  });
-
-  describe('RESET_VIA', () => {
-    it('should reset the via of a product', () => {
-      let result = productsReducer(
-        state,
-        new Actions.SetViaAction({
-          id: Mocks.Product1.id,
-          value: RecipeId.AdvancedOilProcessing,
-        })
-      );
-      result = productsReducer(
-        result,
-        new Actions.ResetViaAction(Mocks.Product1.id)
-      );
-      expect(result.entities[Mocks.Product1.id].viaId).toBeUndefined();
     });
   });
 

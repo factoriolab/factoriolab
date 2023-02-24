@@ -35,7 +35,6 @@ describe('ObjectivesComponent', () => {
     dispatch.idVal('setItem', Products.SetItemAction);
     dispatch.idVal('setRate', Products.SetRateAction);
     dispatch.idVal('setRateType', Products.SetRateTypeAction);
-    dispatch.idVal('setVia', Products.SetViaAction);
     dispatch.val('removeProducer', Producers.RemoveAction);
     dispatch.idVal('setRecipe', Producers.SetRecipeAction);
     dispatch.idVal('setCount', Producers.SetCountAction);

@@ -35,36 +35,17 @@ describe('WizardComponent', () => {
     });
   });
 
-  describe('openViaState', () => {
-    it('should add a product to determine via steps', () => {
-      spyOn(component, 'createProduct');
-      component.openViaState();
-      expect(component.createProduct).toHaveBeenCalledWith(
-        '',
-        '1',
-        RateType.Items
-      );
-      expect(component.state).toEqual(WizardState.ProductVia);
-    });
-  });
-
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
     dispatch.spy.calls.reset();
-    component.createProduct(
-      ItemId.IronPlate,
-      '1',
-      RateType.Items,
-      ItemId.IronOre
-    );
+    component.createProduct(ItemId.IronPlate, '1', RateType.Items);
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
       new Products.CreateAction({
         id: '0',
         itemId: ItemId.IronPlate,
         rate: '1',
         rateType: RateType.Items,
-        viaId: ItemId.IronOre,
       })
     );
     dispatch.spy.calls.reset();

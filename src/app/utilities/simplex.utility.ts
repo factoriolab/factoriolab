@@ -1,13 +1,11 @@
 import { Constraint, Model, Simplex, Status, Variable } from 'glpk-ts';
 
 import { environment } from 'src/environments';
-import { fnPropsNotNullish } from '~/helpers';
 import {
   Dataset,
   Entities,
   MatrixResult,
   MatrixResultType,
-  RateType,
   Rational,
   RationalProducer,
   RationalProduct,
@@ -148,46 +146,6 @@ export class SimplexUtility {
       recipeIds: solution.recipeIds,
       inputIds: solution.inputIds,
     };
-  }
-
-  /** Solve simplex for a given item id and return recipes or items in steps */
-  static getSteps(
-    itemId: string,
-    itemSettings: Items.ItemsState,
-    disabledRecipeIds: string[],
-    costInput: Rational,
-    costIgnored: Rational,
-    simplexType: SimplexType,
-    data: Dataset,
-    recipes: boolean
-  ): [string, Rational][] {
-    const steps = this.solve(
-      [{ id: '0', itemId, rate: Rational.one, rateType: RateType.Items }],
-      [],
-      itemSettings,
-      disabledRecipeIds,
-      costInput,
-      costIgnored,
-      simplexType,
-      data,
-      false
-    ).steps;
-
-    if (recipes) {
-      return steps
-        .filter(fnPropsNotNullish('recipeId', 'factories'))
-        .sort((a, b) =>
-          data.recipeR[b.recipeId]
-            .output(itemId)
-            .sub(data.recipeR[a.recipeId].output(itemId))
-            .toNumber()
-        )
-        .map((s) => [s.recipeId, s.factories]);
-    } else {
-      return steps
-        .filter(fnPropsNotNullish('itemId', 'items'))
-        .map((s) => [s.itemId, s.items]);
-    }
   }
 
   //#region Setup

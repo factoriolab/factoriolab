@@ -9,8 +9,6 @@ export enum WizardState {
   ObjectiveType,
   ProductType,
   ProductItems,
-  ProductFactories,
-  ProductVia,
   Producer,
 }
 
@@ -22,13 +20,11 @@ export enum WizardState {
 })
 export class WizardComponent {
   vm$ = combineLatest([
-    this.store.select(Products.getViaOptions),
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getDisplayRate),
     this.store.select(Settings.getRateTypeOptions),
   ]).pipe(
-    map(([viaOptions, data, displayRate, rateTypeOptions]) => ({
-      viaOptions,
+    map(([data, displayRate, rateTypeOptions]) => ({
       data,
       displayRate,
       rateTypeOptions,
@@ -37,8 +33,6 @@ export class WizardComponent {
 
   id = '';
   rate = '1';
-  viaRateType = RateType.Items;
-  viaId = '';
   state = WizardState.ObjectiveType;
 
   displayRateOptions = displayRateOptions;
@@ -53,24 +47,14 @@ export class WizardComponent {
     this.state = state;
   }
 
-  openViaState(): void {
-    this.createProduct(this.id, '1', RateType.Items);
-    this.state = WizardState.ProductVia;
-  }
-
   /** Action Dispatch Methods */
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  createProduct(
-    itemId: string,
-    rate: string,
-    rateType: RateType,
-    viaId?: string
-  ): void {
+  createProduct(itemId: string, rate: string, rateType: RateType): void {
     this.store.dispatch(
-      new Products.CreateAction({ id: '0', itemId, rate, rateType, viaId })
+      new Products.CreateAction({ id: '0', itemId, rate, rateType })
     );
   }
 

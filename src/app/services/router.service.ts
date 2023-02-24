@@ -782,20 +782,11 @@ export class RouterService {
         const t = this.zipDiffNumber(obj.rateType, RateType.Items);
 
         return {
-          bare: this.zipFields([
-            obj.itemId,
-            r,
-            t,
-            this.zipTruthyString(obj.viaId),
-          ]),
+          bare: this.zipFields([obj.itemId, r, t]),
           hash: this.zipFields([
             this.zipTruthyNString(obj.itemId, hash.items),
             r,
             t,
-            this.zipTruthyNString(
-              obj.viaId,
-              obj.rateType === RateType.Factories ? hash.recipes : hash.items
-            ),
           ]),
         };
       })
@@ -825,17 +816,12 @@ export class RouterService {
           rate: s[i++],
           rateType: Number(s[i++]) | RateType.Items,
         };
-        obj.viaId = this.parseNString(
-          s[i++],
-          obj.rateType === RateType.Factories ? hash.recipes : hash.items
-        );
       } else {
         obj = {
           id,
           itemId: s[i++],
           rate: s[i++],
           rateType: Number(s[i++]) | RateType.Items,
-          viaId: this.parseString(s[i++]),
         };
       }
 

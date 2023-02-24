@@ -47,69 +47,6 @@
         [ngModel]="product.rateType"
         (onChange)="setRateType(product.id, $event.value)"
       ></p-dropdown>
-      <ng-container
-        *ngIf="vm.viaOptions[product.id].length > 0; else recipeNone"
-      >
-        <ng-container *ngIf="product.viaId as id">
-          <ng-container
-            *ngIf="product.rateType | rateTypeViaDropdown as dropdownType"
-          >
-            <p-dropdown
-              [labDropdownBase]="vm.mobile ? 'icon' : ''"
-              [class.icon]="vm.mobile"
-              [virtualScroll]="true"
-              [virtualScrollItemSize]="34"
-              [tooltip]="'objectives.viaTooltip' | translate"
-              tooltipPosition="left"
-              [options]="vm.viaOptions[product.id]"
-              [ngModel]="product.viaId"
-              (onChange)="setVia(product.id, $event.value)"
-            >
-              <ng-template pTemplate="selectedItem" let-item>
-                <div *ngIf="vm.mobile; else desktopSelectedItem" class="d-flex">
-                  <i [class]="item.value | iconSmClass : dropdownType"></i>
-                </div>
-                <ng-template #desktopSelectedItem>
-                  <span *ngIf="item.value === product.itemId; else viaSelected">
-                    {{ 'objectives.viaPlaceholder' | translate }}
-                  </span>
-                  <ng-template #viaSelected>
-                    <div class="d-flex align-items-center h-100">
-                      <i [class]="item.value | iconSmClass : dropdownType"></i>
-                      <div class="ms-3 text-truncate">
-                        {{ item.label }}
-                      </div>
-                    </div>
-                  </ng-template>
-                </ng-template>
-              </ng-template>
-              <ng-template pTemplate="item" let-item>
-                <div
-                  class="d-flex align-items-center py-2 w-100 h-100"
-                  [pTooltip]="
-                    dropdownType === 'recipe'
-                      ? (item.value | recipeTooltip : vm.data)
-                      : (item.value | itemTooltip : vm.data)
-                  "
-                  [escape]="false"
-                >
-                  <i [class]="item.value | iconSmClass : dropdownType"></i>
-                  <div class="ms-3 text-truncate">
-                    {{ item.label }}
-                  </div>
-                </div>
-              </ng-template>
-            </p-dropdown>
-          </ng-container>
-        </ng-container>
-      </ng-container>
-      <ng-template #recipeNone>
-        <span class="p-inputgroup-addon"
-          ><span class="p-error">{{
-            'objectives.noEnabledRecipes' | translate
-          }}</span></span
-        >
-      </ng-template>
     </div>
   </div>
   <h3 *ngIf="vm.producers.length">

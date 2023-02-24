@@ -1,5 +1,4 @@
 import { createSelector } from '@ngrx/store';
-import { SelectItem } from 'primeng/api';
 
 import { fnPropsNotNullish } from '~/helpers';
 import {
@@ -17,7 +16,7 @@ import {
   StepDetailTab,
   StepOutput,
 } from '~/models';
-import { RateUtility, RecipeUtility, SimplexUtility } from '~/utilities';
+import { RateUtility, SimplexUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Factories from '../factories';
 import * as Items from '../items';
@@ -38,65 +37,12 @@ export const getEntities = createSelector(
 );
 
 /* Complex selectors */
-export const getBaseProducts = createSelector(
+export const getProducts = createSelector(
   getIds,
   getEntities,
   Settings.getDataset,
   (ids, entities, data) =>
     ids.map((i) => entities[i]).filter((p) => data.itemEntities[p.itemId])
-);
-
-export const getProductSteps = createSelector(
-  getBaseProducts,
-  Items.getItemSettings,
-  Settings.getDisabledRecipeIds,
-  Settings.getSimplexModifiers,
-  Recipes.getAdjustedDataset,
-  (products, itemSettings, disabledRecipeIds, adj, data) =>
-    products?.reduce((e: Entities<[string, Rational][]>, p) => {
-      e[p.id] = SimplexUtility.getSteps(
-        p.itemId,
-        itemSettings,
-        disabledRecipeIds,
-        adj.costInput,
-        adj.costIgnored,
-        adj.simplexType,
-        data,
-        p.rateType === RateType.Factories
-      );
-      return e;
-    }, {})
-);
-
-export const getProducts = createSelector(
-  getBaseProducts,
-  getProductSteps,
-  Settings.getDataset,
-  (products, productSteps, data) =>
-    products?.map((p) => RecipeUtility.adjustProduct(p, productSteps, data))
-);
-
-export const getViaOptions = createSelector(
-  getProducts,
-  getProductSteps,
-  Settings.getDataset,
-  (products, productSteps, data) =>
-    products.reduce((e: Entities<SelectItem[]>, p) => {
-      if (productSteps[p.id]) {
-        e[p.id] = productSteps[p.id]
-          .map((r) => r[0])
-          .map(
-            (r): SelectItem => ({
-              label:
-                p.rateType === RateType.Factories
-                  ? data.recipeEntities[r].name
-                  : data.itemEntities[r].name,
-              value: r,
-            })
-          );
-      }
-      return e;
-    }, {})
 );
 
 export const getRationalProducts = createSelector(getProducts, (products) =>
@@ -128,54 +74,26 @@ export const getProductsByWagons = createSelector(
   (products) => products[RateType.Wagons]
 );
 
-export const getProductsByFactories = createSelector(
-  getProductsBy,
-  (products) => products[RateType.Factories]
-);
-
 export const getNormalizedRatesByItems = createSelector(
   getProductsByItems,
-  getProductSteps,
   Settings.getDisplayRateInfo,
-  (products, productSteps, dispRateInfo) =>
+  (products, dispRateInfo) =>
     products?.reduce((e: Entities<Rational>, p) => {
       const rate = p.rate.div(dispRateInfo.value);
-      if (p.viaId === p.itemId) {
-        e[p.id] = rate;
-      } else {
-        const via = RecipeUtility.getProductStepData(productSteps, p);
-        if (via) {
-          e[p.id] = rate.div(via[1]);
-        } else {
-          e[p.id] = Rational.zero;
-        }
-      }
+      e[p.id] = rate;
       return e;
     }, {})
 );
 
 export const getNormalizedRatesByBelts = createSelector(
   getProductsByBelts,
-  getProductSteps,
   Items.getItemSettings,
   Settings.getBeltSpeed,
-  (products, productSteps, itemSettings, beltSpeed) =>
+  (products, itemSettings, beltSpeed) =>
     products?.reduce((e: Entities<Rational>, p) => {
-      if (p.viaId === p.itemId) {
-        const id = itemSettings[p.itemId].beltId;
-        if (id) {
-          e[p.id] = p.rate.mul(beltSpeed[id]);
-        }
-      } else {
-        const via = RecipeUtility.getProductStepData(productSteps, p);
-        if (via) {
-          const id = itemSettings[via[0]].beltId;
-          if (id) {
-            e[p.id] = p.rate.mul(beltSpeed[id]).div(via[1]);
-          }
-        } else {
-          e[p.id] = Rational.zero;
-        }
+      const id = itemSettings[p.itemId].beltId;
+      if (id) {
+        e[p.id] = p.rate.mul(beltSpeed[id]);
       }
       return e;
     }, {})
@@ -183,73 +101,22 @@ export const getNormalizedRatesByBelts = createSelector(
 
 export const getNormalizedRatesByWagons = createSelector(
   getProductsByWagons,
-  getProductSteps,
   Items.getItemSettings,
   Settings.getDisplayRateInfo,
   Settings.getDataset,
-  (products, productSteps, itemSettings, dispRateInfo, data) =>
+  (products, itemSettings, dispRateInfo, data) =>
     products?.reduce((e: Entities<Rational>, p) => {
-      if (p.viaId === p.itemId) {
-        e[p.id] = p.rate.div(dispRateInfo.value);
-        const wagonId = itemSettings[p.itemId].wagonId;
-        if (wagonId) {
-          const item = data.itemEntities[p.itemId];
-          const wagon = data.itemEntities[wagonId];
-          if (item.stack && wagon.cargoWagon) {
-            e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
-          } else if (wagon.fluidWagon) {
-            e[p.id] = e[p.id].mul(wagon.fluidWagon.capacity);
-          }
-        }
-      } else {
-        const via = RecipeUtility.getProductStepData(productSteps, p);
-        if (via) {
-          e[p.id] = p.rate.div(dispRateInfo.value);
-          const wagonId = itemSettings[via[0]].wagonId;
-          if (wagonId) {
-            const item = data.itemEntities[via[0]];
-            const wagon = data.itemEntities[wagonId];
-            if (item.stack && wagon.cargoWagon) {
-              e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
-            } else if (wagon.fluidWagon) {
-              e[p.id] = e[p.id].mul(wagon.fluidWagon.capacity);
-            }
-          }
-          e[p.id] = e[p.id].div(via[1]);
-        } else {
-          e[p.id] = Rational.zero;
+      e[p.id] = p.rate.div(dispRateInfo.value);
+      const wagonId = itemSettings[p.itemId].wagonId;
+      if (wagonId) {
+        const item = data.itemEntities[p.itemId];
+        const wagon = data.itemEntities[wagonId];
+        if (item.stack && wagon.cargoWagon) {
+          e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
+        } else if (wagon.fluidWagon) {
+          e[p.id] = e[p.id].mul(wagon.fluidWagon.capacity);
         }
       }
-      return e;
-    }, {})
-);
-
-export const getNormalizedRatesByFactories = createSelector(
-  getProductsByFactories,
-  getProductSteps,
-  Recipes.getAdjustedDataset,
-  (products, productSteps, data) =>
-    products?.reduce((e: Entities<Rational>, p) => {
-      let recipeId = data.itemRecipeId[p.itemId];
-      if (recipeId && p.viaId === recipeId) {
-        const recipe = data.recipeR[recipeId];
-        e[p.id] = p.rate.div(recipe.time);
-        if (recipe.out) {
-          e[p.id] = e[p.id].mul(recipe.out[p.itemId]);
-        }
-        if (recipe.adjustProd && recipe.productivity) {
-          e[p.id] = e[p.id].div(recipe.productivity);
-        }
-      } else {
-        const via = RecipeUtility.getProductStepData(productSteps, p);
-        if (via) {
-          recipeId = via[0];
-          e[p.id] = p.rate.div(via[1]);
-        } else {
-          e[p.id] = Rational.zero;
-        }
-      }
-
       return e;
     }, {})
 );
@@ -258,12 +125,10 @@ export const getNormalizedRates = createSelector(
   getNormalizedRatesByItems,
   getNormalizedRatesByBelts,
   getNormalizedRatesByWagons,
-  getNormalizedRatesByFactories,
-  (byItems, byBelts, byWagons, byFactories) => ({
+  (byItems, byBelts, byWagons) => ({
     ...byItems,
     ...byBelts,
     ...byWagons,
-    ...byFactories,
   })
 );
 
@@ -322,12 +187,6 @@ export const getSteps = createSelector(
       dispRateInfo,
       data
     )
-);
-
-export const checkViaState = createSelector(
-  getRationalProducts,
-  getNormalizedRates,
-  (products, rates) => ({ products, rates })
 );
 
 export const getZipState = createSelector(

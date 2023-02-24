@@ -28,7 +28,6 @@ import {
 export class ObjectivesComponent {
   vm$ = combineLatest([
     this.store.select(Products.getProducts),
-    this.store.select(Products.getViaOptions),
     this.store.select(Producers.getProducers),
     this.store.select(Items.getItemSettings),
     this.store.select(Factories.getFactories),
@@ -42,7 +41,6 @@ export class ObjectivesComponent {
     map(
       ([
         products,
-        viaOptions,
         producers,
         itemSettings,
         factories,
@@ -54,7 +52,6 @@ export class ObjectivesComponent {
         width,
       ]) => ({
         products,
-        viaOptions,
         producers,
         itemSettings,
         factories,
@@ -91,10 +88,6 @@ export class ObjectivesComponent {
 
   setRateType(id: string, value: RateType): void {
     this.store.dispatch(new Products.SetRateTypeAction({ id, value }));
-  }
-
-  setVia(id: string, value: string): void {
-    this.store.dispatch(new Products.SetViaAction({ id, value }));
   }
 
   removeProducer(id: string): void {

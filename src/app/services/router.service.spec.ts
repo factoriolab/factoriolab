@@ -660,7 +660,6 @@ describe('RouterService', () => {
             itemId: ItemId.SteelChest,
             rate: '1',
             rateType: RateType.Items,
-            viaId: ItemId.IronOre,
           },
         ],
         Mocks.Hash
@@ -681,7 +680,6 @@ describe('RouterService', () => {
             itemId: ItemId.SteelChest,
             rate: '1',
             rateType: RateType.Belts,
-            viaId: ItemId.IronOre,
           },
         ],
         Mocks.Hash
@@ -702,7 +700,6 @@ describe('RouterService', () => {
             itemId: ItemId.SteelChest,
             rate: '1',
             rateType: RateType.Wagons,
-            viaId: ItemId.IronOre,
           },
         ],
         Mocks.Hash
@@ -710,27 +707,6 @@ describe('RouterService', () => {
       expect(zip.objectives).toEqual({
         bare: 'p=steel-chest*1*2*iron-ore',
         hash: 'pC6*1*2*Bd',
-      });
-    });
-
-    it('should handle RateType Factories', () => {
-      const zip = mockZipData();
-      service.zipProducts(
-        zip,
-        [
-          {
-            id: '0',
-            itemId: ItemId.SteelChest,
-            rate: '1',
-            rateType: RateType.Factories,
-            viaId: ItemId.IronOre,
-          },
-        ],
-        Mocks.Hash
-      );
-      expect(zip.objectives).toEqual({
-        bare: 'p=steel-chest*1*3*iron-ore',
-        hash: 'pC6*1*3*Bl',
       });
     });
   });
@@ -747,8 +723,7 @@ describe('RouterService', () => {
             id: '1',
             itemId: ItemId.SteelChest,
             rate: '1',
-            rateType: RateType.Factories,
-            viaId: ItemId.IronOre,
+            rateType: RateType.Items,
           },
         },
         index: 2,
@@ -765,7 +740,6 @@ describe('RouterService', () => {
             itemId: ItemId.SteelChest,
             rate: '1',
             rateType: RateType.Items,
-            viaId: ItemId.IronOre,
           },
         },
         index: 2,
@@ -782,7 +756,6 @@ describe('RouterService', () => {
             itemId: ItemId.SteelChest,
             rate: '1',
             rateType: RateType.Belts,
-            viaId: ItemId.IronOre,
           },
         },
         index: 2,
@@ -799,24 +772,6 @@ describe('RouterService', () => {
             itemId: ItemId.SteelChest,
             rate: '1',
             rateType: RateType.Wagons,
-            viaId: ItemId.IronOre,
-          },
-        },
-        index: 2,
-      });
-    });
-
-    it('hash should handle RateType Factories', () => {
-      const result = service.unzipProducts({ ['p']: 'C6*1*3*Bl' }, Mocks.Hash);
-      expect(result).toEqual({
-        ids: ['1'],
-        entities: {
-          ['1']: {
-            id: '1',
-            itemId: ItemId.SteelChest,
-            rate: '1',
-            rateType: RateType.Factories,
-            viaId: ItemId.IronOre,
           },
         },
         index: 2,
@@ -833,7 +788,6 @@ describe('RouterService', () => {
             itemId: '',
             rate: '1',
             rateType: RateType.Items,
-            viaId: ItemId.IronOre,
           },
         },
         index: 2,

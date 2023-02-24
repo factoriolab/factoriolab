@@ -1,8 +1,6 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Entities,
-  Product,
-  RateType,
   Rational,
   RationalRecipe,
   RationalRecipeSettings,
@@ -793,47 +791,6 @@ describe('RecipeUtility', () => {
     });
   });
 
-  describe('getProductStepData', () => {
-    const productId = '0';
-
-    it('should handle no recipes available', () => {
-      const result = RecipeUtility.getProductStepData({ [productId]: [] }, {
-        id: productId,
-        itemId: RecipeId.Coal,
-      } as any);
-      expect(result).toBeNull();
-    });
-
-    it('should find matching data', () => {
-      const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductStepData({ [productId]: [data] }, {
-        id: productId,
-        itemId: RecipeId.Coal,
-        viaId: RecipeId.Coal,
-      } as any);
-      expect(result).toEqual(data);
-    });
-
-    it('should fail to find matching data', () => {
-      const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductStepData({ [productId]: [data] }, {
-        id: productId,
-        itemId: RecipeId.Coal,
-        viaId: RecipeId.AdvancedOilProcessing,
-      } as any);
-      expect(result).toBeNull();
-    });
-
-    it('should handle no recipe specified', () => {
-      const data: [string, Rational] = [RecipeId.Coal, Rational.one];
-      const result = RecipeUtility.getProductStepData({ [productId]: [data] }, {
-        id: productId,
-        itemId: RecipeId.Coal,
-      } as any);
-      expect(result).toEqual(data);
-    });
-  });
-
   describe('allowsModules', () => {
     it('should check factory and rocket recipes', () => {
       // Silo recipes
@@ -978,93 +935,6 @@ describe('RecipeUtility', () => {
       );
       expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from(29575));
       expect(recipeR[RecipeId.CopperCable].cost).toEqual(Rational.one);
-    });
-  });
-
-  describe('adjustProduct', () => {
-    const id = '0';
-    const itemId = ItemId.Coal;
-    const rate = '1';
-    const rateType = RateType.Factories;
-
-    it('should ignore products using rateType other than Factories', () => {
-      const product = {
-        ...Mocks.Product1,
-        ...{ viaId: Mocks.Product1.itemId },
-      };
-      expect(
-        RecipeUtility.adjustProduct(product, {}, Mocks.AdjustedData)
-      ).toEqual(product);
-    });
-
-    it('should add viaId to products using rateType other than Factories', () => {
-      const recipe = RecipeUtility.adjustProduct(
-        Mocks.Product1,
-        {},
-        Mocks.AdjustedData
-      );
-      expect(recipe).toEqual({
-        ...Mocks.Product1,
-        ...{ viaId: Mocks.Product1.itemId },
-      });
-    });
-
-    it('by factories, should return product with all fields defined', () => {
-      const product: Product = {
-        id,
-        itemId,
-        rate,
-        rateType,
-        viaId: RecipeId.Coal,
-      };
-      expect(RecipeUtility.adjustProduct(product, {}, Mocks.Dataset)).toEqual(
-        product
-      );
-    });
-
-    it('by factories, nondefault factory, should return product with all fields defined', () => {
-      const product: Product = {
-        id,
-        itemId,
-        rate,
-        rateType,
-        viaId: RecipeId.Coal,
-      };
-      expect(RecipeUtility.adjustProduct(product, {}, Mocks.Dataset)).toEqual(
-        product
-      );
-    });
-
-    it('by factories, should set simple viaId', () => {
-      const result = RecipeUtility.adjustProduct(
-        { id, itemId, rate, rateType },
-        {},
-        Mocks.Dataset
-      );
-      expect(result.viaId).toEqual(itemId);
-    });
-
-    it('by factories, should set complex viaId', () => {
-      spyOn(RecipeUtility, 'getProductStepData').and.returnValue([
-        itemId,
-        Rational.zero,
-      ]);
-      const result = RecipeUtility.adjustProduct(
-        { id, itemId: ItemId.PetroleumGas, rate, rateType },
-        {},
-        Mocks.Dataset
-      );
-      expect(result.viaId).toEqual(itemId);
-    });
-
-    it('by factories, should skip missed viaId', () => {
-      spyOn(RecipeUtility, 'getProductStepData').and.returnValue(null);
-      const result = RecipeUtility.adjustProduct(
-        { id, itemId: ItemId.PetroleumGas, rate, rateType },
-        {},
-        Mocks.Dataset
-      );
-      expect(result.viaId).toBeUndefined();
     });
   });
 

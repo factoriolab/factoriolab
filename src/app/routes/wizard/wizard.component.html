@@ -10,12 +10,6 @@
       <ng-container *ngSwitchCase="WizardState.ProductItems">
         <ng-container *ngTemplateOutlet="productItems"></ng-container>
       </ng-container>
-      <ng-container *ngSwitchCase="WizardState.ProductFactories">
-        <ng-container *ngTemplateOutlet="productFactories"></ng-container>
-      </ng-container>
-      <ng-container *ngSwitchCase="WizardState.ProductVia">
-        <ng-container *ngTemplateOutlet="productVia"></ng-container>
-      </ng-container>
       <ng-container *ngSwitchCase="WizardState.Producer">
         <ng-container *ngTemplateOutlet="producer"></ng-container>
       </ng-container>
@@ -88,24 +82,6 @@
       [label]="'wizard.productTypeItems' | translate"
       (click)="state = WizardState.ProductItems"
     ></button>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-industry"
-      [label]="'wizard.productTypeFactories' | translate"
-      (click)="state = WizardState.ProductFactories"
-    ></button>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-flask"
-      [label]="'wizard.productTypeVia' | translate"
-      (click)="openViaState()"
-    ></button>
     <p-divider></p-divider>
     <button
       pButton
@@ -147,123 +123,6 @@
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
       (click)="createProduct(id, rate, RateType.Items)"
-      routerLink="/list"
-    ></button>
-    <p-divider></p-divider>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mb-2 p-button-outlined"
-      icon="fa-solid fa-arrow-left"
-      [label]="'wizard.back' | translate"
-      (click)="state = WizardState.ProductType"
-    ></button>
-  </ng-template>
-  <ng-template #productFactories>
-    <div>{{ 'wizard.productFactories' | translate }}</div>
-    <p-divider></p-divider>
-    <div class="d-flex align-items-center justify-content-center">
-      <i [class]="id | iconClass"></i>
-      <span class="ms-2">{{ vm.data.itemEntities[id].name }}</span>
-    </div>
-    <lab-input-number
-      class="mt-2 w-100"
-      tooltipPosition="top"
-      [value]="rate"
-      (setValue)="rate = $event"
-    ></lab-input-number>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-check"
-      [label]="'ok' | translate"
-      (click)="createProduct(id, rate, RateType.Factories)"
-      routerLink="/list"
-    ></button>
-    <p-divider></p-divider>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mb-2 p-button-outlined"
-      icon="fa-solid fa-arrow-left"
-      [label]="'wizard.back' | translate"
-      (click)="state = WizardState.ProductType"
-    ></button>
-  </ng-template>
-  <ng-template #productVia>
-    <div>{{ 'wizard.productVia' | translate }}</div>
-    <p-divider></p-divider>
-    <div class="d-flex align-items-center justify-content-center">
-      <i [class]="id | iconClass"></i>
-      <span class="ms-2">{{ vm.data.itemEntities[id].name }}</span>
-    </div>
-    <lab-input-number
-      class="mt-2 w-100"
-      tooltipPosition="top"
-      [value]="rate"
-      (setValue)="rate = $event"
-    ></lab-input-number>
-    <p-dropdown
-      styleClass="my-2"
-      [options]="vm.rateTypeOptions"
-      [(ngModel)]="viaRateType"
-    ></p-dropdown
-    ><ng-container *ngIf="vm.viaOptions['0'].length > 0; else recipeNone">
-      <ng-container *ngIf="viaRateType | rateTypeViaDropdown as dropdownType">
-        <p-dropdown
-          labDropdownBase
-          [options]="vm.viaOptions['0']"
-          [(ngModel)]="viaId"
-        >
-          <ng-template pTemplate="selectedItem" let-item>
-            <span *ngIf="item.value === id; else viaSelected">
-              {{ 'objectives.viaPlaceholder' | translate }}
-            </span>
-            <ng-template #viaSelected>
-              <div class="d-flex align-items-center h-100">
-                <i [class]="item.value | iconSmClass : dropdownType"></i>
-                <div class="ms-3 text-truncate">
-                  {{ item.label }}
-                </div>
-              </div>
-            </ng-template>
-          </ng-template>
-          <ng-template pTemplate="item" let-item>
-            <div
-              class="d-flex align-items-center py-2 w-100 h-100"
-              [pTooltip]="
-                dropdownType === 'recipe'
-                  ? (item.value | recipeTooltip : vm.data)
-                  : (item.value | itemTooltip : vm.data)
-              "
-              [escape]="false"
-            >
-              <i [class]="item.value | iconSmClass : dropdownType"></i>
-              <div class="ms-3 text-truncate">
-                {{ item.label }}
-              </div>
-            </div>
-          </ng-template>
-        </p-dropdown>
-      </ng-container>
-    </ng-container>
-    <ng-template #recipeNone>
-      <span class="p-inputgroup-addon p-error">{{
-        'objectives.noEnabledRecipes' | translate
-      }}</span>
-    </ng-template>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-check"
-      [label]="'ok' | translate"
-      (click)="createProduct(id, rate, viaRateType, viaId)"
       routerLink="/list"
     ></button>
     <p-divider></p-divider>

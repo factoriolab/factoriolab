@@ -73,7 +73,6 @@
       "wagonsPerSecond": "Wagons/s",
       "wagonsPerMinute": "Wagons/m",
       "wagonsPerHour": "Wagons/h",
-      "factories": "Machines",
       "pollutionPerSecond": "Pollution/s",
       "pollutionPerMinute": "Pollution/m",
       "pollutionPerHour": "Pollution/h"
@@ -155,11 +154,8 @@
     "runFactoriesButton": "Choose which recipe (producer)",
     "productType": "How do you want to set your production rate?",
     "productTypeItems": "I want to specify an amount to produce",
-    "productTypeFactories": "I want to specify a number of machines",
-    "productTypeVia": "I am limited by one of its ingredients",
     "productItems": "How much do you want to produce?",
-    "productFactories": "How many machines do you want to run?",
-    "productVia": "What ingredient are you limited by?"
+    "productFactories": "How many machines do you want to run?"
   },
   "settings": {
     "header": "Settings",
@@ -256,8 +252,6 @@
     "itemTooltip": "Select product item",
     "rateTooltip": "Set output rate",
     "rateTypeTooltip": "Select rate type",
-    "viaPlaceholder": "Select limit step",
-    "viaTooltip": "Limit item production by rate of a specific step",
     "noEnabledRecipes": "No recipes, try enabling item or its recipes",
     "producers": "Producers",
     "removeProducerTooltip": "Remove producer",

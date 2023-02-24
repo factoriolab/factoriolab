@@ -7,7 +7,6 @@ export enum RateType {
   Items,
   Belts,
   Wagons,
-  Factories,
 }
 
 export function rateTypeOptions(
@@ -18,7 +17,6 @@ export function rateTypeOptions(
     { value: RateType.Items, label: dispRateInfo.itemsLabel },
     { value: RateType.Belts, label: 'options.rateType.belts' },
     { value: RateType.Wagons, label: dispRateInfo.wagonsLabel },
-    { value: RateType.Factories, label: 'options.rateType.factories' },
   ];
 
   if (game === Game.DysonSphereProgram || game === Game.CaptainOfIndustry) {

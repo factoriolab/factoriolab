@@ -8,7 +8,7 @@ import { filter, first } from 'rxjs/operators';
 
 import { environment } from 'src/environments';
 import { FuelType, gameInfo, ModHash } from '~/models';
-import { LabState, Preferences, Products, Settings } from '~/store';
+import { LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Injectable({
@@ -42,22 +42,6 @@ Determine resource and factory requirements for your desired output products.`,
     this.store.select(Settings.getModId).subscribe((modId) => {
       this.gaSvc.event('set_mod_id', modId);
       BrowserUtility.modState = modId;
-    });
-
-    this.store.select(Products.checkViaState).subscribe((s) => {
-      for (const product of s.products) {
-        if (
-          product.viaId &&
-          product.viaId !== product.itemId &&
-          product.rate.nonzero() &&
-          s.rates[product.id].isZero()
-        ) {
-          // Reset invalid viaId
-          // This normally occurs when a chosen viaId no longer appears in the result steps
-          // Usually due to some parent item/recipe being ignored or recipe disabled
-          this.store.dispatch(new Products.ResetViaAction(product.id));
-        }
-      }
     });
 
     this.store.select(Preferences.preferencesState).subscribe((s) => {

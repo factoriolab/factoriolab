@@ -76,21 +76,13 @@ export function productsReducer(
       };
     }
     case ProductsActionType.SET_ITEM: {
-      const entities = StoreUtility.assignValue(
-        state.entities,
-        'itemId',
-        action.payload
-      );
-      if (entities[action.payload.id].rateType === RateType.Factories) {
-        entities[action.payload.id].rateType = RateType.Items;
-      }
       return {
         ...state,
         ...{
-          entities: StoreUtility.resetFields(
-            entities,
-            ['viaId'],
-            action.payload.id
+          entities: StoreUtility.assignValue(
+            state.entities,
+            'itemId',
+            action.payload
           ),
         },
       };
@@ -110,35 +102,9 @@ export function productsReducer(
       return {
         ...state,
         ...{
-          entities: StoreUtility.resetFields(
-            StoreUtility.assignValue(
-              state.entities,
-              'rateType',
-              action.payload
-            ),
-            ['viaId'],
-            action.payload.id
-          ),
-        },
-      };
-    case ProductsActionType.SET_VIA:
-      return {
-        ...state,
-        ...{
           entities: StoreUtility.assignValue(
             state.entities,
-            'viaId',
-            action.payload
-          ),
-        },
-      };
-    case ProductsActionType.RESET_VIA:
-      return {
-        ...state,
-        ...{
-          entities: StoreUtility.resetFields(
-            state.entities,
-            ['viaId'],
+            'rateType',
             action.payload
           ),
         },

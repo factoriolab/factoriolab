@@ -78,7 +78,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest([
-      this.store.select(Products.getBaseProducts),
+      this.store.select(Products.getProducts),
       this.store.select(Producers.getBaseProducers),
       this.store.select(Settings.getDataset),
       this.contentSvc.lang$,
