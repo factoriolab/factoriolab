@@ -4,10 +4,10 @@ import { Rational } from '../rational';
 import { BeaconSettings, RationalBeaconSettings } from './beacon-settings';
 
 export interface RecipeSettings {
-  factoryId?: string;
-  factoryModuleIds?: string[];
+  machineId?: string;
+  machineModuleIds?: string[];
   /** Calculated, not configurable */
-  factoryModuleOptions?: SelectItem[];
+  machineModuleOptions?: SelectItem[];
   beacons?: BeaconSettings[];
   overclock?: number;
   cost?: string;
@@ -15,24 +15,24 @@ export interface RecipeSettings {
 }
 
 export class RationalRecipeSettings {
-  factoryId?: string;
-  factoryModuleIds?: string[];
+  machineId?: string;
+  machineModuleIds?: string[];
   /** Calculated, not configurable */
-  factoryModuleOptions?: SelectItem[];
+  machineModuleOptions?: SelectItem[];
   beacons?: RationalBeaconSettings[];
   overclock?: Rational;
   cost?: Rational;
   checked?: boolean;
 
   constructor(data: RecipeSettings) {
-    if (data.factoryId != null) {
-      this.factoryId = data.factoryId;
+    if (data.machineId != null) {
+      this.machineId = data.machineId;
     }
-    if (data.factoryModuleIds != null) {
-      this.factoryModuleIds = data.factoryModuleIds;
+    if (data.machineModuleIds != null) {
+      this.machineModuleIds = data.machineModuleIds;
     }
-    if (data.factoryModuleOptions != null) {
-      this.factoryModuleOptions = data.factoryModuleOptions;
+    if (data.machineModuleOptions != null) {
+      this.machineModuleOptions = data.machineModuleOptions;
     }
     if (data.beacons) {
       this.beacons = data.beacons.map((b) => new RationalBeaconSettings(b));

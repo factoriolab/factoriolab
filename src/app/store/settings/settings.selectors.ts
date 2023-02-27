@@ -21,10 +21,10 @@ import {
   RationalBeacon,
   RationalBelt,
   RationalCargoWagon,
-  RationalFactory,
   RationalFluidWagon,
   RationalFuel,
   RationalItem,
+  RationalMachine,
   RationalModule,
   RationalRecipe,
   researchSpeedFactor,
@@ -83,9 +83,9 @@ export const getCostFactor = createSelector(
   settingsState,
   (state) => state.costFactor
 );
-export const getCostFactory = createSelector(
+export const getCostMachine = createSelector(
   settingsState,
-  (state) => state.costFactory
+  (state) => state.costMachine
 );
 export const getCostInput = createSelector(
   settingsState,
@@ -226,8 +226,8 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
         cargoWagonId: m.cargoWagon,
         fluidWagonId: m.fluidWagon,
         disabledRecipeIds: m.disabledRecipes,
-        factoryRankIds:
-          preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
+        machineRankIds:
+          preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
         moduleRankIds: moduleRank,
         beaconCount:
           preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
@@ -286,7 +286,7 @@ export const getRationalCostFactor = createSelector(getCostFactor, (cost) =>
   Rational.fromString(cost)
 );
 
-export const getRationalCostFactory = createSelector(getCostFactory, (cost) =>
+export const getRationalCostMachine = createSelector(getCostMachine, (cost) =>
   Rational.fromString(cost)
 );
 
@@ -420,7 +420,7 @@ export const getDataset = createSelector(
       .filter(fnPropsNotNullish('fluidWagon'))
       .sort((a, b) => a.fluidWagon.capacity - b.fluidWagon.capacity)
       .map((i) => i.id);
-    const factoryIds = items.filter((i) => i.factory).map((i) => i.id);
+    const machineIds = items.filter((i) => i.machine).map((i) => i.id);
     const modules = items.filter((i) => i.module);
     const moduleIds = modules.map((i) => i.id);
     const proliferatorModuleIds = modules
@@ -495,7 +495,7 @@ export const getDataset = createSelector(
     const beltEntities: Entities<RationalBelt> = {};
     const cargoWagonEntities: Entities<RationalCargoWagon> = {};
     const fluidWagonEntities: Entities<RationalFluidWagon> = {};
-    const factoryEntities: Entities<RationalFactory> = {};
+    const machineEntities: Entities<RationalMachine> = {};
     const moduleEntities: Entities<RationalModule> = {};
     const fuelEntities: Entities<RationalFuel> = {};
     const itemEntities = itemIds.reduce((e: Entities<RationalItem>, i) => {
@@ -514,8 +514,8 @@ export const getDataset = createSelector(
       if (item.fluidWagon) {
         fluidWagonEntities[i] = item.fluidWagon;
       }
-      if (item.factory) {
-        factoryEntities[i] = item.factory;
+      if (item.machine) {
+        machineEntities[i] = item.machine;
       }
       if (item.module) {
         moduleEntities[i] = item.module;
@@ -591,8 +591,8 @@ export const getDataset = createSelector(
       cargoWagonEntities,
       fluidWagonIds,
       fluidWagonEntities,
-      factoryIds,
-      factoryEntities,
+      machineIds,
+      machineEntities,
       moduleIds,
       proliferatorModuleIds,
       moduleEntities,
@@ -669,7 +669,7 @@ export const getAdjustmentData = createSelector(
   getRationalMiningBonus,
   getResearchFactor,
   getRationalCostFactor,
-  getRationalCostFactory,
+  getRationalCostMachine,
   getDataset,
   (
     netProductionOnly,
@@ -678,7 +678,7 @@ export const getAdjustmentData = createSelector(
     miningBonus,
     researchSpeed,
     costFactor,
-    costFactory,
+    costMachine,
     data
   ) => ({
     netProductionOnly,
@@ -687,7 +687,7 @@ export const getAdjustmentData = createSelector(
     miningBonus,
     researchSpeed,
     costFactor,
-    costFactory,
+    costMachine,
     data,
   })
 );
@@ -695,7 +695,7 @@ export const getAdjustmentData = createSelector(
 export const getSettingsModified = createSelector(settingsState, (state) => ({
   cost:
     state.costFactor !== initialSettingsState.costFactor ||
-    state.costFactory !== initialSettingsState.costFactory ||
+    state.costMachine !== initialSettingsState.costMachine ||
     state.costInput !== initialSettingsState.costInput ||
     state.costIgnored !== initialSettingsState.costIgnored,
 }));

@@ -978,8 +978,8 @@ export class SimplexUtility {
   ): void {
     const steps = state.steps;
     // Don't assign to any step that already has a recipe or producer assigned
-    // (Those steps should have non-nullish factories)
-    const options = steps.filter((s) => s.factories == null);
+    // (Those steps should have non-nullish machines)
+    const options = steps.filter((s) => s.machines == null);
     // Look for a step that was selected to be associated with this recipe
     let step = options.find((s) => s.recipeId === recipe.id);
     if (!step) {
@@ -1008,11 +1008,11 @@ export class SimplexUtility {
     step.recipeId = recipe.id;
     step.recipe = recipe;
     if (producer) {
-      step.factories = producer.count;
+      step.machines = producer.count;
       step.producerId = producer.id;
     } else {
-      step.factories = solution.recipes[recipe.id].add(
-        step.factories || Rational.zero
+      step.machines = solution.recipes[recipe.id].add(
+        step.machines || Rational.zero
       );
     }
 

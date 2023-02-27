@@ -31,7 +31,7 @@ describe('MatrixComponent', () => {
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.val('setCostFactor', Settings.SetCostFactorAction);
-    dispatch.val('setCostFactory', Settings.SetCostFactoryAction);
+    dispatch.val('setCostMachine', Settings.SetCostMachineAction);
     dispatch.val('setCostInput', Settings.SetCostInputAction);
     dispatch.val('setCostIgnored', Settings.SetCostIgnoredAction);
     dispatch.idVal('setRecipeCost', Recipes.SetCostAction);

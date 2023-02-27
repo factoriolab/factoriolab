@@ -17,7 +17,7 @@ export interface Recipe {
   part?: string;
   /** Used to link the recipe to an alternate icon id */
   icon?: string;
-  /** Used to override the factory's usage for this recipe */
+  /** Used to override the machine's usage for this recipe */
   usage?: number | string;
 }
 

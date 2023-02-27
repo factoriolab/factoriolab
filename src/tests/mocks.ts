@@ -5,8 +5,8 @@ import i18n from 'src/data/1.1/i18n/zh.json';
 import * as M from '~/models';
 import {
   Datasets,
-  Factories,
   Items,
+  Machines,
   Preferences,
   Producers,
   Products,
@@ -110,8 +110,8 @@ export const ItemSettings1: M.ItemSettings = {
   wagonId: ItemId.CargoWagon,
 };
 export const RecipeSettings1: M.RecipeSettings = {
-  factoryId: ItemId.AssemblingMachine2,
-  factoryModuleIds: [ItemId.Module, ItemId.Module],
+  machineId: ItemId.AssemblingMachine2,
+  machineModuleIds: [ItemId.Module, ItemId.Module],
   beacons: [
     {
       id: ItemId.Beacon,
@@ -121,8 +121,8 @@ export const RecipeSettings1: M.RecipeSettings = {
   ],
 };
 export const RecipeSettings2: M.RecipeSettings = {
-  factoryId: ItemId.AssemblingMachine2,
-  factoryModuleIds: [ItemId.Module, ItemId.Module],
+  machineId: ItemId.AssemblingMachine2,
+  machineModuleIds: [ItemId.Module, ItemId.Module],
   beacons: [
     {
       id: ItemId.Beacon,
@@ -138,7 +138,7 @@ export const Step1: M.Step = {
   items: M.Rational.fromString(Product1.rate),
   belts: M.Rational.fromNumber(0.5),
   wagons: M.Rational.two,
-  factories: M.Rational.one,
+  machines: M.Rational.one,
   power: M.Rational.one,
   pollution: M.Rational.one,
 };
@@ -149,7 +149,7 @@ export const Step2: M.Step = {
   items: M.Rational.fromString(Product2.rate),
   belts: M.Rational.one,
   wagons: M.Rational.one,
-  factories: M.Rational.two,
+  machines: M.Rational.two,
   power: M.Rational.zero,
   pollution: M.Rational.zero,
 };
@@ -185,8 +185,8 @@ export const ItemSettingsInitial = Items.getItemSettings.projector(
     },
   }
 );
-export const FactorySettingsInitial = Factories.getFactories.projector(
-  Factories.initialFactoriesState,
+export const MachineSettingsInitial = Machines.getMachines.projector(
+  Machines.initialMachinesState,
   Defaults,
   Dataset
 );
@@ -194,7 +194,7 @@ export function getRecipeSettings(): M.Entities<M.RecipeSettings> {
   Recipes.getRecipeSettings.release();
   return Recipes.getRecipeSettings.projector(
     {},
-    FactorySettingsInitial,
+    MachineSettingsInitial,
     Dataset
   );
 }
@@ -216,7 +216,7 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
     miningBonus: M.Rational.zero,
     researchSpeed: M.Rational.one,
     costFactor: M.Rational.one,
-    costFactory: M.Rational.one,
+    costMachine: M.Rational.one,
     data: Dataset,
   }
 );
@@ -258,8 +258,8 @@ export const Flow: M.FlowData = {
       id: 'b',
       type: M.NodeType.Recipe,
       recipe: Data.recipes[0],
-      factories: '1',
-      factoryId: 'factoryId',
+      machines: '1',
+      machineId: 'machineId',
     },
   ],
   links: [
@@ -289,6 +289,6 @@ export const AdjustmentData = {
   miningBonus: M.Rational.zero,
   researchSpeed: M.Rational.one,
   costFactor: M.Rational.one,
-  costFactory: M.Rational.one,
+  costMachine: M.Rational.one,
   data: Dataset,
 };

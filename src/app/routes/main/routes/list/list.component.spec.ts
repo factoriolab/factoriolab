@@ -58,7 +58,7 @@ describe('ListComponent', () => {
           tabs: [
             { label: StepDetailTab.Item },
             { label: StepDetailTab.Recipe },
-            { label: StepDetailTab.Factory },
+            { label: StepDetailTab.Machine },
           ],
           outputs: [],
           recipeIds: [],
@@ -185,27 +185,27 @@ describe('ListComponent', () => {
     };
 
     it('should skip a step with no recipe', () => {
-      spyOn(component, 'setFactory');
+      spyOn(component, 'setMachine');
       component.changeRecipeField(
         { id: '0' },
         '1',
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset,
-        RecipeField.Factory
+        RecipeField.Machine
       );
-      expect(component.setFactory).not.toHaveBeenCalled();
+      expect(component.setMachine).not.toHaveBeenCalled();
     });
 
-    it('should set up default for factory', () => {
-      spyOn(component, 'setFactory');
+    it('should set up default for machine', () => {
+      spyOn(component, 'setMachine');
       component.changeRecipeField(
         step,
         ItemId.AssemblingMachine2,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset,
-        RecipeField.Factory
+        RecipeField.Machine
       );
-      expect(component.setFactory).toHaveBeenCalledWith(
+      expect(component.setMachine).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         ItemId.AssemblingMachine2,
         ItemId.AssemblingMachine3,
@@ -213,17 +213,17 @@ describe('ListComponent', () => {
       );
     });
 
-    it('should set up default for factory modules', () => {
-      spyOn(component, 'setFactoryModules');
+    it('should set up default for machine modules', () => {
+      spyOn(component, 'setMachineModules');
       component.changeRecipeField(
         step,
         ItemId.SpeedModule3,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset,
-        RecipeField.FactoryModules,
+        RecipeField.MachineModules,
         0
       );
-      expect(component.setFactoryModules).toHaveBeenCalledWith(
+      expect(component.setMachineModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         new Array(4).fill(ItemId.SpeedModule3),
         new Array(4).fill(ItemId.SpeedModule3),
@@ -236,7 +236,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         '4',
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset,
         RecipeField.BeaconCount,
         0
@@ -255,7 +255,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         ItemId.Beacon,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset,
         RecipeField.Beacon,
         0
@@ -274,7 +274,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         ItemId.SpeedModule3,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset,
         RecipeField.BeaconModules,
         0,
@@ -294,7 +294,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         '8',
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset,
         RecipeField.BeaconTotal,
         0
@@ -312,7 +312,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         100,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset,
         RecipeField.Overclock
       );
@@ -357,12 +357,12 @@ describe('ListComponent', () => {
     dispatch.idValDef('setBelt', Items.SetBeltAction);
     dispatch.idValDef('setWagon', Items.SetWagonAction);
     dispatch.idVal('setItemChecked', Items.SetCheckedAction);
-    dispatch.idValDef('setFactory', Recipes.SetFactoryAction);
-    dispatch.idValDefAlt('setFactory', Producers.SetFactoryAction);
-    dispatch.idValDef('setFactoryModules', Recipes.SetFactoryModulesAction);
+    dispatch.idValDef('setMachine', Recipes.SetMachineAction);
+    dispatch.idValDefAlt('setMachine', Producers.SetMachineAction);
+    dispatch.idValDef('setMachineModules', Recipes.SetMachineModulesAction);
     dispatch.idValDefAlt(
-      'setFactoryModules',
-      Producers.SetFactoryModulesAction
+      'setMachineModules',
+      Producers.SetMachineModulesAction
     );
     dispatch.val('addBeacon', Recipes.AddBeaconAction);
     dispatch.valAlt('addBeacon', Producers.AddBeaconAction);
@@ -390,7 +390,7 @@ describe('ListComponent', () => {
     dispatch.void('resetIgnores', Items.ResetIgnoresAction);
     dispatch.void('resetBelts', Items.ResetBeltsAction);
     dispatch.void('resetWagons', Items.ResetWagonsAction);
-    dispatch.void('resetFactories', Recipes.ResetFactoriesAction);
+    dispatch.void('resetMachines', Recipes.ResetMachinesAction);
     dispatch.void('resetBeacons', Recipes.ResetBeaconsAction);
     dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
   });

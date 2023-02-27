@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
 import { Game, ItemId } from '~/models';
-import { FactoryShowPipe } from './factory-show.pipe';
+import { MachineShowPipe } from './machine-show.pipe';
 
-describe('FactoryShowPipe', () => {
-  let pipe: FactoryShowPipe;
+describe('MachineShowPipe', () => {
+  let pipe: MachineShowPipe;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [FactoryShowPipe] });
-    pipe = TestBed.inject(FactoryShowPipe);
+    TestBed.configureTestingModule({ providers: [MachineShowPipe] });
+    pipe = TestBed.inject(MachineShowPipe);
   });
 
   it('should be created', () => {
@@ -16,7 +16,7 @@ describe('FactoryShowPipe', () => {
   });
 
   describe('transform', () => {
-    it('should hide factory icon for DSP Mining Drill', () => {
+    it('should hide machine icon for DSP Mining Drill', () => {
       expect(
         pipe.transform(ItemId.MiningDrill, Game.DysonSphereProgram)
       ).toBeFalse();

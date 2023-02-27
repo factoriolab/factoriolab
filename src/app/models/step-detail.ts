@@ -6,7 +6,7 @@ export interface StepOutput {
   recipeId: string;
   producerId?: string;
   value: Rational;
-  factories: Rational;
+  machines: Rational;
 }
 
 export interface StepDetail {

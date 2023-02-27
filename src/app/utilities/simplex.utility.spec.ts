@@ -210,7 +210,7 @@ describe('SimplexUtility', () => {
       const hocStep = result.steps.find(
         (s) => s.recipeId === RecipeId.HeavyOilCracking
       );
-      expect(hocStep!.factories!.gt(Rational.zero)).toBeTrue();
+      expect(hocStep!.machines!.gt(Rational.zero)).toBeTrue();
     });
   });
 
@@ -1145,7 +1145,7 @@ describe('SimplexUtility', () => {
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
           items: Rational.one,
-          factories: Rational.one,
+          machines: Rational.one,
           recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
         },
       ]);
@@ -1169,7 +1169,7 @@ describe('SimplexUtility', () => {
         {
           id: '0',
           recipeId: RecipeId.Coal,
-          factories: Rational.one,
+          machines: Rational.one,
           recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
         },
       ]);
@@ -1194,7 +1194,7 @@ describe('SimplexUtility', () => {
         {
           id: '0',
           recipeId: RecipeId.Coal,
-          factories: Rational.one,
+          machines: Rational.one,
           recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
           producerId: Mocks.RationalProducer.id,
         },
@@ -1238,7 +1238,7 @@ describe('SimplexUtility', () => {
         {
           id: '2',
           recipeId: RecipeId.AdvancedOilProcessing,
-          factories: Rational.one,
+          machines: Rational.one,
           recipe: Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing],
         },
         { id: '1', itemId: ItemId.Wood, items: Rational.zero },

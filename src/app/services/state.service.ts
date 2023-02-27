@@ -30,7 +30,7 @@ export class StateService {
       this.meta.updateTag({
         name: 'description',
         content: `A feature-rich production calculator for ${gameInfo[game].meta} and similar games.
-Determine resource and factory requirements for your desired output products.`,
+Determine item and machine requirements for your desired output products.`,
       });
     });
 
@@ -75,7 +75,7 @@ Determine resource and factory requirements for your desired output products.`,
             belts: [...data.hash.belts],
             fuels: [...data.hash.fuels],
             wagons: [...data.hash.wagons],
-            factories: [...data.hash.factories],
+            machines: [...data.hash.machines],
             modules: [...data.hash.modules],
             recipes: [...data.hash.recipes],
           };
@@ -107,10 +107,10 @@ Determine resource and factory requirements for your desired output products.`,
             .filter((i) => hash.wagons.indexOf(i) === -1)) {
             hash.wagons.push(id);
           }
-          for (const id of [...data.factoryIds]
+          for (const id of [...data.machineIds]
             .sort()
-            .filter((i) => hash.factories.indexOf(i) === -1)) {
-            hash.factories.push(id);
+            .filter((i) => hash.machines.indexOf(i) === -1)) {
+            hash.machines.push(id);
           }
           for (const id of [...data.moduleIds]
             .sort()

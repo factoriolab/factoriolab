@@ -3,7 +3,7 @@ import { Rational } from '../rational';
 import { ModuleEffect } from './module';
 import { RationalSilo, Silo } from './silo';
 
-export interface Factory {
+export interface Machine {
   speed?: number;
   modules?: number;
   /** Energy type, e.g. electric or burner */
@@ -23,7 +23,7 @@ export interface Factory {
   disallowEffects?: ModuleEffect[];
 }
 
-export class RationalFactory {
+export class RationalMachine {
   speed?: Rational;
   modules?: number;
   /** Energy type, e.g. electric or burner */
@@ -40,7 +40,7 @@ export class RationalFactory {
   consumption?: Entities<Rational>;
   disallowEffects?: ModuleEffect[];
 
-  constructor(data: Factory) {
+  constructor(data: Machine) {
     if (data.speed != null) {
       this.speed = Rational.fromNumber(data.speed);
     }

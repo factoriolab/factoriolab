@@ -23,16 +23,16 @@ export function recipesReducer(
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
       return initialRecipesState;
-    case RecipesActionType.SET_FACTORY:
+    case RecipesActionType.SET_MACHINE:
       return StoreUtility.resetFields(
-        StoreUtility.compareReset(state, 'factoryId', action.payload),
-        ['factoryModuleIds', 'beacons'],
+        StoreUtility.compareReset(state, 'machineId', action.payload),
+        ['machineModuleIds', 'beacons'],
         action.payload.id
       );
-    case RecipesActionType.SET_FACTORY_MODULES:
+    case RecipesActionType.SET_MACHINE_MODULES:
       return StoreUtility.compareReset(
         state,
-        'factoryModuleIds',
+        'machineModuleIds',
         action.payload
       );
     case RecipesActionType.ADD_BEACON:
@@ -113,14 +113,14 @@ export function recipesReducer(
     case RecipesActionType.RESET_RECIPE_MODULES:
       return StoreUtility.resetFields(
         state,
-        ['factoryModuleIds', 'beacons'],
+        ['machineModuleIds', 'beacons'],
         action.payload
       );
-    case RecipesActionType.RESET_FACTORIES:
+    case RecipesActionType.RESET_MACHINES:
       return StoreUtility.resetFields(state, [
-        'factoryId',
+        'machineId',
         'overclock',
-        'factoryModuleIds',
+        'machineModuleIds',
         'beacons',
       ]);
     case RecipesActionType.RESET_BEACONS:

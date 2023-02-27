@@ -2,26 +2,26 @@ import { createSelector } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
 import { getIdOptions } from '~/helpers';
-import { Entities, FactorySettings, Game } from '~/models';
+import { Entities, Game, MachineSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Settings from '../settings';
-import { FactoriesState } from './factories.reducer';
+import { MachinesState } from './machines.reducer';
 
 /* Base selector functions */
-export const factoriesState = (state: LabState): FactoriesState =>
-  state.factoriesState;
+export const machinesState = (state: LabState): MachinesState =>
+  state.machinesState;
 
 /* Complex selectors */
-export const getFactories = createSelector(
-  factoriesState,
+export const getMachines = createSelector(
+  machinesState,
   Settings.getDefaults,
   Settings.getDataset,
-  (state, defaults, data): FactoriesState => {
-    const ids = state.ids ?? defaults?.factoryRankIds ?? [];
+  (state, defaults, data): MachinesState => {
+    const ids = state.ids ?? defaults?.machineRankIds ?? [];
 
-    const entities: Entities<FactorySettings> = {};
-    const def: FactorySettings = { ...state.entities[''] };
+    const entities: Entities<MachineSettings> = {};
+    const def: MachineSettings = { ...state.entities[''] };
     def.moduleRankIds = def.moduleRankIds ?? defaults?.moduleRankIds ?? [];
     def.moduleOptions = getIdOptions(
       data.moduleIds,
@@ -45,13 +45,13 @@ export const getFactories = createSelector(
     }
     entities[''] = def;
 
-    for (const id of data.factoryIds.filter((i) => data.itemEntities[i])) {
-      const s: FactorySettings = { ...state.entities[id] };
-      const factory = data.factoryEntities[id];
+    for (const id of data.machineIds.filter((i) => data.itemEntities[i])) {
+      const s: MachineSettings = { ...state.entities[id] };
+      const machine = data.machineEntities[id];
 
-      if (factory.modules) {
+      if (machine.modules) {
         s.moduleRankIds = s.moduleRankIds ?? def.moduleRankIds;
-        s.moduleOptions = RecipeUtility.moduleOptions(factory, null, data);
+        s.moduleOptions = RecipeUtility.moduleOptions(machine, null, data);
         s.beaconCount = s.beaconCount != null ? s.beaconCount : def.beaconCount;
         s.beaconId = s.beaconId ?? def.beaconId;
         s.beaconModuleRankIds =
@@ -75,20 +75,20 @@ export const getFactories = createSelector(
   }
 );
 
-export const getFactoryOptions = createSelector(
-  getFactories,
+export const getMachineOptions = createSelector(
+  getMachines,
   Settings.getDataset,
-  (factories, data) =>
-    data.factoryIds.map(
+  (machines, data) =>
+    data.machineIds.map(
       (f): SelectItem => ({
         label: data.itemEntities[f].name,
         value: f,
-        disabled: (factories.ids ?? []).indexOf(f) !== -1,
+        disabled: (machines.ids ?? []).indexOf(f) !== -1,
       })
     )
 );
 
-export const getFactoryRows = createSelector(getFactories, (factories) => [
+export const getMachineRows = createSelector(getMachines, (machines) => [
   '',
-  ...(factories.ids ?? []),
+  ...(machines.ids ?? []),
 ]);

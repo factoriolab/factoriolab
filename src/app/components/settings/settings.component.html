@@ -250,7 +250,7 @@
         <p-divider>
           <span class="p-tag">
             <i class="fa-solid fa-industry"></i>
-            {{ 'settings.factory' | translate }}
+            {{ 'settings.machine' | translate }}
           </span>
         </p-divider>
         <div class="mt-3 py-2 mb-1">
@@ -269,25 +269,25 @@
         </div>
         <ng-container *ngIf="vm.data.game !== Game.CaptainOfIndustry">
           <ng-container
-            *ngFor="let factoryId of vm.factoryRows; let index = index"
+            *ngFor="let machineId of vm.machineRows; let index = index"
           >
-            <ng-container *ngIf="vm.factories.entities[factoryId] as settings">
+            <ng-container *ngIf="vm.machines.entities[machineId] as settings">
               <ng-container
                 *ngIf="
-                  factoryId
-                    ? vm.factories.entities['']
+                  machineId
+                    ? vm.machines.entities['']
                     : vm.data.defaults as defaults
                 "
               >
-                <div class="p-inputgroup flex-wrap factory-preference">
-                  <!-- Add/Remove factory button -->
+                <div class="p-inputgroup flex-wrap machine-preference">
+                  <!-- Add/Remove machine button -->
                   <p-dropdown
                     *ngIf="index === 0; else removeButton"
                     labDropdownBase="icon"
-                    [tooltip]="'settings.addFactoryTooltip' | translate"
-                    [options]="vm.factoryOptions"
+                    [tooltip]="'settings.addMachineTooltip' | translate"
+                    [options]="vm.machineOptions"
                     (onChange)="
-                      addFactory($event.value, vm.data.defaults?.factoryRankIds)
+                      addMachine($event.value, vm.data.defaults?.machineRankIds)
                     "
                   >
                     <ng-template pTemplate="selectedItem" let-item>
@@ -300,7 +300,7 @@
                     <ng-template pTemplate="item" let-item>
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="item.value | factoryTooltip : vm.data"
+                        [pTooltip]="item.value | machineTooltip : vm.data"
                         [escape]="false"
                       >
                         <i [class]="item.value | iconSmClass"></i>
@@ -317,28 +317,28 @@
                       type="button"
                       icon="fa-solid fa-minus"
                       [pTooltip]="
-                        'settings.removeFactoryPreference' | translate
+                        'settings.removeMachinePreference' | translate
                       "
                       (click)="
-                        removeFactory(
-                          factoryId,
-                          vm.data.defaults?.factoryRankIds
+                        removeMachine(
+                          machineId,
+                          vm.data.defaults?.machineRankIds
                         )
                       "
                     ></button>
                   </ng-template>
-                  <!-- Factory dropdown -->
+                  <!-- Machine dropdown -->
                   <p-dropdown
-                    *ngIf="factoryId; else factoryIcon"
+                    *ngIf="machineId; else machineIcon"
                     labDropdownBase="icon"
-                    [tooltip]="'settings.factoryTooltip' | translate"
-                    [ngModel]="factoryId"
-                    [options]="vm.factoryOptions"
+                    [tooltip]="'settings.machineTooltip' | translate"
+                    [ngModel]="machineId"
+                    [options]="vm.machineOptions"
                     (onChange)="
-                      setFactory(
-                        factoryId,
+                      setMachine(
+                        machineId,
                         $event.value,
-                        vm.data.defaults?.factoryRankIds
+                        vm.data.defaults?.machineRankIds
                       )
                     "
                   >
@@ -350,7 +350,7 @@
                     <ng-template pTemplate="item" let-item>
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="item.value | factoryTooltip : vm.data"
+                        [pTooltip]="item.value | machineTooltip : vm.data"
                         [escape]="false"
                       >
                         <i [class]="item.value | iconSmClass"></i>
@@ -360,10 +360,10 @@
                       </div>
                     </ng-template>
                   </p-dropdown>
-                  <ng-template #factoryIcon>
+                  <ng-template #machineIcon>
                     <span
                       class="p-inputgroup-addon"
-                      [pTooltip]="'settings.factoryDefaults' | translate"
+                      [pTooltip]="'settings.machineDefaults' | translate"
                     >
                       <i class="fa-solid fa-industry"></i>
                     </span>
@@ -387,7 +387,7 @@
                       [options]="settings.moduleOptions ?? []"
                       (onChange)="
                         setModuleRank(
-                          factoryId,
+                          machineId,
                           $event.value,
                           defaults?.moduleRankIds
                         )
@@ -429,7 +429,7 @@
                         [options]="settings.moduleOptions ?? []"
                         (onChange)="
                           setModuleRank(
-                            factoryId,
+                            machineId,
                             [$event.value],
                             vm.data.defaults?.moduleRankIds
                           )
@@ -469,9 +469,9 @@
                       [ngModel]="settings.overclock"
                       (onBlur)="
                         setOverclock(
-                          factoryId,
+                          machineId,
                           overclockInput.value,
-                          factoryId ? vm.factories.entities[''].overclock : 100
+                          machineId ? vm.machines.entities[''].overclock : 100
                         )
                       "
                     >
@@ -486,7 +486,7 @@
                         [value]="settings.beaconCount"
                         (setValue)="
                           setBeaconCount(
-                            factoryId,
+                            machineId,
                             $event,
                             defaults?.beaconCount
                           )
@@ -500,7 +500,7 @@
                         [ngModel]="settings.beaconId"
                         [options]="vm.options.beacons"
                         (onChange)="
-                          setBeacon(factoryId, $event.value, defaults?.beaconId)
+                          setBeacon(machineId, $event.value, defaults?.beaconId)
                         "
                       >
                         <ng-template pTemplate="selectedItem" let-item>
@@ -536,7 +536,7 @@
                         [options]="settings.beaconModuleOptions ?? []"
                         (onChange)="
                           changeBeaconModuleRank(
-                            factoryId,
+                            machineId,
                             $event.value,
                             defaults
                           )
@@ -578,16 +578,16 @@
                     pRipple
                     type="button"
                     class="ms-auto"
-                    [class.invisible]="vm.factoryMenuItems[index].length === 0"
+                    [class.invisible]="vm.machineMenuItems[index].length === 0"
                     icon="fa-solid fa-ellipsis-vertical"
-                    [pTooltip]="'settings.moveFactoryPreference' | translate"
-                    (click)="factoryMenu.toggle($event)"
+                    [pTooltip]="'settings.moveMachinePreference' | translate"
+                    (click)="machineMenu.toggle($event)"
                   >
                     <p-menu
-                      #factoryMenu
+                      #machineMenu
                       appendTo="body"
                       [popup]="true"
-                      [model]="vm.factoryMenuItems[index]"
+                      [model]="vm.machineMenuItems[index]"
                     ></p-menu>
                   </button>
                 </div>

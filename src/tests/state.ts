@@ -1,8 +1,8 @@
 import {
   Datasets,
-  Factories,
   Items,
   LabState,
+  Machines,
   Preferences,
   Producers,
   Products,
@@ -32,7 +32,7 @@ export const initialState: LabState = {
   producersState: Producers.initialProducersState,
   itemsState: Items.initialItemsState,
   recipesState: Recipes.initialRecipesState,
-  factoriesState: Factories.initialFactoriesState,
+  machinesState: Machines.initialMachinesState,
   settingsState: Settings.initialSettingsState,
   preferencesState: Preferences.initialPreferencesState,
 };

@@ -1,35 +1,35 @@
 import { ItemId, Mocks } from 'src/tests';
 import * as App from '../app.actions';
-import * as Actions from './factories.actions';
-import { factoriesReducer, initialFactoriesState } from './factories.reducer';
+import * as Actions from './machines.actions';
+import { initialMachinesState, machinesReducer } from './machines.reducer';
 
-describe('Factories Reducer', () => {
+describe('Machines Reducer', () => {
   const id = 'id';
   const value = 'value';
   const def = 'default';
 
   describe('LOAD', () => {
-    it('should load factory settings', () => {
-      const result = factoriesReducer(
+    it('should load machine settings', () => {
+      const result = machinesReducer(
         undefined,
         new App.LoadAction({
-          factoriesState: Mocks.FactorySettingsInitial,
+          machinesState: Mocks.MachineSettingsInitial,
         } as any)
       );
-      expect(result).toEqual(Mocks.FactorySettingsInitial);
+      expect(result).toEqual(Mocks.MachineSettingsInitial);
     });
   });
 
   describe('RESET', () => {
     it('should return the initial state', () => {
-      const result = factoriesReducer(undefined, new App.ResetAction());
-      expect(result).toEqual(initialFactoriesState);
+      const result = machinesReducer(undefined, new App.ResetAction());
+      expect(result).toEqual(initialMachinesState);
     });
   });
 
   describe('ADD', () => {
-    it('should add a factory to the list', () => {
-      const result = factoriesReducer(
+    it('should add a machine to the list', () => {
+      const result = machinesReducer(
         { ids: [], entities: {} },
         new Actions.AddAction({ value, def: [def] })
       );
@@ -37,7 +37,7 @@ describe('Factories Reducer', () => {
     });
 
     it('should handle undefined ids', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         undefined,
         new Actions.AddAction({ value, def: [def] })
       );
@@ -45,7 +45,7 @@ describe('Factories Reducer', () => {
     });
 
     it('should handle undefined ids and default', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         undefined,
         new Actions.AddAction({ value, def: undefined })
       );
@@ -54,8 +54,8 @@ describe('Factories Reducer', () => {
   });
 
   describe('REMOVE', () => {
-    it('should remove a factory from the list', () => {
-      const result = factoriesReducer(
+    it('should remove a machine from the list', () => {
+      const result = machinesReducer(
         { ids: [], entities: { [def]: {} } } as any,
         new Actions.RemoveAction({ value: def, def: [def] })
       );
@@ -64,7 +64,7 @@ describe('Factories Reducer', () => {
     });
 
     it('should handle undefined ids', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: undefined, entities: { [def]: {} } } as any,
         new Actions.RemoveAction({ value: def, def: [def] })
       );
@@ -73,7 +73,7 @@ describe('Factories Reducer', () => {
     });
 
     it('should handle undefined ids and default', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: undefined, entities: { [def]: {} } } as any,
         new Actions.RemoveAction({ value: def, def: undefined })
       );
@@ -83,8 +83,8 @@ describe('Factories Reducer', () => {
   });
 
   describe('RAISE', () => {
-    it('should raise the rank of a factory', () => {
-      const result = factoriesReducer(
+    it('should raise the rank of a machine', () => {
+      const result = machinesReducer(
         { ids: undefined, entities: {} },
         new Actions.RaiseAction({ value: def, def: [value, def] })
       );
@@ -92,7 +92,7 @@ describe('Factories Reducer', () => {
     });
 
     it('should do nothing if rank is already highest', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: undefined, entities: {} },
         new Actions.RaiseAction({ value, def: [value, def] })
       );
@@ -100,7 +100,7 @@ describe('Factories Reducer', () => {
     });
 
     it('should handle no match in ids', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: [], entities: {} },
         new Actions.RaiseAction({ value: def, def: [value, def] })
       );
@@ -108,7 +108,7 @@ describe('Factories Reducer', () => {
     });
 
     it('should handle undefined ids and default', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: undefined, entities: {} },
         new Actions.RaiseAction({ value: def, def: undefined })
       );
@@ -117,8 +117,8 @@ describe('Factories Reducer', () => {
   });
 
   describe('LOWER', () => {
-    it('should lower the rank of a factory', () => {
-      const result = factoriesReducer(
+    it('should lower the rank of a machine', () => {
+      const result = machinesReducer(
         { ids: undefined, entities: {} },
         new Actions.LowerAction({ value, def: [value, def] })
       );
@@ -126,7 +126,7 @@ describe('Factories Reducer', () => {
     });
 
     it('should do nothing if rank is already lowest', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: undefined, entities: {} },
         new Actions.LowerAction({ value: def, def: [value, def] })
       );
@@ -134,7 +134,7 @@ describe('Factories Reducer', () => {
     });
 
     it('should handle no match in ids', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: [], entities: {} },
         new Actions.LowerAction({ value: def, def: [value, def] })
       );
@@ -142,7 +142,7 @@ describe('Factories Reducer', () => {
     });
 
     it('should handle undefined ids and default', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: undefined, entities: {} },
         new Actions.LowerAction({ value: def, def: undefined })
       );
@@ -150,38 +150,38 @@ describe('Factories Reducer', () => {
     });
   });
 
-  describe('SET_FACTORY', () => {
+  describe('SET_MACHINE', () => {
     it('should replace an id in the rank list', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: undefined, entities: { [def]: 'test' } } as any,
-        new Actions.SetFactoryAction({ id: def, value, def: [def] })
+        new Actions.SetMachineAction({ id: def, value, def: [def] })
       );
       expect(result.ids).toEqual([value]);
       expect(result.entities[value]).toEqual('test' as any);
     });
 
     it('should do nothing if id is not found', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: undefined, entities: { [def]: 'test' } } as any,
-        new Actions.SetFactoryAction({ id, value, def: [def] })
+        new Actions.SetMachineAction({ id, value, def: [def] })
       );
       expect(result.ids).toBeUndefined();
       expect(result.entities[def]).toEqual('test' as any);
     });
 
     it('should handle no match in ids', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: [], entities: { [def]: 'test' } } as any,
-        new Actions.SetFactoryAction({ id, value, def: [def] })
+        new Actions.SetMachineAction({ id, value, def: [def] })
       );
       expect(result.ids).toEqual([]);
       expect(result.entities[def]).toEqual('test' as any);
     });
 
     it('should handle undefined ids and default', () => {
-      const result = factoriesReducer(
+      const result = machinesReducer(
         { ids: undefined, entities: { [def]: 'test' } } as any,
-        new Actions.SetFactoryAction({ id, value, def: undefined })
+        new Actions.SetMachineAction({ id, value, def: undefined })
       );
       expect(result.ids).toBeUndefined();
       expect(result.entities[def]).toEqual('test' as any);
@@ -189,8 +189,8 @@ describe('Factories Reducer', () => {
   });
 
   describe('SET_MODULE_RANK', () => {
-    it('should set the module rank for a factory', () => {
-      const result = factoriesReducer(
+    it('should set the module rank for a machine', () => {
+      const result = machinesReducer(
         undefined,
         new Actions.SetModuleRankAction({ id, value: [value], def: [] })
       );
@@ -199,8 +199,8 @@ describe('Factories Reducer', () => {
   });
 
   describe('SET_BEACON_COUNT', () => {
-    it('should set the beacon count for a factory', () => {
-      const result = factoriesReducer(
+    it('should set the beacon count for a machine', () => {
+      const result = machinesReducer(
         undefined,
         new Actions.SetBeaconCountAction({ id, value: '2', def: '8' })
       );
@@ -209,8 +209,8 @@ describe('Factories Reducer', () => {
   });
 
   describe('SET_BEACON', () => {
-    it('should set the beacon for a factory', () => {
-      const result = factoriesReducer(
+    it('should set the beacon for a machine', () => {
+      const result = machinesReducer(
         undefined,
         new Actions.SetBeaconAction({ id, value, def: ItemId.Beacon })
       );
@@ -219,8 +219,8 @@ describe('Factories Reducer', () => {
   });
 
   describe('SET_BEACON_MODULE', () => {
-    it('should set the beacon module for a factory', () => {
-      const result = factoriesReducer(
+    it('should set the beacon module for a machine', () => {
+      const result = machinesReducer(
         undefined,
         new Actions.SetBeaconModuleRankAction({
           id,
@@ -233,8 +233,8 @@ describe('Factories Reducer', () => {
   });
 
   describe('SET_OVERCLOCK', () => {
-    it('should set the overclock for a factory', () => {
-      const result = factoriesReducer(
+    it('should set the overclock for a machine', () => {
+      const result = machinesReducer(
         undefined,
         new Actions.SetOverclockAction({ id, value: 200, def: 100 })
       );
@@ -243,8 +243,8 @@ describe('Factories Reducer', () => {
   });
 
   it('should return the default state', () => {
-    expect(factoriesReducer(undefined, { type: 'Test' } as any)).toEqual(
-      initialFactoriesState
+    expect(machinesReducer(undefined, { type: 'Test' } as any)).toEqual(
+      initialMachinesState
     );
   });
 });

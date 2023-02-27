@@ -4,8 +4,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Dataset, Game } from '~/models';
 import { DisplayService } from '~/services';
 
-@Pipe({ name: 'factoryTooltip' })
-export class FactoryTooltipPipe implements PipeTransform {
+@Pipe({ name: 'machineTooltip' })
+export class MachineTooltipPipe implements PipeTransform {
   constructor(
     private translateSvc: TranslateService,
     private displaySvc: DisplayService
@@ -15,88 +15,88 @@ export class FactoryTooltipPipe implements PipeTransform {
     if (value == null) return '';
 
     const item = data.itemEntities[value];
-    const factory = item?.factory;
+    const machine = item?.machine;
 
-    if (item == null || factory == null) return '';
+    if (item == null || machine == null) return '';
 
     let html = item.name + '\n<small>';
     const tableRows: [string, string][] = [];
-    if (factory.speed && data.game !== Game.CaptainOfIndustry) {
+    if (machine.speed && data.game !== Game.CaptainOfIndustry) {
       tableRows.push([
         this.translateSvc.instant('tooltip.craftingSpeed'),
-        this.displaySvc.round(factory.speed),
+        this.displaySvc.round(machine.speed),
       ]);
     }
 
-    if (factory.modules && data.game === Game.Factorio) {
+    if (machine.modules && data.game === Game.Factorio) {
       tableRows.push([
         this.translateSvc.instant('tooltip.modules'),
-        factory.modules.toString(),
+        machine.modules.toString(),
       ]);
     }
 
-    if (factory.disallowEffects) {
+    if (machine.disallowEffects) {
       tableRows.push([
         this.translateSvc.instant('tooltip.disallowEffects'),
-        factory.disallowEffects.join(', '),
+        machine.disallowEffects.join(', '),
       ]);
     }
 
-    if (factory.type) {
+    if (machine.type) {
       tableRows.push([
         this.translateSvc.instant('tooltip.energyType'),
-        factory.type,
+        machine.type,
       ]);
     }
 
-    if (factory.category) {
+    if (machine.category) {
       tableRows.push([
         this.translateSvc.instant('tooltip.fuelCategory'),
-        factory.category,
+        machine.category,
       ]);
     }
 
-    if (factory.usage?.nonzero()) {
+    if (machine.usage?.nonzero()) {
       tableRows.push([
         this.translateSvc.instant('tooltip.energyUsage'),
-        this.displaySvc.power(factory.usage),
+        this.displaySvc.power(machine.usage),
       ]);
     }
 
-    if (factory.drain?.nonzero()) {
+    if (machine.drain?.nonzero()) {
       tableRows.push([
         this.translateSvc.instant('tooltip.drain'),
-        this.displaySvc.power(factory.drain),
+        this.displaySvc.power(machine.drain),
       ]);
     }
 
-    if (factory.pollution?.nonzero()) {
+    if (machine.pollution?.nonzero()) {
       tableRows.push([
         this.translateSvc.instant('tooltip.pollution'),
-        this.displaySvc.round(factory.pollution) + '/m',
+        this.displaySvc.round(machine.pollution) + '/m',
       ]);
     }
 
-    if (factory.silo) {
+    if (machine.silo) {
       tableRows.push([
         this.translateSvc.instant('tooltip.rocketPartsRequired'),
-        this.displaySvc.round(factory.silo.parts),
+        this.displaySvc.round(machine.silo.parts),
       ]);
       tableRows.push([
         this.translateSvc.instant('tooltip.launchTime'),
-        this.displaySvc.round(factory.silo.launch) + 's',
+        this.displaySvc.round(machine.silo.launch) + 's',
       ]);
     }
 
     html += this.displaySvc.table(tableRows);
 
-    if (factory.consumption) {
+    if (machine.consumption) {
       html +=
         '<div class="d-flex align-items-center justify-content-center flex-wrap mt-2">';
-      for (const key of Object.keys(factory.consumption)) {
+      for (const key of Object.keys(machine.consumption)) {
         html += this.displaySvc.icon(
           key,
-          this.displaySvc.round(factory.consumption[key])
+          this.displaySvc.round(machine.consumption[key])
         );
       }
       html += '</div>';

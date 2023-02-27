@@ -50,8 +50,8 @@ export class MatrixComponent {
     this.store.dispatch(new Settings.SetCostFactorAction(data));
   }
 
-  setCostFactory(data: string): void {
-    this.store.dispatch(new Settings.SetCostFactoryAction(data));
+  setCostMachine(data: string): void {
+    this.store.dispatch(new Settings.SetCostMachineAction(data));
   }
 
   setCostInput(data: string): void {

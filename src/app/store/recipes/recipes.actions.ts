@@ -8,8 +8,8 @@ import {
 } from '~/models';
 
 export const enum RecipesActionType {
-  SET_FACTORY = '[Recipes] Set Factory',
-  SET_FACTORY_MODULES = '[Recipes] Set Factory Modules',
+  SET_MACHINE = '[Recipes] Set Machine',
+  SET_MACHINE_MODULES = '[Recipes] Set Machine Modules',
   ADD_BEACON = '[Recipes] Add Beacon',
   REMOVE_BEACON = '[Recipes] Remove Beacon',
   SET_BEACON_COUNT = '[Recipes] Set Beacon Count',
@@ -21,18 +21,18 @@ export const enum RecipesActionType {
   SET_CHECKED = '[Recipes] Set Checked',
   RESET_RECIPE = '[Recipes] Reset Recipe',
   RESET_RECIPE_MODULES = '[Recipes] Reset Recipe Modules',
-  RESET_FACTORIES = '[Recipes] Reset Factories',
+  RESET_MACHINES = '[Recipes] Reset Machines',
   RESET_BEACONS = '[Recipes] Reset Beacons',
   RESET_COST = '[Recipes] Reset Cost',
 }
 
-export class SetFactoryAction implements Action {
-  readonly type = RecipesActionType.SET_FACTORY;
+export class SetMachineAction implements Action {
+  readonly type = RecipesActionType.SET_MACHINE;
   constructor(public payload: IdDefaultPayload) {}
 }
 
-export class SetFactoryModulesAction implements Action {
-  readonly type = RecipesActionType.SET_FACTORY_MODULES;
+export class SetMachineModulesAction implements Action {
+  readonly type = RecipesActionType.SET_MACHINE_MODULES;
   constructor(public payload: IdDefaultPayload<string[]>) {}
 }
 
@@ -91,8 +91,8 @@ export class ResetRecipeModulesAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class ResetFactoriesAction implements Action {
-  readonly type = RecipesActionType.RESET_FACTORIES;
+export class ResetMachinesAction implements Action {
+  readonly type = RecipesActionType.RESET_MACHINES;
 }
 
 export class ResetBeaconsAction implements Action {
@@ -104,8 +104,8 @@ export class ResetCostAction implements Action {
 }
 
 export type RecipesAction =
-  | SetFactoryAction
-  | SetFactoryModulesAction
+  | SetMachineAction
+  | SetMachineModulesAction
   | AddBeaconAction
   | RemoveBeaconAction
   | SetBeaconCountAction
@@ -117,6 +117,6 @@ export type RecipesAction =
   | SetCheckedAction
   | ResetRecipeAction
   | ResetRecipeModulesAction
-  | ResetFactoriesAction
+  | ResetMachinesAction
   | ResetBeaconsAction
   | ResetCostAction;

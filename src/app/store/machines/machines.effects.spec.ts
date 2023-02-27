@@ -8,11 +8,11 @@ import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
 import { LabState } from '../';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
-import * as Actions from './factories.actions';
-import { FactoriesEffects } from './factories.effects';
+import * as Actions from './machines.actions';
+import { MachinesEffects } from './machines.effects';
 
-describe('FactoriesEffects', () => {
-  let effects: FactoriesEffects;
+describe('MachinesEffects', () => {
+  let effects: MachinesEffects;
   let actions: ReplaySubject<any>;
   let mockStore: MockStore<LabState>;
 
@@ -23,11 +23,11 @@ describe('FactoriesEffects', () => {
           initialState,
         }),
         provideMockActions(() => actions),
-        FactoriesEffects,
+        MachinesEffects,
       ],
     });
 
-    effects = TestBed.inject(FactoriesEffects);
+    effects = TestBed.inject(MachinesEffects);
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
       Recipes.getRecipeSettings,
@@ -38,19 +38,19 @@ describe('FactoriesEffects', () => {
   });
 
   describe('resetRecipeSetting$', () => {
-    it('should reset when factory modules do not match', () => {
+    it('should reset when machine modules do not match', () => {
       actions = new ReplaySubject(1);
       actions.next(
         new Actions.RemoveAction({
           value: ItemId.AssemblingMachine3,
-          def: Mocks.Defaults.factoryRankIds,
+          def: Mocks.Defaults.machineRankIds,
         })
       );
       mockStore.setState({
         ...initialState,
         ...{
           recipesState: {
-            [RecipeId.Coal]: { factoryModuleIds: [ItemId.SpeedModule] },
+            [RecipeId.Coal]: { machineModuleIds: [ItemId.SpeedModule] },
           },
         },
       });
@@ -66,7 +66,7 @@ describe('FactoriesEffects', () => {
       actions.next(
         new Actions.RemoveAction({
           value: ItemId.AssemblingMachine3,
-          def: Mocks.Defaults.factoryRankIds,
+          def: Mocks.Defaults.machineRankIds,
         })
       );
       mockStore.setState({

@@ -119,8 +119,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getDefaults.projector(Preset.Minimum, Mocks.Mod);
       TestUtility.assert(result != null);
       expect(result.beltId).toEqual(Mocks.Mod.defaults!.minBelt!);
-      expect(result.factoryRankIds).toEqual(
-        Mocks.Mod.defaults!.minFactoryRank!
+      expect(result.machineRankIds).toEqual(
+        Mocks.Mod.defaults!.minMachineRank!
       );
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beaconModuleId).toEqual(ItemId.Module);
@@ -185,7 +185,7 @@ describe('Settings Selectors', () => {
         cargoWagonId: 'cargoWagon',
         fluidWagonId: 'fluidWagon',
         disabledRecipeIds: 'disabledRecipes',
-        factoryRankIds: 'factoryRank',
+        machineRankIds: 'machineRank',
         moduleRankIds: 'moduleRank',
         beaconCount: 'beaconCount',
         beaconId: 'beacon',
@@ -356,7 +356,7 @@ describe('Settings Selectors', () => {
       expect(result.itemIds.length).toBeGreaterThan(0);
       expect(result.beltIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.fuelIds).length).toBeGreaterThan(0);
-      expect(result.factoryIds.length).toBeGreaterThan(0);
+      expect(result.machineIds.length).toBeGreaterThan(0);
       expect(result.moduleIds.length).toBeGreaterThan(0);
       expect(result.proliferatorModuleIds.length).toEqual(1);
       expect(Object.keys(result.itemEntities).length).toEqual(

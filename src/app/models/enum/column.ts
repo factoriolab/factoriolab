@@ -10,7 +10,7 @@ export enum Column {
   Items = 'items',
   Belts = 'belts',
   Wagons = 'wagons',
-  Factories = 'factories',
+  Machines = 'machines',
   Beacons = 'beacons',
   Power = 'power',
   Pollution = 'pollution',
@@ -23,7 +23,7 @@ export const allColumns = [
   Column.Items,
   Column.Belts,
   Column.Wagons,
-  Column.Factories,
+  Column.Machines,
   Column.Beacons,
   Column.Power,
   Column.Pollution,
@@ -35,7 +35,7 @@ export const initialColumns = [
   Column.Items,
   Column.Belts,
   Column.Wagons,
-  Column.Factories,
+  Column.Machines,
   Column.Beacons,
   Column.Power,
   Column.Pollution,
@@ -46,7 +46,7 @@ export const precisionColumns = [
   Column.Items,
   Column.Belts,
   Column.Wagons,
-  Column.Factories,
+  Column.Machines,
   Column.Power,
   Column.Pollution,
 ];
@@ -56,7 +56,7 @@ export function columnOptions(game: Game): SelectItem<Column>[] {
     (id): SelectItem<Column> => ({
       label: `options.column.${id}`,
       value: id,
-      disabled: id === Column.Items || id === Column.Factories,
+      disabled: id === Column.Items || id === Column.Machines,
     })
   );
 

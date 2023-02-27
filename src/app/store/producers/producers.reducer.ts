@@ -24,7 +24,7 @@ export function producersReducer(
     | ProducersAction
     | App.AppAction
     | Settings.SetModAction
-    | Recipes.ResetFactoriesAction
+    | Recipes.ResetMachinesAction
     | Recipes.ResetBeaconsAction
     | Items.ResetCheckedAction
 ): ProducersState {
@@ -95,7 +95,7 @@ export function producersReducer(
         ...{
           entities: StoreUtility.resetFields(
             entities,
-            ['factoryId', 'factoryModuleIds', 'beacons', 'overclock'],
+            ['machineId', 'machineModuleIds', 'beacons', 'overclock'],
             action.payload.id
           ),
         },
@@ -112,28 +112,28 @@ export function producersReducer(
           ),
         },
       };
-    case ProducersActionType.SET_FACTORY:
+    case ProducersActionType.SET_MACHINE:
       return {
         ...state,
         ...{
           entities: StoreUtility.resetFields(
             StoreUtility.compareReset(
               state.entities,
-              'factoryId',
+              'machineId',
               action.payload
             ),
-            ['factoryModuleIds', 'beacons'],
+            ['machineModuleIds', 'beacons'],
             action.payload.id
           ),
         },
       };
-    case ProducersActionType.SET_FACTORY_MODULES:
+    case ProducersActionType.SET_MACHINE_MODULES:
       return {
         ...state,
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            'factoryModuleIds',
+            'machineModuleIds',
             action.payload
           ),
         },
@@ -260,19 +260,19 @@ export function producersReducer(
         ...{
           entities: StoreUtility.resetFields(
             state.entities,
-            ['factoryId', 'overclock', 'factoryModuleIds', 'beacons'],
+            ['machineId', 'overclock', 'machineModuleIds', 'beacons'],
             action.payload
           ),
         },
       };
-    case Recipes.RecipesActionType.RESET_FACTORIES:
+    case Recipes.RecipesActionType.RESET_MACHINES:
       return {
         ...state,
         ...{
           entities: StoreUtility.resetFields(state.entities, [
-            'factoryId',
+            'machineId',
             'overclock',
-            'factoryModuleIds',
+            'machineModuleIds',
             'beacons',
           ]),
         },

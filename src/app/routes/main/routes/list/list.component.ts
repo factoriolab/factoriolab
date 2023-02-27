@@ -29,9 +29,9 @@ import {
   TrackService,
 } from '~/services';
 import {
-  Factories,
   Items,
   LabState,
+  Machines,
   Preferences,
   Producers,
   Products,
@@ -48,7 +48,7 @@ import { RecipeUtility } from '~/utilities';
 })
 export class ListComponent implements OnInit, AfterViewInit {
   vm$ = combineLatest([
-    this.store.select(Factories.getFactories),
+    this.store.select(Machines.getMachines),
     this.store.select(Items.getItemSettings),
     this.store.select(Items.getItemsModified),
     this.store.select(Products.getStepsModified),
@@ -73,7 +73,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   ]).pipe(
     map(
       ([
-        factories,
+        machines,
         itemSettings,
         itemsModified,
         stepsModified,
@@ -96,7 +96,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         beltSpeedTxt,
         zipPartial,
       ]) => ({
-        factories,
+        machines,
         itemSettings,
         itemsModified,
         stepsModified,
@@ -244,7 +244,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   changeRecipeField(
     step: Step,
     event: string | number,
-    factories: Factories.FactoriesState,
+    machines: Machines.MachinesState,
     data: Dataset,
     field: RecipeField,
     index?: number,
@@ -255,17 +255,17 @@ export class ListComponent implements OnInit, AfterViewInit {
     const id = step.producerId ?? step.recipeId;
     const isProducer = step.producerId != null;
     const settings = step.recipeSettings;
-    if (settings?.factoryId) {
-      const factorySettings = factories.entities[settings.factoryId];
+    if (settings?.machineId) {
+      const machineSettings = machines.entities[settings.machineId];
       switch (field) {
-        case RecipeField.Factory: {
-          if (typeof event === 'string' && factories.ids != null) {
-            this.setFactory(
+        case RecipeField.Machine: {
+          if (typeof event === 'string' && machines.ids != null) {
+            this.setMachine(
               step.producerId ?? step.recipeId,
               event,
               RecipeUtility.bestMatch(
                 data.recipeEntities[step.recipeId].producers,
-                factories.ids
+                machines.ids
               ),
               step.producerId != null
             );
@@ -273,52 +273,52 @@ export class ListComponent implements OnInit, AfterViewInit {
 
           break;
         }
-        case RecipeField.FactoryModules: {
+        case RecipeField.MachineModules: {
           if (
-            factorySettings.moduleRankIds != null &&
+            machineSettings.moduleRankIds != null &&
             data != null &&
             typeof event === 'string' &&
             index != null &&
-            settings.factoryModuleIds != null
+            settings.machineModuleIds != null
           ) {
-            const factory = data.factoryEntities[settings.factoryId];
-            const count = settings.factoryModuleIds.length;
+            const machine = data.machineEntities[settings.machineId];
+            const count = settings.machineModuleIds.length;
             const options = RecipeUtility.moduleOptions(
-              factory,
+              machine,
               step.recipeId,
               data
             );
             const def = RecipeUtility.defaultModules(
               options,
-              factorySettings.moduleRankIds,
+              machineSettings.moduleRankIds,
               count
             );
             const modules = this.generateModules(
               index,
               event,
-              settings.factoryModuleIds
+              settings.machineModuleIds
             );
-            this.setFactoryModules(id, modules, def, isProducer);
+            this.setMachineModules(id, modules, def, isProducer);
           }
           break;
         }
         case RecipeField.BeaconCount: {
           if (typeof event === 'string' && index != null) {
-            const def = factorySettings.beaconCount;
+            const def = machineSettings.beaconCount;
             this.setBeaconCount(id, index, event, def, isProducer);
           }
           break;
         }
         case RecipeField.Beacon: {
           if (typeof event === 'string' && index != null) {
-            const def = factorySettings.beaconId;
+            const def = machineSettings.beaconId;
             this.setBeacon(id, index, event, def, isProducer);
           }
           break;
         }
         case RecipeField.BeaconModules: {
           if (
-            factorySettings.beaconModuleRankIds != null &&
+            machineSettings.beaconModuleRankIds != null &&
             typeof event === 'string' &&
             index != null &&
             subindex != null
@@ -337,7 +337,7 @@ export class ListComponent implements OnInit, AfterViewInit {
               );
               const def = RecipeUtility.defaultModules(
                 options,
-                factorySettings.beaconModuleRankIds,
+                machineSettings.beaconModuleRankIds,
                 count
               );
               const value = this.generateModules(
@@ -358,7 +358,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         }
         case RecipeField.Overclock: {
           if (typeof event === 'number') {
-            const def = factorySettings.overclock;
+            const def = machineSettings.overclock;
             const value = Math.max(1, Math.min(250, event));
             this.setOverclock(id, value, def, isProducer);
           }
@@ -405,22 +405,22 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new Items.SetCheckedAction({ id, value }));
   }
 
-  setFactory(id: string, value: string, def: string, producer = false): void {
+  setMachine(id: string, value: string, def: string, producer = false): void {
     const action = producer
-      ? Producers.SetFactoryAction
-      : Recipes.SetFactoryAction;
+      ? Producers.SetMachineAction
+      : Recipes.SetMachineAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
-  setFactoryModules(
+  setMachineModules(
     id: string,
     value: string[],
     def: string[] | undefined,
     producer = false
   ): void {
     const action = producer
-      ? Producers.SetFactoryModulesAction
-      : Recipes.SetFactoryModulesAction;
+      ? Producers.SetMachineModulesAction
+      : Recipes.SetMachineModulesAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
@@ -536,8 +536,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new Items.ResetWagonsAction());
   }
 
-  resetFactories(): void {
-    this.store.dispatch(new Recipes.ResetFactoriesAction());
+  resetMachines(): void {
+    this.store.dispatch(new Recipes.ResetMachinesAction());
   }
 
   resetBeacons(): void {

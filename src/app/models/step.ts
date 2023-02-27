@@ -26,7 +26,7 @@ export interface Step {
   recipeId?: string;
   recipe?: RationalRecipe;
   recipeSettings?: RationalRecipeSettings;
-  factories?: Rational;
+  machines?: Rational;
   power?: Rational;
   pollution?: Rational;
   producerId?: string;

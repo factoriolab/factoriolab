@@ -46,7 +46,7 @@ describe('ExportService', () => {
       surplus: Rational.two,
       belts: Rational.from(3),
       wagons: Rational.from(4),
-      factories: Rational.from(5),
+      machines: Rational.from(5),
       power: Rational.from(6),
       pollution: Rational.from(7),
       outputs: { [itemId]: Rational.from(8) },
@@ -63,8 +63,8 @@ describe('ExportService', () => {
       wagonId: 'wagon',
     };
     const fullRecipe: RecipeSettings = {
-      factoryId: ItemId.AssemblingMachine2,
-      factoryModuleIds: ['a', 'b'],
+      machineId: ItemId.AssemblingMachine2,
+      machineModuleIds: ['a', 'b'],
       beacons: [{ count: '8', id: 'beacon', moduleIds: ['c', 'd'] }],
     };
 
@@ -89,9 +89,9 @@ describe('ExportService', () => {
         Wagons: '=4',
         Wagon: itemS.wagonId,
         Recipe: recipeId,
-        Factories: '=5',
-        Factory: fullRecipe.factoryId,
-        FactoryModules: '"a,b"',
+        Machines: '=5',
+        Machine: fullRecipe.machineId,
+        MachineModules: '"a,b"',
         Beacons: '"8"',
         Beacon: '"beacon"',
         BeaconModules: '"c|d"',
@@ -114,8 +114,8 @@ describe('ExportService', () => {
         Belt: 'belt',
         Wagon: 'wagon',
         Recipe: recipeId,
-        Factory: ItemId.AssemblingMachine2,
-        FactoryModules: '"a,b"',
+        Machine: ItemId.AssemblingMachine2,
+        MachineModules: '"a,b"',
         Beacons: '"8"',
         Beacon: '"beacon"',
         BeaconModules: '"c|d"',

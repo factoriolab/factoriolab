@@ -197,21 +197,21 @@ describe('Products Selectors', () => {
       const producers = Producers.initialProducersState;
       const items = Mocks.ItemSettingsEntities;
       const recipes = Mocks.RecipeSettingsEntities;
-      const factories = Mocks.FactorySettingsInitial;
+      const machines = Mocks.MachineSettingsInitial;
       const settings = Settings.initialSettingsState;
       const result = Selectors.getZipState.projector(
         products,
         producers,
         items,
         recipes,
-        factories,
+        machines,
         settings
       );
       expect(result.products).toBe(products);
       expect(result.producers).toBe(producers);
       expect(result.items).toBe(items);
       expect(result.recipes).toBe(recipes);
-      expect(result.factories).toBe(factories);
+      expect(result.machines).toBe(machines);
       expect(result.settings).toBe(settings);
     });
   });
@@ -238,7 +238,7 @@ describe('Products Selectors', () => {
             itemId: ItemId.Coal,
             recipeId: RecipeId.Coal,
             recipeSettings: {
-              factoryModuleIds: [ItemId.ProductivityModule3],
+              machineModuleIds: [ItemId.ProductivityModule3],
               beacons: [
                 {
                   id: ItemId.Beacon,
@@ -252,11 +252,11 @@ describe('Products Selectors', () => {
             recipeId: RecipeId.Coal,
             belts: Rational.one,
             wagons: Rational.one,
-            factories: Rational.one,
+            machines: Rational.one,
             power: Rational.one,
             pollution: Rational.one,
             recipeSettings: {
-              factoryModuleIds: [
+              machineModuleIds: [
                 ItemId.Module,
                 ItemId.SpeedModule3,
                 ItemId.SpeedModule3,
@@ -278,8 +278,8 @@ describe('Products Selectors', () => {
       expect(result).toEqual({
         belts: { [ItemId.TransportBelt]: Rational.one },
         wagons: { [ItemId.CargoWagon]: Rational.one },
-        factories: { [ItemId.ElectricMiningDrill]: Rational.one },
-        factoryModules: {
+        machines: { [ItemId.ElectricMiningDrill]: Rational.one },
+        machineModules: {
           [ItemId.ProductivityModule3]: Rational.from(3),
         },
         beacons: { [ItemId.Beacon]: Rational.one },
@@ -297,18 +297,18 @@ describe('Products Selectors', () => {
           {
             id: '0',
             recipeId: RecipeId.Coal,
-            factories: Rational.one,
+            machines: Rational.one,
           },
         ],
         Mocks.ItemSettingsInitial,
-        { [RecipeId.Coal]: { factoryId: ItemId.MiningDrill } },
+        { [RecipeId.Coal]: { machineId: ItemId.MiningDrill } },
         { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
       );
       expect(result).toEqual({
         belts: {},
         wagons: {},
-        factories: { [RecipeId.Coal]: Rational.one },
-        factoryModules: {},
+        machines: { [RecipeId.Coal]: Rational.one },
+        machineModules: {},
         beacons: {},
         beaconModules: {},
         power: Rational.zero,
@@ -325,13 +325,13 @@ describe('Products Selectors', () => {
           itemId: ItemId.PetroleumGas,
           items: Rational.one,
           recipeId: RecipeId.Coal,
-          factories: Rational.one,
+          machines: Rational.one,
           outputs: { [ItemId.PetroleumGas]: Rational.two },
         },
         {
           id: '1',
           recipeId: RecipeId.CrudeOil,
-          factories: Rational.two,
+          machines: Rational.two,
           outputs: { [ItemId.PetroleumGas]: Rational.one },
         },
         {
@@ -364,9 +364,9 @@ describe('Products Selectors', () => {
               target: '_self',
             },
             {
-              label: StepDetailTab.Factory,
-              id: 'step_0_factory_tab',
-              url: '#step_0_factory',
+              label: StepDetailTab.Machine,
+              id: 'step_0_machine_tab',
+              url: '#step_0_machine',
               target: '_self',
             },
             {
@@ -381,13 +381,13 @@ describe('Products Selectors', () => {
               recipeId: RecipeId.Coal,
               producerId: undefined,
               value: Rational.two,
-              factories: Rational.one,
+              machines: Rational.one,
             },
             {
               recipeId: RecipeId.CrudeOil,
               producerId: undefined,
               value: Rational.one,
-              factories: Rational.two,
+              machines: Rational.two,
             },
           ],
           recipeIds: [
@@ -411,9 +411,9 @@ describe('Products Selectors', () => {
               target: '_self',
             },
             {
-              label: StepDetailTab.Factory,
-              id: 'step_1_factory_tab',
-              url: '#step_1_factory',
+              label: StepDetailTab.Machine,
+              id: 'step_1_machine_tab',
+              url: '#step_1_machine',
               target: '_self',
             },
           ],
@@ -496,7 +496,7 @@ describe('Products Selectors', () => {
         [Column.Items]: 0,
         [Column.Belts]: 0,
         [Column.Wagons]: 0,
-        [Column.Factories]: 0,
+        [Column.Machines]: 0,
         [Column.Power]: 0,
         [Column.Pollution]: 0,
       });

@@ -2,17 +2,17 @@ import { TestBed } from '@angular/core/testing';
 
 import { ItemId, Mocks, TestModule } from 'src/tests';
 import { Rational } from '~/models';
-import { FactoryTooltipPipe } from './factory-tooltip.pipe';
+import { MachineTooltipPipe } from './machine-tooltip.pipe';
 
-describe('FactoryTooltipPipe', () => {
-  let pipe: FactoryTooltipPipe;
+describe('MachineTooltipPipe', () => {
+  let pipe: MachineTooltipPipe;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestModule],
-      providers: [FactoryTooltipPipe],
+      providers: [MachineTooltipPipe],
     });
-    pipe = TestBed.inject(FactoryTooltipPipe);
+    pipe = TestBed.inject(MachineTooltipPipe);
   });
 
   it('should be created', () => {
@@ -20,18 +20,18 @@ describe('FactoryTooltipPipe', () => {
   });
 
   describe('transform', () => {
-    it('should generate a factory tooltip', () => {
+    it('should generate a machine tooltip', () => {
       const data = Mocks.getDataset();
-      data.itemEntities[ItemId.AssemblingMachine3].factory!.category =
+      data.itemEntities[ItemId.AssemblingMachine3].machine!.category =
         'chemical';
-      data.itemEntities[ItemId.AssemblingMachine3].factory!.silo = {
+      data.itemEntities[ItemId.AssemblingMachine3].machine!.silo = {
         parts: Rational.one,
         launch: Rational.two,
       };
-      data.itemEntities[ItemId.AssemblingMachine3].factory!.consumption = {
+      data.itemEntities[ItemId.AssemblingMachine3].machine!.consumption = {
         [ItemId.Wood]: Rational.ten,
       };
-      data.itemEntities[ItemId.AssemblingMachine3].factory!.disallowEffects = [
+      data.itemEntities[ItemId.AssemblingMachine3].machine!.disallowEffects = [
         'productivity',
       ];
       const result = pipe.transform(ItemId.AssemblingMachine3, data);

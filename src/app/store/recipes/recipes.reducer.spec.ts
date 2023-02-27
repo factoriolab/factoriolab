@@ -25,17 +25,17 @@ describe('Recipes Reducer', () => {
     });
   });
 
-  describe('SET_FACTORY', () => {
-    it('should set the factory', () => {
+  describe('SET_MACHINE', () => {
+    it('should set the machine', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetFactoryAction({
+        new Actions.SetMachineAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].factoryId).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.Recipe1.id].machineId).toEqual(Mocks.Item1.id);
     });
 
     it('should reset all other recipe settings', () => {
@@ -44,32 +44,32 @@ describe('Recipes Reducer', () => {
           ...initialRecipesState,
           ...{
             [Mocks.Recipe1.id]: {
-              factoryModuleIds: ['test'],
+              machineModuleIds: ['test'],
               beacons: [{ count: '20', id: 'test', moduleIds: ['test'] }],
             },
           },
         },
-        new Actions.SetFactoryAction({
+        new Actions.SetMachineAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id]).toEqual({ factoryId: Mocks.Item1.id });
+      expect(result[Mocks.Recipe1.id]).toEqual({ machineId: Mocks.Item1.id });
     });
   });
 
-  describe('SET_FACTORY_MODULES', () => {
+  describe('SET_MACHINE_MODULES', () => {
     it('should set the modules', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetFactoryModulesAction({
+        new Actions.SetMachineModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
           def: undefined,
         })
       );
-      expect(result[Mocks.Recipe1.id].factoryModuleIds).toEqual([
+      expect(result[Mocks.Recipe1.id].machineModuleIds).toEqual([
         Mocks.Item1.id,
       ]);
     });
@@ -236,20 +236,20 @@ describe('Recipes Reducer', () => {
       );
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(
         {},
-        ['factoryModuleIds', 'beacons'] as any,
+        ['machineModuleIds', 'beacons'] as any,
         Mocks.Recipe1.id
       );
     });
   });
 
-  describe('RESET_FACTORY', () => {
+  describe('RESET_MACHINE', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(undefined, new Actions.ResetFactoriesAction());
+      recipesReducer(undefined, new Actions.ResetMachinesAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
-        'factoryId',
+        'machineId',
         'overclock',
-        'factoryModuleIds',
+        'machineModuleIds',
         'beacons',
       ] as any);
     });

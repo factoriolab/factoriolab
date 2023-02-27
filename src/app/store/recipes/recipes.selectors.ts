@@ -8,8 +8,8 @@ import {
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
-import * as Factories from '../factories';
 import * as Items from '../items';
+import * as Machines from '../machines';
 import * as Producers from '../producers';
 import * as Settings from '../settings';
 import { RecipesState } from './recipes.reducer';
@@ -21,34 +21,34 @@ export const recipesState = (state: LabState): RecipesState =>
 /* Complex selectors */
 export const getRecipeSettings = createSelector(
   recipesState,
-  Factories.getFactories,
+  Machines.getMachines,
   Settings.getDataset,
-  (state, factories, data) => {
+  (state, machines, data) => {
     const value: Entities<RecipeSettings> = {};
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
       const s: RecipeSettings = { ...state[recipe.id] };
 
-      if (s.factoryId == null) {
-        s.factoryId = RecipeUtility.bestMatch(
+      if (s.machineId == null) {
+        s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
-          factories.ids ?? []
+          machines.ids ?? []
         );
       }
 
-      const factory = data.factoryEntities[s.factoryId];
-      const def = factories.entities[s.factoryId];
-      if (factory != null && RecipeUtility.allowsModules(recipe, factory)) {
-        s.factoryModuleOptions = RecipeUtility.moduleOptions(
-          factory,
+      const machine = data.machineEntities[s.machineId];
+      const def = machines.entities[s.machineId];
+      if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
+        s.machineModuleOptions = RecipeUtility.moduleOptions(
+          machine,
           recipe.id,
           data
         );
 
-        if (s.factoryModuleIds == null) {
-          s.factoryModuleIds = RecipeUtility.defaultModules(
-            s.factoryModuleOptions,
+        if (s.machineModuleIds == null) {
+          s.machineModuleIds = RecipeUtility.defaultModules(
+            s.machineModuleOptions,
             def.moduleRankIds ?? [],
-            factory.modules ?? 0
+            machine.modules ?? 0
           );
         }
 
@@ -80,8 +80,8 @@ export const getRecipeSettings = createSelector(
           }
         }
       } else {
-        // Factory doesn't support modules, remove any
-        delete s.factoryModuleIds;
+        // Machine doesn't support modules, remove any
+        delete s.machineModuleIds;
         delete s.beacons;
       }
 
@@ -146,7 +146,7 @@ export const getAdjustedDataset = createSelector(
       adj.researchSpeed,
       adj.netProductionOnly,
       adj.costFactor,
-      adj.costFactory,
+      adj.costMachine,
       adj.data
     )
 );
@@ -158,17 +158,17 @@ export const getRecipesModified = createSelector(
     checked:
       Object.keys(state).some((id) => state[id].checked != null) ||
       producers.some((p) => p.checked != null),
-    factories:
+    machines:
       Object.keys(state).some(
         (id) =>
-          state[id].factoryId != null ||
-          state[id].factoryModuleIds != null ||
+          state[id].machineId != null ||
+          state[id].machineModuleIds != null ||
           state[id].overclock != null
       ) ||
       producers.some(
         (p) =>
-          p.factoryId != null ||
-          p.factoryModuleIds != null ||
+          p.machineId != null ||
+          p.machineModuleIds != null ||
           p.overclock != null
       ),
     beacons:

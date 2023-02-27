@@ -2,17 +2,17 @@ import { TestBed } from '@angular/core/testing';
 
 import { ItemId, TestModule } from 'src/tests';
 import { Rational } from '~/models';
-import { FactoryRatePipe } from './factory-rate.pipe';
+import { MachineRatePipe } from './machine-rate.pipe';
 
-describe('FactoryRatePipe', () => {
-  let pipe: FactoryRatePipe;
+describe('MachineRatePipe', () => {
+  let pipe: MachineRatePipe;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestModule],
-      providers: [FactoryRatePipe],
+      providers: [MachineRatePipe],
     });
-    pipe = TestBed.inject(FactoryRatePipe);
+    pipe = TestBed.inject(MachineRatePipe);
   });
 
   it('should be created', () => {

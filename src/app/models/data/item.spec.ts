@@ -18,7 +18,7 @@ describe('RationalItem', () => {
         pipe: {
           speed: 10,
         },
-        factory: {
+        machine: {
           speed: 1,
           modules: 0,
         },
@@ -41,8 +41,8 @@ describe('RationalItem', () => {
       expect(result.stack).toEqual(Rational.two);
       expect(result.belt?.speed).toEqual(Rational.one);
       expect(result.pipe?.speed).toEqual(Rational.ten);
-      expect(result.factory?.speed).toEqual(Rational.one);
-      expect(result.factory?.modules).toEqual(0);
+      expect(result.machine?.speed).toEqual(Rational.one);
+      expect(result.machine?.modules).toEqual(0);
       expect(result.module?.speed).toEqual(Rational.one);
       expect(result.module?.productivity).toEqual(Rational.one);
       expect(result.module?.consumption).toEqual(Rational.one);
@@ -66,7 +66,7 @@ describe('RationalItem', () => {
       expect(result.stack).toBeUndefined();
       expect(result.belt).toBeUndefined();
       expect(result.pipe).toBeUndefined();
-      expect(result.factory).toBeUndefined();
+      expect(result.machine).toBeUndefined();
       expect(result.module).toBeUndefined();
       expect(result.fuel).toBeUndefined();
       expect(result.icon).toBeUndefined();

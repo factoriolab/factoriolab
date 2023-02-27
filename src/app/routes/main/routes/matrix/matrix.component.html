@@ -55,13 +55,13 @@
         ></lab-input-number>
       </td>
     </tr>
-    <tr [pTooltip]="'matrix.factoryCostTooltip' | translate">
-      <th>{{ 'matrix.factory' | translate }}</th>
+    <tr [pTooltip]="'matrix.machineCostTooltip' | translate">
+      <th>{{ 'matrix.machine' | translate }}</th>
       <td>
         <lab-input-number
           width="8rem"
-          [value]="vm.settings.costFactory"
-          (setValue)="setCostFactory($event)"
+          [value]="vm.settings.costMachine"
+          (setValue)="setCostMachine($event)"
         ></lab-input-number>
       </td>
     </tr>

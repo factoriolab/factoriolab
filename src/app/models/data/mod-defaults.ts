@@ -8,8 +8,8 @@ export interface ModDefaults {
   cargoWagon: string;
   fluidWagon: string;
   disabledRecipes: string[];
-  minFactoryRank: string[];
-  maxFactoryRank: string[];
+  minMachineRank: string[];
+  maxMachineRank: string[];
   moduleRank: string[];
   beaconModule: string;
 }

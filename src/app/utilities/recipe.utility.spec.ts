@@ -26,7 +26,7 @@ describe('RecipeUtility', () => {
   });
 
   describe('defaultModules', () => {
-    it('should fill in modules list for factory', () => {
+    it('should fill in modules list for machine', () => {
       const result = RecipeUtility.defaultModules(
         [{ value: ItemId.SpeedModule }],
         [ItemId.ProductivityModule, ItemId.SpeedModule],
@@ -39,7 +39,7 @@ describe('RecipeUtility', () => {
   describe('adjustRecipe', () => {
     it('should adjust a standard recipe', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.factoryModuleIds = undefined;
+      settings.machineModuleIds = undefined;
       settings.beacons = [{ moduleIds: [ItemId.SpeedModule] }];
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
@@ -91,7 +91,7 @@ describe('RecipeUtility', () => {
       const settings = {
         ...Mocks.RationalRecipeSettings[RecipeId.MiningProductivity],
       };
-      settings.factoryId = ItemId.Lab;
+      settings.machineId = ItemId.Lab;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.MiningProductivity,
         ItemId.Coal,
@@ -118,7 +118,7 @@ describe('RecipeUtility', () => {
 
     it('should handle mining productivity', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.IronOre] };
-      settings.factoryId = ItemId.ElectricMiningDrill;
+      settings.machineId = ItemId.ElectricMiningDrill;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
         ItemId.Coal,
@@ -144,7 +144,7 @@ describe('RecipeUtility', () => {
 
     it('should handle modules and beacons', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.factoryModuleIds = [
+      settings.machineModuleIds = [
         ItemId.SpeedModule,
         ItemId.ProductivityModule,
         ItemId.EfficiencyModule,
@@ -203,7 +203,7 @@ describe('RecipeUtility', () => {
 
     it('should use minimum 20% effects', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
-      settings.factoryModuleIds = [
+      settings.machineModuleIds = [
         ItemId.EfficiencyModule3,
         ItemId.EfficiencyModule3,
         ItemId.EfficiencyModule3,
@@ -258,7 +258,7 @@ describe('RecipeUtility', () => {
 
     it('should handle burner fuel inputs', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.IronOre] };
-      settings.factoryId = ItemId.BurnerMiningDrill;
+      settings.machineId = ItemId.BurnerMiningDrill;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
         ItemId.Coal,
@@ -287,7 +287,7 @@ describe('RecipeUtility', () => {
 
     it('should add to existing burner fuel input', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.PlasticBar] };
-      settings.factoryId = ItemId.SteelFurnace;
+      settings.machineId = ItemId.SteelFurnace;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.PlasticBar,
         ItemId.Coal,
@@ -388,7 +388,7 @@ describe('RecipeUtility', () => {
       const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
       settings.overclock = Rational.from(200);
       const data = Mocks.getDataset();
-      data.factoryEntities[ItemId.AssemblingMachine2].usage =
+      data.machineEntities[ItemId.AssemblingMachine2].usage =
         Rational.from(-10);
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
@@ -455,18 +455,18 @@ describe('RecipeUtility', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should handle a factory with no listed speed', () => {
+    it('should handle a machine with no listed speed', () => {
       const settings = Mocks.RationalRecipeSettings[RecipeId.SteelChest];
       const data = {
         ...Mocks.Dataset,
         ...{
-          factoryEntities: {
-            ...Mocks.Dataset.factoryEntities,
+          machineEntities: {
+            ...Mocks.Dataset.machineEntities,
             ...{
               [ItemId.AssemblingMachine2]: {
-                ...Mocks.Dataset.factoryEntities[ItemId.AssemblingMachine2],
+                ...Mocks.Dataset.machineEntities[ItemId.AssemblingMachine2],
                 ...{
-                  ...Mocks.Dataset.factoryEntities[ItemId.AssemblingMachine2],
+                  ...Mocks.Dataset.machineEntities[ItemId.AssemblingMachine2],
                   ...{ speed: undefined },
                 },
               },
@@ -500,7 +500,7 @@ describe('RecipeUtility', () => {
     it('should calculate proliferator usage', () => {
       const settings = new RationalRecipeSettings({
         ...Mocks.RecipeSettingsInitial[ItemId.SteelChest],
-        ...{ factoryModuleIds: [ItemId.ProductivityModule3] },
+        ...{ machineModuleIds: [ItemId.ProductivityModule3] },
       });
       const recipe = {
         ...Mocks.Dataset.recipeEntities[RecipeId.SteelChest],
@@ -567,7 +567,7 @@ describe('RecipeUtility', () => {
     it('should ignore proliferator self-spray with no productivity bonus', () => {
       const settings = new RationalRecipeSettings({
         ...Mocks.RecipeSettingsInitial[ItemId.SteelChest],
-        ...{ factoryModuleIds: [ItemId.ProductivityModule3] },
+        ...{ machineModuleIds: [ItemId.ProductivityModule3] },
       });
       const recipe = {
         ...Mocks.Dataset.recipeEntities[RecipeId.SteelChest],
@@ -631,15 +631,15 @@ describe('RecipeUtility', () => {
       expect(result).toEqual(expected);
     });
 
-    it('should add factory consumption', () => {
+    it('should add machine consumption', () => {
       const data = {
         ...Mocks.Dataset,
         ...{
-          factoryEntities: {
-            ...Mocks.Dataset.factoryEntities,
+          machineEntities: {
+            ...Mocks.Dataset.machineEntities,
             ...{
               [ItemId.AssemblingMachine2]: {
-                ...Mocks.Dataset.factoryEntities[ItemId.AssemblingMachine2],
+                ...Mocks.Dataset.machineEntities[ItemId.AssemblingMachine2],
                 ...{
                   consumption: {
                     [ItemId.Coal]: Rational.one,
@@ -768,12 +768,12 @@ describe('RecipeUtility', () => {
       );
     });
 
-    it('should handle invalid factory', () => {
+    it('should handle invalid machine', () => {
       const settings2 = {
         ...Mocks.RationalRecipeSettingsInitial,
         ...{
           [RecipeId.SpaceSciencePack]: {
-            factoryId: 'id',
+            machineId: 'id',
           },
         },
       };
@@ -792,31 +792,31 @@ describe('RecipeUtility', () => {
   });
 
   describe('allowsModules', () => {
-    it('should check factory and rocket recipes', () => {
+    it('should check machine and rocket recipes', () => {
       // Silo recipes
       expect(
         RecipeUtility.allowsModules(
           Mocks.Dataset.recipeEntities[RecipeId.RocketPart],
-          Mocks.Dataset.factoryEntities[ItemId.RocketSilo]
+          Mocks.Dataset.machineEntities[ItemId.RocketSilo]
         )
       ).toBeTrue();
       expect(
         RecipeUtility.allowsModules(
           Mocks.Dataset.recipeEntities[RecipeId.SpaceSciencePack],
-          Mocks.Dataset.factoryEntities[ItemId.RocketSilo]
+          Mocks.Dataset.machineEntities[ItemId.RocketSilo]
         )
       ).toBeFalse();
       // Normal recipes
       expect(
         RecipeUtility.allowsModules(
           Mocks.Dataset.recipeEntities[ItemId.Coal],
-          Mocks.Dataset.factoryEntities[ItemId.ElectricMiningDrill]
+          Mocks.Dataset.machineEntities[ItemId.ElectricMiningDrill]
         )
       ).toBeTrue();
       expect(
         RecipeUtility.allowsModules(
           Mocks.Dataset.recipeEntities[ItemId.Coal],
-          Mocks.Dataset.factoryEntities[ItemId.BurnerMiningDrill]
+          Mocks.Dataset.machineEntities[ItemId.BurnerMiningDrill]
         )
       ).toBeFalse();
     });
@@ -926,7 +926,7 @@ describe('RecipeUtility', () => {
       expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.two);
     });
 
-    it('should apply normal recipe and factory costs', () => {
+    it('should apply normal recipe and machine costs', () => {
       RecipeUtility.adjustCost(
         recipeR,
         Mocks.RationalRecipeSettingsInitial,
@@ -942,12 +942,12 @@ describe('RecipeUtility', () => {
     it('should adjust a producer based on settings', () => {
       const result = RecipeUtility.adjustProducer(
         { id: '1', recipeId: RecipeId.IronPlate, count: '1' },
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset
       );
-      expect(result.factoryId).toEqual(ItemId.ElectricFurnace);
-      expect(result.factoryModuleOptions?.length).toEqual(10);
-      expect(result.factoryModuleIds).toEqual([
+      expect(result.machineId).toEqual(ItemId.ElectricFurnace);
+      expect(result.machineModuleOptions?.length).toEqual(10);
+      expect(result.machineModuleIds).toEqual([
         ItemId.ProductivityModule3,
         ItemId.ProductivityModule3,
       ]);
@@ -961,9 +961,9 @@ describe('RecipeUtility', () => {
       expect(result.overclock).toBeUndefined();
     });
 
-    it('should handle a factory with no modules', () => {
-      const factories = {
-        ...Mocks.FactorySettingsInitial,
+    it('should handle a machine with no modules', () => {
+      const machines = {
+        ...Mocks.MachineSettingsInitial,
         ...{ ids: undefined },
       };
       const result = RecipeUtility.adjustProducer(
@@ -972,25 +972,25 @@ describe('RecipeUtility', () => {
           recipeId: RecipeId.IronPlate,
           count: '1',
         },
-        factories,
+        machines,
         Mocks.Dataset
       );
-      expect(result.factoryId).toEqual(ItemId.StoneFurnace);
+      expect(result.machineId).toEqual(ItemId.StoneFurnace);
     });
 
     it('should handle nullish values', () => {
       spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
       const data = Mocks.getDataset();
-      data.factoryEntities[ItemId.StoneFurnace].modules = undefined;
-      const factories = {
-        ...Mocks.FactorySettingsInitial,
+      data.machineEntities[ItemId.StoneFurnace].modules = undefined;
+      const machines = {
+        ...Mocks.MachineSettingsInitial,
         ...{
           ids: undefined,
           entities: {
-            ...Mocks.FactorySettingsInitial.entities,
+            ...Mocks.MachineSettingsInitial.entities,
             ...{
               [ItemId.ElectricFurnace]: {
-                ...Mocks.FactorySettingsInitial.entities[
+                ...Mocks.MachineSettingsInitial.entities[
                   ItemId.ElectricFurnace
                 ],
                 ...{
@@ -1009,11 +1009,11 @@ describe('RecipeUtility', () => {
           count: '1',
           beacons: [{ id: ItemId.Beacon }],
         },
-        factories,
+        machines,
         data
       );
-      expect(result.factoryId).toEqual(ItemId.StoneFurnace);
-      expect(result.factoryModuleIds).toEqual([]);
+      expect(result.machineId).toEqual(ItemId.StoneFurnace);
+      expect(result.machineModuleIds).toEqual([]);
       expect(result.beacons?.[0].moduleIds).toEqual([
         ItemId.Module,
         ItemId.Module,

@@ -5,10 +5,10 @@ import {
   RationalBeacon,
   RationalBelt,
   RationalCargoWagon,
-  RationalFactory,
   RationalFluidWagon,
   RationalFuel,
   RationalItem,
+  RationalMachine,
   RationalModule,
   RationalRecipe,
   Recipe,
@@ -37,8 +37,8 @@ export interface Dataset {
   cargoWagonEntities: Entities<RationalCargoWagon>;
   fluidWagonIds: string[];
   fluidWagonEntities: Entities<RationalFluidWagon>;
-  factoryIds: string[];
-  factoryEntities: Entities<RationalFactory>;
+  machineIds: string[];
+  machineEntities: Entities<RationalMachine>;
   moduleIds: string[];
   moduleEntities: Entities<RationalModule>;
   fuelIds: Entities<string[]>;

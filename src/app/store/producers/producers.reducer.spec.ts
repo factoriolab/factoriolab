@@ -116,31 +116,31 @@ describe('Producers Reducer', () => {
     });
   });
 
-  describe('SET_FACTORY', () => {
-    it('should set factory on a producer', () => {
+  describe('SET_MACHINE', () => {
+    it('should set machine on a producer', () => {
       const result = producersReducer(
         state,
-        new Actions.SetFactoryAction({
+        new Actions.SetMachineAction({
           id: '0',
           value: ItemId.AssemblingMachine2,
           def: ItemId.AssemblingMachine1,
         })
       );
-      expect(result.entities['0'].factoryId).toEqual(ItemId.AssemblingMachine2);
+      expect(result.entities['0'].machineId).toEqual(ItemId.AssemblingMachine2);
     });
   });
 
-  describe('SET_FACTORY_MODULES', () => {
-    it('should set factory modules on a producers', () => {
+  describe('SET_MACHINE_MODULES', () => {
+    it('should set machine modules on a producers', () => {
       const result = producersReducer(
         state,
-        new Actions.SetFactoryModulesAction({
+        new Actions.SetMachineModulesAction({
           id: '0',
           value: [ItemId.SpeedModule],
           def: [ItemId.Module],
         })
       );
-      expect(result.entities['0'].factoryModuleIds).toEqual([
+      expect(result.entities['0'].machineModuleIds).toEqual([
         ItemId.SpeedModule,
       ]);
     });
@@ -260,7 +260,7 @@ describe('Producers Reducer', () => {
             id: '0',
             recipeId: RecipeId.WoodenChest,
             count: '30',
-            factoryId: 'factoryId',
+            machineId: 'machineId',
             overclock: 100,
             beacons: [
               {
@@ -285,7 +285,7 @@ describe('Producers Reducer', () => {
     });
   });
 
-  describe('Recipes RESET_FACTORIES', () => {
+  describe('Recipes RESET_MACHINES', () => {
     it('should reset all producers', () => {
       const state: ProducersState = {
         ids: ['0'],
@@ -294,7 +294,7 @@ describe('Producers Reducer', () => {
             id: '0',
             recipeId: RecipeId.WoodenChest,
             count: '30',
-            factoryId: 'factoryId',
+            machineId: 'machineId',
             overclock: 100,
             beacons: [
               {
@@ -307,10 +307,7 @@ describe('Producers Reducer', () => {
         },
         index: 1,
       };
-      const result = producersReducer(
-        state,
-        new Recipes.ResetFactoriesAction()
-      );
+      const result = producersReducer(state, new Recipes.ResetMachinesAction());
       expect(result.entities['0']).toEqual({
         id: '0',
         recipeId: RecipeId.WoodenChest,
@@ -328,7 +325,7 @@ describe('Producers Reducer', () => {
             id: '0',
             recipeId: RecipeId.WoodenChest,
             count: '30',
-            factoryId: 'factoryId',
+            machineId: 'machineId',
             overclock: 100,
             beacons: [
               {
@@ -346,7 +343,7 @@ describe('Producers Reducer', () => {
         id: '0',
         recipeId: RecipeId.WoodenChest,
         count: '30',
-        factoryId: 'factoryId',
+        machineId: 'machineId',
         overclock: 100,
       });
     });

@@ -18,7 +18,6 @@ import {
   Defaults,
   DisplayRate,
   displayRateOptions,
-  FactorySettings,
   FuelType,
   Game,
   gameInfo,
@@ -30,6 +29,7 @@ import {
   ItemId,
   Language,
   languageOptions,
+  MachineSettings,
   PowerUnit,
   powerUnitOptions,
   Preset,
@@ -41,7 +41,7 @@ import {
   themeOptions,
 } from '~/models';
 import { ContentService, DisplayService, RouterService } from '~/services';
-import { App, Factories, LabState, Preferences, Settings } from '~/store';
+import { App, LabState, Machines, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
@@ -55,9 +55,9 @@ export class SettingsComponent implements OnInit {
   @HostBinding('class.hidden') @Input() hidden = false;
 
   vm$ = combineLatest([
-    this.store.select(Factories.getFactories),
-    this.store.select(Factories.getFactoryRows),
-    this.store.select(Factories.getFactoryOptions),
+    this.store.select(Machines.getMachines),
+    this.store.select(Machines.getMachineRows),
+    this.store.select(Machines.getMachineOptions),
     this.store.select(Settings.getSettings),
     this.store.select(Settings.getColumnsState),
     this.store.select(Settings.getDataset),
@@ -72,9 +72,9 @@ export class SettingsComponent implements OnInit {
   ]).pipe(
     map(
       ([
-        factories,
-        factoryRows,
-        factoryOptions,
+        machines,
+        machineRows,
+        machineOptions,
         settings,
         columns,
         data,
@@ -86,9 +86,9 @@ export class SettingsComponent implements OnInit {
         preferences,
         savedStates,
       ]) => ({
-        factories,
-        factoryRows,
-        factoryOptions,
+        machines,
+        machineRows,
+        machineOptions,
         settings,
         columns,
         data,
@@ -99,7 +99,7 @@ export class SettingsComponent implements OnInit {
         dispRateInfo,
         preferences,
         savedStates,
-        factoryMenuItems: this.buildFactoryMenus(factoryRows, data),
+        machineMenuItems: this.buildMachineMenus(machineRows, data),
       })
     )
   );
@@ -146,23 +146,23 @@ export class SettingsComponent implements OnInit {
       });
   }
 
-  buildFactoryMenus(factoryRows: string[], data: Dataset): MenuItem[][] {
-    return factoryRows.map((factoryId, index): MenuItem[] => {
-      if (!factoryId) return [];
+  buildMachineMenus(machineRows: string[], data: Dataset): MenuItem[][] {
+    return machineRows.map((machineId, index): MenuItem[] => {
+      if (!machineId) return [];
       const items: MenuItem[] = [];
       if (index > 1)
         items.push({
           label: this.translateSvc.instant('settings.moveUp'),
           icon: 'fa-solid fa-arrow-up',
           command: () =>
-            this.raiseFactory(factoryId, data.defaults?.factoryRankIds),
+            this.raiseMachine(machineId, data.defaults?.machineRankIds),
         });
-      if (index < factoryRows.length - 1)
+      if (index < machineRows.length - 1)
         items.push({
           label: this.translateSvc.instant('settings.moveDown'),
           icon: 'fa-solid fa-arrow-down',
           command: () =>
-            this.lowerFactory(factoryId, data.defaults?.factoryRankIds),
+            this.lowerMachine(machineId, data.defaults?.machineRankIds),
         });
       return items;
     });
@@ -217,7 +217,7 @@ export class SettingsComponent implements OnInit {
   changeBeaconModuleRank(
     id: string,
     value: string[],
-    def: FactorySettings | Defaults
+    def: MachineSettings | Defaults
   ): void {
     if (id === '') {
       this.setBeaconModuleRank(id, value, [(def as Defaults).beaconModuleId]);
@@ -225,7 +225,7 @@ export class SettingsComponent implements OnInit {
       this.setBeaconModuleRank(
         id,
         value,
-        (def as FactorySettings).beaconModuleRankIds
+        (def as MachineSettings).beaconModuleRankIds
       );
     }
   }
@@ -263,40 +263,40 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetPresetAction(value));
   }
 
-  addFactory(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Factories.AddAction({ value, def }));
+  addMachine(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Machines.AddAction({ value, def }));
   }
 
-  removeFactory(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Factories.RemoveAction({ value, def }));
+  removeMachine(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Machines.RemoveAction({ value, def }));
   }
 
-  raiseFactory(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Factories.RaiseAction({ value, def }));
+  raiseMachine(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Machines.RaiseAction({ value, def }));
   }
 
-  lowerFactory(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Factories.LowerAction({ value, def }));
+  lowerMachine(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Machines.LowerAction({ value, def }));
   }
 
-  setFactory(id: string, value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Factories.SetFactoryAction({ id, value, def }));
+  setMachine(id: string, value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Machines.SetMachineAction({ id, value, def }));
   }
 
   setModuleRank(id: string, value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Factories.SetModuleRankAction({ id, value, def }));
+    this.store.dispatch(new Machines.SetModuleRankAction({ id, value, def }));
   }
 
   setOverclock(id: string, value: number, def: number | undefined): void {
-    this.store.dispatch(new Factories.SetOverclockAction({ id, value, def }));
+    this.store.dispatch(new Machines.SetOverclockAction({ id, value, def }));
   }
 
   setBeaconCount(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(new Factories.SetBeaconCountAction({ id, value, def }));
+    this.store.dispatch(new Machines.SetBeaconCountAction({ id, value, def }));
   }
 
   setBeacon(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(new Factories.SetBeaconAction({ id, value, def }));
+    this.store.dispatch(new Machines.SetBeaconAction({ id, value, def }));
   }
 
   setBeaconModuleRank(
@@ -305,7 +305,7 @@ export class SettingsComponent implements OnInit {
     def: string[] | undefined
   ): void {
     this.store.dispatch(
-      new Factories.SetBeaconModuleRankAction({ id, value, def })
+      new Machines.SetBeaconModuleRankAction({ id, value, def })
     );
   }
 

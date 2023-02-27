@@ -55,15 +55,15 @@ export class FlowService {
     };
 
     const itemPrec = columns[Column.Items].precision;
-    const factoryPrec = columns[Column.Factories].precision;
+    const machinePrec = columns[Column.Machines].precision;
 
     for (const step of steps) {
-      if (step.recipeId && step.factories) {
+      if (step.recipeId && step.machines) {
         const recipe = data.recipeEntities[step.recipeId];
         const settings = step.recipeSettings;
 
-        if (settings?.factoryId != null) {
-          const factory = data.itemEntities[settings.factoryId];
+        if (settings?.machineId != null) {
+          const machine = data.itemEntities[settings.machineId];
           // CREATE NODE: Standard recipe
           flow.nodes.push({
             id: `r|${step.id}`,
@@ -73,10 +73,10 @@ export class FlowService {
               ? NodeType.Input
               : NodeType.Recipe,
             name: recipe.name,
-            text: `${step.factories.toString(factoryPrec)} ${factory.name}`,
+            text: `${step.machines.toString(machinePrec)} ${machine.name}`,
             recipe,
-            factoryId: settings.factoryId,
-            factories: step.factories.toString(factoryPrec),
+            machineId: settings.machineId,
+            machines: step.machines.toString(machinePrec),
           });
         }
       }

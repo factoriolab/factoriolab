@@ -21,9 +21,9 @@ import {
 import {
   App,
   Datasets,
-  Factories,
   Items,
   LabState,
+  Machines,
   Producers,
   Products,
   Recipes,
@@ -77,8 +77,8 @@ const mockItemsState: Items.ItemsState = {
 };
 const mockRecipesState: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
-    factoryId: ItemId.AssemblingMachine2,
-    factoryModuleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
+    machineId: ItemId.AssemblingMachine2,
+    machineModuleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
     beacons: [
       {
         count: '1',
@@ -91,7 +91,7 @@ const mockRecipesState: Recipes.RecipesState = {
     cost: '100',
   },
 };
-const mockFactoriesState: Factories.FactoriesState = {
+const mockMachinesState: Machines.MachinesState = {
   ids: [ItemId.AssemblingMachine2, ItemId.SteelFurnace],
   entities: {
     ['']: {
@@ -120,7 +120,7 @@ const mockSettingsState: Settings.SettingsState = {
   inserterCapacity: InserterCapacity.Capacity0,
   displayRate: DisplayRate.PerHour,
   costFactor: '2',
-  costFactory: '10',
+  costMachine: '10',
   costInput: '0',
   costIgnored: '100',
 };
@@ -145,7 +145,7 @@ const mockState: LabState = {
   producersState: mockProducersState,
   itemsState: mockItemsState,
   recipesState: mockRecipesState,
-  factoriesState: mockFactoriesState,
+  machinesState: mockMachinesState,
   settingsState: mockSettingsState,
 } as any;
 function mockEmptyZip(): Zip {
@@ -170,7 +170,7 @@ describe('RouterService', () => {
       producers: Producers.ProducersState;
       items: Items.ItemsState;
       recipes: Recipes.RecipesState;
-      factories: Factories.FactoriesState;
+      machines: Machines.MachinesState;
       settings: Settings.SettingsState;
     }
   >;
@@ -193,7 +193,7 @@ describe('RouterService', () => {
       producers: Producers.initialProducersState,
       items: Items.initialItemsState,
       recipes: Recipes.initialRecipesState,
-      factories: Factories.initialFactoriesState,
+      machines: Machines.initialMachinesState,
       settings: Settings.initialSettingsState,
     });
     router = TestBed.inject(Router);
@@ -221,7 +221,7 @@ describe('RouterService', () => {
       producers: Producers.initialProducersState,
       items: { [ItemId.Wood]: { ignore: true } },
       recipes: Recipes.initialRecipesState,
-      factories: Factories.initialFactoriesState,
+      machines: Machines.initialMachinesState,
       settings: Settings.initialSettingsState,
     });
     mockStore.refreshState();
@@ -238,7 +238,7 @@ describe('RouterService', () => {
         Producers.initialProducersState,
         Items.initialItemsState,
         Recipes.initialRecipesState,
-        Factories.initialFactoriesState,
+        Machines.initialMachinesState,
         Settings.initialSettingsState
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith('/?test');
@@ -254,7 +254,7 @@ describe('RouterService', () => {
         Producers.initialProducersState,
         Items.initialItemsState,
         Recipes.initialRecipesState,
-        Factories.initialFactoriesState,
+        Machines.initialMachinesState,
         Settings.initialSettingsState
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith('path?test#hash');
@@ -270,7 +270,7 @@ describe('RouterService', () => {
           Producers.initialProducersState,
           Items.initialItemsState,
           Recipes.initialRecipesState,
-          Factories.initialFactoriesState,
+          Machines.initialMachinesState,
           Settings.initialSettingsState
         )
         .subscribe((z) => (zip = z));
@@ -285,7 +285,7 @@ describe('RouterService', () => {
           mockProducersState,
           mockItemsState,
           mockRecipesState,
-          mockFactoriesState,
+          mockMachinesState,
           mockSettingsState
         )
         .subscribe((z) => (zip = z));
@@ -399,7 +399,7 @@ describe('RouterService', () => {
       };
       delete mockStateV0.settingsState?.beaconReceivers;
       delete mockStateV0.settingsState?.costFactor;
-      delete mockStateV0.settingsState?.costFactory;
+      delete mockStateV0.settingsState?.costMachine;
       delete mockStateV0.settingsState?.costInput;
       delete mockStateV0.settingsState?.costIgnored;
       delete mockStateV0.settingsState?.proliferatorSprayId;
@@ -640,12 +640,12 @@ describe('RouterService', () => {
       const [params, _] = service.migrateV2(
         {
           [Section.Recipes]: '***?',
-          [Section.Factories]: '**?',
+          [Section.Machines]: '**?',
         },
         []
       );
       expect(params[Section.Recipes]).toEqual('');
-      expect(params[Section.Factories]).toEqual('');
+      expect(params[Section.Machines]).toEqual('');
     });
   });
 
@@ -884,14 +884,14 @@ describe('RouterService', () => {
         []
       );
       expect(result).toEqual({
-        [RecipeId.SteelChest]: { factoryId: ItemId.AssemblingMachine2 },
+        [RecipeId.SteelChest]: { machineId: ItemId.AssemblingMachine2 },
       });
     });
 
     it('hash should map values to empty strings if null', () => {
       const result = service.unzipRecipes({ ['r']: '*A*' }, [], Mocks.Hash);
       expect(result).toEqual({
-        ['']: { factoryId: ItemId.AssemblingMachine1 },
+        ['']: { machineId: ItemId.AssemblingMachine1 },
       });
     });
 
@@ -914,10 +914,10 @@ describe('RouterService', () => {
     });
   });
 
-  describe('zipFactories', () => {
+  describe('zipMachines', () => {
     it('should handle null ids', () => {
       const zip = mockZipData();
-      service.zipFactories(
+      service.zipMachines(
         zip,
         {
           ids: undefined,
@@ -929,9 +929,9 @@ describe('RouterService', () => {
     });
   });
 
-  describe('unzipFactories', () => {
+  describe('unzipMachines', () => {
     it('bare should unzip empty ids', () => {
-      const result = service.unzipFactories({ ['f']: '_' });
+      const result = service.unzipMachines({ ['f']: '_' });
       expect(result).toEqual({
         ids: undefined,
         entities: {},
@@ -939,7 +939,7 @@ describe('RouterService', () => {
     });
 
     it('hash should unzip empty ids', () => {
-      const result = service.unzipFactories({ ['f']: '_' }, Mocks.Hash);
+      const result = service.unzipMachines({ ['f']: '_' }, Mocks.Hash);
       expect(result).toEqual({
         ids: undefined,
         entities: {},
@@ -947,7 +947,7 @@ describe('RouterService', () => {
     });
 
     it('hash should map values to empty strings if null', () => {
-      const result = service.unzipFactories({ ['f']: '1_?**1' }, Mocks.Hash);
+      const result = service.unzipMachines({ ['f']: '1_?**1' }, Mocks.Hash);
       expect(result).toEqual({
         ids: [''],
         entities: { ['']: { beaconCount: '1' } },

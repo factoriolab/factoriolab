@@ -104,13 +104,13 @@ describe('StoreUtility', () => {
           [Mocks.Item1.id]: {
             ignore: true,
             belt: ItemId.TransportBelt,
-            factory: ItemId.AssemblingMachine1,
+            machine: ItemId.AssemblingMachine1,
           },
         },
         ['ignore', 'belt']
       );
       expect(result[Mocks.Item1.id]).toEqual({
-        factory: ItemId.AssemblingMachine1,
+        machine: ItemId.AssemblingMachine1,
       } as any);
     });
   });

@@ -49,10 +49,10 @@ export class FlowComponent implements AfterViewInit {
           el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.recipeProcess(
             n.recipe
           )}</div>`;
-          if (n.factories != null && n.factoryId != null) {
+          if (n.machines != null && n.machineId != null) {
             el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.icon(
-              n.factoryId,
-              n.factories
+              n.machineId,
+              n.machines
             )}</div>`;
           }
         }

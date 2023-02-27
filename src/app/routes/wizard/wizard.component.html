@@ -47,19 +47,19 @@
       (selectId)="selectId($event, WizardState.ProductType)"
     ></lab-picker>
     <p-divider></p-divider>
-    <span>{{ 'wizard.runFactories' | translate }}</span>
+    <span>{{ 'wizard.runMachines' | translate }}</span>
     <button
       pButton
       pRipple
       type="button"
       class="mt-2"
       icon="fa-solid fa-industry"
-      [label]="'wizard.runFactoriesButton' | translate"
+      [label]="'wizard.runMachinesButton' | translate"
       (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
     ></button>
     <lab-picker
       #addRecipePicker
-      [header]="'wizard.runFactoriesButton' | translate"
+      [header]="'wizard.runMachinesButton' | translate"
       (selectId)="selectId($event, WizardState.Producer)"
     ></lab-picker>
     <p-divider></p-divider>
@@ -137,7 +137,7 @@
     ></button>
   </ng-template>
   <ng-template #producer>
-    <div>{{ 'wizard.productFactories' | translate }}</div>
+    <div>{{ 'wizard.productMachines' | translate }}</div>
     <p-divider></p-divider>
     <div class="d-flex align-items-center justify-content-center">
       <i [class]="id | iconClass"></i>

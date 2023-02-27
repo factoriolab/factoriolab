@@ -31,9 +31,9 @@ export interface StepExport {
   Wagons?: string;
   Wagon?: string;
   Recipe?: string;
-  Factories?: string;
-  Factory?: string;
-  FactoryModules?: string;
+  Machines?: string;
+  Machine?: string;
+  MachineModules?: string;
   Beacons?: string;
   Beacon?: string;
   BeaconModules?: string;
@@ -127,16 +127,16 @@ export class ExportService {
       if (inputs) {
         exp.Inputs = `"${inputs}"`;
       }
-      if (settings.factoryId != null) {
-        const factory = data.factoryEntities[settings.factoryId];
-        const allowsModules = RecipeUtility.allowsModules(recipe, factory);
-        if (columns[Column.Factories].show) {
-          if (step.factories != null) {
-            exp.Factories = '=' + step.factories.toString();
+      if (settings.machineId != null) {
+        const machine = data.machineEntities[settings.machineId];
+        const allowsModules = RecipeUtility.allowsModules(recipe, machine);
+        if (columns[Column.Machines].show) {
+          if (step.machines != null) {
+            exp.Machines = '=' + step.machines.toString();
           }
-          exp.Factory = settings.factoryId;
-          if (allowsModules && settings.factoryModuleIds != null) {
-            exp.FactoryModules = `"${settings.factoryModuleIds.join(',')}"`;
+          exp.Machine = settings.machineId;
+          if (allowsModules && settings.machineModuleIds != null) {
+            exp.MachineModules = `"${settings.machineModuleIds.join(',')}"`;
           }
         }
         if (columns[Column.Beacons].show && allowsModules) {

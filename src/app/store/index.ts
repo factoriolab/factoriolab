@@ -4,8 +4,8 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { environment } from 'src/environments/environment';
 import * as App from './app.actions';
 import * as Datasets from './datasets';
-import * as Factories from './factories';
 import * as Items from './items';
+import * as Machines from './machines';
 import * as Preferences from './preferences';
 import * as Producers from './producers';
 import * as Products from './products';
@@ -19,7 +19,7 @@ export interface LabState {
   producersState: Producers.ProducersState;
   itemsState: Items.ItemsState;
   recipesState: Recipes.RecipesState;
-  factoriesState: Factories.FactoriesState;
+  machinesState: Machines.MachinesState;
   settingsState: Settings.SettingsState;
   preferencesState: Preferences.PreferencesState;
 }
@@ -30,7 +30,7 @@ export const reducers: ActionReducerMap<LabState, never> = {
   producersState: Producers.producersReducer,
   itemsState: Items.itemsReducer,
   recipesState: Recipes.recipesReducer,
-  factoriesState: Factories.factoriesReducer,
+  machinesState: Machines.machinesReducer,
   settingsState: Settings.settingsReducer,
   preferencesState: Preferences.preferencesReducer,
 };
@@ -46,7 +46,7 @@ export const metaReducers: MetaReducer<LabState>[] = environment.testing
 export {
   App,
   Datasets,
-  Factories,
+  Machines,
   Items,
   Preferences,
   Producers,

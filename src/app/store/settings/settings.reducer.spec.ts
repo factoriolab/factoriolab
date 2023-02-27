@@ -235,14 +235,14 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_COST_FACTORY', () => {
-    it('should set the factory cost multiplier', () => {
+  describe('SET_COST_MACHINE', () => {
+    it('should set the machine cost multiplier', () => {
       const value = '10';
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetCostFactoryAction(value)
+        new Actions.SetCostMachineAction(value)
       );
-      expect(result.costFactory).toEqual(value);
+      expect(result.costMachine).toEqual(value);
     });
   });
 
@@ -273,14 +273,14 @@ describe('Settings Reducer', () => {
       const result = settingsReducer(
         {
           costFactor: 'a',
-          costFactory: 'b',
+          costMachine: 'b',
           costInput: 'c',
           costIgnored: 'd',
         } as any,
         new Actions.ResetCostAction()
       );
       expect(result.costFactor).toEqual('1');
-      expect(result.costFactory).toEqual('1');
+      expect(result.costMachine).toEqual('1');
       expect(result.costInput).toEqual('1000000');
       expect(result.costIgnored).toEqual('0');
     });

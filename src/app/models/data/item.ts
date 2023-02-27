@@ -2,9 +2,9 @@ import { Rational } from '../rational';
 import { Beacon, RationalBeacon } from './beacon';
 import { Belt, RationalBelt } from './belt';
 import { CargoWagon, RationalCargoWagon } from './cargo-wagon';
-import { Factory, RationalFactory } from './factory';
 import { FluidWagon, RationalFluidWagon } from './fluid-wagon';
 import { Fuel, RationalFuel } from './fuel';
+import { Machine, RationalMachine } from './machine';
 import { Module, RationalModule } from './module';
 
 export interface Item {
@@ -16,7 +16,7 @@ export interface Item {
   beacon?: Beacon;
   belt?: Belt;
   pipe?: Belt;
-  factory?: Factory;
+  machine?: Machine;
   module?: Module;
   fuel?: Fuel;
   cargoWagon?: CargoWagon;
@@ -36,7 +36,7 @@ export class RationalItem {
   beacon?: RationalBeacon;
   belt?: RationalBelt;
   pipe?: RationalBelt;
-  factory?: RationalFactory;
+  machine?: RationalMachine;
   module?: RationalModule;
   fuel?: RationalFuel;
   cargoWagon?: RationalCargoWagon;
@@ -63,8 +63,8 @@ export class RationalItem {
     if (data.pipe) {
       this.pipe = new RationalBelt(data.pipe);
     }
-    if (data.factory) {
-      this.factory = new RationalFactory(data.factory);
+    if (data.machine) {
+      this.machine = new RationalMachine(data.machine);
     }
     if (data.module) {
       this.module = new RationalModule(data.module);

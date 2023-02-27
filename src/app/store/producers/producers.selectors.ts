@@ -3,8 +3,8 @@ import { createSelector } from '@ngrx/store';
 import { RationalProducer, RationalRecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
-import * as Factories from '../factories';
 import * as Items from '../items';
+import * as Machines from '../machines';
 import * as Settings from '../settings';
 import { ProducersState } from './producers.reducer';
 
@@ -29,10 +29,10 @@ export const getBaseProducers = createSelector(
 
 export const getProducers = createSelector(
   getBaseProducers,
-  Factories.getFactories,
+  Machines.getMachines,
   Settings.getDataset,
-  (producers, factories, data) =>
-    producers.map((p) => RecipeUtility.adjustProducer(p, factories, data))
+  (producers, machines, data) =>
+    producers.map((p) => RecipeUtility.adjustProducer(p, machines, data))
 );
 
 export const getRationalProducers = createSelector(

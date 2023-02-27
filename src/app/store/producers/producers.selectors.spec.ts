@@ -35,12 +35,12 @@ describe('Producers Selectors', () => {
       spyOn(RecipeUtility, 'adjustProducer');
       Selectors.getProducers.projector(
         [Mocks.Producer],
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset
       );
       expect(RecipeUtility.adjustProducer).toHaveBeenCalledWith(
         Mocks.Producer,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachineSettingsInitial,
         Mocks.Dataset
       );
     });

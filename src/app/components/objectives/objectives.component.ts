@@ -10,7 +10,6 @@ import {
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import {
-  Factories,
   Items,
   LabState,
   Producers,
@@ -30,7 +29,6 @@ export class ObjectivesComponent {
     this.store.select(Products.getProducts),
     this.store.select(Producers.getProducers),
     this.store.select(Items.getItemSettings),
-    this.store.select(Factories.getFactories),
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Settings.getDisplayRate),
     this.store.select(Settings.getRateTypeOptions),
@@ -43,7 +41,6 @@ export class ObjectivesComponent {
         products,
         producers,
         itemSettings,
-        factories,
         recipeSettings,
         displayRate,
         rateTypeOptions,
@@ -54,7 +51,6 @@ export class ObjectivesComponent {
         products,
         producers,
         itemSettings,
-        factories,
         recipeSettings,
         displayRate,
         rateTypeOptions,

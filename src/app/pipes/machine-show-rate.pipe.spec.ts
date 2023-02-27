@@ -2,14 +2,14 @@ import { TestBed } from '@angular/core/testing';
 
 import { ItemId } from 'src/tests';
 import { Game } from '~/models';
-import { FactoryShowRatePipe } from './factory-show-rate.pipe';
+import { MachineShowRatePipe } from './machine-show-rate.pipe';
 
-describe('FactoryShowRatePipe', () => {
-  let pipe: FactoryShowRatePipe;
+describe('MachineShowRatePipe', () => {
+  let pipe: MachineShowRatePipe;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [FactoryShowRatePipe] });
-    pipe = TestBed.inject(FactoryShowRatePipe);
+    TestBed.configureTestingModule({ providers: [MachineShowRatePipe] });
+    pipe = TestBed.inject(MachineShowRatePipe);
   });
 
   it('should be created', () => {
@@ -17,7 +17,7 @@ describe('FactoryShowRatePipe', () => {
   });
 
   describe('transform', () => {
-    it('should hide factory rate for CoI Mine Control Tower', () => {
+    it('should hide machine rate for CoI Mine Control Tower', () => {
       expect(
         pipe.transform(ItemId.MineControlTower, Game.CaptainOfIndustry)
       ).toBeFalse();

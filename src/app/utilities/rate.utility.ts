@@ -36,30 +36,30 @@ export class RateUtility {
     recipe: RationalRecipe,
     game: Game
   ): void {
-    if (step.factories?.nonzero() && !recipe.part) {
+    if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
         // Reset power
         step.power = Rational.zero;
 
         // Calculate drain
         if (recipe.drain?.nonzero()) {
-          let factories = step.factories.ceil();
+          let machines = step.machines.ceil();
           if (game === Game.DysonSphereProgram) {
             // In DSP drain is not cumulative; only add for inactive machines
-            factories = factories.sub(step.factories);
+            machines = machines.sub(step.machines);
           }
 
-          step.power = step.power.add(factories.mul(recipe.drain));
+          step.power = step.power.add(machines.mul(recipe.drain));
         }
         // Calculate consumption
         if (recipe.consumption?.nonzero()) {
-          step.power = step.power.add(step.factories.mul(recipe.consumption));
+          step.power = step.power.add(step.machines.mul(recipe.consumption));
         }
       }
 
       // Calculate pollution
       if (recipe.pollution?.nonzero()) {
-        step.pollution = step.factories.mul(recipe.pollution);
+        step.pollution = step.machines.mul(recipe.pollution);
       }
     }
   }
@@ -99,9 +99,9 @@ export class RateUtility {
   }
 
   static calculateParentsOutputs(step: Step, steps: Step[]): void {
-    if (step.recipe && step.factories?.nonzero()) {
+    if (step.recipe && step.machines?.nonzero()) {
       const recipe = step.recipe;
-      const quantity = step.factories.div(recipe.time);
+      const quantity = step.machines.div(recipe.time);
       for (const itemId of Object.keys(recipe.in)) {
         if (recipe.in[itemId].nonzero()) {
           const rate = recipe.in[itemId].mul(quantity);
@@ -150,12 +150,12 @@ export class RateUtility {
   ): void {
     let noItems = false;
     if (step.recipeId != null && step.recipeSettings != null) {
-      const factoryId = step.recipeSettings.factoryId;
-      if (factoryId != null) {
-        const factory = data.factoryEntities[factoryId];
+      const machineId = step.recipeSettings.machineId;
+      if (machineId != null) {
+        const machine = data.machineEntities[machineId];
         const recipe = data.recipeEntities[step.recipeId];
         // No belts/wagons on research rows or rocket part rows
-        noItems = !!(factory.research || (factory.silo && !recipe.part));
+        noItems = !!(machine.research || (machine.silo && !recipe.part));
       }
     }
     if (noItems) {
@@ -188,14 +188,14 @@ export class RateUtility {
     if (
       !beaconReceivers?.nonzero() ||
       step.recipeId == null ||
-      !step.factories?.nonzero() ||
+      !step.machines?.nonzero() ||
       data.recipeEntities[step.recipeId].part ||
       step.recipeSettings == null
     ) {
       return;
     }
 
-    const factories = step.factories;
+    const machines = step.machines;
 
     const settings = step.recipeSettings;
     if (settings.beacons == null) return;
@@ -207,7 +207,7 @@ export class RateUtility {
           let total = b.total;
           if (b.id != null) {
             if (b.count != null && total == null) {
-              total = factories.ceil().mul(b.count).div(beaconReceivers);
+              total = machines.ceil().mul(b.count).div(beaconReceivers);
               if (total.lt(b.count)) {
                 // Can't be less than beacon count
                 total = b.count;

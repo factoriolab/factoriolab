@@ -18,8 +18,8 @@ import {
 } from '~/models';
 import { RateUtility, SimplexUtility } from '~/utilities';
 import { LabState } from '../';
-import * as Factories from '../factories';
 import * as Items from '../items';
+import * as Machines from '../machines';
 import * as Preferences from '../preferences';
 import * as Producers from '../producers';
 import * as Recipes from '../recipes';
@@ -194,14 +194,14 @@ export const getZipState = createSelector(
   Producers.producersState,
   Items.itemsState,
   Recipes.recipesState,
-  Factories.factoriesState,
+  Machines.machinesState,
   Settings.settingsState,
-  (products, producers, items, recipes, factories, settings) => ({
+  (products, producers, items, recipes, machines, settings) => ({
     products,
     producers,
     items,
     recipes,
-    factories,
+    machines,
     settings,
   })
 );
@@ -214,8 +214,8 @@ export const getStepsModified = createSelector(
   (steps, producers, itemSettings, recipeSettings) => ({
     producers: producers.reduce((e: Entities<boolean>, p) => {
       e[p.id] =
-        p.factoryId != null ||
-        p.factoryModuleIds != null ||
+        p.machineId != null ||
+        p.machineModuleIds != null ||
         p.beacons != null ||
         p.overclock != null;
       return e;
@@ -243,8 +243,8 @@ export const getTotals = createSelector(
   (steps, itemSettings, recipeSettings, data) => {
     const belts: Entities<Rational> = {};
     const wagons: Entities<Rational> = {};
-    const factories: Entities<Rational> = {};
-    const factoryModules: Entities<Rational> = {};
+    const machines: Entities<Rational> = {};
+    const machineModules: Entities<Rational> = {};
     const beacons: Entities<Rational> = {};
     const beaconModules: Entities<Rational> = {};
     let power = Rational.zero;
@@ -276,33 +276,33 @@ export const getTotals = createSelector(
       }
 
       if (step.recipeId != null) {
-        // Total Factories & Modules
-        if (step.factories?.nonzero()) {
+        // Total Machines & Modules
+        if (step.machines?.nonzero()) {
           const recipe = data.recipeEntities[step.recipeId];
           // Don't include silos from launch recipes
           if (!recipe.part) {
             const settings = recipeSettings[step.recipeId];
-            let factory = settings.factoryId;
+            let machine = settings.machineId;
             if (
               data.game === Game.DysonSphereProgram &&
-              factory === ItemId.MiningDrill
+              machine === ItemId.MiningDrill
             ) {
               // Use recipe id (vein type) in place of mining drill for DSP mining
-              factory = step.recipeId;
+              machine = step.recipeId;
             }
-            if (factory != null) {
-              if (!Object.prototype.hasOwnProperty.call(factories, factory)) {
-                factories[factory] = Rational.zero;
+            if (machine != null) {
+              if (!Object.prototype.hasOwnProperty.call(machines, machine)) {
+                machines[machine] = Rational.zero;
               }
 
-              const value = step.factories.ceil();
-              factories[factory] = factories[factory].add(value);
+              const value = step.machines.ceil();
+              machines[machine] = machines[machine].add(value);
 
               // Check for modules to add
-              if (settings.factoryModuleIds) {
+              if (settings.machineModuleIds) {
                 addValueToRecordByIds(
-                  factoryModules,
-                  settings.factoryModuleIds.filter((i) => i !== ItemId.Module),
+                  machineModules,
+                  settings.machineModuleIds.filter((i) => i !== ItemId.Module),
                   value
                 );
               }
@@ -352,8 +352,8 @@ export const getTotals = createSelector(
     return {
       belts,
       wagons,
-      factories,
-      factoryModules,
+      machines,
+      machineModules,
       beacons,
       beaconModules,
       power,
@@ -391,13 +391,13 @@ export const getStepDetails = createSelector(
         tabs.push(StepDetailTab.Item);
         outputs.push(
           ...steps
-            .filter(fnPropsNotNullish('outputs', 'recipeId', 'factories'))
+            .filter(fnPropsNotNullish('outputs', 'recipeId', 'machines'))
             .filter((s) => s.outputs[itemId] != null)
             .map((s) => ({
               recipeId: s.recipeId,
               producerId: s.producerId,
               value: s.outputs[itemId],
-              factories: s.factories,
+              machines: s.machines,
             }))
         );
         outputs.sort((a, b) => b.value.sub(a.value).toNumber());
@@ -405,8 +405,8 @@ export const getStepDetails = createSelector(
       if (s.recipeId != null) {
         tabs.push(StepDetailTab.Recipe);
       }
-      if (s.factories?.nonzero()) {
-        tabs.push(StepDetailTab.Factory);
+      if (s.machines?.nonzero()) {
+        tabs.push(StepDetailTab.Machine);
       }
       if (s.itemId != null) {
         for (const recipe of data.complexRecipeIds.map(
@@ -519,7 +519,7 @@ export const getEffectivePrecision = createSelector(
                 | 'items'
                 | 'belts'
                 | 'wagons'
-                | 'factories'
+                | 'machines'
                 | 'power'
                 | 'pollution'
             ]

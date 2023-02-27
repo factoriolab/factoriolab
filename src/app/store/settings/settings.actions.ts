@@ -29,7 +29,7 @@ export const enum SettingsActionType {
   SET_INSERTER_CAPACITY = '[Settings] Set Inserter Capacity',
   SET_DISPLAY_RATE = '[Settings] Set Display Rate',
   SET_COST_FACTOR = '[Settings] Set Cost Factor',
-  SET_COST_FACTORY = '[Settings] Set Factory Cost',
+  SET_COST_MACHINE = '[Settings] Set Machine Cost',
   SET_COST_INPUT = '[Settings] Set Input Cost',
   SET_COST_IGNORED = '[Settings] Set Ignored Cost',
   RESET_COST = '[Settings] Reset Cost Modifiers',
@@ -125,8 +125,8 @@ export class SetCostFactorAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class SetCostFactoryAction implements Action {
-  readonly type = SettingsActionType.SET_COST_FACTORY;
+export class SetCostMachineAction implements Action {
+  readonly type = SettingsActionType.SET_COST_MACHINE;
   constructor(public payload: string) {}
 }
 
@@ -163,7 +163,7 @@ export type SettingsAction =
   | SetInserterCapacityAction
   | SetDisplayRateAction
   | SetCostFactorAction
-  | SetCostFactoryAction
+  | SetCostMachineAction
   | SetCostInputAction
   | SetCostIgnoredAction
   | ResetCostAction;

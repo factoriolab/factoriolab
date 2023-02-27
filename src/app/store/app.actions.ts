@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
 
 import { DatasetsState } from './datasets';
-import { FactoriesState } from './factories';
 import { ItemsState } from './items';
+import { MachinesState } from './machines';
 import { ProducersState } from './producers';
 import { ProductsState } from './products';
 import { RecipesState } from './recipes';
@@ -14,7 +14,7 @@ export interface PartialState {
   producersState?: ProducersState;
   itemsState?: ItemsState;
   recipesState?: RecipesState;
-  factoriesState?: FactoriesState;
+  machinesState?: MachinesState;
   settingsState?: Partial<SettingsState>;
 }
 

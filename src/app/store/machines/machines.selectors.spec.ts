@@ -1,13 +1,13 @@
 import { ItemId, Mocks } from 'src/tests';
 import { Game } from '~/models';
-import { initialFactoriesState } from './factories.reducer';
-import * as Selectors from './factories.selectors';
+import { initialMachinesState } from './machines.reducer';
+import * as Selectors from './machines.selectors';
 
-describe('Factories Selectors', () => {
-  describe('getFactorySettings', () => {
-    it('should fill in factory settings', () => {
-      const result = Selectors.getFactories.projector(
-        initialFactoriesState,
+describe('Machines Selectors', () => {
+  describe('getMachineSettings', () => {
+    it('should fill in machine settings', () => {
+      const result = Selectors.getMachines.projector(
+        initialMachinesState,
         Mocks.Defaults,
         Mocks.AdjustedData
       );
@@ -16,8 +16,8 @@ describe('Factories Selectors', () => {
     });
 
     it('should handle null defaults', () => {
-      const result = Selectors.getFactories.projector(
-        initialFactoriesState,
+      const result = Selectors.getMachines.projector(
+        initialMachinesState,
         null,
         Mocks.AdjustedData
       );
@@ -26,7 +26,7 @@ describe('Factories Selectors', () => {
     });
 
     it('should read number of beacons', () => {
-      const result = Selectors.getFactories.projector(
+      const result = Selectors.getMachines.projector(
         {
           ids: undefined,
           entities: { [ItemId.AssemblingMachine2]: { beaconCount: '0' } },
@@ -42,8 +42,8 @@ describe('Factories Selectors', () => {
     });
 
     it('should use null beaconCount for DSP', () => {
-      const result = Selectors.getFactories.projector(
-        initialFactoriesState,
+      const result = Selectors.getMachines.projector(
+        initialMachinesState,
         Mocks.Defaults,
         { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
       );
@@ -52,20 +52,20 @@ describe('Factories Selectors', () => {
 
     it('should include overclock in Satisfactory', () => {
       const state = {
-        ...initialFactoriesState,
+        ...initialMachinesState,
         ...{
           entities: {
-            ...initialFactoriesState.entities,
+            ...initialMachinesState.entities,
             ...{
               '': {
-                ...initialFactoriesState.entities[''],
+                ...initialMachinesState.entities[''],
                 ...{ overclock: 200 },
               },
             },
           },
         },
       };
-      const result = Selectors.getFactories.projector(state, Mocks.Defaults, {
+      const result = Selectors.getMachines.projector(state, Mocks.Defaults, {
         ...Mocks.AdjustedData,
         ...{ game: Game.Satisfactory },
       });
@@ -74,20 +74,20 @@ describe('Factories Selectors', () => {
 
     it('should default overclock to 100 in Satisfactory', () => {
       const state = {
-        ...initialFactoriesState,
+        ...initialMachinesState,
         ...{
           entities: {
-            ...initialFactoriesState.entities,
+            ...initialMachinesState.entities,
             ...{
               '': {
-                ...initialFactoriesState.entities[''],
+                ...initialMachinesState.entities[''],
                 ...{ overclock: undefined },
               },
             },
           },
         },
       };
-      const result = Selectors.getFactories.projector(state, Mocks.Defaults, {
+      const result = Selectors.getMachines.projector(state, Mocks.Defaults, {
         ...Mocks.AdjustedData,
         ...{ game: Game.Satisfactory },
       });
@@ -95,24 +95,24 @@ describe('Factories Selectors', () => {
     });
   });
 
-  describe('getFactoryOptions', () => {
+  describe('getMachineOptions', () => {
     it('should handle null ids', () => {
-      const result = Selectors.getFactoryOptions.projector(
-        initialFactoriesState,
+      const result = Selectors.getMachineOptions.projector(
+        initialMachinesState,
         Mocks.Dataset
       );
-      expect(result.length).toEqual(Mocks.Dataset.factoryIds.length);
+      expect(result.length).toEqual(Mocks.Dataset.machineIds.length);
     });
   });
 
-  describe('getFactoryRows', () => {
+  describe('getMachineRows', () => {
     it('should handle null ids', () => {
-      const result = Selectors.getFactoryRows.projector(initialFactoriesState);
+      const result = Selectors.getMachineRows.projector(initialMachinesState);
       expect(result).toEqual(['']);
     });
 
     it('should add empty option to beginning of list', () => {
-      const result = Selectors.getFactoryRows.projector({
+      const result = Selectors.getMachineRows.projector({
         ids: [ItemId.AssemblingMachine1],
         entities: {},
       });
