@@ -7,7 +7,7 @@ export interface CargoWagon {
 export class RationalCargoWagon {
   size: Rational;
 
-  constructor(data: CargoWagon) {
-    this.size = Rational.fromNumber(data.size);
+  constructor(obj: CargoWagon) {
+    this.size = Rational.fromNumber(obj.size);
   }
 }

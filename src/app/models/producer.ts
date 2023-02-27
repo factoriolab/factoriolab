@@ -14,12 +14,12 @@ export class RationalProducer extends RationalRecipeSettings {
   count: Rational;
   recipe: RationalRecipe;
 
-  constructor(data: Producer, recipe: RationalRecipe) {
-    super(data);
+  constructor(obj: Producer, recipe: RationalRecipe) {
+    super(obj);
 
-    this.id = data.id;
-    this.recipeId = data.recipeId;
-    this.count = Rational.fromString(data.count);
+    this.id = obj.id;
+    this.recipeId = obj.recipeId;
+    this.count = Rational.fromString(obj.count);
     this.recipe = recipe;
   }
 }

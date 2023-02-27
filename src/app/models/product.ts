@@ -14,10 +14,10 @@ export class RationalProduct {
   rate: Rational;
   rateType: RateType;
 
-  constructor(data: Product) {
-    this.id = data.id;
-    this.itemId = data.itemId;
-    this.rate = Rational.fromString(data.rate);
-    this.rateType = data.rateType;
+  constructor(obj: Product) {
+    this.id = obj.id;
+    this.itemId = obj.itemId;
+    this.rate = Rational.fromString(obj.rate);
+    this.rateType = obj.rateType;
   }
 }

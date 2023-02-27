@@ -11,11 +11,11 @@ export class RationalFuel {
   value: Rational;
   result?: string;
 
-  constructor(data: Fuel) {
-    this.category = data.category;
-    this.value = Rational.fromNumber(data.value);
-    if (data.result) {
-      this.result = data.result;
+  constructor(obj: Fuel) {
+    this.category = obj.category;
+    this.value = Rational.fromNumber(obj.value);
+    if (obj.result) {
+      this.result = obj.result;
     }
   }
 }

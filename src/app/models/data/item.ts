@@ -46,43 +46,43 @@ export class RationalItem {
   /** Used to add extra text to an already defined icon */
   iconText?: string;
 
-  constructor(data: Item) {
-    this.id = data.id;
-    this.name = data.name;
-    this.category = data.category;
-    this.row = Math.round(data.row);
-    if (data.stack) {
-      this.stack = Rational.fromNumber(data.stack);
+  constructor(obj: Item) {
+    this.id = obj.id;
+    this.name = obj.name;
+    this.category = obj.category;
+    this.row = Math.round(obj.row);
+    if (obj.stack) {
+      this.stack = Rational.fromNumber(obj.stack);
     }
-    if (data.beacon) {
-      this.beacon = new RationalBeacon(data.beacon);
+    if (obj.beacon) {
+      this.beacon = new RationalBeacon(obj.beacon);
     }
-    if (data.belt) {
-      this.belt = new RationalBelt(data.belt);
+    if (obj.belt) {
+      this.belt = new RationalBelt(obj.belt);
     }
-    if (data.pipe) {
-      this.pipe = new RationalBelt(data.pipe);
+    if (obj.pipe) {
+      this.pipe = new RationalBelt(obj.pipe);
     }
-    if (data.machine) {
-      this.machine = new RationalMachine(data.machine);
+    if (obj.machine) {
+      this.machine = new RationalMachine(obj.machine);
     }
-    if (data.module) {
-      this.module = new RationalModule(data.module);
+    if (obj.module) {
+      this.module = new RationalModule(obj.module);
     }
-    if (data.fuel) {
-      this.fuel = new RationalFuel(data.fuel);
+    if (obj.fuel) {
+      this.fuel = new RationalFuel(obj.fuel);
     }
-    if (data.cargoWagon) {
-      this.cargoWagon = new RationalCargoWagon(data.cargoWagon);
+    if (obj.cargoWagon) {
+      this.cargoWagon = new RationalCargoWagon(obj.cargoWagon);
     }
-    if (data.fluidWagon) {
-      this.fluidWagon = new RationalFluidWagon(data.fluidWagon);
+    if (obj.fluidWagon) {
+      this.fluidWagon = new RationalFluidWagon(obj.fluidWagon);
     }
-    if (data.icon) {
-      this.icon = data.icon;
+    if (obj.icon) {
+      this.icon = obj.icon;
     }
-    if (data.iconText) {
-      this.iconText = data.iconText;
+    if (obj.iconText) {
+      this.iconText = obj.iconText;
     }
   }
 }

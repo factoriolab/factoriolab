@@ -42,24 +42,24 @@ export class RationalRecipe {
   consumption?: Rational;
   pollution?: Rational;
 
-  constructor(data: Recipe) {
-    this.id = data.id;
-    this.name = data.name;
-    this.category = data.category;
-    this.row = Math.round(data.row);
-    this.time = Rational.fromNumber(data.time);
-    this.producers = data.producers;
-    this.in = Object.keys(data.in).reduce((e: Entities<Rational>, i) => {
-      e[i] = Rational.fromJson(data.in[i]);
+  constructor(obj: Recipe) {
+    this.id = obj.id;
+    this.name = obj.name;
+    this.category = obj.category;
+    this.row = Math.round(obj.row);
+    this.time = Rational.fromNumber(obj.time);
+    this.producers = obj.producers;
+    this.in = Object.keys(obj.in).reduce((e: Entities<Rational>, i) => {
+      e[i] = Rational.fromJson(obj.in[i]);
       return e;
     }, {});
-    this.out = Object.keys(data.out).reduce((e: Entities<Rational>, i) => {
-      e[i] = Rational.fromJson(data.out[i]);
+    this.out = Object.keys(obj.out).reduce((e: Entities<Rational>, i) => {
+      e[i] = Rational.fromJson(obj.out[i]);
       return e;
     }, {});
 
-    if (data.catalyst) {
-      const catalyst = data.catalyst; // Store null-checked value
+    if (obj.catalyst) {
+      const catalyst = obj.catalyst; // Store null-checked value
       this.catalyst = Object.keys(catalyst).reduce(
         (e: Entities<Rational>, i) => {
           e[i] = Rational.fromJson(catalyst[i]);
@@ -68,17 +68,17 @@ export class RationalRecipe {
         {}
       );
     }
-    if (data.cost) {
-      this.cost = Rational.fromNumber(data.cost);
+    if (obj.cost) {
+      this.cost = Rational.fromNumber(obj.cost);
     }
-    if (data.part) {
-      this.part = data.part;
+    if (obj.part) {
+      this.part = obj.part;
     }
-    if (data.usage != null) {
-      if (typeof data.usage === 'string') {
-        this.usage = Rational.fromString(data.usage);
+    if (obj.usage != null) {
+      if (typeof obj.usage === 'string') {
+        this.usage = Rational.fromString(obj.usage);
       } else {
-        this.usage = Rational.fromNumber(data.usage);
+        this.usage = Rational.fromNumber(obj.usage);
       }
     }
   }

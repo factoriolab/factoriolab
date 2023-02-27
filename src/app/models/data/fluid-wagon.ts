@@ -7,7 +7,7 @@ export interface FluidWagon {
 export class RationalFluidWagon {
   capacity: Rational;
 
-  constructor(data: FluidWagon) {
-    this.capacity = Rational.fromNumber(data.capacity);
+  constructor(obj: FluidWagon) {
+    this.capacity = Rational.fromNumber(obj.capacity);
   }
 }

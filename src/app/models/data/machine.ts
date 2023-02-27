@@ -40,43 +40,43 @@ export class RationalMachine {
   consumption?: Entities<Rational>;
   disallowEffects?: ModuleEffect[];
 
-  constructor(data: Machine) {
-    if (data.speed != null) {
-      this.speed = Rational.fromNumber(data.speed);
+  constructor(obj: Machine) {
+    if (obj.speed != null) {
+      this.speed = Rational.fromNumber(obj.speed);
     }
-    if (data.modules != null) {
-      this.modules = Math.round(data.modules);
+    if (obj.modules != null) {
+      this.modules = Math.round(obj.modules);
     }
-    if (data.type) {
-      this.type = data.type;
+    if (obj.type) {
+      this.type = obj.type;
     }
-    if (data.category) {
-      this.category = data.category;
+    if (obj.category) {
+      this.category = obj.category;
     }
-    if (data.usage != null) {
-      this.usage = Rational.fromNumber(data.usage);
+    if (obj.usage != null) {
+      this.usage = Rational.fromNumber(obj.usage);
     }
-    if (data.drain != null) {
-      if (typeof data.drain === 'string') {
-        this.drain = Rational.fromString(data.drain);
+    if (obj.drain != null) {
+      if (typeof obj.drain === 'string') {
+        this.drain = Rational.fromString(obj.drain);
       } else {
-        this.drain = Rational.fromNumber(data.drain);
+        this.drain = Rational.fromNumber(obj.drain);
       }
     }
-    if (data.pollution != null) {
-      this.pollution = Rational.fromNumber(data.pollution);
+    if (obj.pollution != null) {
+      this.pollution = Rational.fromNumber(obj.pollution);
     }
-    if (data.mining) {
-      this.mining = data.mining;
+    if (obj.mining) {
+      this.mining = obj.mining;
     }
-    if (data.research) {
-      this.research = data.research;
+    if (obj.research) {
+      this.research = obj.research;
     }
-    if (data.silo) {
-      this.silo = new RationalSilo(data.silo);
+    if (obj.silo) {
+      this.silo = new RationalSilo(obj.silo);
     }
-    if (data.consumption) {
-      const consumption = data.consumption;
+    if (obj.consumption) {
+      const consumption = obj.consumption;
       this.consumption = Object.keys(consumption).reduce(
         (e: Entities<Rational>, i) => {
           e[i] = Rational.fromJson(consumption[i]);
@@ -85,8 +85,8 @@ export class RationalMachine {
         {}
       );
     }
-    if (data.disallowEffects) {
-      this.disallowEffects = data.disallowEffects;
+    if (obj.disallowEffects) {
+      this.disallowEffects = obj.disallowEffects;
     }
   }
 }

@@ -24,27 +24,27 @@ export class RationalRecipeSettings {
   cost?: Rational;
   checked?: boolean;
 
-  constructor(data: RecipeSettings) {
-    if (data.machineId != null) {
-      this.machineId = data.machineId;
+  constructor(obj: RecipeSettings) {
+    if (obj.machineId != null) {
+      this.machineId = obj.machineId;
     }
-    if (data.machineModuleIds != null) {
-      this.machineModuleIds = data.machineModuleIds;
+    if (obj.machineModuleIds != null) {
+      this.machineModuleIds = obj.machineModuleIds;
     }
-    if (data.machineModuleOptions != null) {
-      this.machineModuleOptions = data.machineModuleOptions;
+    if (obj.machineModuleOptions != null) {
+      this.machineModuleOptions = obj.machineModuleOptions;
     }
-    if (data.beacons) {
-      this.beacons = data.beacons.map((b) => new RationalBeaconSettings(b));
+    if (obj.beacons) {
+      this.beacons = obj.beacons.map((b) => new RationalBeaconSettings(b));
     }
-    if (data.overclock != null) {
-      this.overclock = Rational.fromNumber(data.overclock);
+    if (obj.overclock != null) {
+      this.overclock = Rational.fromNumber(obj.overclock);
     }
-    if (data.cost != null) {
-      this.cost = Rational.fromString(data.cost);
+    if (obj.cost != null) {
+      this.cost = Rational.fromString(obj.cost);
     }
-    if (data.checked != null) {
-      this.checked = data.checked;
+    if (obj.checked != null) {
+      this.checked = obj.checked;
     }
   }
 }

@@ -15,8 +15,8 @@ export class RationalSilo {
   /** Launch animation delay, in seconds */
   launch: Rational;
 
-  constructor(data: Silo) {
-    this.parts = Rational.fromNumber(data.parts);
-    this.launch = Rational.fromNumber(data.launch).div(secs);
+  constructor(obj: Silo) {
+    this.parts = Rational.fromNumber(obj.parts);
+    this.launch = Rational.fromNumber(obj.launch).div(secs);
   }
 }

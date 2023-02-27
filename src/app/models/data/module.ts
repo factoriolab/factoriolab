@@ -25,27 +25,27 @@ export class RationalModule {
   sprays?: Rational;
   proliferator?: string;
 
-  constructor(data: Module) {
-    if (data.speed) {
-      this.speed = Rational.fromNumber(data.speed);
+  constructor(obj: Module) {
+    if (obj.speed) {
+      this.speed = Rational.fromNumber(obj.speed);
     }
-    if (data.productivity) {
-      this.productivity = Rational.fromNumber(data.productivity);
+    if (obj.productivity) {
+      this.productivity = Rational.fromNumber(obj.productivity);
     }
-    if (data.consumption) {
-      this.consumption = Rational.fromNumber(data.consumption);
+    if (obj.consumption) {
+      this.consumption = Rational.fromNumber(obj.consumption);
     }
-    if (data.pollution) {
-      this.pollution = Rational.fromNumber(data.pollution);
+    if (obj.pollution) {
+      this.pollution = Rational.fromNumber(obj.pollution);
     }
-    if (data.limitation) {
-      this.limitation = data.limitation;
+    if (obj.limitation) {
+      this.limitation = obj.limitation;
     }
-    if (data.sprays) {
-      this.sprays = Rational.fromNumber(data.sprays);
+    if (obj.sprays) {
+      this.sprays = Rational.fromNumber(obj.sprays);
     }
-    if (data.proliferator) {
-      this.proliferator = data.proliferator;
+    if (obj.proliferator) {
+      this.proliferator = obj.proliferator;
     }
   }
 }

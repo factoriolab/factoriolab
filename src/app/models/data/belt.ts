@@ -7,7 +7,7 @@ export interface Belt {
 export class RationalBelt {
   speed: Rational;
 
-  constructor(data: Belt) {
-    this.speed = Rational.fromJson(data.speed);
+  constructor(obj: Belt) {
+    this.speed = Rational.fromJson(obj.speed);
   }
 }

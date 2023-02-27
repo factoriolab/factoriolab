@@ -26,21 +26,21 @@ export class RationalBeacon {
   usage?: Rational;
   disallowEffects?: ModuleEffect[];
 
-  constructor(data: Beacon) {
-    this.effectivity = Rational.fromNumber(data.effectivity);
-    this.modules = data.modules;
-    this.range = data.range;
-    if (data.type) {
-      this.type = data.type;
+  constructor(obj: Beacon) {
+    this.effectivity = Rational.fromNumber(obj.effectivity);
+    this.modules = obj.modules;
+    this.range = obj.range;
+    if (obj.type) {
+      this.type = obj.type;
     }
-    if (data.category) {
-      this.category = data.category;
+    if (obj.category) {
+      this.category = obj.category;
     }
-    if (data.usage != null) {
-      this.usage = Rational.fromNumber(data.usage);
+    if (obj.usage != null) {
+      this.usage = Rational.fromNumber(obj.usage);
     }
-    if (data.disallowEffects) {
-      this.disallowEffects = data.disallowEffects;
+    if (obj.disallowEffects) {
+      this.disallowEffects = obj.disallowEffects;
     }
   }
 }
