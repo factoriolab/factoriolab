@@ -5,7 +5,6 @@ import {
   Rational,
   RationalProduct,
   RationalRecipe,
-  SimplexType,
 } from '~/models';
 import { RateUtility } from './rate.utility';
 import { MatrixSolution, MatrixState, SimplexUtility } from './simplex.utility';
@@ -23,7 +22,6 @@ describe('SimplexUtility', () => {
     data: Mocks.AdjustedData,
     costInput: Rational.from(1000000),
     costIgnored: Rational.zero,
-    simplexType: SimplexType.JsBigIntRational,
   });
   /** https://en.wikipedia.org/wiki/Simplex_algorithm#Example */
   const getTableau = (): Rational[][] => [
@@ -101,10 +99,6 @@ describe('SimplexUtility', () => {
     inputIds: [],
   });
 
-  beforeEach(() => {
-    SimplexUtility.cache = {};
-  });
-
   describe('solve', () => {
     it('should handle empty list of products', () => {
       expect(
@@ -115,7 +109,6 @@ describe('SimplexUtility', () => {
           [],
           Rational.zero,
           Rational.zero,
-          SimplexType.JsBigIntRational,
           Mocks.AdjustedData
         )
       ).toEqual({

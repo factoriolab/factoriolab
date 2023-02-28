@@ -83,16 +83,7 @@ export interface GlpkResult {
   time: number;
 }
 
-export interface MatrixCache {
-  O: Rational[];
-  R: Rational[];
-  pivots: number;
-  time: number;
-}
-
 export class SimplexUtility {
-  static cache: Entities<MatrixCache[]> = {};
-
   static solve(
     products: RationalProduct[],
     producers: RationalProducer[],
@@ -120,10 +111,7 @@ export class SimplexUtility {
     // Get solution for matrix state
     const solution = this.getSolution(state);
 
-    if (
-      solution.resultType === MatrixResultType.Solved ||
-      solution.resultType === MatrixResultType.Cached
-    ) {
+    if (solution.resultType === MatrixResultType.Solved) {
       // Update steps with solution
       this.updateSteps(solution, state);
     }
@@ -294,72 +282,46 @@ export class SimplexUtility {
     // Convert state to canonical tableau
     const A = this.canonical(state);
 
-    const [O, H] = this.hash(A);
-
     const itemIds = Object.keys(state.items);
     const recipeIds = Object.keys(state.recipes);
     const inputIds = state.inputIds;
 
-    // Check cache
-    const cache = this.checkCache(O, H);
-    if (cache) {
-      const [surplus, recipes, inputs] = this.parseSolution(cache.R, state);
-      // Found cached result
+    const A0 = A.map((R) => [...R]);
+    const result = this.simplexType(glpkResult);
+
+    if (result.type === MatrixResultType.Solved) {
+      // Parse solution into usable state
+      const [surplus, recipes, inputs] = this.parseSolution(result.O, state);
       return {
-        resultType: MatrixResultType.Cached,
+        resultType: result.type,
         surplus,
         recipes,
         inputs,
-        pivots: cache.pivots,
-        time: cache.time,
-        A,
-        O: cache.R,
+        pivots: result.pivots,
+        time: result.time,
+        A: A0,
+        O: result.O,
         itemIds,
         producers: state.producers,
         recipeIds,
         inputIds,
       };
     } else {
-      // Cache original tableau
-      const A0 = A.map((R) => [...R]);
-
-      const result = this.simplexType(glpkResult);
-
-      if (result.type === MatrixResultType.Solved) {
-        // Parse solution into usable state
-        this.cacheResult(O, H, result);
-        const [surplus, recipes, inputs] = this.parseSolution(result.O, state);
-        return {
-          resultType: result.type,
-          surplus,
-          recipes,
-          inputs,
-          pivots: result.pivots,
-          time: result.time,
-          A: A0,
-          O: result.O,
-          itemIds,
-          producers: state.producers,
-          recipeIds,
-          inputIds,
-        };
-      } else {
-        // No solution found
-        return {
-          resultType: result.type,
-          surplus: {},
-          recipes: {},
-          inputs: {},
-          pivots: result.pivots,
-          time: result.time,
-          A: A0,
-          O: result.O,
-          itemIds,
-          producers: state.producers,
-          recipeIds,
-          inputIds,
-        };
-      }
+      // No solution found
+      return {
+        resultType: result.type,
+        surplus: {},
+        recipes: {},
+        inputs: {},
+        pivots: result.pivots,
+        time: result.time,
+        A: A0,
+        O: result.O,
+        itemIds,
+        producers: state.producers,
+        recipeIds,
+        inputIds,
+      };
     }
   }
 
@@ -893,82 +855,6 @@ export class SimplexUtility {
     }
 
     RateUtility.adjustPowerPollution(step, recipe, state.data.game);
-  }
-  //#endregion
-
-  //#region Cache
-  static hash(A: Rational[][]): [Rational[], string] {
-    const O = [...A[0]];
-    const B = A.filter((R, i) => i !== 0);
-    const H = B.map((R) => R.map((c) => c.toString()).join(',')).join('\n');
-    return [O, H];
-  }
-
-  static cacheResult(O: Rational[], H: string, result: SimplexResult): void {
-    if (!this.cache[H]) {
-      this.cache[H] = [];
-    }
-
-    this.cache[H].push({
-      O,
-      R: result.O,
-      pivots: result.pivots,
-      time: result.time,
-    });
-  }
-
-  static checkCache(O: Rational[], H: string): MatrixCache | null {
-    if (this.cache[H]) {
-      // Check objective matches
-      for (const c of this.cache[H]) {
-        const ratio = this.objectiveRatio(O, c.O);
-        if (ratio) {
-          if (ratio.isOne()) {
-            return c;
-          } else {
-            return { ...c, ...{ R: c.R.map((r) => r.mul(ratio)) } };
-          }
-        }
-      }
-    }
-
-    return null;
-  }
-
-  static objectiveRatio(O: Rational[], C: Rational[]): Rational | null {
-    // Check length first
-    if (O.length !== C.length) {
-      return null;
-    }
-
-    // Check ratio
-    let ratio: Rational | null = null;
-    for (let i = 1; i < O.length; i++) {
-      if (C[i].isZero()) {
-        if (!O[i].isZero()) {
-          // No match
-          return null;
-        }
-        // Keep looking, both 0
-      } else {
-        if (O[i].isZero()) {
-          // No match
-          return null;
-        } else if (ratio) {
-          // Ratio must match
-          if (!ratio.eq(O[i].div(C[i]))) {
-            // No match
-            return null;
-          }
-          // Keep going
-        } else {
-          // Log the ratio
-          ratio = O[i].div(C[i]);
-        }
-      }
-    }
-
-    return ratio;
   }
   //#endregion
 }
