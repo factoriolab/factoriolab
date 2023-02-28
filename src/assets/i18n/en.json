@@ -11,7 +11,7 @@
     "errorDetail": "The application has encountered an error:",
     "reset": "Reset",
     "resetTooltip": "Click to reset",
-    "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, {{ pivots }} pivots, size: {{ rows }} x {{ cols }}, cost: {{ cost }}",
+    "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, size: {{ rows }} x {{ cols }}, cost: {{ cost }}",
     "simplexUnsolved": "Simplex {{ resultType }}",
     "simplexError": "No solution found",
     "simplexErrorDetail": "Try using the WASM Float64 simplex solver with all recipes enabled, or check your disabled recipes to ensure a solution is feasible.\n\nE.G. If one iron plate requires two gears, and one gear requires two iron plates, a solution for iron plates is not feasible.",

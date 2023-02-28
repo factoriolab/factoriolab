@@ -22,7 +22,7 @@
         <ng-container *ngIf="vm.mod != null; else loading">
           <lab-objectives></lab-objectives>
 
-          <p-card styleClass="mt-4" [header]="'app.machine' | translate">
+          <p-card styleClass="mt-4" [header]="'app.factory' | translate">
             <p-tabMenu [model]="tabItems">
               <ng-template pTemplate="item" let-item>
                 <span class="p-menuitem-icon" [class]="item.icon"></span>
@@ -36,8 +36,7 @@
               <div class="d-flex align-items-center justify-content-between">
                 <ng-container
                   *ngIf="
-                    vm.result.resultType === MatrixResultType.Solved ||
-                      vm.result.resultType === MatrixResultType.Cached;
+                    vm.result.resultType === MatrixResultType.Solved;
                     else notSolved
                   "
                 >
@@ -49,7 +48,6 @@
                             : {
                                 resultType: vm.result.resultType.toLowerCase(),
                                 time: vm.result.time,
-                                pivots: vm.result.pivots,
                                 rows: vm.result.A.length,
                                 cols: vm.result.A[0].length,
                                 cost: vm.result.O[

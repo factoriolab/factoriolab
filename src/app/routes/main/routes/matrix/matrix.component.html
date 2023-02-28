@@ -13,10 +13,6 @@
         {{ 'matrix.runtimeValue' | translate : { value: vm.result.time } }}
       </td>
     </tr>
-    <tr *ngIf="vm.result.pivots != null">
-      <th>{{ 'matrix.pivots' | translate }}</th>
-      <td>{{ vm.result.pivots }}</td>
-    </tr>
     <tr *ngIf="vm.result.A && vm.result.O">
       <th>{{ 'matrix.size' | translate }}</th>
       <td>

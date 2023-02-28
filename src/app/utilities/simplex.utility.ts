@@ -44,8 +44,6 @@ export interface MatrixState {
 
 export interface MatrixSolution {
   resultType: MatrixResultType;
-  /** Final number of simplex pivots */
-  pivots: number;
   /** Runtime in ms */
   time: number;
   /** Simplex canonical matrix */
@@ -119,7 +117,6 @@ export class SimplexUtility {
     return {
       steps: state.steps,
       resultType: solution.resultType,
-      pivots: solution.pivots,
       time: solution.time,
       A: solution.A,
       O: solution.O,
@@ -193,7 +190,7 @@ export class SimplexUtility {
     const recipes = state.recipeIds
       .filter((r) => !state.recipes[r])
       .map((r) => state.data.recipeR[r])
-      .filter((r) => r.out && r.out[itemId]);
+      .filter((r) => r.produces(itemId));
     for (const recipe of recipes) {
       state.recipes[recipe.id] = recipe;
     }
@@ -268,7 +265,6 @@ export class SimplexUtility {
         surplus: {},
         recipes: {},
         inputs: {},
-        pivots: 0,
         time: 0,
         A: [[]],
         O: [],
@@ -297,7 +293,6 @@ export class SimplexUtility {
         surplus,
         recipes,
         inputs,
-        pivots: result.pivots,
         time: result.time,
         A: A0,
         O: result.O,
@@ -313,7 +308,6 @@ export class SimplexUtility {
         surplus: {},
         recipes: {},
         inputs: {},
-        pivots: result.pivots,
         time: result.time,
         A: A0,
         O: result.O,

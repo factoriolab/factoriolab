@@ -6,8 +6,6 @@ import { Step } from './step';
 export interface MatrixResult {
   steps: Step[];
   resultType: MatrixResultType;
-  /** Final number of simplex pivots */
-  pivots?: number;
   /** Runtime in ms */
   time?: number;
   /** Simplex canonical matrix */

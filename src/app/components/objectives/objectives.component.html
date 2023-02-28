@@ -1,100 +1,106 @@
 <p-card *ngIf="vm$ | async as vm" [header]="'objectives.title' | translate">
-  <h3 *ngIf="vm.products.length">
-    {{ 'objectives.products' | translate }}
-  </h3>
-  <div
-    *ngFor="let product of vm.products; trackBy: trackSvc.trackById"
-    class="mb-2"
-  >
-    <div class="p-inputgroup">
-      <button
-        pButton
-        pRipple
-        type="button"
-        class="p-button-outlined icon"
-        icon="fa-solid fa-minus"
-        [pTooltip]="'objectives.removeProductTooltip' | translate"
-        (click)="removeProduct(product.id)"
-      ></button>
-      <button
-        pButton
-        pRipple
-        type="button"
-        class="text-truncate"
-        [icon]="product.itemId | iconSmClass"
-        [label]="vm.mobile ? '' : vm.data.itemEntities[product.itemId].name"
-        [pTooltip]="'objectives.itemTooltip' | translate"
-        tooltipPosition="top"
-        (click)="editPicker.clickOpen(vm.data, 'item', product.itemId)"
-      ></button>
-      <lab-picker
-        #editPicker
-        [header]="'objectives.itemTooltip' | translate"
-        (selectId)="setItem(product.id, $event)"
-      ></lab-picker>
-      <lab-input-number
-        [pTooltip]="'objectives.rateTooltip' | translate"
-        tooltipPosition="top"
-        [hideButtons]="vm.mobile"
-        [value]="product.rate"
-        (setValue)="setRate(product.id, $event)"
-      ></lab-input-number>
-      <p-dropdown
-        labDropdownTranslate
-        [tooltip]="'objectives.rateTypeTooltip' | translate"
-        tooltipPosition="top"
-        [options]="vm.rateTypeOptions"
-        [ngModel]="product.rateType"
-        (onChange)="setRateType(product.id, $event.value)"
-      ></p-dropdown>
-    </div>
-  </div>
-  <h3 *ngIf="vm.producers.length">
-    {{ 'objectives.producers' | translate }}
-  </h3>
-  <div
-    *ngFor="let producer of vm.producers; trackBy: trackSvc.trackById"
-    class="mb-2 producer"
-  >
-    <div class="p-inputgroup">
-      <button
-        pButton
-        pRipple
-        type="button"
-        class="p-button-outlined icon"
-        icon="fa-solid fa-minus"
-        [pTooltip]="'objectives.removeProducerTooltip' | translate"
-        (click)="removeProducer(producer.id)"
-      ></button>
-      <button
-        pButton
-        pRipple
-        type="button"
-        class="lab-button-icon-only text-truncate"
-        [pTooltip]="'objectives.recipeTooltip' | translate"
-        tooltipPosition="top"
-        (click)="editPicker.clickOpen(vm.data, 'recipe', producer.recipeId)"
+  <div class="row">
+    <div *ngIf="vm.products.length" class="col-12 col-xl-6">
+      <h3>
+        {{ 'objectives.products' | translate }}
+      </h3>
+      <div
+        *ngFor="let product of vm.products; trackBy: trackSvc.trackById"
+        class="mb-2"
       >
-        <i
-          class="p-button-icon"
-          [class]="producer.recipeId | iconSmClass : 'recipe'"
-          ><span>#{{ producer.id }}</span></i
-        >
-        <span *ngIf="!vm.mobile" class="p-button-label">{{
-          vm.data.recipeEntities[producer.recipeId].name
-        }}</span>
-      </button>
-      <lab-picker
-        #editPicker
-        [header]="'objectives.recipeTooltip' | translate"
-        (selectId)="setRecipe(producer.id, $event)"
-      ></lab-picker>
-      <lab-input-number
-        [pTooltip]="'objectives.countTooltip' | translate"
-        tooltipPosition="top"
-        [value]="producer.count"
-        (setValue)="setCount(producer.id, $event)"
-      ></lab-input-number>
+        <div class="p-inputgroup">
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-outlined icon"
+            icon="fa-solid fa-minus"
+            [pTooltip]="'objectives.removeProductTooltip' | translate"
+            (click)="removeProduct(product.id)"
+          ></button>
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="text-truncate"
+            [icon]="product.itemId | iconSmClass"
+            [label]="vm.mobile ? '' : vm.data.itemEntities[product.itemId].name"
+            [pTooltip]="'objectives.itemTooltip' | translate"
+            tooltipPosition="top"
+            (click)="editPicker.clickOpen(vm.data, 'item', product.itemId)"
+          ></button>
+          <lab-picker
+            #editPicker
+            [header]="'objectives.itemTooltip' | translate"
+            (selectId)="setItem(product.id, $event)"
+          ></lab-picker>
+          <lab-input-number
+            [pTooltip]="'objectives.rateTooltip' | translate"
+            tooltipPosition="top"
+            [hideButtons]="vm.mobile"
+            [value]="product.rate"
+            (setValue)="setRate(product.id, $event)"
+          ></lab-input-number>
+          <p-dropdown
+            labDropdownTranslate
+            [tooltip]="'objectives.rateTypeTooltip' | translate"
+            tooltipPosition="top"
+            [options]="vm.rateTypeOptions"
+            [ngModel]="product.rateType"
+            (onChange)="setRateType(product.id, $event.value)"
+          ></p-dropdown>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="vm.producers.length" class="col-12 col-xl-6">
+      <h3>
+        {{ 'objectives.producers' | translate }}
+      </h3>
+      <div
+        *ngFor="let producer of vm.producers; trackBy: trackSvc.trackById"
+        class="mb-2 producer"
+      >
+        <div class="p-inputgroup">
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-outlined icon"
+            icon="fa-solid fa-minus"
+            [pTooltip]="'objectives.removeProducerTooltip' | translate"
+            (click)="removeProducer(producer.id)"
+          ></button>
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="lab-button-icon-only text-truncate"
+            [pTooltip]="'objectives.recipeTooltip' | translate"
+            tooltipPosition="top"
+            (click)="editPicker.clickOpen(vm.data, 'recipe', producer.recipeId)"
+          >
+            <i
+              class="p-button-icon"
+              [class]="producer.recipeId | iconSmClass : 'recipe'"
+              ><span>#{{ producer.id }}</span></i
+            >
+            <span *ngIf="!vm.mobile" class="p-button-label">{{
+              vm.data.recipeEntities[producer.recipeId].name
+            }}</span>
+          </button>
+          <lab-picker
+            #editPicker
+            [header]="'objectives.recipeTooltip' | translate"
+            (selectId)="setRecipe(producer.id, $event)"
+          ></lab-picker>
+          <lab-input-number
+            [pTooltip]="'objectives.countTooltip' | translate"
+            tooltipPosition="top"
+            [value]="producer.count"
+            (setValue)="setCount(producer.id, $event)"
+          ></lab-input-number>
+        </div>
+      </div>
     </div>
   </div>
   <!-- Mobile buttons -->
