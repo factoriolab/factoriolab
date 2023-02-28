@@ -2,7 +2,7 @@ import { Rational } from '../rational';
 import { ModuleEffect } from './module';
 
 export interface Beacon {
-  effectivity: number;
+  effectivity: number | string;
   modules: number;
   range: number;
   /** Energy type, e.g. electric or burner */
@@ -10,7 +10,7 @@ export interface Beacon {
   /** Fuel category, e.g. chemical or nuclear */
   category?: string;
   /** Energy consumption in kW */
-  usage?: number;
+  usage?: number | string;
   disallowEffects?: ModuleEffect[];
 }
 
@@ -27,7 +27,7 @@ export class RationalBeacon {
   disallowEffects?: ModuleEffect[];
 
   constructor(obj: Beacon) {
-    this.effectivity = Rational.fromNumber(obj.effectivity);
+    this.effectivity = Rational.from(obj.effectivity);
     this.modules = obj.modules;
     this.range = obj.range;
     if (obj.type) {
@@ -37,7 +37,7 @@ export class RationalBeacon {
       this.category = obj.category;
     }
     if (obj.usage != null) {
-      this.usage = Rational.fromNumber(obj.usage);
+      this.usage = Rational.from(obj.usage);
     }
     if (obj.disallowEffects) {
       this.disallowEffects = obj.disallowEffects;

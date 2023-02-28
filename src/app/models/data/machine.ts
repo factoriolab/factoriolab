@@ -4,18 +4,18 @@ import { ModuleEffect } from './module';
 import { RationalSilo, Silo } from './silo';
 
 export interface Machine {
-  speed?: number;
+  speed?: number | string;
   modules?: number;
   /** Energy type, e.g. electric or burner */
   type?: string;
   /** Fuel category, e.g. chemical or nuclear */
   category?: string;
   /** Energy consumption in kW */
-  usage?: number;
+  usage?: number | string;
   /** Drain in kW */
   drain?: number | string;
   /** Pollution in #/m */
-  pollution?: number;
+  pollution?: number | string;
   mining?: boolean;
   research?: boolean;
   silo?: Silo;
@@ -42,7 +42,7 @@ export class RationalMachine {
 
   constructor(obj: Machine) {
     if (obj.speed != null) {
-      this.speed = Rational.fromNumber(obj.speed);
+      this.speed = Rational.from(obj.speed);
     }
     if (obj.modules != null) {
       this.modules = Math.round(obj.modules);
@@ -54,17 +54,13 @@ export class RationalMachine {
       this.category = obj.category;
     }
     if (obj.usage != null) {
-      this.usage = Rational.fromNumber(obj.usage);
+      this.usage = Rational.from(obj.usage);
     }
     if (obj.drain != null) {
-      if (typeof obj.drain === 'string') {
-        this.drain = Rational.fromString(obj.drain);
-      } else {
-        this.drain = Rational.fromNumber(obj.drain);
-      }
+      this.drain = Rational.from(obj.drain);
     }
     if (obj.pollution != null) {
-      this.pollution = Rational.fromNumber(obj.pollution);
+      this.pollution = Rational.from(obj.pollution);
     }
     if (obj.mining) {
       this.mining = obj.mining;
@@ -79,7 +75,7 @@ export class RationalMachine {
       const consumption = obj.consumption;
       this.consumption = Object.keys(consumption).reduce(
         (e: Entities<Rational>, i) => {
-          e[i] = Rational.fromJson(consumption[i]);
+          e[i] = Rational.from(consumption[i]);
           return e;
         },
         {}

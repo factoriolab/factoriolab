@@ -7,10 +7,10 @@ export type ModuleEffect =
   | 'pollution';
 
 export interface Module {
-  speed?: number;
-  productivity?: number;
-  consumption?: number;
-  pollution?: number;
+  speed?: number | string;
+  productivity?: number | string;
+  consumption?: number | string;
+  pollution?: number | string;
   limitation?: string;
   sprays?: number;
   proliferator?: string;
@@ -27,16 +27,16 @@ export class RationalModule {
 
   constructor(obj: Module) {
     if (obj.speed) {
-      this.speed = Rational.fromNumber(obj.speed);
+      this.speed = Rational.from(obj.speed);
     }
     if (obj.productivity) {
-      this.productivity = Rational.fromNumber(obj.productivity);
+      this.productivity = Rational.from(obj.productivity);
     }
     if (obj.consumption) {
-      this.consumption = Rational.fromNumber(obj.consumption);
+      this.consumption = Rational.from(obj.consumption);
     }
     if (obj.pollution) {
-      this.pollution = Rational.fromNumber(obj.pollution);
+      this.pollution = Rational.from(obj.pollution);
     }
     if (obj.limitation) {
       this.limitation = obj.limitation;

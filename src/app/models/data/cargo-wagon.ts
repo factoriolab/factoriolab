@@ -8,6 +8,6 @@ export class RationalCargoWagon {
   size: Rational;
 
   constructor(obj: CargoWagon) {
-    this.size = Rational.fromNumber(obj.size);
+    this.size = Rational.from(obj.size);
   }
 }

@@ -25,11 +25,10 @@ export class DisplayService {
   }
 
   power(value: Rational | string | number): string {
-    if (typeof value === 'string') {
-      value = Rational.fromString(value);
-    } else if (typeof value === 'number') {
-      value = Rational.fromNumber(value);
+    if (!(value instanceof Rational)) {
+      value = Rational.from(value);
     }
+
     if (value.abs().lt(Rational.thousand)) {
       return `${this.round(value)} kW`;
     } else {

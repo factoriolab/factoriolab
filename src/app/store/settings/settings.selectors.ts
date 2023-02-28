@@ -399,17 +399,15 @@ export const getDataset = createSelector(
         /** Don't sort belts in DSP, leave based on stacks */
         game === Game.DysonSphereProgram
           ? 0
-          : Rational.fromJson(a.belt.speed)
-              .sub(Rational.fromJson(b.belt.speed))
+          : Rational.from(a.belt.speed)
+              .sub(Rational.from(b.belt.speed))
               .toNumber()
       )
       .map((i) => i.id);
     const pipeIds = items
       .filter(fnPropsNotNullish('pipe'))
       .sort((a, b) =>
-        Rational.fromJson(a.pipe.speed)
-          .sub(Rational.fromJson(b.pipe.speed))
-          .toNumber()
+        Rational.from(a.pipe.speed).sub(Rational.from(b.pipe.speed)).toNumber()
       )
       .map((i) => i.id);
     const cargoWagonIds = items
@@ -418,7 +416,11 @@ export const getDataset = createSelector(
       .map((i) => i.id);
     const fluidWagonIds = items
       .filter(fnPropsNotNullish('fluidWagon'))
-      .sort((a, b) => a.fluidWagon.capacity - b.fluidWagon.capacity)
+      .sort((a, b) =>
+        Rational.from(a.fluidWagon.capacity)
+          .sub(Rational.from(b.fluidWagon.capacity))
+          .toNumber()
+      )
       .map((i) => i.id);
     const machineIds = items.filter((i) => i.machine).map((i) => i.id);
     const modules = items.filter((i) => i.module);
@@ -429,7 +431,9 @@ export const getDataset = createSelector(
       .map((i) => i.id);
     const fuelIds = items
       .filter(fnPropsNotNullish('fuel'))
-      .sort((a, b) => a.fuel.value - b.fuel.value)
+      .sort((a, b) =>
+        Rational.from(a.fuel.value).sub(Rational.from(b.fuel.value)).toNumber()
+      )
       .reduce((e: Entities<string[]>, f) => {
         const cat = f.fuel.category;
         if (!e[cat]) {

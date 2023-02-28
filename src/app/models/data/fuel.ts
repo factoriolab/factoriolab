@@ -2,7 +2,7 @@ import { Rational } from '../rational';
 
 export interface Fuel {
   category: string;
-  value: number;
+  value: number | string;
   result?: string;
 }
 
@@ -13,7 +13,7 @@ export class RationalFuel {
 
   constructor(obj: Fuel) {
     this.category = obj.category;
-    this.value = Rational.fromNumber(obj.value);
+    this.value = Rational.from(obj.value);
     if (obj.result) {
       this.result = obj.result;
     }

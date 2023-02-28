@@ -8,6 +8,6 @@ export class RationalBelt {
   speed: Rational;
 
   constructor(obj: Belt) {
-    this.speed = Rational.fromJson(obj.speed);
+    this.speed = Rational.from(obj.speed);
   }
 }

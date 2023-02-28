@@ -6,13 +6,13 @@ export interface Recipe {
   name: string;
   category: string;
   row: number;
-  time: number;
+  time: number | string;
   producers: string[];
   in: Entities<number | string>;
   out: Entities<number | string>;
   /** Denotes amount of output that is not affected by productivity */
   catalyst?: Entities<number | string>;
-  cost?: number;
+  cost?: number | string;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
   /** Used to link the recipe to an alternate icon id */
@@ -47,14 +47,14 @@ export class RationalRecipe {
     this.name = obj.name;
     this.category = obj.category;
     this.row = Math.round(obj.row);
-    this.time = Rational.fromNumber(obj.time);
+    this.time = Rational.from(obj.time);
     this.producers = obj.producers;
     this.in = Object.keys(obj.in).reduce((e: Entities<Rational>, i) => {
-      e[i] = Rational.fromJson(obj.in[i]);
+      e[i] = Rational.from(obj.in[i]);
       return e;
     }, {});
     this.out = Object.keys(obj.out).reduce((e: Entities<Rational>, i) => {
-      e[i] = Rational.fromJson(obj.out[i]);
+      e[i] = Rational.from(obj.out[i]);
       return e;
     }, {});
 
@@ -62,24 +62,20 @@ export class RationalRecipe {
       const catalyst = obj.catalyst; // Store null-checked value
       this.catalyst = Object.keys(catalyst).reduce(
         (e: Entities<Rational>, i) => {
-          e[i] = Rational.fromJson(catalyst[i]);
+          e[i] = Rational.from(catalyst[i]);
           return e;
         },
         {}
       );
     }
     if (obj.cost) {
-      this.cost = Rational.fromNumber(obj.cost);
+      this.cost = Rational.from(obj.cost);
     }
     if (obj.part) {
       this.part = obj.part;
     }
     if (obj.usage != null) {
-      if (typeof obj.usage === 'string') {
-        this.usage = Rational.fromString(obj.usage);
-      } else {
-        this.usage = Rational.fromNumber(obj.usage);
-      }
+      this.usage = Rational.from(obj.usage);
     }
   }
 
