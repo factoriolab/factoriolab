@@ -223,7 +223,6 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
 export const PreferencesState: Preferences.PreferencesState = {
   states: { ['name']: 'z=zip' },
   columns: Preferences.initialColumnsState,
-  simplexType: M.SimplexType.JsBigIntRational,
   powerUnit: M.PowerUnit.Auto,
   language: M.Language.English,
   theme: M.Theme.Dark,
