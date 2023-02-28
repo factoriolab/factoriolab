@@ -11,7 +11,7 @@
     "errorDetail": "The application has encountered an error:",
     "reset": "Reset",
     "resetTooltip": "Click to reset",
-    "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, size: {{ rows }} x {{ cols }}, cost: {{ cost }}",
+    "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, cost: {{ cost }}",
     "simplexUnsolved": "Simplex {{ resultType }}",
     "simplexError": "No solution found",
     "simplexErrorDetail": "Try using the WASM Float64 simplex solver with all recipes enabled, or check your disabled recipes to ensure a solution is feasible.\n\nE.G. If one iron plate requires two gears, and one gear requires two iron plates, a solution for iron plates is not feasible.",
@@ -301,8 +301,6 @@
     "runtime": "Runtime",
     "runtimeValue": "{{ value }} ms",
     "pivots": "Pivots",
-    "size": "Size",
-    "sizeValue": "{{ rows }} rows, {{ cols }} cols",
     "costModifiers": "Cost modifiers",
     "costUndoTooltip": "Undo all cost modifications",
     "recipeCostTooltip": "Multiplies cost of recipes with a defined cost, usually mining",
@@ -312,18 +310,6 @@
     "inputCostTooltip": "Cost of input items that are produced by no recipes",
     "input": "Input",
     "ignoredCostTooltip": "Cost of items that have been explicitly ignored",
-    "ignored": "Ignored",
-    "tableauPrecisionNote": "Note: This table uses the precision of the items column",
-    "simplexCanonicalTableau": "Simplex canonical tableau",
-    "items": "Items/s",
-    "producers": "Producers",
-    "recipes": "Recipes",
-    "inputs": "Inputs",
-    "cost": "Cost",
-    "objective": "Objective",
-    "recipeCost": "Recipe cost",
-    "recipeCostUndoTooltip": "Undo recipe cost modification",
-    "solution": "Solution",
-    "surplus": "Surplus/s"
+    "ignored": "Ignored"
   }
 }

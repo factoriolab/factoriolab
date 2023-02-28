@@ -46,10 +46,8 @@ export interface MatrixSolution {
   resultType: MatrixResultType;
   /** Runtime in ms */
   time: number;
-  /** Simplex canonical matrix */
-  A: Rational[][];
-  /** Simplex objective solution */
-  O: Rational[];
+  /** Overall simplex solution cost */
+  cost: Rational;
   /** Items in tableau */
   itemIds: string[];
   /** Producers in tableau */
@@ -66,15 +64,11 @@ export interface MatrixSolution {
   recipes: Entities<Rational>;
 }
 
-export interface SimplexResult {
-  type: MatrixResultType;
-  pivots: number;
-  time: number;
-  O: Rational[];
-}
-
 export interface GlpkResult {
-  O: Rational[];
+  surplus: Entities<Rational>;
+  recipes: Entities<Rational>;
+  inputs: Entities<Rational>;
+  cost: Rational;
   returnCode: Simplex.ReturnCode;
   status: Status;
   error: boolean;
@@ -118,8 +112,7 @@ export class SimplexUtility {
       steps: state.steps,
       resultType: solution.resultType,
       time: solution.time,
-      A: solution.A,
-      O: solution.O,
+      cost: solution.cost,
       itemIds: solution.itemIds,
       producers: solution.producers,
       recipeIds: solution.recipeIds,
@@ -266,8 +259,7 @@ export class SimplexUtility {
         recipes: {},
         inputs: {},
         time: 0,
-        A: [[]],
-        O: [],
+        cost: Rational.zero,
         itemIds: [],
         producers: [],
         recipeIds: [],
@@ -276,47 +268,27 @@ export class SimplexUtility {
     }
 
     // Convert state to canonical tableau
-    const A = this.canonical(state);
-
     const itemIds = Object.keys(state.items);
     const recipeIds = Object.keys(state.recipes);
     const inputIds = state.inputIds;
 
-    const A0 = A.map((R) => [...R]);
-    const result = this.simplexType(glpkResult);
-
-    if (result.type === MatrixResultType.Solved) {
-      // Parse solution into usable state
-      const [surplus, recipes, inputs] = this.parseSolution(result.O, state);
-      return {
-        resultType: result.type,
-        surplus,
-        recipes,
-        inputs,
-        time: result.time,
-        A: A0,
-        O: result.O,
-        itemIds,
-        producers: state.producers,
-        recipeIds,
-        inputIds,
-      };
-    } else {
-      // No solution found
-      return {
-        resultType: result.type,
-        surplus: {},
-        recipes: {},
-        inputs: {},
-        time: result.time,
-        A: A0,
-        O: result.O,
-        itemIds,
-        producers: state.producers,
-        recipeIds,
-        inputIds,
-      };
-    }
+    // Parse solution into usable state
+    const surplus = glpkResult.surplus;
+    const inputs = glpkResult.inputs;
+    const recipes = glpkResult.recipes;
+    // const [surplus, recipes, inputs] = this.parseSolution(result.O, state);
+    return {
+      resultType: MatrixResultType.Solved,
+      surplus,
+      recipes,
+      inputs,
+      time: glpkResult.time,
+      itemIds,
+      producers: state.producers,
+      recipeIds,
+      inputIds,
+      cost: glpkResult.cost,
+    };
   }
 
   static glpk(state: MatrixState): GlpkResult {
@@ -417,13 +389,25 @@ export class SimplexUtility {
     const start = Date.now();
     const [returnCode, status] = this.glpkSimplex(m);
     const time = Date.now() - start;
+    const surplus: Entities<Rational> = {};
+    const inputs: Entities<Rational> = {};
+    const recipes: Entities<Rational> = {};
+    const cost = Rational.fromNumber(m.value);
 
     if (returnCode !== 'ok' || status !== 'optimal') {
-      return { returnCode, status, time, O: [], error: true };
+      return {
+        returnCode,
+        status,
+        time,
+        surplus,
+        inputs,
+        recipes,
+        cost,
+        error: true,
+      };
     }
 
-    // Set up IBFS
-    const O = [Rational.zero];
+    // Parse solution
     for (const itemId of itemIds) {
       if (
         // Include item if it is an input
@@ -447,17 +431,13 @@ export class SimplexUtility {
           state.items[itemId]
         );
 
-        O.push(val);
+        if (val.nonzero()) {
+          surplus[itemId] = val;
+        }
       } else {
         // Item is not part of the solution, remove it
         delete state.items[itemId];
       }
-    }
-
-    // Add producer columns (0 means balanced solution was found / assumed)
-    for (let i = 0; i < state.producers.length; i++) {
-      O.push(Rational.zero);
-      O.push(Rational.zero);
     }
 
     // Clean up inputs
@@ -469,17 +449,30 @@ export class SimplexUtility {
         delete state.recipes[recipeId];
       } else {
         // Recipe is part of the solution, include result
-        O.push(Rational.fromNumber(recipeVarEntities[recipeId].value));
+        const val = Rational.fromNumber(recipeVarEntities[recipeId].value);
+        if (val.nonzero()) {
+          recipes[recipeId] = val;
+        }
       }
     }
 
     for (const inputId of state.inputIds) {
-      O.push(Rational.fromNumber(inputVarEntities[inputId].value));
+      const val = Rational.fromNumber(inputVarEntities[inputId].value);
+      if (val.nonzero()) {
+        inputs[inputId] = val;
+      }
     }
 
-    O.push(Rational.fromNumber(m.value));
-
-    return { returnCode, status, time, O, error: false };
+    return {
+      returnCode,
+      status,
+      time,
+      surplus,
+      inputs,
+      recipes,
+      cost,
+      error: false,
+    };
   }
 
   static isFloatZero(val: number): boolean {
@@ -490,192 +483,6 @@ export class SimplexUtility {
   static glpkSimplex(model: Model): [Simplex.ReturnCode, Status] {
     const returnCode = model.simplex(simplexConfig);
     return [returnCode, model.status];
-  }
-
-  /** Convert state into canonical tableau */
-  static canonical(state: MatrixState): Rational[][] {
-    const itemIds = Object.keys(state.items);
-    const recipes = Object.keys(state.recipes).map((r) => state.recipes[r]);
-    const A: Rational[][] = [];
-
-    // Build objective row
-    const O: Rational[] = [Rational.one]; // C
-    for (const itemId of itemIds) {
-      // Add item columns
-      O.push(state.items[itemId].inverse());
-    }
-
-    for (const producer of state.producers) {
-      // Add producer columns
-      O.push(producer.count.inverse()); // Lower boundary
-      O.push(producer.count); // Upper boundary
-    }
-
-    // Add recipe columns, input columns, and cost
-    O.push(
-      ...new Array(recipes.length + state.inputIds.length + 1).fill(
-        Rational.zero
-      )
-    );
-    A.push(O);
-
-    // Build producer rows
-    for (const producer of state.producers) {
-      const recipe = producer.recipe;
-      const R: Rational[] = [Rational.zero]; // C
-
-      // Add item columns
-      for (const itemId of itemIds) {
-        let val = Rational.zero;
-        if (recipe.in[itemId]) {
-          val = val.sub(recipe.in[itemId]);
-        }
-
-        if (recipe.out[itemId]) {
-          val = val.add(recipe.out[itemId]);
-        }
-
-        R.push(val.div(recipe.time));
-      }
-
-      // Add producer columns
-      for (const other of state.producers) {
-        // Lower boundary
-        R.push(producer.id === other.id ? Rational.one : Rational.zero);
-        // Upper boundary
-        R.push(producer.id === other.id ? Rational.minusOne : Rational.zero);
-      }
-
-      // Add recipe columns
-      R.push(...new Array(recipes.length).fill(Rational.zero));
-
-      // Add input columns
-      R.push(...new Array(state.inputIds.length).fill(Rational.zero));
-
-      // Add cost column
-      R.push(Rational.zero);
-
-      A.push(R);
-    }
-
-    // Build recipe rows
-    for (const recipe of recipes) {
-      const R: Rational[] = [Rational.zero]; // C
-
-      // Add item columns
-      for (const itemId of itemIds) {
-        let val = Rational.zero;
-        if (recipe.in[itemId]) {
-          val = val.sub(recipe.in[itemId]);
-        }
-
-        if (recipe.out[itemId]) {
-          val = val.add(recipe.out[itemId]);
-        }
-
-        R.push(val.div(recipe.time));
-      }
-
-      // Add producer columns (2 each, LB + UB)
-      R.push(...new Array(state.producers.length * 2).fill(Rational.zero));
-
-      // Add recipe columns
-      for (const other of recipes) {
-        R.push(recipe.id === other.id ? Rational.one : Rational.zero);
-      }
-
-      // Add input columns
-      R.push(...new Array(state.inputIds.length).fill(Rational.zero));
-
-      // Add cost column
-      R.push(recipe.cost ?? Rational.zero);
-
-      A.push(R);
-    }
-
-    // Build input rows
-    for (const itemId of state.inputIds) {
-      const R: Rational[] = [Rational.zero]; // C
-
-      // Add item columns
-      for (const other of itemIds) {
-        R.push(itemId === other ? Rational.one : Rational.zero);
-      }
-
-      // Add producer columns (2 each, LB + UB)
-      R.push(...new Array(state.producers.length * 2).fill(Rational.zero));
-
-      // Add recipe columns
-      R.push(...new Array(recipes.length).fill(Rational.zero));
-
-      // Add input columns
-      for (const other of state.inputIds) {
-        R.push(itemId === other ? Rational.one : Rational.zero);
-      }
-
-      // Add cost column
-      if (state.itemIds.indexOf(itemId) === -1) {
-        // Item is ignored, assume unlimited free input
-        R.push(state.costIgnored);
-      } else {
-        // Avoid using items that cannot currently be produced
-        R.push(state.costInput);
-      }
-
-      A.push(R);
-    }
-
-    return A;
-  }
-
-  /** Solve the canonical tableau using the selected simplex type */
-  static simplexType(glpkResult: GlpkResult): SimplexResult {
-    return {
-      type: MatrixResultType.Solved,
-      pivots: 0,
-      time: glpkResult.time,
-      O: glpkResult.O,
-    };
-  }
-
-  /** Parse solution from solved tableau */
-  static parseSolution(
-    O: Rational[],
-    state: MatrixState
-  ): [Entities<Rational>, Entities<Rational>, Entities<Rational>] {
-    const itemIds = Object.keys(state.items);
-    const recipeIds = Object.keys(state.recipes);
-
-    // Parse items
-    const surplus: Entities<Rational> = {};
-    for (let i = 0; i < itemIds.length; i++) {
-      const c = i + 1;
-      if (O[c].gt(Rational.zero)) {
-        surplus[itemIds[i]] = O[c];
-      }
-    }
-
-    const nextCols = 1 + itemIds.length + state.producers.length * 2;
-
-    // Parse recipes
-    const recipes: Entities<Rational> = {};
-    const inputs: Entities<Rational> = {};
-    for (let i = 0; i < recipeIds.length; i++) {
-      const c = nextCols + i;
-      if (O[c].gt(Rational.zero)) {
-        recipes[recipeIds[i]] = O[c];
-      }
-    }
-
-    // Parse inputs
-    for (let i = 0; i < state.inputIds.length; i++) {
-      const c = nextCols + recipeIds.length + i;
-      if (O[c].gt(Rational.zero)) {
-        inputs[state.inputIds[i]] = O[c];
-      }
-    }
-
-    return [surplus, recipes, inputs];
   }
   //#endregion
 

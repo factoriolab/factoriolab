@@ -10,7 +10,7 @@
     "error": "Erreur",
     "errorDetail": "L'application a rencontré une erreur:",
     "reset": "Réinitialiser",
-    "simplexSolved": "Simplexe {{ resultType }}: {{ time }}ms, {{ pivots }} pivots, taille: {{ rows }} x {{ cols }}, Coût: {{ cost }}",
+    "simplexSolved": "Simplexe {{ resultType }}: {{ time }}ms, Coût: {{ cost }}",
     "simplexUnsolved": "Simplexe {{ resultType }}",
     "simplexError": "Pas de solution trouvé",
     "simplexErrorDetail": "Essayez d'utiliser le solveur simplexe WASM Float64 avec toutes les recettes activés, ou vérifiez les recettes désactivés pour être sûre qu'une solution est possible'.\n\nE.G. Si une plaque de fer requiert deux engrenages, et un engrenage requiert deux plaques de fer, alors il n'y a pas de solutions pour les plaques de fers.",
@@ -265,8 +265,6 @@
     "runtime": "Durée",
     "runtimeValue": "{{ value }} ms",
     "pivots": "Pivots",
-    "size": "Taille",
-    "sizeValue": "{{ rows }} rangées, {{ cols }} colonnes",
     "costModifiers": "Modificateur de coût",
     "costUndoTooltip": "Annuler tout les modificateur de coût",
     "recipeCostTooltip": "Multiplie le coût des recettes avec un coût défini, généralement du minage",
@@ -276,18 +274,6 @@
     "inputCostTooltip": "Coût des éléments d'entrée qui ne sont produits par aucune recette",
     "input": "Entré",
     "ignoredCostTooltip": "Coût des articles qui ont été explicitement ignorés",
-    "ignored": "Ignoré",
-    "tableauPrecisionNote": "Remarque : Ce tableau utilise la précision de la colonne des articles",
-    "simplexCanonicalTableau": "Tableau canonique simplexe",
-    "items": "Articles/s",
-    "producers": "Producteurs",
-    "recipes": "Recettes",
-    "inputs": "Entrées",
-    "cost": "Coût",
-    "objective": "Objectif",
-    "recipeCost": "Coût de la recette",
-    "recipeCostUndoTooltip": "Annuler le modificateur de coût de la recette",
-    "solution": "Solution",
-    "surplus": "Surplus/s"
+    "ignored": "Ignoré"
   }
 }

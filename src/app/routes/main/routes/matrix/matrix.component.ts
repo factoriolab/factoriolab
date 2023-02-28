@@ -2,9 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { Column } from '~/models';
-import { TrackService } from '~/services';
-import { LabState, Preferences, Products, Recipes, Settings } from '~/store';
+import { LabState, Products, Settings } from '~/store';
 
 @Component({
   selector: 'lab-matrix',
@@ -15,35 +13,17 @@ import { LabState, Preferences, Products, Recipes, Settings } from '~/store';
 export class MatrixComponent {
   vm$ = combineLatest([
     this.store.select(Products.getMatrixResult),
-    this.store.select(Recipes.getRecipesModified),
-    this.store.select(Recipes.getAdjustedDataset),
-    this.store.select(Recipes.recipesState),
     this.store.select(Settings.getSettingsModified),
     this.store.select(Settings.settingsState),
-    this.store.select(Preferences.getColumns),
   ]).pipe(
-    map(
-      ([
-        result,
-        recipesModified,
-        data,
-        recipeRaw,
-        settingsModified,
-        settings,
-        columns,
-      ]) => ({
-        result,
-        recipesModified,
-        data,
-        recipeRaw,
-        settingsModified,
-        settings,
-        precision: columns[Column.Items].precision,
-      })
-    )
+    map(([result, settingsModified, settings]) => ({
+      result,
+      settingsModified,
+      settings,
+    }))
   );
 
-  constructor(public trackSvc: TrackService, private store: Store<LabState>) {}
+  constructor(private store: Store<LabState>) {}
 
   /** Action Dispatch Methods */
   setCostFactor(data: string): void {
@@ -62,15 +42,7 @@ export class MatrixComponent {
     this.store.dispatch(new Settings.SetCostIgnoredAction(data));
   }
 
-  setRecipeCost(id: string, value?: string): void {
-    this.store.dispatch(new Recipes.SetCostAction({ id, value }));
-  }
-
   resetCost(): void {
     this.store.dispatch(new Settings.ResetCostAction());
-  }
-
-  resetRecipeCost(): void {
-    this.store.dispatch(new Recipes.ResetCostAction());
   }
 }

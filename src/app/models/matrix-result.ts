@@ -8,10 +8,8 @@ export interface MatrixResult {
   resultType: MatrixResultType;
   /** Runtime in ms */
   time?: number;
-  /** Simplex canonical matrix */
-  A?: Rational[][];
-  /** Simplex objective solution */
-  O?: Rational[];
+  /** Total cost of solution */
+  cost?: Rational;
   /** Items in tableau */
   itemIds?: string[];
   /** Producers in tableau */

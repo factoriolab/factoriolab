@@ -252,8 +252,6 @@
     "simplexResult": "单纯形法求解结果",
     "runtime": "消耗时间",
     "pivots": "主元数",
-    "size": "大小",
-    "sizeValue": "{{ rows }} 行，{{ cols }} 列",
     "costModifiers": "成本修改",
     "costUndoTooltip": "取消所有成本修改",
     "recipeCostTooltip": "将所有有既定成本的配方（通常是采集）的成本乘以此系数",
@@ -263,18 +261,6 @@
     "inputCostTooltip": "非配方产生的外部输入物品的成本",
     "input": "输入的物品",
     "ignoredCostTooltip": "被指定为已忽略的物品的成本",
-    "ignored": "忽略的物品",
-    "tableauPrecisionNote": "注：此表格使用物品列表的数据精度设置",
-    "simplexCanonicalTableau": "规范单纯形表",
-    "items": "每秒增减个数",
-    "producers": "生产线",
-    "recipes": "配方",
-    "inputs": "物品输入",
-    "cost": "成本",
-    "objective": "目标",
-    "recipeCost": "配方成本",
-    "recipeCostUndoTooltip": "取消对配方成本的修改",
-    "solution": "解决方案",
-    "surplus": "每秒盈余个数"
+    "ignored": "忽略的物品"
   }
 }

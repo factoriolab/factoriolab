@@ -34,36 +34,30 @@
             <router-outlet></router-outlet>
             <ng-template pTemplate="footer">
               <div class="d-flex align-items-center justify-content-between">
-                <ng-container
+                <div
                   *ngIf="
                     vm.result.resultType === MatrixResultType.Solved;
                     else notSolved
                   "
                 >
-                  <div *ngIf="vm.result.A && vm.result.O">
-                    <div>
-                      {{
-                        'app.simplexSolved'
-                          | translate
-                            : {
-                                resultType: vm.result.resultType.toLowerCase(),
-                                time: vm.result.time,
-                                rows: vm.result.A.length,
-                                cols: vm.result.A[0].length,
-                                cost: vm.result.O[
-                                  vm.result.O.length - 1
-                                ].toPrecision(2)
-                              }
-                      }}
-                    </div>
-                  </div>
-                </ng-container>
-                <ng-template #notSolved>
-                  <span>{{
-                    'app.simplexUnsolved'
+                  {{
+                    'app.simplexSolved'
                       | translate
-                        : { resultType: vm.result.resultType.toLowerCase() }
-                  }}</span>
+                        : {
+                            resultType: vm.result.resultType.toLowerCase(),
+                            time: vm.result.time,
+                            cost: vm.result.cost?.toPrecision(2)
+                          }
+                  }}
+                </div>
+                <ng-template #notSolved>
+                  <div>
+                    {{
+                      'app.simplexUnsolved'
+                        | translate
+                          : { resultType: vm.result.resultType.toLowerCase() }
+                    }}
+                  </div>
                 </ng-template>
                 <span>{{ version }}</span>
               </div>
