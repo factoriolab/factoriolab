@@ -11,7 +11,6 @@ import {
   RationalProduct,
   RationalRecipe,
   Step,
-  WARNING_HANG,
 } from '~/models';
 import { Items } from '~/store';
 import { RateUtility } from './rate.utility';
@@ -681,111 +680,6 @@ export class SimplexUtility {
       time: glpkResult.time,
       O: glpkResult.O,
     };
-  }
-
-  /** Solve the canonical tableau using the simplex method */
-  static simplex(A: Rational[][], error = true): SimplexResult {
-    const timeout = error ? 5000 : 1000;
-    let time = 0;
-    let check = true;
-    let start = Date.now();
-
-    let p = 0;
-
-    for (;;) {
-      p++;
-      let c = 0;
-      const O = A[0];
-      for (let i = 1; i < O.length - 1; i++) {
-        if (O[i].lt(O[c])) {
-          c = i;
-        }
-      }
-
-      if (!O[c].lt(Rational.zero)) {
-        return {
-          type: MatrixResultType.Solved,
-          pivots: p,
-          time: time + Date.now() - start,
-          O: A[0],
-        };
-      }
-
-      if (!this.pivotCol(A, c)) {
-        return {
-          type: MatrixResultType.Failed,
-          pivots: p,
-          time: time + Date.now() - start,
-          O: A[0],
-        };
-      }
-
-      if (check) {
-        const time_check = Date.now() - start;
-        if (time_check > timeout) {
-          const warn =
-            WARNING_HANG +
-            `\n\nmatrix size: ${A.length} x ${A[0].length}, pivots: ${p}, time: ${time_check}ms`;
-          if (error && confirm(warn)) {
-            start = Date.now();
-            time = time_check;
-            check = false;
-          } else {
-            return {
-              type: MatrixResultType.Cancelled,
-              pivots: p,
-              time: time_check,
-              O: A[0],
-            };
-          }
-        }
-      }
-    }
-  }
-
-  /** Pivot a column of the tableau */
-  static pivotCol(A: Rational[][], c: number): boolean {
-    const x = A[0].length - 1;
-    let r: number | null = null;
-    let rN: Rational | null = null;
-    for (let i = 1; i < A.length; i++) {
-      const R = A[i];
-      if (R[c].gt(Rational.zero)) {
-        const ratio = R[x].div(R[c]);
-        if (rN === null || ratio.lt(rN)) {
-          r = i;
-          rN = ratio;
-        }
-      }
-    }
-
-    if (r === null) {
-      return false;
-    }
-
-    return this.pivot(A, c, r);
-  }
-
-  /** Performs a simplex pivot operation */
-  static pivot(A: Rational[][], c: number, r: number): boolean {
-    // Multiply pivot row by reciprocal of pivot element
-    const P = A[r];
-    const reciprocal = P[c].reciprocal();
-    for (let i = 0; i < P.length; i++) {
-      P[i] = P[i].mul(reciprocal);
-    }
-
-    // Add multiples of pivot row to other rows to change pivot column to 0
-    for (let i = 0; i < A.length; i++) {
-      if (i !== r && A[i][c].nonzero()) {
-        const R = A[i];
-        const factor = R[c];
-        for (let j = 0; j < R.length; j++) {
-          R[j] = R[j].sub(P[j].mul(factor));
-        }
-      }
-    }
-    return true;
   }
 
   /** Parse solution from solved tableau */
