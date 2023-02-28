@@ -69,10 +69,6 @@
       "speed5": "Vitesse de recherche 5",
       "speed6": "Vitesse de recherche 6"
     },
-    "simplexType": {
-      "jsBigIntRational": "JS BigInt Rational",
-      "wasmFloat64": "WASM Float64"
-    },
     "stepDetailTab": {
       "item": "Articles",
       "recipe": "Recette",
@@ -111,7 +107,6 @@
   },
   "columns": {
     "header": "Paramètres de colonne",
-    "fractionSimplexWarning": "Utiliser le solveur simplexe WASM Float64 peux resulter en des fractions imparfaites. Basculez vers le solveur simplexe rationel JS BigInt plus lent mais avec une précision totale.",
     "visibility": "Visibilité",
     "precision": "Precision",
     "decimals": "Decimales",

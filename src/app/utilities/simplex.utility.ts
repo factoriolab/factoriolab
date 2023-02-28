@@ -10,7 +10,6 @@ import {
   RationalProducer,
   RationalProduct,
   RationalRecipe,
-  SimplexType,
   Step,
   WARNING_HANG,
 } from '~/models';
@@ -42,7 +41,6 @@ export interface MatrixState {
   data: Dataset;
   costInput: Rational;
   costIgnored: Rational;
-  simplexType: SimplexType;
 }
 
 export interface MatrixSolution {
@@ -103,9 +101,7 @@ export class SimplexUtility {
     disabledRecipeIds: string[],
     costInput: Rational,
     costIgnored: Rational,
-    simplexType: SimplexType,
-    data: Dataset,
-    error = true
+    data: Dataset
   ): MatrixResult {
     if (products.length === 0 && producers.length === 0) {
       return { steps: [], resultType: MatrixResultType.Skipped };
@@ -119,12 +115,11 @@ export class SimplexUtility {
       disabledRecipeIds,
       costInput,
       costIgnored,
-      simplexType,
       data
     );
 
     // Get solution for matrix state
-    const solution = this.getSolution(state, error);
+    const solution = this.getSolution(state);
 
     if (
       solution.resultType === MatrixResultType.Solved ||
@@ -156,7 +151,6 @@ export class SimplexUtility {
     disabledRecipeIds: string[],
     costInput: Rational,
     costIgnored: Rational,
-    simplexType: SimplexType,
     data: Dataset
   ): MatrixState {
     // Set up state object
@@ -173,7 +167,6 @@ export class SimplexUtility {
       itemIds: data.itemIds.filter((i) => !itemSettings[i].ignore),
       costInput,
       costIgnored,
-      simplexType,
       data,
     };
 
@@ -277,7 +270,7 @@ export class SimplexUtility {
 
   //#region Simplex
   /** Convert state to canonical tableau, solve using simplex, and parse solution */
-  static getSolution(state: MatrixState, error = true): MatrixSolution {
+  static getSolution(state: MatrixState): MatrixSolution {
     // Get glpk-wasm presolve solution
     const glpkResult = this.glpk(state);
 
@@ -331,7 +324,7 @@ export class SimplexUtility {
       // Cache original tableau
       const A0 = A.map((R) => [...R]);
 
-      const result = this.simplexType(A, state.simplexType, glpkResult, error);
+      const result = this.simplexType(glpkResult);
 
       if (result.type === MatrixResultType.Solved) {
         // Parse solution into usable state
@@ -681,24 +674,13 @@ export class SimplexUtility {
   }
 
   /** Solve the canonical tableau using the selected simplex type */
-  static simplexType(
-    A: Rational[][],
-    simplexType: SimplexType,
-    glpkResult: GlpkResult,
-    error = true
-  ): SimplexResult {
-    if (simplexType === SimplexType.JsBigIntRational) {
-      const result = this.simplex(A, error);
-      result.time += glpkResult.time;
-      return result;
-    } else {
-      return {
-        type: MatrixResultType.Solved,
-        pivots: 0,
-        time: glpkResult.time,
-        O: glpkResult.O,
-      };
-    }
+  static simplexType(glpkResult: GlpkResult): SimplexResult {
+    return {
+      type: MatrixResultType.Solved,
+      pivots: 0,
+      time: glpkResult.time,
+      O: glpkResult.O,
+    };
   }
 
   /** Solve the canonical tableau using the simplex method */

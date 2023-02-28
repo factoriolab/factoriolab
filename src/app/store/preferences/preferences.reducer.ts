@@ -6,7 +6,6 @@ import {
   initialColumns,
   Language,
   PowerUnit,
-  SimplexType,
   Theme,
 } from '~/models';
 import * as App from '../app.actions';
@@ -20,7 +19,6 @@ export type ColumnsState = Entities<ColumnSettings>;
 export interface PreferencesState {
   states: Entities<string>;
   columns: ColumnsState;
-  simplexType: SimplexType;
   language: Language;
   powerUnit: PowerUnit;
   theme: Theme;
@@ -38,7 +36,6 @@ export const initialColumnsState: ColumnsState = allColumns.reduce(
 export const initialPreferencesState: PreferencesState = {
   states: {},
   columns: initialColumnsState,
-  simplexType: SimplexType.WasmFloat64,
   language: Language.English,
   powerUnit: PowerUnit.Auto,
   theme: Theme.Dark,
@@ -74,8 +71,6 @@ export function preferencesReducer(
             : PowerUnit.Auto,
         },
       };
-    case PreferencesActionType.SET_SIMPLEX_TYPE:
-      return { ...state, ...{ simplexType: action.payload } };
     case PreferencesActionType.SET_LANGUAGE:
       return { ...state, ...{ language: action.payload } };
     case PreferencesActionType.SET_POWER_UNIT:

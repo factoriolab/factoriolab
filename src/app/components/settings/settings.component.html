@@ -1108,30 +1108,6 @@
           ></p-checkbox>
         </div>
       </div>
-      <div class="mb-2">
-        <p-divider>
-          <span class="p-tag">
-            <i class="fa-solid fa-code"></i>
-            {{ 'settings.advanced' | translate }}
-          </span>
-        </p-divider>
-        <div class="mt-3 py-2">
-          <div class="p-float-label">
-            <p-dropdown
-              labDropdownTranslate
-              inputId="simplex-solver"
-              [tooltip]="'settings.simplexSolverTooltip' | translate"
-              [ngModel]="vm.preferences.simplexType"
-              [options]="simplexTypeOptions"
-              (onChange)="setSimplexType($event.value)"
-            >
-            </p-dropdown>
-            <label for="inserter-capacity">{{
-              'settings.simplexSolver' | translate
-            }}</label>
-          </div>
-        </div>
-      </div>
     </div>
   </p-scrollPanel>
 </div>

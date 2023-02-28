@@ -8,7 +8,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 
-import { Column, precisionColumns, SimplexType } from '~/models';
+import { Column, precisionColumns } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Preferences, Settings } from '~/store';
 
@@ -26,13 +26,11 @@ export class ColumnsDialogComponent implements OnInit {
       .select(Settings.getColumnsState)
       .pipe(tap((columns) => this.initEdit(columns))),
     this.store.select(Settings.getColumnOptions),
-    this.store.select(Preferences.getSimplexType),
     this.usesFractions$,
   ]).pipe(
-    map(([columns, columnOptions, simplexType, usesFractions]) => ({
+    map(([columns, columnOptions, usesFractions]) => ({
       columns,
       columnOptions,
-      simplexType,
       usesFractions,
     }))
   );
@@ -40,8 +38,6 @@ export class ColumnsDialogComponent implements OnInit {
   visible = false;
   editValue: Preferences.ColumnsState = {};
   precisionColumns = precisionColumns;
-
-  SimplexType = SimplexType;
 
   constructor(
     private ref: ChangeDetectorRef,

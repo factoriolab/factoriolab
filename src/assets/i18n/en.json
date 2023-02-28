@@ -86,10 +86,6 @@
       "speed5": "Research speed 5",
       "speed6": "Research speed 6"
     },
-    "simplexType": {
-      "jsBigIntRational": "JS BigInt Rational",
-      "wasmFloat64": "WASM Float64"
-    },
     "stepDetailTab": {
       "item": "Item",
       "recipe": "Recipe",
@@ -124,7 +120,6 @@
   },
   "columns": {
     "header": "Column settings",
-    "fractionSimplexWarning": "Using WASM Float64 simplex solver may result in imperfect fractions. Switch to JS BigInt Rational simplex solver for slower calculations with full precision.",
     "visibility": "Visibility",
     "precision": "Precision",
     "decimals": "Decimals",

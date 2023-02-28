@@ -280,7 +280,6 @@ export const Flow: M.FlowData = {
 export const SimplexModifiers = {
   costInput: M.Rational.from(1000000),
   costIgnored: M.Rational.zero,
-  simplexType: M.SimplexType.WasmFloat64,
 };
 export const AdjustmentData = {
   netProductionOnly: false,

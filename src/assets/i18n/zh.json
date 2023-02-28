@@ -102,7 +102,6 @@
   },
   "columns": {
     "header": "列设置",
-    "fractionSimplexWarning": "使用 WASM Float64 单纯形法求解器可能会导致不完美的分数。可以换成 JS BigInt Rational 单纯形法求解器，虽然较慢但计算精度高。",
     "visibility": "是否可见",
     "precision": "精度",
     "decimals": "小数位",

@@ -35,8 +35,6 @@ import {
   Preset,
   ResearchSpeed,
   researchSpeedOptions,
-  SimplexType,
-  simplexTypeOptions,
   Theme,
   themeOptions,
 } from '~/models';
@@ -116,14 +114,12 @@ export class SettingsComponent implements OnInit {
   languageOptions = languageOptions;
   powerUnitOptions = powerUnitOptions;
   researchSpeedOptions = researchSpeedOptions;
-  simplexTypeOptions = simplexTypeOptions;
   themeOptions = themeOptions;
 
   Column = Column;
   FuelType = FuelType;
   Game = Game;
   ItemId = ItemId;
-  SimplexType = SimplexType;
 
   constructor(
     public contentSvc: ContentService,
@@ -372,10 +368,6 @@ export class SettingsComponent implements OnInit {
 
   setTheme(value: Theme): void {
     this.store.dispatch(new Preferences.SetThemeAction(value));
-  }
-
-  setSimplexType(value: SimplexType): void {
-    this.store.dispatch(new Preferences.SetSimplexTypeAction(value));
   }
 
   setBypassLanding(value: boolean): void {

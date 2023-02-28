@@ -153,7 +153,6 @@ export const getMatrixResult = createSelector(
       disabledRecipeIds,
       adj.costInput,
       adj.costIgnored,
-      adj.simplexType,
       data
     )
 );

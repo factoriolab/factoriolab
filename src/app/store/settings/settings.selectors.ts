@@ -301,11 +301,9 @@ export const getRationalCostIgnored = createSelector(getCostIgnored, (cost) =>
 export const getSimplexModifiers = createSelector(
   getRationalCostInput,
   getRationalCostIgnored,
-  Preferences.getSimplexType,
-  (costInput, costIgnored, simplexType) => ({
+  (costInput, costIgnored) => ({
     costInput,
     costIgnored,
-    simplexType,
   })
 );
 

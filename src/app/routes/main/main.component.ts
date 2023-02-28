@@ -11,16 +11,9 @@ import { MenuItem } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
 import { environment } from 'src/environments';
-import {
-  APP,
-  Game,
-  gameInfo,
-  ItemId,
-  MatrixResultType,
-  SimplexType,
-} from '~/models';
+import { APP, Game, gameInfo, ItemId, MatrixResultType } from '~/models';
 import { ContentService, ErrorService } from '~/services';
-import { App, LabState, Preferences, Products, Settings } from '~/store';
+import { App, LabState, Products, Settings } from '~/store';
 
 @Component({
   selector: 'lab-main',
@@ -119,9 +112,6 @@ export class MainComponent implements AfterViewInit {
         .select(Settings.getDefaults)
         .pipe(first())
         .subscribe((def) => {
-          this.store.dispatch(
-            new Preferences.SetSimplexTypeAction(SimplexType.WasmFloat64)
-          );
           this.store.dispatch(
             new Settings.SetDisabledRecipesAction({
               value: [],
