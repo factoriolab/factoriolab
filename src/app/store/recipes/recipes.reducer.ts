@@ -30,6 +30,7 @@ export function recipesReducer(
       for (const entry of action.payload) {
         state = StoreUtility.compareReset(state, 'excluded', entry);
       }
+      
       return state;
     }
     case RecipesActionType.SET_CHECKED:

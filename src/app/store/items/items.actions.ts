@@ -4,6 +4,7 @@ import { IdDefaultPayload, IdPayload } from '~/models';
 
 export const enum ItemsActionType {
   SET_EXCLUDED = '[Items] Set Excluded',
+  SET_EXCLUDED_BATCH = '[Items] Set Excluded Batch',
   SET_CHECKED = '[Items] Set Checked',
   SET_BELT = '[Items] Set Belt',
   SET_WAGON = '[Items] Set Wagon',
@@ -17,6 +18,11 @@ export const enum ItemsActionType {
 export class SetExcludedAction implements Action {
   readonly type = ItemsActionType.SET_EXCLUDED;
   constructor(public payload: IdPayload<boolean>) {}
+}
+
+export class SetExcludedBatchAction implements Action {
+  readonly type = ItemsActionType.SET_EXCLUDED_BATCH;
+  constructor(public payload: IdPayload<boolean>[]) {}
 }
 
 export class SetCheckedAction implements Action {
@@ -56,6 +62,7 @@ export class ResetWagonsAction implements Action {
 
 export type ItemsAction =
   | SetExcludedAction
+  | SetExcludedBatchAction
   | SetCheckedAction
   | SetBeltAction
   | SetWagonAction

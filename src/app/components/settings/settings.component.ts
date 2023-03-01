@@ -23,6 +23,7 @@ import {
   gameInfo,
   gameOptions,
   IdDefaultPayload,
+  IdPayload,
   InserterCapacity,
   inserterCapacityOptions,
   InserterTarget,
@@ -248,6 +249,21 @@ export class SettingsComponent implements OnInit {
     this.setRecipeExcludedBatch(payload);
   }
 
+  setExcludedItems(
+    checked: string[],
+    itemSettings: Items.ItemsState,
+    data: Dataset
+  ): void {
+    const payload: IdPayload<boolean>[] = [];
+    for (const id of data.itemIds) {
+      const value = checked.some((i) => i === id);
+      if (value !== itemSettings[id].excluded) {
+        payload.push({ id, value });
+      }
+    }
+    this.setItemExcludedBatch(payload);
+  }
+
   changeBeaconModuleRank(
     id: string,
     value: string[],
@@ -283,6 +299,10 @@ export class SettingsComponent implements OnInit {
 
   setMod(value: string): void {
     this.store.dispatch(new Settings.SetModAction(value));
+  }
+
+  setItemExcludedBatch(payload: IdPayload<boolean>[]): void {
+    this.store.dispatch(new Items.SetExcludedBatchAction(payload));
   }
 
   setRecipeExcludedBatch(payload: IdDefaultPayload<boolean>[]): void {

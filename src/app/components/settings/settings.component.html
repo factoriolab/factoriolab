@@ -211,6 +211,29 @@
             pRipple
             type="button"
             class="p-button-rounded p-button-outlined"
+            icon="fa-solid fa-boxes-stacked"
+            [pTooltip]="'settings.itemsTooltip' | translate"
+            [label]="
+              'settings.itemsExcluded'
+                | translate
+                  : {
+                      count: vm.excludedItemIds.length
+                    }
+            "
+            (click)="itemsPicker.clickOpen(vm.data, 'item', vm.excludedItemIds)"
+          ></button>
+          <lab-picker
+            #itemsPicker
+            [header]="'settings.itemsHeader' | translate"
+            (selectIds)="setExcludedItems($event, vm.itemSettings, vm.data)"
+          ></lab-picker>
+        </div>
+        <div class="py-2">
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-rounded p-button-outlined"
             icon="fa-solid fa-flask-vial"
             [pTooltip]="'settings.recipesTooltip' | translate"
             [label]="

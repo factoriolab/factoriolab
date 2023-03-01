@@ -24,6 +24,18 @@ export function itemsReducer(
         value: action.payload.value,
         def: false,
       });
+    case ItemsActionType.SET_EXCLUDED_BATCH: {
+      state = { ...state };
+      for (const entry of action.payload) {
+        state = StoreUtility.compareReset(state, 'excluded', {
+          id: entry.id,
+          value: entry.value,
+          def: false,
+        });
+      }
+
+      return state;
+    }
     case ItemsActionType.SET_CHECKED:
       return StoreUtility.compareReset(state, 'checked', {
         id: action.payload.id,

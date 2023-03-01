@@ -16,36 +16,52 @@
   [breakpoints]="{ '768px': '80vw', '576px': '100vw' }"
   (onHide)="onHide()"
 >
-  <div class="d-flex w-100 my-1">
-    <p-checkbox
-      *ngIf="isMultiselect"
-      [binary]="true"
-      [label]="'picker.includeAll' | translate"
-      [formControl]="selectAllCtrl"
-      (onChange)="selectAll($event.checked)"
-    ></p-checkbox>
-    <span class="flex-grow-1 p-input-icon-right" [class.ms-2]="isMultiselect">
+  <div class="d-flex w-100 my-1 p-inputgroup">
+    <span class="p-inputgroup-addon">
       <i class="fa-solid fa-magnifying-glass"></i>
-      <input
-        #inputFilter
-        pInputText
-        type="text"
-        class="w-100"
-        pAutoFocus
-        [autofocus]="true"
-        [formControl]="searchCtrl"
-      />
     </span>
+    <input
+      #inputFilter
+      pInputText
+      type="text"
+      class="w-100"
+      pAutoFocus
+      [autofocus]="true"
+      [formControl]="searchCtrl"
+    />
+    <ng-container *ngIf="isMultiselect">
+      <span class="p-inputgroup-addon flex-shrink-0">
+        <p-checkbox
+          [binary]="true"
+          [label]="'picker.includeAll' | translate"
+          labelStyleClass="text-nowrap"
+          [formControl]="selectAllCtrl"
+          (onChange)="selectAll($event.checked)"
+        ></p-checkbox>
+      </span>
+      <button
+        *ngIf="type === 'recipe'"
+        pButton
+        pRipple
+        icon="fa-solid fa-rotate-left"
+        class="flex-shrink-0"
+        [pTooltip]="'picker.reset' | translate"
+        (click)="reset()"
+      ></button>
+    </ng-container>
   </div>
   <p-tabView *ngIf="visible" [(activeIndex)]="activeIndex" [scrollable]="true">
     <ng-container *ngFor="let categoryId of categoryIds; let i = index">
       <p-tabPanel
         *ngIf="categoryEntities[categoryId] as category"
-        [tooltip]="category.name"
         [selected]="i === activeIndex"
       >
         <ng-template pTemplate="header">
           <i [class]="categoryId | iconSmClass : 'category'"></i>
+          <span
+            class="d-none d-lg-inline ms-2 ps-1 text-nowrap text-truncate"
+            >{{ category.name }}</span
+          >
         </ng-template>
         <ng-template pTemplate="content">
           <p-scrollPanel

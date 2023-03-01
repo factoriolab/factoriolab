@@ -127,7 +127,8 @@
     "notApplicable": "N/A"
   },
   "picker": {
-    "includeAll": "Include all"
+    "includeAll": "Include all",
+    "reset": "Reset to default"
   },
   "landing": {
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work.",
@@ -173,6 +174,9 @@
     "mod": "Mod",
     "version": "Version",
     "modVersionsTooltip": "Versions of game / mods in this data set",
+    "itemsExcluded": "{{ count }} items excluded",
+    "itemsTooltip": "Click to modify which items are included. Excluded items will not be produced in the solution.",
+    "itemsHeader": "Set included items",
     "recipesExcluded": "{{ count }} recipes excluded",
     "recipesTooltip": "Click to modify which recipes are included. Excluded recipes will not be used in the solution.",
     "recipesHeader": "Set included recipes",
