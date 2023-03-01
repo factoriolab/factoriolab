@@ -12,7 +12,6 @@ import {
 
 export const enum SettingsActionType {
   SET_MOD = '[Settings] Set Mod',
-  SET_DISABLED_RECIPES = '[Settings] Set Disabled Recipes',
   SET_NET_PRODUCTION_ONLY = '[Settings] Set Net Production Only',
   SET_PRESET = '[Settings] Set Preset',
   SET_BEACON_RECEIVERS = '[Settings] Set Beacon Receivers',
@@ -31,18 +30,13 @@ export const enum SettingsActionType {
   SET_COST_FACTOR = '[Settings] Set Cost Factor',
   SET_COST_MACHINE = '[Settings] Set Machine Cost',
   SET_COST_INPUT = '[Settings] Set Input Cost',
-  SET_COST_IGNORED = '[Settings] Set Ignored Cost',
+  SET_COST_EXCLUDED = '[Settings] Set Excluded Cost',
   RESET_COST = '[Settings] Reset Cost Modifiers',
 }
 
 export class SetModAction implements Action {
   readonly type = SettingsActionType.SET_MOD;
   constructor(public payload: string) {}
-}
-
-export class SetDisabledRecipesAction implements Action {
-  readonly type = SettingsActionType.SET_DISABLED_RECIPES;
-  constructor(public payload: DefaultPayload<string[]>) {}
 }
 
 export class SetNetProductionOnlyAction implements Action {
@@ -135,8 +129,8 @@ export class SetCostInputAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class SetCostIgnoredAction implements Action {
-  readonly type = SettingsActionType.SET_COST_IGNORED;
+export class SetCostExcludedAction implements Action {
+  readonly type = SettingsActionType.SET_COST_EXCLUDED;
   constructor(public payload: string) {}
 }
 
@@ -146,7 +140,6 @@ export class ResetCostAction implements Action {
 
 export type SettingsAction =
   | SetModAction
-  | SetDisabledRecipesAction
   | SetNetProductionOnlyAction
   | SetPresetAction
   | SetBeaconReceiversAction
@@ -165,5 +158,5 @@ export type SettingsAction =
   | SetCostFactorAction
   | SetCostMachineAction
   | SetCostInputAction
-  | SetCostIgnoredAction
+  | SetCostExcludedAction
   | ResetCostAction;

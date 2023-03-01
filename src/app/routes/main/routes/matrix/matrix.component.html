@@ -62,13 +62,13 @@
         ></lab-input-number>
       </td>
     </tr>
-    <tr [pTooltip]="'matrix.ignoredCostTooltip' | translate">
-      <th>{{ 'matrix.ignored' | translate }}</th>
+    <tr [pTooltip]="'matrix.excludedCostTooltip' | translate">
+      <th>{{ 'matrix.excluded' | translate }}</th>
       <td>
         <lab-input-number
           width="8rem"
-          [value]="vm.settings.costIgnored"
-          (setValue)="setCostIgnored($event)"
+          [value]="vm.settings.costExcluded"
+          (setValue)="setCostExcluded($event)"
         ></lab-input-number>
       </td>
     </tr>

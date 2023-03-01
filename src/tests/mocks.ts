@@ -105,7 +105,7 @@ export const ProductSteps = {
   ],
 };
 export const ItemSettings1: M.ItemSettings = {
-  ignore: false,
+  excluded: false,
   beltId: ItemId.TransportBelt,
   wagonId: ItemId.CargoWagon,
 };
@@ -181,7 +181,7 @@ export const ItemSettingsInitial = Items.getItemSettings.projector(
       fuelId: ItemId.Coal,
       cargoWagonId: ItemId.CargoWagon,
       fluidWagonId: ItemId.FluidWagon,
-      disabledRecipeIds: [],
+      excludedRecipeIds: [],
     },
   }
 );
@@ -278,7 +278,7 @@ export const Flow: M.FlowData = {
 };
 export const SimplexModifiers = {
   costInput: M.Rational.from(1000000),
-  costIgnored: M.Rational.zero,
+  costExcluded: M.Rational.zero,
 };
 export const AdjustmentData = {
   netProductionOnly: false,

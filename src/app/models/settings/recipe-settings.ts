@@ -4,6 +4,8 @@ import { Rational } from '../rational';
 import { BeaconSettings, RationalBeaconSettings } from './beacon-settings';
 
 export interface RecipeSettings {
+  excluded?: boolean;
+  checked?: boolean;
   machineId?: string;
   machineModuleIds?: string[];
   /** Calculated, not configurable */
@@ -11,10 +13,11 @@ export interface RecipeSettings {
   beacons?: BeaconSettings[];
   overclock?: number;
   cost?: string;
-  checked?: boolean;
 }
 
 export class RationalRecipeSettings {
+  excluded?: boolean;
+  checked?: boolean;
   machineId?: string;
   machineModuleIds?: string[];
   /** Calculated, not configurable */
@@ -22,9 +25,14 @@ export class RationalRecipeSettings {
   beacons?: RationalBeaconSettings[];
   overclock?: Rational;
   cost?: Rational;
-  checked?: boolean;
 
   constructor(obj: RecipeSettings) {
+    if (obj.excluded != null) {
+      this.excluded = obj.excluded;
+    }
+    if (obj.checked != null) {
+      this.checked = obj.checked;
+    }
     if (obj.machineId != null) {
       this.machineId = obj.machineId;
     }
@@ -42,9 +50,6 @@ export class RationalRecipeSettings {
     }
     if (obj.cost != null) {
       this.cost = Rational.fromString(obj.cost);
-    }
-    if (obj.checked != null) {
-      this.checked = obj.checked;
     }
   }
 }

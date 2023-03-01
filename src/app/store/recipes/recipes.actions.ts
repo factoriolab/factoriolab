@@ -8,6 +8,9 @@ import {
 } from '~/models';
 
 export const enum RecipesActionType {
+  SET_EXCLUDED = '[Recipes] Set Excluded',
+  SET_EXCLUDED_BATCH = '[Recipes] Set Excluded Batch',
+  SET_CHECKED = '[Recipes] Set Checked',
   SET_MACHINE = '[Recipes] Set Machine',
   SET_MACHINE_MODULES = '[Recipes] Set Machine Modules',
   ADD_BEACON = '[Recipes] Add Beacon',
@@ -18,12 +21,27 @@ export const enum RecipesActionType {
   SET_BEACON_TOTAL = '[Recipes] Set Beacon Total',
   SET_OVERCLOCK = '[Recipes] Set Overclock',
   SET_COST = '[Recipes] Set Cost',
-  SET_CHECKED = '[Recipes] Set Checked',
   RESET_RECIPE = '[Recipes] Reset Recipe',
+  RESET_EXCLUDED = '[Recipes] Reset Excluded',
   RESET_RECIPE_MODULES = '[Recipes] Reset Recipe Modules',
   RESET_MACHINES = '[Recipes] Reset Machines',
   RESET_BEACONS = '[Recipes] Reset Beacons',
   RESET_COST = '[Recipes] Reset Cost',
+}
+
+export class SetExcludedAction implements Action {
+  readonly type = RecipesActionType.SET_EXCLUDED;
+  constructor(public payload: IdDefaultPayload<boolean>) {}
+}
+
+export class SetExcludedBatchAction implements Action {
+  readonly type = RecipesActionType.SET_EXCLUDED_BATCH;
+  constructor(public payload: IdDefaultPayload<boolean>[]) {}
+}
+
+export class SetCheckedAction implements Action {
+  readonly type = RecipesActionType.SET_CHECKED;
+  constructor(public payload: IdPayload<boolean>) {}
 }
 
 export class SetMachineAction implements Action {
@@ -76,11 +94,6 @@ export class SetCostAction implements Action {
   constructor(public payload: IdPayload<string | undefined>) {}
 }
 
-export class SetCheckedAction implements Action {
-  readonly type = RecipesActionType.SET_CHECKED;
-  constructor(public payload: IdPayload<boolean>) {}
-}
-
 export class ResetRecipeAction implements Action {
   readonly type = RecipesActionType.RESET_RECIPE;
   constructor(public payload: string) {}
@@ -89,6 +102,10 @@ export class ResetRecipeAction implements Action {
 export class ResetRecipeModulesAction implements Action {
   readonly type = RecipesActionType.RESET_RECIPE_MODULES;
   constructor(public payload: string) {}
+}
+
+export class ResetExcludedAction implements Action {
+  readonly type = RecipesActionType.RESET_EXCLUDED;
 }
 
 export class ResetMachinesAction implements Action {
@@ -104,6 +121,9 @@ export class ResetCostAction implements Action {
 }
 
 export type RecipesAction =
+  | SetExcludedAction
+  | SetExcludedBatchAction
+  | SetCheckedAction
   | SetMachineAction
   | SetMachineModulesAction
   | AddBeaconAction
@@ -114,9 +134,9 @@ export type RecipesAction =
   | SetBeaconTotalAction
   | SetOverclockAction
   | SetCostAction
-  | SetCheckedAction
   | ResetRecipeAction
   | ResetRecipeModulesAction
+  | ResetExcludedAction
   | ResetMachinesAction
   | ResetBeaconsAction
   | ResetCostAction;

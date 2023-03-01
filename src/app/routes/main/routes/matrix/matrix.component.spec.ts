@@ -33,7 +33,7 @@ describe('MatrixComponent', () => {
     dispatch.val('setCostFactor', Settings.SetCostFactorAction);
     dispatch.val('setCostMachine', Settings.SetCostMachineAction);
     dispatch.val('setCostInput', Settings.SetCostInputAction);
-    dispatch.val('setCostIgnored', Settings.SetCostIgnoredAction);
+    dispatch.val('setCostExcluded', Settings.SetCostExcludedAction);
     dispatch.idVal('setRecipeCost', Recipes.SetCostAction);
     dispatch.void('resetCost', Settings.ResetCostAction);
     dispatch.void('resetRecipeCost', Recipes.ResetCostAction);

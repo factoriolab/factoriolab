@@ -184,7 +184,7 @@ describe('Settings Selectors', () => {
         fuelId: 'fuel',
         cargoWagonId: 'cargoWagon',
         fluidWagonId: 'fluidWagon',
-        disabledRecipeIds: 'disabledRecipes',
+        excludedRecipeIds: 'excludedRecipes',
         machineRankIds: 'machineRank',
         moduleRankIds: 'moduleRank',
         beaconCount: 'beaconCount',
@@ -208,7 +208,7 @@ describe('Settings Selectors', () => {
           fuelId: Mocks.Defaults.fuelId,
           cargoWagonId: Mocks.Defaults.cargoWagonId,
           fluidWagonId: Mocks.Defaults.fluidWagonId,
-          disabledRecipeIds: Mocks.Defaults.disabledRecipeIds,
+          excludedRecipeIds: Mocks.Defaults.excludedRecipeIds,
         },
       });
     });
@@ -226,7 +226,7 @@ describe('Settings Selectors', () => {
           fuelId: undefined,
           cargoWagonId: undefined,
           fluidWagonId: undefined,
-          disabledRecipeIds: [],
+          excludedRecipeIds: [],
         },
       });
     });
@@ -236,15 +236,6 @@ describe('Settings Selectors', () => {
     it('should return fuel from settings', () => {
       const result = Selectors.getFuelId.projector(Mocks.SettingsStateInitial);
       expect(result).toEqual(Mocks.SettingsStateInitial.fuelId);
-    });
-  });
-
-  describe('getDisabledRecipeIds', () => {
-    it('should return disabledRecipes from settings', () => {
-      const result = Selectors.getDisabledRecipeIds.projector(
-        Mocks.SettingsStateInitial
-      );
-      expect(result).toEqual(Mocks.SettingsStateInitial.disabledRecipeIds);
     });
   });
 
@@ -288,12 +279,10 @@ describe('Settings Selectors', () => {
       const result = Selectors.getSimplexModifiers.projector(
         Rational.one,
         Rational.one,
-        SimplexType.JsBigIntRational
       );
       expect(result).toEqual({
         costInput: Rational.one,
-        costIgnored: Rational.one,
-        simplexType: SimplexType.JsBigIntRational,
+        costExcluded: Rational.one,
       });
     });
   });
@@ -367,10 +356,6 @@ describe('Settings Selectors', () => {
         result.itemIds.length
       );
       expect(result.recipeIds.length).toBeGreaterThan(0);
-      expect(result.complexRecipeIds.length).toBeGreaterThan(0);
-      expect(result.complexRecipeIds.length).toBeLessThan(
-        result.recipeIds.length
-      );
       expect(Object.keys(result.recipeEntities).length).toEqual(
         result.recipeIds.length
       );
@@ -563,7 +548,7 @@ describe('Settings Selectors', () => {
       const result = Selectors.getSettingsModified.projector({
         ...initialSettingsState,
         ...{
-          costIgnored: '100',
+          costExcluded: '100',
         },
       });
       expect(result.cost).toBeTrue();

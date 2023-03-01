@@ -226,19 +226,12 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   toggleRecipe(
     id: string,
-    settings: Settings.SettingsState,
+    settings: Recipes.RecipesState,
     data: Dataset
   ): void {
-    const disabledRecipes = settings.disabledRecipeIds ?? [];
-    const def = data.defaults?.disabledRecipeIds;
-    if (disabledRecipes.indexOf(id) === -1) {
-      this.setDisabledRecipes([...disabledRecipes, id], def);
-    } else {
-      this.setDisabledRecipes(
-        disabledRecipes.filter((i) => i !== id),
-        def
-      );
-    }
+    const value = !settings[id].excluded ?? true;
+    const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);
+    this.setRecipeExcluded(id, value, def);
   }
 
   changeRecipeField(
@@ -389,8 +382,12 @@ export class ListComponent implements OnInit, AfterViewInit {
   }
 
   /** Action Dispatch Methods */
-  ignoreItem(value: string): void {
-    this.store.dispatch(new Items.IgnoreItemAction(value));
+  setItemExcluded(id: string, value: boolean): void {
+    this.store.dispatch(new Items.SetExcludedAction({ id, value }));
+  }
+
+  setItemChecked(id: string, value: boolean): void {
+    this.store.dispatch(new Items.SetCheckedAction({ id, value }));
   }
 
   setBelt(id: string, value: string, def: string): void {
@@ -401,8 +398,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new Items.SetWagonAction({ id, value, def }));
   }
 
-  setItemChecked(id: string, value: boolean): void {
-    this.store.dispatch(new Items.SetCheckedAction({ id, value }));
+  setRecipeExcluded(id: string, value: boolean, def: boolean): void {
+    this.store.dispatch(new Recipes.SetExcludedAction({ id, value, def }));
   }
 
   setMachine(id: string, value: string, def: string, producer = false): void {
@@ -524,8 +521,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new Items.ResetCheckedAction());
   }
 
-  resetIgnores(): void {
-    this.store.dispatch(new Items.ResetIgnoresAction());
+  resetExcluded(): void {
+    this.store.dispatch(new Items.ResetExcludedAction());
   }
 
   resetBelts(): void {
@@ -542,9 +539,5 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   resetBeacons(): void {
     this.store.dispatch(new Recipes.ResetBeaconsAction());
-  }
-
-  setDisabledRecipes(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
   }
 }

@@ -38,8 +38,8 @@ export class MatrixComponent {
     this.store.dispatch(new Settings.SetCostInputAction(data));
   }
 
-  setCostIgnored(data: string): void {
-    this.store.dispatch(new Settings.SetCostIgnoredAction(data));
+  setCostExcluded(data: string): void {
+    this.store.dispatch(new Settings.SetCostExcludedAction(data));
   }
 
   resetCost(): void {

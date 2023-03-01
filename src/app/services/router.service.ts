@@ -439,7 +439,7 @@ export class RouterService {
         modId,
         displayRateV1,
         params[Section.Mod], // Legacy preset
-        s[1], // disabledRecipeIds
+        s[1], // excludedRecipeIds
         s[3], // beltId
         s[4], // fuelId
         s[5], // flowRate
@@ -923,7 +923,7 @@ export class RouterService {
     const z = this.zipList(
       Object.keys(state).map((i) => {
         const obj = state[i];
-        const g = this.zipTruthyBool(obj.ignore);
+        const g = this.zipTruthyBool(obj.excluded);
 
         return {
           bare: this.zipFields([
@@ -962,7 +962,7 @@ export class RouterService {
       if (hash) {
         id = this.parseNString(s[i++], hash.items) ?? '';
         obj = {
-          ignore: this.parseBool(s[i++]),
+          excluded: this.parseBool(s[i++]),
           beltId: this.parseNString(s[i++], hash.belts),
           wagonId: this.parseNString(s[i++], hash.wagons),
           checked: this.parseBool(s[i++]),
@@ -970,7 +970,7 @@ export class RouterService {
       } else {
         id = s[i++];
         obj = {
-          ignore: this.parseBool(s[i++]),
+          excluded: this.parseBool(s[i++]),
           beltId: this.parseString(s[i++]),
           wagonId: this.parseString(s[i++]),
           checked: this.parseBool(s[i++]),
@@ -991,6 +991,7 @@ export class RouterService {
         return {
           bare: this.zipFields([
             i,
+            this.zipTruthyBool(obj.excluded),
             this.zipTruthyString(obj.machineId),
             this.zipTruthyArray(obj.machineModuleIds),
             this.zipTruthyArray(data.recipeBeaconMap[i]),
@@ -1000,6 +1001,7 @@ export class RouterService {
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(i, hash.recipes),
+            this.zipTruthyBool(obj.excluded),
             this.zipTruthyNString(obj.machineId, hash.machines),
             this.zipTruthyNArray(obj.machineModuleIds, hash.modules),
             this.zipTruthyArray(data.recipeBeaconMap[i]),
@@ -1033,6 +1035,7 @@ export class RouterService {
       if (hash) {
         id = this.parseNString(s[i++], hash.recipes) ?? '';
         obj = {
+          excluded: this.parseBool(s[i++]),
           machineId: this.parseNString(s[i++], hash.machines),
           machineModuleIds: this.parseNArray(s[i++], hash.modules),
           beacons: this.parseArray(s[i++])?.map(
@@ -1045,6 +1048,7 @@ export class RouterService {
       } else {
         id = s[i++];
         obj = {
+          excluded: this.parseBool(s[i++]),
           machineId: this.parseString(s[i++]),
           machineModuleIds: this.parseArray(s[i++]),
           beacons: this.parseArray(s[i++])?.map(
@@ -1173,7 +1177,6 @@ export class RouterService {
         this.zipDiffString(state.modId, init.modId),
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
         this.zipDiffNumber(state.preset, init.preset),
-        this.zipDiffArray(state.disabledRecipeIds, init.disabledRecipeIds),
         this.zipDiffString(state.beltId, init.beltId),
         this.zipDiffString(state.fuelId, init.fuelId),
         this.zipDiffNumber(state.flowRate, init.flowRate),
@@ -1187,7 +1190,7 @@ export class RouterService {
         this.zipDiffString(state.costFactor, init.costFactor),
         this.zipDiffString(state.costMachine, init.costMachine),
         this.zipDiffString(state.costInput, init.costInput),
-        this.zipDiffString(state.costIgnored, init.costIgnored),
+        this.zipDiffString(state.costExcluded, init.costExcluded),
         this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
         this.zipDiffString(state.proliferatorSprayId, init.proliferatorSprayId),
         this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
@@ -1195,11 +1198,6 @@ export class RouterService {
       hash: this.zipFields([
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
         this.zipDiffNumber(state.preset, init.preset),
-        this.zipDiffNArray(
-          state.disabledRecipeIds,
-          init.disabledRecipeIds,
-          hash.recipes
-        ),
         this.zipDiffNString(state.beltId, init.beltId, hash.belts),
         this.zipDiffNString(state.fuelId, init.fuelId, hash.fuels),
         this.zipDiffNNumber(state.flowRate, init.flowRate),
@@ -1213,7 +1211,7 @@ export class RouterService {
         this.zipDiffString(state.costFactor, init.costFactor),
         this.zipDiffString(state.costMachine, init.costMachine),
         this.zipDiffString(state.costInput, init.costInput),
-        this.zipDiffString(state.costIgnored, init.costIgnored),
+        this.zipDiffString(state.costExcluded, init.costExcluded),
         this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
         this.zipDiffNString(
           state.proliferatorSprayId,
@@ -1243,7 +1241,6 @@ export class RouterService {
       obj = {
         displayRate: this.parseDisplayRate(s[i++]),
         preset: this.parseNumber(s[i++]),
-        disabledRecipeIds: this.parseNArray(s[i++], hash.recipes),
         beltId: this.parseNString(s[i++], hash.belts),
         fuelId: this.parseNString(s[i++], hash.fuels),
         flowRate: this.parseNNumber(s[i++]),
@@ -1257,7 +1254,7 @@ export class RouterService {
         costFactor: this.parseString(s[i++]),
         costMachine: this.parseString(s[i++]),
         costInput: this.parseString(s[i++]),
-        costIgnored: this.parseString(s[i++]),
+        costExcluded: this.parseString(s[i++]),
         beaconReceivers: this.parseString(s[i++]),
         proliferatorSprayId: this.parseNString(s[i++], hash.modules),
         netProductionOnly: this.parseBool(s[i++]),
@@ -1267,7 +1264,6 @@ export class RouterService {
         modId: this.parseString(s[i++]),
         displayRate: this.parseDisplayRate(s[i++]),
         preset: this.parseNumber(s[i++]),
-        disabledRecipeIds: this.parseArray(s[i++]),
         beltId: this.parseString(s[i++]),
         fuelId: this.parseString(s[i++]),
         flowRate: this.parseNumber(s[i++]),
@@ -1281,7 +1277,7 @@ export class RouterService {
         costFactor: this.parseString(s[i++]),
         costMachine: this.parseString(s[i++]),
         costInput: this.parseString(s[i++]),
-        costIgnored: this.parseString(s[i++]),
+        costExcluded: this.parseString(s[i++]),
         beaconReceivers: this.parseString(s[i++]),
         proliferatorSprayId: this.parseString(s[i++]),
         netProductionOnly: this.parseBool(s[i++]),

@@ -8,7 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
-import { combineLatest, first, map } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
 import { APP, Game, gameInfo, ItemId, MatrixResultType } from '~/models';
@@ -55,7 +55,6 @@ export class MainComponent implements AfterViewInit {
   version = `${APP} ${environment.version}`;
   isResetting = false;
   showSimplexErr = false;
-  isFixingSimplex = false;
   simplexErrSub = this.store
     .select(Products.getMatrixResult)
     .subscribe(
@@ -102,26 +101,6 @@ export class MainComponent implements AfterViewInit {
    * */
   ngAfterViewInit(): void {
     this.errorSvc.message$.subscribe(() => this.ref.detectChanges());
-  }
-
-  tryFixSimplex(): void {
-    this.isFixingSimplex = true;
-    // Give button loading indicator a chance to start
-    setTimeout(() => {
-      this.store
-        .select(Settings.getDefaults)
-        .pipe(first())
-        .subscribe((def) => {
-          this.store.dispatch(
-            new Settings.SetDisabledRecipesAction({
-              value: [],
-              def: def?.disabledRecipeIds,
-            })
-          );
-          this.showSimplexErr = false;
-          this.isFixingSimplex = false;
-        });
-    }, 10);
   }
 
   reset(game: Game): void {

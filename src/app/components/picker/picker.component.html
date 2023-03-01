@@ -20,7 +20,7 @@
     <p-checkbox
       *ngIf="isMultiselect"
       [binary]="true"
-      [label]="'picker.enableAll' | translate"
+      [label]="'picker.includeAll' | translate"
       [formControl]="selectAllCtrl"
       (onChange)="selectAll($event.checked)"
     ></p-checkbox>

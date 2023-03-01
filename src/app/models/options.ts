@@ -8,6 +8,6 @@ export interface Options {
   cargoWagons: SelectItem[];
   fluidWagons: SelectItem[];
   chemicalFuels: SelectItem[];
-  complexRecipes: SelectItem[];
   proliferatorModules: SelectItem[];
+  recipes: SelectItem[];
 }

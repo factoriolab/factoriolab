@@ -12,7 +12,6 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
   modId: string;
-  disabledRecipeIds?: string[];
   netProductionOnly: boolean;
   preset: Preset;
   beaconReceivers: string | null;
@@ -31,7 +30,7 @@ export interface SettingsState {
   costFactor: string;
   costMachine: string;
   costInput: string;
-  costIgnored: string;
+  costExcluded: string;
 }
 
 export const initialSettingsState: SettingsState = {
@@ -49,7 +48,7 @@ export const initialSettingsState: SettingsState = {
   costFactor: '1',
   costMachine: '1',
   costInput: '1000000',
-  costIgnored: '0',
+  costExcluded: '0',
 };
 
 export function settingsReducer(
@@ -74,7 +73,6 @@ export function settingsReducer(
           researchSpeed: ResearchSpeed.Speed6,
         },
       };
-      delete newState.disabledRecipeIds;
       delete newState.beltId;
       delete newState.pipeId;
       delete newState.fuelId;
@@ -82,13 +80,6 @@ export function settingsReducer(
       delete newState.fluidWagonId;
       return newState;
     }
-    case SettingsActionType.SET_DISABLED_RECIPES:
-      return {
-        ...state,
-        ...{
-          disabledRecipeIds: StoreUtility.compareValues(action.payload),
-        },
-      };
     case SettingsActionType.SET_NET_PRODUCTION_ONLY:
       return { ...state, ...{ netProductionOnly: action.payload } };
     case SettingsActionType.SET_PRESET:
@@ -140,8 +131,8 @@ export function settingsReducer(
       return { ...state, ...{ costMachine: action.payload } };
     case SettingsActionType.SET_COST_INPUT:
       return { ...state, ...{ costInput: action.payload } };
-    case SettingsActionType.SET_COST_IGNORED:
-      return { ...state, ...{ costIgnored: action.payload } };
+    case SettingsActionType.SET_COST_EXCLUDED:
+      return { ...state, ...{ costExcluded: action.payload } };
     case SettingsActionType.RESET_COST:
       return {
         ...state,
@@ -149,7 +140,7 @@ export function settingsReducer(
           costFactor: initialSettingsState.costFactor,
           costMachine: initialSettingsState.costMachine,
           costInput: initialSettingsState.costInput,
-          costIgnored: initialSettingsState.costIgnored,
+          costExcluded: initialSettingsState.costExcluded,
         },
       };
     default:

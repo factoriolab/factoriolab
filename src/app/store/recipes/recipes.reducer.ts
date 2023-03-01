@@ -23,6 +23,21 @@ export function recipesReducer(
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
       return initialRecipesState;
+    case RecipesActionType.SET_EXCLUDED:
+      return StoreUtility.compareReset(state, 'excluded', action.payload);
+    case RecipesActionType.SET_EXCLUDED_BATCH: {
+      state = { ...state };
+      for (const entry of action.payload) {
+        state = StoreUtility.compareReset(state, 'excluded', entry);
+      }
+      return state;
+    }
+    case RecipesActionType.SET_CHECKED:
+      return StoreUtility.compareReset(state, 'checked', {
+        id: action.payload.id,
+        value: action.payload.value,
+        def: false,
+      });
     case RecipesActionType.SET_MACHINE:
       return StoreUtility.resetFields(
         StoreUtility.compareReset(state, 'machineId', action.payload),
@@ -99,12 +114,6 @@ export function recipesReducer(
         'cost',
         action.payload as IdDefaultPayload
       );
-    case RecipesActionType.SET_CHECKED:
-      return StoreUtility.compareReset(state, 'checked', {
-        id: action.payload.id,
-        value: action.payload.value,
-        def: false,
-      });
     case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
       delete newState[action.payload];
@@ -123,12 +132,14 @@ export function recipesReducer(
         'machineModuleIds',
         'beacons',
       ]);
+    case Items.ItemsActionType.RESET_CHECKED:
+      return StoreUtility.resetField(state, 'checked');
+    case RecipesActionType.RESET_EXCLUDED:
+      return StoreUtility.resetField(state, 'excluded');
     case RecipesActionType.RESET_BEACONS:
       return StoreUtility.resetField(state, 'beacons');
     case RecipesActionType.RESET_COST:
       return StoreUtility.resetField(state, 'cost');
-    case Items.ItemsActionType.RESET_CHECKED:
-      return StoreUtility.resetField(state, 'checked');
     default:
       return state;
   }

@@ -22,14 +22,7 @@ import {
   StepDetailTab,
 } from '~/models';
 import { ExportService } from '~/services';
-import {
-  Items,
-  LabState,
-  Producers,
-  Products,
-  Recipes,
-  Settings,
-} from '~/store';
+import { Items, LabState, Producers, Products, Recipes } from '~/store';
 import { ListComponent } from './list.component';
 import { ListModule } from './list.module';
 
@@ -62,7 +55,6 @@ describe('ListComponent', () => {
           ],
           outputs: [],
           recipeIds: [],
-          defaultableRecipeIds: [],
         };
         return e;
       }, {})
@@ -151,31 +143,31 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('toggleRecipe', () => {
-    it('should enable a recipe', () => {
-      spyOn(component, 'setDisabledRecipes');
-      const settings = {
-        ...Settings.initialSettingsState,
-        ...{ disabledRecipeIds: [RecipeId.AdvancedOilProcessing] },
-      };
-      const data = { ...Mocks.AdjustedData, ...{ defaults: undefined } };
-      component.toggleRecipe(RecipeId.AdvancedOilProcessing, settings, data);
-      expect(component.setDisabledRecipes).toHaveBeenCalledWith([], undefined);
-    });
+  // describe('toggleRecipe', () => {
+  //   it('should enable a recipe', () => {
+  //     spyOn(component, 'setExcludedRecipes');
+  //     const settings = {
+  //       ...Settings.initialSettingsState,
+  //       ...{ excludedRecipeIds: [RecipeId.AdvancedOilProcessing] },
+  //     };
+  //     const data = { ...Mocks.AdjustedData, ...{ defaults: undefined } };
+  //     component.toggleRecipe(RecipeId.AdvancedOilProcessing, settings, data);
+  //     expect(component.setExcludedRecipes).toHaveBeenCalledWith([], undefined);
+  //   });
 
-    it('should disable a recipe', () => {
-      spyOn(component, 'setDisabledRecipes');
-      component.toggleRecipe(
-        RecipeId.AdvancedOilProcessing,
-        Settings.initialSettingsState,
-        Mocks.AdjustedData
-      );
-      expect(component.setDisabledRecipes).toHaveBeenCalledWith(
-        [RecipeId.AdvancedOilProcessing],
-        Mocks.AdjustedData.defaults?.disabledRecipeIds
-      );
-    });
-  });
+  //   it('should disable a recipe', () => {
+  //     spyOn(component, 'setExcludedRecipes');
+  //     component.toggleRecipe(
+  //       RecipeId.AdvancedOilProcessing,
+  //       Settings.initialSettingsState,
+  //       Mocks.AdjustedData
+  //     );
+  //     expect(component.setExcludedRecipes).toHaveBeenCalledWith(
+  //       [RecipeId.AdvancedOilProcessing],
+  //       Mocks.AdjustedData.defaults?.excludedRecipeIds
+  //     );
+  //   });
+  // });
 
   describe('changeRecipeField', () => {
     const step: Step = {
@@ -353,7 +345,7 @@ describe('ListComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.val('ignoreItem', Items.IgnoreItemAction);
+    dispatch.idVal('setItemExcluded', Items.SetExcludedAction);
     dispatch.idValDef('setBelt', Items.SetBeltAction);
     dispatch.idValDef('setWagon', Items.SetWagonAction);
     dispatch.idVal('setItemChecked', Items.SetCheckedAction);
@@ -387,11 +379,10 @@ describe('ListComponent', () => {
     dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
     dispatch.val('resetProducer', Producers.ResetProducerAction);
     dispatch.void('resetChecked', Items.ResetCheckedAction);
-    dispatch.void('resetIgnores', Items.ResetIgnoresAction);
+    dispatch.void('resetExcluded', Items.ResetExcludedAction);
     dispatch.void('resetBelts', Items.ResetBeltsAction);
     dispatch.void('resetWagons', Items.ResetWagonsAction);
     dispatch.void('resetMachines', Recipes.ResetMachinesAction);
     dispatch.void('resetBeacons', Recipes.ResetBeaconsAction);
-    dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
   });
 });

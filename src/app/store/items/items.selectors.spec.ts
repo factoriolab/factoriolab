@@ -35,7 +35,7 @@ describe('Items Selectors', () => {
       const result = Selectors.getItemsModified.projector(
         Mocks.ItemSettingsInitial
       );
-      expect(result.ignore).toBeTrue();
+      expect(result.excluded).toBeTrue();
       expect(result.belts).toBeTrue();
       expect(result.wagons).toBeTrue();
     });

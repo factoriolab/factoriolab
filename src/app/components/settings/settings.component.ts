@@ -22,6 +22,7 @@ import {
   Game,
   gameInfo,
   gameOptions,
+  IdDefaultPayload,
   InserterCapacity,
   inserterCapacityOptions,
   InserterTarget,
@@ -39,7 +40,15 @@ import {
   themeOptions,
 } from '~/models';
 import { ContentService, DisplayService, RouterService } from '~/services';
-import { App, LabState, Machines, Preferences, Settings } from '~/store';
+import {
+  App,
+  Items,
+  LabState,
+  Machines,
+  Preferences,
+  Recipes,
+  Settings,
+} from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
@@ -53,6 +62,8 @@ export class SettingsComponent implements OnInit {
   @HostBinding('class.hidden') @Input() hidden = false;
 
   vm$ = combineLatest([
+    this.store.select(Items.getItemSettings),
+    this.store.select(Recipes.getRecipeSettings),
     this.store.select(Machines.getMachines),
     this.store.select(Machines.getMachineRows),
     this.store.select(Machines.getMachineOptions),
@@ -70,6 +81,8 @@ export class SettingsComponent implements OnInit {
   ]).pipe(
     map(
       ([
+        itemSettings,
+        recipeSettings,
         machines,
         machineRows,
         machineOptions,
@@ -84,6 +97,8 @@ export class SettingsComponent implements OnInit {
         preferences,
         savedStates,
       ]) => ({
+        itemSettings,
+        recipeSettings,
         machines,
         machineRows,
         machineOptions,
@@ -98,6 +113,10 @@ export class SettingsComponent implements OnInit {
         preferences,
         savedStates,
         machineMenuItems: this.buildMachineMenus(machineRows, data),
+        excludedItemIds: data.itemIds.filter((i) => itemSettings[i].excluded),
+        excludedRecipeIds: data.recipeIds.filter(
+          (r) => recipeSettings[r].excluded
+        ),
       })
     )
   );
@@ -210,6 +229,25 @@ export class SettingsComponent implements OnInit {
     this.setMod(gameInfo[game].modId);
   }
 
+  setExcludedRecipes(
+    checked: string[],
+    recipeSettings: Recipes.RecipesState,
+    data: Dataset
+  ): void {
+    const payload: IdDefaultPayload<boolean>[] = [];
+    for (const id of data.recipeIds) {
+      const value = checked.some((i) => i === id);
+      if (value !== recipeSettings[id].excluded) {
+        // Needs to change, find default value
+        const def = (data.defaults?.excludedRecipeIds ?? []).some(
+          (i) => i === id
+        );
+        payload.push({ id, value, def });
+      }
+    }
+    this.setRecipeExcludedBatch(payload);
+  }
+
   changeBeaconModuleRank(
     id: string,
     value: string[],
@@ -247,8 +285,8 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetModAction(value));
   }
 
-  setDisabledRecipes(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
+  setRecipeExcludedBatch(payload: IdDefaultPayload<boolean>[]): void {
+    this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
   }
 
   setNetProductionOnly(value: boolean): void {

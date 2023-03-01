@@ -14,8 +14,7 @@
     "simplexUnsolved": "Simplexe {{ resultType }}",
     "simplexError": "Pas de solution trouvé",
     "simplexErrorDetail": "Essayez d'utiliser le solveur simplexe WASM Float64 avec toutes les recettes activés, ou vérifiez les recettes désactivés pour être sûre qu'une solution est possible'.\n\nE.G. Si une plaque de fer requiert deux engrenages, et un engrenage requiert deux plaques de fer, alors il n'y a pas de solutions pour les plaques de fers.",
-    "dontShowAgain": "Ne plus afficher",
-    "trySuggestedFix": "Essayez le correctif suggéré"
+    "dontShowAgain": "Ne plus afficher"
   },
   "options": {
     "column": {
@@ -137,7 +136,7 @@
     "version": "Version",
     "modVersionsTooltip": "Versions du jeu / mods ",
     "optionalRecipes": "Recettes optionel",
-    "recipesEnabled": "Recette(s) activé",
+    "recipesIncluded": "Recette(s) activé",
     "optionalRecipesTooltip": "Cliquez pour modifier quelles recettes optionels sont activé. Les recettes désactivées ne seront pas utilisées dans la solution.",
     "machines": "Usine",
     "preset": "Préréglage",
@@ -208,7 +207,6 @@
     "rateTypeTooltip": "Séléctionne l'unité de débit",
     "viaPlaceholder": "Sélectionnez l'étape limite",
     "viaTooltip": "Limiter la production d'articles en fonction d'une étape spécifique",
-    "noEnabledRecipes": "Aucune recette activée correspond",
     "producers": "Producteurs",
     "removeProducerTooltip": "Enlever le producteur",
     "recipeTooltip": "Sélectionner la recette du producteur",
@@ -255,8 +253,8 @@
     "defaultRecipeInfo1": "Cliquez pour définir une recette par défaut pour cet article. Si elle est définie, la recette par défaut sera considérée comme le seul moyen de produire cet article.",
     "defaultRecipeInfo2": "La recette doit être activée et ne doit produire que cet article.",
     "defaultRecipeInfo3": "La valeur par défaut a été ignorée en raison d'une boucle détectée.",
-    "enabledRecipes": "Recettes actives",
-    "enabledRecipesInfo": "Cliquez sur les recettes pour les désactiver ou les activer. Les recettes désactivées ne vont pas être utilisées dans la solution.",
+    "includedRecipes": "Recettes actives",
+    "includedRecipesInfo": "Cliquez sur les recettes pour les désactiver ou les activer. Les recettes désactivées ne vont pas être utilisées dans la solution.",
     "total": "Total"
   },
   "matrix": {
@@ -273,7 +271,7 @@
     "machine": "Usine",
     "inputCostTooltip": "Coût des éléments d'entrée qui ne sont produits par aucune recette",
     "input": "Entré",
-    "ignoredCostTooltip": "Coût des articles qui ont été explicitement ignorés",
-    "ignored": "Ignoré"
+    "excludedCostTooltip": "Coût des articles qui ont été explicitement ignorés",
+    "excluded": "Ignoré"
   }
 }

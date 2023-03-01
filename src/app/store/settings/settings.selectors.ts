@@ -91,9 +91,9 @@ export const getCostInput = createSelector(
   settingsState,
   (state) => state.costInput
 );
-export const getCostIgnored = createSelector(
+export const getCostExcluded = createSelector(
   settingsState,
-  (state) => state.costIgnored
+  (state) => state.costExcluded
 );
 
 /* Complex selectors */
@@ -225,7 +225,7 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
         fuelId: m.fuel,
         cargoWagonId: m.cargoWagon,
         fluidWagonId: m.fluidWagon,
-        disabledRecipeIds: m.disabledRecipes,
+        excludedRecipeIds: m.excludedRecipes,
         machineRankIds:
           preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
         moduleRankIds: moduleRank,
@@ -252,17 +252,11 @@ export const getSettings = createSelector(
       fuelId: s.fuelId ?? d?.fuelId,
       cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
       fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
-      disabledRecipeIds: s.disabledRecipeIds ?? d?.disabledRecipeIds ?? [],
     },
   })
 );
 
 export const getFuelId = createSelector(getSettings, (s) => s.fuelId);
-
-export const getDisabledRecipeIds = createSelector(
-  getSettings,
-  (s) => s.disabledRecipeIds
-);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
   Rational.fromNumber(bonus).div(Rational.hundred)
@@ -294,16 +288,16 @@ export const getRationalCostInput = createSelector(getCostInput, (cost) =>
   Rational.fromString(cost)
 );
 
-export const getRationalCostIgnored = createSelector(getCostIgnored, (cost) =>
+export const getRationalCostExcluded = createSelector(getCostExcluded, (cost) =>
   Rational.fromString(cost)
 );
 
 export const getSimplexModifiers = createSelector(
   getRationalCostInput,
-  getRationalCostIgnored,
-  (costInput, costIgnored) => ({
+  getRationalCostExcluded,
+  (costInput, costExcluded) => ({
     costInput,
-    costIgnored,
+    costExcluded,
   })
 );
 
@@ -560,18 +554,6 @@ export const getDataset = createSelector(
       return e;
     }, {});
 
-    // Calculate complex recipes
-    const simpleRecipeIds = Object.keys(itemRecipeId).map(
-      (i) => itemRecipeId[i]
-    );
-    const complexRecipeIds = recipeIds
-      .filter(
-        (r) =>
-          simpleRecipeIds.indexOf(r) === -1 ||
-          Object.keys(recipeEntities[r].out).length > 1
-      )
-      .sort();
-
     const dataset: Dataset = {
       game,
       version: mod?.version ?? {},
@@ -601,7 +583,6 @@ export const getDataset = createSelector(
       fuelIds,
       fuelEntities,
       recipeIds,
-      complexRecipeIds,
       recipeEntities,
       recipeR,
       limitations,
@@ -630,7 +611,7 @@ export const getOptions = createSelector(
       data.fuelIds[FuelType.Chemical] ?? [],
       data.itemEntities
     ),
-    complexRecipes: getIdOptions(data.complexRecipeIds, data.recipeEntities),
+    recipes: getIdOptions(data.recipeIds, data.recipeEntities),
   })
 );
 
@@ -699,7 +680,7 @@ export const getSettingsModified = createSelector(settingsState, (state) => ({
     state.costFactor !== initialSettingsState.costFactor ||
     state.costMachine !== initialSettingsState.costMachine ||
     state.costInput !== initialSettingsState.costInput ||
-    state.costIgnored !== initialSettingsState.costIgnored,
+    state.costExcluded !== initialSettingsState.costExcluded,
 }));
 
 export const getInserterData = createSelector(

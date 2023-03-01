@@ -14,9 +14,8 @@
     "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, cost: {{ cost }}",
     "simplexUnsolved": "Simplex {{ resultType }}",
     "simplexError": "No solution found",
-    "simplexErrorDetail": "Try using the WASM Float64 simplex solver with all recipes enabled, or check your disabled recipes to ensure a solution is feasible.\n\nE.G. If one iron plate requires two gears, and one gear requires two iron plates, a solution for iron plates is not feasible.",
-    "dontShowAgain": "Don't show again",
-    "trySuggestedFix": "Try suggested fix"
+    "simplexErrorDetail": "Check your excluded recipes to ensure a solution is feasible.\n\nE.G. If one iron plate requires two gears, and one gear requires two iron plates, a solution for iron plates is not feasible.",
+    "dontShowAgain": "Don't show again"
   },
   "options": {
     "column": {
@@ -128,7 +127,7 @@
     "notApplicable": "N/A"
   },
   "picker": {
-    "enableAll": "Enable all"
+    "includeAll": "Include all"
   },
   "landing": {
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work.",
@@ -174,9 +173,9 @@
     "mod": "Mod",
     "version": "Version",
     "modVersionsTooltip": "Versions of game / mods in this data set",
-    "optionalRecipesDisabled": "{{ count }} optional recipes disabled",
-    "optionalRecipesTooltip": "Click to modify which optional recipes are enabled. Disabled recipes will not be used in the solution.",
-    "optionalRecipesHeader": "Toggle enabled optional recipes",
+    "recipesExcluded": "{{ count }} recipes excluded",
+    "recipesTooltip": "Click to modify which recipes are included. Excluded recipes will not be used in the solution.",
+    "recipesHeader": "Set included recipes",
     "machines": "Machines",
     "preset": "Preset",
     "presetTooltip": "Select a default preset of machine settings to use",
@@ -247,7 +246,6 @@
     "itemTooltip": "Select product item",
     "rateTooltip": "Set output rate",
     "rateTypeTooltip": "Select rate type",
-    "noEnabledRecipes": "No recipes, try enabling item or its recipes",
     "producers": "Producers",
     "removeProducerTooltip": "Remove producer",
     "recipeTooltip": "Select producer recipe",
@@ -265,7 +263,7 @@
     "checkedUndoTooltip": "Undo all checkmarks",
     "tree": "Tree",
     "items": "Items",
-    "itemsUndoTooltip": "Undo all ignored items",
+    "itemsUndoTooltip": "Undo all excluded items",
     "itemRecipesUndoTooltip": "Undo all default recipes",
     "belts": "Belts",
     "beltsUndoTooltip": "Undo all belt modifications",
@@ -291,8 +289,8 @@
     "inputs": "Inputs",
     "outputs": "Outputs",
     "inserterCountInfo": "* Inserters are calculated using target/capacity settings and 0.18 experimental data from the <a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">wiki.</a>",
-    "enabledRecipes": "Enabled recipes",
-    "enabledRecipesInfo": "Click recipes to enable or disable them. Disabled recipes will not be used in the solution.",
+    "includedRecipes": "Included recipes",
+    "includedRecipesInfo": "Click recipes to include or exclude them. Excluded recipes will not be used in the solution.",
     "total": "Total"
   },
   "matrix": {
@@ -309,7 +307,7 @@
     "machine": "Machine",
     "inputCostTooltip": "Cost of input items that are produced by no recipes",
     "input": "Input",
-    "ignoredCostTooltip": "Cost of items that have been explicitly ignored",
-    "ignored": "Ignored"
+    "excludedCostTooltip": "Cost of items that have been explicitly excluded",
+    "excluded": "Excluded"
   }
 }

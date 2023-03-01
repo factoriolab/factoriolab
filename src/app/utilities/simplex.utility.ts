@@ -12,7 +12,7 @@ import {
   RationalRecipe,
   Step,
 } from '~/models';
-import { Items } from '~/store';
+import { Items, Recipes } from '~/store';
 import { RateUtility } from './rate.utility';
 
 const FLOAT_TOLERANCE = 1e-10;
@@ -31,15 +31,15 @@ export interface MatrixState {
   recipes: Entities<RationalRecipe>;
   /** Items used in the matrix */
   items: Entities<Rational>;
-  /** Items that have no enabled recipe */
+  /** Items that have no included recipe */
   inputIds: string[];
-  /** All recipes that are not disabled */
+  /** All recipes that are included */
   recipeIds: string[];
-  /** All items that are not disabled */
+  /** All items that are included */
   itemIds: string[];
   data: Dataset;
   costInput: Rational;
-  costIgnored: Rational;
+  costExcluded: Rational;
 }
 
 export interface MatrixSolution {
@@ -80,9 +80,9 @@ export class SimplexUtility {
     products: RationalProduct[],
     producers: RationalProducer[],
     itemSettings: Items.ItemsState,
-    disabledRecipeIds: string[],
+    recipeSettings: Recipes.RecipesState,
     costInput: Rational,
-    costIgnored: Rational,
+    costExcluded: Rational,
     data: Dataset
   ): MatrixResult {
     if (products.length === 0 && producers.length === 0) {
@@ -94,9 +94,9 @@ export class SimplexUtility {
       products,
       producers,
       itemSettings,
-      disabledRecipeIds,
+      recipeSettings,
       costInput,
-      costIgnored,
+      costExcluded,
       data
     );
 
@@ -125,9 +125,9 @@ export class SimplexUtility {
     products: RationalProduct[],
     producers: RationalProducer[],
     itemSettings: Items.ItemsState,
-    disabledRecipeIds: string[],
+    recipeSettings: Recipes.RecipesState,
     costInput: Rational,
-    costIgnored: Rational,
+    costExcluded: Rational,
     data: Dataset
   ): MatrixState {
     // Set up state object
@@ -138,12 +138,10 @@ export class SimplexUtility {
       recipes: {},
       items: {},
       inputIds: [],
-      recipeIds: data.recipeIds.filter(
-        (r) => disabledRecipeIds.indexOf(r) === -1
-      ),
-      itemIds: data.itemIds.filter((i) => !itemSettings[i].ignore),
+      recipeIds: data.recipeIds.filter((r) => !recipeSettings[r].excluded),
+      itemIds: data.itemIds.filter((i) => !itemSettings[i].excluded),
       costInput,
-      costIgnored,
+      costExcluded,
       data,
     };
 
@@ -233,7 +231,7 @@ export class SimplexUtility {
     }
   }
 
-  /** Determines which items in the matrix are input-only (not produced by any recipe, or ignored) */
+  /** Determines which items in the matrix are input-only (not produced by any recipe, or excluded) */
   static parseInputs(state: MatrixState): void {
     const itemIds = Object.keys(state.items);
     const recipeIds = Object.keys(state.recipes);
@@ -325,7 +323,7 @@ export class SimplexUtility {
     for (const inputId of state.inputIds) {
       const cost =
         state.itemIds.indexOf(inputId) === -1
-          ? state.costIgnored
+          ? state.costExcluded
           : state.costInput;
       const config = {
         obj: cost.toNumber(),

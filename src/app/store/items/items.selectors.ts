@@ -19,7 +19,7 @@ export const getItemSettings = createSelector(
       for (const item of data.itemIds.map((i) => data.itemEntities[i])) {
         const itemSettings: ItemSettings = state[item.id]
           ? { ...state[item.id] }
-          : { ignore: false };
+          : { excluded: false };
 
         // Belt (or Pipe)
         if (!itemSettings.beltId) {
@@ -46,8 +46,8 @@ export const getItemSettings = createSelector(
 );
 
 export const getItemsModified = createSelector(itemsState, (state) => ({
+  excluded: Object.keys(state).some((id) => state[id].excluded != null),
   checked: Object.keys(state).some((id) => state[id].checked != null),
-  ignore: Object.keys(state).some((id) => state[id].ignore != null),
   belts: Object.keys(state).some((id) => state[id].beltId != null),
   wagons: Object.keys(state).some((id) => state[id].wagonId != null),
 }));

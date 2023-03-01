@@ -1,4 +1,4 @@
-import { ItemId, RecipeId } from 'src/tests';
+import { ItemId } from 'src/tests';
 import {
   DisplayRate,
   InserterCapacity,
@@ -46,17 +46,6 @@ describe('Settings Reducer', () => {
         new Actions.SetModAction(value)
       );
       expect(result.modId).toEqual(value);
-    });
-  });
-
-  describe('SET_DISABLED_RECIPES', () => {
-    it('should set the list of disabled recipes', () => {
-      const value = [RecipeId.AdvancedOilProcessing];
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetDisabledRecipesAction({ value, def: [] })
-      );
-      expect(result.disabledRecipeIds).toEqual(value);
     });
   });
 
@@ -257,14 +246,14 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_COST_IGNORED', () => {
-    it('should set the ignored cost', () => {
+  describe('SET_COST_EXCLUDED', () => {
+    it('should set the excluded cost', () => {
       const value = '10';
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetCostIgnoredAction(value)
+        new Actions.SetCostExcludedAction(value)
       );
-      expect(result.costIgnored).toEqual(value);
+      expect(result.costExcluded).toEqual(value);
     });
   });
 
@@ -275,14 +264,14 @@ describe('Settings Reducer', () => {
           costFactor: 'a',
           costMachine: 'b',
           costInput: 'c',
-          costIgnored: 'd',
+          costExcluded: 'd',
         } as any,
         new Actions.ResetCostAction()
       );
       expect(result.costFactor).toEqual('1');
       expect(result.costMachine).toEqual('1');
       expect(result.costInput).toEqual('1000000');
-      expect(result.costIgnored).toEqual('0');
+      expect(result.costExcluded).toEqual('0');
     });
   });
 

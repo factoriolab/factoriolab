@@ -103,7 +103,7 @@ export class PickerComponent implements OnInit {
       );
     } else {
       if (Array.isArray(selection)) {
-        this.allSelectItems = data.complexRecipeIds.map(
+        this.allSelectItems = data.recipeIds.map(
           (i): SelectItem => ({
             label: data.recipeEntities[i].name,
             value: i,

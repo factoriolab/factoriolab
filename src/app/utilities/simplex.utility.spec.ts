@@ -21,7 +21,7 @@ describe('SimplexUtility', () => {
     itemIds: Mocks.Dataset.itemIds,
     data: Mocks.AdjustedData,
     costInput: Rational.from(1000000),
-    costIgnored: Rational.zero,
+    costExcluded: Rational.zero,
   });
   /** https://en.wikipedia.org/wiki/Simplex_algorithm#Example */
   const getTableau = (): Rational[][] => [
@@ -273,7 +273,7 @@ describe('SimplexUtility', () => {
         itemIds: Mocks.Dataset.itemIds,
         data: Mocks.Dataset,
         costInput: Rational.from(1000000),
-        costIgnored: Rational.zero,
+        costExcluded: Rational.zero,
         simplexType: SimplexType.JsBigIntRational,
       });
     });
@@ -399,7 +399,7 @@ describe('SimplexUtility', () => {
   describe('parseInputs', () => {
     it('should parse input-only items', () => {
       const state = getState();
-      // Coal = ignored input, Wood = normal input
+      // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
       state.items[ItemId.Wood] = Rational.one;
       state.items[ItemId.Coal] = Rational.one;
@@ -512,7 +512,7 @@ describe('SimplexUtility', () => {
   describe('glpk', () => {
     it('should run the glpk wasm module to presolve', () => {
       const state = getState();
-      // Coal = ignored input, Wood = normal input
+      // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
       state.inputIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
       state.recipes[RecipeId.CopperPlate] = new RationalRecipe({
@@ -558,7 +558,7 @@ describe('SimplexUtility', () => {
   describe('canonical', () => {
     it('should get a canonical matrix', () => {
       const state = getState();
-      // Coal = ignored input, Wood = normal input
+      // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
       state.inputIds = [ItemId.Wood, ItemId.Coal];
       state.recipes[RecipeId.CopperCable] =

@@ -130,20 +130,20 @@ Determine item and machine requirements for your desired output products.`,
           }
         }
         if (data.defaults) {
-          const filteredDisabledRecipeIds =
-            data.defaults.disabledRecipeIds.filter((a) =>
-              data.complexRecipeIds.some((b) => b === a)
+          const filteredExcludedRecipeIds =
+            data.defaults.excludedRecipeIds.filter((a) =>
+              data.recipeIds.some((b) => b === a)
             );
           if (
-            filteredDisabledRecipeIds.length !==
-            data.defaults.disabledRecipeIds.length
+            filteredExcludedRecipeIds.length !==
+            data.defaults.excludedRecipeIds.length
           ) {
             console.log(
-              `Filtered disabled recipes (${filteredDisabledRecipeIds.length}):`
+              `Filtered excluded recipes (${filteredExcludedRecipeIds.length}):`
             );
-            console.log(JSON.stringify(filteredDisabledRecipeIds));
+            console.log(JSON.stringify(filteredExcludedRecipeIds));
           } else {
-            console.log('No unrecognized disabled recipes');
+            console.log('No unrecognized excluded recipes');
           }
         }
         const invalidRecipes: string[] = [];

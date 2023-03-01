@@ -12,8 +12,7 @@
     "reset": "重置",
     "simplexError": "未找到解决方案",
     "simplexErrorDetail": "尝试在启用所有配方的情况下使用 WASM Float64 单纯形法求解器，或者检查你禁用的配方以确保解决方案是可行的。\n\n例如，如果一个铁板需要两个齿轮，而一个齿轮需要两个铁板，那么制作铁板就是不可行的。",
-    "dontShowAgain": "不再显示",
-    "trySuggestedFix": "尝试建议的修复方法"
+    "dontShowAgain": "不再显示"
   },
   "options": {
     "column": {
@@ -129,9 +128,7 @@
     "modVersions": "Mod 版本",
     "version": "版本",
     "modVersionsTooltip": "此数据集中的游戏 / mod 版本",
-    "optionalRecipes": "可选的配方",
-    "recipesEnabled": "个配方已启用",
-    "optionalRecipesTooltip": "单击来修改禁用哪些配方\n被禁用的配方将不会用于计算中",
+    "recipesTooltip": "单击来修改禁用哪些配方\n被禁用的配方将不会用于计算中",
     "machines": "工厂",
     "preset": "预设",
     "presetTooltip": "请选择要使用的默认预设。",
@@ -197,7 +194,6 @@
     "rateTypeTooltip": "改变速率类型",
     "viaPlaceholder": "设置限制的步骤",
     "viaTooltip": "通过限制一个步骤的生产速率限制产品的生产",
-    "noEnabledRecipes": "没有已启用的匹配配方",
     "producers": "生产线",
     "removeProducerTooltip": "移除生产线",
     "recipeTooltip": "选择配方",
@@ -243,8 +239,8 @@
     "defaultRecipeInfo1": "点击设置该物品的默认配方。\n如果设置了该选项，那么该选项将作为制造这项物品的唯一配方。",
     "defaultRecipeInfo2": "该配方必须启用并且必须使用这个配方来制造这项物品。",
     "defaultRecipeInfo3": "检测到循环引用，该默认值被忽略。",
-    "enabledRecipes": "启用配方",
-    "enabledRecipesInfo": "点击配方来启用或是禁用它们\n禁用配方的话将不会使用它来进行计算",
+    "includedRecipes": "启用配方",
+    "includedRecipesInfo": "点击配方来启用或是禁用它们\n禁用配方的话将不会使用它来进行计算",
     "total": "总计"
   },
   "matrix": {
@@ -260,7 +256,7 @@
     "machine": "工厂",
     "inputCostTooltip": "非配方产生的外部输入物品的成本",
     "input": "输入的物品",
-    "ignoredCostTooltip": "被指定为已忽略的物品的成本",
-    "ignored": "忽略的物品"
+    "excludedCostTooltip": "被指定为已忽略的物品的成本",
+    "excluded": "忽略的物品"
   }
 }

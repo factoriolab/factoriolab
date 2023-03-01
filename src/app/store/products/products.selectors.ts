@@ -142,17 +142,17 @@ export const getMatrixResult = createSelector(
   getNormalizedProducts,
   Producers.getRationalProducers,
   Items.getItemSettings,
-  Settings.getDisabledRecipeIds,
+  Recipes.getRecipeSettings,
   Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
-  (products, producers, itemSettings, disabledRecipeIds, adj, data) =>
+  (products, producers, itemSettings, recipeSettings, adj, data) =>
     SimplexUtility.solve(
       products,
       producers,
       itemSettings,
-      disabledRecipeIds,
+      recipeSettings,
       adj.costInput,
-      adj.costIgnored,
+      adj.costExcluded,
       data
     )
 );
@@ -378,13 +378,11 @@ function addValueToRecordByIds(
 export const getStepDetails = createSelector(
   getSteps,
   Recipes.getAdjustedDataset,
-  Settings.getDisabledRecipeIds,
-  (steps, data, disabledRecipeIds) =>
+  (steps, data) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
       const outputs: StepOutput[] = [];
       const recipeIds: string[] = [];
-      const defaultableRecipeIds: string[] = [];
       if (s.itemId != null && s.items != null) {
         const itemId = s.itemId; // Store null-checked id
         tabs.push(StepDetailTab.Item);
@@ -408,17 +406,9 @@ export const getStepDetails = createSelector(
         tabs.push(StepDetailTab.Machine);
       }
       if (s.itemId != null) {
-        for (const recipe of data.complexRecipeIds.map(
-          (r) => data.recipeR[r]
-        )) {
+        for (const recipe of data.recipeIds.map((r) => data.recipeR[r])) {
           if (recipe.produces(s.itemId)) {
             recipeIds.push(recipe.id);
-            if (
-              disabledRecipeIds.indexOf(recipe.id) === -1 &&
-              recipe.producesOnly(s.itemId)
-            ) {
-              defaultableRecipeIds.push(recipe.id);
-            }
           }
         }
         if (recipeIds.length) {
@@ -435,7 +425,6 @@ export const getStepDetails = createSelector(
         })),
         outputs,
         recipeIds,
-        defaultableRecipeIds,
       };
 
       return e;

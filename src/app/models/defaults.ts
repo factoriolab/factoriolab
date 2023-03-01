@@ -4,7 +4,7 @@ export interface Defaults {
   fuelId: string;
   cargoWagonId: string;
   fluidWagonId: string;
-  disabledRecipeIds: string[];
+  excludedRecipeIds: string[];
   machineRankIds: string[];
   moduleRankIds: string[];
   beaconCount: string;

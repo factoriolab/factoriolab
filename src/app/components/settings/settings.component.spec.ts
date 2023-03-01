@@ -194,7 +194,6 @@ describe('SettingsComponent', () => {
     dispatch.idVal('saveState', Preferences.SaveStateAction);
     dispatch.val('removeState', Preferences.RemoveStateAction);
     dispatch.val('setMod', Settings.SetModAction);
-    dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
     dispatch.val('setNetProductionOnly', Settings.SetNetProductionOnlyAction);
     dispatch.val('setPreset', Settings.SetPresetAction);
     dispatch.valDef('removeMachine', Machines.RemoveAction);
@@ -226,7 +225,6 @@ describe('SettingsComponent', () => {
     dispatch.val('setPowerUnit', Preferences.SetPowerUnitAction);
     dispatch.val('setLanguage', Preferences.SetLanguageAction);
     dispatch.val('setTheme', Preferences.SetThemeAction);
-    dispatch.val('setSimplexType', Preferences.SetSimplexTypeAction);
     dispatch.val('setBypassLanding', Preferences.SetBypassLandingAction);
   });
 });

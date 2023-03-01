@@ -70,7 +70,7 @@ const mockProducersState: Producers.ProducersState = {
 };
 const mockItemsState: Items.ItemsState = {
   [ItemId.SteelChest]: {
-    ignore: true,
+    excluded: true,
     beltId: ItemId.TransportBelt,
     wagonId: ItemId.CargoWagon,
   },
@@ -104,7 +104,7 @@ const mockMachinesState: Machines.MachinesState = {
 };
 const mockSettingsState: Settings.SettingsState = {
   modId: '1.0',
-  disabledRecipeIds: [],
+  excludedRecipeIds: [],
   netProductionOnly: true,
   preset: Preset.Modules,
   beaconReceivers: '1',
@@ -122,7 +122,7 @@ const mockSettingsState: Settings.SettingsState = {
   costFactor: '2',
   costMachine: '10',
   costInput: '0',
-  costIgnored: '100',
+  costExcluded: '100',
 };
 const mockZip: Zip = {
   bare: 'p=steel-chest*1*1&q=steel-chest*1',
@@ -219,7 +219,7 @@ describe('RouterService', () => {
     mockGetZipState.setResult({
       products: Products.initialProductsState,
       producers: Producers.initialProducersState,
-      items: { [ItemId.Wood]: { ignore: true } },
+      items: { [ItemId.Wood]: { excluded: true } },
       recipes: Recipes.initialRecipesState,
       machines: Machines.initialMachinesState,
       settings: Settings.initialSettingsState,
@@ -401,7 +401,7 @@ describe('RouterService', () => {
       delete mockStateV0.settingsState?.costFactor;
       delete mockStateV0.settingsState?.costMachine;
       delete mockStateV0.settingsState?.costInput;
-      delete mockStateV0.settingsState?.costIgnored;
+      delete mockStateV0.settingsState?.costExcluded;
       delete mockStateV0.settingsState?.proliferatorSprayId;
       delete mockStateV0.settingsState?.netProductionOnly;
       expect(service.dispatch).toHaveBeenCalledWith(
@@ -863,14 +863,14 @@ describe('RouterService', () => {
         ['i']: 'steel-chest*1*transport-belt*',
       });
       expect(result).toEqual({
-        [ItemId.SteelChest]: { ignore: true, beltId: ItemId.TransportBelt },
+        [ItemId.SteelChest]: { excluded: true, beltId: ItemId.TransportBelt },
       });
     });
 
     it('hash should map id to empty string if null', () => {
       const result = service.unzipItems({ ['i']: '*1*C*' }, Mocks.Hash);
       expect(result).toEqual({
-        ['']: { ignore: true, beltId: ItemId.TransportBelt },
+        ['']: { excluded: true, beltId: ItemId.TransportBelt },
       });
     });
   });

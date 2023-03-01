@@ -212,28 +212,22 @@
             type="button"
             class="p-button-rounded p-button-outlined"
             icon="fa-solid fa-flask-vial"
-            [pTooltip]="'settings.optionalRecipesTooltip' | translate"
+            [pTooltip]="'settings.recipesTooltip' | translate"
             [label]="
-              'settings.optionalRecipesDisabled'
+              'settings.recipesExcluded'
                 | translate
                   : {
-                      count: vm.settings.disabledRecipeIds.length
+                      count: vm.excludedRecipeIds.length
                     }
             "
             (click)="
-              optionalRecipesPicker.clickOpen(
-                vm.data,
-                'recipe',
-                vm.settings.disabledRecipeIds
-              )
+              recipesPicker.clickOpen(vm.data, 'recipe', vm.excludedRecipeIds)
             "
           ></button>
           <lab-picker
-            #optionalRecipesPicker
-            [header]="'settings.optionalRecipesHeader' | translate"
-            (selectIds)="
-              setDisabledRecipes($event, vm.data.defaults?.disabledRecipeIds)
-            "
+            #recipesPicker
+            [header]="'settings.recipesHeader' | translate"
+            (selectIds)="setExcludedRecipes($event, vm.recipeSettings, vm.data)"
           ></lab-picker>
         </div>
         <div class="py-2">
