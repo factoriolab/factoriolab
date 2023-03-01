@@ -1,45 +1,48 @@
-import { Entities, Producer } from '~/models';
+import { Entities, RecipeObjective } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { Items } from '../';
 import * as App from '../app.actions';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
-import { ProducersAction, ProducersActionType } from './producers.actions';
+import {
+  RecipeObjectivesAction,
+  RecipeObjectivesActionType,
+} from './recipe-objectives.actions';
 
-export interface ProducersState {
+export interface RecipeObjectivesState {
   ids: string[];
-  entities: Entities<Producer>;
+  entities: Entities<RecipeObjective>;
   index: number;
 }
 
-export const initialProducersState: ProducersState = {
+export const initialRecipeObjectivesState: RecipeObjectivesState = {
   ids: [],
   entities: {},
   index: 0,
 };
 
-export function producersReducer(
-  state: ProducersState = initialProducersState,
+export function recipeObjectivesReducer(
+  state: RecipeObjectivesState = initialRecipeObjectivesState,
   action:
-    | ProducersAction
+    | RecipeObjectivesAction
     | App.AppAction
     | Settings.SetModAction
     | Recipes.ResetMachinesAction
     | Recipes.ResetBeaconsAction
     | Items.ResetCheckedAction
-): ProducersState {
+): RecipeObjectivesState {
   switch (action.type) {
     case App.AppActionType.LOAD:
-      return action.payload.producersState
-        ? action.payload.producersState
-        : initialProducersState;
+      return action.payload.recipeObjectivesState
+        ? action.payload.recipeObjectivesState
+        : initialRecipeObjectivesState;
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
-      return initialProducersState;
-    case ProducersActionType.ADD: {
+      return initialRecipeObjectivesState;
+    case RecipeObjectivesActionType.ADD: {
       let count = '1';
       if (state.ids.length > 0) {
-        // Use count from last producer in list
+        // Use count from last objective in list
         const id = state.ids[state.ids.length - 1];
         count = state.entities[id].count;
       }
@@ -61,19 +64,19 @@ export function producersReducer(
         },
       };
     }
-    case ProducersActionType.CREATE: {
-      // Use full producer, but enforce id: '0'
-      const producer = { ...action.payload, ...{ id: '0' } };
+    case RecipeObjectivesActionType.CREATE: {
+      // Use full objective, but enforce id: '0'
+      const recipeObjective = { ...action.payload, ...{ id: '0' } };
       return {
         ...state,
         ...{
-          ids: [producer.id],
-          entities: { [producer.id]: producer },
+          ids: [recipeObjective.id],
+          entities: { [recipeObjective.id]: recipeObjective },
           index: 1,
         },
       };
     }
-    case ProducersActionType.REMOVE: {
+    case RecipeObjectivesActionType.REMOVE: {
       const newEntities = { ...state.entities };
       delete newEntities[action.payload];
       return {
@@ -84,7 +87,7 @@ export function producersReducer(
         },
       };
     }
-    case ProducersActionType.SET_RECIPE: {
+    case RecipeObjectivesActionType.SET_RECIPE: {
       const entities = StoreUtility.assignValue(
         state.entities,
         'recipeId',
@@ -101,7 +104,7 @@ export function producersReducer(
         },
       };
     }
-    case ProducersActionType.SET_COUNT:
+    case RecipeObjectivesActionType.SET_COUNT:
       return {
         ...state,
         ...{
@@ -112,7 +115,7 @@ export function producersReducer(
           ),
         },
       };
-    case ProducersActionType.SET_MACHINE:
+    case RecipeObjectivesActionType.SET_MACHINE:
       return {
         ...state,
         ...{
@@ -127,7 +130,7 @@ export function producersReducer(
           ),
         },
       };
-    case ProducersActionType.SET_MACHINE_MODULES:
+    case RecipeObjectivesActionType.SET_MACHINE_MODULES:
       return {
         ...state,
         ...{
@@ -138,7 +141,7 @@ export function producersReducer(
           ),
         },
       };
-    case ProducersActionType.ADD_BEACON:
+    case RecipeObjectivesActionType.ADD_BEACON:
       return {
         ...state,
         ...{
@@ -158,7 +161,7 @@ export function producersReducer(
           },
         },
       };
-    case ProducersActionType.REMOVE_BEACON:
+    case RecipeObjectivesActionType.REMOVE_BEACON:
       return {
         ...state,
         ...{
@@ -177,7 +180,7 @@ export function producersReducer(
           },
         },
       };
-    case ProducersActionType.SET_BEACON_COUNT:
+    case RecipeObjectivesActionType.SET_BEACON_COUNT:
       return {
         ...state,
         ...{
@@ -189,7 +192,7 @@ export function producersReducer(
           ),
         },
       };
-    case ProducersActionType.SET_BEACON:
+    case RecipeObjectivesActionType.SET_BEACON:
       return {
         ...state,
         ...{
@@ -207,7 +210,7 @@ export function producersReducer(
           ),
         },
       };
-    case ProducersActionType.SET_BEACON_MODULES:
+    case RecipeObjectivesActionType.SET_BEACON_MODULES:
       return {
         ...state,
         ...{
@@ -220,7 +223,7 @@ export function producersReducer(
           ),
         },
       };
-    case ProducersActionType.SET_BEACON_TOTAL:
+    case RecipeObjectivesActionType.SET_BEACON_TOTAL:
       return {
         ...state,
         ...{
@@ -232,7 +235,7 @@ export function producersReducer(
           ),
         },
       };
-    case ProducersActionType.SET_OVERCLOCK:
+    case RecipeObjectivesActionType.SET_OVERCLOCK:
       return {
         ...state,
         ...{
@@ -243,7 +246,7 @@ export function producersReducer(
           ),
         },
       };
-    case ProducersActionType.SET_CHECKED:
+    case RecipeObjectivesActionType.SET_CHECKED:
       return {
         ...state,
         ...{
@@ -254,7 +257,7 @@ export function producersReducer(
           }),
         },
       };
-    case ProducersActionType.RESET_PRODUCER:
+    case RecipeObjectivesActionType.RESET_OBJECTIVE:
       return {
         ...state,
         ...{

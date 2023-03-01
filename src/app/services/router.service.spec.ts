@@ -13,9 +13,9 @@ import {
   InserterTarget,
   ItemObjective,
   Preset,
-  Producer,
   RateType,
   Rational,
+  RecipeObjective,
   ResearchSpeed,
 } from '~/models';
 import {
@@ -56,7 +56,7 @@ const mockProductsState: Products.ItemObjectivesState = {
   },
   index: 2,
 };
-const mockProducer: Producer = {
+const mockProducer: RecipeObjective = {
   id: '1',
   recipeId: ItemId.SteelChest,
   count: '1',
@@ -155,7 +155,7 @@ function mockZipData(objectives?: Zip, config?: Zip): ZipData {
   return {
     objectives: objectives ?? mockEmptyZip(),
     config: config ?? mockEmptyZip(),
-    producerBeaconMap: {},
+    objectiveBeaconMap: {},
     recipeBeaconMap: {},
   };
 }
@@ -599,7 +599,7 @@ describe('RouterService', () => {
         bare: '&e=1*speed-module~speed-module*beacon',
         hash: '&e1*G~G*A',
       });
-      expect(result.producerBeaconMap).toEqual({ ['0']: [0] });
+      expect(result.objectiveBeaconMap).toEqual({ ['0']: [0] });
       expect(result.recipeBeaconMap).toEqual({ [RecipeId.IronPlate]: [0] });
     });
   });

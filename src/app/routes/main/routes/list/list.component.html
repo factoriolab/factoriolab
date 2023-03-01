@@ -201,7 +201,10 @@
             </ng-container>
             <div class="icon">
               <button
-                *ngIf="step.itemId && step.producerId == null; else recipeIcon"
+                *ngIf="
+                  step.itemId && step.recipeObjectiveId == null;
+                  else recipeIcon
+                "
                 pButton
                 pRipple
                 type="button"
@@ -225,8 +228,8 @@
                   [pTooltip]="step.recipeId | recipeTooltip : vm.data"
                   [escape]="false"
                 >
-                  <span *ngIf="step.producerId != null"
-                    >#{{ step.producerId }}</span
+                  <span *ngIf="step.recipeObjectiveId != null"
+                    >#{{ step.recipeObjectiveId }}</span
                   >
                 </i>
               </ng-template>
@@ -570,8 +573,8 @@
                   [class]="step.recipeId | iconSmClass : 'recipe'"
                   [pTooltip]="step.recipeId | recipeTooltip : vm.data"
                   [escape]="false"
-                  ><span *ngIf="step.producerId"
-                    >#{{ step.producerId }}</span
+                  ><span *ngIf="step.recipeObjectiveId"
+                    >#{{ step.recipeObjectiveId }}</span
                   ></i
                 >
                 <p-dropdown
@@ -703,8 +706,8 @@
                   icon="fa-solid fa-plus"
                   (click)="
                     addBeacon(
-                      step.producerId ?? step.recipeId,
-                      step.producerId != null
+                      step.recipeObjectiveId ?? step.recipeId,
+                      step.recipeObjectiveId != null
                     )
                   "
                 ></button>
@@ -717,9 +720,9 @@
                     icon="fa-solid fa-minus"
                     (click)="
                       removeBeacon(
-                        step.producerId ?? step.recipeId,
+                        step.recipeObjectiveId ?? step.recipeId,
                         i,
-                        step.producerId != null
+                        step.recipeObjectiveId != null
                       )
                     "
                   ></button>
@@ -893,7 +896,8 @@
               *ngIf="
                 (step.recipeId && vm.stepsModified.recipes[step.recipeId]) ||
                 (step.itemId && vm.stepsModified.items[step.itemId]) ||
-                (step.producerId && vm.stepsModified.producers[step.producerId])
+                (step.recipeObjectiveId &&
+                  vm.stepsModified.recipeObjectives[step.recipeObjectiveId])
               "
               pButton
               pRipple
@@ -961,7 +965,7 @@
                       machines: output.machines,
                       machineId: vm.recipeSettings[output.recipeId].machineId,
                       recipeId: output.recipeId,
-                      producerId: output.producerId,
+                      recipeObjectiveId: output.recipeObjectiveId,
                       percent: output.value,
                       percentOnDest: true,
                       destId: step.itemId
@@ -1002,10 +1006,11 @@
                           ? step.recipeSettings?.machineId
                           : null,
                       recipeId: step.recipeId,
-                      producerId: step.producerId,
+                      recipeObjectiveId: step.recipeObjectiveId,
                       percent: parent.value,
                       destId: vm.stepById[parent.key].recipeId,
-                      destProducerId: vm.stepById[parent.key].producerId,
+                      destRecipeObjectiveId:
+                        vm.stepById[parent.key].recipeObjectiveId,
                       destIsRecipe: true
                     }
                   "
@@ -1096,10 +1101,10 @@
                             machines: row.step.machines?.mul(row.percent),
                             machineId: row.step.recipeSettings?.machineId,
                             recipeId: row.step.recipeId,
-                            producerId: row.step.producerId,
+                            recipeObjectiveId: row.step.recipeObjectiveId,
                             percent: row.percent,
                             destId: step.recipeId,
-                            destProducerId: step.producerId,
+                            destRecipeObjectiveId: step.recipeObjectiveId,
                             destIsRecipe: true
                           }
                         "
@@ -1141,11 +1146,11 @@
                           machines: row.step.machines?.mul(row.percent),
                           machineId: row.step.recipeSettings?.machineId,
                           recipeId: row.step.recipeId,
-                          producerId: row.step.producerId,
+                          recipeObjectiveId: row.step.recipeObjectiveId,
                           percent: row.percent,
                           percentOnDest: true,
                           destId: step.recipeId,
-                          destProducerId: step.producerId,
+                          destRecipeObjectiveId: step.recipeObjectiveId,
                           destIsRecipe: true
                         }
                       "
@@ -1387,7 +1392,9 @@
                       {{ 'list.includedRecipes' | translate }}
                     </div>
                     <div>
-                      <small>{{ 'list.includedRecipesInfo' | translate }}</small>
+                      <small>{{
+                        'list.includedRecipesInfo' | translate
+                      }}</small>
                     </div>
                   </div>
                 </td>
@@ -1402,7 +1409,9 @@
                       pRipple
                       type="button"
                       class="hover-action p-button-text me-2"
-                      [class.hover-active]="vm.recipeSettings[recipeId].excluded"
+                      [class.hover-active]="
+                        vm.recipeSettings[recipeId].excluded
+                      "
                       [icon]="recipeId | iconSmClass : 'recipe'"
                       [pTooltip]="recipeId | recipeTooltip : vm.data"
                       [escape]="false"
@@ -1438,11 +1447,11 @@
       let-machines="machines"
       let-machineId="machineId"
       let-recipeId="recipeId"
-      let-producerId="producerId"
+      let-recipeObjectiveId="recipeObjectiveId"
       let-percent="percent"
       let-percentOnDest="percentOnDest"
       let-destId="destId"
-      let-destProducerId="destProducerId"
+      let-destRecipeObjectiveId="destRecipeObjectiveId"
       let-destIsRecipe="destIsRecipe"
     >
       <tr class="detail">
@@ -1557,7 +1566,9 @@
                   [class]="recipeId | iconClass : 'recipe'"
                   [pTooltip]="recipeId | recipeTooltip : vm.data"
                   [escape]="false"
-                  ><span *ngIf="producerId">#{{ producerId }}</span></i
+                  ><span *ngIf="recipeObjectiveId"
+                    >#{{ recipeObjectiveId }}</span
+                  ></i
                 >
                 <i
                   [class]="machineId | iconClass"
@@ -1595,7 +1606,9 @@
                       : (destId | itemTooltip : vm.data)
                   "
                   [escape]="false"
-                  ><span *ngIf="destProducerId">#{{ destProducerId }}</span></i
+                  ><span *ngIf="destRecipeObjectiveId"
+                    >#{{ destRecipeObjectiveId }}</span
+                  ></i
                 >
               </ng-container>
             </div>

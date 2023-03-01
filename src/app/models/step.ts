@@ -6,10 +6,10 @@ import { RationalRecipeSettings } from './settings';
 export interface Step {
   id: string;
   /**
-   * Priority: 1) Item state, 2) Producer state, 3) Recipe state
+   * Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
    *
    * If an item is excluded, step should still be checked, therefore item state
-   * must be highest priority. Producer state takes priority over recipe since
+   * must be highest priority. Recipe objective state takes priority over recipe since
    * recipe state may be present on a separate step.
    */
   checked?: boolean;
@@ -29,5 +29,5 @@ export interface Step {
   machines?: Rational;
   power?: Rational;
   pollution?: Rational;
-  producerId?: string;
+  recipeObjectiveId?: string;
 }

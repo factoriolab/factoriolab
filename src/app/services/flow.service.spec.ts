@@ -63,7 +63,7 @@ describe('FlowService', () => {
             id: '4',
             recipeId: RecipeId.IronPlate,
             machines: Rational.one,
-            producerId: '0',
+            recipeObjectiveId: '0',
             recipeSettings:
               Mocks.RationalRecipeSettingsInitial[RecipeId.IronPlate],
           },

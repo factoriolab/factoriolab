@@ -9,7 +9,7 @@ import {
   ItemObjectives,
   LabState,
   Preferences,
-  Producers,
+  RecipeObjectives,
   Settings,
 } from '~/store';
 import { BrowserUtility } from '~/utilities';
@@ -56,8 +56,8 @@ export class LandingComponent {
     this.router.navigate(['list']);
   }
 
-  selectProducer(value: string): void {
-    this.addProducer(value);
+  selectRecipe(value: string): void {
+    this.addRecipe(value);
     this.router.navigate(['list']);
   }
 
@@ -82,8 +82,8 @@ export class LandingComponent {
     this.store.dispatch(new ItemObjectives.AddAction(value));
   }
 
-  addProducer(value: string): void {
-    this.store.dispatch(new Producers.AddAction(value));
+  addRecipe(value: string): void {
+    this.store.dispatch(new RecipeObjectives.AddAction(value));
   }
 
   setBypassLanding(value: boolean): void {

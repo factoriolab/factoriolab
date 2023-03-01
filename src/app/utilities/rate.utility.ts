@@ -5,8 +5,8 @@ import {
   Game,
   ItemSettings,
   Rational,
-  RationalProducer,
   RationalRecipe,
+  RationalRecipeObjective,
   RationalRecipeSettings,
   Step,
   toEntities,
@@ -66,7 +66,7 @@ export class RateUtility {
 
   static normalizeSteps(
     steps: Step[],
-    producers: RationalProducer[],
+    recipeObjectives: RationalRecipeObjective[],
     itemSettings: Entities<ItemSettings>,
     recipeSettings: Entities<RationalRecipeSettings>,
     beaconReceivers: Rational | null,
@@ -80,10 +80,10 @@ export class RateUtility {
       this.calculateParentsOutputs(step, _steps);
     }
 
-    const producerEntities = toEntities(producers);
+    const recipeObjectiveEntities = toEntities(recipeObjectives);
 
     for (const step of _steps) {
-      this.calculateSettings(step, producerEntities, recipeSettings);
+      this.calculateSettings(step, recipeObjectiveEntities, recipeSettings);
       this.calculateBelts(step, itemSettings, beltSpeed, data);
       this.calculateBeacons(step, beaconReceivers, data);
       this.calculateDisplayRate(step, dispRateInfo);
@@ -91,7 +91,7 @@ export class RateUtility {
         step,
         itemSettings,
         recipeSettings,
-        producerEntities
+        recipeObjectiveEntities
       );
     }
 
@@ -130,12 +130,12 @@ export class RateUtility {
 
   static calculateSettings(
     step: Step,
-    producerEntities: Entities<RationalProducer>,
+    recipeObjectiveEntities: Entities<RationalRecipeObjective>,
     recipeSettings: Entities<RationalRecipeSettings>
   ): void {
     if (step.recipeId) {
-      if (step.producerId) {
-        step.recipeSettings = producerEntities[step.producerId];
+      if (step.recipeObjectiveId) {
+        step.recipeSettings = recipeObjectiveEntities[step.recipeObjectiveId];
       } else {
         step.recipeSettings = recipeSettings[step.recipeId];
       }
@@ -255,13 +255,13 @@ export class RateUtility {
     step: Step,
     itemSettings: Entities<ItemSettings>,
     recipeSettings: Entities<RationalRecipeSettings>,
-    producerEntities: Entities<RationalProducer>
+    recipeObjectiveEntities: Entities<RationalRecipeObjective>
   ): void {
-    // Priority: 1) Item state, 2) Producer state, 3) Recipe state
+    // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
       step.checked = itemSettings[step.itemId].checked;
-    } else if (step.producerId != null) {
-      step.checked = producerEntities[step.producerId].checked;
+    } else if (step.recipeObjectiveId != null) {
+      step.checked = recipeObjectiveEntities[step.recipeObjectiveId].checked;
     } else if (step.recipeId != null) {
       step.checked = recipeSettings[step.recipeId].checked;
     }

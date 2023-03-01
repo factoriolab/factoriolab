@@ -1,8 +1,8 @@
 import { Mocks } from 'src/tests';
 import { RecipeUtility } from '~/utilities';
-import * as Selectors from './producers.selectors';
+import * as Selectors from './recipe-objectives.selectors';
 
-describe('Producers Selectors', () => {
+describe('Recipe Objectives Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
       expect(

@@ -113,7 +113,7 @@ describe('ListComponent', () => {
         id: '0',
         itemId: ItemId.Coal,
         recipeId: RecipeId.Coal,
-        producerId: '1',
+        recipeObjectiveId: '1',
       };
       component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
@@ -327,7 +327,7 @@ describe('ListComponent', () => {
     it('should set for a producer step', () => {
       spyOn(component, 'setRecipeChecked');
       component.changeStepChecked(
-        { id: '0', producerId: '1', recipeId: RecipeId.Coal },
+        { id: '0', recipeObjectiveId: '1', recipeId: RecipeId.Coal },
         true
       );
       expect(component.setRecipeChecked).toHaveBeenCalledWith('1', true, true);
@@ -377,7 +377,7 @@ describe('ListComponent', () => {
     dispatch.idValAlt('setRecipeChecked', Producers.SetCheckedAction);
     dispatch.val('resetItem', Items.ResetItemAction);
     dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
-    dispatch.val('resetProducer', Producers.ResetProducerAction);
+    dispatch.val('resetProducer', Producers.ResetObjectiveAction);
     dispatch.void('resetChecked', Items.ResetCheckedAction);
     dispatch.void('resetExcluded', Items.ResetExcludedAction);
     dispatch.void('resetBelts', Items.ResetBeltsAction);

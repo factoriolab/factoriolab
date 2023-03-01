@@ -1189,7 +1189,7 @@ describe('SimplexUtility', () => {
           recipeId: RecipeId.Coal,
           machines: Rational.one,
           recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
-          producerId: Mocks.RationalProducer.id,
+          recipeObjectiveId: Mocks.RationalProducer.id,
         },
       ]);
     });

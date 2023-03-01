@@ -1,14 +1,14 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { Producer } from '~/models';
+import { RecipeObjective } from '~/models';
 import { Items } from '../';
 import * as App from '../app.actions';
 import * as Recipes from '../recipes';
-import * as Actions from './producers.actions';
+import * as Actions from './recipe-objectives.actions';
 import {
   initialProducersState,
   producersReducer,
   ProducersState,
-} from './producers.reducer';
+} from './recipe-objectives.reducer';
 
 describe('Producers Reducer', () => {
   const state = producersReducer(
@@ -74,7 +74,7 @@ describe('Producers Reducer', () => {
 
   describe('CREATE', () => {
     it('should create a new producer', () => {
-      const product: Producer = {
+      const product: RecipeObjective = {
         id: '1',
         recipeId: RecipeId.IronPlate,
         count: '2',
@@ -275,7 +275,7 @@ describe('Producers Reducer', () => {
       };
       const result = producersReducer(
         state,
-        new Actions.ResetProducerAction('0')
+        new Actions.ResetObjectiveAction('0')
       );
       expect(result.entities['0']).toEqual({
         id: '0',

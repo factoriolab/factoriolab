@@ -4,14 +4,14 @@ import { DatasetsState } from './datasets';
 import { ItemObjectivesState } from './item-objectives';
 import { ItemsState } from './items';
 import { MachinesState } from './machines';
-import { ProducersState } from './producers';
+import { RecipeObjectivesState } from './recipe-objectives';
 import { RecipesState } from './recipes';
 import { SettingsState } from './settings';
 
 export interface PartialState {
   datasetsState?: DatasetsState;
   itemObjectivesState?: ItemObjectivesState;
-  producersState?: ProducersState;
+  recipeObjectivesState?: RecipeObjectivesState;
   itemsState?: ItemsState;
   recipesState?: RecipesState;
   machinesState?: MachinesState;

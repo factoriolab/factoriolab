@@ -13,7 +13,7 @@ import {
   ItemObjectives,
   Items,
   LabState,
-  Producers,
+  RecipeObjectives,
   Recipes,
   Settings,
 } from '~/store';
@@ -27,7 +27,7 @@ import {
 export class ObjectivesComponent {
   vm$ = combineLatest([
     this.store.select(ItemObjectives.getItemObjectives),
-    this.store.select(Producers.getProducers),
+    this.store.select(RecipeObjectives.getRecipeObjectives),
     this.store.select(Items.getItemSettings),
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Settings.getDisplayRate),
@@ -39,7 +39,7 @@ export class ObjectivesComponent {
     map(
       ([
         itemObjectives,
-        producers,
+        recipeObjectives,
         itemSettings,
         recipeSettings,
         displayRate,
@@ -49,7 +49,7 @@ export class ObjectivesComponent {
         width,
       ]) => ({
         itemObjectives,
-        producers,
+        recipeObjectives,
         itemSettings,
         recipeSettings,
         displayRate,
@@ -86,24 +86,24 @@ export class ObjectivesComponent {
     this.store.dispatch(new ItemObjectives.SetRateTypeAction({ id, value }));
   }
 
-  removeProducer(id: string): void {
-    this.store.dispatch(new Producers.RemoveAction(id));
+  removeRecipeObjective(id: string): void {
+    this.store.dispatch(new RecipeObjectives.RemoveAction(id));
   }
 
   setRecipe(id: string, value: string): void {
-    this.store.dispatch(new Producers.SetRecipeAction({ id, value }));
+    this.store.dispatch(new RecipeObjectives.SetRecipeAction({ id, value }));
   }
 
   setCount(id: string, value: string): void {
-    this.store.dispatch(new Producers.SetCountAction({ id, value }));
+    this.store.dispatch(new RecipeObjectives.SetCountAction({ id, value }));
   }
 
   addItemObjective(value: string): void {
     this.store.dispatch(new ItemObjectives.AddAction(value));
   }
 
-  addProducer(value: string): void {
-    this.store.dispatch(new Producers.AddAction(value));
+  addRecipeObjective(value: string): void {
+    this.store.dispatch(new RecipeObjectives.AddAction(value));
   }
 
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {

@@ -21,7 +21,7 @@ import { LabState } from '../';
 import * as Items from '../items';
 import * as Machines from '../machines';
 import * as Preferences from '../preferences';
-import * as Producers from '../producers';
+import * as RecipeObjectives from '../recipe-objectives';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import { ItemObjectivesState } from './item-objectives.reducer';
@@ -144,15 +144,15 @@ export const getNormalizedItemObjectives = createSelector(
 
 export const getMatrixResult = createSelector(
   getNormalizedItemObjectives,
-  Producers.getRationalProducers,
+  RecipeObjectives.getRationalRecipeObjectives,
   Items.getItemSettings,
   Recipes.getRecipeSettings,
   Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
-  (itemObjectives, producers, itemSettings, recipeSettings, adj, data) =>
+  (itemObjectives, recipeObjectives, itemSettings, recipeSettings, adj, data) =>
     SimplexUtility.solve(
       itemObjectives,
-      producers,
+      recipeObjectives,
       itemSettings,
       recipeSettings,
       adj.costInput,
@@ -163,7 +163,7 @@ export const getMatrixResult = createSelector(
 
 export const getSteps = createSelector(
   getMatrixResult,
-  Producers.getRationalProducers,
+  RecipeObjectives.getRationalRecipeObjectives,
   Items.getItemSettings,
   Recipes.getRationalRecipeSettings,
   Settings.getRationalBeaconReceivers,
@@ -172,7 +172,7 @@ export const getSteps = createSelector(
   Recipes.getAdjustedDataset,
   (
     result,
-    producers,
+    recipeObjectives,
     itemSettings,
     recipeSettings,
     beaconReceivers,
@@ -182,7 +182,7 @@ export const getSteps = createSelector(
   ) =>
     RateUtility.normalizeSteps(
       result.steps,
-      producers,
+      recipeObjectives,
       itemSettings,
       recipeSettings,
       beaconReceivers,
@@ -194,14 +194,14 @@ export const getSteps = createSelector(
 
 export const getZipState = createSelector(
   itemObjectivesState,
-  Producers.producersState,
+  RecipeObjectives.recipeObjectivesState,
   Items.itemsState,
   Recipes.recipesState,
   Machines.machinesState,
   Settings.settingsState,
-  (itemObjectives, producers, items, recipes, machines, settings) => ({
+  (itemObjectives, recipeObjectives, items, recipes, machines, settings) => ({
     itemObjectives,
-    producers,
+    recipeObjectives,
     items,
     recipes,
     machines,
@@ -211,11 +211,11 @@ export const getZipState = createSelector(
 
 export const getStepsModified = createSelector(
   getSteps,
-  Producers.getBaseProducers,
+  RecipeObjectives.getBaseRecipeObjectives,
   Items.itemsState,
   Recipes.recipesState,
-  (steps, producers, itemSettings, recipeSettings) => ({
-    producers: producers.reduce((e: Entities<boolean>, p) => {
+  (steps, recipeObjectives, itemSettings, recipeSettings) => ({
+    recipeObjectives: recipeObjectives.reduce((e: Entities<boolean>, p) => {
       e[p.id] =
         p.machineId != null ||
         p.machineModuleIds != null ||
@@ -396,7 +396,7 @@ export const getStepDetails = createSelector(
             .filter((s) => s.outputs[itemId] != null)
             .map((s) => ({
               recipeId: s.recipeId,
-              producerId: s.producerId,
+              recipeObjectiveId: s.recipeObjectiveId,
               value: s.outputs[itemId],
               machines: s.machines,
             }))

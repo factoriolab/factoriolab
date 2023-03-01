@@ -73,7 +73,7 @@ export class FlowService {
           // CREATE NODE: Standard recipe
           flow.nodes.push({
             id: `r|${step.id}`,
-            type: step.producerId
+            type: step.recipeObjectiveId
               ? NodeType.Output
               : Object.keys(recipe.in).length === 0
               ? NodeType.Input

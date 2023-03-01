@@ -15,9 +15,9 @@ import {
   ItemSettings,
   MachineSettings,
   ModHash,
-  Producer,
   RateType,
   Rational,
+  RecipeObjective,
   RecipeSettings,
   Step,
 } from '~/models';
@@ -28,7 +28,7 @@ import {
   Items,
   LabState,
   Machines,
-  Producers,
+  RecipeObjectives,
   Recipes,
   Settings,
 } from '~/store';
@@ -58,7 +58,7 @@ export enum Section {
   Version = 'v',
   Mod = 'b',
   ItemObjectives = 'p',
-  Producers = 'q',
+  RecipeObjectives = 'q',
   Items = 'i',
   Recipes = 'r',
   Machines = 'f',
@@ -90,7 +90,7 @@ export interface Zip {
 export interface ZipData {
   objectives: Zip;
   config: Zip;
-  producerBeaconMap: Entities<number[]>;
+  objectiveBeaconMap: Entities<number[]>;
   recipeBeaconMap: Entities<number[]>;
 }
 
@@ -144,7 +144,7 @@ export class RouterService {
         tap((s) =>
           this.updateUrl(
             s.itemObjectives,
-            s.producers,
+            s.recipeObjectives,
             s.items,
             s.recipes,
             s.machines,
@@ -157,7 +157,7 @@ export class RouterService {
 
   updateUrl(
     itemObjectives: ItemObjectives.ItemObjectivesState,
-    producers: Producers.ProducersState,
+    recipeObjectives: RecipeObjectives.RecipeObjectivesState,
     items: Items.ItemsState,
     recipes: Recipes.RecipesState,
     machines: Machines.MachinesState,
@@ -165,7 +165,7 @@ export class RouterService {
   ): void {
     this.zipState(
       itemObjectives,
-      producers,
+      recipeObjectives,
       items,
       recipes,
       machines,
@@ -186,7 +186,7 @@ export class RouterService {
 
   zipState(
     itemObjectives: ItemObjectives.ItemObjectivesState,
-    producers: Producers.ProducersState,
+    recipeObjectives: RecipeObjectives.RecipeObjectivesState,
     items: Items.ItemsState,
     recipes: Recipes.RecipesState,
     machines: Machines.MachinesState,
@@ -199,15 +199,15 @@ export class RouterService {
       map((hash) => {
         // Setup object lists
         const p = itemObjectives.ids.map((i) => itemObjectives.entities[i]);
-        const q = producers.ids.map((i) => producers.entities[i]);
+        const q = recipeObjectives.ids.map((i) => recipeObjectives.entities[i]);
 
         // Beacons
         const zData = this.zipBeacons(q, recipes, hash);
 
         // Item Objectives
         this.zipItemObjectives(zData, p, hash);
-        // Producers
-        this.zipProducers(zData, q, hash);
+        // Recipe Objectives
+        this.zipRecipeObjectives(zData, q, hash);
 
         // Mod (Hashed only, for hash lookup)
         const zMod = this.zipDiffString(
@@ -247,7 +247,7 @@ export class RouterService {
       objectives: this.empty,
       config: config,
       recipeBeaconMap: {},
-      producerBeaconMap: {},
+      objectiveBeaconMap: {},
     };
     this.zipItemObjectives(zData, itemObjectives, hash);
     return '?' + this.getHash(zData);
@@ -315,8 +315,8 @@ export class RouterService {
             if (params[Section.ItemObjectives]) {
               state.itemObjectivesState = this.unzipItemObjectives(params);
             }
-            if (params[Section.Producers]) {
-              state.producersState = this.unzipProducers(
+            if (params[Section.RecipeObjectives]) {
+              state.recipeObjectivesState = this.unzipRecipeObjectives(
                 params,
                 beaconSettings
               );
@@ -346,8 +346,8 @@ export class RouterService {
                     hash
                   );
                 }
-                if (params[Section.Producers]) {
-                  state.producersState = this.unzipProducers(
+                if (params[Section.RecipeObjectives]) {
+                  state.recipeObjectivesState = this.unzipRecipeObjectives(
                     params,
                     beaconSettings,
                     hash
@@ -633,7 +633,7 @@ export class RouterService {
   ): [Entities<string>, string[]] {
     const list: string[] = [];
 
-    this.migrateInlineBeaconsSection(params, Section.Producers, 4, list);
+    this.migrateInlineBeaconsSection(params, Section.RecipeObjectives, 4, list);
     this.migrateInlineBeaconsSection(params, Section.Recipes, 3, list);
 
     if (list.length) {
@@ -668,19 +668,19 @@ export class RouterService {
   }
 
   zipBeacons(
-    producers: Producer[],
+    recipeObjectives: RecipeObjective[],
     recipes: Recipes.RecipesState,
     hash: ModHash
   ): ZipData {
     const list: Zip[] = [];
     const beaconsIdMap: Entities<number> = {};
-    const producerBeaconMap: Entities<number[]> = {};
+    const objectiveBeaconMap: Entities<number[]> = {};
     const recipeBeaconMap: Entities<number[]> = {};
 
-    for (const producer of producers) {
-      if (producer.beacons != null) {
-        producerBeaconMap[producer.id] = this.zipBeaconArray(
-          producer.beacons,
+    for (const recipeObjective of recipeObjectives) {
+      if (recipeObjective.beacons != null) {
+        objectiveBeaconMap[recipeObjective.id] = this.zipBeaconArray(
+          recipeObjective.beacons,
           beaconsIdMap,
           list,
           hash
@@ -711,7 +711,7 @@ export class RouterService {
     return {
       objectives: this.empty,
       config,
-      producerBeaconMap,
+      objectiveBeaconMap: objectiveBeaconMap,
       recipeBeaconMap,
     };
   }
@@ -843,9 +843,13 @@ export class RouterService {
     return { ids, index, entities };
   }
 
-  zipProducers(data: ZipData, producers: Producer[], hash: ModHash): void {
+  zipRecipeObjectives(
+    data: ZipData,
+    recipeObjectives: RecipeObjective[],
+    hash: ModHash
+  ): void {
     const z = this.zipList(
-      producers.map((obj) => {
+      recipeObjectives.map((obj) => {
         const r = Rational.fromString(obj.count).toString();
 
         return {
@@ -854,7 +858,7 @@ export class RouterService {
             r,
             this.zipTruthyString(obj.machineId),
             this.zipTruthyArray(obj.machineModuleIds),
-            this.zipTruthyArray(data.producerBeaconMap[obj.id]),
+            this.zipTruthyArray(data.objectiveBeaconMap[obj.id]),
             this.zipTruthyNumber(obj.overclock),
             this.zipTruthyBool(obj.checked),
           ]),
@@ -863,7 +867,7 @@ export class RouterService {
             r,
             this.zipTruthyNString(obj.machineId, hash.machines),
             this.zipTruthyNArray(obj.machineModuleIds, hash.modules),
-            this.zipTruthyArray(data.producerBeaconMap[obj.id]),
+            this.zipTruthyArray(data.objectiveBeaconMap[obj.id]),
             this.zipTruthyNumber(obj.overclock),
             this.zipTruthyBool(obj.checked),
           ]),
@@ -873,25 +877,25 @@ export class RouterService {
 
     if (z.bare.length) {
       const prefix = data.objectives.bare.length ? '&' : '';
-      data.objectives.bare += `${prefix}${Section.Producers}=${z.bare}`;
-      data.objectives.hash += `${prefix}${Section.Producers}${z.hash}`;
+      data.objectives.bare += `${prefix}${Section.RecipeObjectives}=${z.bare}`;
+      data.objectives.hash += `${prefix}${Section.RecipeObjectives}${z.hash}`;
     }
   }
 
-  unzipProducers(
+  unzipRecipeObjectives(
     params: Entities,
     beaconSettings: BeaconSettings[],
     hash?: ModHash
-  ): Producers.ProducersState {
-    const list = params[Section.Producers].split(LISTSEP);
+  ): RecipeObjectives.RecipeObjectivesState {
+    const list = params[Section.RecipeObjectives].split(LISTSEP);
     const ids: string[] = [];
-    const entities: Entities<Producer> = {};
+    const entities: Entities<RecipeObjective> = {};
     let index = 1;
-    for (const producer of list) {
-      const s = producer.split(FIELDSEP);
+    for (const recipeObjective of list) {
+      const s = recipeObjective.split(FIELDSEP);
       let i = 0;
       const id = index.toString();
-      let obj: Producer;
+      let obj: RecipeObjective;
 
       if (hash) {
         obj = {

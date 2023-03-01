@@ -57,7 +57,7 @@
         type="button"
         class="mt-2"
         icon="fa-solid fa-flask"
-        [label]="'landing.addAProducer' | translate"
+        [label]="'landing.addARecipe' | translate"
         (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
       ></button>
       <lab-picker
@@ -67,8 +67,8 @@
       ></lab-picker>
       <lab-picker
         #addRecipePicker
-        [header]="'landing.addAProducer' | translate"
-        (selectId)="selectProducer($event)"
+        [header]="'landing.addARecipe' | translate"
+        (selectId)="selectRecipe($event)"
       ></lab-picker>
       <p-divider
         *ngIf="vm.savedStates.length || BrowserUtility.routerState"

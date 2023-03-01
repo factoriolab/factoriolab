@@ -3,13 +3,13 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { DisplayRate, displayRateOptions, RateType } from '~/models';
-import { ItemObjectives, LabState, Producers, Settings } from '~/store';
+import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
 export enum WizardState {
   ObjectiveType,
   ItemObjectiveType,
   ItemObjectiveItems,
-  Producer,
+  RecipeObjective,
 }
 
 @Component({
@@ -58,9 +58,9 @@ export class WizardComponent {
     );
   }
 
-  createProducer(recipeId: string, count: string): void {
+  createRecipeObjective(recipeId: string, count: string): void {
     this.store.dispatch(
-      new Producers.CreateAction({ id: '0', recipeId, count })
+      new RecipeObjectives.CreateAction({ id: '0', recipeId, count })
     );
   }
 }

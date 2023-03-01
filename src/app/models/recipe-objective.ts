@@ -2,19 +2,19 @@ import { RationalRecipe } from './data';
 import { Rational } from './rational';
 import { RationalRecipeSettings, RecipeSettings } from './settings';
 
-export interface Producer extends RecipeSettings {
+export interface RecipeObjective extends RecipeSettings {
   id: string;
   recipeId: string;
   count: string;
 }
 
-export class RationalProducer extends RationalRecipeSettings {
+export class RationalRecipeObjective extends RationalRecipeSettings {
   id: string;
   recipeId: string;
   count: Rational;
   recipe: RationalRecipe;
 
-  constructor(obj: Producer, recipe: RationalRecipe) {
+  constructor(obj: RecipeObjective, recipe: RationalRecipe) {
     super(obj);
 
     this.id = obj.id;

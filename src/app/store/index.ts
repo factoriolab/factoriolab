@@ -8,7 +8,7 @@ import * as ItemObjectives from './item-objectives';
 import * as Items from './items';
 import * as Machines from './machines';
 import * as Preferences from './preferences';
-import * as Producers from './producers';
+import * as RecipeObjectives from './recipe-objectives';
 import * as Recipes from './recipes';
 import * as Settings from './settings';
 import { storageMetaReducer } from './storage.reducer';
@@ -16,7 +16,7 @@ import { storageMetaReducer } from './storage.reducer';
 export interface LabState {
   datasetsState: Datasets.DatasetsState;
   itemObjectivesState: ItemObjectives.ItemObjectivesState;
-  producersState: Producers.ProducersState;
+  recipeObjectivesState: RecipeObjectives.RecipeObjectivesState;
   itemsState: Items.ItemsState;
   recipesState: Recipes.RecipesState;
   machinesState: Machines.MachinesState;
@@ -27,7 +27,7 @@ export interface LabState {
 export const reducers: ActionReducerMap<LabState, never> = {
   datasetsState: Datasets.datasetsReducer,
   itemObjectivesState: ItemObjectives.itemObjectivesReducer,
-  producersState: Producers.producersReducer,
+  recipeObjectivesState: RecipeObjectives.recipeObjectivesReducer,
   itemsState: Items.itemsReducer,
   recipesState: Recipes.recipesReducer,
   machinesState: Machines.machinesReducer,
@@ -50,7 +50,7 @@ export {
   Items,
   Machines,
   Preferences,
-  Producers,
+  RecipeObjectives,
   Recipes,
   Settings,
 };

@@ -381,13 +381,13 @@ describe('Item Objectives Selectors', () => {
           outputs: [
             {
               recipeId: RecipeId.Coal,
-              producerId: undefined,
+              recipeObjectiveId: undefined,
               value: Rational.two,
               machines: Rational.one,
             },
             {
               recipeId: RecipeId.CrudeOil,
-              producerId: undefined,
+              recipeObjectiveId: undefined,
               value: Rational.one,
               machines: Rational.two,
             },

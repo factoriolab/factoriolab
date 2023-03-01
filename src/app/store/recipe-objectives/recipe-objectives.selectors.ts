@@ -1,25 +1,28 @@
 import { createSelector } from '@ngrx/store';
 
-import { RationalProducer, RationalRecipeSettings } from '~/models';
+import { RationalRecipeObjective, RationalRecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
 import * as Machines from '../machines';
 import * as Settings from '../settings';
-import { ProducersState } from './producers.reducer';
+import { RecipeObjectivesState } from './recipe-objectives.reducer';
 
 /* Base selector functions */
-export const producersState = (state: LabState): ProducersState =>
-  state.producersState;
+export const recipeObjectivesState = (state: LabState): RecipeObjectivesState =>
+  state.recipeObjectivesState;
 
-export const getIds = createSelector(producersState, (state) => state.ids);
+export const getIds = createSelector(
+  recipeObjectivesState,
+  (state) => state.ids
+);
 export const getEntities = createSelector(
-  producersState,
+  recipeObjectivesState,
   (state) => state.entities
 );
 
 /** Complex selectors */
-export const getBaseProducers = createSelector(
+export const getBaseRecipeObjectives = createSelector(
   getIds,
   getEntities,
   Settings.getDataset,
@@ -27,22 +30,24 @@ export const getBaseProducers = createSelector(
     ids.map((i) => entities[i]).filter((p) => data.recipeEntities[p.recipeId])
 );
 
-export const getProducers = createSelector(
-  getBaseProducers,
+export const getRecipeObjectives = createSelector(
+  getBaseRecipeObjectives,
   Machines.getMachines,
   Settings.getDataset,
-  (producers, machines, data) =>
-    producers.map((p) => RecipeUtility.adjustProducer(p, machines, data))
+  (recipeObjectives, machines, data) =>
+    recipeObjectives.map((p) =>
+      RecipeUtility.adjustRecipeObjective(p, machines, data)
+    )
 );
 
-export const getRationalProducers = createSelector(
-  getProducers,
+export const getRationalRecipeObjectives = createSelector(
+  getRecipeObjectives,
   Settings.getAdjustmentData,
   Items.getItemSettings,
-  (producers, adj, itemSettings) =>
-    producers.map(
+  (recipeObjectives, adj, itemSettings) =>
+    recipeObjectives.map(
       (p) =>
-        new RationalProducer(
+        new RationalRecipeObjective(
           p,
           RecipeUtility.adjustRecipe(
             p.recipeId,

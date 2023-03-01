@@ -10,8 +10,8 @@
       <ng-container *ngSwitchCase="WizardState.ItemObjectiveItems">
         <ng-container *ngTemplateOutlet="itemObjectiveItems"></ng-container>
       </ng-container>
-      <ng-container *ngSwitchCase="WizardState.Producer">
-        <ng-container *ngTemplateOutlet="producer"></ng-container>
+      <ng-container *ngSwitchCase="WizardState.RecipeObjective">
+        <ng-container *ngTemplateOutlet="recipeObjective"></ng-container>
       </ng-container>
     </ng-container>
     <button
@@ -60,7 +60,7 @@
     <lab-picker
       #addRecipePicker
       [header]="'wizard.runMachinesButton' | translate"
-      (selectId)="selectId($event, WizardState.Producer)"
+      (selectId)="selectId($event, WizardState.RecipeObjective)"
     ></lab-picker>
     <p-divider></p-divider>
   </ng-template>
@@ -136,8 +136,8 @@
       (click)="state = WizardState.ItemObjectiveType"
     ></button>
   </ng-template>
-  <ng-template #producer>
-    <div>{{ 'wizard.producerMachines' | translate }}</div>
+  <ng-template #recipeObjective>
+    <div>{{ 'wizard.recipeObjectiveMachines' | translate }}</div>
     <p-divider></p-divider>
     <div class="d-flex align-items-center justify-content-center">
       <i [class]="id | iconClass"></i>
@@ -156,7 +156,7 @@
       class="mt-2"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="createProducer(id, rate)"
+      (click)="createRecipeObjective(id, rate)"
       routerLink="/list"
     ></button>
     <p-divider></p-divider>

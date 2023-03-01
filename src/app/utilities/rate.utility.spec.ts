@@ -5,7 +5,7 @@ import {
   Entities,
   Game,
   Rational,
-  RationalProducer,
+  RationalRecipeObjective,
   RationalRecipeSettings,
   Step,
 } from '~/models';
@@ -193,9 +193,9 @@ describe('RateUtility', () => {
       const step: Step = {
         id: '0',
         recipeId: RecipeId.Coal,
-        producerId: '0',
+        recipeObjectiveId: '0',
       };
-      const producers: Entities<RationalProducer> = {
+      const producers: Entities<RationalRecipeObjective> = {
         ['0']: {
           id: '0',
           recipeId: RecipeId.Coal,
@@ -426,7 +426,7 @@ describe('RateUtility', () => {
     });
 
     it('should set the checked state for a producer step', () => {
-      const step: Step = { id: '0', producerId: '1' };
+      const step: Step = { id: '0', recipeObjectiveId: '1' };
       RateUtility.calculateChecked(
         step,
         {},

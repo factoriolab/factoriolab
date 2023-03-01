@@ -59,13 +59,16 @@
         </div>
       </div>
     </div>
-    <div *ngIf="vm.producers.length" class="col-12 col-xl-6">
+    <div *ngIf="vm.recipeObjectives.length" class="col-12 col-xl-6">
       <h3>
-        {{ 'objectives.producers' | translate }}
+        {{ 'objectives.recipeObjectives' | translate }}
       </h3>
       <div
-        *ngFor="let producer of vm.producers; trackBy: trackSvc.trackById"
-        class="mb-2 producer"
+        *ngFor="
+          let recipeObjective of vm.recipeObjectives;
+          trackBy: trackSvc.trackById
+        "
+        class="mb-2"
       >
         <div class="p-inputgroup">
           <button
@@ -74,8 +77,8 @@
             type="button"
             class="p-button-outlined icon"
             icon="fa-solid fa-minus"
-            [pTooltip]="'objectives.removeProducerTooltip' | translate"
-            (click)="removeProducer(producer.id)"
+            [pTooltip]="'objectives.removeRecipeTooltip' | translate"
+            (click)="removeRecipeObjective(recipeObjective.id)"
           ></button>
           <button
             pButton
@@ -84,27 +87,29 @@
             class="lab-button-icon-only text-truncate"
             [pTooltip]="'objectives.recipeTooltip' | translate"
             tooltipPosition="top"
-            (click)="editPicker.clickOpen(vm.data, 'recipe', producer.recipeId)"
+            (click)="
+              editPicker.clickOpen(vm.data, 'recipe', recipeObjective.recipeId)
+            "
           >
             <i
               class="p-button-icon"
-              [class]="producer.recipeId | iconSmClass : 'recipe'"
-              ><span>#{{ producer.id }}</span></i
+              [class]="recipeObjective.recipeId | iconSmClass : 'recipe'"
+              ><span>#{{ recipeObjective.id }}</span></i
             >
             <span *ngIf="!vm.mobile" class="p-button-label">{{
-              vm.data.recipeEntities[producer.recipeId].name
+              vm.data.recipeEntities[recipeObjective.recipeId].name
             }}</span>
           </button>
           <lab-picker
             #editPicker
             [header]="'objectives.recipeTooltip' | translate"
-            (selectId)="setRecipe(producer.id, $event)"
+            (selectId)="setRecipe(recipeObjective.id, $event)"
           ></lab-picker>
           <lab-input-number
             [pTooltip]="'objectives.countTooltip' | translate"
             tooltipPosition="top"
-            [value]="producer.count"
-            (setValue)="setCount(producer.id, $event)"
+            [value]="recipeObjective.count"
+            (setValue)="setCount(recipeObjective.id, $event)"
           ></lab-input-number>
         </div>
       </div>
@@ -132,9 +137,9 @@
         type="button"
         class="w-100"
         icon="fa-solid fa-plus"
-        [pTooltip]="'objectives.addAProducerTooltip' | translate"
+        [pTooltip]="'objectives.addARecipeTooltip' | translate"
         tooltipPosition="top"
-        [label]="'objectives.producer' | translate"
+        [label]="'objectives.recipe' | translate"
         (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
       ></button>
     </div>
@@ -161,9 +166,9 @@
         type="button"
         class="w-100"
         icon="fa-solid fa-flask"
-        [pTooltip]="'objectives.addAProducerTooltip' | translate"
+        [pTooltip]="'objectives.addARecipeTooltip' | translate"
         tooltipPosition="top"
-        [label]="'objectives.addAProducer' | translate"
+        [label]="'objectives.addARecipe' | translate"
         (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
       ></button>
     </div>
@@ -186,7 +191,7 @@
   ></lab-picker>
   <lab-picker
     #addRecipePicker
-    [header]="'objectives.addAProducerTooltip' | translate"
-    (selectId)="addProducer($event)"
+    [header]="'objectives.addARecipeTooltip' | translate"
+    (selectId)="addRecipeObjective($event)"
   ></lab-picker>
 </p-card>

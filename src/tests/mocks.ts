@@ -9,7 +9,7 @@ import {
   Items,
   Machines,
   Preferences,
-  Producers,
+  RecipeObjectives,
   Recipes,
   Settings,
 } from '~/store';
@@ -82,18 +82,18 @@ export const RationalItemObjectives = ItemObjectivesList.map((p) => {
   return rp;
 });
 export const RationalItemObjective = RationalItemObjectives[0];
-export const Producer: M.Producer = {
+export const RecipeObjective: M.RecipeObjective = {
   id: '0',
   recipeId: RecipeId.IronPlate,
   count: '1',
 };
-export const ProducersState: Producers.ProducersState = {
+export const RecipeObjectivesState: RecipeObjectives.RecipeObjectivesState = {
   ids: ['0'],
-  entities: { ['0']: Producer },
+  entities: { ['0']: RecipeObjective },
   index: 2,
 };
-export const RationalProducer = new M.RationalProducer(
-  Producer,
+export const RationalRecipeObjective = new M.RationalRecipeObjective(
+  RecipeObjective,
   Dataset.recipeR[RecipeId.IronPlate]
 );
 export const ItemObjectiveIds = ItemObjectivesList.map((p) => p.id);

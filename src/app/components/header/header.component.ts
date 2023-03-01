@@ -14,7 +14,7 @@ import { combineLatest, map } from 'rxjs';
 
 import { APP, Game, gameInfo, gameOptions, games } from '~/models';
 import { ContentService } from '~/services';
-import { ItemObjectives, LabState, Producers, Settings } from '~/store';
+import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
 interface MenuLink {
   label: string;
@@ -79,12 +79,12 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
     combineLatest([
       this.store.select(ItemObjectives.getItemObjectives),
-      this.store.select(Producers.getBaseProducers),
+      this.store.select(RecipeObjectives.getBaseRecipeObjectives),
       this.store.select(Settings.getDataset),
       this.contentSvc.lang$,
     ])
       .pipe(untilDestroyed(this))
-      .subscribe(([itemObjectives, producers, data]) => {
+      .subscribe(([itemObjectives, recipeObjectives, data]) => {
         if (
           itemObjectives.length &&
           data.itemEntities[itemObjectives[0].itemId]
@@ -93,11 +93,11 @@ export class HeaderComponent implements OnInit {
             `${data.itemEntities[itemObjectives[0].itemId].name} | ${APP}`
           );
         } else if (
-          producers.length &&
-          data.recipeEntities[producers[0].recipeId]
+          recipeObjectives.length &&
+          data.recipeEntities[recipeObjectives[0].recipeId]
         ) {
           this.title.setTitle(
-            `${data.recipeEntities[producers[0].recipeId].name} | ${APP}`
+            `${data.recipeEntities[recipeObjectives[0].recipeId].name} | ${APP}`
           );
         } else {
           this.title.setTitle(APP);

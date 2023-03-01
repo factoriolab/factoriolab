@@ -133,7 +133,7 @@
   "landing": {
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work.",
     "addAnItem": "Add an item",
-    "addAProducer": "Add a producer",
+    "addARecipe": "Add a recipe",
     "loadSavedState": "Load a saved state",
     "loadLastState": "Load last state",
     "help": "Help me get started",
@@ -146,11 +146,11 @@
     "produceItems": "I want to produce items or research",
     "produceItemsButton": "Choose which item",
     "runMachines": "I want to run a number of machines",
-    "runMachinesButton": "Choose which recipe (producer)",
+    "runMachinesButton": "Choose which recipe",
     "itemObjectiveType": "How do you want to set your production rate?",
     "itemObjectiveTypeItems": "I want to specify an amount to produce",
     "itemObjectiveItems": "How much do you want to produce?",
-    "producerMachines": "How many machines do you want to run?"
+    "recipeObjectiveMachines": "How many machines do you want to run?"
   },
   "settings": {
     "header": "Settings",
@@ -250,16 +250,16 @@
     "itemTooltip": "Select item",
     "rateTooltip": "Set output rate",
     "rateTypeTooltip": "Select rate type",
-    "producers": "Producers",
-    "removeProducerTooltip": "Remove producer",
-    "recipeTooltip": "Select producer recipe",
-    "countTooltip": "Set producer count",
+    "recipes": "Recipes",
+    "removeRecipeTooltip": "Remove recipe",
+    "recipeTooltip": "Select recipe",
+    "countTooltip": "Set machine count",
     "item": "Item",
     "addAnItem": "Add an item",
     "addAnItemTooltip": "Select an item to produce",
-    "producer": "Producer",
-    "addAProducer": "Add a producer",
-    "addAProducerTooltip": "Select a recipe to produce",
+    "recipe": "Recipe",
+    "addARecipe": "Add a recipe",
+    "addARecipeTooltip": "Select a recipe to produce",
     "selectDisplayRate": "Select display rate"
   },
   "list": {

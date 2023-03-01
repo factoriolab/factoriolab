@@ -4,7 +4,7 @@ import { Rational } from './rational';
 
 export interface StepOutput {
   recipeId: string;
-  producerId?: string;
+  recipeObjectiveId?: string;
   value: Rational;
   machines: Rational;
 }

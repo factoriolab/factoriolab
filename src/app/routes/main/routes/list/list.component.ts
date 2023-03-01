@@ -34,7 +34,7 @@ import {
   LabState,
   Machines,
   Preferences,
-  Producers,
+  RecipeObjectives,
   Recipes,
   Settings,
 } from '~/store';
@@ -201,8 +201,8 @@ export class ListComponent implements OnInit, AfterViewInit {
       this.resetItem(step.itemId);
     }
 
-    if (step.producerId) {
-      this.resetProducer(step.producerId);
+    if (step.recipeObjectiveId) {
+      this.resetRecipeObjective(step.recipeObjectiveId);
     } else if (step.recipeId) {
       this.resetRecipe(step.recipeId);
     }
@@ -245,8 +245,8 @@ export class ListComponent implements OnInit, AfterViewInit {
   ): void {
     if (step.recipeId == null) return;
 
-    const id = step.producerId ?? step.recipeId;
-    const isProducer = step.producerId != null;
+    const id = step.recipeObjectiveId ?? step.recipeId;
+    const isObjective = step.recipeObjectiveId != null;
     const settings = step.recipeSettings;
     if (settings?.machineId) {
       const machineSettings = machines.entities[settings.machineId];
@@ -254,13 +254,13 @@ export class ListComponent implements OnInit, AfterViewInit {
         case RecipeField.Machine: {
           if (typeof event === 'string' && machines.ids != null) {
             this.setMachine(
-              step.producerId ?? step.recipeId,
+              step.recipeObjectiveId ?? step.recipeId,
               event,
               RecipeUtility.bestMatch(
                 data.recipeEntities[step.recipeId].producers,
                 machines.ids
               ),
-              step.producerId != null
+              step.recipeObjectiveId != null
             );
           }
 
@@ -291,21 +291,21 @@ export class ListComponent implements OnInit, AfterViewInit {
               event,
               settings.machineModuleIds
             );
-            this.setMachineModules(id, modules, def, isProducer);
+            this.setMachineModules(id, modules, def, isObjective);
           }
           break;
         }
         case RecipeField.BeaconCount: {
           if (typeof event === 'string' && index != null) {
             const def = machineSettings.beaconCount;
-            this.setBeaconCount(id, index, event, def, isProducer);
+            this.setBeaconCount(id, index, event, def, isObjective);
           }
           break;
         }
         case RecipeField.Beacon: {
           if (typeof event === 'string' && index != null) {
             const def = machineSettings.beaconId;
-            this.setBeacon(id, index, event, def, isProducer);
+            this.setBeacon(id, index, event, def, isObjective);
           }
           break;
         }
@@ -338,14 +338,14 @@ export class ListComponent implements OnInit, AfterViewInit {
                 event,
                 beaconSettings.moduleIds
               );
-              this.setBeaconModules(id, index, value, def, isProducer);
+              this.setBeaconModules(id, index, value, def, isObjective);
             }
           }
           break;
         }
         case RecipeField.BeaconTotal: {
           if (typeof event === 'string' && index != null) {
-            this.setBeaconTotal(id, index, event, isProducer);
+            this.setBeaconTotal(id, index, event, isObjective);
           }
           break;
         }
@@ -353,7 +353,7 @@ export class ListComponent implements OnInit, AfterViewInit {
           if (typeof event === 'number') {
             const def = machineSettings.overclock;
             const value = Math.max(1, Math.min(250, event));
-            this.setOverclock(id, value, def, isProducer);
+            this.setOverclock(id, value, def, isObjective);
           }
           break;
         }
@@ -371,11 +371,11 @@ export class ListComponent implements OnInit, AfterViewInit {
   }
 
   changeStepChecked(step: Step, checked: boolean): void {
-    // Priority: 1) Item state, 2) Producer state, 3) Recipe state
+    // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
       this.setItemChecked(step.itemId, checked);
-    } else if (step.producerId != null) {
-      this.setRecipeChecked(step.producerId, checked, true);
+    } else if (step.recipeObjectiveId != null) {
+      this.setRecipeChecked(step.recipeObjectiveId, checked, true);
     } else if (step.recipeId != null) {
       this.setRecipeChecked(step.recipeId, checked);
     }
@@ -402,9 +402,9 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new Recipes.SetExcludedAction({ id, value, def }));
   }
 
-  setMachine(id: string, value: string, def: string, producer = false): void {
-    const action = producer
-      ? Producers.SetMachineAction
+  setMachine(id: string, value: string, def: string, objective = false): void {
+    const action = objective
+      ? RecipeObjectives.SetMachineAction
       : Recipes.SetMachineAction;
     this.store.dispatch(new action({ id, value, def }));
   }
@@ -413,24 +413,24 @@ export class ListComponent implements OnInit, AfterViewInit {
     id: string,
     value: string[],
     def: string[] | undefined,
-    producer = false
+    objective = false
   ): void {
-    const action = producer
-      ? Producers.SetMachineModulesAction
+    const action = objective
+      ? RecipeObjectives.SetMachineModulesAction
       : Recipes.SetMachineModulesAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
-  addBeacon(id: string, producer = false): void {
-    const action = producer
-      ? Producers.AddBeaconAction
+  addBeacon(id: string, objective = false): void {
+    const action = objective
+      ? RecipeObjectives.AddBeaconAction
       : Recipes.AddBeaconAction;
     this.store.dispatch(new action(id));
   }
 
-  removeBeacon(id: string, value: number, producer = false): void {
-    const action = producer
-      ? Producers.RemoveBeaconAction
+  removeBeacon(id: string, value: number, objective = false): void {
+    const action = objective
+      ? RecipeObjectives.RemoveBeaconAction
       : Recipes.RemoveBeaconAction;
     this.store.dispatch(new action({ id, value }));
   }
@@ -440,10 +440,10 @@ export class ListComponent implements OnInit, AfterViewInit {
     index: number,
     value: string,
     def: string | undefined,
-    producer = false
+    objective = false
   ): void {
-    const action = producer
-      ? Producers.SetBeaconCountAction
+    const action = objective
+      ? RecipeObjectives.SetBeaconCountAction
       : Recipes.SetBeaconCountAction;
     this.store.dispatch(new action({ id, index, value, def }));
   }
@@ -453,10 +453,10 @@ export class ListComponent implements OnInit, AfterViewInit {
     index: number,
     value: string,
     def: string | undefined,
-    producer = false
+    objective = false
   ): void {
-    const action = producer
-      ? Producers.SetBeaconAction
+    const action = objective
+      ? RecipeObjectives.SetBeaconAction
       : Recipes.SetBeaconAction;
     this.store.dispatch(new action({ id, index, value, def }));
   }
@@ -466,10 +466,10 @@ export class ListComponent implements OnInit, AfterViewInit {
     index: number,
     value: string[],
     def: string[] | undefined,
-    producer = false
+    objective = false
   ): void {
-    const action = producer
-      ? Producers.SetBeaconModulesAction
+    const action = objective
+      ? RecipeObjectives.SetBeaconModulesAction
       : Recipes.SetBeaconModulesAction;
     this.store.dispatch(new action({ id, index, value, def }));
   }
@@ -478,10 +478,10 @@ export class ListComponent implements OnInit, AfterViewInit {
     id: string,
     index: number,
     value: string,
-    producer = false
+    objective = false
   ): void {
-    const action = producer
-      ? Producers.SetBeaconTotalAction
+    const action = objective
+      ? RecipeObjectives.SetBeaconTotalAction
       : Recipes.SetBeaconTotalAction;
     this.store.dispatch(new action({ id, index, value }));
   }
@@ -490,17 +490,17 @@ export class ListComponent implements OnInit, AfterViewInit {
     id: string,
     value: number,
     def: number | undefined,
-    producer = false
+    objective = false
   ): void {
-    const action = producer
-      ? Producers.SetOverclockAction
+    const action = objective
+      ? RecipeObjectives.SetOverclockAction
       : Recipes.SetOverclockAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
-  setRecipeChecked(id: string, value: boolean, producer = false): void {
-    const action = producer
-      ? Producers.SetCheckedAction
+  setRecipeChecked(id: string, value: boolean, objective = false): void {
+    const action = objective
+      ? RecipeObjectives.SetCheckedAction
       : Recipes.SetCheckedAction;
     this.store.dispatch(new action({ id, value }));
   }
@@ -513,8 +513,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new Recipes.ResetRecipeAction(value));
   }
 
-  resetProducer(value: string): void {
-    this.store.dispatch(new Producers.ResetProducerAction(value));
+  resetRecipeObjective(value: string): void {
+    this.store.dispatch(new RecipeObjectives.ResetObjectiveAction(value));
   }
 
   resetChecked(): void {
