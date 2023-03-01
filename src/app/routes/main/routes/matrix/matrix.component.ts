@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { LabState, Products, Settings } from '~/store';
+import { ItemObjectives, LabState, Settings } from '~/store';
 
 @Component({
   selector: 'lab-matrix',
@@ -12,7 +12,7 @@ import { LabState, Products, Settings } from '~/store';
 })
 export class MatrixComponent {
   vm$ = combineLatest([
-    this.store.select(Products.getMatrixResult),
+    this.store.select(ItemObjectives.getMatrixResult),
     this.store.select(Settings.getSettingsModified),
     this.store.select(Settings.settingsState),
   ]).pipe(

@@ -5,11 +5,11 @@ import i18n from 'src/data/1.1/i18n/zh.json';
 import * as M from '~/models';
 import {
   Datasets,
+  ItemObjectives,
   Items,
   Machines,
   Preferences,
   Producers,
-  Products,
   Recipes,
   Settings,
 } from '~/store';
@@ -42,41 +42,46 @@ export const CategoryId = Dataset.categoryIds[0];
 export const Item1 = Dataset.itemEntities[Dataset.itemIds[0]];
 export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
 export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
-export const Product1: M.Product = {
+export const ItemObjective1: M.ItemObjective = {
   id: '0',
   itemId: Item1.id,
   rate: '1',
   rateType: M.RateType.Items,
 };
-export const Product2: M.Product = {
+export const ItemObjective2: M.ItemObjective = {
   id: '1',
   itemId: Item2.id,
   rate: '2',
   rateType: M.RateType.Belts,
 };
-export const Product3: M.Product = {
+export const ItemObjective3: M.ItemObjective = {
   id: '2',
   itemId: ItemId.PetroleumGas,
   rate: '3',
   rateType: M.RateType.Wagons,
 };
-export const Product4: M.Product = {
+export const ItemObjective4: M.ItemObjective = {
   id: '3',
   itemId: ItemId.TransportBelt,
   rate: '4',
   rateType: M.RateType.Items,
 };
-export const ProductsList = [Product1, Product2, Product3, Product4];
-export const ProductsState: Products.ProductsState = {
-  ids: ProductsList.map((p) => p.id),
-  entities: M.toEntities(ProductsList),
-  index: ProductsList.length + 1,
+export const ItemObjectivesList = [
+  ItemObjective1,
+  ItemObjective2,
+  ItemObjective3,
+  ItemObjective4,
+];
+export const ItemObjectivesState: ItemObjectives.ItemObjectivesState = {
+  ids: ItemObjectivesList.map((p) => p.id),
+  entities: M.toEntities(ItemObjectivesList),
+  index: ItemObjectivesList.length + 1,
 };
-export const RationalProducts = ProductsList.map((p) => {
-  const rp = new M.RationalProduct(p);
+export const RationalItemObjectives = ItemObjectivesList.map((p) => {
+  const rp = new M.RationalItemObjective(p);
   return rp;
 });
-export const RationalProduct = RationalProducts[0];
+export const RationalItemObjective = RationalItemObjectives[0];
 export const Producer: M.Producer = {
   id: '0',
   recipeId: RecipeId.IronPlate,
@@ -91,16 +96,16 @@ export const RationalProducer = new M.RationalProducer(
   Producer,
   Dataset.recipeR[RecipeId.IronPlate]
 );
-export const ProductIds = ProductsList.map((p) => p.id);
-export const ProductEntities =
-  Products.getProductsBy.projector(RationalProducts);
-export const ProductSteps = {
-  [Product1.id]: <[string, M.Rational][]>[],
-  [Product2.id]: <[string, M.Rational][]>[],
-  [Product3.id]: <[string, M.Rational][]>[
+export const ItemObjectiveIds = ItemObjectivesList.map((p) => p.id);
+export const ItemObjectiveEntities =
+  ItemObjectives.getItemObjectivesBy.projector(RationalItemObjectives);
+export const ItemObjectivesteps = {
+  [ItemObjective1.id]: <[string, M.Rational][]>[],
+  [ItemObjective2.id]: <[string, M.Rational][]>[],
+  [ItemObjective3.id]: <[string, M.Rational][]>[
     [ItemId.PetroleumGas, M.Rational.one],
   ],
-  [Product4.id]: <[string, M.Rational][]>[
+  [ItemObjective4.id]: <[string, M.Rational][]>[
     [RecipeId.TransportBelt, M.Rational.one],
   ],
 };
@@ -135,7 +140,7 @@ export const Step1: M.Step = {
   id: `${Item1.id}.${Item1.id}`,
   itemId: Item1.id,
   recipeId: Item1.id,
-  items: M.Rational.fromString(Product1.rate),
+  items: M.Rational.fromString(ItemObjective1.rate),
   belts: M.Rational.fromNumber(0.5),
   wagons: M.Rational.two,
   machines: M.Rational.one,
@@ -146,7 +151,7 @@ export const Step2: M.Step = {
   id: `${Item2.id}.${Item2.id}`,
   itemId: Item2.id,
   recipeId: Item2.id,
-  items: M.Rational.fromString(Product2.rate),
+  items: M.Rational.fromString(ItemObjective2.rate),
   belts: M.Rational.one,
   wagons: M.Rational.one,
   machines: M.Rational.two,
@@ -231,13 +236,7 @@ export const PreferencesState: Preferences.PreferencesState = {
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
   resultType: M.MatrixResultType.Solved,
-  pivots: 9,
   time: 20,
-  A: [
-    [M.Rational.one, M.Rational.one, M.Rational.zero, M.Rational.zero],
-    [M.Rational.zero, M.Rational.one, M.Rational.one, M.Rational.one],
-  ],
-  O: [M.Rational.one, M.Rational.one, M.Rational.one, M.Rational.one],
   itemIds: [ItemId.Wood],
   recipeIds: [RecipeId.WoodenChest],
   inputIds: [],

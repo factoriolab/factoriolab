@@ -29,9 +29,9 @@ describe('WizardComponent', () => {
 
   describe('selectId', () => {
     it('should set the id and state', () => {
-      component.selectId(ItemId.IronPlate, WizardState.ProductType);
+      component.selectId(ItemId.IronPlate, WizardState.ItemObjectiveType);
       expect(component.id).toEqual(ItemId.IronPlate);
-      expect(component.state).toEqual(WizardState.ProductType);
+      expect(component.state).toEqual(WizardState.ItemObjectiveType);
     });
   });
 
@@ -39,7 +39,7 @@ describe('WizardComponent', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
     dispatch.spy.calls.reset();
-    component.createProduct(ItemId.IronPlate, '1', RateType.Items);
+    component.createItemObjective(ItemId.IronPlate, '1', RateType.Items);
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
       new Products.CreateAction({
         id: '0',

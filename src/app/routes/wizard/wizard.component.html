@@ -4,11 +4,11 @@
       <ng-container *ngSwitchCase="WizardState.ObjectiveType">
         <ng-container *ngTemplateOutlet="objectiveType"></ng-container>
       </ng-container>
-      <ng-container *ngSwitchCase="WizardState.ProductType">
-        <ng-container *ngTemplateOutlet="productType"></ng-container>
+      <ng-container *ngSwitchCase="WizardState.ItemObjectiveType">
+        <ng-container *ngTemplateOutlet="itemObjectiveType"></ng-container>
       </ng-container>
-      <ng-container *ngSwitchCase="WizardState.ProductItems">
-        <ng-container *ngTemplateOutlet="productItems"></ng-container>
+      <ng-container *ngSwitchCase="WizardState.ItemObjectiveItems">
+        <ng-container *ngTemplateOutlet="itemObjectiveItems"></ng-container>
       </ng-container>
       <ng-container *ngSwitchCase="WizardState.Producer">
         <ng-container *ngTemplateOutlet="producer"></ng-container>
@@ -39,12 +39,12 @@
       class="mt-2"
       icon="fa-solid fa-box"
       [label]="'wizard.produceItemsButton' | translate"
-      (click)="addProductPicker.clickOpen(vm.data, 'item')"
+      (click)="addItemObjectivePicker.clickOpen(vm.data, 'item')"
     ></button>
     <lab-picker
-      #addProductPicker
+      #addItemObjectivePicker
       [header]="'wizard.produceItemsButton' | translate"
-      (selectId)="selectId($event, WizardState.ProductType)"
+      (selectId)="selectId($event, WizardState.ItemObjectiveType)"
     ></lab-picker>
     <p-divider></p-divider>
     <span>{{ 'wizard.runMachines' | translate }}</span>
@@ -64,9 +64,9 @@
     ></lab-picker>
     <p-divider></p-divider>
   </ng-template>
-  <ng-template #productType>
+  <ng-template #itemObjectiveType>
     <div>
-      {{ 'wizard.productType' | translate }}
+      {{ 'wizard.itemObjectiveType' | translate }}
     </div>
     <p-divider></p-divider>
     <div class="d-flex align-items-center justify-content-center">
@@ -79,8 +79,8 @@
       type="button"
       class="mt-2"
       icon="fa-solid fa-gauge"
-      [label]="'wizard.productTypeItems' | translate"
-      (click)="state = WizardState.ProductItems"
+      [label]="'wizard.itemObjectiveTypeItems' | translate"
+      (click)="state = WizardState.ItemObjectiveItems"
     ></button>
     <p-divider></p-divider>
     <button
@@ -93,8 +93,8 @@
       (click)="state = WizardState.ObjectiveType"
     ></button>
   </ng-template>
-  <ng-template #productItems>
-    <div>{{ 'wizard.productItems' | translate }}</div>
+  <ng-template #itemObjectiveItems>
+    <div>{{ 'wizard.itemObjectiveItems' | translate }}</div>
     <p-divider></p-divider>
     <div class="d-flex align-items-center justify-content-center">
       <i [class]="id | iconClass"></i>
@@ -122,7 +122,7 @@
       class="mt-2"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="createProduct(id, rate, RateType.Items)"
+      (click)="createItemObjective(id, rate, RateType.Items)"
       routerLink="/list"
     ></button>
     <p-divider></p-divider>
@@ -133,11 +133,11 @@
       class="mb-2 p-button-outlined"
       icon="fa-solid fa-arrow-left"
       [label]="'wizard.back' | translate"
-      (click)="state = WizardState.ProductType"
+      (click)="state = WizardState.ItemObjectiveType"
     ></button>
   </ng-template>
   <ng-template #producer>
-    <div>{{ 'wizard.productMachines' | translate }}</div>
+    <div>{{ 'wizard.producerMachines' | translate }}</div>
     <p-divider></p-divider>
     <div class="d-flex align-items-center justify-content-center">
       <i [class]="id | iconClass"></i>

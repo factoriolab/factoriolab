@@ -3,7 +3,7 @@ import {
   MatrixResultType,
   RateType,
   Rational,
-  RationalProduct,
+  RationalItemObjective,
   RationalRecipe,
 } from '~/models';
 import { RateUtility } from './rate.utility';
@@ -11,7 +11,7 @@ import { MatrixSolution, MatrixState, SimplexUtility } from './simplex.utility';
 
 describe('SimplexUtility', () => {
   const getState = (): MatrixState => ({
-    products: [],
+    itemObjectives: [],
     producers: [],
     steps: [],
     recipes: {},
@@ -259,7 +259,7 @@ describe('SimplexUtility', () => {
         Mocks.Dataset
       );
       expect(result).toEqual({
-        products: [Mocks.RationalProduct],
+        itemObjectives: [Mocks.RationalProduct],
         producers: [Mocks.RationalProducer],
         steps: [],
         recipes: {},
@@ -281,7 +281,7 @@ describe('SimplexUtility', () => {
     it('should handle adjusted product', () => {
       const result = SimplexUtility.getState(
         [
-          new RationalProduct({
+          new RationalItemObjective({
             id: '1',
             itemId: ItemId.MiningProductivity,
             rate: '60',

@@ -14,7 +14,7 @@ import { combineLatest, map } from 'rxjs';
 
 import { APP, Game, gameInfo, gameOptions, games } from '~/models';
 import { ContentService } from '~/services';
-import { LabState, Producers, Products, Settings } from '~/store';
+import { ItemObjectives, LabState, Producers, Settings } from '~/store';
 
 interface MenuLink {
   label: string;
@@ -78,16 +78,19 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest([
-      this.store.select(Products.getProducts),
+      this.store.select(ItemObjectives.getItemObjectives),
       this.store.select(Producers.getBaseProducers),
       this.store.select(Settings.getDataset),
       this.contentSvc.lang$,
     ])
       .pipe(untilDestroyed(this))
-      .subscribe(([products, producers, data]) => {
-        if (products.length && data.itemEntities[products[0].itemId]) {
+      .subscribe(([itemObjectives, producers, data]) => {
+        if (
+          itemObjectives.length &&
+          data.itemEntities[itemObjectives[0].itemId]
+        ) {
           this.title.setTitle(
-            `${data.itemEntities[products[0].itemId].name} | ${APP}`
+            `${data.itemEntities[itemObjectives[0].itemId].name} | ${APP}`
           );
         } else if (
           producers.length &&

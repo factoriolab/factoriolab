@@ -29,12 +29,12 @@ import {
   TrackService,
 } from '~/services';
 import {
+  ItemObjectives,
   Items,
   LabState,
   Machines,
   Preferences,
   Producers,
-  Products,
   Recipes,
   Settings,
 } from '~/store';
@@ -51,15 +51,15 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.select(Machines.getMachines),
     this.store.select(Items.getItemSettings),
     this.store.select(Items.getItemsModified),
-    this.store.select(Products.getStepsModified),
-    this.store.select(Products.getTotals),
-    this.store.select(Products.getSteps),
-    this.store.select(Products.getStepDetails),
-    this.store.select(Products.getStepById),
-    this.store.select(Products.getStepByItemEntities),
-    this.store.select(Products.getStepTree),
-    this.store.select(Products.getEffectivePrecision),
-    this.store.select(Products.getEffectivePowerUnit),
+    this.store.select(ItemObjectives.getStepsModified),
+    this.store.select(ItemObjectives.getTotals),
+    this.store.select(ItemObjectives.getSteps),
+    this.store.select(ItemObjectives.getStepDetails),
+    this.store.select(ItemObjectives.getStepById),
+    this.store.select(ItemObjectives.getStepByItemEntities),
+    this.store.select(ItemObjectives.getStepTree),
+    this.store.select(ItemObjectives.getEffectivePrecision),
+    this.store.select(ItemObjectives.getEffectivePowerUnit),
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Recipes.getRecipesModified),
     this.store.select(Recipes.getAdjustedDataset),
@@ -161,8 +161,8 @@ export class ListComponent implements OnInit, AfterViewInit {
       if (this.fragmentId) {
         const [_, stepId, tabId] = this.fragmentId.split('_');
         combineLatest([
-          this.store.select(Products.getSteps),
-          this.store.select(Products.getStepDetails),
+          this.store.select(ItemObjectives.getSteps),
+          this.store.select(ItemObjectives.getStepDetails),
         ])
           .pipe(first())
           .subscribe(([steps, stepDetails]) => {

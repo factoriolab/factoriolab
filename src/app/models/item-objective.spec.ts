@@ -1,12 +1,12 @@
 import { ItemId } from 'src/tests';
 import { RateType } from './enum/rate-type';
-import { RationalProduct } from './product';
+import { RationalItemObjective } from './item-objective';
 import { Rational } from './rational';
 
-describe('RationalProduct', () => {
+describe('RationalItemObjective', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new RationalProduct({
+      const result = new RationalItemObjective({
         id: '1',
         itemId: ItemId.ArtilleryShellRange,
         rate: '2',

@@ -13,7 +13,13 @@ import {
   Step,
   themeMap,
 } from '~/models';
-import { LabState, Preferences, Products, Recipes, Settings } from '~/store';
+import {
+  ItemObjectives,
+  LabState,
+  Preferences,
+  Recipes,
+  Settings,
+} from '~/store';
 import { ColumnsState } from '~/store/preferences';
 
 @Injectable({
@@ -27,7 +33,7 @@ export class FlowService {
     private store: Store<LabState>
   ) {
     this.flowData$ = combineLatest([
-      this.store.select(Products.getSteps),
+      this.store.select(ItemObjectives.getSteps),
       this.store.select(Recipes.getAdjustedDataset),
       this.store
         .select(Settings.getDisplayRateInfo)

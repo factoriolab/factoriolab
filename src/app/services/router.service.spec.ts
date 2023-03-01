@@ -11,9 +11,9 @@ import {
   DisplayRate,
   InserterCapacity,
   InserterTarget,
+  ItemObjective,
   Preset,
   Producer,
-  Product,
   RateType,
   Rational,
   ResearchSpeed,
@@ -43,13 +43,13 @@ import {
   ZipVersion,
 } from './router.service';
 
-const mockProduct: Product = {
+const mockProduct: ItemObjective = {
   id: '1',
   itemId: ItemId.SteelChest,
   rate: '1',
   rateType: RateType.Belts,
 };
-const mockProductsState: Products.ProductsState = {
+const mockProductsState: Products.ItemObjectivesState = {
   ids: ['1'],
   entities: {
     ['1']: mockProduct,
@@ -166,7 +166,7 @@ describe('RouterService', () => {
   let mockGetZipState: MemoizedSelector<
     LabState,
     {
-      products: Products.ProductsState;
+      products: Products.ItemObjectivesState;
       producers: Producers.ProducersState;
       items: Items.ItemsState;
       recipes: Recipes.RecipesState;
@@ -189,7 +189,7 @@ describe('RouterService', () => {
       [mockSettingsState.modId]: Mocks.Hash,
     });
     mockGetZipState = mockStore.overrideSelector(Products.getZipState, {
-      products: Products.initialProductsState,
+      products: Products.initialItemObjectivesState,
       producers: Producers.initialProducersState,
       items: Items.initialItemsState,
       recipes: Recipes.initialRecipesState,
@@ -217,7 +217,7 @@ describe('RouterService', () => {
       done();
     });
     mockGetZipState.setResult({
-      products: Products.initialProductsState,
+      products: Products.initialItemObjectivesState,
       producers: Producers.initialProducersState,
       items: { [ItemId.Wood]: { excluded: true } },
       recipes: Recipes.initialRecipesState,
@@ -234,7 +234,7 @@ describe('RouterService', () => {
       spyOn(service, 'getHash').and.returnValue('test');
       spyOn(router, 'navigateByUrl');
       service.updateUrl(
-        Products.initialProductsState,
+        Products.initialItemObjectivesState,
         Producers.initialProducersState,
         Items.initialItemsState,
         Recipes.initialRecipesState,
@@ -250,7 +250,7 @@ describe('RouterService', () => {
       spyOn(router, 'navigateByUrl');
       spyOnProperty(router, 'url').and.returnValue('path#hash');
       service.updateUrl(
-        Products.initialProductsState,
+        Products.initialItemObjectivesState,
         Producers.initialProducersState,
         Items.initialItemsState,
         Recipes.initialRecipesState,
@@ -266,7 +266,7 @@ describe('RouterService', () => {
       let zip: ZipData | undefined;
       service
         .zipState(
-          Products.initialProductsState,
+          Products.initialItemObjectivesState,
           Producers.initialProducersState,
           Items.initialItemsState,
           Recipes.initialRecipesState,
@@ -652,7 +652,7 @@ describe('RouterService', () => {
   describe('zipProducts', () => {
     it('should handle RateType Items', () => {
       const zip = mockZipData();
-      service.zipProducts(
+      service.zipItemObjectives(
         zip,
         [
           {
@@ -672,7 +672,7 @@ describe('RouterService', () => {
 
     it('should handle RateType Belts', () => {
       const zip = mockZipData();
-      service.zipProducts(
+      service.zipItemObjectives(
         zip,
         [
           {
@@ -692,7 +692,7 @@ describe('RouterService', () => {
 
     it('should handle RateType Wagons', () => {
       const zip = mockZipData();
-      service.zipProducts(
+      service.zipItemObjectives(
         zip,
         [
           {

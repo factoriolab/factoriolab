@@ -250,7 +250,7 @@ export class RecipeUtility {
       }
 
       recipe.productivity = prod;
-      // Log to adjust prod for research products
+      // Log to adjust prod for research objectives
       if (machine.research) {
         recipe.adjustProd = true;
       }

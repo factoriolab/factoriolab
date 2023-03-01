@@ -48,22 +48,22 @@
         pRipple
         type="button"
         icon="fa-solid fa-box"
-        [label]="'landing.addAProduct' | translate"
-        (click)="addProductPicker.clickOpen(vm.data, 'item')"
+        [label]="'landing.addAnItem' | translate"
+        (click)="addItemPicker.clickOpen(vm.data, 'item')"
       ></button>
       <button
         pButton
         pRipple
         type="button"
         class="mt-2"
-        icon="fa-solid fa-industry"
+        icon="fa-solid fa-flask"
         [label]="'landing.addAProducer' | translate"
         (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
       ></button>
       <lab-picker
-        #addProductPicker
-        [header]="'landing.addAProduct' | translate"
-        (selectId)="selectProduct($event)"
+        #addItemPicker
+        [header]="'landing.addAnItem' | translate"
+        (selectId)="selectItem($event)"
       ></lab-picker>
       <lab-picker
         #addRecipePicker

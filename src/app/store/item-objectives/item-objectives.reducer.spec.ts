@@ -1,27 +1,27 @@
 import { ItemId, Mocks } from 'src/tests';
-import { Product, RateType } from '~/models';
+import { ItemObjective, RateType } from '~/models';
 import * as App from '../app.actions';
-import * as Actions from './products.actions';
+import * as Actions from './item-objectives.actions';
 import {
-  initialProductsState,
-  productsReducer,
-  ProductsState,
-} from './products.reducer';
+  initialItemObjectivesState,
+  itemObjectivesReducer,
+  ItemObjectivesState,
+} from './item-objectives.reducer';
 
-describe('Products Reducer', () => {
-  const state = productsReducer(
+describe('Item Objectives Reducer', () => {
+  const state = itemObjectivesReducer(
     undefined,
     new Actions.AddAction(ItemId.WoodenChest)
   );
 
   describe('LOAD', () => {
     it('should load a list of products', () => {
-      const productsState: ProductsState = {
+      const productsState: ItemObjectivesState = {
         ids: ['id'],
         entities: { id: Mocks.Product1 },
         index: 1,
       };
-      const result = productsReducer(
+      const result = itemObjectivesReducer(
         undefined,
         new App.LoadAction({ productsState })
       );
@@ -29,15 +29,15 @@ describe('Products Reducer', () => {
     });
 
     it('should skip loading products state if null', () => {
-      const result = productsReducer(undefined, new App.LoadAction({}));
-      expect(result).toEqual(initialProductsState);
+      const result = itemObjectivesReducer(undefined, new App.LoadAction({}));
+      expect(result).toEqual(initialItemObjectivesState);
     });
   });
 
   describe('App RESET', () => {
     it('should return the initial state', () => {
-      const result = productsReducer(undefined, new App.ResetAction());
-      expect(result).toEqual(initialProductsState);
+      const result = itemObjectivesReducer(undefined, new App.ResetAction());
+      expect(result).toEqual(initialItemObjectivesState);
     });
   });
 
@@ -47,7 +47,7 @@ describe('Products Reducer', () => {
     });
 
     it('should use settings from the last added product', () => {
-      const state: ProductsState = {
+      const state: ItemObjectivesState = {
         ids: ['0'],
         entities: {
           ['0']: {
@@ -59,7 +59,10 @@ describe('Products Reducer', () => {
         },
         index: 1,
       };
-      const result = productsReducer(state, new Actions.AddAction(ItemId.Wood));
+      const result = itemObjectivesReducer(
+        state,
+        new Actions.AddAction(ItemId.Wood)
+      );
       expect(result.entities['1']).toEqual({
         id: '1',
         itemId: ItemId.Wood,
@@ -71,13 +74,16 @@ describe('Products Reducer', () => {
 
   describe('CREATE', () => {
     it('should create a new product', () => {
-      const product: Product = {
+      const product: ItemObjective = {
         id: '1',
         itemId: ItemId.IronPlate,
         rate: '2',
         rateType: RateType.Items,
       };
-      const result = productsReducer(state, new Actions.CreateAction(product));
+      const result = itemObjectivesReducer(
+        state,
+        new Actions.CreateAction(product)
+      );
       expect(result.entities['0']).toEqual({
         id: '0',
         itemId: ItemId.IronPlate,
@@ -90,14 +96,17 @@ describe('Products Reducer', () => {
 
   describe('REMOVE', () => {
     it('should remove a product', () => {
-      const result = productsReducer(state, new Actions.RemoveAction('0'));
+      const result = itemObjectivesReducer(
+        state,
+        new Actions.RemoveAction('0')
+      );
       expect(result.ids.length).toEqual(0);
     });
   });
 
   describe('SET_ITEM', () => {
     it('should set item on a product', () => {
-      const result = productsReducer(
+      const result = itemObjectivesReducer(
         state,
         new Actions.SetItemAction({
           id: Mocks.Product1.id,
@@ -113,7 +122,7 @@ describe('Products Reducer', () => {
   describe('SET_RATE', () => {
     it('should set rate of a product', () => {
       const value = '3';
-      const result = productsReducer(
+      const result = itemObjectivesReducer(
         state,
         new Actions.SetRateAction({ id: Mocks.Product1.id, value })
       );
@@ -124,7 +133,7 @@ describe('Products Reducer', () => {
   describe('SET_RATE_TYPE', () => {
     it('should set rate type of a product', () => {
       const value = RateType.Wagons;
-      const result = productsReducer(
+      const result = itemObjectivesReducer(
         state,
         new Actions.SetRateTypeAction({ id: Mocks.Product1.id, value })
       );
@@ -134,7 +143,7 @@ describe('Products Reducer', () => {
 
   describe('ADJUST_DISPLAY_RATE', () => {
     it('should adjust rates for products when display rate changes', () => {
-      const result = productsReducer(
+      const result = itemObjectivesReducer(
         state,
         new Actions.AdjustDisplayRateAction('1/60')
       );
@@ -142,11 +151,11 @@ describe('Products Reducer', () => {
     });
 
     it('should not adjust rates when rate type unaffected by display rate', () => {
-      let result = productsReducer(
+      let result = itemObjectivesReducer(
         state,
         new Actions.SetRateTypeAction({ id: '0', value: RateType.Belts })
       );
-      result = productsReducer(
+      result = itemObjectivesReducer(
         result,
         new Actions.AdjustDisplayRateAction('1/60')
       );
@@ -155,6 +164,6 @@ describe('Products Reducer', () => {
   });
 
   it('should return default state', () => {
-    expect(productsReducer(state, { type: 'Test' } as any)).toBe(state);
+    expect(itemObjectivesReducer(state, { type: 'Test' } as any)).toBe(state);
   });
 });

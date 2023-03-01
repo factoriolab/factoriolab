@@ -10,10 +10,10 @@ import {
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import {
+  ItemObjectives,
   Items,
   LabState,
   Producers,
-  Products,
   Recipes,
   Settings,
 } from '~/store';
@@ -26,7 +26,7 @@ import {
 })
 export class ObjectivesComponent {
   vm$ = combineLatest([
-    this.store.select(Products.getProducts),
+    this.store.select(ItemObjectives.getItemObjectives),
     this.store.select(Producers.getProducers),
     this.store.select(Items.getItemSettings),
     this.store.select(Recipes.getRecipeSettings),
@@ -38,7 +38,7 @@ export class ObjectivesComponent {
   ]).pipe(
     map(
       ([
-        products,
+        itemObjectives,
         producers,
         itemSettings,
         recipeSettings,
@@ -48,7 +48,7 @@ export class ObjectivesComponent {
         data,
         width,
       ]) => ({
-        products,
+        itemObjectives,
         producers,
         itemSettings,
         recipeSettings,
@@ -70,20 +70,20 @@ export class ObjectivesComponent {
   ) {}
 
   /** Action Dispatch Methods */
-  removeProduct(id: string): void {
-    this.store.dispatch(new Products.RemoveAction(id));
+  removeItemObjective(id: string): void {
+    this.store.dispatch(new ItemObjectives.RemoveAction(id));
   }
 
   setItem(id: string, value: string): void {
-    this.store.dispatch(new Products.SetItemAction({ id, value }));
+    this.store.dispatch(new ItemObjectives.SetItemAction({ id, value }));
   }
 
   setRate(id: string, value: string): void {
-    this.store.dispatch(new Products.SetRateAction({ id, value }));
+    this.store.dispatch(new ItemObjectives.SetRateAction({ id, value }));
   }
 
   setRateType(id: string, value: RateType): void {
-    this.store.dispatch(new Products.SetRateTypeAction({ id, value }));
+    this.store.dispatch(new ItemObjectives.SetRateTypeAction({ id, value }));
   }
 
   removeProducer(id: string): void {
@@ -98,8 +98,8 @@ export class ObjectivesComponent {
     this.store.dispatch(new Producers.SetCountAction({ id, value }));
   }
 
-  addProduct(value: string): void {
-    this.store.dispatch(new Products.AddAction(value));
+  addItemObjective(value: string): void {
+    this.store.dispatch(new ItemObjectives.AddAction(value));
   }
 
   addProducer(value: string): void {

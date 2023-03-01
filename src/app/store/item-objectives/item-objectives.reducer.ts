@@ -1,38 +1,41 @@
-import { Entities, Product, RateType, Rational } from '~/models';
+import { Entities, ItemObjective, RateType, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
-import { ProductsAction, ProductsActionType } from './products.actions';
+import {
+  ItemObjectivesAction,
+  ItemObjectivesActionType,
+} from './item-objectives.actions';
 
-export interface ProductsState {
+export interface ItemObjectivesState {
   ids: string[];
-  entities: Entities<Product>;
+  entities: Entities<ItemObjective>;
   index: number;
 }
 
-export const initialProductsState: ProductsState = {
+export const initialItemObjectivesState: ItemObjectivesState = {
   ids: [],
   entities: {},
   index: 0,
 };
 
-export function productsReducer(
-  state: ProductsState = initialProductsState,
-  action: ProductsAction | App.AppAction | Settings.SetModAction
-): ProductsState {
+export function itemObjectivesReducer(
+  state: ItemObjectivesState = initialItemObjectivesState,
+  action: ItemObjectivesAction | App.AppAction | Settings.SetModAction
+): ItemObjectivesState {
   switch (action.type) {
     case App.AppActionType.LOAD:
-      return action.payload.productsState
-        ? action.payload.productsState
-        : initialProductsState;
+      return action.payload.itemObjectivesState
+        ? action.payload.itemObjectivesState
+        : initialItemObjectivesState;
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
-      return initialProductsState;
-    case ProductsActionType.ADD: {
+      return initialItemObjectivesState;
+    case ItemObjectivesActionType.ADD: {
       let rate = '60';
       let rateType = RateType.Items;
       if (state.ids.length > 0) {
-        // Use rate and rate type from last product in list
+        // Use rate and rate type from last item objective in list
         const id = state.ids[state.ids.length - 1];
         rate = state.entities[id].rate;
         rateType = state.entities[id].rateType;
@@ -56,15 +59,19 @@ export function productsReducer(
         },
       };
     }
-    case ProductsActionType.CREATE: {
-      // Use full product, but enforce id: '0'
-      const product = { ...action.payload, ...{ id: '0' } };
+    case ItemObjectivesActionType.CREATE: {
+      // Use full item objective, but enforce id: '0'
+      const itemObjective = { ...action.payload, ...{ id: '0' } };
       return {
         ...state,
-        ...{ ids: [product.id], entities: { [product.id]: product }, index: 1 },
+        ...{
+          ids: [itemObjective.id],
+          entities: { [itemObjective.id]: itemObjective },
+          index: 1,
+        },
       };
     }
-    case ProductsActionType.REMOVE: {
+    case ItemObjectivesActionType.REMOVE: {
       const newEntities = { ...state.entities };
       delete newEntities[action.payload];
       return {
@@ -75,7 +82,7 @@ export function productsReducer(
         },
       };
     }
-    case ProductsActionType.SET_ITEM: {
+    case ItemObjectivesActionType.SET_ITEM: {
       return {
         ...state,
         ...{
@@ -87,7 +94,7 @@ export function productsReducer(
         },
       };
     }
-    case ProductsActionType.SET_RATE:
+    case ItemObjectivesActionType.SET_RATE:
       return {
         ...state,
         ...{
@@ -98,7 +105,7 @@ export function productsReducer(
           ),
         },
       };
-    case ProductsActionType.SET_RATE_TYPE:
+    case ItemObjectivesActionType.SET_RATE_TYPE:
       return {
         ...state,
         ...{
@@ -109,7 +116,7 @@ export function productsReducer(
           ),
         },
       };
-    case ProductsActionType.ADJUST_DISPLAY_RATE: {
+    case ItemObjectivesActionType.ADJUST_DISPLAY_RATE: {
       const factor = Rational.fromString(action.payload);
       const newEntities = { ...state.entities };
       for (const id of state.ids.filter(

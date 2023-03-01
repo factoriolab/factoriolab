@@ -1,11 +1,14 @@
 <p-card *ngIf="vm$ | async as vm" [header]="'objectives.title' | translate">
   <div class="row">
-    <div *ngIf="vm.products.length" class="col-12 col-xl-6">
+    <div *ngIf="vm.itemObjectives.length" class="col-12 col-xl-6">
       <h3>
-        {{ 'objectives.products' | translate }}
+        {{ 'objectives.items' | translate }}
       </h3>
       <div
-        *ngFor="let product of vm.products; trackBy: trackSvc.trackById"
+        *ngFor="
+          let itemObjective of vm.itemObjectives;
+          trackBy: trackSvc.trackById
+        "
         class="mb-2"
       >
         <div class="p-inputgroup">
@@ -15,39 +18,43 @@
             type="button"
             class="p-button-outlined icon"
             icon="fa-solid fa-minus"
-            [pTooltip]="'objectives.removeProductTooltip' | translate"
-            (click)="removeProduct(product.id)"
+            [pTooltip]="'objectives.removeItemTooltip' | translate"
+            (click)="removeItemObjective(itemObjective.id)"
           ></button>
           <button
             pButton
             pRipple
             type="button"
             class="text-truncate"
-            [icon]="product.itemId | iconSmClass"
-            [label]="vm.mobile ? '' : vm.data.itemEntities[product.itemId].name"
+            [icon]="itemObjective.itemId | iconSmClass"
+            [label]="
+              vm.mobile ? '' : vm.data.itemEntities[itemObjective.itemId].name
+            "
             [pTooltip]="'objectives.itemTooltip' | translate"
             tooltipPosition="top"
-            (click)="editPicker.clickOpen(vm.data, 'item', product.itemId)"
+            (click)="
+              editPicker.clickOpen(vm.data, 'item', itemObjective.itemId)
+            "
           ></button>
           <lab-picker
             #editPicker
             [header]="'objectives.itemTooltip' | translate"
-            (selectId)="setItem(product.id, $event)"
+            (selectId)="setItem(itemObjective.id, $event)"
           ></lab-picker>
           <lab-input-number
             [pTooltip]="'objectives.rateTooltip' | translate"
             tooltipPosition="top"
             [hideButtons]="vm.mobile"
-            [value]="product.rate"
-            (setValue)="setRate(product.id, $event)"
+            [value]="itemObjective.rate"
+            (setValue)="setRate(itemObjective.id, $event)"
           ></lab-input-number>
           <p-dropdown
             labDropdownTranslate
             [tooltip]="'objectives.rateTypeTooltip' | translate"
             tooltipPosition="top"
             [options]="vm.rateTypeOptions"
-            [ngModel]="product.rateType"
-            (onChange)="setRateType(product.id, $event.value)"
+            [ngModel]="itemObjective.rateType"
+            (onChange)="setRateType(itemObjective.id, $event.value)"
           ></p-dropdown>
         </div>
       </div>
@@ -112,10 +119,10 @@
         type="button"
         class="w-100"
         icon="fa-solid fa-plus"
-        [pTooltip]="'objectives.addAProductTooltip' | translate"
+        [pTooltip]="'objectives.addAnItemTooltip' | translate"
         tooltipPosition="top"
-        [label]="'objectives.product' | translate"
-        (click)="addProductPicker.clickOpen(vm.data, 'item')"
+        [label]="'objectives.item' | translate"
+        (click)="addItemPicker.clickOpen(vm.data, 'item')"
       ></button>
     </div>
     <div class="col-6">
@@ -141,10 +148,10 @@
         type="button"
         class="w-100"
         icon="fa-solid fa-box"
-        [pTooltip]="'objectives.addAProductTooltip' | translate"
+        [pTooltip]="'objectives.addAnItemTooltip' | translate"
         tooltipPosition="top"
-        [label]="'objectives.addAProduct' | translate"
-        (click)="addProductPicker.clickOpen(vm.data, 'item')"
+        [label]="'objectives.addAnItem' | translate"
+        (click)="addItemPicker.clickOpen(vm.data, 'item')"
       ></button>
     </div>
     <div class="me-3">
@@ -153,7 +160,7 @@
         pRipple
         type="button"
         class="w-100"
-        icon="fa-solid fa-industry"
+        icon="fa-solid fa-flask"
         [pTooltip]="'objectives.addAProducerTooltip' | translate"
         tooltipPosition="top"
         [label]="'objectives.addAProducer' | translate"
@@ -173,9 +180,9 @@
     </div>
   </div>
   <lab-picker
-    #addProductPicker
-    [header]="'objectives.addAProductTooltip' | translate"
-    (selectId)="addProduct($event)"
+    #addItemPicker
+    [header]="'objectives.addAnItemTooltip' | translate"
+    (selectId)="addItemObjective($event)"
   ></lab-picker>
   <lab-picker
     #addRecipePicker

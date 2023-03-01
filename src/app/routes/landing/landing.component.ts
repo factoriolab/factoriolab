@@ -5,7 +5,13 @@ import { combineLatest, map } from 'rxjs';
 
 import { Game, gameInfo, gameOptions } from '~/models';
 import { RouterService } from '~/services';
-import { LabState, Preferences, Producers, Products, Settings } from '~/store';
+import {
+  ItemObjectives,
+  LabState,
+  Preferences,
+  Producers,
+  Settings,
+} from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
@@ -45,8 +51,8 @@ export class LandingComponent {
     private routerSvc: RouterService
   ) {}
 
-  selectProduct(value: string): void {
-    this.addProduct(value);
+  selectItem(value: string): void {
+    this.addItem(value);
     this.router.navigate(['list']);
   }
 
@@ -72,8 +78,8 @@ export class LandingComponent {
     this.store.dispatch(new Settings.SetModAction(value));
   }
 
-  addProduct(value: string): void {
-    this.store.dispatch(new Products.AddAction(value));
+  addItem(value: string): void {
+    this.store.dispatch(new ItemObjectives.AddAction(value));
   }
 
   addProducer(value: string): void {

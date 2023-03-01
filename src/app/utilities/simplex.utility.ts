@@ -7,8 +7,8 @@ import {
   MatrixResult,
   MatrixResultType,
   Rational,
+  RationalItemObjective,
   RationalProducer,
-  RationalProduct,
   RationalRecipe,
   Step,
 } from '~/models';
@@ -24,7 +24,7 @@ const simplexConfig: Simplex.Options = environment.debug
   : { msgLevel: 'off' };
 
 export interface MatrixState {
-  products: RationalProduct[];
+  itemObjectives: RationalItemObjective[];
   producers: RationalProducer[];
   steps: Step[];
   /** Recipes used in the matrix */
@@ -77,7 +77,7 @@ export interface GlpkResult {
 
 export class SimplexUtility {
   static solve(
-    products: RationalProduct[],
+    itemObjectives: RationalItemObjective[],
     producers: RationalProducer[],
     itemSettings: Items.ItemsState,
     recipeSettings: Recipes.RecipesState,
@@ -85,13 +85,13 @@ export class SimplexUtility {
     costExcluded: Rational,
     data: Dataset
   ): MatrixResult {
-    if (products.length === 0 && producers.length === 0) {
+    if (itemObjectives.length === 0 && producers.length === 0) {
       return { steps: [], resultType: MatrixResultType.Skipped };
     }
 
     // Get matrix state
     const state = this.getState(
-      products,
+      itemObjectives,
       producers,
       itemSettings,
       recipeSettings,
@@ -122,7 +122,7 @@ export class SimplexUtility {
 
   //#region Setup
   static getState(
-    products: RationalProduct[],
+    itemObjectives: RationalItemObjective[],
     producers: RationalProducer[],
     itemSettings: Items.ItemsState,
     recipeSettings: Recipes.RecipesState,
@@ -132,7 +132,7 @@ export class SimplexUtility {
   ): MatrixState {
     // Set up state object
     const state: MatrixState = {
-      products,
+      itemObjectives,
       producers,
       steps: [],
       recipes: {},
@@ -145,17 +145,17 @@ export class SimplexUtility {
       data,
     };
 
-    // Add products to matrix state
-    for (const product of products) {
-      state.items[product.itemId] = product.rate;
-      // Adjust based on productivity, e.g. for research products
-      const recipe = data.recipeR[data.itemRecipeId[product.itemId]];
+    // Add item objectives to matrix state
+    for (const itemObjective of itemObjectives) {
+      state.items[itemObjective.itemId] = itemObjective.rate;
+      // Adjust based on productivity, e.g. for research objectives
+      const recipe = data.recipeR[data.itemRecipeId[itemObjective.itemId]];
       if (recipe?.adjustProd) {
-        state.items[product.itemId] = state.items[product.itemId].mul(
-          recipe.productivity
-        );
+        state.items[itemObjective.itemId] = state.items[
+          itemObjective.itemId
+        ].mul(recipe.productivity);
       }
-      this.parseItemRecursively(product.itemId, state);
+      this.parseItemRecursively(itemObjective.itemId, state);
     }
 
     // Add producers to matrix state

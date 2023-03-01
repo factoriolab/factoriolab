@@ -3,12 +3,12 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { DisplayRate, displayRateOptions, RateType } from '~/models';
-import { LabState, Producers, Products, Settings } from '~/store';
+import { ItemObjectives, LabState, Producers, Settings } from '~/store';
 
 export enum WizardState {
   ObjectiveType,
-  ProductType,
-  ProductItems,
+  ItemObjectiveType,
+  ItemObjectiveItems,
   Producer,
 }
 
@@ -52,9 +52,9 @@ export class WizardComponent {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  createProduct(itemId: string, rate: string, rateType: RateType): void {
+  createItemObjective(itemId: string, rate: string, rateType: RateType): void {
     this.store.dispatch(
-      new Products.CreateAction({ id: '0', itemId, rate, rateType })
+      new ItemObjectives.CreateAction({ id: '0', itemId, rate, rateType })
     );
   }
 

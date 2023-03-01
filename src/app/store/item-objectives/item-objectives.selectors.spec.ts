@@ -16,13 +16,15 @@ import { Producers } from '../';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
-import * as Selectors from './products.selectors';
+import * as Selectors from './item-objectives.selectors';
 
-describe('Products Selectors', () => {
+describe('Item Objectives Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
       expect(
-        Selectors.productsState({ productsState: Mocks.ProductsState } as any)
+        Selectors.itemObjectivesState({
+          productsState: Mocks.ProductsState,
+        } as any)
       ).toEqual(Mocks.ProductsState);
       expect(Selectors.getIds.projector(Mocks.ProductsState)).toEqual(
         Mocks.ProductsState.ids
@@ -35,7 +37,7 @@ describe('Products Selectors', () => {
 
   describe('getProducts', () => {
     it('should return the array of products', () => {
-      const result = Selectors.getProducts.projector(
+      const result = Selectors.getItemObjectives.projector(
         Mocks.ProductsState.ids,
         Mocks.ProductsState.entities,
         Mocks.Dataset
@@ -46,7 +48,7 @@ describe('Products Selectors', () => {
 
   describe('getRationalProducts', () => {
     it('should map products to rational products', () => {
-      const result = Selectors.getRationalProducts.projector(
+      const result = Selectors.getRationalItemObjectives.projector(
         Mocks.ProductsList
       );
       expect(result[0].rate.nonzero()).toBeTrue();
@@ -55,13 +57,13 @@ describe('Products Selectors', () => {
 
   describe('getProductsBy', () => {
     it('should handle empty/null values', () => {
-      const result = Selectors.getProductsBy.projector([]);
+      const result = Selectors.getItemObjectivesBy.projector([]);
       expect(Object.keys(result).length).toEqual(0);
     });
 
     it('should return the array of product ids', () => {
       const products = [...Mocks.RationalProducts, Mocks.RationalProducts[0]];
-      const result = Selectors.getProductsBy.projector(products);
+      const result = Selectors.getItemObjectivesBy.projector(products);
       expect(Object.keys(result).length).toEqual(Mocks.ProductIds.length);
     });
   });
@@ -69,7 +71,7 @@ describe('Products Selectors', () => {
   describe('getProductsByItems', () => {
     it('should select the products calculated by items', () => {
       expect(
-        Selectors.getProductsByItems.projector({
+        Selectors.getItemObjectivesByItems.projector({
           [RateType.Items]: true,
         } as any)
       ).toBeTrue();
@@ -79,7 +81,7 @@ describe('Products Selectors', () => {
   describe('getProductsByBelts', () => {
     it('should select the products calculated by belts', () => {
       expect(
-        Selectors.getProductsByBelts.projector({
+        Selectors.getItemObjectivesByBelts.projector({
           [RateType.Belts]: true,
         } as any)
       ).toBeTrue();
@@ -89,7 +91,7 @@ describe('Products Selectors', () => {
   describe('getProductsByWagons', () => {
     it('should select the products calculated by wagons', () => {
       expect(
-        Selectors.getProductsByWagons.projector({
+        Selectors.getItemObjectivesByWagons.projector({
           [RateType.Wagons]: true,
         } as any)
       ).toBeTrue();
@@ -148,7 +150,7 @@ describe('Products Selectors', () => {
 
   describe('getNormalizedProducts', () => {
     it('should map products to rates', () => {
-      const result = Selectors.getNormalizedProducts.projector(
+      const result = Selectors.getNormalizedItemObjectives.projector(
         Mocks.RationalProducts,
         { ['0']: Rational.ten }
       );

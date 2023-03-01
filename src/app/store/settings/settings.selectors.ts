@@ -436,7 +436,7 @@ export const getDataset = createSelector(
       }, {});
 
     // Calculate missing implicit recipe icons
-    // For recipes with no icon, use icon of first output product
+    // For recipes with no icon, use icon of first output item
     recipes
       .filter((r) => !iconEntities[r.id] && !recipeEntities[r.id].icon)
       .forEach((r) => {

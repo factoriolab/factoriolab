@@ -11,11 +11,11 @@ import {
   BeaconSettings,
   DisplayRate,
   Entities,
+  ItemObjective,
   ItemSettings,
   MachineSettings,
   ModHash,
   Producer,
-  Product,
   RateType,
   Rational,
   RecipeSettings,
@@ -24,11 +24,11 @@ import {
 import {
   App,
   Datasets,
+  ItemObjectives,
   Items,
   LabState,
   Machines,
   Producers,
-  Products,
   Recipes,
   Settings,
 } from '~/store';
@@ -57,7 +57,7 @@ export const MIN_ZIP = 75;
 export enum Section {
   Version = 'v',
   Mod = 'b',
-  Products = 'p',
+  ItemObjectives = 'p',
   Producers = 'q',
   Items = 'i',
   Recipes = 'r',
@@ -139,11 +139,11 @@ export class RouterService {
       .pipe(
         first(),
         tap(() => this.dataSvc.initialize()),
-        switchMap(() => this.store.select(Products.getZipState)),
+        switchMap(() => this.store.select(ItemObjectives.getZipState)),
         debounceTime(0),
         tap((s) =>
           this.updateUrl(
-            s.products,
+            s.itemObjectives,
             s.producers,
             s.items,
             s.recipes,
@@ -156,7 +156,7 @@ export class RouterService {
   }
 
   updateUrl(
-    products: Products.ProductsState,
+    itemObjectives: ItemObjectives.ItemObjectivesState,
     producers: Producers.ProducersState,
     items: Items.ItemsState,
     recipes: Recipes.RecipesState,
@@ -164,7 +164,7 @@ export class RouterService {
     settings: Settings.SettingsState
   ): void {
     this.zipState(
-      products,
+      itemObjectives,
       producers,
       items,
       recipes,
@@ -185,7 +185,7 @@ export class RouterService {
   }
 
   zipState(
-    products: Products.ProductsState,
+    itemObjectives: ItemObjectives.ItemObjectivesState,
     producers: Producers.ProducersState,
     items: Items.ItemsState,
     recipes: Recipes.RecipesState,
@@ -198,14 +198,14 @@ export class RouterService {
       first(),
       map((hash) => {
         // Setup object lists
-        const p = products.ids.map((i) => products.entities[i]);
+        const p = itemObjectives.ids.map((i) => itemObjectives.entities[i]);
         const q = producers.ids.map((i) => producers.entities[i]);
 
         // Beacons
         const zData = this.zipBeacons(q, recipes, hash);
 
-        // Products
-        this.zipProducts(zData, p, hash);
+        // Item Objectives
+        this.zipItemObjectives(zData, p, hash);
         // Producers
         this.zipProducers(zData, q, hash);
 
@@ -235,7 +235,7 @@ export class RouterService {
     if (step.items == null || step.itemId == null || hash == null) {
       return null;
     }
-    const products: Product[] = [
+    const itemObjectives: ItemObjective[] = [
       {
         id: '0',
         itemId: step.itemId,
@@ -249,7 +249,7 @@ export class RouterService {
       recipeBeaconMap: {},
       producerBeaconMap: {},
     };
-    this.zipProducts(zData, products, hash);
+    this.zipItemObjectives(zData, itemObjectives, hash);
     return '?' + this.getHash(zData);
   }
 
@@ -312,8 +312,8 @@ export class RouterService {
               params[k] = decodeURIComponent(params[k]);
             });
             const beaconSettings = this.unzipBeacons(params);
-            if (params[Section.Products]) {
-              state.productsState = this.unzipProducts(params);
+            if (params[Section.ItemObjectives]) {
+              state.itemObjectivesState = this.unzipItemObjectives(params);
             }
             if (params[Section.Producers]) {
               state.producersState = this.unzipProducers(
@@ -340,8 +340,11 @@ export class RouterService {
               .requestData(modId || Settings.initialSettingsState.modId)
               .subscribe(([_, hash]) => {
                 const beaconSettings = this.unzipBeacons(params, hash);
-                if (params[Section.Products]) {
-                  state.productsState = this.unzipProducts(params, hash);
+                if (params[Section.ItemObjectives]) {
+                  state.itemObjectivesState = this.unzipItemObjectives(
+                    params,
+                    hash
+                  );
                 }
                 if (params[Section.Producers]) {
                   state.producersState = this.unzipProducers(
@@ -775,9 +778,13 @@ export class RouterService {
     });
   }
 
-  zipProducts(data: ZipData, products: Product[], hash: ModHash): void {
+  zipItemObjectives(
+    data: ZipData,
+    itemObjectives: ItemObjective[],
+    hash: ModHash
+  ): void {
     const z = this.zipList(
-      products.map((obj) => {
+      itemObjectives.map((obj) => {
         const r = Rational.fromString(obj.rate).toString();
         const t = this.zipDiffNumber(obj.rateType, RateType.Items);
 
@@ -793,21 +800,24 @@ export class RouterService {
     );
 
     if (z.bare.length) {
-      data.objectives.bare += `${Section.Products}=${z.bare}`;
-      data.objectives.hash += `${Section.Products}${z.hash}`;
+      data.objectives.bare += `${Section.ItemObjectives}=${z.bare}`;
+      data.objectives.hash += `${Section.ItemObjectives}${z.hash}`;
     }
   }
 
-  unzipProducts(params: Entities, hash?: ModHash): Products.ProductsState {
-    const list = params[Section.Products].split(LISTSEP);
+  unzipItemObjectives(
+    params: Entities,
+    hash?: ModHash
+  ): ItemObjectives.ItemObjectivesState {
+    const list = params[Section.ItemObjectives].split(LISTSEP);
     const ids: string[] = [];
-    const entities: Entities<Product> = {};
+    const entities: Entities<ItemObjective> = {};
     let index = 1;
-    for (const product of list) {
-      const s = product.split(FIELDSEP);
+    for (const itemObjective of list) {
+      const s = itemObjective.split(FIELDSEP);
       let i = 0;
       const id = index.toString();
-      let obj: Product;
+      let obj: ItemObjective;
 
       if (hash) {
         obj = {

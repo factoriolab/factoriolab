@@ -4,10 +4,10 @@ import { map } from 'rxjs/operators';
 
 import { displayRateInfo } from '~/models';
 import * as Settings from '../settings';
-import { AdjustDisplayRateAction } from './products.actions';
+import { AdjustDisplayRateAction } from './item-objectives.actions';
 
 @Injectable()
-export class ProductsEffects {
+export class ItemObjectivesEffects {
   adjustDisplayRate$ = createEffect(() =>
     this.actions$.pipe(
       ofType(Settings.SettingsActionType.SET_DISPLAY_RATE),

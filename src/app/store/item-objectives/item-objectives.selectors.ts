@@ -10,7 +10,7 @@ import {
   precisionColumns,
   RateType,
   Rational,
-  RationalProduct,
+  RationalItemObjective,
   Step,
   StepDetail,
   StepDetailTab,
@@ -24,20 +24,20 @@ import * as Preferences from '../preferences';
 import * as Producers from '../producers';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
-import { ProductsState } from './products.reducer';
+import { ItemObjectivesState } from './item-objectives.reducer';
 
 /* Base selector functions */
-export const productsState = (state: LabState): ProductsState =>
-  state.productsState;
+export const itemObjectivesState = (state: LabState): ItemObjectivesState =>
+  state.itemObjectivesState;
 
-export const getIds = createSelector(productsState, (state) => state.ids);
+export const getIds = createSelector(itemObjectivesState, (state) => state.ids);
 export const getEntities = createSelector(
-  productsState,
+  itemObjectivesState,
   (state) => state.entities
 );
 
 /* Complex selectors */
-export const getProducts = createSelector(
+export const getItemObjectives = createSelector(
   getIds,
   getEntities,
   Settings.getDataset,
@@ -45,40 +45,43 @@ export const getProducts = createSelector(
     ids.map((i) => entities[i]).filter((p) => data.itemEntities[p.itemId])
 );
 
-export const getRationalProducts = createSelector(getProducts, (products) =>
-  products.map((p) => new RationalProduct(p))
+export const getRationalItemObjectives = createSelector(
+  getItemObjectives,
+  (itemObjectives) => itemObjectives.map((p) => new RationalItemObjective(p))
 );
 
-export const getProductsBy = createSelector(getRationalProducts, (products) =>
-  products.reduce((e: Entities<RationalProduct[]>, p) => {
-    if (!e[p.rateType]) {
-      e[p.rateType] = [];
-    }
-    e[p.rateType] = [...e[p.rateType], p];
-    return e;
-  }, {})
+export const getItemObjectivesBy = createSelector(
+  getRationalItemObjectives,
+  (itemObjectives) =>
+    itemObjectives.reduce((e: Entities<RationalItemObjective[]>, p) => {
+      if (!e[p.rateType]) {
+        e[p.rateType] = [];
+      }
+      e[p.rateType] = [...e[p.rateType], p];
+      return e;
+    }, {})
 );
 
-export const getProductsByItems = createSelector(
-  getProductsBy,
-  (products) => products[RateType.Items]
+export const getItemObjectivesByItems = createSelector(
+  getItemObjectivesBy,
+  (itemObjectives) => itemObjectives[RateType.Items]
 );
 
-export const getProductsByBelts = createSelector(
-  getProductsBy,
-  (products) => products[RateType.Belts]
+export const getItemObjectivesByBelts = createSelector(
+  getItemObjectivesBy,
+  (itemObjectives) => itemObjectives[RateType.Belts]
 );
 
-export const getProductsByWagons = createSelector(
-  getProductsBy,
-  (products) => products[RateType.Wagons]
+export const getItemObjectivesByWagons = createSelector(
+  getItemObjectivesBy,
+  (itemObjectives) => itemObjectives[RateType.Wagons]
 );
 
 export const getNormalizedRatesByItems = createSelector(
-  getProductsByItems,
+  getItemObjectivesByItems,
   Settings.getDisplayRateInfo,
-  (products, dispRateInfo) =>
-    products?.reduce((e: Entities<Rational>, p) => {
+  (itemObjectives, dispRateInfo) =>
+    itemObjectives?.reduce((e: Entities<Rational>, p) => {
       const rate = p.rate.div(dispRateInfo.value);
       e[p.id] = rate;
       return e;
@@ -86,11 +89,11 @@ export const getNormalizedRatesByItems = createSelector(
 );
 
 export const getNormalizedRatesByBelts = createSelector(
-  getProductsByBelts,
+  getItemObjectivesByBelts,
   Items.getItemSettings,
   Settings.getBeltSpeed,
-  (products, itemSettings, beltSpeed) =>
-    products?.reduce((e: Entities<Rational>, p) => {
+  (itemObjectives, itemSettings, beltSpeed) =>
+    itemObjectives?.reduce((e: Entities<Rational>, p) => {
       const id = itemSettings[p.itemId].beltId;
       if (id) {
         e[p.id] = p.rate.mul(beltSpeed[id]);
@@ -100,12 +103,12 @@ export const getNormalizedRatesByBelts = createSelector(
 );
 
 export const getNormalizedRatesByWagons = createSelector(
-  getProductsByWagons,
+  getItemObjectivesByWagons,
   Items.getItemSettings,
   Settings.getDisplayRateInfo,
   Settings.getDataset,
-  (products, itemSettings, dispRateInfo, data) =>
-    products?.reduce((e: Entities<Rational>, p) => {
+  (itemObjectives, itemSettings, dispRateInfo, data) =>
+    itemObjectives?.reduce((e: Entities<Rational>, p) => {
       e[p.id] = p.rate.div(dispRateInfo.value);
       const wagonId = itemSettings[p.itemId].wagonId;
       if (wagonId) {
@@ -132,22 +135,23 @@ export const getNormalizedRates = createSelector(
   })
 );
 
-export const getNormalizedProducts = createSelector(
-  getRationalProducts,
+export const getNormalizedItemObjectives = createSelector(
+  getRationalItemObjectives,
   getNormalizedRates,
-  (products, rates) => products.map((p) => ({ ...p, ...{ rate: rates[p.id] } }))
+  (itemObjectives, rates) =>
+    itemObjectives.map((p) => ({ ...p, ...{ rate: rates[p.id] } }))
 );
 
 export const getMatrixResult = createSelector(
-  getNormalizedProducts,
+  getNormalizedItemObjectives,
   Producers.getRationalProducers,
   Items.getItemSettings,
   Recipes.getRecipeSettings,
   Settings.getSimplexModifiers,
   Recipes.getAdjustedDataset,
-  (products, producers, itemSettings, recipeSettings, adj, data) =>
+  (itemObjectives, producers, itemSettings, recipeSettings, adj, data) =>
     SimplexUtility.solve(
-      products,
+      itemObjectives,
       producers,
       itemSettings,
       recipeSettings,
@@ -189,14 +193,14 @@ export const getSteps = createSelector(
 );
 
 export const getZipState = createSelector(
-  productsState,
+  itemObjectivesState,
   Producers.producersState,
   Items.itemsState,
   Recipes.recipesState,
   Machines.machinesState,
   Settings.settingsState,
-  (products, producers, items, recipes, machines, settings) => ({
-    products,
+  (itemObjectives, producers, items, recipes, machines, settings) => ({
+    itemObjectives,
     producers,
     items,
     recipes,
