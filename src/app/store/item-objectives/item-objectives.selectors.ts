@@ -8,7 +8,6 @@ import {
   ItemId,
   PowerUnit,
   precisionColumns,
-  RateUnit,
   Rational,
   RationalItemObjective,
   Step,
@@ -50,96 +49,23 @@ export const getRationalItemObjectives = createSelector(
   (itemObjectives) => itemObjectives.map((p) => new RationalItemObjective(p))
 );
 
-export const getItemObjectivesBy = createSelector(
-  getRationalItemObjectives,
-  (itemObjectives) =>
-    itemObjectives.reduce(
-      (e: Record<RateUnit, RationalItemObjective[]>, p) => {
-        e[p.rateUnit] = [...e[p.rateUnit], p];
-        return e;
-      },
-      { items: [], belts: [], wagons: [] }
-    )
-);
-
-export const getItemObjectivesByItems = createSelector(
-  getItemObjectivesBy,
-  (itemObjectives) => itemObjectives['items']
-);
-
-export const getItemObjectivesByBelts = createSelector(
-  getItemObjectivesBy,
-  (itemObjectives) => itemObjectives['belts']
-);
-
-export const getItemObjectivesByWagons = createSelector(
-  getItemObjectivesBy,
-  (itemObjectives) => itemObjectives['wagons']
-);
-
-export const getNormalizedRatesByItems = createSelector(
-  getItemObjectivesByItems,
-  Settings.getDisplayRateInfo,
-  (itemObjectives, dispRateInfo) =>
-    itemObjectives?.reduce((e: Entities<Rational>, p) => {
-      const rate = p.rate.div(dispRateInfo.value);
-      e[p.id] = rate;
-      return e;
-    }, {})
-);
-
-export const getNormalizedRatesByBelts = createSelector(
-  getItemObjectivesByBelts,
-  Items.getItemSettings,
-  Settings.getBeltSpeed,
-  (itemObjectives, itemSettings, beltSpeed) =>
-    itemObjectives?.reduce((e: Entities<Rational>, p) => {
-      const id = itemSettings[p.itemId].beltId;
-      if (id) {
-        e[p.id] = p.rate.mul(beltSpeed[id]);
-      }
-      return e;
-    }, {})
-);
-
-export const getNormalizedRatesByWagons = createSelector(
-  getItemObjectivesByWagons,
-  Items.getItemSettings,
-  Settings.getDisplayRateInfo,
-  Settings.getDataset,
-  (itemObjectives, itemSettings, dispRateInfo, data) =>
-    itemObjectives?.reduce((e: Entities<Rational>, p) => {
-      e[p.id] = p.rate.div(dispRateInfo.value);
-      const wagonId = itemSettings[p.itemId].wagonId;
-      if (wagonId) {
-        const item = data.itemEntities[p.itemId];
-        const wagon = data.itemEntities[wagonId];
-        if (item.stack && wagon.cargoWagon) {
-          e[p.id] = e[p.id].mul(item.stack.mul(wagon.cargoWagon.size));
-        } else if (wagon.fluidWagon) {
-          e[p.id] = e[p.id].mul(wagon.fluidWagon.capacity);
-        }
-      }
-      return e;
-    }, {})
-);
-
-export const getNormalizedRates = createSelector(
-  getNormalizedRatesByItems,
-  getNormalizedRatesByBelts,
-  getNormalizedRatesByWagons,
-  (byItems, byBelts, byWagons) => ({
-    ...byItems,
-    ...byBelts,
-    ...byWagons,
-  })
-);
-
 export const getNormalizedItemObjectives = createSelector(
   getRationalItemObjectives,
-  getNormalizedRates,
-  (itemObjectives, rates) =>
-    itemObjectives.map((p) => ({ ...p, ...{ rate: rates[p.id] } }))
+  Items.getItemSettings,
+  Settings.getBeltSpeed,
+  Settings.getDataset,
+  (itemObjectives, itemSettings, beltSpeed, data) =>
+    itemObjectives.map((o) => ({
+      ...o,
+      ...{
+        rate: RateUtility.itemObjectiveNormalizedRate(
+          o,
+          itemSettings,
+          beltSpeed,
+          data
+        ),
+      },
+    }))
 );
 
 export const getMatrixResult = createSelector(

@@ -5,6 +5,7 @@ import { LeftPadPipe } from './left-pad.pipe';
 import { MachineRatePipe } from './machine-rate.pipe';
 import { MachineShowRatePipe } from './machine-show-rate.pipe';
 import { MachineShowPipe } from './machine-show.pipe';
+import { ObjectiveRatePipe } from './objective-rate.pipe';
 import { OptionsPipe } from './options.pipe';
 import { PowerPipe } from './power.pipe';
 import { PrecisionExamplePipe } from './precision-example.pipe';
@@ -29,6 +30,7 @@ export const pipes = [
   IconSmClassPipe,
   InserterSpeedPipe,
   LeftPadPipe,
+  ObjectiveRatePipe,
   OptionsPipe,
   MachineRatePipe,
   MachineShowPipe,

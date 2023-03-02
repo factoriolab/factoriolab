@@ -1,4 +1,4 @@
-import { Entities, ItemObjective, RateUnit, Rational } from '~/models';
+import { Entities, ItemObjective, RateUnit } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
@@ -32,7 +32,7 @@ export function itemObjectivesReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialItemObjectivesState;
     case ItemObjectivesActionType.ADD: {
-      let rate = '60';
+      let rate = '1';
       let rateUnit: RateUnit = 'items';
       if (state.ids.length > 0) {
         // Use rate and rate type from last item objective in list
@@ -105,7 +105,7 @@ export function itemObjectivesReducer(
           ),
         },
       };
-    case ItemObjectivesActionType.SET_RATE_TYPE:
+    case ItemObjectivesActionType.SET_RATE_UNIT:
       return {
         ...state,
         ...{
@@ -116,24 +116,6 @@ export function itemObjectivesReducer(
           ),
         },
       };
-    case ItemObjectivesActionType.ADJUST_DISPLAY_RATE: {
-      const factor = Rational.fromString(action.payload);
-      const newEntities = { ...state.entities };
-      for (const id of state.ids.filter(
-        (i) =>
-          state.entities[i].rateUnit === 'items' ||
-          state.entities[i].rateUnit === 'wagons'
-      )) {
-        const rate = Rational.fromString(state.entities[id].rate)
-          .mul(factor)
-          .toString();
-        newEntities[id] = { ...state.entities[id], ...{ rate } };
-      }
-      return {
-        ...state,
-        ...{ entities: newEntities },
-      };
-    }
     default:
       return state;
   }

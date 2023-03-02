@@ -5,16 +5,47 @@ import {
   Game,
   ItemSettings,
   Rational,
+  RationalItemObjective,
   RationalRecipe,
   RationalRecipeObjective,
   RationalRecipeSettings,
   Step,
   toEntities,
 } from '~/models';
+import { Items } from '~/store';
 
 const ROOT_ID = '';
 
 export class RateUtility {
+  static itemObjectiveNormalizedRate(
+    itemObjective: RationalItemObjective,
+    itemSettings: Items.ItemsState,
+    beltSpeed: Entities<Rational>,
+    data: Dataset
+  ): Rational {
+    const rate = itemObjective.rate;
+    let factor = Rational.one;
+    if (itemObjective.rateUnit === 'belts') {
+      const beltId = itemSettings[itemObjective.itemId].beltId;
+      if (beltId) {
+        factor = beltSpeed[beltId];
+      }
+    } else if (itemObjective.rateUnit === 'wagons') {
+      const wagonId = itemSettings[itemObjective.itemId].wagonId;
+      if (wagonId) {
+        const item = data.itemEntities[itemObjective.itemId];
+        const wagon = data.itemEntities[wagonId];
+        if (item.stack && wagon.cargoWagon) {
+          factor = item.stack.mul(wagon.cargoWagon.size);
+        } else if (wagon.fluidWagon) {
+          factor = wagon.fluidWagon.capacity;
+        }
+      }
+    }
+
+    return rate.mul(factor);
+  }
+
   static addEntityValue(
     step: Step,
     key: 'parents' | 'outputs',

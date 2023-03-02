@@ -8,7 +8,7 @@ export const enum ItemObjectivesActionType {
   REMOVE = '[Item Objectives] Remove',
   SET_ITEM = '[Item Objectives] Set Item',
   SET_RATE = '[Item Objectives] Set Rate',
-  SET_RATE_TYPE = '[Item Objectives] Set Rate Type',
+  SET_RATE_UNIT = '[Item Objectives] Set Rate Unit',
   ADJUST_DISPLAY_RATE = '[Item Objectives] Adjust Display Rate',
 }
 
@@ -38,13 +38,8 @@ export class SetRateAction implements Action {
 }
 
 export class SetRateUnitAction implements Action {
-  readonly type = ItemObjectivesActionType.SET_RATE_TYPE;
+  readonly type = ItemObjectivesActionType.SET_RATE_UNIT;
   constructor(public payload: IdPayload<RateUnit>) {}
-}
-
-export class AdjustDisplayRateAction implements Action {
-  readonly type = ItemObjectivesActionType.ADJUST_DISPLAY_RATE;
-  constructor(public payload: string) {}
 }
 
 export type ItemObjectivesAction =
@@ -53,5 +48,4 @@ export type ItemObjectivesAction =
   | RemoveAction
   | SetItemAction
   | SetRateAction
-  | SetRateUnitAction
-  | AdjustDisplayRateAction;
+  | SetRateUnitAction;
