@@ -59,7 +59,7 @@ const mockProductsState: Products.ItemObjectivesState = {
 const mockProducer: RecipeObjective = {
   id: '1',
   recipeId: ItemId.SteelChest,
-  count: '1',
+  amount: '1',
 };
 const mockProducersState: Producers.ProducersState = {
   ids: ['1'],
@@ -587,7 +587,7 @@ describe('RouterService', () => {
           {
             id: '0',
             recipeId: RecipeId.IronPlate,
-            count: '1',
+            amount: '1',
             beacons,
           },
         ],

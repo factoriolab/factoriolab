@@ -259,7 +259,6 @@
     "recipes": "Recipes",
     "removeRecipeTooltip": "Remove recipe",
     "recipeTooltip": "Select recipe",
-    "countTooltip": "Set machine count",
     "item": "Item",
     "addAnItem": "Add an item",
     "addAnItemTooltip": "Select an item to produce",

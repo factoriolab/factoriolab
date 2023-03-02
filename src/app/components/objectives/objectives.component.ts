@@ -78,11 +78,11 @@ export class ObjectivesComponent {
     this.store.dispatch(new ItemObjectives.SetItemAction({ id, value }));
   }
 
-  setAmount(id: string, value: string): void {
+  setItemAmount(id: string, value: string): void {
     this.store.dispatch(new ItemObjectives.SetAmountAction({ id, value }));
   }
 
-  setAmountType(id: string, value: AmountType): void {
+  setItemAmountType(id: string, value: AmountType): void {
     this.store.dispatch(new ItemObjectives.SetAmountTypeAction({ id, value }));
   }
 
@@ -94,8 +94,8 @@ export class ObjectivesComponent {
     this.store.dispatch(new RecipeObjectives.SetRecipeAction({ id, value }));
   }
 
-  setCount(id: string, value: string): void {
-    this.store.dispatch(new RecipeObjectives.SetCountAction({ id, value }));
+  setRecipeAmount(id: string, value: string): void {
+    this.store.dispatch(new RecipeObjectives.SetAmountAction({ id, value }));
   }
 
   addItemObjective(value: string): void {

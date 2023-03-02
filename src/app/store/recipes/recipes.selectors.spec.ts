@@ -193,7 +193,7 @@ describe('Recipes Selectors', () => {
       const producer: RecipeObjective = {
         id: '1',
         recipeId: RecipeId.Coal,
-        count: '1',
+        amount: '1',
         overclock: 100,
         beacons: [{ moduleIds: [] }],
       };

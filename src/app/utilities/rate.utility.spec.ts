@@ -199,7 +199,7 @@ describe('RateUtility', () => {
         ['0']: {
           id: '0',
           recipeId: RecipeId.Coal,
-          count: Rational.one,
+          amount: Rational.one,
           recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
         },
       };

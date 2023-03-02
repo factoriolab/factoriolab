@@ -85,7 +85,7 @@ export const RationalItemObjective = RationalItemObjectives[0];
 export const RecipeObjective: M.RecipeObjective = {
   id: '0',
   recipeId: RecipeId.IronPlate,
-  count: '1',
+  amount: '1',
 };
 export const RecipeObjectivesState: RecipeObjectives.RecipeObjectivesState = {
   ids: ['0'],

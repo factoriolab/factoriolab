@@ -66,9 +66,9 @@ export class WizardComponent {
     );
   }
 
-  createRecipeObjective(recipeId: string, count: string): void {
+  createRecipeObjective(recipeId: string, amount: string): void {
     this.store.dispatch(
-      new RecipeObjectives.CreateAction({ id: '0', recipeId, count })
+      new RecipeObjectives.CreateAction({ id: '0', recipeId, amount })
     );
   }
 }

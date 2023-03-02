@@ -307,8 +307,8 @@ export class SimplexUtility {
     // Add recipe objective vars to model
     for (const recipeObjective of state.recipeObjectives) {
       const config = {
-        lb: recipeObjective.count.toNumber(),
-        ub: recipeObjective.count.toNumber(),
+        lb: recipeObjective.amount.toNumber(),
+        ub: recipeObjective.amount.toNumber(),
         name: recipeObjective.id,
       };
       recipeObjectiveVarEntities[recipeObjective.id] = m.addVar(config);
@@ -524,7 +524,7 @@ export class SimplexUtility {
       const recipe = recipeObjective.recipe;
       if (!recipe.out[itemId]) continue;
       output = output.add(
-        recipe.out[itemId].mul(recipeObjective.count).div(recipe.time)
+        recipe.out[itemId].mul(recipeObjective.amount).div(recipe.time)
       );
     }
 
@@ -645,7 +645,7 @@ export class SimplexUtility {
     step.recipeId = recipe.id;
     step.recipe = recipe;
     if (recipeObjective) {
-      step.machines = recipeObjective.count;
+      step.machines = recipeObjective.amount;
       step.recipeObjectiveId = recipeObjective.id;
     } else {
       step.machines = solution.recipes[recipe.id].add(

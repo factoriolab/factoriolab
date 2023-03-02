@@ -5,6 +5,8 @@ import { Game } from './game';
 
 export type AmountType = 'items' | 'belts' | 'wagons';
 
+export const amountTypes: AmountType[] = ['items', 'belts', 'wagons'];
+
 export function amountTypeOptions(
   dispRateInfo: DisplayRateInfo,
   game: Game
