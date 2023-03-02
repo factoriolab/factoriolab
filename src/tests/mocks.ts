@@ -46,25 +46,25 @@ export const ItemObjective1: M.ItemObjective = {
   id: '0',
   itemId: Item1.id,
   rate: '1',
-  rateType: M.AmountType.Items,
+  rateUnit: M.AmountType.Items,
 };
 export const ItemObjective2: M.ItemObjective = {
   id: '1',
   itemId: Item2.id,
   rate: '2',
-  rateType: M.AmountType.Belts,
+  rateUnit: M.AmountType.Belts,
 };
 export const ItemObjective3: M.ItemObjective = {
   id: '2',
   itemId: ItemId.PetroleumGas,
   rate: '3',
-  rateType: M.AmountType.Wagons,
+  rateUnit: M.AmountType.Wagons,
 };
 export const ItemObjective4: M.ItemObjective = {
   id: '3',
   itemId: ItemId.TransportBelt,
   rate: '4',
-  rateType: M.AmountType.Items,
+  rateUnit: M.AmountType.Items,
 };
 export const ItemObjectivesList = [
   ItemObjective1,

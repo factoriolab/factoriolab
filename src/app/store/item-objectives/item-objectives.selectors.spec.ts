@@ -6,7 +6,7 @@ import {
   Game,
   MatrixResultType,
   PowerUnit,
-  RateType,
+  RateUnit,
   Rational,
   Step,
   StepDetailTab,

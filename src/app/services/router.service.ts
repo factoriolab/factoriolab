@@ -15,7 +15,7 @@ import {
   ItemSettings,
   MachineSettings,
   ModHash,
-  rateTypes,
+  rateUnits,
   Rational,
   RecipeObjective,
   RecipeSettings,
@@ -240,7 +240,7 @@ export class RouterService {
         id: '0',
         itemId: step.itemId,
         rate: step.items.toString(),
-        rateType: 'items',
+        rateUnit: 'items',
       },
     ];
     const zData: ZipData = {
@@ -461,6 +461,13 @@ export class RouterService {
         params[Section.Mod], // Legacy preset
       ]);
     }
+
+    const fn = (a?: string, b?: string): void => {
+      console.log(a, b);
+    };
+
+    fn(undefined);
+    fn(undefined, 'a');
 
     params[Section.Version] = ZipVersion.Version1;
     return this.migrateV1(params, warnings);
@@ -786,7 +793,7 @@ export class RouterService {
     const z = this.zipList(
       itemObjectives.map((obj) => {
         const r = Rational.fromString(obj.rate).toString();
-        const t = this.zipDiffNumber(rateTypes.indexOf(obj.rateType), 0);
+        const t = this.zipDiffNumber(rateUnits.indexOf(obj.rateUnit), 0);
 
         return {
           bare: this.zipFields([obj.itemId, r, t]),
@@ -824,14 +831,14 @@ export class RouterService {
           id,
           itemId: this.parseNString(s[i++], hash.items) ?? '',
           rate: s[i++],
-          rateType: rateTypes[Number(s[i++])] ?? 'items',
+          rateUnit: rateUnits[Number(s[i++])] ?? 'items',
         };
       } else {
         obj = {
           id,
           itemId: s[i++],
           rate: s[i++],
-          rateType: rateTypes[Number(s[i++])] ?? 'items',
+          rateUnit: rateUnits[Number(s[i++])] ?? 'items',
         };
       }
 

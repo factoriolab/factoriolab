@@ -1,4 +1,3 @@
-export * from './rate-type';
 export * from './breakpoint';
 export * from './column';
 export * from './display-rate';
@@ -9,6 +8,7 @@ export * from './id-type';
 export * from './inserter-capacity';
 export * from './inserter-target';
 export * from './item-id';
+export * from './rate-unit';
 export * from './language';
 export * from './matrix-result-type';
 export * from './objective-type';

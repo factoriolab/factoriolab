@@ -6,7 +6,7 @@ import {
   Breakpoint,
   DisplayRate,
   displayRateOptions,
-  RateType,
+  RateUnit,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import {
@@ -31,7 +31,7 @@ export class ObjectivesComponent {
     this.store.select(Items.getItemSettings),
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Settings.getDisplayRate),
-    this.store.select(Settings.getRateTypeOptions),
+    this.store.select(Settings.getRateUnitOptions),
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getDataset),
     this.contentService.width$,
@@ -43,7 +43,7 @@ export class ObjectivesComponent {
         itemSettings,
         recipeSettings,
         displayRate,
-        rateTypeOptions,
+        rateUnitOptions,
         options,
         data,
         width,
@@ -53,7 +53,7 @@ export class ObjectivesComponent {
         itemSettings,
         recipeSettings,
         displayRate,
-        rateTypeOptions,
+        rateUnitOptions,
         options,
         data,
         mobile: width < Breakpoint.Small,
@@ -82,8 +82,8 @@ export class ObjectivesComponent {
     this.store.dispatch(new ItemObjectives.SetRateAction({ id, value }));
   }
 
-  setRateType(id: string, value: RateType): void {
-    this.store.dispatch(new ItemObjectives.SetRateTypeAction({ id, value }));
+  setRateUnit(id: string, value: RateUnit): void {
+    this.store.dispatch(new ItemObjectives.SetRateUnitAction({ id, value }));
   }
 
   removeRecipeObjective(id: string): void {

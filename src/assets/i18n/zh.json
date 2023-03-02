@@ -191,7 +191,7 @@
     "removeItemTooltip": "移除产物",
     "itemTooltip": "选择产物",
     "rateTooltip": "设置生产速度",
-    "rateTypeTooltip": "改变速率类型",
+    "rateUnitTooltip": "改变速率类型",
     "recipes": "生产线",
     "removeRecipeTooltip": "移除生产线",
     "recipeTooltip": "选择配方",

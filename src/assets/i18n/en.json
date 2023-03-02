@@ -18,7 +18,7 @@
     "dontShowAgain": "Don't show again"
   },
   "options": {
-    "rateType": {
+    "rateUnit": {
       "itemsPerSecond": "Items/s",
       "itemsPerMinute": "Items/m",
       "itemsPerHour": "Items/h",
@@ -255,7 +255,7 @@
     "removeItemTooltip": "Remove item",
     "itemTooltip": "Select item",
     "rateTooltip": "Set rate",
-    "rateTypeTooltip": "Select rate type",
+    "rateUnitTooltip": "Select rate type",
     "recipes": "Recipes",
     "removeRecipeTooltip": "Remove recipe",
     "recipeTooltip": "Select recipe",

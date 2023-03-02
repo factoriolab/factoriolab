@@ -1,5 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
-import { ItemObjective, RateType } from '~/models';
+import { ItemObjective, RateUnit } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './item-objectives.actions';
 import {

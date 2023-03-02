@@ -3,17 +3,17 @@ import { SelectItem } from 'primeng/api';
 import { DisplayRateInfo } from './display-rate';
 import { Game } from './game';
 
-export type RateType = 'items' | 'belts' | 'wagons';
+export type RateUnit = 'items' | 'belts' | 'wagons';
 
-export const rateTypes: RateType[] = ['items', 'belts', 'wagons'];
+export const rateUnits: RateUnit[] = ['items', 'belts', 'wagons'];
 
-export function rateTypeOptions(
+export function rateUnitOptions(
   dispRateInfo: DisplayRateInfo,
   game: Game
-): SelectItem<RateType>[] {
-  const result: SelectItem<RateType>[] = [
+): SelectItem<RateUnit>[] {
+  const result: SelectItem<RateUnit>[] = [
     { value: 'items', label: dispRateInfo.itemsLabel },
-    { value: 'belts', label: 'options.rateType.belts' },
+    { value: 'belts', label: 'options.rateUnit.belts' },
     { value: 'wagons', label: dispRateInfo.wagonsLabel },
   ];
 

@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { IdPayload, ItemObjective, RateType } from '~/models';
+import { IdPayload, ItemObjective, RateUnit } from '~/models';
 
 export const enum ItemObjectivesActionType {
   ADD = '[Item Objectives] Add',
@@ -37,9 +37,9 @@ export class SetRateAction implements Action {
   constructor(public payload: IdPayload) {}
 }
 
-export class SetRateTypeAction implements Action {
+export class SetRateUnitAction implements Action {
   readonly type = ItemObjectivesActionType.SET_RATE_TYPE;
-  constructor(public payload: IdPayload<RateType>) {}
+  constructor(public payload: IdPayload<RateUnit>) {}
 }
 
 export class AdjustDisplayRateAction implements Action {
@@ -53,5 +53,5 @@ export type ItemObjectivesAction =
   | RemoveAction
   | SetItemAction
   | SetRateAction
-  | SetRateTypeAction
+  | SetRateUnitAction
   | AdjustDisplayRateAction;

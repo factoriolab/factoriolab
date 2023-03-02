@@ -1,7 +1,7 @@
 import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   MatrixResultType,
-  RateType,
+  RateUnit,
   Rational,
   RationalItemObjective,
   RationalRecipe,

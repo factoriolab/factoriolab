@@ -204,7 +204,7 @@
     "removeProductTooltip": "Enlever le produit",
     "itemTooltip": "Séléctionner l'article à produire",
     "rateTooltip": "Définir le débit de sortie",
-    "rateTypeTooltip": "Séléctionne l'unité de débit",
+    "rateUnitTooltip": "Séléctionne l'unité de débit",
     "recipes": "Producteurs",
     "removeRecipeTooltip": "Enlever le producteur",
     "recipeTooltip": "Sélectionner la recette du producteur",

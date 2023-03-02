@@ -16,7 +16,7 @@ import {
   ItemId,
   Preset,
   presetOptions,
-  rateTypeOptions,
+  rateUnitOptions,
   Rational,
   RationalBeacon,
   RationalBelt,
@@ -124,10 +124,10 @@ export const getDisplayRateInfo = createSelector(
   (displayRate) => displayRateInfo[displayRate]
 );
 
-export const getRateTypeOptions = createSelector(
+export const getRateUnitOptions = createSelector(
   getGame,
   getDisplayRateInfo,
-  (game, dispRateInfo) => rateTypeOptions(dispRateInfo, game)
+  (game, dispRateInfo) => rateUnitOptions(dispRateInfo, game)
 );
 
 export const getPresetOptions = createSelector(getGame, (game) =>

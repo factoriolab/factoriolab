@@ -13,7 +13,7 @@ import {
   InserterTarget,
   ItemObjective,
   Preset,
-  RateType,
+  RateUnit,
   Rational,
   RecipeObjective,
   ResearchSpeed,

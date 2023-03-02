@@ -50,11 +50,11 @@
           ></lab-input-number>
           <p-dropdown
             labDropdownTranslate
-            [tooltip]="'objectives.rateTypeTooltip' | translate"
+            [tooltip]="'objectives.rateUnitTooltip' | translate"
             tooltipPosition="top"
-            [options]="vm.rateTypeOptions"
-            [ngModel]="itemObjective.rateType"
-            (onChange)="setRateType(itemObjective.id, $event.value)"
+            [options]="vm.rateUnitOptions"
+            [ngModel]="itemObjective.rateUnit"
+            (onChange)="setRateUnit(itemObjective.id, $event.value)"
           ></p-dropdown>
         </div>
       </div>

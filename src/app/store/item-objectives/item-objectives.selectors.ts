@@ -8,7 +8,7 @@ import {
   ItemId,
   PowerUnit,
   precisionColumns,
-  RateType,
+  RateUnit,
   Rational,
   RationalItemObjective,
   Step,
@@ -54,8 +54,8 @@ export const getItemObjectivesBy = createSelector(
   getRationalItemObjectives,
   (itemObjectives) =>
     itemObjectives.reduce(
-      (e: Record<RateType, RationalItemObjective[]>, p) => {
-        e[p.rateType] = [...e[p.rateType], p];
+      (e: Record<RateUnit, RationalItemObjective[]>, p) => {
+        e[p.rateUnit] = [...e[p.rateUnit], p];
         return e;
       },
       { items: [], belts: [], wagons: [] }

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { DisplayRate, displayRateOptions, RateType } from '~/models';
+import { DisplayRate, displayRateOptions, RateUnit } from '~/models';
 import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
 export enum WizardState {
@@ -22,12 +22,12 @@ export class WizardComponent {
   vm$ = combineLatest([
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getDisplayRate),
-    this.store.select(Settings.getRateTypeOptions),
+    this.store.select(Settings.getRateUnitOptions),
   ]).pipe(
-    map(([data, displayRate, rateTypeOptions]) => ({
+    map(([data, displayRate, rateUnitOptions]) => ({
       data,
       displayRate,
-      rateTypeOptions,
+      rateUnitOptions,
     }))
   );
 
@@ -52,17 +52,13 @@ export class WizardComponent {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  createItemObjective(
-    itemId: string,
-    rate: string,
-    rateType: RateType
-  ): void {
+  createItemObjective(itemId: string, rate: string, rateUnit: RateUnit): void {
     this.store.dispatch(
       new ItemObjectives.CreateAction({
         id: '0',
         itemId,
-        rate
-        rateType,
+        rate,
+        rateUnit,
       })
     );
   }
