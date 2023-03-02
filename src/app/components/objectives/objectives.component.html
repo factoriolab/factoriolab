@@ -42,19 +42,19 @@
             (selectId)="setItem(itemObjective.id, $event)"
           ></lab-picker>
           <lab-input-number
-            [pTooltip]="'objectives.amountTooltip' | translate"
+            [pTooltip]="'objectives.rateTooltip' | translate"
             tooltipPosition="top"
             [hideButtons]="vm.mobile"
-            [value]="itemObjective.amount"
-            (setValue)="setItemAmount(itemObjective.id, $event)"
+            [value]="itemObjective.rate"
+            (setValue)="setRate(itemObjective.id, $event)"
           ></lab-input-number>
           <p-dropdown
             labDropdownTranslate
-            [tooltip]="'objectives.amountTypeTooltip' | translate"
+            [tooltip]="'objectives.rateTypeTooltip' | translate"
             tooltipPosition="top"
-            [options]="vm.amountTypeOptions"
-            [ngModel]="itemObjective.amountType"
-            (onChange)="setItemAmountType(itemObjective.id, $event.value)"
+            [options]="vm.rateTypeOptions"
+            [ngModel]="itemObjective.rateType"
+            (onChange)="setRateType(itemObjective.id, $event.value)"
           ></p-dropdown>
         </div>
       </div>
@@ -106,10 +106,10 @@
             (selectId)="setRecipe(recipeObjective.id, $event)"
           ></lab-picker>
           <lab-input-number
-            [pTooltip]="'objectives.amountTooltip' | translate"
+            [pTooltip]="'objectives.countTooltip' | translate"
             tooltipPosition="top"
-            [value]="recipeObjective.amount"
-            (setValue)="setRecipeAmount(recipeObjective.id, $event)"
+            [value]="recipeObjective.count"
+            (setValue)="setCount(recipeObjective.id, $event)"
           ></lab-input-number>
         </div>
       </div>

@@ -15,19 +15,19 @@ import {
 const ROOT_ID = '';
 
 export class RateUtility {
-  static addEntityAmount(
+  static addEntityValue(
     step: Step,
     key: 'parents' | 'outputs',
     parentId: string,
-    amount: Rational
+    value: Rational
   ): void {
     const obj = step[key];
     if (!obj) {
-      step[key] = { [parentId]: amount };
+      step[key] = { [parentId]: value };
     } else if (obj[parentId]) {
-      obj[parentId] = obj[parentId].add(amount);
+      obj[parentId] = obj[parentId].add(value);
     } else {
-      obj[parentId] = amount;
+      obj[parentId] = value;
     }
   }
 
@@ -107,7 +107,7 @@ export class RateUtility {
           const amount = recipe.in[itemId].mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
           if (itemStep != null) {
-            this.addEntityAmount(itemStep, 'parents', step.id, amount);
+            this.addEntityValue(itemStep, 'parents', step.id, amount);
           }
         }
       }
@@ -116,7 +116,7 @@ export class RateUtility {
           const amount = recipe.out[itemId].mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
           if (itemStep?.items?.nonzero()) {
-            this.addEntityAmount(
+            this.addEntityValue(
               step,
               'outputs',
               itemId,

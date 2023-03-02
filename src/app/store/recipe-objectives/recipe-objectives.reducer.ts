@@ -40,11 +40,11 @@ export function recipeObjectivesReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialRecipeObjectivesState;
     case RecipeObjectivesActionType.ADD: {
-      let amount = '1';
+      let count = '1';
       if (state.ids.length > 0) {
-        // Use amount from last objective in list
+        // Use count from last objective in list
         const id = state.ids[state.ids.length - 1];
-        amount = state.entities[id].amount;
+        count = state.entities[id].count;
       }
       return {
         ...state,
@@ -56,7 +56,7 @@ export function recipeObjectivesReducer(
               [state.index]: {
                 id: state.index.toString(),
                 recipeId: action.payload,
-                amount,
+                count,
               },
             },
           },
@@ -104,13 +104,13 @@ export function recipeObjectivesReducer(
         },
       };
     }
-    case RecipeObjectivesActionType.SET_AMOUNT:
+    case RecipeObjectivesActionType.SET_COUNT:
       return {
         ...state,
         ...{
           entities: StoreUtility.assignValue(
             state.entities,
-            'amount',
+            'count',
             action.payload
           ),
         },

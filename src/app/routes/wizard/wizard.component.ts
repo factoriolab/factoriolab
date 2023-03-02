@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { AmountType, DisplayRate, displayRateOptions } from '~/models';
+import { DisplayRate, displayRateOptions, RateType } from '~/models';
 import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
 export enum WizardState {
@@ -22,7 +22,7 @@ export class WizardComponent {
   vm$ = combineLatest([
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getDisplayRate),
-    this.store.select(Settings.getAmountTypeOptions),
+    this.store.select(Settings.getRateTypeOptions),
   ]).pipe(
     map(([data, displayRate, rateTypeOptions]) => ({
       data,
@@ -32,7 +32,8 @@ export class WizardComponent {
   );
 
   id = '';
-  amount = '1';
+  rate = '1';
+  count = '1';
   state = WizardState.ObjectiveType;
 
   displayRateOptions = displayRateOptions;
@@ -53,22 +54,22 @@ export class WizardComponent {
 
   createItemObjective(
     itemId: string,
-    amount: string,
-    amountType: AmountType
+    rate: string,
+    rateType: RateType
   ): void {
     this.store.dispatch(
       new ItemObjectives.CreateAction({
         id: '0',
         itemId,
-        amount,
-        amountType,
+        rate
+        rateType,
       })
     );
   }
 
-  createRecipeObjective(recipeId: string, amount: string): void {
+  createRecipeObjective(recipeId: string, count: string): void {
     this.store.dispatch(
-      new RecipeObjectives.CreateAction({ id: '0', recipeId, amount })
+      new RecipeObjectives.CreateAction({ id: '0', recipeId, count })
     );
   }
 }

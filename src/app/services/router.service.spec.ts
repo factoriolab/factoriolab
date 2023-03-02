@@ -7,13 +7,13 @@ import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
-  AmountType,
   BeaconSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
   ItemObjective,
   Preset,
+  RateType,
   Rational,
   RecipeObjective,
   ResearchSpeed,
@@ -46,8 +46,8 @@ import {
 const mockProduct: ItemObjective = {
   id: '1',
   itemId: ItemId.SteelChest,
-  amount: '1',
-  amountType: AmountType.Belts,
+  rate: '1',
+  rateType: AmountType.Belts,
 };
 const mockProductsState: Products.ItemObjectivesState = {
   ids: ['1'],
@@ -59,7 +59,7 @@ const mockProductsState: Products.ItemObjectivesState = {
 const mockProducer: RecipeObjective = {
   id: '1',
   recipeId: ItemId.SteelChest,
-  amount: '1',
+  count: '1',
 };
 const mockProducersState: Producers.ProducersState = {
   ids: ['1'],
@@ -587,7 +587,7 @@ describe('RouterService', () => {
           {
             id: '0',
             recipeId: RecipeId.IronPlate,
-            amount: '1',
+            count: '1',
             beacons,
           },
         ],
@@ -658,8 +658,8 @@ describe('RouterService', () => {
           {
             id: '0',
             itemId: ItemId.SteelChest,
-            amount: '1',
-            amountType: AmountType.Items,
+            rate: '1',
+            rateType: AmountType.Items,
           },
         ],
         Mocks.Hash
@@ -678,8 +678,8 @@ describe('RouterService', () => {
           {
             id: '0',
             itemId: ItemId.SteelChest,
-            amount: '1',
-            amountType: AmountType.Belts,
+            rate: '1',
+            rateType: AmountType.Belts,
           },
         ],
         Mocks.Hash
@@ -698,8 +698,8 @@ describe('RouterService', () => {
           {
             id: '0',
             itemId: ItemId.SteelChest,
-            amount: '1',
-            amountType: AmountType.Wagons,
+            rate: '1',
+            rateType: AmountType.Wagons,
           },
         ],
         Mocks.Hash

@@ -3,15 +3,15 @@ import { SelectItem } from 'primeng/api';
 import { DisplayRateInfo } from './display-rate';
 import { Game } from './game';
 
-export type AmountType = 'items' | 'belts' | 'wagons';
+export type RateType = 'items' | 'belts' | 'wagons';
 
-export const amountTypes: AmountType[] = ['items', 'belts', 'wagons'];
+export const rateTypes: RateType[] = ['items', 'belts', 'wagons'];
 
-export function amountTypeOptions(
+export function rateTypeOptions(
   dispRateInfo: DisplayRateInfo,
   game: Game
-): SelectItem<AmountType>[] {
-  const result: SelectItem<AmountType>[] = [
+): SelectItem<RateType>[] {
+  const result: SelectItem<RateType>[] = [
     { value: 'items', label: dispRateInfo.itemsLabel },
     { value: 'belts', label: 'options.rateType.belts' },
     { value: 'wagons', label: dispRateInfo.wagonsLabel },

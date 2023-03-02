@@ -18,7 +18,7 @@
     "dontShowAgain": "Don't show again"
   },
   "options": {
-    "amountType": {
+    "rateType": {
       "itemsPerSecond": "Items/s",
       "itemsPerMinute": "Items/m",
       "itemsPerHour": "Items/h",
@@ -254,11 +254,12 @@
     "items": "Items",
     "removeItemTooltip": "Remove item",
     "itemTooltip": "Select item",
-    "amountTooltip": "Set amount",
-    "amountTypeTooltip": "Select amount type",
+    "rateTooltip": "Set rate",
+    "rateTypeTooltip": "Select rate type",
     "recipes": "Recipes",
     "removeRecipeTooltip": "Remove recipe",
     "recipeTooltip": "Select recipe",
+    "countTooltip": "Set machine count",
     "item": "Item",
     "addAnItem": "Add an item",
     "addAnItemTooltip": "Select an item to produce",

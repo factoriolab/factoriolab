@@ -1,7 +1,7 @@
 import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
-  AmountType,
   MatrixResultType,
+  RateType,
   Rational,
   RationalItemObjective,
   RationalRecipe,
@@ -188,8 +188,8 @@ describe('SimplexUtility', () => {
           {
             id: '1',
             itemId: ItemId.PetroleumGas,
-            amount: Rational.one,
-            amountType: AmountType.Items,
+            rate: Rational.one,
+            rateType: AmountType.Items,
           },
         ],
         [],
@@ -284,8 +284,8 @@ describe('SimplexUtility', () => {
           new RationalItemObjective({
             id: '1',
             itemId: ItemId.MiningProductivity,
-            amount: '60',
-            amountType: AmountType.Items,
+            rate: '60',
+            rateType: AmountType.Items,
           }),
         ],
         [],

@@ -1,23 +1,23 @@
-import { AmountType } from './enum/amount-type';
+import { RateType } from './enum/rate-type';
 import { Rational } from './rational';
 
 export interface ItemObjective {
   id: string;
   itemId: string;
-  amount: string;
-  amountType: AmountType;
+  rate: string;
+  rateType: RateType;
 }
 
 export class RationalItemObjective {
   id: string;
   itemId: string;
-  amount: Rational;
-  amountType: AmountType;
+  rate: Rational;
+  rateType: RateType;
 
   constructor(obj: ItemObjective) {
     this.id = obj.id;
     this.itemId = obj.itemId;
-    this.amount = Rational.fromString(obj.amount);
-    this.amountType = obj.amountType;
+    this.rate = Rational.fromString(obj.rate);
+    this.rateType = obj.rateType;
   }
 }

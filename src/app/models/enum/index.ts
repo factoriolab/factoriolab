@@ -1,4 +1,4 @@
-export * from './amount-type';
+export * from './rate-type';
 export * from './breakpoint';
 export * from './column';
 export * from './display-rate';

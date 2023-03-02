@@ -1,4 +1,4 @@
-import { AmountType, Entities, ItemObjective, Rational } from '~/models';
+import { Entities, ItemObjective, RateType, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
@@ -32,13 +32,13 @@ export function itemObjectivesReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialItemObjectivesState;
     case ItemObjectivesActionType.ADD: {
-      let amount = '60';
-      let amountType: AmountType = 'items';
+      let rate = '60';
+      let rateType: RateType = 'items';
       if (state.ids.length > 0) {
-        // Use amount and amount type from last item objective in list
+        // Use rate and rate type from last item objective in list
         const id = state.ids[state.ids.length - 1];
-        amount = state.entities[id].amount;
-        amountType = state.entities[id].amountType;
+        rate = state.entities[id].rate;
+        rateType = state.entities[id].rateType;
       }
       return {
         ...state,
@@ -50,8 +50,8 @@ export function itemObjectivesReducer(
               [state.index]: {
                 id: state.index.toString(),
                 itemId: action.payload,
-                amount,
-                amountType,
+                rate,
+                rateType,
               },
             },
           },
@@ -94,24 +94,24 @@ export function itemObjectivesReducer(
         },
       };
     }
-    case ItemObjectivesActionType.SET_AMOUNT:
+    case ItemObjectivesActionType.SET_RATE:
       return {
         ...state,
         ...{
           entities: StoreUtility.assignValue(
             state.entities,
-            'amount',
+            'rate',
             action.payload
           ),
         },
       };
-    case ItemObjectivesActionType.SET_AMOUNT_TYPE:
+    case ItemObjectivesActionType.SET_RATE_TYPE:
       return {
         ...state,
         ...{
           entities: StoreUtility.assignValue(
             state.entities,
-            'amountType',
+            'rateType',
             action.payload
           ),
         },
@@ -121,13 +121,13 @@ export function itemObjectivesReducer(
       const newEntities = { ...state.entities };
       for (const id of state.ids.filter(
         (i) =>
-          state.entities[i].amountType === 'items' ||
-          state.entities[i].amountType === 'wagons'
+          state.entities[i].rateType === 'items' ||
+          state.entities[i].rateType === 'wagons'
       )) {
-        const amount = Rational.fromString(state.entities[id].amount)
+        const rate = Rational.fromString(state.entities[id].rate)
           .mul(factor)
           .toString();
-        newEntities[id] = { ...state.entities[id], ...{ amount } };
+        newEntities[id] = { ...state.entities[id], ...{ rate } };
       }
       return {
         ...state,

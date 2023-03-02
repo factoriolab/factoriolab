@@ -103,8 +103,8 @@
     <lab-input-number
       class="mt-2 w-100"
       tooltipPosition="top"
-      [value]="amount"
-      (setValue)="amount = $event"
+      [value]="rate"
+      (setValue)="rate = $event"
     ></lab-input-number>
     <p-dropdown
       labDropdownTranslate
@@ -122,7 +122,7 @@
       class="mt-2"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="createItemObjective(id, amount, 'items')"
+      (click)="createItemObjective(id, rate, 'items')"
       routerLink="/list"
     ></button>
     <p-divider></p-divider>
@@ -146,8 +146,8 @@
     <lab-input-number
       class="mt-2 w-100"
       tooltipPosition="top"
-      [value]="amount"
-      (setValue)="amount = $event"
+      [value]="count"
+      (setValue)="count = $event"
     ></lab-input-number>
     <button
       pButton
@@ -156,7 +156,7 @@
       class="mt-2"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="createRecipeObjective(id, amount)"
+      (click)="createRecipeObjective(id, count)"
       routerLink="/list"
     ></button>
     <p-divider></p-divider>

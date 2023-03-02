@@ -2,13 +2,13 @@ import { createSelector } from '@ngrx/store';
 
 import { fnPropsNotNullish } from '~/helpers';
 import {
-  AmountType,
   Column,
   Entities,
   Game,
   ItemId,
   PowerUnit,
   precisionColumns,
+  RateType,
   Rational,
   RationalItemObjective,
   Step,
@@ -54,8 +54,8 @@ export const getItemObjectivesBy = createSelector(
   getRationalItemObjectives,
   (itemObjectives) =>
     itemObjectives.reduce(
-      (e: Record<AmountType, RationalItemObjective[]>, p) => {
-        e[p.amountType] = [...e[p.amountType], p];
+      (e: Record<RateType, RationalItemObjective[]>, p) => {
+        e[p.rateType] = [...e[p.rateType], p];
         return e;
       },
       { items: [], belts: [], wagons: [] }
@@ -77,18 +77,18 @@ export const getItemObjectivesByWagons = createSelector(
   (itemObjectives) => itemObjectives['wagons']
 );
 
-export const getNormalizedAmountsByItems = createSelector(
+export const getNormalizedRatesByItems = createSelector(
   getItemObjectivesByItems,
   Settings.getDisplayRateInfo,
   (itemObjectives, dispRateInfo) =>
     itemObjectives?.reduce((e: Entities<Rational>, p) => {
-      const amount = p.amount.div(dispRateInfo.value);
-      e[p.id] = amount;
+      const rate = p.rate.div(dispRateInfo.value);
+      e[p.id] = rate;
       return e;
     }, {})
 );
 
-export const getNormalizedAmountsByBelts = createSelector(
+export const getNormalizedRatesByBelts = createSelector(
   getItemObjectivesByBelts,
   Items.getItemSettings,
   Settings.getBeltSpeed,
@@ -96,20 +96,20 @@ export const getNormalizedAmountsByBelts = createSelector(
     itemObjectives?.reduce((e: Entities<Rational>, p) => {
       const id = itemSettings[p.itemId].beltId;
       if (id) {
-        e[p.id] = p.amount.mul(beltSpeed[id]);
+        e[p.id] = p.rate.mul(beltSpeed[id]);
       }
       return e;
     }, {})
 );
 
-export const getNormalizedAmountsByWagons = createSelector(
+export const getNormalizedRatesByWagons = createSelector(
   getItemObjectivesByWagons,
   Items.getItemSettings,
   Settings.getDisplayRateInfo,
   Settings.getDataset,
   (itemObjectives, itemSettings, dispRateInfo, data) =>
     itemObjectives?.reduce((e: Entities<Rational>, p) => {
-      e[p.id] = p.amount.div(dispRateInfo.value);
+      e[p.id] = p.rate.div(dispRateInfo.value);
       const wagonId = itemSettings[p.itemId].wagonId;
       if (wagonId) {
         const item = data.itemEntities[p.itemId];
@@ -124,10 +124,10 @@ export const getNormalizedAmountsByWagons = createSelector(
     }, {})
 );
 
-export const getNormalizedAmounts = createSelector(
-  getNormalizedAmountsByItems,
-  getNormalizedAmountsByBelts,
-  getNormalizedAmountsByWagons,
+export const getNormalizedRates = createSelector(
+  getNormalizedRatesByItems,
+  getNormalizedRatesByBelts,
+  getNormalizedRatesByWagons,
   (byItems, byBelts, byWagons) => ({
     ...byItems,
     ...byBelts,
@@ -137,9 +137,9 @@ export const getNormalizedAmounts = createSelector(
 
 export const getNormalizedItemObjectives = createSelector(
   getRationalItemObjectives,
-  getNormalizedAmounts,
-  (itemObjectives, amounts) =>
-    itemObjectives.map((p) => ({ ...p, ...{ amount: amounts[p.id] } }))
+  getNormalizedRates,
+  (itemObjectives, rates) =>
+    itemObjectives.map((p) => ({ ...p, ...{ rate: rates[p.id] } }))
 );
 
 export const getMatrixResult = createSelector(

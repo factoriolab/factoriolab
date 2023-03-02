@@ -144,7 +144,7 @@ export class SimplexUtility {
 
     // Add item objectives to matrix state
     for (const itemObjective of itemObjectives) {
-      state.items[itemObjective.itemId] = itemObjective.amount;
+      state.items[itemObjective.itemId] = itemObjective.rate;
       // Adjust based on productivity, e.g. for research objectives
       const recipe = data.recipeR[data.itemRecipeId[itemObjective.itemId]];
       if (recipe?.adjustProd) {
@@ -307,8 +307,8 @@ export class SimplexUtility {
     // Add recipe objective vars to model
     for (const recipeObjective of state.recipeObjectives) {
       const config = {
-        lb: recipeObjective.amount.toNumber(),
-        ub: recipeObjective.amount.toNumber(),
+        lb: recipeObjective.count.toNumber(),
+        ub: recipeObjective.count.toNumber(),
         name: recipeObjective.id,
       };
       recipeObjectiveVarEntities[recipeObjective.id] = m.addVar(config);
@@ -524,7 +524,7 @@ export class SimplexUtility {
       const recipe = recipeObjective.recipe;
       if (!recipe.out[itemId]) continue;
       output = output.add(
-        recipe.out[itemId].mul(recipeObjective.amount).div(recipe.time)
+        recipe.out[itemId].mul(recipeObjective.count).div(recipe.time)
       );
     }
 
@@ -645,7 +645,7 @@ export class SimplexUtility {
     step.recipeId = recipe.id;
     step.recipe = recipe;
     if (recipeObjective) {
-      step.machines = recipeObjective.amount;
+      step.machines = recipeObjective.count;
       step.recipeObjectiveId = recipeObjective.id;
     } else {
       step.machines = solution.recipes[recipe.id].add(

@@ -8,13 +8,13 @@ describe('RationalItemObjective', () => {
       const result = new RationalItemObjective({
         id: '1',
         itemId: ItemId.ArtilleryShellRange,
-        amount: '2',
-        amountType: 'belts',
+        rate: '2',
+        rateType: 'belts',
       });
       expect(result.id).toEqual('1');
       expect(result.itemId).toEqual(ItemId.ArtilleryShellRange);
-      expect(result.amount).toEqual(Rational.two);
-      expect(result.amountType).toEqual('belts');
+      expect(result.rate).toEqual(Rational.two);
+      expect(result.rateType).toEqual('belts');
     });
   });
 });

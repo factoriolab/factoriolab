@@ -8,7 +8,6 @@ import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
 import {
-  amountTypes,
   BeaconSettings,
   DisplayRate,
   Entities,
@@ -16,6 +15,7 @@ import {
   ItemSettings,
   MachineSettings,
   ModHash,
+  rateTypes,
   Rational,
   RecipeObjective,
   RecipeSettings,
@@ -239,8 +239,8 @@ export class RouterService {
       {
         id: '0',
         itemId: step.itemId,
-        amount: step.items.toString(),
-        amountType: 'items',
+        rate: step.items.toString(),
+        rateType: 'items',
       },
     ];
     const zData: ZipData = {
@@ -785,8 +785,8 @@ export class RouterService {
   ): void {
     const z = this.zipList(
       itemObjectives.map((obj) => {
-        const r = Rational.fromString(obj.amount).toString();
-        const t = this.zipDiffNumber(amountTypes.indexOf(obj.amountType), 0);
+        const r = Rational.fromString(obj.rate).toString();
+        const t = this.zipDiffNumber(rateTypes.indexOf(obj.rateType), 0);
 
         return {
           bare: this.zipFields([obj.itemId, r, t]),
@@ -823,15 +823,15 @@ export class RouterService {
         obj = {
           id,
           itemId: this.parseNString(s[i++], hash.items) ?? '',
-          amount: s[i++],
-          amountType: amountTypes[Number(s[i++])] ?? 'items',
+          rate: s[i++],
+          rateType: rateTypes[Number(s[i++])] ?? 'items',
         };
       } else {
         obj = {
           id,
           itemId: s[i++],
-          amount: s[i++],
-          amountType: amountTypes[Number(s[i++])] ?? 'items',
+          rate: s[i++],
+          rateType: rateTypes[Number(s[i++])] ?? 'items',
         };
       }
 
@@ -850,12 +850,12 @@ export class RouterService {
   ): void {
     const z = this.zipList(
       recipeObjectives.map((obj) => {
-        const amount = Rational.fromString(obj.amount).toString();
+        const count = Rational.fromString(obj.count).toString();
 
         return {
           bare: this.zipFields([
             obj.recipeId,
-            amount,
+            count,
             this.zipTruthyString(obj.machineId),
             this.zipTruthyArray(obj.machineModuleIds),
             this.zipTruthyArray(data.objectiveBeaconMap[obj.id]),
@@ -864,7 +864,7 @@ export class RouterService {
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(obj.recipeId, hash.recipes),
-            amount,
+            count,
             this.zipTruthyNString(obj.machineId, hash.machines),
             this.zipTruthyNArray(obj.machineModuleIds, hash.modules),
             this.zipTruthyArray(data.objectiveBeaconMap[obj.id]),
@@ -901,7 +901,7 @@ export class RouterService {
         obj = {
           id,
           recipeId: this.parseNString(s[i++], hash.recipes) ?? '',
-          amount: s[i++],
+          count: s[i++],
           machineId: this.parseNString(s[i++], hash.machines),
           machineModuleIds: this.parseNArray(s[i++], hash.modules),
           beacons: this.parseArray(s[i++])?.map(
@@ -914,7 +914,7 @@ export class RouterService {
         obj = {
           id,
           recipeId: s[i++],
-          amount: s[i++],
+          count: s[i++],
           machineId: this.parseString(s[i++]),
           machineModuleIds: this.parseArray(s[i++]),
           beacons: this.parseArray(s[i++])?.map(

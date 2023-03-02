@@ -1,12 +1,12 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
-  AmountType,
   Column,
   DisplayRate,
   displayRateInfo,
   Game,
   MatrixResultType,
   PowerUnit,
+  RateType,
   Rational,
   Step,
   StepDetailTab,
@@ -51,7 +51,7 @@ describe('Item Objectives Selectors', () => {
       const result = Selectors.getRationalItemObjectives.projector(
         Mocks.ProductsList
       );
-      expect(result[0].amount.nonzero()).toBeTrue();
+      expect(result[0].rate.nonzero()).toBeTrue();
     });
   });
 

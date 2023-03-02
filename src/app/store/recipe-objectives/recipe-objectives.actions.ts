@@ -13,7 +13,7 @@ export const enum RecipeObjectivesActionType {
   CREATE = '[Recipe Objectives] Create',
   REMOVE = '[Recipe Objectives] Remove',
   SET_RECIPE = '[Recipe Objectives] Set Recipe',
-  SET_AMOUNT = '[Recipe Objectives] Set Amount',
+  SET_COUNT = '[Recipe Objectives] Set Count',
   SET_MACHINE = '[Recipe Objectives] Set Machine',
   SET_MACHINE_MODULES = '[Recipe Objectives] Set Machine Modules',
   ADD_BEACON = '[Recipe Objectives] Add Beacon',
@@ -47,8 +47,8 @@ export class SetRecipeAction implements Action {
   constructor(public payload: IdPayload) {}
 }
 
-export class SetAmountAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_AMOUNT;
+export class SetCountAction implements Action {
+  readonly type = RecipeObjectivesActionType.SET_COUNT;
   constructor(public payload: IdPayload<string>) {}
 }
 
@@ -112,7 +112,7 @@ export type RecipeObjectivesAction =
   | CreateAction
   | RemoveAction
   | SetRecipeAction
-  | SetAmountAction
+  | SetCountAction
   | SetMachineAction
   | SetMachineModulesAction
   | AddBeaconAction

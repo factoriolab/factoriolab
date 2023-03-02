@@ -3,10 +3,10 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import {
-  AmountType,
   Breakpoint,
   DisplayRate,
   displayRateOptions,
+  RateType,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import {
@@ -31,7 +31,7 @@ export class ObjectivesComponent {
     this.store.select(Items.getItemSettings),
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Settings.getDisplayRate),
-    this.store.select(Settings.getAmountTypeOptions),
+    this.store.select(Settings.getRateTypeOptions),
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getDataset),
     this.contentService.width$,
@@ -43,7 +43,7 @@ export class ObjectivesComponent {
         itemSettings,
         recipeSettings,
         displayRate,
-        amountTypeOptions,
+        rateTypeOptions,
         options,
         data,
         width,
@@ -53,7 +53,7 @@ export class ObjectivesComponent {
         itemSettings,
         recipeSettings,
         displayRate,
-        amountTypeOptions,
+        rateTypeOptions,
         options,
         data,
         mobile: width < Breakpoint.Small,
@@ -78,12 +78,12 @@ export class ObjectivesComponent {
     this.store.dispatch(new ItemObjectives.SetItemAction({ id, value }));
   }
 
-  setItemAmount(id: string, value: string): void {
-    this.store.dispatch(new ItemObjectives.SetAmountAction({ id, value }));
+  setRate(id: string, value: string): void {
+    this.store.dispatch(new ItemObjectives.SetRateAction({ id, value }));
   }
 
-  setItemAmountType(id: string, value: AmountType): void {
-    this.store.dispatch(new ItemObjectives.SetAmountTypeAction({ id, value }));
+  setRateType(id: string, value: RateType): void {
+    this.store.dispatch(new ItemObjectives.SetRateTypeAction({ id, value }));
   }
 
   removeRecipeObjective(id: string): void {
@@ -94,8 +94,8 @@ export class ObjectivesComponent {
     this.store.dispatch(new RecipeObjectives.SetRecipeAction({ id, value }));
   }
 
-  setRecipeAmount(id: string, value: string): void {
-    this.store.dispatch(new RecipeObjectives.SetAmountAction({ id, value }));
+  setCount(id: string, value: string): void {
+    this.store.dispatch(new RecipeObjectives.SetCountAction({ id, value }));
   }
 
   addItemObjective(value: string): void {

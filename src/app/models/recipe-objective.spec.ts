@@ -9,13 +9,13 @@ describe('RationalRecipeObjective', () => {
         {
           id: '1',
           recipeId: RecipeId.IronPlate,
-          amount: '2',
+          count: '2',
         },
         Mocks.Dataset.recipeR[RecipeId.IronPlate]
       );
       expect(result.id).toEqual('1');
       expect(result.recipeId).toEqual(RecipeId.IronPlate);
-      expect(result.amount).toEqual(Rational.two);
+      expect(result.count).toEqual(Rational.two);
     });
 
     it('should ignore undefined fields', () => {
@@ -23,13 +23,13 @@ describe('RationalRecipeObjective', () => {
         {
           id: '1',
           recipeId: RecipeId.IronPlate,
-          amount: '2',
+          count: '2',
         },
         Mocks.Dataset.recipeR[RecipeId.IronPlate]
       );
       expect(result.id).toEqual('1');
       expect(result.recipeId).toEqual(RecipeId.IronPlate);
-      expect(result.amount).toEqual(Rational.two);
+      expect(result.count).toEqual(Rational.two);
     });
   });
 });

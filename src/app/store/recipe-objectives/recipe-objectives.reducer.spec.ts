@@ -77,7 +77,7 @@ describe('Producers Reducer', () => {
       const product: RecipeObjective = {
         id: '1',
         recipeId: RecipeId.IronPlate,
-        amount: '2',
+        count: '2',
       };
       const result = producersReducer(state, new Actions.CreateAction(product));
       expect(result.entities['0']).toEqual({

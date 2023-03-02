@@ -5,13 +5,13 @@ import { RationalRecipeSettings, RecipeSettings } from './settings';
 export interface RecipeObjective extends RecipeSettings {
   id: string;
   recipeId: string;
-  amount: string;
+  count: string;
 }
 
 export class RationalRecipeObjective extends RationalRecipeSettings {
   id: string;
   recipeId: string;
-  amount: Rational;
+  count: Rational;
   recipe: RationalRecipe;
 
   constructor(obj: RecipeObjective, recipe: RationalRecipe) {
@@ -19,7 +19,7 @@ export class RationalRecipeObjective extends RationalRecipeSettings {
 
     this.id = obj.id;
     this.recipeId = obj.recipeId;
-    this.amount = Rational.fromString(obj.amount);
+    this.count = Rational.fromString(obj.count);
     this.recipe = recipe;
   }
 }
