@@ -8,6 +8,7 @@ import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
 import {
+  AmountType,
   BeaconSettings,
   DisplayRate,
   Entities,
@@ -15,7 +16,6 @@ import {
   ItemSettings,
   MachineSettings,
   ModHash,
-  RateType,
   Rational,
   RecipeObjective,
   RecipeSettings,
@@ -239,8 +239,8 @@ export class RouterService {
       {
         id: '0',
         itemId: step.itemId,
-        rate: step.items.toString(),
-        rateType: RateType.Items,
+        amount: step.items.toString(),
+        amountType: AmountType.Items,
       },
     ];
     const zData: ZipData = {
@@ -785,8 +785,8 @@ export class RouterService {
   ): void {
     const z = this.zipList(
       itemObjectives.map((obj) => {
-        const r = Rational.fromString(obj.rate).toString();
-        const t = this.zipDiffNumber(obj.rateType, RateType.Items);
+        const r = Rational.fromString(obj.amount).toString();
+        const t = this.zipDiffNumber(obj.amountType, AmountType.Items);
 
         return {
           bare: this.zipFields([obj.itemId, r, t]),
@@ -823,15 +823,15 @@ export class RouterService {
         obj = {
           id,
           itemId: this.parseNString(s[i++], hash.items) ?? '',
-          rate: s[i++],
-          rateType: Number(s[i++]) | RateType.Items,
+          amount: s[i++],
+          amountType: Number(s[i++]) | AmountType.Items,
         };
       } else {
         obj = {
           id,
           itemId: s[i++],
-          rate: s[i++],
-          rateType: Number(s[i++]) | RateType.Items,
+          amount: s[i++],
+          amountType: Number(s[i++]) | AmountType.Items,
         };
       }
 

@@ -1,12 +1,12 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
+  AmountType,
   Column,
   DisplayRate,
   displayRateInfo,
   Game,
   MatrixResultType,
   PowerUnit,
-  RateType,
   Rational,
   Step,
   StepDetailTab,
@@ -51,7 +51,7 @@ describe('Item Objectives Selectors', () => {
       const result = Selectors.getRationalItemObjectives.projector(
         Mocks.ProductsList
       );
-      expect(result[0].rate.nonzero()).toBeTrue();
+      expect(result[0].amount.nonzero()).toBeTrue();
     });
   });
 
@@ -72,7 +72,7 @@ describe('Item Objectives Selectors', () => {
     it('should select the products calculated by items', () => {
       expect(
         Selectors.getItemObjectivesByItems.projector({
-          [RateType.Items]: true,
+          [AmountType.Items]: true,
         } as any)
       ).toBeTrue();
     });
@@ -82,7 +82,7 @@ describe('Item Objectives Selectors', () => {
     it('should select the products calculated by belts', () => {
       expect(
         Selectors.getItemObjectivesByBelts.projector({
-          [RateType.Belts]: true,
+          [AmountType.Belts]: true,
         } as any)
       ).toBeTrue();
     });
@@ -92,7 +92,7 @@ describe('Item Objectives Selectors', () => {
     it('should select the products calculated by wagons', () => {
       expect(
         Selectors.getItemObjectivesByWagons.projector({
-          [RateType.Wagons]: true,
+          [AmountType.Wagons]: true,
         } as any)
       ).toBeTrue();
     });

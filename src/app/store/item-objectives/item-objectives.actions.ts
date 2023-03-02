@@ -1,14 +1,14 @@
 import { Action } from '@ngrx/store';
 
-import { IdPayload, ItemObjective, RateType } from '~/models';
+import { AmountType, IdPayload, ItemObjective } from '~/models';
 
 export const enum ItemObjectivesActionType {
   ADD = '[Item Objectives] Add',
   CREATE = '[Item Objectives] Create',
   REMOVE = '[Item Objectives] Remove',
   SET_ITEM = '[Item Objectives] Set Item',
-  SET_RATE = '[Item Objectives] Set Rate',
-  SET_RATE_TYPE = '[Item Objectives] Set Rate Type',
+  SET_AMOUNT = '[Item Objectives] Set Amount',
+  SET_AMOUNT_TYPE = '[Item Objectives] Set Amount Type',
   ADJUST_DISPLAY_RATE = '[Item Objectives] Adjust Display Rate',
 }
 
@@ -32,14 +32,14 @@ export class SetItemAction implements Action {
   constructor(public payload: IdPayload) {}
 }
 
-export class SetRateAction implements Action {
-  readonly type = ItemObjectivesActionType.SET_RATE;
+export class SetAmountAction implements Action {
+  readonly type = ItemObjectivesActionType.SET_AMOUNT;
   constructor(public payload: IdPayload) {}
 }
 
-export class SetRateTypeAction implements Action {
-  readonly type = ItemObjectivesActionType.SET_RATE_TYPE;
-  constructor(public payload: IdPayload<RateType>) {}
+export class SetAmountTypeAction implements Action {
+  readonly type = ItemObjectivesActionType.SET_AMOUNT_TYPE;
+  constructor(public payload: IdPayload<AmountType>) {}
 }
 
 export class AdjustDisplayRateAction implements Action {
@@ -52,6 +52,6 @@ export type ItemObjectivesAction =
   | CreateAction
   | RemoveAction
   | SetItemAction
-  | SetRateAction
-  | SetRateTypeAction
+  | SetAmountAction
+  | SetAmountTypeAction
   | AdjustDisplayRateAction;

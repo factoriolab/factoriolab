@@ -18,6 +18,18 @@
     "dontShowAgain": "Don't show again"
   },
   "options": {
+    "amountType": {
+      "itemsPerSecond": "Items/s",
+      "itemsPerMinute": "Items/m",
+      "itemsPerHour": "Items/h",
+      "belts": "Belts",
+      "wagonsPerSecond": "Wagons/s",
+      "wagonsPerMinute": "Wagons/m",
+      "wagonsPerHour": "Wagons/h",
+      "pollutionPerSecond": "Pollution/s",
+      "pollutionPerMinute": "Pollution/m",
+      "pollutionPerHour": "Pollution/h"
+    },
     "column": {
       "checkbox": "Checkbox",
       "tree": "Tree",
@@ -56,6 +68,12 @@
       "fastTransportBelt": "Fast transport belt",
       "transportBelt": "Transport belt"
     },
+    "objectiveType": {
+      "output": "Output",
+      "input": "Input",
+      "maximize": "Maximize",
+      "limit": "Limit"
+    },
     "preset": {
       "minimum": "Minimum",
       "modules": "Modules",
@@ -63,18 +81,6 @@
       "beacon12": "12 Beacons",
       "upgraded": "Upgraded",
       "proliferated": "Proliferated"
-    },
-    "rateType": {
-      "itemsPerSecond": "Items/s",
-      "itemsPerMinute": "Items/m",
-      "itemsPerHour": "Items/h",
-      "belts": "Belts",
-      "wagonsPerSecond": "Wagons/s",
-      "wagonsPerMinute": "Wagons/m",
-      "wagonsPerHour": "Wagons/h",
-      "pollutionPerSecond": "Pollution/s",
-      "pollutionPerMinute": "Pollution/m",
-      "pollutionPerHour": "Pollution/h"
     },
     "researchSpeed": {
       "speed0": "No research bonus",
@@ -248,8 +254,8 @@
     "items": "Items",
     "removeItemTooltip": "Remove item",
     "itemTooltip": "Select item",
-    "rateTooltip": "Set output rate",
-    "rateTypeTooltip": "Select rate type",
+    "amountTooltip": "Set amount",
+    "amountTypeTooltip": "Select amount type",
     "recipes": "Recipes",
     "removeRecipeTooltip": "Remove recipe",
     "recipeTooltip": "Select recipe",

@@ -15,7 +15,7 @@ describe('RateUtility', () => {
   describe('addEntityValue', () => {
     it('should add parents field to step', () => {
       const step = { ...Mocks.Step1 };
-      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, Rational.one);
+      RateUtility.addEntityAmount(step, 'parents', ItemId.Coal, Rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
     });
 
@@ -24,7 +24,7 @@ describe('RateUtility', () => {
         ...Mocks.Step1,
         ...{ parents: { [ItemId.Coal]: Rational.zero } },
       };
-      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, Rational.one);
+      RateUtility.addEntityAmount(step, 'parents', ItemId.Coal, Rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
     });
 
@@ -33,7 +33,7 @@ describe('RateUtility', () => {
         ...Mocks.Step1,
         ...{ parents: {} },
       };
-      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, Rational.one);
+      RateUtility.addEntityAmount(step, 'parents', ItemId.Coal, Rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
     });
   });
@@ -158,13 +158,13 @@ describe('RateUtility', () => {
       };
       const stepB: Step = { id: '1', itemId: ItemId.IronOre };
       RateUtility.calculateParentsOutputs(stepA, [stepA, stepB]);
-      expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
+      expect(RateUtility.addEntityAmount).toHaveBeenCalledWith(
         stepB,
         'parents',
         '0',
         Rational.from(5, 16)
       );
-      expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
+      expect(RateUtility.addEntityAmount).toHaveBeenCalledWith(
         stepA,
         'outputs',
         'iron-plate',

@@ -1,3 +1,4 @@
+export * from './amount-type';
 export * from './breakpoint';
 export * from './column';
 export * from './display-rate';
@@ -13,7 +14,6 @@ export * from './matrix-result-type';
 export * from './objective-type';
 export * from './power-unit';
 export * from './preset';
-export * from './rate-type';
 export * from './recipe-field';
 export * from './research-speed';
 export * from './step-detail-tab';

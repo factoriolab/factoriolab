@@ -1,5 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
-import { ItemObjective, RateType } from '~/models';
+import { AmountType, ItemObjective } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './item-objectives.actions';
 import {
@@ -53,8 +53,8 @@ describe('Item Objectives Reducer', () => {
           ['0']: {
             id: '0',
             itemId: ItemId.Coal,
-            rate: '30',
-            rateType: RateType.Wagons,
+            amount: '30',
+            amountType: AmountType.Wagons,
           },
         },
         index: 1,
@@ -66,8 +66,8 @@ describe('Item Objectives Reducer', () => {
       expect(result.entities['1']).toEqual({
         id: '1',
         itemId: ItemId.Wood,
-        rate: '30',
-        rateType: RateType.Wagons,
+        amount: '30',
+        amountType: AmountType.Wagons,
       });
     });
   });
@@ -77,8 +77,8 @@ describe('Item Objectives Reducer', () => {
       const product: ItemObjective = {
         id: '1',
         itemId: ItemId.IronPlate,
-        rate: '2',
-        rateType: RateType.Items,
+        amount: '2',
+        amountType: AmountType.Items,
       };
       const result = itemObjectivesReducer(
         state,
@@ -87,8 +87,8 @@ describe('Item Objectives Reducer', () => {
       expect(result.entities['0']).toEqual({
         id: '0',
         itemId: ItemId.IronPlate,
-        rate: '2',
-        rateType: RateType.Items,
+        amount: '2',
+        amountType: AmountType.Items,
       });
       expect(result.index).toEqual(1);
     });
@@ -124,20 +124,20 @@ describe('Item Objectives Reducer', () => {
       const value = '3';
       const result = itemObjectivesReducer(
         state,
-        new Actions.SetRateAction({ id: Mocks.Product1.id, value })
+        new Actions.SetAmountAction({ id: Mocks.Product1.id, value })
       );
-      expect(result.entities[Mocks.Product1.id].rate).toEqual(value);
+      expect(result.entities[Mocks.Product1.id].amount).toEqual(value);
     });
   });
 
   describe('SET_RATE_TYPE', () => {
     it('should set rate type of a product', () => {
-      const value = RateType.Wagons;
+      const value = AmountType.Wagons;
       const result = itemObjectivesReducer(
         state,
-        new Actions.SetRateTypeAction({ id: Mocks.Product1.id, value })
+        new Actions.SetAmountTypeAction({ id: Mocks.Product1.id, value })
       );
-      expect(result.entities[Mocks.Product1.id].rateType).toEqual(value);
+      expect(result.entities[Mocks.Product1.id].amountType).toEqual(value);
     });
   });
 
@@ -147,19 +147,19 @@ describe('Item Objectives Reducer', () => {
         state,
         new Actions.AdjustDisplayRateAction('1/60')
       );
-      expect(result.entities[Mocks.Product1.id].rate).toEqual('1');
+      expect(result.entities[Mocks.Product1.id].amount).toEqual('1');
     });
 
     it('should not adjust rates when rate type unaffected by display rate', () => {
       let result = itemObjectivesReducer(
         state,
-        new Actions.SetRateTypeAction({ id: '0', value: RateType.Belts })
+        new Actions.SetAmountTypeAction({ id: '0', value: AmountType.Belts })
       );
       result = itemObjectivesReducer(
         result,
         new Actions.AdjustDisplayRateAction('1/60')
       );
-      expect(result.entities[Mocks.Product1.id].rate).toEqual('60');
+      expect(result.entities[Mocks.Product1.id].amount).toEqual('60');
     });
   });
 

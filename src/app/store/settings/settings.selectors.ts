@@ -4,6 +4,7 @@ import { SelectItem } from 'primeng/api';
 import { environment } from 'src/environments';
 import { fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
+  amountTypeOptions,
   Column,
   columnOptions,
   Dataset,
@@ -16,7 +17,6 @@ import {
   ItemId,
   Preset,
   presetOptions,
-  rateTypeOptions,
   Rational,
   RationalBeacon,
   RationalBelt,
@@ -124,10 +124,10 @@ export const getDisplayRateInfo = createSelector(
   (displayRate) => displayRateInfo[displayRate]
 );
 
-export const getRateTypeOptions = createSelector(
+export const getAmountTypeOptions = createSelector(
   getGame,
   getDisplayRateInfo,
-  (game, dispRateInfo) => rateTypeOptions(dispRateInfo, game)
+  (game, dispRateInfo) => amountTypeOptions(dispRateInfo, game)
 );
 
 export const getPresetOptions = createSelector(getGame, (game) =>

@@ -15,19 +15,19 @@ import {
 const ROOT_ID = '';
 
 export class RateUtility {
-  static addEntityValue(
+  static addEntityAmount(
     step: Step,
     key: 'parents' | 'outputs',
     parentId: string,
-    rate: Rational
+    amount: Rational
   ): void {
     const obj = step[key];
     if (!obj) {
-      step[key] = { [parentId]: rate };
+      step[key] = { [parentId]: amount };
     } else if (obj[parentId]) {
-      obj[parentId] = obj[parentId].add(rate);
+      obj[parentId] = obj[parentId].add(amount);
     } else {
-      obj[parentId] = rate;
+      obj[parentId] = amount;
     }
   }
 
@@ -104,23 +104,23 @@ export class RateUtility {
       const quantity = step.machines.div(recipe.time);
       for (const itemId of Object.keys(recipe.in)) {
         if (recipe.in[itemId].nonzero()) {
-          const rate = recipe.in[itemId].mul(quantity);
+          const amount = recipe.in[itemId].mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
           if (itemStep != null) {
-            this.addEntityValue(itemStep, 'parents', step.id, rate);
+            this.addEntityAmount(itemStep, 'parents', step.id, amount);
           }
         }
       }
       for (const itemId of Object.keys(recipe.out)) {
         if (recipe.out[itemId].nonzero()) {
-          const rate = recipe.out[itemId].mul(quantity);
+          const amount = recipe.out[itemId].mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
           if (itemStep?.items?.nonzero()) {
-            this.addEntityValue(
+            this.addEntityAmount(
               step,
               'outputs',
               itemId,
-              rate.div(itemStep.items)
+              amount.div(itemStep.items)
             );
           }
         }

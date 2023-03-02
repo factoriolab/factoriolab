@@ -144,7 +144,7 @@ export class SimplexUtility {
 
     // Add item objectives to matrix state
     for (const itemObjective of itemObjectives) {
-      state.items[itemObjective.itemId] = itemObjective.rate;
+      state.items[itemObjective.itemId] = itemObjective.amount;
       // Adjust based on productivity, e.g. for research objectives
       const recipe = data.recipeR[data.itemRecipeId[itemObjective.itemId]];
       if (recipe?.adjustProd) {

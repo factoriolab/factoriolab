@@ -45,26 +45,26 @@ export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
 export const ItemObjective1: M.ItemObjective = {
   id: '0',
   itemId: Item1.id,
-  rate: '1',
-  rateType: M.RateType.Items,
+  amount: '1',
+  amountType: M.AmountType.Items,
 };
 export const ItemObjective2: M.ItemObjective = {
   id: '1',
   itemId: Item2.id,
-  rate: '2',
-  rateType: M.RateType.Belts,
+  amount: '2',
+  amountType: M.AmountType.Belts,
 };
 export const ItemObjective3: M.ItemObjective = {
   id: '2',
   itemId: ItemId.PetroleumGas,
-  rate: '3',
-  rateType: M.RateType.Wagons,
+  amount: '3',
+  amountType: M.AmountType.Wagons,
 };
 export const ItemObjective4: M.ItemObjective = {
   id: '3',
   itemId: ItemId.TransportBelt,
-  rate: '4',
-  rateType: M.RateType.Items,
+  amount: '4',
+  amountType: M.AmountType.Items,
 };
 export const ItemObjectivesList = [
   ItemObjective1,
@@ -140,7 +140,7 @@ export const Step1: M.Step = {
   id: `${Item1.id}.${Item1.id}`,
   itemId: Item1.id,
   recipeId: Item1.id,
-  items: M.Rational.fromString(ItemObjective1.rate),
+  items: M.Rational.fromString(ItemObjective1.amount),
   belts: M.Rational.fromNumber(0.5),
   wagons: M.Rational.two,
   machines: M.Rational.one,
@@ -151,7 +151,7 @@ export const Step2: M.Step = {
   id: `${Item2.id}.${Item2.id}`,
   itemId: Item2.id,
   recipeId: Item2.id,
-  items: M.Rational.fromString(ItemObjective2.rate),
+  items: M.Rational.fromString(ItemObjective2.amount),
   belts: M.Rational.one,
   wagons: M.Rational.one,
   machines: M.Rational.two,

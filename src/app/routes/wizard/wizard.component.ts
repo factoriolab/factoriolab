@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { DisplayRate, displayRateOptions, RateType } from '~/models';
+import { AmountType, DisplayRate, displayRateOptions } from '~/models';
 import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
 export enum WizardState {
@@ -22,7 +22,7 @@ export class WizardComponent {
   vm$ = combineLatest([
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getDisplayRate),
-    this.store.select(Settings.getRateTypeOptions),
+    this.store.select(Settings.getAmountTypeOptions),
   ]).pipe(
     map(([data, displayRate, rateTypeOptions]) => ({
       data,
@@ -32,12 +32,11 @@ export class WizardComponent {
   );
 
   id = '';
-  rate = '1';
+  amount = '1';
   state = WizardState.ObjectiveType;
 
   displayRateOptions = displayRateOptions;
 
-  RateType = RateType;
   WizardState = WizardState;
 
   constructor(private store: Store<LabState>) {}
@@ -52,9 +51,18 @@ export class WizardComponent {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  createItemObjective(itemId: string, rate: string, rateType: RateType): void {
+  createItemObjective(
+    itemId: string,
+    amount: string,
+    amountType: AmountType
+  ): void {
     this.store.dispatch(
-      new ItemObjectives.CreateAction({ id: '0', itemId, rate, rateType })
+      new ItemObjectives.CreateAction({
+        id: '0',
+        itemId,
+        amount,
+        amountType,
+      })
     );
   }
 

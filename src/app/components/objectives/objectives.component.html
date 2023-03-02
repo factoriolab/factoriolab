@@ -42,19 +42,19 @@
             (selectId)="setItem(itemObjective.id, $event)"
           ></lab-picker>
           <lab-input-number
-            [pTooltip]="'objectives.rateTooltip' | translate"
+            [pTooltip]="'objectives.amountTooltip' | translate"
             tooltipPosition="top"
             [hideButtons]="vm.mobile"
-            [value]="itemObjective.rate"
-            (setValue)="setRate(itemObjective.id, $event)"
+            [value]="itemObjective.amount"
+            (setValue)="setAmount(itemObjective.id, $event)"
           ></lab-input-number>
           <p-dropdown
             labDropdownTranslate
-            [tooltip]="'objectives.rateTypeTooltip' | translate"
+            [tooltip]="'objectives.amountTypeTooltip' | translate"
             tooltipPosition="top"
-            [options]="vm.rateTypeOptions"
-            [ngModel]="itemObjective.rateType"
-            (onChange)="setRateType(itemObjective.id, $event.value)"
+            [options]="vm.amountTypeOptions"
+            [ngModel]="itemObjective.amountType"
+            (onChange)="setAmountType(itemObjective.id, $event.value)"
           ></p-dropdown>
         </div>
       </div>

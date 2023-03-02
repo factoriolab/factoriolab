@@ -7,13 +7,13 @@ import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
+  AmountType,
   BeaconSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
   ItemObjective,
   Preset,
-  RateType,
   Rational,
   RecipeObjective,
   ResearchSpeed,
@@ -46,8 +46,8 @@ import {
 const mockProduct: ItemObjective = {
   id: '1',
   itemId: ItemId.SteelChest,
-  rate: '1',
-  rateType: RateType.Belts,
+  amount: '1',
+  amountType: AmountType.Belts,
 };
 const mockProductsState: Products.ItemObjectivesState = {
   ids: ['1'],
@@ -658,8 +658,8 @@ describe('RouterService', () => {
           {
             id: '0',
             itemId: ItemId.SteelChest,
-            rate: '1',
-            rateType: RateType.Items,
+            amount: '1',
+            amountType: AmountType.Items,
           },
         ],
         Mocks.Hash
@@ -678,8 +678,8 @@ describe('RouterService', () => {
           {
             id: '0',
             itemId: ItemId.SteelChest,
-            rate: '1',
-            rateType: RateType.Belts,
+            amount: '1',
+            amountType: AmountType.Belts,
           },
         ],
         Mocks.Hash
@@ -698,8 +698,8 @@ describe('RouterService', () => {
           {
             id: '0',
             itemId: ItemId.SteelChest,
-            rate: '1',
-            rateType: RateType.Wagons,
+            amount: '1',
+            amountType: AmountType.Wagons,
           },
         ],
         Mocks.Hash
@@ -723,7 +723,7 @@ describe('RouterService', () => {
             id: '1',
             itemId: ItemId.SteelChest,
             rate: '1',
-            rateType: RateType.Items,
+            rateType: AmountType.Items,
           },
         },
         index: 2,
@@ -739,7 +739,7 @@ describe('RouterService', () => {
             id: '1',
             itemId: ItemId.SteelChest,
             rate: '1',
-            rateType: RateType.Items,
+            rateType: AmountType.Items,
           },
         },
         index: 2,
@@ -755,7 +755,7 @@ describe('RouterService', () => {
             id: '1',
             itemId: ItemId.SteelChest,
             rate: '1',
-            rateType: RateType.Belts,
+            rateType: AmountType.Belts,
           },
         },
         index: 2,
@@ -771,7 +771,7 @@ describe('RouterService', () => {
             id: '1',
             itemId: ItemId.SteelChest,
             rate: '1',
-            rateType: RateType.Wagons,
+            rateType: AmountType.Wagons,
           },
         },
         index: 2,
@@ -787,7 +787,7 @@ describe('RouterService', () => {
             id: '1',
             itemId: '',
             rate: '1',
-            rateType: RateType.Items,
+            rateType: AmountType.Items,
           },
         },
         index: 2,
