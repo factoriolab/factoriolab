@@ -53,8 +53,9 @@ export const getNormalizedItemObjectives = createSelector(
   getRationalItemObjectives,
   Items.getItemSettings,
   Settings.getBeltSpeed,
+  Settings.getDisplayRateInfo,
   Recipes.getAdjustedDataset,
-  (itemObjectives, itemSettings, beltSpeed, data) =>
+  (itemObjectives, itemSettings, beltSpeed, displayRateInfo, data) =>
     itemObjectives.map((o) => ({
       ...o,
       ...{
@@ -62,6 +63,7 @@ export const getNormalizedItemObjectives = createSelector(
           o,
           itemSettings,
           beltSpeed,
+          displayRateInfo,
           data
         ),
       },

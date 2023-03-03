@@ -22,25 +22,37 @@ export class RateUtility {
     itemObjective: RationalItemObjective,
     itemSettings: Items.ItemsState,
     beltSpeed: Entities<Rational>,
+    displayRateInfo: DisplayRateInfo,
     data: Dataset
   ): Rational {
     const rate = itemObjective.rate;
     let factor = Rational.one;
-    if (itemObjective.rateUnit === RateUnit.Belts) {
-      const beltId = itemSettings[itemObjective.itemId].beltId;
-      if (beltId) {
-        factor = beltSpeed[beltId];
+    switch (itemObjective.rateUnit) {
+      case RateUnit.Items: {
+        factor = displayRateInfo.value.reciprocal();
+        break;
       }
-    } else if (itemObjective.rateUnit === RateUnit.Wagons) {
-      const wagonId = itemSettings[itemObjective.itemId].wagonId;
-      if (wagonId) {
-        const item = data.itemEntities[itemObjective.itemId];
-        const wagon = data.itemEntities[wagonId];
-        if (item.stack && wagon.cargoWagon) {
-          factor = item.stack.mul(wagon.cargoWagon.size);
-        } else if (wagon.fluidWagon) {
-          factor = wagon.fluidWagon.capacity;
+      case RateUnit.Belts: {
+        const beltId = itemSettings[itemObjective.itemId].beltId;
+        if (beltId) {
+          factor = beltSpeed[beltId];
         }
+        break;
+      }
+      case RateUnit.Wagons: {
+        const wagonId = itemSettings[itemObjective.itemId].wagonId;
+        if (wagonId) {
+          const item = data.itemEntities[itemObjective.itemId];
+          const wagon = data.itemEntities[wagonId];
+          if (item.stack && wagon.cargoWagon) {
+            factor = item.stack
+              .mul(wagon.cargoWagon.size)
+              .div(displayRateInfo.value);
+          } else if (wagon.fluidWagon) {
+            factor = wagon.fluidWagon.capacity.div(displayRateInfo.value);
+          }
+        }
+        break;
       }
     }
 

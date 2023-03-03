@@ -5,13 +5,10 @@ import { combineLatest, map } from 'rxjs';
 import {
   Breakpoint,
   DisplayRate,
-  displayRateInfo,
   displayRateOptions,
-  ItemObjective,
   ObjectiveType,
   objectiveTypeOptions,
   RateUnit,
-  Rational,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import {
@@ -74,23 +71,6 @@ export class ObjectivesComponent {
     private store: Store<LabState>,
     private contentService: ContentService
   ) {}
-
-  changeRate(
-    itemObjective: ItemObjective,
-    value: string,
-    displayRate: DisplayRate
-  ): void {
-    if (
-      displayRate !== DisplayRate.PerSecond &&
-      itemObjective.rateUnit !== RateUnit.Belts
-    ) {
-      value = Rational.from(value)
-        .div(displayRateInfo[displayRate].value)
-        .toString();
-    }
-
-    this.setRate(itemObjective.id, value);
-  }
 
   /** Action Dispatch Methods */
   removeItemObjective(id: string): void {

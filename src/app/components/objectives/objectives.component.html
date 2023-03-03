@@ -45,8 +45,8 @@
             [pTooltip]="'objectives.rateTooltip' | translate"
             tooltipPosition="top"
             [hideButtons]="vm.mobile"
-            [value]="itemObjective | objectiveRate : vm.displayRate"
-            (setValue)="changeRate(itemObjective, $event, vm.displayRate)"
+            [value]="itemObjective.rate"
+            (setValue)="setRate(itemObjective.id, $event)"
           ></lab-input-number>
           <p-dropdown
             labDropdownTranslate

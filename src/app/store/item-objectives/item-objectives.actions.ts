@@ -10,6 +10,7 @@ export const enum ItemObjectivesActionType {
   SET_RATE = '[Item Objectives] Set Rate',
   SET_RATE_UNIT = '[Item Objectives] Set Rate Unit',
   SET_TYPE = '[Item Objectives] Set Type',
+  ADJUST_DISPLAY_RATE = '[Item Objectives] Adjust Display Rate',
 }
 
 export class AddAction implements Action {
@@ -47,6 +48,11 @@ export class SetTypeAction implements Action {
   constructor(public payload: IdPayload<ObjectiveType>) {}
 }
 
+export class AdjustDisplayRateAction implements Action {
+  readonly type = ItemObjectivesActionType.ADJUST_DISPLAY_RATE;
+  constructor(public payload: string) {}
+}
+
 export type ItemObjectivesAction =
   | AddAction
   | CreateAction
@@ -54,4 +60,5 @@ export type ItemObjectivesAction =
   | SetItemAction
   | SetRateAction
   | SetRateUnitAction
-  | SetTypeAction;
+  | SetTypeAction
+  | AdjustDisplayRateAction;
