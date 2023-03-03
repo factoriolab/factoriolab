@@ -44,6 +44,12 @@ export class RateUtility {
       }
     }
 
+    // Adjust based on productivity, e.g. for research objectives
+    const recipe = data.recipeR[data.itemRecipeId[itemObjective.itemId]];
+    if (recipe?.adjustProd) {
+      factor = factor.mul(recipe.productivity);
+    }
+
     return rate.mul(factor);
   }
 

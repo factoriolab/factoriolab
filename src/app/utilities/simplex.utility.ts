@@ -6,6 +6,7 @@ import {
   Entities,
   MatrixResult,
   MatrixResultType,
+  ObjectiveType,
   Rational,
   RationalItemObjective,
   RationalRecipe,
@@ -143,16 +144,29 @@ export class SimplexUtility {
     };
 
     // Add item objectives to matrix state
-    for (const itemObjective of itemObjectives) {
-      state.items[itemObjective.itemId] = itemObjective.rate;
-      // Adjust based on productivity, e.g. for research objectives
-      const recipe = data.recipeR[data.itemRecipeId[itemObjective.itemId]];
-      if (recipe?.adjustProd) {
-        state.items[itemObjective.itemId] = state.items[
-          itemObjective.itemId
-        ].mul(recipe.productivity);
+    for (const obj of itemObjectives) {
+      switch (obj.type) {
+        case ObjectiveType.Output: {
+          state.items[obj.itemId] = (
+            state.items[obj.itemId] ?? Rational.zero
+          ).add(obj.rate);
+          this.parseItemRecursively(obj.itemId, state);
+          break;
+        }
+        case ObjectiveType.Input: {
+          state.items[obj.itemId] = (
+            state.items[obj.itemId] ?? Rational.zero
+          ).sub(obj.rate);
+          break;
+        }
+        case ObjectiveType.Maximize: {
+          this.parseItemRecursively(obj.itemId, state);
+          break;
+        }
+        case ObjectiveType.Limit: {
+          break;
+        }
       }
-      this.parseItemRecursively(itemObjective.itemId, state);
     }
 
     // Add recipe objectives to matrix state
@@ -403,6 +417,8 @@ export class SimplexUtility {
     // Parse solution
     for (const itemId of itemIds) {
       if (
+        // Include the item if it is part of objectives
+        state.items[itemId] ||
         // Include item if it is an input
         (inputVarEntities[itemId] &&
           !this.isFloatZero(inputVarEntities[itemId].value)) ||
@@ -520,6 +536,12 @@ export class SimplexUtility {
       output = output.add(amount);
     }
 
+    for (const itemObjective of state.itemObjectives.filter(
+      (o) => o.itemId === itemId && o.type === ObjectiveType.Input
+    )) {
+      output = output.add(itemObjective.rate);
+    }
+
     for (const recipeObjective of state.recipeObjectives) {
       const recipe = recipeObjective.recipe;
       if (!recipe.out[itemId]) continue;
@@ -546,7 +568,7 @@ export class SimplexUtility {
         itemId,
         items: output,
       };
-      if (state.items[itemId].nonzero()) {
+      if (state.items[itemId].gt(Rational.zero)) {
         step.output = state.items[itemId];
       }
 

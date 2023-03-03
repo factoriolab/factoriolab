@@ -951,7 +951,7 @@
             <ng-container
               *ngFor="let output of vm.stepDetails[step.id].outputs"
             >
-              <ng-container *ngIf="output.recipeId && step.itemId">
+              <ng-container *ngIf="step.itemId">
                 <ng-container
                   *ngTemplateOutlet="
                     detailRow;
@@ -963,7 +963,9 @@
                       wagons: step.wagons?.mul(output.value),
                       wagonId: vm.itemSettings[step.itemId].wagonId,
                       machines: output.machines,
-                      machineId: vm.recipeSettings[output.recipeId].machineId,
+                      machineId:
+                        output.recipeId &&
+                        vm.recipeSettings[output.recipeId].machineId,
                       recipeId: output.recipeId,
                       recipeObjectiveId: output.recipeObjectiveId,
                       percent: output.value,
@@ -1559,6 +1561,9 @@
           </td>
           <td class="p-0" colspan="100">
             <div class="d-flex align-items-center">
+              <div *ngIf="!recipeId" class="position-absolute">
+                {{ 'list.inputs' | translate }}
+              </div>
               <ng-container
                 *ngIf="machineId | machineShow : vm.data.game; else machineFill"
               >

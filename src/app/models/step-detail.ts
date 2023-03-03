@@ -3,7 +3,7 @@ import { MenuItem } from 'primeng/api';
 import { Rational } from './rational';
 
 export interface StepOutput {
-  recipeId: string;
+  recipeId?: string;
   recipeObjectiveId?: string;
   value: Rational;
   machines: Rational;

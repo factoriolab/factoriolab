@@ -1,4 +1,4 @@
-import { Entities, ItemObjective, RateUnit } from '~/models';
+import { Entities, ItemObjective, ObjectiveType, RateUnit } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
@@ -40,6 +40,13 @@ export function itemObjectivesReducer(
         rate = state.entities[id].rate;
         rateUnit = state.entities[id].rateUnit;
       }
+      const objective: ItemObjective = {
+        id: state.index.toString(),
+        itemId: action.payload,
+        rate,
+        rateUnit,
+        type: ObjectiveType.Output,
+      };
       return {
         ...state,
         ...{
@@ -47,12 +54,7 @@ export function itemObjectivesReducer(
           entities: {
             ...state.entities,
             ...{
-              [state.index]: {
-                id: state.index.toString(),
-                itemId: action.payload,
-                rate,
-                rateUnit,
-              },
+              [state.index]: objective,
             },
           },
           index: state.index + 1,

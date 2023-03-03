@@ -53,7 +53,7 @@ export const getNormalizedItemObjectives = createSelector(
   getRationalItemObjectives,
   Items.getItemSettings,
   Settings.getBeltSpeed,
-  Settings.getDataset,
+  Recipes.getAdjustedDataset,
   (itemObjectives, itemSettings, beltSpeed, data) =>
     itemObjectives.map((o) => ({
       ...o,
@@ -327,6 +327,17 @@ export const getStepDetails = createSelector(
               machines: s.machines,
             }))
         );
+
+        const inputs = outputs.reduce((r: Rational, o) => {
+          return r.sub(o.value);
+        }, Rational.one);
+        if (inputs.nonzero()) {
+          outputs.push({
+            value: inputs,
+            machines: Rational.zero,
+          });
+        }
+
         outputs.sort((a, b) => b.value.sub(a.value).toNumber());
       }
       if (s.recipeId != null) {

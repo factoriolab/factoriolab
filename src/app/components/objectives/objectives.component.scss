@@ -8,6 +8,13 @@
   }
 }
 
+@include media-breakpoint-up(sm) {
+  button.text-truncate,
+  .p-inputgroup lab-input-number.p-inputwrapper {
+    flex: 0 0 25%;
+  }
+}
+
 :host ::ng-deep {
   button.lab-button-icon-only .p-button-icon {
     margin-right: 0.5rem;
