@@ -209,10 +209,8 @@
     "removeRecipeTooltip": "Enlever le producteur",
     "recipeTooltip": "Sélectionner la recette du producteur",
     "countTooltip": "Définir un nombre de producteurs",
-    "item": "Produit",
     "addAnItem": "Ajouter un produit",
     "addAnItemTooltip": "Séléctionner un article à produire",
-    "recipe": "Producteur",
     "addARecipe": "Ajouter un producteur",
     "addARecipeTooltip": "Séléctionner une recette à produire",
     "selectDisplayRate": "Séléctionner la cadence affiché"

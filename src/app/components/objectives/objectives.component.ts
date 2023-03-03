@@ -66,6 +66,8 @@ export class ObjectivesComponent {
   objectiveTypeOptions = objectiveTypeOptions;
   displayRateOptions = displayRateOptions;
 
+  ObjectiveType = ObjectiveType;
+
   constructor(
     public trackSvc: TrackService,
     private store: Store<LabState>,

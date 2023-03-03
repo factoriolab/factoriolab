@@ -196,10 +196,8 @@
     "removeRecipeTooltip": "移除生产线",
     "recipeTooltip": "选择配方",
     "countTooltip": "设置生产线数量",
-    "item": "产物",
     "addAnItem": "添加一个产物",
     "addAnItemTooltip": "选择要生产的产物",
-    "recipe": "生产线",
     "addARecipe": "添加一个生产线",
     "addARecipeTooltip": "选择要生产的配方",
     "selectDisplayRate": "选择速率显示单位"
