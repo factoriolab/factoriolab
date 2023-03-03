@@ -18,18 +18,6 @@
     "dontShowAgain": "Don't show again"
   },
   "options": {
-    "rateUnit": {
-      "itemsPerSecond": "Items/s",
-      "itemsPerMinute": "Items/m",
-      "itemsPerHour": "Items/h",
-      "belts": "Belts",
-      "wagonsPerSecond": "Wagons/s",
-      "wagonsPerMinute": "Wagons/m",
-      "wagonsPerHour": "Wagons/h",
-      "pollutionPerSecond": "Pollution/s",
-      "pollutionPerMinute": "Pollution/m",
-      "pollutionPerHour": "Pollution/h"
-    },
     "column": {
       "checkbox": "Checkbox",
       "tree": "Tree",
@@ -81,6 +69,18 @@
       "beacon12": "12 Beacons",
       "upgraded": "Upgraded",
       "proliferated": "Proliferated"
+    },
+    "rateUnit": {
+      "itemsPerSecond": "Items/s",
+      "itemsPerMinute": "Items/m",
+      "itemsPerHour": "Items/h",
+      "belts": "Belts",
+      "wagonsPerSecond": "Wagons/s",
+      "wagonsPerMinute": "Wagons/m",
+      "wagonsPerHour": "Wagons/h",
+      "pollutionPerSecond": "Pollution/s",
+      "pollutionPerMinute": "Pollution/m",
+      "pollutionPerHour": "Pollution/h"
     },
     "researchSpeed": {
       "speed0": "No research bonus",
@@ -253,6 +253,7 @@
     "title": "Objectives",
     "items": "Items",
     "removeItemTooltip": "Remove item",
+    "typeTooltip": "Select objective type",
     "itemTooltip": "Select item",
     "rateTooltip": "Set rate",
     "rateUnitTooltip": "Select rate type",

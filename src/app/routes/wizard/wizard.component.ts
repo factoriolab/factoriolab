@@ -2,7 +2,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { DisplayRate, displayRateOptions, RateUnit } from '~/models';
+import {
+  DisplayRate,
+  displayRateOptions,
+  ObjectiveType,
+  RateUnit,
+} from '~/models';
 import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
 export enum WizardState {
@@ -38,6 +43,7 @@ export class WizardComponent {
 
   displayRateOptions = displayRateOptions;
 
+  RateUnit = RateUnit;
   WizardState = WizardState;
 
   constructor(private store: Store<LabState>) {}
@@ -59,13 +65,19 @@ export class WizardComponent {
         itemId,
         rate,
         rateUnit,
+        type: ObjectiveType.Output,
       })
     );
   }
 
   createRecipeObjective(recipeId: string, count: string): void {
     this.store.dispatch(
-      new RecipeObjectives.CreateAction({ id: '0', recipeId, count })
+      new RecipeObjectives.CreateAction({
+        id: '0',
+        recipeId,
+        count,
+        type: ObjectiveType.Output,
+      })
     );
   }
 }

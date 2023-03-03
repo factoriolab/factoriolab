@@ -56,6 +56,14 @@
             [ngModel]="itemObjective.rateUnit"
             (onChange)="setRateUnit(itemObjective.id, $event.value)"
           ></p-dropdown>
+          <p-dropdown
+            labDropdownTranslate
+            [tooltip]="'objectives.typeTooltip' | translate"
+            tooltipPosition="top"
+            [options]="objectiveTypeOptions"
+            [ngModel]="itemObjective.type"
+            (onChange)="setItemType(itemObjective.id, $event.value)"
+          ></p-dropdown>
         </div>
       </div>
     </div>
@@ -111,6 +119,14 @@
             [value]="recipeObjective.count"
             (setValue)="setCount(recipeObjective.id, $event)"
           ></lab-input-number>
+          <p-dropdown
+            labDropdownTranslate
+            [tooltip]="'objectives.typeTooltip' | translate"
+            tooltipPosition="top"
+            [options]="objectiveTypeOptions"
+            [ngModel]="recipeObjective.type"
+            (onChange)="setRecipeType(recipeObjective.id, $event.value)"
+          ></p-dropdown>
         </div>
       </div>
     </div>

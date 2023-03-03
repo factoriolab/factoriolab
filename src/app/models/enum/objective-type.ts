@@ -1,10 +1,19 @@
 import { SelectItem } from 'primeng/api';
 
-export type ObjectiveType = 'output' | 'input' | 'maximize' | 'limit';
+export enum ObjectiveType {
+  Output,
+  Input,
+  Maximize,
+  Limit,
+}
 
 export const objectiveTypeOptions: SelectItem<ObjectiveType>[] = [
-  { value: 'output', label: 'options.objectiveType.output' },
-  { value: 'input', label: 'options.objectiveType.input' },
-  { value: 'maximize', label: 'options.objectiveType.maximize' },
-  { value: 'limit', label: 'options.objectiveType.limit' },
+  {
+    value: ObjectiveType.Output,
+    label: 'options.objectiveType.output',
+    title: 'test',
+  },
+  { value: ObjectiveType.Input, label: 'options.objectiveType.input' },
+  { value: ObjectiveType.Maximize, label: 'options.objectiveType.maximize' },
+  { value: ObjectiveType.Limit, label: 'options.objectiveType.limit' },
 ];

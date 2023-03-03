@@ -33,7 +33,7 @@ export function itemObjectivesReducer(
       return initialItemObjectivesState;
     case ItemObjectivesActionType.ADD: {
       let rate = '1';
-      let rateUnit: RateUnit = 'items';
+      let rateUnit = RateUnit.Items;
       if (state.ids.length > 0) {
         // Use rate and rate type from last item objective in list
         const id = state.ids[state.ids.length - 1];
@@ -112,6 +112,17 @@ export function itemObjectivesReducer(
           entities: StoreUtility.assignValue(
             state.entities,
             'rateUnit',
+            action.payload
+          ),
+        },
+      };
+    case ItemObjectivesActionType.SET_TYPE:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.assignValue(
+            state.entities,
+            'type',
             action.payload
           ),
         },

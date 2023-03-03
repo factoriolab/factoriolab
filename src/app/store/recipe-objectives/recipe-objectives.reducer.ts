@@ -115,6 +115,17 @@ export function recipeObjectivesReducer(
           ),
         },
       };
+    case RecipeObjectivesActionType.SET_TYPE:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.assignValue(
+            state.entities,
+            'type',
+            action.payload
+          ),
+        },
+      };
     case RecipeObjectivesActionType.SET_MACHINE:
       return {
         ...state,

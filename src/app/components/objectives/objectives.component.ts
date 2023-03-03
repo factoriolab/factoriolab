@@ -8,6 +8,8 @@ import {
   displayRateInfo,
   displayRateOptions,
   ItemObjective,
+  ObjectiveType,
+  objectiveTypeOptions,
   RateUnit,
   Rational,
 } from '~/models';
@@ -64,6 +66,7 @@ export class ObjectivesComponent {
     )
   );
 
+  objectiveTypeOptions = objectiveTypeOptions;
   displayRateOptions = displayRateOptions;
 
   constructor(
@@ -79,7 +82,7 @@ export class ObjectivesComponent {
   ): void {
     if (
       displayRate !== DisplayRate.PerSecond &&
-      itemObjective.rateUnit !== 'belts'
+      itemObjective.rateUnit !== RateUnit.Belts
     ) {
       value = Rational.from(value)
         .div(displayRateInfo[displayRate].value)
@@ -106,6 +109,10 @@ export class ObjectivesComponent {
     this.store.dispatch(new ItemObjectives.SetRateUnitAction({ id, value }));
   }
 
+  setItemType(id: string, value: ObjectiveType): void {
+    this.store.dispatch(new ItemObjectives.SetTypeAction({ id, value }));
+  }
+
   removeRecipeObjective(id: string): void {
     this.store.dispatch(new RecipeObjectives.RemoveAction(id));
   }
@@ -116,6 +123,10 @@ export class ObjectivesComponent {
 
   setCount(id: string, value: string): void {
     this.store.dispatch(new RecipeObjectives.SetCountAction({ id, value }));
+  }
+
+  setRecipeType(id: string, value: ObjectiveType): void {
+    this.store.dispatch(new RecipeObjectives.SetTypeAction({ id, value }));
   }
 
   addItemObjective(value: string): void {

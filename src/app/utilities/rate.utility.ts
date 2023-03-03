@@ -4,6 +4,7 @@ import {
   Entities,
   Game,
   ItemSettings,
+  RateUnit,
   Rational,
   RationalItemObjective,
   RationalRecipe,
@@ -25,12 +26,12 @@ export class RateUtility {
   ): Rational {
     const rate = itemObjective.rate;
     let factor = Rational.one;
-    if (itemObjective.rateUnit === 'belts') {
+    if (itemObjective.rateUnit === RateUnit.Belts) {
       const beltId = itemSettings[itemObjective.itemId].beltId;
       if (beltId) {
         factor = beltSpeed[beltId];
       }
-    } else if (itemObjective.rateUnit === 'wagons') {
+    } else if (itemObjective.rateUnit === RateUnit.Wagons) {
       const wagonId = itemSettings[itemObjective.itemId].wagonId;
       if (wagonId) {
         const item = data.itemEntities[itemObjective.itemId];

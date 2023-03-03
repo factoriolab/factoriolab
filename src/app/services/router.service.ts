@@ -15,7 +15,8 @@ import {
   ItemSettings,
   MachineSettings,
   ModHash,
-  rateUnits,
+  ObjectiveType,
+  RateUnit,
   Rational,
   RecipeObjective,
   RecipeSettings,
@@ -240,7 +241,8 @@ export class RouterService {
         id: '0',
         itemId: step.itemId,
         rate: step.items.toString(),
-        rateUnit: 'items',
+        rateUnit: RateUnit.Items,
+        type: ObjectiveType.Output,
       },
     ];
     const zData: ZipData = {
@@ -792,15 +794,17 @@ export class RouterService {
   ): void {
     const z = this.zipList(
       itemObjectives.map((obj) => {
-        const r = Rational.fromString(obj.rate).toString();
-        const t = this.zipDiffNumber(rateUnits.indexOf(obj.rateUnit), 0);
+        const rate = Rational.fromString(obj.rate).toString();
+        const unit = this.zipDiffNumber(obj.rateUnit, RateUnit.Items);
+        const type = this.zipDiffNumber(obj.type, ObjectiveType.Output);
 
         return {
-          bare: this.zipFields([obj.itemId, r, t]),
+          bare: this.zipFields([obj.itemId, rate, unit, type]),
           hash: this.zipFields([
             this.zipTruthyNString(obj.itemId, hash.items),
-            r,
-            t,
+            rate,
+            unit,
+            type,
           ]),
         };
       })
@@ -831,14 +835,16 @@ export class RouterService {
           id,
           itemId: this.parseNString(s[i++], hash.items) ?? '',
           rate: s[i++],
-          rateUnit: rateUnits[Number(s[i++])] ?? 'items',
+          rateUnit: Number(s[i++]) | RateUnit.Items,
+          type: Number(s[i++]) | ObjectiveType.Output,
         };
       } else {
         obj = {
           id,
           itemId: s[i++],
           rate: s[i++],
-          rateUnit: rateUnits[Number(s[i++])] ?? 'items',
+          rateUnit: Number(s[i++]) | RateUnit.Items,
+          type: Number(s[i++]) | ObjectiveType.Output,
         };
       }
 
@@ -909,6 +915,7 @@ export class RouterService {
           id,
           recipeId: this.parseNString(s[i++], hash.recipes) ?? '',
           count: s[i++],
+          type: Number(s[i++]) | ObjectiveType.Output,
           machineId: this.parseNString(s[i++], hash.machines),
           machineModuleIds: this.parseNArray(s[i++], hash.modules),
           beacons: this.parseArray(s[i++])?.map(
@@ -922,6 +929,7 @@ export class RouterService {
           id,
           recipeId: s[i++],
           count: s[i++],
+          type: Number(s[i++]) | ObjectiveType.Output,
           machineId: this.parseString(s[i++]),
           machineModuleIds: this.parseArray(s[i++]),
           beacons: this.parseArray(s[i++])?.map(

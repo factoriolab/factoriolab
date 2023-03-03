@@ -5,6 +5,7 @@ import {
   IdIndexDefaultPayload,
   IdIndexPayload,
   IdPayload,
+  ObjectiveType,
 } from '~/models';
 import { RecipeObjective } from '~/models/recipe-objective';
 
@@ -14,6 +15,7 @@ export const enum RecipeObjectivesActionType {
   REMOVE = '[Recipe Objectives] Remove',
   SET_RECIPE = '[Recipe Objectives] Set Recipe',
   SET_COUNT = '[Recipe Objectives] Set Count',
+  SET_TYPE = '[Recipe Objectives] Set Type',
   SET_MACHINE = '[Recipe Objectives] Set Machine',
   SET_MACHINE_MODULES = '[Recipe Objectives] Set Machine Modules',
   ADD_BEACON = '[Recipe Objectives] Add Beacon',
@@ -50,6 +52,11 @@ export class SetRecipeAction implements Action {
 export class SetCountAction implements Action {
   readonly type = RecipeObjectivesActionType.SET_COUNT;
   constructor(public payload: IdPayload<string>) {}
+}
+
+export class SetTypeAction implements Action {
+  readonly type = RecipeObjectivesActionType.SET_TYPE;
+  constructor(public payload: IdPayload<ObjectiveType>) {}
 }
 
 export class SetMachineAction implements Action {
@@ -113,6 +120,7 @@ export type RecipeObjectivesAction =
   | RemoveAction
   | SetRecipeAction
   | SetCountAction
+  | SetTypeAction
   | SetMachineAction
   | SetMachineModulesAction
   | AddBeaconAction
