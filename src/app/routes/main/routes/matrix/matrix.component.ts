@@ -1,11 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
+import { AppSharedModule } from '~/app-shared.module';
 import { ItemObjectives, LabState, Settings } from '~/store';
 
 @Component({
-  selector: 'lab-matrix',
+  standalone: true,
+  imports: [CommonModule, AppSharedModule],
   templateUrl: './matrix.component.html',
   styleUrls: ['./matrix.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

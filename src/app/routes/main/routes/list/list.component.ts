@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -12,6 +12,7 @@ import { Store } from '@ngrx/store';
 import { Table } from 'primeng/table';
 import { combineLatest, filter, first, map } from 'rxjs';
 
+import { AppSharedModule } from '~/app-shared.module';
 import {
   Column,
   Dataset,
@@ -41,7 +42,8 @@ import {
 import { RecipeUtility } from '~/utilities';
 
 @Component({
-  selector: 'lab-list',
+  standalone: true,
+  imports: [CommonModule, AppSharedModule],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

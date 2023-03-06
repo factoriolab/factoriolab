@@ -1,8 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
+import { AppSharedModule } from '~/app-shared.module';
 import { Game, gameInfo, gameOptions } from '~/models';
 import { RouterService } from '~/services';
 import {
@@ -15,7 +17,8 @@ import {
 import { BrowserUtility } from '~/utilities';
 
 @Component({
-  selector: 'lab-landing',
+  standalone: true,
+  imports: [CommonModule, AppSharedModule],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -9,12 +10,14 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { DataSet } from 'vis-data/esnext';
 import { Data, Edge, Network, Node, Options } from 'vis-network/esnext';
 
+import { AppSharedModule } from '~/app-shared.module';
 import { Entities, FlowData } from '~/models';
 import { DisplayService, FlowService } from '~/services';
 
 @UntilDestroy()
 @Component({
-  selector: 'lab-flow',
+  standalone: true,
+  imports: [CommonModule, AppSharedModule],
   templateUrl: './flow.component.html',
   styleUrls: ['./flow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,7 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { RadioButtonModule } from 'primeng/radiobutton';
+import { StepsModule } from 'primeng/steps';
 import { combineLatest, map } from 'rxjs';
 
+import { AppSharedModule } from '~/app-shared.module';
 import {
   DisplayRate,
   displayRateOptions,
@@ -18,7 +22,8 @@ export enum WizardState {
 }
 
 @Component({
-  selector: 'lab-wizard',
+  standalone: true,
+  imports: [CommonModule, RadioButtonModule, StepsModule, AppSharedModule],
   templateUrl: './wizard.component.html',
   styleUrls: ['./wizard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
