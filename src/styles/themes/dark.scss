@@ -1,8 +1,10 @@
 @use 'sass:color';
 
-/* Based on PrimeNG Arya Orange theme
- * Removed styles: p-organizationchart, p-carousel, p-galleria, p-avatar, fc, p-datepicker,
- * p-calendar, p-terminal, p-fileupload, p-image, p-toast, p-message, p-inline-message */
+/* 
+ * Based on PrimeNG Arya Orange theme
+ * Removed styles: p-organizationchart, p-carousel, p-galleria, p-avatar, fc,
+ * p-datepicker, p-calendar, p-terminal, p-fileupload, p-image, p-toast
+ */
 
 // Defined in root
 $surface-a: #1e1e1e;
@@ -33,14 +35,23 @@ $info-color: #81d4fa;
 $info-hover-color: #5dc8f9;
 $info-focus-color: #a7e1fc;
 $info-active-color: #38bbf7;
+$info-msg-bg-color: #b3e5fc;
+$info-msg-border-color: #0891cf;
+$info-msg-color: #044868;
 $success-color: #c5e1a5;
 $success-hover-color: #b2d788;
 $success-focus-color: #d6eac0;
 $success-active-color: #9fce6b;
+$success-msg-bg-color: #c8e6c9;
+$success-msg-border-color: #439446;
+$success-msg-color: #224a23;
 $warning-color: #ffe082;
 $warning-hover-color: #ffd65c;
 $warning-focus-color: #ffe9a8;
 $warning-active-color: #ffcd35;
+$warning-msg-bg-color: #ffecb3;
+$warning-msg-border-color: #d9a300;
+$warning-msg-color: #6d5100;
 $help-color: #ce93d8;
 $help-hover-color: #c278ce;
 $help-focus-color: #ddb3e4;
@@ -49,6 +60,9 @@ $danger-color: #f48fb1;
 $danger-hover-color: #f16c98;
 $danger-focus-color: #f7b1c8;
 $danger-active-color: #ed4980;
+$error-msg-bg-color: #ffcdd2;
+$error-msg-border-color: #e60017;
+$error-msg-color: #73000c;
 $datatable-stripe-color: #242424;
 $overlaypanel-before-border-color: #353535;
 $gray-30: rgba(30, 30, 30, 0);
@@ -5677,6 +5691,143 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   margin-left: 0.5rem;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+
+.p-inline-message {
+  padding: 0.5rem 0.5rem;
+  margin: 0;
+  border-radius: 3px;
+}
+.p-inline-message.p-inline-message-info {
+  background: $info-msg-bg-color;
+  border: solid $info-msg-border-color;
+  border-width: 1px;
+  color: $info-msg-color;
+}
+.p-inline-message.p-inline-message-info .p-inline-message-icon {
+  color: $info-msg-color;
+}
+.p-inline-message.p-inline-message-success {
+  background: $success-msg-bg-color;
+  border: solid $success-msg-border-color;
+  border-width: 1px;
+  color: $success-msg-color;
+}
+.p-inline-message.p-inline-message-success .p-inline-message-icon {
+  color: $success-msg-color;
+}
+.p-inline-message.p-inline-message-warn {
+  background: $warning-msg-bg-color;
+  border: solid $warning-msg-border-color;
+  border-width: 1px;
+  color: $warning-msg-color;
+}
+.p-inline-message.p-inline-message-warn .p-inline-message-icon {
+  color: $warning-msg-color;
+}
+.p-inline-message.p-inline-message-error {
+  background: $error-msg-bg-color;
+  border: solid $error-msg-border-color;
+  border-width: 1px;
+  color: $error-msg-color;
+}
+.p-inline-message.p-inline-message-error .p-inline-message-icon {
+  color: $error-msg-color;
+}
+.p-inline-message .p-inline-message-icon {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+.p-inline-message .p-inline-message-text {
+  font-size: 1rem;
+}
+.p-inline-message.p-inline-message-icon-only .p-inline-message-icon {
+  margin-right: 0;
+}
+
+.p-message {
+  margin: 1rem 0;
+  border-radius: 3px;
+}
+.p-message .p-message-wrapper {
+  padding: 1rem 1.5rem;
+}
+.p-message .p-message-close {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: transparent;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-message .p-message-close:hover {
+  background: $surface-c;
+}
+.p-message .p-message-close:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-message.p-message-info {
+  background: $info-msg-bg-color;
+  border: solid $info-msg-border-color;
+  border-width: 0 0 0 6px;
+  color: $info-msg-color;
+}
+.p-message.p-message-info .p-message-icon {
+  color: $info-msg-color;
+}
+.p-message.p-message-info .p-message-close {
+  color: $info-msg-color;
+}
+.p-message.p-message-success {
+  background: $success-msg-bg-color;
+  border: solid $success-msg-border-color;
+  border-width: 0 0 0 6px;
+  color: $success-msg-color;
+}
+.p-message.p-message-success .p-message-icon {
+  color: $success-msg-color;
+}
+.p-message.p-message-success .p-message-close {
+  color: $success-msg-color;
+}
+.p-message.p-message-warn {
+  background: $warning-msg-bg-color;
+  border: solid $warning-msg-border-color;
+  border-width: 0 0 0 6px;
+  color: $warning-msg-color;
+}
+.p-message.p-message-warn .p-message-icon {
+  color: $warning-msg-color;
+}
+.p-message.p-message-warn .p-message-close {
+  color: $warning-msg-color;
+}
+.p-message.p-message-error {
+  background: $error-msg-bg-color;
+  border: solid $error-msg-border-color;
+  border-width: 0 0 0 6px;
+  color: $error-msg-color;
+}
+.p-message.p-message-error .p-message-icon {
+  color: $error-msg-color;
+}
+.p-message.p-message-error .p-message-close {
+  color: $error-msg-color;
+}
+.p-message .p-message-text {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.p-message .p-message-icon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+.p-message .p-message-summary {
+  font-weight: 700;
+}
+.p-message .p-message-detail {
+  margin-left: 0.5rem;
 }
 
 .p-badge {
