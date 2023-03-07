@@ -1,11 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
+import { Message } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
 import {
   Breakpoint,
   DisplayRate,
   displayRateOptions,
+  MatrixResult,
+  MatrixResultType,
   ObjectiveType,
   objectiveTypeOptions,
   RateUnit,
@@ -29,6 +33,7 @@ import {
 export class ObjectivesComponent {
   vm$ = combineLatest([
     this.store.select(ItemObjectives.getItemObjectives),
+    this.store.select(ItemObjectives.getMatrixResult),
     this.store.select(RecipeObjectives.getRecipeObjectives),
     this.store.select(Items.getItemSettings),
     this.store.select(Recipes.getRecipeSettings),
@@ -41,6 +46,7 @@ export class ObjectivesComponent {
     map(
       ([
         itemObjectives,
+        matrixResult,
         recipeObjectives,
         itemSettings,
         recipeSettings,
@@ -51,6 +57,7 @@ export class ObjectivesComponent {
         width,
       ]) => ({
         itemObjectives,
+        matrixResult,
         recipeObjectives,
         itemSettings,
         recipeSettings,
@@ -59,9 +66,27 @@ export class ObjectivesComponent {
         options,
         data,
         mobile: width < Breakpoint.Small,
+        messages: this.getMessages(matrixResult),
       })
     )
   );
+
+  getMessages(matrixResult: MatrixResult): Message[] {
+    if (matrixResult.resultType === MatrixResultType.Failed) {
+      return [
+        {
+          severity: 'error',
+          summary: this.translateSvc.instant('objectives.error'),
+          detail: this.translateSvc.instant('objectives.errorDetail', {
+            returnCode: matrixResult.returnCode ?? 'unknown',
+            simplexStatus: matrixResult.simplexStatus ?? 'unknown',
+          }),
+        },
+      ];
+    } else {
+      return [];
+    }
+  }
 
   objectiveTypeOptions = objectiveTypeOptions;
   displayRateOptions = displayRateOptions;
@@ -71,6 +96,7 @@ export class ObjectivesComponent {
   constructor(
     public trackSvc: TrackService,
     private store: Store<LabState>,
+    private translateSvc: TranslateService,
     private contentService: ContentService
   ) {}
 

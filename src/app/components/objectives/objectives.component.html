@@ -177,4 +177,10 @@
     [header]="'objectives.addARecipeTooltip' | translate"
     (selectId)="addRecipeObjective($event)"
   ></lab-picker>
+  <p-messages
+    styleClass="w-100 w-xxl-50"
+    [value]="vm.messages"
+    [closable]="false"
+    [escape]="false"
+  ></p-messages>
 </p-card>

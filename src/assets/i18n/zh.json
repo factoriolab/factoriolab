@@ -10,8 +10,6 @@
     "error": "错误",
     "errorDetail": "此应用遇到了一个错误：",
     "reset": "重置",
-    "simplexError": "未找到解决方案",
-    "simplexErrorDetail": "尝试在启用所有配方的情况下使用 WASM Float64 单纯形法求解器，或者检查你禁用的配方以确保解决方案是可行的。\n\n例如，如果一个铁板需要两个齿轮，而一个齿轮需要两个铁板，那么制作铁板就是不可行的。",
     "dontShowAgain": "不再显示"
   },
   "options": {

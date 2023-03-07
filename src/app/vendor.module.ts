@@ -12,6 +12,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
+import { MessagesModule } from 'primeng/messages';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
@@ -35,6 +36,7 @@ const modules = [
   InputNumberModule,
   InputTextModule,
   MenuModule,
+  MessagesModule,
   MultiSelectModule,
   ProgressSpinnerModule,
   RippleModule,

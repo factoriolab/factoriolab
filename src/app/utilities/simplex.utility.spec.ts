@@ -15,7 +15,7 @@ describe('SimplexUtility', () => {
     producers: [],
     steps: [],
     recipes: {},
-    items: {},
+    itemsOutput: {},
     inputIds: [],
     recipeIds: Mocks.Dataset.recipeIds,
     itemIds: Mocks.Dataset.itemIds,
@@ -263,7 +263,7 @@ describe('SimplexUtility', () => {
         producers: [Mocks.RationalProducer],
         steps: [],
         recipes: {},
-        items: {
+        itemsOutput: {
           [ItemId.WoodenChest]: Mocks.RationalProduct.rate,
           [ItemId.IronPlate]: Rational.zero,
           [ItemId.IronOre]: Rational.zero,
@@ -297,7 +297,7 @@ describe('SimplexUtility', () => {
         Mocks.AdjustedData
       );
 
-      expect(result.items[ItemId.MiningProductivity]).toEqual(
+      expect(result.itemsOutput[ItemId.MiningProductivity]).toEqual(
         Rational.from(72)
       );
     });
@@ -318,7 +318,9 @@ describe('SimplexUtility', () => {
       const state = getState();
       const recipe = Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       const result = SimplexUtility.itemMatches(recipe, state);
-      expect(state.items).toEqual({ [ItemId.CopperPlate]: Rational.zero });
+      expect(state.itemsOutput).toEqual({
+        [ItemId.CopperPlate]: Rational.zero,
+      });
       expect(state.recipes).toEqual({});
       expect(result).toEqual([ItemId.CopperPlate]);
     });
@@ -392,7 +394,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       SimplexUtility.addSurplusVariables(state);
-      expect(state.items[ItemId.Coal]).toEqual(Rational.zero);
+      expect(state.itemsOutput[ItemId.Coal]).toEqual(Rational.zero);
     });
   });
 
@@ -401,8 +403,8 @@ describe('SimplexUtility', () => {
       const state = getState();
       // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.items[ItemId.Wood] = Rational.one;
-      state.items[ItemId.Coal] = Rational.one;
+      state.itemsOutput[ItemId.Wood] = Rational.one;
+      state.itemsOutput[ItemId.Coal] = Rational.one;
       state.recipes = {
         [RecipeId.Coal]: Mocks.Dataset.recipeR[RecipeId.Coal],
       };
@@ -527,10 +529,10 @@ describe('SimplexUtility', () => {
       });
       state.recipes[RecipeId.IronPlate] =
         Mocks.Dataset.recipeR[RecipeId.IronPlate];
-      state.items[ItemId.Wood] = Rational.one;
-      state.items[ItemId.Coal] = Rational.one;
-      state.items[ItemId.IronPlate] = Rational.zero;
-      state.items[ItemId.IronOre] = Rational.zero;
+      state.itemsOutput[ItemId.Wood] = Rational.one;
+      state.itemsOutput[ItemId.Coal] = Rational.one;
+      state.itemsOutput[ItemId.IronPlate] = Rational.zero;
+      state.itemsOutput[ItemId.IronOre] = Rational.zero;
       state.producers = [
         {
           id: '0',
@@ -576,12 +578,12 @@ describe('SimplexUtility', () => {
       state.recipes[ItemId.Water] = Mocks.AdjustedData.recipeR[RecipeId.Water];
       state.recipes[ItemId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
-      state.items[ItemId.CopperCable] = Rational.one;
-      state.items[ItemId.CopperPlate] = Rational.zero;
-      state.items[ItemId.Wood] = Rational.zero;
-      state.items[ItemId.Coal] = Rational.zero;
-      state.items[ItemId.IronOre] = Rational.zero;
-      state.items[ItemId.IronPlate] = Rational.zero;
+      state.itemsOutput[ItemId.CopperCable] = Rational.one;
+      state.itemsOutput[ItemId.CopperPlate] = Rational.zero;
+      state.itemsOutput[ItemId.Wood] = Rational.zero;
+      state.itemsOutput[ItemId.Coal] = Rational.zero;
+      state.itemsOutput[ItemId.IronOre] = Rational.zero;
+      state.itemsOutput[ItemId.IronPlate] = Rational.zero;
       const alt = { ...Mocks.RationalProducer, ...{ id: '2' } };
       state.producers = [Mocks.RationalProducer, alt];
       const result = SimplexUtility.canonical(state);
@@ -862,8 +864,8 @@ describe('SimplexUtility', () => {
   describe('parseSolution', () => {
     it('should parse the solution of the tableau', () => {
       const state = getState();
-      state.items[ItemId.Coal] = Rational.zero;
-      state.items[ItemId.IronOre] = Rational.zero;
+      state.itemsOutput[ItemId.Coal] = Rational.zero;
+      state.itemsOutput[ItemId.IronOre] = Rational.zero;
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
@@ -893,8 +895,8 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'assignRecipes');
       spyOn(SimplexUtility, 'addRecipeStep');
       const state = getState();
-      state.items[ItemId.Coal] = Rational.zero;
-      state.items[ItemId.IronOre] = Rational.zero;
+      state.itemsOutput[ItemId.Coal] = Rational.zero;
+      state.itemsOutput[ItemId.IronOre] = Rational.zero;
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       state.recipes[ItemId.Wood] = { id: null } as any;
       state.recipes[RecipeId.IronOre] =
@@ -920,7 +922,7 @@ describe('SimplexUtility', () => {
         recipes: { [RecipeId.Coal]: Rational.two },
       };
       const state = getState();
-      state.items[ItemId.Coal] = Rational.from(3);
+      state.itemsOutput[ItemId.Coal] = Rational.from(3);
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       state.producers = [Mocks.RationalProducer];
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);
@@ -941,7 +943,7 @@ describe('SimplexUtility', () => {
         recipes: {},
       };
       const state = getState();
-      state.items[ItemId.IronPlate] = Rational.zero;
+      state.itemsOutput[ItemId.IronPlate] = Rational.zero;
       state.producers = [Mocks.RationalProducer];
       SimplexUtility.addItemStep(ItemId.IronPlate, solution, state);
       expect(state.steps).toEqual([
@@ -972,7 +974,7 @@ describe('SimplexUtility', () => {
           items: Rational.zero,
         },
       ];
-      state.items[ItemId.HeavyOil] = Rational.zero;
+      state.itemsOutput[ItemId.HeavyOil] = Rational.zero;
       state.recipes[RecipeId.AdvancedOilProcessing] =
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing];
       SimplexUtility.addItemStep(ItemId.HeavyOil, solution, state);
@@ -1002,7 +1004,7 @@ describe('SimplexUtility', () => {
         recipes: { [RecipeId.Coal]: Rational.from(4) },
       };
       const state = getState();
-      state.items[ItemId.Coal] = Rational.zero;
+      state.itemsOutput[ItemId.Coal] = Rational.zero;
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
@@ -1024,7 +1026,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.data = Mocks.getDataset();
       state.data.itemRecipeId[ItemId.Coal] = 'other';
-      state.items[ItemId.Coal] = Rational.from(3);
+      state.itemsOutput[ItemId.Coal] = Rational.from(3);
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       state.producers = [Mocks.RationalProducer];
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);

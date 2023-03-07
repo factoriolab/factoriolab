@@ -13,8 +13,6 @@
     "resetTooltip": "Click to reset",
     "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, cost: {{ cost }}",
     "simplexUnsolved": "Simplex {{ resultType }}",
-    "simplexError": "No solution found",
-    "simplexErrorDetail": "Check your excluded recipes to ensure a solution is feasible.\n\nE.G. If one iron plate requires two gears, and one gear requires two iron plates, a solution for iron plates is not feasible.",
     "dontShowAgain": "Don't show again"
   },
   "options": {
@@ -265,7 +263,9 @@
     "addAnItemTooltip": "Select an item to produce",
     "addARecipe": "Add a recipe",
     "addARecipeTooltip": "Select a recipe to produce",
-    "selectDisplayRate": "Select display rate"
+    "selectDisplayRate": "Select display rate",
+    "error": "No solution found",
+    "errorDetail": "Check limit and maximize objectives and enabled recipes. <i><small>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</small></i>"
   },
   "list": {
     "openColumnSettings": "Open column settings",

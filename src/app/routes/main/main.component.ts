@@ -54,13 +54,6 @@ export class MainComponent implements AfterViewInit {
 
   version = `${APP} ${environment.version}`;
   isResetting = false;
-  showSimplexErr = false;
-  simplexErrSub = this.store
-    .select(ItemObjectives.getMatrixResult)
-    .subscribe(
-      (result) =>
-        (this.showSimplexErr = result.resultType === MatrixResultType.Failed)
-    );
   tabItems: MenuItem[] = [
     {
       label: 'app.list',
