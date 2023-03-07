@@ -79,19 +79,17 @@ export class RationalRecipe {
     }
   }
 
-  produces(id: string): boolean {
-    if (this.out[id]) {
+  produces(itemId: string): boolean {
+    if (this.out[itemId]) {
       // Recipe declares this as output, check inputs
-      return this.in[id] == null || this.in[id].lt(this.out[id]);
+      return this.in[itemId] == null || this.in[itemId].lt(this.out[itemId]);
     }
     return false;
   }
 
-  producesOnly(id: string): boolean {
-    return Object.keys(this.out).length === 1 && this.produces(id);
-  }
-
-  output(id: string): Rational {
-    return (this.out[id] ?? Rational.zero).sub(this.in[id] ?? Rational.zero);
+  output(itemId: string): Rational {
+    return (this.out[itemId] ?? Rational.zero)
+      .sub(this.in[itemId] ?? Rational.zero)
+      .div(this.time);
   }
 }

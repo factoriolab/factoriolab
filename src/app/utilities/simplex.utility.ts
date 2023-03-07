@@ -5,6 +5,7 @@ import {
   Simplex,
   Status,
   Variable,
+  VariableProperties,
 } from 'glpk-ts';
 import { StatusSimplex } from 'glpk-ts/dist/status';
 
@@ -189,6 +190,10 @@ export class SimplexUtility {
         }
         case ObjectiveType.Maximize: {
           this.addIdValue(state.itemsMaximize, obj.itemId, obj.rate);
+          if (!state.itemsOutput[obj.itemId]) {
+            state.itemsOutput[obj.itemId] = Rational.zero;
+          }
+
           this.parseItemRecursively(obj.itemId, state);
           break;
         }
@@ -346,11 +351,17 @@ export class SimplexUtility {
     const recipeVarEntities: Entities<Variable> = {};
     const recipeObjectiveVarEntities: Entities<Variable> = {};
     const inputVarEntities: Entities<Variable> = {};
+    const outputVarEntities: Entities<Variable> = {};
+    // Track net output of items, for item output/input constraints
     const itemConstrEntities: Entities<Constraint> = {};
+    // Track consumption of items, for item limit constraints
+    const inputConstrEntities: Entities<Constraint> = {};
+
+    let maximizeVar: Variable | undefined;
 
     // Add recipe vars to model
     for (const recipeId of recipeIds) {
-      const config = {
+      const config: VariableProperties = {
         obj: (state.recipes[recipeId].cost ?? Rational.zero).toNumber(),
         lb: 0,
         name: recipeId,
@@ -360,7 +371,7 @@ export class SimplexUtility {
 
     // Add recipe objective vars to model
     for (const recipeObjective of state.recipeObjectives) {
-      const config = {
+      const config: VariableProperties = {
         lb: recipeObjective.count.toNumber(),
         ub: recipeObjective.count.toNumber(),
         name: recipeObjective.id,
@@ -369,73 +380,113 @@ export class SimplexUtility {
     }
 
     // Add input vars to model
-    for (const inputId of state.inputIds) {
+    for (const itemId of state.inputIds) {
       const cost =
-        state.itemIds.indexOf(inputId) === -1
+        state.itemIds.indexOf(itemId) === -1
           ? state.costExcluded
           : state.costInput;
-      const config = {
+      const config: VariableProperties = {
         obj: cost.toNumber(),
         lb: 0,
-        name: inputId,
+        name: itemId,
       };
-      inputVarEntities[inputId] = m.addVar(config);
+      console.log('input', config);
+      inputVarEntities[itemId] = m.addVar(config);
     }
 
-    // Add item constraints to model
+    // Add output vars to model
     for (const itemId of itemIds) {
-      const coeffs: [Variable, number][] = [];
+      const config: VariableProperties = {
+        name: itemId,
+      };
+      if (state.itemsLimit[itemId]) {
+        config.ub = state.itemsLimit[itemId].toNumber();
+      }
+      console.log('output', config);
+      outputVarEntities[itemId] = m.addVar(config);
+    }
+
+    // Add maximize constraint to model
+    const maximizeIds = Object.keys(state.itemsMaximize);
+    if (maximizeIds.length > 0) {
+      const config: VariableProperties = {
+        obj: state.costInput.inverse().toNumber(),
+        lb: 0,
+        ub: 1000,
+        name: 'maximize',
+      };
+      console.log('maximize', config);
+      maximizeVar = m.addVar(config);
+    }
+
+    // Add net output and input item constraints to model
+    for (const itemId of itemIds) {
+      const netCoeffs: [Variable, number][] = [];
+      const inputCoeffs: [Variable, number][] = [];
       for (const recipeId of recipeIds) {
-        let val = Rational.zero;
         const recipe = state.recipes[recipeId];
-        if (recipe.in[itemId]) {
-          val = val.sub(recipe.in[itemId]);
-        }
-
-        if (recipe.out[itemId]) {
-          val = val.add(recipe.out[itemId]);
-        }
-
+        const val = recipe.output(itemId);
         if (val.nonzero()) {
-          coeffs.push([
+          netCoeffs.push([recipeVarEntities[recipeId], val.toNumber()]);
+        }
+
+        if (recipe.in[itemId]) {
+          inputCoeffs.push([
             recipeVarEntities[recipeId],
-            val.div(recipe.time).toNumber(),
+            recipe.in[itemId].div(recipe.time).toNumber(),
           ]);
         }
       }
 
       for (const recipeObjective of state.recipeObjectives) {
-        let val = Rational.zero;
         const recipe = recipeObjective.recipe;
-        if (recipe.in[itemId]) {
-          val = val.sub(recipe.in[itemId]);
-        }
-
-        if (recipe.out[itemId]) {
-          val = val.add(recipe.out[itemId]);
-        }
-
+        const val = recipe.output(itemId);
         if (val.nonzero()) {
-          coeffs.push([
+          netCoeffs.push([
             recipeObjectiveVarEntities[recipeObjective.id],
-            val.div(recipe.time).toNumber(),
+            val.toNumber(),
+          ]);
+        }
+
+        if (recipe.in[itemId]) {
+          inputCoeffs.push([
+            recipeObjectiveVarEntities[recipeObjective.id],
+            recipe.in[itemId].div(recipe.time).toNumber(),
           ]);
         }
       }
 
       // Add input coeff
       if (state.inputIds.indexOf(itemId) !== -1) {
-        coeffs.push([inputVarEntities[itemId], 1]);
+        netCoeffs.push([inputVarEntities[itemId], 1]);
       }
 
-      const config: ConstraintProperties = {
-        coeffs,
-        lb: state.itemsOutput[itemId].toNumber(),
-      };
-      if (state.itemsLimit[itemId]) {
-        config.ub = state.itemsLimit[itemId].toNumber();
+      // Add maximize coeff
+      if (maximizeVar != null && state.itemsMaximize[itemId]) {
+        netCoeffs.push([
+          maximizeVar,
+          state.itemsMaximize[itemId].inverse().toNumber(),
+        ]);
       }
-      itemConstrEntities[itemId] = m.addConstr(config);
+
+      const netConfig: ConstraintProperties = {
+        coeffs: netCoeffs,
+        lb: state.itemsOutput[itemId].toNumber(),
+        name: itemId,
+      };
+      console.log('item', netConfig);
+      itemConstrEntities[itemId] = m.addConstr(netConfig);
+
+      if (state.itemsLimit[itemId]) {
+        const inputConfig: ConstraintProperties = {
+          coeffs: inputCoeffs,
+          ub: state.itemsLimit[itemId].toNumber(),
+          name: itemId,
+        };
+        console.log('input', inputConfig);
+        inputConstrEntities[itemId] = m.addConstr(inputConfig);
+        // netConfig.ub = state.itemsLimit[itemId].toNumber();
+      }
     }
 
     // Run GLPK simplex
@@ -481,6 +532,14 @@ export class SimplexUtility {
             (p.recipe.in[itemId] || p.recipe.out[itemId])
         )
       ) {
+        console.log('final value', itemId, itemConstrEntities[itemId].value);
+        if (inputConstrEntities[itemId]) {
+          console.log(
+            'final input value',
+            itemId,
+            inputConstrEntities[itemId].value
+          );
+        }
         // Recipes for this item are part of the solution, include result
         const val = Rational.fromNumber(itemConstrEntities[itemId].value).sub(
           state.itemsOutput[itemId]

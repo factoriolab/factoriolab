@@ -127,15 +127,15 @@ export function itemObjectivesReducer(
     case ItemObjectivesActionType.ADJUST_DISPLAY_RATE: {
       const factor = Rational.fromString(action.payload);
       const newEntities = { ...state.entities };
-      for (const id of state.ids.filter(
-        (i) =>
-          state.entities[i].rateUnit === RateUnit.Items ||
-          state.entities[i].rateUnit === RateUnit.Wagons
-      )) {
-        const rate = Rational.fromString(state.entities[id].rate)
-          .mul(factor)
-          .toString();
-        newEntities[id] = { ...state.entities[id], ...{ rate } };
+      for (const objective of state.ids
+        .map((i) => state.entities[i])
+        .filter(
+          (o) =>
+            o.type !== ObjectiveType.Maximize &&
+            (o.rateUnit === RateUnit.Items || o.rateUnit === RateUnit.Wagons)
+        )) {
+        const rate = Rational.fromString(objective.rate).mul(factor).toString();
+        newEntities[objective.id] = { ...objective, ...{ rate } };
       }
       return {
         ...state,

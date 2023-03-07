@@ -5,6 +5,7 @@ import { Rational } from './rational';
 export interface StepOutput {
   recipeId?: string;
   recipeObjectiveId?: string;
+  inputs?: boolean;
   value: Rational;
   machines: Rational;
 }

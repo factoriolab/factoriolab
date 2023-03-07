@@ -335,6 +335,7 @@ export const getStepDetails = createSelector(
         }, Rational.one);
         if (inputs.nonzero()) {
           outputs.push({
+            inputs: true,
             value: inputs,
             machines: Rational.zero,
           });

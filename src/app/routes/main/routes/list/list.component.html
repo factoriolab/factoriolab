@@ -970,7 +970,8 @@
                       recipeObjectiveId: output.recipeObjectiveId,
                       percent: output.value,
                       percentOnDest: true,
-                      destId: step.itemId
+                      destId: step.itemId,
+                      inputs: output.inputs
                     }
                   "
                 >
@@ -1455,6 +1456,7 @@
       let-destId="destId"
       let-destRecipeObjectiveId="destRecipeObjectiveId"
       let-destIsRecipe="destIsRecipe"
+      let-inputs="inputs"
     >
       <tr class="detail">
         <ng-container *ngIf="itemId">
@@ -1561,7 +1563,7 @@
           </td>
           <td class="p-0" colspan="100">
             <div class="d-flex align-items-center">
-              <div *ngIf="!recipeId" class="position-absolute">
+              <div *ngIf="inputs" class="position-absolute">
                 {{ 'list.inputs' | translate }}
               </div>
               <ng-container
