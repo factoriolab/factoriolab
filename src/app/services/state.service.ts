@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Meta } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
@@ -7,7 +6,7 @@ import { combineLatest } from 'rxjs';
 import { filter, first } from 'rxjs/operators';
 
 import { environment } from 'src/environments';
-import { FuelType, gameInfo, ModHash } from '~/models';
+import { FuelType, ModHash } from '~/models';
 import { LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
@@ -16,7 +15,6 @@ import { BrowserUtility } from '~/utilities';
 })
 export class StateService {
   constructor(
-    private meta: Meta,
     private gaSvc: GoogleAnalyticsService,
     private store: Store<LabState>,
     private translateSvc: TranslateService
@@ -27,11 +25,6 @@ export class StateService {
 
     this.store.select(Settings.getGame).subscribe((game) => {
       this.gaSvc.event('set_game', game);
-      this.meta.updateTag({
-        name: 'description',
-        content: `A feature-rich production calculator for ${gameInfo[game].meta} and similar games.
-Determine item and machine requirements for your desired output products.`,
-      });
     });
 
     this.store.select(Preferences.getLanguage).subscribe((lang) => {
