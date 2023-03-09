@@ -18,11 +18,12 @@ import {
   ObjectiveType,
   Rational,
   RationalItemObjective,
+  RationalOf,
   RationalRecipe,
   RationalRecipeObjective,
   Step,
 } from '~/models';
-import { Items, Recipes } from '~/store';
+import { Items, Recipes, Settings } from '~/store';
 import { RateUtility } from './rate.utility';
 
 const FLOAT_TOLERANCE = 1e-10;
@@ -61,8 +62,7 @@ export interface MatrixState {
   /** All items that are included */
   itemIds: string[];
   data: Dataset;
-  costUnproduceable: Rational;
-  costExcluded: Rational;
+  cost: RationalOf<Settings.SimplexCosts>;
 }
 
 export interface MatrixSolution {
@@ -129,8 +129,7 @@ export class SimplexUtility {
     recipeObjectives: RationalRecipeObjective[],
     itemSettings: Items.ItemsState,
     recipeSettings: Recipes.RecipesState,
-    costUnproduceable: Rational,
-    costExcluded: Rational,
+    cost: RationalOf<Settings.SimplexCosts>,
     data: Dataset
   ): MatrixResult {
     if (itemObjectives.length === 0 && recipeObjectives.length === 0) {
@@ -143,8 +142,7 @@ export class SimplexUtility {
       recipeObjectives,
       itemSettings,
       recipeSettings,
-      costUnproduceable,
-      costExcluded,
+      cost,
       data
     );
 
@@ -172,8 +170,7 @@ export class SimplexUtility {
     recipeObjectives: RationalRecipeObjective[],
     itemSettings: Items.ItemsState,
     recipeSettings: Recipes.RecipesState,
-    costUnproduceable: Rational,
-    costExcluded: Rational,
+    cost: RationalOf<Settings.SimplexCosts>,
     data: Dataset
   ): MatrixState {
     // Set up state object
@@ -187,8 +184,7 @@ export class SimplexUtility {
       excludedIds: data.itemIds.filter((i) => itemSettings[i].excluded),
       recipeIds: data.recipeIds.filter((r) => !recipeSettings[r].excluded),
       itemIds: data.itemIds.filter((i) => !itemSettings[i].excluded),
-      costUnproduceable,
-      costExcluded,
+      cost,
       data,
     };
 
@@ -400,7 +396,7 @@ export class SimplexUtility {
     // Add unproduceable vars to model
     for (const itemId of state.unproduceableIds) {
       const config: VariableProperties = {
-        obj: state.costUnproduceable.toNumber(),
+        obj: state.cost.unproduceable.toNumber(),
         lb: 0,
         name: itemId,
       };
@@ -410,7 +406,7 @@ export class SimplexUtility {
     // Add excluded vars to model
     for (const itemId of state.excludedIds) {
       const config: VariableProperties = {
-        obj: state.costExcluded.toNumber(),
+        obj: state.cost.excluded.toNumber(),
         lb: 0,
         name: itemId,
       };
@@ -420,6 +416,7 @@ export class SimplexUtility {
     // Add input/output vars to model
     for (const itemId of itemIds) {
       const config: VariableProperties = {
+        obj: state.cost.surplus.toNumber(),
         name: itemId,
       };
       const values = state.items[itemId];
@@ -444,8 +441,7 @@ export class SimplexUtility {
     );
     if (maximizeIds.length > 0) {
       const config: VariableProperties = {
-        // TODO: Add new cost variable for maximization value??
-        obj: state.costUnproduceable.inverse().toNumber(),
+        obj: state.cost.maximize.toNumber(),
         lb: 0,
         ub: 1000,
         name: 'maximize',

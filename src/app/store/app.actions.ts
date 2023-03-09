@@ -6,7 +6,7 @@ import { ItemsState } from './items';
 import { MachinesState } from './machines';
 import { RecipeObjectivesState } from './recipe-objectives';
 import { RecipesState } from './recipes';
-import { SettingsState } from './settings';
+import { PartialSettingsState } from './settings';
 
 export interface PartialState {
   datasetsState?: DatasetsState;
@@ -15,7 +15,7 @@ export interface PartialState {
   itemsState?: ItemsState;
   recipesState?: RecipesState;
   machinesState?: MachinesState;
-  settingsState?: Partial<SettingsState>;
+  settingsState?: PartialSettingsState;
 }
 
 export enum AppActionType {

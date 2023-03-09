@@ -75,16 +75,22 @@ export const getMatrixResult = createSelector(
   RecipeObjectives.getRationalRecipeObjectives,
   Items.getItemSettings,
   Recipes.getRecipeSettings,
-  Settings.getSimplexModifiers,
+  Settings.getRationalCost,
   Recipes.getAdjustedDataset,
-  (itemObjectives, recipeObjectives, itemSettings, recipeSettings, adj, data) =>
+  (
+    itemObjectives,
+    recipeObjectives,
+    itemSettings,
+    recipeSettings,
+    cost,
+    data
+  ) =>
     SimplexUtility.solve(
       itemObjectives,
       recipeObjectives,
       itemSettings,
       recipeSettings,
-      adj.costInput,
-      adj.costExcluded,
+      cost,
       data
     )
 );

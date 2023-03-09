@@ -317,6 +317,10 @@
     "unproduceableCostTooltip": "Cost of items that cannot be produced by any included recipes",
     "unproduceable": "Unproduceable",
     "excludedCostTooltip": "Cost of items that have been explicitly excluded",
-    "excluded": "Excluded"
+    "excluded": "Excluded",
+    "surplusCostTooltip": "Cost to produce surplus items",
+    "surplus": "Surplus",
+    "maximizeCostTooltip": "Cost of maximization objectives (must be negative)",
+    "maximize": "Maximize"
   }
 }

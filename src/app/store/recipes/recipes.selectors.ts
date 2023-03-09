@@ -140,8 +140,9 @@ export const getSrc = createSelector(
 export const getAdjustedDataset = createSelector(
   getRationalRecipeSettings,
   Items.getItemSettings,
+  Settings.getRationalCost,
   Settings.getAdjustmentData,
-  (recipeSettings, itemSettings, adj) =>
+  (recipeSettings, itemSettings, cost, adj) =>
     RecipeUtility.adjustDataset(
       recipeSettings,
       itemSettings,
@@ -150,8 +151,7 @@ export const getAdjustedDataset = createSelector(
       adj.miningBonus,
       adj.researchSpeed,
       adj.netProductionOnly,
-      adj.costFactor,
-      adj.costMachine,
+      cost,
       adj.data
     )
 );

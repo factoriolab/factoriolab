@@ -29,20 +29,28 @@ export class MatrixComponent {
   constructor(private store: Store<LabState>) {}
 
   /** Action Dispatch Methods */
-  setCostFactor(data: string): void {
-    this.store.dispatch(new Settings.SetCostFactorAction(data));
+  setCostFactor(value: string): void {
+    this.store.dispatch(new Settings.SetCostFactorAction(value));
   }
 
-  setCostMachine(data: string): void {
-    this.store.dispatch(new Settings.SetCostMachineAction(data));
+  setCostMachine(value: string): void {
+    this.store.dispatch(new Settings.SetCostMachineAction(value));
   }
 
-  setCostUnproduceable(data: string): void {
-    this.store.dispatch(new Settings.SetCostUnproduceableAction(data));
+  setCostUnproduceable(value: string): void {
+    this.store.dispatch(new Settings.SetCostUnproduceableAction(value));
   }
 
-  setCostExcluded(data: string): void {
-    this.store.dispatch(new Settings.SetCostExcludedAction(data));
+  setCostExcluded(value: string): void {
+    this.store.dispatch(new Settings.SetCostExcludedAction(value));
+  }
+
+  setCostSurplus(value: string): void {
+    this.store.dispatch(new Settings.SetCostSurplusAction(value));
+  }
+
+  setCostMaximize(value: string): void {
+    this.store.dispatch(new Settings.SetCostMaximizeAction(value));
   }
 
   resetCost(): void {

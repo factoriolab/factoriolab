@@ -31,6 +31,8 @@ export const enum SettingsActionType {
   SET_COST_MACHINE = '[Settings] Set Machine Cost',
   SET_COST_UNPRODUCEABLE = '[Settings] Set Unproduceable Cost',
   SET_COST_EXCLUDED = '[Settings] Set Excluded Cost',
+  SET_COST_SURPLUS = '[Settings] Set Surplus Cost',
+  SET_COST_MAXIMIZE = '[Settings] Set Maximize Cost',
   RESET_COST = '[Settings] Reset Cost Modifiers',
 }
 
@@ -134,6 +136,16 @@ export class SetCostExcludedAction implements Action {
   constructor(public payload: string) {}
 }
 
+export class SetCostSurplusAction implements Action {
+  readonly type = SettingsActionType.SET_COST_SURPLUS;
+  constructor(public payload: string) {}
+}
+
+export class SetCostMaximizeAction implements Action {
+  readonly type = SettingsActionType.SET_COST_MAXIMIZE;
+  constructor(public payload: string) {}
+}
+
 export class ResetCostAction implements Action {
   readonly type = SettingsActionType.RESET_COST;
 }
@@ -159,4 +171,6 @@ export type SettingsAction =
   | SetCostMachineAction
   | SetCostUnproduceableAction
   | SetCostExcludedAction
+  | SetCostSurplusAction
+  | SetCostMaximizeAction
   | ResetCostAction;

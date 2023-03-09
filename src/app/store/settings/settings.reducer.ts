@@ -10,6 +10,15 @@ import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import { SettingsAction, SettingsActionType } from './settings.actions';
 
+export interface SimplexCosts {
+  factor: string;
+  machine: string;
+  unproduceable: string;
+  excluded: string;
+  surplus: string;
+  maximize: string;
+}
+
 export interface SettingsState {
   modId: string;
   netProductionOnly: boolean;
@@ -27,11 +36,12 @@ export interface SettingsState {
   researchSpeed: ResearchSpeed;
   inserterCapacity: InserterCapacity;
   displayRate: DisplayRate;
-  costFactor: string;
-  costMachine: string;
-  costUnproduceable: string;
-  costExcluded: string;
+  cost: SimplexCosts;
 }
+
+export type PartialSettingsState = Partial<Omit<SettingsState, 'cost'>> & {
+  cost?: Partial<SimplexCosts>;
+};
 
 export const initialSettingsState: SettingsState = {
   modId: '1.1',
@@ -45,10 +55,14 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   inserterCapacity: InserterCapacity.Capacity7,
   displayRate: DisplayRate.PerMinute,
-  costFactor: '1',
-  costMachine: '1',
-  costUnproduceable: '1000000',
-  costExcluded: '0',
+  cost: {
+    factor: '1',
+    machine: '1',
+    unproduceable: '1000000',
+    excluded: '0',
+    surplus: '0',
+    maximize: '-100000',
+  },
 };
 
 export function settingsReducer(
@@ -58,7 +72,18 @@ export function settingsReducer(
   switch (action.type) {
     case App.AppActionType.LOAD:
       return action.payload.settingsState
-        ? { ...initialSettingsState, ...action.payload.settingsState }
+        ? {
+            ...initialSettingsState,
+            ...{
+              ...action.payload.settingsState,
+              ...{
+                cost: {
+                  ...initialSettingsState.cost,
+                  ...action.payload.settingsState.cost,
+                },
+              },
+            },
+          }
         : initialSettingsState;
     case App.AppActionType.RESET:
       return initialSettingsState;
@@ -126,21 +151,40 @@ export function settingsReducer(
     case SettingsActionType.SET_DISPLAY_RATE:
       return { ...state, ...{ displayRate: action.payload.value } };
     case SettingsActionType.SET_COST_FACTOR:
-      return { ...state, ...{ costFactor: action.payload } };
+      return {
+        ...state,
+        ...{ cost: { ...state.cost, ...{ factor: action.payload } } },
+      };
     case SettingsActionType.SET_COST_MACHINE:
-      return { ...state, ...{ costMachine: action.payload } };
+      return {
+        ...state,
+        ...{ cost: { ...state.cost, ...{ machine: action.payload } } },
+      };
     case SettingsActionType.SET_COST_UNPRODUCEABLE:
-      return { ...state, ...{ costUnproduceable: action.payload } };
+      return {
+        ...state,
+        ...{ cost: { ...state.cost, ...{ unproduceable: action.payload } } },
+      };
     case SettingsActionType.SET_COST_EXCLUDED:
-      return { ...state, ...{ costExcluded: action.payload } };
+      return {
+        ...state,
+        ...{ cost: { ...state.cost, ...{ excluded: action.payload } } },
+      };
+    case SettingsActionType.SET_COST_SURPLUS:
+      return {
+        ...state,
+        ...{ cost: { ...state.cost, ...{ surplus: action.payload } } },
+      };
+    case SettingsActionType.SET_COST_MAXIMIZE:
+      return {
+        ...state,
+        ...{ cost: { ...state.cost, ...{ maximize: action.payload } } },
+      };
     case SettingsActionType.RESET_COST:
       return {
         ...state,
         ...{
-          costFactor: initialSettingsState.costFactor,
-          costMachine: initialSettingsState.costMachine,
-          costUnproduceable: initialSettingsState.costUnproduceable,
-          costExcluded: initialSettingsState.costExcluded,
+          cost: initialSettingsState.cost,
         },
       };
     default:

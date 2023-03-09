@@ -1216,13 +1216,15 @@ export class RouterService {
         this.zipDiffString(state.cargoWagonId, init.cargoWagonId),
         this.zipDiffString(state.fluidWagonId, init.fluidWagonId),
         this.zipDiffString(state.pipeId, init.pipeId),
-        this.zipDiffString(state.costFactor, init.costFactor),
-        this.zipDiffString(state.costMachine, init.costMachine),
-        this.zipDiffString(state.costUnproduceable, init.costUnproduceable),
-        this.zipDiffString(state.costExcluded, init.costExcluded),
         this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
         this.zipDiffString(state.proliferatorSprayId, init.proliferatorSprayId),
         this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
+        this.zipDiffString(state.cost.factor, init.cost.factor),
+        this.zipDiffString(state.cost.machine, init.cost.machine),
+        this.zipDiffString(state.cost.unproduceable, init.cost.unproduceable),
+        this.zipDiffString(state.cost.excluded, init.cost.excluded),
+        this.zipDiffString(state.cost.surplus, init.cost.surplus),
+        this.zipDiffString(state.cost.maximize, init.cost.maximize),
       ]),
       hash: this.zipFields([
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
@@ -1237,10 +1239,6 @@ export class RouterService {
         this.zipDiffNString(state.cargoWagonId, init.cargoWagonId, hash.wagons),
         this.zipDiffNString(state.fluidWagonId, init.fluidWagonId, hash.wagons),
         this.zipDiffNString(state.pipeId, init.pipeId, hash.belts),
-        this.zipDiffString(state.costFactor, init.costFactor),
-        this.zipDiffString(state.costMachine, init.costMachine),
-        this.zipDiffString(state.costUnproduceable, init.costUnproduceable),
-        this.zipDiffString(state.costExcluded, init.costExcluded),
         this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
         this.zipDiffNString(
           state.proliferatorSprayId,
@@ -1248,6 +1246,12 @@ export class RouterService {
           hash.modules
         ),
         this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
+        this.zipDiffString(state.cost.factor, init.cost.factor),
+        this.zipDiffString(state.cost.machine, init.cost.machine),
+        this.zipDiffString(state.cost.unproduceable, init.cost.unproduceable),
+        this.zipDiffString(state.cost.excluded, init.cost.excluded),
+        this.zipDiffString(state.cost.surplus, init.cost.surplus),
+        this.zipDiffString(state.cost.maximize, init.cost.maximize),
       ]),
     };
 
@@ -1260,11 +1264,11 @@ export class RouterService {
   unzipSettings(
     params: Entities,
     hash?: ModHash
-  ): Partial<Settings.SettingsState> {
+  ): Settings.PartialSettingsState {
     const zip = params[Section.Settings];
     const s = zip.split(FIELDSEP);
     let i = 0;
-    let obj: Partial<Settings.SettingsState>;
+    let obj: Settings.PartialSettingsState;
 
     if (hash) {
       obj = {
@@ -1280,13 +1284,17 @@ export class RouterService {
         cargoWagonId: this.parseNString(s[i++], hash.wagons),
         fluidWagonId: this.parseNString(s[i++], hash.wagons),
         pipeId: this.parseNString(s[i++], hash.belts),
-        costFactor: this.parseString(s[i++]),
-        costMachine: this.parseString(s[i++]),
-        costUnproduceable: this.parseString(s[i++]),
-        costExcluded: this.parseString(s[i++]),
         beaconReceivers: this.parseString(s[i++]),
         proliferatorSprayId: this.parseNString(s[i++], hash.modules),
         netProductionOnly: this.parseBool(s[i++]),
+        cost: {
+          factor: this.parseString(s[i++]),
+          machine: this.parseString(s[i++]),
+          unproduceable: this.parseString(s[i++]),
+          excluded: this.parseString(s[i++]),
+          surplus: this.parseString(s[i++]),
+          maximize: this.parseString(s[i++]),
+        },
       };
     } else {
       obj = {
@@ -1303,17 +1311,24 @@ export class RouterService {
         cargoWagonId: this.parseString(s[i++]),
         fluidWagonId: this.parseString(s[i++]),
         pipeId: this.parseString(s[i++]),
-        costFactor: this.parseString(s[i++]),
-        costMachine: this.parseString(s[i++]),
-        costUnproduceable: this.parseString(s[i++]),
-        costExcluded: this.parseString(s[i++]),
         beaconReceivers: this.parseString(s[i++]),
         proliferatorSprayId: this.parseString(s[i++]),
         netProductionOnly: this.parseBool(s[i++]),
+        cost: {
+          factor: this.parseString(s[i++]),
+          machine: this.parseString(s[i++]),
+          unproduceable: this.parseString(s[i++]),
+          excluded: this.parseString(s[i++]),
+          surplus: this.parseString(s[i++]),
+          maximize: this.parseString(s[i++]),
+        },
       };
     }
 
     this.deleteEmptyKeys(obj);
+    if (obj.cost) {
+      this.deleteEmptyKeys(obj.cost);
+    }
     return obj;
   }
 

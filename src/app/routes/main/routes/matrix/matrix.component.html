@@ -37,7 +37,7 @@
       <td>
         <lab-input-number
           width="8rem"
-          [value]="vm.settings.costFactor"
+          [value]="vm.settings.cost.factor"
           (setValue)="setCostFactor($event)"
         ></lab-input-number>
       </td>
@@ -47,7 +47,7 @@
       <td>
         <lab-input-number
           width="8rem"
-          [value]="vm.settings.costMachine"
+          [value]="vm.settings.cost.machine"
           (setValue)="setCostMachine($event)"
         ></lab-input-number>
       </td>
@@ -57,7 +57,7 @@
       <td>
         <lab-input-number
           width="8rem"
-          [value]="vm.settings.costUnproduceable"
+          [value]="vm.settings.cost.unproduceable"
           (setValue)="setCostUnproduceable($event)"
         ></lab-input-number>
       </td>
@@ -67,8 +67,30 @@
       <td>
         <lab-input-number
           width="8rem"
-          [value]="vm.settings.costExcluded"
+          [value]="vm.settings.cost.excluded"
           (setValue)="setCostExcluded($event)"
+        ></lab-input-number>
+      </td>
+    </tr>
+    <tr [pTooltip]="'matrix.surplusCostTooltip' | translate">
+      <th>{{ 'matrix.surplus' | translate }}</th>
+      <td>
+        <lab-input-number
+          width="8rem"
+          [value]="vm.settings.cost.surplus"
+          (setValue)="setCostSurplus($event)"
+        ></lab-input-number>
+      </td>
+    </tr>
+    <tr [pTooltip]="'matrix.maximizeCostTooltip' | translate">
+      <th>{{ 'matrix.maximize' | translate }}</th>
+      <td>
+        <lab-input-number
+          width="8rem"
+          [value]="vm.settings.cost.maximize"
+          [minimum]="null"
+          maximum="0"
+          (setValue)="setCostMaximize($event)"
         ></lab-input-number>
       </td>
     </tr>

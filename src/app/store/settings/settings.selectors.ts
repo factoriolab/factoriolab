@@ -26,6 +26,7 @@ import {
   RationalItem,
   RationalMachine,
   RationalModule,
+  RationalOf,
   RationalRecipe,
   researchSpeedFactor,
   toBoolEntities,
@@ -35,7 +36,11 @@ import { Options } from '~/models/options';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
-import { initialSettingsState, SettingsState } from './settings.reducer';
+import {
+  initialSettingsState,
+  SettingsState,
+  SimplexCosts,
+} from './settings.reducer';
 
 /* Base selector functions */
 export const settingsState = (state: LabState): SettingsState =>
@@ -79,22 +84,7 @@ export const getDisplayRate = createSelector(
   settingsState,
   (state) => state.displayRate
 );
-export const getCostFactor = createSelector(
-  settingsState,
-  (state) => state.costFactor
-);
-export const getCostMachine = createSelector(
-  settingsState,
-  (state) => state.costMachine
-);
-export const getCostInput = createSelector(
-  settingsState,
-  (state) => state.costUnproduceable
-);
-export const getCostExcluded = createSelector(
-  settingsState,
-  (state) => state.costExcluded
-);
+export const getCost = createSelector(settingsState, (state) => state.cost);
 
 /* Complex selectors */
 export const getMod = createSelector(
@@ -276,29 +266,16 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
   Rational.fromNumber(rate)
 );
 
-export const getRationalCostFactor = createSelector(getCostFactor, (cost) =>
-  Rational.fromString(cost)
-);
-
-export const getRationalCostMachine = createSelector(getCostMachine, (cost) =>
-  Rational.fromString(cost)
-);
-
-export const getRationalCostInput = createSelector(getCostInput, (cost) =>
-  Rational.fromString(cost)
-);
-
-export const getRationalCostExcluded = createSelector(getCostExcluded, (cost) =>
-  Rational.fromString(cost)
-);
-
-export const getSimplexModifiers = createSelector(
-  getRationalCostInput,
-  getRationalCostExcluded,
-  (costInput, costExcluded) => ({
-    costInput,
-    costExcluded,
-  })
+export const getRationalCost = createSelector(
+  getCost,
+  (cost): RationalOf<SimplexCosts> =>
+    (Object.keys(cost) as (keyof SimplexCosts)[]).reduce(
+      (a: Partial<RationalOf<SimplexCosts>>, b) => {
+        a[b] = Rational.fromString(cost[b]);
+        return a;
+      },
+      {}
+    ) as RationalOf<SimplexCosts>
 );
 
 export const getI18n = createSelector(
@@ -651,8 +628,6 @@ export const getAdjustmentData = createSelector(
   getFuelId,
   getRationalMiningBonus,
   getResearchFactor,
-  getRationalCostFactor,
-  getRationalCostMachine,
   getDataset,
   (
     netProductionOnly,
@@ -660,8 +635,6 @@ export const getAdjustmentData = createSelector(
     fuelId,
     miningBonus,
     researchSpeed,
-    costFactor,
-    costMachine,
     data
   ) => ({
     netProductionOnly,
@@ -669,18 +642,12 @@ export const getAdjustmentData = createSelector(
     fuelId,
     miningBonus,
     researchSpeed,
-    costFactor,
-    costMachine,
     data,
   })
 );
 
 export const getSettingsModified = createSelector(settingsState, (state) => ({
-  cost:
-    state.costFactor !== initialSettingsState.costFactor ||
-    state.costMachine !== initialSettingsState.costMachine ||
-    state.costUnproduceable !== initialSettingsState.costUnproduceable ||
-    state.costExcluded !== initialSettingsState.costExcluded,
+  cost: state.cost !== initialSettingsState.cost,
 }));
 
 export const getInserterData = createSelector(

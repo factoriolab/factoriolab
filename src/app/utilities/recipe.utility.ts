@@ -15,12 +15,13 @@ import {
   RationalBeacon,
   RationalBelt,
   RationalMachine,
+  RationalOf,
   RationalRecipe,
   RationalRecipeSettings,
   Recipe,
   RecipeObjective,
 } from '~/models';
-import { Machines } from '~/store';
+import { Machines, Settings } from '~/store';
 
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
@@ -452,8 +453,7 @@ export class RecipeUtility {
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    costFactor: Rational,
-    costMachine: Rational,
+    cost: RationalOf<Settings.SimplexCosts>,
     data: Dataset
   ): Dataset {
     const recipeR = this.adjustRecipes(
@@ -466,7 +466,7 @@ export class RecipeUtility {
       netProductionOnly,
       data
     );
-    this.adjustCost(recipeR, recipeSettings, costFactor, costMachine);
+    this.adjustCost(recipeR, recipeSettings, cost);
     return { ...data, ...{ recipeR } };
   }
 
@@ -503,8 +503,7 @@ export class RecipeUtility {
   static adjustCost(
     recipeR: Entities<RationalRecipe>,
     recipeSettings: Entities<RationalRecipeSettings>,
-    costFactor: Rational,
-    costMachine: Rational
+    cost: RationalOf<Settings.SimplexCosts>
   ): void {
     for (const id of Object.keys(recipeR)) {
       const recipe = recipeR[id];
@@ -516,10 +515,10 @@ export class RecipeUtility {
         const output = Object.keys(recipe.out)
           .reduce((v, o) => v.add(recipe.out[o]), Rational.zero)
           .div(recipe.time);
-        recipe.cost = output.mul(recipe.cost).mul(costFactor);
+        recipe.cost = output.mul(recipe.cost).mul(cost.factor);
       } else {
         // Adjust based on recipe time so that this is based on # machines
-        recipe.cost = costMachine;
+        recipe.cost = cost.machine;
       }
     }
   }
