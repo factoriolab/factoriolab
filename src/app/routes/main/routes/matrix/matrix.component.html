@@ -52,13 +52,13 @@
         ></lab-input-number>
       </td>
     </tr>
-    <tr [pTooltip]="'matrix.inputCostTooltip' | translate">
-      <th>{{ 'matrix.input' | translate }}</th>
+    <tr [pTooltip]="'matrix.unproduceableCostTooltip' | translate">
+      <th>{{ 'matrix.unproduceable' | translate }}</th>
       <td>
         <lab-input-number
           width="8rem"
-          [value]="vm.settings.costInput"
-          (setValue)="setCostInput($event)"
+          [value]="vm.settings.costUnproduceable"
+          (setValue)="setCostUnproduceable($event)"
         ></lab-input-number>
       </td>
     </tr>

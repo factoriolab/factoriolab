@@ -314,8 +314,8 @@
     "recipe": "Recipe",
     "machineCostTooltip": "Multiplies cost of physical machines running recipes",
     "machine": "Machine",
-    "inputCostTooltip": "Cost of input items that are produced by no recipes",
-    "input": "Input",
+    "unproduceableCostTooltip": "Cost of items that cannot be produced by any included recipes",
+    "unproduceable": "Unproduceable",
     "excludedCostTooltip": "Cost of items that have been explicitly excluded",
     "excluded": "Excluded"
   }

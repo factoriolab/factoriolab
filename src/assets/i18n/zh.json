@@ -248,8 +248,8 @@
     "recipe": "配方",
     "machineCostTooltip": "将所有在工厂中制作的配方的成本乘以此系数",
     "machine": "工厂",
-    "inputCostTooltip": "非配方产生的外部输入物品的成本",
-    "input": "输入的物品",
+    "unproduceableCostTooltip": "非配方产生的外部输入物品的成本",
+    "unproduceable": "输入的物品",
     "excludedCostTooltip": "被指定为已忽略的物品的成本",
     "excluded": "忽略的物品"
   }

@@ -1011,10 +1011,11 @@
                       recipeId: step.recipeId,
                       recipeObjectiveId: step.recipeObjectiveId,
                       percent: parent.value,
-                      destId: vm.stepById[parent.key].recipeId,
+                      destId: vm.stepById[parent.key]?.recipeId,
                       destRecipeObjectiveId:
-                        vm.stepById[parent.key].recipeObjectiveId,
-                      destIsRecipe: true
+                        vm.stepById[parent.key]?.recipeObjectiveId,
+                      destIsRecipe: true,
+                      outputs: parent.key === ''
                     }
                   "
                 >
@@ -1457,6 +1458,7 @@
       let-destRecipeObjectiveId="destRecipeObjectiveId"
       let-destIsRecipe="destIsRecipe"
       let-inputs="inputs"
+      let-outputs="outputs"
     >
       <tr class="detail">
         <ng-container *ngIf="itemId">
@@ -1591,7 +1593,7 @@
                   <i class="lab-icon"></i>
                 </div>
               </ng-template>
-              <ng-container *ngIf="percent && destId">
+              <ng-container *ngIf="percent">
                 <i
                   class="m-1 p-2 fa-solid fa-arrow-right"
                   *ngIf="percentOnDest"
@@ -1604,6 +1606,7 @@
                   *ngIf="!percentOnDest"
                 ></i>
                 <i
+                  *ngIf="destId"
                   [class]="
                     destId | iconClass : (destIsRecipe ? 'recipe' : 'item')
                   "
@@ -1617,6 +1620,9 @@
                     >#{{ destRecipeObjectiveId }}</span
                   ></i
                 >
+                <span *ngIf="outputs">
+                  {{ 'list.outputs' | translate }}
+                </span>
               </ng-container>
             </div>
           </td>

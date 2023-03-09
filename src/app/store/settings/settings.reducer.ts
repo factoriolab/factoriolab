@@ -29,7 +29,7 @@ export interface SettingsState {
   displayRate: DisplayRate;
   costFactor: string;
   costMachine: string;
-  costInput: string;
+  costUnproduceable: string;
   costExcluded: string;
 }
 
@@ -47,7 +47,7 @@ export const initialSettingsState: SettingsState = {
   displayRate: DisplayRate.PerMinute,
   costFactor: '1',
   costMachine: '1',
-  costInput: '1000000',
+  costUnproduceable: '1000000',
   costExcluded: '0',
 };
 
@@ -129,8 +129,8 @@ export function settingsReducer(
       return { ...state, ...{ costFactor: action.payload } };
     case SettingsActionType.SET_COST_MACHINE:
       return { ...state, ...{ costMachine: action.payload } };
-    case SettingsActionType.SET_COST_INPUT:
-      return { ...state, ...{ costInput: action.payload } };
+    case SettingsActionType.SET_COST_UNPRODUCEABLE:
+      return { ...state, ...{ costUnproduceable: action.payload } };
     case SettingsActionType.SET_COST_EXCLUDED:
       return { ...state, ...{ costExcluded: action.payload } };
     case SettingsActionType.RESET_COST:
@@ -139,7 +139,7 @@ export function settingsReducer(
         ...{
           costFactor: initialSettingsState.costFactor,
           costMachine: initialSettingsState.costMachine,
-          costInput: initialSettingsState.costInput,
+          costUnproduceable: initialSettingsState.costUnproduceable,
           costExcluded: initialSettingsState.costExcluded,
         },
       };

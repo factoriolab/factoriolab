@@ -121,7 +121,7 @@ const mockSettingsState: Settings.SettingsState = {
   displayRate: DisplayRate.PerHour,
   costFactor: '2',
   costMachine: '10',
-  costInput: '0',
+  costUnproduceable: '0',
   costExcluded: '100',
 };
 const mockZip: Zip = {
@@ -400,7 +400,7 @@ describe('RouterService', () => {
       delete mockStateV0.settingsState?.beaconReceivers;
       delete mockStateV0.settingsState?.costFactor;
       delete mockStateV0.settingsState?.costMachine;
-      delete mockStateV0.settingsState?.costInput;
+      delete mockStateV0.settingsState?.costUnproduceable;
       delete mockStateV0.settingsState?.costExcluded;
       delete mockStateV0.settingsState?.proliferatorSprayId;
       delete mockStateV0.settingsState?.netProductionOnly;

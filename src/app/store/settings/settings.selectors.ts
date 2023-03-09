@@ -89,7 +89,7 @@ export const getCostMachine = createSelector(
 );
 export const getCostInput = createSelector(
   settingsState,
-  (state) => state.costInput
+  (state) => state.costUnproduceable
 );
 export const getCostExcluded = createSelector(
   settingsState,
@@ -679,7 +679,7 @@ export const getSettingsModified = createSelector(settingsState, (state) => ({
   cost:
     state.costFactor !== initialSettingsState.costFactor ||
     state.costMachine !== initialSettingsState.costMachine ||
-    state.costInput !== initialSettingsState.costInput ||
+    state.costUnproduceable !== initialSettingsState.costUnproduceable ||
     state.costExcluded !== initialSettingsState.costExcluded,
 }));
 

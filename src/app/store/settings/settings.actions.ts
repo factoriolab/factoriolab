@@ -29,7 +29,7 @@ export const enum SettingsActionType {
   SET_DISPLAY_RATE = '[Settings] Set Display Rate',
   SET_COST_FACTOR = '[Settings] Set Cost Factor',
   SET_COST_MACHINE = '[Settings] Set Machine Cost',
-  SET_COST_INPUT = '[Settings] Set Input Cost',
+  SET_COST_UNPRODUCEABLE = '[Settings] Set Unproduceable Cost',
   SET_COST_EXCLUDED = '[Settings] Set Excluded Cost',
   RESET_COST = '[Settings] Reset Cost Modifiers',
 }
@@ -124,8 +124,8 @@ export class SetCostMachineAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class SetCostInputAction implements Action {
-  readonly type = SettingsActionType.SET_COST_INPUT;
+export class SetCostUnproduceableAction implements Action {
+  readonly type = SettingsActionType.SET_COST_UNPRODUCEABLE;
   constructor(public payload: string) {}
 }
 
@@ -157,6 +157,6 @@ export type SettingsAction =
   | SetDisplayRateAction
   | SetCostFactorAction
   | SetCostMachineAction
-  | SetCostInputAction
+  | SetCostUnproduceableAction
   | SetCostExcludedAction
   | ResetCostAction;

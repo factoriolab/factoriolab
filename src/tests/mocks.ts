@@ -239,7 +239,7 @@ export const MatrixResultSolved: M.MatrixResult = {
   time: 20,
   itemIds: [ItemId.Wood],
   recipeIds: [RecipeId.WoodenChest],
-  inputIds: [],
+  unproduceableIds: [],
 };
 export const Flow: M.FlowData = {
   theme: M.themeMap[M.Theme.Light],

@@ -37,8 +37,8 @@ export class MatrixComponent {
     this.store.dispatch(new Settings.SetCostMachineAction(data));
   }
 
-  setCostInput(data: string): void {
-    this.store.dispatch(new Settings.SetCostInputAction(data));
+  setCostUnproduceable(data: string): void {
+    this.store.dispatch(new Settings.SetCostUnproduceableAction(data));
   }
 
   setCostExcluded(data: string): void {

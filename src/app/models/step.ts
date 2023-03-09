@@ -14,12 +14,17 @@ export interface Step {
    */
   checked?: boolean;
   itemId?: string;
+  /** Amount of item produced by all recipes */
   items?: Rational;
+  /** Amount of item that goes towards objectives */
   output?: Rational;
+  /** Amount of item that is unused */
   surplus?: Rational;
   belts?: Rational;
   wagons?: Rational;
-  /** Fraction of this item requested by each step */
+  /**
+   * Fraction of this item requested by each step, or output denoted by key `''`
+   */
   parents?: Entities<Rational>;
   /** Fraction this recipe produces of each item */
   outputs?: Entities<Rational>;

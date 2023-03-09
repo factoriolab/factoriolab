@@ -16,11 +16,11 @@ describe('SimplexUtility', () => {
     steps: [],
     recipes: {},
     itemsOutput: {},
-    inputIds: [],
+    unproduceableIds: [],
     recipeIds: Mocks.Dataset.recipeIds,
     itemIds: Mocks.Dataset.itemIds,
     data: Mocks.AdjustedData,
-    costInput: Rational.from(1000000),
+    costUnproduceable: Rational.from(1000000),
     costExcluded: Rational.zero,
   });
   /** https://en.wikipedia.org/wiki/Simplex_algorithm#Example */
@@ -88,7 +88,7 @@ describe('SimplexUtility', () => {
     resultType,
     surplus: {},
     recipes: {},
-    inputs: {},
+    unproduceable: {},
     pivots: 1,
     time: 2,
     A: [],
@@ -96,7 +96,7 @@ describe('SimplexUtility', () => {
     itemIds: [],
     producers: [],
     recipeIds: [],
-    inputIds: [],
+    unproduceableIds: [],
   });
 
   describe('solve', () => {
@@ -145,7 +145,7 @@ describe('SimplexUtility', () => {
         itemIds: [],
         producers: [],
         recipeIds: [],
-        inputIds: [],
+        unproduceableIds: [],
       });
     });
 
@@ -177,7 +177,7 @@ describe('SimplexUtility', () => {
         itemIds: [],
         producers: [],
         recipeIds: [],
-        inputIds: [],
+        unproduceableIds: [],
       });
       expect(SimplexUtility.updateSteps).toHaveBeenCalled();
     });
@@ -268,11 +268,15 @@ describe('SimplexUtility', () => {
           [ItemId.IronPlate]: Rational.zero,
           [ItemId.IronOre]: Rational.zero,
         },
-        inputIds: [ItemId.WoodenChest, ItemId.IronPlate, ItemId.IronOre],
+        unproduceableIds: [
+          ItemId.WoodenChest,
+          ItemId.IronPlate,
+          ItemId.IronOre,
+        ],
         recipeIds: Mocks.Dataset.recipeIds,
         itemIds: Mocks.Dataset.itemIds,
         data: Mocks.Dataset,
-        costInput: Rational.from(1000000),
+        costUnproduceable: Rational.from(1000000),
         costExcluded: Rational.zero,
         simplexType: SimplexType.JsBigIntRational,
       });
@@ -408,8 +412,8 @@ describe('SimplexUtility', () => {
       state.recipes = {
         [RecipeId.Coal]: Mocks.Dataset.recipeR[RecipeId.Coal],
       };
-      SimplexUtility.parseInputs(state);
-      expect(state.inputIds).toEqual([ItemId.Wood, ItemId.Coal]);
+      SimplexUtility.parseUnproduceable(state);
+      expect(state.unproduceableIds).toEqual([ItemId.Wood, ItemId.Coal]);
     });
   });
 
@@ -516,7 +520,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.inputIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
+      state.unproduceableIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
       state.recipes[RecipeId.CopperPlate] = new RationalRecipe({
         id: 'id',
         name: 'name',
@@ -562,7 +566,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.inputIds = [ItemId.Wood, ItemId.Coal];
+      state.unproduceableIds = [ItemId.Wood, ItemId.Coal];
       state.recipes[RecipeId.CopperCable] =
         Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       state.recipes[ItemId.CopperPlate] = new RationalRecipe({
@@ -869,7 +873,7 @@ describe('SimplexUtility', () => {
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
-      state.inputIds = [ItemId.Coal, ItemId.IronOre];
+      state.unproduceableIds = [ItemId.Coal, ItemId.IronOre];
       const O = [
         Rational.one,
         Rational.zero,

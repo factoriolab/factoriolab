@@ -263,8 +263,8 @@
     "recipe": "Recettes",
     "machineCostTooltip": "Multiplie le coût des usines physiques exécutant des recettes",
     "machine": "Usine",
-    "inputCostTooltip": "Coût des éléments d'entrée qui ne sont produits par aucune recette",
-    "input": "Entré",
+    "unproduceableCostTooltip": "Coût des éléments d'entrée qui ne sont produits par aucune recette",
+    "unproduceable": "Entré",
     "excludedCostTooltip": "Coût des articles qui ont été explicitement ignorés",
     "excluded": "Ignoré"
   }

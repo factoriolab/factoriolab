@@ -240,9 +240,9 @@ describe('Settings Reducer', () => {
       const value = '10';
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetCostInputAction(value)
+        new Actions.SetCostUnproduceableAction(value)
       );
-      expect(result.costInput).toEqual(value);
+      expect(result.costUnproduceable).toEqual(value);
     });
   });
 
@@ -270,7 +270,7 @@ describe('Settings Reducer', () => {
       );
       expect(result.costFactor).toEqual('1');
       expect(result.costMachine).toEqual('1');
-      expect(result.costInput).toEqual('1000000');
+      expect(result.costUnproduceable).toEqual('1000000');
       expect(result.costExcluded).toEqual('0');
     });
   });

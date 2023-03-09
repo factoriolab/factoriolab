@@ -20,6 +20,6 @@ export interface MatrixResult {
   itemIds?: string[];
   /** Recipes in tableau */
   recipeIds?: string[];
-  /** Items identified as inputs in tableau */
-  inputIds?: string[];
+  /** Items identified as unproduceable */
+  unproduceableIds?: string[];
 }
