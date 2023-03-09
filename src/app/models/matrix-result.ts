@@ -16,10 +16,4 @@ export interface MatrixResult {
   time?: number;
   /** Total cost of solution */
   cost?: Rational;
-  /** Items in tableau */
-  itemIds?: string[];
-  /** Recipes in tableau */
-  recipeIds?: string[];
-  /** Items identified as unproduceable */
-  unproduceableIds?: string[];
 }

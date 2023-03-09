@@ -54,6 +54,8 @@ export interface MatrixState {
   items: Entities<ItemValues>;
   /** Items that have no included recipe */
   unproduceableIds: string[];
+  /** Items that are explicitly excluded */
+  excludedIds: string[];
   /** All recipes that are included */
   recipeIds: string[];
   /** All items that are included */
@@ -79,10 +81,14 @@ export interface MatrixSolution {
   recipeIds: string[];
   /** Items identified as unproduceable */
   unproduceableIds: string[];
+  /** Items excluded */
+  excludedIds: string[];
   /** Surplus items, may be empty */
   surplus: Entities<Rational>;
   /** Unproduceable items (no recipe), may be empty */
   unproduceable: Entities<Rational>;
+  /** Excluded items, may be empty */
+  excluded: Entities<Rational>;
   /** Recipe values of the solution */
   recipes: Entities<Rational>;
 }
@@ -91,6 +97,7 @@ export interface GlpkResult {
   surplus: Entities<Rational>;
   recipes: Entities<Rational>;
   unproduceable: Entities<Rational>;
+  excluded: Entities<Rational>;
   cost: Rational;
   returnCode: Simplex.ReturnCode;
   status: Status;
@@ -156,9 +163,6 @@ export class SimplexUtility {
       simplexStatus: solution.simplexStatus,
       time: solution.time,
       cost: solution.cost,
-      itemIds: solution.itemIds,
-      recipeIds: solution.recipeIds,
-      unproduceableIds: solution.unproduceableIds,
     };
   }
 
@@ -180,6 +184,7 @@ export class SimplexUtility {
       recipes: {},
       items: {},
       unproduceableIds: [],
+      excludedIds: data.itemIds.filter((i) => itemSettings[i].excluded),
       recipeIds: data.recipeIds.filter((r) => !recipeSettings[r].excluded),
       itemIds: data.itemIds.filter((i) => !itemSettings[i].excluded),
       costUnproduceable,
@@ -241,9 +246,8 @@ export class SimplexUtility {
       .filter((r) => !state.recipes[r])
       .map((r) => state.data.recipeR[r])
       .filter((r) => r.produces(itemId));
-    for (const recipe of recipes) {
-      state.recipes[recipe.id] = recipe;
-    }
+
+    recipes.forEach((r) => (state.recipes[r.id] = r));
 
     return recipes;
   }
@@ -296,15 +300,13 @@ export class SimplexUtility {
 
   /**
    * Determines which items in the matrix are unproduceable (not produced by any
-   * recipe, or excluded)
+   * recipe)
    */
   static parseUnproduceable(state: MatrixState): void {
     const itemIds = Object.keys(state.items);
     const recipeIds = Object.keys(state.recipes);
     state.unproduceableIds = itemIds.filter(
-      (i) =>
-        !recipeIds.some((r) => state.data.recipeR[r].produces(i)) ||
-        state.itemIds.indexOf(i) === -1
+      (i) => !recipeIds.some((r) => state.data.recipeR[r].produces(i))
     );
   }
   //#endregion
@@ -312,47 +314,43 @@ export class SimplexUtility {
   //#region Simplex
   /** Convert state to canonical tableau, solve using simplex, and parse solution */
   static getSolution(state: MatrixState): MatrixSolution {
-    // Get glpk-wasm presolve solution
     const glpkResult = this.glpk(state);
 
     if (glpkResult.error) {
-      // console.error(glpkResult.status, glpkResult.returnCode);
       // No solution found
       return {
         resultType: MatrixResultType.Failed,
         returnCode: glpkResult.returnCode,
         simplexStatus: glpkResult.status,
         surplus: {},
-        recipes: {},
         unproduceable: {},
+        excluded: {},
+        recipes: {},
         time: 0,
         cost: Rational.zero,
         itemIds: [],
         recipeIds: [],
         unproduceableIds: [],
+        excludedIds: [],
       };
     }
 
-    // Convert state to canonical tableau
     const itemIds = Object.keys(state.items);
     const recipeIds = Object.keys(state.recipes);
-    const unproduceableIds = state.unproduceableIds;
+    const { unproduceableIds, excludedIds } = state;
+    const { surplus, unproduceable, excluded, recipes } = glpkResult;
 
-    // Parse solution into usable state
-    const { surplus, unproduceable, recipes } = glpkResult;
-    // const surplus = glpkResult.surplus;
-    // const unproduceable = glpkResult.unproduceable;
-    // const recipes = glpkResult.recipes;
-    // const [surplus, recipes, inputs] = this.parseSolution(result.O, state);
     return {
       resultType: MatrixResultType.Solved,
       surplus,
       recipes,
       unproduceable,
+      excluded,
       time: glpkResult.time,
       itemIds,
       recipeIds,
       unproduceableIds,
+      excludedIds,
       cost: glpkResult.cost,
     };
   }
@@ -364,14 +362,19 @@ export class SimplexUtility {
     const m = new Model({ sense: 'min' });
     const recipeVarEntities: Entities<Variable> = {};
     const recipeObjectiveVarEntities: Entities<Variable> = {};
+    // Variables for items that cannot be produced by any recipe
     const unproduceableVarEntities: Entities<Variable> = {};
+    // Variables for items that have been excluded
+    const excludedVarEntities: Entities<Variable> = {};
+    // Variables for (free) inputs, where ub represents input quantity
     const inputVarEntities: Entities<Variable> = {};
+    // Variables for outputs, where lb represents objective quantity
     const outputVarEntities: Entities<Variable> = {};
     // Track net output of items, for item output/input constraints
     const itemConstrEntities: Entities<Constraint> = {};
     // Track consumption of items, for item limit constraints
     const inputLimitConstrEntities: Entities<Constraint> = {};
-
+    // Variable for maximization ratio, if included
     let maximizeVar: Variable | undefined;
 
     // Add recipe vars to model
@@ -396,17 +399,22 @@ export class SimplexUtility {
 
     // Add unproduceable vars to model
     for (const itemId of state.unproduceableIds) {
-      const cost =
-        state.itemIds.indexOf(itemId) === -1
-          ? state.costExcluded
-          : state.costUnproduceable;
       const config: VariableProperties = {
-        obj: cost.toNumber(),
+        obj: state.costUnproduceable.toNumber(),
         lb: 0,
         name: itemId,
       };
-      // console.log('input', config);
       unproduceableVarEntities[itemId] = m.addVar(config);
+    }
+
+    // Add excluded vars to model
+    for (const itemId of state.excludedIds) {
+      const config: VariableProperties = {
+        obj: state.costExcluded.toNumber(),
+        lb: 0,
+        name: itemId,
+      };
+      excludedVarEntities[itemId] = m.addVar(config);
     }
 
     // Add input/output vars to model
@@ -436,12 +444,12 @@ export class SimplexUtility {
     );
     if (maximizeIds.length > 0) {
       const config: VariableProperties = {
+        // TODO: Add new cost variable for maximization value??
         obj: state.costUnproduceable.inverse().toNumber(),
         lb: 0,
         ub: 1000,
         name: 'maximize',
       };
-      // console.log('maximize', config);
       maximizeVar = m.addVar(config);
     }
 
@@ -496,19 +504,6 @@ export class SimplexUtility {
       // Add maximize coeff
       if (maximizeVar != null && values.max != null) {
         netCoeffs.push([maximizeVar, values.max.inverse().toNumber()]);
-
-        // const maxCoeffs: [Variable, number][] = [
-        //   ...netCoeffs,
-        //   [maximizeVar, state.itemsMaximize[itemId].inverse().toNumber()],
-        // ];
-
-        // const maxConfig: ConstraintProperties = {
-        //   coeffs: maxCoeffs,
-        //   lb: 0,
-        //   // name: itemId,
-        // };
-
-        // m.addConstr(maxConfig);
       }
 
       const netConfig: ConstraintProperties = {
@@ -516,7 +511,6 @@ export class SimplexUtility {
         lb: values.out?.toNumber(),
         name: itemId,
       };
-      // console.log('item', netConfig);
       itemConstrEntities[itemId] = m.addConstr(netConfig);
 
       if (values.lim) {
@@ -525,9 +519,7 @@ export class SimplexUtility {
           ub: values.lim.toNumber(),
           name: itemId,
         };
-        // console.log('input', inputConfig);
         inputLimitConstrEntities[itemId] = m.addConstr(inputConfig);
-        // netConfig.ub = state.itemsLimit[itemId].toNumber();
       }
     }
 
@@ -537,6 +529,7 @@ export class SimplexUtility {
     const time = Date.now() - start;
     const surplus: Entities<Rational> = {};
     const unproduceable: Entities<Rational> = {};
+    const excluded: Entities<Rational> = {};
     const recipes: Entities<Rational> = {};
     const cost = Rational.fromNumber(m.value);
 
@@ -547,6 +540,7 @@ export class SimplexUtility {
         time,
         surplus,
         unproduceable,
+        excluded,
         recipes,
         cost,
         error: true,
@@ -556,34 +550,6 @@ export class SimplexUtility {
     // Parse solution
     for (const itemId of itemIds) {
       const values = state.items[itemId];
-      // if (
-      //   // Include the item if it is part of objectives
-      //   state.itemsOutput[itemId] ||
-      //   // Include item if it is an input
-      //   (inputVarEntities[itemId] &&
-      //     !this.isFloatZero(inputVarEntities[itemId].value)) ||
-      //   // Include item if it is part of solution recipes
-      //   recipeIds.some(
-      //     (r) =>
-      //       !this.isFloatZero(recipeVarEntities[r].value) &&
-      //       (state.recipes[r].in[itemId] || state.recipes[r].out[itemId])
-      //   ) ||
-      //   // Include item if it is part of objective recipes
-      //   state.recipeObjectives.some(
-      //     (p) =>
-      //       !this.isFloatZero(recipeObjectiveVarEntities[p.id].value) &&
-      //       (p.recipe.in[itemId] || p.recipe.out[itemId])
-      //   )
-      // ) {
-      // console.log('final value', itemId, itemConstrEntities[itemId].value);
-      if (inputLimitConstrEntities[itemId]) {
-        // console.log(
-        //   'final input value',
-        //   itemId,
-        //   inputConstrEntities[itemId].value
-        // );
-      }
-      // Recipes for this item are part of the solution, include result
       const val = Rational.fromNumber(itemConstrEntities[itemId].value).sub(
         values.out ?? Rational.zero
       );
@@ -596,26 +562,13 @@ export class SimplexUtility {
         const maxVal = maximizeVar.value;
         const maxRat = Rational.fromNumber(maxVal);
         const val = maxRat.mul(values.max);
-        console.log(itemId, maxVal, val, val.mul(Rational.from(60)).toNumber());
         // Add maximize output to items output
         values.out = values.out.add(val);
       }
-
-      // } else {
-      //   // Item is not part of the solution, remove it
-      //   delete state.itemsOutput[itemId];
-      // }
     }
-
-    // Clean up inputs
-    // state.inputIds = state.inputIds.filter((i) => state.itemsOutput[i] != null);
 
     for (const recipeId of recipeIds) {
       if (!this.isFloatZero(recipeVarEntities[recipeId].value)) {
-        // Recipe is not part of the solution, remove it
-        // delete state.recipes[recipeId];
-        // } else {
-        // Recipe is part of the solution, include result
         const val = Rational.fromNumber(recipeVarEntities[recipeId].value);
         if (val.nonzero()) {
           recipes[recipeId] = val;
@@ -630,12 +583,20 @@ export class SimplexUtility {
       }
     }
 
+    for (const itemId of state.excludedIds) {
+      const val = Rational.fromNumber(excludedVarEntities[itemId].value);
+      if (val.nonzero()) {
+        excluded[itemId] = val;
+      }
+    }
+
     return {
       returnCode,
       status,
       time,
       surplus,
       unproduceable,
+      excluded,
       recipes,
       cost,
       error: false,
@@ -656,7 +617,6 @@ export class SimplexUtility {
   //#region Solution
   /** Update steps with matrix solution */
   static updateSteps(solution: MatrixSolution, state: MatrixState): void {
-    // console.log(state.itemsOutput);
     for (const itemId of Object.keys(state.items)) {
       this.addItemStep(itemId, solution, state);
     }
@@ -714,6 +674,10 @@ export class SimplexUtility {
       output = output.add(solution.unproduceable[itemId]);
     }
 
+    if (solution.excluded[itemId]) {
+      output = output.add(solution.excluded[itemId]);
+    }
+
     if (output.nonzero()) {
       const recipes = state.data.recipeIds
         .map((r) => state.recipes[r])
@@ -732,9 +696,6 @@ export class SimplexUtility {
         step.output = values.out;
         step.parents = { '': step.output };
       }
-      // if (values.max) {
-      //   console.log('need to check', itemId);
-      // }
 
       if (index !== -1 && index < steps.length - 1) {
         steps.splice(index + 1, 0, step);
@@ -746,7 +707,6 @@ export class SimplexUtility {
         step.surplus = solution.surplus[itemId];
       }
     }
-    console.log('addItemStep', JSON.stringify(steps.map((s) => s.itemId)));
   }
 
   /** Attempt to intelligently assign recipes to steps with no recipe */
