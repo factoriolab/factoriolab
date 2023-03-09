@@ -53,6 +53,8 @@ export interface MatrixState {
   recipes: Entities<RationalRecipe>;
   /** Items used in the matrix */
   items: Entities<ItemValues>;
+  /** Recipe limits */
+  recipeLimits: Entities<Rational>;
   /** Items that have no included recipe */
   unproduceableIds: string[];
   /** Items that are explicitly excluded */
@@ -180,6 +182,7 @@ export class SimplexUtility {
       steps: [],
       recipes: {},
       items: {},
+      recipeLimits: {},
       unproduceableIds: [],
       excludedIds: data.itemIds.filter((i) => itemSettings[i].excluded),
       recipeIds: data.recipeIds.filter((r) => !recipeSettings[r].excluded),
@@ -209,7 +212,6 @@ export class SimplexUtility {
         case ObjectiveType.Limit: {
           this.addItemValue(state.items, obj.itemId);
           const current = state.items[obj.itemId].lim;
-
           if (current == null || current.gt(obj.rate)) {
             state.items[obj.itemId].lim = obj.rate;
           }
@@ -219,13 +221,30 @@ export class SimplexUtility {
     }
 
     // Add recipe objectives to matrix state
-    for (const recipeObjective of recipeObjectives) {
-      for (const itemId of Object.keys(recipeObjective.recipe.out)) {
-        this.addItemValue(state.items, itemId);
-      }
+    for (const obj of recipeObjectives) {
+      switch (obj.type) {
+        case ObjectiveType.Output:
+        case ObjectiveType.Input:
+        case ObjectiveType.Maximize: {
+          for (const itemId of Object.keys(obj.recipe.out)) {
+            this.addItemValue(state.items, itemId);
+          }
 
-      this.parseRecipeRecursively(recipeObjective.recipe, state);
+          this.parseRecipeRecursively(obj.recipe, state);
+
+          break;
+        }
+        case ObjectiveType.Limit: {
+          const current = state.recipeLimits[obj.recipeId];
+          if (current == null || current.gt(obj.count)) {
+            state.recipeLimits[obj.recipeId] = obj.count;
+          }
+          break;
+        }
+      }
     }
+
+    console.log(state.recipeLimits);
 
     // Include any output-only items to calculate surplus
     this.addSurplusVariables(state);
@@ -356,17 +375,20 @@ export class SimplexUtility {
     const recipeIds = Object.keys(state.recipes);
 
     const m = new Model({ sense: 'min' });
+    // Variables for recipes
     const recipeVarEntities: Entities<Variable> = {};
+    // Variables for recipe output objectives, where lb and ub represent
+    // objective quantity (no surplus allowed on recipe objectives)
     const recipeObjectiveVarEntities: Entities<Variable> = {};
+    // Variables for outputs, where lb represents objective quantity
+    const outputVarEntities: Entities<Variable> = {};
+    // Variables for (free) inputs, where ub represents input quantity
+    const inputVarEntities: Entities<Variable> = {};
     // Variables for items that cannot be produced by any recipe
     const unproduceableVarEntities: Entities<Variable> = {};
     // Variables for items that have been excluded
     const excludedVarEntities: Entities<Variable> = {};
-    // Variables for (free) inputs, where ub represents input quantity
-    const inputVarEntities: Entities<Variable> = {};
-    // Variables for outputs, where lb represents objective quantity
-    const outputVarEntities: Entities<Variable> = {};
-    // Track net output of items, for item output/input constraints
+    // Track net output of items, for item output constraints
     const itemConstrEntities: Entities<Constraint> = {};
     // Track consumption of items, for item limit constraints
     const inputLimitConstrEntities: Entities<Constraint> = {};
@@ -380,17 +402,26 @@ export class SimplexUtility {
         lb: 0,
         name: recipeId,
       };
+
+      // Add limit, if any
+      if (state.recipeLimits[recipeId]) {
+        config.ub = state.recipeLimits[recipeId].toNumber();
+        // console.log(recipeId, config.ub);
+      }
+
       recipeVarEntities[recipeId] = m.addVar(config);
     }
 
     // Add recipe objective vars to model
-    for (const recipeObjective of state.recipeObjectives) {
+    for (const obj of state.recipeObjectives.filter(
+      (o) => o.type !== ObjectiveType.Limit
+    )) {
       const config: VariableProperties = {
-        lb: recipeObjective.count.toNumber(),
-        ub: recipeObjective.count.toNumber(),
-        name: recipeObjective.id,
+        lb: obj.count.toNumber(),
+        ub: obj.count.toNumber(),
+        name: obj.id,
       };
-      recipeObjectiveVarEntities[recipeObjective.id] = m.addVar(config);
+      recipeObjectiveVarEntities[obj.id] = m.addVar(config);
     }
 
     // Add unproduceable vars to model
@@ -469,7 +500,9 @@ export class SimplexUtility {
         }
       }
 
-      for (const recipeObjective of state.recipeObjectives) {
+      for (const recipeObjective of state.recipeObjectives.filter(
+        (o) => o.type !== ObjectiveType.Limit
+      )) {
         const recipe = recipeObjective.recipe;
         const val = recipe.output(itemId);
         if (val.nonzero()) {
@@ -624,7 +657,9 @@ export class SimplexUtility {
       this.addRecipeStep(recipe, solution, state);
     }
 
-    for (const recipeObjective of state.recipeObjectives) {
+    for (const recipeObjective of state.recipeObjectives.filter(
+      (o) => o.type !== ObjectiveType.Limit
+    )) {
       this.addRecipeStep(
         recipeObjective.recipe,
         solution,
@@ -650,6 +685,7 @@ export class SimplexUtility {
         .mul(solution.recipes[recipe.id])
         .div(recipe.time);
       output = output.add(amount);
+      // console.log(itemId, recipe.id, output.toNumber());
     }
 
     for (const itemObjective of state.itemObjectives.filter(
@@ -658,7 +694,9 @@ export class SimplexUtility {
       output = output.add(itemObjective.rate);
     }
 
-    for (const recipeObjective of state.recipeObjectives) {
+    for (const recipeObjective of state.recipeObjectives.filter(
+      (o) => o.type !== ObjectiveType.Limit
+    )) {
       const recipe = recipeObjective.recipe;
       if (!recipe.out[itemId]) continue;
       output = output.add(
@@ -673,6 +711,8 @@ export class SimplexUtility {
     if (solution.excluded[itemId]) {
       output = output.add(solution.excluded[itemId]);
     }
+
+    // console.log(itemId, 'final', output.toNumber());
 
     if (output.nonzero()) {
       const recipes = state.data.recipeIds
@@ -709,7 +749,11 @@ export class SimplexUtility {
   static assignRecipes(solution: MatrixSolution, state: MatrixState): void {
     const steps = state.steps;
     const recipes = Object.keys(solution.recipes).map((r) => state.recipes[r]);
-    recipes.push(...state.recipeObjectives.map((p) => p.recipe));
+    recipes.push(
+      ...state.recipeObjectives
+        .filter((o) => o.type !== ObjectiveType.Limit)
+        .map((p) => p.recipe)
+    );
 
     // Check for exact id matches
     for (const step of steps.filter((s) => s.recipeId == null)) {

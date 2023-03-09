@@ -864,11 +864,13 @@ export class RouterService {
     const z = this.zipList(
       recipeObjectives.map((obj) => {
         const count = Rational.fromString(obj.count).toString();
+        const type = this.zipDiffNumber(obj.type, ObjectiveType.Output);
 
         return {
           bare: this.zipFields([
             obj.recipeId,
             count,
+            type,
             this.zipTruthyString(obj.machineId),
             this.zipTruthyArray(obj.machineModuleIds),
             this.zipTruthyArray(data.objectiveBeaconMap[obj.id]),
@@ -878,6 +880,7 @@ export class RouterService {
           hash: this.zipFields([
             this.zipTruthyNString(obj.recipeId, hash.recipes),
             count,
+            type,
             this.zipTruthyNString(obj.machineId, hash.machines),
             this.zipTruthyNArray(obj.machineModuleIds, hash.modules),
             this.zipTruthyArray(data.objectiveBeaconMap[obj.id]),
