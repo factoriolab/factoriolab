@@ -11,7 +11,7 @@ import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
-import { APP, Game, gameInfo, ItemId, MatrixResultType } from '~/models';
+import { APP, Game, gameInf, ItemId, MatrixResultType } from '~/models';
 import { ContentService, ErrorService } from '~/services';
 import { App, ItemObjectives, LabState, Settings } from '~/store';
 
@@ -102,7 +102,7 @@ export class MainComponent implements AfterViewInit {
     setTimeout(() => {
       this.ngZone.run(() => {
         this.errorSvc.message$.next(null);
-        this.router.navigateByUrl(gameInfo[game].route);
+        this.router.navigateByUrl(gameInf[game].route);
         this.store.dispatch(new App.ResetAction());
         this.isResetting = false;
       });

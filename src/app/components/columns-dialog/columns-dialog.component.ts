@@ -8,7 +8,13 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 
-import { Column, precisionColumns } from '~/models';
+import {
+  ColumnCfg,
+  ColumnKey,
+  ColumnsCfg,
+  columnsInf,
+  Entities,
+} from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Preferences, Settings } from '~/store';
 
@@ -23,7 +29,7 @@ export class ColumnsDialogComponent implements OnInit {
   usesFractions$ = new BehaviorSubject(false);
   vm$ = combineLatest([
     this.store
-      .select(Settings.getColumnsState)
+      .select(Settings.getColumnsCfg)
       .pipe(tap((columns) => this.initEdit(columns))),
     this.store.select(Settings.getColumnOptions),
     this.usesFractions$,
@@ -36,8 +42,8 @@ export class ColumnsDialogComponent implements OnInit {
   );
 
   visible = false;
-  editValue: Preferences.ColumnsState = {};
-  precisionColumns = precisionColumns;
+  editValue: Entities<ColumnCfg> = {};
+  columnsInf = columnsInf;
 
   constructor(
     private ref: ChangeDetectorRef,
@@ -52,10 +58,10 @@ export class ColumnsDialogComponent implements OnInit {
     });
   }
 
-  initEdit(columns: Preferences.ColumnsState): void {
-    this.editValue = Object.keys(columns).reduce(
-      (e: Preferences.ColumnsState, c) => {
-        e[c] = { ...columns[c] };
+  initEdit(columnsCfg: ColumnsCfg): void {
+    this.editValue = (Object.keys(columnsCfg) as ColumnKey[]).reduce(
+      (e: Entities<ColumnCfg>, c) => {
+        e[c] = { ...columnsCfg[c] };
         return e;
       },
       {}
@@ -63,18 +69,22 @@ export class ColumnsDialogComponent implements OnInit {
     this.updateUsesFractions();
   }
 
-  changeFraction(value: boolean, column: Column): void {
+  changeFraction(value: boolean, column: ColumnKey): void {
     this.editValue[column].precision = value ? null : 1;
     this.updateUsesFractions();
   }
 
   updateUsesFractions(): void {
     this.usesFractions$.next(
-      precisionColumns.some((c) => this.editValue[c].precision == null)
+      (Object.keys(this.editValue) as ColumnKey[]).some(
+        (c) => columnsInf[c].hasPrecision && this.editValue[c] == null
+      )
     );
   }
 
   save(): void {
-    this.store.dispatch(new Preferences.SetColumnsAction(this.editValue));
+    this.store.dispatch(
+      new Preferences.SetColumnsAction(this.editValue as ColumnsCfg)
+    );
   }
 }

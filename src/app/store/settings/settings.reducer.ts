@@ -1,4 +1,5 @@
 import {
+  CostsCfg,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
@@ -9,15 +10,6 @@ import {
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import { SettingsAction, SettingsActionType } from './settings.actions';
-
-export interface SimplexCosts {
-  factor: string;
-  machine: string;
-  unproduceable: string;
-  excluded: string;
-  surplus: string;
-  maximize: string;
-}
 
 export interface SettingsState {
   modId: string;
@@ -36,11 +28,11 @@ export interface SettingsState {
   researchSpeed: ResearchSpeed;
   inserterCapacity: InserterCapacity;
   displayRate: DisplayRate;
-  cost: SimplexCosts;
+  cost: CostsCfg;
 }
 
 export type PartialSettingsState = Partial<Omit<SettingsState, 'cost'>> & {
-  cost?: Partial<SimplexCosts>;
+  cost?: Partial<CostsCfg>;
 };
 
 export const initialSettingsState: SettingsState = {

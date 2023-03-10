@@ -34,10 +34,7 @@
           ></p-checkbox>
         </td>
         <ng-container
-          *ngIf="
-            precisionColumns.indexOf(column.value) !== -1;
-            else noPrecision
-          "
+          *ngIf="$any(columnsInf)[column.value].hasPrecision; else noPrecision"
         >
           <td>
             <p-inputNumber

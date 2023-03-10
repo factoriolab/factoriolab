@@ -1,9 +1,7 @@
 import {
-  allColumns,
-  Column,
-  ColumnSettings,
+  ColumnsCfg,
   Entities,
-  initialColumns,
+  initialColumnsCfg,
   Language,
   PowerUnit,
   Theme,
@@ -14,28 +12,18 @@ import {
   PreferencesActionType,
 } from './preferences.actions';
 
-export type ColumnsState = Entities<ColumnSettings>;
-
 export interface PreferencesState {
   states: Entities<string>;
-  columns: ColumnsState;
+  columns: ColumnsCfg;
   language: Language;
   powerUnit: PowerUnit;
   theme: Theme;
   bypassLanding: boolean;
 }
 
-export const initialColumnsState: ColumnsState = allColumns.reduce(
-  (e: ColumnsState, c) => {
-    e[c] = { show: initialColumns.indexOf(c) !== -1, precision: 1 };
-    return e;
-  },
-  {}
-);
-
 export const initialPreferencesState: PreferencesState = {
   states: {},
-  columns: initialColumnsState,
+  columns: initialColumnsCfg,
   language: Language.English,
   powerUnit: PowerUnit.Auto,
   theme: Theme.Dark,
@@ -66,7 +54,7 @@ export function preferencesReducer(
         ...state,
         ...{
           columns: action.payload,
-          powerUnit: action.payload[Column.Power].show
+          powerUnit: action.payload.power.show
             ? state.powerUnit
             : PowerUnit.Auto,
         },

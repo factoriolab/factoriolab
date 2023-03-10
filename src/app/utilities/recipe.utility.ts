@@ -3,6 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { fnPropsNotNullish } from '~/helpers';
 import {
   Beacon,
+  CostsRatCfg,
   Dataset,
   EnergyType,
   Entities,
@@ -15,13 +16,12 @@ import {
   RationalBeacon,
   RationalBelt,
   RationalMachine,
-  RationalOf,
   RationalRecipe,
   RationalRecipeSettings,
   Recipe,
   RecipeObjective,
 } from '~/models';
-import { Machines, Settings } from '~/store';
+import { Machines } from '~/store';
 
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
@@ -453,7 +453,7 @@ export class RecipeUtility {
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    cost: RationalOf<Settings.SimplexCosts>,
+    cost: CostsRatCfg,
     data: Dataset
   ): Dataset {
     const recipeR = this.adjustRecipes(
@@ -503,7 +503,7 @@ export class RecipeUtility {
   static adjustCost(
     recipeR: Entities<RationalRecipe>,
     recipeSettings: Entities<RationalRecipeSettings>,
-    cost: RationalOf<Settings.SimplexCosts>
+    cost: CostsRatCfg
   ): void {
     for (const id of Object.keys(recipeR)) {
       const recipe = recipeR[id];

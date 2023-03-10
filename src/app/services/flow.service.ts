@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable, switchMap } from 'rxjs';
 
 import {
-  Column,
+  ColumnsCfg,
   Dataset,
   FlowData,
   FlowStyle,
@@ -20,7 +20,6 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { ColumnsState } from '~/store/preferences';
 
 @Injectable({
   providedIn: 'root',
@@ -51,7 +50,7 @@ export class FlowService {
     steps: Step[],
     data: Dataset,
     suffix: string,
-    columns: ColumnsState,
+    columnsCfg: ColumnsCfg,
     theme: FlowStyle
   ): FlowData {
     const flow: FlowData = {
@@ -60,8 +59,8 @@ export class FlowService {
       links: [],
     };
 
-    const itemPrec = columns[Column.Items].precision;
-    const machinePrec = columns[Column.Machines].precision;
+    const itemPrec = columnsCfg.items.precision;
+    const machinePrec = columnsCfg.machines.precision;
 
     for (const step of steps) {
       if (step.recipeId && step.machines) {

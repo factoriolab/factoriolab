@@ -21,7 +21,7 @@
           ></button>
         </th>
         <!-- Checkbox -->
-        <th *ngIf="vm.columns[Column.Checkbox].show">
+        <th *ngIf="vm.columnsCfg.checkbox.show">
           <div class="d-flex align-items-center justify-content-center">
             <i class="fa-solid fa-square-check"></i>
             <button
@@ -37,7 +37,7 @@
           </div>
         </th>
         <!-- Tree -->
-        <th *ngIf="vm.columns[Column.Tree].show">
+        <th *ngIf="vm.columnsCfg.tree.show">
           {{ 'list.tree' | translate }}
         </th>
         <!-- Items (Value / Icon)-->
@@ -57,7 +57,7 @@
           </div>
         </th>
         <!-- Belts -->
-        <th *ngIf="vm.columns[Column.Belts].show" colspan="2">
+        <th *ngIf="vm.columnsCfg.belts.show" colspan="2">
           <div class="d-flex align-items-center">
             <span>{{ 'list.belts' | translate }}</span>
             <button
@@ -73,7 +73,7 @@
           </div>
         </th>
         <!-- Wagons -->
-        <th *ngIf="vm.columns[Column.Wagons].show" colspan="2">
+        <th *ngIf="vm.columnsCfg.wagons.show" colspan="2">
           <div class="d-flex align-items-center">
             <span>{{ vm.dispRateInfo.wagonsLabel | translate }}</span>
             <button
@@ -105,7 +105,7 @@
           </div>
         </th>
         <!-- Beacons -->
-        <th *ngIf="vm.columns[Column.Beacons].show" colspan="2">
+        <th *ngIf="vm.columnsCfg.beacons.show" colspan="2">
           <div class="d-flex align-items-center">
             <span>{{ 'list.beacons' | translate }}</span>
             <button
@@ -121,15 +121,15 @@
           </div>
         </th>
         <!-- Power -->
-        <th *ngIf="vm.columns[Column.Power].show">
+        <th *ngIf="vm.columnsCfg.power.show">
           <span>{{ 'list.power' | translate }}</span>
         </th>
         <!-- Pollution -->
-        <th *ngIf="vm.columns[Column.Pollution].show">
+        <th *ngIf="vm.columnsCfg.pollution.show">
           <span>{{ vm.dispRateInfo.pollutionLabel | translate }}</span>
         </th>
         <!-- Link -->
-        <th *ngIf="vm.columns[Column.Link].show" class="w-0">
+        <th *ngIf="vm.columnsCfg.link.show" class="w-0">
           <button
             pButton
             pRipple
@@ -144,7 +144,7 @@
                 vm.steps,
                 vm.itemSettings,
                 vm.recipeSettings,
-                vm.columns,
+                vm.columnsCfg,
                 vm.data
               )
             "
@@ -178,7 +178,7 @@
           </div>
         </td>
         <!-- Checkbox -->
-        <td *ngIf="vm.columns[Column.Checkbox].show">
+        <td *ngIf="vm.columnsCfg.checkbox.show">
           <div class="d-flex justify-content-center">
             <p-checkbox
               [binary]="true"
@@ -188,7 +188,7 @@
           </div>
         </td>
         <!-- Tree -->
-        <td *ngIf="vm.columns[Column.Tree].show" class="overflow-hidden p-0">
+        <td *ngIf="vm.columnsCfg.tree.show" class="overflow-hidden p-0">
           <div class="d-flex align-items-center links">
             <ng-container *ngIf="vm.stepTree[step.id]?.length">
               <div
@@ -242,11 +242,11 @@
             <span
               *ngIf="step.surplus && step.surplus.nonzero()"
               class="monospace"
-              >(+{{ step.surplus | rate : vm.columns[Column.Items].precision }})
+              >(+{{ step.surplus | rate : vm.columnsCfg.items.precision }})
             </span>
             <span class="monospace">{{
               step.items.sub(step.surplus || Rational.zero)
-                | rate : vm.columns[Column.Items].precision
+                | rate : vm.columnsCfg.items.precision
             }}</span>
           </td>
           <td class="ps-0">
@@ -276,12 +276,12 @@
           </td>
         </ng-container>
         <!-- Belts -->
-        <ng-container *ngIf="vm.columns[Column.Belts].show">
+        <ng-container *ngIf="vm.columnsCfg.belts.show">
           <ng-container *ngIf="step.itemId && step.belts; else emptyCol2">
             <ng-container *ngIf="vm.itemSettings[step.itemId].beltId as beltId">
               <td class="w-0 text-end">
                 <span class="monospace">{{
-                  step.belts | rate : vm.columns[Column.Belts].precision
+                  step.belts | rate : vm.columnsCfg.belts.precision
                 }}</span>
               </td>
               <td class="ps-0">
@@ -410,7 +410,7 @@
           </ng-container>
         </ng-container>
         <!-- Wagons -->
-        <ng-container *ngIf="vm.columns[Column.Wagons].show">
+        <ng-container *ngIf="vm.columnsCfg.wagons.show">
           <ng-container
             *ngIf="
               step.itemId &&
@@ -421,7 +421,7 @@
           >
             <td class="w-0 text-end">
               <span class="monospace">{{
-                step.wagons | rate : vm.columns[Column.Wagons].precision
+                step.wagons | rate : vm.columnsCfg.wagons.precision
               }}</span>
             </td>
             <td class="ps-0">
@@ -551,9 +551,7 @@
               class="monospace"
               >{{
                 step.machines
-                  | machineRate
-                    : vm.columns[Column.Machines].precision
-                    : machineId
+                  | machineRate : vm.columnsCfg.machines.precision : machineId
               }}</span
             >
           </td>
@@ -682,7 +680,7 @@
           </td>
         </ng-container>
         <!-- Beacons -->
-        <ng-container *ngIf="vm.columns[Column.Beacons].show">
+        <ng-container *ngIf="vm.columnsCfg.beacons.show">
           <ng-container
             *ngIf="step.recipeId && step.recipeSettings; else emptyCol2"
           >
@@ -854,26 +852,24 @@
           </ng-container>
         </ng-container>
         <!-- Power -->
-        <td *ngIf="vm.columns[Column.Power].show" class="text-end">
+        <td *ngIf="vm.columnsCfg.power.show" class="text-end">
           <span *ngIf="step.power && step.power.nonzero()" class="monospace">{{
             step.power
-              | power
-                : vm.columns[Column.Power].precision
-                : vm.effectivePowerUnit
+              | power : vm.columnsCfg.power.precision : vm.effectivePowerUnit
           }}</span>
         </td>
         <!-- Pollution -->
-        <td *ngIf="vm.columns[Column.Pollution].show" class="text-end">
+        <td *ngIf="vm.columnsCfg.pollution.show" class="text-end">
           <span
             *ngIf="step.pollution && step.pollution.nonzero()"
             class="monospace"
             >{{
-              step.pollution | rate : vm.columns[Column.Pollution].precision
+              step.pollution | rate : vm.columnsCfg.pollution.precision
             }}</span
           >
         </td>
         <!-- Link -->
-        <td *ngIf="vm.columns[Column.Link].show">
+        <td *ngIf="vm.columnsCfg.link.show">
           <div class="d-flex">
             <a
               class="text-decoration-none"
@@ -1195,7 +1191,7 @@
                                     row.step.items
                                       .mul(row.percent)
                                       .div(step.machines)
-                                    | rate : vm.columns[Column.Items].precision,
+                                    | rate : vm.columnsCfg.items.precision,
                                   itemId: input.key
                                 }
                               "
@@ -1203,7 +1199,7 @@
                             </ng-container>
                           </ng-container>
                         </td>
-                        <td *ngIf="vm.columns[Column.Belts].show">
+                        <td *ngIf="vm.columnsCfg.belts.show">
                           <ng-container *ngIf="row.step.belts">
                             <ng-container
                               *ngIf="
@@ -1218,8 +1214,7 @@
                                       row.step.belts
                                         .mul(row.percent)
                                         .div(step.machines)
-                                      | rate
-                                        : vm.columns[Column.Belts].precision,
+                                      | rate : vm.columnsCfg.belts.precision,
                                     itemId: beltId
                                   }
                                 "
@@ -1325,7 +1320,7 @@
                           </ng-container>
                         </td>
                       </ng-container>
-                      <td *ngIf="vm.columns[Column.Belts].show">
+                      <td *ngIf="vm.columnsCfg.belts.show">
                         <ng-container
                           *ngIf="vm.itemSettings[output.key].beltId as beltId"
                         >
@@ -1335,7 +1330,7 @@
                               context: {
                                 value:
                                   items.div(vm.beltSpeed[beltId])
-                                  | rate : vm.columns[Column.Belts].precision,
+                                  | rate : vm.columnsCfg.belts.precision,
                                 itemId: beltId
                               }
                             "
@@ -1350,7 +1345,7 @@
                             context: {
                               value:
                                 items.mul(vm.dispRateInfo.value)
-                                | rate : vm.columns[Column.Items].precision,
+                                | rate : vm.columnsCfg.items.precision,
                               itemId: output.key
                             }
                           "
@@ -1435,7 +1430,7 @@
     </ng-template>
     <ng-template #leftPad>
       <td></td>
-      <td *ngIf="vm.columns[Column.Tree].show"></td>
+      <td *ngIf="vm.columnsCfg.tree.show"></td>
     </ng-template>
     <ng-template
       #detailRow
@@ -1462,7 +1457,7 @@
           <ng-template *ngTemplateOutlet="leftPad"></ng-template>
           <td class="w-0 text-end">
             <span class="monospace">{{
-              items | rate : vm.columns[Column.Items].precision
+              items | rate : vm.columnsCfg.items.precision
             }}</span>
           </td>
           <td class="ps-0">
@@ -1474,11 +1469,11 @@
               ></i>
             </div>
           </td>
-          <ng-container *ngIf="vm.columns[Column.Belts].show">
+          <ng-container *ngIf="vm.columnsCfg.belts.show">
             <ng-container *ngIf="belts && beltId">
               <td class="w-0 text-end">
                 <span class="monospace">{{
-                  belts | rate : vm.columns[Column.Belts].precision
+                  belts | rate : vm.columnsCfg.belts.precision
                 }}</span>
               </td>
               <td class="ps-0">
@@ -1500,11 +1495,11 @@
               </td>
             </ng-container>
           </ng-container>
-          <ng-container *ngIf="vm.columns[Column.Wagons].show">
+          <ng-container *ngIf="vm.columnsCfg.wagons.show">
             <ng-container *ngIf="wagons && wagonId">
               <td class="w-0 text-end">
                 <span class="monospace">{{
-                  wagons | rate : vm.columns[Column.Wagons].precision
+                  wagons | rate : vm.columnsCfg.wagons.precision
                 }}</span>
               </td>
               <td class="ps-0">
@@ -1554,9 +1549,7 @@
               class="monospace"
               >{{
                 machines
-                  | machineRate
-                    : vm.columns[Column.Machines].precision
-                    : machineId
+                  | machineRate : vm.columnsCfg.machines.precision : machineId
               }}</span
             >
           </td>
@@ -1629,21 +1622,14 @@
     <ng-template pTemplate="footer">
       <tr>
         <td></td>
-        <td *ngIf="vm.columns[Column.Tree].show"></td>
+        <td *ngIf="vm.columnsCfg.tree.show"></td>
         <td colspan="2">
           {{ 'list.total' | translate }}
         </td>
         <ng-container
           *ngTemplateOutlet="
             totalCell;
-            context: { column: Column.Belts, totals: vm.totals.belts }
-          "
-        >
-        </ng-container>
-        <ng-container
-          *ngTemplateOutlet="
-            totalCell;
-            context: { column: Column.Wagons, totals: vm.totals.wagons }
+            context: { columnCfg: vm.columnsCfg.belts, totals: vm.totals.belts }
           "
         >
         </ng-container>
@@ -1651,7 +1637,17 @@
           *ngTemplateOutlet="
             totalCell;
             context: {
-              column: Column.Machines,
+              columnCfg: vm.columnsCfg.wagons,
+              totals: vm.totals.wagons
+            }
+          "
+        >
+        </ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            totalCell;
+            context: {
+              columnCfg: vm.columnsCfg.machines,
               totals: vm.totals.machines,
               modulesTotals: vm.totals.machineModules
             }
@@ -1662,42 +1658,40 @@
           *ngTemplateOutlet="
             totalCell;
             context: {
-              column: Column.Beacons,
+              columnCfg: vm.columnsCfg.beacons,
               totals: vm.totals.beacons,
               modulesTotals: vm.totals.beaconModules
             }
           "
         >
         </ng-container>
-        <td *ngIf="vm.columns[Column.Power].show" class="text-end inherit">
+        <td *ngIf="vm.columnsCfg.power.show" class="text-end inherit">
           <span class="monospace">{{
             vm.totals.power
-              | power
-                : vm.columns[Column.Power].precision
-                : vm.effectivePowerUnit
+              | power : vm.columnsCfg.power.precision : vm.effectivePowerUnit
           }}</span>
         </td>
-        <td *ngIf="vm.columns[Column.Pollution].show" class="text-end inherit">
+        <td *ngIf="vm.columnsCfg.pollution.show" class="text-end inherit">
           <span class="monospace">{{
-            vm.totals.pollution | rate : vm.columns[Column.Pollution].precision
+            vm.totals.pollution | rate : vm.columnsCfg.pollution.precision
           }}</span>
         </td>
-        <td *ngIf="vm.columns[Column.Link].show"></td>
+        <td *ngIf="vm.columnsCfg.link.show"></td>
       </tr>
       <ng-template
         #totalCell
-        let-column="column"
+        let-columnCfg="columnCfg"
         let-totals="totals"
         let-modulesTotals="modulesTotals"
       >
-        <ng-container *ngIf="vm.columns[column].show">
+        <ng-container *ngIf="columnCfg.show">
           <td class="w-0 text-end inherit">
             <div
               *ngFor="let tot of totals | keyvalue : trackSvc.sortByValue"
               class="py-2 icon-height"
             >
               <span class="monospace">{{
-                tot.value | rate : vm.columns[column].precision
+                tot.value | rate : columnCfg.precision
               }}</span>
             </div>
           </td>

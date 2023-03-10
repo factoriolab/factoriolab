@@ -13,14 +13,13 @@ import { MenuItem } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
 import {
-  Column,
   Dataset,
   Defaults,
   DisplayRate,
   displayRateOptions,
   FuelType,
   Game,
-  gameInfo,
+  gameInf,
   gameOptions,
   IdDefaultPayload,
   IdPayload,
@@ -69,7 +68,7 @@ export class SettingsComponent implements OnInit {
     this.store.select(Machines.getMachineRows),
     this.store.select(Machines.getMachineOptions),
     this.store.select(Settings.getSettings),
-    this.store.select(Settings.getColumnsState),
+    this.store.select(Settings.getColumnsCfg),
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getModOptions),
@@ -88,7 +87,7 @@ export class SettingsComponent implements OnInit {
         machineRows,
         machineOptions,
         settings,
-        columns,
+        columnsCfg,
         data,
         options,
         modOptions,
@@ -104,7 +103,7 @@ export class SettingsComponent implements OnInit {
         machineRows,
         machineOptions,
         settings,
-        columns,
+        columnsCfg,
         data,
         options,
         modOptions,
@@ -136,7 +135,6 @@ export class SettingsComponent implements OnInit {
   researchSpeedOptions = researchSpeedOptions;
   themeOptions = themeOptions;
 
-  Column = Column;
   FuelType = FuelType;
   Game = Game;
   ItemId = ItemId;
@@ -227,7 +225,7 @@ export class SettingsComponent implements OnInit {
   }
 
   setGame(game: Game): void {
-    this.setMod(gameInfo[game].modId);
+    this.setMod(gameInf[game].modId);
   }
 
   setExcludedRecipes(

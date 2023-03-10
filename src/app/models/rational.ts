@@ -5,8 +5,6 @@ const bigZero = BigInt(0);
 const bigOne = BigInt(1);
 const bigMinusOne = BigInt(-1);
 
-export type RationalOf<T> = { [Property in keyof T]: Rational };
-
 export class Rational {
   static zero = new Rational(bigZero);
   static minusOne = new Rational(bigMinusOne);

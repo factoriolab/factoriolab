@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, Game, gameInfo, gameOptions, games } from '~/models';
+import { APP, Game, gameInf, gameOptions, games } from '~/models';
 import { ContentService } from '~/services';
 import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
@@ -38,7 +38,7 @@ export class HeaderComponent implements OnInit {
     this.contentSvc.settingsXlHidden$,
   ]).pipe(
     map(([game, settingsXlHidden]) => ({
-      gameInfo: gameInfo[game],
+      gameInf: gameInf[game],
       gameOptions: this.buildGameOptions(game),
       settingsXlHidden,
     }))
@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit {
       href: 'https://ko-fi.com/dcbroad3',
     },
   ];
-  gameInfo = gameInfo;
+  gameInf = gameInf;
   gameOptions = gameOptions;
 
   constructor(
@@ -110,9 +110,9 @@ export class HeaderComponent implements OnInit {
       .filter((g) => g !== game)
       .map(
         (g): MenuItem => ({
-          icon: 'lab-icon-sm ' + gameInfo[g].icon,
-          label: this.translateSvc.instant(gameInfo[g].label),
-          routerLink: gameInfo[g].route,
+          icon: 'lab-icon-sm ' + gameInf[g].icon,
+          label: this.translateSvc.instant(gameInf[g].label),
+          routerLink: gameInf[g].route,
         })
       );
   }

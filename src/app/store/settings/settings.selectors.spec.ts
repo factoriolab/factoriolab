@@ -68,7 +68,7 @@ describe('Settings Selectors', () => {
 
   describe('getColumnsState', () => {
     it('should override columns for Factorio', () => {
-      const result = Selectors.getColumnsState.projector(
+      const result = Selectors.getColumnsCfg.projector(
         Game.Factorio,
         Preferences.initialColumnsState
       );
@@ -78,7 +78,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should override columns for Captain of Industry', () => {
-      const result = Selectors.getColumnsState.projector(
+      const result = Selectors.getColumnsCfg.projector(
         Game.CaptainOfIndustry,
         Preferences.initialColumnsState
       );
@@ -89,7 +89,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should override columns for Dyson Sphere Program', () => {
-      const result = Selectors.getColumnsState.projector(
+      const result = Selectors.getColumnsCfg.projector(
         Game.DysonSphereProgram,
         Preferences.initialColumnsState
       );
@@ -99,7 +99,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should override columns for Satisfactory', () => {
-      const result = Selectors.getColumnsState.projector(
+      const result = Selectors.getColumnsCfg.projector(
         Game.Satisfactory,
         Preferences.initialColumnsState
       );
@@ -278,7 +278,7 @@ describe('Settings Selectors', () => {
     it('should create an object to be used by simplex calcs', () => {
       const result = Selectors.getSimplexModifiers.projector(
         Rational.one,
-        Rational.one,
+        Rational.one
       );
       expect(result).toEqual({
         costInput: Rational.one,

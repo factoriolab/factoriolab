@@ -11,6 +11,7 @@ import { StatusSimplex } from 'glpk-ts/dist/status';
 
 import { environment } from 'src/environments';
 import {
+  CostsRatCfg,
   Dataset,
   Entities,
   MatrixResult,
@@ -18,12 +19,11 @@ import {
   ObjectiveType,
   Rational,
   RationalItemObjective,
-  RationalOf,
   RationalRecipe,
   RationalRecipeObjective,
   Step,
 } from '~/models';
-import { Items, Recipes, Settings } from '~/store';
+import { Items, Recipes } from '~/store';
 import { RateUtility } from './rate.utility';
 
 const FLOAT_TOLERANCE = 1e-10;
@@ -69,7 +69,7 @@ export interface MatrixState {
   /** All items that are included */
   itemIds: string[];
   data: Dataset;
-  cost: RationalOf<Settings.SimplexCosts>;
+  cost: CostsRatCfg;
 }
 
 export interface MatrixSolution {
@@ -136,7 +136,7 @@ export class SimplexUtility {
     recipeObjectives: RationalRecipeObjective[],
     itemSettings: Items.ItemsState,
     recipeSettings: Recipes.RecipesState,
-    cost: RationalOf<Settings.SimplexCosts>,
+    cost: CostsRatCfg,
     data: Dataset
   ): MatrixResult {
     if (itemObjectives.length === 0 && recipeObjectives.length === 0) {
@@ -177,7 +177,7 @@ export class SimplexUtility {
     recipeObjectives: RationalRecipeObjective[],
     itemSettings: Items.ItemsState,
     recipeSettings: Recipes.RecipesState,
-    cost: RationalOf<Settings.SimplexCosts>,
+    cost: CostsRatCfg,
     data: Dataset
   ): MatrixState {
     // Set up state object

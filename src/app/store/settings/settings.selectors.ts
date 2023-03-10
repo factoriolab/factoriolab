@@ -4,14 +4,18 @@ import { SelectItem } from 'primeng/api';
 import { environment } from 'src/environments';
 import { fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
-  Column,
   columnOptions,
+  columnsGameCfg,
+  CostKey,
+  CostsRatCfg,
   Dataset,
   Defaults,
   displayRateInfo,
   Entities,
   FuelType,
   Game,
+  gameInf,
+  initialColumnsCfg,
   InserterData,
   ItemId,
   Preset,
@@ -26,7 +30,6 @@ import {
   RationalItem,
   RationalMachine,
   RationalModule,
-  RationalOf,
   RationalRecipe,
   researchSpeedFactor,
   toBoolEntities,
@@ -36,11 +39,7 @@ import { Options } from '~/models/options';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
-import {
-  initialSettingsState,
-  SettingsState,
-  SimplexCosts,
-} from './settings.reducer';
+import { initialSettingsState, SettingsState } from './settings.reducer';
 
 /* Base selector functions */
 export const settingsState = (state: LabState): SettingsState =>
@@ -105,8 +104,10 @@ export const getGame = createSelector(
   (id, data) => data[id]?.game ?? Game.None
 );
 
-export const getColumnOptions = createSelector(getGame, (game) =>
-  columnOptions(game)
+export const getGameInf = createSelector(getGame, (game) => gameInf[game]);
+
+export const getColumnOptions = createSelector(getGameInf, (gameInf) =>
+  columnOptions(gameInf)
 );
 
 export const getDisplayRateInfo = createSelector(
@@ -138,56 +139,11 @@ export const getModOptions = createSelector(
       )
 );
 
-export const getColumnsState = createSelector(
-  getGame,
+export const getColumnsCfg = createSelector(
+  getGameInf,
   Preferences.getColumns,
-  (game, col): Preferences.ColumnsState => {
-    switch (game) {
-      case Game.CaptainOfIndustry:
-        return {
-          ...Preferences.initialColumnsState,
-          ...col,
-          ...{
-            [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
-            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
-            [Column.Power]: { ...col[Column.Power], ...{ show: false } },
-            [Column.Pollution]: {
-              ...col[Column.Pollution],
-              ...{ show: false },
-            },
-          },
-        };
-      case Game.DysonSphereProgram:
-        return {
-          ...Preferences.initialColumnsState,
-          ...col,
-          ...{
-            [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
-            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
-            [Column.Pollution]: {
-              ...col[Column.Pollution],
-              ...{ show: false },
-            },
-          },
-        };
-      case Game.Satisfactory:
-        return {
-          ...Preferences.initialColumnsState,
-          ...col,
-          ...{
-            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
-            [Column.Pollution]: {
-              ...col[Column.Pollution],
-              ...{ show: false },
-            },
-          },
-        };
-      default:
-        return {
-          ...Preferences.initialColumnsState,
-          ...col,
-        };
-    }
+  (gameInf, columnsCfg) => {
+    return columnsGameCfg({ ...initialColumnsCfg, ...columnsCfg }, gameInf);
   }
 );
 
@@ -268,14 +224,11 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
 
 export const getRationalCost = createSelector(
   getCost,
-  (cost): RationalOf<SimplexCosts> =>
-    (Object.keys(cost) as (keyof SimplexCosts)[]).reduce(
-      (a: Partial<RationalOf<SimplexCosts>>, b) => {
-        a[b] = Rational.fromString(cost[b]);
-        return a;
-      },
-      {}
-    ) as RationalOf<SimplexCosts>
+  (cost): CostsRatCfg =>
+    (Object.keys(cost) as CostKey[]).reduce((a: Partial<CostsRatCfg>, b) => {
+      a[b] = Rational.fromString(cost[b]);
+      return a;
+    }, {}) as CostsRatCfg
 );
 
 export const getI18n = createSelector(

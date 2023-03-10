@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { Game, gameInfo, gameOptions } from '~/models';
+import { Game, gameInf, gameOptions } from '~/models';
 import { RouterService } from '~/services';
 import {
   ItemObjectives,
@@ -42,7 +42,7 @@ export class LandingComponent {
     }))
   );
 
-  gameInfo = gameInfo;
+  gameInf = gameInf;
   gameOptions = gameOptions;
 
   Game = Game;
@@ -73,7 +73,7 @@ export class LandingComponent {
   }
 
   setGame(game: Game): void {
-    this.setMod(gameInfo[game].modId);
+    this.setMod(gameInf[game].modId);
   }
 
   /** Action Dispatch Methods */

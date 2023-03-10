@@ -14,7 +14,7 @@ import { combineLatest, filter, first, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import {
-  Column,
+  ColumnsCfg,
   Dataset,
   Game,
   ItemId,
@@ -34,7 +34,6 @@ import {
   Items,
   LabState,
   Machines,
-  Preferences,
   RecipeObjectives,
   Recipes,
   Settings,
@@ -64,7 +63,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.select(Recipes.getRecipeSettings),
     this.store.select(Recipes.getRecipesModified),
     this.store.select(Recipes.getAdjustedDataset),
-    this.store.select(Settings.getColumnsState),
+    this.store.select(Settings.getColumnsCfg),
     this.store.select(Settings.getSettings),
     this.store.select(Settings.getDisplayRateInfo),
     this.store.select(Settings.getOptions),
@@ -88,7 +87,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         recipeSettings,
         recipesModified,
         data,
-        columns,
+        columnsCfg,
         settings,
         dispRateInfo,
         options,
@@ -110,7 +109,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         recipeSettings,
         recipesModified,
         data,
-        columns,
+        columnsCfg,
         settings,
         dispRateInfo,
         options,
@@ -125,7 +124,6 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   fragmentId: string | null | undefined;
 
-  Column = Column;
   ItemId = ItemId;
   StepDetailTab = StepDetailTab;
   Game = Game;
@@ -211,12 +209,12 @@ export class ListComponent implements OnInit, AfterViewInit {
     steps: Step[],
     itemSettings: Items.ItemsState,
     recipeSettings: Recipes.RecipesState,
-    columns: Preferences.ColumnsState,
+    columnsCfg: ColumnsCfg,
     data: Dataset
   ): void {
     this.exportSvc.stepsToCsv(
       steps,
-      columns,
+      columnsCfg,
       itemSettings,
       recipeSettings,
       data

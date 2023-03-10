@@ -3,7 +3,7 @@ import { saveAs } from 'file-saver';
 
 import { notNullish } from '~/helpers';
 import {
-  Column,
+  ColumnsCfg,
   Dataset,
   Entities,
   ItemSettings,
@@ -11,7 +11,6 @@ import {
   RecipeSettings,
   Step,
 } from '~/models';
-import { ColumnsState } from '~/store/preferences';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
@@ -47,13 +46,13 @@ export interface StepExport {
 export class ExportService {
   stepsToCsv(
     steps: Step[],
-    columns: ColumnsState,
+    columnsCfg: ColumnsCfg,
     itemSettings: Entities<ItemSettings>,
     recipeSettings: Entities<RecipeSettings>,
     data: Dataset
   ): void {
     const json = steps.map((s) =>
-      this.stepToJson(s, steps, columns, itemSettings, recipeSettings, data)
+      this.stepToJson(s, steps, columnsCfg, itemSettings, recipeSettings, data)
     );
     const fields = Object.keys(json[0]) as (keyof StepExport)[];
     const csv = json.map((row) => fields.map((f) => row[f]).join(','));
@@ -83,7 +82,7 @@ export class ExportService {
   stepToJson(
     step: Step,
     steps: Step[],
-    columns: ColumnsState,
+    columns: ColumnsCfg,
     itemSettings: Entities<ItemSettings>,
     recipeSettings: Entities<RecipeSettings>,
     data: Dataset
@@ -99,13 +98,13 @@ export class ExportService {
       if (step.surplus != null) {
         exp.Surplus = '=' + step.surplus.toString();
       }
-      if (columns[Column.Belts].show) {
+      if (columns.belts.show) {
         if (step.belts != null) {
           exp.Belts = '=' + step.belts.toString();
         }
         exp.Belt = settings.beltId;
       }
-      if (columns[Column.Wagons].show) {
+      if (columns.wagons.show) {
         if (step.wagons != null) {
           exp.Wagons = '=' + step.wagons.toString();
         }
@@ -130,7 +129,7 @@ export class ExportService {
       if (settings.machineId != null) {
         const machine = data.machineEntities[settings.machineId];
         const allowsModules = RecipeUtility.allowsModules(recipe, machine);
-        if (columns[Column.Machines].show) {
+        if (columns.machines.show) {
           if (step.machines != null) {
             exp.Machines = '=' + step.machines.toString();
           }
@@ -139,19 +138,19 @@ export class ExportService {
             exp.MachineModules = `"${settings.machineModuleIds.join(',')}"`;
           }
         }
-        if (columns[Column.Beacons].show && allowsModules) {
+        if (columns.beacons.show && allowsModules) {
           exp.Beacons = `"${settings.beacons?.map((b) => b.count).join(',')}"`;
           exp.Beacon = `"${settings.beacons?.map((b) => b.id).join(',')}"`;
           exp.BeaconModules = `"${settings.beacons
             ?.map((b) => b.moduleIds?.join('|'))
             .join(',')}"`;
         }
-        if (columns[Column.Power].show) {
+        if (columns.power.show) {
           if (step.power != null) {
             exp.Power = '=' + step.power.toString();
           }
         }
-        if (columns[Column.Pollution].show) {
+        if (columns.pollution.show) {
           if (step.pollution != null) {
             exp.Pollution = '=' + step.pollution.toString();
           }
