@@ -2,12 +2,10 @@ import { createSelector } from '@ngrx/store';
 
 import { fnPropsNotNullish } from '~/helpers';
 import {
-  Column,
   Entities,
   Game,
   ItemId,
   PowerUnit,
-  precisionColumns,
   Rational,
   RationalItemObjective,
   Step,
@@ -437,37 +435,6 @@ export const getStepTree = createSelector(getSteps, (steps) => {
   return tree;
 });
 
-export const getEffectivePrecision = createSelector(
-  getSteps,
-  Settings.getColumnsState,
-  (steps, columns) => {
-    const effPrecision: Entities<number | null> = {};
-    effPrecision[Column.Surplus] = effPrecFrom(
-      steps,
-      columns[Column.Items].precision,
-      (s) => s.surplus
-    );
-
-    for (const i of precisionColumns.filter((i) => columns[i].show)) {
-      effPrecision[i] = effPrecFrom(steps, columns[i].precision, (s) =>
-        i === Column.Items
-          ? (s.items || Rational.zero).sub(s.surplus || Rational.zero)
-          : s[
-              i.toLowerCase() as
-                | 'items'
-                | 'belts'
-                | 'wagons'
-                | 'machines'
-                | 'power'
-                | 'pollution'
-            ]
-      );
-    }
-
-    return effPrecision;
-  }
-);
-
 export const getEffectivePowerUnit = createSelector(
   getSteps,
   Preferences.getPowerUnit,
@@ -494,23 +461,3 @@ export const getEffectivePowerUnit = createSelector(
     }
   }
 );
-
-export function effPrecFrom(
-  steps: Step[],
-  precision: number | null,
-  fn: (step: Step) => Rational | undefined
-): number | null {
-  if (precision == null) {
-    return precision;
-  }
-  let max = 0;
-  for (const step of steps) {
-    const dec = fn(step)?.toDecimals() ?? 0;
-    if (dec >= precision) {
-      return precision;
-    } else if (dec > max) {
-      max = dec;
-    }
-  }
-  return max;
-}
