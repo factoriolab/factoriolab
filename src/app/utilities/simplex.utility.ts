@@ -47,12 +47,17 @@ export interface ItemValues {
 
 export interface MatrixState {
   itemObjectives: RationalItemObjective[];
+  /**
+   * Output & Maximize recipe objectives
+   *  * Limits moved to `recipeLimits`
+   *  * Inputs added to `itemValues`
+   */
   recipeObjectives: RationalRecipeObjective[];
   steps: Step[];
   /** Recipes used in the matrix */
   recipes: Entities<RationalRecipe>;
   /** Items used in the matrix */
-  items: Entities<ItemValues>;
+  itemValues: Entities<ItemValues>;
   /** Recipe limits */
   recipeLimits: Entities<Rational>;
   /** Items that have no included recipe */
@@ -178,10 +183,13 @@ export class SimplexUtility {
     // Set up state object
     const state: MatrixState = {
       itemObjectives,
-      recipeObjectives,
+      recipeObjectives: recipeObjectives.filter(
+        (o) =>
+          o.type === ObjectiveType.Output || o.type === ObjectiveType.Maximize
+      ),
       steps: [],
       recipes: {},
-      items: {},
+      itemValues: {},
       recipeLimits: {},
       unproduceableIds: [],
       excludedIds: data.itemIds.filter((i) => itemSettings[i].excluded),
@@ -195,25 +203,25 @@ export class SimplexUtility {
     for (const obj of itemObjectives) {
       switch (obj.type) {
         case ObjectiveType.Output: {
-          this.addItemValue(state.items, obj.itemId, obj.rate);
+          this.addItemValue(state.itemValues, obj.itemId, obj.rate);
           this.parseItemRecursively(obj.itemId, state);
           break;
         }
         case ObjectiveType.Input: {
-          this.addItemValue(state.items, obj.itemId, obj.rate, 'in');
+          this.addItemValue(state.itemValues, obj.itemId, obj.rate, 'in');
           break;
         }
         case ObjectiveType.Maximize: {
-          this.addItemValue(state.items, obj.itemId, obj.rate, 'max');
-          this.addItemValue(state.items, obj.itemId);
+          this.addItemValue(state.itemValues, obj.itemId, obj.rate, 'max');
+          this.addItemValue(state.itemValues, obj.itemId);
           this.parseItemRecursively(obj.itemId, state);
           break;
         }
         case ObjectiveType.Limit: {
-          this.addItemValue(state.items, obj.itemId);
-          const current = state.items[obj.itemId].lim;
+          this.addItemValue(state.itemValues, obj.itemId);
+          const current = state.itemValues[obj.itemId].lim;
           if (current == null || current.gt(obj.rate)) {
-            state.items[obj.itemId].lim = obj.rate;
+            state.itemValues[obj.itemId].lim = obj.rate;
           }
           break;
         }
@@ -224,14 +232,22 @@ export class SimplexUtility {
     for (const obj of recipeObjectives) {
       switch (obj.type) {
         case ObjectiveType.Output:
-        case ObjectiveType.Input:
         case ObjectiveType.Maximize: {
           for (const itemId of Object.keys(obj.recipe.out)) {
-            this.addItemValue(state.items, itemId);
+            this.addItemValue(state.itemValues, itemId);
           }
 
           this.parseRecipeRecursively(obj.recipe, state);
 
+          break;
+        }
+        case ObjectiveType.Input: {
+          for (const itemId of Object.keys(obj.recipe.out).filter((i) =>
+            obj.recipe.produces(i)
+          )) {
+            const rate = obj.count.mul(obj.recipe.output(itemId));
+            this.addItemValue(state.itemValues, itemId, rate, 'in');
+          }
           break;
         }
         case ObjectiveType.Limit: {
@@ -243,8 +259,6 @@ export class SimplexUtility {
         }
       }
     }
-
-    console.log(state.recipeLimits);
 
     // Include any output-only items to calculate surplus
     this.addSurplusVariables(state);
@@ -270,10 +284,10 @@ export class SimplexUtility {
   /** Find matching item inputs for a recipe that have not yet been parsed */
   static itemMatches(recipe: RationalRecipe, state: MatrixState): string[] {
     const itemIds = Object.keys(recipe.in).filter(
-      (i) => state.items[i]?.out == null
+      (i) => state.itemValues[i]?.out == null
     );
     for (const itemId of itemIds) {
-      this.addItemValue(state.items, itemId);
+      this.addItemValue(state.itemValues, itemId);
     }
     return itemIds;
   }
@@ -306,9 +320,9 @@ export class SimplexUtility {
     const recipes = Object.keys(state.recipes).map((r) => state.recipes[r]);
     for (const recipe of recipes) {
       for (const id of Object.keys(recipe.out).filter(
-        (o) => state.items[o]?.out == null
+        (o) => state.itemValues[o]?.out == null
       )) {
-        this.addItemValue(state.items, id);
+        this.addItemValue(state.itemValues, id);
       }
     }
   }
@@ -318,7 +332,7 @@ export class SimplexUtility {
    * recipe)
    */
   static parseUnproduceable(state: MatrixState): void {
-    const itemIds = Object.keys(state.items);
+    const itemIds = Object.keys(state.itemValues);
     const recipeIds = Object.keys(state.recipes);
     state.unproduceableIds = itemIds.filter(
       (i) => !recipeIds.some((r) => state.data.recipeR[r].produces(i))
@@ -350,7 +364,7 @@ export class SimplexUtility {
       };
     }
 
-    const itemIds = Object.keys(state.items);
+    const itemIds = Object.keys(state.itemValues);
     const recipeIds = Object.keys(state.recipes);
     const { unproduceableIds, excludedIds } = state;
     const { surplus, unproduceable, excluded, recipes } = glpkResult;
@@ -371,7 +385,7 @@ export class SimplexUtility {
   }
 
   static glpk(state: MatrixState): GlpkResult {
-    const itemIds = Object.keys(state.items);
+    const itemIds = Object.keys(state.itemValues);
     const recipeIds = Object.keys(state.recipes);
 
     const m = new Model({ sense: 'min' });
@@ -413,9 +427,7 @@ export class SimplexUtility {
     }
 
     // Add recipe objective vars to model
-    for (const obj of state.recipeObjectives.filter(
-      (o) => o.type !== ObjectiveType.Limit
-    )) {
+    for (const obj of state.recipeObjectives) {
       const config: VariableProperties = {
         lb: obj.count.toNumber(),
         ub: obj.count.toNumber(),
@@ -450,7 +462,7 @@ export class SimplexUtility {
         obj: state.cost.surplus.toNumber(),
         name: itemId,
       };
-      const values = state.items[itemId];
+      const values = state.itemValues[itemId];
       if (values.lim) {
         config.ub = values.lim.toNumber();
       }
@@ -467,14 +479,13 @@ export class SimplexUtility {
     }
 
     // Add maximize constraint to model
-    const maximizeIds = Object.keys(state.items).filter(
-      (i) => state.items[i].max != null
+    const maximizeIds = Object.keys(state.itemValues).filter(
+      (i) => state.itemValues[i].max != null
     );
     if (maximizeIds.length > 0) {
       const config: VariableProperties = {
         obj: state.cost.maximize.toNumber(),
         lb: 0,
-        ub: 1000,
         name: 'maximize',
       };
       maximizeVar = m.addVar(config);
@@ -482,7 +493,7 @@ export class SimplexUtility {
 
     // Add net output and input item constraints to model
     for (const itemId of itemIds) {
-      const values = state.items[itemId];
+      const values = state.itemValues[itemId];
       const netCoeffs: [Variable, number][] = [];
       const inputCoeffs: [Variable, number][] = [];
       for (const recipeId of recipeIds) {
@@ -500,9 +511,7 @@ export class SimplexUtility {
         }
       }
 
-      for (const recipeObjective of state.recipeObjectives.filter(
-        (o) => o.type !== ObjectiveType.Limit
-      )) {
+      for (const recipeObjective of state.recipeObjectives) {
         const recipe = recipeObjective.recipe;
         const val = recipe.output(itemId);
         if (val.nonzero()) {
@@ -578,7 +587,7 @@ export class SimplexUtility {
 
     // Parse solution
     for (const itemId of itemIds) {
-      const values = state.items[itemId];
+      const values = state.itemValues[itemId];
       const val = Rational.fromNumber(itemConstrEntities[itemId].value).sub(
         values.out ?? Rational.zero
       );
@@ -646,7 +655,7 @@ export class SimplexUtility {
   //#region Solution
   /** Update steps with matrix solution */
   static updateSteps(solution: MatrixSolution, state: MatrixState): void {
-    for (const itemId of Object.keys(state.items)) {
+    for (const itemId of Object.keys(state.itemValues)) {
       this.addItemStep(itemId, solution, state);
     }
 
@@ -657,9 +666,7 @@ export class SimplexUtility {
       this.addRecipeStep(recipe, solution, state);
     }
 
-    for (const recipeObjective of state.recipeObjectives.filter(
-      (o) => o.type !== ObjectiveType.Limit
-    )) {
+    for (const recipeObjective of state.recipeObjectives) {
       this.addRecipeStep(
         recipeObjective.recipe,
         solution,
@@ -675,7 +682,7 @@ export class SimplexUtility {
     solution: MatrixSolution,
     state: MatrixState
   ): void {
-    const values = state.items[itemId];
+    const values = state.itemValues[itemId];
     const steps = state.steps;
     let output = Rational.zero;
     for (const recipe of Object.keys(solution.recipes)
@@ -694,9 +701,7 @@ export class SimplexUtility {
       output = output.add(itemObjective.rate);
     }
 
-    for (const recipeObjective of state.recipeObjectives.filter(
-      (o) => o.type !== ObjectiveType.Limit
-    )) {
+    for (const recipeObjective of state.recipeObjectives) {
       const recipe = recipeObjective.recipe;
       if (!recipe.out[itemId]) continue;
       output = output.add(
@@ -749,11 +754,7 @@ export class SimplexUtility {
   static assignRecipes(solution: MatrixSolution, state: MatrixState): void {
     const steps = state.steps;
     const recipes = Object.keys(solution.recipes).map((r) => state.recipes[r]);
-    recipes.push(
-      ...state.recipeObjectives
-        .filter((o) => o.type !== ObjectiveType.Limit)
-        .map((p) => p.recipe)
-    );
+    recipes.push(...state.recipeObjectives.map((p) => p.recipe));
 
     // Check for exact id matches
     for (const step of steps.filter((s) => s.recipeId == null)) {
