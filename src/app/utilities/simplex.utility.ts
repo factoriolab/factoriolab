@@ -203,21 +203,32 @@ export class SimplexUtility {
     for (const obj of itemObjectives) {
       switch (obj.type) {
         case ObjectiveType.Output: {
+          // Add item objective rate to output and parse item for recipes
           this.addItemValue(state.itemValues, obj.itemId, obj.rate);
           this.parseItemRecursively(obj.itemId, state);
           break;
         }
         case ObjectiveType.Input: {
+          // Add item objective rate to input, no need to add recipes
           this.addItemValue(state.itemValues, obj.itemId, obj.rate, 'in');
           break;
         }
         case ObjectiveType.Maximize: {
+          /**
+           * Add item objective rate to maximize and parse item for recipes
+           * Add item to standard output values with 0-value
+           */
           this.addItemValue(state.itemValues, obj.itemId, obj.rate, 'max');
           this.addItemValue(state.itemValues, obj.itemId);
           this.parseItemRecursively(obj.itemId, state);
           break;
         }
         case ObjectiveType.Limit: {
+          /**
+           * Add item objective rate to limits if current limit is null or
+           * greater than this objective's value, no need to add recipes
+           * Add item to standard output values with 0-value
+           */
           this.addItemValue(state.itemValues, obj.itemId);
           const current = state.itemValues[obj.itemId].lim;
           if (current == null || current.gt(obj.rate)) {
@@ -242,6 +253,7 @@ export class SimplexUtility {
           break;
         }
         case ObjectiveType.Input: {
+          // Parse inputs and add them as though they were item objective inputs
           for (const itemId of Object.keys(obj.recipe.out).filter((i) =>
             obj.recipe.produces(i)
           )) {
@@ -251,6 +263,10 @@ export class SimplexUtility {
           break;
         }
         case ObjectiveType.Limit: {
+          /**
+           * Add recipe objective count to recipe limits if current limit is
+           * null or greater than this objective's value
+           */
           const current = state.recipeLimits[obj.recipeId];
           if (current == null || current.gt(obj.count)) {
             state.recipeLimits[obj.recipeId] = obj.count;
