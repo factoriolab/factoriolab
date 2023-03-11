@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, Game, gameInf, gameOptions, games } from '~/models';
+import { APP, Game, gameInf, gameOptions } from '~/models';
 import { ContentService } from '~/services';
 import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
@@ -106,7 +106,8 @@ export class HeaderComponent implements OnInit {
   }
 
   buildGameOptions(game: Game): MenuItem[] {
-    return games
+    return gameOptions
+      .map((o) => o.value)
       .filter((g) => g !== game)
       .map(
         (g): MenuItem => ({

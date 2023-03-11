@@ -2,7 +2,7 @@ import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Column,
   DisplayRate,
-  displayRateInfo,
+  displayRateInf,
   Game,
   MatrixResultType,
   PowerUnit,
@@ -102,7 +102,7 @@ describe('Item Objectives Selectors', () => {
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByItems.projector(
         [Mocks.RationalProducts[0]],
-        displayRateInfo[DisplayRate.PerHour]
+        displayRateInf[DisplayRate.PerHour]
       );
       expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
     });
@@ -124,7 +124,7 @@ describe('Item Objectives Selectors', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [Mocks.RationalProducts[2]],
         Mocks.ItemSettingsInitial,
-        displayRateInfo[DisplayRate.PerHour],
+        displayRateInf[DisplayRate.PerHour],
         Mocks.Dataset
       );
       expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
@@ -134,7 +134,7 @@ describe('Item Objectives Selectors', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [Mocks.RationalProducts[0]],
         Mocks.ItemSettingsInitial,
-        displayRateInfo[DisplayRate.PerHour],
+        displayRateInf[DisplayRate.PerHour],
         Mocks.Dataset
       );
       expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
@@ -186,7 +186,7 @@ describe('Item Objectives Selectors', () => {
         {},
         null,
         {},
-        displayRateInfo[DisplayRate.PerMinute],
+        displayRateInf[DisplayRate.PerMinute],
         Mocks.Dataset
       );
       expect(RateUtility.normalizeSteps).toHaveBeenCalled();

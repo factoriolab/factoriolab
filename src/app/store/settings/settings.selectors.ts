@@ -10,7 +10,7 @@ import {
   CostsRatCfg,
   Dataset,
   Defaults,
-  displayRateInfo,
+  displayRateInf,
   Entities,
   FuelType,
   Game,
@@ -112,7 +112,7 @@ export const getColumnOptions = createSelector(getGameInf, (gameInf) =>
 
 export const getDisplayRateInfo = createSelector(
   getDisplayRate,
-  (displayRate) => displayRateInfo[displayRate]
+  (displayRate) => displayRateInf[displayRate]
 );
 
 export const getRateUnitOptions = createSelector(

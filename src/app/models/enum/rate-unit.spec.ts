@@ -1,10 +1,10 @@
-import { DisplayRate, displayRateInfo } from './display-rate';
+import { DisplayRate, displayRateInf } from './display-rate';
 import { Game } from './game';
 import { rateUnitOptions } from './rate-unit';
 
 describe('RateUnit', () => {
   describe('rateUnitOptions', () => {
-    const dispRateInfo = displayRateInfo[DisplayRate.PerMinute];
+    const dispRateInfo = displayRateInf[DisplayRate.PerMinute];
 
     it('should return the correct options for Factorio', () => {
       expect(rateUnitOptions(dispRateInfo, Game.Factorio).length).toEqual(4);

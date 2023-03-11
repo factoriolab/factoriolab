@@ -1,6 +1,6 @@
 import {
   Dataset,
-  DisplayRateInfo,
+  DisplayRateInf,
   Entities,
   Game,
   ItemSettings,
@@ -22,7 +22,7 @@ export class RateUtility {
     itemObjective: RationalItemObjective,
     itemSettings: Items.ItemsState,
     beltSpeed: Entities<Rational>,
-    displayRateInfo: DisplayRateInfo,
+    displayRateInfo: DisplayRateInf,
     data: Dataset
   ): Rational {
     const rate = itemObjective.rate;
@@ -121,7 +121,7 @@ export class RateUtility {
     recipeSettings: Entities<RationalRecipeSettings>,
     beaconReceivers: Rational | null,
     beltSpeed: Entities<Rational>,
-    dispRateInfo: DisplayRateInfo,
+    dispRateInfo: DisplayRateInf,
     data: Dataset
   ): Step[] {
     const _steps = this.copy(steps);
@@ -278,7 +278,7 @@ export class RateUtility {
     };
   }
 
-  static calculateDisplayRate(step: Step, dispRateInfo: DisplayRateInfo): void {
+  static calculateDisplayRate(step: Step, dispRateInfo: DisplayRateInf): void {
     if (step.items) {
       if (step.parents) {
         for (const key of Object.keys(step.parents)) {

@@ -1,7 +1,7 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   DisplayRate,
-  displayRateInfo,
+  displayRateInf,
   Entities,
   Game,
   Rational,
@@ -134,7 +134,7 @@ describe('RateUtility', () => {
         {},
         null,
         {},
-        displayRateInfo[DisplayRate.PerMinute],
+        displayRateInf[DisplayRate.PerMinute],
         Mocks.Dataset
       );
       expect(RateUtility.calculateParentsOutputs).toHaveBeenCalledTimes(2);
@@ -402,7 +402,7 @@ describe('RateUtility', () => {
       };
       RateUtility.calculateDisplayRate(
         step,
-        displayRateInfo[DisplayRate.PerMinute]
+        displayRateInf[DisplayRate.PerMinute]
       );
       expect(step.items).toEqual(Rational.from(60));
       expect(step.surplus).toEqual(Rational.from(120));
