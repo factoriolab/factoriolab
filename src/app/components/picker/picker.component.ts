@@ -17,7 +17,7 @@ import { map } from 'rxjs';
 
 import { Category, Dataset, Entities } from '~/models';
 import { LabState } from '~/store';
-import * as Recipes from '~/store/recipes';
+import * as RecipesCfg from '~/store/recipe-configs';
 
 @UntilDestroy()
 @Component({
@@ -36,7 +36,7 @@ export class PickerComponent implements OnInit {
   @Output() selectIds = new EventEmitter<string[]>();
 
   vm$ = this.store
-    .select(Recipes.getAdjustedDataset)
+    .select(RecipesCfg.getAdjustedDataset)
     .pipe(map((data) => ({ data })));
 
   searchCtrl = new FormControl('');

@@ -142,8 +142,8 @@
             (click)="
               export(
                 vm.steps,
-                vm.itemSettings,
-                vm.recipeSettings,
+                vm.itemsCfg,
+                vm.recipesCfg,
                 vm.columnsCfg,
                 vm.data
               )
@@ -209,14 +209,14 @@
                 pRipple
                 type="button"
                 class="hover-action p-button-text"
-                [class.hover-active]="vm.itemSettings[step.itemId].excluded"
+                [class.hover-active]="vm.itemsCfg[step.itemId].excluded"
                 [icon]="step.itemId | iconSmClass"
                 [pTooltip]="step.itemId | itemTooltip : vm.data"
                 [escape]="false"
                 (click)="
                   setItemExcluded(
                     step.itemId,
-                    !vm.itemSettings[step.itemId].excluded
+                    !vm.itemsCfg[step.itemId].excluded
                   )
                 "
               >
@@ -259,14 +259,14 @@
                 pRipple
                 type="button"
                 class="hover-action p-button-text"
-                [class.hover-active]="vm.itemSettings[step.itemId].excluded"
+                [class.hover-active]="vm.itemsCfg[step.itemId].excluded"
                 [icon]="step.itemId | iconSmClass"
                 [pTooltip]="step.itemId | itemTooltip : vm.data"
                 [escape]="false"
                 (click)="
                   setItemExcluded(
                     step.itemId,
-                    !vm.itemSettings[step.itemId].excluded
+                    !vm.itemsCfg[step.itemId].excluded
                   )
                 "
               >
@@ -278,7 +278,7 @@
         <!-- Belts -->
         <ng-container *ngIf="vm.columnsCfg.belts.show">
           <ng-container *ngIf="step.itemId && step.belts; else emptyCol2">
-            <ng-container *ngIf="vm.itemSettings[step.itemId].beltId as beltId">
+            <ng-container *ngIf="vm.itemsCfg[step.itemId].beltId as beltId">
               <td class="w-0 text-end">
                 <span class="monospace">{{
                   step.belts | rate : vm.columnsCfg.belts.precision
@@ -415,7 +415,7 @@
             *ngIf="
               step.itemId &&
                 step.wagons &&
-                vm.itemSettings[step.itemId].wagonId as wagonId;
+                vm.itemsCfg[step.itemId].wagonId as wagonId;
               else emptyCol2
             "
           >
@@ -586,7 +586,7 @@
                     changeRecipeField(
                       step,
                       $event.value,
-                      vm.machines,
+                      vm.machinesCfg,
                       vm.data,
                       RecipeField.Machine
                     )
@@ -625,7 +625,7 @@
                     changeRecipeField(
                       step,
                       overclockInput.value,
-                      vm.machines,
+                      vm.machinesCfg,
                       vm.data,
                       RecipeField.Overclock
                     )
@@ -649,7 +649,7 @@
                       changeRecipeField(
                         step,
                         $event.value,
-                        vm.machines,
+                        vm.machinesCfg,
                         vm.data,
                         RecipeField.MachineModules,
                         i
@@ -735,7 +735,7 @@
                     changeRecipeField(
                       step,
                       $event,
-                      vm.machines,
+                      vm.machinesCfg,
                       vm.data,
                       RecipeField.BeaconCount,
                       i
@@ -760,7 +760,7 @@
                     changeRecipeField(
                       step,
                       $event.value,
-                      vm.machines,
+                      vm.machinesCfg,
                       vm.data,
                       RecipeField.Beacon,
                       i
@@ -803,7 +803,7 @@
                     changeRecipeField(
                       step,
                       $event.value,
-                      vm.machines,
+                      vm.machinesCfg,
                       vm.data,
                       RecipeField.BeaconModules,
                       i,
@@ -840,7 +840,7 @@
                     changeRecipeField(
                       step,
                       $event,
-                      vm.machines,
+                      vm.machinesCfg,
                       vm.data,
                       RecipeField.BeaconTotal,
                       i
@@ -953,13 +953,13 @@
                       items: step.items?.mul(output.value),
                       itemId: step.itemId,
                       belts: step.belts?.mul(output.value),
-                      beltId: vm.itemSettings[step.itemId].beltId,
+                      beltId: vm.itemsCfg[step.itemId].beltId,
                       wagons: step.wagons?.mul(output.value),
-                      wagonId: vm.itemSettings[step.itemId].wagonId,
+                      wagonId: vm.itemsCfg[step.itemId].wagonId,
                       machines: output.machines,
                       machineId:
                         output.recipeId &&
-                        vm.recipeSettings[output.recipeId].machineId,
+                        vm.recipesCfg[output.recipeId].machineId,
                       recipeId: output.recipeId,
                       recipeObjectiveId: output.recipeObjectiveId,
                       percent: output.value,
@@ -991,9 +991,9 @@
                       items: step.items?.mul(parent.value),
                       itemId: step.itemId,
                       belts: step.belts?.mul(parent.value),
-                      beltId: vm.itemSettings[step.itemId].beltId,
+                      beltId: vm.itemsCfg[step.itemId].beltId,
                       wagons: step.wagons?.mul(parent.value),
-                      wagonId: vm.itemSettings[step.itemId].wagonId,
+                      wagonId: vm.itemsCfg[step.itemId].wagonId,
                       machines:
                         vm.stepDetails[step.id].outputs.length === 1
                           ? step.machines?.mul(parent.value)
@@ -1093,9 +1093,9 @@
                             items: row.step.items?.mul(row.percent),
                             itemId: input.key,
                             belts: row.step.belts?.mul(row.percent),
-                            beltId: vm.itemSettings[row.step.itemId].beltId,
+                            beltId: vm.itemsCfg[row.step.itemId].beltId,
                             wagons: row.step.wagons?.mul(row.percent),
-                            wagonId: vm.itemSettings[row.step.itemId].wagonId,
+                            wagonId: vm.itemsCfg[row.step.itemId].wagonId,
                             machines: row.step.machines?.mul(row.percent),
                             machineId: row.step.recipeSettings?.machineId,
                             recipeId: row.step.recipeId,
@@ -1138,9 +1138,9 @@
                           items: row.step.items?.mul(row.percent),
                           itemId: output.key,
                           belts: row.step.belts?.mul(row.percent),
-                          beltId: vm.itemSettings[row.step.itemId].beltId,
+                          beltId: vm.itemsCfg[row.step.itemId].beltId,
                           wagons: row.step.wagons?.mul(row.percent),
-                          wagonId: vm.itemSettings[row.step.itemId].wagonId,
+                          wagonId: vm.itemsCfg[row.step.itemId].wagonId,
                           machines: row.step.machines?.mul(row.percent),
                           machineId: row.step.recipeSettings?.machineId,
                           recipeId: row.step.recipeId,
@@ -1202,9 +1202,7 @@
                         <td *ngIf="vm.columnsCfg.belts.show">
                           <ng-container *ngIf="row.step.belts">
                             <ng-container
-                              *ngIf="
-                                vm.itemSettings[input.key].beltId as beltId
-                              "
+                              *ngIf="vm.itemsCfg[input.key].beltId as beltId"
                             >
                               <ng-container
                                 *ngTemplateOutlet="
@@ -1227,8 +1225,8 @@
                           <td>
                             <ng-container
                               *ngIf="
-                                vm.itemSettings[input.key].beltId !==
-                                  ItemId.Pipe && row.step.items
+                                vm.itemsCfg[input.key].beltId !== ItemId.Pipe &&
+                                row.step.items
                               "
                             >
                               <ng-container
@@ -1300,7 +1298,7 @@
                         <td>
                           <ng-container
                             *ngIf="
-                              vm.itemSettings[output.key].beltId !== ItemId.Pipe
+                              vm.itemsCfg[output.key].beltId !== ItemId.Pipe
                             "
                           >
                             <ng-container
@@ -1322,7 +1320,7 @@
                       </ng-container>
                       <td *ngIf="vm.columnsCfg.belts.show">
                         <ng-container
-                          *ngIf="vm.itemSettings[output.key].beltId as beltId"
+                          *ngIf="vm.itemsCfg[output.key].beltId as beltId"
                         >
                           <ng-container
                             *ngTemplateOutlet="
@@ -1405,15 +1403,11 @@
                       pRipple
                       type="button"
                       class="hover-action p-button-text me-2"
-                      [class.hover-active]="
-                        vm.recipeSettings[recipeId].excluded
-                      "
+                      [class.hover-active]="vm.recipesCfg[recipeId].excluded"
                       [icon]="recipeId | iconSmClass : 'recipe'"
                       [pTooltip]="recipeId | recipeTooltip : vm.data"
                       [escape]="false"
-                      (click)="
-                        toggleRecipe(recipeId, vm.recipeSettings, vm.data)
-                      "
+                      (click)="toggleRecipe(recipeId, vm.recipesCfg, vm.data)"
                     >
                       <i class="hover-icon fa-solid fa-eye-slash"></i>
                     </button>

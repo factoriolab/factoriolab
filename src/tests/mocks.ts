@@ -72,7 +72,7 @@ export const ItemObjectivesList = [
   ItemObjective3,
   ItemObjective4,
 ];
-export const ItemObjectivesState: ItemObjectives.ItemObjectivesState = {
+export const ItemObjectivesState: ItemObjectives.ItemsObjState = {
   ids: ItemObjectivesList.map((p) => p.id),
   entities: M.toEntities(ItemObjectivesList),
   index: ItemObjectivesList.length + 1,
@@ -175,23 +175,19 @@ export const SettingsStateInitial = Settings.getSettings.projector(
   Settings.initialSettingsState,
   Defaults
 );
-export const ItemSettingsInitial = Items.getItemSettings.projector(
-  {},
-  Dataset,
-  {
-    ...Settings.initialSettingsState,
-    ...{
-      beltId: ItemId.TransportBelt,
-      pipeId: ItemId.Pipe,
-      fuelId: ItemId.Coal,
-      cargoWagonId: ItemId.CargoWagon,
-      fluidWagonId: ItemId.FluidWagon,
-      excludedRecipeIds: [],
-    },
-  }
-);
-export const MachineSettingsInitial = Machines.getMachines.projector(
-  Machines.initialMachinesState,
+export const ItemSettingsInitial = Items.getItemsCfg.projector({}, Dataset, {
+  ...Settings.initialSettingsState,
+  ...{
+    beltId: ItemId.TransportBelt,
+    pipeId: ItemId.Pipe,
+    fuelId: ItemId.Coal,
+    cargoWagonId: ItemId.CargoWagon,
+    fluidWagonId: ItemId.FluidWagon,
+    excludedRecipeIds: [],
+  },
+});
+export const MachineSettingsInitial = Machines.getMachinesCfg.projector(
+  Machines.initialMachinesCfgState,
   Defaults,
   Dataset
 );

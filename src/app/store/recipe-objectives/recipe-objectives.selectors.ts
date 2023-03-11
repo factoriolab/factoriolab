@@ -3,26 +3,23 @@ import { createSelector } from '@ngrx/store';
 import { RecipeRtlCfg, RecipeRtlObj } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
-import * as Items from '../items';
-import * as Machines from '../machines';
+import * as Items from '../item-configs';
+import * as Machines from '../machine-configs';
 import * as Settings from '../settings';
-import { RecipeObjectivesState } from './recipe-objectives.reducer';
+import { RecipesObjState } from './recipe-objectives.reducer';
 
 /* Base selector functions */
-export const recipeObjectivesState = (state: LabState): RecipeObjectivesState =>
-  state.recipeObjectivesState;
+export const recipesObjState = (state: LabState): RecipesObjState =>
+  state.recipesObjState;
 
-export const getIds = createSelector(
-  recipeObjectivesState,
-  (state) => state.ids
-);
+export const getIds = createSelector(recipesObjState, (state) => state.ids);
 export const getEntities = createSelector(
-  recipeObjectivesState,
+  recipesObjState,
   (state) => state.entities
 );
 
 /** Complex selectors */
-export const getBaseRecipeObjectives = createSelector(
+export const getBaseRecipesObj = createSelector(
   getIds,
   getEntities,
   Settings.getDataset,
@@ -30,22 +27,22 @@ export const getBaseRecipeObjectives = createSelector(
     ids.map((i) => entities[i]).filter((p) => data.recipeEntities[p.recipeId])
 );
 
-export const getRecipeObjectives = createSelector(
-  getBaseRecipeObjectives,
-  Machines.getMachines,
+export const getRecipesObj = createSelector(
+  getBaseRecipesObj,
+  Machines.getMachinesCfg,
   Settings.getDataset,
-  (recipeObjectives, machines, data) =>
-    recipeObjectives.map((p) =>
-      RecipeUtility.adjustRecipeObjective(p, machines, data)
+  (recipesObj, machinesCfg, data) =>
+    recipesObj.map((p) =>
+      RecipeUtility.adjustRecipeObjective(p, machinesCfg, data)
     )
 );
 
-export const getRationalRecipeObjectives = createSelector(
-  getRecipeObjectives,
+export const getRecipesRtlObj = createSelector(
+  getRecipesObj,
   Settings.getAdjustmentData,
-  Items.getItemSettings,
-  (recipeObjectives, adj, itemSettings) =>
-    recipeObjectives.map(
+  Items.getItemsCfg,
+  (recipesObj, adj, itemSettings) =>
+    recipesObj.map(
       (p) =>
         new RecipeRtlObj(
           p,

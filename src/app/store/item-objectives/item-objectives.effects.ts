@@ -7,7 +7,7 @@ import * as Settings from '../settings';
 import { AdjustDisplayRateAction } from './item-objectives.actions';
 
 @Injectable()
-export class ItemObjectivesEffects {
+export class ItemsObjEffects {
   adjustDisplayRate$ = createEffect(() =>
     this.actions$.pipe(
       ofType(Settings.SettingsActionType.SET_DISPLAY_RATE),

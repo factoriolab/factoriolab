@@ -1,14 +1,14 @@
 import { Mocks } from 'src/tests';
-import { initialItemsState } from './items.reducer';
-import * as Selectors from './items.selectors';
+import { initialItemsCfgState } from './item-configs.reducer';
+import * as Selectors from './item-configs.selectors';
 
-describe('Items Selectors', () => {
+describe('Item Configs Selectors', () => {
   const stringValue = 'value';
 
-  describe('getItemSettings', () => {
-    it('should return the item settings', () => {
-      const result = Selectors.getItemSettings.projector(
-        initialItemsState,
+  describe('getItemConfigs', () => {
+    it('should return the item configs', () => {
+      const result = Selectors.getItemsCfg.projector(
+        initialItemsCfgState,
         Mocks.Dataset,
         Mocks.SettingsStateInitial
       );
@@ -17,10 +17,10 @@ describe('Items Selectors', () => {
 
     it('should use the passed overrides', () => {
       const state = {
-        ...initialItemsState,
+        ...initialItemsCfgState,
         ...{ [Mocks.Item1.id]: { beltId: stringValue, wagonId: stringValue } },
       };
-      const result = Selectors.getItemSettings.projector(
+      const result = Selectors.getItemsCfg.projector(
         state,
         Mocks.Dataset,
         Mocks.SettingsStateInitial

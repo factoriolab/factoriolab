@@ -25,12 +25,12 @@ import {
 import {
   App,
   Datasets,
-  ItemObjectives,
-  Items,
+  ItemsCfg,
+  ItemsObj,
   LabState,
-  Machines,
-  RecipeObjectives,
-  Recipes,
+  MachinesCfg,
+  RecipesCfg,
+  RecipesObj,
   Settings,
 } from '~/store';
 import { BrowserUtility } from '~/utilities';
@@ -140,15 +140,15 @@ export class RouterService {
       .pipe(
         first(),
         tap(() => this.dataSvc.initialize()),
-        switchMap(() => this.store.select(ItemObjectives.getZipState)),
+        switchMap(() => this.store.select(ItemsObj.getZipState)),
         debounceTime(0),
         tap((s) =>
           this.updateUrl(
-            s.itemObjectives,
-            s.recipeObjectives,
-            s.items,
-            s.recipes,
-            s.machines,
+            s.itemsObj,
+            s.recipesObj,
+            s.itemsCfg,
+            s.recipesCfg,
+            s.machinesCfg,
             s.settings
           )
         )
@@ -157,19 +157,19 @@ export class RouterService {
   }
 
   updateUrl(
-    itemObjectives: ItemObjectives.ItemObjectivesState,
-    recipeObjectives: RecipeObjectives.RecipeObjectivesState,
-    items: Items.ItemsState,
-    recipes: Recipes.RecipesState,
-    machines: Machines.MachinesState,
+    itemsObj: ItemsObj.ItemsObjState,
+    recipesObj: RecipesObj.RecipesObjState,
+    itemsCfg: ItemsCfg.ItemsCfgState,
+    recipesCfg: RecipesCfg.RecipesCfgState,
+    machinesCfg: MachinesCfg.MachinesCfgState,
     settings: Settings.SettingsState
   ): void {
     this.zipState(
-      itemObjectives,
-      recipeObjectives,
-      items,
-      recipes,
-      machines,
+      itemsObj,
+      recipesObj,
+      itemsCfg,
+      recipesCfg,
+      machinesCfg,
       settings
     ).subscribe((zData) => {
       this.zip = this.getHash(zData);
@@ -186,11 +186,11 @@ export class RouterService {
   }
 
   zipState(
-    itemObjectives: ItemObjectives.ItemObjectivesState,
-    recipeObjectives: RecipeObjectives.RecipeObjectivesState,
-    items: Items.ItemsState,
-    recipes: Recipes.RecipesState,
-    machines: Machines.MachinesState,
+    itemsObj: ItemsObj.ItemsObjState,
+    recipesObj: RecipesObj.RecipesObjState,
+    itemsCfg: ItemsCfg.ItemsCfgState,
+    recipesCfg: RecipesCfg.RecipesCfgState,
+    machinesCfg: MachinesCfg.MachinesCfgState,
     settings: Settings.SettingsState
   ): Observable<ZipData> {
     return this.store.select(Datasets.getHashRecord).pipe(
@@ -199,11 +199,11 @@ export class RouterService {
       first(),
       map((hash) => {
         // Setup object lists
-        const p = itemObjectives.ids.map((i) => itemObjectives.entities[i]);
-        const q = recipeObjectives.ids.map((i) => recipeObjectives.entities[i]);
+        const p = itemsObj.ids.map((i) => itemsObj.entities[i]);
+        const q = recipesObj.ids.map((i) => recipesObj.entities[i]);
 
         // Beacons
-        const zData = this.zipBeacons(q, recipes, hash);
+        const zData = this.zipBeacons(q, recipesCfg, hash);
 
         // Item Objectives
         this.zipItemObjectives(zData, p, hash);
@@ -222,9 +222,9 @@ export class RouterService {
         }
 
         // Settings
-        this.zipItems(zData, items, hash);
-        this.zipRecipes(zData, recipes, hash);
-        this.zipMachines(zData, machines, hash);
+        this.zipItems(zData, itemsCfg, hash);
+        this.zipRecipes(zData, recipesCfg, hash);
+        this.zipMachines(zData, machinesCfg, hash);
         this.zipSettings(zData, settings, hash);
         this.zipConfig$.next(zData.config);
         return zData;
@@ -315,22 +315,22 @@ export class RouterService {
             });
             const beaconSettings = this.unzipBeacons(params);
             if (params[Section.ItemObjectives]) {
-              state.itemObjectivesState = this.unzipItemObjectives(params);
+              state.itemsObjState = this.unzipItemObjectives(params);
             }
             if (params[Section.RecipeObjectives]) {
-              state.recipeObjectivesState = this.unzipRecipeObjectives(
+              state.recipesObjState = this.unzipRecipeObjectives(
                 params,
                 beaconSettings
               );
             }
             if (params[Section.Items]) {
-              state.itemsState = this.unzipItems(params);
+              state.itemsCfgState = this.unzipItems(params);
             }
             if (params[Section.Recipes]) {
-              state.recipesState = this.unzipRecipes(params, beaconSettings);
+              state.recipesCfgState = this.unzipRecipes(params, beaconSettings);
             }
             if (params[Section.Machines]) {
-              state.machinesState = this.unzipMachines(params);
+              state.machinesCfgState = this.unzipMachines(params);
             }
             if (params[Section.Settings]) {
               state.settingsState = this.unzipSettings(params);
@@ -343,30 +343,27 @@ export class RouterService {
               .subscribe(([_, hash]) => {
                 const beaconSettings = this.unzipBeacons(params, hash);
                 if (params[Section.ItemObjectives]) {
-                  state.itemObjectivesState = this.unzipItemObjectives(
-                    params,
-                    hash
-                  );
+                  state.itemsObjState = this.unzipItemObjectives(params, hash);
                 }
                 if (params[Section.RecipeObjectives]) {
-                  state.recipeObjectivesState = this.unzipRecipeObjectives(
+                  state.recipesObjState = this.unzipRecipeObjectives(
                     params,
                     beaconSettings,
                     hash
                   );
                 }
                 if (params[Section.Items]) {
-                  state.itemsState = this.unzipItems(params, hash);
+                  state.itemsCfgState = this.unzipItems(params, hash);
                 }
                 if (params[Section.Recipes]) {
-                  state.recipesState = this.unzipRecipes(
+                  state.recipesCfgState = this.unzipRecipes(
                     params,
                     beaconSettings,
                     hash
                   );
                 }
                 if (params[Section.Machines]) {
-                  state.machinesState = this.unzipMachines(params, hash);
+                  state.machinesCfgState = this.unzipMachines(params, hash);
                 }
                 if (params[Section.Settings]) {
                   state.settingsState = this.unzipSettings(params, hash);
@@ -678,7 +675,7 @@ export class RouterService {
 
   zipBeacons(
     recipeObjectives: RecipeObj[],
-    recipes: Recipes.RecipesState,
+    recipes: RecipesCfg.RecipesCfgState,
     hash: ModHash
   ): ZipData {
     const list: Zip[] = [];
@@ -819,7 +816,7 @@ export class RouterService {
   unzipItemObjectives(
     params: Entities,
     hash?: ModHash
-  ): ItemObjectives.ItemObjectivesState {
+  ): ItemsObj.ItemsObjState {
     const list = params[Section.ItemObjectives].split(LISTSEP);
     const ids: string[] = [];
     const entities: Entities<ItemObj> = {};
@@ -902,7 +899,7 @@ export class RouterService {
     params: Entities,
     beaconSettings: BeaconCfg[],
     hash?: ModHash
-  ): RecipeObjectives.RecipeObjectivesState {
+  ): RecipesObj.RecipesObjState {
     const list = params[Section.RecipeObjectives].split(LISTSEP);
     const ids: string[] = [];
     const entities: Entities<RecipeObj> = {};
@@ -951,7 +948,7 @@ export class RouterService {
     return { ids, index, entities };
   }
 
-  zipItems(data: ZipData, state: Items.ItemsState, hash: ModHash): void {
+  zipItems(data: ZipData, state: ItemsCfg.ItemsCfgState, hash: ModHash): void {
     const z = this.zipList(
       Object.keys(state).map((i) => {
         const obj = state[i];
@@ -982,9 +979,9 @@ export class RouterService {
     }
   }
 
-  unzipItems(params: Entities, hash?: ModHash): Items.ItemsState {
+  unzipItems(params: Entities, hash?: ModHash): ItemsCfg.ItemsCfgState {
     const list = params[Section.Items].split(LISTSEP);
-    const entities: Items.ItemsState = {};
+    const entities: ItemsCfg.ItemsCfgState = {};
     for (const item of list) {
       const s = item.split(FIELDSEP);
       let i = 0;
@@ -1015,7 +1012,11 @@ export class RouterService {
     return entities;
   }
 
-  zipRecipes(data: ZipData, state: Recipes.RecipesState, hash: ModHash): void {
+  zipRecipes(
+    data: ZipData,
+    state: RecipesCfg.RecipesCfgState,
+    hash: ModHash
+  ): void {
     const z = this.zipList(
       Object.keys(state).map((i) => {
         const obj = state[i];
@@ -1055,9 +1056,9 @@ export class RouterService {
     params: Entities,
     beaconSettings: BeaconCfg[],
     hash?: ModHash
-  ): Recipes.RecipesState {
+  ): RecipesCfg.RecipesCfgState {
     const list = params[Section.Recipes].split(LISTSEP);
-    const entities: Recipes.RecipesState = {};
+    const entities: RecipesCfg.RecipesCfgState = {};
     for (const recipe of list) {
       const s = recipe.split(FIELDSEP);
       let i = 0;
@@ -1100,7 +1101,7 @@ export class RouterService {
 
   zipMachines(
     data: ZipData,
-    state: Machines.MachinesState,
+    state: MachinesCfg.MachinesCfgState,
     hash: ModHash
   ): void {
     const ids = state.ids ? ['', ...state.ids] : Object.keys(state.entities);
@@ -1139,7 +1140,10 @@ export class RouterService {
     }
   }
 
-  unzipMachines(params: Entities, hash?: ModHash): Machines.MachinesState {
+  unzipMachines(
+    params: Entities,
+    hash?: ModHash
+  ): MachinesCfg.MachinesCfgState {
     const list = params[Section.Machines].split(LISTSEP);
     let ids: string[] | undefined;
     const entities: Entities<MachineCfg> = {};

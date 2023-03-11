@@ -13,36 +13,36 @@ import {
   Step,
   toEntities,
 } from '~/models';
-import { Items } from '~/store';
+import { ItemsCfg } from '~/store';
 
 const ROOT_ID = '';
 
 export class RateUtility {
   static itemObjectiveNormalizedRate(
-    itemObjective: ItemRtlObj,
-    itemSettings: Items.ItemsState,
+    itemObj: ItemRtlObj,
+    itemsCfg: ItemsCfg.ItemsCfgState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInf,
     data: Dataset
   ): Rational {
-    const rate = itemObjective.rate;
+    const rate = itemObj.rate;
     let factor = Rational.one;
-    switch (itemObjective.rateUnit) {
+    switch (itemObj.rateUnit) {
       case RateUnit.Items: {
         factor = displayRateInfo.value.reciprocal();
         break;
       }
       case RateUnit.Belts: {
-        const beltId = itemSettings[itemObjective.itemId].beltId;
+        const beltId = itemsCfg[itemObj.itemId].beltId;
         if (beltId) {
           factor = beltSpeed[beltId];
         }
         break;
       }
       case RateUnit.Wagons: {
-        const wagonId = itemSettings[itemObjective.itemId].wagonId;
+        const wagonId = itemsCfg[itemObj.itemId].wagonId;
         if (wagonId) {
-          const item = data.itemEntities[itemObjective.itemId];
+          const item = data.itemEntities[itemObj.itemId];
           const wagon = data.itemEntities[wagonId];
           if (item.stack && wagon.cargoWagon) {
             factor = item.stack
@@ -57,7 +57,7 @@ export class RateUtility {
     }
 
     // Adjust based on productivity, e.g. for research objectives
-    const recipe = data.recipeR[data.itemRecipeId[itemObjective.itemId]];
+    const recipe = data.recipeR[data.itemRecipeId[itemObj.itemId]];
     if (recipe?.adjustProd) {
       factor = factor.mul(recipe.productivity);
     }

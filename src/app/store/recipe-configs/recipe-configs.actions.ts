@@ -7,120 +7,120 @@ import {
   IdPayload,
 } from '~/models';
 
-export const enum RecipesActionType {
-  SET_EXCLUDED = '[Recipes] Set Excluded',
-  SET_EXCLUDED_BATCH = '[Recipes] Set Excluded Batch',
-  SET_CHECKED = '[Recipes] Set Checked',
-  SET_MACHINE = '[Recipes] Set Machine',
-  SET_MACHINE_MODULES = '[Recipes] Set Machine Modules',
-  ADD_BEACON = '[Recipes] Add Beacon',
-  REMOVE_BEACON = '[Recipes] Remove Beacon',
-  SET_BEACON_COUNT = '[Recipes] Set Beacon Count',
-  SET_BEACON = '[Recipes] Set Beacon',
-  SET_BEACON_MODULES = '[Recipes] Set Beacon Modules',
-  SET_BEACON_TOTAL = '[Recipes] Set Beacon Total',
-  SET_OVERCLOCK = '[Recipes] Set Overclock',
-  SET_COST = '[Recipes] Set Cost',
-  RESET_RECIPE = '[Recipes] Reset Recipe',
-  RESET_EXCLUDED = '[Recipes] Reset Excluded',
-  RESET_RECIPE_MODULES = '[Recipes] Reset Recipe Modules',
-  RESET_MACHINES = '[Recipes] Reset Machines',
-  RESET_BEACONS = '[Recipes] Reset Beacons',
-  RESET_COST = '[Recipes] Reset Cost',
+export const enum RecipesCfgActionType {
+  SET_EXCLUDED = '[Recipe Configs] Set Excluded',
+  SET_EXCLUDED_BATCH = '[Recipe Configs] Set Excluded Batch',
+  SET_CHECKED = '[Recipe Configs] Set Checked',
+  SET_MACHINE = '[Recipe Configs] Set Machine',
+  SET_MACHINE_MODULES = '[Recipe Configs] Set Machine Modules',
+  ADD_BEACON = '[Recipe Configs] Add Beacon',
+  REMOVE_BEACON = '[Recipe Configs] Remove Beacon',
+  SET_BEACON_COUNT = '[Recipe Configs] Set Beacon Count',
+  SET_BEACON = '[Recipe Configs] Set Beacon',
+  SET_BEACON_MODULES = '[Recipe Configs] Set Beacon Modules',
+  SET_BEACON_TOTAL = '[Recipe Configs] Set Beacon Total',
+  SET_OVERCLOCK = '[Recipe Configs] Set Overclock',
+  SET_COST = '[Recipe Configs] Set Cost',
+  RESET_RECIPE = '[Recipe Configs] Reset Recipe',
+  RESET_EXCLUDED = '[Recipe Configs] Reset Excluded',
+  RESET_RECIPE_MODULES = '[Recipe Configs] Reset Recipe Modules',
+  RESET_MACHINES = '[Recipe Configs] Reset Machines',
+  RESET_BEACONS = '[Recipe Configs] Reset Beacons',
+  RESET_COST = '[Recipe Configs] Reset Cost',
 }
 
 export class SetExcludedAction implements Action {
-  readonly type = RecipesActionType.SET_EXCLUDED;
+  readonly type = RecipesCfgActionType.SET_EXCLUDED;
   constructor(public payload: IdDefaultPayload<boolean>) {}
 }
 
 export class SetExcludedBatchAction implements Action {
-  readonly type = RecipesActionType.SET_EXCLUDED_BATCH;
+  readonly type = RecipesCfgActionType.SET_EXCLUDED_BATCH;
   constructor(public payload: IdDefaultPayload<boolean>[]) {}
 }
 
 export class SetCheckedAction implements Action {
-  readonly type = RecipesActionType.SET_CHECKED;
+  readonly type = RecipesCfgActionType.SET_CHECKED;
   constructor(public payload: IdPayload<boolean>) {}
 }
 
 export class SetMachineAction implements Action {
-  readonly type = RecipesActionType.SET_MACHINE;
+  readonly type = RecipesCfgActionType.SET_MACHINE;
   constructor(public payload: IdDefaultPayload) {}
 }
 
 export class SetMachineModulesAction implements Action {
-  readonly type = RecipesActionType.SET_MACHINE_MODULES;
+  readonly type = RecipesCfgActionType.SET_MACHINE_MODULES;
   constructor(public payload: IdDefaultPayload<string[]>) {}
 }
 
 export class AddBeaconAction implements Action {
-  readonly type = RecipesActionType.ADD_BEACON;
+  readonly type = RecipesCfgActionType.ADD_BEACON;
   constructor(public payload: string) {}
 }
 
 export class RemoveBeaconAction implements Action {
-  readonly type = RecipesActionType.REMOVE_BEACON;
+  readonly type = RecipesCfgActionType.REMOVE_BEACON;
   constructor(public payload: IdPayload<number>) {}
 }
 
 export class SetBeaconCountAction implements Action {
-  readonly type = RecipesActionType.SET_BEACON_COUNT;
+  readonly type = RecipesCfgActionType.SET_BEACON_COUNT;
   constructor(public payload: IdIndexDefaultPayload) {}
 }
 
 export class SetBeaconAction implements Action {
-  readonly type = RecipesActionType.SET_BEACON;
+  readonly type = RecipesCfgActionType.SET_BEACON;
   constructor(public payload: IdIndexDefaultPayload) {}
 }
 
 export class SetBeaconModulesAction implements Action {
-  readonly type = RecipesActionType.SET_BEACON_MODULES;
+  readonly type = RecipesCfgActionType.SET_BEACON_MODULES;
   constructor(public payload: IdIndexDefaultPayload<string[]>) {}
 }
 
 export class SetBeaconTotalAction implements Action {
-  readonly type = RecipesActionType.SET_BEACON_TOTAL;
+  readonly type = RecipesCfgActionType.SET_BEACON_TOTAL;
   constructor(public payload: IdIndexPayload) {}
 }
 
 export class SetOverclockAction implements Action {
-  readonly type = RecipesActionType.SET_OVERCLOCK;
+  readonly type = RecipesCfgActionType.SET_OVERCLOCK;
   constructor(public payload: IdDefaultPayload<number>) {}
 }
 
 export class SetCostAction implements Action {
-  readonly type = RecipesActionType.SET_COST;
+  readonly type = RecipesCfgActionType.SET_COST;
   constructor(public payload: IdPayload<string | undefined>) {}
 }
 
 export class ResetRecipeAction implements Action {
-  readonly type = RecipesActionType.RESET_RECIPE;
+  readonly type = RecipesCfgActionType.RESET_RECIPE;
   constructor(public payload: string) {}
 }
 
 export class ResetRecipeModulesAction implements Action {
-  readonly type = RecipesActionType.RESET_RECIPE_MODULES;
+  readonly type = RecipesCfgActionType.RESET_RECIPE_MODULES;
   constructor(public payload: string) {}
 }
 
 export class ResetExcludedAction implements Action {
-  readonly type = RecipesActionType.RESET_EXCLUDED;
+  readonly type = RecipesCfgActionType.RESET_EXCLUDED;
 }
 
 export class ResetMachinesAction implements Action {
-  readonly type = RecipesActionType.RESET_MACHINES;
+  readonly type = RecipesCfgActionType.RESET_MACHINES;
 }
 
 export class ResetBeaconsAction implements Action {
-  readonly type = RecipesActionType.RESET_BEACONS;
+  readonly type = RecipesCfgActionType.RESET_BEACONS;
 }
 
 export class ResetCostAction implements Action {
-  readonly type = RecipesActionType.RESET_COST;
+  readonly type = RecipesCfgActionType.RESET_COST;
 }
 
-export type RecipesAction =
+export type RecipesCfgAction =
   | SetExcludedAction
   | SetExcludedBatchAction
   | SetCheckedAction

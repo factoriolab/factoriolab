@@ -9,7 +9,7 @@ import {
 } from '~/models';
 import { RecipeObj } from '~/models/recipe-objective';
 
-export const enum RecipeObjectivesActionType {
+export const enum RecipesObjActionType {
   ADD = '[Recipe Objectives] Add',
   CREATE = '[Recipe Objectives] Create',
   REMOVE = '[Recipe Objectives] Remove',
@@ -30,91 +30,91 @@ export const enum RecipeObjectivesActionType {
 }
 
 export class AddAction implements Action {
-  readonly type = RecipeObjectivesActionType.ADD;
+  readonly type = RecipesObjActionType.ADD;
   constructor(public payload: string) {}
 }
 
 export class CreateAction implements Action {
-  readonly type = RecipeObjectivesActionType.CREATE;
+  readonly type = RecipesObjActionType.CREATE;
   constructor(public payload: RecipeObj) {}
 }
 
 export class RemoveAction implements Action {
-  readonly type = RecipeObjectivesActionType.REMOVE;
+  readonly type = RecipesObjActionType.REMOVE;
   constructor(public payload: string) {}
 }
 
 export class SetRecipeAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_RECIPE;
+  readonly type = RecipesObjActionType.SET_RECIPE;
   constructor(public payload: IdPayload) {}
 }
 
 export class SetCountAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_COUNT;
+  readonly type = RecipesObjActionType.SET_COUNT;
   constructor(public payload: IdPayload<string>) {}
 }
 
 export class SetTypeAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_TYPE;
+  readonly type = RecipesObjActionType.SET_TYPE;
   constructor(public payload: IdPayload<ObjectiveType>) {}
 }
 
 export class SetMachineAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_MACHINE;
+  readonly type = RecipesObjActionType.SET_MACHINE;
   constructor(public payload: IdDefaultPayload) {}
 }
 
 export class SetMachineModulesAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_MACHINE_MODULES;
+  readonly type = RecipesObjActionType.SET_MACHINE_MODULES;
   constructor(public payload: IdDefaultPayload<string[]>) {}
 }
 
 export class AddBeaconAction implements Action {
-  readonly type = RecipeObjectivesActionType.ADD_BEACON;
+  readonly type = RecipesObjActionType.ADD_BEACON;
   constructor(public payload: string) {}
 }
 
 export class RemoveBeaconAction implements Action {
-  readonly type = RecipeObjectivesActionType.REMOVE_BEACON;
+  readonly type = RecipesObjActionType.REMOVE_BEACON;
   constructor(public payload: IdPayload<number>) {}
 }
 
 export class SetBeaconCountAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_BEACON_COUNT;
+  readonly type = RecipesObjActionType.SET_BEACON_COUNT;
   constructor(public payload: IdIndexDefaultPayload) {}
 }
 
 export class SetBeaconAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_BEACON;
+  readonly type = RecipesObjActionType.SET_BEACON;
   constructor(public payload: IdIndexDefaultPayload) {}
 }
 
 export class SetBeaconModulesAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_BEACON_MODULES;
+  readonly type = RecipesObjActionType.SET_BEACON_MODULES;
   constructor(public payload: IdIndexDefaultPayload<string[]>) {}
 }
 
 export class SetBeaconTotalAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_BEACON_TOTAL;
+  readonly type = RecipesObjActionType.SET_BEACON_TOTAL;
   constructor(public payload: IdIndexPayload) {}
 }
 
 export class SetOverclockAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_OVERCLOCK;
+  readonly type = RecipesObjActionType.SET_OVERCLOCK;
   constructor(public payload: IdDefaultPayload<number>) {}
 }
 
 export class SetCheckedAction implements Action {
-  readonly type = RecipeObjectivesActionType.SET_CHECKED;
+  readonly type = RecipesObjActionType.SET_CHECKED;
   constructor(public payload: IdPayload<boolean>) {}
 }
 
 export class ResetObjectiveAction implements Action {
-  readonly type = RecipeObjectivesActionType.RESET_OBJECTIVE;
+  readonly type = RecipesObjActionType.RESET_OBJECTIVE;
   constructor(public payload: string) {}
 }
 
-export type RecipeObjectivesAction =
+export type RecipesObjAction =
   | AddAction
   | CreateAction
   | RemoveAction

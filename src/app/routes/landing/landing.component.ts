@@ -7,13 +7,7 @@ import { combineLatest, map } from 'rxjs';
 import { AppSharedModule } from '~/app-shared.module';
 import { Game, gameInf, gameOptions } from '~/models';
 import { RouterService } from '~/services';
-import {
-  ItemObjectives,
-  LabState,
-  Preferences,
-  RecipeObjectives,
-  Settings,
-} from '~/store';
+import { ItemsObj, LabState, Preferences, RecipesObj, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
@@ -82,11 +76,11 @@ export class LandingComponent {
   }
 
   addItem(value: string): void {
-    this.store.dispatch(new ItemObjectives.AddAction(value));
+    this.store.dispatch(new ItemsObj.AddAction(value));
   }
 
   addRecipe(value: string): void {
-    this.store.dispatch(new RecipeObjectives.AddAction(value));
+    this.store.dispatch(new RecipesObj.AddAction(value));
   }
 
   setBypassLanding(value: boolean): void {

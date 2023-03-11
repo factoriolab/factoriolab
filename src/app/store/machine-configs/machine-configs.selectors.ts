@@ -6,18 +6,18 @@ import { Entities, Game, MachineCfg } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Settings from '../settings';
-import { MachinesState } from './machines.reducer';
+import { MachinesCfgState } from './machine-configs.reducer';
 
 /* Base selector functions */
-export const machinesState = (state: LabState): MachinesState =>
-  state.machinesState;
+export const machineCfgsState = (state: LabState): MachinesCfgState =>
+  state.machinesCfgState;
 
 /* Complex selectors */
-export const getMachines = createSelector(
-  machinesState,
+export const getMachinesCfg = createSelector(
+  machineCfgsState,
   Settings.getDefaults,
   Settings.getDataset,
-  (state, defaults, data): MachinesState => {
+  (state, defaults, data): MachinesCfgState => {
     const ids = state.ids ?? defaults?.machineRankIds ?? [];
 
     const entities: Entities<MachineCfg> = {};
@@ -76,7 +76,7 @@ export const getMachines = createSelector(
 );
 
 export const getMachineOptions = createSelector(
-  getMachines,
+  getMachinesCfg,
   Settings.getDataset,
   (machines, data) =>
     data.machineIds.map(
@@ -88,7 +88,7 @@ export const getMachineOptions = createSelector(
     )
 );
 
-export const getMachineRows = createSelector(getMachines, (machines) => [
+export const getMachineRows = createSelector(getMachinesCfg, (machines) => [
   '',
   ...(machines.ids ?? []),
 ]);

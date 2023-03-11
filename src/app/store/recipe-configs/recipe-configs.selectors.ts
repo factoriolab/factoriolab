@@ -3,22 +3,22 @@ import { createSelector } from '@ngrx/store';
 import { Entities, Rational, RecipeCfg, RecipeRtlCfg } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
-import * as Items from '../items';
-import * as Machines from '../machines';
+import * as Items from '../item-configs';
+import * as Machines from '../machine-configs';
 import * as RecipeObjectives from '../recipe-objectives';
 import * as Settings from '../settings';
-import { RecipesState } from './recipes.reducer';
+import { RecipesCfgState } from './recipe-configs.reducer';
 
 /* Base selector functions */
-export const recipesState = (state: LabState): RecipesState =>
-  state.recipesState;
+export const recipesCfgState = (state: LabState): RecipesCfgState =>
+  state.recipesCfgState;
 
 /* Complex selectors */
-export const getRecipeSettings = createSelector(
-  recipesState,
-  Machines.getMachines,
+export const getRecipesCfg = createSelector(
+  recipesCfgState,
+  Machines.getMachinesCfg,
   Settings.getDataset,
-  (state, machines, data) => {
+  (state, machinesCfg, data) => {
     const value: Entities<RecipeCfg> = {};
     const defaultexcludedRecipeIds = data.defaults?.excludedRecipeIds ?? [];
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
@@ -31,12 +31,12 @@ export const getRecipeSettings = createSelector(
       if (s.machineId == null) {
         s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
-          machines.ids ?? []
+          machinesCfg.ids ?? []
         );
       }
 
       const machine = data.machineEntities[s.machineId];
-      const def = machines.entities[s.machineId];
+      const def = machinesCfg.entities[s.machineId];
       if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
         s.machineModuleOptions = RecipeUtility.moduleOptions(
           machine,
@@ -107,13 +107,11 @@ export const getRecipeSettings = createSelector(
   }
 );
 
-export const getRationalRecipeSettings = createSelector(
-  getRecipeSettings,
-  (recipeSettings) =>
-    Object.keys(recipeSettings).reduce((e: Entities<RecipeRtlCfg>, i) => {
-      e[i] = new RecipeRtlCfg(recipeSettings[i]);
-      return e;
-    }, {})
+export const getRecipesRtlCfg = createSelector(getRecipesCfg, (recipesCfg) =>
+  Object.keys(recipesCfg).reduce((e: Entities<RecipeRtlCfg>, i) => {
+    e[i] = new RecipeRtlCfg(recipesCfg[i]);
+    return e;
+  }, {})
 );
 
 export const getSrc = createSelector(
@@ -130,8 +128,8 @@ export const getSrc = createSelector(
 );
 
 export const getAdjustedDataset = createSelector(
-  getRationalRecipeSettings,
-  Items.getItemSettings,
+  getRecipesRtlCfg,
+  Items.getItemsCfg,
   Settings.getRationalCost,
   Settings.getAdjustmentData,
   (recipeSettings, itemSettings, cost, adj) =>
@@ -149,8 +147,8 @@ export const getAdjustedDataset = createSelector(
 );
 
 export const getRecipesModified = createSelector(
-  recipesState,
-  RecipeObjectives.getBaseRecipeObjectives,
+  recipesCfgState,
+  RecipeObjectives.getBaseRecipesObj,
   (state, recipeObjectives) => ({
     checked:
       Object.keys(state).some((id) => state[id].checked != null) ||

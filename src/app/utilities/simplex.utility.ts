@@ -23,7 +23,7 @@ import {
   RecipeRtlObj,
   Step,
 } from '~/models';
-import { Items, Recipes } from '~/store';
+import { ItemsCfg, RecipesCfg } from '~/store';
 import { RateUtility } from './rate.utility';
 
 const FLOAT_TOLERANCE = 1e-10;
@@ -134,8 +134,8 @@ export class SimplexUtility {
   static solve(
     itemObjectives: ItemRtlObj[],
     recipeObjectives: RecipeRtlObj[],
-    itemSettings: Items.ItemsState,
-    recipeSettings: Recipes.RecipesState,
+    itemsCfg: ItemsCfg.ItemsCfgState,
+    recipesCfg: RecipesCfg.RecipesCfgState,
     cost: CostsRtlCfg,
     data: Dataset
   ): MatrixResult {
@@ -147,8 +147,8 @@ export class SimplexUtility {
     const state = this.getState(
       itemObjectives,
       recipeObjectives,
-      itemSettings,
-      recipeSettings,
+      itemsCfg,
+      recipesCfg,
       cost,
       data
     );
@@ -175,8 +175,8 @@ export class SimplexUtility {
   static getState(
     itemObjectives: ItemRtlObj[],
     recipeObjectives: RecipeRtlObj[],
-    itemSettings: Items.ItemsState,
-    recipeSettings: Recipes.RecipesState,
+    itemsCfg: ItemsCfg.ItemsCfgState,
+    recipesCfg: RecipesCfg.RecipesCfgState,
     cost: CostsRtlCfg,
     data: Dataset
   ): MatrixState {
@@ -192,9 +192,9 @@ export class SimplexUtility {
       itemValues: {},
       recipeLimits: {},
       unproduceableIds: [],
-      excludedIds: data.itemIds.filter((i) => itemSettings[i].excluded),
-      recipeIds: data.recipeIds.filter((r) => !recipeSettings[r].excluded),
-      itemIds: data.itemIds.filter((i) => !itemSettings[i].excluded),
+      excludedIds: data.itemIds.filter((i) => itemsCfg[i].excluded),
+      recipeIds: data.recipeIds.filter((r) => !recipesCfg[r].excluded),
+      itemIds: data.itemIds.filter((i) => !itemsCfg[i].excluded),
       cost,
       data,
     };

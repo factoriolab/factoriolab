@@ -2,7 +2,7 @@ import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { RecipeObj } from '~/models';
 import { Items } from '../';
 import * as App from '../app.actions';
-import * as Recipes from '../recipes';
+import * as Recipes from '../recipe-configs';
 import * as Actions from './recipe-objectives.actions';
 import {
   initialProducersState,
@@ -10,7 +10,7 @@ import {
   ProducersState,
 } from './recipe-objectives.reducer';
 
-describe('Producers Reducer', () => {
+describe('Recipe Objectivess Reducer', () => {
   const state = producersReducer(
     undefined,
     new Actions.AddAction(RecipeId.WoodenChest)

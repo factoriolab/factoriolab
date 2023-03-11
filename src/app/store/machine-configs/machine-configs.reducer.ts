@@ -2,33 +2,36 @@ import { Entities, MachineCfg } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
-import { MachinesAction, MachinesActionType } from './machines.actions';
+import {
+  MachinesCfgAction,
+  MachinesCfgActionType,
+} from './machine-configs.actions';
 
-export type MachinesState = {
+export type MachinesCfgState = {
   ids?: string[];
   entities: Entities<MachineCfg>;
 };
 
-export const initialMachinesState: MachinesState = {
+export const initialMachinesCfgState: MachinesCfgState = {
   entities: {},
 };
 
-export function machinesReducer(
-  state: MachinesState = initialMachinesState,
+export function machinesCfgReducer(
+  state: MachinesCfgState = initialMachinesCfgState,
   action:
-    | MachinesAction
+    | MachinesCfgAction
     | App.AppAction
     | Settings.SetModAction
     | Settings.SetPresetAction
-): MachinesState {
+): MachinesCfgState {
   switch (action.type) {
     case App.AppActionType.LOAD:
-      return { ...initialMachinesState, ...action.payload.machinesState };
+      return { ...initialMachinesCfgState, ...action.payload.machinesCfgState };
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
     case Settings.SettingsActionType.SET_PRESET:
-      return initialMachinesState;
-    case MachinesActionType.ADD: {
+      return initialMachinesCfgState;
+    case MachinesCfgActionType.ADD: {
       const value = [
         ...(state.ids ?? action.payload.def ?? []),
         action.payload.value,
@@ -36,7 +39,7 @@ export function machinesReducer(
       const ids = StoreUtility.compareRank(value, action.payload.def);
       return { ...state, ...{ ids } };
     }
-    case MachinesActionType.REMOVE: {
+    case MachinesCfgActionType.REMOVE: {
       const value = (state.ids ?? action.payload.def ?? []).filter(
         (i) => i !== action.payload.value
       );
@@ -48,7 +51,7 @@ export function machinesReducer(
       delete newState.entities[action.payload.value];
       return newState;
     }
-    case MachinesActionType.RAISE: {
+    case MachinesCfgActionType.RAISE: {
       const value = [...(state.ids ?? action.payload.def ?? [])];
       const i = value.indexOf(action.payload.value);
       if (i !== -1 && i > 0) {
@@ -58,7 +61,7 @@ export function machinesReducer(
       }
       return state;
     }
-    case MachinesActionType.LOWER: {
+    case MachinesCfgActionType.LOWER: {
       const value = [...(state.ids ?? action.payload.def ?? [])];
       const i = value.indexOf(action.payload.value);
       if (i !== -1 && i < value.length - 1) {
@@ -68,7 +71,7 @@ export function machinesReducer(
       }
       return state;
     }
-    case MachinesActionType.SET_MACHINE: {
+    case MachinesCfgActionType.SET_MACHINE: {
       const value = [...(state.ids ?? action.payload.def ?? [])];
       const i = value.indexOf(action.payload.id);
       if (i !== -1) {
@@ -87,7 +90,7 @@ export function machinesReducer(
       }
       return state;
     }
-    case MachinesActionType.SET_MODULE_RANK: {
+    case MachinesCfgActionType.SET_MODULE_RANK: {
       const entities = StoreUtility.compareReset(
         state.entities,
         'moduleRankIds',
@@ -96,7 +99,7 @@ export function machinesReducer(
       );
       return { ...state, ...{ entities } };
     }
-    case MachinesActionType.SET_BEACON_COUNT: {
+    case MachinesCfgActionType.SET_BEACON_COUNT: {
       const entities = StoreUtility.compareReset(
         state.entities,
         'beaconCount',
@@ -104,7 +107,7 @@ export function machinesReducer(
       );
       return { ...state, ...{ entities } };
     }
-    case MachinesActionType.SET_BEACON: {
+    case MachinesCfgActionType.SET_BEACON: {
       const entities = StoreUtility.resetFields(
         StoreUtility.compareReset(state.entities, 'beaconId', action.payload),
         ['beaconModuleRankIds'],
@@ -112,7 +115,7 @@ export function machinesReducer(
       );
       return { ...state, ...{ entities } };
     }
-    case MachinesActionType.SET_BEACON_MODULE_RANK: {
+    case MachinesCfgActionType.SET_BEACON_MODULE_RANK: {
       const entities = StoreUtility.compareReset(
         state.entities,
         'beaconModuleRankIds',
@@ -120,7 +123,7 @@ export function machinesReducer(
       );
       return { ...state, ...{ entities } };
     }
-    case MachinesActionType.SET_OVERCLOCK: {
+    case MachinesCfgActionType.SET_OVERCLOCK: {
       const entities = StoreUtility.compareReset(
         state.entities,
         'overclock',

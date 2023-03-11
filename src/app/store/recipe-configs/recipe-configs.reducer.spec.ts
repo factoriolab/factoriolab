@@ -2,13 +2,16 @@ import { ItemId, Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
 import { Items } from '../';
 import * as App from '../app.actions';
-import * as Actions from './recipes.actions';
-import { initialRecipesState, recipesReducer } from './recipes.reducer';
+import * as Actions from './recipe-configs.actions';
+import {
+  initialRecipesCfgState,
+  recipesCfgReducer,
+} from './recipe-configs.reducer';
 
-describe('Recipes Reducer', () => {
+describe('Recipe Configs Reducer', () => {
   describe('LOAD', () => {
     it('should load recipe settings', () => {
-      const result = recipesReducer(
+      const result = recipesCfgReducer(
         undefined,
         new App.LoadAction({
           recipesState: Mocks.RecipeSettingsEntities,
@@ -20,15 +23,15 @@ describe('Recipes Reducer', () => {
 
   describe('RESET', () => {
     it('should return the initial state', () => {
-      const result = recipesReducer(undefined, new App.ResetAction());
-      expect(result).toEqual(initialRecipesState);
+      const result = recipesCfgReducer(undefined, new App.ResetAction());
+      expect(result).toEqual(initialRecipesCfgState);
     });
   });
 
   describe('SET_MACHINE', () => {
     it('should set the machine', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.SetMachineAction({
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
@@ -39,9 +42,9 @@ describe('Recipes Reducer', () => {
     });
 
     it('should reset all other recipe settings', () => {
-      const result = recipesReducer(
+      const result = recipesCfgReducer(
         {
-          ...initialRecipesState,
+          ...initialRecipesCfgState,
           ...{
             [Mocks.Recipe1.id]: {
               machineModuleIds: ['test'],
@@ -61,8 +64,8 @@ describe('Recipes Reducer', () => {
 
   describe('SET_MACHINE_MODULES', () => {
     it('should set the modules', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.SetMachineModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
@@ -77,8 +80,8 @@ describe('Recipes Reducer', () => {
 
   describe('ADD_BEACON', () => {
     it('should add a beacon to a recipe', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.AddBeaconAction(Mocks.Recipe1.id)
       );
       expect(result[Mocks.Recipe1.id].beacons?.length).toEqual(2);
@@ -87,9 +90,9 @@ describe('Recipes Reducer', () => {
 
   describe('REMOVE_BEACON', () => {
     it('should remove a beacon from a recipe', () => {
-      const result = recipesReducer(
+      const result = recipesCfgReducer(
         {
-          ...initialRecipesState,
+          ...initialRecipesCfgState,
           ...{ [Mocks.Recipe1.id]: { beacons: undefined } },
         },
         new Actions.RemoveBeaconAction({ id: Mocks.Recipe1.id, value: 0 })
@@ -100,8 +103,8 @@ describe('Recipes Reducer', () => {
 
   describe('SET_BEACON_COUNT', () => {
     it('should set the beacon count', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.SetBeaconCountAction({
           id: Mocks.Recipe1.id,
           index: 0,
@@ -115,8 +118,8 @@ describe('Recipes Reducer', () => {
 
   describe('SET_BEACON', () => {
     it('should set the beacon', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.SetBeaconAction({
           id: Mocks.Recipe1.id,
           index: 0,
@@ -128,9 +131,9 @@ describe('Recipes Reducer', () => {
     });
 
     it('should reset the beacon modules', () => {
-      const result = recipesReducer(
+      const result = recipesCfgReducer(
         {
-          ...initialRecipesState,
+          ...initialRecipesCfgState,
           ...{ [Mocks.Recipe1.id]: { beacons: [{ moduleIds: ['test'] }] } },
         },
         new Actions.SetBeaconAction({
@@ -148,8 +151,8 @@ describe('Recipes Reducer', () => {
 
   describe('SET_BEACON_MODULES', () => {
     it('should set the beacon module', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.SetBeaconModulesAction({
           id: Mocks.Recipe1.id,
           index: 0,
@@ -165,8 +168,8 @@ describe('Recipes Reducer', () => {
 
   describe('SET_BEACON_TOTAL', () => {
     it('should set the beacon total', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.SetBeaconTotalAction({
           id: Mocks.Recipe1.id,
           index: 0,
@@ -179,8 +182,8 @@ describe('Recipes Reducer', () => {
 
   describe('SET_OVERCLOCK', () => {
     it('should set the overclock', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.SetOverclockAction({
           id: Mocks.Recipe1.id,
           value: 200,
@@ -193,8 +196,8 @@ describe('Recipes Reducer', () => {
 
   describe('SET_COST', () => {
     it('should set the cost', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.SetCostAction({
           id: Mocks.Recipe1.id,
           value: '10',
@@ -206,8 +209,8 @@ describe('Recipes Reducer', () => {
 
   describe('SET_CHECKED', () => {
     it('should set the checked state', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.SetCheckedAction({
           id: Mocks.Recipe1.id,
           value: true,
@@ -219,8 +222,8 @@ describe('Recipes Reducer', () => {
 
   describe('RESET_RECIPE', () => {
     it('should reset a recipe', () => {
-      const result = recipesReducer(
-        initialRecipesState,
+      const result = recipesCfgReducer(
+        initialRecipesCfgState,
         new Actions.ResetRecipeAction(Mocks.Recipe1.id)
       );
       expect(result[Mocks.Recipe1.id]).toBeUndefined();
@@ -230,7 +233,7 @@ describe('Recipes Reducer', () => {
   describe('RESET_RECIPE_MODULES', () => {
     it(`should reset a recipe's modules`, () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(
+      recipesCfgReducer(
         undefined,
         new Actions.ResetRecipeModulesAction(Mocks.Recipe1.id)
       );
@@ -245,7 +248,7 @@ describe('Recipes Reducer', () => {
   describe('RESET_MACHINE', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(undefined, new Actions.ResetMachinesAction());
+      recipesCfgReducer(undefined, new Actions.ResetMachinesAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
         'machineId',
         'overclock',
@@ -258,7 +261,7 @@ describe('Recipes Reducer', () => {
   describe('RESET_BEACONS', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
-      recipesReducer(undefined, new Actions.ResetBeaconsAction());
+      recipesCfgReducer(undefined, new Actions.ResetBeaconsAction());
       expect(StoreUtility.resetField).toHaveBeenCalledWith(
         {},
         'beacons' as any
@@ -269,7 +272,7 @@ describe('Recipes Reducer', () => {
   describe('RESET_COST', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
-      recipesReducer(undefined, new Actions.ResetCostAction());
+      recipesCfgReducer(undefined, new Actions.ResetCostAction());
       expect(StoreUtility.resetField).toHaveBeenCalledWith({}, 'cost' as any);
     });
   });
@@ -277,7 +280,7 @@ describe('Recipes Reducer', () => {
   describe('Items RESET_CHECKED', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
-      recipesReducer(undefined, new Items.ResetCheckedAction());
+      recipesCfgReducer(undefined, new Items.ResetCheckedAction());
       expect(StoreUtility.resetField).toHaveBeenCalledWith(
         {},
         'checked' as any
@@ -286,8 +289,8 @@ describe('Recipes Reducer', () => {
   });
 
   it('should return default state', () => {
-    expect(recipesReducer(undefined, { type: 'Test' } as any)).toBe(
-      initialRecipesState
+    expect(recipesCfgReducer(undefined, { type: 'Test' } as any)).toBe(
+      initialRecipesCfgState
     );
   });
 });

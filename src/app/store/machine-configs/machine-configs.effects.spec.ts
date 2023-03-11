@@ -6,13 +6,13 @@ import { ReplaySubject } from 'rxjs';
 
 import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
 import { LabState } from '../';
-import * as Recipes from '../recipes';
+import * as Recipes from '../recipe-configs';
 import * as Settings from '../settings';
-import * as Actions from './machines.actions';
-import { MachinesEffects } from './machines.effects';
+import * as Actions from './machine-configs.actions';
+import { MachinesCfgEffects } from './machine-configs.effects';
 
-describe('MachinesEffects', () => {
-  let effects: MachinesEffects;
+describe('MachinesCfgEffects', () => {
+  let effects: MachinesCfgEffects;
   let actions: ReplaySubject<any>;
   let mockStore: MockStore<LabState>;
 
@@ -23,14 +23,14 @@ describe('MachinesEffects', () => {
           initialState,
         }),
         provideMockActions(() => actions),
-        MachinesEffects,
+        MachinesCfgEffects,
       ],
     });
 
-    effects = TestBed.inject(MachinesEffects);
+    effects = TestBed.inject(MachinesCfgEffects);
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
-      Recipes.getRecipeSettings,
+      Recipes.getRecipesCfg,
       Mocks.RecipeSettingsInitial
     );
     mockStore.overrideSelector(Settings.getDataset, Mocks.Dataset);
@@ -49,13 +49,13 @@ describe('MachinesEffects', () => {
       mockStore.setState({
         ...initialState,
         ...{
-          recipesState: {
+          recipesCfgState: {
             [RecipeId.Coal]: { machineModuleIds: [ItemId.SpeedModule] },
           },
         },
       });
       const results: Action[] = [];
-      effects.resetRecipeSettings$.subscribe((a) => results.push(a));
+      effects.resetRecipesCfg$.subscribe((a) => results.push(a));
       expect(results).toEqual([
         new Recipes.ResetRecipeModulesAction(RecipeId.Coal),
       ]);
@@ -72,13 +72,13 @@ describe('MachinesEffects', () => {
       mockStore.setState({
         ...initialState,
         ...{
-          recipesState: {
+          recipesCfgState: {
             [RecipeId.Coal]: { beacons: [{ moduleIds: [ItemId.SpeedModule] }] },
           },
         },
       });
       const results: Action[] = [];
-      effects.resetRecipeSettings$.subscribe((a) => results.push(a));
+      effects.resetRecipesCfg$.subscribe((a) => results.push(a));
       expect(results).toEqual([]);
     });
   });

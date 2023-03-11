@@ -42,11 +42,11 @@ import {
 import { ContentService, DisplayService, RouterService } from '~/services';
 import {
   App,
-  Items,
+  ItemsCfg,
   LabState,
-  Machines,
+  MachinesCfg,
   Preferences,
-  Recipes,
+  RecipesCfg,
   Settings,
 } from '~/store';
 import { BrowserUtility } from '~/utilities';
@@ -62,11 +62,11 @@ export class SettingsComponent implements OnInit {
   @HostBinding('class.hidden') @Input() hidden = false;
 
   vm$ = combineLatest([
-    this.store.select(Items.getItemSettings),
-    this.store.select(Recipes.getRecipeSettings),
-    this.store.select(Machines.getMachines),
-    this.store.select(Machines.getMachineRows),
-    this.store.select(Machines.getMachineOptions),
+    this.store.select(ItemsCfg.getItemsCfg),
+    this.store.select(RecipesCfg.getRecipesCfg),
+    this.store.select(MachinesCfg.getMachinesCfg),
+    this.store.select(MachinesCfg.getMachineRows),
+    this.store.select(MachinesCfg.getMachineOptions),
     this.store.select(Settings.getSettings),
     this.store.select(Settings.getColumnsCfg),
     this.store.select(Settings.getDataset),
@@ -81,9 +81,9 @@ export class SettingsComponent implements OnInit {
   ]).pipe(
     map(
       ([
-        itemSettings,
-        recipeSettings,
-        machines,
+        itemsCfg,
+        recipesCfg,
+        machinesCfg,
         machineRows,
         machineOptions,
         settings,
@@ -97,9 +97,9 @@ export class SettingsComponent implements OnInit {
         preferences,
         savedStates,
       ]) => ({
-        itemSettings,
-        recipeSettings,
-        machines,
+        itemsCfg,
+        recipesCfg,
+        machinesCfg,
         machineRows,
         machineOptions,
         settings,
@@ -113,10 +113,8 @@ export class SettingsComponent implements OnInit {
         preferences,
         savedStates,
         machineMenuItems: this.buildMachineMenus(machineRows, data),
-        excludedItemIds: data.itemIds.filter((i) => itemSettings[i].excluded),
-        excludedRecipeIds: data.recipeIds.filter(
-          (r) => recipeSettings[r].excluded
-        ),
+        excludedItemIds: data.itemIds.filter((i) => itemsCfg[i].excluded),
+        excludedRecipeIds: data.recipeIds.filter((r) => recipesCfg[r].excluded),
       })
     )
   );
@@ -230,13 +228,13 @@ export class SettingsComponent implements OnInit {
 
   setExcludedRecipes(
     checked: string[],
-    recipeSettings: Recipes.RecipesState,
+    recipesCfg: RecipesCfg.RecipesCfgState,
     data: Dataset
   ): void {
     const payload: IdDefaultPayload<boolean>[] = [];
     for (const id of data.recipeIds) {
       const value = checked.some((i) => i === id);
-      if (value !== recipeSettings[id].excluded) {
+      if (value !== recipesCfg[id].excluded) {
         // Needs to change, find default value
         const def = (data.defaults?.excludedRecipeIds ?? []).some(
           (i) => i === id
@@ -249,13 +247,13 @@ export class SettingsComponent implements OnInit {
 
   setExcludedItems(
     checked: string[],
-    itemSettings: Items.ItemsState,
+    itemsCfg: ItemsCfg.ItemsCfgState,
     data: Dataset
   ): void {
     const payload: IdPayload<boolean>[] = [];
     for (const id of data.itemIds) {
       const value = checked.some((i) => i === id);
-      if (value !== itemSettings[id].excluded) {
+      if (value !== itemsCfg[id].excluded) {
         payload.push({ id, value });
       }
     }
@@ -300,11 +298,11 @@ export class SettingsComponent implements OnInit {
   }
 
   setItemExcludedBatch(payload: IdPayload<boolean>[]): void {
-    this.store.dispatch(new Items.SetExcludedBatchAction(payload));
+    this.store.dispatch(new ItemsCfg.SetExcludedBatchAction(payload));
   }
 
   setRecipeExcludedBatch(payload: IdDefaultPayload<boolean>[]): void {
-    this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
+    this.store.dispatch(new RecipesCfg.SetExcludedBatchAction(payload));
   }
 
   setNetProductionOnly(value: boolean): void {
@@ -316,39 +314,43 @@ export class SettingsComponent implements OnInit {
   }
 
   addMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.AddAction({ value, def }));
+    this.store.dispatch(new MachinesCfg.AddAction({ value, def }));
   }
 
   removeMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.RemoveAction({ value, def }));
+    this.store.dispatch(new MachinesCfg.RemoveAction({ value, def }));
   }
 
   raiseMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.RaiseAction({ value, def }));
+    this.store.dispatch(new MachinesCfg.RaiseAction({ value, def }));
   }
 
   lowerMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.LowerAction({ value, def }));
+    this.store.dispatch(new MachinesCfg.LowerAction({ value, def }));
   }
 
   setMachine(id: string, value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.SetMachineAction({ id, value, def }));
+    this.store.dispatch(new MachinesCfg.SetMachineAction({ id, value, def }));
   }
 
   setModuleRank(id: string, value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Machines.SetModuleRankAction({ id, value, def }));
+    this.store.dispatch(
+      new MachinesCfg.SetModuleRankAction({ id, value, def })
+    );
   }
 
   setOverclock(id: string, value: number, def: number | undefined): void {
-    this.store.dispatch(new Machines.SetOverclockAction({ id, value, def }));
+    this.store.dispatch(new MachinesCfg.SetOverclockAction({ id, value, def }));
   }
 
   setBeaconCount(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(new Machines.SetBeaconCountAction({ id, value, def }));
+    this.store.dispatch(
+      new MachinesCfg.SetBeaconCountAction({ id, value, def })
+    );
   }
 
   setBeacon(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(new Machines.SetBeaconAction({ id, value, def }));
+    this.store.dispatch(new MachinesCfg.SetBeaconAction({ id, value, def }));
   }
 
   setBeaconModuleRank(
@@ -357,7 +359,7 @@ export class SettingsComponent implements OnInit {
     def: string[] | undefined
   ): void {
     this.store.dispatch(
-      new Machines.SetBeaconModuleRankAction({ id, value, def })
+      new MachinesCfg.SetBeaconModuleRankAction({ id, value, def })
     );
   }
 

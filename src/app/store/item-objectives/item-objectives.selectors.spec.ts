@@ -13,8 +13,8 @@ import {
 } from '~/models';
 import { RateUtility, SimplexUtility } from '~/utilities';
 import { Producers } from '../';
-import * as Items from '../items';
-import * as Recipes from '../recipes';
+import * as Items from '../item-configs';
+import * as Recipes from '../recipe-configs';
 import * as Settings from '../settings';
 import * as Selectors from './item-objectives.selectors';
 
@@ -22,7 +22,7 @@ describe('Item Objectives Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
       expect(
-        Selectors.itemObjectivesState({
+        Selectors.itemsObjState({
           productsState: Mocks.ProductsState,
         } as any)
       ).toEqual(Mocks.ProductsState);
@@ -37,7 +37,7 @@ describe('Item Objectives Selectors', () => {
 
   describe('getProducts', () => {
     it('should return the array of products', () => {
-      const result = Selectors.getItemObjectives.projector(
+      const result = Selectors.getItemsObj.projector(
         Mocks.ProductsState.ids,
         Mocks.ProductsState.entities,
         Mocks.Dataset
@@ -48,9 +48,7 @@ describe('Item Objectives Selectors', () => {
 
   describe('getRationalProducts', () => {
     it('should map products to rational products', () => {
-      const result = Selectors.getRationalItemObjectives.projector(
-        Mocks.ProductsList
-      );
+      const result = Selectors.getItemsRtlObj.projector(Mocks.ProductsList);
       expect(result[0].rate.nonzero()).toBeTrue();
     });
   });
@@ -150,7 +148,7 @@ describe('Item Objectives Selectors', () => {
 
   describe('getNormalizedProducts', () => {
     it('should map products to rates', () => {
-      const result = Selectors.getNormalizedItemObjectives.projector(
+      const result = Selectors.getNormalizedItemsObj.projector(
         Mocks.RationalProducts,
         { ['0']: Rational.ten }
       );
@@ -223,8 +221,8 @@ describe('Item Objectives Selectors', () => {
       const result = Selectors.getStepsModified.projector(
         Mocks.Steps,
         [Mocks.Producer],
-        Items.initialItemsState,
-        Recipes.initialRecipesState
+        Items.initialItemsCfgState,
+        Recipes.initialRecipesCfgState
       );
       expect(result.items[Mocks.Step1.itemId!]).toBeFalse();
       expect(result.recipes[Mocks.Step1.recipeId!]).toBeFalse();

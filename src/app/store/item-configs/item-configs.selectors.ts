@@ -3,14 +3,15 @@ import { createSelector } from '@ngrx/store';
 import { Entities, ItemCfg, ItemId } from '~/models';
 import { LabState } from '../';
 import * as Settings from '../settings';
-import { ItemsState } from './items.reducer';
+import { ItemsCfgState } from './item-configs.reducer';
 
 /* Base selector functions */
-export const itemsState = (state: LabState): ItemsState => state.itemsState;
+export const itemsCfgState = (state: LabState): ItemsCfgState =>
+  state.itemsCfgState;
 
 /* Complex selectors */
-export const getItemSettings = createSelector(
-  itemsState,
+export const getItemsCfg = createSelector(
+  itemsCfgState,
   Settings.getDataset,
   Settings.getSettings,
   (state, data, settings) => {
@@ -45,7 +46,7 @@ export const getItemSettings = createSelector(
   }
 );
 
-export const getItemsModified = createSelector(itemsState, (state) => ({
+export const getItemsModified = createSelector(itemsCfgState, (state) => ({
   excluded: Object.keys(state).some((id) => state[id].excluded != null),
   checked: Object.keys(state).some((id) => state[id].checked != null),
   belts: Object.keys(state).some((id) => state[id].beltId != null),

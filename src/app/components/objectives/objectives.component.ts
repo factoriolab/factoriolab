@@ -16,11 +16,11 @@ import {
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import {
-  ItemObjectives,
-  Items,
+  ItemsCfg,
+  ItemsObj,
   LabState,
-  RecipeObjectives,
-  Recipes,
+  RecipesCfg,
+  RecipesObj,
   Settings,
 } from '~/store';
 
@@ -32,11 +32,11 @@ import {
 })
 export class ObjectivesComponent {
   vm$ = combineLatest([
-    this.store.select(ItemObjectives.getItemObjectives),
-    this.store.select(ItemObjectives.getMatrixResult),
-    this.store.select(RecipeObjectives.getRecipeObjectives),
-    this.store.select(Items.getItemSettings),
-    this.store.select(Recipes.getRecipeSettings),
+    this.store.select(ItemsObj.getItemsObj),
+    this.store.select(ItemsObj.getMatrixResult),
+    this.store.select(RecipesObj.getRecipesObj),
+    this.store.select(ItemsCfg.getItemsCfg),
+    this.store.select(RecipesCfg.getRecipesCfg),
     this.store.select(Settings.getDisplayRate),
     this.store.select(Settings.getRateUnitOptions),
     this.store.select(Settings.getOptions),
@@ -45,22 +45,22 @@ export class ObjectivesComponent {
   ]).pipe(
     map(
       ([
-        itemObjectives,
+        itemsObj,
         matrixResult,
-        recipeObjectives,
-        itemSettings,
-        recipeSettings,
+        recipesObj,
+        itemsCfg,
+        recipesCfg,
         displayRate,
         rateUnitOptions,
         options,
         data,
         width,
       ]) => ({
-        itemObjectives,
+        itemsObj,
         matrixResult,
-        recipeObjectives,
-        itemSettings,
-        recipeSettings,
+        recipesObj,
+        itemsCfg,
+        recipesCfg,
         displayRate,
         rateUnitOptions,
         options,
@@ -101,48 +101,48 @@ export class ObjectivesComponent {
   ) {}
 
   /** Action Dispatch Methods */
-  removeItemObjective(id: string): void {
-    this.store.dispatch(new ItemObjectives.RemoveAction(id));
+  removeItemObj(id: string): void {
+    this.store.dispatch(new ItemsObj.RemoveAction(id));
   }
 
   setItem(id: string, value: string): void {
-    this.store.dispatch(new ItemObjectives.SetItemAction({ id, value }));
+    this.store.dispatch(new ItemsObj.SetItemAction({ id, value }));
   }
 
   setRate(id: string, value: string): void {
-    this.store.dispatch(new ItemObjectives.SetRateAction({ id, value }));
+    this.store.dispatch(new ItemsObj.SetRateAction({ id, value }));
   }
 
   setRateUnit(id: string, value: RateUnit): void {
-    this.store.dispatch(new ItemObjectives.SetRateUnitAction({ id, value }));
+    this.store.dispatch(new ItemsObj.SetRateUnitAction({ id, value }));
   }
 
   setItemType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(new ItemObjectives.SetTypeAction({ id, value }));
+    this.store.dispatch(new ItemsObj.SetTypeAction({ id, value }));
   }
 
-  removeRecipeObjective(id: string): void {
-    this.store.dispatch(new RecipeObjectives.RemoveAction(id));
+  removeRecipeObj(id: string): void {
+    this.store.dispatch(new RecipesObj.RemoveAction(id));
   }
 
   setRecipe(id: string, value: string): void {
-    this.store.dispatch(new RecipeObjectives.SetRecipeAction({ id, value }));
+    this.store.dispatch(new RecipesObj.SetRecipeAction({ id, value }));
   }
 
   setCount(id: string, value: string): void {
-    this.store.dispatch(new RecipeObjectives.SetCountAction({ id, value }));
+    this.store.dispatch(new RecipesObj.SetCountAction({ id, value }));
   }
 
   setRecipeType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(new RecipeObjectives.SetTypeAction({ id, value }));
+    this.store.dispatch(new RecipesObj.SetTypeAction({ id, value }));
   }
 
-  addItemObjective(value: string): void {
-    this.store.dispatch(new ItemObjectives.AddAction(value));
+  addItemObj(value: string): void {
+    this.store.dispatch(new ItemsObj.AddAction(value));
   }
 
-  addRecipeObjective(value: string): void {
-    this.store.dispatch(new RecipeObjectives.AddAction(value));
+  addRecipeObj(value: string): void {
+    this.store.dispatch(new RecipesObj.AddAction(value));
   }
 
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {

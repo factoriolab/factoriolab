@@ -5,25 +5,25 @@ import { combineLatest, first, switchMap } from 'rxjs';
 
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
-import * as Recipes from '../recipes';
+import * as Recipes from '../recipe-configs';
 import * as Settings from '../settings';
-import { MachinesActionType } from './machines.actions';
+import { MachinesCfgActionType } from './machine-configs.actions';
 
 @Injectable()
-export class MachinesEffects {
+export class MachinesCfgEffects {
   /** Resets recipe settings that are invalidated by changes to machine settings */
-  resetRecipeSettings$ = createEffect(() =>
+  resetRecipesCfg$ = createEffect(() =>
     this.actions$.pipe(
       ofType(
-        MachinesActionType.ADD,
-        MachinesActionType.REMOVE,
-        MachinesActionType.RAISE,
-        MachinesActionType.SET_MACHINE
+        MachinesCfgActionType.ADD,
+        MachinesCfgActionType.REMOVE,
+        MachinesCfgActionType.RAISE,
+        MachinesCfgActionType.SET_MACHINE
       ),
       switchMap(() =>
         combineLatest([
-          this.store.select(Recipes.recipesState),
-          this.store.select(Recipes.getRecipeSettings),
+          this.store.select(Recipes.recipesCfgState),
+          this.store.select(Recipes.getRecipesCfg),
           this.store.select(Settings.getDataset),
         ]).pipe(first())
       ),

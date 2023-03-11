@@ -1,13 +1,13 @@
 import { ItemId, Mocks } from 'src/tests';
 import { Game } from '~/models';
-import { initialMachinesState } from './machines.reducer';
-import * as Selectors from './machines.selectors';
+import { initialMachinesCfgState } from './machine-configs.reducer';
+import * as Selectors from './machine-configs.selectors';
 
-describe('Machines Selectors', () => {
+describe('Machine Configs Selectors', () => {
   describe('getMachineSettings', () => {
     it('should fill in machine settings', () => {
-      const result = Selectors.getMachines.projector(
-        initialMachinesState,
+      const result = Selectors.getMachinesCfg.projector(
+        initialMachinesCfgState,
         Mocks.Defaults,
         Mocks.AdjustedData
       );
@@ -16,8 +16,8 @@ describe('Machines Selectors', () => {
     });
 
     it('should handle null defaults', () => {
-      const result = Selectors.getMachines.projector(
-        initialMachinesState,
+      const result = Selectors.getMachinesCfg.projector(
+        initialMachinesCfgState,
         null,
         Mocks.AdjustedData
       );
@@ -26,7 +26,7 @@ describe('Machines Selectors', () => {
     });
 
     it('should read number of beacons', () => {
-      const result = Selectors.getMachines.projector(
+      const result = Selectors.getMachinesCfg.projector(
         {
           ids: undefined,
           entities: { [ItemId.AssemblingMachine2]: { beaconCount: '0' } },
@@ -42,8 +42,8 @@ describe('Machines Selectors', () => {
     });
 
     it('should use null beaconCount for DSP', () => {
-      const result = Selectors.getMachines.projector(
-        initialMachinesState,
+      const result = Selectors.getMachinesCfg.projector(
+        initialMachinesCfgState,
         Mocks.Defaults,
         { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
       );
@@ -52,20 +52,20 @@ describe('Machines Selectors', () => {
 
     it('should include overclock in Satisfactory', () => {
       const state = {
-        ...initialMachinesState,
+        ...initialMachinesCfgState,
         ...{
           entities: {
-            ...initialMachinesState.entities,
+            ...initialMachinesCfgState.entities,
             ...{
               '': {
-                ...initialMachinesState.entities[''],
+                ...initialMachinesCfgState.entities[''],
                 ...{ overclock: 200 },
               },
             },
           },
         },
       };
-      const result = Selectors.getMachines.projector(state, Mocks.Defaults, {
+      const result = Selectors.getMachinesCfg.projector(state, Mocks.Defaults, {
         ...Mocks.AdjustedData,
         ...{ game: Game.Satisfactory },
       });
@@ -74,20 +74,20 @@ describe('Machines Selectors', () => {
 
     it('should default overclock to 100 in Satisfactory', () => {
       const state = {
-        ...initialMachinesState,
+        ...initialMachinesCfgState,
         ...{
           entities: {
-            ...initialMachinesState.entities,
+            ...initialMachinesCfgState.entities,
             ...{
               '': {
-                ...initialMachinesState.entities[''],
+                ...initialMachinesCfgState.entities[''],
                 ...{ overclock: undefined },
               },
             },
           },
         },
       };
-      const result = Selectors.getMachines.projector(state, Mocks.Defaults, {
+      const result = Selectors.getMachinesCfg.projector(state, Mocks.Defaults, {
         ...Mocks.AdjustedData,
         ...{ game: Game.Satisfactory },
       });
@@ -98,7 +98,7 @@ describe('Machines Selectors', () => {
   describe('getMachineOptions', () => {
     it('should handle null ids', () => {
       const result = Selectors.getMachineOptions.projector(
-        initialMachinesState,
+        initialMachinesCfgState,
         Mocks.Dataset
       );
       expect(result.length).toEqual(Mocks.Dataset.machineIds.length);
@@ -107,7 +107,9 @@ describe('Machines Selectors', () => {
 
   describe('getMachineRows', () => {
     it('should handle null ids', () => {
-      const result = Selectors.getMachineRows.projector(initialMachinesState);
+      const result = Selectors.getMachineRows.projector(
+        initialMachinesCfgState
+      );
       expect(result).toEqual(['']);
     });
 

@@ -2,36 +2,33 @@ import { Entities, ItemObj, ObjectiveType, RateUnit, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
-import {
-  ItemObjectivesAction,
-  ItemObjectivesActionType,
-} from './item-objectives.actions';
+import { ItemsObjAction, ItemsObjActionType } from './item-objectives.actions';
 
-export interface ItemObjectivesState {
+export interface ItemsObjState {
   ids: string[];
   entities: Entities<ItemObj>;
   index: number;
 }
 
-export const initialItemObjectivesState: ItemObjectivesState = {
+export const initialItemsObjState: ItemsObjState = {
   ids: [],
   entities: {},
   index: 0,
 };
 
-export function itemObjectivesReducer(
-  state: ItemObjectivesState = initialItemObjectivesState,
-  action: ItemObjectivesAction | App.AppAction | Settings.SetModAction
-): ItemObjectivesState {
+export function itemsObjReducer(
+  state: ItemsObjState = initialItemsObjState,
+  action: ItemsObjAction | App.AppAction | Settings.SetModAction
+): ItemsObjState {
   switch (action.type) {
     case App.AppActionType.LOAD:
-      return action.payload.itemObjectivesState
-        ? action.payload.itemObjectivesState
-        : initialItemObjectivesState;
+      return action.payload.itemsObjState
+        ? action.payload.itemsObjState
+        : initialItemsObjState;
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
-      return initialItemObjectivesState;
-    case ItemObjectivesActionType.ADD: {
+      return initialItemsObjState;
+    case ItemsObjActionType.ADD: {
       let rate = '60';
       let rateUnit = RateUnit.Items;
       if (state.ids.length > 0) {
@@ -61,7 +58,7 @@ export function itemObjectivesReducer(
         },
       };
     }
-    case ItemObjectivesActionType.CREATE: {
+    case ItemsObjActionType.CREATE: {
       // Use full item objective, but enforce id: '0'
       const itemObjective = { ...action.payload, ...{ id: '0' } };
       return {
@@ -73,7 +70,7 @@ export function itemObjectivesReducer(
         },
       };
     }
-    case ItemObjectivesActionType.REMOVE: {
+    case ItemsObjActionType.REMOVE: {
       const newEntities = { ...state.entities };
       delete newEntities[action.payload];
       return {
@@ -84,7 +81,7 @@ export function itemObjectivesReducer(
         },
       };
     }
-    case ItemObjectivesActionType.SET_ITEM: {
+    case ItemsObjActionType.SET_ITEM: {
       return {
         ...state,
         ...{
@@ -96,7 +93,7 @@ export function itemObjectivesReducer(
         },
       };
     }
-    case ItemObjectivesActionType.SET_RATE:
+    case ItemsObjActionType.SET_RATE:
       return {
         ...state,
         ...{
@@ -107,7 +104,7 @@ export function itemObjectivesReducer(
           ),
         },
       };
-    case ItemObjectivesActionType.SET_RATE_UNIT:
+    case ItemsObjActionType.SET_RATE_UNIT:
       return {
         ...state,
         ...{
@@ -118,7 +115,7 @@ export function itemObjectivesReducer(
           ),
         },
       };
-    case ItemObjectivesActionType.ADJUST_DISPLAY_RATE: {
+    case ItemsObjActionType.ADJUST_DISPLAY_RATE: {
       const factor = Rational.fromString(action.payload);
       const newEntities = { ...state.entities };
       for (const objective of state.ids
@@ -136,7 +133,7 @@ export function itemObjectivesReducer(
         ...{ entities: newEntities },
       };
     }
-    case ItemObjectivesActionType.SET_TYPE:
+    case ItemsObjActionType.SET_TYPE:
       return {
         ...state,
         ...{

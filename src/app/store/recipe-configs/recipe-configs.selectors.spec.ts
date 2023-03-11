@@ -1,16 +1,16 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { Rational, RecipeObj } from '~/models';
 import { RecipeUtility } from '~/utilities';
-import { initialRecipesState } from './recipes.reducer';
-import * as Selectors from './recipes.selectors';
+import { initialRecipesCfgState } from './recipe-configs.reducer';
+import * as Selectors from './recipe-configs.selectors';
 
-describe('Recipes Selectors', () => {
+describe('Recipe Configs Selectors', () => {
   const stringValue = 'value';
 
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
       expect(
-        Selectors.recipesState({
+        Selectors.recipesCfgState({
           recipesState: Mocks.RecipeSettingsInitial,
         } as any)
       ).toEqual(Mocks.RecipeSettingsInitial);
@@ -19,8 +19,8 @@ describe('Recipes Selectors', () => {
 
   describe('getRecipeSettings', () => {
     it('should return the recipe settings', () => {
-      const result = Selectors.getRecipeSettings.projector(
-        initialRecipesState,
+      const result = Selectors.getRecipesCfg.projector(
+        initialRecipesCfgState,
         Mocks.MachineSettingsInitial,
         Mocks.Dataset
       );
@@ -31,7 +31,7 @@ describe('Recipes Selectors', () => {
 
     it('should handle null settings', () => {
       const state = {
-        ...initialRecipesState,
+        ...initialRecipesCfgState,
         ...{ [Mocks.Item1.id]: { machineId: ItemId.AssemblingMachine3 } },
       };
       const data = {
@@ -49,7 +49,7 @@ describe('Recipes Selectors', () => {
         },
       };
       spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
-      const result = Selectors.getRecipeSettings.projector(
+      const result = Selectors.getRecipesCfg.projector(
         state,
         {
           ...Mocks.MachineSettingsInitial,
@@ -70,10 +70,10 @@ describe('Recipes Selectors', () => {
 
     it('should use machine override', () => {
       const state = {
-        ...initialRecipesState,
+        ...initialRecipesCfgState,
         ...{ [Mocks.Item1.id]: { machineId: stringValue } },
       };
-      const result = Selectors.getRecipeSettings.projector(
+      const result = Selectors.getRecipesCfg.projector(
         state,
         Mocks.MachineSettingsInitial,
         Mocks.Dataset
@@ -83,10 +83,10 @@ describe('Recipes Selectors', () => {
 
     it('should use module override', () => {
       const state = {
-        ...initialRecipesState,
+        ...initialRecipesCfgState,
         ...{ [Mocks.Item1.id]: { machineModuleIds: [stringValue] } },
       };
-      const result = Selectors.getRecipeSettings.projector(
+      const result = Selectors.getRecipesCfg.projector(
         state,
         Mocks.MachineSettingsInitial,
         Mocks.Dataset
@@ -96,10 +96,10 @@ describe('Recipes Selectors', () => {
 
     it('should use beacon count override', () => {
       const state = {
-        ...initialRecipesState,
+        ...initialRecipesCfgState,
         ...{ [Mocks.Item1.id]: { beacons: [{ count: stringValue }] } },
       };
-      const result = Selectors.getRecipeSettings.projector(
+      const result = Selectors.getRecipesCfg.projector(
         state,
         Mocks.MachineSettingsInitial,
         Mocks.Dataset
@@ -109,7 +109,7 @@ describe('Recipes Selectors', () => {
 
     it('should use beacon module override', () => {
       const state = {
-        ...initialRecipesState,
+        ...initialRecipesCfgState,
         ...{ [Mocks.Item1.id]: { beacons: [{ moduleIds: [stringValue] }] } },
       };
       const machines = {
@@ -130,7 +130,7 @@ describe('Recipes Selectors', () => {
           },
         },
       };
-      const result = Selectors.getRecipeSettings.projector(
+      const result = Selectors.getRecipesCfg.projector(
         state,
         machines,
         Mocks.Dataset
@@ -142,10 +142,10 @@ describe('Recipes Selectors', () => {
 
     it('should reset invalid beacon totals', () => {
       const state = {
-        ...initialRecipesState,
+        ...initialRecipesCfgState,
         ...{ [Mocks.Item1.id]: { beacons: [{ total: '8', count: '0' }] } },
       };
-      const result = Selectors.getRecipeSettings.projector(
+      const result = Selectors.getRecipesCfg.projector(
         state,
         Mocks.MachineSettingsInitial,
         Mocks.Dataset

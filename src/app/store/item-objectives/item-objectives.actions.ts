@@ -2,7 +2,7 @@ import { Action } from '@ngrx/store';
 
 import { IdPayload, ItemObj, ObjectiveType, RateUnit } from '~/models';
 
-export const enum ItemObjectivesActionType {
+export const enum ItemsObjActionType {
   ADD = '[Item Objectives] Add',
   CREATE = '[Item Objectives] Create',
   REMOVE = '[Item Objectives] Remove',
@@ -14,46 +14,46 @@ export const enum ItemObjectivesActionType {
 }
 
 export class AddAction implements Action {
-  readonly type = ItemObjectivesActionType.ADD;
+  readonly type = ItemsObjActionType.ADD;
   constructor(public payload: string) {}
 }
 
 export class CreateAction implements Action {
-  readonly type = ItemObjectivesActionType.CREATE;
+  readonly type = ItemsObjActionType.CREATE;
   constructor(public payload: ItemObj) {}
 }
 
 export class RemoveAction implements Action {
-  readonly type = ItemObjectivesActionType.REMOVE;
+  readonly type = ItemsObjActionType.REMOVE;
   constructor(public payload: string) {}
 }
 
 export class SetItemAction implements Action {
-  readonly type = ItemObjectivesActionType.SET_ITEM;
+  readonly type = ItemsObjActionType.SET_ITEM;
   constructor(public payload: IdPayload) {}
 }
 
 export class SetRateAction implements Action {
-  readonly type = ItemObjectivesActionType.SET_RATE;
+  readonly type = ItemsObjActionType.SET_RATE;
   constructor(public payload: IdPayload) {}
 }
 
 export class SetRateUnitAction implements Action {
-  readonly type = ItemObjectivesActionType.SET_RATE_UNIT;
+  readonly type = ItemsObjActionType.SET_RATE_UNIT;
   constructor(public payload: IdPayload<RateUnit>) {}
 }
 
 export class SetTypeAction implements Action {
-  readonly type = ItemObjectivesActionType.SET_TYPE;
+  readonly type = ItemsObjActionType.SET_TYPE;
   constructor(public payload: IdPayload<ObjectiveType>) {}
 }
 
 export class AdjustDisplayRateAction implements Action {
-  readonly type = ItemObjectivesActionType.ADJUST_DISPLAY_RATE;
+  readonly type = ItemsObjActionType.ADJUST_DISPLAY_RATE;
   constructor(public payload: string) {}
 }
 
-export type ItemObjectivesAction =
+export type ItemsObjAction =
   | AddAction
   | CreateAction
   | RemoveAction

@@ -225,7 +225,7 @@
           <lab-picker
             #itemsPicker
             [header]="'settings.itemsHeader' | translate"
-            (selectIds)="setExcludedItems($event, vm.itemSettings, vm.data)"
+            (selectIds)="setExcludedItems($event, vm.itemsCfg, vm.data)"
           ></lab-picker>
         </div>
         <div class="py-2">
@@ -250,7 +250,7 @@
           <lab-picker
             #recipesPicker
             [header]="'settings.recipesHeader' | translate"
-            (selectIds)="setExcludedRecipes($event, vm.recipeSettings, vm.data)"
+            (selectIds)="setExcludedRecipes($event, vm.recipesCfg, vm.data)"
           ></lab-picker>
         </div>
         <div class="py-2">
@@ -288,11 +288,13 @@
           <ng-container
             *ngFor="let machineId of vm.machineRows; let index = index"
           >
-            <ng-container *ngIf="vm.machines.entities[machineId] as settings">
+            <ng-container
+              *ngIf="vm.machinesCfg.entities[machineId] as settings"
+            >
               <ng-container
                 *ngIf="
                   machineId
-                    ? vm.machines.entities['']
+                    ? vm.machinesCfg.entities['']
                     : vm.data.defaults as defaults
                 "
               >
@@ -488,7 +490,9 @@
                         setOverclock(
                           machineId,
                           overclockInput.value,
-                          machineId ? vm.machines.entities[''].overclock : 100
+                          machineId
+                            ? vm.machinesCfg.entities[''].overclock
+                            : 100
                         )
                       "
                     >

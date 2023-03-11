@@ -21,7 +21,7 @@ import {
   RecipeRtl,
   RecipeRtlCfg,
 } from '~/models';
-import { Machines } from '~/store';
+import { MachinesCfg } from '~/store';
 
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
@@ -524,46 +524,46 @@ export class RecipeUtility {
   }
 
   static adjustRecipeObjective(
-    recipeObjective: RecipeObj,
-    machines: Machines.MachinesState,
+    recipeObj: RecipeObj,
+    machinesCfg: MachinesCfg.MachinesCfgState,
     data: Dataset
   ): RecipeObj {
-    recipeObjective = { ...recipeObjective };
-    const recipe = data.recipeEntities[recipeObjective.recipeId];
+    recipeObj = { ...recipeObj };
+    const recipe = data.recipeEntities[recipeObj.recipeId];
 
-    if (recipeObjective.machineId == null) {
-      recipeObjective.machineId = this.bestMatch(
+    if (recipeObj.machineId == null) {
+      recipeObj.machineId = this.bestMatch(
         recipe.producers,
-        machines.ids ?? []
+        machinesCfg.ids ?? []
       );
     }
 
-    const machine = data.machineEntities[recipeObjective.machineId];
-    const def = machines.entities[recipeObjective.machineId];
+    const machine = data.machineEntities[recipeObj.machineId];
+    const def = machinesCfg.entities[recipeObj.machineId];
     if (machine != null && this.allowsModules(recipe, machine)) {
-      recipeObjective.machineModuleOptions = this.moduleOptions(
+      recipeObj.machineModuleOptions = this.moduleOptions(
         machine,
-        recipeObjective.recipeId,
+        recipeObj.recipeId,
         data
       );
 
-      if (recipeObjective.machineModuleIds == null) {
-        recipeObjective.machineModuleIds = this.defaultModules(
-          recipeObjective.machineModuleOptions,
+      if (recipeObj.machineModuleIds == null) {
+        recipeObj.machineModuleIds = this.defaultModules(
+          recipeObj.machineModuleOptions,
           def.moduleRankIds ?? [],
           machine.modules ?? 0
         );
       }
 
-      if (recipeObjective.beacons == null) {
-        recipeObjective.beacons = [{}];
+      if (recipeObj.beacons == null) {
+        recipeObj.beacons = [{}];
       } else {
-        recipeObjective.beacons = recipeObjective.beacons.map((b) => ({
+        recipeObj.beacons = recipeObj.beacons.map((b) => ({
           ...b,
         }));
       }
 
-      for (const beaconSettings of recipeObjective.beacons) {
+      for (const beaconSettings of recipeObj.beacons) {
         beaconSettings.count = beaconSettings.count ?? def.beaconCount;
         beaconSettings.id = beaconSettings.id ?? def.beaconId;
 
@@ -571,7 +571,7 @@ export class RecipeUtility {
           const beacon = data.beaconEntities[beaconSettings.id];
           beaconSettings.moduleOptions = this.moduleOptions(
             beacon,
-            recipeObjective.recipeId,
+            recipeObj.recipeId,
             data
           );
 
@@ -586,12 +586,12 @@ export class RecipeUtility {
       }
     } else {
       // Machine doesn't support modules, remove any
-      delete recipeObjective.machineModuleIds;
-      delete recipeObjective.beacons;
+      delete recipeObj.machineModuleIds;
+      delete recipeObj.beacons;
     }
 
-    recipeObjective.overclock = recipeObjective.overclock ?? def.overclock;
+    recipeObj.overclock = recipeObj.overclock ?? def.overclock;
 
-    return recipeObjective;
+    return recipeObj;
   }
 }

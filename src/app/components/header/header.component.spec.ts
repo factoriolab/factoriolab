@@ -34,7 +34,7 @@ describe('HeaderComponent', () => {
     it('should update the page title with the first item objective name', () => {
       spyOn(title, 'setTitle');
       mockStore.overrideSelector(
-        ItemObjectives.getItemObjectives,
+        ItemObjectives.getItemsObj,
         Mocks.ItemObjectivesList
       );
       mockStore.refreshState();
@@ -43,7 +43,7 @@ describe('HeaderComponent', () => {
 
     it('should update the page title with the first producer name', () => {
       spyOn(title, 'setTitle');
-      mockStore.overrideSelector(ItemObjectives.getItemObjectives, []);
+      mockStore.overrideSelector(ItemObjectives.getItemsObj, []);
       mockStore.overrideSelector(Producers.getBaseProducers, [Mocks.Producer]);
       mockStore.refreshState();
       expect(title.setTitle).toHaveBeenCalledWith('Iron plate | FactorioLab');

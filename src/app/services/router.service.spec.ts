@@ -68,7 +68,7 @@ const mockProducersState: Producers.ProducersState = {
   },
   index: 2,
 };
-const mockItemsState: Items.ItemsState = {
+const mockItemsState: Items.ItemsCfgState = {
   [ItemId.SteelChest]: {
     excluded: true,
     beltId: ItemId.TransportBelt,
@@ -91,7 +91,7 @@ const mockRecipesState: Recipes.RecipesState = {
     cost: '100',
   },
 };
-const mockMachinesState: Machines.MachinesState = {
+const mockMachinesState: Machines.MachinesCfgState = {
   ids: [ItemId.AssemblingMachine2, ItemId.SteelFurnace],
   entities: {
     ['']: {
@@ -168,9 +168,9 @@ describe('RouterService', () => {
     {
       products: Products.ItemObjectivesState;
       producers: Producers.ProducersState;
-      items: Items.ItemsState;
+      items: Items.ItemsCfgState;
       recipes: Recipes.RecipesState;
-      machines: Machines.MachinesState;
+      machines: Machines.MachinesCfgState;
       settings: Settings.SettingsState;
     }
   >;
@@ -191,9 +191,9 @@ describe('RouterService', () => {
     mockGetZipState = mockStore.overrideSelector(Products.getZipState, {
       products: Products.initialItemObjectivesState,
       producers: Producers.initialProducersState,
-      items: Items.initialItemsState,
+      items: Items.initialItemsCfgState,
       recipes: Recipes.initialRecipesState,
-      machines: Machines.initialMachinesState,
+      machines: Machines.initialMachinesCfgState,
       settings: Settings.initialSettingsState,
     });
     router = TestBed.inject(Router);
@@ -221,7 +221,7 @@ describe('RouterService', () => {
       producers: Producers.initialProducersState,
       items: { [ItemId.Wood]: { excluded: true } },
       recipes: Recipes.initialRecipesState,
-      machines: Machines.initialMachinesState,
+      machines: Machines.initialMachinesCfgState,
       settings: Settings.initialSettingsState,
     });
     mockStore.refreshState();
@@ -236,9 +236,9 @@ describe('RouterService', () => {
       service.updateUrl(
         Products.initialItemObjectivesState,
         Producers.initialProducersState,
-        Items.initialItemsState,
+        Items.initialItemsCfgState,
         Recipes.initialRecipesState,
-        Machines.initialMachinesState,
+        Machines.initialMachinesCfgState,
         Settings.initialSettingsState
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith('/?test');
@@ -252,9 +252,9 @@ describe('RouterService', () => {
       service.updateUrl(
         Products.initialItemObjectivesState,
         Producers.initialProducersState,
-        Items.initialItemsState,
+        Items.initialItemsCfgState,
         Recipes.initialRecipesState,
-        Machines.initialMachinesState,
+        Machines.initialMachinesCfgState,
         Settings.initialSettingsState
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith('path?test#hash');
@@ -268,9 +268,9 @@ describe('RouterService', () => {
         .zipState(
           Products.initialItemObjectivesState,
           Producers.initialProducersState,
-          Items.initialItemsState,
+          Items.initialItemsCfgState,
           Recipes.initialRecipesState,
-          Machines.initialMachinesState,
+          Machines.initialMachinesCfgState,
           Settings.initialSettingsState
         )
         .subscribe((z) => (zip = z));
