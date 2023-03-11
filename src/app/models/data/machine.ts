@@ -3,6 +3,7 @@ import { Rational } from '../rational';
 import { ModuleEffect } from './module';
 import { RationalSilo, Silo } from './silo';
 
+/** Machine data */
 export interface Machine {
   speed?: number | string;
   modules?: number;
@@ -23,7 +24,8 @@ export interface Machine {
   disallowEffects?: ModuleEffect[];
 }
 
-export class RationalMachine {
+/** Rational machine data */
+export class MachineRtl {
   speed?: Rational;
   modules?: number;
   /** Energy type, e.g. electric or burner */

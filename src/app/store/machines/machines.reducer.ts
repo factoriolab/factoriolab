@@ -1,4 +1,4 @@
-import { Entities, MachineSettings } from '~/models';
+import { Entities, MachineCfg } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
@@ -6,7 +6,7 @@ import { MachinesAction, MachinesActionType } from './machines.actions';
 
 export type MachinesState = {
   ids?: string[];
-  entities: Entities<MachineSettings>;
+  entities: Entities<MachineCfg>;
 };
 
 export const initialMachinesState: MachinesState = {

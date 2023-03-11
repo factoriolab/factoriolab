@@ -2,7 +2,7 @@ import { createSelector } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
 import { getIdOptions } from '~/helpers';
-import { Entities, Game, MachineSettings } from '~/models';
+import { Entities, Game, MachineCfg } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Settings from '../settings';
@@ -20,8 +20,8 @@ export const getMachines = createSelector(
   (state, defaults, data): MachinesState => {
     const ids = state.ids ?? defaults?.machineRankIds ?? [];
 
-    const entities: Entities<MachineSettings> = {};
-    const def: MachineSettings = { ...state.entities[''] };
+    const entities: Entities<MachineCfg> = {};
+    const def: MachineCfg = { ...state.entities[''] };
     def.moduleRankIds = def.moduleRankIds ?? defaults?.moduleRankIds ?? [];
     def.moduleOptions = getIdOptions(
       data.moduleIds,
@@ -46,7 +46,7 @@ export const getMachines = createSelector(
     entities[''] = def;
 
     for (const id of data.machineIds.filter((i) => data.itemEntities[i])) {
-      const s: MachineSettings = { ...state.entities[id] };
+      const s: MachineCfg = { ...state.entities[id] };
       const machine = data.machineEntities[id];
 
       if (machine.modules) {

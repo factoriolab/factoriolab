@@ -3,13 +3,13 @@ import {
   DisplayRateInf,
   Entities,
   Game,
-  ItemSettings,
+  ItemCfg,
+  ItemRtlObj,
   RateUnit,
   Rational,
-  RationalItemObjective,
-  RationalRecipe,
-  RationalRecipeObjective,
-  RationalRecipeSettings,
+  RecipeRtl,
+  RecipeRtlCfg,
+  RecipeRtlObj,
   Step,
   toEntities,
 } from '~/models';
@@ -19,7 +19,7 @@ const ROOT_ID = '';
 
 export class RateUtility {
   static itemObjectiveNormalizedRate(
-    itemObjective: RationalItemObjective,
+    itemObjective: ItemRtlObj,
     itemSettings: Items.ItemsState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInf,
@@ -81,11 +81,7 @@ export class RateUtility {
     }
   }
 
-  static adjustPowerPollution(
-    step: Step,
-    recipe: RationalRecipe,
-    game: Game
-  ): void {
+  static adjustPowerPollution(step: Step, recipe: RecipeRtl, game: Game): void {
     if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
         // Reset power
@@ -116,9 +112,9 @@ export class RateUtility {
 
   static normalizeSteps(
     steps: Step[],
-    recipeObjectives: RationalRecipeObjective[],
-    itemSettings: Entities<ItemSettings>,
-    recipeSettings: Entities<RationalRecipeSettings>,
+    recipeObjectives: RecipeRtlObj[],
+    itemSettings: Entities<ItemCfg>,
+    recipeSettings: Entities<RecipeRtlCfg>,
     beaconReceivers: Rational | null,
     beltSpeed: Entities<Rational>,
     dispRateInfo: DisplayRateInf,
@@ -180,8 +176,8 @@ export class RateUtility {
 
   static calculateSettings(
     step: Step,
-    recipeObjectiveEntities: Entities<RationalRecipeObjective>,
-    recipeSettings: Entities<RationalRecipeSettings>
+    recipeObjectiveEntities: Entities<RecipeRtlObj>,
+    recipeSettings: Entities<RecipeRtlCfg>
   ): void {
     if (step.recipeId) {
       if (step.recipeObjectiveId) {
@@ -194,7 +190,7 @@ export class RateUtility {
 
   static calculateBelts(
     step: Step,
-    itemSettings: Entities<ItemSettings>,
+    itemSettings: Entities<ItemCfg>,
     beltSpeed: Entities<Rational>,
     data: Dataset
   ): void {
@@ -303,9 +299,9 @@ export class RateUtility {
 
   static calculateChecked(
     step: Step,
-    itemSettings: Entities<ItemSettings>,
-    recipeSettings: Entities<RationalRecipeSettings>,
-    recipeObjectiveEntities: Entities<RationalRecipeObjective>
+    itemSettings: Entities<ItemCfg>,
+    recipeSettings: Entities<RecipeRtlCfg>,
+    recipeObjectiveEntities: Entities<RecipeRtlObj>
   ): void {
     // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {

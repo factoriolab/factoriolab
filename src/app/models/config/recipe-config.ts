@@ -1,32 +1,34 @@
 import { SelectItem } from 'primeng/api';
 
 import { Rational } from '../rational';
-import { BeaconSettings, RationalBeaconSettings } from './beacon-settings';
+import { BeaconCfg, BeaconRtlCfg } from './beacon-config';
 
-export interface RecipeSettings {
+/** Recipe configuration */
+export interface RecipeCfg {
   excluded?: boolean;
   checked?: boolean;
   machineId?: string;
   machineModuleIds?: string[];
   /** Calculated, not configurable */
   machineModuleOptions?: SelectItem[];
-  beacons?: BeaconSettings[];
+  beacons?: BeaconCfg[];
   overclock?: number;
   cost?: string;
 }
 
-export class RationalRecipeSettings {
+/** Recipe rational configuration */
+export class RecipeRtlCfg {
   excluded?: boolean;
   checked?: boolean;
   machineId?: string;
   machineModuleIds?: string[];
   /** Calculated, not configurable */
   machineModuleOptions?: SelectItem[];
-  beacons?: RationalBeaconSettings[];
+  beacons?: BeaconRtlCfg[];
   overclock?: Rational;
   cost?: Rational;
 
-  constructor(obj: RecipeSettings) {
+  constructor(obj: RecipeCfg) {
     if (obj.excluded != null) {
       this.excluded = obj.excluded;
     }
@@ -43,7 +45,7 @@ export class RationalRecipeSettings {
       this.machineModuleOptions = obj.machineModuleOptions;
     }
     if (obj.beacons) {
-      this.beacons = obj.beacons.map((b) => new RationalBeaconSettings(b));
+      this.beacons = obj.beacons.map((b) => new BeaconRtlCfg(b));
     }
     if (obj.overclock != null) {
       this.overclock = Rational.fromNumber(obj.overclock);

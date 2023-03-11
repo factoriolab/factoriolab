@@ -1,4 +1,4 @@
-import { Entities, RecipeObjective } from '~/models';
+import { Entities, RecipeObj } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { Items } from '../';
 import * as App from '../app.actions';
@@ -11,7 +11,7 @@ import {
 
 export interface RecipeObjectivesState {
   ids: string[];
-  entities: Entities<RecipeObjective>;
+  entities: Entities<RecipeObj>;
   index: number;
 }
 

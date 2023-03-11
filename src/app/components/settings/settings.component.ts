@@ -30,7 +30,7 @@ import {
   ItemId,
   Language,
   languageOptions,
-  MachineSettings,
+  MachineCfg,
   PowerUnit,
   powerUnitOptions,
   Preset,
@@ -265,7 +265,7 @@ export class SettingsComponent implements OnInit {
   changeBeaconModuleRank(
     id: string,
     value: string[],
-    def: MachineSettings | Defaults
+    def: MachineCfg | Defaults
   ): void {
     if (id === '') {
       this.setBeaconModuleRank(id, value, [(def as Defaults).beaconModuleId]);
@@ -273,7 +273,7 @@ export class SettingsComponent implements OnInit {
       this.setBeaconModuleRank(
         id,
         value,
-        (def as MachineSettings).beaconModuleRankIds
+        (def as MachineCfg).beaconModuleRankIds
       );
     }
   }

@@ -8,18 +8,18 @@ import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
 import {
-  BeaconSettings,
+  BeaconCfg,
   DisplayRate,
   Entities,
-  ItemObjective,
-  ItemSettings,
-  MachineSettings,
+  ItemCfg,
+  ItemObj,
+  MachineCfg,
   ModHash,
   ObjectiveType,
   RateUnit,
   Rational,
-  RecipeObjective,
-  RecipeSettings,
+  RecipeCfg,
+  RecipeObj,
   Step,
 } from '~/models';
 import {
@@ -236,7 +236,7 @@ export class RouterService {
     if (step.items == null || step.itemId == null || hash == null) {
       return null;
     }
-    const itemObjectives: ItemObjective[] = [
+    const itemObjectives: ItemObj[] = [
       {
         id: '0',
         itemId: step.itemId,
@@ -677,7 +677,7 @@ export class RouterService {
   }
 
   zipBeacons(
-    recipeObjectives: RecipeObjective[],
+    recipeObjectives: RecipeObj[],
     recipes: Recipes.RecipesState,
     hash: ModHash
   ): ZipData {
@@ -726,7 +726,7 @@ export class RouterService {
   }
 
   zipBeaconArray(
-    beacons: BeaconSettings[],
+    beacons: BeaconCfg[],
     beaconsIdMap: Entities<number>,
     list: Zip[],
     hash: ModHash
@@ -756,7 +756,7 @@ export class RouterService {
     });
   }
 
-  unzipBeacons(params: Entities, hash?: ModHash): BeaconSettings[] {
+  unzipBeacons(params: Entities, hash?: ModHash): BeaconCfg[] {
     if (!params[Section.Beacons]) return [];
 
     const list = params[Section.Beacons].split(LISTSEP);
@@ -764,7 +764,7 @@ export class RouterService {
     return list.map((beacon) => {
       const s = beacon.split(FIELDSEP);
       let i = 0;
-      let obj: BeaconSettings;
+      let obj: BeaconCfg;
 
       if (hash) {
         obj = {
@@ -789,7 +789,7 @@ export class RouterService {
 
   zipItemObjectives(
     data: ZipData,
-    itemObjectives: ItemObjective[],
+    itemObjectives: ItemObj[],
     hash: ModHash
   ): void {
     const z = this.zipList(
@@ -822,13 +822,13 @@ export class RouterService {
   ): ItemObjectives.ItemObjectivesState {
     const list = params[Section.ItemObjectives].split(LISTSEP);
     const ids: string[] = [];
-    const entities: Entities<ItemObjective> = {};
+    const entities: Entities<ItemObj> = {};
     let index = 1;
     for (const itemObjective of list) {
       const s = itemObjective.split(FIELDSEP);
       let i = 0;
       const id = index.toString();
-      let obj: ItemObjective;
+      let obj: ItemObj;
 
       if (hash) {
         obj = {
@@ -858,7 +858,7 @@ export class RouterService {
 
   zipRecipeObjectives(
     data: ZipData,
-    recipeObjectives: RecipeObjective[],
+    recipeObjectives: RecipeObj[],
     hash: ModHash
   ): void {
     const z = this.zipList(
@@ -900,18 +900,18 @@ export class RouterService {
 
   unzipRecipeObjectives(
     params: Entities,
-    beaconSettings: BeaconSettings[],
+    beaconSettings: BeaconCfg[],
     hash?: ModHash
   ): RecipeObjectives.RecipeObjectivesState {
     const list = params[Section.RecipeObjectives].split(LISTSEP);
     const ids: string[] = [];
-    const entities: Entities<RecipeObjective> = {};
+    const entities: Entities<RecipeObj> = {};
     let index = 1;
     for (const recipeObjective of list) {
       const s = recipeObjective.split(FIELDSEP);
       let i = 0;
       const id = index.toString();
-      let obj: RecipeObjective;
+      let obj: RecipeObj;
 
       if (hash) {
         obj = {
@@ -989,7 +989,7 @@ export class RouterService {
       const s = item.split(FIELDSEP);
       let i = 0;
       let id: string;
-      let obj: ItemSettings;
+      let obj: ItemCfg;
 
       if (hash) {
         id = this.parseNString(s[i++], hash.items) ?? '';
@@ -1053,7 +1053,7 @@ export class RouterService {
 
   unzipRecipes(
     params: Entities,
-    beaconSettings: BeaconSettings[],
+    beaconSettings: BeaconCfg[],
     hash?: ModHash
   ): Recipes.RecipesState {
     const list = params[Section.Recipes].split(LISTSEP);
@@ -1062,7 +1062,7 @@ export class RouterService {
       const s = recipe.split(FIELDSEP);
       let i = 0;
       let id: string;
-      let obj: RecipeSettings;
+      let obj: RecipeCfg;
 
       if (hash) {
         id = this.parseNString(s[i++], hash.recipes) ?? '';
@@ -1142,14 +1142,14 @@ export class RouterService {
   unzipMachines(params: Entities, hash?: ModHash): Machines.MachinesState {
     const list = params[Section.Machines].split(LISTSEP);
     let ids: string[] | undefined;
-    const entities: Entities<MachineSettings> = {};
+    const entities: Entities<MachineCfg> = {};
     let loadIds = false;
     for (let z = 0; z < list.length; z++) {
       const machine = list[z];
       const s = machine.split(FIELDSEP);
       let i = 0;
       let id: string | undefined;
-      let obj: Partial<MachineSettings>;
+      let obj: Partial<MachineCfg>;
 
       if (hash) {
         id = s[i++];

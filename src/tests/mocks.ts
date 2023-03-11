@@ -42,25 +42,25 @@ export const CategoryId = Dataset.categoryIds[0];
 export const Item1 = Dataset.itemEntities[Dataset.itemIds[0]];
 export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
 export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
-export const ItemObjective1: M.ItemObjective = {
+export const ItemObjective1: M.ItemObj = {
   id: '0',
   itemId: Item1.id,
   rate: '1',
   rateUnit: M.AmountType.Items,
 };
-export const ItemObjective2: M.ItemObjective = {
+export const ItemObjective2: M.ItemObj = {
   id: '1',
   itemId: Item2.id,
   rate: '2',
   rateUnit: M.AmountType.Belts,
 };
-export const ItemObjective3: M.ItemObjective = {
+export const ItemObjective3: M.ItemObj = {
   id: '2',
   itemId: ItemId.PetroleumGas,
   rate: '3',
   rateUnit: M.AmountType.Wagons,
 };
-export const ItemObjective4: M.ItemObjective = {
+export const ItemObjective4: M.ItemObj = {
   id: '3',
   itemId: ItemId.TransportBelt,
   rate: '4',
@@ -78,11 +78,11 @@ export const ItemObjectivesState: ItemObjectives.ItemObjectivesState = {
   index: ItemObjectivesList.length + 1,
 };
 export const RationalItemObjectives = ItemObjectivesList.map((p) => {
-  const rp = new M.RationalItemObjective(p);
+  const rp = new M.ItemRtlObj(p);
   return rp;
 });
 export const RationalItemObjective = RationalItemObjectives[0];
-export const RecipeObjective: M.RecipeObjective = {
+export const RecipeObjective: M.RecipeObj = {
   id: '0',
   recipeId: RecipeId.IronPlate,
   count: '1',
@@ -92,7 +92,7 @@ export const RecipeObjectivesState: RecipeObjectives.RecipeObjectivesState = {
   entities: { ['0']: RecipeObjective },
   index: 2,
 };
-export const RationalRecipeObjective = new M.RationalRecipeObjective(
+export const RationalRecipeObjective = new M.RecipeRtlObj(
   RecipeObjective,
   Dataset.recipeR[RecipeId.IronPlate]
 );
@@ -109,12 +109,12 @@ export const ItemObjectivesteps = {
     [RecipeId.TransportBelt, M.Rational.one],
   ],
 };
-export const ItemSettings1: M.ItemSettings = {
+export const ItemSettings1: M.ItemCfg = {
   excluded: false,
   beltId: ItemId.TransportBelt,
   wagonId: ItemId.CargoWagon,
 };
-export const RecipeSettings1: M.RecipeSettings = {
+export const RecipeSettings1: M.RecipeCfg = {
   machineId: ItemId.AssemblingMachine2,
   machineModuleIds: [ItemId.Module, ItemId.Module],
   beacons: [
@@ -125,7 +125,7 @@ export const RecipeSettings1: M.RecipeSettings = {
     },
   ],
 };
-export const RecipeSettings2: M.RecipeSettings = {
+export const RecipeSettings2: M.RecipeCfg = {
   machineId: ItemId.AssemblingMachine2,
   machineModuleIds: [ItemId.Module, ItemId.Module],
   beacons: [
@@ -163,11 +163,11 @@ export const BeltSpeed: M.Entities<M.Rational> = {
   [ItemId.TransportBelt]: new M.Rational(BigInt(15)),
   [ItemId.Pipe]: new M.Rational(BigInt(1500)),
 };
-export const ItemSettingsEntities: M.Entities<M.ItemSettings> = {};
+export const ItemSettingsEntities: M.Entities<M.ItemCfg> = {};
 for (const item of Dataset.itemIds.map((i) => Dataset.itemEntities[i])) {
   ItemSettingsEntities[item.id] = { ...ItemSettings1 };
 }
-export const RecipeSettingsEntities: M.Entities<M.RecipeSettings> = {};
+export const RecipeSettingsEntities: M.Entities<M.RecipeCfg> = {};
 for (const recipe of Dataset.recipeIds.map((i) => Dataset.recipeEntities[i])) {
   RecipeSettingsEntities[recipe.id] = { ...RecipeSettings1 };
 }
@@ -195,7 +195,7 @@ export const MachineSettingsInitial = Machines.getMachines.projector(
   Defaults,
   Dataset
 );
-export function getRecipeSettings(): M.Entities<M.RecipeSettings> {
+export function getRecipeSettings(): M.Entities<M.RecipeCfg> {
   Recipes.getRecipeSettings.release();
   return Recipes.getRecipeSettings.projector(
     {},
@@ -206,7 +206,7 @@ export function getRecipeSettings(): M.Entities<M.RecipeSettings> {
 export const RecipeSettingsInitial = getRecipeSettings();
 export const RationalRecipeSettings =
   Recipes.getRationalRecipeSettings.projector(RecipeSettingsEntities);
-export function getRationalRecipeSettings(): M.Entities<M.RationalRecipeSettings> {
+export function getRationalRecipeSettings(): M.Entities<M.RecipeRtlCfg> {
   Recipes.getRationalRecipeSettings.release();
   return Recipes.getRationalRecipeSettings.projector(RecipeSettingsInitial);
 }

@@ -1,7 +1,8 @@
 import { ObjectiveType, RateUnit } from './enum';
 import { Rational } from './rational';
 
-export interface ItemObjective {
+/** Item objective configuration */
+export interface ItemObj {
   id: string;
   itemId: string;
   rate: string;
@@ -9,14 +10,15 @@ export interface ItemObjective {
   type: ObjectiveType;
 }
 
-export class RationalItemObjective {
+/** Rational item objective configuration */
+export class ItemRtlObj {
   id: string;
   itemId: string;
   rate: Rational;
   rateUnit: RateUnit;
   type: ObjectiveType;
 
-  constructor(obj: ItemObjective) {
+  constructor(obj: ItemObj) {
     this.id = obj.id;
     this.itemId = obj.itemId;
     this.rate = Rational.fromString(obj.rate);

@@ -1,10 +1,10 @@
 import { Rational } from '../rational';
-import { RationalModule } from './module';
+import { ModuleRtl } from './module';
 
-describe('RationalModule', () => {
+describe('ModuleRtl', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new RationalModule({
+      const result = new ModuleRtl({
         speed: 1,
         productivity: 2,
         consumption: 3,
@@ -23,7 +23,7 @@ describe('RationalModule', () => {
     });
 
     it('should ignore undefined fields', () => {
-      const result = new RationalModule({});
+      const result = new ModuleRtl({});
       expect(result.speed).toBeUndefined();
       expect(result.productivity).toBeUndefined();
       expect(result.consumption).toBeUndefined();

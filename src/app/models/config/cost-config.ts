@@ -13,4 +13,4 @@ export type CostKey =
 export type CostsCfg = Record<CostKey, string>;
 
 /** Rational simplex costs configuration */
-export type CostsRatCfg = Record<CostKey, Rational>;
+export type CostsRtlCfg = Record<CostKey, Rational>;

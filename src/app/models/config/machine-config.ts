@@ -1,6 +1,6 @@
 import { SelectItem } from 'primeng/api';
 
-export interface MachineSettings {
+export interface MachineCfg {
   moduleRankIds?: string[];
   /** Calculated, not configurable */
   moduleOptions?: SelectItem[];

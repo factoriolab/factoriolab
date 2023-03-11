@@ -1,6 +1,7 @@
 import { Rational } from '../rational';
 import { ModuleEffect } from './module';
 
+/** Beacon data */
 export interface Beacon {
   effectivity: number | string;
   modules: number;
@@ -14,7 +15,8 @@ export interface Beacon {
   disallowEffects?: ModuleEffect[];
 }
 
-export class RationalBeacon {
+/** Rational beacon data */
+export class BeaconRtl {
   effectivity: Rational;
   modules: number;
   range: number;

@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { RationalRecipeObjective, RationalRecipeSettings } from '~/models';
+import { RecipeRtlCfg, RecipeRtlObj } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
@@ -47,7 +47,7 @@ export const getRationalRecipeObjectives = createSelector(
   (recipeObjectives, adj, itemSettings) =>
     recipeObjectives.map(
       (p) =>
-        new RationalRecipeObjective(
+        new RecipeRtlObj(
           p,
           RecipeUtility.adjustRecipe(
             p.recipeId,
@@ -56,7 +56,7 @@ export const getRationalRecipeObjectives = createSelector(
             adj.miningBonus,
             adj.researchSpeed,
             adj.netProductionOnly,
-            new RationalRecipeSettings(p),
+            new RecipeRtlCfg(p),
             itemSettings,
             adj.data
           )

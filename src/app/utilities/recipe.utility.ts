@@ -3,23 +3,23 @@ import { SelectItem } from 'primeng/api';
 import { fnPropsNotNullish } from '~/helpers';
 import {
   Beacon,
-  CostsRatCfg,
+  BeaconRtl,
+  BeltRtl,
+  CostsRtlCfg,
   Dataset,
   EnergyType,
   Entities,
   FuelType,
   Game,
+  ItemCfg,
   ItemId,
-  ItemSettings,
   Machine,
+  MachineRtl,
   Rational,
-  RationalBeacon,
-  RationalBelt,
-  RationalMachine,
-  RationalRecipe,
-  RationalRecipeSettings,
   Recipe,
-  RecipeObjective,
+  RecipeObj,
+  RecipeRtl,
+  RecipeRtlCfg,
 } from '~/models';
 import { Machines } from '~/store';
 
@@ -41,7 +41,7 @@ export class RecipeUtility {
   }
 
   static moduleOptions(
-    entity: Machine | RationalMachine | Beacon | RationalBeacon,
+    entity: Machine | MachineRtl | Beacon | BeaconRtl,
     recipeId: string | null,
     data: Dataset
   ): SelectItem[] {
@@ -93,11 +93,11 @@ export class RecipeUtility {
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    settings: RationalRecipeSettings,
-    itemSettings: Entities<ItemSettings>,
+    settings: RecipeRtlCfg,
+    itemSettings: Entities<ItemCfg>,
     data: Dataset
-  ): RationalRecipe {
-    const recipe = new RationalRecipe(data.recipeEntities[recipeId]);
+  ): RecipeRtl {
+    const recipe = new RecipeRtl(data.recipeEntities[recipeId]);
     if (settings.machineId != null) {
       const machine = data.machineEntities[settings.machineId];
 
@@ -116,7 +116,7 @@ export class RecipeUtility {
           .filter((b): b is string => b != null)
           .map((beltId) => data.beltEntities[beltId]);
         let minSpeed = Rational.zero;
-        for (const b of belts.filter((b): b is RationalBelt => b != null)) {
+        for (const b of belts.filter((b): b is BeltRtl => b != null)) {
           if (minSpeed.lt(b.speed)) {
             minSpeed = b.speed;
           }
@@ -402,10 +402,10 @@ export class RecipeUtility {
 
   /** Adjust rocket launch and rocket part recipes */
   static adjustSiloRecipes(
-    recipeR: Entities<RationalRecipe>,
-    settings: Entities<RationalRecipeSettings>,
+    recipeR: Entities<RecipeRtl>,
+    settings: Entities<RecipeRtlCfg>,
     data: Dataset
-  ): Entities<RationalRecipe> {
+  ): Entities<RecipeRtl> {
     for (const partId of Object.keys(recipeR)) {
       const partMachineId = settings[partId].machineId;
       if (partMachineId) {
@@ -435,8 +435,8 @@ export class RecipeUtility {
   }
 
   static allowsModules(
-    recipe: Recipe | RationalRecipe,
-    machine: RationalMachine
+    recipe: Recipe | RecipeRtl,
+    machine: MachineRtl
   ): boolean {
     return (
       (!machine.silo || !recipe.part) &&
@@ -446,14 +446,14 @@ export class RecipeUtility {
   }
 
   static adjustDataset(
-    recipeSettings: Entities<RationalRecipeSettings>,
-    itemSettings: Entities<ItemSettings>,
+    recipeSettings: Entities<RecipeRtlCfg>,
+    itemSettings: Entities<ItemCfg>,
     fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    cost: CostsRatCfg,
+    cost: CostsRtlCfg,
     data: Dataset
   ): Dataset {
     const recipeR = this.adjustRecipes(
@@ -471,17 +471,17 @@ export class RecipeUtility {
   }
 
   static adjustRecipes(
-    recipeSettings: Entities<RationalRecipeSettings>,
-    itemSettings: Entities<ItemSettings>,
+    recipeSettings: Entities<RecipeRtlCfg>,
+    itemSettings: Entities<ItemCfg>,
     fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
     data: Dataset
-  ): Entities<RationalRecipe> {
+  ): Entities<RecipeRtl> {
     return this.adjustSiloRecipes(
-      data.recipeIds.reduce((e: Entities<RationalRecipe>, i) => {
+      data.recipeIds.reduce((e: Entities<RecipeRtl>, i) => {
         e[i] = this.adjustRecipe(
           i,
           fuelId,
@@ -501,9 +501,9 @@ export class RecipeUtility {
   }
 
   static adjustCost(
-    recipeR: Entities<RationalRecipe>,
-    recipeSettings: Entities<RationalRecipeSettings>,
-    cost: CostsRatCfg
+    recipeR: Entities<RecipeRtl>,
+    recipeSettings: Entities<RecipeRtlCfg>,
+    cost: CostsRtlCfg
   ): void {
     for (const id of Object.keys(recipeR)) {
       const recipe = recipeR[id];
@@ -524,10 +524,10 @@ export class RecipeUtility {
   }
 
   static adjustRecipeObjective(
-    recipeObjective: RecipeObjective,
+    recipeObjective: RecipeObj,
     machines: Machines.MachinesState,
     data: Dataset
-  ): RecipeObjective {
+  ): RecipeObj {
     recipeObjective = { ...recipeObjective };
     const recipe = data.recipeEntities[recipeObjective.recipeId];
 

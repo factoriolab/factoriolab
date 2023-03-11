@@ -1,11 +1,11 @@
-import { Entities, IdDefaultPayload, RecipeSettings } from '~/models';
+import { Entities, IdDefaultPayload, RecipeCfg } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { Items } from '../';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
 import { RecipesAction, RecipesActionType } from './recipes.actions';
 
-export type RecipesState = Entities<RecipeSettings>;
+export type RecipesState = Entities<RecipeCfg>;
 
 export const initialRecipesState: RecipesState = {};
 
@@ -30,7 +30,7 @@ export function recipesReducer(
       for (const entry of action.payload) {
         state = StoreUtility.compareReset(state, 'excluded', entry);
       }
-      
+
       return state;
     }
     case RecipesActionType.SET_CHECKED:

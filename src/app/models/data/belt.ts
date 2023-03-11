@@ -1,10 +1,12 @@
 import { Rational } from '../rational';
 
+/** Belt data */
 export interface Belt {
   speed: number | string;
 }
 
-export class RationalBelt {
+/** Rational belt data */
+export class BeltRtl {
   speed: Rational;
 
   constructor(obj: Belt) {

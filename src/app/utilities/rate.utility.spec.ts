@@ -5,8 +5,8 @@ import {
   Entities,
   Game,
   Rational,
-  RationalRecipeObjective,
-  RationalRecipeSettings,
+  RecipeRtlCfg,
+  RecipeRtlObj,
   Step,
 } from '~/models';
 import { RateUtility } from './rate.utility';
@@ -195,7 +195,7 @@ describe('RateUtility', () => {
         recipeId: RecipeId.Coal,
         recipeObjectiveId: '0',
       };
-      const producers: Entities<RationalRecipeObjective> = {
+      const producers: Entities<RecipeRtlObj> = {
         ['0']: {
           id: '0',
           recipeId: RecipeId.Coal,
@@ -346,7 +346,7 @@ describe('RateUtility', () => {
     });
 
     it('should override from recipe settings', () => {
-      const recipeSettings: RationalRecipeSettings = {
+      const recipeSettings: RecipeRtlCfg = {
         beacons: [
           {
             count: Rational.from(8),

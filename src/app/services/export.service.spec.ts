@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { ItemSettings, Rational, RecipeSettings, Step } from '~/models';
+import { ItemCfg, Rational, RecipeCfg, Step } from '~/models';
 import { Preferences } from '~/store';
 import { ExportService } from './export.service';
 
@@ -58,11 +58,11 @@ describe('ExportService', () => {
       itemId: itemId,
       recipeId: recipeId,
     };
-    const itemS: ItemSettings = {
+    const itemS: ItemCfg = {
       beltId: 'belt',
       wagonId: 'wagon',
     };
-    const fullRecipe: RecipeSettings = {
+    const fullRecipe: RecipeCfg = {
       machineId: ItemId.AssemblingMachine2,
       machineModuleIds: ['a', 'b'],
       beacons: [{ count: '8', id: 'beacon', moduleIds: ['c', 'd'] }],

@@ -2,7 +2,8 @@ import { SelectItem } from 'primeng/api';
 
 import { Rational } from '../rational';
 
-export interface BeaconSettings {
+/** Beacon configuration */
+export interface BeaconCfg {
   count?: string;
   id?: string;
   moduleIds?: string[];
@@ -11,7 +12,8 @@ export interface BeaconSettings {
   total?: string;
 }
 
-export class RationalBeaconSettings {
+/** Beacon rational configuration */
+export class BeaconRtlCfg {
   count?: Rational;
   id?: string;
   moduleIds?: string[];
@@ -19,7 +21,7 @@ export class RationalBeaconSettings {
   moduleOptions?: SelectItem[];
   total?: Rational;
 
-  constructor(obj: BeaconSettings) {
+  constructor(obj: BeaconCfg) {
     if (obj.count != null) {
       this.count = Rational.fromString(obj.count);
     }

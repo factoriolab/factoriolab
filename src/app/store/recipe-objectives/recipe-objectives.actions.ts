@@ -7,7 +7,7 @@ import {
   IdPayload,
   ObjectiveType,
 } from '~/models';
-import { RecipeObjective } from '~/models/recipe-objective';
+import { RecipeObj } from '~/models/recipe-objective';
 
 export const enum RecipeObjectivesActionType {
   ADD = '[Recipe Objectives] Add',
@@ -36,7 +36,7 @@ export class AddAction implements Action {
 
 export class CreateAction implements Action {
   readonly type = RecipeObjectivesActionType.CREATE;
-  constructor(public payload: RecipeObjective) {}
+  constructor(public payload: RecipeObj) {}
 }
 
 export class RemoveAction implements Action {

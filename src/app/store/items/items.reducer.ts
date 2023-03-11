@@ -1,10 +1,10 @@
-import { Entities, ItemSettings } from '~/models';
+import { Entities, ItemCfg } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
 import { ItemsAction, ItemsActionType } from './items.actions';
 
-export type ItemsState = Entities<ItemSettings>;
+export type ItemsState = Entities<ItemCfg>;
 
 export const initialItemsState: ItemsState = {};
 

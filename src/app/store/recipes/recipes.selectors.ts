@@ -1,11 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import {
-  Entities,
-  Rational,
-  RationalRecipeSettings,
-  RecipeSettings,
-} from '~/models';
+import { Entities, Rational, RecipeCfg, RecipeRtlCfg } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
@@ -24,10 +19,10 @@ export const getRecipeSettings = createSelector(
   Machines.getMachines,
   Settings.getDataset,
   (state, machines, data) => {
-    const value: Entities<RecipeSettings> = {};
+    const value: Entities<RecipeCfg> = {};
     const defaultexcludedRecipeIds = data.defaults?.excludedRecipeIds ?? [];
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
-      const s: RecipeSettings = { ...state[recipe.id] };
+      const s: RecipeCfg = { ...state[recipe.id] };
 
       if (s.excluded == null) {
         s.excluded = defaultexcludedRecipeIds.some((i) => i === recipe.id);
@@ -115,13 +110,10 @@ export const getRecipeSettings = createSelector(
 export const getRationalRecipeSettings = createSelector(
   getRecipeSettings,
   (recipeSettings) =>
-    Object.keys(recipeSettings).reduce(
-      (e: Entities<RationalRecipeSettings>, i) => {
-        e[i] = new RationalRecipeSettings(recipeSettings[i]);
-        return e;
-      },
-      {}
-    )
+    Object.keys(recipeSettings).reduce((e: Entities<RecipeRtlCfg>, i) => {
+      e[i] = new RecipeRtlCfg(recipeSettings[i]);
+      return e;
+    }, {})
 );
 
 export const getSrc = createSelector(

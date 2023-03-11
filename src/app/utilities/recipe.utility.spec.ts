@@ -1,10 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import {
-  Entities,
-  Rational,
-  RationalRecipe,
-  RationalRecipeSettings,
-} from '~/models';
+import { Entities, Rat, Rational, Recipe, RecipeRtlCfg } from '~/models';
 import { RecipeUtility } from './recipe.utility';
 
 describe('RecipeUtility', () => {
@@ -52,7 +47,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
@@ -76,7 +71,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.CopperCable]
       );
       expected.time = Rational.from(2, 3);
@@ -103,7 +98,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.MiningProductivity]
       );
       expected.out = { [ItemId.MiningProductivity]: Rational.one };
@@ -130,7 +125,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.IronOre]
       );
       expected.out = { [ItemId.IronOre]: Rational.from(3) };
@@ -187,7 +182,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         data
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = {
@@ -242,7 +237,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         data
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = {
@@ -270,7 +265,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.IronOre]
       );
       expected.in = { [ItemId.Coal]: Rational.from(3, 20) };
@@ -299,7 +294,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.PlasticBar]
       );
       expected.in[ItemId.Coal] = Rational.from(809, 800);
@@ -372,7 +367,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         Mocks.Dataset
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
@@ -401,7 +396,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         data
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
@@ -442,7 +437,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         data
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
@@ -485,7 +480,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         data
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
@@ -498,7 +493,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should calculate proliferator usage', () => {
-      const settings = new RationalRecipeSettings({
+      const settings = new RecipeRtlCfg({
         ...Mocks.RecipeSettingsInitial[ItemId.SteelChest],
         ...{ machineModuleIds: [ItemId.ProductivityModule3] },
       });
@@ -552,7 +547,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         data
       );
-      const expected = new RationalRecipe(recipe);
+      const expected = new RecipeRat(recipe);
       expected.in[ItemId.ProductivityModule] = Rational.from(11, 10);
       expected.in[ItemId.ProductivityModule3] = Rational.from(9, 10);
       expected.out = { [ItemId.SteelChest]: Rational.from(11, 10) };
@@ -565,7 +560,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should ignore proliferator self-spray with no productivity bonus', () => {
-      const settings = new RationalRecipeSettings({
+      const settings = new RecipeRtlCfg({
         ...Mocks.RecipeSettingsInitial[ItemId.SteelChest],
         ...{ machineModuleIds: [ItemId.ProductivityModule3] },
       });
@@ -619,7 +614,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         data
       );
-      const expected = new RationalRecipe(recipe);
+      const expected = new RecipeRat(recipe);
       expected.in[ItemId.SpeedModule] = Rational.from(1, 10);
       expected.in[ItemId.ProductivityModule3] = Rational.from(9, 10);
       expected.out = { [ItemId.SteelChest]: Rational.from(11, 10) };
@@ -661,7 +656,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemSettingsInitial,
         data
       );
-      const expected = new RationalRecipe(
+      const expected = new RecipeRat(
         Mocks.Dataset.recipeEntities[RecipeId.CopperCable]
       );
       expected.time = Rational.from(2, 3);
@@ -732,11 +727,11 @@ describe('RecipeUtility', () => {
   });
 
   describe('adjustSiloRecipes', () => {
-    let recipeR: Entities<RationalRecipe>;
+    let recipeR: Entities<RecipeRat>;
 
     beforeEach(() => {
       recipeR = Mocks.AdjustedData.recipeIds.reduce(
-        (e: Entities<RationalRecipe>, i) => {
+        (e: Entities<RecipeRat>, i) => {
           e[i] = RecipeUtility.adjustRecipe(
             i,
             ItemId.Coal,
@@ -892,7 +887,7 @@ describe('RecipeUtility', () => {
   });
 
   describe('adjustCost', () => {
-    let recipeR: Entities<RationalRecipe>;
+    let recipeR: Entities<RecipeRat>;
 
     beforeEach(() => {
       recipeR = RecipeUtility.adjustRecipes(

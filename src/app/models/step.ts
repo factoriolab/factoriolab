@@ -1,7 +1,7 @@
-import { RationalRecipe } from './data';
+import { RecipeRtlCfg } from './config';
+import { RecipeRtl } from './data';
 import { Entities } from './entities';
 import { Rational } from './rational';
-import { RationalRecipeSettings } from './settings';
 
 export interface Step {
   id: string;
@@ -29,8 +29,8 @@ export interface Step {
   /** Fraction this recipe produces of each item */
   outputs?: Entities<Rational>;
   recipeId?: string;
-  recipe?: RationalRecipe;
-  recipeSettings?: RationalRecipeSettings;
+  recipe?: RecipeRtl;
+  recipeSettings?: RecipeRtlCfg;
   machines?: Rational;
   power?: Rational;
   pollution?: Rational;

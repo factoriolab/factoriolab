@@ -6,9 +6,9 @@ import {
   ColumnsCfg,
   Dataset,
   Entities,
-  ItemSettings,
+  ItemCfg,
   Rational,
-  RecipeSettings,
+  RecipeCfg,
   Step,
 } from '~/models';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
@@ -47,8 +47,8 @@ export class ExportService {
   stepsToCsv(
     steps: Step[],
     columnsCfg: ColumnsCfg,
-    itemSettings: Entities<ItemSettings>,
-    recipeSettings: Entities<RecipeSettings>,
+    itemSettings: Entities<ItemCfg>,
+    recipeSettings: Entities<RecipeCfg>,
     data: Dataset
   ): void {
     const json = steps.map((s) =>
@@ -83,8 +83,8 @@ export class ExportService {
     step: Step,
     steps: Step[],
     columns: ColumnsCfg,
-    itemSettings: Entities<ItemSettings>,
-    recipeSettings: Entities<RecipeSettings>,
+    itemSettings: Entities<ItemCfg>,
+    recipeSettings: Entities<RecipeCfg>,
     data: Dataset
   ): StepExport {
     const exp: StepExport = {};

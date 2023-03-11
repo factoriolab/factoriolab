@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { RecipeObjective } from '~/models';
+import { RecipeObj } from '~/models';
 import { Items } from '../';
 import * as App from '../app.actions';
 import * as Recipes from '../recipes';
@@ -74,7 +74,7 @@ describe('Producers Reducer', () => {
 
   describe('CREATE', () => {
     it('should create a new producer', () => {
-      const product: RecipeObjective = {
+      const product: RecipeObj = {
         id: '1',
         recipeId: RecipeId.IronPlate,
         count: '2',

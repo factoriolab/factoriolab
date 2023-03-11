@@ -1,12 +1,13 @@
 import { Rational } from '../rational';
-import { Beacon, RationalBeacon } from './beacon';
-import { Belt, RationalBelt } from './belt';
-import { CargoWagon, RationalCargoWagon } from './cargo-wagon';
-import { FluidWagon, RationalFluidWagon } from './fluid-wagon';
-import { Fuel, RationalFuel } from './fuel';
-import { Machine, RationalMachine } from './machine';
-import { Module, RationalModule } from './module';
+import { Beacon, BeaconRtl } from './beacon';
+import { Belt, BeltRtl } from './belt';
+import { CargoWagon, CargoWagonRtl } from './cargo-wagon';
+import { FluidWagon, FluidWagonRtl } from './fluid-wagon';
+import { Fuel, FuelRtl } from './fuel';
+import { Machine, MachineRtl } from './machine';
+import { Module, ModuleRtl } from './module';
 
+/** Item data */
 export interface Item {
   id: string;
   name: string;
@@ -27,20 +28,21 @@ export interface Item {
   iconText?: string;
 }
 
-export class RationalItem {
+/** Rational item data */
+export class ItemRtl {
   id: string;
   name: string;
   category: string;
   row: number;
   stack?: Rational;
-  beacon?: RationalBeacon;
-  belt?: RationalBelt;
-  pipe?: RationalBelt;
-  machine?: RationalMachine;
-  module?: RationalModule;
-  fuel?: RationalFuel;
-  cargoWagon?: RationalCargoWagon;
-  fluidWagon?: RationalFluidWagon;
+  beacon?: BeaconRtl;
+  belt?: BeltRtl;
+  pipe?: BeltRtl;
+  machine?: MachineRtl;
+  module?: ModuleRtl;
+  fuel?: FuelRtl;
+  cargoWagon?: CargoWagonRtl;
+  fluidWagon?: FluidWagonRtl;
   /** Used to link the item to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -55,28 +57,28 @@ export class RationalItem {
       this.stack = Rational.fromNumber(obj.stack);
     }
     if (obj.beacon) {
-      this.beacon = new RationalBeacon(obj.beacon);
+      this.beacon = new BeaconRtl(obj.beacon);
     }
     if (obj.belt) {
-      this.belt = new RationalBelt(obj.belt);
+      this.belt = new BeltRtl(obj.belt);
     }
     if (obj.pipe) {
-      this.pipe = new RationalBelt(obj.pipe);
+      this.pipe = new BeltRtl(obj.pipe);
     }
     if (obj.machine) {
-      this.machine = new RationalMachine(obj.machine);
+      this.machine = new MachineRtl(obj.machine);
     }
     if (obj.module) {
-      this.module = new RationalModule(obj.module);
+      this.module = new ModuleRtl(obj.module);
     }
     if (obj.fuel) {
-      this.fuel = new RationalFuel(obj.fuel);
+      this.fuel = new FuelRtl(obj.fuel);
     }
     if (obj.cargoWagon) {
-      this.cargoWagon = new RationalCargoWagon(obj.cargoWagon);
+      this.cargoWagon = new CargoWagonRtl(obj.cargoWagon);
     }
     if (obj.fluidWagon) {
-      this.fluidWagon = new RationalFluidWagon(obj.fluidWagon);
+      this.fluidWagon = new FluidWagonRtl(obj.fluidWagon);
     }
     if (obj.icon) {
       this.icon = obj.icon;

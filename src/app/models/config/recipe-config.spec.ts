@@ -1,11 +1,11 @@
 import { ItemId } from 'src/tests';
 import { Rational } from '../rational';
-import { RationalRecipeSettings } from './recipe-settings';
+import { RecipeRtlCfg } from './recipe-config';
 
-describe('RationalRecipeSettings', () => {
+describe('RecipeRtlCfg', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new RationalRecipeSettings({
+      const result = new RecipeRtlCfg({
         machineId: ItemId.AssemblingMachine1,
         machineModuleIds: [],
         beacons: [],
@@ -22,7 +22,7 @@ describe('RationalRecipeSettings', () => {
     });
 
     it('should ignore undefined fields', () => {
-      const result = new RationalRecipeSettings({});
+      const result = new RecipeRtlCfg({});
       expect(result.machineId).toBeUndefined();
       expect(result.machineModuleIds).toBeUndefined();
       expect(result.beacons).toBeUndefined();

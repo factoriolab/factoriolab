@@ -5,9 +5,9 @@ import {
   Entities,
   Game,
   ItemId,
+  ItemRtlObj,
   PowerUnit,
   Rational,
-  RationalItemObjective,
   Step,
   StepDetail,
   StepDetailTab,
@@ -44,7 +44,7 @@ export const getItemObjectives = createSelector(
 
 export const getRationalItemObjectives = createSelector(
   getItemObjectives,
-  (itemObjectives) => itemObjectives.map((p) => new RationalItemObjective(p))
+  (itemObjectives) => itemObjectives.map((p) => new ItemRtlObj(p))
 );
 
 export const getNormalizedItemObjectives = createSelector(

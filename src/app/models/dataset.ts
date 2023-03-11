@@ -1,17 +1,17 @@
 import {
+  BeaconRtl,
+  BeltRtl,
+  CargoWagonRtl,
   Category,
+  FluidWagonRtl,
+  FuelRtl,
   Icon,
+  ItemRtl,
+  MachineRtl,
   ModHash,
-  RationalBeacon,
-  RationalBelt,
-  RationalCargoWagon,
-  RationalFluidWagon,
-  RationalFuel,
-  RationalItem,
-  RationalMachine,
-  RationalModule,
-  RationalRecipe,
+  ModuleRtl,
   Recipe,
+  RecipeRtl,
 } from './data';
 import { Defaults } from './defaults';
 import { Entities } from './entities';
@@ -27,26 +27,26 @@ export interface Dataset {
   iconIds: string[];
   iconEntities: Entities<Icon>;
   itemIds: string[];
-  itemEntities: Entities<RationalItem>;
+  itemEntities: Entities<ItemRtl>;
   beaconIds: string[];
-  beaconEntities: Entities<RationalBeacon>;
+  beaconEntities: Entities<BeaconRtl>;
   beltIds: string[];
   pipeIds: string[];
-  beltEntities: Entities<RationalBelt>;
+  beltEntities: Entities<BeltRtl>;
   cargoWagonIds: string[];
-  cargoWagonEntities: Entities<RationalCargoWagon>;
+  cargoWagonEntities: Entities<CargoWagonRtl>;
   fluidWagonIds: string[];
-  fluidWagonEntities: Entities<RationalFluidWagon>;
+  fluidWagonEntities: Entities<FluidWagonRtl>;
   machineIds: string[];
-  machineEntities: Entities<RationalMachine>;
+  machineEntities: Entities<MachineRtl>;
   moduleIds: string[];
-  moduleEntities: Entities<RationalModule>;
+  moduleEntities: Entities<ModuleRtl>;
   fuelIds: Entities<string[]>;
-  fuelEntities: Entities<RationalFuel>;
+  fuelEntities: Entities<FuelRtl>;
   itemRecipeId: Entities<string>;
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
-  recipeR: Entities<RationalRecipe>;
+  recipeR: Entities<RecipeRtl>;
   proliferatorModuleIds: string[];
   limitations: Entities<Entities<boolean>>;
   hash?: ModHash;

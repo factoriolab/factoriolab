@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { Entities, ItemId, ItemSettings } from '~/models';
+import { Entities, ItemCfg, ItemId } from '~/models';
 import { LabState } from '../';
 import * as Settings from '../settings';
 import { ItemsState } from './items.reducer';
@@ -14,10 +14,10 @@ export const getItemSettings = createSelector(
   Settings.getDataset,
   Settings.getSettings,
   (state, data, settings) => {
-    const value: Entities<ItemSettings> = {};
+    const value: Entities<ItemCfg> = {};
     if (data?.itemIds?.length) {
       for (const item of data.itemIds.map((i) => data.itemEntities[i])) {
-        const itemSettings: ItemSettings = state[item.id]
+        const itemSettings: ItemCfg = state[item.id]
           ? { ...state[item.id] }
           : { excluded: false };
 

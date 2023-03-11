@@ -4,33 +4,33 @@ import { SelectItem } from 'primeng/api';
 import { environment } from 'src/environments';
 import { fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
+  BeaconRtl,
+  BeltRtl,
+  CargoWagonRtl,
   columnOptions,
   columnsGameCfg,
   CostKey,
-  CostsRatCfg,
+  CostsRtlCfg,
   Dataset,
   Defaults,
   displayRateInf,
   Entities,
+  FluidWagonRtl,
+  FuelRtl,
   FuelType,
   Game,
   gameInf,
   initialColumnsCfg,
   InserterData,
   ItemId,
+  ItemRtl,
+  MachineRtl,
+  ModuleRtl,
   Preset,
   presetOptions,
   rateUnitOptions,
   Rational,
-  RationalBeacon,
-  RationalBelt,
-  RationalCargoWagon,
-  RationalFluidWagon,
-  RationalFuel,
-  RationalItem,
-  RationalMachine,
-  RationalModule,
-  RationalRecipe,
+  RecipeRtl,
   researchSpeedFactor,
   toBoolEntities,
   toEntities,
@@ -224,11 +224,11 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
 
 export const getRationalCost = createSelector(
   getCost,
-  (cost): CostsRatCfg =>
-    (Object.keys(cost) as CostKey[]).reduce((a: Partial<CostsRatCfg>, b) => {
+  (cost): CostsRtlCfg =>
+    (Object.keys(cost) as CostKey[]).reduce((a: Partial<CostsRtlCfg>, b) => {
       a[b] = Rational.fromString(cost[b]);
       return a;
-    }, {}) as CostsRatCfg
+    }, {}) as CostsRtlCfg
 );
 
 export const getI18n = createSelector(
@@ -417,15 +417,15 @@ export const getDataset = createSelector(
     }
 
     // Convert to rationals
-    const beaconEntities: Entities<RationalBeacon> = {};
-    const beltEntities: Entities<RationalBelt> = {};
-    const cargoWagonEntities: Entities<RationalCargoWagon> = {};
-    const fluidWagonEntities: Entities<RationalFluidWagon> = {};
-    const machineEntities: Entities<RationalMachine> = {};
-    const moduleEntities: Entities<RationalModule> = {};
-    const fuelEntities: Entities<RationalFuel> = {};
-    const itemEntities = itemIds.reduce((e: Entities<RationalItem>, i) => {
-      const item = new RationalItem(itemData[i]);
+    const beaconEntities: Entities<BeaconRtl> = {};
+    const beltEntities: Entities<BeltRtl> = {};
+    const cargoWagonEntities: Entities<CargoWagonRtl> = {};
+    const fluidWagonEntities: Entities<FluidWagonRtl> = {};
+    const machineEntities: Entities<MachineRtl> = {};
+    const moduleEntities: Entities<ModuleRtl> = {};
+    const fuelEntities: Entities<FuelRtl> = {};
+    const itemEntities = itemIds.reduce((e: Entities<ItemRtl>, i) => {
+      const item = new ItemRtl(itemData[i]);
       if (item.beacon) {
         beaconEntities[i] = item.beacon;
       }
@@ -453,27 +453,24 @@ export const getDataset = createSelector(
       e[i] = item;
       return e;
     }, {});
-    const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
-      e[r] = new RationalRecipe(recipeEntities[r]);
+    const recipeR = recipeIds.reduce((e: Entities<RecipeRtl>, r) => {
+      e[r] = new RecipeRtl(recipeEntities[r]);
       return e;
     }, {});
 
     // Calculate item simple recipes
-    const recipeMatches = recipeIds.reduce(
-      (e: Entities<RationalRecipe[]>, r) => {
-        const recipe = recipeR[r];
-        const outputs = Object.keys(recipe.out);
-        for (const o of outputs.filter((i) => recipe.produces(i))) {
-          if (!e[o]) {
-            e[o] = [recipe];
-          } else {
-            e[o].push(recipe);
-          }
+    const recipeMatches = recipeIds.reduce((e: Entities<RecipeRtl[]>, r) => {
+      const recipe = recipeR[r];
+      const outputs = Object.keys(recipe.out);
+      for (const o of outputs.filter((i) => recipe.produces(i))) {
+        if (!e[o]) {
+          e[o] = [recipe];
+        } else {
+          e[o].push(recipe);
         }
-        return e;
-      },
-      {}
-    );
+      }
+      return e;
+    }, {});
     const itemRecipeId = itemIds.reduce((e: Entities, i) => {
       const matches = Object.prototype.hasOwnProperty.call(recipeMatches, i)
         ? recipeMatches[i]

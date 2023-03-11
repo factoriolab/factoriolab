@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { Rational, RecipeObjective } from '~/models';
+import { Rational, RecipeObj } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
@@ -190,7 +190,7 @@ describe('Recipes Selectors', () => {
     });
 
     it('should account for producer settings', () => {
-      const producer: RecipeObjective = {
+      const producer: RecipeObj = {
         id: '1',
         recipeId: RecipeId.Coal,
         count: '1',

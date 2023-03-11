@@ -1,10 +1,11 @@
 import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
+  ItemRtlObj,
   MatrixResultType,
+  Rat,
   RateUnit,
   Rational,
-  RationalItemObjective,
-  RationalRecipe,
+  Recipe,
 } from '~/models';
 import { RateUtility } from './rate.utility';
 import { MatrixSolution, MatrixState, SimplexUtility } from './simplex.utility';
@@ -285,7 +286,7 @@ describe('SimplexUtility', () => {
     it('should handle adjusted product', () => {
       const result = SimplexUtility.getState(
         [
-          new RationalItemObjective({
+          new ItemRtlObj({
             id: '1',
             itemId: ItemId.MiningProductivity,
             rate: '60',
@@ -521,7 +522,7 @@ describe('SimplexUtility', () => {
       // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
       state.unproduceableIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
-      state.recipes[RecipeId.CopperPlate] = new RationalRecipe({
+      state.recipes[RecipeId.CopperPlate] = new RecipeRat({
         id: 'id',
         name: 'name',
         time: 1,
@@ -569,7 +570,7 @@ describe('SimplexUtility', () => {
       state.unproduceableIds = [ItemId.Wood, ItemId.Coal];
       state.recipes[RecipeId.CopperCable] =
         Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
-      state.recipes[ItemId.CopperPlate] = new RationalRecipe({
+      state.recipes[ItemId.CopperPlate] = new RecipeRat({
         id: 'id',
         name: 'name',
         time: 1,

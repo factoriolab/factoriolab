@@ -1,5 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
-import { ItemObjective, RateUnit } from '~/models';
+import { ItemObj, RateUnit } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './item-objectives.actions';
 import {
@@ -74,7 +74,7 @@ describe('Item Objectives Reducer', () => {
 
   describe('CREATE', () => {
     it('should create a new product', () => {
-      const product: ItemObjective = {
+      const product: ItemObj = {
         id: '1',
         itemId: ItemId.IronPlate,
         rate: '2',

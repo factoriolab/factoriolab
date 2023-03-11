@@ -7,15 +7,15 @@ import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
-  BeaconSettings,
+  BeaconCfg,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
-  ItemObjective,
+  ItemObj,
   Preset,
   RateUnit,
   Rational,
-  RecipeObjective,
+  RecipeObj,
   ResearchSpeed,
 } from '~/models';
 import {
@@ -43,7 +43,7 @@ import {
   ZipVersion,
 } from './router.service';
 
-const mockProduct: ItemObjective = {
+const mockProduct: ItemObj = {
   id: '1',
   itemId: ItemId.SteelChest,
   rate: '1',
@@ -56,7 +56,7 @@ const mockProductsState: Products.ItemObjectivesState = {
   },
   index: 2,
 };
-const mockProducer: RecipeObjective = {
+const mockProducer: RecipeObj = {
   id: '1',
   recipeId: ItemId.SteelChest,
   count: '1',
@@ -575,7 +575,7 @@ describe('RouterService', () => {
 
   describe('zipBeacons', () => {
     it('should generate maps for producer and recipe beacons', () => {
-      const beacons: BeaconSettings[] = [
+      const beacons: BeaconCfg[] = [
         {
           count: '1',
           id: ItemId.Beacon,

@@ -1,10 +1,4 @@
-import {
-  Entities,
-  ItemObjective,
-  ObjectiveType,
-  RateUnit,
-  Rational,
-} from '~/models';
+import { Entities, ItemObj, ObjectiveType, RateUnit, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
@@ -15,7 +9,7 @@ import {
 
 export interface ItemObjectivesState {
   ids: string[];
-  entities: Entities<ItemObjective>;
+  entities: Entities<ItemObj>;
   index: number;
 }
 
@@ -46,7 +40,7 @@ export function itemObjectivesReducer(
         rate = state.entities[id].rate;
         rateUnit = state.entities[id].rateUnit;
       }
-      const objective: ItemObjective = {
+      const objective: ItemObj = {
         id: state.index.toString(),
         itemId: action.payload,
         rate,
