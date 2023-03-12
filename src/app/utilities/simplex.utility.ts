@@ -230,6 +230,7 @@ export class SimplexUtility {
            * Add item to standard output values with 0-value
            */
           this.addItemValue(state.itemValues, obj.itemId);
+          this.parseItemRecursively(obj.itemId, state);
           const current = state.itemValues[obj.itemId].lim;
           if (current == null || current.gt(obj.rate)) {
             state.itemValues[obj.itemId].lim = obj.rate;
@@ -246,6 +247,7 @@ export class SimplexUtility {
         case ObjectiveType.Maximize: {
           for (const itemId of Object.keys(obj.recipe.out)) {
             this.addItemValue(state.itemValues, itemId);
+            this.parseItemRecursively(itemId, state);
           }
 
           this.parseRecipeRecursively(obj.recipe, state);
@@ -419,6 +421,8 @@ export class SimplexUtility {
     const itemConstrEntities: Entities<Constraint> = {};
     // Track consumption of items, for item limit constraints
     const inputLimitConstrEntities: Entities<Constraint> = {};
+    // Track number of machines for recipe maximization constraints
+    const recipeObjectiveConstrEntities: Entities<Constraint> = {};
     // Variable for maximization ratio, if included
     let maximizeVar: Variable | undefined;
 
@@ -442,10 +446,16 @@ export class SimplexUtility {
     // Add recipe objective vars to model
     for (const obj of state.recipeObjectives) {
       const config: VariableProperties = {
-        lb: obj.count.toNumber(),
-        ub: obj.count.toNumber(),
+        lb: 0,
         name: obj.id,
       };
+
+      // Set ub/lb if type is output, maximize will be set up later
+      if (obj.type === ObjectiveType.Output) {
+        config.ub = obj.count.toNumber();
+        config.lb = obj.count.toNumber();
+      }
+
       recipeObjectiveVarEntities[obj.id] = m.addVar(config);
     }
 
@@ -492,10 +502,13 @@ export class SimplexUtility {
     }
 
     // Add maximize constraint to model
-    const maximizeIds = Object.keys(state.itemValues).filter(
+    const maximizeItemIds = Object.keys(state.itemValues).filter(
       (i) => state.itemValues[i].max != null
     );
-    if (maximizeIds.length > 0) {
+    const maximizeRecipeObjectiveIds = state.recipeObjectives.filter(
+      (o) => o.type === ObjectiveType.Maximize
+    );
+    if (maximizeItemIds.length > 0 || maximizeRecipeObjectiveIds.length > 0) {
       const config: VariableProperties = {
         obj: state.cost.maximize.toNumber(),
         lb: 0,
@@ -574,6 +587,23 @@ export class SimplexUtility {
       }
     }
 
+    if (maximizeVar != null) {
+      // Add recipe objective maximization constraints to model
+      for (const recipeObj of state.recipeObjectives.filter(
+        (o) => o.type === ObjectiveType.Maximize
+      )) {
+        const coeffs: [Variable, number][] = [];
+        coeffs.push([recipeObjectiveVarEntities[recipeObj.id], 1]);
+        coeffs.push([maximizeVar, recipeObj.count.inverse().toNumber()]);
+        const config: ConstraintProperties = {
+          coeffs,
+          lb: 0,
+          name: recipeObj.id,
+        };
+        recipeObjectiveConstrEntities[recipeObj.id] = m.addConstr(config);
+      }
+    }
+
     // Run GLPK simplex
     const start = Date.now();
     const [returnCode, status] = this.glpkSimplex(m);
@@ -640,6 +670,14 @@ export class SimplexUtility {
         excluded[itemId] = val;
       }
     }
+
+    // Update recipe objective counts to account for maximizations
+    state.recipeObjectives = state.recipeObjectives.map((o) => ({
+      ...o,
+      ...{
+        count: Rational.fromNumber(recipeObjectiveVarEntities[o.id].value),
+      },
+    }));
 
     return {
       returnCode,

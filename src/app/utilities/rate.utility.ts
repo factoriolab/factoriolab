@@ -5,6 +5,7 @@ import {
   Game,
   ItemCfg,
   ItemRtlObj,
+  ObjectiveType,
   RateUnit,
   Rational,
   RecipeRtl,
@@ -25,6 +26,11 @@ export class RateUtility {
     displayRateInfo: DisplayRateInf,
     data: Dataset
   ): Rational {
+    if (itemObj.type === ObjectiveType.Maximize) {
+      // Ignore RateUnit entirely when maximizing, it is also hidden in UI
+      return itemObj.rate;
+    }
+
     const rate = itemObj.rate;
     let factor = Rational.one;
     switch (itemObj.rateUnit) {
