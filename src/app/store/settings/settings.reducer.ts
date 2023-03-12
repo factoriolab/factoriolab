@@ -1,5 +1,5 @@
 import {
-  CostsCfg,
+  CostsSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
@@ -28,11 +28,11 @@ export interface SettingsState {
   researchSpeed: ResearchSpeed;
   inserterCapacity: InserterCapacity;
   displayRate: DisplayRate;
-  cost: CostsCfg;
+  cost: CostsSettings;
 }
 
 export type PartialSettingsState = Partial<Omit<SettingsState, 'cost'>> & {
-  cost?: Partial<CostsCfg>;
+  cost?: Partial<CostsSettings>;
 };
 
 export const initialSettingsState: SettingsState = {

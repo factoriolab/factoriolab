@@ -9,10 +9,10 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
 
 import {
-  ColumnCfg,
   ColumnKey,
-  ColumnsCfg,
-  columnsInf,
+  ColumnSettings,
+  columnsInfo,
+  ColumnsState,
   Entities,
 } from '~/models';
 import { ContentService } from '~/services';
@@ -29,7 +29,7 @@ export class ColumnsDialogComponent implements OnInit {
   usesFractions$ = new BehaviorSubject(false);
   vm$ = combineLatest([
     this.store
-      .select(Settings.getColumnsCfg)
+      .select(Settings.getColumnsState)
       .pipe(tap((columns) => this.initEdit(columns))),
     this.store.select(Settings.getColumnOptions),
     this.usesFractions$,
@@ -42,8 +42,8 @@ export class ColumnsDialogComponent implements OnInit {
   );
 
   visible = false;
-  editValue: Entities<ColumnCfg> = {};
-  columnsInf = columnsInf;
+  editValue: Entities<ColumnSettings> = {};
+  columnsInf = columnsInfo;
 
   constructor(
     private ref: ChangeDetectorRef,
@@ -58,10 +58,10 @@ export class ColumnsDialogComponent implements OnInit {
     });
   }
 
-  initEdit(columnsCfg: ColumnsCfg): void {
-    this.editValue = (Object.keys(columnsCfg) as ColumnKey[]).reduce(
-      (e: Entities<ColumnCfg>, c) => {
-        e[c] = { ...columnsCfg[c] };
+  initEdit(columnsState: ColumnsState): void {
+    this.editValue = (Object.keys(columnsState) as ColumnKey[]).reduce(
+      (e: Entities<ColumnSettings>, c) => {
+        e[c] = { ...columnsState[c] };
         return e;
       },
       {}
@@ -77,14 +77,14 @@ export class ColumnsDialogComponent implements OnInit {
   updateUsesFractions(): void {
     this.usesFractions$.next(
       (Object.keys(this.editValue) as ColumnKey[]).some(
-        (c) => columnsInf[c].hasPrecision && this.editValue[c] == null
+        (c) => columnsInfo[c].hasPrecision && this.editValue[c] == null
       )
     );
   }
 
   save(): void {
     this.store.dispatch(
-      new Preferences.SetColumnsAction(this.editValue as ColumnsCfg)
+      new Preferences.SetColumnsAction(this.editValue as ColumnsState)
     );
   }
 }

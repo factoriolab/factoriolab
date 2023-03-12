@@ -4,33 +4,33 @@ import { SelectItem } from 'primeng/api';
 import { environment } from 'src/environments';
 import { fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
-  BeaconRtl,
-  BeltRtl,
-  CargoWagonRtl,
+  BeaconRational,
+  BeltRational,
+  CargoWagonRational,
   columnOptions,
-  columnsGameCfg,
   CostKey,
-  CostsRtlCfg,
+  CostsRationalSettings,
   Dataset,
   Defaults,
-  displayRateInf,
+  displayRateInfo,
   Entities,
-  FluidWagonRtl,
-  FuelRtl,
+  FluidWagonRational,
+  FuelRational,
   FuelType,
   Game,
-  gameInf,
-  initialColumnsCfg,
+  gameColumnsState,
+  gameInfo,
+  initialColumnsState,
   InserterData,
   ItemId,
-  ItemRtl,
-  MachineRtl,
-  ModuleRtl,
+  ItemRational,
+  MachineRational,
+  ModuleRational,
   Preset,
   presetOptions,
   rateUnitOptions,
   Rational,
-  RecipeRtl,
+  RecipeRational,
   researchSpeedFactor,
   toBoolEntities,
   toEntities,
@@ -104,15 +104,15 @@ export const getGame = createSelector(
   (id, data) => data[id]?.game ?? Game.None
 );
 
-export const getGameInf = createSelector(getGame, (game) => gameInf[game]);
+export const getGameInfo = createSelector(getGame, (game) => gameInfo[game]);
 
-export const getColumnOptions = createSelector(getGameInf, (gameInf) =>
+export const getColumnOptions = createSelector(getGameInfo, (gameInf) =>
   columnOptions(gameInf)
 );
 
 export const getDisplayRateInfo = createSelector(
   getDisplayRate,
-  (displayRate) => displayRateInf[displayRate]
+  (displayRate) => displayRateInfo[displayRate]
 );
 
 export const getRateUnitOptions = createSelector(
@@ -139,11 +139,14 @@ export const getModOptions = createSelector(
       )
 );
 
-export const getColumnsCfg = createSelector(
-  getGameInf,
+export const getColumnsState = createSelector(
+  getGameInfo,
   Preferences.getColumns,
-  (gameInf, columnsCfg) => {
-    return columnsGameCfg({ ...initialColumnsCfg, ...columnsCfg }, gameInf);
+  (gameInfo, columnsState) => {
+    return gameColumnsState(
+      { ...initialColumnsState, ...columnsState },
+      gameInfo
+    );
   }
 );
 
@@ -224,11 +227,14 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
 
 export const getRationalCost = createSelector(
   getCost,
-  (cost): CostsRtlCfg =>
-    (Object.keys(cost) as CostKey[]).reduce((a: Partial<CostsRtlCfg>, b) => {
-      a[b] = Rational.fromString(cost[b]);
-      return a;
-    }, {}) as CostsRtlCfg
+  (cost): CostsRationalSettings =>
+    (Object.keys(cost) as CostKey[]).reduce(
+      (a: Partial<CostsRationalSettings>, b) => {
+        a[b] = Rational.fromString(cost[b]);
+        return a;
+      },
+      {}
+    ) as CostsRationalSettings
 );
 
 export const getI18n = createSelector(
@@ -417,15 +423,15 @@ export const getDataset = createSelector(
     }
 
     // Convert to rationals
-    const beaconEntities: Entities<BeaconRtl> = {};
-    const beltEntities: Entities<BeltRtl> = {};
-    const cargoWagonEntities: Entities<CargoWagonRtl> = {};
-    const fluidWagonEntities: Entities<FluidWagonRtl> = {};
-    const machineEntities: Entities<MachineRtl> = {};
-    const moduleEntities: Entities<ModuleRtl> = {};
-    const fuelEntities: Entities<FuelRtl> = {};
-    const itemEntities = itemIds.reduce((e: Entities<ItemRtl>, i) => {
-      const item = new ItemRtl(itemData[i]);
+    const beaconEntities: Entities<BeaconRational> = {};
+    const beltEntities: Entities<BeltRational> = {};
+    const cargoWagonEntities: Entities<CargoWagonRational> = {};
+    const fluidWagonEntities: Entities<FluidWagonRational> = {};
+    const machineEntities: Entities<MachineRational> = {};
+    const moduleEntities: Entities<ModuleRational> = {};
+    const fuelEntities: Entities<FuelRational> = {};
+    const itemEntities = itemIds.reduce((e: Entities<ItemRational>, i) => {
+      const item = new ItemRational(itemData[i]);
       if (item.beacon) {
         beaconEntities[i] = item.beacon;
       }
@@ -453,24 +459,27 @@ export const getDataset = createSelector(
       e[i] = item;
       return e;
     }, {});
-    const recipeR = recipeIds.reduce((e: Entities<RecipeRtl>, r) => {
-      e[r] = new RecipeRtl(recipeEntities[r]);
+    const recipeR = recipeIds.reduce((e: Entities<RecipeRational>, r) => {
+      e[r] = new RecipeRational(recipeEntities[r]);
       return e;
     }, {});
 
     // Calculate item simple recipes
-    const recipeMatches = recipeIds.reduce((e: Entities<RecipeRtl[]>, r) => {
-      const recipe = recipeR[r];
-      const outputs = Object.keys(recipe.out);
-      for (const o of outputs.filter((i) => recipe.produces(i))) {
-        if (!e[o]) {
-          e[o] = [recipe];
-        } else {
-          e[o].push(recipe);
+    const recipeMatches = recipeIds.reduce(
+      (e: Entities<RecipeRational[]>, r) => {
+        const recipe = recipeR[r];
+        const outputs = Object.keys(recipe.out);
+        for (const o of outputs.filter((i) => recipe.produces(i))) {
+          if (!e[o]) {
+            e[o] = [recipe];
+          } else {
+            e[o].push(recipe);
+          }
         }
-      }
-      return e;
-    }, {});
+        return e;
+      },
+      {}
+    );
     const itemRecipeId = itemIds.reduce((e: Entities, i) => {
       const matches = Object.prototype.hasOwnProperty.call(recipeMatches, i)
         ? recipeMatches[i]

@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { ItemsObj, LabState, Settings } from '~/store';
+import { ItemObjectives, LabState, Settings } from '~/store';
 
 @Component({
   standalone: true,
@@ -15,7 +15,7 @@ import { ItemsObj, LabState, Settings } from '~/store';
 })
 export class MatrixComponent {
   vm$ = combineLatest([
-    this.store.select(ItemsObj.getMatrixResult),
+    this.store.select(ItemObjectives.getMatrixResult),
     this.store.select(Settings.getSettingsModified),
     this.store.select(Settings.settingsState),
   ]).pipe(

@@ -1,6 +1,6 @@
 import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
 import {
-  ItemRtlObj,
+  ItemObjectiveRational,
   MatrixResultType,
   Rat,
   RateUnit,
@@ -194,7 +194,7 @@ describe('SimplexUtility', () => {
           },
         ],
         [],
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         [],
         Rational.from(1000000),
         Rational.zero,
@@ -213,7 +213,7 @@ describe('SimplexUtility', () => {
       expect(
         SimplexUtility.getSteps(
           ItemId.CopperPlate,
-          Mocks.ItemSettingsInitial,
+          Mocks.ItemsStateInitial,
           [],
           Rational.from(1000000),
           Rational.zero,
@@ -231,7 +231,7 @@ describe('SimplexUtility', () => {
       expect(
         SimplexUtility.getSteps(
           ItemId.CopperPlate,
-          Mocks.ItemSettingsInitial,
+          Mocks.ItemsStateInitial,
           [],
           Rational.from(1000000),
           Rational.zero,
@@ -252,7 +252,7 @@ describe('SimplexUtility', () => {
       const result = SimplexUtility.getState(
         [Mocks.RationalProduct],
         [Mocks.RationalProducer],
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         [],
         Rational.from(1000000),
         Rational.zero,
@@ -286,7 +286,7 @@ describe('SimplexUtility', () => {
     it('should handle adjusted product', () => {
       const result = SimplexUtility.getState(
         [
-          new ItemRtlObj({
+          new ItemObjectiveRational({
             id: '1',
             itemId: ItemId.MiningProductivity,
             rate: '60',
@@ -294,7 +294,7 @@ describe('SimplexUtility', () => {
           }),
         ],
         [],
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         [],
         Rational.from(1000000),
         Rational.zero,

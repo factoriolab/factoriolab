@@ -1,45 +1,45 @@
-import { Entities, RecipeObj } from '~/models';
+import { Entities, RecipeObjective } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
-import * as ItemsCfg from '../item-configs';
-import * as RecipesCfg from '../recipe-configs';
+import * as Items from '../items';
+import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import {
-  RecipesObjAction,
-  RecipesObjActionType,
+  RecipeObjectivesAction,
+  RecipeObjectivesActionType,
 } from './recipe-objectives.actions';
 
-export interface RecipesObjState {
+export interface RecipeObjectivesState {
   ids: string[];
-  entities: Entities<RecipeObj>;
+  entities: Entities<RecipeObjective>;
   index: number;
 }
 
-export const initialRecipesObjState: RecipesObjState = {
+export const initialRecipeObjectivesState: RecipeObjectivesState = {
   ids: [],
   entities: {},
   index: 0,
 };
 
-export function recipesObjReducer(
-  state: RecipesObjState = initialRecipesObjState,
+export function recipeObjectivesReducer(
+  state: RecipeObjectivesState = initialRecipeObjectivesState,
   action:
-    | RecipesObjAction
+    | RecipeObjectivesAction
     | App.AppAction
     | Settings.SetModAction
-    | RecipesCfg.ResetMachinesAction
-    | RecipesCfg.ResetBeaconsAction
-    | ItemsCfg.ResetCheckedAction
-): RecipesObjState {
+    | Recipes.ResetMachinesAction
+    | Recipes.ResetBeaconsAction
+    | Items.ResetCheckedAction
+): RecipeObjectivesState {
   switch (action.type) {
     case App.AppActionType.LOAD:
-      return action.payload.recipesObjState
-        ? action.payload.recipesObjState
-        : initialRecipesObjState;
+      return action.payload.recipeObjectivesState
+        ? action.payload.recipeObjectivesState
+        : initialRecipeObjectivesState;
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
-      return initialRecipesObjState;
-    case RecipesObjActionType.ADD: {
+      return initialRecipeObjectivesState;
+    case RecipeObjectivesActionType.ADD: {
       let count = '1';
       if (state.ids.length > 0) {
         // Use count from last objective in list
@@ -64,7 +64,7 @@ export function recipesObjReducer(
         },
       };
     }
-    case RecipesObjActionType.CREATE: {
+    case RecipeObjectivesActionType.CREATE: {
       // Use full objective, but enforce id: '0'
       const recipeObjective = { ...action.payload, ...{ id: '0' } };
       return {
@@ -76,7 +76,7 @@ export function recipesObjReducer(
         },
       };
     }
-    case RecipesObjActionType.REMOVE: {
+    case RecipeObjectivesActionType.REMOVE: {
       const newEntities = { ...state.entities };
       delete newEntities[action.payload];
       return {
@@ -87,7 +87,7 @@ export function recipesObjReducer(
         },
       };
     }
-    case RecipesObjActionType.SET_RECIPE: {
+    case RecipeObjectivesActionType.SET_RECIPE: {
       const entities = StoreUtility.assignValue(
         state.entities,
         'recipeId',
@@ -104,7 +104,7 @@ export function recipesObjReducer(
         },
       };
     }
-    case RecipesObjActionType.SET_COUNT:
+    case RecipeObjectivesActionType.SET_COUNT:
       return {
         ...state,
         ...{
@@ -115,7 +115,7 @@ export function recipesObjReducer(
           ),
         },
       };
-    case RecipesObjActionType.SET_TYPE:
+    case RecipeObjectivesActionType.SET_TYPE:
       return {
         ...state,
         ...{
@@ -126,7 +126,7 @@ export function recipesObjReducer(
           ),
         },
       };
-    case RecipesObjActionType.SET_MACHINE:
+    case RecipeObjectivesActionType.SET_MACHINE:
       return {
         ...state,
         ...{
@@ -141,7 +141,7 @@ export function recipesObjReducer(
           ),
         },
       };
-    case RecipesObjActionType.SET_MACHINE_MODULES:
+    case RecipeObjectivesActionType.SET_MACHINE_MODULES:
       return {
         ...state,
         ...{
@@ -152,7 +152,7 @@ export function recipesObjReducer(
           ),
         },
       };
-    case RecipesObjActionType.ADD_BEACON:
+    case RecipeObjectivesActionType.ADD_BEACON:
       return {
         ...state,
         ...{
@@ -172,7 +172,7 @@ export function recipesObjReducer(
           },
         },
       };
-    case RecipesObjActionType.REMOVE_BEACON:
+    case RecipeObjectivesActionType.REMOVE_BEACON:
       return {
         ...state,
         ...{
@@ -191,7 +191,7 @@ export function recipesObjReducer(
           },
         },
       };
-    case RecipesObjActionType.SET_BEACON_COUNT:
+    case RecipeObjectivesActionType.SET_BEACON_COUNT:
       return {
         ...state,
         ...{
@@ -203,7 +203,7 @@ export function recipesObjReducer(
           ),
         },
       };
-    case RecipesObjActionType.SET_BEACON:
+    case RecipeObjectivesActionType.SET_BEACON:
       return {
         ...state,
         ...{
@@ -221,7 +221,7 @@ export function recipesObjReducer(
           ),
         },
       };
-    case RecipesObjActionType.SET_BEACON_MODULES:
+    case RecipeObjectivesActionType.SET_BEACON_MODULES:
       return {
         ...state,
         ...{
@@ -234,7 +234,7 @@ export function recipesObjReducer(
           ),
         },
       };
-    case RecipesObjActionType.SET_BEACON_TOTAL:
+    case RecipeObjectivesActionType.SET_BEACON_TOTAL:
       return {
         ...state,
         ...{
@@ -246,7 +246,7 @@ export function recipesObjReducer(
           ),
         },
       };
-    case RecipesObjActionType.SET_OVERCLOCK:
+    case RecipeObjectivesActionType.SET_OVERCLOCK:
       return {
         ...state,
         ...{
@@ -257,7 +257,7 @@ export function recipesObjReducer(
           ),
         },
       };
-    case RecipesObjActionType.SET_CHECKED:
+    case RecipeObjectivesActionType.SET_CHECKED:
       return {
         ...state,
         ...{
@@ -268,7 +268,7 @@ export function recipesObjReducer(
           }),
         },
       };
-    case RecipesObjActionType.RESET_OBJECTIVE:
+    case RecipeObjectivesActionType.RESET_OBJECTIVE:
       return {
         ...state,
         ...{
@@ -279,7 +279,7 @@ export function recipesObjReducer(
           ),
         },
       };
-    case RecipesCfg.RecipesCfgActionType.RESET_MACHINES:
+    case Recipes.RecipesActionType.RESET_MACHINES:
       return {
         ...state,
         ...{
@@ -291,14 +291,14 @@ export function recipesObjReducer(
           ]),
         },
       };
-    case RecipesCfg.RecipesCfgActionType.RESET_BEACONS:
+    case Recipes.RecipesActionType.RESET_BEACONS:
       return {
         ...state,
         ...{
           entities: StoreUtility.resetField(state.entities, 'beacons'),
         },
       };
-    case ItemsCfg.ItemsCfgActionType.RESET_CHECKED:
+    case Items.ItemsActionType.RESET_CHECKED:
       return {
         ...state,
         ...{

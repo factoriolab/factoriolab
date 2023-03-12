@@ -4,33 +4,33 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { environment } from 'src/environments/environment';
 import * as App from './app.actions';
 import * as Datasets from './datasets';
-import * as ItemsCfg from './item-configs';
-import * as ItemsObj from './item-objectives';
-import * as MachinesCfg from './machine-configs';
+import * as ItemObjectives from './item-objectives';
+import * as Items from './items';
+import * as Machines from './machines';
 import * as Preferences from './preferences';
-import * as RecipesCfg from './recipe-configs';
-import * as RecipesObj from './recipe-objectives';
+import * as RecipeObjectives from './recipe-objectives';
+import * as Recipes from './recipes';
 import * as Settings from './settings';
 import { storageMetaReducer } from './storage.reducer';
 
 export interface LabState {
   datasetsState: Datasets.DatasetsState;
-  itemsObjState: ItemsObj.ItemsObjState;
-  recipesObjState: RecipesObj.RecipesObjState;
-  itemsCfgState: ItemsCfg.ItemsCfgState;
-  recipesCfgState: RecipesCfg.RecipesCfgState;
-  machinesCfgState: MachinesCfg.MachinesCfgState;
+  itemObjectivesState: ItemObjectives.ItemObjectivesState;
+  recipeObjectivesState: RecipeObjectives.RecipeObjectivesState;
+  itemsState: Items.ItemsState;
+  recipesState: Recipes.RecipesState;
+  machinesState: Machines.MachinesState;
   settingsState: Settings.SettingsState;
   preferencesState: Preferences.PreferencesState;
 }
 
 export const reducers: ActionReducerMap<LabState, never> = {
   datasetsState: Datasets.datasetsReducer,
-  itemsObjState: ItemsObj.itemsObjReducer,
-  recipesObjState: RecipesObj.recipesObjReducer,
-  itemsCfgState: ItemsCfg.itemsCfgReducer,
-  recipesCfgState: RecipesCfg.recipesCfgReducer,
-  machinesCfgState: MachinesCfg.machinesCfgReducer,
+  itemObjectivesState: ItemObjectives.itemObjectivesReducer,
+  recipeObjectivesState: RecipeObjectives.recipeObjectivesReducer,
+  itemsState: Items.itemsReducer,
+  recipesState: Recipes.recipesReducer,
+  machinesState: Machines.machinesReducer,
   settingsState: Settings.settingsReducer,
   preferencesState: Preferences.preferencesReducer,
 };
@@ -46,11 +46,11 @@ export const metaReducers: MetaReducer<LabState>[] = environment.testing
 export {
   App,
   Datasets,
-  ItemsObj,
-  ItemsCfg,
-  MachinesCfg,
+  ItemObjectives,
+  Items,
+  Machines,
   Preferences,
-  RecipesObj,
-  RecipesCfg,
+  RecipeObjectives,
+  Recipes,
   Settings,
 };

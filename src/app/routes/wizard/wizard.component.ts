@@ -12,7 +12,7 @@ import {
   ObjectiveType,
   RateUnit,
 } from '~/models';
-import { ItemsObj, LabState, RecipesObj, Settings } from '~/store';
+import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
 export enum WizardState {
   ObjectiveType,
@@ -63,9 +63,9 @@ export class WizardComponent {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  createItemObj(itemId: string, rate: string, rateUnit: RateUnit): void {
+  createItemObjective(itemId: string, rate: string, rateUnit: RateUnit): void {
     this.store.dispatch(
-      new ItemsObj.CreateAction({
+      new ItemObjectives.CreateAction({
         id: '0',
         itemId,
         rate,
@@ -75,9 +75,9 @@ export class WizardComponent {
     );
   }
 
-  createRecipeObj(recipeId: string, count: string): void {
+  createRecipeObjective(recipeId: string, count: string): void {
     this.store.dispatch(
-      new RecipesObj.CreateAction({
+      new RecipeObjectives.CreateAction({
         id: '0',
         recipeId,
         count,

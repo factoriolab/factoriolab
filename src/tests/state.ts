@@ -1,12 +1,12 @@
 import {
   Datasets,
-  ItemsCfg,
-  ItemsObj,
+  ItemObjectives,
+  Items,
   LabState,
-  MachinesCfg,
+  Machines,
   Preferences,
-  RecipesCfg,
-  RecipesObj,
+  RecipeObjectives,
+  Recipes,
   Settings,
 } from '~/store';
 import { Mocks } from './';
@@ -28,11 +28,11 @@ const datasetsState = Datasets.datasetsReducer(
 
 export const initialState: LabState = {
   datasetsState,
-  itemsObjState: ItemsObj.initialItemsObjState,
-  recipesObjState: RecipesObj.initialRecipeObjectivesState,
-  itemsCfgState: ItemsCfg.initialItemsCfgState,
-  recipesCfgState: RecipesCfg.initialRecipesState,
-  machinesCfgState: MachinesCfg.initialMachinesCfgState,
+  itemObjectivesState: ItemObjectives.initialItemObjectivesState,
+  recipeObjectivesState: RecipeObjectives.initialRecipeObjectivesState,
+  itemsState: Items.initialItemsState,
+  recipesState: Recipes.initialRecipesState,
+  machinesState: Machines.initialMachinesState,
   settingsState: Settings.initialSettingsState,
   preferencesState: Preferences.initialPreferencesState,
 };

@@ -6,7 +6,6 @@ export type ModuleEffect =
   | 'consumption'
   | 'pollution';
 
-/** Module data */
 export interface Module {
   speed?: number | string;
   productivity?: number | string;
@@ -17,8 +16,7 @@ export interface Module {
   proliferator?: string;
 }
 
-/** Rational module data */
-export class ModuleRtl {
+export class ModuleRational {
   speed?: Rational;
   productivity?: Rational;
   consumption?: Rational;

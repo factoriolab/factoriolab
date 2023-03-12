@@ -1,12 +1,10 @@
 import { Rational } from '../rational';
 
-/** Fluid wagon data */
 export interface FluidWagon {
   capacity: number | string;
 }
 
-/** Rational fluid wagon data */
-export class FluidWagonRtl {
+export class FluidWagonRational {
   capacity: Rational;
 
   constructor(obj: FluidWagon) {

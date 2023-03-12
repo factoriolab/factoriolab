@@ -225,7 +225,7 @@
           <lab-picker
             #itemsPicker
             [header]="'settings.itemsHeader' | translate"
-            (selectIds)="setExcludedItems($event, vm.itemsCfg, vm.data)"
+            (selectIds)="setExcludedItems($event, vm.itemsState, vm.data)"
           ></lab-picker>
         </div>
         <div class="py-2">
@@ -250,7 +250,7 @@
           <lab-picker
             #recipesPicker
             [header]="'settings.recipesHeader' | translate"
-            (selectIds)="setExcludedRecipes($event, vm.recipesCfg, vm.data)"
+            (selectIds)="setExcludedRecipes($event, vm.recipesState, vm.data)"
           ></lab-picker>
         </div>
         <div class="py-2">
@@ -289,12 +289,12 @@
             *ngFor="let machineId of vm.machineRows; let index = index"
           >
             <ng-container
-              *ngIf="vm.machinesCfg.entities[machineId] as settings"
+              *ngIf="vm.machinesState.entities[machineId] as settings"
             >
               <ng-container
                 *ngIf="
                   machineId
-                    ? vm.machinesCfg.entities['']
+                    ? vm.machinesState.entities['']
                     : vm.data.defaults as defaults
                 "
               >
@@ -491,7 +491,7 @@
                           machineId,
                           overclockInput.value,
                           machineId
-                            ? vm.machinesCfg.entities[''].overclock
+                            ? vm.machinesState.entities[''].overclock
                             : 100
                         )
                       "
@@ -1068,7 +1068,7 @@
             }}</label>
           </span>
         </div>
-        <div *ngIf="vm.columnsCfg.power.show" class="mt-3 py-2">
+        <div *ngIf="vm.columnsState.power.show" class="mt-3 py-2">
           <span class="p-float-label">
             <p-dropdown
               labDropdownTranslate

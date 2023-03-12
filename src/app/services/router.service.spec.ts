@@ -7,25 +7,26 @@ import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
-  BeaconCfg,
+  BeaconSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
-  ItemObj,
+  ItemObjective,
+  ObjectiveType,
   Preset,
   RateUnit,
   Rational,
-  RecipeObj,
+  RecipeObjective,
   ResearchSpeed,
 } from '~/models';
 import {
   App,
   Datasets,
+  ItemObjectives,
   Items,
   LabState,
   Machines,
-  Producers,
-  Products,
+  RecipeObjectives,
   Recipes,
   Settings,
 } from '~/store';
@@ -43,32 +44,34 @@ import {
   ZipVersion,
 } from './router.service';
 
-const mockProduct: ItemObj = {
+const mockItemObjective: ItemObjective = {
   id: '1',
   itemId: ItemId.SteelChest,
   rate: '1',
-  rateType: AmountType.Belts,
+  rateUnit: RateUnit.Belts,
+  type: ObjectiveType.Output,
 };
-const mockProductsState: Products.ItemObjectivesState = {
+const mockItemObjectivesState: ItemObjectives.ItemObjectivesState = {
   ids: ['1'],
   entities: {
-    ['1']: mockProduct,
+    ['1']: mockItemObjective,
   },
   index: 2,
 };
-const mockProducer: RecipeObj = {
+const mockRecipeObjective: RecipeObjective = {
   id: '1',
   recipeId: ItemId.SteelChest,
   count: '1',
+  type: ObjectiveType.Output,
 };
-const mockProducersState: Producers.ProducersState = {
+const mockRecipeObjectivesState: RecipeObjectives.RecipeObjectivesState = {
   ids: ['1'],
   entities: {
-    ['1']: mockProducer,
+    ['1']: mockRecipeObjective,
   },
   index: 2,
 };
-const mockItemsState: Items.ItemsCfgState = {
+const mockItemsState: Items.ItemsState = {
   [ItemId.SteelChest]: {
     excluded: true,
     beltId: ItemId.TransportBelt,
@@ -91,7 +94,7 @@ const mockRecipesState: Recipes.RecipesState = {
     cost: '100',
   },
 };
-const mockMachinesState: Machines.MachinesCfgState = {
+const mockMachinesState: Machines.MachinesState = {
   ids: [ItemId.AssemblingMachine2, ItemId.SteelFurnace],
   entities: {
     ['']: {
@@ -104,7 +107,6 @@ const mockMachinesState: Machines.MachinesCfgState = {
 };
 const mockSettingsState: Settings.SettingsState = {
   modId: '1.0',
-  excludedRecipeIds: [],
   netProductionOnly: true,
   preset: Preset.Modules,
   beaconReceivers: '1',
@@ -119,10 +121,14 @@ const mockSettingsState: Settings.SettingsState = {
   researchSpeed: ResearchSpeed.Speed0,
   inserterCapacity: InserterCapacity.Capacity0,
   displayRate: DisplayRate.PerHour,
-  costFactor: '2',
-  costMachine: '10',
-  costUnproduceable: '0',
-  costExcluded: '100',
+  cost: {
+    factor: '2',
+    machine: '10',
+    unproduceable: '0',
+    excluded: '100',
+    surplus: '0',
+    maximize: '-100000',
+  },
 };
 const mockZip: Zip = {
   bare: 'p=steel-chest*1*1&q=steel-chest*1',
@@ -141,8 +147,8 @@ const mockZipPartial: Zip = {
     '*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D*1',
 };
 const mockState: LabState = {
-  productsState: mockProductsState,
-  producersState: mockProducersState,
+  productsState: mockItemObjectivesState,
+  producersState: mockRecipeObjectivesState,
   itemsState: mockItemsState,
   recipesState: mockRecipesState,
   machinesState: mockMachinesState,
@@ -281,8 +287,8 @@ describe('RouterService', () => {
       let zip: ZipData | undefined;
       service
         .zipState(
-          mockProductsState,
-          mockProducersState,
+          mockItemObjectivesState,
+          mockRecipeObjectivesState,
           mockItemsState,
           mockRecipesState,
           mockMachinesState,
@@ -575,7 +581,7 @@ describe('RouterService', () => {
 
   describe('zipBeacons', () => {
     it('should generate maps for producer and recipe beacons', () => {
-      const beacons: BeaconCfg[] = [
+      const beacons: BeaconSettings[] = [
         {
           count: '1',
           id: ItemId.Beacon,

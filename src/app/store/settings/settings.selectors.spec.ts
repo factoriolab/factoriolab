@@ -68,7 +68,7 @@ describe('Settings Selectors', () => {
 
   describe('getColumnsState', () => {
     it('should override columns for Factorio', () => {
-      const result = Selectors.getColumnsCfg.projector(
+      const result = Selectors.getColumnsState.projector(
         Game.Factorio,
         Preferences.initialColumnsState
       );
@@ -78,7 +78,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should override columns for Captain of Industry', () => {
-      const result = Selectors.getColumnsCfg.projector(
+      const result = Selectors.getColumnsState.projector(
         Game.CaptainOfIndustry,
         Preferences.initialColumnsState
       );
@@ -89,7 +89,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should override columns for Dyson Sphere Program', () => {
-      const result = Selectors.getColumnsCfg.projector(
+      const result = Selectors.getColumnsState.projector(
         Game.DysonSphereProgram,
         Preferences.initialColumnsState
       );
@@ -99,7 +99,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should override columns for Satisfactory', () => {
-      const result = Selectors.getColumnsCfg.projector(
+      const result = Selectors.getColumnsState.projector(
         Game.Satisfactory,
         Preferences.initialColumnsState
       );

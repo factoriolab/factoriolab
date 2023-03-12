@@ -14,8 +14,7 @@ export const displayRateOptions: SelectItem<DisplayRate>[] = [
   { value: DisplayRate.PerHour, label: 'options.displayRate.perHour' },
 ];
 
-/** Display rate information, nonconfigurable */
-export interface DisplayRateInf {
+export interface DisplayRateInfo {
   option: DisplayRate;
   suffix: string;
   itemsLabel: string;
@@ -24,8 +23,7 @@ export interface DisplayRateInf {
   value: Rational;
 }
 
-/** Display rate information data, nonconfigurable */
-export const displayRateInf: Record<DisplayRate, DisplayRateInf> = {
+export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
   [DisplayRate.PerSecond]: {
     option: DisplayRate.PerSecond,
     suffix: 'options.displayRate.perSecondSuffix',

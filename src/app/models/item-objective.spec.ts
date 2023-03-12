@@ -1,11 +1,11 @@
 import { ItemId } from 'src/tests';
-import { ItemRtlObj } from './item-objective';
+import { ItemObjectiveRational } from './item-objective';
 import { Rational } from './rational';
 
-describe('ItemRtlObj', () => {
+describe('ItemObjectiveRational', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new ItemRtlObj({
+      const result = new ItemObjectiveRational({
         id: '1',
         itemId: ItemId.ArtilleryShellRange,
         rate: '2',

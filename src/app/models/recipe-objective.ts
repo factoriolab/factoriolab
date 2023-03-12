@@ -1,25 +1,23 @@
-import { RecipeCfg, RecipeRtlCfg } from './config';
-import { RecipeRtl } from './data';
+import { RecipeRational } from './data';
 import { ObjectiveType } from './enum';
 import { Rational } from './rational';
+import { RecipeSettings, RecipeSettingsRational } from './settings';
 
-/** Recipe objective configuration */
-export interface RecipeObj extends RecipeCfg {
+export interface RecipeObjective extends RecipeSettings {
   id: string;
   recipeId: string;
   count: string;
   type: ObjectiveType;
 }
 
-/** Recipe objective rational configuration */
-export class RecipeRtlObj extends RecipeRtlCfg {
+export class RecipeObjectiveRational extends RecipeSettingsRational {
   id: string;
   recipeId: string;
   count: Rational;
   type: ObjectiveType;
-  recipe: RecipeRtl;
+  recipe: RecipeRational;
 
-  constructor(obj: RecipeObj, recipe: RecipeRtl) {
+  constructor(obj: RecipeObjective, recipe: RecipeRational) {
     super(obj);
 
     this.id = obj.id;

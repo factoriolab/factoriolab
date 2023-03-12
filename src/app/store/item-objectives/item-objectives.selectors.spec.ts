@@ -2,7 +2,7 @@ import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Column,
   DisplayRate,
-  displayRateInf,
+  displayRateInfo,
   Game,
   MatrixResultType,
   PowerUnit,
@@ -13,8 +13,8 @@ import {
 } from '~/models';
 import { RateUtility, SimplexUtility } from '~/utilities';
 import { Producers } from '../';
-import * as Items from '../item-configs';
-import * as Recipes from '../recipe-configs';
+import * as Items from '../items';
+import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import * as Selectors from './item-objectives.selectors';
 
@@ -22,7 +22,7 @@ describe('Item Objectives Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
       expect(
-        Selectors.itemsObjState({
+        Selectors.itemObjectivesState({
           productsState: Mocks.ProductsState,
         } as any)
       ).toEqual(Mocks.ProductsState);
@@ -37,7 +37,7 @@ describe('Item Objectives Selectors', () => {
 
   describe('getProducts', () => {
     it('should return the array of products', () => {
-      const result = Selectors.getItemsObj.projector(
+      const result = Selectors.getItemObjectives.projector(
         Mocks.ProductsState.ids,
         Mocks.ProductsState.entities,
         Mocks.Dataset
@@ -48,7 +48,9 @@ describe('Item Objectives Selectors', () => {
 
   describe('getRationalProducts', () => {
     it('should map products to rational products', () => {
-      const result = Selectors.getItemsRtlObj.projector(Mocks.ProductsList);
+      const result = Selectors.getItemObjectiveRationals.projector(
+        Mocks.ProductsList
+      );
       expect(result[0].rate.nonzero()).toBeTrue();
     });
   });
@@ -100,7 +102,7 @@ describe('Item Objectives Selectors', () => {
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByItems.projector(
         [Mocks.RationalProducts[0]],
-        displayRateInf[DisplayRate.PerHour]
+        displayRateInfo[DisplayRate.PerHour]
       );
       expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
     });
@@ -121,8 +123,8 @@ describe('Item Objectives Selectors', () => {
     it('should return the rate entities', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [Mocks.RationalProducts[2]],
-        Mocks.ItemSettingsInitial,
-        displayRateInf[DisplayRate.PerHour],
+        Mocks.ItemsStateInitial,
+        displayRateInfo[DisplayRate.PerHour],
         Mocks.Dataset
       );
       expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
@@ -131,8 +133,8 @@ describe('Item Objectives Selectors', () => {
     it('should return the rate entities for items', () => {
       const result = Selectors.getNormalizedRatesByWagons.projector(
         [Mocks.RationalProducts[0]],
-        Mocks.ItemSettingsInitial,
-        displayRateInf[DisplayRate.PerHour],
+        Mocks.ItemsStateInitial,
+        displayRateInfo[DisplayRate.PerHour],
         Mocks.Dataset
       );
       expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
@@ -148,7 +150,7 @@ describe('Item Objectives Selectors', () => {
 
   describe('getNormalizedProducts', () => {
     it('should map products to rates', () => {
-      const result = Selectors.getNormalizedItemsObj.projector(
+      const result = Selectors.getNormalizedItemObjectives.projector(
         Mocks.RationalProducts,
         { ['0']: Rational.ten }
       );
@@ -184,7 +186,7 @@ describe('Item Objectives Selectors', () => {
         {},
         null,
         {},
-        displayRateInf[DisplayRate.PerMinute],
+        displayRateInfo[DisplayRate.PerMinute],
         Mocks.Dataset
       );
       expect(RateUtility.normalizeSteps).toHaveBeenCalled();
@@ -195,9 +197,9 @@ describe('Item Objectives Selectors', () => {
     it('should put together the required state parts', () => {
       const products = Mocks.ProductsState;
       const producers = Producers.initialProducersState;
-      const items = Mocks.ItemSettingsEntities;
-      const recipes = Mocks.RecipeSettingsEntities;
-      const machines = Mocks.MachineSettingsInitial;
+      const items = Mocks.ItemsState;
+      const recipes = Mocks.RecipesState;
+      const machines = Mocks.MachinesStateInitial;
       const settings = Settings.initialSettingsState;
       const result = Selectors.getZipState.projector(
         products,
@@ -221,8 +223,8 @@ describe('Item Objectives Selectors', () => {
       const result = Selectors.getStepsModified.projector(
         Mocks.Steps,
         [Mocks.Producer],
-        Items.initialItemsCfgState,
-        Recipes.initialRecipesCfgState
+        Items.initialItemsState,
+        Recipes.initialRecipesState
       );
       expect(result.items[Mocks.Step1.itemId!]).toBeFalse();
       expect(result.recipes[Mocks.Step1.recipeId!]).toBeFalse();
@@ -271,8 +273,8 @@ describe('Item Objectives Selectors', () => {
             },
           },
         ],
-        Mocks.ItemSettingsInitial,
-        Mocks.RecipeSettingsInitial,
+        Mocks.ItemsStateInitial,
+        Mocks.RecipesStateInitial,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -300,7 +302,7 @@ describe('Item Objectives Selectors', () => {
             machines: Rational.one,
           },
         ],
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         { [RecipeId.Coal]: { machineId: ItemId.MiningDrill } },
         { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
       );

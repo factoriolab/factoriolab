@@ -1,5 +1,11 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { Entities, Rat, Rational, Recipe, RecipeRtlCfg } from '~/models';
+import {
+  Entities,
+  Rat,
+  Rational,
+  Recipe,
+  RecipeSettingsRational,
+} from '~/models';
 import { RecipeUtility } from './recipe.utility';
 
 describe('RecipeUtility', () => {
@@ -33,7 +39,7 @@ describe('RecipeUtility', () => {
 
   describe('adjustRecipe', () => {
     it('should adjust a standard recipe', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      const settings = { ...Mocks.RecipesStateRational[RecipeId.SteelChest] };
       settings.machineModuleIds = undefined;
       settings.beacons = [{ moduleIds: [ItemId.SpeedModule] }];
       const result = RecipeUtility.adjustRecipe(
@@ -44,7 +50,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
       const expected = new RecipeRat(
@@ -67,8 +73,8 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         false,
-        Mocks.RationalRecipeSettings[RecipeId.CopperCable],
-        Mocks.ItemSettingsInitial,
+        Mocks.RecipesStateRational[RecipeId.CopperCable],
+        Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
       const expected = new RecipeRat(
@@ -84,7 +90,7 @@ describe('RecipeUtility', () => {
 
     it('should handle research factor/productivity', () => {
       const settings = {
-        ...Mocks.RationalRecipeSettings[RecipeId.MiningProductivity],
+        ...Mocks.RecipesStateRational[RecipeId.MiningProductivity],
       };
       settings.machineId = ItemId.Lab;
       const result = RecipeUtility.adjustRecipe(
@@ -95,7 +101,7 @@ describe('RecipeUtility', () => {
         Rational.two,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
       const expected = new RecipeRat(
@@ -112,7 +118,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle mining productivity', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.IronOre] };
+      const settings = { ...Mocks.RecipesStateRational[RecipeId.IronOre] };
       settings.machineId = ItemId.ElectricMiningDrill;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
@@ -122,7 +128,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
       const expected = new RecipeRat(
@@ -138,7 +144,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle modules and beacons', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      const settings = { ...Mocks.RecipesStateRational[RecipeId.SteelChest] };
       settings.machineModuleIds = [
         ItemId.SpeedModule,
         ItemId.ProductivityModule,
@@ -179,7 +185,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         data
       );
       const expected = new RecipeRat(
@@ -197,7 +203,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should use minimum 20% effects', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      const settings = { ...Mocks.RecipesStateRational[RecipeId.SteelChest] };
       settings.machineModuleIds = [
         ItemId.EfficiencyModule3,
         ItemId.EfficiencyModule3,
@@ -234,7 +240,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         data
       );
       const expected = new RecipeRat(
@@ -252,7 +258,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle burner fuel inputs', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.IronOre] };
+      const settings = { ...Mocks.RecipesStateRational[RecipeId.IronOre] };
       settings.machineId = ItemId.BurnerMiningDrill;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.IronOre,
@@ -262,7 +268,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
       const expected = new RecipeRat(
@@ -281,7 +287,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should add to existing burner fuel input', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.PlasticBar] };
+      const settings = { ...Mocks.RecipesStateRational[RecipeId.PlasticBar] };
       settings.machineId = ItemId.SteelFurnace;
       const result = RecipeUtility.adjustRecipe(
         RecipeId.PlasticBar,
@@ -291,7 +297,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
       const expected = new RecipeRat(
@@ -317,8 +323,8 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         false,
-        Mocks.RationalRecipeSettingsInitial[RecipeId.UsedUpUraniumFuelCell],
-        Mocks.ItemSettingsInitial,
+        Mocks.RecipesStateRationalInitial[RecipeId.UsedUpUraniumFuelCell],
+        Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
       expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
@@ -346,15 +352,15 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         false,
-        Mocks.RationalRecipeSettingsInitial[RecipeId.UsedUpUraniumFuelCell],
-        Mocks.ItemSettingsInitial,
+        Mocks.RecipesStateRationalInitial[RecipeId.UsedUpUraniumFuelCell],
+        Mocks.ItemsStateInitial,
         data
       );
       expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
     });
 
     it('should adjust based on overclock', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      const settings = { ...Mocks.RecipesStateRational[RecipeId.SteelChest] };
       settings.overclock = Rational.from(200);
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
@@ -364,7 +370,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
       const expected = new RecipeRat(
@@ -380,7 +386,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should adjust a power producer based on overclock', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      const settings = { ...Mocks.RecipesStateRational[RecipeId.SteelChest] };
       settings.overclock = Rational.from(200);
       const data = Mocks.getDataset();
       data.machineEntities[ItemId.AssemblingMachine2].usage =
@@ -393,7 +399,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         data
       );
       const expected = new RecipeRat(
@@ -409,7 +415,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should use a recipe specific usage', () => {
-      const settings = { ...Mocks.RationalRecipeSettings[RecipeId.SteelChest] };
+      const settings = { ...Mocks.RecipesStateRational[RecipeId.SteelChest] };
       const data = {
         ...Mocks.Dataset,
         ...{
@@ -434,7 +440,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         data
       );
       const expected = new RecipeRat(
@@ -451,7 +457,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle a machine with no listed speed', () => {
-      const settings = Mocks.RationalRecipeSettings[RecipeId.SteelChest];
+      const settings = Mocks.RecipesStateRational[RecipeId.SteelChest];
       const data = {
         ...Mocks.Dataset,
         ...{
@@ -477,7 +483,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         data
       );
       const expected = new RecipeRat(
@@ -493,8 +499,8 @@ describe('RecipeUtility', () => {
     });
 
     it('should calculate proliferator usage', () => {
-      const settings = new RecipeRtlCfg({
-        ...Mocks.RecipeSettingsInitial[ItemId.SteelChest],
+      const settings = new RecipeSettingsRational({
+        ...Mocks.RecipesStateInitial[ItemId.SteelChest],
         ...{ machineModuleIds: [ItemId.ProductivityModule3] },
       });
       const recipe = {
@@ -544,7 +550,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         data
       );
       const expected = new RecipeRat(recipe);
@@ -560,8 +566,8 @@ describe('RecipeUtility', () => {
     });
 
     it('should ignore proliferator self-spray with no productivity bonus', () => {
-      const settings = new RecipeRtlCfg({
-        ...Mocks.RecipeSettingsInitial[ItemId.SteelChest],
+      const settings = new RecipeSettingsRational({
+        ...Mocks.RecipesStateInitial[ItemId.SteelChest],
         ...{ machineModuleIds: [ItemId.ProductivityModule3] },
       });
       const recipe = {
@@ -611,7 +617,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         false,
         settings,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         data
       );
       const expected = new RecipeRat(recipe);
@@ -652,8 +658,8 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         false,
-        Mocks.RationalRecipeSettings[RecipeId.CopperCable],
-        Mocks.ItemSettingsInitial,
+        Mocks.RecipesStateRational[RecipeId.CopperCable],
+        Mocks.ItemsStateInitial,
         data
       );
       const expected = new RecipeRat(
@@ -679,8 +685,8 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         true,
-        Mocks.RationalRecipeSettings[RecipeId.CoalLiquefaction],
-        Mocks.ItemSettingsInitial,
+        Mocks.RecipesStateRational[RecipeId.CoalLiquefaction],
+        Mocks.ItemsStateInitial,
         data
       );
       expect(result.in[ItemId.HeavyOil]).toBeUndefined();
@@ -698,8 +704,8 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         true,
-        Mocks.RationalRecipeSettings[RecipeId.CoalLiquefaction],
-        Mocks.ItemSettingsInitial,
+        Mocks.RecipesStateRational[RecipeId.CoalLiquefaction],
+        Mocks.ItemsStateInitial,
         data
       );
       expect(result.in[ItemId.HeavyOil]).toEqual(Rational.one);
@@ -717,8 +723,8 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.zero,
         true,
-        Mocks.RationalRecipeSettings[RecipeId.CoalLiquefaction],
-        Mocks.ItemSettingsInitial,
+        Mocks.RecipesStateRational[RecipeId.CoalLiquefaction],
+        Mocks.ItemsStateInitial,
         data
       );
       expect(result.in[ItemId.HeavyOil]).toBeUndefined();
@@ -739,8 +745,8 @@ describe('RecipeUtility', () => {
             Rational.zero,
             Rational.one,
             false,
-            Mocks.RationalRecipeSettingsInitial[i],
-            Mocks.ItemSettingsInitial,
+            Mocks.RecipesStateRationalInitial[i],
+            Mocks.ItemsStateInitial,
             Mocks.Dataset
           );
           return e;
@@ -752,7 +758,7 @@ describe('RecipeUtility', () => {
     it('should adjust recipes', () => {
       const result = RecipeUtility.adjustSiloRecipes(
         recipeR,
-        Mocks.RationalRecipeSettingsInitial,
+        Mocks.RecipesStateRationalInitial,
         Mocks.AdjustedData
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
@@ -765,7 +771,7 @@ describe('RecipeUtility', () => {
 
     it('should handle invalid machine', () => {
       const settings2 = {
-        ...Mocks.RationalRecipeSettingsInitial,
+        ...Mocks.RecipesStateRationalInitial,
         ...{
           [RecipeId.SpaceSciencePack]: {
             machineId: 'id',
@@ -822,8 +828,8 @@ describe('RecipeUtility', () => {
       spyOn(RecipeUtility, 'adjustSiloRecipes').and.callThrough();
       spyOn(RecipeUtility, 'adjustRecipe').and.callThrough();
       const result = RecipeUtility.adjustDataset(
-        Mocks.RationalRecipeSettingsInitial,
-        Mocks.ItemSettingsInitial,
+        Mocks.RecipesStateRationalInitial,
+        Mocks.ItemsStateInitial,
         ItemId.Coal,
         ItemId.Module,
         Rational.zero,
@@ -840,10 +846,10 @@ describe('RecipeUtility', () => {
 
     it('should use specified item recipe', () => {
       const itemSettings = {
-        ...Mocks.ItemSettingsInitial,
+        ...Mocks.ItemsStateInitial,
         ...{
           [ItemId.PetroleumGas]: {
-            ...Mocks.ItemSettingsInitial[ItemId.PetroleumGas],
+            ...Mocks.ItemsStateInitial[ItemId.PetroleumGas],
             ...{
               recipeId: RecipeId.CoalLiquefaction,
             },
@@ -851,7 +857,7 @@ describe('RecipeUtility', () => {
         },
       };
       const result = RecipeUtility.adjustDataset(
-        Mocks.RationalRecipeSettingsInitial,
+        Mocks.RecipesStateRationalInitial,
         itemSettings,
         ItemId.Coal,
         ItemId.Module,
@@ -869,8 +875,8 @@ describe('RecipeUtility', () => {
 
     it('should find unique item recipes', () => {
       const result = RecipeUtility.adjustDataset(
-        Mocks.RationalRecipeSettingsInitial,
-        Mocks.ItemSettingsInitial,
+        Mocks.RecipesStateRationalInitial,
+        Mocks.ItemsStateInitial,
         ItemId.Coal,
         ItemId.Module,
         Rational.zero,
@@ -891,8 +897,8 @@ describe('RecipeUtility', () => {
 
     beforeEach(() => {
       recipeR = RecipeUtility.adjustRecipes(
-        Mocks.RationalRecipeSettingsInitial,
-        Mocks.ItemSettingsInitial,
+        Mocks.RecipesStateRationalInitial,
+        Mocks.ItemsStateInitial,
         ItemId.Coal,
         ItemId.Module,
         Rational.zero,
@@ -904,10 +910,10 @@ describe('RecipeUtility', () => {
 
     it('should apply an overridden cost', () => {
       const recipeSettings = {
-        ...Mocks.RationalRecipeSettingsInitial,
+        ...Mocks.RecipesStateRationalInitial,
         ...{
           [RecipeId.Coal]: {
-            ...Mocks.RationalRecipeSettingsInitial[RecipeId.Coal],
+            ...Mocks.RecipesStateRationalInitial[RecipeId.Coal],
             ...{ cost: Rational.two },
           },
         },
@@ -924,7 +930,7 @@ describe('RecipeUtility', () => {
     it('should apply normal recipe and machine costs', () => {
       RecipeUtility.adjustCost(
         recipeR,
-        Mocks.RationalRecipeSettingsInitial,
+        Mocks.RecipesStateRationalInitial,
         Rational.one,
         Rational.one
       );
@@ -937,7 +943,7 @@ describe('RecipeUtility', () => {
     it('should adjust a producer based on settings', () => {
       const result = RecipeUtility.adjustProducer(
         { id: '1', recipeId: RecipeId.IronPlate, count: '1' },
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset
       );
       expect(result.machineId).toEqual(ItemId.ElectricFurnace);
@@ -958,7 +964,7 @@ describe('RecipeUtility', () => {
 
     it('should handle a machine with no modules', () => {
       const machines = {
-        ...Mocks.MachineSettingsInitial,
+        ...Mocks.MachinesStateInitial,
         ...{ ids: undefined },
       };
       const result = RecipeUtility.adjustProducer(
@@ -978,16 +984,14 @@ describe('RecipeUtility', () => {
       const data = Mocks.getDataset();
       data.machineEntities[ItemId.StoneFurnace].modules = undefined;
       const machines = {
-        ...Mocks.MachineSettingsInitial,
+        ...Mocks.MachinesStateInitial,
         ...{
           ids: undefined,
           entities: {
-            ...Mocks.MachineSettingsInitial.entities,
+            ...Mocks.MachinesStateInitial.entities,
             ...{
               [ItemId.ElectricFurnace]: {
-                ...Mocks.MachineSettingsInitial.entities[
-                  ItemId.ElectricFurnace
-                ],
+                ...Mocks.MachinesStateInitial.entities[ItemId.ElectricFurnace],
                 ...{
                   moduleRankIds: undefined,
                   beaconModuleRankIds: undefined,

@@ -5,7 +5,10 @@
         {{ 'objectives.items' | translate }}
       </h3>
       <div
-        *ngFor="let itemObjective of vm.itemsObj; trackBy: trackSvc.trackById"
+        *ngFor="
+          let itemObjective of vm.itemObjectives;
+          trackBy: trackSvc.trackById
+        "
         class="mb-1"
       >
         <div class="p-inputgroup">
@@ -16,7 +19,7 @@
             class="p-button-outlined icon"
             icon="fa-solid fa-minus"
             [pTooltip]="'objectives.removeItemTooltip' | translate"
-            (click)="removeItemObj(itemObjective.id)"
+            (click)="removeItemObjective(itemObjective.id)"
           ></button>
           <button
             pButton
@@ -93,7 +96,7 @@
       </h3>
       <div
         *ngFor="
-          let recipeObjective of vm.recipesObj;
+          let recipeObjective of vm.recipeObjectives;
           trackBy: trackSvc.trackById
         "
         class="mb-2"
@@ -106,7 +109,7 @@
             class="p-button-outlined icon"
             icon="fa-solid fa-minus"
             [pTooltip]="'objectives.removeRecipeTooltip' | translate"
-            (click)="removeRecipeObj(recipeObjective.id)"
+            (click)="removeRecipeObjective(recipeObjective.id)"
           ></button>
           <button
             pButton
@@ -167,12 +170,12 @@
   <lab-picker
     #addItemPicker
     [header]="'objectives.addAnItemTooltip' | translate"
-    (selectId)="addItemObj($event)"
+    (selectId)="addItemObjective($event)"
   ></lab-picker>
   <lab-picker
     #addRecipePicker
     [header]="'objectives.addARecipeTooltip' | translate"
-    (selectId)="addRecipeObj($event)"
+    (selectId)="addRecipeObjective($event)"
   ></lab-picker>
   <p-messages
     styleClass="w-100 w-xxl-50"

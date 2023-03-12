@@ -5,7 +5,7 @@ import {
   Entities,
   Game,
   ItemId,
-  ItemRtlObj,
+  ItemObjectiveRational,
   PowerUnit,
   Rational,
   Step,
@@ -15,26 +15,26 @@ import {
 } from '~/models';
 import { RateUtility, SimplexUtility } from '~/utilities';
 import { LabState } from '../';
-import * as Items from '../item-configs';
-import * as Machines from '../machine-configs';
+import * as Items from '../items';
+import * as Machines from '../machines';
 import * as Preferences from '../preferences';
-import * as Recipes from '../recipe-configs';
 import * as RecipeObjectives from '../recipe-objectives';
+import * as Recipes from '../recipes';
 import * as Settings from '../settings';
-import { ItemsObjState } from './item-objectives.reducer';
+import { ItemObjectivesState } from './item-objectives.reducer';
 
 /* Base selector functions */
-export const itemsObjState = (state: LabState): ItemsObjState =>
-  state.itemsObjState;
+export const itemObjectivesState = (state: LabState): ItemObjectivesState =>
+  state.itemObjectivesState;
 
-export const getIds = createSelector(itemsObjState, (state) => state.ids);
+export const getIds = createSelector(itemObjectivesState, (state) => state.ids);
 export const getEntities = createSelector(
-  itemsObjState,
+  itemObjectivesState,
   (state) => state.entities
 );
 
 /* Complex selectors */
-export const getItemsObj = createSelector(
+export const getItemObjectives = createSelector(
   getIds,
   getEntities,
   Settings.getDataset,
@@ -42,23 +42,24 @@ export const getItemsObj = createSelector(
     ids.map((i) => entities[i]).filter((p) => data.itemEntities[p.itemId])
 );
 
-export const getItemsRtlObj = createSelector(getItemsObj, (itemsObj) =>
-  itemsObj.map((p) => new ItemRtlObj(p))
+export const getItemObjectiveRationals = createSelector(
+  getItemObjectives,
+  (itemObjectives) => itemObjectives.map((p) => new ItemObjectiveRational(p))
 );
 
-export const getNormalizedItemsObj = createSelector(
-  getItemsRtlObj,
-  Items.getItemsCfg,
+export const getNormalizedItemObjectives = createSelector(
+  getItemObjectiveRationals,
+  Items.getItemsState,
   Settings.getBeltSpeed,
   Settings.getDisplayRateInfo,
   Recipes.getAdjustedDataset,
-  (itemsObj, itemSettings, beltSpeed, displayRateInfo, data) =>
-    itemsObj.map((o) => ({
+  (itemObjectives, itemsSettings, beltSpeed, displayRateInfo, data) =>
+    itemObjectives.map((o) => ({
       ...o,
       ...{
         rate: RateUtility.itemObjectiveNormalizedRate(
           o,
-          itemSettings,
+          itemsSettings,
           beltSpeed,
           displayRateInfo,
           data
@@ -68,25 +69,25 @@ export const getNormalizedItemsObj = createSelector(
 );
 
 export const getMatrixResult = createSelector(
-  getNormalizedItemsObj,
-  RecipeObjectives.getRecipesRtlObj,
-  Items.getItemsCfg,
-  Recipes.getRecipesCfg,
+  getNormalizedItemObjectives,
+  RecipeObjectives.getRecipeObjectiveRationals,
+  Items.getItemsState,
+  Recipes.getRecipesState,
   Settings.getRationalCost,
   Recipes.getAdjustedDataset,
   (
     itemObjectives,
     recipeObjectives,
-    itemSettings,
-    recipeSettings,
+    itemsSettings,
+    recipesSettings,
     cost,
     data
   ) =>
     SimplexUtility.solve(
       itemObjectives,
       recipeObjectives,
-      itemSettings,
-      recipeSettings,
+      itemsSettings,
+      recipesSettings,
       cost,
       data
     )
@@ -94,9 +95,9 @@ export const getMatrixResult = createSelector(
 
 export const getSteps = createSelector(
   getMatrixResult,
-  RecipeObjectives.getRecipesRtlObj,
-  Items.getItemsCfg,
-  Recipes.getRecipesRtlCfg,
+  RecipeObjectives.getRecipeObjectiveRationals,
+  Items.getItemsState,
+  Recipes.getRecipesStateRational,
   Settings.getRationalBeaconReceivers,
   Settings.getBeltSpeed,
   Settings.getDisplayRateInfo,
@@ -104,8 +105,8 @@ export const getSteps = createSelector(
   (
     result,
     recipeObjectives,
-    itemSettings,
-    recipeSettings,
+    itemsSettings,
+    recipesSettings,
     beaconReceivers,
     beltSpeed,
     dispRateInfo,
@@ -114,8 +115,8 @@ export const getSteps = createSelector(
     RateUtility.normalizeSteps(
       result.steps,
       recipeObjectives,
-      itemSettings,
-      recipeSettings,
+      itemsSettings,
+      recipesSettings,
       beaconReceivers,
       beltSpeed,
       dispRateInfo,
@@ -124,29 +125,36 @@ export const getSteps = createSelector(
 );
 
 export const getZipState = createSelector(
-  itemsObjState,
-  RecipeObjectives.recipesObjState,
-  Items.itemsCfgState,
-  Recipes.recipesCfgState,
-  Machines.machineCfgsState,
+  itemObjectivesState,
+  RecipeObjectives.recipeObjectivesState,
+  Items.itemsState,
+  Recipes.recipesState,
+  Machines.machinesState,
   Settings.settingsState,
-  (itemsObj, recipesObj, itemsCfg, recipesCfg, machinesCfg, settings) => ({
-    itemsObj,
-    recipesObj,
-    itemsCfg,
-    recipesCfg,
-    machinesCfg,
+  (
+    itemObjectives,
+    recipeObjectives,
+    itemsState,
+    recipesState,
+    machinesState,
+    settings
+  ) => ({
+    itemObjectives,
+    recipeObjectives,
+    itemsState,
+    recipesState,
+    machinesState,
     settings,
   })
 );
 
 export const getStepsModified = createSelector(
   getSteps,
-  RecipeObjectives.getBaseRecipesObj,
-  Items.itemsCfgState,
-  Recipes.recipesCfgState,
-  (steps, recipesObj, itemsCfg, recipesCfg) => ({
-    recipeObjectives: recipesObj.reduce((e: Entities<boolean>, p) => {
+  RecipeObjectives.getBaseRecipeObjectives,
+  Items.itemsState,
+  Recipes.recipesState,
+  (steps, recipeObjectives, itemsSettings, recipesSettings) => ({
+    recipeObjectives: recipeObjectives.reduce((e: Entities<boolean>, p) => {
       e[p.id] =
         p.machineId != null ||
         p.machineModuleIds != null ||
@@ -156,13 +164,13 @@ export const getStepsModified = createSelector(
     }, {}),
     items: steps.reduce((e: Entities<boolean>, s) => {
       if (s.itemId) {
-        e[s.itemId] = itemsCfg[s.itemId] != null;
+        e[s.itemId] = itemsSettings[s.itemId] != null;
       }
       return e;
     }, {}),
     recipes: steps.reduce((e: Entities<boolean>, s) => {
       if (s.recipeId) {
-        e[s.recipeId] = recipesCfg[s.recipeId] != null;
+        e[s.recipeId] = recipesSettings[s.recipeId] != null;
       }
       return e;
     }, {}),
@@ -171,10 +179,10 @@ export const getStepsModified = createSelector(
 
 export const getTotals = createSelector(
   getSteps,
-  Items.getItemsCfg,
-  Recipes.getRecipesCfg,
+  Items.getItemsState,
+  Recipes.getRecipesState,
   Recipes.getAdjustedDataset,
-  (steps, itemsCfg, recipesCfg, data) => {
+  (steps, itemsSettings, recipesSettings, data) => {
     const belts: Entities<Rational> = {};
     const wagons: Entities<Rational> = {};
     const machines: Entities<Rational> = {};
@@ -188,7 +196,7 @@ export const getTotals = createSelector(
       if (step.itemId != null) {
         // Total Belts
         if (step.belts?.nonzero()) {
-          const belt = itemsCfg[step.itemId].beltId;
+          const belt = itemsSettings[step.itemId].beltId;
           if (belt != null) {
             if (!Object.prototype.hasOwnProperty.call(belts, belt)) {
               belts[belt] = Rational.zero;
@@ -199,7 +207,7 @@ export const getTotals = createSelector(
 
         // Total Wagons
         if (step.wagons?.nonzero()) {
-          const wagon = itemsCfg[step.itemId].wagonId;
+          const wagon = itemsSettings[step.itemId].wagonId;
           if (wagon != null) {
             if (!Object.prototype.hasOwnProperty.call(wagons, wagon)) {
               wagons[wagon] = Rational.zero;
@@ -215,7 +223,7 @@ export const getTotals = createSelector(
           const recipe = data.recipeEntities[step.recipeId];
           // Don't include silos from launch recipes
           if (!recipe.part) {
-            const settings = recipesCfg[step.recipeId];
+            const settings = recipesSettings[step.recipeId];
             let machine = settings.machineId;
             if (
               data.game === Game.DysonSphereProgram &&

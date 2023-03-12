@@ -1,6 +1,6 @@
 export * from './data';
 export * from './enum';
-export * from './config';
+export * from './settings';
 
 export * from './app-data';
 export * from './constants';

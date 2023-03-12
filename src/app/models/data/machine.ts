@@ -1,9 +1,8 @@
 import { Entities } from '../entities';
 import { Rational } from '../rational';
 import { ModuleEffect } from './module';
-import { RationalSilo, Silo } from './silo';
+import { Silo, SiloRational } from './silo';
 
-/** Machine data */
 export interface Machine {
   speed?: number | string;
   modules?: number;
@@ -24,8 +23,7 @@ export interface Machine {
   disallowEffects?: ModuleEffect[];
 }
 
-/** Rational machine data */
-export class MachineRtl {
+export class MachineRational {
   speed?: Rational;
   modules?: number;
   /** Energy type, e.g. electric or burner */
@@ -38,7 +36,7 @@ export class MachineRtl {
   pollution?: Rational;
   mining?: boolean;
   research?: boolean;
-  silo?: RationalSilo;
+  silo?: SiloRational;
   consumption?: Entities<Rational>;
   disallowEffects?: ModuleEffect[];
 
@@ -71,7 +69,7 @@ export class MachineRtl {
       this.research = obj.research;
     }
     if (obj.silo) {
-      this.silo = new RationalSilo(obj.silo);
+      this.silo = new SiloRational(obj.silo);
     }
     if (obj.consumption) {
       const consumption = obj.consumption;

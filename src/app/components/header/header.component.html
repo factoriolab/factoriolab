@@ -24,9 +24,9 @@
       pButton
       pRipple
       class="p-button-lg p-button-text icon-btn-lg"
-      [icon]="vm.gameInf.icon | iconSmClass"
-      [label]="vm.gameInf.label | translate"
-      [routerLink]="vm.gameInf.route"
+      [icon]="vm.gameInfo.icon | iconSmClass"
+      [label]="vm.gameInfo.label | translate"
+      [routerLink]="vm.gameInfo.route"
       [pTooltip]="'app.resetTooltip' | translate"
       tooltipPosition="bottom"
     ></button>
@@ -43,10 +43,10 @@
       ></button>
     </ng-container>
   </div>
-  <a class="d-sm-none" [routerLink]="vm.gameInf.route">
+  <a class="d-sm-none" [routerLink]="vm.gameInfo.route">
     <p-splitButton
       styleClass="p-button-lg p-button-text"
-      [icon]="vm.gameInf.icon | iconSmClass"
+      [icon]="vm.gameInfo.icon | iconSmClass"
       [model]="vm.gameOptions"
       (onDropdownClick)="cancelRouterLink($event)"
     >

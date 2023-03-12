@@ -12,9 +12,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, Game, gameInf, gameOptions } from '~/models';
+import { APP, Game, gameInfo, gameOptions } from '~/models';
 import { ContentService } from '~/services';
-import { ItemsObj, LabState, RecipesObj, Settings } from '~/store';
+import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
 interface MenuLink {
   label: string;
@@ -38,7 +38,7 @@ export class HeaderComponent implements OnInit {
     this.contentSvc.settingsXlHidden$,
   ]).pipe(
     map(([game, settingsXlHidden]) => ({
-      gameInf: gameInf[game],
+      gameInfo: gameInfo[game],
       gameOptions: this.buildGameOptions(game),
       settingsXlHidden,
     }))
@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit {
       href: 'https://ko-fi.com/dcbroad3',
     },
   ];
-  gameInf = gameInf;
+  gameInf = gameInfo;
   gameOptions = gameOptions;
 
   constructor(
@@ -78,8 +78,8 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest([
-      this.store.select(ItemsObj.getItemsObj),
-      this.store.select(RecipesObj.getBaseRecipesObj),
+      this.store.select(ItemObjectives.getItemObjectives),
+      this.store.select(RecipeObjectives.getBaseRecipeObjectives),
       this.store.select(Settings.getDataset),
       this.contentSvc.lang$,
     ])
@@ -108,9 +108,9 @@ export class HeaderComponent implements OnInit {
       .filter((g) => g !== game)
       .map(
         (g): MenuItem => ({
-          icon: 'lab-icon-sm ' + gameInf[g].icon,
-          label: this.translateSvc.instant(gameInf[g].label),
-          routerLink: gameInf[g].route,
+          icon: 'lab-icon-sm ' + gameInfo[g].icon,
+          label: this.translateSvc.instant(gameInfo[g].label),
+          routerLink: gameInfo[g].route,
         })
       );
   }

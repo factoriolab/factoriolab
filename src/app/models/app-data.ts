@@ -1,7 +1,7 @@
-import { ModInf } from './mod';
+import { ModInfo } from './mod';
 
 export interface AppData {
-  mods: ModInf[];
+  mods: ModInfo[];
   v0: string[];
   hash: string[];
 }

@@ -5,9 +5,15 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { Game, gameInf, gameOptions } from '~/models';
+import { Game, gameInfo, gameOptions } from '~/models';
 import { RouterService } from '~/services';
-import { ItemsObj, LabState, Preferences, RecipesObj, Settings } from '~/store';
+import {
+  ItemObjectives,
+  LabState,
+  Preferences,
+  RecipeObjectives,
+  Settings,
+} from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
@@ -36,7 +42,7 @@ export class LandingComponent {
     }))
   );
 
-  gameInf = gameInf;
+  gameInfo = gameInfo;
   gameOptions = gameOptions;
 
   Game = Game;
@@ -49,12 +55,12 @@ export class LandingComponent {
   ) {}
 
   selectItem(value: string): void {
-    this.addItem(value);
+    this.addItemObjective(value);
     this.router.navigate(['list']);
   }
 
   selectRecipe(value: string): void {
-    this.addRecipe(value);
+    this.addRecipeObjective(value);
     this.router.navigate(['list']);
   }
 
@@ -67,7 +73,7 @@ export class LandingComponent {
   }
 
   setGame(game: Game): void {
-    this.setMod(gameInf[game].modId);
+    this.setMod(gameInfo[game].modId);
   }
 
   /** Action Dispatch Methods */
@@ -75,12 +81,12 @@ export class LandingComponent {
     this.store.dispatch(new Settings.SetModAction(value));
   }
 
-  addItem(value: string): void {
-    this.store.dispatch(new ItemsObj.AddAction(value));
+  addItemObjective(value: string): void {
+    this.store.dispatch(new ItemObjectives.AddAction(value));
   }
 
-  addRecipe(value: string): void {
-    this.store.dispatch(new RecipesObj.AddAction(value));
+  addRecipeObjective(value: string): void {
+    this.store.dispatch(new RecipeObjectives.AddAction(value));
   }
 
   setBypassLanding(value: boolean): void {

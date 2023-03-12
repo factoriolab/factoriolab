@@ -35,12 +35,12 @@ describe('Recipe Objectives Selectors', () => {
       spyOn(RecipeUtility, 'adjustProducer');
       Selectors.getProducers.projector(
         [Mocks.Producer],
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset
       );
       expect(RecipeUtility.adjustProducer).toHaveBeenCalledWith(
         Mocks.Producer,
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset
       );
     });
@@ -52,7 +52,7 @@ describe('Recipe Objectives Selectors', () => {
       Selectors.getRationalProducers.projector(
         [Mocks.Producer],
         Mocks.AdjustmentData,
-        Mocks.ItemSettingsInitial
+        Mocks.ItemsStateInitial
       );
       expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(1);
     });

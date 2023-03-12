@@ -6,18 +6,18 @@ import { ReplaySubject } from 'rxjs';
 import { DisplayRate } from '~/models';
 import * as Settings from '../settings';
 import * as Actions from './item-objectives.actions';
-import { ItemsObjEffects } from './item-objectives.effects';
+import { ItemObjectivesEffects } from './item-objectives.effects';
 
-describe('ItemsObjEffects', () => {
-  let effects: ItemsObjEffects;
+describe('ItemObjectivesEffects', () => {
+  let effects: ItemObjectivesEffects;
   let actions: ReplaySubject<any>;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      providers: [provideMockActions(() => actions), ItemsObjEffects],
+      providers: [provideMockActions(() => actions), ItemObjectivesEffects],
     });
 
-    effects = TestBed.inject(ItemsObjEffects);
+    effects = TestBed.inject(ItemObjectivesEffects);
   });
 
   describe('adjustDisplayRate$', () => {

@@ -11,19 +11,19 @@ import { StatusSimplex } from 'glpk-ts/dist/status';
 
 import { environment } from 'src/environments';
 import {
-  CostsRtlCfg,
+  CostsRationalSettings,
   Dataset,
   Entities,
-  ItemRtlObj,
+  ItemObjectiveRational,
   MatrixResult,
   MatrixResultType,
   ObjectiveType,
   Rational,
-  RecipeRtl,
-  RecipeRtlObj,
+  RecipeObjectiveRational,
+  RecipeRational,
   Step,
 } from '~/models';
-import { ItemsCfg, RecipesCfg } from '~/store';
+import { Items, Recipes } from '~/store';
 import { RateUtility } from './rate.utility';
 
 const FLOAT_TOLERANCE = 1e-10;
@@ -46,16 +46,16 @@ export interface ItemValues {
 }
 
 export interface MatrixState {
-  itemObjectives: ItemRtlObj[];
+  itemObjectives: ItemObjectiveRational[];
   /**
    * Output & Maximize recipe objectives
    *  * Limits moved to `recipeLimits`
    *  * Inputs added to `itemValues`
    */
-  recipeObjectives: RecipeRtlObj[];
+  recipeObjectives: RecipeObjectiveRational[];
   steps: Step[];
   /** Recipes used in the matrix */
-  recipes: Entities<RecipeRtl>;
+  recipes: Entities<RecipeRational>;
   /** Items used in the matrix */
   itemValues: Entities<ItemValues>;
   /** Recipe limits */
@@ -69,7 +69,7 @@ export interface MatrixState {
   /** All items that are included */
   itemIds: string[];
   data: Dataset;
-  cost: CostsRtlCfg;
+  cost: CostsRationalSettings;
 }
 
 export interface MatrixSolution {
@@ -132,11 +132,11 @@ export class SimplexUtility {
   }
 
   static solve(
-    itemObjectives: ItemRtlObj[],
-    recipeObjectives: RecipeRtlObj[],
-    itemsCfg: ItemsCfg.ItemsCfgState,
-    recipesCfg: RecipesCfg.RecipesCfgState,
-    cost: CostsRtlCfg,
+    itemObjectives: ItemObjectiveRational[],
+    recipeObjectives: RecipeObjectiveRational[],
+    itemsState: Items.ItemsState,
+    recipesState: Recipes.RecipesState,
+    cost: CostsRationalSettings,
     data: Dataset
   ): MatrixResult {
     if (itemObjectives.length === 0 && recipeObjectives.length === 0) {
@@ -147,8 +147,8 @@ export class SimplexUtility {
     const state = this.getState(
       itemObjectives,
       recipeObjectives,
-      itemsCfg,
-      recipesCfg,
+      itemsState,
+      recipesState,
       cost,
       data
     );
@@ -173,11 +173,11 @@ export class SimplexUtility {
 
   //#region Setup
   static getState(
-    itemObjectives: ItemRtlObj[],
-    recipeObjectives: RecipeRtlObj[],
-    itemsCfg: ItemsCfg.ItemsCfgState,
-    recipesCfg: RecipesCfg.RecipesCfgState,
-    cost: CostsRtlCfg,
+    itemObjectives: ItemObjectiveRational[],
+    recipeObjectives: RecipeObjectiveRational[],
+    itemsState: Items.ItemsState,
+    recipesState: Recipes.RecipesState,
+    cost: CostsRationalSettings,
     data: Dataset
   ): MatrixState {
     // Set up state object
@@ -192,9 +192,9 @@ export class SimplexUtility {
       itemValues: {},
       recipeLimits: {},
       unproduceableIds: [],
-      excludedIds: data.itemIds.filter((i) => itemsCfg[i].excluded),
-      recipeIds: data.recipeIds.filter((r) => !recipesCfg[r].excluded),
-      itemIds: data.itemIds.filter((i) => !itemsCfg[i].excluded),
+      excludedIds: data.itemIds.filter((i) => itemsState[i].excluded),
+      recipeIds: data.recipeIds.filter((r) => !recipesState[r].excluded),
+      itemIds: data.itemIds.filter((i) => !itemsState[i].excluded),
       cost,
       data,
     };
@@ -288,7 +288,7 @@ export class SimplexUtility {
   }
 
   /** Find matching recipes for an item that have not yet been parsed */
-  static recipeMatches(itemId: string, state: MatrixState): RecipeRtl[] {
+  static recipeMatches(itemId: string, state: MatrixState): RecipeRational[] {
     const recipes = state.recipeIds
       .filter((r) => !state.recipes[r])
       .map((r) => state.data.recipeR[r])
@@ -300,7 +300,7 @@ export class SimplexUtility {
   }
 
   /** Find matching item inputs for a recipe that have not yet been parsed */
-  static itemMatches(recipe: RecipeRtl, state: MatrixState): string[] {
+  static itemMatches(recipe: RecipeRational, state: MatrixState): string[] {
     const itemIds = Object.keys(recipe.in).filter(
       (i) => state.itemValues[i]?.out == null
     );
@@ -311,7 +311,10 @@ export class SimplexUtility {
   }
 
   /** Look for item inputs for a recipe, recursively */
-  static parseRecipeRecursively(recipe: RecipeRtl, state: MatrixState): void {
+  static parseRecipeRecursively(
+    recipe: RecipeRational,
+    state: MatrixState
+  ): void {
     if (recipe.in) {
       const matches = this.itemMatches(recipe, state);
       for (const itemId of matches.filter(
@@ -847,10 +850,10 @@ export class SimplexUtility {
 
   /** Update steps with recipe from matrix solution */
   static addRecipeStep(
-    recipe: RecipeRtl,
+    recipe: RecipeRational,
     solution: MatrixSolution,
     state: MatrixState,
-    recipeObjective?: RecipeRtlObj
+    recipeObjective?: RecipeObjectiveRational
   ): void {
     const steps = state.steps;
     // Don't assign to any step that already has a recipe or objective assigned

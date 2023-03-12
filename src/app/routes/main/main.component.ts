@@ -11,9 +11,9 @@ import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
-import { APP, Game, gameInf, ItemId, MatrixResultType } from '~/models';
+import { APP, Game, gameInfo, ItemId, MatrixResultType } from '~/models';
 import { ContentService, ErrorService } from '~/services';
-import { App, ItemsObj, LabState, Settings } from '~/store';
+import { App, ItemObjectives, LabState, Settings } from '~/store';
 
 @Component({
   selector: 'lab-main',
@@ -25,7 +25,7 @@ export class MainComponent implements AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
     this.store.select(Settings.getMod),
-    this.store.select(ItemsObj.getMatrixResult),
+    this.store.select(ItemObjectives.getMatrixResult),
     this.contentSvc.settingsActive$,
     this.contentSvc.settingsXlHidden$,
     this.contentSvc.scrollTop$,
@@ -102,7 +102,7 @@ export class MainComponent implements AfterViewInit {
     setTimeout(() => {
       this.ngZone.run(() => {
         this.errorSvc.message$.next(null);
-        this.router.navigateByUrl(gameInf[game].route);
+        this.router.navigateByUrl(gameInfo[game].route);
         this.store.dispatch(new App.ResetAction());
         this.isResetting = false;
       });

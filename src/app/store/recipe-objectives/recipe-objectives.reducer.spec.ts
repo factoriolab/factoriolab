@@ -1,8 +1,8 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { RecipeObj } from '~/models';
+import { RecipeObjective } from '~/models';
 import { Items } from '../';
 import * as App from '../app.actions';
-import * as Recipes from '../recipe-configs';
+import * as Recipes from '../recipes';
 import * as Actions from './recipe-objectives.actions';
 import {
   initialProducersState,
@@ -10,7 +10,7 @@ import {
   ProducersState,
 } from './recipe-objectives.reducer';
 
-describe('Recipe Objectivess Reducer', () => {
+describe('Recipe Objectives Reducer', () => {
   const state = producersReducer(
     undefined,
     new Actions.AddAction(RecipeId.WoodenChest)
@@ -74,7 +74,7 @@ describe('Recipe Objectivess Reducer', () => {
 
   describe('CREATE', () => {
     it('should create a new producer', () => {
-      const product: RecipeObj = {
+      const product: RecipeObjective = {
         id: '1',
         recipeId: RecipeId.IronPlate,
         count: '2',

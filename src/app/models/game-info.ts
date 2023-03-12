@@ -1,8 +1,8 @@
-import { ColumnKey } from './config';
 import { Game } from './enum';
+import { ColumnKey } from './settings';
 
 /** Game information, nonconfigurable */
-export interface GameInf {
+export interface GameInfo {
   icon: string;
   route: string;
   label: string;
@@ -12,7 +12,7 @@ export interface GameInf {
 }
 
 /** Game information data, nonconfigurable */
-export const gameInf: Record<Game, GameInf> = {
+export const gameInfo: Record<Game, GameInfo> = {
   [Game.None]: {
     icon: 'factorio',
     route: 'factorio',

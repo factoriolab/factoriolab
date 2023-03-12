@@ -38,7 +38,7 @@ describe('WizardComponent', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
     dispatch.spy.calls.reset();
-    component.createItemObj(ItemId.IronPlate, '1', 'items');
+    component.createItemObjective(ItemId.IronPlate, '1', 'items');
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
       new Products.CreateAction({
         id: '0',

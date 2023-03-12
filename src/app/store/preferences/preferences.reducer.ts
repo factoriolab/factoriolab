@@ -1,7 +1,7 @@
 import {
-  ColumnsCfg,
+  ColumnsState,
   Entities,
-  initialColumnsCfg,
+  initialColumnsState,
   Language,
   PowerUnit,
   Theme,
@@ -14,7 +14,7 @@ import {
 
 export interface PreferencesState {
   states: Entities<string>;
-  columns: ColumnsCfg;
+  columns: ColumnsState;
   language: Language;
   powerUnit: PowerUnit;
   theme: Theme;
@@ -23,7 +23,7 @@ export interface PreferencesState {
 
 export const initialPreferencesState: PreferencesState = {
   states: {},
-  columns: initialColumnsCfg,
+  columns: initialColumnsState,
   language: Language.English,
   powerUnit: PowerUnit.Auto,
   theme: Theme.Dark,

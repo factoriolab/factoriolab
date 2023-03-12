@@ -1,10 +1,10 @@
 import { Rational } from '../rational';
-import { BeltRtl } from './belt';
+import { BeltRational } from './belt';
 
-describe('BeltRtl', () => {
+describe('BeltRational', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new BeltRtl({ speed: 2 });
+      const result = new BeltRational({ speed: 2 });
       expect(result.speed).toEqual(Rational.two);
     });
   });

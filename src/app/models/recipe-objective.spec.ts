@@ -1,11 +1,11 @@
 import { Mocks, RecipeId } from 'src/tests';
 import { Rational } from './rational';
-import { RecipeRtlObj } from './recipe-objective';
+import { RecipeObjectiveRational } from './recipe-objective';
 
-describe('RecipeRtlObj', () => {
+describe('RecipeObjectiveRational', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new RecipeRtlObj(
+      const result = new RecipeObjectiveRational(
         {
           id: '1',
           recipeId: RecipeId.IronPlate,
@@ -19,7 +19,7 @@ describe('RecipeRtlObj', () => {
     });
 
     it('should ignore undefined fields', () => {
-      const result = new RecipeRtlObj(
+      const result = new RecipeObjectiveRational(
         {
           id: '1',
           recipeId: RecipeId.IronPlate,

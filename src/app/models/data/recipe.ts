@@ -1,7 +1,6 @@
 import { Entities } from '../entities';
 import { Rational } from '../rational';
 
-/** Recipe data */
 export interface Recipe {
   id: string;
   name: string;
@@ -22,8 +21,7 @@ export interface Recipe {
   usage?: number | string;
 }
 
-/** Rational recipe */
-export class RecipeRtl {
+export class RecipeRational {
   id: string;
   name: string;
   category: string;

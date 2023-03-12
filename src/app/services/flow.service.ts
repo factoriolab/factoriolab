@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable, switchMap } from 'rxjs';
 
 import {
-  ColumnsCfg,
+  ColumnsState,
   Dataset,
   FlowData,
   FlowStyle,
@@ -13,7 +13,13 @@ import {
   Step,
   themeMap,
 } from '~/models';
-import { ItemsObj, LabState, Preferences, RecipesCfg, Settings } from '~/store';
+import {
+  ItemObjectives,
+  LabState,
+  Preferences,
+  Recipes,
+  Settings,
+} from '~/store';
 
 @Injectable({
   providedIn: 'root',
@@ -26,8 +32,8 @@ export class FlowService {
     private store: Store<LabState>
   ) {
     this.flowData$ = combineLatest([
-      this.store.select(ItemsObj.getSteps),
-      this.store.select(RecipesCfg.getAdjustedDataset),
+      this.store.select(ItemObjectives.getSteps),
+      this.store.select(Recipes.getAdjustedDataset),
       this.store
         .select(Settings.getDisplayRateInfo)
         .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
@@ -44,7 +50,7 @@ export class FlowService {
     steps: Step[],
     data: Dataset,
     suffix: string,
-    columnsCfg: ColumnsCfg,
+    columnsState: ColumnsState,
     theme: FlowStyle
   ): FlowData {
     const flow: FlowData = {
@@ -53,8 +59,8 @@ export class FlowService {
       links: [],
     };
 
-    const itemPrec = columnsCfg.items.precision;
-    const machinePrec = columnsCfg.machines.precision;
+    const itemPrec = columnsState.items.precision;
+    const machinePrec = columnsState.machines.precision;
 
     for (const step of steps) {
       if (step.recipeId && step.machines) {

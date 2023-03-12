@@ -2,7 +2,6 @@ export * from './beacon';
 export * from './belt';
 export * from './cargo-wagon';
 export * from './category';
-export * from '../dataset';
 export * from './fluid-wagon';
 export * from './fuel';
 export * from './icon';

@@ -9,7 +9,7 @@ export interface Silo {
   launch: number;
 }
 
-export class RationalSilo {
+export class SiloRational {
   /** Number of rocket parts required */
   parts: Rational;
   /** Launch animation delay, in seconds */

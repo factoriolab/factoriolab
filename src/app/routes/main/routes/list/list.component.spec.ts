@@ -173,7 +173,7 @@ describe('ListComponent', () => {
     const step: Step = {
       id: '0',
       recipeId: RecipeId.WoodenChest,
-      recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.WoodenChest],
+      recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.WoodenChest],
     };
 
     it('should skip a step with no recipe', () => {
@@ -181,7 +181,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         { id: '0' },
         '1',
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.Machine
       );
@@ -193,7 +193,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         ItemId.AssemblingMachine2,
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.Machine
       );
@@ -210,7 +210,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         ItemId.SpeedModule3,
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.MachineModules,
         0
@@ -228,7 +228,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         '4',
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.BeaconCount,
         0
@@ -247,7 +247,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         ItemId.Beacon,
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.Beacon,
         0
@@ -266,7 +266,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         ItemId.SpeedModule3,
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.BeaconModules,
         0,
@@ -286,7 +286,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         '8',
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.BeaconTotal,
         0
@@ -304,7 +304,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         100,
-        Mocks.MachineSettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.Overclock
       );

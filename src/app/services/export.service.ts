@@ -3,12 +3,12 @@ import { saveAs } from 'file-saver';
 
 import { notNullish } from '~/helpers';
 import {
-  ColumnsCfg,
+  ColumnsState,
   Dataset,
   Entities,
-  ItemCfg,
+  ItemSettings,
   Rational,
-  RecipeCfg,
+  RecipeSettings,
   Step,
 } from '~/models';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
@@ -46,13 +46,13 @@ export interface StepExport {
 export class ExportService {
   stepsToCsv(
     steps: Step[],
-    columnsCfg: ColumnsCfg,
-    itemSettings: Entities<ItemCfg>,
-    recipeSettings: Entities<RecipeCfg>,
+    columnsState: ColumnsState,
+    itemsState: Entities<ItemSettings>,
+    recipesState: Entities<RecipeSettings>,
     data: Dataset
   ): void {
     const json = steps.map((s) =>
-      this.stepToJson(s, steps, columnsCfg, itemSettings, recipeSettings, data)
+      this.stepToJson(s, steps, columnsState, itemsState, recipesState, data)
     );
     const fields = Object.keys(json[0]) as (keyof StepExport)[];
     const csv = json.map((row) => fields.map((f) => row[f]).join(','));
@@ -82,15 +82,15 @@ export class ExportService {
   stepToJson(
     step: Step,
     steps: Step[],
-    columns: ColumnsCfg,
-    itemSettings: Entities<ItemCfg>,
-    recipeSettings: Entities<RecipeCfg>,
+    columns: ColumnsState,
+    itemsState: Entities<ItemSettings>,
+    recipesState: Entities<RecipeSettings>,
     data: Dataset
   ): StepExport {
     const exp: StepExport = {};
     if (step.itemId != null) {
       exp.Item = step.itemId;
-      const settings = itemSettings[step.itemId];
+      const itemSettings = itemsState[step.itemId];
       if (step.items != null) {
         exp.Items =
           '=' + step.items.sub(step.surplus ?? Rational.zero).toString();
@@ -102,19 +102,19 @@ export class ExportService {
         if (step.belts != null) {
           exp.Belts = '=' + step.belts.toString();
         }
-        exp.Belt = settings.beltId;
+        exp.Belt = itemSettings.beltId;
       }
       if (columns.wagons.show) {
         if (step.wagons != null) {
           exp.Wagons = '=' + step.wagons.toString();
         }
-        exp.Wagon = settings.wagonId;
+        exp.Wagon = itemSettings.wagonId;
       }
     }
     if (step.recipeId != null) {
       exp.Recipe = step.recipeId;
       const recipe = data.recipeR[step.recipeId];
-      const settings = recipeSettings[step.recipeId];
+      const recipeSettings = recipesState[step.recipeId];
       const inputs = Object.keys(recipe.in)
         .map((i) => {
           const inStep = steps.find((s) => s.itemId === i);
@@ -126,22 +126,28 @@ export class ExportService {
       if (inputs) {
         exp.Inputs = `"${inputs}"`;
       }
-      if (settings.machineId != null) {
-        const machine = data.machineEntities[settings.machineId];
+      if (recipeSettings.machineId != null) {
+        const machine = data.machineEntities[recipeSettings.machineId];
         const allowsModules = RecipeUtility.allowsModules(recipe, machine);
         if (columns.machines.show) {
           if (step.machines != null) {
             exp.Machines = '=' + step.machines.toString();
           }
-          exp.Machine = settings.machineId;
-          if (allowsModules && settings.machineModuleIds != null) {
-            exp.MachineModules = `"${settings.machineModuleIds.join(',')}"`;
+          exp.Machine = recipeSettings.machineId;
+          if (allowsModules && recipeSettings.machineModuleIds != null) {
+            exp.MachineModules = `"${recipeSettings.machineModuleIds.join(
+              ','
+            )}"`;
           }
         }
         if (columns.beacons.show && allowsModules) {
-          exp.Beacons = `"${settings.beacons?.map((b) => b.count).join(',')}"`;
-          exp.Beacon = `"${settings.beacons?.map((b) => b.id).join(',')}"`;
-          exp.BeaconModules = `"${settings.beacons
+          exp.Beacons = `"${recipeSettings.beacons
+            ?.map((b) => b.count)
+            .join(',')}"`;
+          exp.Beacon = `"${recipeSettings.beacons
+            ?.map((b) => b.id)
+            .join(',')}"`;
+          exp.BeaconModules = `"${recipeSettings.beacons
             ?.map((b) => b.moduleIds?.join('|'))
             .join(',')}"`;
         }

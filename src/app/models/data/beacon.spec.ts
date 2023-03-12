@@ -1,11 +1,11 @@
 import { EnergyType, FuelType } from '../enum';
 import { Rational } from '../rational';
-import { BeaconRtl } from './beacon';
+import { BeaconRational } from './beacon';
 
-describe('BeaconRtl', () => {
+describe('BeaconRational', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new BeaconRtl({
+      const result = new BeaconRational({
         effectivity: 0.5,
         modules: 2,
         range: 3,
@@ -22,7 +22,7 @@ describe('BeaconRtl', () => {
     });
 
     it('should ignore undefined fields', () => {
-      const result = new BeaconRtl({
+      const result = new BeaconRational({
         effectivity: 0.5,
         modules: 2,
         range: 3,

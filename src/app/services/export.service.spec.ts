@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { ItemCfg, Rational, RecipeCfg, Step } from '~/models';
+import { ItemSettings, Rational, RecipeSettings, Step } from '~/models';
 import { Preferences } from '~/store';
 import { ExportService } from './export.service';
 
@@ -22,8 +22,8 @@ describe('ExportService', () => {
       service.stepsToCsv(
         Mocks.Steps,
         Preferences.initialColumnsState,
-        Mocks.ItemSettingsInitial,
-        Mocks.RecipeSettingsInitial,
+        Mocks.ItemsStateInitial,
+        Mocks.RecipesStateInitial,
         Mocks.AdjustedData
       );
       expect(service.saveAsCsv).toHaveBeenCalled();
@@ -58,11 +58,11 @@ describe('ExportService', () => {
       itemId: itemId,
       recipeId: recipeId,
     };
-    const itemS: ItemCfg = {
+    const itemS: ItemSettings = {
       beltId: 'belt',
       wagonId: 'wagon',
     };
-    const fullRecipe: RecipeCfg = {
+    const fullRecipe: RecipeSettings = {
       machineId: ItemId.AssemblingMachine2,
       machineModuleIds: ['a', 'b'],
       beacons: [{ count: '8', id: 'beacon', moduleIds: ['c', 'd'] }],

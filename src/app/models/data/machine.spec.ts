@@ -1,12 +1,12 @@
 import { ItemId } from 'src/tests';
 import { EnergyType, FuelType } from '../enum';
 import { Rational } from '../rational';
-import { MachineRtl } from './machine';
+import { MachineRational } from './machine';
 
-describe('MachineRtl', () => {
+describe('MachineRational', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new MachineRtl({
+      const result = new MachineRational({
         speed: 1,
         modules: 2,
         type: EnergyType.Burner,
@@ -35,7 +35,7 @@ describe('MachineRtl', () => {
     });
 
     it('should handle string for drain', () => {
-      const result = new MachineRtl({
+      const result = new MachineRational({
         speed: 1,
         modules: 2,
         type: EnergyType.Electric,
@@ -45,7 +45,7 @@ describe('MachineRtl', () => {
     });
 
     it('should ignore undefined fields', () => {
-      const result = new MachineRtl({
+      const result = new MachineRational({
         speed: 1,
         modules: 2,
       });

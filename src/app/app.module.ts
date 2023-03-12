@@ -29,8 +29,8 @@ import { ThemeService } from './services/theme.service';
 import { LabState, metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
-import { ItemsObjEffects } from './store/item-objectives/item-objectives.effects';
-import { MachinesCfgEffects } from './store/machine-configs/machine-configs.effects';
+import { ItemObjectivesEffects } from './store/item-objectives/item-objectives.effects';
+import { MachinesEffects } from './store/machines/machines.effects';
 
 function initializeApp(
   primengConfig: PrimeNGConfig,
@@ -67,8 +67,8 @@ function initializeApp(
     }),
     EffectsModule.forRoot([
       DatasetsEffects,
-      ItemsObjEffects,
-      MachinesCfgEffects,
+      ItemObjectivesEffects,
+      MachinesEffects,
       AnalyticsEffects,
     ]),
     TranslateModule.forRoot({

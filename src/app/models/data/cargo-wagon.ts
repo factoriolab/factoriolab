@@ -1,12 +1,10 @@
 import { Rational } from '../rational';
 
-/** Cargo wagon data */
 export interface CargoWagon {
   size: number;
 }
 
-/** Rational cargo wagon data */
-export class CargoWagonRtl {
+export class CargoWagonRational {
   size: Rational;
 
   constructor(obj: CargoWagon) {

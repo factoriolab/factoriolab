@@ -14,7 +14,7 @@ import { combineLatest, filter, first, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import {
-  ColumnsCfg,
+  ColumnsState,
   Dataset,
   Game,
   ItemId,
@@ -30,12 +30,12 @@ import {
   TrackService,
 } from '~/services';
 import {
-  ItemsCfg,
-  ItemsObj,
+  ItemObjectives,
+  Items,
   LabState,
-  MachinesCfg,
-  RecipesCfg,
-  RecipesObj,
+  Machines,
+  RecipeObjectives,
+  Recipes,
   Settings,
 } from '~/store';
 import { RecipeUtility } from '~/utilities';
@@ -49,21 +49,21 @@ import { RecipeUtility } from '~/utilities';
 })
 export class ListComponent implements OnInit, AfterViewInit {
   vm$ = combineLatest([
-    this.store.select(MachinesCfg.getMachinesCfg),
-    this.store.select(ItemsCfg.getItemsCfg),
-    this.store.select(ItemsCfg.getItemsModified),
-    this.store.select(ItemsObj.getStepsModified),
-    this.store.select(ItemsObj.getTotals),
-    this.store.select(ItemsObj.getSteps),
-    this.store.select(ItemsObj.getStepDetails),
-    this.store.select(ItemsObj.getStepById),
-    this.store.select(ItemsObj.getStepByItemEntities),
-    this.store.select(ItemsObj.getStepTree),
-    this.store.select(ItemsObj.getEffectivePowerUnit),
-    this.store.select(RecipesCfg.getRecipesCfg),
-    this.store.select(RecipesCfg.getRecipesModified),
-    this.store.select(RecipesCfg.getAdjustedDataset),
-    this.store.select(Settings.getColumnsCfg),
+    this.store.select(Machines.getMachinesState),
+    this.store.select(Items.getItemsState),
+    this.store.select(Items.getItemsModified),
+    this.store.select(ItemObjectives.getStepsModified),
+    this.store.select(ItemObjectives.getTotals),
+    this.store.select(ItemObjectives.getSteps),
+    this.store.select(ItemObjectives.getStepDetails),
+    this.store.select(ItemObjectives.getStepById),
+    this.store.select(ItemObjectives.getStepByItemEntities),
+    this.store.select(ItemObjectives.getStepTree),
+    this.store.select(ItemObjectives.getEffectivePowerUnit),
+    this.store.select(Recipes.getRecipesState),
+    this.store.select(Recipes.getRecipesModified),
+    this.store.select(Recipes.getAdjustedDataset),
+    this.store.select(Settings.getColumnsState),
     this.store.select(Settings.getSettings),
     this.store.select(Settings.getDisplayRateInfo),
     this.store.select(Settings.getOptions),
@@ -73,8 +73,8 @@ export class ListComponent implements OnInit, AfterViewInit {
   ]).pipe(
     map(
       ([
-        machinesCfg,
-        itemsCfg,
+        machinesState,
+        itemsState,
         itemsModified,
         stepsModified,
         totals,
@@ -84,10 +84,10 @@ export class ListComponent implements OnInit, AfterViewInit {
         stepByItemEntities,
         stepTree,
         effectivePowerUnit,
-        recipesCfg,
+        recipesState,
         recipesModified,
         data,
-        columnsCfg,
+        columnsState,
         settings,
         dispRateInfo,
         options,
@@ -95,8 +95,8 @@ export class ListComponent implements OnInit, AfterViewInit {
         beltSpeedTxt,
         zipPartial,
       ]) => ({
-        machinesCfg,
-        itemsCfg,
+        machinesState,
+        itemsState,
         itemsModified,
         stepsModified,
         totals,
@@ -106,10 +106,10 @@ export class ListComponent implements OnInit, AfterViewInit {
         stepByItemEntities,
         stepTree,
         effectivePowerUnit,
-        recipesCfg,
+        recipesState,
         recipesModified,
         data,
-        columnsCfg,
+        columnsState,
         settings,
         dispRateInfo,
         options,
@@ -158,8 +158,8 @@ export class ListComponent implements OnInit, AfterViewInit {
       if (this.fragmentId) {
         const [_, stepId, tabId] = this.fragmentId.split('_');
         combineLatest([
-          this.store.select(ItemsObj.getSteps),
-          this.store.select(ItemsObj.getStepDetails),
+          this.store.select(ItemObjectives.getSteps),
+          this.store.select(ItemObjectives.getStepDetails),
         ])
           .pipe(first())
           .subscribe(([steps, stepDetails]) => {
@@ -207,20 +207,26 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   export(
     steps: Step[],
-    itemsCfg: ItemsCfg.ItemsCfgState,
-    recipesCfg: RecipesCfg.RecipesCfgState,
-    columnsCfg: ColumnsCfg,
+    itemsState: Items.ItemsState,
+    recipesState: Recipes.RecipesState,
+    columnsState: ColumnsState,
     data: Dataset
   ): void {
-    this.exportSvc.stepsToCsv(steps, columnsCfg, itemsCfg, recipesCfg, data);
+    this.exportSvc.stepsToCsv(
+      steps,
+      columnsState,
+      itemsState,
+      recipesState,
+      data
+    );
   }
 
   toggleRecipe(
     id: string,
-    recipesCfg: RecipesCfg.RecipesCfgState,
+    recipesState: Recipes.RecipesState,
     data: Dataset
   ): void {
-    const value = !recipesCfg[id].excluded ?? true;
+    const value = !recipesState[id].excluded ?? true;
     const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);
     this.setRecipeExcluded(id, value, def);
   }
@@ -228,7 +234,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   changeRecipeField(
     step: Step,
     event: string | number,
-    machinesCfg: MachinesCfg.MachinesCfgState,
+    machinesState: Machines.MachinesState,
     data: Dataset,
     field: RecipeField,
     index?: number,
@@ -240,16 +246,16 @@ export class ListComponent implements OnInit, AfterViewInit {
     const isObjective = step.recipeObjectiveId != null;
     const settings = step.recipeSettings;
     if (settings?.machineId) {
-      const machineCfg = machinesCfg.entities[settings.machineId];
+      const machineSettings = machinesState.entities[settings.machineId];
       switch (field) {
         case RecipeField.Machine: {
-          if (typeof event === 'string' && machinesCfg.ids != null) {
+          if (typeof event === 'string' && machinesState.ids != null) {
             this.setMachine(
               step.recipeObjectiveId ?? step.recipeId,
               event,
               RecipeUtility.bestMatch(
                 data.recipeEntities[step.recipeId].producers,
-                machinesCfg.ids
+                machinesState.ids
               ),
               step.recipeObjectiveId != null
             );
@@ -259,7 +265,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         }
         case RecipeField.MachineModules: {
           if (
-            machineCfg.moduleRankIds != null &&
+            machineSettings.moduleRankIds != null &&
             data != null &&
             typeof event === 'string' &&
             index != null &&
@@ -274,7 +280,7 @@ export class ListComponent implements OnInit, AfterViewInit {
             );
             const def = RecipeUtility.defaultModules(
               options,
-              machineCfg.moduleRankIds,
+              machineSettings.moduleRankIds,
               count
             );
             const modules = this.generateModules(
@@ -288,21 +294,21 @@ export class ListComponent implements OnInit, AfterViewInit {
         }
         case RecipeField.BeaconCount: {
           if (typeof event === 'string' && index != null) {
-            const def = machineCfg.beaconCount;
+            const def = machineSettings.beaconCount;
             this.setBeaconCount(id, index, event, def, isObjective);
           }
           break;
         }
         case RecipeField.Beacon: {
           if (typeof event === 'string' && index != null) {
-            const def = machineCfg.beaconId;
+            const def = machineSettings.beaconId;
             this.setBeacon(id, index, event, def, isObjective);
           }
           break;
         }
         case RecipeField.BeaconModules: {
           if (
-            machineCfg.beaconModuleRankIds != null &&
+            machineSettings.beaconModuleRankIds != null &&
             typeof event === 'string' &&
             index != null &&
             subindex != null
@@ -321,7 +327,7 @@ export class ListComponent implements OnInit, AfterViewInit {
               );
               const def = RecipeUtility.defaultModules(
                 options,
-                machineCfg.beaconModuleRankIds,
+                machineSettings.beaconModuleRankIds,
                 count
               );
               const value = this.generateModules(
@@ -342,7 +348,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         }
         case RecipeField.Overclock: {
           if (typeof event === 'number') {
-            const def = machineCfg.overclock;
+            const def = machineSettings.overclock;
             const value = Math.max(1, Math.min(250, event));
             this.setOverclock(id, value, def, isObjective);
           }
@@ -374,29 +380,29 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   /** Action Dispatch Methods */
   setItemExcluded(id: string, value: boolean): void {
-    this.store.dispatch(new ItemsCfg.SetExcludedAction({ id, value }));
+    this.store.dispatch(new Items.SetExcludedAction({ id, value }));
   }
 
   setItemChecked(id: string, value: boolean): void {
-    this.store.dispatch(new ItemsCfg.SetCheckedAction({ id, value }));
+    this.store.dispatch(new Items.SetCheckedAction({ id, value }));
   }
 
   setBelt(id: string, value: string, def: string): void {
-    this.store.dispatch(new ItemsCfg.SetBeltAction({ id, value, def }));
+    this.store.dispatch(new Items.SetBeltAction({ id, value, def }));
   }
 
   setWagon(id: string, value: string, def: string): void {
-    this.store.dispatch(new ItemsCfg.SetWagonAction({ id, value, def }));
+    this.store.dispatch(new Items.SetWagonAction({ id, value, def }));
   }
 
   setRecipeExcluded(id: string, value: boolean, def: boolean): void {
-    this.store.dispatch(new RecipesCfg.SetExcludedAction({ id, value, def }));
+    this.store.dispatch(new Recipes.SetExcludedAction({ id, value, def }));
   }
 
   setMachine(id: string, value: string, def: string, objective = false): void {
     const action = objective
-      ? RecipesObj.SetMachineAction
-      : RecipesCfg.SetMachineAction;
+      ? RecipeObjectives.SetMachineAction
+      : Recipes.SetMachineAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
@@ -407,22 +413,22 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipesObj.SetMachineModulesAction
-      : RecipesCfg.SetMachineModulesAction;
+      ? RecipeObjectives.SetMachineModulesAction
+      : Recipes.SetMachineModulesAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
   addBeacon(id: string, objective = false): void {
     const action = objective
-      ? RecipesObj.AddBeaconAction
-      : RecipesCfg.AddBeaconAction;
+      ? RecipeObjectives.AddBeaconAction
+      : Recipes.AddBeaconAction;
     this.store.dispatch(new action(id));
   }
 
   removeBeacon(id: string, value: number, objective = false): void {
     const action = objective
-      ? RecipesObj.RemoveBeaconAction
-      : RecipesCfg.RemoveBeaconAction;
+      ? RecipeObjectives.RemoveBeaconAction
+      : Recipes.RemoveBeaconAction;
     this.store.dispatch(new action({ id, value }));
   }
 
@@ -434,8 +440,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipesObj.SetBeaconCountAction
-      : RecipesCfg.SetBeaconCountAction;
+      ? RecipeObjectives.SetBeaconCountAction
+      : Recipes.SetBeaconCountAction;
     this.store.dispatch(new action({ id, index, value, def }));
   }
 
@@ -447,8 +453,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipesObj.SetBeaconAction
-      : RecipesCfg.SetBeaconAction;
+      ? RecipeObjectives.SetBeaconAction
+      : Recipes.SetBeaconAction;
     this.store.dispatch(new action({ id, index, value, def }));
   }
 
@@ -460,8 +466,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipesObj.SetBeaconModulesAction
-      : RecipesCfg.SetBeaconModulesAction;
+      ? RecipeObjectives.SetBeaconModulesAction
+      : Recipes.SetBeaconModulesAction;
     this.store.dispatch(new action({ id, index, value, def }));
   }
 
@@ -472,8 +478,8 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipesObj.SetBeaconTotalAction
-      : RecipesCfg.SetBeaconTotalAction;
+      ? RecipeObjectives.SetBeaconTotalAction
+      : Recipes.SetBeaconTotalAction;
     this.store.dispatch(new action({ id, index, value }));
   }
 
@@ -484,51 +490,51 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipesObj.SetOverclockAction
-      : RecipesCfg.SetOverclockAction;
+      ? RecipeObjectives.SetOverclockAction
+      : Recipes.SetOverclockAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
   setRecipeChecked(id: string, value: boolean, objective = false): void {
     const action = objective
-      ? RecipesObj.SetCheckedAction
-      : RecipesCfg.SetCheckedAction;
+      ? RecipeObjectives.SetCheckedAction
+      : Recipes.SetCheckedAction;
     this.store.dispatch(new action({ id, value }));
   }
 
   resetItem(value: string): void {
-    this.store.dispatch(new ItemsCfg.ResetItemAction(value));
+    this.store.dispatch(new Items.ResetItemAction(value));
   }
 
   resetRecipe(value: string): void {
-    this.store.dispatch(new RecipesCfg.ResetRecipeAction(value));
+    this.store.dispatch(new Recipes.ResetRecipeAction(value));
   }
 
   resetRecipeObj(value: string): void {
-    this.store.dispatch(new RecipesObj.ResetObjectiveAction(value));
+    this.store.dispatch(new RecipeObjectives.ResetObjectiveAction(value));
   }
 
   resetChecked(): void {
-    this.store.dispatch(new ItemsCfg.ResetCheckedAction());
+    this.store.dispatch(new Items.ResetCheckedAction());
   }
 
   resetExcluded(): void {
-    this.store.dispatch(new ItemsCfg.ResetExcludedAction());
+    this.store.dispatch(new Items.ResetExcludedAction());
   }
 
   resetBelts(): void {
-    this.store.dispatch(new ItemsCfg.ResetBeltsAction());
+    this.store.dispatch(new Items.ResetBeltsAction());
   }
 
   resetWagons(): void {
-    this.store.dispatch(new ItemsCfg.ResetWagonsAction());
+    this.store.dispatch(new Items.ResetWagonsAction());
   }
 
   resetMachines(): void {
-    this.store.dispatch(new RecipesCfg.ResetMachinesAction());
+    this.store.dispatch(new Recipes.ResetMachinesAction());
   }
 
   resetBeacons(): void {
-    this.store.dispatch(new RecipesCfg.ResetBeaconsAction());
+    this.store.dispatch(new Recipes.ResetBeaconsAction());
   }
 }

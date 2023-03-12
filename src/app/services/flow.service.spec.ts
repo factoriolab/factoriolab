@@ -26,7 +26,7 @@ describe('FlowService', () => {
             items: Rational.ten,
             recipeId: RecipeId.CrudeOil,
             recipeSettings:
-              Mocks.RationalRecipeSettingsInitial[RecipeId.CrudeOil],
+              Mocks.RecipesStateRationalInitial[RecipeId.CrudeOil],
             machines: Rational.one,
             parents: { [RecipeId.AdvancedOilProcessing]: Rational.one },
             outputs: { [ItemId.CrudeOil]: Rational.from(1, 2) },
@@ -38,9 +38,7 @@ describe('FlowService', () => {
             output: Rational.one,
             recipeId: RecipeId.AdvancedOilProcessing,
             recipeSettings:
-              Mocks.RationalRecipeSettingsInitial[
-                RecipeId.AdvancedOilProcessing
-              ],
+              Mocks.RecipesStateRationalInitial[RecipeId.AdvancedOilProcessing],
             machines: Rational.one,
             outputs: {
               [ItemId.HeavyOil]: Rational.one,
@@ -65,7 +63,7 @@ describe('FlowService', () => {
             machines: Rational.one,
             recipeObjectiveId: '0',
             recipeSettings:
-              Mocks.RationalRecipeSettingsInitial[RecipeId.IronPlate],
+              Mocks.RecipesStateRationalInitial[RecipeId.IronPlate],
           },
         ],
         Mocks.Dataset,

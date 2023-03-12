@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { ColumnsCfg, IdPayload, Language, PowerUnit, Theme } from '~/models';
+import { ColumnsState, IdPayload, Language, PowerUnit, Theme } from '~/models';
 
 export const enum PreferencesActionType {
   SAVE_STATE = '[Preferences] Save State',
@@ -24,7 +24,7 @@ export class RemoveStateAction implements Action {
 
 export class SetColumnsAction implements Action {
   readonly type = PreferencesActionType.SET_COLUMNS;
-  constructor(public payload: ColumnsCfg) {}
+  constructor(public payload: ColumnsState) {}
 }
 
 export class SetLanguageAction implements Action {

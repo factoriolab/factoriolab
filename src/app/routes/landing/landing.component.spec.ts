@@ -35,7 +35,7 @@ describe('LandingComponent', () => {
       spyOn(component, 'addProduct');
       spyOn(router, 'navigate');
       component.selectProduct(ItemId.IronPlate);
-      expect(component.addItem).toHaveBeenCalledWith(ItemId.IronPlate);
+      expect(component.addItemObjective).toHaveBeenCalledWith(ItemId.IronPlate);
       expect(router.navigate).toHaveBeenCalledWith(['list']);
     });
   });

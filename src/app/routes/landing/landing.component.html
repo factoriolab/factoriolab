@@ -18,7 +18,7 @@
       >
         <ng-template pTemplate="selectedItem">
           <div
-            *ngIf="gameInf[vm.data.game] as info"
+            *ngIf="gameInfo[vm.data.game] as info"
             class="d-flex align-items-center"
           >
             <i class="mx-1" [class]="info.icon | iconSmClass"></i>
@@ -27,7 +27,7 @@
         </ng-template>
         <ng-template pTemplate="item" let-item>
           <div
-            *ngIf="$any(gameInf)[item.value] as info"
+            *ngIf="$any(gameInfo)[item.value] as info"
             class="d-flex align-items-center"
           >
             <i [class]="info.icon | iconSmClass"></i>

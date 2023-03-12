@@ -1,11 +1,11 @@
 import { CategoryId, ItemId, RecipeId } from 'src/tests';
 import { Rational } from '../rational';
-import { RecipeRtl } from './recipe';
+import { RecipeRational } from './recipe';
 
-describe('RecipeRat', () => {
+describe('RecipeRational', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new RecipeRtl({
+      const result = new RecipeRational({
         id: RecipeId.AdvancedOilProcessing,
         name: 'name',
         time: 1,
@@ -32,7 +32,7 @@ describe('RecipeRat', () => {
     });
 
     it('should ignore undefined fields', () => {
-      const result = new RecipeRtl({
+      const result = new RecipeRational({
         id: RecipeId.AdvancedOilProcessing,
         name: 'name',
         time: 1,
@@ -52,7 +52,7 @@ describe('RecipeRat', () => {
     });
 
     it('should handle string for usage', () => {
-      const result = new RecipeRtl({
+      const result = new RecipeRational({
         id: RecipeId.AdvancedOilProcessing,
         name: 'name',
         time: 1,
@@ -71,7 +71,7 @@ describe('RecipeRat', () => {
     const id = 'id';
 
     it('should handle a recipe that contains the item as input and output', () => {
-      const recipe = new RecipeRtl({
+      const recipe = new RecipeRational({
         time: 0,
         in: { [id]: 1 },
         out: { [id]: 2 },
@@ -80,7 +80,7 @@ describe('RecipeRat', () => {
     });
 
     it('should handle a recipe that contains other outputs', () => {
-      const recipe = new RecipeRtl({
+      const recipe = new RecipeRational({
         time: 0,
         in: {},
         out: { ['test']: 2 },
@@ -89,7 +89,7 @@ describe('RecipeRat', () => {
     });
 
     it('should handle a recipe that does not match', () => {
-      const recipe = new RecipeRtl({
+      const recipe = new RecipeRational({
         time: 0,
         in: {},
         out: {},
@@ -98,33 +98,11 @@ describe('RecipeRat', () => {
     });
   });
 
-  describe('producesOnly', () => {
-    const id = 'id';
-
-    it('handle recipe with multiple outputs', () => {
-      const recipe = new RecipeRtl({
-        time: 0,
-        in: {},
-        out: { [id]: 1, ['other']: 1 },
-      } as any);
-      expect(recipe.producesOnly(id)).toBeFalse();
-    });
-
-    it('handle recipe with single output', () => {
-      const recipe = new RecipeRtl({
-        time: 0,
-        in: {},
-        out: { [id]: 1 },
-      } as any);
-      expect(recipe.producesOnly(id)).toBeTrue();
-    });
-  });
-
   describe('output', () => {
     const id = 'id';
 
     it('should handle null values', () => {
-      const recipe = new RecipeRtl({
+      const recipe = new RecipeRational({
         id,
         name: 'name',
         time: 0,
@@ -138,7 +116,7 @@ describe('RecipeRat', () => {
     });
 
     it('should subtract input from output', () => {
-      const recipe = new RecipeRtl({
+      const recipe = new RecipeRational({
         id,
         name: 'name',
         time: 0,

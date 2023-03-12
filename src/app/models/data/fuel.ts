@@ -1,14 +1,12 @@
 import { Rational } from '../rational';
 
-/** Rational fuel */
 export interface Fuel {
   category: string;
   value: number | string;
   result?: string;
 }
 
-/** Rational fuel data */
-export class FuelRtl {
+export class FuelRational {
   category: string;
   value: Rational;
   result?: string;

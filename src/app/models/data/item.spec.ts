@@ -1,12 +1,12 @@
 import { CategoryId, ItemId } from 'src/tests';
 import { FuelType } from '../enum';
 import { Rational } from '../rational';
-import { ItemRtl } from './item';
+import { ItemRational } from './item';
 
-describe('ItemRtl', () => {
+describe('ItemRational', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new ItemRtl({
+      const result = new ItemRational({
         id: ItemId.Wood,
         name: 'name',
         category: CategoryId.Combat,
@@ -53,7 +53,7 @@ describe('ItemRtl', () => {
     });
 
     it('should ignore undefined fields', () => {
-      const result = new ItemRtl({
+      const result = new ItemRational({
         id: ItemId.Wood,
         name: 'name',
         category: CategoryId.Combat,
