@@ -592,18 +592,18 @@ export class SimplexUtility {
 
     if (maximizeVar != null) {
       // Add recipe objective maximization constraints to model
-      for (const recipeObj of state.recipeObjectives.filter(
+      for (const recipeObjective of state.recipeObjectives.filter(
         (o) => o.type === ObjectiveType.Maximize
       )) {
         const coeffs: [Variable, number][] = [];
-        coeffs.push([recipeObjectiveVarEntities[recipeObj.id], 1]);
-        coeffs.push([maximizeVar, recipeObj.count.inverse().toNumber()]);
+        coeffs.push([recipeObjectiveVarEntities[recipeObjective.id], 1]);
+        coeffs.push([maximizeVar, recipeObjective.count.inverse().toNumber()]);
         const config: ConstraintProperties = {
           coeffs,
           lb: 0,
-          name: recipeObj.id,
+          name: recipeObjective.id,
         };
-        recipeObjectiveConstrEntities[recipeObj.id] = m.addConstr(config);
+        recipeObjectiveConstrEntities[recipeObjective.id] = m.addConstr(config);
       }
     }
 

@@ -199,7 +199,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     }
 
     if (step.recipeObjectiveId) {
-      this.resetRecipeObj(step.recipeObjectiveId);
+      this.resetRecipeObjective(step.recipeObjectiveId);
     } else if (step.recipeId) {
       this.resetRecipe(step.recipeId);
     }
@@ -510,7 +510,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new Recipes.ResetRecipeAction(value));
   }
 
-  resetRecipeObj(value: string): void {
+  resetRecipeObjective(value: string): void {
     this.store.dispatch(new RecipeObjectives.ResetObjectiveAction(value));
   }
 
