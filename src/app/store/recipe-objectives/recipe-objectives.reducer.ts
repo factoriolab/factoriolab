@@ -1,4 +1,4 @@
-import { Entities, RecipeObjective } from '~/models';
+import { Entities, ObjectiveType, RecipeObjective } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Items from '../items';
@@ -57,6 +57,7 @@ export function recipeObjectivesReducer(
                 id: state.index.toString(),
                 recipeId: action.payload,
                 count,
+                type: ObjectiveType.Output,
               },
             },
           },
