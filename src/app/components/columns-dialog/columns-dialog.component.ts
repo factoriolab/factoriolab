@@ -59,13 +59,12 @@ export class ColumnsDialogComponent implements OnInit {
   }
 
   initEdit(columnsState: ColumnsState): void {
-    this.editValue = (Object.keys(columnsState) as ColumnKey[]).reduce(
-      (e: Entities<ColumnSettings>, c) => {
+    this.editValue = (Object.keys(columnsState) as ColumnKey[])
+      .filter((c) => columnsInfo[c] != null) // Filter out any obsolete keys
+      .reduce((e: Entities<ColumnSettings>, c) => {
         e[c] = { ...columnsState[c] };
         return e;
-      },
-      {}
-    );
+      }, {});
     this.updateUsesFractions();
   }
 
