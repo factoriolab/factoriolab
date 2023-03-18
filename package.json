@@ -20,10 +20,10 @@
     "test": "ng test",
     "test-build": "ng test --no-watch --browsers=ChromeHeadless",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
-    "process-mod": "ts-node scripts/process-mod.ts",
     "lint": "ng lint",
     "lint-build": "ng lint --max-warnings 0",
-    "factorio-dump": "scripts\\factorio-dump.bat"
+    "factorio-dump": "scripts\\factorio-dump.bat",
+    "process-mod": "ts-node scripts/process-mod.ts"
   },
   "dependencies": {
     "@angular/animations": "^15.2.1",
