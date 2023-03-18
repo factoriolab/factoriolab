@@ -1,6 +1,11 @@
 import fs from 'fs';
 
 import { ModData } from '~/models';
+import {
+  DataRawDump,
+  isUnlockRecipeModifier,
+  Locale,
+} from './factorio-dump.models';
 
 const mod = process.argv[2];
 
@@ -10,9 +15,44 @@ if (!mod) {
   );
 }
 
-console.warn('WARNING: This script is deprecated');
+/** Read data dump */
 
-// const iconsPath = `./src/data/${mod}/icons.png`;
+// Set up paths
+const appDataPath = process.env['AppData'];
+const scriptOutputPath = `${appDataPath}\\Factorio\\script-output`;
+const dataRawPath = `${scriptOutputPath}\\data-raw-dump.json`;
+const itemLocalePath = `${scriptOutputPath}\\item-locale.json`;
+
+// Read locale data
+const itemLocaleStr = fs.readFileSync(itemLocalePath).toString();
+const itemLocale = JSON.parse(itemLocaleStr) as Locale;
+
+for (const key of Object.keys(itemLocale.names)) {
+  console.log(key, itemLocale.names[key]);
+}
+
+// Read main data JSON
+const dataRawStr = fs.readFileSync(dataRawPath).toString();
+const dataRaw = JSON.parse(dataRawStr) as DataRawDump;
+for (const key of Object.keys(dataRaw.item)) {
+  console.log(key);
+}
+
+for (const key of Object.keys(dataRaw.technology)) {
+  const tech = dataRaw.technology[key];
+  if (tech.effects) {
+    for (const effect of tech.effects) {
+      if (isUnlockRecipeModifier(effect)) {
+        console.log(tech.name, 'unlocks', effect.recipe);
+      }
+    }
+  }
+}
+
+//console.log(appDataPath, scriptOutputPath);
+
+/** Read in existing data file */
+const iconsPath = `./src/data/${mod}/icons.png`;
 const dataPath = `./src/data/${mod}/data.json`;
 const rawData = fs.readFileSync(dataPath).toString();
 const data: ModData = JSON.parse(rawData);
@@ -42,4 +82,4 @@ async function processMod(): Promise<void> {
   }
 }
 
-processMod();
+// processMod();
