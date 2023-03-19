@@ -1,13 +1,10 @@
 import fs from 'fs';
 
-import { ModData } from '~/models';
-import {
-  DataRawDump,
-  isUnlockRecipeModifier,
-  Locale,
-} from './factorio-dump.models';
+import { Entities, ModData, Recipe, Technology } from '~/models';
+import * as D from './factorio-dump.models';
 
 const mod = process.argv[2];
+const mode: 'normal' | 'expensive' = 'normal';
 
 if (!mod) {
   throw new Error(
@@ -22,64 +19,137 @@ const appDataPath = process.env['AppData'];
 const scriptOutputPath = `${appDataPath}\\Factorio\\script-output`;
 const dataRawPath = `${scriptOutputPath}\\data-raw-dump.json`;
 const itemLocalePath = `${scriptOutputPath}\\item-locale.json`;
-
-// Read locale data
-const itemLocaleStr = fs.readFileSync(itemLocalePath).toString();
-const itemLocale = JSON.parse(itemLocaleStr) as Locale;
-
-for (const key of Object.keys(itemLocale.names)) {
-  console.log(key, itemLocale.names[key]);
-}
-
-// Read main data JSON
-const dataRawStr = fs.readFileSync(dataRawPath).toString();
-const dataRaw = JSON.parse(dataRawStr) as DataRawDump;
-for (const key of Object.keys(dataRaw.item)) {
-  console.log(key);
-}
-
-for (const key of Object.keys(dataRaw.technology)) {
-  const tech = dataRaw.technology[key];
-  if (tech.effects) {
-    for (const effect of tech.effects) {
-      if (isUnlockRecipeModifier(effect)) {
-        console.log(tech.name, 'unlocks', effect.recipe);
-      }
-    }
-  }
-}
+const techLocalePath = `${scriptOutputPath}\\technology-locale.json`;
 
 //console.log(appDataPath, scriptOutputPath);
 
 /** Read in existing data file */
-const iconsPath = `./src/data/${mod}/icons.png`;
-const dataPath = `./src/data/${mod}/data.json`;
-const rawData = fs.readFileSync(dataPath).toString();
-const data: ModData = JSON.parse(rawData);
+// const iconsPath = `./src/data/${mod}/icons.png`;
+// const dataPath = `./src/data/${mod}/data.json`;
+// const rawData = fs.readFileSync(dataPath).toString();
+// const data: ModData = JSON.parse(rawData);
 
-async function processMod(): Promise<void> {
-  let no_in = 0;
-  let no_out = 0;
+function processMod(): void {
+  // Read locale data
+  const itemLocaleStr = fs.readFileSync(itemLocalePath).toString();
+  const itemLocale = JSON.parse(itemLocaleStr) as D.Locale;
+  const techLocaleStr = fs.readFileSync(techLocalePath).toString();
+  const techLocale = JSON.parse(techLocaleStr) as D.Locale;
 
-  for (const recipe of data.recipes) {
-    if (recipe.in == null) {
-      recipe.in = {};
-      no_in++;
+  // Read main data JSON
+  const dataRawStr = fs.readFileSync(dataRawPath).toString();
+  const dataRaw = JSON.parse(dataRawStr) as D.DataRawDump;
+
+  const dataOut: ModData = {
+    version: {},
+    categories: [],
+    icons: [],
+    items: [],
+    recipes: [],
+    limitations: {},
+  };
+  const recipesUnlocked: Entities<boolean> = {};
+
+  for (const key of Object.keys(dataRaw.technology)) {
+    const techRaw = dataRaw.technology[key];
+
+    const technology: Technology = {};
+
+    if (techRaw.prerequisites?.length) {
+      technology.prerequisites = techRaw.prerequisites;
     }
 
-    if (recipe.out == null) {
-      recipe.out = { [recipe.id]: 1 };
-      no_out++;
+    const unlockRecipes: string[] = [];
+    if (techRaw.effects) {
+      for (const effect of techRaw.effects) {
+        if (D.isUnlockRecipeModifier(effect)) {
+          // console.log(technologyRaw.name, 'unlocks', effect.recipe);
+          unlockRecipes.push(effect.recipe);
+          recipesUnlocked[effect.recipe] = true;
+        }
+      }
+    }
+
+    if (unlockRecipes.length) {
+      technology.unlockRecipes = unlockRecipes;
+    }
+
+    const recipe: Recipe = {
+      id: techRaw.name,
+      name: techLocale.names[techRaw.name],
+      category: 'technology',
+      row: 0,
+      time: techRaw.unit.time,
+      producers: [], // TODO: Calculate later..
+      in: techRaw.unit.ingredients.reduce(
+        (e: Entities<number>, [id, count]) => {
+          e[id] = count;
+          return e;
+        },
+        {}
+      ),
+      out: { [techRaw.name]: 1 },
+      technology,
+    };
+
+    dataOut.recipes.push(recipe);
+  }
+
+  const recipesEnabled: Entities<D.Recipe> = {};
+  const fixedRecipe: Entities<boolean> = {};
+
+  for (const key of Object.keys(dataRaw['assembling-machine'])) {
+    const assemblingMachine = dataRaw['assembling-machine'][key];
+    if (assemblingMachine.fixed_recipe) {
+      fixedRecipe[assemblingMachine.fixed_recipe] = true;
     }
   }
 
-  fs.writeFileSync(dataPath, JSON.stringify(data));
-
-  if (no_in > 0 || no_out > 0) {
-    console.log(
-      `Fixed recipes: ${no_in} with no inputs and ${no_out} with no outputs.`
-    );
+  for (const key of Object.keys(dataRaw['rocket-silo'])) {
+    const rocketSilo = dataRaw['rocket-silo'][key];
+    if (rocketSilo.fixed_recipe) {
+      fixedRecipe[rocketSilo.fixed_recipe] = true;
+    }
   }
+
+  for (const key of Object.keys(dataRaw.recipe)) {
+    const recipe = dataRaw.recipe[key];
+    let include = true;
+
+    // Skip recipes that don't have results
+    if (recipe.result == null && !recipe.results?.length && !recipe[mode]) {
+      console.log(`Skipping recipe ${key} due to no results`);
+      include = false;
+    }
+
+    // Always include fixed recipes that have outputs
+    if (!fixedRecipe[key]) {
+      // Skip recipes that are not unlocked / enabled
+      if (!recipe.enabled && !recipesUnlocked[key]) {
+        include = false;
+      }
+
+      // Skip recipes that are hidden
+      if (recipe.hidden) {
+        include = false;
+      }
+    }
+
+    // TODO: Filter out recipe loops
+
+    if (include) {
+      recipesEnabled[key] = recipe;
+    }
+  }
+
+  const itemsUsed: Entities<boolean> = {};
+
+  for (const key of Object.keys(recipesEnabled)) {
+    console.log(key);
+  }
+
+  const dataTempPath = `./temp/data.json`;
+  fs.writeFileSync(dataTempPath, JSON.stringify(dataOut));
 }
 
-// processMod();
+processMod();

@@ -13,3 +13,4 @@ export * from './mod-hash';
 export * from './mod-i18n';
 export * from './module';
 export * from './recipe';
+export * from './technology';

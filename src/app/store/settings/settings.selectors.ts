@@ -257,7 +257,7 @@ export const getDataset = createSelector(
       {},
       environment.debug
     );
-    const modIconPath = mod?.iconPath ?? `data/${mod?.id}/icons.png`;
+    const modIconPath = `data/${mod?.id}/icons.png`;
     const iconEntities = toEntities(
       (mod?.icons ?? []).map((i) => ({
         ...i,

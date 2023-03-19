@@ -1,5 +1,6 @@
 import { Entities } from '../entities';
 import { Rational } from '../rational';
+import { Technology } from './technology';
 
 export interface Recipe {
   id: string;
@@ -15,6 +16,8 @@ export interface Recipe {
   cost?: number | string;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
+  /** If recipe is a technology, indicates unlocks / prerequisites */
+  technology?: Technology;
   /** Used to link the recipe to an alternate icon id */
   icon?: string;
   /** Used to override the machine's usage for this recipe */
@@ -37,6 +40,8 @@ export class RecipeRational {
   cost?: Rational;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
+  /** If recipe is a technology, indicates unlocks / prerequisites */
+  technology?: Technology;
   usage?: Rational;
   drain?: Rational;
   consumption?: Rational;
@@ -49,10 +54,12 @@ export class RecipeRational {
     this.row = Math.round(obj.row);
     this.time = Rational.from(obj.time);
     this.producers = obj.producers;
+
     this.in = Object.keys(obj.in).reduce((e: Entities<Rational>, i) => {
       e[i] = Rational.from(obj.in[i]);
       return e;
     }, {});
+
     this.out = Object.keys(obj.out).reduce((e: Entities<Rational>, i) => {
       e[i] = Rational.from(obj.out[i]);
       return e;
@@ -68,12 +75,19 @@ export class RecipeRational {
         {}
       );
     }
+
     if (obj.cost) {
       this.cost = Rational.from(obj.cost);
     }
+
     if (obj.part) {
       this.part = obj.part;
     }
+
+    if (obj.technology) {
+      this.technology = obj.technology;
+    }
+
     if (obj.usage != null) {
       this.usage = Rational.from(obj.usage);
     }
@@ -84,6 +98,7 @@ export class RecipeRational {
       // Recipe declares this as output, check inputs
       return this.in[itemId] == null || this.in[itemId].lt(this.out[itemId]);
     }
+
     return false;
   }
 
