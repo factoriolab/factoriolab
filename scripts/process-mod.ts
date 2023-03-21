@@ -18,7 +18,7 @@ if (!mod) {
 const appDataPath = process.env['AppData'];
 const scriptOutputPath = `${appDataPath}\\Factorio\\script-output`;
 const dataRawPath = `${scriptOutputPath}\\data-raw-dump.json`;
-const itemLocalePath = `${scriptOutputPath}\\item-locale.json`;
+// const itemLocalePath = `${scriptOutputPath}\\item-locale.json`;
 const techLocalePath = `${scriptOutputPath}\\technology-locale.json`;
 
 //console.log(appDataPath, scriptOutputPath);
@@ -31,8 +31,8 @@ const techLocalePath = `${scriptOutputPath}\\technology-locale.json`;
 
 function processMod(): void {
   // Read locale data
-  const itemLocaleStr = fs.readFileSync(itemLocalePath).toString();
-  const itemLocale = JSON.parse(itemLocaleStr) as D.Locale;
+  // const itemLocaleStr = fs.readFileSync(itemLocalePath).toString();
+  // const itemLocale = JSON.parse(itemLocaleStr) as D.Locale;
   const techLocaleStr = fs.readFileSync(techLocalePath).toString();
   const techLocale = JSON.parse(techLocaleStr) as D.Locale;
 
@@ -144,7 +144,39 @@ function processMod(): void {
 
   const itemsUsed: Entities<boolean> = {};
 
+  // Check for burnt result / rocket launch products
+  for (const key of Object.keys(dataRaw.item)) {
+    const item = dataRaw.item[key];
+    if (item.rocket_launch_product || item.rocket_launch_products) {
+      itemsUsed[item.name] = true;
+
+      if (item.rocket_launch_product) {
+        if (D.isSimpleProduct(item.rocket_launch_product)) {
+          itemsUsed[item.rocket_launch_product[0]] = true;
+        } else {
+          itemsUsed[item.rocket_launch_product.name] = true;
+        }
+      }
+
+      if (item.rocket_launch_products) {
+        for (const product of item.rocket_launch_products) {
+          if (D.isSimpleProduct(product)) {
+            itemsUsed[product[0]] = true;
+          } else {
+            itemsUsed[product.name] = true;
+          }
+        }
+      }
+    }
+
+    if (item.burnt_result) {
+      itemsUsed[item.name] = true;
+      itemsUsed[item.burnt_result] = true;
+    }
+  }
+
   for (const key of Object.keys(recipesEnabled)) {
+    // Check ingredients
     console.log(key);
   }
 
