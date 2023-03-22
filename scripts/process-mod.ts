@@ -48,7 +48,7 @@ function processMod(): void {
     recipes: [],
     limitations: {},
   };
-  const recipesUnlocked: Entities<boolean> = {};
+  const recipesUnlocked = new Set<string>();
 
   for (const key of Object.keys(dataRaw.technology)) {
     const techRaw = dataRaw.technology[key];
@@ -65,7 +65,7 @@ function processMod(): void {
         if (D.isUnlockRecipeModifier(effect)) {
           // console.log(technologyRaw.name, 'unlocks', effect.recipe);
           unlockRecipes.push(effect.recipe);
-          recipesUnlocked[effect.recipe] = true;
+          recipesUnlocked.add(effect.recipe);
         }
       }
     }
@@ -96,19 +96,19 @@ function processMod(): void {
   }
 
   const recipesEnabled: Entities<D.Recipe> = {};
-  const fixedRecipe: Entities<boolean> = {};
+  const fixedRecipe = new Set<string>();
 
   for (const key of Object.keys(dataRaw['assembling-machine'])) {
     const assemblingMachine = dataRaw['assembling-machine'][key];
     if (assemblingMachine.fixed_recipe) {
-      fixedRecipe[assemblingMachine.fixed_recipe] = true;
+      fixedRecipe.add(assemblingMachine.fixed_recipe);
     }
   }
 
   for (const key of Object.keys(dataRaw['rocket-silo'])) {
     const rocketSilo = dataRaw['rocket-silo'][key];
     if (rocketSilo.fixed_recipe) {
-      fixedRecipe[rocketSilo.fixed_recipe] = true;
+      fixedRecipe.add(rocketSilo.fixed_recipe);
     }
   }
 
@@ -123,9 +123,9 @@ function processMod(): void {
     }
 
     // Always include fixed recipes that have outputs
-    if (!fixedRecipe[key]) {
+    if (!fixedRecipe.has(key)) {
       // Skip recipes that are not unlocked / enabled
-      if (recipe.enabled === false && !recipesUnlocked[key]) {
+      if (recipe.enabled === false && !recipesUnlocked.has(key)) {
         include = false;
       }
 
