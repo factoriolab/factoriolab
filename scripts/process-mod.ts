@@ -125,7 +125,7 @@ function processMod(): void {
     // Always include fixed recipes that have outputs
     if (!fixedRecipe[key]) {
       // Skip recipes that are not unlocked / enabled
-      if (!recipe.enabled && !recipesUnlocked[key]) {
+      if (recipe.enabled === false && !recipesUnlocked[key]) {
         include = false;
       }
 
@@ -142,43 +142,128 @@ function processMod(): void {
     }
   }
 
-  const itemsUsed: Entities<boolean> = {};
+  const itemsUsed = new Set<string>();
+  const fluidsUsed = new Set<string>();
 
   // Check for burnt result / rocket launch products
   for (const key of Object.keys(dataRaw.item)) {
     const item = dataRaw.item[key];
     if (item.rocket_launch_product || item.rocket_launch_products) {
-      itemsUsed[item.name] = true;
+      itemsUsed.add(item.name);
 
       if (item.rocket_launch_product) {
         if (D.isSimpleProduct(item.rocket_launch_product)) {
-          itemsUsed[item.rocket_launch_product[0]] = true;
+          itemsUsed.add(item.rocket_launch_product[0]);
+        } else if (D.isItemProduct(item.rocket_launch_product)) {
+          itemsUsed.add(item.rocket_launch_product.name);
         } else {
-          itemsUsed[item.rocket_launch_product.name] = true;
+          fluidsUsed.add(item.rocket_launch_product.name);
         }
       }
 
       if (item.rocket_launch_products) {
         for (const product of item.rocket_launch_products) {
           if (D.isSimpleProduct(product)) {
-            itemsUsed[product[0]] = true;
+            itemsUsed.add(product[0]);
+          } else if (D.isItemProduct(product)) {
+            itemsUsed.add(product.name);
           } else {
-            itemsUsed[product.name] = true;
+            fluidsUsed.add(product.name);
           }
         }
       }
     }
 
     if (item.burnt_result) {
-      itemsUsed[item.name] = true;
-      itemsUsed[item.burnt_result] = true;
+      itemsUsed.add(item.name);
+      itemsUsed.add(item.burnt_result);
     }
   }
 
+  console.log(JSON.stringify(Object.keys(recipesEnabled)));
+
   for (const key of Object.keys(recipesEnabled)) {
+    const recipe = dataRaw.recipe[key];
+    const recipeData = typeof recipe[mode] === 'object' ? recipe[mode] : recipe;
+
     // Check ingredients
-    console.log(key);
+    for (const ingredient of recipeData.ingredients) {
+      if (D.isSimpleIngredient(ingredient)) {
+        itemsUsed.add(ingredient[0]);
+      } else if (D.isItemIngredient(ingredient)) {
+        itemsUsed.add(ingredient.name);
+      } else {
+        fluidsUsed.add(ingredient.name);
+      }
+    }
+
+    // Check products
+    if (recipeData.results) {
+      for (const result of recipeData.results) {
+        if (D.isSimpleProduct(result)) {
+          itemsUsed.add(result[0]);
+        } else if (D.isItemProduct(result)) {
+          itemsUsed.add(result.name);
+        } else {
+          fluidsUsed.add(result.name);
+        }
+      }
+    } else if (recipeData.result) {
+      itemsUsed.add(recipeData.result);
+    }
   }
+
+  // Sort items
+  const itemsRaw = [
+    ...Array.from(itemsUsed.keys()).map((key) => {
+      const item =
+        dataRaw.item[key] ??
+        dataRaw.ammo[key] ??
+        dataRaw.armor[key] ??
+        dataRaw.capsule[key] ??
+        dataRaw.gun[key] ??
+        dataRaw['item-with-entity-data'][key] ??
+        dataRaw.module[key] ??
+        dataRaw['rail-planner'][key] ??
+        dataRaw['repair-tool'][key] ??
+        dataRaw['spidertron-remote'][key] ??
+        dataRaw.tool[key];
+      if (item == null) {
+        console.log(key);
+      }
+      return item;
+    }),
+    ...Array.from(fluidsUsed.keys()).map((key) => {
+      const fluid = dataRaw.fluid[key];
+      if (fluid == null) {
+        console.log(key);
+      }
+      return fluid;
+    }),
+  ];
+  const itemsList = itemsRaw
+    .map((item): [string, string, string, string, string, string] => {
+      const subgroup = dataRaw['item-subgroup'][item.subgroup ?? 'other'];
+      const group = dataRaw['item-group'][subgroup.group];
+      return [
+        group.order ?? '',
+        group.name,
+        subgroup.order ?? '',
+        subgroup.name,
+        item.order ?? '',
+        item.name,
+      ];
+    })
+    .sort((a, b) => {
+      for (let i = 0; i < 6; i++) {
+        if (a[i] !== b[i]) {
+          return a[i].localeCompare(b[i]);
+        }
+      }
+      return a[5].localeCompare(b[5]);
+    })
+    .map((all) => all[5]);
+  console.log(JSON.stringify(itemsList));
 
   const dataTempPath = `./temp/data.json`;
   fs.writeFileSync(dataTempPath, JSON.stringify(dataOut));

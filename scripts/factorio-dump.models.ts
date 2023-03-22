@@ -9,9 +9,10 @@ export interface Base {
 }
 
 export interface Color {
-  r: number;
-  g: number;
-  b: number;
+  r?: number;
+  g?: number;
+  b?: number;
+  a?: number;
 }
 
 export interface IconData {
@@ -83,7 +84,7 @@ export interface Item extends Base, IconSpecification {
   stack_size: number;
   burnt_result?: string;
   close_sound?: Sound;
-  dark_background_icons?: IconSpecification[];
+  dark_background_icons?: IconData[];
   dark_background_icon?: string;
   default_request_amount?: number;
   flags?: ItemFlag[];
@@ -98,10 +99,117 @@ export interface Item extends Base, IconSpecification {
   place_as_tile?: PlaceAsTile;
   place_result?: string;
   placed_as_equipment_result?: string;
-  rocket_launch_product?: ItemProduct;
-  rocket_launch_products?: ItemProduct[];
+  rocket_launch_product?: Product;
+  rocket_launch_products?: Product[];
   subgroup?: string;
   wire_count?: number;
+}
+
+export interface AmmoItem extends Item {
+  ammo_type: unknown; // Not mapped
+  magazine_size: number;
+  reload_time: number;
+}
+
+export interface Capsule extends Item {
+  capsule_action: unknown; // Not mapped
+  radius_color?: Color;
+}
+
+export interface Gun extends Item {
+  attack_parameters: unknown; // Not mapped
+}
+
+export interface ItemWithEntityData extends Item {
+  icon_tintable_masks?: IconData[];
+  icon_tintable_mask?: string;
+  icon_tintables?: IconData[];
+  icon_tintable?: string;
+}
+
+export interface EffectProperty {
+  bonus?: number;
+}
+
+export interface Effect {
+  consumption?: EffectProperty;
+  speed?: EffectProperty;
+  productivity?: EffectProperty;
+  pollution?: EffectProperty;
+}
+
+export interface ModuleBeaconTint {
+  primary?: Color;
+  secondary?: Color;
+  tertiary?: Color;
+  quaternary?: Color;
+}
+
+export interface Module extends Item {
+  category: string;
+  effect: Effect;
+  tier: number;
+  art_style?: string;
+  beacon_tint?: ModuleBeaconTint;
+  limitation?: string[];
+  limitation_blacklist?: string[];
+  limitation_message_key?: string;
+  requires_beacon_alt_mode?: boolean;
+}
+
+export interface RailPlanner extends Item {
+  curved_rail: string;
+  straight_rail: string;
+}
+
+export interface SpidertronRemote extends Item {
+  icon_color_indicator_masks?: IconData[];
+  icon_color_indicator_mask?: string;
+}
+
+export interface Tool extends Item {
+  durability?: number;
+  durability_description_key?: string;
+  durability_description_value?: string;
+  infinite?: boolean;
+}
+
+export interface Resistance {
+  type: string;
+  decrease?: number;
+  percent?: number;
+}
+
+export interface Armor extends Tool {
+  equipment_grid?: string;
+  inventory_size_bonus?: number;
+  resistances?: Resistance[];
+}
+
+export interface RepairTool extends Tool {
+  speed: number;
+  repair_result: unknown; // Not mapped
+}
+
+export interface Fluid extends Base, IconSpecification {
+  base_color: Color;
+  default_temperature: number;
+  flow_color: Color;
+  emissions_multiplier?: number;
+  fuel_value?: string;
+  gas_temperature?: number;
+  heat_capacity?: string;
+  hidden?: boolean;
+  max_temperature?: boolean;
+  subgroup?: string;
+}
+
+export interface ItemGroup extends Base, IconSpecification {
+  order_in_recipe?: string;
+}
+
+export interface ItemSubGroup extends Base {
+  group: string;
 }
 
 export interface AssemblingMachine extends Base {
@@ -112,13 +220,10 @@ export interface RocketSilo extends AssemblingMachine {
   rocket_parts_required: number;
 }
 
-export type RecipeIngredient =
-  | [string, number]
-  | ItemIngredient
-  | FluidIngredient;
+export type Ingredient = [string, number] | ItemIngredient | FluidIngredient;
 
 export interface ItemIngredient {
-  type: 'item';
+  type?: 'item';
   name: string;
   amount: number;
   catalyst_amount?: number;
@@ -136,7 +241,7 @@ export interface FluidIngredient {
 }
 
 export function isSimpleIngredient(
-  value: RecipeIngredient
+  value: Ingredient
 ): value is [string, number] {
   return Array.isArray(value);
 }
@@ -144,13 +249,13 @@ export function isSimpleIngredient(
 export function isItemIngredient(
   value: ItemIngredient | FluidIngredient
 ): value is ItemIngredient {
-  return value.type === 'item';
+  return value.type == null || value.type === 'item';
 }
 
-export type RecipeProduct = [string, number] | ItemProduct | FluidProduct;
+export type Product = [string, number] | ItemProduct | FluidProduct;
 
 export interface ItemProduct {
-  type: 'item';
+  type?: 'item';
   name: string;
   amount: number;
   probability: number;
@@ -170,20 +275,18 @@ export interface FluidProduct {
   catalyst_amount: number;
 }
 
-export function isSimpleProduct(
-  value: RecipeProduct
-): value is [string, number] {
+export function isSimpleProduct(value: Product): value is [string, number] {
   return Array.isArray(value);
 }
 
 export function isItemProduct(
   value: ItemProduct | FluidProduct
 ): value is ItemProduct {
-  return value.type === 'item';
+  return value.type == null || value.type === 'item';
 }
 
 export interface RecipeData {
-  ingredients: (ItemProduct | FluidProduct)[];
+  ingredients: Ingredient[];
   result?: string;
   result_count?: string;
   results?: (ItemProduct | FluidProduct)[];
@@ -228,11 +331,24 @@ export interface Technology {
 }
 
 export interface DataRawDump {
+  ammo: Entities<AmmoItem>;
+  armor: Entities<Armor>;
   'assembling-machine': Entities<AssemblingMachine>;
+  capsule: Entities<Capsule>;
+  fluid: Entities<Fluid>;
+  gun: Entities<Gun>;
   item: Entities<Item>;
+  'item-group': Entities<ItemGroup>;
+  'item-subgroup': Entities<ItemSubGroup>;
+  'item-with-entity-data': Entities<ItemWithEntityData>;
+  module: Entities<Module>;
+  'rail-planner': Entities<RailPlanner>;
   recipe: Entities<Recipe>;
+  'repair-tool': Entities<RepairTool>;
   'rocket-silo': Entities<RocketSilo>;
+  'spidertron-remote': Entities<SpidertronRemote>;
   technology: Entities<Technology>;
+  tool: Entities<Tool>;
 }
 
 export interface Locale {
