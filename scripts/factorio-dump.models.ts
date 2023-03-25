@@ -192,6 +192,7 @@ export interface RepairTool extends Tool {
 }
 
 export interface Fluid extends Base, IconSpecification {
+  type: 'fluid';
   base_color: Color;
   default_temperature: number;
   flow_color: Color;
@@ -202,6 +203,10 @@ export interface Fluid extends Base, IconSpecification {
   hidden?: boolean;
   max_temperature?: boolean;
   subgroup?: string;
+}
+
+export function isFluid(value: Base): value is Fluid {
+  return value.type === 'fluid';
 }
 
 export interface ItemGroup extends Base, IconSpecification {

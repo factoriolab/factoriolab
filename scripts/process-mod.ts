@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { Entities, ModData, Recipe, Technology } from '~/models';
+import { Entities, Item, ModData, Recipe, Technology } from '~/models';
 import * as D from './factorio-dump.models';
 
 const mod = process.argv[2];
@@ -18,7 +18,8 @@ if (!mod) {
 const appDataPath = process.env['AppData'];
 const scriptOutputPath = `${appDataPath}\\Factorio\\script-output`;
 const dataRawPath = `${scriptOutputPath}\\data-raw-dump.json`;
-// const itemLocalePath = `${scriptOutputPath}\\item-locale.json`;
+const itemLocalePath = `${scriptOutputPath}\\item-locale.json`;
+const fluidLocalePath = `${scriptOutputPath}\\fluid-locale.json`;
 const techLocalePath = `${scriptOutputPath}\\technology-locale.json`;
 
 //console.log(appDataPath, scriptOutputPath);
@@ -31,8 +32,10 @@ const techLocalePath = `${scriptOutputPath}\\technology-locale.json`;
 
 function processMod(): void {
   // Read locale data
-  // const itemLocaleStr = fs.readFileSync(itemLocalePath).toString();
-  // const itemLocale = JSON.parse(itemLocaleStr) as D.Locale;
+  const itemLocaleStr = fs.readFileSync(itemLocalePath).toString();
+  const itemLocale = JSON.parse(itemLocaleStr) as D.Locale;
+  const fluidLocaleStr = fs.readFileSync(fluidLocalePath).toString();
+  const fluidLocale = JSON.parse(fluidLocaleStr) as D.Locale;
   const techLocaleStr = fs.readFileSync(techLocalePath).toString();
   const techLocale = JSON.parse(techLocaleStr) as D.Locale;
 
@@ -40,7 +43,28 @@ function processMod(): void {
   const dataRawStr = fs.readFileSync(dataRawPath).toString();
   const dataRaw = JSON.parse(dataRawStr) as D.DataRawDump;
 
-  const dataOut: ModData = {
+  let lastRow = 0;
+  let lastGroup = '';
+  let lastSubgroup = '';
+  function getRow(item: D.Item | D.Fluid): number {
+    const subgroup =
+      dataRaw['item-subgroup'][
+        item.subgroup ?? D.isFluid(item) ? 'fluid' : 'other'
+      ];
+    if (subgroup.group === lastGroup) {
+      if (subgroup.name !== lastSubgroup) {
+        lastRow++;
+      }
+    } else {
+      lastRow = 0;
+    }
+
+    lastGroup = subgroup.group;
+    lastSubgroup = subgroup.name;
+    return lastRow;
+  }
+
+  const modData: ModData = {
     version: {},
     categories: [],
     icons: [],
@@ -92,7 +116,7 @@ function processMod(): void {
       technology,
     };
 
-    dataOut.recipes.push(recipe);
+    modData.recipes.push(recipe);
   }
 
   const recipesEnabled: Entities<D.Recipe> = {};
@@ -180,8 +204,6 @@ function processMod(): void {
     }
   }
 
-  console.log(JSON.stringify(Object.keys(recipesEnabled)));
-
   for (const key of Object.keys(recipesEnabled)) {
     const recipe = dataRaw.recipe[key];
     const recipeData = typeof recipe[mode] === 'object' ? recipe[mode] : recipe;
@@ -215,8 +237,8 @@ function processMod(): void {
 
   // Sort items
   const itemsRaw = [
-    ...Array.from(itemsUsed.keys()).map((key) => {
-      const item =
+    ...Array.from(itemsUsed.keys()).map(
+      (key) =>
         dataRaw.item[key] ??
         dataRaw.ammo[key] ??
         dataRaw.armor[key] ??
@@ -227,46 +249,63 @@ function processMod(): void {
         dataRaw['rail-planner'][key] ??
         dataRaw['repair-tool'][key] ??
         dataRaw['spidertron-remote'][key] ??
-        dataRaw.tool[key];
-      if (item == null) {
-        console.log(key);
-      }
-      return item;
-    }),
-    ...Array.from(fluidsUsed.keys()).map((key) => {
-      const fluid = dataRaw.fluid[key];
-      if (fluid == null) {
-        console.log(key);
-      }
-      return fluid;
-    }),
+        dataRaw.tool[key]
+    ),
+    ...Array.from(fluidsUsed.keys()).map((key) => dataRaw.fluid[key]),
   ];
-  const itemsList = itemsRaw
-    .map((item): [string, string, string, string, string, string] => {
-      const subgroup = dataRaw['item-subgroup'][item.subgroup ?? 'other'];
-      const group = dataRaw['item-group'][subgroup.group];
-      return [
-        group.order ?? '',
-        group.name,
-        subgroup.order ?? '',
-        subgroup.name,
-        item.order ?? '',
-        item.name,
-      ];
-    })
+  const itemsSorted = itemsRaw
+    .map(
+      (
+        item
+      ): {
+        item: D.Item | D.Fluid;
+        sort: [string, string, string, string, string, string];
+      } => {
+        const subgroup = dataRaw['item-subgroup'][item.subgroup ?? 'other'];
+        const group = dataRaw['item-group'][subgroup.group];
+        return {
+          item,
+          sort: [
+            group.order ?? '',
+            group.name,
+            subgroup.order ?? '',
+            subgroup.name,
+            item.order ?? '',
+            item.name,
+          ],
+        };
+      }
+    )
     .sort((a, b) => {
       for (let i = 0; i < 6; i++) {
-        if (a[i] !== b[i]) {
-          return a[i].localeCompare(b[i]);
+        if (a.sort[i] !== b.sort[i]) {
+          return a.sort[i].localeCompare(b.sort[i]);
         }
       }
-      return a[5].localeCompare(b[5]);
+      return a.sort[5].localeCompare(b.sort[5]);
     })
-    .map((all) => all[5]);
-  console.log(JSON.stringify(itemsList));
+    .map((all) => all.item);
+
+  // Process items
+  for (const itemRaw of itemsSorted) {
+    const subgroup = dataRaw['item-subgroup'][itemRaw.subgroup ?? 'fluid'];
+    const group = dataRaw['item-group'][subgroup.group];
+
+    if (D.isFluid(itemRaw)) {
+      const item: Item = {
+        id: itemRaw.name,
+        name: fluidLocale.names[itemRaw.name],
+        row: getRow(itemRaw),
+        category: group.name,
+      };
+      modData.items.push(item);
+    } else {
+      console.log(itemRaw.name);
+    }
+  }
 
   const dataTempPath = `./temp/data.json`;
-  fs.writeFileSync(dataTempPath, JSON.stringify(dataOut));
+  fs.writeFileSync(dataTempPath, JSON.stringify(modData));
 }
 
 processMod();
