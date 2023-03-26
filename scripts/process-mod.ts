@@ -1,6 +1,13 @@
 import fs from 'fs';
 
-import { Entities, Item, ModData, Recipe, Technology } from '~/models';
+import {
+  Category,
+  Entities,
+  Item,
+  ModData,
+  Recipe,
+  Technology,
+} from '~/models';
 import * as D from './factorio-dump.models';
 
 const mod = process.argv[2];
@@ -18,8 +25,10 @@ if (!mod) {
 const appDataPath = process.env['AppData'];
 const scriptOutputPath = `${appDataPath}\\Factorio\\script-output`;
 const dataRawPath = `${scriptOutputPath}\\data-raw-dump.json`;
+const groupLocalePath = `${scriptOutputPath}\\item-group-locale.json`;
 const itemLocalePath = `${scriptOutputPath}\\item-locale.json`;
 const fluidLocalePath = `${scriptOutputPath}\\fluid-locale.json`;
+const recipeLocalePath = `${scriptOutputPath}\\recipe-locale.json`;
 const techLocalePath = `${scriptOutputPath}\\technology-locale.json`;
 
 //console.log(appDataPath, scriptOutputPath);
@@ -30,12 +39,24 @@ const techLocalePath = `${scriptOutputPath}\\technology-locale.json`;
 // const rawData = fs.readFileSync(dataPath).toString();
 // const data: ModData = JSON.parse(rawData);
 
+function addEntityValue(e: Entities<number>, id: string, val: number): void {
+  if (e[id] == null) {
+    e[id] = val;
+  } else {
+    e[id] = e[id] + val;
+  }
+}
+
 function processMod(): void {
   // Read locale data
+  const groupLocaleStr = fs.readFileSync(groupLocalePath).toString();
+  const groupLocale = JSON.parse(groupLocaleStr) as D.Locale;
   const itemLocaleStr = fs.readFileSync(itemLocalePath).toString();
   const itemLocale = JSON.parse(itemLocaleStr) as D.Locale;
   const fluidLocaleStr = fs.readFileSync(fluidLocalePath).toString();
   const fluidLocale = JSON.parse(fluidLocaleStr) as D.Locale;
+  const recipeLocaleStr = fs.readFileSync(recipeLocalePath).toString();
+  const recipeLocale = JSON.parse(recipeLocaleStr) as D.Locale;
   const techLocaleStr = fs.readFileSync(techLocalePath).toString();
   const techLocale = JSON.parse(techLocaleStr) as D.Locale;
 
@@ -43,27 +64,115 @@ function processMod(): void {
   const dataRawStr = fs.readFileSync(dataRawPath).toString();
   const dataRaw = JSON.parse(dataRawStr) as D.DataRawDump;
 
-  let lastRow = 0;
-  let lastGroup = '';
-  let lastSubgroup = '';
-  function getRow(item: D.Item | D.Fluid): number {
-    const subgroup =
-      dataRaw['item-subgroup'][
-        item.subgroup ?? D.isFluid(item) ? 'fluid' : 'other'
-      ];
-    if (subgroup.group === lastGroup) {
-      if (subgroup.name !== lastSubgroup) {
-        lastRow++;
-      }
-    } else {
-      lastRow = 0;
-    }
-
-    lastGroup = subgroup.group;
-    lastSubgroup = subgroup.name;
-    return lastRow;
+  function getItem(name: string): D.Item | D.Fluid {
+    return (
+      dataRaw.item[name] ??
+      dataRaw.ammo[name] ??
+      dataRaw.armor[name] ??
+      dataRaw.capsule[name] ??
+      dataRaw.gun[name] ??
+      dataRaw['item-with-entity-data'][name] ??
+      dataRaw.module[name] ??
+      dataRaw['rail-planner'][name] ??
+      dataRaw['repair-tool'][name] ??
+      dataRaw['spidertron-remote'][name] ??
+      dataRaw.tool[name] ??
+      dataRaw.fluid[name]
+    );
   }
 
+  function getRecipeProduct(recipe: D.Recipe): D.Item | D.Fluid {
+    const recipeData = typeof recipe[mode] === 'object' ? recipe[mode] : recipe;
+    if (recipeData.result) {
+      return getItem(recipeData.result);
+    } else if (recipeData.results?.length === 1) {
+      const result = recipeData.results[0];
+      if (D.isSimpleProduct(result)) {
+        return getItem(result[0]);
+      } else if (D.isItemProduct(result)) {
+        return getItem(result.name);
+      } else {
+        return dataRaw.fluid[result.name];
+      }
+    } else if (recipeData.results && recipe.main_product) {
+      const mainProduct = recipe.main_product;
+      const result = recipeData.results.find((r) =>
+        D.isSimpleIngredient(r) ? r[0] === mainProduct : r.name === mainProduct
+      );
+      if (result) {
+        if (D.isSimpleProduct(result)) {
+          return getItem(result[0]);
+        } else if (D.isItemProduct(result)) {
+          return getItem(result.name);
+        } else {
+          return dataRaw.fluid[result.name];
+        }
+      } else {
+        throw `Main product ${mainProduct} declared by recipe ${recipe.name} not found in results`;
+      }
+    } else {
+      throw `Recipe ${recipe.name} declares no subgroup though it is required`;
+    }
+  }
+
+  function getRecipeSubgroup(recipe: D.Recipe): string {
+    if (recipe.subgroup) {
+      return recipe.subgroup;
+    }
+
+    return getSubgroup(getRecipeProduct(recipe));
+  }
+
+  function getSubgroup(proto: D.Recipe | D.Item | D.Fluid): string {
+    if (proto.subgroup) {
+      return proto.subgroup;
+    }
+
+    if (D.isRecipe(proto)) {
+      return getRecipeSubgroup(proto);
+    } else if (D.isFluid(proto)) {
+      return 'fluid';
+    } else {
+      return 'other';
+    }
+  }
+
+  let lastItemRow = 0;
+  let lastItemGroup = '';
+  let lastItemSubgroup = '';
+  function getItemRow(item: D.Item | D.Fluid): number {
+    const subgroup = dataRaw['item-subgroup'][getSubgroup(item)];
+    if (subgroup.group === lastItemGroup) {
+      if (subgroup.name !== lastItemSubgroup) {
+        lastItemRow++;
+      }
+    } else {
+      lastItemRow = 0;
+    }
+
+    lastItemGroup = subgroup.group;
+    lastItemSubgroup = subgroup.name;
+    return lastItemRow;
+  }
+
+  let lastRecipeRow = 0;
+  let lastRecipeGroup = '';
+  let lastRecipeSubgroup = '';
+  function getRecipeRow(recipe: D.Recipe): number {
+    const subgroupId = getRecipeSubgroup(recipe);
+    const subgroup = dataRaw['item-subgroup'][subgroupId];
+    if (subgroup.group === lastRecipeGroup) {
+      if (subgroup.name !== lastRecipeSubgroup) {
+        lastRecipeRow++;
+      }
+    } else {
+      lastRecipeRow = 0;
+    }
+
+    lastRecipeGroup = subgroup.group;
+    lastRecipeSubgroup = subgroup.name;
+    return lastRecipeRow;
+  }
   const modData: ModData = {
     version: {},
     categories: [],
@@ -73,6 +182,7 @@ function processMod(): void {
     limitations: {},
   };
   const recipesUnlocked = new Set<string>();
+  const technologyRecipes: Recipe[] = [];
 
   for (const key of Object.keys(dataRaw.technology)) {
     const techRaw = dataRaw.technology[key];
@@ -116,7 +226,7 @@ function processMod(): void {
       technology,
     };
 
-    modData.recipes.push(recipe);
+    technologyRecipes.push(recipe);
   }
 
   const recipesEnabled: Entities<D.Recipe> = {};
@@ -167,7 +277,6 @@ function processMod(): void {
   }
 
   const itemsUsed = new Set<string>();
-  const fluidsUsed = new Set<string>();
 
   // Check for burnt result / rocket launch products
   for (const key of Object.keys(dataRaw.item)) {
@@ -178,10 +287,8 @@ function processMod(): void {
       if (item.rocket_launch_product) {
         if (D.isSimpleProduct(item.rocket_launch_product)) {
           itemsUsed.add(item.rocket_launch_product[0]);
-        } else if (D.isItemProduct(item.rocket_launch_product)) {
-          itemsUsed.add(item.rocket_launch_product.name);
         } else {
-          fluidsUsed.add(item.rocket_launch_product.name);
+          itemsUsed.add(item.rocket_launch_product.name);
         }
       }
 
@@ -189,10 +296,8 @@ function processMod(): void {
         for (const product of item.rocket_launch_products) {
           if (D.isSimpleProduct(product)) {
             itemsUsed.add(product[0]);
-          } else if (D.isItemProduct(product)) {
-            itemsUsed.add(product.name);
           } else {
-            fluidsUsed.add(product.name);
+            itemsUsed.add(product.name);
           }
         }
       }
@@ -205,17 +310,16 @@ function processMod(): void {
   }
 
   for (const key of Object.keys(recipesEnabled)) {
-    const recipe = dataRaw.recipe[key];
-    const recipeData = typeof recipe[mode] === 'object' ? recipe[mode] : recipe;
+    const recipeRaw = dataRaw.recipe[key];
+    const recipeData =
+      typeof recipeRaw[mode] === 'object' ? recipeRaw[mode] : recipeRaw;
 
     // Check ingredients
     for (const ingredient of recipeData.ingredients) {
       if (D.isSimpleIngredient(ingredient)) {
         itemsUsed.add(ingredient[0]);
-      } else if (D.isItemIngredient(ingredient)) {
-        itemsUsed.add(ingredient.name);
       } else {
-        fluidsUsed.add(ingredient.name);
+        itemsUsed.add(ingredient.name);
       }
     }
 
@@ -224,10 +328,8 @@ function processMod(): void {
       for (const result of recipeData.results) {
         if (D.isSimpleProduct(result)) {
           itemsUsed.add(result[0]);
-        } else if (D.isItemProduct(result)) {
-          itemsUsed.add(result.name);
         } else {
-          fluidsUsed.add(result.name);
+          itemsUsed.add(result.name);
         }
       }
     } else if (recipeData.result) {
@@ -236,42 +338,36 @@ function processMod(): void {
   }
 
   // Sort items
-  const itemsRaw = [
-    ...Array.from(itemsUsed.keys()).map(
-      (key) =>
-        dataRaw.item[key] ??
-        dataRaw.ammo[key] ??
-        dataRaw.armor[key] ??
-        dataRaw.capsule[key] ??
-        dataRaw.gun[key] ??
-        dataRaw['item-with-entity-data'][key] ??
-        dataRaw.module[key] ??
-        dataRaw['rail-planner'][key] ??
-        dataRaw['repair-tool'][key] ??
-        dataRaw['spidertron-remote'][key] ??
-        dataRaw.tool[key]
-    ),
-    ...Array.from(fluidsUsed.keys()).map((key) => dataRaw.fluid[key]),
+  const protos = [
+    ...Array.from(itemsUsed.keys()).map((key) => getItem(key)),
+    ...Object.keys(recipesEnabled).map((r) => recipesEnabled[r]),
   ];
-  const itemsSorted = itemsRaw
+  const protosSorted = protos
     .map(
       (
-        item
+        proto
       ): {
-        item: D.Item | D.Fluid;
+        proto: D.Item | D.Fluid | D.Recipe;
         sort: [string, string, string, string, string, string];
       } => {
-        const subgroup = dataRaw['item-subgroup'][item.subgroup ?? 'other'];
+        const subgroupId = getSubgroup(proto);
+        const subgroup = dataRaw['item-subgroup'][subgroupId];
         const group = dataRaw['item-group'][subgroup.group];
+
+        let order = proto.order;
+        if (order == null && D.isRecipe(proto)) {
+          order = getRecipeProduct(proto).order;
+        }
+
         return {
-          item,
+          proto,
           sort: [
             group.order ?? '',
             group.name,
             subgroup.order ?? '',
             subgroup.name,
-            item.order ?? '',
-            item.name,
+            order ?? '',
+            proto.name,
           ],
         };
       }
@@ -284,25 +380,90 @@ function processMod(): void {
       }
       return a.sort[5].localeCompare(b.sort[5]);
     })
-    .map((all) => all.item);
+    .map((all) => all.proto);
 
-  // Process items
-  for (const itemRaw of itemsSorted) {
-    const subgroup = dataRaw['item-subgroup'][itemRaw.subgroup ?? 'fluid'];
+  const groupsUsed = new Set<string>();
+
+  // Process protos
+  for (const proto of protosSorted) {
+    const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
     const group = dataRaw['item-group'][subgroup.group];
+    groupsUsed.add(group.name);
+    if (D.isRecipe(proto)) {
+      const recipeData = typeof proto[mode] === 'object' ? proto[mode] : proto;
 
-    if (D.isFluid(itemRaw)) {
+      const recipeIn: Entities<number> = {};
+      const recipeOut: Entities<number> = {};
+
+      // Check ingredients
+      for (const ingredient of recipeData.ingredients) {
+        if (D.isSimpleIngredient(ingredient)) {
+          const [itemId, amount] = ingredient;
+          addEntityValue(recipeIn, itemId, amount);
+        } else {
+          addEntityValue(recipeIn, ingredient.name, ingredient.amount);
+        }
+      }
+
+      // Check products
+      if (recipeData.results) {
+        for (const result of recipeData.results) {
+          if (D.isSimpleProduct(result)) {
+            const [itemId, amount] = result;
+            addEntityValue(recipeOut, itemId, amount);
+          } else {
+            addEntityValue(recipeOut, result.name, result.amount);
+          }
+        }
+      } else if (recipeData.result) {
+        addEntityValue(
+          recipeOut,
+          recipeData.result,
+          recipeData.result_count ?? 1
+        );
+      }
+
+      const recipe: Recipe = {
+        id: proto.name,
+        name: recipeLocale.names[proto.name],
+        category: subgroup.group,
+        row: getRecipeRow(proto),
+        time: proto.energy_required ?? 0.5,
+        producers: [],
+        in: recipeIn,
+        out: recipeOut,
+      };
+      modData.recipes.push(recipe);
+    } else if (D.isFluid(proto)) {
       const item: Item = {
-        id: itemRaw.name,
-        name: fluidLocale.names[itemRaw.name],
-        row: getRow(itemRaw),
+        id: proto.name,
+        name: fluidLocale.names[proto.name],
+        row: getItemRow(proto),
         category: group.name,
       };
       modData.items.push(item);
     } else {
-      console.log(itemRaw.name);
+      const item: Item = {
+        id: proto.name,
+        name: itemLocale.names[proto.name],
+        stack: proto.stack_size,
+        row: getItemRow(proto),
+        category: group.name,
+      };
+      modData.items.push(item);
     }
   }
+
+  modData.recipes.push(...technologyRecipes);
+
+  for (const id of groupsUsed) {
+    const category: Category = {
+      id,
+      name: groupLocale.names[id],
+    };
+    modData.categories.push(category);
+  }
+  modData.categories.push({ id: 'technology', name: 'Technology' });
 
   const dataTempPath = `./temp/data.json`;
   fs.writeFileSync(dataTempPath, JSON.stringify(modData));

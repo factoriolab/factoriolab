@@ -138,7 +138,7 @@ export interface Effect {
   pollution?: EffectProperty;
 }
 
-export interface ModuleBeaconTint {
+export interface TintTable {
   primary?: Color;
   secondary?: Color;
   tertiary?: Color;
@@ -150,7 +150,7 @@ export interface Module extends Item {
   effect: Effect;
   tier: number;
   art_style?: string;
-  beacon_tint?: ModuleBeaconTint;
+  beacon_tint?: TintTable;
   limitation?: string[];
   limitation_blacklist?: string[];
   limitation_message_key?: string;
@@ -293,7 +293,7 @@ export function isItemProduct(
 export interface RecipeData {
   ingredients: Ingredient[];
   result?: string;
-  result_count?: string;
+  result_count?: number;
   results?: (ItemProduct | FluidProduct)[];
   energy_required?: number;
   emissions_multiplier?: number;
@@ -301,10 +301,29 @@ export interface RecipeData {
   hidden?: boolean;
 }
 
-export interface Recipe extends Base, RecipeData {
+export interface Recipe extends Base, IconSpecification, RecipeData {
+  allow_as_intermediate?: boolean;
+  allow_decomposition?: boolean;
+  allow_inserter_overload?: boolean;
+  allow_intermediates?: boolean;
+  always_show_made_in?: boolean;
+  always_show_products?: boolean;
   category?: string;
-  normal?: RecipeData | boolean;
+  crafting_machine_tint?: TintTable;
   expensive?: RecipeData | boolean;
+  hide_from_player_crafting?: boolean;
+  hide_from_stats?: boolean;
+  main_product?: string;
+  normal?: RecipeData | boolean;
+  overload_multiplier?: number;
+  requester_paste_multiplier?: number;
+  show_amount_in_title?: boolean;
+  subgroup?: string;
+  unlock_results?: boolean;
+}
+
+export function isRecipe(value: Base): value is Recipe {
+  return value.type === 'recipe';
 }
 
 export interface Modifier {
