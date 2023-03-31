@@ -346,12 +346,23 @@ export interface TechnologyUnit {
   time: number;
 }
 
-export interface Technology {
+export interface TechnologyData {
+  unit: TechnologyUnit;
+  effects?: Modifier[];
+  enabled?: boolean;
+  hidden?: boolean;
+  ignore_tech_cost_multiplier?: boolean;
+  max_level?: number | string;
+  prerequisites: string[];
+  upgrade?: boolean;
+  visible_when_disabled?: boolean;
+}
+
+export interface Technology extends TechnologyData, IconSpecification {
   type: 'technology';
   name: string;
-  unit: TechnologyUnit;
-  prerequisites: string[];
-  effects?: Modifier[];
+  expensive?: TechnologyData;
+  normal?: TechnologyData;
 }
 
 export interface DataRawDump {

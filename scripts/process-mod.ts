@@ -47,6 +47,12 @@ function addEntityValue(e: Entities<number>, id: string, val: number): void {
   }
 }
 
+function getIconHash(spec: D.IconSpecification): string {
+  return `${JSON.stringify(spec.icon)}.${JSON.stringify(
+    spec.icon_size
+  )}.${JSON.stringify(spec.icon_mipmaps)}.${JSON.stringify(spec.icons)}`;
+}
+
 function processMod(): void {
   // Read locale data
   const groupLocaleStr = fs.readFileSync(groupLocalePath).toString();
@@ -182,20 +188,22 @@ function processMod(): void {
     limitations: {},
   };
   const recipesUnlocked = new Set<string>();
+  const iconHashes = new Set<string>();
   const technologyRecipes: Recipe[] = [];
 
   for (const key of Object.keys(dataRaw.technology)) {
     const techRaw = dataRaw.technology[key];
+    const techData = techRaw[mode] ?? techRaw;
 
     const technology: Technology = {};
 
-    if (techRaw.prerequisites?.length) {
-      technology.prerequisites = techRaw.prerequisites;
+    if (techData.prerequisites?.length) {
+      technology.prerequisites = techData.prerequisites;
     }
 
     const unlockRecipes: string[] = [];
-    if (techRaw.effects) {
-      for (const effect of techRaw.effects) {
+    if (techData.effects) {
+      for (const effect of techData.effects) {
         if (D.isUnlockRecipeModifier(effect)) {
           // console.log(technologyRaw.name, 'unlocks', effect.recipe);
           unlockRecipes.push(effect.recipe);
@@ -213,9 +221,9 @@ function processMod(): void {
       name: techLocale.names[techRaw.name],
       category: 'technology',
       row: 0,
-      time: techRaw.unit.time,
+      time: techData.unit.time,
       producers: [], // TODO: Calculate later..
-      in: techRaw.unit.ingredients.reduce(
+      in: techData.unit.ingredients.reduce(
         (e: Entities<number>, [id, count]) => {
           e[id] = count;
           return e;
@@ -225,6 +233,17 @@ function processMod(): void {
       out: { [techRaw.name]: 1 },
       technology,
     };
+
+    if (techRaw.icon == null && techRaw.icons == null) {
+      console.log(`No icons for tech ${techRaw.name}`);
+    } else {
+      const iconHash = getIconHash(techRaw);
+      if (iconHashes.has(iconHash)) {
+        console.log(`already has hash for tech ${techRaw.name}`);
+      } else {
+        iconHashes.add(iconHash);
+      }
+    }
 
     technologyRecipes.push(recipe);
   }
@@ -389,7 +408,27 @@ function processMod(): void {
     const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
     const group = dataRaw['item-group'][subgroup.group];
     groupsUsed.add(group.name);
+
     if (D.isRecipe(proto)) {
+      if (proto.icon == null && proto.icons == null) {
+        const product = getRecipeProduct(proto);
+        const iconHash = getIconHash(product);
+        if (iconHashes.has(iconHash)) {
+          console.log(`already has hash for recipe product ${proto.name}`);
+          console.log(iconHash);
+        } else {
+          iconHashes.add(iconHash);
+        }
+      } else {
+        const iconHash = getIconHash(proto);
+        if (iconHashes.has(iconHash)) {
+          console.log(`already has hash for recipe ${proto.name}`);
+          console.log(iconHash);
+        } else {
+          iconHashes.add(iconHash);
+        }
+      }
+
       const recipeData = typeof proto[mode] === 'object' ? proto[mode] : proto;
 
       const recipeIn: Entities<number> = {};
@@ -435,6 +474,14 @@ function processMod(): void {
       };
       modData.recipes.push(recipe);
     } else if (D.isFluid(proto)) {
+      const iconHash = getIconHash(proto);
+      if (iconHashes.has(iconHash)) {
+        console.log(`already has hash for fluid ${proto.name}`);
+        console.log(iconHash);
+      } else {
+        iconHashes.add(iconHash);
+      }
+
       const item: Item = {
         id: proto.name,
         name: fluidLocale.names[proto.name],
@@ -443,6 +490,14 @@ function processMod(): void {
       };
       modData.items.push(item);
     } else {
+      const iconHash = getIconHash(proto);
+      if (iconHashes.has(iconHash)) {
+        console.log(`already has hash for item ${proto.name}`);
+        console.log(iconHash);
+      } else {
+        iconHashes.add(iconHash);
+      }
+
       const item: Item = {
         id: proto.name,
         name: itemLocale.names[proto.name],
