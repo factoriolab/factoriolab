@@ -426,8 +426,13 @@ export class SimplexUtility {
     const inputLimitConstrEntities: Entities<Constraint> = {};
     // Track number of machines for recipe maximization constraints
     const recipeObjectiveConstrEntities: Entities<Constraint> = {};
-    // Variable for maximization ratio, if included
-    let maximizeVar: Variable | undefined;
+    // Variable for maximization ratio
+    const config: VariableProperties = {
+      obj: state.cost.maximize.toNumber(),
+      lb: 0,
+      name: 'maximize',
+    };
+    const maximizeVar = m.addVar(config);
 
     // Add recipe vars to model
     for (const recipeId of recipeIds) {
@@ -504,21 +509,8 @@ export class SimplexUtility {
       outputVarEntities[itemId] = m.addVar(config);
     }
 
-    // Add maximize constraint to model
-    const maximizeItemIds = Object.keys(state.itemValues).filter(
-      (i) => state.itemValues[i].max != null
-    );
-    const maximizeRecipeObjectiveIds = state.recipeObjectives.filter(
-      (o) => o.type === ObjectiveType.Maximize
-    );
-    if (maximizeItemIds.length > 0 || maximizeRecipeObjectiveIds.length > 0) {
-      const config: VariableProperties = {
-        obj: state.cost.maximize.toNumber(),
-        lb: 0,
-        name: 'maximize',
-      };
-      maximizeVar = m.addVar(config);
-    }
+    // Used to track quantities from maximization ratio
+    let maximizeFactor = Rational.zero;
 
     // Add net output and input item constraints to model
     for (const itemId of itemIds) {
@@ -569,7 +561,8 @@ export class SimplexUtility {
       }
 
       // Add maximize coeff
-      if (maximizeVar != null && values.max != null) {
+      if (values.max != null) {
+        maximizeFactor = maximizeFactor.add(values.max);
         netCoeffs.push([maximizeVar, values.max.inverse().toNumber()]);
       }
 
@@ -590,22 +583,28 @@ export class SimplexUtility {
       }
     }
 
-    if (maximizeVar != null) {
-      // Add recipe objective maximization constraints to model
-      for (const recipeObjective of state.recipeObjectives.filter(
-        (o) => o.type === ObjectiveType.Maximize
-      )) {
-        const coeffs: [Variable, number][] = [];
-        coeffs.push([recipeObjectiveVarEntities[recipeObjective.id], 1]);
-        coeffs.push([maximizeVar, recipeObjective.count.inverse().toNumber()]);
-        const config: ConstraintProperties = {
-          coeffs,
-          lb: 0,
-          name: recipeObjective.id,
-        };
-        recipeObjectiveConstrEntities[recipeObjective.id] = m.addConstr(config);
-      }
+    // Add recipe objective maximization constraints to model
+    for (const recipeObjective of state.recipeObjectives.filter(
+      (o) => o.type === ObjectiveType.Maximize
+    )) {
+      maximizeFactor = maximizeFactor.add(recipeObjective.count);
+      const coeffs: [Variable, number][] = [];
+      coeffs.push([recipeObjectiveVarEntities[recipeObjective.id], 1]);
+      coeffs.push([maximizeVar, recipeObjective.count.inverse().toNumber()]);
+      const config: ConstraintProperties = {
+        coeffs,
+        lb: 0,
+        name: recipeObjective.id,
+      };
+      recipeObjectiveConstrEntities[recipeObjective.id] = m.addConstr(config);
     }
+
+    /**
+     * Scale maximize cost based on summed values from max objectives. This
+     * prevents increases in values of maximize objectives from overtaking the
+     * maximize cost and resulting in no production as the optimal solution.
+     */
+    maximizeVar.obj = maximizeVar.obj * maximizeFactor.toNumber();
 
     // Run GLPK simplex
     const start = Date.now();
@@ -642,7 +641,7 @@ export class SimplexUtility {
         surplus[itemId] = val;
       }
 
-      if (values.max != null && maximizeVar != null) {
+      if (values.max != null) {
         const maxVal = maximizeVar.value;
         const maxRat = Rational.fromNumber(maxVal);
         const val = maxRat.mul(values.max);

@@ -38,20 +38,22 @@ export function itemObjectivesReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialItemObjectivesState;
     case ItemObjectivesActionType.ADD: {
-      let rate = '60';
+      let rate = '1';
       let rateUnit = RateUnit.Items;
+      let type = ObjectiveType.Output;
       if (state.ids.length > 0) {
-        // Use rate and rate type from last item objective in list
+        // Use settings from last item objective in list
         const id = state.ids[state.ids.length - 1];
         rate = state.entities[id].rate;
         rateUnit = state.entities[id].rateUnit;
+        type = state.entities[id].type;
       }
       const objective: ItemObjective = {
         id: state.index.toString(),
         itemId: action.payload,
         rate,
         rateUnit,
-        type: ObjectiveType.Output,
+        type,
       };
       return {
         ...state,
