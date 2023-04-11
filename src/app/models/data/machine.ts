@@ -5,14 +5,13 @@ import { ModuleEffect } from './module';
 import { Silo, SiloRational } from './silo';
 
 export interface Machine {
-  /** Energy type, e.g. electric or burner */
-  type: EnergyType;
   speed: number | string;
-  /** Energy consumption in kW */
-  usage: number | string;
   modules?: number;
+  type?: EnergyType;
   /** Fuel category, e.g. chemical or nuclear */
   category?: string;
+  /** Energy consumption in kW */
+  usage?: number | string;
   /** Drain in kW */
   drain?: number | string;
   /** Pollution in #/m */
@@ -25,14 +24,13 @@ export interface Machine {
 }
 
 export class MachineRational {
-  /** Energy type, e.g. electric or burner */
-  type: EnergyType;
   speed: Rational;
-  /** Energy consumption in kW */
-  usage: Rational;
   modules?: number;
+  type?: EnergyType;
   /** Fuel category, e.g. chemical or nuclear */
   category?: string;
+  /** Energy consumption in kW */
+  usage?: Rational;
   drain?: Rational;
   pollution?: Rational;
   mining?: boolean;
@@ -42,12 +40,16 @@ export class MachineRational {
   disallowedEffects?: ModuleEffect[];
 
   constructor(obj: Machine) {
-    this.type = obj.type;
     this.speed = Rational.from(obj.speed);
-    this.usage = Rational.from(obj.usage);
 
     if (obj.modules != null) {
       this.modules = Math.round(obj.modules);
+    }
+    if (obj.type != null) {
+      this.type = obj.type;
+    }
+    if (obj.usage != null) {
+      this.usage = Rational.from(obj.usage);
     }
     if (obj.category) {
       this.category = obj.category;

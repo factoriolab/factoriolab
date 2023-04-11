@@ -1,4 +1,4 @@
-import { EnergyType, Entities } from '~/models';
+import { Entities } from '~/models';
 
 export interface ModList {
   mods: { name: string; enabled: boolean }[];
@@ -386,13 +386,13 @@ export interface Technology extends TechnologyData, IconSpecification {
 }
 
 export interface ElectricEnergySource {
-  type: EnergyType.Electric;
+  type: 'electric';
   emissions_per_minute?: number;
   drain?: string;
 }
 
 export interface BurnerEnergySource {
-  type: EnergyType.Burner;
+  type: 'burner';
   emissions_per_minute?: number;
   /** Default: 'chemical' */
   fuel_category?: string;
@@ -410,7 +410,7 @@ export interface FluidEnergySource {
 }
 
 export interface VoidEnergySource {
-  type: EnergyType.Void;
+  type: 'void';
   emissions_per_minute?: number;
 }
 
@@ -447,6 +447,11 @@ export interface MiningDrill extends Base {
   module_specification?: ModuleSpecification;
 }
 
+export interface OffshorePump extends Base {
+  fluid: string;
+  pumping_speed: number;
+}
+
 export interface DataRawDump {
   ammo: Entities<AmmoItem>;
   armor: Entities<Armor>;
@@ -461,6 +466,7 @@ export interface DataRawDump {
   'item-with-entity-data': Entities<ItemWithEntityData>;
   'mining-drill': Entities<MiningDrill>;
   module: Entities<Module>;
+  'offshore-pump': Entities<OffshorePump>;
   'rail-planner': Entities<RailPlanner>;
   recipe: Entities<Recipe>;
   'repair-tool': Entities<RepairTool>;

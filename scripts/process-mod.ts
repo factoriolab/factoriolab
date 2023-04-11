@@ -8,6 +8,7 @@ import {
   Recipe,
   Technology,
 } from '~/models';
+import { EnergyType } from '../src/app/models/enum/energy-type';
 import * as D from './factorio-dump.models';
 
 const mod = process.argv[2];
@@ -564,7 +565,9 @@ function processMod(): void {
             effectivity: beacon.distribution_effectivity,
             modules: beacon.module_specification.module_slots ?? 0,
             range: beacon.supply_area_distance,
-            type: beacon.energy_source.type,
+            type: beacon.energy_source.type as
+              | EnergyType.Electric
+              | EnergyType.Void,
             usage: getPowerInKw(beacon.energy_usage),
             disallowedEffects: D.allEffects.filter(
               (e) =>
@@ -576,59 +579,46 @@ function processMod(): void {
 
         if (dataRaw['mining-drill'][proto.place_result]) {
           const miningDrill = dataRaw['mining-drill'][proto.place_result];
+          item.machine = {
+            speed: miningDrill.mining_speed,
+            modules: miningDrill.module_specification?.module_slots,
+            type: miningDrill.energy_source.type as EnergyType,
+            usage: getPowerInKw(miningDrill.energy_usage),
+            pollution: miningDrill.energy_source.emissions_per_minute,
+            mining: true,
+            disallowedEffects: miningDrill.allowed_effects?.length
+              ? miningDrill.allowed_effects
+              : undefined,
+          };
 
-          if (
-            miningDrill.energy_source.type === 'fluid' ||
-            miningDrill.energy_source.type === 'heat'
-          ) {
-            console.warn(
-              `Skipping machine '${miningDrill.name}' with energy source type: '${miningDrill.energy_source.type}'`
-            );
-          } else {
-            item.machine = {
-              type: miningDrill.energy_source.type,
-              speed: miningDrill.mining_speed,
-              usage: getPowerInKw(miningDrill.energy_usage),
-              mining: true,
-              disallowedEffects: miningDrill.allowed_effects,
-            };
-
-            if (miningDrill.module_specification) {
-              item.machine.modules =
-                miningDrill.module_specification.module_slots ?? 0;
+          if (miningDrill.energy_source.type === 'electric') {
+            if (miningDrill.energy_source.drain) {
+              item.machine.drain = getPowerInKw(
+                miningDrill.energy_source.drain
+              );
             }
-
-            if (miningDrill.energy_source.emissions_per_minute) {
-              item.machine.pollution =
-                miningDrill.energy_source.emissions_per_minute;
-            }
-
-            switch (miningDrill.energy_source.type) {
-              case 'electric': {
-                if (miningDrill.energy_source.drain) {
-                  item.machine.drain = getPowerInKw(
-                    miningDrill.energy_source.drain
-                  );
-                }
-                break;
-              }
-              case 'burner': {
-                if (miningDrill.energy_source.fuel_categories) {
-                  if (miningDrill.energy_source.fuel_categories.length > 1) {
-                    console.warn(
-                      `Using first energy source fuel category for machine ${miningDrill.name}`
-                    );
-                    item.machine.category =
-                      miningDrill.energy_source.fuel_categories[0];
-                  } else {
-                    item.machine.category =
-                      miningDrill.energy_source.fuel_category ?? 'chemical';
-                  }
-                }
-                break;
+          } else if (miningDrill.energy_source.type === 'burner') {
+            if (miningDrill.energy_source.fuel_categories) {
+              if (miningDrill.energy_source.fuel_categories.length > 1) {
+                console.warn(
+                  `Using first energy source fuel category for machine ${miningDrill.name}`
+                );
+                item.machine.category =
+                  miningDrill.energy_source.fuel_categories[0];
+              } else {
+                item.machine.category =
+                  miningDrill.energy_source.fuel_category ?? 'chemical';
               }
             }
           }
+        }
+
+        if (dataRaw['offshore-pump'][proto.place_result]) {
+          const offshorePump = dataRaw['offshore-pump'][proto.place_result];
+          item.machine = {
+            speed: offshorePump.pumping_speed * 60,
+            type: undefined,
+          };
         }
       }
 

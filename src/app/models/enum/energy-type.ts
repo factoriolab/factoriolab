@@ -1,5 +1,9 @@
 export enum EnergyType {
-  Electric = 'electric',
   Burner = 'burner',
+  Electric = 'electric',
+  // Unsupported
+  Fluid = 'fluid',
+  // Unsupported
+  Heat = 'heat',
   Void = 'void',
 }

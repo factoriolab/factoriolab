@@ -6,10 +6,10 @@ export interface Beacon {
   effectivity: number | string;
   modules: number;
   range: number;
-  /** Beacons can only be electric or void */
+  /** Beacons must use electric or void energy source */
   type: EnergyType.Electric | EnergyType.Void;
   /** Energy consumption in kW */
-  usage: number | string;
+  usage: number;
   disallowedEffects?: ModuleEffect[];
 }
 
@@ -17,7 +17,7 @@ export class BeaconRational {
   effectivity: Rational;
   modules: number;
   range: number;
-  /** Beacons can only be electric or void */
+  /** Beacons must use electric or void energy source */
   type: EnergyType.Electric | EnergyType.Void;
   /** Energy consumption in kW */
   usage: Rational;
@@ -28,7 +28,7 @@ export class BeaconRational {
     this.modules = obj.modules;
     this.range = obj.range;
     this.type = obj.type;
-    this.usage = Rational.from(obj.usage);
+    this.usage = Rational.fromNumber(obj.usage);
     if (obj.disallowedEffects) {
       this.disallowedEffects = obj.disallowedEffects;
     }
