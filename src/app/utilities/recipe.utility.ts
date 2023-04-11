@@ -60,9 +60,9 @@ export class RecipeUtility {
     }
 
     // Filter for modules allowed on this entity
-    if (entity.disallowEffects) {
-      for (const disallowEffect of entity.disallowEffects) {
-        allowed = allowed.filter((m) => m.module[disallowEffect] == null);
+    if (entity.disallowedEffects) {
+      for (const disallowedEffect of entity.disallowedEffects) {
+        allowed = allowed.filter((m) => m.module[disallowedEffect] == null);
       }
     }
 

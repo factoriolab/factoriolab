@@ -102,7 +102,7 @@
     "flowRate": "Flow rate",
     "craftingSpeed": "Crafting speed",
     "modules": "Modules",
-    "disallowEffects": "Disallow effects",
+    "disallowedEffects": "Disallowed effects",
     "energyType": "Energy type",
     "fuelCategory": "Fuel category",
     "energyUsage": "Energy usage",

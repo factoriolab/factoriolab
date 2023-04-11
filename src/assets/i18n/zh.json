@@ -78,7 +78,7 @@
     "flowRate": "流速",
     "craftingSpeed": "制造速度",
     "modules": "插件",
-    "disallowEffects": "禁用效果",
+    "disallowedEffects": "禁用效果",
     "energyType": "能量类型",
     "fuelCategory": "燃料种类",
     "energyUsage": "能量消耗",

@@ -19,7 +19,7 @@ describe('MachineRational', () => {
         consumption: {
           [ItemId.Coal]: 1,
         },
-        disallowEffects: ['productivity'],
+        disallowedEffects: ['productivity'],
       });
       expect(result.speed).toEqual(Rational.one);
       expect(result.modules).toEqual(2);
@@ -31,7 +31,7 @@ describe('MachineRational', () => {
       expect(result.mining).toBeTrue();
       expect(result.research).toBeTrue();
       expect(result.consumption).toEqual({ [ItemId.Coal]: Rational.one });
-      expect(result.disallowEffects).toEqual(['productivity']);
+      expect(result.disallowedEffects).toEqual(['productivity']);
     });
 
     it('should handle string for drain', () => {

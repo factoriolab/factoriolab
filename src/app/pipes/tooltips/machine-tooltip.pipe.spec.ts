@@ -31,9 +31,8 @@ describe('MachineTooltipPipe', () => {
       data.itemEntities[ItemId.AssemblingMachine3].machine!.consumption = {
         [ItemId.Wood]: Rational.ten,
       };
-      data.itemEntities[ItemId.AssemblingMachine3].machine!.disallowEffects = [
-        'productivity',
-      ];
+      data.itemEntities[ItemId.AssemblingMachine3].machine!.disallowedEffects =
+        ['productivity'];
       const result = pipe.transform(ItemId.AssemblingMachine3, data);
       expect(result).toBeTruthy();
     });

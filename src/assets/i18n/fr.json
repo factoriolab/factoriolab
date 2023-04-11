@@ -83,7 +83,7 @@
     "flowRate": "Débit",
     "craftingSpeed": "Vitesse de fabrication",
     "modules": "Modules",
-    "disallowEffects": "Effets Interdit",
+    "disallowedEffects": "Effets Interdit",
     "energyType": "Type d'énergie",
     "fuelCategory": "Catégorie de carburant",
     "energyUsage": "Utilisation d'énergie",

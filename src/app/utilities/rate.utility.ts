@@ -1,6 +1,7 @@
 import {
   Dataset,
   DisplayRateInfo,
+  EnergyType,
   Entities,
   Game,
   ItemObjectiveRational,
@@ -271,7 +272,7 @@ export class RateUtility {
             }
 
             const beacon = data.beaconEntities[b.id];
-            if (beacon.usage?.nonzero() && total != null) {
+            if (beacon.type === EnergyType.Electric && total != null) {
               step.power = (step.power ?? Rational.zero).add(
                 total.mul(beacon.usage)
               );

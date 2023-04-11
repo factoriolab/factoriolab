@@ -1,4 +1,17 @@
-import { Entities } from '~/models';
+import { EnergyType, Entities } from '~/models';
+
+export interface ModList {
+  mods: { name: string; enabled: boolean }[];
+}
+
+export interface PlayerData {
+  'last-played-version': {
+    game_version: string;
+    build_version: number;
+    build_mode: string;
+    platform: string;
+  };
+}
 
 export interface Base {
   name: string;
@@ -130,6 +143,13 @@ export interface ItemWithEntityData extends Item {
 export interface EffectProperty {
   bonus?: number;
 }
+
+export const allEffects: (keyof Effect)[] = [
+  'consumption',
+  'speed',
+  'productivity',
+  'pollution',
+];
 
 export interface Effect {
   consumption?: EffectProperty;
@@ -365,10 +385,73 @@ export interface Technology extends TechnologyData, IconSpecification {
   normal?: TechnologyData;
 }
 
+export interface ElectricEnergySource {
+  type: EnergyType.Electric;
+  emissions_per_minute?: number;
+  drain?: string;
+}
+
+export interface BurnerEnergySource {
+  type: EnergyType.Burner;
+  emissions_per_minute?: number;
+  /** Default: 'chemical' */
+  fuel_category?: string;
+  fuel_categories?: string[];
+}
+
+export interface HeatEnergySource {
+  type: 'heat';
+  emissions_per_minute?: number;
+}
+
+export interface FluidEnergySource {
+  type: 'fluid';
+  emissions_per_minute?: number;
+}
+
+export interface VoidEnergySource {
+  type: EnergyType.Void;
+  emissions_per_minute?: number;
+}
+
+export type EnergySource =
+  | ElectricEnergySource
+  | BurnerEnergySource
+  | HeatEnergySource
+  | FluidEnergySource
+  | VoidEnergySource;
+
+export interface ModuleSpecification {
+  /** Default: 0 */
+  module_slots?: number;
+}
+
+export interface TransportBelt {
+  speed: number;
+}
+
+export interface Beacon extends Base {
+  distribution_effectivity: number;
+  energy_source: ElectricEnergySource | VoidEnergySource;
+  energy_usage: string;
+  module_specification: ModuleSpecification;
+  supply_area_distance: number;
+  allowed_effects?: (keyof Effect)[];
+}
+
+export interface MiningDrill extends Base {
+  energy_source: EnergySource;
+  energy_usage: string;
+  mining_speed: number;
+  allowed_effects?: (keyof Effect)[];
+  module_specification?: ModuleSpecification;
+}
+
 export interface DataRawDump {
   ammo: Entities<AmmoItem>;
   armor: Entities<Armor>;
   'assembling-machine': Entities<AssemblingMachine>;
+  beacon: Entities<Beacon>;
   capsule: Entities<Capsule>;
   fluid: Entities<Fluid>;
   gun: Entities<Gun>;
@@ -376,6 +459,7 @@ export interface DataRawDump {
   'item-group': Entities<ItemGroup>;
   'item-subgroup': Entities<ItemSubGroup>;
   'item-with-entity-data': Entities<ItemWithEntityData>;
+  'mining-drill': Entities<MiningDrill>;
   module: Entities<Module>;
   'rail-planner': Entities<RailPlanner>;
   recipe: Entities<Recipe>;
@@ -384,6 +468,7 @@ export interface DataRawDump {
   'spidertron-remote': Entities<SpidertronRemote>;
   technology: Entities<Technology>;
   tool: Entities<Tool>;
+  'transport-belt': Entities<TransportBelt>;
 }
 
 export interface Locale {

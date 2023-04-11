@@ -23,13 +23,12 @@ if (!mod) {
 
 // Set up paths
 const appDataPath = process.env['AppData'];
-const scriptOutputPath = `${appDataPath}\\Factorio\\script-output`;
+const factorioPath = `${appDataPath}\\Factorio`;
+const modsPath = `${factorioPath}\\mods`;
+const modListPath = `${modsPath}\\mod-list.json`;
+const playerDataPath = `${factorioPath}\\player-data.json`;
+const scriptOutputPath = `${factorioPath}\\script-output`;
 const dataRawPath = `${scriptOutputPath}\\data-raw-dump.json`;
-const groupLocalePath = `${scriptOutputPath}\\item-group-locale.json`;
-const itemLocalePath = `${scriptOutputPath}\\item-locale.json`;
-const fluidLocalePath = `${scriptOutputPath}\\fluid-locale.json`;
-const recipeLocalePath = `${scriptOutputPath}\\recipe-locale.json`;
-const techLocalePath = `${scriptOutputPath}\\technology-locale.json`;
 
 //console.log(appDataPath, scriptOutputPath);
 
@@ -47,28 +46,76 @@ function addEntityValue(e: Entities<number>, id: string, val: number): void {
   }
 }
 
-function getIconHash(spec: D.IconSpecification): string {
-  return `${JSON.stringify(spec.icon)}.${JSON.stringify(
-    spec.icon_size
-  )}.${JSON.stringify(spec.icon_mipmaps)}.${JSON.stringify(spec.icons)}`;
+function getJsonData<T>(file: string): T {
+  const str = fs.readFileSync(file).toString();
+  const sanitized = str.replace(/"(.*)":\s?-?inf/g, '"$1": 0');
+  return JSON.parse(sanitized) as T;
+}
+
+function getLocale(file: string): D.Locale {
+  const path = `${scriptOutputPath}\\${file}`;
+  return getJsonData<D.Locale>(path);
+}
+
+function getMultiplier(letter: string): number {
+  switch (letter) {
+    case '':
+      return 0.001;
+    case 'k':
+    case 'K':
+      return 1;
+    case 'M':
+      return 1000;
+    case 'G':
+      return 1000000;
+    default:
+      throw `Unsupported multiplier: '${letter}'`;
+  }
+}
+
+function getPowerInKw(usage: string): number {
+  const match = /(\d+)(\w+)/.exec(usage);
+  if (match == null) {
+    throw `Unrecognized power format: '${usage}'`;
+  }
+
+  const [_, numStr, unit] = [...match];
+  if (!unit.endsWith('W')) {
+    throw `Unrecognized power unit: '${usage}'`;
+  }
+  const multiplier = getMultiplier(unit.substring(0, unit.length - 1));
+  const num = Number(numStr);
+  return multiplier * num;
 }
 
 function processMod(): void {
+  // Read mod data
+  const modList = getJsonData<D.ModList>(modListPath);
+  const modFiles = fs
+    .readdirSync(modsPath)
+    // Only include zip files
+    .filter((f) => f.endsWith('.zip'))
+    // Trim .zip from end of string
+    .map((f) => f.substring(0, f.length - 4));
+
+  // Read player data
+  const playerData = getJsonData<D.PlayerData>(playerDataPath);
+
   // Read locale data
-  const groupLocaleStr = fs.readFileSync(groupLocalePath).toString();
-  const groupLocale = JSON.parse(groupLocaleStr) as D.Locale;
-  const itemLocaleStr = fs.readFileSync(itemLocalePath).toString();
-  const itemLocale = JSON.parse(itemLocaleStr) as D.Locale;
-  const fluidLocaleStr = fs.readFileSync(fluidLocalePath).toString();
-  const fluidLocale = JSON.parse(fluidLocaleStr) as D.Locale;
-  const recipeLocaleStr = fs.readFileSync(recipeLocalePath).toString();
-  const recipeLocale = JSON.parse(recipeLocaleStr) as D.Locale;
-  const techLocaleStr = fs.readFileSync(techLocalePath).toString();
-  const techLocale = JSON.parse(techLocaleStr) as D.Locale;
+  const groupLocale = getLocale('item-group-locale.json');
+  const itemLocale = getLocale('item-locale.json');
+  const fluidLocale = getLocale('fluid-locale.json');
+  const recipeLocale = getLocale('recipe-locale.json');
+  const techLocale = getLocale('technology-locale.json');
 
   // Read main data JSON
-  const dataRawStr = fs.readFileSync(dataRawPath).toString();
-  const dataRaw = JSON.parse(dataRawStr) as D.DataRawDump;
+  const dataRaw = getJsonData<D.DataRawDump>(dataRawPath);
+
+  // Set up collections
+  // Record of icons by hash: id
+  const icons: Record<string, string> = {};
+  // Record of icon copies by hash: ids
+  const iconCopies: Record<string, string[]> = {};
 
   function getItem(name: string): D.Item | D.Fluid {
     return (
@@ -179,6 +226,23 @@ function processMod(): void {
     lastRecipeSubgroup = subgroup.name;
     return lastRecipeRow;
   }
+
+  function addIcon(spec: D.IconSpecification & D.Base): void {
+    if (spec.icon == null && spec.icons == null) {
+      throw `No icons for proto ${spec.name}`;
+    }
+
+    const hash = `${JSON.stringify(spec.icon)}.${JSON.stringify(
+      spec.icon_size
+    )}.${JSON.stringify(spec.icon_mipmaps)}.${JSON.stringify(spec.icons)}`;
+    if (icons[hash]) {
+      iconCopies[hash].push(spec.name);
+    } else {
+      icons[hash] = spec.name;
+      iconCopies[hash] = [];
+    }
+  }
+
   const modData: ModData = {
     version: {},
     categories: [],
@@ -187,8 +251,25 @@ function processMod(): void {
     recipes: [],
     limitations: {},
   };
+
+  modList.mods
+    .filter((m) => m.enabled)
+    .forEach((m) => {
+      if (m.name === 'base') {
+        const version = playerData['last-played-version'].game_version;
+        modData.version[m.name] = version;
+      } else {
+        const file = modFiles.find((f) => f.startsWith(m.name));
+        if (file == null) {
+          throw `No mod file found for mod ${m.name}`;
+        } else {
+          const version = file.substring(m.name.length + 1);
+          modData.version[m.name] = version;
+        }
+      }
+    });
+
   const recipesUnlocked = new Set<string>();
-  const iconHashes = new Set<string>();
   const technologyRecipes: Recipe[] = [];
 
   for (const key of Object.keys(dataRaw.technology)) {
@@ -205,7 +286,6 @@ function processMod(): void {
     if (techData.effects) {
       for (const effect of techData.effects) {
         if (D.isUnlockRecipeModifier(effect)) {
-          // console.log(technologyRaw.name, 'unlocks', effect.recipe);
           unlockRecipes.push(effect.recipe);
           recipesUnlocked.add(effect.recipe);
         }
@@ -234,18 +314,8 @@ function processMod(): void {
       technology,
     };
 
-    if (techRaw.icon == null && techRaw.icons == null) {
-      console.log(`No icons for tech ${techRaw.name}`);
-    } else {
-      const iconHash = getIconHash(techRaw);
-      if (iconHashes.has(iconHash)) {
-        console.log(`already has hash for tech ${techRaw.name}`);
-      } else {
-        iconHashes.add(iconHash);
-      }
-    }
-
     technologyRecipes.push(recipe);
+    addIcon(techRaw);
   }
 
   const recipesEnabled: Entities<D.Recipe> = {};
@@ -410,25 +480,6 @@ function processMod(): void {
     groupsUsed.add(group.name);
 
     if (D.isRecipe(proto)) {
-      if (proto.icon == null && proto.icons == null) {
-        const product = getRecipeProduct(proto);
-        const iconHash = getIconHash(product);
-        if (iconHashes.has(iconHash)) {
-          console.log(`already has hash for recipe product ${proto.name}`);
-          console.log(iconHash);
-        } else {
-          iconHashes.add(iconHash);
-        }
-      } else {
-        const iconHash = getIconHash(proto);
-        if (iconHashes.has(iconHash)) {
-          console.log(`already has hash for recipe ${proto.name}`);
-          console.log(iconHash);
-        } else {
-          iconHashes.add(iconHash);
-        }
-      }
-
       const recipeData = typeof proto[mode] === 'object' ? proto[mode] : proto;
 
       const recipeIn: Entities<number> = {};
@@ -473,31 +524,24 @@ function processMod(): void {
         out: recipeOut,
       };
       modData.recipes.push(recipe);
-    } else if (D.isFluid(proto)) {
-      const iconHash = getIconHash(proto);
-      if (iconHashes.has(iconHash)) {
-        console.log(`already has hash for fluid ${proto.name}`);
-        console.log(iconHash);
-      } else {
-        iconHashes.add(iconHash);
-      }
 
+      if (proto.icon == null && proto.icons == null) {
+        const product = getRecipeProduct(proto);
+        addIcon(product);
+      } else {
+        addIcon(proto);
+      }
+    } else if (D.isFluid(proto)) {
       const item: Item = {
         id: proto.name,
         name: fluidLocale.names[proto.name],
         row: getItemRow(proto),
         category: group.name,
       };
-      modData.items.push(item);
-    } else {
-      const iconHash = getIconHash(proto);
-      if (iconHashes.has(iconHash)) {
-        console.log(`already has hash for item ${proto.name}`);
-        console.log(iconHash);
-      } else {
-        iconHashes.add(iconHash);
-      }
 
+      modData.items.push(item);
+      addIcon(proto);
+    } else {
       const item: Item = {
         id: proto.name,
         name: itemLocale.names[proto.name],
@@ -505,7 +549,91 @@ function processMod(): void {
         row: getItemRow(proto),
         category: group.name,
       };
+
+      if (proto.place_result) {
+        if (dataRaw['transport-belt'][proto.place_result]) {
+          const transportBelt = dataRaw['transport-belt'][proto.place_result];
+          item.belt = {
+            speed: transportBelt.speed * 480,
+          };
+        }
+
+        if (dataRaw.beacon[proto.place_result]) {
+          const beacon = dataRaw.beacon[proto.place_result];
+          item.beacon = {
+            effectivity: beacon.distribution_effectivity,
+            modules: beacon.module_specification.module_slots ?? 0,
+            range: beacon.supply_area_distance,
+            type: beacon.energy_source.type,
+            usage: getPowerInKw(beacon.energy_usage),
+            disallowedEffects: D.allEffects.filter(
+              (e) =>
+                beacon.allowed_effects == null ||
+                beacon.allowed_effects.indexOf(e) === -1
+            ),
+          };
+        }
+
+        if (dataRaw['mining-drill'][proto.place_result]) {
+          const miningDrill = dataRaw['mining-drill'][proto.place_result];
+
+          if (
+            miningDrill.energy_source.type === 'fluid' ||
+            miningDrill.energy_source.type === 'heat'
+          ) {
+            console.warn(
+              `Skipping machine '${miningDrill.name}' with energy source type: '${miningDrill.energy_source.type}'`
+            );
+          } else {
+            item.machine = {
+              type: miningDrill.energy_source.type,
+              speed: miningDrill.mining_speed,
+              usage: getPowerInKw(miningDrill.energy_usage),
+              mining: true,
+              disallowedEffects: miningDrill.allowed_effects,
+            };
+
+            if (miningDrill.module_specification) {
+              item.machine.modules =
+                miningDrill.module_specification.module_slots ?? 0;
+            }
+
+            if (miningDrill.energy_source.emissions_per_minute) {
+              item.machine.pollution =
+                miningDrill.energy_source.emissions_per_minute;
+            }
+
+            switch (miningDrill.energy_source.type) {
+              case 'electric': {
+                if (miningDrill.energy_source.drain) {
+                  item.machine.drain = getPowerInKw(
+                    miningDrill.energy_source.drain
+                  );
+                }
+                break;
+              }
+              case 'burner': {
+                if (miningDrill.energy_source.fuel_categories) {
+                  if (miningDrill.energy_source.fuel_categories.length > 1) {
+                    console.warn(
+                      `Using first energy source fuel category for machine ${miningDrill.name}`
+                    );
+                    item.machine.category =
+                      miningDrill.energy_source.fuel_categories[0];
+                  } else {
+                    item.machine.category =
+                      miningDrill.energy_source.fuel_category ?? 'chemical';
+                  }
+                }
+                break;
+              }
+            }
+          }
+        }
+      }
+
       modData.items.push(item);
+      addIcon(proto);
     }
   }
 
@@ -519,6 +647,26 @@ function processMod(): void {
     modData.categories.push(category);
   }
   modData.categories.push({ id: 'technology', name: 'Technology' });
+
+  // Sprite sheet
+  const iconIds = Object.keys(icons).map((i) => icons[i]);
+  const width = Math.max(8, Math.ceil(Math.pow(iconIds.length, 0.5)));
+
+  const wrap = width * -64;
+  let x = 0;
+  let y = 0;
+  for (const id of iconIds) {
+    modData.icons.push({
+      id,
+      position: `${x}px ${y}px`,
+    });
+
+    x = x - 64;
+    if (x === wrap) {
+      y = y - 64;
+      x = 0;
+    }
+  }
 
   const dataTempPath = `./temp/data.json`;
   fs.writeFileSync(dataTempPath, JSON.stringify(modData));

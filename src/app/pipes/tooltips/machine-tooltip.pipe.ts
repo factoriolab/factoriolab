@@ -20,8 +20,14 @@ export class MachineTooltipPipe implements PipeTransform {
     if (item == null || machine == null) return '';
 
     let html = item.name + '\n<small>';
-    const tableRows: [string, string][] = [];
-    if (machine.speed && data.game !== Game.CaptainOfIndustry) {
+    const tableRows: [string, string][] = [
+      [this.translateSvc.instant('tooltip.energyType'), machine.type],
+      [
+        this.translateSvc.instant('tooltip.energyUsage'),
+        this.displaySvc.power(machine.usage),
+      ],
+    ];
+    if (data.game !== Game.CaptainOfIndustry) {
       tableRows.push([
         this.translateSvc.instant('tooltip.craftingSpeed'),
         this.displaySvc.round(machine.speed),
@@ -35,17 +41,10 @@ export class MachineTooltipPipe implements PipeTransform {
       ]);
     }
 
-    if (machine.disallowEffects) {
+    if (machine.disallowedEffects) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.disallowEffects'),
-        machine.disallowEffects.join(', '),
-      ]);
-    }
-
-    if (machine.type) {
-      tableRows.push([
-        this.translateSvc.instant('tooltip.energyType'),
-        machine.type,
+        this.translateSvc.instant('tooltip.disallowedEffects'),
+        machine.disallowedEffects.join(', '),
       ]);
     }
 
@@ -53,13 +52,6 @@ export class MachineTooltipPipe implements PipeTransform {
       tableRows.push([
         this.translateSvc.instant('tooltip.fuelCategory'),
         machine.category,
-      ]);
-    }
-
-    if (machine.usage?.nonzero()) {
-      tableRows.push([
-        this.translateSvc.instant('tooltip.energyUsage'),
-        this.displaySvc.power(machine.usage),
       ]);
     }
 

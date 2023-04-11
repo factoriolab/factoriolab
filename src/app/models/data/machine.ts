@@ -1,17 +1,18 @@
 import { Entities } from '../entities';
+import { EnergyType } from '../enum';
 import { Rational } from '../rational';
 import { ModuleEffect } from './module';
 import { Silo, SiloRational } from './silo';
 
 export interface Machine {
-  speed?: number | string;
-  modules?: number;
   /** Energy type, e.g. electric or burner */
-  type?: string;
+  type: EnergyType;
+  speed: number | string;
+  /** Energy consumption in kW */
+  usage: number | string;
+  modules?: number;
   /** Fuel category, e.g. chemical or nuclear */
   category?: string;
-  /** Energy consumption in kW */
-  usage?: number | string;
   /** Drain in kW */
   drain?: number | string;
   /** Pollution in #/m */
@@ -20,41 +21,36 @@ export interface Machine {
   research?: boolean;
   silo?: Silo;
   consumption?: Entities<number | string>;
-  disallowEffects?: ModuleEffect[];
+  disallowedEffects?: ModuleEffect[];
 }
 
 export class MachineRational {
-  speed?: Rational;
-  modules?: number;
   /** Energy type, e.g. electric or burner */
-  type?: string;
+  type: EnergyType;
+  speed: Rational;
+  /** Energy consumption in kW */
+  usage: Rational;
+  modules?: number;
   /** Fuel category, e.g. chemical or nuclear */
   category?: string;
-  /** Energy consumption in kW */
-  usage?: Rational;
   drain?: Rational;
   pollution?: Rational;
   mining?: boolean;
   research?: boolean;
   silo?: SiloRational;
   consumption?: Entities<Rational>;
-  disallowEffects?: ModuleEffect[];
+  disallowedEffects?: ModuleEffect[];
 
   constructor(obj: Machine) {
-    if (obj.speed != null) {
-      this.speed = Rational.from(obj.speed);
-    }
+    this.type = obj.type;
+    this.speed = Rational.from(obj.speed);
+    this.usage = Rational.from(obj.usage);
+
     if (obj.modules != null) {
       this.modules = Math.round(obj.modules);
     }
-    if (obj.type) {
-      this.type = obj.type;
-    }
     if (obj.category) {
       this.category = obj.category;
-    }
-    if (obj.usage != null) {
-      this.usage = Rational.from(obj.usage);
     }
     if (obj.drain != null) {
       this.drain = Rational.from(obj.drain);
@@ -81,8 +77,8 @@ export class MachineRational {
         {}
       );
     }
-    if (obj.disallowEffects) {
-      this.disallowEffects = obj.disallowEffects;
+    if (obj.disallowedEffects) {
+      this.disallowedEffects = obj.disallowedEffects;
     }
   }
 }
