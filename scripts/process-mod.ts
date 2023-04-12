@@ -854,6 +854,7 @@ function processMod(): void {
         }
       }
 
+      // Parse module
       if (D.isModule(proto)) {
         item.module = {
           consumption: proto.effect.consumption?.bonus || undefined,
@@ -881,6 +882,7 @@ function processMod(): void {
         }
       }
 
+      // Parse fuel
       if (proto.fuel_category != null && proto.fuel_value != null) {
         item.fuel = {
           category: proto.fuel_category,
