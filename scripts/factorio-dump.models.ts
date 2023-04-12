@@ -177,6 +177,10 @@ export interface Module extends Item {
   requires_beacon_alt_mode?: boolean;
 }
 
+export function isModule(proto: Base): proto is Module {
+  return proto.type === 'module';
+}
+
 export interface RailPlanner extends Item {
   curved_rail: string;
   straight_rail: string;
@@ -225,8 +229,8 @@ export interface Fluid extends Base, IconSpecification {
   subgroup?: string;
 }
 
-export function isFluid(value: Base): value is Fluid {
-  return value.type === 'fluid';
+export function isFluid(proto: Base): proto is Fluid {
+  return proto.type === 'fluid';
 }
 
 export interface ItemGroup extends Base, IconSpecification {
@@ -235,14 +239,6 @@ export interface ItemGroup extends Base, IconSpecification {
 
 export interface ItemSubGroup extends Base {
   group: string;
-}
-
-export interface AssemblingMachine extends Base {
-  fixed_recipe?: string;
-}
-
-export interface RocketSilo extends AssemblingMachine {
-  rocket_parts_required: number;
 }
 
 export type Ingredient = [string, number] | ItemIngredient | FluidIngredient;
@@ -266,15 +262,15 @@ export interface FluidIngredient {
 }
 
 export function isSimpleIngredient(
-  value: Ingredient
-): value is [string, number] {
-  return Array.isArray(value);
+  proto: Ingredient
+): proto is [string, number] {
+  return Array.isArray(proto);
 }
 
 export function isItemIngredient(
-  value: ItemIngredient | FluidIngredient
-): value is ItemIngredient {
-  return value.type == null || value.type === 'item';
+  proto: ItemIngredient | FluidIngredient
+): proto is ItemIngredient {
+  return proto.type == null || proto.type === 'item';
 }
 
 export type Product = [string, number] | ItemProduct | FluidProduct;
@@ -300,14 +296,14 @@ export interface FluidProduct {
   catalyst_amount: number;
 }
 
-export function isSimpleProduct(value: Product): value is [string, number] {
-  return Array.isArray(value);
+export function isSimpleProduct(proto: Product): proto is [string, number] {
+  return Array.isArray(proto);
 }
 
 export function isItemProduct(
-  value: ItemProduct | FluidProduct
-): value is ItemProduct {
-  return value.type == null || value.type === 'item';
+  proto: ItemProduct | FluidProduct
+): proto is ItemProduct {
+  return proto.type == null || proto.type === 'item';
 }
 
 export interface RecipeData {
@@ -342,8 +338,8 @@ export interface Recipe extends Base, IconSpecification, RecipeData {
   unlock_results?: boolean;
 }
 
-export function isRecipe(value: Base): value is Recipe {
-  return value.type === 'recipe';
+export function isRecipe(proto: Base): proto is Recipe {
+  return proto.type === 'recipe';
 }
 
 export interface Modifier {
@@ -351,9 +347,9 @@ export interface Modifier {
 }
 
 export function isUnlockRecipeModifier(
-  modifier: Modifier
-): modifier is UnlockRecipeModifier {
-  return modifier.type === 'unlock-recipe';
+  proto: Modifier
+): proto is UnlockRecipeModifier {
+  return proto.type === 'unlock-recipe';
 }
 
 export interface UnlockRecipeModifier extends Modifier {
@@ -426,10 +422,6 @@ export interface ModuleSpecification {
   module_slots?: number;
 }
 
-export interface TransportBelt {
-  speed: number;
-}
-
 export interface Beacon extends Base {
   distribution_effectivity: number;
   energy_source: ElectricEnergySource | VoidEnergySource;
@@ -439,12 +431,89 @@ export interface Beacon extends Base {
   allowed_effects?: (keyof Effect)[];
 }
 
+export interface Boiler extends Base {
+  energy_consumption: string;
+  energy_source: EnergySource;
+  target_temperature: number;
+}
+
+export function isBoiler(proto: Base): proto is Boiler {
+  return proto.type === 'boiler';
+}
+
+export interface CraftingMachine extends Base {
+  crafting_categories: string[];
+  crafting_speed: number;
+  energy_source: EnergySource;
+  energy_usage: string;
+  allowed_effects?: (keyof Effect)[];
+  module_specification?: ModuleSpecification;
+}
+
+export interface AssemblingMachine extends CraftingMachine {
+  fixed_recipe?: string;
+}
+
+export function isAssemblingMachine(proto: Base): proto is AssemblingMachine {
+  return proto.type === 'assembling-machine';
+}
+
+export interface RocketSilo extends AssemblingMachine {
+  active_energy_usage: string;
+  door_opening_speed: number;
+  energy_usage: string;
+  idle_energy_usage: string;
+  lamp_energy_usage: string;
+  light_blinking_speed: number;
+  rocket_entity: string;
+  rocket_parts_required: number;
+  launch_wait_time?: number;
+  rocket_rising_delay?: number;
+}
+
+export function isRocketSilo(proto: Base): proto is RocketSilo {
+  return proto.type === 'rocket-silo';
+}
+
+export interface RocketSiloRocket extends Base {
+  engine_starting_speed: number;
+  flying_acceleration: number;
+  flying_speed: number;
+  rising_speed: number;
+}
+
+export interface Furnace extends CraftingMachine {
+  result_inventory_size: number;
+  source_inventory_size: number;
+}
+
+export function isFurnace(proto: Base): proto is Furnace {
+  return proto.type === 'furnace';
+}
+
+export interface Lab extends Base {
+  energy_source: EnergySource;
+  energy_usage: string;
+  allowed_effects?: (keyof Effect)[];
+  module_specification?: ModuleSpecification;
+  research_speed?: number;
+}
+
+export function isLab(proto: Base): proto is Lab {
+  return proto.type === 'lab';
+}
+
 export interface MiningDrill extends Base {
   energy_source: EnergySource;
   energy_usage: string;
   mining_speed: number;
+  resource_categories: string[];
   allowed_effects?: (keyof Effect)[];
   module_specification?: ModuleSpecification;
+}
+
+export function isMiningDrill(proto: Base): proto is MiningDrill {
+  return proto.type === 'mining-drill';
 }
 
 export interface OffshorePump extends Base {
@@ -452,25 +521,57 @@ export interface OffshorePump extends Base {
   pumping_speed: number;
 }
 
+export function isOffshorePump(proto: Base): proto is OffshorePump {
+  return proto.type === 'offshore-pump';
+}
+
+export interface Reactor extends Base {
+  consumption: string;
+  energy_source: EnergySource;
+}
+
+export function isReactor(proto: Base): proto is Reactor {
+  return proto.type === 'reactor';
+}
+
+export interface TransportBelt extends Base {
+  speed: number;
+}
+
+export interface CargoWagon extends Base {
+  inventory_size: number;
+}
+
+export interface FluidWagon extends Base {
+  capacity: number;
+}
+
 export interface DataRawDump {
   ammo: Entities<AmmoItem>;
   armor: Entities<Armor>;
   'assembling-machine': Entities<AssemblingMachine>;
   beacon: Entities<Beacon>;
+  boiler: Entities<Boiler>;
   capsule: Entities<Capsule>;
+  'cargo-wagon': Entities<CargoWagon>;
   fluid: Entities<Fluid>;
+  'fluid-wagon': Entities<FluidWagon>;
+  furnace: Entities<CraftingMachine>;
   gun: Entities<Gun>;
   item: Entities<Item>;
   'item-group': Entities<ItemGroup>;
   'item-subgroup': Entities<ItemSubGroup>;
   'item-with-entity-data': Entities<ItemWithEntityData>;
+  lab: Entities<Lab>;
   'mining-drill': Entities<MiningDrill>;
   module: Entities<Module>;
   'offshore-pump': Entities<OffshorePump>;
   'rail-planner': Entities<RailPlanner>;
+  reactor: Entities<Reactor>;
   recipe: Entities<Recipe>;
   'repair-tool': Entities<RepairTool>;
   'rocket-silo': Entities<RocketSilo>;
+  'rocket-silo-rocket': Entities<RocketSiloRocket>;
   'spidertron-remote': Entities<SpidertronRemote>;
   technology: Entities<Technology>;
   tool: Entities<Tool>;

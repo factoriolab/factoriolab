@@ -7,10 +7,10 @@ export type ModuleEffect =
   | 'pollution';
 
 export interface Module {
-  speed?: number | string;
-  productivity?: number | string;
   consumption?: number | string;
   pollution?: number | string;
+  productivity?: number | string;
+  speed?: number | string;
   limitation?: string;
   sprays?: number;
   proliferator?: string;

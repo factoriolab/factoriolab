@@ -5,8 +5,9 @@ import { ModuleEffect } from './module';
 import { Silo, SiloRational } from './silo';
 
 export interface Machine {
-  speed: number | string;
+  speed?: number | string;
   modules?: number;
+  disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel category, e.g. chemical or nuclear */
   category?: string;
@@ -20,12 +21,12 @@ export interface Machine {
   research?: boolean;
   silo?: Silo;
   consumption?: Entities<number | string>;
-  disallowedEffects?: ModuleEffect[];
 }
 
 export class MachineRational {
   speed: Rational;
   modules?: number;
+  disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel category, e.g. chemical or nuclear */
   category?: string;
@@ -37,13 +38,15 @@ export class MachineRational {
   research?: boolean;
   silo?: SiloRational;
   consumption?: Entities<Rational>;
-  disallowedEffects?: ModuleEffect[];
 
   constructor(obj: Machine) {
-    this.speed = Rational.from(obj.speed);
+    this.speed = Rational.from(obj.speed ?? 1);
 
     if (obj.modules != null) {
       this.modules = Math.round(obj.modules);
+    }
+    if (obj.disallowedEffects) {
+      this.disallowedEffects = obj.disallowedEffects;
     }
     if (obj.type != null) {
       this.type = obj.type;
@@ -78,9 +81,6 @@ export class MachineRational {
         },
         {}
       );
-    }
-    if (obj.disallowedEffects) {
-      this.disallowedEffects = obj.disallowedEffects;
     }
   }
 }

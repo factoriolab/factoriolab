@@ -4,8 +4,11 @@ import {
   Category,
   Entities,
   Item,
+  Machine,
   ModData,
+  ModuleEffect,
   Recipe,
+  Silo,
   Technology,
 } from '~/models';
 import { EnergyType } from '../src/app/models/enum/energy-type';
@@ -74,8 +77,23 @@ function getMultiplier(letter: string): number {
   }
 }
 
+function getEnergyInMJ(usage: string): number {
+  const match = /(\d*\.?\d*)(\w*)/.exec(usage);
+  if (match == null) {
+    throw `Unrecognized power format: '${usage}'`;
+  }
+
+  const [_, numStr, unit] = [...match];
+  if (!unit.endsWith('J')) {
+    throw `Unrecognized energy unit: '${usage}'`;
+  }
+  const multiplier = getMultiplier(unit.substring(0, unit.length - 1)) / 1000;
+  const num = Number(numStr);
+  return multiplier * num;
+}
+
 function getPowerInKw(usage: string): number {
-  const match = /(\d+)(\w+)/.exec(usage);
+  const match = /(\d*\.?\d*)(\w*)/.exec(usage);
   if (match == null) {
     throw `Unrecognized power format: '${usage}'`;
   }
@@ -87,6 +105,23 @@ function getPowerInKw(usage: string): number {
   const multiplier = getMultiplier(unit.substring(0, unit.length - 1));
   const num = Number(numStr);
   return multiplier * num;
+}
+
+function getDisallowedEffects(
+  allowedEffects?: (keyof D.Effect)[] | Record<string, never>,
+  defaultDisallow = false
+): (keyof D.Effect)[] | undefined {
+  if (allowedEffects == null) {
+    return defaultDisallow ? D.allEffects : undefined;
+  }
+
+  if (!Array.isArray(allowedEffects)) {
+    allowedEffects = [];
+  }
+
+  const checked = allowedEffects;
+  const result = D.allEffects.filter((e) => checked.indexOf(e) === -1);
+  return result.length === 0 ? undefined : result;
 }
 
 function processMod(): void {
@@ -117,6 +152,12 @@ function processMod(): void {
   const icons: Record<string, string> = {};
   // Record of icon copies by hash: ids
   const iconCopies: Record<string, string[]> = {};
+  // Records of producer categories to producers
+  const burners: Record<string, string[]> = {};
+  const crafting: Record<string, string[]> = {};
+  const resource: Record<string, string[]> = {};
+  // Record of limitations by hash: id
+  const limitations: Record<string, string> = {};
 
   function getItem(name: string): D.Item | D.Fluid {
     return (
@@ -242,6 +283,201 @@ function processMod(): void {
       icons[hash] = spec.name;
       iconCopies[hash] = [];
     }
+  }
+  type MachineProto =
+    | D.Boiler
+    | D.AssemblingMachine
+    | D.RocketSilo
+    | D.Furnace
+    | D.Lab
+    | D.MiningDrill
+    | D.OffshorePump
+    | D.Reactor;
+
+  function getMachineSpeed(proto: MachineProto): number | undefined {
+    if (D.isReactor(proto)) {
+      return undefined;
+    }
+
+    let speed: number;
+    if (D.isBoiler(proto)) {
+      speed = getPowerInKw(proto.energy_consumption);
+    } else if (D.isLab(proto)) {
+      speed = proto.research_speed ?? 1;
+    } else if (D.isMiningDrill(proto)) {
+      speed = proto.mining_speed;
+    } else if (D.isOffshorePump(proto)) {
+      speed = proto.pumping_speed * 60;
+    } else {
+      speed = proto.crafting_speed;
+    }
+
+    return speed === 1 ? undefined : speed;
+  }
+
+  function getMachineModules(proto: MachineProto): number | undefined {
+    if (D.isBoiler(proto) || D.isOffshorePump(proto) || D.isReactor(proto)) {
+      return undefined;
+    }
+
+    return proto.module_specification?.module_slots;
+  }
+
+  function getMachineType(proto: MachineProto): EnergyType | undefined {
+    if (D.isOffshorePump(proto)) {
+      return undefined;
+    }
+
+    return proto.energy_source.type as EnergyType;
+  }
+
+  function getMachineCategory(proto: MachineProto): string | undefined {
+    if (D.isOffshorePump(proto)) {
+      return undefined;
+    }
+
+    if (proto.energy_source.type === 'burner') {
+      if (proto.energy_source.fuel_categories) {
+        if (proto.energy_source.fuel_categories.length > 1) {
+          console.warn(
+            `Only using first fuel category from burner ${proto.name}`
+          );
+        }
+
+        return proto.energy_source.fuel_categories[0];
+      } else {
+        return proto.energy_source.fuel_category;
+      }
+    }
+
+    return undefined;
+  }
+
+  function getMachineUsage(proto: MachineProto): number | undefined {
+    if (D.isOffshorePump(proto)) {
+      return undefined;
+    } else if (D.isBoiler(proto)) {
+      return getPowerInKw(proto.energy_consumption);
+    } else if (D.isReactor(proto)) {
+      return getPowerInKw(proto.consumption);
+    }
+
+    return getPowerInKw(proto.energy_usage);
+  }
+
+  function getMachineDrain(proto: MachineProto): number | undefined {
+    if (D.isOffshorePump(proto)) {
+      return undefined;
+    }
+
+    if (proto.energy_source.type === 'electric') {
+      if (proto.energy_source.drain != null) {
+        return getPowerInKw(proto.energy_source.drain);
+      } else {
+        if (
+          D.isAssemblingMachine(proto) ||
+          D.isRocketSilo(proto) ||
+          D.isFurnace(proto)
+        ) {
+          const usage = getMachineUsage(proto);
+          if (usage != null) {
+            const idle = D.isRocketSilo(proto)
+              ? getPowerInKw(proto.idle_energy_usage)
+              : 0;
+            return usage / 30 + idle;
+          }
+        }
+      }
+    }
+
+    return undefined;
+  }
+
+  function getMachinePollution(proto: MachineProto): number | undefined {
+    if (D.isOffshorePump(proto)) {
+      return undefined;
+    }
+
+    return proto.energy_source.emissions_per_minute;
+  }
+
+  function getMachineMining(proto: MachineProto): true | undefined {
+    return D.isMiningDrill(proto) || undefined;
+  }
+
+  function getMachineResearch(proto: MachineProto): true | undefined {
+    return D.isLab(proto) || undefined;
+  }
+
+  function getMachineSilo(proto: MachineProto): Silo | undefined {
+    if (D.isRocketSilo(proto)) {
+      const rocket = dataRaw['rocket-silo-rocket'][proto.rocket_entity];
+
+      let launch = 0;
+      // Lights blinking open
+      launch += 1 / proto.light_blinking_speed + 1;
+      // Doors opening
+      launch += 1 / proto.door_opening_speed + 1;
+      // Doors opened
+      launch += (proto.rocket_rising_delay ?? 30) + 1;
+      // Rocket rising
+      launch += 1 / rocket.rising_speed + 1;
+      // Rocket ready
+      launch += 14; // Estimate for satellite inserter swing time
+      // Launch started
+      launch += (proto.launch_wait_time ?? 120) + 1;
+      // Engine starting
+      launch += 1 / rocket.engine_starting_speed + 1;
+      // Rocket flying
+      const rocketFlightThreshold = 0.5;
+      launch +=
+        Math.log(
+          1 +
+            (rocketFlightThreshold * rocket.flying_acceleration) /
+              rocket.flying_speed
+        ) / Math.log(1 + rocket.flying_acceleration);
+      // Lights blinking close
+      launch += 1 / proto.light_blinking_speed + 1;
+      // Doors closing
+      launch += 1 / proto.door_opening_speed + 1;
+
+      launch = Math.floor(launch + 0.5);
+
+      return {
+        parts: proto.rocket_parts_required,
+        launch,
+      };
+    }
+
+    return undefined;
+  }
+
+  function getMachineDisallowedEffects(
+    proto: MachineProto
+  ): ModuleEffect[] | undefined {
+    if (D.isBoiler(proto) || D.isOffshorePump(proto) || D.isReactor(proto)) {
+      return undefined;
+    }
+
+    return getDisallowedEffects(proto.allowed_effects);
+  }
+
+  function getMachine(proto: MachineProto): Machine {
+    const machine: Machine = {
+      speed: getMachineSpeed(proto),
+      modules: getMachineModules(proto),
+      disallowedEffects: getMachineDisallowedEffects(proto),
+      type: getMachineType(proto),
+      category: getMachineCategory(proto),
+      usage: getMachineUsage(proto),
+      drain: getMachineDrain(proto),
+      pollution: getMachinePollution(proto),
+      mining: getMachineMining(proto),
+      research: getMachineResearch(proto),
+      silo: getMachineSilo(proto),
+    };
+
+    return machine;
   }
 
   const modData: ModData = {
@@ -552,74 +788,105 @@ function processMod(): void {
       };
 
       if (proto.place_result) {
-        if (dataRaw['transport-belt'][proto.place_result]) {
-          const transportBelt = dataRaw['transport-belt'][proto.place_result];
-          item.belt = {
-            speed: transportBelt.speed * 480,
-          };
-        }
-
+        // Parse beacon
         if (dataRaw.beacon[proto.place_result]) {
-          const beacon = dataRaw.beacon[proto.place_result];
+          const entity = dataRaw.beacon[proto.place_result];
           item.beacon = {
-            effectivity: beacon.distribution_effectivity,
-            modules: beacon.module_specification.module_slots ?? 0,
-            range: beacon.supply_area_distance,
-            type: beacon.energy_source.type as
+            effectivity: entity.distribution_effectivity,
+            modules: entity.module_specification.module_slots ?? 0,
+            range: entity.supply_area_distance,
+            type: entity.energy_source.type as
               | EnergyType.Electric
               | EnergyType.Void,
-            usage: getPowerInKw(beacon.energy_usage),
-            disallowedEffects: D.allEffects.filter(
-              (e) =>
-                beacon.allowed_effects == null ||
-                beacon.allowed_effects.indexOf(e) === -1
+            usage: getPowerInKw(entity.energy_usage),
+            disallowedEffects: getDisallowedEffects(
+              entity.allowed_effects,
+              true
             ),
           };
         }
 
-        if (dataRaw['mining-drill'][proto.place_result]) {
-          const miningDrill = dataRaw['mining-drill'][proto.place_result];
-          item.machine = {
-            speed: miningDrill.mining_speed,
-            modules: miningDrill.module_specification?.module_slots,
-            type: miningDrill.energy_source.type as EnergyType,
-            usage: getPowerInKw(miningDrill.energy_usage),
-            pollution: miningDrill.energy_source.emissions_per_minute,
-            mining: true,
-            disallowedEffects: miningDrill.allowed_effects?.length
-              ? miningDrill.allowed_effects
-              : undefined,
-          };
+        // Parse machine
+        if (dataRaw.boiler[proto.place_result]) {
+          const entity = dataRaw.boiler[proto.place_result];
+          item.machine = getMachine(entity);
+        } else if (dataRaw['assembling-machine'][proto.place_result]) {
+          const entity = dataRaw['assembling-machine'][proto.place_result];
+          item.machine = getMachine(entity);
+        } else if (dataRaw['rocket-silo'][proto.place_result]) {
+          const entity = dataRaw['rocket-silo'][proto.place_result];
+          item.machine = getMachine(entity);
+        } else if (dataRaw.furnace[proto.place_result]) {
+          const entity = dataRaw.furnace[proto.place_result];
+          item.machine = getMachine(entity);
+        } else if (dataRaw.lab[proto.place_result]) {
+          const entity = dataRaw.lab[proto.place_result];
+          item.machine = getMachine(entity);
+        } else if (dataRaw['mining-drill'][proto.place_result]) {
+          const entity = dataRaw['mining-drill'][proto.place_result];
+          item.machine = getMachine(entity);
+        } else if (dataRaw['offshore-pump'][proto.place_result]) {
+          const entity = dataRaw['offshore-pump'][proto.place_result];
+          item.machine = getMachine(entity);
+        } else if (dataRaw['reactor'][proto.place_result]) {
+          const entity = dataRaw['reactor'][proto.place_result];
+          item.machine = getMachine(entity);
+        }
 
-          if (miningDrill.energy_source.type === 'electric') {
-            if (miningDrill.energy_source.drain) {
-              item.machine.drain = getPowerInKw(
-                miningDrill.energy_source.drain
-              );
-            }
-          } else if (miningDrill.energy_source.type === 'burner') {
-            if (miningDrill.energy_source.fuel_categories) {
-              if (miningDrill.energy_source.fuel_categories.length > 1) {
-                console.warn(
-                  `Using first energy source fuel category for machine ${miningDrill.name}`
-                );
-                item.machine.category =
-                  miningDrill.energy_source.fuel_categories[0];
-              } else {
-                item.machine.category =
-                  miningDrill.energy_source.fuel_category ?? 'chemical';
-              }
-            }
+        // Parse transport belt
+        if (dataRaw['transport-belt'][proto.place_result]) {
+          const entity = dataRaw['transport-belt'][proto.place_result];
+          item.belt = {
+            speed: entity.speed * 480,
+          };
+        }
+
+        // Parse cargo wagon
+        if (dataRaw['cargo-wagon'][proto.place_result]) {
+          const entity = dataRaw['cargo-wagon'][proto.place_result];
+          item.cargoWagon = { size: entity.inventory_size };
+        }
+
+        // Parse fluid wagon
+        if (dataRaw['fluid-wagon'][proto.place_result]) {
+          const entity = dataRaw['fluid-wagon'][proto.place_result];
+          item.fluidWagon = { capacity: entity.capacity };
+        }
+      }
+
+      if (D.isModule(proto)) {
+        item.module = {
+          consumption: proto.effect.consumption?.bonus || undefined,
+          pollution: proto.effect.pollution?.bonus || undefined,
+          productivity: proto.effect.productivity?.bonus || undefined,
+          speed: proto.effect.speed?.bonus || undefined,
+        };
+
+        let limitation = proto.limitation;
+        if (proto.limitation_blacklist) {
+          limitation = limitation ?? Object.keys(recipesEnabled);
+          limitation = limitation.filter(
+            (l) => proto.limitation_blacklist?.indexOf(l) === -1
+          );
+        }
+
+        if (limitation != null) {
+          limitation.sort();
+          const hash = JSON.stringify(limitation);
+          if (!limitations[hash]) {
+            limitations[hash] = proto.name;
           }
-        }
 
-        if (dataRaw['offshore-pump'][proto.place_result]) {
-          const offshorePump = dataRaw['offshore-pump'][proto.place_result];
-          item.machine = {
-            speed: offshorePump.pumping_speed * 60,
-            type: undefined,
-          };
+          item.module.limitation = limitations[hash];
         }
+      }
+
+      if (proto.fuel_category != null && proto.fuel_value != null) {
+        item.fuel = {
+          category: proto.fuel_category,
+          value: getEnergyInMJ(proto.fuel_value),
+          result: proto.burnt_result,
+        };
       }
 
       modData.items.push(item);
