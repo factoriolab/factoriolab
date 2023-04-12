@@ -23,7 +23,8 @@
     height: 64px;
   }
 
-  > span {
+  > span,
+  &::after {
     // Styles for text overlay
     position: absolute;
     bottom: -2px;

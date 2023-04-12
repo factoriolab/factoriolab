@@ -148,10 +148,6 @@ function processMod(): void {
   const dataRaw = getJsonData<D.DataRawDump>(dataRawPath);
 
   // Set up collections
-  // Record of icons by hash: id
-  const icons: Record<string, string> = {};
-  // Record of icon copies by hash: ids
-  const iconCopies: Record<string, string[]> = {};
   // Record of limitations by hash: id
   const limitations: Record<string, string> = {};
 
@@ -265,20 +261,47 @@ function processMod(): void {
     return lastRecipeRow;
   }
 
-  function addIcon(spec: D.IconSpecification & D.Base): void {
+  const iconHash: Record<string, string> = {};
+  const iconSet = new Set<string>();
+
+  function getIcon(spec: D.IconSpecification & D.Base): string | undefined {
+    // If recipe has no declared icon, get product icon
+    if (D.isRecipe(spec) && spec.icon == null && spec.icons == null) {
+      spec = getRecipeProduct(spec);
+    }
+
     if (spec.icon == null && spec.icons == null) {
       throw `No icons for proto ${spec.name}`;
+    }
+
+    let iconId = spec.name;
+    if (iconSet.has(iconId)) {
+      // Find alternate id
+      let i = 0;
+      let altId: string;
+      do {
+        altId = `${iconId}-${i++}`;
+      } while (iconSet.has(altId));
+      iconId = altId;
     }
 
     const hash = `${JSON.stringify(spec.icon)}.${JSON.stringify(
       spec.icon_size
     )}.${JSON.stringify(spec.icon_mipmaps)}.${JSON.stringify(spec.icons)}`;
-    if (icons[hash]) {
-      iconCopies[hash].push(spec.name);
+    if (iconHash[hash]) {
+      iconId = iconHash[hash];
     } else {
-      icons[hash] = spec.name;
-      iconCopies[hash] = [];
+      iconHash[hash] = iconId;
     }
+
+    return iconId === spec.name ? undefined : iconId;
+  }
+
+  function getIconText(proto: D.Technology): string | undefined {
+    if (!proto.upgrade) return undefined;
+
+    const match = /(\d+)$/.exec(proto.name);
+    return match?.[0] ? match[0] : undefined;
   }
 
   // Records of producer categories to producers
@@ -742,10 +765,10 @@ function processMod(): void {
         name: fluidLocale.names[proto.name],
         row: getItemRow(proto),
         category: group.name,
+        icon: getIcon(proto),
       };
 
       modData.items.push(item);
-      addIcon(proto);
     } else {
       const item: Item = {
         id: proto.name,
@@ -753,6 +776,7 @@ function processMod(): void {
         stack: proto.stack_size,
         row: getItemRow(proto),
         category: group.name,
+        icon: getIcon(proto),
       };
 
       if (proto.place_result) {
@@ -861,7 +885,6 @@ function processMod(): void {
       }
 
       modData.items.push(item);
-      addIcon(proto);
     }
   }
 
@@ -914,15 +937,9 @@ function processMod(): void {
       in: recipeIn,
       out: recipeOut,
       unlockedBy: recipesUnlocked[proto.name],
+      icon: getIcon(proto),
     };
     modData.recipes.push(recipe);
-
-    if (proto.icon == null && proto.icons == null) {
-      const product = getRecipeProduct(proto);
-      addIcon(product);
-    } else {
-      addIcon(proto);
-    }
   }
 
   const technologies = Object.keys(dataRaw.technology).map(
@@ -954,10 +971,11 @@ function processMod(): void {
       ),
       out: { [techRaw.name]: 1 },
       technology,
+      icon: getIcon(techRaw),
+      iconText: getIconText(techRaw),
     };
 
     modData.recipes.push(recipe);
-    addIcon(techRaw);
   }
 
   for (const id of groupsUsed) {
@@ -970,7 +988,7 @@ function processMod(): void {
   modData.categories.push({ id: 'technology', name: 'Technology' });
 
   // Sprite sheet
-  const iconIds = Object.keys(icons).map((i) => icons[i]);
+  const iconIds = Object.keys(iconHash).map((i) => iconHash[i]);
   const width = Math.max(8, Math.ceil(Math.pow(iconIds.length, 0.5)));
 
   const wrap = width * -64;

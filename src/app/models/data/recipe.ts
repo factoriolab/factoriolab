@@ -23,6 +23,8 @@ export interface Recipe {
   technology?: Technology;
   /** Used to link the recipe to an alternate icon id */
   icon?: string;
+  /** Used to add extra text to an already defined icon */
+  iconText?: string;
   /** Used to override the machine's usage for this recipe */
   usage?: number | string;
 }
