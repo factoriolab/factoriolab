@@ -152,10 +152,6 @@ function processMod(): void {
   const icons: Record<string, string> = {};
   // Record of icon copies by hash: ids
   const iconCopies: Record<string, string[]> = {};
-  // Records of producer categories to producers
-  const burners: Record<string, string[]> = {};
-  const crafting: Record<string, string[]> = {};
-  const resource: Record<string, string[]> = {};
   // Record of limitations by hash: id
   const limitations: Record<string, string> = {};
 
@@ -284,6 +280,70 @@ function processMod(): void {
       iconCopies[hash] = [];
     }
   }
+
+  // Records of producer categories to producers
+  type ProducerType = 'burner' | 'crafting' | 'resource';
+  type EntityType = 'lab' | 'silo' | 'boiler' | 'offshorePump';
+  const producers: Record<ProducerType, Record<string, string[]>> = {
+    burner: {},
+    crafting: {},
+    resource: {},
+  };
+  const machines: Record<EntityType, string[]> = {
+    lab: [],
+    silo: [],
+    boiler: [],
+    offshorePump: [],
+  };
+
+  function addProducers(
+    id: string,
+    categories: string[],
+    type: ProducerType
+  ): void {
+    const record = producers[type];
+
+    for (const category of categories) {
+      if (record[category] == null) {
+        record[category] = [];
+      }
+
+      record[category].push(id);
+    }
+  }
+
+  function processProducers(proto: MachineProto): void {
+    if (D.isMiningDrill(proto)) {
+      addProducers(proto.name, proto.resource_categories, 'resource');
+    }
+
+    if (!D.isOffshorePump(proto) && proto.energy_source.type === 'burner') {
+      if (proto.energy_source.fuel_categories) {
+        addProducers(proto.name, proto.energy_source.fuel_categories, 'burner');
+      } else if (proto.energy_source.fuel_category) {
+        addProducers(proto.name, [proto.energy_source.fuel_category], 'burner');
+      }
+    }
+
+    if (
+      D.isAssemblingMachine(proto) ||
+      D.isRocketSilo(proto) ||
+      D.isFurnace(proto)
+    ) {
+      addProducers(proto.name, proto.crafting_categories, 'crafting');
+    }
+
+    if (D.isBoiler(proto)) {
+      machines.boiler.push(proto.name);
+    } else if (D.isRocketSilo(proto)) {
+      machines.silo.push(proto.name);
+    } else if (D.isLab(proto)) {
+      machines.lab.push(proto.name);
+    } else if (D.isOffshorePump(proto)) {
+      machines.offshorePump.push(proto.name);
+    }
+  }
+
   type MachineProto =
     | D.Boiler
     | D.AssemblingMachine
@@ -401,14 +461,6 @@ function processMod(): void {
     return proto.energy_source.emissions_per_minute;
   }
 
-  function getMachineMining(proto: MachineProto): true | undefined {
-    return D.isMiningDrill(proto) || undefined;
-  }
-
-  function getMachineResearch(proto: MachineProto): true | undefined {
-    return D.isLab(proto) || undefined;
-  }
-
   function getMachineSilo(proto: MachineProto): Silo | undefined {
     if (D.isRocketSilo(proto)) {
       const rocket = dataRaw['rocket-silo-rocket'][proto.rocket_entity];
@@ -472,10 +524,10 @@ function processMod(): void {
       usage: getMachineUsage(proto),
       drain: getMachineDrain(proto),
       pollution: getMachinePollution(proto),
-      mining: getMachineMining(proto),
-      research: getMachineResearch(proto),
       silo: getMachineSilo(proto),
     };
+
+    processProducers(proto);
 
     return machine;
   }
@@ -506,53 +558,18 @@ function processMod(): void {
       }
     });
 
-  const recipesUnlocked = new Set<string>();
-  const technologyRecipes: Recipe[] = [];
-
+  // Record of recipe id : technology id
+  const recipesUnlocked: Record<string, string> = {};
   for (const key of Object.keys(dataRaw.technology)) {
     const techRaw = dataRaw.technology[key];
     const techData = techRaw[mode] ?? techRaw;
-
-    const technology: Technology = {};
-
-    if (techData.prerequisites?.length) {
-      technology.prerequisites = techData.prerequisites;
-    }
-
-    const unlockRecipes: string[] = [];
     if (techData.effects) {
       for (const effect of techData.effects) {
         if (D.isUnlockRecipeModifier(effect)) {
-          unlockRecipes.push(effect.recipe);
-          recipesUnlocked.add(effect.recipe);
+          recipesUnlocked[effect.recipe] = techRaw.name;
         }
       }
     }
-
-    if (unlockRecipes.length) {
-      technology.unlockRecipes = unlockRecipes;
-    }
-
-    const recipe: Recipe = {
-      id: techRaw.name,
-      name: techLocale.names[techRaw.name],
-      category: 'technology',
-      row: 0,
-      time: techData.unit.time,
-      producers: [], // TODO: Calculate later..
-      in: techData.unit.ingredients.reduce(
-        (e: Entities<number>, [id, count]) => {
-          e[id] = count;
-          return e;
-        },
-        {}
-      ),
-      out: { [techRaw.name]: 1 },
-      technology,
-    };
-
-    technologyRecipes.push(recipe);
-    addIcon(techRaw);
   }
 
   const recipesEnabled: Entities<D.Recipe> = {};
@@ -585,7 +602,7 @@ function processMod(): void {
     // Always include fixed recipes that have outputs
     if (!fixedRecipe.has(key)) {
       // Skip recipes that are not unlocked / enabled
-      if (recipe.enabled === false && !recipesUnlocked.has(key)) {
+      if (recipe.enabled === false && !recipesUnlocked[key]) {
         include = false;
       }
 
@@ -710,65 +727,16 @@ function processMod(): void {
 
   const groupsUsed = new Set<string>();
 
-  // Process protos
+  // Process item protos
   for (const proto of protosSorted) {
+    // Skip recipes until producers are processed
+    if (D.isRecipe(proto)) continue;
+
     const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
     const group = dataRaw['item-group'][subgroup.group];
     groupsUsed.add(group.name);
 
-    if (D.isRecipe(proto)) {
-      const recipeData = typeof proto[mode] === 'object' ? proto[mode] : proto;
-
-      const recipeIn: Entities<number> = {};
-      const recipeOut: Entities<number> = {};
-
-      // Check ingredients
-      for (const ingredient of recipeData.ingredients) {
-        if (D.isSimpleIngredient(ingredient)) {
-          const [itemId, amount] = ingredient;
-          addEntityValue(recipeIn, itemId, amount);
-        } else {
-          addEntityValue(recipeIn, ingredient.name, ingredient.amount);
-        }
-      }
-
-      // Check products
-      if (recipeData.results) {
-        for (const result of recipeData.results) {
-          if (D.isSimpleProduct(result)) {
-            const [itemId, amount] = result;
-            addEntityValue(recipeOut, itemId, amount);
-          } else {
-            addEntityValue(recipeOut, result.name, result.amount);
-          }
-        }
-      } else if (recipeData.result) {
-        addEntityValue(
-          recipeOut,
-          recipeData.result,
-          recipeData.result_count ?? 1
-        );
-      }
-
-      const recipe: Recipe = {
-        id: proto.name,
-        name: recipeLocale.names[proto.name],
-        category: subgroup.group,
-        row: getRecipeRow(proto),
-        time: proto.energy_required ?? 0.5,
-        producers: [],
-        in: recipeIn,
-        out: recipeOut,
-      };
-      modData.recipes.push(recipe);
-
-      if (proto.icon == null && proto.icons == null) {
-        const product = getRecipeProduct(proto);
-        addIcon(product);
-      } else {
-        addIcon(proto);
-      }
-    } else if (D.isFluid(proto)) {
+    if (D.isFluid(proto)) {
       const item: Item = {
         id: proto.name,
         name: fluidLocale.names[proto.name],
@@ -876,6 +844,7 @@ function processMod(): void {
           const hash = JSON.stringify(limitation);
           if (!limitations[hash]) {
             limitations[hash] = proto.name;
+            modData.limitations[proto.name] = limitation;
           }
 
           item.module.limitation = limitations[hash];
@@ -896,7 +865,100 @@ function processMod(): void {
     }
   }
 
-  modData.recipes.push(...technologyRecipes);
+  // Process recipe protos
+  for (const proto of protosSorted.filter(D.isRecipe)) {
+    const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
+    const group = dataRaw['item-group'][subgroup.group];
+    groupsUsed.add(group.name);
+
+    const recipeData = typeof proto[mode] === 'object' ? proto[mode] : proto;
+
+    const recipeIn: Entities<number> = {};
+    const recipeOut: Entities<number> = {};
+
+    // Check ingredients
+    for (const ingredient of recipeData.ingredients) {
+      if (D.isSimpleIngredient(ingredient)) {
+        const [itemId, amount] = ingredient;
+        addEntityValue(recipeIn, itemId, amount);
+      } else {
+        addEntityValue(recipeIn, ingredient.name, ingredient.amount);
+      }
+    }
+
+    // Check products
+    if (recipeData.results) {
+      for (const result of recipeData.results) {
+        if (D.isSimpleProduct(result)) {
+          const [itemId, amount] = result;
+          addEntityValue(recipeOut, itemId, amount);
+        } else {
+          addEntityValue(recipeOut, result.name, result.amount);
+        }
+      }
+    } else if (recipeData.result) {
+      addEntityValue(
+        recipeOut,
+        recipeData.result,
+        recipeData.result_count ?? 1
+      );
+    }
+
+    const recipe: Recipe = {
+      id: proto.name,
+      name: recipeLocale.names[proto.name],
+      category: subgroup.group,
+      row: getRecipeRow(proto),
+      time: proto.energy_required ?? 0.5,
+      producers: producers.crafting[proto.category ?? 'crafting'],
+      in: recipeIn,
+      out: recipeOut,
+      unlockedBy: recipesUnlocked[proto.name],
+    };
+    modData.recipes.push(recipe);
+
+    if (proto.icon == null && proto.icons == null) {
+      const product = getRecipeProduct(proto);
+      addIcon(product);
+    } else {
+      addIcon(proto);
+    }
+  }
+
+  const technologies = Object.keys(dataRaw.technology).map(
+    (t) => dataRaw.technology[t]
+  );
+  technologies.sort((a, b) => {
+    return (a.order ?? '').localeCompare(b.order ?? '');
+  });
+  for (const techRaw of technologies) {
+    const techData = techRaw[mode] ?? techRaw;
+    const technology: Technology = {};
+    if (techData.prerequisites?.length) {
+      technology.prerequisites = techData.prerequisites;
+    }
+
+    const recipe: Recipe = {
+      id: techRaw.name,
+      name: techLocale.names[techRaw.name],
+      category: 'technology',
+      row: 0,
+      time: techData.unit.time,
+      producers: machines.lab,
+      in: techData.unit.ingredients.reduce(
+        (e: Entities<number>, [id, count]) => {
+          e[id] = count;
+          return e;
+        },
+        {}
+      ),
+      out: { [techRaw.name]: 1 },
+      technology,
+    };
+
+    modData.recipes.push(recipe);
+    addIcon(techRaw);
+  }
 
   for (const id of groupsUsed) {
     const category: Category = {

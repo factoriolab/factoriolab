@@ -11,7 +11,7 @@ export class StepHrefPipe implements PipeTransform {
     let step = value;
     if (step.recipeId) {
       const recipe = data.recipeR[step.recipeId];
-      if (recipe.adjustProd && recipe.productivity && value.items) {
+      if (recipe.technology && recipe.productivity && value.items) {
         // Adjust items to account for productivity bonus
         step = {
           ...value,

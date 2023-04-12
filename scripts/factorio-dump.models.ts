@@ -374,7 +374,7 @@ export interface TechnologyData {
   visible_when_disabled?: boolean;
 }
 
-export interface Technology extends TechnologyData, IconSpecification {
+export interface Technology extends Base, TechnologyData, IconSpecification {
   type: 'technology';
   name: string;
   expensive?: TechnologyData;

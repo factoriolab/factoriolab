@@ -29,6 +29,7 @@ export class BeaconRational {
     this.range = obj.range;
     this.type = obj.type;
     this.usage = Rational.fromNumber(obj.usage);
+
     if (obj.disallowedEffects) {
       this.disallowedEffects = obj.disallowedEffects;
     }

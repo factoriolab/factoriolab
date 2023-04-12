@@ -51,36 +51,47 @@ export class ItemRational {
     this.name = obj.name;
     this.category = obj.category;
     this.row = Math.round(obj.row);
+
     if (obj.stack) {
       this.stack = Rational.fromNumber(obj.stack);
     }
+
     if (obj.beacon) {
       this.beacon = new BeaconRational(obj.beacon);
     }
+
     if (obj.belt) {
       this.belt = new BeltRational(obj.belt);
     }
+
     if (obj.pipe) {
       this.pipe = new BeltRational(obj.pipe);
     }
+
     if (obj.machine) {
       this.machine = new MachineRational(obj.machine);
     }
+
     if (obj.module) {
       this.module = new ModuleRational(obj.module);
     }
+
     if (obj.fuel) {
       this.fuel = new FuelRational(obj.fuel);
     }
+
     if (obj.cargoWagon) {
       this.cargoWagon = new CargoWagonRational(obj.cargoWagon);
     }
+
     if (obj.fluidWagon) {
       this.fluidWagon = new FluidWagonRational(obj.fluidWagon);
     }
+
     if (obj.icon) {
       this.icon = obj.icon;
     }
+
     if (obj.iconText) {
       this.iconText = obj.iconText;
     }

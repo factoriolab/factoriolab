@@ -14,9 +14,12 @@ export interface Recipe {
   /** Denotes amount of output that is not affected by productivity */
   catalyst?: Entities<number | string>;
   cost?: number | string;
+  mining?: boolean;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
-  /** If recipe is a technology, indicates unlocks / prerequisites */
+  /** If a recipe is locked initially, indicates what technology is required */
+  unlockedBy?: string;
+  /** If recipe is a technology, indicates prerequisites */
   technology?: Technology;
   /** Used to link the recipe to an alternate icon id */
   icon?: string;
@@ -32,14 +35,16 @@ export class RecipeRational {
   time: Rational;
   producers: string[];
   productivity = Rational.one;
-  adjustProd = false;
   in: Entities<Rational>;
   out: Entities<Rational>;
   /** Denotes amount of output that is not affected by productivity */
   catalyst?: Entities<Rational>;
   cost?: Rational;
+  mining?: boolean;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
+  /** If a recipe is locked initially, indicates what technology unlocks it */
+  unlockedBy?: string;
   /** If recipe is a technology, indicates unlocks / prerequisites */
   technology?: Technology;
   usage?: Rational;
@@ -78,6 +83,10 @@ export class RecipeRational {
 
     if (obj.cost) {
       this.cost = Rational.from(obj.cost);
+    }
+
+    if (obj.mining) {
+      this.mining = obj.mining;
     }
 
     if (obj.part) {

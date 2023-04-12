@@ -1023,9 +1023,7 @@
               <ng-container
                 *ngIf="
                   vm.data.game === Game.Factorio &&
-                  step.recipeSettings.machineId &&
-                  vm.data.itemEntities[step.recipeSettings.machineId].machine
-                    ?.mining
+                  vm.data.recipeEntities[step.recipeId].mining
                 "
               >
                 <tr class="detail">

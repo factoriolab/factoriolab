@@ -17,8 +17,6 @@ export interface Machine {
   drain?: number | string;
   /** Pollution in #/m */
   pollution?: number | string;
-  mining?: boolean;
-  research?: boolean;
   silo?: Silo;
   consumption?: Entities<number | string>;
 }
@@ -34,8 +32,6 @@ export class MachineRational {
   usage?: Rational;
   drain?: Rational;
   pollution?: Rational;
-  mining?: boolean;
-  research?: boolean;
   silo?: SiloRational;
   consumption?: Entities<Rational>;
 
@@ -45,33 +41,35 @@ export class MachineRational {
     if (obj.modules != null) {
       this.modules = Math.round(obj.modules);
     }
+
     if (obj.disallowedEffects) {
       this.disallowedEffects = obj.disallowedEffects;
     }
+
     if (obj.type != null) {
       this.type = obj.type;
     }
+
     if (obj.usage != null) {
       this.usage = Rational.from(obj.usage);
     }
+
     if (obj.category) {
       this.category = obj.category;
     }
+
     if (obj.drain != null) {
       this.drain = Rational.from(obj.drain);
     }
+
     if (obj.pollution != null) {
       this.pollution = Rational.from(obj.pollution);
     }
-    if (obj.mining) {
-      this.mining = obj.mining;
-    }
-    if (obj.research) {
-      this.research = obj.research;
-    }
+
     if (obj.silo) {
       this.silo = new SiloRational(obj.silo);
     }
+
     if (obj.consumption) {
       const consumption = obj.consumption;
       this.consumption = Object.keys(consumption).reduce(

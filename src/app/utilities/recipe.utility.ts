@@ -51,12 +51,15 @@ export class RecipeUtility {
       .filter(fnPropsNotNullish('module'));
 
     if (recipeId != null) {
-      // Filter for modules allowed on this recipe
-      allowed = allowed.filter(
-        (m) =>
-          m.module.limitation == null ||
-          data.limitations[m.module.limitation][recipeId]
-      );
+      const recipe = data.recipeEntities[recipeId];
+      if (!recipe.mining && !recipe.technology) {
+        // Filter for modules allowed on this recipe
+        allowed = allowed.filter(
+          (m) =>
+            m.module.limitation == null ||
+            data.limitations[m.module.limitation][recipeId]
+        );
+      }
     }
 
     // Filter for modules allowed on this entity
@@ -124,7 +127,7 @@ export class RecipeUtility {
         recipe.time = recipe.time.div(minSpeed);
       }
 
-      if (machine.research) {
+      if (recipe.technology) {
         // Adjust for research factor
         recipe.time = recipe.time.div(researchSpeed);
       }
@@ -135,7 +138,7 @@ export class RecipeUtility {
       let consumption = Rational.one;
       let pollution = Rational.one;
 
-      if (machine.mining) {
+      if (recipe.mining) {
         // Adjust for mining bonus
         prod = prod.add(miningBonus);
       }
@@ -251,10 +254,6 @@ export class RecipeUtility {
       }
 
       recipe.productivity = prod;
-      // Log to adjust prod for research objectives
-      if (machine.research) {
-        recipe.adjustProd = true;
-      }
 
       // Power
       recipe.drain = machine.drain;
