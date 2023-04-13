@@ -1119,7 +1119,7 @@ async function processMod(): Promise<void> {
 
   // Sprite sheet
   spritesmith.run(
-    { src: Object.keys(iconFiles), padding: 2, exportOpts: { format: 'png' } },
+    { src: Object.keys(iconFiles), padding: 2 },
     async (_, result) => {
       const modIconsPath = `${modPath}/icons.webp`;
       await sharp(result.image).webp().toFile(modIconsPath);

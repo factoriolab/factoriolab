@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { Rational, Recipe } from '~/models';
+import { IdType, Rational, Recipe } from '~/models';
 
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
-  icon(id: string, num?: string | number): string {
-    return `<i class="me-2 lab-icon-sm padded ${id}"><span>${
+  icon(id: string, num?: string | number, type: IdType = 'item'): string {
+    return `<i class="me-2 lab-icon-sm ${type} padded ${id}"><span>${
       num ?? ''
     }</span></i>`;
   }
