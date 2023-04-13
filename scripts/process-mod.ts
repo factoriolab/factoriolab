@@ -1,4 +1,6 @@
 import fs from 'fs';
+import sharp from 'sharp';
+import spritesmith from 'spritesmith';
 
 import {
   Category,
@@ -6,6 +8,7 @@ import {
   Item,
   Machine,
   ModData,
+  ModHash,
   ModuleEffect,
   Recipe,
   Silo,
@@ -19,28 +22,23 @@ const mode: 'normal' | 'expensive' = 'normal';
 
 if (!mod) {
   throw new Error(
-    'Please specify a mod to process by the folder name, e.g. "1.1" for \\src\\data\\1.1\\'
+    'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1'
   );
 }
 
-/** Read data dump */
-
 // Set up paths
 const appDataPath = process.env['AppData'];
-const factorioPath = `${appDataPath}\\Factorio`;
-const modsPath = `${factorioPath}\\mods`;
-const modListPath = `${modsPath}\\mod-list.json`;
-const playerDataPath = `${factorioPath}\\player-data.json`;
-const scriptOutputPath = `${factorioPath}\\script-output`;
-const dataRawPath = `${scriptOutputPath}\\data-raw-dump.json`;
-
-//console.log(appDataPath, scriptOutputPath);
-
-/** Read in existing data file */
-// const iconsPath = `./src/data/${mod}/icons.png`;
-// const dataPath = `./src/data/${mod}/data.json`;
-// const rawData = fs.readFileSync(dataPath).toString();
-// const data: ModData = JSON.parse(rawData);
+const factorioPath = `${appDataPath}/Factorio`;
+const modsPath = `${factorioPath}/mods`;
+const modListPath = `${modsPath}/mod-list.json`;
+const playerDataPath = `${factorioPath}/player-data.json`;
+const scriptOutputPath = `${factorioPath}/script-output`;
+const dataRawPath = `${scriptOutputPath}/data-raw-dump.json`;
+const tempPath = './scripts/temp';
+const tempIconsPath = `${tempPath}/icons`;
+const modPath = `./src/data/${mod}`;
+const modDataPath = `${modPath}/data.json`;
+const modHashPath = `${modPath}/hash.json`;
 
 function addEntityValue(e: Entities<number>, id: string, val: number): void {
   if (e[id] == null) {
@@ -57,7 +55,7 @@ function getJsonData<T>(file: string): T {
 }
 
 function getLocale(file: string): D.Locale {
-  const path = `${scriptOutputPath}\\${file}`;
+  const path = `${scriptOutputPath}/${file}`;
   return getJsonData<D.Locale>(path);
 }
 
@@ -80,7 +78,7 @@ function getMultiplier(letter: string): number {
 function getEnergyInMJ(usage: string): number {
   const match = /(\d*\.?\d*)(\w*)/.exec(usage);
   if (match == null) {
-    throw `Unrecognized power format: '${usage}'`;
+    throw `Unrecognized energy format: '${usage}'`;
   }
 
   const [_, numStr, unit] = [...match];
@@ -124,7 +122,7 @@ function getDisallowedEffects(
   return result.length === 0 ? undefined : result;
 }
 
-function processMod(): void {
+async function processMod(): Promise<void> {
   // Read mod data
   const modList = getJsonData<D.ModList>(modListPath);
   const modFiles = fs
@@ -133,6 +131,14 @@ function processMod(): void {
     .filter((f) => f.endsWith('.zip'))
     // Trim .zip from end of string
     .map((f) => f.substring(0, f.length - 4));
+
+  // Create directories
+  if (fs.existsSync(tempPath)) {
+    fs.rmSync(tempPath, { recursive: true });
+  }
+
+  fs.mkdirSync(tempPath);
+  fs.mkdirSync(tempIconsPath);
 
   // Read player data
   const playerData = getJsonData<D.PlayerData>(playerDataPath);
@@ -261,10 +267,23 @@ function processMod(): void {
     return lastRecipeRow;
   }
 
+  // Record of icon hash : icon id
   const iconHash: Record<string, string> = {};
   const iconSet = new Set<string>();
+  // Record of file path : icon id
+  const iconFiles: Record<string, string> = {};
 
-  function getIcon(spec: D.IconSpecification & D.Base): string | undefined {
+  async function resizeIcon(path: string, iconId: string): Promise<void> {
+    const outPath = `${tempPath}/icons/${iconId}.png`;
+    await sharp(path).resize(64, 64).png().toFile(outPath);
+    iconFiles[outPath] = iconId;
+  }
+
+  async function getIcon(
+    spec: D.IconSpecification & D.Base
+  ): Promise<string | undefined> {
+    const id = D.isTechnology(spec) ? `${spec.name}-technology` : spec.name;
+
     // If recipe has no declared icon, get product icon
     if (D.isRecipe(spec) && spec.icon == null && spec.icons == null) {
       spec = getRecipeProduct(spec);
@@ -274,16 +293,7 @@ function processMod(): void {
       throw `No icons for proto ${spec.name}`;
     }
 
-    let iconId = spec.name;
-    if (iconSet.has(iconId)) {
-      // Find alternate id
-      let i = 0;
-      let altId: string;
-      do {
-        altId = `${iconId}-${i++}`;
-      } while (iconSet.has(altId));
-      iconId = altId;
-    }
+    let iconId = id;
 
     const hash = `${JSON.stringify(spec.icon)}.${JSON.stringify(
       spec.icon_size
@@ -291,17 +301,41 @@ function processMod(): void {
     if (iconHash[hash]) {
       iconId = iconHash[hash];
     } else {
+      if (iconSet.has(iconId)) {
+        // Find alternate id
+        let i = 0;
+        let altId: string;
+        do {
+          altId = `${iconId}-${i++}`;
+        } while (iconSet.has(altId));
+        iconId = altId;
+      }
+
       iconHash[hash] = iconId;
+
+      let folder = 'item';
+      if (D.isRecipe(spec)) {
+        folder = 'recipe';
+      } else if (D.isFluid(spec)) {
+        folder = 'fluid';
+      } else if (D.isTechnology(spec)) {
+        folder = 'technology';
+      } else if (D.isItemGroup(spec)) {
+        folder = 'item-group';
+      } else {
+        folder = 'item';
+      }
+
+      const path = `${scriptOutputPath}/${folder}/${spec.name}.png`;
+      await resizeIcon(path, iconId);
     }
 
-    return iconId === spec.name ? undefined : iconId;
+    return iconId === id ? undefined : iconId;
   }
 
-  function getIconText(proto: D.Technology): string | undefined {
-    if (!proto.upgrade) return undefined;
-
-    const match = /(\d+)$/.exec(proto.name);
-    return match?.[0] ? match[0] : undefined;
+  function getIconText(proto: D.Base): string | undefined {
+    const match = /-(\d+)$/.exec(proto.name);
+    return match?.[1] ? match[1] : undefined;
   }
 
   // Records of producer categories to producers
@@ -564,6 +598,86 @@ function processMod(): void {
     limitations: {},
   };
 
+  const modUpdateReport: ModHash = {
+    items: [],
+    beacons: [],
+    belts: [],
+    fuels: [],
+    wagons: [],
+    machines: [],
+    modules: [],
+    technologies: [],
+    recipes: [],
+  };
+  function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
+    if (hash[key] == null) hash[key] = [];
+
+    if (hash[key].indexOf(id) === -1) {
+      hash[key].push(id);
+      modUpdateReport[key].push(id);
+    }
+  }
+
+  function writeData(): void {
+    if (fs.existsSync(modDataPath)) {
+      const oldData = getJsonData<ModData>(modDataPath);
+      const oldHash = getJsonData<ModHash>(modHashPath);
+
+      modData.defaults = oldData.defaults;
+
+      if (modData.defaults?.excludedRecipes) {
+        // Filter excluded recipes for only recipes that exist
+        modData.defaults.excludedRecipes =
+          modData.defaults.excludedRecipes.filter((e) =>
+            modData.recipes.some((r) => r.id === e)
+          );
+      }
+
+      modData.items.forEach((i) => {
+        addIfMissing(oldHash, 'items', i.id);
+
+        if (i.beacon) addIfMissing(oldHash, 'beacons', i.id);
+        if (i.belt) addIfMissing(oldHash, 'belts', i.id);
+        if (i.fuel) addIfMissing(oldHash, 'fuels', i.id);
+        if (i.cargoWagon || i.fluidWagon) addIfMissing(oldHash, 'wagons', i.id);
+        if (i.machine) addIfMissing(oldHash, 'machines', i.id);
+        if (i.module) addIfMissing(oldHash, 'modules', i.id);
+      });
+
+      modData.recipes.forEach((r) => {
+        addIfMissing(oldHash, 'recipes', r.id);
+
+        if (r.technology) addIfMissing(oldHash, 'technologies', r.id);
+      });
+
+      fs.writeFileSync(modHashPath, JSON.stringify(oldHash));
+      fs.writeFileSync(
+        `${tempPath}/hash-update-report.json`,
+        JSON.stringify(modUpdateReport)
+      );
+    } else {
+      const modHash: ModHash = {
+        items: modData.items.map((i) => i.id),
+        beacons: modData.items.filter((i) => i.beacon).map((i) => i.id),
+        belts: modData.items.filter((i) => i.belt).map((i) => i.id),
+        fuels: modData.items.filter((i) => i.fuel).map((i) => i.id),
+        wagons: modData.items
+          .filter((i) => i.cargoWagon || i.fluidWagon)
+          .map((i) => i.id),
+        machines: modData.items.filter((i) => i.machine).map((i) => i.id),
+        modules: modData.items.filter((i) => i.module).map((i) => i.id),
+        recipes: modData.recipes.map((r) => r.id),
+        technologies: modData.recipes
+          .filter((r) => r.technology)
+          .map((r) => r.id),
+      };
+
+      fs.writeFileSync(modHashPath, JSON.stringify(modHash));
+    }
+
+    fs.writeFileSync(modDataPath, JSON.stringify(modData));
+  }
+
   modList.mods
     .filter((m) => m.enabled)
     .forEach((m) => {
@@ -765,7 +879,7 @@ function processMod(): void {
         name: fluidLocale.names[proto.name],
         row: getItemRow(proto),
         category: group.name,
-        icon: getIcon(proto),
+        icon: await getIcon(proto),
       };
 
       modData.items.push(item);
@@ -776,7 +890,7 @@ function processMod(): void {
         stack: proto.stack_size,
         row: getItemRow(proto),
         category: group.name,
-        icon: getIcon(proto),
+        icon: await getIcon(proto),
       };
 
       if (proto.place_result) {
@@ -937,7 +1051,7 @@ function processMod(): void {
       in: recipeIn,
       out: recipeOut,
       unlockedBy: recipesUnlocked[proto.name],
-      icon: getIcon(proto),
+      icon: await getIcon(proto),
     };
     modData.recipes.push(recipe);
   }
@@ -951,12 +1065,13 @@ function processMod(): void {
   for (const techRaw of technologies) {
     const techData = techRaw[mode] ?? techRaw;
     const technology: Technology = {};
+    const id = `${techRaw.name}-technology`;
     if (techData.prerequisites?.length) {
       technology.prerequisites = techData.prerequisites;
     }
 
     const recipe: Recipe = {
-      id: techRaw.name,
+      id,
       name: techLocale.names[techRaw.name],
       category: 'technology',
       row: 0,
@@ -969,46 +1084,57 @@ function processMod(): void {
         },
         {}
       ),
-      out: { [techRaw.name]: 1 },
+      out: { [id]: 1 },
       technology,
-      icon: getIcon(techRaw),
+      icon: await getIcon(techRaw),
       iconText: getIconText(techRaw),
     };
-
     modData.recipes.push(recipe);
+
+    const item: Item = {
+      id,
+      name: recipe.name,
+      category: recipe.category,
+      row: 0,
+      icon: recipe.icon,
+      iconText: recipe.iconText,
+    };
+    modData.items.push(item);
   }
 
   for (const id of groupsUsed) {
+    const itemGroup = dataRaw['item-group'][id];
     const category: Category = {
       id,
       name: groupLocale.names[id],
+      icon: await getIcon(itemGroup),
     };
     modData.categories.push(category);
   }
-  modData.categories.push({ id: 'technology', name: 'Technology' });
+  modData.categories.push({
+    id: 'technology',
+    name: 'Technology',
+    icon: 'lab',
+  });
 
   // Sprite sheet
-  const iconIds = Object.keys(iconHash).map((i) => iconHash[i]);
-  const width = Math.max(8, Math.ceil(Math.pow(iconIds.length, 0.5)));
+  spritesmith.run(
+    { src: Object.keys(iconFiles), padding: 2, exportOpts: { format: 'png' } },
+    async (_, result) => {
+      const modIconsPath = `${modPath}/icons.webp`;
+      await sharp(result.image).webp().toFile(modIconsPath);
 
-  const wrap = width * -64;
-  let x = 0;
-  let y = 0;
-  for (const id of iconIds) {
-    modData.icons.push({
-      id,
-      position: `${x}px ${y}px`,
-    });
+      modData.icons = Object.keys(result.coordinates).map((file) => {
+        const coords = result.coordinates[file];
+        return {
+          id: iconFiles[file],
+          position: `${-coords.x}px ${-coords.y}px`,
+        };
+      });
 
-    x = x - 64;
-    if (x === wrap) {
-      y = y - 64;
-      x = 0;
+      writeData();
     }
-  }
-
-  const dataTempPath = `./temp/data.json`;
-  fs.writeFileSync(dataTempPath, JSON.stringify(modData));
+  );
 }
 
 processMod();

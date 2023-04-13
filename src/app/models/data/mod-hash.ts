@@ -7,4 +7,5 @@ export interface ModHash {
   machines: string[];
   modules: string[];
   recipes: string[];
+  technologies: string[];
 }

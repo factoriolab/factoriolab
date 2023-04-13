@@ -237,6 +237,10 @@ export interface ItemGroup extends Base, IconSpecification {
   order_in_recipe?: string;
 }
 
+export function isItemGroup(proto: Base): proto is ItemGroup {
+  return proto.type === 'item-group';
+}
+
 export interface ItemSubGroup extends Base {
   group: string;
 }
@@ -379,6 +383,10 @@ export interface Technology extends Base, TechnologyData, IconSpecification {
   name: string;
   expensive?: TechnologyData;
   normal?: TechnologyData;
+}
+
+export function isTechnology(proto: Base): proto is Technology {
+  return proto.type === 'technology';
 }
 
 export interface ElectricEnergySource {
