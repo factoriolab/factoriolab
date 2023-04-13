@@ -84,7 +84,6 @@ export class InputNumberComponent implements OnInit, OnChanges {
     if ((changes['value'] || changes['maximum']) && this.max != null) {
       try {
         this.isMaximum = Rational.fromString(this.value).gte(this.max);
-        console.log(this.isMaximum);
       } catch {
         this.isMaximum = false;
       }
@@ -94,12 +93,10 @@ export class InputNumberComponent implements OnInit, OnChanges {
   changeValue(value: string, type: EventType): void {
     try {
       const rational = Rational.fromString(value);
-      console.log(rational.toNumber(), this.min, this.max);
       if (
         (this.min == null || rational.gte(this.min)) &&
         (this.max == null || rational.lte(this.max))
       ) {
-        console.log('setvalue', value);
         this.setValue$.next({ value, type });
         return;
       }

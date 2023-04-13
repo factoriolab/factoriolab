@@ -445,7 +445,6 @@ export class SimplexUtility {
       // Add limit, if any
       if (state.recipeLimits[recipeId]) {
         config.ub = state.recipeLimits[recipeId].toNumber();
-        // console.log(recipeId, config.ub);
       }
 
       recipeVarEntities[recipeId] = m.addVar(config);
@@ -745,7 +744,6 @@ export class SimplexUtility {
         .mul(solution.recipes[recipe.id])
         .div(recipe.time);
       output = output.add(amount);
-      // console.log(itemId, recipe.id, output.toNumber());
     }
 
     for (const itemObjective of state.itemObjectives.filter(
@@ -769,8 +767,6 @@ export class SimplexUtility {
     if (solution.excluded[itemId]) {
       output = output.add(solution.excluded[itemId]);
     }
-
-    // console.log(itemId, 'final', output.toNumber());
 
     if (output.nonzero()) {
       const recipes = state.data.recipeIds

@@ -464,13 +464,6 @@ export class RouterService {
       ]);
     }
 
-    const fn = (a?: string, b?: string): void => {
-      console.log(a, b);
-    };
-
-    fn(undefined);
-    fn(undefined, 'a');
-
     params[Section.Version] = ZipVersion.Version1;
     return this.migrateV1(params, warnings);
   }

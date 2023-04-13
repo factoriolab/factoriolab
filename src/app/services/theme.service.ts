@@ -77,7 +77,6 @@ export class ThemeService {
         .map((i) => data.itemEntities[i])
         .filter(fnPropsNotNullish('iconText'))
         .forEach((item) => {
-          console.log(item.id, item.iconText);
           css += `.${item.id}.item::after { content: "${item.iconText}"; } `;
         });
       data.recipeIds
