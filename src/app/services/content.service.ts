@@ -25,6 +25,7 @@ export class ContentService {
 
   // Dialogs
   showColumns$ = new Subject<void>();
+  showCosts$ = new Subject<void>();
   showConfirm$ = new Subject<Confirmation>();
 
   confirm(confirmation: Confirmation): void {

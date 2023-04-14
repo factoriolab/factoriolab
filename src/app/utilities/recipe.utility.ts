@@ -5,7 +5,7 @@ import {
   Beacon,
   BeaconRational,
   BeltRational,
-  CostsRationalSettings,
+  CostRationalSettings,
   Dataset,
   EnergyType,
   Entities,
@@ -452,7 +452,7 @@ export class RecipeUtility {
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    cost: CostsRationalSettings,
+    cost: CostRationalSettings,
     data: Dataset
   ): Dataset {
     const recipeR = this.adjustRecipes(
@@ -502,7 +502,7 @@ export class RecipeUtility {
   static adjustCost(
     recipeR: Entities<RecipeRational>,
     recipesState: Entities<RecipeSettingsRational>,
-    cost: CostsRationalSettings
+    cost: CostRationalSettings
   ): void {
     for (const id of Object.keys(recipeR)) {
       const recipe = recipeR[id];

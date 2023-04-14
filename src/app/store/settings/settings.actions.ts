@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 
 import {
+  CostSettings,
   DefaultPayload,
   DisplayRate,
   InserterCapacity,
@@ -28,12 +29,7 @@ export const enum SettingsActionType {
   SET_RESEARCH_SPEED = '[Settings] Set Research Speed',
   SET_INSERTER_CAPACITY = '[Settings] Set Inserter Capacity',
   SET_DISPLAY_RATE = '[Settings] Set Display Rate',
-  SET_COST_FACTOR = '[Settings] Set Cost Factor',
-  SET_COST_MACHINE = '[Settings] Set Machine Cost',
-  SET_COST_UNPRODUCEABLE = '[Settings] Set Unproduceable Cost',
-  SET_COST_EXCLUDED = '[Settings] Set Excluded Cost',
-  SET_COST_SURPLUS = '[Settings] Set Surplus Cost',
-  SET_COST_MAXIMIZE = '[Settings] Set Maximize Cost',
+  SET_COSTS = '[Settings] Set Costs',
   RESET_COST = '[Settings] Reset Cost Modifiers',
 }
 
@@ -122,34 +118,9 @@ export class SetDisplayRateAction implements Action {
   constructor(public payload: PreviousPayload<DisplayRate>) {}
 }
 
-export class SetCostFactorAction implements Action {
-  readonly type = SettingsActionType.SET_COST_FACTOR;
-  constructor(public payload: string) {}
-}
-
-export class SetCostMachineAction implements Action {
-  readonly type = SettingsActionType.SET_COST_MACHINE;
-  constructor(public payload: string) {}
-}
-
-export class SetCostUnproduceableAction implements Action {
-  readonly type = SettingsActionType.SET_COST_UNPRODUCEABLE;
-  constructor(public payload: string) {}
-}
-
-export class SetCostExcludedAction implements Action {
-  readonly type = SettingsActionType.SET_COST_EXCLUDED;
-  constructor(public payload: string) {}
-}
-
-export class SetCostSurplusAction implements Action {
-  readonly type = SettingsActionType.SET_COST_SURPLUS;
-  constructor(public payload: string) {}
-}
-
-export class SetCostMaximizeAction implements Action {
-  readonly type = SettingsActionType.SET_COST_MAXIMIZE;
-  constructor(public payload: string) {}
+export class SetCostsAction implements Action {
+  readonly type = SettingsActionType.SET_COSTS;
+  constructor(public payload: CostSettings) {}
 }
 
 export class ResetCostAction implements Action {
@@ -174,10 +145,5 @@ export type SettingsAction =
   | SetResearchSpeedAction
   | SetInserterCapacityAction
   | SetDisplayRateAction
-  | SetCostFactorAction
-  | SetCostMachineAction
-  | SetCostUnproduceableAction
-  | SetCostExcludedAction
-  | SetCostSurplusAction
-  | SetCostMaximizeAction
+  | SetCostsAction
   | ResetCostAction;

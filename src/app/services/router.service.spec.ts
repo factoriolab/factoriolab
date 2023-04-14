@@ -121,7 +121,7 @@ const mockSettingsState: Settings.SettingsState = {
   researchSpeed: ResearchSpeed.Speed0,
   inserterCapacity: InserterCapacity.Capacity0,
   displayRate: DisplayRate.PerHour,
-  cost: {
+  costs: {
     factor: '2',
     machine: '10',
     unproduceable: '0',

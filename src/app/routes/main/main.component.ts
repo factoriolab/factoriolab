@@ -68,9 +68,9 @@ export class MainComponent implements AfterViewInit {
       queryParamsHandling: 'preserve',
     },
     {
-      label: 'app.matrix',
-      icon: 'fa-solid fa-table-cells',
-      routerLink: 'matrix',
+      label: 'app.data',
+      icon: 'fa-solid fa-database',
+      routerLink: 'data',
       queryParamsHandling: 'preserve',
     },
   ];

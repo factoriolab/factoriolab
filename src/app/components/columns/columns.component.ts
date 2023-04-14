@@ -20,12 +20,12 @@ import { LabState, Preferences, Settings } from '~/store';
 
 @UntilDestroy()
 @Component({
-  selector: 'lab-columns-dialog',
-  templateUrl: './columns-dialog.component.html',
-  styleUrls: ['./columns-dialog.component.scss'],
+  selector: 'lab-columns',
+  templateUrl: './columns.component.html',
+  styleUrls: ['./columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColumnsDialogComponent implements OnInit {
+export class ColumnsComponent implements OnInit {
   usesFractions$ = new BehaviorSubject(false);
   vm$ = combineLatest([
     this.store
@@ -44,6 +44,16 @@ export class ColumnsDialogComponent implements OnInit {
   visible = false;
   editValue: Entities<ColumnSettings> = {};
   columnsInf = columnsInfo;
+
+  get modified(): boolean {
+    return (Object.keys(this.editValue) as ColumnKey[]).some(
+      (k) =>
+        this.editValue[k].precision !==
+          Preferences.initialPreferencesState.columns[k].precision ||
+        this.editValue[k].show !==
+          Preferences.initialPreferencesState.columns[k].show
+    );
+  }
 
   constructor(
     private ref: ChangeDetectorRef,
@@ -79,6 +89,10 @@ export class ColumnsDialogComponent implements OnInit {
         (c) => columnsInfo[c].hasPrecision && this.editValue[c] == null
       )
     );
+  }
+
+  reset(): void {
+    this.editValue = { ...Preferences.initialPreferencesState.columns };
   }
 
   save(): void {

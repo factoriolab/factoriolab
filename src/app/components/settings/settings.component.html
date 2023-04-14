@@ -1156,6 +1156,23 @@
           ></p-checkbox>
         </div>
       </div>
+      <div class="mb-2">
+        <p-divider>
+          <span class="p-tag">
+            <i class="fa-solid fa-code"></i>
+            {{ 'settings.advanced' | translate }}
+          </span>
+        </p-divider>
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="p-button-rounded p-button-outlined mb-2"
+          icon="fa-solid fa-dollar-sign"
+          [label]="'settings.openCosts' | translate"
+          (click)="contentSvc.showCosts$.next()"
+        ></button>
+      </div>
     </div>
   </p-scrollPanel>
 </div>

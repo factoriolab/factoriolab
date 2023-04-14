@@ -9,7 +9,7 @@ import {
   CargoWagonRational,
   columnOptions,
   CostKey,
-  CostsRationalSettings,
+  CostRationalSettings,
   Dataset,
   Defaults,
   displayRateInfo,
@@ -88,7 +88,7 @@ export const getDisplayRate = createSelector(
   settingsState,
   (state) => state.displayRate
 );
-export const getCost = createSelector(settingsState, (state) => state.cost);
+export const getCosts = createSelector(settingsState, (state) => state.costs);
 
 /* Complex selectors */
 export const getMod = createSelector(
@@ -231,15 +231,15 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
 );
 
 export const getRationalCost = createSelector(
-  getCost,
-  (cost): CostsRationalSettings =>
+  getCosts,
+  (cost): CostRationalSettings =>
     (Object.keys(cost) as CostKey[]).reduce(
-      (a: Partial<CostsRationalSettings>, b) => {
+      (a: Partial<CostRationalSettings>, b) => {
         a[b] = Rational.fromString(cost[b]);
         return a;
       },
       {}
-    ) as CostsRationalSettings
+    ) as CostRationalSettings
 );
 
 export const getI18n = createSelector(
@@ -623,7 +623,7 @@ export const getAdjustmentData = createSelector(
 );
 
 export const getSettingsModified = createSelector(settingsState, (state) => ({
-  cost: state.cost !== initialSettingsState.cost,
+  costs: state.costs !== initialSettingsState.costs,
 }));
 
 export const getInserterData = createSelector(

@@ -11,7 +11,7 @@ import { StatusSimplex } from 'glpk-ts/dist/status';
 
 import { environment } from 'src/environments';
 import {
-  CostsRationalSettings,
+  CostRationalSettings,
   Dataset,
   Entities,
   ItemObjectiveRational,
@@ -69,7 +69,7 @@ export interface MatrixState {
   /** All items that are included */
   itemIds: string[];
   data: Dataset;
-  cost: CostsRationalSettings;
+  cost: CostRationalSettings;
 }
 
 export interface MatrixSolution {
@@ -137,7 +137,7 @@ export class SimplexUtility {
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     researchedTechnologyIds: string[] | null,
-    cost: CostsRationalSettings,
+    cost: CostRationalSettings,
     data: Dataset
   ): MatrixResult {
     if (itemObjectives.length === 0 && recipeObjectives.length === 0) {
@@ -184,7 +184,7 @@ export class SimplexUtility {
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     researchedTechnologyIds: string[],
-    cost: CostsRationalSettings,
+    cost: CostRationalSettings,
     data: Dataset
   ): MatrixState {
     // Set up state object

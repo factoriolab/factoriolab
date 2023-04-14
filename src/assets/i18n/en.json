@@ -2,14 +2,15 @@
   "cancel": "Cancel",
   "ok": "OK",
   "yes": "Yes",
+  "reset": "Reset",
   "app": {
     "factory": "Factory",
     "list": "List",
     "flow": "Flow",
     "matrix": "Matrix",
+    "data": "Data",
     "error": "Error",
     "errorDetail": "The application has encountered an error:",
-    "reset": "Reset",
     "resetTooltip": "Click to reset",
     "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, cost: {{ cost }}",
     "simplexUnsolved": "Simplex {{ resultType }}",
@@ -133,9 +134,23 @@
     "example": "Example",
     "notApplicable": "N/A"
   },
+  "costs": {
+    "header": "Cost settings",
+    "recipeTooltip": "Multiplies cost of recipes with a defined cost, usually mining",
+    "recipe": "Recipe",
+    "machineTooltip": "Multiplies cost of physical machines running recipes",
+    "machine": "Machine",
+    "unproduceableTooltip": "Cost of items that cannot be produced by any included recipes",
+    "unproduceable": "Unproduceable",
+    "excludedTooltip": "Cost of items that have been explicitly excluded",
+    "excluded": "Excluded",
+    "surplusTooltip": "Cost to produce surplus items",
+    "surplus": "Surplus",
+    "maximizeTooltip": "Cost of maximization objectives (must be negative)",
+    "maximize": "Maximize"
+  },
   "picker": {
-    "includeAll": "Include all",
-    "reset": "Reset to default"
+    "includeAll": "Include all"
   },
   "techPicker": {
     "header": "Set researched technologies",
@@ -255,6 +270,7 @@
     "theme": "Theme",
     "themeTooltip": "Select theme",
     "advanced": "Advanced",
+    "openCosts": "Open cost settings",
     "simplexSolver": "Simplex solver",
     "simplexSolverTooltip": "Select the simplex solver algorithm; JS BigInt Rational is slower but maintains full precision",
     "bypassLanding": "Always skip landing page",
@@ -315,26 +331,5 @@
     "includedRecipes": "Included recipes",
     "includedRecipesInfo": "Click recipes to include or exclude them. Excluded recipes will not be used in the solution.",
     "total": "Total"
-  },
-  "matrix": {
-    "statistics": "Statistics",
-    "simplexResult": "Simplex result",
-    "runtime": "Runtime",
-    "runtimeValue": "{{ value }} ms",
-    "pivots": "Pivots",
-    "costModifiers": "Cost modifiers",
-    "costUndoTooltip": "Undo all cost modifications",
-    "recipeCostTooltip": "Multiplies cost of recipes with a defined cost, usually mining",
-    "recipe": "Recipe",
-    "machineCostTooltip": "Multiplies cost of physical machines running recipes",
-    "machine": "Machine",
-    "unproduceableCostTooltip": "Cost of items that cannot be produced by any included recipes",
-    "unproduceable": "Unproduceable",
-    "excludedCostTooltip": "Cost of items that have been explicitly excluded",
-    "excluded": "Excluded",
-    "surplusCostTooltip": "Cost to produce surplus items",
-    "surplus": "Surplus",
-    "maximizeCostTooltip": "Cost of maximization objectives (must be negative)",
-    "maximize": "Maximize"
   }
 }

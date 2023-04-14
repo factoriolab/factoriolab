@@ -8,6 +8,6 @@ export type CostKey =
   | 'surplus'
   | 'maximize';
 
-export type CostsSettings = Record<CostKey, string>;
+export type CostSettings = Record<CostKey, string>;
 
-export type CostsRationalSettings = Record<CostKey, Rational>;
+export type CostRationalSettings = Record<CostKey, Rational>;

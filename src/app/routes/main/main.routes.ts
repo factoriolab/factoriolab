@@ -18,11 +18,9 @@ export const routes: Routes = [
           import('./routes/flow/flow.component').then((c) => c.FlowComponent),
       },
       {
-        path: 'matrix',
-        loadComponent: () =>
-          import('./routes/matrix/matrix.component').then(
-            (c) => c.MatrixComponent
-          ),
+        path: 'data',
+        loadChildren: () =>
+          import('./routes/data/data.module').then((m) => m.DataModule),
       },
     ],
   },

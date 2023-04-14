@@ -6,22 +6,22 @@ import { TestModule } from 'src/tests';
 import { Column } from '~/models';
 import { ContentService } from '~/services';
 import { Preferences } from '~/store';
-import { ColumnsDialogComponent } from './columns-dialog.component';
+import { ColumnsComponent } from './columns.component';
 
-describe('ColumnsDialogComponent', () => {
-  let component: ColumnsDialogComponent;
-  let fixture: ComponentFixture<ColumnsDialogComponent>;
+describe('ColumnsComponent', () => {
+  let component: ColumnsComponent;
+  let fixture: ComponentFixture<ColumnsComponent>;
   let markForCheck: jasmine.Spy;
   let mockStore: MockStore;
   let contentSvc: ContentService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ColumnsDialogComponent],
+      declarations: [ColumnsComponent],
       imports: [TestModule],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ColumnsDialogComponent);
+    fixture = TestBed.createComponent(ColumnsComponent);
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     markForCheck = spyOn(ref.constructor.prototype, 'markForCheck');
     mockStore = TestBed.inject(MockStore);

@@ -1,5 +1,6 @@
-import { ColumnsDialogComponent } from './columns-dialog/columns-dialog.component';
+import { ColumnsComponent } from './columns/columns.component';
 import { ContentComponent } from './content/content.component';
+import { CostsComponent } from './costs/costs.component';
 import { HeaderComponent } from './header/header.component';
 import { InputNumberComponent } from './input-number/input-number.component';
 import { ObjectivesComponent } from './objectives/objectives.component';
@@ -8,8 +9,9 @@ import { SettingsComponent } from './settings/settings.component';
 import { TechPickerComponent } from './tech-picker/tech-picker.component';
 
 export const components = [
-  ColumnsDialogComponent,
+  ColumnsComponent,
   ContentComponent,
+  CostsComponent,
   HeaderComponent,
   InputNumberComponent,
   PickerComponent,

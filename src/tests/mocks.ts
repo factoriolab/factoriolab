@@ -207,7 +207,7 @@ export function getRecipesStateRational(): M.Entities<M.RecipeSettingsRational> 
 }
 export const RecipesStateRationalInitial = getRecipesStateRational();
 export const CostRational = Settings.getRationalCost.projector(
-  Settings.initialSettingsState.cost
+  Settings.initialSettingsState.costs
 );
 export const AdjustedData = Recipes.getAdjustedDataset.projector(
   RecipesStateRationalInitial,
