@@ -5,6 +5,7 @@ import { InputNumberComponent } from './input-number/input-number.component';
 import { ObjectivesComponent } from './objectives/objectives.component';
 import { PickerComponent } from './picker/picker.component';
 import { SettingsComponent } from './settings/settings.component';
+import { TechPickerComponent } from './tech-picker/tech-picker.component';
 
 export const components = [
   ColumnsDialogComponent,
@@ -14,4 +15,5 @@ export const components = [
   PickerComponent,
   ObjectivesComponent,
   SettingsComponent,
+  TechPickerComponent,
 ];

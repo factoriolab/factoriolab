@@ -12,6 +12,7 @@ import {
   ModuleRational,
   Recipe,
   RecipeRational,
+  Technology,
 } from './data';
 import { Defaults } from './defaults';
 import { Entities } from './entities';
@@ -46,6 +47,8 @@ export interface Dataset {
   itemRecipeId: Entities<string>;
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
+  technologyIds: string[];
+  technologyEntities: Entities<Technology>;
   recipeR: Entities<RecipeRational>;
   proliferatorModuleIds: string[];
   limitations: Entities<Entities<boolean>>;

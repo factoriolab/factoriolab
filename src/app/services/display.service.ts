@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
-import { IdType, Rational, Recipe } from '~/models';
+import { IdType, Rational, Recipe, Technology } from '~/models';
 
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
+  constructor(private translateSvc: TranslateService) {}
+
   icon(id: string, num?: string | number, type: IdType = 'item'): string {
     return `<i class="me-2 lab-icon-sm ${type} padded ${id}"><span>${
       num ?? ''
@@ -56,5 +59,17 @@ export class DisplayService {
       .map((i) => this.icon(i, recipe.out[i]))
       .join('');
     return `${timeHtml}${inHtml}<i class="m-1 me-2 fa-solid fa-arrow-right"></i>${outHtml}`;
+  }
+
+  technologyPrerequisites(technology: Technology | undefined): string {
+    if (technology?.prerequisites == null) return '';
+
+    const a = `<small><div>${this.translateSvc.instant(
+      'tooltip.prerequisites'
+    )}</div>${technology.prerequisites
+      .map((i) => this.icon(i, undefined, 'recipe'))
+      .join('')}</small>`;
+
+    return a;
   }
 }

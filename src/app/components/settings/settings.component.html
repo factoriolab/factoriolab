@@ -211,6 +211,32 @@
             pRipple
             type="button"
             class="p-button-rounded p-button-outlined"
+            icon="fa-solid fa-microchip"
+            [pTooltip]="'settings.techsTooltip' | translate"
+            [label]="
+              vm.settings.researchedTechnologyIds
+                ? ('settings.techsResearched'
+                  | translate
+                    : {
+                        count: vm.settings.researchedTechnologyIds.length
+                      })
+                : ('settings.allTechsResearched' | translate)
+            "
+            (click)="
+              techPicker.clickOpen(vm.data, vm.settings.researchedTechnologyIds)
+            "
+          ></button>
+          <lab-tech-picker
+            #techPicker
+            (selectIds)="setResearchedTechnologies($event)"
+          ></lab-tech-picker>
+        </div>
+        <div class="py-2">
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-rounded p-button-outlined"
             icon="fa-solid fa-boxes-stacked"
             [pTooltip]="'settings.itemsTooltip' | translate"
             [label]="

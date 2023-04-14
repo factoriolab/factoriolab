@@ -1200,6 +1200,10 @@ export class RouterService {
     const z: Zip = {
       bare: this.zipFields([
         this.zipDiffString(state.modId, init.modId),
+        this.zipDiffNullableArray(
+          state.researchedTechnologyIds,
+          init.researchedTechnologyIds
+        ),
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
         this.zipDiffNumber(state.preset, init.preset),
         this.zipDiffString(state.beltId, init.beltId),
@@ -1223,6 +1227,11 @@ export class RouterService {
         this.zipDiffString(state.cost.maximize, init.cost.maximize),
       ]),
       hash: this.zipFields([
+        this.zipDiffNullableNArray(
+          state.researchedTechnologyIds,
+          init.researchedTechnologyIds,
+          hash.technologies
+        ),
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
         this.zipDiffNumber(state.preset, init.preset),
         this.zipDiffNString(state.beltId, init.beltId, hash.belts),
@@ -1268,6 +1277,10 @@ export class RouterService {
 
     if (hash) {
       obj = {
+        researchedTechnologyIds: this.parseNullableNArray(
+          s[i++],
+          hash.technologies
+        ),
         displayRate: this.parseDisplayRate(s[i++]),
         preset: this.parseNumber(s[i++]),
         beltId: this.parseNString(s[i++], hash.belts),
@@ -1295,6 +1308,7 @@ export class RouterService {
     } else {
       obj = {
         modId: this.parseString(s[i++]),
+        researchedTechnologyIds: this.parseNullableArray(s[i++]),
         displayRate: this.parseDisplayRate(s[i++]),
         preset: this.parseNumber(s[i++]),
         beltId: this.parseString(s[i++]),
@@ -1401,9 +1415,9 @@ export class RouterService {
     return value === init ? '' : value == null ? NULL : value ? TRUE : FALSE;
   }
 
-  zipDiffArray(
-    value: string[] | undefined,
-    init: string[] | undefined
+  zipDiffNullableArray(
+    value: string[] | null | undefined,
+    init: string[] | null | undefined
   ): string {
     const zVal =
       value != null
@@ -1442,9 +1456,9 @@ export class RouterService {
     return value === init ? '' : value == null ? NULL : this.getId(value);
   }
 
-  zipDiffNArray(
-    value: string[] | undefined,
-    init: string[] | undefined,
+  zipDiffNullableNArray(
+    value: string[] | null | undefined,
+    init: string[] | null | undefined,
     hash: string[]
   ): string {
     const zVal =
@@ -1511,6 +1525,7 @@ export class RouterService {
     if (!value?.length || value === NULL) {
       return undefined;
     }
+
     switch (value) {
       case '0':
         return DisplayRate.PerSecond;
@@ -1530,11 +1545,20 @@ export class RouterService {
     return value === EMPTY ? [] : value.split(ARRAYSEP);
   }
 
+  parseNullableArray(value: string | undefined): string[] | null | undefined {
+    if (!value?.length) return undefined;
+
+    if (value === NULL) return null;
+
+    return value === EMPTY ? [] : value.split(ARRAYSEP);
+  }
+
   parseNString(value: string | undefined, hash: string[]): string | undefined {
     const v = this.parseString(value);
     if (v == null) {
       return v;
     }
+
     return hash[this.getN(v)];
   }
 
@@ -1542,6 +1566,7 @@ export class RouterService {
     if (!value?.length || value === NULL) {
       return undefined;
     }
+
     return this.getN(value);
   }
 
@@ -1550,6 +1575,19 @@ export class RouterService {
     if (v == null) {
       return v;
     }
+
+    return v.map((a) => hash[this.getN(a)]);
+  }
+
+  parseNullableNArray(
+    value: string | undefined,
+    hash: string[]
+  ): string[] | null | undefined {
+    const v = this.parseNullableArray(value);
+    if (v == null) {
+      return v;
+    }
+
     return v.map((a) => hash[this.getN(a)]);
   }
 
@@ -1575,10 +1613,12 @@ export class RouterService {
     if (charCode >= this.base64codes.length) {
       throw new Error('Unable to parse base64 string.');
     }
+
     const code = this.base64codes[charCode];
     if (code === 255) {
       throw new Error('Unable to parse base64 string.');
     }
+
     return code;
   }
 
@@ -1592,12 +1632,14 @@ export class RouterService {
       result += BASE64ABC[((bytes[i - 1] & 0x0f) << 2) | (bytes[i] >> 6)];
       result += BASE64ABC[bytes[i] & 0x3f];
     }
+
     if (i === l + 1) {
       // 1 octet yet to write
       result += BASE64ABC[bytes[i - 2] >> 2];
       result += BASE64ABC[(bytes[i - 2] & 0x03) << 4];
       result += '__';
     }
+
     if (i === l) {
       // 2 octets yet to write
       result += BASE64ABC[bytes[i - 2] >> 2];
@@ -1616,16 +1658,19 @@ export class RouterService {
         'Router failed to parse url, checking for missing trailing characters...'
       );
     }
+
     try {
       return this.inflateMend(str, '-');
     } catch {
       // ignore error
     }
+
     try {
       return this.inflateMend(str, '.');
     } catch {
       // ignore error
     }
+
     return this.inflateMend(str, '_');
   }
 
@@ -1644,10 +1689,12 @@ export class RouterService {
     if (str.length % 4 !== 0) {
       throw new Error('Unable to parse base64 string.');
     }
+
     const index = str.indexOf('_');
     if (index !== -1 && index < str.length - 2) {
       throw new Error('Unable to parse base64 string.');
     }
+
     const missingOctets = str.endsWith('__') ? 2 : str.endsWith('_') ? 1 : 0;
     const n = str.length;
     const result = new Uint8Array(3 * (n / 4));
@@ -1662,6 +1709,7 @@ export class RouterService {
       result[j + 1] = (buffer >> 8) & 0xff;
       result[j + 2] = buffer & 0xff;
     }
+
     return result.subarray(0, result.length - missingOctets);
   }
 

@@ -13,6 +13,7 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
   modId: string;
+  researchedTechnologyIds: string[] | null;
   netProductionOnly: boolean;
   preset: Preset;
   beaconReceivers: string | null;
@@ -37,6 +38,7 @@ export type PartialSettingsState = Partial<Omit<SettingsState, 'cost'>> & {
 
 export const initialSettingsState: SettingsState = {
   modId: '1.1',
+  researchedTechnologyIds: [],
   netProductionOnly: false,
   preset: Preset.Minimum,
   beaconReceivers: null,
@@ -97,6 +99,8 @@ export function settingsReducer(
       delete newState.fluidWagonId;
       return newState;
     }
+    case SettingsActionType.SET_RESEARCHED_TECHNOLOGIES:
+      return { ...state, ...{ researchedTechnologyIds: action.payload } };
     case SettingsActionType.SET_NET_PRODUCTION_ONLY:
       return { ...state, ...{ netProductionOnly: action.payload } };
     case SettingsActionType.SET_PRESET:

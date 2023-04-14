@@ -119,7 +119,8 @@
     "pipe": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Flow rate</td><td>{{ speed }}{{ suffix }}</td></tr></table></small>",
     "cargoWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Inventory</td><td>{{ size }} stacks</td></tr></table></small>",
     "fluidWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Capacity</td><td>{{ size }}</td></tr></table></small>",
-    "fuel": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Category</td><td>{{ category }}</td></tr><tr><td>Value</td><td>{{ value }} MJ</td></tr></table></small>"
+    "fuel": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Category</td><td>{{ category }}</td></tr><tr><td>Value</td><td>{{ value }} MJ</td></tr></table></small>",
+    "prerequisites": "Prerequisites"
   },
   "columns": {
     "header": "Column settings",
@@ -133,6 +134,14 @@
   "picker": {
     "includeAll": "Include all",
     "reset": "Reset to default"
+  },
+  "techPicker": {
+    "header": "Set researched technologies",
+    "unlockAll": "Unlock all",
+    "available": "Available",
+    "locked": "Locked",
+    "researched": "Researched",
+    "none": "--None--"
   },
   "landing": {
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work.",
@@ -178,6 +187,9 @@
     "mod": "Mod",
     "version": "Version",
     "modVersionsTooltip": "Versions of game / mods in this data set",
+    "techsResearched": "{{ count }} technologies researched",
+    "allTechsResearched": "All technologies researched",
+    "techsTooltip": "Click to modify which techs are researched. Locked recipes will not be used in the solution.",
     "itemsExcluded": "{{ count }} items excluded",
     "itemsTooltip": "Click to modify which items are included. Excluded items will not be produced in the solution.",
     "itemsHeader": "Set included items",

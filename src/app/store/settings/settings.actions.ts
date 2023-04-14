@@ -12,6 +12,7 @@ import {
 
 export const enum SettingsActionType {
   SET_MOD = '[Settings] Set Mod',
+  SET_RESEARCHED_TECHNOLOGIES = '[Settings] Set Researched Technologies',
   SET_NET_PRODUCTION_ONLY = '[Settings] Set Net Production Only',
   SET_PRESET = '[Settings] Set Preset',
   SET_BEACON_RECEIVERS = '[Settings] Set Beacon Receivers',
@@ -39,6 +40,11 @@ export const enum SettingsActionType {
 export class SetModAction implements Action {
   readonly type = SettingsActionType.SET_MOD;
   constructor(public payload: string) {}
+}
+
+export class SetResearchedTechnologiesAction implements Action {
+  readonly type = SettingsActionType.SET_RESEARCHED_TECHNOLOGIES;
+  constructor(public payload: string[] | null) {}
 }
 
 export class SetNetProductionOnlyAction implements Action {
@@ -152,6 +158,7 @@ export class ResetCostAction implements Action {
 
 export type SettingsAction =
   | SetModAction
+  | SetResearchedTechnologiesAction
   | SetNetProductionOnlyAction
   | SetPresetAction
   | SetBeaconReceiversAction

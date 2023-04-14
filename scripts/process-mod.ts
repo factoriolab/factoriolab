@@ -1320,7 +1320,9 @@ async function processMod(): Promise<void> {
     const technology: Technology = {};
     const id = `${techRaw.name}-technology`;
     if (techData.prerequisites?.length) {
-      technology.prerequisites = techData.prerequisites;
+      technology.prerequisites = techData.prerequisites.map(
+        (p) => `${p}-technology`
+      );
     }
 
     const recipe: Recipe = {

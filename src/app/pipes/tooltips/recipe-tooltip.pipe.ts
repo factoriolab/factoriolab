@@ -11,6 +11,7 @@ export class RecipeTooltipPipe implements PipeTransform {
     if (value == null) return '';
 
     const recipe = data.recipeEntities[value];
+    const technology = data.technologyEntities[value];
 
     if (recipe == null) return '';
 
@@ -23,6 +24,8 @@ export class RecipeTooltipPipe implements PipeTransform {
     }</div><div class="d-flex align-items-center justify-content-center\
     flex-wrap mt-2">${this.displaySvc.recipeProcess(recipe)}\
     </div><div class="d-flex align-items-center justify-content-center flex-wrap mt-2">\
-    ${producersHtml}</div>`;
+    ${producersHtml}</div>${this.displaySvc.technologyPrerequisites(
+      technology
+    )}`;
   }
 }

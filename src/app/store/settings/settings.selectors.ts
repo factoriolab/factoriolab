@@ -32,6 +32,7 @@ import {
   Rational,
   RecipeRational,
   researchSpeedFactor,
+  Technology,
   toBoolEntities,
   toEntities,
 } from '~/models';
@@ -46,6 +47,10 @@ export const settingsState = (state: LabState): SettingsState =>
   state.settingsState;
 
 export const getModId = createSelector(settingsState, (state) => state.modId);
+export const getResearchedTechnologies = createSelector(
+  settingsState,
+  (state) => state.researchedTechnologyIds
+);
 export const getNetProductionOnly = createSelector(
   settingsState,
   (state) => state.netProductionOnly
@@ -350,11 +355,12 @@ export const getDataset = createSelector(
           .toNumber()
       )
       .map((i) => i.id);
-    const machineIds = items.filter((i) => i.machine).map((i) => i.id);
-    const modules = items.filter((i) => i.module);
+    const machineIds = items
+      .filter(fnPropsNotNullish('machine'))
+      .map((i) => i.id);
+    const modules = items.filter(fnPropsNotNullish('module'));
     const moduleIds = modules.map((i) => i.id);
     const proliferatorModuleIds = modules
-      .filter(fnPropsNotNullish('module'))
       .filter((i) => i.module.sprays != null)
       .map((i) => i.id);
     const fuelIds = items
@@ -370,6 +376,9 @@ export const getDataset = createSelector(
         e[cat].push(f.id);
         return e;
       }, {});
+    const technologyIds = recipes
+      .filter(fnPropsNotNullish('technology'))
+      .map((r) => r.id);
 
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output item
@@ -459,8 +468,14 @@ export const getDataset = createSelector(
       e[i] = item;
       return e;
     }, {});
+    const technologyEntities: Entities<Technology> = {};
     const recipeR = recipeIds.reduce((e: Entities<RecipeRational>, r) => {
-      e[r] = new RecipeRational(recipeEntities[r]);
+      const recipe = new RecipeRational(recipeEntities[r]);
+      if (recipe.technology) {
+        technologyEntities[r] = recipe.technology;
+      }
+
+      e[r] = recipe;
       return e;
     }, {});
 
@@ -520,6 +535,8 @@ export const getDataset = createSelector(
       fuelEntities,
       recipeIds,
       recipeEntities,
+      technologyIds,
+      technologyEntities,
       recipeR,
       limitations,
       hash,

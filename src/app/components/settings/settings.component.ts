@@ -299,6 +299,10 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetModAction(value));
   }
 
+  setResearchedTechnologies(value: string[] | null): void {
+    this.store.dispatch(new Settings.SetResearchedTechnologiesAction(value));
+  }
+
   setItemExcludedBatch(payload: IdPayload<boolean>[]): void {
     this.store.dispatch(new Items.SetExcludedBatchAction(payload));
   }
