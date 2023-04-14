@@ -328,23 +328,22 @@ export class RateUtility {
     // Determine parents
     const parents: Entities<string> = {};
     for (const step of steps) {
-      if (step.parents && Object.keys(step.parents).length === 1) {
+      if (
+        step.parents == null ||
+        step.parents[''] ||
+        Object.keys(step.parents).length > 1
+      ) {
+        parents[step.id] = ROOT_ID;
+      } else {
         const stepId = Object.keys(step.parents)[0];
-        if (stepId === '') {
-          // Empty string denotes output step
-          parents[step.id] = ROOT_ID;
-        } else {
-          const parent = steps.find((s) => s.id === stepId);
-          if (parent) {
-            if (step.id === parent.id) {
-              parents[step.id] = ROOT_ID;
-            } else {
-              parents[step.id] = parent.id;
-            }
+        const parent = steps.find((s) => s.id === stepId);
+        if (parent) {
+          if (step.id === parent.id) {
+            parents[step.id] = ROOT_ID;
+          } else {
+            parents[step.id] = parent.id;
           }
         }
-      } else {
-        parents[step.id] = ROOT_ID;
       }
     }
 
