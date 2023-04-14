@@ -29,17 +29,29 @@ export class LandingComponent {
     this.store.select(Settings.getModOptions),
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getMod),
+    this.store.select(Settings.getRecipesLocked),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
   ]).pipe(
-    map(([settings, modOptions, data, mod, preferences, savedStates]) => ({
-      settings,
-      modOptions,
-      data,
-      mod,
-      preferences,
-      savedStates,
-    }))
+    map(
+      ([
+        settings,
+        modOptions,
+        data,
+        mod,
+        recipesLocked,
+        preferences,
+        savedStates,
+      ]) => ({
+        settings,
+        modOptions,
+        data,
+        mod,
+        recipesLocked,
+        preferences,
+        savedStates,
+      })
+    )
   );
 
   gameInfo = gameInfo;

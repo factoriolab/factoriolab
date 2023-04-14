@@ -68,7 +68,7 @@
       <lab-picker
         #addRecipePicker
         [header]="'landing.addARecipe' | translate"
-        [researchedTechnologyIds]="vm.settings.researchedTechnologyIds"
+        [recipesLocked]="vm.recipesLocked"
         (selectId)="selectRecipe($event)"
       ></lab-picker>
       <p-divider

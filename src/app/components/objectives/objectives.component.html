@@ -134,7 +134,7 @@
           <lab-picker
             #editPicker
             [header]="'objectives.recipeTooltip' | translate"
-            [researchedTechnologyIds]="vm.researchedTechnologyIds"
+            [recipesLocked]="vm.recipesLocked"
             (selectId)="setRecipe(recipeObjective.id, $event)"
           ></lab-picker>
           <lab-input-number
@@ -176,7 +176,7 @@
   <lab-picker
     #addRecipePicker
     [header]="'objectives.addARecipeTooltip' | translate"
-    [researchedTechnologyIds]="vm.researchedTechnologyIds"
+    [recipesLocked]="vm.recipesLocked"
     (selectId)="addRecipeObjective($event)"
   ></lab-picker>
   <p-messages

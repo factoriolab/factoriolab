@@ -32,7 +32,7 @@ export class PickerComponent implements OnInit {
     | undefined;
 
   @Input() header = '';
-  @Input() researchedTechnologyIds: string[] | null | undefined;
+  @Input() recipesLocked: Entities<boolean> = {};
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<string[]>();
 
@@ -56,7 +56,6 @@ export class PickerComponent implements OnInit {
   allCategoryIds: string[] = [];
   allCategoryRows: Entities<string[][]> = {};
   activeIndex = 0;
-  locked: Entities<boolean> = {};
 
   constructor(
     private ref: ChangeDetectorRef,
@@ -126,15 +125,6 @@ export class PickerComponent implements OnInit {
         );
         this.activeIndex = index;
       }
-
-      this.locked = data.recipeIds.reduce((e: Entities<boolean>, id) => {
-        const recipe = data.recipeEntities[id];
-        e[id] =
-          recipe.unlockedBy != null &&
-          this.researchedTechnologyIds != null &&
-          this.researchedTechnologyIds.indexOf(recipe.unlockedBy) === -1;
-        return e;
-      }, {});
     }
     this.categoryIds = data.categoryIds.filter((c) => this.categoryRows[c]);
     this.allCategoryIds = this.categoryIds;

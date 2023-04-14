@@ -276,7 +276,7 @@
           <lab-picker
             #recipesPicker
             [header]="'settings.recipesHeader' | translate"
-            [researchedTechnologyIds]="vm.settings.researchedTechnologyIds"
+            [recipesLocked]="vm.recipesLocked"
             (selectIds)="setExcludedRecipes($event, vm.recipesState, vm.data)"
           ></lab-picker>
         </div>

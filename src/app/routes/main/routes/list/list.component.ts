@@ -69,6 +69,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getBeltSpeed),
     this.store.select(Settings.getBeltSpeedTxt),
+    this.store.select(Settings.getRecipesLocked),
     this.routerSvc.zipConfig$,
   ]).pipe(
     map(
@@ -93,6 +94,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         options,
         beltSpeed,
         beltSpeedTxt,
+        recipesLocked,
         zipPartial,
       ]) => ({
         machinesState,
@@ -115,6 +117,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         options,
         beltSpeed,
         beltSpeedTxt,
+        recipesLocked,
         zipPartial,
       })
     )

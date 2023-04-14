@@ -188,7 +188,7 @@
           </div>
         </td>
         <!-- Tree -->
-        <td *ngIf="vm.columnsState.tree.show" class="overflow-hidden p-0">
+        <td *ngIf="vm.columnsState.tree.show" class="overflow-hidden px-1 py-0">
           <div class="d-flex align-items-center links">
             <ng-container *ngIf="vm.stepTree[step.id]?.length">
               <div
@@ -1400,7 +1400,9 @@
                       pButton
                       pRipple
                       type="button"
-                      class="hover-action p-button-text me-2"
+                      class="hover-action me-2"
+                      [class.p-button-text]="!vm.recipesLocked[recipeId]"
+                      [class.p-button-danger]="vm.recipesLocked[recipeId]"
                       [class.hover-active]="vm.recipesState[recipeId].excluded"
                       [icon]="recipeId | iconSmClass : 'recipe'"
                       [pTooltip]="recipeId | recipeTooltip : vm.data"
