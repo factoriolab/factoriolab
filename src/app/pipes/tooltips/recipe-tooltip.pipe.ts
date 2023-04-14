@@ -15,17 +15,14 @@ export class RecipeTooltipPipe implements PipeTransform {
 
     if (recipe == null) return '';
 
-    const producersHtml = recipe.producers
-      .map((i) => this.displaySvc.icon(i, ''))
-      .join('');
-
     return `<div>${
       recipe.name
     }</div><div class="d-flex align-items-center justify-content-center\
     flex-wrap mt-2">${this.displaySvc.recipeProcess(recipe)}\
-    </div><div class="d-flex align-items-center justify-content-center flex-wrap mt-2">\
-    ${producersHtml}</div>${this.displaySvc.technologyPrerequisites(
-      technology
-    )}`;
+    </div>${this.displaySvc.recipeProducedBy(
+      recipe
+    )}${this.displaySvc.recipeUnlockedBy(
+      recipe
+    )}${this.displaySvc.technologyPrerequisites(technology)}`;
   }
 }

@@ -120,6 +120,8 @@
     "cargoWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Inventory</td><td>{{ size }} stacks</td></tr></table></small>",
     "fluidWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Capacity</td><td>{{ size }}</td></tr></table></small>",
     "fuel": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Category</td><td>{{ category }}</td></tr><tr><td>Value</td><td>{{ value }} MJ</td></tr></table></small>",
+    "producedBy": "Produced by",
+    "unlockedBy": "Unlocked by",
     "prerequisites": "Prerequisites"
   },
   "columns": {

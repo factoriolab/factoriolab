@@ -61,6 +61,22 @@ export class DisplayService {
     return `${timeHtml}${inHtml}<i class="m-1 me-2 fa-solid fa-arrow-right"></i>${outHtml}`;
   }
 
+  recipeProducedBy(recipe: Recipe): string {
+    return `<small><div>${this.translateSvc.instant(
+      'tooltip.producedBy'
+    )}</div>${recipe.producers.map((i) => this.icon(i, '')).join('')}</small>`;
+  }
+
+  recipeUnlockedBy(recipe: Recipe): string {
+    if (recipe.unlockedBy == null) return '';
+
+    const a = `<small><div>${this.translateSvc.instant(
+      'tooltip.unlockedBy'
+    )}</div>${this.icon(recipe.unlockedBy, undefined, 'recipe')}</small>`;
+
+    return a;
+  }
+
   technologyPrerequisites(technology: Technology | undefined): string {
     if (technology?.prerequisites == null) return '';
 
