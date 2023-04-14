@@ -60,6 +60,7 @@
     <lab-picker
       #addRecipePicker
       [header]="'wizard.runMachinesButton' | translate"
+      [researchedTechnologyIds]="vm.researchedTechnologyIds"
       (selectId)="selectId($event, WizardState.RecipeObjective)"
     ></lab-picker>
     <p-divider></p-divider>

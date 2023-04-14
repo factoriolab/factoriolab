@@ -31,11 +31,13 @@ export enum WizardState {
 export class WizardComponent {
   vm$ = combineLatest([
     this.store.select(Settings.getDataset),
+    this.store.select(Settings.getResearchedTechnologyIds),
     this.store.select(Settings.getDisplayRate),
     this.store.select(Settings.getRateUnitOptions),
   ]).pipe(
-    map(([data, displayRate, rateUnitOptions]) => ({
+    map(([data, researchedTechnologyIds, displayRate, rateUnitOptions]) => ({
       data,
+      researchedTechnologyIds,
       displayRate,
       rateUnitOptions,
     }))
