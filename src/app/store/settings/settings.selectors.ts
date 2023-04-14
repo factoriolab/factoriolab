@@ -47,7 +47,7 @@ export const settingsState = (state: LabState): SettingsState =>
   state.settingsState;
 
 export const getModId = createSelector(settingsState, (state) => state.modId);
-export const getResearchedTechnologies = createSelector(
+export const getResearchedTechnologyIds = createSelector(
   settingsState,
   (state) => state.researchedTechnologyIds
 );

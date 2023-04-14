@@ -136,11 +136,16 @@ export class SimplexUtility {
     recipeObjectives: RecipeObjectiveRational[],
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
+    researchedTechnologyIds: string[] | null,
     cost: CostsRationalSettings,
     data: Dataset
   ): MatrixResult {
     if (itemObjectives.length === 0 && recipeObjectives.length === 0) {
       return { steps: [], resultType: MatrixResultType.Skipped };
+    }
+
+    if (researchedTechnologyIds == null) {
+      researchedTechnologyIds = data.technologyIds;
     }
 
     // Get matrix state
@@ -149,6 +154,7 @@ export class SimplexUtility {
       recipeObjectives,
       itemsState,
       recipesState,
+      researchedTechnologyIds,
       cost,
       data
     );
@@ -177,6 +183,7 @@ export class SimplexUtility {
     recipeObjectives: RecipeObjectiveRational[],
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
+    researchedTechnologyIds: string[],
     cost: CostsRationalSettings,
     data: Dataset
   ): MatrixState {
@@ -193,7 +200,15 @@ export class SimplexUtility {
       recipeLimits: {},
       unproduceableIds: [],
       excludedIds: data.itemIds.filter((i) => itemsState[i].excluded),
-      recipeIds: data.recipeIds.filter((r) => !recipesState[r].excluded),
+      recipeIds: data.recipeIds.filter((r) => {
+        // Filter for included, unlocked recipes
+        const recipe = data.recipeEntities[r];
+        return (
+          !recipesState[r].excluded &&
+          (recipe.unlockedBy == null ||
+            researchedTechnologyIds.indexOf(recipe.unlockedBy) !== -1)
+        );
+      }),
       itemIds: data.itemIds.filter((i) => !itemsState[i].excluded),
       cost,
       data,

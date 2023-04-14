@@ -767,7 +767,7 @@ async function processMod(): Promise<void> {
     if (techData.effects) {
       for (const effect of techData.effects) {
         if (D.isUnlockRecipeModifier(effect)) {
-          recipesUnlocked[effect.recipe] = techRaw.name;
+          recipesUnlocked[effect.recipe] = `${techRaw.name}-technology`;
         }
       }
     }
