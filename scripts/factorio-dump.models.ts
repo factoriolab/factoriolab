@@ -280,24 +280,24 @@ export function isItemIngredient(
 export type Product = [string, number] | ItemProduct | FluidProduct;
 
 export interface ItemProduct {
-  type?: 'item';
+  type: 'item';
   name: string;
-  amount: number;
-  probability: number;
-  amount_min: number;
-  amount_max: number;
-  catalyst_amount: number;
+  amount?: number;
+  probability?: number;
+  amount_min?: number;
+  amount_max?: number;
+  catalyst_amount?: number;
 }
 
 export interface FluidProduct {
   type: 'fluid';
   name: string;
-  probability: number;
-  amount: number;
-  amount_min: number;
-  amount_max: number;
-  temperature: number;
-  catalyst_amount: number;
+  probability?: number;
+  amount?: number;
+  amount_min?: number;
+  amount_max?: number;
+  temperature?: number;
+  catalyst_amount?: number;
 }
 
 export function isSimpleProduct(proto: Product): proto is [string, number] {
@@ -517,6 +517,7 @@ export interface MiningDrill extends Base {
   mining_speed: number;
   resource_categories: string[];
   allowed_effects?: (keyof Effect)[];
+  input_fluid_box?: object;
   module_specification?: ModuleSpecification;
 }
 
@@ -554,6 +555,21 @@ export interface FluidWagon extends Base {
   capacity: number;
 }
 
+export interface MinableProperties {
+  mining_time: number;
+  results?: (ItemProduct | FluidProduct)[];
+  result?: string;
+  fluid_amount?: number;
+  mining_particle?: string;
+  required_fluid?: string;
+  count?: number;
+}
+
+export interface ResourceEntity extends Base {
+  category?: string;
+  minable?: MinableProperties;
+}
+
 export interface DataRawDump {
   ammo: Entities<AmmoItem>;
   armor: Entities<Armor>;
@@ -578,6 +594,7 @@ export interface DataRawDump {
   reactor: Entities<Reactor>;
   recipe: Entities<Recipe>;
   'repair-tool': Entities<RepairTool>;
+  resource: Entities<ResourceEntity>;
   'rocket-silo': Entities<RocketSilo>;
   'rocket-silo-rocket': Entities<RocketSiloRocket>;
   'spidertron-remote': Entities<SpidertronRemote>;

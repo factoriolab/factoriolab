@@ -75,6 +75,11 @@ function getMultiplier(letter: string): number {
   }
 }
 
+function round(number: number, decimals: number): number {
+  const factor = Math.pow(10, decimals);
+  return Math.round(number * factor) / factor;
+}
+
 function getEnergyInMJ(usage: string): number {
   const match = /(\d*\.?\d*)(\w*)/.exec(usage);
   if (match == null) {
@@ -87,7 +92,8 @@ function getEnergyInMJ(usage: string): number {
   }
   const multiplier = getMultiplier(unit.substring(0, unit.length - 1)) / 1000;
   const num = Number(numStr);
-  return multiplier * num;
+  const result = multiplier * num;
+  return round(result, 10);
 }
 
 function getPowerInKw(usage: string): number {
@@ -190,7 +196,7 @@ async function processMod(): Promise<void> {
     } else if (recipeData.results && recipe.main_product) {
       const mainProduct = recipe.main_product;
       const result = recipeData.results.find((r) =>
-        D.isSimpleIngredient(r) ? r[0] === mainProduct : r.name === mainProduct
+        D.isSimpleProduct(r) ? r[0] === mainProduct : r.name === mainProduct
       );
       if (result) {
         if (D.isSimpleProduct(result)) {
@@ -251,8 +257,8 @@ async function processMod(): Promise<void> {
   let lastRecipeRow = 0;
   let lastRecipeGroup = '';
   let lastRecipeSubgroup = '';
-  function getRecipeRow(recipe: D.Recipe): number {
-    const subgroupId = getRecipeSubgroup(recipe);
+  function getRecipeRow(proto: D.Recipe | D.Item | D.Fluid): number {
+    const subgroupId = getSubgroup(proto);
     const subgroup = dataRaw['item-subgroup'][subgroupId];
     if (subgroup.group === lastRecipeGroup) {
       if (subgroup.name !== lastRecipeSubgroup) {
@@ -561,6 +567,64 @@ async function processMod(): Promise<void> {
     return undefined;
   }
 
+  function getIngredients(ingredients: D.Ingredient[]): Record<string, number> {
+    const result: Record<string, number> = {};
+
+    for (const ingredient of ingredients) {
+      if (D.isSimpleIngredient(ingredient)) {
+        const [itemId, amount] = ingredient;
+        addEntityValue(result, itemId, amount);
+      } else {
+        addEntityValue(result, ingredient.name, ingredient.amount);
+      }
+    }
+
+    return result;
+  }
+
+  function getRecipeData(recipe: D.Recipe): D.RecipeData {
+    return typeof recipe[mode] === 'object' ? recipe[mode] : recipe;
+  }
+
+  function getProducts(
+    results: D.Product[] | undefined,
+    result?: string,
+    result_count = 1
+  ): [Record<string, number>, Record<string, number> | undefined, number] {
+    const record: Record<string, number> = {};
+    let catalyst: Record<string, number> | undefined;
+    let total = 0;
+
+    if (results) {
+      for (const product of results) {
+        if (D.isSimpleProduct(product)) {
+          const [itemId, amount] = product;
+          addEntityValue(record, itemId, amount);
+          total += amount;
+        } else {
+          let amount = product.amount;
+          if (amount == null && product.amount_max && product.amount_min) {
+            amount = (product.amount_max + product.amount_min) / 2;
+          }
+
+          if (amount == null) continue;
+
+          if (product.probability) {
+            amount = amount * product.probability;
+          }
+
+          addEntityValue(record, product.name, amount);
+          total += amount;
+        }
+      }
+    } else if (result && result_count) {
+      addEntityValue(record, result, result_count);
+      total += result_count;
+    }
+
+    return [record, catalyst, total];
+  }
+
   function getMachineDisallowedEffects(
     proto: MachineProto
   ): ModuleEffect[] | undefined {
@@ -726,15 +790,28 @@ async function processMod(): Promise<void> {
     }
   }
 
+  // Cache recipe results to use later
+  const recipeResults: Record<
+    string,
+    [Record<string, number>, Record<string, number> | undefined, number]
+  > = {};
   for (const key of Object.keys(dataRaw.recipe)) {
     const recipe = dataRaw.recipe[key];
     let include = true;
 
     // Skip recipes that don't have results
-    if (recipe.result == null && !recipe.results?.length && !recipe[mode]) {
+    const recipeData = getRecipeData(recipe);
+    const results = getProducts(
+      recipeData.results,
+      recipeData.result,
+      recipeData.result_count
+    );
+    if (results[2] === 0) {
       console.log(`Skipping recipe ${key} due to no results`);
       include = false;
     }
+
+    recipeResults[key] = results;
 
     // Always include fixed recipes that have outputs
     if (!fixedRecipe.has(key)) {
@@ -877,8 +954,8 @@ async function processMod(): Promise<void> {
       const item: Item = {
         id: proto.name,
         name: fluidLocale.names[proto.name],
-        row: getItemRow(proto),
         category: group.name,
+        row: getItemRow(proto),
         icon: await getIcon(proto),
       };
 
@@ -887,9 +964,9 @@ async function processMod(): Promise<void> {
       const item: Item = {
         id: proto.name,
         name: itemLocale.names[proto.name],
+        category: group.name,
         stack: proto.stack_size,
         row: getItemRow(proto),
-        category: group.name,
         icon: await getIcon(proto),
       };
 
@@ -1002,58 +1079,234 @@ async function processMod(): Promise<void> {
     }
   }
 
-  // Process recipe protos
-  for (const proto of protosSorted.filter(D.isRecipe)) {
+  const recipeKeysUsed = new Set<string>(Object.keys(recipesEnabled));
+
+  function getFakeRecipeId(desiredId: string, backupId: string): string {
+    if (recipeKeysUsed.has(desiredId)) {
+      recipeKeysUsed.add(backupId);
+      return backupId;
+    } else {
+      return desiredId;
+    }
+  }
+
+  // Process recipe protos / fake recipes
+  const processedLaunchProto = new Set<string>();
+  for (const proto of protosSorted) {
     const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
     const group = dataRaw['item-group'][subgroup.group];
     groupsUsed.add(group.name);
 
-    const recipeData = typeof proto[mode] === 'object' ? proto[mode] : proto;
-
-    const recipeIn: Entities<number> = {};
-    const recipeOut: Entities<number> = {};
-
-    // Check ingredients
-    for (const ingredient of recipeData.ingredients) {
-      if (D.isSimpleIngredient(ingredient)) {
-        const [itemId, amount] = ingredient;
-        addEntityValue(recipeIn, itemId, amount);
-      } else {
-        addEntityValue(recipeIn, ingredient.name, ingredient.amount);
-      }
-    }
-
-    // Check products
-    if (recipeData.results) {
-      for (const result of recipeData.results) {
-        if (D.isSimpleProduct(result)) {
-          const [itemId, amount] = result;
-          addEntityValue(recipeOut, itemId, amount);
-        } else {
-          addEntityValue(recipeOut, result.name, result.amount);
+    if (D.isRecipe(proto)) {
+      const recipeData = getRecipeData(proto);
+      const [recipeOut, recipeCatalyst] = recipeResults[proto.name];
+      const recipe: Recipe = {
+        id: proto.name,
+        name: recipeLocale.names[proto.name],
+        category: subgroup.group,
+        row: getRecipeRow(proto),
+        time: proto.energy_required ?? 0.5,
+        producers: producers.crafting[proto.category ?? 'crafting'],
+        in: getIngredients(recipeData.ingredients),
+        // Already calculated when determining included recipes
+        out: recipeOut,
+        catalyst: recipeCatalyst,
+        unlockedBy: recipesUnlocked[proto.name],
+        icon: await getIcon(proto),
+      };
+      modData.recipes.push(recipe);
+    } else if (D.isFluid(proto)) {
+      // Check for offshore pump recipes
+      for (const pumpName of machines.offshorePump) {
+        const offshorePump = dataRaw['offshore-pump'][pumpName];
+        if (offshorePump.fluid === proto.name) {
+          // Found an offshore pump recipe
+          const id = getFakeRecipeId(
+            proto.name,
+            `${pumpName}-${proto.name}-pump`
+          );
+          const recipe: Recipe = {
+            id,
+            name: `${itemLocale.names[pumpName]} : ${
+              fluidLocale.names[proto.name]
+            }`,
+            category: group.name,
+            row: getRecipeRow(proto),
+            time: 1,
+            in: {},
+            out: { [proto.name]: 1 },
+            producers: [pumpName],
+            cost: 100,
+          };
+          modData.recipes.push(recipe);
         }
       }
-    } else if (recipeData.result) {
-      addEntityValue(
-        recipeOut,
-        recipeData.result,
-        recipeData.result_count ?? 1
-      );
+
+      // Check for boiler recipes
+      if (proto.name === 'steam') {
+        const water = dataRaw.fluid['water'];
+        for (const boilerName of machines.boiler) {
+          const boiler = dataRaw.boiler[boilerName];
+          // TODO: Account for different target temperatures
+          if (boiler.target_temperature === 165) {
+            // Found a boiler recipe
+            const id = getFakeRecipeId(
+              proto.name,
+              `${boilerName}-${proto.name}-boil`
+            );
+
+            const tempDiff = 165 - 15;
+            const energyReqd =
+              tempDiff * getEnergyInMJ(water.heat_capacity ?? '1KJ') * 1000;
+
+            const recipe: Recipe = {
+              id,
+              name: `${itemLocale.names[boilerName]} : ${
+                fluidLocale.names[proto.name]
+              }`,
+              category: group.name,
+              row: getRecipeRow(proto),
+              time: round(energyReqd, 10),
+              in: { [water.name]: 1 },
+              out: { [proto.name]: 1 },
+              producers: [boilerName],
+            };
+            modData.recipes.push(recipe);
+          }
+        }
+      }
+    } else {
+      // Check for rocket launch recipes
+      for (const launch_proto of protosSorted) {
+        if (
+          // Must be an item
+          D.isRecipe(launch_proto) ||
+          D.isFluid(launch_proto) ||
+          // Ignore if already processed
+          processedLaunchProto.has(launch_proto.name) ||
+          // Ignore if no launch products
+          (launch_proto.rocket_launch_product == null &&
+            launch_proto.rocket_launch_products == null)
+        )
+          continue;
+
+        const [recipeOut, recipeCatalyst] = getProducts(
+          launch_proto.rocket_launch_products ??
+            (launch_proto.rocket_launch_product
+              ? [launch_proto.rocket_launch_product]
+              : undefined)
+        );
+
+        if (recipeOut[proto.name]) {
+          // Found rocket launch recipe
+          for (const siloName of machines.silo) {
+            const silo = dataRaw['rocket-silo'][siloName];
+            const id = getFakeRecipeId(
+              proto.name,
+              `${siloName}-${launch_proto.name}-launch`
+            );
+
+            const recipeIn: Record<string, number> = {
+              [launch_proto.name]: 1,
+            };
+
+            // Add rocket parts
+            let part: string | undefined;
+            if (silo.fixed_recipe == null) continue;
+            const fixedRecipe = dataRaw.recipe[silo.fixed_recipe];
+            const fixedRecipeData = getRecipeData(fixedRecipe);
+            const [fixedRecipeProducts, _] = getProducts(
+              fixedRecipeData.results,
+              fixedRecipeData.result,
+              fixedRecipeData.result_count
+            );
+            for (const id of Object.keys(fixedRecipeProducts)) {
+              recipeIn[id] =
+                fixedRecipeProducts[id] * silo.rocket_parts_required;
+              part = id;
+            }
+
+            if (part == null) continue;
+
+            const recipe: Recipe = {
+              id,
+              name: `${itemLocale.names[siloName]} : ${
+                itemLocale.names[proto.name]
+              }`,
+              category: group.name,
+              row: getRecipeRow(proto),
+              time: 40.6, // Ignored for silo recipes in calculator
+              in: recipeIn,
+              out: recipeOut,
+              catalyst: recipeCatalyst,
+              part,
+              producers: [siloName],
+            };
+            modData.recipes.push(recipe);
+            processedLaunchProto.add(launch_proto.name);
+          }
+        }
+      }
+
+      // Check for burn recipes
+      if (proto.burnt_result && proto.fuel_category) {
+        // Found burn recipe
+        const id = getFakeRecipeId(proto.burnt_result, `${proto.name}-burn`);
+        const recipe: Recipe = {
+          id,
+          name: `${itemLocale.names[proto.name]} : ${
+            itemLocale.names[proto.burnt_result]
+          }`,
+          category: group.name,
+          row: getRecipeRow(proto),
+          time: 1,
+          in: { [proto.name]: 0 },
+          out: { [proto.burnt_result]: 0 },
+          producers: producers.burner[proto.fuel_category],
+        };
+        modData.recipes.push(recipe);
+      }
     }
 
-    const recipe: Recipe = {
-      id: proto.name,
-      name: recipeLocale.names[proto.name],
-      category: subgroup.group,
-      row: getRecipeRow(proto),
-      time: proto.energy_required ?? 0.5,
-      producers: producers.crafting[proto.category ?? 'crafting'],
-      in: recipeIn,
-      out: recipeOut,
-      unlockedBy: recipesUnlocked[proto.name],
-      icon: await getIcon(proto),
-    };
-    modData.recipes.push(recipe);
+    const resource = dataRaw.resource[proto.name];
+    if (resource && resource.minable) {
+      // Found mining recipe
+      const id = getFakeRecipeId(proto.name, `${proto.name}-mining`);
+      let miners = producers.resource[resource.category ?? 'basic-solid'];
+      const recipeIn: Record<string, number> = {};
+      if (resource.minable.required_fluid && resource.minable.fluid_amount) {
+        const amount = resource.minable.fluid_amount / 10;
+        recipeIn[resource.minable.required_fluid] = amount;
+        miners = miners.filter((m) => {
+          // Only allow producers with fluid boxes
+          const miningDrill = dataRaw['mining-drill'][m];
+          return miningDrill.input_fluid_box != null;
+        });
+      }
+
+      const [recipeOut, recipeCatalyst, total] = getProducts(
+        resource.minable.results,
+        resource.minable.result,
+        resource.minable.count
+      );
+
+      const recipe: Recipe = {
+        id,
+        name: D.isFluid(proto)
+          ? fluidLocale.names[proto.name]
+          : itemLocale.names[proto.name],
+        category: group.name,
+        row: getRecipeRow(proto),
+        time: resource.minable.mining_time,
+        in: recipeIn,
+        out: recipeOut,
+        catalyst: recipeCatalyst,
+        cost: 10000 / total,
+        mining: true,
+        producers: miners,
+      };
+      modData.recipes.push(recipe);
+    }
   }
 
   const technologies = Object.keys(dataRaw.technology).map(
@@ -1115,6 +1368,16 @@ async function processMod(): Promise<void> {
     id: 'technology',
     name: 'Technology',
     icon: 'lab',
+  });
+
+  // Filter out recipes with no producers
+  modData.recipes = modData.recipes.filter((r) => {
+    if (r.producers.length === 0) {
+      console.log(`Skipping recipe ${r.id} due to no producers`);
+      return false;
+    }
+
+    return true;
   });
 
   // Sprite sheet
