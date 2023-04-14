@@ -330,12 +330,17 @@ export class RateUtility {
     for (const step of steps) {
       if (step.parents && Object.keys(step.parents).length === 1) {
         const stepId = Object.keys(step.parents)[0];
-        const parent = steps.find((s) => s.id === stepId);
-        if (parent) {
-          if (step.id === parent.id) {
-            parents[step.id] = ROOT_ID;
-          } else {
-            parents[step.id] = parent.id;
+        if (stepId === '') {
+          // Empty string denotes output step
+          parents[step.id] = ROOT_ID;
+        } else {
+          const parent = steps.find((s) => s.id === stepId);
+          if (parent) {
+            if (step.id === parent.id) {
+              parents[step.id] = ROOT_ID;
+            } else {
+              parents[step.id] = parent.id;
+            }
           }
         }
       } else {
