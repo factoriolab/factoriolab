@@ -19,20 +19,7 @@ export class ItemTooltipPipe implements PipeTransform {
 
       return item.name;
     } else {
-      const recipe = data.recipeEntities[recipeId];
-
-      if (recipe == null) return '';
-
-      const producersHtml = recipe.producers
-        .map((i) => this.displaySvc.icon(i, ''))
-        .join('');
-
-      return `<div>${
-        recipe.name
-      }</div><div class="d-flex align-items-center justify-content-center\
-      flex-wrap mt-2">${this.displaySvc.recipeProcess(recipe)}\
-      </div><div class="d-flex align-items-center justify-content-center flex-wrap mt-2">\
-      ${producersHtml}</div>`;
+      return this.displaySvc.recipeTooltip(value, data);
     }
   }
 }

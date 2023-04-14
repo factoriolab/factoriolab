@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { IdType, Rational, Recipe, Technology } from '~/models';
+import { Dataset, IdType, Rational, Recipe, Technology } from '~/models';
 
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
@@ -48,6 +48,23 @@ export class DisplayService {
     } else {
       return '';
     }
+  }
+
+  recipeTooltip(value: string | null | undefined, data: Dataset): string {
+    if (value == null) return '';
+
+    const recipe = data.recipeEntities[value];
+    const technology = data.technologyEntities[value];
+
+    if (recipe == null) return '';
+
+    return `<div>${
+      recipe.name
+    }</div><div class="d-flex align-items-center justify-content-center\
+    flex-wrap mt-2">${this.recipeProcess(recipe)}\
+    </div>${this.recipeProducedBy(recipe)}${this.recipeUnlockedBy(
+      recipe
+    )}${this.technologyPrerequisites(technology)}`;
   }
 
   recipeProcess(recipe: Recipe): string {
