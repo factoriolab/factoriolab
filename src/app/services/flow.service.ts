@@ -122,6 +122,8 @@ export class FlowService {
 
             // Links to recipe node
             for (const targetId of Object.keys(step.parents)) {
+              if (targetId === '') continue; // Skip output parent
+
               // This is how much is requested by that step,
               // but need recipe source
               const targetAmount = step.items.mul(step.parents[targetId]);
@@ -198,6 +200,8 @@ export class FlowService {
         }
       }
     }
+
+    console.log(flow);
 
     return flow;
   }
