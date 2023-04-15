@@ -13,6 +13,7 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
   modId: string;
+  /** Use null value to indicate all researched */
   researchedTechnologyIds: string[] | null;
   netProductionOnly: boolean;
   preset: Preset;
@@ -38,7 +39,7 @@ export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
 
 export const initialSettingsState: SettingsState = {
   modId: '1.1',
-  researchedTechnologyIds: [],
+  researchedTechnologyIds: null,
   netProductionOnly: false,
   preset: Preset.Minimum,
   beaconReceivers: null,
