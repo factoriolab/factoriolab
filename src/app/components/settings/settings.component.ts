@@ -120,6 +120,8 @@ export class SettingsComponent implements OnInit {
         excludedRecipeIds: data.recipeIds.filter(
           (r) => recipesState[r].excluded
         ),
+        mod: modOptions.find((o) => o.value === settings.modId),
+        preset: presetOptions.find((o) => o.value === settings.preset),
       })
     )
   );

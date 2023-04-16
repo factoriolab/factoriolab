@@ -127,7 +127,7 @@
     "version": "版本",
     "modVersionsTooltip": "此数据集中的游戏 / mod 版本",
     "recipesTooltip": "单击来修改禁用哪些配方\n被禁用的配方将不会用于计算中",
-    "machines": "工厂",
+    "factory": "工厂",
     "preset": "预设",
     "presetTooltip": "请选择要使用的默认预设。",
     "addMachineTooltip": "添加工厂配置",

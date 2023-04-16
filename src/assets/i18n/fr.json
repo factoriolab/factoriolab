@@ -136,7 +136,7 @@
     "optionalRecipes": "Recettes optionel",
     "recipesIncluded": "Recette(s) activé",
     "optionalRecipesTooltip": "Cliquez pour modifier quelles recettes optionels sont activé. Les recettes désactivées ne seront pas utilisées dans la solution.",
-    "machines": "Usine",
+    "factory": "Usine",
     "preset": "Préréglage",
     "presetTooltip": "Sélectionnez un préréglage par défaut de paramètres de l'usine à utiliser",
     "addMachineTooltip": "Ajouter une préférence d'usine",

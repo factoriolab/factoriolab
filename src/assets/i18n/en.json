@@ -213,7 +213,7 @@
     "recipesExcluded": "{{ count }} recipes excluded",
     "recipesTooltip": "Click to modify which recipes are included. Excluded recipes will not be used in the solution.",
     "recipesHeader": "Set included recipes",
-    "machines": "Machines",
+    "factory": "Factory",
     "preset": "Preset",
     "presetTooltip": "Select a default preset of machine settings to use",
     "addMachineTooltip": "Add a machine preference",

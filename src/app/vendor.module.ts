@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { AccordionModule } from 'primeng/accordion';
 import { AutoFocusModule } from 'primeng/autofocus';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -25,6 +26,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 const modules = [
   // primeng
+  AccordionModule,
   AutoFocusModule,
   ButtonModule,
   CardModule,
