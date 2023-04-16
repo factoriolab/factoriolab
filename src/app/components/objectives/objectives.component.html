@@ -4,6 +4,28 @@
       <h3>
         {{ 'objectives.items' | translate }}
       </h3>
+      <div class="d-flex mb-2 col-12">
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="me-1 flex-grow-1 p-button-outlined"
+          icon="fa-solid fa-box"
+          [pTooltip]="'objectives.addAnItemTooltip' | translate"
+          tooltipPosition="top"
+          [label]="'objectives.addAnItem' | translate"
+          (click)="addItemPicker.clickOpen(vm.data, 'item')"
+        ></button>
+        <p-dropdown
+          labDropdownTranslate
+          styleClass="h-100"
+          [tooltip]="'objectives.selectDisplayRate' | translate"
+          [ngModel]="vm.displayRate"
+          [options]="displayRateOptions"
+          (onChange)="setDisplayRate($event.value, vm.displayRate)"
+        >
+        </p-dropdown>
+      </div>
       <div
         *ngFor="
           let itemObjective of vm.itemObjectives;
@@ -67,33 +89,24 @@
           ></p-dropdown>
         </div>
       </div>
-      <div class="d-flex col-12 col-md-6 col-xxl-12">
-        <button
-          pButton
-          pRipple
-          type="button"
-          class="me-1 flex-grow-1 p-button-outlined"
-          icon="fa-solid fa-box"
-          [pTooltip]="'objectives.addAnItemTooltip' | translate"
-          tooltipPosition="top"
-          [label]="'objectives.addAnItem' | translate"
-          (click)="addItemPicker.clickOpen(vm.data, 'item')"
-        ></button>
-        <p-dropdown
-          labDropdownTranslate
-          styleClass="h-100"
-          [tooltip]="'objectives.selectDisplayRate' | translate"
-          [ngModel]="vm.displayRate"
-          [options]="displayRateOptions"
-          (onChange)="setDisplayRate($event.value, vm.displayRate)"
-        >
-        </p-dropdown>
-      </div>
     </div>
     <div class="col-12 col-xxl-6">
       <h3>
         {{ 'objectives.recipes' | translate }}
       </h3>
+      <div class="d-flex col-12">
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="w-100 p-button-outlined mb-2"
+          icon="fa-solid fa-flask"
+          [pTooltip]="'objectives.addARecipeTooltip' | translate"
+          tooltipPosition="top"
+          [label]="'objectives.addARecipe' | translate"
+          (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
+        ></button>
+      </div>
       <div
         *ngFor="
           let recipeObjective of vm.recipeObjectives;
@@ -152,19 +165,6 @@
             (onChange)="setRecipeType(recipeObjective.id, $event.value)"
           ></p-dropdown>
         </div>
-      </div>
-      <div class="d-flex col-12 col-md-6">
-        <button
-          pButton
-          pRipple
-          type="button"
-          class="w-100 p-button-outlined"
-          icon="fa-solid fa-flask"
-          [pTooltip]="'objectives.addARecipeTooltip' | translate"
-          tooltipPosition="top"
-          [label]="'objectives.addARecipe' | translate"
-          (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
-        ></button>
       </div>
     </div>
   </div>
