@@ -162,6 +162,8 @@ async function processMod(): Promise<void> {
   // Set up collections
   // Record of limitations by hash: id
   const limitations: Record<string, string> = {};
+  // Record of technology ids by raw id: factoriolab id
+  const techId: Record<string, string> = {};
 
   function getItem(name: string): D.Item | D.Fluid {
     return (
@@ -288,7 +290,7 @@ async function processMod(): Promise<void> {
   async function getIcon(
     spec: D.IconSpecification & D.Base
   ): Promise<string | undefined> {
-    const id = D.isTechnology(spec) ? `${spec.name}-technology` : spec.name;
+    const id = D.isTechnology(spec) ? techId[spec.name] : spec.name;
 
     // If recipe has no declared icon, get product icon
     if (D.isRecipe(spec) && spec.icon == null && spec.icons == null) {
@@ -764,10 +766,21 @@ async function processMod(): Promise<void> {
   for (const key of Object.keys(dataRaw.technology)) {
     const techRaw = dataRaw.technology[key];
     const techData = techRaw[mode] ?? techRaw;
+
+    if (
+      getItem(techRaw.name) ||
+      dataRaw.recipe[techRaw.name] ||
+      dataRaw['item-group'][techRaw.name]
+    ) {
+      techId[techRaw.name] = `${techRaw.name}-technology`;
+    } else {
+      techId[techRaw.name] = techRaw.name;
+    }
+
     if (techData.effects) {
       for (const effect of techData.effects) {
         if (D.isUnlockRecipeModifier(effect)) {
-          recipesUnlocked[effect.recipe] = `${techRaw.name}-technology`;
+          recipesUnlocked[effect.recipe] = techId[techRaw.name];
         }
       }
     }
@@ -1318,7 +1331,7 @@ async function processMod(): Promise<void> {
   for (const techRaw of technologies) {
     const techData = techRaw[mode] ?? techRaw;
     const technology: Technology = {};
-    const id = `${techRaw.name}-technology`;
+    const id = techId[techRaw.name];
     if (techData.prerequisites?.length) {
       technology.prerequisites = techData.prerequisites.map(
         (p) => `${p}-technology`
