@@ -85,6 +85,7 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
+              "baseHref": "/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -113,6 +114,7 @@
                   "with": "src/environments/environment.staging.ts"
                 }
               ],
+              "baseHref": "/staging/",
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
