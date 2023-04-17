@@ -331,5 +331,11 @@
     "includedRecipes": "Included recipes",
     "includedRecipesInfo": "Click recipes to include or exclude them. Excluded recipes will not be used in the solution.",
     "total": "Total"
+  },
+  "data": {
+    "versions": "Versions",
+    "categories": "Categories",
+    "items": "Items",
+    "recipes": "Recipes"
   }
 }

@@ -1,1 +1,39 @@
-<p>data works!</p>
+<ng-container *ngIf="vm$ | async as vm">
+  <h3>{{ 'data.versions' | translate }}</h3>
+  <ul>
+    <li *ngFor="let version of vm.data.version | keyvalue">
+      {{ version.key }}: {{ version.value }}
+    </li>
+  </ul>
+  <h3>{{ 'data.categories' | translate }}</h3>
+  <ul>
+    <li *ngFor="let categoryId of vm.data.categoryIds">
+      <a
+        *ngIf="vm.data.categoryEntities[categoryId] as category"
+        [routerLink]="'category/' + categoryId"
+        queryParamsHandling="preserve"
+      >
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="p-button-link"
+          [icon]="categoryId | iconClass : 'category'"
+          [label]="category.name"
+        ></button>
+      </a>
+    </li>
+  </ul>
+  <h3>{{ 'data.items' | translate }}</h3>
+  <ul>
+    <li *ngFor="let itemId of vm.data.itemIds">
+      {{ itemId }}
+    </li>
+  </ul>
+  <h3>{{ 'data.recipes' | translate }}</h3>
+  <ul>
+    <li *ngFor="let recipeId of vm.data.recipeIds">
+      {{ recipeId }}
+    </li>
+  </ul>
+</ng-container>
