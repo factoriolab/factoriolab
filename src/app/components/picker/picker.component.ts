@@ -32,7 +32,6 @@ export class PickerComponent implements OnInit {
     | undefined;
 
   @Input() header = '';
-  @Input() recipesLocked: Entities<boolean> = {};
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<string[]>();
 
@@ -72,9 +71,11 @@ export class PickerComponent implements OnInit {
   clickOpen(
     data: Dataset,
     type: 'item' | 'recipe',
+    allIds: string[],
     selection?: string | string[]
   ): void {
     this.type = type;
+    const allIdsSet = new Set(allIds);
     if (Array.isArray(selection)) {
       this.isMultiselect = true;
       this.selection = [...selection];
@@ -89,8 +90,15 @@ export class PickerComponent implements OnInit {
     });
     this.categoryEntities = data.categoryEntities;
     if (type === 'item') {
-      this.categoryRows = data.categoryItemRows;
-      this.allSelectItems = data.itemIds.map(
+      this.categoryRows = {};
+      data.categoryIds.forEach((c) => {
+        this.categoryRows[c] = [];
+        data.categoryItemRows[c].forEach((r) =>
+          this.categoryRows[c].push(r.filter((i) => allIdsSet.has(i)))
+        );
+      });
+
+      this.allSelectItems = allIds.map(
         (i): SelectItem => ({
           label: data.itemEntities[i].name,
           value: i,
@@ -107,8 +115,15 @@ export class PickerComponent implements OnInit {
         this.activeIndex = index;
       }
     } else {
-      this.categoryRows = data.categoryRecipeRows;
-      this.allSelectItems = data.recipeIds.map(
+      this.categoryRows = {};
+      data.categoryIds.forEach((c) => {
+        this.categoryRows[c] = [];
+        data.categoryRecipeRows[c].forEach((r) =>
+          this.categoryRows[c].push(r.filter((i) => allIdsSet.has(i)))
+        );
+      });
+
+      this.allSelectItems = allIds.map(
         (i): SelectItem => ({
           label: data.recipeEntities[i].name,
           value: i,

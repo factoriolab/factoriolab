@@ -14,7 +14,7 @@
           [pTooltip]="'objectives.addAnItemTooltip' | translate"
           tooltipPosition="top"
           [label]="'objectives.addAnItem' | translate"
-          (click)="addItemPicker.clickOpen(vm.data, 'item')"
+          (click)="addItemPicker.clickOpen(vm.data, 'item', vm.itemIds)"
         ></button>
         <p-dropdown
           labDropdownTranslate
@@ -55,7 +55,12 @@
             [pTooltip]="'objectives.itemTooltip' | translate"
             tooltipPosition="top"
             (click)="
-              editPicker.clickOpen(vm.data, 'item', itemObjective.itemId)
+              editPicker.clickOpen(
+                vm.data,
+                'item',
+                vm.itemIds,
+                itemObjective.itemId
+              )
             "
           ></button>
           <lab-picker
@@ -104,7 +109,7 @@
           [pTooltip]="'objectives.addARecipeTooltip' | translate"
           tooltipPosition="top"
           [label]="'objectives.addARecipe' | translate"
-          (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
+          (click)="addRecipePicker.clickOpen(vm.data, 'recipe', vm.recipeIds)"
         ></button>
       </div>
       <div
@@ -132,7 +137,12 @@
             [pTooltip]="'objectives.recipeTooltip' | translate"
             tooltipPosition="top"
             (click)="
-              editPicker.clickOpen(vm.data, 'recipe', recipeObjective.recipeId)
+              editPicker.clickOpen(
+                vm.data,
+                'recipe',
+                vm.recipeIds,
+                recipeObjective.recipeId
+              )
             "
           >
             <i
@@ -147,7 +157,6 @@
           <lab-picker
             #editPicker
             [header]="'objectives.recipeTooltip' | translate"
-            [recipesLocked]="vm.recipesLocked"
             (selectId)="setRecipe(recipeObjective.id, $event)"
           ></lab-picker>
           <lab-input-number
@@ -176,7 +185,6 @@
   <lab-picker
     #addRecipePicker
     [header]="'objectives.addARecipeTooltip' | translate"
-    [recipesLocked]="vm.recipesLocked"
     (selectId)="addRecipeObjective($event)"
   ></lab-picker>
   <p-messages

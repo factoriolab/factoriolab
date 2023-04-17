@@ -1138,7 +1138,12 @@
                       }
               "
               (click)="
-                itemsPicker.clickOpen(vm.data, 'item', vm.excludedItemIds)
+                itemsPicker.clickOpen(
+                  vm.data,
+                  'item',
+                  vm.itemIds,
+                  vm.excludedItemIds
+                )
               "
             ></button>
             <lab-picker
@@ -1163,13 +1168,17 @@
                       }
               "
               (click)="
-                recipesPicker.clickOpen(vm.data, 'recipe', vm.excludedRecipeIds)
+                recipesPicker.clickOpen(
+                  vm.data,
+                  'recipe',
+                  vm.recipeIds,
+                  vm.excludedRecipeIds
+                )
               "
             ></button>
             <lab-picker
               #recipesPicker
               [header]="'settings.recipesHeader' | translate"
-              [recipesLocked]="vm.recipesLocked"
               (selectIds)="setExcludedRecipes($event, vm.recipesState, vm.data)"
             ></lab-picker>
           </div>

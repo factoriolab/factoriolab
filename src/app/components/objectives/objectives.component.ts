@@ -41,7 +41,8 @@ export class ObjectivesComponent {
     this.store.select(Settings.getRateUnitOptions),
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getDataset),
-    this.store.select(Settings.getRecipesLocked),
+    this.store.select(Settings.getAvailableItems),
+    this.store.select(Settings.getAvailableRecipes),
     this.contentService.width$,
   ]).pipe(
     map(
@@ -55,7 +56,8 @@ export class ObjectivesComponent {
         rateUnitOptions,
         options,
         data,
-        recipesLocked,
+        itemIds,
+        recipeIds,
         width,
       ]) => ({
         itemObjectives,
@@ -67,7 +69,8 @@ export class ObjectivesComponent {
         rateUnitOptions,
         options,
         data,
-        recipesLocked,
+        itemIds,
+        recipeIds,
         mobile: width < Breakpoint.Small,
         messages: this.getMessages(matrixResult),
       })

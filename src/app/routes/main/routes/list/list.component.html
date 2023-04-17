@@ -1400,9 +1400,7 @@
                       pButton
                       pRipple
                       type="button"
-                      class="hover-action me-2"
-                      [class.p-button-text]="!vm.recipesLocked[recipeId]"
-                      [class.p-button-danger]="vm.recipesLocked[recipeId]"
+                      class="p-button-text hover-action me-2"
                       [class.hover-active]="vm.recipesState[recipeId].excluded"
                       [icon]="recipeId | iconSmClass : 'recipe'"
                       [pTooltip]="recipeId | recipeTooltip : vm.data"

@@ -39,7 +39,7 @@
       class="mt-2"
       icon="fa-solid fa-box"
       [label]="'wizard.produceItemsButton' | translate"
-      (click)="addItemObjectivePicker.clickOpen(vm.data, 'item')"
+      (click)="addItemObjectivePicker.clickOpen(vm.data, 'item', vm.itemIds)"
     ></button>
     <lab-picker
       #addItemObjectivePicker
@@ -55,12 +55,11 @@
       class="mt-2"
       icon="fa-solid fa-industry"
       [label]="'wizard.runMachinesButton' | translate"
-      (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
+      (click)="addRecipePicker.clickOpen(vm.data, 'recipe', vm.recipeIds)"
     ></button>
     <lab-picker
       #addRecipePicker
       [header]="'wizard.runMachinesButton' | translate"
-      [recipesLocked]="vm.recipesLocked"
       (selectId)="selectId($event, WizardState.RecipeObjective)"
     ></lab-picker>
     <p-divider></p-divider>

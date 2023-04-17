@@ -324,7 +324,8 @@ function addValueToRecordByIds(
 export const getStepDetails = createSelector(
   getSteps,
   Recipes.getAdjustedDataset,
-  (steps, data) =>
+  Settings.getAvailableRecipes,
+  (steps, data, availableRecipeIds) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
       const outputs: StepOutput[] = [];
@@ -364,7 +365,7 @@ export const getStepDetails = createSelector(
         tabs.push(StepDetailTab.Machine);
       }
       if (s.itemId != null) {
-        for (const recipe of data.recipeIds.map((r) => data.recipeR[r])) {
+        for (const recipe of availableRecipeIds.map((r) => data.recipeR[r])) {
           if (recipe.produces(s.itemId)) {
             recipeIds.push(recipe.id);
           }

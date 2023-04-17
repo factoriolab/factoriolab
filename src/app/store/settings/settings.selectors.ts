@@ -670,20 +670,43 @@ export const getAllResearchedTechnologyIds = createSelector(
   }
 );
 
-export const getRecipesLocked = createSelector(
+export const getAvailableRecipes = createSelector(
   getAllResearchedTechnologyIds,
   getDataset,
   (researchedTechnologyIds, data) => {
-    return data.recipeIds.reduce((e: Entities<boolean>, id) => {
-      const recipe = data.recipeEntities[id];
-      e[id] =
-        recipe.unlockedBy != null &&
-        researchedTechnologyIds != null &&
-        researchedTechnologyIds.indexOf(recipe.unlockedBy) === -1;
-      return e;
-    }, {});
+    if (researchedTechnologyIds == null) return data.recipeIds;
+
+    const set = new Set(researchedTechnologyIds);
+    return data.recipeIds.filter((i) => {
+      const recipe = data.recipeEntities[i];
+      return recipe.unlockedBy == null || set.has(recipe.unlockedBy);
+    });
   }
 );
+
+export const getAvailableItems = createSelector(
+  getAvailableRecipes,
+  getDataset,
+  (recipeIds, data) => {
+    const recipes = recipeIds.map((r) => data.recipeR[r]);
+    return data.itemIds.filter((i) => recipes.some((r) => r.produces(i)));
+  }
+);
+
+// export const getRecipesLocked = createSelector(
+//   getAllResearchedTechnologyIds,
+//   getDataset,
+//   (researchedTechnologyIds, data) => {
+//     return data.recipeIds.reduce((e: Entities<boolean>, id) => {
+//       const recipe = data.recipeEntities[id];
+//       e[id] =
+//         recipe.unlockedBy != null &&
+//         researchedTechnologyIds != null &&
+//         researchedTechnologyIds.indexOf(recipe.unlockedBy) === -1;
+//       return e;
+//     }, {});
+//   }
+// );
 
 export function reduceEntities(
   value: Entities<string[]>,

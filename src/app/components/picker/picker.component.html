@@ -77,8 +77,7 @@
                 pRipple
                 type="button"
                 class="me-1 mb-1"
-                [class.p-button-text]="id !== selection && !recipesLocked[id]"
-                [class.p-button-danger]="recipesLocked[id]"
+                [class.p-button-text]="id !== selection"
                 [class.hover-action]="isMultiselect"
                 [class.hover-active]="selection && selection.indexOf(id) !== -1"
                 [icon]="id | iconSmClass : type"

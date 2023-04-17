@@ -29,7 +29,8 @@ export class LandingComponent {
     this.store.select(Settings.getModOptions),
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getMod),
-    this.store.select(Settings.getRecipesLocked),
+    this.store.select(Settings.getAvailableItems),
+    this.store.select(Settings.getAvailableRecipes),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
   ]).pipe(
@@ -39,7 +40,8 @@ export class LandingComponent {
         modOptions,
         data,
         mod,
-        recipesLocked,
+        itemIds,
+        recipeIds,
         preferences,
         savedStates,
       ]) => ({
@@ -47,7 +49,8 @@ export class LandingComponent {
         modOptions,
         data,
         mod,
-        recipesLocked,
+        itemIds,
+        recipeIds,
         preferences,
         savedStates,
       })

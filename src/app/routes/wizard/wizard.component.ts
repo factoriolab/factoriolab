@@ -31,13 +31,15 @@ export enum WizardState {
 export class WizardComponent {
   vm$ = combineLatest([
     this.store.select(Settings.getDataset),
-    this.store.select(Settings.getRecipesLocked),
+    this.store.select(Settings.getAvailableItems),
+    this.store.select(Settings.getAvailableRecipes),
     this.store.select(Settings.getDisplayRate),
     this.store.select(Settings.getRateUnitOptions),
   ]).pipe(
-    map(([data, recipesLocked, displayRate, rateUnitOptions]) => ({
+    map(([data, itemIds, recipeIds, displayRate, rateUnitOptions]) => ({
       data,
-      recipesLocked,
+      itemIds,
+      recipeIds,
       displayRate,
       rateUnitOptions,
     }))
