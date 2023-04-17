@@ -632,8 +632,46 @@ export const getInserterData = createSelector(
   (target, capacity) => InserterData[target][capacity]
 );
 
-export const getRecipesLocked = createSelector(
+export const getAllResearchedTechnologyIds = createSelector(
   getResearchedTechnologyIds,
+  getDataset,
+  (researchedTechologyIds, data) => {
+    if (
+      /** No need to parse if all researched */
+      researchedTechologyIds == null ||
+      /** Skip if data is not loaded */
+      Object.keys(data.technologyEntities).length === 0
+    )
+      return researchedTechologyIds;
+
+    /**
+     * Source technology list includes only minimal set of technologies that
+     * are not required as prerequisites for other researched technologies,
+     * to reduce zip size. Need to rehydrate full list of technology ids using
+     * their prerequisites.
+     */
+    const selection = new Set(researchedTechologyIds);
+
+    let addIds: Set<string>;
+    do {
+      addIds = new Set<string>();
+
+      for (const id of selection) {
+        const tech = data.technologyEntities[id];
+        tech.prerequisites
+          ?.filter((p) => !selection.has(p))
+          .forEach((p) => addIds.add(p));
+      }
+
+      addIds.forEach((i) => selection.add(i));
+    } while (addIds.size);
+
+    return Array.from(selection);
+  }
+);
+
+export const getRecipesLocked = createSelector(
+  getAllResearchedTechnologyIds,
   getDataset,
   (researchedTechnologyIds, data) => {
     return data.recipeIds.reduce((e: Entities<boolean>, id) => {

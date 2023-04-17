@@ -1333,9 +1333,7 @@ async function processMod(): Promise<void> {
     const technology: Technology = {};
     const id = techId[techRaw.name];
     if (techData.prerequisites?.length) {
-      technology.prerequisites = techData.prerequisites.map(
-        (p) => `${p}-technology`
-      );
+      technology.prerequisites = techData.prerequisites.map((p) => techId[p]);
     }
 
     const recipe: Recipe = {
@@ -1399,8 +1397,10 @@ async function processMod(): Promise<void> {
   spritesmith.run(
     { src: Object.keys(iconFiles), padding: 2 },
     async (_, result) => {
+      const tempPngPath = `${tempPath}/icons.png`;
       const modIconsPath = `${modPath}/icons.webp`;
-      await sharp(result.image).webp().toFile(modIconsPath);
+      fs.writeFileSync(tempPngPath, result.image);
+      await sharp(tempPngPath).webp().toFile(modIconsPath);
 
       modData.icons = Object.keys(result.coordinates).map((file) => {
         const coords = result.coordinates[file];

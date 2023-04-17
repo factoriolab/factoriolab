@@ -73,7 +73,7 @@ export const getMatrixResult = createSelector(
   RecipeObjectives.getRecipeObjectiveRationals,
   Items.getItemsState,
   Recipes.getRecipesState,
-  Settings.getResearchedTechnologyIds,
+  Settings.getAllResearchedTechnologyIds,
   Settings.getRationalCost,
   Recipes.getAdjustedDataset,
   (

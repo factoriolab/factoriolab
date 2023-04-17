@@ -230,19 +230,16 @@
               icon="fa-solid fa-microchip"
               [pTooltip]="'settings.techsTooltip' | translate"
               [label]="
-                vm.settings.researchedTechnologyIds
+                vm.researchedTechnologyIds
                   ? ('settings.techsResearched'
                     | translate
                       : {
-                          count: vm.settings.researchedTechnologyIds.length
+                          count: vm.researchedTechnologyIds.length
                         })
                   : ('settings.allTechsResearched' | translate)
               "
               (click)="
-                techPicker.clickOpen(
-                  vm.data,
-                  vm.settings.researchedTechnologyIds
-                )
+                techPicker.clickOpen(vm.data, vm.researchedTechnologyIds)
               "
             ></button>
             <lab-tech-picker

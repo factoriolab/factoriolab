@@ -13,7 +13,11 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
   modId: string;
-  /** Use null value to indicate all researched */
+  /**
+   * Use null value to indicate all researched. This list is filtered to the
+   * minimal set of technologies not listed as prerequisites for other
+   * researched technologies, to reduce zip size.
+   */
   researchedTechnologyIds: string[] | null;
   netProductionOnly: boolean;
   preset: Preset;
