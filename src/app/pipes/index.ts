@@ -10,6 +10,7 @@ import { PowerPipe } from './power.pipe';
 import { PrecisionExamplePipe } from './precision-example.pipe';
 import { RatePipe } from './rate.pipe';
 import { StepHrefPipe } from './step-href.pipe';
+import { StepIdPipe } from './step-id.pipe';
 import {
   BeaconTooltipPipe,
   ItemTooltipPipe,
@@ -37,4 +38,5 @@ export const pipes = [
   PrecisionExamplePipe,
   RatePipe,
   StepHrefPipe,
+  StepIdPipe,
 ];

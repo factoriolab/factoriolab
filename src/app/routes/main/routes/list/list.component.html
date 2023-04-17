@@ -925,7 +925,8 @@
             <p-tabMenu
               #expandTabMenu
               [model]="vm.stepDetails[step.id].tabs"
-              [activeItem]="vm.stepDetails[step.id].tabs[0]"
+              [activeItem]="activeItem[step | stepId]"
+              (activeItemChange)="setActiveItem(step, $event)"
             >
               <ng-template pTemplate="item" let-item>
                 {{ 'options.stepDetailTab.' + item.label | translate }}

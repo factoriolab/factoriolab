@@ -9,20 +9,24 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { MenuItem } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { combineLatest, filter, first, map } from 'rxjs';
+import { combineLatest, filter, first, map, tap } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import {
   ColumnsState,
   Dataset,
+  Entities,
   Game,
   ItemId,
   Rational,
   RecipeField,
   Step,
+  StepDetail,
   StepDetailTab,
 } from '~/models';
+import { StepIdPipe } from '~/pipes/step-id.pipe';
 import {
   ContentService,
   ExportService,
@@ -117,11 +121,13 @@ export class ListComponent implements OnInit, AfterViewInit {
         beltSpeedTxt,
         zipPartial,
       })
-    )
+    ),
+    tap((vm) => this.setActiveItems(vm.steps, vm.stepDetails))
   );
 
   @ViewChild('stepsTable') stepsTable: Table | undefined;
 
+  activeItem: Entities<MenuItem> = {};
   fragmentId: string | null | undefined;
 
   ItemId = ItemId;
@@ -191,6 +197,31 @@ export class ListComponent implements OnInit, AfterViewInit {
     } catch {
       // ignore error
     }
+  }
+
+  setActiveItems(steps: Step[], stepDetails: Entities<StepDetail>): void {
+    steps.forEach((s) => {
+      const id = StepIdPipe.transform(s);
+      const old = this.activeItem[id];
+      const detail = stepDetails[s.id];
+      if (detail == null) return;
+
+      if (old == null) {
+        this.activeItem[id] = detail.tabs[0];
+      } else if (detail.tabs.indexOf(old) === -1) {
+        const match = detail.tabs.find((t) => t.label === old.label);
+        if (match == null) {
+          this.activeItem[id] = detail.tabs[0];
+        } else {
+          this.activeItem[id] = match;
+        }
+      }
+    });
+  }
+
+  setActiveItem(step: Step, item: MenuItem): void {
+    const id = StepIdPipe.transform(step);
+    this.activeItem[id] = item;
   }
 
   resetStep(step: Step): void {
