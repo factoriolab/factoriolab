@@ -108,7 +108,7 @@ export class HeaderComponent implements OnInit {
       .filter((g) => g !== game)
       .map(
         (g): MenuItem => ({
-          icon: 'lab-icon-sm ' + gameInfo[g].icon,
+          icon: 'lab-icon small ' + gameInfo[g].icon,
           label: this.translateSvc.instant(gameInfo[g].label),
           routerLink: gameInfo[g].route,
         })

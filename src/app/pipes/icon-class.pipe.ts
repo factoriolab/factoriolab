@@ -13,9 +13,16 @@ export class IconClassPipe implements PipeTransform {
 
 @Pipe({ name: 'iconSmClass' })
 export class IconSmClassPipe implements PipeTransform {
-  transform(value: string | null | undefined, type: IdType = 'item'): string {
+  static transform(
+    value: string | null | undefined,
+    type: IdType = 'item'
+  ): string {
     if (value == null) return '';
 
-    return `lab-icon-sm ${type} ${value}`;
+    return `lab-icon sm ${type} ${value}`;
+  }
+
+  transform(value: string | null | undefined, type: IdType = 'item'): string {
+    return IconSmClassPipe.transform(value, type);
   }
 }

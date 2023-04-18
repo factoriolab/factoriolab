@@ -334,8 +334,15 @@
   },
   "data": {
     "versions": "Versions",
+    "collections": "Collections",
+    "any": "Any",
+    "selectedLabel": "{0} selected",
+    "name": "Name",
     "categories": "Categories",
     "items": "Items",
-    "recipes": "Recipes"
+    "recipes": "Recipes",
+    "category": "Category",
+    "item": "Item",
+    "recipe": "Recipe"
   }
 }

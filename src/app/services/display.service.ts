@@ -8,7 +8,7 @@ export class DisplayService {
   constructor(private translateSvc: TranslateService) {}
 
   icon(id: string, num?: string | number, type: IdType = 'item'): string {
-    return `<i class="me-2 lab-icon-sm ${type} padded ${id}"><span>${
+    return `<i class="me-2 lab-icon sm ${type} padded ${id}"><span>${
       num ?? ''
     }</span></i>`;
   }

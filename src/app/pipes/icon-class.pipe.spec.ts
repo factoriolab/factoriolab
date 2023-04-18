@@ -40,7 +40,7 @@ describe('IconSmClassPipe', () => {
 
   describe('transform', () => {
     it('should generate classes for small icons', () => {
-      expect(pipe.transform(ItemId.Coal)).toEqual('lab-icon-sm item coal');
+      expect(pipe.transform(ItemId.Coal)).toEqual('lab-icon sm item coal');
     });
 
     it('should handle null value', () => {

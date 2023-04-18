@@ -549,6 +549,7 @@ export const getDataset = createSelector(
 export const getOptions = createSelector(
   getDataset,
   (data): Options => ({
+    categories: getIdOptions(data.categoryIds, data.categoryEntities),
     items: getIdOptions(data.itemIds, data.itemEntities),
     beacons: getIdOptions(data.beaconIds, data.itemEntities),
     belts: getIdOptions(data.beltIds, data.itemEntities),

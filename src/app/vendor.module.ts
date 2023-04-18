@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AccordionModule } from 'primeng/accordion';
 import { AutoFocusModule } from 'primeng/autofocus';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -28,6 +29,7 @@ const modules = [
   // primeng
   AccordionModule,
   AutoFocusModule,
+  BreadcrumbModule,
   ButtonModule,
   CardModule,
   CheckboxModule,
