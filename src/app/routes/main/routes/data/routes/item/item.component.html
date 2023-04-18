@@ -2,4 +2,253 @@
   <p-breadcrumb [home]="vm.home" [model]="vm.breadcrumb"></p-breadcrumb>
   <h3>{{ vm.obj.name }}</h3>
   <i class="lg" [class]="vm.id | iconClass : 'item'"></i>
+  <table class="properties">
+    <tr>
+      <th>{{ 'data.category' | translate }}</th>
+      <td>
+        <a
+          [routerLink]="'/data/categories/' + vm.obj.category"
+          queryParamsHandling="preserve"
+        >
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-text"
+            [label]="vm.data.categoryEntities[vm.obj.category].name"
+            [icon]="vm.obj.category | iconClass : 'category'"
+          ></button>
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <th>{{ 'data.stackSize' | translate }}</th>
+      <td>
+        {{ vm.obj.stack ?? ('data.fluid' | translate) }}
+      </td>
+    </tr>
+    <ng-container *ngIf="vm.obj.beacon as beacon">
+      <tr>
+        <th colspan="2">
+          <h3>{{ 'data.beacon' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.efficiency' | translate }}</th>
+        <td>{{ beacon.effectivity }}</td>
+      </tr>
+      <tr>
+        <th>{{ 'data.moduleSlots' | translate }}</th>
+        <td>{{ beacon.modules }}</td>
+      </tr>
+      <tr>
+        <th>{{ 'data.range' | translate }}</th>
+        <td>{{ beacon.range }}</td>
+      </tr>
+      <tr>
+        <th>{{ 'data.energySource' | translate }}</th>
+        <td>{{ beacon.type }}</td>
+      </tr>
+      <tr>
+        <th>{{ 'data.energyConsumption' | translate }}</th>
+        <td>{{ displaySvc.power(beacon.usage) }}</td>
+      </tr>
+      <tr *ngIf="beacon.disallowedEffects">
+        <th>{{ 'data.disallowedEffects' | translate }}</th>
+        <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+      </tr>
+    </ng-container>
+    <ng-container *ngIf="vm.obj.belt as belt">
+      <tr>
+        <th colspan="2">
+          <h3>{{ 'data.belt' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.beltSpeed' | translate }}</th>
+        <td>{{ belt.speed }}</td>
+      </tr>
+    </ng-container>
+    <ng-container *ngIf="vm.obj.cargoWagon as cargoWagon">
+      <tr>
+        <th colspan="2">
+          <h3>{{ 'data.cargoWagon' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.storageSize' | translate }}</th>
+        <td>{{ cargoWagon.size }}</td>
+      </tr>
+    </ng-container>
+    <ng-container *ngIf="vm.obj.fluidWagon as fluidWagon">
+      <tr>
+        <th colspan="2">
+          <h3>{{ 'data.fluidWagon' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.fluidCapacity' | translate }}</th>
+        <td>{{ fluidWagon.capacity }}</td>
+      </tr>
+    </ng-container>
+    <ng-container *ngIf="vm.obj.fuel as fuel">
+      <tr>
+        <th colspan="2">
+          <h3>{{ 'data.fuel' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.fuelCategory' | translate }}</th>
+        <td>{{ fuel.category }}</td>
+      </tr>
+      <tr>
+        <th>{{ 'data.fuelValue' | translate }}</th>
+        <td>{{ fuel.value }} MJ</td>
+      </tr>
+      <tr *ngIf="fuel.result">
+        <th>{{ 'data.burntResult' | translate }}</th>
+        <td>
+          <a
+            [routerLink]="'/data/items/' + fuel.result"
+            queryParamsHandling="preserve"
+          >
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-text"
+              [label]="vm.data.itemEntities[fuel.result].name"
+              [icon]="fuel.result | iconClass : 'item'"
+            ></button>
+          </a>
+        </td>
+      </tr>
+    </ng-container>
+    <ng-container *ngIf="vm.obj.machine as machine">
+      <tr>
+        <th colspan="2">
+          <h3>{{ 'data.machine' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.craftingSpeed' | translate }}</th>
+        <td>{{ machine.speed }}</td>
+      </tr>
+      <tr *ngIf="machine.modules">
+        <th>{{ 'data.moduleSlots' | translate }}</th>
+        <td>{{ machine.modules }}</td>
+      </tr>
+      <tr *ngIf="machine.disallowedEffects">
+        <th>{{ 'data.disallowedEffects' | translate }}</th>
+        <td>{{ machine.disallowedEffects.join(', ') }}</td>
+      </tr>
+      <tr *ngIf="machine.type">
+        <th>{{ 'data.energySource' | translate }}</th>
+        <td>{{ machine.type }}</td>
+      </tr>
+      <tr *ngIf="machine.category">
+        <th>{{ 'data.fuelCategory' | translate }}</th>
+        <td>{{ machine.category }}</td>
+      </tr>
+      <tr *ngIf="machine.usage">
+        <th>{{ 'data.energyConsumption' | translate }}</th>
+        <td>
+          {{
+            machine.usage
+              ? displaySvc.power(machine.usage)
+              : ('none' | translate)
+          }}
+        </td>
+      </tr>
+      <tr *ngIf="machine.drain">
+        <th>{{ 'data.energyDrain' | translate }}</th>
+        <td>{{ displaySvc.power(machine.drain) }}</td>
+      </tr>
+      <tr *ngIf="machine.pollution">
+        <th>{{ 'data.pollution' | translate }}</th>
+        <td>{{ machine.pollution }}/m</td>
+      </tr>
+      <tr *ngIf="machine.consumption">
+        <th>{{ 'data.consumption' }}</th>
+        <td>
+          <div
+            class="d-flex align-items-center justify-content-center flex-wrap"
+          >
+            <i
+              *ngFor="let kv of machine.consumption | keyvalue"
+              [class]="kv.key | iconSmClass : 'item'"
+            >
+              <span>{{ displaySvc.round(kv.value) }}</span>
+            </i>
+          </div>
+        </td>
+      </tr>
+      <ng-container *ngIf="machine.silo as silo">
+        <tr>
+          <th colspan="2">
+            <h3>{{ 'data.rocketSilo' | translate }}</h3>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.rocketPartsRequired' | translate }}</th>
+          <td>{{ silo.parts }}</td>
+        </tr>
+        <tr>
+          <th>{{ 'data.rocketLaunchTime' | translate }}</th>
+          <td>{{ displaySvc.round(silo.launch) }}</td>
+        </tr>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="vm.obj.module as module">
+      <tr>
+        <th colspan="2">
+          <h3>{{ 'data.module' | translate }}</h3>
+        </th>
+      </tr>
+      <tr *ngIf="module.consumption">
+        <th>{{ 'data.energyConsumption' | translate }}</th>
+        <td>{{ displaySvc.toBonusPercent(module.consumption) }}</td>
+      </tr>
+      <tr *ngIf="module.pollution">
+        <th>{{ 'data.pollution' | translate }}</th>
+        <td>{{ displaySvc.toBonusPercent(module.pollution) }}</td>
+      </tr>
+      <tr *ngIf="module.productivity">
+        <th>{{ 'data.productivity' | translate }}</th>
+        <td>{{ displaySvc.toBonusPercent(module.productivity) }}</td>
+      </tr>
+      <tr *ngIf="module.speed">
+        <th>{{ 'data.speed' | translate }}</th>
+        <td>{{ displaySvc.toBonusPercent(module.speed) }}</td>
+      </tr>
+      <tr *ngIf="module.sprays">
+        <th>{{ 'data.sprays' | translate }}</th>
+        <td>{{ displaySvc.round(module.sprays) }}</td>
+      </tr>
+      <tr *ngIf="module.proliferator">
+        <th>{{ 'data.proliferator' | translate }}</th>
+        <td>
+          <a
+            [routerLink]="'/data/items/' + module.proliferator"
+            queryParamsHandling="preserve"
+          >
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-text"
+              [label]="vm.data.itemEntities[module.proliferator].name"
+              [icon]="module.proliferator | iconClass : 'item'"
+            ></button>
+          </a>
+        </td>
+      </tr>
+    </ng-container>
+  </table>
+
+  <ng-container *ngIf="vm.obj.machine">
+    TODO: Table of produceable recipes
+  </ng-container>
+  TODO: Table of recipes that produce this item TODO: Table of recipes that
+  consume this item
 </ng-container>

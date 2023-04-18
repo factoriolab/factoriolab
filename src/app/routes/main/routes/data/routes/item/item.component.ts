@@ -6,6 +6,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
+import { DisplayService } from '~/services';
 import { LabState, Settings } from '~/store';
 import { DataRouteService } from '../../data-route.service';
 import { DetailComponent } from '../../models';
@@ -37,7 +38,8 @@ export class ItemComponent extends DetailComponent {
     route: ActivatedRoute,
     translateSvc: TranslateService,
     private store: Store<LabState>,
-    private dataRouteSvc: DataRouteService
+    private dataRouteSvc: DataRouteService,
+    public displaySvc: DisplayService
   ) {
     super(route, translateSvc);
   }

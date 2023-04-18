@@ -847,8 +847,7 @@
           </div>
           <div
             *ngIf="
-              vm.data.fuelIds[FuelType.Chemical] &&
-              vm.data.fuelIds[FuelType.Chemical].length > 1 &&
+              vm.data.chemicalFuelIds.length &&
               vm.data.game !== Game.Satisfactory
             "
             class="mt-3 pb-3"

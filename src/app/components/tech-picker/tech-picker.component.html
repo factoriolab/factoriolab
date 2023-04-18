@@ -31,9 +31,7 @@
   <p-scrollPanel [style]="{ height: 'calc(80vh - 165px)', minHeight: '363px' }">
     <h3>{{ 'techPicker.available' | translate }}</h3>
     <div class="d-flex flex-wrap">
-      <i *ngIf="vm.status.available.length === 0">{{
-        'techPicker.none' | translate
-      }}</i>
+      <i *ngIf="vm.status.available.length === 0">{{ 'none' | translate }}</i>
       <button
         *ngFor="let id of vm.status.available"
         pButton
@@ -48,9 +46,7 @@
     </div>
     <h3>{{ 'techPicker.locked' | translate }}</h3>
     <div class="d-flex flex-wrap">
-      <i *ngIf="vm.status.locked.length === 0">{{
-        'techPicker.none' | translate
-      }}</i>
+      <i *ngIf="vm.status.locked.length === 0">{{ 'none' | translate }}</i>
       <button
         *ngFor="let id of vm.status.locked"
         pButton
@@ -65,9 +61,7 @@
     </div>
     <h3>{{ 'techPicker.researched' | translate }}</h3>
     <div class="d-flex flex-wrap">
-      <i *ngIf="vm.status.researched.length === 0">{{
-        'techPicker.none' | translate
-      }}</i>
+      <i *ngIf="vm.status.researched.length === 0">{{ 'none' | translate }}</i>
       <button
         *ngFor="let id of vm.status.researched"
         pButton

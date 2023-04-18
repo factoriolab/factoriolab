@@ -300,7 +300,9 @@ export class RecipeUtility {
         ) {
           // Try to find matching input for burning recipes
           const ins = Object.keys(recipe.in);
-          const fuels = data.fuelIds[machine.category];
+          const fuels = data.fuelIds.filter(
+            (i) => data.fuelEntities[i].category === machine.category
+          );
           rFuelId = ins.find((i) => fuels.indexOf(i) !== -1) || fuels[0];
         }
         if (rFuelId) {

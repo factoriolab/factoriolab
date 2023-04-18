@@ -363,19 +363,16 @@ export const getDataset = createSelector(
     const proliferatorModuleIds = modules
       .filter((i) => i.module.sprays != null)
       .map((i) => i.id);
-    const fuelIds = items
+    const fuels = items
       .filter(fnPropsNotNullish('fuel'))
       .sort((a, b) =>
         Rational.from(a.fuel.value).sub(Rational.from(b.fuel.value)).toNumber()
-      )
-      .reduce((e: Entities<string[]>, f) => {
-        const cat = f.fuel.category;
-        if (!e[cat]) {
-          e[cat] = [];
-        }
-        e[cat].push(f.id);
-        return e;
-      }, {});
+      );
+    const fuelIds = fuels.map((i) => i.id);
+    const chemicalFuelIds = fuels
+      .filter((i) => i.fuel.category === FuelType.Chemical)
+      .map((i) => i.id);
+
     const technologyIds = recipes
       .filter(fnPropsNotNullish('technology'))
       .map((r) => r.id);
@@ -532,6 +529,7 @@ export const getDataset = createSelector(
       proliferatorModuleIds,
       moduleEntities,
       fuelIds,
+      chemicalFuelIds,
       fuelEntities,
       recipeIds,
       recipeEntities,
@@ -561,10 +559,7 @@ export const getOptions = createSelector(
       data.itemEntities,
       true
     ),
-    chemicalFuels: getIdOptions(
-      data.fuelIds[FuelType.Chemical] ?? [],
-      data.itemEntities
-    ),
+    chemicalFuels: getIdOptions(data.chemicalFuelIds, data.itemEntities),
     recipes: getIdOptions(data.recipeIds, data.recipeEntities),
   })
 );
