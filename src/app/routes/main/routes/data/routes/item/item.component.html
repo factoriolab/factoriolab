@@ -2,7 +2,7 @@
   <p-breadcrumb [home]="vm.home" [model]="vm.breadcrumb"></p-breadcrumb>
   <h3>{{ vm.obj.name }}</h3>
   <i class="lg" [class]="vm.id | iconClass : 'item'"></i>
-  <table class="properties">
+  <table class="properties mb-4">
     <tr>
       <th>{{ 'data.category' | translate }}</th>
       <td>
@@ -21,10 +21,10 @@
         </a>
       </td>
     </tr>
-    <tr>
+    <tr *ngIf="vm.obj.stack">
       <th>{{ 'data.stackSize' | translate }}</th>
       <td>
-        {{ vm.obj.stack ?? ('data.fluid' | translate) }}
+        {{ vm.obj.stack }}
       </td>
     </tr>
     <ng-container *ngIf="vm.obj.beacon as beacon">
@@ -246,9 +246,22 @@
     </ng-container>
   </table>
 
+  <ng-container *ngIf="vm.producedByRecipeIds.length">
+    <h3>{{ 'data.producedBy' | translate }}</h3>
+    <lab-collection-table
+      [ids]="vm.producedByRecipeIds"
+      type="recipe"
+    ></lab-collection-table>
+  </ng-container>
+  <ng-container *ngIf="vm.consumedByRecipeIds.length">
+    <h3>{{ 'data.consumedBy' | translate }}</h3>
+    <lab-collection-table
+      [ids]="vm.consumedByRecipeIds"
+      type="recipe"
+    ></lab-collection-table>
+  </ng-container>
+
   <ng-container *ngIf="vm.obj.machine">
     TODO: Table of produceable recipes
   </ng-container>
-  TODO: Table of recipes that produce this item TODO: Table of recipes that
-  consume this item
 </ng-container>

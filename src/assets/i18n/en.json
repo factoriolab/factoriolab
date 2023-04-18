@@ -362,7 +362,6 @@
     "item": "Item",
     "recipe": "Recipe",
     "stackSize": "Stack size",
-    "fluid": "Fluid",
     "efficiency": "Efficiency",
     "moduleSlots": "Module slots",
     "range": "Range",
@@ -384,6 +383,9 @@
     "speed": "Speed",
     "sprays": "Sprays",
     "proliferator": "Proliferator",
-    "burntResult": "Burnt result"
+    "burntResult": "Burnt result",
+    "consumedBy": "Consumed by",
+    "producedBy": "Produced by",
+    "currentPageReportTemplate": "Showing {first} to {last} of {totalRecords}"
   }
 }

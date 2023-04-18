@@ -33,11 +33,23 @@ export class CollectionTableComponent {
     map(([ids, type, options, data]) => ({
       type,
       value: this.getValue(ids, type, data),
+      route: this.getCollectionRoute(type),
       options,
     }))
   );
 
   constructor(private store: Store<LabState>) {}
+
+  getCollectionRoute(type: IdType): string {
+    switch (type) {
+      case 'category':
+        return '/data/categories/';
+      case 'item':
+        return '/data/items/';
+      case 'recipe':
+        return '/data/recipes/';
+    }
+  }
 
   getValue(ids: string[], type: IdType, data: Dataset): CollectionItem[] {
     let entities: Entities<Entity>;

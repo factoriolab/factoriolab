@@ -9,11 +9,12 @@ import { AppSharedModule } from '~/app-shared.module';
 import { DisplayService } from '~/services';
 import { LabState, Settings } from '~/store';
 import { DataRouteService } from '../../data-route.service';
+import { DataSharedModule } from '../../data-shared.module';
 import { DetailComponent } from '../../models';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, AppSharedModule],
+  imports: [CommonModule, AppSharedModule, DataSharedModule],
   templateUrl: './item.component.html',
   styleUrls: ['./item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,6 +30,12 @@ export class ItemComponent extends DetailComponent {
       id,
       obj: data.itemEntities[id],
       breadcrumb: [parent, { label: data.itemEntities[id].name }],
+      producedByRecipeIds: data.recipeIds.filter(
+        (r) => data.recipeEntities[r].out[id]
+      ),
+      consumedByRecipeIds: data.recipeIds.filter(
+        (r) => data.recipeEntities[r].in[id]
+      ),
       home,
       data,
     }))
