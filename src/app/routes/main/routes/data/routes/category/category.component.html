@@ -2,4 +2,11 @@
   <p-breadcrumb [home]="vm.home" [model]="vm.breadcrumb"></p-breadcrumb>
   <h3>{{ vm.obj.name }}</h3>
   <i class="lg" [class]="vm.id | iconClass : 'category'"></i>
+  <h3>{{ 'data.items' | translate }}</h3>
+  <lab-collection-table [ids]="vm.itemIds" type="item"></lab-collection-table>
+  <h3>{{ 'data.recipes' | translate }}</h3>
+  <lab-collection-table
+    [ids]="vm.recipeIds"
+    type="recipe"
+  ></lab-collection-table>
 </ng-container>

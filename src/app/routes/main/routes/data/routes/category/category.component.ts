@@ -8,11 +8,12 @@ import { combineLatest, map } from 'rxjs';
 import { AppSharedModule } from '~/app-shared.module';
 import { LabState, Settings } from '~/store';
 import { DataRouteService } from '../../data-route.service';
+import { DataSharedModule } from '../../data-shared.module';
 import { DetailComponent } from '../../models';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, AppSharedModule],
+  imports: [CommonModule, AppSharedModule, DataSharedModule],
   templateUrl: './category.component.html',
   styleUrls: ['./category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,7 +30,10 @@ export class CategoryComponent extends DetailComponent {
       obj: data.categoryEntities[id],
       breadcrumb: [parent, { label: data.categoryEntities[id].name }],
       home,
-      data,
+      itemIds: data.itemIds.filter((i) => data.itemEntities[i].category === id),
+      recipeIds: data.recipeIds.filter(
+        (i) => data.recipeEntities[i].category === id
+      ),
     }))
   );
 
