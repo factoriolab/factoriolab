@@ -3,11 +3,12 @@
   <p-table [value]="collections">
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ 'data.collections' | translate }}</th>
+        <th>{{ 'data.collection' | translate }}</th>
+        <th>{{ 'data.count' | translate }}</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-collection>
-      <tr>
+      <tr *ngIf="$any(vm.data)[collection.id].length as count">
         <td>
           <a
             [routerLink]="collection.routerLink"
@@ -22,6 +23,7 @@
             ></button>
           </a>
         </td>
+        <td>{{ count }}</td>
       </tr>
     </ng-template>
   </p-table>

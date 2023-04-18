@@ -7,7 +7,7 @@ import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { Category, Dataset, Item, Recipe } from '~/models';
+import { Category, Dataset, Entities, Item, Recipe } from '~/models';
 import { LabState, Settings } from '~/store';
 import { DataRouteService } from '../../data-route.service';
 import { Collection } from '../../models';
@@ -64,7 +64,18 @@ export class CollectionComponent {
 
   getValue(collection: Collection, data: Dataset): CollectionItem[] {
     const ids = data[collection.ids] as string[];
-    const entities = data[collection.entities] as Record<string, Entity>;
+    let entities: Entities<Entity>;
+    switch (collection.type) {
+      case 'category':
+        entities = data.categoryEntities;
+        break;
+      case 'item':
+        entities = data.itemEntities;
+        break;
+      case 'recipe':
+        entities = data.recipeEntities;
+    }
+
     return ids.map((i) => {
       const entity = entities[i];
       const obj: CollectionItem = {

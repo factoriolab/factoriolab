@@ -1,1 +1,5 @@
-<p>recipe works!</p>
+<ng-container *ngIf="vm$ | async as vm">
+  <p-breadcrumb [home]="vm.home" [model]="vm.breadcrumb"></p-breadcrumb>
+  <h3>{{ vm.obj.name }}</h3>
+  <i class="lg" [class]="vm.id | iconClass : 'recipe'"></i>
+</ng-container>

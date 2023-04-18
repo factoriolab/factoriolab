@@ -1,1 +1,5 @@
-<p>item works!</p>
+<ng-container *ngIf="vm$ | async as vm">
+  <p-breadcrumb [home]="vm.home" [model]="vm.breadcrumb"></p-breadcrumb>
+  <h3>{{ vm.obj.name }}</h3>
+  <i class="lg" [class]="vm.id | iconClass : 'item'"></i>
+</ng-container>

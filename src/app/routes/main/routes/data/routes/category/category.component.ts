@@ -3,13 +3,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { Dataset } from '~/models';
 import { LabState, Settings } from '~/store';
 import { DataRouteService } from '../../data-route.service';
+import { DetailComponent } from '../../models';
 
 @Component({
   standalone: true,
@@ -18,39 +17,28 @@ import { DataRouteService } from '../../data-route.service';
   styleUrls: ['./category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CategoryComponent {
-  id$ = this.route.params.pipe(map((params) => params['id']));
+export class CategoryComponent extends DetailComponent {
   vm$ = combineLatest([
     this.id$,
+    this.parent$,
     this.dataRouteSvc.home$,
     this.store.select(Settings.getDataset),
   ]).pipe(
-    map(([id, home, data]) => ({
+    map(([id, parent, home, data]) => ({
       id,
       obj: data.categoryEntities[id],
-      breadcrumb: this.getBreadcrumb(id, data),
+      breadcrumb: [parent, { label: data.categoryEntities[id].name }],
       home,
       data,
     }))
   );
 
   constructor(
-    private route: ActivatedRoute,
-    private translateSvc: TranslateService,
+    route: ActivatedRoute,
+    translateSvc: TranslateService,
     private store: Store<LabState>,
     private dataRouteSvc: DataRouteService
-  ) {}
-
-  getBreadcrumb(id: string, data: Dataset): MenuItem[] {
-    return [
-      {
-        label: this.translateSvc.instant('data.categories'),
-        routerLink: '/data/categories',
-        queryParamsHandling: 'preserve',
-      },
-      {
-        label: data.categoryEntities[id].name,
-      },
-    ];
+  ) {
+    super(route, translateSvc);
   }
 }
