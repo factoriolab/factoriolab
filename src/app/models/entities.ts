@@ -10,6 +10,7 @@ export function toEntities<T extends { id: string }>(
       if (e[v.id]) {
         console.warn(`Duplicate id: ${v.id}`);
       }
+
       e[v.id] = v;
       return e;
     }, init);
