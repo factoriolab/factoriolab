@@ -67,19 +67,21 @@ export class CollectionTableComponent {
         entities = data.recipeEntities;
     }
 
-    return ids.map((i) => {
-      const entity = entities[i];
-      const obj: CollectionItem = {
-        id: entity.id,
-        name: entity.name,
-      };
+    return ids
+      .filter((i) => entities[i])
+      .map((i) => {
+        const entity = entities[i];
+        const obj: CollectionItem = {
+          id: entity.id,
+          name: entity.name,
+        };
 
-      if (type !== 'category') {
-        obj.category =
-          data.categoryEntities[(entity as Item | Recipe).category];
-      }
+        if (type !== 'category') {
+          obj.category =
+            data.categoryEntities[(entity as Item | Recipe).category];
+        }
 
-      return obj;
-    });
+        return obj;
+      });
   }
 }
