@@ -28,7 +28,7 @@ export class CategoryComponent extends DetailComponent {
     map(([id, parent, home, data]) => ({
       id,
       obj: data.categoryEntities[id],
-      breadcrumb: [parent, { label: data.categoryEntities[id].name }],
+      breadcrumb: [parent, { label: data.categoryEntities[id]?.name }],
       home,
       itemIds: data.itemIds.filter((i) => data.itemEntities[i].category === id),
       recipeIds: data.recipeIds.filter(

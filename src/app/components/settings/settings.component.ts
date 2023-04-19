@@ -122,9 +122,9 @@ export class SettingsComponent implements OnInit {
         preferences,
         savedStates,
         machineMenuItems: this.buildMachineMenus(machineRows, data),
-        excludedItemIds: data.itemIds.filter((i) => itemsState[i].excluded),
+        excludedItemIds: data.itemIds.filter((i) => itemsState[i]?.excluded),
         excludedRecipeIds: data.recipeIds.filter(
-          (r) => recipesState[r].excluded
+          (r) => recipesState[r]?.excluded
         ),
         mod: modOptions.find((o) => o.value === settings.modId),
         preset: presetOptions.find((o) => o.value === settings.preset),
