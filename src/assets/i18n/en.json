@@ -387,6 +387,13 @@
     "consumedByRecipes": "Consumed by recipes",
     "producedByRecipes": "Produced by recipes",
     "producibleRecipes": "Producible recipes",
-    "currentPageReportTemplate": "Showing {first} to {last} of {totalRecords}"
+    "currentPageReportTemplate": "Showing {first} to {last} of {totalRecords}",
+    "itemSettings": "Item settings",
+    "excluded": "Excluded",
+    "checked": "Checked",
+    "machineSettings": "Machine settings",
+    "moduleRank": "Module rank",
+    "beaconModuleRank": "Beacon module rank",
+    "overclock": "Overclock"
   }
 }

@@ -29,7 +29,7 @@
     </tr>
     <ng-container *ngIf="vm.obj.beacon as beacon">
       <tr>
-        <th colspan="2">
+        <th colspan="2" class="text-center">
           <h3>{{ 'data.beacon' | translate }}</h3>
         </th>
       </tr>
@@ -60,7 +60,7 @@
     </ng-container>
     <ng-container *ngIf="vm.obj.belt as belt">
       <tr>
-        <th colspan="2">
+        <th colspan="2" class="text-center">
           <h3>{{ 'data.belt' | translate }}</h3>
         </th>
       </tr>
@@ -71,7 +71,7 @@
     </ng-container>
     <ng-container *ngIf="vm.obj.cargoWagon as cargoWagon">
       <tr>
-        <th colspan="2">
+        <th colspan="2" class="text-center">
           <h3>{{ 'data.cargoWagon' | translate }}</h3>
         </th>
       </tr>
@@ -82,7 +82,7 @@
     </ng-container>
     <ng-container *ngIf="vm.obj.fluidWagon as fluidWagon">
       <tr>
-        <th colspan="2">
+        <th colspan="2" class="text-center">
           <h3>{{ 'data.fluidWagon' | translate }}</h3>
         </th>
       </tr>
@@ -93,7 +93,7 @@
     </ng-container>
     <ng-container *ngIf="vm.obj.fuel as fuel">
       <tr>
-        <th colspan="2">
+        <th colspan="2" class="text-center">
           <h3>{{ 'data.fuel' | translate }}</h3>
         </th>
       </tr>
@@ -126,7 +126,7 @@
     </ng-container>
     <ng-container *ngIf="vm.obj.machine as machine">
       <tr>
-        <th colspan="2">
+        <th colspan="2" class="text-center">
           <h3>{{ 'data.machine' | translate }}</h3>
         </th>
       </tr>
@@ -185,7 +185,7 @@
       </tr>
       <ng-container *ngIf="machine.silo as silo">
         <tr>
-          <th colspan="2">
+          <th colspan="2" class="text-center">
             <h3>{{ 'data.rocketSilo' | translate }}</h3>
           </th>
         </tr>
@@ -201,7 +201,7 @@
     </ng-container>
     <ng-container *ngIf="vm.obj.module as module">
       <tr>
-        <th colspan="2">
+        <th colspan="2" class="text-center">
           <h3>{{ 'data.module' | translate }}</h3>
         </th>
       </tr>
@@ -242,6 +242,198 @@
             ></button>
           </a>
         </td>
+      </tr>
+    </ng-container>
+    <tr>
+      <th colspan="2">
+        <div class="d-flex align-items-center justify-content-between">
+          <div></div>
+          <h3>{{ 'data.itemSettings' | translate }}</h3>
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="ms-2 p-button-rounded"
+            [class.invisible]="!vm.itemsStateRaw"
+            icon="fa-solid fa-rotate-left"
+            (click)="resetItem(vm.id)"
+          ></button>
+        </div>
+      </th>
+    </tr>
+    <tr>
+      <th>{{ 'data.excluded' | translate }}</th>
+      <td>
+        <div class="d-flex align-items-center justify-content-end">
+          <p-checkbox
+            [ngModel]="vm.itemsState.excluded"
+            [binary]="true"
+            (onChange)="setItemExcluded(vm.id, $event.checked)"
+          ></p-checkbox>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th>{{ 'data.checked' | translate }}</th>
+      <td>
+        <p-checkbox
+          [ngModel]="vm.itemsState.checked"
+          [binary]="true"
+          (onChange)="setItemChecked(vm.id, $event.checked)"
+        ></p-checkbox>
+      </td>
+    </tr>
+    <tr>
+      <th>{{ 'data.belt' | translate }}</th>
+      <td *ngIf="vm.itemsState.beltId as beltId">
+        <a
+          [routerLink]="
+            '/data/' +
+            (vm.data.beltIds.indexOf(beltId) !== -1
+              ? 'belts'
+              : vm.data.pipeIds.indexOf(beltId) !== -1
+              ? 'pipes'
+              : 'items') +
+            '/' +
+            beltId
+          "
+          queryParamsHandling="preserve"
+        >
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-text"
+            [label]="vm.data.itemEntities[beltId].name"
+            [icon]="beltId | iconClass : 'item'"
+          ></button>
+        </a>
+      </td>
+    </tr>
+    <tr *ngIf="vm.obj.stack; else fluidWagon">
+      <th>{{ 'data.cargoWagon' | translate }}</th>
+      <td *ngIf="vm.itemsState.wagonId as wagonId">
+        <a
+          [routerLink]="'/data/cargo-wagons/' + wagonId"
+          queryParamsHandling="preserve"
+        >
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-text"
+            [label]="vm.data.itemEntities[wagonId].name"
+            [icon]="wagonId | iconClass : 'item'"
+          ></button>
+        </a>
+      </td>
+    </tr>
+    <ng-template #fluidWagon>
+      <tr>
+        <th>{{ 'data.fluidWagon' | translate }}</th>
+        <td *ngIf="vm.itemsState.wagonId as wagonId">
+          <a
+            [routerLink]="'/data/fluid-wagons/' + wagonId"
+            queryParamsHandling="preserve"
+          >
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-text"
+              [label]="vm.data.itemEntities[wagonId].name"
+              [icon]="wagonId | iconClass : 'item'"
+            ></button>
+          </a>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-container *ngIf="vm.obj.machine && vm.machinesState">
+      <tr>
+        <th colspan="2">
+          <div class="d-flex align-items-center justify-content-between">
+            <div></div>
+            <h3>{{ 'data.machineSettings' | translate }}</h3>
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-rounded justify-self-end"
+              [class.invisible]="!vm.machinesStateRaw"
+              icon="fa-solid fa-rotate-left"
+              (click)="resetMachine(vm.id)"
+            ></button>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.moduleRank' | translate }}</th>
+        <td>
+          <div *ngFor="let moduleId of vm.machinesState.moduleRankIds">
+            <a
+              [routerLink]="'/data/modules/' + moduleId"
+              queryParamsHandling="preserve"
+            >
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text"
+                [label]="vm.data.itemEntities[moduleId].name"
+                [icon]="moduleId | iconClass : 'item'"
+              ></button>
+            </a>
+          </div>
+        </td>
+      </tr>
+      <ng-container *ngIf="vm.data.game === Game.Factorio">
+        <tr>
+          <th>{{ 'data.beacons' | translate }}</th>
+          <td>{{ vm.machinesState.beaconCount }}</td>
+        </tr>
+        <tr>
+          <th>{{ 'data.beacon' | translate }}</th>
+          <td>
+            <a
+              *ngIf="vm.machinesState.beaconId as beaconId"
+              [routerLink]="'/data/beacons/' + beaconId"
+              queryParamsHandling="preserve"
+            >
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text"
+                [label]="vm.data.itemEntities[beaconId].name"
+                [icon]="beaconId | iconClass : 'item'"
+              ></button>
+            </a>
+          </td>
+        </tr>
+        <tr>
+          <th>{{ 'data.beaconModuleRank' | translate }}</th>
+          <td>
+            <div *ngFor="let moduleId of vm.machinesState.beaconModuleRankIds">
+              <a
+                [routerLink]="'/data/modules/' + moduleId"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="vm.data.itemEntities[moduleId].name"
+                  [icon]="moduleId | iconClass : 'item'"
+                ></button>
+              </a>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+      <tr *ngIf="vm.data.game === Game.Satisfactory">
+        <th>{{ 'data.overclock' | translate }}</th>
+        <td>{{ vm.machinesState.overclock }}%</td>
       </tr>
     </ng-container>
   </table>

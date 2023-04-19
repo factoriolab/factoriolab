@@ -21,6 +21,7 @@ export class CollectionTableComponent {
   @Input() set type(value: IdType) {
     this.type$.next(value);
   }
+  @Input() useRelativePath = false;
 
   ids$ = new ReplaySubject<string[]>();
   type$ = new ReplaySubject<IdType>();
@@ -41,6 +42,8 @@ export class CollectionTableComponent {
   constructor(private store: Store<LabState>) {}
 
   getCollectionRoute(type: IdType): string {
+    if (this.useRelativePath) return '';
+
     switch (type) {
       case 'category':
         return '/data/categories/';

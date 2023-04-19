@@ -39,6 +39,7 @@ export class SetWagonAction implements Action {
   readonly type = ItemsActionType.SET_WAGON;
   constructor(public payload: IdDefaultPayload) {}
 }
+
 export class ResetItemAction implements Action {
   readonly type = ItemsActionType.RESET_ITEM;
   constructor(public payload: string) {}

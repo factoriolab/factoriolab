@@ -13,6 +13,7 @@ export const enum MachinesActionType {
   SET_BEACON = '[Machines] Set Beacon',
   SET_BEACON_MODULE_RANK = '[Machines] Set Beacon Module Rank',
   SET_OVERCLOCK = '[Machines] Set Overclock',
+  RESET_MACHINE = '[Machines] Reset Machine',
 }
 
 export class AddAction implements Action {
@@ -65,6 +66,11 @@ export class SetOverclockAction implements Action {
   constructor(public payload: IdDefaultPayload<number>) {}
 }
 
+export class ResetMachineAction implements Action {
+  readonly type = MachinesActionType.RESET_MACHINE;
+  constructor(public payload: string) {}
+}
+
 export type MachinesAction =
   | AddAction
   | RemoveAction
@@ -75,4 +81,5 @@ export type MachinesAction =
   | SetBeaconCountAction
   | SetBeaconAction
   | SetBeaconModuleRankAction
-  | SetOverclockAction;
+  | SetOverclockAction
+  | ResetMachineAction;

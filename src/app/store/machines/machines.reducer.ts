@@ -126,6 +126,12 @@ export function machinesReducer(
         'overclock',
         action.payload
       );
+      console.log(state.entities, action.payload);
+      return { ...state, ...{ entities } };
+    }
+    case MachinesActionType.RESET_MACHINE: {
+      const entities = { ...state.entities };
+      delete entities[action.payload];
       return { ...state, ...{ entities } };
     }
     default:

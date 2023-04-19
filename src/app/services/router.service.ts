@@ -256,7 +256,11 @@ export class RouterService {
   }
 
   getHash(zData: ZipData): string {
-    const bare = zData.objectives.bare + zData.config.bare + this.zipTail.bare;
+    let bare = zData.objectives.bare + zData.config.bare + this.zipTail.bare;
+    if (bare.startsWith('&')) {
+      bare = bare.substring(1);
+    }
+
     const hash = zData.objectives.hash + zData.config.hash + this.zipTail.hash;
     const zip = `z=${this.bytesToBase64(deflate(hash))}&${Section.Version}=${
       this.hashVersion
