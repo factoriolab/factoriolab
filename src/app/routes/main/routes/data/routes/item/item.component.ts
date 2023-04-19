@@ -44,6 +44,7 @@ export class ItemComponent extends DetailComponent {
       ]) => ({
         id,
         obj: data.itemEntities[id],
+        category: data.categoryEntities[data.itemEntities[id]?.category ?? ''],
         breadcrumb: [parent, { label: data.itemEntities[id]?.name }],
         producedByRecipeIds: data.recipeIds.filter(
           (r) => data.recipeEntities[r].out[id]

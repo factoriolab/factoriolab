@@ -12,7 +12,7 @@
           <i class="lg" [class]="vm.id | iconClass : 'item'"></i>
         </td>
       </tr>
-      <tr *ngIf="vm.data.categoryEntities[vm.obj.category] as category">
+      <tr *ngIf="vm.category">
         <th>{{ 'data.category' | translate }}</th>
         <td>
           <a
@@ -24,7 +24,7 @@
               pRipple
               type="button"
               class="p-button-text"
-              [label]="category.name"
+              [label]="vm.category.name"
               [icon]="vm.obj.category | iconClass : 'category'"
             ></button>
           </a>
@@ -112,7 +112,7 @@
         </tr>
         <tr>
           <th>{{ 'data.fuelValue' | translate }}</th>
-          <td>{{ fuel.value }} MJ</td>
+          <td>{{ displaySvc.round(fuel.value) }} MJ</td>
         </tr>
         <tr *ngIf="fuel.result">
           <th>{{ 'data.burntResult' | translate }}</th>
@@ -253,98 +253,80 @@
           </td>
         </tr>
       </ng-container>
-      <tr>
-        <th colspan="2">
-          <div class="d-flex align-items-center justify-content-between">
-            <div></div>
-            <h3>{{ 'data.itemSettings' | translate }}</h3>
-            <div>
+      <ng-container *ngIf="vm.category">
+        <tr>
+          <th colspan="2">
+            <div class="d-flex align-items-center justify-content-between">
+              <div></div>
+              <h3>{{ 'data.itemSettings' | translate }}</h3>
+              <div>
+                <button
+                  *ngIf="vm.itemsStateRaw"
+                  pButton
+                  pRipple
+                  type="button"
+                  class="ms-2 p-button-rounded"
+                  icon="fa-solid fa-rotate-left"
+                  (click)="resetItem(vm.id)"
+                ></button>
+              </div>
+            </div>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.excluded' | translate }}</th>
+          <td>
+            <div class="d-flex align-items-center justify-content-end">
+              <p-checkbox
+                [ngModel]="vm.itemsState.excluded"
+                [binary]="true"
+                (onChange)="setItemExcluded(vm.id, $event.checked)"
+              ></p-checkbox>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>{{ 'data.checked' | translate }}</th>
+          <td>
+            <p-checkbox
+              [ngModel]="vm.itemsState.checked"
+              [binary]="true"
+              (onChange)="setItemChecked(vm.id, $event.checked)"
+            ></p-checkbox>
+          </td>
+        </tr>
+        <tr>
+          <th>{{ 'data.belt' | translate }}</th>
+          <td *ngIf="vm.itemsState.beltId as beltId">
+            <a
+              [routerLink]="
+                '/data/' +
+                (vm.data.beltIds.indexOf(beltId) !== -1
+                  ? 'belts'
+                  : vm.data.pipeIds.indexOf(beltId) !== -1
+                  ? 'pipes'
+                  : 'items') +
+                '/' +
+                beltId
+              "
+              queryParamsHandling="preserve"
+            >
               <button
-                *ngIf="vm.itemsStateRaw"
                 pButton
                 pRipple
                 type="button"
-                class="ms-2 p-button-rounded"
-                icon="fa-solid fa-rotate-left"
-                (click)="resetItem(vm.id)"
+                class="p-button-text"
+                [label]="vm.data.itemEntities[beltId].name"
+                [icon]="beltId | iconClass : 'item'"
               ></button>
-            </div>
-          </div>
-        </th>
-      </tr>
-      <tr>
-        <th>{{ 'data.excluded' | translate }}</th>
-        <td>
-          <div class="d-flex align-items-center justify-content-end">
-            <p-checkbox
-              [ngModel]="vm.itemsState.excluded"
-              [binary]="true"
-              (onChange)="setItemExcluded(vm.id, $event.checked)"
-            ></p-checkbox>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <th>{{ 'data.checked' | translate }}</th>
-        <td>
-          <p-checkbox
-            [ngModel]="vm.itemsState.checked"
-            [binary]="true"
-            (onChange)="setItemChecked(vm.id, $event.checked)"
-          ></p-checkbox>
-        </td>
-      </tr>
-      <tr>
-        <th>{{ 'data.belt' | translate }}</th>
-        <td *ngIf="vm.itemsState.beltId as beltId">
-          <a
-            [routerLink]="
-              '/data/' +
-              (vm.data.beltIds.indexOf(beltId) !== -1
-                ? 'belts'
-                : vm.data.pipeIds.indexOf(beltId) !== -1
-                ? 'pipes'
-                : 'items') +
-              '/' +
-              beltId
-            "
-            queryParamsHandling="preserve"
-          >
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="p-button-text"
-              [label]="vm.data.itemEntities[beltId].name"
-              [icon]="beltId | iconClass : 'item'"
-            ></button>
-          </a>
-        </td>
-      </tr>
-      <tr *ngIf="vm.obj.stack; else fluidWagon">
-        <th>{{ 'data.cargoWagon' | translate }}</th>
-        <td *ngIf="vm.itemsState.wagonId as wagonId">
-          <a
-            [routerLink]="'/data/cargo-wagons/' + wagonId"
-            queryParamsHandling="preserve"
-          >
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="p-button-text"
-              [label]="vm.data.itemEntities[wagonId].name"
-              [icon]="wagonId | iconClass : 'item'"
-            ></button>
-          </a>
-        </td>
-      </tr>
-      <ng-template #fluidWagon>
-        <tr>
-          <th>{{ 'data.fluidWagon' | translate }}</th>
+            </a>
+          </td>
+        </tr>
+        <tr *ngIf="vm.obj.stack; else fluidWagon">
+          <th>{{ 'data.cargoWagon' | translate }}</th>
           <td *ngIf="vm.itemsState.wagonId as wagonId">
             <a
-              [routerLink]="'/data/fluid-wagons/' + wagonId"
+              [routerLink]="'/data/cargo-wagons/' + wagonId"
               queryParamsHandling="preserve"
             >
               <button
@@ -358,7 +340,27 @@
             </a>
           </td>
         </tr>
-      </ng-template>
+        <ng-template #fluidWagon>
+          <tr>
+            <th>{{ 'data.fluidWagon' | translate }}</th>
+            <td *ngIf="vm.itemsState.wagonId as wagonId">
+              <a
+                [routerLink]="'/data/fluid-wagons/' + wagonId"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="vm.data.itemEntities[wagonId].name"
+                  [icon]="wagonId | iconClass : 'item'"
+                ></button>
+              </a>
+            </td>
+          </tr>
+        </ng-template>
+      </ng-container>
       <ng-container *ngIf="vm.obj.machine && vm.machinesState">
         <tr>
           <th colspan="2">
