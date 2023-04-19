@@ -311,7 +311,7 @@ export function isItemProduct(
 }
 
 export interface RecipeData {
-  ingredients: Ingredient[];
+  ingredients: Ingredient[] | Record<string, never>;
   result?: string;
   result_count?: number;
   results?: (ItemProduct | FluidProduct)[];
@@ -368,7 +368,7 @@ export interface TechnologyUnit {
 
 export interface TechnologyData {
   unit: TechnologyUnit;
-  effects?: Modifier[];
+  effects?: Modifier[] | Record<string, never>;
   enabled?: boolean;
   hidden?: boolean;
   ignore_tech_cost_multiplier?: boolean;

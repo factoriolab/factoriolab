@@ -16,6 +16,13 @@ import {
 } from '~/models';
 import { EnergyType } from '../src/app/models/enum/energy-type';
 import * as D from './factorio-dump.models';
+import { getJsonData } from './helpers';
+
+/**
+ * This script is intended to pull files from a dump from Factorio and build
+ * files required by the calculator. If the files already exist, should use
+ * existing defaults and append to the hash list.
+ */
 
 const mod = process.argv[2];
 const mode: 'normal' | 'expensive' = 'normal';
@@ -40,18 +47,34 @@ const modPath = `./src/data/${mod}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
 
+// const oldIconsPath = `${modPath}/icons.png`;
+// const modIconsPath = `${modPath}/icons.webp`;
+// sharp(oldIconsPath).webp().toFile(modIconsPath);
+// throw 'exit';
+
+interface ModDataReport {
+  noProducers: string[];
+  noProducts: string[];
+  multiFuelCategory: string[];
+}
+
+const start = Date.now();
+let temp = Date.now();
+function logTime(msg: string): void {
+  const now = Date.now();
+  const stepTime = now - temp;
+  const allTime = now - start;
+  temp = now;
+
+  console.log(allTime, stepTime, msg);
+}
+
 function addEntityValue(e: Entities<number>, id: string, val: number): void {
   if (e[id] == null) {
     e[id] = val;
   } else {
     e[id] = e[id] + val;
   }
-}
-
-function getJsonData<T>(file: string): T {
-  const str = fs.readFileSync(file).toString();
-  const sanitized = str.replace(/"(.*)":\s?-?inf/g, '"$1": 0');
-  return JSON.parse(sanitized) as T;
 }
 
 function getLocale(file: string): D.Locale {
@@ -70,6 +93,8 @@ function getMultiplier(letter: string): number {
       return 1000;
     case 'G':
       return 1000000;
+    case 'T':
+      return 1000000000;
     default:
       throw `Unsupported multiplier: '${letter}'`;
   }
@@ -130,6 +155,7 @@ function getDisallowedEffects(
 
 async function processMod(): Promise<void> {
   // Read mod data
+  logTime('Reading mod data');
   const modList = getJsonData<D.ModList>(modListPath);
   const modFiles = fs
     .readdirSync(modsPath)
@@ -157,7 +183,7 @@ async function processMod(): Promise<void> {
   const techLocale = getLocale('technology-locale.json');
 
   // Read main data JSON
-  const dataRaw = getJsonData<D.DataRawDump>(dataRawPath);
+  const dataRaw = getJsonData<D.DataRawDump>(dataRawPath, true);
 
   // Set up collections
   // Record of limitations by hash: id
@@ -377,16 +403,16 @@ async function processMod(): Promise<void> {
     }
   }
 
-  function processProducers(proto: MachineProto): void {
+  function processProducers(proto: MachineProto, name: string): void {
     if (D.isMiningDrill(proto)) {
-      addProducers(proto.name, proto.resource_categories, 'resource');
+      addProducers(name, proto.resource_categories, 'resource');
     }
 
     if (!D.isOffshorePump(proto) && proto.energy_source.type === 'burner') {
       if (proto.energy_source.fuel_categories) {
-        addProducers(proto.name, proto.energy_source.fuel_categories, 'burner');
+        addProducers(name, proto.energy_source.fuel_categories, 'burner');
       } else if (proto.energy_source.fuel_category) {
-        addProducers(proto.name, [proto.energy_source.fuel_category], 'burner');
+        addProducers(name, [proto.energy_source.fuel_category], 'burner');
       }
     }
 
@@ -395,17 +421,17 @@ async function processMod(): Promise<void> {
       D.isRocketSilo(proto) ||
       D.isFurnace(proto)
     ) {
-      addProducers(proto.name, proto.crafting_categories, 'crafting');
+      addProducers(name, proto.crafting_categories, 'crafting');
     }
 
     if (D.isBoiler(proto)) {
-      machines.boiler.push(proto.name);
+      machines.boiler.push(name);
     } else if (D.isRocketSilo(proto)) {
-      machines.silo.push(proto.name);
+      machines.silo.push(name);
     } else if (D.isLab(proto)) {
-      machines.lab.push(proto.name);
+      machines.lab.push(name);
     } else if (D.isOffshorePump(proto)) {
-      machines.offshorePump.push(proto.name);
+      machines.offshorePump.push(name);
     }
   }
 
@@ -464,9 +490,7 @@ async function processMod(): Promise<void> {
     if (proto.energy_source.type === 'burner') {
       if (proto.energy_source.fuel_categories) {
         if (proto.energy_source.fuel_categories.length > 1) {
-          console.warn(
-            `Only using first fuel category from burner ${proto.name}`
-          );
+          modDataReport.multiFuelCategory.push(proto.name);
         }
 
         return proto.energy_source.fuel_categories[0];
@@ -569,15 +593,19 @@ async function processMod(): Promise<void> {
     return undefined;
   }
 
-  function getIngredients(ingredients: D.Ingredient[]): Record<string, number> {
+  function getIngredients(
+    ingredients: D.Ingredient[] | Record<string, never>
+  ): Record<string, number> {
     const result: Record<string, number> = {};
 
-    for (const ingredient of ingredients) {
-      if (D.isSimpleIngredient(ingredient)) {
-        const [itemId, amount] = ingredient;
-        addEntityValue(result, itemId, amount);
-      } else {
-        addEntityValue(result, ingredient.name, ingredient.amount);
+    if (Array.isArray(ingredients)) {
+      for (const ingredient of ingredients) {
+        if (D.isSimpleIngredient(ingredient)) {
+          const [itemId, amount] = ingredient;
+          addEntityValue(result, itemId, amount);
+        } else {
+          addEntityValue(result, ingredient.name, ingredient.amount);
+        }
       }
     }
 
@@ -589,7 +617,7 @@ async function processMod(): Promise<void> {
   }
 
   function getProducts(
-    results: D.Product[] | undefined,
+    results: D.Product[] | Record<string, never> | undefined,
     result?: string,
     result_count = 1
   ): [Record<string, number>, Record<string, number> | undefined, number] {
@@ -597,7 +625,7 @@ async function processMod(): Promise<void> {
     let catalyst: Record<string, number> | undefined;
     let total = 0;
 
-    if (results) {
+    if (Array.isArray(results)) {
       for (const product of results) {
         if (D.isSimpleProduct(product)) {
           const [itemId, amount] = product;
@@ -637,7 +665,7 @@ async function processMod(): Promise<void> {
     return getDisallowedEffects(proto.allowed_effects);
   }
 
-  function getMachine(proto: MachineProto): Machine {
+  function getMachine(proto: MachineProto, name: string): Machine {
     const machine: Machine = {
       speed: getMachineSpeed(proto),
       modules: getMachineModules(proto),
@@ -650,7 +678,7 @@ async function processMod(): Promise<void> {
       silo: getMachineSilo(proto),
     };
 
-    processProducers(proto);
+    processProducers(proto, name);
 
     return machine;
   }
@@ -664,7 +692,13 @@ async function processMod(): Promise<void> {
     limitations: {},
   };
 
-  const modUpdateReport: ModHash = {
+  const modDataReport: ModDataReport = {
+    noProducts: [],
+    noProducers: [],
+    multiFuelCategory: [],
+  };
+
+  const modHashReport: ModHash = {
     items: [],
     beacons: [],
     belts: [],
@@ -680,7 +714,7 @@ async function processMod(): Promise<void> {
 
     if (hash[key].indexOf(id) === -1) {
       hash[key].push(id);
-      modUpdateReport[key].push(id);
+      modHashReport[key].push(id);
     }
   }
 
@@ -719,7 +753,7 @@ async function processMod(): Promise<void> {
       fs.writeFileSync(modHashPath, JSON.stringify(oldHash));
       fs.writeFileSync(
         `${tempPath}/hash-update-report.json`,
-        JSON.stringify(modUpdateReport)
+        JSON.stringify(modHashReport)
       );
     } else {
       const modHash: ModHash = {
@@ -742,7 +776,13 @@ async function processMod(): Promise<void> {
     }
 
     fs.writeFileSync(modDataPath, JSON.stringify(modData));
+    fs.writeFileSync(
+      `${tempPath}/data-report.json`,
+      JSON.stringify(modDataReport)
+    );
   }
+
+  logTime('Processing data');
 
   modList.mods
     .filter((m) => m.enabled)
@@ -777,7 +817,7 @@ async function processMod(): Promise<void> {
       techId[techRaw.name] = techRaw.name;
     }
 
-    if (techData.effects) {
+    if (Array.isArray(techData.effects)) {
       for (const effect of techData.effects) {
         if (D.isUnlockRecipeModifier(effect)) {
           recipesUnlocked[effect.recipe] = techId[techRaw.name];
@@ -820,7 +860,7 @@ async function processMod(): Promise<void> {
       recipeData.result_count
     );
     if (results[2] === 0) {
-      console.log(`Skipping recipe ${key} due to no results`);
+      modDataReport.noProducts.push(key);
       include = false;
     }
 
@@ -885,11 +925,13 @@ async function processMod(): Promise<void> {
       typeof recipeRaw[mode] === 'object' ? recipeRaw[mode] : recipeRaw;
 
     // Check ingredients
-    for (const ingredient of recipeData.ingredients) {
-      if (D.isSimpleIngredient(ingredient)) {
-        itemsUsed.add(ingredient[0]);
-      } else {
-        itemsUsed.add(ingredient.name);
+    if (Array.isArray(recipeData.ingredients)) {
+      for (const ingredient of recipeData.ingredients) {
+        if (D.isSimpleIngredient(ingredient)) {
+          itemsUsed.add(ingredient[0]);
+        } else {
+          itemsUsed.add(ingredient.name);
+        }
       }
     }
 
@@ -1005,28 +1047,28 @@ async function processMod(): Promise<void> {
         // Parse machine
         if (dataRaw.boiler[proto.place_result]) {
           const entity = dataRaw.boiler[proto.place_result];
-          item.machine = getMachine(entity);
+          item.machine = getMachine(entity, proto.name);
         } else if (dataRaw['assembling-machine'][proto.place_result]) {
           const entity = dataRaw['assembling-machine'][proto.place_result];
-          item.machine = getMachine(entity);
+          item.machine = getMachine(entity, proto.name);
         } else if (dataRaw['rocket-silo'][proto.place_result]) {
           const entity = dataRaw['rocket-silo'][proto.place_result];
-          item.machine = getMachine(entity);
+          item.machine = getMachine(entity, proto.name);
         } else if (dataRaw.furnace[proto.place_result]) {
           const entity = dataRaw.furnace[proto.place_result];
-          item.machine = getMachine(entity);
+          item.machine = getMachine(entity, proto.name);
         } else if (dataRaw.lab[proto.place_result]) {
           const entity = dataRaw.lab[proto.place_result];
-          item.machine = getMachine(entity);
+          item.machine = getMachine(entity, proto.name);
         } else if (dataRaw['mining-drill'][proto.place_result]) {
           const entity = dataRaw['mining-drill'][proto.place_result];
-          item.machine = getMachine(entity);
+          item.machine = getMachine(entity, proto.name);
         } else if (dataRaw['offshore-pump'][proto.place_result]) {
           const entity = dataRaw['offshore-pump'][proto.place_result];
-          item.machine = getMachine(entity);
+          item.machine = getMachine(entity, proto.name);
         } else if (dataRaw['reactor'][proto.place_result]) {
           const entity = dataRaw['reactor'][proto.place_result];
-          item.machine = getMachine(entity);
+          item.machine = getMachine(entity, proto.name);
         }
 
         // Parse transport belt
@@ -1292,8 +1334,14 @@ async function processMod(): Promise<void> {
         recipeIn[resource.minable.required_fluid] = amount;
         miners = miners.filter((m) => {
           // Only allow producers with fluid boxes
-          const miningDrill = dataRaw['mining-drill'][m];
-          return miningDrill.input_fluid_box != null;
+          const item = getItem(m);
+          if (!D.isFluid(item) && item.place_result) {
+            const miningDrill = dataRaw['mining-drill'][item.place_result];
+            return miningDrill.input_fluid_box != null;
+          } else {
+            // Seems to be an invalid entry
+            return false;
+          }
         });
       }
 
@@ -1385,8 +1433,8 @@ async function processMod(): Promise<void> {
 
   // Filter out recipes with no producers
   modData.recipes = modData.recipes.filter((r) => {
-    if (r.producers.length === 0) {
-      console.log(`Skipping recipe ${r.id} due to no producers`);
+    if (!r.producers?.length) {
+      modDataReport.noProducers.push(r.id);
       return false;
     }
 
@@ -1394,13 +1442,12 @@ async function processMod(): Promise<void> {
   });
 
   // Sprite sheet
+  logTime('Generating sprite sheet');
   spritesmith.run(
     { src: Object.keys(iconFiles), padding: 2 },
     async (_, result) => {
-      const tempPngPath = `${tempPath}/icons.png`;
       const modIconsPath = `${modPath}/icons.webp`;
-      fs.writeFileSync(tempPngPath, result.image);
-      await sharp(tempPngPath).webp().toFile(modIconsPath);
+      await sharp(result.image).webp().toFile(modIconsPath);
 
       modData.icons = Object.keys(result.coordinates).map((file) => {
         const coords = result.coordinates[file];
@@ -1410,7 +1457,9 @@ async function processMod(): Promise<void> {
         };
       });
 
+      logTime('Writing data');
       writeData();
+      logTime('Complete');
     }
   );
 }

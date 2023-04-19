@@ -92,10 +92,12 @@ export class PickerComponent implements OnInit {
     if (type === 'item') {
       this.categoryRows = {};
       data.categoryIds.forEach((c) => {
-        this.categoryRows[c] = [];
-        data.categoryItemRows[c].forEach((r) =>
-          this.categoryRows[c].push(r.filter((i) => allIdsSet.has(i)))
-        );
+        if (data.categoryItemRows[c]) {
+          this.categoryRows[c] = [];
+          data.categoryItemRows[c].forEach((r) =>
+            this.categoryRows[c].push(r.filter((i) => allIdsSet.has(i)))
+          );
+        }
       });
 
       this.allSelectItems = allIds.map(
@@ -117,10 +119,12 @@ export class PickerComponent implements OnInit {
     } else {
       this.categoryRows = {};
       data.categoryIds.forEach((c) => {
-        this.categoryRows[c] = [];
-        data.categoryRecipeRows[c].forEach((r) =>
-          this.categoryRows[c].push(r.filter((i) => allIdsSet.has(i)))
-        );
+        if (data.categoryRecipeRows[c]) {
+          this.categoryRows[c] = [];
+          data.categoryRecipeRows[c].forEach((r) =>
+            this.categoryRows[c].push(r.filter((i) => allIdsSet.has(i)))
+          );
+        }
       });
 
       this.allSelectItems = allIds.map(
