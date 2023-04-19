@@ -201,7 +201,7 @@ export const getTotals = createSelector(
         if (step.belts?.nonzero()) {
           const belt = itemsSettings[step.itemId].beltId;
           if (belt != null) {
-            if (!Object.prototype.hasOwnProperty.call(belts, belt)) {
+            if (!belts[belt]) {
               belts[belt] = Rational.zero;
             }
             belts[belt] = belts[belt].add(step.belts.ceil());
@@ -212,7 +212,7 @@ export const getTotals = createSelector(
         if (step.wagons?.nonzero()) {
           const wagon = itemsSettings[step.itemId].wagonId;
           if (wagon != null) {
-            if (!Object.prototype.hasOwnProperty.call(wagons, wagon)) {
+            if (!wagons[wagon]) {
               wagons[wagon] = Rational.zero;
             }
             wagons[wagon] = wagons[wagon].add(step.wagons.ceil());
@@ -236,7 +236,7 @@ export const getTotals = createSelector(
               machine = step.recipeId;
             }
             if (machine != null) {
-              if (!Object.prototype.hasOwnProperty.call(machines, machine)) {
+              if (!machines[machine]) {
                 machines[machine] = Rational.zero;
               }
 
@@ -264,7 +264,7 @@ export const getTotals = createSelector(
 
             if (beaconId == null || !total?.nonzero()) continue;
 
-            if (!Object.prototype.hasOwnProperty.call(beacons, beaconId)) {
+            if (!beacons[beaconId]) {
               beacons[beaconId] = Rational.zero;
             }
 
@@ -313,7 +313,7 @@ function addValueToRecordByIds(
   value: Rational
 ): void {
   ids.forEach((id) => {
-    if (!Object.prototype.hasOwnProperty.call(record, id)) {
+    if (!record[id]) {
       record[id] = Rational.zero;
     }
 

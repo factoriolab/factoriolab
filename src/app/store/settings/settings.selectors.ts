@@ -493,9 +493,7 @@ export const getDataset = createSelector(
       {}
     );
     const itemRecipeId = itemIds.reduce((e: Entities, i) => {
-      const matches = Object.prototype.hasOwnProperty.call(recipeMatches, i)
-        ? recipeMatches[i]
-        : [];
+      const matches = recipeMatches[i] ? recipeMatches[i] : [];
       if (matches.length === 1) {
         e[i] = matches[0].id;
       }

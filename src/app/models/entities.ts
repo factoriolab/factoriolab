@@ -7,7 +7,7 @@ export function toEntities<T extends { id: string }>(
 ): Entities<T> {
   if (warn) {
     return value.reduce((e: Entities<T>, v) => {
-      if (Object.prototype.hasOwnProperty.call(e, v.id)) {
+      if (e[v.id]) {
         console.warn(`Duplicate id: ${v.id}`);
       }
       e[v.id] = v;
