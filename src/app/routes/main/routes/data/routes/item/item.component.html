@@ -257,15 +257,17 @@
         <div class="d-flex align-items-center justify-content-between">
           <div></div>
           <h3>{{ 'data.itemSettings' | translate }}</h3>
-          <button
-            pButton
-            pRipple
-            type="button"
-            class="ms-2 p-button-rounded"
-            [class.invisible]="!vm.itemsStateRaw"
-            icon="fa-solid fa-rotate-left"
-            (click)="resetItem(vm.id)"
-          ></button>
+          <div>
+            <button
+              *ngIf="vm.itemsStateRaw"
+              pButton
+              pRipple
+              type="button"
+              class="ms-2 p-button-rounded"
+              icon="fa-solid fa-rotate-left"
+              (click)="resetItem(vm.id)"
+            ></button>
+          </div>
         </div>
       </th>
     </tr>
@@ -362,15 +364,17 @@
           <div class="d-flex align-items-center justify-content-between">
             <div></div>
             <h3>{{ 'data.machineSettings' | translate }}</h3>
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="p-button-rounded justify-self-end"
-              [class.invisible]="!vm.machinesStateRaw"
-              icon="fa-solid fa-rotate-left"
-              (click)="resetMachine(vm.id)"
-            ></button>
+            <div>
+              <button
+                *ngIf="vm.machinesStateRaw"
+                pButton
+                pRipple
+                type="button"
+                class="p-button-rounded justify-self-end"
+                icon="fa-solid fa-rotate-left"
+                (click)="resetMachine(vm.id)"
+              ></button>
+            </div>
           </div>
         </th>
       </tr>
