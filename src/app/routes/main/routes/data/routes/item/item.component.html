@@ -12,7 +12,7 @@
           <i class="lg" [class]="vm.id | iconClass : 'item'"></i>
         </td>
       </tr>
-      <tr>
+      <tr *ngIf="vm.data.categoryEntities[vm.obj.category] as category">
         <th>{{ 'data.category' | translate }}</th>
         <td>
           <a
@@ -24,7 +24,7 @@
               pRipple
               type="button"
               class="p-button-text"
-              [label]="vm.data.categoryEntities[vm.obj.category].name"
+              [label]="category.name"
               [icon]="vm.obj.category | iconClass : 'category'"
             ></button>
           </a>

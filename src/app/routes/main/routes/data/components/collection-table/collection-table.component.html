@@ -57,6 +57,7 @@
       </td>
       <td *ngIf="vm.type !== 'category'">
         <a
+          *ngIf="obj.category"
           [routerLink]="'/data/categories/' + obj.category.id"
           queryParamsHandling="preserve"
         >
