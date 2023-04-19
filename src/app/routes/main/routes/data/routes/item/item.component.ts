@@ -36,6 +36,9 @@ export class ItemComponent extends DetailComponent {
       consumedByRecipeIds: data.recipeIds.filter(
         (r) => data.recipeEntities[r].in[id]
       ),
+      producibleRecipeIds: data.recipeIds.filter(
+        (r) => data.recipeEntities[r].producers.indexOf(id) !== -1
+      ),
       home,
       data,
     }))

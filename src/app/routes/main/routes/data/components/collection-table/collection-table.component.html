@@ -2,7 +2,7 @@
   *ngIf="vm$ | async as vm"
   [value]="vm.value"
   labPagedTable
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [paginator]="vm.value.length > 10"
   [globalFilterFields]="['category.id']"
 >
   <ng-template pTemplate="header">
@@ -16,7 +16,7 @@
         <p-sortIcon field="category.name"></p-sortIcon>
       </th>
     </tr>
-    <tr>
+    <tr *ngIf="vm.value.length > 10">
       <th>
         <p-columnFilter
           type="text"

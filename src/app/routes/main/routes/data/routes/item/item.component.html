@@ -247,21 +247,24 @@
   </table>
 
   <ng-container *ngIf="vm.producedByRecipeIds.length">
-    <h3>{{ 'data.producedBy' | translate }}</h3>
+    <h3>{{ 'data.producedByRecipes' | translate }}</h3>
     <lab-collection-table
       [ids]="vm.producedByRecipeIds"
       type="recipe"
     ></lab-collection-table>
   </ng-container>
   <ng-container *ngIf="vm.consumedByRecipeIds.length">
-    <h3>{{ 'data.consumedBy' | translate }}</h3>
+    <h3>{{ 'data.consumedByRecipes' | translate }}</h3>
     <lab-collection-table
       [ids]="vm.consumedByRecipeIds"
       type="recipe"
     ></lab-collection-table>
   </ng-container>
-
-  <ng-container *ngIf="vm.obj.machine">
-    TODO: Table of produceable recipes
+  <ng-container *ngIf="vm.producibleRecipeIds.length">
+    <h3>{{ 'data.producibleRecipes' | translate }}</h3>
+    <lab-collection-table
+      [ids]="vm.producibleRecipeIds"
+      type="recipe"
+    ></lab-collection-table>
   </ng-container>
 </ng-container>

@@ -384,8 +384,9 @@
     "sprays": "Sprays",
     "proliferator": "Proliferator",
     "burntResult": "Burnt result",
-    "consumedBy": "Consumed by",
-    "producedBy": "Produced by",
+    "consumedByRecipes": "Consumed by recipes",
+    "producedByRecipes": "Produced by recipes",
+    "producibleRecipes": "Producible recipes",
     "currentPageReportTemplate": "Showing {first} to {last} of {totalRecords}"
   }
 }
