@@ -333,6 +333,7 @@
     "total": "Total"
   },
   "data": {
+    "notFound": "Not found",
     "versions": "Versions",
     "collection": "Collection",
     "count": "Count",
