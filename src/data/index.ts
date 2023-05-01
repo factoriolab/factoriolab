@@ -18,7 +18,6 @@ export const data: AppData = {
     { id: 'efs', name: 'Electric Furnaces', game: Game.Factorio },
     { id: 'fpp', name: 'Factorio Plus Plus', game: Game.Factorio },
     { id: 'fep', name: 'FactorioExtended Plus', game: Game.Factorio },
-    { id: 'ir2', name: 'Industrial Revolution 2', game: Game.Factorio },
     { id: 'ir3', name: 'Industrial Revolution 3', game: Game.Factorio },
     { id: 'kr2', name: 'Krastorio 2', game: Game.Factorio },
     { id: 'kr2aai', name: 'Krastorio 2 + AAI', game: Game.Factorio },
