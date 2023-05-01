@@ -149,6 +149,10 @@ export interface ItemWithTags extends ItemWithLabel {
   type: 'item-with-tags';
 }
 
+export interface SelectionTool extends ItemWithLabel {
+  type: 'selection-tool';
+}
+
 export interface EffectProperty {
   bonus?: number;
 }
@@ -328,6 +332,7 @@ export interface RecipeData {
   emissions_multiplier?: number;
   enabled?: boolean;
   hidden?: boolean;
+  main_product?: string;
 }
 
 export interface Recipe extends Base, IconSpecification, RecipeData {
@@ -607,6 +612,7 @@ export interface DataRawDump {
   resource: Entities<ResourceEntity>;
   'rocket-silo': Entities<RocketSilo>;
   'rocket-silo-rocket': Entities<RocketSiloRocket>;
+  'selection-tool': Entities<SelectionTool>;
   'spidertron-remote': Entities<SpidertronRemote>;
   technology: Entities<Technology>;
   tool: Entities<Tool>;

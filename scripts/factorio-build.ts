@@ -47,11 +47,6 @@ const modPath = `./src/data/${mod}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
 
-// const oldIconsPath = `${modPath}/icons.png`;
-// const modIconsPath = `${modPath}/icons.webp`;
-// sharp(oldIconsPath).webp().toFile(modIconsPath);
-// throw 'exit';
-
 interface ModDataReport {
   noProducers: string[];
   noProducts: string[];
@@ -203,6 +198,7 @@ async function processMod(): Promise<void> {
       dataRaw.module[name] ??
       dataRaw['rail-planner'][name] ??
       dataRaw['repair-tool'][name] ??
+      dataRaw['selection-tool'][name] ??
       dataRaw['spidertron-remote'][name] ??
       dataRaw.tool[name] ??
       dataRaw.fluid[name]
@@ -222,8 +218,8 @@ async function processMod(): Promise<void> {
       } else {
         return dataRaw.fluid[result.name];
       }
-    } else if (recipeData.results && recipe.main_product) {
-      const mainProduct = recipe.main_product;
+    } else if (recipeData.results && recipeData.main_product) {
+      const mainProduct = recipeData.main_product;
       const result = recipeData.results.find((r) =>
         D.isSimpleProduct(r) ? r[0] === mainProduct : r.name === mainProduct
       );
@@ -236,7 +232,7 @@ async function processMod(): Promise<void> {
           return dataRaw.fluid[result.name];
         }
       } else {
-        throw `Main product ${mainProduct} declared by recipe ${recipe.name} not found in results`;
+        throw `Main product '${mainProduct}' declared by recipe '${recipe.name}' not found in results`;
       }
     } else {
       return undefined;
@@ -250,7 +246,7 @@ async function processMod(): Promise<void> {
 
     const product = getRecipeProduct(recipe);
     if (product == null) {
-      throw `Recipe ${recipe.name} declares no subgroup though it is required`;
+      throw `Recipe '${recipe.name}' declares no subgroup though it is required`;
     }
 
     return getSubgroup(product);
@@ -960,11 +956,7 @@ async function processMod(): Promise<void> {
 
   // Sort items
   const protos = [
-    ...Array.from(itemsUsed.keys()).map((key) => {
-      const item = getItem(key);
-      if (item == null) console.log(key);
-      return item;
-    }),
+    ...Array.from(itemsUsed.keys()).map((key) => getItem(key)),
     ...Object.keys(recipesEnabled).map((r) => recipesEnabled[r]),
   ];
   const protosSorted = protos
