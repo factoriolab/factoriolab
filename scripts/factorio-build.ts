@@ -15,7 +15,7 @@ import {
   Technology,
 } from '~/models';
 import { EnergyType } from '../src/app/models/enum/energy-type';
-import * as D from './factorio-dump.models';
+import * as D from './factorio.models';
 import { getJsonData } from './helpers';
 
 /**
@@ -208,7 +208,7 @@ async function processMod(): Promise<void> {
     );
   }
 
-  function getRecipeProduct(recipe: D.Recipe): D.Item | D.Fluid {
+  function getRecipeProduct(recipe: D.Recipe): D.Item | D.Fluid | undefined {
     const recipeData = typeof recipe[mode] === 'object' ? recipe[mode] : recipe;
     if (recipeData.result) {
       return getItem(recipeData.result);
@@ -238,7 +238,7 @@ async function processMod(): Promise<void> {
         throw `Main product ${mainProduct} declared by recipe ${recipe.name} not found in results`;
       }
     } else {
-      throw `Recipe ${recipe.name} declares no subgroup though it is required`;
+      return undefined;
     }
   }
 
@@ -247,7 +247,12 @@ async function processMod(): Promise<void> {
       return recipe.subgroup;
     }
 
-    return getSubgroup(getRecipeProduct(recipe));
+    const product = getRecipeProduct(recipe);
+    if (product == null) {
+      throw `Recipe ${recipe.name} declares no subgroup though it is required`;
+    }
+
+    return getSubgroup(product);
   }
 
   function getSubgroup(proto: D.Recipe | D.Item | D.Fluid): string {
@@ -320,10 +325,12 @@ async function processMod(): Promise<void> {
 
     // If recipe has no declared icon, get product icon
     if (D.isRecipe(spec) && spec.icon == null && spec.icons == null) {
-      spec = getRecipeProduct(spec);
+      const product = getRecipeProduct(spec);
+      if (product != null) spec = product;
     }
 
-    if (spec.icon == null && spec.icons == null) {
+    // If recipe still has no product icon, calculator will pick first product
+    if (!D.isRecipe(spec) && spec.icon == null && spec.icons == null) {
       throw `No icons for proto ${spec.name}`;
     }
 
@@ -968,7 +975,7 @@ async function processMod(): Promise<void> {
 
         let order = proto.order;
         if (order == null && D.isRecipe(proto)) {
-          order = getRecipeProduct(proto).order;
+          order = getRecipeProduct(proto)?.order;
         }
 
         return {

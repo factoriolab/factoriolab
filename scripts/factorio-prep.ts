@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { ModData } from '~/models';
-import * as D from './factorio-dump.models';
+import * as D from './factorio.models';
 import { getJsonData } from './helpers';
 
 /**
