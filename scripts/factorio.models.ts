@@ -140,6 +140,15 @@ export interface ItemWithEntityData extends Item {
   icon_tintable?: string;
 }
 
+export interface ItemWithLabel extends Item {
+  default_label_color?: Color;
+  draw_label_for_cursor_render?: boolean;
+}
+
+export interface ItemWithTags extends ItemWithLabel {
+  type: 'item-with-tags';
+}
+
 export interface EffectProperty {
   bonus?: number;
 }
@@ -362,7 +371,7 @@ export interface UnlockRecipeModifier extends Modifier {
 }
 
 export interface TechnologyUnit {
-  ingredients: [string, number][];
+  ingredients: Ingredient[];
   time: number;
 }
 
@@ -586,6 +595,7 @@ export interface DataRawDump {
   'item-group': Entities<ItemGroup>;
   'item-subgroup': Entities<ItemSubGroup>;
   'item-with-entity-data': Entities<ItemWithEntityData>;
+  'item-with-tags': Entities<ItemWithTags>;
   lab: Entities<Lab>;
   'mining-drill': Entities<MiningDrill>;
   module: Entities<Module>;

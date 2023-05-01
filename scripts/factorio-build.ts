@@ -199,6 +199,7 @@ async function processMod(): Promise<void> {
       dataRaw.capsule[name] ??
       dataRaw.gun[name] ??
       dataRaw['item-with-entity-data'][name] ??
+      dataRaw['item-with-tags'][name] ??
       dataRaw.module[name] ??
       dataRaw['rail-planner'][name] ??
       dataRaw['repair-tool'][name] ??
@@ -387,11 +388,12 @@ async function processMod(): Promise<void> {
     crafting: {},
     resource: {},
   };
-  const machines: Record<EntityType, string[]> = {
-    lab: [],
-    silo: [],
-    boiler: [],
-    offshorePump: [],
+  // For each machine type, a map of item name : entity name
+  const machines: Record<EntityType, Record<string, string>> = {
+    lab: {},
+    silo: {},
+    boiler: {},
+    offshorePump: {},
   };
 
   function addProducers(
@@ -432,13 +434,13 @@ async function processMod(): Promise<void> {
     }
 
     if (D.isBoiler(proto)) {
-      machines.boiler.push(name);
+      machines.boiler[name] = proto.name;
     } else if (D.isRocketSilo(proto)) {
-      machines.silo.push(name);
+      machines.silo[name] = proto.name;
     } else if (D.isLab(proto)) {
-      machines.lab.push(name);
+      machines.lab[name] = proto.name;
     } else if (D.isOffshorePump(proto)) {
-      machines.offshorePump.push(name);
+      machines.offshorePump[name] = proto.name;
     }
   }
 
@@ -958,7 +960,11 @@ async function processMod(): Promise<void> {
 
   // Sort items
   const protos = [
-    ...Array.from(itemsUsed.keys()).map((key) => getItem(key)),
+    ...Array.from(itemsUsed.keys()).map((key) => {
+      const item = getItem(key);
+      if (item == null) console.log(key);
+      return item;
+    }),
     ...Object.keys(recipesEnabled).map((r) => recipesEnabled[r]),
   ];
   const protosSorted = protos
@@ -1179,8 +1185,9 @@ async function processMod(): Promise<void> {
       modData.recipes.push(recipe);
     } else if (D.isFluid(proto)) {
       // Check for offshore pump recipes
-      for (const pumpName of machines.offshorePump) {
-        const offshorePump = dataRaw['offshore-pump'][pumpName];
+      for (const pumpName of Object.keys(machines.offshorePump)) {
+        const entityName = machines.offshorePump[pumpName];
+        const offshorePump = dataRaw['offshore-pump'][entityName];
         if (offshorePump.fluid === proto.name) {
           // Found an offshore pump recipe
           const id = getFakeRecipeId(
@@ -1207,8 +1214,9 @@ async function processMod(): Promise<void> {
       // Check for boiler recipes
       if (proto.name === 'steam') {
         const water = dataRaw.fluid['water'];
-        for (const boilerName of machines.boiler) {
-          const boiler = dataRaw.boiler[boilerName];
+        for (const boilerName of Object.keys(machines.boiler)) {
+          const entityName = machines.boiler[boilerName];
+          const boiler = dataRaw.boiler[entityName];
           // TODO: Account for different target temperatures
           if (boiler.target_temperature === 165) {
             // Found a boiler recipe
@@ -1261,8 +1269,9 @@ async function processMod(): Promise<void> {
 
         if (recipeOut[proto.name]) {
           // Found rocket launch recipe
-          for (const siloName of machines.silo) {
-            const silo = dataRaw['rocket-silo'][siloName];
+          for (const siloName of Object.keys(machines.silo)) {
+            const entityName = machines.silo[siloName];
+            const silo = dataRaw['rocket-silo'][entityName];
             const id = getFakeRecipeId(
               proto.name,
               `${siloName}-${launch_proto.name}-launch`
@@ -1397,14 +1406,8 @@ async function processMod(): Promise<void> {
       category: 'technology',
       row: 0,
       time: techData.unit.time,
-      producers: machines.lab,
-      in: techData.unit.ingredients.reduce(
-        (e: Entities<number>, [id, count]) => {
-          e[id] = count;
-          return e;
-        },
-        {}
-      ),
+      producers: Object.keys(machines.lab),
+      in: getIngredients(techData.unit.ingredients),
       out: { [id]: 1 },
       technology,
       icon: await getIcon(techRaw),
