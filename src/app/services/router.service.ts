@@ -77,6 +77,7 @@ export enum ZipVersion {
   Version5 = '5', // Hash
   Version6 = '6', // Bare
   Version7 = '7', // Hash
+  Version8 = '8', // Unified
 }
 
 export enum MigrationWarning {
@@ -102,12 +103,11 @@ export class RouterService {
   zip: string | undefined;
   zipConfig$ = new BehaviorSubject<Zip>(this.empty);
   base64codes: Uint8Array;
-  // Intended to denote hashing algorithm version
-  bareVersion = ZipVersion.Version6;
-  hashVersion = ZipVersion.Version7;
+  // Current hashing algorithm version
+  version = ZipVersion.Version8;
   zipTail: Zip = {
-    bare: `&${Section.Version}=${this.bareVersion}`,
-    hash: `&${Section.Version}${this.hashVersion}`,
+    bare: `&${Section.Version}=${this.version}`,
+    hash: `&${Section.Version}${this.version}`,
   };
   first = true;
   ready$ = new Subject<void>();
@@ -263,7 +263,7 @@ export class RouterService {
 
     const hash = zData.objectives.hash + zData.config.hash + this.zipTail.hash;
     const zip = `z=${this.bytesToBase64(deflate(hash))}&${Section.Version}=${
-      this.hashVersion
+      this.version
     }`;
     return bare.length < Math.max(zip.length, MIN_ZIP) ? bare : zip;
   }
@@ -292,6 +292,7 @@ export class RouterService {
 
         if (query && this.zip !== query) {
           let zip = query;
+          let isBare = true;
           const zipSection = new URLSearchParams(zip).get(Section.Zip);
           if (zipSection != null) {
             // Upgrade V0 query-unsafe zipped characters
@@ -300,6 +301,7 @@ export class RouterService {
               .replace(/\//g, '.')
               .replace(/=/g, '_');
             zip = this.inflateSafe(z);
+            isBare = false;
           }
           // Upgrade V0 query-unsafe delimiters
           zip = zip.replace(/,/g, LISTSEP).replace(/\+/g, ARRAYSEP);
@@ -311,9 +313,8 @@ export class RouterService {
           let warnings: string[] = [];
           [params, warnings] = this.migrate(params);
           this.displayWarnings(warnings);
-          const v = params[Section.Version] as ZipVersion;
           const state: App.PartialState = {};
-          if (v === this.bareVersion) {
+          if (isBare) {
             Object.keys(params).forEach((k) => {
               params[k] = decodeURIComponent(params[k]);
             });
@@ -419,6 +420,10 @@ export class RouterService {
         return this.migrateV4(params, warnings);
       case ZipVersion.Version5:
         return this.migrateV5(params, warnings);
+      case ZipVersion.Version6:
+        return this.migrateV6(params, warnings);
+      case ZipVersion.Version7:
+        return this.migrateV7(params, warnings);
       default:
         return [params, warnings];
     }
@@ -634,8 +639,7 @@ export class RouterService {
 
   private migrateInlineBeacons(
     params: Entities,
-    warnings: string[],
-    version: ZipVersion
+    warnings: string[]
   ): [Entities<string>, string[]] {
     const list: string[] = [];
 
@@ -647,7 +651,6 @@ export class RouterService {
       params[Section.Beacons] = list.join(LISTSEP);
     }
 
-    params[Section.Version] = version;
     return [params, warnings];
   }
 
@@ -656,7 +659,9 @@ export class RouterService {
     params: Entities,
     warnings: string[]
   ): [Entities<string>, string[]] {
-    return this.migrateInlineBeacons(params, warnings, ZipVersion.Version6);
+    [params, warnings] = this.migrateInlineBeacons(params, warnings);
+    params[Section.Version] = ZipVersion.Version6;
+    return this.migrateV6(params, warnings);
   }
 
   /** Migrates V5 hash zip to latest hash format */
@@ -664,7 +669,186 @@ export class RouterService {
     params: Entities<string>,
     warnings: string[]
   ): [Entities<string>, string[]] {
-    return this.migrateInlineBeacons(params, warnings, ZipVersion.Version7);
+    [params, warnings] = this.migrateInlineBeacons(params, warnings);
+    params[Section.Version] = ZipVersion.Version7;
+    return this.migrateV7(params, warnings);
+  }
+
+  private migrateInsertField(
+    params: Entities,
+    section: Section,
+    index: number
+  ): void {
+    if (params[section]) {
+      const list = params[section].split(LISTSEP);
+      for (let i = 0; i < list.length; i++) {
+        const o = list[i].split(FIELDSEP);
+        if (o.length > index) {
+          o.splice(index, 0, '');
+          list[i] = this.zipFields(o);
+        }
+      }
+
+      params[section] = list.join(FIELDSEP);
+    }
+  }
+
+  private migrateDeleteField(
+    params: Entities,
+    section: Section,
+    index: number
+  ): void {
+    if (params[section]) {
+      const list = params[section].split(LISTSEP);
+      for (let i = 0; i < list.length; i++) {
+        const o = list[i].split(FIELDSEP);
+        if (o.length > index) {
+          o.splice(index, 1);
+          list[i] = this.zipFields(o);
+        }
+      }
+
+      params[section] = list.join(FIELDSEP);
+    }
+  }
+
+  private migrateMoveUpField(fields: string[], from: number, to: number): void {
+    if (fields[from] != null) {
+      const value = fields[from];
+      fields.splice(from, 1);
+      while (fields.length <= to) {
+        fields.push('');
+      }
+
+      fields[to] = value;
+    }
+  }
+
+  private migrateToV8(
+    params: Entities,
+    warnings: string[],
+    isBare: boolean
+  ): [Entities, string[]] {
+    // RecipeObjectives: Insert type field
+    this.migrateInsertField(params, Section.RecipeObjectives, 2);
+
+    /**
+     * ItemObjectives: Convert via / limit step, convert machines rate type to
+     * recipe objectives
+     */
+    if (params[Section.ItemObjectives]) {
+      const list = params[Section.ItemObjectives].split(LISTSEP);
+      const migrated = [...list];
+      for (let i = 0; i < list.length; i++) {
+        const obj = list[i];
+        const o = obj.split(FIELDSEP);
+
+        if (o[2] === '3') {
+          // Convert old RateType.Machines to recipe objectives
+          const recipes = params[Section.RecipeObjectives]
+            ? params[Section.RecipeObjectives].split(LISTSEP)
+            : [];
+          if (o.length > 3) {
+            // Also switch into limit / maximize objectives
+            const limit = [o[3], o[1], ObjectiveType.Limit.toString()];
+            const maximize = [o[0], '1', ObjectiveType.Maximize.toString()];
+            recipes.push(this.zipFields(maximize));
+            recipes.push(this.zipFields(limit));
+          } else {
+            recipes.push(this.zipFields([o[0], o[1]]));
+          }
+
+          migrated.splice(i, 1);
+          params[Section.RecipeObjectives] = recipes.join(LISTSEP);
+        } else {
+          if (o.length > 3) {
+            // Set up limit with via id & objective rate / rate type
+            const limit = [o[3], o[1], o[2], ObjectiveType.Limit.toString()];
+            // Convert original objective to maximize objective with weight of 1
+            const maximize = [o[0], '1', '', ObjectiveType.Maximize.toString()];
+            migrated[i] = this.zipFields(maximize);
+            migrated.push(this.zipFields(limit));
+          }
+        }
+      }
+
+      params[Section.ItemObjectives] = migrated.join(LISTSEP);
+    }
+
+    // Items: Remove recipeId
+    this.migrateDeleteField(params, Section.Items, 4);
+
+    // Recipes: Insert excluded field
+    this.migrateInsertField(params, Section.Recipes, 1);
+
+    /**
+     * Settings: Insert researchedTechnologyIds and maximizeType, move
+     * disabledRecipeIds into Recipes, move costs
+     */
+    if (params[Section.Settings]) {
+      const s = params[Section.Settings].split(FIELDSEP);
+      const x = isBare ? 1 : 0;
+
+      // Convert disabled recipe ids
+      if (s.length > 2 + x) {
+        const disabledRecipeIds = this.parseArray(s[2 + x]);
+        if (disabledRecipeIds) {
+          const recipes = params[Section.Recipes] ?? '';
+          const list = recipes.split(LISTSEP);
+          for (const id of disabledRecipeIds) {
+            let found = false;
+            for (let i = 0; i < list.length; i++) {
+              const r = list[i].split(FIELDSEP);
+              if (r[0] === id) {
+                found = true;
+                r[1] = TRUE;
+                list[i] = this.zipFields(r);
+              }
+            }
+
+            if (!found) {
+              list.push(this.zipFields([id, TRUE]));
+            }
+          }
+
+          params[Section.Recipes] = list.join(LISTSEP);
+
+          s.splice(2 + x, 1);
+        }
+
+        s.splice(2 + x, 1);
+      }
+
+      // Insert researchedTechnologyIds
+      s.splice(x, 0, '');
+
+      // Move cost fields
+      this.migrateMoveUpField(s, 16 + x, 20 + x);
+      this.migrateMoveUpField(s, 15 + x, 19 + x);
+      this.migrateMoveUpField(s, 14 + x, 18 + x);
+      this.migrateMoveUpField(s, 13 + x, 17 + x);
+
+      params[Section.Settings] = s.join(FIELDSEP);
+    }
+
+    params[Section.Version] = ZipVersion.Version8;
+    return [params, warnings];
+  }
+
+  /** Migrates V6 bare zip to latest format */
+  migrateV6(
+    params: Entities,
+    warnings: string[]
+  ): [Entities<string>, string[]] {
+    return this.migrateToV8(params, warnings, true);
+  }
+
+  /** Migrates V7 hash zip to latest format */
+  migrateV7(
+    params: Entities,
+    warnings: string[]
+  ): [Entities<string>, string[]] {
+    return this.migrateToV8(params, warnings, false);
   }
 
   displayWarnings(warnings: string[]): void {
@@ -1223,7 +1407,7 @@ export class RouterService {
         this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
         this.zipDiffString(state.proliferatorSprayId, init.proliferatorSprayId),
         this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
-        this.zipDiffNNumber(state.maximizeType, init.maximizeType),
+        this.zipDiffNumber(state.maximizeType, init.maximizeType),
         this.zipDiffString(state.costs.factor, init.costs.factor),
         this.zipDiffString(state.costs.machine, init.costs.machine),
         this.zipDiffString(state.costs.unproduceable, init.costs.unproduceable),
@@ -1256,7 +1440,7 @@ export class RouterService {
           hash.modules
         ),
         this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
-        this.zipDiffNNumber(state.maximizeType, init.maximizeType),
+        this.zipDiffNumber(state.maximizeType, init.maximizeType),
         this.zipDiffString(state.costs.factor, init.costs.factor),
         this.zipDiffString(state.costs.machine, init.costs.machine),
         this.zipDiffString(state.costs.unproduceable, init.costs.unproduceable),
