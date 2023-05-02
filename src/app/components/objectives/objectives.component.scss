@@ -22,10 +22,6 @@
 }
 
 :host ::ng-deep {
-  button.lab-button-icon-only .p-button-icon {
-    margin-right: 0.5rem;
-  }
-
   @include media-breakpoint-down(sm) {
     button.lab-button-icon-only {
       justify-content: center;

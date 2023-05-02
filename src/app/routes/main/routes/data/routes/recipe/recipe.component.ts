@@ -6,7 +6,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { LabState, Settings } from '~/store';
+import { Dataset, RecipeSettings } from '~/models';
+import { DisplayService } from '~/services';
+import { LabState, Recipes, Settings } from '~/store';
 import { DataRouteService } from '../../data-route.service';
 import { DetailComponent } from '../../models';
 
@@ -22,23 +24,57 @@ export class RecipeComponent extends DetailComponent {
     this.id$,
     this.parent$,
     this.dataRouteSvc.home$,
+    this.store.select(Recipes.recipesState),
+    this.store.select(Recipes.getRecipesState),
     this.store.select(Settings.getDataset),
   ]).pipe(
-    map(([id, parent, home, data]) => ({
+    map(([id, parent, home, recipesStateRaw, recipesState, data]) => ({
       id,
       obj: data.recipeEntities[id],
+      category: data.categoryEntities[data.recipeEntities[id]?.category ?? ''],
       breadcrumb: [parent, { label: data.recipeEntities[id].name }],
+      ingredientIds: Object.keys(data.recipeEntities[id]?.in ?? {}),
+      catalystIds: Object.keys(data.recipeEntities[id].catalyst ?? {}),
+      productIds: Object.keys(data.recipeEntities[id]?.out ?? {}),
+      recipesStateRaw: recipesStateRaw[id],
+      recipesState: recipesState[id],
       home,
       data,
     }))
   );
 
+  trueValue = true;
+
   constructor(
     route: ActivatedRoute,
     translateSvc: TranslateService,
     private store: Store<LabState>,
-    private dataRouteSvc: DataRouteService
+    private dataRouteSvc: DataRouteService,
+    public displaySvc: DisplayService
   ) {
     super(route, translateSvc);
+  }
+
+  toggleRecipe(
+    id: string,
+    recipeSettings: RecipeSettings,
+    data: Dataset
+  ): void {
+    const value = !recipeSettings.excluded ?? true;
+    const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);
+    this.setRecipeExcluded(id, value, def);
+  }
+
+  /** Action dispatch methods */
+  setRecipeExcluded(id: string, value: boolean, def: boolean): void {
+    this.store.dispatch(new Recipes.SetExcludedAction({ id, value, def }));
+  }
+
+  setRecipeChecked(id: string, value: boolean): void {
+    this.store.dispatch(new Recipes.SetCheckedAction({ id, value }));
+  }
+
+  resetRecipe(value: string): void {
+    this.store.dispatch(new Recipes.ResetRecipeAction(value));
   }
 }

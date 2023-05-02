@@ -1,8 +1,269 @@
 <ng-container *ngIf="vm$ | async as vm">
   <p-breadcrumb [home]="vm.home" [model]="vm.breadcrumb"></p-breadcrumb>
   <ng-container *ngIf="vm.obj; else notFound">
-    <h3>{{ vm.obj.name }}</h3>
-    <i class="lg" [class]="vm.id | iconClass : 'recipe'"></i>
+    <table class="properties mb-4">
+      <tr>
+        <th colspan="2" class="text-center">
+          <h3>{{ vm.obj.name }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <td colspan="2" class="text-center">
+          <i class="lg" [class]="vm.id | iconClass : 'recipe'"></i>
+        </td>
+      </tr>
+      <tr *ngIf="vm.category">
+        <th>{{ 'data.category' | translate }}</th>
+        <td>
+          <a
+            [routerLink]="'/data/categories/' + vm.obj.category"
+            queryParamsHandling="preserve"
+          >
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-text"
+              [label]="vm.category.name"
+              [icon]="vm.obj.category | iconSmClass : 'category'"
+            ></button>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>{{ 'data.time' | translate }}</th>
+        <td>{{ vm.obj.time }}</td>
+      </tr>
+      <tr *ngIf="vm.ingredientIds.length">
+        <th>{{ 'data.ingredients' | translate }}</th>
+        <td>
+          <div
+            *ngFor="let i of vm.ingredientIds"
+            class="d-flex align-items-center justify-content-end"
+          >
+            <a [routerLink]="'/data/items/' + i" queryParamsHandling="preserve">
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text"
+                [label]="vm.data.itemEntities[i]?.name ?? ''"
+                [icon]="i | iconSmClass"
+              ></button>
+            </a>
+            <span class="ms-3">{{ vm.obj.in[i] }}</span>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="vm.catalystIds.length">
+        <th>{{ 'data.catalysts' | translate }}</th>
+        <td>
+          <div
+            *ngFor="let i of vm.catalystIds"
+            class="d-flex align-items-center justify-content-end"
+          >
+            <a [routerLink]="'/data/items/' + i" queryParamsHandling="preserve">
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text"
+                [label]="vm.data.itemEntities[i]?.name ?? ''"
+                [icon]="i | iconSmClass"
+              ></button>
+            </a>
+            <span class="ms-3">{{ vm.obj.catalyst?.[i] }}</span>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="vm.productIds.length">
+        <th>{{ 'data.products' | translate }}</th>
+        <td>
+          <div
+            *ngFor="let i of vm.productIds"
+            class="d-flex align-items-center justify-content-end"
+          >
+            <a [routerLink]="'/data/items/' + i" queryParamsHandling="preserve">
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text"
+                [label]="vm.data.itemEntities[i]?.name ?? ''"
+                [icon]="i | iconSmClass"
+              ></button>
+            </a>
+            <span class="ms-3">{{ vm.obj.out[i] }}</span>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>{{ 'data.producers' | translate }}</th>
+        <td>
+          <div *ngFor="let i of vm.obj.producers">
+            <a
+              [routerLink]="'/data/machines/' + i"
+              queryParamsHandling="preserve"
+            >
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text"
+                [label]="vm.data.itemEntities[i]?.name ?? ''"
+                [icon]="i | iconSmClass"
+              ></button>
+            </a>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="vm.obj.unlockedBy">
+        <th>{{ 'data.unlockedBy' | translate }}</th>
+        <td>
+          <a
+            [routerLink]="'/data/technologies/' + vm.obj.unlockedBy"
+            queryParamsHandling="preserve"
+          >
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-text"
+              [label]="vm.data.recipeEntities[vm.obj.unlockedBy]?.name ?? ''"
+              [icon]="vm.obj.unlockedBy | iconSmClass : 'recipe'"
+            ></button>
+          </a>
+        </td>
+      </tr>
+      <tr *ngIf="vm.obj.mining">
+        <th>{{ 'data.mining' | translate }}</th>
+        <td>
+          <p-checkbox
+            [(ngModel)]="trueValue"
+            [binary]="true"
+            [disabled]="true"
+          ></p-checkbox>
+        </td>
+      </tr>
+      <tr *ngIf="vm.obj.part">
+        <th>{{ 'data.rocketPart' | translate }}</th>
+        <td>
+          <a
+            [routerLink]="'/data/items/' + vm.obj.part"
+            queryParamsHandling="preserve"
+          >
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-text"
+              [label]="vm.data.itemEntities[vm.obj.part]?.name ?? ''"
+              [icon]="vm.obj.part | iconSmClass"
+            ></button>
+          </a>
+        </td>
+      </tr>
+      <tr *ngIf="vm.obj.usage">
+        <th>{{ 'data.energyConsumption' | translate }}</th>
+        <td>{{ displaySvc.power(vm.obj.usage) }}</td>
+      </tr>
+      <ng-container *ngIf="vm.obj.technology as technology">
+        <tr>
+          <th colspan="2" class="text-center">
+            <h3>{{ 'data.technology' | translate }}</h3>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.prerequisites' | translate }}</th>
+          <td>
+            <div *ngIf="!technology.prerequisites?.length" class="text-end">
+              {{ 'none' | translate }}
+            </div>
+            <div *ngFor="let i of technology.prerequisites" class="text-end">
+              <a
+                [routerLink]="'/data/technologies/' + i"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="vm.data.recipeEntities[i]?.name ?? ''"
+                  [icon]="i | iconSmClass : 'recipe'"
+                ></button>
+              </a>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+      <tr>
+        <th colspan="2">
+          <div class="d-flex align-items-center justify-content-between">
+            <div></div>
+            <h3>{{ 'data.recipeSettings' | translate }}</h3>
+            <div>
+              <button
+                *ngIf="vm.recipesStateRaw"
+                pButton
+                pRipple
+                type="button"
+                class="ms-2 p-button-rounded"
+                icon="fa-solid fa-rotate-left"
+                (click)="resetRecipe(vm.id)"
+              ></button>
+            </div>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.excluded' | translate }}</th>
+        <td>
+          <div class="d-flex align-items-center justify-content-end">
+            <p-checkbox
+              [ngModel]="vm.recipesState.excluded"
+              [binary]="true"
+              (onChange)="toggleRecipe(vm.id, vm.recipesState, vm.data)"
+            ></p-checkbox>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th>{{ 'data.checked' | translate }}</th>
+        <td>
+          <p-checkbox
+            [ngModel]="vm.recipesState.checked"
+            [binary]="true"
+            (onChange)="setRecipeChecked(vm.id, $event.checked)"
+          ></p-checkbox>
+        </td>
+      </tr>
+      <tr>
+        <th>{{ 'data.machine' | translate }}</th>
+        <td>
+          <a
+            *ngIf="vm.recipesState.machineId as id"
+            [routerLink]="'/data/machiness/' + id"
+            queryParamsHandling="preserve"
+          >
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-text"
+              [label]="vm.data.itemEntities[id]?.name ?? ''"
+              [icon]="id | iconSmClass"
+            ></button>
+          </a>
+        </td>
+      </tr>
+      <tr *ngIf="vm.obj.cost">
+        <th>{{ 'data.cost' | translate }}</th>
+        <td>
+          <p-inputNumber></p-inputNumber>
+        </td>
+      </tr>
+    </table>
   </ng-container>
   <ng-template #notFound>
     <div class="my-5 p-error">{{ 'data.notFound' | translate }}</div>

@@ -63,6 +63,10 @@
     &.padded {
       margin: 7px;
     }
+
+    + .p-button-label {
+      margin-left: 0.75rem;
+    }
   }
 }
 

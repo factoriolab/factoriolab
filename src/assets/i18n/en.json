@@ -399,6 +399,18 @@
     "machineSettings": "Machine settings",
     "moduleRank": "Module rank",
     "beaconModuleRank": "Beacon module rank",
-    "overclock": "Overclock"
+    "overclock": "Overclock",
+    "time": "Time (s)",
+    "ingredients": "Ingredients",
+    "catalysts": "Catalysts",
+    "products": "Products",
+    "producers": "Producers",
+    "unlockedBy": "Unlocked by",
+    "mining": "Mining",
+    "rocketPart": "Rocket part",
+    "technology": "Technology",
+    "prerequisites": "Prerequisites",
+    "recipeSettings": "Recipe settings",
+    "cost": "Cost"
   }
 }
