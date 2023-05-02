@@ -64,7 +64,7 @@ export const data: AppData = {
     'bobang',
     'dsp',
     'fep',
-    'ir2',
+    'ir2', // Obsolete
     'kr2',
     'kr2sxp',
     'pys',

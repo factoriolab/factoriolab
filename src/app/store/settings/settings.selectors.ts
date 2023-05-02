@@ -88,6 +88,10 @@ export const getDisplayRate = createSelector(
   settingsState,
   (state) => state.displayRate
 );
+export const getMaximizeType = createSelector(
+  settingsState,
+  (state) => state.maximizeType
+);
 export const getCosts = createSelector(settingsState, (state) => state.costs);
 
 /* Complex selectors */

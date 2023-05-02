@@ -4,6 +4,7 @@ import {
   InserterCapacity,
   InserterTarget,
   ItemId,
+  MaximizeType,
   Preset,
   ResearchSpeed,
 } from '~/models';
@@ -35,6 +36,7 @@ export interface SettingsState {
   inserterCapacity: InserterCapacity;
   displayRate: DisplayRate;
   costs: CostSettings;
+  maximizeType: MaximizeType;
 }
 
 export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
@@ -54,13 +56,14 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   inserterCapacity: InserterCapacity.Capacity7,
   displayRate: DisplayRate.PerMinute,
+  maximizeType: MaximizeType.Weight,
   costs: {
     factor: '1',
     machine: '1',
     unproduceable: '1000000',
     excluded: '0',
     surplus: '0',
-    maximize: '-100000',
+    maximize: '-1000000',
   },
 };
 
@@ -151,6 +154,8 @@ export function settingsReducer(
       return { ...state, ...{ inserterCapacity: action.payload } };
     case SettingsActionType.SET_DISPLAY_RATE:
       return { ...state, ...{ displayRate: action.payload.value } };
+    case SettingsActionType.SET_MAXIMIZE_TYPE:
+      return { ...state, ...{ maximizeType: action.payload } };
     case SettingsActionType.SET_COSTS:
       return { ...state, ...{ costs: action.payload } };
 

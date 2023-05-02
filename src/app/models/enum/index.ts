@@ -9,6 +9,7 @@ export * from './inserter-target';
 export * from './item-id';
 export * from './language';
 export * from './matrix-result-type';
+export * from './maximize-option';
 export * from './objective-type';
 export * from './power-unit';
 export * from './preset';

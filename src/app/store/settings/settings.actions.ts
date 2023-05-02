@@ -6,6 +6,7 @@ import {
   DisplayRate,
   InserterCapacity,
   InserterTarget,
+  MaximizeType,
   Preset,
   PreviousPayload,
   ResearchSpeed,
@@ -29,6 +30,7 @@ export const enum SettingsActionType {
   SET_RESEARCH_SPEED = '[Settings] Set Research Speed',
   SET_INSERTER_CAPACITY = '[Settings] Set Inserter Capacity',
   SET_DISPLAY_RATE = '[Settings] Set Display Rate',
+  SET_MAXIMIZE_TYPE = '[Settings] Set Maximize Type',
   SET_COSTS = '[Settings] Set Costs',
   RESET_COST = '[Settings] Reset Cost Modifiers',
 }
@@ -118,6 +120,11 @@ export class SetDisplayRateAction implements Action {
   constructor(public payload: PreviousPayload<DisplayRate>) {}
 }
 
+export class SetMaximizeTypeAction implements Action {
+  readonly type = SettingsActionType.SET_MAXIMIZE_TYPE;
+  constructor(public payload: MaximizeType) {}
+}
+
 export class SetCostsAction implements Action {
   readonly type = SettingsActionType.SET_COSTS;
   constructor(public payload: CostSettings) {}
@@ -145,5 +152,6 @@ export type SettingsAction =
   | SetResearchSpeedAction
   | SetInserterCapacityAction
   | SetDisplayRateAction
+  | SetMaximizeTypeAction
   | SetCostsAction
   | ResetCostAction;

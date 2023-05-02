@@ -1223,6 +1223,7 @@ export class RouterService {
         this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
         this.zipDiffString(state.proliferatorSprayId, init.proliferatorSprayId),
         this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
+        this.zipDiffNNumber(state.maximizeType, init.maximizeType),
         this.zipDiffString(state.costs.factor, init.costs.factor),
         this.zipDiffString(state.costs.machine, init.costs.machine),
         this.zipDiffString(state.costs.unproduceable, init.costs.unproduceable),
@@ -1255,6 +1256,7 @@ export class RouterService {
           hash.modules
         ),
         this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
+        this.zipDiffNNumber(state.maximizeType, init.maximizeType),
         this.zipDiffString(state.costs.factor, init.costs.factor),
         this.zipDiffString(state.costs.machine, init.costs.machine),
         this.zipDiffString(state.costs.unproduceable, init.costs.unproduceable),
@@ -1300,6 +1302,7 @@ export class RouterService {
         beaconReceivers: this.parseString(s[i++]),
         proliferatorSprayId: this.parseNString(s[i++], hash.modules),
         netProductionOnly: this.parseBool(s[i++]),
+        maximizeType: this.parseNNumber(s[i++]),
         costs: {
           factor: this.parseString(s[i++]),
           machine: this.parseString(s[i++]),
@@ -1328,6 +1331,7 @@ export class RouterService {
         beaconReceivers: this.parseString(s[i++]),
         proliferatorSprayId: this.parseString(s[i++]),
         netProductionOnly: this.parseBool(s[i++]),
+        maximizeType: this.parseNumber(s[i++]),
         costs: {
           factor: this.parseString(s[i++]),
           machine: this.parseString(s[i++]),

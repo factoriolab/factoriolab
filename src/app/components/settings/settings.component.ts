@@ -31,6 +31,8 @@ import {
   Language,
   languageOptions,
   MachineSettings,
+  MaximizeType,
+  maximizeTypeOptions,
   PowerUnit,
   powerUnitOptions,
   Preset,
@@ -145,6 +147,7 @@ export class SettingsComponent implements OnInit {
   powerUnitOptions = powerUnitOptions;
   researchSpeedOptions = researchSpeedOptions;
   themeOptions = themeOptions;
+  maximizeTypeOptions = maximizeTypeOptions;
 
   FuelType = FuelType;
   Game = Game;
@@ -426,6 +429,10 @@ export class SettingsComponent implements OnInit {
 
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
+  }
+
+  setMaximizeType(value: MaximizeType): void {
+    this.store.dispatch(new Settings.SetMaximizeTypeAction(value));
   }
 
   setPowerUnit(value: PowerUnit): void {

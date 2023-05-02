@@ -56,6 +56,10 @@
       "fastTransportBelt": "Fast transport belt",
       "transportBelt": "Transport belt"
     },
+    "maximizeType": {
+      "weight": "Weight",
+      "ratio": "Ratio"
+    },
     "objectiveType": {
       "output": "Output",
       "input": "Input",
@@ -270,9 +274,9 @@
     "theme": "Theme",
     "themeTooltip": "Select theme",
     "advanced": "Advanced",
+    "maximizeType": "Maximize value type",
+    "maximizeTypeTooltip": "Select maximize objective value type",
     "openCosts": "Open cost settings",
-    "simplexSolver": "Simplex solver",
-    "simplexSolverTooltip": "Select the simplex solver algorithm; JS BigInt Rational is slower but maintains full precision",
     "bypassLanding": "Always skip landing page",
     "netProductionOnly": "Net production only",
     "netProductionOnlyTooltip": "If checked, recipes that both produce and consume the same item are reduced to the net production only"

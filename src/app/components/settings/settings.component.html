@@ -1112,6 +1112,22 @@
       </p-accordionTab>
       <p-accordionTab [header]="'settings.advanced' | translate">
         <div class="p-fluid">
+          <div class="mt-3 pb-3">
+            <span class="p-float-label">
+              <p-dropdown
+                labDropdownTranslate
+                inputId="maximize-type"
+                [tooltip]="'settings.maximizeTypeTooltip' | translate"
+                [ngModel]="vm.settings.maximizeType"
+                [options]="maximizeTypeOptions"
+                (onChange)="setMaximizeType($event.value)"
+              >
+              </p-dropdown>
+              <label for="maximize-type">{{
+                'settings.maximizeType' | translate
+              }}</label>
+            </span>
+          </div>
           <div class="pb-3">
             <p-checkbox
               [ngModel]="vm.settings.netProductionOnly"

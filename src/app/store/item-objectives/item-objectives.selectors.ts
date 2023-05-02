@@ -74,6 +74,7 @@ export const getMatrixResult = createSelector(
   Items.getItemsState,
   Recipes.getRecipesState,
   Settings.getAllResearchedTechnologyIds,
+  Settings.getMaximizeType,
   Settings.getRationalCost,
   Recipes.getAdjustedDataset,
   (
@@ -82,6 +83,7 @@ export const getMatrixResult = createSelector(
     itemsSettings,
     recipesSettings,
     researchedTechnologyIds,
+    maximizeType,
     cost,
     data
   ) =>
@@ -91,6 +93,7 @@ export const getMatrixResult = createSelector(
       itemsSettings,
       recipesSettings,
       researchedTechnologyIds,
+      maximizeType,
       cost,
       data
     )
