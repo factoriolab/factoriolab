@@ -5,8 +5,6 @@
 This is the repository for the [FactorioLab](https://factoriolab.github.io) project, a tool for calculating resource and factory requirements for the games [Factorio](https://factorio.com), [Dyson Sphere Program](https://store.steampowered.com/app/1366540/Dyson_Sphere_Program/), [Satisfactory](https://www.satisfactorygame.com/), and [Captain of Industry](https://www.captain-of-industry.com/).  
 This project is intended to build on the features of the Kirk McDonald [Factorio Calculator](https://kirkmcdonald.github.io) ([GitHub](https://github.com/KirkMcDonald/kirkmcdonald.github.io)). It is built from the ground up using Angular, Redux, and Typescript.
 
-**For instructions on how to use this tool,** check out the [wiki](https://github.com/factoriolab/factoriolab/wiki).
-
 **To submit suggestions or issues,** please check out the [issues page](https://github.com/factoriolab/factoriolab/issues).
 
 **To discuss the calculator,** join the [Discord](https://discord.gg/N4FKV687x2).

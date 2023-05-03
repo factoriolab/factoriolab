@@ -46,11 +46,6 @@ export class HeaderComponent implements OnInit {
 
   links: MenuLink[] = [
     {
-      label: 'Wiki',
-      icon: 'fa-solid fa-book',
-      href: 'https://github.com/factoriolab/factoriolab/wiki',
-    },
-    {
       label: 'Source',
       icon: 'fa-brands fa-github',
       href: 'https://github.com/factoriolab/factoriolab',
