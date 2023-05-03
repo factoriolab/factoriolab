@@ -47,19 +47,18 @@ export class ItemComponent extends DetailComponent {
         category: data.categoryEntities[data.itemEntities[id]?.category ?? ''],
         breadcrumb: [parent, { label: data.itemEntities[id]?.name }],
         producedByRecipeIds: data.recipeIds.filter(
-          (r) => data.recipeEntities[r].out[id]
+          (r) => data.recipeEntities[r]?.out[id]
         ),
         consumedByRecipeIds: data.recipeIds.filter(
-          (r) => data.recipeEntities[r].in[id]
+          (r) => data.recipeEntities[r]?.in[id]
         ),
         producibleRecipeIds: data.recipeIds.filter(
-          (r) => data.recipeEntities[r].producers.indexOf(id) !== -1
+          (r) => data.recipeEntities[r]?.producers.indexOf(id) !== -1
         ),
-        itemsStateRaw: itemsStateRaw[id],
-        itemsState: itemsState[id],
-        machinesStateRaw: machinesStateRaw.entities[id],
-        machinesState: machinesState.entities[id],
-        machinesStateAll: machinesState,
+        itemSettingsRaw: itemsStateRaw[id],
+        itemSettings: itemsState[id],
+        machineSettingsRaw: machinesStateRaw.entities[id],
+        machineSettings: machinesState.entities[id],
         home,
         data,
       })

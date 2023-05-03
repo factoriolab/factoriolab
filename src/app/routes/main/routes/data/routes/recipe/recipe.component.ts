@@ -6,9 +6,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { Dataset, RecipeSettings } from '~/models';
+import { Dataset, Game, RecipeSettings } from '~/models';
 import { DisplayService } from '~/services';
-import { LabState, Recipes, Settings } from '~/store';
+import { LabState, Recipes } from '~/store';
 import { DataRouteService } from '../../data-route.service';
 import { DetailComponent } from '../../models';
 
@@ -26,24 +26,27 @@ export class RecipeComponent extends DetailComponent {
     this.dataRouteSvc.home$,
     this.store.select(Recipes.recipesState),
     this.store.select(Recipes.getRecipesState),
-    this.store.select(Settings.getDataset),
+    this.store.select(Recipes.getAdjustedDataset),
   ]).pipe(
     map(([id, parent, home, recipesStateRaw, recipesState, data]) => ({
       id,
       obj: data.recipeEntities[id],
+      recipeR: data.recipeR[id],
       category: data.categoryEntities[data.recipeEntities[id]?.category ?? ''],
-      breadcrumb: [parent, { label: data.recipeEntities[id].name }],
+      breadcrumb: [parent, { label: data.recipeEntities[id]?.name }],
       ingredientIds: Object.keys(data.recipeEntities[id]?.in ?? {}),
-      catalystIds: Object.keys(data.recipeEntities[id].catalyst ?? {}),
+      catalystIds: Object.keys(data.recipeEntities[id]?.catalyst ?? {}),
       productIds: Object.keys(data.recipeEntities[id]?.out ?? {}),
-      recipesStateRaw: recipesStateRaw[id],
-      recipesState: recipesState[id],
+      recipeSettingsRaw: recipesStateRaw[id],
+      recipeSettings: recipesState[id],
       home,
       data,
     }))
   );
 
   trueValue = true;
+
+  Game = Game;
 
   constructor(
     route: ActivatedRoute,
@@ -72,6 +75,10 @@ export class RecipeComponent extends DetailComponent {
 
   setRecipeChecked(id: string, value: boolean): void {
     this.store.dispatch(new Recipes.SetCheckedAction({ id, value }));
+  }
+
+  setRecipeCost(id: string, value: string): void {
+    this.store.dispatch(new Recipes.SetCostAction({ id, value }));
   }
 
   resetRecipe(value: string): void {

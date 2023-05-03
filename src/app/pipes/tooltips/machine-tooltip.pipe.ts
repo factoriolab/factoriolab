@@ -23,66 +23,66 @@ export class MachineTooltipPipe implements PipeTransform {
     const tableRows: [string, string][] = [];
     if (data.game !== Game.CaptainOfIndustry) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.craftingSpeed'),
+        this.translateSvc.instant('data.craftingSpeed'),
         this.displaySvc.round(machine.speed),
       ]);
     }
 
     if (machine.modules && data.game === Game.Factorio) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.modules'),
+        this.translateSvc.instant('data.modules'),
         machine.modules.toString(),
       ]);
     }
 
     if (machine.disallowedEffects) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.disallowedEffects'),
+        this.translateSvc.instant('data.disallowedEffects'),
         machine.disallowedEffects.join(', '),
       ]);
     }
 
     if (machine.type) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.energyType'),
+        this.translateSvc.instant('data.energySource'),
         machine.type,
       ]);
     }
 
     if (machine.category) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.fuelCategory'),
+        this.translateSvc.instant('data.fuelCategory'),
         machine.category,
       ]);
     }
     if (machine.usage?.nonzero()) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.energyUsage'),
+        this.translateSvc.instant('data.energyConsumption'),
         this.displaySvc.power(machine.usage),
       ]);
     }
 
     if (machine.drain?.nonzero()) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.drain'),
+        this.translateSvc.instant('data.energyDrain'),
         this.displaySvc.power(machine.drain),
       ]);
     }
 
     if (machine.pollution?.nonzero()) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.pollution'),
+        this.translateSvc.instant('data.pollution'),
         this.displaySvc.round(machine.pollution) + '/m',
       ]);
     }
 
     if (machine.silo) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.rocketPartsRequired'),
+        this.translateSvc.instant('data.rocketPartsRequired'),
         this.displaySvc.round(machine.silo.parts),
       ]);
       tableRows.push([
-        this.translateSvc.instant('tooltip.launchTime'),
+        this.translateSvc.instant('data.rocketLaunchTime'),
         this.displaySvc.round(machine.silo.launch) + 's',
       ]);
     }

@@ -80,7 +80,7 @@ export class DisplayService {
 
   recipeProducedBy(recipe: Recipe): string {
     return `<small><div>${this.translateSvc.instant(
-      'tooltip.producedBy'
+      'data.producedByRecipes'
     )}</div>${recipe.producers.map((i) => this.icon(i, '')).join('')}</small>`;
   }
 
@@ -88,7 +88,7 @@ export class DisplayService {
     if (recipe.unlockedBy == null) return '';
 
     const a = `<small><div>${this.translateSvc.instant(
-      'tooltip.unlockedBy'
+      'data.unlockedBy'
     )}</div>${this.icon(recipe.unlockedBy, undefined, 'recipe')}</small>`;
 
     return a;
@@ -98,7 +98,7 @@ export class DisplayService {
     if (technology?.prerequisites == null) return '';
 
     const a = `<small><div>${this.translateSvc.instant(
-      'tooltip.prerequisites'
+      'data.prerequisites'
     )}</div>${technology.prerequisites
       .map((i) => this.icon(i, undefined, 'recipe'))
       .join('')}</small>`;

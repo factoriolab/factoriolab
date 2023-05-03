@@ -15,5 +15,11 @@ table.properties {
 
   td {
     text-align: end;
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
   }
 }

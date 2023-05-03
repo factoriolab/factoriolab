@@ -257,39 +257,41 @@
         <tr>
           <th colspan="2">
             <div class="d-flex align-items-center justify-content-between">
-              <div></div>
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="invisible p-button-rounded"
+                icon="fa-solid fa-rotate-right"
+              ></button>
               <h3>{{ 'data.itemSettings' | translate }}</h3>
-              <div>
-                <button
-                  *ngIf="vm.itemsStateRaw"
-                  pButton
-                  pRipple
-                  type="button"
-                  class="ms-2 p-button-rounded"
-                  icon="fa-solid fa-rotate-left"
-                  (click)="resetItem(vm.id)"
-                ></button>
-              </div>
+              <button
+                [class.invisible]="!vm.itemSettingsRaw"
+                pButton
+                pRipple
+                type="button"
+                class="ms-2 p-button-rounded"
+                icon="fa-solid fa-rotate-left"
+                (click)="resetItem(vm.id)"
+              ></button>
             </div>
           </th>
         </tr>
         <tr>
           <th>{{ 'data.excluded' | translate }}</th>
           <td>
-            <div class="d-flex align-items-center justify-content-end">
-              <p-checkbox
-                [ngModel]="vm.itemsState.excluded"
-                [binary]="true"
-                (onChange)="setItemExcluded(vm.id, $event.checked)"
-              ></p-checkbox>
-            </div>
+            <p-checkbox
+              [ngModel]="vm.itemSettings.excluded"
+              [binary]="true"
+              (onChange)="setItemExcluded(vm.id, $event.checked)"
+            ></p-checkbox>
           </td>
         </tr>
         <tr>
           <th>{{ 'data.checked' | translate }}</th>
           <td>
             <p-checkbox
-              [ngModel]="vm.itemsState.checked"
+              [ngModel]="vm.itemSettings.checked"
               [binary]="true"
               (onChange)="setItemChecked(vm.id, $event.checked)"
             ></p-checkbox>
@@ -297,7 +299,7 @@
         </tr>
         <tr>
           <th>{{ 'data.belt' | translate }}</th>
-          <td *ngIf="vm.itemsState.beltId as beltId">
+          <td *ngIf="vm.itemSettings.beltId as beltId">
             <a
               [routerLink]="
                 '/data/' +
@@ -324,7 +326,7 @@
         </tr>
         <tr *ngIf="vm.obj.stack; else fluidWagon">
           <th>{{ 'data.cargoWagon' | translate }}</th>
-          <td *ngIf="vm.itemsState.wagonId as wagonId">
+          <td *ngIf="vm.itemSettings.wagonId as wagonId">
             <a
               [routerLink]="'/data/cargo-wagons/' + wagonId"
               queryParamsHandling="preserve"
@@ -343,7 +345,7 @@
         <ng-template #fluidWagon>
           <tr>
             <th>{{ 'data.fluidWagon' | translate }}</th>
-            <td *ngIf="vm.itemsState.wagonId as wagonId">
+            <td *ngIf="vm.itemSettings.wagonId as wagonId">
               <a
                 [routerLink]="'/data/fluid-wagons/' + wagonId"
                 queryParamsHandling="preserve"
@@ -361,32 +363,42 @@
           </tr>
         </ng-template>
       </ng-container>
-      <ng-container *ngIf="vm.obj.machine && vm.machinesState">
+      <ng-container *ngIf="vm.obj.machine && vm.machineSettings">
         <tr>
           <th colspan="2">
             <div class="d-flex align-items-center justify-content-between">
-              <div></div>
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="invisible p-button-rounded"
+                icon="fa-solid fa-rotate-right"
+              ></button>
               <h3>{{ 'data.machineSettings' | translate }}</h3>
-              <div>
-                <button
-                  *ngIf="vm.machinesStateRaw"
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-rounded justify-self-end"
-                  icon="fa-solid fa-rotate-left"
-                  (click)="resetMachine(vm.id)"
-                ></button>
-              </div>
+
+              <button
+                [class.invisible]="!vm.machineSettingsRaw"
+                pButton
+                pRipple
+                type="button"
+                class="p-button-rounded justify-self-end"
+                icon="fa-solid fa-rotate-left"
+                (click)="resetMachine(vm.id)"
+              ></button>
             </div>
           </th>
         </tr>
         <tr>
           <th>{{ 'data.moduleRank' | translate }}</th>
           <td>
-            <div *ngFor="let moduleId of vm.machinesState.moduleRankIds">
+            <div *ngIf="!vm.machineSettings.moduleRankIds?.length">
+              {{ 'none' | translate }}
+            </div>
+            <div *ngFor="let moduleId of vm.machineSettings.moduleRankIds">
               <a
-                [routerLink]="'/data/modules/' + moduleId"
+                [routerLink]="
+                  moduleId === 'module' ? null : '/data/modules/' + moduleId
+                "
                 queryParamsHandling="preserve"
               >
                 <button
@@ -394,7 +406,7 @@
                   pRipple
                   type="button"
                   class="p-button-text"
-                  [label]="vm.data.itemEntities[moduleId].name"
+                  [label]="vm.data.itemEntities[moduleId]?.name ?? ''"
                   [icon]="moduleId | iconSmClass : 'item'"
                 ></button>
               </a>
@@ -404,13 +416,15 @@
         <ng-container *ngIf="vm.data.game === Game.Factorio">
           <tr>
             <th>{{ 'data.beacons' | translate }}</th>
-            <td>{{ vm.machinesState.beaconCount }}</td>
+            <td>
+              {{ vm.machineSettings.beaconCount ?? ('none' | translate) }}
+            </td>
           </tr>
           <tr>
             <th>{{ 'data.beacon' | translate }}</th>
             <td>
               <a
-                *ngIf="vm.machinesState.beaconId as beaconId"
+                *ngIf="vm.machineSettings.beaconId as beaconId; else none"
                 [routerLink]="'/data/beacons/' + beaconId"
                 queryParamsHandling="preserve"
               >
@@ -428,11 +442,16 @@
           <tr>
             <th>{{ 'data.beaconModuleRank' | translate }}</th>
             <td>
+              <div *ngIf="!vm.machineSettings.beaconModuleRankIds?.length">
+                {{ 'none' | translate }}
+              </div>
               <div
-                *ngFor="let moduleId of vm.machinesState.beaconModuleRankIds"
+                *ngFor="let moduleId of vm.machineSettings.beaconModuleRankIds"
               >
                 <a
-                  [routerLink]="'/data/modules/' + moduleId"
+                  [routerLink]="
+                    moduleId === 'module' ? null : '/data/modules/' + moduleId
+                  "
                   queryParamsHandling="preserve"
                 >
                   <button
@@ -440,7 +459,7 @@
                     pRipple
                     type="button"
                     class="p-button-text"
-                    [label]="vm.data.itemEntities[moduleId].name"
+                    [label]="vm.data.itemEntities[moduleId]?.name ?? ''"
                     [icon]="moduleId | iconSmClass : 'item'"
                   ></button>
                 </a>
@@ -450,7 +469,7 @@
         </ng-container>
         <tr *ngIf="vm.data.game === Game.Satisfactory">
           <th>{{ 'data.overclock' | translate }}</th>
-          <td>{{ vm.machinesState.overclock }}%</td>
+          <td>{{ vm.machineSettings.overclock }}%</td>
         </tr>
       </ng-container>
     </table>
@@ -479,5 +498,8 @@
   </ng-container>
   <ng-template #notFound>
     <div class="my-5 p-error">{{ 'data.notFound' | translate }}</div>
+  </ng-template>
+  <ng-template #none>
+    {{ 'none' | translate }}
   </ng-template>
 </ng-container>

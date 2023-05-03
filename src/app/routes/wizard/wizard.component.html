@@ -4,11 +4,8 @@
       <ng-container *ngSwitchCase="WizardState.ObjectiveType">
         <ng-container *ngTemplateOutlet="objectiveType"></ng-container>
       </ng-container>
-      <ng-container *ngSwitchCase="WizardState.ItemObjectiveType">
-        <ng-container *ngTemplateOutlet="itemObjectiveType"></ng-container>
-      </ng-container>
-      <ng-container *ngSwitchCase="WizardState.ItemObjectiveItems">
-        <ng-container *ngTemplateOutlet="itemObjectiveItems"></ng-container>
+      <ng-container *ngSwitchCase="WizardState.ItemObjective">
+        <ng-container *ngTemplateOutlet="itemObjective"></ng-container>
       </ng-container>
       <ng-container *ngSwitchCase="WizardState.RecipeObjective">
         <ng-container *ngTemplateOutlet="recipeObjective"></ng-container>
@@ -44,7 +41,7 @@
     <lab-picker
       #addItemObjectivePicker
       [header]="'wizard.produceItemsButton' | translate"
-      (selectId)="selectId($event, WizardState.ItemObjectiveType)"
+      (selectId)="selectId($event, WizardState.ItemObjective)"
     ></lab-picker>
     <p-divider></p-divider>
     <span>{{ 'wizard.runMachines' | translate }}</span>
@@ -64,36 +61,7 @@
     ></lab-picker>
     <p-divider></p-divider>
   </ng-template>
-  <ng-template #itemObjectiveType>
-    <div>
-      {{ 'wizard.itemObjectiveType' | translate }}
-    </div>
-    <p-divider></p-divider>
-    <div class="d-flex align-items-center justify-content-center">
-      <i [class]="id | iconClass"></i>
-      <span class="ms-2">{{ vm.data.itemEntities[id].name }}</span>
-    </div>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-gauge"
-      [label]="'wizard.itemObjectiveTypeItems' | translate"
-      (click)="state = WizardState.ItemObjectiveItems"
-    ></button>
-    <p-divider></p-divider>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mb-2 p-button-outlined"
-      icon="fa-solid fa-arrow-left"
-      [label]="'wizard.back' | translate"
-      (click)="state = WizardState.ObjectiveType"
-    ></button>
-  </ng-template>
-  <ng-template #itemObjectiveItems>
+  <ng-template #itemObjective>
     <div>{{ 'wizard.itemObjectiveItems' | translate }}</div>
     <p-divider></p-divider>
     <div class="d-flex align-items-center justify-content-center">
@@ -133,7 +101,7 @@
       class="mb-2 p-button-outlined"
       icon="fa-solid fa-arrow-left"
       [label]="'wizard.back' | translate"
-      (click)="state = WizardState.ItemObjectiveType"
+      (click)="state = WizardState.ObjectiveType"
     ></button>
   </ng-template>
   <ng-template #recipeObjective>

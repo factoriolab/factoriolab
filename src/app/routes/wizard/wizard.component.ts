@@ -16,8 +16,7 @@ import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 
 export enum WizardState {
   ObjectiveType,
-  ItemObjectiveType,
-  ItemObjectiveItems,
+  ItemObjective,
   RecipeObjective,
 }
 

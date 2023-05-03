@@ -38,7 +38,7 @@
         </th>
         <!-- Tree -->
         <th *ngIf="vm.columnsState.tree.show">
-          {{ 'list.tree' | translate }}
+          {{ 'options.column.tree' | translate }}
         </th>
         <!-- Items (Value / Icon)-->
         <th colspan="2">
@@ -59,7 +59,7 @@
         <!-- Belts -->
         <th *ngIf="vm.columnsState.belts.show" colspan="2">
           <div class="d-flex align-items-center">
-            <span>{{ 'list.belts' | translate }}</span>
+            <span>{{ 'options.column.belts' | translate }}</span>
             <button
               *ngIf="vm.itemsModified.belts"
               pButton
@@ -91,7 +91,7 @@
         <!-- Machines -->
         <th colspan="2">
           <div class="d-flex align-items-center">
-            <span>{{ 'list.machines' | translate }}</span>
+            <span>{{ 'options.column.machines' | translate }}</span>
             <button
               *ngIf="vm.recipesModified.machines"
               pButton
@@ -107,7 +107,7 @@
         <!-- Beacons -->
         <th *ngIf="vm.columnsState.beacons.show" colspan="2">
           <div class="d-flex align-items-center">
-            <span>{{ 'list.beacons' | translate }}</span>
+            <span>{{ 'options.column.beacons' | translate }}</span>
             <button
               *ngIf="vm.recipesModified.beacons"
               pButton
@@ -122,7 +122,7 @@
         </th>
         <!-- Power -->
         <th *ngIf="vm.columnsState.power.show">
-          <span>{{ 'list.power' | translate }}</span>
+          <span>{{ 'options.column.power' | translate }}</span>
         </th>
         <!-- Pollution -->
         <th *ngIf="vm.columnsState.pollution.show">

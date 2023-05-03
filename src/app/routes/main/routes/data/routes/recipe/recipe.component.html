@@ -37,17 +37,14 @@
       <tr *ngIf="vm.ingredientIds.length">
         <th>{{ 'data.ingredients' | translate }}</th>
         <td>
-          <div
-            *ngFor="let i of vm.ingredientIds"
-            class="d-flex align-items-center justify-content-end"
-          >
+          <div *ngFor="let i of vm.ingredientIds">
             <a [routerLink]="'/data/items/' + i" queryParamsHandling="preserve">
               <button
                 pButton
                 pRipple
                 type="button"
                 class="p-button-text"
-                [label]="vm.data.itemEntities[i]?.name ?? ''"
+                [label]="vm.data.itemEntities[i].name"
                 [icon]="i | iconSmClass"
               ></button>
             </a>
@@ -58,17 +55,14 @@
       <tr *ngIf="vm.catalystIds.length">
         <th>{{ 'data.catalysts' | translate }}</th>
         <td>
-          <div
-            *ngFor="let i of vm.catalystIds"
-            class="d-flex align-items-center justify-content-end"
-          >
+          <div *ngFor="let i of vm.catalystIds">
             <a [routerLink]="'/data/items/' + i" queryParamsHandling="preserve">
               <button
                 pButton
                 pRipple
                 type="button"
                 class="p-button-text"
-                [label]="vm.data.itemEntities[i]?.name ?? ''"
+                [label]="vm.data.itemEntities[i].name"
                 [icon]="i | iconSmClass"
               ></button>
             </a>
@@ -79,17 +73,14 @@
       <tr *ngIf="vm.productIds.length">
         <th>{{ 'data.products' | translate }}</th>
         <td>
-          <div
-            *ngFor="let i of vm.productIds"
-            class="d-flex align-items-center justify-content-end"
-          >
+          <div *ngFor="let i of vm.productIds">
             <a [routerLink]="'/data/items/' + i" queryParamsHandling="preserve">
               <button
                 pButton
                 pRipple
                 type="button"
                 class="p-button-text"
-                [label]="vm.data.itemEntities[i]?.name ?? ''"
+                [label]="vm.data.itemEntities[i].name"
                 [icon]="i | iconSmClass"
               ></button>
             </a>
@@ -110,7 +101,7 @@
                 pRipple
                 type="button"
                 class="p-button-text"
-                [label]="vm.data.itemEntities[i]?.name ?? ''"
+                [label]="vm.data.itemEntities[i].name"
                 [icon]="i | iconSmClass"
               ></button>
             </a>
@@ -129,7 +120,7 @@
               pRipple
               type="button"
               class="p-button-text"
-              [label]="vm.data.recipeEntities[vm.obj.unlockedBy]?.name ?? ''"
+              [label]="vm.data.recipeEntities[vm.obj.unlockedBy].name"
               [icon]="vm.obj.unlockedBy | iconSmClass : 'recipe'"
             ></button>
           </a>
@@ -157,7 +148,7 @@
               pRipple
               type="button"
               class="p-button-text"
-              [label]="vm.data.itemEntities[vm.obj.part]?.name ?? ''"
+              [label]="vm.data.itemEntities[vm.obj.part].name"
               [icon]="vm.obj.part | iconSmClass"
             ></button>
           </a>
@@ -176,10 +167,10 @@
         <tr>
           <th>{{ 'data.prerequisites' | translate }}</th>
           <td>
-            <div *ngIf="!technology.prerequisites?.length" class="text-end">
+            <div *ngIf="!technology.prerequisites?.length">
               {{ 'none' | translate }}
             </div>
-            <div *ngFor="let i of technology.prerequisites" class="text-end">
+            <div *ngFor="let i of technology.prerequisites">
               <a
                 [routerLink]="'/data/technologies/' + i"
                 queryParamsHandling="preserve"
@@ -189,7 +180,7 @@
                   pRipple
                   type="button"
                   class="p-button-text"
-                  [label]="vm.data.recipeEntities[i]?.name ?? ''"
+                  [label]="vm.data.recipeEntities[i].name"
                   [icon]="i | iconSmClass : 'recipe'"
                 ></button>
               </a>
@@ -200,39 +191,41 @@
       <tr>
         <th colspan="2">
           <div class="d-flex align-items-center justify-content-between">
-            <div></div>
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="invisible p-button-rounded"
+              icon="fa-solid fa-rotate-right"
+            ></button>
             <h3>{{ 'data.recipeSettings' | translate }}</h3>
-            <div>
-              <button
-                *ngIf="vm.recipesStateRaw"
-                pButton
-                pRipple
-                type="button"
-                class="ms-2 p-button-rounded"
-                icon="fa-solid fa-rotate-left"
-                (click)="resetRecipe(vm.id)"
-              ></button>
-            </div>
+            <button
+              [class.invisible]="!vm.recipeSettingsRaw"
+              pButton
+              pRipple
+              type="button"
+              class="p-button-rounded"
+              icon="fa-solid fa-rotate-left"
+              (click)="resetRecipe(vm.id)"
+            ></button>
           </div>
         </th>
       </tr>
       <tr>
         <th>{{ 'data.excluded' | translate }}</th>
         <td>
-          <div class="d-flex align-items-center justify-content-end">
-            <p-checkbox
-              [ngModel]="vm.recipesState.excluded"
-              [binary]="true"
-              (onChange)="toggleRecipe(vm.id, vm.recipesState, vm.data)"
-            ></p-checkbox>
-          </div>
+          <p-checkbox
+            [ngModel]="vm.recipeSettings.excluded"
+            [binary]="true"
+            (onChange)="toggleRecipe(vm.id, vm.recipeSettings, vm.data)"
+          ></p-checkbox>
         </td>
       </tr>
       <tr>
         <th>{{ 'data.checked' | translate }}</th>
         <td>
           <p-checkbox
-            [ngModel]="vm.recipesState.checked"
+            [ngModel]="vm.recipeSettings.checked"
             [binary]="true"
             (onChange)="setRecipeChecked(vm.id, $event.checked)"
           ></p-checkbox>
@@ -242,8 +235,8 @@
         <th>{{ 'data.machine' | translate }}</th>
         <td>
           <a
-            *ngIf="vm.recipesState.machineId as id"
-            [routerLink]="'/data/machiness/' + id"
+            *ngIf="vm.recipeSettings.machineId as id"
+            [routerLink]="'/data/machines/' + id"
             queryParamsHandling="preserve"
           >
             <button
@@ -251,16 +244,89 @@
               pRipple
               type="button"
               class="p-button-text"
-              [label]="vm.data.itemEntities[id]?.name ?? ''"
+              [label]="vm.data.itemEntities[id].name"
               [icon]="id | iconSmClass"
             ></button>
           </a>
         </td>
       </tr>
-      <tr *ngIf="vm.obj.cost">
+      <tr *ngIf="vm.recipeSettings.machineModuleIds?.length">
+        <th>{{ 'data.modules' | translate }}</th>
+        <td>
+          <div *ngFor="let moduleId of vm.recipeSettings.machineModuleIds">
+            <a
+              [routerLink]="
+                moduleId === 'module' ? null : '/data/modules/' + moduleId
+              "
+              queryParamsHandling="preserve"
+            >
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text"
+                [label]="vm.data.itemEntities[moduleId].name"
+                [icon]="moduleId | iconSmClass"
+              ></button>
+            </a>
+          </div>
+        </td>
+      </tr>
+      <ng-container *ngIf="vm.data.game === Game.Factorio">
+        <tr *ngFor="let beacon of vm.recipeSettings.beacons">
+          <th>{{ 'data.beacons' | translate }}</th>
+          <td>
+            <ng-container *ngFor="let beacon of vm.recipeSettings.beacons">
+              <div>
+                <a
+                  *ngIf="beacon.id"
+                  [routerLink]="'/data/beacons/' + beacon.id"
+                  queryParamsHandling="preserve"
+                >
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    [label]="vm.data.itemEntities[beacon.id].name"
+                    [icon]="beacon.id | iconSmClass"
+                  ></button>
+                </a>
+                <span class="ms-3">{{ beacon.count }}</span>
+              </div>
+              <div *ngFor="let moduleId of beacon.moduleIds">
+                <a
+                  [routerLink]="
+                    moduleId === 'module' ? null : '/data/modules/' + moduleId
+                  "
+                  queryParamsHandling="preserve"
+                >
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    [label]="vm.data.itemEntities[moduleId].name"
+                    [icon]="moduleId | iconSmClass"
+                  ></button>
+                </a>
+              </div>
+            </ng-container>
+          </td>
+        </tr>
+      </ng-container>
+      <tr *ngIf="vm.data.game === Game.Satisfactory">
+        <th>{{ 'data.overclock' | translate }}</th>
+        <td>{{ vm.recipeSettings.overclock }}%</td>
+        <td></td>
+      </tr>
+      <tr *ngIf="vm.recipeR?.cost as cost">
         <th>{{ 'data.cost' | translate }}</th>
         <td>
-          <p-inputNumber></p-inputNumber>
+          <lab-input-number
+            [value]="cost.toString()"
+            (setValue)="setRecipeCost(vm.id, $event)"
+          ></lab-input-number>
         </td>
       </tr>
     </table>
