@@ -137,10 +137,10 @@ export class ListComponent implements OnInit, AfterViewInit {
   Rational = Rational;
 
   constructor(
+    public route: ActivatedRoute,
     public contentSvc: ContentService,
     public trackSvc: TrackService,
     @Inject(DOCUMENT) private document: Document,
-    private route: ActivatedRoute,
     private store: Store<LabState>,
     private exportSvc: ExportService,
     private routerSvc: RouterService

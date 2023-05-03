@@ -911,7 +911,13 @@
       <ng-container *ngIf="_step | asStep as step">
         <tr>
           <td>
-            <a class="text-decoration-none" [href]="'#step_' + step.id">
+            <a
+              class="text-decoration-none"
+              routerLink="."
+              [relativeTo]="route"
+              queryParamsHandling="preserve"
+              [fragment]="step.id"
+            >
               <button
                 pButton
                 pRipple

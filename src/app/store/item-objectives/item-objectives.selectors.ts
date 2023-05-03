@@ -382,8 +382,9 @@ export const getStepDetails = createSelector(
         tabs: tabs.map((t) => ({
           id: `step_${s.id}_${t}_tab`,
           label: t,
-          url: `#step_${s.id}_${t}`,
-          target: '_self',
+          command: (): void => {
+            document.location.hash = `step_${s.id}_${t}`;
+          },
         })),
         outputs,
         recipeIds,
