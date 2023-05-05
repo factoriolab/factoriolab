@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TestModule } from 'src/tests';
 import { CollectionComponent } from './collection.component';
 
 describe('CollectionComponent', () => {
@@ -8,9 +9,8 @@ describe('CollectionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CollectionComponent ]
-    })
-    .compileComponents();
+      imports: [TestModule, CollectionComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(CollectionComponent);
     component = fixture.componentInstance;

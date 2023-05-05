@@ -11,7 +11,7 @@ export class DetailComponent {
   parent$ = this.detail$.pipe(
     map(
       (detail): MenuItem => ({
-        label: this.translateSvc.instant(detail.collectionLabel),
+        label: this.translateSvc.instant(detail.collectionLabel ?? 'none'),
         routerLink: '..',
         queryParamsHandling: 'preserve',
       })

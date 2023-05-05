@@ -55,6 +55,8 @@ export class CollectionTableComponent {
   }
 
   getValue(ids: string[], type: IdType, data: Dataset): CollectionItem[] {
+    if (ids == null) return [];
+
     let entities: Entities<Entity>;
     switch (type) {
       case 'category':

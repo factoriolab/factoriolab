@@ -206,7 +206,6 @@ describe('Settings Selectors', () => {
           fuelId: Mocks.Defaults.fuelId,
           cargoWagonId: Mocks.Defaults.cargoWagonId,
           fluidWagonId: Mocks.Defaults.fluidWagonId,
-          excludedRecipeIds: Mocks.Defaults.excludedRecipeIds,
         },
       });
     });
@@ -224,7 +223,6 @@ describe('Settings Selectors', () => {
           fuelId: undefined,
           cargoWagonId: undefined,
           fluidWagonId: undefined,
-          excludedRecipeIds: [],
         },
       });
     });
@@ -394,6 +392,7 @@ describe('Settings Selectors', () => {
         ItemId.SolidFuel,
         'rocket-fuel',
         'nuclear-fuel',
+        'uranium-fuel-cell',
       ]);
     });
 
@@ -491,7 +490,7 @@ describe('Settings Selectors', () => {
   describe('getOptions', () => {
     it('should handle no chemical fuels', () => {
       const data = Mocks.getDataset();
-      data.fuelIds = [];
+      data.chemicalFuelIds = [];
       const result = Selectors.getOptions.projector(data);
       expect(result.chemicalFuels.length).toEqual(0);
     });
@@ -535,7 +534,7 @@ describe('Settings Selectors', () => {
       const result = Selectors.getSettingsModified.projector({
         ...initialSettingsState,
         ...{
-          costExcluded: '100',
+          costs: { excluded: '100' } as any,
         },
       });
       expect(result.costs).toBeTrue();

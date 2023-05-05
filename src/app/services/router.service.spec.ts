@@ -626,7 +626,7 @@ describe('RouterService', () => {
 
   describe('migrate', () => {
     it('should return latest version without alteration', () => {
-      const originalParams = { [Section.Version]: ZipVersion.Version6 };
+      const originalParams = { [Section.Version]: ZipVersion.Version8 };
       const [params, _] = service.migrate({ ...originalParams });
       expect(params).toEqual(originalParams);
     });
@@ -640,7 +640,7 @@ describe('RouterService', () => {
 
     it('should handle preset without other settings', () => {
       const [params, _] = service.migrateV0({ [Section.Mod]: '0' }, []);
-      expect(params[Section.Settings]).toEqual('?*?*0');
+      expect(params[Section.Settings]).toEqual('?**?*0');
     });
   });
 
@@ -888,7 +888,7 @@ describe('RouterService', () => {
     it('should remove unspecified fields', () => {
       const result = service.unzipRecipes(
         {
-          ['r']: 'steel-chest*assembling-machine-2*',
+          ['r']: 'steel-chest**assembling-machine-2*',
         },
         []
       );
@@ -898,14 +898,14 @@ describe('RouterService', () => {
     });
 
     it('hash should map values to empty strings if null', () => {
-      const result = service.unzipRecipes({ ['r']: '*A*' }, [], Mocks.Hash);
+      const result = service.unzipRecipes({ ['r']: '**A*' }, [], Mocks.Hash);
       expect(result).toEqual({
         ['']: { machineId: ItemId.AssemblingMachine1 },
       });
     });
 
     it('bare should map beacons', () => {
-      const result = service.unzipRecipes({ ['r']: 'iron-plate***0' }, []);
+      const result = service.unzipRecipes({ ['r']: 'iron-plate****0' }, []);
       expect(result).toEqual({
         [ItemId.IronPlate]: {
           beacons: [{}],
@@ -914,7 +914,7 @@ describe('RouterService', () => {
     });
 
     it('hash should map beacons', () => {
-      const result = service.unzipRecipes({ ['r']: 'B***0' }, [], Mocks.Hash);
+      const result = service.unzipRecipes({ ['r']: 'B****0' }, [], Mocks.Hash);
       expect(result).toEqual({
         [RecipeId.AdvancedCircuit]: {
           beacons: [{}],

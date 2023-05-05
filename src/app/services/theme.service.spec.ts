@@ -21,7 +21,6 @@ describe('ThemeService', () => {
     data.categoryEntities[CategoryId.Combat].icon = 'pistol';
     data.iconEntities['coal'].invertLight = true;
     data.iconEntities['pistol'].invertLight = true;
-    data.iconEntities['nuclear-fuel|recipe'].invertLight = true;
     mockStore.overrideSelector(Settings.getDataset, data);
     mockStore.refreshState();
     service.initialize();

@@ -12,8 +12,7 @@ describe('WizardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [WizardComponent],
-      imports: [TestModule],
+      imports: [TestModule, WizardComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WizardComponent);

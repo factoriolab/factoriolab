@@ -24,7 +24,7 @@ export class CollectionComponent {
   breadcrumb$ = this.collection$.pipe(
     map((data): MenuItem[] => [
       {
-        label: this.translateSvc.instant(data.label),
+        label: this.translateSvc.instant(data.label ?? 'none'),
       },
     ])
   );

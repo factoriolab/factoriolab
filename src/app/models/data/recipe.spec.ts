@@ -105,7 +105,7 @@ describe('RecipeRational', () => {
       const recipe = new RecipeRational({
         id,
         name: 'name',
-        time: 0,
+        time: 1,
         producers: [],
         in: {},
         out: {},
@@ -119,7 +119,7 @@ describe('RecipeRational', () => {
       const recipe = new RecipeRational({
         id,
         name: 'name',
-        time: 0,
+        time: 1,
         in: { [id]: 1 },
         out: { [id]: 2 },
         producers: [],

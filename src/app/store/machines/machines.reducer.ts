@@ -126,7 +126,6 @@ export function machinesReducer(
         'overclock',
         action.payload
       );
-      console.log(state.entities, action.payload);
       return { ...state, ...{ entities } };
     }
     case MachinesActionType.RESET_MACHINE: {

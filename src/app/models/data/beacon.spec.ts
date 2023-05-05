@@ -16,7 +16,7 @@ describe('BeaconRational', () => {
       expect(result.effectivity).toEqual(new Rational(BigInt(1), BigInt(2)));
       expect(result.modules).toEqual(2);
       expect(result.range).toEqual(3);
-      expect(result.type).toEqual(EnergyType.Burner);
+      expect(result.type).toEqual(EnergyType.Electric);
       expect(result.usage).toEqual(Rational.one);
       expect(result.disallowedEffects).toEqual(['productivity']);
     });

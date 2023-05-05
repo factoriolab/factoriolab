@@ -828,7 +828,7 @@ export class RouterService {
       this.migrateMoveUpField(s, 14 + x, 18 + x);
       this.migrateMoveUpField(s, 13 + x, 17 + x);
 
-      params[Section.Settings] = s.join(FIELDSEP);
+      params[Section.Settings] = this.zipFields(s);
     }
 
     params[Section.Version] = ZipVersion.Version8;

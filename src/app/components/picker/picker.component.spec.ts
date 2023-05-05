@@ -58,7 +58,9 @@ describe('PickerComponent', () => {
     });
 
     it('should open as multiselect', () => {
-      component.clickOpen(Mocks.Dataset, 'recipe', [RecipeId.IronPlate]);
+      component.clickOpen(Mocks.Dataset, 'recipe', Mocks.Dataset.recipeIds, [
+        RecipeId.IronPlate,
+      ]);
       expect(component.visible).toBeTrue();
       expect(component.isMultiselect).toBeTrue();
       expect(component.selection?.length).toEqual(1);
