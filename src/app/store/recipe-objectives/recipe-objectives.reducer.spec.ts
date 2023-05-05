@@ -20,7 +20,7 @@ describe('Recipe Objectives Reducer', () => {
     it('should load a list of objectives', () => {
       const recipeObjectivesState: RecipeObjectivesState = {
         ids: ['0'],
-        entities: { id: Mocks.RecipeObjective },
+        entities: { id: Mocks.RecipeObjective1 },
         index: 1,
       };
       const result = recipeObjectivesReducer(

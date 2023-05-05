@@ -1,12 +1,12 @@
-import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
-import {
-  ItemObjectiveRational,
-  MatrixResultType,
-  MaximizeType,
-  Rational,
-} from '~/models';
+import { ItemId, Mocks, RecipeId } from 'src/tests';
+import { Entities, MatrixResultType, MaximizeType, Rational } from '~/models';
 import { RateUtility } from './rate.utility';
-import { MatrixSolution, MatrixState, SimplexUtility } from './simplex.utility';
+import {
+  ItemValues,
+  MatrixSolution,
+  MatrixState,
+  SimplexUtility,
+} from './simplex.utility';
 
 describe('SimplexUtility', () => {
   const getState = (): MatrixState => ({
@@ -31,65 +31,6 @@ describe('SimplexUtility', () => {
       maximize: Rational.from(-1000000),
     },
   });
-  /** https://en.wikipedia.org/wiki/Simplex_algorithm#Example */
-  const getTableau = (): Rational[][] => [
-    [
-      Rational.one,
-      Rational.from(-2),
-      Rational.from(-3),
-      Rational.from(-4),
-      Rational.zero,
-      Rational.zero,
-      Rational.zero,
-    ],
-    [
-      Rational.zero,
-      Rational.from(3),
-      Rational.from(2),
-      Rational.one,
-      Rational.one,
-      Rational.zero,
-      Rational.from(10),
-    ],
-    [
-      Rational.zero,
-      Rational.from(2),
-      Rational.from(5),
-      Rational.from(3),
-      Rational.zero,
-      Rational.one,
-      Rational.from(15),
-    ],
-  ];
-  const getSolution = (): Rational[][] => [
-    [
-      Rational.one,
-      Rational.from([2, 3]),
-      Rational.from([11, 3]),
-      Rational.zero,
-      Rational.zero,
-      Rational.from([4, 3]),
-      Rational.from(20),
-    ],
-    [
-      Rational.zero,
-      Rational.from([7, 3]),
-      Rational.from([1, 3]),
-      Rational.zero,
-      Rational.one,
-      Rational.from([-1, 3]),
-      Rational.from(5),
-    ],
-    [
-      Rational.zero,
-      Rational.from([2, 3]),
-      Rational.from([5, 3]),
-      Rational.one,
-      Rational.zero,
-      Rational.from([1, 3]),
-      Rational.from(5),
-    ],
-  ];
   const getResult = (
     resultType: MatrixResultType = MatrixResultType.Solved
   ): MatrixSolution => ({
@@ -104,6 +45,18 @@ describe('SimplexUtility', () => {
     unproduceable: {},
     excluded: {},
     recipes: {},
+  });
+
+  describe('addItemValue', () => {
+    it('should add a value to an entity of Rationals', () => {
+      const result: Entities<ItemValues> = {};
+      SimplexUtility.addItemValue(result, 'id');
+      expect(result['id'].out).toEqual(Rational.zero);
+      SimplexUtility.addItemValue(result, 'id', Rational.one);
+      expect(result['id'].out).toEqual(Rational.one);
+      SimplexUtility.addItemValue(result, 'id', Rational.two, 'lim');
+      expect(result['id'].lim).toEqual(Rational.two);
+    });
   });
 
   describe('solve', () => {
@@ -125,163 +78,122 @@ describe('SimplexUtility', () => {
       });
     });
 
-    // it('should update steps with solution from simplex method', () => {
-    //   spyOn(SimplexUtility, 'getState').and.returnValue({
-    //     steps: Mocks.Steps,
-    //   } as any);
-    //   const result = getResult(MatrixResultType.Solved);
-    //   spyOn(SimplexUtility, 'getSolution').and.returnValue(result);
-    //   spyOn(SimplexUtility, 'updateSteps');
-    //   expect(
-    //     SimplexUtility.solve(
-    //       Mocks.RationalProducts,
+    it('should update steps with solution from simplex method', () => {
+      spyOn(SimplexUtility, 'getState').and.returnValue({
+        steps: Mocks.Steps,
+      } as any);
+      const result = getResult(MatrixResultType.Solved);
+      spyOn(SimplexUtility, 'getSolution').and.returnValue(result);
+      spyOn(SimplexUtility, 'updateSteps');
+      expect(
+        SimplexUtility.solve(
+          Mocks.RationalItemObjectives,
+          [],
+          {},
+          {},
+          null,
+          MaximizeType.Weight,
+          Mocks.CostRational,
+          Mocks.AdjustedData
+        )
+      ).toEqual({
+        steps: Mocks.Steps,
+        resultType: MatrixResultType.Solved,
+        returnCode: undefined,
+        simplexStatus: undefined,
+        time: 2,
+        cost: Rational.one,
+      });
+      expect(SimplexUtility.updateSteps).toHaveBeenCalled();
+    });
+  });
+
+  describe('getState', () => {
+    it('should build full state object', () => {
+      const itemObjectives = [
+        ...Mocks.RationalItemObjectives,
+        Mocks.RationalItemObjectives[3],
+      ];
+      const recipeObjectives = [
+        ...Mocks.RationalRecipeObjectives,
+        Mocks.RationalRecipeObjectives[3],
+      ];
+      spyOn(SimplexUtility, 'parseItemRecursively');
+      const result = SimplexUtility.getState(
+        itemObjectives,
+        recipeObjectives,
+        Mocks.ItemsStateInitial,
+        Mocks.RecipesState,
+        Mocks.Dataset.technologyIds,
+        MaximizeType.Weight,
+        Mocks.CostRational,
+        Mocks.Dataset
+      );
+      expect(result).toEqual({
+        itemObjectives,
+        recipeObjectives: [
+          Mocks.RationalRecipeObjectives[0],
+          Mocks.RationalRecipeObjectives[2],
+        ],
+        steps: [],
+        recipes: {},
+        itemValues: {
+          [ItemId.AdvancedCircuit]: { out: Rational.one },
+          [ItemId.IronPlate]: { out: Rational.zero, in: Rational.one },
+          [ItemId.PlasticBar]: { out: Rational.zero, max: Rational.one },
+          [ItemId.PiercingRoundsMagazine]: { out: Rational.zero },
+          [ItemId.FirearmMagazine]: { out: Rational.zero },
+          [ItemId.SteelPlate]: { out: Rational.zero },
+          [ItemId.CopperPlate]: {
+            out: Rational.zero,
+            in: Rational.from([5, 16]),
+          },
+          [ItemId.PetroleumGas]: { out: Rational.zero, lim: Rational.hundred },
+        },
+        recipeLimits: { [RecipeId.IronPlate]: Rational.ten },
+        unproduceableIds: [
+          ItemId.AdvancedCircuit,
+          ItemId.IronPlate,
+          ItemId.PlasticBar,
+          ItemId.PetroleumGas,
+          ItemId.PiercingRoundsMagazine,
+          ItemId.FirearmMagazine,
+          ItemId.SteelPlate,
+          ItemId.CopperPlate,
+        ],
+        excludedIds: [],
+        recipeIds: Mocks.Dataset.recipeIds,
+        itemIds: Mocks.Dataset.itemIds,
+        data: Mocks.Dataset,
+        maximizeType: MaximizeType.Weight,
+        cost: Mocks.CostRational,
+      });
+    });
+
+    //   it('should handle adjusted product', () => {
+    //     const result = SimplexUtility.getState(
+    //       [
+    //         new ItemObjectiveRational({
+    //           id: '1',
+    //           itemId: ItemId.MiningProductivity,
+    //           rate: '60',
+    //           rateType: AmountType.Items,
+    //         }),
+    //       ],
     //       [],
-    //       {},
+    //       Mocks.ItemsStateInitial,
     //       [],
-    //       Rational.zero,
+    //       Rational.from(1000000),
     //       Rational.zero,
     //       SimplexType.JsBigIntRational,
     //       Mocks.AdjustedData
-    //     )
-    //   ).toEqual({
-    //     steps: Mocks.Steps,
-    //     resultType: MatrixResultType.Solved,
-    //     pivots: 1,
-    //     time: 2,
-    //     A: [],
-    //     O: [],
-    //     itemIds: [],
-    //     producers: [],
-    //     recipeIds: [],
-    //     unproduceableIds: [],
+    //     );
+
+    //     expect(result.itemsOutput[ItemId.MiningProductivity]).toEqual(
+    //       Rational.from(72)
+    //     );
     //   });
-    //   expect(SimplexUtility.updateSteps).toHaveBeenCalled();
-    // });
-
-    // it('should include heavy oil cracking', () => {
-    //   const result = SimplexUtility.solve(
-    //     [
-    //       {
-    //         id: '1',
-    //         itemId: ItemId.PetroleumGas,
-    //         rate: Rational.one,
-    //         rateType: AmountType.Items,
-    //       },
-    //     ],
-    //     [],
-    //     Mocks.ItemsStateInitial,
-    //     [],
-    //     Rational.from(1000000),
-    //     Rational.zero,
-    //     SimplexType.JsBigIntRational,
-    //     Mocks.AdjustedData
-    //   );
-    //   const hocStep = result.steps.find(
-    //     (s) => s.recipeId === RecipeId.HeavyOilCracking
-    //   );
-    //   expect(hocStep!.machines!.gt(Rational.zero)).toBeTrue();
-    // });
   });
-
-  // describe('getSteps', () => {
-  //   it('should get item step information for an item', () => {
-  //     expect(
-  //       SimplexUtility.getSteps(
-  //         ItemId.CopperPlate,
-  //         Mocks.ItemsStateInitial,
-  //         [],
-  //         Rational.from(1000000),
-  //         Rational.zero,
-  //         SimplexType.JsBigIntRational,
-  //         Mocks.AdjustedData,
-  //         false
-  //       )
-  //     ).toEqual([
-  //       [ItemId.CopperPlate, Rational.one],
-  //       [ItemId.CopperOre, Rational.from([5, 6])],
-  //     ]);
-  //   });
-
-  //   it('should get recipe step information for an item', () => {
-  //     expect(
-  //       SimplexUtility.getSteps(
-  //         ItemId.CopperPlate,
-  //         Mocks.ItemsStateInitial,
-  //         [],
-  //         Rational.from(1000000),
-  //         Rational.zero,
-  //         SimplexType.JsBigIntRational,
-  //         Mocks.AdjustedData,
-  //         true
-  //       )
-  //     ).toEqual([
-  //       [ItemId.CopperPlate, Rational.from([40, 141])],
-  //       [ItemId.CopperOre, Rational.from([1000, 3549])],
-  //     ]);
-  //   });
-  // });
-
-  // describe('getState', () => {
-  //   it('should build full state object', () => {
-  //     spyOn(SimplexUtility, 'parseItemRecursively');
-  //     const result = SimplexUtility.getState(
-  //       [Mocks.RationalProduct],
-  //       [Mocks.RationalProducer],
-  //       Mocks.ItemsStateInitial,
-  //       [],
-  //       Rational.from(1000000),
-  //       Rational.zero,
-  //       SimplexType.JsBigIntRational,
-  //       Mocks.Dataset
-  //     );
-  //     expect(result).toEqual({
-  //       itemObjectives: [Mocks.RationalProduct],
-  //       producers: [Mocks.RationalProducer],
-  //       steps: [],
-  //       recipes: {},
-  //       itemsOutput: {
-  //         [ItemId.WoodenChest]: Mocks.RationalProduct.rate,
-  //         [ItemId.IronPlate]: Rational.zero,
-  //         [ItemId.IronOre]: Rational.zero,
-  //       },
-  //       unproduceableIds: [
-  //         ItemId.WoodenChest,
-  //         ItemId.IronPlate,
-  //         ItemId.IronOre,
-  //       ],
-  //       recipeIds: Mocks.Dataset.recipeIds,
-  //       itemIds: Mocks.Dataset.itemIds,
-  //       data: Mocks.Dataset,
-  //       costUnproduceable: Rational.from(1000000),
-  //       costExcluded: Rational.zero,
-  //       simplexType: SimplexType.JsBigIntRational,
-  //     });
-  //   });
-
-  //   it('should handle adjusted product', () => {
-  //     const result = SimplexUtility.getState(
-  //       [
-  //         new ItemObjectiveRational({
-  //           id: '1',
-  //           itemId: ItemId.MiningProductivity,
-  //           rate: '60',
-  //           rateType: AmountType.Items,
-  //         }),
-  //       ],
-  //       [],
-  //       Mocks.ItemsStateInitial,
-  //       [],
-  //       Rational.from(1000000),
-  //       Rational.zero,
-  //       SimplexType.JsBigIntRational,
-  //       Mocks.AdjustedData
-  //     );
-
-  //     expect(result.itemsOutput[ItemId.MiningProductivity]).toEqual(
-  //       Rational.from(72)
-  //     );
-  //   });
-  // });
 
   describe('recipeMatches', () => {
     it('should find matching recipes for an item', () => {

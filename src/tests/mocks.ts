@@ -44,31 +44,31 @@ export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
 export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
 export const ItemObjective1: M.ItemObjective = {
   id: '0',
-  itemId: Item1.id,
+  itemId: ItemId.AdvancedCircuit,
   rate: '1',
   rateUnit: M.RateUnit.Items,
   type: M.ObjectiveType.Output,
 };
 export const ItemObjective2: M.ItemObjective = {
   id: '1',
-  itemId: Item2.id,
-  rate: '2',
+  itemId: ItemId.IronPlate,
+  rate: '1',
   rateUnit: M.RateUnit.Belts,
-  type: M.ObjectiveType.Output,
+  type: M.ObjectiveType.Input,
 };
 export const ItemObjective3: M.ItemObjective = {
   id: '2',
-  itemId: ItemId.PetroleumGas,
-  rate: '3',
-  rateUnit: M.RateUnit.Wagons,
-  type: M.ObjectiveType.Output,
+  itemId: ItemId.PlasticBar,
+  rate: '1',
+  rateUnit: M.RateUnit.Items,
+  type: M.ObjectiveType.Maximize,
 };
 export const ItemObjective4: M.ItemObjective = {
   id: '3',
-  itemId: ItemId.TransportBelt,
-  rate: '4',
+  itemId: ItemId.PetroleumGas,
+  rate: '100',
   rateUnit: M.RateUnit.Items,
-  type: M.ObjectiveType.Output,
+  type: M.ObjectiveType.Limit,
 };
 export const ItemObjectivesList = [
   ItemObjective1,
@@ -77,30 +77,53 @@ export const ItemObjectivesList = [
   ItemObjective4,
 ];
 export const ItemObjectivesState: ItemObjectives.ItemObjectivesState = {
-  ids: ItemObjectivesList.map((p) => p.id),
+  ids: ItemObjectivesList.map((o) => o.id),
   entities: M.toEntities(ItemObjectivesList),
   index: ItemObjectivesList.length + 1,
 };
-export const RationalItemObjectives = ItemObjectivesList.map((p) => {
-  const rp = new M.ItemObjectiveRational(p);
-  return rp;
-});
+export const RationalItemObjectives = ItemObjectivesList.map(
+  (o) => new M.ItemObjectiveRational(o)
+);
 export const RationalItemObjective = RationalItemObjectives[0];
-export const RecipeObjective: M.RecipeObjective = {
+export const RecipeObjective1: M.RecipeObjective = {
   id: '0',
-  recipeId: RecipeId.IronPlate,
+  recipeId: RecipeId.PiercingRoundsMagazine,
   count: '1',
   type: M.ObjectiveType.Output,
 };
-export const RecipeObjectivesState: RecipeObjectives.RecipeObjectivesState = {
-  ids: ['0'],
-  entities: { ['0']: RecipeObjective },
-  index: 2,
+export const RecipeObjective2: M.RecipeObjective = {
+  id: '1',
+  recipeId: RecipeId.CopperPlate,
+  count: '1',
+  type: M.ObjectiveType.Input,
 };
-export const RationalRecipeObjective = new M.RecipeObjectiveRational(
-  RecipeObjective,
-  Dataset.recipeR[RecipeId.IronPlate]
+export const RecipeObjective3: M.RecipeObjective = {
+  id: '2',
+  recipeId: RecipeId.FirearmMagazine,
+  count: '1',
+  type: M.ObjectiveType.Maximize,
+};
+export const RecipeObjective4: M.RecipeObjective = {
+  id: '3',
+  recipeId: RecipeId.IronPlate,
+  count: '10',
+  type: M.ObjectiveType.Limit,
+};
+export const RecipeObjectivesList = [
+  RecipeObjective1,
+  RecipeObjective2,
+  RecipeObjective3,
+  RecipeObjective4,
+];
+export const RecipeObjectivesState: RecipeObjectives.RecipeObjectivesState = {
+  ids: RecipeObjectivesList.map((o) => o.id),
+  entities: M.toEntities(RecipeObjectivesList),
+  index: RecipeObjectivesList.length + 1,
+};
+export const RationalRecipeObjectives = RecipeObjectivesList.map(
+  (o) => new M.RecipeObjectiveRational(o, Dataset.recipeR[o.recipeId])
 );
+export const RationalRecipeObjective = RationalRecipeObjectives[0];
 export const ItemObjectiveIds = ItemObjectivesList.map((p) => p.id);
 export const ItemObjectivesteps = {
   [ItemObjective1.id]: <[string, M.Rational][]>[],
