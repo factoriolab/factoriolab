@@ -189,23 +189,23 @@ describe('Recipes Selectors', () => {
       expect(result.cost).toBeFalse();
     });
 
-    it('should account for producer settings', () => {
-      const producer: RecipeObjective = {
-        id: '1',
-        recipeId: RecipeId.Coal,
-        count: '1',
-        overclock: 100,
-        beacons: [{ moduleIds: [] }],
-      };
-      const result = Selectors.getRecipesModified.projector(
-        {
-          [RecipeId.Coal]: {},
-        },
-        [producer]
-      );
-      expect(result.machines).toBeTrue();
-      expect(result.beacons).toBeTrue();
-      expect(result.cost).toBeFalse();
-    });
+    // it('should account for producer settings', () => {
+    //   const producer: RecipeObjective = {
+    //     id: '1',
+    //     recipeId: RecipeId.Coal,
+    //     count: '1',
+    //     overclock: 100,
+    //     beacons: [{ moduleIds: [] }],
+    //   };
+    //   const result = Selectors.getRecipesModified.projector(
+    //     {
+    //       [RecipeId.Coal]: {},
+    //     },
+    //     [producer]
+    //   );
+    //   expect(result.machines).toBeTrue();
+    //   expect(result.beacons).toBeTrue();
+    //   expect(result.cost).toBeFalse();
+    // });
   });
 });

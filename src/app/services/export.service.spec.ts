@@ -1,7 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { ItemSettings, Rational, RecipeSettings, Step } from '~/models';
+import {
+  initialColumnsState,
+  ItemSettings,
+  Rational,
+  RecipeSettings,
+  Step,
+} from '~/models';
 import { Preferences } from '~/store';
 import { ExportService } from './export.service';
 
@@ -21,7 +27,7 @@ describe('ExportService', () => {
       spyOn(service, 'saveAsCsv');
       service.stepsToCsv(
         Mocks.Steps,
-        Preferences.initialColumnsState,
+        initialColumnsState,
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         Mocks.AdjustedData
@@ -72,7 +78,7 @@ describe('ExportService', () => {
       const result = service.stepToJson(
         fullStep,
         [inStep, fullStep],
-        Preferences.initialColumnsState,
+        initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe },
         Mocks.AdjustedData
@@ -104,7 +110,7 @@ describe('ExportService', () => {
       const result = service.stepToJson(
         minStep,
         [minStep],
-        Preferences.initialColumnsState,
+        initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe },
         Mocks.AdjustedData

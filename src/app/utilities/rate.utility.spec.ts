@@ -4,6 +4,7 @@ import {
   displayRateInfo,
   Entities,
   Game,
+  ObjectiveType,
   Rational,
   RecipeObjectiveRational,
   RecipeSettingsRational,
@@ -15,7 +16,7 @@ describe('RateUtility', () => {
   describe('addEntityValue', () => {
     it('should add parents field to step', () => {
       const step = { ...Mocks.Step1 };
-      RateUtility.addEntityAmount(step, 'parents', ItemId.Coal, Rational.one);
+      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, Rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
     });
 
@@ -24,7 +25,7 @@ describe('RateUtility', () => {
         ...Mocks.Step1,
         ...{ parents: { [ItemId.Coal]: Rational.zero } },
       };
-      RateUtility.addEntityAmount(step, 'parents', ItemId.Coal, Rational.one);
+      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, Rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
     });
 
@@ -33,7 +34,7 @@ describe('RateUtility', () => {
         ...Mocks.Step1,
         ...{ parents: {} },
       };
-      RateUtility.addEntityAmount(step, 'parents', ItemId.Coal, Rational.one);
+      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, Rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: Rational.one });
     });
   });
@@ -74,7 +75,7 @@ describe('RateUtility', () => {
     });
 
     it('should handle account for non-cumulative DSP drain', () => {
-      const step: any = { machines: Rational.from(1, 3) };
+      const step: any = { machines: Rational.from([1, 3]) };
       const result = { ...step };
       const recipe: any = {
         drain: Rational.two,
@@ -83,8 +84,8 @@ describe('RateUtility', () => {
       };
       RateUtility.adjustPowerPollution(result, recipe, Game.DysonSphereProgram);
       expect(result).toEqual({
-        machines: Rational.from(1, 3),
-        power: Rational.from(4, 3),
+        machines: Rational.from([1, 3]),
+        power: Rational.from([4, 3]),
       });
     });
 
@@ -104,7 +105,7 @@ describe('RateUtility', () => {
     });
 
     it('should calculate power/pollution', () => {
-      const step: any = { machines: Rational.from(3, 2) };
+      const step: any = { machines: Rational.from([3, 2]) };
       const recipe: any = {
         drain: Rational.from(3),
         consumption: Rational.from(4),
@@ -112,9 +113,9 @@ describe('RateUtility', () => {
       };
       RateUtility.adjustPowerPollution(step, recipe, Game.Factorio);
       expect(step).toEqual({
-        machines: Rational.from(3, 2),
+        machines: Rational.from([3, 2]),
         power: Rational.from(12),
-        pollution: Rational.from(15, 2),
+        pollution: Rational.from([15, 2]),
       });
     });
   });
@@ -158,17 +159,17 @@ describe('RateUtility', () => {
       };
       const stepB: Step = { id: '1', itemId: ItemId.IronOre };
       RateUtility.calculateParentsOutputs(stepA, [stepA, stepB]);
-      expect(RateUtility.addEntityAmount).toHaveBeenCalledWith(
+      expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
         stepB,
         'parents',
         '0',
-        Rational.from(5, 16)
+        Rational.from([5, 16])
       );
-      expect(RateUtility.addEntityAmount).toHaveBeenCalledWith(
+      expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
         stepA,
         'outputs',
         'iron-plate',
-        Rational.from(5, 16)
+        Rational.from([5, 16])
       );
     });
   });
@@ -200,6 +201,7 @@ describe('RateUtility', () => {
           id: '0',
           recipeId: RecipeId.Coal,
           count: Rational.one,
+          type: ObjectiveType.Output,
           recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
         },
       };

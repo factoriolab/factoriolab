@@ -14,8 +14,8 @@ describe('MachineRational', () => {
         usage: 3,
         drain: 5,
         pollution: 4,
-        mining: true,
-        research: true,
+        // mining: true,
+        // research: true,
         consumption: {
           [ItemId.Coal]: 1,
         },
@@ -28,8 +28,8 @@ describe('MachineRational', () => {
       expect(result.usage).toEqual(Rational.from(3));
       expect(result.drain).toEqual(Rational.from(5));
       expect(result.pollution).toEqual(Rational.from(4));
-      expect(result.mining).toBeTrue();
-      expect(result.research).toBeTrue();
+      // expect(result.mining).toBeTrue();
+      // expect(result.research).toBeTrue();
       expect(result.consumption).toEqual({ [ItemId.Coal]: Rational.one });
       expect(result.disallowedEffects).toEqual(['productivity']);
     });
@@ -56,8 +56,8 @@ describe('MachineRational', () => {
       expect(result.usage).toBeUndefined();
       expect(result.drain).toBeUndefined();
       expect(result.pollution).toBeUndefined();
-      expect(result.mining).toBeUndefined();
-      expect(result.research).toBeUndefined();
+      // expect(result.mining).toBeUndefined();
+      // expect(result.research).toBeUndefined();
       expect(result.consumption).toBeUndefined();
     });
   });

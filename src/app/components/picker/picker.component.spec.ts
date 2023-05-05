@@ -36,13 +36,23 @@ describe('PickerComponent', () => {
 
   describe('clickOpen', () => {
     it('should open the products dialog', () => {
-      component.clickOpen(Mocks.Dataset, 'item', ItemId.IronPlate);
+      component.clickOpen(
+        Mocks.Dataset,
+        'item',
+        Mocks.Dataset.itemIds,
+        ItemId.IronPlate
+      );
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();
     });
 
     it('should open the producers dialog', () => {
-      component.clickOpen(Mocks.Dataset, 'recipe', RecipeId.IronPlate);
+      component.clickOpen(
+        Mocks.Dataset,
+        'recipe',
+        Mocks.Dataset.recipeIds,
+        RecipeId.IronPlate
+      );
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();
     });
@@ -101,7 +111,7 @@ describe('PickerComponent', () => {
 
   describe('inputSearch', () => {
     beforeEach(() => {
-      component.clickOpen(Mocks.Dataset, 'item');
+      component.clickOpen(Mocks.Dataset, 'item', Mocks.Dataset.itemIds);
     });
 
     it('should skip if no search is specified', () => {

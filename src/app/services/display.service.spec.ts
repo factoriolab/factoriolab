@@ -30,7 +30,7 @@ describe('DisplayService', () => {
 
   describe('round', () => {
     it('should round a rational to two digits', () => {
-      expect(service.round(Rational.from(1, 3))).toEqual('0.33');
+      expect(service.round(Rational.from([1, 3]))).toEqual('0.33');
     });
   });
 

@@ -24,7 +24,7 @@ describe('MachineRatePipe', () => {
       expect(pipe.transform(Rational.one, null, ItemId.Pumpjack)).toEqual(
         '100%'
       );
-      expect(pipe.transform(Rational.from(1, 3), 3, ItemId.Pumpjack)).toEqual(
+      expect(pipe.transform(Rational.from([1, 3]), 3, ItemId.Pumpjack)).toEqual(
         '33.4%'
       );
     });

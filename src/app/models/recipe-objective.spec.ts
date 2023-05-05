@@ -1,4 +1,5 @@
 import { Mocks, RecipeId } from 'src/tests';
+import { ObjectiveType } from './enum';
 import { Rational } from './rational';
 import { RecipeObjectiveRational } from './recipe-objective';
 
@@ -10,6 +11,7 @@ describe('RecipeObjectiveRational', () => {
           id: '1',
           recipeId: RecipeId.IronPlate,
           count: '2',
+          type: ObjectiveType.Output,
         },
         Mocks.Dataset.recipeR[RecipeId.IronPlate]
       );
@@ -24,6 +26,7 @@ describe('RecipeObjectiveRational', () => {
           id: '1',
           recipeId: RecipeId.IronPlate,
           count: '2',
+          type: ObjectiveType.Output,
         },
         Mocks.Dataset.recipeR[RecipeId.IronPlate]
       );

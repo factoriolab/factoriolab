@@ -1,9 +1,9 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Entities,
-  Rat,
+  ObjectiveType,
   Rational,
-  Recipe,
+  RecipeRational,
   RecipeSettingsRational,
 } from '~/models';
 import { RecipeUtility } from './recipe.utility';
@@ -53,14 +53,14 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from(2, 3);
+      expected.time = Rational.from([2, 3]);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(150);
-      expected.pollution = Rational.from(1, 20);
+      expected.pollution = Rational.from([1, 20]);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -77,13 +77,13 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.CopperCable]
       );
-      expected.time = Rational.from(2, 3);
+      expected.time = Rational.from([2, 3]);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(150);
-      expected.pollution = Rational.from(1, 20);
+      expected.pollution = Rational.from([1, 20]);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -104,12 +104,11 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.MiningProductivity]
       );
       expected.out = { [ItemId.MiningProductivity]: Rational.one };
       expected.time = Rational.from(30);
-      expected.adjustProd = true;
       expected.productivity = Rational.one;
       expected.drain = Rational.zero;
       expected.consumption = Rational.from(60);
@@ -131,14 +130,14 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.IronOre]
       );
       expected.out = { [ItemId.IronOre]: Rational.from(3) };
       expected.time = Rational.two;
       expected.drain = Rational.zero;
       expected.consumption = Rational.from(90);
-      expected.pollution = Rational.from(1, 6);
+      expected.pollution = Rational.from([1, 6]);
       expected.productivity = Rational.from(3);
       expect(result).toEqual(expected);
     });
@@ -188,17 +187,17 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = {
-        [ItemId.SteelChest]: Rational.from(76, 25),
+        [ItemId.SteelChest]: Rational.from([76, 25]),
       };
-      expected.time = Rational.from(40, 81);
+      expected.time = Rational.from([40, 81]);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(255);
-      expected.pollution = Rational.from(1037, 4000);
-      expected.productivity = Rational.from(76, 25);
+      expected.pollution = Rational.from([1037, 4000]);
+      expected.productivity = Rational.from([76, 25]);
       expect(result).toEqual(expected);
     });
 
@@ -243,16 +242,16 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = {
         [ItemId.SteelChest]: Rational.one,
       };
-      expected.time = Rational.from(10, 3);
+      expected.time = Rational.from([10, 3]);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(30);
-      expected.pollution = Rational.from(1, 500);
+      expected.pollution = Rational.from([1, 500]);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -271,17 +270,17 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.IronOre]
       );
-      expected.in = { [ItemId.Coal]: Rational.from(3, 20) };
+      expected.in = { [ItemId.Coal]: Rational.from([3, 20]) };
       expected.out = {
         [ItemId.IronOre]: Rational.one,
       };
       expected.time = Rational.from(4);
       expected.drain = undefined;
       expected.consumption = Rational.zero;
-      expected.pollution = Rational.from(1, 5);
+      expected.pollution = Rational.from([1, 5]);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -300,17 +299,17 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.PlasticBar]
       );
-      expected.in[ItemId.Coal] = Rational.from(809, 800);
+      expected.in[ItemId.Coal] = Rational.from([809, 800]);
       expected.out = {
         [ItemId.PlasticBar]: Rational.two,
       };
-      expected.time = Rational.from(1, 2);
+      expected.time = Rational.from([1, 2]);
       expected.drain = undefined;
       expected.consumption = Rational.zero;
-      expected.pollution = Rational.from(1, 15);
+      expected.pollution = Rational.from([1, 15]);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -327,7 +326,9 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
-      expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
+      expect(result.in[ItemId.UraniumFuelCell]).toEqual(
+        Rational.from([1, 200])
+      );
     });
 
     it('should find non-matching nonchemical fuel', () => {
@@ -356,7 +357,9 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data
       );
-      expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
+      expect(result.in[ItemId.UraniumFuelCell]).toEqual(
+        Rational.from([1, 200])
+      );
     });
 
     it('should adjust based on overclock', () => {
@@ -373,14 +376,14 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.Dataset
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from(1, 3);
+      expected.time = Rational.from([1, 3]);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(375);
-      expected.pollution = Rational.from(1, 20);
+      expected.pollution = Rational.from([1, 20]);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -402,14 +405,14 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from(1, 3);
+      expected.time = Rational.from([1, 3]);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(-20);
-      expected.pollution = Rational.from(1, 20);
+      expected.pollution = Rational.from([1, 20]);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -443,58 +446,16 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from(2, 3);
+      expected.time = Rational.from([2, 3]);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(10000);
-      expected.pollution = Rational.from(1, 20);
+      expected.pollution = Rational.from([1, 20]);
       expected.productivity = Rational.one;
       expected.usage = Rational.from(10000);
-      expect(result).toEqual(expected);
-    });
-
-    it('should handle a machine with no listed speed', () => {
-      const settings = Mocks.RecipesStateRational[RecipeId.SteelChest];
-      const data = {
-        ...Mocks.Dataset,
-        ...{
-          machineEntities: {
-            ...Mocks.Dataset.machineEntities,
-            ...{
-              [ItemId.AssemblingMachine2]: {
-                ...Mocks.Dataset.machineEntities[ItemId.AssemblingMachine2],
-                ...{
-                  ...Mocks.Dataset.machineEntities[ItemId.AssemblingMachine2],
-                  ...{ speed: undefined },
-                },
-              },
-            },
-          },
-        },
-      };
-      const result = RecipeUtility.adjustRecipe(
-        RecipeId.SteelChest,
-        ItemId.Coal,
-        ItemId.Module,
-        Rational.zero,
-        Rational.zero,
-        false,
-        settings,
-        Mocks.ItemsStateInitial,
-        data
-      );
-      const expected = new RecipeRat(
-        Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
-      );
-      expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from(1, 30);
-      expected.drain = Rational.from(5);
-      expected.consumption = Rational.from(150);
-      expected.pollution = Rational.from(1, 20);
-      expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
 
@@ -553,15 +514,15 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data
       );
-      const expected = new RecipeRat(recipe);
-      expected.in[ItemId.ProductivityModule] = Rational.from(11, 10);
-      expected.in[ItemId.ProductivityModule3] = Rational.from(9, 10);
-      expected.out = { [ItemId.SteelChest]: Rational.from(11, 10) };
-      expected.time = Rational.from(8, 97);
-      expected.drain = Rational.from(25, 2);
+      const expected = new RecipeRational(recipe);
+      expected.in[ItemId.ProductivityModule] = Rational.from([11, 10]);
+      expected.in[ItemId.ProductivityModule3] = Rational.from([9, 10]);
+      expected.out = { [ItemId.SteelChest]: Rational.from([11, 10]) };
+      expected.time = Rational.from([8, 97]);
+      expected.drain = Rational.from([25, 2]);
       expected.consumption = Rational.from(2775);
-      expected.pollution = Rational.from(407, 1500);
-      expected.productivity = Rational.from(11, 10);
+      expected.pollution = Rational.from([407, 1500]);
+      expected.productivity = Rational.from([11, 10]);
       expect(result).toEqual(expected);
     });
 
@@ -620,15 +581,15 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data
       );
-      const expected = new RecipeRat(recipe);
-      expected.in[ItemId.SpeedModule] = Rational.from(1, 10);
-      expected.in[ItemId.ProductivityModule3] = Rational.from(9, 10);
-      expected.out = { [ItemId.SteelChest]: Rational.from(11, 10) };
-      expected.time = Rational.from(8, 97);
-      expected.drain = Rational.from(25, 2);
+      const expected = new RecipeRational(recipe);
+      expected.in[ItemId.SpeedModule] = Rational.from([1, 10]);
+      expected.in[ItemId.ProductivityModule3] = Rational.from([9, 10]);
+      expected.out = { [ItemId.SteelChest]: Rational.from([11, 10]) };
+      expected.time = Rational.from([8, 97]);
+      expected.drain = Rational.from([25, 2]);
       expected.consumption = Rational.from(2775);
-      expected.pollution = Rational.from(407, 1500);
-      expected.productivity = Rational.from(11, 10);
+      expected.pollution = Rational.from([407, 1500]);
+      expected.productivity = Rational.from([11, 10]);
       expect(result).toEqual(expected);
     });
 
@@ -662,15 +623,15 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data
       );
-      const expected = new RecipeRat(
+      const expected = new RecipeRational(
         Mocks.Dataset.recipeEntities[RecipeId.CopperCable]
       );
-      expected.time = Rational.from(2, 3);
+      expected.time = Rational.from([2, 3]);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(150);
-      expected.pollution = Rational.from(1, 20);
+      expected.pollution = Rational.from([1, 20]);
       expected.productivity = Rational.one;
-      expected.in[ItemId.Coal] = Rational.from(1, 90);
+      expected.in[ItemId.Coal] = Rational.from([1, 90]);
       expect(result).toEqual(expected);
     });
 
@@ -733,11 +694,11 @@ describe('RecipeUtility', () => {
   });
 
   describe('adjustSiloRecipes', () => {
-    let recipeR: Entities<RecipeRat>;
+    let recipeR: Entities<RecipeRational>;
 
     beforeEach(() => {
       recipeR = Mocks.AdjustedData.recipeIds.reduce(
-        (e: Entities<RecipeRat>, i) => {
+        (e: Entities<RecipeRational>, i) => {
           e[i] = RecipeUtility.adjustRecipe(
             i,
             ItemId.Coal,
@@ -762,10 +723,10 @@ describe('RecipeUtility', () => {
         Mocks.AdjustedData
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from(82499, 924)
+        Rational.from([82499, 924])
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from(82499, 66000)
+        Rational.from([82499, 66000])
       );
     });
 
@@ -784,10 +745,10 @@ describe('RecipeUtility', () => {
         Mocks.AdjustedData
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from(203, 5)
+        Rational.from([203, 5])
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from(82499, 66000)
+        Rational.from([82499, 66000])
       );
     });
   });
@@ -835,8 +796,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.one,
         false,
-        Rational.one,
-        Rational.one,
+        Mocks.CostRational,
         Mocks.Dataset
       );
       expect(result).toBeTruthy();
@@ -864,8 +824,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.one,
         false,
-        Rational.one,
-        Rational.one,
+        Mocks.CostRational,
         Mocks.Dataset
       );
       expect(result.itemRecipeId[ItemId.PetroleumGas]).toEqual(
@@ -882,8 +841,7 @@ describe('RecipeUtility', () => {
         Rational.zero,
         Rational.one,
         false,
-        Rational.one,
-        Rational.one,
+        Mocks.CostRational,
         Mocks.Dataset
       );
       expect(result.itemRecipeId[ItemId.SolidFuel]).toEqual(
@@ -893,7 +851,7 @@ describe('RecipeUtility', () => {
   });
 
   describe('adjustCost', () => {
-    let recipeR: Entities<RecipeRat>;
+    let recipeR: Entities<RecipeRational>;
 
     beforeEach(() => {
       recipeR = RecipeUtility.adjustRecipes(
@@ -918,12 +876,7 @@ describe('RecipeUtility', () => {
           },
         },
       };
-      RecipeUtility.adjustCost(
-        recipeR,
-        recipeSettings,
-        Rational.one,
-        Rational.one
-      );
+      RecipeUtility.adjustCost(recipeR, recipeSettings, Mocks.CostRational);
       expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.two);
     });
 
@@ -931,18 +884,22 @@ describe('RecipeUtility', () => {
       RecipeUtility.adjustCost(
         recipeR,
         Mocks.RecipesStateRationalInitial,
-        Rational.one,
-        Rational.one
+        Mocks.CostRational
       );
       expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from(29575));
       expect(recipeR[RecipeId.CopperCable].cost).toEqual(Rational.one);
     });
   });
 
-  describe('adjustProducer', () => {
+  describe('adjustRecipeObjective', () => {
     it('should adjust a producer based on settings', () => {
-      const result = RecipeUtility.adjustProducer(
-        { id: '1', recipeId: RecipeId.IronPlate, count: '1' },
+      const result = RecipeUtility.adjustRecipeObjective(
+        {
+          id: '1',
+          recipeId: RecipeId.IronPlate,
+          count: '1',
+          type: ObjectiveType.Output,
+        },
         Mocks.MachinesStateInitial,
         Mocks.Dataset
       );
@@ -967,11 +924,12 @@ describe('RecipeUtility', () => {
         ...Mocks.MachinesStateInitial,
         ...{ ids: undefined },
       };
-      const result = RecipeUtility.adjustProducer(
+      const result = RecipeUtility.adjustRecipeObjective(
         {
           id: '1',
           recipeId: RecipeId.IronPlate,
           count: '1',
+          type: ObjectiveType.Output,
         },
         machines,
         Mocks.Dataset
@@ -1001,11 +959,12 @@ describe('RecipeUtility', () => {
           },
         },
       };
-      const result = RecipeUtility.adjustProducer(
+      const result = RecipeUtility.adjustRecipeObjective(
         {
           id: '1',
           recipeId: RecipeId.IronPlate,
           count: '1',
+          type: ObjectiveType.Output,
           beacons: [{ id: ItemId.Beacon }],
         },
         machines,

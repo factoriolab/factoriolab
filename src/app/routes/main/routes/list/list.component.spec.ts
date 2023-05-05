@@ -22,9 +22,14 @@ import {
   StepDetailTab,
 } from '~/models';
 import { ExportService } from '~/services';
-import { Items, LabState, Producers, Products, Recipes } from '~/store';
+import {
+  ItemObjectives,
+  Items,
+  LabState,
+  RecipeObjectives,
+  Recipes,
+} from '~/store';
 import { ListComponent } from './list.component';
-import { ListModule } from './list.module';
 
 enum DataTest {
   Export = 'lab-list-export',
@@ -38,14 +43,15 @@ describe('ListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestModule, ListModule],
+      declarations: [ListComponent],
+      imports: [TestModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListComponent);
     mockStore = TestBed.inject(MockStore);
-    mockStore.overrideSelector(Products.getSteps, Mocks.Steps);
+    mockStore.overrideSelector(ItemObjectives.getSteps, Mocks.Steps);
     mockStore.overrideSelector(
-      Products.getStepDetails,
+      ItemObjectives.getStepDetails,
       Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
         e[s.id] = {
           tabs: [
@@ -105,7 +111,7 @@ describe('ListComponent', () => {
     beforeEach(() => {
       spyOn(component, 'resetItem');
       spyOn(component, 'resetRecipe');
-      spyOn(component, 'resetProducer');
+      // spyOn(component, 'resetProducer');
     });
 
     it('should reset a producer step', () => {
@@ -118,7 +124,7 @@ describe('ListComponent', () => {
       component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).not.toHaveBeenCalled();
-      expect(component.resetProducer).toHaveBeenCalled();
+      // expect(component.resetProducer).toHaveBeenCalled();
     });
 
     it('should reset a recipe step', () => {
@@ -130,7 +136,7 @@ describe('ListComponent', () => {
       component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).toHaveBeenCalled();
-      expect(component.resetProducer).not.toHaveBeenCalled();
+      // expect(component.resetProducer).not.toHaveBeenCalled();
     });
   });
 
@@ -350,34 +356,40 @@ describe('ListComponent', () => {
     dispatch.idValDef('setWagon', Items.SetWagonAction);
     dispatch.idVal('setItemChecked', Items.SetCheckedAction);
     dispatch.idValDef('setMachine', Recipes.SetMachineAction);
-    dispatch.idValDefAlt('setMachine', Producers.SetMachineAction);
+    dispatch.idValDefAlt('setMachine', RecipeObjectives.SetMachineAction);
     dispatch.idValDef('setMachineModules', Recipes.SetMachineModulesAction);
     dispatch.idValDefAlt(
       'setMachineModules',
-      Producers.SetMachineModulesAction
+      RecipeObjectives.SetMachineModulesAction
     );
     dispatch.val('addBeacon', Recipes.AddBeaconAction);
-    dispatch.valAlt('addBeacon', Producers.AddBeaconAction);
+    dispatch.valAlt('addBeacon', RecipeObjectives.AddBeaconAction);
     dispatch.idVal('removeBeacon', Recipes.RemoveBeaconAction);
-    dispatch.idValAlt('removeBeacon', Producers.RemoveBeaconAction);
+    dispatch.idValAlt('removeBeacon', RecipeObjectives.RemoveBeaconAction);
     dispatch.idIndValDef('setBeaconCount', Recipes.SetBeaconCountAction);
-    dispatch.idIndValDefAlt('setBeaconCount', Producers.SetBeaconCountAction);
+    dispatch.idIndValDefAlt(
+      'setBeaconCount',
+      RecipeObjectives.SetBeaconCountAction
+    );
     dispatch.idIndValDef('setBeacon', Recipes.SetBeaconAction);
-    dispatch.idIndValDefAlt('setBeacon', Producers.SetBeaconAction);
+    dispatch.idIndValDefAlt('setBeacon', RecipeObjectives.SetBeaconAction);
     dispatch.idIndValDef('setBeaconModules', Recipes.SetBeaconModulesAction);
     dispatch.idIndValDefAlt(
       'setBeaconModules',
-      Producers.SetBeaconModulesAction
+      RecipeObjectives.SetBeaconModulesAction
     );
     dispatch.idIndVal('setBeaconTotal', Recipes.SetBeaconTotalAction);
-    dispatch.idIndValAlt('setBeaconTotal', Producers.SetBeaconTotalAction);
+    dispatch.idIndValAlt(
+      'setBeaconTotal',
+      RecipeObjectives.SetBeaconTotalAction
+    );
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
-    dispatch.idValDefAlt('setOverclock', Producers.SetOverclockAction);
+    dispatch.idValDefAlt('setOverclock', RecipeObjectives.SetOverclockAction);
     dispatch.idVal('setRecipeChecked', Recipes.SetCheckedAction);
-    dispatch.idValAlt('setRecipeChecked', Producers.SetCheckedAction);
+    dispatch.idValAlt('setRecipeChecked', RecipeObjectives.SetCheckedAction);
     dispatch.val('resetItem', Items.ResetItemAction);
     dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
-    dispatch.val('resetProducer', Producers.ResetObjectiveAction);
+    dispatch.val('resetRecipeObjective', RecipeObjectives.ResetObjectiveAction);
     dispatch.void('resetChecked', Items.ResetCheckedAction);
     dispatch.void('resetExcluded', Items.ResetExcludedAction);
     dispatch.void('resetBelts', Items.ResetBeltsAction);

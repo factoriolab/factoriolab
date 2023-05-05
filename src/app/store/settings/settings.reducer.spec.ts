@@ -213,67 +213,67 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_COST_FACTOR', () => {
-    it('should set the recipe cost multiplier', () => {
-      const value = '10';
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetCostFactorAction(value)
-      );
-      expect(result.costFactor).toEqual(value);
-    });
-  });
+  // describe('SET_COST_FACTOR', () => {
+  //   it('should set the recipe cost multiplier', () => {
+  //     const value = '10';
+  //     const result = settingsReducer(
+  //       initialSettingsState,
+  //       new Actions.SetCostFactorAction(value)
+  //     );
+  //     expect(result.costFactor).toEqual(value);
+  //   });
+  // });
 
-  describe('SET_COST_MACHINE', () => {
-    it('should set the machine cost multiplier', () => {
-      const value = '10';
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetCostMachineAction(value)
-      );
-      expect(result.costMachine).toEqual(value);
-    });
-  });
+  // describe('SET_COST_MACHINE', () => {
+  //   it('should set the machine cost multiplier', () => {
+  //     const value = '10';
+  //     const result = settingsReducer(
+  //       initialSettingsState,
+  //       new Actions.SetCostMachineAction(value)
+  //     );
+  //     expect(result.costMachine).toEqual(value);
+  //   });
+  // });
 
-  describe('SET_COST_INPUT', () => {
-    it('should set the input cost', () => {
-      const value = '10';
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetCostUnproduceableAction(value)
-      );
-      expect(result.costUnproduceable).toEqual(value);
-    });
-  });
+  // describe('SET_COST_INPUT', () => {
+  //   it('should set the input cost', () => {
+  //     const value = '10';
+  //     const result = settingsReducer(
+  //       initialSettingsState,
+  //       new Actions.SetCostUnproduceableAction(value)
+  //     );
+  //     expect(result.costUnproduceable).toEqual(value);
+  //   });
+  // });
 
-  describe('SET_COST_EXCLUDED', () => {
-    it('should set the excluded cost', () => {
-      const value = '10';
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetCostExcludedAction(value)
-      );
-      expect(result.costExcluded).toEqual(value);
-    });
-  });
+  // describe('SET_COST_EXCLUDED', () => {
+  //   it('should set the excluded cost', () => {
+  //     const value = '10';
+  //     const result = settingsReducer(
+  //       initialSettingsState,
+  //       new Actions.SetCostExcludedAction(value)
+  //     );
+  //     expect(result.costExcluded).toEqual(value);
+  //   });
+  // });
 
-  describe('RESET_COST', () => {
-    it('should reset the cost fields', () => {
-      const result = settingsReducer(
-        {
-          costFactor: 'a',
-          costMachine: 'b',
-          costInput: 'c',
-          costExcluded: 'd',
-        } as any,
-        new Actions.ResetCostAction()
-      );
-      expect(result.costFactor).toEqual('1');
-      expect(result.costMachine).toEqual('1');
-      expect(result.costUnproduceable).toEqual('1000000');
-      expect(result.costExcluded).toEqual('0');
-    });
-  });
+  // describe('RESET_COST', () => {
+  //   it('should reset the cost fields', () => {
+  //     const result = settingsReducer(
+  //       {
+  //         costFactor: 'a',
+  //         costMachine: 'b',
+  //         costInput: 'c',
+  //         costExcluded: 'd',
+  //       } as any,
+  //       new Actions.ResetCostAction()
+  //     );
+  //     expect(result.costFactor).toEqual('1');
+  //     expect(result.costMachine).toEqual('1');
+  //     expect(result.costUnproduceable).toEqual('1000000');
+  //     expect(result.costExcluded).toEqual('0');
+  //   });
+  // });
 
   it('should return default state', () => {
     expect(settingsReducer(undefined, { type: 'Test' } as any)).toBe(

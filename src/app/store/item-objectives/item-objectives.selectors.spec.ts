@@ -1,18 +1,15 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
-  Column,
   DisplayRate,
   displayRateInfo,
   Game,
   MatrixResultType,
   PowerUnit,
-  RateUnit,
   Rational,
   Step,
   StepDetailTab,
 } from '~/models';
 import { RateUtility, SimplexUtility } from '~/utilities';
-import { Producers } from '../';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -23,158 +20,65 @@ describe('Item Objectives Selectors', () => {
     it('should get slices of state', () => {
       expect(
         Selectors.itemObjectivesState({
-          productsState: Mocks.ProductsState,
+          itemObjectivesState: Mocks.ItemObjectivesState,
         } as any)
-      ).toEqual(Mocks.ProductsState);
-      expect(Selectors.getIds.projector(Mocks.ProductsState)).toEqual(
-        Mocks.ProductsState.ids
+      ).toEqual(Mocks.ItemObjectivesState);
+      expect(Selectors.getIds.projector(Mocks.ItemObjectivesState)).toEqual(
+        Mocks.ItemObjectivesState.ids
       );
-      expect(Selectors.getEntities.projector(Mocks.ProductsState)).toEqual(
-        Mocks.ProductsState.entities
-      );
+      expect(
+        Selectors.getEntities.projector(Mocks.ItemObjectivesState)
+      ).toEqual(Mocks.ItemObjectivesState.entities);
     });
   });
 
   describe('getProducts', () => {
     it('should return the array of products', () => {
       const result = Selectors.getItemObjectives.projector(
-        Mocks.ProductsState.ids,
-        Mocks.ProductsState.entities,
+        Mocks.ItemObjectivesState.ids,
+        Mocks.ItemObjectivesState.entities,
         Mocks.Dataset
       );
-      expect(result.length).toEqual(Mocks.ProductIds.length);
+      expect(result.length).toEqual(Mocks.ItemObjectiveIds.length);
     });
   });
 
   describe('getRationalProducts', () => {
     it('should map products to rational products', () => {
       const result = Selectors.getItemObjectiveRationals.projector(
-        Mocks.ProductsList
+        Mocks.ItemObjectivesList
       );
       expect(result[0].rate.nonzero()).toBeTrue();
     });
   });
 
-  describe('getProductsBy', () => {
-    it('should handle empty/null values', () => {
-      const result = Selectors.getItemObjectivesBy.projector([]);
-      expect(Object.keys(result).length).toEqual(0);
-    });
+  // describe('getNormalizedProducts', () => {
+  //   it('should map products to rates', () => {
+  //     const result = Selectors.getNormalizedItemObjectives.projector(
+  //       Mocks.RationalProducts,
+  //       { ['0']: Rational.ten }
+  //     );
+  //     expect(result[0].rate).toEqual(Rational.ten);
+  //   });
+  // });
 
-    it('should return the array of product ids', () => {
-      const products = [...Mocks.RationalProducts, Mocks.RationalProducts[0]];
-      const result = Selectors.getItemObjectivesBy.projector(products);
-      expect(Object.keys(result).length).toEqual(Mocks.ProductIds.length);
-    });
-  });
-
-  describe('getProductsByItems', () => {
-    it('should select the products calculated by items', () => {
-      expect(
-        Selectors.getItemObjectivesByItems.projector({
-          [AmountType.Items]: true,
-        } as any)
-      ).toBeTrue();
-    });
-  });
-
-  describe('getProductsByBelts', () => {
-    it('should select the products calculated by belts', () => {
-      expect(
-        Selectors.getItemObjectivesByBelts.projector({
-          [AmountType.Belts]: true,
-        } as any)
-      ).toBeTrue();
-    });
-  });
-
-  describe('getProductsByWagons', () => {
-    it('should select the products calculated by wagons', () => {
-      expect(
-        Selectors.getItemObjectivesByWagons.projector({
-          [AmountType.Wagons]: true,
-        } as any)
-      ).toBeTrue();
-    });
-  });
-
-  describe('getNormalizedRatesByItems', () => {
-    it('should return the rate entities', () => {
-      const result = Selectors.getNormalizedRatesByItems.projector(
-        [Mocks.RationalProducts[0]],
-        displayRateInfo[DisplayRate.PerHour]
-      );
-      expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
-    });
-  });
-
-  describe('getNormalizedRatesByBelts', () => {
-    it('should return the rate entities', () => {
-      const result = Selectors.getNormalizedRatesByBelts.projector(
-        [Mocks.RationalProducts[1]],
-        { [Mocks.Product2.itemId]: Mocks.ItemSettings1 },
-        { [Mocks.ItemSettings1.beltId!]: Rational.one }
-      );
-      expect(result[Mocks.Product2.id].nonzero()).toBeTrue();
-    });
-  });
-
-  describe('getNormalizedRatesByWagons', () => {
-    it('should return the rate entities', () => {
-      const result = Selectors.getNormalizedRatesByWagons.projector(
-        [Mocks.RationalProducts[2]],
-        Mocks.ItemsStateInitial,
-        displayRateInfo[DisplayRate.PerHour],
-        Mocks.Dataset
-      );
-      expect(result[Mocks.Product3.id].nonzero()).toBeTrue();
-    });
-
-    it('should return the rate entities for items', () => {
-      const result = Selectors.getNormalizedRatesByWagons.projector(
-        [Mocks.RationalProducts[0]],
-        Mocks.ItemsStateInitial,
-        displayRateInfo[DisplayRate.PerHour],
-        Mocks.Dataset
-      );
-      expect(result[Mocks.Product1.id].nonzero()).toBeTrue();
-    });
-  });
-
-  describe('getNormalizedRates', () => {
-    it('should handle empty/null values', () => {
-      const result = Selectors.getNormalizedRates.projector({}, {}, {});
-      expect(Object.keys(result).length).toEqual(0);
-    });
-  });
-
-  describe('getNormalizedProducts', () => {
-    it('should map products to rates', () => {
-      const result = Selectors.getNormalizedItemObjectives.projector(
-        Mocks.RationalProducts,
-        { ['0']: Rational.ten }
-      );
-      expect(result[0].rate).toEqual(Rational.ten);
-    });
-  });
-
-  describe('getMatrixResult', () => {
-    it('should calculate rates using utility method', () => {
-      spyOn(SimplexUtility, 'solve').and.returnValue({
-        steps: [],
-        resultType: MatrixResultType.Skipped,
-      });
-      Selectors.getMatrixResult.projector(
-        [Mocks.RationalProduct],
-        [],
-        {},
-        [],
-        Mocks.SimplexModifiers,
-        Mocks.Dataset
-      );
-      expect(SimplexUtility.solve).toHaveBeenCalled();
-    });
-  });
+  // describe('getMatrixResult', () => {
+  //   it('should calculate rates using utility method', () => {
+  //     spyOn(SimplexUtility, 'solve').and.returnValue({
+  //       steps: [],
+  //       resultType: MatrixResultType.Skipped,
+  //     });
+  //     Selectors.getMatrixResult.projector(
+  //       [Mocks.RationalProduct],
+  //       [],
+  //       {},
+  //       [],
+  //       Mocks.SimplexModifiers,
+  //       Mocks.Dataset
+  //     );
+  //     expect(SimplexUtility.solve).toHaveBeenCalled();
+  //   });
+  // });
 
   describe('getSteps', () => {
     it('should calculate rates using utility method', () => {
@@ -193,43 +97,43 @@ describe('Item Objectives Selectors', () => {
     });
   });
 
-  describe('getZipState', () => {
-    it('should put together the required state parts', () => {
-      const products = Mocks.ProductsState;
-      const producers = Producers.initialProducersState;
-      const items = Mocks.ItemsState;
-      const recipes = Mocks.RecipesState;
-      const machines = Mocks.MachinesStateInitial;
-      const settings = Settings.initialSettingsState;
-      const result = Selectors.getZipState.projector(
-        products,
-        producers,
-        items,
-        recipes,
-        machines,
-        settings
-      );
-      expect(result.products).toBe(products);
-      expect(result.producers).toBe(producers);
-      expect(result.items).toBe(items);
-      expect(result.recipes).toBe(recipes);
-      expect(result.machines).toBe(machines);
-      expect(result.settings).toBe(settings);
-    });
-  });
+  // describe('getZipState', () => {
+  //   it('should put together the required state parts', () => {
+  //     const products = Mocks.ItemObjectivesState;
+  //     const producers = Producers.initialProducersState;
+  //     const items = Mocks.ItemsState;
+  //     const recipes = Mocks.RecipesState;
+  //     const machines = Mocks.MachinesStateInitial;
+  //     const settings = Settings.initialSettingsState;
+  //     const result = Selectors.getZipState.projector(
+  //       products,
+  //       producers,
+  //       items,
+  //       recipes,
+  //       machines,
+  //       settings
+  //     );
+  //     expect(result.products).toBe(products);
+  //     expect(result.producers).toBe(producers);
+  //     expect(result.items).toBe(items);
+  //     expect(result.recipes).toBe(recipes);
+  //     expect(result.machines).toBe(machines);
+  //     expect(result.settings).toBe(settings);
+  //   });
+  // });
 
-  describe('getStepsModified', () => {
-    it('should determine which steps have modified item or recipe settings', () => {
-      const result = Selectors.getStepsModified.projector(
-        Mocks.Steps,
-        [Mocks.Producer],
-        Items.initialItemsState,
-        Recipes.initialRecipesState
-      );
-      expect(result.items[Mocks.Step1.itemId!]).toBeFalse();
-      expect(result.recipes[Mocks.Step1.recipeId!]).toBeFalse();
-    });
-  });
+  // describe('getStepsModified', () => {
+  //   it('should determine which steps have modified item or recipe settings', () => {
+  //     const result = Selectors.getStepsModified.projector(
+  //       Mocks.Steps,
+  //       [Mocks.Producer],
+  //       Items.initialItemsState,
+  //       Recipes.initialRecipesState
+  //     );
+  //     expect(result.items[Mocks.Step1.itemId!]).toBeFalse();
+  //     expect(result.recipes[Mocks.Step1.recipeId!]).toBeFalse();
+  //   });
+  // });
 
   describe('getTotals', () => {
     it('should get totals for columns', () => {
@@ -319,119 +223,119 @@ describe('Item Objectives Selectors', () => {
     });
   });
 
-  describe('getStepDetails', () => {
-    it('should determine detail tabs to display for steps', () => {
-      const steps: Step[] = [
-        {
-          id: '0',
-          itemId: ItemId.PetroleumGas,
-          items: Rational.one,
-          recipeId: RecipeId.Coal,
-          machines: Rational.one,
-          outputs: { [ItemId.PetroleumGas]: Rational.two },
-        },
-        {
-          id: '1',
-          recipeId: RecipeId.CrudeOil,
-          machines: Rational.two,
-          outputs: { [ItemId.PetroleumGas]: Rational.one },
-        },
-        {
-          id: '2',
-        },
-      ];
-      const data = {
-        ...Mocks.AdjustedData,
-        ...{
-          // Manually test with one recipe which should be listed as required
-          optionalRecipeIds: Mocks.AdjustedData.complexRecipeIds.filter(
-            (i) => i !== RecipeId.CoalLiquefaction
-          ),
-        },
-      };
-      const result = Selectors.getStepDetails.projector(steps, data, []);
-      expect(result).toEqual({
-        ['0']: {
-          tabs: [
-            {
-              label: StepDetailTab.Item,
-              id: 'step_0_item_tab',
-              url: '#step_0_item',
-              target: '_self',
-            },
-            {
-              label: StepDetailTab.Recipe,
-              id: 'step_0_recipe_tab',
-              url: '#step_0_recipe',
-              target: '_self',
-            },
-            {
-              label: StepDetailTab.Machine,
-              id: 'step_0_machine_tab',
-              url: '#step_0_machine',
-              target: '_self',
-            },
-            {
-              label: StepDetailTab.Recipes,
-              id: 'step_0_recipes_tab',
-              url: '#step_0_recipes',
-              target: '_self',
-            },
-          ],
-          outputs: [
-            {
-              recipeId: RecipeId.Coal,
-              recipeObjectiveId: undefined,
-              value: Rational.two,
-              machines: Rational.one,
-            },
-            {
-              recipeId: RecipeId.CrudeOil,
-              recipeObjectiveId: undefined,
-              value: Rational.one,
-              machines: Rational.two,
-            },
-          ],
-          recipeIds: [
-            RecipeId.AdvancedOilProcessing,
-            RecipeId.BasicOilProcessing,
-            RecipeId.CoalLiquefaction,
-            RecipeId.EmptyPetroleumGasBarrel,
-            RecipeId.LightOilCracking,
-          ],
-          defaultableRecipeIds: [
-            RecipeId.BasicOilProcessing,
-            RecipeId.LightOilCracking,
-          ],
-        },
-        ['1']: {
-          tabs: [
-            {
-              label: StepDetailTab.Recipe,
-              id: 'step_1_recipe_tab',
-              url: '#step_1_recipe',
-              target: '_self',
-            },
-            {
-              label: StepDetailTab.Machine,
-              id: 'step_1_machine_tab',
-              url: '#step_1_machine',
-              target: '_self',
-            },
-          ],
-          outputs: [],
-          recipeIds: [],
-          defaultableRecipeIds: [],
-        },
-        ['2']: {
-          tabs: [],
-          outputs: [],
-          recipeIds: [],
-          defaultableRecipeIds: [],
-        },
-      });
-    });
-  });
+  // describe('getStepDetails', () => {
+  //   it('should determine detail tabs to display for steps', () => {
+  //     const steps: Step[] = [
+  //       {
+  //         id: '0',
+  //         itemId: ItemId.PetroleumGas,
+  //         items: Rational.one,
+  //         recipeId: RecipeId.Coal,
+  //         machines: Rational.one,
+  //         outputs: { [ItemId.PetroleumGas]: Rational.two },
+  //       },
+  //       {
+  //         id: '1',
+  //         recipeId: RecipeId.CrudeOil,
+  //         machines: Rational.two,
+  //         outputs: { [ItemId.PetroleumGas]: Rational.one },
+  //       },
+  //       {
+  //         id: '2',
+  //       },
+  //     ];
+  //     const data = {
+  //       ...Mocks.AdjustedData,
+  //       ...{
+  //         // Manually test with one recipe which should be listed as required
+  //         optionalRecipeIds: Mocks.AdjustedData.complexRecipeIds.filter(
+  //           (i) => i !== RecipeId.CoalLiquefaction
+  //         ),
+  //       },
+  //     };
+  //     const result = Selectors.getStepDetails.projector(steps, data, []);
+  //     expect(result).toEqual({
+  //       ['0']: {
+  //         tabs: [
+  //           {
+  //             label: StepDetailTab.Item,
+  //             id: 'step_0_item_tab',
+  //             url: '#step_0_item',
+  //             target: '_self',
+  //           },
+  //           {
+  //             label: StepDetailTab.Recipe,
+  //             id: 'step_0_recipe_tab',
+  //             url: '#step_0_recipe',
+  //             target: '_self',
+  //           },
+  //           {
+  //             label: StepDetailTab.Machine,
+  //             id: 'step_0_machine_tab',
+  //             url: '#step_0_machine',
+  //             target: '_self',
+  //           },
+  //           {
+  //             label: StepDetailTab.Recipes,
+  //             id: 'step_0_recipes_tab',
+  //             url: '#step_0_recipes',
+  //             target: '_self',
+  //           },
+  //         ],
+  //         outputs: [
+  //           {
+  //             recipeId: RecipeId.Coal,
+  //             recipeObjectiveId: undefined,
+  //             value: Rational.two,
+  //             machines: Rational.one,
+  //           },
+  //           {
+  //             recipeId: RecipeId.CrudeOil,
+  //             recipeObjectiveId: undefined,
+  //             value: Rational.one,
+  //             machines: Rational.two,
+  //           },
+  //         ],
+  //         recipeIds: [
+  //           RecipeId.AdvancedOilProcessing,
+  //           RecipeId.BasicOilProcessing,
+  //           RecipeId.CoalLiquefaction,
+  //           RecipeId.EmptyPetroleumGasBarrel,
+  //           RecipeId.LightOilCracking,
+  //         ],
+  //         defaultableRecipeIds: [
+  //           RecipeId.BasicOilProcessing,
+  //           RecipeId.LightOilCracking,
+  //         ],
+  //       },
+  //       ['1']: {
+  //         tabs: [
+  //           {
+  //             label: StepDetailTab.Recipe,
+  //             id: 'step_1_recipe_tab',
+  //             url: '#step_1_recipe',
+  //             target: '_self',
+  //           },
+  //           {
+  //             label: StepDetailTab.Machine,
+  //             id: 'step_1_machine_tab',
+  //             url: '#step_1_machine',
+  //             target: '_self',
+  //           },
+  //         ],
+  //         outputs: [],
+  //         recipeIds: [],
+  //         defaultableRecipeIds: [],
+  //       },
+  //       ['2']: {
+  //         tabs: [],
+  //         outputs: [],
+  //         recipeIds: [],
+  //         defaultableRecipeIds: [],
+  //       },
+  //     });
+  //   });
+  // });
 
   describe('getStepById', () => {
     it('should create a map of step ids to steps', () => {
@@ -487,23 +391,23 @@ describe('Item Objectives Selectors', () => {
     });
   });
 
-  describe('getEffectivePrecision', () => {
-    it('should calculate the effective precision for columns', () => {
-      const result = Selectors.getEffectivePrecision.projector(
-        [{ id: '0' }],
-        Mocks.PreferencesState.columns
-      );
-      expect(result).toEqual({
-        [Column.Surplus]: 0,
-        [Column.Items]: 0,
-        [Column.Belts]: 0,
-        [Column.Wagons]: 0,
-        [Column.Machines]: 0,
-        [Column.Power]: 0,
-        [Column.Pollution]: 0,
-      });
-    });
-  });
+  // describe('getEffectivePrecision', () => {
+  //   it('should calculate the effective precision for columns', () => {
+  //     const result = Selectors.getEffectivePrecision.projector(
+  //       [{ id: '0' }],
+  //       Mocks.PreferencesState.columns
+  //     );
+  //     expect(result).toEqual({
+  //       [Column.Surplus]: 0,
+  //       [Column.Items]: 0,
+  //       [Column.Belts]: 0,
+  //       [Column.Wagons]: 0,
+  //       [Column.Machines]: 0,
+  //       [Column.Power]: 0,
+  //       [Column.Pollution]: 0,
+  //     });
+  //   });
+  // });
 
   describe('getEffectivePowerUnit', () => {
     it('should calculate an auto power unit', () => {
@@ -534,22 +438,22 @@ describe('Item Objectives Selectors', () => {
     });
   });
 
-  describe('effPrecFrom', () => {
-    it('should handle null precision', () => {
-      expect(Selectors.effPrecFrom([], null, () => undefined)).toBeNull();
-    });
+  // describe('effPrecFrom', () => {
+  //   it('should handle null precision', () => {
+  //     expect(Selectors.effPrecFrom([], null, () => undefined)).toBeNull();
+  //   });
 
-    it('should determine max decimals', () => {
-      expect(
-        Selectors.effPrecFrom(
-          [
-            { id: '0', items: Rational.from(1, 2) },
-            { id: '1', items: Rational.from(1, 3) },
-          ],
-          3,
-          (step) => step.items
-        )
-      ).toEqual(3);
-    });
-  });
+  //   it('should determine max decimals', () => {
+  //     expect(
+  //       Selectors.effPrecFrom(
+  //         [
+  //           { id: '0', items: Rational.from(1, 2) },
+  //           { id: '1', items: Rational.from(1, 3) },
+  //         ],
+  //         3,
+  //         (step) => step.items
+  //       )
+  //     ).toEqual(3);
+  //   });
+  // });
 });

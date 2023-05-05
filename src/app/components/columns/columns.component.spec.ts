@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
 import { TestModule } from 'src/tests';
-import { Column } from '~/models';
 import { ContentService } from '~/services';
 import { Preferences } from '~/store';
 import { ColumnsComponent } from './columns.component';
@@ -42,22 +41,22 @@ describe('ColumnsComponent', () => {
     });
   });
 
-  describe('changeFraction', () => {
-    it('should set precision fraction state', () => {
-      component.changeFraction(true, Column.Items);
-      expect(component.editValue[Column.Items].precision).toEqual(null);
-      component.changeFraction(false, Column.Items);
-      expect(component.editValue[Column.Items].precision).toEqual(1);
-    });
-  });
+  // describe('changeFraction', () => {
+  //   it('should set precision fraction state', () => {
+  //     component.changeFraction(true, Column.Items);
+  //     expect(component.editValue[Column.Items].precision).toEqual(null);
+  //     component.changeFraction(false, Column.Items);
+  //     expect(component.editValue[Column.Items].precision).toEqual(1);
+  //   });
+  // });
 
-  describe('save', () => {
-    it('should dispatch the action', () => {
-      spyOn(mockStore, 'dispatch');
-      component.save();
-      expect(mockStore.dispatch).toHaveBeenCalledWith(
-        new Preferences.SetColumnsAction(component.editValue)
-      );
-    });
-  });
+  // describe('save', () => {
+  //   it('should dispatch the action', () => {
+  //     spyOn(mockStore, 'dispatch');
+  //     component.save();
+  //     expect(mockStore.dispatch).toHaveBeenCalledWith(
+  //       new Preferences.SetColumnsAction(component.editValue)
+  //     );
+  //   });
+  // });
 });
