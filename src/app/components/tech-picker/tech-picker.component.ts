@@ -7,12 +7,12 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, Observable, Subject } from 'rxjs';
+import { combineLatest, map, Observable, ReplaySubject } from 'rxjs';
 
 import { Dataset } from '~/models';
 import { LabState } from '~/store';
 
-type UnlockStatus = 'available' | 'locked' | 'researched';
+export type UnlockStatus = 'available' | 'locked' | 'researched';
 
 @Component({
   selector: 'lab-tech-picker',
@@ -25,8 +25,8 @@ export class TechPickerComponent {
 
   selectAllCtrl = new FormControl(false);
 
-  data$ = new Subject<Dataset>();
-  selection$ = new Subject<string[]>();
+  data$ = new ReplaySubject<Dataset>(1);
+  selection$ = new ReplaySubject<string[]>(1);
   status$: Observable<Record<UnlockStatus, string[]>> = combineLatest([
     this.selection$,
     this.data$,

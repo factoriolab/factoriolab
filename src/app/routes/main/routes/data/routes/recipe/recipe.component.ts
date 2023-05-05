@@ -63,7 +63,7 @@ export class RecipeComponent extends DetailComponent {
     recipeSettings: RecipeSettings,
     data: Dataset
   ): void {
-    const value = !recipeSettings.excluded ?? true;
+    const value = !recipeSettings.excluded;
     const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);
     this.setRecipeExcluded(id, value, def);
   }

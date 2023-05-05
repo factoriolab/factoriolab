@@ -1,13 +1,11 @@
-import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
-import { TechPickerComponent } from './tech-picker.component';
+import { Mocks, RecipeId, TestModule } from 'src/tests';
+import { TechPickerComponent, UnlockStatus } from './tech-picker.component';
 
 describe('TechPickerComponent', () => {
   let component: TechPickerComponent;
   let fixture: ComponentFixture<TechPickerComponent>;
-  let markForCheck: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -17,8 +15,6 @@ describe('TechPickerComponent', () => {
 
     fixture = TestBed.createComponent(TechPickerComponent);
     component = fixture.componentInstance;
-    const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
-    markForCheck = spyOn(ref.constructor.prototype, 'markForCheck');
     fixture.detectChanges();
   });
 
@@ -26,76 +22,79 @@ describe('TechPickerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('ngOnInit', () => {
-  //   it('should watch for search changes', () => {
-  //     spyOn(component, 'inputSearch');
-  //     component.searchCtrl.setValue('search');
-  //     expect(component.inputSearch).toHaveBeenCalled();
-  //   });
-  // });
+  describe('clickOpen', () => {
+    it('should set up lists of available, locked, and researched technologies', () => {
+      let status: Record<UnlockStatus, string[]> | undefined;
+      component.status$.subscribe((s) => (status = s));
+      component.clickOpen(Mocks.Dataset, [RecipeId.MiningProductivity]);
+      expect(status?.available.length).toEqual(8);
+      expect(status?.researched.length).toEqual(1);
+      expect(status?.locked.length).toEqual(183);
+    });
 
-  // describe('clickOpen', () => {
-  //   it('should open the products dialog', () => {
-  //     component.clickOpen(Mocks.Dataset, 'item', ItemId.IronPlate);
-  //     expect(component.visible).toBeTrue();
-  //     expect(markForCheck).toHaveBeenCalled();
-  //   });
+    it('should handle null selection', () => {
+      let status: Record<UnlockStatus, string[]> | undefined;
+      component.status$.subscribe((s) => (status = s));
+      component.clickOpen(Mocks.Dataset, null);
+      expect(status?.available.length).toEqual(0);
+      expect(status?.researched.length).toEqual(192);
+      expect(status?.locked.length).toEqual(0);
+    });
+  });
 
-  //   it('should open the producers dialog', () => {
-  //     component.clickOpen(Mocks.Dataset, 'recipe', RecipeId.IronPlate);
-  //     expect(component.visible).toBeTrue();
-  //     expect(markForCheck).toHaveBeenCalled();
-  //   });
+  describe('selectAll', () => {
+    it('should set the selection to all', () => {
+      spyOn(component.selection$, 'next');
+      component.selectAll(true, Mocks.Dataset);
+      expect(component.selection$.next).toHaveBeenCalledWith(
+        Mocks.Dataset.technologyIds
+      );
+    });
 
-  //   it('should open as multiselect', () => {
-  //     component.clickOpen(Mocks.Dataset, 'recipe', [RecipeId.IronPlate]);
-  //     expect(component.visible).toBeTrue();
-  //     expect(component.isMultiselect).toBeTrue();
-  //     expect(component.selection?.length).toEqual(1);
-  //   });
-  // });
+    it('should set the selection to empty', () => {
+      spyOn(component.selection$, 'next');
+      component.selectAll(false, Mocks.Dataset);
+      expect(component.selection$.next).toHaveBeenCalledWith([]);
+    });
+  });
 
-  // describe('selectAll', () => {
-  //   it('should set the selection to empty', () => {
-  //     component.selection = [RecipeId.AdvancedCircuit];
-  //     component.selectAll(true);
-  //     expect(component.selection).toEqual([]);
-  //   });
+  describe('clickId', () => {
+    it('should add the id and any dependencies to the selection', () => {
+      spyOn(component.selection$, 'next');
+      component.clickId(RecipeId.Electronics, [], Mocks.Dataset);
+      expect(component.selection$.next).toHaveBeenCalledWith([
+        RecipeId.Electronics,
+        RecipeId.Automation,
+      ]);
+    });
 
-  //   it('should set the selection to all', () => {
-  //     component.selection = [];
-  //     component.allSelectItems = [{ value: RecipeId.AdvancedCircuit }];
-  //     component.selectAll(false);
-  //     expect(component.selection.length).toEqual(1);
-  //   });
-  // });
+    it('should remove id and any dependencies from the selection', () => {
+      spyOn(component.selection$, 'next');
+      component.clickId(
+        RecipeId.Automation,
+        [RecipeId.Electronics, RecipeId.Automation],
+        Mocks.Dataset
+      );
+      expect(component.selection$.next).toHaveBeenCalledWith([]);
+    });
+  });
 
-  // describe('clickId', () => {
-  //   it('should emit the id and close the dialog', () => {
-  //     spyOn(component.selectId, 'emit');
-  //     component.visible = true;
-  //     component.clickId(ItemId.IronPlate);
-  //     expect(component.selectId.emit).toHaveBeenCalledWith(ItemId.IronPlate);
-  //     expect(component.visible).toBeFalse();
-  //   });
+  describe('onHide', () => {
+    it('should emit the selection filtered to a minimal set', () => {
+      spyOn(component.selectIds, 'emit');
+      component.onHide(
+        [RecipeId.Electronics, RecipeId.Automation],
+        Mocks.Dataset
+      );
+      expect(component.selectIds.emit).toHaveBeenCalledWith([
+        RecipeId.Electronics,
+      ]);
+    });
 
-  //   it('should toggle when opened as a multiselect', () => {
-  //     component.selection = [];
-  //     component.clickId(RecipeId.AdvancedCircuit);
-  //     expect(component.selection).toEqual([RecipeId.AdvancedCircuit]);
-  //     component.clickId(RecipeId.AdvancedCircuit);
-  //     expect(component.selection).toEqual([]);
-  //   });
-  // });
-
-  // describe('onHide', () => {
-  //   it('should emit selected ids if array', () => {
-  //     spyOn(component.selectIds, 'emit');
-  //     component.selection = [RecipeId.AdvancedCircuit];
-  //     component.onHide();
-  //     expect(component.selectIds.emit).toHaveBeenCalledWith([
-  //       RecipeId.AdvancedCircuit,
-  //     ]);
-  //   });
-  // });
+    it('should emit null if all technologies are selected', () => {
+      spyOn(component.selectIds, 'emit');
+      component.onHide(Mocks.Dataset.technologyIds, Mocks.Dataset);
+      expect(component.selectIds.emit).toHaveBeenCalledWith(null);
+    });
+  });
 });
