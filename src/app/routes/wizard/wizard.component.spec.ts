@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, ItemId, RecipeId, TestModule } from 'src/tests';
-import { LabState, Settings } from '~/store';
+import { ObjectiveType, RateUnit } from '~/models';
+import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 import { WizardComponent, WizardState } from './wizard.component';
 
 describe('WizardComponent', () => {
@@ -25,35 +26,37 @@ describe('WizardComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('selectId', () => {
-  //   it('should set the id and state', () => {
-  //     component.selectId(ItemId.IronPlate, WizardState.ItemObjectiveType);
-  //     expect(component.id).toEqual(ItemId.IronPlate);
-  //     expect(component.state).toEqual(WizardState.ItemObjectiveType);
-  //   });
-  // });
+  describe('selectId', () => {
+    it('should set the id and state', () => {
+      component.selectId(ItemId.IronPlate, WizardState.ItemObjective);
+      expect(component.id).toEqual(ItemId.IronPlate);
+      expect(component.state).toEqual(WizardState.ItemObjective);
+    });
+  });
 
-  // it('should dispatch actions', () => {
-  //   const dispatch = new DispatchTest(mockStore, component);
-  //   dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
-  //   dispatch.spy.calls.reset();
-  //   component.createItemObjective(ItemId.IronPlate, '1', 'items');
-  //   expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-  //     new Products.CreateAction({
-  //       id: '0',
-  //       itemId: ItemId.IronPlate,
-  //       rate: '1',
-  //       rateType: 'items',
-  //     })
-  //   );
-  //   dispatch.spy.calls.reset();
-  //   component.createProducer(RecipeId.IronPlate, '1');
-  //   expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-  //     new Producers.CreateAction({
-  //       id: '0',
-  //       recipeId: ItemId.IronPlate,
-  //       count: '1',
-  //     })
-  //   );
-  // });
+  it('should dispatch actions', () => {
+    const dispatch = new DispatchTest(mockStore, component);
+    dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
+    dispatch.spy.calls.reset();
+    component.createItemObjective(ItemId.IronPlate, '1', RateUnit.Items);
+    expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
+      new ItemObjectives.CreateAction({
+        id: '0',
+        itemId: ItemId.IronPlate,
+        rate: '1',
+        rateUnit: RateUnit.Items,
+        type: ObjectiveType.Output,
+      })
+    );
+    dispatch.spy.calls.reset();
+    component.createRecipeObjective(RecipeId.IronPlate, '1');
+    expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
+      new RecipeObjectives.CreateAction({
+        id: '0',
+        recipeId: ItemId.IronPlate,
+        count: '1',
+        type: ObjectiveType.Output,
+      })
+    );
+  });
 });

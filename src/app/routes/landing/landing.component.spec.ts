@@ -4,7 +4,13 @@ import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { Game } from '~/models';
-import { LabState, Preferences, Settings } from '~/store';
+import {
+  ItemObjectives,
+  LabState,
+  Preferences,
+  RecipeObjectives,
+  Settings,
+} from '~/store';
 import { LandingComponent } from './landing.component';
 
 describe('LandingComponent', () => {
@@ -29,25 +35,27 @@ describe('LandingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('selectProduct', () => {
-  //   it('should add a product and navigate to the list', () => {
-  //     spyOn(component, 'addProduct');
-  //     spyOn(router, 'navigate');
-  //     component.selectProduct(ItemId.IronPlate);
-  //     expect(component.addItemObjective).toHaveBeenCalledWith(ItemId.IronPlate);
-  //     expect(router.navigate).toHaveBeenCalledWith(['list']);
-  //   });
-  // });
+  describe('selectItem', () => {
+    it('should add an item objective and navigate to the list', () => {
+      spyOn(component, 'addItemObjective');
+      spyOn(router, 'navigate');
+      component.selectItem(ItemId.IronPlate);
+      expect(component.addItemObjective).toHaveBeenCalledWith(ItemId.IronPlate);
+      expect(router.navigate).toHaveBeenCalledWith(['list']);
+    });
+  });
 
-  // describe('selectProducer', () => {
-  //   it('should add a producer and navigate to the list', () => {
-  //     spyOn(component, 'addProducer');
-  //     spyOn(router, 'navigate');
-  //     component.selectProducer(RecipeId.IronPlate);
-  //     expect(component.addProducer).toHaveBeenCalledWith(ItemId.IronPlate);
-  //     expect(router.navigate).toHaveBeenCalledWith(['list']);
-  //   });
-  // });
+  describe('selectRecipe', () => {
+    it('should add a recipe objective and navigate to the list', () => {
+      spyOn(component, 'addRecipeObjective');
+      spyOn(router, 'navigate');
+      component.selectRecipe(RecipeId.IronPlate);
+      expect(component.addRecipeObjective).toHaveBeenCalledWith(
+        ItemId.IronPlate
+      );
+      expect(router.navigate).toHaveBeenCalledWith(['list']);
+    });
+  });
 
   describe('setState', () => {
     it('should call the router to navigate', () => {
@@ -67,11 +75,11 @@ describe('LandingComponent', () => {
     });
   });
 
-  // it('should dispatch actions', () => {
-  //   const dispatch = new DispatchTest(mockStore, component);
-  //   dispatch.val('setMod', Settings.SetModAction);
-  //   dispatch.val('addItemObjective', Products.AddAction);
-  //   dispatch.val('addRecipeObjective', Producers.AddAction);
-  //   dispatch.val('setBypassLanding', Preferences.SetBypassLandingAction);
-  // });
+  it('should dispatch actions', () => {
+    const dispatch = new DispatchTest(mockStore, component);
+    dispatch.val('setMod', Settings.SetModAction);
+    dispatch.val('addItemObjective', ItemObjectives.AddAction);
+    dispatch.val('addRecipeObjective', RecipeObjectives.AddAction);
+    dispatch.val('setBypassLanding', Preferences.SetBypassLandingAction);
+  });
 });
