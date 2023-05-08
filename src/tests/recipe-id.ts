@@ -7,6 +7,7 @@ export enum RecipeId {
   Coal = 'coal',
   CoalLiquefaction = 'coal-liquefaction',
   CopperCable = 'copper-cable',
+  CopperOre = 'copper-ore',
   CopperPlate = 'copper-plate',
   CrudeOil = 'crude-oil',
   ElectronicCircuit = 'electronic-circuit',

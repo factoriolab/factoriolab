@@ -609,8 +609,13 @@ export class SimplexUtility {
       }
 
       // Add unproduceable coeff
-      if (state.unproduceableIds.indexOf(itemId) !== -1) {
+      if (state.unproduceableIds.includes(itemId)) {
         netCoeffs.push([unproduceableVarEntities[itemId], 1]);
+      }
+
+      // Add excluded coeff
+      if (state.excludedIds.includes(itemId)) {
+        netCoeffs.push([excludedVarEntities[itemId], 1]);
       }
 
       // Add input coeff
@@ -691,7 +696,7 @@ export class SimplexUtility {
     for (const itemId of itemIds) {
       const values = state.itemValues[itemId];
       const val = Rational.fromNumber(itemConstrEntities[itemId].value).sub(
-        values.out ?? Rational.zero
+        values.out
       );
 
       if (val.nonzero()) {
@@ -804,10 +809,9 @@ export class SimplexUtility {
       output = output.add(amount);
     }
 
-    for (const itemObjective of state.itemObjectives.filter(
-      (o) => o.itemId === itemId && o.type === ObjectiveType.Input
-    )) {
-      output = output.add(itemObjective.rate);
+    const input = state.itemValues[itemId].in;
+    if (input) {
+      output = output.add(input);
     }
 
     for (const recipeObjective of state.recipeObjectives) {
