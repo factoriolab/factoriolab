@@ -96,6 +96,12 @@ export interface ZipData {
   recipeBeaconMap: Entities<number[]>;
 }
 
+export interface MigrationState {
+  params: Entities<string>;
+  warnings: string[];
+  isBare: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -311,13 +317,10 @@ export class RouterService {
             .replace(/\*e\*/g, `*${EMPTY}*`);
           let params = this.getParams(zip);
           let warnings: string[] = [];
-          [params, warnings] = this.migrate(params);
+          ({ params, warnings, isBare } = this.migrate(params, isBare));
           this.displayWarnings(warnings);
           const state: App.PartialState = {};
           if (isBare) {
-            Object.keys(params).forEach((k) => {
-              params[k] = decodeURIComponent(params[k]);
-            });
             const beaconSettings = this.unzipBeacons(params);
             if (params[Section.ItemObjectives]) {
               state.itemObjectivesState = this.unzipItemObjectives(params);
@@ -403,37 +406,43 @@ export class RouterService {
   }
 
   /** Migrates older zip params to latest bare/hash formats */
-  migrate(params: Entities): [Entities<string>, string[]] {
+  migrate(params: Entities, isBare: boolean): MigrationState {
     const warnings: string[] = [];
     const v = (params[Section.Version] as ZipVersion) ?? ZipVersion.Version0;
     this.gaSvc.event('unzip_version', v);
+
+    if (isBare || v === ZipVersion.Version0) {
+      Object.keys(params).forEach((k) => {
+        params[k] = decodeURIComponent(params[k]);
+      });
+    }
+
+    const state: MigrationState = { params, warnings, isBare };
     switch (v) {
       case ZipVersion.Version0:
-        return this.migrateV0(params, warnings);
+        return this.migrateV0(state);
       case ZipVersion.Version1:
-        return this.migrateV1(params, warnings);
+        return this.migrateV1(state);
       case ZipVersion.Version2:
-        return this.migrateV2(params, warnings);
+        return this.migrateV2(state);
       case ZipVersion.Version3:
-        return this.migrateV3(params, warnings);
+        return this.migrateV3(state);
       case ZipVersion.Version4:
-        return this.migrateV4(params, warnings);
+        return this.migrateV4(state);
       case ZipVersion.Version5:
-        return this.migrateV5(params, warnings);
+        return this.migrateV5(state);
       case ZipVersion.Version6:
-        return this.migrateV6(params, warnings);
+        return this.migrateV6(state);
       case ZipVersion.Version7:
-        return this.migrateV7(params, warnings);
+        return this.migrateV7(state);
       default:
-        return [params, warnings];
+        return { params, warnings, isBare };
     }
   }
 
   /** Migrates V0 bare zip to latest bare format */
-  migrateV0(
-    params: Entities,
-    warnings: string[]
-  ): [Entities<string>, string[]] {
+  migrateV0(state: MigrationState): MigrationState {
+    const { params } = state;
     if (params[Section.Settings]) {
       // Reorganize settings
       const zip = params[Section.Settings];
@@ -474,14 +483,12 @@ export class RouterService {
     }
 
     params[Section.Version] = ZipVersion.Version1;
-    return this.migrateV1(params, warnings);
+    return this.migrateV1(state);
   }
 
   /** Migrates V1 bare zip to latest bare format */
-  migrateV1(
-    params: Entities,
-    warnings: string[]
-  ): [Entities<string>, string[]] {
+  migrateV1(state: MigrationState): MigrationState {
+    const { params, warnings } = state;
     if (params[Section.Settings]) {
       const zip = params[Section.Settings];
       const s = zip.split(FIELDSEP);
@@ -499,14 +506,12 @@ export class RouterService {
     }
 
     params[Section.Version] = ZipVersion.Version4;
-    return this.migrateV4(params, warnings);
+    return this.migrateV4(state);
   }
 
   /** Migrates V2 hash zip to latest hash format */
-  migrateV2(
-    params: Entities<string>,
-    warnings: string[]
-  ): [Entities<string>, string[]] {
+  migrateV2(state: MigrationState): MigrationState {
+    const { params } = state;
     if (params[Section.Recipes]) {
       // Convert recipe settings
       const zip = params[Section.Recipes];
@@ -548,14 +553,12 @@ export class RouterService {
     }
 
     params[Section.Version] = ZipVersion.Version3;
-    return this.migrateV3(params, warnings);
+    return this.migrateV3(state);
   }
 
   /** Migrates V3 hash zip to latest hash format */
-  migrateV3(
-    params: Entities<string>,
-    warnings: string[]
-  ): [Entities<string>, string[]] {
+  migrateV3(state: MigrationState): MigrationState {
+    const { params, warnings } = state;
     if (params[Section.Settings]) {
       const zip = params[Section.Settings];
       const s = zip.split(FIELDSEP);
@@ -573,7 +576,7 @@ export class RouterService {
     }
 
     params[Section.Version] = ZipVersion.Version5;
-    return this.migrateV5(params, warnings);
+    return this.migrateV5(state);
   }
 
   private migrateInlineBeaconsSection(
@@ -637,41 +640,37 @@ export class RouterService {
     }
   }
 
-  private migrateInlineBeacons(
-    params: Entities,
-    warnings: string[]
-  ): [Entities<string>, string[]] {
+  private migrateInlineBeacons(state: MigrationState): MigrationState {
     const list: string[] = [];
 
-    this.migrateInlineBeaconsSection(params, Section.RecipeObjectives, 4, list);
-    this.migrateInlineBeaconsSection(params, Section.Recipes, 3, list);
+    this.migrateInlineBeaconsSection(
+      state.params,
+      Section.RecipeObjectives,
+      4,
+      list
+    );
+    this.migrateInlineBeaconsSection(state.params, Section.Recipes, 3, list);
 
     if (list.length) {
       // Add beacon settings
-      params[Section.Beacons] = list.join(LISTSEP);
+      state.params[Section.Beacons] = list.join(LISTSEP);
     }
 
-    return [params, warnings];
+    return state;
   }
 
   /** Migrates V4 bare zip to latest bare format */
-  migrateV4(
-    params: Entities,
-    warnings: string[]
-  ): [Entities<string>, string[]] {
-    [params, warnings] = this.migrateInlineBeacons(params, warnings);
-    params[Section.Version] = ZipVersion.Version6;
-    return this.migrateV6(params, warnings);
+  migrateV4(state: MigrationState): MigrationState {
+    state = this.migrateInlineBeacons(state);
+    state.params[Section.Version] = ZipVersion.Version6;
+    return this.migrateV6(state);
   }
 
   /** Migrates V5 hash zip to latest hash format */
-  migrateV5(
-    params: Entities<string>,
-    warnings: string[]
-  ): [Entities<string>, string[]] {
-    [params, warnings] = this.migrateInlineBeacons(params, warnings);
-    params[Section.Version] = ZipVersion.Version7;
-    return this.migrateV7(params, warnings);
+  migrateV5(state: MigrationState): MigrationState {
+    state = this.migrateInlineBeacons(state);
+    state.params[Section.Version] = ZipVersion.Version7;
+    return this.migrateV7(state);
   }
 
   private migrateInsertField(
@@ -716,6 +715,11 @@ export class RouterService {
     if (fields[from] != null) {
       const value = fields[from];
       fields.splice(from, 1);
+      if (fields.length > to) {
+        // Insert space to maintain length
+        fields.splice(to, 0, '');
+      }
+
       while (fields.length <= to) {
         fields.push('');
       }
@@ -724,11 +728,9 @@ export class RouterService {
     }
   }
 
-  private migrateToV8(
-    params: Entities,
-    warnings: string[],
-    isBare: boolean
-  ): [Entities, string[]] {
+  private migrateToV8(state: MigrationState): MigrationState {
+    const { params, isBare } = state;
+
     // RecipeObjectives: Insert type field
     this.migrateInsertField(params, Section.RecipeObjectives, 2);
 
@@ -793,8 +795,8 @@ export class RouterService {
       if (s.length > 2 + x) {
         const disabledRecipeIds = this.parseArray(s[2 + x]);
         if (disabledRecipeIds) {
-          const recipes = params[Section.Recipes] ?? '';
-          const list = recipes.split(LISTSEP);
+          const recipes = params[Section.Recipes];
+          const list = recipes ? recipes.split(LISTSEP) : [];
           for (const id of disabledRecipeIds) {
             let found = false;
             for (let i = 0; i < list.length; i++) {
@@ -815,8 +817,6 @@ export class RouterService {
 
           s.splice(2 + x, 1);
         }
-
-        s.splice(2 + x, 1);
       }
 
       // Insert researchedTechnologyIds
@@ -832,23 +832,19 @@ export class RouterService {
     }
 
     params[Section.Version] = ZipVersion.Version8;
-    return [params, warnings];
+    return state;
   }
 
   /** Migrates V6 bare zip to latest format */
-  migrateV6(
-    params: Entities,
-    warnings: string[]
-  ): [Entities<string>, string[]] {
-    return this.migrateToV8(params, warnings, true);
+  migrateV6(state: MigrationState): MigrationState {
+    state.isBare = true;
+    return this.migrateToV8(state);
   }
 
   /** Migrates V7 hash zip to latest format */
-  migrateV7(
-    params: Entities,
-    warnings: string[]
-  ): [Entities<string>, string[]] {
-    return this.migrateToV8(params, warnings, false);
+  migrateV7(state: MigrationState): MigrationState {
+    state.isBare = false;
+    return this.migrateToV8(state);
   }
 
   displayWarnings(warnings: string[]): void {
