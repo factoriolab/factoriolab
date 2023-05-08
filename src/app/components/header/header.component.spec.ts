@@ -4,7 +4,7 @@ import { MockStore } from '@ngrx/store/testing';
 
 import { Mocks, TestModule } from 'src/tests';
 import { Game } from '~/models';
-import { ItemObjectives } from '~/store';
+import { ItemObjectives, RecipeObjectives } from '~/store';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -30,25 +30,31 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('ngOnInit', () => {
-  //   it('should update the page title with the first item objective name', () => {
-  //     spyOn(title, 'setTitle');
-  //     mockStore.overrideSelector(
-  //       ItemObjectives.getItemsObj,
-  //       Mocks.ItemObjectivesList
-  //     );
-  //     mockStore.refreshState();
-  //     expect(title.setTitle).toHaveBeenCalledWith('Wooden chest | FactorioLab');
-  //   });
+  describe('ngOnInit', () => {
+    it('should update the page title with the first item objective name', () => {
+      spyOn(title, 'setTitle');
+      mockStore.overrideSelector(
+        ItemObjectives.getItemObjectives,
+        Mocks.ItemObjectivesList
+      );
+      mockStore.refreshState();
+      expect(title.setTitle).toHaveBeenCalledWith(
+        'Advanced circuit | FactorioLab'
+      );
+    });
 
-  //   it('should update the page title with the first producer name', () => {
-  //     spyOn(title, 'setTitle');
-  //     mockStore.overrideSelector(ItemObjectives.getItemsObj, []);
-  //     mockStore.overrideSelector(Producers.getBaseProducers, [Mocks.Producer]);
-  //     mockStore.refreshState();
-  //     expect(title.setTitle).toHaveBeenCalledWith('Iron plate | FactorioLab');
-  //   });
-  // });
+    it('should update the page title with the first recipe objective name', () => {
+      spyOn(title, 'setTitle');
+      mockStore.overrideSelector(ItemObjectives.getItemObjectives, []);
+      mockStore.overrideSelector(RecipeObjectives.getBaseRecipeObjectives, [
+        Mocks.RecipeObjective1,
+      ]);
+      mockStore.refreshState();
+      expect(title.setTitle).toHaveBeenCalledWith(
+        'Piercing rounds magazine | FactorioLab'
+      );
+    });
+  });
 
   describe('buildGameOptions', () => {
     it('should return a filtered list of game menu items', () => {

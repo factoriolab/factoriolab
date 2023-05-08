@@ -92,7 +92,7 @@ export class ColumnsComponent implements OnInit {
   }
 
   reset(): void {
-    this.editValue = { ...Preferences.initialPreferencesState.columns };
+    this.initEdit(Preferences.initialPreferencesState.columns);
   }
 
   save(): void {

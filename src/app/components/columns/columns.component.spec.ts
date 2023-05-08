@@ -33,6 +33,15 @@ describe('ColumnsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('modified', () => {
+    it('should determine whether the value matches the initial state', () => {
+      component.reset();
+      expect(component.modified).toBeFalse();
+      component.editValue['wagons'].show = false;
+      expect(component.modified).toBeTrue();
+    });
+  });
+
   describe('ngOnInit', () => {
     it('should watch subject to show dialog', () => {
       contentSvc.showColumns$.next();
@@ -41,22 +50,32 @@ describe('ColumnsComponent', () => {
     });
   });
 
-  // describe('changeFraction', () => {
-  //   it('should set precision fraction state', () => {
-  //     component.changeFraction(true, Column.Items);
-  //     expect(component.editValue[Column.Items].precision).toEqual(null);
-  //     component.changeFraction(false, Column.Items);
-  //     expect(component.editValue[Column.Items].precision).toEqual(1);
-  //   });
-  // });
+  describe('changeFraction', () => {
+    it('should set precision fraction state', () => {
+      component.changeFraction(true, 'items');
+      expect(component.editValue['items'].precision).toEqual(null);
+      component.changeFraction(false, 'items');
+      expect(component.editValue['items'].precision).toEqual(1);
+    });
+  });
 
-  // describe('save', () => {
-  //   it('should dispatch the action', () => {
-  //     spyOn(mockStore, 'dispatch');
-  //     component.save();
-  //     expect(mockStore.dispatch).toHaveBeenCalledWith(
-  //       new Preferences.SetColumnsAction(component.editValue)
-  //     );
-  //   });
-  // });
+  describe('reset', () => {
+    it('should set the value back to the initial state', () => {
+      component.editValue = null as any;
+      component.reset();
+      expect(component.editValue).toEqual(
+        Preferences.initialPreferencesState.columns
+      );
+    });
+  });
+
+  describe('save', () => {
+    it('should dispatch the action', () => {
+      spyOn(mockStore, 'dispatch');
+      component.save();
+      expect(mockStore.dispatch).toHaveBeenCalledWith(
+        new Preferences.SetColumnsAction(component.editValue as any)
+      );
+    });
+  });
 });
