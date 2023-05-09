@@ -190,13 +190,13 @@ describe('RateUtility', () => {
       );
     });
 
-    it('should add recipe settings to a producer step', () => {
+    it('should add recipe settings to a recipe objective step', () => {
       const step: Step = {
         id: '0',
         recipeId: RecipeId.Coal,
         recipeObjectiveId: '0',
       };
-      const producers: Entities<RecipeObjectiveRational> = {
+      const recipeObjectives: Entities<RecipeObjectiveRational> = {
         ['0']: {
           id: '0',
           recipeId: RecipeId.Coal,
@@ -207,10 +207,10 @@ describe('RateUtility', () => {
       };
       RateUtility.calculateSettings(
         step,
-        producers,
+        recipeObjectives,
         Mocks.RecipesStateRationalInitial
       );
-      expect(step.recipeSettings).toEqual(producers[0]);
+      expect(step.recipeSettings).toEqual(recipeObjectives[0]);
     });
   });
 
@@ -426,7 +426,7 @@ describe('RateUtility', () => {
       expect(step.checked).toBeTrue();
     });
 
-    it('should set the checked state for a producer step', () => {
+    it('should set the checked state for a recipe objective step', () => {
       const step: Step = { id: '0', recipeObjectiveId: '1' };
       RateUtility.calculateChecked(
         step,

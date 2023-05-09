@@ -364,7 +364,7 @@ describe('ListComponent', () => {
       expect(component.setItemChecked).toHaveBeenCalledWith(ItemId.Coal, true);
     });
 
-    it('should set for a producer step', () => {
+    it('should set for a recipe objective step', () => {
       spyOn(component, 'setRecipeChecked');
       component.changeStepChecked(
         { id: '0', recipeObjectiveId: '1', recipeId: RecipeId.Coal },

@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { Rational, RecipeObjective } from '~/models';
+import { ObjectiveType, Rational, RecipeObjective } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
@@ -189,23 +189,24 @@ describe('Recipes Selectors', () => {
       expect(result.cost).toBeFalse();
     });
 
-    // it('should account for producer settings', () => {
-    //   const producer: RecipeObjective = {
-    //     id: '1',
-    //     recipeId: RecipeId.Coal,
-    //     count: '1',
-    //     overclock: 100,
-    //     beacons: [{ moduleIds: [] }],
-    //   };
-    //   const result = Selectors.getRecipesModified.projector(
-    //     {
-    //       [RecipeId.Coal]: {},
-    //     },
-    //     [producer]
-    //   );
-    //   expect(result.machines).toBeTrue();
-    //   expect(result.beacons).toBeTrue();
-    //   expect(result.cost).toBeFalse();
-    // });
+    it('should account for recipe objective settings', () => {
+      const objective: RecipeObjective = {
+        id: '1',
+        recipeId: RecipeId.Coal,
+        count: '1',
+        type: ObjectiveType.Output,
+        overclock: 100,
+        beacons: [{ moduleIds: [] }],
+      };
+      const result = Selectors.getRecipesModified.projector(
+        {
+          [RecipeId.Coal]: {},
+        },
+        [objective]
+      );
+      expect(result.machines).toBeTrue();
+      expect(result.beacons).toBeTrue();
+      expect(result.cost).toBeFalse();
+    });
   });
 });

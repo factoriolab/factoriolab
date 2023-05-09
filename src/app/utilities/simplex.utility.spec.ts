@@ -66,7 +66,7 @@ describe('SimplexUtility', () => {
   });
 
   describe('solve', () => {
-    it('should handle empty list of products', () => {
+    it('should handle empty list of objectives', () => {
       expect(
         SimplexUtility.solve(
           [],

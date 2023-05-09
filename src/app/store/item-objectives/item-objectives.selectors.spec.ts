@@ -34,8 +34,8 @@ describe('Item Objectives Selectors', () => {
     });
   });
 
-  describe('getProducts', () => {
-    it('should return the array of products', () => {
+  describe('getItemObjectives', () => {
+    it('should return the array of objectives', () => {
       const result = Selectors.getItemObjectives.projector(
         Mocks.ItemObjectivesState.ids,
         Mocks.ItemObjectivesState.entities,
@@ -45,8 +45,8 @@ describe('Item Objectives Selectors', () => {
     });
   });
 
-  describe('getRationalProducts', () => {
-    it('should map products to rational products', () => {
+  describe('getRationalItemObjectives', () => {
+    it('should map objectives to rational objectives', () => {
       const result = Selectors.getItemObjectiveRationals.projector(
         Mocks.ItemObjectivesList
       );
@@ -55,7 +55,7 @@ describe('Item Objectives Selectors', () => {
   });
 
   describe('getNormalizedItemObjectives', () => {
-    it('should map products to rates', () => {
+    it('should map objectives to rates', () => {
       spyOn(RateUtility, 'itemObjectiveNormalizedRate');
       Selectors.getNormalizedItemObjectives.projector(
         Mocks.RationalItemObjectives,

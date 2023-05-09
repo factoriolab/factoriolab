@@ -35,7 +35,7 @@ describe('PickerComponent', () => {
   });
 
   describe('clickOpen', () => {
-    it('should open the products dialog', () => {
+    it('should open the items dialog', () => {
       component.clickOpen(
         Mocks.Dataset,
         'item',
@@ -46,7 +46,7 @@ describe('PickerComponent', () => {
       expect(markForCheck).toHaveBeenCalled();
     });
 
-    it('should open the producers dialog', () => {
+    it('should open the recipes dialog', () => {
       component.clickOpen(
         Mocks.Dataset,
         'recipe',

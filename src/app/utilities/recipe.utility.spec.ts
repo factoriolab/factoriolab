@@ -894,7 +894,7 @@ describe('RecipeUtility', () => {
   });
 
   describe('adjustRecipeObjective', () => {
-    it('should adjust a producer based on settings', () => {
+    it('should adjust a recipe objective based on settings', () => {
       const result = RecipeUtility.adjustRecipeObjective(
         {
           id: '1',

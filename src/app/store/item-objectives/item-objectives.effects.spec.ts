@@ -21,7 +21,7 @@ describe('ItemObjectivesEffects', () => {
   });
 
   describe('adjustDisplayRate$', () => {
-    it('should dispatch an action to adjust product rates', () => {
+    it('should dispatch an action to adjust objective rates', () => {
       actions = new ReplaySubject(1);
       actions.next(
         new Settings.SetDisplayRateAction({
