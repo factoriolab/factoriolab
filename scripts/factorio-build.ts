@@ -649,6 +649,13 @@ async function processMod(): Promise<void> {
           }
 
           addEntityValue(record, product.name, amount);
+
+          if (product.catalyst_amount) {
+            if (catalyst == null) catalyst = {};
+
+            addEntityValue(catalyst, product.name, product.catalyst_amount);
+          }
+
           total += amount;
         }
       }
@@ -1159,7 +1166,24 @@ async function processMod(): Promise<void> {
 
     if (D.isRecipe(proto)) {
       const recipeData = getRecipeData(proto);
-      const [recipeOut, recipeCatalyst] = recipeResults[proto.name];
+      const recipeIn = getIngredients(recipeData.ingredients);
+      const [recipeOut] = recipeResults[proto.name];
+      let [, recipeCatalyst] = recipeResults[proto.name];
+
+      // Check for calculated catalysts
+      for (const outId of Object.keys(recipeOut)) {
+        if (
+          recipeIn[outId] &&
+          (recipeCatalyst == null || !recipeCatalyst[outId])
+        ) {
+          // Need to manually calculate and add catalyst amount for this item
+          if (recipeCatalyst == null) recipeCatalyst = {};
+
+          const amount = Math.min(recipeOut[outId], recipeIn[outId]);
+          recipeCatalyst[outId] = amount;
+        }
+      }
+
       const recipe: Recipe = {
         id: proto.name,
         name: recipeLocale.names[proto.name],

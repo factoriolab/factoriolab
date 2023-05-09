@@ -1,4 +1,4 @@
-import { Mocks } from 'src/tests';
+import { ItemId, Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Actions from './items.actions';
@@ -41,6 +41,20 @@ describe('Items Reducer', () => {
         new Actions.SetExcludedAction({ id: Mocks.Item1.id, value: false })
       );
       expect(result[Mocks.Item1.id]).toBeUndefined();
+    });
+  });
+
+  describe('SET_EXCLUDED_BATCH', () => {
+    it('should apply multiple changes to excluded state', () => {
+      const result = itemsReducer(
+        initialItemsState,
+        new Actions.SetExcludedBatchAction([
+          { id: ItemId.Coal, value: true },
+          { id: ItemId.IronOre, value: false },
+        ])
+      );
+      expect(result[ItemId.Coal].excluded).toBeTrue();
+      expect(result[ItemId.IronOre]).toBeUndefined();
     });
   });
 
