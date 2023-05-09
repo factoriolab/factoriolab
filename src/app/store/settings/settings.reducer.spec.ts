@@ -1,8 +1,10 @@
-import { ItemId } from 'src/tests';
+import { ItemId, RecipeId } from 'src/tests';
 import {
+  CostSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
+  MaximizeType,
   Preset,
   ResearchSpeed,
 } from '~/models';
@@ -46,6 +48,17 @@ describe('Settings Reducer', () => {
         new Actions.SetModAction(value)
       );
       expect(result.modId).toEqual(value);
+    });
+  });
+
+  describe('SET_RESEARCHED_TECHNOLOGIES', () => {
+    it('should set the researched technology ids', () => {
+      const value = [RecipeId.ArtilleryShellRange];
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetResearchedTechnologiesAction(value)
+      );
+      expect(result.researchedTechnologyIds).toEqual(value);
     });
   });
 
@@ -213,67 +226,53 @@ describe('Settings Reducer', () => {
     });
   });
 
-  // describe('SET_COST_FACTOR', () => {
-  //   it('should set the recipe cost multiplier', () => {
-  //     const value = '10';
-  //     const result = settingsReducer(
-  //       initialSettingsState,
-  //       new Actions.SetCostFactorAction(value)
-  //     );
-  //     expect(result.costFactor).toEqual(value);
-  //   });
-  // });
+  describe('SET_MAXIMIZE_TYPE', () => {
+    it('should set the maximize type', () => {
+      const value = MaximizeType.Ratio;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetMaximizeTypeAction(value)
+      );
+      expect(result.maximizeType).toEqual(MaximizeType.Ratio);
+    });
+  });
 
-  // describe('SET_COST_MACHINE', () => {
-  //   it('should set the machine cost multiplier', () => {
-  //     const value = '10';
-  //     const result = settingsReducer(
-  //       initialSettingsState,
-  //       new Actions.SetCostMachineAction(value)
-  //     );
-  //     expect(result.costMachine).toEqual(value);
-  //   });
-  // });
+  describe('SET_COSTS', () => {
+    it('should set cost values', () => {
+      const value: CostSettings = {
+        factor: '1',
+        machine: '1',
+        unproduceable: '1',
+        excluded: '1',
+        surplus: '1',
+        maximize: '-1',
+      };
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetCostsAction(value)
+      );
+      expect(result.costs).toEqual(value);
+    });
+  });
 
-  // describe('SET_COST_INPUT', () => {
-  //   it('should set the input cost', () => {
-  //     const value = '10';
-  //     const result = settingsReducer(
-  //       initialSettingsState,
-  //       new Actions.SetCostUnproduceableAction(value)
-  //     );
-  //     expect(result.costUnproduceable).toEqual(value);
-  //   });
-  // });
-
-  // describe('SET_COST_EXCLUDED', () => {
-  //   it('should set the excluded cost', () => {
-  //     const value = '10';
-  //     const result = settingsReducer(
-  //       initialSettingsState,
-  //       new Actions.SetCostExcludedAction(value)
-  //     );
-  //     expect(result.costExcluded).toEqual(value);
-  //   });
-  // });
-
-  // describe('RESET_COST', () => {
-  //   it('should reset the cost fields', () => {
-  //     const result = settingsReducer(
-  //       {
-  //         costFactor: 'a',
-  //         costMachine: 'b',
-  //         costInput: 'c',
-  //         costExcluded: 'd',
-  //       } as any,
-  //       new Actions.ResetCostAction()
-  //     );
-  //     expect(result.costFactor).toEqual('1');
-  //     expect(result.costMachine).toEqual('1');
-  //     expect(result.costUnproduceable).toEqual('1000000');
-  //     expect(result.costExcluded).toEqual('0');
-  //   });
-  // });
+  describe('RESET_COST', () => {
+    it('should reset the cost fields', () => {
+      const result = settingsReducer(
+        {
+          costs: {
+            factor: 'a',
+            machine: 'b',
+            unproduceable: 'c',
+            excluded: 'd',
+            surplus: 'e',
+            maximize: 'f',
+          },
+        } as any,
+        new Actions.ResetCostAction()
+      );
+      expect(result.costs).toEqual(initialSettingsState.costs);
+    });
+  });
 
   it('should return default state', () => {
     expect(settingsReducer(undefined, { type: 'Test' } as any)).toBe(

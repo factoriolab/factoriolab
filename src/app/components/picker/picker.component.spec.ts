@@ -57,8 +57,28 @@ describe('PickerComponent', () => {
       expect(markForCheck).toHaveBeenCalled();
     });
 
-    it('should open as multiselect', () => {
+    it('should open as item multiselect', () => {
+      component.clickOpen(Mocks.Dataset, 'item', Mocks.Dataset.itemIds, [
+        ItemId.IronPlate,
+      ]);
+      expect(component.visible).toBeTrue();
+      expect(component.isMultiselect).toBeTrue();
+      expect(component.selection?.length).toEqual(1);
+    });
+
+    it('should open as recipe multiselect', () => {
       component.clickOpen(Mocks.Dataset, 'recipe', Mocks.Dataset.recipeIds, [
+        RecipeId.IronPlate,
+      ]);
+      expect(component.visible).toBeTrue();
+      expect(component.isMultiselect).toBeTrue();
+      expect(component.selection?.length).toEqual(1);
+    });
+
+    it('should open as recipe multiselect with null defaults', () => {
+      const data = Mocks.getDataset();
+      data.defaults = undefined;
+      component.clickOpen(data, 'recipe', Mocks.Dataset.recipeIds, [
         RecipeId.IronPlate,
       ]);
       expect(component.visible).toBeTrue();
@@ -79,6 +99,15 @@ describe('PickerComponent', () => {
       component.allSelectItems = [{ value: RecipeId.AdvancedCircuit }];
       component.selectAll(false);
       expect(component.selection.length).toEqual(1);
+    });
+  });
+
+  describe('reset', () => {
+    it('should set the selection back to the default value', () => {
+      component.selection = [ItemId.IronPlate];
+      component.default = [];
+      component.reset();
+      expect(component.selection).toEqual([]);
     });
   });
 

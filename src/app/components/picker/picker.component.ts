@@ -137,7 +137,8 @@ export class PickerComponent implements OnInit {
 
       if (Array.isArray(selection)) {
         this.selectAllCtrl.setValue(selection.length === 0);
-        this.default = data.defaults?.excludedRecipeIds ?? [];
+        this.default =
+          data.defaults != null ? [...data.defaults.excludedRecipeIds] : [];
       } else if (selection) {
         const index = data.categoryIds.indexOf(
           data.recipeEntities[selection].category

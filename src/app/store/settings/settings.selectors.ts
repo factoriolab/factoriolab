@@ -691,21 +691,6 @@ export const getAvailableItems = createSelector(
   }
 );
 
-// export const getRecipesLocked = createSelector(
-//   getAllResearchedTechnologyIds,
-//   getDataset,
-//   (researchedTechnologyIds, data) => {
-//     return data.recipeIds.reduce((e: Entities<boolean>, id) => {
-//       const recipe = data.recipeEntities[id];
-//       e[id] =
-//         recipe.unlockedBy != null &&
-//         researchedTechnologyIds != null &&
-//         researchedTechnologyIds.indexOf(recipe.unlockedBy) === -1;
-//       return e;
-//     }, {});
-//   }
-// );
-
 export function reduceEntities(
   value: Entities<string[]>,
   init: Entities<Entities<boolean>> = {}

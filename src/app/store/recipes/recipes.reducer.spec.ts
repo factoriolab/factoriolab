@@ -1,4 +1,4 @@
-import { ItemId, Mocks } from 'src/tests';
+import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { StoreUtility } from '~/utilities';
 import { Items } from '../';
 import * as App from '../app.actions';
@@ -22,6 +22,46 @@ describe('Recipes Reducer', () => {
     it('should return the initial state', () => {
       const result = recipesReducer(undefined, new App.ResetAction());
       expect(result).toEqual(initialRecipesState);
+    });
+  });
+
+  describe('SET_EXCLUDED', () => {
+    it('should set excluded state of an item', () => {
+      const result = recipesReducer(
+        initialRecipesState,
+        new Actions.SetExcludedAction({
+          id: RecipeId.Coal,
+          value: true,
+          def: false,
+        })
+      );
+      expect(result[RecipeId.Coal].excluded).toEqual(true);
+    });
+
+    it('should delete key if exclude matches default value', () => {
+      const result = recipesReducer(
+        initialRecipesState,
+        new Actions.SetExcludedAction({
+          id: RecipeId.Coal,
+          value: true,
+          def: true,
+        })
+      );
+      expect(result[RecipeId.Coal]).toBeUndefined();
+    });
+  });
+
+  describe('SET_EXCLUDED_BATCH', () => {
+    it('should apply multiple changes to excluded state', () => {
+      const result = recipesReducer(
+        initialRecipesState,
+        new Actions.SetExcludedBatchAction([
+          { id: RecipeId.Coal, value: true, def: false },
+          { id: RecipeId.IronOre, value: false, def: false },
+        ])
+      );
+      expect(result[ItemId.Coal].excluded).toBeTrue();
+      expect(result[ItemId.IronOre]).toBeUndefined();
     });
   });
 
@@ -224,6 +264,17 @@ describe('Recipes Reducer', () => {
         new Actions.ResetRecipeAction(Mocks.Recipe1.id)
       );
       expect(result[Mocks.Recipe1.id]).toBeUndefined();
+    });
+  });
+
+  describe('RESET_EXCLUDED', () => {
+    it('should call resetField', () => {
+      spyOn(StoreUtility, 'resetField');
+      recipesReducer(undefined, new Actions.ResetExcludedAction());
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(
+        {},
+        'excluded' as any
+      );
     });
   });
 

@@ -120,6 +120,8 @@ export function recipesReducer(
       delete newState[action.payload];
       return newState;
     }
+    case RecipesActionType.RESET_EXCLUDED:
+      return StoreUtility.resetField(state, 'excluded');
     case RecipesActionType.RESET_RECIPE_MODULES:
       return StoreUtility.resetFields(
         state,
@@ -135,8 +137,6 @@ export function recipesReducer(
       ]);
     case Items.ItemsActionType.RESET_CHECKED:
       return StoreUtility.resetField(state, 'checked');
-    case RecipesActionType.RESET_EXCLUDED:
-      return StoreUtility.resetField(state, 'excluded');
     case RecipesActionType.RESET_BEACONS:
       return StoreUtility.resetField(state, 'beacons');
     case RecipesActionType.RESET_COST:

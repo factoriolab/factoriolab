@@ -97,7 +97,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('REMOVE', () => {
-    it('should remove a objective', () => {
+    it('should remove an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.RemoveAction('0')
@@ -107,7 +107,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('SET_RECIPE', () => {
-    it('should set recipe on a objective', () => {
+    it('should set recipe on an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.SetRecipeAction({ id: '0', value: RecipeId.Coal })
@@ -117,7 +117,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('SET_COUNT', () => {
-    it('should set count of a objective', () => {
+    it('should set count of an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.SetCountAction({ id: '0', value: '30' })
@@ -126,8 +126,19 @@ describe('Recipe Objectives Reducer', () => {
     });
   });
 
+  describe('SET_TYPE', () => {
+    it('should set type of an objective', () => {
+      const value = ObjectiveType.Limit;
+      const result = recipeObjectivesReducer(
+        state,
+        new Actions.SetTypeAction({ id: '0', value })
+      );
+      expect(result.entities['0'].type).toEqual(value);
+    });
+  });
+
   describe('SET_MACHINE', () => {
-    it('should set machine on a objective', () => {
+    it('should set machine on an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.SetMachineAction({
@@ -141,7 +152,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('SET_MACHINE_MODULES', () => {
-    it('should set machine modules on a objective', () => {
+    it('should set machine modules on an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.SetMachineModulesAction({
@@ -157,7 +168,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('ADD_BEACON', () => {
-    it('should add a beacon to a objective', () => {
+    it('should add a beacon to an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.AddBeaconAction('0')
@@ -167,7 +178,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('REMOVE_BEACON', () => {
-    it('should remove a beacon from a objective', () => {
+    it('should remove a beacon from an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.RemoveBeaconAction({ id: '0', value: 0 })
@@ -177,7 +188,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('SET_BEACON_COUNT', () => {
-    it('should set beacon count on a objective', () => {
+    it('should set beacon count on an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.SetBeaconCountAction({
@@ -192,7 +203,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('SET_BEACON', () => {
-    it('should set beacon on a objective', () => {
+    it('should set beacon on an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.SetBeaconAction({
@@ -207,7 +218,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('SET_BEACON_MODULES', () => {
-    it('should set beacon modules on a objective', () => {
+    it('should set beacon modules on an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.SetBeaconModulesAction({
@@ -238,7 +249,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('SET_OVERCLOCK', () => {
-    it('should set overclock on a objective', () => {
+    it('should set overclock on an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.SetOverclockAction({
@@ -252,7 +263,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('SET_CHECKED', () => {
-    it('should set checked state on a objective', () => {
+    it('should set checked state on an objective', () => {
       const result = recipeObjectivesReducer(
         state,
         new Actions.SetCheckedAction({
@@ -265,7 +276,7 @@ describe('Recipe Objectives Reducer', () => {
   });
 
   describe('RESET_OBJECTIVE', () => {
-    it('should reset a objective', () => {
+    it('should reset an objective', () => {
       const state: RecipeObjectivesState = {
         ids: ['0'],
         entities: {

@@ -47,8 +47,6 @@ export class Rational {
       const [p, q] = x;
       if (q === 0) {
         throw Error(DIVIDE_BY_ZERO);
-      } else if (q == null) {
-        return new Rational(BigInt(p), bigOne);
       } else {
         return new Rational(BigInt(p), BigInt(q));
       }

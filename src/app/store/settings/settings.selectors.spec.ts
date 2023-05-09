@@ -553,4 +553,51 @@ describe('Settings Selectors', () => {
       );
     });
   });
+
+  describe('getAllResearchedTechnologyIds', () => {
+    it('should expand minimal set of technology ids into full list', () => {
+      const result = Selectors.getAllResearchedTechnologyIds.projector(
+        [RecipeId.ArtilleryShellRange],
+        Mocks.Dataset
+      );
+      expect(result?.length).toEqual(54);
+    });
+
+    it('should return value if null', () => {
+      const result = Selectors.getAllResearchedTechnologyIds.projector(
+        null,
+        Mocks.Dataset
+      );
+      expect(result).toBeNull();
+    });
+  });
+
+  describe('getAvailableRecipes', () => {
+    it('should return full list if value is null', () => {
+      const result = Selectors.getAvailableRecipes.projector(
+        null,
+        Mocks.Dataset
+      );
+      expect(result).toEqual(Mocks.Dataset.recipeIds);
+    });
+
+    it('should filter for only unlocked recipes', () => {
+      const result = Selectors.getAvailableRecipes.projector(
+        [RecipeId.Automation],
+        Mocks.Dataset
+      );
+      expect(result.length).toEqual(233);
+    });
+  });
+
+  describe('getAvailableItems', () => {
+    it('should return items with some recipe available to produce it', () => {
+      const result = Selectors.getAvailableItems.projector(
+        Mocks.Dataset.recipeIds,
+        Mocks.Dataset
+      );
+      // Cannot produce wood in vanilla Factorio
+      expect(result.length).toEqual(Mocks.Dataset.itemIds.length - 1);
+    });
+  });
 });
