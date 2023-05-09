@@ -26,7 +26,7 @@ describe('Recipe Objectives Selectors', () => {
         Mocks.RecipeObjectivesState.entities,
         Mocks.Dataset
       );
-      expect(result).toEqual([Mocks.RecipeObjective1]);
+      expect(result).toEqual(Mocks.RecipeObjectivesList);
     });
   });
 

@@ -8,7 +8,6 @@ import {
   RecipeSettings,
   Step,
 } from '~/models';
-import { Preferences } from '~/store';
 import { ExportService } from './export.service';
 
 describe('ExportService', () => {
