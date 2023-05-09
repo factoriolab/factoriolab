@@ -35,8 +35,10 @@ describe('Rational', () => {
       });
 
       it('should generate a Rational from number', () => {
-        expect(Rational.fromNumber(0.25)).toEqual(
-          new Rational(BigInt(1), BigInt(4))
+        expect(Rational.fromNumber(0.25)).toEqual(Rational.from([1, 4]));
+        // Test known number to hit alternate solution in `fromFloat`
+        expect(Rational.fromNumber(0.007342528014038914)).toEqual(
+          Rational.from([477, 64964])
         );
       });
     });

@@ -242,6 +242,16 @@ describe('Machines Reducer', () => {
     });
   });
 
+  describe('RESET_MACHINE', () => {
+    it('should reset a machine', () => {
+      const result = machinesReducer(
+        Mocks.MachinesStateInitial,
+        new Actions.ResetMachineAction(ItemId.AssemblingMachine2)
+      );
+      expect(result.entities[ItemId.AssemblingMachine2]).toBeUndefined();
+    });
+  });
+
   it('should return the default state', () => {
     expect(machinesReducer(undefined, { type: 'Test' } as any)).toEqual(
       initialMachinesState

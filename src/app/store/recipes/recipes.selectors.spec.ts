@@ -37,6 +37,7 @@ describe('Recipes Selectors', () => {
       const data = {
         ...Mocks.Dataset,
         ...{
+          defaults: undefined,
           machineEntities: {
             ...Mocks.Dataset.machineEntities,
             ...{
