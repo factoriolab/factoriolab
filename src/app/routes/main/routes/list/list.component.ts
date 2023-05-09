@@ -208,7 +208,7 @@ export class ListComponent implements OnInit, AfterViewInit {
 
       if (old == null) {
         this.activeItem[id] = detail.tabs[0];
-      } else if (detail.tabs.indexOf(old) === -1) {
+      } else {
         const match = detail.tabs.find((t) => t.label === old.label);
         if (match == null) {
           this.activeItem[id] = detail.tabs[0];
@@ -257,7 +257,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     recipesState: Recipes.RecipesState,
     data: Dataset
   ): void {
-    const value = !recipesState[id].excluded ?? true;
+    const value = !recipesState[id].excluded;
     const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);
     this.setRecipeExcluded(id, value, def);
   }

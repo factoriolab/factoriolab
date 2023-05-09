@@ -332,7 +332,7 @@ export const getStepDetails = createSelector(
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
       const outputs: StepOutput[] = [];
-      const recipeIds: string[] = [];
+      let recipeIds: string[] = [];
       if (s.itemId != null && s.items != null) {
         const itemId = s.itemId; // Store null-checked id
         tabs.push(StepDetailTab.Item);
@@ -361,31 +361,41 @@ export const getStepDetails = createSelector(
 
         outputs.sort((a, b) => b.value.sub(a.value).toNumber());
       }
+
       if (s.recipeId != null) {
         tabs.push(StepDetailTab.Recipe);
       }
+
       if (s.machines?.nonzero()) {
         tabs.push(StepDetailTab.Machine);
       }
+
       if (s.itemId != null) {
-        for (const recipe of availableRecipeIds.map((r) => data.recipeR[r])) {
-          if (recipe.produces(s.itemId)) {
-            recipeIds.push(recipe.id);
-          }
-        }
+        const itemId = s.itemId;
+        recipeIds = availableRecipeIds
+          .map((r) => data.recipeR[r])
+          .filter((r) => r.produces(itemId))
+          .map((r) => r.id);
+
         if (recipeIds.length) {
           tabs.push(StepDetailTab.Recipes);
         }
       }
 
       e[s.id] = {
-        tabs: tabs.map((t) => ({
-          id: `step_${s.id}_${t}_tab`,
-          label: t,
-          command: (): void => {
-            document.location.hash = `step_${s.id}_${t}`;
-          },
-        })),
+        tabs: tabs.map((t) => {
+          const id = `step_${s.id}_${t}_tab`;
+          return {
+            id,
+            label: t,
+            command:
+              // Simple assignment function; testing is unnecessary
+              // istanbul ignore next
+              (): void => {
+                document.location.hash = id;
+              },
+          };
+        }),
         outputs,
         recipeIds,
       };

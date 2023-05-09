@@ -126,6 +126,17 @@ export function itemObjectivesReducer(
           ),
         },
       };
+    case ItemObjectivesActionType.SET_TYPE:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.assignValue(
+            state.entities,
+            'type',
+            action.payload
+          ),
+        },
+      };
     case ItemObjectivesActionType.ADJUST_DISPLAY_RATE: {
       const factor = Rational.fromString(action.payload);
       const newEntities = { ...state.entities };
@@ -144,17 +155,6 @@ export function itemObjectivesReducer(
         ...{ entities: newEntities },
       };
     }
-    case ItemObjectivesActionType.SET_TYPE:
-      return {
-        ...state,
-        ...{
-          entities: StoreUtility.assignValue(
-            state.entities,
-            'type',
-            action.payload
-          ),
-        },
-      };
     default:
       return state;
   }

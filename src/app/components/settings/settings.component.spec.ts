@@ -7,12 +7,21 @@ import {
   DispatchTest,
   ItemId,
   Mocks,
+  RecipeId,
   TestModule,
   TestUtility,
 } from 'src/tests';
 import { Game } from '~/models';
 import { ContentService } from '~/services';
-import { App, LabState, Machines, Preferences, Settings } from '~/store';
+import {
+  App,
+  Items,
+  LabState,
+  Machines,
+  Preferences,
+  Recipes,
+  Settings,
+} from '~/store';
 import { BrowserUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
 
@@ -148,6 +157,49 @@ describe('SettingsComponent', () => {
     });
   });
 
+  describe('setExcludedRecipes', () => {
+    it('should set up a batch of actions to set recipe excluded states', () => {
+      spyOn(component, 'setRecipeExcludedBatch');
+      component.setExcludedRecipes(
+        [...Mocks.Dataset.defaults!.excludedRecipeIds, RecipeId.Coal],
+        Mocks.RecipesStateInitial,
+        Mocks.Dataset
+      );
+      expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
+        { id: RecipeId.Coal, value: true, def: false },
+      ]);
+    });
+
+    it('should handle null defaults', () => {
+      spyOn(component, 'setRecipeExcludedBatch');
+      component.setExcludedRecipes(
+        [...Mocks.Dataset.defaults!.excludedRecipeIds, RecipeId.Coal],
+        Mocks.RecipesStateInitial,
+        {
+          ...Mocks.Dataset,
+          ...{ defaults: undefined },
+        }
+      );
+      expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
+        { id: RecipeId.Coal, value: true, def: false },
+      ]);
+    });
+  });
+
+  describe('setExcludedItems', () => {
+    it('should set up a batch of actions to set item excluded states', () => {
+      spyOn(component, 'setItemExcludedBatch');
+      component.setExcludedItems(
+        [ItemId.Coal],
+        Mocks.ItemsStateInitial,
+        Mocks.Dataset
+      );
+      expect(component.setItemExcludedBatch).toHaveBeenCalledWith([
+        { id: ItemId.Coal, value: true },
+      ]);
+    });
+  });
+
   describe('changeBeaconModuleRank', () => {
     it('should set the defaults for the default machine', () => {
       spyOn(component, 'setBeaconModuleRank');
@@ -194,6 +246,12 @@ describe('SettingsComponent', () => {
     dispatch.idVal('saveState', Preferences.SaveStateAction);
     dispatch.val('removeState', Preferences.RemoveStateAction);
     dispatch.val('setMod', Settings.SetModAction);
+    dispatch.val(
+      'setResearchedTechnologies',
+      Settings.SetResearchedTechnologiesAction
+    );
+    dispatch.val('setItemExcludedBatch', Items.SetExcludedBatchAction);
+    dispatch.val('setRecipeExcludedBatch', Recipes.SetExcludedBatchAction);
     dispatch.val('setNetProductionOnly', Settings.SetNetProductionOnlyAction);
     dispatch.val('setPreset', Settings.SetPresetAction);
     dispatch.valDef('removeMachine', Machines.RemoveAction);
@@ -222,6 +280,7 @@ describe('SettingsComponent', () => {
     dispatch.val('setResearchSpeed', Settings.SetResearchSpeedAction);
     dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
+    dispatch.val('setMaximizeType', Settings.SetMaximizeTypeAction);
     dispatch.val('setPowerUnit', Preferences.SetPowerUnitAction);
     dispatch.val('setLanguage', Preferences.SetLanguageAction);
     dispatch.val('setTheme', Preferences.SetThemeAction);

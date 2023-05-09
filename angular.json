@@ -169,10 +169,18 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              "src/favicon.ico",
-              "src/assets",
+              "src/assets/i18n",
+              {
+                "glob": "**/*",
+                "input": "src/assets/icons",
+                "output": "/"
+              },
               "src/data",
-              "src/manifest.webmanifest"
+              {
+                "glob": "glpk.all.wasm",
+                "input": "node_modules/glpk-wasm/dist/",
+                "output": "/assets/glpk-wasm/"
+              }
             ],
             "styles": [
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",

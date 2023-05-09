@@ -5,6 +5,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
+import { MenuItem } from 'primeng/api';
 
 import {
   DispatchTest,
@@ -106,14 +107,43 @@ describe('ListComponent', () => {
     });
   });
 
+  describe('setActiveItems', () => {
+    it('should try to restore old active detail tab', () => {
+      const tab1: MenuItem = { label: 'tab1' };
+      const tab2: MenuItem = { label: 'tab2' };
+      component.activeItem = { ['2']: tab2, ['3']: tab2 };
+      component.setActiveItems(
+        [{ id: '0' }, { id: '1' }, { id: '2' }, { id: '3' }],
+        {
+          ['1']: { tabs: [tab1], outputs: [], recipeIds: [] },
+          ['2']: { tabs: [tab1, tab2], outputs: [], recipeIds: [] },
+          ['3']: { tabs: [tab1], outputs: [], recipeIds: [] },
+        }
+      );
+      expect(component.activeItem).toEqual({
+        ['1']: tab1,
+        ['2']: tab2,
+        ['3']: tab1,
+      });
+    });
+  });
+
+  describe('setActiveItem', () => {
+    it('should cache the active detail tab', () => {
+      const tab1: MenuItem = { label: 'tab1' };
+      component.setActiveItem({ id: '0' }, tab1);
+      expect(component.activeItem['0']).toEqual(tab1);
+    });
+  });
+
   describe('resetStep', () => {
     beforeEach(() => {
       spyOn(component, 'resetItem');
       spyOn(component, 'resetRecipe');
-      // spyOn(component, 'resetProducer');
+      spyOn(component, 'resetRecipeObjective');
     });
 
-    it('should reset a producer step', () => {
+    it('should reset a recipe objective step', () => {
       const step: Step = {
         id: '0',
         itemId: ItemId.Coal,
@@ -123,7 +153,7 @@ describe('ListComponent', () => {
       component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).not.toHaveBeenCalled();
-      // expect(component.resetProducer).toHaveBeenCalled();
+      expect(component.resetRecipeObjective).toHaveBeenCalled();
     });
 
     it('should reset a recipe step', () => {
@@ -135,7 +165,7 @@ describe('ListComponent', () => {
       component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).toHaveBeenCalled();
-      // expect(component.resetProducer).not.toHaveBeenCalled();
+      expect(component.resetRecipeObjective).not.toHaveBeenCalled();
     });
   });
 
@@ -148,31 +178,36 @@ describe('ListComponent', () => {
     });
   });
 
-  // describe('toggleRecipe', () => {
-  //   it('should enable a recipe', () => {
-  //     spyOn(component, 'setExcludedRecipes');
-  //     const settings = {
-  //       ...Settings.initialSettingsState,
-  //       ...{ excludedRecipeIds: [RecipeId.AdvancedOilProcessing] },
-  //     };
-  //     const data = { ...Mocks.AdjustedData, ...{ defaults: undefined } };
-  //     component.toggleRecipe(RecipeId.AdvancedOilProcessing, settings, data);
-  //     expect(component.setExcludedRecipes).toHaveBeenCalledWith([], undefined);
-  //   });
+  describe('toggleRecipe', () => {
+    it('should disable a recipe', () => {
+      spyOn(component, 'setRecipeExcluded');
+      const data = { ...Mocks.AdjustedData, ...{ defaults: undefined } };
+      component.toggleRecipe(
+        RecipeId.AdvancedOilProcessing,
+        Mocks.RecipesStateInitial,
+        data
+      );
+      expect(component.setRecipeExcluded).toHaveBeenCalledWith(
+        RecipeId.AdvancedOilProcessing,
+        true,
+        false
+      );
+    });
 
-  //   it('should disable a recipe', () => {
-  //     spyOn(component, 'setExcludedRecipes');
-  //     component.toggleRecipe(
-  //       RecipeId.AdvancedOilProcessing,
-  //       Settings.initialSettingsState,
-  //       Mocks.AdjustedData
-  //     );
-  //     expect(component.setExcludedRecipes).toHaveBeenCalledWith(
-  //       [RecipeId.AdvancedOilProcessing],
-  //       Mocks.AdjustedData.defaults?.excludedRecipeIds
-  //     );
-  //   });
-  // });
+    it('should enable a recipe', () => {
+      spyOn(component, 'setRecipeExcluded');
+      component.toggleRecipe(
+        RecipeId.EmptyPetroleumGasBarrel,
+        Mocks.RecipesStateInitial,
+        Mocks.AdjustedData
+      );
+      expect(component.setRecipeExcluded).toHaveBeenCalledWith(
+        RecipeId.EmptyPetroleumGasBarrel,
+        false,
+        true
+      );
+    });
+  });
 
   describe('changeRecipeField', () => {
     const step: Step = {
@@ -351,9 +386,10 @@ describe('ListComponent', () => {
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.idVal('setItemExcluded', Items.SetExcludedAction);
+    dispatch.idVal('setItemChecked', Items.SetCheckedAction);
     dispatch.idValDef('setBelt', Items.SetBeltAction);
     dispatch.idValDef('setWagon', Items.SetWagonAction);
-    dispatch.idVal('setItemChecked', Items.SetCheckedAction);
+    dispatch.idValDef('setRecipeExcluded', Recipes.SetExcludedAction);
     dispatch.idValDef('setMachine', Recipes.SetMachineAction);
     dispatch.idValDefAlt('setMachine', RecipeObjectives.SetMachineAction);
     dispatch.idValDef('setMachineModules', Recipes.SetMachineModulesAction);
