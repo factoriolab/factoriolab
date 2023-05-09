@@ -21,7 +21,7 @@ export class MachineTooltipPipe implements PipeTransform {
 
     let html = item.name + '\n<small>';
     const tableRows: [string, string][] = [];
-    if (data.game !== Game.CaptainOfIndustry) {
+    if (machine.speed && data.game !== Game.CaptainOfIndustry) {
       tableRows.push([
         this.translateSvc.instant('data.craftingSpeed'),
         this.displaySvc.round(machine.speed),

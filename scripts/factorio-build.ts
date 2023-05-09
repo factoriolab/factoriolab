@@ -450,9 +450,9 @@ async function processMod(): Promise<void> {
     | D.OffshorePump
     | D.Reactor;
 
-  function getMachineSpeed(proto: MachineProto): number | undefined {
+  function getMachineSpeed(proto: MachineProto): number {
     if (D.isReactor(proto)) {
-      return undefined;
+      return 1;
     }
 
     let speed: number;
@@ -468,7 +468,7 @@ async function processMod(): Promise<void> {
       speed = proto.crafting_speed;
     }
 
-    return speed === 1 ? undefined : speed;
+    return speed;
   }
 
   function getMachineModules(proto: MachineProto): number | undefined {

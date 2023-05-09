@@ -88,59 +88,59 @@ describe('RecipeUtility', () => {
       expect(result).toEqual(expected);
     });
 
-    // it('should handle research factor/productivity', () => {
-    //   const settings = {
-    //     ...Mocks.RecipesStateRational[RecipeId.MiningProductivity],
-    //   };
-    //   settings.machineId = ItemId.Lab;
-    //   const result = RecipeUtility.adjustRecipe(
-    //     RecipeId.MiningProductivity,
-    //     ItemId.Coal,
-    //     ItemId.Module,
-    //     Rational.zero,
-    //     Rational.two,
-    //     false,
-    //     settings,
-    //     Mocks.ItemsStateInitial,
-    //     Mocks.Dataset
-    //   );
-    //   const expected = new RecipeRational(
-    //     Mocks.Dataset.recipeEntities[RecipeId.MiningProductivity]
-    //   );
-    //   expected.out = { [ItemId.MiningProductivity]: Rational.one };
-    //   expected.time = Rational.from(30);
-    //   expected.productivity = Rational.one;
-    //   expected.drain = Rational.zero;
-    //   expected.consumption = Rational.from(60);
-    //   expected.pollution = Rational.zero;
-    //   expect(result).toEqual(expected);
-    // });
+    it('should handle research factor', () => {
+      const settings = {
+        ...Mocks.RecipesStateRational[RecipeId.MiningProductivity],
+      };
+      settings.machineId = ItemId.Lab;
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.MiningProductivity,
+        ItemId.Coal,
+        ItemId.Module,
+        Rational.zero,
+        Rational.two,
+        false,
+        settings,
+        Mocks.ItemsStateInitial,
+        Mocks.Dataset
+      );
+      const expected = new RecipeRational(
+        Mocks.Dataset.recipeEntities[RecipeId.MiningProductivity]
+      );
+      expected.out = { [ItemId.MiningProductivity]: Rational.one };
+      expected.time = Rational.from(30);
+      expected.productivity = Rational.one;
+      expected.drain = undefined;
+      expected.consumption = Rational.from(60);
+      expected.pollution = Rational.zero;
+      expect(result).toEqual(expected);
+    });
 
-    // it('should handle mining productivity', () => {
-    //   const settings = { ...Mocks.RecipesStateRational[RecipeId.IronOre] };
-    //   settings.machineId = ItemId.ElectricMiningDrill;
-    //   const result = RecipeUtility.adjustRecipe(
-    //     RecipeId.IronOre,
-    //     ItemId.Coal,
-    //     ItemId.Module,
-    //     Rational.two,
-    //     Rational.zero,
-    //     false,
-    //     settings,
-    //     Mocks.ItemsStateInitial,
-    //     Mocks.Dataset
-    //   );
-    //   const expected = new RecipeRational(
-    //     Mocks.Dataset.recipeEntities[RecipeId.IronOre]
-    //   );
-    //   expected.out = { [ItemId.IronOre]: Rational.from(3) };
-    //   expected.time = Rational.two;
-    //   expected.drain = Rational.zero;
-    //   expected.consumption = Rational.from(90);
-    //   expected.pollution = Rational.from([1, 6]);
-    //   expected.productivity = Rational.from(3);
-    //   expect(result).toEqual(expected);
-    // });
+    it('should handle mining productivity', () => {
+      const settings = { ...Mocks.RecipesStateRational[RecipeId.IronOre] };
+      settings.machineId = ItemId.ElectricMiningDrill;
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.IronOre,
+        ItemId.Coal,
+        ItemId.Module,
+        Rational.two,
+        Rational.zero,
+        false,
+        settings,
+        Mocks.ItemsStateInitial,
+        Mocks.Dataset
+      );
+      const expected = new RecipeRational(
+        Mocks.Dataset.recipeEntities[RecipeId.IronOre]
+      );
+      expected.out = { [ItemId.IronOre]: Rational.from(3) };
+      expected.time = Rational.two;
+      expected.drain = undefined;
+      expected.consumption = Rational.from(90);
+      expected.pollution = Rational.from([1, 6]);
+      expected.productivity = Rational.from(3);
+      expect(result).toEqual(expected);
+    });
 
     it('should handle modules and beacons', () => {
       const settings = { ...Mocks.RecipesStateRational[RecipeId.SteelChest] };
@@ -690,6 +690,32 @@ describe('RecipeUtility', () => {
       );
       expect(result.in[ItemId.HeavyOil]).toBeUndefined();
       expect(result.out[ItemId.HeavyOil]).toBeUndefined();
+    });
+
+    it('should calculate machine speed based on belt speed if undefined', () => {
+      const data = Mocks.getDataset();
+      data.machineEntities[ItemId.AssemblingMachine2].speed = undefined;
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        ItemId.Coal,
+        ItemId.Module,
+        Rational.zero,
+        Rational.zero,
+        false,
+        Mocks.RecipesStateRational[RecipeId.SteelChest],
+        Mocks.ItemsStateInitial,
+        data
+      );
+      const expected = new RecipeRational(
+        Mocks.Dataset.recipeEntities[RecipeId.SteelChest]
+      );
+      expected.out = { [ItemId.SteelChest]: Rational.one };
+      expected.time = Rational.from([1, 30]);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(150);
+      expected.pollution = Rational.from([1, 20]);
+      expected.productivity = Rational.one;
+      expect(result).toEqual(expected);
     });
   });
 

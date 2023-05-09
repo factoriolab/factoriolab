@@ -5,6 +5,7 @@ import { ModuleEffect } from './module';
 import { Silo, SiloRational } from './silo';
 
 export interface Machine {
+  /** If undefined, speed is based on belt speed */
   speed?: number | string;
   modules?: number;
   disallowedEffects?: ModuleEffect[];
@@ -22,7 +23,8 @@ export interface Machine {
 }
 
 export class MachineRational {
-  speed: Rational;
+  /** If undefined, speed is based on belt speed */
+  speed?: Rational;
   modules?: number;
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
@@ -36,7 +38,9 @@ export class MachineRational {
   consumption?: Entities<Rational>;
 
   constructor(obj: Machine) {
-    this.speed = Rational.from(obj.speed ?? 1);
+    if (obj.speed) {
+      this.speed = Rational.from(obj.speed);
+    }
 
     if (obj.modules != null) {
       this.modules = Math.round(obj.modules);
