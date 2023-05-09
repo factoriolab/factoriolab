@@ -4,7 +4,9 @@ import {
   displayRateInfo,
   Entities,
   Game,
+  ItemObjectiveRational,
   ObjectiveType,
+  RateUnit,
   Rational,
   RecipeObjectiveRational,
   RecipeSettingsRational,
@@ -13,6 +15,114 @@ import {
 import { RateUtility } from './rate.utility';
 
 describe('RateUtility', () => {
+  describe('itemObjectiveNormalizedRate', () => {
+    it('should skip on maximize objectives', () => {
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: '1',
+            rateUnit: RateUnit.Belts,
+            type: ObjectiveType.Maximize,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.one);
+    });
+
+    it('should normalize item objective rates based on display rate', () => {
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: '1',
+            rateUnit: RateUnit.Items,
+            type: ObjectiveType.Output,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.from([1, 60]));
+    });
+
+    it('should normalize item objective rates based on belts', () => {
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: '1',
+            rateUnit: RateUnit.Belts,
+            type: ObjectiveType.Output,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.from(15));
+    });
+
+    it('should normalize item objective rates based on wagons', () => {
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: '1',
+            rateUnit: RateUnit.Wagons,
+            type: ObjectiveType.Output,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.from([100, 3]));
+
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.PetroleumGas,
+            rate: '1',
+            rateUnit: RateUnit.Wagons,
+            type: ObjectiveType.Output,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.from([1250, 3]));
+    });
+
+    it('should adjust technology objective rate by productivity', () => {
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.ArtilleryShellRange,
+            rate: '1',
+            rateUnit: RateUnit.Items,
+            type: ObjectiveType.Output,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.from([1, 60]));
+    });
+  });
+
   describe('addEntityValue', () => {
     it('should add parents field to step', () => {
       const step = { ...Mocks.Step1 };

@@ -306,3 +306,4 @@ export const AdjustmentData = {
   costMachine: M.Rational.one,
   data: Dataset,
 };
+export const DisplayRateInfo = M.displayRateInfo[M.DisplayRate.PerMinute];

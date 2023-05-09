@@ -73,18 +73,26 @@ export class InputNumberComponent implements OnInit, OnChanges {
         this.maximum == null ? null : Rational.fromString(this.maximum);
     }
 
-    if ((changes['value'] || changes['minimum']) && this.min != null) {
-      try {
-        this.isMinimum = Rational.fromString(this.value).lte(this.min);
-      } catch {
+    if (changes['value'] || changes['minimum']) {
+      if (this.min != null) {
+        try {
+          this.isMinimum = Rational.fromString(this.value).lte(this.min);
+        } catch {
+          this.isMinimum = false;
+        }
+      } else {
         this.isMinimum = false;
       }
     }
 
-    if ((changes['value'] || changes['maximum']) && this.max != null) {
-      try {
-        this.isMaximum = Rational.fromString(this.value).gte(this.max);
-      } catch {
+    if (changes['value'] || changes['maximum']) {
+      if (this.max != null) {
+        try {
+          this.isMaximum = Rational.fromString(this.value).gte(this.max);
+        } catch {
+          this.isMaximum = false;
+        }
+      } else {
         this.isMaximum = false;
       }
     }
