@@ -28,7 +28,10 @@ describe('FlowService', () => {
             recipeSettings:
               Mocks.RecipesStateRationalInitial[RecipeId.CrudeOil],
             machines: Rational.one,
-            parents: { [RecipeId.AdvancedOilProcessing]: Rational.one },
+            parents: {
+              [RecipeId.AdvancedOilProcessing]: Rational.one,
+              '': Rational.one,
+            },
             outputs: { [ItemId.CrudeOil]: Rational.from([1, 2]) },
           },
           {
