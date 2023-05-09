@@ -2,6 +2,8 @@ import { ItemId, Mocks, RecipeId, TestUtility } from 'src/tests';
 import {
   EnergyType,
   Game,
+  gameInfo,
+  initialColumnsState,
   InserterCapacity,
   InserterData,
   InserterTarget,
@@ -10,7 +12,6 @@ import {
   Rational,
   ResearchSpeed,
 } from '~/models';
-import * as Preferences from '../preferences';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
 
@@ -64,48 +65,48 @@ describe('Settings Selectors', () => {
     });
   });
 
-  // describe('getColumnsState', () => {
-  //   it('should override columns for Factorio', () => {
-  //     const result = Selectors.getColumnsState.projector(
-  //       Game.Factorio,
-  //       Preferences.initialColumnsState
-  //     );
-  //     expect(result[Column.Wagons].show).toBeTrue();
-  //     expect(result[Column.Beacons].show).toBeTrue();
-  //     expect(result[Column.Pollution].show).toBeTrue();
-  //   });
+  describe('getColumnsState', () => {
+    it('should override columns for Factorio', () => {
+      const result = Selectors.getColumnsState.projector(
+        gameInfo[Game.Factorio],
+        initialColumnsState
+      );
+      expect(result['wagons'].show).toBeTrue();
+      expect(result['beacons'].show).toBeTrue();
+      expect(result['pollution'].show).toBeTrue();
+    });
 
-  //   it('should override columns for Captain of Industry', () => {
-  //     const result = Selectors.getColumnsState.projector(
-  //       Game.CaptainOfIndustry,
-  //       Preferences.initialColumnsState
-  //     );
-  //     expect(result[Column.Wagons].show).toBeFalse();
-  //     expect(result[Column.Beacons].show).toBeFalse();
-  //     expect(result[Column.Power].show).toBeFalse();
-  //     expect(result[Column.Pollution].show).toBeFalse();
-  //   });
+    it('should override columns for Captain of Industry', () => {
+      const result = Selectors.getColumnsState.projector(
+        gameInfo[Game.CaptainOfIndustry],
+        initialColumnsState
+      );
+      expect(result['wagons'].show).toBeFalse();
+      expect(result['beacons'].show).toBeFalse();
+      expect(result['power'].show).toBeFalse();
+      expect(result['pollution'].show).toBeFalse();
+    });
 
-  //   it('should override columns for Dyson Sphere Program', () => {
-  //     const result = Selectors.getColumnsState.projector(
-  //       Game.DysonSphereProgram,
-  //       Preferences.initialColumnsState
-  //     );
-  //     expect(result[Column.Wagons].show).toBeFalse();
-  //     expect(result[Column.Beacons].show).toBeFalse();
-  //     expect(result[Column.Pollution].show).toBeFalse();
-  //   });
+    it('should override columns for Dyson Sphere Program', () => {
+      const result = Selectors.getColumnsState.projector(
+        gameInfo[Game.DysonSphereProgram],
+        initialColumnsState
+      );
+      expect(result['wagons'].show).toBeFalse();
+      expect(result['beacons'].show).toBeFalse();
+      expect(result['pollution'].show).toBeFalse();
+    });
 
-  //   it('should override columns for Satisfactory', () => {
-  //     const result = Selectors.getColumnsState.projector(
-  //       Game.Satisfactory,
-  //       Preferences.initialColumnsState
-  //     );
-  //     expect(result[Column.Wagons].show).toBeTrue();
-  //     expect(result[Column.Beacons].show).toBeFalse();
-  //     expect(result[Column.Pollution].show).toBeFalse();
-  //   });
-  // });
+    it('should override columns for Satisfactory', () => {
+      const result = Selectors.getColumnsState.projector(
+        gameInfo[Game.Satisfactory],
+        initialColumnsState
+      );
+      expect(result['wagons'].show).toBeTrue();
+      expect(result['beacons'].show).toBeFalse();
+      expect(result['pollution'].show).toBeFalse();
+    });
+  });
 
   describe('getDefaults', () => {
     it('should handle null base data', () => {
