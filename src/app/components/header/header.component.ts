@@ -61,8 +61,6 @@ export class HeaderComponent implements OnInit {
       href: 'https://ko-fi.com/dcbroad3',
     },
   ];
-  gameInf = gameInfo;
-  gameOptions = gameOptions;
 
   constructor(
     public contentSvc: ContentService,
