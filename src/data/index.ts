@@ -16,6 +16,7 @@ export const data: AppData = {
     { id: 'bob', name: "Bob's Mods", game: Game.Factorio },
     { id: 'bobang', name: "Bob's & Angel's", game: Game.Factorio },
     { id: 'efs', name: 'Electric Furnaces', game: Game.Factorio },
+    { id: 'ffw', name: 'Freight Forwarding', game: Game.Factorio },
     { id: 'fpp', name: 'Factorio Plus Plus', game: Game.Factorio },
     { id: 'fep', name: 'FactorioExtended Plus', game: Game.Factorio },
     { id: 'ir2', name: 'Industrial Revolution 2', game: Game.Factorio },
@@ -89,5 +90,6 @@ export const data: AppData = {
     'efs',
     'kr2aai',
     'vbz',
+    'ffw',
   ],
 };
