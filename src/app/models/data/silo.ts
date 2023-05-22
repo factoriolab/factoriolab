@@ -9,14 +9,14 @@ export interface Silo {
   launch: number;
 }
 
-export class SiloRational {
+export class RationalSilo {
   /** Number of rocket parts required */
   parts: Rational;
   /** Launch animation delay, in seconds */
   launch: Rational;
 
-  constructor(obj: Silo) {
-    this.parts = Rational.fromNumber(obj.parts);
-    this.launch = Rational.fromNumber(obj.launch).div(secs);
+  constructor(data: Silo) {
+    this.parts = Rational.fromNumber(data.parts);
+    this.launch = Rational.fromNumber(data.launch).div(secs);
   }
 }

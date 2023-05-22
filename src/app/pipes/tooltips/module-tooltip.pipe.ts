@@ -24,35 +24,35 @@ export class ModuleTooltipPipe implements PipeTransform {
     const tableRows: [string, string][] = [];
     if (module.consumption?.nonzero()) {
       tableRows.push([
-        this.translateSvc.instant('data.energyConsumption'),
+        this.translateSvc.instant('tooltip.consumption'),
         this.displaySvc.toBonusPercent(module.consumption),
       ]);
     }
 
     if (module.speed?.nonzero()) {
       tableRows.push([
-        this.translateSvc.instant('data.speed'),
+        this.translateSvc.instant('tooltip.speed'),
         this.displaySvc.toBonusPercent(module.speed),
       ]);
     }
 
     if (module.productivity?.nonzero()) {
       tableRows.push([
-        this.translateSvc.instant('data.productivity'),
+        this.translateSvc.instant('tooltip.productivity'),
         this.displaySvc.toBonusPercent(module.productivity),
       ]);
     }
 
     if (module.pollution?.nonzero()) {
       tableRows.push([
-        this.translateSvc.instant('data.pollution'),
+        this.translateSvc.instant('tooltip.pollution'),
         this.displaySvc.toBonusPercent(module.pollution),
       ]);
     }
 
     if (module.sprays?.nonzero()) {
       tableRows.push([
-        this.translateSvc.instant('data.sprays'),
+        this.translateSvc.instant('tooltip.sprays'),
         this.displaySvc.round(module.sprays),
       ]);
     }

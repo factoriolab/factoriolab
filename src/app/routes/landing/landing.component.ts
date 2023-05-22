@@ -1,24 +1,15 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
-import { AppSharedModule } from '~/app-shared.module';
 import { Game, gameInfo, gameOptions } from '~/models';
 import { RouterService } from '~/services';
-import {
-  ItemObjectives,
-  LabState,
-  Preferences,
-  RecipeObjectives,
-  Settings,
-} from '~/store';
+import { LabState, Preferences, Producers, Products, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
-  standalone: true,
-  imports: [CommonModule, AppSharedModule],
+  selector: 'lab-landing',
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,32 +20,17 @@ export class LandingComponent {
     this.store.select(Settings.getModOptions),
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getMod),
-    this.store.select(Settings.getAvailableItems),
-    this.store.select(Settings.getAvailableRecipes),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
   ]).pipe(
-    map(
-      ([
-        settings,
-        modOptions,
-        data,
-        mod,
-        itemIds,
-        recipeIds,
-        preferences,
-        savedStates,
-      ]) => ({
-        settings,
-        modOptions,
-        data,
-        mod,
-        itemIds,
-        recipeIds,
-        preferences,
-        savedStates,
-      })
-    )
+    map(([settings, modOptions, data, mod, preferences, savedStates]) => ({
+      settings,
+      modOptions,
+      data,
+      mod,
+      preferences,
+      savedStates,
+    }))
   );
 
   gameInfo = gameInfo;
@@ -69,13 +45,13 @@ export class LandingComponent {
     private routerSvc: RouterService
   ) {}
 
-  selectItem(value: string): void {
-    this.addItemObjective(value);
+  selectProduct(value: string): void {
+    this.addProduct(value);
     this.router.navigate(['list']);
   }
 
-  selectRecipe(value: string): void {
-    this.addRecipeObjective(value);
+  selectProducer(value: string): void {
+    this.addProducer(value);
     this.router.navigate(['list']);
   }
 
@@ -96,12 +72,12 @@ export class LandingComponent {
     this.store.dispatch(new Settings.SetModAction(value));
   }
 
-  addItemObjective(value: string): void {
-    this.store.dispatch(new ItemObjectives.AddAction(value));
+  addProduct(value: string): void {
+    this.store.dispatch(new Products.AddAction(value));
   }
 
-  addRecipeObjective(value: string): void {
-    this.store.dispatch(new RecipeObjectives.AddAction(value));
+  addProducer(value: string): void {
+    this.store.dispatch(new Producers.AddAction(value));
   }
 
   setBypassLanding(value: boolean): void {

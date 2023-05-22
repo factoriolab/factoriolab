@@ -1,10 +1,8 @@
 import {
-  CostSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
   ItemId,
-  MaximizeType,
   Preset,
   ResearchSpeed,
 } from '~/models';
@@ -14,12 +12,7 @@ import { SettingsAction, SettingsActionType } from './settings.actions';
 
 export interface SettingsState {
   modId: string;
-  /**
-   * Use null value to indicate all researched. This list is filtered to the
-   * minimal set of technologies not listed as prerequisites for other
-   * researched technologies, to reduce zip size.
-   */
-  researchedTechnologyIds: string[] | null;
+  disabledRecipeIds?: string[];
   netProductionOnly: boolean;
   preset: Preset;
   beaconReceivers: string | null;
@@ -35,17 +28,14 @@ export interface SettingsState {
   researchSpeed: ResearchSpeed;
   inserterCapacity: InserterCapacity;
   displayRate: DisplayRate;
-  costs: CostSettings;
-  maximizeType: MaximizeType;
+  costFactor: string;
+  costFactory: string;
+  costInput: string;
+  costIgnored: string;
 }
-
-export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
-  costs?: Partial<CostSettings>;
-};
 
 export const initialSettingsState: SettingsState = {
   modId: '1.1',
-  researchedTechnologyIds: null,
   netProductionOnly: false,
   preset: Preset.Minimum,
   beaconReceivers: null,
@@ -56,15 +46,10 @@ export const initialSettingsState: SettingsState = {
   researchSpeed: ResearchSpeed.Speed6,
   inserterCapacity: InserterCapacity.Capacity7,
   displayRate: DisplayRate.PerMinute,
-  maximizeType: MaximizeType.Weight,
-  costs: {
-    factor: '1',
-    machine: '1',
-    unproduceable: '1000000',
-    excluded: '0',
-    surplus: '0',
-    maximize: '-1000000',
-  },
+  costFactor: '1',
+  costFactory: '1',
+  costInput: '1000000',
+  costIgnored: '0',
 };
 
 export function settingsReducer(
@@ -74,18 +59,7 @@ export function settingsReducer(
   switch (action.type) {
     case App.AppActionType.LOAD:
       return action.payload.settingsState
-        ? {
-            ...initialSettingsState,
-            ...{
-              ...action.payload.settingsState,
-              ...{
-                costs: {
-                  ...initialSettingsState.costs,
-                  ...action.payload.settingsState.costs,
-                },
-              },
-            },
-          }
+        ? { ...initialSettingsState, ...action.payload.settingsState }
         : initialSettingsState;
     case App.AppActionType.RESET:
       return initialSettingsState;
@@ -100,6 +74,7 @@ export function settingsReducer(
           researchSpeed: ResearchSpeed.Speed6,
         },
       };
+      delete newState.disabledRecipeIds;
       delete newState.beltId;
       delete newState.pipeId;
       delete newState.fuelId;
@@ -107,8 +82,13 @@ export function settingsReducer(
       delete newState.fluidWagonId;
       return newState;
     }
-    case SettingsActionType.SET_RESEARCHED_TECHNOLOGIES:
-      return { ...state, ...{ researchedTechnologyIds: action.payload } };
+    case SettingsActionType.SET_DISABLED_RECIPES:
+      return {
+        ...state,
+        ...{
+          disabledRecipeIds: StoreUtility.compareValues(action.payload),
+        },
+      };
     case SettingsActionType.SET_NET_PRODUCTION_ONLY:
       return { ...state, ...{ netProductionOnly: action.payload } };
     case SettingsActionType.SET_PRESET:
@@ -154,16 +134,22 @@ export function settingsReducer(
       return { ...state, ...{ inserterCapacity: action.payload } };
     case SettingsActionType.SET_DISPLAY_RATE:
       return { ...state, ...{ displayRate: action.payload.value } };
-    case SettingsActionType.SET_MAXIMIZE_TYPE:
-      return { ...state, ...{ maximizeType: action.payload } };
-    case SettingsActionType.SET_COSTS:
-      return { ...state, ...{ costs: action.payload } };
-
+    case SettingsActionType.SET_COST_FACTOR:
+      return { ...state, ...{ costFactor: action.payload } };
+    case SettingsActionType.SET_COST_FACTORY:
+      return { ...state, ...{ costFactory: action.payload } };
+    case SettingsActionType.SET_COST_INPUT:
+      return { ...state, ...{ costInput: action.payload } };
+    case SettingsActionType.SET_COST_IGNORED:
+      return { ...state, ...{ costIgnored: action.payload } };
     case SettingsActionType.RESET_COST:
       return {
         ...state,
         ...{
-          costs: initialSettingsState.costs,
+          costFactor: initialSettingsState.costFactor,
+          costFactory: initialSettingsState.costFactory,
+          costInput: initialSettingsState.costInput,
+          costIgnored: initialSettingsState.costIgnored,
         },
       };
     default:

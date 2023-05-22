@@ -72,26 +72,6 @@ export class ThemeService {
             css += `body.light .${category.id}.category::before { filter: invert(1); } `;
           }
         });
-
-      data.itemIds
-        .map((i) => data.itemEntities[i])
-        .filter(fnPropsNotNullish('iconText'))
-        .forEach((item) => {
-          css += `.${item.id}.item::after { content: "${item.iconText}"; } `;
-        });
-      data.recipeIds
-        .map((i) => data.recipeEntities[i])
-        .filter(fnPropsNotNullish('iconText'))
-        .forEach((recipe) => {
-          css += `.${recipe.id}.recipe::after { content: "${recipe.iconText}"; } `;
-        });
-      data.categoryIds
-        .map((i) => data.categoryEntities[i])
-        .filter(fnPropsNotNullish('iconText'))
-        .forEach((category) => {
-          css += `.${category.id}.category::after { content: "${category.iconText}"; } `;
-        });
-
       style.innerText = css;
       this.head.appendChild(style);
     });

@@ -1,16 +1,12 @@
 import { routes } from './main.routes';
-import { DataModule } from './routes/data/data.module';
-import { FlowComponent } from './routes/flow/flow.component';
-import { ListComponent } from './routes/list/list.component';
+import { FlowModule } from './routes/flow/flow.module';
+import { ListModule } from './routes/list/list.module';
+import { MatrixModule } from './routes/matrix/matrix.module';
 
 describe('Main Routes', () => {
-  it('should load child routes', async () => {
-    expect(await routes[0].children![0].loadComponent!()).toEqual(
-      ListComponent
-    );
-    expect(await routes[0].children![1].loadComponent!()).toEqual(
-      FlowComponent
-    );
-    expect(await routes[0].children![2].loadChildren!()).toEqual(DataModule);
+  it('should load child modules', async () => {
+    expect(await routes[0].children![0].loadChildren!()).toEqual(ListModule);
+    expect(await routes[0].children![1].loadChildren!()).toEqual(FlowModule);
+    expect(await routes[0].children![2].loadChildren!()).toEqual(MatrixModule);
   });
 });

@@ -20,7 +20,9 @@ describe('BeaconTooltipPipe', () => {
 
   describe('transform', () => {
     it('should generate a beacon tooltip', () => {
-      const result = pipe.transform(ItemId.Beacon, Mocks.Dataset);
+      const data = Mocks.getDataset();
+      data.itemEntities[ItemId.Beacon].beacon!.category = 'chemical';
+      const result = pipe.transform(ItemId.Beacon, data);
       expect(result).toBeTruthy();
     });
 

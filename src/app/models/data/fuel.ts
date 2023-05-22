@@ -2,20 +2,20 @@ import { Rational } from '../rational';
 
 export interface Fuel {
   category: string;
-  value: number | string;
+  value: number;
   result?: string;
 }
 
-export class FuelRational {
+export class RationalFuel {
   category: string;
   value: Rational;
   result?: string;
 
-  constructor(obj: Fuel) {
-    this.category = obj.category;
-    this.value = Rational.from(obj.value);
-    if (obj.result) {
-      this.result = obj.result;
+  constructor(data: Fuel) {
+    this.category = data.category;
+    this.value = Rational.fromNumber(data.value);
+    if (data.result) {
+      this.result = data.result;
     }
   }
 }

@@ -1,57 +1,49 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { RadioButtonModule } from 'primeng/radiobutton';
-import { StepsModule } from 'primeng/steps';
 import { combineLatest, map } from 'rxjs';
 
-import { AppSharedModule } from '~/app-shared.module';
-import {
-  DisplayRate,
-  displayRateOptions,
-  ObjectiveType,
-  RateUnit,
-} from '~/models';
-import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
+import { DisplayRate, displayRateOptions, RateType } from '~/models';
+import { LabState, Producers, Products, Settings } from '~/store';
 
 export enum WizardState {
   ObjectiveType,
-  ItemObjective,
-  RecipeObjective,
+  ProductType,
+  ProductItems,
+  ProductFactories,
+  ProductVia,
+  Producer,
 }
 
 @Component({
-  standalone: true,
-  imports: [CommonModule, RadioButtonModule, StepsModule, AppSharedModule],
+  selector: 'lab-wizard',
   templateUrl: './wizard.component.html',
   styleUrls: ['./wizard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardComponent {
   vm$ = combineLatest([
+    this.store.select(Products.getViaOptions),
     this.store.select(Settings.getDataset),
-    this.store.select(Settings.getAvailableItems),
-    this.store.select(Settings.getAvailableRecipes),
     this.store.select(Settings.getDisplayRate),
-    this.store.select(Settings.getRateUnitOptions),
+    this.store.select(Settings.getRateTypeOptions),
   ]).pipe(
-    map(([data, itemIds, recipeIds, displayRate, rateUnitOptions]) => ({
+    map(([viaOptions, data, displayRate, rateTypeOptions]) => ({
+      viaOptions,
       data,
-      itemIds,
-      recipeIds,
       displayRate,
-      rateUnitOptions,
+      rateTypeOptions,
     }))
   );
 
   id = '';
   rate = '1';
-  count = '1';
+  viaRateType = RateType.Items;
+  viaId = '';
   state = WizardState.ObjectiveType;
 
   displayRateOptions = displayRateOptions;
 
-  RateUnit = RateUnit;
+  RateType = RateType;
   WizardState = WizardState;
 
   constructor(private store: Store<LabState>) {}
@@ -61,31 +53,30 @@ export class WizardComponent {
     this.state = state;
   }
 
+  openViaState(): void {
+    this.createProduct(this.id, '1', RateType.Items);
+    this.state = WizardState.ProductVia;
+  }
+
   /** Action Dispatch Methods */
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  createItemObjective(itemId: string, rate: string, rateUnit: RateUnit): void {
+  createProduct(
+    itemId: string,
+    rate: string,
+    rateType: RateType,
+    viaId?: string
+  ): void {
     this.store.dispatch(
-      new ItemObjectives.CreateAction({
-        id: '0',
-        itemId,
-        rate,
-        rateUnit,
-        type: ObjectiveType.Output,
-      })
+      new Products.CreateAction({ id: '0', itemId, rate, rateType, viaId })
     );
   }
 
-  createRecipeObjective(recipeId: string, count: string): void {
+  createProducer(recipeId: string, count: string): void {
     this.store.dispatch(
-      new RecipeObjectives.CreateAction({
-        id: '0',
-        recipeId,
-        count,
-        type: ObjectiveType.Output,
-      })
+      new Producers.CreateAction({ id: '0', recipeId, count })
     );
   }
 }

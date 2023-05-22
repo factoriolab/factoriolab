@@ -1,21 +1,21 @@
 import { Action } from '@ngrx/store';
 
 import { DatasetsState } from './datasets';
-import { ItemObjectivesState } from './item-objectives';
+import { FactoriesState } from './factories';
 import { ItemsState } from './items';
-import { MachinesState } from './machines';
-import { RecipeObjectivesState } from './recipe-objectives';
+import { ProducersState } from './producers';
+import { ProductsState } from './products';
 import { RecipesState } from './recipes';
-import { PartialSettingsState } from './settings';
+import { SettingsState } from './settings';
 
 export interface PartialState {
   datasetsState?: DatasetsState;
-  itemObjectivesState?: ItemObjectivesState;
-  recipeObjectivesState?: RecipeObjectivesState;
+  productsState?: ProductsState;
+  producersState?: ProducersState;
   itemsState?: ItemsState;
   recipesState?: RecipesState;
-  machinesState?: MachinesState;
-  settingsState?: PartialSettingsState;
+  factoriesState?: FactoriesState;
+  settingsState?: Partial<SettingsState>;
 }
 
 export enum AppActionType {

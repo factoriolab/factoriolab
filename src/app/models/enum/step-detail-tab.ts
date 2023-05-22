@@ -2,6 +2,6 @@ export enum StepDetailTab {
   None = 'none',
   Item = 'item',
   Recipe = 'recipe',
-  Machine = 'machine',
+  Factory = 'factory',
   Recipes = 'recipes',
 }

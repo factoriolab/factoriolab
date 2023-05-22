@@ -30,7 +30,7 @@ describe('DisplayService', () => {
 
   describe('round', () => {
     it('should round a rational to two digits', () => {
-      expect(service.round(Rational.from([1, 3]))).toEqual('0.33');
+      expect(service.round(Rational.from(1, 3))).toEqual('0.33');
     });
   });
 
@@ -55,36 +55,6 @@ describe('DisplayService', () => {
       expect(
         service.recipeProcess(
           Mocks.Dataset.recipeEntities[RecipeId.ElectronicCircuit]
-        )
-      ).toBeTruthy();
-    });
-  });
-
-  describe('recipeProducedBy', () => {
-    it('should generate html for recipe producers', () => {
-      expect(
-        service.recipeProducedBy(
-          Mocks.Dataset.recipeEntities[RecipeId.ElectronicCircuit]
-        )
-      ).toBeTruthy();
-    });
-  });
-
-  describe('recipeUnlockedBy', () => {
-    it('should generate html for recipe producers', () => {
-      expect(
-        service.recipeUnlockedBy(
-          Mocks.Dataset.recipeEntities[RecipeId.CoalLiquefaction]
-        )
-      ).toBeTruthy();
-    });
-  });
-
-  describe('technologyPrerequisites', () => {
-    it('should generate html for technology prerequisites', () => {
-      expect(
-        service.technologyPrerequisites(
-          Mocks.Dataset.recipeEntities[RecipeId.ArtilleryShellRange].technology
         )
       ).toBeTruthy();
     });

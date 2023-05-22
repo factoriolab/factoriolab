@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Mocks, RecipeId, TestModule } from 'src/tests';
-import { Rational, Step } from '~/models';
+import { Mocks, TestModule } from 'src/tests';
+import { Rational } from '~/models';
 import { RouterService } from '~/services';
 import { StepHrefPipe } from './step-href.pipe';
 
@@ -25,12 +25,17 @@ describe('StepHrefPipe', () => {
   describe('transform', () => {
     it('should adjust recipes where necessary', () => {
       spyOn(routerService, 'stepHref');
-      const step: Step = {
-        id: '0',
-        items: Rational.one,
-        recipeId: RecipeId.ArtilleryShellRange,
-      };
-      expect(pipe.transform(step, { bare: '', hash: '' }, Mocks.Dataset));
+      expect(
+        pipe.transform(Mocks.Step1, { bare: '', hash: '' }, {
+          recipeR: {
+            [Mocks.Step1.recipeId!]: {
+              adjustProd: true,
+              productivity: Rational.two,
+            },
+          },
+          hash: '',
+        } as any)
+      );
       expect(routerService.stepHref).toHaveBeenCalled();
       expect(routerService.stepHref).not.toHaveBeenCalledWith(
         Mocks.Step1,

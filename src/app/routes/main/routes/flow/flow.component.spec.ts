@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Mocks, TestModule } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
+import { ListComponent } from '../list/list.component';
 import { FlowComponent } from './flow.component';
 
 describe('FlowComponent', () => {
@@ -10,7 +11,8 @@ describe('FlowComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestModule, AppSharedModule, FlowComponent],
+      declarations: [ListComponent, FlowComponent],
+      imports: [TestModule, AppSharedModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FlowComponent);

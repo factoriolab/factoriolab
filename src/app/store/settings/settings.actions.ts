@@ -1,12 +1,10 @@
 import { Action } from '@ngrx/store';
 
 import {
-  CostSettings,
   DefaultPayload,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
-  MaximizeType,
   Preset,
   PreviousPayload,
   ResearchSpeed,
@@ -14,7 +12,7 @@ import {
 
 export const enum SettingsActionType {
   SET_MOD = '[Settings] Set Mod',
-  SET_RESEARCHED_TECHNOLOGIES = '[Settings] Set Researched Technologies',
+  SET_DISABLED_RECIPES = '[Settings] Set Disabled Recipes',
   SET_NET_PRODUCTION_ONLY = '[Settings] Set Net Production Only',
   SET_PRESET = '[Settings] Set Preset',
   SET_BEACON_RECEIVERS = '[Settings] Set Beacon Receivers',
@@ -30,8 +28,10 @@ export const enum SettingsActionType {
   SET_RESEARCH_SPEED = '[Settings] Set Research Speed',
   SET_INSERTER_CAPACITY = '[Settings] Set Inserter Capacity',
   SET_DISPLAY_RATE = '[Settings] Set Display Rate',
-  SET_MAXIMIZE_TYPE = '[Settings] Set Maximize Type',
-  SET_COSTS = '[Settings] Set Costs',
+  SET_COST_FACTOR = '[Settings] Set Cost Factor',
+  SET_COST_FACTORY = '[Settings] Set Factory Cost',
+  SET_COST_INPUT = '[Settings] Set Input Cost',
+  SET_COST_IGNORED = '[Settings] Set Ignored Cost',
   RESET_COST = '[Settings] Reset Cost Modifiers',
 }
 
@@ -40,9 +40,9 @@ export class SetModAction implements Action {
   constructor(public payload: string) {}
 }
 
-export class SetResearchedTechnologiesAction implements Action {
-  readonly type = SettingsActionType.SET_RESEARCHED_TECHNOLOGIES;
-  constructor(public payload: string[] | null) {}
+export class SetDisabledRecipesAction implements Action {
+  readonly type = SettingsActionType.SET_DISABLED_RECIPES;
+  constructor(public payload: DefaultPayload<string[]>) {}
 }
 
 export class SetNetProductionOnlyAction implements Action {
@@ -120,14 +120,24 @@ export class SetDisplayRateAction implements Action {
   constructor(public payload: PreviousPayload<DisplayRate>) {}
 }
 
-export class SetMaximizeTypeAction implements Action {
-  readonly type = SettingsActionType.SET_MAXIMIZE_TYPE;
-  constructor(public payload: MaximizeType) {}
+export class SetCostFactorAction implements Action {
+  readonly type = SettingsActionType.SET_COST_FACTOR;
+  constructor(public payload: string) {}
 }
 
-export class SetCostsAction implements Action {
-  readonly type = SettingsActionType.SET_COSTS;
-  constructor(public payload: CostSettings) {}
+export class SetCostFactoryAction implements Action {
+  readonly type = SettingsActionType.SET_COST_FACTORY;
+  constructor(public payload: string) {}
+}
+
+export class SetCostInputAction implements Action {
+  readonly type = SettingsActionType.SET_COST_INPUT;
+  constructor(public payload: string) {}
+}
+
+export class SetCostIgnoredAction implements Action {
+  readonly type = SettingsActionType.SET_COST_IGNORED;
+  constructor(public payload: string) {}
 }
 
 export class ResetCostAction implements Action {
@@ -136,7 +146,7 @@ export class ResetCostAction implements Action {
 
 export type SettingsAction =
   | SetModAction
-  | SetResearchedTechnologiesAction
+  | SetDisabledRecipesAction
   | SetNetProductionOnlyAction
   | SetPresetAction
   | SetBeaconReceiversAction
@@ -152,6 +162,8 @@ export type SettingsAction =
   | SetResearchSpeedAction
   | SetInserterCapacityAction
   | SetDisplayRateAction
-  | SetMaximizeTypeAction
-  | SetCostsAction
+  | SetCostFactorAction
+  | SetCostFactoryAction
+  | SetCostInputAction
+  | SetCostIgnoredAction
   | ResetCostAction;

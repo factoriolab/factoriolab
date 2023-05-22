@@ -12,9 +12,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, Game, gameInfo, gameOptions } from '~/models';
+import { APP, Game, gameInfo, gameOptions, games } from '~/models';
 import { ContentService } from '~/services';
-import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
+import { LabState, Producers, Products, Settings } from '~/store';
 
 interface MenuLink {
   label: string;
@@ -46,6 +46,11 @@ export class HeaderComponent implements OnInit {
 
   links: MenuLink[] = [
     {
+      label: 'Wiki',
+      icon: 'fa-solid fa-book',
+      href: 'https://github.com/factoriolab/factoriolab/wiki',
+    },
+    {
       label: 'Source',
       icon: 'fa-brands fa-github',
       href: 'https://github.com/factoriolab/factoriolab',
@@ -61,6 +66,8 @@ export class HeaderComponent implements OnInit {
       href: 'https://ko-fi.com/dcbroad3',
     },
   ];
+  gameInfo = gameInfo;
+  gameOptions = gameOptions;
 
   constructor(
     public contentSvc: ContentService,
@@ -71,23 +78,23 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest([
-      this.store.select(ItemObjectives.getItemObjectives),
-      this.store.select(RecipeObjectives.getBaseRecipeObjectives),
+      this.store.select(Products.getBaseProducts),
+      this.store.select(Producers.getBaseProducers),
       this.store.select(Settings.getDataset),
       this.contentSvc.lang$,
     ])
       .pipe(untilDestroyed(this))
-      .subscribe(([itemsObj, recipesObj, data]) => {
-        if (itemsObj.length && data.itemEntities[itemsObj[0].itemId]) {
+      .subscribe(([products, producers, data]) => {
+        if (products.length && data.itemEntities[products[0].itemId]) {
           this.title.setTitle(
-            `${data.itemEntities[itemsObj[0].itemId].name} | ${APP}`
+            `${data.itemEntities[products[0].itemId].name} | ${APP}`
           );
         } else if (
-          recipesObj.length &&
-          data.recipeEntities[recipesObj[0].recipeId]
+          producers.length &&
+          data.recipeEntities[producers[0].recipeId]
         ) {
           this.title.setTitle(
-            `${data.recipeEntities[recipesObj[0].recipeId].name} | ${APP}`
+            `${data.recipeEntities[producers[0].recipeId].name} | ${APP}`
           );
         } else {
           this.title.setTitle(APP);
@@ -96,12 +103,11 @@ export class HeaderComponent implements OnInit {
   }
 
   buildGameOptions(game: Game): MenuItem[] {
-    return gameOptions
-      .map((o) => o.value)
+    return games
       .filter((g) => g !== game)
       .map(
         (g): MenuItem => ({
-          icon: 'lab-icon small ' + gameInfo[g].icon,
+          icon: 'lab-icon-sm ' + gameInfo[g].icon,
           label: this.translateSvc.instant(gameInfo[g].label),
           routerLink: gameInfo[g].route,
         })

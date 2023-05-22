@@ -1,12 +1,12 @@
 import { CategoryId, ItemId } from 'src/tests';
 import { FuelType } from '../enum';
 import { Rational } from '../rational';
-import { ItemRational } from './item';
+import { RationalItem } from './item';
 
-describe('ItemRational', () => {
+describe('RationalItem', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new ItemRational({
+      const result = new RationalItem({
         id: ItemId.Wood,
         name: 'name',
         category: CategoryId.Combat,
@@ -18,7 +18,7 @@ describe('ItemRational', () => {
         pipe: {
           speed: 10,
         },
-        machine: {
+        factory: {
           speed: 1,
           modules: 0,
         },
@@ -41,8 +41,8 @@ describe('ItemRational', () => {
       expect(result.stack).toEqual(Rational.two);
       expect(result.belt?.speed).toEqual(Rational.one);
       expect(result.pipe?.speed).toEqual(Rational.ten);
-      expect(result.machine?.speed).toEqual(Rational.one);
-      expect(result.machine?.modules).toEqual(0);
+      expect(result.factory?.speed).toEqual(Rational.one);
+      expect(result.factory?.modules).toEqual(0);
       expect(result.module?.speed).toEqual(Rational.one);
       expect(result.module?.productivity).toEqual(Rational.one);
       expect(result.module?.consumption).toEqual(Rational.one);
@@ -53,7 +53,7 @@ describe('ItemRational', () => {
     });
 
     it('should ignore undefined fields', () => {
-      const result = new ItemRational({
+      const result = new RationalItem({
         id: ItemId.Wood,
         name: 'name',
         category: CategoryId.Combat,
@@ -66,7 +66,7 @@ describe('ItemRational', () => {
       expect(result.stack).toBeUndefined();
       expect(result.belt).toBeUndefined();
       expect(result.pipe).toBeUndefined();
-      expect(result.machine).toBeUndefined();
+      expect(result.factory).toBeUndefined();
       expect(result.module).toBeUndefined();
       expect(result.fuel).toBeUndefined();
       expect(result.icon).toBeUndefined();
