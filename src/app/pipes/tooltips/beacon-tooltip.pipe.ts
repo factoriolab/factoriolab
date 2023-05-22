@@ -23,31 +23,22 @@ export class BeaconTooltipPipe implements PipeTransform {
 
     const tableRows: [string, string][] = [
       [
-        this.translateSvc.instant('tooltip.effectivity'),
+        this.translateSvc.instant('data.efficiency'),
         this.displaySvc.round(beacon.effectivity),
       ],
-      [this.translateSvc.instant('tooltip.modules'), beacon.modules.toString()],
-      [this.translateSvc.instant('tooltip.range'), beacon.range.toString()],
+      [this.translateSvc.instant('data.modules'), beacon.modules.toString()],
+      [this.translateSvc.instant('data.range'), beacon.range.toString()],
+      [this.translateSvc.instant('data.energySource'), beacon.type],
+      [
+        this.translateSvc.instant('data.energyConsumption'),
+        this.displaySvc.power(beacon.usage),
+      ],
     ];
 
-    if (beacon.type) {
+    if (beacon.disallowedEffects) {
       tableRows.push([
-        this.translateSvc.instant('tooltip.energyType'),
-        beacon.type,
-      ]);
-    }
-
-    if (beacon.category) {
-      tableRows.push([
-        this.translateSvc.instant('tooltip.fuelCategory'),
-        beacon.category,
-      ]);
-    }
-
-    if (beacon.usage) {
-      tableRows.push([
-        this.translateSvc.instant('tooltip.energyUsage'),
-        this.displaySvc.power(beacon.usage),
+        this.translateSvc.instant('data.disallowedEffects'),
+        beacon.disallowedEffects.join(', '),
       ]);
     }
 

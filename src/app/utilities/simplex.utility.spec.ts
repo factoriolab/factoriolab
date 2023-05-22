@@ -1,158 +1,86 @@
-import { CategoryId, ItemId, Mocks, RecipeId } from 'src/tests';
+import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
+  Entities,
   MatrixResultType,
-  RateType,
+  MaximizeType,
+  ObjectiveType,
   Rational,
-  RationalProduct,
-  RationalRecipe,
-  SimplexType,
 } from '~/models';
 import { RateUtility } from './rate.utility';
-import { MatrixSolution, MatrixState, SimplexUtility } from './simplex.utility';
+import {
+  ItemValues,
+  MatrixSolution,
+  MatrixState,
+  SimplexUtility,
+} from './simplex.utility';
 
 describe('SimplexUtility', () => {
   const getState = (): MatrixState => ({
-    products: [],
-    producers: [],
+    itemObjectives: [],
+    recipeObjectives: [],
     steps: [],
     recipes: {},
-    items: {},
-    inputIds: [],
+    itemValues: {},
+    recipeLimits: {},
+    unproduceableIds: [],
+    excludedIds: [],
     recipeIds: Mocks.Dataset.recipeIds,
     itemIds: Mocks.Dataset.itemIds,
     data: Mocks.AdjustedData,
-    costInput: Rational.from(1000000),
-    costIgnored: Rational.zero,
-    simplexType: SimplexType.JsBigIntRational,
+    maximizeType: MaximizeType.Weight,
+    cost: {
+      factor: Rational.one,
+      machine: Rational.one,
+      unproduceable: Rational.from(1000000),
+      excluded: Rational.zero,
+      surplus: Rational.zero,
+      maximize: Rational.from(-1000000),
+    },
   });
-  /** https://en.wikipedia.org/wiki/Simplex_algorithm#Example */
-  const getTableau = (): Rational[][] => [
-    [
-      Rational.one,
-      Rational.from(-2),
-      Rational.from(-3),
-      Rational.from(-4),
-      Rational.zero,
-      Rational.zero,
-      Rational.zero,
-    ],
-    [
-      Rational.zero,
-      Rational.from(3),
-      Rational.from(2),
-      Rational.one,
-      Rational.one,
-      Rational.zero,
-      Rational.from(10),
-    ],
-    [
-      Rational.zero,
-      Rational.from(2),
-      Rational.from(5),
-      Rational.from(3),
-      Rational.zero,
-      Rational.one,
-      Rational.from(15),
-    ],
-  ];
-  const getSolution = (): Rational[][] => [
-    [
-      Rational.one,
-      Rational.from(2, 3),
-      Rational.from(11, 3),
-      Rational.zero,
-      Rational.zero,
-      Rational.from(4, 3),
-      Rational.from(20),
-    ],
-    [
-      Rational.zero,
-      Rational.from(7, 3),
-      Rational.from(1, 3),
-      Rational.zero,
-      Rational.one,
-      Rational.from(-1, 3),
-      Rational.from(5),
-    ],
-    [
-      Rational.zero,
-      Rational.from(2, 3),
-      Rational.from(5, 3),
-      Rational.one,
-      Rational.zero,
-      Rational.from(1, 3),
-      Rational.from(5),
-    ],
-  ];
   const getResult = (
     resultType: MatrixResultType = MatrixResultType.Solved
   ): MatrixSolution => ({
     resultType,
-    surplus: {},
-    recipes: {},
-    inputs: {},
-    pivots: 1,
     time: 2,
-    A: [],
-    O: [],
+    cost: Rational.one,
     itemIds: [],
-    producers: [],
     recipeIds: [],
-    inputIds: [],
+    unproduceableIds: [],
+    excludedIds: [],
+    surplus: {},
+    unproduceable: {},
+    excluded: {},
+    recipes: {},
   });
 
-  beforeEach(() => {
-    SimplexUtility.cache = {};
+  describe('addItemValue', () => {
+    it('should add a value to an entity of Rationals', () => {
+      const result: Entities<ItemValues> = {};
+      SimplexUtility.addItemValue(result, 'id');
+      expect(result['id'].out).toEqual(Rational.zero);
+      SimplexUtility.addItemValue(result, 'id', Rational.one);
+      expect(result['id'].out).toEqual(Rational.one);
+      SimplexUtility.addItemValue(result, 'id', Rational.two, 'lim');
+      expect(result['id'].lim).toEqual(Rational.two);
+    });
   });
 
   describe('solve', () => {
-    it('should handle empty list of products', () => {
+    it('should handle empty list of objectives', () => {
       expect(
         SimplexUtility.solve(
           [],
           [],
           {},
+          {},
           [],
-          Rational.zero,
-          Rational.zero,
-          SimplexType.JsBigIntRational,
+          MaximizeType.Weight,
+          Mocks.CostRational,
           Mocks.AdjustedData
         )
       ).toEqual({
         steps: [],
         resultType: MatrixResultType.Skipped,
-      });
-    });
-
-    it('should handle timeout and quit in simplex method', () => {
-      spyOn(SimplexUtility, 'getState').and.returnValue({
-        steps: Mocks.Steps,
-      } as any);
-      spyOn(SimplexUtility, 'getSolution').and.returnValue(
-        getResult(MatrixResultType.Cancelled)
-      );
-      expect(
-        SimplexUtility.solve(
-          Mocks.RationalProducts,
-          [],
-          {},
-          [],
-          Rational.zero,
-          Rational.zero,
-          SimplexType.JsBigIntRational,
-          Mocks.AdjustedData
-        )
-      ).toEqual({
-        steps: Mocks.Steps,
-        resultType: MatrixResultType.Cancelled,
-        pivots: 1,
-        time: 2,
-        A: [],
-        O: [],
-        itemIds: [],
-        producers: [],
-        recipeIds: [],
-        inputIds: [],
       });
     });
 
@@ -165,148 +93,87 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'updateSteps');
       expect(
         SimplexUtility.solve(
-          Mocks.RationalProducts,
+          Mocks.RationalItemObjectives,
           [],
           {},
-          [],
-          Rational.zero,
-          Rational.zero,
-          SimplexType.JsBigIntRational,
+          {},
+          null,
+          MaximizeType.Weight,
+          Mocks.CostRational,
           Mocks.AdjustedData
         )
       ).toEqual({
         steps: Mocks.Steps,
         resultType: MatrixResultType.Solved,
-        pivots: 1,
+        returnCode: undefined,
+        simplexStatus: undefined,
         time: 2,
-        A: [],
-        O: [],
-        itemIds: [],
-        producers: [],
-        recipeIds: [],
-        inputIds: [],
+        cost: Rational.one,
       });
       expect(SimplexUtility.updateSteps).toHaveBeenCalled();
-    });
-
-    it('should include heavy oil cracking', () => {
-      const result = SimplexUtility.solve(
-        [
-          {
-            id: '1',
-            itemId: ItemId.PetroleumGas,
-            rate: Rational.one,
-            rateType: RateType.Items,
-          },
-        ],
-        [],
-        Mocks.ItemSettingsInitial,
-        [],
-        Rational.from(1000000),
-        Rational.zero,
-        SimplexType.JsBigIntRational,
-        Mocks.AdjustedData
-      );
-      const hocStep = result.steps.find(
-        (s) => s.recipeId === RecipeId.HeavyOilCracking
-      );
-      expect(hocStep!.factories!.gt(Rational.zero)).toBeTrue();
-    });
-  });
-
-  describe('getSteps', () => {
-    it('should get item step information for an item', () => {
-      expect(
-        SimplexUtility.getSteps(
-          ItemId.CopperPlate,
-          Mocks.ItemSettingsInitial,
-          [],
-          Rational.from(1000000),
-          Rational.zero,
-          SimplexType.JsBigIntRational,
-          Mocks.AdjustedData,
-          false
-        )
-      ).toEqual([
-        [ItemId.CopperPlate, Rational.one],
-        [ItemId.CopperOre, Rational.from(5, 6)],
-      ]);
-    });
-
-    it('should get recipe step information for an item', () => {
-      expect(
-        SimplexUtility.getSteps(
-          ItemId.CopperPlate,
-          Mocks.ItemSettingsInitial,
-          [],
-          Rational.from(1000000),
-          Rational.zero,
-          SimplexType.JsBigIntRational,
-          Mocks.AdjustedData,
-          true
-        )
-      ).toEqual([
-        [ItemId.CopperPlate, Rational.from(40, 141)],
-        [ItemId.CopperOre, Rational.from(1000, 3549)],
-      ]);
     });
   });
 
   describe('getState', () => {
     it('should build full state object', () => {
+      const itemObjectives = [
+        ...Mocks.RationalItemObjectives,
+        Mocks.RationalItemObjectives[3],
+      ];
+      const recipeObjectives = [
+        ...Mocks.RationalRecipeObjectives,
+        Mocks.RationalRecipeObjectives[3],
+      ];
       spyOn(SimplexUtility, 'parseItemRecursively');
       const result = SimplexUtility.getState(
-        [Mocks.RationalProduct],
-        [Mocks.RationalProducer],
-        Mocks.ItemSettingsInitial,
-        [],
-        Rational.from(1000000),
-        Rational.zero,
-        SimplexType.JsBigIntRational,
+        itemObjectives,
+        recipeObjectives,
+        Mocks.ItemsStateInitial,
+        Mocks.RecipesState,
+        Mocks.Dataset.technologyIds,
+        MaximizeType.Weight,
+        Mocks.CostRational,
         Mocks.Dataset
       );
       expect(result).toEqual({
-        products: [Mocks.RationalProduct],
-        producers: [Mocks.RationalProducer],
+        itemObjectives,
+        recipeObjectives: [
+          Mocks.RationalRecipeObjectives[0],
+          Mocks.RationalRecipeObjectives[2],
+        ],
         steps: [],
         recipes: {},
-        items: {
-          [ItemId.WoodenChest]: Mocks.RationalProduct.rate,
-          [ItemId.IronPlate]: Rational.zero,
-          [ItemId.IronOre]: Rational.zero,
+        itemValues: {
+          [ItemId.AdvancedCircuit]: { out: Rational.one },
+          [ItemId.IronPlate]: { out: Rational.zero, in: Rational.one },
+          [ItemId.PlasticBar]: { out: Rational.zero, max: Rational.one },
+          [ItemId.PiercingRoundsMagazine]: { out: Rational.zero },
+          [ItemId.FirearmMagazine]: { out: Rational.zero },
+          [ItemId.SteelPlate]: { out: Rational.zero },
+          [ItemId.CopperPlate]: {
+            out: Rational.zero,
+            in: Rational.from([5, 16]),
+          },
+          [ItemId.PetroleumGas]: { out: Rational.zero, lim: Rational.hundred },
         },
-        inputIds: [ItemId.WoodenChest, ItemId.IronPlate, ItemId.IronOre],
+        recipeLimits: { [RecipeId.IronPlate]: Rational.ten },
+        unproduceableIds: [
+          ItemId.AdvancedCircuit,
+          ItemId.IronPlate,
+          ItemId.PlasticBar,
+          ItemId.PetroleumGas,
+          ItemId.PiercingRoundsMagazine,
+          ItemId.FirearmMagazine,
+          ItemId.SteelPlate,
+          ItemId.CopperPlate,
+        ],
+        excludedIds: [],
         recipeIds: Mocks.Dataset.recipeIds,
         itemIds: Mocks.Dataset.itemIds,
         data: Mocks.Dataset,
-        costInput: Rational.from(1000000),
-        costIgnored: Rational.zero,
-        simplexType: SimplexType.JsBigIntRational,
+        maximizeType: MaximizeType.Weight,
+        cost: Mocks.CostRational,
       });
-    });
-
-    it('should handle adjusted product', () => {
-      const result = SimplexUtility.getState(
-        [
-          new RationalProduct({
-            id: '1',
-            itemId: ItemId.MiningProductivity,
-            rate: '60',
-            rateType: RateType.Items,
-          }),
-        ],
-        [],
-        Mocks.ItemSettingsInitial,
-        [],
-        Rational.from(1000000),
-        Rational.zero,
-        SimplexType.JsBigIntRational,
-        Mocks.AdjustedData
-      );
-
-      expect(result.items[ItemId.MiningProductivity]).toEqual(
-        Rational.from(72)
-      );
     });
   });
 
@@ -325,7 +192,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       const recipe = Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
       const result = SimplexUtility.itemMatches(recipe, state);
-      expect(state.items).toEqual({ [ItemId.CopperPlate]: Rational.zero });
+      expect(state.itemValues[ItemId.CopperPlate].out).toEqual(Rational.zero);
       expect(state.recipes).toEqual({});
       expect(result).toEqual([ItemId.CopperPlate]);
     });
@@ -399,113 +266,29 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       SimplexUtility.addSurplusVariables(state);
-      expect(state.items[ItemId.Coal]).toEqual(Rational.zero);
+      expect(state.itemValues[ItemId.Coal].out).toEqual(Rational.zero);
     });
   });
 
-  describe('parseInputs', () => {
-    it('should parse input-only items', () => {
+  describe('parseUnproduceable', () => {
+    it('should parse unproduceable items', () => {
       const state = getState();
-      // Coal = ignored input, Wood = normal input
-      state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.items[ItemId.Wood] = Rational.one;
-      state.items[ItemId.Coal] = Rational.one;
+      state.itemValues[ItemId.Wood] = { out: Rational.one };
+      state.itemValues[ItemId.Coal] = { out: Rational.one };
       state.recipes = {
         [RecipeId.Coal]: Mocks.Dataset.recipeR[RecipeId.Coal],
       };
-      SimplexUtility.parseInputs(state);
-      expect(state.inputIds).toEqual([ItemId.Wood, ItemId.Coal]);
+      SimplexUtility.parseUnproduceable(state);
+      expect(state.unproduceableIds).toEqual([ItemId.Wood]);
     });
   });
 
   describe('getSolution', () => {
-    it('should handle no solution found by simplex', () => {
-      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
-      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
-      spyOn(SimplexUtility, 'checkCache').and.returnValue(null);
-      spyOn(SimplexUtility, 'simplex').and.returnValue({
-        type: MatrixResultType.Failed,
-        pivots: 0,
-        time: 0,
-        O: [],
-      });
-      spyOn(SimplexUtility, 'parseSolution');
-      const state = getState();
-      const result = SimplexUtility.getSolution(state);
-      expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith(
-        [[Rational.one]],
-        true
-      );
-      expect(SimplexUtility.parseSolution).not.toHaveBeenCalled();
-      expect(result.resultType).toEqual(MatrixResultType.Failed);
-    });
-
-    it('should handle timeout and quit in simplex', () => {
-      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
-      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
-      spyOn(SimplexUtility, 'checkCache').and.returnValue(null);
-      spyOn(SimplexUtility, 'simplex').and.returnValue({
-        type: MatrixResultType.Cancelled,
-        pivots: 0,
-        time: 0,
-        O: [],
-      });
-      spyOn(SimplexUtility, 'parseSolution');
-      const state = getState();
-      const result = SimplexUtility.getSolution(state);
-      expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith(
-        [[Rational.one]],
-        true
-      );
-      expect(SimplexUtility.parseSolution).not.toHaveBeenCalled();
-      expect(result.resultType).toEqual(MatrixResultType.Cancelled);
-    });
-
     it('should parse the solution found by simplex', () => {
-      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
-      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
-      spyOn(SimplexUtility, 'checkCache').and.returnValue(null);
-      spyOn(SimplexUtility, 'simplex').and.returnValue({
-        type: MatrixResultType.Solved,
-        pivots: 0,
-        time: 0,
-        O: [Rational.one],
-      });
-      spyOn(SimplexUtility, 'parseSolution').and.returnValue([{}, {}, {}]);
+      spyOn(SimplexUtility, 'glpk').and.returnValue({} as any);
       const state = getState();
       const result = SimplexUtility.getSolution(state);
-      expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.simplex).toHaveBeenCalledWith(
-        [[Rational.one]],
-        true
-      );
-      expect(SimplexUtility.parseSolution).toHaveBeenCalledWith(
-        [Rational.one],
-        state
-      );
       expect(result.resultType).toEqual(MatrixResultType.Solved);
-    });
-
-    it('should parse a solution from the cache', () => {
-      spyOn(SimplexUtility, 'canonical').and.returnValue([[Rational.one]]);
-      spyOn(SimplexUtility, 'hash').and.returnValue(['O' as any, 'H']);
-      spyOn(SimplexUtility, 'checkCache').and.returnValue({
-        O: [Rational.one],
-        R: [Rational.two],
-        pivots: 2,
-        time: 20,
-      });
-      spyOn(SimplexUtility, 'parseSolution').and.returnValue([{}, {}, {}]);
-      const state = getState();
-      const result = SimplexUtility.getSolution(state);
-      expect(SimplexUtility.canonical).toHaveBeenCalledWith(state);
-      expect(SimplexUtility.parseSolution).toHaveBeenCalledWith(
-        [Rational.two],
-        state
-      );
-      expect(result.resultType).toEqual(MatrixResultType.Cached);
     });
 
     it('should handle glpk failure', () => {
@@ -517,33 +300,96 @@ describe('SimplexUtility', () => {
   });
 
   describe('glpk', () => {
-    it('should run the glpk wasm module to presolve', () => {
+    it('should find a solution using glpk', () => {
       const state = getState();
-      // Coal = ignored input, Wood = normal input
+      // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.inputIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
-      state.recipes[RecipeId.CopperPlate] = new RationalRecipe({
-        id: 'id',
-        name: 'name',
-        time: 1,
-        in: {},
-        out: { [ItemId.CopperPlate]: 1 },
-        producers: [],
-        row: 0,
-        category: CategoryId.Logistics,
-      });
+      state.unproduceableIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
+      state.excludedIds = [ItemId.CopperOre];
+      state.recipes[RecipeId.CopperPlate] =
+        Mocks.Dataset.recipeR[RecipeId.CopperPlate];
       state.recipes[RecipeId.IronPlate] =
         Mocks.Dataset.recipeR[RecipeId.IronPlate];
-      state.items[ItemId.Wood] = Rational.one;
-      state.items[ItemId.Coal] = Rational.one;
-      state.items[ItemId.IronPlate] = Rational.zero;
-      state.items[ItemId.IronOre] = Rational.zero;
-      state.producers = [
+      state.itemValues[ItemId.Wood] = {
+        out: Rational.one,
+      };
+      state.itemValues[ItemId.Coal] = { out: Rational.one };
+      state.itemValues[ItemId.IronPlate] = {
+        out: Rational.zero,
+        max: Rational.one,
+      };
+      state.itemValues[ItemId.IronOre] = {
+        out: Rational.zero,
+        in: Rational.one,
+        lim: Rational.ten,
+      };
+      state.itemValues[ItemId.CopperCable] = { out: Rational.zero };
+      state.itemValues[ItemId.CopperPlate] = { out: Rational.zero };
+      state.itemValues[ItemId.CopperOre] = { out: Rational.zero };
+      state.recipeLimits[RecipeId.CopperPlate] = Rational.ten;
+      state.recipeObjectives = [
         {
           id: '0',
           recipeId: RecipeId.IronPlate,
           count: Rational.one,
+          type: ObjectiveType.Output,
           recipe: Mocks.Dataset.recipeR[RecipeId.IronPlate],
+        },
+        {
+          id: '1',
+          recipeId: RecipeId.CopperCable,
+          count: Rational.one,
+          type: ObjectiveType.Maximize,
+          recipe: Mocks.Dataset.recipeR[RecipeId.CopperCable],
+        },
+      ];
+      const result = SimplexUtility.glpk(state);
+      expect(result.returnCode).toEqual('ok');
+      expect(result.status).toEqual('optimal');
+    });
+
+    it('should find a solution using glpk maximizing by ratio', () => {
+      const state = getState();
+      state.maximizeType = MaximizeType.Ratio;
+      // Coal = excluded input, Wood = normal input
+      state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
+      state.unproduceableIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
+      state.excludedIds = [ItemId.CopperOre];
+      state.recipes[RecipeId.CopperPlate] =
+        Mocks.Dataset.recipeR[RecipeId.CopperPlate];
+      state.recipes[RecipeId.IronPlate] =
+        Mocks.Dataset.recipeR[RecipeId.IronPlate];
+      state.itemValues[ItemId.Wood] = {
+        out: Rational.one,
+      };
+      state.itemValues[ItemId.Coal] = { out: Rational.one };
+      state.itemValues[ItemId.IronPlate] = {
+        out: Rational.zero,
+        max: Rational.one,
+      };
+      state.itemValues[ItemId.IronOre] = {
+        out: Rational.zero,
+        in: Rational.one,
+        lim: Rational.ten,
+      };
+      state.itemValues[ItemId.CopperCable] = { out: Rational.zero };
+      state.itemValues[ItemId.CopperPlate] = { out: Rational.zero };
+      state.itemValues[ItemId.CopperOre] = { out: Rational.zero };
+      state.recipeLimits[RecipeId.CopperPlate] = Rational.ten;
+      state.recipeObjectives = [
+        {
+          id: '0',
+          recipeId: RecipeId.IronPlate,
+          count: Rational.one,
+          type: ObjectiveType.Output,
+          recipe: Mocks.Dataset.recipeR[RecipeId.IronPlate],
+        },
+        {
+          id: '1',
+          recipeId: RecipeId.CopperCable,
+          count: Rational.one,
+          type: ObjectiveType.Maximize,
+          recipe: Mocks.Dataset.recipeR[RecipeId.CopperCable],
         },
       ];
       const result = SimplexUtility.glpk(state);
@@ -562,351 +408,19 @@ describe('SimplexUtility', () => {
     });
   });
 
-  describe('canonical', () => {
-    it('should get a canonical matrix', () => {
-      const state = getState();
-      // Coal = ignored input, Wood = normal input
-      state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.inputIds = [ItemId.Wood, ItemId.Coal];
-      state.recipes[RecipeId.CopperCable] =
-        Mocks.AdjustedData.recipeR[RecipeId.CopperCable];
-      state.recipes[ItemId.CopperPlate] = new RationalRecipe({
-        id: 'id',
-        name: 'name',
-        time: 1,
-        in: {},
-        out: { [ItemId.CopperPlate]: 1 },
-        producers: [],
-        row: 0,
-        category: CategoryId.Logistics,
-      });
-      state.recipes[ItemId.Water] = Mocks.AdjustedData.recipeR[RecipeId.Water];
-      state.recipes[ItemId.IronOre] =
-        Mocks.AdjustedData.recipeR[RecipeId.IronOre];
-      state.items[ItemId.CopperCable] = Rational.one;
-      state.items[ItemId.CopperPlate] = Rational.zero;
-      state.items[ItemId.Wood] = Rational.zero;
-      state.items[ItemId.Coal] = Rational.zero;
-      state.items[ItemId.IronOre] = Rational.zero;
-      state.items[ItemId.IronPlate] = Rational.zero;
-      const alt = { ...Mocks.RationalProducer, ...{ id: '2' } };
-      state.producers = [Mocks.RationalProducer, alt];
-      const result = SimplexUtility.canonical(state);
-      expect(result).toEqual([
-        [
-          Rational.one,
-          Rational.minusOne,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.minusOne,
-          Rational.one,
-          Rational.minusOne,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-        ],
-        [
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.from(-5, 16),
-          Rational.from(5, 16),
-          Rational.one,
-          Rational.minusOne,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-        ],
-        [
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.from(-5, 16),
-          Rational.from(5, 16),
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.minusOne,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-        ],
-        [
-          Rational.zero,
-          Rational.from(154, 5),
-          Rational.from(-11),
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-        ],
-        [
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-        ],
-        [
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.from(120000),
-        ],
-        [
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.from(1183, 400),
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.from(29575),
-        ],
-        [
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.from(1000000),
-        ],
-        [
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.zero,
-          Rational.one,
-          Rational.zero,
-        ],
-      ]);
-    });
-  });
-
-  describe('simplexType', () => {
-    it('should return presolve result', () => {
-      const result = SimplexUtility.simplexType([[]], SimplexType.WasmFloat64, {
-        returnCode: 'ok',
-        status: 'optimal',
-        error: false,
-        time: 0,
-        O: [],
-      });
-      expect(result.type).toEqual(MatrixResultType.Solved);
-    });
-  });
-
-  describe('simplex', () => {
-    it('should solve a canonical tableau', () => {
-      const A = getTableau();
-      const result = SimplexUtility.simplex(A);
-      expect(A).toEqual(getSolution());
-      expect(result.type).toEqual(MatrixResultType.Solved);
-      expect(result.pivots).toEqual(2);
-    });
-
-    it('should handle a failed pivot', () => {
-      spyOn(SimplexUtility, 'pivotCol').and.returnValue(false);
-      const result = SimplexUtility.simplex(getTableau());
-      expect(result.type).toEqual(MatrixResultType.Failed);
-      expect(result.pivots).toEqual(1);
-    });
-
-    it('should prompt on timeout and continue', () => {
-      spyOn(window, 'confirm').and.returnValue(true);
-      spyOn(Date, 'now').and.returnValues(0, 5001);
-      const A = getTableau();
-      const result = SimplexUtility.simplex(A);
-      expect(A).toEqual(getSolution());
-      expect(result.type).toEqual(MatrixResultType.Solved);
-      expect(result.pivots).toEqual(2);
-    });
-
-    it('should prompt on timeout and quit', () => {
-      spyOn(window, 'confirm').and.returnValue(false);
-      spyOn(Date, 'now').and.returnValues(0, 5001);
-      const result = SimplexUtility.simplex(getTableau());
-      expect(result.type).toEqual(MatrixResultType.Cancelled);
-      expect(result.pivots).toEqual(1);
-    });
-
-    it('should quit one timeout with error = false', () => {
-      spyOn(window, 'confirm').and.returnValue(false);
-      spyOn(Date, 'now').and.returnValues(0, 1001);
-      const result = SimplexUtility.simplex(getTableau(), false);
-      expect(result.type).toEqual(MatrixResultType.Cancelled);
-      expect(result.pivots).toEqual(1);
-    });
-  });
-
-  describe('pivotCol', () => {
-    it('should pivot the correct row', () => {
-      spyOn(SimplexUtility, 'pivot');
-      const A = getTableau();
-      SimplexUtility.pivotCol(A, 3);
-      expect(SimplexUtility.pivot).toHaveBeenCalledWith(A, 3, 2);
-    });
-
-    it('should handle no positive rows', () => {
-      spyOn(SimplexUtility, 'pivot');
-      const A = getTableau();
-      const result = SimplexUtility.pivotCol(A, 0);
-      expect(SimplexUtility.pivot).not.toHaveBeenCalled();
-      expect(result).toBeFalse();
-    });
-
-    it('should pivot the first correct row', () => {
-      spyOn(SimplexUtility, 'pivot');
-      const A = getTableau();
-      SimplexUtility.pivotCol(A, 1);
-      expect(SimplexUtility.pivot).toHaveBeenCalledWith(A, 1, 1);
-    });
-  });
-
-  describe('pivot', () => {
-    it('should pivot a column', () => {
-      const A = getTableau();
-      const result = SimplexUtility.pivot(A, 3, 2);
-      expect(A).toEqual(getSolution());
-      expect(result).toBeTrue();
-    });
-  });
-
-  describe('parseSolution', () => {
-    it('should parse the solution of the tableau', () => {
-      const state = getState();
-      state.items[ItemId.Coal] = Rational.zero;
-      state.items[ItemId.IronOre] = Rational.zero;
-      state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      state.recipes[RecipeId.IronOre] =
-        Mocks.AdjustedData.recipeR[RecipeId.IronOre];
-      state.inputIds = [ItemId.Coal, ItemId.IronOre];
-      const O = [
-        Rational.one,
-        Rational.zero,
-        Rational.one,
-        Rational.zero,
-        Rational.two,
-        Rational.one,
-        Rational.zero,
-        Rational.zero,
-      ];
-      const result = SimplexUtility.parseSolution(O, state);
-      expect(result).toEqual([
-        { [ItemId.IronOre]: Rational.one },
-        { [RecipeId.IronOre]: Rational.two },
-        { [ItemId.Coal]: Rational.one },
-      ]);
-    });
-  });
-
   describe('updateSteps', () => {
     it('should walk through and update steps based on simplex result', () => {
       spyOn(SimplexUtility, 'addItemStep');
       spyOn(SimplexUtility, 'assignRecipes');
       spyOn(SimplexUtility, 'addRecipeStep');
       const state = getState();
-      state.items[ItemId.Coal] = Rational.zero;
-      state.items[ItemId.IronOre] = Rational.zero;
+      state.itemValues[ItemId.Coal] = { out: Rational.zero };
+      state.itemValues[ItemId.IronOre] = { out: Rational.zero };
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       state.recipes[ItemId.Wood] = { id: null } as any;
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
-      state.producers = [Mocks.RationalProducer];
+      state.recipeObjectives = [Mocks.RationalRecipeObjective];
       const solution: any = {
         surplus: { [ItemId.IronOre]: Rational.one },
         inputs: { [ItemId.Wood]: Rational.one },
@@ -923,39 +437,46 @@ describe('SimplexUtility', () => {
     it('should add a new step', () => {
       const solution: any = {
         surplus: {},
-        inputs: {},
+        unproduceable: {},
+        excluded: {},
         recipes: { [RecipeId.Coal]: Rational.two },
       };
       const state = getState();
-      state.items[ItemId.Coal] = Rational.from(3);
+      state.itemValues[ItemId.Coal] = { out: Rational.from(3) };
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      state.producers = [Mocks.RationalProducer];
+      state.recipeObjectives = [Mocks.RationalRecipeObjective];
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: Rational.from(1183, 200),
+          items: Rational.from([1183, 200]),
           output: Rational.from(3),
+          parents: { '': Rational.from(3) },
         },
       ]);
     });
 
-    it('should include producer output a new step', () => {
+    it('should include recipe objective output a new step', () => {
       const solution: any = {
         surplus: {},
-        inputs: {},
+        unproduceable: {},
+        excluded: {},
         recipes: {},
       };
       const state = getState();
-      state.items[ItemId.IronPlate] = Rational.zero;
-      state.producers = [Mocks.RationalProducer];
-      SimplexUtility.addItemStep(ItemId.IronPlate, solution, state);
+      state.itemValues[ItemId.PiercingRoundsMagazine] = { out: Rational.zero };
+      state.recipeObjectives = [Mocks.RationalRecipeObjective];
+      SimplexUtility.addItemStep(
+        ItemId.PiercingRoundsMagazine,
+        solution,
+        state
+      );
       expect(state.steps).toEqual([
         {
           id: '0',
-          itemId: ItemId.IronPlate,
-          items: Rational.from(5, 16),
+          itemId: ItemId.PiercingRoundsMagazine,
+          items: Rational.from([1, 3]),
         },
       ]);
     });
@@ -963,7 +484,8 @@ describe('SimplexUtility', () => {
     it('should place a new step next to related steps', () => {
       const solution: any = {
         surplus: {},
-        inputs: { [ItemId.HeavyOil]: Rational.one },
+        unproduceable: { [ItemId.HeavyOil]: Rational.one },
+        excluded: { [ItemId.HeavyOil]: Rational.one },
         recipes: {},
       };
       const state = getState();
@@ -979,7 +501,7 @@ describe('SimplexUtility', () => {
           items: Rational.zero,
         },
       ];
-      state.items[ItemId.HeavyOil] = Rational.zero;
+      state.itemValues[ItemId.HeavyOil] = { out: Rational.zero };
       state.recipes[RecipeId.AdvancedOilProcessing] =
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing];
       SimplexUtility.addItemStep(ItemId.HeavyOil, solution, state);
@@ -992,7 +514,7 @@ describe('SimplexUtility', () => {
         {
           id: '2',
           itemId: ItemId.HeavyOil,
-          items: Rational.one,
+          items: Rational.two,
         },
         {
           id: '1',
@@ -1005,43 +527,39 @@ describe('SimplexUtility', () => {
     it('should assign a surplus value', () => {
       const solution: any = {
         surplus: { [ItemId.Coal]: Rational.from(3) },
-        inputs: {},
+        unproduceable: {},
+        excluded: {},
         recipes: { [RecipeId.Coal]: Rational.from(4) },
       };
       const state = getState();
-      state.items[ItemId.Coal] = Rational.zero;
+      state.itemValues[ItemId.Coal] = { out: Rational.zero };
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: Rational.from(1183, 100),
+          items: Rational.from([1183, 100]),
           surplus: Rational.from(3),
         },
       ]);
     });
 
-    it('should include surplus from non-default recipes', () => {
+    it('should include input values', () => {
       const solution: any = {
         surplus: {},
-        inputs: {},
-        recipes: { [RecipeId.Coal]: Rational.two },
+        unproduceable: {},
+        excluded: {},
+        recipes: {},
       };
       const state = getState();
-      state.data = Mocks.getDataset();
-      state.data.itemRecipeId[ItemId.Coal] = 'other';
-      state.items[ItemId.Coal] = Rational.from(3);
-      state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      state.producers = [Mocks.RationalProducer];
+      state.itemValues[ItemId.Coal] = { out: Rational.zero, in: Rational.one };
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: Rational.from(1183, 200),
-          surplus: Rational.from(1183, 200),
-          output: Rational.from(3),
+          items: Rational.one,
         },
       ]);
     });
@@ -1051,7 +569,8 @@ describe('SimplexUtility', () => {
     it('should assign recipes to appropriate steps', () => {
       const solution: any = {
         surplus: {},
-        inputs: {},
+        unproduceable: {},
+        excluded: {},
         recipes: {
           [RecipeId.CopperCable]: Rational.one,
           [RecipeId.AdvancedOilProcessing]: Rational.one,
@@ -1087,7 +606,7 @@ describe('SimplexUtility', () => {
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing];
       state.recipes[RecipeId.BasicOilProcessing] =
         Mocks.AdjustedData.recipeR[RecipeId.BasicOilProcessing];
-      state.producers = [Mocks.RationalProducer];
+      state.recipeObjectives = [Mocks.RationalRecipeObjective];
       SimplexUtility.assignRecipes(solution, state);
       expect(state.steps).toEqual([
         {
@@ -1145,7 +664,7 @@ describe('SimplexUtility', () => {
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
           items: Rational.one,
-          factories: Rational.one,
+          machines: Rational.one,
           recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
         },
       ]);
@@ -1169,13 +688,13 @@ describe('SimplexUtility', () => {
         {
           id: '0',
           recipeId: RecipeId.Coal,
-          factories: Rational.one,
+          machines: Rational.one,
           recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
         },
       ]);
     });
 
-    it('should add a producer step', () => {
+    it('should add a recipe objective step', () => {
       spyOn(RateUtility, 'adjustPowerPollution');
       const state = getState();
       const solution: any = {
@@ -1187,16 +706,16 @@ describe('SimplexUtility', () => {
         Mocks.AdjustedData.recipeR[RecipeId.Coal],
         solution,
         state,
-        Mocks.RationalProducer
+        Mocks.RationalRecipeObjective
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([
         {
           id: '0',
           recipeId: RecipeId.Coal,
-          factories: Rational.one,
+          machines: Rational.one,
           recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
-          producerId: Mocks.RationalProducer.id,
+          recipeObjectiveId: Mocks.RationalRecipeObjective.id,
         },
       ]);
     });
@@ -1238,133 +757,11 @@ describe('SimplexUtility', () => {
         {
           id: '2',
           recipeId: RecipeId.AdvancedOilProcessing,
-          factories: Rational.one,
+          machines: Rational.one,
           recipe: Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing],
         },
         { id: '1', itemId: ItemId.Wood, items: Rational.zero },
       ]);
-    });
-  });
-
-  describe('hash', () => {
-    it('should generate a hash of the tableau and objective', () => {
-      const result = SimplexUtility.hash([
-        [Rational.one],
-        [Rational.one, Rational.two],
-      ]);
-      expect(result[0]).toEqual([Rational.one]);
-      expect(result[1]).toEqual('1,2');
-    });
-  });
-
-  describe('cacheResult', () => {
-    it('should create a new cache entry', () => {
-      SimplexUtility.cacheResult([Rational.one], 'H', {
-        type: MatrixResultType.Solved,
-        O: [Rational.two],
-        pivots: 2,
-        time: 20,
-      });
-      expect(SimplexUtility.cache).toEqual({
-        H: [{ O: [Rational.one], R: [Rational.two], pivots: 2, time: 20 }],
-      });
-    });
-
-    it('should add to an existing cache entry', () => {
-      SimplexUtility.cache['H'] = ['old' as any];
-      SimplexUtility.cacheResult([Rational.one], 'H', {
-        type: MatrixResultType.Solved,
-        O: [Rational.two],
-        pivots: 2,
-        time: 20,
-      });
-      expect(SimplexUtility.cache).toEqual({
-        H: [
-          'old' as any,
-          { O: [Rational.one], R: [Rational.two], pivots: 2, time: 20 },
-        ],
-      });
-    });
-  });
-
-  describe('checkCache', () => {
-    it('should skip if no cache matches H', () => {
-      expect(SimplexUtility.checkCache([Rational.one], 'H')).toBeNull();
-    });
-
-    it('should skip if ratio is null', () => {
-      spyOn(SimplexUtility, 'objectiveRatio').and.returnValue(null);
-      SimplexUtility.cache['H'] = ['cache' as any];
-      expect(SimplexUtility.checkCache([Rational.one], 'H')).toBeNull();
-    });
-
-    it('should return cache entry if ratio is one', () => {
-      spyOn(SimplexUtility, 'objectiveRatio').and.returnValue(Rational.one);
-      SimplexUtility.cache['H'] = ['cache' as any];
-      expect(SimplexUtility.checkCache([Rational.one], 'H')).toEqual(
-        'cache' as any
-      );
-    });
-
-    it('should adjust cache entry based on ratio', () => {
-      spyOn(SimplexUtility, 'objectiveRatio').and.returnValue(Rational.two);
-      SimplexUtility.cache['H'] = [
-        { O: [Rational.one], R: [Rational.one], pivots: 2, time: 20 },
-      ];
-      expect(SimplexUtility.checkCache([Rational.one], 'H')).toEqual({
-        O: [Rational.one],
-        R: [Rational.two],
-        pivots: 2,
-        time: 20,
-      });
-    });
-  });
-
-  describe('objectiveRatio', () => {
-    it('should check length first', () => {
-      expect(SimplexUtility.objectiveRatio([], [Rational.one])).toBeNull();
-    });
-
-    it('should handle all zeroes', () => {
-      expect(
-        SimplexUtility.objectiveRatio(
-          [Rational.one, Rational.zero],
-          [Rational.one, Rational.zero]
-        )
-      ).toBeNull();
-    });
-
-    it('should handle zero/nonzero mismatches', () => {
-      expect(
-        SimplexUtility.objectiveRatio(
-          [Rational.one, Rational.one],
-          [Rational.one, Rational.zero]
-        )
-      ).toBeNull();
-      expect(
-        SimplexUtility.objectiveRatio(
-          [Rational.one, Rational.zero],
-          [Rational.one, Rational.one]
-        )
-      ).toBeNull();
-    });
-
-    it('should handle ratio mismatch', () => {
-      expect(
-        SimplexUtility.objectiveRatio(
-          [Rational.one, Rational.one, Rational.one],
-          [Rational.one, Rational.one, Rational.two]
-        )
-      ).toBeNull();
-    });
-
-    it('should handle ratio match', () => {
-      expect(
-        SimplexUtility.objectiveRatio(
-          [Rational.one, Rational.one, Rational.one],
-          [Rational.one, Rational.two, Rational.two]
-        )
-      ).toEqual(Rational.from(1, 2));
     });
   });
 });

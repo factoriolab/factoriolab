@@ -5,9 +5,9 @@ import * as Selectors from './items.selectors';
 describe('Items Selectors', () => {
   const stringValue = 'value';
 
-  describe('getItemSettings', () => {
-    it('should return the item settings', () => {
-      const result = Selectors.getItemSettings.projector(
+  describe('getItemConfigs', () => {
+    it('should return the item configs', () => {
+      const result = Selectors.getItemsState.projector(
         initialItemsState,
         Mocks.Dataset,
         Mocks.SettingsStateInitial
@@ -20,7 +20,7 @@ describe('Items Selectors', () => {
         ...initialItemsState,
         ...{ [Mocks.Item1.id]: { beltId: stringValue, wagonId: stringValue } },
       };
-      const result = Selectors.getItemSettings.projector(
+      const result = Selectors.getItemsState.projector(
         state,
         Mocks.Dataset,
         Mocks.SettingsStateInitial
@@ -33,9 +33,9 @@ describe('Items Selectors', () => {
   describe('getItemsModified', () => {
     it('should determine whether columns are modified', () => {
       const result = Selectors.getItemsModified.projector(
-        Mocks.ItemSettingsInitial
+        Mocks.ItemsStateInitial
       );
-      expect(result.ignore).toBeTrue();
+      expect(result.excluded).toBeTrue();
       expect(result.belts).toBeTrue();
       expect(result.wagons).toBeTrue();
     });

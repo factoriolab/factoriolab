@@ -3,15 +3,15 @@ import { MenuItem } from 'primeng/api';
 import { Rational } from './rational';
 
 export interface StepOutput {
-  recipeId: string;
-  producerId?: string;
+  recipeId?: string;
+  recipeObjectiveId?: string;
+  inputs?: boolean;
   value: Rational;
-  factories: Rational;
+  machines: Rational;
 }
 
 export interface StepDetail {
   tabs: MenuItem[];
   outputs: StepOutput[];
   recipeIds: string[];
-  defaultableRecipeIds: string[];
 }

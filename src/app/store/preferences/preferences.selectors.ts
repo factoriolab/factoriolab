@@ -16,10 +16,6 @@ export const getColumns = createSelector(
   preferencesState,
   (state) => state.columns
 );
-export const getSimplexType = createSelector(
-  preferencesState,
-  (state) => state.simplexType
-);
 export const getPowerUnit = createSelector(
   preferencesState,
   (state) => state.powerUnit

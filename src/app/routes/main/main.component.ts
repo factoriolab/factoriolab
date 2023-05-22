@@ -8,19 +8,12 @@ import {
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
-import { combineLatest, first, map } from 'rxjs';
+import { combineLatest, map } from 'rxjs';
 
 import { environment } from 'src/environments';
-import {
-  APP,
-  Game,
-  gameInfo,
-  ItemId,
-  MatrixResultType,
-  SimplexType,
-} from '~/models';
+import { APP, Game, gameInfo, ItemId, MatrixResultType } from '~/models';
 import { ContentService, ErrorService } from '~/services';
-import { App, LabState, Preferences, Products, Settings } from '~/store';
+import { App, ItemObjectives, LabState, Settings } from '~/store';
 
 @Component({
   selector: 'lab-main',
@@ -32,7 +25,7 @@ export class MainComponent implements AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
     this.store.select(Settings.getMod),
-    this.store.select(Products.getMatrixResult),
+    this.store.select(ItemObjectives.getMatrixResult),
     this.contentSvc.settingsActive$,
     this.contentSvc.settingsXlHidden$,
     this.contentSvc.scrollTop$,
@@ -61,14 +54,6 @@ export class MainComponent implements AfterViewInit {
 
   version = `${APP} ${environment.version}`;
   isResetting = false;
-  showSimplexErr = false;
-  isFixingSimplex = false;
-  simplexErrSub = this.store
-    .select(Products.getMatrixResult)
-    .subscribe(
-      (result) =>
-        (this.showSimplexErr = result.resultType === MatrixResultType.Failed)
-    );
   tabItems: MenuItem[] = [
     {
       label: 'app.list',
@@ -83,9 +68,9 @@ export class MainComponent implements AfterViewInit {
       queryParamsHandling: 'preserve',
     },
     {
-      label: 'app.matrix',
-      icon: 'fa-solid fa-table-cells',
-      routerLink: 'matrix',
+      label: 'app.data',
+      icon: 'fa-solid fa-database',
+      routerLink: 'data',
       queryParamsHandling: 'preserve',
     },
   ];
@@ -109,29 +94,6 @@ export class MainComponent implements AfterViewInit {
    * */
   ngAfterViewInit(): void {
     this.errorSvc.message$.subscribe(() => this.ref.detectChanges());
-  }
-
-  tryFixSimplex(): void {
-    this.isFixingSimplex = true;
-    // Give button loading indicator a chance to start
-    setTimeout(() => {
-      this.store
-        .select(Settings.getDefaults)
-        .pipe(first())
-        .subscribe((def) => {
-          this.store.dispatch(
-            new Preferences.SetSimplexTypeAction(SimplexType.WasmFloat64)
-          );
-          this.store.dispatch(
-            new Settings.SetDisabledRecipesAction({
-              value: [],
-              def: def?.disabledRecipeIds,
-            })
-          );
-          this.showSimplexErr = false;
-          this.isFixingSimplex = false;
-        });
-    }, 10);
   }
 
   reset(game: Game): void {

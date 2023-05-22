@@ -1,6 +1,6 @@
 export enum RecipeField {
-  Factory,
-  FactoryModules,
+  Machine,
+  MachineModules,
   BeaconCount,
   Beacon,
   BeaconModules,

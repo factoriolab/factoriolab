@@ -15,11 +15,13 @@
   }
 }
 
-:host ::ng-deep {
-  button.lab-button-icon-only .p-button-icon {
-    margin-right: 0.5rem;
+@include media-breakpoint-down(sm) {
+  .p-inputgroup lab-input-number.p-inputwrapper {
+    flex: 0 0 15%;
   }
+}
 
+:host ::ng-deep {
   @include media-breakpoint-down(sm) {
     button.lab-button-icon-only {
       justify-content: center;

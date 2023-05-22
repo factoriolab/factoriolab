@@ -1,7 +1,7 @@
 import { Entities, IdDefaultPayload, RecipeSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { Items } from '../';
 import * as App from '../app.actions';
+import * as Items from '../items';
 import * as Settings from '../settings';
 import { RecipesAction, RecipesActionType } from './recipes.actions';
 
@@ -23,16 +23,32 @@ export function recipesReducer(
     case App.AppActionType.RESET:
     case Settings.SettingsActionType.SET_MOD:
       return initialRecipesState;
-    case RecipesActionType.SET_FACTORY:
+    case RecipesActionType.SET_EXCLUDED:
+      return StoreUtility.compareReset(state, 'excluded', action.payload);
+    case RecipesActionType.SET_EXCLUDED_BATCH: {
+      state = { ...state };
+      for (const entry of action.payload) {
+        state = StoreUtility.compareReset(state, 'excluded', entry);
+      }
+
+      return state;
+    }
+    case RecipesActionType.SET_CHECKED:
+      return StoreUtility.compareReset(state, 'checked', {
+        id: action.payload.id,
+        value: action.payload.value,
+        def: false,
+      });
+    case RecipesActionType.SET_MACHINE:
       return StoreUtility.resetFields(
-        StoreUtility.compareReset(state, 'factoryId', action.payload),
-        ['factoryModuleIds', 'beacons'],
+        StoreUtility.compareReset(state, 'machineId', action.payload),
+        ['machineModuleIds', 'beacons'],
         action.payload.id
       );
-    case RecipesActionType.SET_FACTORY_MODULES:
+    case RecipesActionType.SET_MACHINE_MODULES:
       return StoreUtility.compareReset(
         state,
-        'factoryModuleIds',
+        'machineModuleIds',
         action.payload
       );
     case RecipesActionType.ADD_BEACON:
@@ -99,36 +115,32 @@ export function recipesReducer(
         'cost',
         action.payload as IdDefaultPayload
       );
-    case RecipesActionType.SET_CHECKED:
-      return StoreUtility.compareReset(state, 'checked', {
-        id: action.payload.id,
-        value: action.payload.value,
-        def: false,
-      });
     case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
       delete newState[action.payload];
       return newState;
     }
+    case RecipesActionType.RESET_EXCLUDED:
+      return StoreUtility.resetField(state, 'excluded');
     case RecipesActionType.RESET_RECIPE_MODULES:
       return StoreUtility.resetFields(
         state,
-        ['factoryModuleIds', 'beacons'],
+        ['machineModuleIds', 'beacons'],
         action.payload
       );
-    case RecipesActionType.RESET_FACTORIES:
+    case RecipesActionType.RESET_MACHINES:
       return StoreUtility.resetFields(state, [
-        'factoryId',
+        'machineId',
         'overclock',
-        'factoryModuleIds',
+        'machineModuleIds',
         'beacons',
       ]);
+    case Items.ItemsActionType.RESET_CHECKED:
+      return StoreUtility.resetField(state, 'checked');
     case RecipesActionType.RESET_BEACONS:
       return StoreUtility.resetField(state, 'beacons');
     case RecipesActionType.RESET_COST:
       return StoreUtility.resetField(state, 'cost');
-    case Items.ItemsActionType.RESET_CHECKED:
-      return StoreUtility.resetField(state, 'checked');
     default:
       return state;
   }

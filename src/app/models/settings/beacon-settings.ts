@@ -11,7 +11,7 @@ export interface BeaconSettings {
   total?: string;
 }
 
-export class RationalBeaconSettings {
+export class BeaconRationalSettings {
   count?: Rational;
   id?: string;
   moduleIds?: string[];
@@ -19,21 +19,21 @@ export class RationalBeaconSettings {
   moduleOptions?: SelectItem[];
   total?: Rational;
 
-  constructor(data: BeaconSettings) {
-    if (data.count != null) {
-      this.count = Rational.fromString(data.count);
+  constructor(obj: BeaconSettings) {
+    if (obj.count != null) {
+      this.count = Rational.fromString(obj.count);
     }
-    if (data.id) {
-      this.id = data.id;
+    if (obj.id) {
+      this.id = obj.id;
     }
-    if (data.moduleIds) {
-      this.moduleIds = data.moduleIds;
+    if (obj.moduleIds) {
+      this.moduleIds = obj.moduleIds;
     }
-    if (data.moduleOptions) {
-      this.moduleOptions = data.moduleOptions;
+    if (obj.moduleOptions) {
+      this.moduleOptions = obj.moduleOptions;
     }
-    if (data.total) {
-      this.total = Rational.fromString(data.total);
+    if (obj.total) {
+      this.total = Rational.fromString(obj.total);
     }
   }
 }

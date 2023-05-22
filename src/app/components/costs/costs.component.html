@@ -1,0 +1,97 @@
+<p-dialog
+  *ngIf="vm$ | async as vm"
+  [(visible)]="visible"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '300px' }"
+  [header]="'costs.header' | translate"
+  (onHide)="save()"
+>
+  <table class="result-info my-2">
+    <tr [pTooltip]="'costs.recipeTooltip' | translate">
+      <td>{{ 'costs.recipe' | translate }}</td>
+      <td>
+        <lab-input-number
+          width="8rem"
+          [value]="editValue.factor"
+          (setValue)="editValue.factor = $event"
+        ></lab-input-number>
+      </td>
+    </tr>
+    <tr [pTooltip]="'costs.machineTooltip' | translate">
+      <td>{{ 'costs.machine' | translate }}</td>
+      <td>
+        <lab-input-number
+          width="8rem"
+          [value]="editValue.machine"
+          (setValue)="editValue.machine = $event"
+        ></lab-input-number>
+      </td>
+    </tr>
+    <tr [pTooltip]="'costs.unproduceableTooltip' | translate">
+      <td>{{ 'costs.unproduceable' | translate }}</td>
+      <td>
+        <lab-input-number
+          width="8rem"
+          [value]="editValue.unproduceable"
+          (setValue)="editValue.unproduceable = $event"
+        ></lab-input-number>
+      </td>
+    </tr>
+    <tr [pTooltip]="'costs.excludedTooltip' | translate">
+      <td>{{ 'costs.excluded' | translate }}</td>
+      <td>
+        <lab-input-number
+          width="8rem"
+          [value]="editValue.excluded"
+          (setValue)="editValue.excluded = $event"
+        ></lab-input-number>
+      </td>
+    </tr>
+    <tr [pTooltip]="'costs.surplusTooltip' | translate">
+      <td>{{ 'costs.surplus' | translate }}</td>
+      <td>
+        <lab-input-number
+          width="8rem"
+          [value]="editValue.surplus"
+          (setValue)="editValue.surplus = $event"
+        ></lab-input-number>
+      </td>
+    </tr>
+    <tr [pTooltip]="'costs.maximizeTooltip' | translate">
+      <td>{{ 'costs.maximize' | translate }}</td>
+      <td>
+        <lab-input-number
+          width="8rem"
+          [value]="editValue.maximize"
+          [minimum]="null"
+          maximum="0"
+          (setValue)="editValue.maximize = $event"
+        ></lab-input-number>
+      </td>
+    </tr>
+  </table>
+  <ng-template pTemplate="footer">
+    <button
+      *ngIf="modified"
+      pButton
+      pRipple
+      type="button"
+      class="p-button-text"
+      icon="fa-solid fa-rotate-left"
+      [label]="'reset' | translate"
+      (click)="reset()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-text"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="visible = false"
+    ></button>
+  </ng-template>
+</p-dialog>
