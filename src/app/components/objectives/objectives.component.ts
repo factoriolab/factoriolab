@@ -79,11 +79,22 @@ export class ObjectivesComponent {
 
   getMessages(matrixResult: MatrixResult): Message[] {
     if (matrixResult.resultType === MatrixResultType.Failed) {
+      let errorKey = 'objectives.error';
+      let errorDetailKey = 'objectives.errorDetail';
+
+      if (matrixResult.simplexStatus === 'unbounded') {
+        errorKey = 'objectives.errorUnbounded';
+        errorDetailKey = 'objectives.errorUnboundedDetail';
+      } else if (matrixResult.simplexStatus === 'no_feasible') {
+        errorKey = 'objectives.errorInfeasible';
+        errorDetailKey = 'objectives.errorInfeasibleDetail';
+      }
+
       return [
         {
           severity: 'error',
-          summary: this.translateSvc.instant('objectives.error'),
-          detail: this.translateSvc.instant('objectives.errorDetail', {
+          summary: this.translateSvc.instant(errorKey),
+          detail: this.translateSvc.instant(errorDetailKey, {
             returnCode: matrixResult.returnCode ?? 'unknown',
             simplexStatus: matrixResult.simplexStatus ?? 'unknown',
           }),

@@ -270,7 +270,11 @@
     "addARecipeTooltip": "Select a recipe to produce",
     "selectDisplayRate": "Select display rate",
     "error": "No solution found",
-    "errorDetail": "Check limit and maximize objectives and enabled recipes. <i><small>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</small></i>"
+    "errorDetail": "Check limit and maximize objectives and enabled recipes. <i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>",
+    "errorUnbounded": "Solution is unbounded",
+    "errorUnboundedDetail": "Limit objectives may not be restrictive enough for maximize objectives. <i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>",
+    "errorInfeasible": "Solution is infeasible",
+    "errorInfeasibleDetail": "Limit objectives may be too restrictive to satisfy output objectives. <i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>"
   },
   "list": {
     "openColumnSettings": "Open column settings",
