@@ -900,9 +900,28 @@ async function processMod(): Promise<void> {
 
   const itemsUsed = new Set<string>();
 
+  const itemKeys = [
+    ...Object.keys(dataRaw.item),
+    ...Object.keys(dataRaw.ammo),
+    ...Object.keys(dataRaw.armor),
+    ...Object.keys(dataRaw.capsule),
+    ...Object.keys(dataRaw.gun),
+    ...Object.keys(dataRaw['item-with-entity-data']),
+    ...Object.keys(dataRaw['item-with-tags']),
+    ...Object.keys(dataRaw.module),
+    ...Object.keys(dataRaw['rail-planner']),
+    ...Object.keys(dataRaw['repair-tool']),
+    ...Object.keys(dataRaw['selection-tool']),
+    ...Object.keys(dataRaw['spidertron-remote']),
+    ...Object.keys(dataRaw.tool),
+  ];
+
   // Check for burnt result / rocket launch products
-  for (const key of Object.keys(dataRaw.item)) {
-    const item = dataRaw.item[key];
+  for (const key of itemKeys) {
+    const item = getItem(key);
+
+    if (D.isFluid(item)) continue;
+
     if (item.rocket_launch_product || item.rocket_launch_products) {
       itemsUsed.add(item.name);
 
@@ -1153,6 +1172,7 @@ async function processMod(): Promise<void> {
       recipeKeysUsed.add(backupId);
       return backupId;
     } else {
+      recipeKeysUsed.add(desiredId);
       return desiredId;
     }
   }
