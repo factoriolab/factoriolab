@@ -3,7 +3,7 @@ import { saveAs } from 'file-saver';
 
 import { notNullish } from '~/helpers';
 import {
-  ColumnsState,
+  Column,
   Dataset,
   Entities,
   ItemSettings,
@@ -11,6 +11,7 @@ import {
   RecipeSettings,
   Step,
 } from '~/models';
+import { ColumnsState } from '~/store/preferences';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
@@ -30,9 +31,9 @@ export interface StepExport {
   Wagons?: string;
   Wagon?: string;
   Recipe?: string;
-  Machines?: string;
-  Machine?: string;
-  MachineModules?: string;
+  Factories?: string;
+  Factory?: string;
+  FactoryModules?: string;
   Beacons?: string;
   Beacon?: string;
   BeaconModules?: string;
@@ -46,13 +47,13 @@ export interface StepExport {
 export class ExportService {
   stepsToCsv(
     steps: Step[],
-    columnsState: ColumnsState,
-    itemsState: Entities<ItemSettings>,
-    recipesState: Entities<RecipeSettings>,
+    columns: ColumnsState,
+    itemSettings: Entities<ItemSettings>,
+    recipeSettings: Entities<RecipeSettings>,
     data: Dataset
   ): void {
     const json = steps.map((s) =>
-      this.stepToJson(s, steps, columnsState, itemsState, recipesState, data)
+      this.stepToJson(s, steps, columns, itemSettings, recipeSettings, data)
     );
     const fields = Object.keys(json[0]) as (keyof StepExport)[];
     const csv = json.map((row) => fields.map((f) => row[f]).join(','));
@@ -83,14 +84,14 @@ export class ExportService {
     step: Step,
     steps: Step[],
     columns: ColumnsState,
-    itemsState: Entities<ItemSettings>,
-    recipesState: Entities<RecipeSettings>,
+    itemSettings: Entities<ItemSettings>,
+    recipeSettings: Entities<RecipeSettings>,
     data: Dataset
   ): StepExport {
     const exp: StepExport = {};
     if (step.itemId != null) {
       exp.Item = step.itemId;
-      const itemSettings = itemsState[step.itemId];
+      const settings = itemSettings[step.itemId];
       if (step.items != null) {
         exp.Items =
           '=' + step.items.sub(step.surplus ?? Rational.zero).toString();
@@ -98,23 +99,23 @@ export class ExportService {
       if (step.surplus != null) {
         exp.Surplus = '=' + step.surplus.toString();
       }
-      if (columns.belts.show) {
+      if (columns[Column.Belts].show) {
         if (step.belts != null) {
           exp.Belts = '=' + step.belts.toString();
         }
-        exp.Belt = itemSettings.beltId;
+        exp.Belt = settings.beltId;
       }
-      if (columns.wagons.show) {
+      if (columns[Column.Wagons].show) {
         if (step.wagons != null) {
           exp.Wagons = '=' + step.wagons.toString();
         }
-        exp.Wagon = itemSettings.wagonId;
+        exp.Wagon = settings.wagonId;
       }
     }
     if (step.recipeId != null) {
       exp.Recipe = step.recipeId;
       const recipe = data.recipeR[step.recipeId];
-      const recipeSettings = recipesState[step.recipeId];
+      const settings = recipeSettings[step.recipeId];
       const inputs = Object.keys(recipe.in)
         .map((i) => {
           const inStep = steps.find((s) => s.itemId === i);
@@ -126,37 +127,31 @@ export class ExportService {
       if (inputs) {
         exp.Inputs = `"${inputs}"`;
       }
-      if (recipeSettings.machineId != null) {
-        const machine = data.machineEntities[recipeSettings.machineId];
-        const allowsModules = RecipeUtility.allowsModules(recipe, machine);
-        if (columns.machines.show) {
-          if (step.machines != null) {
-            exp.Machines = '=' + step.machines.toString();
+      if (settings.factoryId != null) {
+        const factory = data.factoryEntities[settings.factoryId];
+        const allowsModules = RecipeUtility.allowsModules(recipe, factory);
+        if (columns[Column.Factories].show) {
+          if (step.factories != null) {
+            exp.Factories = '=' + step.factories.toString();
           }
-          exp.Machine = recipeSettings.machineId;
-          if (allowsModules && recipeSettings.machineModuleIds != null) {
-            exp.MachineModules = `"${recipeSettings.machineModuleIds.join(
-              ','
-            )}"`;
+          exp.Factory = settings.factoryId;
+          if (allowsModules && settings.factoryModuleIds != null) {
+            exp.FactoryModules = `"${settings.factoryModuleIds.join(',')}"`;
           }
         }
-        if (columns.beacons.show && allowsModules) {
-          exp.Beacons = `"${recipeSettings.beacons
-            ?.map((b) => b.count)
-            .join(',')}"`;
-          exp.Beacon = `"${recipeSettings.beacons
-            ?.map((b) => b.id)
-            .join(',')}"`;
-          exp.BeaconModules = `"${recipeSettings.beacons
+        if (columns[Column.Beacons].show && allowsModules) {
+          exp.Beacons = `"${settings.beacons?.map((b) => b.count).join(',')}"`;
+          exp.Beacon = `"${settings.beacons?.map((b) => b.id).join(',')}"`;
+          exp.BeaconModules = `"${settings.beacons
             ?.map((b) => b.moduleIds?.join('|'))
             .join(',')}"`;
         }
-        if (columns.power.show) {
+        if (columns[Column.Power].show) {
           if (step.power != null) {
             exp.Power = '=' + step.power.toString();
           }
         }
-        if (columns.pollution.show) {
+        if (columns[Column.Pollution].show) {
           if (step.pollution != null) {
             exp.Pollution = '=' + step.pollution.toString();
           }

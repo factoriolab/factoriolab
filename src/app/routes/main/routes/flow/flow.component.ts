@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -10,14 +9,12 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { DataSet } from 'vis-data/esnext';
 import { Data, Edge, Network, Node, Options } from 'vis-network/esnext';
 
-import { AppSharedModule } from '~/app-shared.module';
 import { Entities, FlowData } from '~/models';
 import { DisplayService, FlowService } from '~/services';
 
 @UntilDestroy()
 @Component({
-  standalone: true,
-  imports: [CommonModule, AppSharedModule],
+  selector: 'lab-flow',
   templateUrl: './flow.component.html',
   styleUrls: ['./flow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,10 +49,10 @@ export class FlowComponent implements AfterViewInit {
           el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.recipeProcess(
             n.recipe
           )}</div>`;
-          if (n.machines != null && n.machineId != null) {
+          if (n.factories != null && n.factoryId != null) {
             el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.icon(
-              n.machineId,
-              n.machines
+              n.factoryId,
+              n.factories
             )}</div>`;
           }
         }

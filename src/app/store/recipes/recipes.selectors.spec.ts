@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { ObjectiveType, Rational, RecipeObjective } from '~/models';
+import { Producer, Rational } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
@@ -11,17 +11,17 @@ describe('Recipes Selectors', () => {
     it('should get slices of state', () => {
       expect(
         Selectors.recipesState({
-          recipesState: Mocks.RecipesStateInitial,
+          recipesState: Mocks.RecipeSettingsInitial,
         } as any)
-      ).toEqual(Mocks.RecipesStateInitial);
+      ).toEqual(Mocks.RecipeSettingsInitial);
     });
   });
 
   describe('getRecipeSettings', () => {
     it('should return the recipe settings', () => {
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.getRecipeSettings.projector(
         initialRecipesState,
-        Mocks.MachinesStateInitial,
+        Mocks.FactorySettingsInitial,
         Mocks.Dataset
       );
       expect(Object.keys(result).length).toEqual(
@@ -32,17 +32,16 @@ describe('Recipes Selectors', () => {
     it('should handle null settings', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { machineId: ItemId.AssemblingMachine3 } },
+        ...{ [Mocks.Item1.id]: { factoryId: ItemId.AssemblingMachine3 } },
       };
       const data = {
         ...Mocks.Dataset,
         ...{
-          defaults: undefined,
-          machineEntities: {
-            ...Mocks.Dataset.machineEntities,
+          factoryEntities: {
+            ...Mocks.Dataset.factoryEntities,
             ...{
               [ItemId.AssemblingMachine3]: {
-                ...Mocks.Dataset.machineEntities[ItemId.AssemblingMachine3],
+                ...Mocks.Dataset.factoryEntities[ItemId.AssemblingMachine3],
                 ...{ modules: undefined },
               },
             },
@@ -50,49 +49,49 @@ describe('Recipes Selectors', () => {
         },
       };
       spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.getRecipeSettings.projector(
         state,
         {
-          ...Mocks.MachinesStateInitial,
+          ...Mocks.FactorySettingsInitial,
           ...{
             ids: undefined,
             entities: {
-              ...Mocks.MachinesStateInitial.entities,
+              ...Mocks.FactorySettingsInitial.entities,
               ...{ [ItemId.AssemblingMachine3]: {} },
             },
           },
         },
         data
       );
-      expect(result[Mocks.Item1.id].machineId).toEqual(
+      expect(result[Mocks.Item1.id].factoryId).toEqual(
         ItemId.AssemblingMachine3
       );
     });
 
-    it('should use machine override', () => {
+    it('should use factory override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { machineId: stringValue } },
+        ...{ [Mocks.Item1.id]: { factoryId: stringValue } },
       };
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.MachinesStateInitial,
+        Mocks.FactorySettingsInitial,
         Mocks.Dataset
       );
-      expect(result[Mocks.Item1.id].machineId).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].factoryId).toEqual(stringValue);
     });
 
     it('should use module override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { machineModuleIds: [stringValue] } },
+        ...{ [Mocks.Item1.id]: { factoryModuleIds: [stringValue] } },
       };
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.MachinesStateInitial,
+        Mocks.FactorySettingsInitial,
         Mocks.Dataset
       );
-      expect(result[Mocks.Item1.id].machineModuleIds).toEqual([stringValue]);
+      expect(result[Mocks.Item1.id].factoryModuleIds).toEqual([stringValue]);
     });
 
     it('should use beacon count override', () => {
@@ -100,9 +99,9 @@ describe('Recipes Selectors', () => {
         ...initialRecipesState,
         ...{ [Mocks.Item1.id]: { beacons: [{ count: stringValue }] } },
       };
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.MachinesStateInitial,
+        Mocks.FactorySettingsInitial,
         Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].beacons?.[0].count).toEqual(stringValue);
@@ -113,14 +112,14 @@ describe('Recipes Selectors', () => {
         ...initialRecipesState,
         ...{ [Mocks.Item1.id]: { beacons: [{ moduleIds: [stringValue] }] } },
       };
-      const machines = {
-        ...Mocks.MachinesStateInitial,
+      const factories = {
+        ...Mocks.FactorySettingsInitial,
         ...{
           entities: {
-            ...Mocks.MachinesStateInitial.entities,
+            ...Mocks.FactorySettingsInitial.entities,
             ...{
               [ItemId.AssemblingMachine3]: {
-                ...Mocks.MachinesStateInitial.entities[
+                ...Mocks.FactorySettingsInitial.entities[
                   ItemId.AssemblingMachine3
                 ],
                 ...{
@@ -131,9 +130,9 @@ describe('Recipes Selectors', () => {
           },
         },
       };
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.getRecipeSettings.projector(
         state,
-        machines,
+        factories,
         Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].beacons?.[0].moduleIds).toEqual([
@@ -146,9 +145,9 @@ describe('Recipes Selectors', () => {
         ...initialRecipesState,
         ...{ [Mocks.Item1.id]: { beacons: [{ total: '8', count: '0' }] } },
       };
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.getRecipeSettings.projector(
         state,
-        Mocks.MachinesStateInitial,
+        Mocks.FactorySettingsInitial,
         Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].beacons?.[0].total).toBeUndefined();
@@ -177,25 +176,24 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipesModified.projector(
         {
           [RecipeId.Coal]: {
-            machineId: undefined,
-            machineModuleIds: undefined,
+            factoryId: undefined,
+            factoryModuleIds: undefined,
             overclock: 100,
             beacons: [{ total: '1' }],
           },
         },
         []
       );
-      expect(result.machines).toBeTrue();
+      expect(result.factories).toBeTrue();
       expect(result.beacons).toBeTrue();
       expect(result.cost).toBeFalse();
     });
 
-    it('should account for recipe objective settings', () => {
-      const objective: RecipeObjective = {
+    it('should account for producer settings', () => {
+      const producer: Producer = {
         id: '1',
         recipeId: RecipeId.Coal,
         count: '1',
-        type: ObjectiveType.Output,
         overclock: 100,
         beacons: [{ moduleIds: [] }],
       };
@@ -203,9 +201,9 @@ describe('Recipes Selectors', () => {
         {
           [RecipeId.Coal]: {},
         },
-        [objective]
+        [producer]
       );
-      expect(result.machines).toBeTrue();
+      expect(result.factories).toBeTrue();
       expect(result.beacons).toBeTrue();
       expect(result.cost).toBeFalse();
     });

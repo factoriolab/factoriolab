@@ -1,9 +1,8 @@
 import { ItemId, Mocks, RecipeId, TestUtility } from 'src/tests';
 import {
-  EnergyType,
+  Column,
+  FuelType,
   Game,
-  gameInfo,
-  initialColumnsState,
   InserterCapacity,
   InserterData,
   InserterTarget,
@@ -11,7 +10,9 @@ import {
   Preset,
   Rational,
   ResearchSpeed,
+  SimplexType,
 } from '~/models';
+import * as Preferences from '../preferences';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
 
@@ -68,43 +69,43 @@ describe('Settings Selectors', () => {
   describe('getColumnsState', () => {
     it('should override columns for Factorio', () => {
       const result = Selectors.getColumnsState.projector(
-        gameInfo[Game.Factorio],
-        initialColumnsState
+        Game.Factorio,
+        Preferences.initialColumnsState
       );
-      expect(result['wagons'].show).toBeTrue();
-      expect(result['beacons'].show).toBeTrue();
-      expect(result['pollution'].show).toBeTrue();
+      expect(result[Column.Wagons].show).toBeTrue();
+      expect(result[Column.Beacons].show).toBeTrue();
+      expect(result[Column.Pollution].show).toBeTrue();
     });
 
     it('should override columns for Captain of Industry', () => {
       const result = Selectors.getColumnsState.projector(
-        gameInfo[Game.CaptainOfIndustry],
-        initialColumnsState
+        Game.CaptainOfIndustry,
+        Preferences.initialColumnsState
       );
-      expect(result['wagons'].show).toBeFalse();
-      expect(result['beacons'].show).toBeFalse();
-      expect(result['power'].show).toBeFalse();
-      expect(result['pollution'].show).toBeFalse();
+      expect(result[Column.Wagons].show).toBeFalse();
+      expect(result[Column.Beacons].show).toBeFalse();
+      expect(result[Column.Power].show).toBeFalse();
+      expect(result[Column.Pollution].show).toBeFalse();
     });
 
     it('should override columns for Dyson Sphere Program', () => {
       const result = Selectors.getColumnsState.projector(
-        gameInfo[Game.DysonSphereProgram],
-        initialColumnsState
+        Game.DysonSphereProgram,
+        Preferences.initialColumnsState
       );
-      expect(result['wagons'].show).toBeFalse();
-      expect(result['beacons'].show).toBeFalse();
-      expect(result['pollution'].show).toBeFalse();
+      expect(result[Column.Wagons].show).toBeFalse();
+      expect(result[Column.Beacons].show).toBeFalse();
+      expect(result[Column.Pollution].show).toBeFalse();
     });
 
     it('should override columns for Satisfactory', () => {
       const result = Selectors.getColumnsState.projector(
-        gameInfo[Game.Satisfactory],
-        initialColumnsState
+        Game.Satisfactory,
+        Preferences.initialColumnsState
       );
-      expect(result['wagons'].show).toBeTrue();
-      expect(result['beacons'].show).toBeFalse();
-      expect(result['pollution'].show).toBeFalse();
+      expect(result[Column.Wagons].show).toBeTrue();
+      expect(result[Column.Beacons].show).toBeFalse();
+      expect(result[Column.Pollution].show).toBeFalse();
     });
   });
 
@@ -118,8 +119,8 @@ describe('Settings Selectors', () => {
       const result = Selectors.getDefaults.projector(Preset.Minimum, Mocks.Mod);
       TestUtility.assert(result != null);
       expect(result.beltId).toEqual(Mocks.Mod.defaults!.minBelt!);
-      expect(result.machineRankIds).toEqual(
-        Mocks.Mod.defaults!.minMachineRank!
+      expect(result.factoryRankIds).toEqual(
+        Mocks.Mod.defaults!.minFactoryRank!
       );
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beaconModuleId).toEqual(ItemId.Module);
@@ -183,8 +184,8 @@ describe('Settings Selectors', () => {
         fuelId: 'fuel',
         cargoWagonId: 'cargoWagon',
         fluidWagonId: 'fluidWagon',
-        excludedRecipeIds: 'excludedRecipes',
-        machineRankIds: 'machineRank',
+        disabledRecipeIds: 'disabledRecipes',
+        factoryRankIds: 'factoryRank',
         moduleRankIds: 'moduleRank',
         beaconCount: 'beaconCount',
         beaconId: 'beacon',
@@ -207,6 +208,7 @@ describe('Settings Selectors', () => {
           fuelId: Mocks.Defaults.fuelId,
           cargoWagonId: Mocks.Defaults.cargoWagonId,
           fluidWagonId: Mocks.Defaults.fluidWagonId,
+          disabledRecipeIds: Mocks.Defaults.disabledRecipeIds,
         },
       });
     });
@@ -224,6 +226,7 @@ describe('Settings Selectors', () => {
           fuelId: undefined,
           cargoWagonId: undefined,
           fluidWagonId: undefined,
+          disabledRecipeIds: [],
         },
       });
     });
@@ -233,6 +236,15 @@ describe('Settings Selectors', () => {
     it('should return fuel from settings', () => {
       const result = Selectors.getFuelId.projector(Mocks.SettingsStateInitial);
       expect(result).toEqual(Mocks.SettingsStateInitial.fuelId);
+    });
+  });
+
+  describe('getDisabledRecipeIds', () => {
+    it('should return disabledRecipes from settings', () => {
+      const result = Selectors.getDisabledRecipeIds.projector(
+        Mocks.SettingsStateInitial
+      );
+      expect(result).toEqual(Mocks.SettingsStateInitial.disabledRecipeIds);
     });
   });
 
@@ -268,6 +280,21 @@ describe('Settings Selectors', () => {
     it('should convert the numeric value to a Rational', () => {
       const result = Selectors.getRationalFlowRate.projector(1);
       expect(result).toEqual(Rational.one);
+    });
+  });
+
+  describe('getSimplexModifiers', () => {
+    it('should create an object to be used by simplex calcs', () => {
+      const result = Selectors.getSimplexModifiers.projector(
+        Rational.one,
+        Rational.one,
+        SimplexType.JsBigIntRational
+      );
+      expect(result).toEqual({
+        costInput: Rational.one,
+        costIgnored: Rational.one,
+        simplexType: SimplexType.JsBigIntRational,
+      });
     });
   });
 
@@ -329,7 +356,7 @@ describe('Settings Selectors', () => {
       expect(result.itemIds.length).toBeGreaterThan(0);
       expect(result.beltIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.fuelIds).length).toBeGreaterThan(0);
-      expect(result.machineIds.length).toBeGreaterThan(0);
+      expect(result.factoryIds.length).toBeGreaterThan(0);
       expect(result.moduleIds.length).toBeGreaterThan(0);
       expect(result.proliferatorModuleIds.length).toEqual(1);
       expect(Object.keys(result.itemEntities).length).toEqual(
@@ -340,6 +367,10 @@ describe('Settings Selectors', () => {
         result.itemIds.length
       );
       expect(result.recipeIds.length).toBeGreaterThan(0);
+      expect(result.complexRecipeIds.length).toBeGreaterThan(0);
+      expect(result.complexRecipeIds.length).toBeLessThan(
+        result.recipeIds.length
+      );
       expect(Object.keys(result.recipeEntities).length).toEqual(
         result.recipeIds.length
       );
@@ -363,8 +394,6 @@ describe('Settings Selectors', () => {
                 effectivity: 1,
                 modules: 1,
                 range: 1,
-                type: EnergyType.Electric as EnergyType.Electric,
-                usage: 1,
               },
               cargoWagon: { size: 1 },
               fluidWagon: { capacity: 1 },
@@ -387,13 +416,12 @@ describe('Settings Selectors', () => {
       ]);
       expect(result.cargoWagonIds).toEqual(['id', ItemId.CargoWagon]);
       expect(result.fluidWagonIds).toEqual(['id', ItemId.FluidWagon]);
-      expect(result.fuelIds).toEqual([
+      expect(result.fuelIds[FuelType.Chemical]).toEqual([
         ItemId.Wood,
         ItemId.Coal,
         ItemId.SolidFuel,
         'rocket-fuel',
         'nuclear-fuel',
-        'uranium-fuel-cell',
       ]);
     });
 
@@ -491,7 +519,7 @@ describe('Settings Selectors', () => {
   describe('getOptions', () => {
     it('should handle no chemical fuels', () => {
       const data = Mocks.getDataset();
-      data.chemicalFuelIds = [];
+      data.fuelIds = {};
       const result = Selectors.getOptions.projector(data);
       expect(result.chemicalFuels.length).toEqual(0);
     });
@@ -535,10 +563,10 @@ describe('Settings Selectors', () => {
       const result = Selectors.getSettingsModified.projector({
         ...initialSettingsState,
         ...{
-          costs: { excluded: '100' } as any,
+          costIgnored: '100',
         },
       });
-      expect(result.costs).toBeTrue();
+      expect(result.cost).toBeTrue();
     });
   });
 
@@ -551,53 +579,6 @@ describe('Settings Selectors', () => {
       expect(result).toEqual(
         InserterData[InserterTarget.Chest][InserterCapacity.Capacity0]
       );
-    });
-  });
-
-  describe('getAllResearchedTechnologyIds', () => {
-    it('should expand minimal set of technology ids into full list', () => {
-      const result = Selectors.getAllResearchedTechnologyIds.projector(
-        [RecipeId.ArtilleryShellRange],
-        Mocks.Dataset
-      );
-      expect(result?.length).toEqual(54);
-    });
-
-    it('should return value if null', () => {
-      const result = Selectors.getAllResearchedTechnologyIds.projector(
-        null,
-        Mocks.Dataset
-      );
-      expect(result).toBeNull();
-    });
-  });
-
-  describe('getAvailableRecipes', () => {
-    it('should return full list if value is null', () => {
-      const result = Selectors.getAvailableRecipes.projector(
-        null,
-        Mocks.Dataset
-      );
-      expect(result).toEqual(Mocks.Dataset.recipeIds);
-    });
-
-    it('should filter for only unlocked recipes', () => {
-      const result = Selectors.getAvailableRecipes.projector(
-        [RecipeId.Automation],
-        Mocks.Dataset
-      );
-      expect(result.length).toEqual(233);
-    });
-  });
-
-  describe('getAvailableItems', () => {
-    it('should return items with some recipe available to produce it', () => {
-      const result = Selectors.getAvailableItems.projector(
-        Mocks.Dataset.recipeIds,
-        Mocks.Dataset
-      );
-      // Cannot produce wood in vanilla Factorio
-      expect(result.length).toEqual(Mocks.Dataset.itemIds.length - 1);
     });
   });
 });

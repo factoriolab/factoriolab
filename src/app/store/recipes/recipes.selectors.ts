@@ -3,14 +3,14 @@ import { createSelector } from '@ngrx/store';
 import {
   Entities,
   Rational,
+  RationalRecipeSettings,
   RecipeSettings,
-  RecipeSettingsRational,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
+import * as Factories from '../factories';
 import * as Items from '../items';
-import * as Machines from '../machines';
-import * as RecipeObjectives from '../recipe-objectives';
+import * as Producers from '../producers';
 import * as Settings from '../settings';
 import { RecipesState } from './recipes.reducer';
 
@@ -19,41 +19,36 @@ export const recipesState = (state: LabState): RecipesState =>
   state.recipesState;
 
 /* Complex selectors */
-export const getRecipesState = createSelector(
+export const getRecipeSettings = createSelector(
   recipesState,
-  Machines.getMachinesState,
+  Factories.getFactories,
   Settings.getDataset,
-  (state, machinesState, data) => {
+  (state, factories, data) => {
     const value: Entities<RecipeSettings> = {};
-    const defaultexcludedRecipeIds = data.defaults?.excludedRecipeIds ?? [];
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
       const s: RecipeSettings = { ...state[recipe.id] };
 
-      if (s.excluded == null) {
-        s.excluded = defaultexcludedRecipeIds.some((i) => i === recipe.id);
-      }
-
-      if (s.machineId == null) {
-        s.machineId = RecipeUtility.bestMatch(
+      if (s.factoryId == null) {
+        s.factoryId = RecipeUtility.bestMatch(
           recipe.producers,
-          machinesState.ids ?? []
+          factories.ids ?? []
         );
       }
 
-      const machine = data.machineEntities[s.machineId];
-      const def = machinesState.entities[s.machineId];
-      if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
-        s.machineModuleOptions = RecipeUtility.moduleOptions(
-          machine,
+      const factory = data.factoryEntities[s.factoryId];
+      const def = factories.entities[s.factoryId];
+      if (factory != null && RecipeUtility.allowsModules(recipe, factory)) {
+        s.factoryModuleOptions = RecipeUtility.moduleOptions(
+          factory,
           recipe.id,
           data
         );
 
-        if (s.machineModuleIds == null) {
-          s.machineModuleIds = RecipeUtility.defaultModules(
-            s.machineModuleOptions,
+        if (s.factoryModuleIds == null) {
+          s.factoryModuleIds = RecipeUtility.defaultModules(
+            s.factoryModuleOptions,
             def.moduleRankIds ?? [],
-            machine.modules ?? 0
+            factory.modules ?? 0
           );
         }
 
@@ -85,8 +80,8 @@ export const getRecipesState = createSelector(
           }
         }
       } else {
-        // Machine doesn't support modules, remove any
-        delete s.machineModuleIds;
+        // Factory doesn't support modules, remove any
+        delete s.factoryModuleIds;
         delete s.beacons;
       }
 
@@ -112,12 +107,12 @@ export const getRecipesState = createSelector(
   }
 );
 
-export const getRecipesStateRational = createSelector(
-  getRecipesState,
-  (recipesState) =>
-    Object.keys(recipesState).reduce(
-      (e: Entities<RecipeSettingsRational>, i) => {
-        e[i] = new RecipeSettingsRational(recipesState[i]);
+export const getRationalRecipeSettings = createSelector(
+  getRecipeSettings,
+  (recipeSettings) =>
+    Object.keys(recipeSettings).reduce(
+      (e: Entities<RationalRecipeSettings>, i) => {
+        e[i] = new RationalRecipeSettings(recipeSettings[i]);
         return e;
       },
       {}
@@ -138,47 +133,49 @@ export const getSrc = createSelector(
 );
 
 export const getAdjustedDataset = createSelector(
-  getRecipesStateRational,
-  Items.getItemsState,
-  Settings.getRationalCost,
+  getRationalRecipeSettings,
+  Items.getItemSettings,
+  Settings.getDisabledRecipeIds,
   Settings.getAdjustmentData,
-  (recipesState, itemsState, cost, adj) =>
+  (recipeSettings, itemSettings, disabledRecipeIds, adj) =>
     RecipeUtility.adjustDataset(
-      recipesState,
-      itemsState,
+      recipeSettings,
+      itemSettings,
+      disabledRecipeIds,
       adj.fuelId,
       adj.proliferatorSprayId,
       adj.miningBonus,
       adj.researchSpeed,
       adj.netProductionOnly,
-      cost,
+      adj.costFactor,
+      adj.costFactory,
       adj.data
     )
 );
 
 export const getRecipesModified = createSelector(
   recipesState,
-  RecipeObjectives.getBaseRecipeObjectives,
-  (state, recipeObjectives) => ({
+  Producers.getBaseProducers,
+  (state, producers) => ({
     checked:
       Object.keys(state).some((id) => state[id].checked != null) ||
-      recipeObjectives.some((p) => p.checked != null),
-    machines:
+      producers.some((p) => p.checked != null),
+    factories:
       Object.keys(state).some(
         (id) =>
-          state[id].machineId != null ||
-          state[id].machineModuleIds != null ||
+          state[id].factoryId != null ||
+          state[id].factoryModuleIds != null ||
           state[id].overclock != null
       ) ||
-      recipeObjectives.some(
+      producers.some(
         (p) =>
-          p.machineId != null ||
-          p.machineModuleIds != null ||
+          p.factoryId != null ||
+          p.factoryModuleIds != null ||
           p.overclock != null
       ),
     beacons:
       Object.keys(state).some((id) => state[id].beacons != null) ||
-      recipeObjectives.some((p) => p.beacons != null),
+      producers.some((p) => p.beacons != null),
     cost: Object.keys(state).some((id) => state[id].cost),
   })
 );

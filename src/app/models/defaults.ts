@@ -4,8 +4,8 @@ export interface Defaults {
   fuelId: string;
   cargoWagonId: string;
   fluidWagonId: string;
-  excludedRecipeIds: string[];
-  machineRankIds: string[];
+  disabledRecipeIds: string[];
+  factoryRankIds: string[];
   moduleRankIds: string[];
   beaconCount: string;
   beaconId: string;

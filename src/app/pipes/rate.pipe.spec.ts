@@ -17,7 +17,7 @@ describe('RatePipe', () => {
 
   describe('transform', () => {
     it('should convert to fraction', () => {
-      expect(pipe.transform(Rational.from([1, 2]), null)).toEqual('1/2');
+      expect(pipe.transform(Rational.from(1, 2), null)).toEqual('1/2');
     });
 
     it('should convert to percentage', () => {
@@ -25,7 +25,7 @@ describe('RatePipe', () => {
     });
 
     it('should round to specified digits and add extra zeroes', () => {
-      expect(pipe.transform(Rational.from([1, 2]), 2)).toEqual('0.50');
+      expect(pipe.transform(Rational.from(1, 2), 2)).toEqual('0.50');
     });
 
     it('should round to specified digits and add spaces for integers', () => {
@@ -33,11 +33,11 @@ describe('RatePipe', () => {
     });
 
     it('should add zeroes to values rounded to integers', () => {
-      expect(pipe.transform(Rational.from([9999, 10000]), 1)).toEqual('1.0');
+      expect(pipe.transform(Rational.from(9999, 10000), 1)).toEqual('1.0');
     });
 
     it('should round to 0 digits', () => {
-      expect(pipe.transform(Rational.from([1, 2]), 0)).toEqual('1');
+      expect(pipe.transform(Rational.from(1, 2), 0)).toEqual('1');
     });
   });
 });

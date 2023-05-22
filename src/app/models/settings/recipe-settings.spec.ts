@@ -1,20 +1,20 @@
 import { ItemId } from 'src/tests';
 import { Rational } from '../rational';
-import { RecipeSettingsRational } from './recipe-settings';
+import { RationalRecipeSettings } from './recipe-settings';
 
-describe('RecipeRationalSettings', () => {
+describe('RationalRecipeSettings', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new RecipeSettingsRational({
-        machineId: ItemId.AssemblingMachine1,
-        machineModuleIds: [],
+      const result = new RationalRecipeSettings({
+        factoryId: ItemId.AssemblingMachine1,
+        factoryModuleIds: [],
         beacons: [],
         overclock: 200,
         cost: '100',
         checked: true,
       });
-      expect(result.machineId).toEqual(ItemId.AssemblingMachine1);
-      expect(result.machineModuleIds).toEqual([]);
+      expect(result.factoryId).toEqual(ItemId.AssemblingMachine1);
+      expect(result.factoryModuleIds).toEqual([]);
       expect(result.beacons).toEqual([]);
       expect(result.overclock).toEqual(Rational.from(200));
       expect(result.cost).toEqual(Rational.hundred);
@@ -22,9 +22,9 @@ describe('RecipeRationalSettings', () => {
     });
 
     it('should ignore undefined fields', () => {
-      const result = new RecipeSettingsRational({});
-      expect(result.machineId).toBeUndefined();
-      expect(result.machineModuleIds).toBeUndefined();
+      const result = new RationalRecipeSettings({});
+      expect(result.factoryId).toBeUndefined();
+      expect(result.factoryModuleIds).toBeUndefined();
       expect(result.beacons).toBeUndefined();
       expect(result.overclock).toBeUndefined();
       expect(result.cost).toBeUndefined();

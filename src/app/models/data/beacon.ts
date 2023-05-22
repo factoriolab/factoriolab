@@ -1,37 +1,46 @@
-import { EnergyType } from '../enum';
 import { Rational } from '../rational';
 import { ModuleEffect } from './module';
 
 export interface Beacon {
-  effectivity: number | string;
+  effectivity: number;
   modules: number;
   range: number;
-  /** Beacons must use electric or void energy source */
-  type: EnergyType.Electric | EnergyType.Void;
+  /** Energy type, e.g. electric or burner */
+  type?: string;
+  /** Fuel category, e.g. chemical or nuclear */
+  category?: string;
   /** Energy consumption in kW */
-  usage: number;
-  disallowedEffects?: ModuleEffect[];
+  usage?: number;
+  disallowEffects?: ModuleEffect[];
 }
 
-export class BeaconRational {
+export class RationalBeacon {
   effectivity: Rational;
   modules: number;
   range: number;
-  /** Beacons must use electric or void energy source */
-  type: EnergyType.Electric | EnergyType.Void;
+  /** Energy type, e.g. electric or burner */
+  type?: string;
+  /** Fuel category, e.g. chemical or nuclear */
+  category?: string;
   /** Energy consumption in kW */
-  usage: Rational;
-  disallowedEffects?: ModuleEffect[];
+  usage?: Rational;
+  disallowEffects?: ModuleEffect[];
 
-  constructor(obj: Beacon) {
-    this.effectivity = Rational.from(obj.effectivity);
-    this.modules = obj.modules;
-    this.range = obj.range;
-    this.type = obj.type;
-    this.usage = Rational.fromNumber(obj.usage);
-
-    if (obj.disallowedEffects) {
-      this.disallowedEffects = obj.disallowedEffects;
+  constructor(data: Beacon) {
+    this.effectivity = Rational.fromNumber(data.effectivity);
+    this.modules = data.modules;
+    this.range = data.range;
+    if (data.type) {
+      this.type = data.type;
+    }
+    if (data.category) {
+      this.category = data.category;
+    }
+    if (data.usage != null) {
+      this.usage = Rational.fromNumber(data.usage);
+    }
+    if (data.disallowEffects) {
+      this.disallowEffects = data.disallowEffects;
     }
   }
 }

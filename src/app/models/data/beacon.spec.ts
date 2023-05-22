@@ -1,40 +1,38 @@
-import { EnergyType } from '../enum';
+import { EnergyType, FuelType } from '../enum';
 import { Rational } from '../rational';
-import { BeaconRational } from './beacon';
+import { RationalBeacon } from './beacon';
 
-describe('BeaconRational', () => {
+describe('RationalBeacon', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new BeaconRational({
+      const result = new RationalBeacon({
         effectivity: 0.5,
         modules: 2,
         range: 3,
-        type: EnergyType.Electric,
+        type: EnergyType.Burner,
+        category: FuelType.Chemical,
         usage: 1,
-        disallowedEffects: ['productivity'],
       });
       expect(result.effectivity).toEqual(new Rational(BigInt(1), BigInt(2)));
       expect(result.modules).toEqual(2);
       expect(result.range).toEqual(3);
-      expect(result.type).toEqual(EnergyType.Electric);
+      expect(result.type).toEqual(EnergyType.Burner);
+      expect(result.category).toEqual(FuelType.Chemical);
       expect(result.usage).toEqual(Rational.one);
-      expect(result.disallowedEffects).toEqual(['productivity']);
     });
 
     it('should ignore undefined fields', () => {
-      const result = new BeaconRational({
+      const result = new RationalBeacon({
         effectivity: 0.5,
         modules: 2,
         range: 3,
-        type: EnergyType.Electric as EnergyType.Electric,
-        usage: 1,
       });
       expect(result.effectivity).toEqual(new Rational(BigInt(1), BigInt(2)));
       expect(result.modules).toEqual(2);
       expect(result.range).toEqual(3);
-      expect(result.type).toEqual(EnergyType.Electric);
-      expect(result.usage).toEqual(Rational.one);
-      expect(result.disallowedEffects).toBeUndefined();
+      expect(result.type).toBeUndefined();
+      expect(result.category).toBeUndefined();
+      expect(result.usage).toBeUndefined();
     });
   });
 });

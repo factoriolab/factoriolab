@@ -9,8 +9,7 @@
     [style.width]="width"
     [ngModel]="value"
     labValidateNumber
-    [minimum]="min"
-    [maximum]="max"
+    [labValidateMinimum]="minimum"
     (input)="changeValue(input.value, 'input')"
     (blur)="changeValue(input.value, 'blur')"
   />
@@ -22,7 +21,6 @@
       class="p-inputnumber-button p-inputnumber-button-up"
       [class.p-button-text]="textButtons"
       icon="fa-solid fa-angle-up"
-      [disabled]="isMaximum"
       (click)="increase()"
     ></button>
     <button

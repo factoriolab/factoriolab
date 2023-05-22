@@ -1,55 +1,50 @@
 import { SelectItem } from 'primeng/api';
 
 import { Rational } from '../rational';
-import { BeaconRationalSettings, BeaconSettings } from './beacon-settings';
+import { BeaconSettings, RationalBeaconSettings } from './beacon-settings';
 
 export interface RecipeSettings {
-  excluded?: boolean;
-  checked?: boolean;
-  machineId?: string;
-  machineModuleIds?: string[];
+  factoryId?: string;
+  factoryModuleIds?: string[];
   /** Calculated, not configurable */
-  machineModuleOptions?: SelectItem[];
+  factoryModuleOptions?: SelectItem[];
   beacons?: BeaconSettings[];
   overclock?: number;
   cost?: string;
+  checked?: boolean;
 }
 
-export class RecipeSettingsRational {
-  excluded?: boolean;
-  checked?: boolean;
-  machineId?: string;
-  machineModuleIds?: string[];
+export class RationalRecipeSettings {
+  factoryId?: string;
+  factoryModuleIds?: string[];
   /** Calculated, not configurable */
-  machineModuleOptions?: SelectItem[];
-  beacons?: BeaconRationalSettings[];
+  factoryModuleOptions?: SelectItem[];
+  beacons?: RationalBeaconSettings[];
   overclock?: Rational;
   cost?: Rational;
+  checked?: boolean;
 
-  constructor(obj: RecipeSettings) {
-    if (obj.excluded != null) {
-      this.excluded = obj.excluded;
+  constructor(data: RecipeSettings) {
+    if (data.factoryId != null) {
+      this.factoryId = data.factoryId;
     }
-    if (obj.checked != null) {
-      this.checked = obj.checked;
+    if (data.factoryModuleIds != null) {
+      this.factoryModuleIds = data.factoryModuleIds;
     }
-    if (obj.machineId != null) {
-      this.machineId = obj.machineId;
+    if (data.factoryModuleOptions != null) {
+      this.factoryModuleOptions = data.factoryModuleOptions;
     }
-    if (obj.machineModuleIds != null) {
-      this.machineModuleIds = obj.machineModuleIds;
+    if (data.beacons) {
+      this.beacons = data.beacons.map((b) => new RationalBeaconSettings(b));
     }
-    if (obj.machineModuleOptions != null) {
-      this.machineModuleOptions = obj.machineModuleOptions;
+    if (data.overclock != null) {
+      this.overclock = Rational.fromNumber(data.overclock);
     }
-    if (obj.beacons) {
-      this.beacons = obj.beacons.map((b) => new BeaconRationalSettings(b));
+    if (data.cost != null) {
+      this.cost = Rational.fromString(data.cost);
     }
-    if (obj.overclock != null) {
-      this.overclock = Rational.fromNumber(obj.overclock);
-    }
-    if (obj.cost != null) {
-      this.cost = Rational.fromString(obj.cost);
+    if (data.checked != null) {
+      this.checked = data.checked;
     }
   }
 }

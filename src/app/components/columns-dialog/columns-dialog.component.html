@@ -1,0 +1,91 @@
+<p-dialog
+  *ngIf="vm$ | async as vm"
+  [(visible)]="visible"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: '400px' }"
+  [breakpoints]="{ '400px': '100vw' }"
+  [header]="'columns.header' | translate"
+  (onHide)="save()"
+>
+  <div
+    class="p-error"
+    *ngIf="vm.usesFractions && vm.simplexType === SimplexType.WasmFloat64"
+  >
+    {{ 'columns.fractionSimplexWarning' | translate }}
+  </div>
+  <p-table
+    responsiveLayout="scroll"
+    styleClass="p-datatable-sm"
+    [value]="vm.columnOptions"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ 'columns.visibility' | translate }}</th>
+        <th>{{ 'columns.decimals' | translate }}</th>
+        <th>{{ 'columns.fractions' | translate }}</th>
+        <th>{{ 'columns.example' | translate }}</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-column>
+      <tr>
+        <td>
+          <p-checkbox
+            [(ngModel)]="editValue[column.value].show"
+            [binary]="true"
+            [label]="column.label | translate"
+            [disabled]="column.disabled"
+          ></p-checkbox>
+        </td>
+        <ng-container
+          *ngIf="
+            precisionColumns.indexOf(column.value) !== -1;
+            else noPrecision
+          "
+        >
+          <td>
+            <p-inputNumber
+              [min]="0"
+              [size]="1"
+              [showButtons]="true"
+              class="w-100"
+              styleClass="w-100"
+              inputStyleClass="text-end"
+              [disabled]="!editValue[column.value].show"
+              [(ngModel)]="editValue[column.value].precision"
+            ></p-inputNumber>
+          </td>
+          <td class="text-center">
+            <p-checkbox
+              [ngModel]="editValue[column.value].precision == null"
+              [binary]="true"
+              [disabled]="!editValue[column.value].show"
+              (onChange)="changeFraction($event.checked, column.value)"
+            ></p-checkbox>
+          </td>
+          <td>
+            {{ editValue[column.value].precision | precisionExample }}
+          </td>
+        </ng-container>
+        <ng-template #noPrecision>
+          <td colspan="3" class="text-center colspan-3">
+            <div class="p-2">{{ 'columns.notApplicable' | translate }}</div>
+          </td>
+        </ng-template>
+      </tr>
+    </ng-template>
+  </p-table>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-text"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="visible = false"
+    ></button>
+  </ng-template>
+</p-dialog>

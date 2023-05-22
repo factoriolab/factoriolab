@@ -1,6 +1,7 @@
 export interface ItemSettings {
-  excluded?: boolean;
-  checked?: boolean;
+  ignore?: boolean;
   beltId?: string;
   wagonId?: string;
+  recipeId?: string;
+  checked?: boolean;
 }

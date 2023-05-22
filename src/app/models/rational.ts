@@ -35,77 +35,20 @@ export class Rational {
     return x < bigZero ? x * bigMinusOne : x;
   }
 
-  static from(x: number | string | [number, number]): Rational {
-    if (typeof x === 'number') {
-      // Parse Rational from number
-      return this.fromNumber(x);
-    } else if (typeof x === 'string') {
-      // Parse Rational from string
-      return this.fromString(x);
-    } else {
-      // Parse Rational from array (num/denom pair)
-      const [p, q] = x;
-      if (q === 0) {
-        throw Error(DIVIDE_BY_ZERO);
-      } else {
-        return new Rational(BigInt(p), BigInt(q));
-      }
+  static from(p: number, q = 1): Rational {
+    if (q === 0) {
+      throw Error(DIVIDE_BY_ZERO);
     }
+
+    return new Rational(BigInt(p), BigInt(q));
   }
 
-  static fromNumber(x: number): Rational {
-    if (Number.isInteger(x)) {
-      return new Rational(BigInt(x), bigOne);
-    }
-
-    return this.fromFloat(x);
-  }
-
-  private static fromStringCache: Record<string, Rational> = {};
-  static fromString(x: string): Rational {
-    if (this.fromStringCache[x]) return this.fromStringCache[x];
-
-    if (x.length === 0) {
-      throw new Error('Empty string');
-    }
-
-    let result: Rational;
-
-    if (x.indexOf('/') === -1) {
-      result = Rational.fromNumber(Number(x));
-    } else {
-      const f = x.split('/');
-      if (f.length > 2) {
-        throw new Error('Too many /');
-      }
-
-      if (f[0].indexOf(' ') === -1) {
-        const p = Number(f[0]);
-        const q = Number(f[1]);
-        result = Rational.from([p, q]);
-      } else {
-        const g = f[0].split(' ');
-        if (g.length > 2) {
-          throw new Error('Too many spaces');
-        }
-
-        const n = Number(g[0]);
-        const p = Number(g[1]);
-        const q = Number(f[1]);
-        result = Rational.from(n).add(Rational.from([p, q]));
-      }
-    }
-
-    this.fromStringCache[x] = result;
-    return result;
-  }
-
-  private static fromFloatCache: Record<number, Rational> = {};
+  private static parseFloatCache: Record<number, Rational> = {};
   /**
    * Source: https://www.ics.uci.edu/%7Eeppstein/numth/frap.c
    */
-  private static fromFloat(startx: number): Rational {
-    if (this.fromFloatCache[startx]) return this.fromFloatCache[startx];
+  private static parseFloat(startx: number): Rational {
+    if (this.parseFloatCache[startx]) return this.parseFloatCache[startx];
 
     let ai = startx,
       x = startx;
@@ -128,19 +71,66 @@ export class Rational {
       x = 1 / (x - ai);
     }
 
-    const optA = Rational.from([m[0][0], m[1][0]]);
+    const optA = Rational.from(m[0][0], m[1][0]);
     const errA = Math.abs(startx - optA.toNumber());
 
     ai = Math.floor((MAX_DENOM - m[1][1]) / m[1][0]);
     m[0][0] = m[0][0] * ai + m[0][1];
     m[1][0] = m[1][0] * ai + m[1][1];
 
-    const optB = Rational.from([m[0][0], m[1][0]]);
+    const optB = Rational.from(m[0][0], m[1][0]);
     const errB = Math.abs(startx - optB.toNumber());
 
     const result = errA < errB ? optA : optB;
-    this.fromFloatCache[startx] = result;
+    this.parseFloatCache[startx] = result;
     return result;
+  }
+
+  static fromJson(x: number | string): Rational {
+    if (typeof x === 'number') {
+      return this.fromNumber(x);
+    }
+
+    return this.fromString(x);
+  }
+
+  static fromNumber(x: number): Rational {
+    if (Number.isInteger(x)) {
+      return new Rational(BigInt(x), bigOne);
+    }
+
+    return this.parseFloat(x);
+  }
+
+  static fromString(x: string): Rational {
+    if (x.length === 0) {
+      throw new Error('Empty string');
+    }
+
+    if (typeof x === 'number' || x.indexOf('/') === -1) {
+      return Rational.fromNumber(Number(x));
+    } else {
+      const f = x.split('/');
+      if (f.length > 2) {
+        throw new Error('Too many /');
+      }
+
+      if (f[0].indexOf(' ') === -1) {
+        const p = Number(f[0]);
+        const q = Number(f[1]);
+        return Rational.from(p, q);
+      } else {
+        const g = f[0].split(' ');
+        if (g.length > 2) {
+          throw new Error('Too many spaces');
+        }
+
+        const n = Number(g[0]);
+        const p = Number(g[1]);
+        const q = Number(f[1]);
+        return Rational.from(n).add(Rational.from(p, q));
+      }
+    }
   }
 
   static min(x: Rational, y: Rational): Rational {

@@ -102,15 +102,15 @@ describe('StoreUtility', () => {
       const result = StoreUtility.resetFields(
         {
           [Mocks.Item1.id]: {
-            excluded: true,
+            ignore: true,
             belt: ItemId.TransportBelt,
-            machine: ItemId.AssemblingMachine1,
+            factory: ItemId.AssemblingMachine1,
           },
         },
-        ['excluded', 'belt']
+        ['ignore', 'belt']
       );
       expect(result[Mocks.Item1.id]).toEqual({
-        machine: ItemId.AssemblingMachine1,
+        factory: ItemId.AssemblingMachine1,
       } as any);
     });
   });
@@ -118,8 +118,8 @@ describe('StoreUtility', () => {
   describe('resetField', () => {
     it('should reset changes to a field', () => {
       const result = StoreUtility.resetField(
-        { [Mocks.Item1.id]: { excluded: true, belt: ItemId.TransportBelt } },
-        'excluded'
+        { [Mocks.Item1.id]: { ignore: true, belt: ItemId.TransportBelt } },
+        'ignore'
       );
       expect(result[Mocks.Item1.id]).toEqual({
         belt: ItemId.TransportBelt,
@@ -128,16 +128,16 @@ describe('StoreUtility', () => {
 
     it('should delete an entity if no modifications remain', () => {
       const result = StoreUtility.resetField(
-        { [Mocks.Item1.id]: { excluded: true } },
-        'excluded'
+        { [Mocks.Item1.id]: { ignore: true } },
+        'ignore'
       );
       expect(result[Mocks.Item1.id]).toBeUndefined();
     });
 
     it('should reset a field for a specific id', () => {
       const result = StoreUtility.resetField(
-        { [Mocks.Item1.id]: { excluded: true, belt: ItemId.TransportBelt } },
-        'excluded',
+        { [Mocks.Item1.id]: { ignore: true, belt: ItemId.TransportBelt } },
+        'ignore',
         Mocks.Item1.id
       );
       expect(result[Mocks.Item1.id]).toEqual({

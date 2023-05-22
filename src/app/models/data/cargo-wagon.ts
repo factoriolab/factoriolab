@@ -4,10 +4,10 @@ export interface CargoWagon {
   size: number;
 }
 
-export class CargoWagonRational {
+export class RationalCargoWagon {
   size: Rational;
 
-  constructor(obj: CargoWagon) {
-    this.size = Rational.from(obj.size);
+  constructor(data: CargoWagon) {
+    this.size = Rational.fromNumber(data.size);
   }
 }

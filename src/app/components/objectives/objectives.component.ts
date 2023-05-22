@@ -1,25 +1,20 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
-import { Message } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
 import {
   Breakpoint,
   DisplayRate,
   displayRateOptions,
-  MatrixResult,
-  MatrixResultType,
-  ObjectiveType,
-  objectiveTypeOptions,
-  RateUnit,
+  RateType,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import {
-  ItemObjectives,
+  Factories,
   Items,
   LabState,
-  RecipeObjectives,
+  Producers,
+  Products,
   Recipes,
   Settings,
 } from '~/store';
@@ -32,134 +27,94 @@ import {
 })
 export class ObjectivesComponent {
   vm$ = combineLatest([
-    this.store.select(ItemObjectives.getItemObjectives),
-    this.store.select(ItemObjectives.getMatrixResult),
-    this.store.select(RecipeObjectives.getRecipeObjectives),
-    this.store.select(Items.getItemsState),
-    this.store.select(Recipes.getRecipesState),
+    this.store.select(Products.getProducts),
+    this.store.select(Products.getViaOptions),
+    this.store.select(Producers.getProducers),
+    this.store.select(Items.getItemSettings),
+    this.store.select(Factories.getFactories),
+    this.store.select(Recipes.getRecipeSettings),
     this.store.select(Settings.getDisplayRate),
-    this.store.select(Settings.getRateUnitOptions),
+    this.store.select(Settings.getRateTypeOptions),
     this.store.select(Settings.getOptions),
     this.store.select(Settings.getDataset),
-    this.store.select(Settings.getAvailableItems),
-    this.store.select(Settings.getAvailableRecipes),
     this.contentService.width$,
   ]).pipe(
     map(
       ([
-        itemObjectives,
-        matrixResult,
-        recipeObjectives,
-        itemsState,
-        recipesState,
+        products,
+        viaOptions,
+        producers,
+        itemSettings,
+        factories,
+        recipeSettings,
         displayRate,
-        rateUnitOptions,
+        rateTypeOptions,
         options,
         data,
-        itemIds,
-        recipeIds,
         width,
       ]) => ({
-        itemObjectives,
-        matrixResult,
-        recipeObjectives,
-        itemsState,
-        recipesState,
+        products,
+        viaOptions,
+        producers,
+        itemSettings,
+        factories,
+        recipeSettings,
         displayRate,
-        rateUnitOptions,
+        rateTypeOptions,
         options,
         data,
-        itemIds,
-        recipeIds,
         mobile: width < Breakpoint.Small,
-        messages: this.getMessages(matrixResult),
       })
     )
   );
 
-  getMessages(matrixResult: MatrixResult): Message[] {
-    if (matrixResult.resultType === MatrixResultType.Failed) {
-      let errorKey = 'objectives.error';
-      let errorDetailKey = 'objectives.errorDetail';
-
-      if (matrixResult.simplexStatus === 'unbounded') {
-        errorKey = 'objectives.errorUnbounded';
-        errorDetailKey = 'objectives.errorUnboundedDetail';
-      } else if (matrixResult.simplexStatus === 'no_feasible') {
-        errorKey = 'objectives.errorInfeasible';
-        errorDetailKey = 'objectives.errorInfeasibleDetail';
-      }
-
-      return [
-        {
-          severity: 'error',
-          summary: this.translateSvc.instant(errorKey),
-          detail: this.translateSvc.instant(errorDetailKey, {
-            returnCode: matrixResult.returnCode ?? 'unknown',
-            simplexStatus: matrixResult.simplexStatus ?? 'unknown',
-          }),
-        },
-      ];
-    } else {
-      return [];
-    }
-  }
-
-  objectiveTypeOptions = objectiveTypeOptions;
   displayRateOptions = displayRateOptions;
-
-  ObjectiveType = ObjectiveType;
 
   constructor(
     public trackSvc: TrackService,
     private store: Store<LabState>,
-    private translateSvc: TranslateService,
     private contentService: ContentService
   ) {}
 
   /** Action Dispatch Methods */
-  removeItemObjective(id: string): void {
-    this.store.dispatch(new ItemObjectives.RemoveAction(id));
+  removeProduct(id: string): void {
+    this.store.dispatch(new Products.RemoveAction(id));
   }
 
   setItem(id: string, value: string): void {
-    this.store.dispatch(new ItemObjectives.SetItemAction({ id, value }));
+    this.store.dispatch(new Products.SetItemAction({ id, value }));
   }
 
   setRate(id: string, value: string): void {
-    this.store.dispatch(new ItemObjectives.SetRateAction({ id, value }));
+    this.store.dispatch(new Products.SetRateAction({ id, value }));
   }
 
-  setRateUnit(id: string, value: RateUnit): void {
-    this.store.dispatch(new ItemObjectives.SetRateUnitAction({ id, value }));
+  setRateType(id: string, value: RateType): void {
+    this.store.dispatch(new Products.SetRateTypeAction({ id, value }));
   }
 
-  setItemType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(new ItemObjectives.SetTypeAction({ id, value }));
+  setVia(id: string, value: string): void {
+    this.store.dispatch(new Products.SetViaAction({ id, value }));
   }
 
-  removeRecipeObjective(id: string): void {
-    this.store.dispatch(new RecipeObjectives.RemoveAction(id));
+  removeProducer(id: string): void {
+    this.store.dispatch(new Producers.RemoveAction(id));
   }
 
   setRecipe(id: string, value: string): void {
-    this.store.dispatch(new RecipeObjectives.SetRecipeAction({ id, value }));
+    this.store.dispatch(new Producers.SetRecipeAction({ id, value }));
   }
 
   setCount(id: string, value: string): void {
-    this.store.dispatch(new RecipeObjectives.SetCountAction({ id, value }));
+    this.store.dispatch(new Producers.SetCountAction({ id, value }));
   }
 
-  setRecipeType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(new RecipeObjectives.SetTypeAction({ id, value }));
+  addProduct(value: string): void {
+    this.store.dispatch(new Products.AddAction(value));
   }
 
-  addItemObjective(value: string): void {
-    this.store.dispatch(new ItemObjectives.AddAction(value));
-  }
-
-  addRecipeObjective(value: string): void {
-    this.store.dispatch(new RecipeObjectives.AddAction(value));
+  addProducer(value: string): void {
+    this.store.dispatch(new Producers.AddAction(value));
   }
 
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {

@@ -81,6 +81,13 @@
     left: unset !important;
     right: 0px;
   }
+
+  // Add extra padding between large game icon and button label
+  .p-button.p-button-lg.icon-btn-lg {
+    .p-button-icon-left {
+      margin-right: 1rem;
+    }
+  }
 }
 
 a {
