@@ -4,33 +4,33 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { environment } from 'src/environments/environment';
 import * as App from './app.actions';
 import * as Datasets from './datasets';
-import * as ItemObjectives from './item-objectives';
+import * as Factories from './factories';
 import * as Items from './items';
-import * as Machines from './machines';
 import * as Preferences from './preferences';
-import * as RecipeObjectives from './recipe-objectives';
+import * as Producers from './producers';
+import * as Products from './products';
 import * as Recipes from './recipes';
 import * as Settings from './settings';
 import { storageMetaReducer } from './storage.reducer';
 
 export interface LabState {
   datasetsState: Datasets.DatasetsState;
-  itemObjectivesState: ItemObjectives.ItemObjectivesState;
-  recipeObjectivesState: RecipeObjectives.RecipeObjectivesState;
+  productsState: Products.ProductsState;
+  producersState: Producers.ProducersState;
   itemsState: Items.ItemsState;
   recipesState: Recipes.RecipesState;
-  machinesState: Machines.MachinesState;
+  factoriesState: Factories.FactoriesState;
   settingsState: Settings.SettingsState;
   preferencesState: Preferences.PreferencesState;
 }
 
 export const reducers: ActionReducerMap<LabState, never> = {
   datasetsState: Datasets.datasetsReducer,
-  itemObjectivesState: ItemObjectives.itemObjectivesReducer,
-  recipeObjectivesState: RecipeObjectives.recipeObjectivesReducer,
+  productsState: Products.productsReducer,
+  producersState: Producers.producersReducer,
   itemsState: Items.itemsReducer,
   recipesState: Recipes.recipesReducer,
-  machinesState: Machines.machinesReducer,
+  factoriesState: Factories.factoriesReducer,
   settingsState: Settings.settingsReducer,
   preferencesState: Preferences.preferencesReducer,
 };
@@ -46,11 +46,11 @@ export const metaReducers: MetaReducer<LabState>[] = environment.testing
 export {
   App,
   Datasets,
-  ItemObjectives,
+  Factories,
   Items,
-  Machines,
   Preferences,
-  RecipeObjectives,
+  Producers,
+  Products,
   Recipes,
   Settings,
 };

@@ -1,7 +1,6 @@
 import { SelectItem } from 'primeng/api';
 
 export interface Options {
-  categories: SelectItem[];
   items: SelectItem[];
   beacons: SelectItem[];
   belts: SelectItem[];
@@ -9,6 +8,6 @@ export interface Options {
   cargoWagons: SelectItem[];
   fluidWagons: SelectItem[];
   chemicalFuels: SelectItem[];
+  complexRecipes: SelectItem[];
   proliferatorModules: SelectItem[];
-  recipes: SelectItem[];
 }

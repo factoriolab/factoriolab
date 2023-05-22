@@ -1,13 +1,13 @@
 import { Rational } from '../rational';
 
 export interface FluidWagon {
-  capacity: number | string;
+  capacity: number;
 }
 
-export class FluidWagonRational {
+export class RationalFluidWagon {
   capacity: Rational;
 
-  constructor(obj: FluidWagon) {
-    this.capacity = Rational.from(obj.capacity);
+  constructor(data: FluidWagon) {
+    this.capacity = Rational.fromNumber(data.capacity);
   }
 }

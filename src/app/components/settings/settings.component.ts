@@ -13,16 +13,16 @@ import { MenuItem } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
 import {
+  Column,
   Dataset,
   Defaults,
   DisplayRate,
   displayRateOptions,
+  FactorySettings,
   FuelType,
   Game,
   gameInfo,
   gameOptions,
-  IdDefaultPayload,
-  IdPayload,
   InserterCapacity,
   inserterCapacityOptions,
   InserterTarget,
@@ -30,27 +30,18 @@ import {
   ItemId,
   Language,
   languageOptions,
-  MachineSettings,
-  MaximizeType,
-  maximizeTypeOptions,
   PowerUnit,
   powerUnitOptions,
   Preset,
   ResearchSpeed,
   researchSpeedOptions,
+  SimplexType,
+  simplexTypeOptions,
   Theme,
   themeOptions,
 } from '~/models';
 import { ContentService, DisplayService, RouterService } from '~/services';
-import {
-  App,
-  Items,
-  LabState,
-  Machines,
-  Preferences,
-  Recipes,
-  Settings,
-} from '~/store';
+import { App, Factories, LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
@@ -64,11 +55,9 @@ export class SettingsComponent implements OnInit {
   @HostBinding('class.hidden') @Input() hidden = false;
 
   vm$ = combineLatest([
-    this.store.select(Items.getItemsState),
-    this.store.select(Recipes.getRecipesState),
-    this.store.select(Machines.getMachinesState),
-    this.store.select(Machines.getMachineRows),
-    this.store.select(Machines.getMachineOptions),
+    this.store.select(Factories.getFactories),
+    this.store.select(Factories.getFactoryRows),
+    this.store.select(Factories.getFactoryOptions),
     this.store.select(Settings.getSettings),
     this.store.select(Settings.getColumnsState),
     this.store.select(Settings.getDataset),
@@ -77,59 +66,40 @@ export class SettingsComponent implements OnInit {
     this.store.select(Settings.getPresetOptions),
     this.store.select(Settings.getBeltSpeedTxt),
     this.store.select(Settings.getDisplayRateInfo),
-    this.store.select(Settings.getAllResearchedTechnologyIds),
-    this.store.select(Settings.getAvailableItems),
-    this.store.select(Settings.getAvailableRecipes),
     this.store.select(Preferences.preferencesState),
     this.store.select(Preferences.getSavedStates),
     this.contentSvc.lang$,
   ]).pipe(
     map(
       ([
-        itemsState,
-        recipesState,
-        machinesState,
-        machineRows,
-        machineOptions,
+        factories,
+        factoryRows,
+        factoryOptions,
         settings,
-        columnsState,
+        columns,
         data,
         options,
         modOptions,
         presetOptions,
         beltSpeedTxt,
         dispRateInfo,
-        researchedTechnologyIds,
-        itemIds,
-        recipeIds,
         preferences,
         savedStates,
       ]) => ({
-        itemsState,
-        recipesState,
-        machinesState,
-        machineRows,
-        machineOptions,
+        factories,
+        factoryRows,
+        factoryOptions,
         settings,
-        columnsState,
+        columns,
         data,
         options,
         modOptions,
         presetOptions,
         beltSpeedTxt,
         dispRateInfo,
-        researchedTechnologyIds,
-        itemIds,
-        recipeIds,
         preferences,
         savedStates,
-        machineMenuItems: this.buildMachineMenus(machineRows, data),
-        excludedItemIds: data.itemIds.filter((i) => itemsState[i]?.excluded),
-        excludedRecipeIds: data.recipeIds.filter(
-          (r) => recipesState[r]?.excluded
-        ),
-        mod: modOptions.find((o) => o.value === settings.modId),
-        preset: presetOptions.find((o) => o.value === settings.preset),
+        factoryMenuItems: this.buildFactoryMenus(factoryRows, data),
       })
     )
   );
@@ -146,12 +116,14 @@ export class SettingsComponent implements OnInit {
   languageOptions = languageOptions;
   powerUnitOptions = powerUnitOptions;
   researchSpeedOptions = researchSpeedOptions;
+  simplexTypeOptions = simplexTypeOptions;
   themeOptions = themeOptions;
-  maximizeTypeOptions = maximizeTypeOptions;
 
+  Column = Column;
   FuelType = FuelType;
   Game = Game;
   ItemId = ItemId;
+  SimplexType = SimplexType;
 
   constructor(
     public contentSvc: ContentService,
@@ -174,23 +146,23 @@ export class SettingsComponent implements OnInit {
       });
   }
 
-  buildMachineMenus(machineRows: string[], data: Dataset): MenuItem[][] {
-    return machineRows.map((machineId, index): MenuItem[] => {
-      if (!machineId) return [];
+  buildFactoryMenus(factoryRows: string[], data: Dataset): MenuItem[][] {
+    return factoryRows.map((factoryId, index): MenuItem[] => {
+      if (!factoryId) return [];
       const items: MenuItem[] = [];
       if (index > 1)
         items.push({
           label: this.translateSvc.instant('settings.moveUp'),
           icon: 'fa-solid fa-arrow-up',
           command: () =>
-            this.raiseMachine(machineId, data.defaults?.machineRankIds),
+            this.raiseFactory(factoryId, data.defaults?.factoryRankIds),
         });
-      if (index < machineRows.length - 1)
+      if (index < factoryRows.length - 1)
         items.push({
           label: this.translateSvc.instant('settings.moveDown'),
           icon: 'fa-solid fa-arrow-down',
           command: () =>
-            this.lowerMachine(machineId, data.defaults?.machineRankIds),
+            this.lowerFactory(factoryId, data.defaults?.factoryRankIds),
         });
       return items;
     });
@@ -242,44 +214,10 @@ export class SettingsComponent implements OnInit {
     this.setMod(gameInfo[game].modId);
   }
 
-  setExcludedRecipes(
-    checked: string[],
-    recipesState: Recipes.RecipesState,
-    data: Dataset
-  ): void {
-    const payload: IdDefaultPayload<boolean>[] = [];
-    for (const id of data.recipeIds) {
-      const value = checked.some((i) => i === id);
-      if (value !== recipesState[id].excluded) {
-        // Needs to change, find default value
-        const def = (data.defaults?.excludedRecipeIds ?? []).some(
-          (i) => i === id
-        );
-        payload.push({ id, value, def });
-      }
-    }
-    this.setRecipeExcludedBatch(payload);
-  }
-
-  setExcludedItems(
-    checked: string[],
-    itemsState: Items.ItemsState,
-    data: Dataset
-  ): void {
-    const payload: IdPayload<boolean>[] = [];
-    for (const id of data.itemIds) {
-      const value = checked.some((i) => i === id);
-      if (value !== itemsState[id].excluded) {
-        payload.push({ id, value });
-      }
-    }
-    this.setItemExcludedBatch(payload);
-  }
-
   changeBeaconModuleRank(
     id: string,
     value: string[],
-    def: MachineSettings | Defaults
+    def: FactorySettings | Defaults
   ): void {
     if (id === '') {
       this.setBeaconModuleRank(id, value, [(def as Defaults).beaconModuleId]);
@@ -287,7 +225,7 @@ export class SettingsComponent implements OnInit {
       this.setBeaconModuleRank(
         id,
         value,
-        (def as MachineSettings).beaconModuleRankIds
+        (def as FactorySettings).beaconModuleRankIds
       );
     }
   }
@@ -313,16 +251,8 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetModAction(value));
   }
 
-  setResearchedTechnologies(value: string[] | null): void {
-    this.store.dispatch(new Settings.SetResearchedTechnologiesAction(value));
-  }
-
-  setItemExcludedBatch(payload: IdPayload<boolean>[]): void {
-    this.store.dispatch(new Items.SetExcludedBatchAction(payload));
-  }
-
-  setRecipeExcludedBatch(payload: IdDefaultPayload<boolean>[]): void {
-    this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
+  setDisabledRecipes(value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Settings.SetDisabledRecipesAction({ value, def }));
   }
 
   setNetProductionOnly(value: boolean): void {
@@ -333,40 +263,40 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetPresetAction(value));
   }
 
-  addMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.AddAction({ value, def }));
+  addFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.AddAction({ value, def }));
   }
 
-  removeMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.RemoveAction({ value, def }));
+  removeFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.RemoveAction({ value, def }));
   }
 
-  raiseMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.RaiseAction({ value, def }));
+  raiseFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.RaiseAction({ value, def }));
   }
 
-  lowerMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.LowerAction({ value, def }));
+  lowerFactory(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.LowerAction({ value, def }));
   }
 
-  setMachine(id: string, value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.SetMachineAction({ id, value, def }));
+  setFactory(id: string, value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Factories.SetFactoryAction({ id, value, def }));
   }
 
   setModuleRank(id: string, value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Machines.SetModuleRankAction({ id, value, def }));
+    this.store.dispatch(new Factories.SetModuleRankAction({ id, value, def }));
   }
 
   setOverclock(id: string, value: number, def: number | undefined): void {
-    this.store.dispatch(new Machines.SetOverclockAction({ id, value, def }));
+    this.store.dispatch(new Factories.SetOverclockAction({ id, value, def }));
   }
 
   setBeaconCount(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(new Machines.SetBeaconCountAction({ id, value, def }));
+    this.store.dispatch(new Factories.SetBeaconCountAction({ id, value, def }));
   }
 
   setBeacon(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(new Machines.SetBeaconAction({ id, value, def }));
+    this.store.dispatch(new Factories.SetBeaconAction({ id, value, def }));
   }
 
   setBeaconModuleRank(
@@ -375,7 +305,7 @@ export class SettingsComponent implements OnInit {
     def: string[] | undefined
   ): void {
     this.store.dispatch(
-      new Machines.SetBeaconModuleRankAction({ id, value, def })
+      new Factories.SetBeaconModuleRankAction({ id, value, def })
     );
   }
 
@@ -431,10 +361,6 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  setMaximizeType(value: MaximizeType): void {
-    this.store.dispatch(new Settings.SetMaximizeTypeAction(value));
-  }
-
   setPowerUnit(value: PowerUnit): void {
     this.store.dispatch(new Preferences.SetPowerUnitAction(value));
   }
@@ -446,6 +372,10 @@ export class SettingsComponent implements OnInit {
 
   setTheme(value: Theme): void {
     this.store.dispatch(new Preferences.SetThemeAction(value));
+  }
+
+  setSimplexType(value: SimplexType): void {
+    this.store.dispatch(new Preferences.SetSimplexTypeAction(value));
   }
 
   setBypassLanding(value: boolean): void {

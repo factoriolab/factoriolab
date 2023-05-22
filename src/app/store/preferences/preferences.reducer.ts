@@ -1,9 +1,12 @@
 import {
-  ColumnsState,
+  allColumns,
+  Column,
+  ColumnSettings,
   Entities,
-  initialColumnsState,
+  initialColumns,
   Language,
   PowerUnit,
+  SimplexType,
   Theme,
 } from '~/models';
 import * as App from '../app.actions';
@@ -12,18 +15,30 @@ import {
   PreferencesActionType,
 } from './preferences.actions';
 
+export type ColumnsState = Entities<ColumnSettings>;
+
 export interface PreferencesState {
   states: Entities<string>;
   columns: ColumnsState;
+  simplexType: SimplexType;
   language: Language;
   powerUnit: PowerUnit;
   theme: Theme;
   bypassLanding: boolean;
 }
 
+export const initialColumnsState: ColumnsState = allColumns.reduce(
+  (e: ColumnsState, c) => {
+    e[c] = { show: initialColumns.indexOf(c) !== -1, precision: 1 };
+    return e;
+  },
+  {}
+);
+
 export const initialPreferencesState: PreferencesState = {
   states: {},
   columns: initialColumnsState,
+  simplexType: SimplexType.WasmFloat64,
   language: Language.English,
   powerUnit: PowerUnit.Auto,
   theme: Theme.Dark,
@@ -54,11 +69,13 @@ export function preferencesReducer(
         ...state,
         ...{
           columns: action.payload,
-          powerUnit: action.payload.power.show
+          powerUnit: action.payload[Column.Power].show
             ? state.powerUnit
             : PowerUnit.Auto,
         },
       };
+    case PreferencesActionType.SET_SIMPLEX_TYPE:
+      return { ...state, ...{ simplexType: action.payload } };
     case PreferencesActionType.SET_LANGUAGE:
       return { ...state, ...{ language: action.payload } };
     case PreferencesActionType.SET_POWER_UNIT:

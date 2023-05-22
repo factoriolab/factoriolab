@@ -21,7 +21,7 @@
           ></button>
         </th>
         <!-- Checkbox -->
-        <th *ngIf="vm.columnsState.checkbox.show">
+        <th *ngIf="vm.columns[Column.Checkbox].show">
           <div class="d-flex align-items-center justify-content-center">
             <i class="fa-solid fa-square-check"></i>
             <button
@@ -37,29 +37,39 @@
           </div>
         </th>
         <!-- Tree -->
-        <th *ngIf="vm.columnsState.tree.show">
-          {{ 'options.column.tree' | translate }}
+        <th *ngIf="vm.columns[Column.Tree].show">
+          {{ 'list.tree' | translate }}
         </th>
         <!-- Items (Value / Icon)-->
         <th colspan="2">
           <div class="d-flex align-items-center">
             <span>{{ vm.dispRateInfo.itemsLabel | translate }}</span>
             <button
-              *ngIf="vm.itemsModified.excluded"
+              *ngIf="vm.itemsModified.ignore"
               pButton
               pRipple
               type="button"
               class="ms-2 p-button-text p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.itemsUndoTooltip' | translate"
-              (click)="resetExcluded()"
+              (click)="resetIgnores()"
+            ></button>
+            <button
+              *ngIf="vm.itemsModified.recipe"
+              pButton
+              pRipple
+              type="button"
+              class="ms-2 p-button-text p-button-rounded"
+              icon="fa-solid fa-rotate-left"
+              [pTooltip]="'list.itemRecipesUndoTooltip' | translate"
+              (click)="resetRecipes()"
             ></button>
           </div>
         </th>
         <!-- Belts -->
-        <th *ngIf="vm.columnsState.belts.show" colspan="2">
+        <th *ngIf="vm.columns[Column.Belts].show" colspan="2">
           <div class="d-flex align-items-center">
-            <span>{{ 'options.column.belts' | translate }}</span>
+            <span>{{ 'list.belts' | translate }}</span>
             <button
               *ngIf="vm.itemsModified.belts"
               pButton
@@ -73,7 +83,7 @@
           </div>
         </th>
         <!-- Wagons -->
-        <th *ngIf="vm.columnsState.wagons.show" colspan="2">
+        <th *ngIf="vm.columns[Column.Wagons].show" colspan="2">
           <div class="d-flex align-items-center">
             <span>{{ vm.dispRateInfo.wagonsLabel | translate }}</span>
             <button
@@ -88,26 +98,26 @@
             ></button>
           </div>
         </th>
-        <!-- Machines -->
+        <!-- Factories -->
         <th colspan="2">
           <div class="d-flex align-items-center">
-            <span>{{ 'options.column.machines' | translate }}</span>
+            <span>{{ 'list.factories' | translate }}</span>
             <button
-              *ngIf="vm.recipesModified.machines"
+              *ngIf="vm.recipesModified.factories"
               pButton
               pRipple
               type="button"
               class="ms-2 p-button-text p-button-rounded"
               icon="fa-solid fa-rotate-left"
-              [pTooltip]="'list.machinesUndoTooltip' | translate"
-              (click)="resetMachines()"
+              [pTooltip]="'list.factoriesUndoTooltip' | translate"
+              (click)="resetFactories()"
             ></button>
           </div>
         </th>
         <!-- Beacons -->
-        <th *ngIf="vm.columnsState.beacons.show" colspan="2">
+        <th *ngIf="vm.columns[Column.Beacons].show" colspan="2">
           <div class="d-flex align-items-center">
-            <span>{{ 'options.column.beacons' | translate }}</span>
+            <span>{{ 'list.beacons' | translate }}</span>
             <button
               *ngIf="vm.recipesModified.beacons"
               pButton
@@ -121,15 +131,15 @@
           </div>
         </th>
         <!-- Power -->
-        <th *ngIf="vm.columnsState.power.show">
-          <span>{{ 'options.column.power' | translate }}</span>
+        <th *ngIf="vm.columns[Column.Power].show">
+          <span>{{ 'list.power' | translate }}</span>
         </th>
         <!-- Pollution -->
-        <th *ngIf="vm.columnsState.pollution.show">
+        <th *ngIf="vm.columns[Column.Pollution].show">
           <span>{{ vm.dispRateInfo.pollutionLabel | translate }}</span>
         </th>
         <!-- Link -->
-        <th *ngIf="vm.columnsState.link.show" class="w-0">
+        <th *ngIf="vm.columns[Column.Link].show" class="w-0">
           <button
             pButton
             pRipple
@@ -142,9 +152,9 @@
             (click)="
               export(
                 vm.steps,
-                vm.itemsState,
-                vm.recipesState,
-                vm.columnsState,
+                vm.itemSettings,
+                vm.recipeSettings,
+                vm.columns,
                 vm.data
               )
             "
@@ -178,7 +188,7 @@
           </div>
         </td>
         <!-- Checkbox -->
-        <td *ngIf="vm.columnsState.checkbox.show">
+        <td *ngIf="vm.columns[Column.Checkbox].show">
           <div class="d-flex justify-content-center">
             <p-checkbox
               [binary]="true"
@@ -188,7 +198,7 @@
           </div>
         </td>
         <!-- Tree -->
-        <td *ngIf="vm.columnsState.tree.show" class="overflow-hidden px-1 py-0">
+        <td *ngIf="vm.columns[Column.Tree].show" class="overflow-hidden p-0">
           <div class="d-flex align-items-center links">
             <ng-container *ngIf="vm.stepTree[step.id]?.length">
               <div
@@ -201,24 +211,16 @@
             </ng-container>
             <div class="icon">
               <button
-                *ngIf="
-                  step.itemId && step.recipeObjectiveId == null;
-                  else recipeIcon
-                "
+                *ngIf="step.itemId && step.producerId == null; else recipeIcon"
                 pButton
                 pRipple
                 type="button"
                 class="hover-action p-button-text"
-                [class.hover-active]="vm.itemsState[step.itemId].excluded"
+                [class.hover-active]="vm.itemSettings[step.itemId].ignore"
                 [icon]="step.itemId | iconSmClass"
                 [pTooltip]="step.itemId | itemTooltip : vm.data"
                 [escape]="false"
-                (click)="
-                  setItemExcluded(
-                    step.itemId,
-                    !vm.itemsState[step.itemId].excluded
-                  )
-                "
+                (click)="ignoreItem(step.itemId)"
               >
                 <i class="hover-icon fa-solid fa-eye-slash"></i>
               </button>
@@ -228,8 +230,8 @@
                   [pTooltip]="step.recipeId | recipeTooltip : vm.data"
                   [escape]="false"
                 >
-                  <span *ngIf="step.recipeObjectiveId != null"
-                    >#{{ step.recipeObjectiveId }}</span
+                  <span *ngIf="step.producerId != null"
+                    >#{{ step.producerId }}</span
                   >
                 </i>
               </ng-template>
@@ -242,11 +244,13 @@
             <span
               *ngIf="step.surplus && step.surplus.nonzero()"
               class="monospace"
-              >(+{{ step.surplus | rate : vm.columnsState.items.precision }})
+              >(+{{
+                step.surplus | rate : vm.effectivePrecision[Column.Surplus]
+              }})
             </span>
             <span class="monospace">{{
               step.items.sub(step.surplus || Rational.zero)
-                | rate : vm.columnsState.items.precision
+                | rate : vm.effectivePrecision[Column.Items]
             }}</span>
           </td>
           <td class="ps-0">
@@ -259,16 +263,11 @@
                 pRipple
                 type="button"
                 class="hover-action p-button-text"
-                [class.hover-active]="vm.itemsState[step.itemId].excluded"
+                [class.hover-active]="vm.itemSettings[step.itemId].ignore"
                 [icon]="step.itemId | iconSmClass"
                 [pTooltip]="step.itemId | itemTooltip : vm.data"
                 [escape]="false"
-                (click)="
-                  setItemExcluded(
-                    step.itemId,
-                    !vm.itemsState[step.itemId].excluded
-                  )
-                "
+                (click)="ignoreItem(step.itemId)"
               >
                 <i class="hover-icon fa-solid fa-eye-slash"></i>
               </button>
@@ -276,12 +275,12 @@
           </td>
         </ng-container>
         <!-- Belts -->
-        <ng-container *ngIf="vm.columnsState.belts.show">
+        <ng-container *ngIf="vm.columns[Column.Belts].show">
           <ng-container *ngIf="step.itemId && step.belts; else emptyCol2">
-            <ng-container *ngIf="vm.itemsState[step.itemId].beltId as beltId">
+            <ng-container *ngIf="vm.itemSettings[step.itemId].beltId as beltId">
               <td class="w-0 text-end">
                 <span class="monospace">{{
-                  step.belts | rate : vm.columnsState.belts.precision
+                  step.belts | rate : vm.effectivePrecision[Column.Belts]
                 }}</span>
               </td>
               <td class="ps-0">
@@ -410,18 +409,18 @@
           </ng-container>
         </ng-container>
         <!-- Wagons -->
-        <ng-container *ngIf="vm.columnsState.wagons.show">
+        <ng-container *ngIf="vm.columns[Column.Wagons].show">
           <ng-container
             *ngIf="
               step.itemId &&
                 step.wagons &&
-                vm.itemsState[step.itemId].wagonId as wagonId;
+                vm.itemSettings[step.itemId].wagonId as wagonId;
               else emptyCol2
             "
           >
             <td class="w-0 text-end">
               <span class="monospace">{{
-                step.wagons | rate : vm.columnsState.wagons.precision
+                step.wagons | rate : vm.effectivePrecision[Column.Wagons]
               }}</span>
             </td>
             <td class="ps-0">
@@ -537,26 +536,28 @@
             </td>
           </ng-container>
         </ng-container>
-        <!-- Machines -->
+        <!-- Factories -->
         <ng-container
-          *ngIf="step.recipeSettings?.machineId as machineId; else emptyCol2"
+          *ngIf="step.recipeSettings?.factoryId as factoryId; else emptyCol2"
         >
           <td class="w-0 text-end">
             <span
               *ngIf="
-                step.machines &&
-                step.machines.nonzero() &&
-                (machineId | machineShowRate : vm.data.game)
+                step.factories &&
+                step.factories.nonzero() &&
+                (factoryId | factoryShowRate : vm.data.game)
               "
               class="monospace"
               >{{
-                step.machines
-                  | machineRate : vm.columnsState.machines.precision : machineId
+                step.factories
+                  | factoryRate
+                    : vm.effectivePrecision[Column.Factories]
+                    : factoryId
               }}</span
             >
           </td>
           <td class="ps-0">
-            <ng-container *ngIf="machineId | machineShow : vm.data.game">
+            <ng-container *ngIf="factoryId | factoryShow : vm.data.game">
               <div
                 *ngIf="step.recipeId && step.recipe && step.recipeSettings"
                 class="d-flex align-items-center"
@@ -569,26 +570,26 @@
                   [class]="step.recipeId | iconSmClass : 'recipe'"
                   [pTooltip]="step.recipeId | recipeTooltip : vm.data"
                   [escape]="false"
-                  ><span *ngIf="step.recipeObjectiveId"
-                    >#{{ step.recipeObjectiveId }}</span
+                  ><span *ngIf="step.producerId"
+                    >#{{ step.producerId }}</span
                   ></i
                 >
                 <p-dropdown
-                  *ngIf="vm.data.machineEntities[machineId] as machine"
+                  *ngIf="vm.data.factoryEntities[factoryId] as factory"
                   labDropdownBase="icon"
-                  [pTooltip]="machineId | machineTooltip : vm.data"
+                  [pTooltip]="factoryId | factoryTooltip : vm.data"
                   [escape]="false"
                   [options]="
                     step.recipe.producers | options : vm.data.itemEntities
                   "
-                  [ngModel]="machineId"
+                  [ngModel]="factoryId"
                   (onChange)="
                     changeRecipeField(
                       step,
                       $event.value,
-                      vm.machinesState,
+                      vm.factories,
                       vm.data,
-                      RecipeField.Machine
+                      RecipeField.Factory
                     )
                   "
                 >
@@ -600,7 +601,7 @@
                   <ng-template pTemplate="item" let-item>
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="item.value | machineTooltip : vm.data"
+                      [pTooltip]="item.value | factoryTooltip : vm.data"
                       [escape]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
@@ -625,7 +626,7 @@
                     changeRecipeField(
                       step,
                       overclockInput.value,
-                      vm.machinesState,
+                      vm.factories,
                       vm.data,
                       RecipeField.Overclock
                     )
@@ -633,7 +634,7 @@
                 >
                 </p-inputNumber>
                 <ng-container
-                  *ngIf="step.recipeSettings?.machineModuleIds as moduleIds"
+                  *ngIf="step.recipeSettings?.factoryModuleIds as moduleIds"
                 >
                   <p-dropdown
                     *ngFor="let moduleId of moduleIds; index as i; last as last"
@@ -643,15 +644,15 @@
                     [pTooltip]="moduleId | moduleTooltip : vm.data"
                     tooltipPosition="top"
                     [escape]="false"
-                    [options]="step.recipeSettings.machineModuleOptions ?? []"
+                    [options]="step.recipeSettings.factoryModuleOptions ?? []"
                     [ngModel]="moduleId"
                     (onChange)="
                       changeRecipeField(
                         step,
                         $event.value,
-                        vm.machinesState,
+                        vm.factories,
                         vm.data,
-                        RecipeField.MachineModules,
+                        RecipeField.FactoryModules,
                         i
                       )
                     "
@@ -680,7 +681,7 @@
           </td>
         </ng-container>
         <!-- Beacons -->
-        <ng-container *ngIf="vm.columnsState.beacons.show">
+        <ng-container *ngIf="vm.columns[Column.Beacons].show">
           <ng-container
             *ngIf="step.recipeId && step.recipeSettings; else emptyCol2"
           >
@@ -702,8 +703,8 @@
                   icon="fa-solid fa-plus"
                   (click)="
                     addBeacon(
-                      step.recipeObjectiveId ?? step.recipeId,
-                      step.recipeObjectiveId != null
+                      step.producerId ?? step.recipeId,
+                      step.producerId != null
                     )
                   "
                 ></button>
@@ -716,9 +717,9 @@
                     icon="fa-solid fa-minus"
                     (click)="
                       removeBeacon(
-                        step.recipeObjectiveId ?? step.recipeId,
+                        step.producerId ?? step.recipeId,
                         i,
-                        step.recipeObjectiveId != null
+                        step.producerId != null
                       )
                     "
                   ></button>
@@ -735,7 +736,7 @@
                     changeRecipeField(
                       step,
                       $event,
-                      vm.machinesState,
+                      vm.factories,
                       vm.data,
                       RecipeField.BeaconCount,
                       i
@@ -760,7 +761,7 @@
                     changeRecipeField(
                       step,
                       $event.value,
-                      vm.machinesState,
+                      vm.factories,
                       vm.data,
                       RecipeField.Beacon,
                       i
@@ -803,7 +804,7 @@
                     changeRecipeField(
                       step,
                       $event.value,
-                      vm.machinesState,
+                      vm.factories,
                       vm.data,
                       RecipeField.BeaconModules,
                       i,
@@ -840,7 +841,7 @@
                     changeRecipeField(
                       step,
                       $event,
-                      vm.machinesState,
+                      vm.factories,
                       vm.data,
                       RecipeField.BeaconTotal,
                       i
@@ -852,24 +853,26 @@
           </ng-container>
         </ng-container>
         <!-- Power -->
-        <td *ngIf="vm.columnsState.power.show" class="text-end">
+        <td *ngIf="vm.columns[Column.Power].show" class="text-end">
           <span *ngIf="step.power && step.power.nonzero()" class="monospace">{{
             step.power
-              | power : vm.columnsState.power.precision : vm.effectivePowerUnit
+              | power
+                : vm.effectivePrecision[Column.Power]
+                : vm.effectivePowerUnit
           }}</span>
         </td>
         <!-- Pollution -->
-        <td *ngIf="vm.columnsState.pollution.show" class="text-end">
+        <td *ngIf="vm.columns[Column.Pollution].show" class="text-end">
           <span
             *ngIf="step.pollution && step.pollution.nonzero()"
             class="monospace"
             >{{
-              step.pollution | rate : vm.columnsState.pollution.precision
+              step.pollution | rate : vm.effectivePrecision[Column.Pollution]
             }}</span
           >
         </td>
         <!-- Link -->
-        <td *ngIf="vm.columnsState.link.show">
+        <td *ngIf="vm.columns[Column.Link].show">
           <div class="d-flex">
             <a
               class="text-decoration-none"
@@ -890,8 +893,7 @@
               *ngIf="
                 (step.recipeId && vm.stepsModified.recipes[step.recipeId]) ||
                 (step.itemId && vm.stepsModified.items[step.itemId]) ||
-                (step.recipeObjectiveId &&
-                  vm.stepsModified.recipeObjectives[step.recipeObjectiveId])
+                (step.producerId && vm.stepsModified.producers[step.producerId])
               "
               pButton
               pRipple
@@ -911,13 +913,7 @@
       <ng-container *ngIf="_step | asStep as step">
         <tr>
           <td>
-            <a
-              class="text-decoration-none"
-              routerLink="."
-              [relativeTo]="route"
-              queryParamsHandling="preserve"
-              [fragment]="step.id"
-            >
+            <a class="text-decoration-none" [href]="'#step_' + step.id">
               <button
                 pButton
                 pRipple
@@ -931,8 +927,7 @@
             <p-tabMenu
               #expandTabMenu
               [model]="vm.stepDetails[step.id].tabs"
-              [activeItem]="activeItem[step | stepId]"
-              (activeItemChange)="setActiveItem(step, $event)"
+              [activeItem]="vm.stepDetails[step.id].tabs[0]"
             >
               <ng-template pTemplate="item" let-item>
                 {{ 'options.stepDetailTab.' + item.label | translate }}
@@ -952,7 +947,7 @@
             <ng-container
               *ngFor="let output of vm.stepDetails[step.id].outputs"
             >
-              <ng-container *ngIf="step.itemId">
+              <ng-container *ngIf="output.recipeId && step.itemId">
                 <ng-container
                   *ngTemplateOutlet="
                     detailRow;
@@ -960,19 +955,16 @@
                       items: step.items?.mul(output.value),
                       itemId: step.itemId,
                       belts: step.belts?.mul(output.value),
-                      beltId: vm.itemsState[step.itemId].beltId,
+                      beltId: vm.itemSettings[step.itemId].beltId,
                       wagons: step.wagons?.mul(output.value),
-                      wagonId: vm.itemsState[step.itemId].wagonId,
-                      machines: output.machines,
-                      machineId:
-                        output.recipeId &&
-                        vm.recipesState[output.recipeId].machineId,
+                      wagonId: vm.itemSettings[step.itemId].wagonId,
+                      factories: output.factories,
+                      factoryId: vm.recipeSettings[output.recipeId].factoryId,
                       recipeId: output.recipeId,
-                      recipeObjectiveId: output.recipeObjectiveId,
+                      producerId: output.producerId,
                       percent: output.value,
                       percentOnDest: true,
-                      destId: step.itemId,
-                      inputs: output.inputs
+                      destId: step.itemId
                     }
                   "
                 >
@@ -998,25 +990,23 @@
                       items: step.items?.mul(parent.value),
                       itemId: step.itemId,
                       belts: step.belts?.mul(parent.value),
-                      beltId: vm.itemsState[step.itemId].beltId,
+                      beltId: vm.itemSettings[step.itemId].beltId,
                       wagons: step.wagons?.mul(parent.value),
-                      wagonId: vm.itemsState[step.itemId].wagonId,
-                      machines:
+                      wagonId: vm.itemSettings[step.itemId].wagonId,
+                      factories:
                         vm.stepDetails[step.id].outputs.length === 1
-                          ? step.machines?.mul(parent.value)
+                          ? step.factories?.mul(parent.value)
                           : null,
-                      machineId:
+                      factoryId:
                         vm.stepDetails[step.id].outputs.length === 1
-                          ? step.recipeSettings?.machineId
+                          ? step.recipeSettings?.factoryId
                           : null,
                       recipeId: step.recipeId,
-                      recipeObjectiveId: step.recipeObjectiveId,
+                      producerId: step.producerId,
                       percent: parent.value,
-                      destId: vm.stepById[parent.key]?.recipeId,
-                      destRecipeObjectiveId:
-                        vm.stepById[parent.key]?.recipeObjectiveId,
-                      destIsRecipe: true,
-                      outputs: parent.key === ''
+                      destId: vm.stepById[parent.key].recipeId,
+                      destProducerId: vm.stepById[parent.key].producerId,
+                      destIsRecipe: true
                     }
                   "
                 >
@@ -1030,7 +1020,9 @@
               <ng-container
                 *ngIf="
                   vm.data.game === Game.Factorio &&
-                  vm.data.recipeEntities[step.recipeId].mining
+                  step.recipeSettings.factoryId &&
+                  vm.data.itemEntities[step.recipeSettings.factoryId].factory
+                    ?.mining
                 "
               >
                 <tr class="detail">
@@ -1098,16 +1090,16 @@
                             items: row.step.items?.mul(row.percent),
                             itemId: input.key,
                             belts: row.step.belts?.mul(row.percent),
-                            beltId: vm.itemsState[row.step.itemId].beltId,
+                            beltId: vm.itemSettings[row.step.itemId].beltId,
                             wagons: row.step.wagons?.mul(row.percent),
-                            wagonId: vm.itemsState[row.step.itemId].wagonId,
-                            machines: row.step.machines?.mul(row.percent),
-                            machineId: row.step.recipeSettings?.machineId,
+                            wagonId: vm.itemSettings[row.step.itemId].wagonId,
+                            factories: row.step.factories?.mul(row.percent),
+                            factoryId: row.step.recipeSettings?.factoryId,
                             recipeId: row.step.recipeId,
-                            recipeObjectiveId: row.step.recipeObjectiveId,
+                            producerId: row.step.producerId,
                             percent: row.percent,
                             destId: step.recipeId,
-                            destRecipeObjectiveId: step.recipeObjectiveId,
+                            destProducerId: step.producerId,
                             destIsRecipe: true
                           }
                         "
@@ -1143,17 +1135,17 @@
                           items: row.step.items?.mul(row.percent),
                           itemId: output.key,
                           belts: row.step.belts?.mul(row.percent),
-                          beltId: vm.itemsState[row.step.itemId].beltId,
+                          beltId: vm.itemSettings[row.step.itemId].beltId,
                           wagons: row.step.wagons?.mul(row.percent),
-                          wagonId: vm.itemsState[row.step.itemId].wagonId,
-                          machines: row.step.machines?.mul(row.percent),
-                          machineId: row.step.recipeSettings?.machineId,
+                          wagonId: vm.itemSettings[row.step.itemId].wagonId,
+                          factories: row.step.factories?.mul(row.percent),
+                          factoryId: row.step.recipeSettings?.factoryId,
                           recipeId: row.step.recipeId,
-                          recipeObjectiveId: row.step.recipeObjectiveId,
+                          producerId: row.step.producerId,
                           percent: row.percent,
                           percentOnDest: true,
                           destId: step.recipeId,
-                          destRecipeObjectiveId: step.recipeObjectiveId,
+                          destProducerId: step.producerId,
                           destIsRecipe: true
                         }
                       "
@@ -1164,12 +1156,12 @@
               </ng-container>
             </ng-container>
           </ng-container>
-          <!-- Machine row details -->
-          <tr *ngSwitchCase="StepDetailTab.Machine" class="detail">
+          <!-- Factory row details -->
+          <tr *ngSwitchCase="StepDetailTab.Factory" class="detail">
             <td></td>
             <td colspan="100">
               <div
-                *ngIf="step.recipeId && step.machines"
+                *ngIf="step.recipeId && step.factories"
                 class="d-flex align-items-center"
               >
                 <table class="mw-0">
@@ -1190,13 +1182,14 @@
                           <ng-container *ngIf="row.step.items">
                             <ng-container
                               *ngTemplateOutlet="
-                                machineValueCell;
+                                factoryValueCell;
                                 context: {
                                   value:
                                     row.step.items
                                       .mul(row.percent)
-                                      .div(step.machines)
-                                    | rate : vm.columnsState.items.precision,
+                                      .div(step.factories)
+                                    | rate
+                                      : vm.effectivePrecision[Column.Items],
                                   itemId: input.key
                                 }
                               "
@@ -1204,20 +1197,23 @@
                             </ng-container>
                           </ng-container>
                         </td>
-                        <td *ngIf="vm.columnsState.belts.show">
+                        <td *ngIf="vm.columns[Column.Belts].show">
                           <ng-container *ngIf="row.step.belts">
                             <ng-container
-                              *ngIf="vm.itemsState[input.key].beltId as beltId"
+                              *ngIf="
+                                vm.itemSettings[input.key].beltId as beltId
+                              "
                             >
                               <ng-container
                                 *ngTemplateOutlet="
-                                  machineValueCell;
+                                  factoryValueCell;
                                   context: {
                                     value:
                                       row.step.belts
                                         .mul(row.percent)
-                                        .div(step.machines)
-                                      | rate : vm.columnsState.belts.precision,
+                                        .div(step.factories)
+                                      | rate
+                                        : vm.effectivePrecision[Column.Belts],
                                     itemId: beltId
                                   }
                                 "
@@ -1230,7 +1226,7 @@
                           <td>
                             <ng-container
                               *ngIf="
-                                vm.itemsState[input.key].beltId !==
+                                vm.itemSettings[input.key].beltId !==
                                   ItemId.Pipe && row.step.items
                               "
                             >
@@ -1238,14 +1234,14 @@
                                 *ngIf="
                                   row.step.items
                                     .mul(row.percent)
-                                    .div(step.machines)
+                                    .div(step.factories)
                                     .div(vm.dispRateInfo.value)
                                     | inserterSpeed : vm.settings as ins
                                 "
                               >
                                 <ng-container
                                   *ngTemplateOutlet="
-                                    machineValueCell;
+                                    factoryValueCell;
                                     context: {
                                       value: ins.value | rate : 1,
                                       itemId: ins.id
@@ -1267,7 +1263,7 @@
                     <td class="monospace">1</td>
                     <td>
                       <div
-                        *ngIf="step.recipeSettings?.machineId as machineId"
+                        *ngIf="step.recipeSettings?.factoryId as factoryId"
                         class="d-flex align-items-center"
                       >
                         <i
@@ -1276,8 +1272,8 @@
                           [escape]="false"
                         ></i>
                         <i
-                          [class]="machineId | iconClass"
-                          [pTooltip]="machineId | machineTooltip : vm.data"
+                          [class]="factoryId | iconClass"
+                          [pTooltip]="factoryId | factoryTooltip : vm.data"
                           [escape]="false"
                         ></i>
                       </div>
@@ -1303,7 +1299,7 @@
                         <td>
                           <ng-container
                             *ngIf="
-                              vm.itemsState[output.key].beltId !== ItemId.Pipe
+                              vm.itemSettings[output.key].beltId !== ItemId.Pipe
                             "
                           >
                             <ng-container
@@ -1311,7 +1307,7 @@
                             >
                               <ng-container
                                 *ngTemplateOutlet="
-                                  machineValueCell;
+                                  factoryValueCell;
                                   context: {
                                     value: ins.value | rate : 1,
                                     itemId: ins.id
@@ -1323,17 +1319,17 @@
                           </ng-container>
                         </td>
                       </ng-container>
-                      <td *ngIf="vm.columnsState.belts.show">
+                      <td *ngIf="vm.columns[Column.Belts].show">
                         <ng-container
-                          *ngIf="vm.itemsState[output.key].beltId as beltId"
+                          *ngIf="vm.itemSettings[output.key].beltId as beltId"
                         >
                           <ng-container
                             *ngTemplateOutlet="
-                              machineValueCell;
+                              factoryValueCell;
                               context: {
                                 value:
                                   items.div(vm.beltSpeed[beltId])
-                                  | rate : vm.columnsState.belts.precision,
+                                  | rate : vm.effectivePrecision[Column.Belts],
                                 itemId: beltId
                               }
                             "
@@ -1344,11 +1340,11 @@
                       <td>
                         <ng-container
                           *ngTemplateOutlet="
-                            machineValueCell;
+                            factoryValueCell;
                             context: {
                               value:
                                 items.mul(vm.dispRateInfo.value)
-                                | rate : vm.columnsState.items.precision,
+                                | rate : vm.effectivePrecision[Column.Items],
                               itemId: output.key
                             }
                           "
@@ -1359,7 +1355,7 @@
                   </ng-container>
                 </table>
                 <ng-template
-                  #machineValueCell
+                  #factoryValueCell
                   let-value="value"
                   let-itemId="itemId"
                 >
@@ -1383,17 +1379,79 @@
           <!-- Recipes row details -->
           <ng-container *ngSwitchCase="StepDetailTab.Recipes">
             <ng-container *ngIf="step.itemId">
+              <ng-container
+                *ngIf="vm.stepDetails[step.id].defaultableRecipeIds.length"
+              >
+                <tr class="detail">
+                  <td></td>
+                  <td colspan="100">
+                    <div>
+                      <div class="fw-bold">
+                        {{ 'list.defaultRecipe' | translate }}
+                      </div>
+                      <div>
+                        <small>{{
+                          'list.defaultRecipeInfo1' | translate
+                        }}</small>
+                      </div>
+                      <div>
+                        <small>{{
+                          'list.defaultRecipeInfo2' | translate
+                        }}</small>
+                      </div>
+                      <div
+                        class="p-error"
+                        *ngIf="vm.data.itemRecipeId[step.itemId] === null"
+                      >
+                        <small>{{
+                          'list.defaultRecipeInfo3' | translate
+                        }}</small>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="detail">
+                  <td></td>
+                  <td colspan="100">
+                    <div class="d-flex flex-wrap">
+                      <button
+                        *ngFor="
+                          let recipeId of vm.stepDetails[step.id]
+                            .defaultableRecipeIds
+                        "
+                        pButton
+                        pRipple
+                        type="button"
+                        class="me-2"
+                        [class.p-button-text]="
+                          vm.data.itemRecipeId[step.itemId] !== recipeId
+                        "
+                        [icon]="recipeId | iconSmClass : 'recipe'"
+                        [pTooltip]="recipeId | recipeTooltip : vm.data"
+                        [escape]="false"
+                        (click)="
+                          toggleDefaultRecipe(
+                            step.itemId,
+                            recipeId,
+                            vm.itemSettings,
+                            vm.settings,
+                            vm.data
+                          )
+                        "
+                      ></button>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
               <tr class="detail">
                 <td></td>
                 <td colspan="100">
                   <div>
                     <div class="fw-bold">
-                      {{ 'list.includedRecipes' | translate }}
+                      {{ 'list.enabledRecipes' | translate }}
                     </div>
                     <div>
-                      <small>{{
-                        'list.includedRecipesInfo' | translate
-                      }}</small>
+                      <small>{{ 'list.enabledRecipesInfo' | translate }}</small>
                     </div>
                   </div>
                 </td>
@@ -1407,12 +1465,14 @@
                       pButton
                       pRipple
                       type="button"
-                      class="p-button-text hover-action me-2"
-                      [class.hover-active]="vm.recipesState[recipeId].excluded"
+                      class="hover-action p-button-text me-2"
+                      [class.hover-active]="
+                        vm.settings.disabledRecipeIds.indexOf(recipeId) !== -1
+                      "
                       [icon]="recipeId | iconSmClass : 'recipe'"
                       [pTooltip]="recipeId | recipeTooltip : vm.data"
                       [escape]="false"
-                      (click)="toggleRecipe(recipeId, vm.recipesState, vm.data)"
+                      (click)="toggleRecipe(recipeId, vm.settings, vm.data)"
                     >
                       <i class="hover-icon fa-solid fa-eye-slash"></i>
                     </button>
@@ -1429,7 +1489,7 @@
     </ng-template>
     <ng-template #leftPad>
       <td></td>
-      <td *ngIf="vm.columnsState.tree.show"></td>
+      <td *ngIf="vm.columns[Column.Tree].show"></td>
     </ng-template>
     <ng-template
       #detailRow
@@ -1439,24 +1499,22 @@
       let-beltId="beltId"
       let-wagons="wagons"
       let-wagonId="wagonId"
-      let-machines="machines"
-      let-machineId="machineId"
+      let-factories="factories"
+      let-factoryId="factoryId"
       let-recipeId="recipeId"
-      let-recipeObjectiveId="recipeObjectiveId"
+      let-producerId="producerId"
       let-percent="percent"
       let-percentOnDest="percentOnDest"
       let-destId="destId"
-      let-destRecipeObjectiveId="destRecipeObjectiveId"
+      let-destProducerId="destProducerId"
       let-destIsRecipe="destIsRecipe"
-      let-inputs="inputs"
-      let-outputs="outputs"
     >
       <tr class="detail">
         <ng-container *ngIf="itemId">
           <ng-template *ngTemplateOutlet="leftPad"></ng-template>
           <td class="w-0 text-end">
             <span class="monospace">{{
-              items | rate : vm.columnsState.items.precision
+              items | rate : vm.effectivePrecision[Column.Items]
             }}</span>
           </td>
           <td class="ps-0">
@@ -1468,11 +1526,11 @@
               ></i>
             </div>
           </td>
-          <ng-container *ngIf="vm.columnsState.belts.show">
+          <ng-container *ngIf="vm.columns[Column.Belts].show">
             <ng-container *ngIf="belts && beltId">
               <td class="w-0 text-end">
                 <span class="monospace">{{
-                  belts | rate : vm.columnsState.belts.precision
+                  belts | rate : vm.effectivePrecision[Column.Belts]
                 }}</span>
               </td>
               <td class="ps-0">
@@ -1494,11 +1552,11 @@
               </td>
             </ng-container>
           </ng-container>
-          <ng-container *ngIf="vm.columnsState.wagons.show">
+          <ng-container *ngIf="vm.columns[Column.Wagons].show">
             <ng-container *ngIf="wagons && wagonId">
               <td class="w-0 text-end">
                 <span class="monospace">{{
-                  wagons | rate : vm.columnsState.wagons.precision
+                  wagons | rate : vm.effectivePrecision[Column.Wagons]
                 }}</span>
               </td>
               <td class="ps-0">
@@ -1541,40 +1599,37 @@
           <td class="w-0 text-end">
             <span
               *ngIf="
-                machines &&
-                machines.nonzero() &&
-                (machineId | machineShowRate : vm.data.game)
+                factories &&
+                factories.nonzero() &&
+                (factoryId | factoryShowRate : vm.data.game)
               "
               class="monospace"
               >{{
-                machines
-                  | machineRate : vm.columnsState.machines.precision : machineId
+                factories
+                  | factoryRate
+                    : vm.effectivePrecision[Column.Factories]
+                    : factoryId
               }}</span
             >
           </td>
           <td class="p-0" colspan="100">
             <div class="d-flex align-items-center">
-              <div *ngIf="inputs" class="position-absolute">
-                {{ 'list.inputs' | translate }}
-              </div>
               <ng-container
-                *ngIf="machineId | machineShow : vm.data.game; else machineFill"
+                *ngIf="factoryId | factoryShow : vm.data.game; else factoryFill"
               >
                 <i
                   [class]="recipeId | iconClass : 'recipe'"
                   [pTooltip]="recipeId | recipeTooltip : vm.data"
                   [escape]="false"
-                  ><span *ngIf="recipeObjectiveId"
-                    >#{{ recipeObjectiveId }}</span
-                  ></i
+                  ><span *ngIf="producerId">#{{ producerId }}</span></i
                 >
                 <i
-                  [class]="machineId | iconClass"
-                  [pTooltip]="machineId | machineTooltip : vm.data"
+                  [class]="factoryId | iconClass"
+                  [pTooltip]="factoryId | factoryTooltip : vm.data"
                   [escape]="false"
                 ></i>
               </ng-container>
-              <ng-template #machineFill>
+              <ng-template #factoryFill>
                 <div class="d-flex invisible">
                   <i class="lab-icon"></i>
                 </div>
@@ -1582,7 +1637,7 @@
                   <i class="lab-icon"></i>
                 </div>
               </ng-template>
-              <ng-container *ngIf="percent">
+              <ng-container *ngIf="percent && destId">
                 <i
                   class="m-1 p-2 fa-solid fa-arrow-right"
                   *ngIf="percentOnDest"
@@ -1595,7 +1650,6 @@
                   *ngIf="!percentOnDest"
                 ></i>
                 <i
-                  *ngIf="destId"
                   [class]="
                     destId | iconClass : (destIsRecipe ? 'recipe' : 'item')
                   "
@@ -1605,13 +1659,8 @@
                       : (destId | itemTooltip : vm.data)
                   "
                   [escape]="false"
-                  ><span *ngIf="destRecipeObjectiveId"
-                    >#{{ destRecipeObjectiveId }}</span
-                  ></i
+                  ><span *ngIf="destProducerId">#{{ destProducerId }}</span></i
                 >
-                <span *ngIf="outputs">
-                  {{ 'list.outputs' | translate }}
-                </span>
               </ng-container>
             </div>
           </td>
@@ -1621,16 +1670,31 @@
     <ng-template pTemplate="footer">
       <tr>
         <td></td>
-        <td *ngIf="vm.columnsState.tree.show"></td>
+        <td *ngIf="vm.columns[Column.Tree].show"></td>
         <td colspan="2">
           {{ 'list.total' | translate }}
         </td>
         <ng-container
           *ngTemplateOutlet="
             totalCell;
+            context: { column: Column.Belts, totals: vm.totals.belts }
+          "
+        >
+        </ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            totalCell;
+            context: { column: Column.Wagons, totals: vm.totals.wagons }
+          "
+        >
+        </ng-container>
+        <ng-container
+          *ngTemplateOutlet="
+            totalCell;
             context: {
-              columnSettings: vm.columnsState.belts,
-              totals: vm.totals.belts
+              column: Column.Factories,
+              totals: vm.totals.factories,
+              modulesTotals: vm.totals.factoryModules
             }
           "
         >
@@ -1639,61 +1703,42 @@
           *ngTemplateOutlet="
             totalCell;
             context: {
-              columnSettings: vm.columnsState.wagons,
-              totals: vm.totals.wagons
-            }
-          "
-        >
-        </ng-container>
-        <ng-container
-          *ngTemplateOutlet="
-            totalCell;
-            context: {
-              columnSettings: vm.columnsState.machines,
-              totals: vm.totals.machines,
-              modulesTotals: vm.totals.machineModules
-            }
-          "
-        >
-        </ng-container>
-        <ng-container
-          *ngTemplateOutlet="
-            totalCell;
-            context: {
-              columnSettings: vm.columnsState.beacons,
+              column: Column.Beacons,
               totals: vm.totals.beacons,
               modulesTotals: vm.totals.beaconModules
             }
           "
         >
         </ng-container>
-        <td *ngIf="vm.columnsState.power.show" class="text-end inherit">
+        <td *ngIf="vm.columns[Column.Power].show" class="text-end inherit">
           <span class="monospace">{{
             vm.totals.power
-              | power : vm.columnsState.power.precision : vm.effectivePowerUnit
+              | power
+                : vm.effectivePrecision[Column.Power]
+                : vm.effectivePowerUnit
           }}</span>
         </td>
-        <td *ngIf="vm.columnsState.pollution.show" class="text-end inherit">
+        <td *ngIf="vm.columns[Column.Pollution].show" class="text-end inherit">
           <span class="monospace">{{
-            vm.totals.pollution | rate : vm.columnsState.pollution.precision
+            vm.totals.pollution | rate : vm.effectivePrecision[Column.Pollution]
           }}</span>
         </td>
-        <td *ngIf="vm.columnsState.link.show"></td>
+        <td *ngIf="vm.columns[Column.Link].show"></td>
       </tr>
       <ng-template
         #totalCell
-        let-columnSettings="columnSettings"
+        let-column="column"
         let-totals="totals"
         let-modulesTotals="modulesTotals"
       >
-        <ng-container *ngIf="columnSettings.show">
+        <ng-container *ngIf="vm.columns[column].show">
           <td class="w-0 text-end inherit">
             <div
               *ngFor="let tot of totals | keyvalue : trackSvc.sortByValue"
               class="py-2 icon-height"
             >
               <span class="monospace">{{
-                tot.value | rate : columnSettings.precision
+                tot.value | rate : vm.effectivePrecision[column]
               }}</span>
             </div>
           </td>

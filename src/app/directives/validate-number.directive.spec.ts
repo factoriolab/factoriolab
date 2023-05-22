@@ -3,7 +3,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { TestUtility } from 'src/tests';
-import { Rational } from '~/models';
 import { ValidateNumberDirective } from './validate-number.directive';
 
 enum DataTest {
@@ -14,7 +13,7 @@ enum DataTest {
   template: `<input
     #input
     labValidateNumber
-    [minimum]="minimum"
+    [labValidateMinimum]="labValidateMinimum"
     [(ngModel)]="model"
     data-test="lab-validate-number-input"
   />`,
@@ -23,7 +22,7 @@ class TestValidateNumberDirectiveComponent {
   @ViewChild('input') input!: ElementRef<HTMLInputElement>;
 
   model = null;
-  minimum = Rational.one;
+  labValidateMinimum = '1';
 }
 
 describe('ValidateNumberDirective', () => {

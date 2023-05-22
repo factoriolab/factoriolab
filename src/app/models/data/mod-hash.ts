@@ -4,8 +4,7 @@ export interface ModHash {
   belts: string[];
   fuels: string[];
   wagons: string[];
-  machines: string[];
+  factories: string[];
   modules: string[];
   recipes: string[];
-  technologies: string[];
 }

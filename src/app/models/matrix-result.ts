@@ -1,19 +1,25 @@
-import { Simplex } from 'glpk-ts';
-import { StatusSimplex } from 'glpk-ts/dist/status';
-
 import { MatrixResultType } from './enum';
+import { RationalProducer } from './producer';
 import { Rational } from './rational';
 import { Step } from './step';
 
 export interface MatrixResult {
   steps: Step[];
   resultType: MatrixResultType;
-  /** GLPK simplex return code */
-  returnCode?: Simplex.ReturnCode;
-  /** GLPK model simplex status */
-  simplexStatus?: StatusSimplex;
+  /** Final number of simplex pivots */
+  pivots?: number;
   /** Runtime in ms */
   time?: number;
-  /** Total cost of solution */
-  cost?: Rational;
+  /** Simplex canonical matrix */
+  A?: Rational[][];
+  /** Simplex objective solution */
+  O?: Rational[];
+  /** Items in tableau */
+  itemIds?: string[];
+  /** Producers in tableau */
+  producers?: RationalProducer[];
+  /** Recipes in tableau */
+  recipeIds?: string[];
+  /** Items identified as inputs in tableau */
+  inputIds?: string[];
 }

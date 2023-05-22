@@ -4,7 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, Observable, switchMap } from 'rxjs';
 
 import {
-  ColumnsState,
+  Column,
   Dataset,
   FlowData,
   FlowStyle,
@@ -13,13 +13,8 @@ import {
   Step,
   themeMap,
 } from '~/models';
-import {
-  ItemObjectives,
-  LabState,
-  Preferences,
-  Recipes,
-  Settings,
-} from '~/store';
+import { LabState, Preferences, Products, Recipes, Settings } from '~/store';
+import { ColumnsState } from '~/store/preferences';
 
 @Injectable({
   providedIn: 'root',
@@ -32,7 +27,7 @@ export class FlowService {
     private store: Store<LabState>
   ) {
     this.flowData$ = combineLatest([
-      this.store.select(ItemObjectives.getSteps),
+      this.store.select(Products.getSteps),
       this.store.select(Recipes.getAdjustedDataset),
       this.store
         .select(Settings.getDisplayRateInfo)
@@ -50,7 +45,7 @@ export class FlowService {
     steps: Step[],
     data: Dataset,
     suffix: string,
-    columnsState: ColumnsState,
+    columns: ColumnsState,
     theme: FlowStyle
   ): FlowData {
     const flow: FlowData = {
@@ -59,29 +54,29 @@ export class FlowService {
       links: [],
     };
 
-    const itemPrec = columnsState.items.precision;
-    const machinePrec = columnsState.machines.precision;
+    const itemPrec = columns[Column.Items].precision;
+    const factoryPrec = columns[Column.Factories].precision;
 
     for (const step of steps) {
-      if (step.recipeId && step.machines) {
+      if (step.recipeId && step.factories) {
         const recipe = data.recipeEntities[step.recipeId];
         const settings = step.recipeSettings;
 
-        if (settings?.machineId != null) {
-          const machine = data.itemEntities[settings.machineId];
+        if (settings?.factoryId != null) {
+          const factory = data.itemEntities[settings.factoryId];
           // CREATE NODE: Standard recipe
           flow.nodes.push({
             id: `r|${step.id}`,
-            type: step.recipeObjectiveId
+            type: step.producerId
               ? NodeType.Output
               : Object.keys(recipe.in).length === 0
               ? NodeType.Input
               : NodeType.Recipe,
             name: recipe.name,
-            text: `${step.machines.toString(machinePrec)} ${machine.name}`,
+            text: `${step.factories.toString(factoryPrec)} ${factory.name}`,
             recipe,
-            machineId: settings.machineId,
-            machines: step.machines.toString(machinePrec),
+            factoryId: settings.factoryId,
+            factories: step.factories.toString(factoryPrec),
           });
         }
       }
@@ -122,8 +117,6 @@ export class FlowService {
 
             // Links to recipe node
             for (const targetId of Object.keys(step.parents)) {
-              if (targetId === '') continue; // Skip output parent
-
               // This is how much is requested by that step,
               // but need recipe source
               const targetAmount = step.items.mul(step.parents[targetId]);
