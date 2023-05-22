@@ -38,6 +38,22 @@ describe('ObjectivesComponent', () => {
       });
       expect(result.length).toEqual(1);
     });
+
+    it('should build specific error messages to display to the user', () => {
+      let result = component.getMessages({
+        steps: [],
+        resultType: MatrixResultType.Failed,
+        simplexStatus: 'unbounded',
+      });
+      expect(result[0].summary).toEqual('objectives.errorUnbounded');
+
+      result = component.getMessages({
+        steps: [],
+        resultType: MatrixResultType.Failed,
+        simplexStatus: 'no_feasible',
+      });
+      expect(result[0].summary).toEqual('objectives.errorInfeasible');
+    });
   });
 
   it('should dispatch actions', () => {
