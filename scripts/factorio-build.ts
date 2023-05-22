@@ -1375,50 +1375,53 @@ async function processMod(): Promise<void> {
       }
     }
 
-    const resource = dataRaw.resource[proto.name];
-    if (resource && resource.minable) {
-      // Found mining recipe
-      const id = getFakeRecipeId(proto.name, `${proto.name}-mining`);
-      let miners = producers.resource[resource.category ?? 'basic-solid'];
-      const recipeIn: Record<string, number> = {};
-      if (resource.minable.required_fluid && resource.minable.fluid_amount) {
-        const amount = resource.minable.fluid_amount / 10;
-        recipeIn[resource.minable.required_fluid] = amount;
-        miners = miners.filter((m) => {
-          // Only allow producers with fluid boxes
-          const item = getItem(m);
-          if (!D.isFluid(item) && item.place_result) {
-            const miningDrill = dataRaw['mining-drill'][item.place_result];
-            return miningDrill.input_fluid_box != null;
-          } else {
-            // Seems to be an invalid entry
-            return false;
-          }
-        });
+    if (!D.isRecipe(proto)) {
+      const resource = dataRaw.resource[proto.name];
+      if (resource && resource.minable) {
+        // Found mining recipe
+        const id = getFakeRecipeId(proto.name, `${proto.name}-mining`);
+
+        let miners = producers.resource[resource.category ?? 'basic-solid'];
+        const recipeIn: Record<string, number> = {};
+        if (resource.minable.required_fluid && resource.minable.fluid_amount) {
+          const amount = resource.minable.fluid_amount / 10;
+          recipeIn[resource.minable.required_fluid] = amount;
+          miners = miners.filter((m) => {
+            // Only allow producers with fluid boxes
+            const item = getItem(m);
+            if (!D.isFluid(item) && item.place_result) {
+              const miningDrill = dataRaw['mining-drill'][item.place_result];
+              return miningDrill.input_fluid_box != null;
+            } else {
+              // Seems to be an invalid entry
+              return false;
+            }
+          });
+        }
+
+        const [recipeOut, recipeCatalyst, total] = getProducts(
+          resource.minable.results,
+          resource.minable.result,
+          resource.minable.count
+        );
+
+        const recipe: Recipe = {
+          id,
+          name: D.isFluid(proto)
+            ? fluidLocale.names[proto.name]
+            : itemLocale.names[proto.name],
+          category: group.name,
+          row: getRecipeRow(proto),
+          time: resource.minable.mining_time,
+          in: recipeIn,
+          out: recipeOut,
+          catalyst: recipeCatalyst,
+          cost: 10000 / total,
+          mining: true,
+          producers: miners,
+        };
+        modData.recipes.push(recipe);
       }
-
-      const [recipeOut, recipeCatalyst, total] = getProducts(
-        resource.minable.results,
-        resource.minable.result,
-        resource.minable.count
-      );
-
-      const recipe: Recipe = {
-        id,
-        name: D.isFluid(proto)
-          ? fluidLocale.names[proto.name]
-          : itemLocale.names[proto.name],
-        category: group.name,
-        row: getRecipeRow(proto),
-        time: resource.minable.mining_time,
-        in: recipeIn,
-        out: recipeOut,
-        catalyst: recipeCatalyst,
-        cost: 10000 / total,
-        mining: true,
-        producers: miners,
-      };
-      modData.recipes.push(recipe);
     }
   }
 
@@ -1471,10 +1474,24 @@ async function processMod(): Promise<void> {
     };
     modData.categories.push(category);
   }
+
+  let icon = 'lab';
+  let lab = modData.items.find((i) => i.id === icon);
+  if (lab == null) {
+    lab = modData.items.find((i) => i.id.indexOf('lab') !== -1);
+    if (lab == null) {
+      throw 'Technology icon not found';
+    } else {
+      icon = lab.icon ?? lab.id;
+    }
+  } else if (lab.icon != null) {
+    icon = lab.icon;
+  }
+
   modData.categories.push({
     id: 'technology',
     name: 'Technology',
-    icon: 'lab',
+    icon,
   });
 
   // Filter out recipes with no producers
