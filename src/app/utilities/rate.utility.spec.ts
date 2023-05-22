@@ -4,14 +4,125 @@ import {
   displayRateInfo,
   Entities,
   Game,
+  ItemObjectiveRational,
+  ObjectiveType,
+  RateUnit,
   Rational,
-  RationalProducer,
-  RationalRecipeSettings,
+  RecipeObjectiveRational,
+  RecipeSettingsRational,
   Step,
 } from '~/models';
 import { RateUtility } from './rate.utility';
 
 describe('RateUtility', () => {
+  describe('itemObjectiveNormalizedRate', () => {
+    it('should skip on maximize objectives', () => {
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: '1',
+            rateUnit: RateUnit.Belts,
+            type: ObjectiveType.Maximize,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.one);
+    });
+
+    it('should normalize item objective rates based on display rate', () => {
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: '1',
+            rateUnit: RateUnit.Items,
+            type: ObjectiveType.Output,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.from([1, 60]));
+    });
+
+    it('should normalize item objective rates based on belts', () => {
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: '1',
+            rateUnit: RateUnit.Belts,
+            type: ObjectiveType.Output,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.from(15));
+    });
+
+    it('should normalize item objective rates based on wagons', () => {
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.Coal,
+            rate: '1',
+            rateUnit: RateUnit.Wagons,
+            type: ObjectiveType.Output,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.from([100, 3]));
+
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.PetroleumGas,
+            rate: '1',
+            rateUnit: RateUnit.Wagons,
+            type: ObjectiveType.Output,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.from([1250, 3]));
+    });
+
+    it('should adjust technology objective rate by productivity', () => {
+      expect(
+        RateUtility.itemObjectiveNormalizedRate(
+          new ItemObjectiveRational({
+            id: '0',
+            itemId: ItemId.ArtilleryShellRange,
+            rate: '1',
+            rateUnit: RateUnit.Items,
+            type: ObjectiveType.Output,
+          }),
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.Dataset
+        )
+      ).toEqual(Rational.from([1, 60]));
+    });
+  });
+
   describe('addEntityValue', () => {
     it('should add parents field to step', () => {
       const step = { ...Mocks.Step1 };
@@ -39,8 +150,8 @@ describe('RateUtility', () => {
   });
 
   describe('adjustPowerPollution', () => {
-    it('should handle no factories', () => {
-      const step: any = { factories: null };
+    it('should handle no machines', () => {
+      const step: any = { machines: null };
       const result = { ...step };
       RateUtility.adjustPowerPollution(
         result,
@@ -51,7 +162,7 @@ describe('RateUtility', () => {
     });
 
     it('should handle null drain/consumption/pollution', () => {
-      const step: any = { factories: Rational.one };
+      const step: any = { machines: Rational.one };
       const result = { ...step };
       const recipe: any = { drain: null, consumption: null, pollution: null };
       RateUtility.adjustPowerPollution(result, recipe, Game.Factorio);
@@ -59,7 +170,7 @@ describe('RateUtility', () => {
     });
 
     it('should handle only drain', () => {
-      const step: any = { factories: Rational.one };
+      const step: any = { machines: Rational.one };
       const result = { ...step };
       const recipe: any = {
         drain: Rational.two,
@@ -68,13 +179,13 @@ describe('RateUtility', () => {
       };
       RateUtility.adjustPowerPollution(result, recipe, Game.Factorio);
       expect(result).toEqual({
-        factories: Rational.one,
+        machines: Rational.one,
         power: Rational.two,
       });
     });
 
     it('should handle account for non-cumulative DSP drain', () => {
-      const step: any = { factories: Rational.from(1, 3) };
+      const step: any = { machines: Rational.from([1, 3]) };
       const result = { ...step };
       const recipe: any = {
         drain: Rational.two,
@@ -83,13 +194,13 @@ describe('RateUtility', () => {
       };
       RateUtility.adjustPowerPollution(result, recipe, Game.DysonSphereProgram);
       expect(result).toEqual({
-        factories: Rational.from(1, 3),
-        power: Rational.from(4, 3),
+        machines: Rational.from([1, 3]),
+        power: Rational.from([4, 3]),
       });
     });
 
     it('should handle only consumption', () => {
-      const step: any = { factories: Rational.one };
+      const step: any = { machines: Rational.one };
       const result = { ...step };
       const recipe: any = {
         drain: null,
@@ -98,13 +209,13 @@ describe('RateUtility', () => {
       };
       RateUtility.adjustPowerPollution(result, recipe, Game.Factorio);
       expect(result).toEqual({
-        factories: Rational.one,
+        machines: Rational.one,
         power: Rational.two,
       });
     });
 
     it('should calculate power/pollution', () => {
-      const step: any = { factories: Rational.from(3, 2) };
+      const step: any = { machines: Rational.from([3, 2]) };
       const recipe: any = {
         drain: Rational.from(3),
         consumption: Rational.from(4),
@@ -112,9 +223,9 @@ describe('RateUtility', () => {
       };
       RateUtility.adjustPowerPollution(step, recipe, Game.Factorio);
       expect(step).toEqual({
-        factories: Rational.from(3, 2),
+        machines: Rational.from([3, 2]),
         power: Rational.from(12),
-        pollution: Rational.from(15, 2),
+        pollution: Rational.from([15, 2]),
       });
     });
   });
@@ -154,7 +265,7 @@ describe('RateUtility', () => {
         items: Rational.one,
         itemId: ItemId.IronPlate,
         recipe: Mocks.Dataset.recipeR[RecipeId.IronPlate],
-        factories: Rational.one,
+        machines: Rational.one,
       };
       const stepB: Step = { id: '1', itemId: ItemId.IronOre };
       RateUtility.calculateParentsOutputs(stepA, [stepA, stepB]);
@@ -162,13 +273,13 @@ describe('RateUtility', () => {
         stepB,
         'parents',
         '0',
-        Rational.from(5, 16)
+        Rational.from([5, 16])
       );
       expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
         stepA,
         'outputs',
         'iron-plate',
-        Rational.from(5, 16)
+        Rational.from([5, 16])
       );
     });
   });
@@ -182,33 +293,34 @@ describe('RateUtility', () => {
       RateUtility.calculateSettings(
         step,
         {},
-        Mocks.RationalRecipeSettingsInitial
+        Mocks.RecipesStateRationalInitial
       );
       expect(step.recipeSettings).toEqual(
-        Mocks.RationalRecipeSettingsInitial[RecipeId.Coal]
+        Mocks.RecipesStateRationalInitial[RecipeId.Coal]
       );
     });
 
-    it('should add recipe settings to a producer step', () => {
+    it('should add recipe settings to a recipe objective step', () => {
       const step: Step = {
         id: '0',
         recipeId: RecipeId.Coal,
-        producerId: '0',
+        recipeObjectiveId: '0',
       };
-      const producers: Entities<RationalProducer> = {
+      const recipeObjectives: Entities<RecipeObjectiveRational> = {
         ['0']: {
           id: '0',
           recipeId: RecipeId.Coal,
           count: Rational.one,
+          type: ObjectiveType.Output,
           recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
         },
       };
       RateUtility.calculateSettings(
         step,
-        producers,
-        Mocks.RationalRecipeSettingsInitial
+        recipeObjectives,
+        Mocks.RecipesStateRationalInitial
       );
-      expect(step.recipeSettings).toEqual(producers[0]);
+      expect(step.recipeSettings).toEqual(recipeObjectives[0]);
     });
   });
 
@@ -220,7 +332,7 @@ describe('RateUtility', () => {
       };
       RateUtility.calculateBelts(
         step,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -236,7 +348,7 @@ describe('RateUtility', () => {
       };
       RateUtility.calculateBelts(
         step,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -253,7 +365,7 @@ describe('RateUtility', () => {
       };
       RateUtility.calculateBelts(
         step,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -269,11 +381,11 @@ describe('RateUtility', () => {
         belts: Rational.one,
         wagons: Rational.one,
         recipeSettings:
-          Mocks.RationalRecipeSettingsInitial[RecipeId.ArtilleryShellRange],
+          Mocks.RecipesStateRationalInitial[RecipeId.ArtilleryShellRange],
       };
       RateUtility.calculateBelts(
         step,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -289,12 +401,11 @@ describe('RateUtility', () => {
         items: Rational.one,
         belts: Rational.one,
         wagons: Rational.one,
-        recipeSettings:
-          Mocks.RationalRecipeSettingsInitial[RecipeId.RocketPart],
+        recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.RocketPart],
       };
       RateUtility.calculateBelts(
         step,
-        Mocks.ItemSettingsInitial,
+        Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.AdjustedData
       );
@@ -310,9 +421,9 @@ describe('RateUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
         recipeId: RecipeId.Coal,
-        factories: Rational.one,
+        machines: Rational.one,
         power: Rational.zero,
-        recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.Coal],
+        recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.Coal],
       };
       RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
       expect(step.power).toEqual(Rational.from(3840));
@@ -324,9 +435,9 @@ describe('RateUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
         recipeId: RecipeId.Coal,
-        factories: Rational.one,
+        machines: Rational.one,
         power: Rational.zero,
-        recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.Coal],
+        recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.Coal],
       };
       RateUtility.calculateBeacons(step, Rational.hundred, Mocks.AdjustedData);
       expect(step.recipeSettings?.beacons?.[0].total).toEqual(Rational.from(8));
@@ -338,15 +449,15 @@ describe('RateUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
         recipeId: RecipeId.Coal,
-        factories: Rational.one,
-        recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.Coal],
+        machines: Rational.one,
+        recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.Coal],
       };
       RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
       expect(step.power).toEqual(Rational.from(3840));
     });
 
     it('should override from recipe settings', () => {
-      const recipeSettings: RationalRecipeSettings = {
+      const recipeSettings: RecipeSettingsRational = {
         beacons: [
           {
             count: Rational.from(8),
@@ -360,7 +471,7 @@ describe('RateUtility', () => {
         itemId: ItemId.Coal,
         items: Rational.one,
         recipeId: RecipeId.Coal,
-        factories: Rational.one,
+        machines: Rational.one,
         power: Rational.zero,
         recipeSettings,
       };
@@ -378,7 +489,7 @@ describe('RateUtility', () => {
       const step: Step = {
         id: 'id',
         recipeId: RecipeId.IronOre,
-        factories: Rational.one,
+        machines: Rational.one,
         recipeSettings: {
           beacons: undefined,
         },
@@ -425,8 +536,8 @@ describe('RateUtility', () => {
       expect(step.checked).toBeTrue();
     });
 
-    it('should set the checked state for a producer step', () => {
-      const step: Step = { id: '0', producerId: '1' };
+    it('should set the checked state for a recipe objective step', () => {
+      const step: Step = { id: '0', recipeObjectiveId: '1' };
       RateUtility.calculateChecked(
         step,
         {},

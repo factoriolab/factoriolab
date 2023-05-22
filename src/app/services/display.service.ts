@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
-import { Rational, Recipe } from '~/models';
+import { Dataset, IdType, Rational, Recipe, Technology } from '~/models';
 
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
-  icon(id: string, num?: string | number): string {
-    return `<i class="me-2 lab-icon-sm padded ${id}"><span>${
+  constructor(private translateSvc: TranslateService) {}
+
+  icon(id: string, num?: string | number, type: IdType = 'item'): string {
+    return `<i class="me-2 lab-icon sm ${type} padded ${id}"><span>${
       num ?? ''
     }</span></i>`;
   }
@@ -25,11 +28,10 @@ export class DisplayService {
   }
 
   power(value: Rational | string | number): string {
-    if (typeof value === 'string') {
-      value = Rational.fromString(value);
-    } else if (typeof value === 'number') {
-      value = Rational.fromNumber(value);
+    if (!(value instanceof Rational)) {
+      value = Rational.from(value);
     }
+
     if (value.abs().lt(Rational.thousand)) {
       return `${this.round(value)} kW`;
     } else {
@@ -48,6 +50,23 @@ export class DisplayService {
     }
   }
 
+  recipeTooltip(value: string | null | undefined, data: Dataset): string {
+    if (value == null) return '';
+
+    const recipe = data.recipeEntities[value];
+    const technology = data.technologyEntities[value];
+
+    if (recipe == null) return '';
+
+    return `<div>${
+      recipe.name
+    }</div><div class="d-flex align-items-center justify-content-center\
+    flex-wrap mt-2">${this.recipeProcess(recipe)}\
+    </div>${this.recipeProducedBy(recipe)}${this.recipeUnlockedBy(
+      recipe
+    )}${this.technologyPrerequisites(technology)}`;
+  }
+
   recipeProcess(recipe: Recipe): string {
     const timeHtml = this.icon('time', recipe.time);
     const inHtml = Object.keys(recipe.in)
@@ -57,5 +76,33 @@ export class DisplayService {
       .map((i) => this.icon(i, recipe.out[i]))
       .join('');
     return `${timeHtml}${inHtml}<i class="m-1 me-2 fa-solid fa-arrow-right"></i>${outHtml}`;
+  }
+
+  recipeProducedBy(recipe: Recipe): string {
+    return `<small><div>${this.translateSvc.instant(
+      'data.producedByRecipes'
+    )}</div>${recipe.producers.map((i) => this.icon(i, '')).join('')}</small>`;
+  }
+
+  recipeUnlockedBy(recipe: Recipe): string {
+    if (recipe.unlockedBy == null) return '';
+
+    const a = `<small><div>${this.translateSvc.instant(
+      'data.unlockedBy'
+    )}</div>${this.icon(recipe.unlockedBy, undefined, 'recipe')}</small>`;
+
+    return a;
+  }
+
+  technologyPrerequisites(technology: Technology | undefined): string {
+    if (technology?.prerequisites == null) return '';
+
+    const a = `<small><div>${this.translateSvc.instant(
+      'data.prerequisites'
+    )}</div>${technology.prerequisites
+      .map((i) => this.icon(i, undefined, 'recipe'))
+      .join('')}</small>`;
+
+    return a;
   }
 }

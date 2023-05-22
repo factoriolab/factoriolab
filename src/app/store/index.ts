@@ -4,33 +4,33 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { environment } from 'src/environments/environment';
 import * as App from './app.actions';
 import * as Datasets from './datasets';
-import * as Factories from './factories';
+import * as ItemObjectives from './item-objectives';
 import * as Items from './items';
+import * as Machines from './machines';
 import * as Preferences from './preferences';
-import * as Producers from './producers';
-import * as Products from './products';
+import * as RecipeObjectives from './recipe-objectives';
 import * as Recipes from './recipes';
 import * as Settings from './settings';
 import { storageMetaReducer } from './storage.reducer';
 
 export interface LabState {
   datasetsState: Datasets.DatasetsState;
-  productsState: Products.ProductsState;
-  producersState: Producers.ProducersState;
+  itemObjectivesState: ItemObjectives.ItemObjectivesState;
+  recipeObjectivesState: RecipeObjectives.RecipeObjectivesState;
   itemsState: Items.ItemsState;
   recipesState: Recipes.RecipesState;
-  factoriesState: Factories.FactoriesState;
+  machinesState: Machines.MachinesState;
   settingsState: Settings.SettingsState;
   preferencesState: Preferences.PreferencesState;
 }
 
 export const reducers: ActionReducerMap<LabState, never> = {
   datasetsState: Datasets.datasetsReducer,
-  productsState: Products.productsReducer,
-  producersState: Producers.producersReducer,
+  itemObjectivesState: ItemObjectives.itemObjectivesReducer,
+  recipeObjectivesState: RecipeObjectives.recipeObjectivesReducer,
   itemsState: Items.itemsReducer,
   recipesState: Recipes.recipesReducer,
-  factoriesState: Factories.factoriesReducer,
+  machinesState: Machines.machinesReducer,
   settingsState: Settings.settingsReducer,
   preferencesState: Preferences.preferencesReducer,
 };
@@ -46,11 +46,11 @@ export const metaReducers: MetaReducer<LabState>[] = environment.testing
 export {
   App,
   Datasets,
-  Factories,
+  ItemObjectives,
   Items,
+  Machines,
   Preferences,
-  Producers,
-  Products,
+  RecipeObjectives,
   Recipes,
   Settings,
 };

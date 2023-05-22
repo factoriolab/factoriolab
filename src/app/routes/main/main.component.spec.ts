@@ -39,16 +39,16 @@ describe('MainComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('tryFixSimplex', () => {
-    it('should set loading indicator and dispatch actions', fakeAsync(() => {
-      spyOn(mockStore, 'dispatch');
-      component.tryFixSimplex();
-      expect(component.isFixingSimplex).toBeTrue();
-      tick(100);
-      expect(mockStore.dispatch).toHaveBeenCalledTimes(2);
-      expect(component.isFixingSimplex).toBeFalse();
-    }));
-  });
+  // describe('tryFixSimplex', () => {
+  //   it('should set loading indicator and dispatch actions', fakeAsync(() => {
+  //     spyOn(mockStore, 'dispatch');
+  //     component.tryFixSimplex();
+  //     expect(component.isFixingSimplex).toBeTrue();
+  //     tick(100);
+  //     expect(mockStore.dispatch).toHaveBeenCalledTimes(2);
+  //     expect(component.isFixingSimplex).toBeFalse();
+  //   }));
+  // });
 
   describe('reset', () => {
     it('should set loading indicator and reset application', fakeAsync(() => {

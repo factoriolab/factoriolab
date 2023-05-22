@@ -1,0 +1,25 @@
+table.properties {
+  border-spacing: 0px;
+  border-collapse: collapse;
+
+  th,
+  td {
+    border: 1px solid var(--surface-border);
+    border-width: 1px 0 1px 0;
+    padding: 0.5rem;
+  }
+
+  th {
+    text-align: start;
+  }
+
+  td {
+    text-align: end;
+
+    > div {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  }
+}

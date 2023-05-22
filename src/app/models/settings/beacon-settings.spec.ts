@@ -1,11 +1,11 @@
 import { ItemId } from 'src/tests';
 import { Rational } from '../rational';
-import { RationalBeaconSettings } from './beacon-settings';
+import { BeaconRationalSettings } from './beacon-settings';
 
-describe('RationalBeaconSettings', () => {
+describe('BeaconRationalSettings', () => {
   describe('constructor', () => {
     it('should fill in all fields', () => {
-      const result = new RationalBeaconSettings({
+      const result = new BeaconRationalSettings({
         count: '2',
         id: ItemId.Beacon,
         moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
@@ -23,7 +23,7 @@ describe('RationalBeaconSettings', () => {
     });
 
     it('should ignore undefined fields', () => {
-      const result = new RationalBeaconSettings({});
+      const result = new BeaconRationalSettings({});
       expect(result.count).toBeUndefined();
       expect(result.id).toBeUndefined();
       expect(result.moduleIds).toBeUndefined();

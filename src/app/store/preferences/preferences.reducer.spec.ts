@@ -1,4 +1,4 @@
-import { Column, Language, PowerUnit, SimplexType, Theme } from '~/models';
+import { Language, PowerUnit, Theme } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
@@ -39,7 +39,7 @@ describe('Preferences Reducer', () => {
 
   describe('SET_COLUMNS', () => {
     it('should set the columns state', () => {
-      const columns = { [Column.Power]: { show: true } } as any;
+      const columns = { power: { show: true } } as any;
       const result = preferencesReducer(
         undefined,
         new Actions.SetColumnsAction(columns)
@@ -50,19 +50,9 @@ describe('Preferences Reducer', () => {
     it('should reset power unit if power column is hidden', () => {
       const result = preferencesReducer(
         { powerUnit: PowerUnit.MW } as any,
-        new Actions.SetColumnsAction({ [Column.Power]: {} } as any)
+        new Actions.SetColumnsAction({ power: {} } as any)
       );
       expect(result.powerUnit).toEqual(PowerUnit.Auto);
-    });
-  });
-
-  describe('SET_SIMPLEX_TYPE', () => {
-    it('should set the simplex type', () => {
-      const result = preferencesReducer(
-        undefined,
-        new Actions.SetSimplexTypeAction(SimplexType.JsBigIntRational)
-      );
-      expect(result.simplexType).toEqual(SimplexType.JsBigIntRational);
     });
   });
 

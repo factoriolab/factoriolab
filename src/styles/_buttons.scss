@@ -44,7 +44,6 @@ body.light .p-button.hover-action.hover-active .p-button-icon {
 .p-dropdown.icon,
 .p-multiselect.icon {
   .lab-icon,
-  .lab-icon-sm,
   .fa-solid {
     transition: opacity 300ms ease;
   }
@@ -61,7 +60,6 @@ body.light .p-button.hover-action.hover-active .p-button-icon {
 
   &:hover {
     .lab-icon,
-    .lab-icon-sm,
     .fa-solid {
       opacity: 0.3;
     }

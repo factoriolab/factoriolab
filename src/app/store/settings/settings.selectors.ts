@@ -4,30 +4,35 @@ import { SelectItem } from 'primeng/api';
 import { environment } from 'src/environments';
 import { fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
-  Column,
+  BeaconRational,
+  BeltRational,
+  CargoWagonRational,
   columnOptions,
+  CostKey,
+  CostRationalSettings,
   Dataset,
   Defaults,
   displayRateInfo,
   Entities,
+  FluidWagonRational,
+  FuelRational,
   FuelType,
   Game,
+  gameColumnsState,
+  gameInfo,
+  initialColumnsState,
   InserterData,
   ItemId,
+  ItemRational,
+  MachineRational,
+  ModuleRational,
   Preset,
   presetOptions,
-  rateTypeOptions,
+  rateUnitOptions,
   Rational,
-  RationalBeacon,
-  RationalBelt,
-  RationalCargoWagon,
-  RationalFactory,
-  RationalFluidWagon,
-  RationalFuel,
-  RationalItem,
-  RationalModule,
-  RationalRecipe,
+  RecipeRational,
   researchSpeedFactor,
+  Technology,
   toBoolEntities,
   toEntities,
 } from '~/models';
@@ -42,6 +47,10 @@ export const settingsState = (state: LabState): SettingsState =>
   state.settingsState;
 
 export const getModId = createSelector(settingsState, (state) => state.modId);
+export const getResearchedTechnologyIds = createSelector(
+  settingsState,
+  (state) => state.researchedTechnologyIds
+);
 export const getNetProductionOnly = createSelector(
   settingsState,
   (state) => state.netProductionOnly
@@ -79,22 +88,11 @@ export const getDisplayRate = createSelector(
   settingsState,
   (state) => state.displayRate
 );
-export const getCostFactor = createSelector(
+export const getMaximizeType = createSelector(
   settingsState,
-  (state) => state.costFactor
+  (state) => state.maximizeType
 );
-export const getCostFactory = createSelector(
-  settingsState,
-  (state) => state.costFactory
-);
-export const getCostInput = createSelector(
-  settingsState,
-  (state) => state.costInput
-);
-export const getCostIgnored = createSelector(
-  settingsState,
-  (state) => state.costIgnored
-);
+export const getCosts = createSelector(settingsState, (state) => state.costs);
 
 /* Complex selectors */
 export const getMod = createSelector(
@@ -115,8 +113,10 @@ export const getGame = createSelector(
   (id, data) => data[id]?.game ?? Game.None
 );
 
-export const getColumnOptions = createSelector(getGame, (game) =>
-  columnOptions(game)
+export const getGameInfo = createSelector(getGame, (game) => gameInfo[game]);
+
+export const getColumnOptions = createSelector(getGameInfo, (gameInf) =>
+  columnOptions(gameInf)
 );
 
 export const getDisplayRateInfo = createSelector(
@@ -124,10 +124,10 @@ export const getDisplayRateInfo = createSelector(
   (displayRate) => displayRateInfo[displayRate]
 );
 
-export const getRateTypeOptions = createSelector(
+export const getRateUnitOptions = createSelector(
   getGame,
   getDisplayRateInfo,
-  (game, dispRateInfo) => rateTypeOptions(dispRateInfo, game)
+  (game, dispRateInfo) => rateUnitOptions(dispRateInfo, game)
 );
 
 export const getPresetOptions = createSelector(getGame, (game) =>
@@ -149,55 +149,13 @@ export const getModOptions = createSelector(
 );
 
 export const getColumnsState = createSelector(
-  getGame,
+  getGameInfo,
   Preferences.getColumns,
-  (game, col): Preferences.ColumnsState => {
-    switch (game) {
-      case Game.CaptainOfIndustry:
-        return {
-          ...Preferences.initialColumnsState,
-          ...col,
-          ...{
-            [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
-            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
-            [Column.Power]: { ...col[Column.Power], ...{ show: false } },
-            [Column.Pollution]: {
-              ...col[Column.Pollution],
-              ...{ show: false },
-            },
-          },
-        };
-      case Game.DysonSphereProgram:
-        return {
-          ...Preferences.initialColumnsState,
-          ...col,
-          ...{
-            [Column.Wagons]: { ...col[Column.Wagons], ...{ show: false } },
-            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
-            [Column.Pollution]: {
-              ...col[Column.Pollution],
-              ...{ show: false },
-            },
-          },
-        };
-      case Game.Satisfactory:
-        return {
-          ...Preferences.initialColumnsState,
-          ...col,
-          ...{
-            [Column.Beacons]: { ...col[Column.Beacons], ...{ show: false } },
-            [Column.Pollution]: {
-              ...col[Column.Pollution],
-              ...{ show: false },
-            },
-          },
-        };
-      default:
-        return {
-          ...Preferences.initialColumnsState,
-          ...col,
-        };
-    }
+  (gameInfo, columnsState) => {
+    return gameColumnsState(
+      { ...initialColumnsState, ...columnsState },
+      gameInfo
+    );
   }
 );
 
@@ -225,9 +183,9 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
         fuelId: m.fuel,
         cargoWagonId: m.cargoWagon,
         fluidWagonId: m.fluidWagon,
-        disabledRecipeIds: m.disabledRecipes,
-        factoryRankIds:
-          preset === Preset.Minimum ? m.minFactoryRank : m.maxFactoryRank,
+        excludedRecipeIds: m.excludedRecipes,
+        machineRankIds:
+          preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
         moduleRankIds: moduleRank,
         beaconCount:
           preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
@@ -252,17 +210,11 @@ export const getSettings = createSelector(
       fuelId: s.fuelId ?? d?.fuelId,
       cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
       fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
-      disabledRecipeIds: s.disabledRecipeIds ?? d?.disabledRecipeIds ?? [],
     },
   })
 );
 
 export const getFuelId = createSelector(getSettings, (s) => s.fuelId);
-
-export const getDisabledRecipeIds = createSelector(
-  getSettings,
-  (s) => s.disabledRecipeIds
-);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
   Rational.fromNumber(bonus).div(Rational.hundred)
@@ -282,31 +234,16 @@ export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
   Rational.fromNumber(rate)
 );
 
-export const getRationalCostFactor = createSelector(getCostFactor, (cost) =>
-  Rational.fromString(cost)
-);
-
-export const getRationalCostFactory = createSelector(getCostFactory, (cost) =>
-  Rational.fromString(cost)
-);
-
-export const getRationalCostInput = createSelector(getCostInput, (cost) =>
-  Rational.fromString(cost)
-);
-
-export const getRationalCostIgnored = createSelector(getCostIgnored, (cost) =>
-  Rational.fromString(cost)
-);
-
-export const getSimplexModifiers = createSelector(
-  getRationalCostInput,
-  getRationalCostIgnored,
-  Preferences.getSimplexType,
-  (costInput, costIgnored, simplexType) => ({
-    costInput,
-    costIgnored,
-    simplexType,
-  })
+export const getRationalCost = createSelector(
+  getCosts,
+  (cost): CostRationalSettings =>
+    (Object.keys(cost) as CostKey[]).reduce(
+      (a: Partial<CostRationalSettings>, b) => {
+        a[b] = Rational.fromString(cost[b]);
+        return a;
+      },
+      {}
+    ) as CostRationalSettings
 );
 
 export const getI18n = createSelector(
@@ -329,7 +266,7 @@ export const getDataset = createSelector(
       {},
       environment.debug
     );
-    const modIconPath = mod?.iconPath ?? `data/${mod?.id}/icons.png`;
+    const modIconPath = `data/${mod?.id}/icons.webp`;
     const iconEntities = toEntities(
       (mod?.icons ?? []).map((i) => ({
         ...i,
@@ -399,17 +336,15 @@ export const getDataset = createSelector(
         /** Don't sort belts in DSP, leave based on stacks */
         game === Game.DysonSphereProgram
           ? 0
-          : Rational.fromJson(a.belt.speed)
-              .sub(Rational.fromJson(b.belt.speed))
+          : Rational.from(a.belt.speed)
+              .sub(Rational.from(b.belt.speed))
               .toNumber()
       )
       .map((i) => i.id);
     const pipeIds = items
       .filter(fnPropsNotNullish('pipe'))
       .sort((a, b) =>
-        Rational.fromJson(a.pipe.speed)
-          .sub(Rational.fromJson(b.pipe.speed))
-          .toNumber()
+        Rational.from(a.pipe.speed).sub(Rational.from(b.pipe.speed)).toNumber()
       )
       .map((i) => i.id);
     const cargoWagonIds = items
@@ -418,29 +353,36 @@ export const getDataset = createSelector(
       .map((i) => i.id);
     const fluidWagonIds = items
       .filter(fnPropsNotNullish('fluidWagon'))
-      .sort((a, b) => a.fluidWagon.capacity - b.fluidWagon.capacity)
+      .sort((a, b) =>
+        Rational.from(a.fluidWagon.capacity)
+          .sub(Rational.from(b.fluidWagon.capacity))
+          .toNumber()
+      )
       .map((i) => i.id);
-    const factoryIds = items.filter((i) => i.factory).map((i) => i.id);
-    const modules = items.filter((i) => i.module);
+    const machineIds = items
+      .filter(fnPropsNotNullish('machine'))
+      .map((i) => i.id);
+    const modules = items.filter(fnPropsNotNullish('module'));
     const moduleIds = modules.map((i) => i.id);
     const proliferatorModuleIds = modules
-      .filter(fnPropsNotNullish('module'))
       .filter((i) => i.module.sprays != null)
       .map((i) => i.id);
-    const fuelIds = items
+    const fuels = items
       .filter(fnPropsNotNullish('fuel'))
-      .sort((a, b) => a.fuel.value - b.fuel.value)
-      .reduce((e: Entities<string[]>, f) => {
-        const cat = f.fuel.category;
-        if (!e[cat]) {
-          e[cat] = [];
-        }
-        e[cat].push(f.id);
-        return e;
-      }, {});
+      .sort((a, b) =>
+        Rational.from(a.fuel.value).sub(Rational.from(b.fuel.value)).toNumber()
+      );
+    const fuelIds = fuels.map((i) => i.id);
+    const chemicalFuelIds = fuels
+      .filter((i) => i.fuel.category === FuelType.Chemical)
+      .map((i) => i.id);
+
+    const technologyIds = recipes
+      .filter(fnPropsNotNullish('technology'))
+      .map((r) => r.id);
 
     // Calculate missing implicit recipe icons
-    // For recipes with no icon, use icon of first output product
+    // For recipes with no icon, use icon of first output item
     recipes
       .filter((r) => !iconEntities[r.id] && !recipeEntities[r.id].icon)
       .forEach((r) => {
@@ -491,15 +433,15 @@ export const getDataset = createSelector(
     }
 
     // Convert to rationals
-    const beaconEntities: Entities<RationalBeacon> = {};
-    const beltEntities: Entities<RationalBelt> = {};
-    const cargoWagonEntities: Entities<RationalCargoWagon> = {};
-    const fluidWagonEntities: Entities<RationalFluidWagon> = {};
-    const factoryEntities: Entities<RationalFactory> = {};
-    const moduleEntities: Entities<RationalModule> = {};
-    const fuelEntities: Entities<RationalFuel> = {};
-    const itemEntities = itemIds.reduce((e: Entities<RationalItem>, i) => {
-      const item = new RationalItem(itemData[i]);
+    const beaconEntities: Entities<BeaconRational> = {};
+    const beltEntities: Entities<BeltRational> = {};
+    const cargoWagonEntities: Entities<CargoWagonRational> = {};
+    const fluidWagonEntities: Entities<FluidWagonRational> = {};
+    const machineEntities: Entities<MachineRational> = {};
+    const moduleEntities: Entities<ModuleRational> = {};
+    const fuelEntities: Entities<FuelRational> = {};
+    const itemEntities = itemIds.reduce((e: Entities<ItemRational>, i) => {
+      const item = new ItemRational(itemData[i]);
       if (item.beacon) {
         beaconEntities[i] = item.beacon;
       }
@@ -514,8 +456,8 @@ export const getDataset = createSelector(
       if (item.fluidWagon) {
         fluidWagonEntities[i] = item.fluidWagon;
       }
-      if (item.factory) {
-        factoryEntities[i] = item.factory;
+      if (item.machine) {
+        machineEntities[i] = item.machine;
       }
       if (item.module) {
         moduleEntities[i] = item.module;
@@ -527,14 +469,20 @@ export const getDataset = createSelector(
       e[i] = item;
       return e;
     }, {});
-    const recipeR = recipeIds.reduce((e: Entities<RationalRecipe>, r) => {
-      e[r] = new RationalRecipe(recipeEntities[r]);
+    const technologyEntities: Entities<Technology> = {};
+    const recipeR = recipeIds.reduce((e: Entities<RecipeRational>, r) => {
+      const recipe = new RecipeRational(recipeEntities[r]);
+      if (recipe.technology) {
+        technologyEntities[r] = recipe.technology;
+      }
+
+      e[r] = recipe;
       return e;
     }, {});
 
     // Calculate item simple recipes
     const recipeMatches = recipeIds.reduce(
-      (e: Entities<RationalRecipe[]>, r) => {
+      (e: Entities<RecipeRational[]>, r) => {
         const recipe = recipeR[r];
         const outputs = Object.keys(recipe.out);
         for (const o of outputs.filter((i) => recipe.produces(i))) {
@@ -549,26 +497,12 @@ export const getDataset = createSelector(
       {}
     );
     const itemRecipeId = itemIds.reduce((e: Entities, i) => {
-      const matches = Object.prototype.hasOwnProperty.call(recipeMatches, i)
-        ? recipeMatches[i]
-        : [];
+      const matches = recipeMatches[i] ? recipeMatches[i] : [];
       if (matches.length === 1) {
         e[i] = matches[0].id;
       }
       return e;
     }, {});
-
-    // Calculate complex recipes
-    const simpleRecipeIds = Object.keys(itemRecipeId).map(
-      (i) => itemRecipeId[i]
-    );
-    const complexRecipeIds = recipeIds
-      .filter(
-        (r) =>
-          simpleRecipeIds.indexOf(r) === -1 ||
-          Object.keys(recipeEntities[r].out).length > 1
-      )
-      .sort();
 
     const dataset: Dataset = {
       game,
@@ -591,16 +525,18 @@ export const getDataset = createSelector(
       cargoWagonEntities,
       fluidWagonIds,
       fluidWagonEntities,
-      factoryIds,
-      factoryEntities,
+      machineIds,
+      machineEntities,
       moduleIds,
       proliferatorModuleIds,
       moduleEntities,
       fuelIds,
+      chemicalFuelIds,
       fuelEntities,
       recipeIds,
-      complexRecipeIds,
       recipeEntities,
+      technologyIds,
+      technologyEntities,
       recipeR,
       limitations,
       hash,
@@ -613,6 +549,7 @@ export const getDataset = createSelector(
 export const getOptions = createSelector(
   getDataset,
   (data): Options => ({
+    categories: getIdOptions(data.categoryIds, data.categoryEntities),
     items: getIdOptions(data.itemIds, data.itemEntities),
     beacons: getIdOptions(data.beaconIds, data.itemEntities),
     belts: getIdOptions(data.beltIds, data.itemEntities),
@@ -624,11 +561,8 @@ export const getOptions = createSelector(
       data.itemEntities,
       true
     ),
-    chemicalFuels: getIdOptions(
-      data.fuelIds[FuelType.Chemical] ?? [],
-      data.itemEntities
-    ),
-    complexRecipes: getIdOptions(data.complexRecipeIds, data.recipeEntities),
+    chemicalFuels: getIdOptions(data.chemicalFuelIds, data.itemEntities),
+    recipes: getIdOptions(data.recipeIds, data.recipeEntities),
   })
 );
 
@@ -668,8 +602,6 @@ export const getAdjustmentData = createSelector(
   getFuelId,
   getRationalMiningBonus,
   getResearchFactor,
-  getRationalCostFactor,
-  getRationalCostFactory,
   getDataset,
   (
     netProductionOnly,
@@ -677,8 +609,6 @@ export const getAdjustmentData = createSelector(
     fuelId,
     miningBonus,
     researchSpeed,
-    costFactor,
-    costFactory,
     data
   ) => ({
     netProductionOnly,
@@ -686,24 +616,79 @@ export const getAdjustmentData = createSelector(
     fuelId,
     miningBonus,
     researchSpeed,
-    costFactor,
-    costFactory,
     data,
   })
 );
 
 export const getSettingsModified = createSelector(settingsState, (state) => ({
-  cost:
-    state.costFactor !== initialSettingsState.costFactor ||
-    state.costFactory !== initialSettingsState.costFactory ||
-    state.costInput !== initialSettingsState.costInput ||
-    state.costIgnored !== initialSettingsState.costIgnored,
+  costs: state.costs !== initialSettingsState.costs,
 }));
 
 export const getInserterData = createSelector(
   getInserterTarget,
   getInserterCapacity,
   (target, capacity) => InserterData[target][capacity]
+);
+
+export const getAllResearchedTechnologyIds = createSelector(
+  getResearchedTechnologyIds,
+  getDataset,
+  (researchedTechologyIds, data) => {
+    if (
+      /** No need to parse if all researched */
+      researchedTechologyIds == null ||
+      /** Skip if data is not loaded */
+      Object.keys(data.technologyEntities).length === 0
+    )
+      return researchedTechologyIds;
+
+    /**
+     * Source technology list includes only minimal set of technologies that
+     * are not required as prerequisites for other researched technologies,
+     * to reduce zip size. Need to rehydrate full list of technology ids using
+     * their prerequisites.
+     */
+    const selection = new Set(researchedTechologyIds);
+
+    let addIds: Set<string>;
+    do {
+      addIds = new Set<string>();
+
+      for (const id of selection) {
+        const tech = data.technologyEntities[id];
+        tech.prerequisites
+          ?.filter((p) => !selection.has(p))
+          .forEach((p) => addIds.add(p));
+      }
+
+      addIds.forEach((i) => selection.add(i));
+    } while (addIds.size);
+
+    return Array.from(selection);
+  }
+);
+
+export const getAvailableRecipes = createSelector(
+  getAllResearchedTechnologyIds,
+  getDataset,
+  (researchedTechnologyIds, data) => {
+    if (researchedTechnologyIds == null) return data.recipeIds;
+
+    const set = new Set(researchedTechnologyIds);
+    return data.recipeIds.filter((i) => {
+      const recipe = data.recipeEntities[i];
+      return recipe.unlockedBy == null || set.has(recipe.unlockedBy);
+    });
+  }
+);
+
+export const getAvailableItems = createSelector(
+  getAvailableRecipes,
+  getDataset,
+  (recipeIds, data) => {
+    const recipes = recipeIds.map((r) => data.recipeR[r]);
+    return data.itemIds.filter((i) => recipes.some((r) => r.produces(i)));
+  }
 );
 
 export function reduceEntities(

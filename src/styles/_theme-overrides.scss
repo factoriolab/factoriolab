@@ -94,3 +94,8 @@ table p-dropdown {
 .p-button {
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
 }
+
+// Ensure gap between menu icon & text
+.p-menuitem-icon + .p-menuitem-text {
+  margin-left: 0.5rem;
+}

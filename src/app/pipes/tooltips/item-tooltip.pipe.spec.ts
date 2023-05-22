@@ -1,13 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ItemId, Mocks, RecipeId } from 'src/tests';
+import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { ItemTooltipPipe } from './item-tooltip.pipe';
 
 describe('ItemTooltipPipe', () => {
   let pipe: ItemTooltipPipe;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ providers: [ItemTooltipPipe] });
+    TestBed.configureTestingModule({
+      providers: [ItemTooltipPipe],
+      imports: [TestModule],
+    });
     pipe = TestBed.inject(ItemTooltipPipe);
   });
 
