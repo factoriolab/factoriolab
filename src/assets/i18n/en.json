@@ -13,7 +13,8 @@
     "errorDetail": "The application has encountered an error:",
     "resetTooltip": "Click to reset",
     "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, cost: {{ cost }}",
-    "simplexUnsolved": "Simplex {{ resultType }}"
+    "simplexUnsolved": "Simplex {{ resultType }}",
+    "migrationWarning": "Migration warning"
   },
   "options": {
     "column": {
