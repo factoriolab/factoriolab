@@ -7,16 +7,16 @@ export type ModuleEffect =
   | 'pollution';
 
 export interface Module {
-  speed?: number;
-  productivity?: number;
-  consumption?: number;
-  pollution?: number;
+  consumption?: number | string;
+  pollution?: number | string;
+  productivity?: number | string;
+  speed?: number | string;
   limitation?: string;
   sprays?: number;
   proliferator?: string;
 }
 
-export class RationalModule {
+export class ModuleRational {
   speed?: Rational;
   productivity?: Rational;
   consumption?: Rational;
@@ -25,27 +25,33 @@ export class RationalModule {
   sprays?: Rational;
   proliferator?: string;
 
-  constructor(data: Module) {
-    if (data.speed) {
-      this.speed = Rational.fromNumber(data.speed);
+  constructor(obj: Module) {
+    if (obj.speed) {
+      this.speed = Rational.from(obj.speed);
     }
-    if (data.productivity) {
-      this.productivity = Rational.fromNumber(data.productivity);
+
+    if (obj.productivity) {
+      this.productivity = Rational.from(obj.productivity);
     }
-    if (data.consumption) {
-      this.consumption = Rational.fromNumber(data.consumption);
+
+    if (obj.consumption) {
+      this.consumption = Rational.from(obj.consumption);
     }
-    if (data.pollution) {
-      this.pollution = Rational.fromNumber(data.pollution);
+
+    if (obj.pollution) {
+      this.pollution = Rational.from(obj.pollution);
     }
-    if (data.limitation) {
-      this.limitation = data.limitation;
+
+    if (obj.limitation) {
+      this.limitation = obj.limitation;
     }
-    if (data.sprays) {
-      this.sprays = Rational.fromNumber(data.sprays);
+
+    if (obj.sprays) {
+      this.sprays = Rational.fromNumber(obj.sprays);
     }
-    if (data.proliferator) {
-      this.proliferator = data.proliferator;
+
+    if (obj.proliferator) {
+      this.proliferator = obj.proliferator;
     }
   }
 }

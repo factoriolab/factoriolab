@@ -1,5 +1,4 @@
-.lab-icon,
-.lab-icon-sm {
+.lab-icon {
   position: relative;
   flex-shrink: 0;
 
@@ -23,7 +22,8 @@
     height: 64px;
   }
 
-  > span {
+  > span,
+  &::after {
     // Styles for text overlay
     position: absolute;
     bottom: -2px;
@@ -40,28 +40,40 @@
       -2px 0px 2px black;
     pointer-events: none;
   }
-}
 
-.lab-icon-sm {
-  margin: 0;
-  width: 20px;
-  height: 20px;
+  &.lg {
+    width: 64px;
+    height: 64px;
 
-  &::before {
-    top: -6px;
-    left: -6px;
+    &::before {
+      transform: none;
+    }
   }
 
-  &.padded {
-    margin: 7px;
+  &.sm {
+    margin: 0;
+    width: 20px;
+    height: 20px;
+
+    &::before {
+      top: -6px;
+      left: -6px;
+    }
+
+    &.padded {
+      margin: 7px;
+    }
+
+    + .p-button-label {
+      margin-left: 0.75rem;
+    }
   }
 }
 
 /** Set up base app related icons sprite sheet */
-.lab-icon,
-.lab-icon-sm {
+.lab-icon {
   &::before {
-    background-image: url('../assets/icons/icons.png');
+    background-image: url('../assets/icons/icons.webp');
   }
 }
 

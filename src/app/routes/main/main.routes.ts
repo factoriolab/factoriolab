@@ -9,18 +9,18 @@ export const routes: Routes = [
     children: [
       {
         path: 'list',
-        loadChildren: () =>
-          import('./routes/list/list.module').then((c) => c.ListModule),
+        loadComponent: () =>
+          import('./routes/list/list.component').then((c) => c.ListComponent),
       },
       {
         path: 'flow',
-        loadChildren: () =>
-          import('./routes/flow/flow.module').then((m) => m.FlowModule),
+        loadComponent: () =>
+          import('./routes/flow/flow.component').then((c) => c.FlowComponent),
       },
       {
-        path: 'matrix',
+        path: 'data',
         loadChildren: () =>
-          import('./routes/matrix/matrix.module').then((m) => m.MatrixModule),
+          import('./routes/data/data.module').then((m) => m.DataModule),
       },
     ],
   },

@@ -1,74 +1,131 @@
 import {
   Dataset,
   DisplayRateInfo,
+  EnergyType,
   Entities,
   Game,
+  ItemObjectiveRational,
   ItemSettings,
+  ObjectiveType,
+  RateUnit,
   Rational,
-  RationalProducer,
-  RationalRecipe,
-  RationalRecipeSettings,
+  RecipeObjectiveRational,
+  RecipeRational,
+  RecipeSettingsRational,
   Step,
   toEntities,
 } from '~/models';
+import { Items } from '~/store';
 
 const ROOT_ID = '';
 
 export class RateUtility {
+  static itemObjectiveNormalizedRate(
+    itemObjective: ItemObjectiveRational,
+    itemsState: Items.ItemsState,
+    beltSpeed: Entities<Rational>,
+    displayRateInfo: DisplayRateInfo,
+    data: Dataset
+  ): Rational {
+    if (itemObjective.type === ObjectiveType.Maximize) {
+      // Ignore RateUnit entirely when maximizing, it is also hidden in UI
+      return itemObjective.rate;
+    }
+
+    const rate = itemObjective.rate;
+    let factor = Rational.one;
+    switch (itemObjective.rateUnit) {
+      case RateUnit.Items: {
+        factor = displayRateInfo.value.reciprocal();
+        break;
+      }
+      case RateUnit.Belts: {
+        const beltId = itemsState[itemObjective.itemId].beltId;
+        if (beltId) {
+          factor = beltSpeed[beltId];
+        }
+        break;
+      }
+      case RateUnit.Wagons: {
+        const wagonId = itemsState[itemObjective.itemId].wagonId;
+        if (wagonId) {
+          const item = data.itemEntities[itemObjective.itemId];
+          const wagon = data.itemEntities[wagonId];
+          if (item.stack && wagon.cargoWagon) {
+            factor = item.stack
+              .mul(wagon.cargoWagon.size)
+              .div(displayRateInfo.value);
+          } else if (wagon.fluidWagon) {
+            factor = wagon.fluidWagon.capacity.div(displayRateInfo.value);
+          }
+        }
+        break;
+      }
+    }
+
+    // Adjust based on productivity for technology objectives
+    const recipe = data.recipeR[data.itemRecipeId[itemObjective.itemId]];
+    if (recipe?.technology) {
+      factor = factor.mul(recipe.productivity);
+    }
+
+    return rate.mul(factor);
+  }
+
   static addEntityValue(
     step: Step,
     key: 'parents' | 'outputs',
     parentId: string,
-    rate: Rational
+    value: Rational
   ): void {
     const obj = step[key];
     if (!obj) {
-      step[key] = { [parentId]: rate };
+      step[key] = { [parentId]: value };
     } else if (obj[parentId]) {
-      obj[parentId] = obj[parentId].add(rate);
+      obj[parentId] = obj[parentId].add(value);
     } else {
-      obj[parentId] = rate;
+      obj[parentId] = value;
     }
   }
 
   static adjustPowerPollution(
     step: Step,
-    recipe: RationalRecipe,
+    recipe: RecipeRational,
     game: Game
   ): void {
-    if (step.factories?.nonzero() && !recipe.part) {
+    if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
         // Reset power
         step.power = Rational.zero;
 
         // Calculate drain
         if (recipe.drain?.nonzero()) {
-          let factories = step.factories.ceil();
+          let machines = step.machines.ceil();
           if (game === Game.DysonSphereProgram) {
             // In DSP drain is not cumulative; only add for inactive machines
-            factories = factories.sub(step.factories);
+            machines = machines.sub(step.machines);
           }
 
-          step.power = step.power.add(factories.mul(recipe.drain));
+          step.power = step.power.add(machines.mul(recipe.drain));
         }
         // Calculate consumption
         if (recipe.consumption?.nonzero()) {
-          step.power = step.power.add(step.factories.mul(recipe.consumption));
+          step.power = step.power.add(step.machines.mul(recipe.consumption));
         }
       }
 
       // Calculate pollution
       if (recipe.pollution?.nonzero()) {
-        step.pollution = step.factories.mul(recipe.pollution);
+        step.pollution = step.machines.mul(recipe.pollution);
       }
     }
   }
 
   static normalizeSteps(
     steps: Step[],
-    producers: RationalProducer[],
-    itemSettings: Entities<ItemSettings>,
-    recipeSettings: Entities<RationalRecipeSettings>,
+    recipeObjectives: RecipeObjectiveRational[],
+    itemsState: Entities<ItemSettings>,
+    recipesState: Entities<RecipeSettingsRational>,
     beaconReceivers: Rational | null,
     beltSpeed: Entities<Rational>,
     dispRateInfo: DisplayRateInfo,
@@ -80,18 +137,18 @@ export class RateUtility {
       this.calculateParentsOutputs(step, _steps);
     }
 
-    const producerEntities = toEntities(producers);
+    const recipeObjectiveEntities = toEntities(recipeObjectives);
 
     for (const step of _steps) {
-      this.calculateSettings(step, producerEntities, recipeSettings);
-      this.calculateBelts(step, itemSettings, beltSpeed, data);
+      this.calculateSettings(step, recipeObjectiveEntities, recipesState);
+      this.calculateBelts(step, itemsState, beltSpeed, data);
       this.calculateBeacons(step, beaconReceivers, data);
       this.calculateDisplayRate(step, dispRateInfo);
       this.calculateChecked(
         step,
-        itemSettings,
-        recipeSettings,
-        producerEntities
+        itemsState,
+        recipesState,
+        recipeObjectiveEntities
       );
     }
 
@@ -99,28 +156,28 @@ export class RateUtility {
   }
 
   static calculateParentsOutputs(step: Step, steps: Step[]): void {
-    if (step.recipe && step.factories?.nonzero()) {
+    if (step.recipe && step.machines?.nonzero()) {
       const recipe = step.recipe;
-      const quantity = step.factories.div(recipe.time);
+      const quantity = step.machines.div(recipe.time);
       for (const itemId of Object.keys(recipe.in)) {
         if (recipe.in[itemId].nonzero()) {
-          const rate = recipe.in[itemId].mul(quantity);
+          const amount = recipe.in[itemId].mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
           if (itemStep != null) {
-            this.addEntityValue(itemStep, 'parents', step.id, rate);
+            this.addEntityValue(itemStep, 'parents', step.id, amount);
           }
         }
       }
       for (const itemId of Object.keys(recipe.out)) {
         if (recipe.out[itemId].nonzero()) {
-          const rate = recipe.out[itemId].mul(quantity);
+          const amount = recipe.out[itemId].mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
           if (itemStep?.items?.nonzero()) {
             this.addEntityValue(
               step,
               'outputs',
               itemId,
-              rate.div(itemStep.items)
+              amount.div(itemStep.items)
             );
           }
         }
@@ -130,43 +187,43 @@ export class RateUtility {
 
   static calculateSettings(
     step: Step,
-    producerEntities: Entities<RationalProducer>,
-    recipeSettings: Entities<RationalRecipeSettings>
+    recipeObjectiveEntities: Entities<RecipeObjectiveRational>,
+    recipesState: Entities<RecipeSettingsRational>
   ): void {
     if (step.recipeId) {
-      if (step.producerId) {
-        step.recipeSettings = producerEntities[step.producerId];
+      if (step.recipeObjectiveId) {
+        step.recipeSettings = recipeObjectiveEntities[step.recipeObjectiveId];
       } else {
-        step.recipeSettings = recipeSettings[step.recipeId];
+        step.recipeSettings = recipesState[step.recipeId];
       }
     }
   }
 
   static calculateBelts(
     step: Step,
-    itemSettings: Entities<ItemSettings>,
+    itemsState: Entities<ItemSettings>,
     beltSpeed: Entities<Rational>,
     data: Dataset
   ): void {
     let noItems = false;
     if (step.recipeId != null && step.recipeSettings != null) {
-      const factoryId = step.recipeSettings.factoryId;
-      if (factoryId != null) {
-        const factory = data.factoryEntities[factoryId];
+      const machineId = step.recipeSettings.machineId;
+      if (machineId != null) {
+        const machine = data.machineEntities[machineId];
         const recipe = data.recipeEntities[step.recipeId];
         // No belts/wagons on research rows or rocket part rows
-        noItems = !!(factory.research || (factory.silo && !recipe.part));
+        noItems = !!(recipe.technology || (machine.silo && !recipe.part));
       }
     }
     if (noItems) {
       delete step.belts;
       delete step.wagons;
     } else if (step.itemId != null) {
-      const belt = itemSettings[step.itemId].beltId;
+      const belt = itemsState[step.itemId].beltId;
       if (step.items != null && belt != null) {
         step.belts = step.items.div(beltSpeed[belt]);
       }
-      const wagon = itemSettings[step.itemId].wagonId;
+      const wagon = itemsState[step.itemId].wagonId;
       if (step.items != null && wagon != null) {
         const item = data.itemEntities[step.itemId];
         if (item.stack) {
@@ -188,14 +245,14 @@ export class RateUtility {
     if (
       !beaconReceivers?.nonzero() ||
       step.recipeId == null ||
-      !step.factories?.nonzero() ||
+      !step.machines?.nonzero() ||
       data.recipeEntities[step.recipeId].part ||
       step.recipeSettings == null
     ) {
       return;
     }
 
-    const factories = step.factories;
+    const machines = step.machines;
 
     const settings = step.recipeSettings;
     if (settings.beacons == null) return;
@@ -207,7 +264,7 @@ export class RateUtility {
           let total = b.total;
           if (b.id != null) {
             if (b.count != null && total == null) {
-              total = factories.ceil().mul(b.count).div(beaconReceivers);
+              total = machines.ceil().mul(b.count).div(beaconReceivers);
               if (total.lt(b.count)) {
                 // Can't be less than beacon count
                 total = b.count;
@@ -215,7 +272,7 @@ export class RateUtility {
             }
 
             const beacon = data.beaconEntities[b.id];
-            if (beacon.usage?.nonzero() && total != null) {
+            if (beacon.type === EnergyType.Electric && total != null) {
               step.power = (step.power ?? Rational.zero).add(
                 total.mul(beacon.usage)
               );
@@ -253,17 +310,17 @@ export class RateUtility {
 
   static calculateChecked(
     step: Step,
-    itemSettings: Entities<ItemSettings>,
-    recipeSettings: Entities<RationalRecipeSettings>,
-    producerEntities: Entities<RationalProducer>
+    itemsState: Entities<ItemSettings>,
+    recipesState: Entities<RecipeSettingsRational>,
+    recipeObjectiveEntities: Entities<RecipeObjectiveRational>
   ): void {
-    // Priority: 1) Item state, 2) Producer state, 3) Recipe state
+    // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
-      step.checked = itemSettings[step.itemId].checked;
-    } else if (step.producerId != null) {
-      step.checked = producerEntities[step.producerId].checked;
+      step.checked = itemsState[step.itemId].checked;
+    } else if (step.recipeObjectiveId != null) {
+      step.checked = recipeObjectiveEntities[step.recipeObjectiveId].checked;
     } else if (step.recipeId != null) {
-      step.checked = recipeSettings[step.recipeId].checked;
+      step.checked = recipesState[step.recipeId].checked;
     }
   }
 
@@ -271,7 +328,13 @@ export class RateUtility {
     // Determine parents
     const parents: Entities<string> = {};
     for (const step of steps) {
-      if (step.parents && Object.keys(step.parents).length === 1) {
+      if (
+        step.parents == null ||
+        step.parents[''] ||
+        Object.keys(step.parents).length > 1
+      ) {
+        parents[step.id] = ROOT_ID;
+      } else {
         const stepId = Object.keys(step.parents)[0];
         const parent = steps.find((s) => s.id === stepId);
         if (parent) {
@@ -281,8 +344,6 @@ export class RateUtility {
             parents[step.id] = parent.id;
           }
         }
-      } else {
-        parents[step.id] = ROOT_ID;
       }
     }
 

@@ -4,7 +4,7 @@ import { MockStore } from '@ngrx/store/testing';
 
 import { Mocks, TestModule } from 'src/tests';
 import { Game } from '~/models';
-import { Producers, Products } from '~/store';
+import { ItemObjectives, RecipeObjectives } from '~/store';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -31,19 +31,28 @@ describe('HeaderComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should update the page title with the first product name', () => {
+    it('should update the page title with the first item objective name', () => {
       spyOn(title, 'setTitle');
-      mockStore.overrideSelector(Products.getBaseProducts, Mocks.ProductsList);
+      mockStore.overrideSelector(
+        ItemObjectives.getItemObjectives,
+        Mocks.ItemObjectivesList
+      );
       mockStore.refreshState();
-      expect(title.setTitle).toHaveBeenCalledWith('Wooden chest | FactorioLab');
+      expect(title.setTitle).toHaveBeenCalledWith(
+        'Advanced circuit | FactorioLab'
+      );
     });
 
-    it('should update the page title with the first producer name', () => {
+    it('should update the page title with the first recipe objective name', () => {
       spyOn(title, 'setTitle');
-      mockStore.overrideSelector(Products.getBaseProducts, []);
-      mockStore.overrideSelector(Producers.getBaseProducers, [Mocks.Producer]);
+      mockStore.overrideSelector(ItemObjectives.getItemObjectives, []);
+      mockStore.overrideSelector(RecipeObjectives.getBaseRecipeObjectives, [
+        Mocks.RecipeObjective1,
+      ]);
       mockStore.refreshState();
-      expect(title.setTitle).toHaveBeenCalledWith('Iron plate | FactorioLab');
+      expect(title.setTitle).toHaveBeenCalledWith(
+        'Piercing rounds magazine | FactorioLab'
+      );
     });
   });
 

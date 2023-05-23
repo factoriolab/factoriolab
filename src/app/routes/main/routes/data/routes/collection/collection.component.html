@@ -1,0 +1,8 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <p-breadcrumb [home]="vm.home" [model]="vm.breadcrumb"></p-breadcrumb>
+  <lab-collection-table
+    [ids]="vm.ids"
+    [type]="vm.collection.type"
+    [useRelativePath]="true"
+  ></lab-collection-table>
+</ng-container>

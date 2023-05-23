@@ -14,6 +14,7 @@ import { InputNumberComponent } from './input-number.component';
   template: `<lab-input-number
     [value]="value"
     [minimum]="minimum"
+    [maximum]="maximum"
     [width]="width"
     [inputId]="inputId"
     (setValue)="setValue($event)"
@@ -22,7 +23,8 @@ import { InputNumberComponent } from './input-number.component';
 class TestInputNumberComponent {
   @ViewChild(InputNumberComponent) child!: InputNumberComponent;
   value = '10';
-  minimum = '1';
+  minimum: string | null = '1';
+  maximum: string | null = '20';
   width = '';
   inputId = '';
   setValue(_: string): void {}
@@ -56,7 +58,22 @@ describe('InputNumberComponent', () => {
       expect(component.child.isMinimum).toBeTrue();
     });
 
+    it('should handle changes to maximum', () => {
+      component.maximum = '0';
+      fixture.detectChanges();
+      expect(component.child.isMaximum).toBeTrue();
+    });
+
+    it('should handle null values', () => {
+      component.minimum = null;
+      component.maximum = null;
+      fixture.detectChanges();
+      expect(component.child.isMinimum).toBeFalse();
+      expect(component.child.isMaximum).toBeFalse();
+    });
+
     it('should handle invalid values', () => {
+      component.maximum = '10';
       component.value = 'err';
       fixture.detectChanges();
       expect(component.child.isMinimum).toBeFalse();

@@ -7,9 +7,9 @@ describe('Preferences Selectors', () => {
       expect(Selectors.getStates.projector(Mocks.PreferencesState)).toEqual(
         Mocks.PreferencesState.states
       );
-    });
-
-    it('should get bypass landing value', () => {
+      expect(Selectors.getLanguage.projector(Mocks.PreferencesState)).toEqual(
+        'en'
+      );
       expect(
         Selectors.getBypassLanding.projector(Mocks.PreferencesState)
       ).toEqual(false);

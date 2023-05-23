@@ -3,7 +3,7 @@
     <div class="d-flex flex-column">
       <div class="d-flex justify-content-center">
         <img
-          src="assets/icons/icon-128x128.png"
+          src="factoriolab.webp"
           alt="FactorioLab"
           height="128"
           width="128"
@@ -48,27 +48,27 @@
         pRipple
         type="button"
         icon="fa-solid fa-box"
-        [label]="'landing.addAProduct' | translate"
-        (click)="addProductPicker.clickOpen(vm.data, 'item')"
+        [label]="'landing.addAnItem' | translate"
+        (click)="addItemPicker.clickOpen(vm.data, 'item', vm.itemIds)"
       ></button>
       <button
         pButton
         pRipple
         type="button"
         class="mt-2"
-        icon="fa-solid fa-industry"
-        [label]="'landing.addAProducer' | translate"
-        (click)="addRecipePicker.clickOpen(vm.data, 'recipe')"
+        icon="fa-solid fa-flask"
+        [label]="'landing.addARecipe' | translate"
+        (click)="addRecipePicker.clickOpen(vm.data, 'recipe', vm.recipeIds)"
       ></button>
       <lab-picker
-        #addProductPicker
-        [header]="'landing.addAProduct' | translate"
-        (selectId)="selectProduct($event)"
+        #addItemPicker
+        [header]="'landing.addAnItem' | translate"
+        (selectId)="selectItem($event)"
       ></lab-picker>
       <lab-picker
         #addRecipePicker
-        [header]="'landing.addAProducer' | translate"
-        (selectId)="selectProducer($event)"
+        [header]="'landing.addARecipe' | translate"
+        (selectId)="selectRecipe($event)"
       ></lab-picker>
       <p-divider
         *ngIf="vm.savedStates.length || BrowserUtility.routerState"

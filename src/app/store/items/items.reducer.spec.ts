@@ -1,4 +1,4 @@
-import { Mocks } from 'src/tests';
+import { ItemId, Mocks } from 'src/tests';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Actions from './items.actions';
@@ -9,9 +9,9 @@ describe('Items Reducer', () => {
     it('should load item settings', () => {
       const result = itemsReducer(
         undefined,
-        new App.LoadAction({ itemsState: Mocks.ItemSettingsEntities } as any)
+        new App.LoadAction({ itemsState: Mocks.ItemsState } as any)
       );
-      expect(result).toEqual(Mocks.ItemSettingsEntities);
+      expect(result).toEqual(Mocks.ItemsState);
     });
   });
 
@@ -22,25 +22,39 @@ describe('Items Reducer', () => {
     });
   });
 
-  describe('IGNORE', () => {
-    it('should ignore a recipe', () => {
+  describe('SET_EXCLUDED', () => {
+    it('should set excluded state of an item', () => {
       const result = itemsReducer(
         initialItemsState,
-        new Actions.IgnoreItemAction(Mocks.Item1.id)
+        new Actions.SetExcludedAction({ id: Mocks.Item1.id, value: true })
       );
-      expect(result[Mocks.Item1.id].ignore).toEqual(true);
+      expect(result[Mocks.Item1.id].excluded).toEqual(true);
     });
 
-    it('should delete key if ignore = false is the only modification', () => {
+    it('should delete key if exclude = false is the only modification', () => {
       let result = itemsReducer(
         initialItemsState,
-        new Actions.IgnoreItemAction(Mocks.Item1.id)
+        new Actions.SetExcludedAction({ id: Mocks.Item1.id, value: true })
       );
       result = itemsReducer(
         result,
-        new Actions.IgnoreItemAction(Mocks.Item1.id)
+        new Actions.SetExcludedAction({ id: Mocks.Item1.id, value: false })
       );
       expect(result[Mocks.Item1.id]).toBeUndefined();
+    });
+  });
+
+  describe('SET_EXCLUDED_BATCH', () => {
+    it('should apply multiple changes to excluded state', () => {
+      const result = itemsReducer(
+        initialItemsState,
+        new Actions.SetExcludedBatchAction([
+          { id: ItemId.Coal, value: true },
+          { id: ItemId.IronOre, value: false },
+        ])
+      );
+      expect(result[ItemId.Coal].excluded).toBeTrue();
+      expect(result[ItemId.IronOre]).toBeUndefined();
     });
   });
 
@@ -72,20 +86,6 @@ describe('Items Reducer', () => {
     });
   });
 
-  describe('SET_RECIPE', () => {
-    it('should set the recipe', () => {
-      const result = itemsReducer(
-        initialItemsState,
-        new Actions.SetRecipeAction({
-          id: Mocks.Item1.id,
-          value: Mocks.Item1.id,
-          def: undefined,
-        })
-      );
-      expect(result[Mocks.Item1.id].recipeId).toEqual(Mocks.Item1.id);
-    });
-  });
-
   describe('SET_CHECKED', () => {
     it('should set the checked state', () => {
       const result = itemsReducer(
@@ -109,11 +109,14 @@ describe('Items Reducer', () => {
     });
   });
 
-  describe('RESET_IGNORES', () => {
+  describe('RESET_EXCLUDED', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
-      itemsReducer(undefined, new Actions.ResetIgnoresAction());
-      expect(StoreUtility.resetField).toHaveBeenCalledWith({}, 'ignore' as any);
+      itemsReducer(undefined, new Actions.ResetExcludedAction());
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(
+        {},
+        'excluded' as any
+      );
     });
   });
 
@@ -132,17 +135,6 @@ describe('Items Reducer', () => {
       expect(StoreUtility.resetField).toHaveBeenCalledWith(
         {},
         'wagonId' as any
-      );
-    });
-  });
-
-  describe('RESET_RECIPES', () => {
-    it('should call resetField', () => {
-      spyOn(StoreUtility, 'resetField');
-      itemsReducer(undefined, new Actions.ResetRecipesAction());
-      expect(StoreUtility.resetField).toHaveBeenCalledWith(
-        {},
-        'recipeId' as any
       );
     });
   });

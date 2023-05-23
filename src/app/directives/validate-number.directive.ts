@@ -19,24 +19,25 @@ import { Rational } from '~/models';
   ],
 })
 export class ValidateNumberDirective implements Validator {
-  @Input() set labValidateMinimum(value: string) {
-    this.minimum = Rational.fromString(value);
-  }
-
-  minimum = Rational.zero;
+  @Input() minimum: Rational | null = Rational.zero;
+  @Input() maximum: Rational | null = null;
 
   validate(control: AbstractControl): ValidationErrors | null {
     if (control.value == null) {
       return null;
     }
+
     try {
       const rational = Rational.fromString(control.value);
-      if (rational.gte(this.minimum)) {
+      if (
+        (this.minimum == null || rational.gte(this.minimum)) &&
+        (this.maximum == null || rational.lte(this.maximum))
+      )
         return null;
-      }
     } catch {
       // ignore error
     }
+
     return {
       validateNumber: {
         valid: false,

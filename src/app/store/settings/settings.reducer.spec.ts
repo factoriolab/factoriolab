@@ -1,8 +1,10 @@
 import { ItemId, RecipeId } from 'src/tests';
 import {
+  CostSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
+  MaximizeType,
   Preset,
   ResearchSpeed,
 } from '~/models';
@@ -49,14 +51,14 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_DISABLED_RECIPES', () => {
-    it('should set the list of disabled recipes', () => {
-      const value = [RecipeId.AdvancedOilProcessing];
+  describe('SET_RESEARCHED_TECHNOLOGIES', () => {
+    it('should set the researched technology ids', () => {
+      const value = [RecipeId.ArtilleryShellRange];
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetDisabledRecipesAction({ value, def: [] })
+        new Actions.SetResearchedTechnologiesAction(value)
       );
-      expect(result.disabledRecipeIds).toEqual(value);
+      expect(result.researchedTechnologyIds).toEqual(value);
     });
   });
 
@@ -224,47 +226,32 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_COST_FACTOR', () => {
-    it('should set the recipe cost multiplier', () => {
-      const value = '10';
+  describe('SET_MAXIMIZE_TYPE', () => {
+    it('should set the maximize type', () => {
+      const value = MaximizeType.Ratio;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetCostFactorAction(value)
+        new Actions.SetMaximizeTypeAction(value)
       );
-      expect(result.costFactor).toEqual(value);
+      expect(result.maximizeType).toEqual(MaximizeType.Ratio);
     });
   });
 
-  describe('SET_COST_FACTORY', () => {
-    it('should set the factory cost multiplier', () => {
-      const value = '10';
+  describe('SET_COSTS', () => {
+    it('should set cost values', () => {
+      const value: CostSettings = {
+        factor: '1',
+        machine: '1',
+        unproduceable: '1',
+        excluded: '1',
+        surplus: '1',
+        maximize: '-1',
+      };
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetCostFactoryAction(value)
+        new Actions.SetCostsAction(value)
       );
-      expect(result.costFactory).toEqual(value);
-    });
-  });
-
-  describe('SET_COST_INPUT', () => {
-    it('should set the input cost', () => {
-      const value = '10';
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetCostInputAction(value)
-      );
-      expect(result.costInput).toEqual(value);
-    });
-  });
-
-  describe('SET_COST_IGNORED', () => {
-    it('should set the ignored cost', () => {
-      const value = '10';
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetCostIgnoredAction(value)
-      );
-      expect(result.costIgnored).toEqual(value);
+      expect(result.costs).toEqual(value);
     });
   });
 
@@ -272,17 +259,18 @@ describe('Settings Reducer', () => {
     it('should reset the cost fields', () => {
       const result = settingsReducer(
         {
-          costFactor: 'a',
-          costFactory: 'b',
-          costInput: 'c',
-          costIgnored: 'd',
+          costs: {
+            factor: 'a',
+            machine: 'b',
+            unproduceable: 'c',
+            excluded: 'd',
+            surplus: 'e',
+            maximize: 'f',
+          },
         } as any,
         new Actions.ResetCostAction()
       );
-      expect(result.costFactor).toEqual('1');
-      expect(result.costFactory).toEqual('1');
-      expect(result.costInput).toEqual('1000000');
-      expect(result.costIgnored).toEqual('0');
+      expect(result.costs).toEqual(initialSettingsState.costs);
     });
   });
 

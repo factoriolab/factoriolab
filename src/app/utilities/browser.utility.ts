@@ -17,16 +17,21 @@ export class BrowserUtility {
   }
 
   static mergeState(initial: LabState): LabState {
-    const preferencesState = BrowserUtility.preferencesState;
+    let preferencesState = BrowserUtility.preferencesState;
     if (preferencesState) {
-      return {
-        ...initial,
+      preferencesState = {
+        ...initial.preferencesState,
+        ...preferencesState,
         ...{
-          preferencesState: {
-            ...initial.preferencesState,
-            ...preferencesState,
+          columns: {
+            ...initial.preferencesState.columns,
+            ...preferencesState.columns,
           },
         },
+      };
+      return {
+        ...initial,
+        ...{ preferencesState },
       };
     } else {
       return initial;

@@ -69,8 +69,8 @@ export interface Node extends FlowBase {
   id: string;
   type: NodeType;
   recipe?: Recipe;
-  factories?: string;
-  factoryId?: string;
+  machines?: string;
+  machineId?: string;
 }
 
 export interface Link extends FlowBase {
