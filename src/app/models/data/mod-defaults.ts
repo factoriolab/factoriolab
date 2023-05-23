@@ -7,9 +7,9 @@ export interface ModDefaults {
   fuel: string;
   cargoWagon: string;
   fluidWagon: string;
-  disabledRecipes: string[];
-  minFactoryRank: string[];
-  maxFactoryRank: string[];
+  excludedRecipes: string[];
+  minMachineRank: string[];
+  maxMachineRank: string[];
   moduleRank: string[];
   beaconModule: string;
 }

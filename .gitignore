@@ -46,3 +46,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Script temp files
+scripts/temp

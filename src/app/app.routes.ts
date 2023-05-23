@@ -1,16 +1,21 @@
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
+import { LandingGuard } from './guards';
+
 export const routes: Routes = [
   {
     path: 'wizard',
-    loadChildren: () =>
-      import('./routes/wizard/wizard.module').then((m) => m.WizardModule),
+    loadComponent: () =>
+      import('./routes/wizard/wizard.component').then((c) => c.WizardComponent),
   },
   {
     path: '',
     pathMatch: 'full',
-    loadChildren: () =>
-      import('./routes/landing/landing.module').then((m) => m.LandingModule),
+    canActivate: [LandingGuard],
+    loadComponent: () =>
+      import('./routes/landing/landing.component').then(
+        (c) => c.LandingComponent
+      ),
   },
   {
     path: '',

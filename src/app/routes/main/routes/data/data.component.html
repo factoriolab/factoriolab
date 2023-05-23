@@ -1,0 +1,44 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <p-breadcrumb [home]="vm.home"></p-breadcrumb>
+  <p-table [value]="collections">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>{{ 'data.collection' | translate }}</th>
+        <th>{{ 'data.count' | translate }}</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-collection>
+      <tr *ngIf="$any(vm.data)[collection.id].length as count">
+        <td>
+          <a
+            [routerLink]="collection.routerLink"
+            queryParamsHandling="preserve"
+          >
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-link"
+              [label]="collection.label | translate"
+            ></button>
+          </a>
+        </td>
+        <td>{{ count }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-table styleClass="mt-5" [value]="vm.data.version | keyvalue">
+    <ng-template pTemplate="header">
+      <tr>
+        <th colspan="2">{{ 'data.versions' | translate }}</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-version>
+      <tr>
+        <td>{{ version.key }}</td>
+        <td>{{ version.value }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</ng-container>

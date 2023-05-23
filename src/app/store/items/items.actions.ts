@@ -3,22 +3,31 @@ import { Action } from '@ngrx/store';
 import { IdDefaultPayload, IdPayload } from '~/models';
 
 export const enum ItemsActionType {
-  IGNORE_ITEM = '[Items] Ignore Item',
+  SET_EXCLUDED = '[Items] Set Excluded',
+  SET_EXCLUDED_BATCH = '[Items] Set Excluded Batch',
+  SET_CHECKED = '[Items] Set Checked',
   SET_BELT = '[Items] Set Belt',
   SET_WAGON = '[Items] Set Wagon',
-  SET_RECIPE = '[Items] Set Recipe',
-  SET_CHECKED = '[Items] Set Checked',
   RESET_ITEM = '[Items] Reset Item',
-  RESET_IGNORES = '[Items] Reset Ignores',
+  RESET_EXCLUDED = '[Items] Reset Excluded',
+  RESET_CHECKED = '[Items] Reset Checked',
   RESET_BELTS = '[Items] Reset Belts',
   RESET_WAGONS = '[Items] Reset Wagon',
-  RESET_RECIPES = '[Items] Reset Recipes',
-  RESET_CHECKED = '[Items] Reset Checked',
 }
 
-export class IgnoreItemAction implements Action {
-  readonly type = ItemsActionType.IGNORE_ITEM;
-  constructor(public payload: string) {}
+export class SetExcludedAction implements Action {
+  readonly type = ItemsActionType.SET_EXCLUDED;
+  constructor(public payload: IdPayload<boolean>) {}
+}
+
+export class SetExcludedBatchAction implements Action {
+  readonly type = ItemsActionType.SET_EXCLUDED_BATCH;
+  constructor(public payload: IdPayload<boolean>[]) {}
+}
+
+export class SetCheckedAction implements Action {
+  readonly type = ItemsActionType.SET_CHECKED;
+  constructor(public payload: IdPayload<boolean>) {}
 }
 
 export class SetBeltAction implements Action {
@@ -31,23 +40,17 @@ export class SetWagonAction implements Action {
   constructor(public payload: IdDefaultPayload) {}
 }
 
-export class SetRecipeAction implements Action {
-  readonly type = ItemsActionType.SET_RECIPE;
-  constructor(public payload: IdDefaultPayload<string | undefined>) {}
-}
-
-export class SetCheckedAction implements Action {
-  readonly type = ItemsActionType.SET_CHECKED;
-  constructor(public payload: IdPayload<boolean>) {}
-}
-
 export class ResetItemAction implements Action {
   readonly type = ItemsActionType.RESET_ITEM;
   constructor(public payload: string) {}
 }
 
-export class ResetIgnoresAction implements Action {
-  readonly type = ItemsActionType.RESET_IGNORES;
+export class ResetExcludedAction implements Action {
+  readonly type = ItemsActionType.RESET_EXCLUDED;
+}
+
+export class ResetCheckedAction implements Action {
+  readonly type = ItemsActionType.RESET_CHECKED;
 }
 
 export class ResetBeltsAction implements Action {
@@ -58,23 +61,14 @@ export class ResetWagonsAction implements Action {
   readonly type = ItemsActionType.RESET_WAGONS;
 }
 
-export class ResetRecipesAction implements Action {
-  readonly type = ItemsActionType.RESET_RECIPES;
-}
-
-export class ResetCheckedAction implements Action {
-  readonly type = ItemsActionType.RESET_CHECKED;
-}
-
 export type ItemsAction =
-  | IgnoreItemAction
+  | SetExcludedAction
+  | SetExcludedBatchAction
+  | SetCheckedAction
   | SetBeltAction
   | SetWagonAction
-  | SetRecipeAction
-  | SetCheckedAction
   | ResetItemAction
-  | ResetIgnoresAction
+  | ResetExcludedAction
+  | ResetCheckedAction
   | ResetBeltsAction
-  | ResetWagonsAction
-  | ResetRecipesAction
-  | ResetCheckedAction;
+  | ResetWagonsAction;

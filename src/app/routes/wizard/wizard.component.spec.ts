@@ -2,10 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, ItemId, RecipeId, TestModule } from 'src/tests';
-import { RateType } from '~/models';
-import { LabState, Producers, Products, Settings } from '~/store';
+import { ObjectiveType, RateUnit } from '~/models';
+import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 import { WizardComponent, WizardState } from './wizard.component';
-import { WizardModule } from './wizard.module';
 
 describe('WizardComponent', () => {
   let component: WizardComponent;
@@ -14,7 +13,7 @@ describe('WizardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestModule, WizardModule],
+      imports: [TestModule, WizardComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(WizardComponent);
@@ -29,22 +28,9 @@ describe('WizardComponent', () => {
 
   describe('selectId', () => {
     it('should set the id and state', () => {
-      component.selectId(ItemId.IronPlate, WizardState.ProductType);
+      component.selectId(ItemId.IronPlate, WizardState.ItemObjective);
       expect(component.id).toEqual(ItemId.IronPlate);
-      expect(component.state).toEqual(WizardState.ProductType);
-    });
-  });
-
-  describe('openViaState', () => {
-    it('should add a product to determine via steps', () => {
-      spyOn(component, 'createProduct');
-      component.openViaState();
-      expect(component.createProduct).toHaveBeenCalledWith(
-        '',
-        '1',
-        RateType.Items
-      );
-      expect(component.state).toEqual(WizardState.ProductVia);
+      expect(component.state).toEqual(WizardState.ItemObjective);
     });
   });
 
@@ -52,28 +38,24 @@ describe('WizardComponent', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
     dispatch.spy.calls.reset();
-    component.createProduct(
-      ItemId.IronPlate,
-      '1',
-      RateType.Items,
-      ItemId.IronOre
-    );
+    component.createItemObjective(ItemId.IronPlate, '1', RateUnit.Items);
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-      new Products.CreateAction({
+      new ItemObjectives.CreateAction({
         id: '0',
         itemId: ItemId.IronPlate,
         rate: '1',
-        rateType: RateType.Items,
-        viaId: ItemId.IronOre,
+        rateUnit: RateUnit.Items,
+        type: ObjectiveType.Output,
       })
     );
     dispatch.spy.calls.reset();
-    component.createProducer(RecipeId.IronPlate, '1');
+    component.createRecipeObjective(RecipeId.IronPlate, '1');
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-      new Producers.CreateAction({
+      new RecipeObjectives.CreateAction({
         id: '0',
         recipeId: ItemId.IronPlate,
         count: '1',
+        type: ObjectiveType.Output,
       })
     );
   });

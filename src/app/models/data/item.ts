@@ -1,11 +1,11 @@
 import { Rational } from '../rational';
-import { Beacon, RationalBeacon } from './beacon';
-import { Belt, RationalBelt } from './belt';
-import { CargoWagon, RationalCargoWagon } from './cargo-wagon';
-import { Factory, RationalFactory } from './factory';
-import { FluidWagon, RationalFluidWagon } from './fluid-wagon';
-import { Fuel, RationalFuel } from './fuel';
-import { Module, RationalModule } from './module';
+import { Beacon, BeaconRational } from './beacon';
+import { Belt, BeltRational } from './belt';
+import { CargoWagon, CargoWagonRational } from './cargo-wagon';
+import { FluidWagon, FluidWagonRational } from './fluid-wagon';
+import { Fuel, FuelRational } from './fuel';
+import { Machine, MachineRational } from './machine';
+import { Module, ModuleRational } from './module';
 
 export interface Item {
   id: string;
@@ -16,7 +16,7 @@ export interface Item {
   beacon?: Beacon;
   belt?: Belt;
   pipe?: Belt;
-  factory?: Factory;
+  machine?: Machine;
   module?: Module;
   fuel?: Fuel;
   cargoWagon?: CargoWagon;
@@ -27,62 +27,73 @@ export interface Item {
   iconText?: string;
 }
 
-export class RationalItem {
+export class ItemRational {
   id: string;
   name: string;
   category: string;
   row: number;
   stack?: Rational;
-  beacon?: RationalBeacon;
-  belt?: RationalBelt;
-  pipe?: RationalBelt;
-  factory?: RationalFactory;
-  module?: RationalModule;
-  fuel?: RationalFuel;
-  cargoWagon?: RationalCargoWagon;
-  fluidWagon?: RationalFluidWagon;
+  beacon?: BeaconRational;
+  belt?: BeltRational;
+  pipe?: BeltRational;
+  machine?: MachineRational;
+  module?: ModuleRational;
+  fuel?: FuelRational;
+  cargoWagon?: CargoWagonRational;
+  fluidWagon?: FluidWagonRational;
   /** Used to link the item to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
   iconText?: string;
 
-  constructor(data: Item) {
-    this.id = data.id;
-    this.name = data.name;
-    this.category = data.category;
-    this.row = Math.round(data.row);
-    if (data.stack) {
-      this.stack = Rational.fromNumber(data.stack);
+  constructor(obj: Item) {
+    this.id = obj.id;
+    this.name = obj.name;
+    this.category = obj.category;
+    this.row = Math.round(obj.row);
+
+    if (obj.stack) {
+      this.stack = Rational.fromNumber(obj.stack);
     }
-    if (data.beacon) {
-      this.beacon = new RationalBeacon(data.beacon);
+
+    if (obj.beacon) {
+      this.beacon = new BeaconRational(obj.beacon);
     }
-    if (data.belt) {
-      this.belt = new RationalBelt(data.belt);
+
+    if (obj.belt) {
+      this.belt = new BeltRational(obj.belt);
     }
-    if (data.pipe) {
-      this.pipe = new RationalBelt(data.pipe);
+
+    if (obj.pipe) {
+      this.pipe = new BeltRational(obj.pipe);
     }
-    if (data.factory) {
-      this.factory = new RationalFactory(data.factory);
+
+    if (obj.machine) {
+      this.machine = new MachineRational(obj.machine);
     }
-    if (data.module) {
-      this.module = new RationalModule(data.module);
+
+    if (obj.module) {
+      this.module = new ModuleRational(obj.module);
     }
-    if (data.fuel) {
-      this.fuel = new RationalFuel(data.fuel);
+
+    if (obj.fuel) {
+      this.fuel = new FuelRational(obj.fuel);
     }
-    if (data.cargoWagon) {
-      this.cargoWagon = new RationalCargoWagon(data.cargoWagon);
+
+    if (obj.cargoWagon) {
+      this.cargoWagon = new CargoWagonRational(obj.cargoWagon);
     }
-    if (data.fluidWagon) {
-      this.fluidWagon = new RationalFluidWagon(data.fluidWagon);
+
+    if (obj.fluidWagon) {
+      this.fluidWagon = new FluidWagonRational(obj.fluidWagon);
     }
-    if (data.icon) {
-      this.icon = data.icon;
+
+    if (obj.icon) {
+      this.icon = obj.icon;
     }
-    if (data.iconText) {
-      this.iconText = data.iconText;
+
+    if (obj.iconText) {
+      this.iconText = obj.iconText;
     }
   }
 }

@@ -1,8 +1,10 @@
 @use 'sass:color';
 
-/* Based on PrimeNG Arya Orange theme
- * Removed styles: p-organizationchart, p-carousel, p-galleria, p-avatar, fc, p-datepicker,
- * p-calendar, p-terminal, p-fileupload, p-image, p-toast, p-message, p-inline-message */
+/* 
+ * Based on PrimeNG Arya Orange theme
+ * Removed styles: p-organizationchart, p-carousel, p-galleria, p-avatar, fc,
+ * p-datepicker, p-calendar, p-terminal, p-fileupload, p-image, p-toast
+ */
 
 // Defined in root
 $surface-a: #1e1e1e;
@@ -33,14 +35,23 @@ $info-color: #81d4fa;
 $info-hover-color: #5dc8f9;
 $info-focus-color: #a7e1fc;
 $info-active-color: #38bbf7;
+$info-msg-bg-color: #b3e5fc;
+$info-msg-border-color: #0891cf;
+$info-msg-color: #044868;
 $success-color: #c5e1a5;
 $success-hover-color: #b2d788;
 $success-focus-color: #d6eac0;
 $success-active-color: #9fce6b;
+$success-msg-bg-color: #c8e6c9;
+$success-msg-border-color: #439446;
+$success-msg-color: #224a23;
 $warning-color: #ffe082;
 $warning-hover-color: #ffd65c;
 $warning-focus-color: #ffe9a8;
 $warning-active-color: #ffcd35;
+$warning-msg-bg-color: #ffecb3;
+$warning-msg-border-color: #d9a300;
+$warning-msg-color: #6d5100;
 $help-color: #ce93d8;
 $help-hover-color: #c278ce;
 $help-focus-color: #ddb3e4;
@@ -49,6 +60,9 @@ $danger-color: #f48fb1;
 $danger-hover-color: #f16c98;
 $danger-focus-color: #f7b1c8;
 $danger-active-color: #ed4980;
+$error-msg-bg-color: #ffcdd2;
+$error-msg-border-color: #e60017;
+$error-msg-color: #73000c;
 $datatable-stripe-color: #242424;
 $overlaypanel-before-border-color: #353535;
 $gray-30: rgba(30, 30, 30, 0);
@@ -189,6 +203,7 @@ $danger-a16: rgba($danger-color, 0.16);
 }
 .p-autocomplete .p-autocomplete-multiple-container {
   padding: 0.25rem 0.5rem;
+  gap: 0.5rem;
 }
 .p-autocomplete .p-autocomplete-multiple-container:not(.p-disabled):hover {
   border-color: $primary-color;
@@ -396,6 +411,18 @@ p-cascadeselect.p-cascadeselect-clearable .p-cascadeselect-clear-icon {
   right: $button-size;
 }
 
+.p-overlay-modal .p-cascadeselect-sublist .p-cascadeselect-panel {
+  box-shadow: none;
+  border-radius: 0;
+  padding: 0.25rem 0 0.25rem 0.5rem;
+}
+.p-overlay-modal
+  .p-cascadeselect-item-active
+  > .p-cascadeselect-item-content
+  .p-cascadeselect-group-icon {
+  transform: rotate(90deg);
+}
+
 .p-checkbox {
   width: 20px;
   height: 20px;
@@ -459,6 +486,7 @@ p-checkbox.ng-dirty.ng-invalid > .p-checkbox > .p-checkbox-box {
 
 .p-chips .p-chips-multiple-container {
   padding: 0.25rem 0.5rem;
+  gap: 0.5rem;
 }
 .p-chips .p-chips-multiple-container:not(.p-disabled):hover {
   border-color: $primary-color;
@@ -1136,6 +1164,9 @@ p-listbox.ng-dirty.ng-invalid > .p-listbox {
 .p-multiselect .p-multiselect-label.p-placeholder {
   color: $text-color-secondary;
 }
+.p-multiselect.p-multiselect-chip .p-multiselect-label {
+  gap: 0.5rem;
+}
 .p-multiselect.p-multiselect-chip .p-multiselect-token {
   padding: 0.25rem 0.5rem;
   margin-right: 0.5rem;
@@ -1774,6 +1805,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   outline: 0 none;
   outline-offset: 0;
   box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-button .p-button-label {
+  transition-duration: 0.2s;
 }
 .p-button .p-button-icon-left {
   margin-right: 0.5rem;
@@ -2859,12 +2893,78 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 .p-datatable.p-datatable-gridlines .p-datatable-thead > tr > th {
   border-width: 1px 1px 1px 1px;
+  border-width: 1px 0 1px 1px;
+}
+.p-datatable.p-datatable-gridlines .p-datatable-thead > tr > th:last-child {
+  border-width: 1px;
 }
 .p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td {
+  border-width: 1px 0 0 1px;
+}
+.p-datatable.p-datatable-gridlines .p-datatable-tbody > tr > td:last-child {
+  border-width: 1px 1px 0 1px;
+}
+.p-datatable.p-datatable-gridlines .p-datatable-tbody > tr:last-child > td {
+  border-width: 1px 0 1px 1px;
+}
+.p-datatable.p-datatable-gridlines
+  .p-datatable-tbody
+  > tr:last-child
+  > td:last-child {
   border-width: 1px;
 }
 .p-datatable.p-datatable-gridlines .p-datatable-tfoot > tr > td {
   border-width: 1px;
+  border-width: 1px 0 1px 1px;
+}
+.p-datatable.p-datatable-gridlines .p-datatable-tfoot > tr > td:last-child {
+  border-width: 1px 1px 1px 1px;
+}
+.p-datatable.p-datatable-gridlines
+  .p-datatable-thead
+  + .p-datatable-tfoot
+  > tr
+  > td {
+  border-width: 0 0 1px 1px;
+}
+.p-datatable.p-datatable-gridlines
+  .p-datatable-thead
+  + .p-datatable-tfoot
+  > tr
+  > td:last-child {
+  border-width: 0 1px 1px 1px;
+}
+.p-datatable.p-datatable-gridlines:has(.p-datatable-thead):has(
+    .p-datatable-tbody
+  )
+  .p-datatable-tbody
+  > tr
+  > td {
+  border-width: 0 0 1px 1px;
+}
+.p-datatable.p-datatable-gridlines:has(.p-datatable-thead):has(
+    .p-datatable-tbody
+  )
+  .p-datatable-tbody
+  > tr
+  > td:last-child {
+  border-width: 0 1px 1px 1px;
+}
+.p-datatable.p-datatable-gridlines:has(.p-datatable-tbody):has(
+    .p-datatable-tfoot
+  )
+  .p-datatable-tbody
+  > tr:last-child
+  > td {
+  border-width: 0 0 0 1px;
+}
+.p-datatable.p-datatable-gridlines:has(.p-datatable-tbody):has(
+    .p-datatable-tfoot
+  )
+  .p-datatable-tbody
+  > tr:last-child
+  > td:last-child {
+  border-width: 0 1px 0 1px;
 }
 .p-datatable.p-datatable-striped .p-datatable-tbody > tr:nth-child(even) {
   background: $datatable-stripe-color;
@@ -4129,6 +4229,7 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 1px solid $surface-d;
   padding: 1rem;
   border-radius: 3px;
+  gap: 0.5rem;
 }
 .p-toolbar .p-toolbar-separator {
   margin: 0 0.5rem;
@@ -4328,6 +4429,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   padding-top: 0;
 }
 .p-sidebar .p-sidebar-content {
+  padding: 1rem;
+}
+.p-sidebar .p-sidebar-footer {
   padding: 1rem;
 }
 
@@ -5524,6 +5628,19 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 1px solid $surface-d;
   border-width: 0 0 2px 0;
 }
+.p-tabmenu .p-tabmenu-nav .p-menuitem-badge {
+  background: $primary-color;
+  color: $primary-color-text;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  line-height: 1.5rem;
+  border-radius: 3px;
+  margin-left: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
 .p-tabmenu .p-tabmenu-nav .p-tabmenuitem {
   margin-right: 0;
 }
@@ -5677,6 +5794,143 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   margin-left: 0.5rem;
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+
+.p-inline-message {
+  padding: 0.5rem 0.5rem;
+  margin: 0;
+  border-radius: 3px;
+}
+.p-inline-message.p-inline-message-info {
+  background: $info-msg-bg-color;
+  border: solid $info-msg-border-color;
+  border-width: 1px;
+  color: $info-msg-color;
+}
+.p-inline-message.p-inline-message-info .p-inline-message-icon {
+  color: $info-msg-color;
+}
+.p-inline-message.p-inline-message-success {
+  background: $success-msg-bg-color;
+  border: solid $success-msg-border-color;
+  border-width: 1px;
+  color: $success-msg-color;
+}
+.p-inline-message.p-inline-message-success .p-inline-message-icon {
+  color: $success-msg-color;
+}
+.p-inline-message.p-inline-message-warn {
+  background: $warning-msg-bg-color;
+  border: solid $warning-msg-border-color;
+  border-width: 1px;
+  color: $warning-msg-color;
+}
+.p-inline-message.p-inline-message-warn .p-inline-message-icon {
+  color: $warning-msg-color;
+}
+.p-inline-message.p-inline-message-error {
+  background: $error-msg-bg-color;
+  border: solid $error-msg-border-color;
+  border-width: 1px;
+  color: $error-msg-color;
+}
+.p-inline-message.p-inline-message-error .p-inline-message-icon {
+  color: $error-msg-color;
+}
+.p-inline-message .p-inline-message-icon {
+  font-size: 1rem;
+  margin-right: 0.5rem;
+}
+.p-inline-message .p-inline-message-text {
+  font-size: 1rem;
+}
+.p-inline-message.p-inline-message-icon-only .p-inline-message-icon {
+  margin-right: 0;
+}
+
+.p-message {
+  margin: 1rem 0;
+  border-radius: 3px;
+}
+.p-message .p-message-wrapper {
+  padding: 1rem 1.5rem;
+}
+.p-message .p-message-close {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: transparent;
+  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+}
+.p-message .p-message-close:hover {
+  background: $surface-c;
+}
+.p-message .p-message-close:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px $shadow-color;
+}
+.p-message.p-message-info {
+  background: $info-msg-bg-color;
+  border: solid $info-msg-border-color;
+  border-width: 0 0 0 6px;
+  color: $info-msg-color;
+}
+.p-message.p-message-info .p-message-icon {
+  color: $info-msg-color;
+}
+.p-message.p-message-info .p-message-close {
+  color: $info-msg-color;
+}
+.p-message.p-message-success {
+  background: $success-msg-bg-color;
+  border: solid $success-msg-border-color;
+  border-width: 0 0 0 6px;
+  color: $success-msg-color;
+}
+.p-message.p-message-success .p-message-icon {
+  color: $success-msg-color;
+}
+.p-message.p-message-success .p-message-close {
+  color: $success-msg-color;
+}
+.p-message.p-message-warn {
+  background: $warning-msg-bg-color;
+  border: solid $warning-msg-border-color;
+  border-width: 0 0 0 6px;
+  color: $warning-msg-color;
+}
+.p-message.p-message-warn .p-message-icon {
+  color: $warning-msg-color;
+}
+.p-message.p-message-warn .p-message-close {
+  color: $warning-msg-color;
+}
+.p-message.p-message-error {
+  background: $error-msg-bg-color;
+  border: solid $error-msg-border-color;
+  border-width: 0 0 0 6px;
+  color: $error-msg-color;
+}
+.p-message.p-message-error .p-message-icon {
+  color: $error-msg-color;
+}
+.p-message.p-message-error .p-message-close {
+  color: $error-msg-color;
+}
+.p-message .p-message-text {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.p-message .p-message-icon {
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+.p-message .p-message-summary {
+  font-weight: 700;
+}
+.p-message .p-message-detail {
+  margin-left: 0.5rem;
 }
 
 .p-badge {

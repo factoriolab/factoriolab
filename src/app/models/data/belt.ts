@@ -4,10 +4,10 @@ export interface Belt {
   speed: number | string;
 }
 
-export class RationalBelt {
+export class BeltRational {
   speed: Rational;
 
-  constructor(data: Belt) {
-    this.speed = Rational.fromJson(data.speed);
+  constructor(obj: Belt) {
+    this.speed = Rational.from(obj.speed);
   }
 }

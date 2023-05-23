@@ -1,20 +1,11 @@
 import { Action } from '@ngrx/store';
 
-import {
-  ColumnSettings,
-  Entities,
-  IdPayload,
-  Language,
-  PowerUnit,
-  SimplexType,
-  Theme,
-} from '~/models';
+import { ColumnsState, IdPayload, Language, PowerUnit, Theme } from '~/models';
 
 export const enum PreferencesActionType {
   SAVE_STATE = '[Preferences] Save State',
   REMOVE_STATE = '[Preferences] Remove State',
   SET_COLUMNS = '[Preferences] Set Columns',
-  SET_SIMPLEX_TYPE = '[Preferences] Set Simplex Type',
   SET_LANGUAGE = '[Preferences] Set Display Language',
   SET_POWER_UNIT = '[Preferences] Set Power Unit',
   SET_THEME = '[Preferences] Set Theme',
@@ -33,12 +24,7 @@ export class RemoveStateAction implements Action {
 
 export class SetColumnsAction implements Action {
   readonly type = PreferencesActionType.SET_COLUMNS;
-  constructor(public payload: Entities<ColumnSettings>) {}
-}
-
-export class SetSimplexTypeAction implements Action {
-  readonly type = PreferencesActionType.SET_SIMPLEX_TYPE;
-  constructor(public payload: SimplexType) {}
+  constructor(public payload: ColumnsState) {}
 }
 
 export class SetLanguageAction implements Action {
@@ -65,7 +51,6 @@ export type PreferencesAction =
   | SaveStateAction
   | RemoveStateAction
   | SetColumnsAction
-  | SetSimplexTypeAction
   | SetLanguageAction
   | SetPowerUnitAction
   | SetThemeAction

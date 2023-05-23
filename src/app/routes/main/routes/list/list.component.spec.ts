@@ -5,6 +5,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
+import { MenuItem } from 'primeng/api';
 
 import {
   DispatchTest,
@@ -23,15 +24,13 @@ import {
 } from '~/models';
 import { ExportService } from '~/services';
 import {
+  ItemObjectives,
   Items,
   LabState,
-  Producers,
-  Products,
+  RecipeObjectives,
   Recipes,
-  Settings,
 } from '~/store';
 import { ListComponent } from './list.component';
-import { ListModule } from './list.module';
 
 enum DataTest {
   Export = 'lab-list-export',
@@ -45,24 +44,23 @@ describe('ListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestModule, ListModule],
+      imports: [TestModule, ListComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ListComponent);
     mockStore = TestBed.inject(MockStore);
-    mockStore.overrideSelector(Products.getSteps, Mocks.Steps);
+    mockStore.overrideSelector(ItemObjectives.getSteps, Mocks.Steps);
     mockStore.overrideSelector(
-      Products.getStepDetails,
+      ItemObjectives.getStepDetails,
       Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
         e[s.id] = {
           tabs: [
             { label: StepDetailTab.Item },
             { label: StepDetailTab.Recipe },
-            { label: StepDetailTab.Factory },
+            { label: StepDetailTab.Machine },
           ],
           outputs: [],
           recipeIds: [],
-          defaultableRecipeIds: [],
         };
         return e;
       }, {})
@@ -109,24 +107,53 @@ describe('ListComponent', () => {
     });
   });
 
+  describe('setActiveItems', () => {
+    it('should try to restore old active detail tab', () => {
+      const tab1: MenuItem = { label: 'tab1' };
+      const tab2: MenuItem = { label: 'tab2' };
+      component.activeItem = { ['2']: tab2, ['3']: tab2 };
+      component.setActiveItems(
+        [{ id: '0' }, { id: '1' }, { id: '2' }, { id: '3' }],
+        {
+          ['1']: { tabs: [tab1], outputs: [], recipeIds: [] },
+          ['2']: { tabs: [tab1, tab2], outputs: [], recipeIds: [] },
+          ['3']: { tabs: [tab1], outputs: [], recipeIds: [] },
+        }
+      );
+      expect(component.activeItem).toEqual({
+        ['1']: tab1,
+        ['2']: tab2,
+        ['3']: tab1,
+      });
+    });
+  });
+
+  describe('setActiveItem', () => {
+    it('should cache the active detail tab', () => {
+      const tab1: MenuItem = { label: 'tab1' };
+      component.setActiveItem({ id: '0' }, tab1);
+      expect(component.activeItem['0']).toEqual(tab1);
+    });
+  });
+
   describe('resetStep', () => {
     beforeEach(() => {
       spyOn(component, 'resetItem');
       spyOn(component, 'resetRecipe');
-      spyOn(component, 'resetProducer');
+      spyOn(component, 'resetRecipeObjective');
     });
 
-    it('should reset a producer step', () => {
+    it('should reset a recipe objective step', () => {
       const step: Step = {
         id: '0',
         itemId: ItemId.Coal,
         recipeId: RecipeId.Coal,
-        producerId: '1',
+        recipeObjectiveId: '1',
       };
       component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).not.toHaveBeenCalled();
-      expect(component.resetProducer).toHaveBeenCalled();
+      expect(component.resetRecipeObjective).toHaveBeenCalled();
     });
 
     it('should reset a recipe step', () => {
@@ -138,7 +165,7 @@ describe('ListComponent', () => {
       component.resetStep(step);
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).toHaveBeenCalled();
-      expect(component.resetProducer).not.toHaveBeenCalled();
+      expect(component.resetRecipeObjective).not.toHaveBeenCalled();
     });
   });
 
@@ -151,85 +178,33 @@ describe('ListComponent', () => {
     });
   });
 
-  describe('toggleDefaultRecipe', () => {
-    it('should reset a default recipe to null', () => {
-      spyOn(component, 'setDefaultRecipe');
-      const itemSettings = {
-        ...Mocks.ItemSettingsInitial,
-        ...{
-          [ItemId.Coal]: {
-            ...Mocks.ItemSettingsInitial[ItemId.Coal],
-            ...{
-              recipeId: RecipeId.Coal,
-            },
-          },
-        },
-      };
-      component.toggleDefaultRecipe(
-        ItemId.Coal,
-        RecipeId.Coal,
-        itemSettings,
-        Settings.initialSettingsState,
-        Mocks.AdjustedData
-      );
-      expect(component.setDefaultRecipe).toHaveBeenCalledWith(ItemId.Coal);
-    });
-
-    it('should set a default recipe', () => {
-      spyOn(component, 'setDefaultRecipe');
-      component.toggleDefaultRecipe(
-        ItemId.Coal,
-        RecipeId.Coal,
-        Mocks.ItemSettingsInitial,
-        Mocks.SettingsStateInitial,
-        Mocks.AdjustedData
-      );
-      expect(component.setDefaultRecipe).toHaveBeenCalledWith(
-        ItemId.Coal,
-        RecipeId.Coal,
-        RecipeId.Coal
-      );
-    });
-
-    it('should handle null disabled recipes', () => {
-      spyOn(component, 'setDefaultRecipe');
-      component.toggleDefaultRecipe(
-        ItemId.Coal,
-        RecipeId.Coal,
-        Mocks.ItemSettingsInitial,
-        Settings.initialSettingsState,
-        Mocks.AdjustedData
-      );
-      expect(component.setDefaultRecipe).toHaveBeenCalledWith(
-        ItemId.Coal,
-        RecipeId.Coal,
-        RecipeId.Coal
-      );
-    });
-  });
-
   describe('toggleRecipe', () => {
-    it('should enable a recipe', () => {
-      spyOn(component, 'setDisabledRecipes');
-      const settings = {
-        ...Settings.initialSettingsState,
-        ...{ disabledRecipeIds: [RecipeId.AdvancedOilProcessing] },
-      };
-      const data = { ...Mocks.AdjustedData, ...{ defaults: undefined } };
-      component.toggleRecipe(RecipeId.AdvancedOilProcessing, settings, data);
-      expect(component.setDisabledRecipes).toHaveBeenCalledWith([], undefined);
-    });
-
     it('should disable a recipe', () => {
-      spyOn(component, 'setDisabledRecipes');
+      spyOn(component, 'setRecipeExcluded');
+      const data = { ...Mocks.AdjustedData, ...{ defaults: undefined } };
       component.toggleRecipe(
         RecipeId.AdvancedOilProcessing,
-        Settings.initialSettingsState,
+        Mocks.RecipesStateInitial,
+        data
+      );
+      expect(component.setRecipeExcluded).toHaveBeenCalledWith(
+        RecipeId.AdvancedOilProcessing,
+        true,
+        false
+      );
+    });
+
+    it('should enable a recipe', () => {
+      spyOn(component, 'setRecipeExcluded');
+      component.toggleRecipe(
+        RecipeId.EmptyPetroleumGasBarrel,
+        Mocks.RecipesStateInitial,
         Mocks.AdjustedData
       );
-      expect(component.setDisabledRecipes).toHaveBeenCalledWith(
-        [RecipeId.AdvancedOilProcessing],
-        Mocks.AdjustedData.defaults?.disabledRecipeIds
+      expect(component.setRecipeExcluded).toHaveBeenCalledWith(
+        RecipeId.EmptyPetroleumGasBarrel,
+        false,
+        true
       );
     });
   });
@@ -238,31 +213,31 @@ describe('ListComponent', () => {
     const step: Step = {
       id: '0',
       recipeId: RecipeId.WoodenChest,
-      recipeSettings: Mocks.RationalRecipeSettingsInitial[RecipeId.WoodenChest],
+      recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.WoodenChest],
     };
 
     it('should skip a step with no recipe', () => {
-      spyOn(component, 'setFactory');
+      spyOn(component, 'setMachine');
       component.changeRecipeField(
         { id: '0' },
         '1',
-        Mocks.FactorySettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
-        RecipeField.Factory
+        RecipeField.Machine
       );
-      expect(component.setFactory).not.toHaveBeenCalled();
+      expect(component.setMachine).not.toHaveBeenCalled();
     });
 
-    it('should set up default for factory', () => {
-      spyOn(component, 'setFactory');
+    it('should set up default for machine', () => {
+      spyOn(component, 'setMachine');
       component.changeRecipeField(
         step,
         ItemId.AssemblingMachine2,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
-        RecipeField.Factory
+        RecipeField.Machine
       );
-      expect(component.setFactory).toHaveBeenCalledWith(
+      expect(component.setMachine).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         ItemId.AssemblingMachine2,
         ItemId.AssemblingMachine3,
@@ -270,17 +245,17 @@ describe('ListComponent', () => {
       );
     });
 
-    it('should set up default for factory modules', () => {
-      spyOn(component, 'setFactoryModules');
+    it('should set up default for machine modules', () => {
+      spyOn(component, 'setMachineModules');
       component.changeRecipeField(
         step,
         ItemId.SpeedModule3,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
-        RecipeField.FactoryModules,
+        RecipeField.MachineModules,
         0
       );
-      expect(component.setFactoryModules).toHaveBeenCalledWith(
+      expect(component.setMachineModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         new Array(4).fill(ItemId.SpeedModule3),
         new Array(4).fill(ItemId.SpeedModule3),
@@ -293,7 +268,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         '4',
-        Mocks.FactorySettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.BeaconCount,
         0
@@ -312,7 +287,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         ItemId.Beacon,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.Beacon,
         0
@@ -331,7 +306,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         ItemId.SpeedModule3,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.BeaconModules,
         0,
@@ -351,7 +326,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         '8',
-        Mocks.FactorySettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.BeaconTotal,
         0
@@ -369,7 +344,7 @@ describe('ListComponent', () => {
       component.changeRecipeField(
         step,
         100,
-        Mocks.FactorySettingsInitial,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.Overclock
       );
@@ -389,10 +364,10 @@ describe('ListComponent', () => {
       expect(component.setItemChecked).toHaveBeenCalledWith(ItemId.Coal, true);
     });
 
-    it('should set for a producer step', () => {
+    it('should set for a recipe objective step', () => {
       spyOn(component, 'setRecipeChecked');
       component.changeStepChecked(
-        { id: '0', producerId: '1', recipeId: RecipeId.Coal },
+        { id: '0', recipeObjectiveId: '1', recipeId: RecipeId.Coal },
         true
       );
       expect(component.setRecipeChecked).toHaveBeenCalledWith('1', true, true);
@@ -410,47 +385,51 @@ describe('ListComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.val('ignoreItem', Items.IgnoreItemAction);
+    dispatch.idVal('setItemExcluded', Items.SetExcludedAction);
+    dispatch.idVal('setItemChecked', Items.SetCheckedAction);
     dispatch.idValDef('setBelt', Items.SetBeltAction);
     dispatch.idValDef('setWagon', Items.SetWagonAction);
-    dispatch.idVal('setItemChecked', Items.SetCheckedAction);
-    dispatch.idValDef('setFactory', Recipes.SetFactoryAction);
-    dispatch.idValDefAlt('setFactory', Producers.SetFactoryAction);
-    dispatch.idValDef('setFactoryModules', Recipes.SetFactoryModulesAction);
+    dispatch.idValDef('setRecipeExcluded', Recipes.SetExcludedAction);
+    dispatch.idValDef('setMachine', Recipes.SetMachineAction);
+    dispatch.idValDefAlt('setMachine', RecipeObjectives.SetMachineAction);
+    dispatch.idValDef('setMachineModules', Recipes.SetMachineModulesAction);
     dispatch.idValDefAlt(
-      'setFactoryModules',
-      Producers.SetFactoryModulesAction
+      'setMachineModules',
+      RecipeObjectives.SetMachineModulesAction
     );
     dispatch.val('addBeacon', Recipes.AddBeaconAction);
-    dispatch.valAlt('addBeacon', Producers.AddBeaconAction);
+    dispatch.valAlt('addBeacon', RecipeObjectives.AddBeaconAction);
     dispatch.idVal('removeBeacon', Recipes.RemoveBeaconAction);
-    dispatch.idValAlt('removeBeacon', Producers.RemoveBeaconAction);
+    dispatch.idValAlt('removeBeacon', RecipeObjectives.RemoveBeaconAction);
     dispatch.idIndValDef('setBeaconCount', Recipes.SetBeaconCountAction);
-    dispatch.idIndValDefAlt('setBeaconCount', Producers.SetBeaconCountAction);
+    dispatch.idIndValDefAlt(
+      'setBeaconCount',
+      RecipeObjectives.SetBeaconCountAction
+    );
     dispatch.idIndValDef('setBeacon', Recipes.SetBeaconAction);
-    dispatch.idIndValDefAlt('setBeacon', Producers.SetBeaconAction);
+    dispatch.idIndValDefAlt('setBeacon', RecipeObjectives.SetBeaconAction);
     dispatch.idIndValDef('setBeaconModules', Recipes.SetBeaconModulesAction);
     dispatch.idIndValDefAlt(
       'setBeaconModules',
-      Producers.SetBeaconModulesAction
+      RecipeObjectives.SetBeaconModulesAction
     );
     dispatch.idIndVal('setBeaconTotal', Recipes.SetBeaconTotalAction);
-    dispatch.idIndValAlt('setBeaconTotal', Producers.SetBeaconTotalAction);
+    dispatch.idIndValAlt(
+      'setBeaconTotal',
+      RecipeObjectives.SetBeaconTotalAction
+    );
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
-    dispatch.idValDefAlt('setOverclock', Producers.SetOverclockAction);
+    dispatch.idValDefAlt('setOverclock', RecipeObjectives.SetOverclockAction);
     dispatch.idVal('setRecipeChecked', Recipes.SetCheckedAction);
-    dispatch.idValAlt('setRecipeChecked', Producers.SetCheckedAction);
+    dispatch.idValAlt('setRecipeChecked', RecipeObjectives.SetCheckedAction);
     dispatch.val('resetItem', Items.ResetItemAction);
     dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
-    dispatch.val('resetProducer', Producers.ResetProducerAction);
+    dispatch.val('resetRecipeObjective', RecipeObjectives.ResetObjectiveAction);
     dispatch.void('resetChecked', Items.ResetCheckedAction);
-    dispatch.void('resetIgnores', Items.ResetIgnoresAction);
+    dispatch.void('resetExcluded', Items.ResetExcludedAction);
     dispatch.void('resetBelts', Items.ResetBeltsAction);
     dispatch.void('resetWagons', Items.ResetWagonsAction);
-    dispatch.void('resetRecipes', Items.ResetRecipesAction);
-    dispatch.void('resetFactories', Recipes.ResetFactoriesAction);
+    dispatch.void('resetMachines', Recipes.ResetMachinesAction);
     dispatch.void('resetBeacons', Recipes.ResetBeaconsAction);
-    dispatch.valDef('setDisabledRecipes', Settings.SetDisabledRecipesAction);
-    dispatch.idValDef('setDefaultRecipe', Items.SetRecipeAction);
   });
 });

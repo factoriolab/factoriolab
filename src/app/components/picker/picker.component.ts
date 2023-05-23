@@ -46,6 +46,7 @@ export class PickerComponent implements OnInit {
   type: 'item' | 'recipe' = 'item';
   isMultiselect = false;
   selection: string | string[] | undefined;
+  default: string | string[] | undefined;
   categoryEntities: Entities<Category> = {};
   categoryIds: string[] = [];
   categoryRows: Entities<string[][]> = {};
@@ -70,9 +71,11 @@ export class PickerComponent implements OnInit {
   clickOpen(
     data: Dataset,
     type: 'item' | 'recipe',
+    allIds: string[],
     selection?: string | string[]
   ): void {
     this.type = type;
+    const allIdsSet = new Set(allIds);
     if (Array.isArray(selection)) {
       this.isMultiselect = true;
       this.selection = [...selection];
@@ -87,66 +90,60 @@ export class PickerComponent implements OnInit {
     });
     this.categoryEntities = data.categoryEntities;
     if (type === 'item') {
-      this.categoryRows = data.categoryItemRows;
-      if (selection && !Array.isArray(selection)) {
-        const index = data.categoryIds.indexOf(
-          data.itemEntities[selection].category
-        );
-        this.activeIndex = index;
-      }
-      this.allSelectItems = data.itemIds.map(
+      this.categoryRows = {};
+      data.categoryIds.forEach((c) => {
+        if (data.categoryItemRows[c]) {
+          this.categoryRows[c] = [];
+          data.categoryItemRows[c].forEach((r) =>
+            this.categoryRows[c].push(r.filter((i) => allIdsSet.has(i)))
+          );
+        }
+      });
+
+      this.allSelectItems = allIds.map(
         (i): SelectItem => ({
           label: data.itemEntities[i].name,
           value: i,
           title: data.itemEntities[i].category,
         })
       );
-    } else {
+
       if (Array.isArray(selection)) {
-        this.allSelectItems = data.complexRecipeIds.map(
-          (i): SelectItem => ({
-            label: data.recipeEntities[i].name,
-            value: i,
-            title: data.recipeEntities[i].category,
-          })
-        );
-
-        // Find categories that have complex recipes
-        const categoryIds = data.categoryIds.filter((c) =>
-          this.allSelectItems.some((i) => i.title === c)
-        );
-
-        // Filter category rows
-        this.categoryRows = {};
-        const ids = this.allSelectItems.map((i) => i.value);
-        for (const c of categoryIds) {
-          // Filter each category row
-          this.categoryRows[c] = [];
-          for (const r of data.categoryRecipeRows[c]) {
-            this.categoryRows[c].push(r.filter((i) => ids.indexOf(i) !== -1));
-          }
-          // Filter out empty category rows
-          this.categoryRows[c] = this.categoryRows[c].filter(
-            (r) => r.length > 0
-          );
-        }
-
         this.selectAllCtrl.setValue(selection.length === 0);
-      } else {
-        this.categoryRows = data.categoryRecipeRows;
-        if (selection) {
-          const index = data.categoryIds.indexOf(
-            data.recipeEntities[selection].category
-          );
-          this.activeIndex = index;
-        }
-        this.allSelectItems = data.recipeIds.map(
-          (i): SelectItem => ({
-            label: data.recipeEntities[i].name,
-            value: i,
-            title: data.recipeEntities[i].category,
-          })
+      } else if (selection != null) {
+        const index = data.categoryIds.indexOf(
+          data.itemEntities[selection].category
         );
+        this.activeIndex = index;
+      }
+    } else {
+      this.categoryRows = {};
+      data.categoryIds.forEach((c) => {
+        if (data.categoryRecipeRows[c]) {
+          this.categoryRows[c] = [];
+          data.categoryRecipeRows[c].forEach((r) =>
+            this.categoryRows[c].push(r.filter((i) => allIdsSet.has(i)))
+          );
+        }
+      });
+
+      this.allSelectItems = allIds.map(
+        (i): SelectItem => ({
+          label: data.recipeEntities[i].name,
+          value: i,
+          title: data.recipeEntities[i].category,
+        })
+      );
+
+      if (Array.isArray(selection)) {
+        this.selectAllCtrl.setValue(selection.length === 0);
+        this.default =
+          data.defaults != null ? [...data.defaults.excludedRecipeIds] : [];
+      } else if (selection) {
+        const index = data.categoryIds.indexOf(
+          data.recipeEntities[selection].category
+        );
+        this.activeIndex = index;
       }
     }
     this.categoryIds = data.categoryIds.filter((c) => this.categoryRows[c]);
@@ -162,6 +159,10 @@ export class PickerComponent implements OnInit {
     } else {
       this.selection = this.allSelectItems.map((i) => i.value);
     }
+  }
+
+  reset(): void {
+    this.selection = this.default;
   }
 
   clickId(id: string): void {
