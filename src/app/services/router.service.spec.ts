@@ -31,6 +31,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
+import { ContentService } from './content.service';
 import { DataService } from './data.service';
 import {
   EMPTY,
@@ -185,6 +186,7 @@ describe('RouterService', () => {
   >;
   let router: Router;
   let dataSvc: DataService;
+  let contentSvc: ContentService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -207,6 +209,7 @@ describe('RouterService', () => {
     });
     router = TestBed.inject(Router);
     dataSvc = TestBed.inject(DataService);
+    contentSvc = TestBed.inject(ContentService);
   });
 
   it('should be created', () => {
@@ -394,7 +397,7 @@ describe('RouterService', () => {
     });
 
     it('should unzip v0', () => {
-      spyOn(window, 'alert');
+      spyOn(contentSvc, 'confirm');
       const url =
         '/#z=eJxtUNsKwyAM.Zr5EHDUFsZeZC.7j6E2toJVp3ZjL.v2dbSD2pUQyOXk5CSBp4xo' +
         'qeoxZWDAyL2sEMkZMRtUjsKl4GOmEm0GJWLn6VN03pFYQEVKOEhrXEcHoXrjkNaAWqPK' +
@@ -422,7 +425,7 @@ describe('RouterService', () => {
           'wagon*?',
         mockStateV0
       );
-      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
+      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v1', () => {
@@ -433,7 +436,7 @@ describe('RouterService', () => {
     });
 
     it('should unzip v1', () => {
-      spyOn(window, 'alert');
+      spyOn(contentSvc, 'confirm');
       const v1Full =
         'p=steel-chest*1*1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel' +
         '-chest*assembling-machine-2*effectivity-module~effectivity-module*1*' +
@@ -460,7 +463,7 @@ describe('RouterService', () => {
       delete mockStateV1.settingsState?.costs?.surplus;
       delete mockStateV1.settingsState?.costs?.maximize;
       expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockStateV1);
-      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
+      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v2', () => {
@@ -473,7 +476,7 @@ describe('RouterService', () => {
     });
 
     it('should unzip v2', () => {
-      spyOn(window, 'alert');
+      spyOn(contentSvc, 'confirm');
       const url =
         '/?z=eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78m' +
         'mFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSMGkU_';
@@ -502,7 +505,7 @@ describe('RouterService', () => {
           '*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
         mockStateV2
       );
-      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
+      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v3', () => {
@@ -515,7 +518,7 @@ describe('RouterService', () => {
     });
 
     it('should unzip v3', () => {
-      spyOn(window, 'alert');
+      spyOn(contentSvc, 'confirm');
       const url =
         '/?z=eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX' +
         '5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6AbeM' +
@@ -546,7 +549,7 @@ describe('RouterService', () => {
           'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
         mockStateV3
       );
-      expect(window.alert).toHaveBeenCalled(); // Log warning for expensive field
+      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v4', () => {

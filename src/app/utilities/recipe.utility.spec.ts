@@ -914,7 +914,7 @@ describe('RecipeUtility', () => {
         Mocks.RecipesStateRationalInitial,
         Mocks.CostRational
       );
-      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from(29575));
+      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from([1183, 4]));
       expect(recipeR[RecipeId.CopperCable].cost).toEqual(Rational.one);
     });
   });
