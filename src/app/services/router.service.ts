@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { deflate, inflate } from 'pako';
 import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
@@ -34,6 +35,7 @@ import {
   Settings,
 } from '~/store';
 import { BrowserUtility } from '~/utilities';
+import { ContentService } from './content.service';
 import { DataService } from './data.service';
 
 export const NULL = '?'; // Encoded, previously 'n'
@@ -81,7 +83,8 @@ export enum ZipVersion {
 }
 
 export enum MigrationWarning {
-  ExpensiveDeprecation = 'Deprecated: The expensive setting has been removed. Please use or request an expensive data set instead.',
+  ExpensiveDeprecation = 'The expensive setting has been removed. Please use or request an expensive data set instead.',
+  LimitStepDeprecation = 'Limit steps have been replaced by limit objectives. Results may differ if using multiple objectives as limits apply to all objectives.',
 }
 
 export interface Zip {
@@ -126,6 +129,8 @@ export class RouterService {
     private router: Router,
     private gaSvc: GoogleAnalyticsService,
     private store: Store<LabState>,
+    private translateSvc: TranslateService,
+    private contentSvc: ContentService,
     private dataSvc: DataService
   ) {
     const l = 256;
@@ -688,7 +693,7 @@ export class RouterService {
         }
       }
 
-      params[section] = list.join(FIELDSEP);
+      params[section] = list.join(LISTSEP);
     }
   }
 
@@ -707,7 +712,7 @@ export class RouterService {
         }
       }
 
-      params[section] = list.join(FIELDSEP);
+      params[section] = list.join(LISTSEP);
     }
   }
 
@@ -730,6 +735,7 @@ export class RouterService {
 
   private migrateToV8(state: MigrationState): MigrationState {
     const { params, isBare } = state;
+    let needsLimitDeprecationWarning = false;
 
     // RecipeObjectives: Insert type field
     this.migrateInsertField(params, Section.RecipeObjectives, 2);
@@ -756,6 +762,7 @@ export class RouterService {
             const maximize = [o[0], '1', ObjectiveType.Maximize.toString()];
             recipes.push(this.zipFields(maximize));
             recipes.push(this.zipFields(limit));
+            needsLimitDeprecationWarning = true;
           } else {
             recipes.push(this.zipFields([o[0], o[1]]));
           }
@@ -770,8 +777,13 @@ export class RouterService {
             const maximize = [o[0], '1', '', ObjectiveType.Maximize.toString()];
             migrated[i] = this.zipFields(maximize);
             migrated.push(this.zipFields(limit));
+            needsLimitDeprecationWarning = true;
           }
         }
+      }
+
+      if (needsLimitDeprecationWarning) {
+        state.warnings.push(MigrationWarning.LimitStepDeprecation);
       }
 
       params[Section.ItemObjectives] = migrated.join(LISTSEP);
@@ -814,9 +826,9 @@ export class RouterService {
           }
 
           params[Section.Recipes] = list.join(LISTSEP);
-
-          s.splice(2 + x, 1);
         }
+
+        s.splice(2 + x, 1);
       }
 
       // Insert researchedTechnologyIds
@@ -848,8 +860,14 @@ export class RouterService {
   }
 
   displayWarnings(warnings: string[]): void {
-    if (warnings.length) {
-      window.alert(warnings.join('\r\n'));
+    for (const message of warnings) {
+      this.contentSvc.confirm({
+        message,
+        header: this.translateSvc.instant('app.migrationWarning'),
+        acceptLabel: this.translateSvc.instant('OK'),
+        // acceptVisible: false,
+        rejectVisible: false,
+      });
     }
   }
 

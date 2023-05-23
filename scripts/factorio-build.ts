@@ -25,7 +25,7 @@ import { getJsonData } from './helpers';
  */
 
 const mod = process.argv[2];
-const mode: 'normal' | 'expensive' = 'normal';
+const mode: 'normal' | 'expensive' = 'expensive';
 
 if (!mod) {
   throw new Error(
@@ -1209,7 +1209,7 @@ async function processMod(): Promise<void> {
         name: recipeLocale.names[proto.name],
         category: subgroup.group,
         row: getRecipeRow(proto),
-        time: proto.energy_required ?? 0.5,
+        time: recipeData.energy_required ?? 0.5,
         producers: producers.crafting[proto.category ?? 'crafting'],
         in: getIngredients(recipeData.ingredients),
         // Already calculated when determining included recipes
