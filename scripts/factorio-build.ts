@@ -25,7 +25,7 @@ import { getJsonData } from './helpers';
  */
 
 const mod = process.argv[2];
-const mode: 'normal' | 'expensive' = 'expensive';
+const mode: 'normal' | 'expensive' = 'normal';
 
 if (!mod) {
   throw new Error(
