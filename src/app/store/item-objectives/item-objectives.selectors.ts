@@ -223,13 +223,17 @@ export const getTotals = createSelector(
         }
       }
 
-      if (step.recipeId != null) {
+      if (
+        step.recipeId != null &&
+        step.recipe != null &&
+        step.recipeSettings != null
+      ) {
         // Total Machines & Modules
         if (step.machines?.nonzero()) {
-          const recipe = data.recipeEntities[step.recipeId];
+          const recipe = step.recipe;
           // Don't include silos from launch recipes
           if (!recipe.part) {
-            const settings = recipesSettings[step.recipeId];
+            const settings = step.recipeSettings;
             let machine = settings.machineId;
             if (
               data.game === Game.DysonSphereProgram &&
