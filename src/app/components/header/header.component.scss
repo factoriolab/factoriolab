@@ -59,6 +59,7 @@
 
   @include media-breakpoint-down(xl) {
     width: 100%;
+    justify-content: space-between;
 
     > li {
       width: 25%;
@@ -68,15 +69,15 @@
       }
     }
   }
+
+  @include media-breakpoint-down(sm) {
+    > li {
+      width: 33%;
+    }
+  }
 }
 
 :host ::ng-deep {
-  @include media-breakpoint-down(sm) {
-    .header-menu .p-button-icon {
-      display: none;
-    }
-  }
-
   .p-tieredmenu {
     left: unset !important;
     right: 0px;

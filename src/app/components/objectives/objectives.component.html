@@ -55,7 +55,7 @@
             [pTooltip]="'objectives.itemTooltip' | translate"
             tooltipPosition="top"
             (click)="
-              editPicker.clickOpen(
+              editItemPicker.clickOpen(
                 vm.data,
                 'item',
                 vm.itemIds,
@@ -64,7 +64,7 @@
             "
           ></button>
           <lab-picker
-            #editPicker
+            #editItemPicker
             [header]="'objectives.itemTooltip' | translate"
             (selectId)="setItem(itemObjective.id, $event)"
           ></lab-picker>
@@ -137,7 +137,7 @@
             [pTooltip]="'objectives.recipeTooltip' | translate"
             tooltipPosition="top"
             (click)="
-              editPicker.clickOpen(
+              editRecipePicker.clickOpen(
                 vm.data,
                 'recipe',
                 vm.recipeIds,
@@ -155,13 +155,14 @@
             }}</span>
           </button>
           <lab-picker
-            #editPicker
+            #editRecipePicker
             [header]="'objectives.recipeTooltip' | translate"
             (selectId)="setRecipe(recipeObjective.id, $event)"
           ></lab-picker>
           <lab-input-number
             [pTooltip]="'objectives.countTooltip' | translate"
             tooltipPosition="top"
+            [hideButtons]="vm.mobile"
             [value]="recipeObjective.count"
             (setValue)="setCount(recipeObjective.id, $event)"
           ></lab-input-number>

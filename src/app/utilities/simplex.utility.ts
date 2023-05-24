@@ -703,12 +703,24 @@ export class SimplexUtility {
         surplus[itemId] = val;
       }
 
-      if (values.max != null && state.maximizeType === MaximizeType.Ratio) {
-        const maxVal = maximizeVar.value;
-        const maxRat = Rational.fromNumber(maxVal);
-        const val = maxRat.mul(values.max);
-        // Add maximize output to items output
-        values.out = values.out.add(val);
+      if (values.max != null) {
+        switch (state.maximizeType) {
+          case MaximizeType.Ratio: {
+            const maxVal = maximizeVar.value;
+            const maxRat = Rational.fromNumber(maxVal);
+            const val = maxRat.mul(values.max);
+            // Add maximize output to items output
+            values.out = values.out.add(val);
+            break;
+          }
+          case MaximizeType.Weight: {
+            const maxVal = maximizeItemVarEntities[itemId].value;
+            const val = Rational.fromNumber(maxVal);
+            // Add maximize output to items output
+            values.out = values.out.add(val);
+            break;
+          }
+        }
       }
     }
 
@@ -789,6 +801,11 @@ export class SimplexUtility {
         recipeObjective
       );
     }
+
+    // Move output steps to the top of the list
+    state.steps.sort(
+      (a, b) => (a.output != null ? 0 : 1) - (b.output != null ? 0 : 1)
+    );
   }
 
   /** Update steps with item from matrix solution */

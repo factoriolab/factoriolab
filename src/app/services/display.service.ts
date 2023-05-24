@@ -80,7 +80,7 @@ export class DisplayService {
 
   recipeProducedBy(recipe: Recipe): string {
     return `<small><div>${this.translateSvc.instant(
-      'data.producedByRecipes'
+      'data.producers'
     )}</div>${recipe.producers.map((i) => this.icon(i, '')).join('')}</small>`;
   }
 

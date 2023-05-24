@@ -310,7 +310,7 @@ async function processMod(): Promise<void> {
   const iconFiles: Record<string, string> = {};
 
   async function resizeIcon(path: string, iconId: string): Promise<void> {
-    const outPath = `${tempPath}/icons/${iconId}.png`;
+    const outPath = `${tempIconsPath}/${iconId}.png`;
     await sharp(path).resize(64, 64).png().toFile(outPath);
     iconFiles[outPath] = iconId;
   }
@@ -350,6 +350,7 @@ async function processMod(): Promise<void> {
       }
 
       iconHash[hash] = iconId;
+      iconSet.add(iconId);
 
       let folder = 'item';
       if (D.isRecipe(spec)) {
