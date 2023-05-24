@@ -463,12 +463,24 @@ export function isBoiler(proto: Base): proto is Boiler {
   return proto.type === 'boiler';
 }
 
+export interface FluidBoxes {
+  [key: number]: FluidBox;
+  off_when_no_fluid_recipe?: boolean;
+}
+
+export interface FluidBox {
+  filter?: string;
+  /** Default: 'None' */
+  production_type?: 'None' | 'none' | 'input' | 'input-output' | 'output';
+}
+
 export interface CraftingMachine extends Base {
   crafting_categories: string[];
   crafting_speed: number;
   energy_source: EnergySource;
   energy_usage: string;
   allowed_effects?: (keyof Effect)[];
+  fluid_boxes?: FluidBox[] | FluidBoxes;
   module_specification?: ModuleSpecification;
 }
 
