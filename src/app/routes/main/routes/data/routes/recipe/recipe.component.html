@@ -254,21 +254,26 @@
         <th>{{ 'data.modules' | translate }}</th>
         <td>
           <div *ngFor="let moduleId of vm.recipeSettings.machineModuleIds">
-            <a
-              [routerLink]="
-                moduleId === 'module' ? null : '/data/modules/' + moduleId
-              "
-              queryParamsHandling="preserve"
+            <i
+              *ngIf="moduleId === 'module'; else moduleButton"
+              [class]="moduleId | iconSmClass"
             >
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="p-button-text"
-                [label]="vm.data.itemEntities[moduleId].name"
-                [icon]="moduleId | iconSmClass"
-              ></button>
-            </a>
+            </i>
+            <ng-template #moduleButton>
+              <a
+                [routerLink]="'/data/modules/' + moduleId"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="vm.data.itemEntities[moduleId].name"
+                  [icon]="moduleId | iconSmClass"
+                ></button>
+              </a>
+            </ng-template>
           </div>
         </td>
       </tr>
@@ -295,21 +300,26 @@
                 <span class="ms-3">{{ beacon.count }}</span>
               </div>
               <div *ngFor="let moduleId of beacon.moduleIds">
-                <a
-                  [routerLink]="
-                    moduleId === 'module' ? null : '/data/modules/' + moduleId
-                  "
-                  queryParamsHandling="preserve"
+                <i
+                  *ngIf="moduleId === 'module'; else moduleButton"
+                  [class]="moduleId | iconSmClass"
                 >
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    class="p-button-text"
-                    [label]="vm.data.itemEntities[moduleId].name"
-                    [icon]="moduleId | iconSmClass"
-                  ></button>
-                </a>
+                </i>
+                <ng-template #moduleButton>
+                  <a
+                    [routerLink]="'/data/modules/' + moduleId"
+                    queryParamsHandling="preserve"
+                  >
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      class="p-button-text"
+                      [label]="vm.data.itemEntities[moduleId].name"
+                      [icon]="moduleId | iconSmClass"
+                    ></button>
+                  </a>
+                </ng-template>
               </div>
             </ng-container>
           </td>
