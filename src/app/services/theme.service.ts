@@ -9,6 +9,7 @@ import { BrowserUtility } from '~/utilities';
 
 const LAB_ICON_STYLE_ID = 'lab-icon-css';
 const LAB_THEME_STYLE_ID = 'lab-theme-css';
+const LAB_ICONS_IMG_ID = 'lab-icons-img';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,17 @@ export class ThemeService {
 
   initialize(): void {
     this.store.select(Settings.getDataset).subscribe((data) => {
+      const iconImg = this.document.getElementById(
+        LAB_ICONS_IMG_ID
+      ) as HTMLImageElement | null;
+
+      if (iconImg) {
+        const file = data.iconEntities[data.iconIds[0]]?.file;
+        if (file) {
+          iconImg.src = file;
+        }
+      }
+
       // Generate .lab-icon::before css rules stylesheet
       const old = this.document.getElementById(LAB_ICON_STYLE_ID);
       if (old) {
