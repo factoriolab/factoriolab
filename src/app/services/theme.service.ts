@@ -23,18 +23,18 @@ export class ThemeService {
   ) {}
 
   initialize(): void {
-    this.store.select(Settings.getDataset).subscribe((data) => {
+    this.store.select(Settings.getModId).subscribe((id) => {
       const iconImg = this.document.getElementById(
         LAB_ICONS_IMG_ID
       ) as HTMLImageElement | null;
 
       if (iconImg) {
-        const file = data.iconEntities[data.iconIds[0]]?.file;
-        if (file) {
-          iconImg.src = file;
-        }
+        const file = `data/${id}/icons.webp`;
+        iconImg.src = file;
       }
+    });
 
+    this.store.select(Settings.getDataset).subscribe((data) => {
       // Generate .lab-icon::before css rules stylesheet
       const old = this.document.getElementById(LAB_ICON_STYLE_ID);
       if (old) {
