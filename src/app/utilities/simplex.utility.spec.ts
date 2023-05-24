@@ -426,6 +426,12 @@ describe('SimplexUtility', () => {
         inputs: { [ItemId.Wood]: Rational.one },
         recipes: { [RecipeId.IronOre]: Rational.two },
       };
+      state.steps = [
+        { id: '0' },
+        { id: '1', output: Rational.one },
+        { id: '2' },
+        { id: '3', output: Rational.one },
+      ];
       SimplexUtility.updateSteps(solution, state);
       expect(SimplexUtility.addItemStep).toHaveBeenCalledTimes(2);
       expect(SimplexUtility.assignRecipes).toHaveBeenCalledTimes(1);

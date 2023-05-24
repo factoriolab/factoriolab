@@ -153,7 +153,9 @@ describe('Item Objectives Selectors', () => {
             id: '0',
             itemId: ItemId.Coal,
             recipeId: RecipeId.Coal,
+            recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
             recipeSettings: {
+              machineId: ItemId.ElectricMiningDrill,
               machineModuleIds: [ItemId.ProductivityModule3],
               beacons: [
                 {
@@ -171,7 +173,9 @@ describe('Item Objectives Selectors', () => {
             machines: Rational.one,
             power: Rational.one,
             pollution: Rational.one,
+            recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
             recipeSettings: {
+              machineId: ItemId.ElectricMiningDrill,
               machineModuleIds: [
                 ItemId.Module,
                 ItemId.SpeedModule3,
@@ -196,7 +200,7 @@ describe('Item Objectives Selectors', () => {
         wagons: { [ItemId.CargoWagon]: Rational.one },
         machines: { [ItemId.ElectricMiningDrill]: Rational.one },
         machineModules: {
-          [ItemId.ProductivityModule3]: Rational.from(3),
+          [ItemId.SpeedModule3]: Rational.from(2),
         },
         beacons: { [ItemId.Beacon]: Rational.one },
         beaconModules: {
@@ -213,7 +217,11 @@ describe('Item Objectives Selectors', () => {
           {
             id: '0',
             recipeId: RecipeId.Coal,
+            recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
             machines: Rational.one,
+            recipeSettings: {
+              machineId: ItemId.MiningDrill,
+            },
           },
         ],
         Mocks.ItemsStateInitial,

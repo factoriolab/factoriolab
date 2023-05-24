@@ -1,7 +1,7 @@
 {
   "name": "factoriolab",
   "description": "Angular-based calculator for the game Factorio",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "private": true,
   "contributors": [
     "Doug Broad (https://github.com/dcbroad3)"
@@ -24,7 +24,8 @@
     "lint-build": "ng lint --max-warnings 0",
     "factorio-prep": "ts-node scripts/factorio-prep.ts",
     "factorio-dump": "scripts\\factorio-dump.bat",
-    "factorio-build": "ts-node scripts/factorio-build.ts"
+    "factorio-build": "ts-node scripts/factorio-build.ts",
+    "minify-data": "ts-node scripts/minify-data.ts"
   },
   "dependencies": {
     "@angular/animations": "^15.2.1",
