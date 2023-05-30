@@ -324,7 +324,7 @@ export function isItemProduct(
 }
 
 export interface RecipeData {
-  ingredients: Ingredient[] | Record<string, never>;
+  ingredients: Ingredient[] | Record<string, Ingredient>;
   result?: string;
   result_count?: number;
   results?: (ItemProduct | FluidProduct)[];
@@ -382,7 +382,7 @@ export interface TechnologyUnit {
 
 export interface TechnologyData {
   unit: TechnologyUnit;
-  effects?: Modifier[] | Record<string, never>;
+  effects?: Modifier[] | Record<string, Modifier>;
   enabled?: boolean;
   hidden?: boolean;
   ignore_tech_cost_multiplier?: boolean;
@@ -530,7 +530,7 @@ export interface Lab extends Base {
   energy_usage: string;
   allowed_effects?: (keyof Effect)[];
   module_specification?: ModuleSpecification;
-  research_speed?: number;
+  researching_speed?: number;
 }
 
 export function isLab(proto: Base): proto is Lab {
