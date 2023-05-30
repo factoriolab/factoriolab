@@ -16,7 +16,7 @@ import {
 } from '~/models';
 import { EnergyType } from '../src/app/models/enum/energy-type';
 import * as D from './factorio.models';
-import { getJsonData } from './helpers';
+import { coerceArray, getJsonData } from './helpers';
 
 /**
  * This script is intended to pull files from a dump from Factorio and build
@@ -50,6 +50,7 @@ const modHashPath = `${modPath}/hash.json`;
 interface ModDataReport {
   noProducers: string[];
   noProducts: string[];
+  resourceNoMinableProducts: string[];
   multiFuelCategory: string[];
 }
 
@@ -132,16 +133,14 @@ function getPowerInKw(usage: string): number {
 }
 
 function getDisallowedEffects(
-  allowedEffects?: (keyof D.Effect)[] | Record<string, never>,
+  allowedEffects?: (keyof D.Effect)[] | Record<string, keyof D.Effect>,
   defaultDisallow = false
 ): (keyof D.Effect)[] | undefined {
   if (allowedEffects == null) {
     return defaultDisallow ? D.allEffects : undefined;
   }
 
-  if (!Array.isArray(allowedEffects)) {
-    allowedEffects = [];
-  }
+  allowedEffects = coerceArray(allowedEffects);
 
   const checked = allowedEffects;
   const result = D.allEffects.filter((e) => checked.indexOf(e) === -1);
@@ -471,7 +470,7 @@ async function processMod(): Promise<void> {
     if (D.isBoiler(proto)) {
       speed = getPowerInKw(proto.energy_consumption);
     } else if (D.isLab(proto)) {
-      speed = proto.research_speed ?? 1;
+      speed = proto.researching_speed ?? 1;
     } else if (D.isMiningDrill(proto)) {
       speed = proto.mining_speed;
     } else if (D.isOffshorePump(proto)) {
@@ -611,18 +610,16 @@ async function processMod(): Promise<void> {
   }
 
   function getIngredients(
-    ingredients: D.Ingredient[] | Record<string, never>
+    ingredients: D.Ingredient[] | Record<string, D.Ingredient>
   ): Record<string, number> {
     const result: Record<string, number> = {};
 
-    if (Array.isArray(ingredients)) {
-      for (const ingredient of ingredients) {
-        if (D.isSimpleIngredient(ingredient)) {
-          const [itemId, amount] = ingredient;
-          addEntityValue(result, itemId, amount);
-        } else {
-          addEntityValue(result, ingredient.name, ingredient.amount);
-        }
+    for (const ingredient of coerceArray(ingredients)) {
+      if (D.isSimpleIngredient(ingredient)) {
+        const [itemId, amount] = ingredient;
+        addEntityValue(result, itemId, amount);
+      } else {
+        addEntityValue(result, ingredient.name, ingredient.amount);
       }
     }
 
@@ -634,7 +631,7 @@ async function processMod(): Promise<void> {
   }
 
   function getProducts(
-    results: D.Product[] | Record<string, never> | undefined,
+    results: D.Product[] | Record<string, D.Product> | undefined,
     result?: string,
     result_count = 1
   ): [Record<string, number>, Record<string, number> | undefined, number] {
@@ -642,15 +639,19 @@ async function processMod(): Promise<void> {
     let catalyst: Record<string, number> | undefined;
     let total = 0;
 
-    if (Array.isArray(results)) {
-      for (const product of results) {
+    if (results != null) {
+      for (const product of coerceArray(results)) {
         if (D.isSimpleProduct(product)) {
           const [itemId, amount] = product;
           addEntityValue(record, itemId, amount);
           total += amount;
         } else {
           let amount = product.amount;
-          if (amount == null && product.amount_max && product.amount_min) {
+          if (
+            amount == null &&
+            product.amount_max != null &&
+            product.amount_min != null
+          ) {
             amount = (product.amount_max + product.amount_min) / 2;
           }
 
@@ -720,6 +721,7 @@ async function processMod(): Promise<void> {
     noProducts: [],
     noProducers: [],
     multiFuelCategory: [],
+    resourceNoMinableProducts: [],
   };
 
   const modHashReport: ModHash = {
@@ -841,11 +843,9 @@ async function processMod(): Promise<void> {
       techId[techRaw.name] = techRaw.name;
     }
 
-    if (Array.isArray(techData.effects)) {
-      for (const effect of techData.effects) {
-        if (D.isUnlockRecipeModifier(effect)) {
-          recipesUnlocked[effect.recipe] = techId[techRaw.name];
-        }
+    for (const effect of coerceArray(techData.effects)) {
+      if (D.isUnlockRecipeModifier(effect)) {
+        recipesUnlocked[effect.recipe] = techId[techRaw.name];
       }
     }
   }
@@ -968,13 +968,11 @@ async function processMod(): Promise<void> {
       typeof recipeRaw[mode] === 'object' ? recipeRaw[mode] : recipeRaw;
 
     // Check ingredients
-    if (Array.isArray(recipeData.ingredients)) {
-      for (const ingredient of recipeData.ingredients) {
-        if (D.isSimpleIngredient(ingredient)) {
-          itemsUsed.add(ingredient[0]);
-        } else {
-          itemsUsed.add(ingredient.name);
-        }
+    for (const ingredient of coerceArray(recipeData.ingredients)) {
+      if (D.isSimpleIngredient(ingredient)) {
+        itemsUsed.add(ingredient[0]);
+      } else {
+        itemsUsed.add(ingredient.name);
       }
     }
 
@@ -1217,85 +1215,92 @@ async function processMod(): Promise<void> {
       }
 
       let producers = producersMap.crafting[proto.category ?? 'crafting'];
-      // Ensure producers have sufficient fluid boxes
-      const fluidIngredients = Object.keys(recipeIn)
-        .map((i) => getItem(i))
-        .filter((i) => D.isFluid(i));
-      if (fluidIngredients.length > 0) {
-        producers = producers.filter((p) => {
-          const fluidBoxes = craftingFluidBoxes[p];
-          const inputFluidBoxes = fluidBoxes.filter(
-            (f) =>
-              f.production_type === 'input' ||
-              f.production_type === 'input-output'
-          );
-          const usedIndices = new Set<number>();
-          for (const ingredient of fluidIngredients) {
-            const availableFluidBoxes = inputFluidBoxes.filter(
-              (_, i) => !usedIndices.has(i)
-            );
-            if (availableFluidBoxes.length === 0) return false;
-
-            const filterFluidBox = availableFluidBoxes.find(
-              (f) => f.filter === ingredient.name
-            );
-            if (filterFluidBox != null) {
-              usedIndices.add(inputFluidBoxes.indexOf(filterFluidBox));
-            } else {
-              const fluidBox = availableFluidBoxes[0];
-              usedIndices.add(inputFluidBoxes.indexOf(fluidBox));
-            }
+      if (producers != null) {
+        // Ensure producers have sufficient fluid boxes
+        const fluidIngredients = Object.keys(recipeIn)
+          .map((i) => getItem(i))
+          .filter((i) => D.isFluid(i));
+        if (fluidIngredients.length > 0) {
+          if (producers == null) {
+            console.log(proto);
           }
-
-          return true;
-        });
-      }
-      const fluidProducts = Object.keys(recipeOut)
-        .map((i) => getItem(i))
-        .filter((i) => D.isFluid(i));
-      if (fluidProducts.length > 0) {
-        producers = producers.filter((p) => {
-          const fluidBoxes = craftingFluidBoxes[p];
-          const outputFluidBoxes = fluidBoxes.filter(
-            (f) => f.production_type === 'output'
-          );
-          const usedIndices = new Set<number>();
-          for (const product of fluidProducts) {
-            const availableFluidBoxes = outputFluidBoxes.filter(
-              (_, i) => !usedIndices.has(i)
+          producers = producers.filter((p) => {
+            const fluidBoxes = craftingFluidBoxes[p];
+            const inputFluidBoxes = fluidBoxes.filter(
+              (f) =>
+                f.production_type === 'input' ||
+                f.production_type === 'input-output'
             );
-            if (availableFluidBoxes.length === 0) return false;
+            const usedIndices = new Set<number>();
+            for (const ingredient of fluidIngredients) {
+              const availableFluidBoxes = inputFluidBoxes.filter(
+                (_, i) => !usedIndices.has(i)
+              );
+              if (availableFluidBoxes.length === 0) return false;
 
-            const filterFluidBox = availableFluidBoxes.find(
-              (f) => f.filter === product.name
-            );
-            if (filterFluidBox != null) {
-              usedIndices.add(outputFluidBoxes.indexOf(filterFluidBox));
-            } else {
-              const fluidBox = availableFluidBoxes[0];
-              usedIndices.add(outputFluidBoxes.indexOf(fluidBox));
+              const filterFluidBox = availableFluidBoxes.find(
+                (f) => f.filter === ingredient.name
+              );
+              if (filterFluidBox != null) {
+                usedIndices.add(inputFluidBoxes.indexOf(filterFluidBox));
+              } else {
+                const fluidBox = availableFluidBoxes[0];
+                usedIndices.add(inputFluidBoxes.indexOf(fluidBox));
+              }
             }
-          }
 
-          return true;
-        });
+            return true;
+          });
+        }
+        const fluidProducts = Object.keys(recipeOut)
+          .map((i) => getItem(i))
+          .filter((i) => D.isFluid(i));
+        if (fluidProducts.length > 0) {
+          producers = producers.filter((p) => {
+            const fluidBoxes = craftingFluidBoxes[p];
+            const outputFluidBoxes = fluidBoxes.filter(
+              (f) => f.production_type === 'output'
+            );
+            const usedIndices = new Set<number>();
+            for (const product of fluidProducts) {
+              const availableFluidBoxes = outputFluidBoxes.filter(
+                (_, i) => !usedIndices.has(i)
+              );
+              if (availableFluidBoxes.length === 0) return false;
+
+              const filterFluidBox = availableFluidBoxes.find(
+                (f) => f.filter === product.name
+              );
+              if (filterFluidBox != null) {
+                usedIndices.add(outputFluidBoxes.indexOf(filterFluidBox));
+              } else {
+                const fluidBox = availableFluidBoxes[0];
+                usedIndices.add(outputFluidBoxes.indexOf(fluidBox));
+              }
+            }
+
+            return true;
+          });
+        }
+
+        const recipe: Recipe = {
+          id: proto.name,
+          name: recipeLocale.names[proto.name],
+          category: subgroup.group,
+          row: getRecipeRow(proto),
+          time: recipeData.energy_required ?? 0.5,
+          producers,
+          in: recipeIn,
+          // Already calculated when determining included recipes
+          out: recipeOut,
+          catalyst: recipeCatalyst,
+          unlockedBy: recipesUnlocked[proto.name],
+          icon: await getIcon(proto),
+        };
+        modData.recipes.push(recipe);
+      } else {
+        modDataReport.noProducers.push(proto.name);
       }
-
-      const recipe: Recipe = {
-        id: proto.name,
-        name: recipeLocale.names[proto.name],
-        category: subgroup.group,
-        row: getRecipeRow(proto),
-        time: recipeData.energy_required ?? 0.5,
-        producers,
-        in: recipeIn,
-        // Already calculated when determining included recipes
-        out: recipeOut,
-        catalyst: recipeCatalyst,
-        unlockedBy: recipesUnlocked[proto.name],
-        icon: await getIcon(proto),
-      };
-      modData.recipes.push(recipe);
     } else if (D.isFluid(proto)) {
       // Check for offshore pump recipes
       for (const pumpName of Object.keys(machines.offshorePump)) {
@@ -1451,36 +1456,42 @@ async function processMod(): Promise<void> {
         modData.recipes.push(recipe);
       }
     }
+  }
 
-    if (!D.isRecipe(proto)) {
-      const resource = dataRaw.resource[proto.name];
-      if (resource && resource.minable) {
-        // Found mining recipe
-        const id = getFakeRecipeId(proto.name, `${proto.name}-mining`);
+  for (const name of Object.keys(dataRaw.resource)) {
+    const resource = dataRaw.resource[name];
+    if (resource && resource.minable) {
+      // Found mining recipe
 
-        let miners = producersMap.resource[resource.category ?? 'basic-solid'];
-        const recipeIn: Record<string, number> = {};
-        if (resource.minable.required_fluid && resource.minable.fluid_amount) {
-          const amount = resource.minable.fluid_amount / 10;
-          recipeIn[resource.minable.required_fluid] = amount;
-          miners = miners.filter((m) => {
-            // Only allow producers with fluid boxes
-            const item = getItem(m);
-            if (!D.isFluid(item) && item.place_result) {
-              const miningDrill = dataRaw['mining-drill'][item.place_result];
-              return miningDrill.input_fluid_box != null;
-            } else {
-              // Seems to be an invalid entry
-              return false;
-            }
-          });
-        }
+      let miners = producersMap.resource[resource.category ?? 'basic-solid'];
+      const recipeIn: Record<string, number> = {};
+      if (resource.minable.required_fluid && resource.minable.fluid_amount) {
+        const amount = resource.minable.fluid_amount / 10;
+        recipeIn[resource.minable.required_fluid] = amount;
+        miners = miners.filter((m) => {
+          // Only allow producers with fluid boxes
+          const item = getItem(m);
+          if (!D.isFluid(item) && item.place_result) {
+            const miningDrill = dataRaw['mining-drill'][item.place_result];
+            return miningDrill.input_fluid_box != null;
+          } else {
+            // Seems to be an invalid entry
+            return false;
+          }
+        });
+      }
 
-        const [recipeOut, recipeCatalyst, total] = getProducts(
-          resource.minable.results,
-          resource.minable.result,
-          resource.minable.count
-        );
+      const [recipeOut, recipeCatalyst, total] = getProducts(
+        resource.minable.results,
+        resource.minable.result,
+        resource.minable.count
+      );
+
+      const proto = getItem(Object.keys(recipeOut)[0]);
+      if (proto != null) {
+        const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
+        const group = dataRaw['item-group'][subgroup.group];
+        const id = getFakeRecipeId(proto.name, `${name}-mining`);
 
         const recipe: Recipe = {
           id,
@@ -1498,6 +1509,8 @@ async function processMod(): Promise<void> {
           producers: miners,
         };
         modData.recipes.push(recipe);
+      } else {
+        modDataReport.resourceNoMinableProducts.push(name);
       }
     }
   }
