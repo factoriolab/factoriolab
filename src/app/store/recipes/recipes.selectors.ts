@@ -25,12 +25,12 @@ export const getRecipesState = createSelector(
   Settings.getDataset,
   (state, machinesState, data) => {
     const value: Entities<RecipeSettings> = {};
-    const defaultexcludedRecipeIds = data.defaults?.excludedRecipeIds ?? [];
+    const defaultExcludedRecipeIds = data.defaults?.excludedRecipeIds ?? [];
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
       const s: RecipeSettings = { ...state[recipe.id] };
 
       if (s.excluded == null) {
-        s.excluded = defaultexcludedRecipeIds.some((i) => i === recipe.id);
+        s.excluded = defaultExcludedRecipeIds.some((i) => i === recipe.id);
       }
 
       if (s.machineId == null) {

@@ -4,14 +4,22 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { deflate, inflate } from 'pako';
-import { BehaviorSubject, debounceTime, Observable, Subject } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  debounceTime,
+  Observable,
+  Subject,
+} from 'rxjs';
 import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
+import { filterNullish } from '~/helpers';
 import {
   BeaconSettings,
   DisplayRate,
   Entities,
+  IdDefaultPayload,
   ItemObjective,
   ItemSettings,
   MachineSettings,
@@ -120,6 +128,12 @@ export class RouterService {
   };
   first = true;
   ready$ = new Subject<void>();
+  /**
+   * V6/V7 Disabled recipes have to be fixed up after data loads because state
+   * depends on default values. Trigger this migration to be run after load via
+   * this subject.
+   */
+  fixV8ExcludedRecipes$ = new Subject<void>();
 
   get empty(): Zip {
     return { bare: '', hash: '' };
@@ -142,6 +156,38 @@ export class RouterService {
       this.base64codes[BASE64ABC.charCodeAt(i)] = i;
     }
     this.base64codes['_'.charCodeAt(0)] = 0;
+
+    /**
+     * When migrating to V8, set `excluded` to `false` for any recipes which are
+     * excluded by default but were not excluded in the migrated router state.
+     */
+    this.fixV8ExcludedRecipes$
+      .pipe(
+        switchMap(() =>
+          this.store.select(Settings.getMod).pipe(
+            map((m) => m?.defaults),
+            filterNullish(),
+            first()
+          )
+        ),
+        switchMap(() =>
+          combineLatest([
+            this.store.select(Recipes.recipesState),
+            this.store.select(Recipes.getRecipesState),
+          ]).pipe(first())
+        ),
+        tap(([recipesRaw, recipesState]) => {
+          const payload: IdDefaultPayload<boolean>[] = [];
+          for (const id of Object.keys(recipesState)) {
+            const value = recipesState[id].excluded;
+            if (value && !recipesRaw[id]?.excluded) {
+              payload.push({ id, value: false, def: true });
+            }
+          }
+          this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
+        })
+      )
+      .subscribe();
   }
 
   initialize(): void {
@@ -826,6 +872,8 @@ export class RouterService {
           }
 
           params[Section.Recipes] = list.join(LISTSEP);
+
+          this.fixV8ExcludedRecipes$.next();
         }
 
         s.splice(2 + x, 1);
