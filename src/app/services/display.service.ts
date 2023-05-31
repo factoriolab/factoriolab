@@ -8,9 +8,14 @@ export class DisplayService {
   constructor(private translateSvc: TranslateService) {}
 
   icon(id: string, num?: string | number, type: IdType = 'item'): string {
-    return `<i class="me-2 lab-icon sm ${type} padded ${id}"><span>${
-      num ?? ''
-    }</span></i>`;
+    let numStr = '';
+    if (typeof num === 'number') {
+      numStr = Number(num.toFixed(2)).toString();
+    } else if (typeof num === 'string') {
+      numStr = num;
+    }
+
+    return `<i class="me-2 lab-icon sm ${type} padded ${id}"><span>${numStr}</span></i>`;
   }
 
   table(rows: [string, string][]): string {
