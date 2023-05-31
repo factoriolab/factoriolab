@@ -5,6 +5,7 @@ export enum Game {
   Factorio = 'Factorio',
   CaptainOfIndustry = 'CaptainOfIndustry',
   DysonSphereProgram = 'DysonSphereProgram',
+  FinalFactory = 'FinalFactory',
   Satisfactory = 'Satisfactory',
 }
 
@@ -13,4 +14,5 @@ export const gameOptions: SelectItem<Game>[] = [
   { value: Game.DysonSphereProgram, label: 'options.game.dysonSphereProgram' },
   { value: Game.Satisfactory, label: 'options.game.satisfactory' },
   { value: Game.CaptainOfIndustry, label: 'options.game.captainOfIndustry' },
+  { value: Game.FinalFactory, label: 'options.game.finalFactory' },
 ];

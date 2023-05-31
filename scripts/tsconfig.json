@@ -3,6 +3,12 @@
   "compilerOptions": {
     "module": "CommonJS"
   },
-  "files": ["factorio-prep.ts", "factorio-build.ts", "factorio.models.ts"],
+  "files": [
+    "factorio-build.ts",
+    "factorio-prep.ts",
+    "factorio.models.ts",
+    "generate-hash.ts",
+    "minify-data.ts"
+  ],
   "include": ["**/*.d.ts"]
 }

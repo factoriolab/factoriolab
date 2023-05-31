@@ -5,453 +5,444 @@
   "categories": [
     {
       "id": "stations",
-      "name": "Stations"
+      "name": "Stations",
+      "icon": "advanced-assembler"
     },
     {
       "id": "logistics",
-      "name": "Logistics"
+      "name": "Logistics",
+      "icon": "advanced-miner-bot"
     },
     {
       "id": "component",
-      "name": "Component"
-    },
-    {
-      "id": "terrain",
-      "name": "Terrain"
+      "name": "Component",
+      "icon": "ai-controller-circuit"
     },
     {
       "id": "ship",
-      "name": "Ship"
+      "name": "Ship",
+      "icon": "bat"
     },
     {
       "id": "intermediates",
-      "name": "Intermediates"
+      "name": "Intermediates",
+      "icon": "fabricator"
     },
     {
       "id": "ore",
-      "name": "Ore"
-    },
-    {
-      "id": "logisticsline",
-      "name": "LogisticsLine"
-    },
-    {
-      "id": "player",
-      "name": "Player"
+      "name": "Ore",
+      "icon": "bauxite-ore"
     },
     {
       "id": "reprocessed",
-      "name": "Reprocessed"
-    },
-    {
-      "id": "meta",
-      "name": "Meta"
+      "name": "Reprocessed",
+      "icon": "recycled-asteroid-research-bot"
     }
   ],
   "icons": [
     {
       "id": "advanced-assembler",
-      "position": "-320px -416px"
+      "position": "0px -768px"
     },
     {
       "id": "advanced-miner-bot",
-      "position": "-256px -416px"
+      "position": "-64px -768px"
     },
     {
       "id": "advanced-mining-station",
-      "position": "-192px -416px"
+      "position": "-128px -768px"
     },
     {
       "id": "advanced-ship-assembler",
-      "position": "-128px -416px"
+      "position": "-192px -768px"
     },
     {
       "id": "ai-controller-circuit",
-      "position": "-64px -416px"
+      "position": "-256px -768px"
     },
     {
       "id": "antimatter-collector",
-      "position": "64px -416px"
+      "position": "-384px -768px"
     },
     {
       "id": "antimatter-power-station",
-      "position": "128px -416px"
+      "position": "-448px -768px"
     },
     {
       "id": "assembler",
-      "position": "192px -416px"
+      "position": "-512px -768px"
     },
     {
       "id": "asteroid-research-bot",
-      "position": "256px -416px"
+      "position": "-576px -768px"
     },
     {
       "id": "asteroid-research-station",
-      "position": "-320px -352px"
+      "position": "0px -704px"
     },
     {
       "id": "atomic-printer",
-      "position": "-256px -352px"
+      "position": "-64px -704px"
     },
     {
       "id": "bat",
-      "position": "-192px -352px"
+      "position": "-128px -704px"
     },
     {
       "id": "bat-dock",
-      "position": "-128px -352px"
+      "position": "-192px -704px"
     },
     {
       "id": "bauxite-ore",
-      "position": "0px -352px"
+      "position": "-320px -704px"
     },
     {
       "id": "cargo-drone",
-      "position": "192px -352px"
+      "position": "-512px -704px"
     },
     {
       "id": "cargo-hold",
-      "position": "256px -352px"
+      "position": "-576px -704px"
     },
     {
       "id": "comet-catcher",
-      "position": "-320px -288px"
+      "position": "0px -640px"
     },
     {
       "id": "comet-core",
-      "position": "-256px -288px"
+      "position": "-64px -640px"
     },
     {
       "id": "comet-harvester",
-      "position": "-128px -288px"
+      "position": "-192px -640px"
     },
     {
       "id": "connector",
-      "position": "-64px -288px"
+      "position": "-256px -640px"
     },
     {
       "id": "construction-bot",
-      "position": "0px -288px"
+      "position": "-320px -640px"
     },
     {
       "id": "dark-star-gate",
-      "position": "64px -288px"
+      "position": "-384px -640px"
     },
     {
       "id": "defense-platform",
-      "position": "128px -288px"
+      "position": "-448px -640px"
     },
     {
       "id": "duplicator-artifact",
-      "position": "-320px -224px"
+      "position": "0px -576px"
     },
     {
       "id": "dyson-bot",
-      "position": "-256px -224px"
+      "position": "-64px -576px"
     },
     {
       "id": "dyson-power-receiver",
-      "position": "-192px -224px"
+      "position": "-128px -576px"
     },
     {
       "id": "dyson-power-transmitter",
-      "position": "-128px -224px"
+      "position": "-192px -576px"
     },
     {
       "id": "dyson-segment",
-      "position": "0px -224px"
+      "position": "-320px -576px"
     },
     {
       "id": "exotic-matter",
-      "position": "128px -224px"
+      "position": "-448px -576px"
     },
     {
       "id": "exploration-center",
-      "position": "192px -224px"
+      "position": "-512px -576px"
     },
     {
       "id": "explorer-bot",
-      "position": "256px -224px"
+      "position": "-576px -576px"
     },
     {
       "id": "fabricator",
-      "position": "-256px -160px"
+      "position": "-64px -512px"
     },
     {
       "id": "fast-cargo-drone",
-      "position": "-192px -160px"
+      "position": "-128px -512px"
     },
     {
       "id": "fast-inserter-bot",
-      "position": "-128px -160px"
+      "position": "-192px -512px"
     },
     {
       "id": "fleet-navigation-center",
-      "position": "-64px -160px"
+      "position": "-256px -512px"
     },
     {
       "id": "fullerene-structure",
-      "position": "0px -160px"
+      "position": "-320px -512px"
     },
     {
       "id": "greenhouse-station",
-      "position": "64px -160px"
+      "position": "-384px -512px"
     },
     {
       "id": "hauler",
-      "position": "128px -160px"
+      "position": "-448px -512px"
     },
     {
       "id": "hauler-station",
-      "position": "192px -160px"
+      "position": "-512px -512px"
     },
     {
       "id": "heat-exchanger",
-      "position": "256px -160px"
+      "position": "-576px -512px"
     },
     {
       "id": "high-density-station-core",
-      "position": "-320px -96px"
+      "position": "0px -448px"
     },
     {
       "id": "high-density-structure",
-      "position": "-256px -96px"
+      "position": "-64px -448px"
     },
     {
       "id": "high-energy-connector",
-      "position": "-192px -96px"
+      "position": "-128px -448px"
     },
     {
       "id": "high-energy-laser",
-      "position": "-128px -96px"
+      "position": "-192px -448px"
     },
     {
       "id": "ice",
-      "position": "-64px -96px"
+      "position": "-256px -448px"
     },
     {
       "id": "inserter-bot",
-      "position": "64px -96px"
+      "position": "-384px -448px"
     },
     {
       "id": "iron-ore",
-      "position": "192px -96px"
+      "position": "-512px -448px"
     },
     {
       "id": "junction",
-      "position": "256px -96px"
+      "position": "-576px -448px"
     },
     {
       "id": "knight",
-      "position": "-320px -32px"
+      "position": "0px -384px"
     },
     {
       "id": "knight-dock",
-      "position": "-256px -32px"
+      "position": "-64px -384px"
     },
     {
       "id": "krillo",
-      "position": "-192px -32px"
+      "position": "-128px -384px"
     },
     {
       "id": "large-cargo-hold",
-      "position": "-128px -32px"
+      "position": "-192px -384px"
     },
     {
       "id": "logistics-bay",
-      "position": "-64px -32px"
+      "position": "-256px -384px"
     },
     {
       "id": "ancient-treasure",
-      "position": "0px -32px"
+      "position": "-320px -384px"
     },
     {
       "id": "loot-pickupable",
-      "position": "64px -32px"
+      "position": "-384px -384px"
     },
     {
       "id": "low-density-structure",
-      "position": "128px -32px"
+      "position": "-448px -384px"
     },
     {
       "id": "medium-density-structure",
-      "position": "256px -32px"
+      "position": "-576px -384px"
     },
     {
       "id": "miner-bot",
-      "position": "-320px 32px"
+      "position": "0px -320px"
     },
     {
       "id": "mining-station",
-      "position": "-256px 32px"
+      "position": "-64px -320px"
     },
     {
       "id": "organic-compounds",
-      "position": "-64px 32px"
+      "position": "-256px -320px"
     },
     {
       "id": "organic-polymer",
-      "position": "0px 32px"
+      "position": "-320px -320px"
     },
     {
       "id": "planetary-research-bot",
-      "position": "64px 32px"
+      "position": "-384px -320px"
     },
     {
       "id": "planetary-research-station",
-      "position": "128px 32px"
+      "position": "-448px -320px"
     },
     {
       "id": "plasma-engine-parts",
-      "position": "192px 32px"
+      "position": "-512px -320px"
     },
     {
       "id": "power-receiver",
-      "position": "-320px 96px"
+      "position": "0px -256px"
     },
     {
       "id": "power-transmitter",
-      "position": "-256px 96px"
+      "position": "-64px -256px"
     },
     {
       "id": "quantum-computer",
-      "position": "-192px 96px"
+      "position": "-128px -256px"
     },
     {
       "id": "quantum-printer",
-      "position": "-128px 96px"
+      "position": "-192px -256px"
     },
     {
       "id": "radiator-artifact",
-      "position": "-64px 96px"
+      "position": "-256px -256px"
     },
     {
       "id": "radiator",
-      "position": "0px 96px"
+      "position": "-320px -256px"
     },
     {
       "id": "razor",
-      "position": "64px 96px"
+      "position": "-384px -256px"
     },
     {
       "id": "razor-spawner",
-      "position": "192px 96px"
+      "position": "-512px -256px"
     },
     {
       "id": "recycled-asteroid-research-bot",
-      "position": "256px 96px"
+      "position": "-576px -256px"
     },
     {
       "id": "recycled-miner-bot",
-      "position": "-320px 160px"
+      "position": "0px -192px"
     },
     {
       "id": "recycled-planetary-research-bot",
-      "position": "-256px 160px"
+      "position": "-64px -192px"
     },
     {
       "id": "repair-center",
-      "position": "-128px 160px"
+      "position": "-192px -192px"
     },
     {
       "id": "research-pickupable",
-      "position": "-64px 160px"
+      "position": "-256px -192px"
     },
     {
       "id": "robotic-parts",
-      "position": "192px 160px"
+      "position": "-512px -192px"
     },
     {
       "id": "ship-assembler",
-      "position": "256px 160px"
+      "position": "-576px -192px"
     },
     {
       "id": "ship-reprocessing-plant",
-      "position": "-320px 224px"
+      "position": "0px -128px"
     },
     {
       "id": "ship-yard",
-      "position": "-256px 224px"
+      "position": "-64px -128px"
     },
     {
       "id": "silica-ore",
-      "position": "-128px 224px"
+      "position": "-192px -128px"
     },
     {
       "id": "singularity-circuit",
-      "position": "-64px 224px"
+      "position": "-256px -128px"
     },
     {
       "id": "singularity-engine",
-      "position": "0px 224px"
+      "position": "-320px -128px"
     },
     {
       "id": "singularity-field-generator",
-      "position": "64px 224px"
+      "position": "-384px -128px"
     },
     {
       "id": "singularity-power-station",
-      "position": "128px 224px"
+      "position": "-448px -128px"
     },
     {
       "id": "singularity-vessel",
-      "position": "192px 224px"
+      "position": "-512px -128px"
     },
     {
       "id": "small-ship-core",
-      "position": "256px 224px"
+      "position": "-576px -128px"
     },
     {
       "id": "solar-panel",
-      "position": "-320px 288px"
+      "position": "0px -64px"
     },
     {
       "id": "solid-state-laser",
-      "position": "-256px 288px"
+      "position": "-64px -64px"
     },
     {
       "id": "spawner-chest",
-      "position": "-128px 288px"
+      "position": "-192px -64px"
     },
     {
       "id": "stabilizer-artifact",
-      "position": "-64px 288px"
+      "position": "-256px -64px"
     },
     {
       "id": "station-core",
-      "position": "0px 288px"
+      "position": "-320px -64px"
     },
     {
       "id": "stellar-research-bot",
-      "position": "64px 288px"
+      "position": "-384px -64px"
     },
     {
       "id": "stellar-research-station",
-      "position": "128px 288px"
+      "position": "-448px -64px"
     },
     {
       "id": "stinger",
-      "position": "192px 288px"
+      "position": "-512px -64px"
     },
     {
       "id": "stinger-spawner",
-      "position": "256px 288px"
+      "position": "-576px -64px"
     },
     {
       "id": "strut",
-      "position": "-320px 352px"
+      "position": "0px 0px"
     },
     {
       "id": "trash-can",
-      "position": "-192px 352px"
+      "position": "-128px 0px"
     },
     {
       "id": "trident",
-      "position": "-128px 352px"
+      "position": "-192px 0px"
     },
     {
       "id": "trident-spawner",
-      "position": "-64px 352px"
+      "position": "-256px 0px"
     }
   ],
   "items": [
@@ -462,7 +453,7 @@
       "stack": 50,
       "row": 0,
       "machine": {
-        "drain": 2.0,
+        "drain": 2,
         "speed": 0.8,
         "usage": 40.0
       }
@@ -488,7 +479,7 @@
       "stack": 50,
       "row": 0,
       "machine": {
-        "drain": 2.0,
+        "drain": 2,
         "speed": 0.8,
         "usage": 40.0
       }
@@ -521,7 +512,7 @@
       "stack": 50,
       "row": 0,
       "machine": {
-        "drain": 2.0,
+        "drain": 2,
         "speed": 0.5,
         "usage": 12.0
       }
@@ -547,7 +538,7 @@
       "stack": 50,
       "row": 0,
       "machine": {
-        "drain": 2.0,
+        "drain": 2,
         "speed": 0.5,
         "usage": 5.0
       }
@@ -608,8 +599,8 @@
       "stack": 10,
       "row": 0,
       "machine": {
-        "drain": 4.0,
-        "speed": 1.0,
+        "drain": 4,
+        "speed": 1,
         "usage": 20.0
       }
     },
@@ -679,8 +670,8 @@
       "stack": 4,
       "row": 0,
       "machine": {
-        "drain": 0.0,
-        "speed": 1.0,
+        "drain": 0,
+        "speed": 1,
         "usage": 0.0
       }
     },
@@ -747,8 +738,8 @@
       "stack": 50,
       "row": 0,
       "machine": {
-        "drain": 2.0,
-        "speed": 1.0,
+        "drain": 2,
+        "speed": 1,
         "usage": 20.0
       }
     },
@@ -972,7 +963,7 @@
       "stack": 50,
       "row": 0,
       "machine": {
-        "drain": 2.0,
+        "drain": 2,
         "speed": 0.8,
         "usage": 40.0
       }
@@ -1054,7 +1045,7 @@
       "stack": 50,
       "row": 0,
       "machine": {
-        "drain": 2.0,
+        "drain": 2,
         "speed": 0.4,
         "usage": 16.0
       }
@@ -1066,8 +1057,8 @@
       "stack": 10,
       "row": 0,
       "machine": {
-        "drain": 3.0,
-        "speed": 1.0,
+        "drain": 3,
+        "speed": 1,
         "usage": 30.0
       }
     },
@@ -1227,12 +1218,12 @@
       "time": 1.5,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "assembler": 1,
         "quantum-computer": 2,
         "medium-density-structure": 20
       },
-      "output": {
+      "out": {
         "advanced-assembler": 1
       }
     },
@@ -1240,15 +1231,15 @@
       "category": "logistics",
       "id": "advanced-miner-bot",
       "name": "Advanced Miner Bot",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "recycled-miner-bot": 2,
         "high-energy-laser": 2,
         "quantum-computer": 1
       },
-      "output": {
+      "out": {
         "advanced-miner-bot": 1
       }
     },
@@ -1256,15 +1247,15 @@
       "category": "stations",
       "id": "advanced-mining-station",
       "name": "Advanced Mining Station",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "high-density-structure": 10,
         "mining-station": 1,
         "quantum-computer": 4
       },
-      "output": {
+      "out": {
         "advanced-mining-station": 1
       }
     },
@@ -1272,15 +1263,15 @@
       "category": "stations",
       "id": "advanced-ship-assembler",
       "name": "Advanced Ship Assembler",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "assembler": 1,
         "quantum-computer": 4,
         "medium-density-structure": 20
       },
-      "output": {
+      "out": {
         "advanced-ship-assembler": 1
       }
     },
@@ -1291,11 +1282,11 @@
       "time": 0.4,
       "row": 0,
       "producers": ["atomic-printer", "quantum-printer"],
-      "input": {
+      "in": {
         "silica-ore": 2,
         "bauxite-ore": 1
       },
-      "output": {
+      "out": {
         "ai-controller-circuit": 1
       }
     },
@@ -1303,14 +1294,14 @@
       "category": "stations",
       "id": "antimatter-collector",
       "name": "Antimatter Collector",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "low-density-structure": 4,
         "ai-controller-circuit": 3
       },
-      "output": {
+      "out": {
         "antimatter-collector": 1
       }
     },
@@ -1318,15 +1309,15 @@
       "category": "stations",
       "id": "antimatter-power-station",
       "name": "Antimatter Power Station",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 10,
         "fabricator": 6,
         "solid-state-laser": 4
       },
-      "output": {
+      "out": {
         "antimatter-power-station": 1
       }
     },
@@ -1334,14 +1325,14 @@
       "category": "stations",
       "id": "assembler",
       "name": "Assembler",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 15,
         "fabricator": 4
       },
-      "output": {
+      "out": {
         "assembler": 1
       }
     },
@@ -1349,14 +1340,14 @@
       "category": "logistics",
       "id": "asteroid-research-bot",
       "name": "Asteroid Research Bot",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "low-density-structure": 6,
         "ai-controller-circuit": 8
       },
-      "output": {
+      "out": {
         "asteroid-research-bot": 1
       }
     },
@@ -1364,15 +1355,15 @@
       "category": "stations",
       "id": "asteroid-research-station",
       "name": "Asteroid Research Station",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 16,
         "ai-controller-circuit": 8,
         "robotic-parts": 8
       },
-      "output": {
+      "out": {
         "asteroid-research-station": 1
       }
     },
@@ -1380,14 +1371,14 @@
       "category": "stations",
       "id": "atomic-printer",
       "name": "Atomic Printer",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 10,
         "fabricator": 2
       },
-      "output": {
+      "out": {
         "atomic-printer": 1
       }
     },
@@ -1395,13 +1386,13 @@
       "category": "ship",
       "id": "bat",
       "name": "Bat",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "small-ship-core": 1
       },
-      "output": {
+      "out": {
         "bat": 1
       }
     },
@@ -1409,15 +1400,15 @@
       "category": "stations",
       "id": "bat-dock",
       "name": "Bat Dock",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 8,
         "low-density-structure": 4,
         "ai-controller-circuit": 2
       },
-      "output": {
+      "out": {
         "bat-dock": 1
       }
     },
@@ -1425,15 +1416,15 @@
       "category": "logistics",
       "id": "cargo-drone",
       "name": "Cargo Drone",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "robotic-parts": 8,
         "ai-controller-circuit": 4,
         "plasma-engine-parts": 2
       },
-      "output": {
+      "out": {
         "cargo-drone": 1
       }
     },
@@ -1441,13 +1432,13 @@
       "category": "stations",
       "id": "cargo-hold",
       "name": "Cargo Hold",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 12
       },
-      "output": {
+      "out": {
         "cargo-hold": 1
       }
     },
@@ -1455,15 +1446,15 @@
       "category": "stations",
       "id": "comet-catcher",
       "name": "Comet Catcher",
-      "time": 8.0,
+      "time": 8,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "high-density-structure": 16,
         "singularity-field-generator": 8,
         "robotic-parts": 12
       },
-      "output": {
+      "out": {
         "comet-catcher": 1
       }
     },
@@ -1471,15 +1462,15 @@
       "category": "stations",
       "id": "comet-harvester",
       "name": "Comet Harvester",
-      "time": 4.0,
+      "time": 4,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "high-density-structure": 12,
         "robotic-parts": 18,
         "solid-state-laser": 20
       },
-      "output": {
+      "out": {
         "comet-harvester": 1
       }
     },
@@ -1487,14 +1478,14 @@
       "category": "stations",
       "id": "connector",
       "name": "Connector",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 4,
         "solid-state-laser": 1
       },
-      "output": {
+      "out": {
         "connector": 1
       }
     },
@@ -1502,14 +1493,14 @@
       "category": "logistics",
       "id": "construction-bot",
       "name": "Construction Bot",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "small-ship-core": 1,
         "ai-controller-circuit": 1
       },
-      "output": {
+      "out": {
         "construction-bot": 1
       }
     },
@@ -1517,14 +1508,14 @@
       "category": "stations",
       "id": "dark-star-gate",
       "name": "Dark Star Gate",
-      "time": 10.0,
+      "time": 10,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "fullerene-structure": 200,
         "advanced-ship-assembler": 3
       },
-      "output": {
+      "out": {
         "dark-star-gate": 1
       }
     },
@@ -1532,14 +1523,14 @@
       "category": "stations",
       "id": "defense-platform",
       "name": "Defense Platform",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 15,
         "ai-controller-circuit": 10
       },
-      "output": {
+      "out": {
         "defense-platform": 1
       }
     },
@@ -1547,16 +1538,16 @@
       "category": "logistics",
       "id": "dyson-bot",
       "name": "Dyson Bot",
-      "time": 4.0,
+      "time": 4,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "recycled-miner-bot": 1,
         "quantum-computer": 2,
         "solar-panel": 1,
         "high-energy-laser": 1
       },
-      "output": {
+      "out": {
         "dyson-bot": 1
       }
     },
@@ -1564,15 +1555,15 @@
       "category": "stations",
       "id": "dyson-power-receiver",
       "name": "Dyson Power Receiver",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "high-density-structure": 16,
         "fullerene-structure": 12,
         "robotic-parts": 8
       },
-      "output": {
+      "out": {
         "dyson-power-receiver": 1
       }
     },
@@ -1580,15 +1571,15 @@
       "category": "stations",
       "id": "dyson-power-transmitter",
       "name": "Dyson Power Transmitter",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "high-density-structure": 18,
         "high-energy-laser": 12,
         "fullerene-structure": 9
       },
-      "output": {
+      "out": {
         "dyson-power-transmitter": 1
       }
     },
@@ -1596,14 +1587,14 @@
       "category": "stations",
       "id": "dyson-segment",
       "name": "Dyson Segment",
-      "time": 10.0,
+      "time": 10,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "high-density-structure": 75,
         "fullerene-structure": 50
       },
-      "output": {
+      "out": {
         "dyson-segment": 1
       }
     },
@@ -1611,15 +1602,15 @@
       "category": "stations",
       "id": "exploration-center",
       "name": "Exploration Center",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 10,
         "ai-controller-circuit": 5,
         "robotic-parts": 5
       },
-      "output": {
+      "out": {
         "exploration-center": 1
       }
     },
@@ -1627,14 +1618,14 @@
       "category": "logistics",
       "id": "explorer-bot",
       "name": "Explorer Bot",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "low-density-structure": 3,
         "ai-controller-circuit": 3
       },
-      "output": {
+      "out": {
         "explorer-bot": 1
       }
     },
@@ -1645,11 +1636,11 @@
       "time": 0.5,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "robotic-parts": 1,
         "solid-state-laser": 2
       },
-      "output": {
+      "out": {
         "fabricator": 1
       }
     },
@@ -1657,15 +1648,15 @@
       "category": "logistics",
       "id": "fast-cargo-drone",
       "name": "Fast Cargo Drone",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "cargo-drone": 1,
         "quantum-computer": 1,
         "high-density-structure": 2
       },
-      "output": {
+      "out": {
         "fast-cargo-drone": 1
       }
     },
@@ -1673,14 +1664,14 @@
       "category": "logistics",
       "id": "fast-inserter-bot",
       "name": "Fast Inserter Bot",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "inserter-bot": 1,
         "quantum-computer": 1
       },
-      "output": {
+      "out": {
         "fast-inserter-bot": 1
       }
     },
@@ -1688,15 +1679,15 @@
       "category": "stations",
       "id": "fleet-navigation-center",
       "name": "Fleet Navigation Center",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 15,
         "robotic-parts": 4,
         "ai-controller-circuit": 6
       },
-      "output": {
+      "out": {
         "fleet-navigation-center": 1
       }
     },
@@ -1704,14 +1695,14 @@
       "category": "intermediates",
       "id": "fullerene-structure",
       "name": "Fullerene Structure",
-      "time": 3.0,
+      "time": 3,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "high-density-structure": 3,
         "organic-polymer": 2
       },
-      "output": {
+      "out": {
         "fullerene-structure": 1
       }
     },
@@ -1719,15 +1710,15 @@
       "category": "stations",
       "id": "greenhouse-station",
       "name": "Greenhouse Station",
-      "time": 5.0,
+      "time": 5,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 15,
         "fabricator": 5,
         "robotic-parts": 10
       },
-      "output": {
+      "out": {
         "greenhouse-station": 1
       }
     },
@@ -1735,15 +1726,15 @@
       "category": "logistics",
       "id": "hauler",
       "name": "Hauler",
-      "time": 5.0,
+      "time": 5,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "small-ship-core": 10,
         "cargo-hold": 5,
         "plasma-engine-parts": 10
       },
-      "output": {
+      "out": {
         "hauler": 1
       }
     },
@@ -1751,15 +1742,15 @@
       "category": "stations",
       "id": "hauler-station",
       "name": "Hauler Station",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 15,
         "robotic-parts": 15,
         "ai-controller-circuit": 5
       },
-      "output": {
+      "out": {
         "hauler-station": 1
       }
     },
@@ -1767,14 +1758,14 @@
       "category": "stations",
       "id": "heat-exchanger",
       "name": "Heat Exchanger",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 6,
         "low-density-structure": 4
       },
-      "output": {
+      "out": {
         "heat-exchanger": 1
       }
     },
@@ -1782,14 +1773,14 @@
       "category": "stations",
       "id": "high-density-station-core",
       "name": "High Density Station Core",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "high-density-structure": 15,
         "station-core": 1
       },
-      "output": {
+      "out": {
         "high-density-station-core": 1
       }
     },
@@ -1800,11 +1791,11 @@
       "time": 0.5,
       "row": 0,
       "producers": ["atomic-printer", "quantum-printer"],
-      "input": {
+      "in": {
         "iron-ore": 3,
         "organic-compounds": 2
       },
-      "output": {
+      "out": {
         "high-density-structure": 1
       }
     },
@@ -1812,15 +1803,15 @@
       "category": "stations",
       "id": "high-energy-connector",
       "name": "High Energy Connector",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "connector": 1,
         "high-energy-laser": 1,
         "quantum-computer": 1
       },
-      "output": {
+      "out": {
         "high-energy-connector": 1
       }
     },
@@ -1831,11 +1822,11 @@
       "time": 0.5,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "solid-state-laser": 1,
         "organic-polymer": 2
       },
-      "output": {
+      "out": {
         "high-energy-laser": 1
       }
     },
@@ -1843,13 +1834,13 @@
       "category": "ore",
       "id": "ice",
       "name": "Ice",
-      "time": 15.0,
+      "time": 15,
       "row": 0,
       "producers": ["comet-harvester"],
-      "input": {
+      "in": {
         "comet-core": 1
       },
-      "output": {
+      "out": {
         "ice": 50
       }
     },
@@ -1857,14 +1848,14 @@
       "category": "logistics",
       "id": "inserter-bot",
       "name": "Inserter Bot",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "plasma-engine-parts": 2,
         "robotic-parts": 2
       },
-      "output": {
+      "out": {
         "inserter-bot": 1
       }
     },
@@ -1872,14 +1863,14 @@
       "category": "stations",
       "id": "junction",
       "name": "Junction",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 6,
         "robotic-parts": 3
       },
-      "output": {
+      "out": {
         "junction": 1
       }
     },
@@ -1887,14 +1878,14 @@
       "category": "ship",
       "id": "knight",
       "name": "Knight",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "small-ship-core": 6,
         "high-density-structure": 2
       },
-      "output": {
+      "out": {
         "knight": 1
       }
     },
@@ -1902,13 +1893,13 @@
       "category": "stations",
       "id": "knight-dock",
       "name": "Knight Dock",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "high-density-structure": 15
       },
-      "output": {
+      "out": {
         "knight-dock": 1
       }
     },
@@ -1916,15 +1907,15 @@
       "category": "ship",
       "id": "krillo",
       "name": "Krillo",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "small-ship-core": 12,
         "high-energy-laser": 4,
         "quantum-computer": 2
       },
-      "output": {
+      "out": {
         "krillo": 1
       }
     },
@@ -1932,14 +1923,14 @@
       "category": "stations",
       "id": "large-cargo-hold",
       "name": "Large Cargo Hold",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "high-density-structure": 15,
         "cargo-hold": 1
       },
-      "output": {
+      "out": {
         "large-cargo-hold": 1
       }
     },
@@ -1947,14 +1938,14 @@
       "category": "stations",
       "id": "logistics-bay",
       "name": "Logistics Bay",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 8,
         "robotic-parts": 12
       },
-      "output": {
+      "out": {
         "logistics-bay": 1
       }
     },
@@ -1965,10 +1956,10 @@
       "time": 0.4,
       "row": 0,
       "producers": ["atomic-printer", "quantum-printer"],
-      "input": {
+      "in": {
         "bauxite-ore": 2
       },
-      "output": {
+      "out": {
         "low-density-structure": 1
       }
     },
@@ -1979,10 +1970,10 @@
       "time": 0.5,
       "row": 0,
       "producers": ["atomic-printer", "quantum-printer"],
-      "input": {
+      "in": {
         "iron-ore": 2
       },
-      "output": {
+      "out": {
         "medium-density-structure": 1
       }
     },
@@ -1990,14 +1981,14 @@
       "category": "logistics",
       "id": "miner-bot",
       "name": "Miner Bot",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "low-density-structure": 2,
         "solid-state-laser": 3
       },
-      "output": {
+      "out": {
         "miner-bot": 1
       }
     },
@@ -2005,13 +1996,13 @@
       "category": "stations",
       "id": "mining-station",
       "name": "Mining Station",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 12
       },
-      "output": {
+      "out": {
         "mining-station": 1
       }
     },
@@ -2019,14 +2010,14 @@
       "category": "ore",
       "id": "organic-compounds",
       "name": "Organic Compounds",
-      "time": 5.0,
+      "time": 5,
       "row": 0,
       "producers": ["greenhouse-station"],
-      "input": {
+      "in": {
         "ice": 10,
         "organic-compounds": 4
       },
-      "output": {
+      "out": {
         "organic-compounds": 6
       }
     },
@@ -2034,14 +2025,14 @@
       "category": "component",
       "id": "organic-polymer",
       "name": "Organic Polymer",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["atomic-printer", "quantum-printer"],
-      "input": {
+      "in": {
         "ice": 2,
         "organic-compounds": 2
       },
-      "output": {
+      "out": {
         "organic-polymer": 1
       }
     },
@@ -2049,15 +2040,15 @@
       "category": "logistics",
       "id": "planetary-research-bot",
       "name": "Planetary Research Bot",
-      "time": 5.0,
+      "time": 5,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "recycled-asteroid-research-bot": 2,
         "inserter-bot": 4,
         "fabricator": 6
       },
-      "output": {
+      "out": {
         "planetary-research-bot": 1
       }
     },
@@ -2065,15 +2056,15 @@
       "category": "stations",
       "id": "planetary-research-station",
       "name": "Planetary Research Station",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "asteroid-research-station": 1,
         "medium-density-structure": 15,
         "robotic-parts": 20
       },
-      "output": {
+      "out": {
         "planetary-research-station": 1
       }
     },
@@ -2084,11 +2075,11 @@
       "time": 0.5,
       "row": 0,
       "producers": ["atomic-printer", "quantum-printer"],
-      "input": {
+      "in": {
         "bauxite-ore": 2,
         "iron-ore": 1
       },
-      "output": {
+      "out": {
         "plasma-engine-parts": 1
       }
     },
@@ -2096,14 +2087,14 @@
       "category": "stations",
       "id": "power-receiver",
       "name": "Power Receiver",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "robotic-parts": 2,
         "medium-density-structure": 10
       },
-      "output": {
+      "out": {
         "power-receiver": 1
       }
     },
@@ -2111,14 +2102,14 @@
       "category": "stations",
       "id": "power-transmitter",
       "name": "Power Transmitter",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 6,
         "solid-state-laser": 4
       },
-      "output": {
+      "out": {
         "power-transmitter": 1
       }
     },
@@ -2129,12 +2120,12 @@
       "time": 0.5,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "organic-polymer": 2,
         "ai-controller-circuit": 4,
         "low-density-structure": 2
       },
-      "output": {
+      "out": {
         "quantum-computer": 1
       }
     },
@@ -2142,15 +2133,15 @@
       "category": "stations",
       "id": "quantum-printer",
       "name": "Quantum Printer",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "atomic-printer": 1,
         "quantum-computer": 4,
         "high-density-structure": 10
       },
-      "output": {
+      "out": {
         "quantum-printer": 1
       }
     },
@@ -2158,14 +2149,14 @@
       "category": "stations",
       "id": "radiator-artifact",
       "name": "Radiator Artifact",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "ice": 6,
         "low-density-structure": 15
       },
-      "output": {
+      "out": {
         "radiator-artifact": 1
       }
     },
@@ -2173,14 +2164,14 @@
       "category": "stations",
       "id": "radiator",
       "name": "Radiator",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "ice": 6,
         "low-density-structure": 15
       },
-      "output": {
+      "out": {
         "radiator": 1
       }
     },
@@ -2188,13 +2179,13 @@
       "category": "reprocessed",
       "id": "recycled-asteroid-research-bot",
       "name": "Recycled Asteroid Research Bot",
-      "time": 4.0,
+      "time": 4,
       "row": 0,
       "producers": ["ship-reprocessing-plant"],
-      "input": {
+      "in": {
         "asteroid-research-bot": 1
       },
-      "output": {
+      "out": {
         "recycled-asteroid-research-bot": 2
       }
     },
@@ -2202,13 +2193,13 @@
       "category": "reprocessed",
       "id": "recycled-miner-bot",
       "name": "Recycled Miner Bot",
-      "time": 4.0,
+      "time": 4,
       "row": 0,
       "producers": ["ship-reprocessing-plant"],
-      "input": {
+      "in": {
         "miner-bot": 1
       },
-      "output": {
+      "out": {
         "recycled-miner-bot": 2
       }
     },
@@ -2216,13 +2207,13 @@
       "category": "reprocessed",
       "id": "recycled-planetary-research-bot",
       "name": "Recycled Planetary Research Bot",
-      "time": 4.0,
+      "time": 4,
       "row": 0,
       "producers": ["ship-reprocessing-plant"],
-      "input": {
+      "in": {
         "planetary-research-bot": 1
       },
-      "output": {
+      "out": {
         "recycled-planetary-research-bot": 2
       }
     },
@@ -2230,14 +2221,14 @@
       "category": "stations",
       "id": "repair-center",
       "name": "Repair Center",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "fabricator": 8,
         "medium-density-structure": 6
       },
-      "output": {
+      "out": {
         "repair-center": 1
       }
     },
@@ -2248,11 +2239,11 @@
       "time": 0.5,
       "row": 0,
       "producers": ["atomic-printer", "quantum-printer"],
-      "input": {
+      "in": {
         "silica-ore": 1,
         "iron-ore": 2
       },
-      "output": {
+      "out": {
         "robotic-parts": 1
       }
     },
@@ -2260,15 +2251,15 @@
       "category": "stations",
       "id": "ship-assembler",
       "name": "Ship Assembler",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "robotic-parts": 6,
         "medium-density-structure": 24,
         "ai-controller-circuit": 12
       },
-      "output": {
+      "out": {
         "ship-assembler": 1
       }
     },
@@ -2276,15 +2267,15 @@
       "category": "stations",
       "id": "ship-reprocessing-plant",
       "name": "Ship Reprocessing Plant",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 30,
         "solid-state-laser": 10,
         "assembler": 1
       },
-      "output": {
+      "out": {
         "ship-reprocessing-plant": 1
       }
     },
@@ -2292,15 +2283,15 @@
       "category": "stations",
       "id": "ship-yard",
       "name": "Ship Yard",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 30,
         "robotic-parts": 8,
         "ai-controller-circuit": 12
       },
-      "output": {
+      "out": {
         "ship-yard": 1
       }
     },
@@ -2308,16 +2299,16 @@
       "category": "intermediates",
       "id": "singularity-circuit",
       "name": "Singularity Circuit",
-      "time": 5.0,
+      "time": 5,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "singularity-field-generator": 2,
         "quantum-computer": 4,
         "organic-polymer": 4,
         "exotic-matter": 1
       },
-      "output": {
+      "out": {
         "singularity-circuit": 1
       }
     },
@@ -2328,12 +2319,12 @@
       "time": 0.4,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "singularity-power-station": 1,
         "plasma-engine-parts": 20,
         "dyson-power-transmitter": 1
       },
-      "output": {
+      "out": {
         "singularity-engine": 1
       }
     },
@@ -2344,12 +2335,12 @@
       "time": 0.5,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "power-transmitter": 1,
         "fabricator": 10,
         "robotic-parts": 5
       },
-      "output": {
+      "out": {
         "singularity-field-generator": 1
       }
     },
@@ -2357,14 +2348,14 @@
       "category": "stations",
       "id": "singularity-power-station",
       "name": "Singularity Power Station",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "cargo-hold": 2,
         "singularity-field-generator": 3
       },
-      "output": {
+      "out": {
         "singularity-power-station": 1
       }
     },
@@ -2375,11 +2366,11 @@
       "time": 0.8,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "low-density-structure": 5,
         "ai-controller-circuit": 3
       },
-      "output": {
+      "out": {
         "small-ship-core": 1
       }
     },
@@ -2387,14 +2378,14 @@
       "category": "stations",
       "id": "solar-panel",
       "name": "Solar Panel",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "silica-ore": 6,
         "medium-density-structure": 3
       },
-      "output": {
+      "out": {
         "solar-panel": 1
       }
     },
@@ -2405,10 +2396,10 @@
       "time": 0.5,
       "row": 0,
       "producers": ["atomic-printer", "quantum-printer"],
-      "input": {
+      "in": {
         "silica-ore": 3
       },
-      "output": {
+      "out": {
         "solid-state-laser": 1
       }
     },
@@ -2416,13 +2407,13 @@
       "category": "stations",
       "id": "spawner-chest",
       "name": "Spawner Chest",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "iron-ore": 1
       },
-      "output": {
+      "out": {
         "spawner-chest": 1
       }
     },
@@ -2430,15 +2421,15 @@
       "category": "stations",
       "id": "station-core",
       "name": "Station Core",
-      "time": 2.0,
+      "time": 2,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 10,
         "robotic-parts": 5,
         "ai-controller-circuit": 3
       },
-      "output": {
+      "out": {
         "station-core": 1
       }
     },
@@ -2446,16 +2437,16 @@
       "category": "logistics",
       "id": "stellar-research-bot",
       "name": "Stellar Research Bot",
-      "time": 10.0,
+      "time": 10,
       "row": 0,
       "producers": ["advanced-ship-assembler", "ship-assembler"],
-      "input": {
+      "in": {
         "recycled-planetary-research-bot": 3,
         "high-energy-connector": 4,
         "high-density-structure": 8,
         "quantum-computer": 4
       },
-      "output": {
+      "out": {
         "stellar-research-bot": 1
       }
     },
@@ -2463,15 +2454,15 @@
       "category": "stations",
       "id": "stellar-research-station",
       "name": "Stellar Research Station",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "asteroid-research-station": 1,
         "quantum-computer": 15,
         "high-density-structure": 10
       },
-      "output": {
+      "out": {
         "stellar-research-station": 1
       }
     },
@@ -2479,13 +2470,13 @@
       "category": "stations",
       "id": "strut",
       "name": "Strut",
-      "time": 1.0,
+      "time": 1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 10
       },
-      "output": {
+      "out": {
         "strut": 1
       }
     },
@@ -2496,10 +2487,10 @@
       "time": 0.1,
       "row": 0,
       "producers": ["advanced-assembler", "assembler"],
-      "input": {
+      "in": {
         "medium-density-structure": 12
       },
-      "output": {
+      "out": {
         "trash-can": 1
       }
     }

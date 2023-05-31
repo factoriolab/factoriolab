@@ -16,7 +16,7 @@ import {
 } from '~/models';
 import { EnergyType } from '../src/app/models/enum/energy-type';
 import * as D from './factorio.models';
-import { coerceArray, getJsonData } from './helpers';
+import { coerceArray, emptyModHash, getJsonData } from './helpers';
 
 /**
  * This script is intended to pull files from a dump from Factorio and build
@@ -724,17 +724,7 @@ async function processMod(): Promise<void> {
     resourceNoMinableProducts: [],
   };
 
-  const modHashReport: ModHash = {
-    items: [],
-    beacons: [],
-    belts: [],
-    fuels: [],
-    wagons: [],
-    machines: [],
-    modules: [],
-    technologies: [],
-    recipes: [],
-  };
+  const modHashReport = emptyModHash();
   function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
     if (hash[key] == null) hash[key] = [];
 

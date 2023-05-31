@@ -1,5 +1,7 @@
 import fs from 'fs';
 
+import { ModHash } from '~/models';
+
 export function getJsonData<T>(file: string, sanitize = false): T {
   let str = fs.readFileSync(file).toString();
   if (sanitize) {
@@ -18,4 +20,18 @@ export function coerceArray<T>(
 
   const record = value;
   return Object.keys(record).map((k) => record[k]);
+}
+
+export function emptyModHash(): ModHash {
+  return {
+    items: [],
+    beacons: [],
+    belts: [],
+    fuels: [],
+    wagons: [],
+    machines: [],
+    modules: [],
+    technologies: [],
+    recipes: [],
+  };
 }
