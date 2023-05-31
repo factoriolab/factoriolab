@@ -19,7 +19,7 @@ export class ItemTooltipPipe implements PipeTransform {
 
       return item.name;
     } else {
-      return this.displaySvc.recipeTooltip(value, data);
+      return this.displaySvc.recipeTooltip(recipeId, data);
     }
   }
 }
