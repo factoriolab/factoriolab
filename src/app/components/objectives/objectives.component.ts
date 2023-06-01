@@ -6,6 +6,7 @@ import { combineLatest, map } from 'rxjs';
 
 import {
   Breakpoint,
+  Dataset,
   DisplayRate,
   displayRateOptions,
   MatrixResult,
@@ -110,10 +111,34 @@ export class ObjectivesComponent {
     private contentService: ContentService
   ) {}
 
-  changeUnit(objective: Objective, value: ObjectiveUnit): void {
+  changeUnit(objective: Objective, unit: ObjectiveUnit, data: Dataset): void {
     // TODO: Need logic to check whether we can switch to a specific
     // recipe / item, and prompt if the user needs to pick one
-    console.log(objective, value);
+    console.log(objective, unit);
+    if (unit === ObjectiveUnit.Machines) {
+      if (objective.unit === ObjectiveUnit.Machines) {
+        // Units are unchanged, no action required
+      } else {
+        const recipeIds = data.itemRecipeIds[objective.targetId];
+        if (recipeIds.length === 1) {
+          this.setUnit(objective.id, { targetId: recipeIds[0], unit });
+        } else {
+          // TODO: Open recipe picker
+        }
+      }
+    } else {
+      if (objective.unit === ObjectiveUnit.Machines) {
+        const itemIds = data.recipeProductIds[objective.targetId];
+        if (itemIds.length === 1) {
+          this.setUnit(objective.id, { targetId: itemIds[0], unit });
+        } else {
+          // TODO: Open item picker
+        }
+      } else {
+        // No target conversion required
+        this.setUnit(objective.id, { targetId: objective.targetId, unit });
+      }
+    }
   }
 
   addItemObjective(targetId: string): void {

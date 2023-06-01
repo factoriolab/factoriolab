@@ -1,28 +1,6 @@
 <p-card *ngIf="vm$ | async as vm" [header]="'objectives.title' | translate">
   <div class="row">
     <div class="col-12 col-xxl-6 mb-3 mb-xxl-0">
-      <div class="d-flex mb-2 col-12">
-        <button
-          pButton
-          pRipple
-          type="button"
-          class="me-1 flex-grow-1 p-button-outlined"
-          icon="fa-solid fa-box"
-          [pTooltip]="'objectives.addAnItemTooltip' | translate"
-          tooltipPosition="top"
-          [label]="'objectives.addAnItem' | translate"
-          (click)="addItemPicker.clickOpen(vm.data, 'item', vm.itemIds)"
-        ></button>
-        <p-dropdown
-          labDropdownTranslate
-          styleClass="h-100"
-          [tooltip]="'objectives.selectDisplayRate' | translate"
-          [ngModel]="vm.displayRate"
-          [options]="displayRateOptions"
-          (onChange)="setDisplayRate($event.value, vm.displayRate)"
-        >
-        </p-dropdown>
-      </div>
       <div
         *ngFor="let objective of vm.objectives; trackBy: trackSvc.trackById"
         class="mb-1"
@@ -109,7 +87,7 @@
             tooltipPosition="top"
             [options]="vm.rateUnitOptions"
             [ngModel]="objective.unit"
-            (onChange)="changeUnit(objective, $event.value)"
+            (onChange)="changeUnit(objective, $event.value, vm.data)"
           ></p-dropdown>
           <p-dropdown
             labDropdownTranslate
@@ -120,6 +98,37 @@
             (onChange)="setType(objective.id, $event.value)"
           ></p-dropdown>
         </div>
+      </div>
+      <div class="d-flex mb-2 col-12">
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="me-1 flex-grow-1 p-button-outlined"
+          icon="fa-solid fa-box"
+          tooltipPosition="top"
+          [label]="'objectives.addItems' | translate"
+          (click)="addItemPicker.clickOpen(vm.data, 'item', vm.itemIds)"
+        ></button>
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="me-1 flex-grow-1 p-button-outlined"
+          icon="fa-solid fa-industry"
+          tooltipPosition="top"
+          [label]="'objectives.addMachines' | translate"
+          (click)="addRecipePicker.clickOpen(vm.data, 'recipe', vm.recipeIds)"
+        ></button>
+        <p-dropdown
+          labDropdownTranslate
+          styleClass="h-100"
+          [tooltip]="'objectives.selectDisplayRate' | translate"
+          [ngModel]="vm.displayRate"
+          [options]="displayRateOptions"
+          (onChange)="setDisplayRate($event.value, vm.displayRate)"
+        >
+        </p-dropdown>
       </div>
     </div>
   </div>

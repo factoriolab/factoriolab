@@ -121,7 +121,7 @@ export class RouterService {
   zipConfig$ = new BehaviorSubject<Zip>(this.empty);
   base64codes: Uint8Array;
   // Current hashing algorithm version
-  version = ZipVersion.Version8;
+  version = ZipVersion.Version9;
   zipTail: Zip = {
     bare: `&${Section.Version}=${this.version}`,
     hash: `&${Section.Version}${this.version}`,

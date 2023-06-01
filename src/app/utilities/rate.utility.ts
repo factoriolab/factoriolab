@@ -66,7 +66,7 @@ export class RateUtility {
     }
 
     // Adjust based on productivity for technology objectives
-    const recipe = data.recipeR[data.itemRecipeId[objective.targetId]];
+    const recipe = data.recipeR[data.itemRecipeIds[objective.targetId][0]];
     if (recipe?.technology) {
       factor = factor.mul(recipe.productivity);
     }
