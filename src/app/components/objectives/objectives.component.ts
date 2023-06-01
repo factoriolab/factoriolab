@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Message } from 'primeng/api';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest, first, map, tap } from 'rxjs';
 
 import {
   Breakpoint,
@@ -19,6 +19,7 @@ import {
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import { Items, LabState, Objectives, Recipes, Settings } from '~/store';
+import { PickerComponent } from '../picker/picker.component';
 
 @Component({
   selector: 'lab-objectives',
@@ -70,6 +71,11 @@ export class ObjectivesComponent {
     )
   );
 
+  @ViewChild('chooseItemPicker') chooseItemPicker: PickerComponent | undefined;
+  @ViewChild('chooseRecipePicker') chooseRecipePicker:
+    | PickerComponent
+    | undefined;
+
   getMessages(matrixResult: MatrixResult): Message[] {
     if (matrixResult.resultType === MatrixResultType.Failed) {
       let errorKey = 'objectives.error';
@@ -112,9 +118,6 @@ export class ObjectivesComponent {
   ) {}
 
   changeUnit(objective: Objective, unit: ObjectiveUnit, data: Dataset): void {
-    // TODO: Need logic to check whether we can switch to a specific
-    // recipe / item, and prompt if the user needs to pick one
-    console.log(objective, unit);
     if (unit === ObjectiveUnit.Machines) {
       if (objective.unit === ObjectiveUnit.Machines) {
         // Units are unchanged, no action required
@@ -122,8 +125,16 @@ export class ObjectivesComponent {
         const recipeIds = data.itemRecipeIds[objective.targetId];
         if (recipeIds.length === 1) {
           this.setUnit(objective.id, { targetId: recipeIds[0], unit });
+        } else if (this.chooseRecipePicker != null) {
+          this.chooseRecipePicker.selectId
+            .pipe(
+              first(),
+              tap((targetId) => this.setUnit(objective.id, { targetId, unit }))
+            )
+            .subscribe();
+          this.chooseRecipePicker.clickOpen(data, 'recipe', recipeIds);
         } else {
-          // TODO: Open recipe picker
+          throw new Error('Recipe picker was not found');
         }
       }
     } else {
@@ -131,8 +142,16 @@ export class ObjectivesComponent {
         const itemIds = data.recipeProductIds[objective.targetId];
         if (itemIds.length === 1) {
           this.setUnit(objective.id, { targetId: itemIds[0], unit });
+        } else if (this.chooseItemPicker != null) {
+          this.chooseItemPicker.selectId
+            .pipe(
+              first(),
+              tap((targetId) => this.setUnit(objective.id, { targetId, unit }))
+            )
+            .subscribe();
+          this.chooseItemPicker.clickOpen(data, 'item', itemIds);
         } else {
-          // TODO: Open item picker
+          throw new Error('Item picker was not found');
         }
       } else {
         // No target conversion required
@@ -152,6 +171,14 @@ export class ObjectivesComponent {
   /** Action Dispatch Methods */
   removeObjective(id: string): void {
     this.store.dispatch(new Objectives.RemoveAction(id));
+  }
+
+  raiseObjective(id: string): void {
+    this.store.dispatch(new Objectives.RaiseAction(id));
+  }
+
+  lowerObjective(id: string): void {
+    this.store.dispatch(new Objectives.LowerAction(id));
   }
 
   setTarget(id: string, value: string): void {

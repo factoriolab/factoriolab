@@ -94,9 +94,10 @@ export class PickerComponent implements OnInit {
       data.categoryIds.forEach((c) => {
         if (data.categoryItemRows[c]) {
           this.categoryRows[c] = [];
-          data.categoryItemRows[c].forEach((r) =>
-            this.categoryRows[c].push(r.filter((i) => allIdsSet.has(i)))
-          );
+          data.categoryItemRows[c].forEach((r) => {
+            const row = r.filter((i) => allIdsSet.has(i));
+            if (row.length) this.categoryRows[c].push(row);
+          });
         }
       });
 
@@ -121,9 +122,10 @@ export class PickerComponent implements OnInit {
       data.categoryIds.forEach((c) => {
         if (data.categoryRecipeRows[c]) {
           this.categoryRows[c] = [];
-          data.categoryRecipeRows[c].forEach((r) =>
-            this.categoryRows[c].push(r.filter((i) => allIdsSet.has(i)))
-          );
+          data.categoryRecipeRows[c].forEach((r) => {
+            const row = r.filter((i) => allIdsSet.has(i));
+            if (row.length) this.categoryRows[c].push(row);
+          });
         }
       });
 
@@ -146,7 +148,9 @@ export class PickerComponent implements OnInit {
         this.activeIndex = index;
       }
     }
-    this.categoryIds = data.categoryIds.filter((c) => this.categoryRows[c]);
+    this.categoryIds = data.categoryIds.filter(
+      (c) => this.categoryRows[c].length
+    );
     this.allCategoryIds = this.categoryIds;
     this.allCategoryRows = this.categoryRows;
     this.visible = true;

@@ -14,6 +14,8 @@ export const enum ObjectivesActionType {
   ADD = '[Objectives] Add',
   CREATE = '[Objectives] Create',
   REMOVE = '[Objectives] Remove',
+  RAISE = '[Objectives] Raise',
+  LOWER = '[Objectives] Lower',
   SET_TARGET = '[Objectives] Set Target',
   SET_VALUE = '[Objectives] Set Value',
   SET_UNIT = '[Objectives] Set Unit',
@@ -44,6 +46,16 @@ export class CreateAction implements Action {
 
 export class RemoveAction implements Action {
   readonly type = ObjectivesActionType.REMOVE;
+  constructor(public payload: string) {}
+}
+
+export class RaiseAction implements Action {
+  readonly type = ObjectivesActionType.RAISE;
+  constructor(public payload: string) {}
+}
+
+export class LowerAction implements Action {
+  readonly type = ObjectivesActionType.LOWER;
   constructor(public payload: string) {}
 }
 
@@ -131,6 +143,8 @@ export type ObjectivesAction =
   | AddAction
   | CreateAction
   | RemoveAction
+  | RaiseAction
+  | LowerAction
   | SetTargetAction
   | SetValueAction
   | SetUnitAction
