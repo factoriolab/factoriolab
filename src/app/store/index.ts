@@ -4,19 +4,17 @@ import { storeFreeze } from 'ngrx-store-freeze';
 import { environment } from 'src/environments/environment';
 import * as App from './app.actions';
 import * as Datasets from './datasets';
-import * as ItemObjectives from './item-objectives';
 import * as Items from './items';
 import * as Machines from './machines';
+import * as Objectives from './objectives';
 import * as Preferences from './preferences';
-import * as RecipeObjectives from './recipe-objectives';
 import * as Recipes from './recipes';
 import * as Settings from './settings';
 import { storageMetaReducer } from './storage.reducer';
 
 export interface LabState {
   datasetsState: Datasets.DatasetsState;
-  itemObjectivesState: ItemObjectives.ItemObjectivesState;
-  recipeObjectivesState: RecipeObjectives.RecipeObjectivesState;
+  objectivesState: Objectives.ObjectivesState;
   itemsState: Items.ItemsState;
   recipesState: Recipes.RecipesState;
   machinesState: Machines.MachinesState;
@@ -26,8 +24,7 @@ export interface LabState {
 
 export const reducers: ActionReducerMap<LabState, never> = {
   datasetsState: Datasets.datasetsReducer,
-  itemObjectivesState: ItemObjectives.itemObjectivesReducer,
-  recipeObjectivesState: RecipeObjectives.recipeObjectivesReducer,
+  objectivesState: Objectives.objectivesReducer,
   itemsState: Items.itemsReducer,
   recipesState: Recipes.recipesReducer,
   machinesState: Machines.machinesReducer,
@@ -46,11 +43,10 @@ export const metaReducers: MetaReducer<LabState>[] = environment.testing
 export {
   App,
   Datasets,
-  ItemObjectives,
   Items,
   Machines,
+  Objectives,
   Preferences,
-  RecipeObjectives,
   Recipes,
   Settings,
 };

@@ -4,12 +4,11 @@ import {
   EnergyType,
   Entities,
   Game,
-  ItemObjectiveRational,
   ItemSettings,
+  ObjectiveRational,
   ObjectiveType,
-  RateUnit,
+  ObjectiveUnit,
   Rational,
-  RecipeObjectiveRational,
   RecipeRational,
   RecipeSettingsRational,
   Step,
@@ -20,36 +19,39 @@ import { Items } from '~/store';
 const ROOT_ID = '';
 
 export class RateUtility {
-  static itemObjectiveNormalizedRate(
-    itemObjective: ItemObjectiveRational,
+  static objectiveNormalizedRate(
+    objective: ObjectiveRational,
     itemsState: Items.ItemsState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInfo,
     data: Dataset
   ): Rational {
-    if (itemObjective.type === ObjectiveType.Maximize) {
-      // Ignore RateUnit entirely when maximizing, it is also hidden in UI
-      return itemObjective.rate;
+    // Ignore unit entirely when maximizing, do not adjust if unit is Machines
+    if (
+      objective.unit === ObjectiveUnit.Machines ||
+      objective.type === ObjectiveType.Maximize
+    ) {
+      return objective.value;
     }
 
-    const rate = itemObjective.rate;
+    const rate = objective.value;
     let factor = Rational.one;
-    switch (itemObjective.rateUnit) {
-      case RateUnit.Items: {
+    switch (objective.unit) {
+      case ObjectiveUnit.Items: {
         factor = displayRateInfo.value.reciprocal();
         break;
       }
-      case RateUnit.Belts: {
-        const beltId = itemsState[itemObjective.itemId].beltId;
+      case ObjectiveUnit.Belts: {
+        const beltId = itemsState[objective.targetId].beltId;
         if (beltId) {
           factor = beltSpeed[beltId];
         }
         break;
       }
-      case RateUnit.Wagons: {
-        const wagonId = itemsState[itemObjective.itemId].wagonId;
+      case ObjectiveUnit.Wagons: {
+        const wagonId = itemsState[objective.targetId].wagonId;
         if (wagonId) {
-          const item = data.itemEntities[itemObjective.itemId];
+          const item = data.itemEntities[objective.targetId];
           const wagon = data.itemEntities[wagonId];
           if (item.stack && wagon.cargoWagon) {
             factor = item.stack
@@ -64,7 +66,7 @@ export class RateUtility {
     }
 
     // Adjust based on productivity for technology objectives
-    const recipe = data.recipeR[data.itemRecipeId[itemObjective.itemId]];
+    const recipe = data.recipeR[data.itemRecipeId[objective.targetId]];
     if (recipe?.technology) {
       factor = factor.mul(recipe.productivity);
     }
@@ -123,7 +125,7 @@ export class RateUtility {
 
   static normalizeSteps(
     steps: Step[],
-    recipeObjectives: RecipeObjectiveRational[],
+    objectives: ObjectiveRational[],
     itemsState: Entities<ItemSettings>,
     recipesState: Entities<RecipeSettingsRational>,
     beaconReceivers: Rational | null,
@@ -137,19 +139,14 @@ export class RateUtility {
       this.calculateParentsOutputs(step, _steps);
     }
 
-    const recipeObjectiveEntities = toEntities(recipeObjectives);
+    const objectiveEntities = toEntities(objectives);
 
     for (const step of _steps) {
-      this.calculateSettings(step, recipeObjectiveEntities, recipesState);
+      this.calculateSettings(step, objectiveEntities, recipesState);
       this.calculateBelts(step, itemsState, beltSpeed, data);
       this.calculateBeacons(step, beaconReceivers, data);
       this.calculateDisplayRate(step, dispRateInfo);
-      this.calculateChecked(
-        step,
-        itemsState,
-        recipesState,
-        recipeObjectiveEntities
-      );
+      this.calculateChecked(step, itemsState, recipesState, objectiveEntities);
     }
 
     return this.calculateHierarchy(_steps);
@@ -187,12 +184,12 @@ export class RateUtility {
 
   static calculateSettings(
     step: Step,
-    recipeObjectiveEntities: Entities<RecipeObjectiveRational>,
+    objectiveEntities: Entities<ObjectiveRational>,
     recipesState: Entities<RecipeSettingsRational>
   ): void {
     if (step.recipeId) {
       if (step.recipeObjectiveId) {
-        step.recipeSettings = recipeObjectiveEntities[step.recipeObjectiveId];
+        step.recipeSettings = objectiveEntities[step.recipeObjectiveId];
       } else {
         step.recipeSettings = recipesState[step.recipeId];
       }
@@ -312,13 +309,13 @@ export class RateUtility {
     step: Step,
     itemsState: Entities<ItemSettings>,
     recipesState: Entities<RecipeSettingsRational>,
-    recipeObjectiveEntities: Entities<RecipeObjectiveRational>
+    objectiveEntities: Entities<ObjectiveRational>
   ): void {
     // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
       step.checked = itemsState[step.itemId].checked;
     } else if (step.recipeObjectiveId != null) {
-      step.checked = recipeObjectiveEntities[step.recipeObjectiveId].checked;
+      step.checked = objectiveEntities[step.recipeObjectiveId].checked;
     } else if (step.recipeId != null) {
       step.checked = recipesState[step.recipeId].checked;
     }

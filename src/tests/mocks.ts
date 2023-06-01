@@ -46,28 +46,28 @@ export const ItemObjective1: M.ItemObjective = {
   id: '0',
   itemId: ItemId.AdvancedCircuit,
   rate: '1',
-  rateUnit: M.RateUnit.Items,
+  rateUnit: M.ObjectiveUnit.Items,
   type: M.ObjectiveType.Output,
 };
 export const ItemObjective2: M.ItemObjective = {
   id: '1',
   itemId: ItemId.IronPlate,
   rate: '1',
-  rateUnit: M.RateUnit.Belts,
+  rateUnit: M.ObjectiveUnit.Belts,
   type: M.ObjectiveType.Input,
 };
 export const ItemObjective3: M.ItemObjective = {
   id: '2',
   itemId: ItemId.PlasticBar,
   rate: '1',
-  rateUnit: M.RateUnit.Items,
+  rateUnit: M.ObjectiveUnit.Items,
   type: M.ObjectiveType.Maximize,
 };
 export const ItemObjective4: M.ItemObjective = {
   id: '3',
   itemId: ItemId.PetroleumGas,
   rate: '100',
-  rateUnit: M.RateUnit.Items,
+  rateUnit: M.ObjectiveUnit.Items,
   type: M.ObjectiveType.Limit,
 };
 export const ItemObjectivesList = [

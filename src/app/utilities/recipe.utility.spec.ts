@@ -921,7 +921,7 @@ describe('RecipeUtility', () => {
 
   describe('adjustRecipeObjective', () => {
     it('should adjust a recipe objective based on settings', () => {
-      const result = RecipeUtility.adjustRecipeObjective(
+      const result = RecipeUtility.adjustObjective(
         {
           id: '1',
           recipeId: RecipeId.IronPlate,
@@ -952,7 +952,7 @@ describe('RecipeUtility', () => {
         ...Mocks.MachinesStateInitial,
         ...{ ids: undefined },
       };
-      const result = RecipeUtility.adjustRecipeObjective(
+      const result = RecipeUtility.adjustObjective(
         {
           id: '1',
           recipeId: RecipeId.IronPlate,
@@ -987,7 +987,7 @@ describe('RecipeUtility', () => {
           },
         },
       };
-      const result = RecipeUtility.adjustRecipeObjective(
+      const result = RecipeUtility.adjustObjective(
         {
           id: '1',
           recipeId: RecipeId.IronPlate,

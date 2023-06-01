@@ -72,7 +72,7 @@
       "upgraded": "Upgraded",
       "proliferated": "Proliferated"
     },
-    "rateUnit": {
+    "objectiveUnit": {
       "itemsPerSecond": "Items/s",
       "itemsPerMinute": "Items/m",
       "itemsPerHour": "Items/h",
@@ -80,6 +80,7 @@
       "wagonsPerSecond": "Wagons/s",
       "wagonsPerMinute": "Wagons/m",
       "wagonsPerHour": "Wagons/h",
+      "machines": "Machines",
       "pollutionPerSecond": "Pollution/s",
       "pollutionPerMinute": "Pollution/m",
       "pollutionPerHour": "Pollution/h"
@@ -255,16 +256,12 @@
   },
   "objectives": {
     "title": "Objectives",
-    "items": "Items",
-    "removeItemTooltip": "Remove item",
+    "removeTooltip": "Remove objective",
     "typeTooltip": "Select objective type",
     "itemTooltip": "Select item",
-    "rateTooltip": "Set rate",
-    "rateUnitTooltip": "Select rate type",
-    "recipes": "Recipes",
-    "removeRecipeTooltip": "Remove recipe",
     "recipeTooltip": "Select recipe",
-    "countTooltip": "Set machine count",
+    "valueTooltip": "Set value",
+    "unitTooltip": "Select units",
     "addAnItem": "Add an item",
     "addAnItemTooltip": "Select an item to produce",
     "addARecipe": "Add a recipe",

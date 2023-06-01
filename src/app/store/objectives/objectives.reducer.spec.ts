@@ -3,12 +3,12 @@ import { ObjectiveType, RecipeObjective } from '~/models';
 import { Items } from '../';
 import * as App from '../app.actions';
 import * as Recipes from '../recipes';
-import * as Actions from './recipe-objectives.actions';
+import * as Actions from './objectives.actions';
 import {
   initialRecipeObjectivesState,
   recipeObjectivesReducer,
   RecipeObjectivesState,
-} from './recipe-objectives.reducer';
+} from './objectives.reducer';
 
 describe('Recipe Objectives Reducer', () => {
   const state = recipeObjectivesReducer(

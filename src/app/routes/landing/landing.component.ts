@@ -5,15 +5,15 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { Game, gameInfo, gameOptions } from '~/models';
-import { RouterService } from '~/services';
 import {
-  ItemObjectives,
-  LabState,
-  Preferences,
-  RecipeObjectives,
-  Settings,
-} from '~/store';
+  Game,
+  gameInfo,
+  gameOptions,
+  ObjectiveBase,
+  ObjectiveUnit,
+} from '~/models';
+import { RouterService } from '~/services';
+import { LabState, Objectives, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
@@ -91,17 +91,21 @@ export class LandingComponent {
     this.setMod(gameInfo[game].modId);
   }
 
+  addItemObjective(targetId: string): void {
+    this.addObjective({ targetId, unit: ObjectiveUnit.Items });
+  }
+
+  addRecipeObjective(targetId: string): void {
+    this.addObjective({ targetId, unit: ObjectiveUnit.Machines });
+  }
+
   /** Action Dispatch Methods */
   setMod(value: string): void {
     this.store.dispatch(new Settings.SetModAction(value));
   }
 
-  addItemObjective(value: string): void {
-    this.store.dispatch(new ItemObjectives.AddAction(value));
-  }
-
-  addRecipeObjective(value: string): void {
-    this.store.dispatch(new RecipeObjectives.AddAction(value));
+  addObjective(value: ObjectiveBase): void {
+    this.store.dispatch(new Objectives.AddAction(value));
   }
 
   setBypassLanding(value: boolean): void {

@@ -6,7 +6,7 @@ import {
   Game,
   ItemObjectiveRational,
   ObjectiveType,
-  RateUnit,
+  ObjectiveUnit,
   Rational,
   RecipeObjectiveRational,
   RecipeSettingsRational,
@@ -18,12 +18,12 @@ describe('RateUtility', () => {
   describe('itemObjectiveNormalizedRate', () => {
     it('should skip on maximize objectives', () => {
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
+        RateUtility.objectiveNormalizedRate(
           new ItemObjectiveRational({
             id: '0',
             itemId: ItemId.Coal,
             rate: '1',
-            rateUnit: RateUnit.Belts,
+            rateUnit: ObjectiveUnit.Belts,
             type: ObjectiveType.Maximize,
           }),
           Mocks.ItemsStateInitial,
@@ -36,12 +36,12 @@ describe('RateUtility', () => {
 
     it('should normalize item objective rates based on display rate', () => {
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
+        RateUtility.objectiveNormalizedRate(
           new ItemObjectiveRational({
             id: '0',
             itemId: ItemId.Coal,
             rate: '1',
-            rateUnit: RateUnit.Items,
+            rateUnit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           }),
           Mocks.ItemsStateInitial,
@@ -54,12 +54,12 @@ describe('RateUtility', () => {
 
     it('should normalize item objective rates based on belts', () => {
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
+        RateUtility.objectiveNormalizedRate(
           new ItemObjectiveRational({
             id: '0',
             itemId: ItemId.Coal,
             rate: '1',
-            rateUnit: RateUnit.Belts,
+            rateUnit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           }),
           Mocks.ItemsStateInitial,
@@ -72,12 +72,12 @@ describe('RateUtility', () => {
 
     it('should normalize item objective rates based on wagons', () => {
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
+        RateUtility.objectiveNormalizedRate(
           new ItemObjectiveRational({
             id: '0',
             itemId: ItemId.Coal,
             rate: '1',
-            rateUnit: RateUnit.Wagons,
+            rateUnit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           }),
           Mocks.ItemsStateInitial,
@@ -88,12 +88,12 @@ describe('RateUtility', () => {
       ).toEqual(Rational.from([100, 3]));
 
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
+        RateUtility.objectiveNormalizedRate(
           new ItemObjectiveRational({
             id: '0',
             itemId: ItemId.PetroleumGas,
             rate: '1',
-            rateUnit: RateUnit.Wagons,
+            rateUnit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           }),
           Mocks.ItemsStateInitial,
@@ -106,12 +106,12 @@ describe('RateUtility', () => {
 
     it('should adjust technology objective rate by productivity', () => {
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
+        RateUtility.objectiveNormalizedRate(
           new ItemObjectiveRational({
             id: '0',
             itemId: ItemId.ArtilleryShellRange,
             rate: '1',
-            rateUnit: RateUnit.Items,
+            rateUnit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           }),
           Mocks.ItemsStateInitial,

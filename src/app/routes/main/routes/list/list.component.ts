@@ -34,11 +34,10 @@ import {
   TrackService,
 } from '~/services';
 import {
-  ItemObjectives,
   Items,
   LabState,
   Machines,
-  RecipeObjectives,
+  Objectives,
   Recipes,
   Settings,
 } from '~/store';
@@ -56,16 +55,16 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.select(Machines.getMachinesState),
     this.store.select(Items.getItemsState),
     this.store.select(Items.getItemsModified),
-    this.store.select(ItemObjectives.getStepsModified),
-    this.store.select(ItemObjectives.getTotals),
-    this.store.select(ItemObjectives.getSteps),
-    this.store.select(ItemObjectives.getStepDetails),
-    this.store.select(ItemObjectives.getStepById),
-    this.store.select(ItemObjectives.getStepByItemEntities),
-    this.store.select(ItemObjectives.getStepTree),
-    this.store.select(ItemObjectives.getEffectivePowerUnit),
+    this.store.select(Objectives.getStepsModified),
+    this.store.select(Objectives.getTotals),
+    this.store.select(Objectives.getSteps),
+    this.store.select(Objectives.getStepDetails),
+    this.store.select(Objectives.getStepById),
+    this.store.select(Objectives.getStepByItemEntities),
+    this.store.select(Objectives.getStepTree),
+    this.store.select(Objectives.getEffectivePowerUnit),
     this.store.select(Recipes.getRecipesState),
-    this.store.select(Recipes.getRecipesModified),
+    this.store.select(Objectives.getRecipesModified),
     this.store.select(Recipes.getAdjustedDataset),
     this.store.select(Settings.getColumnsState),
     this.store.select(Settings.getSettings),
@@ -164,8 +163,8 @@ export class ListComponent implements OnInit, AfterViewInit {
       if (this.fragmentId) {
         const [_, stepId, tabId] = this.fragmentId.split('_');
         combineLatest([
-          this.store.select(ItemObjectives.getSteps),
-          this.store.select(ItemObjectives.getStepDetails),
+          this.store.select(Objectives.getSteps),
+          this.store.select(Objectives.getStepDetails),
         ])
           .pipe(first())
           .subscribe(([steps, stepDetails]) => {
@@ -432,7 +431,7 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   setMachine(id: string, value: string, def: string, objective = false): void {
     const action = objective
-      ? RecipeObjectives.SetMachineAction
+      ? Objectives.SetMachineAction
       : Recipes.SetMachineAction;
     this.store.dispatch(new action({ id, value, def }));
   }
@@ -444,21 +443,21 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipeObjectives.SetMachineModulesAction
+      ? Objectives.SetMachineModulesAction
       : Recipes.SetMachineModulesAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
   addBeacon(id: string, objective = false): void {
     const action = objective
-      ? RecipeObjectives.AddBeaconAction
+      ? Objectives.AddBeaconAction
       : Recipes.AddBeaconAction;
     this.store.dispatch(new action(id));
   }
 
   removeBeacon(id: string, value: number, objective = false): void {
     const action = objective
-      ? RecipeObjectives.RemoveBeaconAction
+      ? Objectives.RemoveBeaconAction
       : Recipes.RemoveBeaconAction;
     this.store.dispatch(new action({ id, value }));
   }
@@ -471,7 +470,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipeObjectives.SetBeaconCountAction
+      ? Objectives.SetBeaconCountAction
       : Recipes.SetBeaconCountAction;
     this.store.dispatch(new action({ id, index, value, def }));
   }
@@ -484,7 +483,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipeObjectives.SetBeaconAction
+      ? Objectives.SetBeaconAction
       : Recipes.SetBeaconAction;
     this.store.dispatch(new action({ id, index, value, def }));
   }
@@ -497,7 +496,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipeObjectives.SetBeaconModulesAction
+      ? Objectives.SetBeaconModulesAction
       : Recipes.SetBeaconModulesAction;
     this.store.dispatch(new action({ id, index, value, def }));
   }
@@ -509,7 +508,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipeObjectives.SetBeaconTotalAction
+      ? Objectives.SetBeaconTotalAction
       : Recipes.SetBeaconTotalAction;
     this.store.dispatch(new action({ id, index, value }));
   }
@@ -521,14 +520,14 @@ export class ListComponent implements OnInit, AfterViewInit {
     objective = false
   ): void {
     const action = objective
-      ? RecipeObjectives.SetOverclockAction
+      ? Objectives.SetOverclockAction
       : Recipes.SetOverclockAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
   setRecipeChecked(id: string, value: boolean, objective = false): void {
     const action = objective
-      ? RecipeObjectives.SetCheckedAction
+      ? Objectives.SetCheckedAction
       : Recipes.SetCheckedAction;
     this.store.dispatch(new action({ id, value }));
   }
@@ -542,7 +541,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   }
 
   resetRecipeObjective(value: string): void {
-    this.store.dispatch(new RecipeObjectives.ResetObjectiveAction(value));
+    this.store.dispatch(new Objectives.ResetObjectiveAction(value));
   }
 
   resetChecked(): void {

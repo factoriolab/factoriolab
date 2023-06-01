@@ -1,6 +1,6 @@
 import { Mocks } from 'src/tests';
 import { RecipeUtility } from '~/utilities';
-import * as Selectors from './recipe-objectives.selectors';
+import * as Selectors from './objectives.selectors';
 
 describe('Recipe Objectives Selectors', () => {
   describe('Base selector functions', () => {
@@ -38,7 +38,7 @@ describe('Recipe Objectives Selectors', () => {
         Mocks.MachinesStateInitial,
         Mocks.Dataset
       );
-      expect(RecipeUtility.adjustRecipeObjective).toHaveBeenCalledWith(
+      expect(RecipeUtility.adjustObjective).toHaveBeenCalledWith(
         Mocks.RecipeObjective1,
         Mocks.MachinesStateInitial,
         Mocks.Dataset

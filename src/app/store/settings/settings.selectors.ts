@@ -26,9 +26,9 @@ import {
   ItemRational,
   MachineRational,
   ModuleRational,
+  objectiveUnitOptions,
   Preset,
   presetOptions,
-  rateUnitOptions,
   Rational,
   RecipeRational,
   researchSpeedFactor,
@@ -127,7 +127,7 @@ export const getDisplayRateInfo = createSelector(
 export const getRateUnitOptions = createSelector(
   getGame,
   getDisplayRateInfo,
-  (game, dispRateInfo) => rateUnitOptions(dispRateInfo, game)
+  (game, dispRateInfo) => objectiveUnitOptions(dispRateInfo, game)
 );
 
 export const getPresetOptions = createSelector(getGame, (game) =>

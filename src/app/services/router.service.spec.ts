@@ -14,8 +14,8 @@ import {
   ItemObjective,
   MaximizeType,
   ObjectiveType,
+  ObjectiveUnit,
   Preset,
-  RateUnit,
   Rational,
   RecipeObjective,
   ResearchSpeed,
@@ -50,7 +50,7 @@ const mockItemObjective: ItemObjective = {
   id: '1',
   itemId: ItemId.SteelChest,
   rate: '1',
-  rateUnit: RateUnit.Belts,
+  rateUnit: ObjectiveUnit.Belts,
   type: ObjectiveType.Output,
 };
 const mockItemObjectivesState: ItemObjectives.ItemObjectivesState = {
@@ -766,25 +766,25 @@ describe('RouterService', () => {
     it('should convert item objectives by machines into recipe objectives', () => {
       const { params } = service.migrateV6({
         params: {
-          [Section.ItemObjectives]: 'coal*1*3',
+          [Section.Objectives]: 'coal*1*3',
         },
         warnings: [],
         isBare: true,
       });
-      expect(params[Section.ItemObjectives]).toEqual('');
+      expect(params[Section.Objectives]).toEqual('');
       expect(params[Section.RecipeObjectives]).toEqual('coal*1');
     });
 
     it('should convert item objective by machines with limit step into maximize / limit recipe objectives', () => {
       const { params } = service.migrateV6({
         params: {
-          [Section.ItemObjectives]: 'iron-plate*1*3*iron-ore',
+          [Section.Objectives]: 'iron-plate*1*3*iron-ore',
           [Section.RecipeObjectives]: 'coal*1',
         },
         warnings: [],
         isBare: true,
       });
-      expect(params[Section.ItemObjectives]).toEqual('');
+      expect(params[Section.Objectives]).toEqual('');
       expect(params[Section.RecipeObjectives]).toEqual(
         'coal*1_iron-plate*1*2_iron-ore*1*3'
       );
@@ -793,12 +793,12 @@ describe('RouterService', () => {
     it('should convert item objective with limit step into maximize / limit item objectives', () => {
       const { params } = service.migrateV6({
         params: {
-          [Section.ItemObjectives]: 'iron-plate*1**iron-ore',
+          [Section.Objectives]: 'iron-plate*1**iron-ore',
         },
         warnings: [],
         isBare: true,
       });
-      expect(params[Section.ItemObjectives]).toEqual(
+      expect(params[Section.Objectives]).toEqual(
         'iron-plate*1**2_iron-ore*1**3'
       );
     });
@@ -877,14 +877,14 @@ describe('RouterService', () => {
   describe('zipItemObjectives', () => {
     it('should handle RateUnit Items', () => {
       const zip = mockZipData();
-      service.zipItemObjectives(
+      service.zipObjectives(
         zip,
         [
           {
             id: '0',
             itemId: ItemId.SteelChest,
             rate: '1',
-            rateUnit: RateUnit.Items,
+            rateUnit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
         ],
@@ -898,14 +898,14 @@ describe('RouterService', () => {
 
     it('should handle RateUnit Belts', () => {
       const zip = mockZipData();
-      service.zipItemObjectives(
+      service.zipObjectives(
         zip,
         [
           {
             id: '0',
             itemId: ItemId.SteelChest,
             rate: '1',
-            rateUnit: RateUnit.Belts,
+            rateUnit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
         ],
@@ -919,14 +919,14 @@ describe('RouterService', () => {
 
     it('should handle RateUnit Wagons', () => {
       const zip = mockZipData();
-      service.zipItemObjectives(
+      service.zipObjectives(
         zip,
         [
           {
             id: '0',
             itemId: ItemId.SteelChest,
             rate: '1',
-            rateUnit: RateUnit.Wagons,
+            rateUnit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           },
         ],
@@ -941,7 +941,7 @@ describe('RouterService', () => {
 
   describe('unzipItemObjectives', () => {
     it('bare should unzip', () => {
-      const result = service.unzipItemObjectives({
+      const result = service.unzipObjectives({
         ['p']: 'steel-chest*1*1',
       });
       expect(result).toEqual({
@@ -951,7 +951,7 @@ describe('RouterService', () => {
             id: '1',
             itemId: ItemId.SteelChest,
             rate: '1',
-            rateUnit: RateUnit.Belts,
+            rateUnit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
         },
@@ -960,10 +960,7 @@ describe('RouterService', () => {
     });
 
     it('hash should map values to empty strings if null', () => {
-      const result = service.unzipItemObjectives(
-        { ['p']: '*1**Bd' },
-        Mocks.Hash
-      );
+      const result = service.unzipObjectives({ ['p']: '*1**Bd' }, Mocks.Hash);
       expect(result).toEqual({
         ids: ['1'],
         entities: {
@@ -971,7 +968,7 @@ describe('RouterService', () => {
             id: '1',
             itemId: '',
             rate: '1',
-            rateUnit: RateUnit.Items,
+            rateUnit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
         },

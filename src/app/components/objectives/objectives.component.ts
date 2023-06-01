@@ -10,19 +10,14 @@ import {
   displayRateOptions,
   MatrixResult,
   MatrixResultType,
+  Objective,
+  ObjectiveBase,
   ObjectiveType,
   objectiveTypeOptions,
-  RateUnit,
+  ObjectiveUnit,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
-import {
-  ItemObjectives,
-  Items,
-  LabState,
-  RecipeObjectives,
-  Recipes,
-  Settings,
-} from '~/store';
+import { Items, LabState, Objectives, Recipes, Settings } from '~/store';
 
 @Component({
   selector: 'lab-objectives',
@@ -32,9 +27,8 @@ import {
 })
 export class ObjectivesComponent {
   vm$ = combineLatest([
-    this.store.select(ItemObjectives.getItemObjectives),
-    this.store.select(ItemObjectives.getMatrixResult),
-    this.store.select(RecipeObjectives.getRecipeObjectives),
+    this.store.select(Objectives.getObjectives),
+    this.store.select(Objectives.getMatrixResult),
     this.store.select(Items.getItemsState),
     this.store.select(Recipes.getRecipesState),
     this.store.select(Settings.getDisplayRate),
@@ -47,9 +41,8 @@ export class ObjectivesComponent {
   ]).pipe(
     map(
       ([
-        itemObjectives,
+        objectives,
         matrixResult,
-        recipeObjectives,
         itemsState,
         recipesState,
         displayRate,
@@ -60,9 +53,8 @@ export class ObjectivesComponent {
         recipeIds,
         width,
       ]) => ({
-        itemObjectives,
+        objectives,
         matrixResult,
-        recipeObjectives,
         itemsState,
         recipesState,
         displayRate,
@@ -108,6 +100,7 @@ export class ObjectivesComponent {
   objectiveTypeOptions = objectiveTypeOptions;
   displayRateOptions = displayRateOptions;
 
+  ObjectiveUnit = ObjectiveUnit;
   ObjectiveType = ObjectiveType;
 
   constructor(
@@ -117,49 +110,43 @@ export class ObjectivesComponent {
     private contentService: ContentService
   ) {}
 
+  changeUnit(objective: Objective, value: ObjectiveUnit): void {
+    // TODO: Need logic to check whether we can switch to a specific
+    // recipe / item, and prompt if the user needs to pick one
+    console.log(objective, value);
+  }
+
+  addItemObjective(targetId: string): void {
+    this.addObjective({ targetId, unit: ObjectiveUnit.Items });
+  }
+
+  addRecipeObjective(targetId: string): void {
+    this.addObjective({ targetId, unit: ObjectiveUnit.Machines });
+  }
+
   /** Action Dispatch Methods */
-  removeItemObjective(id: string): void {
-    this.store.dispatch(new ItemObjectives.RemoveAction(id));
+  removeObjective(id: string): void {
+    this.store.dispatch(new Objectives.RemoveAction(id));
   }
 
-  setItem(id: string, value: string): void {
-    this.store.dispatch(new ItemObjectives.SetItemAction({ id, value }));
+  setTarget(id: string, value: string): void {
+    this.store.dispatch(new Objectives.SetTargetAction({ id, value }));
   }
 
-  setRate(id: string, value: string): void {
-    this.store.dispatch(new ItemObjectives.SetRateAction({ id, value }));
+  setValue(id: string, value: string): void {
+    this.store.dispatch(new Objectives.SetValueAction({ id, value }));
   }
 
-  setRateUnit(id: string, value: RateUnit): void {
-    this.store.dispatch(new ItemObjectives.SetRateUnitAction({ id, value }));
+  setUnit(id: string, value: ObjectiveBase): void {
+    this.store.dispatch(new Objectives.SetUnitAction({ id, value }));
   }
 
-  setItemType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(new ItemObjectives.SetTypeAction({ id, value }));
+  setType(id: string, value: ObjectiveType): void {
+    this.store.dispatch(new Objectives.SetTypeAction({ id, value }));
   }
 
-  removeRecipeObjective(id: string): void {
-    this.store.dispatch(new RecipeObjectives.RemoveAction(id));
-  }
-
-  setRecipe(id: string, value: string): void {
-    this.store.dispatch(new RecipeObjectives.SetRecipeAction({ id, value }));
-  }
-
-  setCount(id: string, value: string): void {
-    this.store.dispatch(new RecipeObjectives.SetCountAction({ id, value }));
-  }
-
-  setRecipeType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(new RecipeObjectives.SetTypeAction({ id, value }));
-  }
-
-  addItemObjective(value: string): void {
-    this.store.dispatch(new ItemObjectives.AddAction(value));
-  }
-
-  addRecipeObjective(value: string): void {
-    this.store.dispatch(new RecipeObjectives.AddAction(value));
+  addObjective(value: ObjectiveBase): void {
+    this.store.dispatch(new Objectives.AddAction(value));
   }
 
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {

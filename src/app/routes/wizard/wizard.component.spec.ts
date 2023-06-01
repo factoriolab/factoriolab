@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, ItemId, RecipeId, TestModule } from 'src/tests';
-import { ObjectiveType, RateUnit } from '~/models';
+import { ObjectiveType, ObjectiveUnit } from '~/models';
 import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
 import { WizardComponent, WizardState } from './wizard.component';
 
@@ -38,13 +38,13 @@ describe('WizardComponent', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
     dispatch.spy.calls.reset();
-    component.createItemObjective(ItemId.IronPlate, '1', RateUnit.Items);
+    component.createItemObjective(ItemId.IronPlate, '1', ObjectiveUnit.Items);
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
       new ItemObjectives.CreateAction({
         id: '0',
         itemId: ItemId.IronPlate,
         rate: '1',
-        rateUnit: RateUnit.Items,
+        rateUnit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       })
     );

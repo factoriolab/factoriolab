@@ -20,25 +20,24 @@ import {
   DisplayRate,
   Entities,
   IdDefaultPayload,
-  ItemObjective,
+  isRecipeObjective,
   ItemSettings,
   MachineSettings,
   ModHash,
+  Objective,
   ObjectiveType,
-  RateUnit,
+  ObjectiveUnit,
   Rational,
-  RecipeObjective,
   RecipeSettings,
   Step,
 } from '~/models';
 import {
   App,
   Datasets,
-  ItemObjectives,
   Items,
   LabState,
   Machines,
-  RecipeObjectives,
+  Objectives,
   Recipes,
   Settings,
 } from '~/store';
@@ -68,8 +67,8 @@ export const MIN_ZIP = 75;
 export enum Section {
   Version = 'v',
   Mod = 'b',
-  ItemObjectives = 'p',
-  RecipeObjectives = 'q',
+  Objectives = 'p',
+  RecipeObjectives = 'q', // Obsolete
   Items = 'i',
   Recipes = 'r',
   Machines = 'f',
@@ -88,6 +87,7 @@ export enum ZipVersion {
   Version6 = '6', // Bare
   Version7 = '7', // Hash
   Version8 = '8', // Unified
+  Version9 = '9', // Unified
 }
 
 export enum MigrationWarning {
@@ -197,12 +197,11 @@ export class RouterService {
       .pipe(
         first(),
         tap(() => this.dataSvc.initialize()),
-        switchMap(() => this.store.select(ItemObjectives.getZipState)),
+        switchMap(() => this.store.select(Objectives.getZipState)),
         debounceTime(0),
         tap((s) =>
           this.updateUrl(
-            s.itemObjectives,
-            s.recipeObjectives,
+            s.objectives,
             s.itemsState,
             s.recipesState,
             s.machinesState,
@@ -214,16 +213,14 @@ export class RouterService {
   }
 
   updateUrl(
-    itemObjectives: ItemObjectives.ItemObjectivesState,
-    recipeObjectives: RecipeObjectives.RecipeObjectivesState,
+    objectives: Objectives.ObjectivesState,
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     machineSettings: Machines.MachinesState,
     settings: Settings.SettingsState
   ): void {
     this.zipState(
-      itemObjectives,
-      recipeObjectives,
+      objectives,
       itemsState,
       recipesState,
       machineSettings,
@@ -243,8 +240,7 @@ export class RouterService {
   }
 
   zipState(
-    itemObjectives: ItemObjectives.ItemObjectivesState,
-    recipeObjectives: RecipeObjectives.RecipeObjectivesState,
+    objectives: Objectives.ObjectivesState,
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     machinesState: Machines.MachinesState,
@@ -256,16 +252,13 @@ export class RouterService {
       first(),
       map((hash) => {
         // Setup object lists
-        const p = itemObjectives.ids.map((i) => itemObjectives.entities[i]);
-        const q = recipeObjectives.ids.map((i) => recipeObjectives.entities[i]);
+        const o = objectives.ids.map((i) => objectives.entities[i]);
 
         // Beacons
-        const zData = this.zipBeacons(q, recipesState, hash);
+        const zData = this.zipBeacons(o, recipesState, hash);
 
         // Item Objectives
-        this.zipItemObjectives(zData, p, hash);
-        // Recipe Objectives
-        this.zipRecipeObjectives(zData, q, hash);
+        this.zipObjectives(zData, o, hash);
 
         // Mod (Hashed only, for hash lookup)
         const zMod = this.zipDiffString(
@@ -290,25 +283,40 @@ export class RouterService {
   }
 
   stepHref(step: Step, config: Zip, hash: ModHash | undefined): string | null {
-    if (step.items == null || step.itemId == null || hash == null) {
-      return null;
+    if (hash == null) return null;
+
+    let objectives: Objective[] | undefined;
+    if (step.itemId != null && step.items != null) {
+      objectives = [
+        {
+          id: '0',
+          targetId: step.itemId,
+          value: step.items.toString(),
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        },
+      ];
+    } else if (step.recipeId != null && step.machines != null) {
+      objectives = [
+        {
+          id: '0',
+          targetId: step.recipeId,
+          value: step.machines.toString(),
+          unit: ObjectiveUnit.Machines,
+          type: ObjectiveType.Output,
+        },
+      ];
     }
-    const itemObjectives: ItemObjective[] = [
-      {
-        id: '0',
-        itemId: step.itemId,
-        rate: step.items.toString(),
-        rateUnit: RateUnit.Items,
-        type: ObjectiveType.Output,
-      },
-    ];
+
+    if (objectives == null) return null;
+
     const zData: ZipData = {
       objectives: this.empty,
       config: config,
       recipeBeaconMap: {},
       objectiveBeaconMap: {},
     };
-    this.zipItemObjectives(zData, itemObjectives, hash);
+    this.zipObjectives(zData, objectives, hash);
     return '?' + this.getHash(zData);
   }
 
@@ -373,11 +381,8 @@ export class RouterService {
           const state: App.PartialState = {};
           if (isBare) {
             const beaconSettings = this.unzipBeacons(params);
-            if (params[Section.ItemObjectives]) {
-              state.itemObjectivesState = this.unzipItemObjectives(params);
-            }
-            if (params[Section.RecipeObjectives]) {
-              state.recipeObjectivesState = this.unzipRecipeObjectives(
+            if (params[Section.Objectives]) {
+              state.objectivesState = this.unzipObjectives(
                 params,
                 beaconSettings
               );
@@ -401,14 +406,8 @@ export class RouterService {
               .requestData(modId || Settings.initialSettingsState.modId)
               .subscribe(([_, hash]) => {
                 const beaconSettings = this.unzipBeacons(params, hash);
-                if (params[Section.ItemObjectives]) {
-                  state.itemObjectivesState = this.unzipItemObjectives(
-                    params,
-                    hash
-                  );
-                }
-                if (params[Section.RecipeObjectives]) {
-                  state.recipeObjectivesState = this.unzipRecipeObjectives(
+                if (params[Section.Objectives]) {
+                  state.objectivesState = this.unzipObjectives(
                     params,
                     beaconSettings,
                     hash
@@ -790,8 +789,8 @@ export class RouterService {
      * ItemObjectives: Convert via / limit step, convert machines rate type to
      * recipe objectives
      */
-    if (params[Section.ItemObjectives]) {
-      const list = params[Section.ItemObjectives].split(LISTSEP);
+    if (params[Section.Objectives]) {
+      const list = params[Section.Objectives].split(LISTSEP);
       const migrated = [...list];
       for (let i = 0; i < list.length; i++) {
         const obj = list[i];
@@ -832,7 +831,7 @@ export class RouterService {
         state.warnings.push(MigrationWarning.LimitStepDeprecation);
       }
 
-      params[Section.ItemObjectives] = migrated.join(LISTSEP);
+      params[Section.Objectives] = migrated.join(LISTSEP);
     }
 
     // Items: Remove recipeId
@@ -920,7 +919,7 @@ export class RouterService {
   }
 
   zipBeacons(
-    recipeObjectives: RecipeObjective[],
+    objectives: Objective[],
     recipes: Recipes.RecipesState,
     hash: ModHash
   ): ZipData {
@@ -929,10 +928,10 @@ export class RouterService {
     const objectiveBeaconMap: Entities<number[]> = {};
     const recipeBeaconMap: Entities<number[]> = {};
 
-    for (const recipeObjective of recipeObjectives) {
-      if (recipeObjective.beacons != null) {
-        objectiveBeaconMap[recipeObjective.id] = this.zipBeaconArray(
-          recipeObjective.beacons,
+    for (const objective of objectives) {
+      if (objective.beacons != null) {
+        objectiveBeaconMap[objective.id] = this.zipBeaconArray(
+          objective.beacons,
           beaconsIdMap,
           list,
           hash
@@ -1030,89 +1029,18 @@ export class RouterService {
     });
   }
 
-  zipItemObjectives(
-    data: ZipData,
-    itemObjectives: ItemObjective[],
-    hash: ModHash
-  ): void {
+  zipObjectives(data: ZipData, objectives: Objective[], hash: ModHash): void {
     const z = this.zipList(
-      itemObjectives.map((obj) => {
-        const rate = Rational.fromString(obj.rate).toString();
-        const unit = this.zipDiffNumber(obj.rateUnit, RateUnit.Items);
-        const type = this.zipDiffNumber(obj.type, ObjectiveType.Output);
-
-        return {
-          bare: this.zipFields([obj.itemId, rate, unit, type]),
-          hash: this.zipFields([
-            this.zipTruthyNString(obj.itemId, hash.items),
-            rate,
-            unit,
-            type,
-          ]),
-        };
-      })
-    );
-
-    if (z.bare.length) {
-      data.objectives.bare += `${Section.ItemObjectives}=${z.bare}`;
-      data.objectives.hash += `${Section.ItemObjectives}${z.hash}`;
-    }
-  }
-
-  unzipItemObjectives(
-    params: Entities,
-    hash?: ModHash
-  ): ItemObjectives.ItemObjectivesState {
-    const list = params[Section.ItemObjectives].split(LISTSEP);
-    const ids: string[] = [];
-    const entities: Entities<ItemObjective> = {};
-    let index = 1;
-    for (const itemObjective of list) {
-      const s = itemObjective.split(FIELDSEP);
-      let i = 0;
-      const id = index.toString();
-      let obj: ItemObjective;
-
-      if (hash) {
-        obj = {
-          id,
-          itemId: this.parseNString(s[i++], hash.items) ?? '',
-          rate: s[i++],
-          rateUnit: Number(s[i++]) | RateUnit.Items,
-          type: Number(s[i++]) | ObjectiveType.Output,
-        };
-      } else {
-        obj = {
-          id,
-          itemId: s[i++],
-          rate: s[i++],
-          rateUnit: Number(s[i++]) | RateUnit.Items,
-          type: Number(s[i++]) | ObjectiveType.Output,
-        };
-      }
-
-      this.deleteEmptyKeys(obj);
-      ids.push(id);
-      entities[id] = obj;
-      index++;
-    }
-    return { ids, index, entities };
-  }
-
-  zipRecipeObjectives(
-    data: ZipData,
-    recipeObjectives: RecipeObjective[],
-    hash: ModHash
-  ): void {
-    const z = this.zipList(
-      recipeObjectives.map((obj) => {
-        const count = Rational.fromString(obj.count).toString();
+      objectives.map((obj) => {
+        const value = Rational.fromString(obj.value).toString();
+        const unit = this.zipDiffNumber(obj.unit, ObjectiveUnit.Items);
         const type = this.zipDiffNumber(obj.type, ObjectiveType.Output);
 
         return {
           bare: this.zipFields([
-            obj.recipeId,
-            count,
+            obj.targetId,
+            value,
+            unit,
             type,
             this.zipTruthyString(obj.machineId),
             this.zipTruthyArray(obj.machineModuleIds),
@@ -1121,8 +1049,12 @@ export class RouterService {
             this.zipTruthyBool(obj.checked),
           ]),
           hash: this.zipFields([
-            this.zipTruthyNString(obj.recipeId, hash.recipes),
-            count,
+            this.zipTruthyNString(
+              obj.targetId,
+              isRecipeObjective(obj) ? hash.recipes : hash.items
+            ),
+            value,
+            unit,
             type,
             this.zipTruthyNString(obj.machineId, hash.machines),
             this.zipTruthyNArray(obj.machineModuleIds, hash.modules),
@@ -1135,32 +1067,32 @@ export class RouterService {
     );
 
     if (z.bare.length) {
-      const prefix = data.objectives.bare.length ? '&' : '';
-      data.objectives.bare += `${prefix}${Section.RecipeObjectives}=${z.bare}`;
-      data.objectives.hash += `${prefix}${Section.RecipeObjectives}${z.hash}`;
+      data.objectives.bare += `${Section.Objectives}=${z.bare}`;
+      data.objectives.hash += `${Section.Objectives}${z.hash}`;
     }
   }
 
-  unzipRecipeObjectives(
+  unzipObjectives(
     params: Entities,
     beaconSettings: BeaconSettings[],
     hash?: ModHash
-  ): RecipeObjectives.RecipeObjectivesState {
-    const list = params[Section.RecipeObjectives].split(LISTSEP);
+  ): Objectives.ObjectivesState {
+    const list = params[Section.Objectives].split(LISTSEP);
     const ids: string[] = [];
-    const entities: Entities<RecipeObjective> = {};
+    const entities: Entities<Objective> = {};
     let index = 1;
-    for (const recipeObjective of list) {
-      const s = recipeObjective.split(FIELDSEP);
+    for (const itemObjective of list) {
+      const s = itemObjective.split(FIELDSEP);
       let i = 0;
       const id = index.toString();
-      let obj: RecipeObjective;
+      let obj: Objective;
 
       if (hash) {
         obj = {
           id,
-          recipeId: this.parseNString(s[i++], hash.recipes) ?? '',
-          count: s[i++],
+          targetId: s[i++], // Convert to real id after determining unit
+          value: s[i++],
+          unit: Number(s[i++]) | ObjectiveUnit.Items,
           type: Number(s[i++]) | ObjectiveType.Output,
           machineId: this.parseNString(s[i++], hash.machines),
           machineModuleIds: this.parseNArray(s[i++], hash.modules),
@@ -1170,11 +1102,18 @@ export class RouterService {
           overclock: this.parseNumber(s[i++]),
           checked: this.parseBool(s[i++]),
         };
+
+        obj.targetId =
+          this.parseNString(
+            obj.targetId,
+            isRecipeObjective(obj) ? hash.recipes : hash.items
+          ) ?? '';
       } else {
         obj = {
           id,
-          recipeId: s[i++],
-          count: s[i++],
+          targetId: s[i++],
+          value: s[i++],
+          unit: Number(s[i++]) | ObjectiveUnit.Items,
           type: Number(s[i++]) | ObjectiveType.Output,
           machineId: this.parseString(s[i++]),
           machineModuleIds: this.parseArray(s[i++]),
