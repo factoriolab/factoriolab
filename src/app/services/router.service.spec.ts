@@ -120,8 +120,8 @@ const mockSettingsState: Settings.SettingsState = {
   },
 };
 const mockZip: Zip = {
-  bare: 'p=steel-chest*1*1&q=steel-chest*1',
-  hash: 'pC6*1*1&qDB*1',
+  bare: 'p=steel-chest*1*1',
+  hash: 'pC6*1*1',
 };
 const mockZipPartial: Zip = {
   bare:
@@ -393,13 +393,12 @@ describe('RouterService', () => {
       delete mockStateV0.settingsState?.proliferatorSprayId;
       delete mockStateV0.settingsState?.netProductionOnly;
       expect(service.dispatch).toHaveBeenCalledWith(
-        mockZip.bare +
-          '&b=1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*asse' +
-          'mbling-machine-2*effectivity-module~effectivity-module*1*speed-mod' +
-          'ule~speed-module*beacon*200*100*8&f=1*productivity-module~speed-mo' +
-          'dule*1*speed-module*beacon_assembling-machine-2_steel-furnace&s=1.' +
-          '0*%3D*1*transport-belt*coal*1200*3600*100*0*0*0*cargo-wagon*fluid-' +
-          'wagon*?',
+        'p=steel-chest*1*1&q=steel-chest*1&b=1&i=steel-chest*1*transport-belt' +
+          '*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module' +
+          '~effectivity-module*1*speed-module~speed-module*beacon*200*100*8&f' +
+          '=1*productivity-module~speed-module*1*speed-module*beacon_assembli' +
+          'ng-machine-2_steel-furnace&s=1.0*%3D*1*transport-belt*coal*1200*36' +
+          '00*100*0*0*0*cargo-wagon*fluid-wagon*?',
         mockStateV0
       );
       expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
@@ -696,7 +695,7 @@ describe('RouterService', () => {
 
   describe('migrate', () => {
     it('should return latest version without alteration', () => {
-      const originalParams = { [Section.Version]: ZipVersion.Version8 };
+      const originalParams = { [Section.Version]: ZipVersion.Version9 };
       const { params } = service.migrate({ ...originalParams }, false);
       expect(params).toEqual(originalParams);
     });

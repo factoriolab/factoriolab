@@ -70,28 +70,28 @@ export const Objective4: M.Objective = {
   type: M.ObjectiveType.Limit,
 };
 export const Objective5: M.Objective = {
-  id: '0',
+  id: '4',
   targetId: RecipeId.PiercingRoundsMagazine,
   value: '1',
   unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Output,
 };
 export const Objective6: M.Objective = {
-  id: '1',
+  id: '5',
   targetId: RecipeId.CopperPlate,
   value: '1',
   unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Input,
 };
 export const Objective7: M.Objective = {
-  id: '2',
+  id: '6',
   targetId: RecipeId.FirearmMagazine,
   value: '1',
   unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Maximize,
 };
 export const Objective8: M.Objective = {
-  id: '3',
+  id: '7',
   targetId: RecipeId.IronPlate,
   value: '10',
   unit: M.ObjectiveUnit.Machines,

@@ -127,7 +127,10 @@ describe('SimplexUtility', () => {
       );
       expect(result).toEqual({
         objectives: Mocks.RationalObjectives,
-        recipeObjectives: [],
+        recipeObjectives: [
+          Mocks.RationalObjectives[4],
+          Mocks.RationalObjectives[6],
+        ] as any[],
         steps: [],
         recipes: {},
         itemValues: {
