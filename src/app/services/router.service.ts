@@ -485,6 +485,8 @@ export class RouterService {
         return this.migrateV6(state);
       case ZipVersion.Version7:
         return this.migrateV7(state);
+      case ZipVersion.Version8:
+        return this.migrateV8(state);
       default:
         return { params, warnings, isBare };
     }
@@ -904,6 +906,40 @@ export class RouterService {
   migrateV7(state: MigrationState): MigrationState {
     state.isBare = false;
     return this.migrateToV8(state);
+  }
+
+  migrateV8(state: MigrationState): MigrationState {
+    const { params } = state;
+
+    // Need to convert Recipe Objectives to unified Objectives
+    if (params[Section.RecipeObjectives]) {
+      let objectives: string[] = [];
+      if (params[Section.Objectives]) {
+        objectives = params[Section.Objectives].split(LISTSEP);
+      }
+
+      const list = params[Section.RecipeObjectives].split(LISTSEP);
+      for (let i = 0; i < list.length; i++) {
+        const o = list[i].split(FIELDSEP);
+        const n = this.zipFields([
+          o[0],
+          o[1],
+          '3',
+          o[2],
+          o[3],
+          o[4],
+          o[5],
+          o[6],
+          o[7],
+        ]);
+        objectives.push(n);
+      }
+
+      params[Section.Objectives] = objectives.join(LISTSEP);
+    }
+
+    params[Section.Version] = ZipVersion.Version9;
+    return state;
   }
 
   displayWarnings(warnings: string[]): void {
