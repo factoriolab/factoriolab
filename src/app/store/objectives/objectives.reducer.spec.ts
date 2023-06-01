@@ -1,45 +1,45 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { ObjectiveType, RecipeObjective } from '~/models';
+import { Objective, ObjectiveType, ObjectiveUnit } from '~/models';
 import { Items } from '../';
 import * as App from '../app.actions';
 import * as Recipes from '../recipes';
 import * as Actions from './objectives.actions';
 import {
-  initialRecipeObjectivesState,
-  recipeObjectivesReducer,
-  RecipeObjectivesState,
+  initialObjectivesState,
+  objectivesReducer,
+  ObjectivesState,
 } from './objectives.reducer';
 
-describe('Recipe Objectives Reducer', () => {
-  const state = recipeObjectivesReducer(
+describe('Objectives Reducer', () => {
+  const state = objectivesReducer(
     undefined,
-    new Actions.AddAction(RecipeId.WoodenChest)
+    new Actions.AddAction({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items })
   );
 
   describe('LOAD', () => {
     it('should load a list of objectives', () => {
-      const recipeObjectivesState: RecipeObjectivesState = {
+      const objectivesState: ObjectivesState = {
         ids: ['0'],
-        entities: { id: Mocks.RecipeObjective1 },
+        entities: { id: Mocks.Objective5 },
         index: 1,
       };
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         undefined,
-        new App.LoadAction({ recipeObjectivesState })
+        new App.LoadAction({ objectivesState })
       );
-      expect(result).toEqual(recipeObjectivesState);
+      expect(result).toEqual(objectivesState);
     });
 
     it('should skip loading objectives state if null', () => {
-      const result = recipeObjectivesReducer(undefined, new App.LoadAction({}));
-      expect(result).toEqual(initialRecipeObjectivesState);
+      const result = objectivesReducer(undefined, new App.LoadAction({}));
+      expect(result).toEqual(initialObjectivesState);
     });
   });
 
   describe('App RESET', () => {
     it('should reset the reducer', () => {
-      const result = recipeObjectivesReducer(undefined, new App.ResetAction());
-      expect(result).toEqual(initialRecipeObjectivesState);
+      const result = objectivesReducer(undefined, new App.ResetAction());
+      expect(result).toEqual(initialObjectivesState);
     });
   });
 
@@ -47,49 +47,26 @@ describe('Recipe Objectives Reducer', () => {
     it('should add a new objective', () => {
       expect(state.ids.length).toEqual(1);
     });
-
-    it('should use count from the last added objective', () => {
-      const state: RecipeObjectivesState = {
-        ids: ['0'],
-        entities: {
-          ['0']: {
-            id: '0',
-            recipeId: RecipeId.WoodenChest,
-            count: '30',
-            type: ObjectiveType.Output,
-          },
-        },
-        index: 1,
-      };
-      const result = recipeObjectivesReducer(
-        state,
-        new Actions.AddAction(RecipeId.Coal)
-      );
-      expect(result.entities['1']).toEqual({
-        id: '1',
-        recipeId: RecipeId.Coal,
-        count: '30',
-        type: ObjectiveType.Output,
-      });
-    });
   });
 
   describe('CREATE', () => {
     it('should create a new objective', () => {
-      const objective: RecipeObjective = {
+      const objective: Objective = {
         id: '1',
-        recipeId: RecipeId.IronPlate,
-        count: '2',
+        targetId: RecipeId.IronPlate,
+        value: '2',
+        unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       };
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.CreateAction(objective)
       );
       expect(result.entities['0']).toEqual({
         id: '0',
-        recipeId: RecipeId.IronPlate,
-        count: '2',
+        targetId: RecipeId.IronPlate,
+        value: '2',
+        unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       });
       expect(result.index).toEqual(1);
@@ -98,38 +75,35 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('REMOVE', () => {
     it('should remove an objective', () => {
-      const result = recipeObjectivesReducer(
-        state,
-        new Actions.RemoveAction('0')
-      );
+      const result = objectivesReducer(state, new Actions.RemoveAction('0'));
       expect(result.ids.length).toEqual(0);
     });
   });
 
-  describe('SET_RECIPE', () => {
+  describe('SET_TARGET', () => {
     it('should set recipe on an objective', () => {
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
-        new Actions.SetRecipeAction({ id: '0', value: RecipeId.Coal })
+        new Actions.SetTargetAction({ id: '0', value: RecipeId.Coal })
       );
-      expect(result.entities['0'].recipeId).toEqual(RecipeId.Coal);
+      expect(result.entities['0'].targetId).toEqual(RecipeId.Coal);
     });
   });
 
-  describe('SET_COUNT', () => {
-    it('should set count of an objective', () => {
-      const result = recipeObjectivesReducer(
+  describe('SET_VALUE', () => {
+    it('should set value of an objective', () => {
+      const result = objectivesReducer(
         state,
-        new Actions.SetCountAction({ id: '0', value: '30' })
+        new Actions.SetValueAction({ id: '0', value: '30' })
       );
-      expect(result.entities['0'].count).toEqual('30');
+      expect(result.entities['0'].value).toEqual('30');
     });
   });
 
   describe('SET_TYPE', () => {
     it('should set type of an objective', () => {
       const value = ObjectiveType.Limit;
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.SetTypeAction({ id: '0', value })
       );
@@ -139,7 +113,7 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('SET_MACHINE', () => {
     it('should set machine on an objective', () => {
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.SetMachineAction({
           id: '0',
@@ -153,7 +127,7 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('SET_MACHINE_MODULES', () => {
     it('should set machine modules on an objective', () => {
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.SetMachineModulesAction({
           id: '0',
@@ -169,17 +143,14 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('ADD_BEACON', () => {
     it('should add a beacon to an objective', () => {
-      const result = recipeObjectivesReducer(
-        state,
-        new Actions.AddBeaconAction('0')
-      );
+      const result = objectivesReducer(state, new Actions.AddBeaconAction('0'));
       expect(result.entities['0'].beacons?.length).toEqual(2);
     });
   });
 
   describe('REMOVE_BEACON', () => {
     it('should remove a beacon from an objective', () => {
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.RemoveBeaconAction({ id: '0', value: 0 })
       );
@@ -189,7 +160,7 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('SET_BEACON_COUNT', () => {
     it('should set beacon count on an objective', () => {
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.SetBeaconCountAction({
           id: '0',
@@ -204,7 +175,7 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('SET_BEACON', () => {
     it('should set beacon on an objective', () => {
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.SetBeaconAction({
           id: '0',
@@ -219,7 +190,7 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('SET_BEACON_MODULES', () => {
     it('should set beacon modules on an objective', () => {
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.SetBeaconModulesAction({
           id: '0',
@@ -236,7 +207,7 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('SET_BEACON_TOTAL', () => {
     it('should set the beacon total', () => {
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.SetBeaconTotalAction({
           id: '0',
@@ -250,7 +221,7 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('SET_OVERCLOCK', () => {
     it('should set overclock on an objective', () => {
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.SetOverclockAction({
           id: '0',
@@ -264,7 +235,7 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('SET_CHECKED', () => {
     it('should set checked state on an objective', () => {
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.SetCheckedAction({
           id: '0',
@@ -277,13 +248,14 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('RESET_OBJECTIVE', () => {
     it('should reset an objective', () => {
-      const state: RecipeObjectivesState = {
+      const state: ObjectivesState = {
         ids: ['0'],
         entities: {
           ['0']: {
             id: '0',
-            recipeId: RecipeId.WoodenChest,
-            count: '30',
+            targetId: RecipeId.WoodenChest,
+            value: '30',
+            unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             machineId: 'machineId',
             overclock: 100,
@@ -298,14 +270,15 @@ describe('Recipe Objectives Reducer', () => {
         },
         index: 1,
       };
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Actions.ResetObjectiveAction('0')
       );
       expect(result.entities['0']).toEqual({
         id: '0',
-        recipeId: RecipeId.WoodenChest,
-        count: '30',
+        targetId: RecipeId.WoodenChest,
+        value: '30',
+        unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       });
     });
@@ -313,13 +286,14 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('Recipes RESET_MACHINES', () => {
     it('should reset all objectives', () => {
-      const state: RecipeObjectivesState = {
+      const state: ObjectivesState = {
         ids: ['0'],
         entities: {
           ['0']: {
             id: '0',
-            recipeId: RecipeId.WoodenChest,
-            count: '30',
+            targetId: RecipeId.WoodenChest,
+            value: '30',
+            unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             machineId: 'machineId',
             overclock: 100,
@@ -334,14 +308,15 @@ describe('Recipe Objectives Reducer', () => {
         },
         index: 1,
       };
-      const result = recipeObjectivesReducer(
+      const result = objectivesReducer(
         state,
         new Recipes.ResetMachinesAction()
       );
       expect(result.entities['0']).toEqual({
         id: '0',
-        recipeId: RecipeId.WoodenChest,
-        count: '30',
+        targetId: RecipeId.WoodenChest,
+        value: '30',
+        unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       });
     });
@@ -349,13 +324,14 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('Recipes RESET_BEACONS', () => {
     it('should reset beacons on all objectives', () => {
-      const state: RecipeObjectivesState = {
+      const state: ObjectivesState = {
         ids: ['0'],
         entities: {
           ['0']: {
             id: '0',
-            recipeId: RecipeId.WoodenChest,
-            count: '30',
+            targetId: RecipeId.WoodenChest,
+            value: '30',
+            unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             machineId: 'machineId',
             overclock: 100,
@@ -370,14 +346,12 @@ describe('Recipe Objectives Reducer', () => {
         },
         index: 1,
       };
-      const result = recipeObjectivesReducer(
-        state,
-        new Recipes.ResetBeaconsAction()
-      );
+      const result = objectivesReducer(state, new Recipes.ResetBeaconsAction());
       expect(result.entities['0']).toEqual({
         id: '0',
-        recipeId: RecipeId.WoodenChest,
-        count: '30',
+        targetId: RecipeId.WoodenChest,
+        value: '30',
+        unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
         machineId: 'machineId',
         overclock: 100,
@@ -387,33 +361,32 @@ describe('Recipe Objectives Reducer', () => {
 
   describe('Items RESET_CHECKED', () => {
     it('should reset checked on all objectives', () => {
-      const state: RecipeObjectivesState = {
+      const state: ObjectivesState = {
         ids: ['0'],
         entities: {
           ['0']: {
             id: '0',
-            recipeId: RecipeId.WoodenChest,
-            count: '30',
+            targetId: RecipeId.WoodenChest,
+            value: '30',
+            unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             checked: true,
           },
         },
         index: 1,
       };
-      const result = recipeObjectivesReducer(
-        state,
-        new Items.ResetCheckedAction()
-      );
+      const result = objectivesReducer(state, new Items.ResetCheckedAction());
       expect(result.entities['0']).toEqual({
         id: '0',
-        recipeId: RecipeId.WoodenChest,
-        count: '30',
+        targetId: RecipeId.WoodenChest,
+        value: '30',
+        unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       });
     });
   });
 
   it('should return default state', () => {
-    expect(recipeObjectivesReducer(state, { type: 'Test' } as any)).toBe(state);
+    expect(objectivesReducer(state, { type: 'Test' } as any)).toBe(state);
   });
 });

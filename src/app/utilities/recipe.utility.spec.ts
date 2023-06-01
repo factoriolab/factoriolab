@@ -2,6 +2,7 @@ import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Entities,
   ObjectiveType,
+  ObjectiveUnit,
   Rational,
   RecipeRational,
   RecipeSettingsRational,
@@ -919,13 +920,14 @@ describe('RecipeUtility', () => {
     });
   });
 
-  describe('adjustRecipeObjective', () => {
+  describe('adjustObjective', () => {
     it('should adjust a recipe objective based on settings', () => {
       const result = RecipeUtility.adjustObjective(
         {
           id: '1',
-          recipeId: RecipeId.IronPlate,
-          count: '1',
+          targetId: RecipeId.IronPlate,
+          value: '1',
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
         Mocks.MachinesStateInitial,
@@ -955,8 +957,9 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustObjective(
         {
           id: '1',
-          recipeId: RecipeId.IronPlate,
-          count: '1',
+          targetId: RecipeId.IronPlate,
+          value: '1',
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
         machines,
@@ -990,8 +993,9 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustObjective(
         {
           id: '1',
-          recipeId: RecipeId.IronPlate,
-          count: '1',
+          targetId: RecipeId.IronPlate,
+          value: '1',
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
           beacons: [{ id: ItemId.Beacon }],
         },

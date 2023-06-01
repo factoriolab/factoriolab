@@ -1,11 +1,10 @@
 import {
   Datasets,
-  ItemObjectives,
   Items,
   LabState,
   Machines,
+  Objectives,
   Preferences,
-  RecipeObjectives,
   Recipes,
   Settings,
 } from '~/store';
@@ -28,8 +27,7 @@ const datasetsState = Datasets.datasetsReducer(
 
 export const initialState: LabState = {
   datasetsState,
-  itemObjectivesState: ItemObjectives.initialItemObjectivesState,
-  recipeObjectivesState: RecipeObjectives.initialRecipeObjectivesState,
+  objectivesState: Objectives.initialObjectivesState,
   itemsState: Items.initialItemsState,
   recipesState: Recipes.initialRecipesState,
   machinesState: Machines.initialMachinesState,

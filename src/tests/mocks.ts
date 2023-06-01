@@ -5,11 +5,10 @@ import i18n from 'src/data/1.1/i18n/zh.json';
 import * as M from '~/models';
 import {
   Datasets,
-  ItemObjectives,
   Items,
   Machines,
+  Objectives,
   Preferences,
-  RecipeObjectives,
   Recipes,
   Settings,
 } from '~/store';
@@ -42,96 +41,93 @@ export const CategoryId = Dataset.categoryIds[0];
 export const Item1 = Dataset.itemEntities[Dataset.itemIds[0]];
 export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
 export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
-export const ItemObjective1: M.ItemObjective = {
+export const Objective1: M.Objective = {
   id: '0',
-  itemId: ItemId.AdvancedCircuit,
-  rate: '1',
-  rateUnit: M.ObjectiveUnit.Items,
+  targetId: ItemId.AdvancedCircuit,
+  value: '1',
+  unit: M.ObjectiveUnit.Items,
   type: M.ObjectiveType.Output,
 };
-export const ItemObjective2: M.ItemObjective = {
+export const Objective2: M.Objective = {
   id: '1',
-  itemId: ItemId.IronPlate,
-  rate: '1',
-  rateUnit: M.ObjectiveUnit.Belts,
+  targetId: ItemId.IronPlate,
+  value: '1',
+  unit: M.ObjectiveUnit.Belts,
   type: M.ObjectiveType.Input,
 };
-export const ItemObjective3: M.ItemObjective = {
+export const Objective3: M.Objective = {
   id: '2',
-  itemId: ItemId.PlasticBar,
-  rate: '1',
-  rateUnit: M.ObjectiveUnit.Items,
+  targetId: ItemId.PlasticBar,
+  value: '1',
+  unit: M.ObjectiveUnit.Items,
   type: M.ObjectiveType.Maximize,
 };
-export const ItemObjective4: M.ItemObjective = {
+export const Objective4: M.Objective = {
   id: '3',
-  itemId: ItemId.PetroleumGas,
-  rate: '100',
-  rateUnit: M.ObjectiveUnit.Items,
+  targetId: ItemId.PetroleumGas,
+  value: '100',
+  unit: M.ObjectiveUnit.Items,
   type: M.ObjectiveType.Limit,
 };
-export const ItemObjectivesList = [
-  ItemObjective1,
-  ItemObjective2,
-  ItemObjective3,
-  ItemObjective4,
-];
-export const ItemObjectivesState: ItemObjectives.ItemObjectivesState = {
-  ids: ItemObjectivesList.map((o) => o.id),
-  entities: M.toEntities(ItemObjectivesList),
-  index: ItemObjectivesList.length + 1,
-};
-export const RationalItemObjectives = ItemObjectivesList.map(
-  (o) => new M.ItemObjectiveRational(o)
-);
-export const RationalItemObjective = RationalItemObjectives[0];
-export const RecipeObjective1: M.RecipeObjective = {
+export const Objective5: M.Objective = {
   id: '0',
-  recipeId: RecipeId.PiercingRoundsMagazine,
-  count: '1',
+  targetId: RecipeId.PiercingRoundsMagazine,
+  value: '1',
+  unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Output,
 };
-export const RecipeObjective2: M.RecipeObjective = {
+export const Objective6: M.Objective = {
   id: '1',
-  recipeId: RecipeId.CopperPlate,
-  count: '1',
+  targetId: RecipeId.CopperPlate,
+  value: '1',
+  unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Input,
 };
-export const RecipeObjective3: M.RecipeObjective = {
+export const Objective7: M.Objective = {
   id: '2',
-  recipeId: RecipeId.FirearmMagazine,
-  count: '1',
+  targetId: RecipeId.FirearmMagazine,
+  value: '1',
+  unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Maximize,
 };
-export const RecipeObjective4: M.RecipeObjective = {
+export const Objective8: M.Objective = {
   id: '3',
-  recipeId: RecipeId.IronPlate,
-  count: '10',
+  targetId: RecipeId.IronPlate,
+  value: '10',
+  unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Limit,
 };
-export const RecipeObjectivesList = [
-  RecipeObjective1,
-  RecipeObjective2,
-  RecipeObjective3,
-  RecipeObjective4,
+export const ObjectivesList = [
+  Objective1,
+  Objective2,
+  Objective3,
+  Objective4,
+  Objective5,
+  Objective6,
+  Objective7,
+  Objective8,
 ];
-export const RecipeObjectivesState: RecipeObjectives.RecipeObjectivesState = {
-  ids: RecipeObjectivesList.map((o) => o.id),
-  entities: M.toEntities(RecipeObjectivesList),
-  index: RecipeObjectivesList.length + 1,
+export const ObjectivesState: Objectives.ObjectivesState = {
+  ids: ObjectivesList.map((o) => o.id),
+  entities: M.toEntities(ObjectivesList),
+  index: ObjectivesList.length + 1,
 };
-export const RationalRecipeObjectives = RecipeObjectivesList.map(
-  (o) => new M.RecipeObjectiveRational(o, Dataset.recipeR[o.recipeId])
+export const RationalObjectives = ObjectivesList.map(
+  (o) =>
+    new M.ObjectiveRational(
+      o,
+      M.isRecipeObjective(o) ? Dataset.recipeR[o.targetId] : undefined
+    )
 );
-export const RationalRecipeObjective = RationalRecipeObjectives[0];
-export const ItemObjectiveIds = ItemObjectivesList.map((p) => p.id);
-export const ItemObjectivesteps = {
-  [ItemObjective1.id]: <[string, M.Rational][]>[],
-  [ItemObjective2.id]: <[string, M.Rational][]>[],
-  [ItemObjective3.id]: <[string, M.Rational][]>[
+export const RationalObjective = RationalObjectives[0];
+export const ObjectiveIds = ObjectivesList.map((p) => p.id);
+export const ObjectiveSteps = {
+  [Objective1.id]: <[string, M.Rational][]>[],
+  [Objective2.id]: <[string, M.Rational][]>[],
+  [Objective3.id]: <[string, M.Rational][]>[
     [ItemId.PetroleumGas, M.Rational.one],
   ],
-  [ItemObjective4.id]: <[string, M.Rational][]>[
+  [Objective4.id]: <[string, M.Rational][]>[
     [RecipeId.TransportBelt, M.Rational.one],
   ],
 };
@@ -166,7 +162,7 @@ export const Step1: M.Step = {
   id: `${Item1.id}.${Item1.id}`,
   itemId: Item1.id,
   recipeId: Item1.id,
-  items: M.Rational.fromString(ItemObjective1.rate),
+  items: M.Rational.fromString(Objective1.value),
   belts: M.Rational.fromNumber(0.5),
   wagons: M.Rational.two,
   machines: M.Rational.one,
@@ -177,7 +173,7 @@ export const Step2: M.Step = {
   id: `${Item2.id}.${Item2.id}`,
   itemId: Item2.id,
   recipeId: Item2.id,
-  items: M.Rational.fromString(ItemObjective2.rate),
+  items: M.Rational.fromString(Objective2.value),
   belts: M.Rational.one,
   wagons: M.Rational.one,
   machines: M.Rational.two,
