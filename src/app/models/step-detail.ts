@@ -14,4 +14,5 @@ export interface StepDetail {
   tabs: MenuItem[];
   outputs: StepOutput[];
   recipeIds: string[];
+  allRecipesIncluded: boolean;
 }
