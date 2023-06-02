@@ -11,13 +11,14 @@ import {
   Entities,
   FuelType,
   Game,
+  isRecipeObjective,
   ItemId,
   ItemSettings,
   Machine,
   MachineRational,
+  Objective,
   Rational,
   Recipe,
-  RecipeObjective,
   RecipeRational,
   RecipeSettingsRational,
 } from '~/models';
@@ -524,47 +525,49 @@ export class RecipeUtility {
     }
   }
 
-  static adjustRecipeObjective(
-    recipeObjective: RecipeObjective,
+  static adjustObjective(
+    objective: Objective,
     machinesState: Machines.MachinesState,
     data: Dataset
-  ): RecipeObjective {
-    recipeObjective = { ...recipeObjective };
-    const recipe = data.recipeEntities[recipeObjective.recipeId];
+  ): Objective {
+    if (!isRecipeObjective(objective)) return objective;
 
-    if (recipeObjective.machineId == null) {
-      recipeObjective.machineId = this.bestMatch(
+    objective = { ...objective };
+    const recipe = data.recipeEntities[objective.targetId];
+
+    if (objective.machineId == null) {
+      objective.machineId = this.bestMatch(
         recipe.producers,
         machinesState.ids ?? []
       );
     }
 
-    const machine = data.machineEntities[recipeObjective.machineId];
-    const def = machinesState.entities[recipeObjective.machineId];
+    const machine = data.machineEntities[objective.machineId];
+    const def = machinesState.entities[objective.machineId];
     if (machine != null && this.allowsModules(recipe, machine)) {
-      recipeObjective.machineModuleOptions = this.moduleOptions(
+      objective.machineModuleOptions = this.moduleOptions(
         machine,
-        recipeObjective.recipeId,
+        objective.targetId,
         data
       );
 
-      if (recipeObjective.machineModuleIds == null) {
-        recipeObjective.machineModuleIds = this.defaultModules(
-          recipeObjective.machineModuleOptions,
+      if (objective.machineModuleIds == null) {
+        objective.machineModuleIds = this.defaultModules(
+          objective.machineModuleOptions,
           def.moduleRankIds ?? [],
           machine.modules ?? 0
         );
       }
 
-      if (recipeObjective.beacons == null) {
-        recipeObjective.beacons = [{}];
+      if (objective.beacons == null) {
+        objective.beacons = [{}];
       } else {
-        recipeObjective.beacons = recipeObjective.beacons.map((b) => ({
+        objective.beacons = objective.beacons.map((b) => ({
           ...b,
         }));
       }
 
-      for (const beaconSettings of recipeObjective.beacons) {
+      for (const beaconSettings of objective.beacons) {
         beaconSettings.count = beaconSettings.count ?? def.beaconCount;
         beaconSettings.id = beaconSettings.id ?? def.beaconId;
 
@@ -572,7 +575,7 @@ export class RecipeUtility {
           const beacon = data.beaconEntities[beaconSettings.id];
           beaconSettings.moduleOptions = this.moduleOptions(
             beacon,
-            recipeObjective.recipeId,
+            objective.targetId,
             data
           );
 
@@ -587,12 +590,12 @@ export class RecipeUtility {
       }
     } else {
       // Machine doesn't support modules, remove any
-      delete recipeObjective.machineModuleIds;
-      delete recipeObjective.beacons;
+      delete objective.machineModuleIds;
+      delete objective.beacons;
     }
 
-    recipeObjective.overclock = recipeObjective.overclock ?? def.overclock;
+    objective.overclock = objective.overclock ?? def.overclock;
 
-    return recipeObjective;
+    return objective;
   }
 }

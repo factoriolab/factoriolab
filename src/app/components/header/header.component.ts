@@ -12,9 +12,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, Game, gameInfo, gameOptions } from '~/models';
+import { APP, Game, gameInfo, gameOptions, isRecipeObjective } from '~/models';
 import { ContentService } from '~/services';
-import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
+import { LabState, Objectives, Settings } from '~/store';
 
 interface MenuLink {
   label: string;
@@ -71,24 +71,21 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     combineLatest([
-      this.store.select(ItemObjectives.getItemObjectives),
-      this.store.select(RecipeObjectives.getBaseRecipeObjectives),
+      this.store.select(Objectives.getBaseObjectives),
       this.store.select(Settings.getDataset),
       this.contentSvc.lang$,
     ])
       .pipe(untilDestroyed(this))
-      .subscribe(([itemsObj, recipesObj, data]) => {
-        if (itemsObj.length && data.itemEntities[itemsObj[0].itemId]) {
-          this.title.setTitle(
-            `${data.itemEntities[itemsObj[0].itemId].name} | ${APP}`
-          );
-        } else if (
-          recipesObj.length &&
-          data.recipeEntities[recipesObj[0].recipeId]
-        ) {
-          this.title.setTitle(
-            `${data.recipeEntities[recipesObj[0].recipeId].name} | ${APP}`
-          );
+      .subscribe(([objectives, data]) => {
+        const name = objectives
+          .map((o) =>
+            isRecipeObjective(o)
+              ? data.recipeEntities[o.targetId]?.name
+              : data.itemEntities[o.targetId]?.name
+          )
+          .find((n) => n != null);
+        if (name != null) {
+          this.title.setTitle(`${name} | ${APP}`);
         } else {
           this.title.setTitle(APP);
         }

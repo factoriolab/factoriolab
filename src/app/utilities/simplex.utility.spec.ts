@@ -4,6 +4,7 @@ import {
   MatrixResultType,
   MaximizeType,
   ObjectiveType,
+  ObjectiveUnit,
   Rational,
 } from '~/models';
 import { RateUtility } from './rate.utility';
@@ -16,7 +17,7 @@ import {
 
 describe('SimplexUtility', () => {
   const getState = (): MatrixState => ({
-    itemObjectives: [],
+    objectives: [],
     recipeObjectives: [],
     steps: [],
     recipes: {},
@@ -70,7 +71,6 @@ describe('SimplexUtility', () => {
       expect(
         SimplexUtility.solve(
           [],
-          [],
           {},
           {},
           [],
@@ -93,8 +93,7 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'updateSteps');
       expect(
         SimplexUtility.solve(
-          Mocks.RationalItemObjectives,
-          [],
+          Mocks.RationalObjectives,
           {},
           {},
           null,
@@ -116,18 +115,14 @@ describe('SimplexUtility', () => {
 
   describe('getState', () => {
     it('should build full state object', () => {
-      const itemObjectives = [
-        ...Mocks.RationalItemObjectives,
-        Mocks.RationalItemObjectives[3],
-      ];
-      const recipeObjectives = [
-        ...Mocks.RationalRecipeObjectives,
-        Mocks.RationalRecipeObjectives[3],
-      ];
       spyOn(SimplexUtility, 'parseItemRecursively');
+      const objectives = [
+        ...Mocks.RationalObjectives,
+        Mocks.RationalObjectives[3],
+        Mocks.RationalObjectives[7],
+      ];
       const result = SimplexUtility.getState(
-        itemObjectives,
-        recipeObjectives,
+        objectives,
         Mocks.ItemsStateInitial,
         Mocks.RecipesState,
         Mocks.Dataset.technologyIds,
@@ -136,11 +131,11 @@ describe('SimplexUtility', () => {
         Mocks.Dataset
       );
       expect(result).toEqual({
-        itemObjectives,
+        objectives,
         recipeObjectives: [
-          Mocks.RationalRecipeObjectives[0],
-          Mocks.RationalRecipeObjectives[2],
-        ],
+          Mocks.RationalObjectives[4],
+          Mocks.RationalObjectives[6],
+        ] as any[],
         steps: [],
         recipes: {},
         itemValues: {
@@ -330,15 +325,17 @@ describe('SimplexUtility', () => {
       state.recipeObjectives = [
         {
           id: '0',
-          recipeId: RecipeId.IronPlate,
-          count: Rational.one,
+          targetId: RecipeId.IronPlate,
+          value: Rational.one,
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
           recipe: Mocks.Dataset.recipeR[RecipeId.IronPlate],
         },
         {
           id: '1',
-          recipeId: RecipeId.CopperCable,
-          count: Rational.one,
+          targetId: RecipeId.CopperCable,
+          value: Rational.one,
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Maximize,
           recipe: Mocks.Dataset.recipeR[RecipeId.CopperCable],
         },
@@ -379,15 +376,17 @@ describe('SimplexUtility', () => {
       state.recipeObjectives = [
         {
           id: '0',
-          recipeId: RecipeId.IronPlate,
-          count: Rational.one,
+          targetId: RecipeId.IronPlate,
+          value: Rational.one,
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
           recipe: Mocks.Dataset.recipeR[RecipeId.IronPlate],
         },
         {
           id: '1',
-          recipeId: RecipeId.CopperCable,
-          count: Rational.one,
+          targetId: RecipeId.CopperCable,
+          value: Rational.one,
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Maximize,
           recipe: Mocks.Dataset.recipeR[RecipeId.CopperCable],
         },
@@ -420,7 +419,7 @@ describe('SimplexUtility', () => {
       state.recipes[ItemId.Wood] = { id: null } as any;
       state.recipes[RecipeId.IronOre] =
         Mocks.AdjustedData.recipeR[RecipeId.IronOre];
-      state.recipeObjectives = [Mocks.RationalRecipeObjective];
+      state.recipeObjectives = [Mocks.RationalObjectives[4] as any];
       const solution: any = {
         surplus: { [ItemId.IronOre]: Rational.one },
         inputs: { [ItemId.Wood]: Rational.one },
@@ -450,7 +449,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.itemValues[ItemId.Coal] = { out: Rational.from(3) };
       state.recipes[RecipeId.Coal] = Mocks.AdjustedData.recipeR[RecipeId.Coal];
-      state.recipeObjectives = [Mocks.RationalRecipeObjective];
+      state.recipeObjectives = [Mocks.RationalObjectives[4] as any];
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
@@ -472,7 +471,7 @@ describe('SimplexUtility', () => {
       };
       const state = getState();
       state.itemValues[ItemId.PiercingRoundsMagazine] = { out: Rational.zero };
-      state.recipeObjectives = [Mocks.RationalRecipeObjective];
+      state.recipeObjectives = [Mocks.RationalObjectives[4] as any];
       SimplexUtility.addItemStep(
         ItemId.PiercingRoundsMagazine,
         solution,
@@ -612,7 +611,7 @@ describe('SimplexUtility', () => {
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing];
       state.recipes[RecipeId.BasicOilProcessing] =
         Mocks.AdjustedData.recipeR[RecipeId.BasicOilProcessing];
-      state.recipeObjectives = [Mocks.RationalRecipeObjective];
+      state.recipeObjectives = [Mocks.RationalObjectives[4] as any];
       SimplexUtility.assignRecipes(solution, state);
       expect(state.steps).toEqual([
         {
@@ -712,7 +711,7 @@ describe('SimplexUtility', () => {
         Mocks.AdjustedData.recipeR[RecipeId.Coal],
         solution,
         state,
-        Mocks.RationalRecipeObjective
+        Mocks.RationalObjectives[4] as any
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([
@@ -721,7 +720,7 @@ describe('SimplexUtility', () => {
           recipeId: RecipeId.Coal,
           machines: Rational.one,
           recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
-          recipeObjectiveId: Mocks.RationalRecipeObjective.id,
+          recipeObjectiveId: Mocks.RationalObjectives[4].id,
         },
       ]);
     });

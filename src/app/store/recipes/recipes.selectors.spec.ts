@@ -1,5 +1,5 @@
-import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { ObjectiveType, Rational, RecipeObjective } from '~/models';
+import { ItemId, Mocks } from 'src/tests';
+import { Rational } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
@@ -169,45 +169,6 @@ describe('Recipes Selectors', () => {
         researchSpeed: Rational.one,
         data: Mocks.Dataset,
       });
-    });
-  });
-
-  describe('getRecipesModified', () => {
-    it('should determine whether columns are modified', () => {
-      const result = Selectors.getRecipesModified.projector(
-        {
-          [RecipeId.Coal]: {
-            machineId: undefined,
-            machineModuleIds: undefined,
-            overclock: 100,
-            beacons: [{ total: '1' }],
-          },
-        },
-        []
-      );
-      expect(result.machines).toBeTrue();
-      expect(result.beacons).toBeTrue();
-      expect(result.cost).toBeFalse();
-    });
-
-    it('should account for recipe objective settings', () => {
-      const objective: RecipeObjective = {
-        id: '1',
-        recipeId: RecipeId.Coal,
-        count: '1',
-        type: ObjectiveType.Output,
-        overclock: 100,
-        beacons: [{ moduleIds: [] }],
-      };
-      const result = Selectors.getRecipesModified.projector(
-        {
-          [RecipeId.Coal]: {},
-        },
-        [objective]
-      );
-      expect(result.machines).toBeTrue();
-      expect(result.beacons).toBeTrue();
-      expect(result.cost).toBeFalse();
     });
   });
 });

@@ -2,6 +2,10 @@
 @import 'bootstrap/scss/variables';
 @import 'bootstrap/scss/mixins/_breakpoints';
 
+.objectives-content {
+  max-width: 1000px;
+}
+
 .p-inputgroup {
   p-dropdown.icon {
     flex: 0 0 36px;

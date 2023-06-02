@@ -10,10 +10,9 @@ import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { environment } from 'src/environments';
-import { APP, Game, gameInfo, ItemId, MatrixResultType } from '~/models';
+import { Game, gameInfo, ItemId, MatrixResultType } from '~/models';
 import { ContentService, ErrorService } from '~/services';
-import { App, ItemObjectives, LabState, Settings } from '~/store';
+import { App, LabState, Objectives, Settings } from '~/store';
 
 @Component({
   selector: 'lab-main',
@@ -25,7 +24,7 @@ export class MainComponent implements AfterViewInit {
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
     this.store.select(Settings.getMod),
-    this.store.select(ItemObjectives.getMatrixResult),
+    this.store.select(Objectives.getMatrixResult),
     this.contentSvc.settingsActive$,
     this.contentSvc.settingsXlHidden$,
     this.contentSvc.scrollTop$,
@@ -52,7 +51,6 @@ export class MainComponent implements AfterViewInit {
     )
   );
 
-  version = `${APP} ${environment.version}`;
   isResetting = false;
   tabItems: MenuItem[] = [
     {

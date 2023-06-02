@@ -10,9 +10,9 @@ import {
   DisplayRate,
   displayRateOptions,
   ObjectiveType,
-  RateUnit,
+  ObjectiveUnit,
 } from '~/models';
-import { ItemObjectives, LabState, RecipeObjectives, Settings } from '~/store';
+import { LabState, Objectives, Settings } from '~/store';
 
 export enum WizardState {
   ObjectiveType,
@@ -51,7 +51,7 @@ export class WizardComponent {
 
   displayRateOptions = displayRateOptions;
 
-  RateUnit = RateUnit;
+  RateUnit = ObjectiveUnit;
   WizardState = WizardState;
 
   constructor(private store: Store<LabState>) {}
@@ -66,24 +66,29 @@ export class WizardComponent {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  createItemObjective(itemId: string, rate: string, rateUnit: RateUnit): void {
+  createItemObjective(
+    targetId: string,
+    value: string,
+    unit: ObjectiveUnit
+  ): void {
     this.store.dispatch(
-      new ItemObjectives.CreateAction({
+      new Objectives.CreateAction({
         id: '0',
-        itemId,
-        rate,
-        rateUnit,
+        targetId,
+        value,
+        unit,
         type: ObjectiveType.Output,
       })
     );
   }
 
-  createRecipeObjective(recipeId: string, count: string): void {
+  createRecipeObjective(targetId: string, value: string): void {
     this.store.dispatch(
-      new RecipeObjectives.CreateAction({
+      new Objectives.CreateAction({
         id: '0',
-        recipeId,
-        count,
+        targetId,
+        value,
+        unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       })
     );

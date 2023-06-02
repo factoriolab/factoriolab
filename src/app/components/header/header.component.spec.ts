@@ -4,7 +4,7 @@ import { MockStore } from '@ngrx/store/testing';
 
 import { Mocks, TestModule } from 'src/tests';
 import { Game } from '~/models';
-import { ItemObjectives, RecipeObjectives } from '~/store';
+import { Objectives } from '~/store';
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -31,27 +31,15 @@ describe('HeaderComponent', () => {
   });
 
   describe('ngOnInit', () => {
-    it('should update the page title with the first item objective name', () => {
+    it('should update the page title with the first objective name', () => {
       spyOn(title, 'setTitle');
       mockStore.overrideSelector(
-        ItemObjectives.getItemObjectives,
-        Mocks.ItemObjectivesList
+        Objectives.getBaseObjectives,
+        Mocks.ObjectivesList
       );
       mockStore.refreshState();
       expect(title.setTitle).toHaveBeenCalledWith(
         'Advanced circuit | FactorioLab'
-      );
-    });
-
-    it('should update the page title with the first recipe objective name', () => {
-      spyOn(title, 'setTitle');
-      mockStore.overrideSelector(ItemObjectives.getItemObjectives, []);
-      mockStore.overrideSelector(RecipeObjectives.getBaseRecipeObjectives, [
-        Mocks.RecipeObjective1,
-      ]);
-      mockStore.refreshState();
-      expect(title.setTitle).toHaveBeenCalledWith(
-        'Piercing rounds magazine | FactorioLab'
       );
     });
   });
