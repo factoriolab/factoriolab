@@ -19,6 +19,7 @@ import {
   Dataset,
   Entities,
   Game,
+  IdDefaultPayload,
   ItemId,
   Rational,
   RecipeField,
@@ -177,7 +178,7 @@ export class ListComponent implements OnInit, AfterViewInit {
                   setTimeout(() => {
                     if (tabId) {
                       const tab = this.document.querySelector(
-                        '#' + this.fragmentId + '_tab'
+                        '#' + this.fragmentId
                       ) as HTMLElement | null;
                       if (tab) {
                         tab.click();
@@ -249,6 +250,17 @@ export class ListComponent implements OnInit, AfterViewInit {
       recipesState,
       data
     );
+  }
+
+  toggleRecipes(ids: string[], value: boolean, data: Dataset): void {
+    const payload = ids.map(
+      (id): IdDefaultPayload<boolean> => ({
+        id,
+        value,
+        def: (data.defaults?.excludedRecipeIds ?? []).includes(id),
+      })
+    );
+    this.setRecipeExcludedBatch(payload);
   }
 
   toggleRecipe(
@@ -427,6 +439,10 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   setRecipeExcluded(id: string, value: boolean, def: boolean): void {
     this.store.dispatch(new Recipes.SetExcludedAction({ id, value, def }));
+  }
+
+  setRecipeExcludedBatch(payload: IdDefaultPayload<boolean>[]): void {
+    this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
   }
 
   setMachine(id: string, value: string, def: string, objective = false): void {

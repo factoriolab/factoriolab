@@ -1382,7 +1382,9 @@
           </tr>
           <!-- Recipes row details -->
           <ng-container *ngSwitchCase="StepDetailTab.Recipes">
-            <ng-container *ngIf="step.itemId">
+            <ng-container
+              *ngIf="step.itemId && vm.stepDetails[step.id] as stepDetails"
+            >
               <tr class="detail">
                 <td></td>
                 <td colspan="100">
@@ -1390,11 +1392,23 @@
                     <div class="fw-bold">
                       {{ 'list.includedRecipes' | translate }}
                     </div>
-                    <div>
+                    <div class="mb-2">
                       <small>{{
                         'list.includedRecipesInfo' | translate
                       }}</small>
                     </div>
+                    <p-checkbox
+                      [ngModel]="stepDetails.allRecipesIncluded"
+                      [binary]="true"
+                      [label]="'picker.includeAll' | translate"
+                      (onChange)="
+                        toggleRecipes(
+                          stepDetails.recipeIds,
+                          stepDetails.allRecipesIncluded,
+                          vm.data
+                        )
+                      "
+                    ></p-checkbox>
                   </div>
                 </td>
               </tr>
@@ -1403,7 +1417,7 @@
                 <td colspan="100">
                   <div class="d-flex flex-wrap">
                     <button
-                      *ngFor="let recipeId of vm.stepDetails[step.id].recipeIds"
+                      *ngFor="let recipeId of stepDetails.recipeIds"
                       pButton
                       pRipple
                       type="button"
