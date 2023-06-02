@@ -5,67 +5,88 @@ import {
   Game,
   MatrixResultType,
   MaximizeType,
+  Objective,
+  ObjectiveType,
+  ObjectiveUnit,
   PowerUnit,
   Rational,
   Step,
   StepDetailTab,
 } from '~/models';
-import { RateUtility, SimplexUtility } from '~/utilities';
-import { RecipeObjectives } from '../';
+import { RateUtility, RecipeUtility, SimplexUtility } from '~/utilities';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
-import * as Selectors from './item-objectives.selectors';
+import * as Selectors from './objectives.selectors';
 
-describe('Item Objectives Selectors', () => {
+describe('Objectives Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
       expect(
-        Selectors.itemObjectivesState({
-          itemObjectivesState: Mocks.ItemObjectivesState,
+        Selectors.objectivesState({
+          objectivesState: Mocks.ObjectivesState,
         } as any)
-      ).toEqual(Mocks.ItemObjectivesState);
-      expect(Selectors.getIds.projector(Mocks.ItemObjectivesState)).toEqual(
-        Mocks.ItemObjectivesState.ids
+      ).toEqual(Mocks.ObjectivesState);
+      expect(Selectors.getIds.projector(Mocks.ObjectivesState)).toEqual(
+        Mocks.ObjectivesState.ids
       );
-      expect(
-        Selectors.getEntities.projector(Mocks.ItemObjectivesState)
-      ).toEqual(Mocks.ItemObjectivesState.entities);
+      expect(Selectors.getEntities.projector(Mocks.ObjectivesState)).toEqual(
+        Mocks.ObjectivesState.entities
+      );
     });
   });
 
-  describe('getItemObjectives', () => {
+  describe('getBaseObjectives', () => {
     it('should return the array of objectives', () => {
-      const result = Selectors.getItemObjectives.projector(
-        Mocks.ItemObjectivesState.ids,
-        Mocks.ItemObjectivesState.entities,
+      const result = Selectors.getBaseObjectives.projector(
+        Mocks.ObjectivesState.ids,
+        Mocks.ObjectivesState.entities,
         Mocks.Dataset
       );
-      expect(result.length).toEqual(Mocks.ItemObjectiveIds.length);
+      expect(result).toEqual(Mocks.ObjectivesList);
     });
   });
 
-  describe('getRationalItemObjectives', () => {
-    it('should map objectives to rational objectives', () => {
-      const result = Selectors.getItemObjectiveRationals.projector(
-        Mocks.ItemObjectivesList
+  describe('getObjectives', () => {
+    it('should adjust recipe objectives based on settings', () => {
+      spyOn(RecipeUtility, 'adjustObjective');
+      Selectors.getObjectives.projector(
+        [Mocks.Objective5],
+        Mocks.MachinesStateInitial,
+        Mocks.Dataset
       );
-      expect(result[0].rate.nonzero()).toBeTrue();
+      expect(RecipeUtility.adjustObjective).toHaveBeenCalledWith(
+        Mocks.Objective5,
+        Mocks.MachinesStateInitial,
+        Mocks.Dataset
+      );
     });
   });
 
-  describe('getNormalizedItemObjectives', () => {
+  describe('getObjectiveRationals', () => {
+    it('should convert objectives to rationals', () => {
+      spyOn(RecipeUtility, 'adjustRecipe');
+      Selectors.getObjectiveRationals.projector(
+        [Mocks.Objective1, Mocks.Objective5],
+        Mocks.AdjustmentData,
+        Mocks.ItemsStateInitial
+      );
+      expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('getNormalizedObjectives', () => {
     it('should map objectives to rates', () => {
-      spyOn(RateUtility, 'itemObjectiveNormalizedRate');
-      Selectors.getNormalizedItemObjectives.projector(
-        Mocks.RationalItemObjectives,
+      spyOn(RateUtility, 'objectiveNormalizedRate');
+      Selectors.getNormalizedObjectives.projector(
+        Mocks.RationalObjectives,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         displayRateInfo[DisplayRate.PerMinute],
         Mocks.Dataset
       );
-      expect(RateUtility.itemObjectiveNormalizedRate).toHaveBeenCalledTimes(
-        Mocks.RationalItemObjectives.length
+      expect(RateUtility.objectiveNormalizedRate).toHaveBeenCalledTimes(
+        Mocks.RationalObjectives.length
       );
     });
   });
@@ -77,8 +98,7 @@ describe('Item Objectives Selectors', () => {
         resultType: MatrixResultType.Skipped,
       });
       Selectors.getMatrixResult.projector(
-        Mocks.RationalItemObjectives,
-        Mocks.RationalRecipeObjectives,
+        Mocks.RationalObjectives,
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         [],
@@ -109,22 +129,19 @@ describe('Item Objectives Selectors', () => {
 
   describe('getZipState', () => {
     it('should put together the required state parts', () => {
-      const itemObjectives = Mocks.ItemObjectivesState;
-      const recipeObjectives = RecipeObjectives.initialRecipeObjectivesState;
+      const objectives = Mocks.ObjectivesState;
       const itemsState = Mocks.ItemsState;
       const recipesState = Mocks.RecipesState;
       const machinesState = Mocks.MachinesStateInitial;
       const settings = Settings.initialSettingsState;
       const result = Selectors.getZipState.projector(
-        itemObjectives,
-        recipeObjectives,
+        objectives,
         itemsState,
         recipesState,
         machinesState,
         settings
       );
-      expect(result.itemObjectives).toBe(itemObjectives);
-      expect(result.recipeObjectives).toBe(recipeObjectives);
+      expect(result.objectives).toBe(objectives);
       expect(result.itemsState).toBe(itemsState);
       expect(result.recipesState).toBe(recipesState);
       expect(result.machinesState).toBe(machinesState);
@@ -136,7 +153,7 @@ describe('Item Objectives Selectors', () => {
     it('should determine which steps have modified item or recipe settings', () => {
       const result = Selectors.getStepsModified.projector(
         Mocks.Steps,
-        Mocks.RecipeObjectivesList,
+        Mocks.ObjectivesList,
         Items.initialItemsState,
         Recipes.initialRecipesState
       );
@@ -192,7 +209,6 @@ describe('Item Objectives Selectors', () => {
           },
         ],
         Mocks.ItemsStateInitial,
-        Mocks.RecipesStateInitial,
         Mocks.AdjustedData
       );
       expect(result).toEqual({
@@ -225,7 +241,6 @@ describe('Item Objectives Selectors', () => {
           },
         ],
         Mocks.ItemsStateInitial,
-        { [RecipeId.Coal]: { machineId: ItemId.MiningDrill } },
         { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
       );
       expect(result).toEqual({
@@ -397,24 +412,6 @@ describe('Item Objectives Selectors', () => {
     });
   });
 
-  // describe('getEffectivePrecision', () => {
-  //   it('should calculate the effective precision for columns', () => {
-  //     const result = Selectors.getEffectivePrecision.projector(
-  //       [{ id: '0' }],
-  //       Mocks.PreferencesState.columns
-  //     );
-  //     expect(result).toEqual({
-  //       [Column.Surplus]: 0,
-  //       [Column.Items]: 0,
-  //       [Column.Belts]: 0,
-  //       [Column.Wagons]: 0,
-  //       [Column.Machines]: 0,
-  //       [Column.Power]: 0,
-  //       [Column.Pollution]: 0,
-  //     });
-  //   });
-  // });
-
   describe('getEffectivePowerUnit', () => {
     it('should calculate an auto power unit', () => {
       expect(
@@ -444,22 +441,43 @@ describe('Item Objectives Selectors', () => {
     });
   });
 
-  // describe('effPrecFrom', () => {
-  //   it('should handle null precision', () => {
-  //     expect(Selectors.effPrecFrom([], null, () => undefined)).toBeNull();
-  //   });
+  describe('getRecipesModified', () => {
+    it('should determine whether columns are modified', () => {
+      const result = Selectors.getRecipesModified.projector(
+        {
+          [RecipeId.Coal]: {
+            machineId: undefined,
+            machineModuleIds: undefined,
+            overclock: 100,
+            beacons: [{ total: '1' }],
+          },
+        },
+        []
+      );
+      expect(result.machines).toBeTrue();
+      expect(result.beacons).toBeTrue();
+      expect(result.cost).toBeFalse();
+    });
 
-  //   it('should determine max decimals', () => {
-  //     expect(
-  //       Selectors.effPrecFrom(
-  //         [
-  //           { id: '0', items: Rational.from(1, 2) },
-  //           { id: '1', items: Rational.from(1, 3) },
-  //         ],
-  //         3,
-  //         (step) => step.items
-  //       )
-  //     ).toEqual(3);
-  //   });
-  // });
+    it('should account for recipe objective settings', () => {
+      const objective: Objective = {
+        id: '1',
+        targetId: RecipeId.Coal,
+        value: '1',
+        unit: ObjectiveUnit.Machines,
+        type: ObjectiveType.Output,
+        overclock: 100,
+        beacons: [{ moduleIds: [] }],
+      };
+      const result = Selectors.getRecipesModified.projector(
+        {
+          [RecipeId.Coal]: {},
+        },
+        [objective]
+      );
+      expect(result.machines).toBeTrue();
+      expect(result.beacons).toBeTrue();
+      expect(result.cost).toBeFalse();
+    });
+  });
 });

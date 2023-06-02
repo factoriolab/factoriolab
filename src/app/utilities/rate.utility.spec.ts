@@ -4,9 +4,9 @@ import {
   displayRateInfo,
   Entities,
   Game,
-  ItemObjectiveRational,
+  ObjectiveRational,
   ObjectiveType,
-  RateUnit,
+  ObjectiveUnit,
   Rational,
   RecipeObjectiveRational,
   RecipeSettingsRational,
@@ -15,15 +15,15 @@ import {
 import { RateUtility } from './rate.utility';
 
 describe('RateUtility', () => {
-  describe('itemObjectiveNormalizedRate', () => {
+  describe('objectiveNormalizedRate', () => {
     it('should skip on maximize objectives', () => {
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
-          new ItemObjectiveRational({
+        RateUtility.objectiveNormalizedRate(
+          new ObjectiveRational({
             id: '0',
-            itemId: ItemId.Coal,
-            rate: '1',
-            rateUnit: RateUnit.Belts,
+            targetId: ItemId.Coal,
+            value: '1',
+            unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Maximize,
           }),
           Mocks.ItemsStateInitial,
@@ -36,12 +36,12 @@ describe('RateUtility', () => {
 
     it('should normalize item objective rates based on display rate', () => {
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
-          new ItemObjectiveRational({
+        RateUtility.objectiveNormalizedRate(
+          new ObjectiveRational({
             id: '0',
-            itemId: ItemId.Coal,
-            rate: '1',
-            rateUnit: RateUnit.Items,
+            targetId: ItemId.Coal,
+            value: '1',
+            unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           }),
           Mocks.ItemsStateInitial,
@@ -54,12 +54,12 @@ describe('RateUtility', () => {
 
     it('should normalize item objective rates based on belts', () => {
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
-          new ItemObjectiveRational({
+        RateUtility.objectiveNormalizedRate(
+          new ObjectiveRational({
             id: '0',
-            itemId: ItemId.Coal,
-            rate: '1',
-            rateUnit: RateUnit.Belts,
+            targetId: ItemId.Coal,
+            value: '1',
+            unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           }),
           Mocks.ItemsStateInitial,
@@ -72,12 +72,12 @@ describe('RateUtility', () => {
 
     it('should normalize item objective rates based on wagons', () => {
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
-          new ItemObjectiveRational({
+        RateUtility.objectiveNormalizedRate(
+          new ObjectiveRational({
             id: '0',
-            itemId: ItemId.Coal,
-            rate: '1',
-            rateUnit: RateUnit.Wagons,
+            targetId: ItemId.Coal,
+            value: '1',
+            unit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           }),
           Mocks.ItemsStateInitial,
@@ -88,12 +88,12 @@ describe('RateUtility', () => {
       ).toEqual(Rational.from([100, 3]));
 
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
-          new ItemObjectiveRational({
+        RateUtility.objectiveNormalizedRate(
+          new ObjectiveRational({
             id: '0',
-            itemId: ItemId.PetroleumGas,
-            rate: '1',
-            rateUnit: RateUnit.Wagons,
+            targetId: ItemId.PetroleumGas,
+            value: '1',
+            unit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           }),
           Mocks.ItemsStateInitial,
@@ -106,12 +106,12 @@ describe('RateUtility', () => {
 
     it('should adjust technology objective rate by productivity', () => {
       expect(
-        RateUtility.itemObjectiveNormalizedRate(
-          new ItemObjectiveRational({
+        RateUtility.objectiveNormalizedRate(
+          new ObjectiveRational({
             id: '0',
-            itemId: ItemId.ArtilleryShellRange,
-            rate: '1',
-            rateUnit: RateUnit.Items,
+            targetId: ItemId.ArtilleryShellRange,
+            value: '1',
+            unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           }),
           Mocks.ItemsStateInitial,
@@ -309,8 +309,9 @@ describe('RateUtility', () => {
       const recipeObjectives: Entities<RecipeObjectiveRational> = {
         ['0']: {
           id: '0',
-          recipeId: RecipeId.Coal,
-          count: Rational.one,
+          targetId: RecipeId.Coal,
+          value: Rational.one,
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
           recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
         },

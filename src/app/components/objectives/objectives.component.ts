@@ -1,28 +1,25 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Message } from 'primeng/api';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest, first, map, tap } from 'rxjs';
 
 import {
   Breakpoint,
+  Dataset,
   DisplayRate,
   displayRateOptions,
   MatrixResult,
   MatrixResultType,
+  Objective,
+  ObjectiveBase,
   ObjectiveType,
   objectiveTypeOptions,
-  RateUnit,
+  ObjectiveUnit,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
-import {
-  ItemObjectives,
-  Items,
-  LabState,
-  RecipeObjectives,
-  Recipes,
-  Settings,
-} from '~/store';
+import { Items, LabState, Objectives, Recipes, Settings } from '~/store';
+import { PickerComponent } from '../picker/picker.component';
 
 @Component({
   selector: 'lab-objectives',
@@ -32,9 +29,8 @@ import {
 })
 export class ObjectivesComponent {
   vm$ = combineLatest([
-    this.store.select(ItemObjectives.getItemObjectives),
-    this.store.select(ItemObjectives.getMatrixResult),
-    this.store.select(RecipeObjectives.getRecipeObjectives),
+    this.store.select(Objectives.getObjectives),
+    this.store.select(Objectives.getMatrixResult),
     this.store.select(Items.getItemsState),
     this.store.select(Recipes.getRecipesState),
     this.store.select(Settings.getDisplayRate),
@@ -47,9 +43,8 @@ export class ObjectivesComponent {
   ]).pipe(
     map(
       ([
-        itemObjectives,
+        objectives,
         matrixResult,
-        recipeObjectives,
         itemsState,
         recipesState,
         displayRate,
@@ -60,9 +55,8 @@ export class ObjectivesComponent {
         recipeIds,
         width,
       ]) => ({
-        itemObjectives,
+        objectives,
         matrixResult,
-        recipeObjectives,
         itemsState,
         recipesState,
         displayRate,
@@ -76,6 +70,24 @@ export class ObjectivesComponent {
       })
     )
   );
+
+  @ViewChild('chooseItemPicker') chooseItemPicker: PickerComponent | undefined;
+  @ViewChild('chooseRecipePicker') chooseRecipePicker:
+    | PickerComponent
+    | undefined;
+
+  objectiveTypeOptions = objectiveTypeOptions;
+  displayRateOptions = displayRateOptions;
+
+  ObjectiveUnit = ObjectiveUnit;
+  ObjectiveType = ObjectiveType;
+
+  constructor(
+    public trackSvc: TrackService,
+    private store: Store<LabState>,
+    private translateSvc: TranslateService,
+    private contentService: ContentService
+  ) {}
 
   getMessages(matrixResult: MatrixResult): Message[] {
     if (matrixResult.resultType === MatrixResultType.Failed) {
@@ -105,61 +117,88 @@ export class ObjectivesComponent {
     }
   }
 
-  objectiveTypeOptions = objectiveTypeOptions;
-  displayRateOptions = displayRateOptions;
+  changeUnit(objective: Objective, unit: ObjectiveUnit, data: Dataset): void {
+    if (unit === ObjectiveUnit.Machines) {
+      if (objective.unit === ObjectiveUnit.Machines) {
+        // Units are unchanged, no action required
+      } else {
+        const recipeIds = data.itemRecipeIds[objective.targetId];
+        if (recipeIds.length === 1) {
+          this.setUnit(objective.id, { targetId: recipeIds[0], unit });
+        } else if (this.chooseRecipePicker != null) {
+          this.chooseRecipePicker.selectId
+            .pipe(
+              first(),
+              tap((targetId) => this.setUnit(objective.id, { targetId, unit }))
+            )
+            .subscribe();
+          this.chooseRecipePicker.clickOpen(data, 'recipe', recipeIds);
+        } else {
+          throw new Error('Recipe picker was not found');
+        }
+      }
+    } else {
+      if (objective.unit === ObjectiveUnit.Machines) {
+        const itemIds = data.recipeProductIds[objective.targetId];
+        if (itemIds.length === 1) {
+          this.setUnit(objective.id, { targetId: itemIds[0], unit });
+        } else if (this.chooseItemPicker != null) {
+          this.chooseItemPicker.selectId
+            .pipe(
+              first(),
+              tap((targetId) => this.setUnit(objective.id, { targetId, unit }))
+            )
+            .subscribe();
+          this.chooseItemPicker.clickOpen(data, 'item', itemIds);
+        } else {
+          throw new Error('Item picker was not found');
+        }
+      } else {
+        // No target conversion required
+        this.setUnit(objective.id, { targetId: objective.targetId, unit });
+      }
+    }
+  }
 
-  ObjectiveType = ObjectiveType;
+  addItemObjective(targetId: string): void {
+    this.addObjective({ targetId, unit: ObjectiveUnit.Items });
+  }
 
-  constructor(
-    public trackSvc: TrackService,
-    private store: Store<LabState>,
-    private translateSvc: TranslateService,
-    private contentService: ContentService
-  ) {}
+  addRecipeObjective(targetId: string): void {
+    this.addObjective({ targetId, unit: ObjectiveUnit.Machines });
+  }
 
   /** Action Dispatch Methods */
-  removeItemObjective(id: string): void {
-    this.store.dispatch(new ItemObjectives.RemoveAction(id));
+  removeObjective(id: string): void {
+    this.store.dispatch(new Objectives.RemoveAction(id));
   }
 
-  setItem(id: string, value: string): void {
-    this.store.dispatch(new ItemObjectives.SetItemAction({ id, value }));
+  raiseObjective(id: string): void {
+    this.store.dispatch(new Objectives.RaiseAction(id));
   }
 
-  setRate(id: string, value: string): void {
-    this.store.dispatch(new ItemObjectives.SetRateAction({ id, value }));
+  lowerObjective(id: string): void {
+    this.store.dispatch(new Objectives.LowerAction(id));
   }
 
-  setRateUnit(id: string, value: RateUnit): void {
-    this.store.dispatch(new ItemObjectives.SetRateUnitAction({ id, value }));
+  setTarget(id: string, value: string): void {
+    this.store.dispatch(new Objectives.SetTargetAction({ id, value }));
   }
 
-  setItemType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(new ItemObjectives.SetTypeAction({ id, value }));
+  setValue(id: string, value: string): void {
+    this.store.dispatch(new Objectives.SetValueAction({ id, value }));
   }
 
-  removeRecipeObjective(id: string): void {
-    this.store.dispatch(new RecipeObjectives.RemoveAction(id));
+  setUnit(id: string, value: ObjectiveBase): void {
+    this.store.dispatch(new Objectives.SetUnitAction({ id, value }));
   }
 
-  setRecipe(id: string, value: string): void {
-    this.store.dispatch(new RecipeObjectives.SetRecipeAction({ id, value }));
+  setType(id: string, value: ObjectiveType): void {
+    this.store.dispatch(new Objectives.SetTypeAction({ id, value }));
   }
 
-  setCount(id: string, value: string): void {
-    this.store.dispatch(new RecipeObjectives.SetCountAction({ id, value }));
-  }
-
-  setRecipeType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(new RecipeObjectives.SetTypeAction({ id, value }));
-  }
-
-  addItemObjective(value: string): void {
-    this.store.dispatch(new ItemObjectives.AddAction(value));
-  }
-
-  addRecipeObjective(value: string): void {
-    this.store.dispatch(new RecipeObjectives.AddAction(value));
+  addObjective(value: ObjectiveBase): void {
+    this.store.dispatch(new Objectives.AddAction(value));
   }
 
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {

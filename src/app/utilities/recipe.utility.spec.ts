@@ -2,6 +2,7 @@ import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Entities,
   ObjectiveType,
+  ObjectiveUnit,
   Rational,
   RecipeRational,
   RecipeSettingsRational,
@@ -831,51 +832,6 @@ describe('RecipeUtility', () => {
         Mocks.Dataset.recipeIds.length
       );
     });
-
-    // it('should use specified item recipe', () => {
-    //   const itemSettings = {
-    //     ...Mocks.ItemsStateInitial,
-    //     ...{
-    //       [ItemId.PetroleumGas]: {
-    //         ...Mocks.ItemsStateInitial[ItemId.PetroleumGas],
-    //         ...{
-    //           recipeId: RecipeId.CoalLiquefaction,
-    //         },
-    //       },
-    //     },
-    //   };
-    //   const result = RecipeUtility.adjustDataset(
-    //     Mocks.RecipesStateRationalInitial,
-    //     itemSettings,
-    //     ItemId.Coal,
-    //     ItemId.Module,
-    //     Rational.zero,
-    //     Rational.one,
-    //     false,
-    //     Mocks.CostRational,
-    //     Mocks.Dataset
-    //   );
-    //   expect(result.itemRecipeId[ItemId.PetroleumGas]).toEqual(
-    //     RecipeId.CoalLiquefaction
-    //   );
-    // });
-
-    // it('should find unique item recipes', () => {
-    //   const result = RecipeUtility.adjustDataset(
-    //     Mocks.RecipesStateRationalInitial,
-    //     Mocks.ItemsStateInitial,
-    //     ItemId.Coal,
-    //     ItemId.Module,
-    //     Rational.zero,
-    //     Rational.one,
-    //     false,
-    //     Mocks.CostRational,
-    //     Mocks.Dataset
-    //   );
-    //   expect(result.itemRecipeId[ItemId.SolidFuel]).toEqual(
-    //     RecipeId.SolidFuelFromLightOil
-    //   );
-    // });
   });
 
   describe('adjustCost', () => {
@@ -919,13 +875,24 @@ describe('RecipeUtility', () => {
     });
   });
 
-  describe('adjustRecipeObjective', () => {
+  describe('adjustObjective', () => {
+    it('should return an item objective unaltered', () => {
+      expect(
+        RecipeUtility.adjustObjective(
+          Mocks.Objective1,
+          Mocks.MachinesStateInitial,
+          Mocks.Dataset
+        )
+      ).toEqual(Mocks.Objective1);
+    });
+
     it('should adjust a recipe objective based on settings', () => {
-      const result = RecipeUtility.adjustRecipeObjective(
+      const result = RecipeUtility.adjustObjective(
         {
           id: '1',
-          recipeId: RecipeId.IronPlate,
-          count: '1',
+          targetId: RecipeId.IronPlate,
+          value: '1',
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
         Mocks.MachinesStateInitial,
@@ -952,11 +919,12 @@ describe('RecipeUtility', () => {
         ...Mocks.MachinesStateInitial,
         ...{ ids: undefined },
       };
-      const result = RecipeUtility.adjustRecipeObjective(
+      const result = RecipeUtility.adjustObjective(
         {
           id: '1',
-          recipeId: RecipeId.IronPlate,
-          count: '1',
+          targetId: RecipeId.IronPlate,
+          value: '1',
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
         machines,
@@ -987,11 +955,12 @@ describe('RecipeUtility', () => {
           },
         },
       };
-      const result = RecipeUtility.adjustRecipeObjective(
+      const result = RecipeUtility.adjustObjective(
         {
           id: '1',
-          recipeId: RecipeId.IronPlate,
-          count: '1',
+          targetId: RecipeId.IronPlate,
+          value: '1',
+          unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
           beacons: [{ id: ItemId.Beacon }],
         },

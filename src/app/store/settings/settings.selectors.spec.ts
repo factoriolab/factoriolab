@@ -335,8 +335,7 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.itemEntities).length).toEqual(
         result.itemIds.length
       );
-      expect(Object.keys(result.itemRecipeId).length).toBeGreaterThan(0);
-      expect(Object.keys(result.itemRecipeId).length).toBeLessThan(
+      expect(Object.keys(result.itemRecipeIds).length).toEqual(
         result.itemIds.length
       );
       expect(result.recipeIds.length).toBeGreaterThan(0);

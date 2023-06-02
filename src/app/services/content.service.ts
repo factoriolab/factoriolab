@@ -4,6 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { Confirmation } from 'primeng/api';
 import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
 
+import { environment } from 'src/environments';
+import { APP } from '~/models';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -54,6 +57,8 @@ export class ContentService {
 
   // Watch all language changes
   lang$ = this.translateSvc.onLangChange.pipe(startWith(''));
+
+  version = `${APP} ${environment.version}`;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,

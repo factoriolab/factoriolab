@@ -48,7 +48,7 @@
         pRipple
         type="button"
         icon="fa-solid fa-box"
-        [label]="'landing.addAnItem' | translate"
+        [label]="'landing.addItems' | translate"
         (click)="addItemPicker.clickOpen(vm.data, 'item', vm.itemIds)"
       ></button>
       <button
@@ -56,18 +56,18 @@
         pRipple
         type="button"
         class="mt-2"
-        icon="fa-solid fa-flask"
-        [label]="'landing.addARecipe' | translate"
+        icon="fa-solid fa-industry"
+        [label]="'landing.addMachines' | translate"
         (click)="addRecipePicker.clickOpen(vm.data, 'recipe', vm.recipeIds)"
       ></button>
       <lab-picker
         #addItemPicker
-        [header]="'landing.addAnItem' | translate"
+        [header]="'landing.addItems' | translate"
         (selectId)="selectItem($event)"
       ></lab-picker>
       <lab-picker
         #addRecipePicker
-        [header]="'landing.addARecipe' | translate"
+        [header]="'landing.addMachines' | translate"
         (selectId)="selectRecipe($event)"
       ></lab-picker>
       <p-divider
@@ -128,3 +128,5 @@
 <ng-template #spinner>
   <p-progressSpinner></p-progressSpinner>
 </ng-template>
+
+<span class="position-absolute bottom-0 mb-3">{{ contentSvc.version }}</span>

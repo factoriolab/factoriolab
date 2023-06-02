@@ -26,9 +26,9 @@ import {
   ItemRational,
   MachineRational,
   ModuleRational,
+  objectiveUnitOptions,
   Preset,
   presetOptions,
-  rateUnitOptions,
   Rational,
   RecipeRational,
   researchSpeedFactor,
@@ -127,7 +127,7 @@ export const getDisplayRateInfo = createSelector(
 export const getRateUnitOptions = createSelector(
   getGame,
   getDisplayRateInfo,
-  (game, dispRateInfo) => rateUnitOptions(dispRateInfo, game)
+  (game, dispRateInfo) => objectiveUnitOptions(dispRateInfo, game)
 );
 
 export const getPresetOptions = createSelector(getGame, (game) =>
@@ -480,27 +480,16 @@ export const getDataset = createSelector(
       return e;
     }, {});
 
-    // Calculate item simple recipes
-    const recipeMatches = recipeIds.reduce(
-      (e: Entities<RecipeRational[]>, r) => {
-        const recipe = recipeR[r];
-        const outputs = Object.keys(recipe.out);
-        for (const o of outputs.filter((i) => recipe.produces(i))) {
-          if (!e[o]) {
-            e[o] = [recipe];
-          } else {
-            e[o].push(recipe);
-          }
-        }
-        return e;
-      },
-      {}
-    );
-    const itemRecipeId = itemIds.reduce((e: Entities, i) => {
-      const matches = recipeMatches[i] ? recipeMatches[i] : [];
-      if (matches.length === 1) {
-        e[i] = matches[0].id;
-      }
+    const itemRecipeIds = itemIds.reduce((e: Entities<string[]>, i) => {
+      e[i] = recipeIds
+        .map((r) => recipeR[r])
+        .filter((r) => r.produces(i))
+        .map((r) => r.id);
+      return e;
+    }, {});
+    const recipeProductIds = recipeIds.reduce((e: Entities<string[]>, r) => {
+      const recipe = recipeR[r];
+      e[r] = Object.keys(recipe.out).filter((i) => recipe.produces(i));
       return e;
     }, {});
 
@@ -515,7 +504,7 @@ export const getDataset = createSelector(
       iconEntities,
       itemIds,
       itemEntities,
-      itemRecipeId,
+      itemRecipeIds,
       beaconIds,
       beaconEntities,
       beltIds,
@@ -535,6 +524,7 @@ export const getDataset = createSelector(
       fuelEntities,
       recipeIds,
       recipeEntities,
+      recipeProductIds,
       technologyIds,
       technologyEntities,
       recipeR,

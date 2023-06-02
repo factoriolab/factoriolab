@@ -10,7 +10,6 @@ import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
 import * as Machines from '../machines';
-import * as RecipeObjectives from '../recipe-objectives';
 import * as Settings from '../settings';
 import { RecipesState } from './recipes.reducer';
 
@@ -154,31 +153,4 @@ export const getAdjustedDataset = createSelector(
       cost,
       adj.data
     )
-);
-
-export const getRecipesModified = createSelector(
-  recipesState,
-  RecipeObjectives.getBaseRecipeObjectives,
-  (state, recipeObjectives) => ({
-    checked:
-      Object.keys(state).some((id) => state[id].checked != null) ||
-      recipeObjectives.some((p) => p.checked != null),
-    machines:
-      Object.keys(state).some(
-        (id) =>
-          state[id].machineId != null ||
-          state[id].machineModuleIds != null ||
-          state[id].overclock != null
-      ) ||
-      recipeObjectives.some(
-        (p) =>
-          p.machineId != null ||
-          p.machineModuleIds != null ||
-          p.overclock != null
-      ),
-    beacons:
-      Object.keys(state).some((id) => state[id].beacons != null) ||
-      recipeObjectives.some((p) => p.beacons != null),
-    cost: Object.keys(state).some((id) => state[id].cost),
-  })
 );
