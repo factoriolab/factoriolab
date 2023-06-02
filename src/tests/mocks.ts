@@ -19,6 +19,7 @@ export const Raw = data;
 export const DataState = Datasets.initialDatasetsState;
 export const ModInfo = data.mods[0];
 export const Data = mod as unknown as M.ModData;
+Data.defaults!.excludedRecipes = [RecipeId.NuclearFuelReprocessing];
 export const Hash: M.ModHash = hash;
 export const I18n: M.ModI18n = i18n;
 export const Mod = { ...ModInfo, ...Data } as M.Mod;
