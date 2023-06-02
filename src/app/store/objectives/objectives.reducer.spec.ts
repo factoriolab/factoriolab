@@ -80,6 +80,42 @@ describe('Objectives Reducer', () => {
     });
   });
 
+  describe('RAISE', () => {
+    it('should raise an objective', () => {
+      const result = objectivesReducer(
+        { ids: ['0', '1'], entities: {}, index: 0 },
+        new Actions.RaiseAction('1')
+      );
+      expect(result.ids).toEqual(['1', '0']);
+    });
+
+    it('should ignore invalid ids', () => {
+      const result = objectivesReducer(
+        { ids: ['0', '1'], entities: {}, index: 0 },
+        new Actions.RaiseAction('2')
+      );
+      expect(result.ids).toEqual(['0', '1']);
+    });
+  });
+
+  describe('LOWER', () => {
+    it('should lower an objective', () => {
+      const result = objectivesReducer(
+        { ids: ['0', '1'], entities: {}, index: 0 },
+        new Actions.LowerAction('0')
+      );
+      expect(result.ids).toEqual(['1', '0']);
+    });
+
+    it('should ignore invalid ids', () => {
+      const result = objectivesReducer(
+        { ids: ['0', '1'], entities: {}, index: 0 },
+        new Actions.LowerAction('2')
+      );
+      expect(result.ids).toEqual(['0', '1']);
+    });
+  });
+
   describe('SET_TARGET', () => {
     it('should set recipe on an objective', () => {
       const result = objectivesReducer(
@@ -97,6 +133,23 @@ describe('Objectives Reducer', () => {
         new Actions.SetValueAction({ id: '0', value: '30' })
       );
       expect(result.entities['0'].value).toEqual('30');
+    });
+  });
+
+  describe('SET_UNIT', () => {
+    it('should set target and unit of an objective', () => {
+      const result = objectivesReducer(
+        state,
+        new Actions.SetUnitAction({
+          id: '0',
+          value: {
+            targetId: ItemId.AdvancedCircuit,
+            unit: ObjectiveUnit.Belts,
+          },
+        })
+      );
+      expect(result.entities['0'].targetId).toEqual(ItemId.AdvancedCircuit);
+      expect(result.entities['0'].unit).toEqual(ObjectiveUnit.Belts);
     });
   });
 
@@ -281,6 +334,34 @@ describe('Objectives Reducer', () => {
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       });
+    });
+  });
+
+  describe('ADJUST_DISPLAY_RATE', () => {
+    it('should adjust rates for objectives when display rate changes', () => {
+      const result = objectivesReducer(
+        state,
+        new Actions.AdjustDisplayRateAction('1/60')
+      );
+      expect(result.entities[Mocks.Objective1.id].value).toEqual('1/60');
+    });
+
+    it('should not adjust rates when rate type unaffected by display rate', () => {
+      let result = objectivesReducer(
+        state,
+        new Actions.SetUnitAction({
+          id: '0',
+          value: {
+            targetId: ItemId.Coal,
+            unit: ObjectiveUnit.Belts,
+          },
+        })
+      );
+      result = objectivesReducer(
+        result,
+        new Actions.AdjustDisplayRateAction('1/60')
+      );
+      expect(result.entities['0'].value).toEqual('1');
     });
   });
 

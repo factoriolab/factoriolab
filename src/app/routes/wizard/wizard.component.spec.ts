@@ -34,29 +34,30 @@ describe('WizardComponent', () => {
     });
   });
 
-  // it('should dispatch actions', () => {
-  //   const dispatch = new DispatchTest(mockStore, component);
-  //   dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
-  //   dispatch.spy.calls.reset();
-  //   component.createItemObjective(ItemId.IronPlate, '1', ObjectiveUnit.Items);
-  //   expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-  //     new ItemObjectives.CreateAction({
-  //       id: '0',
-  //       itemId: ItemId.IronPlate,
-  //       rate: '1',
-  //       rateUnit: ObjectiveUnit.Items,
-  //       type: ObjectiveType.Output,
-  //     })
-  //   );
-  //   dispatch.spy.calls.reset();
-  //   component.createRecipeObjective(RecipeId.IronPlate, '1');
-  //   expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-  //     new RecipeObjectives.CreateAction({
-  //       id: '0',
-  //       recipeId: ItemId.IronPlate,
-  //       count: '1',
-  //       type: ObjectiveType.Output,
-  //     })
-  //   );
-  // });
+  it('should dispatch actions', () => {
+    const dispatch = new DispatchTest(mockStore, component);
+    dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
+    dispatch.spy.calls.reset();
+    component.createItemObjective(ItemId.IronPlate, '1', ObjectiveUnit.Items);
+    expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
+      new Objectives.CreateAction({
+        id: '0',
+        targetId: ItemId.IronPlate,
+        value: '1',
+        unit: ObjectiveUnit.Items,
+        type: ObjectiveType.Output,
+      })
+    );
+    dispatch.spy.calls.reset();
+    component.createRecipeObjective(RecipeId.IronPlate, '1');
+    expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
+      new Objectives.CreateAction({
+        id: '0',
+        targetId: ItemId.IronPlate,
+        value: '1',
+        unit: ObjectiveUnit.Machines,
+        type: ObjectiveType.Output,
+      })
+    );
+  });
 });

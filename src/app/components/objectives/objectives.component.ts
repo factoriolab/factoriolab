@@ -76,6 +76,19 @@ export class ObjectivesComponent {
     | PickerComponent
     | undefined;
 
+  objectiveTypeOptions = objectiveTypeOptions;
+  displayRateOptions = displayRateOptions;
+
+  ObjectiveUnit = ObjectiveUnit;
+  ObjectiveType = ObjectiveType;
+
+  constructor(
+    public trackSvc: TrackService,
+    private store: Store<LabState>,
+    private translateSvc: TranslateService,
+    private contentService: ContentService
+  ) {}
+
   getMessages(matrixResult: MatrixResult): Message[] {
     if (matrixResult.resultType === MatrixResultType.Failed) {
       let errorKey = 'objectives.error';
@@ -103,19 +116,6 @@ export class ObjectivesComponent {
       return [];
     }
   }
-
-  objectiveTypeOptions = objectiveTypeOptions;
-  displayRateOptions = displayRateOptions;
-
-  ObjectiveUnit = ObjectiveUnit;
-  ObjectiveType = ObjectiveType;
-
-  constructor(
-    public trackSvc: TrackService,
-    private store: Store<LabState>,
-    private translateSvc: TranslateService,
-    private contentService: ContentService
-  ) {}
 
   changeUnit(objective: Objective, unit: ObjectiveUnit, data: Dataset): void {
     if (unit === ObjectiveUnit.Machines) {

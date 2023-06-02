@@ -832,51 +832,6 @@ describe('RecipeUtility', () => {
         Mocks.Dataset.recipeIds.length
       );
     });
-
-    // it('should use specified item recipe', () => {
-    //   const itemSettings = {
-    //     ...Mocks.ItemsStateInitial,
-    //     ...{
-    //       [ItemId.PetroleumGas]: {
-    //         ...Mocks.ItemsStateInitial[ItemId.PetroleumGas],
-    //         ...{
-    //           recipeId: RecipeId.CoalLiquefaction,
-    //         },
-    //       },
-    //     },
-    //   };
-    //   const result = RecipeUtility.adjustDataset(
-    //     Mocks.RecipesStateRationalInitial,
-    //     itemSettings,
-    //     ItemId.Coal,
-    //     ItemId.Module,
-    //     Rational.zero,
-    //     Rational.one,
-    //     false,
-    //     Mocks.CostRational,
-    //     Mocks.Dataset
-    //   );
-    //   expect(result.itemRecipeId[ItemId.PetroleumGas]).toEqual(
-    //     RecipeId.CoalLiquefaction
-    //   );
-    // });
-
-    // it('should find unique item recipes', () => {
-    //   const result = RecipeUtility.adjustDataset(
-    //     Mocks.RecipesStateRationalInitial,
-    //     Mocks.ItemsStateInitial,
-    //     ItemId.Coal,
-    //     ItemId.Module,
-    //     Rational.zero,
-    //     Rational.one,
-    //     false,
-    //     Mocks.CostRational,
-    //     Mocks.Dataset
-    //   );
-    //   expect(result.itemRecipeId[ItemId.SolidFuel]).toEqual(
-    //     RecipeId.SolidFuelFromLightOil
-    //   );
-    // });
   });
 
   describe('adjustCost', () => {
@@ -921,6 +876,16 @@ describe('RecipeUtility', () => {
   });
 
   describe('adjustObjective', () => {
+    it('should return an item objective unaltered', () => {
+      expect(
+        RecipeUtility.adjustObjective(
+          Mocks.Objective1,
+          Mocks.MachinesStateInitial,
+          Mocks.Dataset
+        )
+      ).toEqual(Mocks.Objective1);
+    });
+
     it('should adjust a recipe objective based on settings', () => {
       const result = RecipeUtility.adjustObjective(
         {
