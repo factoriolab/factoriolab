@@ -55,6 +55,7 @@ describe('ListComponent', () => {
           ],
           outputs: [],
           recipeIds: [],
+          allRecipesIncluded: true,
         };
         return e;
       }, {})
@@ -109,9 +110,24 @@ describe('ListComponent', () => {
       component.setActiveItems(
         [{ id: '0' }, { id: '1' }, { id: '2' }, { id: '3' }],
         {
-          ['1']: { tabs: [tab1], outputs: [], recipeIds: [] },
-          ['2']: { tabs: [tab1, tab2], outputs: [], recipeIds: [] },
-          ['3']: { tabs: [tab1], outputs: [], recipeIds: [] },
+          ['1']: {
+            tabs: [tab1],
+            outputs: [],
+            recipeIds: [],
+            allRecipesIncluded: true,
+          },
+          ['2']: {
+            tabs: [tab1, tab2],
+            outputs: [],
+            recipeIds: [],
+            allRecipesIncluded: true,
+          },
+          ['3']: {
+            tabs: [tab1],
+            outputs: [],
+            recipeIds: [],
+            allRecipesIncluded: true,
+          },
         }
       );
       expect(component.activeItem).toEqual({
@@ -169,6 +185,20 @@ describe('ListComponent', () => {
       TestUtility.clickDt(fixture, DataTest.Export);
       fixture.detectChanges();
       expect(exportSvc.stepsToCsv).toHaveBeenCalled();
+    });
+  });
+
+  describe('toggleRecipes', () => {
+    it('should toggle a set of recipes', () => {
+      spyOn(component, 'setRecipeExcludedBatch');
+      component.toggleRecipes(
+        [RecipeId.AdvancedOilProcessing],
+        true,
+        {} as any
+      );
+      expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
+        { id: RecipeId.AdvancedOilProcessing, value: true, def: false },
+      ]);
     });
   });
 
@@ -384,6 +414,7 @@ describe('ListComponent', () => {
     dispatch.idValDef('setBelt', Items.SetBeltAction);
     dispatch.idValDef('setWagon', Items.SetWagonAction);
     dispatch.idValDef('setRecipeExcluded', Recipes.SetExcludedAction);
+    dispatch.val('setRecipeExcludedBatch', Recipes.SetExcludedBatchAction);
     dispatch.idValDef('setMachine', Recipes.SetMachineAction);
     dispatch.idValDefAlt('setMachine', Objectives.SetMachineAction);
     dispatch.idValDef('setMachineModules', Recipes.SetMachineModulesAction);
