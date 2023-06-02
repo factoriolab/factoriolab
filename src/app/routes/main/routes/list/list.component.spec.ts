@@ -221,12 +221,12 @@ describe('ListComponent', () => {
     it('should enable a recipe', () => {
       spyOn(component, 'setRecipeExcluded');
       component.toggleRecipe(
-        RecipeId.EmptyPetroleumGasBarrel,
+        RecipeId.NuclearFuelReprocessing,
         Mocks.RecipesStateInitial,
         Mocks.AdjustedData
       );
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
-        RecipeId.EmptyPetroleumGasBarrel,
+        RecipeId.NuclearFuelReprocessing,
         false,
         true
       );

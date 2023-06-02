@@ -17,7 +17,7 @@ describe('Recipes Selectors', () => {
     });
   });
 
-  describe('getRecipeSettings', () => {
+  describe('getRecipesState', () => {
     it('should return the recipe settings', () => {
       const result = Selectors.getRecipesState.projector(
         initialRecipesState,
