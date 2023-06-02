@@ -149,7 +149,7 @@ export class PickerComponent implements OnInit {
       }
     }
     this.categoryIds = data.categoryIds.filter(
-      (c) => this.categoryRows[c].length
+      (c) => this.categoryRows[c]?.length
     );
     this.allCategoryIds = this.categoryIds;
     this.allCategoryRows = this.categoryRows;
