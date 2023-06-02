@@ -808,8 +808,6 @@ async function processMod(): Promise<void> {
     );
   }
 
-  logTime('Processing data');
-
   modList.mods
     .filter((m) => m.enabled)
     .forEach((m) => {
@@ -826,6 +824,8 @@ async function processMod(): Promise<void> {
         }
       }
     });
+
+  logTime('Calculating included recipes');
 
   // Record of recipe id : technology id
   const recipesUnlocked: Record<string, string> = {};
@@ -868,10 +868,12 @@ async function processMod(): Promise<void> {
   }
 
   // Cache recipe results to use later
-  const recipeResults: Record<
+  const recipeDataMap: Record<string, D.RecipeData> = {};
+  const recipeResultsMap: Record<
     string,
     [Record<string, number>, Record<string, number> | undefined, number]
   > = {};
+  const recipeIngredientsMap: Record<string, Record<string, number>> = {};
   for (const key of Object.keys(dataRaw.recipe)) {
     const recipe = dataRaw.recipe[key];
     let include = true;
@@ -888,7 +890,8 @@ async function processMod(): Promise<void> {
       include = false;
     }
 
-    recipeResults[key] = results;
+    recipeDataMap[key] = recipeData;
+    recipeResultsMap[key] = results;
 
     // Always include fixed recipes that have outputs
     if (!fixedRecipe.has(key)) {
@@ -907,9 +910,75 @@ async function processMod(): Promise<void> {
 
     if (include) {
       recipesEnabled[key] = recipe;
+      recipeIngredientsMap[key] = getIngredients(recipeData.ingredients);
     }
   }
 
+  function checkForMatch(
+    ingredients: Record<string, number>,
+    results: Record<string, number>
+  ): boolean {
+    const inKeys = Object.keys(ingredients);
+    const outKeys = Object.keys(results);
+    return (
+      inKeys.length === outKeys.length &&
+      inKeys.every((i) => results[i] === ingredients[i])
+    );
+  }
+
+  const keysToRemove = new Set<string>();
+  const recipesIncluded = Object.keys(recipesEnabled);
+
+  // Check for recipe loops
+  for (const key of Object.keys(recipesEnabled)) {
+    const ingredientsKeys = Object.keys(recipeIngredientsMap[key]);
+    let matchKey: string | undefined;
+    let matchMulti = false;
+    for (const r of recipesIncluded) {
+      const results = recipeResultsMap[r][0];
+      for (const key of ingredientsKeys) {
+        if (results[key]) {
+          if (matchKey == null) {
+            matchKey = r;
+          } else {
+            matchMulti = true;
+          }
+        }
+      }
+
+      if (matchMulti) break;
+    }
+
+    if (matchKey != null && !matchMulti) {
+      // Ingredients to this recipe are only produced by one recipe
+      // Check for a loop
+      const results = recipeResultsMap[matchKey][0];
+      const ingredientMatch = checkForMatch(recipeIngredientsMap[key], results);
+
+      if (ingredientMatch) {
+        // Check whether results of this recipe match ingredients of matched recipe
+        const results = recipeResultsMap[key][0];
+        const fullMatch = checkForMatch(
+          recipeIngredientsMap[matchKey],
+          results
+        );
+
+        if (fullMatch) {
+          // Detected recipe loop
+          keysToRemove.add(key);
+          keysToRemove.add(matchKey);
+          delete recipesEnabled[key];
+          delete recipesEnabled[matchKey];
+        }
+      }
+    }
+  }
+
+  for (const key of keysToRemove) {
+    delete recipesEnabled[key];
+  }
+
+  logTime('Processing data');
   const itemsUsed = new Set<string>();
 
   const itemKeys = [
@@ -1195,10 +1264,10 @@ async function processMod(): Promise<void> {
     groupsUsed.add(group.name);
 
     if (D.isRecipe(proto)) {
-      const recipeData = getRecipeData(proto);
-      const recipeIn = getIngredients(recipeData.ingredients);
-      const [recipeOut] = recipeResults[proto.name];
-      let [, recipeCatalyst] = recipeResults[proto.name];
+      const recipeData = recipeDataMap[proto.name];
+      const recipeIn = recipeIngredientsMap[proto.name];
+      const [recipeOut] = recipeResultsMap[proto.name];
+      let [, recipeCatalyst] = recipeResultsMap[proto.name];
 
       // Check for calculated catalysts
       for (const outId of Object.keys(recipeOut)) {
