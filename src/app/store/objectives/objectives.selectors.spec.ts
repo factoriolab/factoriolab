@@ -279,6 +279,7 @@ describe('Objectives Selectors', () => {
       ];
       const result = Selectors.getStepDetails.projector(
         steps,
+        Mocks.RecipesStateInitial,
         Mocks.AdjustedData,
         Mocks.Dataset.recipeIds
       );
@@ -332,6 +333,7 @@ describe('Objectives Selectors', () => {
             RecipeId.LightOilCracking,
             RecipeId.EmptyPetroleumGasBarrel,
           ],
+          allRecipesIncluded: false,
         },
         ['1']: {
           tabs: [
@@ -348,11 +350,13 @@ describe('Objectives Selectors', () => {
           ],
           outputs: [],
           recipeIds: [],
+          allRecipesIncluded: true,
         },
         ['2']: {
           tabs: [],
           outputs: [],
           recipeIds: [],
+          allRecipesIncluded: true,
         },
       });
     });

@@ -353,9 +353,10 @@ function addValueToRecordByIds(
 
 export const getStepDetails = createSelector(
   getSteps,
+  Recipes.getRecipesState,
   Recipes.getAdjustedDataset,
   Settings.getAvailableRecipes,
-  (steps, data, availableRecipeIds) =>
+  (steps, recipesState, data, availableRecipeIds) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
       const outputs: StepOutput[] = [];
@@ -425,6 +426,7 @@ export const getStepDetails = createSelector(
         }),
         outputs,
         recipeIds,
+        allRecipesIncluded: recipeIds.every((r) => !recipesState[r].excluded),
       };
 
       return e;
