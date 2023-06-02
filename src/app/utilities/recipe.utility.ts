@@ -27,6 +27,7 @@ import { Machines } from '~/store';
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
   static POLLUTION_FACTOR = new Rational(BigInt(60));
+  static MIN_FACTORIO_RECIPE_TIME = new Rational(BigInt(1), BigInt(60));
 
   /** Determines what option to use based on preferred rank */
   static bestMatch(options: string[], rank: string[]): string {
@@ -238,6 +239,14 @@ export class RecipeUtility {
       // Calculate module/beacon effects
       // Speed
       recipe.time = recipe.time.div(speed);
+
+      // In Factorio, minimum recipe time is 1/60s (1 tick)
+      if (
+        recipe.time.lt(this.MIN_FACTORIO_RECIPE_TIME) &&
+        data.game === Game.Factorio
+      ) {
+        recipe.time = this.MIN_FACTORIO_RECIPE_TIME;
+      }
 
       // Productivity
       for (const outId of Object.keys(recipe.out)) {
