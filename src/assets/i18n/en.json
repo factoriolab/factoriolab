@@ -144,8 +144,8 @@
   },
   "landing": {
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work.",
-    "addAnItem": "Add an item",
-    "addARecipe": "Add a recipe",
+    "addItems": "Add items",
+    "addMachines": "Add machines",
     "loadSavedState": "Load a saved state",
     "loadLastState": "Load last state",
     "help": "Help me get started",

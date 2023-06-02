@@ -12,7 +12,7 @@ import {
   ObjectiveBase,
   ObjectiveUnit,
 } from '~/models';
-import { RouterService } from '~/services';
+import { ContentService, RouterService } from '~/services';
 import { LabState, Objectives, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
@@ -65,6 +65,7 @@ export class LandingComponent {
 
   constructor(
     public router: Router,
+    public contentSvc: ContentService,
     private store: Store<LabState>,
     private routerSvc: RouterService
   ) {}
