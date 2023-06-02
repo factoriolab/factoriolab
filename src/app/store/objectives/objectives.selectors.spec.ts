@@ -331,9 +331,8 @@ describe('Objectives Selectors', () => {
             RecipeId.AdvancedOilProcessing,
             RecipeId.CoalLiquefaction,
             RecipeId.LightOilCracking,
-            RecipeId.EmptyPetroleumGasBarrel,
           ],
-          allRecipesIncluded: false,
+          allRecipesIncluded: true,
         },
         ['1']: {
           tabs: [

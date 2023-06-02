@@ -36,7 +36,7 @@ describe('RecipeComponent', () => {
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
         true,
-        false
+        true
       );
     });
 

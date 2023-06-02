@@ -153,7 +153,7 @@ describe('PickerComponent', () => {
 
     it('should search items', () => {
       component.inputSearch('petrol');
-      expect(component.categoryIds.length).toEqual(2);
+      expect(component.categoryIds.length).toEqual(1);
       expect(component.categoryRows[CategoryId.Fluids]).toEqual([
         [ItemId.PetroleumGas],
       ]);

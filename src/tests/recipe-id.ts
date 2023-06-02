@@ -12,8 +12,6 @@ export enum RecipeId {
   CrudeOil = 'crude-oil',
   ElectronicCircuit = 'electronic-circuit',
   Electronics = 'electronics',
-  EmptyPetroleumGasBarrel = 'empty-petroleum-gas-barrel',
-  FillWaterBarrel = 'fill-water-barrel',
   FirearmMagazine = 'firearm-magazine',
   HeavyOilCracking = 'heavy-oil-cracking',
   IronOre = 'iron-ore',
