@@ -25,6 +25,7 @@ import {
   RecipeField,
   Step,
   StepDetail,
+  stepDetailIcon,
   StepDetailTab,
 } from '~/models';
 import { StepIdPipe } from '~/pipes/step-id.pipe';
@@ -129,6 +130,7 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   activeItem: Entities<MenuItem> = {};
   fragmentId: string | null | undefined;
+  stepDetailIcon = stepDetailIcon;
 
   ItemId = ItemId;
   StepDetailTab = StepDetailTab;
