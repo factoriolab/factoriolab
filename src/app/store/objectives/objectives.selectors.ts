@@ -420,7 +420,11 @@ export const getStepDetails = createSelector(
               // Simple assignment function; testing is unnecessary
               // istanbul ignore next
               (): void => {
-                document.location.hash = id;
+                history.replaceState(
+                  {},
+                  '',
+                  `${window.location.href.replace(/#(.*)$/, '')}#${id}`
+                );
               },
           };
         }),

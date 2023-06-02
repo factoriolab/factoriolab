@@ -86,6 +86,16 @@ tr.detail {
   background-color: var(--surface-ground);
 }
 
+:host
+  ::ng-deep
+  tr.detail
+  .p-tabmenu
+  .p-tabmenu-nav
+  .p-tabmenuitem:not(.p-highlight)
+  .p-menuitem-link {
+  background-color: transparent;
+}
+
 .icon-height {
   height: 32px;
   margin-top: 1px;

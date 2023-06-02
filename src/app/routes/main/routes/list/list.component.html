@@ -909,7 +909,7 @@
     <ng-template pTemplate="rowexpansion" let-_step>
       <!-- Details row tab menu -->
       <ng-container *ngIf="_step | asStep as step">
-        <tr>
+        <tr class="detail">
           <td>
             <a
               class="text-decoration-none"
@@ -935,7 +935,13 @@
               (activeItemChange)="setActiveItem(step, $event)"
             >
               <ng-template pTemplate="item" let-item>
-                {{ 'options.stepDetailTab.' + item.label | translate }}
+                <span
+                  class="p-menuitem-icon"
+                  [class]="$any(stepDetailIcon)[item.label]"
+                ></span>
+                <span class="p-menuitem-text">{{
+                  'options.stepDetailTab.' + item.label | translate
+                }}</span>
               </ng-template>
             </p-tabMenu>
           </td>
