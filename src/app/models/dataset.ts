@@ -29,6 +29,7 @@ export interface Dataset {
   iconEntities: Entities<Icon>;
   itemIds: string[];
   itemEntities: Entities<ItemRational>;
+  itemRecipeIds: Entities<string[]>;
   beaconIds: string[];
   beaconEntities: Entities<BeaconRational>;
   beltIds: string[];
@@ -45,9 +46,9 @@ export interface Dataset {
   fuelIds: string[];
   chemicalFuelIds: string[];
   fuelEntities: Entities<FuelRational>;
-  itemRecipeId: Entities<string>;
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
+  recipeProductIds: Entities<string[]>;
   technologyIds: string[];
   technologyEntities: Entities<Technology>;
   recipeR: Entities<RecipeRational>;

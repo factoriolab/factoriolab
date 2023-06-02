@@ -3,14 +3,8 @@ import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
-import { Game } from '~/models';
-import {
-  ItemObjectives,
-  LabState,
-  Preferences,
-  RecipeObjectives,
-  Settings,
-} from '~/store';
+import { Game, ObjectiveUnit } from '~/models';
+import { LabState, Objectives, Preferences, Settings } from '~/store';
 import { LandingComponent } from './landing.component';
 
 describe('LandingComponent', () => {
@@ -75,11 +69,32 @@ describe('LandingComponent', () => {
     });
   });
 
+  describe('addItemObjective', () => {
+    it('should use ObjectiveUnit.Items', () => {
+      spyOn(component, 'addObjective');
+      component.addItemObjective(ItemId.AdvancedCircuit);
+      expect(component.addObjective).toHaveBeenCalledWith({
+        targetId: ItemId.AdvancedCircuit,
+        unit: ObjectiveUnit.Items,
+      });
+    });
+  });
+
+  describe('addRecipeObjective', () => {
+    it('should use ObjectiveUnit.Machines', () => {
+      spyOn(component, 'addObjective');
+      component.addRecipeObjective(RecipeId.AdvancedCircuit);
+      expect(component.addObjective).toHaveBeenCalledWith({
+        targetId: RecipeId.AdvancedCircuit,
+        unit: ObjectiveUnit.Machines,
+      });
+    });
+  });
+
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.val('setMod', Settings.SetModAction);
-    dispatch.val('addItemObjective', ItemObjectives.AddAction);
-    dispatch.val('addRecipeObjective', RecipeObjectives.AddAction);
+    dispatch.val('addObjective', Objectives.AddAction);
     dispatch.val('setBypassLanding', Preferences.SetBypassLandingAction);
   });
 });

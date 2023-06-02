@@ -49,6 +49,7 @@
               pButton
               pRipple
               type="button"
+              class="p-button-outlined"
               icon="fa-solid fa-xmark"
               [pTooltip]="'cancel' | translate"
               (click)="editState = false"
@@ -67,6 +68,7 @@
               pButton
               pRipple
               type="button"
+              class="p-button-outlined"
               icon="fa-solid fa-floppy-disk"
               [pTooltip]="'settings.saveSavedState' | translate"
               [disabled]="!stateCtrl.valid"
@@ -79,6 +81,7 @@
             pButton
             pRipple
             type="button"
+            class="p-button-outlined"
             icon="fa-solid fa-pen-to-square"
             [pTooltip]="'settings.editSavedState' | translate"
             (click)="openEditState()"
@@ -95,6 +98,7 @@
             pButton
             pRipple
             type="button"
+            class="p-button-outlined"
             icon="fa-solid fa-trash"
             [pTooltip]="'settings.deleteSavedState' | translate"
             [disabled]="!state"
@@ -160,6 +164,7 @@
                 pButton
                 pRipple
                 icon="fa-solid fa-info"
+                class="p-button-outlined"
                 [pTooltip]="'settings.modVersions' | translate"
                 (click)="versionsVisible = true"
               >
@@ -314,7 +319,8 @@
                         pButton
                         pRipple
                         type="button"
-                        icon="fa-solid fa-minus"
+                        icon="fa-solid fa-xmark"
+                        class="p-button-outlined"
                         [pTooltip]="
                           'settings.removeMachinePreference' | translate
                         "
@@ -582,7 +588,7 @@
                       pButton
                       pRipple
                       type="button"
-                      class="ms-auto"
+                      class="p-button-outlined ms-auto"
                       [class.invisible]="
                         vm.machineMenuItems[index].length === 0
                       "
@@ -906,6 +912,8 @@
                   [min]="1"
                   [step]="100"
                   [showButtons]="true"
+                  incrementButtonClass="p-button-outlined"
+                  decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.pipeFlowRateTooltip' | translate"
                   [ngModel]="vm.settings.flowRate"
                   (onBlur)="setFlowRate(flowRateInput.value)"
@@ -948,6 +956,8 @@
                 [min]="100"
                 [step]="10"
                 [showButtons]="true"
+                incrementButtonClass="p-button-outlined"
+                decrementButtonClass="p-button-outlined"
                 [pTooltip]="'settings.miningSpeedTooltip' | translate"
                 [ngModel]="vm.settings.miningBonus + 100"
                 (onBlur)="setMiningBonus(miningBonusInput.value - 100)"
@@ -974,6 +984,8 @@
                 [min]="0"
                 [step]="10"
                 [showButtons]="true"
+                incrementButtonClass="p-button-outlined"
+                decrementButtonClass="p-button-outlined"
                 [pTooltip]="'settings.miningProductivityTooltip' | translate"
                 [ngModel]="vm.settings.miningBonus"
                 (onBlur)="setMiningBonus(miningProdInput.value)"

@@ -10,16 +10,16 @@ export class ItemTooltipPipe implements PipeTransform {
   transform(value: string | null | undefined, data: Dataset): string {
     if (value == null) return '';
 
-    const recipeId = data.itemRecipeId[value];
+    const recipeIds = data.itemRecipeIds[value];
 
-    if (recipeId == null) {
+    if (recipeIds?.length === 1) {
+      return this.displaySvc.recipeTooltip(recipeIds[0], data);
+    } else {
       const item = data.itemEntities[value];
 
       if (item == null) return '';
 
       return item.name;
-    } else {
-      return this.displaySvc.recipeTooltip(recipeId, data);
     }
   }
 }

@@ -1,17 +1,15 @@
 import { Action } from '@ngrx/store';
 
 import { DatasetsState } from './datasets';
-import { ItemObjectivesState } from './item-objectives';
 import { ItemsState } from './items';
 import { MachinesState } from './machines';
-import { RecipeObjectivesState } from './recipe-objectives';
+import { ObjectivesState } from './objectives';
 import { RecipesState } from './recipes';
 import { PartialSettingsState } from './settings';
 
 export interface PartialState {
   datasetsState?: DatasetsState;
-  itemObjectivesState?: ItemObjectivesState;
-  recipeObjectivesState?: RecipeObjectivesState;
+  objectivesState?: ObjectivesState;
   itemsState?: ItemsState;
   recipesState?: RecipesState;
   machinesState?: MachinesState;
