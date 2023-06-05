@@ -474,7 +474,7 @@ async function processMod(): Promise<void> {
     } else if (D.isMiningDrill(proto)) {
       speed = proto.mining_speed;
     } else if (D.isOffshorePump(proto)) {
-      speed = proto.pumping_speed * 60;
+      speed = 1; // Speed is set on recipe instead of pump
     } else {
       speed = proto.crafting_speed;
     }
@@ -1381,6 +1381,7 @@ async function processMod(): Promise<void> {
             proto.name,
             `${pumpName}-${proto.name}-pump`
           );
+          const out = offshorePump.pumping_speed * 60;
           const recipe: Recipe = {
             id,
             name: `${itemLocale.names[pumpName]} : ${
@@ -1390,7 +1391,7 @@ async function processMod(): Promise<void> {
             row: getRecipeRow(proto),
             time: 1,
             in: {},
-            out: { [proto.name]: 1 },
+            out: { [proto.name]: out },
             producers: [pumpName],
             cost: 1,
           };
