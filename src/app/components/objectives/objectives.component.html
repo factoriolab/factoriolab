@@ -162,21 +162,21 @@
   </div>
   <lab-picker
     #addItemPicker
-    [header]="'objectives.selectItem' | translate"
+    [header]="'objectives.selectAnItem' | translate"
     (selectId)="addItemObjective($event)"
   ></lab-picker>
   <lab-picker
     #addRecipePicker
-    [header]="'objectives.selectRecipe' | translate"
+    [header]="'objectives.selectARecipe' | translate"
     (selectId)="addRecipeObjective($event)"
   ></lab-picker>
   <lab-picker
     #chooseItemPicker
-    [header]="'objectives.selectItem' | translate"
+    [header]="'objectives.selectAnItem' | translate"
   ></lab-picker>
   <lab-picker
     #chooseRecipePicker
-    [header]="'objectives.selectRecipe' | translate"
+    [header]="'objectives.selectARecipe' | translate"
   ></lab-picker>
   <p-messages
     *ngIf="vm.messages.length"
