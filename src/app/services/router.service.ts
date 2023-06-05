@@ -317,7 +317,7 @@ export class RouterService {
       objectiveBeaconMap: {},
     };
     this.zipObjectives(zData, objectives, hash);
-    return '?' + this.getHash(zData);
+    return 'list?' + this.getHash(zData);
   }
 
   getHash(zData: ZipData): string {
