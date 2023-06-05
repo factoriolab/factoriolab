@@ -474,7 +474,7 @@ async function processMod(): Promise<void> {
     } else if (D.isMiningDrill(proto)) {
       speed = proto.mining_speed;
     } else if (D.isOffshorePump(proto)) {
-      speed = 1;
+      speed = 1; // Speed is set on recipe instead of pump
     } else {
       speed = proto.crafting_speed;
     }
