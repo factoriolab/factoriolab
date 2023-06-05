@@ -313,7 +313,7 @@ describe('RouterService', () => {
           mockEmptyZip(),
           Mocks.Hash
         )
-      ).toEqual('?test');
+      ).toEqual('list?test');
     });
 
     it('should return get the hash for machines from specific step', () => {
@@ -329,7 +329,7 @@ describe('RouterService', () => {
           mockEmptyZip(),
           Mocks.Hash
         )
-      ).toEqual('?test');
+      ).toEqual('list?test');
     });
   });
 

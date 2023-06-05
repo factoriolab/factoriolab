@@ -257,6 +257,26 @@ describe('RecipeUtility', () => {
       expect(result).toEqual(expected);
     });
 
+    it('should use minimum 1/60 second time in Factorio', () => {
+      const data = Mocks.getDataset();
+      data.recipeEntities[RecipeId.SteelChest] = {
+        ...data.recipeEntities[RecipeId.SteelChest],
+        ...{ time: 0.0001 },
+      };
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        ItemId.Coal,
+        ItemId.Module,
+        Rational.zero,
+        Rational.zero,
+        false,
+        Mocks.RecipesStateRationalInitial[RecipeId.SteelChest],
+        Mocks.ItemsStateInitial,
+        data
+      );
+      expect(result.time).toEqual(Rational.from([1, 60]));
+    });
+
     it('should handle burner fuel inputs', () => {
       const settings = { ...Mocks.RecipesStateRational[RecipeId.IronOre] };
       settings.machineId = ItemId.BurnerMiningDrill;
