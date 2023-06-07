@@ -906,8 +906,6 @@ async function processMod(): Promise<void> {
       }
     }
 
-    // TODO: Filter out recipe loops
-
     if (include) {
       recipesEnabled[key] = recipe;
       recipeIngredientsMap[key] = getIngredients(recipeData.ingredients);
@@ -934,23 +932,32 @@ async function processMod(): Promise<void> {
     const ingredientsKeys = Object.keys(recipeIngredientsMap[key]);
     let matchKey: string | undefined;
     let matchMulti = false;
+    const matchIngredients: string[] = [];
     for (const r of recipesIncluded) {
       const results = recipeResultsMap[r][0];
+      const ingredients = recipeIngredientsMap[r];
       for (const key of ingredientsKeys) {
         if (results[key]) {
           if (matchKey == null) {
             matchKey = r;
           } else {
             matchMulti = true;
+            break;
           }
+        }
+
+        if (ingredients[key]) {
+          matchIngredients.push(key);
         }
       }
 
       if (matchMulti) break;
     }
 
-    if (matchKey != null && !matchMulti) {
+    if (matchKey != null && !matchMulti && matchIngredients.length === 1) {
       // Ingredients to this recipe are only produced by one recipe
+      // If matchIngredients.length is 1, then the ingredients are also not used elsewhere
+
       // Check for a loop
       const results = recipeResultsMap[matchKey][0];
       const ingredientMatch = checkForMatch(recipeIngredientsMap[key], results);
@@ -1031,32 +1038,33 @@ async function processMod(): Promise<void> {
     }
   }
 
+  // Check for use in recipe ingredients / products
   for (const key of Object.keys(recipesEnabled)) {
-    const recipeRaw = dataRaw.recipe[key];
-    const recipeData =
-      typeof recipeRaw[mode] === 'object' ? recipeRaw[mode] : recipeRaw;
-
-    // Check ingredients
-    for (const ingredient of coerceArray(recipeData.ingredients)) {
-      if (D.isSimpleIngredient(ingredient)) {
-        itemsUsed.add(ingredient[0]);
-      } else {
-        itemsUsed.add(ingredient.name);
-      }
+    for (const ingredient of Object.keys(recipeIngredientsMap[key])) {
+      itemsUsed.add(ingredient);
     }
 
-    // Check products
-    if (recipeData.results) {
-      for (const result of recipeData.results) {
-        if (D.isSimpleProduct(result)) {
-          itemsUsed.add(result[0]);
-        } else {
-          itemsUsed.add(result.name);
-        }
-      }
-    } else if (recipeData.result) {
-      itemsUsed.add(recipeData.result);
+    for (const product of Object.keys(recipeResultsMap[key][0])) {
+      itemsUsed.add(product);
     }
+  }
+
+  // Check for use in technology ingredients
+  const technologies = Object.keys(dataRaw.technology)
+    .map((t) => dataRaw.technology[t])
+    .filter((t) => !t.hidden);
+  const techDataMap: Record<string, D.TechnologyData> = {};
+  const techIngredientsMap: Record<string, Record<string, number>> = {};
+  for (const tech of technologies) {
+    const techData = tech[mode] ?? tech;
+    const techIngredients = getIngredients(techData.unit.ingredients);
+
+    for (const ingredient of Object.keys(techIngredients)) {
+      itemsUsed.add(ingredient);
+    }
+
+    techDataMap[tech.name] = techData;
+    techIngredientsMap[tech.name] = techIngredients;
   }
 
   // Sort items
@@ -1585,14 +1593,11 @@ async function processMod(): Promise<void> {
     }
   }
 
-  const technologies = Object.keys(dataRaw.technology).map(
-    (t) => dataRaw.technology[t]
-  );
   technologies.sort((a, b) => {
     return (a.order ?? '').localeCompare(b.order ?? '');
   });
   for (const techRaw of technologies) {
-    const techData = techRaw[mode] ?? techRaw;
+    const techData = techDataMap[techRaw.name];
     const technology: Technology = {};
     const id = techId[techRaw.name];
     if (techData.prerequisites?.length) {
@@ -1606,7 +1611,7 @@ async function processMod(): Promise<void> {
       row: 0,
       time: techData.unit.time,
       producers: Object.keys(machines.lab),
-      in: getIngredients(techData.unit.ingredients),
+      in: techIngredientsMap[techRaw.name],
       out: { [id]: 1 },
       technology,
       icon: await getIcon(techRaw),
