@@ -77,10 +77,6 @@
   }
 }
 
-.captain-of-industry::before {
-  background-position: -1px -1px;
-}
-
 .dyson-sphere-program::before {
   background-position: -66px -1px;
 }
@@ -123,4 +119,8 @@ body.light .module::before {
 
 .time::before {
   background-position: -131px -131px;
+}
+
+.captain-of-industry::before {
+  background-position: -196px -131px;
 }
