@@ -48,7 +48,7 @@
       ></button>
     </div>
     <h3>{{ 'techPicker.locked' | translate }}</h3>
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap invert">
       <i *ngIf="vm.status.locked.length === 0">{{ 'none' | translate }}</i>
       <button
         *ngFor="let id of vm.status.locked"
@@ -63,7 +63,7 @@
       ></button>
     </div>
     <h3>{{ 'techPicker.researched' | translate }}</h3>
-    <div class="d-flex flex-wrap">
+    <div class="d-flex flex-wrap invert">
       <i *ngIf="vm.status.researched.length === 0">{{ 'none' | translate }}</i>
       <button
         *ngFor="let id of vm.status.researched"

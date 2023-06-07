@@ -37,6 +37,8 @@ export class ThemeService {
 
         if (icon.invertLight) {
           css += `body.light .${i}::before { filter: invert(1); } `;
+          css += `.invert .${i}::before { filter: invert(1); } `;
+          css += `body.light .invert .${i}::before { filter: none; } `;
         }
       });
       data.itemIds
@@ -48,6 +50,8 @@ export class ThemeService {
 
           if (icon.invertLight) {
             css += `body.light .${item.id}.item::before { filter: invert(1); } `;
+            css += `.invert .${item.id}::before { filter: invert(1); } `;
+            css += `body.light .invert .${item.id}::before { filter: none; } `;
           }
         });
       data.recipeIds
@@ -59,6 +63,8 @@ export class ThemeService {
 
           if (icon.invertLight) {
             css += `body.light .${recipe.id}.recipe::before { filter: invert(1); } `;
+            css += `.invert .${recipe.id}::before { filter: invert(1); } `;
+            css += `body.light .invert .${recipe.id}::before { filter: none; } `;
           }
         });
       data.categoryIds
@@ -70,6 +76,8 @@ export class ThemeService {
 
           if (icon.invertLight) {
             css += `body.light .${category.id}.category::before { filter: invert(1); } `;
+            css += `.invert .${category.id}::before { filter: invert(1); } `;
+            css += `body.light .invert .${category.id}::before { filter: none; } `;
           }
         });
 
