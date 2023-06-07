@@ -2,7 +2,13 @@
   "version": { "DSP": "0.9.27.15466" },
   "categories": [
     { "id": "components", "name": "Components" },
-    { "id": "buildings", "name": "Buildings" }
+    { "id": "buildings", "name": "Buildings" },
+    {
+      "id": "technologies",
+      "name": "Technologies",
+      "icon": "mission-completed"
+    },
+    { "id": "upgrades", "name": "Upgrades", "icon": "mecha-core-6" }
   ],
   "icons": [
     { "id": "accumulator-full", "position": "-0px -0px" },
@@ -11,377 +17,1098 @@
     { "id": "annihilation-constraint-sphere", "position": "-192px -0px" },
     { "id": "antimatter-fuel-rod", "position": "-256px -0px" },
     { "id": "antimatter", "position": "-320px -0px" },
-    { "id": "applied-superconductor", "position": "-384px -0px" },
+    {
+      "id": "applied-superconductor",
+      "position": "-384px -0px",
+      "invertLight": true
+    },
     { "id": "arc-smelter", "position": "-448px -0px" },
-    { "id": "artificial-star-technology", "position": "-512px -0px" },
+    {
+      "id": "artificial-star-technology",
+      "position": "-512px -0px",
+      "invertLight": true
+    },
     { "id": "artificial-star", "position": "-576px -0px" },
     { "id": "assembling-machine-1", "position": "-640px -0px" },
     { "id": "assembling-machine-2", "position": "-704px -0px" },
     { "id": "assembling-machine-3", "position": "-768px -0px" },
-    { "id": "automatic-mettalurgy", "position": "-832px -0px" },
+    {
+      "id": "automatic-metallurgy",
+      "position": "-832px -0px",
+      "invertLight": true
+    },
     { "id": "automatic-piler", "position": "-896px -0px" },
-    { "id": "base-logistics-system", "position": "-960px -0px" },
-    { "id": "basic-assembling-processes", "position": "-1024px -0px" },
-    { "id": "basic-chemical-engineering", "position": "-1088px -0px" },
-    { "id": "buildings", "position": "-1152px -0px" },
+    {
+      "id": "basic-assembling-processes",
+      "position": "-960px -0px",
+      "invertLight": true
+    },
+    {
+      "id": "basic-chemical-engineering",
+      "position": "-1024px -0px",
+      "invertLight": true
+    },
+    {
+      "id": "basic-logistics-system",
+      "position": "-1088px -0px",
+      "invertLight": true
+    },
+    { "id": "buildings", "position": "-1152px -0px", "invertLight": true },
     { "id": "carbon-nanotube-advanced", "position": "-0px -64px" },
     { "id": "carbon-nanotube", "position": "-64px -64px" },
     { "id": "casimir-crystal-advanced", "position": "-128px -64px" },
-    { "id": "casimir-crystal-technology", "position": "-192px -64px" },
+    {
+      "id": "casimir-crystal-technology",
+      "position": "-192px -64px",
+      "invertLight": true
+    },
     { "id": "casimir-crystal", "position": "-256px -64px" },
     { "id": "chemical-plant", "position": "-320px -64px" },
     { "id": "circuit-board", "position": "-384px -64px" },
     { "id": "coal-vein", "position": "-448px -64px" },
     { "id": "coal", "position": "-512px -64px" },
-    { "id": "communication-control-1", "position": "-576px -64px" },
-    { "id": "communication-control-2", "position": "-640px -64px" },
-    { "id": "communication-control-3", "position": "-704px -64px" },
-    { "id": "communication-control-4", "position": "-768px -64px" },
-    { "id": "communication-control-5", "position": "-832px -64px" },
-    { "id": "communication-control-6", "position": "-896px -64px" },
-    { "id": "communication-control-7", "position": "-960px -64px" },
-    { "id": "components", "position": "-1024px -64px" },
-    { "id": "controlled-annihilation-reaction", "position": "-1088px -64px" },
+    {
+      "id": "communication-control-1",
+      "position": "-576px -64px",
+      "invertLight": true
+    },
+    {
+      "id": "communication-control-2",
+      "position": "-640px -64px",
+      "invertLight": true
+    },
+    {
+      "id": "communication-control-3",
+      "position": "-704px -64px",
+      "invertLight": true
+    },
+    {
+      "id": "communication-control-4",
+      "position": "-768px -64px",
+      "invertLight": true
+    },
+    {
+      "id": "communication-control-5",
+      "position": "-832px -64px",
+      "invertLight": true
+    },
+    {
+      "id": "communication-control-6",
+      "position": "-896px -64px",
+      "invertLight": true
+    },
+    {
+      "id": "communication-control-7",
+      "position": "-960px -64px",
+      "invertLight": true
+    },
+    { "id": "components", "position": "-1024px -64px", "invertLight": true },
+    {
+      "id": "controlled-annihilation-reaction",
+      "position": "-1088px -64px",
+      "invertLight": true
+    },
     { "id": "conveyor-belt-1", "position": "-1152px -64px" },
     { "id": "conveyor-belt-2", "position": "-0px -128px" },
     { "id": "conveyor-belt-3", "position": "-64px -128px" },
     { "id": "copper-ingot", "position": "-128px -128px" },
     { "id": "copper-ore", "position": "-192px -128px" },
     { "id": "copper-vein", "position": "-256px -128px" },
-    { "id": "critical-photon", "position": "-320px -128px" },
-    { "id": "crude-oil-seep", "position": "-384px -128px" },
-    { "id": "crude-oil", "position": "-448px -128px" },
-    { "id": "crystal-silicon-advanced", "position": "-512px -128px" },
-    { "id": "crystal-silicon", "position": "-576px -128px" },
-    { "id": "crystal-smelting", "position": "-640px -128px" },
-    { "id": "deuterium-fractionation-technology", "position": "-704px -128px" },
-    { "id": "deuterium-fractionation", "position": "-768px -128px" },
-    { "id": "deuterium", "position": "-832px -128px" },
-    { "id": "deuteron-fuel-rod", "position": "-896px -128px" },
-    { "id": "diamond-advanced", "position": "-960px -128px" },
-    { "id": "kimberlite-vein", "position": "-1024px -128px" },
+    { "id": "critical-photon-graviton", "position": "-320px -128px" },
+    { "id": "critical-photon", "position": "-384px -128px" },
+    { "id": "crude-oil-seep", "position": "-448px -128px" },
+    { "id": "crude-oil", "position": "-512px -128px" },
+    { "id": "crystal-silicon-advanced", "position": "-576px -128px" },
+    { "id": "crystal-silicon", "position": "-640px -128px" },
+    {
+      "id": "crystal-smelting",
+      "position": "-704px -128px",
+      "invertLight": true
+    },
+    {
+      "id": "deuterium-fractionation-technology",
+      "position": "-768px -128px",
+      "invertLight": true
+    },
+    { "id": "deuterium-fractionation", "position": "-832px -128px" },
+    { "id": "deuterium", "position": "-896px -128px" },
+    { "id": "deuteron-fuel-rod", "position": "-960px -128px" },
+    { "id": "diamond-advanced", "position": "-1024px -128px" },
     { "id": "diamond", "position": "-1088px -128px" },
-    { "id": "dirac-inversion-mechanism", "position": "-1152px -128px" },
-    { "id": "distribution-logistics-system", "position": "-0px -192px" },
-    { "id": "distribution-range-1", "position": "-64px -192px" },
-    { "id": "distribution-range-2", "position": "-128px -192px" },
-    { "id": "distribution-range-3", "position": "-192px -192px" },
-    { "id": "distribution-range-4", "position": "-256px -192px" },
-    { "id": "distribution-range-5", "position": "-320px -192px" },
-    { "id": "drive-engine-1", "position": "-384px -192px" },
-    { "id": "drive-engine-2", "position": "-448px -192px" },
-    { "id": "drive-engine-3", "position": "-512px -192px" },
-    { "id": "drive-engine-4", "position": "-576px -192px" },
-    { "id": "drive-engine-5", "position": "-640px -192px" },
-    { "id": "drive-engine-6", "position": "-704px -192px" },
-    { "id": "drone-engine-1", "position": "-768px -192px" },
-    { "id": "drone-engine-2", "position": "-832px -192px" },
-    { "id": "drone-engine-3", "position": "-896px -192px" },
-    { "id": "drone-engine-4", "position": "-960px -192px" },
-    { "id": "drone-engine-5", "position": "-1024px -192px" },
-    { "id": "drone-engine-6", "position": "-1088px -192px" },
+    {
+      "id": "dirac-inversion-mechanism",
+      "position": "-1152px -128px",
+      "invertLight": true
+    },
+    {
+      "id": "distribution-logistics-system",
+      "position": "-0px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "distribution-range-1",
+      "position": "-64px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "distribution-range-2",
+      "position": "-128px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "distribution-range-3",
+      "position": "-192px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "distribution-range-4",
+      "position": "-256px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "distribution-range-5",
+      "position": "-320px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drive-engine-1",
+      "position": "-384px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drive-engine-2",
+      "position": "-448px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drive-engine-3",
+      "position": "-512px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drive-engine-4",
+      "position": "-576px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drive-engine-5",
+      "position": "-640px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drive-engine-6",
+      "position": "-704px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drone-engine-1",
+      "position": "-768px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drone-engine-2",
+      "position": "-832px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drone-engine-3",
+      "position": "-896px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drone-engine-4",
+      "position": "-960px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drone-engine-5",
+      "position": "-1024px -192px",
+      "invertLight": true
+    },
+    {
+      "id": "drone-engine-6",
+      "position": "-1088px -192px",
+      "invertLight": true
+    },
     { "id": "dyson-sphere-component", "position": "-1152px -192px" },
-    { "id": "dyson-sphere-stress-system-1", "position": "-0px -256px" },
+    {
+      "id": "dyson-sphere-stress-system-1",
+      "position": "-0px -256px",
+      "invertLight": true
+    },
     { "id": "electric-motor", "position": "-64px -256px" },
-    { "id": "electromagnetic-drive", "position": "-128px -256px" },
-    { "id": "electromagnetic-matrix-technology", "position": "-192px -256px" },
+    {
+      "id": "electromagnetic-drive",
+      "position": "-128px -256px",
+      "invertLight": true
+    },
+    {
+      "id": "electromagnetic-matrix-technology",
+      "position": "-192px -256px",
+      "invertLight": true
+    },
     { "id": "electromagnetic-matrix", "position": "-256px -256px" },
     { "id": "electromagnetic-turbine", "position": "-320px -256px" },
-    { "id": "electromagnetism", "position": "-384px -256px" },
+    {
+      "id": "electromagnetism",
+      "position": "-384px -256px",
+      "invertLight": true
+    },
     { "id": "em-rail-ejector", "position": "-448px -256px" },
     { "id": "energetic-graphite", "position": "-512px -256px" },
-    { "id": "energy-circuit-1", "position": "-576px -256px" },
-    { "id": "energy-circuit-2", "position": "-640px -256px" },
-    { "id": "energy-circuit-3", "position": "-704px -256px" },
-    { "id": "energy-circuit-4", "position": "-768px -256px" },
-    { "id": "energy-circuit-5", "position": "-832px -256px" },
-    { "id": "energy-circuit-6", "position": "-896px -256px" },
+    {
+      "id": "energy-circuit-1",
+      "position": "-576px -256px",
+      "invertLight": true
+    },
+    {
+      "id": "energy-circuit-2",
+      "position": "-640px -256px",
+      "invertLight": true
+    },
+    {
+      "id": "energy-circuit-3",
+      "position": "-704px -256px",
+      "invertLight": true
+    },
+    {
+      "id": "energy-circuit-4",
+      "position": "-768px -256px",
+      "invertLight": true
+    },
+    {
+      "id": "energy-circuit-5",
+      "position": "-832px -256px",
+      "invertLight": true
+    },
+    {
+      "id": "energy-circuit-6",
+      "position": "-896px -256px",
+      "invertLight": true
+    },
     { "id": "energy-exchanger", "position": "-960px -256px" },
-    { "id": "energy-matrix-technology", "position": "-1024px -256px" },
+    {
+      "id": "energy-matrix-technology",
+      "position": "-1024px -256px",
+      "invertLight": true
+    },
     { "id": "energy-matrix", "position": "-1088px -256px" },
-    { "id": "energy-storage", "position": "-1152px -256px" },
-    { "id": "environment-modification", "position": "-0px -320px" },
+    {
+      "id": "energy-storage",
+      "position": "-1152px -256px",
+      "invertLight": true
+    },
+    {
+      "id": "environment-modification",
+      "position": "-0px -320px",
+      "invertLight": true
+    },
     { "id": "fire-ice-vein", "position": "-64px -320px" },
     { "id": "fire-ice", "position": "-128px -320px" },
-    { "id": "fluid-storage-encapsulation", "position": "-192px -320px" },
+    {
+      "id": "fluid-storage-encapsulation",
+      "position": "-192px -320px",
+      "invertLight": true
+    },
     { "id": "foundation", "position": "-256px -320px" },
     { "id": "fractal-silicon-vein", "position": "-320px -320px" },
     { "id": "fractal-silicon", "position": "-384px -320px" },
     { "id": "fractionator", "position": "-448px -320px" },
     { "id": "frame-material", "position": "-512px -320px" },
-    { "id": "gas-giants-exploitation", "position": "-576px -320px" },
+    {
+      "id": "gas-giants-exploitation",
+      "position": "-576px -320px",
+      "invertLight": true
+    },
     { "id": "gear", "position": "-640px -320px" },
-    { "id": "geothermal-extraction", "position": "-704px -320px" },
+    {
+      "id": "geothermal-extraction",
+      "position": "-704px -320px",
+      "invertLight": true
+    },
     { "id": "geothermal-power-station", "position": "-768px -320px" },
     { "id": "glass", "position": "-832px -320px" },
     { "id": "graphene-advanced", "position": "-896px -320px" },
     { "id": "graphene", "position": "-960px -320px" },
-    { "id": "gravitational-wave-refraction", "position": "-1024px -320px" },
+    {
+      "id": "gravitational-wave-refraction",
+      "position": "-1024px -320px",
+      "invertLight": true
+    },
     { "id": "graviton-lens", "position": "-1088px -320px" },
-    { "id": "gravity-matrix-technology", "position": "-1152px -320px" },
+    {
+      "id": "gravity-matrix-technology",
+      "position": "-1152px -320px",
+      "invertLight": true
+    },
     { "id": "gravity-matrix", "position": "-0px -384px" },
-    { "id": "high-efficiency-logistics-system", "position": "-64px -384px" },
-    { "id": "high-efficiency-plasma-control", "position": "-128px -384px" },
+    {
+      "id": "high-efficiency-logistics-system",
+      "position": "-64px -384px",
+      "invertLight": true
+    },
+    {
+      "id": "high-efficiency-plasma-control",
+      "position": "-128px -384px",
+      "invertLight": true
+    },
     { "id": "high-purity-silicon", "position": "-192px -384px" },
-    { "id": "high-speed-assembling-processes", "position": "-256px -384px" },
-    { "id": "high-strength-crystal", "position": "-320px -384px" },
-    { "id": "high-strength-glass", "position": "-384px -384px" },
+    {
+      "id": "high-speed-assembling-processes",
+      "position": "-256px -384px",
+      "invertLight": true
+    },
+    {
+      "id": "high-strength-crystal",
+      "position": "-320px -384px",
+      "invertLight": true
+    },
+    {
+      "id": "high-strength-glass",
+      "position": "-384px -384px",
+      "invertLight": true
+    },
     {
       "id": "high-strength-lightweight-structure",
-      "position": "-448px -384px"
+      "position": "-448px -384px",
+      "invertLight": true
     },
-    { "id": "high-strength-material", "position": "-512px -384px" },
-    { "id": "high-strength-titanium-alloy", "position": "-576px -384px" },
-    { "id": "hydrogen-fuel-rod-technology", "position": "-640px -384px" },
+    {
+      "id": "high-strength-material",
+      "position": "-512px -384px",
+      "invertLight": true
+    },
+    {
+      "id": "high-strength-titanium-alloy",
+      "position": "-576px -384px",
+      "invertLight": true
+    },
+    {
+      "id": "hydrogen-fuel-rod-technology",
+      "position": "-640px -384px",
+      "invertLight": true
+    },
     { "id": "hydrogen-fuel-rod", "position": "-704px -384px" },
     { "id": "hydrogen", "position": "-768px -384px" },
-    { "id": "improved-logistics-system", "position": "-832px -384px" },
-    { "id": "information-matrix-technology", "position": "-896px -384px" },
+    {
+      "id": "improved-logistics-system",
+      "position": "-832px -384px",
+      "invertLight": true
+    },
+    {
+      "id": "information-matrix-technology",
+      "position": "-896px -384px",
+      "invertLight": true
+    },
     { "id": "information-matrix", "position": "-960px -384px" },
-    { "id": "integrated-logistics-system", "position": "-1024px -384px" },
+    {
+      "id": "integrated-logistics-system",
+      "position": "-1024px -384px",
+      "invertLight": true
+    },
     { "id": "interstellar-logistics-station", "position": "-1088px -384px" },
-    { "id": "interstellar-logistics-system", "position": "-1152px -384px" },
-    { "id": "interstellar-power-transmission", "position": "-0px -448px" },
-    { "id": "inventory-capacity-1", "position": "-64px -448px" },
-    { "id": "inventory-capacity-2", "position": "-128px -448px" },
-    { "id": "inventory-capacity-3", "position": "-192px -448px" },
-    { "id": "inventory-capacity-4", "position": "-256px -448px" },
-    { "id": "inventory-capacity-5", "position": "-320px -448px" },
-    { "id": "inventory-capacity-6", "position": "-384px -448px" },
+    {
+      "id": "interstellar-logistics-system",
+      "position": "-1152px -384px",
+      "invertLight": true
+    },
+    {
+      "id": "interstellar-power-transmission",
+      "position": "-0px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "inventory-capacity-1",
+      "position": "-64px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "inventory-capacity-2",
+      "position": "-128px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "inventory-capacity-3",
+      "position": "-192px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "inventory-capacity-4",
+      "position": "-256px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "inventory-capacity-5",
+      "position": "-320px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "inventory-capacity-6",
+      "position": "-384px -448px",
+      "invertLight": true
+    },
     { "id": "iron-ingot", "position": "-448px -448px" },
     { "id": "iron-ore", "position": "-512px -448px" },
     { "id": "iron-vein", "position": "-576px -448px" },
     { "id": "kimberlite-ore", "position": "-640px -448px" },
-    { "id": "log", "position": "-704px -448px" },
-    { "id": "logistics-bot", "position": "-768px -448px" },
-    { "id": "logistics-carrier-capacity-1", "position": "-832px -448px" },
-    { "id": "logistics-carrier-capacity-12", "position": "-192px -512px" },
-    { "id": "logistics-carrier-capacity-2", "position": "-896px -448px" },
-    { "id": "logistics-carrier-capacity-3", "position": "-960px -448px" },
-    { "id": "logistics-carrier-capacity-4", "position": "-1024px -448px" },
-    { "id": "logistics-carrier-capacity-5", "position": "-1088px -448px" },
-    { "id": "logistics-carrier-capacity-6", "position": "-1152px -448px" },
-    { "id": "logistics-carrier-capacity-7", "position": "-0px -512px" },
-    { "id": "logistics-carrier-capacity-8", "position": "-64px -512px" },
-    { "id": "logistics-carrier-capacity-9", "position": "-128px -512px" },
-    { "id": "logistics-carrier-engine-1", "position": "-256px -512px" },
-    { "id": "logistics-carrier-engine-2", "position": "-320px -512px" },
-    { "id": "logistics-carrier-engine-3", "position": "-384px -512px" },
-    { "id": "logistics-carrier-engine-4", "position": "-448px -512px" },
-    { "id": "logistics-carrier-engine-5", "position": "-512px -512px" },
-    { "id": "logistics-carrier-engine-6", "position": "-576px -512px" },
-    { "id": "logistics-carrier-engine-7", "position": "-640px -512px" },
-    { "id": "logistics-distributor", "position": "-704px -512px" },
-    { "id": "logistics-drone", "position": "-768px -512px" },
+    { "id": "kimberlite-vein", "position": "-704px -448px" },
+    { "id": "log", "position": "-768px -448px" },
+    { "id": "logistics-bot", "position": "-832px -448px" },
+    {
+      "id": "logistics-carrier-capacity-1",
+      "position": "-896px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-capacity-12",
+      "position": "-256px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-capacity-2",
+      "position": "-960px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-capacity-3",
+      "position": "-1024px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-capacity-4",
+      "position": "-1088px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-capacity-5",
+      "position": "-1152px -448px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-capacity-6",
+      "position": "-0px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-capacity-7",
+      "position": "-64px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-capacity-8",
+      "position": "-128px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-capacity-9",
+      "position": "-192px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-engine-1",
+      "position": "-320px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-engine-2",
+      "position": "-384px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-engine-3",
+      "position": "-448px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-engine-4",
+      "position": "-512px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-engine-5",
+      "position": "-576px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-engine-6",
+      "position": "-640px -512px",
+      "invertLight": true
+    },
+    {
+      "id": "logistics-carrier-engine-7",
+      "position": "-704px -512px",
+      "invertLight": true
+    },
+    { "id": "logistics-distributor", "position": "-768px -512px" },
+    { "id": "logistics-drone", "position": "-832px -512px" },
     {
       "id": "logistics-station-integrated-logistics-1",
-      "position": "-832px -512px"
+      "position": "-896px -512px",
+      "invertLight": true
     },
     {
       "id": "logistics-station-integrated-logistics-2",
-      "position": "-896px -512px"
+      "position": "-960px -512px",
+      "invertLight": true
     },
     {
       "id": "logistics-station-integrated-logistics-3",
-      "position": "-960px -512px"
+      "position": "-1024px -512px",
+      "invertLight": true
     },
-    { "id": "logistics-vessel", "position": "-1024px -512px" },
-    { "id": "magnet", "position": "-1088px -512px" },
-    { "id": "magnetic-coil", "position": "-1152px -512px" },
-    { "id": "magnetic-levitation-technology", "position": "-0px -576px" },
-    { "id": "magnetic-particle-trap", "position": "-64px -576px" },
-    { "id": "mass-construction-1", "position": "-128px -576px" },
-    { "id": "mass-construction-2", "position": "-192px -576px" },
-    { "id": "mass-construction-3", "position": "-256px -576px" },
-    { "id": "mass-construction-4", "position": "-320px -576px" },
-    { "id": "mass-construction-5", "position": "-384px -576px" },
-    { "id": "mass-energy-storage", "position": "-448px -576px" },
-    { "id": "matrix-lab", "position": "-512px -576px" },
-    { "id": "mecha-core-1", "position": "-576px -576px" },
-    { "id": "mecha-core-2", "position": "-640px -576px" },
-    { "id": "mecha-core-3", "position": "-704px -576px" },
-    { "id": "mecha-core-4", "position": "-768px -576px" },
-    { "id": "mecha-core-5", "position": "-832px -576px" },
-    { "id": "mecha-core-6", "position": "-896px -576px" },
-    { "id": "mechanical-frame-1", "position": "-960px -576px" },
-    { "id": "mechanical-frame-2", "position": "-1024px -576px" },
-    { "id": "mechanical-frame-3", "position": "-1088px -576px" },
-    { "id": "mechanical-frame-4", "position": "-1152px -576px" },
-    { "id": "mechanical-frame-5", "position": "-0px -640px" },
-    { "id": "mechanical-frame-6", "position": "-64px -640px" },
-    { "id": "mechanical-frame-7", "position": "-128px -640px" },
-    { "id": "mechanical-frame-8", "position": "-192px -640px" },
-    { "id": "mesoscopic-quantum-entanglement", "position": "-256px -640px" },
-    { "id": "microcrystalline-component", "position": "-320px -640px" },
-    { "id": "mini-fusion-power-generation", "position": "-384px -640px" },
-    { "id": "mini-fusion-power-plant", "position": "-448px -640px" },
+    { "id": "logistics-vessel", "position": "-1088px -512px" },
+    { "id": "magnet", "position": "-1152px -512px" },
+    { "id": "magnetic-coil", "position": "-0px -576px" },
+    {
+      "id": "magnetic-levitation-technology",
+      "position": "-64px -576px",
+      "invertLight": true
+    },
+    {
+      "id": "magnetic-particle-trap",
+      "position": "-128px -576px",
+      "invertLight": true
+    },
+    {
+      "id": "mass-construction-1",
+      "position": "-192px -576px",
+      "invertLight": true
+    },
+    {
+      "id": "mass-construction-2",
+      "position": "-256px -576px",
+      "invertLight": true
+    },
+    {
+      "id": "mass-construction-3",
+      "position": "-320px -576px",
+      "invertLight": true
+    },
+    {
+      "id": "mass-construction-4",
+      "position": "-384px -576px",
+      "invertLight": true
+    },
+    {
+      "id": "mass-construction-5",
+      "position": "-448px -576px",
+      "invertLight": true
+    },
+    { "id": "mass-energy-storage", "position": "-512px -576px" },
+    { "id": "matrix-lab", "position": "-576px -576px" },
+    { "id": "mecha-core-1", "position": "-640px -576px", "invertLight": true },
+    { "id": "mecha-core-2", "position": "-704px -576px", "invertLight": true },
+    { "id": "mecha-core-3", "position": "-768px -576px", "invertLight": true },
+    { "id": "mecha-core-4", "position": "-832px -576px", "invertLight": true },
+    { "id": "mecha-core-5", "position": "-896px -576px", "invertLight": true },
+    { "id": "mecha-core-6", "position": "-960px -576px", "invertLight": true },
+    {
+      "id": "mechanical-frame-1",
+      "position": "-1024px -576px",
+      "invertLight": true
+    },
+    {
+      "id": "mechanical-frame-2",
+      "position": "-1088px -576px",
+      "invertLight": true
+    },
+    {
+      "id": "mechanical-frame-3",
+      "position": "-1152px -576px",
+      "invertLight": true
+    },
+    {
+      "id": "mechanical-frame-4",
+      "position": "-0px -640px",
+      "invertLight": true
+    },
+    {
+      "id": "mechanical-frame-5",
+      "position": "-64px -640px",
+      "invertLight": true
+    },
+    {
+      "id": "mechanical-frame-6",
+      "position": "-128px -640px",
+      "invertLight": true
+    },
+    {
+      "id": "mechanical-frame-7",
+      "position": "-192px -640px",
+      "invertLight": true
+    },
+    {
+      "id": "mechanical-frame-8",
+      "position": "-256px -640px",
+      "invertLight": true
+    },
+    {
+      "id": "mesoscopic-quantum-entanglement",
+      "position": "-320px -640px",
+      "invertLight": true
+    },
+    { "id": "microcrystalline-component", "position": "-384px -640px" },
+    {
+      "id": "mini-fusion-power-generation",
+      "position": "-448px -640px",
+      "invertLight": true
+    },
+    { "id": "mini-fusion-power-plant", "position": "-512px -640px" },
     {
       "id": "miniature-particle-collider-technology",
-      "position": "-512px -640px"
+      "position": "-576px -640px",
+      "invertLight": true
     },
-    { "id": "miniature-particle-collider", "position": "-576px -640px" },
-    { "id": "mining-machine", "position": "-640px -640px" },
-    { "id": "mission-completed", "position": "-704px -640px" },
-    { "id": "module", "position": "-768px -640px" },
-    { "id": "oil-extractor", "position": "-832px -640px" },
-    { "id": "oil-refinery", "position": "-896px -640px" },
-    { "id": "optical-grating-crystal-vein", "position": "-960px -640px" },
-    { "id": "optical-grating-crystal", "position": "-1024px -640px" },
-    { "id": "orbital-collector", "position": "-1088px -640px" },
-    { "id": "organic-crystal-original", "position": "-1152px -640px" },
-    { "id": "organic-crystal-vein", "position": "-0px -704px" },
-    { "id": "organic-crystal", "position": "-64px -704px" },
-    { "id": "particle-broadband", "position": "-128px -704px" },
-    { "id": "particle-container-advanced", "position": "-192px -704px" },
-    { "id": "particle-container", "position": "-256px -704px" },
-    { "id": "particle-control-technology", "position": "-320px -704px" },
-    { "id": "photon-combiner-advanced", "position": "-384px -704px" },
-    { "id": "photon-combiner", "position": "-448px -704px" },
-    { "id": "photon-frequency-conversion", "position": "-512px -704px" },
-    { "id": "photon-spotlight-mining-technology", "position": "-576px -704px" },
-    { "id": "plane-filter-smelting-technology", "position": "-640px -704px" },
-    { "id": "plane-filter", "position": "-704px -704px" },
-    { "id": "plane-smelter", "position": "-768px -704px" },
-    { "id": "planetary-ionosphere-utilization", "position": "-832px -704px" },
-    { "id": "planetary-logistics-station", "position": "-896px -704px" },
-    { "id": "planetary-logistics-system", "position": "-960px -704px" },
-    { "id": "plant-fuel", "position": "-1024px -704px" },
-    { "id": "plasma-exciter", "position": "-1088px -704px" },
-    { "id": "plasma-extract-refining", "position": "-1152px -704px" },
-    { "id": "plasma-refining", "position": "-0px -768px" },
-    { "id": "plastic", "position": "-64px -768px" },
-    { "id": "polymer-chemical-engineering", "position": "-128px -768px" },
-    { "id": "prism", "position": "-192px -768px" },
-    { "id": "processor-technology", "position": "-256px -768px" },
-    { "id": "processor", "position": "-320px -768px" },
-    { "id": "proliferator-1-products", "position": "-384px -768px" },
-    { "id": "proliferator-1-speed", "position": "-448px -768px" },
-    { "id": "proliferator-1-technology", "position": "-512px -768px" },
-    { "id": "proliferator-1", "position": "-576px -768px" },
-    { "id": "proliferator-2-products", "position": "-640px -768px" },
-    { "id": "proliferator-2-speed", "position": "-704px -768px" },
-    { "id": "proliferator-2-technology", "position": "-768px -768px" },
-    { "id": "proliferator-2", "position": "-832px -768px" },
-    { "id": "proliferator-3-products", "position": "-896px -768px" },
-    { "id": "proliferator-3-speed", "position": "-960px -768px" },
-    { "id": "proliferator-3-technology", "position": "-1024px -768px" },
-    { "id": "proliferator-3", "position": "-1088px -768px" },
-    { "id": "quantum-chemical-plant", "position": "-1152px -768px" },
-    { "id": "quantum-chip-technology", "position": "-0px -832px" },
-    { "id": "quantum-chip", "position": "-64px -832px" },
-    { "id": "quantum-printing-technology", "position": "-128px -832px" },
-    { "id": "ray-receiver-technology", "position": "-192px -832px" },
-    { "id": "ray-receiver", "position": "-256px -832px" },
-    { "id": "ray-transmission-efficiency-1", "position": "-320px -832px" },
-    { "id": "ray-transmission-efficiency-2", "position": "-384px -832px" },
-    { "id": "ray-transmission-efficiency-3", "position": "-448px -832px" },
-    { "id": "ray-transmission-efficiency-4", "position": "-512px -832px" },
-    { "id": "ray-transmission-efficiency-5", "position": "-576px -832px" },
-    { "id": "ray-transmission-efficiency-6", "position": "-640px -832px" },
-    { "id": "ray-transmission-efficiency-7", "position": "-704px -832px" },
-    { "id": "ray-transmission-efficiency-8", "position": "-768px -832px" },
-    { "id": "refined-oil", "position": "-832px -832px" },
-    { "id": "reforming-refine", "position": "-896px -832px" },
-    { "id": "reinforced-thruster-technology", "position": "-960px -832px" },
-    { "id": "reinforced-thruster", "position": "-1024px -832px" },
-    { "id": "research-speed-1", "position": "-1088px -832px" },
-    { "id": "research-speed-2", "position": "-1152px -832px" },
-    { "id": "research-speed-3", "position": "-0px -896px" },
-    { "id": "research-speed-4", "position": "-64px -896px" },
+    { "id": "miniature-particle-collider", "position": "-640px -640px" },
+    { "id": "mining-machine", "position": "-704px -640px" },
+    {
+      "id": "mission-completed",
+      "position": "-768px -640px",
+      "invertLight": true
+    },
+    { "id": "module", "position": "-832px -640px" },
+    { "id": "oil-extractor", "position": "-896px -640px" },
+    { "id": "oil-refinery", "position": "-960px -640px" },
+    { "id": "optical-grating-crystal-vein", "position": "-1024px -640px" },
+    { "id": "optical-grating-crystal", "position": "-1088px -640px" },
+    { "id": "orbital-collector", "position": "-1152px -640px" },
+    { "id": "organic-crystal-original", "position": "-0px -704px" },
+    { "id": "organic-crystal-vein", "position": "-64px -704px" },
+    { "id": "organic-crystal", "position": "-128px -704px" },
+    { "id": "particle-broadband", "position": "-192px -704px" },
+    { "id": "particle-container-advanced", "position": "-256px -704px" },
+    { "id": "particle-container", "position": "-320px -704px" },
+    {
+      "id": "particle-control-technology",
+      "position": "-384px -704px",
+      "invertLight": true
+    },
+    { "id": "photon-combiner-advanced", "position": "-448px -704px" },
+    { "id": "photon-combiner", "position": "-512px -704px" },
+    {
+      "id": "photon-frequency-conversion",
+      "position": "-576px -704px",
+      "invertLight": true
+    },
+    {
+      "id": "photon-spotlight-mining-technology",
+      "position": "-640px -704px",
+      "invertLight": true
+    },
+    {
+      "id": "plane-filter-smelting-technology",
+      "position": "-704px -704px",
+      "invertLight": true
+    },
+    { "id": "plane-filter", "position": "-768px -704px" },
+    { "id": "plane-smelter", "position": "-832px -704px" },
+    {
+      "id": "planetary-ionosphere-utilization",
+      "position": "-896px -704px",
+      "invertLight": true
+    },
+    { "id": "planetary-logistics-station", "position": "-960px -704px" },
+    {
+      "id": "planetary-logistics-system",
+      "position": "-1024px -704px",
+      "invertLight": true
+    },
+    { "id": "plant-fuel", "position": "-1088px -704px" },
+    { "id": "plasma-exciter", "position": "-1152px -704px" },
+    {
+      "id": "plasma-extract-refining",
+      "position": "-0px -768px",
+      "invertLight": true
+    },
+    { "id": "plasma-refining", "position": "-64px -768px" },
+    { "id": "plastic", "position": "-128px -768px" },
+    {
+      "id": "polymer-chemical-engineering",
+      "position": "-192px -768px",
+      "invertLight": true
+    },
+    { "id": "prism", "position": "-256px -768px" },
+    {
+      "id": "processor-technology",
+      "position": "-320px -768px",
+      "invertLight": true
+    },
+    { "id": "processor", "position": "-384px -768px" },
+    { "id": "proliferator-1-products", "position": "-448px -768px" },
+    { "id": "proliferator-1-speed", "position": "-512px -768px" },
+    {
+      "id": "proliferator-1-technology",
+      "position": "-576px -768px",
+      "invertLight": true
+    },
+    { "id": "proliferator-1", "position": "-640px -768px" },
+    { "id": "proliferator-2-products", "position": "-704px -768px" },
+    { "id": "proliferator-2-speed", "position": "-768px -768px" },
+    {
+      "id": "proliferator-2-technology",
+      "position": "-832px -768px",
+      "invertLight": true
+    },
+    { "id": "proliferator-2", "position": "-896px -768px" },
+    { "id": "proliferator-3-products", "position": "-960px -768px" },
+    { "id": "proliferator-3-speed", "position": "-1024px -768px" },
+    {
+      "id": "proliferator-3-technology",
+      "position": "-1088px -768px",
+      "invertLight": true
+    },
+    { "id": "proliferator-3", "position": "-1152px -768px" },
+    { "id": "quantum-chemical-plant", "position": "-0px -832px" },
+    {
+      "id": "quantum-chip-technology",
+      "position": "-64px -832px",
+      "invertLight": true
+    },
+    { "id": "quantum-chip", "position": "-128px -832px" },
+    {
+      "id": "quantum-printing-technology",
+      "position": "-192px -832px",
+      "invertLight": true
+    },
+    {
+      "id": "ray-receiver-technology",
+      "position": "-256px -832px",
+      "invertLight": true
+    },
+    { "id": "ray-receiver", "position": "-320px -832px" },
+    {
+      "id": "ray-transmission-efficiency-1",
+      "position": "-384px -832px",
+      "invertLight": true
+    },
+    {
+      "id": "ray-transmission-efficiency-2",
+      "position": "-448px -832px",
+      "invertLight": true
+    },
+    {
+      "id": "ray-transmission-efficiency-3",
+      "position": "-512px -832px",
+      "invertLight": true
+    },
+    {
+      "id": "ray-transmission-efficiency-4",
+      "position": "-576px -832px",
+      "invertLight": true
+    },
+    {
+      "id": "ray-transmission-efficiency-5",
+      "position": "-640px -832px",
+      "invertLight": true
+    },
+    {
+      "id": "ray-transmission-efficiency-6",
+      "position": "-704px -832px",
+      "invertLight": true
+    },
+    {
+      "id": "ray-transmission-efficiency-7",
+      "position": "-768px -832px",
+      "invertLight": true
+    },
+    {
+      "id": "ray-transmission-efficiency-8",
+      "position": "-832px -832px",
+      "invertLight": true
+    },
+    { "id": "refined-oil", "position": "-896px -832px" },
+    {
+      "id": "reforming-refine-technology",
+      "position": "-960px -832px",
+      "invertLight": true
+    },
+    { "id": "reforming-refine", "position": "-1024px -832px" },
+    {
+      "id": "reinforced-thruster-technology",
+      "position": "-1088px -832px",
+      "invertLight": true
+    },
+    { "id": "reinforced-thruster", "position": "-1152px -832px" },
+    {
+      "id": "research-speed-1",
+      "position": "-0px -896px",
+      "invertLight": true
+    },
+    {
+      "id": "research-speed-2",
+      "position": "-64px -896px",
+      "invertLight": true
+    },
+    {
+      "id": "research-speed-3",
+      "position": "-128px -896px",
+      "invertLight": true
+    },
+    {
+      "id": "research-speed-4",
+      "position": "-192px -896px",
+      "invertLight": true
+    },
     {
       "id": "satellite-power-distribution-system",
-      "position": "-128px -896px"
+      "position": "-256px -896px",
+      "invertLight": true
     },
-    { "id": "satellite-substation", "position": "-192px -896px" },
-    { "id": "semiconductor-material", "position": "-256px -896px" },
-    { "id": "silicon-ore", "position": "-320px -896px" },
-    { "id": "silicon-vein", "position": "-384px -896px" },
-    { "id": "small-carrier-rocket", "position": "-448px -896px" },
-    { "id": "smelting-purification", "position": "-512px -896px" },
-    { "id": "solar-collection", "position": "-576px -896px" },
-    { "id": "solar-panel", "position": "-640px -896px" },
-    { "id": "solar-sail-life-1", "position": "-704px -896px" },
-    { "id": "solar-sail-life-2", "position": "-768px -896px" },
-    { "id": "solar-sail-life-3", "position": "-832px -896px" },
-    { "id": "solar-sail-life-4", "position": "-896px -896px" },
-    { "id": "solar-sail-life-5", "position": "-960px -896px" },
-    { "id": "solar-sail-life-6", "position": "-1024px -896px" },
-    { "id": "solar-sail-orbit-system", "position": "-1088px -896px" },
-    { "id": "solar-sail", "position": "-1152px -896px" },
-    { "id": "sorter-cargo-stacking-1", "position": "-0px -960px" },
-    { "id": "sorter-cargo-stacking-2", "position": "-64px -960px" },
-    { "id": "sorter-cargo-stacking-3", "position": "-128px -960px" },
-    { "id": "sorter-cargo-stacking-4", "position": "-192px -960px" },
-    { "id": "sorter-cargo-stacking-5", "position": "-256px -960px" },
-    { "id": "sorter-1", "position": "-320px -960px" },
-    { "id": "sorter-2", "position": "-384px -960px" },
-    { "id": "sorter-3", "position": "-448px -960px" },
-    { "id": "space-warper-advanced", "position": "-512px -960px" },
-    { "id": "space-warper", "position": "-576px -960px" },
-    { "id": "spiniform-stalagmite-crystal-vein", "position": "-640px -960px" },
-    { "id": "spiniform-stalagmite-crystal", "position": "-704px -960px" },
-    { "id": "splitter", "position": "-768px -960px" },
-    { "id": "spray-coater", "position": "-832px -960px" },
-    { "id": "steel-smelting", "position": "-896px -960px" },
-    { "id": "steel", "position": "-960px -960px" },
-    { "id": "stone-brick", "position": "-1024px -960px" },
-    { "id": "stone-vein", "position": "-1088px -960px" },
-    { "id": "stone", "position": "-1152px -960px" },
-    { "id": "storage-1", "position": "-0px -1024px" },
-    { "id": "storage-2", "position": "-64px -1024px" },
-    { "id": "storage-tank", "position": "-128px -1024px" },
-    { "id": "strange-matter-technology", "position": "-192px -1024px" },
-    { "id": "strange-matter", "position": "-256px -1024px" },
-    { "id": "structure-matrix-technology", "position": "-320px -1024px" },
-    { "id": "structure-matrix", "position": "-384px -1024px" },
-    { "id": "sulfuric-acid", "position": "-448px -1024px" },
-    { "id": "super-magnetic-field-generator", "position": "-512px -1024px" },
-    { "id": "super-magnetic-ring", "position": "-576px -1024px" },
-    { "id": "tesla-tower", "position": "-640px -1024px" },
-    { "id": "thermal-power-plant", "position": "-704px -1024px" },
-    { "id": "thermal-power", "position": "-768px -1024px" },
-    { "id": "thruster-technology", "position": "-832px -1024px" },
-    { "id": "thruster", "position": "-896px -1024px" },
-    { "id": "titanium-alloy", "position": "-960px -1024px" },
-    { "id": "titanium-crystal", "position": "-1024px -1024px" },
-    { "id": "titanium-glass", "position": "-1088px -1024px" },
-    { "id": "titanium-ingot", "position": "-1152px -1024px" },
-    { "id": "titanium-ore", "position": "-0px -1088px" },
-    { "id": "titanium-smelting", "position": "-64px -1088px" },
-    { "id": "titanium-vein", "position": "-128px -1088px" },
-    { "id": "traffic-monitor", "position": "-192px -1088px" },
-    { "id": "unipolar-magnet-vein", "position": "-256px -1088px" },
-    { "id": "unipolar-magnet", "position": "-320px -1088px" },
-    { "id": "universe-exploration-1", "position": "-384px -1088px" },
-    { "id": "universe-exploration-2", "position": "-448px -1088px" },
-    { "id": "universe-exploration-3", "position": "-512px -1088px" },
-    { "id": "universe-exploration-4", "position": "-576px -1088px" },
-    { "id": "universe-matrix-technology", "position": "-640px -1088px" },
-    { "id": "universe-matrix", "position": "-704px -1088px" },
-    { "id": "veins-utilization-1", "position": "-768px -1088px" },
-    { "id": "veins-utilization-2", "position": "-832px -1088px" },
-    { "id": "veins-utilization-3", "position": "-896px -1088px" },
-    { "id": "veins-utilization-4", "position": "-960px -1088px" },
-    { "id": "veins-utilization-5", "position": "-1024px -1088px" },
-    { "id": "veins-utilization-6", "position": "-1088px -1088px" },
-    { "id": "vertical-construction-1", "position": "-1152px -1088px" },
-    { "id": "vertical-construction-2", "position": "-0px -1152px" },
-    { "id": "vertical-construction-3", "position": "-64px -1152px" },
-    { "id": "vertical-construction-4", "position": "-128px -1152px" },
-    { "id": "vertical-construction-5", "position": "-192px -1152px" },
-    { "id": "vertical-construction-6", "position": "-256px -1152px" },
+    { "id": "satellite-substation", "position": "-320px -896px" },
+    {
+      "id": "semiconductor-material",
+      "position": "-384px -896px",
+      "invertLight": true
+    },
+    { "id": "silicon-ore", "position": "-448px -896px" },
+    { "id": "silicon-vein", "position": "-512px -896px" },
+    { "id": "small-carrier-rocket", "position": "-576px -896px" },
+    {
+      "id": "smelting-purification",
+      "position": "-640px -896px",
+      "invertLight": true
+    },
+    {
+      "id": "solar-collection",
+      "position": "-704px -896px",
+      "invertLight": true
+    },
+    { "id": "solar-panel", "position": "-768px -896px" },
+    {
+      "id": "solar-sail-life-1",
+      "position": "-832px -896px",
+      "invertLight": true
+    },
+    {
+      "id": "solar-sail-life-2",
+      "position": "-896px -896px",
+      "invertLight": true
+    },
+    {
+      "id": "solar-sail-life-3",
+      "position": "-960px -896px",
+      "invertLight": true
+    },
+    {
+      "id": "solar-sail-life-4",
+      "position": "-1024px -896px",
+      "invertLight": true
+    },
+    {
+      "id": "solar-sail-life-5",
+      "position": "-1088px -896px",
+      "invertLight": true
+    },
+    {
+      "id": "solar-sail-life-6",
+      "position": "-1152px -896px",
+      "invertLight": true
+    },
+    {
+      "id": "solar-sail-orbit-system",
+      "position": "-0px -960px",
+      "invertLight": true
+    },
+    { "id": "solar-sail", "position": "-64px -960px" },
+    { "id": "sorter-1", "position": "-128px -960px" },
+    { "id": "sorter-2", "position": "-192px -960px" },
+    { "id": "sorter-3", "position": "-256px -960px" },
+    {
+      "id": "sorter-cargo-stacking-1",
+      "position": "-320px -960px",
+      "invertLight": true
+    },
+    {
+      "id": "sorter-cargo-stacking-2",
+      "position": "-384px -960px",
+      "invertLight": true
+    },
+    {
+      "id": "sorter-cargo-stacking-3",
+      "position": "-448px -960px",
+      "invertLight": true
+    },
+    {
+      "id": "sorter-cargo-stacking-4",
+      "position": "-512px -960px",
+      "invertLight": true
+    },
+    {
+      "id": "sorter-cargo-stacking-5",
+      "position": "-576px -960px",
+      "invertLight": true
+    },
+    { "id": "space-warper-advanced", "position": "-640px -960px" },
+    { "id": "space-warper", "position": "-704px -960px" },
+    { "id": "spiniform-stalagmite-crystal-vein", "position": "-768px -960px" },
+    { "id": "spiniform-stalagmite-crystal", "position": "-832px -960px" },
+    { "id": "splitter", "position": "-896px -960px" },
+    { "id": "spray-coater", "position": "-960px -960px" },
+    {
+      "id": "steel-smelting",
+      "position": "-1024px -960px",
+      "invertLight": true
+    },
+    { "id": "steel", "position": "-1088px -960px" },
+    { "id": "stone-brick", "position": "-1152px -960px" },
+    { "id": "stone-vein", "position": "-0px -1024px" },
+    { "id": "stone", "position": "-64px -1024px" },
+    { "id": "storage-1", "position": "-128px -1024px" },
+    { "id": "storage-2", "position": "-192px -1024px" },
+    { "id": "storage-tank", "position": "-256px -1024px" },
+    {
+      "id": "strange-matter-technology",
+      "position": "-320px -1024px",
+      "invertLight": true
+    },
+    { "id": "strange-matter", "position": "-384px -1024px" },
+    {
+      "id": "structure-matrix-technology",
+      "position": "-448px -1024px",
+      "invertLight": true
+    },
+    { "id": "structure-matrix", "position": "-512px -1024px" },
+    { "id": "sulfuric-acid", "position": "-576px -1024px" },
+    {
+      "id": "super-magnetic-field-generator",
+      "position": "-640px -1024px",
+      "invertLight": true
+    },
+    { "id": "super-magnetic-ring", "position": "-704px -1024px" },
+    { "id": "tesla-tower", "position": "-768px -1024px" },
+    { "id": "thermal-power-plant", "position": "-832px -1024px" },
+    {
+      "id": "thermal-power",
+      "position": "-896px -1024px",
+      "invertLight": true
+    },
+    {
+      "id": "thruster-technology",
+      "position": "-960px -1024px",
+      "invertLight": true
+    },
+    { "id": "thruster", "position": "-1024px -1024px" },
+    { "id": "titanium-alloy", "position": "-1088px -1024px" },
+    { "id": "titanium-crystal", "position": "-1152px -1024px" },
+    { "id": "titanium-glass", "position": "-0px -1088px" },
+    { "id": "titanium-ingot", "position": "-64px -1088px" },
+    { "id": "titanium-ore", "position": "-128px -1088px" },
+    {
+      "id": "titanium-smelting",
+      "position": "-192px -1088px",
+      "invertLight": true
+    },
+    { "id": "titanium-vein", "position": "-256px -1088px" },
+    { "id": "traffic-monitor", "position": "-320px -1088px" },
+    { "id": "unipolar-magnet-vein", "position": "-384px -1088px" },
+    { "id": "unipolar-magnet", "position": "-448px -1088px" },
+    {
+      "id": "universe-exploration-1",
+      "position": "-512px -1088px",
+      "invertLight": true
+    },
+    {
+      "id": "universe-exploration-2",
+      "position": "-576px -1088px",
+      "invertLight": true
+    },
+    {
+      "id": "universe-exploration-3",
+      "position": "-640px -1088px",
+      "invertLight": true
+    },
+    {
+      "id": "universe-exploration-4",
+      "position": "-704px -1088px",
+      "invertLight": true
+    },
+    {
+      "id": "universe-matrix-technology",
+      "position": "-768px -1088px",
+      "invertLight": true
+    },
+    { "id": "universe-matrix", "position": "-832px -1088px" },
+    {
+      "id": "veins-utilization-1",
+      "position": "-896px -1088px",
+      "invertLight": true
+    },
+    {
+      "id": "veins-utilization-2",
+      "position": "-960px -1088px",
+      "invertLight": true
+    },
+    {
+      "id": "veins-utilization-3",
+      "position": "-1024px -1088px",
+      "invertLight": true
+    },
+    {
+      "id": "veins-utilization-4",
+      "position": "-1088px -1088px",
+      "invertLight": true
+    },
+    {
+      "id": "veins-utilization-5",
+      "position": "-1152px -1088px",
+      "invertLight": true
+    },
+    {
+      "id": "veins-utilization-6",
+      "position": "-0px -1152px",
+      "invertLight": true
+    },
+    {
+      "id": "vertical-construction-1",
+      "position": "-64px -1152px",
+      "invertLight": true
+    },
+    {
+      "id": "vertical-construction-2",
+      "position": "-128px -1152px",
+      "invertLight": true
+    },
+    {
+      "id": "vertical-construction-3",
+      "position": "-192px -1152px",
+      "invertLight": true
+    },
+    {
+      "id": "vertical-construction-4",
+      "position": "-256px -1152px",
+      "invertLight": true
+    },
+    {
+      "id": "vertical-construction-5",
+      "position": "-320px -1152px",
+      "invertLight": true
+    },
+    {
+      "id": "vertical-construction-6",
+      "position": "-384px -1152px",
+      "invertLight": true
+    },
     {
       "id": "vertical-launching-silo-technology",
-      "position": "-320px -1152px"
+      "position": "-448px -1152px",
+      "invertLight": true
     },
-    { "id": "vertical-launching-silo", "position": "-384px -1152px" },
-    { "id": "water-pump", "position": "-448px -1152px" },
-    { "id": "water", "position": "-512px -1152px" },
-    { "id": "wave-function-interference", "position": "-576px -1152px" },
-    { "id": "wind-turbine", "position": "-640px -1152px" },
-    { "id": "wireless-power-tower", "position": "-704px -1152px" },
-    { "id": "x-ray-cracking-technology", "position": "-768px -1152px" },
-    { "id": "x-ray-cracking", "position": "-832px -1152px" }
+    { "id": "vertical-launching-silo", "position": "-512px -1152px" },
+    { "id": "water-pump", "position": "-576px -1152px" },
+    { "id": "water", "position": "-640px -1152px" },
+    {
+      "id": "wave-function-interference",
+      "position": "-704px -1152px",
+      "invertLight": true
+    },
+    { "id": "wind-turbine", "position": "-768px -1152px" },
+    { "id": "wireless-power-tower", "position": "-832px -1152px" },
+    {
+      "id": "x-ray-cracking-technology",
+      "position": "-896px -1152px",
+      "invertLight": true
+    },
+    { "id": "x-ray-cracking", "position": "-960px -1152px" }
   ],
   "items": [
     {
@@ -1344,7 +2071,7 @@
       "id": "matrix-lab",
       "name": "Matrix lab",
       "row": 3,
-      "stack": 20,
+      "stack": 50,
       "machine": {
         "type": "electric",
         "usage": 480,
@@ -1413,7 +2140,7 @@
     {
       "category": "buildings",
       "id": "accumulator-full",
-      "name": "Accumulator (full)",
+      "name": "Accumulator (Full)",
       "row": 3,
       "stack": 20,
       "fuel": { "category": "accumulator", "value": 270 }
@@ -1421,7 +2148,7 @@
     {
       "category": "buildings-alt",
       "id": "ray-receiver-pro",
-      "name": "Ray receiver (w/lens)",
+      "name": "Ray receiver (Graviton lens)",
       "row": 0,
       "stack": 10,
       "machine": {
@@ -1590,6 +2317,528 @@
       "belt": { "speed": 120 },
       "icon": "conveyor-belt-3",
       "iconText": 4
+    },
+    {
+      "category": "technologies",
+      "id": "electromagnetism",
+      "name": "Electromagnetism",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "basic-logistics-system",
+      "name": "Basic logistics system",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "automatic-metallurgy",
+      "name": "Automatic metallurgy",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "electromagnetic-matrix-technology",
+      "name": "Electomagnetic matrix (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "basic-assembling-processes",
+      "name": "Basic assembling processes",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "fluid-storage-encapsulation",
+      "name": "Fluid storage encapsulation",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "high-efficiency-plasma-control",
+      "name": "High efficiency plasma control",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "electromagnetic-drive",
+      "name": "Electromagnetic drive",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "steel-smelting",
+      "name": "Steel smelting",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "smelting-purification",
+      "name": "Smelting purification",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "semiconductor-material",
+      "name": "Semiconductor material",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "thermal-power",
+      "name": "Thermal power",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "plasma-extract-refining",
+      "name": "Plasma extract refining",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "improved-logistics-system",
+      "name": "Improved logistics system",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "environment-modification",
+      "name": "Environment modification",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "crystal-smelting",
+      "name": "Crystal smelting",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "solar-collection",
+      "name": "Solar collection",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "proliferator-1-technology",
+      "name": "Proliferator mk.I (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "deuterium-fractionation-technology",
+      "name": "Deuterium fractionation (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "basic-chemical-engineering",
+      "name": "Basic chemical engineering",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "energy-matrix-technology",
+      "name": "Energy matrix (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "magnetic-levitation-technology",
+      "name": "Magnetic Levitation Technology",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "high-efficiency-logistics-system",
+      "name": "High-efficiency logistics system",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "distribution-logistics-system",
+      "name": "Distribution logistics system",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "titanium-smelting",
+      "name": "Titanium smelting",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "energy-storage",
+      "name": "Energy storage",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "photon-frequency-conversion",
+      "name": "Photon frequency conversion",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "processor-technology",
+      "name": "Processor (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "applied-superconductor",
+      "name": "Applied superconductor",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "polymer-chemical-engineering",
+      "name": "Polymer chemical engineering",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "x-ray-cracking-technology",
+      "name": "X-ray cracking (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "hydrogen-fuel-rod-technology",
+      "name": "Hydrogen fuel rod (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "super-magnetic-field-generator",
+      "name": "Super magnetic field generator",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "planetary-logistics-system",
+      "name": "Planetary logistics system",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "geothermal-extraction",
+      "name": "Geothermal extraction",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "solar-sail-orbit-system",
+      "name": "Solar sail orbit system",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "high-speed-assembling-processes",
+      "name": "High speed assembling processes",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "proliferator-2-technology",
+      "name": "Proliferator mk.II (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "high-strength-crystal",
+      "name": "High-strength crystal",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "reforming-refine-technology",
+      "name": "Reforming refine (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "thruster-technology",
+      "name": "Thruster (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "magnetic-particle-trap",
+      "name": "Magnetic particle trap",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "integrated-logistics-system",
+      "name": "Integrated logistics system",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "high-strength-titanium-alloy",
+      "name": "High-strength titanium alloy",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "high-strength-lightweight-structure",
+      "name": "High-strength lightweight structure",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "ray-receiver-technology",
+      "name": "Ray receiver (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "mini-fusion-power-generation",
+      "name": "Mini fusion power generation",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "high-strength-material",
+      "name": "High-strength material",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "structure-matrix-technology",
+      "name": "Structure matrix (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "reinforced-thruster-technology",
+      "name": "Reinforced thruster (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "interstellar-logistics-system",
+      "name": "Interstellar logistics system",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "interstellar-power-transmission",
+      "name": "Interstellar power transmission",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "proliferator-3-technology",
+      "name": "Proliferator mk.III (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "particle-control-technology",
+      "name": "Particle control technology",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "high-strength-glass",
+      "name": "High-strength glass",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "casimir-crystal-technology",
+      "name": "Casimir crystal (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "miniature-particle-collider-technology",
+      "name": "Miniature particle collider (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "satellite-power-distribution-system",
+      "name": "Satellite power distribution system",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "gas-giants-exploitation",
+      "name": "Gas giants exploitation",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "information-matrix-technology",
+      "name": "Information matrix (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "wave-function-interference",
+      "name": "Wave function interference",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "strange-matter-technology",
+      "name": "Strange matter (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "vertical-launching-silo-technology",
+      "name": "Vertical launching silo (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "quantum-chip-technology",
+      "name": "Quantum chip (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "plane-filter-smelting-technology",
+      "name": "Plane-filter smelting technology",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "gravitational-wave-refraction",
+      "name": "Gravitational wave refraction",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "dyson-sphere-stress-system-1",
+      "name": "Dyson sphere stress system (Lv1)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "planetary-ionosphere-utilization",
+      "name": "Planetary ionosphere utilization",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "quantum-printing-technology",
+      "name": "Quantum printing technology",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "photon-spotlight-mining-technology",
+      "name": "Photon spotlight mining technology",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "mesoscopic-quantum-entanglement",
+      "name": "Mesoscopic quantum entanglement",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "gravity-matrix-technology",
+      "name": "Gravity matrix (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "dirac-inversion-mechanism",
+      "name": "Dirac inversion mechanism",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "controlled-annihilation-reaction",
+      "name": "Controlled annihilation reaction",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "artificial-star-technology",
+      "name": "Artificial star (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "universe-matrix-technology",
+      "name": "Universe matrix (Technology)",
+      "row": 0
+    },
+    {
+      "category": "technologies",
+      "id": "mission-completed",
+      "name": "Mission completed!",
+      "row": 0
+    },
+    {
+      "category": "upgrades",
+      "id": "universe-exploration-1",
+      "name": "Universe exploration (Lv1)",
+      "row": 0
+    },
+    {
+      "category": "upgrades",
+      "id": "universe-exploration-2",
+      "name": "Universe exploration (Lv2)",
+      "row": 0
+    },
+    {
+      "category": "upgrades",
+      "id": "universe-exploration-3",
+      "name": "Universe exploration (Lv3)",
+      "row": 0
+    },
+    {
+      "category": "upgrades",
+      "id": "universe-exploration-4",
+      "name": "Universe exploration (Lv4)",
+      "row": 0
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-1",
+      "name": "Mecha core (Lv1)",
+      "row": 0
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-2",
+      "name": "Mecha core (Lv2)",
+      "row": 0
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-3",
+      "name": "Mecha core (Lv3)",
+      "row": 0
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-4",
+      "name": "Mecha core (Lv4)",
+      "row": 0
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-5",
+      "name": "Mecha core (Lv5)",
+      "row": 0
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-6",
+      "name": "Mecha core (Lv6)",
+      "row": 0
     }
   ],
   "limitations": {
@@ -2084,7 +3333,7 @@
     },
     {
       "id": "diamond-advanced",
-      "name": "Diamond (advanced)",
+      "name": "Diamond (Advanced)",
       "time": 1.5,
       "in": { "kimberlite-ore": 1 },
       "out": { "diamond": 2 },
@@ -2104,7 +3353,7 @@
     },
     {
       "id": "crystal-silicon-advanced",
-      "name": "Crystal silicon (advanced)",
+      "name": "Crystal silicon (Advanced)",
       "time": 1.5,
       "in": { "fractal-silicon": 1 },
       "out": { "crystal-silicon": 2 },
@@ -2162,7 +3411,7 @@
     },
     {
       "id": "organic-crystal-original",
-      "name": "Organic crystal (original)",
+      "name": "Organic crystal (Original)",
       "time": 6,
       "in": { "log": 20, "plant-fuel": 30, "water": 10 },
       "out": { "organic-crystal": 1 },
@@ -2196,7 +3445,7 @@
     },
     {
       "id": "graphene-advanced",
-      "name": "Graphene (advanced)",
+      "name": "Graphene (Advanced)",
       "time": 2,
       "in": { "fire-ice": 2 },
       "out": { "graphene": 2, "hydrogen": 1 },
@@ -2326,7 +3575,7 @@
     },
     {
       "id": "casimir-crystal-advanced",
-      "name": "Casimir crystal (advanced)",
+      "name": "Casimir crystal (Advanced)",
       "time": 4,
       "in": { "optical-grating-crystal": 8, "graphene": 2, "hydrogen": 12 },
       "out": { "casimir-crystal": 1 },
@@ -2374,7 +3623,7 @@
     },
     {
       "id": "carbon-nanotube-advanced",
-      "name": "Carbon nanotube (advanced)",
+      "name": "Carbon nanotube (Advanced)",
       "time": 4,
       "in": { "spiniform-stalagmite-crystal": 6 },
       "out": { "carbon-nanotube": 2 },
@@ -2452,7 +3701,7 @@
     },
     {
       "id": "photon-combiner-advanced",
-      "name": "Photon combiner (advanced)",
+      "name": "Photon combiner (Advanced)",
       "time": 3,
       "in": { "optical-grating-crystal": 1, "circuit-board": 1 },
       "out": { "photon-combiner": 1 },
@@ -2614,9 +3863,8 @@
       "category": "components"
     },
     {
-      "id": "photon-capacitor-graviton",
-      "name": "Ray receiver (graviton lens) photon generation",
-      "icon": "graviton-lens",
+      "id": "critical-photon-graviton",
+      "name": "Ray receiver (Graviton lens) photon generation",
       "cost": 100,
       "time": 60,
       "in": {},
@@ -2642,7 +3890,7 @@
     },
     {
       "id": "particle-container-advanced",
-      "name": "Particle container (advanced)",
+      "name": "Particle container (Advanced)",
       "time": 4,
       "in": { "unipolar-magnet": 10, "copper-ingot": 2 },
       "out": { "particle-container": 1 },
@@ -2716,7 +3964,7 @@
     },
     {
       "id": "space-warper-advanced",
-      "name": "Space warper (advanced)",
+      "name": "Space warper (Advanced)",
       "time": 10,
       "in": { "gravity-matrix": 1 },
       "out": { "space-warper": 8 },
@@ -3209,7 +4457,7 @@
     },
     {
       "id": "splitter",
-      "name": "Splitter(4-direction)",
+      "name": "Splitter",
       "time": 2,
       "in": { "iron-ingot": 3, "gear": 2, "circuit-board": 1 },
       "out": { "splitter": 1 },
@@ -3761,7 +5009,7 @@
     },
     {
       "id": "accumulator-full",
-      "name": "Accumulator (full)",
+      "name": "Accumulator (Full)",
       "time": 6,
       "in": { "accumulator": 1 },
       "out": { "accumulator-full": 1 },
@@ -3771,7 +5019,7 @@
     },
     {
       "id": "accumulator-discharge",
-      "name": "Accumulator (discharge)",
+      "name": "Accumulator (Discharge)",
       "icon": "accumulator",
       "time": 6,
       "in": { "accumulator-full": 1 },
@@ -3780,6 +5028,1359 @@
       "producers": ["energy-exchanger"],
       "row": 3,
       "category": "buildings"
+    },
+    {
+      "category": "technologies",
+      "id": "electromagnetism",
+      "name": "Electromagnetism",
+      "row": 0,
+      "time": 1,
+      "in": { "magnetic-coil": 30 },
+      "out": { "electromagnetism": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {}
+    },
+    {
+      "category": "technologies",
+      "id": "basic-logistics-system",
+      "name": "Basic logistics system",
+      "row": 0,
+      "time": 1,
+      "in": { "circuit-board": 20, "gear": 20 },
+      "out": { "basic-logistics-system": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["electromagnetism"] }
+    },
+    {
+      "category": "technologies",
+      "id": "automatic-metallurgy",
+      "name": "Automatic metallurgy",
+      "row": 0,
+      "time": 1,
+      "in": { "magnetic-coil": 20, "circuit-board": 20 },
+      "out": { "automatic-metallurgy": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["electromagnetism"] }
+    },
+    {
+      "category": "technologies",
+      "id": "electromagnetic-matrix-technology",
+      "name": "Electomagnetic matrix (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": { "magnetic-coil": 20, "circuit-board": 20 },
+      "out": { "electromagnetic-matrix-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["electromagnetism"] }
+    },
+    {
+      "category": "technologies",
+      "id": "basic-assembling-processes",
+      "name": "Basic assembling processes",
+      "row": 0,
+      "time": 1,
+      "in": { "circuit-board": 20, "gear": 20 },
+      "out": { "basic-assembling-processes": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["electromagnetism"] }
+    },
+    {
+      "category": "technologies",
+      "id": "fluid-storage-encapsulation",
+      "name": "Fluid storage encapsulation",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "fluid-storage-encapsulation": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["electromagnetism"] }
+    },
+    {
+      "category": "technologies",
+      "id": "high-efficiency-plasma-control",
+      "name": "High efficiency plasma control",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "high-efficiency-plasma-control": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["electromagnetism"] }
+    },
+    {
+      "category": "technologies",
+      "id": "electromagnetic-drive",
+      "name": "Electromagnetic drive",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "electromagnetic-drive": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["electromagnetism"] }
+    },
+    {
+      "category": "technologies",
+      "id": "steel-smelting",
+      "name": "Steel smelting",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "steel-smelting": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["automatic-metallurgy"] }
+    },
+    {
+      "category": "technologies",
+      "id": "smelting-purification",
+      "name": "Smelting purification",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "smelting-purification": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["automatic-metallurgy"] }
+    },
+    {
+      "category": "technologies",
+      "id": "semiconductor-material",
+      "name": "Semiconductor material",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 40 },
+      "out": { "semiconductor-material": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["basic-assembling-processes"] }
+    },
+    {
+      "category": "technologies",
+      "id": "thermal-power",
+      "name": "Thermal power",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "thermal-power": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": { "prerequisites": ["basic-assembling-processes"] }
+    },
+    {
+      "category": "technologies",
+      "id": "plasma-extract-refining",
+      "name": "Plasma extract refining",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 10 },
+      "out": { "plasma-extract-refining": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "fluid-storage-encapsulation",
+          "high-efficiency-plasma-control"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "improved-logistics-system",
+      "name": "Improved logistics system",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "improved-logistics-system": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["basic-logistics-system"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "environment-modification",
+      "name": "Environment modification",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "environment-modification": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["steel-smelting"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "crystal-smelting",
+      "name": "Crystal smelting",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 20 },
+      "out": { "crystal-smelting": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["smelting-purification"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "solar-collection",
+      "name": "Solar collection",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 40 },
+      "out": { "solar-collection": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "smelting-purification",
+          "electromagnetic-matrix-technology",
+          "basic-assembling-processes"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "proliferator-1-technology",
+      "name": "Proliferator mk.I (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "proliferator-1-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "semiconductor-material",
+          "high-efficiency-plasma-control"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "deuterium-fractionation-technology",
+      "name": "Deuterium fractionation (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 30 },
+      "out": { "deuterium-fractionation-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["thermal-power", "plasma-extract-refining"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "basic-chemical-engineering",
+      "name": "Basic chemical engineering",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 10 },
+      "out": { "basic-chemical-engineering": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "fluid-storage-encapsulation",
+          "plasma-extract-refining"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "energy-matrix-technology",
+      "name": "Energy matrix (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "energy-matrix-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["plasma-extract-refining"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "magnetic-levitation-technology",
+      "name": "Magnetic Levitation Technology",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 5 },
+      "out": { "magnetic-levitation-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["electromagnetic-drive"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "high-efficiency-logistics-system",
+      "name": "High-efficiency logistics system",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 5 },
+      "out": { "high-efficiency-logistics-system": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "improved-logistics-system",
+          "magnetic-levitation-technology"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "distribution-logistics-system",
+      "name": "Distribution logistics system",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 10 },
+      "out": { "distribution-logistics-system": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "improved-logistics-system",
+          "magnetic-levitation-technology"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "titanium-smelting",
+      "name": "Titanium smelting",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 20 },
+      "out": { "titanium-smelting": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["steel-smelting"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "energy-storage",
+      "name": "Energy storage",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 20 },
+      "out": { "energy-storage": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "crystal-smelting",
+          "solar-collection",
+          "super-magnetic-field-generator"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "photon-frequency-conversion",
+      "name": "Photon frequency conversion",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 20 },
+      "out": { "photon-frequency-conversion": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["solar-collection"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "processor-technology",
+      "name": "Processor (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "processor-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["semiconductor-material"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "applied-superconductor",
+      "name": "Applied superconductor",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20 },
+      "out": { "applied-superconductor": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["basic-chemical-engineering"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "polymer-chemical-engineering",
+      "name": "Polymer chemical engineering",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 20 },
+      "out": { "polymer-chemical-engineering": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["basic-chemical-engineering"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "x-ray-cracking-technology",
+      "name": "X-ray cracking (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 20 },
+      "out": { "x-ray-cracking-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "basic-chemical-engineering",
+          "plasma-extract-refining"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "hydrogen-fuel-rod-technology",
+      "name": "Hydrogen fuel rod (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": { "energy-matrix": 20 },
+      "out": { "hydrogen-fuel-rod-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["energy-matrix-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "super-magnetic-field-generator",
+      "name": "Super magnetic field generator",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 5 },
+      "out": { "super-magnetic-field-generator": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["magnetic-levitation-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "planetary-logistics-system",
+      "name": "Planetary logistics system",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 10 },
+      "out": { "planetary-logistics-system": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "high-efficiency-logistics-system",
+          "thruster-technology",
+          "vertical-construction-1"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "geothermal-extraction",
+      "name": "Geothermal extraction",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 20 },
+      "out": { "geothermal-extraction": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "photon-frequency-conversion",
+          "super-magnetic-field-generator"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "solar-sail-orbit-system",
+      "name": "Solar sail orbit system",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 20 },
+      "out": { "solar-sail-orbit-system": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "photon-frequency-conversion",
+          "super-magnetic-field-generator"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "high-speed-assembling-processes",
+      "name": "High speed assembling processes",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 10 },
+      "out": { "high-speed-assembling-processes": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["basic-assembling-processes", "processor-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "proliferator-2-technology",
+      "name": "Proliferator mk.II (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 16, "energy-matrix": 12 },
+      "out": { "proliferator-2-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["processor-technology", "proliferator-1-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "high-strength-crystal",
+      "name": "High-strength crystal",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 20 },
+      "out": { "high-strength-crystal": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["polymer-chemical-engineering"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "reforming-refine-technology",
+      "name": "Reforming refine (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 20 },
+      "out": { "reforming-refine-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["x-ray-cracking-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "thruster-technology",
+      "name": "Thruster (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": { "energy-matrix": 20 },
+      "out": { "thruster-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["hydrogen-fuel-rod-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "magnetic-particle-trap",
+      "name": "Magnetic particle trap",
+      "row": 0,
+      "time": 1,
+      "in": { "electromagnetic-matrix": 20, "energy-matrix": 10 },
+      "out": { "magnetic-particle-trap": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["magnetic-levitation-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "integrated-logistics-system",
+      "name": "Integrated logistics system",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20,
+        "energy-matrix": 10,
+        "structure-matrix": 1
+      },
+      "out": { "integrated-logistics-system": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "high-efficiency-logistics-system",
+          "super-magnetic-field-generator"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "high-strength-titanium-alloy",
+      "name": "High-strength titanium alloy",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20,
+        "energy-matrix": 20,
+        "structure-matrix": 2
+      },
+      "out": { "high-strength-titanium-alloy": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["titanium-smelting"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "high-strength-lightweight-structure",
+      "name": "High-strength lightweight structure",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 12,
+        "structure-matrix": 2
+      },
+      "out": { "high-strength-lightweight-structure": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["solar-sail-orbit-system", "high-strength-material"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "ray-receiver-technology",
+      "name": "Ray receiver (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20,
+        "energy-matrix": 20
+      },
+      "out": { "ray-receiver-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["solar-sail-orbit-system"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "mini-fusion-power-generation",
+      "name": "Mini fusion power generation",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20,
+        "energy-matrix": 10,
+        "structure-matrix": 5
+      },
+      "out": { "mini-fusion-power-generation": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "deuterium-fractionation-technology",
+          "high-strength-titanium-alloy"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "high-strength-material",
+      "name": "High-strength material",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "energy-matrix": 16,
+        "structure-matrix": 4
+      },
+      "out": { "high-strength-material": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["applied-superconductor"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "structure-matrix-technology",
+      "name": "Structure matrix (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 12,
+        "energy-matrix": 12
+      },
+      "out": { "structure-matrix-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["high-strength-crystal"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "reinforced-thruster-technology",
+      "name": "Reinforced thruster (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "energy-matrix": 20
+      },
+      "out": { "reinforced-thruster-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["thruster-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "interstellar-logistics-system",
+      "name": "Interstellar logistics system",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20,
+        "energy-matrix": 20,
+        "structure-matrix": 2
+      },
+      "out": { "interstellar-logistics-system": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "planetary-logistics-system",
+          "high-strength-titanium-alloy",
+          "reinforced-thruster-technology"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "interstellar-power-transmission",
+      "name": "Interstellar power transmission",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20,
+        "energy-matrix": 20,
+        "structure-matrix": 2
+      },
+      "out": { "interstellar-power-transmission": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["high-strength-titanium-alloy", "energy-storage"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "proliferator-3-technology",
+      "name": "Proliferator mk.III (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 8,
+        "energy-matrix": 6,
+        "structure-matrix": 4
+      },
+      "out": { "proliferator-3-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["proliferator-2-technology", "high-strength-material"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "particle-control-technology",
+      "name": "Particle control technology",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 16,
+        "energy-matrix": 16,
+        "structure-matrix": 4
+      },
+      "out": { "particle-control-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["high-strength-material"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "high-strength-glass",
+      "name": "High-strength glass",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "energy-matrix": 12,
+        "structure-matrix": 6
+      },
+      "out": { "high-strength-glass": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["high-strength-material"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "casimir-crystal-technology",
+      "name": "Casimir crystal (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 12,
+        "energy-matrix": 12,
+        "structure-matrix": 12
+      },
+      "out": { "casimir-crystal-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["structure-matrix-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "miniature-particle-collider-technology",
+      "name": "Miniature particle collider (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 12,
+        "energy-matrix": 12,
+        "structure-matrix": 12
+      },
+      "out": { "miniature-particle-collider-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["structure-matrix-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "satellite-power-distribution-system",
+      "name": "Satellite power distribution system",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 12,
+        "energy-matrix": 12,
+        "structure-matrix": 12
+      },
+      "out": { "satellite-power-distribution-system": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "super-magnetic-field-generator",
+          "high-strength-lightweight-structure"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "gas-giants-exploitation",
+      "name": "Gas giants exploitation",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "structure-matrix": 10
+      },
+      "out": { "gas-giants-exploitation": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "interstellar-logistics-system",
+          "interstellar-power-transmission"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "information-matrix-technology",
+      "name": "Information matrix (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10
+      },
+      "out": { "information-matrix-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["processor-technology", "particle-control-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "wave-function-interference",
+      "name": "Wave function interference",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 12,
+        "energy-matrix": 12,
+        "information-matrix": 2
+      },
+      "out": { "wave-function-interference": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["high-strength-glass", "casimir-crystal-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "strange-matter-technology",
+      "name": "Strange matter (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 12,
+        "energy-matrix": 12,
+        "structure-matrix": 12
+      },
+      "out": { "strange-matter-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["miniature-particle-collider-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "vertical-launching-silo-technology",
+      "name": "Vertical launching silo (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "structure-matrix": 10,
+        "information-matrix": 1
+      },
+      "out": { "vertical-launching-silo-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "high-strength-lightweight-structure",
+          "quantum-chip-technology"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "quantum-chip-technology",
+      "name": "Quantum chip (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "information-matrix": 10
+      },
+      "out": { "quantum-chip-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "information-matrix-technology",
+          "wave-function-interference"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "plane-filter-smelting-technology",
+      "name": "Plane-filter smelting technology",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "structure-matrix": 10,
+        "information-matrix": 1
+      },
+      "out": { "plane-filter-smelting-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["wave-function-interference", "crystal-smelting"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "gravitational-wave-refraction",
+      "name": "Gravitational wave refraction",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 12,
+        "energy-matrix": 12,
+        "structure-matrix": 12
+      },
+      "out": { "gravitational-wave-refraction": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["strange-matter-technology", "magnetic-particle-trap"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "dyson-sphere-stress-system-1",
+      "name": "Dyson sphere stress system (Lv1)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20,
+        "energy-matrix": 20,
+        "structure-matrix": 20,
+        "information-matrix": 20,
+        "gravity-matrix": 20
+      },
+      "out": { "dyson-sphere-stress-system-1": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["vertical-launching-silo-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "planetary-ionosphere-utilization",
+      "name": "Planetary ionosphere utilization",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20,
+        "energy-matrix": 20,
+        "structure-matrix": 20,
+        "gravity-matrix": 20
+      },
+      "out": { "planetary-ionosphere-utilization": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "ray-receiver-technology",
+          "gravitational-wave-refraction"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "quantum-printing-technology",
+      "name": "Quantum printing technology",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "structure-matrix": 10,
+        "information-matrix": 10
+      },
+      "out": { "quantum-printing-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "high-speed-assembling-processes",
+          "quantum-chip-technology"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "photon-spotlight-mining-technology",
+      "name": "Photon spotlight mining technology",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "structure-matrix": 10,
+        "information-matrix": 10,
+        "gravity-matrix": 10
+      },
+      "out": { "photon-spotlight-mining-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["quantum-chip-technology"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "mesoscopic-quantum-entanglement",
+      "name": "Mesoscopic quantum entanglement",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "structure-matrix": 10,
+        "information-matrix": 10
+      },
+      "out": { "mesoscopic-quantum-entanglement": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "quantum-chip-technology",
+          "strange-matter-technology"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "gravity-matrix-technology",
+      "name": "Gravity matrix (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "structure-matrix": 10
+      },
+      "out": { "gravity-matrix-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": [
+          "quantum-chip-technology",
+          "gravitational-wave-refraction"
+        ]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "dirac-inversion-mechanism",
+      "name": "Dirac inversion mechanism",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20,
+        "energy-matrix": 20,
+        "structure-matrix": 5,
+        "information-matrix": 5,
+        "gravity-matrix": 10
+      },
+      "out": { "dirac-inversion-mechanism": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["planetary-ionosphere-utilization"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "controlled-annihilation-reaction",
+      "name": "Controlled annihilation reaction",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "energy-matrix": 24,
+        "gravity-matrix": 12
+      },
+      "out": { "controlled-annihilation-reaction": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["dirac-inversion-mechanism"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "artificial-star-technology",
+      "name": "Artificial star (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "structure-matrix": 10,
+        "information-matrix": 10,
+        "gravity-matrix": 10
+      },
+      "out": { "artificial-star-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["controlled-annihilation-reaction"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "universe-matrix-technology",
+      "name": "Universe matrix (Technology)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "structure-matrix": 10,
+        "information-matrix": 10,
+        "gravity-matrix": 10
+      },
+      "out": { "universe-matrix-technology": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["dirac-inversion-mechanism"]
+      }
+    },
+    {
+      "category": "technologies",
+      "id": "mission-completed",
+      "name": "Mission completed!",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "universe-matrix": 4
+      },
+      "out": { "mission-completed": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["universe-matrix-technology"]
+      }
+    },
+    {
+      "category": "upgrades",
+      "id": "universe-exploration-1",
+      "name": "Universe exploration (Lv1)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20
+      },
+      "out": { "universe-exploration-1": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {}
+    },
+    {
+      "category": "upgrades",
+      "id": "universe-exploration-2",
+      "name": "Universe exploration (Lv2)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 20
+      },
+      "out": { "universe-exploration-2": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["universe-exploration-1"]
+      }
+    },
+    {
+      "category": "upgrades",
+      "id": "universe-exploration-3",
+      "name": "Universe exploration (Lv3)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 12,
+        "energy-matrix": 12,
+        "information-matrix": 12
+      },
+      "out": { "universe-exploration-3": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["universe-exploration-2", "drive-engine-2"]
+      }
+    },
+    {
+      "category": "upgrades",
+      "id": "universe-exploration-4",
+      "name": "Universe exploration (Lv4)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 6,
+        "energy-matrix": 6,
+        "information-matrix": 6,
+        "gravity-matrix": 6
+      },
+      "out": { "universe-exploration-4": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["universe-exploration-3"]
+      }
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-1",
+      "name": "Mecha core (Lv1)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "iron-ingot": 20,
+        "copper-ingot": 20
+      },
+      "out": { "mecha-core-1": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {}
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-2",
+      "name": "Mecha core (Lv2)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10
+      },
+      "out": { "mecha-core-2": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["mecha-core-1"]
+      }
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-3",
+      "name": "Mecha core (Lv3)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 10,
+        "energy-matrix": 10,
+        "structure-matrix": 10
+      },
+      "out": { "mecha-core-3": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["mecha-core-2"]
+      }
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-4",
+      "name": "Mecha core (Lv4)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 6,
+        "energy-matrix": 6,
+        "structure-matrix": 6,
+        "information-matrix": 6
+      },
+      "out": { "mecha-core-4": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["mecha-core-3"]
+      }
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-5",
+      "name": "Mecha core (Lv5)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "electromagnetic-matrix": 2,
+        "energy-matrix": 2,
+        "structure-matrix": 2,
+        "information-matrix": 2,
+        "gravity-matrix": 2
+      },
+      "out": { "mecha-core-5": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["mecha-core-4"]
+      }
+    },
+    {
+      "category": "upgrades",
+      "id": "mecha-core-6",
+      "name": "Mecha core (Lv6)",
+      "row": 0,
+      "time": 1,
+      "in": {
+        "universe-matrix": 2
+      },
+      "out": { "mecha-core-6": 3600 },
+      "producers": ["matrix-lab"],
+      "technology": {
+        "prerequisites": ["mecha-core-5"]
+      }
     }
   ],
   "defaults": {
@@ -3793,7 +6394,7 @@
       "particle-container-advanced",
       "photon-combiner-advanced",
       "crystal-silicon-advanced",
-      "photon-capacitor-graviton",
+      "critical-photon-graviton",
       "casimir-crystal-advanced",
       "diamond-advanced",
       "gas-giant",
