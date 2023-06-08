@@ -1,5 +1,4 @@
 import { ItemId, Mocks } from 'src/tests';
-import { Rational } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
@@ -152,23 +151,6 @@ describe('Recipes Selectors', () => {
         Mocks.Dataset
       );
       expect(result[Mocks.Item1.id].beacons?.[0].total).toBeUndefined();
-    });
-  });
-
-  describe('getSrc', () => {
-    it('should put together the required state parts', () => {
-      const result = Selectors.getSrc.projector(
-        ItemId.Coal,
-        Rational.zero,
-        Rational.one,
-        Mocks.Dataset
-      );
-      expect(result).toEqual({
-        fuelId: ItemId.Coal,
-        miningBonus: Rational.zero,
-        researchSpeed: Rational.one,
-        data: Mocks.Dataset,
-      });
     });
   });
 });

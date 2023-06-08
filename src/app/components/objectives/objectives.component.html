@@ -15,13 +15,13 @@
           pRipple
           type="button"
           class="p-button-outlined lab-button-icon-only text-truncate"
-          [pTooltip]="'objectives.selectRecipe' | translate"
+          [pTooltip]="'objectives.selectARecipe' | translate"
           tooltipPosition="top"
           (click)="
             editRecipePicker.clickOpen(
               vm.data,
-              'item',
-              vm.itemIds,
+              'recipe',
+              vm.recipeIds,
               objective.targetId
             )
           "
@@ -37,7 +37,7 @@
         </button>
         <lab-picker
           #editRecipePicker
-          [header]="'objectives.selectRecipe' | translate"
+          [header]="'objectives.selectARecipe' | translate"
           (selectId)="setTarget(objective.id, $event)"
         ></lab-picker>
         <ng-template #itemButton>
@@ -50,7 +50,7 @@
             [label]="
               vm.mobile ? '' : vm.data.itemEntities[objective.targetId].name
             "
-            [pTooltip]="'objectives.selectItem' | translate"
+            [pTooltip]="'objectives.selectAnItem' | translate"
             tooltipPosition="top"
             (click)="
               editItemPicker.clickOpen(
@@ -63,7 +63,7 @@
           ></button>
           <lab-picker
             #editItemPicker
-            [header]="'objectives.selectItem' | translate"
+            [header]="'objectives.selectAnItem' | translate"
             (selectId)="setTarget(objective.id, $event)"
           ></lab-picker>
         </ng-template>

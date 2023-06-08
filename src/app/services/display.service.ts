@@ -55,7 +55,11 @@ export class DisplayService {
     }
   }
 
-  recipeTooltip(value: string | null | undefined, data: Dataset): string {
+  recipeTooltip(
+    value: string | null | undefined,
+    data: Dataset,
+    name?: string
+  ): string {
     if (value == null) return '';
 
     const recipe = data.recipeEntities[value];
@@ -64,7 +68,7 @@ export class DisplayService {
     if (recipe == null) return '';
 
     return `<div>${
-      recipe.name
+      name ?? recipe.name
     }</div><div class="d-flex align-items-center justify-content-center\
     flex-wrap mt-2">${this.recipeProcess(recipe)}\
     </div>${this.recipeProducedBy(recipe)}${this.recipeUnlockedBy(

@@ -27,6 +27,7 @@ import {
   MachineRational,
   ModuleRational,
   objectiveUnitOptions,
+  Options,
   Preset,
   presetOptions,
   Rational,
@@ -36,7 +37,6 @@ import {
   toBoolEntities,
   toEntities,
 } from '~/models';
-import { Options } from '~/models/options';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
