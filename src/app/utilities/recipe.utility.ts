@@ -129,7 +129,7 @@ export class RecipeUtility {
         recipe.time = recipe.time.div(minSpeed);
       }
 
-      if (recipe.technology) {
+      if (recipe.technology && data.game === Game.Factorio) {
         // Adjust for research factor
         recipe.time = recipe.time.div(researchSpeed);
       }

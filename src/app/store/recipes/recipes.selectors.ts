@@ -123,19 +123,6 @@ export const getRecipesStateRational = createSelector(
     )
 );
 
-export const getSrc = createSelector(
-  Settings.getFuelId,
-  Settings.getRationalMiningBonus,
-  Settings.getResearchFactor,
-  Settings.getDataset,
-  (fuelId, miningBonus, researchSpeed, data) => ({
-    fuelId,
-    miningBonus,
-    researchSpeed,
-    data,
-  })
-);
-
 export const getAdjustedDataset = createSelector(
   getRecipesStateRational,
   Items.getItemsState,
