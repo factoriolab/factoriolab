@@ -51,6 +51,7 @@ interface ModDataReport {
   noProducers: string[];
   noProducts: string[];
   resourceNoMinableProducts: string[];
+  resourceDuplicate: string[];
   multiFuelCategory: string[];
 }
 
@@ -722,6 +723,7 @@ async function processMod(): Promise<void> {
     noProducers: [],
     multiFuelCategory: [],
     resourceNoMinableProducts: [],
+    resourceDuplicate: [],
   };
 
   const modHashReport: ModHash = {
@@ -896,12 +898,12 @@ async function processMod(): Promise<void> {
     // Always include fixed recipes that have outputs
     if (!fixedRecipe.has(key)) {
       // Skip recipes that are not unlocked / enabled
-      if (recipe.enabled === false && !recipesUnlocked[key]) {
+      if (recipeData.enabled === false && !recipesUnlocked[key]) {
         include = false;
       }
 
       // Skip recipes that are hidden
-      if (recipe.hidden) {
+      if (recipeData.hidden) {
         include = false;
       }
     }
@@ -1536,6 +1538,7 @@ async function processMod(): Promise<void> {
     }
   }
 
+  const resourceHash = new Set<string>();
   for (const name of Object.keys(dataRaw.resource)) {
     const resource = dataRaw.resource[name];
     if (resource && resource.minable) {
@@ -1572,7 +1575,7 @@ async function processMod(): Promise<void> {
         const id = getFakeRecipeId(proto.name, `${name}-mining`);
 
         const recipe: Recipe = {
-          id,
+          id: '',
           name: D.isFluid(proto)
             ? fluidLocale.names[proto.name]
             : itemLocale.names[proto.name],
@@ -1586,7 +1589,15 @@ async function processMod(): Promise<void> {
           mining: true,
           producers: miners,
         };
-        modData.recipes.push(recipe);
+
+        const hash = JSON.stringify(recipe);
+        if (resourceHash.has(hash)) {
+          modDataReport.resourceDuplicate.push(name);
+        } else {
+          recipe.id = id;
+          modData.recipes.push(recipe);
+          resourceHash.add(hash);
+        }
       } else {
         modDataReport.resourceNoMinableProducts.push(name);
       }
@@ -1596,6 +1607,7 @@ async function processMod(): Promise<void> {
   technologies.sort((a, b) => {
     return (a.order ?? '').localeCompare(b.order ?? '');
   });
+  const labs = Object.keys(machines.lab);
   for (const techRaw of technologies) {
     const techData = techDataMap[techRaw.name];
     const technology: Technology = {};
@@ -1604,13 +1616,19 @@ async function processMod(): Promise<void> {
       technology.prerequisites = techData.prerequisites.map((p) => techId[p]);
     }
 
+    const inputs = Object.keys(techIngredientsMap[techRaw.name]);
+    const producers = labs.filter((l) => {
+      const lab = dataRaw.lab[machines.lab[l]];
+      return inputs.every((i) => lab.inputs.includes(i));
+    });
+
     const recipe: Recipe = {
       id,
       name: techLocale.names[techRaw.name],
       category: 'technology',
       row: 0,
       time: techData.unit.time,
-      producers: Object.keys(machines.lab),
+      producers,
       in: techIngredientsMap[techRaw.name],
       out: { [id]: 1 },
       technology,
@@ -1627,6 +1645,14 @@ async function processMod(): Promise<void> {
       icon: recipe.icon,
       iconText: recipe.iconText,
     };
+
+    if (inputs.length) {
+      const firstInput = getItem(inputs[0]);
+      if (!D.isFluid(firstInput)) {
+        item.stack = firstInput.stack_size;
+      }
+    }
+
     modData.items.push(item);
   }
 

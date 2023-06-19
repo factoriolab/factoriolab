@@ -528,6 +528,7 @@ export function isFurnace(proto: Base): proto is Furnace {
 export interface Lab extends Base {
   energy_source: EnergySource;
   energy_usage: string;
+  inputs: string[];
   allowed_effects?: (keyof Effect)[];
   module_specification?: ModuleSpecification;
   researching_speed?: number;
