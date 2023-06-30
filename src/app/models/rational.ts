@@ -1,5 +1,6 @@
 const MAX_DENOM = 100000;
 const DIVIDE_BY_ZERO = 'Cannot divide by zero';
+const FLOAT_TOLERANCE = 1e-10;
 
 const bigZero = BigInt(0);
 const bigOne = BigInt(1);
@@ -54,9 +55,9 @@ export class Rational {
   }
 
   static fromNumber(x: number): Rational {
-    if (Number.isInteger(x)) {
-      return new Rational(BigInt(x), bigOne);
-    }
+    if (Number.isInteger(x)) return new Rational(BigInt(x), bigOne);
+
+    if (Math.abs(x) < FLOAT_TOLERANCE) return Rational.zero;
 
     return this.fromFloat(x);
   }
