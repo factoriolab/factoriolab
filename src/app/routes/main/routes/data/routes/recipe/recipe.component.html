@@ -126,8 +126,18 @@
           </a>
         </td>
       </tr>
-      <tr *ngIf="vm.obj.mining">
+      <tr *ngIf="vm.obj.isMining">
         <th>{{ 'data.mining' | translate }}</th>
+        <td>
+          <p-checkbox
+            [(ngModel)]="trueValue"
+            [binary]="true"
+            [disabled]="true"
+          ></p-checkbox>
+        </td>
+      </tr>
+      <tr *ngIf="vm.obj.isTechnology">
+        <th>{{ 'data.technology' | translate }}</th>
         <td>
           <p-checkbox
             [(ngModel)]="trueValue"
@@ -158,36 +168,6 @@
         <th>{{ 'data.energyConsumption' | translate }}</th>
         <td>{{ displaySvc.power(vm.obj.usage) }}</td>
       </tr>
-      <ng-container *ngIf="vm.obj.technology as technology">
-        <tr>
-          <th colspan="2" class="text-center">
-            <h3>{{ 'data.technology' | translate }}</h3>
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.prerequisites' | translate }}</th>
-          <td>
-            <div *ngIf="!technology.prerequisites?.length">
-              {{ 'none' | translate }}
-            </div>
-            <div *ngFor="let i of technology.prerequisites">
-              <a
-                [routerLink]="'/data/technologies/' + i"
-                queryParamsHandling="preserve"
-              >
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-text"
-                  [label]="vm.data.recipeEntities[i].name"
-                  [icon]="i | iconSmClass : 'recipe'"
-                ></button>
-              </a>
-            </div>
-          </td>
-        </tr>
-      </ng-container>
       <tr>
         <th colspan="2">
           <div class="d-flex align-items-center justify-content-between">

@@ -84,7 +84,7 @@ describe('DisplayService', () => {
     it('should generate html for technology prerequisites', () => {
       expect(
         service.technologyPrerequisites(
-          Mocks.Dataset.recipeEntities[RecipeId.ArtilleryShellRange].technology
+          Mocks.Dataset.itemEntities[ItemId.ArtilleryShellRange].technology
         )
       ).toBeTruthy();
     });

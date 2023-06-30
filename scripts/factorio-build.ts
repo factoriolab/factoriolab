@@ -770,13 +770,10 @@ async function processMod(): Promise<void> {
         if (i.cargoWagon || i.fluidWagon) addIfMissing(oldHash, 'wagons', i.id);
         if (i.machine) addIfMissing(oldHash, 'machines', i.id);
         if (i.module) addIfMissing(oldHash, 'modules', i.id);
+        if (i.technology) addIfMissing(oldHash, 'technologies', i.id);
       });
 
-      modData.recipes.forEach((r) => {
-        addIfMissing(oldHash, 'recipes', r.id);
-
-        if (r.technology) addIfMissing(oldHash, 'technologies', r.id);
-      });
+      modData.recipes.forEach((r) => addIfMissing(oldHash, 'recipes', r.id));
 
       fs.writeFileSync(modHashPath, JSON.stringify(oldHash));
       fs.writeFileSync(
@@ -794,10 +791,10 @@ async function processMod(): Promise<void> {
           .map((i) => i.id),
         machines: modData.items.filter((i) => i.machine).map((i) => i.id),
         modules: modData.items.filter((i) => i.module).map((i) => i.id),
+        technologies: modData.items
+          .filter((i) => i.technology)
+          .map((i) => i.id),
         recipes: modData.recipes.map((r) => r.id),
-        technologies: modData.recipes
-          .filter((r) => r.technology)
-          .map((r) => r.id),
       };
 
       fs.writeFileSync(modHashPath, JSON.stringify(modHash));
@@ -1052,9 +1049,9 @@ async function processMod(): Promise<void> {
   }
 
   // Check for use in technology ingredients
-  const technologies = Object.keys(dataRaw.technology)
-    .map((t) => dataRaw.technology[t])
-    .filter((t) => !t.hidden);
+  const technologies = Object.keys(dataRaw.technology).map(
+    (t) => dataRaw.technology[t]
+  );
   const techDataMap: Record<string, D.TechnologyData> = {};
   const techIngredientsMap: Record<string, Record<string, number>> = {};
   for (const tech of technologies) {
@@ -1586,7 +1583,7 @@ async function processMod(): Promise<void> {
           out: recipeOut,
           catalyst: recipeCatalyst,
           cost: 100 / total,
-          mining: true,
+          isMining: true,
           producers: miners,
         };
 
@@ -1631,7 +1628,7 @@ async function processMod(): Promise<void> {
       producers,
       in: techIngredientsMap[techRaw.name],
       out: { [id]: 1 },
-      technology,
+      isTechnology: true,
       icon: await getIcon(techRaw),
       iconText: getIconText(techRaw),
     };
@@ -1642,6 +1639,7 @@ async function processMod(): Promise<void> {
       name: recipe.name,
       category: recipe.category,
       row: 0,
+      technology,
       icon: recipe.icon,
       iconText: recipe.iconText,
     };
