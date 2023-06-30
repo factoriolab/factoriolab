@@ -41,6 +41,10 @@ describe('Rational', () => {
           Rational.from([477, 64964])
         );
       });
+
+      it('should return zero for numbers below float tolerance', () => {
+        expect(Rational.fromNumber(Number.MIN_VALUE)).toEqual(Rational.zero);
+      });
     });
 
     describe('fromString', () => {
