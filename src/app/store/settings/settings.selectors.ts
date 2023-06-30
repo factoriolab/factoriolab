@@ -377,7 +377,7 @@ export const getDataset = createSelector(
       .filter((i) => i.fuel.category === FuelType.Chemical)
       .map((i) => i.id);
 
-    const technologyIds = recipes
+    const technologyIds = items
       .filter(fnPropsNotNullish('technology'))
       .map((r) => r.id);
 
@@ -440,41 +440,48 @@ export const getDataset = createSelector(
     const machineEntities: Entities<MachineRational> = {};
     const moduleEntities: Entities<ModuleRational> = {};
     const fuelEntities: Entities<FuelRational> = {};
+    const technologyEntities: Entities<Technology> = {};
     const itemEntities = itemIds.reduce((e: Entities<ItemRational>, i) => {
       const item = new ItemRational(itemData[i]);
       if (item.beacon) {
         beaconEntities[i] = item.beacon;
       }
+
       if (item.belt) {
         beltEntities[i] = item.belt;
       } else if (item.pipe) {
         beltEntities[i] = item.pipe;
       }
+
       if (item.cargoWagon) {
         cargoWagonEntities[i] = item.cargoWagon;
       }
+
       if (item.fluidWagon) {
         fluidWagonEntities[i] = item.fluidWagon;
       }
+
       if (item.machine) {
         machineEntities[i] = item.machine;
       }
+
       if (item.module) {
         moduleEntities[i] = item.module;
       }
+
       if (item.fuel) {
         fuelEntities[i] = item.fuel;
+      }
+
+      if (item.technology) {
+        technologyEntities[i] = item.technology;
       }
 
       e[i] = item;
       return e;
     }, {});
-    const technologyEntities: Entities<Technology> = {};
     const recipeR = recipeIds.reduce((e: Entities<RecipeRational>, r) => {
       const recipe = new RecipeRational(recipeEntities[r]);
-      if (recipe.technology) {
-        technologyEntities[r] = recipe.technology;
-      }
 
       e[r] = recipe;
       return e;

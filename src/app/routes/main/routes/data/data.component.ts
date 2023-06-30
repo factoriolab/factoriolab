@@ -69,14 +69,14 @@ export class DataComponent {
       id: 'pipeIds',
     },
     {
-      label: 'data.recipes',
-      routerLink: 'recipes',
-      id: 'recipeIds',
-    },
-    {
       label: 'data.technologies',
       routerLink: 'technologies',
       id: 'technologyIds',
+    },
+    {
+      label: 'data.recipes',
+      routerLink: 'recipes',
+      id: 'recipeIds',
     },
   ];
 

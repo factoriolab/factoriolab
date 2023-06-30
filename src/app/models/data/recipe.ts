@@ -1,6 +1,5 @@
 import { Entities } from '../entities';
 import { Rational } from '../rational';
-import { Technology } from './technology';
 
 export interface Recipe {
   id: string;
@@ -14,13 +13,12 @@ export interface Recipe {
   /** Denotes amount of output that is not affected by productivity */
   catalyst?: Entities<number | string>;
   cost?: number | string;
-  mining?: boolean;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
   /** If a recipe is locked initially, indicates what technology is required */
   unlockedBy?: string;
-  /** If recipe is a technology, indicates prerequisites */
-  technology?: Technology;
+  isMining?: boolean;
+  isTechnology?: boolean;
   /** Used to link the recipe to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -42,13 +40,12 @@ export class RecipeRational {
   /** Denotes amount of output that is not affected by productivity */
   catalyst?: Entities<Rational>;
   cost?: Rational;
-  mining?: boolean;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
   /** If a recipe is locked initially, indicates what technology unlocks it */
   unlockedBy?: string;
-  /** If recipe is a technology, indicates unlocks / prerequisites */
-  technology?: Technology;
+  isMining?: boolean;
+  isTechnology?: boolean;
   usage?: Rational;
   drain?: Rational;
   consumption?: Rational;
@@ -87,16 +84,16 @@ export class RecipeRational {
       this.cost = Rational.from(obj.cost);
     }
 
-    if (obj.mining) {
-      this.mining = obj.mining;
-    }
-
     if (obj.part) {
       this.part = obj.part;
     }
 
-    if (obj.technology) {
-      this.technology = obj.technology;
+    if (obj.isMining != null) {
+      this.isMining = obj.isMining;
+    }
+
+    if (obj.isTechnology != null) {
+      this.isTechnology = obj.isTechnology;
     }
 
     if (obj.usage != null) {
