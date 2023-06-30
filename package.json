@@ -48,7 +48,7 @@
     "bootstrap": "^5.2.3",
     "elkjs": "^0.8.2",
     "file-saver": "^2.0.5",
-    "glpk-ts": "^0.0.9",
+    "glpk-ts": "^0.0.10",
     "ngx-google-analytics": "^14.0.1",
     "pako": "^2.1.0",
     "primeicons": "^6.0.1",

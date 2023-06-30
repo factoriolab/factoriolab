@@ -28,8 +28,6 @@ import {
 import { Items, Recipes } from '~/store';
 import { RateUtility } from './rate.utility';
 
-const FLOAT_TOLERANCE = 1e-10;
-
 const simplexConfig: Simplex.Options = environment.debug
   ? // Don't test debug environment level
     // istanbul ignore next
@@ -437,6 +435,8 @@ export class SimplexUtility {
     const unproduceableVarEntities: Entities<Variable> = {};
     // Variables for items that have been excluded
     const excludedVarEntities: Entities<Variable> = {};
+    // Variables for surplus values
+    const surplusVarEntities: Entities<Variable> = {};
     // Variables for maximize item objectives
     const maximizeItemVarEntities: Entities<Variable> = {};
     // Variables for maximize recipe objectives
@@ -552,15 +552,15 @@ export class SimplexUtility {
     for (const itemId of itemIds) {
       const config: VariableProperties = {
         obj: state.cost.surplus.toNumber(),
+        lb: 0,
         name: itemId,
       };
-      const values = state.itemValues[itemId];
-      if (values.lim) {
-        config.ub = values.lim.toNumber();
-      }
+      surplusVarEntities[itemId] = m.addVar(config);
 
+      const values = state.itemValues[itemId];
       if (values.in) {
         const inputConfig: VariableProperties = {
+          lb: 0,
           ub: values.in.toNumber(),
           name: itemId,
         };
@@ -618,6 +618,9 @@ export class SimplexUtility {
         netCoeffs.push([inputVarEntities[itemId], 1]);
       }
 
+      // Add surplus coeff
+      netCoeffs.push([surplusVarEntities[itemId], -1]);
+
       // Add maximize coeff
       if (values.max != null) {
         switch (state.maximizeType) {
@@ -641,7 +644,8 @@ export class SimplexUtility {
 
       const netConfig: ConstraintProperties = {
         coeffs: netCoeffs,
-        lb: values.out?.toNumber(),
+        lb: values.out.toNumber(),
+        ub: values.out.toNumber(),
         name: itemId,
       };
       itemConstrEntities[itemId] = m.addConstr(netConfig);
@@ -690,13 +694,8 @@ export class SimplexUtility {
     // Parse solution
     for (const itemId of itemIds) {
       const values = state.itemValues[itemId];
-      const val = Rational.fromNumber(itemConstrEntities[itemId].value).sub(
-        values.out
-      );
-
-      if (val.nonzero()) {
-        surplus[itemId] = val;
-      }
+      const val = Rational.fromNumber(surplusVarEntities[itemId].value);
+      if (val.nonzero()) surplus[itemId] = val;
 
       if (values.max != null) {
         switch (state.maximizeType) {
@@ -720,11 +719,9 @@ export class SimplexUtility {
     }
 
     for (const recipeId of recipeIds) {
-      if (!this.isFloatZero(recipeVarEntities[recipeId].value)) {
-        const val = Rational.fromNumber(recipeVarEntities[recipeId].value);
-        if (val.nonzero()) {
-          recipes[recipeId] = val;
-        }
+      const val = Rational.fromNumber(recipeVarEntities[recipeId].value);
+      if (val.nonzero()) {
+        recipes[recipeId] = val;
       }
     }
 
@@ -761,10 +758,6 @@ export class SimplexUtility {
       cost,
       error: false,
     };
-  }
-
-  static isFloatZero(val: number): boolean {
-    return Math.abs(val) < FLOAT_TOLERANCE;
   }
 
   /** Simplex method wrapper mainly for test mocking */
