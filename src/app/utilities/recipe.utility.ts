@@ -54,7 +54,7 @@ export class RecipeUtility {
 
     if (recipeId != null) {
       const recipe = data.recipeEntities[recipeId];
-      if (!recipe.mining && !recipe.technology) {
+      if (!recipe.isMining && !recipe.isTechnology) {
         // Filter for modules allowed on this recipe
         allowed = allowed.filter(
           (m) =>
@@ -129,7 +129,7 @@ export class RecipeUtility {
         recipe.time = recipe.time.div(minSpeed);
       }
 
-      if (recipe.technology && data.game === Game.Factorio) {
+      if (recipe.isTechnology && data.game === Game.Factorio) {
         // Adjust for research factor
         recipe.time = recipe.time.div(researchSpeed);
       }
@@ -140,7 +140,7 @@ export class RecipeUtility {
       let consumption = Rational.one;
       let pollution = Rational.one;
 
-      if (recipe.mining) {
+      if (recipe.isMining) {
         // Adjust for mining bonus
         prod = prod.add(miningBonus);
       }

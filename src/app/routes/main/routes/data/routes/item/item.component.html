@@ -253,6 +253,36 @@
           </td>
         </tr>
       </ng-container>
+      <ng-container *ngIf="vm.obj.technology as technology">
+        <tr>
+          <th colspan="2" class="text-center">
+            <h3>{{ 'data.technology' | translate }}</h3>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.prerequisites' | translate }}</th>
+          <td>
+            <div *ngIf="!technology.prerequisites?.length">
+              {{ 'none' | translate }}
+            </div>
+            <div *ngFor="let i of technology.prerequisites">
+              <a
+                [routerLink]="'/data/technologies/' + i"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="vm.data.recipeEntities[i].name"
+                  [icon]="i | iconSmClass : 'recipe'"
+                ></button>
+              </a>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
       <ng-container *ngIf="vm.category">
         <tr>
           <th colspan="2">
