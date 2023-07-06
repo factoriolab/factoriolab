@@ -1037,6 +1037,21 @@ async function processMod(): Promise<void> {
     }
   }
 
+  // Add resources
+  for (const name of Object.keys(dataRaw.resource)) {
+    const resource = dataRaw.resource[name];
+    if (resource && resource.minable) {
+      const recipeOut = getProducts(
+        resource.minable.results,
+        resource.minable.result,
+        resource.minable.count
+      )[0];
+      for (const outKey of Object.keys(recipeOut)) {
+        itemsUsed.add(outKey);
+      }
+    }
+  }
+
   // Check for use in recipe ingredients / products
   for (const key of Object.keys(recipesEnabled)) {
     for (const ingredient of Object.keys(recipeIngredientsMap[key])) {
