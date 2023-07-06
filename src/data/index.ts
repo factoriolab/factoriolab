@@ -22,6 +22,7 @@ export const data: AppData = {
     { id: 'ir3', name: 'Industrial Revolution 3', game: Game.Factorio },
     { id: 'kr2', name: 'Krastorio 2', game: Game.Factorio },
     { id: 'kr2aai', name: 'Krastorio 2 + AAI', game: Game.Factorio },
+    { id: 'kr2ffw', name: 'Krastorio 2 + FFW', game: Game.Factorio },
     { id: 'kr2sxp', name: 'Krastorio 2 + SE', game: Game.Factorio },
     { id: 'msc', name: 'More Science', game: Game.Factorio },
     { id: 'nls', name: 'Nullius', game: Game.Factorio },
@@ -90,5 +91,6 @@ export const data: AppData = {
     'kr2aai',
     'vbz',
     'ffw',
+    'kr2ffw',
   ],
 };

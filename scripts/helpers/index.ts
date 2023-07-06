@@ -1,11 +1,7 @@
 import fs from 'fs';
 
-export function getJsonData<T>(file: string, sanitize = false): T {
-  let str = fs.readFileSync(file).toString();
-  if (sanitize) {
-    str = str.replace(/"(.*)":\s?-?inf/g, '"$1": 0');
-  }
-
+export function getJsonData<T>(file: string): T {
+  const str = fs.readFileSync(file).toString();
   return JSON.parse(str) as T;
 }
 

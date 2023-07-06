@@ -178,7 +178,7 @@ async function processMod(): Promise<void> {
   const techLocale = getLocale('technology-locale.json');
 
   // Read main data JSON
-  const dataRaw = getJsonData<D.DataRawDump>(dataRawPath, true);
+  const dataRaw = getJsonData<D.DataRawDump>(dataRawPath);
 
   // Set up collections
   // Record of limitations by hash: id
@@ -814,7 +814,7 @@ async function processMod(): Promise<void> {
         const version = playerData['last-played-version'].game_version;
         modData.version[m.name] = version;
       } else {
-        const file = modFiles.find((f) => f.startsWith(m.name));
+        const file = modFiles.find((f) => f.startsWith(m.name + '_'));
         if (file == null) {
           throw `No mod file found for mod ${m.name}`;
         } else {
