@@ -39,7 +39,7 @@ export class ObjectivesComponent {
     this.store.select(Settings.getDataset),
     this.store.select(Settings.getAvailableItems),
     this.store.select(Settings.getAvailableRecipes),
-    this.contentService.width$,
+    this.contentSvc.width$,
   ]).pipe(
     map(
       ([
@@ -86,7 +86,7 @@ export class ObjectivesComponent {
     public trackSvc: TrackService,
     private store: Store<LabState>,
     private translateSvc: TranslateService,
-    private contentService: ContentService
+    private contentSvc: ContentService
   ) {}
 
   getMessages(matrixResult: MatrixResult): Message[] {
