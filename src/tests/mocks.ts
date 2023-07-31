@@ -1,3 +1,5 @@
+import { Component } from '@angular/core';
+
 import { data } from 'src/data';
 import mod from 'src/data/1.1/data.json';
 import hash from 'src/data/1.1/hash.json';
@@ -304,3 +306,6 @@ export const AdjustmentData = {
   data: Dataset,
 };
 export const DisplayRateInfo = M.displayRateInfo[M.DisplayRate.PerMinute];
+
+@Component({ standalone: true, template: '' })
+export class MockComponent {}
