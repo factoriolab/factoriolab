@@ -1,6 +1,6 @@
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
-import { LandingGuard } from './guards';
+import { canActivateLanding } from './guards';
 
 export const routes: Routes = [
   {
@@ -11,7 +11,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    canActivate: [LandingGuard],
+    canActivate: [canActivateLanding],
     loadComponent: () =>
       import('./routes/landing/landing.component').then(
         (c) => c.LandingComponent

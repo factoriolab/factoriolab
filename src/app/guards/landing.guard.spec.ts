@@ -1,62 +1,63 @@
 import { TestBed } from '@angular/core/testing';
-import { Router, UrlTree } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
+import { RouterTestingHarness } from '@angular/router/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { TestModule } from 'src/tests';
+import { Mocks, TestModule } from 'src/tests';
 import { Preferences } from '~/store';
 import { BrowserUtility } from '~/utilities';
-import { LandingGuard } from './landing.guard';
+import { canActivateLanding } from './landing.guard';
 
-describe('LandingGuard', () => {
-  let guard: LandingGuard;
+describe('canActivateLanding', () => {
   let router: Router;
   let mockStore: MockStore;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({ imports: [TestModule] });
+    TestBed.configureTestingModule({
+      imports: [TestModule],
+      providers: [
+        provideRouter([
+          {
+            path: 'urltree',
+            component: Mocks.MockComponent,
+          },
+          {
+            path: 'list',
+            component: Mocks.MockComponent,
+          },
+          {
+            path: '',
+            pathMatch: 'full',
+            canActivate: [canActivateLanding],
+            component: Mocks.MockComponent,
+          },
+        ]),
+      ],
+    });
+
     router = TestBed.inject(Router);
     mockStore = TestBed.inject(MockStore);
-    guard = TestBed.inject(LandingGuard);
   });
 
-  it('should be created', () => {
-    expect(guard).toBeTruthy();
+  it('should load the last saved state', async () => {
+    mockStore.overrideSelector(Preferences.getBypassLanding, true);
+    mockStore.refreshState();
+    spyOnProperty(BrowserUtility, 'routerState').and.returnValue('/urltree');
+    await RouterTestingHarness.create('/');
+    expect(router.url).toEqual('/urltree');
   });
 
-  describe('canActivate', () => {
-    it('should load the last saved state', () => {
-      mockStore.overrideSelector(Preferences.getBypassLanding, true);
-      mockStore.refreshState();
-      spyOnProperty(BrowserUtility, 'routerState').and.returnValue('value');
-      spyOn(router, 'parseUrl').and.returnValue('urltree' as any);
-      let result: boolean | UrlTree | undefined;
-      guard
-        .canActivate({} as any, { url: '/' } as any)
-        .subscribe((r) => (result = r));
-      expect(router.parseUrl).toHaveBeenCalledWith('value');
-      expect(result).toEqual('urltree' as any);
-    });
+  it('should navigate to the list', async () => {
+    mockStore.overrideSelector(Preferences.getBypassLanding, true);
+    mockStore.refreshState();
+    await RouterTestingHarness.create('/?v=6');
+    expect(router.url).toEqual('/list?v=6');
+  });
 
-    it('should navigate to the list', () => {
-      mockStore.overrideSelector(Preferences.getBypassLanding, true);
-      mockStore.refreshState();
-      spyOn(router, 'parseUrl').and.returnValue('urltree' as any);
-      let result: boolean | UrlTree | undefined;
-      guard
-        .canActivate({} as any, { url: '/?v=6' } as any)
-        .subscribe((r) => (result = r));
-      expect(router.parseUrl).toHaveBeenCalledWith('/list?v=6');
-      expect(result).toEqual('urltree' as any);
-    });
-
-    it('should allow navigating to the landing page', () => {
-      mockStore.overrideSelector(Preferences.getBypassLanding, false);
-      mockStore.refreshState();
-      let result: boolean | UrlTree | undefined;
-      guard
-        .canActivate({} as any, { url: '/' } as any)
-        .subscribe((r) => (result = r));
-      expect(result).toEqual(true);
-    });
+  it('should allow navigating to the landing page', async () => {
+    mockStore.overrideSelector(Preferences.getBypassLanding, false);
+    mockStore.refreshState();
+    await RouterTestingHarness.create('/');
+    expect(router.url).toEqual('/');
   });
 });
