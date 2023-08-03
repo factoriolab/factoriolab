@@ -9,6 +9,8 @@ export class TabViewOverrideDirective {
     // Override PrimeNG function to use >= in place of === when checking
     // whether to show forward button
     tabView.updateButtonState = (): void => {
+      if (tabView.content == null) return;
+
       const content = tabView.content.nativeElement as HTMLElement;
       const { scrollLeft, scrollWidth } = content;
       const width = DomHandler.getWidth(content);
