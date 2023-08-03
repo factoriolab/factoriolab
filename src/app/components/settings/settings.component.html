@@ -476,7 +476,7 @@
                         (onBlur)="
                           setOverclock(
                             machineId,
-                            overclockInput.value,
+                            overclockInput.value ?? 0,
                             machineId
                               ? vm.machinesState.entities[''].overclock
                               : 100
@@ -917,7 +917,7 @@
                   decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.pipeFlowRateTooltip' | translate"
                   [ngModel]="vm.settings.flowRate"
-                  (onBlur)="setFlowRate(flowRateInput.value)"
+                  (onBlur)="setFlowRate(flowRateInput.value ?? 1500)"
                 ></p-inputNumber>
                 <label for="pipe-flow-rate">{{
                   'settings.pipeFlowRate' | translate
@@ -961,7 +961,7 @@
                 decrementButtonClass="p-button-outlined"
                 [pTooltip]="'settings.miningSpeedTooltip' | translate"
                 [ngModel]="vm.settings.miningBonus + 100"
-                (onBlur)="setMiningBonus(miningBonusInput.value - 100)"
+                (onBlur)="setMiningBonus((miningBonusInput.value ?? 100) - 100)"
               ></p-inputNumber>
               <label for="mining-speed">{{
                 'settings.miningSpeed' | translate
@@ -989,7 +989,7 @@
                 decrementButtonClass="p-button-outlined"
                 [pTooltip]="'settings.miningProductivityTooltip' | translate"
                 [ngModel]="vm.settings.miningBonus"
-                (onBlur)="setMiningBonus(miningProdInput.value)"
+                (onBlur)="setMiningBonus(miningProdInput.value ?? 0)"
               ></p-inputNumber>
               <label for="mining-productivity">{{
                 'settings.miningProductivity' | translate
