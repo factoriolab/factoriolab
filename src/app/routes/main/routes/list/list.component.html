@@ -625,7 +625,7 @@
                   (onBlur)="
                     changeRecipeField(
                       step,
-                      overclockInput.value,
+                      overclockInput.value ?? 0,
                       vm.machinesState,
                       vm.data,
                       RecipeField.Overclock
@@ -947,7 +947,7 @@
             </p-tabMenu>
           </td>
         </tr>
-        <ng-container [ngSwitch]="expandTabMenu.activeItem.label">
+        <ng-container [ngSwitch]="expandTabMenu.activeItem?.label">
           <!-- Item row details -->
           <ng-container *ngSwitchCase="StepDetailTab.Item">
             <tr *ngIf="vm.stepDetails[step.id].outputs.length" class="detail">

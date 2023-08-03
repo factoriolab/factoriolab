@@ -34,8 +34,15 @@ describe('TabViewOverrideDirective', () => {
   describe('updateButtonState', () => {
     it('should disable forward button if scrollLeft is greater than scrollWidth - width', () => {
       spyOn(DomHandler, 'getWidth').and.returnValue(10000);
-      component.child?.updateButtonState();
-      expect(component.child?.forwardIsDisabled).toBeTrue();
+      component.child!.updateButtonState();
+      expect(component.child!.forwardIsDisabled).toBeTrue();
+    });
+
+    it('should do nothing if content is undefined', () => {
+      spyOn(DomHandler, 'getWidth');
+      component.child!.content = undefined;
+      component.child!.updateButtonState();
+      expect(DomHandler.getWidth).not.toHaveBeenCalled();
     });
   });
 });

@@ -1,42 +1,37 @@
-import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import {
   ActivatedRouteSnapshot,
-  CanActivate,
+  CanActivateFn,
   Router,
   RouterStateSnapshot,
-  UrlTree,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { first, map, Observable } from 'rxjs';
+import { first, map } from 'rxjs';
 
 import { LabState, Preferences } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class LandingGuard implements CanActivate {
-  constructor(private router: Router, private store: Store<LabState>) {}
-
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> {
-    return this.store.select(Preferences.getBypassLanding).pipe(
+export const canActivateLanding: CanActivateFn = (
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+) => {
+  const router = inject(Router);
+  return inject(Store<LabState>)
+    .select(Preferences.getBypassLanding)
+    .pipe(
       first(),
       map((bypassLanding) => {
         if (bypassLanding) {
           if (BrowserUtility.routerState && state.url === '/') {
             // Navigating to root with no query params, use last known state
-            return this.router.parseUrl(BrowserUtility.routerState);
+            return router.parseUrl(BrowserUtility.routerState);
           }
 
           // Navigate to list, preserving query params from target route
-          return this.router.parseUrl('/list' + state.url.substring(1));
+          return router.parseUrl('/list' + state.url.substring(1));
         }
 
         return true;
       })
     );
-  }
-}
+};

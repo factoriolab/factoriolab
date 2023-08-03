@@ -82,10 +82,10 @@ describe('SettingsComponent', () => {
       expect(result.length).toEqual(4);
       const middle = result[2];
       spyOn(component, 'raiseMachine');
-      middle[0].command!();
+      middle[0].command!({});
       expect(component.raiseMachine).toHaveBeenCalled();
       spyOn(component, 'lowerMachine');
-      middle[1].command!();
+      middle[1].command!({});
       expect(component.lowerMachine).toHaveBeenCalled();
     });
   });
