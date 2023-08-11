@@ -169,6 +169,17 @@ export function objectivesReducer(
           ),
         },
       };
+    case ObjectivesActionType.SET_FUEL:
+      return {
+        ...state,
+        ...{
+          entities: StoreUtility.compareReset(
+            state.entities,
+            'fuelId',
+            action.payload
+          ),
+        },
+      };
     case ObjectivesActionType.SET_MACHINE_MODULES:
       return {
         ...state,

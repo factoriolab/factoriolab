@@ -529,12 +529,14 @@ export const getRecipesModified = createSelector(
     machines:
       Object.keys(state).some(
         (id) =>
+          state[id].fuelId != null ||
           state[id].machineId != null ||
           state[id].machineModuleIds != null ||
           state[id].overclock != null
       ) ||
       objectives.some(
         (p) =>
+          p.fuelId != null ||
           p.machineId != null ||
           p.machineModuleIds != null ||
           p.overclock != null

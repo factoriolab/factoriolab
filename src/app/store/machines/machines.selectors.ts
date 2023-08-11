@@ -50,17 +50,14 @@ export const getMachinesState = createSelector(
       const s: MachineSettings = { ...state.entities[id] };
       const machine = data.machineEntities[id];
 
-      if (
-        machine.type === EnergyType.Burner &&
-        machine.fuelCategories &&
-        s.fuelId == null
-      ) {
-        const fuelCategories = machine.fuelCategories;
-        const allowedFuelIds = data.fuelIds.filter((f) =>
-          fuelCategories.includes(data.fuelEntities[f].category)
-        );
-        const fuelId = RecipeUtility.bestMatch(allowedFuelIds, fuelRankIds);
-        s.fuelId = fuelId;
+      if (machine.type === EnergyType.Burner) {
+        s.fuelOptions = RecipeUtility.fuelOptions(machine, data);
+        s.fuelId =
+          s.fuelId ??
+          RecipeUtility.bestMatch(
+            s.fuelOptions.map((o) => o.value),
+            fuelRankIds
+          );
       }
 
       if (machine.modules) {

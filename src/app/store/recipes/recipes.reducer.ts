@@ -124,6 +124,8 @@ export function recipesReducer(
     }
     case RecipesActionType.RESET_EXCLUDED:
       return StoreUtility.resetField(state, 'excluded');
+    case RecipesActionType.RESET_RECIPE_FUEL:
+      return StoreUtility.resetField(state, 'fuelId', action.payload);
     case RecipesActionType.RESET_RECIPE_MODULES:
       return StoreUtility.resetFields(
         state,
@@ -133,6 +135,7 @@ export function recipesReducer(
     case RecipesActionType.RESET_MACHINES:
       return StoreUtility.resetFields(state, [
         'machineId',
+        'fuelId',
         'overclock',
         'machineModuleIds',
         'beacons',

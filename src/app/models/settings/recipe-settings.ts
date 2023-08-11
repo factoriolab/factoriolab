@@ -8,9 +8,11 @@ export interface RecipeSettings {
   checked?: boolean;
   machineId?: string;
   fuelId?: string;
+  /** Calculated, not configurable */
+  fuelOptions?: SelectItem<string>[];
   machineModuleIds?: string[];
   /** Calculated, not configurable */
-  machineModuleOptions?: SelectItem[];
+  machineModuleOptions?: SelectItem<string>[];
   beacons?: BeaconSettings[];
   overclock?: number;
   cost?: string;
@@ -21,9 +23,11 @@ export class RecipeSettingsRational {
   checked?: boolean;
   machineId?: string;
   fuelId?: string;
+  /** Calculated, not configurable */
+  fuelOptions?: SelectItem<string>[];
   machineModuleIds?: string[];
   /** Calculated, not configurable */
-  machineModuleOptions?: SelectItem[];
+  machineModuleOptions?: SelectItem<string>[];
   beacons?: BeaconRationalSettings[];
   overclock?: Rational;
   cost?: Rational;
@@ -43,6 +47,10 @@ export class RecipeSettingsRational {
 
     if (obj.fuelId != null) {
       this.fuelId = obj.fuelId;
+    }
+
+    if (obj.fuelOptions != null) {
+      this.fuelOptions = obj.fuelOptions;
     }
 
     if (obj.machineModuleIds != null) {

@@ -24,6 +24,7 @@ export const enum RecipesActionType {
   SET_COST = '[Recipes] Set Cost',
   RESET_RECIPE = '[Recipes] Reset Recipe',
   RESET_EXCLUDED = '[Recipes] Reset Excluded',
+  RESET_RECIPE_FUEL = '[Recipes] Reset Fuel',
   RESET_RECIPE_MODULES = '[Recipes] Reset Recipe Modules',
   RESET_MACHINES = '[Recipes] Reset Machines',
   RESET_BEACONS = '[Recipes] Reset Beacons',
@@ -105,6 +106,11 @@ export class ResetRecipeAction implements Action {
   constructor(public payload: string) {}
 }
 
+export class ResetRecipeFuelAction implements Action {
+  readonly type = RecipesActionType.RESET_RECIPE_FUEL;
+  constructor(public payload: string) {}
+}
+
 export class ResetRecipeModulesAction implements Action {
   readonly type = RecipesActionType.RESET_RECIPE_MODULES;
   constructor(public payload: string) {}
@@ -142,6 +148,7 @@ export type RecipesAction =
   | SetOverclockAction
   | SetCostAction
   | ResetRecipeAction
+  | ResetRecipeFuelAction
   | ResetRecipeModulesAction
   | ResetExcludedAction
   | ResetMachinesAction

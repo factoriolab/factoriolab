@@ -9,7 +9,6 @@ import {
   Dataset,
   EnergyType,
   Entities,
-  FuelType,
   Game,
   isRecipeObjective,
   ItemId,
@@ -42,11 +41,27 @@ export class RecipeUtility {
     return options[0];
   }
 
+  static fuelOptions(
+    entity: Machine | MachineRational,
+    data: Dataset
+  ): SelectItem<string>[] {
+    if (entity.fuelCategories == null) return [];
+
+    const fuelCategories = entity.fuelCategories;
+    const allowed = data.fuelIds
+      .map((f) => data.itemEntities[f])
+      .filter(fnPropsNotNullish('fuel'))
+      .filter((f) => fuelCategories.includes(f.fuel.category));
+    return allowed.map(
+      (f): SelectItem<string> => ({ value: f.id, label: f.name })
+    );
+  }
+
   static moduleOptions(
     entity: Machine | MachineRational | Beacon | BeaconRational,
     recipeId: string | null,
     data: Dataset
-  ): SelectItem[] {
+  ): SelectItem<string>[] {
     // Get all modules
     let allowed = data.moduleIds
       .map((i) => data.itemEntities[i])
@@ -71,7 +86,9 @@ export class RecipeUtility {
       }
     }
 
-    const options = allowed.map((m) => ({ value: m.id, label: m.name }));
+    const options = allowed.map(
+      (m): SelectItem<string> => ({ value: m.id, label: m.name })
+    );
     if (data.game !== Game.Satisfactory) {
       options.unshift({ label: 'None', value: ItemId.Module });
     }

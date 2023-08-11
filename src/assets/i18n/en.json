@@ -199,6 +199,7 @@
     "removeMachinePreference": "Remove machine preference",
     "machineDefaults": "Machine defaults",
     "machineTooltip": "Select machine preference",
+    "fuelTooltip": "Select fuel",
     "modifierTooltip": "Select modifier",
     "overclockTooltip": "Set overclock percentage",
     "beaconCountTooltip": "Set beacon count",

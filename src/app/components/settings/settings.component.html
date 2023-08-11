@@ -373,6 +373,50 @@
                         <i class="fa-solid fa-industry"></i>
                       </span>
                     </ng-template>
+                    <!-- Fuel dropdown -->
+                    <p-dropdown
+                      *ngIf="settings.fuelId"
+                      labDropdownBase="icon"
+                      [tooltip]="'settings.fuelTooltip' | translate"
+                      [ngModel]="settings.fuelId"
+                      [options]="settings.fuelOptions"
+                      (onChange)="
+                        changeFuel(
+                          machineId,
+                          $event.value,
+                          settings,
+                          vm.settings.fuelRankIds
+                        )
+                      "
+                    >
+                      <ng-template pTemplate="selectedItem" let-item>
+                        <div class="d-flex">
+                          <i [class]="item.value | iconSmClass"></i>
+                        </div>
+                      </ng-template>
+                      <ng-template pTemplate="item" let-item>
+                        <div
+                          class="d-flex align-items-center py-2 w-100 h-100"
+                          [pTooltip]="
+                            'tooltip.fuel'
+                              | translate
+                                : {
+                                    name: vm.data.itemEntities[item.value].name,
+                                    category:
+                                      vm.data.fuelEntities[item.value].category,
+                                    value:
+                                      vm.data.fuelEntities[item.value].value
+                                  }
+                          "
+                          [escape]="false"
+                        >
+                          <i [class]="item.value | iconSmClass"></i>
+                          <div class="ms-3 text-truncate">
+                            {{ item.label }}
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
                     <!-- Modifiers multiselect -->
                     <ng-container *ngIf="settings.moduleRankIds">
                       <p-multiSelect
