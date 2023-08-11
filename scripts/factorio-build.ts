@@ -25,7 +25,7 @@ import { coerceArray, getJsonData } from './helpers';
  */
 
 const mod = process.argv[2];
-const mode: 'normal' | 'expensive' = 'normal';
+const mode: 'normal' | 'expensive' = mod === '1.1e' ? 'expensive' : 'normal';
 
 if (!mod) {
   throw new Error(
@@ -205,7 +205,7 @@ async function processMod(): Promise<void> {
   }
 
   function getRecipeProduct(recipe: D.Recipe): D.Item | D.Fluid | undefined {
-    const recipeData = typeof recipe[mode] === 'object' ? recipe[mode] : recipe;
+    const recipeData = getRecipeData(recipe);
     if (recipeData.result) {
       return getItem(recipeData.result);
     } else if (recipeData.results?.length === 1) {
@@ -623,7 +623,8 @@ async function processMod(): Promise<void> {
   }
 
   function getRecipeData(recipe: D.Recipe): D.RecipeData {
-    return typeof recipe[mode] === 'object' ? recipe[mode] : recipe;
+    const data = recipe[mode];
+    return typeof data === 'object' ? data : recipe;
   }
 
   function getProducts(
