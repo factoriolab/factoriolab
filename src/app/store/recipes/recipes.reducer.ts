@@ -42,9 +42,11 @@ export function recipesReducer(
     case RecipesActionType.SET_MACHINE:
       return StoreUtility.resetFields(
         StoreUtility.compareReset(state, 'machineId', action.payload),
-        ['machineModuleIds', 'beacons'],
+        ['fuelId', 'machineModuleIds', 'beacons'],
         action.payload.id
       );
+    case RecipesActionType.SET_FUEL:
+      return StoreUtility.compareReset(state, 'fuelId', action.payload);
     case RecipesActionType.SET_MACHINE_MODULES:
       return StoreUtility.compareReset(
         state,

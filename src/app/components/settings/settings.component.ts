@@ -403,8 +403,8 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetFluidWagonAction({ value, def }));
   }
 
-  setFuel(value: string, def: string | undefined): void {
-    this.store.dispatch(new Settings.SetFuelAction({ value, def }));
+  setFuels(value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Settings.SetFuelRankAction({ value, def }));
   }
 
   setFlowRate(value: number): void {

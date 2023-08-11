@@ -273,7 +273,7 @@ describe('SettingsComponent', () => {
     dispatch.valDef('setPipe', Settings.SetPipeAction);
     dispatch.valDef('setCargoWagon', Settings.SetCargoWagonAction);
     dispatch.valDef('setFluidWagon', Settings.SetFluidWagonAction);
-    dispatch.valDef('setFuel', Settings.SetFuelAction);
+    dispatch.valDef('setFuels', Settings.SetFuelRankAction);
     dispatch.val('setFlowRate', Settings.SetFlowRateAction);
     dispatch.val('setInserterTarget', Settings.SetInserterTargetAction);
     dispatch.val('setMiningBonus', Settings.SetMiningBonusAction);

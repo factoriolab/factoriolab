@@ -204,7 +204,7 @@ describe('Settings Selectors', () => {
         ...{
           beltId: Mocks.Defaults.beltId,
           pipeId: undefined,
-          fuelId: Mocks.Defaults.fuelId,
+          fuelRankIds: [],
           cargoWagonId: Mocks.Defaults.cargoWagonId,
           fluidWagonId: Mocks.Defaults.fluidWagonId,
         },
@@ -221,7 +221,7 @@ describe('Settings Selectors', () => {
         ...{
           beltId: undefined,
           pipeId: undefined,
-          fuelId: undefined,
+          fuelRankIds: [],
           cargoWagonId: undefined,
           fluidWagonId: undefined,
         },
@@ -231,8 +231,10 @@ describe('Settings Selectors', () => {
 
   describe('getFuelId', () => {
     it('should return fuel from settings', () => {
-      const result = Selectors.getFuelId.projector(Mocks.SettingsStateInitial);
-      expect(result).toEqual(Mocks.SettingsStateInitial.fuelId);
+      const result = Selectors.getFuelRankIds.projector(
+        Mocks.SettingsStateInitial
+      );
+      expect(result).toEqual(Mocks.SettingsStateInitial.fuelRankIds);
     });
   });
 
@@ -484,15 +486,6 @@ describe('Settings Selectors', () => {
         Game.Factorio
       );
       expect(result.categoryIds.length).toEqual(0);
-    });
-  });
-
-  describe('getOptions', () => {
-    it('should handle no chemical fuels', () => {
-      const data = Mocks.getDataset();
-      data.chemicalFuelIds = [];
-      const result = Selectors.getOptions.projector(data);
-      expect(result.chemicalFuels.length).toEqual(0);
     });
   });
 

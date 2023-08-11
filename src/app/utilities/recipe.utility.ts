@@ -93,7 +93,6 @@ export class RecipeUtility {
 
   static adjustRecipe(
     recipeId: string,
-    fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
@@ -302,37 +301,23 @@ export class RecipeUtility {
       }
 
       // Calculate burner fuel inputs
-      if (machine.type === EnergyType.Burner && usage.nonzero()) {
-        let rFuelId = fuelId;
-        if (
-          machine.category != null &&
-          machine.category !== FuelType.Chemical
-        ) {
-          // Try to find matching input for burning recipes
-          const ins = Object.keys(recipe.in);
-          const fuels = data.fuelIds.filter(
-            (i) => data.fuelEntities[i].category === machine.category
-          );
-          rFuelId = ins.find((i) => fuels.indexOf(i) !== -1) || fuels[0];
-        }
-        if (rFuelId) {
-          const fuel = data.fuelEntities[rFuelId];
+      if (settings.fuelId) {
+        const fuel = data.fuelEntities[settings.fuelId];
 
-          if (fuel) {
-            const fuelIn = recipe.time
-              .mul(usage)
-              .div(fuel.value)
-              .div(Rational.thousand);
+        if (fuel) {
+          const fuelIn = recipe.time
+            .mul(usage)
+            .div(fuel.value)
+            .div(Rational.thousand);
 
-            recipe.in[rFuelId] = (recipe.in[rFuelId] || Rational.zero).add(
-              fuelIn
-            );
+          recipe.in[settings.fuelId] = (
+            recipe.in[settings.fuelId] || Rational.zero
+          ).add(fuelIn);
 
-            if (fuel.result) {
-              recipe.out[fuel.result] = (
-                recipe.out[fuel.result] || Rational.zero
-              ).add(fuelIn);
-            }
+          if (fuel.result) {
+            recipe.out[fuel.result] = (
+              recipe.out[fuel.result] || Rational.zero
+            ).add(fuelIn);
           }
         }
       }
@@ -459,7 +444,6 @@ export class RecipeUtility {
   static adjustDataset(
     recipesState: Entities<RecipeSettingsRational>,
     itemsState: Entities<ItemSettings>,
-    fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
@@ -470,7 +454,6 @@ export class RecipeUtility {
     const recipeR = this.adjustRecipes(
       recipesState,
       itemsState,
-      fuelId,
       proliferatorSprayId,
       miningBonus,
       researchSpeed,
@@ -484,7 +467,6 @@ export class RecipeUtility {
   static adjustRecipes(
     recipesState: Entities<RecipeSettingsRational>,
     itemsState: Entities<ItemSettings>,
-    fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
@@ -495,7 +477,6 @@ export class RecipeUtility {
       data.recipeIds.reduce((e: Entities<RecipeRational>, i) => {
         e[i] = this.adjustRecipe(
           i,
-          fuelId,
           proliferatorSprayId,
           miningBonus,
           researchSpeed,

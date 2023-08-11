@@ -69,7 +69,6 @@ export const getObjectiveRationals = createSelector(
           isRecipeObjective(o)
             ? RecipeUtility.adjustRecipe(
                 o.targetId,
-                adj.fuelId,
                 adj.proliferatorSprayId,
                 adj.miningBonus,
                 adj.researchSpeed,

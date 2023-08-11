@@ -87,6 +87,14 @@ export function machinesReducer(
       }
       return state;
     }
+    case MachinesActionType.SET_FUEL: {
+      const entities = StoreUtility.compareReset(
+        state.entities,
+        'fuelId',
+        action.payload
+      );
+      return { ...state, ...{ entities } };
+    }
     case MachinesActionType.SET_MODULE_RANK: {
       const entities = StoreUtility.compareReset(
         state.entities,
