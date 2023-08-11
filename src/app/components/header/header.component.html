@@ -19,28 +19,30 @@
     (click)="contentSvc.toggleSettings()"
   ></button>
   <div class="d-none d-sm-flex p-inputgroup w-auto">
-    <button
-      type="button"
-      pButton
-      pRipple
-      class="p-button-lg p-button-text icon-btn-lg"
-      [icon]="vm.gameInfo.icon | iconSmClass"
-      [label]="vm.gameInfo.label | translate"
-      [routerLink]="vm.gameInfo.route"
-      [pTooltip]="'app.resetTooltip' | translate"
-      tooltipPosition="bottom"
-    ></button>
-    <ng-container *ngFor="let game of vm.gameOptions">
+    <a [routerLink]="vm.gameInfo.route">
       <button
         type="button"
         pButton
         pRipple
-        class="p-button-lg p-button-text"
-        [icon]="game.icon | iconSmClass"
-        [routerLink]="game.routerLink"
-        [pTooltip]="game.label ?? ''"
+        class="p-button-lg p-button-text icon-btn-lg"
+        [icon]="vm.gameInfo.icon | iconSmClass"
+        [label]="vm.gameInfo.label | translate"
+        [pTooltip]="'app.resetTooltip' | translate"
         tooltipPosition="bottom"
       ></button>
+    </a>
+    <ng-container *ngFor="let game of vm.gameOptions">
+      <a [routerLink]="game.routerLink">
+        <button
+          type="button"
+          pButton
+          pRipple
+          class="p-button-lg p-button-text"
+          [icon]="game.icon | iconSmClass"
+          [pTooltip]="game.label ?? ''"
+          tooltipPosition="bottom"
+        ></button>
+      </a>
     </ng-container>
   </div>
   <a class="d-sm-none" [routerLink]="vm.gameInfo.route">
