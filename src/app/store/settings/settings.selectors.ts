@@ -16,7 +16,6 @@ import {
   Entities,
   FluidWagonRational,
   FuelRational,
-  FuelType,
   Game,
   gameColumnsState,
   gameInfo,
