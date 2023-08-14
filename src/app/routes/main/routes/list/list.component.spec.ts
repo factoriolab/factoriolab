@@ -269,6 +269,23 @@ describe('ListComponent', () => {
       );
     });
 
+    it('should set up default for fuel', () => {
+      spyOn(component, 'setFuel');
+      component.changeRecipeField(
+        step,
+        ItemId.Coal,
+        Mocks.MachinesStateInitial,
+        Mocks.Dataset,
+        RecipeField.Fuel
+      );
+      expect(component.setFuel).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        ItemId.Coal,
+        undefined,
+        false
+      );
+    });
+
     it('should set up default for machine modules', () => {
       spyOn(component, 'setMachineModules');
       component.changeRecipeField(
@@ -417,6 +434,8 @@ describe('ListComponent', () => {
     dispatch.val('setRecipeExcludedBatch', Recipes.SetExcludedBatchAction);
     dispatch.idValDef('setMachine', Recipes.SetMachineAction);
     dispatch.idValDefAlt('setMachine', Objectives.SetMachineAction);
+    dispatch.idValDef('setFuel', Recipes.SetFuelAction);
+    dispatch.idValDefAlt('setFuel', Objectives.SetFuelAction);
     dispatch.idValDef('setMachineModules', Recipes.SetMachineModulesAction);
     dispatch.idValDefAlt(
       'setMachineModules',

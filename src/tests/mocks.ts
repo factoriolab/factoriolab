@@ -205,7 +205,7 @@ export const ItemsStateInitial = Items.getItemsState.projector({}, Dataset, {
   ...{
     beltId: ItemId.TransportBelt,
     pipeId: ItemId.Pipe,
-    fuelId: ItemId.Coal,
+    fuelRankIds: [ItemId.Coal],
     cargoWagonId: ItemId.CargoWagon,
     fluidWagonId: ItemId.FluidWagon,
     excludedRecipeIds: [],
@@ -213,6 +213,7 @@ export const ItemsStateInitial = Items.getItemsState.projector({}, Dataset, {
 });
 export const MachinesStateInitial = Machines.getMachinesState.projector(
   Machines.initialMachinesState,
+  [ItemId.Coal],
   Defaults,
   Dataset
 );
@@ -238,7 +239,6 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
   {
     netProductionOnly: false,
     proliferatorSprayId: ItemId.Module,
-    fuelId: ItemId.Coal,
     miningBonus: M.Rational.zero,
     researchSpeed: M.Rational.one,
     data: Dataset,

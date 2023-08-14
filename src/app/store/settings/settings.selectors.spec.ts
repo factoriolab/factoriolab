@@ -180,7 +180,7 @@ describe('Settings Selectors', () => {
         modIds: 'modDatasetIds',
         beltId: 'belt',
         pipeId: 'pipe',
-        fuelId: 'fuel',
+        fuelRankIds: ['fuel'],
         cargoWagonId: 'cargoWagon',
         fluidWagonId: 'fluidWagon',
         excludedRecipeIds: 'excludedRecipes',
@@ -204,7 +204,7 @@ describe('Settings Selectors', () => {
         ...{
           beltId: Mocks.Defaults.beltId,
           pipeId: undefined,
-          fuelRankIds: [],
+          fuelRankIds: [ItemId.Coal],
           cargoWagonId: Mocks.Defaults.cargoWagonId,
           fluidWagonId: Mocks.Defaults.fluidWagonId,
         },

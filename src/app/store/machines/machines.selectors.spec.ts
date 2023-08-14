@@ -8,6 +8,7 @@ describe('Machines Selectors', () => {
     it('should fill in machine settings', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
+        [ItemId.Coal],
         Mocks.Defaults,
         Mocks.AdjustedData
       );
@@ -18,6 +19,7 @@ describe('Machines Selectors', () => {
     it('should handle null defaults', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
+        [ItemId.Coal],
         null,
         Mocks.AdjustedData
       );
@@ -31,6 +33,7 @@ describe('Machines Selectors', () => {
           ids: undefined,
           entities: { [ItemId.AssemblingMachine2]: { beaconCount: '0' } },
         },
+        [ItemId.Coal],
         null,
         Mocks.AdjustedData
       );
@@ -44,6 +47,7 @@ describe('Machines Selectors', () => {
     it('should use null beaconCount for DSP', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
+        [ItemId.Coal],
         Mocks.Defaults,
         { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
       );
@@ -67,6 +71,7 @@ describe('Machines Selectors', () => {
       };
       const result = Selectors.getMachinesState.projector(
         state,
+        [ItemId.Coal],
         Mocks.Defaults,
         {
           ...Mocks.AdjustedData,
@@ -93,6 +98,7 @@ describe('Machines Selectors', () => {
       };
       const result = Selectors.getMachinesState.projector(
         state,
+        [ItemId.Coal],
         Mocks.Defaults,
         {
           ...Mocks.AdjustedData,
