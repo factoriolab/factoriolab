@@ -104,6 +104,22 @@ describe('SettingsComponent', () => {
     });
   });
 
+  describe('setSearch', () => {
+    it('should call the router to navigate', () => {
+      spyOn(router, 'navigateByUrl');
+      component.setSearch('v=9');
+      expect(router.navigateByUrl).toHaveBeenCalled();
+    });
+  });
+
+  describe('copySearchToClipboard', () => {
+    it('should copy the text to the clipboard', () => {
+      spyOn(navigator.clipboard, 'writeText');
+      component.copySearchToClipboard('v=9');
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith('v=9');
+    });
+  });
+
   describe('setState', () => {
     it('should call the router to navigate', () => {
       spyOn(router, 'navigate');
