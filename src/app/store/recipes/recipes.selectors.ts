@@ -41,6 +41,10 @@ export const getRecipesState = createSelector(
 
       const machine = data.machineEntities[s.machineId];
       const def = machinesState.entities[s.machineId];
+
+      s.fuelId = s.fuelId ?? def?.fuelId;
+      s.fuelOptions = def?.fuelOptions;
+
       if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
         s.machineModuleOptions = RecipeUtility.moduleOptions(
           machine,
@@ -132,7 +136,6 @@ export const getAdjustedDataset = createSelector(
     RecipeUtility.adjustDataset(
       recipesState,
       itemsState,
-      adj.fuelId,
       adj.proliferatorSprayId,
       adj.miningBonus,
       adj.researchSpeed,

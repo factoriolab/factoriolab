@@ -2,7 +2,7 @@ import { createSelector } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
 import { getIdOptions } from '~/helpers';
-import { Entities, Game, MachineSettings } from '~/models';
+import { EnergyType, Entities, Game, MachineSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Settings from '../settings';
@@ -15,9 +15,10 @@ export const machinesState = (state: LabState): MachinesState =>
 /* Complex selectors */
 export const getMachinesState = createSelector(
   machinesState,
+  Settings.getFuelRankIds,
   Settings.getDefaults,
   Settings.getDataset,
-  (state, defaults, data): MachinesState => {
+  (state, fuelRankIds, defaults, data): MachinesState => {
     const ids = state.ids ?? defaults?.machineRankIds ?? [];
 
     const entities: Entities<MachineSettings> = {};
@@ -48,6 +49,16 @@ export const getMachinesState = createSelector(
     for (const id of data.machineIds.filter((i) => data.itemEntities[i])) {
       const s: MachineSettings = { ...state.entities[id] };
       const machine = data.machineEntities[id];
+
+      if (machine.type === EnergyType.Burner) {
+        s.fuelOptions = RecipeUtility.fuelOptions(machine, data);
+        s.fuelId =
+          s.fuelId ??
+          RecipeUtility.bestMatch(
+            s.fuelOptions.map((o) => o.value),
+            fuelRankIds
+          );
+      }
 
       if (machine.modules) {
         s.moduleRankIds = s.moduleRankIds ?? def.moduleRankIds;

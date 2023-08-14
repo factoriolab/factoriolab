@@ -44,7 +44,6 @@ export interface Dataset {
   moduleIds: string[];
   moduleEntities: Entities<ModuleRational>;
   fuelIds: string[];
-  chemicalFuelIds: string[];
   fuelEntities: Entities<FuelRational>;
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;

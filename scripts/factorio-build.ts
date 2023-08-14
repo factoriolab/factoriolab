@@ -25,7 +25,7 @@ import { coerceArray, getJsonData } from './helpers';
  */
 
 const mod = process.argv[2];
-const mode: 'normal' | 'expensive' = 'normal';
+const mode: 'normal' | 'expensive' = mod === '1.1e' ? 'expensive' : 'normal';
 
 if (!mod) {
   throw new Error(
@@ -52,7 +52,6 @@ interface ModDataReport {
   noProducts: string[];
   resourceNoMinableProducts: string[];
   resourceDuplicate: string[];
-  multiFuelCategory: string[];
 }
 
 const start = Date.now();
@@ -206,7 +205,7 @@ async function processMod(): Promise<void> {
   }
 
   function getRecipeProduct(recipe: D.Recipe): D.Item | D.Fluid | undefined {
-    const recipeData = typeof recipe[mode] === 'object' ? recipe[mode] : recipe;
+    const recipeData = getRecipeData(recipe);
     if (recipeData.result) {
       return getItem(recipeData.result);
     } else if (recipeData.results?.length === 1) {
@@ -499,20 +498,16 @@ async function processMod(): Promise<void> {
     return proto.energy_source.type as EnergyType;
   }
 
-  function getMachineCategory(proto: MachineProto): string | undefined {
+  function getMachineCategory(proto: MachineProto): string[] | undefined {
     if (D.isOffshorePump(proto)) {
       return undefined;
     }
 
     if (proto.energy_source.type === 'burner') {
       if (proto.energy_source.fuel_categories) {
-        if (proto.energy_source.fuel_categories.length > 1) {
-          modDataReport.multiFuelCategory.push(proto.name);
-        }
-
-        return proto.energy_source.fuel_categories[0];
+        return proto.energy_source.fuel_categories;
       } else {
-        return proto.energy_source.fuel_category;
+        return [proto.energy_source.fuel_category ?? 'chemical'];
       }
     }
 
@@ -628,7 +623,8 @@ async function processMod(): Promise<void> {
   }
 
   function getRecipeData(recipe: D.Recipe): D.RecipeData {
-    return typeof recipe[mode] === 'object' ? recipe[mode] : recipe;
+    const data = recipe[mode];
+    return typeof data === 'object' ? data : recipe;
   }
 
   function getProducts(
@@ -697,7 +693,7 @@ async function processMod(): Promise<void> {
       modules: getMachineModules(proto),
       disallowedEffects: getMachineDisallowedEffects(proto),
       type: getMachineType(proto),
-      category: getMachineCategory(proto),
+      fuelCategories: getMachineCategory(proto),
       usage: getMachineUsage(proto),
       drain: getMachineDrain(proto),
       pollution: getMachinePollution(proto),
@@ -721,7 +717,6 @@ async function processMod(): Promise<void> {
   const modDataReport: ModDataReport = {
     noProducts: [],
     noProducers: [],
-    multiFuelCategory: [],
     resourceNoMinableProducts: [],
     resourceDuplicate: [],
   };
@@ -1727,6 +1722,30 @@ async function processMod(): Promise<void> {
       logTime('Writing data');
       writeData();
       logTime('Complete');
+
+      if (modDataReport.noProducers.length) {
+        console.log(
+          `Recipes with no producers: ${modDataReport.noProducers.length}`
+        );
+      }
+
+      if (modDataReport.noProducts.length) {
+        console.log(
+          `Recipes with no products: ${modDataReport.noProducts.length}`
+        );
+      }
+
+      if (modDataReport.resourceNoMinableProducts.length) {
+        console.log(
+          `Resources with no minable products: ${modDataReport.resourceNoMinableProducts.length}`
+        );
+      }
+
+      if (modDataReport.resourceDuplicate.length) {
+        console.log(
+          `Resource duplicates: ${modDataReport.resourceDuplicate.length}`
+        );
+      }
     }
   );
 }

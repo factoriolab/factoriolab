@@ -178,6 +178,20 @@ describe('Objectives Reducer', () => {
     });
   });
 
+  describe('SET_FUEL', () => {
+    it('should set machine fuel on an objective', () => {
+      const result = objectivesReducer(
+        state,
+        new Actions.SetFuelAction({
+          id: '0',
+          value: ItemId.Coal,
+          def: undefined,
+        })
+      );
+      expect(result.entities['0'].fuelId).toEqual(ItemId.Coal);
+    });
+  });
+
   describe('SET_MACHINE_MODULES', () => {
     it('should set machine modules on an objective', () => {
       const result = objectivesReducer(

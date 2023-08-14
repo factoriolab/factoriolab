@@ -13,7 +13,7 @@ import { MachinesEffects } from './machines.effects';
 
 describe('MachinesEffects', () => {
   let effects: MachinesEffects;
-  let actions: ReplaySubject<any>;
+  let actions: ReplaySubject<unknown>;
   let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
@@ -38,7 +38,7 @@ describe('MachinesEffects', () => {
   });
 
   describe('resetRecipeSetting$', () => {
-    it('should reset when machine modules do not match', () => {
+    it('should reset modules when machine modules do not match', () => {
       actions = new ReplaySubject(1);
       actions.next(
         new Actions.RemoveAction({
@@ -58,6 +58,29 @@ describe('MachinesEffects', () => {
       effects.resetRecipeSettings$.subscribe((a) => results.push(a));
       expect(results).toEqual([
         new Recipes.ResetRecipeModulesAction(RecipeId.Coal),
+      ]);
+    });
+
+    it('should reset fuel when machine is no longer a burner', () => {
+      actions = new ReplaySubject(1);
+      actions.next(
+        new Actions.RemoveAction({
+          value: ItemId.AssemblingMachine3,
+          def: Mocks.Defaults.machineRankIds,
+        })
+      );
+      mockStore.setState({
+        ...initialState,
+        ...{
+          recipesState: {
+            [RecipeId.Coal]: { fuelId: ItemId.Wood },
+          },
+        },
+      });
+      const results: Action[] = [];
+      effects.resetRecipeSettings$.subscribe((a) => results.push(a));
+      expect(results).toEqual([
+        new Recipes.ResetRecipeFuelAction(RecipeId.Coal),
       ]);
     });
 

@@ -17,6 +17,7 @@ import { AppSharedModule } from '~/app-shared.module';
 import {
   ColumnsState,
   Dataset,
+  EnergyType,
   Entities,
   Game,
   IdDefaultPayload,
@@ -136,6 +137,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   StepDetailTab = StepDetailTab;
   Game = Game;
   RecipeField = RecipeField;
+  EnergyType = EnergyType;
   Rational = Rational;
 
   constructor(
@@ -307,6 +309,18 @@ export class ListComponent implements OnInit, AfterViewInit {
 
           break;
         }
+        case RecipeField.Fuel: {
+          if (typeof event === 'string') {
+            this.setFuel(
+              step.recipeObjectiveId ?? step.recipeId,
+              event,
+              machineSettings.fuelId,
+              step.recipeObjectiveId != null
+            );
+          }
+
+          break;
+        }
         case RecipeField.MachineModules: {
           if (
             machineSettings.moduleRankIds != null &&
@@ -451,6 +465,16 @@ export class ListComponent implements OnInit, AfterViewInit {
     const action = objective
       ? Objectives.SetMachineAction
       : Recipes.SetMachineAction;
+    this.store.dispatch(new action({ id, value, def }));
+  }
+
+  setFuel(
+    id: string,
+    value: string,
+    def: string | undefined,
+    objective = false
+  ): void {
+    const action = objective ? Objectives.SetFuelAction : Recipes.SetFuelAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 

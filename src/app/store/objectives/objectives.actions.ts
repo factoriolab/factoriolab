@@ -21,6 +21,7 @@ export const enum ObjectivesActionType {
   SET_UNIT = '[Objectives] Set Unit',
   SET_TYPE = '[Objectives] Set Type',
   SET_MACHINE = '[Objectives] Set Machine',
+  SET_FUEL = '[Objectives] Set Fuel',
   SET_MACHINE_MODULES = '[Objectives] Set Machine Modules',
   ADD_BEACON = '[Objectives] Add Beacon',
   REMOVE_BEACON = '[Objectives] Remove Beacon',
@@ -81,6 +82,11 @@ export class SetTypeAction implements Action {
 
 export class SetMachineAction implements Action {
   readonly type = ObjectivesActionType.SET_MACHINE;
+  constructor(public payload: IdDefaultPayload) {}
+}
+
+export class SetFuelAction implements Action {
+  readonly type = ObjectivesActionType.SET_FUEL;
   constructor(public payload: IdDefaultPayload) {}
 }
 
@@ -150,6 +156,7 @@ export type ObjectivesAction =
   | SetUnitAction
   | SetTypeAction
   | SetMachineAction
+  | SetFuelAction
   | SetMachineModulesAction
   | AddBeaconAction
   | RemoveBeaconAction

@@ -100,7 +100,7 @@ const mockSettingsState: Settings.SettingsState = {
   beaconReceivers: '1',
   proliferatorSprayId: ItemId.ProductivityModule,
   beltId: ItemId.TransportBelt,
-  fuelId: ItemId.Coal,
+  fuelRankIds: [ItemId.Coal],
   cargoWagonId: ItemId.CargoWagon,
   fluidWagonId: ItemId.FluidWagon,
   flowRate: 1200,

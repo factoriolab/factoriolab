@@ -572,7 +572,6 @@
                   ></i
                 >
                 <p-dropdown
-                  *ngIf="vm.data.machineEntities[machineId] as machine"
                   labDropdownBase="icon"
                   [pTooltip]="machineId | machineTooltip : vm.data"
                   [escape]="false"
@@ -631,6 +630,60 @@
                   "
                 >
                 </p-inputNumber>
+                <ng-container *ngIf="step.recipeSettings?.fuelId as fuelId">
+                  <!-- <span>{{ fuelId }}</span> -->
+                  <p-dropdown
+                    labDropdownBase="icon"
+                    [pTooltip]="
+                      'tooltip.fuel'
+                        | translate
+                          : {
+                              name: vm.data.itemEntities[fuelId].name,
+                              category: vm.data.fuelEntities[fuelId].category,
+                              value: vm.data.fuelEntities[fuelId].value
+                            }
+                    "
+                    [escape]="false"
+                    [ngModel]="fuelId"
+                    [options]="step.recipeSettings.fuelOptions ?? []"
+                    (onChange)="
+                      changeRecipeField(
+                        step,
+                        $event.value,
+                        vm.machinesState,
+                        vm.data,
+                        RecipeField.Fuel
+                      )
+                    "
+                  >
+                    <ng-template pTemplate="selectedItem" let-item>
+                      <div class="d-flex">
+                        <i [class]="item.value | iconSmClass"></i>
+                      </div>
+                    </ng-template>
+                    <ng-template pTemplate="item" let-item>
+                      <div
+                        class="d-flex align-items-center py-2 w-100 h-100"
+                        [pTooltip]="
+                          'tooltip.fuel'
+                            | translate
+                              : {
+                                  name: vm.data.itemEntities[item.value].name,
+                                  category:
+                                    vm.data.fuelEntities[item.value].category,
+                                  value: vm.data.fuelEntities[item.value].value
+                                }
+                        "
+                        [escape]="false"
+                      >
+                        <i [class]="item.value | iconSmClass"></i>
+                        <div class="ms-3 text-truncate">
+                          {{ item.label }}
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </ng-container>
                 <ng-container
                   *ngIf="step.recipeSettings?.machineModuleIds as moduleIds"
                 >

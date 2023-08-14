@@ -8,6 +8,7 @@ export const enum MachinesActionType {
   RAISE = '[Machines] Raise',
   LOWER = '[Machines] Lower',
   SET_MACHINE = '[Machines] Set Machine',
+  SET_FUEL = '[Machines] Set Fuel',
   SET_MODULE_RANK = '[Machines] Set Module Rank',
   SET_BEACON_COUNT = '[Machines] Set Beacon Count',
   SET_BEACON = '[Machines] Set Beacon',
@@ -39,6 +40,11 @@ export class LowerAction implements Action {
 export class SetMachineAction implements Action {
   readonly type = MachinesActionType.SET_MACHINE;
   constructor(public payload: IdDefaultPayload<string, string[]>) {}
+}
+
+export class SetFuelAction implements Action {
+  readonly type = MachinesActionType.SET_FUEL;
+  constructor(public payload: IdDefaultPayload<string>) {}
 }
 
 export class SetModuleRankAction implements Action {
@@ -77,6 +83,7 @@ export type MachinesAction =
   | RaiseAction
   | LowerAction
   | SetMachineAction
+  | SetFuelAction
   | SetModuleRankAction
   | SetBeaconCountAction
   | SetBeaconAction

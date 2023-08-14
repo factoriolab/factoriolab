@@ -200,6 +200,33 @@ describe('SettingsComponent', () => {
     });
   });
 
+  describe('changeFuel', () => {
+    it('should calculate the default value for the passed machine', () => {
+      spyOn(component, 'setFuel');
+      component.changeFuel(
+        ItemId.StoneFurnace,
+        ItemId.Coal,
+        { fuelOptions: [{ label: '', value: ItemId.Wood }] },
+        [ItemId.Wood]
+      );
+      expect(component.setFuel).toHaveBeenCalledWith(
+        ItemId.StoneFurnace,
+        ItemId.Coal,
+        ItemId.Wood
+      );
+    });
+
+    it('should handle no options specified in passed settings', () => {
+      spyOn(component, 'setFuel');
+      component.changeFuel(ItemId.StoneFurnace, ItemId.Coal, {}, [ItemId.Wood]);
+      expect(component.setFuel).toHaveBeenCalledWith(
+        ItemId.StoneFurnace,
+        ItemId.Coal,
+        undefined
+      );
+    });
+  });
+
   describe('changeBeaconModuleRank', () => {
     it('should set the defaults for the default machine', () => {
       spyOn(component, 'setBeaconModuleRank');
@@ -256,6 +283,7 @@ describe('SettingsComponent', () => {
     dispatch.val('setPreset', Settings.SetPresetAction);
     dispatch.valDef('removeMachine', Machines.RemoveAction);
     dispatch.idValDef('setMachine', Machines.SetMachineAction);
+    dispatch.idValDef('setFuel', Machines.SetFuelAction);
     dispatch.idValDef('setModuleRank', Machines.SetModuleRankAction);
     dispatch.idValDef('setOverclock', Machines.SetOverclockAction);
     dispatch.valDef('raiseMachine', Machines.RaiseAction);
@@ -273,7 +301,7 @@ describe('SettingsComponent', () => {
     dispatch.valDef('setPipe', Settings.SetPipeAction);
     dispatch.valDef('setCargoWagon', Settings.SetCargoWagonAction);
     dispatch.valDef('setFluidWagon', Settings.SetFluidWagonAction);
-    dispatch.valDef('setFuel', Settings.SetFuelAction);
+    dispatch.valDef('setFuels', Settings.SetFuelRankAction);
     dispatch.val('setFlowRate', Settings.SetFlowRateAction);
     dispatch.val('setInserterTarget', Settings.SetInserterTargetAction);
     dispatch.val('setMiningBonus', Settings.SetMiningBonusAction);

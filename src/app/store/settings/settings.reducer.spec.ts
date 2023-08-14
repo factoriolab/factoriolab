@@ -128,14 +128,14 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_FUEL', () => {
+  describe('SET_FUEL_RANK', () => {
     it('should set the fuel', () => {
-      const value = ItemId.Wood;
+      const value = [ItemId.Wood];
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFuelAction({ value, def: undefined })
+        new Actions.SetFuelRankAction({ value, def: undefined })
       );
-      expect(result.fuelId).toEqual(value);
+      expect(result.fuelRankIds).toEqual(value);
     });
   });
 
