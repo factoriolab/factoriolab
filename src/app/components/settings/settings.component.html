@@ -43,6 +43,30 @@
             <div *ngIf="state">{{ state }}</div>
           </div>
         </ng-template>
+        <div *ngIf="BrowserUtility.isStandalone" class="p-inputgroup mb-2">
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-outlined"
+            icon="fa-solid fa-arrow-up-right-from-square"
+            (click)="setSearch(search.value)"
+          ></button>
+          <input
+            #search
+            pInputText
+            type="text"
+            [ngModel]="BrowserUtility.search"
+          />
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-outlined"
+            icon="fa-solid fa-copy"
+            (click)="copySearchToClipboard(search.value)"
+          ></button>
+        </div>
         <div class="p-inputgroup">
           <ng-container *ngIf="editState; else selectState">
             <button

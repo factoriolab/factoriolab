@@ -152,6 +152,7 @@ export class SettingsComponent implements OnInit {
   FuelType = FuelType;
   Game = Game;
   ItemId = ItemId;
+  BrowserUtility = BrowserUtility;
 
   constructor(
     public contentSvc: ContentService,
@@ -208,6 +209,17 @@ export class SettingsComponent implements OnInit {
         this.resetSettings();
       },
     });
+  }
+
+  setSearch(search: string): void {
+    const tree = this.router.parseUrl(this.router.url);
+    const params = new URLSearchParams(search);
+    params.forEach((value, key) => (tree.queryParams[key] = value));
+    this.router.navigateByUrl(tree);
+  }
+
+  copySearchToClipboard(search: string): void {
+    navigator.clipboard.writeText(search);
   }
 
   setState(id: string, preferences: Preferences.PreferencesState): void {

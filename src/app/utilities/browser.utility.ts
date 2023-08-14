@@ -16,6 +16,11 @@ export class BrowserUtility {
     return window.location.href;
   }
 
+  /**
+   * Indicates whether app is running as a standalone PWA. Evaluates only once.
+   */
+  static isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
   static mergeState(initial: LabState): LabState {
     let preferencesState = BrowserUtility.preferencesState;
     if (preferencesState) {
