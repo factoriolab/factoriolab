@@ -561,9 +561,7 @@
                 *ngIf="step.recipeId && step.recipe && step.recipeSettings"
                 class="d-flex align-items-center"
               >
-                <span class="find-text">{{
-                  vm.data.recipeEntities[step.recipeId].name
-                }}</span>
+                <span class="find-text">{{ step.recipe.name }}</span>
                 <i
                   class="padded"
                   [class]="step.recipeId | iconSmClass : 'recipe'"
@@ -1086,12 +1084,9 @@
           </ng-container>
           <!-- Recipe row details -->
           <ng-container *ngSwitchCase="StepDetailTab.Recipe">
-            <ng-container *ngIf="step.recipeId && step.recipeSettings">
+            <ng-container *ngIf="step.recipe">
               <ng-container
-                *ngIf="
-                  vm.data.game === Game.Factorio &&
-                  vm.data.recipeEntities[step.recipeId].isMining
-                "
+                *ngIf="vm.data.game === Game.Factorio && step.recipe.isMining"
               >
                 <tr class="detail">
                   <ng-template *ngTemplateOutlet="leftPad"></ng-template>
@@ -1119,7 +1114,7 @@
                           context: {
                             items: row.step.items
                               .mul(row.percent)
-                              .div(vm.data.recipeR[step.recipeId].productivity),
+                              .div(step.recipe.productivity),
                             itemId: output.key
                           }
                         "
@@ -1185,7 +1180,7 @@
               </tr>
               <ng-container
                 *ngFor="
-                  let output of vm.data.recipeR[step.recipeId].out
+                  let output of step.recipe.out
                     | keyvalue : trackSvc.sortByValue
                 "
               >
@@ -1229,13 +1224,13 @@
             <td></td>
             <td colspan="100">
               <div
-                *ngIf="step.recipeId && step.machines"
+                *ngIf="step.recipeId && step.recipe && step.machines"
                 class="d-flex align-items-center"
               >
                 <table class="mw-0">
                   <ng-container
                     *ngFor="
-                      let input of vm.data.recipeR[step.recipeId].in
+                      let input of step.recipe.in
                         | keyvalue : trackSvc.sortByValue
                     "
                   >
@@ -1348,17 +1343,11 @@
                 <table class="mw-0">
                   <ng-container
                     *ngFor="
-                      let output of vm.data.recipeR[step.recipeId].out
+                      let output of step.recipe.out
                         | keyvalue : trackSvc.sortByValue
                     "
                   >
-                    <tr
-                      *ngIf="
-                        output.value.div(
-                          vm.data.recipeR[step.recipeId].time
-                        ) as items
-                      "
-                    >
+                    <tr *ngIf="output.value.div(step.recipe.time) as items">
                       <ng-container *ngIf="vm.data.game === Game.Factorio">
                         <td>
                           <ng-container
