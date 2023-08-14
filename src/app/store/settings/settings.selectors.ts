@@ -16,7 +16,6 @@ import {
   Entities,
   FluidWagonRational,
   FuelRational,
-  FuelType,
   Game,
   gameColumnsState,
   gameInfo,
@@ -207,14 +206,14 @@ export const getSettings = createSelector(
     ...{
       beltId: s.beltId ?? d?.beltId,
       pipeId: s.pipeId ?? d?.pipeId,
-      fuelId: s.fuelId ?? d?.fuelId,
+      fuelRankIds: s.fuelRankIds ?? (d?.fuelId ? [d.fuelId] : []),
       cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
       fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
     },
   })
 );
 
-export const getFuelId = createSelector(getSettings, (s) => s.fuelId);
+export const getFuelRankIds = createSelector(getSettings, (s) => s.fuelRankIds);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
   Rational.fromNumber(bonus).div(Rational.hundred)
@@ -373,10 +372,6 @@ export const getDataset = createSelector(
         Rational.from(a.fuel.value).sub(Rational.from(b.fuel.value)).toNumber()
       );
     const fuelIds = fuels.map((i) => i.id);
-    const chemicalFuelIds = fuels
-      .filter((i) => i.fuel.category === FuelType.Chemical)
-      .map((i) => i.id);
-
     const technologyIds = items
       .filter(fnPropsNotNullish('technology'))
       .map((r) => r.id);
@@ -527,7 +522,6 @@ export const getDataset = createSelector(
       proliferatorModuleIds,
       moduleEntities,
       fuelIds,
-      chemicalFuelIds,
       fuelEntities,
       recipeIds,
       recipeEntities,
@@ -558,7 +552,7 @@ export const getOptions = createSelector(
       data.itemEntities,
       true
     ),
-    chemicalFuels: getIdOptions(data.chemicalFuelIds, data.itemEntities),
+    fuels: getIdOptions(data.fuelIds, data.itemEntities),
     recipes: getIdOptions(data.recipeIds, data.recipeEntities),
   })
 );
@@ -596,21 +590,18 @@ export const getBeltSpeedTxt = createSelector(
 export const getAdjustmentData = createSelector(
   getNetProductionOnly,
   getProliferatorSprayId,
-  getFuelId,
   getRationalMiningBonus,
   getResearchFactor,
   getDataset,
   (
     netProductionOnly,
     proliferatorSprayId,
-    fuelId,
     miningBonus,
     researchSpeed,
     data
   ) => ({
     netProductionOnly,
     proliferatorSprayId,
-    fuelId,
     miningBonus,
     researchSpeed,
     data,

@@ -373,6 +373,50 @@
                         <i class="fa-solid fa-industry"></i>
                       </span>
                     </ng-template>
+                    <!-- Fuel dropdown -->
+                    <p-dropdown
+                      *ngIf="settings.fuelId"
+                      labDropdownBase="icon"
+                      [tooltip]="'settings.fuelTooltip' | translate"
+                      [ngModel]="settings.fuelId"
+                      [options]="settings.fuelOptions"
+                      (onChange)="
+                        changeFuel(
+                          machineId,
+                          $event.value,
+                          settings,
+                          vm.settings.fuelRankIds
+                        )
+                      "
+                    >
+                      <ng-template pTemplate="selectedItem" let-item>
+                        <div class="d-flex">
+                          <i [class]="item.value | iconSmClass"></i>
+                        </div>
+                      </ng-template>
+                      <ng-template pTemplate="item" let-item>
+                        <div
+                          class="d-flex align-items-center py-2 w-100 h-100"
+                          [pTooltip]="
+                            'tooltip.fuel'
+                              | translate
+                                : {
+                                    name: vm.data.itemEntities[item.value].name,
+                                    category:
+                                      vm.data.fuelEntities[item.value].category,
+                                    value:
+                                      vm.data.fuelEntities[item.value].value
+                                  }
+                          "
+                          [escape]="false"
+                        >
+                          <i [class]="item.value | iconSmClass"></i>
+                          <div class="ms-3 text-truncate">
+                            {{ item.label }}
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
                     <!-- Modifiers multiselect -->
                     <ng-container *ngIf="settings.moduleRankIds">
                       <p-multiSelect
@@ -853,27 +897,36 @@
             </div>
           </div>
           <div
-            *ngIf="
-              vm.data.chemicalFuelIds.length &&
-              vm.data.game !== Game.Satisfactory
-            "
+            *ngIf="vm.data.fuelIds.length && vm.data.game !== Game.Satisfactory"
             class="mt-3 pb-3"
           >
             <div class="p-float-label">
-              <p-dropdown
-                labDropdownBase
-                inputId="chemical-fuel"
-                [tooltip]="'settings.chemicalFuelTooltip' | translate"
-                [ngModel]="vm.settings.fuelId"
-                [options]="vm.options.chemicalFuels"
-                (onChange)="setFuel($event.value, vm.data.defaults?.fuelId)"
+              <p-multiSelect
+                appendTo="body"
+                scrollHeight="40vh"
+                [tooltip]="'settings.fuelRankTooltip' | translate"
+                [ngModel]="vm.settings.fuelRankIds"
+                [options]="vm.options.fuels"
+                (onChange)="
+                  setFuels(
+                    $event.value,
+                    vm.data.defaults && vm.data.defaults.fuelId
+                      ? [vm.data.defaults.fuelId]
+                      : []
+                  )
+                "
               >
-                <ng-template pTemplate="selectedItem" let-item>
-                  <div class="d-flex align-items-center h-100">
-                    <i [class]="item.value | iconSmClass"></i>
-                    <div class="ms-3 text-truncate">
-                      {{ item.label }}
-                    </div>
+                <ng-template pTemplate="selectedItems" let-items>
+                  <div class="d-flex">
+                    <i
+                      *ngIf="!items?.length"
+                      [class]="ItemId.Module | iconSmClass"
+                    ></i>
+                    <i
+                      *ngFor="let item of items"
+                      class="mx-2"
+                      [class]="item | iconSmClass"
+                    ></i>
                   </div>
                 </ng-template>
                 <ng-template pTemplate="item" let-item>
@@ -897,9 +950,9 @@
                     </div>
                   </div>
                 </ng-template>
-              </p-dropdown>
-              <label for="chemical-fuel">{{
-                'settings.chemicalFuel' | translate
+              </p-multiSelect>
+              <label for="fuel-rank">{{
+                'settings.fuelRank' | translate
               }}</label>
             </div>
           </div>

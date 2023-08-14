@@ -22,8 +22,9 @@ describe('MachineTooltipPipe', () => {
   describe('transform', () => {
     it('should generate a machine tooltip', () => {
       const data = Mocks.getDataset();
-      data.itemEntities[ItemId.AssemblingMachine3].machine!.category =
-        'chemical';
+      data.itemEntities[ItemId.AssemblingMachine3].machine!.fuelCategories = [
+        'chemical',
+      ];
       data.itemEntities[ItemId.AssemblingMachine3].machine!.silo = {
         parts: Rational.one,
         launch: Rational.two,

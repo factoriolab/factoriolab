@@ -49,10 +49,10 @@ export class MachineTooltipPipe implements PipeTransform {
       ]);
     }
 
-    if (machine.category) {
+    if (machine.fuelCategories) {
       tableRows.push([
-        this.translateSvc.instant('data.fuelCategory'),
-        machine.category,
+        this.translateSvc.instant('data.fuelCategories'),
+        machine.fuelCategories.join(', '),
       ]);
     }
     if (machine.usage?.nonzero()) {

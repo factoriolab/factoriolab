@@ -1,5 +1,6 @@
 export enum RecipeField {
   Machine,
+  Fuel,
   MachineModules,
   BeaconCount,
   Beacon,

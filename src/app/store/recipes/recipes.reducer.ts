@@ -42,9 +42,11 @@ export function recipesReducer(
     case RecipesActionType.SET_MACHINE:
       return StoreUtility.resetFields(
         StoreUtility.compareReset(state, 'machineId', action.payload),
-        ['machineModuleIds', 'beacons'],
+        ['fuelId', 'machineModuleIds', 'beacons'],
         action.payload.id
       );
+    case RecipesActionType.SET_FUEL:
+      return StoreUtility.compareReset(state, 'fuelId', action.payload);
     case RecipesActionType.SET_MACHINE_MODULES:
       return StoreUtility.compareReset(
         state,
@@ -122,6 +124,8 @@ export function recipesReducer(
     }
     case RecipesActionType.RESET_EXCLUDED:
       return StoreUtility.resetField(state, 'excluded');
+    case RecipesActionType.RESET_RECIPE_FUEL:
+      return StoreUtility.resetField(state, 'fuelId', action.payload);
     case RecipesActionType.RESET_RECIPE_MODULES:
       return StoreUtility.resetFields(
         state,
@@ -131,6 +135,7 @@ export function recipesReducer(
     case RecipesActionType.RESET_MACHINES:
       return StoreUtility.resetFields(state, [
         'machineId',
+        'fuelId',
         'overclock',
         'machineModuleIds',
         'beacons',

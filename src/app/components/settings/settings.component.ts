@@ -51,7 +51,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { BrowserUtility } from '~/utilities';
+import { BrowserUtility, RecipeUtility } from '~/utilities';
 
 @Component({
   selector: 'lab-settings',
@@ -276,6 +276,19 @@ export class SettingsComponent implements OnInit {
     this.setItemExcludedBatch(payload);
   }
 
+  changeFuel(
+    id: string,
+    value: string,
+    settings: MachineSettings,
+    fuelRankIds: string[]
+  ): void {
+    const def = RecipeUtility.bestMatch(
+      settings.fuelOptions?.map((o) => o.value) ?? [],
+      fuelRankIds
+    );
+    this.setFuel(id, value, def);
+  }
+
   changeBeaconModuleRank(
     id: string,
     value: string[],
@@ -353,6 +366,10 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.SetMachineAction({ id, value, def }));
   }
 
+  setFuel(id: string, value: string, def: string | undefined): void {
+    this.store.dispatch(new Machines.SetFuelAction({ id, value, def }));
+  }
+
   setModuleRank(id: string, value: string[], def: string[] | undefined): void {
     this.store.dispatch(new Machines.SetModuleRankAction({ id, value, def }));
   }
@@ -403,8 +420,8 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetFluidWagonAction({ value, def }));
   }
 
-  setFuel(value: string, def: string | undefined): void {
-    this.store.dispatch(new Settings.SetFuelAction({ value, def }));
+  setFuels(value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Settings.SetFuelRankAction({ value, def }));
   }
 
   setFlowRate(value: number): void {

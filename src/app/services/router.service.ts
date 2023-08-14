@@ -1248,6 +1248,7 @@ export class RouterService {
             this.zipTruthyNumber(obj.overclock),
             this.zipTruthyString(obj.cost),
             this.zipTruthyBool(obj.checked),
+            this.zipTruthyString(obj.fuelId),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(i, hash.recipes),
@@ -1258,6 +1259,7 @@ export class RouterService {
             this.zipTruthyNumber(obj.overclock),
             this.zipTruthyString(obj.cost),
             this.zipTruthyBool(obj.checked),
+            this.zipTruthyNString(obj.fuelId, hash.fuels),
           ]),
         };
       })
@@ -1294,6 +1296,7 @@ export class RouterService {
           overclock: this.parseNumber(s[i++]),
           cost: this.parseString(s[i++]),
           checked: this.parseBool(s[i++]),
+          fuelId: this.parseNString(s[i++], hash.fuels),
         };
       } else {
         id = s[i++];
@@ -1307,6 +1310,7 @@ export class RouterService {
           overclock: this.parseNumber(s[i++]),
           cost: this.parseString(s[i++]),
           checked: this.parseBool(s[i++]),
+          fuelId: this.parseString(s[i++]),
         };
       }
 
@@ -1338,6 +1342,7 @@ export class RouterService {
             this.zipTruthyArray(obj.beaconModuleRankIds),
             this.zipTruthyString(obj.beaconId),
             this.zipTruthyNumber(obj.overclock),
+            this.zipTruthyString(obj.fuelId),
           ]),
           hash: this.zipFields([
             h ? this.zipTruthyNString(i, hash.machines) : i,
@@ -1346,6 +1351,7 @@ export class RouterService {
             this.zipTruthyNArray(obj.beaconModuleRankIds, hash.modules),
             this.zipTruthyNString(obj.beaconId, hash.beacons),
             this.zipTruthyNumber(obj.overclock),
+            this.zipTruthyNString(obj.fuelId, hash.fuels),
           ]),
         };
       })
@@ -1377,6 +1383,7 @@ export class RouterService {
           beaconModuleRankIds: this.parseNArray(s[i++], hash.modules),
           beaconId: this.parseNString(s[i++], hash.beacons),
           overclock: this.parseNumber(s[i++]),
+          fuelId: this.parseNString(s[i++], hash.fuels),
         };
         if (z === 0 && id === TRUE) {
           loadIds = true;
@@ -1398,6 +1405,7 @@ export class RouterService {
           beaconModuleRankIds: this.parseArray(s[i++]),
           beaconId: this.parseString(s[i++]),
           overclock: this.parseNumber(s[i++]),
+          fuelId: this.parseString(s[i++]),
         };
         if (z === 0 && id === TRUE) {
           loadIds = true;
@@ -1432,7 +1440,7 @@ export class RouterService {
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
         this.zipDiffNumber(state.preset, init.preset),
         this.zipDiffString(state.beltId, init.beltId),
-        this.zipDiffString(state.fuelId, init.fuelId),
+        this.zipDiffRank(state.fuelRankIds, init.fuelRankIds),
         this.zipDiffNumber(state.flowRate, init.flowRate),
         this.zipDiffNumber(state.miningBonus, init.miningBonus),
         this.zipDiffNumber(state.researchSpeed, init.researchSpeed),
@@ -1461,7 +1469,7 @@ export class RouterService {
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
         this.zipDiffNumber(state.preset, init.preset),
         this.zipDiffNString(state.beltId, init.beltId, hash.belts),
-        this.zipDiffNString(state.fuelId, init.fuelId, hash.fuels),
+        this.zipDiffNRank(state.fuelRankIds, init.fuelRankIds, hash.fuels),
         this.zipDiffNNumber(state.flowRate, init.flowRate),
         this.zipDiffNNumber(state.miningBonus, init.miningBonus),
         this.zipDiffNNumber(state.researchSpeed, init.researchSpeed),
@@ -1511,7 +1519,7 @@ export class RouterService {
         displayRate: this.parseDisplayRate(s[i++]),
         preset: this.parseNumber(s[i++]),
         beltId: this.parseNString(s[i++], hash.belts),
-        fuelId: this.parseNString(s[i++], hash.fuels),
+        fuelRankIds: this.parseNArray(s[i++], hash.fuels),
         flowRate: this.parseNNumber(s[i++]),
         miningBonus: this.parseNNumber(s[i++]),
         researchSpeed: this.parseNNumber(s[i++]),
@@ -1540,7 +1548,7 @@ export class RouterService {
         displayRate: this.parseDisplayRate(s[i++]),
         preset: this.parseNumber(s[i++]),
         beltId: this.parseString(s[i++]),
-        fuelId: this.parseString(s[i++]),
+        fuelRankIds: this.parseArray(s[i++]),
         flowRate: this.parseNumber(s[i++]),
         miningBonus: this.parseNumber(s[i++]),
         researchSpeed: this.parseNumber(s[i++]),
@@ -1733,6 +1741,7 @@ export class RouterService {
     if (!value?.length || value === NULL) {
       return undefined;
     }
+
     return value;
   }
 
@@ -1740,6 +1749,7 @@ export class RouterService {
     if (!value?.length || value === NULL) {
       return undefined;
     }
+
     return value === TRUE;
   }
 
@@ -1747,6 +1757,7 @@ export class RouterService {
     if (!value?.length || value === NULL) {
       return undefined;
     }
+
     return Number(value);
   }
 
@@ -1771,6 +1782,7 @@ export class RouterService {
     if (!value?.length || value === NULL) {
       return undefined;
     }
+
     return value === EMPTY ? [] : value.split(ARRAYSEP);
   }
 

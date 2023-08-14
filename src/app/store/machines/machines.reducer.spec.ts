@@ -188,6 +188,16 @@ describe('Machines Reducer', () => {
     });
   });
 
+  describe('SET_FUEL', () => {
+    it('should set the fuel for a machine', () => {
+      const result = machinesReducer(
+        undefined,
+        new Actions.SetFuelAction({ id, value, def: undefined })
+      );
+      expect(result.entities[id].fuelId).toEqual(value);
+    });
+  });
+
   describe('SET_MODULE_RANK', () => {
     it('should set the module rank for a machine', () => {
       const result = machinesReducer(

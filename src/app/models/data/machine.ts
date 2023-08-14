@@ -10,8 +10,8 @@ export interface Machine {
   modules?: number;
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
-  /** Fuel category, e.g. chemical or nuclear */
-  category?: string;
+  /** Fuel categories, e.g. chemical or nuclear */
+  fuelCategories?: string[];
   /** Energy consumption in kW */
   usage?: number | string;
   /** Drain in kW */
@@ -28,8 +28,8 @@ export class MachineRational {
   modules?: number;
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
-  /** Fuel category, e.g. chemical or nuclear */
-  category?: string;
+  /** Fuel categories, e.g. chemical or nuclear */
+  fuelCategories?: string[];
   /** Energy consumption in kW */
   usage?: Rational;
   drain?: Rational;
@@ -58,8 +58,8 @@ export class MachineRational {
       this.usage = Rational.from(obj.usage);
     }
 
-    if (obj.category) {
-      this.category = obj.category;
+    if (obj.fuelCategories) {
+      this.fuelCategories = obj.fuelCategories;
     }
 
     if (obj.drain != null) {
