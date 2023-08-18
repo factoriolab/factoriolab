@@ -551,6 +551,10 @@ export class RecipeUtility {
 
     const machine = data.machineEntities[objective.machineId];
     const def = machinesState.entities[objective.machineId];
+
+    objective.fuelId = objective.fuelId ?? def?.fuelId;
+    objective.fuelOptions = def?.fuelOptions;
+
     if (machine != null && this.allowsModules(recipe, machine)) {
       objective.machineModuleOptions = this.moduleOptions(
         machine,
