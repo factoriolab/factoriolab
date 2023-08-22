@@ -32,6 +32,10 @@ export const getBypassLanding = createSelector(
   preferencesState,
   (state) => state.bypassLanding
 );
+export const getShowTechLabels = createSelector(
+  preferencesState,
+  (state) => state.showTechLabels
+);
 
 /** Complex selectors */
 export const getSavedStates = createSelector(getStates, (states) =>
