@@ -10,6 +10,7 @@ export const enum PreferencesActionType {
   SET_POWER_UNIT = '[Preferences] Set Power Unit',
   SET_THEME = '[Preferences] Set Theme',
   SET_BYPASS_LANDING = '[Preferences] Set Bypass Landing',
+  SET_SHOW_TECH_LABELS = '[Preferences] Set Show Tech Labels',
 }
 
 export class SaveStateAction implements Action {
@@ -47,6 +48,11 @@ export class SetBypassLandingAction implements Action {
   constructor(public payload: boolean) {}
 }
 
+export class SetShowTechLabelsAction implements Action {
+  readonly type = PreferencesActionType.SET_SHOW_TECH_LABELS;
+  constructor(public payload: boolean) {}
+}
+
 export type PreferencesAction =
   | SaveStateAction
   | RemoveStateAction
@@ -54,4 +60,5 @@ export type PreferencesAction =
   | SetLanguageAction
   | SetPowerUnitAction
   | SetThemeAction
-  | SetBypassLandingAction;
+  | SetBypassLandingAction
+  | SetShowTechLabelsAction;

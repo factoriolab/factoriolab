@@ -7,10 +7,11 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, Observable, ReplaySubject } from 'rxjs';
+import { FilterService } from 'primeng/api';
+import { combineLatest, map, Observable, ReplaySubject, startWith } from 'rxjs';
 
 import { Dataset } from '~/models';
-import { LabState } from '~/store';
+import { LabState, Preferences } from '~/store';
 
 export type UnlockStatus = 'available' | 'locked' | 'researched';
 
@@ -23,6 +24,7 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
 export class TechPickerComponent {
   @Output() selectIds = new EventEmitter<string[] | null>();
 
+  searchCtrl = new FormControl('');
   selectAllCtrl = new FormControl(false);
 
   data$ = new ReplaySubject<Dataset>(1);
@@ -30,13 +32,24 @@ export class TechPickerComponent {
   status$: Observable<Record<UnlockStatus, string[]>> = combineLatest([
     this.selection$,
     this.data$,
+    this.searchCtrl.valueChanges.pipe(startWith('')),
   ]).pipe(
-    map(([selection, data]) => {
+    map(([selection, data, filter]) => {
+      let technologyIds = data.technologyIds;
+      if (filter) {
+        const technologies = technologyIds.map((i) => data.recipeEntities[i]);
+        technologyIds = this.filterService
+          .filter(technologies, ['name'], filter, 'contains')
+          .map((t) => t.id);
+
+        selection = selection.filter((i) => technologyIds.includes(i));
+      }
+
       const set = new Set(selection);
       const researched = selection;
       const available: string[] = [];
       const locked: string[] = [];
-      for (const id of data.technologyIds) {
+      for (const id of technologyIds) {
         if (!set.has(id)) {
           const tech = data.technologyEntities[id];
 
@@ -54,12 +67,19 @@ export class TechPickerComponent {
       return { available, locked, researched };
     })
   );
-  vm$ = combineLatest([this.selection$, this.status$, this.data$]).pipe(
-    map(([selection, status, data]) => ({ selection, status, data }))
-  );
+  vm$ = combineLatest({
+    selection: this.selection$,
+    status: this.status$,
+    data: this.data$,
+    showTechLabels: this.store.select(Preferences.getShowTechLabels),
+  });
   visible = false;
 
-  constructor(private ref: ChangeDetectorRef, private store: Store<LabState>) {}
+  constructor(
+    private ref: ChangeDetectorRef,
+    private filterService: FilterService,
+    private store: Store<LabState>
+  ) {}
 
   clickOpen(data: Dataset, selection: string[] | null): void {
     this.data$.next(data);
@@ -133,5 +153,10 @@ export class TechPickerComponent {
       );
       this.selectIds.emit(filteredSelection);
     }
+  }
+
+  /** Action Dispatch Methods */
+  setShowTechLabels(value: boolean): void {
+    this.store.dispatch(new Preferences.SetShowTechLabelsAction(value));
   }
 }

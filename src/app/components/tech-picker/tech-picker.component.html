@@ -17,6 +17,17 @@
   (onHide)="onHide(vm.selection, vm.data)"
 >
   <div class="d-flex w-100 my-1 p-inputgroup">
+    <span class="p-inputgroup-addon">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </span>
+    <input
+      pInputText
+      type="text"
+      class="w-100"
+      pAutoFocus
+      [autofocus]="true"
+      [formControl]="searchCtrl"
+    />
     <span class="p-inputgroup-addon flex-shrink-0">
       <p-checkbox
         [binary]="true"
@@ -24,6 +35,15 @@
         labelStyleClass="text-nowrap"
         [formControl]="selectAllCtrl"
         (onChange)="selectAll($event.checked, vm.data)"
+      ></p-checkbox>
+    </span>
+    <span class="p-inputgroup-addon flex-shrink-0">
+      <p-checkbox
+        [binary]="true"
+        [label]="'techPicker.showLabels' | translate"
+        labelStyleClass="text-nowrap"
+        [ngModel]="vm.showTechLabels"
+        (onChange)="setShowTechLabels($event.checked)"
       ></p-checkbox>
     </span>
   </div>
@@ -41,6 +61,7 @@
         pRipple
         type="button"
         class="p-button-text me-1 mb-1"
+        [label]="(vm.showTechLabels && vm.data.recipeEntities[id]?.name) || ''"
         [icon]="id | iconSmClass"
         [pTooltip]="id | recipeTooltip : vm.data"
         [escape]="false"
@@ -56,6 +77,7 @@
         pRipple
         type="button"
         class="p-button-danger me-1 mb-1"
+        [label]="(vm.showTechLabels && vm.data.recipeEntities[id]?.name) || ''"
         [icon]="id | iconSmClass"
         [pTooltip]="id | recipeTooltip : vm.data"
         [escape]="false"
@@ -71,6 +93,7 @@
         pRipple
         type="button"
         class="p-button-success me-1 mb-1"
+        [label]="(vm.showTechLabels && vm.data.recipeEntities[id]?.name) || ''"
         [class.hover-active]="vm.selection?.indexOf(id) === -1"
         [icon]="id | iconSmClass"
         [pTooltip]="id | recipeTooltip : vm.data"
