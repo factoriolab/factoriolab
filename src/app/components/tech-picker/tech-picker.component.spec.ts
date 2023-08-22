@@ -1,11 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MockStore } from '@ngrx/store/testing';
 
-import { Mocks, RecipeId, TestModule } from 'src/tests';
+import { DispatchTest, Mocks, RecipeId, TestModule } from 'src/tests';
+import { LabState, Preferences } from '~/store';
 import { TechPickerComponent, UnlockStatus } from './tech-picker.component';
 
 describe('TechPickerComponent', () => {
   let component: TechPickerComponent;
   let fixture: ComponentFixture<TechPickerComponent>;
+  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -14,12 +17,25 @@ describe('TechPickerComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(TechPickerComponent);
+    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('filter', () => {
+    it('should filter technologies and selection', () => {
+      let status: Record<UnlockStatus, string[]> | undefined;
+      component.status$.subscribe((s) => (status = s));
+      component.clickOpen(Mocks.Dataset, Mocks.Dataset.technologyIds);
+      component.filterCtrl.setValue('optics');
+      expect(status?.available.length).toEqual(0);
+      expect(status?.locked.length).toEqual(0);
+      expect(status?.researched.length).toEqual(1);
+    });
   });
 
   describe('clickOpen', () => {
@@ -96,5 +112,10 @@ describe('TechPickerComponent', () => {
       component.onHide(Mocks.Dataset.technologyIds, Mocks.Dataset);
       expect(component.selectIds.emit).toHaveBeenCalledWith(null);
     });
+  });
+
+  it('should dispatch actions', () => {
+    const dispatch = new DispatchTest(mockStore, component);
+    dispatch.val('setShowTechLabels', Preferences.SetShowTechLabelsAction);
   });
 });
