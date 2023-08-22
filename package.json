@@ -25,7 +25,8 @@
     "factorio-prep": "ts-node scripts/factorio-prep.ts",
     "factorio-dump": "scripts\\factorio-dump.bat",
     "factorio-build": "ts-node scripts/factorio-build.ts",
-    "minify-data": "ts-node scripts/minify-data.ts"
+    "minify-data": "ts-node scripts/minify-data.ts",
+    "update-hash": "ts-node scripts/update-hash.ts"
   },
   "dependencies": {
     "@angular/animations": "^16.1.7",
