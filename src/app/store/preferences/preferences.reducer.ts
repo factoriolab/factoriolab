@@ -19,6 +19,7 @@ export interface PreferencesState {
   powerUnit: PowerUnit;
   theme: Theme;
   bypassLanding: boolean;
+  showTechLabels: boolean;
 }
 
 export const initialPreferencesState: PreferencesState = {
@@ -28,6 +29,7 @@ export const initialPreferencesState: PreferencesState = {
   powerUnit: PowerUnit.Auto,
   theme: Theme.Dark,
   bypassLanding: false,
+  showTechLabels: false,
 };
 
 export function preferencesReducer(
@@ -67,6 +69,8 @@ export function preferencesReducer(
       return { ...state, ...{ theme: action.payload } };
     case PreferencesActionType.SET_BYPASS_LANDING:
       return { ...state, ...{ bypassLanding: action.payload } };
+    case PreferencesActionType.SET_SHOW_TECH_LABELS:
+      return { ...state, ...{ showTechLabels: action.payload } };
     default:
       return state;
   }

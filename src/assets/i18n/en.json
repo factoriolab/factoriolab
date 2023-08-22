@@ -138,6 +138,7 @@
   "techPicker": {
     "header": "Set researched technologies",
     "unlockAll": "Unlock all",
+    "showLabels": "Show labels",
     "available": "Available",
     "locked": "Locked",
     "researched": "Researched"

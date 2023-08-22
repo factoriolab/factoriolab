@@ -96,6 +96,16 @@ describe('Preferences Reducer', () => {
     });
   });
 
+  describe('SET_SHOW_TECH_LABELS', () => {
+    it('should set the show tech labels preference', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetShowTechLabelsAction(true)
+      );
+      expect(result.showTechLabels).toEqual(true);
+    });
+  });
+
   it('should return the default state', () => {
     expect(preferencesReducer(undefined, { type: 'Test' } as any)).toEqual(
       initialPreferencesState
