@@ -1624,9 +1624,37 @@ async function processMod(): Promise<void> {
     }
   }
 
+  function getLastIngredient(ingredients: D.Ingredient[]): string {
+    const ingredient = ingredients[ingredients.length - 1];
+    if (D.isSimpleIngredient(ingredient)) {
+      return ingredient[0];
+    } else {
+      return ingredient.name;
+    }
+  }
+
+  const sortedProtoIds = protosSorted.map((p) => p.name);
+
   technologies.sort((a, b) => {
+    // First, sort by number of ingredients
+    if (a.unit.ingredients.length !== b.unit.ingredients.length) {
+      return a.unit.ingredients.length - b.unit.ingredients.length;
+    }
+
+    // Second, sort by sort order of the last ingredient
+    const aLastIngredient = getLastIngredient(a.unit.ingredients);
+    const bLastIngredient = getLastIngredient(b.unit.ingredients);
+    if (aLastIngredient !== bLastIngredient) {
+      return (
+        sortedProtoIds.indexOf(aLastIngredient) -
+        sortedProtoIds.indexOf(bLastIngredient)
+      );
+    }
+
+    // Third, sort by prototype order field
     return (a.order ?? '').localeCompare(b.order ?? '');
   });
+
   const labs = Object.keys(machines.lab);
   for (const techRaw of technologies) {
     const techData = techDataMap[techRaw.name];
