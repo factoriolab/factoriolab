@@ -900,6 +900,19 @@ async function processMod(): Promise<void> {
       }
     }
 
+    /**
+     * Exclude loading / unloading containers from Freight Forwarding
+     * These are imperfect loops that are not detected automatically, because
+     * there is a chance the container will break in the unload recipe
+     */
+    const subgroup = dataRaw['item-subgroup'][getSubgroup(recipe)];
+    if (
+      subgroup.group === 'ic-load-container' ||
+      subgroup.group === 'ic-unload-container'
+    ) {
+      include = false;
+    }
+
     if (include) {
       recipesEnabled[key] = recipe;
       recipeIngredientsMap[key] = getIngredients(recipeData.ingredients);
