@@ -24,7 +24,7 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
 export class TechPickerComponent {
   @Output() selectIds = new EventEmitter<string[] | null>();
 
-  searchCtrl = new FormControl('');
+  filterCtrl = new FormControl('');
   selectAllCtrl = new FormControl(false);
 
   data$ = new ReplaySubject<Dataset>(1);
@@ -32,7 +32,7 @@ export class TechPickerComponent {
   status$: Observable<Record<UnlockStatus, string[]>> = combineLatest([
     this.selection$,
     this.data$,
-    this.searchCtrl.valueChanges.pipe(startWith('')),
+    this.filterCtrl.valueChanges.pipe(startWith('')),
   ]).pipe(
     map(([selection, data, filter]) => {
       let technologyIds = data.technologyIds;

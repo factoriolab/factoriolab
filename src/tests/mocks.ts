@@ -251,6 +251,7 @@ export const PreferencesState: Preferences.PreferencesState = {
   language: M.Language.English,
   theme: M.Theme.Dark,
   bypassLanding: false,
+  showTechLabels: false,
 };
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
