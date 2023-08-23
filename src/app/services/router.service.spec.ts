@@ -871,6 +871,21 @@ describe('RouterService', () => {
     });
   });
 
+  describe('migrateV7', () => {
+    it('should convert hashed objectives by machines to use items', () => {
+      const { params } = service.migrateV7({
+        params: {
+          [Section.Objectives]: 'Dc*1*3',
+          [Section.Settings]: '0**=*A**Po**A*0',
+          [Section.Version]: '7',
+        },
+        warnings: [],
+        isBare: false,
+      });
+      expect(params[Section.Objectives]).toEqual('Dc*1*0');
+    });
+  });
+
   describe('migrateV8', () => {
     it('should convert recipe objectives to unified objectives', () => {
       const { params } = service.migrateV8({
