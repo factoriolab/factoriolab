@@ -799,23 +799,34 @@ export class RouterService {
         const o = obj.split(FIELDSEP);
 
         if (o[2] === '3') {
-          // Convert old RateType.Machines to recipe objectives
-          const recipes = params[Section.RecipeObjectives]
-            ? params[Section.RecipeObjectives].split(LISTSEP)
-            : [];
-          if (o.length > 3) {
-            // Also switch into limit / maximize objectives
-            const limit = [o[3], o[1], ObjectiveType.Limit.toString()];
-            const maximize = [o[0], '1', ObjectiveType.Maximize.toString()];
-            recipes.push(this.zipFields(maximize));
-            recipes.push(this.zipFields(limit));
-            needsLimitDeprecationWarning = true;
-          } else {
-            recipes.push(this.zipFields([o[0], o[1]]));
-          }
+          if (isBare) {
+            // Convert old RateType.Machines to recipe objectives
+            const recipes = params[Section.RecipeObjectives]
+              ? params[Section.RecipeObjectives].split(LISTSEP)
+              : [];
+            if (o.length > 3) {
+              // Also switch into limit / maximize objectives
+              const limit = [o[3], o[1], ObjectiveType.Limit.toString()];
+              const maximize = [o[0], '1', ObjectiveType.Maximize.toString()];
+              recipes.push(this.zipFields(maximize));
+              recipes.push(this.zipFields(limit));
+              needsLimitDeprecationWarning = true;
+            } else {
+              recipes.push(this.zipFields([o[0], o[1]]));
+            }
 
-          migrated.splice(i, 1);
-          params[Section.RecipeObjectives] = recipes.join(LISTSEP);
+            migrated.splice(i, 1);
+            params[Section.RecipeObjectives] = recipes.join(LISTSEP);
+          } else {
+            /**
+             * Convert hashed RateType.Machines to simple item objective by a
+             * number of items, since we can't recover the recipe id directly
+             * from the hashed item id. I.E. prefer losing the objective unit
+             * over losing the whole objective.
+             */
+            o[2] = '0';
+            migrated[i] = this.zipFields(o);
+          }
         } else {
           if (o.length > 3) {
             // Set up limit with via id & objective rate / rate type
