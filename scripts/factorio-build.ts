@@ -1072,9 +1072,9 @@ async function processMod(): Promise<void> {
   }
 
   // Check for use in technology ingredients
-  const technologies = Object.keys(dataRaw.technology).map(
-    (t) => dataRaw.technology[t]
-  );
+  const technologies = Object.keys(dataRaw.technology)
+    .map((t) => dataRaw.technology[t])
+    .filter((t) => !t.hidden && t.enabled !== false);
   const techDataMap: Record<string, D.TechnologyData> = {};
   const techIngredientsMap: Record<string, Record<string, number>> = {};
   for (const tech of technologies) {
@@ -1656,12 +1656,16 @@ async function processMod(): Promise<void> {
   });
 
   const labs = Object.keys(machines.lab);
+  const technologyIds = technologies.map((t) => t.name);
   for (const techRaw of technologies) {
     const techData = techDataMap[techRaw.name];
     const technology: Technology = {};
     const id = techId[techRaw.name];
     if (techData.prerequisites?.length) {
-      technology.prerequisites = techData.prerequisites.map((p) => techId[p]);
+      technology.prerequisites = techData.prerequisites
+        // Ignore any disabled or hidden prerequisites
+        .filter((p) => technologyIds.includes(p))
+        .map((p) => techId[p]);
     }
 
     const inputs = Object.keys(techIngredientsMap[techRaw.name]);
