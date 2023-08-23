@@ -61,9 +61,9 @@
         pRipple
         type="button"
         class="p-button-text me-1 mb-1"
-        [label]="(vm.showTechLabels && vm.data.recipeEntities[id]?.name) || ''"
+        [label]="(vm.showTechLabels && vm.data.itemEntities[id]?.name) || ''"
         [icon]="id | iconSmClass"
-        [pTooltip]="id | recipeTooltip : vm.data"
+        [pTooltip]="id | itemTooltip : vm.data"
         [escape]="false"
         (click)="clickId(id, vm.selection, vm.data)"
       ></button>
@@ -77,9 +77,9 @@
         pRipple
         type="button"
         class="p-button-danger me-1 mb-1"
-        [label]="(vm.showTechLabels && vm.data.recipeEntities[id]?.name) || ''"
+        [label]="(vm.showTechLabels && vm.data.itemEntities[id]?.name) || ''"
         [icon]="id | iconSmClass"
-        [pTooltip]="id | recipeTooltip : vm.data"
+        [pTooltip]="id | itemTooltip : vm.data"
         [escape]="false"
         (click)="clickId(id, vm.selection, vm.data)"
       ></button>
@@ -93,10 +93,10 @@
         pRipple
         type="button"
         class="p-button-success me-1 mb-1"
-        [label]="(vm.showTechLabels && vm.data.recipeEntities[id]?.name) || ''"
+        [label]="(vm.showTechLabels && vm.data.itemEntities[id]?.name) || ''"
         [class.hover-active]="vm.selection?.indexOf(id) === -1"
         [icon]="id | iconSmClass"
-        [pTooltip]="id | recipeTooltip : vm.data"
+        [pTooltip]="id | itemTooltip : vm.data"
         [escape]="false"
         (click)="clickId(id, vm.selection, vm.data)"
       ></button>

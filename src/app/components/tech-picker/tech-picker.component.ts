@@ -37,7 +37,7 @@ export class TechPickerComponent {
     map(([selection, data, filter]) => {
       let technologyIds = data.technologyIds;
       if (filter) {
-        const technologies = technologyIds.map((i) => data.recipeEntities[i]);
+        const technologies = technologyIds.map((i) => data.itemEntities[i]);
         technologyIds = this.filterService
           .filter(technologies, ['name'], filter, 'contains')
           .map((t) => t.id);

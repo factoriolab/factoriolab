@@ -19,7 +19,8 @@ export class ItemTooltipPipe implements PipeTransform {
     if (recipeIds?.length === 1) {
       return this.displaySvc.recipeTooltip(recipeIds[0], data, item.name);
     } else {
-      return item.name;
+      const technology = data.technologyEntities[value];
+      return item.name + this.displaySvc.technologyPrerequisites(technology);
     }
   }
 }
