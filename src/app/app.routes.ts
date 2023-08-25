@@ -14,7 +14,7 @@ export const routes: Routes = [
     canActivate: [canActivateLanding],
     loadComponent: () =>
       import('./routes/landing/landing.component').then(
-        (c) => c.LandingComponent
+        (c) => c.LandingComponent,
       ),
   },
   {

@@ -18,7 +18,7 @@ describe('OptionsPipe', () => {
   describe('transform', () => {
     it('should generate dropdown options from ids', () => {
       expect(
-        pipe.transform(['id'], { ['id']: { name: 'name' } }, true)
+        pipe.transform(['id'], { ['id']: { name: 'name' } }, true),
       ).toEqual([
         { label: 'None', value: ItemId.Module },
         { label: 'name', value: 'id' },

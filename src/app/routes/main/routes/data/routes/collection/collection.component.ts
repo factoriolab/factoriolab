@@ -26,7 +26,7 @@ export class CollectionComponent {
       {
         label: this.translateSvc.instant(data.label ?? 'none'),
       },
-    ])
+    ]),
   );
   vm$ = combineLatest([
     this.collection$,
@@ -39,13 +39,13 @@ export class CollectionComponent {
       breadcrumb,
       ids: data[collection.ids] as string[],
       home,
-    }))
+    })),
   );
 
   constructor(
     private route: ActivatedRoute,
     private translateSvc: TranslateService,
     private store: Store<LabState>,
-    private dataRouteSvc: DataRouteService
+    private dataRouteSvc: DataRouteService,
   ) {}
 }

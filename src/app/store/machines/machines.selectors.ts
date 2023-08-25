@@ -27,7 +27,7 @@ export const getMachinesState = createSelector(
     def.moduleOptions = getIdOptions(
       data.moduleIds,
       data.itemEntities,
-      data.game !== Game.Satisfactory
+      data.game !== Game.Satisfactory,
     );
     if (data.game === Game.Factorio) {
       def.beaconCount = def.beaconCount ?? defaults?.beaconCount;
@@ -56,7 +56,7 @@ export const getMachinesState = createSelector(
           s.fuelId ??
           RecipeUtility.bestMatch(
             s.fuelOptions.map((o) => o.value),
-            fuelRankIds
+            fuelRankIds,
           );
       }
 
@@ -72,7 +72,7 @@ export const getMachinesState = createSelector(
           s.beaconModuleOptions = RecipeUtility.moduleOptions(
             beacon,
             null,
-            data
+            data,
           );
         }
       }
@@ -83,7 +83,7 @@ export const getMachinesState = createSelector(
     }
 
     return { ids, entities };
-  }
+  },
 );
 
 export const getMachineOptions = createSelector(
@@ -95,8 +95,8 @@ export const getMachineOptions = createSelector(
         label: data.itemEntities[f].name,
         value: f,
         disabled: (machines.ids ?? []).indexOf(f) !== -1,
-      })
-    )
+      }),
+    ),
 );
 
 export const getMachineRows = createSelector(getMachinesState, (machines) => [

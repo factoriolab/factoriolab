@@ -22,7 +22,7 @@ export class DisplayService {
     let html = `<table class="w-100">`;
     rows.forEach(
       (r) =>
-        (html += `<tr><td class="text-nowrap">${r[0]}</td><td class="text-nowrap">${r[1]}</td></tr>`)
+        (html += `<tr><td class="text-nowrap">${r[0]}</td><td class="text-nowrap">${r[1]}</td></tr>`),
     );
     html += `</table>`;
     return html;
@@ -58,7 +58,7 @@ export class DisplayService {
   recipeTooltip(
     value: string | null | undefined,
     data: Dataset,
-    name?: string
+    name?: string,
   ): string {
     if (value == null) return '';
 
@@ -72,7 +72,7 @@ export class DisplayService {
     }</div><div class="d-flex align-items-center justify-content-center\
     flex-wrap mt-2">${this.recipeProcess(recipe)}\
     </div>${this.recipeProducedBy(recipe)}${this.recipeUnlockedBy(
-      recipe
+      recipe,
     )}${this.technologyPrerequisites(technology)}`;
   }
 
@@ -89,7 +89,7 @@ export class DisplayService {
 
   recipeProducedBy(recipe: Recipe): string {
     return `<small><div>${this.translateSvc.instant(
-      'data.producers'
+      'data.producers',
     )}</div>${recipe.producers.map((i) => this.icon(i, '')).join('')}</small>`;
   }
 
@@ -97,7 +97,7 @@ export class DisplayService {
     if (recipe.unlockedBy == null) return '';
 
     const a = `<small><div>${this.translateSvc.instant(
-      'data.unlockedBy'
+      'data.unlockedBy',
     )}</div>${this.icon(recipe.unlockedBy, undefined, 'recipe')}</small>`;
 
     return a;
@@ -107,7 +107,7 @@ export class DisplayService {
     if (technology?.prerequisites == null) return '';
 
     const a = `<small><div>${this.translateSvc.instant(
-      'data.prerequisites'
+      'data.prerequisites',
     )}</div>${technology.prerequisites
       .map((i) => this.icon(i, undefined, 'recipe'))
       .join('')}</small>`;

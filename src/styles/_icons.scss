@@ -36,7 +36,10 @@
     color: white;
 
     white-space: nowrap;
-    text-shadow: 0px 2px 2px black, 0px -2px 2px black, 2px 0px 2px black,
+    text-shadow:
+      0px 2px 2px black,
+      0px -2px 2px black,
+      2px 0px 2px black,
       -2px 0px 2px black;
     pointer-events: none;
   }

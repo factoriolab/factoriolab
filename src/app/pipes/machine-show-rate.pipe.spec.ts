@@ -19,7 +19,7 @@ describe('MachineShowRatePipe', () => {
   describe('transform', () => {
     it('should hide machine rate for CoI Mine Control Tower', () => {
       expect(
-        pipe.transform(ItemId.MineControlTower, Game.CaptainOfIndustry)
+        pipe.transform(ItemId.MineControlTower, Game.CaptainOfIndustry),
       ).toBeFalse();
     });
   });

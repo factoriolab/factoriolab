@@ -10,7 +10,10 @@ export class ErrorService {
 
 @Injectable()
 export class LabErrorHandler implements ErrorHandler {
-  constructor(private ngZone: NgZone, private error: ErrorService) {}
+  constructor(
+    private ngZone: NgZone,
+    private error: ErrorService,
+  ) {}
 
   handleError(error: string): void {
     if (this.error.message$.value == null) {

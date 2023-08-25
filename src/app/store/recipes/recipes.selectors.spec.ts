@@ -11,7 +11,7 @@ describe('Recipes Selectors', () => {
       expect(
         Selectors.recipesState({
           recipesState: Mocks.RecipesStateInitial,
-        } as any)
+        } as any),
       ).toEqual(Mocks.RecipesStateInitial);
     });
   });
@@ -21,10 +21,10 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipesState.projector(
         initialRecipesState,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(Object.keys(result).length).toEqual(
-        Mocks.Dataset.recipeIds.length
+        Mocks.Dataset.recipeIds.length,
       );
     });
 
@@ -61,10 +61,10 @@ describe('Recipes Selectors', () => {
             },
           },
         },
-        data
+        data,
       );
       expect(result[Mocks.Item1.id].machineId).toEqual(
-        ItemId.AssemblingMachine3
+        ItemId.AssemblingMachine3,
       );
     });
 
@@ -76,7 +76,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result[Mocks.Item1.id].machineId).toEqual(stringValue);
     });
@@ -89,7 +89,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result[Mocks.Item1.id].machineModuleIds).toEqual([stringValue]);
     });
@@ -102,7 +102,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result[Mocks.Item1.id].beacons?.[0].count).toEqual(stringValue);
     });
@@ -133,7 +133,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipesState.projector(
         state,
         machines,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result[Mocks.Item1.id].beacons?.[0].moduleIds).toEqual([
         stringValue,
@@ -148,7 +148,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result[Mocks.Item1.id].beacons?.[0].total).toBeUndefined();
     });

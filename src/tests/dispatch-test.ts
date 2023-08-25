@@ -7,7 +7,10 @@ import { MockStore } from '@ngrx/store/testing';
 export class DispatchTest<T> {
   spy = spyOn(this.mockStore, 'dispatch');
 
-  constructor(public mockStore: MockStore, public component: T) {}
+  constructor(
+    public mockStore: MockStore,
+    public component: T,
+  ) {}
 
   void(key: keyof T, action: Type<Action>): void {
     this.spy.calls.reset();
@@ -25,7 +28,7 @@ export class DispatchTest<T> {
     this.spy.calls.reset();
     (this.component[key] as unknown as (value: string, alt: boolean) => void)(
       'value',
-      true
+      true,
     );
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(new action('value'));
   }
@@ -34,10 +37,10 @@ export class DispatchTest<T> {
     this.spy.calls.reset();
     (this.component[key] as unknown as (value: string, def: string) => void)(
       'value',
-      'def'
+      'def',
     );
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ value: 'value', def: 'def' })
+      new action({ value: 'value', def: 'def' }),
     );
   }
 
@@ -45,10 +48,10 @@ export class DispatchTest<T> {
     this.spy.calls.reset();
     (this.component[key] as unknown as (value: string, prev: string) => void)(
       'value',
-      'prev'
+      'prev',
     );
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ value: 'value', prev: 'prev' })
+      new action({ value: 'value', prev: 'prev' }),
     );
   }
 
@@ -56,10 +59,10 @@ export class DispatchTest<T> {
     this.spy.calls.reset();
     (this.component[key] as unknown as (id: string, value: string) => void)(
       'id',
-      'value'
+      'value',
     );
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ id: 'id', value: 'value' })
+      new action({ id: 'id', value: 'value' }),
     );
   }
 
@@ -69,11 +72,11 @@ export class DispatchTest<T> {
       this.component[key] as unknown as (
         id: string,
         value: string,
-        alt: boolean
+        alt: boolean,
       ) => void
     )('id', 'value', true);
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ id: 'id', value: 'value' })
+      new action({ id: 'id', value: 'value' }),
     );
   }
 
@@ -83,11 +86,11 @@ export class DispatchTest<T> {
       this.component[key] as unknown as (
         id: string,
         value: string,
-        def: string
+        def: string,
       ) => void
     )('id', 'value', 'def');
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ id: 'id', value: 'value', def: 'def' })
+      new action({ id: 'id', value: 'value', def: 'def' }),
     );
   }
 
@@ -98,11 +101,11 @@ export class DispatchTest<T> {
         id: string,
         value: string,
         def: string,
-        alt: boolean
+        alt: boolean,
       ) => void
     )('id', 'value', 'def', true);
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ id: 'id', value: 'value', def: 'def' })
+      new action({ id: 'id', value: 'value', def: 'def' }),
     );
   }
 
@@ -112,11 +115,11 @@ export class DispatchTest<T> {
       this.component[key] as unknown as (
         id: string,
         index: number,
-        value: string
+        value: string,
       ) => void
     )('id', 0, 'value');
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ id: 'id', index: 0, value: 'value' })
+      new action({ id: 'id', index: 0, value: 'value' }),
     );
   }
 
@@ -127,11 +130,11 @@ export class DispatchTest<T> {
         id: string,
         index: number,
         value: string,
-        alt: boolean
+        alt: boolean,
       ) => void
     )('id', 0, 'value', true);
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ id: 'id', index: 0, value: 'value' })
+      new action({ id: 'id', index: 0, value: 'value' }),
     );
   }
 
@@ -142,11 +145,11 @@ export class DispatchTest<T> {
         id: string,
         index: number,
         value: string,
-        def: string
+        def: string,
       ) => void
     )('id', 0, 'value', 'def');
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ id: 'id', index: 0, value: 'value', def: 'def' })
+      new action({ id: 'id', index: 0, value: 'value', def: 'def' }),
     );
   }
 
@@ -158,11 +161,11 @@ export class DispatchTest<T> {
         index: number,
         value: string,
         def: string,
-        alt: boolean
+        alt: boolean,
       ) => void
     )('id', 0, 'value', 'def', true);
     expect(this.mockStore.dispatch).toHaveBeenCalledWith(
-      new action({ id: 'id', index: 0, value: 'value', def: 'def' })
+      new action({ id: 'id', index: 0, value: 'value', def: 'def' }),
     );
   }
 }

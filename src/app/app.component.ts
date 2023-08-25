@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     private store: Store<LabState>,
     private translateSvc: TranslateService,
     private routerSvc: RouterService,
-    private themeSvc: ThemeService
+    private themeSvc: ThemeService,
   ) {}
 
   ngOnInit(): void {

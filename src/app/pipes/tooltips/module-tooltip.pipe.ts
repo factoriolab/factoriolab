@@ -8,7 +8,7 @@ import { DisplayService } from '~/services';
 export class ModuleTooltipPipe implements PipeTransform {
   constructor(
     private translateSvc: TranslateService,
-    private displaySvc: DisplayService
+    private displaySvc: DisplayService,
   ) {}
 
   transform(value: string | null | undefined, data: Dataset): string {

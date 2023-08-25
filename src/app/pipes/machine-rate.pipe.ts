@@ -10,12 +10,12 @@ export class MachineRatePipe implements PipeTransform {
   transform(
     value: Rational,
     precision: number | null,
-    machineId: string
+    machineId: string,
   ): string {
     if (machineId === ItemId.Pumpjack) {
       return `${this.ratePipe.transform(
         value.mul(Rational.hundred),
-        precision != null ? Math.max(precision - 2, 0) : precision
+        precision != null ? Math.max(precision - 2, 0) : precision,
       )}%`;
     } else {
       return this.ratePipe.transform(value, precision);

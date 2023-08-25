@@ -64,7 +64,7 @@ describe('ColumnsComponent', () => {
       component.editValue = null as any;
       component.reset();
       expect(component.editValue).toEqual(
-        Preferences.initialPreferencesState.columns
+        Preferences.initialPreferencesState.columns,
       );
     });
   });
@@ -74,7 +74,7 @@ describe('ColumnsComponent', () => {
       spyOn(mockStore, 'dispatch');
       component.save();
       expect(mockStore.dispatch).toHaveBeenCalledWith(
-        new Preferences.SetColumnsAction(component.editValue as any)
+        new Preferences.SetColumnsAction(component.editValue as any),
       );
     });
   });

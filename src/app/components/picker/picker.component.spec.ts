@@ -40,7 +40,7 @@ describe('PickerComponent', () => {
         Mocks.Dataset,
         'item',
         Mocks.Dataset.itemIds,
-        ItemId.IronPlate
+        ItemId.IronPlate,
       );
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();
@@ -51,7 +51,7 @@ describe('PickerComponent', () => {
         Mocks.Dataset,
         'recipe',
         Mocks.Dataset.recipeIds,
-        RecipeId.IronPlate
+        RecipeId.IronPlate,
       );
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();

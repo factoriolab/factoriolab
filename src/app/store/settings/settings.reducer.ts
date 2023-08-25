@@ -69,7 +69,7 @@ export const initialSettingsState: SettingsState = {
 
 export function settingsReducer(
   state: SettingsState = initialSettingsState,
-  action: SettingsAction | App.AppAction
+  action: SettingsAction | App.AppAction,
 ): SettingsState {
   switch (action.type) {
     case App.AppActionType.LOAD:

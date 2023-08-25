@@ -42,7 +42,7 @@ export const getItemsState = createSelector(
       }
     }
     return value;
-  }
+  },
 );
 
 export const getItemsModified = createSelector(itemsState, (state) => ({

@@ -63,7 +63,7 @@ describe('CostsComponent', () => {
       spyOn(mockStore, 'dispatch');
       component.save();
       expect(mockStore.dispatch).toHaveBeenCalledWith(
-        new Settings.SetCostsAction(component.editValue as any)
+        new Settings.SetCostsAction(component.editValue as any),
       );
     });
   });

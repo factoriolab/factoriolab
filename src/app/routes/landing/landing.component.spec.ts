@@ -45,7 +45,7 @@ describe('LandingComponent', () => {
       spyOn(router, 'navigate');
       component.selectRecipe(RecipeId.IronPlate);
       expect(component.addRecipeObjective).toHaveBeenCalledWith(
-        ItemId.IronPlate
+        ItemId.IronPlate,
       );
       expect(router.navigate).toHaveBeenCalledWith(['list']);
     });

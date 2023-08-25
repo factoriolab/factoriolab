@@ -49,10 +49,10 @@ export class ExportService {
     columnsState: ColumnsState,
     itemsState: Entities<ItemSettings>,
     recipesState: Entities<RecipeSettings>,
-    data: Dataset
+    data: Dataset,
   ): void {
     const json = steps.map((s) =>
-      this.stepToJson(s, steps, columnsState, itemsState, recipesState, data)
+      this.stepToJson(s, steps, columnsState, itemsState, recipesState, data),
     );
     const fields = Object.keys(json[0]) as (keyof StepExport)[];
     const csv = json.map((row) => fields.map((f) => row[f]).join(','));
@@ -66,7 +66,7 @@ export class ExportService {
   saveAsCsv(data: string): void {
     saveAs(
       new Blob([data], { type: CSV_TYPE }),
-      'factoriolab_list' + CSV_EXTENSION
+      'factoriolab_list' + CSV_EXTENSION,
     );
   }
 
@@ -75,7 +75,7 @@ export class ExportService {
   saveAsJson(data: string): void {
     saveAs(
       new Blob([data], { type: JSON_TYPE }),
-      'factoriolab_flow' + JSON_EXTENSION
+      'factoriolab_flow' + JSON_EXTENSION,
     );
   }
 
@@ -85,7 +85,7 @@ export class ExportService {
     columns: ColumnsState,
     itemsState: Entities<ItemSettings>,
     recipesState: Entities<RecipeSettings>,
-    data: Dataset
+    data: Dataset,
   ): StepExport {
     const exp: StepExport = {};
     if (step.itemId != null) {
@@ -136,7 +136,7 @@ export class ExportService {
           exp.Machine = recipeSettings.machineId;
           if (allowsModules && recipeSettings.machineModuleIds != null) {
             exp.MachineModules = `"${recipeSettings.machineModuleIds.join(
-              ','
+              ',',
             )}"`;
           }
         }

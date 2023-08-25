@@ -22,7 +22,7 @@ describe('StepIdPipe', () => {
         id: '0',
         recipeId: 'recipe',
         recipeObjectiveId: 'objective',
-      })
+      }),
     ).toEqual('objective');
     expect(
       pipe.transform({
@@ -30,7 +30,7 @@ describe('StepIdPipe', () => {
         recipeId: 'recipe',
         recipeObjectiveId: 'objective',
         itemId: 'item',
-      })
+      }),
     ).toEqual('item');
   });
 });

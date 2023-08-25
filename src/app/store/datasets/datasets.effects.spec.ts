@@ -30,7 +30,7 @@ describe('DatasetsEffects', () => {
       actions.next(new App.LoadAction({}));
       effects.appLoad$.subscribe();
       expect(dataSvc.requestData).toHaveBeenCalledWith(
-        Settings.initialSettingsState.modId
+        Settings.initialSettingsState.modId,
       );
     });
   });
@@ -42,7 +42,7 @@ describe('DatasetsEffects', () => {
       actions.next(new App.ResetAction());
       effects.appReset$.subscribe();
       expect(dataSvc.requestData).toHaveBeenCalledWith(
-        Settings.initialSettingsState.modId
+        Settings.initialSettingsState.modId,
       );
     });
   });

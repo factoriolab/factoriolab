@@ -10,18 +10,18 @@ export class PowerPipe implements PipeTransform {
   transform(
     value: Rational,
     precision: number | null,
-    unit?: PowerUnit
+    unit?: PowerUnit,
   ): string {
     switch (unit) {
       case PowerUnit.GW:
         return `${this.ratePipe.transform(
           value.div(Rational.million),
-          precision
+          precision,
         )} GW`;
       case PowerUnit.MW:
         return `${this.ratePipe.transform(
           value.div(Rational.thousand),
-          precision
+          precision,
         )} MW`;
       default:
         return `${this.ratePipe.transform(value, precision)} kW`;

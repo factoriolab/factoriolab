@@ -57,7 +57,7 @@
         [selected]="i === activeIndex"
       >
         <ng-template pTemplate="header">
-          <i [class]="categoryId | iconSmClass : 'category'"></i>
+          <i [class]="categoryId | iconSmClass: 'category'"></i>
           <span
             class="d-none d-lg-inline ms-2 ps-1 text-nowrap text-truncate"
             >{{ category.name }}</span
@@ -80,11 +80,11 @@
                 [class.p-button-text]="id !== selection"
                 [class.hover-action]="isMultiselect"
                 [class.hover-active]="selection && selection.indexOf(id) !== -1"
-                [icon]="id | iconSmClass : type"
+                [icon]="id | iconSmClass: type"
                 [pTooltip]="
                   type === 'item'
-                    ? (id | itemTooltip : vm.data)
-                    : (id | recipeTooltip : vm.data)
+                    ? (id | itemTooltip: vm.data)
+                    : (id | recipeTooltip: vm.data)
                 "
                 [escape]="false"
                 (click)="clickId(id)"

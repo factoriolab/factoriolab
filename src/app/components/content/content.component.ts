@@ -27,7 +27,7 @@ export class ContentComponent implements OnInit, AfterViewInit {
 
   constructor(
     private confirmationSvc: ConfirmationService,
-    private contentSvc: ContentService
+    private contentSvc: ContentService,
   ) {}
 
   ngOnInit(): void {

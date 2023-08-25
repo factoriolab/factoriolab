@@ -67,8 +67,8 @@ export class ObjectivesComponent {
         recipeIds,
         mobile: width < Breakpoint.Small,
         messages: this.getMessages(matrixResult),
-      })
-    )
+      }),
+    ),
   );
 
   @ViewChild('chooseItemPicker') chooseItemPicker: PickerComponent | undefined;
@@ -86,7 +86,7 @@ export class ObjectivesComponent {
     public trackSvc: TrackService,
     private store: Store<LabState>,
     private translateSvc: TranslateService,
-    private contentSvc: ContentService
+    private contentSvc: ContentService,
   ) {}
 
   getMessages(matrixResult: MatrixResult): Message[] {
@@ -129,7 +129,7 @@ export class ObjectivesComponent {
           this.chooseRecipePicker.selectId
             .pipe(
               first(),
-              tap((targetId) => this.setUnit(objective.id, { targetId, unit }))
+              tap((targetId) => this.setUnit(objective.id, { targetId, unit })),
             )
             .subscribe();
           this.chooseRecipePicker.clickOpen(data, 'recipe', recipeIds);
@@ -146,7 +146,7 @@ export class ObjectivesComponent {
           this.chooseItemPicker.selectId
             .pipe(
               first(),
-              tap((targetId) => this.setUnit(objective.id, { targetId, unit }))
+              tap((targetId) => this.setUnit(objective.id, { targetId, unit })),
             )
             .subscribe();
           this.chooseItemPicker.clickOpen(data, 'item', itemIds);

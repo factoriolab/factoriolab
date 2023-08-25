@@ -17,7 +17,7 @@ describe('Settings Reducer', () => {
     it('should return state if settings state is not included', () => {
       const result = settingsReducer(
         initialSettingsState,
-        new App.LoadAction({} as any)
+        new App.LoadAction({} as any),
       );
       expect(result).toEqual(initialSettingsState);
     });
@@ -27,7 +27,7 @@ describe('Settings Reducer', () => {
         undefined,
         new App.LoadAction({
           settingsState: { displayRate: DisplayRate.PerHour },
-        } as any)
+        } as any),
       );
       expect(result.displayRate).toEqual(DisplayRate.PerHour);
     });
@@ -45,7 +45,7 @@ describe('Settings Reducer', () => {
       const value = 'dsp';
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetModAction(value)
+        new Actions.SetModAction(value),
       );
       expect(result.modId).toEqual(value);
     });
@@ -56,7 +56,7 @@ describe('Settings Reducer', () => {
       const value = [RecipeId.ArtilleryShellRange];
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetResearchedTechnologiesAction(value)
+        new Actions.SetResearchedTechnologiesAction(value),
       );
       expect(result.researchedTechnologyIds).toEqual(value);
     });
@@ -67,7 +67,7 @@ describe('Settings Reducer', () => {
       const value = true;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetNetProductionOnlyAction(value)
+        new Actions.SetNetProductionOnlyAction(value),
       );
       expect(result.netProductionOnly).toEqual(value);
     });
@@ -78,7 +78,7 @@ describe('Settings Reducer', () => {
       const value = Preset.Modules;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetPresetAction(value)
+        new Actions.SetPresetAction(value),
       );
       expect(result.preset).toEqual(value);
     });
@@ -89,7 +89,7 @@ describe('Settings Reducer', () => {
       const value = '1';
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetBeaconReceiversAction(value)
+        new Actions.SetBeaconReceiversAction(value),
       );
       expect(result.beaconReceivers).toEqual(value);
     });
@@ -100,7 +100,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.ProductivityModule;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetProliferatorSprayAction(value)
+        new Actions.SetProliferatorSprayAction(value),
       );
       expect(result.proliferatorSprayId).toEqual(value);
     });
@@ -111,7 +111,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.TransportBelt;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetBeltAction({ value, def: undefined })
+        new Actions.SetBeltAction({ value, def: undefined }),
       );
       expect(result.beltId).toEqual(value);
     });
@@ -122,7 +122,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.Pipe;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetPipeAction({ value, def: undefined })
+        new Actions.SetPipeAction({ value, def: undefined }),
       );
       expect(result.pipeId).toEqual(value);
     });
@@ -133,7 +133,7 @@ describe('Settings Reducer', () => {
       const value = [ItemId.Wood];
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFuelRankAction({ value, def: undefined })
+        new Actions.SetFuelRankAction({ value, def: undefined }),
       );
       expect(result.fuelRankIds).toEqual(value);
     });
@@ -144,7 +144,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.CargoWagon;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetCargoWagonAction({ value, def: undefined })
+        new Actions.SetCargoWagonAction({ value, def: undefined }),
       );
       expect(result.cargoWagonId).toEqual(value);
     });
@@ -155,7 +155,7 @@ describe('Settings Reducer', () => {
       const value = ItemId.FluidWagon;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFluidWagonAction({ value, def: undefined })
+        new Actions.SetFluidWagonAction({ value, def: undefined }),
       );
       expect(result.fluidWagonId).toEqual(value);
     });
@@ -166,7 +166,7 @@ describe('Settings Reducer', () => {
       const value = 6000;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetFlowRateAction(value)
+        new Actions.SetFlowRateAction(value),
       );
       expect(result.flowRate).toEqual(value);
     });
@@ -177,7 +177,7 @@ describe('Settings Reducer', () => {
       const value = InserterTarget.Chest;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetInserterTargetAction(value)
+        new Actions.SetInserterTargetAction(value),
       );
       expect(result.inserterTarget).toEqual(value);
     });
@@ -188,7 +188,7 @@ describe('Settings Reducer', () => {
       const value = 10;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetMiningBonusAction(value)
+        new Actions.SetMiningBonusAction(value),
       );
       expect(result.miningBonus).toEqual(value);
     });
@@ -199,7 +199,7 @@ describe('Settings Reducer', () => {
       const value = ResearchSpeed.Speed1;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetResearchSpeedAction(value)
+        new Actions.SetResearchSpeedAction(value),
       );
       expect(result.researchSpeed).toEqual(value);
     });
@@ -209,7 +209,7 @@ describe('Settings Reducer', () => {
       const value = InserterCapacity.Capacity2;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetInserterCapacityAction(value)
+        new Actions.SetInserterCapacityAction(value),
       );
       expect(result.inserterCapacity).toEqual(value);
     });
@@ -220,7 +220,10 @@ describe('Settings Reducer', () => {
       const value = DisplayRate.PerHour;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetDisplayRateAction({ value, prev: DisplayRate.PerSecond })
+        new Actions.SetDisplayRateAction({
+          value,
+          prev: DisplayRate.PerSecond,
+        }),
       );
       expect(result.displayRate).toEqual(value);
     });
@@ -231,7 +234,7 @@ describe('Settings Reducer', () => {
       const value = MaximizeType.Ratio;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetMaximizeTypeAction(value)
+        new Actions.SetMaximizeTypeAction(value),
       );
       expect(result.maximizeType).toEqual(MaximizeType.Ratio);
     });
@@ -249,7 +252,7 @@ describe('Settings Reducer', () => {
       };
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetCostsAction(value)
+        new Actions.SetCostsAction(value),
       );
       expect(result.costs).toEqual(value);
     });
@@ -268,7 +271,7 @@ describe('Settings Reducer', () => {
             maximize: 'f',
           },
         } as any,
-        new Actions.ResetCostAction()
+        new Actions.ResetCostAction(),
       );
       expect(result.costs).toEqual(initialSettingsState.costs);
     });
@@ -276,7 +279,7 @@ describe('Settings Reducer', () => {
 
   it('should return default state', () => {
     expect(settingsReducer(undefined, { type: 'Test' } as any)).toBe(
-      initialSettingsState
+      initialSettingsState,
     );
   });
 });

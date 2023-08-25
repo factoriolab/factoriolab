@@ -81,7 +81,7 @@ export class MachineRational {
           e[i] = Rational.from(consumption[i]);
           return e;
         },
-        {}
+        {},
       );
     }
   }

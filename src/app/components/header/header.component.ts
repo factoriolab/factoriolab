@@ -41,7 +41,7 @@ export class HeaderComponent implements OnInit {
       gameInfo: gameInfo[game],
       gameOptions: this.buildGameOptions(game),
       settingsXlHidden,
-    }))
+    })),
   );
 
   links: MenuLink[] = [
@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit {
     public contentSvc: ContentService,
     private title: Title,
     private store: Store<LabState>,
-    private translateSvc: TranslateService
+    private translateSvc: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -81,7 +81,7 @@ export class HeaderComponent implements OnInit {
           .map((o) =>
             isRecipeObjective(o)
               ? data.recipeEntities[o.targetId]?.name
-              : data.itemEntities[o.targetId]?.name
+              : data.itemEntities[o.targetId]?.name,
           )
           .find((n) => n != null);
         if (name != null) {
@@ -101,7 +101,7 @@ export class HeaderComponent implements OnInit {
           icon: 'lab-icon small ' + gameInfo[g].icon,
           label: this.translateSvc.instant(gameInfo[g].label),
           routerLink: gameInfo[g].route,
-        })
+        }),
       );
   }
 

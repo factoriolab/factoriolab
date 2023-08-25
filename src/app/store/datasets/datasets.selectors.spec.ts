@@ -7,13 +7,13 @@ describe('Datasets Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
       expect(Selectors.getDataRecord.projector(initialDatasetsState)).toEqual(
-        initialDatasetsState.dataRecord
+        initialDatasetsState.dataRecord,
       );
       expect(Selectors.getI18nRecord.projector(initialDatasetsState)).toEqual(
-        initialDatasetsState.i18nRecord
+        initialDatasetsState.i18nRecord,
       );
       expect(Selectors.getHashRecord.projector(initialDatasetsState)).toEqual(
-        initialDatasetsState.hashRecord
+        initialDatasetsState.hashRecord,
       );
     });
   });

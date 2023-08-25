@@ -23,7 +23,7 @@ describe('InserterSpeedPipe', () => {
         value: Rational.from([100, 243]),
       });
       expect(
-        pipe.transform(Rational.thousand, Mocks.SettingsStateInitial)
+        pipe.transform(Rational.thousand, Mocks.SettingsStateInitial),
       ).toEqual({
         id: ItemId.StackInserter,
         value: Rational.from([20000, 277]),
@@ -34,7 +34,7 @@ describe('InserterSpeedPipe', () => {
       expect(
         pipe.transform(Rational.one, {
           inserterTarget: InserterTarget.Chest,
-        } as any)
+        } as any),
       ).toBeNull();
     });
 

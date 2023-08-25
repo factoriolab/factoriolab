@@ -41,7 +41,7 @@ export class RecipeComponent extends DetailComponent {
       recipeSettings: recipesState[id],
       home,
       data,
-    }))
+    })),
   );
 
   trueValue = true;
@@ -53,7 +53,7 @@ export class RecipeComponent extends DetailComponent {
     translateSvc: TranslateService,
     private store: Store<LabState>,
     private dataRouteSvc: DataRouteService,
-    public displaySvc: DisplayService
+    public displaySvc: DisplayService,
   ) {
     super(route, translateSvc);
   }
@@ -61,7 +61,7 @@ export class RecipeComponent extends DetailComponent {
   toggleRecipe(
     id: string,
     recipeSettings: RecipeSettings,
-    data: Dataset
+    data: Dataset,
   ): void {
     const value = !recipeSettings.excluded;
     const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);

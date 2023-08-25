@@ -31,7 +31,7 @@ export const objectivesState = (state: LabState): ObjectivesState =>
 export const getIds = createSelector(objectivesState, (state) => state.ids);
 export const getEntities = createSelector(
   objectivesState,
-  (state) => state.entities
+  (state) => state.entities,
 );
 
 /** Complex selectors */
@@ -45,8 +45,8 @@ export const getBaseObjectives = createSelector(
       .filter((o) =>
         isRecipeObjective(o)
           ? data.recipeEntities[o.targetId] != null
-          : data.itemEntities[o.targetId] != null
-      )
+          : data.itemEntities[o.targetId] != null,
+      ),
 );
 
 export const getObjectives = createSelector(
@@ -54,7 +54,9 @@ export const getObjectives = createSelector(
   Machines.getMachinesState,
   Settings.getDataset,
   (objectives, machinesState, data) =>
-    objectives.map((o) => RecipeUtility.adjustObjective(o, machinesState, data))
+    objectives.map((o) =>
+      RecipeUtility.adjustObjective(o, machinesState, data),
+    ),
 );
 
 export const getObjectiveRationals = createSelector(
@@ -75,11 +77,11 @@ export const getObjectiveRationals = createSelector(
                 adj.netProductionOnly,
                 new RecipeSettingsRational(o),
                 itemsState,
-                adj.data
+                adj.data,
               )
-            : undefined
-        )
-    )
+            : undefined,
+        ),
+    ),
 );
 
 export const getNormalizedObjectives = createSelector(
@@ -97,10 +99,10 @@ export const getNormalizedObjectives = createSelector(
           itemsSettings,
           beltSpeed,
           displayRateInfo,
-          data
+          data,
         ),
       },
-    }))
+    })),
 );
 
 export const getMatrixResult = createSelector(
@@ -118,7 +120,7 @@ export const getMatrixResult = createSelector(
     researchedTechnologyIds,
     maximizeType,
     cost,
-    data
+    data,
   ) =>
     SimplexUtility.solve(
       objectives,
@@ -127,8 +129,8 @@ export const getMatrixResult = createSelector(
       researchedTechnologyIds,
       maximizeType,
       cost,
-      data
-    )
+      data,
+    ),
 );
 
 export const getSteps = createSelector(
@@ -148,7 +150,7 @@ export const getSteps = createSelector(
     beaconReceivers,
     beltSpeed,
     dispRateInfo,
-    data
+    data,
   ) =>
     RateUtility.normalizeSteps(
       result.steps,
@@ -158,8 +160,8 @@ export const getSteps = createSelector(
       beaconReceivers,
       beltSpeed,
       dispRateInfo,
-      data
-    )
+      data,
+    ),
 );
 
 export const getZipState = createSelector(
@@ -174,7 +176,7 @@ export const getZipState = createSelector(
     recipesState,
     machinesState,
     settings,
-  })
+  }),
 );
 
 export const getStepsModified = createSelector(
@@ -203,7 +205,7 @@ export const getStepsModified = createSelector(
       }
       return e;
     }, {}),
-  })
+  }),
 );
 
 export const getTotals = createSelector(
@@ -277,7 +279,7 @@ export const getTotals = createSelector(
                 addValueToRecordByIds(
                   machineModules,
                   settings.machineModuleIds.filter((i) => i !== ItemId.Module),
-                  value
+                  value,
                 );
               }
             }
@@ -305,7 +307,7 @@ export const getTotals = createSelector(
               addValueToRecordByIds(
                 beaconModules,
                 beacon.moduleIds.filter((i) => i !== ItemId.Module),
-                value
+                value,
               );
             }
           }
@@ -333,13 +335,13 @@ export const getTotals = createSelector(
       power,
       pollution,
     };
-  }
+  },
 );
 
 function addValueToRecordByIds(
   record: Entities<Rational>,
   ids: string[],
-  value: Rational
+  value: Rational,
 ): void {
   ids.forEach((id) => {
     if (!record[id]) {
@@ -372,7 +374,7 @@ export const getStepDetails = createSelector(
               recipeObjectiveId: s.recipeObjectiveId,
               value: s.outputs[itemId],
               machines: s.machines,
-            }))
+            })),
         );
 
         const inputs = outputs.reduce((r: Rational, o) => {
@@ -422,7 +424,7 @@ export const getStepDetails = createSelector(
                 history.replaceState(
                   {},
                   '',
-                  `${window.location.href.replace(/#(.*)$/, '')}#${id}`
+                  `${window.location.href.replace(/#(.*)$/, '')}#${id}`,
                 );
               },
           };
@@ -433,14 +435,14 @@ export const getStepDetails = createSelector(
       };
 
       return e;
-    }, {})
+    }, {}),
 );
 
 export const getStepById = createSelector(getSteps, (steps) =>
   steps.reduce((e: Entities<Step>, s) => {
     e[s.id] = s;
     return e;
-  }, {})
+  }, {}),
 );
 
 export const getStepByItemEntities = createSelector(getSteps, (steps) =>
@@ -449,7 +451,7 @@ export const getStepByItemEntities = createSelector(getSteps, (steps) =>
       e[s.itemId] = s;
     }
     return e;
-  }, {})
+  }, {}),
 );
 
 export const getStepTree = createSelector(getSteps, (steps) => {
@@ -516,7 +518,7 @@ export const getEffectivePowerUnit = createSelector(
     } else {
       return powerUnit;
     }
-  }
+  },
 );
 
 export const getRecipesModified = createSelector(
@@ -532,18 +534,18 @@ export const getRecipesModified = createSelector(
           state[id].fuelId != null ||
           state[id].machineId != null ||
           state[id].machineModuleIds != null ||
-          state[id].overclock != null
+          state[id].overclock != null,
       ) ||
       objectives.some(
         (p) =>
           p.fuelId != null ||
           p.machineId != null ||
           p.machineModuleIds != null ||
-          p.overclock != null
+          p.overclock != null,
       ),
     beacons:
       Object.keys(state).some((id) => state[id].beacons != null) ||
       objectives.some((p) => p.beacons != null),
     cost: Object.keys(state).some((id) => state[id].cost),
-  })
+  }),
 );

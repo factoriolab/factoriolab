@@ -13,7 +13,7 @@ import { BrowserUtility } from '~/utilities';
 
 export const canActivateLanding: CanActivateFn = (
   route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot
+  state: RouterStateSnapshot,
 ) => {
   const router = inject(Router);
   return inject(Store<LabState>)
@@ -32,6 +32,6 @@ export const canActivateLanding: CanActivateFn = (
         }
 
         return true;
-      })
+      }),
     );
 };

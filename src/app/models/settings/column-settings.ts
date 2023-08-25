@@ -56,7 +56,7 @@ export const initialColumnsState: ColumnsState = allColumns.reduce(
     };
     return e;
   },
-  {}
+  {},
 ) as ColumnsState;
 
 /** Get column options for passed game */
@@ -68,13 +68,13 @@ export function columnOptions(gameInfo: GameInfo): SelectItem<ColumnKey>[] {
         label: `options.column.${id}`,
         value: id,
         disabled: id === 'items' || id === 'machines',
-      })
+      }),
     );
 }
 
 export function gameColumnsState(
   columnsState: ColumnsState,
-  gameInfo: GameInfo
+  gameInfo: GameInfo,
 ): ColumnsState {
   gameInfo.hideColumns.forEach((c) => {
     columnsState = {

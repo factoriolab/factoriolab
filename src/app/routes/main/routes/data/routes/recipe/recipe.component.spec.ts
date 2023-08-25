@@ -31,12 +31,12 @@ describe('RecipeComponent', () => {
       component.toggleRecipe(
         RecipeId.NuclearFuelReprocessing,
         {},
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
         true,
-        true
+        true,
       );
     });
 
@@ -48,7 +48,7 @@ describe('RecipeComponent', () => {
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
         true,
-        false
+        false,
       );
     });
   });

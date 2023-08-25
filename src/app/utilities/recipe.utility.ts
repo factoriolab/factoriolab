@@ -43,7 +43,7 @@ export class RecipeUtility {
 
   static fuelOptions(
     entity: Machine | MachineRational,
-    data: Dataset
+    data: Dataset,
   ): SelectItem<string>[] {
     if (entity.fuelCategories == null) return [];
 
@@ -53,14 +53,14 @@ export class RecipeUtility {
       .filter(fnPropsNotNullish('fuel'))
       .filter((f) => fuelCategories.includes(f.fuel.category));
     return allowed.map(
-      (f): SelectItem<string> => ({ value: f.id, label: f.name })
+      (f): SelectItem<string> => ({ value: f.id, label: f.name }),
     );
   }
 
   static moduleOptions(
     entity: Machine | MachineRational | Beacon | BeaconRational,
     recipeId: string | null,
-    data: Dataset
+    data: Dataset,
   ): SelectItem<string>[] {
     // Get all modules
     let allowed = data.moduleIds
@@ -74,7 +74,7 @@ export class RecipeUtility {
         allowed = allowed.filter(
           (m) =>
             m.module.limitation == null ||
-            data.limitations[m.module.limitation][recipeId]
+            data.limitations[m.module.limitation][recipeId],
         );
       }
     }
@@ -87,7 +87,7 @@ export class RecipeUtility {
     }
 
     const options = allowed.map(
-      (m): SelectItem<string> => ({ value: m.id, label: m.name })
+      (m): SelectItem<string> => ({ value: m.id, label: m.name }),
     );
     if (data.game !== Game.Satisfactory) {
       options.unshift({ label: 'None', value: ItemId.Module });
@@ -99,11 +99,11 @@ export class RecipeUtility {
   static defaultModules(
     options: SelectItem[],
     moduleRankIds: string[],
-    count: number
+    count: number,
   ): string[] {
     const module = this.bestMatch(
       options.map((o) => o.value),
-      moduleRankIds
+      moduleRankIds,
     );
     return new Array(count).fill(module);
   }
@@ -116,7 +116,7 @@ export class RecipeUtility {
     netProductionOnly: boolean,
     settings: RecipeSettingsRational,
     itemsState: Entities<ItemSettings>,
-    data: Dataset
+    data: Dataset,
   ): RecipeRational {
     const recipe = new RecipeRational(data.recipeEntities[recipeId]);
     if (settings.machineId != null) {
@@ -206,7 +206,7 @@ export class RecipeUtility {
       if (settings.beacons != null) {
         for (const beaconSettings of settings.beacons) {
           const beaconModules = beaconSettings.moduleIds?.filter(
-            (m) => m !== ItemId.Module && data.moduleEntities[m]
+            (m) => m !== ItemId.Module && data.moduleEntities[m],
           );
           if (
             beaconModules?.length &&
@@ -417,7 +417,7 @@ export class RecipeUtility {
   static adjustSiloRecipes(
     recipeR: Entities<RecipeRational>,
     settings: Entities<RecipeSettingsRational>,
-    data: Dataset
+    data: Dataset,
   ): Entities<RecipeRational> {
     for (const partId of Object.keys(recipeR)) {
       const partMachineId = settings[partId].machineId;
@@ -428,7 +428,7 @@ export class RecipeUtility {
           const itemId = Object.keys(rocketRecipe.out)[0];
           const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
           for (const launchId of Object.keys(recipeR).filter(
-            (i) => recipeR[i].part === partId
+            (i) => recipeR[i].part === partId,
           )) {
             if (partMachineId === settings[launchId].machineId) {
               recipeR[launchId].time = rocketRecipe.time
@@ -449,7 +449,7 @@ export class RecipeUtility {
 
   static allowsModules(
     recipe: Recipe | RecipeRational,
-    machine: MachineRational
+    machine: MachineRational,
   ): boolean {
     return (
       (!machine.silo || !recipe.part) &&
@@ -466,7 +466,7 @@ export class RecipeUtility {
     researchSpeed: Rational,
     netProductionOnly: boolean,
     cost: CostRationalSettings,
-    data: Dataset
+    data: Dataset,
   ): Dataset {
     const recipeR = this.adjustRecipes(
       recipesState,
@@ -475,7 +475,7 @@ export class RecipeUtility {
       miningBonus,
       researchSpeed,
       netProductionOnly,
-      data
+      data,
     );
     this.adjustCost(recipeR, recipesState, cost);
     return { ...data, ...{ recipeR } };
@@ -488,7 +488,7 @@ export class RecipeUtility {
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    data: Dataset
+    data: Dataset,
   ): Entities<RecipeRational> {
     return this.adjustSiloRecipes(
       data.recipeIds.reduce((e: Entities<RecipeRational>, i) => {
@@ -500,19 +500,19 @@ export class RecipeUtility {
           netProductionOnly,
           recipesState[i],
           itemsState,
-          data
+          data,
         );
         return e;
       }, {}),
       recipesState,
-      data
+      data,
     );
   }
 
   static adjustCost(
     recipeR: Entities<RecipeRational>,
     recipesState: Entities<RecipeSettingsRational>,
-    cost: CostRationalSettings
+    cost: CostRationalSettings,
   ): void {
     for (const id of Object.keys(recipeR)) {
       const recipe = recipeR[id];
@@ -535,7 +535,7 @@ export class RecipeUtility {
   static adjustObjective(
     objective: Objective,
     machinesState: Machines.MachinesState,
-    data: Dataset
+    data: Dataset,
   ): Objective {
     if (!isRecipeObjective(objective)) return objective;
 
@@ -545,7 +545,7 @@ export class RecipeUtility {
     if (objective.machineId == null) {
       objective.machineId = this.bestMatch(
         recipe.producers,
-        machinesState.ids ?? []
+        machinesState.ids ?? [],
       );
     }
 
@@ -559,14 +559,14 @@ export class RecipeUtility {
       objective.machineModuleOptions = this.moduleOptions(
         machine,
         objective.targetId,
-        data
+        data,
       );
 
       if (objective.machineModuleIds == null) {
         objective.machineModuleIds = this.defaultModules(
           objective.machineModuleOptions,
           def.moduleRankIds ?? [],
-          machine.modules ?? 0
+          machine.modules ?? 0,
         );
       }
 
@@ -587,14 +587,14 @@ export class RecipeUtility {
           beaconSettings.moduleOptions = this.moduleOptions(
             beacon,
             objective.targetId,
-            data
+            data,
           );
 
           if (beaconSettings.moduleIds == null) {
             beaconSettings.moduleIds = RecipeUtility.defaultModules(
               beaconSettings.moduleOptions,
               def.beaconModuleRankIds ?? [],
-              beacon.modules
+              beacon.modules,
             );
           }
         }
