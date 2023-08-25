@@ -6,7 +6,7 @@ export function getJsonData<T>(file: string): T {
 }
 
 export function coerceArray<T>(
-  value: T[] | Record<string, T> | null | undefined
+  value: T[] | Record<string, T> | null | undefined,
 ): T[] {
   if (value == null) return [];
 
