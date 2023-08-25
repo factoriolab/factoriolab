@@ -13,7 +13,7 @@ export class TrackService {
 
   trackById<T extends boolean | number | string = string>(
     i: number,
-    obj: { id: T }
+    obj: { id: T },
   ): T {
     return obj.id;
   }
@@ -28,7 +28,7 @@ export class TrackService {
 
   sortByValue(
     a: KeyValue<string, Rational>,
-    b: KeyValue<string, Rational>
+    b: KeyValue<string, Rational>,
   ): number {
     return b.value.sub(a.value).toNumber();
   }

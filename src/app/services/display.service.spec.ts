@@ -54,8 +54,8 @@ describe('DisplayService', () => {
     it('should generate html for a recipe', () => {
       expect(
         service.recipeProcess(
-          Mocks.Dataset.recipeEntities[RecipeId.ElectronicCircuit]
-        )
+          Mocks.Dataset.recipeEntities[RecipeId.ElectronicCircuit],
+        ),
       ).toBeTruthy();
     });
   });
@@ -64,8 +64,8 @@ describe('DisplayService', () => {
     it('should generate html for recipe producers', () => {
       expect(
         service.recipeProducedBy(
-          Mocks.Dataset.recipeEntities[RecipeId.ElectronicCircuit]
-        )
+          Mocks.Dataset.recipeEntities[RecipeId.ElectronicCircuit],
+        ),
       ).toBeTruthy();
     });
   });
@@ -74,8 +74,8 @@ describe('DisplayService', () => {
     it('should generate html for recipe producers', () => {
       expect(
         service.recipeUnlockedBy(
-          Mocks.Dataset.recipeEntities[RecipeId.CoalLiquefaction]
-        )
+          Mocks.Dataset.recipeEntities[RecipeId.CoalLiquefaction],
+        ),
       ).toBeTruthy();
     });
   });
@@ -84,8 +84,8 @@ describe('DisplayService', () => {
     it('should generate html for technology prerequisites', () => {
       expect(
         service.technologyPrerequisites(
-          Mocks.Dataset.itemEntities[ItemId.ArtilleryShellRange].technology
-        )
+          Mocks.Dataset.itemEntities[ItemId.ArtilleryShellRange].technology,
+        ),
       ).toBeTruthy();
     });
   });

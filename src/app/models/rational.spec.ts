@@ -18,13 +18,13 @@ describe('Rational', () => {
     describe('from', () => {
       it('should build a Rational from an integer Number', () => {
         expect(Rational.from([1, 3])).toEqual(
-          new Rational(BigInt(1), BigInt(3))
+          new Rational(BigInt(1), BigInt(3)),
         );
       });
 
       it('should throw a divide by zero error', () => {
         expect(() => Rational.from([1, 0])).toThrowError(
-          'Cannot divide by zero'
+          'Cannot divide by zero',
         );
       });
     });
@@ -38,7 +38,7 @@ describe('Rational', () => {
         expect(Rational.fromNumber(0.25)).toEqual(Rational.from([1, 4]));
         // Test known number to hit alternate solution in `fromFloat`
         expect(Rational.fromNumber(0.007342528014038914)).toEqual(
-          Rational.from([477, 64964])
+          Rational.from([477, 64964]),
         );
       });
 
@@ -70,7 +70,7 @@ describe('Rational', () => {
 
       it('should throw on too many spaces', () => {
         expect(() => Rational.fromString('1  1/2')).toThrowError(
-          'Too many spaces'
+          'Too many spaces',
         );
       });
     });
@@ -78,10 +78,10 @@ describe('Rational', () => {
     describe('min', () => {
       it('should return the minimum of two Rationals', () => {
         expect(Rational.min(Rational.zero, Rational.one)).toEqual(
-          Rational.zero
+          Rational.zero,
         );
         expect(Rational.min(Rational.one, Rational.zero)).toEqual(
-          Rational.zero
+          Rational.zero,
         );
       });
     });
@@ -136,8 +136,8 @@ describe('Rational', () => {
         expect(Rational.one.lt(Rational.zero)).toBeFalse();
         expect(
           new Rational(BigInt(1), BigInt(3)).lt(
-            new Rational(BigInt(3), BigInt(4))
-          )
+            new Rational(BigInt(3), BigInt(4)),
+          ),
         ).toBeTrue();
       });
     });
@@ -239,7 +239,7 @@ describe('Rational', () => {
     describe('toPrecision', () => {
       it('should round to precision', () => {
         expect(new Rational(BigInt(1), BigInt(3)).toPrecision(3)).toEqual(
-          0.334
+          0.334,
         );
       });
 
@@ -255,7 +255,7 @@ describe('Rational', () => {
 
       it('should handle mixed', () => {
         expect(new Rational(BigInt(4), BigInt(3)).toFraction()).toEqual(
-          '1 + 1/3'
+          '1 + 1/3',
         );
       });
 
@@ -307,13 +307,13 @@ describe('Rational', () => {
     describe('constructor', () => {
       it('should handle negative quotient', () => {
         expect(new Rational(BigInt(1), BigInt(-1))).toEqual(
-          new Rational(BigInt(-1))
+          new Rational(BigInt(-1)),
         );
       });
 
       it('should simplify fraction', () => {
         expect(new Rational(BigInt(8), BigInt(12))).toEqual(
-          new Rational(BigInt(2), BigInt(3))
+          new Rational(BigInt(2), BigInt(3)),
         );
       });
     });

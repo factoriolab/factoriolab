@@ -17,9 +17,9 @@ export class DatasetsEffects {
             a.payload.settingsState?.modId ||
             Settings.initialSettingsState.modId;
           return this.dataSvc.requestData(id);
-        })
+        }),
       ),
-    { dispatch: false }
+    { dispatch: false },
   );
 
   appReset$ = createEffect(
@@ -27,10 +27,10 @@ export class DatasetsEffects {
       this.actions$.pipe(
         ofType(App.AppActionType.RESET),
         switchMap(() =>
-          this.dataSvc.requestData(Settings.initialSettingsState.modId)
-        )
+          this.dataSvc.requestData(Settings.initialSettingsState.modId),
+        ),
       ),
-    { dispatch: false }
+    { dispatch: false },
   );
 
   setModId$ = createEffect(
@@ -38,11 +38,14 @@ export class DatasetsEffects {
       this.actions$.pipe(
         ofType(Settings.SettingsActionType.SET_MOD),
         switchMap((a: Settings.SetModAction) =>
-          this.dataSvc.requestData(a.payload)
-        )
+          this.dataSvc.requestData(a.payload),
+        ),
       ),
-    { dispatch: false }
+    { dispatch: false },
   );
 
-  constructor(private actions$: Actions, private dataSvc: DataService) {}
+  constructor(
+    private actions$: Actions,
+    private dataSvc: DataService,
+  ) {}
 }

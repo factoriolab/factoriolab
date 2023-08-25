@@ -32,16 +32,16 @@ export class CategoryComponent extends DetailComponent {
       home,
       itemIds: data.itemIds.filter((i) => data.itemEntities[i].category === id),
       recipeIds: data.recipeIds.filter(
-        (i) => data.recipeEntities[i].category === id
+        (i) => data.recipeEntities[i].category === id,
       ),
-    }))
+    })),
   );
 
   constructor(
     route: ActivatedRoute,
     translateSvc: TranslateService,
     private store: Store<LabState>,
-    private dataRouteSvc: DataRouteService
+    private dataRouteSvc: DataRouteService,
   ) {
     super(route, translateSvc);
   }

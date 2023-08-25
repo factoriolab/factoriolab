@@ -35,7 +35,7 @@ export const getRecipesState = createSelector(
       if (s.machineId == null) {
         s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
-          machinesState.ids ?? []
+          machinesState.ids ?? [],
         );
       }
 
@@ -49,14 +49,14 @@ export const getRecipesState = createSelector(
         s.machineModuleOptions = RecipeUtility.moduleOptions(
           machine,
           recipe.id,
-          data
+          data,
         );
 
         if (s.machineModuleIds == null) {
           s.machineModuleIds = RecipeUtility.defaultModules(
             s.machineModuleOptions,
             def.moduleRankIds ?? [],
-            machine.modules ?? 0
+            machine.modules ?? 0,
           );
         }
 
@@ -75,14 +75,14 @@ export const getRecipesState = createSelector(
             beaconSettings.moduleOptions = RecipeUtility.moduleOptions(
               beacon,
               recipe.id,
-              data
+              data,
             );
 
             if (beaconSettings.moduleIds == null) {
               beaconSettings.moduleIds = RecipeUtility.defaultModules(
                 beaconSettings.moduleOptions,
                 def.beaconModuleRankIds ?? [],
-                beacon.modules
+                beacon.modules,
               );
             }
           }
@@ -112,7 +112,7 @@ export const getRecipesState = createSelector(
     }
 
     return value;
-  }
+  },
 );
 
 export const getRecipesStateRational = createSelector(
@@ -123,8 +123,8 @@ export const getRecipesStateRational = createSelector(
         e[i] = new RecipeSettingsRational(recipesState[i]);
         return e;
       },
-      {}
-    )
+      {},
+    ),
 );
 
 export const getAdjustedDataset = createSelector(
@@ -141,6 +141,6 @@ export const getAdjustedDataset = createSelector(
       adj.researchSpeed,
       adj.netProductionOnly,
       cost,
-      adj.data
-    )
+      adj.data,
+    ),
 );

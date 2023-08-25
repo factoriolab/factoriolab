@@ -5,13 +5,13 @@ describe('Preferences Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
       expect(Selectors.getStates.projector(Mocks.PreferencesState)).toEqual(
-        Mocks.PreferencesState.states
+        Mocks.PreferencesState.states,
       );
       expect(Selectors.getLanguage.projector(Mocks.PreferencesState)).toEqual(
-        'en'
+        'en',
       );
       expect(
-        Selectors.getBypassLanding.projector(Mocks.PreferencesState)
+        Selectors.getBypassLanding.projector(Mocks.PreferencesState),
       ).toEqual(false);
     });
   });

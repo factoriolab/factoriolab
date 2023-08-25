@@ -21,7 +21,7 @@ describe('Preferences Reducer', () => {
     it('should save the specified state', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SaveStateAction({ id, value })
+        new Actions.SaveStateAction({ id, value }),
       );
       expect(result.states).toEqual({ [id]: value });
     });
@@ -31,7 +31,7 @@ describe('Preferences Reducer', () => {
     it('should remove the specified state', () => {
       const result = preferencesReducer(
         { states: { [id]: value } } as any,
-        new Actions.RemoveStateAction(id)
+        new Actions.RemoveStateAction(id),
       );
       expect(result.states).toEqual({});
     });
@@ -42,7 +42,7 @@ describe('Preferences Reducer', () => {
       const columns = { power: { show: true } } as any;
       const result = preferencesReducer(
         undefined,
-        new Actions.SetColumnsAction(columns)
+        new Actions.SetColumnsAction(columns),
       );
       expect(result.columns).toEqual(columns);
     });
@@ -50,7 +50,7 @@ describe('Preferences Reducer', () => {
     it('should reset power unit if power column is hidden', () => {
       const result = preferencesReducer(
         { powerUnit: PowerUnit.MW } as any,
-        new Actions.SetColumnsAction({ power: {} } as any)
+        new Actions.SetColumnsAction({ power: {} } as any),
       );
       expect(result.powerUnit).toEqual(PowerUnit.Auto);
     });
@@ -60,7 +60,7 @@ describe('Preferences Reducer', () => {
     it('should set the language', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetLanguageAction(Language.Chinese)
+        new Actions.SetLanguageAction(Language.Chinese),
       );
       expect(result.language).toEqual(Language.Chinese);
     });
@@ -70,7 +70,7 @@ describe('Preferences Reducer', () => {
     it('should set the power unit', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetPowerUnitAction(PowerUnit.MW)
+        new Actions.SetPowerUnitAction(PowerUnit.MW),
       );
       expect(result.powerUnit).toEqual(PowerUnit.MW);
     });
@@ -80,7 +80,7 @@ describe('Preferences Reducer', () => {
     it('should set the power unit', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetThemeAction(Theme.Dark)
+        new Actions.SetThemeAction(Theme.Dark),
       );
       expect(result.theme).toEqual(Theme.Dark);
     });
@@ -90,7 +90,7 @@ describe('Preferences Reducer', () => {
     it('should set the bypass landing preference', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetBypassLandingAction(true)
+        new Actions.SetBypassLandingAction(true),
       );
       expect(result.bypassLanding).toEqual(true);
     });
@@ -100,7 +100,7 @@ describe('Preferences Reducer', () => {
     it('should set the show tech labels preference', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetShowTechLabelsAction(true)
+        new Actions.SetShowTechLabelsAction(true),
       );
       expect(result.showTechLabels).toEqual(true);
     });
@@ -108,7 +108,7 @@ describe('Preferences Reducer', () => {
 
   it('should return the default state', () => {
     expect(preferencesReducer(undefined, { type: 'Test' } as any)).toEqual(
-      initialPreferencesState
+      initialPreferencesState,
     );
   });
 });

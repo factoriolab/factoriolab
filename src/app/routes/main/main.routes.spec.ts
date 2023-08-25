@@ -6,10 +6,10 @@ import { ListComponent } from './routes/list/list.component';
 describe('Main Routes', () => {
   it('should load child routes', async () => {
     expect(await routes[0].children![0].loadComponent!()).toEqual(
-      ListComponent
+      ListComponent,
     );
     expect(await routes[0].children![1].loadComponent!()).toEqual(
-      FlowComponent
+      FlowComponent,
     );
     expect(await routes[0].children![2].loadChildren!()).toEqual(DataModule);
   });

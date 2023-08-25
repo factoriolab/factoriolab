@@ -76,7 +76,7 @@ export class RecipeRational {
           e[i] = Rational.from(catalyst[i]);
           return e;
         },
-        {}
+        {},
       );
     }
 

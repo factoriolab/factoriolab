@@ -59,7 +59,7 @@ export class PickerComponent implements OnInit {
   constructor(
     private ref: ChangeDetectorRef,
     private filterService: FilterService,
-    private store: Store<LabState>
+    private store: Store<LabState>,
   ) {}
 
   ngOnInit(): void {
@@ -72,7 +72,7 @@ export class PickerComponent implements OnInit {
     data: Dataset,
     type: 'item' | 'recipe',
     allIds: string[],
-    selection?: string | string[]
+    selection?: string | string[],
   ): void {
     this.type = type;
     const allIdsSet = new Set(allIds);
@@ -106,14 +106,14 @@ export class PickerComponent implements OnInit {
           label: data.itemEntities[i].name,
           value: i,
           title: data.itemEntities[i].category,
-        })
+        }),
       );
 
       if (Array.isArray(selection)) {
         this.selectAllCtrl.setValue(selection.length === 0);
       } else if (selection != null) {
         const index = data.categoryIds.indexOf(
-          data.itemEntities[selection].category
+          data.itemEntities[selection].category,
         );
         this.activeIndex = index;
       }
@@ -134,7 +134,7 @@ export class PickerComponent implements OnInit {
           label: data.recipeEntities[i].name,
           value: i,
           title: data.recipeEntities[i].category,
-        })
+        }),
       );
 
       if (Array.isArray(selection)) {
@@ -143,13 +143,13 @@ export class PickerComponent implements OnInit {
           data.defaults != null ? [...data.defaults.excludedRecipeIds] : [];
       } else if (selection) {
         const index = data.categoryIds.indexOf(
-          data.recipeEntities[selection].category
+          data.recipeEntities[selection].category,
         );
         this.activeIndex = index;
       }
     }
     this.categoryIds = data.categoryIds.filter(
-      (c) => this.categoryRows[c]?.length
+      (c) => this.categoryRows[c]?.length,
     );
     this.allCategoryIds = this.categoryIds;
     this.allCategoryRows = this.categoryRows;
@@ -202,13 +202,13 @@ export class PickerComponent implements OnInit {
       this.allSelectItems,
       ['label'],
       search,
-      'contains'
+      'contains',
     );
 
     // Filter for matching category ids
     // (Cache category on the SelectItem `title` field)
     this.categoryIds = this.allCategoryIds.filter((c) =>
-      filteredItems.some((i) => i.title === c)
+      filteredItems.some((i) => i.title === c),
     );
 
     // Filter category rows

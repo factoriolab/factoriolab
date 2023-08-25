@@ -58,7 +58,7 @@ describe('ListComponent', () => {
           allRecipesIncluded: true,
         };
         return e;
-      }, {})
+      }, {}),
     );
     exportSvc = TestBed.inject(ExportService);
     component = fixture.componentInstance;
@@ -128,7 +128,7 @@ describe('ListComponent', () => {
             recipeIds: [],
             allRecipesIncluded: true,
           },
-        }
+        },
       );
       expect(component.activeItem).toEqual({
         ['1']: tab1,
@@ -194,7 +194,7 @@ describe('ListComponent', () => {
       component.toggleRecipes(
         [RecipeId.AdvancedOilProcessing],
         true,
-        {} as any
+        {} as any,
       );
       expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
         { id: RecipeId.AdvancedOilProcessing, value: true, def: false },
@@ -209,12 +209,12 @@ describe('ListComponent', () => {
       component.toggleRecipe(
         RecipeId.AdvancedOilProcessing,
         Mocks.RecipesStateInitial,
-        data
+        data,
       );
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.AdvancedOilProcessing,
         true,
-        false
+        false,
       );
     });
 
@@ -223,12 +223,12 @@ describe('ListComponent', () => {
       component.toggleRecipe(
         RecipeId.NuclearFuelReprocessing,
         Mocks.RecipesStateInitial,
-        Mocks.AdjustedData
+        Mocks.AdjustedData,
       );
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
         false,
-        true
+        true,
       );
     });
   });
@@ -247,7 +247,7 @@ describe('ListComponent', () => {
         '1',
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
-        RecipeField.Machine
+        RecipeField.Machine,
       );
       expect(component.setMachine).not.toHaveBeenCalled();
     });
@@ -259,13 +259,13 @@ describe('ListComponent', () => {
         ItemId.AssemblingMachine2,
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
-        RecipeField.Machine
+        RecipeField.Machine,
       );
       expect(component.setMachine).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         ItemId.AssemblingMachine2,
         ItemId.AssemblingMachine3,
-        false
+        false,
       );
     });
 
@@ -276,13 +276,13 @@ describe('ListComponent', () => {
         ItemId.Coal,
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
-        RecipeField.Fuel
+        RecipeField.Fuel,
       );
       expect(component.setFuel).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         ItemId.Coal,
         undefined,
-        false
+        false,
       );
     });
 
@@ -294,13 +294,13 @@ describe('ListComponent', () => {
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.MachineModules,
-        0
+        0,
       );
       expect(component.setMachineModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         new Array(4).fill(ItemId.SpeedModule3),
         new Array(4).fill(ItemId.SpeedModule3),
-        false
+        false,
       );
     });
 
@@ -312,14 +312,14 @@ describe('ListComponent', () => {
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.BeaconCount,
-        0
+        0,
       );
       expect(component.setBeaconCount).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         0,
         '4',
         '8',
-        false
+        false,
       );
     });
 
@@ -331,14 +331,14 @@ describe('ListComponent', () => {
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.Beacon,
-        0
+        0,
       );
       expect(component.setBeacon).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         0,
         ItemId.Beacon,
         ItemId.Beacon,
-        false
+        false,
       );
     });
 
@@ -351,14 +351,14 @@ describe('ListComponent', () => {
         Mocks.Dataset,
         RecipeField.BeaconModules,
         0,
-        0
+        0,
       );
       expect(component.setBeaconModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         0,
         new Array(2).fill(ItemId.SpeedModule3),
         new Array(2).fill(ItemId.SpeedModule3),
-        false
+        false,
       );
     });
 
@@ -370,13 +370,13 @@ describe('ListComponent', () => {
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
         RecipeField.BeaconTotal,
-        0
+        0,
       );
       expect(component.setBeaconTotal).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         0,
         '8',
-        false
+        false,
       );
     });
 
@@ -387,13 +387,13 @@ describe('ListComponent', () => {
         100,
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
-        RecipeField.Overclock
+        RecipeField.Overclock,
       );
       expect(component.setOverclock).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         100,
         undefined,
-        false
+        false,
       );
     });
   });
@@ -409,7 +409,7 @@ describe('ListComponent', () => {
       spyOn(component, 'setRecipeChecked');
       component.changeStepChecked(
         { id: '0', recipeObjectiveId: '1', recipeId: RecipeId.Coal },
-        true
+        true,
       );
       expect(component.setRecipeChecked).toHaveBeenCalledWith('1', true, true);
     });
@@ -419,7 +419,7 @@ describe('ListComponent', () => {
       component.changeStepChecked({ id: '0', recipeId: RecipeId.Coal }, true);
       expect(component.setRecipeChecked).toHaveBeenCalledWith(
         RecipeId.Coal,
-        true
+        true,
       );
     });
   });
@@ -439,7 +439,7 @@ describe('ListComponent', () => {
     dispatch.idValDef('setMachineModules', Recipes.SetMachineModulesAction);
     dispatch.idValDefAlt(
       'setMachineModules',
-      Objectives.SetMachineModulesAction
+      Objectives.SetMachineModulesAction,
     );
     dispatch.val('addBeacon', Recipes.AddBeaconAction);
     dispatch.valAlt('addBeacon', Objectives.AddBeaconAction);
@@ -452,7 +452,7 @@ describe('ListComponent', () => {
     dispatch.idIndValDef('setBeaconModules', Recipes.SetBeaconModulesAction);
     dispatch.idIndValDefAlt(
       'setBeaconModules',
-      Objectives.SetBeaconModulesAction
+      Objectives.SetBeaconModulesAction,
     );
     dispatch.idIndVal('setBeaconTotal', Recipes.SetBeaconTotalAction);
     dispatch.idIndValAlt('setBeaconTotal', Objectives.SetBeaconTotalAction);

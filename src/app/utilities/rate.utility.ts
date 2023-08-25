@@ -24,7 +24,7 @@ export class RateUtility {
     itemsState: Items.ItemsState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInfo,
-    data: Dataset
+    data: Dataset,
   ): Rational {
     // Ignore unit entirely when maximizing, do not adjust if unit is Machines
     if (
@@ -78,7 +78,7 @@ export class RateUtility {
     step: Step,
     key: 'parents' | 'outputs',
     parentId: string,
-    value: Rational
+    value: Rational,
   ): void {
     const obj = step[key];
     if (!obj) {
@@ -93,7 +93,7 @@ export class RateUtility {
   static adjustPowerPollution(
     step: Step,
     recipe: RecipeRational,
-    game: Game
+    game: Game,
   ): void {
     if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
@@ -131,7 +131,7 @@ export class RateUtility {
     beaconReceivers: Rational | null,
     beltSpeed: Entities<Rational>,
     dispRateInfo: DisplayRateInfo,
-    data: Dataset
+    data: Dataset,
   ): Step[] {
     const _steps = this.copy(steps);
 
@@ -174,7 +174,7 @@ export class RateUtility {
               step,
               'outputs',
               itemId,
-              amount.div(itemStep.items)
+              amount.div(itemStep.items),
             );
           }
         }
@@ -185,7 +185,7 @@ export class RateUtility {
   static calculateSettings(
     step: Step,
     objectiveEntities: Entities<ObjectiveRational>,
-    recipesState: Entities<RecipeSettingsRational>
+    recipesState: Entities<RecipeSettingsRational>,
   ): void {
     if (step.recipeId) {
       if (step.recipeObjectiveId) {
@@ -200,7 +200,7 @@ export class RateUtility {
     step: Step,
     itemsState: Entities<ItemSettings>,
     beltSpeed: Entities<Rational>,
-    data: Dataset
+    data: Dataset,
   ): void {
     let noItems = false;
     if (step.recipeId != null && step.recipeSettings != null) {
@@ -225,7 +225,7 @@ export class RateUtility {
         const item = data.itemEntities[step.itemId];
         if (item.stack) {
           step.wagons = step.items.div(
-            data.cargoWagonEntities[wagon].size.mul(item.stack)
+            data.cargoWagonEntities[wagon].size.mul(item.stack),
           );
         } else {
           step.wagons = step.items.div(data.fluidWagonEntities[wagon].capacity);
@@ -237,7 +237,7 @@ export class RateUtility {
   static calculateBeacons(
     step: Step,
     beaconReceivers: Rational | null,
-    data: Dataset
+    data: Dataset,
   ): void {
     if (
       !beaconReceivers?.nonzero() ||
@@ -271,7 +271,7 @@ export class RateUtility {
             const beacon = data.beaconEntities[b.id];
             if (beacon.type === EnergyType.Electric && total != null) {
               step.power = (step.power ?? Rational.zero).add(
-                total.mul(beacon.usage)
+                total.mul(beacon.usage),
               );
             }
           }
@@ -309,7 +309,7 @@ export class RateUtility {
     step: Step,
     itemsState: Entities<ItemSettings>,
     recipesState: Entities<RecipeSettingsRational>,
-    objectiveEntities: Entities<ObjectiveRational>
+    objectiveEntities: Entities<ObjectiveRational>,
   ): void {
     // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
@@ -367,7 +367,7 @@ export class RateUtility {
   static sortRecursive(
     groups: Entities<Step[]>,
     id: string,
-    result: Step[]
+    result: Step[],
   ): Step[] {
     if (!groups[id]) {
       return [];
@@ -384,7 +384,7 @@ export class RateUtility {
 
   static copy(steps: Step[]): Step[] {
     return steps.map((s) =>
-      s.parents ? { ...s, ...{ parents: { ...s.parents } } } : { ...s }
+      s.parents ? { ...s, ...{ parents: { ...s.parents } } } : { ...s },
     );
   }
 }

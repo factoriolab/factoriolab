@@ -16,8 +16,8 @@ export class DataRouteService {
         routerLink: '/data',
         queryParamsHandling: 'preserve',
         label: mod.name,
-      })
-    )
+      }),
+    ),
   );
 
   constructor(private store: Store<LabState>) {}

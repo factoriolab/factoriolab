@@ -19,14 +19,14 @@ export class MachinesEffects {
         MachinesActionType.ADD,
         MachinesActionType.REMOVE,
         MachinesActionType.RAISE,
-        MachinesActionType.SET_MACHINE
+        MachinesActionType.SET_MACHINE,
       ),
       switchMap(() =>
         combineLatest([
           this.store.select(Recipes.recipesState),
           this.store.select(Recipes.getRecipesState),
           this.store.select(Settings.getDataset),
-        ]).pipe(first())
+        ]).pipe(first()),
       ),
       switchMap(([rawSettings, recipesState, data]) => {
         const effects: Action[] = [];
@@ -58,9 +58,12 @@ export class MachinesEffects {
           }
         }
         return effects;
-      })
-    )
+      }),
+    ),
   );
 
-  constructor(private actions$: Actions, private store: Store<LabState>) {}
+  constructor(
+    private actions$: Actions,
+    private store: Store<LabState>,
+  ) {}
 }

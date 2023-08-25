@@ -15,7 +15,7 @@ getTestBed().initTestEnvironment(
   platformBrowserDynamicTesting(),
   {
     teardown: { destroyAfterEach: false },
-  }
+  },
 );
 
 beforeEach(async () => {

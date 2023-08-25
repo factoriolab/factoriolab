@@ -29,7 +29,7 @@ export class CostsComponent implements OnInit {
     map(([costs, settingsModified]) => ({
       costs,
       settingsModified,
-    }))
+    })),
   );
 
   visible = false;
@@ -37,14 +37,14 @@ export class CostsComponent implements OnInit {
 
   get modified(): boolean {
     return (Object.keys(this.editValue) as CostKey[]).some(
-      (k) => this.editValue[k] !== Settings.initialSettingsState.costs[k]
+      (k) => this.editValue[k] !== Settings.initialSettingsState.costs[k],
     );
   }
 
   constructor(
     private ref: ChangeDetectorRef,
     private store: Store<LabState>,
-    private contentSvc: ContentService
+    private contentSvc: ContentService,
   ) {}
 
   ngOnInit(): void {

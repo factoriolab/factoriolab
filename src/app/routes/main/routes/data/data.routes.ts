@@ -8,7 +8,7 @@ export const routes: DataRoute[] = [
     path: 'categories/:id',
     loadComponent: () =>
       import('./routes/category/category.component').then(
-        (c) => c.CategoryComponent
+        (c) => c.CategoryComponent,
       ),
     data: {
       collectionLabel: 'data.categories',
@@ -18,7 +18,7 @@ export const routes: DataRoute[] = [
     path: 'categories',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.categories',
@@ -38,7 +38,7 @@ export const routes: DataRoute[] = [
     path: 'items',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.items',
@@ -58,7 +58,7 @@ export const routes: DataRoute[] = [
     path: 'beacons',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.beacons',
@@ -78,7 +78,7 @@ export const routes: DataRoute[] = [
     path: 'belts',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.belts',
@@ -98,7 +98,7 @@ export const routes: DataRoute[] = [
     path: 'cargo-wagons',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.cargoWagons',
@@ -118,7 +118,7 @@ export const routes: DataRoute[] = [
     path: 'fluid-wagons',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.fluidWagons',
@@ -138,7 +138,7 @@ export const routes: DataRoute[] = [
     path: 'fuels',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.fuels',
@@ -158,7 +158,7 @@ export const routes: DataRoute[] = [
     path: 'machines',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.machines',
@@ -178,7 +178,7 @@ export const routes: DataRoute[] = [
     path: 'modules',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.modules',
@@ -198,7 +198,7 @@ export const routes: DataRoute[] = [
     path: 'pipes',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.pipes',
@@ -218,7 +218,7 @@ export const routes: DataRoute[] = [
     path: 'recipes',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.recipes',
@@ -238,7 +238,7 @@ export const routes: DataRoute[] = [
     path: 'technologies',
     loadComponent: () =>
       import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent
+        (c) => c.CollectionComponent,
       ),
     data: {
       label: 'data.technologies',

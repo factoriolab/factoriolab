@@ -49,7 +49,7 @@ describe('IconSmClassPipe', () => {
 
     it('should work as static class method', () => {
       expect(IconSmClassPipe.transform(ItemId.Coal)).toEqual(
-        'lab-icon sm item coal'
+        'lab-icon sm item coal',
       );
       expect(IconSmClassPipe.transform(null)).toEqual('');
     });

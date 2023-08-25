@@ -39,10 +39,10 @@ describe('ThemeService', () => {
     spyOn(service['head'], 'removeChild');
     spyOn(service['head'], 'appendChild');
     spyOn(service['document'], 'getElementById').and.returnValue(
-      themeLink as any
+      themeLink as any,
     );
     spyOn(service['document'], 'createElement').and.returnValue(
-      tempLink as any
+      tempLink as any,
     );
     mockStore.overrideSelector(Preferences.getTheme, Theme.Light);
     mockStore.refreshState();
@@ -74,7 +74,7 @@ describe('ThemeService', () => {
         theme: Theme.Light,
       } as any);
       spyOn(window.document, 'getElementById').and.returnValue(
-        themeLink as any
+        themeLink as any,
       );
       ThemeService.appInitTheme();
       expect(themeLink.href).toEqual('theme-light.css');
@@ -83,7 +83,7 @@ describe('ThemeService', () => {
     it('should skip if specifying to use dark theme', () => {
       const themeLink = { href: '' };
       spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue(
-        null as any
+        null as any,
       );
       ThemeService.appInitTheme();
       expect(themeLink.href).toEqual('');

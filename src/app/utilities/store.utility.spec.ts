@@ -45,14 +45,14 @@ describe('StoreUtility', () => {
           id: 'id',
           value: ['a', 'b'],
           def: ['a', 'b'],
-        })
+        }),
       ).toBeTrue();
       expect(
         StoreUtility.payloadEquals({
           id: 'id',
           value: ['a', 'b'],
           def: ['a', 'c'],
-        })
+        }),
       ).toBeFalse();
     });
 
@@ -62,14 +62,14 @@ describe('StoreUtility', () => {
           id: 'id',
           value: 'a',
           def: 'a',
-        })
+        }),
       ).toBeTrue();
       expect(
         StoreUtility.payloadEquals({
           id: 'id',
           value: 'a',
           def: 'b',
-        })
+        }),
       ).toBeFalse();
     });
 
@@ -81,8 +81,8 @@ describe('StoreUtility', () => {
             value: ['a', 'b'],
             def: ['a', 'b'],
           },
-          true
-        )
+          true,
+        ),
       ).toBeTrue();
       expect(
         StoreUtility.payloadEquals(
@@ -91,8 +91,8 @@ describe('StoreUtility', () => {
             value: ['a', 'b'],
             def: ['b', 'a'],
           },
-          true
-        )
+          true,
+        ),
       ).toBeFalse();
     });
   });
@@ -107,7 +107,7 @@ describe('StoreUtility', () => {
             machine: ItemId.AssemblingMachine1,
           },
         },
-        ['excluded', 'belt']
+        ['excluded', 'belt'],
       );
       expect(result[Mocks.Item1.id]).toEqual({
         machine: ItemId.AssemblingMachine1,
@@ -119,7 +119,7 @@ describe('StoreUtility', () => {
     it('should reset changes to a field', () => {
       const result = StoreUtility.resetField(
         { [Mocks.Item1.id]: { excluded: true, belt: ItemId.TransportBelt } },
-        'excluded'
+        'excluded',
       );
       expect(result[Mocks.Item1.id]).toEqual({
         belt: ItemId.TransportBelt,
@@ -129,7 +129,7 @@ describe('StoreUtility', () => {
     it('should delete an entity if no modifications remain', () => {
       const result = StoreUtility.resetField(
         { [Mocks.Item1.id]: { excluded: true } },
-        'excluded'
+        'excluded',
       );
       expect(result[Mocks.Item1.id]).toBeUndefined();
     });
@@ -138,7 +138,7 @@ describe('StoreUtility', () => {
       const result = StoreUtility.resetField(
         { [Mocks.Item1.id]: { excluded: true, belt: ItemId.TransportBelt } },
         'excluded',
-        Mocks.Item1.id
+        Mocks.Item1.id,
       );
       expect(result[Mocks.Item1.id]).toEqual({
         belt: ItemId.TransportBelt,
@@ -155,7 +155,7 @@ describe('StoreUtility', () => {
       const result = StoreUtility.compareReset(
         { [id]: { [field]: '' } },
         field,
-        payload
+        payload,
       );
       expect(result[id][field]).toEqual('a');
     });
@@ -165,7 +165,7 @@ describe('StoreUtility', () => {
       const result = StoreUtility.compareReset(
         { [id]: { [field]: '' } },
         field,
-        payload
+        payload,
       );
       expect(result).toEqual({});
     });
@@ -175,7 +175,7 @@ describe('StoreUtility', () => {
       const result = StoreUtility.compareReset(
         { [id]: { other: 'b', [field]: 'b' } },
         field,
-        payload
+        payload,
       );
       expect(result[id][field]).toBeUndefined();
     });
@@ -185,7 +185,7 @@ describe('StoreUtility', () => {
       const result = StoreUtility.compareReset(
         { [id]: { [field]: 'value' } },
         field,
-        payload
+        payload,
       );
       expect(result).toEqual({} as any);
     });
@@ -194,7 +194,7 @@ describe('StoreUtility', () => {
   describe('compareValue', () => {
     it('should return null if equal to default', () => {
       expect(
-        StoreUtility.compareValue({ value: 'a', def: 'a' })
+        StoreUtility.compareValue({ value: 'a', def: 'a' }),
       ).toBeUndefined();
     });
 
@@ -206,13 +206,13 @@ describe('StoreUtility', () => {
   describe('compareValues', () => {
     it('should return null if equal to default', () => {
       expect(
-        StoreUtility.compareValues({ value: ['a', 'b'], def: ['b', 'a'] })
+        StoreUtility.compareValues({ value: ['a', 'b'], def: ['b', 'a'] }),
       ).toBeUndefined();
     });
 
     it('should return value if not equal to default', () => {
       expect(
-        StoreUtility.compareValues({ value: ['a'], def: ['b', 'a'] })
+        StoreUtility.compareValues({ value: ['a'], def: ['b', 'a'] }),
       ).toEqual(['a']);
     });
   });
@@ -236,7 +236,7 @@ describe('StoreUtility', () => {
         { [Mocks.Item1.id]: { beacons: [{ count: '1', id: ItemId.Beacon }] } },
         'beacons',
         'count',
-        0
+        0,
       );
       expect(result[Mocks.Item1.id]).toEqual({
         beacons: [{ id: ItemId.Beacon }],
@@ -248,7 +248,7 @@ describe('StoreUtility', () => {
         { [Mocks.Item1.id]: { beacons: [{ count: '1' }] } },
         'beacons',
         'count',
-        0
+        0,
       );
       expect(result[Mocks.Item1.id]).toBeUndefined();
     });
@@ -262,7 +262,7 @@ describe('StoreUtility', () => {
         'beacons',
         'count',
         0,
-        Mocks.Item1.id
+        Mocks.Item1.id,
       );
       expect(result[Mocks.Item1.id]).toEqual({
         beacons: [{ id: ItemId.Beacon }],
@@ -285,7 +285,7 @@ describe('StoreUtility', () => {
         { [id]: { [field]: [{ [subfield]: '' }] } },
         field,
         subfield,
-        payload
+        payload,
       );
       expect(result[id][field][index][subfield]).toEqual('a');
     });
@@ -296,7 +296,7 @@ describe('StoreUtility', () => {
         { [id]: { [field]: [{ [subfield]: '' }] } },
         field,
         subfield,
-        payload
+        payload,
       );
       expect(result).toEqual({});
     });
@@ -307,7 +307,7 @@ describe('StoreUtility', () => {
         { [id]: { [field]: [{ other: 'b', [subfield]: 'b' }] } },
         field,
         subfield,
-        payload
+        payload,
       );
       expect(result[id][field][index][subfield]).toBeUndefined();
     });
@@ -325,7 +325,7 @@ describe('StoreUtility', () => {
         { [id]: { [field]: [{ count: '' }, { count: 'c' }] } },
         field,
         subfield,
-        payload
+        payload,
       );
       expect(result[id][field][index][subfield]).toEqual('a');
       expect(result[id][field][1][subfield]).toEqual('c');
@@ -337,7 +337,7 @@ describe('StoreUtility', () => {
         { [id]: { [field]: undefined } },
         field,
         subfield,
-        payload as any
+        payload as any,
       );
       expect(result[id][field]?.[index][subfield]).toEqual('a' as any);
     });

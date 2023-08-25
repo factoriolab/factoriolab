@@ -82,6 +82,6 @@ export class DataComponent {
 
   constructor(
     private store: Store<LabState>,
-    private dataRouteSvc: DataRouteService
+    private dataRouteSvc: DataRouteService,
   ) {}
 }

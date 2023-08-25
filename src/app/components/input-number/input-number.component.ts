@@ -57,7 +57,7 @@ export class InputNumberComponent implements OnInit, OnChanges {
         untilDestroyed(this),
         debounce((e) => (e.type === 'input' ? timer(300) : of({}))),
         map((e) => e.value),
-        filterNullish()
+        filterNullish(),
       )
       .subscribe((v) => this.setValue.emit(v));
   }

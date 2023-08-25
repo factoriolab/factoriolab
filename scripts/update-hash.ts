@@ -7,7 +7,7 @@ const mod = process.argv[2];
 
 if (!mod) {
   throw new Error(
-    'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1'
+    'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
   );
 }
 
@@ -29,7 +29,7 @@ function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
 if (modData.defaults?.excludedRecipes) {
   // Filter excluded recipes for only recipes that exist
   modData.defaults.excludedRecipes = modData.defaults.excludedRecipes.filter(
-    (e) => modData.recipes.some((r) => r.id === e)
+    (e) => modData.recipes.some((r) => r.id === e),
   );
 }
 

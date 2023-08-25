@@ -15,7 +15,7 @@ export class IconClassPipe implements PipeTransform {
 export class IconSmClassPipe implements PipeTransform {
   static transform(
     value: string | null | undefined,
-    type: IdType = 'item'
+    type: IdType = 'item',
   ): string {
     if (value == null) return '';
 

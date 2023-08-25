@@ -72,7 +72,7 @@ describe('FlowService', () => {
         Mocks.Dataset,
         '/m',
         Mocks.PreferencesState.columns,
-        themeMap[Theme.Light]
+        themeMap[Theme.Light],
       );
 
       expect(result.nodes.length).toEqual(6);

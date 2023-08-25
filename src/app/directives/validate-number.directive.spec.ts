@@ -51,7 +51,7 @@ describe('ValidateNumberDirective', () => {
   describe('validate', () => {
     it('should validate null value', () => {
       expect(
-        component.input.nativeElement.classList.contains('ng-invalid')
+        component.input.nativeElement.classList.contains('ng-invalid'),
       ).toBeFalse();
     });
 
@@ -59,7 +59,7 @@ describe('ValidateNumberDirective', () => {
       TestUtility.setTextDt(fixture, DataTest.Input, '1 1/3');
       fixture.detectChanges();
       expect(
-        component.input.nativeElement.classList.contains('ng-invalid')
+        component.input.nativeElement.classList.contains('ng-invalid'),
       ).toBeFalse();
     });
 
@@ -67,7 +67,7 @@ describe('ValidateNumberDirective', () => {
       TestUtility.setTextDt(fixture, DataTest.Input, '1 1');
       fixture.detectChanges();
       expect(
-        component.input.nativeElement.classList.contains('ng-invalid')
+        component.input.nativeElement.classList.contains('ng-invalid'),
       ).toBeTrue();
     });
 
@@ -75,7 +75,7 @@ describe('ValidateNumberDirective', () => {
       TestUtility.setTextDt(fixture, DataTest.Input, '0');
       fixture.detectChanges();
       expect(
-        component.input.nativeElement.classList.contains('ng-invalid')
+        component.input.nativeElement.classList.contains('ng-invalid'),
       ).toBeTrue();
     });
   });

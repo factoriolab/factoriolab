@@ -34,7 +34,7 @@ import { ObjectivesEffects } from './store/objectives/objectives.effects';
 
 function initializeApp(
   primengConfig: PrimeNGConfig,
-  translateSvc: TranslateService
+  translateSvc: TranslateService,
 ): () => Promise<unknown> {
   return () => {
     // Enable ripple

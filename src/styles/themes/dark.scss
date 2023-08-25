@@ -17,8 +17,17 @@ $primary-color: #eb9947; // hsl(30, 80, 60)
 $primary-color-text: #212529;
 $maskbg: rgba(0, 0, 0, 0.4);
 $button-size: 2.571rem;
-$font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
-  Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+$font-family:
+  -apple-system,
+  BlinkMacSystemFont,
+  Segoe UI,
+  Roboto,
+  Helvetica,
+  Arial,
+  sans-serif,
+  Apple Color Emoji,
+  Segoe UI Emoji,
+  Segoe UI Symbol;
 
 // Not defined in root, based on primary
 $shadow-color: color.adjust($primary-color, $lightness: +11%);
@@ -250,7 +259,9 @@ p-autocomplete.ng-dirty.ng-invalid > .p-autocomplete > .p-inputtext {
   color: $text-color;
   border: 1px solid $surface-d;
   border-radius: 3px;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-autocomplete-panel .p-autocomplete-items {
@@ -304,7 +315,10 @@ p-autocomplete.p-autocomplete-clearable
 .p-cascadeselect {
   background: $surface-b;
   border: 1px solid $surface-d;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
   border-radius: 3px;
 }
@@ -342,7 +356,9 @@ p-autocomplete.p-autocomplete-clearable
   color: $text-color;
   border: 1px solid $surface-d;
   border-radius: 3px;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-cascadeselect-panel .p-cascadeselect-items {
@@ -434,7 +450,10 @@ p-cascadeselect.p-cascadeselect-clearable .p-cascadeselect-clear-icon {
   height: 20px;
   color: $text-color;
   border-radius: 3px;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
 }
 .p-checkbox .p-checkbox-box .p-checkbox-icon {
@@ -546,14 +565,19 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
 }
 
 .p-colorpicker-overlay-panel {
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 
 .p-dropdown {
   background: $surface-b;
   border: 1px solid $surface-d;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
   border-radius: 3px;
 }
@@ -597,7 +621,9 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
   color: $text-color;
   border: 1px solid $surface-d;
   border-radius: 3px;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-dropdown-panel .p-dropdown-header {
@@ -733,7 +759,9 @@ p-dropdown.ng-dirty.ng-invalid > .p-dropdown {
   .ql-picker-options {
   background: $surface-a;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
   border-radius: 3px;
   padding: 0.5rem 0;
@@ -930,7 +958,10 @@ p-inputnumber.p-inputnumber-clearable
 }
 .p-inputswitch .p-inputswitch-slider {
   background: $surface-d;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
   border-radius: 30px;
 }
@@ -976,7 +1007,10 @@ p-inputswitch.ng-dirty.ng-invalid > .p-inputswitch {
   background: $surface-b;
   padding: 0.5rem 0.5rem;
   border: 1px solid $surface-d;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
   appearance: none;
   border-radius: 3px;
@@ -1143,7 +1177,10 @@ p-listbox.ng-dirty.ng-invalid > .p-listbox {
 .p-multiselect {
   background: $surface-b;
   border: 1px solid $surface-d;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
   border-radius: 3px;
 }
@@ -1158,7 +1195,10 @@ p-listbox.ng-dirty.ng-invalid > .p-listbox {
 }
 .p-multiselect .p-multiselect-label {
   padding: 0.5rem 0.5rem;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
 }
 .p-multiselect .p-multiselect-label.p-placeholder {
@@ -1196,7 +1236,9 @@ p-listbox.ng-dirty.ng-invalid > .p-listbox {
   color: $text-color;
   border: 1px solid $surface-d;
   border-radius: 3px;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-multiselect-panel .p-multiselect-header {
@@ -1232,7 +1274,10 @@ p-listbox.ng-dirty.ng-invalid > .p-listbox {
   border: 0 none;
   background: transparent;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-multiselect-panel .p-multiselect-header .p-multiselect-close:enabled:hover {
   color: $text-color;
@@ -1318,7 +1363,9 @@ p-password.ng-invalid.ng-dirty > .p-password > .p-inputtext {
   background: $surface-a;
   color: $text-color;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
   border-radius: 3px;
 }
@@ -1363,7 +1410,10 @@ p-password.p-password-clearable.p-password-mask .p-password-clear-icon {
   height: 20px;
   color: $text-color;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
 }
 .p-radiobutton .p-radiobutton-box:not(.p-disabled):not(.p-highlight):hover {
@@ -1417,7 +1467,10 @@ p-radiobutton.ng-dirty.ng-invalid > .p-radiobutton > .p-radiobutton-box {
 .p-rating .p-rating-icon {
   color: $text-color;
   margin-left: 0.5rem;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
   font-size: 1.143rem;
 }
@@ -1447,7 +1500,10 @@ p-radiobutton.ng-dirty.ng-invalid > .p-radiobutton > .p-radiobutton-box {
   background: $surface-a;
   border: 1px solid $surface-d;
   color: $text-color;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
 }
 .p-selectbutton .p-button .p-button-icon-left,
@@ -1515,7 +1571,10 @@ p-selectbutton.ng-dirty.ng-invalid > .p-selectbutton > .p-button {
   background: $surface-d;
   border: 2px solid $primary-color;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
 }
 .p-slider .p-slider-handle:focus {
@@ -1531,15 +1590,23 @@ p-selectbutton.ng-dirty.ng-invalid > .p-selectbutton > .p-button {
   border-color: $primary-color;
 }
 .p-slider.p-slider-animate.p-slider-horizontal .p-slider-handle {
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
-    box-shadow 0.2s, left 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    left 0.2s;
 }
 .p-slider.p-slider-animate.p-slider-horizontal .p-slider-range {
   transition: width 0.2s;
 }
 .p-slider.p-slider-animate.p-slider-vertical .p-slider-handle {
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
-    box-shadow 0.2s, bottom 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    bottom 0.2s;
 }
 .p-slider.p-slider-animate.p-slider-vertical .p-slider-range {
   transition: height 0.2s;
@@ -1549,7 +1616,10 @@ p-selectbutton.ng-dirty.ng-invalid > .p-selectbutton > .p-button {
   background: $surface-a;
   border: 1px solid $surface-d;
   color: $text-color;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
 }
 .p-togglebutton.p-button .p-button-icon-left,
@@ -1593,7 +1663,10 @@ p-togglebutton.ng-dirty.ng-invalid > .p-togglebutton.p-button {
 .p-treeselect {
   background: $surface-b;
   border: 1px solid $surface-d;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
   border-radius: 3px;
 }
@@ -1608,7 +1681,10 @@ p-togglebutton.ng-dirty.ng-invalid > .p-togglebutton.p-button {
 }
 .p-treeselect .p-treeselect-label {
   padding: 0.5rem 0.5rem;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
 }
 .p-treeselect .p-treeselect-label.p-placeholder {
@@ -1642,7 +1718,9 @@ p-treeselect.ng-invalid.ng-dirty > .p-treeselect {
   color: $text-color;
   border: 1px solid $surface-d;
   border-radius: 3px;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-treeselect-panel .p-treeselect-header {
@@ -1689,7 +1767,10 @@ p-treeselect.ng-invalid.ng-dirty > .p-treeselect {
   border: 0 none;
   background: transparent;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-treeselect-panel .p-treeselect-header .p-treeselect-close:enabled:hover {
   color: $text-color;
@@ -1734,7 +1815,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 1px solid $primary-color;
   padding: 0.5rem 1rem;
   font-size: 1rem;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
   border-radius: 3px;
 }
@@ -1830,7 +1914,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background-color: $primary-color-text;
 }
 .p-button.p-button-raised {
-  box-shadow: 0px 3px 1px -2px $black-a20, 0px 2px 2px 0px $black-a14,
+  box-shadow:
+    0px 3px 1px -2px $black-a20,
+    0px 2px 2px 0px $black-a14,
     0px 1px 5px 0px $black-a12;
 }
 .p-button.p-button-rounded {
@@ -2456,7 +2542,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   color: $text-color-secondary;
 }
 .p-splitbutton.p-button-raised {
-  box-shadow: 0px 3px 1px -2px $black-a20, 0px 2px 2px 0px $black-a14,
+  box-shadow:
+    0px 3px 1px -2px $black-a20,
+    0px 2px 2px 0px $black-a14,
     0px 1px 5px 0px $black-a12;
 }
 .p-splitbutton.p-button-rounded {
@@ -2806,7 +2894,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 0 none;
   background: transparent;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-datatable .p-datatable-tbody > tr > td .p-row-toggler:enabled:hover,
 .p-datatable .p-datatable-tbody > tr > td .p-row-editor-init:enabled:hover,
@@ -3073,7 +3164,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 0 none;
   background: transparent;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-column-filter-menu-button:hover {
   color: $text-color;
@@ -3103,7 +3197,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 0 none;
   background: transparent;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-column-filter-clear-button:hover {
   color: $text-color;
@@ -3121,7 +3218,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   color: $text-color;
   border: 1px solid $surface-d;
   border-radius: 3px;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
   min-width: 12.5rem;
 }
@@ -3273,7 +3372,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 
 .p-orderlist-item.cdk-drag-preview {
   padding: 0.5rem 1rem;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
   border: 0 none;
   color: $text-color;
@@ -3442,7 +3543,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 
 .p-picklist-item.cdk-drag-preview {
   padding: 0.5rem 1rem;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
   border: 0 none;
   color: $text-color;
@@ -3498,7 +3601,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 0 none;
   background: transparent;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-tree
   .p-tree-container
@@ -3738,7 +3844,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 0 none;
   background: transparent;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
   margin-right: 0.5rem;
 }
 .p-treetable .p-treetable-tbody > tr > td .p-treetable-toggler:enabled:hover {
@@ -3980,7 +4089,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-card {
   background: $surface-a;
   color: $text-color;
-  box-shadow: 0 2px 1px -1px $black-a20, 0 1px 1px 0 $black-a14,
+  box-shadow:
+    0 2px 1px -1px $black-a20,
+    0 1px 1px 0 $black-a14,
     0 1px 3px 0 $black-a12;
   border-radius: 3px;
 }
@@ -4044,7 +4155,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 .p-fieldset.p-fieldset-toggleable .p-fieldset-legend {
   padding: 0;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-fieldset.p-fieldset-toggleable .p-fieldset-legend a {
   padding: 1rem;
@@ -4087,7 +4201,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 0 none;
   background: transparent;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-panel .p-panel-header .p-panel-header-icon:enabled:hover {
   color: $text-color;
@@ -4144,7 +4261,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   color: $text-color;
 }
 .p-splitter .p-splitter-gutter {
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
   background: $surface-c;
 }
 .p-splitter .p-splitter-gutter .p-splitter-gutter-handle {
@@ -4206,7 +4326,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background: $surface-a;
   color: $primary-color;
   width: $button-size;
-  box-shadow: 0px 3px 1px -2px $black-a20, 0px 2px 2px 0px $black-a14,
+  box-shadow:
+    0px 3px 1px -2px $black-a20,
+    0px 2px 2px 0px $black-a14,
     0px 1px 5px 0px $black-a12;
   border-radius: 0;
 }
@@ -4240,7 +4362,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   color: $text-color;
   border: 1px solid $surface-d;
   border-radius: 3px;
-  box-shadow: 0px 11px 15px -7px $black-a20, 0px 24px 38px 3px $black-a14,
+  box-shadow:
+    0px 11px 15px -7px $black-a20,
+    0px 24px 38px 3px $black-a14,
     0px 9px 46px 8px $black-a12;
 }
 .p-confirm-popup .p-confirm-popup-content {
@@ -4282,7 +4406,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 
 .p-dialog {
   border-radius: 3px;
-  box-shadow: 0px 11px 15px -7px $black-a20, 0px 24px 38px 3px $black-a14,
+  box-shadow:
+    0px 11px 15px -7px $black-a20,
+    0px 24px 38px 3px $black-a14,
     0px 9px 46px 8px $black-a12;
   border: 1px solid $surface-d;
 }
@@ -4305,7 +4431,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 0 none;
   background: transparent;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
   margin-right: 0.5rem;
 }
 .p-dialog .p-dialog-header .p-dialog-header-icon:enabled:hover {
@@ -4355,7 +4484,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   color: $text-color;
   border: 1px solid $surface-d;
   border-radius: 3px;
-  box-shadow: 0px 11px 15px -7px $black-a20, 0px 24px 38px 3px $black-a14,
+  box-shadow:
+    0px 11px 15px -7px $black-a20,
+    0px 24px 38px 3px $black-a14,
     0px 9px 46px 8px $black-a12;
 }
 .p-overlaypanel .p-overlaypanel-content {
@@ -4366,7 +4497,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   color: $primary-color-text;
   width: 2rem;
   height: 2rem;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
   border-radius: 50%;
   position: absolute;
   top: -1rem;
@@ -4397,7 +4531,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background: $surface-a;
   color: $text-color;
   border: 1px solid $surface-d;
-  box-shadow: 0px 11px 15px -7px $black-a20, 0px 24px 38px 3px $black-a14,
+  box-shadow:
+    0px 11px 15px -7px $black-a20,
+    0px 24px 38px 3px $black-a14,
     0px 9px 46px 8px $black-a12;
 }
 .p-sidebar .p-sidebar-header {
@@ -4411,7 +4547,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   border: 0 none;
   background: transparent;
   border-radius: 50%;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-sidebar .p-sidebar-header .p-sidebar-close:enabled:hover,
 .p-sidebar .p-sidebar-header .p-sidebar-icon:enabled:hover {
@@ -4439,7 +4578,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background: $surface-d;
   color: $text-color;
   padding: 0.5rem 0.5rem;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
   border-radius: 3px;
 }
@@ -4493,7 +4634,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background: $surface-a;
   color: $text-color;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
   border-radius: 3px;
   width: 12.5rem;
@@ -4536,7 +4679,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   padding: 0.25rem 0;
   background: $surface-a;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
   border-radius: 3px;
 }
@@ -4809,7 +4954,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background: $surface-a;
   color: $text-color;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-megamenu .p-megamenu-submenu-header {
@@ -4914,7 +5061,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-menu.p-menu-overlay {
   background: $surface-a;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-menu .p-submenu-header {
@@ -5103,7 +5252,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   padding: 0.25rem 0;
   background: $surface-a;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
   width: 12.5rem;
 }
@@ -5154,7 +5305,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
     height: 2rem;
     color: $text-color-secondary;
     border-radius: 50%;
-    transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      box-shadow 0.2s;
   }
   .p-menubar .p-menubar-button:hover {
     color: $text-color;
@@ -5171,7 +5325,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
     padding: 0.25rem 0;
     background: $surface-a;
     border: 1px solid $surface-d;
-    box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+    box-shadow:
+      0 2px 4px -1px $black-a20,
+      0 4px 5px 0 $black-a14,
       0 1px 10px 0 $black-a12;
     width: 100%;
   }
@@ -5524,14 +5680,18 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-slidemenu.p-slidemenu-overlay {
   background: $surface-a;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-slidemenu .p-slidemenu-list {
   padding: 0.25rem 0;
   background: $surface-a;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-slidemenu .p-slidemenu.p-slidemenu-active > .p-slidemenu-link {
@@ -5691,7 +5851,9 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   background: $surface-a;
   color: $primary-color;
   width: $button-size;
-  box-shadow: 0px 3px 1px -2px $black-a20, 0px 2px 2px 0px $black-a14,
+  box-shadow:
+    0px 3px 1px -2px $black-a20,
+    0px 2px 2px 0px $black-a14,
     0px 1px 5px 0px $black-a12;
   border-radius: 0;
 }
@@ -5746,14 +5908,18 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-tieredmenu.p-tieredmenu-overlay {
   background: $surface-a;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-tieredmenu .p-submenu-list {
   padding: 0.25rem 0;
   background: $surface-a;
   border: 1px solid $surface-d;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
 }
 .p-tieredmenu .p-menuitem {
@@ -5860,7 +6026,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   height: 2rem;
   border-radius: 50%;
   background: transparent;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-message .p-message-close:hover {
   background: $surface-c;
@@ -6000,7 +6169,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 .p-chip .pi-chip-remove-icon {
   border-radius: 3px;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-chip .pi-chip-remove-icon:focus {
   outline: 0 none;
@@ -6011,7 +6183,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-inplace .p-inplace-display {
   padding: 0.5rem 0.5rem;
   border-radius: 3px;
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s,
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    border-color 0.2s,
     box-shadow 0.2s;
 }
 .p-inplace .p-inplace-display:not(.p-disabled):hover {
@@ -6044,9 +6219,14 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
-  box-shadow: 0 2px 4px -1px $black-a20, 0 4px 5px 0 $black-a14,
+  box-shadow:
+    0 2px 4px -1px $black-a20,
+    0 4px 5px 0 $black-a14,
     0 1px 10px 0 $black-a12;
-  transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    box-shadow 0.2s;
 }
 .p-scrolltop.p-link {
   background: $primary-a16;

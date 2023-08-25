@@ -25,13 +25,13 @@ describe('Objectives Selectors', () => {
       expect(
         Selectors.objectivesState({
           objectivesState: Mocks.ObjectivesState,
-        } as any)
+        } as any),
       ).toEqual(Mocks.ObjectivesState);
       expect(Selectors.getIds.projector(Mocks.ObjectivesState)).toEqual(
-        Mocks.ObjectivesState.ids
+        Mocks.ObjectivesState.ids,
       );
       expect(Selectors.getEntities.projector(Mocks.ObjectivesState)).toEqual(
-        Mocks.ObjectivesState.entities
+        Mocks.ObjectivesState.entities,
       );
     });
   });
@@ -41,7 +41,7 @@ describe('Objectives Selectors', () => {
       const result = Selectors.getBaseObjectives.projector(
         Mocks.ObjectivesState.ids,
         Mocks.ObjectivesState.entities,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result).toEqual(Mocks.ObjectivesList);
     });
@@ -53,12 +53,12 @@ describe('Objectives Selectors', () => {
       Selectors.getObjectives.projector(
         [Mocks.Objective5],
         Mocks.MachinesStateInitial,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(RecipeUtility.adjustObjective).toHaveBeenCalledWith(
         Mocks.Objective5,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
     });
   });
@@ -69,7 +69,7 @@ describe('Objectives Selectors', () => {
       Selectors.getObjectiveRationals.projector(
         [Mocks.Objective1, Mocks.Objective5],
         Mocks.AdjustmentData,
-        Mocks.ItemsStateInitial
+        Mocks.ItemsStateInitial,
       );
       expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(1);
     });
@@ -83,10 +83,10 @@ describe('Objectives Selectors', () => {
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         displayRateInfo[DisplayRate.PerMinute],
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(RateUtility.objectiveNormalizedRate).toHaveBeenCalledTimes(
-        Mocks.RationalObjectives.length
+        Mocks.RationalObjectives.length,
       );
     });
   });
@@ -104,7 +104,7 @@ describe('Objectives Selectors', () => {
         [],
         MaximizeType.Weight,
         Mocks.CostRational,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(SimplexUtility.solve).toHaveBeenCalled();
     });
@@ -121,7 +121,7 @@ describe('Objectives Selectors', () => {
         null,
         {},
         displayRateInfo[DisplayRate.PerMinute],
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(RateUtility.normalizeSteps).toHaveBeenCalled();
     });
@@ -139,7 +139,7 @@ describe('Objectives Selectors', () => {
         itemsState,
         recipesState,
         machinesState,
-        settings
+        settings,
       );
       expect(result.objectives).toBe(objectives);
       expect(result.itemsState).toBe(itemsState);
@@ -155,7 +155,7 @@ describe('Objectives Selectors', () => {
         Mocks.Steps,
         Mocks.ObjectivesList,
         Items.initialItemsState,
-        Recipes.initialRecipesState
+        Recipes.initialRecipesState,
       );
       expect(result.items[Mocks.Step1.itemId!]).toBeFalse();
       expect(result.recipes[Mocks.Step1.recipeId!]).toBeFalse();
@@ -209,7 +209,7 @@ describe('Objectives Selectors', () => {
           },
         ],
         Mocks.ItemsStateInitial,
-        Mocks.AdjustedData
+        Mocks.AdjustedData,
       );
       expect(result).toEqual({
         belts: { [ItemId.TransportBelt]: Rational.one },
@@ -241,7 +241,7 @@ describe('Objectives Selectors', () => {
           },
         ],
         Mocks.ItemsStateInitial,
-        { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
+        { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } },
       );
       expect(result).toEqual({
         belts: {},
@@ -281,7 +281,7 @@ describe('Objectives Selectors', () => {
         steps,
         Mocks.RecipesStateInitial,
         Mocks.AdjustedData,
-        Mocks.Dataset.recipeIds
+        Mocks.Dataset.recipeIds,
       );
       expect(result).toEqual({
         ['0']: {
@@ -418,13 +418,13 @@ describe('Objectives Selectors', () => {
   describe('getEffectivePowerUnit', () => {
     it('should calculate an auto power unit', () => {
       expect(
-        Selectors.getEffectivePowerUnit.projector([], PowerUnit.Auto)
+        Selectors.getEffectivePowerUnit.projector([], PowerUnit.Auto),
       ).toEqual(PowerUnit.kW);
       expect(
         Selectors.getEffectivePowerUnit.projector(
           [{ id: '0', power: Rational.thousand }],
-          PowerUnit.Auto
-        )
+          PowerUnit.Auto,
+        ),
       ).toEqual(PowerUnit.MW);
       expect(
         Selectors.getEffectivePowerUnit.projector(
@@ -432,14 +432,14 @@ describe('Objectives Selectors', () => {
             { id: '0', power: Rational.million },
             { id: '1', power: Rational.million },
           ],
-          PowerUnit.Auto
-        )
+          PowerUnit.Auto,
+        ),
       ).toEqual(PowerUnit.GW);
     });
 
     it('should override with specified power unit', () => {
       expect(
-        Selectors.getEffectivePowerUnit.projector([], PowerUnit.GW)
+        Selectors.getEffectivePowerUnit.projector([], PowerUnit.GW),
       ).toEqual(PowerUnit.GW);
     });
   });
@@ -455,7 +455,7 @@ describe('Objectives Selectors', () => {
             beacons: [{ total: '1' }],
           },
         },
-        []
+        [],
       );
       expect(result.machines).toBeTrue();
       expect(result.beacons).toBeTrue();
@@ -476,7 +476,7 @@ describe('Objectives Selectors', () => {
         {
           [RecipeId.Coal]: {},
         },
-        [objective]
+        [objective],
       );
       expect(result.machines).toBeTrue();
       expect(result.beacons).toBeTrue();

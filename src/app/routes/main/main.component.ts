@@ -47,8 +47,8 @@ export class MainComponent implements AfterViewInit {
         settingsXlHidden,
         scrollTop,
         errorMsg,
-      })
-    )
+      }),
+    ),
   );
 
   isResetting = false;
@@ -83,7 +83,7 @@ export class MainComponent implements AfterViewInit {
     private ref: ChangeDetectorRef,
     private router: Router,
     private store: Store<LabState>,
-    private errorSvc: ErrorService
+    private errorSvc: ErrorService,
   ) {}
 
   /**

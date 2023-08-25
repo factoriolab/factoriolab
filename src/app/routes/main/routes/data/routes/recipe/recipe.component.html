@@ -9,7 +9,7 @@
       </tr>
       <tr>
         <td colspan="2" class="text-center">
-          <i class="lg" [class]="vm.id | iconClass : 'recipe'"></i>
+          <i class="lg" [class]="vm.id | iconClass: 'recipe'"></i>
         </td>
       </tr>
       <tr *ngIf="vm.category">
@@ -25,7 +25,7 @@
               type="button"
               class="p-button-text"
               [label]="vm.category.name"
-              [icon]="vm.obj.category | iconSmClass : 'category'"
+              [icon]="vm.obj.category | iconSmClass: 'category'"
             ></button>
           </a>
         </td>
@@ -121,7 +121,7 @@
               type="button"
               class="p-button-text"
               [label]="vm.data.recipeEntities[vm.obj.unlockedBy].name"
-              [icon]="vm.obj.unlockedBy | iconSmClass : 'recipe'"
+              [icon]="vm.obj.unlockedBy | iconSmClass: 'recipe'"
             ></button>
           </a>
         </td>

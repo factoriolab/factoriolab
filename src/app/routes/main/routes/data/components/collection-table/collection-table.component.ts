@@ -36,7 +36,7 @@ export class CollectionTableComponent {
       value: this.getValue(ids, type, data),
       route: this.getCollectionRoute(type),
       options,
-    }))
+    })),
   );
 
   constructor(private store: Store<LabState>) {}

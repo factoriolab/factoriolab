@@ -14,12 +14,12 @@ export class DetailComponent {
         label: this.translateSvc.instant(detail.collectionLabel ?? 'none'),
         routerLink: '..',
         queryParamsHandling: 'preserve',
-      })
-    )
+      }),
+    ),
   );
 
   constructor(
     private route: ActivatedRoute,
-    private translateSvc: TranslateService
+    private translateSvc: TranslateService,
   ) {}
 }

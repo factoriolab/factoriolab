@@ -37,7 +37,7 @@ describe('CollectionTableComponent', () => {
       const result = component.getValue(
         Mocks.Dataset.categoryIds,
         'category',
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result.length).toEqual(Mocks.Dataset.categoryIds.length);
     });
@@ -46,7 +46,7 @@ describe('CollectionTableComponent', () => {
       const result = component.getValue(
         Mocks.Dataset.machineIds,
         'item',
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result.length).toEqual(Mocks.Dataset.machineIds.length);
     });
@@ -55,7 +55,7 @@ describe('CollectionTableComponent', () => {
       const result = component.getValue(
         Mocks.Dataset.technologyIds,
         'recipe',
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result.length).toEqual(Mocks.Dataset.technologyIds.length);
     });

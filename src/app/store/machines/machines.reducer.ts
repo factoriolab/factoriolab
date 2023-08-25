@@ -19,7 +19,7 @@ export function machinesReducer(
     | MachinesAction
     | App.AppAction
     | Settings.SetModAction
-    | Settings.SetPresetAction
+    | Settings.SetPresetAction,
 ): MachinesState {
   switch (action.type) {
     case App.AppActionType.LOAD:
@@ -38,7 +38,7 @@ export function machinesReducer(
     }
     case MachinesActionType.REMOVE: {
       const value = (state.ids ?? action.payload.def ?? []).filter(
-        (i) => i !== action.payload.value
+        (i) => i !== action.payload.value,
       );
       const ids = StoreUtility.compareRank(value, action.payload.def);
       const newState = {
@@ -91,7 +91,7 @@ export function machinesReducer(
       const entities = StoreUtility.compareReset(
         state.entities,
         'fuelId',
-        action.payload
+        action.payload,
       );
       return { ...state, ...{ entities } };
     }
@@ -100,7 +100,7 @@ export function machinesReducer(
         state.entities,
         'moduleRankIds',
         action.payload,
-        true
+        true,
       );
       return { ...state, ...{ entities } };
     }
@@ -108,7 +108,7 @@ export function machinesReducer(
       const entities = StoreUtility.compareReset(
         state.entities,
         'beaconCount',
-        action.payload
+        action.payload,
       );
       return { ...state, ...{ entities } };
     }
@@ -116,7 +116,7 @@ export function machinesReducer(
       const entities = StoreUtility.resetFields(
         StoreUtility.compareReset(state.entities, 'beaconId', action.payload),
         ['beaconModuleRankIds'],
-        action.payload.id
+        action.payload.id,
       );
       return { ...state, ...{ entities } };
     }
@@ -124,7 +124,7 @@ export function machinesReducer(
       const entities = StoreUtility.compareReset(
         state.entities,
         'beaconModuleRankIds',
-        action.payload
+        action.payload,
       );
       return { ...state, ...{ entities } };
     }
@@ -132,7 +132,7 @@ export function machinesReducer(
       const entities = StoreUtility.compareReset(
         state.entities,
         'overclock',
-        action.payload
+        action.payload,
       );
       return { ...state, ...{ entities } };
     }

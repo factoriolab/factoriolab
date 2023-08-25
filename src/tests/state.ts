@@ -22,7 +22,7 @@ const datasetsState = Datasets.datasetsReducer(
       value: Mocks.Hash,
     },
     i18n: null,
-  })
+  }),
 );
 
 export const initialState: LabState = {

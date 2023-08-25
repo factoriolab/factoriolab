@@ -53,8 +53,8 @@ export class LandingComponent {
         recipeIds,
         preferences,
         savedStates,
-      })
-    )
+      }),
+    ),
   );
 
   gameInfo = gameInfo;
@@ -67,7 +67,7 @@ export class LandingComponent {
     public router: Router,
     public contentSvc: ContentService,
     private store: Store<LabState>,
-    private routerSvc: RouterService
+    private routerSvc: RouterService,
   ) {}
 
   selectItem(value: string): void {

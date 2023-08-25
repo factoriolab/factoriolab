@@ -60,7 +60,7 @@ export const INVERT = BASE64ABC.split('').reduce(
     e[c] = i;
     return e;
   },
-  {}
+  {},
 );
 export const MIN_ZIP = 75;
 
@@ -145,7 +145,7 @@ export class RouterService {
     private store: Store<LabState>,
     private translateSvc: TranslateService,
     private contentSvc: ContentService,
-    private dataSvc: DataService
+    private dataSvc: DataService,
   ) {
     const l = 256;
     this.base64codes = new Uint8Array(l);
@@ -167,14 +167,14 @@ export class RouterService {
           this.store.select(Settings.getMod).pipe(
             map((m) => m?.defaults),
             filterNullish(),
-            first()
-          )
+            first(),
+          ),
         ),
         switchMap(() =>
           combineLatest([
             this.store.select(Recipes.recipesState),
             this.store.select(Recipes.getRecipesState),
-          ]).pipe(first())
+          ]).pipe(first()),
         ),
         tap(([recipesRaw, recipesState]) => {
           const payload: IdDefaultPayload<boolean>[] = [];
@@ -185,7 +185,7 @@ export class RouterService {
             }
           }
           this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
-        })
+        }),
       )
       .subscribe();
   }
@@ -205,9 +205,9 @@ export class RouterService {
             s.itemsState,
             s.recipesState,
             s.machinesState,
-            s.settings
-          )
-        )
+            s.settings,
+          ),
+        ),
       )
       .subscribe();
   }
@@ -217,14 +217,14 @@ export class RouterService {
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     machineSettings: Machines.MachinesState,
-    settings: Settings.SettingsState
+    settings: Settings.SettingsState,
   ): void {
     this.zipState(
       objectives,
       itemsState,
       recipesState,
       machineSettings,
-      settings
+      settings,
     ).subscribe((zData) => {
       this.zip = this.getHash(zData);
       const hash = this.router.url.split('#');
@@ -244,7 +244,7 @@ export class RouterService {
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     machinesState: Machines.MachinesState,
-    settings: Settings.SettingsState
+    settings: Settings.SettingsState,
   ): Observable<ZipData> {
     return this.store.select(Datasets.getHashRecord).pipe(
       map((hashEntities) => hashEntities[settings.modId]),
@@ -263,11 +263,11 @@ export class RouterService {
         // Mod (Hashed only, for hash lookup)
         const zMod = this.zipDiffString(
           settings.modId,
-          Settings.initialSettingsState.modId
+          Settings.initialSettingsState.modId,
         );
         if (zMod.length) {
           zData.config.hash += `&${Section.Mod}${this.getId(
-            data.hash.indexOf(zMod)
+            data.hash.indexOf(zMod),
           )}`;
         }
 
@@ -278,7 +278,7 @@ export class RouterService {
         this.zipSettings(zData, settings, hash);
         this.zipConfig$.next(zData.config);
         return zData;
-      })
+      }),
     );
   }
 
@@ -384,7 +384,7 @@ export class RouterService {
             if (params[Section.Objectives]) {
               state.objectivesState = this.unzipObjectives(
                 params,
-                beaconSettings
+                beaconSettings,
               );
             }
             if (params[Section.Items]) {
@@ -410,7 +410,7 @@ export class RouterService {
                   state.objectivesState = this.unzipObjectives(
                     params,
                     beaconSettings,
-                    hash
+                    hash,
                   );
                 }
                 if (params[Section.Items]) {
@@ -420,7 +420,7 @@ export class RouterService {
                   state.recipesState = this.unzipRecipes(
                     params,
                     beaconSettings,
-                    hash
+                    hash,
                   );
                 }
                 if (params[Section.Machines]) {
@@ -508,7 +508,7 @@ export class RouterService {
         this.parseNumber(s[6]) ?? Settings.initialSettingsState.displayRate;
       const displayRateV1 = this.zipDiffDisplayRate(
         displayRateV0,
-        Settings.initialSettingsState.displayRate
+        Settings.initialSettingsState.displayRate,
       );
       params[Section.Settings] = this.zipFields([
         modId,
@@ -635,7 +635,7 @@ export class RouterService {
     params: Entities,
     section: Section,
     countIndex: number,
-    beacons: string[]
+    beacons: string[],
   ): void {
     if (params[section]) {
       const zip = params[section];
@@ -681,7 +681,7 @@ export class RouterService {
               this.zipTruthyString(moduleIds),
               this.zipTruthyString(id),
               this.zipTruthyString(total),
-            ])
+            ]),
           );
         }
 
@@ -699,7 +699,7 @@ export class RouterService {
       state.params,
       Section.RecipeObjectives,
       4,
-      list
+      list,
     );
     this.migrateInlineBeaconsSection(state.params, Section.Recipes, 3, list);
 
@@ -728,7 +728,7 @@ export class RouterService {
   private migrateInsertField(
     params: Entities,
     section: Section,
-    index: number
+    index: number,
   ): void {
     if (params[section]) {
       const list = params[section].split(LISTSEP);
@@ -747,7 +747,7 @@ export class RouterService {
   private migrateDeleteField(
     params: Entities,
     section: Section,
-    index: number
+    index: number,
   ): void {
     if (params[section]) {
       const list = params[section].split(LISTSEP);
@@ -968,7 +968,7 @@ export class RouterService {
   zipBeacons(
     objectives: Objective[],
     recipes: Recipes.RecipesState,
-    hash: ModHash
+    hash: ModHash,
   ): ZipData {
     const list: Zip[] = [];
     const beaconsIdMap: Entities<number> = {};
@@ -981,7 +981,7 @@ export class RouterService {
           objective.beacons,
           beaconsIdMap,
           list,
-          hash
+          hash,
         );
       }
     }
@@ -993,7 +993,7 @@ export class RouterService {
           recipe.beacons,
           beaconsIdMap,
           list,
-          hash
+          hash,
         );
       }
     }
@@ -1018,7 +1018,7 @@ export class RouterService {
     beacons: BeaconSettings[],
     beaconsIdMap: Entities<number>,
     list: Zip[],
-    hash: ModHash
+    hash: ModHash,
   ): number[] {
     return beacons.map((obj) => {
       const zip: Zip = {
@@ -1098,7 +1098,7 @@ export class RouterService {
           hash: this.zipFields([
             this.zipTruthyNString(
               obj.targetId,
-              isRecipeObjective(obj) ? hash.recipes : hash.items
+              isRecipeObjective(obj) ? hash.recipes : hash.items,
             ),
             value,
             unit,
@@ -1110,7 +1110,7 @@ export class RouterService {
             this.zipTruthyBool(obj.checked),
           ]),
         };
-      })
+      }),
     );
 
     if (z.bare.length) {
@@ -1122,7 +1122,7 @@ export class RouterService {
   unzipObjectives(
     params: Entities,
     beaconSettings: BeaconSettings[],
-    hash?: ModHash
+    hash?: ModHash,
   ): Objectives.ObjectivesState {
     const list = params[Section.Objectives].split(LISTSEP);
     const ids: string[] = [];
@@ -1144,7 +1144,7 @@ export class RouterService {
           machineId: this.parseNString(s[i++], hash.machines),
           machineModuleIds: this.parseNArray(s[i++], hash.modules),
           beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)] ?? {}
+            (i) => beaconSettings[Number(i)] ?? {},
           ),
           overclock: this.parseNumber(s[i++]),
           checked: this.parseBool(s[i++]),
@@ -1153,7 +1153,7 @@ export class RouterService {
         obj.targetId =
           this.parseNString(
             obj.targetId,
-            isRecipeObjective(obj) ? hash.recipes : hash.items
+            isRecipeObjective(obj) ? hash.recipes : hash.items,
           ) ?? '';
       } else {
         obj = {
@@ -1165,7 +1165,7 @@ export class RouterService {
           machineId: this.parseString(s[i++]),
           machineModuleIds: this.parseArray(s[i++]),
           beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)] ?? {}
+            (i) => beaconSettings[Number(i)] ?? {},
           ),
           overclock: this.parseNumber(s[i++]),
           checked: this.parseBool(s[i++]),
@@ -1202,7 +1202,7 @@ export class RouterService {
             this.zipTruthyBool(obj.checked),
           ]),
         };
-      })
+      }),
     );
 
     if (z.bare.length) {
@@ -1273,7 +1273,7 @@ export class RouterService {
             this.zipTruthyNString(obj.fuelId, hash.fuels),
           ]),
         };
-      })
+      }),
     );
 
     if (z.bare.length) {
@@ -1285,7 +1285,7 @@ export class RouterService {
   unzipRecipes(
     params: Entities,
     beaconSettings: BeaconSettings[],
-    hash?: ModHash
+    hash?: ModHash,
   ): Recipes.RecipesState {
     const list = params[Section.Recipes].split(LISTSEP);
     const entities: Recipes.RecipesState = {};
@@ -1302,7 +1302,7 @@ export class RouterService {
           machineId: this.parseNString(s[i++], hash.machines),
           machineModuleIds: this.parseNArray(s[i++], hash.modules),
           beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)] ?? {}
+            (i) => beaconSettings[Number(i)] ?? {},
           ),
           overclock: this.parseNumber(s[i++]),
           cost: this.parseString(s[i++]),
@@ -1316,7 +1316,7 @@ export class RouterService {
           machineId: this.parseString(s[i++]),
           machineModuleIds: this.parseArray(s[i++]),
           beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)] ?? {}
+            (i) => beaconSettings[Number(i)] ?? {},
           ),
           overclock: this.parseNumber(s[i++]),
           cost: this.parseString(s[i++]),
@@ -1334,7 +1334,7 @@ export class RouterService {
   zipMachines(
     data: ZipData,
     state: Machines.MachinesState,
-    hash: ModHash
+    hash: ModHash,
   ): void {
     const ids = state.ids ? ['', ...state.ids] : Object.keys(state.entities);
     const z = this.zipList(
@@ -1365,7 +1365,7 @@ export class RouterService {
             this.zipTruthyNString(obj.fuelId, hash.fuels),
           ]),
         };
-      })
+      }),
     );
 
     if (z.bare.length) {
@@ -1438,7 +1438,7 @@ export class RouterService {
   zipSettings(
     data: ZipData,
     state: Settings.SettingsState,
-    hash: ModHash
+    hash: ModHash,
   ): void {
     const init = Settings.initialSettingsState;
     const z: Zip = {
@@ -1446,7 +1446,7 @@ export class RouterService {
         this.zipDiffString(state.modId, init.modId),
         this.zipDiffNullableArray(
           state.researchedTechnologyIds,
-          init.researchedTechnologyIds
+          init.researchedTechnologyIds,
         ),
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
         this.zipDiffNumber(state.preset, init.preset),
@@ -1475,7 +1475,7 @@ export class RouterService {
         this.zipDiffNullableNArray(
           state.researchedTechnologyIds,
           init.researchedTechnologyIds,
-          hash.technologies
+          hash.technologies,
         ),
         this.zipDiffDisplayRate(state.displayRate, init.displayRate),
         this.zipDiffNumber(state.preset, init.preset),
@@ -1493,7 +1493,7 @@ export class RouterService {
         this.zipDiffNString(
           state.proliferatorSprayId,
           init.proliferatorSprayId,
-          hash.modules
+          hash.modules,
         ),
         this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
         this.zipDiffNumber(state.maximizeType, init.maximizeType),
@@ -1514,7 +1514,7 @@ export class RouterService {
 
   unzipSettings(
     params: Entities,
-    hash?: ModHash
+    hash?: ModHash,
   ): Settings.PartialSettingsState {
     const zip = params[Section.Settings];
     const s = zip.split(FIELDSEP);
@@ -1525,7 +1525,7 @@ export class RouterService {
       obj = {
         researchedTechnologyIds: this.parseNullableNArray(
           s[i++],
-          hash.technologies
+          hash.technologies,
         ),
         displayRate: this.parseDisplayRate(s[i++]),
         preset: this.parseNumber(s[i++]),
@@ -1631,7 +1631,7 @@ export class RouterService {
 
   zipDiffString(
     value: string | null | undefined,
-    init: string | null | undefined
+    init: string | null | undefined,
   ): string {
     return value === init ? '' : value == null ? NULL : value;
   }
@@ -1642,7 +1642,7 @@ export class RouterService {
 
   zipDiffDisplayRate(
     value: DisplayRate | undefined,
-    init: DisplayRate | undefined
+    init: DisplayRate | undefined,
   ): string {
     if (value === init) {
       return '';
@@ -1665,7 +1665,7 @@ export class RouterService {
 
   zipDiffNullableArray(
     value: string[] | null | undefined,
-    init: string[] | null | undefined
+    init: string[] | null | undefined,
   ): string {
     const zVal =
       value != null
@@ -1691,7 +1691,7 @@ export class RouterService {
   zipDiffNString(
     value: string | undefined,
     init: string | undefined,
-    hash: string[]
+    hash: string[],
   ): string {
     return value === init
       ? ''
@@ -1707,7 +1707,7 @@ export class RouterService {
   zipDiffNullableNArray(
     value: string[] | null | undefined,
     init: string[] | null | undefined,
-    hash: string[]
+    hash: string[],
   ): string {
     const zVal =
       value != null
@@ -1733,7 +1733,7 @@ export class RouterService {
   zipDiffNRank(
     value: string[] | undefined,
     init: string[] | undefined,
-    hash: string[]
+    hash: string[],
   ): string {
     const zVal = value
       ? value.length
@@ -1833,7 +1833,7 @@ export class RouterService {
 
   parseNullableNArray(
     value: string | undefined,
-    hash: string[]
+    hash: string[],
   ): string[] | null | undefined {
     const v = this.parseNullableArray(value);
     if (v == null) {
@@ -1907,7 +1907,7 @@ export class RouterService {
       return this.inflate(str);
     } catch {
       console.warn(
-        'Router failed to parse url, checking for missing trailing characters...'
+        'Router failed to parse url, checking for missing trailing characters...',
       );
     }
 

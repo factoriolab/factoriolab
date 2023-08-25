@@ -12,7 +12,7 @@ export enum ObjectiveUnit {
 
 export function objectiveUnitOptions(
   dispRateInfo: DisplayRateInfo,
-  game: Game
+  game: Game,
 ): SelectItem<ObjectiveUnit>[] {
   const result: SelectItem<ObjectiveUnit>[] = [
     { value: ObjectiveUnit.Items, label: dispRateInfo.itemsLabel },

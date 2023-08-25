@@ -47,13 +47,13 @@ export class ItemComponent extends DetailComponent {
         category: data.categoryEntities[data.itemEntities[id]?.category ?? ''],
         breadcrumb: [parent, { label: data.itemEntities[id]?.name }],
         producedByRecipeIds: data.recipeIds.filter(
-          (r) => data.recipeEntities[r]?.out[id]
+          (r) => data.recipeEntities[r]?.out[id],
         ),
         consumedByRecipeIds: data.recipeIds.filter(
-          (r) => data.recipeEntities[r]?.in[id]
+          (r) => data.recipeEntities[r]?.in[id],
         ),
         producibleRecipeIds: data.recipeIds.filter(
-          (r) => data.recipeEntities[r]?.producers.indexOf(id) !== -1
+          (r) => data.recipeEntities[r]?.producers.indexOf(id) !== -1,
         ),
         itemSettingsRaw: itemsStateRaw[id],
         itemSettings: itemsState[id],
@@ -61,8 +61,8 @@ export class ItemComponent extends DetailComponent {
         machineSettings: machinesState.entities[id],
         home,
         data,
-      })
-    )
+      }),
+    ),
   );
 
   Game = Game;
@@ -72,7 +72,7 @@ export class ItemComponent extends DetailComponent {
     translateSvc: TranslateService,
     private store: Store<LabState>,
     private dataRouteSvc: DataRouteService,
-    public displaySvc: DisplayService
+    public displaySvc: DisplayService,
   ) {
     super(route, translateSvc);
   }

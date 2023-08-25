@@ -63,7 +63,7 @@ describe('TechPickerComponent', () => {
       spyOn(component.selection$, 'next');
       component.selectAll(true, Mocks.Dataset);
       expect(component.selection$.next).toHaveBeenCalledWith(
-        Mocks.Dataset.technologyIds
+        Mocks.Dataset.technologyIds,
       );
     });
 
@@ -89,7 +89,7 @@ describe('TechPickerComponent', () => {
       component.clickId(
         RecipeId.Automation,
         [RecipeId.Electronics, RecipeId.Automation],
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.selection$.next).toHaveBeenCalledWith([]);
     });
@@ -100,7 +100,7 @@ describe('TechPickerComponent', () => {
       spyOn(component.selectIds, 'emit');
       component.onHide(
         [RecipeId.Electronics, RecipeId.Automation],
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.selectIds.emit).toHaveBeenCalledWith([
         RecipeId.Electronics,

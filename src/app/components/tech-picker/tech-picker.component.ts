@@ -65,7 +65,7 @@ export class TechPickerComponent {
       }
 
       return { available, locked, researched };
-    })
+    }),
   );
   vm$ = combineLatest({
     selection: this.selection$,
@@ -78,7 +78,7 @@ export class TechPickerComponent {
   constructor(
     private ref: ChangeDetectorRef,
     private filterService: FilterService,
-    private store: Store<LabState>
+    private store: Store<LabState>,
   ) {}
 
   clickOpen(data: Dataset, selection: string[] | null): void {
@@ -149,7 +149,7 @@ export class TechPickerComponent {
           !selection.some((b) => {
             const techB = data.technologyEntities[b];
             return techB.prerequisites && techB.prerequisites.indexOf(a) !== -1;
-          })
+          }),
       );
       this.selectIds.emit(filteredSelection);
     }

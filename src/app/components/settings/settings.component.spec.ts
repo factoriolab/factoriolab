@@ -45,7 +45,7 @@ describe('SettingsComponent', () => {
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
       Preferences.getStates,
-      Mocks.PreferencesState.states
+      Mocks.PreferencesState.states,
     );
     contentSvc = TestBed.inject(ContentService);
     component = fixture.componentInstance;
@@ -77,7 +77,7 @@ describe('SettingsComponent', () => {
           ItemId.AssemblingMachine2,
           ItemId.ElectricMiningDrill,
         ],
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result.length).toEqual(4);
       const middle = result[2];
@@ -179,7 +179,7 @@ describe('SettingsComponent', () => {
       component.setExcludedRecipes(
         [...Mocks.Dataset.defaults!.excludedRecipeIds, RecipeId.Coal],
         Mocks.RecipesStateInitial,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
         { id: RecipeId.Coal, value: true, def: false },
@@ -194,7 +194,7 @@ describe('SettingsComponent', () => {
         {
           ...Mocks.Dataset,
           ...{ defaults: undefined },
-        }
+        },
       );
       expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
         { id: RecipeId.Coal, value: true, def: false },
@@ -208,7 +208,7 @@ describe('SettingsComponent', () => {
       component.setExcludedItems(
         [ItemId.Coal],
         Mocks.ItemsStateInitial,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.setItemExcludedBatch).toHaveBeenCalledWith([
         { id: ItemId.Coal, value: true },
@@ -223,12 +223,12 @@ describe('SettingsComponent', () => {
         ItemId.StoneFurnace,
         ItemId.Coal,
         { fuelOptions: [{ label: '', value: ItemId.Wood }] },
-        [ItemId.Wood]
+        [ItemId.Wood],
       );
       expect(component.setFuel).toHaveBeenCalledWith(
         ItemId.StoneFurnace,
         ItemId.Coal,
-        ItemId.Wood
+        ItemId.Wood,
       );
     });
 
@@ -238,7 +238,7 @@ describe('SettingsComponent', () => {
       expect(component.setFuel).toHaveBeenCalledWith(
         ItemId.StoneFurnace,
         ItemId.Coal,
-        undefined
+        undefined,
       );
     });
   });
@@ -252,7 +252,7 @@ describe('SettingsComponent', () => {
       expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
         '',
         [],
-        ['beaconModuleId']
+        ['beaconModuleId'],
       );
     });
 
@@ -264,7 +264,7 @@ describe('SettingsComponent', () => {
       expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
         ItemId.AssemblingMachine1,
         [],
-        ['beaconModuleId']
+        ['beaconModuleId'],
       );
     });
   });
@@ -291,7 +291,7 @@ describe('SettingsComponent', () => {
     dispatch.val('setMod', Settings.SetModAction);
     dispatch.val(
       'setResearchedTechnologies',
-      Settings.SetResearchedTechnologiesAction
+      Settings.SetResearchedTechnologiesAction,
     );
     dispatch.val('setItemExcludedBatch', Items.SetExcludedBatchAction);
     dispatch.val('setRecipeExcludedBatch', Recipes.SetExcludedBatchAction);
@@ -308,7 +308,7 @@ describe('SettingsComponent', () => {
     dispatch.idValDef('setBeacon', Machines.SetBeaconAction);
     dispatch.idValDef(
       'setBeaconModuleRank',
-      Machines.SetBeaconModuleRankAction
+      Machines.SetBeaconModuleRankAction,
     );
     dispatch.valDef('addMachine', Machines.AddAction);
     dispatch.val('setBeaconReceivers', Settings.SetBeaconReceiversAction);

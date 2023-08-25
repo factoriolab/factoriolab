@@ -11,7 +11,7 @@ describe('Dataset Reducer', () => {
           data: null,
           hash: null,
           i18n: null,
-        })
+        }),
       );
       expect(result.dataRecord).toEqual({});
       expect(result.hashRecord).toEqual({});
@@ -26,7 +26,7 @@ describe('Dataset Reducer', () => {
           data: { id, value: Mocks.Data },
           hash: { id, value: Mocks.Hash },
           i18n: { id, value: Mocks.I18n },
-        })
+        }),
       );
       expect(result.dataRecord[id]).toEqual(Mocks.Data);
       expect(result.hashRecord[id]).toEqual(Mocks.Hash);
@@ -36,7 +36,7 @@ describe('Dataset Reducer', () => {
 
   it('should return default state', () => {
     expect(datasetsReducer(undefined, { type: 'Test' } as any)).toEqual(
-      initialDatasetsState
+      initialDatasetsState,
     );
   });
 });

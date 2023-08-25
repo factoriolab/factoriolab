@@ -10,13 +10,13 @@ export class AnalyticsEffects {
       this.actions$.pipe(
         tap((action) => {
           this.gaSvc.event('action', action.type);
-        })
+        }),
       ),
-    { dispatch: false }
+    { dispatch: false },
   );
 
   constructor(
     private gaSvc: GoogleAnalyticsService,
-    private actions$: Actions
+    private actions$: Actions,
   ) {}
 }
