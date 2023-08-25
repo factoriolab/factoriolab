@@ -8,7 +8,7 @@ export function isRecipeObjective(obj: Objective | ObjectiveRational): boolean {
 }
 
 export function isRecipeRationalObjective(
-  obj: ObjectiveRational
+  obj: ObjectiveRational,
 ): obj is RecipeObjectiveRational {
   return obj.unit === ObjectiveUnit.Machines;
 }

@@ -10,7 +10,7 @@ import {
 export class StoreUtility {
   static rankEquals<T extends number | string>(
     a: T[],
-    b: T[] | undefined
+    b: T[] | undefined,
   ): boolean {
     if (b == null) {
       return false;
@@ -20,7 +20,7 @@ export class StoreUtility {
 
   static arrayEquals<T extends number | string>(
     a: T[],
-    b: T[] | undefined
+    b: T[] | undefined,
   ): boolean {
     if (b == null) {
       return false;
@@ -33,11 +33,11 @@ export class StoreUtility {
       ? rank
         ? this.rankEquals(
             payload.value as (number | string)[],
-            payload.def as (number | string)[]
+            payload.def as (number | string)[],
           )
         : this.arrayEquals(
             payload.value as (number | string)[],
-            payload.def as (number | string)[]
+            payload.def as (number | string)[],
           )
       : payload.value === payload.def;
   }
@@ -46,7 +46,7 @@ export class StoreUtility {
   static resetFields<T extends object>(
     state: Entities<T>,
     fields: (keyof T)[],
-    id?: string
+    id?: string,
   ): Entities<T> {
     // Spread into new state
     let newState = { ...state };
@@ -60,12 +60,12 @@ export class StoreUtility {
   static resetField<T extends object>(
     state: Entities<T>,
     field: keyof T,
-    id?: string
+    id?: string,
   ): Entities<T> {
     // Spread into new state
     const newState = { ...state };
     for (const i of Object.keys(newState).filter(
-      (j) => (!id || id === j) && newState[j][field] !== undefined
+      (j) => (!id || id === j) && newState[j][field] !== undefined,
     )) {
       if (Object.keys(newState[i]).length === 1) {
         delete newState[i];
@@ -82,7 +82,7 @@ export class StoreUtility {
     state: Entities<T>,
     field: K,
     payload: IdDefaultPayload<T[K]>,
-    rank = false
+    rank = false,
   ): Entities<T> {
     // Spread into new state
     if (this.payloadEquals(payload, rank)) {
@@ -107,7 +107,7 @@ export class StoreUtility {
   static assignValue<T, K extends keyof T>(
     state: Entities<T>,
     field: K,
-    payload: IdPayload<T[K]>
+    payload: IdPayload<T[K]>,
   ): Entities<T> {
     return {
       ...state,
@@ -122,7 +122,7 @@ export class StoreUtility {
   }
 
   static compareValues(
-    payload: DefaultPayload<string[]>
+    payload: DefaultPayload<string[]>,
   ): string[] | undefined {
     return this.arrayEquals(payload.value, payload.def)
       ? undefined
@@ -131,7 +131,7 @@ export class StoreUtility {
 
   static compareRank(
     value: string[],
-    def: string[] | undefined
+    def: string[] | undefined,
   ): string[] | undefined {
     return this.rankEquals(value, def) ? undefined : value;
   }
@@ -142,18 +142,18 @@ export class StoreUtility {
     U extends object,
     V extends Exclude<T[K], undefined>[number],
     K extends keyof T,
-    L extends keyof V
+    L extends keyof V,
   >(
     state: Entities<T>,
     field: K,
     subfield: L,
     index: number,
-    id?: string
+    id?: string,
   ): Entities<T> {
     // Spread into new state
     const newState = { ...state };
     for (const i of Object.keys(newState).filter(
-      (j) => (!id || id === j) && newState[j][field] != null
+      (j) => (!id || id === j) && newState[j][field] != null,
     )) {
       const arr = newState[i][field];
       if (arr != null) {
@@ -185,13 +185,13 @@ export class StoreUtility {
     U extends object,
     V extends Exclude<T[K], undefined>[number],
     K extends keyof T,
-    L extends keyof V
+    L extends keyof V,
   >(
     state: Entities<T>,
     field: K,
     subfield: L,
     payload: IdIndexDefaultPayload<V[L]>,
-    rank = false
+    rank = false,
   ): Entities<T> {
     if (this.payloadEquals(payload, rank)) {
       // Resetting to null, spread into new state
@@ -235,12 +235,12 @@ export class StoreUtility {
     U extends object,
     V extends Exclude<T[K], undefined>[number],
     K extends keyof T,
-    L extends keyof V
+    L extends keyof V,
   >(
     state: Entities<T>,
     field: K,
     subfield: L,
-    payload: IdIndexPayload<V[L]>
+    payload: IdIndexPayload<V[L]>,
   ): Entities<T> {
     return {
       ...state,

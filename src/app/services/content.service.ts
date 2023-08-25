@@ -16,14 +16,14 @@ export class ContentService {
     map(
       // Don't test fromEvent
       // istanbul ignore next
-      () => this.document.body.scrollTop
+      () => this.document.body.scrollTop,
     ),
-    startWith(this.document.body.scrollTop)
+    startWith(this.document.body.scrollTop),
   );
   windowInnerWidth = (): number => window.innerWidth;
   width$ = fromEvent(window, 'resize').pipe(
     map(this.windowInnerWidth),
-    startWith(window.innerWidth)
+    startWith(window.innerWidth),
   );
 
   // Dialogs
@@ -40,7 +40,7 @@ export class ContentService {
     TemplateRef<unknown> | undefined
   >(undefined);
   translateItem$ = new BehaviorSubject<TemplateRef<unknown> | undefined>(
-    undefined
+    undefined,
   );
 
   // Header
@@ -62,6 +62,6 @@ export class ContentService {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private translateSvc: TranslateService
+    private translateSvc: TranslateService,
   ) {}
 }

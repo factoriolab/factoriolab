@@ -48,48 +48,48 @@ export const settingsState = (state: LabState): SettingsState =>
 export const getModId = createSelector(settingsState, (state) => state.modId);
 export const getResearchedTechnologyIds = createSelector(
   settingsState,
-  (state) => state.researchedTechnologyIds
+  (state) => state.researchedTechnologyIds,
 );
 export const getNetProductionOnly = createSelector(
   settingsState,
-  (state) => state.netProductionOnly
+  (state) => state.netProductionOnly,
 );
 export const getPreset = createSelector(settingsState, (state) => state.preset);
 export const getBeaconReceivers = createSelector(
   settingsState,
-  (state) => state.beaconReceivers
+  (state) => state.beaconReceivers,
 );
 export const getProliferatorSprayId = createSelector(
   settingsState,
-  (state) => state.proliferatorSprayId
+  (state) => state.proliferatorSprayId,
 );
 export const getFlowRate = createSelector(
   settingsState,
-  (state) => state.flowRate
+  (state) => state.flowRate,
 );
 export const getInserterTarget = createSelector(
   settingsState,
-  (state) => state.inserterTarget
+  (state) => state.inserterTarget,
 );
 export const getMiningBonus = createSelector(
   settingsState,
-  (state) => state.miningBonus
+  (state) => state.miningBonus,
 );
 export const getResearchSpeed = createSelector(
   settingsState,
-  (state) => state.researchSpeed
+  (state) => state.researchSpeed,
 );
 export const getInserterCapacity = createSelector(
   settingsState,
-  (state) => state.inserterCapacity
+  (state) => state.inserterCapacity,
 );
 export const getDisplayRate = createSelector(
   settingsState,
-  (state) => state.displayRate
+  (state) => state.displayRate,
 );
 export const getMaximizeType = createSelector(
   settingsState,
-  (state) => state.maximizeType
+  (state) => state.maximizeType,
 );
 export const getCosts = createSelector(settingsState, (state) => state.costs);
 
@@ -97,40 +97,40 @@ export const getCosts = createSelector(settingsState, (state) => state.costs);
 export const getMod = createSelector(
   getModId,
   Datasets.getModRecord,
-  (id, data) => data[id]
+  (id, data) => data[id],
 );
 
 export const getHash = createSelector(
   getModId,
   Datasets.getHashRecord,
-  (id, hashEntities) => hashEntities[id]
+  (id, hashEntities) => hashEntities[id],
 );
 
 export const getGame = createSelector(
   getModId,
   Datasets.getModInfoRecord,
-  (id, data) => data[id]?.game ?? Game.None
+  (id, data) => data[id]?.game ?? Game.None,
 );
 
 export const getGameInfo = createSelector(getGame, (game) => gameInfo[game]);
 
 export const getColumnOptions = createSelector(getGameInfo, (gameInf) =>
-  columnOptions(gameInf)
+  columnOptions(gameInf),
 );
 
 export const getDisplayRateInfo = createSelector(
   getDisplayRate,
-  (displayRate) => displayRateInfo[displayRate]
+  (displayRate) => displayRateInfo[displayRate],
 );
 
 export const getRateUnitOptions = createSelector(
   getGame,
   getDisplayRateInfo,
-  (game, dispRateInfo) => objectiveUnitOptions(dispRateInfo, game)
+  (game, dispRateInfo) => objectiveUnitOptions(dispRateInfo, game),
 );
 
 export const getPresetOptions = createSelector(getGame, (game) =>
-  presetOptions(game)
+  presetOptions(game),
 );
 
 export const getModOptions = createSelector(
@@ -143,8 +143,8 @@ export const getModOptions = createSelector(
         (m): SelectItem => ({
           label: m.name,
           value: m.id,
-        })
-      )
+        }),
+      ),
 );
 
 export const getColumnsState = createSelector(
@@ -153,9 +153,9 @@ export const getColumnsState = createSelector(
   (gameInfo, columnsState) => {
     return gameColumnsState(
       { ...initialColumnsState, ...columnsState },
-      gameInfo
+      gameInfo,
     );
-  }
+  },
 );
 
 export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
@@ -210,27 +210,27 @@ export const getSettings = createSelector(
       cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
       fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
     },
-  })
+  }),
 );
 
 export const getFuelRankIds = createSelector(getSettings, (s) => s.fuelRankIds);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
-  Rational.fromNumber(bonus).div(Rational.hundred)
+  Rational.fromNumber(bonus).div(Rational.hundred),
 );
 
 export const getResearchFactor = createSelector(
   getResearchSpeed,
-  (speed) => researchSpeedFactor[speed]
+  (speed) => researchSpeedFactor[speed],
 );
 
 export const getRationalBeaconReceivers = createSelector(
   getBeaconReceivers,
-  (total) => (total ? Rational.fromString(total) : null)
+  (total) => (total ? Rational.fromString(total) : null),
 );
 
 export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
-  Rational.fromNumber(rate)
+  Rational.fromNumber(rate),
 );
 
 export const getRationalCost = createSelector(
@@ -241,15 +241,15 @@ export const getRationalCost = createSelector(
         a[b] = Rational.fromString(cost[b]);
         return a;
       },
-      {}
-    ) as CostRationalSettings
+      {},
+    ) as CostRationalSettings,
 );
 
 export const getI18n = createSelector(
   getMod,
   Datasets.getI18nRecord,
   Preferences.getLanguage,
-  (base, i18n, lang) => (base ? i18n[`${base.id}-${lang}`] : null)
+  (base, i18n, lang) => (base ? i18n[`${base.id}-${lang}`] : null),
 );
 
 export const getDataset = createSelector(
@@ -263,7 +263,7 @@ export const getDataset = createSelector(
     const categoryEntities = toEntities(
       mod?.categories ?? [],
       {},
-      environment.debug
+      environment.debug,
     );
     const modIconPath = `data/${mod?.id}/icons.webp`;
     const iconEntities = toEntities(
@@ -272,20 +272,20 @@ export const getDataset = createSelector(
         ...{ file: i.file ?? modIconPath },
       })),
       {},
-      environment.debug
+      environment.debug,
     );
     const itemData = toEntities(mod?.items ?? [], {}, environment.debug);
     const recipeEntities = toEntities(
       mod?.recipes ?? [],
       {},
-      environment.debug
+      environment.debug,
     );
     const limitations = reduceEntities(mod?.limitations ?? {});
 
     // Apply localization
     if (i18n) {
       for (const i of Object.keys(i18n.categories).filter(
-        (i) => categoryEntities[i]
+        (i) => categoryEntities[i],
       )) {
         categoryEntities[i] = {
           ...categoryEntities[i],
@@ -303,7 +303,7 @@ export const getDataset = createSelector(
         };
       }
       for (const i of Object.keys(i18n.recipes).filter(
-        (i) => recipeEntities[i]
+        (i) => recipeEntities[i],
       )) {
         recipeEntities[i] = {
           ...recipeEntities[i],
@@ -337,13 +337,13 @@ export const getDataset = createSelector(
           ? 0
           : Rational.from(a.belt.speed)
               .sub(Rational.from(b.belt.speed))
-              .toNumber()
+              .toNumber(),
       )
       .map((i) => i.id);
     const pipeIds = items
       .filter(fnPropsNotNullish('pipe'))
       .sort((a, b) =>
-        Rational.from(a.pipe.speed).sub(Rational.from(b.pipe.speed)).toNumber()
+        Rational.from(a.pipe.speed).sub(Rational.from(b.pipe.speed)).toNumber(),
       )
       .map((i) => i.id);
     const cargoWagonIds = items
@@ -355,7 +355,7 @@ export const getDataset = createSelector(
       .sort((a, b) =>
         Rational.from(a.fluidWagon.capacity)
           .sub(Rational.from(b.fluidWagon.capacity))
-          .toNumber()
+          .toNumber(),
       )
       .map((i) => i.id);
     const machineIds = items
@@ -369,7 +369,7 @@ export const getDataset = createSelector(
     const fuels = items
       .filter(fnPropsNotNullish('fuel'))
       .sort((a, b) =>
-        Rational.from(a.fuel.value).sub(Rational.from(b.fuel.value)).toNumber()
+        Rational.from(a.fuel.value).sub(Rational.from(b.fuel.value)).toNumber(),
       );
     const fuelIds = fuels.map((i) => i.id);
     const technologyIds = items
@@ -534,7 +534,7 @@ export const getDataset = createSelector(
       defaults,
     };
     return dataset;
-  }
+  },
 );
 
 export const getOptions = createSelector(
@@ -550,11 +550,11 @@ export const getOptions = createSelector(
     proliferatorModules: getIdOptions(
       data.proliferatorModuleIds,
       data.itemEntities,
-      true
+      true,
     ),
     fuels: getIdOptions(data.fuelIds, data.itemEntities),
     recipes: getIdOptions(data.recipeIds, data.recipeEntities),
-  })
+  }),
 );
 
 export const getBeltSpeed = createSelector(
@@ -573,7 +573,7 @@ export const getBeltSpeed = createSelector(
       }
     }
     return value;
-  }
+  },
 );
 
 export const getBeltSpeedTxt = createSelector(
@@ -584,7 +584,7 @@ export const getBeltSpeedTxt = createSelector(
       const speed = beltSpeed[beltId].mul(dispRateInfo.value);
       e[beltId] = Number(speed.toNumber().toFixed(2)).toString();
       return e;
-    }, {})
+    }, {}),
 );
 
 export const getAdjustmentData = createSelector(
@@ -598,14 +598,14 @@ export const getAdjustmentData = createSelector(
     proliferatorSprayId,
     miningBonus,
     researchSpeed,
-    data
+    data,
   ) => ({
     netProductionOnly,
     proliferatorSprayId,
     miningBonus,
     researchSpeed,
     data,
-  })
+  }),
 );
 
 export const getSettingsModified = createSelector(settingsState, (state) => ({
@@ -615,7 +615,7 @@ export const getSettingsModified = createSelector(settingsState, (state) => ({
 export const getInserterData = createSelector(
   getInserterTarget,
   getInserterCapacity,
-  (target, capacity) => InserterData[target][capacity]
+  (target, capacity) => InserterData[target][capacity],
 );
 
 export const getAllResearchedTechnologyIds = createSelector(
@@ -653,7 +653,7 @@ export const getAllResearchedTechnologyIds = createSelector(
     } while (addIds.size);
 
     return Array.from(selection);
-  }
+  },
 );
 
 export const getAvailableRecipes = createSelector(
@@ -667,7 +667,7 @@ export const getAvailableRecipes = createSelector(
       const recipe = data.recipeEntities[i];
       return recipe.unlockedBy == null || set.has(recipe.unlockedBy);
     });
-  }
+  },
 );
 
 export const getAvailableItems = createSelector(
@@ -676,12 +676,12 @@ export const getAvailableItems = createSelector(
   (recipeIds, data) => {
     const recipes = recipeIds.map((r) => data.recipeR[r]);
     return data.itemIds.filter((i) => recipes.some((r) => r.produces(i)));
-  }
+  },
 );
 
 export function reduceEntities(
   value: Entities<string[]>,
-  init: Entities<Entities<boolean>> = {}
+  init: Entities<Entities<boolean>> = {},
 ): Entities<Entities<boolean>> {
   return Object.keys(value).reduce((e: Entities<Entities<boolean>>, x) => {
     e[x] = toBoolEntities(value[x], init[x]);

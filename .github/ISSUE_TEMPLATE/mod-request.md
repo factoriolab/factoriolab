@@ -4,7 +4,6 @@ about: Request support for a mod or set of mods
 title: ''
 labels: mod request
 assignees: ''
-
 ---
 
 **Interested in contributing?**
@@ -17,7 +16,7 @@ If you find the mod you're looking for, add a "thumbs-up" reaction or a comment 
 **What mod set are you requesting?**
 E.G. "Bobs and Angels", "Pyanodons", "Seablock", etc.
 
-**Is this mod set compatible with the latest version of Factorio?"
+**Is this mod set compatible with the latest version of Factorio?"**
 Yes or no. If no, please list the last version that it is compatible with.
 
 **What mods are included in this mod set?**

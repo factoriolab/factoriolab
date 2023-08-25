@@ -23,7 +23,7 @@ export class FlowService {
 
   constructor(
     private translateSvc: TranslateService,
-    private store: Store<LabState>
+    private store: Store<LabState>,
   ) {
     this.flowData$ = combineLatest([
       this.store.select(Objectives.getSteps),
@@ -35,8 +35,8 @@ export class FlowService {
       this.store.select(Preferences.getTheme),
     ]).pipe(
       map(([steps, data, suffix, columns, theme]) =>
-        this.buildGraph(steps, data, suffix, columns, themeMap[theme])
-      )
+        this.buildGraph(steps, data, suffix, columns, themeMap[theme]),
+      ),
     );
   }
 
@@ -45,7 +45,7 @@ export class FlowService {
     data: Dataset,
     suffix: string,
     columnsState: ColumnsState,
-    theme: FlowStyle
+    theme: FlowStyle,
   ): FlowData {
     const flow: FlowData = {
       theme,
@@ -95,7 +95,7 @@ export class FlowService {
             if (sourceStep.recipeId && sourceStep.outputs) {
               if (sourceStep.outputs[step.itemId]) {
                 const sourceAmount = step.surplus.mul(
-                  sourceStep.outputs[step.itemId]
+                  sourceStep.outputs[step.itemId],
                 );
                 // CREATE LINK: Recipe -> Surplus
                 flow.links.push({
@@ -129,7 +129,7 @@ export class FlowService {
                   if (sourceStep.outputs[step.itemId]) {
                     // This source step produces this item
                     const sourceAmount = targetAmount.mul(
-                      sourceStep.outputs[step.itemId]
+                      sourceStep.outputs[step.itemId],
                     );
                     amount = amount.sub(sourceAmount);
 

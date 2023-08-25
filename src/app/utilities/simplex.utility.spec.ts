@@ -39,7 +39,7 @@ describe('SimplexUtility', () => {
     },
   });
   const getResult = (
-    resultType: MatrixResultType = MatrixResultType.Solved
+    resultType: MatrixResultType = MatrixResultType.Solved,
   ): MatrixSolution => ({
     resultType,
     time: 2,
@@ -76,8 +76,8 @@ describe('SimplexUtility', () => {
           [],
           MaximizeType.Weight,
           Mocks.CostRational,
-          Mocks.AdjustedData
-        )
+          Mocks.AdjustedData,
+        ),
       ).toEqual({
         steps: [],
         resultType: MatrixResultType.Skipped,
@@ -99,8 +99,8 @@ describe('SimplexUtility', () => {
           null,
           MaximizeType.Weight,
           Mocks.CostRational,
-          Mocks.AdjustedData
-        )
+          Mocks.AdjustedData,
+        ),
       ).toEqual({
         steps: Mocks.Steps,
         resultType: MatrixResultType.Solved,
@@ -128,7 +128,7 @@ describe('SimplexUtility', () => {
         Mocks.Dataset.technologyIds,
         MaximizeType.Weight,
         Mocks.CostRational,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result).toEqual({
         objectives,
@@ -198,7 +198,7 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'parseItemRecursively');
       SimplexUtility.parseRecipeRecursively(
         Mocks.AdjustedData.recipeR[RecipeId.IronOre],
-        getState()
+        getState(),
       );
       expect(SimplexUtility.parseItemRecursively).not.toHaveBeenCalled();
     });
@@ -214,7 +214,7 @@ describe('SimplexUtility', () => {
       expect(SimplexUtility.itemMatches).toHaveBeenCalledWith(recipe, state);
       expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledWith(
         ItemId.CopperPlate,
-        state
+        state,
       );
     });
   });
@@ -235,7 +235,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.parseItemRecursively(ItemId.CopperCable, state);
       expect(SimplexUtility.parseRecipeRecursively).toHaveBeenCalledWith(
         Mocks.AdjustedData.recipeR[RecipeId.CopperCable],
-        state
+        state,
       );
     });
 
@@ -247,11 +247,11 @@ describe('SimplexUtility', () => {
       SimplexUtility.parseItemRecursively(ItemId.PetroleumGas, state);
       expect(SimplexUtility.recipeMatches).toHaveBeenCalledWith(
         ItemId.PetroleumGas,
-        state
+        state,
       );
       expect(SimplexUtility.parseRecipeRecursively).toHaveBeenCalledWith(
         recipe,
-        state
+        state,
       );
     });
   });
@@ -475,7 +475,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addItemStep(
         ItemId.PiercingRoundsMagazine,
         solution,
-        state
+        state,
       );
       expect(state.steps).toEqual([
         {
@@ -660,7 +660,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addRecipeStep(
         Mocks.AdjustedData.recipeR[RecipeId.Coal],
         solution,
-        state
+        state,
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([
@@ -686,7 +686,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addRecipeStep(
         Mocks.AdjustedData.recipeR[RecipeId.Coal],
         solution,
-        state
+        state,
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([
@@ -711,7 +711,7 @@ describe('SimplexUtility', () => {
         Mocks.AdjustedData.recipeR[RecipeId.Coal],
         solution,
         state,
-        Mocks.RationalObjectives[4] as any
+        Mocks.RationalObjectives[4] as any,
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([
@@ -749,7 +749,7 @@ describe('SimplexUtility', () => {
       SimplexUtility.addRecipeStep(
         Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing],
         solution,
-        state
+        state,
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([

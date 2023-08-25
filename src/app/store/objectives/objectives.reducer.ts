@@ -32,7 +32,7 @@ export function objectivesReducer(
     | Settings.SetModAction
     | Recipes.ResetMachinesAction
     | Recipes.ResetBeaconsAction
-    | Items.ResetCheckedAction
+    | Items.ResetCheckedAction,
 ): ObjectivesState {
   switch (action.type) {
     case App.AppActionType.LOAD:
@@ -108,7 +108,7 @@ export function objectivesReducer(
       const entities = StoreUtility.assignValue(
         state.entities,
         'targetId',
-        action.payload
+        action.payload,
       );
       return {
         ...state,
@@ -116,7 +116,7 @@ export function objectivesReducer(
           entities: StoreUtility.resetFields(
             entities,
             ['machineId', 'machineModuleIds', 'beacons', 'overclock'],
-            action.payload.id
+            action.payload.id,
           ),
         },
       };
@@ -128,7 +128,7 @@ export function objectivesReducer(
           entities: StoreUtility.assignValue(
             state.entities,
             'value',
-            action.payload
+            action.payload,
           ),
         },
       };
@@ -150,7 +150,7 @@ export function objectivesReducer(
           entities: StoreUtility.assignValue(
             state.entities,
             'type',
-            action.payload
+            action.payload,
           ),
         },
       };
@@ -162,10 +162,10 @@ export function objectivesReducer(
             StoreUtility.compareReset(
               state.entities,
               'machineId',
-              action.payload
+              action.payload,
             ),
             ['machineModuleIds', 'beacons'],
-            action.payload.id
+            action.payload.id,
           ),
         },
       };
@@ -176,7 +176,7 @@ export function objectivesReducer(
           entities: StoreUtility.compareReset(
             state.entities,
             'fuelId',
-            action.payload
+            action.payload,
           ),
         },
       };
@@ -187,7 +187,7 @@ export function objectivesReducer(
           entities: StoreUtility.compareReset(
             state.entities,
             'machineModuleIds',
-            action.payload
+            action.payload,
           ),
         },
       };
@@ -238,7 +238,7 @@ export function objectivesReducer(
             state.entities,
             'beacons',
             'count',
-            action.payload
+            action.payload,
           ),
         },
       };
@@ -251,12 +251,12 @@ export function objectivesReducer(
               state.entities,
               'beacons',
               'id',
-              action.payload
+              action.payload,
             ),
             'beacons',
             'moduleIds',
             action.payload.index,
-            action.payload.id
+            action.payload.id,
           ),
         },
       };
@@ -269,7 +269,7 @@ export function objectivesReducer(
             'beacons',
             'moduleIds',
             action.payload,
-            true
+            true,
           ),
         },
       };
@@ -281,7 +281,7 @@ export function objectivesReducer(
             state.entities,
             'beacons',
             'total',
-            action.payload
+            action.payload,
           ),
         },
       };
@@ -292,7 +292,7 @@ export function objectivesReducer(
           entities: StoreUtility.compareReset(
             state.entities,
             'overclock',
-            action.payload
+            action.payload,
           ),
         },
       };
@@ -314,7 +314,7 @@ export function objectivesReducer(
           entities: StoreUtility.resetFields(
             state.entities,
             ['machineId', 'overclock', 'machineModuleIds', 'beacons'],
-            action.payload
+            action.payload,
           ),
         },
       };
@@ -326,7 +326,7 @@ export function objectivesReducer(
         .filter(
           (o) =>
             o.type !== ObjectiveType.Maximize &&
-            (o.unit === ObjectiveUnit.Items || o.unit === ObjectiveUnit.Wagons)
+            (o.unit === ObjectiveUnit.Items || o.unit === ObjectiveUnit.Wagons),
         )) {
         const value = Rational.fromString(objective.value)
           .mul(factor)

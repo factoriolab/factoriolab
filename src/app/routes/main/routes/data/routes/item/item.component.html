@@ -9,7 +9,7 @@
       </tr>
       <tr>
         <td colspan="2" class="text-center">
-          <i class="lg" [class]="vm.id | iconClass : 'item'"></i>
+          <i class="lg" [class]="vm.id | iconClass: 'item'"></i>
         </td>
       </tr>
       <tr *ngIf="vm.category">
@@ -25,7 +25,7 @@
               type="button"
               class="p-button-text"
               [label]="vm.category.name"
-              [icon]="vm.obj.category | iconSmClass : 'category'"
+              [icon]="vm.obj.category | iconSmClass: 'category'"
             ></button>
           </a>
         </td>
@@ -127,7 +127,7 @@
                 type="button"
                 class="p-button-text"
                 [label]="vm.data.itemEntities[fuel.result].name"
-                [icon]="fuel.result | iconSmClass : 'item'"
+                [icon]="fuel.result | iconSmClass: 'item'"
               ></button>
             </a>
           </td>
@@ -185,7 +185,7 @@
             >
               <i
                 *ngFor="let kv of machine.consumption | keyvalue"
-                [class]="kv.key | iconSmClass : 'item'"
+                [class]="kv.key | iconSmClass: 'item'"
               >
                 <span>{{ displaySvc.round(kv.value) }}</span>
               </i>
@@ -247,7 +247,7 @@
                 type="button"
                 class="p-button-text"
                 [label]="vm.data.itemEntities[module.proliferator].name"
-                [icon]="module.proliferator | iconSmClass : 'item'"
+                [icon]="module.proliferator | iconSmClass: 'item'"
               ></button>
             </a>
           </td>
@@ -276,7 +276,7 @@
                   type="button"
                   class="p-button-text"
                   [label]="vm.data.recipeEntities[i].name"
-                  [icon]="i | iconSmClass : 'recipe'"
+                  [icon]="i | iconSmClass: 'recipe'"
                 ></button>
               </a>
             </div>
@@ -349,7 +349,7 @@
                 type="button"
                 class="p-button-text"
                 [label]="vm.data.itemEntities[beltId].name"
-                [icon]="beltId | iconSmClass : 'item'"
+                [icon]="beltId | iconSmClass: 'item'"
               ></button>
             </a>
           </td>
@@ -367,7 +367,7 @@
                 type="button"
                 class="p-button-text"
                 [label]="vm.data.itemEntities[wagonId].name"
-                [icon]="wagonId | iconSmClass : 'item'"
+                [icon]="wagonId | iconSmClass: 'item'"
               ></button>
             </a>
           </td>
@@ -386,7 +386,7 @@
                   type="button"
                   class="p-button-text"
                   [label]="vm.data.itemEntities[wagonId].name"
-                  [icon]="wagonId | iconSmClass : 'item'"
+                  [icon]="wagonId | iconSmClass: 'item'"
                 ></button>
               </a>
             </td>
@@ -437,7 +437,7 @@
                   type="button"
                   class="p-button-text"
                   [label]="vm.data.itemEntities[moduleId]?.name ?? ''"
-                  [icon]="moduleId | iconSmClass : 'item'"
+                  [icon]="moduleId | iconSmClass: 'item'"
                 ></button>
               </a>
             </div>
@@ -464,7 +464,7 @@
                   type="button"
                   class="p-button-text"
                   [label]="vm.data.itemEntities[beaconId].name"
-                  [icon]="beaconId | iconSmClass : 'item'"
+                  [icon]="beaconId | iconSmClass: 'item'"
                 ></button>
               </a>
             </td>
@@ -490,7 +490,7 @@
                     type="button"
                     class="p-button-text"
                     [label]="vm.data.itemEntities[moduleId]?.name ?? ''"
-                    [icon]="moduleId | iconSmClass : 'item'"
+                    [icon]="moduleId | iconSmClass: 'item'"
                   ></button>
                 </a>
               </div>

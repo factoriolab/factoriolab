@@ -7,7 +7,7 @@ import { Settings } from '~/store';
 export class InserterSpeedPipe implements PipeTransform {
   transform(
     value: Rational | undefined,
-    settings: Settings.SettingsState
+    settings: Settings.SettingsState,
   ): InserterSpeed | null {
     if (value != null) {
       const inserter = InserterData[settings.inserterTarget][

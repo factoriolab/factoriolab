@@ -10,31 +10,31 @@ export const preferencesState = (state: LabState): PreferencesState =>
 
 export const getStates = createSelector(
   preferencesState,
-  (state) => state.states
+  (state) => state.states,
 );
 export const getColumns = createSelector(
   preferencesState,
-  (state) => state.columns
+  (state) => state.columns,
 );
 export const getPowerUnit = createSelector(
   preferencesState,
-  (state) => state.powerUnit
+  (state) => state.powerUnit,
 );
 export const getLanguage = createSelector(
   preferencesState,
-  (state) => state.language
+  (state) => state.language,
 );
 export const getTheme = createSelector(
   preferencesState,
-  (state) => state.theme
+  (state) => state.theme,
 );
 export const getBypassLanding = createSelector(
   preferencesState,
-  (state) => state.bypassLanding
+  (state) => state.bypassLanding,
 );
 export const getShowTechLabels = createSelector(
   preferencesState,
-  (state) => state.showTechLabels
+  (state) => state.showTechLabels,
 );
 
 /** Complex selectors */
@@ -43,6 +43,6 @@ export const getSavedStates = createSelector(getStates, (states) =>
     (i): SelectItem => ({
       label: i,
       value: i,
-    })
-  )
+    }),
+  ),
 );

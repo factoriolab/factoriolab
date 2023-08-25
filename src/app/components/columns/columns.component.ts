@@ -38,7 +38,7 @@ export class ColumnsComponent implements OnInit {
       columns,
       columnOptions,
       usesFractions,
-    }))
+    })),
   );
 
   visible = false;
@@ -51,14 +51,14 @@ export class ColumnsComponent implements OnInit {
         this.editValue[k].precision !==
           Preferences.initialPreferencesState.columns[k].precision ||
         this.editValue[k].show !==
-          Preferences.initialPreferencesState.columns[k].show
+          Preferences.initialPreferencesState.columns[k].show,
     );
   }
 
   constructor(
     private ref: ChangeDetectorRef,
     private store: Store<LabState>,
-    private contentSvc: ContentService
+    private contentSvc: ContentService,
   ) {}
 
   ngOnInit(): void {
@@ -86,8 +86,8 @@ export class ColumnsComponent implements OnInit {
   updateUsesFractions(): void {
     this.usesFractions$.next(
       (Object.keys(this.editValue) as ColumnKey[]).some(
-        (c) => columnsInfo[c].hasPrecision && this.editValue[c] == null
-      )
+        (c) => columnsInfo[c].hasPrecision && this.editValue[c] == null,
+      ),
     );
   }
 
@@ -97,7 +97,7 @@ export class ColumnsComponent implements OnInit {
 
   save(): void {
     this.store.dispatch(
-      new Preferences.SetColumnsAction(this.editValue as ColumnsState)
+      new Preferences.SetColumnsAction(this.editValue as ColumnsState),
     );
   }
 }

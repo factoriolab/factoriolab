@@ -10,7 +10,7 @@ export const initialItemsState: ItemsState = {};
 
 export function itemsReducer(
   state: ItemsState = initialItemsState,
-  action: ItemsAction | App.AppAction | Settings.SetModAction
+  action: ItemsAction | App.AppAction | Settings.SetModAction,
 ): ItemsState {
   switch (action.type) {
     case App.AppActionType.LOAD:

@@ -31,7 +31,7 @@ describe('MachinesEffects', () => {
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
       Recipes.getRecipesState,
-      Mocks.RecipesStateInitial
+      Mocks.RecipesStateInitial,
     );
     mockStore.overrideSelector(Settings.getDataset, Mocks.Dataset);
     mockStore.refreshState();
@@ -44,7 +44,7 @@ describe('MachinesEffects', () => {
         new Actions.RemoveAction({
           value: ItemId.AssemblingMachine3,
           def: Mocks.Defaults.machineRankIds,
-        })
+        }),
       );
       mockStore.setState({
         ...initialState,
@@ -67,7 +67,7 @@ describe('MachinesEffects', () => {
         new Actions.RemoveAction({
           value: ItemId.AssemblingMachine3,
           def: Mocks.Defaults.machineRankIds,
-        })
+        }),
       );
       mockStore.setState({
         ...initialState,
@@ -90,7 +90,7 @@ describe('MachinesEffects', () => {
         new Actions.RemoveAction({
           value: ItemId.AssemblingMachine3,
           def: Mocks.Defaults.machineRankIds,
-        })
+        }),
       );
       mockStore.setState({
         ...initialState,

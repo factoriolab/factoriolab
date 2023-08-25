@@ -18,7 +18,7 @@ export class ThemeService {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private store: Store<LabState>
+    private store: Store<LabState>,
   ) {}
 
   initialize(): void {
@@ -106,7 +106,7 @@ export class ThemeService {
 
     this.store.select(Preferences.getTheme).subscribe((theme) => {
       const themeLink = this.document.getElementById(
-        LAB_THEME_STYLE_ID
+        LAB_THEME_STYLE_ID,
       ) as HTMLLinkElement | null;
       if (themeLink) {
         const href = this.themePath(theme);
@@ -159,7 +159,7 @@ export class ThemeService {
     if (theme === Theme.Light) {
       // Need to switch to light theme before app starts
       const themeLink = window.document.getElementById(
-        LAB_THEME_STYLE_ID
+        LAB_THEME_STYLE_ID,
       ) as HTMLLinkElement | null;
       if (themeLink) {
         themeLink.href = 'theme-light.css';

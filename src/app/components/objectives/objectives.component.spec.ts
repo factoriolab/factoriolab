@@ -62,7 +62,7 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective5,
         ObjectiveUnit.Machines,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.setUnit).not.toHaveBeenCalled();
     });
@@ -72,7 +72,7 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective1,
         ObjectiveUnit.Machines,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.setUnit).toHaveBeenCalledWith(Mocks.Objective1.id, {
         targetId: RecipeId.AdvancedCircuit,
@@ -83,7 +83,7 @@ describe('ObjectivesComponent', () => {
     it('should prompt user to switch from item to recipe', () => {
       spyOn(component, 'setUnit');
       spyOn(component.chooseRecipePicker!, 'clickOpen').and.callFake(() =>
-        component.chooseRecipePicker!.selectId.next('id')
+        component.chooseRecipePicker!.selectId.next('id'),
       );
       component.changeUnit(
         {
@@ -94,7 +94,7 @@ describe('ObjectivesComponent', () => {
           type: ObjectiveType.Output,
         },
         ObjectiveUnit.Machines,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.setUnit).toHaveBeenCalledWith('0', {
         targetId: 'id',
@@ -114,8 +114,8 @@ describe('ObjectivesComponent', () => {
             type: ObjectiveType.Output,
           },
           ObjectiveUnit.Machines,
-          Mocks.Dataset
-        )
+          Mocks.Dataset,
+        ),
       ).toThrow();
     });
 
@@ -124,7 +124,7 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective5,
         ObjectiveUnit.Items,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.setUnit).toHaveBeenCalledWith(Mocks.Objective5.id, {
         targetId: ItemId.PiercingRoundsMagazine,
@@ -135,7 +135,7 @@ describe('ObjectivesComponent', () => {
     it('should prompt user to switch from recipe to item', () => {
       spyOn(component, 'setUnit');
       spyOn(component.chooseItemPicker!, 'clickOpen').and.callFake(() =>
-        component.chooseItemPicker!.selectId.next('id')
+        component.chooseItemPicker!.selectId.next('id'),
       );
       component.changeUnit(
         {
@@ -146,7 +146,7 @@ describe('ObjectivesComponent', () => {
           type: ObjectiveType.Output,
         },
         ObjectiveUnit.Items,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.setUnit).toHaveBeenCalledWith('0', {
         targetId: 'id',
@@ -166,8 +166,8 @@ describe('ObjectivesComponent', () => {
             type: ObjectiveType.Output,
           },
           ObjectiveUnit.Items,
-          Mocks.Dataset
-        )
+          Mocks.Dataset,
+        ),
       ).toThrow();
     });
 
@@ -176,7 +176,7 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective1,
         ObjectiveUnit.Belts,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(component.setUnit).toHaveBeenCalledWith(Mocks.Objective1.id, {
         targetId: Mocks.Objective1.targetId,

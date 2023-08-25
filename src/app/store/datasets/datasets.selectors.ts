@@ -11,15 +11,15 @@ export const datasetsState = (state: LabState): DatasetsState =>
 export const getModSets = createSelector(datasetsState, (state) => state.mods);
 export const getDataRecord = createSelector(
   datasetsState,
-  (state) => state.dataRecord
+  (state) => state.dataRecord,
 );
 export const getI18nRecord = createSelector(
   datasetsState,
-  (state) => state.i18nRecord
+  (state) => state.i18nRecord,
 );
 export const getHashRecord = createSelector(
   datasetsState,
-  (state) => state.hashRecord
+  (state) => state.hashRecord,
 );
 
 /* Complex selectors */
@@ -27,7 +27,7 @@ export const getModInfoRecord = createSelector(getModSets, (mods) =>
   mods.reduce((e: Entities<ModInfo | undefined>, m) => {
     e[m.id] = m;
     return e;
-  }, {})
+  }, {}),
 );
 
 export const getModRecord = createSelector(
@@ -40,5 +40,5 @@ export const getModRecord = createSelector(
         e[m.id] = { ...m, ...data };
       }
       return e;
-    }, {})
+    }, {}),
 );

@@ -6,7 +6,7 @@ export class TestUtility {
   static getDt<T>(
     fixture: ComponentFixture<T>,
     dt: string,
-    index = 0
+    index = 0,
   ): HTMLElement {
     return this.getSelector(fixture, `[data-test="${dt}"]`, index);
   }
@@ -14,7 +14,7 @@ export class TestUtility {
   static getSelector<T>(
     fixture: ComponentFixture<T>,
     selector: string,
-    index = 0
+    index = 0,
   ): HTMLElement {
     return (fixture.nativeElement as HTMLElement).querySelectorAll(selector)[
       index
@@ -28,7 +28,7 @@ export class TestUtility {
   static clickSelector<T>(
     fixture: ComponentFixture<T>,
     selector: string,
-    index = 0
+    index = 0,
   ): void {
     return this.getSelector(fixture, selector, index).click();
   }
@@ -36,7 +36,7 @@ export class TestUtility {
   static altClickDt<T>(
     fixture: ComponentFixture<T>,
     dt: string,
-    preventDefault = false
+    preventDefault = false,
   ): void {
     return this.altClick(this.getDt(fixture, dt), preventDefault);
   }
@@ -45,11 +45,11 @@ export class TestUtility {
     fixture: ComponentFixture<T>,
     selector: string,
     index = 0,
-    preventDefault = false
+    preventDefault = false,
   ): void {
     return this.altClick(
       this.getSelector(fixture, selector, index),
-      preventDefault
+      preventDefault,
     );
   }
 
@@ -57,7 +57,7 @@ export class TestUtility {
     fixture: ComponentFixture<T>,
     dt: string,
     value: string,
-    index = 0
+    index = 0,
   ): void {
     return this.setText(this.getDt(fixture, dt, index), value);
   }
@@ -66,7 +66,7 @@ export class TestUtility {
     fixture: ComponentFixture<T>,
     selector: string,
     value: string,
-    index = 0
+    index = 0,
   ): void {
     return this.setText(this.getSelector(fixture, selector, index), value);
   }
@@ -75,7 +75,7 @@ export class TestUtility {
     fixture: ComponentFixture<T>,
     dt: string,
     value: string,
-    index = 0
+    index = 0,
   ): void {
     return this.select(this.getDt(fixture, dt, index), value);
   }
@@ -84,7 +84,7 @@ export class TestUtility {
     fixture: ComponentFixture<T>,
     selector: string,
     value: string,
-    index = 0
+    index = 0,
   ): void {
     return this.select(this.getSelector(fixture, selector, index), value);
   }
@@ -93,7 +93,7 @@ export class TestUtility {
     fixture: ComponentFixture<T>,
     dt: string,
     value: string,
-    index = 0
+    index = 0,
   ): void {
     return this.keyPress(this.getDt(fixture, dt, index), value);
   }
@@ -102,7 +102,7 @@ export class TestUtility {
     fixture: ComponentFixture<T>,
     selector: string,
     value: string,
-    index = 0
+    index = 0,
   ): void {
     return this.keyPress(this.getSelector(fixture, selector, index), value);
   }
@@ -111,7 +111,7 @@ export class TestUtility {
     fixture: ComponentFixture<T>,
     dt: string,
     event: string,
-    index = 0
+    index = 0,
   ): void {
     return this.dispatch(this.getDt(fixture, dt, index), event);
   }
@@ -146,7 +146,7 @@ export class TestUtility {
     type: string,
     element: HTMLElement,
     posX: number,
-    posY: number
+    posY: number,
   ): void {
     const event = new MouseEvent(type, {
       view: window,
@@ -160,7 +160,7 @@ export class TestUtility {
     fixture: ComponentFixture<T>,
     selector: string,
     xOffset: number,
-    yOffset: number
+    yOffset: number,
   ): void {
     const element = this.getSelector(fixture, selector);
 

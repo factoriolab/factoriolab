@@ -10,7 +10,7 @@ describe('Machines Selectors', () => {
         initialMachinesState,
         [ItemId.Coal],
         Mocks.Defaults,
-        Mocks.AdjustedData
+        Mocks.AdjustedData,
       );
       expect(result.ids?.length).toEqual(3);
       expect(Object.keys(result.entities).length).toEqual(19);
@@ -21,7 +21,7 @@ describe('Machines Selectors', () => {
         initialMachinesState,
         [ItemId.Coal],
         null,
-        Mocks.AdjustedData
+        Mocks.AdjustedData,
       );
       expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
@@ -35,12 +35,12 @@ describe('Machines Selectors', () => {
         },
         [ItemId.Coal],
         null,
-        Mocks.AdjustedData
+        Mocks.AdjustedData,
       );
       expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
       expect(result.entities[ItemId.AssemblingMachine2].beaconCount).toEqual(
-        '0'
+        '0',
       );
     });
 
@@ -49,7 +49,7 @@ describe('Machines Selectors', () => {
         initialMachinesState,
         [ItemId.Coal],
         Mocks.Defaults,
-        { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
+        { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } },
       );
       expect(result.entities[''].beaconCount).toBeUndefined();
     });
@@ -76,7 +76,7 @@ describe('Machines Selectors', () => {
         {
           ...Mocks.AdjustedData,
           ...{ game: Game.Satisfactory },
-        }
+        },
       );
       expect(result.entities[''].overclock).toEqual(200);
     });
@@ -103,7 +103,7 @@ describe('Machines Selectors', () => {
         {
           ...Mocks.AdjustedData,
           ...{ game: Game.Satisfactory },
-        }
+        },
       );
       expect(result.entities[''].overclock).toEqual(100);
     });
@@ -113,7 +113,7 @@ describe('Machines Selectors', () => {
     it('should handle null ids', () => {
       const result = Selectors.getMachineOptions.projector(
         initialMachinesState,
-        Mocks.Dataset
+        Mocks.Dataset,
       );
       expect(result.length).toEqual(Mocks.Dataset.machineIds.length);
     });

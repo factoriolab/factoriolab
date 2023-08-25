@@ -46,7 +46,7 @@ describe('WizardComponent', () => {
         value: '1',
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
-      })
+      }),
     );
     dispatch.spy.calls.reset();
     component.createRecipeObjective(RecipeId.IronPlate, '1');
@@ -57,7 +57,7 @@ describe('WizardComponent', () => {
         value: '1',
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
-      })
+      }),
     );
   });
 });

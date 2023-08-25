@@ -41,7 +41,7 @@ export class WizardComponent {
       recipeIds,
       displayRate,
       rateUnitOptions,
-    }))
+    })),
   );
 
   id = '';
@@ -69,7 +69,7 @@ export class WizardComponent {
   createItemObjective(
     targetId: string,
     value: string,
-    unit: ObjectiveUnit
+    unit: ObjectiveUnit,
   ): void {
     this.store.dispatch(
       new Objectives.CreateAction({
@@ -78,7 +78,7 @@ export class WizardComponent {
         value,
         unit,
         type: ObjectiveType.Output,
-      })
+      }),
     );
   }
 
@@ -90,7 +90,7 @@ export class WizardComponent {
         value,
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
-      })
+      }),
     );
   }
 }

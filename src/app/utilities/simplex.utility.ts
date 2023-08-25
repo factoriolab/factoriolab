@@ -118,7 +118,7 @@ export class SimplexUtility {
     obj: Entities<ItemValues>,
     id: string,
     value: Rational = Rational.zero,
-    key: keyof ItemValues = 'out'
+    key: keyof ItemValues = 'out',
   ): void {
     if (obj[id]) {
       const current = obj[id][key];
@@ -139,7 +139,7 @@ export class SimplexUtility {
     researchedTechnologyIds: string[] | null,
     maximizeType: MaximizeType,
     cost: CostRationalSettings,
-    data: Dataset
+    data: Dataset,
   ): MatrixResult {
     if (objectives.length === 0) {
       return { steps: [], resultType: MatrixResultType.Skipped };
@@ -157,7 +157,7 @@ export class SimplexUtility {
       researchedTechnologyIds,
       maximizeType,
       cost,
-      data
+      data,
     );
 
     // Get solution for matrix state
@@ -186,7 +186,7 @@ export class SimplexUtility {
     researchedTechnologyIds: string[],
     maximizeType: MaximizeType,
     cost: CostRationalSettings,
-    data: Dataset
+    data: Dataset,
   ): MatrixState {
     // Set up state object
     const state: MatrixState = {
@@ -194,7 +194,7 @@ export class SimplexUtility {
       recipeObjectives: objectives.filter(
         (o): o is RecipeObjectiveRational =>
           isRecipeRationalObjective(o) &&
-          [ObjectiveType.Output, ObjectiveType.Maximize].includes(o.type)
+          [ObjectiveType.Output, ObjectiveType.Maximize].includes(o.type),
       ),
       steps: [],
       recipes: {},
@@ -235,7 +235,7 @@ export class SimplexUtility {
           case ObjectiveType.Input: {
             // Parse inputs and add them as though they were item objective inputs
             for (const itemId of Object.keys(obj.recipe.out).filter((i) =>
-              obj.recipe.produces(i)
+              obj.recipe.produces(i),
             )) {
               const rate = obj.value.mul(obj.recipe.output(itemId));
               this.addItemValue(state.itemValues, itemId, rate, 'in');
@@ -319,7 +319,7 @@ export class SimplexUtility {
   /** Find matching item inputs for a recipe that have not yet been parsed */
   static itemMatches(recipe: RecipeRational, state: MatrixState): string[] {
     const itemIds = Object.keys(recipe.in).filter(
-      (i) => state.itemValues[i]?.out == null
+      (i) => state.itemValues[i]?.out == null,
     );
     for (const itemId of itemIds) {
       this.addItemValue(state.itemValues, itemId);
@@ -330,12 +330,12 @@ export class SimplexUtility {
   /** Look for item inputs for a recipe, recursively */
   static parseRecipeRecursively(
     recipe: RecipeRational,
-    state: MatrixState
+    state: MatrixState,
   ): void {
     if (recipe.in) {
       const matches = this.itemMatches(recipe, state);
       for (const itemId of matches.filter(
-        (m) => state.itemIds.indexOf(m) !== -1
+        (m) => state.itemIds.indexOf(m) !== -1,
       )) {
         this.parseItemRecursively(itemId, state);
       }
@@ -355,7 +355,7 @@ export class SimplexUtility {
     const recipes = Object.keys(state.recipes).map((r) => state.recipes[r]);
     for (const recipe of recipes) {
       for (const id of Object.keys(recipe.out).filter(
-        (o) => state.itemValues[o]?.out == null
+        (o) => state.itemValues[o]?.out == null,
       )) {
         this.addItemValue(state.itemValues, id);
       }
@@ -370,7 +370,7 @@ export class SimplexUtility {
     const itemIds = Object.keys(state.itemValues);
     const recipeIds = Object.keys(state.recipes);
     state.unproduceableIds = itemIds.filter(
-      (i) => !recipeIds.some((r) => state.data.recipeR[r].produces(i))
+      (i) => !recipeIds.some((r) => state.data.recipeR[r].produces(i)),
     );
   }
   //#endregion
@@ -776,7 +776,7 @@ export class SimplexUtility {
 
     this.assignRecipes(solution, state);
     for (const recipe of Object.keys(solution.recipes).map(
-      (r) => state.recipes[r]
+      (r) => state.recipes[r],
     )) {
       this.addRecipeStep(recipe, solution, state);
     }
@@ -787,7 +787,7 @@ export class SimplexUtility {
 
     // Move output steps to the top of the list
     state.steps.sort(
-      (a, b) => (a.output != null ? 0 : 1) - (b.output != null ? 0 : 1)
+      (a, b) => (a.output != null ? 0 : 1) - (b.output != null ? 0 : 1),
     );
   }
 
@@ -795,7 +795,7 @@ export class SimplexUtility {
   static addItemStep(
     itemId: string,
     solution: MatrixSolution,
-    state: MatrixState
+    state: MatrixState,
   ): void {
     const values = state.itemValues[itemId];
     const steps = state.steps;
@@ -818,7 +818,7 @@ export class SimplexUtility {
       const recipe = objective.recipe;
       if (!recipe.out[itemId]) continue;
       output = output.add(
-        recipe.out[itemId].mul(objective.value).div(recipe.time)
+        recipe.out[itemId].mul(objective.value).div(recipe.time),
       );
     }
 
@@ -836,8 +836,8 @@ export class SimplexUtility {
         .filter((r) => r);
       const index = steps.findIndex((i) =>
         recipes.some(
-          (r) => i.itemId && r.produces(i.itemId) && r.produces(itemId)
-        )
+          (r) => i.itemId && r.produces(i.itemId) && r.produces(itemId),
+        ),
       );
       const step: Step = {
         id: steps.length.toString(),
@@ -870,7 +870,7 @@ export class SimplexUtility {
     // Check for exact id matches
     for (const step of steps.filter((s) => s.recipeId == null)) {
       const i = recipes.findIndex(
-        (r) => r.id === step.itemId && r.produces(step.itemId)
+        (r) => r.id === step.itemId && r.produces(step.itemId),
       );
       if (i !== -1) {
         step.recipeId = recipes[i].id;
@@ -890,7 +890,7 @@ export class SimplexUtility {
     }
 
     const order = Object.keys(potentials).sort(
-      (a, b) => potentials[a].length - potentials[b].length
+      (a, b) => potentials[a].length - potentials[b].length,
     );
     for (const itemId of order) {
       for (const option of potentials[itemId]) {
@@ -910,7 +910,7 @@ export class SimplexUtility {
     recipe: RecipeRational,
     solution: MatrixSolution,
     state: MatrixState,
-    recipeObjective?: RecipeObjectiveRational
+    recipeObjective?: RecipeObjectiveRational,
   ): void {
     const steps = state.steps;
     // Don't assign to any step that already has a recipe or objective assigned
@@ -922,14 +922,14 @@ export class SimplexUtility {
       // Look for any existing step that could be a match
       step = options.find(
         (s) =>
-          s.recipeId == null && s.itemId != null && recipe.produces(s.itemId)
+          s.recipeId == null && s.itemId != null && recipe.produces(s.itemId),
       );
     }
 
     if (!step) {
       // No step was found, need to create a new one for this recipe/objective
       const index = steps.findIndex(
-        (s) => s.itemId && recipe.produces(s.itemId)
+        (s) => s.itemId && recipe.produces(s.itemId),
       );
       step = {
         id: steps.length.toString(),
@@ -948,7 +948,7 @@ export class SimplexUtility {
       step.recipeObjectiveId = recipeObjective.id;
     } else {
       step.machines = solution.recipes[recipe.id].add(
-        step.machines || Rational.zero
+        step.machines || Rational.zero,
       );
     }
 

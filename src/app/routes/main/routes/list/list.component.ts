@@ -122,9 +122,9 @@ export class ListComponent implements OnInit, AfterViewInit {
         beltSpeed,
         beltSpeedTxt,
         zipPartial,
-      })
+      }),
     ),
-    tap((vm) => this.setActiveItems(vm.steps, vm.stepDetails))
+    tap((vm) => this.setActiveItems(vm.steps, vm.stepDetails)),
   );
 
   @ViewChild('stepsTable') stepsTable: Table | undefined;
@@ -147,14 +147,14 @@ export class ListComponent implements OnInit, AfterViewInit {
     @Inject(DOCUMENT) private document: Document,
     private store: Store<LabState>,
     private exportSvc: ExportService,
-    private routerSvc: RouterService
+    private routerSvc: RouterService,
   ) {}
 
   ngOnInit(): void {
     this.route.fragment
       .pipe(
         first(),
-        filter((f) => f != null)
+        filter((f) => f != null),
       )
       .subscribe((id) => {
         // Store the fragment to navigate to it after the component loads
@@ -182,7 +182,7 @@ export class ListComponent implements OnInit, AfterViewInit {
                   setTimeout(() => {
                     if (tabId) {
                       const tab = this.document.querySelector(
-                        '#' + this.fragmentId
+                        '#' + this.fragmentId,
                       ) as HTMLElement | null;
                       if (tab) {
                         tab.click();
@@ -245,14 +245,14 @@ export class ListComponent implements OnInit, AfterViewInit {
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     columnsState: ColumnsState,
-    data: Dataset
+    data: Dataset,
   ): void {
     this.exportSvc.stepsToCsv(
       steps,
       columnsState,
       itemsState,
       recipesState,
-      data
+      data,
     );
   }
 
@@ -262,7 +262,7 @@ export class ListComponent implements OnInit, AfterViewInit {
         id,
         value,
         def: (data.defaults?.excludedRecipeIds ?? []).includes(id),
-      })
+      }),
     );
     this.setRecipeExcludedBatch(payload);
   }
@@ -270,7 +270,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   toggleRecipe(
     id: string,
     recipesState: Recipes.RecipesState,
-    data: Dataset
+    data: Dataset,
   ): void {
     const value = !recipesState[id].excluded;
     const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);
@@ -284,7 +284,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     data: Dataset,
     field: RecipeField,
     index?: number,
-    subindex?: number
+    subindex?: number,
   ): void {
     if (step.recipeId == null) return;
 
@@ -301,9 +301,9 @@ export class ListComponent implements OnInit, AfterViewInit {
               event,
               RecipeUtility.bestMatch(
                 data.recipeEntities[step.recipeId].producers,
-                machinesState.ids
+                machinesState.ids,
               ),
-              step.recipeObjectiveId != null
+              step.recipeObjectiveId != null,
             );
           }
 
@@ -315,7 +315,7 @@ export class ListComponent implements OnInit, AfterViewInit {
               step.recipeObjectiveId ?? step.recipeId,
               event,
               machineSettings.fuelId,
-              step.recipeObjectiveId != null
+              step.recipeObjectiveId != null,
             );
           }
 
@@ -334,17 +334,17 @@ export class ListComponent implements OnInit, AfterViewInit {
             const options = RecipeUtility.moduleOptions(
               machine,
               step.recipeId,
-              data
+              data,
             );
             const def = RecipeUtility.defaultModules(
               options,
               machineSettings.moduleRankIds,
-              count
+              count,
             );
             const modules = this.generateModules(
               index,
               event,
-              settings.machineModuleIds
+              settings.machineModuleIds,
             );
             this.setMachineModules(id, modules, def, isObjective);
           }
@@ -381,17 +381,17 @@ export class ListComponent implements OnInit, AfterViewInit {
               const options = RecipeUtility.moduleOptions(
                 beacon,
                 step.recipeId,
-                data
+                data,
               );
               const def = RecipeUtility.defaultModules(
                 options,
                 machineSettings.beaconModuleRankIds,
-                count
+                count,
               );
               const value = this.generateModules(
                 subindex,
                 event,
-                beaconSettings.moduleIds
+                beaconSettings.moduleIds,
               );
               this.setBeaconModules(id, index, value, def, isObjective);
             }
@@ -472,7 +472,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     id: string,
     value: string,
     def: string | undefined,
-    objective = false
+    objective = false,
   ): void {
     const action = objective ? Objectives.SetFuelAction : Recipes.SetFuelAction;
     this.store.dispatch(new action({ id, value, def }));
@@ -482,7 +482,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     id: string,
     value: string[],
     def: string[] | undefined,
-    objective = false
+    objective = false,
   ): void {
     const action = objective
       ? Objectives.SetMachineModulesAction
@@ -509,7 +509,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     index: number,
     value: string,
     def: string | undefined,
-    objective = false
+    objective = false,
   ): void {
     const action = objective
       ? Objectives.SetBeaconCountAction
@@ -522,7 +522,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     index: number,
     value: string,
     def: string | undefined,
-    objective = false
+    objective = false,
   ): void {
     const action = objective
       ? Objectives.SetBeaconAction
@@ -535,7 +535,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     index: number,
     value: string[],
     def: string[] | undefined,
-    objective = false
+    objective = false,
   ): void {
     const action = objective
       ? Objectives.SetBeaconModulesAction
@@ -547,7 +547,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     id: string,
     index: number,
     value: string,
-    objective = false
+    objective = false,
   ): void {
     const action = objective
       ? Objectives.SetBeaconTotalAction
@@ -559,7 +559,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     id: string,
     value: number,
     def: number | undefined,
-    objective = false
+    objective = false,
   ): void {
     const action = objective
       ? Objectives.SetOverclockAction

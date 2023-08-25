@@ -126,12 +126,12 @@ export class SettingsComponent implements OnInit {
         machineMenuItems: this.buildMachineMenus(machineRows, data),
         excludedItemIds: data.itemIds.filter((i) => itemsState[i]?.excluded),
         excludedRecipeIds: data.recipeIds.filter(
-          (r) => recipesState[r]?.excluded
+          (r) => recipesState[r]?.excluded,
         ),
         mod: modOptions.find((o) => o.value === settings.modId),
         preset: presetOptions.find((o) => o.value === settings.preset),
-      })
-    )
+      }),
+    ),
   );
 
   state = '';
@@ -160,7 +160,7 @@ export class SettingsComponent implements OnInit {
     private router: Router,
     private store: Store<LabState>,
     private translateSvc: TranslateService,
-    private routerSvc: RouterService
+    private routerSvc: RouterService,
   ) {}
 
   ngOnInit(): void {
@@ -170,7 +170,7 @@ export class SettingsComponent implements OnInit {
       .subscribe((states) => {
         this.state =
           Object.keys(states).find(
-            (s) => states[s] === BrowserUtility.search
+            (s) => states[s] === BrowserUtility.search,
           ) ?? '';
       });
   }
@@ -257,7 +257,7 @@ export class SettingsComponent implements OnInit {
   setExcludedRecipes(
     checked: string[],
     recipesState: Recipes.RecipesState,
-    data: Dataset
+    data: Dataset,
   ): void {
     const payload: IdDefaultPayload<boolean>[] = [];
     for (const id of data.recipeIds) {
@@ -265,7 +265,7 @@ export class SettingsComponent implements OnInit {
       if (value !== recipesState[id].excluded) {
         // Needs to change, find default value
         const def = (data.defaults?.excludedRecipeIds ?? []).some(
-          (i) => i === id
+          (i) => i === id,
         );
         payload.push({ id, value, def });
       }
@@ -276,7 +276,7 @@ export class SettingsComponent implements OnInit {
   setExcludedItems(
     checked: string[],
     itemsState: Items.ItemsState,
-    data: Dataset
+    data: Dataset,
   ): void {
     const payload: IdPayload<boolean>[] = [];
     for (const id of data.itemIds) {
@@ -292,11 +292,11 @@ export class SettingsComponent implements OnInit {
     id: string,
     value: string,
     settings: MachineSettings,
-    fuelRankIds: string[]
+    fuelRankIds: string[],
   ): void {
     const def = RecipeUtility.bestMatch(
       settings.fuelOptions?.map((o) => o.value) ?? [],
-      fuelRankIds
+      fuelRankIds,
     );
     this.setFuel(id, value, def);
   }
@@ -304,7 +304,7 @@ export class SettingsComponent implements OnInit {
   changeBeaconModuleRank(
     id: string,
     value: string[],
-    def: MachineSettings | Defaults
+    def: MachineSettings | Defaults,
   ): void {
     if (id === '') {
       this.setBeaconModuleRank(id, value, [(def as Defaults).beaconModuleId]);
@@ -312,7 +312,7 @@ export class SettingsComponent implements OnInit {
       this.setBeaconModuleRank(
         id,
         value,
-        (def as MachineSettings).beaconModuleRankIds
+        (def as MachineSettings).beaconModuleRankIds,
       );
     }
   }
@@ -401,10 +401,10 @@ export class SettingsComponent implements OnInit {
   setBeaconModuleRank(
     id: string,
     value: string[],
-    def: string[] | undefined
+    def: string[] | undefined,
   ): void {
     this.store.dispatch(
-      new Machines.SetBeaconModuleRankAction({ id, value, def })
+      new Machines.SetBeaconModuleRankAction({ id, value, def }),
     );
   }
 

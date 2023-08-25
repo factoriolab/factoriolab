@@ -27,7 +27,7 @@ describe('ObjectivesEffects', () => {
         new Settings.SetDisplayRateAction({
           value: DisplayRate.PerSecond,
           prev: DisplayRate.PerMinute,
-        })
+        }),
       );
       const results: Action[] = [];
       effects.adjustDisplayRate$.subscribe((a) => results.push(a));

@@ -10,7 +10,7 @@ describe('Items Selectors', () => {
       const result = Selectors.getItemsState.projector(
         initialItemsState,
         Mocks.Dataset,
-        Mocks.SettingsStateInitial
+        Mocks.SettingsStateInitial,
       );
       expect(Object.keys(result).length).toEqual(Mocks.Dataset.itemIds.length);
     });
@@ -23,7 +23,7 @@ describe('Items Selectors', () => {
       const result = Selectors.getItemsState.projector(
         state,
         Mocks.Dataset,
-        Mocks.SettingsStateInitial
+        Mocks.SettingsStateInitial,
       );
       expect(result[Mocks.Item1.id].beltId).toEqual(stringValue);
       expect(result[Mocks.Item1.id].wagonId).toEqual(stringValue);
@@ -33,7 +33,7 @@ describe('Items Selectors', () => {
   describe('getItemsModified', () => {
     it('should determine whether columns are modified', () => {
       const result = Selectors.getItemsModified.projector(
-        Mocks.ItemsStateInitial
+        Mocks.ItemsStateInitial,
       );
       expect(result.excluded).toBeTrue();
       expect(result.belts).toBeTrue();

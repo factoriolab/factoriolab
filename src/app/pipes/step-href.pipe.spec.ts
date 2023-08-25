@@ -35,7 +35,7 @@ describe('StepHrefPipe', () => {
       expect(routerService.stepHref).not.toHaveBeenCalledWith(
         Mocks.Step1,
         { bare: '', hash: '' },
-        '' as any
+        '' as any,
       );
     });
   });

@@ -8,19 +8,19 @@ describe('ObjectiveUnit', () => {
 
     it('should return the correct options for Factorio', () => {
       expect(objectiveUnitOptions(dispRateInfo, Game.Factorio).length).toEqual(
-        4
+        4,
       );
     });
 
     it('should return the correct options for Captain of Industry', () => {
       expect(
-        objectiveUnitOptions(dispRateInfo, Game.CaptainOfIndustry).length
+        objectiveUnitOptions(dispRateInfo, Game.CaptainOfIndustry).length,
       ).toEqual(3);
     });
 
     it('should return the correct options for Dyson Sphere Program', () => {
       expect(
-        objectiveUnitOptions(dispRateInfo, Game.DysonSphereProgram).length
+        objectiveUnitOptions(dispRateInfo, Game.DysonSphereProgram).length,
       ).toEqual(3);
     });
   });

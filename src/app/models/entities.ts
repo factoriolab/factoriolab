@@ -3,7 +3,7 @@ export type Entities<T = string> = Record<string, T>;
 export function toEntities<T extends { id: string }>(
   value: T[],
   init: Entities<T> = {},
-  warn = false
+  warn = false,
 ): Entities<T> {
   if (warn) {
     return value.reduce((e: Entities<T>, v) => {
@@ -23,7 +23,7 @@ export function toEntities<T extends { id: string }>(
 
 export function toBoolEntities(
   value: string[],
-  init: Entities<boolean> = {}
+  init: Entities<boolean> = {},
 ): Entities<boolean> {
   return value.reduce((e: Entities<boolean>, v) => {
     e[v] = true;

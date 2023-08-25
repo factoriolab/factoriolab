@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { ModData } from '~/models';
-import * as D from './factorio.models';
+import * as D from './factorio-build.models';
 import { getJsonData } from './helpers';
 
 /**
@@ -12,7 +12,7 @@ import { getJsonData } from './helpers';
 const mod = process.argv[2];
 if (!mod) {
   throw new Error(
-    'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1'
+    'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
   );
 }
 
@@ -46,7 +46,7 @@ async function dumpPrep(): Promise<void> {
     `Enabled mods: ${modList.mods
       .filter((m) => m.enabled)
       .map((m) => m.name)
-      .join(', ')}`
+      .join(', ')}`,
   );
 }
 

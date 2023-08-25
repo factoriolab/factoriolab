@@ -27,7 +27,7 @@ export const I18n: M.ModI18n = i18n;
 export const Mod = { ...ModInfo, ...Data } as M.Mod;
 export const Defaults = Settings.getDefaults.projector(
   M.Preset.Beacon8,
-  Mod
+  Mod,
 ) as M.Defaults;
 export function getDataset(): M.Dataset {
   Settings.getDataset.release();
@@ -36,7 +36,7 @@ export function getDataset(): M.Dataset {
     null,
     Hash,
     Defaults,
-    M.Game.Factorio
+    M.Game.Factorio,
   );
 }
 export const Dataset = getDataset();
@@ -119,8 +119,8 @@ export const RationalObjectives = ObjectivesList.map(
   (o) =>
     new M.ObjectiveRational(
       o,
-      M.isRecipeObjective(o) ? Dataset.recipeR[o.targetId] : undefined
-    )
+      M.isRecipeObjective(o) ? Dataset.recipeR[o.targetId] : undefined,
+    ),
 );
 export const RationalObjective = RationalObjectives[0];
 export const ObjectiveIds = ObjectivesList.map((p) => p.id);
@@ -198,7 +198,7 @@ for (const recipe of Dataset.recipeIds.map((i) => Dataset.recipeEntities[i])) {
 }
 export const SettingsStateInitial = Settings.getSettings.projector(
   Settings.initialSettingsState,
-  Defaults
+  Defaults,
 );
 export const ItemsStateInitial = Items.getItemsState.projector({}, Dataset, {
   ...Settings.initialSettingsState,
@@ -215,7 +215,7 @@ export const MachinesStateInitial = Machines.getMachinesState.projector(
   Machines.initialMachinesState,
   [ItemId.Coal],
   Defaults,
-  Dataset
+  Dataset,
 );
 export function getRecipesState(): M.Entities<M.RecipeSettings> {
   Recipes.getRecipesState.release();
@@ -230,7 +230,7 @@ export function getRecipesStateRational(): M.Entities<M.RecipeSettingsRational> 
 }
 export const RecipesStateRationalInitial = getRecipesStateRational();
 export const CostRational = Settings.getRationalCost.projector(
-  Settings.initialSettingsState.costs
+  Settings.initialSettingsState.costs,
 );
 export const AdjustedData = Recipes.getAdjustedDataset.projector(
   RecipesStateRationalInitial,
@@ -242,7 +242,7 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
     miningBonus: M.Rational.zero,
     researchSpeed: M.Rational.one,
     data: Dataset,
-  }
+  },
 );
 export const PreferencesState: Preferences.PreferencesState = {
   states: { ['name']: 'z=zip' },

@@ -8,7 +8,7 @@ import { DisplayService } from '~/services';
 export class MachineTooltipPipe implements PipeTransform {
   constructor(
     private translateSvc: TranslateService,
-    private displaySvc: DisplayService
+    private displaySvc: DisplayService,
   ) {}
 
   transform(value: string | null | undefined, data: Dataset): string {
@@ -95,7 +95,7 @@ export class MachineTooltipPipe implements PipeTransform {
       for (const key of Object.keys(machine.consumption)) {
         html += this.displaySvc.icon(
           key,
-          this.displaySvc.round(machine.consumption[key])
+          this.displaySvc.round(machine.consumption[key]),
         );
       }
       html += '</div>';

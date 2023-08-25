@@ -29,7 +29,7 @@ export class FlowComponent implements AfterViewInit {
 
   constructor(
     private displaySvc: DisplayService,
-    private flowSvc: FlowService
+    private flowSvc: FlowService,
   ) {}
 
   ngAfterViewInit(): void {
@@ -50,12 +50,12 @@ export class FlowComponent implements AfterViewInit {
         el.innerHTML += `<div>${n.name}</div>`;
         if (n.recipe) {
           el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.recipeProcess(
-            n.recipe
+            n.recipe,
           )}</div>`;
           if (n.machines != null && n.machineId != null) {
             el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.icon(
               n.machineId,
-              n.machines
+              n.machines,
             )}</div>`;
           }
         }
@@ -69,7 +69,7 @@ export class FlowComponent implements AfterViewInit {
             color: nodeTheme.color,
           },
         };
-      })
+      }),
     );
 
     const edges = new DataSet<Edge>();
@@ -89,7 +89,7 @@ export class FlowComponent implements AfterViewInit {
               (a.target === l.source && l.target === a.source) ||
               (a.target === l.target &&
                 a.source === l.source &&
-                a.name !== l.name)
+                a.name !== l.name),
           )
             ? {
                 enabled: true,
@@ -104,7 +104,7 @@ export class FlowComponent implements AfterViewInit {
             color: flowData.theme.edge,
           },
         };
-      })
+      }),
     );
     const container = document.getElementById('lab-flow-svg');
     const data: Data = {

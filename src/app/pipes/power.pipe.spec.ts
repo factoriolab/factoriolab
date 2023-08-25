@@ -22,10 +22,10 @@ describe('PowerPipe', () => {
   describe('transform', () => {
     it('should handle GW/MW/kW', () => {
       expect(
-        pipe.transform(Rational.from(1000000), null, PowerUnit.GW)
+        pipe.transform(Rational.from(1000000), null, PowerUnit.GW),
       ).toEqual('1 GW');
       expect(pipe.transform(Rational.thousand, null, PowerUnit.MW)).toEqual(
-        '1 MW'
+        '1 MW',
       );
       expect(pipe.transform(Rational.one, null, PowerUnit.kW)).toEqual('1 kW');
     });
