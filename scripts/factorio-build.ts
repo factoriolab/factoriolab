@@ -5,6 +5,7 @@ import spritesmith from 'spritesmith';
 import {
   Category,
   Entities,
+  Fuel,
   Item,
   Machine,
   ModData,
@@ -53,6 +54,8 @@ interface ModDataReport {
   noProducts: string[];
   resourceNoMinableProducts: string[];
   resourceDuplicate: string[];
+  energySourceFluidHeat: string[];
+  energySourceFluidFilter: string[];
 }
 
 const start = Date.now();
@@ -64,6 +67,10 @@ function logTime(msg: string): void {
   temp = now;
 
   console.log(allTime, stepTime, msg);
+}
+
+function logWarn(msg: string): void {
+  console.log(`\x1b[33m${msg}\x1b[0m`);
 }
 
 function addEntityValue(e: Entities<number>, id: string, val: number): void {
@@ -407,6 +414,16 @@ async function processMod(): Promise<void> {
     boiler: {},
     offshorePump: {},
   };
+  // Keep track of all used fluid temperatures
+  const fluidTemps: Record<string, Set<number>> = {};
+  // Keep track of recipe variants
+  const recipeTempVariants: Record<string, string[]> = {};
+
+  function addFluidTemp(id: string, temp: number): void {
+    if (fluidTemps[id] == null) fluidTemps[id] = new Set<number>();
+
+    fluidTemps[id].add(temp);
+  }
 
   function addProducers(
     id: string,
@@ -532,6 +549,18 @@ async function processMod(): Promise<void> {
       }
     }
 
+    if (proto.energy_source.type === 'fluid') {
+      if (proto.energy_source.burns_fluid) {
+        if (proto.energy_source.fluid_box.filter != null) {
+          modDataReport.energySourceFluidFilter.push(proto.name);
+        } else {
+          return [proto.energy_source.type];
+        }
+      } else {
+        modDataReport.energySourceFluidHeat.push(proto.name);
+      }
+    }
+
     return undefined;
   }
 
@@ -630,19 +659,38 @@ async function processMod(): Promise<void> {
     ingredients:
       | M.IngredientPrototype[]
       | Record<string, M.IngredientPrototype>,
-  ): Record<string, number> {
+  ): [
+    // Ingredients
+    Record<string, number>,
+    // Min / max fluid temperatures, if defined
+    Record<string, [number | undefined, number | undefined]>,
+  ] {
     const result: Record<string, number> = {};
+    const temps: Record<string, [number | undefined, number | undefined]> = {};
 
     for (const ingredient of coerceArray(ingredients)) {
       if (D.isSimpleIngredient(ingredient)) {
         const [itemId, amount] = ingredient;
         addEntityValue(result, itemId, amount);
       } else {
+        if (D.isFluidIngredient(ingredient)) {
+          if (ingredient.temperature) {
+            temps[ingredient.name] = [
+              ingredient.temperature,
+              ingredient.temperature,
+            ];
+          } else {
+            temps[ingredient.name] = [
+              ingredient.minimum_temperature,
+              ingredient.maximum_temperature,
+            ];
+          }
+        }
         addEntityValue(result, ingredient.name, ingredient.amount);
       }
     }
 
-    return result;
+    return [result, temps];
   }
 
   function getRecipeData(recipe: M.RecipePrototype): M.RecipeData {
@@ -657,8 +705,18 @@ async function processMod(): Promise<void> {
       | undefined,
     result?: string,
     result_count = 1,
-  ): [Record<string, number>, Record<string, number> | undefined, number] {
+  ): [
+    // Products
+    Record<string, number>,
+    // Catalysts, if defined
+    Record<string, number> | undefined,
+    // Total number of outputs
+    number,
+    // Temperatures of fluid outputs, if any
+    Record<string, number>,
+  ] {
     const record: Record<string, number> = {};
+    const temps: Record<string, number> = {};
     let catalyst: Record<string, number> | undefined;
     let total = 0;
 
@@ -669,6 +727,13 @@ async function processMod(): Promise<void> {
           addEntityValue(record, itemId, amount);
           total += amount;
         } else {
+          if (D.isFluidProduct(product)) {
+            const fluid = dataRaw.fluid[product.name];
+            const temp = product.temperature ?? fluid.default_temperature;
+            temps[product.name] = temp;
+            addFluidTemp(product.name, temp);
+          }
+
           let amount = product.amount;
           if (
             amount == null &&
@@ -700,7 +765,7 @@ async function processMod(): Promise<void> {
       total += result_count;
     }
 
-    return [record, catalyst, total];
+    return [record, catalyst, total, temps];
   }
 
   function getMachineDisallowedEffects(
@@ -749,6 +814,8 @@ async function processMod(): Promise<void> {
     noProducers: [],
     resourceNoMinableProducts: [],
     resourceDuplicate: [],
+    energySourceFluidHeat: [],
+    energySourceFluidFilter: [],
   };
 
   const modHashReport: ModHash = {
@@ -895,9 +962,20 @@ async function processMod(): Promise<void> {
   const recipeDataMap: Record<string, M.RecipeData> = {};
   const recipeResultsMap: Record<
     string,
-    [Record<string, number>, Record<string, number> | undefined, number]
+    [
+      Record<string, number>,
+      Record<string, number> | undefined,
+      number,
+      Record<string, number>,
+    ]
   > = {};
-  const recipeIngredientsMap: Record<string, Record<string, number>> = {};
+  const recipeIngredientsMap: Record<
+    string,
+    [
+      Record<string, number>,
+      Record<string, [number | undefined, number | undefined]>,
+    ]
+  > = {};
   for (const key of Object.keys(dataRaw.recipe)) {
     const recipe = dataRaw.recipe[key];
     let include = true;
@@ -966,13 +1044,13 @@ async function processMod(): Promise<void> {
 
   // Check for recipe loops
   for (const key of Object.keys(recipesEnabled)) {
-    const ingredientsKeys = Object.keys(recipeIngredientsMap[key]);
+    const ingredientsKeys = Object.keys(recipeIngredientsMap[key][0]);
     let matchKey: string | undefined;
     let matchMulti = false;
     const matchIngredients: string[] = [];
     for (const r of recipesIncluded) {
       const results = recipeResultsMap[r][0];
-      const ingredients = recipeIngredientsMap[r];
+      const ingredients = recipeIngredientsMap[r][0];
       for (const key of ingredientsKeys) {
         if (results[key]) {
           if (matchKey == null) {
@@ -997,13 +1075,16 @@ async function processMod(): Promise<void> {
 
       // Check for a loop
       const results = recipeResultsMap[matchKey][0];
-      const ingredientMatch = checkForMatch(recipeIngredientsMap[key], results);
+      const ingredientMatch = checkForMatch(
+        recipeIngredientsMap[key][0],
+        results,
+      );
 
       if (ingredientMatch) {
         // Check whether results of this recipe match ingredients of matched recipe
         const results = recipeResultsMap[key][0];
         const fullMatch = checkForMatch(
-          recipeIngredientsMap[matchKey],
+          recipeIngredientsMap[matchKey][0],
           results,
         );
 
@@ -1092,7 +1173,7 @@ async function processMod(): Promise<void> {
 
   // Check for use in recipe ingredients / products
   for (const key of Object.keys(recipesEnabled)) {
-    for (const ingredient of Object.keys(recipeIngredientsMap[key])) {
+    for (const ingredient of Object.keys(recipeIngredientsMap[key][0])) {
       itemsUsed.add(ingredient);
     }
 
@@ -1110,7 +1191,7 @@ async function processMod(): Promise<void> {
   for (const tech of technologies) {
     const techData = tech[mode] || (tech as M.TechnologyData);
     const techIngredients =
-      techData.unit == null ? {} : getIngredients(techData.unit.ingredients);
+      techData.unit == null ? {} : getIngredients(techData.unit.ingredients)[0];
 
     for (const ingredient of Object.keys(techIngredients)) {
       itemsUsed.add(ingredient);
@@ -1177,15 +1258,56 @@ async function processMod(): Promise<void> {
     groupsUsed.add(group.name);
 
     if (M.isFluidPrototype(proto)) {
-      const item: Item = {
-        id: proto.name,
-        name: fluidLocale.names[proto.name],
-        category: group.name,
-        row: getItemRow(proto),
-        icon: await getIcon(proto),
-      };
+      // Check for alternate temperatures from boilers
+      for (const boilerName of Object.keys(dataRaw.boiler)) {
+        const boiler = dataRaw.boiler[boilerName];
+        if (
+          boiler.output_fluid_box.filter === proto.name &&
+          boiler.target_temperature !== proto.default_temperature
+        ) {
+          addFluidTemp(proto.name, boiler.target_temperature);
+        }
+      }
 
-      modData.items.push(item);
+      let fuel: Fuel | undefined;
+      if (proto.fuel_value) {
+        fuel = {
+          category: 'fluid',
+          value: getEnergyInMJ(proto.fuel_value),
+        };
+      }
+
+      const icon = await getIcon(proto);
+      const temps = [...fluidTemps[proto.name]];
+
+      // Move default temperature, if present, to index 0
+      temps.sort((a, b) =>
+        a === proto.default_temperature
+          ? -1
+          : b === proto.default_temperature
+          ? 1
+          : 0,
+      );
+      fluidTemps[proto.name] = new Set(temps);
+
+      temps.forEach((temp, i) => {
+        const id = i === 0 ? proto.name : `${proto.name}-${temp}`;
+        const itemTemp: Item = {
+          id,
+          name: fluidLocale.names[proto.name],
+          category: group.name,
+          row: getItemRow(proto),
+          icon: icon ?? proto.name,
+          fuel,
+        };
+
+        if (temp !== proto.default_temperature) {
+          itemTemp.name += ` (${temp}°C)`;
+          itemTemp.iconText = `${temp}°`;
+        }
+
+        modData.items.push(itemTemp);
+      });
     } else {
       const item: Item = {
         id: proto.name,
@@ -1281,11 +1403,20 @@ async function processMod(): Promise<void> {
         }
 
         if (limitation != null) {
-          limitation.sort();
-          const hash = JSON.stringify(limitation);
+          const set = new Set<string>(limitation);
+          limitation
+            .filter((limRecipeId) => recipeTempVariants[limRecipeId] != null)
+            .forEach((limRecipeId) =>
+              recipeTempVariants[limRecipeId].forEach((varRecipeId) =>
+                set.add(varRecipeId),
+              ),
+            );
+
+          const value = [...set].sort();
+          const hash = JSON.stringify(value);
           if (!limitations[hash]) {
             limitations[hash] = proto.name;
-            modData.limitations[proto.name] = limitation;
+            modData.limitations[proto.name] = value;
           }
 
           item.module.limitation = limitations[hash];
@@ -1326,7 +1457,7 @@ async function processMod(): Promise<void> {
 
     if (M.isRecipePrototype(proto)) {
       const recipeData = recipeDataMap[proto.name];
-      const recipeIn = recipeIngredientsMap[proto.name];
+      const [recipeIn, recipeInTemp] = recipeIngredientsMap[proto.name];
       const [recipeOut] = recipeResultsMap[proto.name];
       let [, recipeCatalyst] = recipeResultsMap[proto.name];
 
@@ -1351,9 +1482,6 @@ async function processMod(): Promise<void> {
           .map((i) => getItem(i))
           .filter((i) => M.isFluidPrototype(i));
         if (fluidIngredients.length > 0) {
-          if (producers == null) {
-            console.log(proto);
-          }
           producers = producers.filter((p) => {
             const fluidBoxes = craftingFluidBoxes[p];
             const inputFluidBoxes = fluidBoxes.filter(
@@ -1413,21 +1541,118 @@ async function processMod(): Promise<void> {
           });
         }
 
-        const recipe: Recipe = {
-          id: proto.name,
-          name: recipeLocale.names[proto.name],
-          category: subgroup.group,
-          row: getRecipeRow(proto),
-          time: recipeData.energy_required ?? 0.5,
-          producers,
-          in: recipeIn,
-          // Already calculated when determining included recipes
-          out: recipeOut,
-          catalyst: recipeCatalyst,
-          unlockedBy: recipesUnlocked[proto.name],
-          icon: await getIcon(proto),
-        };
-        modData.recipes.push(recipe);
+        const fluidTempRules = Object.keys(recipeInTemp);
+        if (fluidTempRules.length) {
+          /**
+           * Cycle through fluid input temperature rules and find valid
+           * ingredient temperatures
+           */
+          const fluidTempOptions: Record<string, number[]> = {};
+          for (let i = 0; i < fluidTempRules.length; i++) {
+            const fluidId = fluidTempRules[i];
+            const [minTemp, maxTemp] = recipeInTemp[fluidId];
+            const fluid = dataRaw.fluid[fluidId];
+
+            const all = [...fluidTemps[fluid.name]];
+            const ok = all.filter(
+              (a) =>
+                (minTemp == null || minTemp <= a) &&
+                (maxTemp == null || maxTemp >= a),
+            );
+            fluidTempOptions[fluidId] = ok;
+          }
+
+          /**
+           * Cycle through valid fluid temperature options and generate
+           * variants of the recipe inputs with matching temperatures. Each
+           * iteration should create variants of every previous variant, in the
+           * case that there are multiple input fluids with multiple valid
+           * temperatures.
+           */
+          let recipeInOptions: [Record<string, number>, string[]][] = [
+            [recipeIn, []],
+          ];
+          for (const key of Object.keys(fluidTempOptions)) {
+            const defaultTemp = [...fluidTemps[key]][0];
+            const old = [...recipeInOptions];
+            recipeInOptions = []; // Clear out list
+            const options = fluidTempOptions[key];
+            options.forEach((temp) => {
+              recipeInOptions.push(
+                /**
+                 * Take each previously generated recipe input set and generate
+                 * a variant with this valid input fluid temperature.
+                 */
+                ...old.map((data) => {
+                  if (temp !== defaultTemp) {
+                    const [original, ids] = data;
+                    const altered = { ...original };
+                    const id = `${key}-${temp}`;
+                    altered[id] = altered[key];
+                    delete altered[key];
+                    return [altered, [...ids, id]] as [
+                      Record<string, number>,
+                      string[],
+                    ];
+                  } else {
+                    return data;
+                  }
+                }),
+              );
+            });
+          }
+
+          // For each set of valid fluid temperature inputs, generate a recipe
+          const icon = await getIcon(proto);
+          recipeTempVariants[proto.name] = [];
+          for (let i = 0; i < recipeInOptions.length; i++) {
+            // For first option, use proto name, for others append index
+            const [recipeIn, ids] = recipeInOptions[i];
+            const id = i === 0 ? proto.name : `${proto.name}-${ids.join('-')}`;
+
+            const recipe: Recipe = {
+              id,
+              name: recipeLocale.names[proto.name],
+              category: subgroup.group,
+              row: getRecipeRow(proto),
+              time: recipeData.energy_required ?? 0.5,
+              producers,
+              in: recipeIn,
+              /**
+               * Already calculated when determining included recipes.
+               * Note: Output temperatures do not vary
+               */
+              out: recipeOut,
+              catalyst: recipeCatalyst,
+              unlockedBy: recipesUnlocked[proto.name],
+              icon,
+            };
+
+            if (i > 0) {
+              recipe.icon = recipe.icon ?? proto.name;
+            }
+
+            modData.recipes.push(recipe);
+
+            recipeTempVariants[proto.name].push(id);
+          }
+        } else {
+          const recipe: Recipe = {
+            id: proto.name,
+            name: recipeLocale.names[proto.name],
+            category: subgroup.group,
+            row: getRecipeRow(proto),
+            time: recipeData.energy_required ?? 0.5,
+            producers,
+            in: recipeIn,
+            // Already calculated when determining included recipes
+            out: recipeOut,
+            catalyst: recipeCatalyst,
+            unlockedBy: recipesUnlocked[proto.name],
+            icon: await getIcon(proto),
+          };
+          modData.recipes.push(recipe);
+        }
       } else {
         modDataReport.noProducers.push(proto.name);
       }
@@ -1461,37 +1686,41 @@ async function processMod(): Promise<void> {
       }
 
       // Check for boiler recipes
-      if (proto.name === 'steam') {
-        const water = dataRaw.fluid['water'];
-        for (const boilerName of Object.keys(machines.boiler)) {
-          const entityName = machines.boiler[boilerName];
-          const boiler = dataRaw.boiler[entityName];
-          // TODO: Account for different target temperatures
-          if (boiler.target_temperature === 165) {
-            // Found a boiler recipe
-            const id = getFakeRecipeId(
-              proto.name,
-              `${boilerName}-${proto.name}-boil`,
-            );
-
-            const tempDiff = 165 - 15;
-            const energyReqd =
-              tempDiff * getEnergyInMJ(water.heat_capacity ?? '1KJ') * 1000;
-
-            const recipe: Recipe = {
-              id,
-              name: `${itemLocale.names[boilerName]} : ${
-                fluidLocale.names[proto.name]
-              }`,
-              category: group.name,
-              row: getRecipeRow(proto),
-              time: round(energyReqd, 10),
-              in: { [water.name]: 1 },
-              out: { [proto.name]: 1 },
-              producers: [boilerName],
-            };
-            modData.recipes.push(recipe);
+      for (const boilerName of Object.keys(machines.boiler)) {
+        const entityName = machines.boiler[boilerName];
+        const boiler = dataRaw.boiler[entityName];
+        if (boiler.output_fluid_box.filter === proto.name) {
+          if (boiler.fluid_box.filter == null) continue;
+          const inputProto = dataRaw.fluid[boiler.fluid_box.filter];
+          let outputId = proto.name;
+          if (boiler.target_temperature !== [...fluidTemps[proto.name]][0]) {
+            outputId = `${proto.name}-${boiler.target_temperature}`;
           }
+
+          // Found a boiler recipe
+          const id = getFakeRecipeId(
+            proto.name,
+            `${boilerName}-${proto.name}-boil`,
+          );
+
+          const tempDiff =
+            boiler.target_temperature - inputProto.default_temperature;
+          const energyReqd =
+            tempDiff * getEnergyInMJ(inputProto.heat_capacity ?? '1KJ') * 1000;
+
+          const recipe: Recipe = {
+            id,
+            name: `${itemLocale.names[boilerName]} : ${
+              fluidLocale.names[proto.name]
+            }`,
+            category: group.name,
+            row: getRecipeRow(proto),
+            time: round(energyReqd, 10),
+            in: { [inputProto.name]: 1 },
+            out: { [outputId]: 1 },
+            producers: [boilerName],
+          };
+          modData.recipes.push(recipe);
         }
       }
     } else {
@@ -1801,28 +2030,48 @@ async function processMod(): Promise<void> {
       writeData();
       logTime('Complete');
 
+      const warnings = (
+        Object.keys(modDataReport) as (keyof ModDataReport)[]
+      ).some((k) => modDataReport[k].length);
+
+      if (warnings) logWarn('\nWARNINGS:');
+
       if (modDataReport.noProducers.length) {
-        console.log(
+        logWarn(
           `Recipes with no producers: ${modDataReport.noProducers.length}`,
         );
       }
 
       if (modDataReport.noProducts.length) {
-        console.log(
-          `Recipes with no products: ${modDataReport.noProducts.length}`,
-        );
+        logWarn(`Recipes with no products: ${modDataReport.noProducts.length}`);
       }
 
       if (modDataReport.resourceNoMinableProducts.length) {
-        console.log(
+        logWarn(
           `Resources with no minable products: ${modDataReport.resourceNoMinableProducts.length}`,
         );
       }
 
       if (modDataReport.resourceDuplicate.length) {
-        console.log(
+        logWarn(
           `Resource duplicates: ${modDataReport.resourceDuplicate.length}`,
         );
+      }
+
+      if (modDataReport.energySourceFluidHeat.length) {
+        logWarn(
+          `Machines with fluid heat energy source: ${modDataReport.energySourceFluidHeat.length}`,
+        );
+      }
+
+      if (modDataReport.energySourceFluidFilter.length) {
+        logWarn(
+          `Machines with filtered fluid energy source: ${modDataReport.energySourceFluidFilter.length}`,
+        );
+      }
+
+      if (warnings) {
+        console.log('See scripts/temp/data-report.json for details');
       }
     },
   );
