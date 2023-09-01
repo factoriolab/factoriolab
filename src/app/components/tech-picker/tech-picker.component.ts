@@ -74,6 +74,8 @@ export class TechPickerComponent {
     showTechLabels: this.store.select(Preferences.getShowTechLabels),
   });
   visible = false;
+  importVisible = false;
+  importValue = '';
 
   constructor(
     private ref: ChangeDetectorRef,
@@ -92,6 +94,37 @@ export class TechPickerComponent {
 
   selectAll(value: boolean, data: Dataset): void {
     this.selection$.next(value ? [...data.technologyIds] : []);
+  }
+
+  openImport(input: HTMLTextAreaElement): void {
+    this.importVisible = true;
+    setTimeout(() => input.focus());
+  }
+
+  importTechs(data: Dataset): void {
+    const selection = this.importValue
+      .split(',')
+      .map((v) => v.trim())
+      .map((id) => {
+        if (!id) return '';
+
+        const alt = `${id}-technology`;
+        if (data.technologyIds.includes(alt)) {
+          return alt;
+        } else if (data.technologyIds.includes(id)) {
+          return id;
+        }
+
+        return '';
+      })
+      .filter((v) => !!v);
+
+    const set = new Set(selection);
+    this.addPrerequisites(set, data);
+
+    this.selection$.next(Array.from(set));
+    this.selectAllCtrl.setValue(set.size === data.technologyIds.length);
+    this.importValue = '';
   }
 
   clickId(id: string, selection: string[], data: Dataset): void {
@@ -116,24 +149,28 @@ export class TechPickerComponent {
     } else {
       set.add(id);
 
-      // Add any technologies whose prerequisites were not previously met
-      let addIds: Set<string>;
-      do {
-        addIds = new Set<string>();
-
-        for (const id of set) {
-          const tech = data.technologyEntities[id];
-          tech.prerequisites
-            ?.filter((p) => !set.has(p))
-            .forEach((p) => addIds.add(p));
-        }
-
-        addIds.forEach((i) => set.add(i));
-      } while (addIds.size);
+      this.addPrerequisites(set, data);
     }
 
     this.selection$.next(Array.from(set));
     this.selectAllCtrl.setValue(set.size === data.technologyIds.length);
+  }
+
+  // Add any technologies whose prerequisites were not previously met
+  addPrerequisites(set: Set<string>, data: Dataset): void {
+    let addIds: Set<string>;
+    do {
+      addIds = new Set<string>();
+
+      for (const id of set) {
+        const tech = data.technologyEntities[id];
+        tech.prerequisites
+          ?.filter((p) => !set.has(p))
+          .forEach((p) => addIds.add(p));
+      }
+
+      addIds.forEach((i) => set.add(i));
+    } while (addIds.size);
   }
 
   onHide(selection: string[], data: Dataset): void {
