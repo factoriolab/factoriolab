@@ -13,6 +13,7 @@ import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MenuModule } from 'primeng/menu';
 import { MessagesModule } from 'primeng/messages';
 import { MultiSelectModule } from 'primeng/multiselect';
@@ -38,6 +39,7 @@ const modules = [
   DividerModule,
   DropdownModule,
   InputNumberModule,
+  InputTextareaModule,
   InputTextModule,
   MenuModule,
   MessagesModule,

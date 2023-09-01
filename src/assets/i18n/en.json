@@ -139,6 +139,10 @@
     "header": "Set researched technologies",
     "unlockAll": "Unlock all",
     "showLabels": "Show labels",
+    "import": "Import",
+    "importTooltip": "Import a comma-separated list of technology ids from your game",
+    "importHeader": "Import researched technologies",
+    "importInstructions": "Enter a comma-separated list of technology ids from your game",
     "available": "Available",
     "locked": "Locked",
     "researched": "Researched"
