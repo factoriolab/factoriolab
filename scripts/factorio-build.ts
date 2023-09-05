@@ -27,8 +27,7 @@ import { coerceArray, getJsonData } from './helpers';
  */
 
 const mod = process.argv[2];
-const mode: 'normal' | 'expensive' = mod === '1.1e' ? 'expensive' : 'normal';
-
+let mode: 'normal' | 'expensive' = 'normal';
 if (!mod) {
   throw new Error(
     'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
@@ -48,6 +47,15 @@ const tempIconsPath = `${tempPath}/icons`;
 const modPath = `./src/data/${mod}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
+
+/** Check whether this is an existing mod set using expensive mode */
+if (fs.existsSync(modDataPath)) {
+  const oldData = getJsonData<ModData>(modDataPath);
+  if (oldData.expensive) {
+    mode = 'expensive';
+    console.log('Note: Using expensive mode data for this mod set');
+  }
+}
 
 interface ModDataReport {
   noProducers: string[];
@@ -553,9 +561,9 @@ async function processMod(): Promise<void> {
       if (proto.energy_source.burns_fluid) {
         if (proto.energy_source.fluid_box.filter != null) {
           modDataReport.energySourceFluidFilter.push(proto.name);
-        } else {
-          return [proto.energy_source.type];
         }
+
+        return [proto.energy_source.type];
       } else {
         modDataReport.energySourceFluidHeat.push(proto.name);
       }
@@ -1278,7 +1286,10 @@ async function processMod(): Promise<void> {
       }
 
       const icon = await getIcon(proto);
-      const temps = [...fluidTemps[proto.name]];
+      let temps = [proto.default_temperature];
+      if (fluidTemps[proto.name] != null) {
+        temps = [...fluidTemps[proto.name]];
+      }
 
       // Move default temperature, if present, to index 0
       temps.sort((a, b) =>
@@ -1885,6 +1896,8 @@ async function processMod(): Promise<void> {
   }
 
   function getLastIngredient(ingredients: M.IngredientPrototype[]): string {
+    if (ingredients.length === 0) return '';
+
     const ingredient = ingredients[ingredients.length - 1];
     if (D.isSimpleIngredient(ingredient)) {
       return ingredient[0];
@@ -1899,13 +1912,16 @@ async function processMod(): Promise<void> {
     // First, sort by number of ingredients
     const aData = a[mode] || (a as M.TechnologyData);
     const bData = b[mode] || (b as M.TechnologyData);
-    if (aData.unit.ingredients.length !== bData.unit.ingredients.length) {
-      return aData.unit.ingredients.length - bData.unit.ingredients.length;
+    const aIngredients = coerceArray(aData.unit.ingredients);
+    const bIngredients = coerceArray(bData.unit.ingredients);
+
+    if (aIngredients.length !== bIngredients.length) {
+      return aIngredients.length - bIngredients.length;
     }
 
     // Second, sort by sort order of the last ingredient
-    const aLastIngredient = getLastIngredient(aData.unit.ingredients);
-    const bLastIngredient = getLastIngredient(bData.unit.ingredients);
+    const aLastIngredient = getLastIngredient(aIngredients);
+    const bLastIngredient = getLastIngredient(bIngredients);
     if (aLastIngredient !== bLastIngredient) {
       return (
         sortedProtoIds.indexOf(aLastIngredient) -
@@ -2040,21 +2056,27 @@ async function processMod(): Promise<void> {
         logWarn(
           `Recipes with no producers: ${modDataReport.noProducers.length}`,
         );
+        console.log('These recipes have been removed.');
       }
 
       if (modDataReport.noProducts.length) {
         logWarn(`Recipes with no products: ${modDataReport.noProducts.length}`);
+        console.log('These recipes have been removed.');
       }
 
       if (modDataReport.resourceNoMinableProducts.length) {
         logWarn(
           `Resources with no minable products: ${modDataReport.resourceNoMinableProducts.length}`,
         );
+        console.log('No mining recipe is generated for these resources.');
       }
 
       if (modDataReport.resourceDuplicate.length) {
         logWarn(
           `Resource duplicates: ${modDataReport.resourceDuplicate.length}`,
+        );
+        console.log(
+          'Only one mining resource is generated for duplicate resources',
         );
       }
 
@@ -2062,16 +2084,20 @@ async function processMod(): Promise<void> {
         logWarn(
           `Machines with fluid heat energy source: ${modDataReport.energySourceFluidHeat.length}`,
         );
+        console.log(
+          'Energy source for these machines is not currently handled.',
+        );
       }
 
       if (modDataReport.energySourceFluidFilter.length) {
         logWarn(
           `Machines with filtered fluid energy source: ${modDataReport.energySourceFluidFilter.length}`,
         );
+        console.log('Fluids allowed for this machine will not be filtered.');
       }
 
       if (warnings) {
-        console.log('See scripts/temp/data-report.json for details');
+        console.log('\nSee scripts/temp/data-report.json for details');
       }
     },
   );

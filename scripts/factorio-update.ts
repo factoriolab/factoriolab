@@ -1,0 +1,142 @@
+import { exec, spawn } from 'child_process';
+
+/**
+ * This script is intended to update a specific Factorio mod set or all sets
+ */
+
+const CURRENT_FACTORIO_MODS = [
+  '1.1',
+  '1.1e',
+  '248',
+  '248o',
+  '248kr2sxp',
+  'aai',
+  'ang',
+  'bio',
+  'bob',
+  'bobang',
+  'efs',
+  'fep',
+  'ffw',
+  'fpp',
+  'ir3',
+  'kr2',
+  'kr2aai',
+  'kr2ffw',
+  'kr2sxp',
+  'msc',
+  'nls',
+  'pys',
+  'pysalf',
+  'qat',
+  'sea',
+  'sxp',
+  'vbz',
+  'xan',
+];
+
+function formatTime(milliseconds: number): string {
+  const seconds = milliseconds / 1000;
+  const duration = [
+    Math.floor(seconds / 60 / 60),
+    Math.floor((seconds / 60) % 60),
+    Math.floor(seconds % 60),
+  ]
+    .join(':')
+    .replace(/\b(\d)\b/g, '0$1');
+  return `\x1b[33m${duration}\x1b[0m`;
+}
+
+const mod = process.argv[2];
+const mods = mod ? [mod] : CURRENT_FACTORIO_MODS;
+const start = Date.now();
+let temp = Date.now();
+function logTime(msg: string): void {
+  const now = Date.now();
+  const stepTime = now - temp;
+  const allTime = now - start;
+  temp = now;
+
+  console.log(formatTime(allTime), formatTime(stepTime), msg);
+}
+
+async function runTsNodeCmd(cmd: string, mod: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    exec(`npm run ${cmd} ${mod}`, (err) => {
+      if (err) reject(err);
+      resolve();
+    });
+  });
+}
+
+/** Prep for a dump of Factorio using the factorio-prep.ts script */
+async function runFactorioPrep(mod: string): Promise<void> {
+  return runTsNodeCmd('factorio-prep', mod);
+}
+
+/** Start a dump of Factorio using the factorio-dump.bat script */
+async function runFactorioDump(): Promise<number | null> {
+  return new Promise((resolve, reject) => {
+    const bat = require.resolve('./factorio-dump.bat');
+    const ls = spawn(bat);
+
+    ls.on('error', (code) => {
+      reject(code);
+    });
+
+    ls.on('exit', (code) => {
+      resolve(code);
+    });
+  });
+}
+
+/** Check whether Factorio is running after a delay */
+async function checkIfFactorioIsRunning(delayMs = 1000): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      exec('tasklist', (err, stdout, _) => {
+        if (err != null) reject(err);
+        resolve(stdout.toLowerCase().includes('factorio.exe'));
+      });
+    }, delayMs);
+  });
+}
+
+/**
+ * Wait for factorio.exe to exit, since the image dump continues to run after
+ * the batch script exits.
+ */
+async function waitForFactorioToExit(waitMs = 30000): Promise<void> {
+  const start = Date.now();
+  let result = false;
+  let runtime = 0;
+  do {
+    result = await checkIfFactorioIsRunning();
+    runtime = Date.now() - start;
+  } while (result && runtime < waitMs);
+}
+
+/** Build a Factorio mod data set using the factorio-build.ts script */
+async function runFactorioBuild(mod: string): Promise<void> {
+  return runTsNodeCmd('factorio-build', mod);
+}
+
+async function updateMod(mod: string): Promise<void> {
+  await runFactorioPrep(mod);
+  await runFactorioDump();
+  await waitForFactorioToExit();
+  await runFactorioBuild(mod);
+}
+
+async function updateMods(mods: string[]): Promise<void> {
+  for (let i = 0; i < mods.length; i++) {
+    const mod = mods[i];
+    await updateMod(mod);
+    logTime(`Updated mod '${mod}' (${i + 1} of ${mods.length})`);
+  }
+}
+
+logTime(
+  `Starting update for ${mods.length} mod${mods.length > 1 ? 's' : ''}...`,
+);
+updateMods(mods);

@@ -49,3 +49,6 @@ Thumbs.db
 
 # Script temp files
 scripts/temp
+
+# Mod settings files
+mod-settings.dat

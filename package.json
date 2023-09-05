@@ -27,6 +27,7 @@
     "factorio-prep": "ts-node scripts/factorio-prep.ts",
     "factorio-dump": "scripts\\factorio-dump.bat",
     "factorio-build": "ts-node scripts/factorio-build.ts",
+    "factorio-update": "ts-node scripts/factorio-update.ts",
     "minify-data": "ts-node scripts/minify-data.ts",
     "update-hash": "ts-node scripts/update-hash.ts"
   },

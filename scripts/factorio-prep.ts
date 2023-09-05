@@ -23,6 +23,8 @@ const modsPath = `${factorioPath}/mods`;
 const modListPath = `${modsPath}/mod-list.json`;
 const modPath = `./src/data/${mod}`;
 const modDataPath = `${modPath}/data.json`;
+const modSettingsSourcePath = `${modPath}/mod-settings.dat`;
+const modSettingsDestPath = `${modsPath}/mod-settings.dat`;
 
 async function dumpPrep(): Promise<void> {
   // Read mod data
@@ -41,6 +43,12 @@ async function dumpPrep(): Promise<void> {
   });
 
   fs.writeFileSync(modListPath, JSON.stringify(modList));
+
+  if (fs.existsSync(modSettingsSourcePath)) {
+    // Copy settings into mods folder
+    fs.copyFileSync(modSettingsSourcePath, modSettingsDestPath);
+    console.log('Copied saved `mod-settings.dat` file into mods folder');
+  }
 
   console.log(
     `Enabled mods: ${modList.mods
