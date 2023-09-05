@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, Mocks, RecipeId, TestModule } from 'src/tests';
@@ -55,6 +60,30 @@ describe('TechPickerComponent', () => {
       expect(status?.available.length).toEqual(0);
       expect(status?.researched.length).toEqual(192);
       expect(status?.locked.length).toEqual(0);
+    });
+  });
+
+  describe('openImport', () => {
+    it('should mark the dialog as visible and focus the textarea', fakeAsync(() => {
+      const input = { focus: (): void => {} };
+      spyOn(input, 'focus');
+      component.openImport(input as any);
+      tick();
+      expect(component.importVisible).toBeTrue();
+      expect(input.focus).toHaveBeenCalled();
+    }));
+  });
+
+  describe('importTechs', () => {
+    it('should match technology ids and handle bad / empty', () => {
+      spyOn(component.selection$, 'next');
+      component.importValue = 'automation,fast-inserter,asdf,';
+      component.importTechs(Mocks.Dataset);
+      expect(component.selection$.next).toHaveBeenCalledWith([
+        'automation',
+        'fast-inserter-technology',
+        'electronics',
+      ]);
     });
   });
 

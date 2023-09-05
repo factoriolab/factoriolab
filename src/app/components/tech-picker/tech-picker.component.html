@@ -46,6 +46,53 @@
         (onChange)="setShowTechLabels($event.checked)"
       ></p-checkbox>
     </span>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="flex-shrink-0"
+      icon="fa-solid fa-file-import"
+      [label]="'techPicker.import' | translate"
+      [pTooltip]="'techPicker.importTooltip' | translate"
+      (click)="openImport(importInput)"
+    ></button>
+    <p-dialog
+      [(visible)]="importVisible"
+      [modal]="true"
+      [dismissableMask]="true"
+      [draggable]="true"
+      [resizable]="false"
+      appendTo="body"
+      [style]="{
+        width: '30vw'
+      }"
+      [breakpoints]="{ '768px': '50vw', '576px': '90vw' }"
+      [header]="'techPicker.importHeader' | translate"
+      (onHide)="importTechs(vm.data)"
+    >
+      <div class="d-flex flex-column">
+        <div>{{ 'techPicker.importInstructions' | translate }}</div>
+        <textarea
+          #importInput
+          class="mt-2 w-100"
+          rows="10"
+          pInputTextarea
+          [(ngModel)]="importValue"
+          (keydown.enter)="importVisible = false"
+        ></textarea>
+      </div>
+      <ng-template pTemplate="footer">
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="p-button-text"
+          icon="fa-solid fa-check"
+          [label]="'ok' | translate"
+          (click)="importVisible = false"
+        ></button>
+      </ng-template>
+    </p-dialog>
   </div>
 
   <p-scrollPanel
