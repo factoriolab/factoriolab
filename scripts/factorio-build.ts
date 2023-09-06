@@ -541,7 +541,15 @@ async function processMod(): Promise<void> {
       return undefined;
     }
 
-    return proto.energy_source.type as EnergyType;
+    switch (proto.energy_source.type) {
+      case 'burner':
+      case 'fluid':
+        return EnergyType.Burner;
+      case 'electric':
+        return EnergyType.Electric;
+      default:
+        return EnergyType.None;
+    }
   }
 
   function getMachineCategory(proto: MachineProto): string[] | undefined {
@@ -1337,9 +1345,10 @@ async function processMod(): Promise<void> {
             effectivity: entity.distribution_effectivity,
             modules: entity.module_specification.module_slots ?? 0,
             range: entity.supply_area_distance,
-            type: entity.energy_source.type as
-              | EnergyType.Electric
-              | EnergyType.Void,
+            type:
+              entity.energy_source.type === 'electric'
+                ? EnergyType.Electric
+                : EnergyType.None,
             usage: getPowerInKw(entity.energy_usage),
             disallowedEffects: getDisallowedEffects(
               entity.allowed_effects,
