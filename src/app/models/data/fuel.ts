@@ -14,8 +14,6 @@ export class FuelRational {
   constructor(obj: Fuel) {
     this.category = obj.category;
     this.value = Rational.from(obj.value);
-    if (obj.result) {
-      this.result = obj.result;
-    }
+    this.result = obj.result;
   }
 }

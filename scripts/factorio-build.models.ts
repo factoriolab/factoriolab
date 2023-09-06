@@ -29,6 +29,12 @@ export function isSimpleIngredient(
   return Array.isArray(value);
 }
 
+export function isFluidIngredient(
+  value: M.IngredientPrototype,
+): value is M.FluidIngredientPrototype {
+  return !Array.isArray(value) && value.type === 'fluid';
+}
+
 export function isSimpleProduct(
   value: M.ProductPrototype,
 ): value is [string, number] {

@@ -26,8 +26,6 @@
   &::after {
     // Styles for text overlay
     position: absolute;
-    bottom: -2px;
-    right: -2px;
 
     font-size: 1rem;
     line-height: 1rem;
@@ -42,6 +40,21 @@
       2px 0px 2px black,
       -2px 0px 2px black;
     pointer-events: none;
+  }
+
+  /**
+   * E.G. Amount of item in recipe, id of machines objective.
+   * Display in lower right.
+   */
+  > span {
+    bottom: -3px;
+    right: -2px;
+  }
+
+  /** E.G. Temperature of fluid. Display in upper right. */
+  &::after {
+    top: -7px;
+    right: -6px;
   }
 
   &.lg {

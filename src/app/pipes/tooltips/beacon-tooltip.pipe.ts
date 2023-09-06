@@ -28,12 +28,21 @@ export class BeaconTooltipPipe implements PipeTransform {
       ],
       [this.translateSvc.instant('data.modules'), beacon.modules.toString()],
       [this.translateSvc.instant('data.range'), beacon.range.toString()],
-      [this.translateSvc.instant('data.energySource'), beacon.type],
-      [
+    ];
+
+    if (beacon.type != null) {
+      tableRows.push([
+        this.translateSvc.instant('data.energySource'),
+        beacon.type,
+      ]);
+    }
+
+    if (beacon.usage != null) {
+      tableRows.push([
         this.translateSvc.instant('data.energyConsumption'),
         this.displaySvc.power(beacon.usage),
-      ],
-    ];
+      ]);
+    }
 
     if (beacon.disallowedEffects) {
       tableRows.push([

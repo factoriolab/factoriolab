@@ -381,9 +381,12 @@ export const getDataset = createSelector(
     recipes
       .filter((r) => !iconEntities[r.id] && !recipeEntities[r.id].icon)
       .forEach((r) => {
+        const firstOutId = Object.keys(r.out)[0];
+        const firstOutItem = itemData[firstOutId];
+
         recipeEntities[r.id] = {
           ...recipeEntities[r.id],
-          ...{ icon: Object.keys(r.out)[0] },
+          ...{ icon: firstOutItem.icon ?? firstOutId },
         };
       });
 

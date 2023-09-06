@@ -54,11 +54,11 @@
           <th>{{ 'data.range' | translate }}</th>
           <td>{{ beacon.range }}</td>
         </tr>
-        <tr>
+        <tr *ngIf="beacon.type">
           <th>{{ 'data.energySource' | translate }}</th>
           <td>{{ beacon.type }}</td>
         </tr>
-        <tr>
+        <tr *ngIf="beacon.usage">
           <th>{{ 'data.energyConsumption' | translate }}</th>
           <td>{{ displaySvc.power(beacon.usage) }}</td>
         </tr>

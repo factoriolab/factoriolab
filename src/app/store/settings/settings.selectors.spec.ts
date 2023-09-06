@@ -578,7 +578,7 @@ describe('Settings Selectors', () => {
         [RecipeId.Automation],
         Mocks.Dataset,
       );
-      expect(result.length).toEqual(233);
+      expect(result.length).toEqual(234);
     });
   });
 
