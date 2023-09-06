@@ -18,7 +18,7 @@ import {
 import { EnergyType } from '../src/app/models/enum/energy-type';
 import * as D from './factorio-build.models';
 import * as M from './factorio.models';
-import { coerceArray, getJsonData } from './helpers';
+import { coerceArray, coerceString, getJsonData } from './helpers';
 
 /**
  * This script is intended to pull files from a dump from Factorio and build
@@ -133,7 +133,7 @@ function getEnergyInMJ(usage: string): number {
   return round(result, 10);
 }
 
-function getPowerInKw(usage: string): number {
+function getPowerInKw(usage: string): number | undefined {
   const match = /(\d*\.?\d*)(\w*)/.exec(usage);
   if (match == null) {
     throw `Unrecognized power format: '${usage}'`;
@@ -141,7 +141,7 @@ function getPowerInKw(usage: string): number {
 
   const [_, numStr, unit] = [...match];
   if (!unit.endsWith('W')) {
-    throw `Unrecognized power unit: '${usage}'`;
+    return undefined;
   }
   const multiplier = getMultiplier(unit.substring(0, unit.length - 1));
   const num = Number(numStr);
@@ -510,7 +510,7 @@ async function processMod(): Promise<void> {
 
     let speed: number;
     if (M.isBoilerPrototype(proto)) {
-      speed = getPowerInKw(proto.energy_consumption);
+      speed = getPowerInKw(proto.energy_consumption) ?? 1;
     } else if (M.isLabPrototype(proto)) {
       speed = proto.researching_speed ?? 1;
     } else if (M.isMiningDrillPrototype(proto)) {
@@ -609,7 +609,7 @@ async function processMod(): Promise<void> {
           const usage = getMachineUsage(proto);
           if (usage != null) {
             const idle = M.isRocketSiloPrototype(proto)
-              ? getPowerInKw(proto.idle_energy_usage)
+              ? getPowerInKw(proto.idle_energy_usage) ?? 0
               : 0;
             return usage / 30 + idle;
           }
@@ -1242,18 +1242,18 @@ async function processMod(): Promise<void> {
         return {
           proto,
           sort: [
-            group.order ?? '',
+            coerceString(group.order),
             group.name,
-            subgroup.order ?? '',
+            coerceString(subgroup.order),
             subgroup.name,
-            order ?? '',
+            coerceString(order),
             proto.name,
           ],
         };
       },
     )
     .sort((a, b) => {
-      for (let i = 0; i < 6; i++) {
+      for (let i = 0; i < 5; i++) {
         if (a.sort[i] !== b.sort[i]) {
           return a.sort[i].localeCompare(b.sort[i]);
         }
@@ -1960,7 +1960,8 @@ async function processMod(): Promise<void> {
     const inputs = Object.keys(techIngredientsMap[techRaw.name]);
     const producers = labs.filter((l) => {
       const lab = dataRaw.lab[machines.lab[l]];
-      return inputs.every((i) => lab.inputs.includes(i));
+      const labInputs = coerceArray(lab.inputs);
+      return inputs.every((i) => labInputs.includes(i));
     });
 
     const recipe: Recipe = {
