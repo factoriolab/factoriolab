@@ -330,6 +330,7 @@ describe('Objectives Selectors', () => {
             RecipeId.BasicOilProcessing,
             RecipeId.AdvancedOilProcessing,
             RecipeId.CoalLiquefaction,
+            RecipeId.CoalLiquefactionSteam500,
             RecipeId.LightOilCracking,
           ],
           allRecipesIncluded: true,

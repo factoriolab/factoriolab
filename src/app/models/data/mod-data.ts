@@ -7,6 +7,7 @@ import { Recipe } from './recipe';
 
 export interface ModData {
   version: Entities<string>;
+  expensive?: boolean;
   categories: Category[];
   icons: Icon[];
   items: Item[];

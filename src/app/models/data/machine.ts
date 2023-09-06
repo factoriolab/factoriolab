@@ -46,21 +46,14 @@ export class MachineRational {
       this.modules = Math.round(obj.modules);
     }
 
-    if (obj.disallowedEffects) {
-      this.disallowedEffects = obj.disallowedEffects;
-    }
-
-    if (obj.type != null) {
-      this.type = obj.type;
-    }
+    this.disallowedEffects = obj.disallowedEffects;
+    this.type = obj.type;
 
     if (obj.usage != null) {
       this.usage = Rational.from(obj.usage);
     }
 
-    if (obj.fuelCategories) {
-      this.fuelCategories = obj.fuelCategories;
-    }
+    this.fuelCategories = obj.fuelCategories;
 
     if (obj.drain != null) {
       this.drain = Rational.from(obj.drain);

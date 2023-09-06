@@ -91,16 +91,8 @@ export class ItemRational {
       this.fluidWagon = new FluidWagonRational(obj.fluidWagon);
     }
 
-    if (obj.technology) {
-      this.technology = obj.technology;
-    }
-
-    if (obj.icon) {
-      this.icon = obj.icon;
-    }
-
-    if (obj.iconText) {
-      this.iconText = obj.iconText;
-    }
+    this.technology = obj.technology;
+    this.icon = obj.icon;
+    this.iconText = obj.iconText;
   }
 }

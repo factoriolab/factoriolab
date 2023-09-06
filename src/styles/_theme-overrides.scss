@@ -102,3 +102,8 @@ table p-dropdown {
 .p-menuitem-icon + .p-menuitem-text {
   margin-left: 0.5rem;
 }
+
+// Make sure tooltips have enough width
+.p-tooltip .p-tooltip-text {
+  width: fit-content;
+}
