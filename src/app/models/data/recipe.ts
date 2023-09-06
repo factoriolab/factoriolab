@@ -84,17 +84,9 @@ export class RecipeRational {
       this.cost = Rational.from(obj.cost);
     }
 
-    if (obj.part) {
-      this.part = obj.part;
-    }
-
-    if (obj.isMining != null) {
-      this.isMining = obj.isMining;
-    }
-
-    if (obj.isTechnology != null) {
-      this.isTechnology = obj.isTechnology;
-    }
+    this.part = obj.part;
+    this.isMining = obj.isMining;
+    this.isTechnology = obj.isTechnology;
 
     if (obj.usage != null) {
       this.usage = Rational.from(obj.usage);

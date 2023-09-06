@@ -548,7 +548,7 @@ async function processMod(): Promise<void> {
       case 'electric':
         return EnergyType.Electric;
       default:
-        return EnergyType.None;
+        return undefined;
     }
   }
 
@@ -1316,9 +1316,11 @@ async function processMod(): Promise<void> {
           name: fluidLocale.names[proto.name],
           category: group.name,
           row: getItemRow(proto),
-          icon: icon ?? proto.name,
+          icon,
           fuel,
         };
+
+        if (i > 0 && itemTemp.icon == null) itemTemp.icon = proto.name;
 
         if (temp !== proto.default_temperature) {
           itemTemp.name += ` (${temp}°C)`;
@@ -1348,7 +1350,7 @@ async function processMod(): Promise<void> {
             type:
               entity.energy_source.type === 'electric'
                 ? EnergyType.Electric
-                : EnergyType.None,
+                : undefined,
             usage: getPowerInKw(entity.energy_usage),
             disallowedEffects: getDisallowedEffects(
               entity.allowed_effects,

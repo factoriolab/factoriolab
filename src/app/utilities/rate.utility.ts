@@ -269,7 +269,11 @@ export class RateUtility {
             }
 
             const beacon = data.beaconEntities[b.id];
-            if (beacon.type === EnergyType.Electric && total != null) {
+            if (
+              beacon.type === EnergyType.Electric &&
+              beacon.usage != null &&
+              total != null
+            ) {
               step.power = (step.power ?? Rational.zero).add(
                 total.mul(beacon.usage),
               );
