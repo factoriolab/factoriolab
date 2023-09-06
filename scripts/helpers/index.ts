@@ -15,3 +15,10 @@ export function coerceArray<T>(
   const record = value;
   return Object.keys(record).map((k) => record[k]);
 }
+
+export function coerceString(
+  value: string | number | null | undefined,
+): string {
+  if (value == null) return '';
+  return value.toString();
+}
