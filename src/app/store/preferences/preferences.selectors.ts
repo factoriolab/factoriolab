@@ -39,10 +39,12 @@ export const getShowTechLabels = createSelector(
 
 /** Complex selectors */
 export const getSavedStates = createSelector(getStates, (states) =>
-  Object.keys(states).map(
-    (i): SelectItem => ({
-      label: i,
-      value: i,
-    }),
-  ),
+  Object.keys(states)
+    .sort()
+    .map(
+      (i): SelectItem => ({
+        label: i,
+        value: i,
+      }),
+    ),
 );
