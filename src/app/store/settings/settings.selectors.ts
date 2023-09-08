@@ -624,14 +624,19 @@ export const getInserterData = createSelector(
 export const getAllResearchedTechnologyIds = createSelector(
   getResearchedTechnologyIds,
   getDataset,
-  (researchedTechologyIds, data) => {
+  (researchedTechnologyIds, data) => {
     if (
       /** No need to parse if all researched */
-      researchedTechologyIds == null ||
+      researchedTechnologyIds == null ||
       /** Skip if data is not loaded */
       Object.keys(data.technologyEntities).length === 0
     )
-      return researchedTechologyIds;
+      return researchedTechnologyIds;
+
+    // Filter out any technology ids that are no longer valid
+    const validTechnologyIds = researchedTechnologyIds.filter(
+      (i) => data.technologyEntities[i] != null,
+    );
 
     /**
      * Source technology list includes only minimal set of technologies that
@@ -639,7 +644,7 @@ export const getAllResearchedTechnologyIds = createSelector(
      * to reduce zip size. Need to rehydrate full list of technology ids using
      * their prerequisites.
      */
-    const selection = new Set(researchedTechologyIds);
+    const selection = new Set(validTechnologyIds);
 
     let addIds: Set<string>;
     do {
