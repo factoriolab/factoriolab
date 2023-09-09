@@ -207,6 +207,26 @@ export const routes: DataRoute[] = [
     },
   },
   {
+    path: 'technologies/:id',
+    loadComponent: () =>
+      import('./routes/item/item.component').then((c) => c.ItemComponent),
+    data: {
+      collectionLabel: 'data.technologies',
+    },
+  },
+  {
+    path: 'technologies',
+    loadComponent: () =>
+      import('./routes/collection/collection.component').then(
+        (c) => c.CollectionComponent,
+      ),
+    data: {
+      label: 'data.technologies',
+      type: 'item',
+      ids: 'technologyIds',
+    },
+  },
+  {
     path: 'recipes/:id',
     loadComponent: () =>
       import('./routes/recipe/recipe.component').then((c) => c.RecipeComponent),
@@ -224,26 +244,6 @@ export const routes: DataRoute[] = [
       label: 'data.recipes',
       type: 'recipe',
       ids: 'recipeIds',
-    },
-  },
-  {
-    path: 'technologies/:id',
-    loadComponent: () =>
-      import('./routes/recipe/recipe.component').then((c) => c.RecipeComponent),
-    data: {
-      collectionLabel: 'data.technologies',
-    },
-  },
-  {
-    path: 'technologies',
-    loadComponent: () =>
-      import('./routes/collection/collection.component').then(
-        (c) => c.CollectionComponent,
-      ),
-    data: {
-      label: 'data.technologies',
-      type: 'recipe',
-      ids: 'technologyIds',
     },
   },
   {
