@@ -3,8 +3,12 @@ import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
 import {
+  Beacon,
+  Belt,
+  CargoWagon,
   Category,
   Entities,
+  FluidWagon,
   Fuel,
   Item,
   Machine,
@@ -194,6 +198,7 @@ async function processMod(): Promise<void> {
   const fluidLocale = getLocale('fluid-locale.json');
   const recipeLocale = getLocale('recipe-locale.json');
   const techLocale = getLocale('technology-locale.json');
+  const entityLocale = getLocale('entity-locale.json');
 
   // Read main data JSON
   const dataRaw = getJsonData<D.DataRawDump>(dataRawPath);
@@ -220,6 +225,23 @@ async function processMod(): Promise<void> {
       dataRaw['spidertron-remote'][name] ??
       dataRaw.tool[name] ??
       dataRaw.fluid[name]
+    );
+  }
+
+  function getEntity(name: string): D.AnyEntityPrototype {
+    return (
+      dataRaw.beacon[name] ??
+      dataRaw['assembling-machine'][name] ??
+      dataRaw.boiler[name] ??
+      dataRaw.furnace[name] ??
+      dataRaw.lab[name] ??
+      dataRaw['mining-drill'][name] ??
+      dataRaw['offshore-pump'][name] ??
+      dataRaw.reactor[name] ??
+      dataRaw['rocket-silo'][name] ??
+      dataRaw['transport-belt'][name] ??
+      dataRaw['cargo-wagon'][name] ??
+      dataRaw['fluid-wagon'][name]
     );
   }
 
@@ -273,7 +295,11 @@ async function processMod(): Promise<void> {
   }
 
   function getSubgroup(
-    proto: D.AnyItemPrototype | M.FluidPrototype | M.RecipePrototype,
+    proto:
+      | D.AnyItemPrototype
+      | D.AnyEntityPrototype
+      | M.FluidPrototype
+      | M.RecipePrototype,
   ): string {
     if (proto.subgroup) {
       return proto.subgroup;
@@ -291,7 +317,9 @@ async function processMod(): Promise<void> {
   let lastItemRow = 0;
   let lastItemGroup = '';
   let lastItemSubgroup = '';
-  function getItemRow(item: D.AnyItemPrototype | M.FluidPrototype): number {
+  function getItemRow(
+    item: D.AnyItemPrototype | D.AnyEntityPrototype | M.FluidPrototype,
+  ): number {
     const subgroup = dataRaw['item-subgroup'][getSubgroup(item)];
     if (subgroup.group === lastItemGroup) {
       if (subgroup.name !== lastItemSubgroup) {
@@ -310,7 +338,11 @@ async function processMod(): Promise<void> {
   let lastRecipeGroup = '';
   let lastRecipeSubgroup = '';
   function getRecipeRow(
-    proto: M.RecipePrototype | D.AnyItemPrototype | M.FluidPrototype,
+    proto:
+      | M.RecipePrototype
+      | D.AnyItemPrototype
+      | D.AnyEntityPrototype
+      | M.FluidPrototype,
   ): number {
     const subgroupId = getSubgroup(proto);
     const subgroup = dataRaw['item-subgroup'][subgroupId];
@@ -342,6 +374,7 @@ async function processMod(): Promise<void> {
   async function getIcon(
     spec:
       | D.AnyItemPrototype
+      | D.AnyEntityPrototype
       | M.FluidPrototype
       | M.ItemGroup
       | M.RecipePrototype
@@ -390,8 +423,10 @@ async function processMod(): Promise<void> {
         folder = 'technology';
       } else if (M.isItemGroup(spec)) {
         folder = 'item-group';
-      } else {
+      } else if (D.isAnyItemPrototype(spec)) {
         folder = 'item';
+      } else {
+        folder = 'entity';
       }
 
       const path = `${scriptOutputPath}/${folder}/${spec.name}.png`;
@@ -424,8 +459,6 @@ async function processMod(): Promise<void> {
   };
   // Keep track of all used fluid temperatures
   const fluidTemps: Record<string, Set<number>> = {};
-  // Keep track of recipe variants
-  const recipeTempVariants: Record<string, string[]> = {};
 
   function addFluidTemp(id: string, temp: number): void {
     if (fluidTemps[id] == null) fluidTemps[id] = new Set<number>();
@@ -798,6 +831,20 @@ async function processMod(): Promise<void> {
     return getDisallowedEffects(proto.allowed_effects);
   }
 
+  function getBeacon(proto: M.BeaconPrototype): Beacon {
+    return {
+      effectivity: proto.distribution_effectivity,
+      modules: proto.module_specification.module_slots ?? 0,
+      range: proto.supply_area_distance,
+      type:
+        proto.energy_source.type === 'electric'
+          ? EnergyType.Electric
+          : undefined,
+      usage: getPowerInKw(proto.energy_usage),
+      disallowedEffects: getDisallowedEffects(proto.allowed_effects, true),
+    };
+  }
+
   function getMachine(proto: MachineProto, name: string): Machine {
     const machine: Machine = {
       speed: getMachineSpeed(proto),
@@ -814,6 +861,18 @@ async function processMod(): Promise<void> {
     processProducers(proto, name);
 
     return machine;
+  }
+
+  function getBelt(proto: M.TransportBeltPrototype): Belt {
+    return { speed: proto.speed * 480 };
+  }
+
+  function getCargoWagon(proto: M.CargoWagonPrototype): CargoWagon {
+    return { size: proto.inventory_size };
+  }
+
+  function getFluidWagon(proto: M.FluidWagonPrototype): FluidWagon {
+    return { capacity: proto.capacity };
   }
 
   const modData: ModData = {
@@ -1120,7 +1179,8 @@ async function processMod(): Promise<void> {
   }
 
   logTime('Processing data');
-  const itemsUsed = new Set<string>();
+  // Include all modules by default
+  const itemsUsed = new Set<string>(Object.keys(dataRaw.module));
 
   const itemKeys = [
     ...Object.keys(dataRaw.item),
@@ -1138,11 +1198,28 @@ async function processMod(): Promise<void> {
     ...Object.keys(dataRaw.tool),
   ];
 
-  // Check for burnt result / rocket launch products
+  const entityKeys = [
+    ...Object.keys(dataRaw.beacon),
+    ...Object.keys(dataRaw['assembling-machine']),
+    ...Object.keys(dataRaw.boiler),
+    ...Object.keys(dataRaw.furnace),
+    ...Object.keys(dataRaw.lab),
+    ...Object.keys(dataRaw['mining-drill']),
+    ...Object.keys(dataRaw['offshore-pump']),
+    ...Object.keys(dataRaw.reactor),
+    ...Object.keys(dataRaw['rocket-silo']),
+    ...Object.keys(dataRaw['transport-belt']),
+    ...Object.keys(dataRaw['cargo-wagon']),
+    ...Object.keys(dataRaw['fluid-wagon']),
+  ];
+
+  // Check for burnt result / rocket launch products, fuels
   for (const key of itemKeys) {
     const item = getItem(key);
 
     if (M.isFluidPrototype(item)) continue;
+
+    if (item.fuel_value) itemsUsed.add(item.name);
 
     if (item.rocket_launch_product || item.rocket_launch_products) {
       itemsUsed.add(item.name);
@@ -1217,9 +1294,26 @@ async function processMod(): Promise<void> {
     techIngredientsMap[tech.name] = techIngredients;
   }
 
+  const itemsUsedProtos = Array.from(itemsUsed.values()).map((key) =>
+    getItem(key),
+  );
+
+  // Add any entities that are not placed by the added items
+  const placedEntities = new Set<string>();
+  for (const proto of itemsUsedProtos) {
+    if (!M.isFluidPrototype(proto) && proto.place_result != null) {
+      placedEntities.add(proto.place_result);
+    }
+  }
+
+  const entitiesUsedProtos = entityKeys
+    .filter((id) => !placedEntities.has(id))
+    .map((id) => getEntity(id));
+
   // Sort items
   const protos = [
-    ...Array.from(itemsUsed.keys()).map((key) => getItem(key)),
+    ...itemsUsedProtos,
+    ...entitiesUsedProtos,
     ...Object.keys(recipesEnabled).map((r) => recipesEnabled[r]),
   ];
   const protosSorted = protos
@@ -1227,7 +1321,11 @@ async function processMod(): Promise<void> {
       (
         proto,
       ): {
-        proto: D.AnyItemPrototype | M.FluidPrototype | M.RecipePrototype;
+        proto:
+          | D.AnyItemPrototype
+          | D.AnyEntityPrototype
+          | M.FluidPrototype
+          | M.RecipePrototype;
         sort: [string, string, string, string, string, string];
       } => {
         const subgroupId = getSubgroup(proto);
@@ -1329,6 +1427,60 @@ async function processMod(): Promise<void> {
 
         modData.items.push(itemTemp);
       });
+    } else if (M.isBeaconPrototype(proto)) {
+      modData.items.push({
+        id: proto.name,
+        name: entityLocale.names[proto.name],
+        category: group.name,
+        row: getItemRow(proto),
+        icon: await getIcon(proto),
+        beacon: getBeacon(proto),
+      });
+    } else if (
+      M.isAssemblingMachinePrototype(proto) ||
+      M.isBoilerPrototype(proto) ||
+      M.isFurnacePrototype(proto) ||
+      M.isLabPrototype(proto) ||
+      M.isMiningDrillPrototype(proto) ||
+      M.isOffshorePumpPrototype(proto) ||
+      M.isReactorPrototype(proto) ||
+      M.isRocketSiloPrototype(proto)
+    ) {
+      modData.items.push({
+        id: proto.name,
+        name: entityLocale.names[proto.name],
+        category: group.name,
+        row: getItemRow(proto),
+        icon: await getIcon(proto),
+        machine: getMachine(proto, proto.name),
+      });
+    } else if (M.isTransportBeltPrototype(proto)) {
+      modData.items.push({
+        id: proto.name,
+        name: entityLocale.names[proto.name],
+        category: group.name,
+        row: getItemRow(proto),
+        icon: await getIcon(proto),
+        belt: getBelt(proto),
+      });
+    } else if (M.isCargoWagonPrototype(proto)) {
+      modData.items.push({
+        id: proto.name,
+        name: entityLocale.names[proto.name],
+        category: group.name,
+        row: getItemRow(proto),
+        icon: await getIcon(proto),
+        cargoWagon: getCargoWagon(proto),
+      });
+    } else if (M.isFluidWagonPrototype(proto)) {
+      modData.items.push({
+        id: proto.name,
+        name: entityLocale.names[proto.name],
+        category: group.name,
+        row: getItemRow(proto),
+        icon: await getIcon(proto),
+        fluidWagon: getFluidWagon(proto),
+      });
     } else {
       const item: Item = {
         id: proto.name,
@@ -1343,20 +1495,7 @@ async function processMod(): Promise<void> {
         // Parse beacon
         if (dataRaw.beacon[proto.place_result]) {
           const entity = dataRaw.beacon[proto.place_result];
-          item.beacon = {
-            effectivity: entity.distribution_effectivity,
-            modules: entity.module_specification.module_slots ?? 0,
-            range: entity.supply_area_distance,
-            type:
-              entity.energy_source.type === 'electric'
-                ? EnergyType.Electric
-                : undefined,
-            usage: getPowerInKw(entity.energy_usage),
-            disallowedEffects: getDisallowedEffects(
-              entity.allowed_effects,
-              true,
-            ),
-          };
+          item.beacon = getBeacon(entity);
         }
 
         // Parse machine
@@ -1389,21 +1528,19 @@ async function processMod(): Promise<void> {
         // Parse transport belt
         if (dataRaw['transport-belt'][proto.place_result]) {
           const entity = dataRaw['transport-belt'][proto.place_result];
-          item.belt = {
-            speed: entity.speed * 480,
-          };
+          item.belt = getBelt(entity);
         }
 
         // Parse cargo wagon
         if (dataRaw['cargo-wagon'][proto.place_result]) {
           const entity = dataRaw['cargo-wagon'][proto.place_result];
-          item.cargoWagon = { size: entity.inventory_size };
+          item.cargoWagon = getCargoWagon(entity);
         }
 
         // Parse fluid wagon
         if (dataRaw['fluid-wagon'][proto.place_result]) {
           const entity = dataRaw['fluid-wagon'][proto.place_result];
-          item.fluidWagon = { capacity: entity.capacity };
+          item.fluidWagon = getFluidWagon(entity);
         }
       }
 
@@ -1425,15 +1562,7 @@ async function processMod(): Promise<void> {
         }
 
         if (limitation != null) {
-          const set = new Set<string>(limitation);
-          limitation
-            .filter((limRecipeId) => recipeTempVariants[limRecipeId] != null)
-            .forEach((limRecipeId) =>
-              recipeTempVariants[limRecipeId].forEach((varRecipeId) =>
-                set.add(varRecipeId),
-              ),
-            );
-
+          const set = new Set(limitation);
           const value = [...set].sort();
           const hash = JSON.stringify(value);
           if (!limitations[hash]) {
@@ -1626,7 +1755,6 @@ async function processMod(): Promise<void> {
 
           // For each set of valid fluid temperature inputs, generate a recipe
           const icon = await getIcon(proto);
-          recipeTempVariants[proto.name] = [];
           for (let i = 0; i < recipeInOptions.length; i++) {
             // For first option, use proto name, for others append index
             const [recipeIn, ids] = recipeInOptions[i];
@@ -1652,11 +1780,14 @@ async function processMod(): Promise<void> {
 
             if (i > 0) {
               recipe.icon = recipe.icon ?? proto.name;
+              // Add recipe temperature variants to relevant limitations
+              for (const limitationId of Object.keys(modData.limitations)) {
+                const limitation = modData.limitations[limitationId];
+                if (limitation.includes(proto.name)) limitation.push(id);
+              }
             }
 
             modData.recipes.push(recipe);
-
-            recipeTempVariants[proto.name].push(id);
           }
         } else {
           const recipe: Recipe = {
@@ -1750,8 +1881,7 @@ async function processMod(): Promise<void> {
       for (const launch_proto of protosSorted) {
         if (
           // Must be an item
-          M.isRecipePrototype(launch_proto) ||
-          M.isFluidPrototype(launch_proto) ||
+          !D.isAnyItemPrototype(launch_proto) ||
           // Ignore if already processed
           processedLaunchProto.has(launch_proto.name) ||
           // Ignore if no launch products
@@ -1820,7 +1950,11 @@ async function processMod(): Promise<void> {
       }
 
       // Check for burn recipes
-      if (proto.burnt_result && proto.fuel_category) {
+      if (
+        D.isAnyItemPrototype(proto) &&
+        proto.burnt_result &&
+        proto.fuel_category
+      ) {
         // Found burn recipe
         const id = getFakeRecipeId(proto.burnt_result, `${proto.name}-burn`);
         const recipe: Recipe = {
