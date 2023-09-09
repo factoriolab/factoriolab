@@ -100,3 +100,35 @@ export type AnyItemPrototype =
   | M.SelectionToolPrototype
   | M.SpidertronRemotePrototype
   | M.ToolPrototype;
+
+export function isItemPrototype(proto: unknown): proto is AnyItemPrototype {
+  return (
+    M.isAmmoItemPrototype(proto) ||
+    M.isArmorPrototype(proto) ||
+    M.isCapsulePrototype(proto) ||
+    M.isGunPrototype(proto) ||
+    M.isItemPrototype(proto) ||
+    M.isItemWithEntityDataPrototype(proto) ||
+    M.isItemWithTagsPrototype(proto) ||
+    M.isModulePrototype(proto) ||
+    M.isRailPlannerPrototype(proto) ||
+    M.isRepairToolPrototype(proto) ||
+    M.isSelectionToolPrototype(proto) ||
+    M.isSpidertronRemotePrototype(proto) ||
+    M.isToolPrototype(proto)
+  );
+}
+
+export type AnyEntityPrototype =
+  | M.BeaconPrototype
+  | M.AssemblingMachinePrototype
+  | M.BoilerPrototype
+  | M.FurnacePrototype
+  | M.LabPrototype
+  | M.MiningDrillPrototype
+  | M.OffshorePumpPrototype
+  | M.ReactorPrototype
+  | M.RocketSiloPrototype
+  | M.TransportBeltPrototype
+  | M.CargoWagonPrototype
+  | M.FluidWagonPrototype;
