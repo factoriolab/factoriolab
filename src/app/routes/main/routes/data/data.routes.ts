@@ -229,7 +229,7 @@ export const routes: DataRoute[] = [
   {
     path: 'technologies/:id',
     loadComponent: () =>
-      import('./routes/recipe/recipe.component').then((c) => c.RecipeComponent),
+      import('./routes/item/item.component').then((c) => c.ItemComponent),
     data: {
       collectionLabel: 'data.technologies',
     },
@@ -242,7 +242,7 @@ export const routes: DataRoute[] = [
       ),
     data: {
       label: 'data.technologies',
-      type: 'recipe',
+      type: 'item',
       ids: 'technologyIds',
     },
   },
