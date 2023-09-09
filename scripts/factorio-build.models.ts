@@ -101,7 +101,7 @@ export type AnyItemPrototype =
   | M.SpidertronRemotePrototype
   | M.ToolPrototype;
 
-export function isItemPrototype(proto: unknown): proto is AnyItemPrototype {
+export function isAnyItemPrototype(proto: unknown): proto is AnyItemPrototype {
   return (
     M.isAmmoItemPrototype(proto) ||
     M.isArmorPrototype(proto) ||

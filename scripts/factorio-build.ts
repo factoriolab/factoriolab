@@ -423,7 +423,7 @@ async function processMod(): Promise<void> {
         folder = 'technology';
       } else if (M.isItemGroup(spec)) {
         folder = 'item-group';
-      } else if (D.isItemPrototype(spec)) {
+      } else if (D.isAnyItemPrototype(spec)) {
         folder = 'item';
       } else {
         folder = 'entity';
@@ -459,8 +459,6 @@ async function processMod(): Promise<void> {
   };
   // Keep track of all used fluid temperatures
   const fluidTemps: Record<string, Set<number>> = {};
-  // Keep track of recipe variants
-  const recipeTempVariants: Record<string, string[]> = {};
 
   function addFluidTemp(id: string, temp: number): void {
     if (fluidTemps[id] == null) fluidTemps[id] = new Set<number>();
@@ -1564,15 +1562,7 @@ async function processMod(): Promise<void> {
         }
 
         if (limitation != null) {
-          const set = new Set<string>(limitation);
-          limitation
-            .filter((limRecipeId) => recipeTempVariants[limRecipeId] != null)
-            .forEach((limRecipeId) =>
-              recipeTempVariants[limRecipeId].forEach((varRecipeId) =>
-                set.add(varRecipeId),
-              ),
-            );
-
+          const set = new Set(limitation);
           const value = [...set].sort();
           const hash = JSON.stringify(value);
           if (!limitations[hash]) {
@@ -1765,7 +1755,6 @@ async function processMod(): Promise<void> {
 
           // For each set of valid fluid temperature inputs, generate a recipe
           const icon = await getIcon(proto);
-          recipeTempVariants[proto.name] = [];
           for (let i = 0; i < recipeInOptions.length; i++) {
             // For first option, use proto name, for others append index
             const [recipeIn, ids] = recipeInOptions[i];
@@ -1791,11 +1780,14 @@ async function processMod(): Promise<void> {
 
             if (i > 0) {
               recipe.icon = recipe.icon ?? proto.name;
+              // Add recipe temperature variants to relevant limitations
+              for (const limitationId of Object.keys(modData.limitations)) {
+                const limitation = modData.limitations[limitationId];
+                if (limitation.includes(proto.name)) limitation.push(id);
+              }
             }
 
             modData.recipes.push(recipe);
-
-            recipeTempVariants[proto.name].push(id);
           }
         } else {
           const recipe: Recipe = {
@@ -1889,7 +1881,7 @@ async function processMod(): Promise<void> {
       for (const launch_proto of protosSorted) {
         if (
           // Must be an item
-          !M.isItemPrototype(launch_proto) ||
+          !D.isAnyItemPrototype(launch_proto) ||
           // Ignore if already processed
           processedLaunchProto.has(launch_proto.name) ||
           // Ignore if no launch products
@@ -1959,7 +1951,7 @@ async function processMod(): Promise<void> {
 
       // Check for burn recipes
       if (
-        D.isItemPrototype(proto) &&
+        D.isAnyItemPrototype(proto) &&
         proto.burnt_result &&
         proto.fuel_category
       ) {
