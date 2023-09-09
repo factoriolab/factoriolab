@@ -50,8 +50,14 @@ function formatTime(milliseconds: number): string {
   return `\x1b[33m${duration}\x1b[0m`;
 }
 
-const mod = process.argv[2];
-const mods = mod ? [mod] : CURRENT_FACTORIO_MODS;
+// Load mods from arguments
+let mods = process.argv.slice(2);
+
+// Fallback to update all mods
+if (mods.length === 0) {
+  mods = CURRENT_FACTORIO_MODS;
+}
+
 const start = Date.now();
 let temp = Date.now();
 function logTime(msg: string): void {
