@@ -55,6 +55,9 @@ export class ItemComponent extends DetailComponent {
         producibleRecipeIds: data.recipeIds.filter(
           (r) => data.recipeEntities[r]?.producers.indexOf(id) !== -1,
         ),
+        unlockedRecipeIds: data.recipeIds.filter(
+          (r) => data.recipeEntities[r]?.unlockedBy === id,
+        ),
         itemSettingsRaw: itemsStateRaw[id],
         itemSettings: itemsState[id],
         machineSettingsRaw: machinesStateRaw.entities[id],
