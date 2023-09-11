@@ -132,36 +132,74 @@ describe('SettingsComponent', () => {
   });
 
   describe('clickSaveState', () => {
-    it('should emit to save the state', () => {
+    it('should emit to create the new saved state', () => {
       spyOn(component, 'saveState');
+      spyOn(component, 'removeState');
       component.editCtrl.setValue(id);
       component.editState = 'create';
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
       component.clickSaveState();
       expect(component.saveState).toHaveBeenCalledWith(id, value);
-      expect(component.editState).toBeFalse();
+      expect(component.removeState).not.toHaveBeenCalled();
+      expect(component.editState).toBeNull();
+    });
+
+    it('should emit to edit the saved state', () => {
+      spyOn(component, 'saveState');
+      spyOn(component, 'removeState');
+      component.editCtrl.setValue(id);
+      component.editState = 'edit';
+      component.state = id;
+      spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
+      component.clickSaveState();
+      expect(component.saveState).toHaveBeenCalledWith(id, value);
+      expect(component.removeState).toHaveBeenCalledWith(id);
+      expect(component.editState).toBeNull();
+    });
+
+    it('should skip if invalid or not editing', () => {
+      spyOn(component, 'saveState');
+      component.editCtrl.setValue('');
+      component.editState = 'create';
+      component.clickSaveState();
+      component.editCtrl.setValue('id');
+      component.editState = null;
+      component.clickSaveState();
+      expect(component.saveState).not.toHaveBeenCalled();
     });
   });
 
   describe('clickDeleteState', () => {
-    it('should emit to remove the state', () => {
+    it('should emit to remove the state from the menu', () => {
       spyOn(component, 'removeState');
       component.state = id;
-      component.clickDeleteState();
+      component.editStateMenu[2].command!({});
       expect(component.removeState).toHaveBeenCalledWith(id);
       expect(component.state).toEqual('');
     });
   });
 
-  describe('openEditState', () => {
-    it('should start the editing state', () => {
+  describe('openCreateState', () => {
+    it('should start the create state from the menu', () => {
       spyOn(component.editCtrl, 'setValue');
       spyOn(component.editCtrl, 'markAsPristine');
       component.state = id;
-      component.openEditState();
+      component.editStateMenu[0].command!({});
+      expect(component.editCtrl.setValue).toHaveBeenCalledWith('');
+      expect(component.editCtrl.markAsPristine).toHaveBeenCalled();
+      expect(component.editState).toEqual('create');
+    });
+  });
+
+  describe('openEditState', () => {
+    it('should start the edit state from the menu', () => {
+      spyOn(component.editCtrl, 'setValue');
+      spyOn(component.editCtrl, 'markAsPristine');
+      component.state = id;
+      component.editStateMenu[1].command!({});
       expect(component.editCtrl.setValue).toHaveBeenCalledWith(id);
       expect(component.editCtrl.markAsPristine).toHaveBeenCalled();
-      expect(component.editState).toBeTrue();
+      expect(component.editState).toEqual('edit');
     });
   });
 
