@@ -134,8 +134,8 @@ describe('SettingsComponent', () => {
   describe('clickSaveState', () => {
     it('should emit to save the state', () => {
       spyOn(component, 'saveState');
-      component.stateCtrl.setValue(id);
-      component.editState = true;
+      component.editCtrl.setValue(id);
+      component.editState = 'create';
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
       component.clickSaveState();
       expect(component.saveState).toHaveBeenCalledWith(id, value);
@@ -155,12 +155,12 @@ describe('SettingsComponent', () => {
 
   describe('openEditState', () => {
     it('should start the editing state', () => {
-      spyOn(component.stateCtrl, 'setValue');
-      spyOn(component.stateCtrl, 'markAsPristine');
+      spyOn(component.editCtrl, 'setValue');
+      spyOn(component.editCtrl, 'markAsPristine');
       component.state = id;
       component.openEditState();
-      expect(component.stateCtrl.setValue).toHaveBeenCalledWith(id);
-      expect(component.stateCtrl.markAsPristine).toHaveBeenCalled();
+      expect(component.editCtrl.setValue).toHaveBeenCalledWith(id);
+      expect(component.editCtrl.markAsPristine).toHaveBeenCalled();
       expect(component.editState).toBeTrue();
     });
   });

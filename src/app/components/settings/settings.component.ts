@@ -135,8 +135,25 @@ export class SettingsComponent implements OnInit {
   );
 
   state = '';
-  stateCtrl = new FormControl('', Validators.required);
-  editState = false;
+  editCtrl = new FormControl('', Validators.required);
+  editState: 'create' | 'edit' | null = null;
+  editStateMenu: MenuItem[] = [
+    {
+      label: this.translateSvc.instant('settings.createSavedState'),
+      icon: 'fa-solid fa-plus',
+      command: (): void => this.openCreateState(),
+    },
+    {
+      label: this.translateSvc.instant('settings.editSavedState'),
+      icon: 'fa-solid fa-pencil',
+      command: (): void => this.openEditState(),
+    },
+    {
+      label: this.translateSvc.instant('settings.deleteSavedState'),
+      icon: 'fa-solid fa-trash',
+      command: (): void => this.clickDeleteState(),
+    },
+  ];
   versionsVisible = false;
 
   displayRateOptions = displayRateOptions;
@@ -232,11 +249,16 @@ export class SettingsComponent implements OnInit {
   }
 
   clickSaveState(): void {
-    if (this.stateCtrl.value) {
-      this.saveState(this.stateCtrl.value, BrowserUtility.search);
-      this.editState = false;
-      this.state = this.stateCtrl.value;
+    if (!this.editCtrl.value || !this.editState) return;
+
+    this.saveState(this.editCtrl.value, BrowserUtility.search);
+
+    if (this.editState === 'edit' && this.state) {
+      this.removeState(this.state);
     }
+
+    this.editState = null;
+    this.state = this.editCtrl.value;
   }
 
   clickDeleteState(): void {
@@ -244,10 +266,16 @@ export class SettingsComponent implements OnInit {
     this.state = '';
   }
 
+  openCreateState(): void {
+    this.editCtrl.setValue('');
+    this.editCtrl.markAsPristine();
+    this.editState = 'create';
+  }
+
   openEditState(): void {
-    this.stateCtrl.setValue(this.state);
-    this.stateCtrl.markAsPristine();
-    this.editState = true;
+    this.editCtrl.setValue(this.state);
+    this.editCtrl.markAsPristine();
+    this.editState = 'edit';
   }
 
   setGame(game: Game): void {
