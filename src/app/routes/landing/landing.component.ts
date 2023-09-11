@@ -31,8 +31,8 @@ export class LandingComponent {
     this.store.select(Settings.getMod),
     this.store.select(Settings.getAvailableItems),
     this.store.select(Settings.getAvailableRecipes),
+    this.store.select(Settings.getSavedStates),
     this.store.select(Preferences.preferencesState),
-    this.store.select(Preferences.getSavedStates),
   ]).pipe(
     map(
       ([
@@ -42,8 +42,8 @@ export class LandingComponent {
         mod,
         itemIds,
         recipeIds,
-        preferences,
         savedStates,
+        preferences,
       ]) => ({
         settings,
         modOptions,
@@ -51,8 +51,8 @@ export class LandingComponent {
         mod,
         itemIds,
         recipeIds,
-        preferences,
         savedStates,
+        preferences,
       }),
     ),
   );
@@ -80,8 +80,7 @@ export class LandingComponent {
     this.router.navigate(['list']);
   }
 
-  setState(id: string, preferences: Preferences.PreferencesState): void {
-    const query = preferences.states[id];
+  setState(query: string): void {
     if (query) {
       const queryParams = this.routerSvc.getParams(query);
       this.router.navigate(['list'], { queryParams });

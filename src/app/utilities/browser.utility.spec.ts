@@ -44,15 +44,6 @@ describe('BrowserUtility', () => {
     });
   });
 
-  describe('modState', () => {
-    it('should get/set', () => {
-      BrowserUtility.modState = 'modState';
-      expect(BrowserUtility.modState).toEqual('modState');
-      BrowserUtility.modState = null;
-      expect(BrowserUtility.modState).toEqual(null);
-    });
-  });
-
   describe('preferencesState', () => {
     it('should get/set', () => {
       const preferencesState: any = { pref: 'value' };

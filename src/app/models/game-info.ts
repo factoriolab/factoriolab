@@ -13,14 +13,6 @@ export interface GameInfo {
 
 /** Game information data, nonconfigurable */
 export const gameInfo: Record<Game, GameInfo> = {
-  [Game.None]: {
-    icon: 'factorio',
-    route: 'factorio',
-    label: 'options.game.factorio',
-    meta: 'FactorioLab',
-    modId: '1.1',
-    hideColumns: [],
-  },
   [Game.Factorio]: {
     icon: 'factorio',
     route: 'factorio',

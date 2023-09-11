@@ -1,7 +1,6 @@
 import { SelectItem } from 'primeng/api';
 
 export enum Game {
-  None = 'None',
   Factorio = 'Factorio',
   CaptainOfIndustry = 'CaptainOfIndustry',
   DysonSphereProgram = 'DysonSphereProgram',

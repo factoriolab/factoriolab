@@ -1,10 +1,19 @@
 import { Action } from '@ngrx/store';
 
-import { ColumnsState, IdPayload, Language, PowerUnit, Theme } from '~/models';
+import {
+  ColumnsState,
+  Entities,
+  Game,
+  IdPayload,
+  Language,
+  PowerUnit,
+  Theme,
+} from '~/models';
 
 export const enum PreferencesActionType {
   SAVE_STATE = '[Preferences] Save State',
   REMOVE_STATE = '[Preferences] Remove State',
+  SET_STATES = '[Preferences] Set States',
   SET_COLUMNS = '[Preferences] Set Columns',
   SET_LANGUAGE = '[Preferences] Set Display Language',
   SET_POWER_UNIT = '[Preferences] Set Power Unit',
@@ -15,12 +24,17 @@ export const enum PreferencesActionType {
 
 export class SaveStateAction implements Action {
   readonly type = PreferencesActionType.SAVE_STATE;
-  constructor(public payload: IdPayload) {}
+  constructor(public payload: [Game, IdPayload]) {}
 }
 
 export class RemoveStateAction implements Action {
   readonly type = PreferencesActionType.REMOVE_STATE;
-  constructor(public payload: string) {}
+  constructor(public payload: [Game, string]) {}
+}
+
+export class SetStatesAction implements Action {
+  readonly type = PreferencesActionType.SET_STATES;
+  constructor(public payload: Record<Game, Entities<string>>) {}
 }
 
 export class SetColumnsAction implements Action {
@@ -56,6 +70,7 @@ export class SetShowTechLabelsAction implements Action {
 export type PreferencesAction =
   | SaveStateAction
   | RemoveStateAction
+  | SetStatesAction
   | SetColumnsAction
   | SetLanguageAction
   | SetPowerUnitAction

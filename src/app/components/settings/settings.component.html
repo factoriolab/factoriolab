@@ -76,7 +76,7 @@
             [placeholder]="'settings.nameSavedState' | translate"
             [pTooltip]="'settings.nameSavedState' | translate"
             tooltipPosition="top"
-            (keydown.enter)="clickSaveState()"
+            (keydown.enter)="clickSaveState(vm.data.game)"
             [formControl]="editCtrl"
           />
           <button
@@ -88,7 +88,7 @@
             [pTooltip]="'settings.saveState' | translate"
             tooltipPosition="top"
             [disabled]="!editCtrl.valid"
-            (click)="clickSaveState()"
+            (click)="clickSaveState(vm.data.game)"
           ></button>
           <button
             pButton
@@ -111,7 +111,7 @@
               tooltipPosition="top"
               [ngModel]="state"
               [options]="vm.savedStates"
-              (onChange)="setState($event.value, vm.preferences)"
+              (onChange)="setState($event.value, vm.gameStates)"
             ></p-dropdown>
             <ng-container *ngIf="state; else createStateButton">
               <button

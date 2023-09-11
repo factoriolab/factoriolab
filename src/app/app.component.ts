@@ -41,7 +41,6 @@ export class AppComponent implements OnInit {
 
     this.store.select(Settings.getModId).subscribe((modId) => {
       this.gaSvc.event('set_mod_id', modId);
-      BrowserUtility.modState = modId;
     });
 
     this.store.select(Preferences.preferencesState).subscribe((s) => {

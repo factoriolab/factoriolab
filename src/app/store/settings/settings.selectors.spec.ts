@@ -61,7 +61,7 @@ describe('Settings Selectors', () => {
         initialSettingsState.modId,
         {},
       );
-      expect(result).toEqual(Game.None);
+      expect(result).toEqual(Game.Factorio);
     });
   });
 

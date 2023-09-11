@@ -17,6 +17,7 @@ import {
   Defaults,
   DisplayRate,
   displayRateOptions,
+  Entities,
   FuelType,
   Game,
   gameInfo,
@@ -80,8 +81,9 @@ export class SettingsComponent implements OnInit {
     this.store.select(Settings.getAllResearchedTechnologyIds),
     this.store.select(Settings.getAvailableItems),
     this.store.select(Settings.getAvailableRecipes),
+    this.store.select(Settings.getGameStates),
+    this.store.select(Settings.getSavedStates),
     this.store.select(Preferences.preferencesState),
-    this.store.select(Preferences.getSavedStates),
     this.contentSvc.lang$,
   ]).pipe(
     map(
@@ -102,8 +104,9 @@ export class SettingsComponent implements OnInit {
         researchedTechnologyIds,
         itemIds,
         recipeIds,
-        preferences,
+        gameStates,
         savedStates,
+        preferences,
       ]) => ({
         itemsState,
         recipesState,
@@ -121,8 +124,9 @@ export class SettingsComponent implements OnInit {
         researchedTechnologyIds,
         itemIds,
         recipeIds,
-        preferences,
+        gameStates,
         savedStates,
+        preferences,
         machineMenuItems: this.buildMachineMenus(machineRows, data),
         excludedItemIds: data.itemIds.filter((i) => itemsState[i]?.excluded),
         excludedRecipeIds: data.recipeIds.filter(
@@ -182,7 +186,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.store
-      .select(Preferences.getStates)
+      .select(Settings.getGameStates)
       .pipe(first())
       .subscribe((states) => {
         this.state =
@@ -239,8 +243,8 @@ export class SettingsComponent implements OnInit {
     navigator.clipboard.writeText(search);
   }
 
-  setState(id: string, preferences: Preferences.PreferencesState): void {
-    const query = preferences.states[id];
+  setState(id: string, states: Entities<string>): void {
+    const query = states[id];
     if (query) {
       const queryParams = this.routerSvc.getParams(query);
       this.state = id;
@@ -248,13 +252,16 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  clickSaveState(): void {
+  clickSaveState(game: Game): void {
     if (!this.editCtrl.value || !this.editState) return;
 
-    this.saveState(this.editCtrl.value, BrowserUtility.search);
+    this.saveState([
+      game,
+      { id: this.editCtrl.value, value: BrowserUtility.search },
+    ]);
 
     if (this.editState === 'edit' && this.state) {
-      this.removeState(this.state);
+      this.removeState([game, this.state]);
     }
 
     this.editState = null;
@@ -262,8 +269,13 @@ export class SettingsComponent implements OnInit {
   }
 
   clickDeleteState(): void {
-    this.removeState(this.state);
-    this.state = '';
+    this.store
+      .select(Settings.getGame)
+      .pipe(first())
+      .subscribe((game) => {
+        this.removeState([game, this.state]);
+        this.state = '';
+      });
   }
 
   openCreateState(): void {
@@ -354,11 +366,11 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new App.ResetAction());
   }
 
-  saveState(id: string, value: string): void {
-    this.store.dispatch(new Preferences.SaveStateAction({ id, value }));
+  saveState(value: [Game, { id: string; value: string }]): void {
+    this.store.dispatch(new Preferences.SaveStateAction(value));
   }
 
-  removeState(value: string): void {
+  removeState(value: [Game, string]): void {
     this.store.dispatch(new Preferences.RemoveStateAction(value));
   }
 
