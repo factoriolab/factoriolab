@@ -348,6 +348,7 @@
     "fluidCapacity": "Fluid capacity",
     "craftingSpeed": "Crafting speed",
     "fuelCategories": "Fuel categories",
+    "fuelCategory": "Fuel category",
     "fuelValue": "Fuel value",
     "energyDrain": "Energy drain",
     "pollution": "Pollution",
