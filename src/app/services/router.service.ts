@@ -19,7 +19,8 @@ import {
   BeaconSettings,
   DisplayRate,
   Entities,
-  IdDefaultPayload,
+  Game,
+  IdValueDefaultPayload,
   isRecipeObjective,
   ItemSettings,
   MachineSettings,
@@ -38,6 +39,7 @@ import {
   LabState,
   Machines,
   Objectives,
+  Preferences,
   Recipes,
   Settings,
 } from '~/store';
@@ -177,7 +179,7 @@ export class RouterService {
           ]).pipe(first()),
         ),
         tap(([recipesRaw, recipesState]) => {
-          const payload: IdDefaultPayload<boolean>[] = [];
+          const payload: IdValueDefaultPayload<boolean>[] = [];
           for (const id of Object.keys(recipesState)) {
             const value = recipesState[id].excluded;
             if (value && !recipesRaw[id]?.excluded) {
@@ -210,6 +212,80 @@ export class RouterService {
         ),
       )
       .subscribe();
+
+    this.store
+      .select(Preferences.getStates)
+      .pipe(first())
+      .subscribe((states) => this.migrateOldStates(states));
+  }
+
+  /** Migrate any saved states ungrouped by game into new groupings */
+  migrateOldStates(states: Record<Game, Entities<string>>): void {
+    if (
+      Object.keys(states).every(
+        (k) => Preferences.initialPreferencesState.states[k as Game] != null,
+      )
+    )
+      return; // Does not need to be migrated
+
+    let migratingStates = { ...states } as unknown as Entities<
+      Entities<string> | string
+    >;
+    for (const key of Object.keys(migratingStates)) {
+      const state = migratingStates[key];
+      if (typeof state !== 'string') continue;
+
+      // State needs to be moved into a grouping
+      const game = this.getGameFromState(state);
+      migratingStates = {
+        ...migratingStates,
+        ...{
+          [game]: {
+            ...(migratingStates[game] as unknown as Entities<string>),
+            ...{ [key]: state },
+          },
+        },
+      };
+      delete migratingStates[key];
+    }
+
+    this.store.dispatch(
+      new Preferences.SetStatesAction(
+        migratingStates as unknown as Record<Game, Entities<string>>,
+      ),
+    );
+  }
+
+  getGameFromState(state: string): Game {
+    const modId = this.getModIdFromState(state);
+    return this.getGameFromModId(modId);
+  }
+
+  getModIdFromState(state: string): string | undefined {
+    if (state.startsWith('z=')) {
+      // Zipped saved state
+      const matchZip = state.match('z=(.+?)(&|$)');
+      if (matchZip == null) return;
+
+      const zip = matchZip[1];
+      const unzip = this.inflateSafe(zip);
+      const matchModId = unzip.match('(&|^)b(.*?)(&|$)');
+      if (matchModId == null) return;
+
+      const zipModId = matchModId[2];
+      return this.parseNString(zipModId, data.hash);
+    } else {
+      // Unzipped saved state
+      const match = state.match('s=(.+?)(&|$)');
+      if (match == null) return;
+
+      return match[1];
+    }
+  }
+
+  getGameFromModId(modId: string | undefined): Game {
+    if (modId == null) return Game.Factorio;
+    return data.mods.find((m) => m.id === modId)?.game ?? Game.Factorio;
   }
 
   updateUrl(

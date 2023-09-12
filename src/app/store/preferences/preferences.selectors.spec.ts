@@ -15,11 +15,4 @@ describe('Preferences Selectors', () => {
       ).toEqual(false);
     });
   });
-
-  describe('getSavedStates', () => {
-    it('should map saved states to an array of id-only options', () => {
-      const result = Selectors.getSavedStates.projector({ ['id']: 'url' });
-      expect(result).toEqual([{ label: 'id', value: 'id' }]);
-    });
-  });
 });

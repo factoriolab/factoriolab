@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 import { Confirmation } from 'primeng/api';
@@ -44,8 +49,8 @@ describe('SettingsComponent', () => {
     router = TestBed.inject(Router);
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
-      Preferences.getStates,
-      Mocks.PreferencesState.states,
+      Settings.getGameStates,
+      Mocks.PreferencesState.states[Game.Factorio],
     );
     contentSvc = TestBed.inject(ContentService);
     component = fixture.componentInstance;
@@ -123,7 +128,7 @@ describe('SettingsComponent', () => {
   describe('setState', () => {
     it('should call the router to navigate', () => {
       spyOn(router, 'navigate');
-      component.setState('name', Mocks.PreferencesState);
+      component.setState('name', Mocks.PreferencesState.states[Game.Factorio]);
       expect(component.state).toEqual('name');
       expect(router.navigate).toHaveBeenCalledWith([], {
         queryParams: { z: 'zip' },
@@ -132,36 +137,83 @@ describe('SettingsComponent', () => {
   });
 
   describe('clickSaveState', () => {
-    it('should emit to save the state', () => {
+    it('should emit to create the new saved state', () => {
       spyOn(component, 'saveState');
-      component.stateCtrl.setValue(id);
-      component.editState = true;
+      spyOn(component, 'removeState');
+      component.editCtrl.setValue(id);
+      component.editState = 'create';
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
-      component.clickSaveState();
-      expect(component.saveState).toHaveBeenCalledWith(id, value);
-      expect(component.editState).toBeFalse();
+      component.clickSaveState(Game.Factorio);
+      expect(component.saveState).toHaveBeenCalledWith(
+        Game.Factorio,
+        id,
+        value,
+      );
+      expect(component.removeState).not.toHaveBeenCalled();
+      expect(component.editState).toBeNull();
+    });
+
+    it('should emit to edit the saved state', () => {
+      spyOn(component, 'saveState');
+      spyOn(component, 'removeState');
+      component.editCtrl.setValue(id);
+      component.editState = 'edit';
+      component.state = id;
+      spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
+      component.clickSaveState(Game.Factorio);
+      expect(component.saveState).toHaveBeenCalledWith(
+        Game.Factorio,
+        id,
+        value,
+      );
+      expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
+      expect(component.editState).toBeNull();
+    });
+
+    it('should skip if invalid or not editing', () => {
+      spyOn(component, 'saveState');
+      component.editCtrl.setValue('');
+      component.editState = 'create';
+      component.clickSaveState(Game.Factorio);
+      component.editCtrl.setValue('id');
+      component.editState = null;
+      component.clickSaveState(Game.Factorio);
+      expect(component.saveState).not.toHaveBeenCalled();
     });
   });
 
   describe('clickDeleteState', () => {
-    it('should emit to remove the state', () => {
+    it('should emit to remove the state from the menu', fakeAsync(() => {
       spyOn(component, 'removeState');
       component.state = id;
-      component.clickDeleteState();
-      expect(component.removeState).toHaveBeenCalledWith(id);
+      component.editStateMenu[2].command!({});
+      tick();
+      expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
       expect(component.state).toEqual('');
+    }));
+  });
+
+  describe('openCreateState', () => {
+    it('should start the create state from the menu', () => {
+      spyOn(component.editCtrl, 'setValue');
+      spyOn(component.editCtrl, 'markAsPristine');
+      component.state = id;
+      component.editStateMenu[0].command!({});
+      expect(component.editCtrl.setValue).toHaveBeenCalledWith('');
+      expect(component.editCtrl.markAsPristine).toHaveBeenCalled();
+      expect(component.editState).toEqual('create');
     });
   });
 
   describe('openEditState', () => {
-    it('should start the editing state', () => {
-      spyOn(component.stateCtrl, 'setValue');
-      spyOn(component.stateCtrl, 'markAsPristine');
+    it('should start the edit state from the menu', () => {
+      spyOn(component.editCtrl, 'setValue');
+      spyOn(component.editCtrl, 'markAsPristine');
       component.state = id;
-      component.openEditState();
-      expect(component.stateCtrl.setValue).toHaveBeenCalledWith(id);
-      expect(component.stateCtrl.markAsPristine).toHaveBeenCalled();
-      expect(component.editState).toBeTrue();
+      component.editStateMenu[1].command!({});
+      expect(component.editCtrl.setValue).toHaveBeenCalledWith(id);
+      expect(component.editCtrl.markAsPristine).toHaveBeenCalled();
+      expect(component.editState).toEqual('edit');
     });
   });
 
@@ -286,8 +338,8 @@ describe('SettingsComponent', () => {
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.void('resetSettings', App.ResetAction);
-    dispatch.idVal('saveState', Preferences.SaveStateAction);
-    dispatch.val('removeState', Preferences.RemoveStateAction);
+    dispatch.keyIdVal('saveState', Preferences.SaveStateAction);
+    dispatch.keyId('removeState', Preferences.RemoveStateAction);
     dispatch.val('setMod', Settings.SetModAction);
     dispatch.val(
       'setResearchedTechnologies',

@@ -1,11 +1,11 @@
 import { Action } from '@ngrx/store';
 
-import { IdPayload, ModData, ModHash, ModI18n } from 'src/app/models';
+import { IdValuePayload, ModData, ModHash, ModI18n } from 'src/app/models';
 
 export interface DatasetPayload {
-  data: IdPayload<ModData> | null;
-  hash: IdPayload<ModHash> | null;
-  i18n: IdPayload<ModI18n> | null;
+  data: IdValuePayload<ModData> | null;
+  hash: IdValuePayload<ModHash> | null;
+  i18n: IdValuePayload<ModI18n> | null;
 }
 
 export const enum DatasetsActionType {

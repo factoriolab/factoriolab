@@ -2,14 +2,14 @@ import { Action } from '@ngrx/store';
 
 import {
   CostSettings,
-  DefaultPayload,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
   MaximizeType,
   Preset,
-  PreviousPayload,
   ResearchSpeed,
+  ValueDefaultPayload,
+  ValuePreviousPayload,
 } from '~/models';
 
 export const enum SettingsActionType {
@@ -67,27 +67,27 @@ export class SetProliferatorSprayAction implements Action {
 
 export class SetBeltAction implements Action {
   readonly type = SettingsActionType.SET_BELT;
-  constructor(public payload: DefaultPayload) {}
+  constructor(public payload: ValueDefaultPayload) {}
 }
 
 export class SetPipeAction implements Action {
   readonly type = SettingsActionType.SET_PIPE;
-  constructor(public payload: DefaultPayload) {}
+  constructor(public payload: ValueDefaultPayload) {}
 }
 
 export class SetFuelRankAction implements Action {
   readonly type = SettingsActionType.SET_FUEL_RANK;
-  constructor(public payload: DefaultPayload<string[]>) {}
+  constructor(public payload: ValueDefaultPayload<string[]>) {}
 }
 
 export class SetCargoWagonAction implements Action {
   readonly type = SettingsActionType.SET_CARGO_WAGON;
-  constructor(public payload: DefaultPayload) {}
+  constructor(public payload: ValueDefaultPayload) {}
 }
 
 export class SetFluidWagonAction implements Action {
   readonly type = SettingsActionType.SET_FLUID_WAGON;
-  constructor(public payload: DefaultPayload) {}
+  constructor(public payload: ValueDefaultPayload) {}
 }
 
 export class SetFlowRateAction implements Action {
@@ -117,7 +117,7 @@ export class SetInserterCapacityAction implements Action {
 
 export class SetDisplayRateAction implements Action {
   readonly type = SettingsActionType.SET_DISPLAY_RATE;
-  constructor(public payload: PreviousPayload<DisplayRate>) {}
+  constructor(public payload: ValuePreviousPayload<DisplayRate>) {}
 }
 
 export class SetMaximizeTypeAction implements Action {

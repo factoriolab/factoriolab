@@ -1,5 +1,4 @@
 import { createSelector } from '@ngrx/store';
-import { SelectItem } from 'primeng/api';
 
 import { LabState } from '../';
 import { PreferencesState } from './preferences.reducer';
@@ -35,16 +34,4 @@ export const getBypassLanding = createSelector(
 export const getShowTechLabels = createSelector(
   preferencesState,
   (state) => state.showTechLabels,
-);
-
-/** Complex selectors */
-export const getSavedStates = createSelector(getStates, (states) =>
-  Object.keys(states)
-    .sort()
-    .map(
-      (i): SelectItem => ({
-        label: i,
-        value: i,
-      }),
-    ),
 );

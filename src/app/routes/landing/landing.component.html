@@ -81,7 +81,9 @@
           [placeholder]="'landing.loadSavedState' | translate"
           styleClass="w-100"
           [options]="vm.savedStates"
-          (onChange)="setState($event.value, vm.preferences)"
+          (onChange)="
+            setState(vm.preferences.states[vm.data.game][$event.value])
+          "
         ></p-dropdown>
       </span>
       <button

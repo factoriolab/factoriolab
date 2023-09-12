@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { IdDefaultPayload, IdPayload } from '~/models';
+import { IdValueDefaultPayload, IdValuePayload } from '~/models';
 
 export const enum ItemsActionType {
   SET_EXCLUDED = '[Items] Set Excluded',
@@ -17,27 +17,27 @@ export const enum ItemsActionType {
 
 export class SetExcludedAction implements Action {
   readonly type = ItemsActionType.SET_EXCLUDED;
-  constructor(public payload: IdPayload<boolean>) {}
+  constructor(public payload: IdValuePayload<boolean>) {}
 }
 
 export class SetExcludedBatchAction implements Action {
   readonly type = ItemsActionType.SET_EXCLUDED_BATCH;
-  constructor(public payload: IdPayload<boolean>[]) {}
+  constructor(public payload: IdValuePayload<boolean>[]) {}
 }
 
 export class SetCheckedAction implements Action {
   readonly type = ItemsActionType.SET_CHECKED;
-  constructor(public payload: IdPayload<boolean>) {}
+  constructor(public payload: IdValuePayload<boolean>) {}
 }
 
 export class SetBeltAction implements Action {
   readonly type = ItemsActionType.SET_BELT;
-  constructor(public payload: IdDefaultPayload) {}
+  constructor(public payload: IdValueDefaultPayload) {}
 }
 
 export class SetWagonAction implements Action {
   readonly type = ItemsActionType.SET_WAGON;
-  constructor(public payload: IdDefaultPayload) {}
+  constructor(public payload: IdValueDefaultPayload) {}
 }
 
 export class ResetItemAction implements Action {

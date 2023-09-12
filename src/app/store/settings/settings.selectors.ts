@@ -109,7 +109,24 @@ export const getHash = createSelector(
 export const getGame = createSelector(
   getModId,
   Datasets.getModInfoRecord,
-  (id, data) => data[id]?.game ?? Game.None,
+  (id, data) => data[id]?.game ?? Game.Factorio,
+);
+
+export const getGameStates = createSelector(
+  getGame,
+  Preferences.getStates,
+  (game, states) => states[game],
+);
+
+export const getSavedStates = createSelector(getGameStates, (states) =>
+  Object.keys(states)
+    .sort()
+    .map(
+      (i): SelectItem => ({
+        label: i,
+        value: i,
+      }),
+    ),
 );
 
 export const getGameInfo = createSelector(getGame, (game) => gameInfo[game]);

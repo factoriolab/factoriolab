@@ -17,12 +17,13 @@ import {
   Defaults,
   DisplayRate,
   displayRateOptions,
+  Entities,
   FuelType,
   Game,
   gameInfo,
   gameOptions,
-  IdDefaultPayload,
-  IdPayload,
+  IdValueDefaultPayload,
+  IdValuePayload,
   InserterCapacity,
   inserterCapacityOptions,
   InserterTarget,
@@ -80,8 +81,9 @@ export class SettingsComponent implements OnInit {
     this.store.select(Settings.getAllResearchedTechnologyIds),
     this.store.select(Settings.getAvailableItems),
     this.store.select(Settings.getAvailableRecipes),
+    this.store.select(Settings.getGameStates),
+    this.store.select(Settings.getSavedStates),
     this.store.select(Preferences.preferencesState),
-    this.store.select(Preferences.getSavedStates),
     this.contentSvc.lang$,
   ]).pipe(
     map(
@@ -102,8 +104,9 @@ export class SettingsComponent implements OnInit {
         researchedTechnologyIds,
         itemIds,
         recipeIds,
-        preferences,
+        gameStates,
         savedStates,
+        preferences,
       ]) => ({
         itemsState,
         recipesState,
@@ -121,8 +124,9 @@ export class SettingsComponent implements OnInit {
         researchedTechnologyIds,
         itemIds,
         recipeIds,
-        preferences,
+        gameStates,
         savedStates,
+        preferences,
         machineMenuItems: this.buildMachineMenus(machineRows, data),
         excludedItemIds: data.itemIds.filter((i) => itemsState[i]?.excluded),
         excludedRecipeIds: data.recipeIds.filter(
@@ -135,8 +139,25 @@ export class SettingsComponent implements OnInit {
   );
 
   state = '';
-  stateCtrl = new FormControl('', Validators.required);
-  editState = false;
+  editCtrl = new FormControl('', Validators.required);
+  editState: 'create' | 'edit' | null = null;
+  editStateMenu: MenuItem[] = [
+    {
+      label: this.translateSvc.instant('settings.createSavedState'),
+      icon: 'fa-solid fa-plus',
+      command: (): void => this.openCreateState(),
+    },
+    {
+      label: this.translateSvc.instant('settings.editSavedState'),
+      icon: 'fa-solid fa-pencil',
+      command: (): void => this.openEditState(),
+    },
+    {
+      label: this.translateSvc.instant('settings.deleteSavedState'),
+      icon: 'fa-solid fa-trash',
+      command: (): void => this.clickDeleteState(),
+    },
+  ];
   versionsVisible = false;
 
   displayRateOptions = displayRateOptions;
@@ -165,7 +186,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.store
-      .select(Preferences.getStates)
+      .select(Settings.getGameStates)
       .pipe(first())
       .subscribe((states) => {
         this.state =
@@ -222,8 +243,8 @@ export class SettingsComponent implements OnInit {
     navigator.clipboard.writeText(search);
   }
 
-  setState(id: string, preferences: Preferences.PreferencesState): void {
-    const query = preferences.states[id];
+  setState(id: string, states: Entities<string>): void {
+    const query = states[id];
     if (query) {
       const queryParams = this.routerSvc.getParams(query);
       this.state = id;
@@ -231,23 +252,39 @@ export class SettingsComponent implements OnInit {
     }
   }
 
-  clickSaveState(): void {
-    if (this.stateCtrl.value) {
-      this.saveState(this.stateCtrl.value, BrowserUtility.search);
-      this.editState = false;
-      this.state = this.stateCtrl.value;
+  clickSaveState(game: Game): void {
+    if (!this.editCtrl.value || !this.editState) return;
+
+    this.saveState(game, this.editCtrl.value, BrowserUtility.search);
+
+    if (this.editState === 'edit' && this.state) {
+      this.removeState(game, this.state);
     }
+
+    this.editState = null;
+    this.state = this.editCtrl.value;
   }
 
   clickDeleteState(): void {
-    this.removeState(this.state);
-    this.state = '';
+    this.store
+      .select(Settings.getGame)
+      .pipe(first())
+      .subscribe((game) => {
+        this.removeState(game, this.state);
+        this.state = '';
+      });
+  }
+
+  openCreateState(): void {
+    this.editCtrl.setValue('');
+    this.editCtrl.markAsPristine();
+    this.editState = 'create';
   }
 
   openEditState(): void {
-    this.stateCtrl.setValue(this.state);
-    this.stateCtrl.markAsPristine();
-    this.editState = true;
+    this.editCtrl.setValue(this.state);
+    this.editCtrl.markAsPristine();
+    this.editState = 'edit';
   }
 
   setGame(game: Game): void {
@@ -259,7 +296,7 @@ export class SettingsComponent implements OnInit {
     recipesState: Recipes.RecipesState,
     data: Dataset,
   ): void {
-    const payload: IdDefaultPayload<boolean>[] = [];
+    const payload: IdValueDefaultPayload<boolean>[] = [];
     for (const id of data.recipeIds) {
       const value = checked.some((i) => i === id);
       if (value !== recipesState[id].excluded) {
@@ -278,7 +315,7 @@ export class SettingsComponent implements OnInit {
     itemsState: Items.ItemsState,
     data: Dataset,
   ): void {
-    const payload: IdPayload<boolean>[] = [];
+    const payload: IdValuePayload<boolean>[] = [];
     for (const id of data.itemIds) {
       const value = checked.some((i) => i === id);
       if (value !== itemsState[id].excluded) {
@@ -326,12 +363,12 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new App.ResetAction());
   }
 
-  saveState(id: string, value: string): void {
-    this.store.dispatch(new Preferences.SaveStateAction({ id, value }));
+  saveState(key: Game, id: string, value: string): void {
+    this.store.dispatch(new Preferences.SaveStateAction({ key, id, value }));
   }
 
-  removeState(value: string): void {
-    this.store.dispatch(new Preferences.RemoveStateAction(value));
+  removeState(key: Game, id: string): void {
+    this.store.dispatch(new Preferences.RemoveStateAction({ key, id }));
   }
 
   setMod(value: string): void {
@@ -342,11 +379,11 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetResearchedTechnologiesAction(value));
   }
 
-  setItemExcludedBatch(payload: IdPayload<boolean>[]): void {
+  setItemExcludedBatch(payload: IdValuePayload<boolean>[]): void {
     this.store.dispatch(new Items.SetExcludedBatchAction(payload));
   }
 
-  setRecipeExcludedBatch(payload: IdDefaultPayload<boolean>[]): void {
+  setRecipeExcludedBatch(payload: IdValueDefaultPayload<boolean>[]): void {
     this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
   }
 
