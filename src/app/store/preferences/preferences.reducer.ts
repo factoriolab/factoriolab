@@ -47,17 +47,16 @@ export function preferencesReducer(
       return initialPreferencesState;
     case PreferencesActionType.SAVE_STATE: {
       const { key, id, value } = action.payload;
-      const states = {
-        ...state.states,
-        ...{ [key]: { ...state.states[key], ...{ [id]: value } } },
-      };
+      const gameStates = { ...state.states[key], ...{ [id]: value } };
+      const states = { ...state.states, ...{ [key]: gameStates } };
       return { ...state, ...{ states } };
     }
     case PreferencesActionType.REMOVE_STATE: {
       const { key, id } = action.payload;
-      const states = { ...state.states[key] };
-      delete states[id];
-      return { ...state, ...{ ...state.states, ...{ [key]: states } } };
+      const gameStates = { ...state.states[key] };
+      delete gameStates[id];
+      const states = { ...state.states, ...{ [key]: gameStates } };
+      return { ...state, ...{ states } };
     }
     case PreferencesActionType.SET_STATES:
       return { ...state, ...{ states: action.payload } };

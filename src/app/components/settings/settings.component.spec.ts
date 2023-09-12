@@ -139,11 +139,11 @@ describe('SettingsComponent', () => {
       component.editState = 'create';
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
       component.clickSaveState(Game.Factorio);
-      expect(component.saveState).toHaveBeenCalledWith({
-        key: Game.Factorio,
+      expect(component.saveState).toHaveBeenCalledWith(
+        Game.Factorio,
         id,
         value,
-      });
+      );
       expect(component.removeState).not.toHaveBeenCalled();
       expect(component.editState).toBeNull();
     });
@@ -156,15 +156,12 @@ describe('SettingsComponent', () => {
       component.state = id;
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
       component.clickSaveState(Game.Factorio);
-      expect(component.saveState).toHaveBeenCalledWith({
-        key: Game.Factorio,
+      expect(component.saveState).toHaveBeenCalledWith(
+        Game.Factorio,
         id,
         value,
-      });
-      expect(component.removeState).toHaveBeenCalledWith({
-        key: Game.Factorio,
-        id,
-      });
+      );
+      expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
       expect(component.editState).toBeNull();
     });
 
@@ -185,10 +182,7 @@ describe('SettingsComponent', () => {
       spyOn(component, 'removeState');
       component.state = id;
       component.editStateMenu[2].command!({});
-      expect(component.removeState).toHaveBeenCalledWith({
-        key: Game.Factorio,
-        id,
-      });
+      expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
       expect(component.state).toEqual('');
     });
   });
@@ -338,8 +332,8 @@ describe('SettingsComponent', () => {
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.void('resetSettings', App.ResetAction);
-    dispatch.idVal('saveState', Preferences.SaveStateAction);
-    dispatch.val('removeState', Preferences.RemoveStateAction);
+    dispatch.keyIdVal('saveState', Preferences.SaveStateAction);
+    dispatch.keyId('removeState', Preferences.RemoveStateAction);
     dispatch.val('setMod', Settings.SetModAction);
     dispatch.val(
       'setResearchedTechnologies',

@@ -1,8 +1,8 @@
 import {
   Entities,
+  IdIndexValueDefaultPayload,
+  IdIndexValuePayload,
   IdValueDefaultPayload,
-  IdValueIndexDefaultPayload,
-  IdValueIndexPayload,
   IdValuePayload,
   ValueDefaultPayload,
 } from '~/models';
@@ -193,7 +193,7 @@ export class StoreUtility {
     state: Entities<T>,
     field: K,
     subfield: L,
-    payload: IdValueIndexDefaultPayload<V[L]>,
+    payload: IdIndexValueDefaultPayload<V[L]>,
     rank = false,
   ): Entities<T> {
     if (this.payloadEquals(payload, rank)) {
@@ -243,7 +243,7 @@ export class StoreUtility {
     state: Entities<T>,
     field: K,
     subfield: L,
-    payload: IdValueIndexPayload<V[L]>,
+    payload: IdIndexValuePayload<V[L]>,
   ): Entities<T> {
     return {
       ...state,

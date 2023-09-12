@@ -1,9 +1,9 @@
 import { Action } from '@ngrx/store';
 
 import {
+  IdIndexValueDefaultPayload,
+  IdIndexValuePayload,
   IdValueDefaultPayload,
-  IdValueIndexDefaultPayload,
-  IdValueIndexPayload,
   IdValuePayload,
 } from '~/models';
 
@@ -73,22 +73,22 @@ export class RemoveBeaconAction implements Action {
 
 export class SetBeaconCountAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_COUNT;
-  constructor(public payload: IdValueIndexDefaultPayload) {}
+  constructor(public payload: IdIndexValueDefaultPayload) {}
 }
 
 export class SetBeaconAction implements Action {
   readonly type = RecipesActionType.SET_BEACON;
-  constructor(public payload: IdValueIndexDefaultPayload) {}
+  constructor(public payload: IdIndexValueDefaultPayload) {}
 }
 
 export class SetBeaconModulesAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_MODULES;
-  constructor(public payload: IdValueIndexDefaultPayload<string[]>) {}
+  constructor(public payload: IdIndexValueDefaultPayload<string[]>) {}
 }
 
 export class SetBeaconTotalAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_TOTAL;
-  constructor(public payload: IdValueIndexPayload) {}
+  constructor(public payload: IdIndexValuePayload) {}
 }
 
 export class SetOverclockAction implements Action {

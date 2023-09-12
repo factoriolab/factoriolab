@@ -29,8 +29,6 @@ import {
   InserterTarget,
   inserterTargetOptions,
   ItemId,
-  KeyIdPayload,
-  KeyIdValuePayload,
   Language,
   languageOptions,
   MachineSettings,
@@ -257,14 +255,10 @@ export class SettingsComponent implements OnInit {
   clickSaveState(game: Game): void {
     if (!this.editCtrl.value || !this.editState) return;
 
-    this.saveState({
-      key: game,
-      id: this.editCtrl.value,
-      value: BrowserUtility.search,
-    });
+    this.saveState(game, this.editCtrl.value, BrowserUtility.search);
 
     if (this.editState === 'edit' && this.state) {
-      this.removeState({ key: game, id: this.state });
+      this.removeState(game, this.state);
     }
 
     this.editState = null;
@@ -276,7 +270,7 @@ export class SettingsComponent implements OnInit {
       .select(Settings.getGame)
       .pipe(first())
       .subscribe((game) => {
-        this.removeState({ key: game, id: this.state });
+        this.removeState(game, this.state);
         this.state = '';
       });
   }
@@ -369,12 +363,12 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new App.ResetAction());
   }
 
-  saveState(value: KeyIdValuePayload<Game>): void {
-    this.store.dispatch(new Preferences.SaveStateAction(value));
+  saveState(key: Game, id: string, value: string): void {
+    this.store.dispatch(new Preferences.SaveStateAction({ key, id, value }));
   }
 
-  removeState(value: KeyIdPayload<Game>): void {
-    this.store.dispatch(new Preferences.RemoveStateAction(value));
+  removeState(key: Game, id: string): void {
+    this.store.dispatch(new Preferences.RemoveStateAction({ key, id }));
   }
 
   setMod(value: string): void {
