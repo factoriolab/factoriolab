@@ -65,6 +65,16 @@ describe('Settings Selectors', () => {
     });
   });
 
+  describe('getGameStates', () => {
+    it('should get saved states from the current game', () => {
+      const result = Selectors.getGameStates.projector(
+        Game.Factorio,
+        Mocks.PreferencesState.states,
+      );
+      expect(result).toEqual(Mocks.PreferencesState.states[Game.Factorio]);
+    });
+  });
+
   describe('getSavedStates', () => {
     it('should map states to dropdown options', () => {
       const result = Selectors.getSavedStates.projector(
