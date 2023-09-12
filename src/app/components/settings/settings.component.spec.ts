@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 import { Confirmation } from 'primeng/api';
@@ -44,8 +49,8 @@ describe('SettingsComponent', () => {
     router = TestBed.inject(Router);
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
-      Preferences.getStates,
-      Mocks.PreferencesState.states,
+      Settings.getGameStates,
+      Mocks.PreferencesState.states[Game.Factorio],
     );
     contentSvc = TestBed.inject(ContentService);
     component = fixture.componentInstance;
@@ -178,13 +183,14 @@ describe('SettingsComponent', () => {
   });
 
   describe('clickDeleteState', () => {
-    it('should emit to remove the state from the menu', () => {
+    it('should emit to remove the state from the menu', fakeAsync(() => {
       spyOn(component, 'removeState');
       component.state = id;
       component.editStateMenu[2].command!({});
+      tick();
       expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
       expect(component.state).toEqual('');
-    });
+    }));
   });
 
   describe('openCreateState', () => {

@@ -216,14 +216,15 @@ export class RouterService {
     this.store
       .select(Preferences.getStates)
       .pipe(first())
-      .subscribe((states) => this._migrateOldStates(states));
+      .subscribe((states) => this.migrateOldStates(states));
   }
 
   /** Migrate any saved states ungrouped by game into new groupings */
-  private _migrateOldStates(states: Record<Game, Entities<string>>): void {
+  migrateOldStates(states: Record<Game, Entities<string>>): void {
     if (
-      Object.keys(states) ===
-      Object.keys(Preferences.initialPreferencesState.states)
+      Object.keys(states).every(
+        (k) => Preferences.initialPreferencesState.states[k as Game] != null,
+      )
     )
       return; // Does not need to be migrated
 
@@ -235,7 +236,7 @@ export class RouterService {
       if (typeof state !== 'string') continue;
 
       // State needs to be moved into a grouping
-      const game = this._getGameFromState(state);
+      const game = this.getGameFromState(state);
       migratingStates = {
         ...migratingStates,
         ...{
@@ -255,15 +256,15 @@ export class RouterService {
     );
   }
 
-  private _getGameFromState(state: string): Game {
-    const modId = this._getModIdFromState(state);
-    return this._getGameFromModId(modId);
+  getGameFromState(state: string): Game {
+    const modId = this.getModIdFromState(state);
+    return this.getGameFromModId(modId);
   }
 
-  private _getModIdFromState(state: string): string | undefined {
+  getModIdFromState(state: string): string | undefined {
     if (state.startsWith('z=')) {
       // Zipped saved state
-      const matchZip = state.match('z=(.*?)(&|$)');
+      const matchZip = state.match('z=(.+?)(&|$)');
       if (matchZip == null) return;
 
       const zip = matchZip[1];
@@ -275,14 +276,14 @@ export class RouterService {
       return this.parseNString(zipModId, data.hash);
     } else {
       // Unzipped saved state
-      const match = state.match('s=(.*?)(&|$)');
+      const match = state.match('s=(.+?)(&|$)');
       if (match == null) return;
 
       return match[1];
     }
   }
 
-  private _getGameFromModId(modId: string | undefined): Game {
+  getGameFromModId(modId: string | undefined): Game {
     if (modId == null) return Game.Factorio;
     return data.mods.find((m) => m.id === modId)?.game ?? Game.Factorio;
   }

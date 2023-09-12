@@ -41,6 +41,16 @@ describe('Preferences Reducer', () => {
     });
   });
 
+  describe('SET_STATES', () => {
+    it('should set all saved states', () => {
+      const result = preferencesReducer(
+        { states: { [Game.Factorio]: { [id]: value } } } as any,
+        new Actions.SetStatesAction(initialPreferencesState.states),
+      );
+      expect(result.states).toEqual(initialPreferencesState.states);
+    });
+  });
+
   describe('SET_COLUMNS', () => {
     it('should set the columns state', () => {
       const columns = { power: { show: true } } as any;

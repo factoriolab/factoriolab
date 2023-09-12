@@ -65,6 +65,15 @@ describe('Settings Selectors', () => {
     });
   });
 
+  describe('getSavedStates', () => {
+    it('should map states to dropdown options', () => {
+      const result = Selectors.getSavedStates.projector(
+        Mocks.PreferencesState.states[Game.Factorio],
+      );
+      expect(result).toEqual([{ label: 'name', value: 'name' }]);
+    });
+  });
+
   describe('getColumnsState', () => {
     it('should override columns for Factorio', () => {
       const result = Selectors.getColumnsState.projector(
