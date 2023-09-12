@@ -28,6 +28,10 @@ export class BrowserUtility {
         ...initial.preferencesState,
         ...preferencesState,
         ...{
+          states: {
+            ...initial.preferencesState.states,
+            ...preferencesState.states,
+          },
           columns: {
             ...initial.preferencesState.columns,
             ...preferencesState.columns,
@@ -40,18 +44,6 @@ export class BrowserUtility {
       };
     } else {
       return initial;
-    }
-  }
-
-  static get modState(): string | null {
-    return localStorage.getItem(StorageKey.Mod);
-  }
-
-  static set modState(value: string | null) {
-    if (value == null) {
-      localStorage.removeItem(StorageKey.Mod);
-    } else {
-      localStorage.setItem(StorageKey.Mod, value);
     }
   }
 

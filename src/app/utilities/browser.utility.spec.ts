@@ -21,13 +21,13 @@ describe('BrowserUtility', () => {
 
   describe('mergeState', () => {
     it('should merge the stored preferences into the state', () => {
-      const preferencesState: any = { pref: 'value', columns: {} };
+      const preferencesState: any = { pref: 'value', columns: {}, states: {} };
       spyOnProperty(BrowserUtility, 'preferencesState', 'get').and.returnValue(
         preferencesState,
       );
       const initial: any = {
         a: { test: 'initial' },
-        preferencesState: { columns: {} },
+        preferencesState: { columns: {}, states: {} },
       };
       expect(BrowserUtility.mergeState(initial)).toEqual({
         a: { test: 'initial' },
@@ -41,15 +41,6 @@ describe('BrowserUtility', () => {
       );
       const state: any = { a: 'a' };
       expect(BrowserUtility.mergeState(state)).toEqual(state);
-    });
-  });
-
-  describe('modState', () => {
-    it('should get/set', () => {
-      BrowserUtility.modState = 'modState';
-      expect(BrowserUtility.modState).toEqual('modState');
-      BrowserUtility.modState = null;
-      expect(BrowserUtility.modState).toEqual(null);
     });
   });
 

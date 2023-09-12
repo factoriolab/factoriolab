@@ -67,66 +67,92 @@
             (click)="copySearchToClipboard(search.value)"
           ></button>
         </div>
-        <div class="p-inputgroup">
-          <ng-container *ngIf="editState; else selectState">
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="p-button-outlined"
-              icon="fa-solid fa-xmark"
-              [pTooltip]="'cancel' | translate"
-              (click)="editState = false"
-            ></button>
-            <input
-              pInputText
-              pAutoFocus
-              [autofocus]="true"
-              type="text"
-              [placeholder]="'settings.nameSavedState' | translate"
-              [pTooltip]="'settings.savedStateName' | translate"
-              tooltipPosition="top"
-              [formControl]="stateCtrl"
-            />
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="p-button-outlined"
-              icon="fa-solid fa-floppy-disk"
-              [pTooltip]="'settings.saveSavedState' | translate"
-              [disabled]="!stateCtrl.valid"
-              (click)="clickSaveState()"
-            ></button>
-          </ng-container>
+        <div *ngIf="editState; else selectState" class="p-inputgroup mb-2">
+          <input
+            pInputText
+            pAutoFocus
+            [autofocus]="true"
+            type="text"
+            [placeholder]="'settings.nameSavedState' | translate"
+            [pTooltip]="'settings.nameSavedState' | translate"
+            tooltipPosition="top"
+            (keydown.enter)="clickSaveState(vm.data.game)"
+            [formControl]="editCtrl"
+          />
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-outlined"
+            icon="fa-solid fa-floppy-disk"
+            [pTooltip]="'settings.saveState' | translate"
+            tooltipPosition="top"
+            [disabled]="!editCtrl.valid"
+            (click)="clickSaveState(vm.data.game)"
+          ></button>
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-outlined"
+            icon="fa-solid fa-xmark"
+            [pTooltip]="'cancel' | translate"
+            (click)="editState = null"
+          ></button>
         </div>
         <ng-template #selectState>
+          <div
+            *ngIf="vm.savedStates.length; else saveCurrentState"
+            class="p-inputgroup"
+          >
+            <p-dropdown
+              [placeholder]="'settings.selectSavedState' | translate"
+              [tooltip]="'settings.selectSavedState' | translate"
+              tooltipPosition="top"
+              [ngModel]="state"
+              [options]="vm.savedStates"
+              (onChange)="setState($event.value, vm.gameStates)"
+            ></p-dropdown>
+            <ng-container *ngIf="state; else createStateButton">
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-outlined"
+                icon="fa-solid fa-ellipsis-vertical"
+                (click)="stateMenu.toggle($event)"
+              >
+                <p-menu
+                  #stateMenu
+                  appendTo="body"
+                  [popup]="true"
+                  [model]="editStateMenu"
+                >
+                </p-menu>
+              </button>
+            </ng-container>
+            <ng-template #createStateButton>
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-outlined"
+                icon="fa-solid fa-plus"
+                [pTooltip]="'settings.createSavedState' | translate"
+                (click)="openCreateState()"
+              ></button>
+            </ng-template>
+          </div>
+        </ng-template>
+        <ng-template #saveCurrentState>
           <button
             pButton
             pRipple
             type="button"
-            class="p-button-outlined"
-            icon="fa-solid fa-pen-to-square"
-            [pTooltip]="'settings.editSavedState' | translate"
-            (click)="openEditState()"
-          ></button>
-          <p-dropdown
-            [placeholder]="'settings.selectSavedState' | translate"
-            [tooltip]="'settings.selectSavedState' | translate"
-            tooltipPosition="top"
-            [ngModel]="state"
-            [options]="vm.savedStates"
-            (onChange)="setState($event.value, vm.preferences)"
-          ></p-dropdown>
-          <button
-            pButton
-            pRipple
-            type="button"
-            class="p-button-outlined"
-            icon="fa-solid fa-trash"
-            [pTooltip]="'settings.deleteSavedState' | translate"
-            [disabled]="!state"
-            (click)="clickDeleteState()"
+            icon="fa-solid fa-floppy-disk"
+            class="p-button-outlined p-button-rounded w-100"
+            [label]="'settings.createSavedState' | translate"
+            (click)="openCreateState()"
           ></button>
         </ng-template>
       </p-accordionTab>

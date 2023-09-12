@@ -1,6 +1,7 @@
 import {
   ColumnsState,
   Entities,
+  Game,
   initialColumnsState,
   Language,
   PowerUnit,
@@ -13,7 +14,7 @@ import {
 } from './preferences.actions';
 
 export interface PreferencesState {
-  states: Entities<string>;
+  states: Record<Game, Entities<string>>;
   columns: ColumnsState;
   language: Language;
   powerUnit: PowerUnit;
@@ -23,7 +24,12 @@ export interface PreferencesState {
 }
 
 export const initialPreferencesState: PreferencesState = {
-  states: {},
+  states: {
+    [Game.Factorio]: {},
+    [Game.DysonSphereProgram]: {},
+    [Game.Satisfactory]: {},
+    [Game.CaptainOfIndustry]: {},
+  },
   columns: initialColumnsState,
   language: Language.English,
   powerUnit: PowerUnit.Auto,
@@ -40,17 +46,20 @@ export function preferencesReducer(
     case App.AppActionType.RESET:
       return initialPreferencesState;
     case PreferencesActionType.SAVE_STATE: {
-      const states = {
-        ...state.states,
-        ...{ [action.payload.id]: action.payload.value },
-      };
+      const { key, id, value } = action.payload;
+      const gameStates = { ...state.states[key], ...{ [id]: value } };
+      const states = { ...state.states, ...{ [key]: gameStates } };
       return { ...state, ...{ states } };
     }
     case PreferencesActionType.REMOVE_STATE: {
-      const states = { ...state.states };
-      delete states[action.payload];
+      const { key, id } = action.payload;
+      const gameStates = { ...state.states[key] };
+      delete gameStates[id];
+      const states = { ...state.states, ...{ [key]: gameStates } };
       return { ...state, ...{ states } };
     }
+    case PreferencesActionType.SET_STATES:
+      return { ...state, ...{ states: action.payload } };
     case PreferencesActionType.SET_COLUMNS:
       return {
         ...state,

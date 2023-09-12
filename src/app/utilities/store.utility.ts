@@ -1,10 +1,10 @@
 import {
-  DefaultPayload,
   Entities,
-  IdDefaultPayload,
-  IdIndexDefaultPayload,
-  IdIndexPayload,
-  IdPayload,
+  IdIndexValueDefaultPayload,
+  IdIndexValuePayload,
+  IdValueDefaultPayload,
+  IdValuePayload,
+  ValueDefaultPayload,
 } from '~/models';
 
 export class StoreUtility {
@@ -28,7 +28,10 @@ export class StoreUtility {
     return this.rankEquals([...a].sort(), [...b].sort());
   }
 
-  static payloadEquals<T>(payload: IdDefaultPayload<T>, rank = false): boolean {
+  static payloadEquals<T>(
+    payload: IdValueDefaultPayload<T>,
+    rank = false,
+  ): boolean {
     return Array.isArray(payload.value) && Array.isArray(payload.def)
       ? rank
         ? this.rankEquals(
@@ -81,7 +84,7 @@ export class StoreUtility {
   static compareReset<T extends object, K extends keyof T>(
     state: Entities<T>,
     field: K,
-    payload: IdDefaultPayload<T[K]>,
+    payload: IdValueDefaultPayload<T[K]>,
     rank = false,
   ): Entities<T> {
     // Spread into new state
@@ -107,7 +110,7 @@ export class StoreUtility {
   static assignValue<T, K extends keyof T>(
     state: Entities<T>,
     field: K,
-    payload: IdPayload<T[K]>,
+    payload: IdValuePayload<T[K]>,
   ): Entities<T> {
     return {
       ...state,
@@ -117,12 +120,12 @@ export class StoreUtility {
     };
   }
 
-  static compareValue<T>(payload: DefaultPayload<T>): T | undefined {
+  static compareValue<T>(payload: ValueDefaultPayload<T>): T | undefined {
     return payload.value === payload.def ? undefined : payload.value;
   }
 
   static compareValues(
-    payload: DefaultPayload<string[]>,
+    payload: ValueDefaultPayload<string[]>,
   ): string[] | undefined {
     return this.arrayEquals(payload.value, payload.def)
       ? undefined
@@ -190,7 +193,7 @@ export class StoreUtility {
     state: Entities<T>,
     field: K,
     subfield: L,
-    payload: IdIndexDefaultPayload<V[L]>,
+    payload: IdIndexValueDefaultPayload<V[L]>,
     rank = false,
   ): Entities<T> {
     if (this.payloadEquals(payload, rank)) {
@@ -240,7 +243,7 @@ export class StoreUtility {
     state: Entities<T>,
     field: K,
     subfield: L,
-    payload: IdIndexPayload<V[L]>,
+    payload: IdIndexValuePayload<V[L]>,
   ): Entities<T> {
     return {
       ...state,

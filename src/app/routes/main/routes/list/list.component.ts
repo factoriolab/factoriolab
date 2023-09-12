@@ -20,7 +20,7 @@ import {
   EnergyType,
   Entities,
   Game,
-  IdDefaultPayload,
+  IdValueDefaultPayload,
   ItemId,
   Rational,
   RecipeField,
@@ -258,7 +258,7 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   toggleRecipes(ids: string[], value: boolean, data: Dataset): void {
     const payload = ids.map(
-      (id): IdDefaultPayload<boolean> => ({
+      (id): IdValueDefaultPayload<boolean> => ({
         id,
         value,
         def: (data.defaults?.excludedRecipeIds ?? []).includes(id),
@@ -457,7 +457,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new Recipes.SetExcludedAction({ id, value, def }));
   }
 
-  setRecipeExcludedBatch(payload: IdDefaultPayload<boolean>[]): void {
+  setRecipeExcludedBatch(payload: IdValueDefaultPayload<boolean>[]): void {
     this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
   }
 

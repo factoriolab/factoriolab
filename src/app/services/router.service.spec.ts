@@ -9,6 +9,7 @@ import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
   BeaconSettings,
   DisplayRate,
+  Game,
   InserterCapacity,
   InserterTarget,
   MaximizeType,
@@ -26,6 +27,7 @@ import {
   LabState,
   Machines,
   Objectives,
+  Preferences,
   Recipes,
   Settings,
 } from '~/store';
@@ -219,6 +221,59 @@ describe('RouterService', () => {
     });
     mockStore.refreshState();
     service.first = true;
+  });
+
+  describe('migrateOldStates', () => {
+    it('should skip if keys match', () => {
+      spyOn(mockStore, 'dispatch');
+      service.migrateOldStates(Mocks.PreferencesState.states);
+      expect(mockStore.dispatch).not.toHaveBeenCalled();
+    });
+
+    it('should migrate saved states into correct games', () => {
+      spyOn(mockStore, 'dispatch');
+      service.migrateOldStates({
+        ...Preferences.initialPreferencesState.states,
+        ...{ id: 's=dsp' },
+      } as any);
+      expect(mockStore.dispatch).toHaveBeenCalledWith(
+        new Preferences.SetStatesAction({
+          ...Preferences.initialPreferencesState.states,
+          ...{
+            [Game.DysonSphereProgram]: { id: 's=dsp' },
+          },
+        }),
+      );
+    });
+  });
+
+  describe('getModIdFromState', () => {
+    it('should handle zipped states', () => {
+      let result = service.getModIdFromState(
+        'z=eJwrcInQMlQrcknU0nLScq9zVyuzBAA04gVG&v=9',
+      );
+      expect(result).toBeUndefined();
+
+      result = service.getModIdFromState(
+        'z=eJwrMNcyVEvyUCtyctTSStZyVStWK7MEADvbBYI_&v=9',
+      );
+      expect(result).toEqual('dsp');
+    });
+
+    it('should handle invalid states', () => {
+      let result = service.getModIdFromState('z=');
+      expect(result).toBeUndefined();
+
+      result = service.getModIdFromState('s=');
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('getGameFromModId', () => {
+    it('should return default value', () => {
+      expect(service.getGameFromModId(undefined)).toEqual(Game.Factorio);
+      expect(service.getGameFromModId('fake')).toEqual(Game.Factorio);
+    });
   });
 
   describe('updateUrl', () => {

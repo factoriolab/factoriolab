@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 
-import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+import { DispatchTest, ItemId, RecipeId, TestModule } from 'src/tests';
 import { Game, ObjectiveUnit } from '~/models';
 import { LabState, Objectives, Preferences, Settings } from '~/store';
 import { LandingComponent } from './landing.component';
@@ -54,7 +54,7 @@ describe('LandingComponent', () => {
   describe('setState', () => {
     it('should call the router to navigate', () => {
       spyOn(router, 'navigate');
-      component.setState('name', Mocks.PreferencesState);
+      component.setState('z=zip');
       expect(router.navigate).toHaveBeenCalledWith(['list'], {
         queryParams: { z: 'zip' },
       });

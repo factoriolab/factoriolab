@@ -245,7 +245,12 @@ export const AdjustedData = Recipes.getAdjustedDataset.projector(
   },
 );
 export const PreferencesState: Preferences.PreferencesState = {
-  states: { ['name']: 'z=zip' },
+  states: {
+    [M.Game.Factorio]: { ['name']: 'z=zip' },
+    [M.Game.DysonSphereProgram]: {},
+    [M.Game.Satisfactory]: {},
+    [M.Game.CaptainOfIndustry]: {},
+  },
   columns: M.initialColumnsState,
   powerUnit: M.PowerUnit.Auto,
   language: M.Language.English,

@@ -168,4 +168,29 @@ export class DispatchTest<T> {
       new action({ id: 'id', index: 0, value: 'value', def: 'def' }),
     );
   }
+
+  keyId(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
+    (this.component[key] as unknown as (key: string, id: string) => void)(
+      'key',
+      'id',
+    );
+    expect(this.mockStore.dispatch).toHaveBeenCalledWith(
+      new action({ key: 'key', id: 'id' }),
+    );
+  }
+
+  keyIdVal(key: keyof T, action: Type<Action>): void {
+    this.spy.calls.reset();
+    (
+      this.component[key] as unknown as (
+        key: string,
+        id: string,
+        value: string,
+      ) => void
+    )('key', 'id', 'value');
+    expect(this.mockStore.dispatch).toHaveBeenCalledWith(
+      new action({ key: 'key', id: 'id', value: 'value' }),
+    );
+  }
 }

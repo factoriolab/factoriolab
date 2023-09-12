@@ -1,4 +1,4 @@
-import { Entities, IdDefaultPayload, RecipeSettings } from '~/models';
+import { Entities, IdValueDefaultPayload, RecipeSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Items from '../items';
@@ -115,7 +115,7 @@ export function recipesReducer(
       return StoreUtility.compareReset(
         state,
         'cost',
-        action.payload as IdDefaultPayload,
+        action.payload as IdValueDefaultPayload,
       );
     case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
