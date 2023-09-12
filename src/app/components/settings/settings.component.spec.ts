@@ -123,7 +123,7 @@ describe('SettingsComponent', () => {
   describe('setState', () => {
     it('should call the router to navigate', () => {
       spyOn(router, 'navigate');
-      component.setState('name', Mocks.PreferencesState);
+      component.setState('name', Mocks.PreferencesState.states[Game.Factorio]);
       expect(component.state).toEqual('name');
       expect(router.navigate).toHaveBeenCalledWith([], {
         queryParams: { z: 'zip' },
@@ -139,10 +139,11 @@ describe('SettingsComponent', () => {
       component.editState = 'create';
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
       component.clickSaveState(Game.Factorio);
-      expect(component.saveState).toHaveBeenCalledWith([
-        Game.Factorio,
-        { id, value },
-      ]);
+      expect(component.saveState).toHaveBeenCalledWith({
+        key: Game.Factorio,
+        id,
+        value,
+      });
       expect(component.removeState).not.toHaveBeenCalled();
       expect(component.editState).toBeNull();
     });
@@ -155,11 +156,15 @@ describe('SettingsComponent', () => {
       component.state = id;
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
       component.clickSaveState(Game.Factorio);
-      expect(component.saveState).toHaveBeenCalledWith([
-        Game.Factorio,
-        { id, value },
-      ]);
-      expect(component.removeState).toHaveBeenCalledWith([Game.Factorio, id]);
+      expect(component.saveState).toHaveBeenCalledWith({
+        key: Game.Factorio,
+        id,
+        value,
+      });
+      expect(component.removeState).toHaveBeenCalledWith({
+        key: Game.Factorio,
+        id,
+      });
       expect(component.editState).toBeNull();
     });
 
@@ -180,7 +185,10 @@ describe('SettingsComponent', () => {
       spyOn(component, 'removeState');
       component.state = id;
       component.editStateMenu[2].command!({});
-      expect(component.removeState).toHaveBeenCalledWith([Game.Factorio, id]);
+      expect(component.removeState).toHaveBeenCalledWith({
+        key: Game.Factorio,
+        id,
+      });
       expect(component.state).toEqual('');
     });
   });

@@ -23,7 +23,8 @@ describe('Preferences Reducer', () => {
         undefined,
         new Actions.SaveStateAction({
           key: Game.Factorio,
-          payload: { id, value },
+          id,
+          value,
         }),
       );
       expect(result.states[Game.Factorio]).toEqual({ [id]: value });
@@ -34,7 +35,7 @@ describe('Preferences Reducer', () => {
     it('should remove the specified state', () => {
       const result = preferencesReducer(
         { states: { [Game.Factorio]: { [id]: value } } } as any,
-        new Actions.RemoveStateAction({ key: Game.Factorio, payload: id }),
+        new Actions.RemoveStateAction({ key: Game.Factorio, id }),
       );
       expect(result.states[Game.Factorio]).toEqual({});
     });
