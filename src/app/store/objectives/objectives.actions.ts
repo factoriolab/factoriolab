@@ -1,10 +1,10 @@
 import { Action } from '@ngrx/store';
 
 import {
-  IdDefaultPayload,
-  IdIndexDefaultPayload,
-  IdIndexPayload,
-  IdPayload,
+  IdValueDefaultPayload,
+  IdValueIndexDefaultPayload,
+  IdValueIndexPayload,
+  IdValuePayload,
   Objective,
   ObjectiveBase,
   ObjectiveType,
@@ -62,37 +62,37 @@ export class LowerAction implements Action {
 
 export class SetTargetAction implements Action {
   readonly type = ObjectivesActionType.SET_TARGET;
-  constructor(public payload: IdPayload) {}
+  constructor(public payload: IdValuePayload) {}
 }
 
 export class SetValueAction implements Action {
   readonly type = ObjectivesActionType.SET_VALUE;
-  constructor(public payload: IdPayload<string>) {}
+  constructor(public payload: IdValuePayload<string>) {}
 }
 
 export class SetUnitAction implements Action {
   readonly type = ObjectivesActionType.SET_UNIT;
-  constructor(public payload: IdPayload<ObjectiveBase>) {}
+  constructor(public payload: IdValuePayload<ObjectiveBase>) {}
 }
 
 export class SetTypeAction implements Action {
   readonly type = ObjectivesActionType.SET_TYPE;
-  constructor(public payload: IdPayload<ObjectiveType>) {}
+  constructor(public payload: IdValuePayload<ObjectiveType>) {}
 }
 
 export class SetMachineAction implements Action {
   readonly type = ObjectivesActionType.SET_MACHINE;
-  constructor(public payload: IdDefaultPayload) {}
+  constructor(public payload: IdValueDefaultPayload) {}
 }
 
 export class SetFuelAction implements Action {
   readonly type = ObjectivesActionType.SET_FUEL;
-  constructor(public payload: IdDefaultPayload) {}
+  constructor(public payload: IdValueDefaultPayload) {}
 }
 
 export class SetMachineModulesAction implements Action {
   readonly type = ObjectivesActionType.SET_MACHINE_MODULES;
-  constructor(public payload: IdDefaultPayload<string[]>) {}
+  constructor(public payload: IdValueDefaultPayload<string[]>) {}
 }
 
 export class AddBeaconAction implements Action {
@@ -102,37 +102,37 @@ export class AddBeaconAction implements Action {
 
 export class RemoveBeaconAction implements Action {
   readonly type = ObjectivesActionType.REMOVE_BEACON;
-  constructor(public payload: IdPayload<number>) {}
+  constructor(public payload: IdValuePayload<number>) {}
 }
 
 export class SetBeaconCountAction implements Action {
   readonly type = ObjectivesActionType.SET_BEACON_COUNT;
-  constructor(public payload: IdIndexDefaultPayload) {}
+  constructor(public payload: IdValueIndexDefaultPayload) {}
 }
 
 export class SetBeaconAction implements Action {
   readonly type = ObjectivesActionType.SET_BEACON;
-  constructor(public payload: IdIndexDefaultPayload) {}
+  constructor(public payload: IdValueIndexDefaultPayload) {}
 }
 
 export class SetBeaconModulesAction implements Action {
   readonly type = ObjectivesActionType.SET_BEACON_MODULES;
-  constructor(public payload: IdIndexDefaultPayload<string[]>) {}
+  constructor(public payload: IdValueIndexDefaultPayload<string[]>) {}
 }
 
 export class SetBeaconTotalAction implements Action {
   readonly type = ObjectivesActionType.SET_BEACON_TOTAL;
-  constructor(public payload: IdIndexPayload) {}
+  constructor(public payload: IdValueIndexPayload) {}
 }
 
 export class SetOverclockAction implements Action {
   readonly type = ObjectivesActionType.SET_OVERCLOCK;
-  constructor(public payload: IdDefaultPayload<number>) {}
+  constructor(public payload: IdValueDefaultPayload<number>) {}
 }
 
 export class SetCheckedAction implements Action {
   readonly type = ObjectivesActionType.SET_CHECKED;
-  constructor(public payload: IdPayload<boolean>) {}
+  constructor(public payload: IdValuePayload<boolean>) {}
 }
 
 export class ResetObjectiveAction implements Action {

@@ -1,4 +1,4 @@
-import { Language, PowerUnit, Theme } from '~/models';
+import { Game, Language, PowerUnit, Theme } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
@@ -21,19 +21,22 @@ describe('Preferences Reducer', () => {
     it('should save the specified state', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SaveStateAction({ id, value }),
+        new Actions.SaveStateAction({
+          key: Game.Factorio,
+          payload: { id, value },
+        }),
       );
-      expect(result.states).toEqual({ [id]: value });
+      expect(result.states[Game.Factorio]).toEqual({ [id]: value });
     });
   });
 
   describe('REMOVE_STATE', () => {
     it('should remove the specified state', () => {
       const result = preferencesReducer(
-        { states: { [id]: value } } as any,
-        new Actions.RemoveStateAction(id),
+        { states: { [Game.Factorio]: { [id]: value } } } as any,
+        new Actions.RemoveStateAction({ key: Game.Factorio, payload: id }),
       );
-      expect(result.states).toEqual({});
+      expect(result.states[Game.Factorio]).toEqual({});
     });
   });
 

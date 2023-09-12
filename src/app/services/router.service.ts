@@ -20,7 +20,7 @@ import {
   DisplayRate,
   Entities,
   Game,
-  IdDefaultPayload,
+  IdValueDefaultPayload,
   isRecipeObjective,
   ItemSettings,
   MachineSettings,
@@ -179,7 +179,7 @@ export class RouterService {
           ]).pipe(first()),
         ),
         tap(([recipesRaw, recipesState]) => {
-          const payload: IdDefaultPayload<boolean>[] = [];
+          const payload: IdValueDefaultPayload<boolean>[] = [];
           for (const id of Object.keys(recipesState)) {
             const value = recipesState[id].excluded;
             if (value && !recipesRaw[id]?.excluded) {

@@ -4,7 +4,8 @@ import {
   ColumnsState,
   Entities,
   Game,
-  IdPayload,
+  KeyIdPayload,
+  KeyIdValuePayload,
   Language,
   PowerUnit,
   Theme,
@@ -24,12 +25,12 @@ export const enum PreferencesActionType {
 
 export class SaveStateAction implements Action {
   readonly type = PreferencesActionType.SAVE_STATE;
-  constructor(public payload: [Game, IdPayload]) {}
+  constructor(public payload: KeyIdValuePayload<Game>) {}
 }
 
 export class RemoveStateAction implements Action {
   readonly type = PreferencesActionType.REMOVE_STATE;
-  constructor(public payload: [Game, string]) {}
+  constructor(public payload: KeyIdPayload<Game>) {}
 }
 
 export class SetStatesAction implements Action {

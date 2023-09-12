@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { DefaultPayload, IdDefaultPayload } from '~/models';
+import { IdValueDefaultPayload, ValueDefaultPayload } from '~/models';
 
 export const enum MachinesActionType {
   ADD = '[Machines] Add',
@@ -19,57 +19,57 @@ export const enum MachinesActionType {
 
 export class AddAction implements Action {
   readonly type = MachinesActionType.ADD;
-  constructor(public payload: DefaultPayload<string, string[]>) {}
+  constructor(public payload: ValueDefaultPayload<string, string[]>) {}
 }
 
 export class RemoveAction implements Action {
   readonly type = MachinesActionType.REMOVE;
-  constructor(public payload: DefaultPayload<string, string[]>) {}
+  constructor(public payload: ValueDefaultPayload<string, string[]>) {}
 }
 
 export class RaiseAction implements Action {
   readonly type = MachinesActionType.RAISE;
-  constructor(public payload: DefaultPayload<string, string[]>) {}
+  constructor(public payload: ValueDefaultPayload<string, string[]>) {}
 }
 
 export class LowerAction implements Action {
   readonly type = MachinesActionType.LOWER;
-  constructor(public payload: DefaultPayload<string, string[]>) {}
+  constructor(public payload: ValueDefaultPayload<string, string[]>) {}
 }
 
 export class SetMachineAction implements Action {
   readonly type = MachinesActionType.SET_MACHINE;
-  constructor(public payload: IdDefaultPayload<string, string[]>) {}
+  constructor(public payload: IdValueDefaultPayload<string, string[]>) {}
 }
 
 export class SetFuelAction implements Action {
   readonly type = MachinesActionType.SET_FUEL;
-  constructor(public payload: IdDefaultPayload<string>) {}
+  constructor(public payload: IdValueDefaultPayload<string>) {}
 }
 
 export class SetModuleRankAction implements Action {
   readonly type = MachinesActionType.SET_MODULE_RANK;
-  constructor(public payload: IdDefaultPayload<string[]>) {}
+  constructor(public payload: IdValueDefaultPayload<string[]>) {}
 }
 
 export class SetBeaconCountAction implements Action {
   readonly type = MachinesActionType.SET_BEACON_COUNT;
-  constructor(public payload: IdDefaultPayload<string>) {}
+  constructor(public payload: IdValueDefaultPayload<string>) {}
 }
 
 export class SetBeaconAction implements Action {
   readonly type = MachinesActionType.SET_BEACON;
-  constructor(public payload: IdDefaultPayload) {}
+  constructor(public payload: IdValueDefaultPayload) {}
 }
 
 export class SetBeaconModuleRankAction implements Action {
   readonly type = MachinesActionType.SET_BEACON_MODULE_RANK;
-  constructor(public payload: IdDefaultPayload<string[]>) {}
+  constructor(public payload: IdValueDefaultPayload<string[]>) {}
 }
 
 export class SetOverclockAction implements Action {
   readonly type = MachinesActionType.SET_OVERCLOCK;
-  constructor(public payload: IdDefaultPayload<number>) {}
+  constructor(public payload: IdValueDefaultPayload<number>) {}
 }
 
 export class ResetMachineAction implements Action {

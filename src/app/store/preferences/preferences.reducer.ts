@@ -46,23 +46,18 @@ export function preferencesReducer(
     case App.AppActionType.RESET:
       return initialPreferencesState;
     case PreferencesActionType.SAVE_STATE: {
-      const [game, payload] = action.payload;
+      const { key, id, value } = action.payload;
       const states = {
         ...state.states,
-        ...{
-          [game]: {
-            ...state.states[game],
-            ...{ [payload.id]: payload.value },
-          },
-        },
+        ...{ [key]: { ...state.states[key], ...{ [id]: value } } },
       };
       return { ...state, ...{ states } };
     }
     case PreferencesActionType.REMOVE_STATE: {
-      const [game, payload] = action.payload;
-      const states = { ...state.states[game] };
-      delete states[payload];
-      return { ...state, ...{ ...state.states, ...{ [game]: states } } };
+      const { key, id } = action.payload;
+      const states = { ...state.states[key] };
+      delete states[id];
+      return { ...state, ...{ ...state.states, ...{ [key]: states } } };
     }
     case PreferencesActionType.SET_STATES:
       return { ...state, ...{ states: action.payload } };

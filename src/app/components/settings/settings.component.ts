@@ -22,13 +22,15 @@ import {
   Game,
   gameInfo,
   gameOptions,
-  IdDefaultPayload,
-  IdPayload,
+  IdValueDefaultPayload,
+  IdValuePayload,
   InserterCapacity,
   inserterCapacityOptions,
   InserterTarget,
   inserterTargetOptions,
   ItemId,
+  KeyIdPayload,
+  KeyIdValuePayload,
   Language,
   languageOptions,
   MachineSettings,
@@ -255,13 +257,14 @@ export class SettingsComponent implements OnInit {
   clickSaveState(game: Game): void {
     if (!this.editCtrl.value || !this.editState) return;
 
-    this.saveState([
-      game,
-      { id: this.editCtrl.value, value: BrowserUtility.search },
-    ]);
+    this.saveState({
+      key: game,
+      id: this.editCtrl.value,
+      value: BrowserUtility.search,
+    });
 
     if (this.editState === 'edit' && this.state) {
-      this.removeState([game, this.state]);
+      this.removeState({ key: game, id: this.state });
     }
 
     this.editState = null;
@@ -273,7 +276,7 @@ export class SettingsComponent implements OnInit {
       .select(Settings.getGame)
       .pipe(first())
       .subscribe((game) => {
-        this.removeState([game, this.state]);
+        this.removeState({ key: game, id: this.state });
         this.state = '';
       });
   }
@@ -299,7 +302,7 @@ export class SettingsComponent implements OnInit {
     recipesState: Recipes.RecipesState,
     data: Dataset,
   ): void {
-    const payload: IdDefaultPayload<boolean>[] = [];
+    const payload: IdValueDefaultPayload<boolean>[] = [];
     for (const id of data.recipeIds) {
       const value = checked.some((i) => i === id);
       if (value !== recipesState[id].excluded) {
@@ -318,7 +321,7 @@ export class SettingsComponent implements OnInit {
     itemsState: Items.ItemsState,
     data: Dataset,
   ): void {
-    const payload: IdPayload<boolean>[] = [];
+    const payload: IdValuePayload<boolean>[] = [];
     for (const id of data.itemIds) {
       const value = checked.some((i) => i === id);
       if (value !== itemsState[id].excluded) {
@@ -366,11 +369,11 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new App.ResetAction());
   }
 
-  saveState(value: [Game, { id: string; value: string }]): void {
+  saveState(value: KeyIdValuePayload<Game>): void {
     this.store.dispatch(new Preferences.SaveStateAction(value));
   }
 
-  removeState(value: [Game, string]): void {
+  removeState(value: KeyIdPayload<Game>): void {
     this.store.dispatch(new Preferences.RemoveStateAction(value));
   }
 
@@ -382,11 +385,11 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetResearchedTechnologiesAction(value));
   }
 
-  setItemExcludedBatch(payload: IdPayload<boolean>[]): void {
+  setItemExcludedBatch(payload: IdValuePayload<boolean>[]): void {
     this.store.dispatch(new Items.SetExcludedBatchAction(payload));
   }
 
-  setRecipeExcludedBatch(payload: IdDefaultPayload<boolean>[]): void {
+  setRecipeExcludedBatch(payload: IdValueDefaultPayload<boolean>[]): void {
     this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
   }
 

@@ -138,8 +138,11 @@ describe('SettingsComponent', () => {
       component.editCtrl.setValue(id);
       component.editState = 'create';
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
-      component.clickSaveState();
-      expect(component.saveState).toHaveBeenCalledWith(id, value);
+      component.clickSaveState(Game.Factorio);
+      expect(component.saveState).toHaveBeenCalledWith([
+        Game.Factorio,
+        { id, value },
+      ]);
       expect(component.removeState).not.toHaveBeenCalled();
       expect(component.editState).toBeNull();
     });
@@ -151,9 +154,12 @@ describe('SettingsComponent', () => {
       component.editState = 'edit';
       component.state = id;
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
-      component.clickSaveState();
-      expect(component.saveState).toHaveBeenCalledWith(id, value);
-      expect(component.removeState).toHaveBeenCalledWith(id);
+      component.clickSaveState(Game.Factorio);
+      expect(component.saveState).toHaveBeenCalledWith([
+        Game.Factorio,
+        { id, value },
+      ]);
+      expect(component.removeState).toHaveBeenCalledWith([Game.Factorio, id]);
       expect(component.editState).toBeNull();
     });
 
@@ -161,10 +167,10 @@ describe('SettingsComponent', () => {
       spyOn(component, 'saveState');
       component.editCtrl.setValue('');
       component.editState = 'create';
-      component.clickSaveState();
+      component.clickSaveState(Game.Factorio);
       component.editCtrl.setValue('id');
       component.editState = null;
-      component.clickSaveState();
+      component.clickSaveState(Game.Factorio);
       expect(component.saveState).not.toHaveBeenCalled();
     });
   });
@@ -174,7 +180,7 @@ describe('SettingsComponent', () => {
       spyOn(component, 'removeState');
       component.state = id;
       component.editStateMenu[2].command!({});
-      expect(component.removeState).toHaveBeenCalledWith(id);
+      expect(component.removeState).toHaveBeenCalledWith([Game.Factorio, id]);
       expect(component.state).toEqual('');
     });
   });
