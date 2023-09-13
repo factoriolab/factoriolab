@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, tap } from 'rxjs';
 
 import {
   ColumnKey,
@@ -27,19 +27,13 @@ import { LabState, Preferences, Settings } from '~/store';
 })
 export class ColumnsComponent implements OnInit {
   usesFractions$ = new BehaviorSubject(false);
-  vm$ = combineLatest([
-    this.store
+  vm$ = combineLatest({
+    columns: this.store
       .select(Settings.getColumnsState)
       .pipe(tap((columns) => this.initEdit(columns))),
-    this.store.select(Settings.getColumnOptions),
-    this.usesFractions$,
-  ]).pipe(
-    map(([columns, columnOptions, usesFractions]) => ({
-      columns,
-      columnOptions,
-      usesFractions,
-    })),
-  );
+    columnOptions: this.store.select(Settings.getColumnOptions),
+    usesFractions: this.usesFractions$,
+  });
 
   visible = false;
   editValue: Entities<ColumnSettings> = {};

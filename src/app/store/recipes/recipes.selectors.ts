@@ -42,8 +42,11 @@ export const getRecipesState = createSelector(
       const machine = data.machineEntities[s.machineId];
       const def = machinesState.entities[s.machineId];
 
-      s.fuelId = s.fuelId ?? def?.fuelId;
-      s.fuelOptions = def?.fuelOptions;
+      if (recipe.isBurn) {
+        s.fuelId = Object.keys(recipe.in)[0];
+      } else {
+        s.fuelId = s.fuelId ?? def?.fuelId;
+      }
 
       if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
         s.machineModuleOptions = RecipeUtility.moduleOptions(

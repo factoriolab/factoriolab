@@ -32,6 +32,14 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.fuelOptions({} as any, Mocks.Dataset);
       expect(result).toEqual([]);
     });
+
+    it('should handle entity that specifies a fuel', () => {
+      const result = RecipeUtility.fuelOptions(
+        { fuel: ItemId.Coal } as any,
+        Mocks.Dataset,
+      );
+      expect(result).toEqual([{ value: ItemId.Coal, label: 'Coal' }]);
+    });
   });
 
   describe('defaultModules', () => {
@@ -920,6 +928,22 @@ describe('RecipeUtility', () => {
         ItemId.Module,
         ItemId.Module,
       ]);
+    });
+
+    it('should use the correct fuel for a burn recipe objective', () => {
+      const result = RecipeUtility.adjustObjective(
+        {
+          id: '1',
+          targetId: RecipeId.UsedUpUraniumFuelCell,
+          value: '1',
+          unit: ObjectiveUnit.Machines,
+          type: ObjectiveType.Output,
+          fuelId: ItemId.Coal,
+        },
+        Mocks.MachinesStateInitial,
+        Mocks.Dataset,
+      );
+      expect(result.fuelId).toEqual(ItemId.UraniumFuelCell);
     });
   });
 });

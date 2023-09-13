@@ -408,6 +408,8 @@ describe('Settings Selectors', () => {
       expect(result.cargoWagonIds).toEqual(['id', ItemId.CargoWagon]);
       expect(result.fluidWagonIds).toEqual(['id', ItemId.FluidWagon]);
       expect(result.fuelIds).toEqual([
+        'steam',
+        'steam-500',
         ItemId.Wood,
         ItemId.Coal,
         ItemId.SolidFuel,

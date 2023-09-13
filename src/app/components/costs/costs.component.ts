@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, tap } from 'rxjs';
+import { combineLatest, tap } from 'rxjs';
 
 import { CostKey, CostSettings } from '~/models';
 import { ContentService } from '~/services';
@@ -20,17 +20,12 @@ import { LabState, Settings } from '~/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CostsComponent implements OnInit {
-  vm$ = combineLatest([
-    this.store
+  vm$ = combineLatest({
+    costs: this.store
       .select(Settings.getCosts)
       .pipe(tap((costs) => this.initEdit(costs))),
-    this.store.select(Settings.getSettingsModified),
-  ]).pipe(
-    map(([costs, settingsModified]) => ({
-      costs,
-      settingsModified,
-    })),
-  );
+    settingsModified: this.store.select(Settings.getSettingsModified),
+  });
 
   visible = false;
   editValue = { ...Settings.initialSettingsState.costs };

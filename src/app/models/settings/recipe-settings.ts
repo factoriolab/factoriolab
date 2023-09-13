@@ -33,33 +33,13 @@ export class RecipeSettingsRational {
   cost?: Rational;
 
   constructor(obj: RecipeSettings) {
-    if (obj.excluded != null) {
-      this.excluded = obj.excluded;
-    }
-
-    if (obj.checked != null) {
-      this.checked = obj.checked;
-    }
-
-    if (obj.machineId != null) {
-      this.machineId = obj.machineId;
-    }
-
-    if (obj.fuelId != null) {
-      this.fuelId = obj.fuelId;
-    }
-
-    if (obj.fuelOptions != null) {
-      this.fuelOptions = obj.fuelOptions;
-    }
-
-    if (obj.machineModuleIds != null) {
-      this.machineModuleIds = obj.machineModuleIds;
-    }
-
-    if (obj.machineModuleOptions != null) {
-      this.machineModuleOptions = obj.machineModuleOptions;
-    }
+    this.excluded = obj.excluded;
+    this.checked = obj.checked;
+    this.machineId = obj.machineId;
+    this.fuelId = obj.fuelId;
+    this.fuelOptions = obj.fuelOptions;
+    this.machineModuleIds = obj.machineModuleIds;
+    this.machineModuleOptions = obj.machineModuleOptions;
 
     if (obj.beacons) {
       this.beacons = obj.beacons.map((b) => new BeaconRationalSettings(b));

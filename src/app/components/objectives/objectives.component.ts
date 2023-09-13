@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Message } from 'primeng/api';
 import { combineLatest, first, map, tap } from 'rxjs';
 
 import {
-  Breakpoint,
   Dataset,
   DisplayRate,
   displayRateOptions,
@@ -28,53 +27,23 @@ import { PickerComponent } from '../picker/picker.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ObjectivesComponent {
-  vm$ = combineLatest([
-    this.store.select(Objectives.getObjectives),
-    this.store.select(Objectives.getMatrixResult),
-    this.store.select(Items.getItemsState),
-    this.store.select(Recipes.getRecipesState),
-    this.store.select(Settings.getDisplayRate),
-    this.store.select(Settings.getRateUnitOptions),
-    this.store.select(Settings.getOptions),
-    this.store.select(Settings.getDataset),
-    this.store.select(Settings.getAvailableItems),
-    this.store.select(Settings.getAvailableRecipes),
-    this.contentSvc.width$,
-  ]).pipe(
-    map(
-      ([
-        objectives,
-        matrixResult,
-        itemsState,
-        recipesState,
-        displayRate,
-        rateUnitOptions,
-        options,
-        data,
-        itemIds,
-        recipeIds,
-        width,
-      ]) => ({
-        objectives,
-        matrixResult,
-        itemsState,
-        recipesState,
-        displayRate,
-        rateUnitOptions,
-        options,
-        data,
-        itemIds,
-        recipeIds,
-        mobile: width < Breakpoint.Small,
-        messages: this.getMessages(matrixResult),
-      }),
-    ),
-  );
-
-  @ViewChild('chooseItemPicker') chooseItemPicker: PickerComponent | undefined;
-  @ViewChild('chooseRecipePicker') chooseRecipePicker:
-    | PickerComponent
-    | undefined;
+  messages$ = this.store
+    .select(Objectives.getMatrixResult)
+    .pipe(map((result) => this.getMessages(result)));
+  vm$ = combineLatest({
+    objectives: this.store.select(Objectives.getObjectives),
+    matrixResult: this.store.select(Objectives.getMatrixResult),
+    itemsState: this.store.select(Items.getItemsState),
+    recipesState: this.store.select(Recipes.getRecipesState),
+    displayRate: this.store.select(Settings.getDisplayRate),
+    rateUnitOptions: this.store.select(Settings.getRateUnitOptions),
+    options: this.store.select(Settings.getOptions),
+    data: this.store.select(Settings.getDataset),
+    itemIds: this.store.select(Settings.getAvailableItems),
+    recipeIds: this.store.select(Settings.getAvailableRecipes),
+    isMobile: this.contentSvc.isMobile$,
+    messages: this.messages$,
+  });
 
   objectiveTypeOptions = objectiveTypeOptions;
   displayRateOptions = displayRateOptions;
@@ -90,34 +59,38 @@ export class ObjectivesComponent {
   ) {}
 
   getMessages(matrixResult: MatrixResult): Message[] {
-    if (matrixResult.resultType === MatrixResultType.Failed) {
-      let errorKey = 'objectives.error';
-      let errorDetailKey = 'objectives.errorDetail';
+    if (matrixResult.resultType !== MatrixResultType.Failed) return [];
 
-      if (matrixResult.simplexStatus === 'unbounded') {
-        errorKey = 'objectives.errorUnbounded';
-        errorDetailKey = 'objectives.errorUnboundedDetail';
-      } else if (matrixResult.simplexStatus === 'no_feasible') {
-        errorKey = 'objectives.errorInfeasible';
-        errorDetailKey = 'objectives.errorInfeasibleDetail';
-      }
+    let errorKey = 'objectives.error';
+    let errorDetailKey = 'objectives.errorDetail';
 
-      return [
-        {
-          severity: 'error',
-          summary: this.translateSvc.instant(errorKey),
-          detail: this.translateSvc.instant(errorDetailKey, {
-            returnCode: matrixResult.returnCode ?? 'unknown',
-            simplexStatus: matrixResult.simplexStatus ?? 'unknown',
-          }),
-        },
-      ];
-    } else {
-      return [];
+    if (matrixResult.simplexStatus === 'unbounded') {
+      errorKey = 'objectives.errorUnbounded';
+      errorDetailKey = 'objectives.errorUnboundedDetail';
+    } else if (matrixResult.simplexStatus === 'no_feasible') {
+      errorKey = 'objectives.errorInfeasible';
+      errorDetailKey = 'objectives.errorInfeasibleDetail';
     }
+
+    return [
+      {
+        severity: 'error',
+        summary: this.translateSvc.instant(errorKey),
+        detail: this.translateSvc.instant(errorDetailKey, {
+          returnCode: matrixResult.returnCode ?? 'unknown',
+          simplexStatus: matrixResult.simplexStatus ?? 'unknown',
+        }),
+      },
+    ];
   }
 
-  changeUnit(objective: Objective, unit: ObjectiveUnit, data: Dataset): void {
+  changeUnit(
+    objective: Objective,
+    unit: ObjectiveUnit,
+    data: Dataset,
+    chooseItemPicker: PickerComponent,
+    chooseRecipePicker: PickerComponent,
+  ): void {
     if (unit === ObjectiveUnit.Machines) {
       if (objective.unit === ObjectiveUnit.Machines) {
         // Units are unchanged, no action required
@@ -125,16 +98,14 @@ export class ObjectivesComponent {
         const recipeIds = data.itemRecipeIds[objective.targetId];
         if (recipeIds.length === 1) {
           this.setUnit(objective.id, { targetId: recipeIds[0], unit });
-        } else if (this.chooseRecipePicker != null) {
-          this.chooseRecipePicker.selectId
+        } else {
+          chooseRecipePicker.selectId
             .pipe(
               first(),
               tap((targetId) => this.setUnit(objective.id, { targetId, unit })),
             )
             .subscribe();
-          this.chooseRecipePicker.clickOpen(data, 'recipe', recipeIds);
-        } else {
-          throw new Error('Recipe picker was not found');
+          chooseRecipePicker.clickOpen(data, 'recipe', recipeIds);
         }
       }
     } else {
@@ -142,16 +113,14 @@ export class ObjectivesComponent {
         const itemIds = data.recipeProductIds[objective.targetId];
         if (itemIds.length === 1) {
           this.setUnit(objective.id, { targetId: itemIds[0], unit });
-        } else if (this.chooseItemPicker != null) {
-          this.chooseItemPicker.selectId
+        } else {
+          chooseItemPicker.selectId
             .pipe(
               first(),
               tap((targetId) => this.setUnit(objective.id, { targetId, unit })),
             )
             .subscribe();
-          this.chooseItemPicker.clickOpen(data, 'item', itemIds);
-        } else {
-          throw new Error('Item picker was not found');
+          chooseItemPicker.clickOpen(data, 'item', itemIds);
         }
       } else {
         // No target conversion required

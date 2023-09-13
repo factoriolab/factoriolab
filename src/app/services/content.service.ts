@@ -5,7 +5,7 @@ import { Confirmation } from 'primeng/api';
 import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
 
 import { environment } from 'src/environments';
-import { APP } from '~/models';
+import { APP, Breakpoint } from '~/models';
 
 @Injectable({
   providedIn: 'root',
@@ -25,6 +25,7 @@ export class ContentService {
     map(this.windowInnerWidth),
     startWith(window.innerWidth),
   );
+  isMobile$ = this.width$.pipe(map((width) => width < Breakpoint.Small));
 
   // Dialogs
   showColumns$ = new Subject<void>();
