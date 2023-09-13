@@ -23,15 +23,11 @@ export class BeaconRationalSettings {
     if (obj.count != null) {
       this.count = Rational.fromString(obj.count);
     }
-    if (obj.id) {
-      this.id = obj.id;
-    }
-    if (obj.moduleIds) {
-      this.moduleIds = obj.moduleIds;
-    }
-    if (obj.moduleOptions) {
-      this.moduleOptions = obj.moduleOptions;
-    }
+
+    this.id = obj.id;
+    this.moduleIds = obj.moduleIds;
+    this.moduleOptions = obj.moduleOptions;
+
     if (obj.total) {
       this.total = Rational.fromString(obj.total);
     }

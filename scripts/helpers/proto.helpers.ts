@@ -2,11 +2,11 @@ import {
   Beacon,
   Belt,
   CargoWagon,
-  EnergyType,
   FluidWagon,
   ModuleEffect,
   Silo,
 } from '~/models';
+import { EnergyType } from '../../src/app/models';
 import * as D from '../factorio-build.models';
 import * as M from '../factorio.models';
 import { getDisallowedEffects } from './data.helpers';

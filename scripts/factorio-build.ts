@@ -1027,7 +1027,7 @@ async function processMod(): Promise<void> {
               tempDiff * getEnergyInMJ(proto.heat_capacity ?? '1KJ');
             const heatFuel: Fuel = {
               category: ANY_FLUID_HEAT,
-              value: energyGenerated,
+              value: round(energyGenerated, 10),
             };
             if (itemTemp.fuel == null) {
               itemTemp.fuel = heatFuel;

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
+import { Subject } from 'rxjs';
 
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
@@ -57,12 +58,22 @@ describe('ObjectivesComponent', () => {
   });
 
   describe('changeUnit', () => {
+    const picker = {
+      selectId: new Subject<string>(),
+      clickOpen: (): void => {},
+    };
+    picker.clickOpen = (): void => {
+      picker.selectId.next('id');
+    };
+
     it('should do nothing if switching to and from machines', () => {
       spyOn(component, 'setUnit');
       component.changeUnit(
         Mocks.Objective5,
         ObjectiveUnit.Machines,
         Mocks.Dataset,
+        {} as any,
+        {} as any,
       );
       expect(component.setUnit).not.toHaveBeenCalled();
     });
@@ -73,6 +84,8 @@ describe('ObjectivesComponent', () => {
         Mocks.Objective1,
         ObjectiveUnit.Machines,
         Mocks.Dataset,
+        {} as any,
+        {} as any,
       );
       expect(component.setUnit).toHaveBeenCalledWith(Mocks.Objective1.id, {
         targetId: RecipeId.AdvancedCircuit,
@@ -82,9 +95,6 @@ describe('ObjectivesComponent', () => {
 
     it('should prompt user to switch from item to recipe', () => {
       spyOn(component, 'setUnit');
-      spyOn(component.chooseRecipePicker!, 'clickOpen').and.callFake(() =>
-        component.chooseRecipePicker!.selectId.next('id'),
-      );
       component.changeUnit(
         {
           id: '0',
@@ -95,28 +105,13 @@ describe('ObjectivesComponent', () => {
         },
         ObjectiveUnit.Machines,
         Mocks.Dataset,
+        {} as any,
+        picker as any,
       );
       expect(component.setUnit).toHaveBeenCalledWith('0', {
         targetId: 'id',
         unit: ObjectiveUnit.Machines,
       });
-    });
-
-    it('should throw if recipe picker is not found', () => {
-      component.chooseRecipePicker = undefined;
-      expect(() =>
-        component.changeUnit(
-          {
-            id: '0',
-            targetId: ItemId.PetroleumGas,
-            value: '1',
-            unit: ObjectiveUnit.Items,
-            type: ObjectiveType.Output,
-          },
-          ObjectiveUnit.Machines,
-          Mocks.Dataset,
-        ),
-      ).toThrow();
     });
 
     it('should auto-switch from recipe to item', () => {
@@ -125,6 +120,8 @@ describe('ObjectivesComponent', () => {
         Mocks.Objective5,
         ObjectiveUnit.Items,
         Mocks.Dataset,
+        {} as any,
+        {} as any,
       );
       expect(component.setUnit).toHaveBeenCalledWith(Mocks.Objective5.id, {
         targetId: ItemId.PiercingRoundsMagazine,
@@ -134,9 +131,6 @@ describe('ObjectivesComponent', () => {
 
     it('should prompt user to switch from recipe to item', () => {
       spyOn(component, 'setUnit');
-      spyOn(component.chooseItemPicker!, 'clickOpen').and.callFake(() =>
-        component.chooseItemPicker!.selectId.next('id'),
-      );
       component.changeUnit(
         {
           id: '0',
@@ -147,28 +141,13 @@ describe('ObjectivesComponent', () => {
         },
         ObjectiveUnit.Items,
         Mocks.Dataset,
+        picker as any,
+        {} as any,
       );
       expect(component.setUnit).toHaveBeenCalledWith('0', {
         targetId: 'id',
         unit: ObjectiveUnit.Items,
       });
-    });
-
-    it('should throw if item picker is not found', () => {
-      component.chooseItemPicker = undefined;
-      expect(() =>
-        component.changeUnit(
-          {
-            id: '0',
-            targetId: RecipeId.AdvancedOilProcessing,
-            value: '1',
-            unit: ObjectiveUnit.Machines,
-            type: ObjectiveType.Output,
-          },
-          ObjectiveUnit.Items,
-          Mocks.Dataset,
-        ),
-      ).toThrow();
     });
 
     it('should auto-switch between items rate units', () => {
@@ -177,6 +156,8 @@ describe('ObjectivesComponent', () => {
         Mocks.Objective1,
         ObjectiveUnit.Belts,
         Mocks.Dataset,
+        {} as any,
+        {} as any,
       );
       expect(component.setUnit).toHaveBeenCalledWith(Mocks.Objective1.id, {
         targetId: Mocks.Objective1.targetId,
