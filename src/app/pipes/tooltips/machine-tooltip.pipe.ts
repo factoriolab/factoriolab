@@ -55,6 +55,11 @@ export class MachineTooltipPipe implements PipeTransform {
         machine.fuelCategories.join(', '),
       ]);
     }
+
+    if (machine.fuel) {
+      tableRows.push([this.translateSvc.instant('data.fuel'), machine.fuel]);
+    }
+
     if (machine.usage?.nonzero()) {
       tableRows.push([
         this.translateSvc.instant('data.energyConsumption'),

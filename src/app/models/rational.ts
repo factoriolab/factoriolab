@@ -177,9 +177,7 @@ export class Rational {
   }
 
   lt(x: Rational): boolean {
-    if (this.q === x.q) {
-      return this.p < x.p;
-    }
+    if (this.q === x.q) return this.p < x.p;
 
     return this.p * x.q < x.p * this.q;
   }
@@ -201,70 +199,48 @@ export class Rational {
   }
 
   add(x: Rational): Rational {
-    if (x.isZero()) {
-      return this;
-    }
+    if (x.isZero()) return this;
 
     return new Rational(this.p * x.q + this.q * x.p, this.q * x.q);
   }
 
   sub(x: Rational): Rational {
-    if (x.isZero()) {
-      return this;
-    }
+    if (x.isZero()) return this;
 
     return new Rational(this.p * x.q - this.q * x.p, this.q * x.q);
   }
 
   mul(x: Rational): Rational {
-    if (this.isOne()) {
-      return x;
-    }
-
-    if (x.isOne()) {
-      return this;
-    }
-
-    if (this.isZero() || x.isZero()) {
-      return Rational.zero;
-    }
+    if (this.isOne()) return x;
+    if (x.isOne()) return this;
+    if (this.isZero() || x.isZero()) return Rational.zero;
 
     return new Rational(this.p * x.p, this.q * x.q);
   }
 
   div(x: Rational): Rational {
-    if (x.isOne()) {
-      return this;
-    }
-
-    if (this.eq(x)) {
-      return Rational.one;
-    }
+    if (x.isOne() || this.isZero()) return this;
+    if (this.eq(x)) return Rational.one;
 
     return new Rational(this.p * x.q, this.q * x.p);
   }
 
   ceil(): Rational {
-    if (this.isInteger()) {
-      return this;
+    if (this.isInteger()) return this;
+
+    // Calculate ceiling using absolute value
+    const num = new Rational(Rational.abs(this.p) / this.q + bigOne);
+    if (this.p < bigZero) {
+      // Inverse back to negative if necessary
+      return num.inverse();
     } else {
-      // Calculate ceiling using absolute value
-      const num = new Rational(Rational.abs(this.p) / this.q + bigOne);
-      if (this.p < bigZero) {
-        // Inverse back to negative if necessary
-        return num.inverse();
-      } else {
-        return num;
-      }
+      return num;
     }
   }
 
   floor(): Rational {
-    if (this.isInteger()) {
-      return this;
-    } else {
-      return new Rational(this.p / this.q);
-    }
+    if (this.isInteger()) return this;
+    return new Rational(this.p / this.q);
   }
 
   abs(): Rational {
@@ -281,9 +257,7 @@ export class Rational {
   }
 
   toFraction(mixed = true): string {
-    if (this.isInteger()) {
-      return this.p.toString();
-    }
+    if (this.isInteger()) return this.p.toString();
 
     if (mixed && Rational.abs(this.p) > Rational.abs(this.q)) {
       const whole = this.p / this.q;

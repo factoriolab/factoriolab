@@ -45,6 +45,11 @@ export class RecipeUtility {
     entity: Machine | MachineRational,
     data: Dataset,
   ): SelectItem<string>[] {
+    if (entity.fuel) {
+      const fuel = data.itemEntities[entity.fuel];
+      return [{ value: fuel.id, label: fuel.name }];
+    }
+
     if (entity.fuelCategories == null) return [];
 
     const fuelCategories = entity.fuelCategories;
@@ -551,6 +556,12 @@ export class RecipeUtility {
 
     const machine = data.machineEntities[objective.machineId];
     const def = machinesState.entities[objective.machineId];
+
+    if (recipe.isBurn) {
+      objective.fuelId = Object.keys(recipe.in)[0];
+    } else {
+      objective.fuelId = objective.fuelId ?? def?.fuelId;
+    }
 
     objective.fuelId = objective.fuelId ?? def?.fuelId;
     objective.fuelOptions = def?.fuelOptions;

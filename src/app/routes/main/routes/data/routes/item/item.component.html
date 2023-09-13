@@ -159,6 +159,10 @@
           <th>{{ 'data.fuelCategories' | translate }}</th>
           <td>{{ machine.fuelCategories.join(', ') }}</td>
         </tr>
+        <tr *ngIf="machine.fuel">
+          <th>{{ 'data.fuel' | translate }}</th>
+          <td>{{ machine.fuel }}</td>
+        </tr>
         <tr *ngIf="machine.usage">
           <th>{{ 'data.energyConsumption' | translate }}</th>
           <td>

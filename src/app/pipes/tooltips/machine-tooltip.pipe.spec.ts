@@ -34,6 +34,7 @@ describe('MachineTooltipPipe', () => {
       };
       data.itemEntities[ItemId.AssemblingMachine3].machine!.disallowedEffects =
         ['productivity'];
+      data.itemEntities[ItemId.AssemblingMachine3].machine!.fuel = ItemId.Coal;
       const result = pipe.transform(ItemId.AssemblingMachine3, data);
       expect(result).toBeTruthy();
     });

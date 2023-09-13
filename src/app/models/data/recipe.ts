@@ -19,6 +19,7 @@ export interface Recipe {
   unlockedBy?: string;
   isMining?: boolean;
   isTechnology?: boolean;
+  isBurn?: boolean;
   /** Used to link the recipe to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -46,6 +47,7 @@ export class RecipeRational {
   unlockedBy?: string;
   isMining?: boolean;
   isTechnology?: boolean;
+  isBurn?: boolean;
   usage?: Rational;
   drain?: Rational;
   consumption?: Rational;
@@ -87,6 +89,7 @@ export class RecipeRational {
     this.part = obj.part;
     this.isMining = obj.isMining;
     this.isTechnology = obj.isTechnology;
+    this.isBurn = obj.isBurn;
 
     if (obj.usage != null) {
       this.usage = Rational.from(obj.usage);

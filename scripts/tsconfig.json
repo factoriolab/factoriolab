@@ -9,6 +9,7 @@
     "factorio-build.models.ts",
     "factorio-build.ts",
     "factorio-prep.ts",
+    "factorio-update.ts",
     "factorio.models.ts",
     "minify-data.ts",
     "update-hash.ts"
