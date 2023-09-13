@@ -132,3 +132,52 @@ export type AnyEntityPrototype =
   | M.TransportBeltPrototype
   | M.CargoWagonPrototype
   | M.FluidWagonPrototype;
+
+export interface ModDataReport {
+  noProducers: string[];
+  noProducts: string[];
+  resourceNoMinableProducts: string[];
+  resourceDuplicate: string[];
+}
+
+export type MachineProto =
+  | M.BoilerPrototype
+  | M.AssemblingMachinePrototype
+  | M.RocketSiloPrototype
+  | M.FurnacePrototype
+  | M.LabPrototype
+  | M.MiningDrillPrototype
+  | M.OffshorePumpPrototype
+  | M.ReactorPrototype;
+
+export const anyEntityKeys = [
+  'beacon',
+  'assembling-machine',
+  'boiler',
+  'furnace',
+  'lab',
+  'mining-drill',
+  'offshore-pump',
+  'reactor',
+  'rocket-silo',
+  'transport-belt',
+  'cargo-wagon',
+  'fluid-wagon',
+] as const;
+
+export const anyItemKeys = [
+  'item',
+  'ammo',
+  'armor',
+  'capsule',
+  'gun',
+  'item-with-entity-data',
+  'item-with-tags',
+  'module',
+  'rail-planner',
+  'repair-tool',
+  'selection-tool',
+  'spidertron-remote',
+  'tool',
+  'fluid',
+] as const;

@@ -3,26 +3,47 @@ import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
 import {
-  Beacon,
-  Belt,
-  CargoWagon,
   Category,
   Entities,
-  FluidWagon,
   Fuel,
   Item,
   Machine,
   ModData,
   ModHash,
-  ModuleEffect,
   Recipe,
-  Silo,
   Technology,
 } from '~/models';
-import { EnergyType } from '../src/app/models/enum/energy-type';
 import * as D from './factorio-build.models';
 import * as M from './factorio.models';
-import { coerceArray, coerceString, getJsonData } from './helpers';
+import {
+  addEntityValue,
+  coerceArray,
+  coerceString,
+  getBeacon,
+  getBelt,
+  getCargoWagon,
+  getEnergyInMJ,
+  getEntityMap,
+  getFluidWagon,
+  getIconText,
+  getIngredients,
+  getItemMap,
+  getJsonData,
+  getLastIngredient,
+  getLocale,
+  getMachineDisallowedEffects,
+  getMachineDrain,
+  getMachineModules,
+  getMachinePollution,
+  getMachineSilo,
+  getMachineSpeed,
+  getMachineType,
+  getMachineUsage,
+  getVersion,
+  logTime,
+  logWarn,
+  round,
+} from './helpers';
 
 /**
  * This script is intended to pull files from a dump from Factorio and build
@@ -42,8 +63,6 @@ if (!mod) {
 const appDataPath = process.env['AppData'];
 const factorioPath = `${appDataPath}/Factorio`;
 const modsPath = `${factorioPath}/mods`;
-const modListPath = `${modsPath}/mod-list.json`;
-const playerDataPath = `${factorioPath}/player-data.json`;
 const scriptOutputPath = `${factorioPath}/script-output`;
 const dataRawPath = `${scriptOutputPath}/data-raw-dump.json`;
 const tempPath = './scripts/temp';
@@ -61,125 +80,9 @@ if (fs.existsSync(modDataPath)) {
   }
 }
 
-interface ModDataReport {
-  noProducers: string[];
-  noProducts: string[];
-  resourceNoMinableProducts: string[];
-  resourceDuplicate: string[];
-  energySourceFluidHeat: string[];
-  energySourceFluidFilter: string[];
-}
-
-const start = Date.now();
-let temp = Date.now();
-function logTime(msg: string): void {
-  const now = Date.now();
-  const stepTime = now - temp;
-  const allTime = now - start;
-  temp = now;
-
-  console.log(allTime, stepTime, msg);
-}
-
-function logWarn(msg: string): void {
-  console.log(`\x1b[33m${msg}\x1b[0m`);
-}
-
-function addEntityValue(e: Entities<number>, id: string, val: number): void {
-  if (e[id] == null) {
-    e[id] = val;
-  } else {
-    e[id] = e[id] + val;
-  }
-}
-
-function getLocale(file: string): D.Locale {
-  const path = `${scriptOutputPath}/${file}`;
-  return getJsonData<D.Locale>(path);
-}
-
-function getMultiplier(letter: string): number {
-  switch (letter) {
-    case '':
-      return 0.001;
-    case 'k':
-    case 'K':
-      return 1;
-    case 'M':
-      return 1000;
-    case 'G':
-      return 1000000;
-    case 'T':
-      return 1000000000;
-    default:
-      throw `Unsupported multiplier: '${letter}'`;
-  }
-}
-
-function round(number: number, decimals: number): number {
-  const factor = Math.pow(10, decimals);
-  return Math.round(number * factor) / factor;
-}
-
-function getEnergyInMJ(usage: string): number {
-  const match = /(\d*\.?\d*)(\w*)/.exec(usage);
-  if (match == null) {
-    throw `Unrecognized energy format: '${usage}'`;
-  }
-
-  const [_, numStr, unit] = [...match];
-  if (!unit.endsWith('J')) {
-    throw `Unrecognized energy unit: '${usage}'`;
-  }
-  const multiplier = getMultiplier(unit.substring(0, unit.length - 1)) / 1000;
-  const num = Number(numStr);
-  const result = multiplier * num;
-  return round(result, 10);
-}
-
-function getPowerInKw(usage: string): number | undefined {
-  const match = /(\d*\.?\d*)(\w*)/.exec(usage);
-  if (match == null) {
-    throw `Unrecognized power format: '${usage}'`;
-  }
-
-  const [_, numStr, unit] = [...match];
-  if (!unit.endsWith('W')) {
-    return undefined;
-  }
-  const multiplier = getMultiplier(unit.substring(0, unit.length - 1));
-  const num = Number(numStr);
-  return multiplier * num;
-}
-
-function getDisallowedEffects(
-  allowedEffects?: M.EffectTypeLimitation,
-  defaultDisallow = false,
-): D.EffectType[] | undefined {
-  if (allowedEffects == null) {
-    return defaultDisallow ? D.allEffects : undefined;
-  }
-
-  allowedEffects =
-    typeof allowedEffects === 'string'
-      ? [allowedEffects]
-      : coerceArray(allowedEffects);
-
-  const checked = allowedEffects;
-  const result = D.allEffects.filter((e) => checked.indexOf(e) === -1);
-  return result.length === 0 ? undefined : result;
-}
-
 async function processMod(): Promise<void> {
   // Read mod data
   logTime('Reading mod data');
-  const modList = getJsonData<D.ModList>(modListPath);
-  const modFiles = fs
-    .readdirSync(modsPath)
-    // Only include zip files
-    .filter((f) => f.endsWith('.zip'))
-    // Trim .zip from end of string
-    .map((f) => f.substring(0, f.length - 4));
 
   // Create directories
   if (fs.existsSync(tempPath)) {
@@ -188,9 +91,6 @@ async function processMod(): Promise<void> {
 
   fs.mkdirSync(tempPath);
   fs.mkdirSync(tempIconsPath);
-
-  // Read player data
-  const playerData = getJsonData<D.PlayerData>(playerDataPath);
 
   // Read locale data
   const groupLocale = getLocale('item-group-locale.json');
@@ -209,56 +109,23 @@ async function processMod(): Promise<void> {
   // Record of technology ids by raw id: factoriolab id
   const techId: Record<string, string> = {};
 
-  function getItem(name: string): D.AnyItemPrototype | M.FluidPrototype {
-    return (
-      dataRaw.item[name] ??
-      dataRaw.ammo[name] ??
-      dataRaw.armor[name] ??
-      dataRaw.capsule[name] ??
-      dataRaw.gun[name] ??
-      dataRaw['item-with-entity-data'][name] ??
-      dataRaw['item-with-tags'][name] ??
-      dataRaw.module[name] ??
-      dataRaw['rail-planner'][name] ??
-      dataRaw['repair-tool'][name] ??
-      dataRaw['selection-tool'][name] ??
-      dataRaw['spidertron-remote'][name] ??
-      dataRaw.tool[name] ??
-      dataRaw.fluid[name]
-    );
-  }
-
-  function getEntity(name: string): D.AnyEntityPrototype {
-    return (
-      dataRaw.beacon[name] ??
-      dataRaw['assembling-machine'][name] ??
-      dataRaw.boiler[name] ??
-      dataRaw.furnace[name] ??
-      dataRaw.lab[name] ??
-      dataRaw['mining-drill'][name] ??
-      dataRaw['offshore-pump'][name] ??
-      dataRaw.reactor[name] ??
-      dataRaw['rocket-silo'][name] ??
-      dataRaw['transport-belt'][name] ??
-      dataRaw['cargo-wagon'][name] ??
-      dataRaw['fluid-wagon'][name]
-    );
-  }
+  const itemMap = getItemMap(dataRaw);
+  const entityMap = getEntityMap(dataRaw);
 
   function getRecipeProduct(
     recipe: M.RecipePrototype,
   ): D.AnyItemPrototype | M.FluidPrototype | undefined {
     const recipeData = getRecipeData(recipe);
     if (recipeData.result) {
-      return getItem(recipeData.result);
+      return itemMap[recipeData.result];
     } else if (recipeData.results?.length === 1) {
       const result = recipeData.results[0];
       if (D.isSimpleProduct(result)) {
-        return getItem(result[0]);
+        return itemMap[result[0]];
       } else if (D.isFluidProduct(result)) {
         return dataRaw.fluid[result.name];
       } else {
-        return getItem(result.name);
+        return itemMap[result.name];
       }
     } else if (recipeData.results && recipeData.main_product) {
       const mainProduct = recipeData.main_product;
@@ -267,11 +134,11 @@ async function processMod(): Promise<void> {
       );
       if (result) {
         if (D.isSimpleProduct(result)) {
-          return getItem(result[0]);
+          return itemMap[result[0]];
         } else if (D.isFluidProduct(result)) {
           return dataRaw.fluid[result.name];
         } else {
-          return getItem(result.name);
+          return itemMap[result.name];
         }
       } else {
         throw `Main product '${mainProduct}' declared by recipe '${recipe.name}' not found in results`;
@@ -436,20 +303,8 @@ async function processMod(): Promise<void> {
     return iconId === id ? undefined : iconId;
   }
 
-  function getIconText(proto: M.PrototypeBase): string | undefined {
-    const match = /-(\d+)$/.exec(proto.name);
-    return match?.[1] ? match[1] : undefined;
-  }
-
-  // Records of producer categories to producers
-  type ProducerType = 'burner' | 'crafting' | 'resource';
-  type EntityType = 'lab' | 'silo' | 'boiler' | 'offshorePump';
-  const producersMap: Record<ProducerType, Record<string, string[]>> = {
-    burner: {},
-    crafting: {},
-    resource: {},
-  };
   const craftingFluidBoxes: Record<string, M.FluidBox[]> = {};
+  type EntityType = 'lab' | 'silo' | 'boiler' | 'offshorePump';
   // For each machine type, a map of item name : entity name
   const machines: Record<EntityType, Record<string, string>> = {
     lab: {},
@@ -457,15 +312,22 @@ async function processMod(): Promise<void> {
     boiler: {},
     offshorePump: {},
   };
+
   // Keep track of all used fluid temperatures
   const fluidTemps: Record<string, Set<number>> = {};
-
   function addFluidTemp(id: string, temp: number): void {
     if (fluidTemps[id] == null) fluidTemps[id] = new Set<number>();
 
     fluidTemps[id].add(temp);
   }
 
+  // Records of producer categories to producers
+  type ProducerType = 'burner' | 'crafting' | 'resource';
+  const producersMap: Record<ProducerType, Record<string, string[]>> = {
+    burner: {},
+    crafting: {},
+    resource: {},
+  };
   function addProducers(
     id: string,
     categories: string[],
@@ -482,7 +344,7 @@ async function processMod(): Promise<void> {
     }
   }
 
-  function processProducers(proto: MachineProto, name: string): void {
+  function processProducers(proto: D.MachineProto, name: string): void {
     if (M.isMiningDrillPrototype(proto)) {
       addProducers(name, proto.resource_categories, 'resource');
     }
@@ -526,66 +388,9 @@ async function processMod(): Promise<void> {
     }
   }
 
-  type MachineProto =
-    | M.BoilerPrototype
-    | M.AssemblingMachinePrototype
-    | M.RocketSiloPrototype
-    | M.FurnacePrototype
-    | M.LabPrototype
-    | M.MiningDrillPrototype
-    | M.OffshorePumpPrototype
-    | M.ReactorPrototype;
-
-  function getMachineSpeed(proto: MachineProto): number {
-    if (M.isReactorPrototype(proto)) {
-      return 1;
-    }
-
-    let speed: number;
-    if (M.isBoilerPrototype(proto)) {
-      speed = getPowerInKw(proto.energy_consumption) ?? 1;
-    } else if (M.isLabPrototype(proto)) {
-      speed = proto.researching_speed ?? 1;
-    } else if (M.isMiningDrillPrototype(proto)) {
-      speed = proto.mining_speed;
-    } else if (M.isOffshorePumpPrototype(proto)) {
-      speed = 1; // Speed is set on recipe instead of pump
-    } else {
-      speed = proto.crafting_speed;
-    }
-
-    return speed;
-  }
-
-  function getMachineModules(proto: MachineProto): number | undefined {
-    if (
-      M.isBoilerPrototype(proto) ||
-      M.isOffshorePumpPrototype(proto) ||
-      M.isReactorPrototype(proto)
-    ) {
-      return undefined;
-    }
-
-    return proto.module_specification?.module_slots;
-  }
-
-  function getMachineType(proto: MachineProto): EnergyType | undefined {
-    if (M.isOffshorePumpPrototype(proto)) {
-      return undefined;
-    }
-
-    switch (proto.energy_source.type) {
-      case 'burner':
-      case 'fluid':
-        return EnergyType.Burner;
-      case 'electric':
-        return EnergyType.Electric;
-      default:
-        return undefined;
-    }
-  }
-
-  function getMachineCategory(proto: MachineProto): string[] | undefined {
+  const ANY_FLUID_BURN = 'fluid';
+  const ANY_FLUID_HEAT = 'fluid-heat';
+  function getMachineCategory(proto: D.MachineProto): string[] | undefined {
     if (M.isOffshorePumpPrototype(proto)) {
       return undefined;
     }
@@ -599,147 +404,15 @@ async function processMod(): Promise<void> {
     }
 
     if (proto.energy_source.type === 'fluid') {
-      if (proto.energy_source.burns_fluid) {
-        if (proto.energy_source.fluid_box.filter != null) {
-          modDataReport.energySourceFluidFilter.push(proto.name);
-        }
+      if (proto.energy_source.fluid_box.filter != null)
+        return [proto.energy_source.fluid_box.filter];
 
-        return [proto.energy_source.type];
-      } else {
-        modDataReport.energySourceFluidHeat.push(proto.name);
-      }
+      if (proto.energy_source.burns_fluid) return [ANY_FLUID_BURN];
+
+      return [ANY_FLUID_HEAT];
     }
 
     return undefined;
-  }
-
-  function getMachineUsage(proto: MachineProto): number | undefined {
-    if (M.isOffshorePumpPrototype(proto)) {
-      return undefined;
-    } else if (M.isBoilerPrototype(proto)) {
-      return getPowerInKw(proto.energy_consumption);
-    } else if (M.isReactorPrototype(proto)) {
-      return getPowerInKw(proto.consumption);
-    }
-
-    return getPowerInKw(proto.energy_usage);
-  }
-
-  function getMachineDrain(proto: MachineProto): number | undefined {
-    if (M.isOffshorePumpPrototype(proto)) {
-      return undefined;
-    }
-
-    if (proto.energy_source.type === 'electric') {
-      if (proto.energy_source.drain != null) {
-        return getPowerInKw(proto.energy_source.drain);
-      } else {
-        if (
-          M.isAssemblingMachinePrototype(proto) ||
-          M.isRocketSiloPrototype(proto) ||
-          M.isFurnacePrototype(proto)
-        ) {
-          const usage = getMachineUsage(proto);
-          if (usage != null) {
-            const idle = M.isRocketSiloPrototype(proto)
-              ? getPowerInKw(proto.idle_energy_usage) ?? 0
-              : 0;
-            return usage / 30 + idle;
-          }
-        }
-      }
-    }
-
-    return undefined;
-  }
-
-  function getMachinePollution(proto: MachineProto): number | undefined {
-    if (M.isOffshorePumpPrototype(proto)) {
-      return undefined;
-    }
-
-    return proto.energy_source.emissions_per_minute;
-  }
-
-  function getMachineSilo(proto: MachineProto): Silo | undefined {
-    if (M.isRocketSiloPrototype(proto)) {
-      const rocket = dataRaw['rocket-silo-rocket'][proto.rocket_entity];
-
-      let launch = 0;
-      // Lights blinking open
-      launch += 1 / proto.light_blinking_speed + 1;
-      // Doors opening
-      launch += 1 / proto.door_opening_speed + 1;
-      // Doors opened
-      launch += (proto.rocket_rising_delay ?? 30) + 1;
-      // Rocket rising
-      launch += 1 / rocket.rising_speed + 1;
-      // Rocket ready
-      launch += 14; // Estimate for satellite inserter swing time
-      // Launch started
-      launch += (proto.launch_wait_time ?? 120) + 1;
-      // Engine starting
-      launch += 1 / rocket.engine_starting_speed + 1;
-      // Rocket flying
-      const rocketFlightThreshold = 0.5;
-      launch +=
-        Math.log(
-          1 +
-            (rocketFlightThreshold * rocket.flying_acceleration) /
-              rocket.flying_speed,
-        ) / Math.log(1 + rocket.flying_acceleration);
-      // Lights blinking close
-      launch += 1 / proto.light_blinking_speed + 1;
-      // Doors closing
-      launch += 1 / proto.door_opening_speed + 1;
-
-      launch = Math.floor(launch + 0.5);
-
-      return {
-        parts: proto.rocket_parts_required,
-        launch,
-      };
-    }
-
-    return undefined;
-  }
-
-  function getIngredients(
-    ingredients:
-      | M.IngredientPrototype[]
-      | Record<string, M.IngredientPrototype>,
-  ): [
-    // Ingredients
-    Record<string, number>,
-    // Min / max fluid temperatures, if defined
-    Record<string, [number | undefined, number | undefined]>,
-  ] {
-    const result: Record<string, number> = {};
-    const temps: Record<string, [number | undefined, number | undefined]> = {};
-
-    for (const ingredient of coerceArray(ingredients)) {
-      if (D.isSimpleIngredient(ingredient)) {
-        const [itemId, amount] = ingredient;
-        addEntityValue(result, itemId, amount);
-      } else {
-        if (D.isFluidIngredient(ingredient)) {
-          if (ingredient.temperature) {
-            temps[ingredient.name] = [
-              ingredient.temperature,
-              ingredient.temperature,
-            ];
-          } else {
-            temps[ingredient.name] = [
-              ingredient.minimum_temperature,
-              ingredient.maximum_temperature,
-            ];
-          }
-        }
-        addEntityValue(result, ingredient.name, ingredient.amount);
-      }
-    }
-
-    return [result, temps];
   }
 
   function getRecipeData(recipe: M.RecipePrototype): M.RecipeData {
@@ -817,35 +490,7 @@ async function processMod(): Promise<void> {
     return [record, catalyst, total, temps];
   }
 
-  function getMachineDisallowedEffects(
-    proto: MachineProto,
-  ): ModuleEffect[] | undefined {
-    if (
-      M.isBoilerPrototype(proto) ||
-      M.isOffshorePumpPrototype(proto) ||
-      M.isReactorPrototype(proto)
-    ) {
-      return undefined;
-    }
-
-    return getDisallowedEffects(proto.allowed_effects);
-  }
-
-  function getBeacon(proto: M.BeaconPrototype): Beacon {
-    return {
-      effectivity: proto.distribution_effectivity,
-      modules: proto.module_specification.module_slots ?? 0,
-      range: proto.supply_area_distance,
-      type:
-        proto.energy_source.type === 'electric'
-          ? EnergyType.Electric
-          : undefined,
-      usage: getPowerInKw(proto.energy_usage),
-      disallowedEffects: getDisallowedEffects(proto.allowed_effects, true),
-    };
-  }
-
-  function getMachine(proto: MachineProto, name: string): Machine {
+  function getMachine(proto: D.MachineProto, name: string): Machine {
     const machine: Machine = {
       speed: getMachineSpeed(proto),
       modules: getMachineModules(proto),
@@ -855,24 +500,12 @@ async function processMod(): Promise<void> {
       usage: getMachineUsage(proto),
       drain: getMachineDrain(proto),
       pollution: getMachinePollution(proto),
-      silo: getMachineSilo(proto),
+      silo: getMachineSilo(proto, dataRaw['rocket-silo-rocket']),
     };
 
     processProducers(proto, name);
 
     return machine;
-  }
-
-  function getBelt(proto: M.TransportBeltPrototype): Belt {
-    return { speed: proto.speed * 480 };
-  }
-
-  function getCargoWagon(proto: M.CargoWagonPrototype): CargoWagon {
-    return { size: proto.inventory_size };
-  }
-
-  function getFluidWagon(proto: M.FluidWagonPrototype): FluidWagon {
-    return { capacity: proto.capacity };
   }
 
   const modData: ModData = {
@@ -884,13 +517,11 @@ async function processMod(): Promise<void> {
     limitations: {},
   };
 
-  const modDataReport: ModDataReport = {
+  const modDataReport: D.ModDataReport = {
     noProducts: [],
     noProducers: [],
     resourceNoMinableProducts: [],
     resourceDuplicate: [],
-    energySourceFluidHeat: [],
-    energySourceFluidFilter: [],
   };
 
   const modHashReport: ModHash = {
@@ -904,6 +535,7 @@ async function processMod(): Promise<void> {
     technologies: [],
     recipes: [],
   };
+
   function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
     if (hash[key] == null) hash[key] = [];
 
@@ -974,22 +606,7 @@ async function processMod(): Promise<void> {
     );
   }
 
-  modList.mods
-    .filter((m) => m.enabled)
-    .forEach((m) => {
-      if (m.name === 'base') {
-        const version = playerData['last-played-version'].game_version;
-        modData.version[m.name] = version;
-      } else {
-        const file = modFiles.find((f) => f.startsWith(m.name + '_'));
-        if (file == null) {
-          throw `No mod file found for mod ${m.name}`;
-        } else {
-          const version = file.substring(m.name.length + 1);
-          modData.version[m.name] = version;
-        }
-      }
-    });
+  modData.version = getVersion(modsPath, factorioPath);
 
   logTime('Calculating included recipes');
 
@@ -1000,7 +617,7 @@ async function processMod(): Promise<void> {
     const techData = techRaw[mode] || (techRaw as M.TechnologyData);
 
     if (
-      getItem(techRaw.name) ||
+      itemMap[techRaw.name] ||
       dataRaw.recipe[techRaw.name] ||
       dataRaw['item-group'][techRaw.name]
     ) {
@@ -1182,40 +799,19 @@ async function processMod(): Promise<void> {
   // Include all modules by default
   const itemsUsed = new Set<string>(Object.keys(dataRaw.module));
 
-  const itemKeys = [
-    ...Object.keys(dataRaw.item),
-    ...Object.keys(dataRaw.ammo),
-    ...Object.keys(dataRaw.armor),
-    ...Object.keys(dataRaw.capsule),
-    ...Object.keys(dataRaw.gun),
-    ...Object.keys(dataRaw['item-with-entity-data']),
-    ...Object.keys(dataRaw['item-with-tags']),
-    ...Object.keys(dataRaw.module),
-    ...Object.keys(dataRaw['rail-planner']),
-    ...Object.keys(dataRaw['repair-tool']),
-    ...Object.keys(dataRaw['selection-tool']),
-    ...Object.keys(dataRaw['spidertron-remote']),
-    ...Object.keys(dataRaw.tool),
-  ];
+  const itemKeys = D.anyItemKeys.reduce((result: string[], key) => {
+    result.push(...Object.keys(dataRaw[key]));
+    return result;
+  }, []);
 
-  const entityKeys = [
-    ...Object.keys(dataRaw.beacon),
-    ...Object.keys(dataRaw['assembling-machine']),
-    ...Object.keys(dataRaw.boiler),
-    ...Object.keys(dataRaw.furnace),
-    ...Object.keys(dataRaw.lab),
-    ...Object.keys(dataRaw['mining-drill']),
-    ...Object.keys(dataRaw['offshore-pump']),
-    ...Object.keys(dataRaw.reactor),
-    ...Object.keys(dataRaw['rocket-silo']),
-    ...Object.keys(dataRaw['transport-belt']),
-    ...Object.keys(dataRaw['cargo-wagon']),
-    ...Object.keys(dataRaw['fluid-wagon']),
-  ];
+  const entityKeys = D.anyEntityKeys.reduce((result: string[], key) => {
+    result.push(...Object.keys(dataRaw[key]));
+    return result;
+  }, []);
 
   // Check for burnt result / rocket launch products, fuels
   for (const key of itemKeys) {
-    const item = getItem(key);
+    const item = itemMap[key];
 
     if (M.isFluidPrototype(item)) continue;
 
@@ -1294,8 +890,8 @@ async function processMod(): Promise<void> {
     techIngredientsMap[tech.name] = techIngredients;
   }
 
-  const itemsUsedProtos = Array.from(itemsUsed.values()).map((key) =>
-    getItem(key),
+  const itemsUsedProtos = Array.from(itemsUsed.values()).map(
+    (key) => itemMap[key],
   );
 
   // Add any entities that are not placed by the added items
@@ -1308,7 +904,7 @@ async function processMod(): Promise<void> {
 
   const entitiesUsedProtos = entityKeys
     .filter((id) => !placedEntities.has(id))
-    .map((id) => getEntity(id));
+    .map((id) => entityMap[id]);
 
   // Sort items
   const protos = [
@@ -1386,7 +982,7 @@ async function processMod(): Promise<void> {
       let fuel: Fuel | undefined;
       if (proto.fuel_value) {
         fuel = {
-          category: 'fluid',
+          category: ANY_FLUID_BURN,
           value: getEnergyInMJ(proto.fuel_value),
         };
       }
@@ -1423,6 +1019,30 @@ async function processMod(): Promise<void> {
         if (temp !== proto.default_temperature) {
           itemTemp.name += ` (${temp}°C)`;
           itemTemp.iconText = `${temp}°`;
+
+          if (temp > proto.default_temperature) {
+            // Add fluid heat fuel
+            const tempDiff = temp - proto.default_temperature;
+            const energyGenerated =
+              tempDiff * getEnergyInMJ(proto.heat_capacity ?? '1KJ');
+            const heatFuel: Fuel = {
+              category: ANY_FLUID_HEAT,
+              value: energyGenerated,
+            };
+            if (itemTemp.fuel == null) {
+              itemTemp.fuel = heatFuel;
+            } else {
+              // Need to add fake item for fluid heat value
+              modData.items.push({
+                id: `${id}-heat-fuel`,
+                name: itemTemp.name,
+                category: itemTemp.category,
+                row: getItemRow(proto),
+                icon,
+                fuel: heatFuel,
+              });
+            }
+          }
         }
 
         modData.items.push(itemTemp);
@@ -1630,7 +1250,7 @@ async function processMod(): Promise<void> {
       if (producers != null) {
         // Ensure producers have sufficient fluid boxes
         const fluidIngredients = Object.keys(recipeIn)
-          .map((i) => getItem(i))
+          .map((i) => itemMap[i])
           .filter((i) => M.isFluidPrototype(i));
         if (fluidIngredients.length > 0) {
           producers = producers.filter((p) => {
@@ -1662,7 +1282,7 @@ async function processMod(): Promise<void> {
           });
         }
         const fluidProducts = Object.keys(recipeOut)
-          .map((i) => getItem(i))
+          .map((i) => itemMap[i])
           .filter((i) => M.isFluidPrototype(i));
         if (fluidProducts.length > 0) {
           producers = producers.filter((p) => {
@@ -1902,48 +1522,68 @@ async function processMod(): Promise<void> {
           for (const siloName of Object.keys(machines.silo)) {
             const entityName = machines.silo[siloName];
             const silo = dataRaw['rocket-silo'][entityName];
-            const id = getFakeRecipeId(
-              proto.name,
-              `${siloName}-${launch_proto.name}-launch`,
-            );
 
-            const recipeIn: Record<string, number> = {
-              [launch_proto.name]: 1,
-            };
-
-            // Add rocket parts
-            let part: string | undefined;
-            if (silo.fixed_recipe == null) continue;
-            const fixedRecipe = dataRaw.recipe[silo.fixed_recipe];
-            const fixedRecipeData = getRecipeData(fixedRecipe);
-            const [fixedRecipeProducts, _] = getProducts(
-              fixedRecipeData.results,
-              fixedRecipeData.result,
-              fixedRecipeData.result_count,
-            );
-            for (const id of Object.keys(fixedRecipeProducts)) {
-              recipeIn[id] =
-                fixedRecipeProducts[id] * silo.rocket_parts_required;
-              part = id;
+            const partRecipes: M.RecipePrototype[] = [];
+            if (silo.fixed_recipe) {
+              partRecipes.push(dataRaw.recipe[silo.fixed_recipe]);
+            } else {
+              const categories = silo.crafting_categories;
+              partRecipes.push(
+                ...Object.keys(dataRaw.recipe)
+                  .map((r) => dataRaw.recipe[r])
+                  .filter((r) => categories.includes(r.category ?? 'crafting')),
+              );
             }
 
-            if (part == null) continue;
+            for (const partRecipe of partRecipes) {
+              const isFixed = silo.fixed_recipe === partRecipe.name;
+              const alternateId = isFixed
+                ? `${siloName}-${launch_proto.name}-launch`
+                : `${siloName}-${launch_proto.name}-${partRecipe.name}-launch`;
+              const id = getFakeRecipeId(proto.name, alternateId);
 
-            const recipe: Recipe = {
-              id,
-              name: `${itemLocale.names[siloName]} : ${
-                itemLocale.names[proto.name]
-              }`,
-              category: group.name,
-              row: getRecipeRow(proto),
-              time: 40.6, // Ignored for silo recipes in calculator
-              in: recipeIn,
-              out: recipeOut,
-              catalyst: recipeCatalyst,
-              part,
-              producers: [siloName],
-            };
-            modData.recipes.push(recipe);
+              const name = isFixed
+                ? `${itemLocale.names[siloName]} : ${
+                    itemLocale.names[proto.name]
+                  }`
+                : `${itemLocale.names[siloName]} : ${
+                    itemLocale.names[proto.name]
+                  } (${recipeLocale.names[partRecipe.name]})`;
+
+              const recipeIn: Record<string, number> = {
+                [launch_proto.name]: 1,
+              };
+
+              // Add rocket parts
+              let part: string | undefined;
+              const partRecipeData = getRecipeData(partRecipe);
+              const [partRecipeProducts, _] = getProducts(
+                partRecipeData.results,
+                partRecipeData.result,
+                partRecipeData.result_count,
+              );
+              for (const id of Object.keys(partRecipeProducts)) {
+                recipeIn[id] =
+                  partRecipeProducts[id] * silo.rocket_parts_required;
+                part = id;
+              }
+
+              if (part == null) continue;
+
+              const recipe: Recipe = {
+                id,
+                name,
+                category: group.name,
+                row: getRecipeRow(proto),
+                time: 40.6, // Ignored for silo recipes in calculator
+                in: recipeIn,
+                out: recipeOut,
+                catalyst: recipeCatalyst,
+                part,
+                producers: [siloName],
+              };
+              modData.recipes.push(recipe);
+            }
             processedLaunchProto.add(launch_proto.name);
           }
         }
@@ -1968,6 +1608,7 @@ async function processMod(): Promise<void> {
           in: { [proto.name]: 0 },
           out: { [proto.burnt_result]: 0 },
           producers: producersMap.burner[proto.fuel_category],
+          isBurn: true,
         };
         modData.recipes.push(recipe);
       }
@@ -1987,7 +1628,7 @@ async function processMod(): Promise<void> {
         recipeIn[resource.minable.required_fluid] = amount;
         miners = miners.filter((m) => {
           // Only allow producers with fluid boxes
-          const item = getItem(m);
+          const item = itemMap[m];
           if (!M.isFluidPrototype(item) && item.place_result) {
             const miningDrill = dataRaw['mining-drill'][item.place_result];
             return miningDrill.input_fluid_box != null;
@@ -2004,7 +1645,7 @@ async function processMod(): Promise<void> {
         resource.minable.count,
       );
 
-      const proto = getItem(Object.keys(recipeOut)[0]);
+      const proto = itemMap[Object.keys(recipeOut)[0]];
       if (proto != null) {
         const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
         const group = dataRaw['item-group'][subgroup.group];
@@ -2037,17 +1678,6 @@ async function processMod(): Promise<void> {
       } else {
         modDataReport.resourceNoMinableProducts.push(name);
       }
-    }
-  }
-
-  function getLastIngredient(ingredients: M.IngredientPrototype[]): string {
-    if (ingredients.length === 0) return '';
-
-    const ingredient = ingredients[ingredients.length - 1];
-    if (D.isSimpleIngredient(ingredient)) {
-      return ingredient[0];
-    } else {
-      return ingredient.name;
     }
   }
 
@@ -2124,7 +1754,7 @@ async function processMod(): Promise<void> {
     };
 
     if (inputs.length) {
-      const firstInput = getItem(inputs[0]);
+      const firstInput = itemMap[inputs[0]];
       if (!M.isFluidPrototype(firstInput)) {
         item.stack = firstInput.stack_size;
       }
@@ -2193,7 +1823,7 @@ async function processMod(): Promise<void> {
       logTime('Complete');
 
       const warnings = (
-        Object.keys(modDataReport) as (keyof ModDataReport)[]
+        Object.keys(modDataReport) as (keyof D.ModDataReport)[]
       ).some((k) => modDataReport[k].length);
 
       if (warnings) logWarn('\nWARNINGS:');
@@ -2224,22 +1854,6 @@ async function processMod(): Promise<void> {
         console.log(
           'Only one mining resource is generated for duplicate resources',
         );
-      }
-
-      if (modDataReport.energySourceFluidHeat.length) {
-        logWarn(
-          `Machines with fluid heat energy source: ${modDataReport.energySourceFluidHeat.length}`,
-        );
-        console.log(
-          'Energy source for these machines is not currently handled.',
-        );
-      }
-
-      if (modDataReport.energySourceFluidFilter.length) {
-        logWarn(
-          `Machines with filtered fluid energy source: ${modDataReport.energySourceFluidFilter.length}`,
-        );
-        console.log('Fluids allowed for this machine will not be filtered.');
       }
 
       if (warnings) {

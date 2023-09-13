@@ -45,6 +45,11 @@ export class RecipeUtility {
     entity: Machine | MachineRational,
     data: Dataset,
   ): SelectItem<string>[] {
+    if (entity.fuel) {
+      const fuel = data.itemEntities[entity.fuel];
+      return [{ value: fuel.id, label: fuel.name }];
+    }
+
     if (entity.fuelCategories == null) return [];
 
     const fuelCategories = entity.fuelCategories;

@@ -12,6 +12,8 @@ export interface Machine {
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
   fuelCategories?: string[];
+  /** Indicates a specific fuel that must be used */
+  fuel?: string;
   /** Energy consumption in kW */
   usage?: number | string;
   /** Drain in kW */
@@ -30,6 +32,8 @@ export class MachineRational {
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
   fuelCategories?: string[];
+  /** Indicates a specific fuel that must be used */
+  fuel?: string;
   /** Energy consumption in kW */
   usage?: Rational;
   drain?: Rational;
@@ -54,6 +58,7 @@ export class MachineRational {
     }
 
     this.fuelCategories = obj.fuelCategories;
+    this.fuel = obj.fuel;
 
     if (obj.drain != null) {
       this.drain = Rational.from(obj.drain);
