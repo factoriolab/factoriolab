@@ -831,14 +831,6 @@ export class SimplexUtility {
     }
 
     if (output.nonzero()) {
-      const recipes = state.data.recipeIds
-        .map((r) => state.recipes[r])
-        .filter((r) => r);
-      const index = steps.findIndex((i) =>
-        recipes.some(
-          (r) => i.itemId && r.produces(i.itemId) && r.produces(itemId),
-        ),
-      );
       const step: Step = {
         id: steps.length.toString(),
         itemId,
@@ -849,11 +841,7 @@ export class SimplexUtility {
         step.parents = { '': step.output };
       }
 
-      if (index !== -1 && index < steps.length - 1) {
-        steps.splice(index + 1, 0, step);
-      } else {
-        steps.push(step);
-      }
+      steps.push(step);
 
       if (solution.surplus[itemId]?.nonzero()) {
         step.surplus = solution.surplus[itemId];
