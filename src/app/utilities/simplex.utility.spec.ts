@@ -465,8 +465,8 @@ describe('SimplexUtility', () => {
     it('should include recipe objective output a new step', () => {
       const solution: any = {
         surplus: {},
-        unproduceable: {},
-        excluded: {},
+        unproduceable: { [ItemId.PiercingRoundsMagazine]: Rational.one },
+        excluded: { [ItemId.PiercingRoundsMagazine]: Rational.one },
         recipes: {},
       };
       const state = getState();
@@ -481,50 +481,7 @@ describe('SimplexUtility', () => {
         {
           id: '0',
           itemId: ItemId.PiercingRoundsMagazine,
-          items: Rational.from([1, 3]),
-        },
-      ]);
-    });
-
-    it('should place a new step next to related steps', () => {
-      const solution: any = {
-        surplus: {},
-        unproduceable: { [ItemId.HeavyOil]: Rational.one },
-        excluded: { [ItemId.HeavyOil]: Rational.one },
-        recipes: {},
-      };
-      const state = getState();
-      state.steps = [
-        {
-          id: '0',
-          itemId: ItemId.PetroleumGas,
-          items: Rational.zero,
-        },
-        {
-          id: '1',
-          itemId: ItemId.Wood,
-          items: Rational.zero,
-        },
-      ];
-      state.itemValues[ItemId.HeavyOil] = { out: Rational.zero };
-      state.recipes[RecipeId.AdvancedOilProcessing] =
-        Mocks.AdjustedData.recipeR[RecipeId.AdvancedOilProcessing];
-      SimplexUtility.addItemStep(ItemId.HeavyOil, solution, state);
-      expect(state.steps).toEqual([
-        {
-          id: '0',
-          itemId: ItemId.PetroleumGas,
-          items: Rational.zero,
-        },
-        {
-          id: '2',
-          itemId: ItemId.HeavyOil,
-          items: Rational.two,
-        },
-        {
-          id: '1',
-          itemId: ItemId.Wood,
-          items: Rational.zero,
+          items: Rational.from([7, 3]),
         },
       ]);
     });

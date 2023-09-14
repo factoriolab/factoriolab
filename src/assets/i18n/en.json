@@ -274,11 +274,14 @@
     "addMachines": "Add machines",
     "selectDisplayRate": "Select display rate",
     "error": "No solution found",
-    "errorDetail": "Check limit and maximize objectives and enabled recipes. <i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>",
+    "errorDetail": "Check <b>Limit</b> and <b>Maximize</b> objectives and enabled recipes. ",
     "errorUnbounded": "Solution is unbounded",
-    "errorUnboundedDetail": "Limit objectives may not be restrictive enough for maximize objectives. <i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>",
+    "errorUnboundedDetail": "<b>Limit</b> objectives may not be restrictive enough for <b>Maximize</b> objectives.",
     "errorInfeasible": "Solution is infeasible",
-    "errorInfeasibleDetail": "Limit objectives may be too restrictive to satisfy output objectives. <i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>"
+    "errorInfeasibleDetail": "<b>Limit</b> objectives may be too restrictive to satisfy <b>Output</b> objectives.",
+    "errorMaximizeExcluded": "Cannot use <b>Maximize</b> with an excluded target. Choose another target or include the current target.",
+    "errorNoLimits": "No <b>Limit</b> objectives have been added. Add <b>Limit</b> objectives to restrict the <b>Maximize</b> objective.",
+    "errorSimplexInfo": "<i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>"
   },
   "list": {
     "openColumnSettings": "Open column settings",
