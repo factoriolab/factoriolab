@@ -5,6 +5,9 @@
     [rowTrackBy]="trackSvc.trackStep"
     styleClass="p-datatable-sm"
     [value]="vm.steps"
+    [customSort]="true"
+    [defaultSortOrder]="-1"
+    (sortFunction)="sortSteps$.next($event)"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -41,9 +44,10 @@
           {{ 'options.column.tree' | translate }}
         </th>
         <!-- Items (Value / Icon)-->
-        <th colspan="2">
+        <th colspan="2" pSortableColumn="items">
           <div class="d-flex align-items-center">
             <span>{{ vm.dispRateInfo.itemsLabel | translate }}</span>
+            <p-sortIcon field="items"></p-sortIcon>
             <button
               *ngIf="vm.itemsModified.excluded"
               pButton
@@ -52,14 +56,19 @@
               class="ms-2 p-button-text p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.itemsUndoTooltip' | translate"
-              (click)="resetExcluded()"
+              (click)="resetExcluded(); $event.stopImmediatePropagation()"
             ></button>
           </div>
         </th>
         <!-- Belts -->
-        <th *ngIf="vm.columnsState.belts.show" colspan="2">
+        <th
+          *ngIf="vm.columnsState.belts.show"
+          colspan="2"
+          pSortableColumn="belts"
+        >
           <div class="d-flex align-items-center">
             <span>{{ 'options.column.belts' | translate }}</span>
+            <p-sortIcon field="belts"></p-sortIcon>
             <button
               *ngIf="vm.itemsModified.belts"
               pButton
@@ -68,14 +77,19 @@
               class="ms-2 p-button-text p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.beltsUndoTooltip' | translate"
-              (click)="resetBelts()"
+              (click)="resetBelts(); $event.stopImmediatePropagation()"
             ></button>
           </div>
         </th>
         <!-- Wagons -->
-        <th *ngIf="vm.columnsState.wagons.show" colspan="2">
+        <th
+          *ngIf="vm.columnsState.wagons.show"
+          colspan="2"
+          pSortableColumn="wagons"
+        >
           <div class="d-flex align-items-center">
             <span>{{ vm.dispRateInfo.wagonsLabel | translate }}</span>
+            <p-sortIcon field="wagons"></p-sortIcon>
             <button
               *ngIf="vm.itemsModified.wagons"
               pButton
@@ -84,14 +98,15 @@
               class="ms-2 p-button-text p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.wagonsUndoTooltip' | translate"
-              (click)="resetWagons()"
+              (click)="resetWagons(); $event.stopImmediatePropagation()"
             ></button>
           </div>
         </th>
         <!-- Machines -->
-        <th colspan="2">
+        <th colspan="2" pSortableColumn="machines">
           <div class="d-flex align-items-center">
             <span>{{ 'options.column.machines' | translate }}</span>
+            <p-sortIcon field="machines"></p-sortIcon>
             <button
               *ngIf="vm.recipesModified.machines"
               pButton
@@ -100,7 +115,7 @@
               class="ms-2 p-button-text p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'list.machinesUndoTooltip' | translate"
-              (click)="resetMachines()"
+              (click)="resetMachines(); $event.stopImmediatePropagation()"
             ></button>
           </div>
         </th>
@@ -121,12 +136,18 @@
           </div>
         </th>
         <!-- Power -->
-        <th *ngIf="vm.columnsState.power.show">
-          <span>{{ 'options.column.power' | translate }}</span>
+        <th *ngIf="vm.columnsState.power.show" pSortableColumn="power">
+          <div class="d-flex align-items-center">
+            <span>{{ 'options.column.power' | translate }}</span>
+            <p-sortIcon field="power"></p-sortIcon>
+          </div>
         </th>
         <!-- Pollution -->
-        <th *ngIf="vm.columnsState.pollution.show">
-          <span>{{ vm.dispRateInfo.pollutionLabel | translate }}</span>
+        <th *ngIf="vm.columnsState.pollution.show" pSortableColumn="pollution">
+          <div class="d-flex align-items-center">
+            <span>{{ vm.dispRateInfo.pollutionLabel | translate }}</span>
+            <p-sortIcon field="pollution"></p-sortIcon>
+          </div>
         </th>
         <!-- Link -->
         <th *ngIf="vm.columnsState.link.show" class="w-0">
@@ -189,7 +210,10 @@
         </td>
         <!-- Tree -->
         <td *ngIf="vm.columnsState.tree.show" class="overflow-hidden px-1 py-0">
-          <div class="d-flex align-items-center links">
+          <div
+            class="d-flex align-items-center links"
+            [class.invisible]="stepsTable.sortField"
+          >
             <ng-container *ngIf="vm.stepTree[step.id]?.length">
               <div
                 *ngFor="let i of vm.stepTree[step.id]; last as last"

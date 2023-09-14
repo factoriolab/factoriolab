@@ -1,7 +1,7 @@
 {
   "name": "factoriolab",
   "description": "Angular-based calculator for the game Factorio",
-  "version": "2.3.40",
+  "version": "2.3.41",
   "private": true,
   "contributors": [
     "Doug Broad (https://github.com/dcbroad3)"

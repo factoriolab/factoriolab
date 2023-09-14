@@ -5,7 +5,7 @@ import {
   tick,
 } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, SortEvent } from 'primeng/api';
 
 import {
   DispatchTest,
@@ -99,6 +99,60 @@ describe('ListComponent', () => {
     it('should handle element not found', () => {
       component.fragmentId = Mocks.Step1.id;
       expect(() => component.ngAfterViewInit()).not.toThrow();
+    });
+  });
+
+  describe('sortSteps', () => {
+    it('should call when sorting is updated', () => {
+      spyOn(component, 'sortSteps');
+      component.sortSteps$.next(null);
+      expect(component.sortSteps).toHaveBeenCalled();
+    });
+
+    it('should skip if conditions are not met', () => {
+      const curr = {
+        order: -1,
+        data: [...Mocks.Steps],
+      } as SortEvent;
+      component.sortSteps(null, curr, Mocks.Steps);
+      expect(curr.data).toEqual(Mocks.Steps);
+    });
+
+    it('should sort the steps based on the passed field', () => {
+      const curr = {
+        order: -1,
+        field: 'belts',
+        data: [...Mocks.Steps],
+      } as SortEvent;
+      component.sortSteps(null, curr, Mocks.Steps);
+      expect(curr.data![0]).not.toEqual(Mocks.Steps[0]);
+    });
+
+    it('should handle missing values', () => {
+      const curr = {
+        order: -1,
+        field: 'fake',
+        data: [...Mocks.Steps],
+      } as SortEvent;
+      component.sortSteps(null, curr, Mocks.Steps);
+      expect(curr.data).toEqual(Mocks.Steps);
+    });
+
+    it('should reset on third column click', () => {
+      const prev = {
+        order: 1,
+        field: 'items',
+      } as SortEvent;
+      const curr = {
+        order: -1,
+        field: 'items',
+        data: [...Mocks.Steps],
+      } as SortEvent;
+      spyOn(component.stepsTable!, 'reset');
+      spyOn(component.sortSteps$, 'next');
+      component.sortSteps(prev, curr, Mocks.Steps);
+      expect(component.stepsTable!.reset).toHaveBeenCalled();
+      expect(component.sortSteps$.next).toHaveBeenCalled();
     });
   });
 
