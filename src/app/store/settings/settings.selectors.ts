@@ -91,6 +91,10 @@ export const getMaximizeType = createSelector(
   settingsState,
   (state) => state.maximizeType,
 );
+export const getSurplusMachinesOutput = createSelector(
+  settingsState,
+  (state) => state.surplusMachinesOutput,
+);
 export const getCosts = createSelector(settingsState, (state) => state.costs);
 
 /* Complex selectors */

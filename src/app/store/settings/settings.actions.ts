@@ -16,6 +16,7 @@ export const enum SettingsActionType {
   SET_MOD = '[Settings] Set Mod',
   SET_RESEARCHED_TECHNOLOGIES = '[Settings] Set Researched Technologies',
   SET_NET_PRODUCTION_ONLY = '[Settings] Set Net Production Only',
+  SET_REQUIRE_MACHINES_OUTPUT = '[Settings] Set Require Machines Output',
   SET_PRESET = '[Settings] Set Preset',
   SET_BEACON_RECEIVERS = '[Settings] Set Beacon Receivers',
   SET_PROLIFERATOR_SPRAY = '[Settings] Set Proliferator Spray',
@@ -47,6 +48,11 @@ export class SetResearchedTechnologiesAction implements Action {
 
 export class SetNetProductionOnlyAction implements Action {
   readonly type = SettingsActionType.SET_NET_PRODUCTION_ONLY;
+  constructor(public payload: boolean) {}
+}
+
+export class SetSurplusMachinesOutputAction implements Action {
+  readonly type = SettingsActionType.SET_REQUIRE_MACHINES_OUTPUT;
   constructor(public payload: boolean) {}
 }
 
@@ -138,6 +144,7 @@ export type SettingsAction =
   | SetModAction
   | SetResearchedTechnologiesAction
   | SetNetProductionOnlyAction
+  | SetSurplusMachinesOutputAction
   | SetPresetAction
   | SetBeaconReceiversAction
   | SetProliferatorSprayAction
