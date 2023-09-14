@@ -8,10 +8,18 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { combineLatest, filter, first, map, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  first,
+  pairwise,
+  tap,
+} from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import {
@@ -46,6 +54,7 @@ import {
 } from '~/store';
 import { RecipeUtility } from '~/utilities';
 
+@UntilDestroy()
 @Component({
   standalone: true,
   imports: [CommonModule, AppSharedModule],
@@ -54,78 +63,36 @@ import { RecipeUtility } from '~/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent implements OnInit, AfterViewInit {
-  vm$ = combineLatest([
-    this.store.select(Machines.getMachinesState),
-    this.store.select(Items.getItemsState),
-    this.store.select(Items.getItemsModified),
-    this.store.select(Objectives.getStepsModified),
-    this.store.select(Objectives.getTotals),
-    this.store.select(Objectives.getSteps),
-    this.store.select(Objectives.getStepDetails),
-    this.store.select(Objectives.getStepById),
-    this.store.select(Objectives.getStepByItemEntities),
-    this.store.select(Objectives.getStepTree),
-    this.store.select(Objectives.getEffectivePowerUnit),
-    this.store.select(Recipes.getRecipesState),
-    this.store.select(Objectives.getRecipesModified),
-    this.store.select(Recipes.getAdjustedDataset),
-    this.store.select(Settings.getColumnsState),
-    this.store.select(Settings.getSettings),
-    this.store.select(Settings.getDisplayRateInfo),
-    this.store.select(Settings.getOptions),
-    this.store.select(Settings.getBeltSpeed),
-    this.store.select(Settings.getBeltSpeedTxt),
-    this.routerSvc.zipConfig$,
-  ]).pipe(
-    map(
-      ([
-        machinesState,
-        itemsState,
-        itemsModified,
-        stepsModified,
-        totals,
-        steps,
-        stepDetails,
-        stepById,
-        stepByItemEntities,
-        stepTree,
-        effectivePowerUnit,
-        recipesState,
-        recipesModified,
-        data,
-        columnsState,
-        settings,
-        dispRateInfo,
-        options,
-        beltSpeed,
-        beltSpeedTxt,
-        zipPartial,
-      ]) => ({
-        machinesState,
-        itemsState,
-        itemsModified,
-        stepsModified,
-        totals,
-        steps,
-        stepDetails,
-        stepById,
-        stepByItemEntities,
-        stepTree,
-        effectivePowerUnit,
-        recipesState,
-        recipesModified,
-        data,
-        columnsState,
-        settings,
-        dispRateInfo,
-        options,
-        beltSpeed,
-        beltSpeedTxt,
-        zipPartial,
-      }),
-    ),
-    tap((vm) => this.setActiveItems(vm.steps, vm.stepDetails)),
+  vm$ = combineLatest({
+    machinesState: this.store.select(Machines.getMachinesState),
+    itemsState: this.store.select(Items.getItemsState),
+    itemsModified: this.store.select(Items.getItemsModified),
+    stepsModified: this.store.select(Objectives.getStepsModified),
+    totals: this.store.select(Objectives.getTotals),
+    steps: this.store.select(Objectives.getSteps),
+    stepDetails: this.store.select(Objectives.getStepDetails),
+    stepById: this.store.select(Objectives.getStepById),
+    stepByItemEntities: this.store.select(Objectives.getStepByItemEntities),
+    stepTree: this.store.select(Objectives.getStepTree),
+    effectivePowerUnit: this.store.select(Objectives.getEffectivePowerUnit),
+    recipesState: this.store.select(Recipes.getRecipesState),
+    recipesModified: this.store.select(Objectives.getRecipesModified),
+    data: this.store.select(Recipes.getAdjustedDataset),
+    columnsState: this.store.select(Settings.getColumnsState),
+    settings: this.store.select(Settings.getSettings),
+    dispRateInfo: this.store.select(Settings.getDisplayRateInfo),
+    options: this.store.select(Settings.getOptions),
+    beltSpeed: this.store.select(Settings.getBeltSpeed),
+    beltSpeedTxt: this.store.select(Settings.getBeltSpeedTxt),
+    zipPartial: this.routerSvc.zipConfig$,
+  }).pipe(
+    tap((vm) => {
+      vm.steps = [...vm.steps]; // Preserve original order
+      this.setActiveItems(vm.steps, vm.stepDetails);
+    }),
   );
+
+  sortSteps$ = new BehaviorSubject<SortEvent | null>(null);
 
   @ViewChild('stepsTable') stepsTable: Table | undefined;
 
@@ -159,6 +126,15 @@ export class ListComponent implements OnInit, AfterViewInit {
       .subscribe((id) => {
         // Store the fragment to navigate to it after the component loads
         this.fragmentId = id;
+      });
+
+    combineLatest([
+      this.sortSteps$.pipe(pairwise()),
+      this.store.select(Objectives.getSteps),
+    ])
+      .pipe(untilDestroyed(this))
+      .subscribe(([[prev, curr], steps]) => {
+        this.sortSteps(prev, curr, steps);
       });
   }
 
@@ -220,6 +196,50 @@ export class ListComponent implements OnInit, AfterViewInit {
           this.activeItem[id] = match;
         }
       }
+    });
+  }
+
+  sortSteps(
+    prev: SortEvent | null,
+    curr: SortEvent | null,
+    steps: Step[],
+  ): void {
+    if (curr == null) return;
+
+    if (
+      prev != null &&
+      prev.field === curr.field &&
+      curr.order === -1 &&
+      this.stepsTable != null
+    ) {
+      /**
+       * User has sorted the same column three times in a row. Reset sort and
+       * reset table state, otherwise PrimeNG will not ever reset sort.
+       */
+      curr.data?.sort((a: Step, b: Step) => {
+        const diff = steps.indexOf(a) - steps.indexOf(b);
+        return diff;
+      });
+      this.stepsTable.sortOrder = 0;
+      this.stepsTable.sortField = '';
+      this.stepsTable.reset();
+      return this.sortSteps$.next(null);
+    }
+
+    if (curr.order == null) return;
+    const order = curr.order;
+
+    // Sort by numeric field
+    const field = curr.field as
+      | 'items'
+      | 'belts'
+      | 'wagons'
+      | 'machines'
+      | 'power'
+      | 'pollution';
+    curr.data?.sort((a: Step, b: Step) => {
+      const diff = (a[field] ?? Rational.zero).sub(b[field] ?? Rational.zero);
+      return diff.toNumber() * order;
     });
   }
 
