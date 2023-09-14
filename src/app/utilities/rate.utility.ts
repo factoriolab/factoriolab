@@ -358,17 +358,19 @@ export class RateUtility {
       groups[parentId].push(step);
     }
 
-    // Sort root items based on recipe hierarchy
-    const sortList = [...groups[ROOT_ID]];
-    for (const step of sortList.filter(
-      (s) => s.parents == null || s.parents[''],
-    )) {
-      if (step.recipe) {
-        this.sortByRecipeRecursive(step.recipe, sortList, steps, []);
+    if (groups[ROOT_ID] && groups[ROOT_ID].length) {
+      // Sort root items based on recipe hierarchy
+      const sortList = [...groups[ROOT_ID]];
+      for (const step of sortList.filter(
+        (s) => s.parents == null || s.parents[''],
+      )) {
+        if (step.recipe) {
+          this.sortByRecipeRecursive(step.recipe, sortList, steps, []);
+        }
       }
-    }
 
-    groups[ROOT_ID] = sortList;
+      groups[ROOT_ID] = sortList;
+    }
 
     // Perform recursive sort
     const sorted = this.sortRecursive(groups, ROOT_ID, []);
