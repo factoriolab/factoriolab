@@ -27,9 +27,16 @@ import { PickerComponent } from '../picker/picker.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ObjectivesComponent {
-  messages$ = this.store
-    .select(Objectives.getMatrixResult)
-    .pipe(map((result) => this.getMessages(result)));
+  messages$ = combineLatest([
+    this.store.select(Objectives.getObjectives),
+    this.store.select(Objectives.getMatrixResult),
+    this.store.select(Items.getItemsState),
+    this.store.select(Recipes.getRecipesState),
+  ]).pipe(
+    map(([objectives, result, itemsState, recipesState]) =>
+      this.getMessages(objectives, result, itemsState, recipesState),
+    ),
+  );
   vm$ = combineLatest({
     objectives: this.store.select(Objectives.getObjectives),
     matrixResult: this.store.select(Objectives.getMatrixResult),
@@ -58,28 +65,81 @@ export class ObjectivesComponent {
     private contentSvc: ContentService,
   ) {}
 
-  getMessages(matrixResult: MatrixResult): Message[] {
+  getMessages(
+    objectives: Objective[],
+    matrixResult: MatrixResult,
+    itemsState: Items.ItemsState,
+    recipesState: Recipes.RecipesState,
+  ): Message[] {
     if (matrixResult.resultType !== MatrixResultType.Failed) return [];
 
-    let errorKey = 'objectives.error';
-    let errorDetailKey = 'objectives.errorDetail';
-
     if (matrixResult.simplexStatus === 'unbounded') {
-      errorKey = 'objectives.errorUnbounded';
-      errorDetailKey = 'objectives.errorUnboundedDetail';
-    } else if (matrixResult.simplexStatus === 'no_feasible') {
-      errorKey = 'objectives.errorInfeasible';
-      errorDetailKey = 'objectives.errorInfeasibleDetail';
-    }
+      const maxObjectives = objectives.filter(
+        (o) => o.type === ObjectiveType.Maximize,
+      );
 
+      if (
+        maxObjectives.length &&
+        objectives.every((o) => o.type !== ObjectiveType.Limit)
+      ) {
+        // Found maximize objectives but no limits
+        return this.buildErrorMessages(
+          'objectives.errorUnbounded',
+          'objectives.errorNoLimits',
+          matrixResult,
+        );
+      }
+
+      if (
+        maxObjectives.some((o) =>
+          o.unit === ObjectiveUnit.Machines
+            ? recipesState[o.targetId].excluded
+            : itemsState[o.targetId].excluded,
+        )
+      ) {
+        // Found an excluded maximize objective
+        return this.buildErrorMessages(
+          'objectives.errorUnbounded',
+          'objectives.errorMaximizeExcluded',
+          matrixResult,
+        );
+      }
+
+      return this.buildErrorMessages(
+        'objectives.errorUnbounded',
+        'objectives.errorUnboundedDetail',
+        matrixResult,
+      );
+    } else if (matrixResult.simplexStatus === 'no_feasible') {
+      return this.buildErrorMessages(
+        'objectives.errorInfeasible',
+        'objectives.errorInfeasibleDetail',
+        matrixResult,
+      );
+    } else {
+      return this.buildErrorMessages(
+        'objectives.error',
+        'objectives.errorDetail',
+        matrixResult,
+      );
+    }
+  }
+
+  buildErrorMessages(
+    summary: string,
+    detail: string,
+    matrixResult: MatrixResult,
+  ): Message[] {
     return [
       {
         severity: 'error',
-        summary: this.translateSvc.instant(errorKey),
-        detail: this.translateSvc.instant(errorDetailKey, {
+        summary: this.translateSvc.instant(summary),
+        detail: `${this.translateSvc.instant(
+          detail,
+        )} ${this.translateSvc.instant('objectives.errorSimplexInfo', {
           returnCode: matrixResult.returnCode ?? 'unknown',
           simplexStatus: matrixResult.simplexStatus ?? 'unknown',
-        }),
+        })}`,
       },
     ];
   }
