@@ -179,6 +179,49 @@ export class ListComponent implements OnInit, AfterViewInit {
     }
   }
 
+  sortSteps(
+    prev: SortEvent | null,
+    curr: SortEvent | null,
+    steps: Step[],
+  ): void {
+    if (curr == null || curr.order == null || curr.field == null) return;
+    const order = curr.order;
+    const field = curr.field as
+      | 'items'
+      | 'belts'
+      | 'wagons'
+      | 'machines'
+      | 'power'
+      | 'pollution';
+
+    if (
+      prev != null &&
+      prev.field === field &&
+      prev.order !== order &&
+      order === -1 &&
+      this.stepsTable != null
+    ) {
+      /**
+       * User has sorted the same column three times in a row. Reset sort and
+       * reset table state, otherwise PrimeNG will not ever reset sort.
+       */
+      curr.data?.sort((a: Step, b: Step) => {
+        const diff = steps.indexOf(a) - steps.indexOf(b);
+        return diff;
+      });
+      this.stepsTable.sortOrder = 0;
+      this.stepsTable.sortField = '';
+      this.stepsTable.reset();
+      return this.sortSteps$.next(null);
+    }
+
+    // Sort by numeric field
+    curr.data?.sort((a: Step, b: Step) => {
+      const diff = (a[field] ?? Rational.zero).sub(b[field] ?? Rational.zero);
+      return diff.toNumber() * order;
+    });
+  }
+
   setActiveItems(steps: Step[], stepDetails: Entities<StepDetail>): void {
     steps.forEach((s) => {
       const id = StepIdPipe.transform(s);
@@ -196,50 +239,6 @@ export class ListComponent implements OnInit, AfterViewInit {
           this.activeItem[id] = match;
         }
       }
-    });
-  }
-
-  sortSteps(
-    prev: SortEvent | null,
-    curr: SortEvent | null,
-    steps: Step[],
-  ): void {
-    if (curr == null) return;
-
-    if (
-      prev != null &&
-      prev.field === curr.field &&
-      curr.order === -1 &&
-      this.stepsTable != null
-    ) {
-      /**
-       * User has sorted the same column three times in a row. Reset sort and
-       * reset table state, otherwise PrimeNG will not ever reset sort.
-       */
-      curr.data?.sort((a: Step, b: Step) => {
-        const diff = steps.indexOf(a) - steps.indexOf(b);
-        return diff;
-      });
-      this.stepsTable.sortOrder = 0;
-      this.stepsTable.sortField = '';
-      this.stepsTable.reset();
-      return this.sortSteps$.next(null);
-    }
-
-    if (curr.order == null) return;
-    const order = curr.order;
-
-    // Sort by numeric field
-    const field = curr.field as
-      | 'items'
-      | 'belts'
-      | 'wagons'
-      | 'machines'
-      | 'power'
-      | 'pollution';
-    curr.data?.sort((a: Step, b: Step) => {
-      const diff = (a[field] ?? Rational.zero).sub(b[field] ?? Rational.zero);
-      return diff.toNumber() * order;
     });
   }
 
