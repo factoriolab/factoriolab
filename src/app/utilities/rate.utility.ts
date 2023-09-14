@@ -350,22 +350,70 @@ export class RateUtility {
 
     // Set up hierarchy groups
     const groups: Entities<Step[]> = {};
-    for (let i = 0; i < steps.length; i++) {
-      const s = steps[i];
-      const p = parents[s.id];
-      if (!groups[p]) {
-        groups[p] = [];
+    for (const step of steps) {
+      const parentId = parents[step.id];
+      if (!groups[parentId]) {
+        groups[parentId] = [];
       }
-      groups[p].push(s);
+      groups[parentId].push(step);
+    }
+
+    if (groups[ROOT_ID] && groups[ROOT_ID].length) {
+      // Sort root items based on recipe hierarchy
+      const sortList = [...groups[ROOT_ID]];
+      for (const step of sortList.filter(
+        (s) => s.parents == null || s.parents[''],
+      )) {
+        if (step.recipe) {
+          this.sortByRecipeRecursive(step.recipe, sortList, steps, []);
+        }
+      }
+
+      groups[ROOT_ID] = sortList;
     }
 
     // Perform recursive sort
     const sorted = this.sortRecursive(groups, ROOT_ID, []);
 
     // Add back any steps left out (potentially circular loops)
-    sorted.push(...steps.filter((s) => sorted.indexOf(s) === -1));
+    sorted.push(...steps.filter((s) => !sorted.includes(s)));
 
     return sorted;
+  }
+
+  static sortByRecipeRecursive(
+    recipe: RecipeRational,
+    sortList: Step[],
+    steps: Step[],
+    checkedRecipes: string[],
+  ): void {
+    // Only keep track of current ancestors
+    const childCheckedRecipes = [...checkedRecipes, recipe.id];
+
+    for (const inputId of Object.keys(recipe.in)) {
+      const step = sortList.find((s) => s.itemId === inputId);
+      if (step) {
+        // Encountered this item as an input, move it to the bottom of the list
+        const index = sortList.indexOf(step);
+        sortList.splice(index, 1);
+        sortList.push(step);
+      }
+
+      for (const recipeStep of steps) {
+        if (
+          recipeStep.recipe &&
+          !checkedRecipes.includes(recipeStep.recipe.id) &&
+          recipeStep.recipe.produces(inputId)
+        ) {
+          this.sortByRecipeRecursive(
+            recipeStep.recipe,
+            sortList,
+            steps,
+            childCheckedRecipes,
+          );
+        }
+      }
+    }
   }
 
   static sortRecursive(
