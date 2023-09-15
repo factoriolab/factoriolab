@@ -15,7 +15,7 @@ import { debounce, map, of, Subject, timer } from 'rxjs';
 import { filterNullish } from '~/helpers';
 import { Rational } from '~/models';
 
-type EventType = 'input' | 'blur';
+type EventType = 'input' | 'blur' | 'enter';
 
 interface Event {
   value: string | null;
@@ -105,6 +105,8 @@ export class InputNumberComponent implements OnInit, OnChanges {
         (this.min == null || rational.gte(this.min)) &&
         (this.max == null || rational.lte(this.max))
       ) {
+        // Simplify value once user is finished
+        if (type !== 'input') value = rational.toString();
         this.setValue$.next({ value, type });
         return;
       }

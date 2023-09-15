@@ -1,3 +1,5 @@
+import * as formula from '@sideway/formula';
+
 const MAX_DENOM = 100000;
 const DIVIDE_BY_ZERO = 'Cannot divide by zero';
 const FLOAT_TOLERANCE = 1e-10;
@@ -72,7 +74,11 @@ export class Rational {
 
     let result: Rational;
 
-    if (x.indexOf('/') === -1) {
+    if (x.startsWith('=')) {
+      // Full math support for equations
+      const value = new formula.Parser(x.substring(1)).evaluate();
+      result = Rational.from(value);
+    } else if (x.indexOf('/') === -1) {
       result = Rational.fromNumber(Number(x));
     } else {
       const f = x.split('/');
