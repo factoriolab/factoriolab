@@ -719,7 +719,6 @@ export class SimplexUtility {
           const recipeValRat = Rational.fromNumber(recipeVal);
           const val = recipeValRat.mul(outRat);
           values.out = values.out.add(val);
-          console.log(itemId, objId, val);
         }
       }
 

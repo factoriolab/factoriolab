@@ -98,6 +98,7 @@ const mockSettingsState: Settings.SettingsState = {
   modId: '1.0',
   researchedTechnologyIds: null,
   netProductionOnly: true,
+  surplusMachinesOutput: false,
   preset: Preset.Modules,
   beaconReceivers: '1',
   proliferatorSprayId: ItemId.ProductivityModule,
@@ -473,6 +474,7 @@ describe('RouterService', () => {
       mockStateV0.settingsState!.costs = {};
       delete mockStateV0.settingsState?.proliferatorSprayId;
       delete mockStateV0.settingsState?.netProductionOnly;
+      delete mockStateV0.settingsState?.surplusMachinesOutput;
       expect(service.dispatch).toHaveBeenCalledWith(
         'p=steel-chest*1*1&q=steel-chest*1&b=1&i=steel-chest*1*transport-belt' +
           '*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module' +
@@ -518,6 +520,7 @@ describe('RouterService', () => {
       delete mockStateV1.settingsState?.maximizeType;
       delete mockStateV1.settingsState?.costs?.surplus;
       delete mockStateV1.settingsState?.costs?.maximize;
+      delete mockStateV1.settingsState?.surplusMachinesOutput;
       expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockStateV1);
       expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
@@ -555,6 +558,7 @@ describe('RouterService', () => {
       delete mockStateV2.settingsState?.maximizeType;
       delete mockStateV2.settingsState?.costs?.surplus;
       delete mockStateV2.settingsState?.costs?.maximize;
+      delete mockStateV2.settingsState?.surplusMachinesOutput;
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2' +
           '*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
@@ -598,6 +602,7 @@ describe('RouterService', () => {
       delete mockStateV3.settingsState?.maximizeType;
       delete mockStateV3.settingsState?.costs?.surplus;
       delete mockStateV3.settingsState?.costs?.maximize;
+      delete mockStateV3.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_' +
@@ -639,6 +644,7 @@ describe('RouterService', () => {
       delete mockStateV4.settingsState?.maximizeType;
       delete mockStateV4.settingsState?.costs?.surplus;
       delete mockStateV4.settingsState?.costs?.maximize;
+      delete mockStateV4.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(v4Full, mockStateV4);
     });
@@ -677,6 +683,7 @@ describe('RouterService', () => {
       delete mockStateV5.settingsState?.maximizeType;
       delete mockStateV5.settingsState?.costs?.surplus;
       delete mockStateV5.settingsState?.costs?.maximize;
+      delete mockStateV5.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_' +
@@ -717,6 +724,7 @@ describe('RouterService', () => {
       delete mockStateV6.settingsState?.maximizeType;
       delete mockStateV6.settingsState?.costs?.surplus;
       delete mockStateV6.settingsState?.costs?.maximize;
+      delete mockStateV6.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(v6Full, mockStateV6);
     });
@@ -754,6 +762,7 @@ describe('RouterService', () => {
       delete mockStateV7.settingsState?.maximizeType;
       delete mockStateV7.settingsState?.costs?.surplus;
       delete mockStateV7.settingsState?.costs?.maximize;
+      delete mockStateV7.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&qDB*1&e1*G~G*A*8&bB&iC6*1*C*A&rDB*B*A~A*0*200*100&f1*D~G*1*G' +
@@ -782,7 +791,11 @@ describe('RouterService', () => {
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
 
-      const mockStateV8: App.PartialState = { ...mockState };
+      const mockStateV8: App.PartialState = {
+        ...mockState,
+        ...{ settingsState: { ...mockState.settingsState } },
+      };
+      delete mockStateV8.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100&f1*D~G*1*G*A_B_' +

@@ -73,6 +73,17 @@ describe('Settings Reducer', () => {
     });
   });
 
+  describe('SET_SURPLUS_MACHINES_OUTPUT', () => {
+    it('should set the surplus machines output value', () => {
+      const value = true;
+      const result = settingsReducer(
+        initialSettingsState,
+        new Actions.SetSurplusMachinesOutputAction(value),
+      );
+      expect(result.surplusMachinesOutput).toEqual(value);
+    });
+  });
+
   describe('SET_PRESET', () => {
     it('should set the preset', () => {
       const value = Preset.Modules;
