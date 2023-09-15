@@ -73,6 +73,10 @@ describe('Rational', () => {
           'Too many spaces',
         );
       });
+
+      it('should evaluate an equation', () => {
+        expect(Rational.fromString('=1+1')).toEqual(Rational.two);
+      });
     });
 
     describe('min', () => {

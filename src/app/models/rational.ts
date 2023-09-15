@@ -81,9 +81,26 @@ export class Rational {
     } else if (x.indexOf('/') === -1) {
       result = Rational.fromNumber(Number(x));
     } else {
-      // Use same formula parser library if '/' is detected
-      const value = new formula.Parser(x).evaluate();
-      result = Rational.from(value);
+      const f = x.split('/');
+      if (f.length > 2) {
+        throw new Error('Too many /');
+      }
+
+      if (f[0].indexOf(' ') === -1) {
+        const p = Number(f[0]);
+        const q = Number(f[1]);
+        result = Rational.from([p, q]);
+      } else {
+        const g = f[0].split(' ');
+        if (g.length > 2) {
+          throw new Error('Too many spaces');
+        }
+
+        const n = Number(g[0]);
+        const p = Number(g[1]);
+        const q = Number(f[1]);
+        result = Rational.from(n).add(Rational.from([p, q]));
+      }
     }
 
     this.fromStringCache[x] = result;
