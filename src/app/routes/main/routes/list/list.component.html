@@ -1047,7 +1047,7 @@
           <!-- Item row details -->
           <ng-container *ngSwitchCase="StepDetailTab.Item">
             <tr *ngIf="vm.stepDetails[step.id].outputs.length" class="detail">
-              <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+              <ng-container *ngTemplateOutlet="leftPad"></ng-container>
               <td colspan="100" class="fw-bold">
                 {{ 'list.sources' | translate }}
               </td>
@@ -1083,7 +1083,7 @@
               </ng-container>
             </ng-container>
             <tr *ngIf="step.parents" class="detail">
-              <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+              <ng-container *ngTemplateOutlet="leftPad"></ng-container>
               <td colspan="100" class="fw-bold">
                 {{ 'list.destinations' | translate }}
               </td>
@@ -1134,7 +1134,7 @@
                 *ngIf="vm.data.game === Game.Factorio && step.recipe.isMining"
               >
                 <tr class="detail">
-                  <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+                  <ng-container *ngTemplateOutlet="leftPad"></ng-container>
                   <td colspan="100" class="fw-bold">
                     {{ 'list.depletion' | translate }}
                   </td>
@@ -1173,7 +1173,7 @@
                 *ngIf="step.recipe && (step.recipe.in | keyvalue).length"
               >
                 <tr class="detail">
-                  <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+                  <ng-container *ngTemplateOutlet="leftPad"></ng-container>
                   <td colspan="100" class="fw-bold">
                     {{ 'list.inputs' | translate }}
                   </td>
@@ -1218,7 +1218,25 @@
                 </ng-container>
               </ng-container>
               <tr class="detail">
-                <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+                <ng-container *ngTemplateOutlet="leftPad"></ng-container>
+                <td colspan="100" class="fw-bold">
+                  {{ 'list.time' | translate }}
+                </td>
+              </tr>
+              <tr class="detail">
+                <ng-container *ngTemplateOutlet="leftPad"></ng-container>
+                <td class="w-0 text-end">
+                  <span class="monospace">{{
+                    step.recipe.time | rate: vm.columnsState.items.precision
+                  }}</span>
+                </td>
+                <td class="ps-0">
+                  <div class="d-flex"><i class="lab-icon time"></i></div>
+                </td>
+                <td colspan="100"></td>
+              </tr>
+              <tr class="detail">
+                <ng-container *ngTemplateOutlet="leftPad"></ng-container>
                 <td colspan="100" class="fw-bold">
                   {{ 'list.outputs' | translate }}
                 </td>
@@ -1364,7 +1382,11 @@
                 <i class="fa-solid fa-arrow-right mx-3"></i>
                 <table class="mw-0">
                   <tr>
-                    <td class="monospace">1</td>
+                    <td class="w-0 text-end">
+                      <span class="monospace">{{
+                        Rational.one | rate: vm.columnsState.machines.precision
+                      }}</span>
+                    </td>
                     <td>
                       <div
                         *ngIf="step.recipeSettings?.machineId as machineId"
@@ -1382,6 +1404,15 @@
                         ></i>
                       </div>
                     </td>
+                  </tr>
+                  <tr>
+                    <td class="w-0 text-end">
+                      <span class="monospace">{{
+                        vm.dispRateInfo.value
+                          | rate: vm.columnsState.machines.precision
+                      }}</span>
+                    </td>
+                    <td><i class="lab-icon time"></i></td>
                   </tr>
                 </table>
                 <i class="fa-solid fa-arrow-right mx-3"></i>
@@ -1561,7 +1592,7 @@
     >
       <tr class="detail">
         <ng-container *ngIf="itemId">
-          <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+          <ng-container *ngTemplateOutlet="leftPad"></ng-container>
           <td class="w-0 text-end">
             <span class="monospace">{{
               items | rate: vm.columnsState.items.precision

@@ -305,6 +305,7 @@
     "destinations": "Destinations",
     "depletion": "Depletion",
     "inputs": "Inputs",
+    "time": "Time",
     "outputs": "Outputs",
     "inserterCountInfo": "* Inserters are calculated using target/capacity settings and 0.18 experimental data from the <a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">wiki.</a>",
     "includedRecipes": "Included recipes",
