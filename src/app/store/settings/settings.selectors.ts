@@ -179,12 +179,6 @@ export const getColumnsState = createSelector(
   },
 );
 
-export const getShowDuplicateIcons = createSelector(
-  getColumnsState,
-  Preferences.getHideDuplicateIcons,
-  (columns, hideDuplicateIcons) => !columns.tree.show || !hideDuplicateIcons,
-);
-
 export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
   if (base) {
     const m = base.defaults;

@@ -51,6 +51,7 @@ import {
   LabState,
   Machines,
   Objectives,
+  Preferences,
   Recipes,
   Settings,
 } from '~/store';
@@ -86,7 +87,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     options: this.store.select(Settings.getOptions),
     beltSpeed: this.store.select(Settings.getBeltSpeed),
     beltSpeedTxt: this.store.select(Settings.getBeltSpeedTxt),
-    showDuplicateIcons: this.store.select(Settings.getShowDuplicateIcons),
+    hideDuplicateIcons: this.store.select(Preferences.getHideDuplicateIcons),
     zipPartial: this.routerSvc.zipConfig$,
   }).pipe(
     tap((vm) => {
