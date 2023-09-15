@@ -21,6 +21,7 @@ export interface PreferencesState {
   theme: Theme;
   bypassLanding: boolean;
   showTechLabels: boolean;
+  hideDuplicateIcons: boolean;
 }
 
 export const initialPreferencesState: PreferencesState = {
@@ -36,6 +37,7 @@ export const initialPreferencesState: PreferencesState = {
   theme: Theme.Dark,
   bypassLanding: false,
   showTechLabels: false,
+  hideDuplicateIcons: false,
 };
 
 export function preferencesReducer(
@@ -80,6 +82,8 @@ export function preferencesReducer(
       return { ...state, ...{ bypassLanding: action.payload } };
     case PreferencesActionType.SET_SHOW_TECH_LABELS:
       return { ...state, ...{ showTechLabels: action.payload } };
+    case PreferencesActionType.SET_HIDE_DUPLICATE_ICONS:
+      return { ...state, ...{ hideDuplicateIcons: action.payload } };
     default:
       return state;
   }

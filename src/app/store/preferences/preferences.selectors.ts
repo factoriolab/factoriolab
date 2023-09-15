@@ -35,3 +35,7 @@ export const getShowTechLabels = createSelector(
   preferencesState,
   (state) => state.showTechLabels,
 );
+export const getHideDuplicateIcons = createSelector(
+  preferencesState,
+  (state) => state.hideDuplicateIcons,
+);

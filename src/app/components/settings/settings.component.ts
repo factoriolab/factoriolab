@@ -521,4 +521,8 @@ export class SettingsComponent implements OnInit {
   setBypassLanding(value: boolean): void {
     this.store.dispatch(new Preferences.SetBypassLandingAction(value));
   }
+
+  setHideDuplicateIcons(value: boolean): void {
+    this.store.dispatch(new Preferences.SetHideDuplicateIconsAction(value));
+  }
 }

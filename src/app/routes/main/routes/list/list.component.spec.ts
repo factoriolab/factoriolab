@@ -486,6 +486,7 @@ describe('ListComponent', () => {
     dispatch.idValDef('setWagon', Items.SetWagonAction);
     dispatch.idValDef('setRecipeExcluded', Recipes.SetExcludedAction);
     dispatch.val('setRecipeExcludedBatch', Recipes.SetExcludedBatchAction);
+    dispatch.val('addObjective', Objectives.AddAction);
     dispatch.idValDef('setMachine', Recipes.SetMachineAction);
     dispatch.idValDefAlt('setMachine', Objectives.SetMachineAction);
     dispatch.idValDef('setFuel', Recipes.SetFuelAction);

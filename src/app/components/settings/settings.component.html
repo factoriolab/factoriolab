@@ -1216,12 +1216,20 @@
               <label for="theme">{{ 'settings.theme' | translate }}</label>
             </div>
           </div>
-          <div>
+          <div class="pb-3">
             <p-checkbox
               [binary]="true"
               [label]="'settings.bypassLanding' | translate"
               [ngModel]="vm.preferences.bypassLanding"
               (onChange)="setBypassLanding($event.checked)"
+            ></p-checkbox>
+          </div>
+          <div>
+            <p-checkbox
+              [ngModel]="vm.preferences.hideDuplicateIcons"
+              [binary]="true"
+              [label]="'settings.hideDuplicateIcons' | translate"
+              (onChange)="setHideDuplicateIcons($event.checked)"
             ></p-checkbox>
           </div>
         </div>
