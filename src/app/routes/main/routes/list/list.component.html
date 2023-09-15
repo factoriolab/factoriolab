@@ -278,7 +278,10 @@
                 vm.data.itemEntities[step.itemId].name
               }}</span>
               <button
-                *ngIf="vm.showDuplicateIcons"
+                *ngIf="
+                  !vm.preferences.hideDuplicateIcons ||
+                  !vm.columnsState.tree.show
+                "
                 pButton
                 pRipple
                 type="button"
@@ -588,7 +591,7 @@
                 <span class="find-text">{{ step.recipe.name }}</span>
                 <button
                   *ngIf="
-                    vm.showDuplicateIcons ||
+                    !vm.preferences.hideDuplicateIcons ||
                     (step.itemId != null && step.itemId !== step.recipeId)
                   "
                   pButton

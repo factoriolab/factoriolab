@@ -1,3 +1,5 @@
+import * as formula from '@sideway/formula';
+
 const MAX_DENOM = 100000;
 const DIVIDE_BY_ZERO = 'Cannot divide by zero';
 const FLOAT_TOLERANCE = 1e-10;
@@ -72,29 +74,16 @@ export class Rational {
 
     let result: Rational;
 
-    if (x.indexOf('/') === -1) {
+    if (x.startsWith('=')) {
+      // Full math support for equations
+      const value = new formula.Parser(x.substring(1)).evaluate();
+      result = Rational.from(value);
+    } else if (x.indexOf('/') === -1) {
       result = Rational.fromNumber(Number(x));
     } else {
-      const f = x.split('/');
-      if (f.length > 2) {
-        throw new Error('Too many /');
-      }
-
-      if (f[0].indexOf(' ') === -1) {
-        const p = Number(f[0]);
-        const q = Number(f[1]);
-        result = Rational.from([p, q]);
-      } else {
-        const g = f[0].split(' ');
-        if (g.length > 2) {
-          throw new Error('Too many spaces');
-        }
-
-        const n = Number(g[0]);
-        const p = Number(g[1]);
-        const q = Number(f[1]);
-        result = Rational.from(n).add(Rational.from([p, q]));
-      }
+      // Use same formula parser library if '/' is detected
+      const value = new formula.Parser(x).evaluate();
+      result = Rational.from(value);
     }
 
     this.fromStringCache[x] = result;
