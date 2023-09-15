@@ -1254,6 +1254,15 @@
             ></p-checkbox>
           </div>
           <div class="pb-3">
+            <p-checkbox
+              [ngModel]="vm.settings.surplusMachinesOutput"
+              [binary]="true"
+              [label]="'settings.surplusMachinesOutput' | translate"
+              [pTooltip]="'settings.surplusMachinesOutputTooltip' | translate"
+              (onChange)="setSurplusMachinesOutput($event.checked)"
+            ></p-checkbox>
+          </div>
+          <div class="pb-3">
             <button
               pButton
               pRipple

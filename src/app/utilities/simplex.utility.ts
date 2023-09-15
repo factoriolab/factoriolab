@@ -70,6 +70,7 @@ export interface MatrixState {
   itemIds: string[];
   data: Dataset;
   maximizeType: MaximizeType;
+  surplusMachinesOutput: boolean;
   cost: CostRationalSettings;
 }
 
@@ -138,6 +139,7 @@ export class SimplexUtility {
     recipesState: Recipes.RecipesState,
     researchedTechnologyIds: string[] | null,
     maximizeType: MaximizeType,
+    surplusMachinesOutput: boolean,
     cost: CostRationalSettings,
     data: Dataset,
   ): MatrixResult {
@@ -156,6 +158,7 @@ export class SimplexUtility {
       recipesState,
       researchedTechnologyIds,
       maximizeType,
+      surplusMachinesOutput,
       cost,
       data,
     );
@@ -185,6 +188,7 @@ export class SimplexUtility {
     recipesState: Recipes.RecipesState,
     researchedTechnologyIds: string[],
     maximizeType: MaximizeType,
+    surplusMachinesOutput: boolean,
     cost: CostRationalSettings,
     data: Dataset,
   ): MatrixState {
@@ -213,6 +217,7 @@ export class SimplexUtility {
       }),
       itemIds: data.itemIds.filter((i) => !itemsState[i].excluded),
       maximizeType,
+      surplusMachinesOutput,
       cost,
       data,
     };
@@ -569,6 +574,7 @@ export class SimplexUtility {
     }
 
     // Add net output and input item constraints to model
+    const recipeObjectiveOutput: Entities<Entities<Rational>> = {};
     for (const itemId of itemIds) {
       const values = state.itemValues[itemId];
       const netCoeffs: [Variable, number][] = [];
@@ -592,7 +598,16 @@ export class SimplexUtility {
         const recipe = obj.recipe;
         const val = recipe.output(itemId);
         if (val.nonzero()) {
-          netCoeffs.push([recipeObjectiveVarEntities[obj.id], val.toNumber()]);
+          if (val.gt(Rational.zero) && !state.surplusMachinesOutput) {
+            if (recipeObjectiveOutput[itemId] == null)
+              recipeObjectiveOutput[itemId] = {};
+            recipeObjectiveOutput[itemId][obj.id] = val;
+          } else {
+            netCoeffs.push([
+              recipeObjectiveVarEntities[obj.id],
+              val.toNumber(),
+            ]);
+          }
         }
 
         if (recipe.in[itemId]) {
@@ -696,6 +711,16 @@ export class SimplexUtility {
       const values = state.itemValues[itemId];
       const val = Rational.fromNumber(surplusVarEntities[itemId].value);
       if (val.nonzero()) surplus[itemId] = val;
+
+      if (recipeObjectiveOutput[itemId]) {
+        for (const objId of Object.keys(recipeObjectiveOutput[itemId])) {
+          const outRat = recipeObjectiveOutput[itemId][objId];
+          const recipeVal = recipeObjectiveVarEntities[objId].value;
+          const recipeValRat = Rational.fromNumber(recipeVal);
+          const val = recipeValRat.mul(outRat);
+          values.out = values.out.add(val);
+        }
+      }
 
       if (values.max != null) {
         switch (state.maximizeType) {

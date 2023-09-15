@@ -348,6 +348,10 @@ describe('SettingsComponent', () => {
     dispatch.val('setItemExcludedBatch', Items.SetExcludedBatchAction);
     dispatch.val('setRecipeExcludedBatch', Recipes.SetExcludedBatchAction);
     dispatch.val('setNetProductionOnly', Settings.SetNetProductionOnlyAction);
+    dispatch.val(
+      'setSurplusMachinesOutput',
+      Settings.SetSurplusMachinesOutputAction,
+    );
     dispatch.val('setPreset', Settings.SetPresetAction);
     dispatch.valDef('removeMachine', Machines.RemoveAction);
     dispatch.idValDef('setMachine', Machines.SetMachineAction);

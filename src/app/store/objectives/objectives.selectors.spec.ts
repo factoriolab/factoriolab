@@ -103,6 +103,7 @@ describe('Objectives Selectors', () => {
         Mocks.RecipesStateInitial,
         [],
         MaximizeType.Weight,
+        false,
         Mocks.CostRational,
         Mocks.Dataset,
       );

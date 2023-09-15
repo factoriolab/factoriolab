@@ -391,6 +391,10 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetNetProductionOnlyAction(value));
   }
 
+  setSurplusMachinesOutput(value: boolean): void {
+    this.store.dispatch(new Settings.SetSurplusMachinesOutputAction(value));
+  }
+
   setPreset(value: Preset): void {
     this.store.dispatch(new Settings.SetPresetAction(value));
   }
