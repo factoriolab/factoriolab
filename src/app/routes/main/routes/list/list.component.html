@@ -210,11 +210,10 @@
         </td>
         <!-- Tree -->
         <td *ngIf="vm.columnsState.tree.show" class="overflow-hidden px-1 py-0">
-          <div
-            class="d-flex align-items-center links"
-            [class.invisible]="stepsTable.sortField"
-          >
-            <ng-container *ngIf="vm.stepTree[step.id]?.length">
+          <div class="d-flex align-items-center links">
+            <ng-container
+              *ngIf="!stepsTable.sortField && vm.stepTree[step.id]?.length"
+            >
               <div
                 *ngFor="let i of vm.stepTree[step.id]; last as last"
                 class="connect"
@@ -279,6 +278,7 @@
                 vm.data.itemEntities[step.itemId].name
               }}</span>
               <button
+                *ngIf="vm.showDuplicateIcons"
                 pButton
                 pRipple
                 type="button"
@@ -586,15 +586,33 @@
                 class="d-flex align-items-center"
               >
                 <span class="find-text">{{ step.recipe.name }}</span>
-                <i
-                  class="padded"
-                  [class]="step.recipeId | iconSmClass: 'recipe'"
+                <button
+                  *ngIf="
+                    vm.showDuplicateIcons ||
+                    (step.itemId != null && step.itemId !== step.recipeId)
+                  "
+                  pButton
+                  pRipple
+                  type="button"
+                  class="hover-action p-button-text"
                   [pTooltip]="step.recipeId | recipeTooltip: vm.data"
                   [escape]="false"
-                  ><span *ngIf="step.recipeObjectiveId"
-                    >#{{ step.recipeObjectiveId }}</span
-                  ></i
+                  (click)="
+                    addObjective({
+                      targetId: step.recipeId,
+                      unit: ObjectiveUnit.Machines
+                    })
+                  "
                 >
+                  <span
+                    class="p-button-icon"
+                    [class]="step.recipeId | iconSmClass: 'recipe'"
+                    ><span *ngIf="step.recipeObjectiveId"
+                      >#{{ step.recipeObjectiveId }}</span
+                    ></span
+                  >
+                  <i class="hover-icon fa-solid fa-circle-plus"></i>
+                </button>
                 <p-dropdown
                   labDropdownBase="icon"
                   [pTooltip]="machineId | machineTooltip: vm.data"
@@ -1047,7 +1065,7 @@
           <!-- Item row details -->
           <ng-container *ngSwitchCase="StepDetailTab.Item">
             <tr *ngIf="vm.stepDetails[step.id].outputs.length" class="detail">
-              <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+              <ng-container *ngTemplateOutlet="leftPad"></ng-container>
               <td colspan="100" class="fw-bold">
                 {{ 'list.sources' | translate }}
               </td>
@@ -1083,7 +1101,7 @@
               </ng-container>
             </ng-container>
             <tr *ngIf="step.parents" class="detail">
-              <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+              <ng-container *ngTemplateOutlet="leftPad"></ng-container>
               <td colspan="100" class="fw-bold">
                 {{ 'list.destinations' | translate }}
               </td>
@@ -1134,7 +1152,7 @@
                 *ngIf="vm.data.game === Game.Factorio && step.recipe.isMining"
               >
                 <tr class="detail">
-                  <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+                  <ng-container *ngTemplateOutlet="leftPad"></ng-container>
                   <td colspan="100" class="fw-bold">
                     {{ 'list.depletion' | translate }}
                   </td>
@@ -1173,7 +1191,7 @@
                 *ngIf="step.recipe && (step.recipe.in | keyvalue).length"
               >
                 <tr class="detail">
-                  <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+                  <ng-container *ngTemplateOutlet="leftPad"></ng-container>
                   <td colspan="100" class="fw-bold">
                     {{ 'list.inputs' | translate }}
                   </td>
@@ -1218,7 +1236,25 @@
                 </ng-container>
               </ng-container>
               <tr class="detail">
-                <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+                <ng-container *ngTemplateOutlet="leftPad"></ng-container>
+                <td colspan="100" class="fw-bold">
+                  {{ 'list.time' | translate }}
+                </td>
+              </tr>
+              <tr class="detail">
+                <ng-container *ngTemplateOutlet="leftPad"></ng-container>
+                <td class="w-0 text-end">
+                  <span class="monospace">{{
+                    step.recipe.time | rate: vm.columnsState.items.precision
+                  }}</span>
+                </td>
+                <td class="ps-0">
+                  <div class="d-flex"><i class="lab-icon time"></i></div>
+                </td>
+                <td colspan="100"></td>
+              </tr>
+              <tr class="detail">
+                <ng-container *ngTemplateOutlet="leftPad"></ng-container>
                 <td colspan="100" class="fw-bold">
                   {{ 'list.outputs' | translate }}
                 </td>
@@ -1364,7 +1400,11 @@
                 <i class="fa-solid fa-arrow-right mx-3"></i>
                 <table class="mw-0">
                   <tr>
-                    <td class="monospace">1</td>
+                    <td class="w-0 text-end">
+                      <span class="monospace">{{
+                        Rational.one | rate: vm.columnsState.machines.precision
+                      }}</span>
+                    </td>
                     <td>
                       <div
                         *ngIf="step.recipeSettings?.machineId as machineId"
@@ -1382,6 +1422,15 @@
                         ></i>
                       </div>
                     </td>
+                  </tr>
+                  <tr>
+                    <td class="w-0 text-end">
+                      <span class="monospace">{{
+                        vm.dispRateInfo.value
+                          | rate: vm.columnsState.machines.precision
+                      }}</span>
+                    </td>
+                    <td><i class="lab-icon time"></i></td>
                   </tr>
                 </table>
                 <i class="fa-solid fa-arrow-right mx-3"></i>
@@ -1561,7 +1610,7 @@
     >
       <tr class="detail">
         <ng-container *ngIf="itemId">
-          <ng-template *ngTemplateOutlet="leftPad"></ng-template>
+          <ng-container *ngTemplateOutlet="leftPad"></ng-container>
           <td class="w-0 text-end">
             <span class="monospace">{{
               items | rate: vm.columnsState.items.precision

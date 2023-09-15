@@ -30,6 +30,8 @@ import {
   Game,
   IdValueDefaultPayload,
   ItemId,
+  ObjectiveBase,
+  ObjectiveUnit,
   Rational,
   RecipeField,
   Step,
@@ -84,6 +86,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     options: this.store.select(Settings.getOptions),
     beltSpeed: this.store.select(Settings.getBeltSpeed),
     beltSpeedTxt: this.store.select(Settings.getBeltSpeedTxt),
+    showDuplicateIcons: this.store.select(Settings.getShowDuplicateIcons),
     zipPartial: this.routerSvc.zipConfig$,
   }).pipe(
     tap((vm) => {
@@ -105,6 +108,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   Game = Game;
   RecipeField = RecipeField;
   EnergyType = EnergyType;
+  ObjectiveUnit = ObjectiveUnit;
   Rational = Rational;
 
   constructor(
@@ -478,6 +482,10 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   setRecipeExcludedBatch(payload: IdValueDefaultPayload<boolean>[]): void {
     this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
+  }
+
+  addObjective(value: ObjectiveBase): void {
+    this.store.dispatch(new Objectives.AddAction(value));
   }
 
   setMachine(id: string, value: string, def: string, objective = false): void {

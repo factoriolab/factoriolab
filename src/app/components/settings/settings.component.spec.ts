@@ -385,5 +385,9 @@ describe('SettingsComponent', () => {
     dispatch.val('setLanguage', Preferences.SetLanguageAction);
     dispatch.val('setTheme', Preferences.SetThemeAction);
     dispatch.val('setBypassLanding', Preferences.SetBypassLandingAction);
+    dispatch.val(
+      'setHideDuplicateIcons',
+      Preferences.SetHideDuplicateIconsAction,
+    );
   });
 });

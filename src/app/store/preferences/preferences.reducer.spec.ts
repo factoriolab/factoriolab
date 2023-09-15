@@ -120,6 +120,16 @@ describe('Preferences Reducer', () => {
     });
   });
 
+  describe('SET_HIDE_DUPLICATE_ICONS', () => {
+    it('should set the hide duplicate icons preference', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetHideDuplicateIconsAction(true),
+      );
+      expect(result.hideDuplicateIcons).toEqual(true);
+    });
+  });
+
   it('should return the default state', () => {
     expect(preferencesReducer(undefined, { type: 'Test' } as any)).toEqual(
       initialPreferencesState,
