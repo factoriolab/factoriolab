@@ -11,19 +11,12 @@
 @import 'styles/utils';
 
 html {
-  overflow: hidden;
-
-  height: 100vh;
-
   font-size: 14px;
+  overflow-x: hidden;
 }
 
 body {
-  overflow-x: hidden;
-  overflow-y: auto;
-
   margin: 0;
-  height: 100%;
   line-height: 20px;
 
   background-color: var(--surface-ground);
