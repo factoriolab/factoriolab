@@ -257,6 +257,7 @@ export const PreferencesState: Preferences.PreferencesState = {
   theme: M.Theme.Dark,
   bypassLanding: false,
   showTechLabels: false,
+  hideDuplicateIcons: false,
 };
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
