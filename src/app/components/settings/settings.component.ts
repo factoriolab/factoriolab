@@ -45,6 +45,7 @@ import {
 import { ContentService, DisplayService, RouterService } from '~/services';
 import {
   App,
+  Datasets,
   Items,
   LabState,
   Machines,
@@ -64,79 +65,36 @@ export class SettingsComponent implements OnInit {
   @HostBinding('class.active') @Input() active = false;
   @HostBinding('class.hidden') @Input() hidden = false;
 
-  vm$ = combineLatest([
-    this.store.select(Items.getItemsState),
-    this.store.select(Recipes.getRecipesState),
-    this.store.select(Machines.getMachinesState),
-    this.store.select(Machines.getMachineRows),
-    this.store.select(Machines.getMachineOptions),
-    this.store.select(Settings.getSettings),
-    this.store.select(Settings.getColumnsState),
-    this.store.select(Settings.getDataset),
-    this.store.select(Settings.getOptions),
-    this.store.select(Settings.getModOptions),
-    this.store.select(Settings.getPresetOptions),
-    this.store.select(Settings.getBeltSpeedTxt),
-    this.store.select(Settings.getDisplayRateInfo),
-    this.store.select(Settings.getAllResearchedTechnologyIds),
-    this.store.select(Settings.getAvailableItems),
-    this.store.select(Settings.getAvailableRecipes),
-    this.store.select(Settings.getGameStates),
-    this.store.select(Settings.getSavedStates),
-    this.store.select(Preferences.preferencesState),
-    this.contentSvc.lang$,
-  ]).pipe(
-    map(
-      ([
-        itemsState,
-        recipesState,
-        machinesState,
-        machineRows,
-        machineOptions,
-        settings,
-        columnsState,
-        data,
-        options,
-        modOptions,
-        presetOptions,
-        beltSpeedTxt,
-        dispRateInfo,
-        researchedTechnologyIds,
-        itemIds,
-        recipeIds,
-        gameStates,
-        savedStates,
-        preferences,
-      ]) => ({
-        itemsState,
-        recipesState,
-        machinesState,
-        machineRows,
-        machineOptions,
-        settings,
-        columnsState,
-        data,
-        options,
-        modOptions,
-        presetOptions,
-        beltSpeedTxt,
-        dispRateInfo,
-        researchedTechnologyIds,
-        itemIds,
-        recipeIds,
-        gameStates,
-        savedStates,
-        preferences,
-        machineMenuItems: this.buildMachineMenus(machineRows, data),
-        excludedItemIds: data.itemIds.filter((i) => itemsState[i]?.excluded),
-        excludedRecipeIds: data.recipeIds.filter(
-          (r) => recipesState[r]?.excluded,
-        ),
-        mod: modOptions.find((o) => o.value === settings.modId),
-        preset: presetOptions.find((o) => o.value === settings.preset),
-      }),
+  machineIds$ = this.store
+    .select(Machines.getMachinesState)
+    .pipe(map((state) => [...(state?.ids ?? [])]));
+  // excludedItemids$ =
+  vm$ = combineLatest({
+    itemsState: this.store.select(Items.getItemsState),
+    excludedItemIds: this.store.select(Items.getExcludedItemIds),
+    recipesState: this.store.select(Recipes.getRecipesState),
+    excludedRecipeIds: this.store.select(Recipes.getExcludedRecipeIds),
+    machinesState: this.store.select(Machines.getMachinesState),
+    machineOptions: this.store.select(Machines.getMachineOptions),
+    settings: this.store.select(Settings.getSettings),
+    columnsState: this.store.select(Settings.getColumnsState),
+    data: this.store.select(Settings.getDataset),
+    options: this.store.select(Settings.getOptions),
+    modOptions: this.store.select(Settings.getModOptions),
+    presetOptions: this.store.select(Settings.getPresetOptions),
+    beltSpeedTxt: this.store.select(Settings.getBeltSpeedTxt),
+    dispRateInfo: this.store.select(Settings.getDisplayRateInfo),
+    researchedTechnologyIds: this.store.select(
+      Settings.getAllResearchedTechnologyIds,
     ),
-  );
+    itemIds: this.store.select(Settings.getAvailableItems),
+    recipeIds: this.store.select(Settings.getAvailableRecipes),
+    gameStates: this.store.select(Settings.getGameStates),
+    savedStates: this.store.select(Settings.getSavedStates),
+    preferences: this.store.select(Preferences.preferencesState),
+    modRecord: this.store.select(Datasets.getModRecord),
+    machineIds: this.machineIds$,
+  });
 
   state = '';
   editCtrl = new FormControl('', Validators.required);
@@ -194,28 +152,6 @@ export class SettingsComponent implements OnInit {
             (s) => states[s] === BrowserUtility.search,
           ) ?? '';
       });
-  }
-
-  buildMachineMenus(machineRows: string[], data: Dataset): MenuItem[][] {
-    return machineRows.map((machineId, index): MenuItem[] => {
-      if (!machineId) return [];
-      const items: MenuItem[] = [];
-      if (index > 1)
-        items.push({
-          label: this.translateSvc.instant('settings.moveUp'),
-          icon: 'fa-solid fa-arrow-up',
-          command: () =>
-            this.raiseMachine(machineId, data.defaults?.machineRankIds),
-        });
-      if (index < machineRows.length - 1)
-        items.push({
-          label: this.translateSvc.instant('settings.moveDown'),
-          icon: 'fa-solid fa-arrow-down',
-          command: () =>
-            this.lowerMachine(machineId, data.defaults?.machineRankIds),
-        });
-      return items;
-    });
   }
 
   clickResetSettings(): void {
@@ -407,12 +343,8 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.RemoveAction({ value, def }));
   }
 
-  raiseMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.RaiseAction({ value, def }));
-  }
-
-  lowerMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.LowerAction({ value, def }));
+  setMachineRank(value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Machines.SetRankAction({ value, def }));
   }
 
   setMachine(id: string, value: string, def: string[] | undefined): void {

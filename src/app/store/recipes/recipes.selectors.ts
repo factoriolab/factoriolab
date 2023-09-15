@@ -147,3 +147,9 @@ export const getAdjustedDataset = createSelector(
       adj.data,
     ),
 );
+
+export const getExcludedRecipeIds = createSelector(
+  getRecipesState,
+  (recipesState) =>
+    Object.keys(recipesState).filter((i) => recipesState[i].excluded),
+);

@@ -98,8 +98,3 @@ export const getMachineOptions = createSelector(
       }),
     ),
 );
-
-export const getMachineRows = createSelector(getMachinesState, (machines) => [
-  '',
-  ...(machines.ids ?? []),
-]);

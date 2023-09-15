@@ -5,8 +5,7 @@ import { IdValueDefaultPayload, ValueDefaultPayload } from '~/models';
 export const enum MachinesActionType {
   ADD = '[Machines] Add',
   REMOVE = '[Machines] Remove',
-  RAISE = '[Machines] Raise',
-  LOWER = '[Machines] Lower',
+  SET_RANK = '[Machines] Set Rank',
   SET_MACHINE = '[Machines] Set Machine',
   SET_FUEL = '[Machines] Set Fuel',
   SET_MODULE_RANK = '[Machines] Set Module Rank',
@@ -27,14 +26,9 @@ export class RemoveAction implements Action {
   constructor(public payload: ValueDefaultPayload<string, string[]>) {}
 }
 
-export class RaiseAction implements Action {
-  readonly type = MachinesActionType.RAISE;
-  constructor(public payload: ValueDefaultPayload<string, string[]>) {}
-}
-
-export class LowerAction implements Action {
-  readonly type = MachinesActionType.LOWER;
-  constructor(public payload: ValueDefaultPayload<string, string[]>) {}
+export class SetRankAction implements Action {
+  readonly type = MachinesActionType.SET_RANK;
+  constructor(public payload: ValueDefaultPayload<string[]>) {}
 }
 
 export class SetMachineAction implements Action {
@@ -80,8 +74,7 @@ export class ResetMachineAction implements Action {
 export type MachinesAction =
   | AddAction
   | RemoveAction
-  | RaiseAction
-  | LowerAction
+  | SetRankAction
   | SetMachineAction
   | SetFuelAction
   | SetModuleRankAction

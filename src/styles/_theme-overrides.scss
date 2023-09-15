@@ -107,3 +107,24 @@ table p-dropdown {
 .p-tooltip .p-tooltip-text {
   width: fit-content;
 }
+
+// Hide orderlist controls
+.p-orderlist {
+  .p-orderlist-controls {
+    display: none;
+  }
+
+  .p-orderlist-list {
+    min-height: auto;
+    padding: 0;
+    border: none;
+
+    .p-orderlist-item {
+      padding: 0;
+    }
+  }
+}
+
+.p-orderlist-item.cdk-drag-preview {
+  padding: 0;
+}
