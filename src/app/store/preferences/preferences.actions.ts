@@ -21,6 +21,7 @@ export const enum PreferencesActionType {
   SET_THEME = '[Preferences] Set Theme',
   SET_BYPASS_LANDING = '[Preferences] Set Bypass Landing',
   SET_SHOW_TECH_LABELS = '[Preferences] Set Show Tech Labels',
+  SET_HIDE_DUPLICATE_ICONS = '[Preferences] Set Hide Duplicate Icons',
 }
 
 export class SaveStateAction implements Action {
@@ -68,6 +69,11 @@ export class SetShowTechLabelsAction implements Action {
   constructor(public payload: boolean) {}
 }
 
+export class SetHideDuplicateIconsAction implements Action {
+  readonly type = PreferencesActionType.SET_HIDE_DUPLICATE_ICONS;
+  constructor(public payload: boolean) {}
+}
+
 export type PreferencesAction =
   | SaveStateAction
   | RemoveStateAction
@@ -77,4 +83,5 @@ export type PreferencesAction =
   | SetPowerUnitAction
   | SetThemeAction
   | SetBypassLandingAction
-  | SetShowTechLabelsAction;
+  | SetShowTechLabelsAction
+  | SetHideDuplicateIconsAction;

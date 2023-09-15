@@ -48,6 +48,10 @@ export class RecipeRational {
   isMining?: boolean;
   isTechnology?: boolean;
   isBurn?: boolean;
+  /** Used to link the recipe to an alternate icon id */
+  icon?: string;
+  /** Used to add extra text to an already defined icon */
+  iconText?: string;
   usage?: Rational;
   drain?: Rational;
   consumption?: Rational;
@@ -90,6 +94,8 @@ export class RecipeRational {
     this.isMining = obj.isMining;
     this.isTechnology = obj.isTechnology;
     this.isBurn = obj.isBurn;
+    this.icon = obj.icon;
+    this.iconText = obj.iconText;
 
     if (obj.usage != null) {
       this.usage = Rational.from(obj.usage);

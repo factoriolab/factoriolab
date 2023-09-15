@@ -210,11 +210,10 @@
         </td>
         <!-- Tree -->
         <td *ngIf="vm.columnsState.tree.show" class="overflow-hidden px-1 py-0">
-          <div
-            class="d-flex align-items-center links"
-            [class.invisible]="stepsTable.sortField"
-          >
-            <ng-container *ngIf="vm.stepTree[step.id]?.length">
+          <div class="d-flex align-items-center links">
+            <ng-container
+              *ngIf="!stepsTable.sortField && vm.stepTree[step.id]?.length"
+            >
               <div
                 *ngFor="let i of vm.stepTree[step.id]; last as last"
                 class="connect"
@@ -279,6 +278,7 @@
                 vm.data.itemEntities[step.itemId].name
               }}</span>
               <button
+                *ngIf="vm.showDuplicateIcons"
                 pButton
                 pRipple
                 type="button"
@@ -587,6 +587,10 @@
               >
                 <span class="find-text">{{ step.recipe.name }}</span>
                 <button
+                  *ngIf="
+                    vm.showDuplicateIcons ||
+                    (step.itemId != null && step.itemId !== step.recipeId)
+                  "
                   pButton
                   pRipple
                   type="button"
