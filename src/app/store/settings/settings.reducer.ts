@@ -21,6 +21,7 @@ export interface SettingsState {
    */
   researchedTechnologyIds: string[] | null;
   netProductionOnly: boolean;
+  surplusMachinesOutput: boolean;
   preset: Preset;
   beaconReceivers: string | null;
   proliferatorSprayId: string;
@@ -47,6 +48,7 @@ export const initialSettingsState: SettingsState = {
   modId: '1.1',
   researchedTechnologyIds: null,
   netProductionOnly: false,
+  surplusMachinesOutput: false,
   preset: Preset.Minimum,
   beaconReceivers: null,
   proliferatorSprayId: ItemId.Module,
@@ -111,6 +113,8 @@ export function settingsReducer(
       return { ...state, ...{ researchedTechnologyIds: action.payload } };
     case SettingsActionType.SET_NET_PRODUCTION_ONLY:
       return { ...state, ...{ netProductionOnly: action.payload } };
+    case SettingsActionType.SET_REQUIRE_MACHINES_OUTPUT:
+      return { ...state, ...{ surplusMachinesOutput: action.payload } };
     case SettingsActionType.SET_PRESET:
       return { ...state, ...{ preset: action.payload } };
     case SettingsActionType.SET_BEACON_RECEIVERS:
@@ -158,7 +162,6 @@ export function settingsReducer(
       return { ...state, ...{ maximizeType: action.payload } };
     case SettingsActionType.SET_COSTS:
       return { ...state, ...{ costs: action.payload } };
-
     case SettingsActionType.RESET_COST:
       return {
         ...state,

@@ -29,6 +29,7 @@ describe('SimplexUtility', () => {
     itemIds: Mocks.Dataset.itemIds,
     data: Mocks.AdjustedData,
     maximizeType: MaximizeType.Weight,
+    surplusMachinesOutput: false,
     cost: {
       factor: Rational.one,
       machine: Rational.one,
@@ -75,6 +76,7 @@ describe('SimplexUtility', () => {
           {},
           [],
           MaximizeType.Weight,
+          false,
           Mocks.CostRational,
           Mocks.AdjustedData,
         ),
@@ -98,6 +100,7 @@ describe('SimplexUtility', () => {
           {},
           null,
           MaximizeType.Weight,
+          false,
           Mocks.CostRational,
           Mocks.AdjustedData,
         ),
@@ -127,6 +130,7 @@ describe('SimplexUtility', () => {
         Mocks.RecipesState,
         Mocks.Dataset.technologyIds,
         MaximizeType.Weight,
+        false,
         Mocks.CostRational,
         Mocks.Dataset,
       );
@@ -167,6 +171,7 @@ describe('SimplexUtility', () => {
         itemIds: Mocks.Dataset.itemIds,
         data: Mocks.Dataset,
         maximizeType: MaximizeType.Weight,
+        surplusMachinesOutput: false,
         cost: Mocks.CostRational,
       });
     });
@@ -348,6 +353,7 @@ describe('SimplexUtility', () => {
     it('should find a solution using glpk maximizing by ratio', () => {
       const state = getState();
       state.maximizeType = MaximizeType.Ratio;
+      state.surplusMachinesOutput = true;
       // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
       state.unproduceableIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];

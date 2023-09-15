@@ -111,6 +111,7 @@ export const getMatrixResult = createSelector(
   Recipes.getRecipesState,
   Settings.getAllResearchedTechnologyIds,
   Settings.getMaximizeType,
+  Settings.getSurplusMachinesOutput,
   Settings.getRationalCost,
   Recipes.getAdjustedDataset,
   (
@@ -119,6 +120,7 @@ export const getMatrixResult = createSelector(
     recipesSettings,
     researchedTechnologyIds,
     maximizeType,
+    surplusMachinesOutput,
     cost,
     data,
   ) =>
@@ -128,6 +130,7 @@ export const getMatrixResult = createSelector(
       recipesSettings,
       researchedTechnologyIds,
       maximizeType,
+      surplusMachinesOutput,
       cost,
       data,
     ),

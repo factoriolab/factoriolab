@@ -1546,6 +1546,10 @@ export class RouterService {
         this.zipDiffString(state.costs.excluded, init.costs.excluded),
         this.zipDiffString(state.costs.surplus, init.costs.surplus),
         this.zipDiffString(state.costs.maximize, init.costs.maximize),
+        this.zipDiffBool(
+          state.surplusMachinesOutput,
+          init.surplusMachinesOutput,
+        ),
       ]),
       hash: this.zipFields([
         this.zipDiffNullableNArray(
@@ -1579,6 +1583,10 @@ export class RouterService {
         this.zipDiffString(state.costs.excluded, init.costs.excluded),
         this.zipDiffString(state.costs.surplus, init.costs.surplus),
         this.zipDiffString(state.costs.maximize, init.costs.maximize),
+        this.zipDiffBool(
+          state.surplusMachinesOutput,
+          init.surplusMachinesOutput,
+        ),
       ]),
     };
 
@@ -1627,6 +1635,7 @@ export class RouterService {
           surplus: this.parseString(s[i++]),
           maximize: this.parseString(s[i++]),
         },
+        surplusMachinesOutput: this.parseBool(s[i++]),
       };
     } else {
       obj = {
@@ -1656,6 +1665,7 @@ export class RouterService {
           surplus: this.parseString(s[i++]),
           maximize: this.parseString(s[i++]),
         },
+        surplusMachinesOutput: this.parseBool(s[i++]),
       };
     }
 
