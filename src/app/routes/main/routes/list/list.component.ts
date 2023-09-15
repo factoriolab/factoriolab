@@ -30,6 +30,8 @@ import {
   Game,
   IdValueDefaultPayload,
   ItemId,
+  ObjectiveBase,
+  ObjectiveUnit,
   Rational,
   RecipeField,
   Step,
@@ -105,6 +107,7 @@ export class ListComponent implements OnInit, AfterViewInit {
   Game = Game;
   RecipeField = RecipeField;
   EnergyType = EnergyType;
+  ObjectiveUnit = ObjectiveUnit;
   Rational = Rational;
 
   constructor(
@@ -478,6 +481,10 @@ export class ListComponent implements OnInit, AfterViewInit {
 
   setRecipeExcludedBatch(payload: IdValueDefaultPayload<boolean>[]): void {
     this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
+  }
+
+  addObjective(value: ObjectiveBase): void {
+    this.store.dispatch(new Objectives.AddAction(value));
   }
 
   setMachine(id: string, value: string, def: string, objective = false): void {

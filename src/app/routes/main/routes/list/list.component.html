@@ -586,15 +586,29 @@
                 class="d-flex align-items-center"
               >
                 <span class="find-text">{{ step.recipe.name }}</span>
-                <i
-                  class="padded"
-                  [class]="step.recipeId | iconSmClass: 'recipe'"
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="hover-action p-button-text"
                   [pTooltip]="step.recipeId | recipeTooltip: vm.data"
                   [escape]="false"
-                  ><span *ngIf="step.recipeObjectiveId"
-                    >#{{ step.recipeObjectiveId }}</span
-                  ></i
+                  (click)="
+                    addObjective({
+                      targetId: step.recipeId,
+                      unit: ObjectiveUnit.Machines
+                    })
+                  "
                 >
+                  <span
+                    class="p-button-icon"
+                    [class]="step.recipeId | iconSmClass: 'recipe'"
+                    ><span *ngIf="step.recipeObjectiveId"
+                      >#{{ step.recipeObjectiveId }}</span
+                    ></span
+                  >
+                  <i class="hover-icon fa-solid fa-circle-plus"></i>
+                </button>
                 <p-dropdown
                   labDropdownBase="icon"
                   [pTooltip]="machineId | machineTooltip: vm.data"
