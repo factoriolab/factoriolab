@@ -572,22 +572,13 @@ describe('RateUtility', () => {
           id: '0',
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
-          recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
           items: Rational.one,
           parents: { ['2']: Rational.one },
-        },
-        {
-          id: '3',
-          itemId: ItemId.FirearmMagazine,
-          recipeId: RecipeId.FirearmMagazine,
-          recipe: Mocks.Dataset.recipeR[RecipeId.FirearmMagazine],
-          items: Rational.one,
         },
         {
           id: '1',
           itemId: ItemId.IronPlate,
           recipeId: RecipeId.IronPlate,
-          recipe: Mocks.Dataset.recipeR[RecipeId.IronPlate],
           items: Rational.one,
           parents: {
             ['1']: Rational.one,
@@ -597,7 +588,6 @@ describe('RateUtility', () => {
           id: '2',
           itemId: ItemId.PlasticBar,
           recipeId: RecipeId.PlasticBar,
-          recipe: Mocks.Dataset.recipeR[RecipeId.PlasticBar],
           items: Rational.one,
         },
       ];
@@ -605,7 +595,7 @@ describe('RateUtility', () => {
       expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
         {
           ['2']: [steps[0]],
-          ['']: [steps[1], steps[3], steps[2]],
+          ['']: [steps[1], steps[2]],
         },
         '',
         [],
