@@ -361,7 +361,7 @@ export class RateUtility {
     if (groups[ROOT_ID] && groups[ROOT_ID].length) {
       console.time('sort');
 
-      // Sort root items based on recipe hierarchy
+      // Sort root steps based on recipe hierarchy
       const ungrouped = new Set<Step>(
         groups[ROOT_ID].filter(
           (s) => s.parents != null && s.parents[''] == null,
@@ -379,6 +379,7 @@ export class RateUtility {
         list = filtered.length ? filtered : nowUngrouped;
 
         for (const step of list) {
+          // Search from bottom of list up to find suitable parent
           let parentIndex: number | undefined;
           for (let i = sortList.length - 1; i >= 0; i--) {
             if (step.parents?.[sortList[i].id]) {
