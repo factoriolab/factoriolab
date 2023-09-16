@@ -358,6 +358,51 @@ export class RateUtility {
       groups[parentId].push(step);
     }
 
+    if (groups[ROOT_ID] && groups[ROOT_ID].length) {
+      console.time('sort');
+
+      // Sort root items based on recipe hierarchy
+      const ungrouped = new Set<Step>(
+        groups[ROOT_ID].filter(
+          (s) => s.parents != null && s.parents[''] == null,
+        ),
+      );
+      const sortList: Step[] = groups[ROOT_ID].filter((s) => !ungrouped.has(s));
+
+      let list: Step[];
+      do {
+        const nowUngrouped = Array.from(ungrouped);
+        const filtered = nowUngrouped.filter(
+          (s) => !nowUngrouped.some((p) => s.parents?.[p.id] != null),
+        );
+        // If no steps remain that have no children, just use the remaining list
+        list = filtered.length ? filtered : nowUngrouped;
+
+        for (const step of list) {
+          let parentIndex: number | undefined;
+          for (let i = sortList.length - 1; i >= 0; i--) {
+            if (step.parents?.[sortList[i].id]) {
+              parentIndex = i;
+              break;
+            }
+          }
+
+          if (parentIndex != null) {
+            sortList.splice(parentIndex + 1, 0, step);
+          } else {
+            sortList.push(step);
+          }
+
+          ungrouped.delete(step);
+        }
+      } while (list.length);
+
+      console.timeEnd('sort');
+      if (ungrouped.size)
+        console.error('failed to sort all steps', Array.from(ungrouped));
+      groups[ROOT_ID] = sortList;
+    }
+
     // Perform recursive sort
     const sorted = this.sortRecursive(groups, ROOT_ID, []);
 
