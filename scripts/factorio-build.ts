@@ -612,6 +612,7 @@ async function processMod(): Promise<void> {
 
   // Record of recipe id : technology id
   const recipesUnlocked: Record<string, string> = {};
+  const technologySet = new Set<M.TechnologyPrototype>();
   for (const key of Object.keys(dataRaw.technology)) {
     const techRaw = dataRaw.technology[key];
     const techData = techRaw[mode] || (techRaw as M.TechnologyData);
@@ -626,9 +627,13 @@ async function processMod(): Promise<void> {
       techId[techRaw.name] = techRaw.name;
     }
 
+    if (!techData.hidden && techData.enabled !== false)
+      technologySet.add(techRaw);
+
     for (const effect of coerceArray(techData.effects)) {
       if (M.isUnlockRecipeModifier(effect)) {
         recipesUnlocked[effect.recipe] = techId[techRaw.name];
+        technologySet.add(techRaw);
       }
     }
   }
@@ -872,12 +877,9 @@ async function processMod(): Promise<void> {
   }
 
   // Check for use in technology ingredients
-  const technologies = Object.keys(dataRaw.technology)
-    .map((t) => dataRaw.technology[t])
-    .filter((t) => !t.hidden && t.enabled !== false);
   const techDataMap: Record<string, M.TechnologyData> = {};
   const techIngredientsMap: Record<string, Record<string, number>> = {};
-  for (const tech of technologies) {
+  for (const tech of technologySet) {
     const techData = tech[mode] || (tech as M.TechnologyData);
     const techIngredients =
       techData.unit == null ? {} : getIngredients(techData.unit.ingredients)[0];
@@ -1683,7 +1685,7 @@ async function processMod(): Promise<void> {
 
   const sortedProtoIds = protosSorted.map((p) => p.name);
 
-  technologies.sort((a, b) => {
+  const technologies = Array.from(technologySet).sort((a, b) => {
     // First, sort by number of ingredients
     const aData = a[mode] || (a as M.TechnologyData);
     const bData = b[mode] || (b as M.TechnologyData);
