@@ -359,8 +359,6 @@ export class RateUtility {
     }
 
     if (groups[ROOT_ID] && groups[ROOT_ID].length) {
-      console.time('sort');
-
       // Sort root steps based on recipe hierarchy
       const ungrouped = new Set<Step>(
         groups[ROOT_ID].filter(
@@ -369,38 +367,37 @@ export class RateUtility {
       );
       const sortList: Step[] = groups[ROOT_ID].filter((s) => !ungrouped.has(s));
 
-      let list: Step[];
+      let addList: Step[];
       do {
-        const nowUngrouped = Array.from(ungrouped);
-        const filtered = nowUngrouped.filter(
-          (s) => !nowUngrouped.some((p) => s.parents?.[p.id] != null),
-        );
-        // If no steps remain that have no children, just use the remaining list
-        list = filtered.length ? filtered : nowUngrouped;
-
-        for (const step of list) {
-          // Search from bottom of list up to find suitable parent
-          let parentIndex: number | undefined;
-          for (let i = sortList.length - 1; i >= 0; i--) {
-            if (step.parents?.[sortList[i].id]) {
-              parentIndex = i;
+        // Look for steps that can be added under a parent
+        addList = [];
+        for (const step of ungrouped) {
+          let insertIndex: number | undefined;
+          for (let i = 0; i < sortList.length; i++) {
+            if (sortList[i].parents?.[step.id]) {
+              insertIndex = i;
               break;
             }
           }
 
-          if (parentIndex != null) {
-            sortList.splice(parentIndex + 1, 0, step);
-          } else {
-            sortList.push(step);
+          if (insertIndex != null) {
+            sortList.splice(insertIndex, 0, step);
+            addList.push(step);
           }
-
-          ungrouped.delete(step);
         }
-      } while (list.length);
 
-      console.timeEnd('sort');
-      if (ungrouped.size)
-        console.error('failed to sort all steps', Array.from(ungrouped));
+        // Couldn't find anything to add under a parent
+        // Add first ungrouped item instead
+        if (addList.length === 0 && ungrouped.size) {
+          const step = Array.from(ungrouped)[0];
+          sortList.push(step);
+          addList.push(step);
+        }
+
+        // Remove items added this loop from the ungrouped list
+        addList.forEach((s) => ungrouped.delete(s));
+      } while (addList.length);
+
       groups[ROOT_ID] = sortList;
     }
 
