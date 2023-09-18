@@ -168,9 +168,7 @@ async function processMod(): Promise<void> {
       | M.FluidPrototype
       | M.RecipePrototype,
   ): string {
-    if (proto.subgroup) {
-      return proto.subgroup;
-    }
+    if (proto.subgroup) return proto.subgroup;
 
     if (M.isRecipePrototype(proto)) {
       return getRecipeSubgroup(proto);
