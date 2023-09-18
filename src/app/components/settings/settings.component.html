@@ -356,11 +356,11 @@
             >
               <div
                 *ngIf="settings"
-                class="p-inputgroup flex-wrap machine-preference"
+                class="p-inputgroup flex-wrap machine-preference mb-1"
               >
                 <!-- Add/Remove machine button -->
                 <p-dropdown
-                  *ngIf="machineId === ''; else removeButton"
+                  *ngIf="machineId === ''; else dragButton"
                   labDropdownBase="icon"
                   [tooltip]="'settings.addMachineTooltip' | translate"
                   [options]="vm.machineOptions"
@@ -388,17 +388,14 @@
                     </div>
                   </ng-template>
                 </p-dropdown>
-                <ng-template #removeButton>
+                <ng-template #dragButton>
                   <button
                     pButton
                     pRipple
                     type="button"
-                    icon="fa-solid fa-xmark"
-                    class="p-button-outlined"
-                    [pTooltip]="'settings.removeMachinePreference' | translate"
-                    (click)="
-                      removeMachine(machineId, vm.data.defaults?.machineRankIds)
-                    "
+                    class="p-button-outlined cursor-grab"
+                    [class.invisible]="machineId === ''"
+                    icon="fa-solid fa-grip-lines"
                   ></button>
                 </ng-template>
                 <!-- Machine dropdown -->
@@ -688,14 +685,17 @@
                     </p-multiSelect>
                   </ng-container>
                 </ng-container>
-                <!-- Move options -->
                 <button
                   pButton
                   pRipple
                   type="button"
+                  icon="fa-solid fa-xmark"
                   class="p-button-outlined ms-auto"
                   [class.invisible]="machineId === ''"
-                  icon="fa-solid fa-grip-lines"
+                  [pTooltip]="'settings.removeMachinePreference' | translate"
+                  (click)="
+                    removeMachine(machineId, vm.data.defaults?.machineRankIds)
+                  "
                 ></button>
               </div>
             </ng-template>

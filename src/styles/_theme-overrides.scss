@@ -125,6 +125,19 @@ table p-dropdown {
 
     .p-orderlist-item {
       padding: 0;
+
+      > .p-ink {
+        display: none;
+      }
+
+      &.p-highlight {
+        color: inherit;
+        background: inherit;
+      }
+
+      &:focus {
+        box-shadow: inherit;
+      }
     }
   }
 }
