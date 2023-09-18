@@ -370,6 +370,7 @@
     "consumedByRecipes": "Consumed by recipes",
     "producedByRecipes": "Produced by recipes",
     "producibleRecipes": "Producible recipes",
+    "unlockedRecipes": "Unlocked recipes",
     "currentPageReportTemplate": "Showing {first} to {last} of {totalRecords}",
     "itemSettings": "Item settings",
     "excluded": "Excluded",
