@@ -67,8 +67,7 @@ export class SettingsComponent implements OnInit {
 
   machineIds$ = this.store
     .select(Machines.getMachinesState)
-    .pipe(map((state) => [...(state?.ids ?? [])]));
-  // excludedItemids$ =
+    .pipe(map((state) => [...state.ids]));
   vm$ = combineLatest({
     itemsState: this.store.select(Items.getItemsState),
     excludedItemIds: this.store.select(Items.getExcludedItemIds),

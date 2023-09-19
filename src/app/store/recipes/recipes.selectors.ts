@@ -35,7 +35,7 @@ export const getRecipesState = createSelector(
       if (s.machineId == null) {
         s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
-          machinesState.ids ?? [],
+          machinesState.ids,
         );
       }
 

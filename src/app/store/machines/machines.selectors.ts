@@ -18,7 +18,7 @@ export const getMachinesState = createSelector(
   Settings.getFuelRankIds,
   Settings.getDefaults,
   Settings.getDataset,
-  (state, fuelRankIds, defaults, data): MachinesState => {
+  (state, fuelRankIds, defaults, data) => {
     const ids = state.ids ?? defaults?.machineRankIds ?? [];
 
     const entities: Entities<MachineSettings> = {};
@@ -94,7 +94,7 @@ export const getMachineOptions = createSelector(
       (f): SelectItem => ({
         label: data.itemEntities[f].name,
         value: f,
-        disabled: (machines.ids ?? []).indexOf(f) !== -1,
+        disabled: machines.ids.indexOf(f) !== -1,
       }),
     ),
 );

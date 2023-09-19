@@ -80,39 +80,13 @@ describe('Objectives Reducer', () => {
     });
   });
 
-  describe('RAISE', () => {
-    it('should raise an objective', () => {
+  describe('SET_ORDER', () => {
+    it('should set the order of objectives', () => {
       const result = objectivesReducer(
-        { ids: ['0', '1'], entities: {}, index: 0 },
-        new Actions.RaiseAction('1'),
+        undefined,
+        new Actions.SetOrderAction(['1', '0']),
       );
       expect(result.ids).toEqual(['1', '0']);
-    });
-
-    it('should ignore invalid ids', () => {
-      const result = objectivesReducer(
-        { ids: ['0', '1'], entities: {}, index: 0 },
-        new Actions.RaiseAction('2'),
-      );
-      expect(result.ids).toEqual(['0', '1']);
-    });
-  });
-
-  describe('LOWER', () => {
-    it('should lower an objective', () => {
-      const result = objectivesReducer(
-        { ids: ['0', '1'], entities: {}, index: 0 },
-        new Actions.LowerAction('0'),
-      );
-      expect(result.ids).toEqual(['1', '0']);
-    });
-
-    it('should ignore invalid ids', () => {
-      const result = objectivesReducer(
-        { ids: ['0', '1'], entities: {}, index: 0 },
-        new Actions.LowerAction('2'),
-      );
-      expect(result.ids).toEqual(['0', '1']);
     });
   });
 
