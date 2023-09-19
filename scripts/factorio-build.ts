@@ -904,7 +904,7 @@ async function processMod(): Promise<void> {
   }
 
   const entitiesUsedProtos = entityKeys
-    .filter((id) => !placedEntities.has(id))
+    .filter((id) => !placedEntities.has(id) && !itemsUsed.has(id))
     .map((id) => entityMap[id]);
 
   // Sort items
