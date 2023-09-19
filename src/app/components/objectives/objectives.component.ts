@@ -161,9 +161,14 @@ export class ObjectivesComponent {
       if (objective.unit === ObjectiveUnit.Machines) {
         // Units are unchanged, no action required
       } else {
-        const recipeIds = data.itemRecipeIds[objective.targetId];
+        const recipeIds = Array.from(
+          data.itemRecipeIds.get(objective.targetId) ?? [],
+        );
         if (recipeIds.length === 1) {
-          this.setUnit(objective.id, { targetId: recipeIds[0], unit });
+          this.setUnit(objective.id, {
+            targetId: recipeIds[0],
+            unit,
+          });
         } else {
           chooseRecipePicker.selectId
             .pipe(
@@ -176,7 +181,9 @@ export class ObjectivesComponent {
       }
     } else {
       if (objective.unit === ObjectiveUnit.Machines) {
-        const itemIds = Array.from(data.recipeR[objective.targetId].produces);
+        const itemIds = Array.from(
+          data.recipeR.get(objective.targetId)?.produces ?? [],
+        );
         if (itemIds.length === 1) {
           this.setUnit(objective.id, { targetId: itemIds[0], unit });
         } else {

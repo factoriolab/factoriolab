@@ -113,52 +113,54 @@ export class ExportService {
     }
     if (step.recipeId != null) {
       exp.Recipe = step.recipeId;
-      const recipe = data.recipeR[step.recipeId];
-      const recipeSettings = recipesState[step.recipeId];
-      const inputs = Object.keys(recipe.in)
-        .map((i) => {
-          const inStep = steps.find((s) => s.itemId === i);
-          return [i, inStep?.parents?.[step.id]?.toString()];
-        })
-        .filter((v) => v[1])
-        .map((v) => `${v[0]}:${v[1]}`)
-        .join(',');
-      if (inputs) {
-        exp.Inputs = `"${inputs}"`;
-      }
-      if (recipeSettings.machineId != null) {
-        const machine = data.machineEntities[recipeSettings.machineId];
-        const allowsModules = RecipeUtility.allowsModules(recipe, machine);
-        if (columns.machines.show) {
-          if (step.machines != null) {
-            exp.Machines = '=' + step.machines.toString();
-          }
-          exp.Machine = recipeSettings.machineId;
-          if (allowsModules && recipeSettings.machineModuleIds != null) {
-            exp.MachineModules = `"${recipeSettings.machineModuleIds.join(
-              ',',
-            )}"`;
-          }
+      const recipe = data.recipeR.get(step.recipeId);
+      if (recipe != null) {
+        const recipeSettings = recipesState[step.recipeId];
+        const inputs = Object.keys(recipe.in)
+          .map((i) => {
+            const inStep = steps.find((s) => s.itemId === i);
+            return [i, inStep?.parents?.[step.id]?.toString()];
+          })
+          .filter((v) => v[1])
+          .map((v) => `${v[0]}:${v[1]}`)
+          .join(',');
+        if (inputs) {
+          exp.Inputs = `"${inputs}"`;
         }
-        if (columns.beacons.show && allowsModules) {
-          exp.Beacons = `"${recipeSettings.beacons
-            ?.map((b) => b.count)
-            .join(',')}"`;
-          exp.Beacon = `"${recipeSettings.beacons
-            ?.map((b) => b.id)
-            .join(',')}"`;
-          exp.BeaconModules = `"${recipeSettings.beacons
-            ?.map((b) => b.moduleIds?.join('|'))
-            .join(',')}"`;
-        }
-        if (columns.power.show) {
-          if (step.power != null) {
-            exp.Power = '=' + step.power.toString();
+        if (recipeSettings.machineId != null) {
+          const machine = data.machineEntities[recipeSettings.machineId];
+          const allowsModules = RecipeUtility.allowsModules(recipe, machine);
+          if (columns.machines.show) {
+            if (step.machines != null) {
+              exp.Machines = '=' + step.machines.toString();
+            }
+            exp.Machine = recipeSettings.machineId;
+            if (allowsModules && recipeSettings.machineModuleIds != null) {
+              exp.MachineModules = `"${recipeSettings.machineModuleIds.join(
+                ',',
+              )}"`;
+            }
           }
-        }
-        if (columns.pollution.show) {
-          if (step.pollution != null) {
-            exp.Pollution = '=' + step.pollution.toString();
+          if (columns.beacons.show && allowsModules) {
+            exp.Beacons = `"${recipeSettings.beacons
+              ?.map((b) => b.count)
+              .join(',')}"`;
+            exp.Beacon = `"${recipeSettings.beacons
+              ?.map((b) => b.id)
+              .join(',')}"`;
+            exp.BeaconModules = `"${recipeSettings.beacons
+              ?.map((b) => b.moduleIds?.join('|'))
+              .join(',')}"`;
+          }
+          if (columns.power.show) {
+            if (step.power != null) {
+              exp.Power = '=' + step.power.toString();
+            }
+          }
+          if (columns.pollution.show) {
+            if (step.pollution != null) {
+              exp.Pollution = '=' + step.pollution.toString();
+            }
           }
         }
       }

@@ -24,12 +24,14 @@ export const getRecipesState = createSelector(
   Settings.getDataset,
   (state, machinesState, data) => {
     const value: Entities<RecipeSettings> = {};
-    const defaultExcludedRecipeIds = data.defaults?.excludedRecipeIds ?? [];
+    const defaultExcludedRecipeIds = new Set(
+      data.defaults?.excludedRecipeIds ?? [],
+    );
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
       const s: RecipeSettings = { ...state[recipe.id] };
 
       if (s.excluded == null) {
-        s.excluded = defaultExcludedRecipeIds.some((i) => i === recipe.id);
+        s.excluded = defaultExcludedRecipeIds.has(recipe.id);
       }
 
       if (s.machineId == null) {
@@ -150,7 +152,7 @@ export const getAdjustedDataset = createSelector(
 );
 
 export const getAvailableItems = createSelector(getAdjustedDataset, (data) =>
-  data.itemIds.filter((i) => data.itemRecipeIds[i].length),
+  data.itemIds.filter((i) => data.itemRecipeIds.get(i)?.size),
 );
 
 export const getExcludedRecipeIds = createSelector(

@@ -25,8 +25,9 @@ export class Rational {
 
   /** Internal, assumes x & y are non-negative */
   static _gcd(x: bigint, y: bigint): bigint {
+    let t: bigint;
     while (y) {
-      const t = y;
+      t = y;
       y = x % y;
       x = t;
     }

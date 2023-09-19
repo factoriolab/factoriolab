@@ -58,7 +58,7 @@ export class RecipeRational {
   pollution?: Rational;
 
   produces: Set<string> = new Set();
-  output: Entities<Rational | undefined> = {};
+  output: Map<string, Rational> = new Map();
 
   constructor(obj: Recipe) {
     this.id = obj.id;
@@ -112,31 +112,17 @@ export class RecipeRational {
         this.produces.add(outId);
       }
 
-      this.output[outId] = output
-        .sub(this.in[outId] ?? Rational.zero)
-        .div(this.time);
+      this.output.set(
+        outId,
+        output.sub(this.in[outId] ?? Rational.zero).div(this.time),
+      );
     }
 
     for (const inId of Object.keys(this.in).filter(
       (i) => this.out[i] == null,
     )) {
       const input = this.in[inId];
-      this.output[inId] = input.inverse().div(this.time);
+      this.output.set(inId, input.inverse().div(this.time));
     }
   }
-
-  // produces(itemId: string): boolean {
-  //   if (this.out[itemId]) {
-  //     // Recipe declares this as output, check inputs
-  //     return this.in[itemId] == null || this.in[itemId].lt(this.out[itemId]);
-  //   }
-
-  //   return false;
-  // }
-
-  // output(itemId: string): Rational {
-  //   return (this.out[itemId] ?? Rational.zero)
-  //     .sub(this.in[itemId] ?? Rational.zero)
-  //     .div(this.time);
-  // }
 }

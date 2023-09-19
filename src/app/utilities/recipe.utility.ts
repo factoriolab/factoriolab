@@ -421,27 +421,26 @@ export class RecipeUtility {
 
   /** Adjust rocket launch and rocket part recipes */
   static adjustSiloRecipes(
-    recipeR: Entities<RecipeRational>,
+    recipeR: Map<string, RecipeRational>,
     settings: Entities<RecipeSettingsRational>,
     data: RawDataset,
-  ): Entities<RecipeRational> {
+  ): Map<string, RecipeRational> {
     for (const partId of Object.keys(recipeR)) {
       const partMachineId = settings[partId].machineId;
       if (partMachineId) {
         const rocketMachine = data.machineEntities[partMachineId];
-        const rocketRecipe = recipeR[partId];
-        if (rocketMachine?.silo && !rocketRecipe.part) {
+        const rocketRecipe = recipeR.get(partId);
+        if (rocketMachine?.silo && rocketRecipe && !rocketRecipe.part) {
           const itemId = Object.keys(rocketRecipe.out)[0];
           const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
-          for (const launchId of Object.keys(recipeR).filter(
-            (i) => recipeR[i].part === partId,
-          )) {
-            if (partMachineId === settings[launchId].machineId) {
-              recipeR[launchId].time = rocketRecipe.time
-                .mul(factor)
-                .add(rocketMachine.silo.launch);
+          const silo = rocketMachine.silo;
+          recipeR.forEach((recipe) => {
+            if (recipe.part !== partId) return;
+            if (partMachineId === settings[recipe.id].machineId) {
+              recipe.time = rocketRecipe.time.mul(factor).add(silo.launch);
             }
-          }
+          });
+
           rocketRecipe.time = rocketRecipe.time
             .mul(factor)
             .add(rocketMachine.silo.launch)
@@ -485,8 +484,8 @@ export class RecipeUtility {
       netProductionOnly,
       data,
     );
-    this.adjustCost(recipeIds, recipeR, recipesState, cost);
-    return this.finalizeData(recipeIds, recipeR, data);
+    this.adjustCost(recipeR, recipesState, cost);
+    return this.finalizeData(recipeR, data);
   }
 
   static adjustRecipes(
@@ -498,36 +497,37 @@ export class RecipeUtility {
     researchSpeed: Rational,
     netProductionOnly: boolean,
     data: RawDataset,
-  ): Entities<RecipeRational> {
+  ): Map<string, RecipeRational> {
     return this.adjustSiloRecipes(
-      recipeIds.reduce((e: Entities<RecipeRational>, i) => {
-        e[i] = this.adjustRecipe(
+      recipeIds.reduce((e: Map<string, RecipeRational>, i) => {
+        e.set(
           i,
-          proliferatorSprayId,
-          miningBonus,
-          researchSpeed,
-          netProductionOnly,
-          recipesState[i],
-          itemsState,
-          data,
+          this.adjustRecipe(
+            i,
+            proliferatorSprayId,
+            miningBonus,
+            researchSpeed,
+            netProductionOnly,
+            recipesState[i],
+            itemsState,
+            data,
+          ),
         );
         return e;
-      }, {}),
+      }, new Map()),
       recipesState,
       data,
     );
   }
 
   static adjustCost(
-    recipeIds: string[],
-    recipeR: Entities<RecipeRational>,
+    recipeR: Map<string, RecipeRational>,
     recipesState: Entities<RecipeSettingsRational>,
     cost: CostRationalSettings,
   ): void {
-    for (const id of recipeIds) {
-      const recipe = recipeR[id];
-      if (recipesState[id].cost) {
-        recipe.cost = recipesState[id].cost;
+    recipeR.forEach((recipe) => {
+      if (recipesState[recipe.id].cost) {
+        recipe.cost = recipesState[recipe.id].cost;
       } else if (recipe.cost) {
         // Recipe has a declared cost, base this on output items not machines
         // Calculate total output, sum, and multiply cost by output
@@ -539,28 +539,31 @@ export class RecipeUtility {
         // Adjust based on recipe time so that this is based on # machines
         recipe.cost = cost.machine;
       }
-    }
+    });
   }
 
   static finalizeData(
-    recipeIds: string[],
-    recipeR: Entities<RecipeRational>,
+    recipeR: Map<string, RecipeRational>,
     data: RawDataset,
   ): Dataset {
-    const itemRecipeIds = data.itemIds.reduce((e: Entities<string[]>, i) => {
-      e[i] = [];
-      return e;
-    }, {});
+    const itemRecipeIds: Map<string, Set<string>> = new Map();
+    const itemIoRecipeIds: Map<string, Set<string>> = new Map();
+    data.itemIds.forEach((i) => {
+      itemRecipeIds.set(i, new Set());
+      itemIoRecipeIds.set(i, new Set());
+    });
 
-    for (const recipeId of recipeIds) {
-      const recipe = recipeR[recipeId];
+    recipeR.forEach((recipe) => {
       recipe.finalize();
-      recipe.produces.forEach((productid) =>
-        itemRecipeIds[productid].push(recipeId),
+      recipe.produces.forEach(
+        (productId) => itemRecipeIds.get(productId)?.add(recipe.id),
       );
-    }
+      for (const ioId of recipe.output.keys()) {
+        itemIoRecipeIds.get(ioId)?.add(recipe.id);
+      }
+    });
 
-    return { ...data, ...{ recipeR, itemRecipeIds } };
+    return { ...data, ...{ recipeR, itemRecipeIds, itemIoRecipeIds } };
   }
 
   static adjustObjective(

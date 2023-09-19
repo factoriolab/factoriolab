@@ -55,6 +55,9 @@ export interface RawDataset {
 }
 
 export interface Dataset extends RawDataset {
-  recipeR: Entities<RecipeRational>;
-  itemRecipeIds: Entities<string[]>;
+  recipeR: Map<string, RecipeRational>;
+  /** For each item, all recipe ids that produce the item */
+  itemRecipeIds: Map<string, Set<string>>;
+  /** For each item, all recipe ids that consume/produce the item */
+  itemIoRecipeIds: Map<string, Set<string>>;
 }
