@@ -14,14 +14,10 @@ export class ItemTooltipPipe implements PipeTransform {
 
     if (item == null) return '';
 
-    const recipeIds = data.itemRecipeIds.get(value);
+    const recipeIds = data.itemRecipeIds[value];
 
-    if (recipeIds?.size === 1) {
-      return this.displaySvc.recipeTooltip(
-        Array.from(recipeIds)[0],
-        data,
-        item.name,
-      );
+    if (recipeIds.length === 1) {
+      return this.displaySvc.recipeTooltip(recipeIds[0], data, item.name);
     } else {
       const technology = data.technologyEntities[value];
       return item.name + this.displaySvc.technologyPrerequisites(technology);

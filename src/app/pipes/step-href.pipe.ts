@@ -10,13 +10,8 @@ export class StepHrefPipe implements PipeTransform {
   transform(value: Step, zipPartial: Zip, data: Dataset): string | null {
     let step = value;
     if (step.recipeId) {
-      const recipe = data.recipeR.get(step.recipeId);
-      if (
-        recipe != null &&
-        recipe.isTechnology &&
-        recipe.productivity &&
-        value.items
-      ) {
+      const recipe = data.recipeR[step.recipeId];
+      if (recipe.isTechnology && recipe.productivity && value.items) {
         // Adjust items to account for productivity bonus
         step = {
           ...value,

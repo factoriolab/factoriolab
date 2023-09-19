@@ -402,9 +402,8 @@ export const getStepDetails = createSelector(
       }
 
       if (s.itemId != null) {
-        const recipeSet = data.itemRecipeIds.get(s.itemId);
-        if (recipeSet?.size) {
-          recipeIds = Array.from(recipeSet);
+        recipeIds = data.itemRecipeIds[s.itemId];
+        if (recipeIds.length) {
           tabs.push(StepDetailTab.Recipes);
         }
       }

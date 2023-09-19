@@ -31,7 +31,7 @@ export class RecipeComponent extends DetailComponent {
     map(([id, parent, home, recipesStateRaw, recipesState, data]) => ({
       id,
       obj: data.recipeEntities[id],
-      recipeR: data.recipeR.get(id),
+      recipeR: data.recipeR[id],
       category: data.categoryEntities[data.recipeEntities[id]?.category ?? ''],
       breadcrumb: [parent, { label: data.recipeEntities[id]?.name }],
       ingredientIds: Object.keys(data.recipeEntities[id]?.in ?? {}),

@@ -152,7 +152,7 @@ export const getAdjustedDataset = createSelector(
 );
 
 export const getAvailableItems = createSelector(getAdjustedDataset, (data) =>
-  data.itemIds.filter((i) => data.itemRecipeIds.get(i)?.size),
+  data.itemIds.filter((i) => data.itemRecipeIds[i].length),
 );
 
 export const getExcludedRecipeIds = createSelector(

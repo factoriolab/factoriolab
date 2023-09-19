@@ -161,9 +161,7 @@ export class ObjectivesComponent {
       if (objective.unit === ObjectiveUnit.Machines) {
         // Units are unchanged, no action required
       } else {
-        const recipeIds = Array.from(
-          data.itemRecipeIds.get(objective.targetId) ?? [],
-        );
+        const recipeIds = data.itemRecipeIds[objective.targetId];
         if (recipeIds.length === 1) {
           this.setUnit(objective.id, {
             targetId: recipeIds[0],
@@ -181,9 +179,7 @@ export class ObjectivesComponent {
       }
     } else {
       if (objective.unit === ObjectiveUnit.Machines) {
-        const itemIds = Array.from(
-          data.recipeR.get(objective.targetId)?.produces ?? [],
-        );
+        const itemIds = Array.from(data.recipeR[objective.targetId].produces);
         if (itemIds.length === 1) {
           this.setUnit(objective.id, { targetId: itemIds[0], unit });
         } else {
