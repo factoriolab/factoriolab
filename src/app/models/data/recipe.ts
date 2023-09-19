@@ -57,6 +57,9 @@ export class RecipeRational {
   consumption?: Rational;
   pollution?: Rational;
 
+  produces: Set<string> = new Set();
+  output: Entities<Rational | undefined> = {};
+
   constructor(obj: Recipe) {
     this.id = obj.id;
     this.name = obj.name;
@@ -102,18 +105,38 @@ export class RecipeRational {
     }
   }
 
-  produces(itemId: string): boolean {
-    if (this.out[itemId]) {
-      // Recipe declares this as output, check inputs
-      return this.in[itemId] == null || this.in[itemId].lt(this.out[itemId]);
+  finalize(): void {
+    for (const outId of Object.keys(this.out)) {
+      const output = this.out[outId];
+      if (this.in[outId] == null || this.in[outId].lt(output)) {
+        this.produces.add(outId);
+      }
+
+      this.output[outId] = output
+        .sub(this.in[outId] ?? Rational.zero)
+        .div(this.time);
     }
 
-    return false;
+    for (const inId of Object.keys(this.in).filter(
+      (i) => this.out[i] == null,
+    )) {
+      const input = this.in[inId];
+      this.output[inId] = input.inverse().div(this.time);
+    }
   }
 
-  output(itemId: string): Rational {
-    return (this.out[itemId] ?? Rational.zero)
-      .sub(this.in[itemId] ?? Rational.zero)
-      .div(this.time);
-  }
+  // produces(itemId: string): boolean {
+  //   if (this.out[itemId]) {
+  //     // Recipe declares this as output, check inputs
+  //     return this.in[itemId] == null || this.in[itemId].lt(this.out[itemId]);
+  //   }
+
+  //   return false;
+  // }
+
+  // output(itemId: string): Rational {
+  //   return (this.out[itemId] ?? Rational.zero)
+  //     .sub(this.in[itemId] ?? Rational.zero)
+  //     .div(this.time);
+  // }
 }

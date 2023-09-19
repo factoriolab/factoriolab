@@ -17,6 +17,7 @@ import {
   MachineRational,
   Objective,
   Rational,
+  RawDataset,
   Recipe,
   RecipeRational,
   RecipeSettingsRational,
@@ -43,7 +44,7 @@ export class RecipeUtility {
 
   static fuelOptions(
     entity: Machine | MachineRational,
-    data: Dataset,
+    data: RawDataset,
   ): SelectItem<string>[] {
     if (entity.fuel) {
       const fuel = data.itemEntities[entity.fuel];
@@ -65,7 +66,7 @@ export class RecipeUtility {
   static moduleOptions(
     entity: Machine | MachineRational | Beacon | BeaconRational,
     recipeId: string | null,
-    data: Dataset,
+    data: RawDataset,
   ): SelectItem<string>[] {
     // Get all modules
     let allowed = data.moduleIds
@@ -121,7 +122,7 @@ export class RecipeUtility {
     netProductionOnly: boolean,
     settings: RecipeSettingsRational,
     itemsState: Entities<ItemSettings>,
-    data: Dataset,
+    data: RawDataset,
   ): RecipeRational {
     const recipe = new RecipeRational(data.recipeEntities[recipeId]);
     if (settings.machineId != null) {
@@ -422,7 +423,7 @@ export class RecipeUtility {
   static adjustSiloRecipes(
     recipeR: Entities<RecipeRational>,
     settings: Entities<RecipeSettingsRational>,
-    data: Dataset,
+    data: RawDataset,
   ): Entities<RecipeRational> {
     for (const partId of Object.keys(recipeR)) {
       const partMachineId = settings[partId].machineId;
@@ -464,6 +465,7 @@ export class RecipeUtility {
   }
 
   static adjustDataset(
+    recipeIds: string[],
     recipesState: Entities<RecipeSettingsRational>,
     itemsState: Entities<ItemSettings>,
     proliferatorSprayId: string,
@@ -471,9 +473,10 @@ export class RecipeUtility {
     researchSpeed: Rational,
     netProductionOnly: boolean,
     cost: CostRationalSettings,
-    data: Dataset,
+    data: RawDataset,
   ): Dataset {
     const recipeR = this.adjustRecipes(
+      recipeIds,
       recipesState,
       itemsState,
       proliferatorSprayId,
@@ -482,21 +485,22 @@ export class RecipeUtility {
       netProductionOnly,
       data,
     );
-    this.adjustCost(recipeR, recipesState, cost);
-    return { ...data, ...{ recipeR } };
+    this.adjustCost(recipeIds, recipeR, recipesState, cost);
+    return this.finalizeData(recipeIds, recipeR, data);
   }
 
   static adjustRecipes(
+    recipeIds: string[],
     recipesState: Entities<RecipeSettingsRational>,
     itemsState: Entities<ItemSettings>,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    data: Dataset,
+    data: RawDataset,
   ): Entities<RecipeRational> {
     return this.adjustSiloRecipes(
-      data.recipeIds.reduce((e: Entities<RecipeRational>, i) => {
+      recipeIds.reduce((e: Entities<RecipeRational>, i) => {
         e[i] = this.adjustRecipe(
           i,
           proliferatorSprayId,
@@ -515,11 +519,12 @@ export class RecipeUtility {
   }
 
   static adjustCost(
+    recipeIds: string[],
     recipeR: Entities<RecipeRational>,
     recipesState: Entities<RecipeSettingsRational>,
     cost: CostRationalSettings,
   ): void {
-    for (const id of Object.keys(recipeR)) {
+    for (const id of recipeIds) {
       const recipe = recipeR[id];
       if (recipesState[id].cost) {
         recipe.cost = recipesState[id].cost;
@@ -537,10 +542,31 @@ export class RecipeUtility {
     }
   }
 
+  static finalizeData(
+    recipeIds: string[],
+    recipeR: Entities<RecipeRational>,
+    data: RawDataset,
+  ): Dataset {
+    const itemRecipeIds = data.itemIds.reduce((e: Entities<string[]>, i) => {
+      e[i] = [];
+      return e;
+    }, {});
+
+    for (const recipeId of recipeIds) {
+      const recipe = recipeR[recipeId];
+      recipe.finalize();
+      recipe.produces.forEach((productid) =>
+        itemRecipeIds[productid].push(recipeId),
+      );
+    }
+
+    return { ...data, ...{ recipeR, itemRecipeIds } };
+  }
+
   static adjustObjective(
     objective: Objective,
     machinesState: Machines.MachinesState,
-    data: Dataset,
+    data: RawDataset,
   ): Objective {
     if (!isRecipeObjective(objective)) return objective;
 

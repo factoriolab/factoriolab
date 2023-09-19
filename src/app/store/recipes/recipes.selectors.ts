@@ -137,6 +137,7 @@ export const getAdjustedDataset = createSelector(
   Settings.getAdjustmentData,
   (recipesState, itemsState, cost, adj) =>
     RecipeUtility.adjustDataset(
+      adj.recipeIds,
       recipesState,
       itemsState,
       adj.proliferatorSprayId,
@@ -146,6 +147,10 @@ export const getAdjustedDataset = createSelector(
       cost,
       adj.data,
     ),
+);
+
+export const getAvailableItems = createSelector(getAdjustedDataset, (data) =>
+  data.itemIds.filter((i) => data.itemRecipeIds[i].length),
 );
 
 export const getExcludedRecipeIds = createSelector(

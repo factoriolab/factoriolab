@@ -9,6 +9,7 @@ const bigOne = BigInt(1);
 const bigMinusOne = BigInt(-1);
 
 export class Rational {
+  static _gcdCache = new Map<bigint, Map<bigint, bigint>>();
   static zero = new Rational(bigZero);
   static minusOne = new Rational(bigMinusOne);
   static one = new Rational(bigOne);
@@ -22,9 +23,8 @@ export class Rational {
   readonly p: bigint;
   readonly q: bigint;
 
-  static gcd(x: bigint, y: bigint): bigint {
-    x = Rational.abs(x);
-    y = Rational.abs(y);
+  /** Internal, assumes x & y are non-negative */
+  static _gcd(x: bigint, y: bigint): bigint {
     while (y) {
       const t = y;
       y = x % y;
@@ -32,6 +32,32 @@ export class Rational {
     }
 
     return x;
+  }
+
+  static gcd(x: bigint, y: bigint): bigint {
+    x = Rational.abs(x);
+    y = Rational.abs(y);
+
+    /** Ensure x >= y */
+    if (y > x) {
+      const t = y;
+      y = x;
+      x = t;
+    }
+
+    let cacheX = this._gcdCache.get(x);
+    const cacheResult = cacheX?.get(y);
+    if (cacheResult != null) return cacheResult;
+
+    const result = this._gcd(x, y);
+
+    if (cacheX == null) {
+      cacheX = new Map();
+      this._gcdCache.set(x, cacheX);
+    }
+
+    cacheX.set(y, result);
+    return result;
   }
 
   static abs(x: bigint): bigint {

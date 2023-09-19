@@ -18,7 +18,7 @@ import { Defaults } from './defaults';
 import { Entities } from './entities';
 import { Game } from './enum';
 
-export interface Dataset {
+export interface RawDataset {
   game: Game;
   version: Entities<string>;
   categoryIds: string[];
@@ -29,7 +29,6 @@ export interface Dataset {
   iconEntities: Entities<Icon>;
   itemIds: string[];
   itemEntities: Entities<ItemRational>;
-  itemRecipeIds: Entities<string[]>;
   beaconIds: string[];
   beaconEntities: Entities<BeaconRational>;
   beltIds: string[];
@@ -47,12 +46,15 @@ export interface Dataset {
   fuelEntities: Entities<FuelRational>;
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
-  recipeProductIds: Entities<string[]>;
   technologyIds: string[];
   technologyEntities: Entities<Technology>;
-  recipeR: Entities<RecipeRational>;
   proliferatorModuleIds: string[];
   limitations: Entities<Entities<boolean>>;
   hash?: ModHash;
   defaults?: Defaults | null;
+}
+
+export interface Dataset extends RawDataset {
+  recipeR: Entities<RecipeRational>;
+  itemRecipeIds: Entities<string[]>;
 }

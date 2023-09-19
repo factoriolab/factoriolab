@@ -44,11 +44,11 @@ export class ObjectivesComponent {
     matrixResult: this.store.select(Objectives.getMatrixResult),
     itemsState: this.store.select(Items.getItemsState),
     recipesState: this.store.select(Recipes.getRecipesState),
+    itemIds: this.store.select(Recipes.getAvailableItems),
+    data: this.store.select(Recipes.getAdjustedDataset),
     displayRate: this.store.select(Settings.getDisplayRate),
     rateUnitOptions: this.store.select(Settings.getRateUnitOptions),
     options: this.store.select(Settings.getOptions),
-    data: this.store.select(Settings.getDataset),
-    itemIds: this.store.select(Settings.getAvailableItems),
     recipeIds: this.store.select(Settings.getAvailableRecipes),
     isMobile: this.contentSvc.isMobile$,
     messages: this.messages$,
@@ -176,7 +176,7 @@ export class ObjectivesComponent {
       }
     } else {
       if (objective.unit === ObjectiveUnit.Machines) {
-        const itemIds = data.recipeProductIds[objective.targetId];
+        const itemIds = Array.from(data.recipeR[objective.targetId].produces);
         if (itemIds.length === 1) {
           this.setUnit(objective.id, { targetId: itemIds[0], unit });
         } else {

@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { Dataset, Game } from '~/models';
+import { Game, RawDataset } from '~/models';
 import { DisplayService } from '~/services';
 
 @Pipe({ name: 'machineTooltip' })
@@ -11,7 +11,7 @@ export class MachineTooltipPipe implements PipeTransform {
     private displaySvc: DisplayService,
   ) {}
 
-  transform(value: string | null | undefined, data: Dataset): string {
+  transform(value: string | null | undefined, data: RawDataset): string {
     if (value == null) return '';
 
     const item = data.itemEntities[value];
