@@ -625,13 +625,14 @@ async function processMod(): Promise<void> {
       techId[techRaw.name] = techRaw.name;
     }
 
-    if (!techData.hidden && techData.enabled !== false)
+    if (!techData.hidden && techData.enabled !== false) {
       technologySet.add(techRaw);
 
-    for (const effect of coerceArray(techData.effects)) {
-      if (M.isUnlockRecipeModifier(effect)) {
-        recipesUnlocked[effect.recipe] = techId[techRaw.name];
-        technologySet.add(techRaw);
+      for (const effect of coerceArray(techData.effects)) {
+        if (M.isUnlockRecipeModifier(effect)) {
+          recipesUnlocked[effect.recipe] = techId[techRaw.name];
+          technologySet.add(techRaw);
+        }
       }
     }
   }
@@ -903,7 +904,7 @@ async function processMod(): Promise<void> {
   }
 
   const entitiesUsedProtos = entityKeys
-    .filter((id) => !placedEntities.has(id))
+    .filter((id) => !placedEntities.has(id) && !itemsUsed.has(id))
     .map((id) => entityMap[id]);
 
   // Sort items

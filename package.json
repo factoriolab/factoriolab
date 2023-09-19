@@ -1,7 +1,7 @@
 {
   "name": "factoriolab",
   "description": "Angular-based calculator for the game Factorio",
-  "version": "2.3.49",
+  "version": "2.3.50",
   "private": true,
   "contributors": [
     "Doug Broad (https://github.com/dcbroad3)"
@@ -42,7 +42,7 @@
     "@angular/platform-browser-dynamic": "^16.2.5",
     "@angular/router": "^16.2.5",
     "@angular/service-worker": "^16.2.5",
-    "@fortawesome/fontawesome-free": "^6.4.0",
+    "@fortawesome/fontawesome-free": "^6.4.2",
     "@ngneat/until-destroy": "^10.0.0",
     "@ngrx/effects": "^16.2.0",
     "@ngrx/store": "^16.2.0",
@@ -60,9 +60,9 @@
     "primeicons": "^6.0.1",
     "primeng": "^16.3.1",
     "rxjs": "~7.8.0",
-    "tslib": "^2.6.1",
-    "vis-data": "^7.1.4",
-    "vis-network": "^9.1.4",
+    "tslib": "^2.6.2",
+    "vis-data": "^7.1.6",
+    "vis-network": "^9.1.6",
     "zone.js": "~0.13.1"
   },
   "devDependencies": {
