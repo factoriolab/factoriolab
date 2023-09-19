@@ -581,7 +581,8 @@ describe('RateUtility', () => {
           recipeId: RecipeId.IronPlate,
           items: Rational.one,
           parents: {
-            ['1']: Rational.one,
+            ['3']: Rational.one,
+            ['4']: Rational.one,
           },
         },
         {
@@ -589,13 +590,30 @@ describe('RateUtility', () => {
           itemId: ItemId.PlasticBar,
           recipeId: RecipeId.PlasticBar,
           items: Rational.one,
+          parents: { ['2']: Rational.one },
+        },
+        {
+          id: '3',
+          itemId: ItemId.CopperPlate,
+          recipeId: RecipeId.CopperPlate,
+          items: Rational.one,
+          parents: {
+            ['2']: Rational.one,
+            ['1']: Rational.one,
+          },
+        },
+        {
+          id: '4',
+          itemId: ItemId.PiercingRoundsMagazine,
+          recipeId: RecipeId.PiercingRoundsMagazine,
+          items: Rational.one,
         },
       ];
       RateUtility.calculateHierarchy(steps);
       expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
         {
           ['2']: [steps[0]],
-          ['']: [steps[1], steps[2]],
+          ['']: [steps[4], steps[2], steps[3], steps[1]],
         },
         '',
         [],
