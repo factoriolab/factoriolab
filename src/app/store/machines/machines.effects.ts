@@ -18,7 +18,7 @@ export class MachinesEffects {
       ofType(
         MachinesActionType.ADD,
         MachinesActionType.REMOVE,
-        MachinesActionType.RAISE,
+        MachinesActionType.SET_RANK,
         MachinesActionType.SET_MACHINE,
       ),
       switchMap(() =>

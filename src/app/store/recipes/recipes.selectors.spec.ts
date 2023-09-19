@@ -54,7 +54,6 @@ describe('Recipes Selectors', () => {
         {
           ...Mocks.MachinesStateInitial,
           ...{
-            ids: undefined,
             entities: {
               ...Mocks.MachinesStateInitial.entities,
               ...{ [ItemId.AssemblingMachine3]: {} },

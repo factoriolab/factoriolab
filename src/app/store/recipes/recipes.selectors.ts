@@ -35,7 +35,7 @@ export const getRecipesState = createSelector(
       if (s.machineId == null) {
         s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
-          machinesState.ids ?? [],
+          machinesState.ids,
         );
       }
 
@@ -146,4 +146,10 @@ export const getAdjustedDataset = createSelector(
       cost,
       adj.data,
     ),
+);
+
+export const getExcludedRecipeIds = createSelector(
+  getRecipesState,
+  (recipesState) =>
+    Object.keys(recipesState).filter((i) => recipesState[i].excluded),
 );

@@ -51,3 +51,7 @@ export const getItemsModified = createSelector(itemsState, (state) => ({
   belts: Object.keys(state).some((id) => state[id].beltId != null),
   wagons: Object.keys(state).some((id) => state[id].wagonId != null),
 }));
+
+export const getExcludedItemIds = createSelector(getItemsState, (itemsState) =>
+  Object.keys(itemsState).filter((i) => itemsState[i]?.excluded),
+);

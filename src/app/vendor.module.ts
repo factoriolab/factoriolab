@@ -17,6 +17,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MenuModule } from 'primeng/menu';
 import { MessagesModule } from 'primeng/messages';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { OrderListModule } from 'primeng/orderlist';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
@@ -44,6 +45,7 @@ const modules = [
   MenuModule,
   MessagesModule,
   MultiSelectModule,
+  OrderListModule,
   ProgressSpinnerModule,
   RippleModule,
   ScrollPanelModule,

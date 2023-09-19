@@ -82,71 +82,13 @@ describe('Machines Reducer', () => {
     });
   });
 
-  describe('RAISE', () => {
-    it('should raise the rank of a machine', () => {
+  describe('SET_RANK', () => {
+    it('should set the order of ids', () => {
       const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.RaiseAction({ value: def, def: [value, def] }),
+        undefined,
+        new Actions.SetRankAction({ value: [value], def: undefined }),
       );
-      expect(result.ids).toEqual([def, value]);
-    });
-
-    it('should do nothing if rank is already highest', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.RaiseAction({ value, def: [value, def] }),
-      );
-      expect(result.ids).toBeUndefined();
-    });
-
-    it('should handle no match in ids', () => {
-      const result = machinesReducer(
-        { ids: [], entities: {} },
-        new Actions.RaiseAction({ value: def, def: [value, def] }),
-      );
-      expect(result.ids).toEqual([]);
-    });
-
-    it('should handle undefined ids and default', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.RaiseAction({ value: def, def: undefined }),
-      );
-      expect(result.ids).toBeUndefined();
-    });
-  });
-
-  describe('LOWER', () => {
-    it('should lower the rank of a machine', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.LowerAction({ value, def: [value, def] }),
-      );
-      expect(result.ids).toEqual([def, value]);
-    });
-
-    it('should do nothing if rank is already lowest', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.LowerAction({ value: def, def: [value, def] }),
-      );
-      expect(result.ids).toBeUndefined();
-    });
-
-    it('should handle no match in ids', () => {
-      const result = machinesReducer(
-        { ids: [], entities: {} },
-        new Actions.LowerAction({ value: def, def: [value, def] }),
-      );
-      expect(result.ids).toEqual([]);
-    });
-
-    it('should handle undefined ids and default', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.LowerAction({ value: def, def: undefined }),
-      );
-      expect(result.ids).toBeUndefined();
+      expect(result.ids).toEqual([value]);
     });
   });
 

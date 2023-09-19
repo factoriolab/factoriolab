@@ -48,26 +48,16 @@ export function machinesReducer(
       delete newState.entities[action.payload.value];
       return newState;
     }
-    case MachinesActionType.RAISE: {
-      const value = [...(state.ids ?? action.payload.def ?? [])];
-      const i = value.indexOf(action.payload.value);
-      if (i !== -1 && i > 0) {
-        value.splice(i - 1, 0, value.splice(i, 1)[0]);
-        const ids = StoreUtility.compareRank(value, action.payload.def);
-        return { ...state, ...{ ids } };
-      }
-      return state;
-    }
-    case MachinesActionType.LOWER: {
-      const value = [...(state.ids ?? action.payload.def ?? [])];
-      const i = value.indexOf(action.payload.value);
-      if (i !== -1 && i < value.length - 1) {
-        value.splice(i + 1, 0, value.splice(i, 1)[0]);
-        const ids = StoreUtility.compareRank(value, action.payload.def);
-        return { ...state, ...{ ids } };
-      }
-      return state;
-    }
+    case MachinesActionType.SET_RANK:
+      return {
+        ...state,
+        ...{
+          ids: StoreUtility.compareRank(
+            action.payload.value,
+            action.payload.def,
+          ),
+        },
+      };
     case MachinesActionType.SET_MACHINE: {
       const value = [...(state.ids ?? action.payload.def ?? [])];
       const i = value.indexOf(action.payload.id);

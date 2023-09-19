@@ -160,6 +160,16 @@ describe('ObjectivesComponent', () => {
     });
   });
 
+  describe('setObjectiveOrder', () => {
+    it('should map objectives to ids', () => {
+      spyOn(component, 'setOrder');
+      component.setObjectiveOrder(Mocks.ObjectivesList);
+      expect(component.setOrder).toHaveBeenCalledWith(
+        Mocks.ObjectivesList.map((o) => o.id),
+      );
+    });
+  });
+
   describe('changeUnit', () => {
     const picker = {
       selectId: new Subject<string>(),
@@ -294,8 +304,7 @@ describe('ObjectivesComponent', () => {
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.val('removeObjective', Objectives.RemoveAction);
-    dispatch.val('raiseObjective', Objectives.RaiseAction);
-    dispatch.val('lowerObjective', Objectives.LowerAction);
+    dispatch.val('setOrder', Objectives.SetOrderAction);
     dispatch.idVal('setTarget', Objectives.SetTargetAction);
     dispatch.idVal('setValue', Objectives.SetValueAction);
     dispatch.idVal('setUnit', Objectives.SetUnitAction);

@@ -1,24 +1,39 @@
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable, TemplateRef } from '@angular/core';
+import { Injectable, TemplateRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Confirmation } from 'primeng/api';
+import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
 import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
 
 import { environment } from 'src/environments';
 import { APP, Breakpoint } from '~/models';
+
+/**
+ * Workaround for https://github.com/primefaces/primeng/issues/12114.
+ * Manually add the main window to the list of scrollable parents, so that when
+ * the main window is scrolled, dropdowns will be closed.
+ */
+ConnectedOverlayScrollHandler.prototype.bindScrollListener = function (
+  this,
+): void {
+  this.scrollableParents = DomHandler.getScrollableParents(this.element);
+  this.scrollableParents.push(window);
+  for (const parent of this.scrollableParents) {
+    parent.addEventListener('scroll', this.listener);
+  }
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class ContentService {
   // Responsive
-  scrollTop$ = fromEvent(this.document.body, 'scroll').pipe(
+  scrollTop$ = fromEvent(window, 'scroll').pipe(
     map(
       // Don't test fromEvent
       // istanbul ignore next
-      () => this.document.body.scrollTop,
+      () => window.scrollY,
     ),
-    startWith(this.document.body.scrollTop),
+    startWith(window.scrollY),
   );
   windowInnerWidth = (): number => window.innerWidth;
   width$ = fromEvent(window, 'resize').pipe(
@@ -61,8 +76,5 @@ export class ContentService {
 
   version = `${APP} ${environment.version}`;
 
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private translateSvc: TranslateService,
-  ) {}
+  constructor(private translateSvc: TranslateService) {}
 }
