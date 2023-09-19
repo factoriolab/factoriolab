@@ -1,3 +1,7 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins/_breakpoints';
+
 .links {
   // Tree container
   height: 50px;
@@ -23,14 +27,22 @@
 
     // Segments should pad between
     & + .connect {
-      margin-left: 32px;
+      margin-left: 24px;
+    }
+
+    @include media-breakpoint-down(xl) {
+      margin-left: 8px;
+
+      + .connect {
+        margin-left: 16px;
+      }
     }
   }
 
   .indent {
     margin-left: 0;
     border-top: 2px dotted var(--text-color-secondary);
-    width: 16px;
+    width: 8px;
   }
 
   .icon {

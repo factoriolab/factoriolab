@@ -86,24 +86,8 @@ export function objectivesReducer(
         },
       };
     }
-    case ObjectivesActionType.RAISE: {
-      const ids = [...state.ids];
-      const i = ids.indexOf(action.payload);
-      if (i !== -1 && i > 0) {
-        ids.splice(i - 1, 0, ids.splice(i, 1)[0]);
-        return { ...state, ...{ ids } };
-      }
-      return state;
-    }
-    case ObjectivesActionType.LOWER: {
-      const ids = [...state.ids];
-      const i = ids.indexOf(action.payload);
-      if (i !== -1 && i < ids.length - 1) {
-        ids.splice(i + 1, 0, ids.splice(i, 1)[0]);
-        return { ...state, ...{ ids } };
-      }
-      return state;
-    }
+    case ObjectivesActionType.SET_ORDER:
+      return { ...state, ...{ ids: action.payload } };
     case ObjectivesActionType.SET_TARGET: {
       const entities = StoreUtility.assignValue(
         state.entities,

@@ -38,7 +38,9 @@ export class ObjectivesComponent {
     ),
   );
   vm$ = combineLatest({
-    objectives: this.store.select(Objectives.getObjectives),
+    objectives: this.store
+      .select(Objectives.getObjectives)
+      .pipe(map((o) => [...o])),
     matrixResult: this.store.select(Objectives.getMatrixResult),
     itemsState: this.store.select(Items.getItemsState),
     recipesState: this.store.select(Recipes.getRecipesState),
@@ -144,6 +146,10 @@ export class ObjectivesComponent {
     ];
   }
 
+  setObjectiveOrder(objectives: Objective[]): void {
+    this.setOrder(objectives.map((o) => o.id));
+  }
+
   changeUnit(
     objective: Objective,
     unit: ObjectiveUnit,
@@ -202,12 +208,8 @@ export class ObjectivesComponent {
     this.store.dispatch(new Objectives.RemoveAction(id));
   }
 
-  raiseObjective(id: string): void {
-    this.store.dispatch(new Objectives.RaiseAction(id));
-  }
-
-  lowerObjective(id: string): void {
-    this.store.dispatch(new Objectives.LowerAction(id));
+  setOrder(ids: string[]): void {
+    this.store.dispatch(new Objectives.SetOrderAction(ids));
   }
 
   setTarget(id: string, value: string): void {

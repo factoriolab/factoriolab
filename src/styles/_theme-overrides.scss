@@ -1,3 +1,7 @@
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins/_breakpoints';
+
 // InputGroup fixes
 .p-inputgroup {
   > .p-inputwrapper {
@@ -106,4 +110,44 @@ table p-dropdown {
 // Make sure tooltips have enough width
 .p-tooltip .p-tooltip-text {
   width: fit-content;
+}
+
+// Hide orderlist controls
+.p-orderlist {
+  .p-orderlist-controls {
+    display: none;
+  }
+
+  .p-orderlist-list {
+    min-height: auto;
+    padding: 0;
+    border: none;
+
+    .p-orderlist-item {
+      padding: 0;
+
+      > .p-ink {
+        display: none;
+      }
+
+      &.p-highlight {
+        color: inherit;
+        background: inherit;
+      }
+
+      &:focus {
+        box-shadow: inherit;
+      }
+    }
+  }
+}
+
+.p-orderlist-item.cdk-drag-preview {
+  padding: 0;
+}
+
+@include media-breakpoint-down(sm) {
+  .p-card .p-card-body {
+    padding: 0.5rem;
+  }
 }

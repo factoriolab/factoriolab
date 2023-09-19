@@ -112,25 +112,10 @@ describe('Machines Selectors', () => {
   describe('getMachineOptions', () => {
     it('should handle null ids', () => {
       const result = Selectors.getMachineOptions.projector(
-        initialMachinesState,
+        Mocks.MachinesStateInitial,
         Mocks.Dataset,
       );
       expect(result.length).toEqual(Mocks.Dataset.machineIds.length);
-    });
-  });
-
-  describe('getMachineRows', () => {
-    it('should handle null ids', () => {
-      const result = Selectors.getMachineRows.projector(initialMachinesState);
-      expect(result).toEqual(['']);
-    });
-
-    it('should add empty option to beginning of list', () => {
-      const result = Selectors.getMachineRows.projector({
-        ids: [ItemId.AssemblingMachine1],
-        entities: {},
-      });
-      expect(result).toEqual(['', ItemId.AssemblingMachine1]);
     });
   });
 });

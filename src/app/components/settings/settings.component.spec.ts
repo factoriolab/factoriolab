@@ -73,28 +73,6 @@ describe('SettingsComponent', () => {
     });
   });
 
-  describe('buildMachineMenus', () => {
-    it('should set up actions for each machine preference', () => {
-      const result = component.buildMachineMenus(
-        [
-          '',
-          ItemId.AssemblingMachine1,
-          ItemId.AssemblingMachine2,
-          ItemId.ElectricMiningDrill,
-        ],
-        Mocks.Dataset,
-      );
-      expect(result.length).toEqual(4);
-      const middle = result[2];
-      spyOn(component, 'raiseMachine');
-      middle[0].command!({});
-      expect(component.raiseMachine).toHaveBeenCalled();
-      spyOn(component, 'lowerMachine');
-      middle[1].command!({});
-      expect(component.lowerMachine).toHaveBeenCalled();
-    });
-  });
-
   describe('clickResetSettings', () => {
     it('should set up a confirmation dialog and clear settings', () => {
       let confirm: Confirmation | undefined;
@@ -358,14 +336,13 @@ describe('SettingsComponent', () => {
     dispatch.idValDef('setFuel', Machines.SetFuelAction);
     dispatch.idValDef('setModuleRank', Machines.SetModuleRankAction);
     dispatch.idValDef('setOverclock', Machines.SetOverclockAction);
-    dispatch.valDef('raiseMachine', Machines.RaiseAction);
-    dispatch.valDef('lowerMachine', Machines.LowerAction);
     dispatch.idValDef('setBeaconCount', Machines.SetBeaconCountAction);
     dispatch.idValDef('setBeacon', Machines.SetBeaconAction);
     dispatch.idValDef(
       'setBeaconModuleRank',
       Machines.SetBeaconModuleRankAction,
     );
+    dispatch.valDef('setMachineRank', Machines.SetRankAction);
     dispatch.valDef('addMachine', Machines.AddAction);
     dispatch.val('setBeaconReceivers', Settings.SetBeaconReceiversAction);
     dispatch.val('setProliferatorSpray', Settings.SetProliferatorSprayAction);

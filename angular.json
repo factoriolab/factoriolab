@@ -63,6 +63,7 @@
             },
             "scripts": [],
             "allowedCommonJsDependencies": [
+              "@sideway/formula",
               "component-emitter",
               "elkjs/lib/elk.bundled",
               "file-saver",
