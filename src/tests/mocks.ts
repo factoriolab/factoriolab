@@ -234,6 +234,7 @@ export function getDataset(): M.Dataset {
   Recipes.getAdjustedDataset.release();
   return Recipes.getAdjustedDataset.projector(
     RecipesStateRationalInitial,
+    [],
     ItemsStateInitial,
     CostRational,
     {
