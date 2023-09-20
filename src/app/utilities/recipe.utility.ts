@@ -467,6 +467,7 @@ export class RecipeUtility {
 
   static adjustDataset(
     recipeIds: string[],
+    excludedRecipeIds: string[],
     recipesState: Entities<RecipeSettingsRational>,
     itemsState: Entities<ItemSettings>,
     proliferatorSprayId: string,
@@ -487,7 +488,7 @@ export class RecipeUtility {
       data,
     );
     this.adjustCost(recipeIds, recipeR, recipesState, cost);
-    return this.finalizeData(recipeIds, recipeR, data);
+    return this.finalizeData(recipeIds, excludedRecipeIds, recipeR, data);
   }
 
   static adjustRecipes(
@@ -546,14 +547,18 @@ export class RecipeUtility {
 
   static finalizeData(
     recipeIds: string[],
+    excludedRecipeIds: string[],
     recipeR: Entities<RecipeRational>,
     data: RawDataset,
   ): Dataset {
+    const excludedSet = new Set(excludedRecipeIds);
     const itemRecipeIds: Entities<string[]> = {};
-    const itemIoRecipeIds: Entities<string[]> = {};
+    const itemIncludedRecipeIds: Entities<string[]> = {};
+    const itemIncludedIoRecipeIds: Entities<string[]> = {};
     data.itemIds.forEach((i) => {
       itemRecipeIds[i] = [];
-      itemIoRecipeIds[i] = [];
+      itemIncludedRecipeIds[i] = [];
+      itemIncludedIoRecipeIds[i] = [];
     });
 
     recipeIds
@@ -563,12 +568,27 @@ export class RecipeUtility {
         recipe.produces.forEach((productId) =>
           itemRecipeIds[productId].push(recipe.id),
         );
-        for (const ioId of Object.keys(recipe.output)) {
-          itemIoRecipeIds[ioId].push(recipe.id);
+
+        if (!excludedSet.has(recipe.id)) {
+          recipe.produces.forEach((productId) =>
+            itemIncludedRecipeIds[productId].push(recipe.id),
+          );
+
+          for (const ioId of Object.keys(recipe.output)) {
+            itemIncludedIoRecipeIds[ioId].push(recipe.id);
+          }
         }
       });
 
-    return { ...data, ...{ recipeR, itemRecipeIds, itemIoRecipeIds } };
+    return {
+      ...data,
+      ...{
+        recipeR,
+        itemRecipeIds,
+        itemIncludedRecipeIds,
+        itemIncludedIoRecipeIds,
+      },
+    };
   }
 
   static adjustObjective(
