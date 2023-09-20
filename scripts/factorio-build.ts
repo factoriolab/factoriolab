@@ -548,6 +548,10 @@ async function processMod(): Promise<void> {
       const oldData = getJsonData<ModData>(modDataPath);
       const oldHash = getJsonData<ModHash>(modHashPath);
 
+      if (mode === 'expensive') {
+        modData.expensive = true;
+      }
+
       modData.defaults = oldData.defaults;
 
       if (modData.defaults?.excludedRecipes) {
