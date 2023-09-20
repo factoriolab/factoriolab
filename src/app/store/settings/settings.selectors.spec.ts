@@ -356,14 +356,8 @@ describe('Settings Selectors', () => {
       expect(Object.keys(result.itemEntities).length).toEqual(
         result.itemIds.length,
       );
-      expect(Object.keys(result.itemRecipeIds).length).toEqual(
-        result.itemIds.length,
-      );
       expect(result.recipeIds.length).toBeGreaterThan(0);
       expect(Object.keys(result.recipeEntities).length).toEqual(
-        result.recipeIds.length,
-      );
-      expect(Object.keys(result.recipeR).length).toEqual(
         result.recipeIds.length,
       );
     });
@@ -513,23 +507,26 @@ describe('Settings Selectors', () => {
   describe('getBeltSpeed', () => {
     it('should return the map of belt speeds', () => {
       const flowRate = Rational.from(2000);
-      const result = Selectors.getBeltSpeed.projector(Mocks.Dataset, flowRate);
+      const result = Selectors.getBeltSpeed.projector(
+        Mocks.RawDataset,
+        flowRate,
+      );
       expect(result[ItemId.TransportBelt]).toEqual(
-        Mocks.Dataset.beltEntities[ItemId.TransportBelt].speed,
+        Mocks.RawDataset.beltEntities[ItemId.TransportBelt].speed,
       );
       expect(result[ItemId.Pipe]).toEqual(flowRate);
     });
 
     it('should include pipe speeds', () => {
       const data = {
-        ...Mocks.Dataset,
+        ...Mocks.RawDataset,
         ...{
           pipeIds: [ItemId.Pipe],
           beltEntities: {
-            ...Mocks.Dataset.beltEntities,
+            ...Mocks.RawDataset.beltEntities,
             ...{
               [ItemId.Pipe]: {
-                ...Mocks.Dataset.beltEntities[ItemId.Pipe],
+                ...Mocks.RawDataset.beltEntities[ItemId.Pipe],
                 ...{
                   speed: Rational.ten,
                 },
@@ -571,7 +568,7 @@ describe('Settings Selectors', () => {
     it('should expand minimal set of technology ids into full list', () => {
       const result = Selectors.getAllResearchedTechnologyIds.projector(
         [RecipeId.ArtilleryShellRange],
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
       expect(result?.length).toEqual(54);
     });
@@ -579,7 +576,7 @@ describe('Settings Selectors', () => {
     it('should return value if null', () => {
       const result = Selectors.getAllResearchedTechnologyIds.projector(
         null,
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
       expect(result).toBeNull();
     });
@@ -589,28 +586,17 @@ describe('Settings Selectors', () => {
     it('should return full list if value is null', () => {
       const result = Selectors.getAvailableRecipes.projector(
         null,
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
-      expect(result).toEqual(Mocks.Dataset.recipeIds);
+      expect(result).toEqual(Mocks.RawDataset.recipeIds);
     });
 
     it('should filter for only unlocked recipes', () => {
       const result = Selectors.getAvailableRecipes.projector(
         [RecipeId.Automation],
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
       expect(result.length).toEqual(234);
-    });
-  });
-
-  describe('getAvailableItems', () => {
-    it('should return items with some recipe available to produce it', () => {
-      const result = Selectors.getAvailableItems.projector(
-        Mocks.Dataset.recipeIds,
-        Mocks.Dataset,
-      );
-      // Cannot produce wood in vanilla Factorio
-      expect(result.length).toEqual(Mocks.Dataset.itemIds.length - 1);
     });
   });
 });

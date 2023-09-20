@@ -21,7 +21,7 @@ describe('MachineTooltipPipe', () => {
 
   describe('transform', () => {
     it('should generate a machine tooltip', () => {
-      const data = Mocks.getDataset();
+      const data = Mocks.getRawDataset();
       data.itemEntities[ItemId.AssemblingMachine3].machine!.fuelCategories = [
         'chemical',
       ];
@@ -40,8 +40,8 @@ describe('MachineTooltipPipe', () => {
     });
 
     it('should handle null values', () => {
-      expect(pipe.transform(null, Mocks.Dataset)).toEqual('');
-      expect(pipe.transform('null', Mocks.Dataset)).toEqual('');
+      expect(pipe.transform(null, Mocks.RawDataset)).toEqual('');
+      expect(pipe.transform('null', Mocks.RawDataset)).toEqual('');
     });
   });
 });

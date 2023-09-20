@@ -141,8 +141,8 @@ export class SimplexUtility {
     maximizeType: MaximizeType,
     surplusMachinesOutput: boolean,
     cost: CostRationalSettings,
-    paused: boolean,
     data: Dataset,
+    paused: boolean,
   ): MatrixResult {
     if (paused || objectives.length === 0) {
       return { steps: [], resultType: MatrixResultType.Skipped };

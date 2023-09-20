@@ -259,7 +259,7 @@ describe('ListComponent', () => {
   describe('toggleRecipe', () => {
     it('should disable a recipe', () => {
       spyOn(component, 'setRecipeExcluded');
-      const data = { ...Mocks.AdjustedData, ...{ defaults: undefined } };
+      const data = { ...Mocks.Dataset, ...{ defaults: undefined } };
       component.toggleRecipe(
         RecipeId.AdvancedOilProcessing,
         Mocks.RecipesStateInitial,
@@ -277,7 +277,7 @@ describe('ListComponent', () => {
       component.toggleRecipe(
         RecipeId.NuclearFuelReprocessing,
         Mocks.RecipesStateInitial,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,

@@ -41,7 +41,7 @@ describe('Objectives Selectors', () => {
       const result = Selectors.getBaseObjectives.projector(
         Mocks.ObjectivesState.ids,
         Mocks.ObjectivesState.entities,
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
       expect(result).toEqual(Mocks.ObjectivesList);
     });
@@ -53,12 +53,12 @@ describe('Objectives Selectors', () => {
       Selectors.getObjectives.projector(
         [Mocks.Objective5],
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
       expect(RecipeUtility.adjustObjective).toHaveBeenCalledWith(
         Mocks.Objective5,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
     });
   });
@@ -106,6 +106,7 @@ describe('Objectives Selectors', () => {
         false,
         Mocks.CostRational,
         Mocks.Dataset,
+        false,
       );
       expect(SimplexUtility.solve).toHaveBeenCalled();
     });
@@ -171,7 +172,7 @@ describe('Objectives Selectors', () => {
             id: '0',
             itemId: ItemId.Coal,
             recipeId: RecipeId.Coal,
-            recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
+            recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
               machineModuleIds: [ItemId.ProductivityModule3],
@@ -191,7 +192,7 @@ describe('Objectives Selectors', () => {
             machines: Rational.one,
             power: Rational.one,
             pollution: Rational.one,
-            recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
+            recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
               machineModuleIds: [
@@ -210,7 +211,7 @@ describe('Objectives Selectors', () => {
           },
         ],
         Mocks.ItemsStateInitial,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(result).toEqual({
         belts: { [ItemId.TransportBelt]: Rational.one },
@@ -234,7 +235,7 @@ describe('Objectives Selectors', () => {
           {
             id: '0',
             recipeId: RecipeId.Coal,
-            recipe: Mocks.AdjustedData.recipeR[RecipeId.Coal],
+            recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
             machines: Rational.one,
             recipeSettings: {
               machineId: ItemId.MiningDrill,
@@ -242,7 +243,7 @@ describe('Objectives Selectors', () => {
           },
         ],
         Mocks.ItemsStateInitial,
-        { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } },
+        { ...Mocks.Dataset, ...{ game: Game.DysonSphereProgram } },
       );
       expect(result).toEqual({
         belts: {},
@@ -281,8 +282,7 @@ describe('Objectives Selectors', () => {
       const result = Selectors.getStepDetails.projector(
         steps,
         Mocks.RecipesStateInitial,
-        Mocks.AdjustedData,
-        Mocks.Dataset.recipeIds,
+        Mocks.Dataset,
       );
       expect(result).toEqual({
         ['0']: {

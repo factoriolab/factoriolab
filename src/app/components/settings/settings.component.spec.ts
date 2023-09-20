@@ -224,7 +224,7 @@ describe('SettingsComponent', () => {
     it('should set up a batch of actions to set recipe excluded states', () => {
       spyOn(component, 'setRecipeExcludedBatch');
       component.setExcludedRecipes(
-        [...Mocks.Dataset.defaults!.excludedRecipeIds, RecipeId.Coal],
+        [...Mocks.RawDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
         Mocks.RecipesStateInitial,
         Mocks.Dataset,
       );
@@ -236,7 +236,7 @@ describe('SettingsComponent', () => {
     it('should handle null defaults', () => {
       spyOn(component, 'setRecipeExcludedBatch');
       component.setExcludedRecipes(
-        [...Mocks.Dataset.defaults!.excludedRecipeIds, RecipeId.Coal],
+        [...Mocks.RawDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
         Mocks.RecipesStateInitial,
         {
           ...Mocks.Dataset,

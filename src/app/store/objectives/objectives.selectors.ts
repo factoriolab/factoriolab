@@ -113,8 +113,8 @@ export const getMatrixResult = createSelector(
   Settings.getMaximizeType,
   Settings.getSurplusMachinesOutput,
   Settings.getRationalCost,
-  Preferences.getPaused,
   Recipes.getAdjustedDataset,
+  Preferences.getPaused,
   (
     objectives,
     itemsSettings,
@@ -123,8 +123,8 @@ export const getMatrixResult = createSelector(
     maximizeType,
     surplusMachinesOutput,
     cost,
-    paused,
     data,
+    paused,
   ) =>
     SimplexUtility.solve(
       objectives,
@@ -134,8 +134,8 @@ export const getMatrixResult = createSelector(
       maximizeType,
       surplusMachinesOutput,
       cost,
-      paused,
       data,
+      paused,
     ),
 );
 

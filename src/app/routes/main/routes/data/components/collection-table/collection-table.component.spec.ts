@@ -35,29 +35,29 @@ describe('CollectionTableComponent', () => {
   describe('getValue', () => {
     it('should get an array of category collection items', () => {
       const result = component.getValue(
-        Mocks.Dataset.categoryIds,
+        Mocks.RawDataset.categoryIds,
         'category',
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
-      expect(result.length).toEqual(Mocks.Dataset.categoryIds.length);
+      expect(result.length).toEqual(Mocks.RawDataset.categoryIds.length);
     });
 
     it('should get an array of item collection items', () => {
       const result = component.getValue(
-        Mocks.Dataset.machineIds,
+        Mocks.RawDataset.machineIds,
         'item',
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
-      expect(result.length).toEqual(Mocks.Dataset.machineIds.length);
+      expect(result.length).toEqual(Mocks.RawDataset.machineIds.length);
     });
 
     it('should get an array of recipe collection items', () => {
       const result = component.getValue(
-        Mocks.Dataset.technologyIds,
+        Mocks.RawDataset.technologyIds,
         'recipe',
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
-      expect(result.length).toEqual(Mocks.Dataset.technologyIds.length);
+      expect(result.length).toEqual(Mocks.RawDataset.technologyIds.length);
     });
   });
 });

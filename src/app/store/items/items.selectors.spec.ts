@@ -9,10 +9,12 @@ describe('Items Selectors', () => {
     it('should return the item configs', () => {
       const result = Selectors.getItemsState.projector(
         initialItemsState,
-        Mocks.Dataset,
+        Mocks.RawDataset,
         Mocks.SettingsStateInitial,
       );
-      expect(Object.keys(result).length).toEqual(Mocks.Dataset.itemIds.length);
+      expect(Object.keys(result).length).toEqual(
+        Mocks.RawDataset.itemIds.length,
+      );
     });
 
     it('should use the passed overrides', () => {
@@ -22,7 +24,7 @@ describe('Items Selectors', () => {
       };
       const result = Selectors.getItemsState.projector(
         state,
-        Mocks.Dataset,
+        Mocks.RawDataset,
         Mocks.SettingsStateInitial,
       );
       expect(result[Mocks.Item1.id].beltId).toEqual(stringValue);

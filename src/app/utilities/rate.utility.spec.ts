@@ -155,7 +155,7 @@ describe('RateUtility', () => {
       const result = { ...step };
       RateUtility.adjustPowerPollution(
         result,
-        Mocks.AdjustedData.recipeR[RecipeId.WoodenChest],
+        Mocks.Dataset.recipeR[RecipeId.WoodenChest],
         Game.Factorio,
       );
       expect(result).toEqual(step);
@@ -335,7 +335,7 @@ describe('RateUtility', () => {
         step,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(step.belts).toBeUndefined();
     });
@@ -351,7 +351,7 @@ describe('RateUtility', () => {
         step,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(step.belts).toEqual(Rational.one);
       expect(step.wagons).toEqual(new Rational(BigInt(3), BigInt(400)));
@@ -368,7 +368,7 @@ describe('RateUtility', () => {
         step,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(step.wagons).toEqual(Rational.one);
     });
@@ -388,7 +388,7 @@ describe('RateUtility', () => {
         step,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(step.belts).toBeUndefined();
       expect(step.wagons).toBeUndefined();
@@ -408,7 +408,7 @@ describe('RateUtility', () => {
         step,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(step.belts).toBeUndefined();
       expect(step.wagons).toBeUndefined();
@@ -426,7 +426,7 @@ describe('RateUtility', () => {
         power: Rational.zero,
         recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.Dataset);
       expect(step.power).toEqual(Rational.from(3840));
     });
 
@@ -440,7 +440,7 @@ describe('RateUtility', () => {
         power: Rational.zero,
         recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, Rational.hundred, Mocks.AdjustedData);
+      RateUtility.calculateBeacons(step, Rational.hundred, Mocks.Dataset);
       expect(step.recipeSettings?.beacons?.[0].total).toEqual(Rational.from(8));
     });
 
@@ -453,7 +453,7 @@ describe('RateUtility', () => {
         machines: Rational.one,
         recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.Dataset);
       expect(step.power).toEqual(Rational.from(3840));
     });
 
@@ -476,13 +476,13 @@ describe('RateUtility', () => {
         power: Rational.zero,
         recipeSettings,
       };
-      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.Dataset);
       expect(step.power).toEqual(Rational.from(480));
     });
 
     it('should do nothing if beaconReceivers is unset', () => {
       const step: Step = { id: 'id' };
-      RateUtility.calculateBeacons(step, null, Mocks.AdjustedData);
+      RateUtility.calculateBeacons(step, null, Mocks.Dataset);
       expect(step).toEqual({ id: 'id' });
     });
 
@@ -496,7 +496,7 @@ describe('RateUtility', () => {
         },
       };
       const stepExpect = { ...step };
-      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedData);
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.Dataset);
       expect(step).toEqual(stepExpect);
     });
   });

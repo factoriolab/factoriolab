@@ -10,7 +10,7 @@ describe('Machines Selectors', () => {
         initialMachinesState,
         [ItemId.Coal],
         Mocks.Defaults,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(result.ids?.length).toEqual(3);
       expect(Object.keys(result.entities).length).toEqual(19);
@@ -21,7 +21,7 @@ describe('Machines Selectors', () => {
         initialMachinesState,
         [ItemId.Coal],
         null,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
@@ -35,7 +35,7 @@ describe('Machines Selectors', () => {
         },
         [ItemId.Coal],
         null,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
@@ -49,7 +49,7 @@ describe('Machines Selectors', () => {
         initialMachinesState,
         [ItemId.Coal],
         Mocks.Defaults,
-        { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } },
+        { ...Mocks.Dataset, ...{ game: Game.DysonSphereProgram } },
       );
       expect(result.entities[''].beaconCount).toBeUndefined();
     });
@@ -74,7 +74,7 @@ describe('Machines Selectors', () => {
         [ItemId.Coal],
         Mocks.Defaults,
         {
-          ...Mocks.AdjustedData,
+          ...Mocks.Dataset,
           ...{ game: Game.Satisfactory },
         },
       );
@@ -101,7 +101,7 @@ describe('Machines Selectors', () => {
         [ItemId.Coal],
         Mocks.Defaults,
         {
-          ...Mocks.AdjustedData,
+          ...Mocks.Dataset,
           ...{ game: Game.Satisfactory },
         },
       );
@@ -113,9 +113,9 @@ describe('Machines Selectors', () => {
     it('should handle null ids', () => {
       const result = Selectors.getMachineOptions.projector(
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.RawDataset,
       );
-      expect(result.length).toEqual(Mocks.Dataset.machineIds.length);
+      expect(result.length).toEqual(Mocks.RawDataset.machineIds.length);
     });
   });
 });

@@ -35,7 +35,7 @@ describe('TechPickerComponent', () => {
     it('should filter technologies and selection', () => {
       let status: Record<UnlockStatus, string[]> | undefined;
       component.status$.subscribe((s) => (status = s));
-      component.clickOpen(Mocks.Dataset, Mocks.Dataset.technologyIds);
+      component.clickOpen(Mocks.Dataset, Mocks.RawDataset.technologyIds);
       component.filterCtrl.setValue('optics');
       expect(status?.available.length).toEqual(0);
       expect(status?.locked.length).toEqual(0);
@@ -92,7 +92,7 @@ describe('TechPickerComponent', () => {
       spyOn(component.selection$, 'next');
       component.selectAll(true, Mocks.Dataset);
       expect(component.selection$.next).toHaveBeenCalledWith(
-        Mocks.Dataset.technologyIds,
+        Mocks.RawDataset.technologyIds,
       );
     });
 
@@ -138,7 +138,7 @@ describe('TechPickerComponent', () => {
 
     it('should emit null if all technologies are selected', () => {
       spyOn(component.selectIds, 'emit');
-      component.onHide(Mocks.Dataset.technologyIds, Mocks.Dataset);
+      component.onHide(Mocks.RawDataset.technologyIds, Mocks.Dataset);
       expect(component.selectIds.emit).toHaveBeenCalledWith(null);
     });
   });

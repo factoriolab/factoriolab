@@ -20,13 +20,13 @@ describe('BeaconTooltipPipe', () => {
 
   describe('transform', () => {
     it('should generate a beacon tooltip', () => {
-      const result = pipe.transform(ItemId.Beacon, Mocks.Dataset);
+      const result = pipe.transform(ItemId.Beacon, Mocks.RawDataset);
       expect(result).toBeTruthy();
     });
 
     it('should handle null values', () => {
-      expect(pipe.transform(null, Mocks.Dataset)).toEqual('');
-      expect(pipe.transform('null', Mocks.Dataset)).toEqual('');
+      expect(pipe.transform(null, Mocks.RawDataset)).toEqual('');
+      expect(pipe.transform('null', Mocks.RawDataset)).toEqual('');
     });
   });
 });
