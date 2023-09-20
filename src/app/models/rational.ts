@@ -1,6 +1,6 @@
 import * as formula from '@sideway/formula';
 
-const MAX_DENOM = 100000;
+const MAX_DENOM = 10000000;
 const DIVIDE_BY_ZERO = 'Cannot divide by zero';
 const FLOAT_TOLERANCE = 1e-10;
 
