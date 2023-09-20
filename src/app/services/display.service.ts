@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-import { Dataset, IdType, Rational, Recipe, Technology } from '~/models';
+import { IdType, Rational, RawDataset, Recipe, Technology } from '~/models';
 
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
@@ -57,7 +57,7 @@ export class DisplayService {
 
   recipeTooltip(
     value: string | null | undefined,
-    data: Dataset,
+    data: RawDataset,
     name?: string,
   ): string {
     if (value == null) return '';

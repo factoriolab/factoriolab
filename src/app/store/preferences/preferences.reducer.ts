@@ -22,6 +22,8 @@ export interface PreferencesState {
   bypassLanding: boolean;
   showTechLabels: boolean;
   hideDuplicateIcons: boolean;
+  rows: number;
+  paused: boolean;
 }
 
 export const initialPreferencesState: PreferencesState = {
@@ -38,6 +40,8 @@ export const initialPreferencesState: PreferencesState = {
   bypassLanding: false,
   showTechLabels: false,
   hideDuplicateIcons: false,
+  rows: 50,
+  paused: false,
 };
 
 export function preferencesReducer(
@@ -72,6 +76,8 @@ export function preferencesReducer(
             : PowerUnit.Auto,
         },
       };
+    case PreferencesActionType.SET_ROWS:
+      return { ...state, ...{ rows: action.payload } };
     case PreferencesActionType.SET_LANGUAGE:
       return { ...state, ...{ language: action.payload } };
     case PreferencesActionType.SET_POWER_UNIT:
@@ -84,6 +90,8 @@ export function preferencesReducer(
       return { ...state, ...{ showTechLabels: action.payload } };
     case PreferencesActionType.SET_HIDE_DUPLICATE_ICONS:
       return { ...state, ...{ hideDuplicateIcons: action.payload } };
+    case PreferencesActionType.SET_PAUSED:
+      return { ...state, ...{ paused: action.payload } };
     default:
       return state;
   }

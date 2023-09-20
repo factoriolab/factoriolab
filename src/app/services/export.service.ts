@@ -95,15 +95,18 @@ export class ExportService {
         exp.Items =
           '=' + step.items.sub(step.surplus ?? Rational.zero).toString();
       }
+
       if (step.surplus != null) {
         exp.Surplus = '=' + step.surplus.toString();
       }
+
       if (columns.belts.show) {
         if (step.belts != null) {
           exp.Belts = '=' + step.belts.toString();
         }
         exp.Belt = itemSettings.beltId;
       }
+
       if (columns.wagons.show) {
         if (step.wagons != null) {
           exp.Wagons = '=' + step.wagons.toString();
@@ -113,6 +116,7 @@ export class ExportService {
     }
     if (step.recipeId != null) {
       exp.Recipe = step.recipeId;
+
       const recipe = data.recipeR[step.recipeId];
       const recipeSettings = recipesState[step.recipeId];
       const inputs = Object.keys(recipe.in)
@@ -123,9 +127,11 @@ export class ExportService {
         .filter((v) => v[1])
         .map((v) => `${v[0]}:${v[1]}`)
         .join(',');
+
       if (inputs) {
         exp.Inputs = `"${inputs}"`;
       }
+
       if (recipeSettings.machineId != null) {
         const machine = data.machineEntities[recipeSettings.machineId];
         const allowsModules = RecipeUtility.allowsModules(recipe, machine);
@@ -140,6 +146,7 @@ export class ExportService {
             )}"`;
           }
         }
+
         if (columns.beacons.show && allowsModules) {
           exp.Beacons = `"${recipeSettings.beacons
             ?.map((b) => b.count)
@@ -151,11 +158,13 @@ export class ExportService {
             ?.map((b) => b.moduleIds?.join('|'))
             .join(',')}"`;
         }
+
         if (columns.power.show) {
           if (step.power != null) {
             exp.Power = '=' + step.power.toString();
           }
         }
+
         if (columns.pollution.show) {
           if (step.pollution != null) {
             exp.Pollution = '=' + step.pollution.toString();
@@ -163,6 +172,7 @@ export class ExportService {
         }
       }
     }
+
     if (step.outputs != null) {
       const outputs = step.outputs; // Store as non-null
       const outputsStr = Object.keys(outputs)
@@ -170,6 +180,7 @@ export class ExportService {
         .join(',');
       exp.Outputs = `"${outputsStr}"`;
     }
+
     if (step.parents != null) {
       const parents = step.parents; // Store as non-null
       const parentsStr = Object.keys(parents)
@@ -179,6 +190,7 @@ export class ExportService {
         .join(',');
       exp.Targets = `"${parentsStr}"`;
     }
+
     return exp;
   }
 }

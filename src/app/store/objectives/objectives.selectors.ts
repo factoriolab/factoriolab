@@ -114,6 +114,7 @@ export const getMatrixResult = createSelector(
   Settings.getSurplusMachinesOutput,
   Settings.getRationalCost,
   Recipes.getAdjustedDataset,
+  Preferences.getPaused,
   (
     objectives,
     itemsSettings,
@@ -123,6 +124,7 @@ export const getMatrixResult = createSelector(
     surplusMachinesOutput,
     cost,
     data,
+    paused,
   ) =>
     SimplexUtility.solve(
       objectives,
@@ -133,6 +135,7 @@ export const getMatrixResult = createSelector(
       surplusMachinesOutput,
       cost,
       data,
+      paused,
     ),
 );
 
@@ -359,8 +362,7 @@ export const getStepDetails = createSelector(
   getSteps,
   Recipes.getRecipesState,
   Recipes.getAdjustedDataset,
-  Settings.getAvailableRecipes,
-  (steps, recipesState, data, availableRecipeIds) =>
+  (steps, recipesState, data) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
       const outputs: StepOutput[] = [];
@@ -403,12 +405,7 @@ export const getStepDetails = createSelector(
       }
 
       if (s.itemId != null) {
-        const itemId = s.itemId;
-        recipeIds = availableRecipeIds
-          .map((r) => data.recipeR[r])
-          .filter((r) => r.produces(itemId))
-          .map((r) => r.id);
-
+        recipeIds = data.itemRecipeIds[s.itemId];
         if (recipeIds.length) {
           tabs.push(StepDetailTab.Recipes);
         }

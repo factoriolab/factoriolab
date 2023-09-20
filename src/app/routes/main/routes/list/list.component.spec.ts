@@ -23,7 +23,7 @@ import {
   StepDetailTab,
 } from '~/models';
 import { ExportService } from '~/services';
-import { Items, LabState, Objectives, Recipes } from '~/store';
+import { Items, LabState, Objectives, Preferences, Recipes } from '~/store';
 import { ListComponent } from './list.component';
 
 enum DataTest {
@@ -259,7 +259,7 @@ describe('ListComponent', () => {
   describe('toggleRecipe', () => {
     it('should disable a recipe', () => {
       spyOn(component, 'setRecipeExcluded');
-      const data = { ...Mocks.AdjustedData, ...{ defaults: undefined } };
+      const data = { ...Mocks.Dataset, ...{ defaults: undefined } };
       component.toggleRecipe(
         RecipeId.AdvancedOilProcessing,
         Mocks.RecipesStateInitial,
@@ -277,7 +277,7 @@ describe('ListComponent', () => {
       component.toggleRecipe(
         RecipeId.NuclearFuelReprocessing,
         Mocks.RecipesStateInitial,
-        Mocks.AdjustedData,
+        Mocks.Dataset,
       );
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
@@ -480,6 +480,7 @@ describe('ListComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
+    dispatch.val('setRows', Preferences.SetRowsAction);
     dispatch.idVal('setItemExcluded', Items.SetExcludedAction);
     dispatch.idVal('setItemChecked', Items.SetCheckedAction);
     dispatch.idValDef('setBelt', Items.SetBeltAction);

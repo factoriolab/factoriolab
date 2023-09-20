@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
 import { MatrixResultType, ObjectiveType, ObjectiveUnit } from '~/models';
-import { LabState, Objectives, Settings } from '~/store';
+import { LabState, Objectives, Preferences, Settings } from '~/store';
 import { ObjectivesComponent } from './objectives.component';
 
 describe('ObjectivesComponent', () => {
@@ -32,6 +32,19 @@ describe('ObjectivesComponent', () => {
   });
 
   describe('getMessages', () => {
+    it('should return no errors unless simplex failed', () => {
+      const result = component.getMessages(
+        [],
+        {
+          steps: [],
+          resultType: MatrixResultType.Skipped,
+        },
+        Mocks.ItemsStateInitial,
+        Mocks.RecipesStateInitial,
+      );
+      expect(result.length).toEqual(0);
+    });
+
     it('should build an error message to display to the user', () => {
       const result = component.getMessages(
         [],
@@ -311,5 +324,6 @@ describe('ObjectivesComponent', () => {
     dispatch.idVal('setType', Objectives.SetTypeAction);
     dispatch.val('addObjective', Objectives.AddAction);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
+    dispatch.val('setPaused', Preferences.SetPausedAction);
   });
 });
