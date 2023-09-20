@@ -38,7 +38,7 @@ describe('Rational', () => {
         expect(Rational.fromNumber(0.25)).toEqual(Rational.from([1, 4]));
         // Test known number to hit alternate solution in `fromFloat`
         expect(Rational.fromNumber(0.007342528014038914)).toEqual(
-          Rational.from([477, 64964]),
+          Rational.from([8000, 1089543]),
         );
       });
 

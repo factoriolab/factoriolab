@@ -205,16 +205,6 @@ export class SettingsComponent implements OnInit {
     this.state = this.editCtrl.value;
   }
 
-  clickDeleteState(): void {
-    this.store
-      .select(Settings.getGame)
-      .pipe(first())
-      .subscribe((game) => {
-        this.removeState(game, this.state);
-        this.state = '';
-      });
-  }
-
   openCreateState(): void {
     this.editCtrl.setValue('');
     this.editCtrl.markAsPristine();
@@ -234,6 +224,16 @@ export class SettingsComponent implements OnInit {
     this.editCtrl.setValue(this.state);
     this.editCtrl.markAsPristine();
     this.editState = 'edit';
+  }
+
+  clickDeleteState(): void {
+    this.store
+      .select(Settings.getGame)
+      .pipe(first())
+      .subscribe((game) => {
+        this.removeState(game, this.state);
+        this.state = '';
+      });
   }
 
   setGame(game: Game): void {
