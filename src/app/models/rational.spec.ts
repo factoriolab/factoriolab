@@ -36,9 +36,12 @@ describe('Rational', () => {
 
       it('should generate a Rational from number', () => {
         expect(Rational.fromNumber(0.25)).toEqual(Rational.from([1, 4]));
-        // Test known number to hit alternate solution in `fromFloat`
         expect(Rational.fromNumber(0.007342528014038914)).toEqual(
-          Rational.from([477, 64964]),
+          Rational.from([8000, 1089543]),
+        );
+        // Test known number to hit alternate solution in `fromFloat`
+        expect(Rational.fromNumber(0.00734252802)).toEqual(
+          Rational.from([68827, 9373747]),
         );
       });
 

@@ -105,6 +105,11 @@ export class SettingsComponent implements OnInit {
       command: (): void => this.openCreateState(),
     },
     {
+      label: this.translateSvc.instant('settings.saveSavedState'),
+      icon: 'fa-solid fa-floppy-disk',
+      command: (): void => this.overwriteState(),
+    },
+    {
       label: this.translateSvc.instant('settings.editSavedState'),
       icon: 'fa-solid fa-pencil',
       command: (): void => this.openEditState(),
@@ -200,6 +205,27 @@ export class SettingsComponent implements OnInit {
     this.state = this.editCtrl.value;
   }
 
+  openCreateState(): void {
+    this.editCtrl.setValue('');
+    this.editCtrl.markAsPristine();
+    this.editState = 'create';
+  }
+
+  overwriteState(): void {
+    this.store
+      .select(Settings.getGame)
+      .pipe(first())
+      .subscribe((game) => {
+        this.saveState(game, this.state, BrowserUtility.search);
+      });
+  }
+
+  openEditState(): void {
+    this.editCtrl.setValue(this.state);
+    this.editCtrl.markAsPristine();
+    this.editState = 'edit';
+  }
+
   clickDeleteState(): void {
     this.store
       .select(Settings.getGame)
@@ -208,18 +234,6 @@ export class SettingsComponent implements OnInit {
         this.removeState(game, this.state);
         this.state = '';
       });
-  }
-
-  openCreateState(): void {
-    this.editCtrl.setValue('');
-    this.editCtrl.markAsPristine();
-    this.editState = 'create';
-  }
-
-  openEditState(): void {
-    this.editCtrl.setValue(this.state);
-    this.editCtrl.markAsPristine();
-    this.editState = 'edit';
   }
 
   setGame(game: Game): void {
