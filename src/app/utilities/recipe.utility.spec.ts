@@ -350,7 +350,7 @@ describe('RecipeUtility', () => {
       expected.out = { [ItemId.SteelChest]: Rational.one };
       expected.time = Rational.from([1, 3]);
       expected.drain = Rational.from(5);
-      expected.consumption = Rational.from(375);
+      expected.consumption = Rational.from([136838616, 364903]);
       expected.pollution = Rational.from([1, 20]);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);

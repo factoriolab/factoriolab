@@ -162,17 +162,6 @@ describe('SettingsComponent', () => {
     });
   });
 
-  describe('clickDeleteState', () => {
-    it('should emit to remove the state from the menu', fakeAsync(() => {
-      spyOn(component, 'removeState');
-      component.state = id;
-      component.editStateMenu[2].command!({});
-      tick();
-      expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
-      expect(component.state).toEqual('');
-    }));
-  });
-
   describe('openCreateState', () => {
     it('should start the create state from the menu', () => {
       spyOn(component.editCtrl, 'setValue');
@@ -185,16 +174,42 @@ describe('SettingsComponent', () => {
     });
   });
 
+  describe('overwriteState', () => {
+    it('should re-save the state with the new value', () => {
+      spyOn(component, 'saveState');
+      mockStore.overrideSelector(Settings.getGame, Game.Factorio);
+      component.state = 'id';
+      spyOnProperty(BrowserUtility, 'search').and.returnValue('search');
+      component.editStateMenu[1].command!({});
+      expect(component.saveState).toHaveBeenCalledWith(
+        Game.Factorio,
+        'id',
+        'search',
+      );
+    });
+  });
+
   describe('openEditState', () => {
     it('should start the edit state from the menu', () => {
       spyOn(component.editCtrl, 'setValue');
       spyOn(component.editCtrl, 'markAsPristine');
       component.state = id;
-      component.editStateMenu[1].command!({});
+      component.editStateMenu[2].command!({});
       expect(component.editCtrl.setValue).toHaveBeenCalledWith(id);
       expect(component.editCtrl.markAsPristine).toHaveBeenCalled();
       expect(component.editState).toEqual('edit');
     });
+  });
+
+  describe('clickDeleteState', () => {
+    it('should emit to remove the state from the menu', fakeAsync(() => {
+      spyOn(component, 'removeState');
+      component.state = id;
+      component.editStateMenu[3].command!({});
+      tick();
+      expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
+      expect(component.state).toEqual('');
+    }));
   });
 
   describe('setGame', () => {
