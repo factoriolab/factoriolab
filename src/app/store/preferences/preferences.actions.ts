@@ -16,12 +16,14 @@ export const enum PreferencesActionType {
   REMOVE_STATE = '[Preferences] Remove State',
   SET_STATES = '[Preferences] Set States',
   SET_COLUMNS = '[Preferences] Set Columns',
+  SET_ROWS = '[Preferences] Set Rows',
   SET_LANGUAGE = '[Preferences] Set Display Language',
   SET_POWER_UNIT = '[Preferences] Set Power Unit',
   SET_THEME = '[Preferences] Set Theme',
   SET_BYPASS_LANDING = '[Preferences] Set Bypass Landing',
   SET_SHOW_TECH_LABELS = '[Preferences] Set Show Tech Labels',
   SET_HIDE_DUPLICATE_ICONS = '[Preferences] Set Hide Duplicate Icons',
+  SET_PAUSED = '[Preferences] Set Paused',
 }
 
 export class SaveStateAction implements Action {
@@ -42,6 +44,11 @@ export class SetStatesAction implements Action {
 export class SetColumnsAction implements Action {
   readonly type = PreferencesActionType.SET_COLUMNS;
   constructor(public payload: ColumnsState) {}
+}
+
+export class SetRowsAction implements Action {
+  readonly type = PreferencesActionType.SET_ROWS;
+  constructor(public payload: number) {}
 }
 
 export class SetLanguageAction implements Action {
@@ -74,14 +81,21 @@ export class SetHideDuplicateIconsAction implements Action {
   constructor(public payload: boolean) {}
 }
 
+export class SetPausedAction implements Action {
+  readonly type = PreferencesActionType.SET_PAUSED;
+  constructor(public payload: boolean) {}
+}
+
 export type PreferencesAction =
   | SaveStateAction
   | RemoveStateAction
   | SetStatesAction
   | SetColumnsAction
+  | SetRowsAction
   | SetLanguageAction
   | SetPowerUnitAction
   | SetThemeAction
   | SetBypassLandingAction
   | SetShowTechLabelsAction
-  | SetHideDuplicateIconsAction;
+  | SetHideDuplicateIconsAction
+  | SetPausedAction;

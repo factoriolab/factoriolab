@@ -21,7 +21,7 @@ describe('ModuleTooltipPipe', () => {
 
   describe('transform', () => {
     it('should generate a module tooltip', () => {
-      const data = Mocks.getDataset();
+      const data = Mocks.getRawDataset();
       data.itemEntities[ItemId.ProductivityModule].module!.sprays =
         Rational.one;
       const result = pipe.transform(ItemId.ProductivityModule, data);
@@ -29,8 +29,8 @@ describe('ModuleTooltipPipe', () => {
     });
 
     it('should handle null values', () => {
-      expect(pipe.transform(null, Mocks.Dataset)).toEqual('');
-      expect(pipe.transform('null', Mocks.Dataset)).toEqual('');
+      expect(pipe.transform(null, Mocks.RawDataset)).toEqual('');
+      expect(pipe.transform('null', Mocks.RawDataset)).toEqual('');
     });
   });
 });

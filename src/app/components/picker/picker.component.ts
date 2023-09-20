@@ -15,7 +15,7 @@ import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
 import { combineLatest } from 'rxjs';
 
-import { Category, Dataset, Entities } from '~/models';
+import { Category, Entities, RawDataset } from '~/models';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 
@@ -67,7 +67,7 @@ export class PickerComponent implements OnInit {
   }
 
   clickOpen(
-    data: Dataset,
+    data: RawDataset,
     type: 'item' | 'recipe',
     allIds: string[],
     selection?: string | string[],

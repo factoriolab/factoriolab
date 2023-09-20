@@ -142,8 +142,9 @@ export class SimplexUtility {
     surplusMachinesOutput: boolean,
     cost: CostRationalSettings,
     data: Dataset,
+    paused: boolean,
   ): MatrixResult {
-    if (objectives.length === 0) {
+    if (paused || objectives.length === 0) {
       return { steps: [], resultType: MatrixResultType.Skipped };
     }
 
@@ -240,9 +241,9 @@ export class SimplexUtility {
           case ObjectiveType.Input: {
             // Parse inputs and add them as though they were item objective inputs
             for (const itemId of Object.keys(obj.recipe.out).filter((i) =>
-              obj.recipe.produces(i),
+              obj.recipe.produces.has(i),
             )) {
-              const rate = obj.value.mul(obj.recipe.output(itemId));
+              const rate = obj.value.mul(obj.recipe.output[itemId]);
               this.addItemValue(state.itemValues, itemId, rate, 'in');
             }
             break;
@@ -311,10 +312,9 @@ export class SimplexUtility {
 
   /** Find matching recipes for an item that have not yet been parsed */
   static recipeMatches(itemId: string, state: MatrixState): RecipeRational[] {
-    const recipes = state.recipeIds
+    const recipes = state.data.itemRecipeIds[itemId]
       .filter((r) => !state.recipes[r])
-      .map((r) => state.data.recipeR[r])
-      .filter((r) => r.produces(itemId));
+      .map((r) => state.data.recipeR[r]);
 
     recipes.forEach((r) => (state.recipes[r.id] = r));
 
@@ -373,9 +373,9 @@ export class SimplexUtility {
    */
   static parseUnproduceable(state: MatrixState): void {
     const itemIds = Object.keys(state.itemValues);
-    const recipeIds = Object.keys(state.recipes);
-    state.unproduceableIds = itemIds.filter(
-      (i) => !recipeIds.some((r) => state.data.recipeR[r].produces(i)),
+    const recipeSet = new Set(Object.keys(state.recipes));
+    state.unproduceableIds = itemIds.filter((i) =>
+      state.data.itemRecipeIds[i].every((r) => !recipeSet.has(r)),
     );
   }
   //#endregion
@@ -579,10 +579,12 @@ export class SimplexUtility {
       const values = state.itemValues[itemId];
       const netCoeffs: [Variable, number][] = [];
       const inputCoeffs: [Variable, number][] = [];
-      for (const recipeId of recipeIds) {
+      state.data.itemIoRecipeIds[itemId].forEach((recipeId) => {
         const recipe = state.recipes[recipeId];
-        const val = recipe.output(itemId);
-        if (val.nonzero()) {
+        if (recipe == null) return;
+
+        const val = recipe.output[itemId];
+        if (val?.nonzero()) {
           netCoeffs.push([recipeVarEntities[recipeId], val.toNumber()]);
         }
 
@@ -592,12 +594,12 @@ export class SimplexUtility {
             recipe.in[itemId].div(recipe.time).toNumber(),
           ]);
         }
-      }
+      });
 
       for (const obj of state.recipeObjectives) {
         const recipe = obj.recipe;
-        const val = recipe.output(itemId);
-        if (val.nonzero()) {
+        const val = recipe.output[itemId];
+        if (val?.nonzero()) {
           if (val.gt(Rational.zero) && !state.surplusMachinesOutput) {
             if (recipeObjectiveOutput[itemId] == null)
               recipeObjectiveOutput[itemId] = {};
@@ -825,14 +827,18 @@ export class SimplexUtility {
     const values = state.itemValues[itemId];
     const steps = state.steps;
     let output = Rational.zero;
-    for (const recipe of Object.keys(solution.recipes)
-      .map((r) => state.recipes[r])
-      .filter((r) => r.out[itemId])) {
+    state.data.itemIoRecipeIds[itemId].forEach((recipeId) => {
+      const recipeAmt = solution.recipes[recipeId];
+      if (recipeAmt == null) return;
+
+      const recipe = state.recipes[recipeId];
+      if (recipe == null || recipe.out[itemId] == null) return;
+
       const amount = recipe.out[itemId]
         .mul(solution.recipes[recipe.id])
         .div(recipe.time);
       output = output.add(amount);
-    }
+    });
 
     const input = state.itemValues[itemId].in;
     if (input) {
@@ -883,7 +889,7 @@ export class SimplexUtility {
     // Check for exact id matches
     for (const step of steps.filter((s) => s.recipeId == null)) {
       const i = recipes.findIndex(
-        (r) => r.id === step.itemId && r.produces(step.itemId),
+        (r) => r.id === step.itemId && r.produces.has(step.itemId),
       );
       if (i !== -1) {
         step.recipeId = recipes[i].id;
@@ -896,7 +902,7 @@ export class SimplexUtility {
     for (const step of steps.filter((s) => s.recipeId == null)) {
       if (step.itemId) {
         potentials[step.itemId] = recipes
-          .filter((r) => step.itemId && r.produces(step.itemId))
+          .filter((r) => step.itemId && r.produces.has(step.itemId))
           .sort((a, b) => Object.keys(a.out).length - Object.keys(b.out).length)
           .map((r) => r.id);
       }
@@ -935,14 +941,16 @@ export class SimplexUtility {
       // Look for any existing step that could be a match
       step = options.find(
         (s) =>
-          s.recipeId == null && s.itemId != null && recipe.produces(s.itemId),
+          s.recipeId == null &&
+          s.itemId != null &&
+          recipe.produces.has(s.itemId),
       );
     }
 
     if (!step) {
       // No step was found, need to create a new one for this recipe/objective
       const index = steps.findIndex(
-        (s) => s.itemId && recipe.produces(s.itemId),
+        (s) => s.itemId && recipe.produces.has(s.itemId),
       );
       step = {
         id: steps.length.toString(),

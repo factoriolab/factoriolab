@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import {
@@ -13,7 +13,7 @@ import {
   ObjectiveUnit,
 } from '~/models';
 import { ContentService, RouterService } from '~/services';
-import { LabState, Objectives, Preferences, Settings } from '~/store';
+import { LabState, Objectives, Preferences, Recipes, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
@@ -24,38 +24,16 @@ import { BrowserUtility } from '~/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingComponent {
-  vm$ = combineLatest([
-    this.store.select(Settings.getSettings),
-    this.store.select(Settings.getModOptions),
-    this.store.select(Settings.getDataset),
-    this.store.select(Settings.getMod),
-    this.store.select(Settings.getAvailableItems),
-    this.store.select(Settings.getAvailableRecipes),
-    this.store.select(Settings.getSavedStates),
-    this.store.select(Preferences.preferencesState),
-  ]).pipe(
-    map(
-      ([
-        settings,
-        modOptions,
-        data,
-        mod,
-        itemIds,
-        recipeIds,
-        savedStates,
-        preferences,
-      ]) => ({
-        settings,
-        modOptions,
-        data,
-        mod,
-        itemIds,
-        recipeIds,
-        savedStates,
-        preferences,
-      }),
-    ),
-  );
+  vm$ = combineLatest({
+    itemIds: this.store.select(Recipes.getAvailableItems),
+    settings: this.store.select(Settings.getSettings),
+    modOptions: this.store.select(Settings.getModOptions),
+    data: this.store.select(Settings.getDataset),
+    mod: this.store.select(Settings.getMod),
+    recipeIds: this.store.select(Settings.getAvailableRecipes),
+    savedStates: this.store.select(Settings.getSavedStates),
+    preferences: this.store.select(Preferences.preferencesState),
+  });
 
   gameInfo = gameInfo;
   gameOptions = gameOptions;

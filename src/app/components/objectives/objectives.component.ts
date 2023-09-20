@@ -17,7 +17,14 @@ import {
   ObjectiveUnit,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
-import { Items, LabState, Objectives, Recipes, Settings } from '~/store';
+import {
+  Items,
+  LabState,
+  Objectives,
+  Preferences,
+  Recipes,
+  Settings,
+} from '~/store';
 import { PickerComponent } from '../picker/picker.component';
 
 @Component({
@@ -44,12 +51,13 @@ export class ObjectivesComponent {
     matrixResult: this.store.select(Objectives.getMatrixResult),
     itemsState: this.store.select(Items.getItemsState),
     recipesState: this.store.select(Recipes.getRecipesState),
+    itemIds: this.store.select(Recipes.getAvailableItems),
+    data: this.store.select(Recipes.getAdjustedDataset),
     displayRate: this.store.select(Settings.getDisplayRate),
     rateUnitOptions: this.store.select(Settings.getRateUnitOptions),
     options: this.store.select(Settings.getOptions),
-    data: this.store.select(Settings.getDataset),
-    itemIds: this.store.select(Settings.getAvailableItems),
     recipeIds: this.store.select(Settings.getAvailableRecipes),
+    paused: this.store.select(Preferences.getPaused),
     isMobile: this.contentSvc.isMobile$,
     messages: this.messages$,
   });
@@ -163,7 +171,10 @@ export class ObjectivesComponent {
       } else {
         const recipeIds = data.itemRecipeIds[objective.targetId];
         if (recipeIds.length === 1) {
-          this.setUnit(objective.id, { targetId: recipeIds[0], unit });
+          this.setUnit(objective.id, {
+            targetId: recipeIds[0],
+            unit,
+          });
         } else {
           chooseRecipePicker.selectId
             .pipe(
@@ -176,7 +187,7 @@ export class ObjectivesComponent {
       }
     } else {
       if (objective.unit === ObjectiveUnit.Machines) {
-        const itemIds = data.recipeProductIds[objective.targetId];
+        const itemIds = Array.from(data.recipeR[objective.targetId].produces);
         if (itemIds.length === 1) {
           this.setUnit(objective.id, { targetId: itemIds[0], unit });
         } else {
@@ -234,5 +245,9 @@ export class ObjectivesComponent {
 
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
+  }
+
+  setPaused(value: boolean): void {
+    this.store.dispatch(new Preferences.SetPausedAction(value));
   }
 }

@@ -70,6 +70,16 @@ describe('Preferences Reducer', () => {
     });
   });
 
+  describe('SET_ROWS', () => {
+    it('should set the paging rows', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetRowsAction(25),
+      );
+      expect(result.rows).toEqual(25);
+    });
+  });
+
   describe('SET_LANGUAGE', () => {
     it('should set the language', () => {
       const result = preferencesReducer(
@@ -127,6 +137,16 @@ describe('Preferences Reducer', () => {
         new Actions.SetHideDuplicateIconsAction(true),
       );
       expect(result.hideDuplicateIcons).toEqual(true);
+    });
+  });
+
+  describe('SET_PAUSED', () => {
+    it('should set the paused state', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetPausedAction(true),
+      );
+      expect(result.paused).toEqual(true);
     });
   });
 

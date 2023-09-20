@@ -25,6 +25,7 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { TableModule } from 'primeng/table';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { TabViewModule } from 'primeng/tabview';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
 
 const modules = [
@@ -53,6 +54,7 @@ const modules = [
   TableModule,
   TabMenuModule,
   TabViewModule,
+  ToggleButtonModule,
   TooltipModule,
 
   // ngx-translate

@@ -33,7 +33,7 @@ describe('MachinesEffects', () => {
       Recipes.getRecipesState,
       Mocks.RecipesStateInitial,
     );
-    mockStore.overrideSelector(Settings.getDataset, Mocks.Dataset);
+    mockStore.overrideSelector(Settings.getDataset, Mocks.RawDataset);
     mockStore.refreshState();
   });
 

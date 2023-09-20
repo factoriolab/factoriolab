@@ -277,6 +277,7 @@
     "addItems": "Add items",
     "addMachines": "Add machines",
     "selectDisplayRate": "Select display rate",
+    "pauseTooltip": "Pause/resume calculations",
     "error": "No solution found",
     "errorDetail": "Check <b>Limit</b> and <b>Maximize</b> objectives and enabled recipes. ",
     "errorUnbounded": "Solution is unbounded",

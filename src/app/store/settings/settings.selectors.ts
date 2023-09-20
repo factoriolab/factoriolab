@@ -10,7 +10,6 @@ import {
   columnOptions,
   CostKey,
   CostRationalSettings,
-  Dataset,
   Defaults,
   displayRateInfo,
   Entities,
@@ -30,7 +29,7 @@ import {
   Preset,
   presetOptions,
   Rational,
-  RecipeRational,
+  RawDataset,
   researchSpeedFactor,
   Technology,
   toBoolEntities,
@@ -499,27 +498,8 @@ export const getDataset = createSelector(
       e[i] = item;
       return e;
     }, {});
-    const recipeR = recipeIds.reduce((e: Entities<RecipeRational>, r) => {
-      const recipe = new RecipeRational(recipeEntities[r]);
 
-      e[r] = recipe;
-      return e;
-    }, {});
-
-    const itemRecipeIds = itemIds.reduce((e: Entities<string[]>, i) => {
-      e[i] = recipeIds
-        .map((r) => recipeR[r])
-        .filter((r) => r.produces(i))
-        .map((r) => r.id);
-      return e;
-    }, {});
-    const recipeProductIds = recipeIds.reduce((e: Entities<string[]>, r) => {
-      const recipe = recipeR[r];
-      e[r] = Object.keys(recipe.out).filter((i) => recipe.produces(i));
-      return e;
-    }, {});
-
-    const dataset: Dataset = {
+    const dataset: RawDataset = {
       game,
       version: mod?.version ?? {},
       categoryIds,
@@ -530,7 +510,6 @@ export const getDataset = createSelector(
       iconEntities,
       itemIds,
       itemEntities,
-      itemRecipeIds,
       beaconIds,
       beaconEntities,
       beltIds,
@@ -549,10 +528,8 @@ export const getDataset = createSelector(
       fuelEntities,
       recipeIds,
       recipeEntities,
-      recipeProductIds,
       technologyIds,
       technologyEntities,
-      recipeR,
       limitations,
       hash,
       defaults,
@@ -609,27 +586,6 @@ export const getBeltSpeedTxt = createSelector(
       e[beltId] = Number(speed.toNumber().toFixed(2)).toString();
       return e;
     }, {}),
-);
-
-export const getAdjustmentData = createSelector(
-  getNetProductionOnly,
-  getProliferatorSprayId,
-  getRationalMiningBonus,
-  getResearchFactor,
-  getDataset,
-  (
-    netProductionOnly,
-    proliferatorSprayId,
-    miningBonus,
-    researchSpeed,
-    data,
-  ) => ({
-    netProductionOnly,
-    proliferatorSprayId,
-    miningBonus,
-    researchSpeed,
-    data,
-  }),
 );
 
 export const getSettingsModified = createSelector(settingsState, (state) => ({
@@ -699,13 +655,28 @@ export const getAvailableRecipes = createSelector(
   },
 );
 
-export const getAvailableItems = createSelector(
+export const getAdjustmentData = createSelector(
+  getNetProductionOnly,
+  getProliferatorSprayId,
+  getRationalMiningBonus,
+  getResearchFactor,
   getAvailableRecipes,
   getDataset,
-  (recipeIds, data) => {
-    const recipes = recipeIds.map((r) => data.recipeR[r]);
-    return data.itemIds.filter((i) => recipes.some((r) => r.produces(i)));
-  },
+  (
+    netProductionOnly,
+    proliferatorSprayId,
+    miningBonus,
+    researchSpeed,
+    recipeIds,
+    data,
+  ) => ({
+    netProductionOnly,
+    proliferatorSprayId,
+    miningBonus,
+    researchSpeed,
+    recipeIds,
+    data,
+  }),
 );
 
 export function reduceEntities(

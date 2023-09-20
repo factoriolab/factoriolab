@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, ReplaySubject } from 'rxjs';
 
-import { Category, Dataset, Entities, IdType, Item, Recipe } from '~/models';
+import { Category, Entities, IdType, Item, RawDataset, Recipe } from '~/models';
 import { LabState, Settings } from '~/store';
 import { CollectionItem } from '../../models';
 
@@ -54,7 +54,7 @@ export class CollectionTableComponent {
     }
   }
 
-  getValue(ids: string[], type: IdType, data: Dataset): CollectionItem[] {
+  getValue(ids: string[], type: IdType, data: RawDataset): CollectionItem[] {
     if (ids == null) return [];
 
     let entities: Entities<Entity>;
