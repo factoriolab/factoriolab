@@ -119,7 +119,7 @@ describe('RateUtility', () => {
           Mocks.DisplayRateInfo,
           Mocks.Dataset,
         ),
-      ).toEqual(Rational.from([1, 60]));
+      ).toEqual(Rational.from([1, 50]));
     });
   });
 
@@ -273,13 +273,13 @@ describe('RateUtility', () => {
         stepB,
         'parents',
         '0',
-        Rational.from([5, 16]),
+        Rational.from([47, 16]),
       );
       expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
         stepA,
         'outputs',
         'iron-plate',
-        Rational.from([5, 16]),
+        Rational.from([141, 40]),
       );
     });
   });

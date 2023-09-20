@@ -15,6 +15,7 @@ export const getColumns = createSelector(
   preferencesState,
   (state) => state.columns,
 );
+export const getRows = createSelector(preferencesState, (state) => state.rows);
 export const getPowerUnit = createSelector(
   preferencesState,
   (state) => state.powerUnit,

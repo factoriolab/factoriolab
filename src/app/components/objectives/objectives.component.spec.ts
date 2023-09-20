@@ -32,6 +32,19 @@ describe('ObjectivesComponent', () => {
   });
 
   describe('getMessages', () => {
+    it('should return no errors unless simplex failed', () => {
+      const result = component.getMessages(
+        [],
+        {
+          steps: [],
+          resultType: MatrixResultType.Skipped,
+        },
+        Mocks.ItemsStateInitial,
+        Mocks.RecipesStateInitial,
+      );
+      expect(result.length).toEqual(0);
+    });
+
     it('should build an error message to display to the user', () => {
       const result = component.getMessages(
         [],

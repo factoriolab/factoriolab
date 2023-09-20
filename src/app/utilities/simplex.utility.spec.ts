@@ -153,7 +153,7 @@ describe('SimplexUtility', () => {
           [ItemId.SteelPlate]: { out: Rational.zero },
           [ItemId.CopperPlate]: {
             out: Rational.zero,
-            in: Rational.from([5, 16]),
+            in: Rational.from([141, 40]),
           },
           [ItemId.PetroleumGas]: { out: Rational.zero, lim: Rational.hundred },
         },
@@ -310,6 +310,7 @@ describe('SimplexUtility', () => {
       state.excludedIds = [ItemId.CopperOre];
       state.recipes[RecipeId.CopperPlate] =
         Mocks.Dataset.recipeR[RecipeId.CopperPlate];
+      state.recipes[RecipeId.CopperPlate].cost = undefined;
       state.recipes[RecipeId.IronPlate] =
         Mocks.Dataset.recipeR[RecipeId.IronPlate];
       state.itemValues[ItemId.Wood] = {
@@ -451,11 +452,16 @@ describe('SimplexUtility', () => {
         surplus: {},
         unproduceable: {},
         excluded: {},
-        recipes: { [RecipeId.Coal]: Rational.two },
+        recipes: {
+          [RecipeId.Coal]: Rational.two,
+          [RecipeId.PlasticBar]: Rational.one,
+        },
       };
       const state = getState();
       state.itemValues[ItemId.Coal] = { out: Rational.from(3) };
       state.recipes[RecipeId.Coal] = Mocks.Dataset.recipeR[RecipeId.Coal];
+      state.recipes[RecipeId.PlasticBar] =
+        Mocks.Dataset.recipeR[RecipeId.PlasticBar];
       state.recipeObjectives = [Mocks.RationalObjectives[4] as any];
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
@@ -488,7 +494,7 @@ describe('SimplexUtility', () => {
         {
           id: '0',
           itemId: ItemId.PiercingRoundsMagazine,
-          items: Rational.from([7, 3]),
+          items: Rational.from([59, 12]),
         },
       ]);
     });
