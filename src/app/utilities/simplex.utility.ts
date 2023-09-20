@@ -10,7 +10,6 @@ import {
 import { StatusSimplex } from 'glpk-ts/dist/status';
 
 import { environment } from 'src/environments';
-import { notNullish } from '~/helpers';
 import {
   CostRationalSettings,
   Dataset,
@@ -142,9 +141,10 @@ export class SimplexUtility {
     maximizeType: MaximizeType,
     surplusMachinesOutput: boolean,
     cost: CostRationalSettings,
+    paused: boolean,
     data: Dataset,
   ): MatrixResult {
-    if (objectives.length === 0) {
+    if (paused || objectives.length === 0) {
       return { steps: [], resultType: MatrixResultType.Skipped };
     }
 

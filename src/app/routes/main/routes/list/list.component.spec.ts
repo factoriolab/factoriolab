@@ -23,7 +23,7 @@ import {
   StepDetailTab,
 } from '~/models';
 import { ExportService } from '~/services';
-import { Items, LabState, Objectives, Recipes } from '~/store';
+import { Items, LabState, Objectives, Preferences, Recipes } from '~/store';
 import { ListComponent } from './list.component';
 
 enum DataTest {
@@ -480,6 +480,7 @@ describe('ListComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
+    dispatch.val('setRows', Preferences.SetRowsAction);
     dispatch.idVal('setItemExcluded', Items.SetExcludedAction);
     dispatch.idVal('setItemChecked', Items.SetCheckedAction);
     dispatch.idValDef('setBelt', Items.SetBeltAction);

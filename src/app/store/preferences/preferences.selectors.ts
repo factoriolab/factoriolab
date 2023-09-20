@@ -39,3 +39,7 @@ export const getHideDuplicateIcons = createSelector(
   preferencesState,
   (state) => state.hideDuplicateIcons,
 );
+export const getPaused = createSelector(
+  preferencesState,
+  (state) => state.paused,
+);

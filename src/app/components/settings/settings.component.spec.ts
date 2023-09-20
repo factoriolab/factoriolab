@@ -76,7 +76,9 @@ describe('SettingsComponent', () => {
   describe('clickResetSettings', () => {
     it('should set up a confirmation dialog and clear settings', () => {
       let confirm: Confirmation | undefined;
-      spyOn(contentSvc, 'confirm').and.callFake((c) => (confirm = c));
+      spyOn(contentSvc, 'confirm').and.callFake(
+        (c: Confirmation) => (confirm = c),
+      );
       component.clickResetSettings();
       TestUtility.assert(confirm?.accept != null);
       spyOn(localStorage, 'clear');

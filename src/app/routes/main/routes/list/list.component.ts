@@ -87,7 +87,7 @@ export class ListComponent implements OnInit, AfterViewInit {
     options: this.store.select(Settings.getOptions),
     beltSpeed: this.store.select(Settings.getBeltSpeed),
     beltSpeedTxt: this.store.select(Settings.getBeltSpeedTxt),
-    hideDuplicateIcons: this.store.select(Preferences.getHideDuplicateIcons),
+    preferences: this.store.select(Preferences.preferencesState),
     zipPartial: this.routerSvc.zipConfig$,
   }).pipe(
     tap((vm) => {
@@ -461,6 +461,10 @@ export class ListComponent implements OnInit, AfterViewInit {
   }
 
   /** Action Dispatch Methods */
+  setRows(value: number): void {
+    this.store.dispatch(new Preferences.SetRowsAction(value));
+  }
+
   setItemExcluded(id: string, value: boolean): void {
     this.store.dispatch(new Items.SetExcludedAction({ id, value }));
   }

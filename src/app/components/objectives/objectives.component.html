@@ -153,6 +153,13 @@
         (onChange)="setDisplayRate($event.value, vm.displayRate)"
       >
       </p-dropdown>
+      <p-toggleButton
+        [ngModel]="vm.paused"
+        [onIcon]="'fa-solid fa-play'"
+        offIcon="fa-solid fa-pause"
+        [pTooltip]="'objectives.pauseTooltip' | translate"
+        (onChange)="setPaused($event.checked ?? false)"
+      ></p-toggleButton>
     </div>
   </div>
   <lab-picker

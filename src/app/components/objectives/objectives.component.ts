@@ -17,7 +17,14 @@ import {
   ObjectiveUnit,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
-import { Items, LabState, Objectives, Recipes, Settings } from '~/store';
+import {
+  Items,
+  LabState,
+  Objectives,
+  Preferences,
+  Recipes,
+  Settings,
+} from '~/store';
 import { PickerComponent } from '../picker/picker.component';
 
 @Component({
@@ -50,6 +57,7 @@ export class ObjectivesComponent {
     rateUnitOptions: this.store.select(Settings.getRateUnitOptions),
     options: this.store.select(Settings.getOptions),
     recipeIds: this.store.select(Settings.getAvailableRecipes),
+    paused: this.store.select(Preferences.getPaused),
     isMobile: this.contentSvc.isMobile$,
     messages: this.messages$,
   });
@@ -237,5 +245,9 @@ export class ObjectivesComponent {
 
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
+  }
+
+  setPaused(value: boolean): void {
+    this.store.dispatch(new Preferences.SetPausedAction(value));
   }
 }

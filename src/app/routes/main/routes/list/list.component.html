@@ -8,15 +8,16 @@
     [customSort]="true"
     [defaultSortOrder]="-1"
     [paginator]="true"
-    [rows]="50"
+    [rows]="vm.preferences.rows"
     [rowsPerPageOptions]="[25, 50, 100, 1000]"
+    (rowsChange)="setRows($event)"
     [showCurrentPageReport]="true"
     (sortFunction)="sortSteps$.next($event)"
   >
     <ng-template pTemplate="header">
       <tr>
         <!-- Row actions -->
-        <th class="w-0 px-0">
+        <th class="w-0 px-1">
           <button
             pButton
             pRipple
@@ -154,7 +155,7 @@
           </div>
         </th>
         <!-- Link -->
-        <th *ngIf="vm.columnsState.link.show" class="w-0 px-0">
+        <th *ngIf="vm.columnsState.link.show" class="w-0 px-1">
           <button
             pButton
             pRipple
@@ -180,7 +181,7 @@
     <ng-template pTemplate="body" let-_step let-expanded="expanded">
       <tr *ngIf="_step | asStep as step">
         <!-- Expand row -->
-        <td class="w-0 px-0 position-relative">
+        <td class="w-0 px-1 position-relative">
           <div [id]="'step_' + step.id" class="fragment"></div>
           <div
             *ngFor="let item of vm.stepDetails[step.id].tabs"
@@ -282,7 +283,10 @@
                 vm.data.itemEntities[step.itemId].name
               }}</span>
               <button
-                *ngIf="!vm.hideDuplicateIcons || !vm.columnsState.tree.show"
+                *ngIf="
+                  !vm.preferences.hideDuplicateIcons ||
+                  !vm.columnsState.tree.show
+                "
                 pButton
                 pRipple
                 type="button"
@@ -592,7 +596,7 @@
                 <span class="find-text">{{ step.recipe.name }}</span>
                 <button
                   *ngIf="
-                    !vm.hideDuplicateIcons ||
+                    !vm.preferences.hideDuplicateIcons ||
                     (step.itemId != null && step.itemId !== step.recipeId)
                   "
                   pButton
@@ -988,7 +992,7 @@
           >
         </td>
         <!-- Link -->
-        <td *ngIf="vm.columnsState.link.show" class="w-0 px-0">
+        <td *ngIf="vm.columnsState.link.show" class="w-0 px-1">
           <div class="d-flex">
             <a
               class="text-decoration-none"
