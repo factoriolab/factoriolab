@@ -776,6 +776,7 @@ describe('RecipeUtility', () => {
       spyOn(RecipeUtility, 'adjustRecipe').and.callThrough();
       const result = RecipeUtility.adjustDataset(
         Mocks.RawDataset.recipeIds,
+        [],
         Mocks.RecipesStateRationalInitial,
         Mocks.ItemsStateInitial,
         ItemId.Module,
