@@ -132,14 +132,22 @@ export const getRecipesStateRational = createSelector(
     ),
 );
 
+export const getExcludedRecipeIds = createSelector(
+  getRecipesState,
+  (recipesState) =>
+    Object.keys(recipesState).filter((i) => recipesState[i].excluded),
+);
+
 export const getAdjustedDataset = createSelector(
   getRecipesStateRational,
+  getExcludedRecipeIds,
   Items.getItemsState,
   Settings.getRationalCost,
   Settings.getAdjustmentData,
-  (recipesState, itemsState, cost, adj) =>
+  (recipesState, excludedRecipeIds, itemsState, cost, adj) =>
     RecipeUtility.adjustDataset(
       adj.recipeIds,
+      excludedRecipeIds,
       recipesState,
       itemsState,
       adj.proliferatorSprayId,
@@ -153,10 +161,4 @@ export const getAdjustedDataset = createSelector(
 
 export const getAvailableItems = createSelector(getAdjustedDataset, (data) =>
   data.itemIds.filter((i) => data.itemRecipeIds[i].length),
-);
-
-export const getExcludedRecipeIds = createSelector(
-  getRecipesState,
-  (recipesState) =>
-    Object.keys(recipesState).filter((i) => recipesState[i].excluded),
 );
