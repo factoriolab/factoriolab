@@ -134,6 +134,19 @@ export function getMachineSilo(
   return undefined;
 }
 
+export function getMachineSize(proto: D.MachineProto): number {
+  const box = proto.collision_box;
+  if (box === undefined) {
+    return 0;
+  }
+  // MapPositions can be arrays or objects
+  const [[x1, y1], [x2, y2]] = box.map((pos) =>
+    Array.isArray(pos) ? pos : [pos.x, pos.y],
+  );
+  // area of collision box
+  return Math.abs(x2 - x1) * Math.abs(y2 - y1);
+}
+
 export function getMachineSpeed(proto: D.MachineProto): number {
   if (M.isReactorPrototype(proto)) return 1;
 
