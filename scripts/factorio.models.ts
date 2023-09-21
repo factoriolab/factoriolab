@@ -2,7 +2,7 @@
 
 /**
  * Application: factorio
- * Version: 1.1.89
+ * Version: 1.1.91
  * API Version: 4
  */
 
@@ -12,7 +12,7 @@ interface _AccumulatorPrototype {
   charge_animation?: Animation;
   /** Count of ticks to preserve the animation even when the charging ends. Used to prevent rapid blinking of the accumulator with unstable need to use it. */
   charge_cooldown: number;
-  /** Only loaded if &#x60;charge_animation&#x60; is defined. */
+  /** Only loaded if `charge_animation` is defined. */
   charge_light?: LightDefinition;
   /** The pictures displayed for circuit connections to this accumulator. */
   circuit_connector_sprites?: CircuitConnectorSprites;
@@ -25,7 +25,7 @@ interface _AccumulatorPrototype {
   discharge_animation?: Animation;
   /** How long (in ticks) the animation will last after discharge has been initialized. */
   discharge_cooldown: number;
-  /** Only loaded if &#x60;discharge_animation&#x60; is defined. */
+  /** Only loaded if `discharge_animation` is defined. */
   discharge_light?: LightDefinition;
   draw_circuit_wires?: boolean;
   draw_copper_wires?: boolean;
@@ -45,20 +45,20 @@ export function isAccumulatorPrototype(
 /** This prototype definition is used for the in-game achievements. */
 interface _AchievementPrototype {
   type: 'achievement';
-  /** If this is set to &#x60;false&#x60;, it is not possible to complete the achievement on the peaceful difficulty setting or when the enemy base generation settings have been changed. */
+  /** If this is set to `false`, it is not possible to complete the achievement on the peaceful difficulty setting or when the enemy base generation settings have been changed. */
   allowed_without_fight?: boolean;
   hidden?: boolean;
   /** Path to the icon file.
 
-Mandatory if &#x60;icons&#x60; is not defined. */
+Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
-Mandatory if &#x60;icons&#x60; is not defined, or if &#x60;icon_size&#x60; is not specified for all instances of &#x60;icons&#x60;. */
+Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
-  /** Can&#x27;t be an empty array. */
+  /** Can't be an empty array. */
   icons?: IconData[];
   /** Unusable by mods, as this refers to unlocking the achievement through Steam. */
   steam_stats_name?: string;
@@ -87,7 +87,7 @@ export function isActiveDefenseEquipmentPrototype(
 ): value is ActiveDefenseEquipmentPrototype {
   return (value as { type: string }).type === 'active-defense-equipment';
 }
-/** This prototype is used to make sound while playing the game. This includes the game&#x27;s [music](https://store.steampowered.com/app/436090/Factorio__Soundtrack/), composed by Daniel James Taylor. */
+/** This prototype is used to make sound while playing the game. This includes the game's [music](https://store.steampowered.com/app/436090/Factorio__Soundtrack/), composed by Daniel James Taylor. */
 export interface AmbientSound {
   /** Unique textual identification of the prototype. */
   name: string;
@@ -123,13 +123,13 @@ export function isAmmoCategory(value: unknown): value is AmmoCategory {
 /** Ammo used for a gun. */
 interface _AmmoItemPrototype {
   type: 'ammo';
-  /** When using a plain [AmmoType](prototype:AmmoType) (no array), the ammo type applies to everything (&#x60;&quot;default&quot;&#x60;).
+  /** When using a plain [AmmoType](prototype:AmmoType) (no array), the ammo type applies to everything (`"default"`).
 
 When using an array of AmmoTypes, they have the additional [AmmoType::source_type](prototype:AmmoType::source_type) property. */
   ammo_type: AmmoType | AmmoType[];
-  /** Number of shots before ammo item is consumed. Must be &gt;&#x3D; &#x60;1&#x60;. */
+  /** Number of shots before ammo item is consumed. Must be >= `1`. */
   magazine_size?: number;
-  /** Amount of extra time (in ticks) it takes to reload the weapon after depleting the magazine. Must be &gt;&#x3D; &#x60;0&#x60;. */
+  /** Amount of extra time (in ticks) it takes to reload the weapon after depleting the magazine. Must be >= `0`. */
   reload_time?: number;
 }
 
@@ -145,7 +145,7 @@ export function isAmmoItemPrototype(
 interface _AmmoTurretPrototype {
   type: 'ammo-turret';
   automated_ammo_count: ItemCountType;
-  /** Shift of the &quot;alt-mode icon&quot; relative to the turret&#x27;s position. */
+  /** Shift of the "alt-mode icon" relative to the turret's position. */
   entity_info_icon_shift?: Vector;
   inventory_size: ItemStackIndex;
 }
@@ -160,128 +160,128 @@ export function isAmmoTurretPrototype(
 }
 /** Specifies an animation that can be used with [LuaRendering::draw_animation](runtime:LuaRendering::draw_animation) at runtime. */
 export interface AnimationPrototype {
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Modifier of the animation playing speed, the default of &#x60;1&#x60; means one animation frame per tick (60 fps). The speed of playing can often vary depending on the usage (output of steam engine for example). Has to be greater than &#x60;0&#x60;.
+Modifier of the animation playing speed, the default of `1` means one animation frame per tick (60 fps). The speed of playing can often vary depending on the usage (output of steam engine for example). Has to be greater than `0`.
 
-If &#x60;layers&#x60; are used, the &#x60;animation_speed&#x60; only has to be defined in one layer. All layers will run at the same speed. */
+If `layers` are used, the `animation_speed` only has to be defined in one layer. All layers will run at the same speed. */
   animation_speed?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   apply_runtime_tint?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   blend_mode?: BlendMode;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   dice?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   dice_x?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   dice_y?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Only one of &#x60;draw_as_shadow&#x60;, &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60; can be true. This takes precedence over &#x60;draw_as_light&#x60;.
+Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. This takes precedence over `draw_as_light`.
 
 Draws first as a normal sprite, then again as a light layer. See [https://forums.factorio.com/91682](https://forums.factorio.com/91682). */
   draw_as_glow?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Only one of &#x60;draw_as_shadow&#x60;, &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60; can be true. */
+Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. */
   draw_as_light?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Only one of &#x60;draw_as_shadow&#x60;, &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60; can be true. This takes precedence over &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60;. */
+Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. This takes precedence over `draw_as_glow` and `draw_as_light`. */
   draw_as_shadow?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined. Mandatory if &#x60;stripes&#x60; is not defined.
+  /** Only loaded if `layers` is not defined. Mandatory if `stripes` is not defined.
 
 The path to the sprite file to use. */
   filename: FileName;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   flags?: SpriteFlags;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Can&#x27;t be &#x60;0&#x60;. */
+Can't be `0`. */
   frame_count?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   frame_sequence?: AnimationFrameSequence;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Unused. */
   generate_sdf?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined. Mandatory if &#x60;size&#x60; is not defined.
+  /** Only loaded if `layers` is not defined. Mandatory if `size` is not defined.
 
 Height of one frame in pixels, from 0-8192. */
   height?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 If this property exists and high resolution sprites are turned on, this is used to load the Animation. */
   hr_version?: Animation;
-  /** If this property is present, all Animation definitions have to be placed as entries in the array, and they will all be loaded from there. &#x60;layers&#x60; may not be an empty table. Each definition in the array may also have the &#x60;layers&#x60; property.
+  /** If this property is present, all Animation definitions have to be placed as entries in the array, and they will all be loaded from there. `layers` may not be an empty table. Each definition in the array may also have the `layers` property.
 
-&#x60;animation_speed&#x60; and &#x60;max_advance&#x60; only have to be defined in one layer. All layers will run at the same speed.
+`animation_speed` and `max_advance` only have to be defined in one layer. All layers will run at the same speed.
 
-If this property is present, all other properties besides &#x60;name&#x60; and &#x60;type&#x60; are ignored. */
+If this property is present, all other properties besides `name` and `type` are ignored. */
   layers: Animation[];
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Once the specified number of pictures is loaded, other pictures are loaded on other line. This is to allow having longer animations in matrix, to input files with too high width. The game engine limits the width of any input files to 8192px, so it is compatible with most graphics cards. &#x60;0&#x60; means that all the pictures are in one horizontal line. */
+Once the specified number of pictures is loaded, other pictures are loaded on other line. This is to allow having longer animations in matrix, to input files with too high width. The game engine limits the width of any input files to 8192px, so it is compatible with most graphics cards. `0` means that all the pictures are in one horizontal line. */
   line_length?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Minimal mode is entered when mod loading fails. You are in it when you see the gray box after (part of) the loading screen that tells you a mod error ([Example](https://cdn.discordapp.com/attachments/340530709712076801/532315796626472972/unknown.png)). Modders can ignore this property. */
   load_in_minimal_mode?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-If &#x60;layers&#x60; are used, &#x60;max_advance&#x60; only has to be defined in one layer. */
+If `layers` are used, `max_advance` only has to be defined in one layer. */
   max_advance?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Only loaded if this is an icon, that is it has the flag &#x60;&quot;group&#x3D;icon&quot;&#x60; or &#x60;&quot;group&#x3D;gui&quot;&#x60;.
+Only loaded if this is an icon, that is it has the flag `"group=icon"` or `"group=gui"`.
 
-Note that &#x60;mipmap_count&#x60; doesn&#x27;t make sense in an animation, as it is not possible to layout mipmaps in a way that would load both the animation and the mipmaps correctly (besides animations with just one frame). See [here](https://forums.factorio.com/viewtopic.php?p&#x3D;549058#p549058). */
+Note that `mipmap_count` doesn't make sense in an animation, as it is not possible to layout mipmaps in a way that would load both the animation and the mipmaps correctly (besides animations with just one frame). See [here](https://forums.factorio.com/viewtopic.php?p=549058#p549058). */
   mipmap_count?: number;
   /** Name of the animation. Can be used with [LuaRendering::draw_animation](runtime:LuaRendering::draw_animation) at runtime. */
   name: string;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Loaded only when &#x60;x&#x60; and &#x60;y&#x60; are both &#x60;0&#x60;. The first member of the tuple is &#x60;x&#x60; and the second is &#x60;y&#x60;. */
+Loaded only when `x` and `y` are both `0`. The first member of the tuple is `x` and the second is `y`. */
   position?: [SpriteSizeType, SpriteSizeType];
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Whether alpha should be pre-multiplied. */
   premul_alpha?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   priority?: SpritePriority;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-How many times to repeat the animation to complete an animation cycle. E.g. if one layer is 10 frames, a second layer of 1 frame would need &#x60;repeat_count &#x3D; 10&#x60; to match the complete cycle. */
+How many times to repeat the animation to complete an animation cycle. E.g. if one layer is 10 frames, a second layer of 1 frame would need `repeat_count = 10` to match the complete cycle. */
   repeat_count?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   run_mode?: 'forward' | 'backward' | 'forward-then-backward';
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Values other than &#x60;1&#x60; specify the scale of the sprite on default zoom. A scale of &#x60;2&#x60; means that the picture will be two times bigger on screen (and thus more pixelated). */
+Values other than `1` specify the scale of the sprite on default zoom. A scale of `2` means that the picture will be two times bigger on screen (and thus more pixelated). */
   scale?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-The shift in tiles. &#x60;util.by_pixel()&#x60; can be used to divide the shift by 32 which is the usual pixel height/width of 1 tile in normal resolution. Note that 32 pixel tile height/width is not enforced anywhere - any other tile height or width is also possible. */
+The shift in tiles. `util.by_pixel()` can be used to divide the shift by 32 which is the usual pixel height/width of 1 tile in normal resolution. Note that 32 pixel tile height/width is not enforced anywhere - any other tile height or width is also possible. */
   shift?: Vector;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 The width and height of one frame. If this is a tuple, the first member of the tuple is the width and the second is the height. Otherwise the size is both width and height. Width and height may only be in the range of 0-8192. */
   size?: SpriteSizeType | [SpriteSizeType, SpriteSizeType];
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   stripes?: Stripe[];
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   tint?: Color;
   type: 'animation';
-  /** Only loaded if &#x60;layers&#x60; is not defined. Mandatory if &#x60;size&#x60; is not defined.
+  /** Only loaded if `layers` is not defined. Mandatory if `size` is not defined.
 
 Width of one frame in pixels, from 0-8192. */
   width?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Horizontal position of the animation in the source file in pixels. */
   x?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Vertical position of the animation in the source file in pixels. */
   y?: SpriteSizeType;
@@ -355,7 +355,7 @@ interface _ArtilleryFlarePrototype {
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
   creation_shift?: Vector;
-  /** How long this flare stays alive after &#x60;shots_per_flare&#x60; amount of shots have been shot at it. */
+  /** How long this flare stays alive after `shots_per_flare` amount of shots have been shot at it. */
   early_death_ticks?: number;
   ended_in_water_trigger_effect?: TriggerEffect;
   initial_frame_speed?: number;
@@ -420,18 +420,18 @@ export function isArtilleryProjectilePrototype(
 interface _ArtilleryTurretPrototype {
   type: 'artillery-turret';
   alert_when_attacking?: boolean;
-  /** Must be &gt; 0. */
+  /** Must be > 0. */
   ammo_stack_limit: ItemCountType;
   automated_ammo_count: ItemCountType;
   base_picture?: Animation4Way;
   base_picture_render_layer?: RenderLayer;
   base_picture_secondary_draw_order?: number;
   base_shift?: Vector;
-  /** Only loaded if &#x60;cannon_barrel_recoil_shiftings&#x60; is loaded. */
+  /** Only loaded if `cannon_barrel_recoil_shiftings` is loaded. */
   cannon_barrel_light_direction?: Vector3D;
   cannon_barrel_pictures?: RotatedSprite;
   cannon_barrel_recoil_shiftings?: Vector3D[];
-  /** Only loaded if &#x60;cannon_barrel_recoil_shiftings&#x60; is loaded. */
+  /** Only loaded if `cannon_barrel_recoil_shiftings` is loaded. */
   cannon_barrel_recoil_shiftings_load_correction_matrix?: Vector3D[];
   cannon_base_pictures?: RotatedSprite;
   cannon_parking_frame_count?: number;
@@ -439,7 +439,7 @@ interface _ArtilleryTurretPrototype {
   disable_automatic_firing?: boolean;
   /** Name of a [GunPrototype](prototype:GunPrototype). */
   gun: ItemID;
-  /** Must be &gt; 0. */
+  /** Must be > 0. */
   inventory_size: ItemStackIndex;
   /** Whether this prototype should be a high priority target for enemy forces. See [Military units and structures](https://wiki.factorio.com/Military_units_and_structures). */
   is_military_target?: boolean;
@@ -462,25 +462,25 @@ export function isArtilleryTurretPrototype(
 /** An [artillery wagon](https://wiki.factorio.com/Artillery_wagon). */
 interface _ArtilleryWagonPrototype {
   type: 'artillery-wagon';
-  /** Must be &gt; 0. */
+  /** Must be > 0. */
   ammo_stack_limit: ItemCountType;
-  /** Only loaded if &#x60;cannon_barrel_recoil_shiftings&#x60; is loaded. */
+  /** Only loaded if `cannon_barrel_recoil_shiftings` is loaded. */
   cannon_barrel_light_direction?: Vector3D;
   cannon_barrel_pictures?: RotatedSprite;
   cannon_barrel_recoil_shiftings?: Vector3D[];
-  /** Only loaded if &#x60;cannon_barrel_recoil_shiftings&#x60; is loaded. */
+  /** Only loaded if `cannon_barrel_recoil_shiftings` is loaded. */
   cannon_barrel_recoil_shiftings_load_correction_matrix?: Vector3D[];
   cannon_base_pictures?: RotatedSprite;
-  /** Must match &#x60;cannon_base_pictures&#x60; frame count. */
+  /** Must match `cannon_base_pictures` frame count. */
   cannon_base_shiftings?: Vector[];
   cannon_parking_frame_count?: number;
   cannon_parking_speed?: number;
   disable_automatic_firing?: boolean;
   /** Name of a [GunPrototype](prototype:GunPrototype). */
   gun: ItemID;
-  /** Must be &gt; 0. */
+  /** Must be > 0. */
   inventory_size: ItemStackIndex;
-  /** Must be &gt; 0. */
+  /** Must be > 0. */
   manual_range_modifier: number;
   rotating_sound?: InterruptibleSound;
   rotating_stopped_sound?: Sound;
@@ -499,7 +499,7 @@ export function isArtilleryWagonPrototype(
 /** An assembling machine - like the assembling machines 1/2/3 in the game, but you can use your own recipe categories. */
 interface _AssemblingMachinePrototype {
   type: 'assembling-machine';
-  /** Shift of the &quot;alt-mode icon&quot; relative to the machine&#x27;s center. */
+  /** Shift of the "alt-mode icon" relative to the machine's center. */
   entity_info_icon_shift?: Vector;
   /** The preset recipe of this machine. This machine does not show a recipe selection if this is set. The base game uses this for the [rocket silo](https://wiki.factorio.com/Rocket_silo). */
   fixed_recipe?: RecipeID;
@@ -522,11 +522,11 @@ export function isAssemblingMachinePrototype(
 /** A setting in the map creation GUI. Used by the [autoplace system](prototype:AutoplaceSpecification::control). */
 interface _AutoplaceControl {
   type: 'autoplace-control';
-  /** Whether there is an &quot;enable&quot; checkbox for the autoplace control in the map generator GUI. If this is false, the autoplace control cannot be disabled from the GUI. */
+  /** Whether there is an "enable" checkbox for the autoplace control in the map generator GUI. If this is false, the autoplace control cannot be disabled from the GUI. */
   can_be_disabled?: boolean;
   /** Controls in what tab the autoplace is shown in the map generator GUI. */
   category: 'resource' | 'terrain' | 'enemy';
-  /** Sets whether this control&#x27;s richness can be changed. The map generator GUI will only show the richness slider when the &#x60;category&#x60; is &#x60;&quot;resource&quot;&#x60;.
+  /** Sets whether this control's richness can be changed. The map generator GUI will only show the richness slider when the `category` is `"resource"`.
 
 If the autoplace control is used to generate ores, you probably want this to be true. */
   richness?: boolean;
@@ -552,20 +552,20 @@ export function isBatteryEquipmentPrototype(
 ): value is BatteryEquipmentPrototype {
   return (value as { type: string }).type === 'battery-equipment';
 }
-/** Entity with the ability to transfer module&#x27;s effects to its neighboring entities. */
+/** Entity with the ability to transfer module's effects to its neighboring entities. */
 interface _BeaconPrototype {
   type: 'beacon';
   /** The types of modules that a player can place inside of the beacon. */
   allowed_effects?: EffectTypeLimitation;
-  /** Only loaded if &#x60;graphics_set&#x60; is not defined.
+  /** Only loaded if `graphics_set` is not defined.
 
 The animation for the beacon, when in use. */
   animation?: Animation;
-  /** Only loaded if &#x60;graphics_set&#x60; is not defined.
+  /** Only loaded if `graphics_set` is not defined.
 
 The picture of the beacon when it is not on. */
   base_picture?: Sprite;
-  /** The multiplier of the module&#x27;s effects, when shared between neighbors. */
+  /** The multiplier of the module's effects, when shared between neighbors. */
   distribution_effectivity: number;
   energy_source: ElectricEnergySource | VoidEnergySource;
   energy_usage: Energy;
@@ -574,7 +574,7 @@ The picture of the beacon when it is not on. */
   /** The number of module slots in this beacon and their icon positions. */
   module_specification: ModuleSpecification;
   radius_visualisation_picture?: Sprite;
-  /** The maximum distance that this beacon can supply its neighbors with its module&#x27;s effects. Max distance is 64. */
+  /** The maximum distance that this beacon can supply its neighbors with its module's effects. Max distance is 64. */
   supply_area_distance: number;
 }
 
@@ -588,26 +588,26 @@ export function isBeaconPrototype(value: unknown): value is BeaconPrototype {
 interface _BeamPrototype {
   type: 'beam';
   action?: Trigger;
-  /** Whether this beams should trigger its action every &#x60;damage_interval&#x60;. If false, the action is instead triggered when its owner triggers shooting. */
+  /** Whether this beams should trigger its action every `damage_interval`. If false, the action is instead triggered when its owner triggers shooting. */
   action_triggered_automatically?: boolean;
   /** Body segment of the beam. Must have at least 1 variation. */
   body: AnimationVariations;
   body_light?: AnimationVariations;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
-  /** Damage interval can&#x27;t be 0. A value of 1 will cause the attack to be applied each tick. */
+  /** Damage interval can't be 0. A value of 1 will cause the attack to be applied each tick. */
   damage_interval: number;
   /** End point of the beam. */
   ending?: Animation;
   ending_light?: Animation;
-  /** Only loaded if &#x60;start_light&#x60;, &#x60;ending_light&#x60;, &#x60;head_light&#x60;, &#x60;tail_light&#x60; and &#x60;body_light&#x60; are not defined. */
+  /** Only loaded if `start_light`, `ending_light`, `head_light`, `tail_light` and `body_light` are not defined. */
   ground_light_animations?: BeamAnimationSet;
   /** Head segment of the beam. */
   head: Animation;
   head_light?: Animation;
-  /** Only loaded if &#x60;start_light&#x60;, &#x60;ending_light&#x60;, &#x60;head_light&#x60;, &#x60;tail_light&#x60; and &#x60;body_light&#x60; are not defined.
+  /** Only loaded if `start_light`, `ending_light`, `head_light`, `tail_light` and `body_light` are not defined.
 
-Lights are additively accumulated onto a light-map, which is [multiplicatively rendered](https://forums.factorio.com/viewtopic.php?p&#x3D;435042#p435042) on the game world. */
+Lights are additively accumulated onto a light-map, which is [multiplicatively rendered](https://forums.factorio.com/viewtopic.php?p=435042#p435042) on the game world. */
   light_animations?: BeamAnimationSet;
   random_end_animation_rotation?: boolean;
   random_target_offset?: boolean;
@@ -652,7 +652,7 @@ interface _BlueprintBookPrototype {
   draw_label_for_cursor_render?: boolean;
   /** The inventory size of the item. */
   inventory_size: ItemStackIndex | 'dynamic';
-  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the &#x60;&quot;not-stackable&quot;&#x60; flag is set. */
+  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: 1;
 }
 
@@ -673,13 +673,13 @@ interface _BlueprintItemPrototype {
   alt_entity_filters?: EntityID[];
   /** This property is parsed, but then ignored. */
   alt_entity_type_filters?: string[];
-  /** This property is hardcoded to &#x60;&quot;blueprint&quot;&#x60;. */
+  /** This property is hardcoded to `"blueprint"`. */
   alt_selection_mode?: SelectionModeFlags;
   /** This property is parsed, but then ignored. */
   alt_tile_filter_mode?: 'whitelist' | 'blacklist';
   /** This property is parsed, but then ignored. */
   alt_tile_filters?: TileID[];
-  /** This property is hardcoded to &#x60;false&#x60;. */
+  /** This property is hardcoded to `false`. */
   always_include_tiles?: boolean;
   /** Whether the item will draw its label when held in the cursor in place of the item count. */
   draw_label_for_cursor_render?: boolean;
@@ -689,9 +689,9 @@ interface _BlueprintItemPrototype {
   entity_filters?: EntityID[];
   /** This property is parsed, but then ignored. */
   entity_type_filters?: string[];
-  /** This property is hardcoded to &#x60;&quot;blueprint&quot;&#x60;. */
+  /** This property is hardcoded to `"blueprint"`. */
   selection_mode?: SelectionModeFlags;
-  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the &#x60;&quot;not-stackable&quot;&#x60; flag is set. */
+  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: 1;
   /** This property is parsed, but then ignored. */
   tile_filter_mode?: 'whitelist' | 'blacklist';
@@ -707,47 +707,47 @@ export function isBlueprintItemPrototype(
 ): value is BlueprintItemPrototype {
   return (value as { type: string }).type === 'blueprint';
 }
-/** A [boiler](https://wiki.factorio.com/Boiler). */
+/** A [boiler](https://wiki.factorio.com/Boiler). It heats fluid and optionally outputs it as a different fluid. */
 interface _BoilerPrototype {
   type: 'boiler';
   /** Controls for how many ticks the boiler will show the fire and fire_glow after the energy source runs out of energy.
 
-Note that &#x60;fire&#x60; and &#x60;fire_glow&#x60; alpha is set to the light intensity of the energy source, so 0 light intensity means the fire is invisible. For burner energy sources, the light intensity will reach zero rather quickly after the boiler runs out of fuel, effectively capping the time that &#x60;fire&#x60; and &#x60;fire_glow&#x60; will be shown after the boiler runs out of fuel. */
+Note that `fire` and `fire_glow` alpha is set to the light intensity of the energy source, so 0 light intensity means the fire is invisible. For burner energy sources, the light intensity will reach zero rather quickly after the boiler runs out of fuel, effectively capping the time that `fire` and `fire_glow` will be shown after the boiler runs out of fuel. */
   burning_cooldown: number;
   energy_consumption: Energy;
   energy_source: EnergySource;
-  /** Animation that is drawn on top of the &#x60;structure&#x60; when &#x60;burning_cooldown&#x60; is larger than 1. The animation alpha can be controlled by the energy source light intensity, depending on &#x60;fire_flicker_enabled&#x60;.
+  /** Animation that is drawn on top of the `structure` when `burning_cooldown` is larger than 1. The animation alpha can be controlled by the energy source light intensity, depending on `fire_flicker_enabled`.
 
-The secondary draw order of this is higher than the secondary draw order of &#x60;fire_glow&#x60;, so this is drawn above &#x60;fire_glow&#x60;. */
+The secondary draw order of this is higher than the secondary draw order of `fire_glow`, so this is drawn above `fire_glow`. */
   fire: BoilerFire;
-  /** If this is set to false, &#x60;fire&#x60; alpha is always 1 instead of being controlled by the light intensity of the energy source. */
+  /** If this is set to false, `fire` alpha is always 1 instead of being controlled by the light intensity of the energy source. */
   fire_flicker_enabled?: boolean;
-  /** Animation that is drawn on top of the &#x60;structure&#x60; when &#x60;burning_cooldown&#x60; is larger than 1. The animation alpha can be controlled by the energy source light intensity, depending on &#x60;fire_glow_flicker_enabled&#x60;.
+  /** Animation that is drawn on top of the `structure` when `burning_cooldown` is larger than 1. The animation alpha can be controlled by the energy source light intensity, depending on `fire_glow_flicker_enabled`.
 
-The secondary draw order of this is lower than the secondary draw order of &#x60;fire&#x60;, so this is drawn below &#x60;fire&#x60;. */
+The secondary draw order of this is lower than the secondary draw order of `fire`, so this is drawn below `fire`. */
   fire_glow: BoilerFireGlow;
-  /** If this is set to false, &#x60;fire_glow&#x60; alpha is always 1 instead of being controlled by the light intensity of the energy source. */
+  /** If this is set to false, `fire_glow` alpha is always 1 instead of being controlled by the light intensity of the energy source. */
   fire_glow_flicker_enabled?: boolean;
   /** The input fluid box.
 
-If &#x60;mode&#x60; is &#x60;&quot;heat-water-inside&quot;&#x60;, the fluid is heated up directly in this fluidbox. */
+If `mode` is `"heat-water-inside"`, the fluid is heated up directly in this fluidbox. */
   fluid_box: FluidBox;
-  /** In the &#x60;&quot;heat-water-inside&quot;&#x60; mode, fluid in the &#x60;fluid_box&#x60; is continuously heated from the input temperature up to its [FluidPrototype::max_temperature](prototype:FluidPrototype::max_temperature).
+  /** In the `"heat-water-inside"` mode, fluid in the `fluid_box` is continuously heated from the input temperature up to its [FluidPrototype::max_temperature](prototype:FluidPrototype::max_temperature).
 
-In the &#x60;&quot;output-to-separate-pipe&quot;&#x60; mode, fluid is transferred from the &#x60;fluid_box&#x60; to the &#x60;output_fluid_box&#x60; when enough energy is available to [heat](prototype:FluidPrototype::heat_capacity) the fluid to the &#x60;target_temperature&#x60;. Setting a filter on the &#x60;output_fluid_box&#x60; allows to specify that the input fluid should be converted to the filtered fluid, instead of it simply being transferred when it can be heated. */
+In the `"output-to-separate-pipe"` mode, fluid is transferred from the `fluid_box` to the `output_fluid_box` when enough energy is available to [heat](prototype:FluidPrototype::heat_capacity) the input fluid to the `target_temperature`. Setting a filter on the `output_fluid_box` means that instead of the heated input fluid getting moved to the output, it is converted to the filtered fluid in a 1:1 ratio. */
   mode?: 'heat-water-inside' | 'output-to-separate-pipe';
   /** The output fluid box.
 
-If &#x60;mode&#x60; is &#x60;&quot;output-to-separate-pipe&quot;&#x60; and this has a [filter](prototype:FluidBox::filter), the input fluid is converted to the output fluid that is set in the filter (in a 1:1 ratio).
+If `mode` is `"output-to-separate-pipe"` and this has a [filter](prototype:FluidBox::filter), the heated input fluid is converted to the output fluid that is set in the filter (in a 1:1 ratio).
 
-If &#x60;mode&#x60; is &#x60;&quot;heat-water-inside&quot;&#x60;, this fluidbox is unused. */
+If `mode` is `"heat-water-inside"`, this fluidbox is unused. */
   output_fluid_box: FluidBox;
-  /** Drawn above the &#x60;structure&#x60;, in the &quot;higher-object-under&quot; [RenderLayer](prototype:RenderLayer). May be useful to correct problems with neighboring pipes overlapping the structure graphics. */
+  /** Drawn above the `structure`, in the "higher-object-under" [RenderLayer](prototype:RenderLayer). May be useful to correct problems with neighboring pipes overlapping the structure graphics. */
   patch?: BoilerPatch;
   structure: BoilerStructure;
-  /** When &#x60;mode&#x60; is &#x60;&quot;output-to-separate-pipe&quot;&#x60;, this is the temperature that the input fluid must reach to be moved to output fluid box.
+  /** When `mode` is `"output-to-separate-pipe"`, this is the temperature that the input fluid must reach to be moved to the output fluid box.
 
-When &#x60;mode&#x60; is &#x60;&quot;heat-water-inside&quot;&#x60; this is unused. Instead, the fluid [max_temperature](prototype:FluidPrototype::max_temperature) is the target temperature for heating the fluid. */
+When `mode` is `"heat-water-inside"` this is unused. Instead, the fluid [max_temperature](prototype:FluidPrototype::max_temperature) is the target temperature for heating the fluid. */
   target_temperature: number;
 }
 
@@ -781,15 +781,15 @@ export function isBuildEntityAchievementPrototype(
 /** An entity that produces power from a burner energy source. */
 interface _BurnerGeneratorPrototype {
   type: 'burner-generator';
-  /** Whether the &#x60;idle_animation&#x60; should also play when the generator is active. */
+  /** Whether the `idle_animation` should also play when the generator is active. */
   always_draw_idle_animation?: boolean;
-  /** Plays when the generator is active. &#x60;idle_animation&#x60; must have the same frame count as animation. */
+  /** Plays when the generator is active. `idle_animation` must have the same frame count as animation. */
   animation: Animation4Way;
   /** The input energy source of the generator. */
   burner: BurnerEnergySource;
-  /** The output energy source of the generator. Any emissions specified on this energy source are ignored, they must be specified on &#x60;burner&#x60;. */
+  /** The output energy source of the generator. Any emissions specified on this energy source are ignored, they must be specified on `burner`. */
   energy_source: ElectricEnergySource;
-  /** Plays when the generator is inactive. Idle animation must have the same frame count as &#x60;animation&#x60;. */
+  /** Plays when the generator is inactive. Idle animation must have the same frame count as `animation`. */
   idle_animation?: Animation4Way;
   /** How much energy this generator can produce. */
   max_power_output: Energy;
@@ -831,7 +831,7 @@ interface _CarPrototype {
   darkness_to_render_light_animation?: number;
   /** Modifies the efficiency of energy transfer from burner output to wheels. */
   effectivity: number;
-  /** Must be a burner energy source when using &#x60;&quot;burner&quot;&#x60;, otherwise it can also be a void energy source. */
+  /** Must be a burner energy source when using `"burner"`, otherwise it can also be a void energy source. */
   energy_source: BurnerEnergySource | VoidEnergySource;
   /** The names of the  [GunPrototype](prototype:GunPrototype)s this car prototype uses. */
   guns?: ItemID[];
@@ -846,7 +846,7 @@ interface _CarPrototype {
   /** Size of the car inventory. */
   inventory_size: ItemStackIndex;
   light?: LightDefinition;
-  /** Must have the same frame count as &#x60;animation&#x60;. */
+  /** Must have the same frame count as `animation`. */
   light_animation?: RotatedAnimation;
   render_layer?: RenderLayer;
   rotation_speed: number;
@@ -885,13 +885,13 @@ export function isCargoWagonPrototype(
 /** The corpse of a [CharacterPrototype](prototype:CharacterPrototype). */
 interface _CharacterCorpsePrototype {
   type: 'character-corpse';
-  /** Table of key value pairs, the keys are armor names and the values are numbers. The number is the Animation that is associated with the armor, e.g. using &#x60;1&#x60; will associate the armor with the first Animation in the pictures table. */
+  /** Table of key value pairs, the keys are armor names and the values are numbers. The number is the Animation that is associated with the armor, e.g. using `1` will associate the armor with the first Animation in the pictures table. */
   armor_picture_mapping?: Record<ItemID, number>;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
-  /** Mandatory if &#x60;pictures&#x60; is not defined. */
+  /** Mandatory if `pictures` is not defined. */
   picture?: Animation;
-  /** Mandatory if &#x60;picture&#x60; is not defined. */
+  /** Mandatory if `picture` is not defined. */
   pictures?: AnimationVariations;
   render_layer?: RenderLayer;
   time_to_live: number;
@@ -921,24 +921,24 @@ interface _CharacterPrototype {
   drop_item_distance: number;
   /** The sound played when the character eats (fish for example). */
   eat: Sound;
-  /** Must be &gt;&#x3D; 0. */
+  /** Must be >= 0. */
   enter_vehicle_distance?: number;
-  /** Triggered when the running animation (&#x60;animations&#x60;) rolls over the frames defined in &#x60;right_footprint_frames&#x60; and &#x60;left_footprint_frames&#x60;. */
+  /** Triggered when the running animation (`animations`) rolls over the frames defined in `right_footprint_frames` and `left_footprint_frames`. */
   footprint_particles?: FootprintParticle[];
   /** Triggered every tick of the running animation. */
   footstep_particle_triggers?: FootstepTriggerEffectList;
   /** Whether this character is moved by belts when standing on them. */
   has_belt_immunity?: boolean;
-  /** The sound played when the character&#x27;s health is low. */
+  /** The sound played when the character's health is low. */
   heartbeat: Sound;
   /** Number of slots in the main inventory. May be 0. */
   inventory_size: ItemStackIndex;
   /** Whether this prototype should be a high priority target for enemy forces. See [Military units and structures](https://wiki.factorio.com/Military_units_and_structures). */
   is_military_target?: boolean;
   item_pickup_distance: number;
-  /** The frames in the running animation (&#x60;animations&#x60;) where the left foot touches the ground. */
+  /** The frames in the running animation (`animations`) where the left foot touches the ground. */
   left_footprint_frames?: number[];
-  /** Offset from the center of the entity for the left footprint. Used by &#x60;footprint_particles&#x60;. */
+  /** Offset from the center of the entity for the left footprint. Used by `footprint_particles`. */
   left_footprint_offset?: Vector;
   light?: LightDefinition;
   loot_pickup_distance: number;
@@ -952,14 +952,14 @@ interface _CharacterPrototype {
   reach_resource_distance: number;
   /** Time in seconds. Must be positive */
   respawn_time?: number;
-  /** The frames in the running animation (&#x60;animations&#x60;) where the right foot touches the ground. */
+  /** The frames in the running animation (`animations`) where the right foot touches the ground. */
   right_footprint_frames?: number[];
-  /** Offset from the center of the entity for the right footprint. Used by &#x60;footprint_particles&#x60;. */
+  /** Offset from the center of the entity for the right footprint. Used by `footprint_particles`. */
   right_footprint_offset?: Vector;
   /** List of positions in the running animation when the walking sound is played. */
   running_sound_animation_positions: number[];
   running_speed: number;
-  /** Triggered when the running animation (&#x60;animations&#x60;) rolls over the frames defined in &#x60;right_footprint_frames&#x60; and &#x60;left_footprint_frames&#x60;. */
+  /** Triggered when the running animation (`animations`) rolls over the frames defined in `right_footprint_frames` and `left_footprint_frames`. */
   synced_footstep_particle_triggers?: FootstepTriggerEffectList;
   ticks_to_keep_aiming_direction: number;
   ticks_to_keep_gun: number;
@@ -998,7 +998,7 @@ export function isCliffPrototype(value: unknown): value is CliffPrototype {
 /** This prototype is used for receiving an achievement when the player has a certain robot follower count. */
 interface _CombatRobotCountAchievementPrototype {
   type: 'combat-robot-count';
-  /** This will trigger the achievement, if player&#x27;s current robot count is over this amount. */
+  /** This will trigger the achievement, if player's current robot count is over this amount. */
   count?: number;
 }
 
@@ -1015,7 +1015,7 @@ export function isCombatRobotCountAchievementPrototype(
 interface _CombatRobotPrototype {
   type: 'combat-robot';
   attack_parameters: AttackParameters;
-  /** Applied when the combat robot expires (runs out of &#x60;time_to_live&#x60;). */
+  /** Applied when the combat robot expires (runs out of `time_to_live`). */
   destroy_action?: Trigger;
   follows_player?: boolean;
   friction?: number;
@@ -1151,7 +1151,7 @@ interface _ContainerPrototype {
   circuit_wire_max_distance?: number;
   draw_circuit_wires?: boolean;
   draw_copper_wires?: boolean;
-  /** If the inventory limiter (red X) is visible in the chest&#x27;s GUI. This does not change the inventory itself ([LuaInventory::supports_bar](runtime:LuaInventory::supports_bar) will not change and the bar can still be modified by script). */
+  /** If the inventory limiter (red X) is visible in the chest's GUI. This does not change the inventory itself ([LuaInventory::supports_bar](runtime:LuaInventory::supports_bar) will not change and the bar can still be modified by script). */
   enable_inventory_bar?: boolean;
   /** The number of slots in this container. */
   inventory_size: ItemStackIndex;
@@ -1184,7 +1184,7 @@ interface _CopyPasteToolPrototype {
   alt_tile_filter_mode?: 'whitelist' | 'blacklist';
   /** This property is parsed, but then ignored. */
   alt_tile_filters?: TileID[];
-  /** This property is hardcoded to &#x60;false&#x60;. */
+  /** This property is hardcoded to `false`. */
   always_include_tiles?: boolean;
   cuts?: boolean;
   /** This property is parsed, but then ignored. */
@@ -1193,7 +1193,7 @@ interface _CopyPasteToolPrototype {
   entity_filters?: EntityID[];
   /** This property is parsed, but then ignored. */
   entity_type_filters?: string[];
-  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the &#x60;&quot;not-stackable&quot;&#x60; flag is set. */
+  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: 1;
   /** This property is parsed, but then ignored. */
   tile_filter_mode?: 'whitelist' | 'blacklist';
@@ -1214,18 +1214,18 @@ interface _CorpsePrototype {
   type: 'corpse';
   /** The dying animation. */
   animation?: RotatedAnimationVariations;
-  /** Variation count must be the same as &#x60;animation&#x60; variation count. Direction count must be the same as &#x60;animation&#x60; direction count. Frame count must be the same as &#x60;animation&#x60; frame count. */
+  /** Variation count must be the same as `animation` variation count. Direction count must be the same as `animation` direction count. Frame count must be the same as `animation` frame count. */
   animation_overlay?: RotatedAnimationVariations;
   animation_overlay_final_render_layer?: RenderLayer;
   animation_overlay_render_layer?: RenderLayer;
   animation_render_layer?: RenderLayer;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
-  /** An array of arrays of integers. The inner arrays are called &quot;groups&quot; and must all have the same size. */
+  /** An array of arrays of integers. The inner arrays are called "groups" and must all have the same size. */
   direction_shuffle?: number[][];
-  /** Multiplier for &#x60;time_before_shading_off&#x60; and &#x60;time_before_removed&#x60;. Must be positive.
+  /** Multiplier for `time_before_shading_off` and `time_before_removed`. Must be positive.
 
-Controls the speed of the animation: &#x60;1 ÷ dying_speed &#x3D; duration of the animation&#x60; */
+Controls the speed of the animation: `1 ÷ dying_speed = duration of the animation` */
   dying_speed?: number;
   final_render_layer?: RenderLayer;
   ground_patch?: AnimationVariations;
@@ -1240,11 +1240,11 @@ Controls the speed of the animation: &#x60;1 ÷ dying_speed &#x3D; duration of t
   shuffle_directions_at_frame?: number;
   splash?: AnimationVariations;
   splash_render_layer?: RenderLayer;
-  /** Controls the speed of the splash animation: &#x60;1 ÷ splash_speed &#x3D; duration of the splash animation&#x60; */
+  /** Controls the speed of the splash animation: `1 ÷ splash_speed = duration of the splash animation` */
   splash_speed?: number;
   /** Time in ticks this corpse lasts. May not be 0. */
   time_before_removed?: number;
-  /** Controls how long the corpse takes to fade, as in how long it takes to get from no transparency to full transparency/removed. This time is &#x27;&#x27;not&#x27;&#x27; added to &#x60;time_before_removed&#x60;, it is instead subtracted from it. So by default, the corpse starts fading about 15 seconds before it gets removed. */
+  /** Controls how long the corpse takes to fade, as in how long it takes to get from no transparency to full transparency/removed. This time is ''not'' added to `time_before_removed`, it is instead subtracted from it. So by default, the corpse starts fading about 15 seconds before it gets removed. */
   time_before_shading_off?: number;
   use_tile_color_for_ground_patch_tint?: boolean;
 }
@@ -1261,15 +1261,15 @@ Note that a crafting machine cannot be rotated unless it has at least one of the
 interface _CraftingMachinePrototype {
   /** Sets the module effects that are allowed to be used on this machine.
 
-Note: If the time to complete a recipe is shorter than one tick, only one craft can be completed per tick, but productivity bonus is applied to the non-limited &#x27;&#x27;completable&#x27;&#x27; work. For a simple example, if a recipe were to take half a tick, only one recipe would be completed, but twice the productivity bonus would occur. The surplus production from productivity is **not** limited to one craft per tick. */
+Note: If the time to complete a recipe is shorter than one tick, only one craft can be completed per tick, but productivity bonus is applied to the non-limited ''completable'' work. For a simple example, if a recipe were to take half a tick, only one recipe would be completed, but twice the productivity bonus would occur. The surplus production from productivity is **not** limited to one craft per tick. */
   allowed_effects?: EffectTypeLimitation;
-  /** Only loaded if &#x60;idle_animation&#x60; is defined. */
+  /** Only loaded if `idle_animation` is defined. */
   always_draw_idle_animation?: boolean;
   /** The animation played when crafting. When the crafting machine is idle, the animation will be paused.
 
 When a crafting machine cannot be rotated, only the north rotation of the animation will be used.
 
-The &#x60;animation_speed&#x60; of the animation is divided by 2 by the game. For example, the default animation speed of 1 means one animation frame per 2 ticks (30 fps) instead of the usual 60 fps. */
+The `animation_speed` of the animation is divided by 2 by the game. For example, the default animation speed of 1 means one animation frame per 2 ticks (30 fps) instead of the usual 60 fps. */
   animation?: Animation4Way;
   /** Productivity bonus that this machine always has. */
   base_productivity?: number;
@@ -1280,43 +1280,43 @@ The &#x60;animation_speed&#x60; of the animation is divided by 2 by the game. Fo
 Crafting speed has to be positive. */
   crafting_speed: number;
   default_recipe_tint?: DefaultRecipeTint;
-  /** Whether the &quot;alt-mode icon&quot; should have a black background. */
+  /** Whether the "alt-mode icon" should have a black background. */
   draw_entity_info_icon_background?: boolean;
   /** Defines how the crafting machine is powered.
 
-When using an electric energy source and &#x60;drain&#x60; is not specified, it will be set to &#x60;energy_usage ÷ 30&#x60; automatically. */
+When using an electric energy source and `drain` is not specified, it will be set to `energy_usage ÷ 30` automatically. */
   energy_source: EnergySource;
   /** Sets how much energy this machine uses while crafting. Energy usage has to be positive. */
   energy_usage: Energy;
-  /** Shift of the &quot;alt-mode icon&quot; relative to the machine&#x27;s center. */
+  /** Shift of the "alt-mode icon" relative to the machine's center. */
   entity_info_icon_shift?: Vector;
-  /** Can have &#x60;off_when_no_fluid_recipe&#x60; key that has a [bool](prototype:bool) value. &#x60;off_when_no_fluid_recipe&#x60; defaults to false. &#x60;off_when_no_fluid_recipe&#x60; is ignored by [FurnacePrototype](prototype:FurnacePrototype) and considered to always be false.
+  /** Can have `off_when_no_fluid_recipe` key that has a [bool](prototype:bool) value. `off_when_no_fluid_recipe` defaults to false. `off_when_no_fluid_recipe` is ignored by [FurnacePrototype](prototype:FurnacePrototype) and considered to always be false.
 
-If a crafting machine has fluid boxes *and* &#x60;off_when_no_fluid_recipe&#x60; is true, the crafting machine can only be rotated when a recipe consuming or producing fluid is set, or it has one of the other properties listed at the top of the page. */
+If a crafting machine has fluid boxes *and* `off_when_no_fluid_recipe` is true, the crafting machine can only be rotated when a recipe consuming or producing fluid is set, or it has one of the other properties listed at the top of the page. */
   fluid_boxes?: FluidBox[];
-  /** Idle animation must have the same frame count as &#x60;animation&#x60;. It is used for drawing the machine in the idle state. The animation is frozen on a single frame when the machine is idle.
+  /** Idle animation must have the same frame count as `animation`. It is used for drawing the machine in the idle state. The animation is frozen on a single frame when the machine is idle.
 
 This is an animation and not just sprite to make it possible for idle state and working state to match their visuals when the machine switches from one state to another.
 
 When a crafting machine cannot be rotated, only the north rotation of the idle animation will be used.
 
-The &#x60;animation_speed&#x60; of the animation is divided by 2 by the game. For example, the default animation speed of 1 means one animation frame per 2 ticks (30 fps) instead of the usual 60 fps. */
+The `animation_speed` of the animation is divided by 2 by the game. For example, the default animation speed of 1 means one animation frame per 2 ticks (30 fps) instead of the usual 60 fps. */
   idle_animation?: Animation4Way;
-  /** Whether the speed of the animation and working visualization should be based on the machine&#x27;s speed (boosted or slowed by modules). */
+  /** Whether the speed of the animation and working visualization should be based on the machine's speed (boosted or slowed by modules). */
   match_animation_speed_to_activity?: boolean;
   /** The number of module slots in this machine, and their icon positions. */
   module_specification?: ModuleSpecification;
   /** Controls whether the ingredients of an in-progress recipe are destroyed when mining the machine/changing the recipe. If set to true, the ingredients do not get destroyed. This affects only the ingredients of the recipe that is currently in progress, so those that visually have already been consumed while their resulting product has not yet been produced. */
   return_ingredients_on_change?: boolean;
-  /** Whether the &quot;alt-mode icon&quot; should be scaled to the size of the machine. */
+  /** Whether the "alt-mode icon" should be scaled to the size of the machine. */
   scale_entity_info_icon?: boolean;
-  /** Only loaded if &#x60;shift_animation_waypoints&#x60; is defined. */
+  /** Only loaded if `shift_animation_waypoints` is defined. */
   shift_animation_transition_duration?: number;
-  /** Only loaded if &#x60;shift_animation_waypoints&#x60; is defined. */
+  /** Only loaded if `shift_animation_waypoints` is defined. */
   shift_animation_waypoint_stop_duration?: number;
-  /** Only loaded if one of &#x60;shift_animation_waypoint_stop_duration&#x60; or &#x60;shift_animation_transition_duration&#x60; is not 0. */
+  /** Only loaded if one of `shift_animation_waypoint_stop_duration` or `shift_animation_transition_duration` is not 0. */
   shift_animation_waypoints?: ShiftAnimationWaypoints;
-  /** Whether the &quot;alt-mode icon&quot; should be drawn at all. */
+  /** Whether the "alt-mode icon" should be drawn at all. */
   show_recipe_icon?: boolean;
   /** Whether the recipe icon should be shown on the map. */
   show_recipe_icon_on_map?: boolean;
@@ -1324,7 +1324,7 @@ The &#x60;animation_speed&#x60; of the animation is divided by 2 by the game. Fo
   status_colors?: StatusColors;
   /** Used to display different animations when the machine is running, for example tinted based on the current recipe.
 
-The &#x60;animation_speed&#x60; of the animation is divided by 2 by the game. For example, the default animation speed of 1 means one animation frame per 2 ticks (30 fps) instead of the usual 60 fps. */
+The `animation_speed` of the animation is divided by 2 by the game. For example, the default animation speed of 1 means one animation frame per 2 ticks (30 fps) instead of the usual 60 fps. */
   working_visualisations?: WorkingVisualisation[];
 }
 
@@ -1344,51 +1344,51 @@ export function isCurvedRailPrototype(
 ): value is CurvedRailPrototype {
   return (value as { type: string }).type === 'curved-rail';
 }
-/** Used for custom keyboard shortcuts/key bindings in mods. The key associated with the custom input can be changed in the options. This means that &#x60;key_sequence&#x60; is simply the default key binding. */
+/** Used for custom keyboard shortcuts/key bindings in mods. The key associated with the custom input can be changed in the options. This means that `key_sequence` is simply the default key binding. */
 interface _CustomInputPrototype {
   type: 'custom-input';
-  /** A [Lua event](runtime:CustomInputEvent) is only raised if the action is &quot;lua&quot;. */
+  /** A [Lua event](runtime:CustomInputEvent) is only raised if the action is "lua". */
   action?:
     | 'lua'
     | 'spawn-item'
     | 'toggle-personal-roboport'
     | 'toggle-personal-logistic-requests'
     | 'toggle-equipment-movement-bonus';
-  /** The alternative key binding for this control. See &#x60;key_sequence&#x60; for the format. */
+  /** The alternative key binding for this control. See `key_sequence` for the format. */
   alternative_key_sequence?: string;
-  /** Sets whether internal game events associated with the same key sequence should be fired or blocked. If they are fired (&quot;none&quot;), then the custom input event will happen before the internal game event. */
+  /** Sets whether internal game events associated with the same key sequence should be fired or blocked. If they are fired ("none"), then the custom input event will happen before the internal game event. */
   consuming?: ConsumingType;
-  /** The alternative controller (game pad) keybinding for this control. See &#x60;key_sequence&#x60; for the format. */
+  /** The alternative controller (game pad) keybinding for this control. See `key_sequence` for the format. */
   controller_alternative_key_sequence?: string;
-  /** The controller (game pad) keybinding for this control. See &#x60;key_sequence&#x60; for the format. */
+  /** The controller (game pad) keybinding for this control. See `key_sequence` for the format. */
   controller_key_sequence?: string;
   /** If this custom input is enabled. Disabled custom inputs exist but are not used by the game. If disabled, no event is raised when the input is used. */
   enabled?: boolean;
   enabled_while_in_cutscene?: boolean;
   enabled_while_spectating?: boolean;
-  /** If true, the type and name of the currently selected prototype will be provided as &quot;selected_prototype&quot; in the raised [Lua event](runtime:CustomInputEvent). [This also works in GUIs](https://forums.factorio.com/96125), not just the game world.
+  /** If true, the type and name of the currently selected prototype will be provided as "selected_prototype" in the raised [Lua event](runtime:CustomInputEvent). [This also works in GUIs](https://forums.factorio.com/96125), not just the game world.
 
 This will also return an item in the cursor such as copper-wire or rail-planner, if nothing is beneath the cursor. */
   include_selected_prototype?: boolean;
-  /** The item will be created when this input is pressed and action is set to &quot;spawn-item&quot;. The item must have the [spawnable](prototype:ItemPrototypeFlags::spawnable) flag set. */
+  /** The item will be created when this input is pressed and action is set to "spawn-item". The item must have the [spawnable](prototype:ItemPrototypeFlags::spawnable) flag set. */
   item_to_spawn?: ItemID;
-  /** The default key sequence for this custom input. Use &quot;&quot; (empty string) for unassigned.
+  /** The default key sequence for this custom input. Use "" (empty string) for unassigned.
 
-Use &quot;mouse-button-2&quot; etc for mouse buttons, mouse-button-3 for middle mouse button. Use &quot;mouse-wheel-up&quot;, &quot;mouse-wheel-down&quot;, &quot;mouse-wheel-left&quot;, &quot;mouse-wheel-right&quot; for mouse wheel.
+Use "mouse-button-2" etc for mouse buttons, mouse-button-3 for middle mouse button. Use "mouse-wheel-up", "mouse-wheel-down", "mouse-wheel-left", "mouse-wheel-right" for mouse wheel.
 
-&quot; + &quot; is used to separate modifier keys from normal keys: &lt;code&gt;&quot;ALT + G&quot;&lt;/code&gt;.
+" + " is used to separate modifier keys from normal keys: <code>"ALT + G"</code>.
 
-For modifier keys, the following names are used: &quot;CONTROL&quot;, &quot;SHIFT&quot;, &quot;ALT&quot;, &quot;COMMAND&quot;.
+For modifier keys, the following names are used: "CONTROL", "SHIFT", "ALT", "COMMAND".
 
 A key binding can contain an unlimited amount of modifier keys (listed above) but only one normal key (listed below). */
   key_sequence: string;
-  /** When a custom-input is linked to a game control it won&#x27;t show up in the control-settings GUI and will fire when the linked control is pressed. */
+  /** When a custom-input is linked to a game control it won't show up in the control-settings GUI and will fire when the linked control is pressed. */
   linked_game_control?: string;
   /** Unique textual identification of the prototype. May not contain a dot, nor exceed a length of 200 characters.
 
 For a list of all names used in vanilla, see [data.raw](https://wiki.factorio.com/Data.raw).
 
-It is also the name for the event that is raised when they key (combination) is pressed and action is &#x60;&quot;lua&quot;&#x60;, see [Tutorial:Script interfaces](https://wiki.factorio.com/Tutorial:Script_interfaces). */
+It is also the name for the event that is raised when they key (combination) is pressed and action is `"lua"`, see [Tutorial:Script interfaces](https://wiki.factorio.com/Tutorial:Script_interfaces#Custom_input). */
   name: string;
 }
 
@@ -1476,15 +1476,15 @@ interface _DeconstructionItemPrototype {
   alt_entity_filters?: EntityID[];
   /** This property is parsed, but then ignored. */
   alt_entity_type_filters?: string[];
-  /** This property is hardcoded to &#x60;&quot;cancel-deconstruct&quot;&#x60;. */
+  /** This property is hardcoded to `"cancel-deconstruct"`. */
   alt_selection_mode?: SelectionModeFlags;
   /** This property is parsed, but then ignored. */
   alt_tile_filter_mode?: 'whitelist' | 'blacklist';
   /** This property is parsed, but then ignored. */
   alt_tile_filters?: TileID[];
-  /** This property is hardcoded to &#x60;false&#x60;. */
+  /** This property is hardcoded to `false`. */
   always_include_tiles?: boolean;
-  /** Can&#x27;t be &gt; 255. */
+  /** Can't be > 255. */
   entity_filter_count?: ItemStackIndex;
   /** This property is parsed, but then ignored. */
   entity_filter_mode?: 'whitelist' | 'blacklist';
@@ -1492,11 +1492,11 @@ interface _DeconstructionItemPrototype {
   entity_filters?: EntityID[];
   /** This property is parsed, but then ignored. */
   entity_type_filters?: string[];
-  /** This property is hardcoded to &#x60;&quot;deconstruct&quot;&#x60;. */
+  /** This property is hardcoded to `"deconstruct"`. */
   selection_mode?: SelectionModeFlags;
-  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the &#x60;&quot;not-stackable&quot;&#x60; flag is set. */
+  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: 1;
-  /** Can&#x27;t be &gt; 255. */
+  /** Can't be > 255. */
   tile_filter_count?: ItemStackIndex;
   /** This property is parsed, but then ignored. */
   tile_filter_mode?: 'whitelist' | 'blacklist';
@@ -1519,13 +1519,13 @@ interface _DecorativePrototype {
   /** Must contain the [0,0] point. Max radius of the collision box is 8. */
   collision_box?: BoundingBox;
   collision_mask?: CollisionMask;
-  /** Loaded only if &#x60;render_layer&#x60; &#x3D; &quot;decals&quot;. */
+  /** Loaded only if `render_layer` = "decals". */
   decal_overdraw_priority?: number;
   grows_through_rail_path?: boolean;
   /** Must contain at least 1 picture. */
   pictures: SpriteVariations;
   render_layer?: RenderLayer;
-  /** Mandatory if &#x60;render_layer&#x60; &#x3D; &quot;decals&quot;. This int16 is converted to a [RenderLayer](prototype:RenderLayer) internally. */
+  /** Mandatory if `render_layer` = "decals". This int16 is converted to a [RenderLayer](prototype:RenderLayer) internally. */
   tile_layer?: number;
   /** Called by [DestroyDecorativesTriggerEffectItem](prototype:DestroyDecorativesTriggerEffectItem). */
   trigger_effect?: TriggerEffect;
@@ -1630,9 +1630,9 @@ export interface EditorControllerPrototype {
   item_pickup_distance: number;
   loot_pickup_distance: number;
   mining_speed: number;
-  /** Must be &gt;&#x3D; 0.34375. */
+  /** Must be >= 0.34375. */
   movement_speed: number;
-  /** Name of the editor controller. Base game uses &quot;default&quot;. */
+  /** Name of the editor controller. Base game uses "default". */
   name: string;
   placed_corpses_never_expire: boolean;
   render_as_day: boolean;
@@ -1655,9 +1655,9 @@ export function isEditorControllerPrototype(
 interface _ElectricEnergyInterfacePrototype {
   type: 'electric-energy-interface';
   allow_copy_paste?: boolean;
-  /** Only loaded if both &#x60;picture&#x60; and &#x60;pictures&#x60; are not defined. */
+  /** Only loaded if both `picture` and `pictures` are not defined. */
   animation?: Animation;
-  /** Only loaded if &#x60;picture&#x60;, &#x60;pictures&#x60;, and &#x60;animation&#x60; are not defined. */
+  /** Only loaded if `picture`, `pictures`, and `animation` are not defined. */
   animations?: Animation4Way;
   /** Whether the electric energy interface animation always runs instead of being scaled to activity. */
   continuous_animation?: boolean;
@@ -1668,7 +1668,7 @@ interface _ElectricEnergyInterfacePrototype {
   /** The light that this electric energy interface emits. */
   light?: LightDefinition;
   picture?: Sprite;
-  /** Only loaded if &#x60;picture&#x60; is not defined. */
+  /** Only loaded if `picture` is not defined. */
   pictures?: Sprite4Way;
   render_layer?: RenderLayer;
 }
@@ -1685,20 +1685,20 @@ export function isElectricEnergyInterfacePrototype(
 /** An electric pole - part of the [electric system](https://wiki.factorio.com/Electric_system). */
 interface _ElectricPolePrototype {
   type: 'electric-pole';
-  /** Drawn above the &#x60;pictures&#x60; when the electric pole is connected to an electric network. */
+  /** Drawn above the `pictures` when the electric pole is connected to an electric network. */
   active_picture?: Sprite;
   connection_points: WireConnectionPoint[];
   draw_circuit_wires?: boolean;
   draw_copper_wires?: boolean;
   /** Drawn when the electric pole is connected to an electric network. */
   light?: LightDefinition;
-  /** The maximum distance between this pole and any other connected pole - if two poles are farther apart than this, they cannot be connected together directly. Corresponds to &quot;wire reach&quot; in the item tooltip.
+  /** The maximum distance between this pole and any other connected pole - if two poles are farther apart than this, they cannot be connected together directly. Corresponds to "wire reach" in the item tooltip.
 
 Max value is 64. */
   maximum_wire_distance?: number;
   pictures: RotatedSprite;
   radius_visualisation_picture?: Sprite;
-  /** The &quot;radius&quot; of this pole&#x27;s supply area. Corresponds to *half* of the &quot;supply area&quot; in the item tooltip. If this is 3.5, the pole will have a 7x7 supply area.
+  /** The "radius" of this pole's supply area. Corresponds to *half* of the "supply area" in the item tooltip. If this is 3.5, the pole will have a 7x7 supply area.
 
 Max value is 64. */
   supply_area_distance: number;
@@ -1730,7 +1730,7 @@ export function isElectricTurretPrototype(
 /** Can spawn entities. Used for biter/spitter nests. */
 interface _EnemySpawnerPrototype {
   type: 'unit-spawner';
-  /** If this is true, this entities &#x60;is_military_target property&#x60; can be changed runtime (on the entity, not on the prototype itself). */
+  /** If this is true, this entities `is_military_target property` can be changed runtime (on the entity, not on the prototype itself). */
   allow_run_time_change_of_is_military_target?: false;
   animations: AnimationVariations;
   call_for_help_radius: number;
@@ -1753,11 +1753,11 @@ interface _EnemySpawnerPrototype {
   random_animation_offset?: boolean;
   /** Array of the [entities](prototype:EntityPrototype) that this spawner can spawn and their spawn probabilities. The sum of probabilities is expected to be 1.0. The array must not be empty. */
   result_units: UnitSpawnDefinition[];
-  /** Decoratives to be created when the spawner is created by the [map generator](https://wiki.factorio.com/Map_generator). Placed when enemies expand if &#x60;spawn_decorations_on_expansion&#x60; is set to true. */
+  /** Decoratives to be created when the spawner is created by the [map generator](https://wiki.factorio.com/Map_generator). Placed when enemies expand if `spawn_decorations_on_expansion` is set to true. */
   spawn_decoration?:
     | CreateDecorativesTriggerEffectItem
     | CreateDecorativesTriggerEffectItem[];
-  /** Whether &#x60;spawn_decoration&#x60; should be spawned when enemies [expand](https://wiki.factorio.com/Enemies#Expansions). */
+  /** Whether `spawn_decoration` should be spawned when enemies [expand](https://wiki.factorio.com/Enemies#Expansions). */
   spawn_decorations_on_expansion?: boolean;
   /** Ticks for cooldown after unit is spawned */
   spawning_cooldown: [number, number];
@@ -1807,7 +1807,7 @@ export function isEntityGhostPrototype(
 ): value is EntityGhostPrototype {
   return (value as { type: string }).type === 'entity-ghost';
 }
-/** Deprecated in 0.18. The type &quot;particle&quot; has been obsoleted and cannot be created. See [ParticlePrototype](prototype:ParticlePrototype) for particles. */
+/** Deprecated in 0.18. The type "particle" has been obsoleted and cannot be created. See [ParticlePrototype](prototype:ParticlePrototype) for particles. */
 interface _EntityParticlePrototype {
   type: 'particle';
   /** Two entities can collide only if they share a layer from the collision mask. */
@@ -1828,7 +1828,7 @@ For in game script access to entity, take a look at [LuaEntity](runtime:LuaEntit
 interface _EntityPrototype {
   /** Names of the entity prototypes this entity prototype can be pasted on to in addition to the standard supported types.
 
-This is used to allow copying between types that aren&#x27;t compatible on the C++ code side, by allowing mods to receive the [on_entity_settings_pasted](runtime:on_entity_settings_pasted) event for the given entity and do the setting pasting via script. */
+This is used to allow copying between types that aren't compatible on the C++ code side, by allowing mods to receive the [on_entity_settings_pasted](runtime:on_entity_settings_pasted) event for the given entity and do the setting pasting via script. */
   additional_pastable_entities?: EntityID[];
   alert_icon_scale?: number;
   alert_icon_shift?: Vector;
@@ -1838,13 +1838,13 @@ This is used to allow copying between types that aren&#x27;t compatible on the C
   build_base_evolution_requirement?: number;
   /** Supported values are 1 (for 1x1 grid) and 2 (for 2x2 grid, like rails).
 
-Internally forced to be &#x60;2&#x60; for [RailPrototype](prototype:RailPrototype), [RailRemnantsPrototype](prototype:RailRemnantsPrototype) and [TrainStopPrototype](prototype:TrainStopPrototype). */
+Internally forced to be `2` for [RailPrototype](prototype:RailPrototype), [RailRemnantsPrototype](prototype:RailRemnantsPrototype) and [TrainStopPrototype](prototype:TrainStopPrototype). */
   build_grid_size?: number;
   build_sound?: Sound;
   close_sound?: Sound;
   /** Specification of the entity collision boundaries. Empty collision box means no collision and is used for smoke, projectiles, particles, explosions etc.
 
-The &#x60;{0,0}&#x60; coordinate in the collision box will match the entity position. It should be near the center of the collision box, to keep correct entity drawing order. The bounding box must include the &#x60;{0,0}&#x60; coordinate.
+The `{0,0}` coordinate in the collision box will match the entity position. It should be near the center of the collision box, to keep correct entity drawing order. The bounding box must include the `{0,0}` coordinate.
 
 Note, that for buildings, it is customary to leave 0.1 wide border between the edge of the tile and the edge of the building, this lets the player move between the building and electric poles/inserters etc. */
   collision_box?: BoundingBox;
@@ -1859,7 +1859,7 @@ Note, that for buildings, it is customary to leave 0.1 wide border between the e
   /** Amount of emissions created (positive number) or cleaned (negative number) every second by the entity. This is passive, and it is independent concept of the emissions of machines, these are created actively depending on the power consumption. Currently used just for trees. */
   emissions_per_second?: number;
   enemy_map_color?: Color;
-  /** This allows you to replace an entity that&#x27;s already placed, with a different one in your inventory. For example, replacing a burner inserter with a fast inserter. The replacement entity can be a different rotation to the replaced entity and you can replace an entity with the same type.
+  /** This allows you to replace an entity that's already placed, with a different one in your inventory. For example, replacing a burner inserter with a fast inserter. The replacement entity can be a different rotation to the replaced entity and you can replace an entity with the same type.
 
 This is simply a string, so any string can be used here. The entity that should be replaced simply has to use the same string here. */
   fast_replaceable_group?: string;
@@ -1869,19 +1869,19 @@ This is simply a string, so any string can be used here. The entity that should 
   hit_visualization_box?: BoundingBox;
   /** Path to the icon file.
 
-Either this or &#x60;icons&#x60; is mandatory for entities that have at least one of these flags active: &#x60;&quot;placeable-neutral&quot;&#x60;, &#x60;&quot;placeable-player&#x60;&quot;, &#x60;&quot;placeable-enemy&quot;&#x60;.
+Either this or `icons` is mandatory for entities that have at least one of these flags active: `"placeable-neutral"`, `"placeable-player`", `"placeable-enemy"`.
 
-Only loaded if &#x60;icons&#x60; is not defined. */
+Only loaded if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
-Only loaded if &#x60;icons&#x60; is not defined, or if &#x60;icon_size&#x60; is not specified for all instances of &#x60;icons&#x60;. */
+Only loaded if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
-  /** This will be used in the electric network statistics, editor building selection, and the bonus gui. Can&#x27;t be an empty array.
+  /** This will be used in the electric network statistics, editor building selection, and the bonus gui. Can't be an empty array.
 
-Either this or &#x60;icon&#x60; is mandatory for entities that have at least one of these flags active: &#x60;&quot;placeable-neutral&quot;&#x60;, &#x60;&quot;placeable-player&#x60;&quot;, &#x60;&quot;placeable-enemy&quot;&#x60;. */
+Either this or `icon` is mandatory for entities that have at least one of these flags active: `"placeable-neutral"`, `"placeable-player`", `"placeable-enemy"`. */
   icons?: IconData[];
   map_color?: Color;
   /** Used instead of the collision box during map generation. Allows space entities differently during map generation, for example if the box is bigger, the entities will be placed farther apart. */
@@ -1891,25 +1891,25 @@ Either this or &#x60;icon&#x60; is mandatory for entities that have at least one
   mining_sound?: Sound;
   /** Name of the entity that will be automatically selected as the upgrade of this entity when using the [upgrade planner](https://wiki.factorio.com/Upgrade_planner) without configuration.
 
-This entity may not have &quot;not-upgradable&quot; flag set and must be minable. This entity mining result must not contain item product with &quot;hidden&quot; flag set. Mining results with no item products are allowed. The entity may not be a [RollingStockPrototype](prototype:RollingStockPrototype).
+This entity may not have "not-upgradable" flag set and must be minable. This entity mining result must not contain item product with "hidden" flag set. Mining results with no item products are allowed. The entity may not be a [RollingStockPrototype](prototype:RollingStockPrototype).
 
-The upgrade target entity needs to have the same bounding box, collision mask, and fast replaceable group as this entity. The upgrade target entity must have least 1 item that builds it that isn&#x27;t hidden. */
+The upgrade target entity needs to have the same bounding box, collision mask, and fast replaceable group as this entity. The upgrade target entity must have least 1 item that builds it that isn't hidden. */
   next_upgrade?: EntityID;
   open_sound?: Sound;
   /** Used to order prototypes in inventory, recipes and GUIs. May not exceed a length of 200 characters.
 
-The order string is taken from the items in &#x60;placeable_by&#x60; if they exist, or from an item that has its [place_result](prototype:ItemPrototype::place_result) set to this entity. */
+The order string is taken from the items in `placeable_by` if they exist, or from an item that has its [place_result](prototype:ItemPrototype::place_result) set to this entity. */
   order?: Order;
-  /** Item that when placed creates this entity. Determines which item is picked when &quot;Q&quot; (smart pipette) is used on the entity, determines which item is needed in a blueprint of this entity.
+  /** Item that when placed creates this entity. Determines which item is picked when "Q" (smart pipette) is used on the entity, determines which item is needed in a blueprint of this entity.
 
-The item count specified here can&#x27;t be larger than the stack size of that item. */
+The item count specified here can't be larger than the stack size of that item. */
   placeable_by?: ItemToPlace | ItemToPlace[];
   /** When this is true, this entity prototype should be included during tile collision checks with tiles that have [TilePrototype::check_collision_with_entities](prototype:TilePrototype::check_collision_with_entities) set to true. */
   protected_from_tile_building?: boolean;
   radius_visualisation_specification?: RadiusVisualisationSpecification;
   /** The entity that remains when this one is mined, deconstructed or fast-replaced. The entity wont actually be spawned if it would collide with the entity that is in the process of being mined. */
   remains_when_mined?: EntityID | EntityID[];
-  /** Whether this entity should remove decoratives that collide with it when this entity is built. When set to &quot;automatic&quot;, if the entity type is considered [a building](runtime:LuaEntityPrototype::is_building) (e.g. an assembling machine or a wall) it will remove decoratives. */
+  /** Whether this entity should remove decoratives that collide with it when this entity is built. When set to "automatic", if the entity type is considered [a building](runtime:LuaEntityPrototype::is_building) (e.g. an assembling machine or a wall) it will remove decoratives. */
   remove_decoratives?: 'automatic' | 'true' | 'false';
   rotated_sound?: Sound;
   selectable_in_game?: boolean;
@@ -1930,14 +1930,15 @@ The selection box is usually a little bit bigger than the collision box, for til
 
 When the tile width is odd, the center will be in the center of the tile, when it is even, the center is on the tile transition. */
   tile_width?: number;
+  /** Defaults to the mask from [UtilityConstants::default_trigger_target_mask_by_type](prototype:UtilityConstants::default_trigger_target_mask_by_type). */
   trigger_target_mask?: TriggerTargetMask;
   /** When playing this sound, the volume is scaled by the speed of the vehicle when colliding with this entity. */
   vehicle_impact_sound?: Sound;
-  /** May also be defined inside &#x60;graphics_set&#x60; instead of directly in the entity prototype. This is useful for entities that use the a &#x60;graphics_set&#x60; property to define their graphics, because then all graphics can be defined in one place.
+  /** May also be defined inside `graphics_set` instead of directly in the entity prototype. This is useful for entities that use the a `graphics_set` property to define their graphics, because then all graphics can be defined in one place.
 
 [Currently only renders](https://forums.factorio.com/100703) for [EntityWithHealthPrototype](prototype:EntityWithHealthPrototype). */
   water_reflection?: WaterReflectionDefinition;
-  /** Will also work on entities that don&#x27;t actually do work. */
+  /** Will also work on entities that don't actually do work. */
   working_sound?: WorkingSound;
 }
 
@@ -1976,7 +1977,7 @@ export type EntityWithHealthPrototype = _EntityWithHealthPrototype &
   Omit<EntityPrototype, keyof _EntityWithHealthPrototype>;
 /** Abstract base of all entities with a force in the game. These entities have a [LuaEntity::unit_number](runtime:LuaEntity::unit_number) during runtime. Can be high priority [military targets](https://wiki.factorio.com/Military_units_and_structures). */
 interface _EntityWithOwnerPrototype {
-  /** If this is true, this entities &#x60;is_military_target property&#x60; can be changed runtime (on the entity, not on the prototype itself). */
+  /** If this is true, this entity's `is_military_target` property can be changed during runtime (on the entity, not on the prototype itself). */
   allow_run_time_change_of_is_military_target?: boolean;
   /** Whether this prototype should be a high priority target for enemy forces. See [Military units and structures](https://wiki.factorio.com/Military_units_and_structures). */
   is_military_target?: boolean;
@@ -2073,7 +2074,7 @@ interface _ExplosionPrototype {
   scale_initial?: number;
   scale_initial_deviation?: number;
   scale_out_duration?: number;
-  /** Mandatory if &#x60;smoke_count&#x60; &gt; 0. */
+  /** Mandatory if `smoke_count` > 0. */
   smoke?: TrivialSmokeID;
   smoke_count?: number;
   smoke_slow_down_factor?: number;
@@ -2120,11 +2121,11 @@ interface _FireFlamePrototype {
   delay_between_initial_flames?: number;
   fade_in_duration?: number;
   fade_out_duration?: number;
-  /** Only loaded if &#x60;uses_alternative_behavior&#x60; is false. */
+  /** Only loaded if `uses_alternative_behavior` is false. */
   flame_alpha?: number;
-  /** Only loaded if &#x60;uses_alternative_behavior&#x60; is false. */
+  /** Only loaded if `uses_alternative_behavior` is false. */
   flame_alpha_deviation?: number;
-  /** Spawns this many &#x60;secondary_pictures&#x60; around the entity when it first spawns. It waits &#x60;delay_between_initial_flames&#x60; between each spawned &#x60;secondary_pictures&#x60;. This can be used to make fires look less repetitive.
+  /** Spawns this many `secondary_pictures` around the entity when it first spawns. It waits `delay_between_initial_flames` between each spawned `secondary_pictures`. This can be used to make fires look less repetitive.
 
 For example, spitters use this to make several smaller splashes around the main one. */
   initial_flame_count?: number;
@@ -2139,10 +2140,10 @@ For example, spitters use this to make several smaller splashes around the main 
   maximum_spread_count?: number;
   on_damage_tick_effect?: Trigger;
   on_fuel_added_action?: Trigger;
-  /** Only loaded if &#x60;uses_alternative_behavior&#x60; is true. */
+  /** Only loaded if `uses_alternative_behavior` is true. */
   particle_alpha?: number;
   particle_alpha_blend_duration?: number;
-  /** Only loaded if &#x60;uses_alternative_behavior&#x60; is true. */
+  /** Only loaded if `uses_alternative_behavior` is true. */
   particle_alpha_deviation?: number;
   pictures?: AnimationVariations;
   render_layer?: RenderLayer;
@@ -2159,9 +2160,9 @@ For example, spitters use this to make several smaller splashes around the main 
   spread_delay: number;
   spread_delay_deviation: number;
   tree_dying_factor?: number;
-  /** If &#x60;false&#x60;, then all animations loop. If &#x60;true&#x60;, they run once and stay on the final frame. Also changes the behavior of several other fire properties as mentioned in their descriptions.
+  /** If `false`, then all animations loop. If `true`, they run once and stay on the final frame. Also changes the behavior of several other fire properties as mentioned in their descriptions.
 
-For example, spitters use alternate behavior, flamethrower flames don&#x27;t. */
+For example, spitters use alternate behavior, flamethrower flames don't. */
   uses_alternative_behavior?: boolean;
 }
 
@@ -2173,7 +2174,7 @@ export function isFireFlamePrototype(
 ): value is FireFlamePrototype {
   return (value as { type: string }).type === 'fire';
 }
-/** Entity that spawns in water tiles, which can be mined. Moves around unless deactivated with [LuaEntity::active](runtime:LuaEntity::active) &#x3D; false. */
+/** Entity that spawns in water tiles, which can be mined. Moves around unless deactivated with [LuaEntity::active](runtime:LuaEntity::active) = false. */
 interface _FishPrototype {
   type: 'fish';
   /** Two entities can collide only if they share a layer from the collision mask. */
@@ -2208,18 +2209,18 @@ interface _FluidPrototype {
   type: 'fluid';
   /** Whether the fluid should be included in the barrel recipes automatically generated by the base mod.
 
-This property is not read by the game engine itself, but the base mod&#x27;s data-updates.lua script. This means it is not available to read at runtime. */
+This property is not read by the game engine itself, but the base mod's data-updates.lua script. This means it is not available to read at runtime. */
   auto_barrel?: boolean;
   /** Used by bars that show the fluid color, like the flamethrower turret fill bar in the tooltip, or the fill bar for the fluid wagon tooltip; and for the pipe windows and storage tank fill gauges. */
   base_color: Color;
-  /** Also the minimum temperature of the fluid. Has to be lower than &#x60;max_temperature&#x60;. */
+  /** Also the minimum temperature of the fluid. Has to be lower than `max_temperature`. */
   default_temperature: number;
   /** Scales pollution generated when the fluid is consumed. */
   emissions_multiplier?: number;
   /** Used only for pipe windows or storage tank fill gauges. */
   flow_color: Color;
   fuel_value?: Energy;
-  /** Above this temperature the &#x60;gas_flow&#x60; animation is used to display the fluid inside storage tanks and pipes. */
+  /** Above this temperature the `gas_flow` animation is used to display the fluid inside storage tanks and pipes. */
   gas_temperature?: number;
   /** Joule needed to heat 1 Unit by 1 °C. */
   heat_capacity?: Energy;
@@ -2227,15 +2228,15 @@ This property is not read by the game engine itself, but the base mod&#x27;s dat
   hidden?: boolean;
   /** Path to the icon file.
 
-Mandatory if &#x60;icons&#x60; is not defined. */
+Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
-Mandatory if &#x60;icons&#x60; is not defined, or if &#x60;icon_size&#x60; is not specified for all instances of &#x60;icons&#x60;. */
+Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
-  /** Can&#x27;t be an empty array. */
+  /** Can't be an empty array. */
   icons?: IconData[];
   max_temperature?: number;
   /** The value of this property may not be an empty string. It either has to be nil, or a non-empty string. */
@@ -2251,7 +2252,7 @@ export function isFluidPrototype(value: unknown): value is FluidPrototype {
 /** Used for example for the handheld flamethrower. */
 interface _FluidStreamPrototype {
   type: 'stream';
-  /** Action that is triggered every time a particle lands. Not triggered for the first particle if &#x60;initial_action&#x60; is non-empty. */
+  /** Action that is triggered every time a particle lands. Not triggered for the first particle if `initial_action` is non-empty. */
   action?: Trigger;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
@@ -2268,7 +2269,7 @@ interface _FluidStreamPrototype {
   particle_fade_out_duration?: number;
   /** Value between 0 and 1. */
   particle_fade_out_threshold?: number;
-  /** Must be larger than 0. &#x60;particle_horizontal_speed&#x60; has to be greater than &#x60;particle_horizontal_speed_deviation&#x60;. */
+  /** Must be larger than 0. `particle_horizontal_speed` has to be greater than `particle_horizontal_speed_deviation`. */
   particle_horizontal_speed: number;
   particle_horizontal_speed_deviation: number;
   /** Value between 0 and 1. */
@@ -2276,7 +2277,7 @@ interface _FluidStreamPrototype {
   /** Will be set to 1 by the game if less than 1. */
   particle_loop_frame_count?: number;
   particle_scale_per_part?: number;
-  /** The stream will spawn one particle every &#x60;particle_spawn_interval&#x60; ticks until the &#x60;particle_spawn_timeout&#x60; is reached. The first particle will trigger an &#x60;initial_action&#x60; upon landing. Each particle triggers an &#x60;action&#x60; upon landing. Particles spawned within a single &#x60;particle_spawn_timeout&#x60; interval will be connected by a stretched &#x60;spine_animation&#x60;. */
+  /** The stream will spawn one particle every `particle_spawn_interval` ticks until the `particle_spawn_timeout` is reached. The first particle will trigger an `initial_action` upon landing. Each particle triggers an `action` upon landing. Particles spawned within a single `particle_spawn_timeout` interval will be connected by a stretched `spine_animation`. */
   particle_spawn_interval: number;
   particle_spawn_timeout?: number;
   particle_start_alpha?: number;
@@ -2286,7 +2287,7 @@ interface _FluidStreamPrototype {
   progress_to_create_smoke?: number;
   shadow?: Animation;
   shadow_scale_enabled?: boolean;
-  /** Smoke spawning is controlled by &#x60;progress_to_create_smoke&#x60;. */
+  /** Smoke spawning is controlled by `progress_to_create_smoke`. */
   smoke_sources?: SmokeSource[];
   special_neutral_target_damage?: DamagePrototype;
   spine_animation?: Animation;
@@ -2306,7 +2307,7 @@ export function isFluidStreamPrototype(
 /** A turret that consumes fluid as ammo. */
 interface _FluidTurretPrototype {
   type: 'fluid-turret';
-  /** Before an turret that was out of ammo is able to fire again, the &#x60;fluid_buffer_size&#x60; must fill to this proportion. */
+  /** Before an turret that was out of ammo is able to fire again, the `fluid_buffer_size` must fill to this proportion. */
   activation_buffer_ratio: number;
   /** Requires ammo_type in attack_parameters. */
   attack_parameters: StreamAttackParameters;
@@ -2378,7 +2379,7 @@ interface _FlyingRobotPrototype {
 
 export type FlyingRobotPrototype = _FlyingRobotPrototype &
   Omit<EntityWithOwnerPrototype, keyof _FlyingRobotPrototype>;
-/** An upwards flying text that disappears after a certain time (setting [LuaEntity::active](runtime:LuaEntity::active) &#x3D; false stops the flying and the disappearing.) */
+/** An upwards flying text that disappears after a certain time (setting [LuaEntity::active](runtime:LuaEntity::active) = false stops the flying and the disappearing.) */
 interface _FlyingTextPrototype {
   type: 'flying-text';
   /** Two entities can collide only if they share a layer from the collision mask. */
@@ -2405,7 +2406,7 @@ export interface FontPrototype {
   /** The color of the border, if enabled. */
   border_color?: Color;
   filtered?: boolean;
-  /** The name of the fonts .ttf descriptor. This descriptor must be defined in the locale info.json. Refer to &#x60;data/core/locale/_language_/info.json&#x60; for examples. */
+  /** The name of the fonts .ttf descriptor. This descriptor must be defined in the locale info.json. Refer to `data/core/locale/_language_/info.json` for examples. */
   from: string;
   /** Name of the font. */
   name: string;
@@ -2430,12 +2431,12 @@ export type FuelCategory = _FuelCategory &
 export function isFuelCategory(value: unknown): value is FuelCategory {
   return (value as { type: string }).type === 'fuel-category';
 }
-/** A furnace. Normal furnaces only process &quot;smelting&quot; category recipes, but you can make furnaces that process other [recipe categories](prototype:RecipeCategory). The difference to assembling machines is that furnaces automatically choose their recipe based on input. */
+/** A furnace. Normal furnaces only process "smelting" category recipes, but you can make furnaces that process other [recipe categories](prototype:RecipeCategory). The difference to assembling machines is that furnaces automatically choose their recipe based on input. */
 interface _FurnacePrototype {
   type: 'furnace';
-  /** The locale key of the message shown when the player attempts to insert an item into the furnace that cannot be processed by that furnace. In-game, the locale is provided the &#x60;__1__&#x60; parameter, which is the localised name of the item. */
+  /** The locale key of the message shown when the player attempts to insert an item into the furnace that cannot be processed by that furnace. In-game, the locale is provided the `__1__` parameter, which is the localised name of the item. */
   cant_insert_at_source_message_key?: string;
-  /** Shift of the &quot;alt-mode icon&quot; relative to the machine&#x27;s center. */
+  /** Shift of the "alt-mode icon" relative to the machine's center. */
   entity_info_icon_shift?: Vector;
   /** The number of output slots. */
   result_inventory_size: ItemStackIndex;
@@ -2499,36 +2500,36 @@ interface _GeneratorPrototype {
   type: 'generator';
   /** If set to true, the available power output is based on the [FluidPrototype::fuel_value](prototype:FluidPrototype::fuel_value). Otherwise, the available power output will be based on the fluid temperature. */
   burns_fluid?: boolean;
-  /** This property is used when &#x60;burns_fluid&#x60; is true and the fluid has a [fuel_value](prototype:FluidPrototype::fuel_value) of 0.
+  /** This property is used when `burns_fluid` is true and the fluid has a [fuel_value](prototype:FluidPrototype::fuel_value) of 0.
 
-This property is also used when &#x60;burns_fluid&#x60; is false and the fluid is at default temperature.
+This property is also used when `burns_fluid` is false and the fluid is at default temperature.
 
-In these cases, this property determines whether the fluid should be destroyed, meaning that the fluid is consumed at the rate of &#x60;fluid_usage_per_tick&#x60;, without producing any power. */
+In these cases, this property determines whether the fluid should be destroyed, meaning that the fluid is consumed at the rate of `fluid_usage_per_tick`, without producing any power. */
   destroy_non_fuel_fluid?: boolean;
   /** How much energy the generator produces compared to how much energy it consumes. For example, an effectivity of 0.5 means that half of the consumed energy is output as power. */
   effectivity: number;
   energy_source: ElectricEnergySource;
-  /** This must have a filter if &#x60;max_power_output&#x60; is not defined. */
+  /** This must have a filter if `max_power_output` is not defined. */
   fluid_box: FluidBox;
   /** The number of fluid units the generator uses per tick. */
   fluid_usage_per_tick: number;
   horizontal_animation: Animation;
   /** The power production of the generator is capped to this value. This is also the value that is shown as the maximum power output in the tooltip of the generator.
 
-&#x60;fluid_box&#x60; must have a filter if this is not defined. */
+`fluid_box` must have a filter if this is not defined. */
   max_power_output?: Energy;
   /** The maximum temperature to which the efficiency can increase. At this temperature the generator will run at 100% efficiency. Note: Higher temperature fluid can still be consumed.
 
-Used to calculate the &#x60;max_power_output&#x60; if it is not defined and &#x60;burns_fluid&#x60; is false. Then, the max power output is &#x60;(min(fluid_max_temp, maximum_temperature) - fluid_default_temp) × fluid_usage_per_tick × fluid_heat_capacity × effectivity&#x60;, the fluid is the filter specified on the &#x60;fluid_box&#x60;. */
+Used to calculate the `max_power_output` if it is not defined and `burns_fluid` is false. Then, the max power output is `(min(fluid_max_temp, maximum_temperature) - fluid_default_temp) × fluid_usage_per_tick × fluid_heat_capacity × effectivity`, the fluid is the filter specified on the `fluid_box`. */
   maximum_temperature: number;
   /** Animation runs at least this fast. This corresponds to the sound. */
   min_perceived_performance?: number;
   performance_to_sound_speedup?: number;
-  /** Scales the generator&#x27;s fluid usage to its maximum power output.
+  /** Scales the generator's fluid usage to its maximum power output.
 
-Setting this to true prevents the generator from overconsuming fluid, for example when higher than&#x60;maximum_temperature&#x60; fluid is fed to the generator.
+Setting this to true prevents the generator from overconsuming fluid, for example when higher than`maximum_temperature` fluid is fed to the generator.
 
-If scale_fluid_usage is false, the generator consumes the full &#x60;fluid_usage_per_tick&#x60; and any of the extra energy in the fluid (in the form of higher temperature) is wasted. The [steam engine](https://wiki.factorio.com/Steam_engine) exhibits this behavior when fed steam from [heat exchangers](https://wiki.factorio.com/Heat_exchanger). */
+If scale_fluid_usage is false, the generator consumes the full `fluid_usage_per_tick` and any of the extra energy in the fluid (in the form of higher temperature) is wasted. The [steam engine](https://wiki.factorio.com/Steam_engine) exhibits this behavior when fed steam from [heat exchangers](https://wiki.factorio.com/Heat_exchanger). */
   scale_fluid_usage?: boolean;
   smoke?: SmokeSource[];
   vertical_animation: Animation;
@@ -2552,9 +2553,9 @@ export interface GodControllerPrototype {
   /** Names of the resource categories the player can mine resources from. */
   mining_categories?: ResourceCategoryID[];
   mining_speed: number;
-  /** Must be &gt;&#x3D; 0.34375. */
+  /** Must be >= 0.34375. */
   movement_speed: number;
-  /** Name of the god-controller. Base game uses &quot;default&quot;. */
+  /** Name of the god-controller. Base game uses "default". */
   name: string;
   type: 'god-controller';
 }
@@ -2567,7 +2568,7 @@ export function isGodControllerPrototype(
 /** This prototype is used for receiving an achievement when the player gets attacked due to pollution. */
 interface _GroupAttackAchievementPrototype {
   type: 'group-attack-achievement';
-  /** This will trigger the achievement, if the player receives this amount of attacks. **Note**: The default achievement &quot;it stinks and they don&#x27;t like it&quot; uses the amount of 1. (As in getting attacked once.) */
+  /** This will trigger the achievement, if the player receives this amount of attacks. **Note**: The default achievement "it stinks and they don't like it" uses the amount of 1. (As in getting attacked once.) */
   amount?: number;
 }
 
@@ -2639,9 +2640,9 @@ export function isHeatPipePrototype(
 ): value is HeatPipePrototype {
   return (value as { type: string }).type === 'heat-pipe';
 }
-/** Used to attach graphics for [cursor boxes](prototype:CursorBoxType) to entities during runtime. HighlightBoxEntity can also be independent from entities so it is simply drawn somewhere in the world. See [LuaSurface::create_entity](runtime:LuaSurface::create_entity) for the available options for type &quot;highlight-box&quot;.
+/** Used to attach graphics for [cursor boxes](prototype:CursorBoxType) to entities during runtime. HighlightBoxEntity can also be independent from entities so it is simply drawn somewhere in the world. See [LuaSurface::create_entity](runtime:LuaSurface::create_entity) for the available options for type "highlight-box".
 
-The [collision_box](prototype:EntityPrototype::collision_box) of the highlight box prototype is ignored during runtime, instead the &quot;bounding_box&quot; given in create_entity() or the selection box of the target entity is used. */
+The [collision_box](prototype:EntityPrototype::collision_box) of the highlight box prototype is ignored during runtime, instead the "bounding_box" given in create_entity() or the selection box of the target entity is used. */
 interface _HighlightBoxEntityPrototype {
   type: 'highlight-box';
   /** Two entities can collide only if they share a layer from the collision mask. */
@@ -2671,7 +2672,7 @@ interface _InfinityContainerPrototype {
     | 'requester'
     | 'storage'
     | 'buffer';
-  /** Whether the &quot;no network&quot; icon should be rendered on this entity if the entity is not within a logistics network. */
+  /** Whether the "no network" icon should be rendered on this entity if the entity is not within a logistics network. */
   render_not_in_network_icon?: boolean;
 }
 
@@ -2704,7 +2705,7 @@ interface _InserterPrototype {
   allow_burner_leech?: boolean;
   /** Whether pickup and insert position can be set run-time. */
   allow_custom_vectors?: boolean;
-  /** Whether the inserter hand should move to the items it picks up from belts, leading to item chasing behaviour. If this is off, the inserter hand will stay in the center of the belt and any items picked up from the edges of the belt &quot;teleport&quot; to the inserter hand. */
+  /** Whether the inserter hand should move to the items it picks up from belts, leading to item chasing behaviour. If this is off, the inserter hand will stay in the center of the belt and any items picked up from the edges of the belt "teleport" to the inserter hand. */
   chases_belt_items?: boolean;
   circuit_connector_sprites?: [
     CircuitConnectorSprites,
@@ -2769,7 +2770,7 @@ interface _ItemEntityPrototype {
 
 Specification of the entity collision boundaries. Empty collision box means no collision and is used for smoke, projectiles, particles, explosions etc.
 
-The &#x60;{0,0}&#x60; coordinate in the collision box will match the entity position. It should be near the center of the collision box, to keep correct entity drawing order. The bounding box must include the &#x60;{0,0}&#x60; coordinate.
+The `{0,0}` coordinate in the collision box will match the entity position. It should be near the center of the collision box, to keep correct entity drawing order. The bounding box must include the `{0,0}` coordinate.
 
 Note, that for buildings, it is customary to leave 0.1 wide border between the edge of the tile and the edge of the building, this lets the player move between the building and electric poles/inserters etc. */
   collision_box?: BoundingBox;
@@ -2785,24 +2786,24 @@ export function isItemEntityPrototype(
 ): value is ItemEntityPrototype {
   return (value as { type: string }).type === 'item-entity';
 }
-/** An item group. Item groups are shown above the list of craftable items in the player&#x27;s inventory. The built-in groups are &quot;logistics&quot;, &quot;production&quot;, &quot;intermediate-products&quot; and &quot;combat&quot; but mods can define their own.
+/** An item group. Item groups are shown above the list of craftable items in the player's inventory. The built-in groups are "logistics", "production", "intermediate-products" and "combat" but mods can define their own.
 
 Items are sorted into item groups by sorting them into a [subgroup](prototype:ItemPrototype::subgroup) which then belongs to a [item group](prototype:ItemSubGroup::group). */
 interface _ItemGroup {
   type: 'item-group';
   /** Path to the icon that is shown to represent this item group.
 
-Mandatory if &#x60;icons&#x60; is not defined. */
+Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
-Mandatory if &#x60;icons&#x60; is not defined, or if &#x60;icon_size&#x60; is not specified for all instances of &#x60;icons&#x60;. */
+Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
-  /** The icon that is shown to represent this item group. Can&#x27;t be an empty array. */
+  /** The icon that is shown to represent this item group. Can't be an empty array. */
   icons?: IconData[];
-  /** Item ingredients in recipes are ordered by item group. The &#x60;order_in_recipe&#x60; property can be used to specify the ordering in recipes without affecting the inventory order. */
+  /** Item ingredients in recipes are ordered by item group. The `order_in_recipe` property can be used to specify the ordering in recipes without affecting the inventory order. */
   order_in_recipe?: Order;
 }
 
@@ -2819,13 +2820,13 @@ interface _ItemPrototype {
   close_sound?: Sound;
   /** Path to the icon file.
 
-Only loaded if &#x60;dark_background_icons&#x60; is not defined.
+Only loaded if `dark_background_icons` is not defined.
 
-Uses the basic &#x60;icon_size&#x60; and &#x60;icon_mipmaps&#x60; properties. */
+Uses the basic `icon_size` and `icon_mipmaps` properties. */
   dark_background_icon?: FileName;
-  /** Inside IconData, the property for the file path is &#x60;dark_background_icon&#x60; instead of &#x60;icon&#x60;. Can&#x27;t be an empty array.
+  /** Inside IconData, the property for the file path is `dark_background_icon` instead of `icon`. Can't be an empty array.
 
-Uses the basic &#x60;icon_size&#x60; and &#x60;icon_mipmaps&#x60; properties. */
+Uses the basic `icon_size` and `icon_mipmaps` properties. */
   dark_background_icons?: IconData[];
   default_request_amount?: ItemCountType;
   /** Specifies some properties of the item. */
@@ -2837,39 +2838,39 @@ Uses the basic &#x60;icon_size&#x60; and &#x60;icon_mipmaps&#x60; properties. */
   /** Colors the glow of the burner energy source when this fuel is burned. Can also be used to color the glow of reactors burning the fuel, see [ReactorPrototype::use_fuel_glow_color](prototype:ReactorPrototype::use_fuel_glow_color). */
   fuel_glow_color?: Color;
   fuel_top_speed_multiplier?: number;
-  /** Mandatory when &#x60;fuel_acceleration_multiplier&#x60;, &#x60;fuel_top_speed_multiplier&#x60; or &#x60;fuel_emissions_multiplier&#x60; or &#x60;fuel_glow_color&#x60; are used. Amount of energy it gives when used as fuel. */
+  /** Mandatory when `fuel_acceleration_multiplier`, `fuel_top_speed_multiplier` or `fuel_emissions_multiplier` or `fuel_glow_color` are used. Amount of energy it gives when used as fuel. */
   fuel_value?: Energy;
   /** Path to the icon file.
 
-Mandatory if &#x60;icons&#x60; is not defined. */
+Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale.
 
 This definition applies to all icon-type properties, both on here and on any children. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
 This definition applies to all icon-type properties, both on here and on any children.
 
-Mandatory if &#x60;icons&#x60; is not defined, or if &#x60;icon_size&#x60; is not specified for all instances of &#x60;icons&#x60;. */
+Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
-  /** Can&#x27;t be an empty array. */
+  /** Can't be an empty array. */
   icons?: IconData[];
   open_sound?: Sound;
-  /** Used to give the item multiple different icons so that they look less uniform on belts etc. For inventory icons and similar, &#x60;icon/icons&#x60; will be used. Maximum number of variations is 16. */
+  /** Used to give the item multiple different icons so that they look less uniform on belts etc. For inventory icons and similar, `icon/icons` will be used. Maximum number of variations is 16. */
   pictures?: SpriteVariations;
   place_as_tile?: PlaceAsTile;
-  /** Name of the [EntityPrototype](prototype:EntityPrototype) that can be built using this item. If this item should be the one that construction bots use to build the specified &#x60;place_result&#x60;, set the &#x60;&quot;primary-place-result&quot;&#x60; [item flag](prototype:ItemPrototypeFlags).
+  /** Name of the [EntityPrototype](prototype:EntityPrototype) that can be built using this item. If this item should be the one that construction bots use to build the specified `place_result`, set the `"primary-place-result"` [item flag](prototype:ItemPrototypeFlags).
 
-The localised name of the entity will be used as the in-game item name. This behavior can be overwritten by specifying &#x60;localised_name&#x60; on this item, it will be used instead. */
+The localised name of the entity will be used as the in-game item name. This behavior can be overwritten by specifying `localised_name` on this item, it will be used instead. */
   place_result?: EntityID;
   placed_as_equipment_result?: EquipmentID;
-  /** Only loaded if &#x60;rocket_launch_products&#x60; is not defined. */
+  /** Only loaded if `rocket_launch_products` is not defined. */
   rocket_launch_product?: ItemProductPrototype;
   rocket_launch_products?: ItemProductPrototype[];
-  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the &#x60;&quot;not-stackable&quot;&#x60; flag is set. */
+  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: ItemCountType;
-  /** Empty text of subgroup is not allowed. (You can omit the definition to get the default &quot;other&quot;). */
+  /** Empty text of subgroup is not allowed. (You can omit the definition to get the default "other"). */
   subgroup?: ItemSubGroupID;
   /** The number of items needed to connect 2 entities with this as wire. In the base game, [green wire](https://wiki.factorio.com/Green_wire), [red wire](https://wiki.factorio.com/Red_wire) and [copper cable](https://wiki.factorio.com/Copper_cable) have this set to 1. */
   wire_count?: ItemCountType;
@@ -2916,27 +2917,27 @@ interface _ItemWithEntityDataPrototype {
   type: 'item-with-entity-data';
   /** Path to the icon file.
 
-Only loaded if &#x60;icon_tintables&#x60; is not defined.
+Only loaded if `icon_tintables` is not defined.
 
-Uses &#x60;icon_size&#x60; and &#x60;icon_mipmaps&#x60; from its [ItemPrototype](prototype:ItemPrototype) parent. */
+Uses `icon_size` and `icon_mipmaps` from its [ItemPrototype](prototype:ItemPrototype) parent. */
   icon_tintable?: FileName;
   /** Path to the icon file.
 
-Only loaded if &#x60;icon_tintable_masks&#x60; is not defined and &#x60;icon_tintable&#x60; is defined.
+Only loaded if `icon_tintable_masks` is not defined and `icon_tintable` is defined.
 
-Uses &#x60;icon_size&#x60; and &#x60;icon_mipmaps&#x60; from its [ItemPrototype](prototype:ItemPrototype) parent. */
+Uses `icon_size` and `icon_mipmaps` from its [ItemPrototype](prototype:ItemPrototype) parent. */
   icon_tintable_mask?: FileName;
-  /** Inside IconData, the property for the file path is &#x60;icon_tintable_mask&#x60; instead of &#x60;icon&#x60;. Can&#x27;t be an empty array.
+  /** Inside IconData, the property for the file path is `icon_tintable_mask` instead of `icon`. Can't be an empty array.
 
-Only loaded if &#x60;icon_tintable&#x60; is defined.
+Only loaded if `icon_tintable` is defined.
 
-Uses &#x60;icon_size&#x60; and &#x60;icon_mipmaps&#x60; from its [ItemPrototype](prototype:ItemPrototype) parent. */
+Uses `icon_size` and `icon_mipmaps` from its [ItemPrototype](prototype:ItemPrototype) parent. */
   icon_tintable_masks?: IconData[];
-  /** Inside IconData, the property for the file path is &#x60;icon_tintable&#x60; instead of &#x60;icon&#x60;. Can&#x27;t be an empty array.
+  /** Inside IconData, the property for the file path is `icon_tintable` instead of `icon`. Can't be an empty array.
 
-Only loaded if &#x60;icon_tintable&#x60; is defined (&#x60;icon_tintables&#x60; takes precedence over &#x60;icon_tintable&#x60;).
+Only loaded if `icon_tintable` is defined (`icon_tintables` takes precedence over `icon_tintable`).
 
-Uses &#x60;icon_size&#x60; and &#x60;icon_mipmaps&#x60; from its [ItemPrototype](prototype:ItemPrototype) parent. */
+Uses `icon_size` and `icon_mipmaps` from its [ItemPrototype](prototype:ItemPrototype) parent. */
   icon_tintables?: IconData[];
 }
 
@@ -2953,9 +2954,9 @@ interface _ItemWithInventoryPrototype {
   type: 'item-with-inventory';
   /** When true, this item-with-inventory will extend the inventory it sits in by default. This is a runtime property on the result item that can be changed through the Lua interface and only determines the initial value. */
   extends_inventory_by_default?: boolean;
-  /** The locale key used when the player attempts to put an item that doesn&#x27;t match the filter rules into the item-with-inventory. */
+  /** The locale key used when the player attempts to put an item that doesn't match the filter rules into the item-with-inventory. */
   filter_message_key?: string;
-  /** This determines how filters are applied. If no filters are defined this is automatically set to &quot;none&quot;. */
+  /** This determines how filters are applied. If no filters are defined this is automatically set to "none". */
   filter_mode?: 'blacklist' | 'whitelist';
   /** The insertion priority mode for this item. This determines if items are first attempted to be put into this items inventory if the item extends the inventory it sits in when items are put into the parent inventory. */
   insertion_priority_mode?:
@@ -2971,7 +2972,7 @@ interface _ItemWithInventoryPrototype {
   item_group_filters?: ItemGroupID[];
   /** A list of explicit item subgroup names to be used as filters. */
   item_subgroup_filters?: ItemSubGroupID[];
-  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the &#x60;&quot;not-stackable&quot;&#x60; flag is set. */
+  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: 1;
 }
 
@@ -3050,7 +3051,7 @@ interface _LabPrototype {
   energy_source: EnergySource;
   /** The amount of energy this lab uses. */
   energy_usage: Energy;
-  /** Shift of the &quot;alt-mode icon&quot; relative to the lab&#x27;s center. */
+  /** Shift of the "alt-mode icon" relative to the lab's center. */
   entity_info_icon_shift?: Vector;
   /** A list of the names of science packs that can be used in this lab.
 
@@ -3083,15 +3084,15 @@ interface _LampPrototype {
   circuit_wire_connection_point?: WireConnectionPoint;
   /** The maximum circuit wire distance for this entity. */
   circuit_wire_max_distance?: number;
-  /** darkness_for_all_lamps_on must be &gt; darkness_for_all_lamps_off. Values must be between 0 and 1. */
+  /** darkness_for_all_lamps_on must be > darkness_for_all_lamps_off. Values must be between 0 and 1. */
   darkness_for_all_lamps_off?: number;
-  /** darkness_for_all_lamps_on must be &gt; darkness_for_all_lamps_off. Values must be between 0 and 1. */
+  /** darkness_for_all_lamps_on must be > darkness_for_all_lamps_off. Values must be between 0 and 1. */
   darkness_for_all_lamps_on?: number;
   draw_circuit_wires?: boolean;
   draw_copper_wires?: boolean;
   /** The emissions set on the energy source are ignored so lamps cannot produce pollution. */
   energy_source: ElectricEnergySource | VoidEnergySource;
-  /** The amount of energy the lamp uses. Must be greater than &gt; 0. */
+  /** The amount of energy the lamp uses. Must be greater than > 0. */
   energy_usage_per_tick: Energy;
   glow_color_intensity?: number;
   glow_render_mode?: 'additive' | 'multiplicative';
@@ -3100,9 +3101,9 @@ interface _LampPrototype {
   light?: LightDefinition;
   /** This refers to when the light is in a circuit network, and is lit a certain color based on a signal value. */
   light_when_colored?: LightDefinition;
-  /** The lamps graphics when it&#x27;s off. */
+  /** The lamps graphics when it's off. */
   picture_off: Sprite;
-  /** The lamps graphics when it&#x27;s on. */
+  /** The lamps graphics when it's on. */
   picture_on: Sprite;
   signal_to_color_mapping?: SignalColorMapping[];
 }
@@ -3146,7 +3147,7 @@ export function isLandMinePrototype(
 ): value is LandMinePrototype {
   return (value as { type: string }).type === 'land-mine';
 }
-/** Deprecated in 0.18. Particles that are exclusively meant for leaves of trees. The type &quot;leaf-particle&quot; has been obsoleted and cannot be created. See [ParticlePrototype](prototype:ParticlePrototype) for particles. */
+/** Deprecated in 0.18. Particles that are exclusively meant for leaves of trees. The type "leaf-particle" has been obsoleted and cannot be created. See [ParticlePrototype](prototype:ParticlePrototype) for particles. */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _LeafParticlePrototype {
   type: 'leaf-particle';
@@ -3193,7 +3194,7 @@ interface _LinkedContainerPrototype {
   draw_copper_wires?: boolean;
   /** Players that can access the GUI to change the link ID. */
   gui_mode?: 'all' | 'none' | 'admins';
-  /** Must be &gt; 0. */
+  /** Must be > 0. */
   inventory_size: ItemStackIndex;
   /** Whether the inventory of this container can be filtered (like cargo wagons) or not. */
   inventory_type?: 'with_bar' | 'with_filters_and_bar';
@@ -3211,7 +3212,7 @@ export function isLinkedContainerPrototype(
 }
 /** Continuously loads and unloads machines, as an alternative to inserters.
 
-This loader type is identical to [Loader1x2Prototype](prototype:Loader1x2Prototype) with the exception of its hardcoded belt_distance. The belt_distance of the loader determines the distance between the position of this loader and the tile of the loader&#x27;s belt target.
+This loader type is identical to [Loader1x2Prototype](prototype:Loader1x2Prototype) with the exception of its hardcoded belt_distance. The belt_distance of the loader determines the distance between the position of this loader and the tile of the loader's belt target.
 
 This loader type always has a belt_distance of 0, meaning by default it is 1 tile long in total. For a loader type with a belt_distance of 0.5, see [Loader1x2Prototype](prototype:Loader1x2Prototype). */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -3229,7 +3230,7 @@ export function isLoader1x1Prototype(
 }
 /** Continuously loads and unloads machines, as an alternative to inserters.
 
-This loader type is identical to [Loader1x1Prototype](prototype:Loader1x1Prototype) with the exception of its hardcoded belt_distance. The belt_distance of the loader determines the distance between the position of this loader and the tile of the loader&#x27;s belt target.
+This loader type is identical to [Loader1x1Prototype](prototype:Loader1x1Prototype) with the exception of its hardcoded belt_distance. The belt_distance of the loader determines the distance between the position of this loader and the tile of the loader's belt target.
 
 This loader type always has a belt_distance of 0.5, meaning by default it is 2 tiles long in total. For a loader type with a belt_distance of 0, see [Loader1x1Prototype](prototype:Loader1x1Prototype). */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -3251,13 +3252,13 @@ interface _LoaderPrototype {
   allow_container_interaction?: boolean;
   /** Whether this loader can load and unload [RollingStockPrototype](prototype:RollingStockPrototype). */
   allow_rail_interaction?: boolean;
-  /** How long this loader&#x27;s belt is. Should be the same as belt_distance, which is hardcoded to &#x60;0.5&#x60; for [Loader1x2Prototype](prototype:Loader1x2Prototype) and to 0 for [Loader1x1Prototype](prototype:Loader1x1Prototype). */
+  /** How long this loader's belt is. Should be the same as belt_distance, which is hardcoded to `0.5` for [Loader1x2Prototype](prototype:Loader1x2Prototype) and to 0 for [Loader1x1Prototype](prototype:Loader1x1Prototype). */
   belt_length?: number;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
-  /** The distance between the position of this loader and the tile of the loader&#x27;s container target. */
+  /** The distance between the position of this loader and the tile of the loader's container target. */
   container_distance?: number;
-  /** Energy in Joules. Can&#x27;t be negative. */
+  /** Energy in Joules. Can't be negative. */
   energy_per_item?: Energy;
   energy_source?:
     | ElectricEnergySource
@@ -3276,7 +3277,7 @@ export type LoaderPrototype = _LoaderPrototype &
 interface _LocomotivePrototype {
   type: 'locomotive';
   darkness_to_render_light_animation?: number;
-  /** Must be a burner energy source when using &quot;burner&quot;, otherwise it can also be a void energy source. */
+  /** Must be a burner energy source when using "burner", otherwise it can also be a void energy source. */
   energy_source: BurnerEnergySource | VoidEnergySource;
   front_light?: LightDefinition;
   front_light_pictures?: RotatedSprite;
@@ -3299,7 +3300,7 @@ interface _LogisticContainerPrototype {
   type: 'logistic-container';
   /** Drawn when a robot brings/takes items from this container. */
   animation?: Animation;
-  /** Played when a robot brings/takes items from this container. Ignored if &#x60;animation&#x60; is not defined. */
+  /** Played when a robot brings/takes items from this container. Ignored if `animation` is not defined. */
   animation_sound?: Sound;
   /** The offset from the center of this container where a robot visually brings/takes items. */
   landing_location_offset?: Vector;
@@ -3310,12 +3311,12 @@ interface _LogisticContainerPrototype {
     | 'requester'
     | 'storage'
     | 'buffer';
-  /** The number of request slots this logistics container has. Requester-type containers must have &gt; 0 slots and can have a maximum of 1000 slots. Storage-type containers must have &lt;&#x3D; 1 slot. */
+  /** The number of request slots this logistics container has. Requester-type containers must have > 0 slots and can have a maximum of 1000 slots. Storage-type containers must have <= 1 slot. */
   max_logistic_slots?: number;
   opened_duration?: number;
   /** The picture displayed for this entity. */
   picture?: Sprite;
-  /** Whether the &quot;no network&quot; icon should be rendered on this entity if the entity is not within a logistics network. */
+  /** Whether the "no network" icon should be rendered on this entity if the entity is not within a logistics network. */
   render_not_in_network_icon?: boolean;
   /** Whether logistic robots have to deliver the exact amount of items requested to this logistic container instead of over-delivering (within their cargo size). */
   use_exact_mode?: boolean;
@@ -3354,7 +3355,7 @@ export function isLogisticRobotPrototype(
 }
 /** The available map gen presets. */
 export interface MapGenPresets {
-  /** Name of the map gen presets. Base game uses &quot;default&quot;. */
+  /** Name of the map gen presets. Base game uses "default". */
   name: string;
   type: 'map-gen-presets';
 }
@@ -3369,7 +3370,7 @@ export interface MapSettings {
   enemy_expansion: EnemyExpansionSettings;
   /** If a behavior fails this many times, the enemy (or enemy group) is destroyed. This solves biters stuck within their own base. */
   max_failed_behavior_count: number;
-  /** Name of the map-settings. Base game uses &quot;map-settings&quot;. */
+  /** Name of the map-settings. Base game uses "map-settings". */
   name: string;
   path_finder: PathFinderSettings;
   pollution: PollutionSettings;
@@ -3396,21 +3397,21 @@ export function isMarketPrototype(value: unknown): value is MarketPrototype {
 interface _MiningDrillPrototype {
   type: 'mining-drill';
   allowed_effects?: EffectTypeLimitation;
-  /** Only loaded if &#x60;graphics_set&#x60; is not defined. */
+  /** Only loaded if `graphics_set` is not defined. */
   animations?: Animation4Way;
   /** Used by the [pumpjack](https://wiki.factorio.com/Pumpjack) to have a static 4 way sprite. */
   base_picture?: Sprite4Way;
-  /** Productivity bonus that this machine always has. Values below &#x60;0&#x60; are allowed, however the sum of the resulting effect together with modules and research is limited to be at least 0%, see [Effect](prototype:Effect). */
+  /** Productivity bonus that this machine always has. Values below `0` are allowed, however the sum of the resulting effect together with modules and research is limited to be at least 0%, see [Effect](prototype:Effect). */
   base_productivity?: number;
   base_render_layer?: RenderLayer;
-  /** Mandatory if circuit_wire_max_distance  &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance  > 0. */
   circuit_connector_sprites?: [
     CircuitConnectorSprites,
     CircuitConnectorSprites,
     CircuitConnectorSprites,
     CircuitConnectorSprites,
   ];
-  /** Mandatory if circuit_wire_max_distance  &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance  > 0. */
   circuit_wire_connection_points?: [
     WireConnectionPoint,
     WireConnectionPoint,
@@ -3423,7 +3424,7 @@ interface _MiningDrillPrototype {
   draw_copper_wires?: boolean;
   /** The energy source of this mining drill. */
   energy_source: EnergySource;
-  /** The amount of energy used by the drill while mining. Can&#x27;t be less than or equal to 0. */
+  /** The amount of energy used by the drill while mining. Can't be less than or equal to 0. */
   energy_usage: Energy;
   graphics_set?: MiningDrillGraphicsSet;
   input_fluid_box?: FluidBox;
@@ -3437,13 +3438,13 @@ interface _MiningDrillPrototype {
   radius_visualisation_picture?: Sprite;
   /** The names of the [ResourceCategory](prototype:ResourceCategory) that can be mined by this drill. For a list of built-in categories, see [here](https://wiki.factorio.com/Data.raw#resource-category).
 
-Note: Categories containing resources which produce items, fluids, or items+fluids may be combined on the same entity, but may not work as expected. Examples: Miner does not rotate fluid-resulting resources until depletion. Fluid isn&#x27;t output (fluid resource change and fluidbox matches previous fluid). Miner with no &#x60;vector_to_place_result&#x60; can&#x27;t output an item result and halts. */
+Note: Categories containing resources which produce items, fluids, or items+fluids may be combined on the same entity, but may not work as expected. Examples: Miner does not rotate fluid-resulting resources until depletion. Fluid isn't output (fluid resource change and fluidbox matches previous fluid). Miner with no `vector_to_place_result` can't output an item result and halts. */
   resource_categories: ResourceCategoryID[];
   /** The distance from the centre of the mining drill to search for resources in.
 
 This is 2.49 for electric mining drills (a 5x5 area) and 0.99 for burner mining drills (a 2x2 area). The drill searches resource outside its natural boundary box, which is 0.01 (the middle of the entity); making it 2.5 and 1.0 gives it another block radius. */
   resource_searching_radius: number;
-  /** The position where any item results are placed, when the mining drill is facing north (default direction). If the drill does not produce any solid items but uses a fluidbox output instead (e.g. pumpjacks), a vector of &#x60;{0,0}&#x60; disables the yellow arrow alt-mode indicator for the placed item location. */
+  /** The position where any item results are placed, when the mining drill is facing north (default direction). If the drill does not produce any solid items but uses a fluidbox output instead (e.g. pumpjacks), a vector of `{0,0}` disables the yellow arrow alt-mode indicator for the placed item location. */
   vector_to_place_result: Vector;
   wet_mining_graphics_set?: MiningDrillGraphicsSet;
 }
@@ -3485,7 +3486,7 @@ export function isModuleCategory(value: unknown): value is ModuleCategory {
 /** A [module](https://wiki.factorio.com/Module). */
 interface _ModulePrototype {
   type: 'module';
-  /** Chooses with what art style the module is shown inside beacons. See [BeaconModuleVisualizations::art_style](prototype:BeaconModuleVisualizations::art_style). Vanilla uses &quot;vanilla&quot; here. */
+  /** Chooses with what art style the module is shown inside beacons. See [BeaconModuleVisualizations::art_style](prototype:BeaconModuleVisualizations::art_style). Vanilla uses "vanilla" here. */
   art_style?: string;
   beacon_tint?: BeaconVisualizationTints;
   /** Used when upgrading modules: Ctrl + click modules into an entity and it will replace lower tier modules of the same category with higher tier modules. */
@@ -3497,7 +3498,7 @@ interface _ModulePrototype {
 
 Note that the game converts this into a normal list of limitations internally, so reading [LuaItemPrototype::limitations](runtime:LuaItemPrototype::limitations) at runtime will be the product of both ways of defining limitations. */
   limitation_blacklist?: RecipeID[];
-  /** The locale key of the message that is shown when the player attempts to use the module on a recipe it can&#x27;t be used on. The locale key will be prefixed with &#x60;item-limitation.&#x60; (the &quot;category&quot; of the locale) by the game. */
+  /** The locale key of the message that is shown when the player attempts to use the module on a recipe it can't be used on. The locale key will be prefixed with `item-limitation.` (the "category" of the locale) by the game. */
   limitation_message_key?: string;
   requires_beacon_alt_mode?: boolean;
   /** Tier of the module inside its category. Used when upgrading modules: Ctrl + click modules into an entity and it will replace lower tier modules with higher tier modules if they have the same category. */
@@ -3512,11 +3513,11 @@ export function isModulePrototype(value: unknown): value is ModulePrototype {
 }
 /** Used by [SelectionToolPrototype::mouse_cursor](prototype:SelectionToolPrototype::mouse_cursor). */
 export interface MouseCursor {
-  /** Mandatory if &#x60;system_cursor&#x60; is not defined. */
+  /** Mandatory if `system_cursor` is not defined. */
   filename?: FileName;
-  /** Mandatory if &#x60;system_cursor&#x60; is not defined. */
+  /** Mandatory if `system_cursor` is not defined. */
   hot_pixel_x?: number;
-  /** Mandatory if &#x60;system_cursor&#x60; is not defined. */
+  /** Mandatory if `system_cursor` is not defined. */
   hot_pixel_y?: number;
   /** Name of the prototype. */
   name: string;
@@ -3551,74 +3552,74 @@ export function isMovementBonusEquipmentPrototype(
 ): value is MovementBonusEquipmentPrototype {
   return (value as { type: string }).type === 'movement-bonus-equipment';
 }
-/** A [NoiseExpression](prototype:NoiseExpression) with a name. The base game uses named noise expressions to specify functions for many map properties to be used in map generation; e.g. the &quot;elevation&quot; expression is used to calculate elevation for every point on a map. For a list of the built-in named noise expressions, see [data.raw](https://wiki.factorio.com/Data.raw#noise-expression).
+/** A [NoiseExpression](prototype:NoiseExpression) with a name. The base game uses named noise expressions to specify functions for many map properties to be used in map generation; e.g. the "elevation" expression is used to calculate elevation for every point on a map. For a list of the built-in named noise expressions, see [data.raw](https://wiki.factorio.com/Data.raw#noise-expression).
 
-Named noise expressions can be used by [MapGenSettings](prototype:MapGenSettings) and [MapGenPreset](prototype:MapGenPreset) to override which named expression is used to calculate a given property by having an entry in &#x60;property_expression_names&#x60;, e.g. &#x60;elevation &#x3D; &quot;0.16-elevation&quot;&#x60;.
+Named noise expressions can be used by [MapGenSettings](prototype:MapGenSettings) and [MapGenPreset](prototype:MapGenPreset) to override which named expression is used to calculate a given property by having an entry in `property_expression_names`, e.g. `elevation = "0.16-elevation"`.
 
-Alternate expressions can be made available in the map generator GUI by setting their &#x60;intended_property&#x60; to the name of the property they should override.
+Alternate expressions can be made available in the map generator GUI by setting their `intended_property` to the name of the property they should override.
 
-Named noise expressions can also be used by [noise variables](prototype:NoiseExpression::variable), e.g. &#x60;noise.var(&quot;my-named-expression&quot;)&#x60;. */
+Named noise expressions can also be used by [noise variables](prototype:NoiseExpression::variable), e.g. `noise.var("my-named-expression")`. */
 interface _NamedNoiseExpression {
   type: 'noise-expression';
   /** The noise expression itself. This is where most of the noise magic happens. */
   expression: NoiseExpression;
   /** Names the property that this expression is intended to provide a value for, if any. This will make the expression show up as an option in the map generator GUI, unless it is the only expression with that intended property, in which case it will be hidden and selected by default.
 
-Note that the &quot;Map type&quot; dropdown in the map generation GUI is actually a selector for &quot;elevation&quot; generators. If generators are available for other properties, the &quot;Map type&quot; dropdown in the GUI will be renamed to &quot;elevation&quot; and shown along with selectors for the other selectable properties.
+Note that the "Map type" dropdown in the map generation GUI is actually a selector for "elevation" generators. If generators are available for other properties, the "Map type" dropdown in the GUI will be renamed to "elevation" and shown along with selectors for the other selectable properties.
 
-For example if a noise expression is intended to be used as an alternative temperature generator, &#x60;intended_property&#x60; should be &quot;temperature&quot;. The base game uses the intended_properties elevation, temperature, moisture and aux. For how the named noise expression with those intended_properties are used in the base game see the notable named noise expression list on [NoiseExpression::variable](prototype:NoiseExpression::variable). Mods may add any other intended_property or modify the existing noise expressions to change/remove their intended properties. Furthermore, mods may remove the use of those named noise expressions from the map generation code or change what they affect.
+For example if a noise expression is intended to be used as an alternative temperature generator, `intended_property` should be "temperature". The base game uses the intended_properties elevation, temperature, moisture and aux. For how the named noise expression with those intended_properties are used in the base game see the notable named noise expression list on [NoiseExpression::variable](prototype:NoiseExpression::variable). Mods may add any other intended_property or modify the existing noise expressions to change/remove their intended properties. Furthermore, mods may remove the use of those named noise expressions from the map generation code or change what they affect.
 
-**intended_property in the base game:** The base game defines two named noise expressions that have the &#x60;intended_property&#x60; &quot;elevation&quot; so that are selectable via the &quot;Map type&quot; dropdown (which actually selects elevation generators)
+**intended_property in the base game:** The base game defines two named noise expressions that have the `intended_property` "elevation" so that are selectable via the "Map type" dropdown (which actually selects elevation generators)
 
-&#x60;&#x60;&#x60;
-local noise &#x3D; require(&quot;noise&quot;)
+```
+local noise = require("noise")
 data:extend{
   {
-    type &#x3D; &quot;noise-expression&quot;,
-    name &#x3D; &quot;elevation&quot;,
-    intended_property &#x3D; &quot;elevation&quot;,
-    expression &#x3D; noise.var(&quot;0_17-lakes-elevation&quot;) -- &quot;0_17-lakes-elevation&quot; is another named noise expression. Noise variables may reference named noise expressions.
+    type = "noise-expression",
+    name = "elevation",
+    intended_property = "elevation",
+    expression = noise.var("0_17-lakes-elevation") -- "0_17-lakes-elevation" is another named noise expression. Noise variables may reference named noise expressions.
   },
   {
-    type &#x3D; &quot;noise-expression&quot;,
-    name &#x3D; &quot;0_17-island&quot;,
-    intended_property &#x3D; &quot;elevation&quot;,
+    type = "noise-expression",
+    name = "0_17-island",
+    intended_property = "elevation",
     -- A large island surrounded by an endless ocean
-    -- expression &#x3D;  [...]
+    -- expression =  [...]
   }
 }
-&#x60;&#x60;&#x60;
+```
 
 **Mods can define any intended_property with any name**. This examples aims to show what this is useful for.
 
-A [NoiseExpression::variable](prototype:NoiseExpression::variable) can reference a named noise expression, so by defining the &quot;test&quot; named noise expression, &#x60;noise.var(&quot;test&quot;)&#x60; may be used in other [noise expressions](prototype:NoiseExpression). Intended_property allows to override what the variable references: With the example, if &quot;more-test&quot; is selected in the dropdown in the map generator GUI, its &#x60;expression&#x60; (&#x60;noise.ridge(noise.var(&quot;y&quot;), -10, 6&#x60;) will provide the value for the noise variable &quot;test&quot; instead.
+A [NoiseExpression::variable](prototype:NoiseExpression::variable) can reference a named noise expression, so by defining the "test" named noise expression, `noise.var("test")` may be used in other [noise expressions](prototype:NoiseExpression). Intended_property allows to override what the variable references: With the example, if "more-test" is selected in the dropdown in the map generator GUI, its `expression` (`noise.ridge(noise.var("y"), -10, 6`) will provide the value for the noise variable "test" instead.
 
-For easy demonstration, that value is assigned to the &quot;elevation&quot; named noise expression, so changing the &quot;test&quot; generator changes the &#x60;noise.var(&quot;test&quot;)&#x60; which in turn is used by the &quot;elevation&quot; named noise expression. The &quot;elevation&quot; noise variable is used by water generation, so changing the test generators is immediately visible in the map generation preview.
+For easy demonstration, that value is assigned to the "elevation" named noise expression, so changing the "test" generator changes the `noise.var("test")` which in turn is used by the "elevation" named noise expression. The "elevation" noise variable is used by water generation, so changing the test generators is immediately visible in the map generation preview.
 
-Note that the player can select the &quot;Island&quot; elevation generator in the Elevation dropdown (previously named Map type), which means the 0_17-island named noise expression is selected and &#x60;noise.var(&quot;test&quot;)&#x60; isn&#x27;t used anymore so changing the test generator no longer has an effect.
+Note that the player can select the "Island" elevation generator in the Elevation dropdown (previously named Map type), which means the 0_17-island named noise expression is selected and `noise.var("test")` isn't used anymore so changing the test generator no longer has an effect.
 
-&#x60;&#x60;&#x60;
-local noise &#x3D; require(&quot;noise&quot;)
+```
+local noise = require("noise")
 data:extend{
   {
-    type &#x3D; &quot;noise-expression&quot;,
-    name &#x3D; &quot;test&quot;,
-    intended_property &#x3D; &quot;test&quot;,
-    expression &#x3D; noise.ridge(noise.var(&quot;x&quot;), -80, 8),
+    type = "noise-expression",
+    name = "test",
+    intended_property = "test",
+    expression = noise.ridge(noise.var("x"), -80, 8),
   },
   {
-    type &#x3D; &quot;noise-expression&quot;,
-    name &#x3D; &quot;more-test&quot;,
-    intended_property &#x3D; &quot;test&quot;, -- override the &quot;test&quot; noise variable when selected by the player
-    expression &#x3D; noise.ridge(noise.var(&quot;y&quot;), -10, 6),
+    type = "noise-expression",
+    name = "more-test",
+    intended_property = "test", -- override the "test" noise variable when selected by the player
+    expression = noise.ridge(noise.var("y"), -10, 6),
   }
 }
-data.raw[&quot;noise-expression&quot;][&quot;elevation&quot;].expression &#x3D; noise.var(&quot;test&quot;) -- the noise variable &quot;test&quot;
-&#x60;&#x60;&#x60; */
+data.raw["noise-expression"]["elevation"].expression = noise.var("test") -- the noise variable "test"
+``` */
   intended_property?: string;
-  /** Used to order alternative expressions in the map generator GUI. For a given property (e.g. &#x27;temperature&#x27;), the NamedNoiseExpression with that property&#x27;s name as its &#x60;intended_property&#x60; with the lowest order will be chosen as the default in the GUI.
+  /** Used to order alternative expressions in the map generator GUI. For a given property (e.g. 'temperature'), the NamedNoiseExpression with that property's name as its `intended_property` with the lowest order will be chosen as the default in the GUI.
 
-If no order is specified, it defaults to &quot;2000&quot; if the property name matches the expression name (making it the &#x27;technical default&#x27; generator for the property if none is specified in MapGenSettings), or &quot;3000&quot; otherwise. A generator defined with an order less than &quot;2000&quot; but with a unique name can thereby override the default generator used when creating a new map through the GUI without automatically overriding the &#x27;technical default&#x27; generator, which is probably used by existing maps. */
+If no order is specified, it defaults to "2000" if the property name matches the expression name (making it the 'technical default' generator for the property if none is specified in MapGenSettings), or "3000" otherwise. A generator defined with an order less than "2000" but with a unique name can thereby override the default generator used when creating a new map through the GUI without automatically overriding the 'technical default' generator, which is probably used by existing maps. */
   order?: Order;
 }
 
@@ -3635,7 +3636,7 @@ interface _NightVisionEquipmentPrototype {
   type: 'night-vision-equipment';
   activate_sound?: Sound;
   color_lookup: DaytimeColorLookupTable;
-  /** Must be &gt;&#x3D; 0 and &lt;&#x3D; 1. */
+  /** Must be >= 0 and <= 1. */
   darkness_to_turn_on?: number;
   deactivate_sound?: Sound;
   energy_input: Energy;
@@ -3664,26 +3665,26 @@ export function isNoiseLayer(value: unknown): value is NoiseLayer {
 interface _OffshorePumpPrototype {
   type: 'offshore-pump';
   adjacent_tile_collision_box?: BoundingBox;
-  /** Tiles colliding with &#x60;adjacent_tile_collision_box&#x60; must NOT collide with this collision mask. */
+  /** Tiles colliding with `adjacent_tile_collision_box` must NOT collide with this collision mask. */
   adjacent_tile_collision_mask?: CollisionMask;
-  /** Tiles colliding with &#x60;adjacent_tile_collision_box&#x60; must collide with this collision mask (unless it&#x27;s empty). */
+  /** Tiles colliding with `adjacent_tile_collision_box` must collide with this collision mask (unless it's empty). */
   adjacent_tile_collision_test?: CollisionMask;
   /** If false, the offshore pump will not show fluid present (visually) before there is an output connected. The pump will also animate yet not show fluid when the fluid is 100% extracted (e.g. such as with a pump). */
   always_draw_fluid?: boolean;
   /** Tile at placement position must NOT collide with this collision mask. */
   center_collision_mask?: CollisionMask;
-  /** If not set (&#x3D;default), the offshore pump does not collide with tiles if it has none of these collision masks: &quot;water-tile&quot;, &quot;ground-tile&quot;, &quot;resource-layer&quot;, &quot;player-layer&quot;, &quot;item-layer&quot;, &quot;doodad-layer&quot;. If it has at least one of the six collision masks, it does collide with tiles.
+  /** If not set (=default), the offshore pump does not collide with tiles if it has none of these collision masks: "water-tile", "ground-tile", "resource-layer", "player-layer", "item-layer", "doodad-layer". If it has at least one of the six collision masks, it does collide with tiles.
 
 If set, this specifies whether collision with tiles should (true) or should not (false) be performed on an offshore pump. */
   check_bounding_box_collides_with_tiles?: boolean;
-  /** Mandatory if circuit_wire_max_distance &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance > 0. */
   circuit_connector_sprites?: [
     CircuitConnectorSprites,
     CircuitConnectorSprites,
     CircuitConnectorSprites,
     CircuitConnectorSprites,
   ];
-  /** Mandatory if circuit_wire_max_distance &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance > 0. */
   circuit_wire_connection_points?: [
     WireConnectionPoint,
     WireConnectionPoint,
@@ -3701,12 +3702,12 @@ If set, this specifies whether collision with tiles should (true) or should not 
   graphics_set?: OffshorePumpGraphicsSet;
   /** Animation runs at least this fast. */
   min_perceived_performance?: number;
-  /** Mandatory if &#x60;graphics_set&#x60; is not defined.
+  /** Mandatory if `graphics_set` is not defined.
 
-Deprecated, use &#x60;graphics_set&#x60; instead. */
+Deprecated, use `graphics_set` instead. */
   picture?: Sprite4Way;
   placeable_position_visualization?: Sprite;
-  /** How many units of fluid are produced per tick. Must be &gt; 0. */
+  /** How many units of fluid are produced per tick. Must be > 0. */
   pumping_speed: number;
   remove_on_tile_collision?: boolean;
 }
@@ -3725,9 +3726,9 @@ interface _ParticlePrototype {
   draw_shadow_when_on_ground?: boolean;
   ended_in_water_trigger_effect?: TriggerEffect;
   ended_on_ground_trigger_effect?: TriggerEffect;
-  /** Defaults to &#x60;life_time&#x60; / 5, but at most 60. If this is 0, it is silently changed to 1. */
+  /** Defaults to `life_time` / 5, but at most 60. If this is 0, it is silently changed to 1. */
   fade_away_duration?: number;
-  /** Can&#x27;t be 1. */
+  /** Can't be 1. */
   life_time: number;
   mining_particle_frame_speed?: number;
   movement_modifier?: number;
@@ -3735,13 +3736,13 @@ interface _ParticlePrototype {
   /** Picture variation count and individual frame count must be equal to shadow variation count. */
   pictures: AnimationVariations;
   regular_trigger_effect?: TriggerEffect;
-  /** Can&#x27;t be 1. */
+  /** Can't be 1. */
   regular_trigger_effect_frequency?: number;
   render_layer?: RenderLayer;
   render_layer_when_on_ground?: RenderLayer;
   /** Shadow variation variation count and individual frame count must be equal to picture variation count. */
   shadows?: AnimationVariations;
-  /** Has to be &gt;&#x3D; -0.01 and &lt;&#x3D; 0.01. */
+  /** Has to be >= -0.01 and <= 0.01. */
   vertical_acceleration?: number;
 }
 
@@ -3762,9 +3763,9 @@ interface _ParticleSourcePrototype {
   height_deviation?: number;
   horizontal_speed: number;
   horizontal_speed_deviation?: number;
-  /** Mandatory if &#x60;smoke&#x60; is not defined. */
+  /** Mandatory if `smoke` is not defined. */
   particle?: ParticleID;
-  /** Mandatory if &#x60;particle&#x60; is not defined. */
+  /** Mandatory if `particle` is not defined. */
   smoke?: SmokeSource[];
   time_before_start: number;
   time_before_start_deviation?: number;
@@ -3820,7 +3821,7 @@ interface _PlayerDamagedAchievementPrototype {
   type: 'player-damaged-achievement';
   /** This will trigger the achievement, if the amount of damage taken by the dealer, is more than this. */
   minimum_damage: number;
-  /** This sets the achievement to only trigger, if you survive the minimum amount of damage. If you don&#x27;t need to survive, false. */
+  /** This sets the achievement to only trigger, if you survive the minimum amount of damage. If you don't need to survive, false. */
   should_survive: boolean;
   /** This will trigger the achievement, if the player takes damage from this specific entity type. */
   type_of_dealer?: string;
@@ -3883,11 +3884,11 @@ interface _ProduceAchievementPrototype {
   type: 'produce-achievement';
   /** This will set the amount of items or fluids needed to craft, for the player to complete the achievement. */
   amount: MaterialAmountType;
-  /** Mandatory if &#x60;item_product&#x60; is not defined.
+  /** Mandatory if `item_product` is not defined.
 
 This will tell the achievement what fluid the player needs to craft, to get the achievement. */
   fluid_product?: FluidID;
-  /** Mandatory if &#x60;fluid_product&#x60; is not defined.
+  /** Mandatory if `fluid_product` is not defined.
 
 This will tell the achievement what item the player needs to craft, to get the achievement. */
   item_product?: ItemID;
@@ -3908,11 +3909,11 @@ interface _ProducePerHourAchievementPrototype {
   type: 'produce-per-hour-achievement';
   /** This is how much the player has to craft in an hour, to receive the achievement. */
   amount: MaterialAmountType;
-  /** Mandatory if &#x60;item_product&#x60; is not defined.
+  /** Mandatory if `item_product` is not defined.
 
 This will tell the achievement what fluid the player needs to craft, to get the achievement. */
   fluid_product?: FluidID;
-  /** Mandatory if &#x60;fluid_product&#x60; is not defined.
+  /** Mandatory if `fluid_product` is not defined.
 
 This will tell the achievement what item the player needs to craft, to get the achievement. */
   item_product?: ItemID;
@@ -3954,7 +3955,7 @@ export function isProgrammableSpeakerPrototype(
 /** Entity with limited lifetime that can hit other entities and has triggers when this happens. */
 interface _ProjectilePrototype {
   type: 'projectile';
-  /** Must be !&#x3D; 0 if &#x60;turning_speed_increases_exponentially_with_projectile_speed&#x60; is true. */
+  /** Must be != 0 if `turning_speed_increases_exponentially_with_projectile_speed` is true. */
   acceleration: number;
   /** Executed when the projectile hits something. */
   action?: Trigger;
@@ -3964,7 +3965,7 @@ interface _ProjectilePrototype {
   /** Setting this to true can be used to disable projectile homing behaviour. */
   direction_only?: boolean;
   enable_drawing_with_mask?: boolean;
-  /** Executed when the projectile hits something, after &#x60;action&#x60; and only if the entity that was hit was destroyed. The projectile is destroyed right after the final_action. */
+  /** Executed when the projectile hits something, after `action` and only if the entity that was hit was destroyed. The projectile is destroyed right after the final_action. */
   final_action?: Trigger;
   force_condition?: ForceCondition;
   height?: number;
@@ -3974,7 +3975,7 @@ interface _ProjectilePrototype {
   light?: LightDefinition;
   /** Must be greater than or equal to 0. */
   max_speed?: number;
-  /** Whenever an entity is hit by the projectile, this number gets reduced by the health of the entity. If the number is then below 0, the &#x60;final_action&#x60; is applied and the projectile destroyed. Otherwise, the projectile simply continues to its destination. */
+  /** Whenever an entity is hit by the projectile, this number gets reduced by the health of the entity. If the number is then below 0, the `final_action` is applied and the projectile destroyed. Otherwise, the projectile simply continues to its destination. */
   piercing_damage?: number;
   /** Whether the animation of the projectile is rotated to match the direction of travel. */
   rotatable?: boolean;
@@ -4016,14 +4017,14 @@ interface _PumpPrototype {
   type: 'pump';
   /** The animation for the pump. */
   animations: Animation4Way;
-  /** Mandatory if circuit_wire_max_distance  &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance  > 0. */
   circuit_connector_sprites?: [
     CircuitConnectorSprites,
     CircuitConnectorSprites,
     CircuitConnectorSprites,
     CircuitConnectorSprites,
   ];
-  /** Mandatory if circuit_wire_max_distance  &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance  > 0. */
   circuit_wire_connection_points?: [
     WireConnectionPoint,
     WireConnectionPoint,
@@ -4058,11 +4059,11 @@ export function isPumpPrototype(value: unknown): value is PumpPrototype {
 /** A [radar](https://wiki.factorio.com/Radar). */
 interface _RadarPrototype {
   type: 'radar';
-  /** The amount of energy the radar has to consume for nearby scan to be performed. This value doesn&#x27;t have any effect on sector scanning.
+  /** The amount of energy the radar has to consume for nearby scan to be performed. This value doesn't have any effect on sector scanning.
 
-Performance warning: nearby scan causes re-charting of many chunks, which is expensive operation. If you want to make a radar that updates map more in real time, you should keep its range low. If you are making radar with high range, you should set this value such that nearby scan is performed once a second or so. For example if you set &#x60;energy_usage&#x60; to 100kW, setting&#x60; energy_per_nearby_scan&#x60; to 100kJ will cause nearby scan happen once per second. */
+Performance warning: nearby scan causes re-charting of many chunks, which is expensive operation. If you want to make a radar that updates map more in real time, you should keep its range low. If you are making radar with high range, you should set this value such that nearby scan is performed once a second or so. For example if you set `energy_usage` to 100kW, setting` energy_per_nearby_scan` to 100kJ will cause nearby scan happen once per second. */
   energy_per_nearby_scan: Energy;
-  /** The amount of energy it takes to scan a sector. This value doesn&#x27;t have any effect on nearby scanning. */
+  /** The amount of energy it takes to scan a sector. This value doesn't have any effect on nearby scanning. */
   energy_per_sector: Energy;
   /** The energy source for this radar. */
   energy_source: EnergySource;
@@ -4105,9 +4106,9 @@ export function isRailChainSignalPrototype(
 /** A [rail planner](https://wiki.factorio.com/Rail_planner). */
 interface _RailPlannerPrototype {
   type: 'rail-planner';
-  /** The name of an entity of the type &quot;curved-rail&quot;. The first item to place of the rail must be this rail planner. */
+  /** The name of an entity of the type "curved-rail". The first item to place of the rail must be this rail planner. */
   curved_rail: EntityID;
-  /** The name of an entity of the type &quot;straight-rail&quot;. The first item to place of the rail must be this rail planner. */
+  /** The name of an entity of the type "straight-rail". The first item to place of the rail must be this rail planner. */
   straight_rail: EntityID;
 }
 
@@ -4160,15 +4161,15 @@ export function isRailRemnantsPrototype(
 /** The abstract base entity for both rail signals. */
 interface _RailSignalBasePrototype {
   animation: RotatedAnimation;
-  /** Mandatory if circuit_wire_max_distance &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance > 0. */
   circuit_connector_sprites?: CircuitConnectorSprites[];
-  /** Mandatory if circuit_wire_max_distance &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance > 0. */
   circuit_wire_connection_points?: WireConnectionPoint[];
   /** The maximum circuit wire distance for this entity. */
   circuit_wire_max_distance?: number;
-  /** The [collision_box](prototype:EntityPrototype::collision_box) of rail signals is hardcoded to &#x60;{{-0.2, -0.2}, {0.2, 0.2}}&#x60;. */
+  /** The [collision_box](prototype:EntityPrototype::collision_box) of rail signals is hardcoded to `{{-0.2, -0.2}, {0.2, 0.2}}`. */
   collision_box?: BoundingBox;
-  /** Rail signals must collide with each other, this can be achieved by having the &quot;rail-layer&quot; collision mask layer on all rail signals.
+  /** Rail signals must collide with each other, this can be achieved by having the "rail-layer" collision mask layer on all rail signals.
 
 Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
@@ -4177,7 +4178,7 @@ Two entities can collide only if they share a layer from the collision mask. */
   default_red_output_signal?: SignalIDConnector;
   draw_circuit_wires?: boolean;
   draw_copper_wires?: boolean;
-  /** The &quot;placeable-off-grid&quot; flag will be ignored for rail signals. */
+  /** The "placeable-off-grid" flag will be ignored for rail signals. */
   flags?: EntityPrototypeFlags;
   green_light?: LightDefinition;
   orange_light?: LightDefinition;
@@ -4204,13 +4205,13 @@ export function isRailSignalPrototype(
 /** A [reactor](https://wiki.factorio.com/Reactor). */
 interface _ReactorPrototype {
   type: 'reactor';
-  /** If defined, number of variations must be at least equal to count of [connections](prototype:HeatBuffer::connections) defined in &#x60;heat_buffer&#x60;. Each variation represents connected heat buffer connection of corresponding index. */
+  /** If defined, number of variations must be at least equal to count of [connections](prototype:HeatBuffer::connections) defined in `heat_buffer`. Each variation represents connected heat buffer connection of corresponding index. */
   connection_patches_connected?: SpriteVariations;
-  /** If defined, number of variations must be at least equal to count of [connections](prototype:HeatBuffer::connections) defined in &#x60;heat_buffer&#x60;. Each variation represents unconnected heat buffer connection of corresponding index. */
+  /** If defined, number of variations must be at least equal to count of [connections](prototype:HeatBuffer::connections) defined in `heat_buffer`. Each variation represents unconnected heat buffer connection of corresponding index. */
   connection_patches_disconnected?: SpriteVariations;
   /** How much energy this reactor can consume (from the input energy source) and then output as heat. */
   consumption: Energy;
-  /** When &#x60;use_fuel_glow_color&#x60; is true, this is the color used as &#x60;working_light_picture&#x60; tint for fuels that don&#x27;t have glow color defined. */
+  /** When `use_fuel_glow_color` is true, this is the color used as `working_light_picture` tint for fuels that don't have glow color defined. */
   default_fuel_glow_color?: Color;
   /** May not be a heat energy source.
 
@@ -4218,9 +4219,9 @@ The input energy source, in vanilla it is a burner energy source. */
   energy_source: EnergySource;
   /** The energy output as heat. */
   heat_buffer: HeatBuffer;
-  /** If defined, number of variations must be at least equal to count of [connections](prototype:HeatBuffer::connections) defined in &#x60;heat_buffer&#x60;. When reactor is heated, corresponding variations are drawn over &#x60;connection_patches_connected&#x60;. */
+  /** If defined, number of variations must be at least equal to count of [connections](prototype:HeatBuffer::connections) defined in `heat_buffer`. When reactor is heated, corresponding variations are drawn over `connection_patches_connected`. */
   heat_connection_patches_connected?: SpriteVariations;
-  /** If defined, number of variations must be at least equal to count of [connections](prototype:HeatBuffer::connections) defined in &#x60;heat_buffer&#x60;. When reactor is heated, corresponding variations are drawn over &#x60;connection_patches_disconnected&#x60;. */
+  /** If defined, number of variations must be at least equal to count of [connections](prototype:HeatBuffer::connections) defined in `heat_buffer`. When reactor is heated, corresponding variations are drawn over `connection_patches_disconnected`. */
   heat_connection_patches_disconnected?: SpriteVariations;
   heat_lower_layer_picture?: Sprite;
   light?: LightDefinition;
@@ -4231,7 +4232,7 @@ The input energy source, in vanilla it is a burner energy source. */
   picture?: Sprite;
   /** When this is true, the reactor will stop consuming fuel/energy when the temperature has reached the maximum. */
   scale_energy_usage?: boolean;
-  /** Whether the reactor should use [fuel_glow_color](prototype:ItemPrototype::fuel_glow_color) from the fuel item prototype as light color and tint for &#x60;working_light_picture&#x60;. [Forum post.](https://forums.factorio.com/71121) */
+  /** Whether the reactor should use [fuel_glow_color](prototype:ItemPrototype::fuel_glow_color) from the fuel item prototype as light color and tint for `working_light_picture`. [Forum post.](https://forums.factorio.com/71121) */
   use_fuel_glow_color?: boolean;
   working_light_picture: Sprite;
 }
@@ -4244,7 +4245,7 @@ export function isReactorPrototype(value: unknown): value is ReactorPrototype {
 }
 /** A recipe category. The built-in categories can be found [here](https://wiki.factorio.com/Data.raw#recipe-category). See [RecipePrototype::category](prototype:RecipePrototype::category). Recipe categories can be used to specify which [machine](prototype:CraftingMachinePrototype::crafting_categories) can craft which [recipes](prototype:RecipePrototype).
 
-The recipe category with the name &quot;crafting&quot; cannot contain recipes with fluid ingredients or products. */
+The recipe category with the name "crafting" cannot contain recipes with fluid ingredients or products. */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _RecipeCategory {
   type: 'recipe-category';
@@ -4258,78 +4259,78 @@ export function isRecipeCategory(value: unknown): value is RecipeCategory {
 }
 /** A recipe. It can be a crafting recipe, a smelting recipe, or a custom type of recipe, see [RecipeCategory](prototype:RecipeCategory).
 
-This prototype has two different formats that can be specified. If both &#x60;normal&#x60; and &#x60;expensive&#x60; are not defined, the standard properties define this recipe. Otherwise, they are ignored, and the &#x60;normal&#x60; and &#x60;expensive&#x60; properties are used exclusively to define this recipe. */
+This prototype has two different formats that can be specified. If both `normal` and `expensive` are not defined, the standard properties define this recipe. Otherwise, they are ignored, and the `normal` and `expensive` properties are used exclusively to define this recipe. */
 interface _RecipePrototype {
   type: 'recipe';
   /** Whether the recipe can be used as an intermediate recipe in hand-crafting.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   allow_as_intermediate?: boolean;
-  /** Whether this recipe is allowed to be broken down for the recipe tooltip &quot;Total raw&quot; calculations.
+  /** Whether this recipe is allowed to be broken down for the recipe tooltip "Total raw" calculations.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   allow_decomposition?: boolean;
   /** Whether the recipe is allowed to have the extra inserter overload bonus applied (4 * stack inserter stack size).
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   allow_inserter_overload?: boolean;
   /** Whether the recipe is allowed to use intermediate recipes when hand-crafting.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   allow_intermediates?: boolean;
-  /** Whether the &quot;Made in: &lt;Machine&gt;&quot; part of the tool-tip should always be present, and not only when the recipe can&#x27;t be hand-crafted.
+  /** Whether the "Made in: <Machine>" part of the tool-tip should always be present, and not only when the recipe can't be hand-crafted.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   always_show_made_in?: boolean;
   /** Whether the products are always shown in the recipe tooltip.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   always_show_products?: boolean;
   /** Controls which category of machines can craft this recipe.
 
-The built-in categories can be found [here](https://wiki.factorio.com/Data.raw#recipe-category). The base &#x60;&quot;crafting&quot;&#x60; category can not contain recipes with fluid ingredients or products. */
+The built-in categories can be found [here](https://wiki.factorio.com/Data.raw#recipe-category). The base `"crafting"` category can not contain recipes with fluid ingredients or products. */
   category?: RecipeCategoryID;
   /** Used by [CraftingMachinePrototype::working_visualisations](prototype:CraftingMachinePrototype::working_visualisations) to tint certain layers with the recipe color. [WorkingVisualisation::apply_recipe_tint](prototype:WorkingVisualisation::apply_recipe_tint) determines which of the four colors is used for that layer, if any. */
   crafting_machine_tint?: CraftingMachineTint;
-  /** Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+  /** Only loaded if neither `normal` nor `expensive` are defined. */
   emissions_multiplier?: number;
-  /** This can be &#x60;false&#x60; to disable the recipe at the start of the game, or &#x60;true&#x60; to leave it enabled.
+  /** This can be `false` to disable the recipe at the start of the game, or `true` to leave it enabled.
 
-If a recipe is unlocked via technology, this should be set to &#x60;false&#x60;.
+If a recipe is unlocked via technology, this should be set to `false`.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   enabled?: boolean;
-  /** The amount of time it takes to make this recipe. Must be &#x60;&gt; 0.001&#x60;. Equals the number of seconds it takes to craft at crafting speed &#x60;1&#x60;.
+  /** The amount of time it takes to make this recipe. Must be `> 0.001`. Equals the number of seconds it takes to craft at crafting speed `1`.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   energy_required?: number;
-  /** Can be set to &#x60;false&#x60; if the &#x60;normal&#x60; property is defined. This will disable this difficulty, same as setting &#x60;enabled&#x60; to &#x60;false&#x60; would. If it&#x27;s later enabled (by research, etc.), it will use the data from &#x60;normal&#x60;.
+  /** Can be set to `false` if the `normal` property is defined. This will disable this difficulty, same as setting `enabled` to `false` would. If it's later enabled (by research, etc.), it will use the data from `normal`.
 
-If this property is not defined while &#x60;normal&#x60; is, it will mirror its data. */
+If this property is not defined while `normal` is, it will mirror its data. */
   expensive?: RecipeData | false;
   /** Hides the recipe from crafting menus.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   hidden?: boolean;
-  /** Hides the recipe from the player&#x27;s crafting screen. The recipe will still show up for selection in machines.
+  /** Hides the recipe from the player's crafting screen. The recipe will still show up for selection in machines.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   hide_from_player_crafting?: boolean;
   /** Hides the recipe from item/fluid production statistics.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   hide_from_stats?: boolean;
-  /** If given, this determines the recipe&#x27;s icon. Otherwise, the icon of &#x60;main_product&#x60; or the singular product is used.
+  /** If given, this determines the recipe's icon. Otherwise, the icon of `main_product` or the singular product is used.
 
-Mandatory if &#x60;icons&#x60; is not defined for a recipe with more than one product and no &#x60;main_product&#x60;, or no product. */
+Mandatory if `icons` is not defined for a recipe with more than one product and no `main_product`, or no product. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
-Mandatory if &#x60;icons&#x60; is not defined, or if &#x60;icon_size&#x60; is not specified for all instances of &#x60;icons&#x60;. */
+Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
-  /** Can&#x27;t be an empty array. */
+  /** Can't be an empty array. */
   icons?: IconData[];
   /** A table containing ingredient names and counts. Can also contain information about fluid temperature and catalyst amounts. The catalyst amounts are automatically calculated from the recipe, or can be set manually in the IngredientPrototype (see [here](https://factorio.com/blog/post/fff-256)).
 
@@ -4337,51 +4338,51 @@ The maximum ingredient amount is 65535. Can be set to an empty table to create a
 
 Duplicate ingredients, e.g. two entries with the same name, are *not* allowed. In-game, the item ingredients are ordered by [ItemGroup::order_in_recipe](prototype:ItemGroup::order_in_recipe).
 
-Mandatory if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Mandatory if neither `normal` nor `expensive` are defined. */
   ingredients?: IngredientPrototype[];
-  /** For recipes with one or more products: Subgroup, localised_name and icon default to the values of the singular/main product, but can be overwritten by the recipe. Setting the main_product to an empty string (&#x60;&quot;&quot;&#x60;) forces the title in the recipe tooltip to use the recipe&#x27;s name (not that of the product) and shows the products in the tooltip.
+  /** For recipes with one or more products: Subgroup, localised_name and icon default to the values of the singular/main product, but can be overwritten by the recipe. Setting the main_product to an empty string (`""`) forces the title in the recipe tooltip to use the recipe's name (not that of the product) and shows the products in the tooltip.
 
-If 1) there are multiple products and this property is nil, 2) this property is set to an empty string (&#x60;&quot;&quot;&#x60;), or 3) there are no products, the recipe will use the localised_name, icon, and subgroup of the recipe. icon and subgroup become non-optional.
+If 1) there are multiple products and this property is nil, 2) this property is set to an empty string (`""`), or 3) there are no products, the recipe will use the localised_name, icon, and subgroup of the recipe. icon and subgroup become non-optional.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   main_product?: string;
-  /** Can be set to &#x60;false&#x60; if the &#x60;expensive&#x60; property is defined. This will disable this difficulty, same as setting &#x60;enabled&#x60; to &#x60;false&#x60; would. If it&#x27;s later enabled (by research, etc.), it will use the data from &#x60;expensive&#x60;.
+  /** Can be set to `false` if the `expensive` property is defined. This will disable this difficulty, same as setting `enabled` to `false` would. If it's later enabled (by research, etc.), it will use the data from `expensive`.
 
-If this property is not defined while &#x60;expensive&#x60; is, it will mirror its data. */
+If this property is not defined while `expensive` is, it will mirror its data. */
   normal?: RecipeData | false;
-  /** Used to determine how many extra items are put into an assembling machine before it&#x27;s considered &quot;full enough&quot;. See [insertion limits](https://wiki.factorio.com/Inserters#Insertion_limits).
+  /** Used to determine how many extra items are put into an assembling machine before it's considered "full enough". See [insertion limits](https://wiki.factorio.com/Inserters#Insertion_limits).
 
-If set to &#x60;0&#x60;, it instead uses the following formula: &#x60;1.166 / (energy_required / the assembler&#x27;s crafting_speed)&#x60;, rounded up, and clamped to be between&#x60;2&#x60; and &#x60;100&#x60;. The numbers used in this formula can be changed by the [UtilityConstants](prototype:UtilityConstants) properties &#x60;dynamic_recipe_overload_factor&#x60;, &#x60;minimum_recipe_overload_multiplier&#x60;, and &#x60;maximum_recipe_overload_multiplier&#x60;.
+If set to `0`, it instead uses the following formula: `1.166 / (energy_required / the assembler's crafting_speed)`, rounded up, and clamped to be between`2` and `100`. The numbers used in this formula can be changed by the [UtilityConstants](prototype:UtilityConstants) properties `dynamic_recipe_overload_factor`, `minimum_recipe_overload_multiplier`, and `maximum_recipe_overload_multiplier`.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   overload_multiplier?: number;
-  /** Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+  /** Only loaded if neither `normal` nor `expensive` are defined. */
   requester_paste_multiplier?: number;
-  /** The item created by this recipe. Must be the name of an [item](prototype:ItemPrototype), such as &#x60;&quot;iron-gear-wheel&quot;&#x60;.
+  /** The item created by this recipe. Must be the name of an [item](prototype:ItemPrototype), such as `"iron-gear-wheel"`.
 
-Only loaded if neither &#x60;results&#x60;, &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `results`, `normal` nor `expensive` are defined. */
   result?: ItemID;
   /** The number of items created by this recipe.
 
-Only loaded if neither &#x60;results&#x60;, &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `results`, `normal` nor `expensive` are defined. */
   result_count?: number;
   /** A table containing result names and counts. Can also contain information about fluid temperature and catalyst amounts. The catalyst amounts are automatically calculated from the recipe, or can be set manually in the ProductPrototype (see [here](https://factorio.com/blog/post/fff-256)).
 
 Can be set to an empty table to create a recipe that produces nothing. Duplicate results, e.g. two entries with the same name, are allowed.
 
-Mandatory if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Mandatory if neither `normal` nor `expensive` are defined. */
   results?: ProductPrototype[];
-  /** Whether the recipe name should have the product amount in front of it, e.g. &quot;2x Transport belt&quot;.
+  /** Whether the recipe name should have the product amount in front of it, e.g. "2x Transport belt".
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   show_amount_in_title?: boolean;
-  /** The subgroup of this recipe. If not specified, it defaults to the subgroup of the product if there is only one, or of the &#x60;main_product&#x60; if multiple products exist.
+  /** The subgroup of this recipe. If not specified, it defaults to the subgroup of the product if there is only one, or of the `main_product` if multiple products exist.
 
-Mandatory if multiple products exist and no &#x60;main_product&#x60; is specified, or if there is no product. */
+Mandatory if multiple products exist and no `main_product` is specified, or if there is no product. */
   subgroup?: ItemSubGroupID;
   /** Whether enabling this recipe unlocks its item products to show in selection lists (item filters, logistic requests, etc.).
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   unlock_results?: boolean;
 }
 
@@ -4410,11 +4411,11 @@ export function isRepairToolPrototype(
 /** This prototype is used for receiving an achievement when the player completes a specific research. */
 interface _ResearchAchievementPrototype {
   type: 'research-achievement';
-  /** Mandatory if &#x60;technology&#x60; is not defined.
+  /** Mandatory if `technology` is not defined.
 
 This will only trigger if the player has learned every research in the game. */
   research_all?: boolean;
-  /** Mandatory if &#x60;research_all&#x60; is not defined.
+  /** Mandatory if `research_all` is not defined.
 
 Researching this technology will trigger the achievement. */
   technology?: TechnologyID;
@@ -4440,36 +4441,36 @@ export type ResourceCategory = _ResourceCategory &
 export function isResourceCategory(value: unknown): value is ResourceCategory {
   return (value as { type: string }).type === 'resource-category';
 }
-/** A mineable/gatherable entity. Its [collision_mask](prototype:EntityPrototype::collision_mask) must contain &quot;resource-layer&quot; if it should be minable with a [MiningDrillPrototype](prototype:MiningDrillPrototype). */
+/** A mineable/gatherable entity. Its [collision_mask](prototype:EntityPrototype::collision_mask) must contain "resource-layer" if it should be minable with a [MiningDrillPrototype](prototype:MiningDrillPrototype). */
 interface _ResourceEntityPrototype {
   type: 'resource';
   /** The category for the resource. Available categories in vanilla can be found [here](https://wiki.factorio.com/Data.raw#resource-category). */
   category?: ResourceCategoryID;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
-  /** How long it takes &#x60;stages_effect&#x60; to go from &#x60;min_effect_alpha&#x60; to &#x60;max_effect_alpha&#x60;. */
+  /** How long it takes `stages_effect` to go from `min_effect_alpha` to `max_effect_alpha`. */
   effect_animation_period?: number;
-  /** How much &#x60;effect_animation_period&#x60; can deviate from its original value. Used to make the stages effect alpha change look less uniform. */
+  /** How much `effect_animation_period` can deviate from its original value. Used to make the stages effect alpha change look less uniform. */
   effect_animation_period_deviation?: number;
-  /** How much the surface darkness should affect the alpha of &#x60;stages_effect&#x60;. */
+  /** How much the surface darkness should affect the alpha of `stages_effect`. */
   effect_darkness_multiplier?: number;
   /** If the resource should be highlighted when holding a mining drill that can mine it (holding a pumpjack highlights crude-oil in the base game). */
   highlight?: boolean;
   /** If the ore is infinitely minable, or if it will eventually run out of resource. */
   infinite?: boolean;
-  /** Every time an infinite-type resource &quot;ticks&quot; lower it&#x27;s lowered by that amount. -- [Rseding91](https://forums.factorio.com/viewtopic.php?p&#x3D;271115#p271115) */
+  /** Every time an infinite-type resource "ticks" lower it's lowered by that amount. -- [Rseding91](https://forums.factorio.com/viewtopic.php?p=271115#p271115) */
   infinite_depletion_amount?: number;
   /** Whether the resource should have a grid pattern on the map instead of a solid map color. */
   map_grid?: boolean;
-  /** Maximal alpha value of &#x60;stages_effect&#x60;. */
+  /** Maximal alpha value of `stages_effect`. */
   max_effect_alpha?: number;
-  /** Minimal alpha value of &#x60;stages_effect&#x60;. */
+  /** Minimal alpha value of `stages_effect`. */
   min_effect_alpha?: number;
-  /** Must be not 0 when &#x60;infinite &#x3D; true&#x60;. */
+  /** Must be not 0 when `infinite = true`. */
   minimum?: number;
   /** Defaults to the resources map color if left unset and map color is set, otherwise defaults to white if left unset. */
   mining_visualisation_tint?: Color;
-  /** Must be not 0 when &#x60;infinite &#x3D; true&#x60;. */
+  /** Must be not 0 when `infinite = true`. */
   normal?: number;
   /** Whether there should be a slight offset to graphics of the resource. Used to make patches a little less uniform in appearance. */
   randomize_visual_position?: boolean;
@@ -4477,13 +4478,13 @@ interface _ResourceEntityPrototype {
   resource_patch_search_radius?: number;
   /** Number of stages the animation has. */
   stage_counts: number[];
-  /** Entity&#x27;s graphics, using a graphic sheet, with variation and depletion. At least one stage must be defined.
+  /** Entity's graphics, using a graphic sheet, with variation and depletion. At least one stage must be defined.
 
-When using [AnimationVariations::sheet](prototype:AnimationVariations::sheet), &#x60;frame_count&#x60; is the amount of frames per row in the spritesheet. &#x60;variation_count&#x60; is the amount of rows in the spritesheet. Each row in the spritesheet is one stage of the animation. */
+When using [AnimationVariations::sheet](prototype:AnimationVariations::sheet), `frame_count` is the amount of frames per row in the spritesheet. `variation_count` is the amount of rows in the spritesheet. Each row in the spritesheet is one stage of the animation. */
   stages: AnimationVariations;
   /** An effect that can be overlaid above the normal ore graphics. Used in the base game to make [uranium ore](https://wiki.factorio.com/Uranium_ore) glow. */
   stages_effect?: AnimationVariations;
-  /** Must be positive when &#x60;tree_removal_probability&#x60; is set. */
+  /** Must be positive when `tree_removal_probability` is set. */
   tree_removal_max_distance?: number;
   /** Must be positive. */
   tree_removal_probability?: number;
@@ -4508,19 +4509,19 @@ interface _RoboportEquipmentPrototype {
   charge_approach_distance: number;
   charging_distance?: number;
   charging_energy: Energy;
-  /** The offsets from the center of the roboport at which robots will charge. Only used if &#x60;charging_station_count&#x60; is equal to 0. */
+  /** The offsets from the center of the roboport at which robots will charge. Only used if `charging_station_count` is equal to 0. */
   charging_offsets?: Vector[];
   /** How many charging points this roboport has. If this is 0, the length of the charging_offsets table is used to calculate the charging station count. */
   charging_station_count?: number;
   charging_station_shift?: Vector;
   /** Distance in tiles. This defines how far away a robot can be from the charging spot and still be charged, however the bot is still required to reach a charging spot in the first place. */
   charging_threshold_distance?: number;
-  /** Can&#x27;t be negative. */
+  /** Can't be negative. */
   construction_radius: number;
   draw_construction_radius_visualization?: boolean;
   /** Unused, as roboport equipment does not have a logistic radius that could be drawn. */
   draw_logistic_radius_visualization?: boolean;
-  /** Mandatory if &#x60;burner&#x60; is defined.
+  /** Mandatory if `burner` is defined.
 
 The size of the buffer of the burner energy source, so effectively the amount of power that the energy source can produce per tick. */
   power?: Energy;
@@ -4535,7 +4536,7 @@ The size of the buffer of the burner energy source, so effectively the amount of
   /** Presumably states the height of the charging stations and thus an additive offset for the charging_offsets. */
   spawn_and_station_height: number;
   spawn_and_station_shadow_height_offset?: number;
-  /** Minimum amount of energy that needs to available inside the roboport&#x27;s buffer so that robots can be spawned. */
+  /** Minimum amount of energy that needs to available inside the roboport's buffer so that robots can be spawned. */
   spawn_minimum?: Energy;
   /** The offset from the center of the roboport at which robots will enter and exit. */
   stationing_offset?: Vector;
@@ -4561,7 +4562,7 @@ interface _RoboportPrototype {
   charging_distance?: number;
   /** The maximum power provided to each charging station. */
   charging_energy: Energy;
-  /** The offsets from the center of the roboport at which robots will charge. Only used if &#x60;charging_station_count&#x60; is equal to 0. */
+  /** The offsets from the center of the roboport at which robots will charge. Only used if `charging_station_count` is equal to 0. */
   charging_offsets?: Vector[];
   /** How many charging points this roboport has. If this is 0, the length of the charging_offsets table is used to calculate the charging station count. */
   charging_station_count?: number;
@@ -4573,7 +4574,7 @@ interface _RoboportPrototype {
   /** The maximum circuit wire distance for this entity. */
   circuit_wire_max_distance?: number;
   close_door_trigger_effect?: TriggerEffect;
-  /** Can&#x27;t be negative. */
+  /** Can't be negative. */
   construction_radius: number;
   default_available_construction_output_signal?: SignalIDConnector;
   default_available_logistic_output_signal?: SignalIDConnector;
@@ -4585,20 +4586,20 @@ interface _RoboportPrototype {
   draw_construction_radius_visualization?: boolean;
   draw_copper_wires?: boolean;
   draw_logistic_radius_visualization?: boolean;
-  /** The roboport&#x27;s energy source. */
+  /** The roboport's energy source. */
   energy_source: ElectricEnergySource | VoidEnergySource;
   /** The amount of energy the roboport uses when idle. */
   energy_usage: Energy;
-  /** Must be &gt;&#x3D; &#x60;logistics_radius&#x60;. */
+  /** Must be >= `logistics_radius`. */
   logistics_connection_distance?: number;
-  /** Can&#x27;t be negative. */
+  /** Can't be negative. */
   logistics_radius: number;
   /** The number of repair pack slots in the roboport. */
   material_slots_count: ItemStackIndex;
   open_door_trigger_effect?: TriggerEffect;
-  /** Minimum charge that the roboport has to have after a blackout (0 charge/buffered energy) to begin working again. Additionally, freshly placed roboports will have their energy buffer filled with &#x60;0.25 × recharge_minimum&#x60; energy.
+  /** Minimum charge that the roboport has to have after a blackout (0 charge/buffered energy) to begin working again. Additionally, freshly placed roboports will have their energy buffer filled with `0.25 × recharge_minimum` energy.
 
-Must be larger than or equal to &#x60;energy_usage&#x60; otherwise during low power the roboport will toggle on and off every tick. */
+Must be larger than or equal to `energy_usage` otherwise during low power the roboport will toggle on and off every tick. */
   recharge_minimum: Energy;
   /** The animation played at each charging point when a robot is charging there. */
   recharging_animation: Animation;
@@ -4649,8 +4650,11 @@ export type RobotWithLogisticInterfacePrototype =
 /** A [rocket silo](https://wiki.factorio.com/Rocket_silo). */
 interface _RocketSiloPrototype {
   type: 'rocket-silo';
+  /** Additional energy used during the following parts of the [launch sequence](runtime:defines.rocket_silo_status): doors_opening, rocket_rising, arms_advance, engine_starting, arms_retract, doors_closing. */
   active_energy_usage: Energy;
+  /** Played when switching into the [lights_blinking_open](runtime:defines.rocket_silo_status.lights_blinking_open) state. */
   alarm_sound?: Sound;
+  /** Applied when switching into the [lights_blinking_open](runtime:defines.rocket_silo_status.lights_blinking_open) state. */
   alarm_trigger?: TriggerEffect;
   arm_01_back_animation: Animation;
   arm_02_right_animation: Animation;
@@ -4659,31 +4663,46 @@ interface _RocketSiloPrototype {
   base_engine_light?: LightDefinition;
   base_front_sprite: Sprite;
   base_light?: LightDefinition;
+  /** Drawn instead of `base_day_sprite` during the night i.e. when [LuaSurface::darkness](runtime:LuaSurface::darkness) is larger than 0.3. */
   base_night_sprite?: Sprite;
+  /** Played when switching into the [arms_retract](runtime:defines.rocket_silo_status.arms_retract) state. */
   clamps_off_sound?: Sound;
+  /** Applied when switching into the [arms_retract](runtime:defines.rocket_silo_status.arms_retract) state. */
   clamps_off_trigger?: TriggerEffect;
+  /** Played when switching into the [arms_advance](runtime:defines.rocket_silo_status.arms_advance) state. */
   clamps_on_sound?: Sound;
+  /** Applied when switching into the [arms_advance](runtime:defines.rocket_silo_status.arms_advance) state. */
   clamps_on_trigger?: TriggerEffect;
   door_back_open_offset: Vector;
   door_back_sprite: Sprite;
   door_front_open_offset: Vector;
   door_front_sprite: Sprite;
+  /** The inverse of the duration in ticks of [doors_opening](runtime:defines.rocket_silo_status.doors_opening) and [closing](runtime:defines.rocket_silo_status.doors_closing). */
   door_opening_speed: number;
+  /** Played when switching into the [doors_opening](runtime:defines.rocket_silo_status.doors_opening) and [doors_closing](runtime:defines.rocket_silo_status.doors_closing) states. */
   doors_sound?: Sound;
+  /** Applied when switching into the [doors_opening](runtime:defines.rocket_silo_status.doors_opening) and [doors_closing](runtime:defines.rocket_silo_status.doors_closing) states. */
   doors_trigger?: TriggerEffect;
+  /** Played when switching into the [engine_starting](runtime:defines.rocket_silo_status.engine_starting) state. */
   flying_sound?: Sound;
   hole_clipping_box: BoundingBox;
   hole_light_sprite: Sprite;
   hole_sprite: Sprite;
-  /** Unused. */
-  idle_energy_usage: Energy;
-  /** May be 0. */
+  /** May be 0.
+
+Additional energy used during the night i.e. when [LuaSurface::darkness](runtime:LuaSurface::darkness) is larger than 0.3. */
   lamp_energy_usage: Energy;
+  /** The time to wait in the [launch_started](runtime:defines.rocket_silo_status.launch_started) state before switching to [engine_starting](runtime:defines.rocket_silo_status.engine_starting). */
   launch_wait_time?: number;
+  /** The inverse of the duration in ticks of [lights_blinking_open](runtime:defines.rocket_silo_status.lights_blinking_open) and [lights_blinking_close](runtime:defines.rocket_silo_status.lights_blinking_close). */
   light_blinking_speed: number;
+  /** Played when switching into the [rocket_rising](runtime:defines.rocket_silo_status.rocket_rising) state. */
   raise_rocket_sound?: Sound;
+  /** Applied when switching into the [rocket_rising](runtime:defines.rocket_silo_status.rocket_rising) state. */
   raise_rocket_trigger?: TriggerEffect;
+  /** Drawn from the start of the [lights_blinking_open](runtime:defines.rocket_silo_status.lights_blinking_open) state until the end of the [lights_blinking_close](runtime:defines.rocket_silo_status.lights_blinking_close) state. */
   red_lights_back_sprites: Sprite;
+  /** Drawn from the start of the [lights_blinking_open](runtime:defines.rocket_silo_status.lights_blinking_open) state until the end of the [lights_blinking_close](runtime:defines.rocket_silo_status.lights_blinking_close) state. */
   red_lights_front_sprites: Sprite;
   /** Name of a [RocketSiloRocketPrototype](prototype:RocketSiloRocketPrototype). */
   rocket_entity: EntityID;
@@ -4691,6 +4710,7 @@ interface _RocketSiloPrototype {
   /** The number of crafts that must complete to produce a rocket. This includes bonus crafts from productivity. Recipe products are ignored. */
   rocket_parts_required: number;
   rocket_result_inventory_size?: ItemStackIndex;
+  /** The time to wait in the [doors_opened](runtime:defines.rocket_silo_status.doors_opened) state before switching to [rocket_rising](runtime:defines.rocket_silo_status.rocket_rising). */
   rocket_rising_delay?: number;
   rocket_shadow_overlay_sprite: Sprite;
   satellite_animation: Animation;
@@ -4698,6 +4718,9 @@ interface _RocketSiloPrototype {
   shadow_sprite: Sprite;
   silo_fade_out_end_distance: number;
   silo_fade_out_start_distance: number;
+  /** How many times the `red_lights_back_sprites` and `red_lights_front_sprites` should blink during [lights_blinking_open](runtime:defines.rocket_silo_status.lights_blinking_open) and [lights_blinking_close](runtime:defines.rocket_silo_status.lights_blinking_close).
+
+Does not affect the duration of the launch sequence. */
   times_to_blink: number;
 }
 
@@ -4781,22 +4804,22 @@ interface _RollingStockPrototype {
   color?: Color;
   /** The distance between the joint of this rolling stock and its connected rolling stocks joint. */
   connection_distance: number;
-  /** Usually a sound to play when the rolling stock drives over a tie. The rolling stock is considered to be driving over a tie every &#x60;tie_distance&#x60; tiles. */
+  /** Usually a sound to play when the rolling stock drives over a tie. The rolling stock is considered to be driving over a tie every `tie_distance` tiles. */
   drive_over_tie_trigger?: TriggerEffect;
   horizontal_doors?: Animation;
   /** The length between this rolling stocks front and rear joints. Joints are the point where connection_distance is measured from when rolling stock are connected to one another. Wheels sprite are placed based on the joint position.
 
 Maximum joint distance is 15.
 
-Note: There needs to be border at least 0.2 between the [bounding box](prototype:EntityPrototype::collision_box) edge and joint. This means that the collision_box must be at least &#x60;{{-0,-0.2},{0,0.2}}&#x60;. */
+Note: There needs to be border at least 0.2 between the [bounding box](prototype:EntityPrototype::collision_box) edge and joint. This means that the collision_box must be at least `{{-0,-0.2},{0,0.2}}`. */
   joint_distance: number;
   /** Maximum speed of the rolling stock in tiles/tick.
 
-In-game, the max speed of a train is &#x60;min(all_rolling_stock_max_speeds) × average(all_fuel_modifiers_in_all_locomotives)&#x60;. This calculated train speed is then silently capped to 7386.3km/h. */
+In-game, the max speed of a train is `min(all_rolling_stock_max_speeds) × average(all_fuel_modifiers_in_all_locomotives)`. This calculated train speed is then silently capped to 7386.3km/h. */
   max_speed: number;
   pictures: RotatedSprite;
   stand_by_light?: LightDefinition;
-  /** In tiles. Used to determine how often &#x60;drive_over_tie_trigger&#x60; is triggered. */
+  /** In tiles. Used to determine how often `drive_over_tie_trigger` is triggered. */
   tie_distance?: number;
   vertical_doors?: Animation;
   vertical_selection_shift: number;
@@ -4876,7 +4899,7 @@ export function isSelectionToolPrototype(
 This is **not** a custom keybinding (keyboard shortcut), for that see [CustomInputPrototype](prototype:CustomInputPrototype). */
 interface _ShortcutPrototype {
   type: 'shortcut';
-  /** If this is &#x60;&quot;lua&quot;&#x60;, [on_lua_shortcut](runtime:on_lua_shortcut) is raised when the shortcut is clicked. */
+  /** If this is `"lua"`, [on_lua_shortcut](runtime:on_lua_shortcut) is raised when the shortcut is clicked. */
   action:
     | 'toggle-alt-mode'
     | 'undo'
@@ -4902,8 +4925,10 @@ Note: The scale that can be defined in the sprite may not behave as expected bec
 
 Note: The scale that can be defined in the sprite may not behave as expected because the game always scales the sprite to fill the GUI slot. */
   icon: Sprite;
-  /** The item to create when clicking on a shortcut with the action set to &#x60;&quot;spawn-item&quot;&#x60;. The item must have the [spawnable](prototype:ItemPrototypeFlags::spawnable) flag set. */
+  /** The item to create when clicking on a shortcut with the action set to `"spawn-item"`. The item must have the [spawnable](prototype:ItemPrototypeFlags::spawnable) flag set. */
   item_to_spawn?: ItemID;
+  /** Used to order the shortcuts in the [quick panel](https://wiki.factorio.com/Quick_panel), which replaces the shortcut bar when using a controller (game pad). It [is recommended](https://forums.factorio.com/106661) to order modded shortcuts after the vanilla shortcuts. */
+  order?: Order;
   /** The icon used in the panel for visible shortcuts, when the shortcut is usable.
 
 Note: The scale that can be defined in the sprite may not behave as expected because the game always scales the sprite to fill the GUI slot. */
@@ -4926,19 +4951,19 @@ export function isShortcutPrototype(
 /** An extremely basic entity with no special functionality. Used for minable rocks. */
 interface _SimpleEntityPrototype {
   type: 'simple-entity';
-  /** Mandatory if both &#x60;picture&#x60; and &#x60;pictures&#x60; are not defined. */
+  /** Mandatory if both `picture` and `pictures` are not defined. */
   animations?: AnimationVariations;
   /** Whether this entity should be treated as a rock for the purpose of deconstruction and for [CarPrototype::immune_to_rock_impacts](prototype:CarPrototype::immune_to_rock_impacts). */
   count_as_rock_for_filtered_deconstruction?: boolean;
-  /** Mandatory if both &#x60;pictures&#x60; and &#x60;animations&#x60; are not defined. Takes priority over &#x60;animations&#x60;. */
+  /** Mandatory if both `pictures` and `animations` are not defined. Takes priority over `animations`. */
   picture?: Sprite;
-  /** Mandatory if both &#x60;picture&#x60; and &#x60;animations&#x60; are not defined. Takes priority over &#x60;picture&#x60; and &#x60;animations&#x60;. */
+  /** Mandatory if both `picture` and `animations` are not defined. Takes priority over `picture` and `animations`. */
   pictures?: SpriteVariations;
   random_animation_offset?: boolean;
-  /** Whether a random graphics variation is chosen when placing the entity/creating it via script/creating it via map generation. If this is &#x60;false&#x60;, the entity will use the first variation instead of a random one. */
+  /** Whether a random graphics variation is chosen when placing the entity/creating it via script/creating it via map generation. If this is `false`, the entity will use the first variation instead of a random one. */
   random_variation_on_create?: boolean;
   render_layer?: RenderLayer;
-  /** Used to determine render order for entities with the same &#x60;render_layer&#x60; in the same position. Entities with a higher &#x60;secondary_draw_order&#x60; are drawn on top. */
+  /** Used to determine render order for entities with the same `render_layer` in the same position. Entities with a higher `secondary_draw_order` are drawn on top. */
   secondary_draw_order?: number;
 }
 
@@ -4968,19 +4993,19 @@ export function isSimpleEntityWithForcePrototype(
 /** Has a force, but unlike [SimpleEntityWithForcePrototype](prototype:SimpleEntityWithForcePrototype) it is only attacked if the biters get stuck on it (or if [EntityWithOwnerPrototype::is_military_target](prototype:EntityWithOwnerPrototype::is_military_target) set to true to make the two entity types equivalent). */
 interface _SimpleEntityWithOwnerPrototype {
   type: 'simple-entity-with-owner';
-  /** Mandatory if both &#x60;picture&#x60; and &#x60;pictures&#x60; are not defined. */
+  /** Mandatory if both `picture` and `pictures` are not defined. */
   animations?: AnimationVariations;
   /** If the entity is not visible to a player, the player cannot select it. */
   force_visibility?: ForceCondition;
-  /** Mandatory if both &#x60;pictures&#x60; and &#x60;animations&#x60; are not defined. */
+  /** Mandatory if both `pictures` and `animations` are not defined. */
   picture?: Sprite;
-  /** Mandatory if both &#x60;picture&#x60; and &#x60;animations&#x60; are not defined. */
+  /** Mandatory if both `picture` and `animations` are not defined. */
   pictures?: SpriteVariations;
   random_animation_offset?: boolean;
   /** Whether a random graphics variation is chosen when placing the entity/creating it via script/creating it via map generation. If this is false, the entity will use the first variation instead of a random one. */
   random_variation_on_create?: boolean;
   render_layer?: RenderLayer;
-  /** Used to determine render order for entities with the same &#x60;render_layer&#x60; in the same position. Entities with a higher &#x60;secondary_draw_order&#x60; are drawn on top. */
+  /** Used to determine render order for entities with the same `render_layer` in the same position. Entities with a higher `secondary_draw_order` are drawn on top. */
   secondary_draw_order?: number;
 }
 
@@ -4992,7 +5017,7 @@ export function isSimpleEntityWithOwnerPrototype(
 ): value is SimpleEntityWithOwnerPrototype {
   return (value as { type: string }).type === 'simple-entity-with-owner';
 }
-/** Deprecated in 0.16. The type &quot;simple-smoke&quot; has been obsoleted and cannot be created. Use [TrivialSmokePrototype](prototype:TrivialSmokePrototype) or [SmokeWithTriggerPrototype](prototype:SmokeWithTriggerPrototype) instead. */
+/** Deprecated in 0.16. The type "simple-smoke" has been obsoleted and cannot be created. Use [TrivialSmokePrototype](prototype:TrivialSmokePrototype) or [SmokeWithTriggerPrototype](prototype:SmokeWithTriggerPrototype) instead. */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _SimpleSmokePrototype {
   type: 'smoke';
@@ -5008,7 +5033,7 @@ export function isSimpleSmokePrototype(
 }
 /** Abstract entity that has an animation. */
 interface _SmokePrototype {
-  /** Smoke always moves randomly unless &#x60;movement_slow_down_factor&#x60; is 0. If &#x60;affected_by_wind&#x60; is true, the smoke will also be moved by wind. */
+  /** Smoke always moves randomly unless `movement_slow_down_factor` is 0. If `affected_by_wind` is true, the smoke will also be moved by wind. */
   affected_by_wind?: boolean;
   animation: Animation;
   /** Must have a collision box size of zero. */
@@ -5020,9 +5045,9 @@ interface _SmokePrototype {
   /** May not be 0 if cyclic is true. */
   duration?: number;
   end_scale?: number;
-  /** &#x60;fade_in_duration&#x60; + &#x60;fade_away_duration&#x60; must be &lt;&#x3D; &#x60;duration&#x60;. */
+  /** `fade_in_duration` + `fade_away_duration` must be <= `duration`. */
   fade_away_duration?: number;
-  /** &#x60;fade_in_duration&#x60; + &#x60;fade_away_duration&#x60; must be &lt;&#x3D; &#x60;duration&#x60;. */
+  /** `fade_in_duration` + `fade_away_duration` must be <= `duration`. */
   fade_in_duration?: number;
   glow_animation?: Animation;
   glow_fade_away_duration?: number;
@@ -5080,7 +5105,7 @@ interface _SolarPanelPrototype {
   type: 'solar-panel';
   /** Sets how this solar panel connects to the energy network. The most relevant property seems to be the output_priority. */
   energy_source: ElectricEnergySource;
-  /** Overlay has to be empty or have same number of variations as &#x60;picture&#x60;. */
+  /** Overlay has to be empty or have same number of variations as `picture`. */
   overlay?: SpriteVariations;
   /** The picture displayed for this solar panel. */
   picture: SpriteVariations;
@@ -5100,33 +5125,33 @@ export function isSolarPanelPrototype(
 export interface SoundPrototype {
   aggregation?: AggregationSpecification;
   allow_random_repeat?: boolean;
-  /** Modifies how far a sound can be heard. Must be between &#x60;0&#x60; and &#x60;1&#x60; inclusive. */
+  /** Modifies how far a sound can be heard. Must be between `0` and `1` inclusive. */
   audible_distance_modifier?: number;
   category?: SoundType;
-  /** Supported sound file formats are &#x60;.ogg&#x60;, &#x60;.wav&#x60; and &#x60;.voc&#x60;.
+  /** Supported sound file formats are `.ogg`, `.wav` and `.voc`.
 
-Only loaded if &#x60;variations&#x60; is not defined. */
+Only loaded if `variations` is not defined. */
   filename: FileName;
   game_controller_vibration_data?: GameControllerVibrationData;
-  /** Must be &#x60;&gt;&#x3D; min_speed&#x60;.
+  /** Must be `>= min_speed`.
 
-Only loaded if &#x60;variations&#x60; is not defined. Only loaded, and mandatory if &#x60;min_speed&#x60; is defined. */
+Only loaded if `variations` is not defined. Only loaded, and mandatory if `min_speed` is defined. */
   max_speed?: number;
-  /** Must be &#x60;&gt;&#x3D; 1 / 64&#x60;.
+  /** Must be `>= 1 / 64`.
 
-Only loaded if both &#x60;variations&#x60; and &#x60;speed&#x60; are not defined. */
+Only loaded if both `variations` and `speed` are not defined. */
   min_speed?: number;
   /** Name of the sound. Can be used as a [SoundPath](runtime:SoundPath) at runtime. */
   name: string;
-  /** Only loaded if &#x60;variations&#x60; is not defined. */
+  /** Only loaded if `variations` is not defined. */
   preload?: boolean;
-  /** Speed must be &#x60;&gt;&#x3D; 1 / 64&#x60;. This sets both min and max speeds.
+  /** Speed must be `>= 1 / 64`. This sets both min and max speeds.
 
-Only loaded if &#x60;variations&#x60; is not defined. */
+Only loaded if `variations` is not defined. */
   speed?: number;
   type: 'sound';
   variations?: SoundDefinition[];
-  /** Only loaded if &#x60;variations&#x60; is not defined. */
+  /** Only loaded if `variations` is not defined. */
   volume?: number;
 }
 
@@ -5135,9 +5160,9 @@ export function isSoundPrototype(value: unknown): value is SoundPrototype {
 }
 /** Properties of the spectator controller. */
 export interface SpectatorControllerPrototype {
-  /** Must be &gt;&#x3D; 0.34375. */
+  /** Must be >= 0.34375. */
   movement_speed: number;
-  /** Name of the spectator controller. Base game uses &quot;default&quot;. */
+  /** Name of the spectator controller. Base game uses "default". */
   name: string;
   type: 'spectator-controller';
 }
@@ -5153,9 +5178,9 @@ interface _SpeechBubblePrototype {
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
   fade_in_out_ticks?: number;
-  /** Needs a style of the type &quot;speech_bubble_style&quot;, defined inside the gui styles. */
+  /** Needs a style of the type "speech_bubble_style", defined inside the gui styles. */
   style: string;
-  /** Needs a style of the type &quot;flow_style&quot;, defined inside the gui styles. */
+  /** Needs a style of the type "flow_style", defined inside the gui styles. */
   wrapper_flow_style?: string;
   y_offset?: number;
 }
@@ -5196,12 +5221,12 @@ export function isSpiderLegPrototype(
 interface _SpiderVehiclePrototype {
   type: 'spider-vehicle';
   automatic_weapon_cycling: boolean;
-  /** This is applied whenever the spider shoots (manual and automatic targeting), &#x60;automatic_weapon_cycling&#x60; is true and the next gun in line (which is then selected) has ammo. When all of the above is the case, the chain_shooting_cooldown_modifier is a multiplier on the remaining shooting cooldown: &#x60;cooldown &#x3D; (remaining_cooldown × chain_shooting_cooldown_modifier)&#x60;.
+  /** This is applied whenever the spider shoots (manual and automatic targeting), `automatic_weapon_cycling` is true and the next gun in line (which is then selected) has ammo. When all of the above is the case, the chain_shooting_cooldown_modifier is a multiplier on the remaining shooting cooldown: `cooldown = (remaining_cooldown × chain_shooting_cooldown_modifier)`.
 
 chain_shooting_cooldown_modifier is intended to be in the range of 0 to 1. This means that setting chain_shooting_cooldown_modifier to 0 reduces the remaining shooting cooldown to 0 while a chain_shooting_cooldown_modifier of 1 does not affect the remaining shooting cooldown at all. */
   chain_shooting_cooldown_modifier: number;
   chunk_exploration_radius: number;
-  /** Must be a burner energy source when using &quot;burner&quot;, otherwise it can also be a void energy source. */
+  /** Must be a burner energy source when using "burner", otherwise it can also be a void energy source. */
   energy_source: BurnerEnergySource | VoidEnergySource;
   graphics_set: SpiderVehicleGraphicsSet;
   /** The guns this spider vehicle uses. */
@@ -5232,15 +5257,15 @@ interface _SpidertronRemotePrototype {
   type: 'spidertron-remote';
   /** Path to the icon file.
 
-Mandatory if &#x60;icon_color_indicator_masks&#x60; is not defined.
+Mandatory if `icon_color_indicator_masks` is not defined.
 
-Uses &#x60;icon_size&#x60; and &#x60;icon_mipmaps&#x60; from its [ItemPrototype](prototype:ItemPrototype) parent. */
+Uses `icon_size` and `icon_mipmaps` from its [ItemPrototype](prototype:ItemPrototype) parent. */
   icon_color_indicator_mask?: FileName;
-  /** Inside IconData, the property for the file path is &#x60;icon_color_indicator_mask&#x60; instead of &#x60;icon&#x60;. Can&#x27;t be an empty array.
+  /** Inside IconData, the property for the file path is `icon_color_indicator_mask` instead of `icon`. Can't be an empty array.
 
-Uses &#x60;icon_size&#x60; and &#x60;icon_mipmaps&#x60; from its [ItemPrototype](prototype:ItemPrototype) parent. */
+Uses `icon_size` and `icon_mipmaps` from its [ItemPrototype](prototype:ItemPrototype) parent. */
   icon_color_indicator_masks?: IconData[];
-  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the &#x60;&quot;not-stackable&quot;&#x60; flag is set. */
+  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: 1;
 }
 
@@ -5260,7 +5285,7 @@ interface _SplitterPrototype {
   structure: Animation4Way;
   structure_animation_movement_cooldown?: number;
   structure_animation_speed_coefficient?: number;
-  /** Drawn 1 tile north of &#x60;structure&#x60; when the splitter is facing east or west. */
+  /** Drawn 1 tile north of `structure` when the splitter is facing east or west. */
   structure_patch?: Animation4Way;
 }
 
@@ -5274,102 +5299,102 @@ export function isSplitterPrototype(
 }
 /** Specifies an image that can be used with [SpritePath](runtime:SpritePath) at runtime. */
 export interface SpritePrototype {
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   apply_runtime_tint?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   blend_mode?: BlendMode;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Only one of &#x60;draw_as_shadow&#x60;, &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60; can be true. This takes precedence over &#x60;draw_as_light&#x60;.
+Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. This takes precedence over `draw_as_light`.
 
 Draws first as a normal sprite, then again as a light layer. See [https://forums.factorio.com/91682](https://forums.factorio.com/91682). */
   draw_as_glow?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Only one of &#x60;draw_as_shadow&#x60;, &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60; can be true. */
+Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. */
   draw_as_light?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Only one of &#x60;draw_as_shadow&#x60;, &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60; can be true. This takes precedence over &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60;. */
+Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. This takes precedence over `draw_as_glow` and `draw_as_light`. */
   draw_as_shadow?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 The path to the sprite file to use. */
   filename: FileName;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   flags?: SpriteFlags;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Unused. */
   generate_sdf?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined. Mandatory if &#x60;size&#x60; is not defined.
+  /** Only loaded if `layers` is not defined. Mandatory if `size` is not defined.
 
 Height of the picture in pixels, from 0-8192. */
   height?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 If this property exists and high resolution sprites are turned on, this is used to load the Sprite. */
   hr_version?: Sprite;
-  /** If this property is present, all Sprite definitions have to be placed as entries in the array, and they will all be loaded from there. &#x60;layers&#x60; may not be an empty table. Each definition in the array may also have the &#x60;layers&#x60; property.
+  /** If this property is present, all Sprite definitions have to be placed as entries in the array, and they will all be loaded from there. `layers` may not be an empty table. Each definition in the array may also have the `layers` property.
 
-If this property is present, all other properties besides &#x60;name&#x60; and &#x60;type&#x60; are ignored. */
+If this property is present, all other properties besides `name` and `type` are ignored. */
   layers?: Sprite[];
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Minimal mode is entered when mod loading fails. You are in it when you see the gray box after (part of) the loading screen that tells you a mod error ([Example](https://cdn.discordapp.com/attachments/340530709712076801/532315796626472972/unknown.png)). Modders can ignore this property. */
   load_in_minimal_mode?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Only loaded if this is an icon, that is it has the flag &#x60;&quot;group&#x3D;icon&quot;&#x60; or &#x60;&quot;group&#x3D;gui&quot;&#x60;. */
+Only loaded if this is an icon, that is it has the flag `"group=icon"` or `"group=gui"`. */
   mipmap_count?: number;
   /** Name of the sprite. Can be used as a [SpritePath](runtime:SpritePath) at runtime. */
   name: string;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Loaded only when &#x60;x&#x60; and &#x60;y&#x60; are both &#x60;0&#x60;. The first member of the tuple is &#x60;x&#x60; and the second is &#x60;y&#x60;. */
+Loaded only when `x` and `y` are both `0`. The first member of the tuple is `x` and the second is `y`. */
   position?: [SpriteSizeType, SpriteSizeType];
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Whether alpha should be pre-multiplied. */
   premul_alpha?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   priority?: SpritePriority;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Values other than &#x60;1&#x60; specify the scale of the sprite on default zoom. A scale of &#x60;2&#x60; means that the picture will be two times bigger on screen (and thus more pixelated). */
+Values other than `1` specify the scale of the sprite on default zoom. A scale of `2` means that the picture will be two times bigger on screen (and thus more pixelated). */
   scale?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-The shift in tiles. &#x60;util.by_pixel()&#x60; can be used to divide the shift by 32 which is the usual pixel height/width of 1 tile in normal resolution. Note that 32 pixel tile height/width is not enforced anywhere - any other tile height or width is also possible. */
+The shift in tiles. `util.by_pixel()` can be used to divide the shift by 32 which is the usual pixel height/width of 1 tile in normal resolution. Note that 32 pixel tile height/width is not enforced anywhere - any other tile height or width is also possible. */
   shift?: Vector;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 The width and height of the sprite. If this is a tuple, the first member of the tuple is the width and the second is the height. Otherwise the size is both width and height. Width and height may only be in the range of 0-8192. */
   size?: SpriteSizeType | [SpriteSizeType, SpriteSizeType];
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Number of slices this is sliced into when using the &quot;optimized atlas packing&quot; option. If you are a modder, you can just ignore this property. As an example, if this is &#x60;4&#x60;, the sprite will be sliced into a &#x60;4x4&#x60; grid. */
+Number of slices this is sliced into when using the "optimized atlas packing" option. If you are a modder, you can just ignore this property. As an example, if this is `4`, the sprite will be sliced into a `4x4` grid. */
   slice?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Same as &#x60;slice&#x60;, but this specifies only how many slices there are on the x-axis. */
+Same as `slice`, but this specifies only how many slices there are on the x-axis. */
   slice_x?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Same as &#x60;slice&#x60;, but this specifies only how many slices there are on the y-axis. */
+Same as `slice`, but this specifies only how many slices there are on the y-axis. */
   slice_y?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   tint?: Color;
   type: 'sprite';
-  /** Only loaded if &#x60;layers&#x60; is not defined. Mandatory if &#x60;size&#x60; is not defined.
+  /** Only loaded if `layers` is not defined. Mandatory if `size` is not defined.
 
 Width of the picture in pixels, from 0-8192. */
   width?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Horizontal position of the sprite in the source file in pixels. */
   x?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Vertical position of the sprite in the source file in pixels. */
   y?: SpriteSizeType;
@@ -5384,37 +5409,37 @@ interface _StickerPrototype {
   animation?: Animation;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
-  /** Interval between application of &#x60;damage_per_tick&#x60;, in ticks. */
+  /** Interval between application of `damage_per_tick`, in ticks. */
   damage_interval?: number;
-  /** Applied every &#x60;damage_interval&#x60; ticks, so may not necessarily be &quot;per tick&quot;. */
+  /** Applied every `damage_interval` ticks, so may not necessarily be "per tick". */
   damage_per_tick?: DamagePrototype;
-  /** Must be &gt; 0. */
+  /** Must be > 0. */
   duration_in_ticks: number;
   fire_spread_cooldown?: number;
   fire_spread_radius?: number;
   force_visibility?: ForceCondition;
-  /** Using this property marks the sticker as a &quot;selection sticker&quot;, meaning that the selection box will be rendered around the entity when the sticker is on it. */
+  /** Using this property marks the sticker as a "selection sticker", meaning that the selection box will be rendered around the entity when the sticker is on it. */
   selection_box_type?: CursorBoxType;
   single_particle?: boolean;
-  /** If this is given, this sticker is considered a &quot;fire sticker&quot; for some functions, such as [BaseAttackParameters::fire_penalty](prototype:BaseAttackParameters::fire_penalty) and [EntityPrototypeFlags::not-flammable](prototype:EntityPrototypeFlags::not_flammable). */
+  /** If this is given, this sticker is considered a "fire sticker" for some functions, such as [BaseAttackParameters::fire_penalty](prototype:BaseAttackParameters::fire_penalty) and [EntityPrototypeFlags::not-flammable](prototype:EntityPrototypeFlags::not_flammable). */
   spread_fire_entity?: EntityID;
   stickers_per_square_meter?: number;
   /** Less than 1 to reduce movement speed, more than 1 to increase it. */
   target_movement_modifier?: number;
-  /** The modifier value when the sticker is attached. It linearly changes over time to reach &#x60;target_movement_modifier_to&#x60;. */
+  /** The modifier value when the sticker is attached. It linearly changes over time to reach `target_movement_modifier_to`. */
   target_movement_modifier_from?: number;
-  /** The modifier value when the sticker expires. It linearly changes over time starting from &#x60;target_movement_modifier_from&#x60;. */
+  /** The modifier value when the sticker expires. It linearly changes over time starting from `target_movement_modifier_from`. */
   target_movement_modifier_to?: number;
   vehicle_friction_modifier?: number;
-  /** Works similarly to &#x60;target_movement_modifier_from&#x60;. */
+  /** Works similarly to `target_movement_modifier_from`. */
   vehicle_friction_modifier_from?: number;
-  /** Works similarly to &#x60;target_movement_modifier_to&#x60;. */
+  /** Works similarly to `target_movement_modifier_to`. */
   vehicle_friction_modifier_to?: number;
   /** Less than 1 to reduce vehicle speed, more than 1 to increase it. */
   vehicle_speed_modifier?: number;
-  /** Works similarly to &#x60;target_movement_modifier_from&#x60;. */
+  /** Works similarly to `target_movement_modifier_from`. */
   vehicle_speed_modifier_from?: number;
-  /** Works similarly to &#x60;target_movement_modifier_to&#x60;. */
+  /** Works similarly to `target_movement_modifier_to`. */
   vehicle_speed_modifier_to?: number;
 }
 
@@ -5427,14 +5452,14 @@ export function isStickerPrototype(value: unknown): value is StickerPrototype {
 /** A [storage tank](https://wiki.factorio.com/Storage_tank). */
 interface _StorageTankPrototype {
   type: 'storage-tank';
-  /** Mandatory if circuit_wire_max_distance  &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance  > 0. */
   circuit_connector_sprites?: [
     CircuitConnectorSprites,
     CircuitConnectorSprites,
     CircuitConnectorSprites,
     CircuitConnectorSprites,
   ];
-  /** Mandatory if circuit_wire_max_distance  &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance  > 0. */
   circuit_wire_connection_points?: [
     WireConnectionPoint,
     WireConnectionPoint,
@@ -5446,16 +5471,16 @@ interface _StorageTankPrototype {
   draw_copper_wires?: boolean;
   /** Must be positive.
 
-Used for determining the x position inside the &#x60;flow_sprite&#x60; when drawing the storage tank. Does not affect gameplay.
+Used for determining the x position inside the `flow_sprite` when drawing the storage tank. Does not affect gameplay.
 
-The x position of the sprite will be &#x60;((game.tick % flow_length_in_ticks) ÷ flow_length_in_ticks) × (flow_sprite.width - 32)&#x60;. This means, that over &#x60;flow_length_in_ticks&#x60; ticks, the part of the &#x60;flow_sprite&#x60; that is drawn in-game is incrementally moved from most-left to most-right inside the actual sprite, that part always has a width of 32px. After &#x60;flow_length_in_ticks&#x60;, the part of the &#x60;flow_sprite&#x60; that is drawn will start from the left again. */
+The x position of the sprite will be `((game.tick % flow_length_in_ticks) ÷ flow_length_in_ticks) × (flow_sprite.width - 32)`. This means, that over `flow_length_in_ticks` ticks, the part of the `flow_sprite` that is drawn in-game is incrementally moved from most-left to most-right inside the actual sprite, that part always has a width of 32px. After `flow_length_in_ticks`, the part of the `flow_sprite` that is drawn will start from the left again. */
   flow_length_in_ticks: number;
   fluid_box: FluidBox;
   pictures: StorageTankPictures;
-  /** If the icons of fluids shown in alt-mode should be scaled to the storage tank&#x27;s size. */
+  /** If the icons of fluids shown in alt-mode should be scaled to the storage tank's size. */
   scale_info_icons?: boolean;
   two_direction_only?: boolean;
-  /** The location of the window showing the contents. Note that for &#x60;window_background&#x60; the width and height are determined by the sprite and window_bounding_box only determines the drawing location. For &#x60;fluid_background&#x60; the width is determined by the sprite and the height and drawing location are determined by window_bounding_box. */
+  /** The location of the window showing the contents. Note that for `window_background` the width and height are determined by the sprite and window_bounding_box only determines the drawing location. For `fluid_background` the width is determined by the sprite and the height and drawing location are determined by window_bounding_box. */
   window_bounding_box: BoundingBox;
 }
 
@@ -5483,66 +5508,66 @@ export function isStraightRailPrototype(
 }
 /** A [technology](https://wiki.factorio.com/Technologies).
 
-This prototype has two different formats that can be specified. If both &#x60;normal&#x60; and &#x60;expensive&#x60; are not defined, the standard properties define this technology. Otherwise, they are ignored, and the &#x60;normal&#x60; and &#x60;expensive&#x60; properties are used exclusively to define this technology. */
+This prototype has two different formats that can be specified. If both `normal` and `expensive` are not defined, the standard properties define this technology. Otherwise, they are ignored, and the `normal` and `expensive` properties are used exclusively to define this technology. */
 interface _TechnologyPrototype {
   type: 'technology';
   /** List of effects of the technology (applied when the technology is researched).
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   effects?: Modifier[];
-  /** Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+  /** Only loaded if neither `normal` nor `expensive` are defined. */
   enabled?: boolean;
-  /** Can be set to &#x60;false&#x60; if the &#x60;normal&#x60; property is defined. This will disable this difficulty, same as setting &#x60;enabled&#x60; to &#x60;false&#x60; would. If it&#x27;s later manually enabled by script, it will use the data from &#x60;normal&#x60;.
+  /** Can be set to `false` if the `normal` property is defined. This will disable this difficulty, same as setting `enabled` to `false` would. If it's later manually enabled by script, it will use the data from `normal`.
 
-If this property is not defined while &#x60;normal&#x60; is, it will mirror its data. */
+If this property is not defined while `normal` is, it will mirror its data. */
   expensive?: TechnologyData | false;
   /** Hides the technology from the tech screen.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   hidden?: boolean;
   /** Path to the icon file.
 
-Mandatory if &#x60;icons&#x60; is not defined. */
+Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
-Mandatory if &#x60;icons&#x60; is not defined, or if &#x60;icon_size&#x60; is not specified for all instances of &#x60;icons&#x60;. */
+Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
-  /** Can&#x27;t be an empty array. */
+  /** Can't be an empty array. */
   icons?: IconData[];
-  /** Controls whether the technology cost ignores the tech cost multiplier set in the [DifficultySettings](runtime:DifficultySettings), e.g. &#x60;4&#x60; for the default expensive difficulty.
+  /** Controls whether the technology cost ignores the tech cost multiplier set in the [DifficultySettings](runtime:DifficultySettings), e.g. `4` for the default expensive difficulty.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   ignore_tech_cost_multiplier?: boolean;
-  /** &#x60;&quot;infinite&quot;&#x60; for infinite technologies, otherwise &#x60;uint32&#x60;.
+  /** `"infinite"` for infinite technologies, otherwise `uint32`.
 
-Defaults to the same level as the technology, which is &#x60;0&#x60; for non-upgrades, and the level of the upgrade for upgrades.
+Defaults to the same level as the technology, which is `0` for non-upgrades, and the level of the upgrade for upgrades.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   max_level?: number | 'infinite';
-  /** If this name ends with &#x60;-&lt;number&gt;&#x60;, that number is ignored for localization purposes. E.g. if the name is &#x60;technology-3&#x60;, the game looks for the &#x60;technology-name.technology&#x60; localization. The technology tree will also show the number on the technology icon. */
+  /** If this name ends with `-<number>`, that number is ignored for localization purposes. E.g. if the name is `technology-3`, the game looks for the `technology-name.technology` localization. The technology tree will also show the number on the technology icon. */
   name: string;
-  /** Can be set to &#x60;false&#x60; if the &#x60;expensive&#x60; property is defined. This will disable this difficulty, same as setting &#x60;enabled&#x60; to &#x60;false&#x60; would. If it&#x27;s later manually enabled by script, it will use the data from &#x60;expensive&#x60;.
+  /** Can be set to `false` if the `expensive` property is defined. This will disable this difficulty, same as setting `enabled` to `false` would. If it's later manually enabled by script, it will use the data from `expensive`.
 
-If this property is not defined while &#x60;expensive&#x60; is, it will mirror its data. */
+If this property is not defined while `expensive` is, it will mirror its data. */
   normal?: TechnologyData | false;
   /** List of technologies needed to be researched before this one can be researched.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   prerequisites?: TechnologyID[];
   /** Determines the cost in items and time of the technology.
 
-Mandatory if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Mandatory if neither `normal` nor `expensive` are defined. */
   unit?: TechnologyUnit;
   /** When set to true, and the technology contains several levels, only the relevant one is displayed in the technology screen.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   upgrade?: boolean;
-  /** Controls whether the technology is shown in the tech GUI when it is not &#x60;enabled&#x60;.
+  /** Controls whether the technology is shown in the tech GUI when it is not `enabled`.
 
-Only loaded if neither &#x60;normal&#x60; nor &#x60;expensive&#x60; are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   visible_when_disabled?: boolean;
 }
 
@@ -5562,7 +5587,7 @@ export interface TileEffectDefinition {
   far_zoom?: number;
   foam_color: Color;
   foam_color_multiplier: number;
-  /** Name of the tile-effect. Base game uses &quot;water&quot;. */
+  /** Name of the tile-effect. Base game uses "water". */
   name: string;
   near_zoom?: number;
   reflection_threshold: number | [number, number];
@@ -5600,14 +5625,14 @@ interface _TilePrototype {
   /** Array of tile names that are allowed next to this one. */
   allowed_neighbors?: TileID[];
   autoplace?: AutoplaceSpecification;
-  /** If this is loaded as one Sound, it is loaded as the &quot;small&quot; build sound. */
+  /** If this is loaded as one Sound, it is loaded as the "small" build sound. */
   build_sound?: Sound | TileBuildSound;
   can_be_part_of_blueprint?: boolean;
   /** If set to true, the game will check for collisions with entities before building or mining the tile. If entities are in the way it is not possible to mine/build the tile. */
   check_collision_with_entities?: boolean;
   collision_mask: CollisionMask;
   decorative_removal_probability?: number;
-  /** Used only for the &#x60;layer_group&#x60; default, see above. */
+  /** Used only for the `layer_group` default, see above. */
   draw_in_water_layer?: boolean;
   /** Name of a [TileEffectDefinition](prototype:TileEffectDefinition). */
   effect?: string;
@@ -5615,25 +5640,26 @@ interface _TilePrototype {
   /** Used by the [pollution](https://wiki.factorio.com/Pollution) shader. */
   effect_color_secondary?: Color;
   effect_is_opaque?: boolean;
-  /** Path to the icon file. If this and &#x60;icon&#x60; is not set, the &#x60;material_background&#x60; in &#x60;variants&#x60; is used as the icon.
+  /** Path to the icon file. If this and `icon` is not set, the `material_background` in `variants` is used as the icon.
 
-Only loaded if &#x60;icons&#x60; is not defined. */
+Only loaded if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
-Only loaded if &#x60;icons&#x60; is not defined, or if &#x60;icon_size&#x60; is not specified for all instances of &#x60;icons&#x60;. */
+Only loaded if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
-  /** Can&#x27;t be an empty array. If this and &#x60;icon&#x60; is not set, the &#x60;material_background&#x60; in &#x60;variants&#x60; is used as the icon. */
+  /** Can't be an empty array. If this and `icon` is not set, the `material_background` in `variants` is used as the icon. */
   icons?: IconData[];
   /** Specifies transition drawing priority. */
   layer: number;
   layer_group?: TileRenderLayer;
   map_color: Color;
-  /** If you want the tile to not be mineable, don&#x27;t specify the minable property. Only non-mineable tiles become hidden tiles when placing mineable tiles on top of them. */
+  /** If you want the tile to not be mineable, don't specify the minable property. Only non-mineable tiles become hidden tiles when placing mineable tiles on top of them. */
   minable?: MinableProperties;
   mined_sound?: Sound;
+  /** Whether the tile needs tile correction logic applied when it's generated in the world, to prevent graphical artifacts. The tile correction logic disallows 1-wide stripes of the tile, see [Friday Facts #346](https://factorio.com/blog/post/fff-346). */
   needs_correction?: boolean;
   next_direction?: TileID;
   placeable_by?: ItemToPlace | ItemToPlace[];
@@ -5664,21 +5690,21 @@ export function isTilePrototype(value: unknown): value is TilePrototype {
 /** A tips and tricks entry. */
 interface _TipsAndTricksItem {
   type: 'tips-and-tricks-item';
-  /** Name of a [TipsAndTricksItemCategory](prototype:TipsAndTricksItemCategory), used for the sorting of this tips and tricks entry. Tips and trick entries are sorted first by category and then by their &#x60;order&#x60; within that category. */
+  /** Name of a [TipsAndTricksItemCategory](prototype:TipsAndTricksItemCategory), used for the sorting of this tips and tricks entry. Tips and trick entries are sorted first by category and then by their `order` within that category. */
   category?: string;
   /** An array of names of other tips and tricks items. This tips and tricks entry is only shown to the player once they have marked all dependencies as read. */
   dependencies?: string[];
   image?: FileName;
-  /** The tips and tricks entry is indented by &#x60;indent&#x60;×6 spaces. */
+  /** The tips and tricks entry is indented by `indent`×6 spaces. */
   indent?: number;
-  /** Whether the tip title on the left in the tips and tricks GUI should use the &quot;title_tip_item&quot; style (semi bold font). */
+  /** Whether the tip title on the left in the tips and tricks GUI should use the "title_tip_item" style (semi bold font). */
   is_title?: boolean;
   player_input_method_filter?: PlayerInputMethodFilter;
   simulation?: SimulationDefinition;
   /** Condition for never showing the tip notification to the player. */
   skip_trigger?: TipTrigger;
   starting_status?: TipStatus;
-  /** String to add in front of the tips and trick entries name. Can be anything, the base game tends to use [rich text](https://wiki.factorio.com/Rich_text) tags for items, e.g. &#x60;[item&#x3D;wooden-chest]&#x60; here. */
+  /** String to add in front of the tips and trick entries name. Can be anything, the base game tends to use [rich text](https://wiki.factorio.com/Rich_text) tags for items, e.g. `[item=wooden-chest]` here. */
   tag?: string;
   /** Condition for when the tip notification should be shown to the player. */
   trigger?: TipTrigger;
@@ -5697,7 +5723,7 @@ export function isTipsAndTricksItem(
 /** A [TipsAndTricksItem](prototype:TipsAndTricksItem) category, used for sorting of tips and tricks entries: Tips and trick entries are sorted first by category and then by their order within that category. */
 export interface TipsAndTricksItemCategory {
   name: string;
-  /** Tips and trick categories are sorted by &#x60;order&#x60;, and then the tips and tips entries are sorted by their own order within those categories. */
+  /** Tips and trick categories are sorted by `order`, and then the tips and tips entries are sorted by their own order within those categories. */
   order: Order;
   type: 'tips-and-tricks-item-category';
 }
@@ -5707,10 +5733,10 @@ export function isTipsAndTricksItemCategory(
 ): value is TipsAndTricksItemCategory {
   return (value as { type: string }).type === 'tips-and-tricks-item-category';
 }
-/** Items with a &quot;durability&quot;. Used for [science packs](https://wiki.factorio.com/Science_pack). */
+/** Items with a "durability". Used for [science packs](https://wiki.factorio.com/Science_pack). */
 interface _ToolPrototype {
   type: 'tool';
-  /** The durability of this tool. Must be positive. Mandatory if &lt;code&gt;infinite&lt;/code&gt; is false. Ignored if &lt;code&gt;infinite&lt;/code&gt; is true. */
+  /** The durability of this tool. Must be positive. Mandatory if <code>infinite</code> is false. Ignored if <code>infinite</code> is true. */
   durability?: number;
   /** May not be longer than 200 characters. */
   durability_description_key?: string;
@@ -5718,21 +5744,21 @@ interface _ToolPrototype {
 
 In-game, the game provides the locale with three [parameters](https://wiki.factorio.com/Tutorial:Localisation#Localising_with_parameters):
 
-&#x60;__1__&#x60;: remaining durability
+`__1__`: remaining durability
 
-&#x60;__2__&#x60;: total durability
+`__2__`: total durability
 
-&#x60;__3__&#x60;: durability as a percentage
+`__3__`: durability as a percentage
 
 So when a locale key that has the following translation
 
-&#x60;Remaining durability is __1__ out of __2__ which is __3__ %&#x60;
+`Remaining durability is __1__ out of __2__ which is __3__ %`
 
 is applied to a tool with 2 remaining durability out of 8 it will be displayed as
 
-&#x60;Remaining durability is 2 out of 8 which is 25 %&#x60; */
+`Remaining durability is 2 out of 8 which is 25 %` */
   durability_description_value?: string;
-  /** Whether this tool has infinite durability. If this is false, &lt;code&gt;durability&lt;/code&gt; must be specified. */
+  /** Whether this tool has infinite durability. If this is false, <code>durability</code> must be specified. */
   infinite?: boolean;
 }
 
@@ -5765,14 +5791,14 @@ interface _TrainStopPrototype {
   /** Has to be 2 for 2x2 grid. */
   build_grid_size?: 2;
   chart_name?: boolean;
-  /** Mandatory if circuit_wire_max_distance &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance > 0. */
   circuit_connector_sprites?: [
     CircuitConnectorSprites,
     CircuitConnectorSprites,
     CircuitConnectorSprites,
     CircuitConnectorSprites,
   ];
-  /** Mandatory if circuit_wire_max_distance &gt; 0. */
+  /** Mandatory if circuit_wire_max_distance > 0. */
   circuit_wire_connection_points?: [
     WireConnectionPoint,
     WireConnectionPoint,
@@ -5806,36 +5832,36 @@ interface _TransportBeltConnectablePrototype {
   animation_speed_coefficient?: number;
   /** This is the preferred way to specify transport belt animations. */
   belt_animation_set?: TransportBeltAnimationSet;
-  /** Mandatory if &#x60;belt_animation_set&#x60; is not defined. */
+  /** Mandatory if `belt_animation_set` is not defined. */
   belt_horizontal?: Animation;
-  /** Mandatory if &#x60;belt_animation_set&#x60; is not defined. */
+  /** Mandatory if `belt_animation_set` is not defined. */
   belt_vertical?: Animation;
   /** Transport belt connectable entities must have [collision_box](prototype:EntityPrototype::collision_box) of an appropriate minimal size, they should occupy more than half of every tile the entity covers. */
   collision_box?: BoundingBox;
-  /** Transport belt connectable entities must collide with &quot;transport-belt-layer&quot;. Transport belt connectable entities must have collision_mask that collides with itself. Transport belt connectable entities cannot have collision mask that collides only with tiles (must collide with entities in some way). */
+  /** Transport belt connectable entities must collide with "transport-belt-layer". Transport belt connectable entities must have collision_mask that collides with itself. Transport belt connectable entities cannot have collision mask that collides only with tiles (must collide with entities in some way). */
   collision_mask?: CollisionMask;
-  /** Mandatory if &#x60;belt_animation_set&#x60; is not defined. */
+  /** Mandatory if `belt_animation_set` is not defined. */
   ending_bottom?: Animation;
-  /** Mandatory if &#x60;belt_animation_set&#x60; is not defined. */
+  /** Mandatory if `belt_animation_set` is not defined. */
   ending_patch?: Sprite4Way;
-  /** Mandatory if &#x60;belt_animation_set&#x60; is not defined. */
+  /** Mandatory if `belt_animation_set` is not defined. */
   ending_side?: Animation;
-  /** Mandatory if &#x60;belt_animation_set&#x60; is not defined. */
+  /** Mandatory if `belt_animation_set` is not defined. */
   ending_top?: Animation;
   ends_with_stopper?: boolean;
-  /** Transport belt connectable entities cannot have the &quot;placeable-off-grid&quot; flag specified. */
+  /** Transport belt connectable entities cannot have the "placeable-off-grid" flag specified. */
   flags?: EntityPrototypeFlags;
-  /** The speed of the belt: &#x60;speed × 480 &#x3D; x Items/second&#x60;.
+  /** The speed of the belt: `speed × 480 = x Items/second`.
 
-The raw value is expressed as the number of tiles traveled by each item on the belt per tick, relative to the belt&#x27;s maximum density - e.g. &#x60;x items/second ÷ (4 items/lane × 2 lanes/belt × 60 ticks/second) &#x3D; &lt;speed&gt; belts/tick&#x60; where a &quot;belt&quot; is the size of one tile. See [Transport_belts/Physics](https://wiki.factorio.com/Transport_belts/Physics) for more details.
+The raw value is expressed as the number of tiles traveled by each item on the belt per tick, relative to the belt's maximum density - e.g. `x items/second ÷ (4 items/lane × 2 lanes/belt × 60 ticks/second) = <speed> belts/tick` where a "belt" is the size of one tile. See [Transport_belts/Physics](https://wiki.factorio.com/Transport_belts/Physics) for more details.
 
-Must be a positive non-infinite number. The number is a fixed point number with 8 bits reserved for decimal precision, meaning the smallest value step is &#x60;1/2^8 &#x3D; 0.00390625&#x60;. In the simple case of a non-curved belt, the rate is multiples of &#x60;1.875&#x60; items/s, even though the entity tooltip may show a different rate. */
+Must be a positive non-infinite number. The number is a fixed point number with 8 bits reserved for decimal precision, meaning the smallest value step is `1/2^8 = 0.00390625`. In the simple case of a non-curved belt, the rate is multiples of `1.875` items/s, even though the entity tooltip may show a different rate. */
   speed: number;
-  /** Mandatory if &#x60;belt_animation_set&#x60; is not defined. */
+  /** Mandatory if `belt_animation_set` is not defined. */
   starting_bottom?: Animation;
-  /** Mandatory if &#x60;belt_animation_set&#x60; is not defined. */
+  /** Mandatory if `belt_animation_set` is not defined. */
   starting_side?: Animation;
-  /** Mandatory if &#x60;belt_animation_set&#x60; is not defined. */
+  /** Mandatory if `belt_animation_set` is not defined. */
   starting_top?: Animation;
 }
 
@@ -5845,7 +5871,7 @@ export type TransportBeltConnectablePrototype =
 /** A [transport belt](https://wiki.factorio.com/Transport_belt). */
 interface _TransportBeltPrototype {
   type: 'transport-belt';
-  /** Mandatory if &#x60;belt_animation_set&#x60; is not defined.
+  /** Mandatory if `belt_animation_set` is not defined.
 
 Transport belts must have 12 animations. */
   animations?: RotatedAnimation;
@@ -5877,15 +5903,15 @@ export function isTransportBeltPrototype(
 /** A [tree](https://wiki.factorio.com/Tree). */
 interface _TreePrototype {
   type: 'tree';
-  /** Mandatory if &#x60;variations&#x60; is defined. */
+  /** Mandatory if `variations` is defined. */
   colors?: Color[];
   darkness_of_burnt_tree?: number;
-  /** The amount of health automatically regenerated. Trees will regenerate every 60 ticks with &#x60;healing_per_tick × 60&#x60;. */
+  /** The amount of health automatically regenerated. Trees will regenerate every 60 ticks with `healing_per_tick × 60`. */
   healing_per_tick?: number;
-  /** Mandatory if &#x60;variations&#x60; is not defined. */
+  /** Mandatory if `variations` is not defined. */
   pictures?: SpriteVariations;
   variation_weights?: number[];
-  /** Can&#x27;t be empty. */
+  /** Can't be empty. */
   variations?: TreeVariation[];
 }
 
@@ -5895,7 +5921,7 @@ export type TreePrototype = _TreePrototype &
 export function isTreePrototype(value: unknown): value is TreePrototype {
   return (value as { type: string }).type === 'tree';
 }
-/** The base game always internally defines a &quot;common&quot; trigger target type. See [Design discussion: Trigger target type](https://forums.factorio.com/71657). */
+/** The base game always internally defines a "common" trigger target type. See [Design discussion: Trigger target type](https://forums.factorio.com/71657). */
 export interface TriggerTargetType {
   name: string;
   type: 'trigger-target-type';
@@ -5906,20 +5932,20 @@ export function isTriggerTargetType(
 ): value is TriggerTargetType {
   return (value as { type: string }).type === 'trigger-target-type';
 }
-/** Smoke, but it&#x27;s not an entity for optimization purposes. */
+/** Smoke, but it's not an entity for optimization purposes. */
 interface _TrivialSmokePrototype {
   type: 'trivial-smoke';
-  /** Smoke always moves randomly unless &#x60;movement_slow_down_factor&#x60; is 0. If &#x60;affected_by_wind&#x60; is true, the smoke will also be moved by wind. */
+  /** Smoke always moves randomly unless `movement_slow_down_factor` is 0. If `affected_by_wind` is true, the smoke will also be moved by wind. */
   affected_by_wind?: boolean;
   animation: Animation;
   color?: Color;
   cyclic?: boolean;
-  /** Can&#x27;t be 0 - the smoke will never render. */
+  /** Can't be 0 - the smoke will never render. */
   duration: number;
   end_scale?: number;
-  /** &#x60;fade_in_duration&#x60; + &#x60;fade_away_duration&#x60; must be &lt;&#x3D; &#x60;duration&#x60;. */
+  /** `fade_in_duration` + `fade_away_duration` must be <= `duration`. */
   fade_away_duration?: number;
-  /** &#x60;fade_in_duration&#x60; + &#x60;fade_away_duration&#x60; must be &lt;&#x3D; &#x60;duration&#x60;. */
+  /** `fade_in_duration` + `fade_away_duration` must be <= `duration`. */
   fade_in_duration?: number;
   glow_animation?: Animation;
   glow_fade_away_duration?: number;
@@ -5949,7 +5975,7 @@ interface _TurretPrototype {
   attack_parameters: AttackParameters;
   attack_target_mask?: TriggerTargetMask;
   attacking_animation?: RotatedAnimation4Way;
-  /** Controls the speed of the attacking_animation: &#x60;1 ÷ attacking_speed &#x3D; duration of the attacking_animation&#x60; */
+  /** Controls the speed of the attacking_animation: `1 ÷ attacking_speed = duration of the attacking_animation` */
   attacking_speed?: number;
   base_picture?: Animation4Way;
   base_picture_render_layer?: RenderLayer;
@@ -5959,25 +5985,25 @@ interface _TurretPrototype {
   corpse?: EntityID;
   dying_sound?: Sound;
   ending_attack_animation?: RotatedAnimation4Way;
-  /** Controls the speed of the ending_attack_animation: &#x60;1 ÷ ending_attack_speed &#x3D; duration of the ending_attack_animation&#x60; */
+  /** Controls the speed of the ending_attack_animation: `1 ÷ ending_attack_speed = duration of the ending_attack_animation` */
   ending_attack_speed?: number;
   energy_glow_animation?: RotatedAnimation4Way;
-  /** The range of the flickering of the alpha of &#x60;energy_glow_animation&#x60;. Default is range 0.2, so animation alpha can be anywhere between 0.8 and 1.0. */
+  /** The range of the flickering of the alpha of `energy_glow_animation`. Default is range 0.2, so animation alpha can be anywhere between 0.8 and 1.0. */
   energy_glow_animation_flicker_strength?: number;
   folded_animation: RotatedAnimation4Way;
-  /** It&#x27;s randomized whether a particular turret uses the primary or the secondary speed for its animations.
+  /** It's randomized whether a particular turret uses the primary or the secondary speed for its animations.
 
-Controls the speed of the folded_animation: &#x60;1 ÷ folded_speed &#x3D; duration of the folded_animation&#x60; */
+Controls the speed of the folded_animation: `1 ÷ folded_speed = duration of the folded_animation` */
   folded_speed?: number;
-  /** It&#x27;s randomized whether a particular turret uses the primary or the secondary speed for its animations.
+  /** It's randomized whether a particular turret uses the primary or the secondary speed for its animations.
 
-Controls the speed of the folded_animation: &#x60;1 ÷ folded_speed_secondary &#x3D; duration of the folded_animation&#x60; */
+Controls the speed of the folded_animation: `1 ÷ folded_speed_secondary = duration of the folded_animation` */
   folded_speed_secondary?: number;
   folding_animation?: RotatedAnimation4Way;
   folding_sound?: Sound;
-  /** Controls the speed of the folding_animation: &#x60;1 ÷ folding_speed &#x3D; duration of the folding_animation&#x60; */
+  /** Controls the speed of the folding_animation: `1 ÷ folding_speed = duration of the folding_animation` */
   folding_speed?: number;
-  /** The intensity of light in the form of &#x60;energy_glow_animation&#x60; drawn on top of &#x60;energy_glow_animation&#x60;. */
+  /** The intensity of light in the form of `energy_glow_animation` drawn on top of `energy_glow_animation`. */
   glow_light_intensity?: number;
   gun_animation_render_layer?: RenderLayer;
   gun_animation_secondary_draw_order?: number;
@@ -5987,45 +6013,45 @@ Controls the speed of the folded_animation: &#x60;1 ÷ folded_speed_secondary &#
   is_military_target?: boolean;
   prepare_range?: number;
   prepared_alternative_animation?: RotatedAnimation4Way;
-  /** The chance for &#x60;prepared_alternative_animation&#x60; to be used. */
+  /** The chance for `prepared_alternative_animation` to be used. */
   prepared_alternative_chance?: number;
   prepared_alternative_sound?: Sound;
-  /** It&#x27;s randomized whether a particular turret uses the primary or the secondary speed for its animations.
+  /** It's randomized whether a particular turret uses the primary or the secondary speed for its animations.
 
-Controls the speed of the prepared_alternative_animation: &#x60;1 ÷ prepared_alternative_speed &#x3D; duration of the prepared_alternative_animation&#x60; */
+Controls the speed of the prepared_alternative_animation: `1 ÷ prepared_alternative_speed = duration of the prepared_alternative_animation` */
   prepared_alternative_speed?: number;
-  /** It&#x27;s randomized whether a particular turret uses the primary or the secondary speed for its animations.
+  /** It's randomized whether a particular turret uses the primary or the secondary speed for its animations.
 
-Controls the speed of the prepared_alternative_animation: &#x60;1 ÷ prepared_alternative_speed_secondary &#x3D; duration of the prepared_alternative_animation&#x60; */
+Controls the speed of the prepared_alternative_animation: `1 ÷ prepared_alternative_speed_secondary = duration of the prepared_alternative_animation` */
   prepared_alternative_speed_secondary?: number;
   prepared_animation?: RotatedAnimation4Way;
   prepared_sound?: Sound;
-  /** It&#x27;s randomized whether a particular turret uses the primary or the secondary speed for its animations.
+  /** It's randomized whether a particular turret uses the primary or the secondary speed for its animations.
 
-Controls the speed of the prepared_animation: &#x60;1 ÷ prepared_speed &#x3D; duration of the prepared_animation&#x60; */
+Controls the speed of the prepared_animation: `1 ÷ prepared_speed = duration of the prepared_animation` */
   prepared_speed?: number;
-  /** It&#x27;s randomized whether a particular turret uses the primary or the secondary speed for its animations.
+  /** It's randomized whether a particular turret uses the primary or the secondary speed for its animations.
 
-Controls the speed of the prepared_animation: &#x60;1 ÷ prepared_speed_secondary &#x3D; duration of the prepared_animation&#x60; */
+Controls the speed of the prepared_animation: `1 ÷ prepared_speed_secondary = duration of the prepared_animation` */
   prepared_speed_secondary?: number;
   preparing_animation?: RotatedAnimation4Way;
   preparing_sound?: Sound;
-  /** Controls the speed of the preparing_animation: &#x60;1 ÷ preparing_speed &#x3D; duration of the preparing_animation&#x60; */
+  /** Controls the speed of the preparing_animation: `1 ÷ preparing_speed = duration of the preparing_animation` */
   preparing_speed?: number;
   random_animation_offset?: boolean;
   rotation_speed?: number;
   /** Whether the secondary (animation) speeds should always be used. */
   secondary_animation?: boolean;
   shoot_in_prepare_state?: boolean;
-  /** Decoratives to be created when the spawner is created by the [map generator](https://wiki.factorio.com/Map_generator). Placed when enemies expand if &#x60;spawn_decorations_on_expansion&#x60; is set to true. */
+  /** Decoratives to be created when the spawner is created by the [map generator](https://wiki.factorio.com/Map_generator). Placed when enemies expand if `spawn_decorations_on_expansion` is set to true. */
   spawn_decoration?:
     | CreateDecorativesTriggerEffectItem
     | CreateDecorativesTriggerEffectItem[];
-  /** Whether &#x60;spawn_decoration&#x60; should be spawned when this turret is created through [enemy expansion](https://wiki.factorio.com/Enemies#Expansions). */
+  /** Whether `spawn_decoration` should be spawned when this turret is created through [enemy expansion](https://wiki.factorio.com/Enemies#Expansions). */
   spawn_decorations_on_expansion?: boolean;
   starting_attack_animation?: RotatedAnimation4Way;
   starting_attack_sound?: Sound;
-  /** Controls the speed of the starting_attack_animation: &#x60;1 ÷ starting_attack_speed &#x3D; duration of the starting_attack_animation&#x60; */
+  /** Controls the speed of the starting_attack_animation: `1 ÷ starting_attack_speed = duration of the starting_attack_animation` */
   starting_attack_speed?: number;
   turret_base_has_direction?: boolean;
 }
@@ -6075,7 +6101,7 @@ interface _UnitPrototype {
   type: 'unit';
   affected_by_tiles?: boolean;
   ai_settings?: UnitAISettings;
-  /** If this is true, this entities &#x60;is_military_target property&#x60; can be changed runtime (on the entity, not on the prototype itself). */
+  /** If this is true, this entities `is_military_target property` can be changed runtime (on the entity, not on the prototype itself). */
   allow_run_time_change_of_is_military_target?: false;
   alternative_attacking_frame_sequence?: UnitAlternativeFrameSequence;
   /** Requires animation in attack_parameters. Requires ammo_type in attack_parameters. */
@@ -6083,9 +6109,9 @@ interface _UnitPrototype {
   can_open_gates?: boolean;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
-  /** How fast the &#x60;run_animation&#x60; frames are advanced. The animations are advanced animation_speed frames per &#x60;distance_per_frame&#x60; that the unit moves.
+  /** How fast the `run_animation` frames are advanced. The animations are advanced animation_speed frames per `distance_per_frame` that the unit moves.
 
-&#x60;frames_advanced &#x3D; (distance_moved ÷ distance_per_frame) * animation_speed&#x60; */
+`frames_advanced = (distance_moved ÷ distance_per_frame) * animation_speed` */
   distance_per_frame: number;
   distraction_cooldown: number;
   /** The sound file to play when entity dies. */
@@ -6101,13 +6127,13 @@ interface _UnitPrototype {
   move_while_shooting?: boolean;
   /** Movement speed of the unit in the world, in tiles per tick. Must be equal to or greater than 0. */
   movement_speed: number;
-  /** The amount of pollution that has to be absorbed by the unit&#x27;s spawner before the unit will leave the spawner and attack the source of the pollution. */
+  /** The amount of pollution that has to be absorbed by the unit's spawner before the unit will leave the spawner and attack the source of the pollution. */
   pollution_to_join_attack: number;
   radar_range?: number;
   render_layer?: RenderLayer;
   rotation_speed?: number;
   run_animation: RotatedAnimation;
-  /** Only loaded if &#x60;walking_sound&#x60; is defined. */
+  /** Only loaded if `walking_sound` is defined. */
   running_sound_animation_positions?: number[];
   spawning_time_modifier?: number;
   /** Max is 100.
@@ -6132,13 +6158,13 @@ interface _UpgradeItemPrototype {
   alt_entity_filters?: EntityID[];
   /** This property is parsed, but then ignored. */
   alt_entity_type_filters?: string[];
-  /** This property is hardcoded to &#x60;&quot;cancel-upgrade&quot;&#x60;. */
+  /** This property is hardcoded to `"cancel-upgrade"`. */
   alt_selection_mode?: SelectionModeFlags;
   /** This property is parsed, but then ignored. */
   alt_tile_filter_mode?: 'whitelist' | 'blacklist';
   /** This property is parsed, but then ignored. */
   alt_tile_filters?: TileID[];
-  /** This property is hardcoded to &#x60;false&#x60;. */
+  /** This property is hardcoded to `false`. */
   always_include_tiles?: boolean;
   /** This property is parsed, but then ignored. */
   entity_filter_mode?: 'whitelist' | 'blacklist';
@@ -6146,11 +6172,11 @@ interface _UpgradeItemPrototype {
   entity_filters?: EntityID[];
   /** This property is parsed, but then ignored. */
   entity_type_filters?: string[];
-  /** Can&#x27;t be &gt; 255. */
+  /** Can't be > 255. */
   mapper_count?: ItemStackIndex;
-  /** This property is hardcoded to &#x60;&quot;upgrade&quot;&#x60;. */
+  /** This property is hardcoded to `"upgrade"`. */
   selection_mode?: SelectionModeFlags;
-  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the &#x60;&quot;not-stackable&quot;&#x60; flag is set. */
+  /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: 1;
   /** This property is parsed, but then ignored. */
   tile_filter_mode?: 'whitelist' | 'blacklist';
@@ -6178,7 +6204,7 @@ interface _UtilityConstants {
   building_no_tint: Color;
   building_not_buildable_tint: Color;
   capsule_range_visualization_color: Color;
-  /** Chart &#x3D; map + minimap. */
+  /** Chart = map + minimap. */
   chart: ChartUtilityConstants;
   checkerboard_black: Color;
   checkerboard_white: Color;
@@ -6206,7 +6232,7 @@ interface _UtilityConstants {
   equipment_default_background_color: Color;
   equipment_default_grabbed_background_color: Color;
   filter_outline_color: Color;
-  /** Must be &gt;&#x3D; 1 */
+  /** Must be >= 1 */
   flying_text_ttl: number;
   forced_enabled_recipe_slot_background_tint: Color;
   ghost_tint: Color;
@@ -6238,9 +6264,9 @@ interface _UtilityConstants {
   missing_preview_sprite_location: FileName;
   /** Must be in range [1, 100]. */
   module_inventory_width: number;
-  /** Must be &gt;&#x3D; 1. */
+  /** Must be >= 1. */
   normalised_achievement_icon_size: number;
-  /** The table with &#x60;name &#x3D; &quot;default&quot;&#x60; must exist and be the first member of the array. */
+  /** The table with `name = "default"` must exist and be the first member of the array. */
   player_colors: PlayerColorData[];
   rail_planner_count_button_color: Color;
   rail_segment_colors: Color[];
@@ -6254,7 +6280,7 @@ interface _UtilityConstants {
   small_area_size: number;
   small_blueprint_area_size: number;
   tile_ghost_tint: Color;
-  /** Must be &gt;&#x3D; 1. */
+  /** Must be >= 1. */
   tooltip_monitor_edge_border: number;
   train_button_hovered_tint: Color;
   train_destination_full_color: Color;
@@ -6272,7 +6298,7 @@ interface _UtilityConstants {
   tree_shadow_roughness: number;
   tree_shadow_speed: number;
   turret_range_visualization_color: Color;
-  /** Must be &gt;&#x3D; 1. */
+  /** Must be >= 1. */
   tutorial_notice_icon_size: number;
   unit_group_max_pursue_distance: number;
   unit_group_pathfind_resolution: number;
@@ -6915,7 +6941,7 @@ interface _VehiclePrototype {
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
   crash_trigger?: TriggerEffect;
-  /** The (movement) energy used per hit point (1 hit point &#x3D; 1 health damage) taken and dealt for this vehicle during collisions. The smaller the number, the more damage this vehicle and the rammed entity take during collisions: &#x60;damage &#x3D; energy / energy_per_hit_point&#x60;. */
+  /** The (movement) energy used per hit point (1 hit point = 1 health damage) taken and dealt for this vehicle during collisions. The smaller the number, the more damage this vehicle and the rammed entity take during collisions: `damage = energy / energy_per_hit_point`. */
   energy_per_hit_point: number;
   /** The name of the [EquipmentGridPrototype](prototype:EquipmentGridPrototype) this vehicle has. */
   equipment_grid?: EquipmentGridID;
@@ -6944,15 +6970,15 @@ interface _VirtualSignalPrototype {
   type: 'virtual-signal';
   /** Path to the icon file that is used to represent this virtual signal.
 
-Mandatory if &#x60;icons&#x60; is not defined. */
+Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
-Mandatory if &#x60;icons&#x60; is not defined, or if &#x60;icon_size&#x60; is not specified for all instances of &#x60;icons&#x60;. */
+Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
-  /** The icon that is used to represent this virtual signal. Can&#x27;t be an empty array. */
+  /** The icon that is used to represent this virtual signal. Can't be an empty array. */
   icons?: IconData[];
   /** The name of a [ItemSubGroup](prototype:ItemSubGroup). */
   subgroup?: ItemSubGroupID;
@@ -7047,22 +7073,22 @@ export interface AdvancedMapGenSettings {
   pollution?: MapGenPresetPollutionSettings;
 }
 export interface AggregationSpecification {
-  /** If &#x60;true&#x60;, already playing sounds are taken into account when checking &#x60;max_count&#x60;. */
+  /** If `true`, already playing sounds are taken into account when checking `max_count`. */
   count_already_playing?: boolean;
   max_count: number;
-  /** If &#x60;count_already_playing&#x60; is &#x60;true&#x60;, this will determine maximum progress when instance is counted toward playing sounds. */
+  /** If `count_already_playing` is `true`, this will determine maximum progress when instance is counted toward playing sounds. */
   progress_threshold?: number;
   remove: boolean;
 }
 interface _AmmoDamageModifier {
   /** Name of the [AmmoCategory](prototype:AmmoCategory) that is affected. */
   ammo_category: AmmoCategoryID;
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   /** Modification value, which will be added to the current ammo damage modifier upon researching. */
   modifier: number;
   type: 'ammo-damage';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -7080,13 +7106,13 @@ export interface AmmoType {
   action?: Trigger;
   /** Name of a [AmmoCategory](prototype:AmmoCategory). Defines whether the attack will be affected by upgrades. */
   category: AmmoCategoryID;
-  /** When true, the gun will be able to shoot even when the target is out of range. Only applies when &#x60;target_type&#x60; equals &#x60;&quot;position&quot;&#x60;. The gun will fire at the maximum range in the direction of the target position. */
+  /** When true, the gun will be able to shoot even when the target is out of range. Only applies when `target_type` equals `"position"`. The gun will fire at the maximum range in the direction of the target position. */
   clamp_position?: boolean;
   consumption_modifier?: number;
   cooldown_modifier?: number;
   /** Energy consumption of a single shot, if applicable. */
   energy_consumption?: Energy;
-  /** Affects the &#x60;range&#x60; value of the shooting gun prototype&#x27;s [BaseAttackParameters](prototype:BaseAttackParameters) to give a modified maximum range. The &#x60;min_range&#x60; value of the gun is unaffected.
+  /** Affects the `range` value of the shooting gun prototype's [BaseAttackParameters](prototype:BaseAttackParameters) to give a modified maximum range. The `min_range` value of the gun is unaffected.
 
 This has no effect on artillery turrets and wagons even though the bonus appears in the GUI. [Forum thread](https://forums.factorio.com/103658). */
   range_modifier?: number;
@@ -7094,9 +7120,9 @@ This has no effect on artillery turrets and wagons even though the bonus appears
 
 Defines for which kind of entity this ammo type applies. Each entity kind can only be used once per array. */
   source_type?: AmmoSourceType;
-  /** &#x60;&quot;entity&quot;&#x60; fires at an entity, &#x60;&quot;position&quot;&#x60; fires directly at a position, &#x60;&quot;direction&quot;&#x60; fires in a direction.
+  /** `"entity"` fires at an entity, `"position"` fires directly at a position, `"direction"` fires in a direction.
 
-If this is &#x60;&quot;entity&quot;&#x60;, &#x60;clamp_position&#x60; is forced to be &#x60;false&#x60;. */
+If this is `"entity"`, `clamp_position` is forced to be `false`. */
   target_type?: 'entity' | 'position' | 'direction';
 }
 export interface AndTipTrigger {
@@ -7118,21 +7144,21 @@ export interface AnimatedVector {
 
 Note that if any frame of the animation is specified from the same source as any other [Sprite](prototype:Sprite) or frame of other animation, it will be shared. */
 interface _Animation {
-  /** Only loaded if &#x60;layers&#x60; is not defined. Mandatory if &#x60;stripes&#x60; is not defined.
+  /** Only loaded if `layers` is not defined. Mandatory if `stripes` is not defined.
 
 The path to the sprite file to use. */
   filename: FileName;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 If this property exists and high resolution sprites are turned on, this is used to load the Animation. */
   hr_version?: Animation;
-  /** If this property is present, all Animation definitions have to be placed as entries in the array, and they will all be loaded from there. &#x60;layers&#x60; may not be an empty table. Each definition in the array may also have the &#x60;layers&#x60; property.
+  /** If this property is present, all Animation definitions have to be placed as entries in the array, and they will all be loaded from there. `layers` may not be an empty table. Each definition in the array may also have the `layers` property.
 
-&#x60;animation_speed&#x60; and &#x60;max_advance&#x60; only have to be defined in one layer. All layers will run at the same speed.
+`animation_speed` and `max_advance` only have to be defined in one layer. All layers will run at the same speed.
 
 If this property is present, all other properties, including those inherited from AnimationParameters, are ignored. */
   layers: Animation[];
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   stripes?: Stripe[];
 }
 
@@ -7155,40 +7181,40 @@ export interface AnimationElement {
   draw_as_light?: boolean;
   draw_as_sprite?: boolean;
   render_layer?: RenderLayer;
-  /** Used to determine render order for sprites with the same &#x60;render_layer&#x60; in the same position. Sprites with a higher &#x60;secondary_draw_order&#x60; are drawn on top. */
+  /** Used to determine render order for sprites with the same `render_layer` in the same position. Sprites with a higher `secondary_draw_order` are drawn on top. */
   secondary_draw_order?: number;
 }
 interface _AnimationParameters {
-  /** Modifier of the animation playing speed, the default of &#x60;1&#x60; means one animation frame per tick (60 fps). The speed of playing can often vary depending on the usage (output of steam engine for example). Has to be greater than &#x60;0&#x60;. */
+  /** Modifier of the animation playing speed, the default of `1` means one animation frame per tick (60 fps). The speed of playing can often vary depending on the usage (output of steam engine for example). Has to be greater than `0`. */
   animation_speed?: number;
-  /** Number of slices this is sliced into when using the &quot;optimized atlas packing&quot; option. If you are a modder, you can just ignore this property. Example: If this is 4, the sprite will be sliced into a 4×4 grid. */
+  /** Number of slices this is sliced into when using the "optimized atlas packing" option. If you are a modder, you can just ignore this property. Example: If this is 4, the sprite will be sliced into a 4×4 grid. */
   dice?: number;
-  /** Same as &#x60;dice&#x60; above, but this specifies only how many slices there are on the x axis. */
+  /** Same as `dice` above, but this specifies only how many slices there are on the x axis. */
   dice_x?: number;
-  /** Same as &#x60;dice&#x60; above, but this specifies only how many slices there are on the y axis. */
+  /** Same as `dice` above, but this specifies only how many slices there are on the y axis. */
   dice_y?: number;
-  /** Can&#x27;t be &#x60;0&#x60;. */
+  /** Can't be `0`. */
   frame_count?: number;
   frame_sequence?: AnimationFrameSequence;
   /** Unused. */
   generate_sdf?: boolean;
-  /** Mandatory if &#x60;size&#x60; is not defined.
+  /** Mandatory if `size` is not defined.
 
 Height of one frame in pixels, from 0-8192. */
   height?: SpriteSizeType;
-  /** Specifies how many pictures are on each horizontal line in the image file. &#x60;0&#x60; means that all the pictures are in one horizontal line. Once the specified number of pictures are loaded from a line, the pictures from the next line are loaded. This is to allow having longer animations loaded in to Factorio&#x27;s graphics matrix than the game engine&#x27;s width limit of 8192px per input file. The restriction on input files is to be compatible with most graphics cards. */
+  /** Specifies how many pictures are on each horizontal line in the image file. `0` means that all the pictures are in one horizontal line. Once the specified number of pictures are loaded from a line, the pictures from the next line are loaded. This is to allow having longer animations loaded in to Factorio's graphics matrix than the game engine's width limit of 8192px per input file. The restriction on input files is to be compatible with most graphics cards. */
   line_length?: number;
   max_advance?: number;
-  /** Only loaded if this is an icon, that is it has the flag &#x60;&quot;group&#x3D;icon&quot;&#x60; or &#x60;&quot;group&#x3D;gui&quot;&#x60;.
+  /** Only loaded if this is an icon, that is it has the flag `"group=icon"` or `"group=gui"`.
 
-Note that &#x60;mipmap_count&#x60; doesn&#x27;t make sense in an animation, as it is not possible to layout mipmaps in a way that would load both the animation and the mipmaps correctly (besides animations with just one frame). See [here](https://forums.factorio.com/viewtopic.php?p&#x3D;549058#p549058). */
+Note that `mipmap_count` doesn't make sense in an animation, as it is not possible to layout mipmaps in a way that would load both the animation and the mipmaps correctly (besides animations with just one frame). See [here](https://forums.factorio.com/viewtopic.php?p=549058#p549058). */
   mipmap_count?: number;
-  /** How many times to repeat the animation to complete an animation cycle. E.g. if one layer is 10 frames, a second layer of 1 frame would need &#x60;repeat_count &#x3D; 10&#x60; to match the complete cycle. */
+  /** How many times to repeat the animation to complete an animation cycle. E.g. if one layer is 10 frames, a second layer of 1 frame would need `repeat_count = 10` to match the complete cycle. */
   repeat_count?: number;
   run_mode?: 'forward' | 'backward' | 'forward-then-backward';
   /** The width and height of one frame. If this is a tuple, the first member of the tuple is the width and the second is the height. Otherwise the size is both width and height. Width and height may only be in the range of 0-8192. */
   size?: SpriteSizeType | [SpriteSizeType, SpriteSizeType];
-  /** Mandatory if &#x60;size&#x60; is not defined.
+  /** Mandatory if `size` is not defined.
 
 Width of one frame in pixels, from 0-8192. */
   width?: SpriteSizeType;
@@ -7209,7 +7235,7 @@ export type AnimationSheet = _AnimationSheet &
 interface _AnimationVariations {
   /** The variations are arranged vertically in the file, one row for each variation. */
   sheet: AnimationSheet;
-  /** Only loaded if &#x60;sheet&#x60; is not defined. */
+  /** Only loaded if `sheet` is not defined. */
   sheets: AnimationSheet[];
 }
 interface _AreaTriggerItem {
@@ -7228,10 +7254,10 @@ export function isAreaTriggerItem(value: unknown): value is AreaTriggerItem {
   return (value as { type: string }).type === 'area';
 }
 interface _ArtilleryRangeModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'artillery-range';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -7256,7 +7282,7 @@ export function isArtilleryRemoteCapsuleAction(
   return (value as { type: string }).type === 'artillery-remote';
 }
 interface _ArtilleryTriggerDelivery {
-  /** Maximum deviation of the projectile from source orientation, in +/- (&#x60;x radians / 2&#x60;). Example: &#x60;3.14 radians -&gt; +/- (180° / 2)&#x60;, meaning up to 90° deviation in either direction of rotation. */
+  /** Maximum deviation of the projectile from source orientation, in +/- (`x radians / 2`). Example: `3.14 radians -> +/- (180° / 2)`, meaning up to 90° deviation in either direction of rotation. */
   direction_deviation?: number;
   /** Name of a [ArtilleryProjectilePrototype](prototype:ArtilleryProjectilePrototype). */
   projectile: EntityID;
@@ -7284,61 +7310,61 @@ export interface AttackReactionItem {
 export interface AutoplacePeak {
   /** Distance from the optimal parameters that get influence of -1.
 
-Only loaded if &#x60;aux_optimal&#x60; is defined. */
+Only loaded if `aux_optimal` is defined. */
   aux_max_range?: number;
   /** Optimal value of aux. If aux is close to this value, peak influence is 1.
 
-aux corresponds to the &#x60;aux&#x60; [noise expression](prototype:BaseNamedNoiseExpressions). */
+aux corresponds to the `aux` [noise expression](prototype:BaseNamedNoiseExpressions). */
   aux_optimal?: number;
   /** Distance from the optimal parameters that is still considered optimal.
 
-Only loaded if &#x60;aux_optimal&#x60; is defined. */
+Only loaded if `aux_optimal` is defined. */
   aux_range?: number;
   /** Limit distance from the optimum on a single (positive) side. This is pure magic.
 
-Only loaded if &#x60;aux_optimal&#x60; is defined. */
+Only loaded if `aux_optimal` is defined. */
   aux_top_property_limit?: number;
   /** Distance from the optimal parameters that get influence of -1.
 
-Only loaded if &#x60;distance_optimal&#x60; is defined. */
+Only loaded if `distance_optimal` is defined. */
   distance_max_range?: number;
   /** Optimal value of distance. If distance is close to this value, peak influence is 1.
 
-distance corresponds to the &#x60;distance&#x60; [noise expression](prototype:BaseNamedNoiseExpressions). */
+distance corresponds to the `distance` [noise expression](prototype:BaseNamedNoiseExpressions). */
   distance_optimal?: number;
   /** Distance from the optimal parameters that is still considered optimal.
 
-Only loaded if &#x60;distance_optimal&#x60; is defined. */
+Only loaded if `distance_optimal` is defined. */
   distance_range?: number;
   /** Limit distance from the optimum on a single (positive) side. This is pure magic.
 
-Only loaded if &#x60;distance_optimal&#x60; is defined. */
+Only loaded if `distance_optimal` is defined. */
   distance_top_property_limit?: number;
   /** Distance from the optimal parameters that get influence of -1.
 
-Only loaded if &#x60;elevation_optimal&#x60; is defined. */
+Only loaded if `elevation_optimal` is defined. */
   elevation_max_range?: number;
   /** Optimal value of elevation. If elevation is close to this value, peak influence is 1.
 
-elevation corresponds to the &#x60;elevation&#x60; [noise expression](prototype:BaseNamedNoiseExpressions). */
+elevation corresponds to the `elevation` [noise expression](prototype:BaseNamedNoiseExpressions). */
   elevation_optimal?: number;
   /** Distance from the optimal parameters that is still considered optimal.
 
-Only loaded if &#x60;elevation_optimal&#x60; is defined. */
+Only loaded if `elevation_optimal` is defined. */
   elevation_range?: number;
   /** Limit distance from the optimum on a single (positive) side. This is pure magic.
 
-Only loaded if &#x60;elevation_optimal&#x60; is defined. */
+Only loaded if `elevation_optimal` is defined. */
   elevation_top_property_limit?: number;
   /** Influence multiplier.
 
-Influence is calculated as a sum of influences of peaks. Influence of a peak is obtained by calculating a distance from each of its dimensions and sum of these individual distances is used as a distance from optimal conditions. Based on this distance a peak gets influence between -1 and 1. This is then multiplied by the noise function, if it is specified, and by the &#x60;influence&#x60; constant (or by &#x60;influence&#x60; + &#x60;richness_influence&#x60; if calculating richness). Finally this value is clamped to a range between &#x60;min_influence&#x60; and &#x60;max_influence&#x60;.
+Influence is calculated as a sum of influences of peaks. Influence of a peak is obtained by calculating a distance from each of its dimensions and sum of these individual distances is used as a distance from optimal conditions. Based on this distance a peak gets influence between -1 and 1. This is then multiplied by the noise function, if it is specified, and by the `influence` constant (or by `influence` + `richness_influence` if calculating richness). Finally this value is clamped to a range between `min_influence` and `max_influence`.
 
 When [AutoplaceSpecification::starting_area_amount](prototype:AutoplaceSpecification::starting_area_amount) is non-zero a position in starting area is selected and a blob is placed centered on this position. Influence is then a maximum of the default calculated value and a value obtained from this blob. */
   influence?: number;
-  /** Maximal influence (after all calculations) of current peak. See &#x60;influence&#x60;. */
+  /** Maximal influence (after all calculations) of current peak. See `influence`. */
   max_influence?: number;
-  /** Minimal influence (after all calculations) of current peak. See &#x60;influence&#x60;. */
+  /** Minimal influence (after all calculations) of current peak. See `influence`. */
   min_influence?: number;
   /** Name of [NoiseLayer](prototype:NoiseLayer) to use for this peak. If empty, then no noise is added to this peak.
 
@@ -7349,71 +7375,71 @@ A peak may have a noise multiplied with its influence. Intended use is to have n
   /** Must be between 0 and 1. Persistence of the noise. */
   noise_persistence?: number;
   noise_scale?: number;
-  /** Bonus for influence multiplier when calculating richness. See &#x60;influence&#x60;. */
+  /** Bonus for influence multiplier when calculating richness. See `influence`. */
   richness_influence?: number;
   /** Distance from the optimal parameters that get influence of -1.
 
-Only loaded if &#x60;starting_area_weight_optimal&#x60; is defined. */
+Only loaded if `starting_area_weight_optimal` is defined. */
   starting_area_weight_max_range?: number;
   /** Optimal value of starting_area_weight. If starting_area_weight is close to this value, peak influence is 1.
 
-starting_area_weight corresponds to the &#x60;starting_area_weight&#x60; [noise expression](prototype:BaseNamedNoiseExpressions). */
+starting_area_weight corresponds to the `starting_area_weight` [noise expression](prototype:BaseNamedNoiseExpressions). */
   starting_area_weight_optimal?: number;
   /** Distance from the optimal parameters that is still considered optimal.
 
-Only loaded if &#x60;starting_area_weight_optimal&#x60; is defined. */
+Only loaded if `starting_area_weight_optimal` is defined. */
   starting_area_weight_range?: number;
   /** Limit distance from the optimum on a single (positive) side. This is pure magic.
 
-Only loaded if &#x60;starting_area_weight_optimal&#x60; is defined. */
+Only loaded if `starting_area_weight_optimal` is defined. */
   starting_area_weight_top_property_limit?: number;
   /** Distance from the optimal parameters that get influence of -1.
 
-Only loaded if &#x60;temperature_optimal&#x60; is defined. */
+Only loaded if `temperature_optimal` is defined. */
   temperature_max_range?: number;
   /** Optimal value of temperature. If temperature is close to this value, peak influence is 1.
 
-temperature corresponds to the &#x60;temperature&#x60; [noise expression](prototype:BaseNamedNoiseExpressions). */
+temperature corresponds to the `temperature` [noise expression](prototype:BaseNamedNoiseExpressions). */
   temperature_optimal?: number;
   /** Distance from the optimal parameters that is still considered optimal.
 
-Only loaded if &#x60;temperature_optimal&#x60; is defined. */
+Only loaded if `temperature_optimal` is defined. */
   temperature_range?: number;
   /** Limit distance from the optimum on a single (positive) side. This is pure magic.
 
-Only loaded if &#x60;temperature_optimal&#x60; is defined. */
+Only loaded if `temperature_optimal` is defined. */
   temperature_top_property_limit?: number;
   /** Distance from the optimal parameters that get influence of -1.
 
-Only loaded if &#x60;tier_from_start_optimal&#x60; is defined. */
+Only loaded if `tier_from_start_optimal` is defined. */
   tier_from_start_max_range?: number;
   /** Optimal value of tier_from_start. If tier_from_start is close to this value, peak influence is 1.
 
-tier_from_start corresponds to the &#x60;tier_from_start&#x60; [noise expression](prototype:BaseNamedNoiseExpressions). */
+tier_from_start corresponds to the `tier_from_start` [noise expression](prototype:BaseNamedNoiseExpressions). */
   tier_from_start_optimal?: number;
   /** Distance from the optimal parameters that is still considered optimal.
 
-Only loaded if &#x60;tier_from_start_optimal&#x60; is defined. */
+Only loaded if `tier_from_start_optimal` is defined. */
   tier_from_start_range?: number;
   /** Limit distance from the optimum on a single (positive) side. This is pure magic.
 
-Only loaded if &#x60;tier_from_start_optimal&#x60; is defined. */
+Only loaded if `tier_from_start_optimal` is defined. */
   tier_from_start_top_property_limit?: number;
   /** Distance from the optimal parameters that get influence of -1.
 
-Only loaded if &#x60;water_optimal&#x60; is defined. */
+Only loaded if `water_optimal` is defined. */
   water_max_range?: number;
   /** Optimal value of water. If water is close to this value, peak influence is 1.
 
-water corresponds to the &#x60;moisture&#x60; [noise expression](prototype:BaseNamedNoiseExpressions). */
+water corresponds to the `moisture` [noise expression](prototype:BaseNamedNoiseExpressions). */
   water_optimal?: number;
   /** Distance from the optimal parameters that is still considered optimal.
 
-Only loaded if &#x60;water_optimal&#x60; is defined. */
+Only loaded if `water_optimal` is defined. */
   water_range?: number;
   /** Limit distance from the optimum on a single (positive) side. This is pure magic.
 
-Only loaded if &#x60;water_optimal&#x60; is defined. */
+Only loaded if `water_optimal` is defined. */
   water_top_property_limit?: number;
 }
 export interface AutoplaceSettings {
@@ -7428,9 +7454,9 @@ Autoplace specification describe conditions for placing tiles, entities, and dec
 
 There are two entirely separate ways to specify the probability and richness:
 
-- The newer noise expression-based system using &#x60;probability_expression&#x60; and &#x60;richness_expression&#x60;.
+- The newer noise expression-based system using `probability_expression` and `richness_expression`.
 
-- The older peaks-based system using &#x60;peaks&#x60; and the properties listed below it. */
+- The older peaks-based system using `peaks` and the properties listed below it. */
 interface _AutoplaceSpecification {
   /** Name of the [AutoplaceControl](prototype:AutoplaceControl) (row in the map generator GUI) that applies to this entity. */
   control?: AutoplaceControlID;
@@ -7438,13 +7464,13 @@ interface _AutoplaceSpecification {
   coverage?: number;
   /** Indicates whether the thing should be placed even if [MapGenSettings](runtime:MapGenSettings) do not provide frequency/size/richness for it. (either for the specific prototype or for the control named by AutoplaceSpecification.control).
 
-If true, normal frequency/size/richness (&#x60;value&#x3D;1&#x60;) are used in that case.  Otherwise it is treated as if &#x27;none&#x27; were selected. */
+If true, normal frequency/size/richness (`value=1`) are used in that case.  Otherwise it is treated as if 'none' were selected. */
   default_enabled?: boolean;
   /** Force of the placed entity. Can be a custom force name. Only relevant for [EntityWithOwnerPrototype](prototype:EntityWithOwnerPrototype). */
   force?: 'enemy' | 'player' | 'neutral' | string;
   /** Multiplier for output of the sharpness filter.
 
-Probability is calculated as &#x60;max_probability * sharpness_filter(sum of influences and size modifier from GUI) - random(0, random_probability_penalty)&#x60;. */
+Probability is calculated as `max_probability * sharpness_filter(sum of influences and size modifier from GUI) - random(0, random_probability_penalty)`. */
   max_probability?: number;
   /** Order for placing the entity (has no effect when placing tiles). Entities whose order compares less are placed earlier (this influences placing multiple entities which collide with itself), from entities with equal order string only one with the highest probability is placed. */
   order?: Order;
@@ -7453,31 +7479,31 @@ Probability is calculated as &#x60;max_probability * sharpness_filter(sum of inf
   placement_density?: number;
   /** If specified, provides a noise expression that will be evaluated at every point on the map to determine probability.
 
-If left blank, probability is determined by the &#x60;peaks&#x60; system based on the properties listed below. */
+If left blank, probability is determined by the `peaks` system based on the properties listed below. */
   probability_expression?: NoiseExpression;
-  /** A random value between &#x60;0&#x60; and this number is subtracted from a probability after sharpness filter. Only works for entities. */
+  /** A random value between `0` and this number is subtracted from a probability after sharpness filter. Only works for entities. */
   random_probability_penalty?: number;
-  /** Base Richness. It is calculated as &#x60;sum of influences * (richness_multiplier + distance * richness_multiplier_distance_bonus) + richness_base&#x60;.
+  /** Base Richness. It is calculated as `sum of influences * (richness_multiplier + distance * richness_multiplier_distance_bonus) + richness_base`.
 
 Note, that when calculating richness, influences of individual peaks use [AutoplacePeak::richness_influence](prototype:AutoplacePeak::richness_influence) bonus. */
   richness_base?: number;
   /** If specified, provides a noise expression that will be evaluated to determine richness.
 
-If probability_expression is specified and &#x60;richness_expression&#x60; is not, then &#x60;probability_expression&#x60; will be used as the richness expression.
+If probability_expression is specified and `richness_expression` is not, then `probability_expression` will be used as the richness expression.
 
-If neither are specified, then probability and richness are both determined by the &#x60;peaks&#x60; system based on the properties listed below. */
+If neither are specified, then probability and richness are both determined by the `peaks` system based on the properties listed below. */
   richness_expression?: NoiseExpression;
-  /** See &#x60;richness_base&#x60;. */
+  /** See `richness_base`. */
   richness_multiplier?: number;
-  /** Bonus to richness multiplier per tile of distance from starting point. See &#x60;richness_base&#x60;. */
+  /** Bonus to richness multiplier per tile of distance from starting point. See `richness_base`. */
   richness_multiplier_distance_bonus?: number;
-  /** Parameter of the sharpness filter for post-processing probability of entity placement. Value of &#x60;0&#x60; disables the filter, with value &#x60;1&#x60;, the filter is a step function centered around &#x60;0.5&#x60;. */
+  /** Parameter of the sharpness filter for post-processing probability of entity placement. Value of `0` disables the filter, with value `1`, the filter is a step function centered around `0.5`. */
   sharpness?: number;
   /** If this value is non zero, influence of this entity will be calculated differently in starting area: For each entity with this parameter a position in starting area is selected and a blob is placed centered on this position. The central tile of this blob will have approximately amount of resources selected by this value.
 
 See [AutoplacePeak::influence](prototype:AutoplacePeak::influence) for the general influence calculation. */
   starting_area_amount?: number;
-  /** See &#x60;starting_area_amount&#x60;. Controls approximate radius of the blob in tiles. */
+  /** See `starting_area_amount`. Controls approximate radius of the blob in tiles. */
   starting_area_size?: number;
   /** Restricts tiles or tile transitions the entity can appear on. */
   tile_restriction?: TileIDRestriction[];
@@ -7486,32 +7512,32 @@ See [AutoplacePeak::influence](prototype:AutoplacePeak::influence) for the gener
 export interface BaseAttackParameters {
   /** Used in tooltips to set the tooltip category. It is also used to get the locale keys for activation instructions and speed of the action for the tooltip.
 
-For example, an activation_type of &quot;throw&quot; will result in the tooltip category &quot;thrown&quot; and the tooltip locale keys &quot;gui.instruction-to-throw&quot; and &quot;description.throwing-speed&quot;. */
+For example, an activation_type of "throw" will result in the tooltip category "thrown" and the tooltip locale keys "gui.instruction-to-throw" and "description.throwing-speed". */
   activation_type?: 'shoot' | 'throw' | 'consume' | 'activate';
   ammo_categories?: AmmoCategoryID[];
-  /** Mandatory if both &#x60;ammo_type&#x60; and &#x60;ammo_categories&#x60; are not defined. */
+  /** Mandatory if both `ammo_type` and `ammo_categories` are not defined. */
   ammo_category?: AmmoCategoryID;
-  /** Must be greater than or equal to &#x60;0&#x60;. */
+  /** Must be greater than or equal to `0`. */
   ammo_consumption_modifier?: number;
   /** Can be mandatory. */
   ammo_type?: AmmoType;
   animation?: RotatedAnimation;
-  /** Number of ticks in which it will be possible to shoot again. If &lt; 1, multiple shots can be performed in one tick. */
+  /** Number of ticks in which it will be possible to shoot again. If < 1, multiple shots can be performed in one tick. */
   cooldown: number;
-  /** Must be between &#x60;0&#x60; and &#x60;1&#x60;. */
+  /** Must be between `0` and `1`. */
   cooldown_deviation?: number;
   /** Played during the attack. */
   cyclic_sound: CyclicSound;
   damage_modifier?: number;
-  /** Used when searching for the nearest enemy, when this is &gt; 0, enemies that aren&#x27;t burning are preferred over burning enemies. Definition of &quot;burning&quot; for this: Entity has sticker attached to it, and the sticker has a [spread_fire_entity](prototype:StickerPrototype::spread_fire_entity) set. */
+  /** Used when searching for the nearest enemy, when this is > 0, enemies that aren't burning are preferred over burning enemies. Definition of "burning" for this: Entity has sticker attached to it, and the sticker has a [spread_fire_entity](prototype:StickerPrototype::spread_fire_entity) set. */
   fire_penalty?: number;
   /** A higher penalty will discourage turrets from targeting units with higher health. A negative penalty will encourage turrets to target units with higher health. */
   health_penalty?: number;
   /** Setting this to anything but zero causes homing projectiles to aim for the predicted location based on enemy movement instead of the current enemy location. */
   lead_target_for_projectile_speed?: number;
-  /** If less than &#x60;range&#x60;, the entity will choose a random distance between &#x60;range&#x60; and &#x60;min_attack_distance&#x60; and attack from that distance. */
+  /** If less than `range`, the entity will choose a random distance between `range` and `min_attack_distance` and attack from that distance. */
   min_attack_distance?: number;
-  /** The minimum distance (in tiles) between an entity and target. If a unit&#x27;s target is less than this, the unit will attempt to move away before attacking. A [flamethrower turret](https://wiki.factorio.com/Flamethrower_turret) does not move, but has a minimum range. Less than this, it is unable to target an enemy. */
+  /** The minimum distance (in tiles) between an entity and target. If a unit's target is less than this, the unit will attempt to move away before attacking. A [flamethrower turret](https://wiki.factorio.com/Flamethrower_turret) does not move, but has a minimum range. Less than this, it is unable to target an enemy. */
   min_range?: number;
   movement_slow_down_cooldown?: number;
   movement_slow_down_factor?: number;
@@ -7522,10 +7548,10 @@ For example, an activation_type of &quot;throw&quot; will result in the tooltip 
   rotate_penalty?: number;
   /** Played once at the start of the attack if these are [ProjectileAttackParameters](prototype:ProjectileAttackParameters). */
   sound?: LayeredSound;
-  /** If this is &lt;&#x3D; 0, it is set to 1. Arc from 0 to 1, so for example 0.25 is 90°. Used by the [flamethrower turret](https://wiki.factorio.com/Flamethrower_turret) in the base game. Arcs greater than 0.5 but less than 1 will be clamped to 0.5 as targeting in arcs larger than half circle is [not implemented](https://forums.factorio.com/94654). */
+  /** If this is <= 0, it is set to 1. Arc from 0 to 1, so for example 0.25 is 90°. Used by the [flamethrower turret](https://wiki.factorio.com/Flamethrower_turret) in the base game. Arcs greater than 0.5 but less than 1 will be clamped to 0.5 as targeting in arcs larger than half circle is [not implemented](https://forums.factorio.com/94654). */
   turn_range?: number;
   use_shooter_direction?: boolean;
-  /** Number of ticks it takes for the weapon to actually shoot after the order for shooting has been made. This also allows to &quot;adjust&quot; the shooting animation to the effect of shooting.
+  /** Number of ticks it takes for the weapon to actually shoot after the order for shooting has been made. This also allows to "adjust" the shooting animation to the effect of shooting.
 
 [CapsuleActions](prototype:CapsuleAction) cannot have attack parameters with non-zero warmup. */
   warmup?: number;
@@ -7534,34 +7560,34 @@ For example, an activation_type of &quot;throw&quot; will result in the tooltip 
 export interface BaseEnergySource {
   /** The pollution an entity emits per minute at full energy consumption. This is exactly the value that is shown in the entity tooltip. */
   emissions_per_minute?: number;
-  /** Whether to render the &quot;no network&quot; icon if the entity is not connected to an electric network. */
+  /** Whether to render the "no network" icon if the entity is not connected to an electric network. */
   render_no_network_icon?: boolean;
-  /** Whether to render the &quot;no power&quot; icon if the entity is low on power. Also applies to the &quot;no fuel&quot; icon when using burner energy sources. */
+  /** Whether to render the "no power" icon if the entity is low on power. Also applies to the "no fuel" icon when using burner energy sources. */
   render_no_power_icon?: boolean;
 }
 /** The abstract base of all [Modifiers](prototype:Modifier). */
 export interface BaseModifier {
   /** Path to the icon file.
 
-Only loaded if &#x60;icons&#x60; is not defined. */
+Only loaded if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
-Only loaded if &#x60;icons&#x60; is not defined, or if &#x60;icon_size&#x60; is not specified for all instances of &#x60;icons&#x60;. */
+Only loaded if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
-  /** Can&#x27;t be an empty array. */
+  /** Can't be an empty array. */
   icons?: IconData[];
 }
 /** The abstract base of all [StyleSpecifications](prototype:StyleSpecification). */
 export interface BaseStyleSpecification {
   bottom_margin?: number;
   bottom_padding?: number;
-  /** Name of a custom GUI effect, which are hard-coded in the game&#x27;s engine. Only has one option currently. */
+  /** Name of a custom GUI effect, which are hard-coded in the game's engine. Only has one option currently. */
   effect?: 'compilatron-hologram';
   effect_opacity?: number;
-  /** Sets &#x60;minimal_height&#x60;, &#x60;maximal_height&#x60; and &#x60;natural_height&#x60; to the same value. */
+  /** Sets `minimal_height`, `maximal_height` and `natural_height` to the same value. */
   height?: number;
   horizontal_align?: HorizontalAlign;
   horizontally_squashable?: StretchRule;
@@ -7569,32 +7595,32 @@ export interface BaseStyleSpecification {
   ignored_by_search?: boolean;
   left_margin?: number;
   left_padding?: number;
-  /** Sets &#x60;top_margin&#x60;, &#x60;right_margin&#x60;, &#x60;bottom_margin&#x60; and &#x60;left_margin&#x60; to the same value. */
+  /** Sets `top_margin`, `right_margin`, `bottom_margin` and `left_margin` to the same value. */
   margin?: number;
-  /** Maximal height ensures that the widget will never be bigger than than that size. It can&#x27;t be stretched to be bigger. */
+  /** Maximal height ensures that the widget will never be bigger than than that size. It can't be stretched to be bigger. */
   maximal_height?: number;
-  /** Maximal width ensures that the widget will never be bigger than than that size. It can&#x27;t be stretched to be bigger. */
+  /** Maximal width ensures that the widget will never be bigger than than that size. It can't be stretched to be bigger. */
   maximal_width?: number;
-  /** Minimal height ensures that the widget will never be smaller than than that size. It can&#x27;t be squashed to be smaller. */
+  /** Minimal height ensures that the widget will never be smaller than than that size. It can't be squashed to be smaller. */
   minimal_height?: number;
-  /** Minimal width ensures that the widget will never be smaller than than that size. It can&#x27;t be squashed to be smaller. */
+  /** Minimal width ensures that the widget will never be smaller than than that size. It can't be squashed to be smaller. */
   minimal_width?: number;
   /** Natural height specifies the height of the element tries to have, but it can still be squashed/stretched to have a different size. */
   natural_height?: number;
-  /** If this is a tuple, the first member sets &#x60;natural_width&#x60; and the second sets &#x60;natural_height&#x60;. Otherwise, both &#x60;natural_width&#x60; and &#x60;natural_height&#x60; are set to the same value. */
+  /** If this is a tuple, the first member sets `natural_width` and the second sets `natural_height`. Otherwise, both `natural_width` and `natural_height` are set to the same value. */
   natural_size?: number | [number, number];
   /** Natural width specifies the width of the element tries to have, but it can still be squashed/stretched to have a different size. */
   natural_width?: number;
   never_hide_by_search?: boolean;
-  /** Sets &#x60;top_padding&#x60;, &#x60;right_padding&#x60;, &#x60;bottom_padding&#x60; and &#x60;left_padding&#x60; to the same value. */
+  /** Sets `top_padding`, `right_padding`, `bottom_padding` and `left_padding` to the same value. */
   padding?: number;
   /** Name of a [StyleSpecification](prototype:StyleSpecification). This style inherits all property values from its parent.
 
-Styles without a parent property default to the root style for their type. The exception to this are the root styles themselves, as they cannot have a parent set. Due to this, for root styles, some style properties are mandatory and behavior may be unexpected, such as an element not showing up because its size defaults to &#x60;0&#x60;. */
+Styles without a parent property default to the root style for their type. The exception to this are the root styles themselves, as they cannot have a parent set. Due to this, for root styles, some style properties are mandatory and behavior may be unexpected, such as an element not showing up because its size defaults to `0`. */
   parent?: string;
   right_margin?: number;
   right_padding?: number;
-  /** If this is a tuple, the first member sets &#x60;width&#x60;, and the second sets &#x60;height&#x60;. Otherwise, both &#x60;width&#x60; and &#x60;height&#x60; are set to the same value. */
+  /** If this is a tuple, the first member sets `width`, and the second sets `height`. Otherwise, both `width` and `height` are set to the same value. */
   size?: number | [number, number];
   tooltip?: LocalisedString;
   top_margin?: number;
@@ -7602,7 +7628,7 @@ Styles without a parent property default to the root style for their type. The e
   vertical_align?: VerticalAlign;
   vertically_squashable?: StretchRule;
   vertically_stretchable?: StretchRule;
-  /** Sets &#x60;minimal_width&#x60;, &#x60;maximal_width&#x60; and &#x60;natural_width&#x60; to the same value. */
+  /** Sets `minimal_width`, `maximal_width` and `natural_width` to the same value. */
   width?: number;
 }
 export interface BeaconGraphicsSet {
@@ -7635,11 +7661,11 @@ export interface BeaconModuleVisualization {
   has_empty_slot?: boolean;
   pictures?: SpriteVariations;
   render_layer?: RenderLayer;
-  /** Used to determine render order for sprites with the same &#x60;render_layer&#x60; in the same position. Sprites with a higher &#x60;secondary_draw_order&#x60; are drawn on top. */
+  /** Used to determine render order for sprites with the same `render_layer` in the same position. Sprites with a higher `secondary_draw_order` are drawn on top. */
   secondary_draw_order?: number;
 }
 export interface BeaconModuleVisualizations {
-  /** The visualization is chosen based on the [ModulePrototype::art_style](prototype:ModulePrototype::art_style), meaning if module art style equals beacon module visualization art style then this visualization is chosen. Vanilla uses &#x60;&quot;vanilla&quot;&#x60; here. */
+  /** The visualization is chosen based on the [ModulePrototype::art_style](prototype:ModulePrototype::art_style), meaning if module art style equals beacon module visualization art style then this visualization is chosen. Vanilla uses `"vanilla"` here. */
   art_style: string;
   /** The outer array contains the different slots, the inner array contains the different layers for those slots (with different tints etc). Example: */
   slots?: BeaconModuleVisualization[][];
@@ -7767,13 +7793,13 @@ export interface BorderImageSet {
 }
 /** A cursor box, for use in [UtilitySprites](prototype:UtilitySprites). */
 export interface BoxSpecification {
-  /** Whether this is a complete box or just the top left corner. If this is true, &#x60;side_length&#x60; and &#x60;side_height&#x60; must be present. Otherwise &#x60;max_side_length&#x60; must be present. */
+  /** Whether this is a complete box or just the top left corner. If this is true, `side_length` and `side_height` must be present. Otherwise `max_side_length` must be present. */
   is_whole_box?: boolean;
-  /** Only read if &#x60;is_whole_box&#x60; is false. */
+  /** Only read if `is_whole_box` is false. */
   max_side_length: number;
-  /** Only read if &#x60;is_whole_box&#x60; is true. */
+  /** Only read if `is_whole_box` is true. */
   side_height: number;
-  /** Only read if &#x60;is_whole_box&#x60; is true. */
+  /** Only read if `is_whole_box` is true. */
   side_length: number;
   sprite: Sprite;
 }
@@ -7796,13 +7822,13 @@ export function isBuildEntityTipTrigger(
 }
 interface _BurnerEnergySource {
   burnt_inventory_size?: ItemStackIndex;
-  /** &#x60;1&#x60; means 100% effectivity. Must be greater than &#x60;0&#x60;. Multiplier of the energy output. */
+  /** `1` means 100% effectivity. Must be greater than `0`. Multiplier of the energy output. */
   effectivity?: number;
   /** The energy source can be used with fuel from these [fuel categories](prototype:FuelCategory). */
   fuel_categories?: FuelCategoryID[];
   /** The energy source can be used with fuel from this [fuel category](prototype:FuelCategory). For a list of built-in categories, see [here](https://wiki.factorio.com/Data.raw#fuel-category).
 
-Only loaded if &#x60;fuel_categories&#x60; is not defined. */
+Only loaded if `fuel_categories` is not defined. */
   fuel_category?: FuelCategoryID;
   fuel_inventory_size: ItemStackIndex;
   light_flicker?: LightFlickeringDefinition;
@@ -7883,9 +7909,9 @@ export function isCameraStyleSpecification(
 }
 /** The data for one variation of character animations. [CharacterPrototype::animations](prototype:CharacterPrototype::animations). */
 export interface CharacterArmorAnimation {
-  /** The names of the armors this animation data is used for. Don&#x27;t define this if you want the animations to be used for the player without armor. */
+  /** The names of the armors this animation data is used for. Don't define this if you want the animations to be used for the player without armor. */
   armors?: ItemID[];
-  /** flipped_shadow_running_with_gun must be nil or contain exactly 18 directions, so all of the combination of gun direction and moving direction can be covered. Some of these variations are used in reverse to save space. You can use the character animation in the base game for reference. &#x60;flipped_shadow_running_with_gun&#x60; has to have same frame count as &#x60;running_with_gun&#x60;. */
+  /** flipped_shadow_running_with_gun must be nil or contain exactly 18 directions, so all of the combination of gun direction and moving direction can be covered. Some of these variations are used in reverse to save space. You can use the character animation in the base game for reference. `flipped_shadow_running_with_gun` has to have same frame count as `running_with_gun`. */
   flipped_shadow_running_with_gun?: RotatedAnimation;
   idle: RotatedAnimation;
   idle_with_gun: RotatedAnimation;
@@ -7896,7 +7922,7 @@ export interface CharacterArmorAnimation {
 }
 interface _CharacterBuildDistanceModifier {
   type: 'character-build-distance';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -7910,7 +7936,7 @@ export function isCharacterBuildDistanceModifier(
 }
 interface _CharacterCraftingSpeedModifier {
   type: 'character-crafting-speed';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -7924,7 +7950,7 @@ export function isCharacterCraftingSpeedModifier(
 }
 interface _CharacterHealthBonusModifier {
   type: 'character-health-bonus';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -7938,7 +7964,7 @@ export function isCharacterHealthBonusModifier(
 }
 interface _CharacterInventorySlotsBonusModifier {
   type: 'character-inventory-slots-bonus';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -7953,7 +7979,7 @@ export function isCharacterInventorySlotsBonusModifier(
 }
 interface _CharacterItemDropDistanceModifier {
   type: 'character-item-drop-distance';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -7968,7 +7994,7 @@ export function isCharacterItemDropDistanceModifier(
 }
 interface _CharacterItemPickupDistanceModifier {
   type: 'character-item-pickup-distance';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -7983,7 +8009,7 @@ export function isCharacterItemPickupDistanceModifier(
 }
 interface _CharacterLogisticRequestsModifier {
   type: 'character-logistic-requests';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -7998,7 +8024,7 @@ export function isCharacterLogisticRequestsModifier(
 }
 interface _CharacterLogisticTrashSlotsModifier {
   type: 'character-logistic-trash-slots';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -8013,7 +8039,7 @@ export function isCharacterLogisticTrashSlotsModifier(
 }
 interface _CharacterLootPickupDistanceModifier {
   type: 'character-loot-pickup-distance';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -8028,7 +8054,7 @@ export function isCharacterLootPickupDistanceModifier(
 }
 interface _CharacterMiningSpeedModifier {
   type: 'character-mining-speed';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -8042,7 +8068,7 @@ export function isCharacterMiningSpeedModifier(
 }
 interface _CharacterReachDistanceModifier {
   type: 'character-reach-distance';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -8056,7 +8082,7 @@ export function isCharacterReachDistanceModifier(
 }
 interface _CharacterResourceReachDistanceModifier {
   type: 'character-resource-reach-distance';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -8073,7 +8099,7 @@ export function isCharacterResourceReachDistanceModifier(
 }
 interface _CharacterRunningSpeedModifier {
   type: 'character-running-speed';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -8210,15 +8236,15 @@ export function isClearCursorTipTrigger(
 export interface CliffPlacementSettings {
   /** Elevation at which the first row of cliffs is placed. Can not be set from the map generation GUI. */
   cliff_elevation_0?: number;
-  /** Elevation difference between successive rows of cliffs. This is inversely proportional to &#x27;frequency&#x27; in the map generation GUI. Specifically, when set from the GUI the value is &#x60;40 / frequency&#x60;. */
+  /** Elevation difference between successive rows of cliffs. This is inversely proportional to 'frequency' in the map generation GUI. Specifically, when set from the GUI the value is `40 / frequency`. */
   cliff_elevation_interval?: number;
   /** Name of the [CliffPrototype](prototype:CliffPrototype). */
   name?: EntityID;
-  /** Corresponds to &#x27;continuity&#x27; in the GUI. This value is not used directly, but is used by the &#x27;cliffiness&#x27; noise expression, which in combination with elevation and the two cliff elevation properties drives cliff placement (cliffs are placed when elevation crosses the elevation contours defined by &#x60;cliff_elevation_0&#x60; and &#x60;cliff_elevation_interval&#x60; when &#x27;cliffiness&#x27; is greater than &#x60;0.5&#x60;). The default &#x27;cliffiness&#x27; expression interprets this value such that larger values result in longer unbroken walls of cliffs, and smaller values (between &#x60;0&#x60; and &#x60;1&#x60;) result in larger gaps in cliff walls. */
+  /** Corresponds to 'continuity' in the GUI. This value is not used directly, but is used by the 'cliffiness' noise expression, which in combination with elevation and the two cliff elevation properties drives cliff placement (cliffs are placed when elevation crosses the elevation contours defined by `cliff_elevation_0` and `cliff_elevation_interval` when 'cliffiness' is greater than `0.5`). The default 'cliffiness' expression interprets this value such that larger values result in longer unbroken walls of cliffs, and smaller values (between `0` and `1`) result in larger gaps in cliff walls. */
   richness?: MapGenSize;
 }
 interface _ClusterTriggerItem {
-  /** Must be at least &#x60;2&#x60;. */
+  /** Must be at least `2`. */
   cluster_count: number;
   distance: number;
   distance_deviation?: number;
@@ -8233,7 +8259,7 @@ export function isClusterTriggerItem(
 ): value is ClusterTriggerItem {
   return (value as { type: string }).type === 'cluster';
 }
-/** Table of red, green, blue, and alpha float values between 0 and 1.Alternatively, values can be from 0-255, they are interpreted as such if at least one value is &#x60;&gt; 1&#x60;.
+/** Table of red, green, blue, and alpha float values between 0 and 1.Alternatively, values can be from 0-255, they are interpreted as such if at least one value is `> 1`.
 
 Color allows the short-hand notation of passing an array of exactly 3 or 4 numbers.
 
@@ -8276,7 +8302,7 @@ export interface ColumnWidth {
   column: number;
   maximal_width?: number;
   minimal_width?: number;
-  /** Sets &#x60;minimal_width&#x60; and &#x60;maximal_width&#x60; to the same value. */
+  /** Sets `minimal_width` and `maximal_width` to the same value. */
   width?: number;
 }
 /** Graphics for the heat pipe. */
@@ -8299,7 +8325,7 @@ export interface ConnectableEntityGraphics {
   t_up: SpriteVariations;
 }
 export interface CraftItemTipTrigger {
-  /** Can only be used when &#x60;event_type&#x60; is &#x60;&quot;crafting-finished&quot;&#x60;. */
+  /** Can only be used when `event_type` is `"crafting-finished"`. */
   consecutive?: boolean;
   count?: number;
   event_type:
@@ -8354,7 +8380,7 @@ interface _CreateEntityTriggerEffectItem {
   show_in_tooltip?: boolean;
   /** Entity creation will not occur if any tile matches the collision condition. Defaults to no collisions. */
   tile_collision_mask?: CollisionMask;
-  /** If &#x60;true&#x60;, the [on_trigger_created_entity](runtime:on_trigger_created_entity) event will be raised. */
+  /** If `true`, the [on_trigger_created_entity](runtime:on_trigger_created_entity) event will be raised. */
   trigger_created_entity?: boolean;
   type: 'create-entity';
 }
@@ -8457,7 +8483,7 @@ interface _CreateStickerTriggerEffectItem {
   show_in_tooltip?: boolean;
   /** Name of a [StickerPrototype](prototype:StickerPrototype) that should be created. */
   sticker: EntityID;
-  /** If &#x60;true&#x60;, [on_trigger_created_entity](runtime:on_trigger_created_entity) will be triggered when the sticker is created. */
+  /** If `true`, [on_trigger_created_entity](runtime:on_trigger_created_entity) will be triggered when the sticker is created. */
   trigger_created_entity?: boolean;
   type: 'create-sticker';
 }
@@ -8529,7 +8555,7 @@ interface _DamageTriggerEffectItem {
   type: 'damage';
   upper_damage_modifier?: number;
   upper_distance_threshold?: number;
-  /** If &#x60;true&#x60;, no corpse for killed entities will be created. */
+  /** If `true`, no corpse for killed entities will be created. */
   vaporize?: boolean;
 }
 
@@ -8549,7 +8575,7 @@ interface _DamageTypeFilters {
 }
 interface _DeconstructionTimeToLiveModifier {
   type: 'deconstruction-time-to-live';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -8608,11 +8634,11 @@ export function isDestroyCliffsTriggerEffectItem(
   return (value as { type: string }).type === 'destroy-cliffs';
 }
 interface _DestroyDecorativesTriggerEffectItem {
-  /** If &#x60;true&#x60;, only decoratives with a [DecorativePrototype::trigger_effect](prototype:DecorativePrototype::trigger_effect) will be destroyed. */
+  /** If `true`, only decoratives with a [DecorativePrototype::trigger_effect](prototype:DecorativePrototype::trigger_effect) will be destroyed. */
   decoratives_with_trigger_only?: boolean;
   from_render_layer?: RenderLayer;
   include_decals?: boolean;
-  /** Soft decoratives are those where [DecorativePrototype::grows_through_rail_path](prototype:DecorativePrototype::grows_through_rail_path) is &#x60;true&#x60;. */
+  /** Soft decoratives are those where [DecorativePrototype::grows_through_rail_path](prototype:DecorativePrototype::grows_through_rail_path) is `true`. */
   include_soft_decoratives?: boolean;
   invoke_decorative_trigger?: boolean;
   radius: number;
@@ -8635,7 +8661,7 @@ export interface DifficultySettings {
   research_queue_setting?: 'always' | 'after-victory' | 'never';
   /** A [defines.difficulty_settings.technology_difficulty](runtime:defines.difficulty_settings.technology_difficulty). */
   technology_difficulty: number;
-  /** Optional, defaults to 1. - Must be &gt;&#x3D; 0.001 and &lt;&#x3D; 1000. */
+  /** Optional, defaults to 1. - Must be >= 0.001 and <= 1000. */
   technology_price_multiplier?: number;
 }
 interface _DirectTriggerItem {
@@ -8692,11 +8718,11 @@ export function isDropDownStyleSpecification(
 ): value is DropDownStyleSpecification {
   return (value as { type: string }).type === 'dropdown_style';
 }
-/** When applied to modules, the resulting effect is a sum of all module affects, multiplied through calculations: &#x60;(1 + sum module effects)&#x60; or, for productivity &#x60;(0 + sum)&#x60;. */
+/** When applied to modules, the resulting effect is a sum of all module affects, multiplied through calculations: `(1 + sum module effects)` or, for productivity `(0 + sum)`. */
 export interface Effect {
   /** Multiplier to energy used during operation (not idle/drain use). The minimum possible sum is -80%. */
   consumption?: EffectValue;
-  /** Multiplier to the pollution factor of an entity&#x27;s pollution during use. The minimum possible sum is -80%. */
+  /** Multiplier to the pollution factor of an entity's pollution during use. The minimum possible sum is -80%. */
   pollution?: EffectValue;
   /** Multiplied against work completed, adds to the bonus results of operating. E.g. an extra crafted recipe or immediate research bonus. The minimum possible sum is 0%. */
   productivity?: EffectValue;
@@ -8710,11 +8736,11 @@ export interface EffectValue {
 interface _ElectricEnergySource {
   /** How much energy this entity can hold. */
   buffer_capacity?: Energy;
-  /** How much energy (per second) will be continuously removed from the energy buffer. In-game, this is shown in the tooltip as &quot;Min. [Minimum] Consumption&quot;. Applied as a constant consumption-per-tick, even when the entity has the property [active](runtime:LuaEntity::active) set to &#x60;false&#x60;. */
+  /** How much energy (per second) will be continuously removed from the energy buffer. In-game, this is shown in the tooltip as "Min. [Minimum] Consumption". Applied as a constant consumption-per-tick, even when the entity has the property [active](runtime:LuaEntity::active) set to `false`. */
   drain?: Energy;
-  /** The rate at which energy can be taken, from the network, to refill the energy buffer. &#x60;0&#x60; means no transfer. */
+  /** The rate at which energy can be taken, from the network, to refill the energy buffer. `0` means no transfer. */
   input_flow_limit?: Energy;
-  /** The rate at which energy can be provided, to the network, from the energy buffer. &#x60;0&#x60; means no transfer. */
+  /** The rate at which energy can be provided, to the network, from the energy buffer. `0` means no transfer. */
   output_flow_limit?: Energy;
   type: 'electric';
   usage_priority: ElectricUsagePriority;
@@ -8728,59 +8754,59 @@ export function isElectricEnergySource(
 ): value is ElectricEnergySource {
   return (value as { type: string }).type === 'electric';
 }
-/** If this is loaded as a single ElementImageSetLayer, it gets used as &#x60;base&#x60;. */
+/** If this is loaded as a single ElementImageSetLayer, it gets used as `base`. */
 interface _ElementImageSet {
   base?: ElementImageSetLayer;
   glow?: ElementImageSetLayer;
   shadow?: ElementImageSetLayer;
 }
-/** If this is loaded as a Sprite, it gets used as &#x60;center&#x60;. */
+/** If this is loaded as a Sprite, it gets used as `center`. */
 interface _ElementImageSetLayer {
   background_blur?: boolean;
   background_blur_sigma?: number;
-  /** Sets &#x60;top_border&#x60;, &#x60;right_border&#x60;, &#x60;bottom_border&#x60; and &#x60;left_border&#x60;.
+  /** Sets `top_border`, `right_border`, `bottom_border` and `left_border`.
 
-Only loaded if &#x60;corner_size&#x60; is not defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+Only loaded if `corner_size` is not defined. Only loaded if `type` is `"composition"`. */
   border?: number;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   bottom?: Sprite;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   bottom_border?: number;
   bottom_outer_border_shift?: number;
   bottom_tiling?: boolean;
-  /** Only loaded if &#x60;corner_size&#x60; is defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `corner_size` is defined. Only loaded if `type` is `"composition"`. */
   bottom_width?: SpriteSizeType;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   center?: Sprite;
-  /** Only loaded if &#x60;corner_size&#x60; is defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `corner_size` is defined. Only loaded if `type` is `"composition"`. */
   center_height?: SpriteSizeType;
   center_tiling_horizontal?: boolean;
   center_tiling_vertical?: boolean;
-  /** Only loaded if &#x60;corner_size&#x60; is defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `corner_size` is defined. Only loaded if `type` is `"composition"`. */
   center_width?: SpriteSizeType;
   /** If this is a tuple, the first member of the tuple is width and the second is height. Otherwise the size is both width and height.
 
-Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+Only loaded if `type` is `"composition"`. */
   corner_size?: number | [number, number];
   custom_horizontal_tiling_sizes?: number[];
-  /** Defines whether the border should be drawn inside the widget, which affects the padding and content size of the widget, or outside of the widget which doesn&#x27;t affect size. The outer draw type is most commonly used for shadows, glows and insets. */
+  /** Defines whether the border should be drawn inside the widget, which affects the padding and content size of the widget, or outside of the widget which doesn't affect size. The outer draw type is most commonly used for shadows, glows and insets. */
   draw_type?: 'inner' | 'outer';
-  /** Only loaded if &#x60;corner_size&#x60; is defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `corner_size` is defined. Only loaded if `type` is `"composition"`. */
   filename?: FileName;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   left?: Sprite;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   left_border?: number;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   left_bottom?: Sprite;
-  /** Only loaded if &#x60;corner_size&#x60; is defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `corner_size` is defined. Only loaded if `type` is `"composition"`. */
   left_height?: SpriteSizeType;
   left_outer_border_shift?: number;
   /** Tiling is used to make a side (not corner) texture repeat instead of being stretched. */
   left_tiling?: boolean;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   left_top?: Sprite;
-  /** Only loaded if &#x60;corner_size&#x60; is defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `corner_size` is defined. Only loaded if `type` is `"composition"`. */
   load_in_minimal_mode?: boolean;
   opacity?: number;
   overall_tiling_horizontal_padding?: number;
@@ -8790,33 +8816,33 @@ Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
   overall_tiling_vertical_padding?: number;
   overall_tiling_vertical_size?: number;
   overall_tiling_vertical_spacing?: number;
-  /** Mandatory if &#x60;corner_size&#x60; is defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Mandatory if `corner_size` is defined. Only loaded if `type` is `"composition"`. */
   position?: MapPosition;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   right?: Sprite;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   right_border?: number;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   right_bottom?: Sprite;
-  /** Only loaded if &#x60;corner_size&#x60; is defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `corner_size` is defined. Only loaded if `type` is `"composition"`. */
   right_height?: SpriteSizeType;
   right_outer_border_shift?: number;
   right_tiling?: boolean;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   right_top?: Sprite;
-  /** Only loaded if &#x60;corner_size&#x60; is defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `corner_size` is defined. Only loaded if `type` is `"composition"`. */
   scale?: number;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   stretch_monolith_image_to_size?: boolean;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   tint?: Color;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   top?: Sprite;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `type` is `"composition"`. */
   top_border?: number;
   top_outer_border_shift?: number;
   top_tiling?: boolean;
-  /** Only loaded if &#x60;corner_size&#x60; is defined. Only loaded if &#x60;type&#x60; is &#x60;&quot;composition&quot;&#x60;. */
+  /** Only loaded if `corner_size` is defined. Only loaded if `type` is `"composition"`. */
   top_width?: SpriteSizeType;
   type?: 'none' | 'composition';
 }
@@ -8850,9 +8876,9 @@ export interface EnemyExpansionSettings {
   /** A chunk has to have at most this much percent unbuildable tiles for it to be considered a candidate. This is to avoid chunks full of water to be marked as candidates. */
   max_colliding_tiles_coefficient: number;
   max_expansion_cooldown: number;
-  /** Distance in chunks from the furthest base around. This prevents expansions from reaching too far into the player&#x27;s territory. */
+  /** Distance in chunks from the furthest base around. This prevents expansions from reaching too far into the player's territory. */
   max_expansion_distance: number;
-  /** Ticks to expand to a single position for a base is used. Cooldown is calculated as follows: &#x60;cooldown &#x3D; lerp(max_expansion_cooldown, min_expansion_cooldown, -e^2 + 2 * e)&#x60; where &#x60;lerp&#x60; is the linear interpolation function, and e is the current evolution factor. */
+  /** Ticks to expand to a single position for a base is used. Cooldown is calculated as follows: `cooldown = lerp(max_expansion_cooldown, min_expansion_cooldown, -e^2 + 2 * e)` where `lerp` is the linear interpolation function, and e is the current evolution factor. */
   min_expansion_cooldown: number;
   neighbouring_base_chunk_coefficient: number;
   neighbouring_chunk_coefficient: number;
@@ -8886,9 +8912,9 @@ export function isEntityTransferTipTrigger(
 /** The shape and dimensions of an equipment module. */
 export interface EquipmentShape {
   height: number;
-  /** Only used when when &#x60;type&#x60; is &#x60;&quot;manual&quot;&#x60;. Each inner array is a &quot;position&quot; inside width×height of the equipment. Each positions that is defined is a filled squares of the equipment shape. &#x60;{0, 0}&#x60; is the upper left corner of the equipment. */
+  /** Only used when when `type` is `"manual"`. Each inner array is a "position" inside width×height of the equipment. Each positions that is defined is a filled squares of the equipment shape. `{0, 0}` is the upper left corner of the equipment. */
   points?: number[][];
-  /** The shape. When using &quot;manual&quot;, &#x60;points&#x60; must be defined. */
+  /** The shape. When using "manual", `points` must be defined. */
   type: 'full' | 'manual';
   width: number;
 }
@@ -8897,11 +8923,11 @@ interface _ExplosionDefinition {
   offset?: Vector;
 }
 export interface FactorioBasisNoiseArguments {
-  /** &#x60;x&#x60; and &#x60;y&#x60; will be multiplied by this value before sampling. */
+  /** `x` and `y` will be multiplied by this value before sampling. */
   input_scale?: ConstantNoiseNumber;
   /** The output will be multiplied by this value before returning. */
   output_scale?: ConstantNoiseNumber;
-  /** Integer between 0 and 4&#x27;294&#x27;967&#x27;295 (inclusive) used to populate the backing random noise. */
+  /** Integer between 0 and 4'294'967'295 (inclusive) used to populate the backing random noise. */
   seed0: ConstantNoiseNumber;
   /** Integer between 0 and 255 (inclusive) used to provide extra randomness when sampling. */
   seed1: ConstantNoiseNumber;
@@ -8909,7 +8935,7 @@ export interface FactorioBasisNoiseArguments {
   y: NoiseNumber;
 }
 export interface FactorioMultioctaveNoiseArguments {
-  /** &#x60;x&#x60; and &#x60;y&#x60; will be multiplied by this value before sampling. */
+  /** `x` and `y` will be multiplied by this value before sampling. */
   input_scale?: ConstantNoiseNumber;
   /** How many layers of noise at different scales to sum. */
   octaves: ConstantNoiseNumber;
@@ -8917,7 +8943,7 @@ export interface FactorioMultioctaveNoiseArguments {
   output_scale?: ConstantNoiseNumber;
   /** How strong is each layer compared to the next larger one. */
   persistence: ConstantNoiseNumber;
-  /** Integer between 0 and 4&#x27;294&#x27;967&#x27;295 (inclusive) used to populate the backing random noise. */
+  /** Integer between 0 and 4'294'967'295 (inclusive) used to populate the backing random noise. */
   seed0: ConstantNoiseNumber;
   /** Integer between 0 and 255 (inclusive) used to provide extra randomness when sampling. */
   seed1: ConstantNoiseNumber;
@@ -9000,48 +9026,48 @@ Entities can have multiple fluidboxes. These can be part of a [FluidEnergySource
 
 A fluidbox can store only one type of fluid at a time. However, a fluid system (ie. multiple connected fluid boxes) can contain multiple different fluids, see [Fluid mixing](https://wiki.factorio.com/Fluid_system#Fluid_mixing). */
 export interface FluidBox {
-  /** Must be greater than &#x60;0&#x60;. The total fluid capacity of the fluid box is &#x60;base_area × height × 100&#x60;. */
+  /** Must be greater than `0`. The total fluid capacity of the fluid box is `base_area × height × 100`. */
   base_area?: number;
-  /** Base level is the elevation of the invisible fluid box. &#x60;0&#x60; is ground level.
+  /** Base level is the elevation of the invisible fluid box. `0` is ground level.
 
-&#x60;-1&#x60; puts the top of the fluid box at the bottom of a pipe connection (base_level &#x60;0&#x60;, height &#x60;1&#x60;), so fluid &quot;falls&quot; in to it, and can&#x27;t get out.
+`-1` puts the top of the fluid box at the bottom of a pipe connection (base_level `0`, height `1`), so fluid "falls" in to it, and can't get out.
 
-&#x60;1&#x60; puts the bottom of the fluid box at the top of a pipe connection, so fluid &quot;falls&quot; out of it, but fluids already outside cannot get into it.
+`1` puts the bottom of the fluid box at the top of a pipe connection, so fluid "falls" out of it, but fluids already outside cannot get into it.
 
 In other words:
 
-- &#x60;1&#x60; &#x3D; output only (and will attempt to empty as fast as possible)
+- `1` = output only (and will attempt to empty as fast as possible)
 
-- &#x60;-1&#x60; &#x3D; input only (and will attempt to fill as fast as possible)
+- `-1` = input only (and will attempt to fill as fast as possible)
 
-- &#x60;0&#x60; means fluids can freely flow in and out (and like a pipe, will balance to the level of the pipe next to it)
+- `0` means fluids can freely flow in and out (and like a pipe, will balance to the level of the pipe next to it)
 
-Having a &#x60;-1&#x60; or &#x60;1&#x60; improperly set on an output or input, respectively, will cause issues like output fluid not leaving the building, or input fluid not entering, regardless of fluid levels in the pipe or fluid box. */
+Having a `-1` or `1` improperly set on an output or input, respectively, will cause issues like output fluid not leaving the building, or input fluid not entering, regardless of fluid levels in the pipe or fluid box. */
   base_level?: number;
-  /** Can be used to specify which fluid is allowed to enter this fluid box. See [here](https://forums.factorio.com/viewtopic.php?f&#x3D;28&amp;t&#x3D;46302). */
+  /** Can be used to specify which fluid is allowed to enter this fluid box. See [here](https://forums.factorio.com/viewtopic.php?f=28&t=46302). */
   filter?: FluidID;
-  /** Must be greater than &#x60;0&#x60;. The total fluid capacity of the fluid box is &#x60;base_area × height × 100&#x60;. */
+  /** Must be greater than `0`. The total fluid capacity of the fluid box is `base_area × height × 100`. */
   height?: number;
   /** Hides the blue input/output arrows and icons at each connection point. */
   hide_connection_info?: boolean;
-  /** The maximum temperature allowed into the fluidbox. Only applied if a &#x60;filter&#x60; is specified. */
+  /** The maximum temperature allowed into the fluidbox. Only applied if a `filter` is specified. */
   maximum_temperature?: number;
-  /** The minimum temperature allowed into the fluidbox. Only applied if a &#x60;filter&#x60; is specified. */
+  /** The minimum temperature allowed into the fluidbox. Only applied if a `filter` is specified. */
   minimum_temperature?: number;
-  /** Connection points to connect to other fluidboxes. This is also marked as blue arrows in alt mode. Fluid may flow in or out depending on the &#x60;type&#x60; field of each connection.
+  /** Connection points to connect to other fluidboxes. This is also marked as blue arrows in alt mode. Fluid may flow in or out depending on the `type` field of each connection.
 
 Connection points may depend on the direction the entity is facing. These connection points cannot share positions with one another or the connection points of another fluid box belonging to the same entity.
 
-Can&#x27;t have more than 255 connections. */
+Can't have more than 255 connections. */
   pipe_connections: PipeConnectionDefinition[];
   /** The pictures to show when another fluid box connects to this one. */
   pipe_covers?: Sprite4Way;
   pipe_picture?: Sprite4Way;
   production_type?: ProductionType;
   render_layer?: RenderLayer;
-  /** Set the secondary draw order for all orientations. Used to determine render order for sprites with the same &#x60;render_layer&#x60; in the same position. Sprites with a higher &#x60;secondary_draw_order&#x60; are drawn on top. */
+  /** Set the secondary draw order for all orientations. Used to determine render order for sprites with the same `render_layer` in the same position. Sprites with a higher `secondary_draw_order` are drawn on top. */
   secondary_draw_order?: number;
-  /** Set the secondary draw order for each orientation. Used to determine render order for sprites with the same &#x60;render_layer&#x60; in the same position. Sprites with a higher &#x60;secondary_draw_order&#x60; are drawn on top. */
+  /** Set the secondary draw order for each orientation. Used to determine render order for sprites with the same `render_layer` in the same position. Sprites with a higher `secondary_draw_order` are drawn on top. */
   secondary_draw_orders?: FluidBoxSecondaryDrawOrders;
 }
 export interface FluidBoxSecondaryDrawOrders {
@@ -9051,22 +9077,22 @@ export interface FluidBoxSecondaryDrawOrders {
   west?: number;
 }
 interface _FluidEnergySource {
-  /** If set to &#x60;true&#x60;, the energy source will calculate power based on the fluid&#x27;s &#x60;fuel_value&#x60;, else it will calculate based on fluid temperature. */
+  /** If set to `true`, the energy source will calculate power based on the fluid's `fuel_value`, else it will calculate based on fluid temperature. */
   burns_fluid?: boolean;
-  /** Property is only used when &#x60;burns_fluid&#x60; is &#x60;true&#x60; and the fluid has a [fuel_value](prototype:FluidPrototype::fuel_value) of &#x60;0&#x60;, or when &#x60;burns_fluid&#x60; is &#x60;false&#x60; and the fluid is at its &#x60;default_temperature&#x60;.
+  /** Property is only used when `burns_fluid` is `true` and the fluid has a [fuel_value](prototype:FluidPrototype::fuel_value) of `0`, or when `burns_fluid` is `false` and the fluid is at its `default_temperature`.
 
-In those cases, this property determines whether the fluid should be destroyed, meaning that the fluid is consumed at the rate of &#x60;fluid_usage_per_tick&#x60;, without producing any power. */
+In those cases, this property determines whether the fluid should be destroyed, meaning that the fluid is consumed at the rate of `fluid_usage_per_tick`, without producing any power. */
   destroy_non_fuel_fluid?: boolean;
-  /** &#x60;1&#x60; means 100% effectivity. Must be greater than &#x60;0&#x60;. Multiplier of the energy output. */
+  /** `1` means 100% effectivity. Must be greater than `0`. Multiplier of the energy output. */
   effectivity?: number;
-  /** All standard fluid box configurations are acceptable, but the type must be &#x60;&quot;input&quot;&#x60; or &#x60;&quot;input-output&quot;&#x60; to function correctly. &#x60;scale_fluid_usage&#x60;, &#x60;fluid_usage_per_tick&#x60;, or a filter on the fluidbox must be set to be able to calculate the fluid usage of the energy source. */
+  /** All standard fluid box configurations are acceptable, but the type must be `"input"` or `"input-output"` to function correctly. `scale_fluid_usage`, `fluid_usage_per_tick`, or a filter on the fluidbox must be set to be able to calculate the fluid usage of the energy source. */
   fluid_box: FluidBox;
-  /** The number of fluid units the energy source uses per tick. If used with &#x60;scale_fluid_usage&#x60;, this specifies the maximum. If this value is not set, &#x60;scale_energy_usage&#x60; is &#x60;false&#x60; and a fluid box filter is set, the game will attempt to calculate this value from the fluid box filter&#x27;s fluid&#x27;s &#x60;fuel_value&#x60; or &#x60;heat_capacity&#x60; and the entity&#x27;s &#x60;energy_usage&#x60;. If &#x60;burns_fluid&#x60; is &#x60;false&#x60;, &#x60;maximum_temperature&#x60; will also be used. If the attempt of the game to calculate this value fails (&#x60;scale_energy_usage&#x60; is &#x60;false&#x60; and a fluid box filter is set), then &#x60;scale_energy_usage&#x60; will be forced to &#x60;true&#x60;, to prevent the energy source from being an infinite fluid sink. More context [on the forums](https://forums.factorio.com/90613). */
+  /** The number of fluid units the energy source uses per tick. If used with `scale_fluid_usage`, this specifies the maximum. If this value is not set, `scale_energy_usage` is `false` and a fluid box filter is set, the game will attempt to calculate this value from the fluid box filter's fluid's `fuel_value` or `heat_capacity` and the entity's `energy_usage`. If `burns_fluid` is `false`, `maximum_temperature` will also be used. If the attempt of the game to calculate this value fails (`scale_energy_usage` is `false` and a fluid box filter is set), then `scale_energy_usage` will be forced to `true`, to prevent the energy source from being an infinite fluid sink. More context [on the forums](https://forums.factorio.com/90613). */
   fluid_usage_per_tick?: number;
   light_flicker?: LightFlickeringDefinition;
-  /** &#x60;0&#x60; means unlimited maximum temperature. If specified while &#x60;scale_fluid_usage&#x60; is &#x60;false&#x60; and &#x60;fluid_usage_per_tick&#x60; is not specified, the game will use this value to calculate &#x60;fluid_usage_per_tick&#x60;. */
+  /** `0` means unlimited maximum temperature. If specified while `scale_fluid_usage` is `false` and `fluid_usage_per_tick` is not specified, the game will use this value to calculate `fluid_usage_per_tick`. */
   maximum_temperature?: number;
-  /** If set to &#x60;true&#x60;, the energy source will consume as much fluid as required to produce the desired power, otherwise it will consume as much as it is allowed to, wasting any excess. */
+  /** If set to `true`, the energy source will consume as much fluid as required to produce the desired power, otherwise it will consume as much as it is allowed to, wasting any excess. */
   scale_fluid_usage?: boolean;
   smoke?: SmokeSource[];
   type: 'fluid';
@@ -9082,17 +9108,17 @@ export function isFluidEnergySource(
 }
 /** A fluid ingredient definition. */
 export interface FluidIngredientPrototype {
-  /** Can not be &#x60;&lt; 0&#x60;. */
+  /** Can not be `< 0`. */
   amount: number;
-  /** Amount of this ingredient that should not be included in the fluid consumption statistics. Usually used together with an equal catalyst amount on the &quot;product&quot; of the catalyst in the recipe.
+  /** Amount of this ingredient that should not be included in the fluid consumption statistics. Usually used together with an equal catalyst amount on the "product" of the catalyst in the recipe.
 
-If this FluidIngredientPrototype is used in a recipe, the &#x60;catalyst_amount&#x60; is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
+If this FluidIngredientPrototype is used in a recipe, the `catalyst_amount` is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
   catalyst_amount?: number;
   /** Used to specify which [CraftingMachinePrototype::fluid_boxes](prototype:CraftingMachinePrototype::fluid_boxes) this ingredient should use. It will use this one fluidbox. */
   fluidbox_index?: number;
-  /** If &#x60;temperature&#x60; is not set, this sets the expected maximum temperature of the fluid ingredient. */
+  /** If `temperature` is not set, this sets the expected maximum temperature of the fluid ingredient. */
   maximum_temperature?: number;
-  /** If &#x60;temperature&#x60; is not set, this sets the expected minimum temperature of the fluid ingredient. */
+  /** If `temperature` is not set, this sets the expected minimum temperature of the fluid ingredient. */
   minimum_temperature?: number;
   /** The name of a [FluidPrototype](prototype:FluidPrototype). */
   name: FluidID;
@@ -9108,27 +9134,27 @@ export function isFluidIngredientPrototype(
 }
 /** A fluid product definition. */
 export interface FluidProductPrototype {
-  /** Can not be &#x60;&lt; 0&#x60;. */
+  /** Can not be `< 0`. */
   amount?: number;
-  /** Only loaded if &#x60;amount&#x60; is not defined.
+  /** Only loaded if `amount` is not defined.
 
-If set to a number that is less than &#x60;amount_min&#x60;, the game will use &#x60;amount_min&#x60; instead. */
+If set to a number that is less than `amount_min`, the game will use `amount_min` instead. */
   amount_max: MaterialAmountType;
-  /** Only loaded if &#x60;amount&#x60; is not defined.
+  /** Only loaded if `amount` is not defined.
 
-Can not be &#x60;&lt; 0&#x60;. */
+Can not be `< 0`. */
   amount_min: MaterialAmountType;
   /** Amount that should not be affected by productivity modules (not yielded from bonus production) and should not be included in the fluid production statistics.
 
-If this FluidProductPrototype is used in a recipe, the &#x60;catalyst_amount&#x60; is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
+If this FluidProductPrototype is used in a recipe, the `catalyst_amount` is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
   catalyst_amount?: number;
   /** Used to specify which [CraftingMachinePrototype::fluid_boxes](prototype:CraftingMachinePrototype::fluid_boxes) this product should use. It will use this one fluidbox. */
   fluidbox_index?: number;
   /** The name of a [FluidPrototype](prototype:FluidPrototype). */
   name: FluidID;
-  /** Value between 0 and 1, &#x60;0&#x60; for 0% chance and &#x60;1&#x60; for 100% chance. */
+  /** Value between 0 and 1, `0` for 0% chance and `1` for 100% chance. */
   probability?: number;
-  /** When hovering over a recipe in the crafting menu the recipe tooltip will be shown. An additional item tooltip will be shown for every product, as a separate tooltip, if the item tooltip has a description and/or properties to show and if &#x60;show_details_in_recipe_tooltip&#x60; is &#x60;true&#x60;. */
+  /** When hovering over a recipe in the crafting menu the recipe tooltip will be shown. An additional item tooltip will be shown for every product, as a separate tooltip, if the item tooltip has a description and/or properties to show and if `show_details_in_recipe_tooltip` is `true`. */
   show_details_in_recipe_tooltip?: boolean;
   /** The temperature of the fluid product. */
   temperature?: number;
@@ -9145,10 +9171,10 @@ export interface FluidWagonConnectorGraphics {
   unload_animations: PumpConnectorGraphics;
 }
 interface _FollowerRobotLifetimeModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'follower-robot-lifetime';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -9165,14 +9191,14 @@ export interface FootprintParticle {
   particle_name?: ParticleID;
   /** The tiles this footprint particle is shown on when the player walks over them. */
   tiles: TileID[];
-  /** Whether this footprint particle should be the default particle that is used for &#x60;tiles&#x60; that don&#x27;t have an associated footprint particle. */
+  /** Whether this footprint particle should be the default particle that is used for `tiles` that don't have an associated footprint particle. */
   use_as_default?: boolean;
 }
 interface _FootstepTriggerEffectItem {
   /** Can be used to specify multiple CreateParticleTriggerEffectItems. If this property is defined, all properties inherited from CreateParticleTriggerEffectItem are ignored. */
   actions?: CreateParticleTriggerEffectItem[];
   tiles: TileID[];
-  /** When &#x60;true&#x60;, the trigger(s) defined in &#x60;actions&#x60; are the default triggers for tiles that don&#x27;t have an associated footstep particle trigger. (ie. don&#x27;t show up in one of the &quot;tiles&quot; lists). */
+  /** When `true`, the trigger(s) defined in `actions` are the default triggers for tiles that don't have an associated footstep particle trigger. (ie. don't show up in one of the "tiles" lists). */
   use_as_default?: boolean;
 }
 
@@ -9228,7 +9254,7 @@ export function isGateOverRailBuildTipTrigger(
 }
 interface _GhostTimeToLiveModifier {
   type: 'ghost-time-to-live';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -9241,11 +9267,11 @@ export function isGhostTimeToLiveModifier(
   return (value as { type: string }).type === 'ghost-time-to-live';
 }
 interface _GiveItemModifier {
-  /** Must be &#x60;&gt; 0&#x60;. */
+  /** Must be `> 0`. */
   count?: ItemCountType;
   item: ItemID;
   type: 'give-item';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -9313,12 +9339,12 @@ export interface GunShift4Way {
 interface _GunSpeedModifier {
   /** Name of the [AmmoCategory](prototype:AmmoCategory) that is affected. */
   ammo_category: AmmoCategoryID;
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   /** Modification value, which will be added to the current gun speed modifier upon researching. */
   modifier: number;
   type: 'gun-speed';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -9336,11 +9362,11 @@ export interface HeatBuffer {
   heat_glow?: Sprite4Way;
   heat_picture?: Sprite4Way;
   heat_pipe_covers?: Sprite4Way;
-  /** Must be &gt;&#x3D; &#x60;default_temperature&#x60;. */
+  /** Must be >= `default_temperature`. */
   max_temperature: number;
   max_transfer: Energy;
   min_temperature_gradient?: number;
-  /** Must be &gt;&#x3D; &#x60;default_temperature&#x60; and &lt;&#x3D; &#x60;max_temperature&#x60;. */
+  /** Must be >= `default_temperature` and <= `max_temperature`. */
   min_working_temperature?: number;
   minimum_glow_temperature?: number;
   pipe_covers?: Sprite4Way;
@@ -9348,7 +9374,7 @@ export interface HeatBuffer {
 }
 /** Defines the connections for [HeatEnergySource](prototype:HeatEnergySource) and [HeatBuffer](prototype:HeatBuffer). */
 export interface HeatConnection {
-  /** The &quot;outward&quot; direction of this heat connection. For a connection to succeed, the other heat connection must face the opposite direction (a south-facing connection needs a north-facing connection to succeed). A connection rotates with the entity. */
+  /** The "outward" direction of this heat connection. For a connection to succeed, the other heat connection must face the opposite direction (a south-facing connection needs a north-facing connection to succeed). A connection rotates with the entity. */
   direction: Direction;
   /** The location of the heat pipe connection, relative to the center of the entity in the north-facing direction. */
   position: MapPosition;
@@ -9360,11 +9386,11 @@ interface _HeatEnergySource {
   heat_glow?: Sprite4Way;
   heat_picture?: Sprite4Way;
   heat_pipe_covers?: Sprite4Way;
-  /** Must be &gt;&#x3D; &#x60;default_temperature&#x60;. */
+  /** Must be >= `default_temperature`. */
   max_temperature: number;
   max_transfer: Energy;
   min_temperature_gradient?: number;
-  /** Must be &gt;&#x3D; &#x60;default_temperature&#x60; and &lt;&#x3D; &#x60;max_temperature&#x60;. */
+  /** Must be >= `default_temperature` and <= `max_temperature`. */
   min_working_temperature?: number;
   minimum_glow_temperature?: number;
   pipe_covers?: Sprite4Way;
@@ -9414,25 +9440,25 @@ export function isHorizontalScrollBarStyleSpecification(
 
 - Only the first icon layer will display a shadow.
 
-- When the final icon is displayed with transparency (e.g. a faded out alert), the icon layer overlap may look [undesirable](https://forums.factorio.com/viewtopic.php?p&#x3D;575844#p575844).
+- When the final icon is displayed with transparency (e.g. a faded out alert), the icon layer overlap may look [undesirable](https://forums.factorio.com/viewtopic.php?p=575844#p575844).
 
-- The final combination of icons will always be resized in GUI based on the first icon layer&#x27;s size, but won&#x27;t be resized when displayed on machines in alt-mode. For example: recipe first icon layer is size 128, scale 1, the icon group will be displayed at resolution /4 to fit the 32px GUI boxes, but will be displayed 4 times as large on buildings.
+- The final combination of icons will always be resized in GUI based on the first icon layer's size, but won't be resized when displayed on machines in alt-mode. For example: recipe first icon layer is size 128, scale 1, the icon group will be displayed at resolution /4 to fit the 32px GUI boxes, but will be displayed 4 times as large on buildings.
 
-- Shift values are based on final size (&#x60;icon_size * scale&#x60;) of the first icon layer. */
+- Shift values are based on final size (`icon_size * scale`) of the first icon layer. */
 export interface IconData {
   /** Path to the icon file. */
   icon: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. &#x60;32&#x60; for a 32px by 32px icon.
+  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
 
-Mandatory if &#x60;icon_size&#x60; is not specified outside of &#x60;icons&#x60;. */
+Mandatory if `icon_size` is not specified outside of `icons`. */
   icon_size: SpriteSizeType;
-  /** Defaults to &#x60;32/icon_size&#x60; for items and recipes, and &#x60;256/icon_size&#x60; for technologies.
+  /** Defaults to `32/icon_size` for items and recipes, and `256/icon_size` for technologies.
 
-Specifies the scale of the icon on the GUI scale. A scale of &#x60;2&#x60; means that the icon will be two times bigger on screen (and thus more pixelated). */
+Specifies the scale of the icon on the GUI scale. A scale of `2` means that the icon will be two times bigger on screen (and thus more pixelated). */
   scale?: number;
-  /** Used to offset the icon &quot;layer&quot; from the overall icon. The shift is applied from the center (so negative shifts are left and up, respectively). Shift values are based on final size (&#x60;icon_size * scale&#x60;) of the first icon. */
+  /** Used to offset the icon "layer" from the overall icon. The shift is applied from the center (so negative shifts are left and up, respectively). Shift values are based on final size (`icon_size * scale`) of the first icon. */
   shift?: Vector;
   /** The tint to apply to the icon. */
   tint?: Color;
@@ -9467,10 +9493,10 @@ export function isInsertItemTriggerEffectItem(
   return (value as { type: string }).type === 'insert-item';
 }
 interface _InserterStackSizeBonusModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'inserter-stack-size-bonus';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -9515,9 +9541,9 @@ export function isInvokeTileEffectTriggerEffectItem(
 /** An item ingredient definition. It can be specified as a table with named or numbered keys, but not a mix of both. */
 interface _ItemIngredientPrototype {
   amount: number;
-  /** Amount of this ingredient that should not be included in the item consumption statistics. Usually used together with an equal catalyst amount on the &quot;product&quot; of the catalyst in the recipe.
+  /** Amount of this ingredient that should not be included in the item consumption statistics. Usually used together with an equal catalyst amount on the "product" of the catalyst in the recipe.
 
-If this fluid is used in a recipe, the &#x60;catalyst_amount&#x60; is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
+If this fluid is used in a recipe, the `catalyst_amount` is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
   catalyst_amount?: number;
   name: ItemID;
   type?: 'item';
@@ -9525,31 +9551,31 @@ If this fluid is used in a recipe, the &#x60;catalyst_amount&#x60; is calculated
 /** An item product definition. It can be specified as a table with named or numbered keys, but not a mix of both. */
 interface _ItemProductPrototype {
   amount?: number;
-  /** Only loaded if &#x60;amount&#x60; is not defined.
+  /** Only loaded if `amount` is not defined.
 
-If set to a number that is less than &#x60;amount_min&#x60;, the game will use &#x60;amount_min&#x60; instead. */
+If set to a number that is less than `amount_min`, the game will use `amount_min` instead. */
   amount_max: number;
-  /** Only loaded if &#x60;amount&#x60; is not defined. */
+  /** Only loaded if `amount` is not defined. */
   amount_min: number;
   /** Amount that should not be affected by productivity modules (not yielded from bonus production) and should not be included in the item production statistics.
 
-If this item is used in a recipe, the &#x60;catalyst_amount&#x60; is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
+If this item is used in a recipe, the `catalyst_amount` is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
   catalyst_amount?: number;
   /** The name of an [ItemPrototype](prototype:ItemPrototype). */
   name: ItemID;
-  /** Value between 0 and 1, &#x60;0&#x60; for 0% chance and &#x60;1&#x60; for 100% chance.
+  /** Value between 0 and 1, `0` for 0% chance and `1` for 100% chance.
 
-The effect of probability is no product, or a linear distribution on [min, max]. For a recipe with probability &#x60;p&#x60;, amount_min &#x60;min&#x60;, and amount_max &#x60;max&#x60;, the Expected Value of this product can be expressed as &#x60;p * (0.5 * (max + min))&#x60;. This is what will be shown in a recipe tooltip. The effect of &#x60;catalyst_amount&#x60; on the product is not shown.
+The effect of probability is no product, or a linear distribution on [min, max]. For a recipe with probability `p`, amount_min `min`, and amount_max `max`, the Expected Value of this product can be expressed as `p * (0.5 * (max + min))`. This is what will be shown in a recipe tooltip. The effect of `catalyst_amount` on the product is not shown.
 
-When &#x60;amount_min&#x60; and &#x60;amount_max&#x60; are not provided, &#x60;amount&#x60; applies as min and max. The Expected Value simplifies to &#x60;p * amount&#x60;, providing &#x60;0&#x60; product, or &#x60;amount&#x60; product, on recipe completion. */
+When `amount_min` and `amount_max` are not provided, `amount` applies as min and max. The Expected Value simplifies to `p * amount`, providing `0` product, or `amount` product, on recipe completion. */
   probability?: number;
-  /** When hovering over a recipe in the crafting menu the recipe tooltip will be shown. An additional item tooltip will be shown for every product, as a separate tooltip, if the item tooltip has a description and/or properties to show and if &#x60;show_details_in_recipe_tooltip&#x60; is &#x60;true&#x60;. */
+  /** When hovering over a recipe in the crafting menu the recipe tooltip will be shown. An additional item tooltip will be shown for every product, as a separate tooltip, if the item tooltip has a description and/or properties to show and if `show_details_in_recipe_tooltip` is `true`. */
   show_details_in_recipe_tooltip?: boolean;
   type?: 'item';
 }
 /** Item that when placed creates this entity/tile. */
 export interface ItemToPlace {
-  /** How many items are used to place one of this entity. Can&#x27;t be larger than the stack size of the item. */
+  /** How many items are used to place one of this entity. Can't be larger than the stack size of the item. */
   count: number;
   /** The item used to place this entity. */
   item: ItemID;
@@ -9580,10 +9606,10 @@ export function isLabelStyleSpecification(
   return (value as { type: string }).type === 'label_style';
 }
 interface _LaboratoryProductivityModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'laboratory-productivity';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -9596,10 +9622,10 @@ export function isLaboratoryProductivityModifier(
   return (value as { type: string }).type === 'laboratory-productivity';
 }
 interface _LaboratorySpeedModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'laboratory-speed';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -9619,12 +9645,12 @@ interface _LightDefinition {
   add_perspective?: boolean;
   /** Color of the light. */
   color?: Color;
-  /** Brightness of the light in the range &#x60;[0, 1]&#x60;, where &#x60;0&#x60; is no light and &#x60;1&#x60; is the maximum light. */
+  /** Brightness of the light in the range `[0, 1]`, where `0` is no light and `1` is the maximum light. */
   intensity: number;
   minimum_darkness?: number;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;oriented&quot;&#x60;. */
+  /** Only loaded if `type` is `"oriented"`. */
   picture: Sprite;
-  /** Only loaded if &#x60;type&#x60; is &#x60;&quot;oriented&quot;&#x60;. */
+  /** Only loaded if `type` is `"oriented"`. */
   rotation_shift?: RealOrientation;
   shift?: Vector;
   /** The radius of the light in tiles. Note that the light gets darker near the edges, so the effective size of the light will appear to be smaller. */
@@ -9632,7 +9658,7 @@ interface _LightDefinition {
   source_orientation_offset?: RealOrientation;
   type?: 'basic' | 'oriented';
 }
-/** Specifies the light flicker. Note that this defaults to &quot;showing a white light&quot; instead of the usually expected &quot;showing nothing&quot;. */
+/** Specifies the light flicker. Note that this defaults to "showing a white light" instead of the usually expected "showing nothing". */
 export interface LightFlickeringDefinition {
   border_fix_speed?: number;
   /** Color of the light. */
@@ -9713,12 +9739,12 @@ export interface LoaderStructure {
 }
 /** The items generated when an [EntityWithHealthPrototype](prototype:EntityWithHealthPrototype) is killed. */
 export interface LootItem {
-  /** Must be &#x60;&gt; 0&#x60;. */
+  /** Must be `> 0`. */
   count_max?: number;
   count_min?: number;
   /** The item to spawn. */
   item: ItemID;
-  /** &#x60;0&#x60; is 0% and &#x60;1&#x60; is 100%. Must be &#x60;&gt; 0&#x60;. */
+  /** `0` is 0% and `1` is 100%. Must be `> 0`. */
   probability?: number;
 }
 export interface LowPowerTipTrigger {
@@ -9774,9 +9800,9 @@ export interface MapGenPreset {
   advanced_settings?: AdvancedMapGenSettings;
   /** If any setting is not set, it will use the default values. */
   basic_settings?: MapGenSettings;
-  /** Whether this is the default preset. If &#x60;true&#x60;, this preset may not have any other properties besides this and order.
+  /** Whether this is the default preset. If `true`, this preset may not have any other properties besides this and order.
 
-If no MapGenPreset has &#x60;default &#x3D; true&#x60;, the preset selector will have a blank preset label, with default settings. The &quot;blank&quot; preset goes away when another preset is selected. */
+If no MapGenPreset has `default = true`, the preset selector will have a blank preset label, with default settings. The "blank" preset goes away when another preset is selected. */
   default?: boolean;
   /** Specifies the ordering in the [map generator GUI](https://wiki.factorio.com/Map_generator). */
   order: Order;
@@ -9802,9 +9828,9 @@ export interface MapGenPresetEnemyExpansionSettings {
   enabled?: boolean;
   /** In ticks. */
   max_expansion_cooldown?: number;
-  /** Distance in chunks from the furthest base around. This prevents expansions from reaching too far into the player&#x27;s territory. */
+  /** Distance in chunks from the furthest base around. This prevents expansions from reaching too far into the player's territory. */
   max_expansion_distance?: number;
-  /** Ticks to expand to a single position for a base is used. Cooldown is calculated as follows: &#x60;cooldown &#x3D; lerp(max_expansion_cooldown, min_expansion_cooldown, -e^2 + 2 * e)&#x60; where &#x60;lerp&#x60; is the linear interpolation function, and e is the current evolution factor. */
+  /** Ticks to expand to a single position for a base is used. Cooldown is calculated as follows: `cooldown = lerp(max_expansion_cooldown, min_expansion_cooldown, -e^2 + 2 * e)` where `lerp` is the linear interpolation function, and e is the current evolution factor. */
   min_expansion_cooldown?: number;
   settler_group_max_size?: number;
   /** Size of the group that goes to build new base (the game interpolates between min size and max size based on evolution factor). */
@@ -9812,12 +9838,12 @@ export interface MapGenPresetEnemyExpansionSettings {
 }
 /** The pollution settings, the values are for 60 ticks (1 second). */
 export interface MapGenPresetPollutionSettings {
-  /** Must be &gt;&#x3D; 0.1. Also known as dissipation rate. */
+  /** Must be >= 0.1. Also known as dissipation rate. */
   ageing?: number;
-  /** Must be &lt;&#x3D; 0.25. Amount that is diffused to neighboring chunks. */
+  /** Must be <= 0.25. Amount that is diffused to neighboring chunks. */
   diffusion_ratio?: number;
   enabled?: boolean;
-  /** Must be &gt;&#x3D; 0.1. */
+  /** Must be >= 0.1. */
   enemy_attack_pollution_consumption_modifier?: number;
   min_pollution_to_damage_trees?: number;
   pollution_restored_per_tree_damage?: number;
@@ -9830,12 +9856,12 @@ export interface MapGenSettings {
     AutoplaceSettings
   >;
   cliff_settings?: CliffPlacementSettings;
-  /** Whether undefined &#x60;autoplace_controls&#x60; should fall back to the default controls or not. */
+  /** Whether undefined `autoplace_controls` should fall back to the default controls or not. */
   default_enable_all_autoplace_controls?: boolean;
-  /** Height of the map in tiles. Silently limited to 2&#x27;000&#x27;000, ie. +/- 1 million tiles from the center in both directions. */
+  /** Height of the map in tiles. Silently limited to 2'000'000, ie. +/- 1 million tiles from the center in both directions. */
   height?: number;
   peaceful_mode?: boolean;
-  /** Map of property name (e.g. &quot;elevation&quot;) to name of noise expression that will provide it. Entries may be omitted. A notable usage is changing autoplace behavior of an entity based on the preset, which cannot be read from a noise expression. */
+  /** Map of property name (e.g. "elevation") to name of noise expression that will provide it. Entries may be omitted. A notable usage is changing autoplace behavior of an entity based on the preset, which cannot be read from a noise expression. */
   property_expression_names?: Record<string, string | boolean | number>;
   /** Read by the game, but not used or set in the GUI. */
   seed?: number;
@@ -9843,23 +9869,23 @@ export interface MapGenSettings {
   starting_area?: MapGenSize;
   /** Array of the positions of the starting areas. */
   starting_points?: MapPosition[];
-  /** This is the inverse of &quot;water scale&quot; in the map generator GUI. So a water scale that shows as 50% in the GUI is a value of &#x60;1/0.5 &#x3D; 2&#x60; for &#x60;terrain_segmentation&#x60;. */
+  /** This is the inverse of "water scale" in the map generator GUI. So a water scale that shows as 50% in the GUI is a value of `1/0.5 = 2` for `terrain_segmentation`. */
   terrain_segmentation?: MapGenSize;
   /** Shown as water coverage in the map generator GUI. */
   water?: MapGenSize;
-  /** Width of the map in tiles. Silently limited to 2&#x27;000&#x27;000, ie. +/- 1 million tiles from the center in both directions. */
+  /** Width of the map in tiles. Silently limited to 2'000'000, ie. +/- 1 million tiles from the center in both directions. */
   width?: number;
 }
 /** Coordinates of a tile in a map. Positive x goes towards east, positive y goes towards south, and x is the first dimension in the array format.
 
-The coordinates are saved as a fixed-size 32 bit integer, with 8 bits reserved for decimal precision, meaning the smallest value step is &#x60;1/2^8 &#x3D; 0.00390625&#x60; tiles. */
+The coordinates are saved as a fixed-size 32 bit integer, with 8 bits reserved for decimal precision, meaning the smallest value step is `1/2^8 = 0.00390625` tiles. */
 interface _MapPosition {
   x: number;
   y: number;
 }
 interface _MaxFailedAttemptsPerTickPerConstructionQueueModifier {
   type: 'max-failed-attempts-per-tick-per-construction-queue';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -9880,7 +9906,7 @@ export function isMaxFailedAttemptsPerTickPerConstructionQueueModifier(
 }
 interface _MaxSuccessfulAttemptsPerTickPerConstructionQueueModifier {
   type: 'max-successful-attempts-per-tick-per-construction-queue';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -9900,10 +9926,10 @@ export function isMaxSuccessfulAttemptsPerTickPerConstructionQueueModifier(
   );
 }
 interface _MaximumFollowingRobotsCountModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'maximum-following-robots-count';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -9918,11 +9944,11 @@ export function isMaximumFollowingRobotsCountModifier(
 }
 /** The mining properties of objects. For formulas for the mining time, see [mining](https://wiki.factorio.com/Mining). */
 export interface MinableProperties {
-  /** Only loaded if &#x60;results&#x60; is not defined.
+  /** Only loaded if `results` is not defined.
 
 How many of result are dropped. */
   count?: number;
-  /** The amount of fluid that is used up when this object is mined. If this is &gt; 0, this object cannot be mined by hand. */
+  /** The amount of fluid that is used up when this object is mined. If this is > 0, this object cannot be mined by hand. */
   fluid_amount?: number;
   /** Name of a [ParticlePrototype](prototype:ParticlePrototype). Which set of particles to use. */
   mining_particle?: ParticleID;
@@ -9931,9 +9957,9 @@ How many of result are dropped. */
   mining_trigger: Trigger;
   /** Name of a [FluidPrototype](prototype:FluidPrototype). The fluid that is used up when this object is mined. */
   required_fluid: FluidID;
-  /** Only loaded if &#x60;results&#x60; is not defined.
+  /** Only loaded if `results` is not defined.
 
-Which item is dropped when this is mined. Cannot be empty. If you want the entity to not be minable, don&#x27;t specify the minable properties, if you want it to be minable with no result item, don&#x27;t specify the result at all. */
+Which item is dropped when this is mined. Cannot be empty. If you want the entity to not be minable, don't specify the minable properties, if you want it to be minable with no result item, don't specify the result at all. */
   result?: ItemID;
   /** The items that are returned when this object is mined. */
   results?: ProductPrototype[];
@@ -9952,7 +9978,7 @@ export function isMinimapStyleSpecification(
 }
 /** Used by [MiningDrillPrototype](prototype:MiningDrillPrototype). */
 export interface MiningDrillGraphicsSet {
-  /** Only loaded if &#x60;idle_animation&#x60; is defined. */
+  /** Only loaded if `idle_animation` is defined. */
   always_draw_idle_animation?: boolean;
   animation?: Animation4Way;
   animation_progress?: number;
@@ -9968,21 +9994,21 @@ export interface MiningDrillGraphicsSet {
   idle_animation?: Animation4Way;
   max_animation_progress?: number;
   min_animation_progress?: number;
-  /** Only loaded if &#x60;shift_animation_waypoints&#x60; is defined. */
+  /** Only loaded if `shift_animation_waypoints` is defined. */
   shift_animation_transition_duration?: number;
-  /** Only loaded if &#x60;shift_animation_waypoints&#x60; is defined. */
+  /** Only loaded if `shift_animation_waypoints` is defined. */
   shift_animation_waypoint_stop_duration?: number;
-  /** Only loaded if one of &#x60;shift_animation_waypoint_stop_duration&#x60; or &#x60;shift_animation_transition_duration&#x60; is not &#x60;0&#x60;. */
+  /** Only loaded if one of `shift_animation_waypoint_stop_duration` or `shift_animation_transition_duration` is not `0`. */
   shift_animation_waypoints?: ShiftAnimationWaypoints;
   /** Used by [WorkingVisualisation::apply_tint](prototype:WorkingVisualisation::apply_tint). */
   status_colors?: StatusColors;
   working_visualisations?: WorkingVisualisation[];
 }
 interface _MiningDrillProductivityBonusModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'mining-drill-productivity-bonus';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -10019,9 +10045,9 @@ export function isNestedTriggerEffectItem(
 ): value is NestedTriggerEffectItem {
   return (value as { type: string }).type === 'nested-result';
 }
-/** &#x60;value_expressions&#x60; property should be a list of numeric expressions, each of which will be evaluated to come up with the corresponding numeric value in the resulting array.
+/** `value_expressions` property should be a list of numeric expressions, each of which will be evaluated to come up with the corresponding numeric value in the resulting array.
 
-Used to construct map positions (&#x60;{x, y}&#x60;) and map position lists (&#x60;{{x0,y0}, {y1,y1}, [...]}&#x60;) for [offset-points](prototype:NoiseFunctionOffsetPoints) and [distance-from-nearest-point](prototype:NoiseFunctionDistanceFromNearestPoint) functions. */
+Used to construct map positions (`{x, y}`) and map position lists (`{{x0,y0}, {y1,y1}, [...]}`) for [offset-points](prototype:NoiseFunctionOffsetPoints) and [distance-from-nearest-point](prototype:NoiseFunctionDistanceFromNearestPoint) functions. */
 export interface NoiseArrayConstruction {
   type: 'array-construction';
   value_expressions: NoiseExpression[];
@@ -10161,7 +10187,7 @@ export function isNoiseFunctionClamp(
 ): value is NoiseFunctionClamp {
   return (value as { type: string }).type === 'function-application';
 }
-/** Prints between 0 and 32 arguments to the [log file](https://wiki.factorio.com/Log_file) when the expression is compiled. For that it needs to part of another expression that is compiled. The last argument of the &#x60;compile-time-log&#x60; is returned as the &quot;result&quot; of the &#x60;compile-time-log&#x60;. */
+/** Prints between 0 and 32 arguments to the [log file](https://wiki.factorio.com/Log_file) when the expression is compiled. For that it needs to part of another expression that is compiled. The last argument of the `compile-time-log` is returned as the "result" of the `compile-time-log`. */
 export interface NoiseFunctionCompileTimeLog {
   arguments: NoiseExpression[];
   function_name: 'compile-time-log';
@@ -10183,7 +10209,7 @@ export interface NoiseFunctionCos {
 export function isNoiseFunctionCos(value: unknown): value is NoiseFunctionCos {
   return (value as { type: string }).type === 'function-application';
 }
-/** Computes the [euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance) of the position &#x60;{x, y}&#x60; to all position listed in points and returns the shortest distance. The returned distance can be &#x60;maximum_distance&#x60; at most. */
+/** Computes the [euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance) of the position `{x, y}` to all position listed in points and returns the shortest distance. The returned distance can be `maximum_distance` at most. */
 export interface NoiseFunctionDistanceFromNearestPoint {
   arguments: DistanceFromNearestPointArguments;
   function_name: 'distance-from-nearest-point';
@@ -10207,7 +10233,7 @@ export function isNoiseFunctionDivide(
 ): value is NoiseFunctionDivide {
   return (value as { type: string }).type === 'function-application';
 }
-/** Returns the result of first argument &#x3D;&#x3D; second argument as a literal number that is &#x60;0&#x60; for false and &#x60;1&#x60; for true. */
+/** Returns the result of first argument == second argument as a literal number that is `0` for false and `1` for true. */
 export interface NoiseFunctionEquals {
   arguments: [NoiseNumber, NoiseNumber];
   function_name: 'equals';
@@ -10277,7 +10303,7 @@ export function isNoiseFunctionFloor(
 ): value is NoiseFunctionFloor {
   return (value as { type: string }).type === 'function-application';
 }
-/** Returns the result of first argument &lt;&#x3D; second argument as a literal number that is &#x60;0&#x60; for false and &#x60;1&#x60; for true. */
+/** Returns the result of first argument <= second argument as a literal number that is `0` for false and `1` for true. */
 export interface NoiseFunctionLessOrEqual {
   arguments: [NoiseNumber, NoiseNumber];
   function_name: 'less-or-equal';
@@ -10289,7 +10315,7 @@ export function isNoiseFunctionLessOrEqual(
 ): value is NoiseFunctionLessOrEqual {
   return (value as { type: string }).type === 'function-application';
 }
-/** Returns the result of first argument &lt; second argument as a literal number that is &#x60;0&#x60; for false and &#x60;1&#x60; for true. */
+/** Returns the result of first argument < second argument as a literal number that is `0` for false and `1` for true. */
 export interface NoiseFunctionLessThan {
   arguments: [NoiseNumber, NoiseNumber];
   function_name: 'less-than';
@@ -10359,7 +10385,7 @@ export function isNoiseFunctionOffsetPoints(
 ): value is NoiseFunctionOffsetPoints {
   return (value as { type: string }).type === 'function-application';
 }
-/** Subtracts a random value in the &#x60;[0, amplitude)&#x60; range from &#x60;source&#x60; if &#x60;source&#x60; is larger than &#x60;0&#x60;. */
+/** Subtracts a random value in the `[0, amplitude)` range from `source` if `source` is larger than `0`. */
 export interface NoiseFunctionRandomPenalty {
   arguments: RandomPenaltyArguments;
   function_name: 'random-penalty';
@@ -10394,13 +10420,13 @@ export interface NoiseFunctionSin {
 export function isNoiseFunctionSin(value: unknown): value is NoiseFunctionSin {
   return (value as { type: string }).type === 'function-application';
 }
-/** Generates random conical spots. The map is divided into square regions, and within each region, candidate points are chosen at random and target density, spot quantity, and radius are calculated for each point (or one of every &#x60;skip_span&#x60; candidate points) by configured expressions. Each spot contributes a quantity to a regional target total (which is the average of sampled target densities times the area of the region) until the total has been reached or a maximum spot count is hit. The output value of the function is the maximum height of any spot at a given point.
+/** Generates random conical spots. The map is divided into square regions, and within each region, candidate points are chosen at random and target density, spot quantity, and radius are calculated for each point (or one of every `skip_span` candidate points) by configured expressions. Each spot contributes a quantity to a regional target total (which is the average of sampled target densities times the area of the region) until the total has been reached or a maximum spot count is hit. The output value of the function is the maximum height of any spot at a given point.
 
 The parameters that provide expressions to be evaluated for each point (all named something_expression) need to actually return expression objects.
 
-The quantity of the spot is assumed to be the same as its volume. Since the volume of a cone is &#x60;pi * radius^2 * height / 3&#x60;, the height (&#x27;peak value&#x27;) of any given spot is calculated as &#x60;3 * quantity / (pi * radius^2)&#x60;
+The quantity of the spot is assumed to be the same as its volume. Since the volume of a cone is `pi * radius^2 * height / 3`, the height ('peak value') of any given spot is calculated as `3 * quantity / (pi * radius^2)`
 
-The infinite series of candidate points (of which &#x60;candidate_point_count&#x60; are actually considered) generated by &#x60;spot-noise&#x60; expressions with the same &#x60;seed0&#x60;, &#x60;seed1&#x60;, &#x60;region_size&#x60;, and &#x60;suggested_minimum_candidate_point_spacing&#x60; will be identical. This allows multiple spot-noise expressions (e.g. for different ore patches) to avoid overlap by using different points from the same list, determined by &#x60;skip_span&#x60; and &#x60;skip_offset&#x60;. */
+The infinite series of candidate points (of which `candidate_point_count` are actually considered) generated by `spot-noise` expressions with the same `seed0`, `seed1`, `region_size`, and `suggested_minimum_candidate_point_spacing` will be identical. This allows multiple spot-noise expressions (e.g. for different ore patches) to avoid overlap by using different points from the same list, determined by `skip_span` and `skip_offset`. */
 export interface NoiseFunctionSpotNoise {
   arguments: SpotNoiseArguments;
   function_name: 'spot-noise';
@@ -10441,21 +10467,21 @@ export function isNoiseFunctionTerrace(
 ): value is NoiseFunctionTerrace {
   return (value as { type: string }).type === 'function-application';
 }
-/** Has an &#x60;arguments&#x60; property that is a list of condition-result expression pairs followed by a default result expression, like so:
+/** Has an `arguments` property that is a list of condition-result expression pairs followed by a default result expression, like so:
 
-&#x60;&#x60;&#x60;
+```
 {
-  type &#x3D; &quot;if-else-chain&quot;,
-  arguments &#x3D; {
+  type = "if-else-chain",
+  arguments = {
     condition1, result1,
     condition2, result2,
     ...
     defaultResult
   }
 }
-&#x60;&#x60;&#x60;
+```
 
-The result of the if-else-chain is the value of the first result expression whose condition expression evaluated to true, or the value of the default result (&#x27;else&#x27;) expression. */
+The result of the if-else-chain is the value of the first result expression whose condition expression evaluated to true, or the value of the default result ('else') expression. */
 export interface NoiseIfElseChain {
   arguments: NoiseExpression[];
   type: 'if-else-chain';
@@ -10464,7 +10490,7 @@ export interface NoiseIfElseChain {
 export function isNoiseIfElseChain(value: unknown): value is NoiseIfElseChain {
   return (value as { type: string }).type === 'if-else-chain';
 }
-/** Evaluates to the same boolean value (true or false) every time, given by the &#x60;literal_value&#x60; property. May be used as a number value, evaluates to &#x60;1&#x60; for true and &#x60;0&#x60; for false. */
+/** Evaluates to the same boolean value (true or false) every time, given by the `literal_value` property. May be used as a number value, evaluates to `1` for true and `0` for false. */
 export interface NoiseLiteralBoolean {
   literal_value: boolean;
   type: 'literal-boolean';
@@ -10475,7 +10501,7 @@ export function isNoiseLiteralBoolean(
 ): value is NoiseLiteralBoolean {
   return (value as { type: string }).type === 'literal-boolean';
 }
-/** Returns the expression represented by its &#x60;literal_value&#x60; property. Useful mostly for passing expressions (to be evaluated later) to the [spot-noise](prototype:NoiseFunctionSpotNoise) function. */
+/** Returns the expression represented by its `literal_value` property. Useful mostly for passing expressions (to be evaluated later) to the [spot-noise](prototype:NoiseFunctionSpotNoise) function. */
 export interface NoiseLiteralExpression {
   literal_value: NoiseExpression;
   type: 'literal-expression';
@@ -10486,7 +10512,7 @@ export function isNoiseLiteralExpression(
 ): value is NoiseLiteralExpression {
   return (value as { type: string }).type === 'literal-expression';
 }
-/** Evaluates to the same number every time, given by the &#x60;literal_value&#x60; property. All numbers are treated as [float](prototype:float) internally unless otherwise specified. May be used as a boolean value, evaluates to true for numbers bigger than zero, anything else evaluates to false. */
+/** Evaluates to the same number every time, given by the `literal_value` property. All numbers are treated as [float](prototype:float) internally unless otherwise specified. May be used as a boolean value, evaluates to true for numbers bigger than zero, anything else evaluates to false. */
 export interface NoiseLiteralNumber {
   literal_value: number;
   type: 'literal-number';
@@ -10497,7 +10523,7 @@ export function isNoiseLiteralNumber(
 ): value is NoiseLiteralNumber {
   return (value as { type: string }).type === 'literal-number';
 }
-/** Evaluates to the same object every time, given by the &#x60;literal_value&#x60; property. Since the noise generation runtime has no notion of objects or use for them, this is useful only in constant contexts, such as the argument of the &#x60;autoplace-probability&#x60; function (where the &#x27;literal object&#x27; is an [AutoplaceSpecification](prototype:AutoplaceSpecification)). */
+/** Evaluates to the same object every time, given by the `literal_value` property. Since the noise generation runtime has no notion of objects or use for them, this is useful only in constant contexts, such as the argument of the `autoplace-probability` function (where the 'literal object' is an [AutoplaceSpecification](prototype:AutoplaceSpecification)). */
 export interface NoiseLiteralObject {
   literal_value: AutoplaceSpecification;
   type: 'literal-object';
@@ -10508,7 +10534,7 @@ export function isNoiseLiteralObject(
 ): value is NoiseLiteralObject {
   return (value as { type: string }).type === 'literal-object';
 }
-/** Evaluates to the same string every time, given by the &#x60;literal_value&#x60; property. Since the noise generation runtime has no notion of strings or use for them, this is useful only in constant contexts. */
+/** Evaluates to the same string every time, given by the `literal_value` property. Since the noise generation runtime has no notion of strings or use for them, this is useful only in constant contexts. */
 export interface NoiseLiteralString {
   literal_value: string;
   type: 'literal-string';
@@ -10532,12 +10558,12 @@ export function isNoiseProcedureDelimiter(
 ): value is NoiseProcedureDelimiter {
   return (value as { type: string }).type === 'procedure-delimiter';
 }
-/** Variables referencing named noise expressions may have their reference overridden by other named noise expression if their &#x60;intended_property&#x60; is the variable name and it is selected by the user in the map generator GUI. See the second example on [NamedNoiseExpression::intended_property](prototype:NamedNoiseExpression::intended_property). */
+/** Variables referencing named noise expressions may have their reference overridden by other named noise expression if their `intended_property` is the variable name and it is selected by the user in the map generator GUI. See the second example on [NamedNoiseExpression::intended_property](prototype:NamedNoiseExpression::intended_property). */
 export interface NoiseVariable {
   type: 'variable';
   /** A string referring to a pre-defined variable, constant, or [NamedNoiseExpression](prototype:NamedNoiseExpression).
 
-The &#x60;&quot;x&quot;&#x60; or &#x60;&quot;y&quot;&#x60; variables refer to the current coordinates of the map position being evaluated.
+The `"x"` or `"y"` variables refer to the current coordinates of the map position being evaluated.
 
 The constants refer to a set of values mostly defined by [MapGenSettings](prototype:MapGenSettings).
 
@@ -10555,21 +10581,21 @@ export function isNoiseVariable(value: unknown): value is NoiseVariable {
 }
 interface _NothingModifier {
   effect_description?: LocalisedString;
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
 export type NothingModifier = _NothingModifier &
   Omit<BaseModifier, keyof _NothingModifier>;
 export interface OffshorePumpGraphicsSet {
-  /** Rendered in &quot;object&quot; layer, with secondary draw order 0. */
+  /** Rendered in "object" layer, with secondary draw order 0. */
   animation: Animation4Way;
-  /** Rendered in layer specified by &#x60;base_render_layer&#x60;, with secondary draw order 0. */
+  /** Rendered in layer specified by `base_render_layer`, with secondary draw order 0. */
   base_pictures?: Sprite4Way;
   base_render_layer?: RenderLayer;
-  /** Rendered in &quot;object&quot; layer, with secondary draw order 20. */
+  /** Rendered in "object" layer, with secondary draw order 20. */
   fluid_animation?: Animation4Way;
-  /** Rendered in &quot;object&quot; layer, with secondary draw order 40. */
+  /** Rendered in "object" layer, with secondary draw order 40. */
   glass_pictures?: Sprite4Way;
   underwater_layer_offset?: number;
   /** Drawn by tile renderer when water animation is enabled. */
@@ -10630,9 +10656,9 @@ export function isPasteEntitySettingsTipTrigger(
   return (value as { type: string }).type === 'paste-entity-settings';
 }
 export interface PathFinderSettings {
-  /** When looking for path from cache make sure it doesn&#x27;t end too far from requested end. This is typically higher than accept value for the start because the end target can be moving. */
+  /** When looking for path from cache make sure it doesn't end too far from requested end. This is typically higher than accept value for the start because the end target can be moving. */
   cache_accept_path_end_distance_ratio: number;
-  /** When looking for path from cache make sure it doesn&#x27;t start too far from requested start in relative distance terms. */
+  /** When looking for path from cache make sure it doesn't start too far from requested start in relative distance terms. */
   cache_accept_path_start_distance_ratio: number;
   /** When searching for connection to path cache path, search at most for this number of steps times the initial estimate. */
   cache_max_connect_to_cache_steps_multiplier: number;
@@ -10640,13 +10666,13 @@ export interface PathFinderSettings {
   cache_path_end_distance_rating_multiplier: number;
   /** When assigning rating to the best path this * start distances is considered. */
   cache_path_start_distance_rating_multiplier: number;
-  /** This is the &quot;threshold&quot; to decide what is short and what is not. */
+  /** This is the "threshold" to decide what is short and what is not. */
   direct_distance_to_consider_short_request: number;
   /** Enemy is not moving/or is too close and has different destination. */
   enemy_with_different_destination_collision_penalty: number;
-  /** Collision penalty for collisions in the extended bounding box but outside the entity&#x27;s actual bounding box. */
+  /** Collision penalty for collisions in the extended bounding box but outside the entity's actual bounding box. */
   extended_collision_penalty: number;
-  /** The pathfinder performs a step of the backward search every &#x60;fwd2bwd_ratio&#x60;&#x27;th step. The minimum allowed value is 2, which means symmetric search. */
+  /** The pathfinder performs a step of the backward search every `fwd2bwd_ratio`'th step. The minimum allowed value is 2, which means symmetric search. */
   fwd2bwd_ratio: number;
   /** Simplification for now; collision with everything else is this. */
   general_entity_collision_penalty: number;
@@ -10654,7 +10680,7 @@ export interface PathFinderSettings {
   general_entity_subsequent_collision_penalty: number;
   /** When comparing nodes in open which one to check next, heuristic value is multiplied by this ratio. The higher the number the more is the search directed directly towards the goal. */
   goal_pressure_ratio: number;
-  /** If there is a moving unit further than this we don&#x27;t really care. */
+  /** If there is a moving unit further than this we don't really care. */
   ignore_moving_enemy_collision_distance: number;
   /** Minimal distance to goal for path to be searched in long path cache. */
   long_cache_min_cacheable_distance: number;
@@ -10691,11 +10717,11 @@ export interface PathFinderSettings {
   use_path_cache: boolean;
 }
 export interface PipeConnectionDefinition {
-  /** &#x60;0&#x60; means not underground. */
+  /** `0` means not underground. */
   max_underground_distance?: number;
   /** Where pipes can connect to this fluidbox regardless the directions of entity. */
   position?: Vector;
-  /** Only loaded if &#x60;position&#x60; is not defined.
+  /** Only loaded if `position` is not defined.
 
 Where pipes can connect to this fluidbox, depending on the entity direction.
 
@@ -10793,7 +10819,7 @@ export interface PollutionSettings {
   min_pollution_to_damage_trees: number;
   /** This much pollution units must be on the chunk to start diffusing. */
   min_to_diffuse: number;
-  /** Anything lower than this (but &gt; 0) is visualized as this value. */
+  /** Anything lower than this (but > 0) is visualized as this value. */
   min_to_show_per_chunk: number;
   pollution_per_tree_damage: number;
   pollution_restored_per_tree_damage: number;
@@ -10830,14 +10856,14 @@ export function isProgressBarStyleSpecification(
   return (value as { type: string }).type === 'progressbar_style';
 }
 interface _ProjectileAttackParameters {
-  /** When used with &#x60;projectile_creation_parameters&#x60;, this offsets what the turret&#x27;s sprite looks at. Setting to &#x60;{0,1}&#x60; will cause the turret to aim one tile up from the target but the projectile will still aim for the entity. Can be used to give the illusion of height but can also confuse aim logic when set too high.
+  /** When used with `projectile_creation_parameters`, this offsets what the turret's sprite looks at. Setting to `{0,1}` will cause the turret to aim one tile up from the target but the projectile will still aim for the entity. Can be used to give the illusion of height but can also confuse aim logic when set too high.
 
-When used without &#x60;projectile_creation_parameters&#x60;, this sets the turret&#x27;s rotation axis. */
+When used without `projectile_creation_parameters`, this sets the turret's rotation axis. */
   projectile_center?: Vector;
   projectile_creation_distance?: number;
-  /** Used to shoot projectiles from arbitrary points. Used by worms and multi-barreled weapons. Use multiple points with the same angle to cause the turret to shoot from multiple barrels. If not set then the launch positions are calculated using &#x60;projectile_center&#x60; and &#x60;projectile_creation_distance&#x60;. */
+  /** Used to shoot projectiles from arbitrary points. Used by worms and multi-barreled weapons. Use multiple points with the same angle to cause the turret to shoot from multiple barrels. If not set then the launch positions are calculated using `projectile_center` and `projectile_creation_distance`. */
   projectile_creation_parameters?: CircularProjectileCreationSpecification;
-  /** Used to shoot from different sides of the turret. Setting to &#x60;0.25&#x60; shoots from the right side, &#x60;0.5&#x60; shoots from the back, and &#x60;0.75&#x60; shoots from the left. The turret will look at the enemy as normal but the bullet will spawn from the offset position. Can be used to create right-handed weapons. */
+  /** Used to shoot from different sides of the turret. Setting to `0.25` shoots from the right side, `0.5` shoots from the back, and `0.75` shoots from the left. The turret will look at the enemy as normal but the bullet will spawn from the offset position. Can be used to create right-handed weapons. */
   projectile_orientation_offset?: number;
   /** Used to show bullet shells/casings being ejected from the gun, e.g. [artillery shell casings](https://factorio.com/blog/post/fff-345). */
   shell_particle?: CircularParticleCreationSpecification;
@@ -10853,13 +10879,13 @@ export function isProjectileAttackParameters(
   return (value as { type: string }).type === 'projectile';
 }
 interface _ProjectileTriggerDelivery {
-  /** Maximum deviation of the projectile from source orientation, in +/- (&#x60;x radians / 2&#x60;). Example: &#x60;3.14 radians -&gt; +/- (180° / 2)&#x60;, meaning up to 90° deviation in either direction of rotation. */
+  /** Maximum deviation of the projectile from source orientation, in +/- (`x radians / 2`). Example: `3.14 radians -> +/- (180° / 2)`, meaning up to 90° deviation in either direction of rotation. */
   direction_deviation?: number;
   max_range?: number;
   min_range?: number;
   /** Name of a [ProjectilePrototype](prototype:ProjectilePrototype). */
   projectile: EntityID;
-  /** The maximum deviation of the projectile maximum range from &#x60;max_range&#x60; is &#x60;max_range × range_deviation ÷ 2&#x60;. This means a deviation of &#x60;0.5&#x60; will appear as a maximum of &#x60;0.25&#x60; (25%) deviation of an initial range goal. Post-deviation range may exceed &#x60;max_range&#x60; or be less than &#x60;min_range&#x60;. */
+  /** The maximum deviation of the projectile maximum range from `max_range` is `max_range × range_deviation ÷ 2`. This means a deviation of `0.5` will appear as a maximum of `0.25` (25%) deviation of an initial range goal. Post-deviation range may exceed `max_range` or be less than `min_range`. */
   range_deviation?: number;
   /** Starting speed in tiles per tick. */
   starting_speed: number;
@@ -10895,7 +10921,7 @@ export interface PumpConnectorGraphicsAnimation {
 }
 /** The push back effect used by the [discharge defense](https://wiki.factorio.com/Discharge_defense).
 
-Aims to push the target entity away from the source entity by the &#x60;distance&#x60; from the target entity&#x27;s current position. Searches within double the &#x60;distance&#x60; from the pushed to position for the nearest non-colliding position for the target entity to be teleported too. If no valid non-colliding position is found or the target is not teleportable, then no push back occurs. */
+Aims to push the target entity away from the source entity by the `distance` from the target entity's current position. Searches within double the `distance` from the pushed to position for the nearest non-colliding position for the target entity to be teleported too. If no valid non-colliding position is found or the target is not teleportable, then no push back occurs. */
 interface _PushBackTriggerEffectItem {
   distance: number;
   type: 'push-back';
@@ -10957,7 +10983,7 @@ export interface RailPictureSet {
 }
 /** Used for graphics by [RailPrototype](prototype:RailPrototype) and [RailRemnantsPrototype](prototype:RailRemnantsPrototype). */
 export interface RailPieceLayers {
-  /** Must have same number of variations as &#x60;metals&#x60;. */
+  /** Must have same number of variations as `metals`. */
   backplates: SpriteVariations;
   /** Must have between 1 and 4 variations. */
   metals: SpriteVariations;
@@ -10988,26 +11014,26 @@ export interface RandomPenaltyArguments {
 export interface RecipeData {
   /** Whether the recipe can be used as an intermediate recipe in hand-crafting. */
   allow_as_intermediate?: boolean;
-  /** Whether this recipe is allowed to be broken down for the recipe tooltip &quot;Total raw&quot; calculations. */
+  /** Whether this recipe is allowed to be broken down for the recipe tooltip "Total raw" calculations. */
   allow_decomposition?: boolean;
   /** Whether the recipe is allowed to have the extra inserter overload bonus applied (4 * stack inserter stack size). */
   allow_inserter_overload?: boolean;
   /** Whether the recipe is allowed to use intermediate recipes when hand-crafting. */
   allow_intermediates?: boolean;
-  /** Whether the &quot;Made in: &lt;Machine&gt;&quot; part of the tool-tip should always be present, and not only when the recipe can&#x27;t be hand-crafted. */
+  /** Whether the "Made in: <Machine>" part of the tool-tip should always be present, and not only when the recipe can't be hand-crafted. */
   always_show_made_in?: boolean;
   /** Whether the products are always shown in the recipe tooltip. */
   always_show_products?: boolean;
   emissions_multiplier?: number;
-  /** This can be &#x60;false&#x60; to disable the recipe at the start of the game, or &#x60;true&#x60; to leave it enabled.
+  /** This can be `false` to disable the recipe at the start of the game, or `true` to leave it enabled.
 
-If a recipe is unlocked via technology, this should be set to &#x60;false&#x60;. */
+If a recipe is unlocked via technology, this should be set to `false`. */
   enabled?: boolean;
-  /** The amount of time it takes to make this recipe. Must be &#x60;&gt; 0.001&#x60;. Equals the number of seconds it takes to craft at crafting speed &#x60;1&#x60;. */
+  /** The amount of time it takes to make this recipe. Must be `> 0.001`. Equals the number of seconds it takes to craft at crafting speed `1`. */
   energy_required?: number;
   /** Hides the recipe from crafting menus. */
   hidden?: boolean;
-  /** Hides the recipe from the player&#x27;s crafting screen. The recipe will still show up for selection in machines. */
+  /** Hides the recipe from the player's crafting screen. The recipe will still show up for selection in machines. */
   hide_from_player_crafting?: boolean;
   /** Hides the recipe from item/fluid production statistics. */
   hide_from_stats?: boolean;
@@ -11017,28 +11043,28 @@ The maximum ingredient amount is 65535. Can be set to an empty table to create a
 
 Duplicate ingredients, e.g. two entries with the same name, are *not* allowed. In-game, the item ingredients are ordered by [ItemGroup::order_in_recipe](prototype:ItemGroup::order_in_recipe). */
   ingredients: IngredientPrototype[];
-  /** For recipes with one or more products: Subgroup, localised_name and icon default to the values of the singular/main product, but can be overwritten by the recipe. Setting the main_product to an empty string (&#x60;&quot;&quot;&#x60;) forces the title in the recipe tooltip to use the recipe&#x27;s name (not that of the product) and shows the products in the tooltip.
+  /** For recipes with one or more products: Subgroup, localised_name and icon default to the values of the singular/main product, but can be overwritten by the recipe. Setting the main_product to an empty string (`""`) forces the title in the recipe tooltip to use the recipe's name (not that of the product) and shows the products in the tooltip.
 
-If 1) there are multiple products and this property is nil, 2) this property is set to an empty string (&#x60;&quot;&quot;&#x60;), or 3) there are no products, the recipe will use the localised_name, icon, and subgroup of the recipe. icon and subgroup become non-optional. */
+If 1) there are multiple products and this property is nil, 2) this property is set to an empty string (`""`), or 3) there are no products, the recipe will use the localised_name, icon, and subgroup of the recipe. icon and subgroup become non-optional. */
   main_product?: string;
-  /** Used to determine how many extra items are put into an assembling machine before it&#x27;s considered &quot;full enough&quot;. See [insertion limits](https://wiki.factorio.com/Inserters#Insertion_limits).
+  /** Used to determine how many extra items are put into an assembling machine before it's considered "full enough". See [insertion limits](https://wiki.factorio.com/Inserters#Insertion_limits).
 
-If set to &#x60;0&#x60;, it instead uses the following formula: &#x60;1.166 / (energy_required / the assembler&#x27;s crafting_speed)&#x60;, rounded up, and clamped to be between&#x60;2&#x60; and &#x60;100&#x60;. The numbers used in this formula can be changed by the [UtilityConstants](prototype:UtilityConstants) properties &#x60;dynamic_recipe_overload_factor&#x60;, &#x60;minimum_recipe_overload_multiplier&#x60;, and &#x60;maximum_recipe_overload_multiplier&#x60;. */
+If set to `0`, it instead uses the following formula: `1.166 / (energy_required / the assembler's crafting_speed)`, rounded up, and clamped to be between`2` and `100`. The numbers used in this formula can be changed by the [UtilityConstants](prototype:UtilityConstants) properties `dynamic_recipe_overload_factor`, `minimum_recipe_overload_multiplier`, and `maximum_recipe_overload_multiplier`. */
   overload_multiplier?: number;
   requester_paste_multiplier?: number;
-  /** The item created by this recipe. Must be the name of an [item](prototype:ItemPrototype), such as &#x60;&quot;iron-gear-wheel&quot;&#x60;.
+  /** The item created by this recipe. Must be the name of an [item](prototype:ItemPrototype), such as `"iron-gear-wheel"`.
 
-Only loaded if &#x60;results&#x60; is not defined. */
+Only loaded if `results` is not defined. */
   result?: ItemID;
   /** The number of items created by this recipe.
 
-Only loaded if &#x60;results&#x60; is not defined. */
+Only loaded if `results` is not defined. */
   result_count?: number;
   /** A table containing result names and counts. Can also contain information about fluid temperature and catalyst amounts. The catalyst amounts are automatically calculated from the recipe, or can be set manually in the ProductPrototype (see [here](https://factorio.com/blog/post/fff-256)).
 
 Can be set to an empty table to create a recipe that produces nothing. Duplicate results, e.g. two entries with the same name, are allowed. */
   results: ProductPrototype[];
-  /** Whether the recipe name should have the product amount in front of it, e.g. &quot;2x Transport belt&quot; */
+  /** Whether the recipe name should have the product amount in front of it, e.g. "2x Transport belt" */
   show_amount_in_title?: boolean;
   /** Whether enabling this recipe unlocks its item products to show in selection lists (item filters, logistic requests, etc.). */
   unlock_results?: boolean;
@@ -11062,55 +11088,55 @@ export interface Resistances {
   type: DamageTypeID;
 }
 interface _RotatedAnimation {
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   apply_projection?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-If &#x60;true&#x60;, &#x60;direction_count&#x60; must be greater than &#x60;1&#x60;. */
+If `true`, `direction_count` must be greater than `1`. */
   axially_symmetrical?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   counterclockwise?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-The sequential animation instance is loaded equal to the entities direction within the &#x60;direction_count&#x60; setting.
+The sequential animation instance is loaded equal to the entities direction within the `direction_count` setting.
 
 Direction count to [Direction](prototype:Direction) (animation sequence number):
 
-- &#x60;1&#x60;: North (1)
+- `1`: North (1)
 
-- &#x60;2&#x60;: North (1), South (2)
+- `2`: North (1), South (2)
 
-- &#x60;4&#x60;: North (1), East (2), South (3), West (4)
+- `4`: North (1), East (2), South (3), West (4)
 
-- &#x60;8&#x60;: North (1), Northeast (2), East (3), Southeast (4), South (5), Southwest (6), West (7), Northwest (8) */
+- `8`: North (1), Northeast (2), East (3), Southeast (4), South (5), Southwest (6), West (7), Northwest (8) */
   direction_count: number;
-  /** Only loaded if &#x60;layers&#x60;, &#x60;stripes&#x60;, and &#x60;filenames&#x60; are not defined.
+  /** Only loaded if `layers`, `stripes`, and `filenames` are not defined.
 
 The path to the sprite file to use. */
   filename: FileName;
-  /** Only loaded if both &#x60;layers&#x60; and &#x60;stripes&#x60; are not defined. */
+  /** Only loaded if both `layers` and `stripes` are not defined. */
   filenames?: FileName[];
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 If this property exists and high resolution sprites are turned on, this is used to load the animation. */
   hr_version?: RotatedAnimation;
-  /** If this property is present, all RotatedAnimation definitions have to be placed as entries in the array, and they will all be loaded from there. &#x60;layers&#x60; may not be an empty table. Each definition in the array may also have the &#x60;layers&#x60; property.
+  /** If this property is present, all RotatedAnimation definitions have to be placed as entries in the array, and they will all be loaded from there. `layers` may not be an empty table. Each definition in the array may also have the `layers` property.
 
 If this property is present, all other properties, including those inherited from AnimationParameters, are ignored. */
   layers?: RotatedAnimation[];
-  /** Only loaded if &#x60;layers&#x60; is not defined. Mandatory if &#x60;filenames&#x60; is defined. */
+  /** Only loaded if `layers` is not defined. Mandatory if `filenames` is defined. */
   lines_per_file?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   middle_orientation?: RealOrientation;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Automatically clamped to be between &#x60;0&#x60; and &#x60;1&#x60;. */
+Automatically clamped to be between `0` and `1`. */
   orientation_range?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined. Mandatory if &#x60;filenames&#x60; is defined. */
+  /** Only loaded if `layers` is not defined. Mandatory if `filenames` is defined. */
   slice?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   still_frame?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   stripes?: Stripe[];
 }
 
@@ -11128,59 +11154,59 @@ interface _RotatedAnimation4Way {
 }
 /** Specifies series of sprites used to visualize different rotations of the object. */
 interface _RotatedSprite {
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   allow_low_quality_rotation?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Used to fix the inconsistency of direction of the entity in 3d when rendered and direction on the screen (where the 45 degree angle for projection is used). */
   apply_projection?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-When &#x60;true&#x60;, the same picture is used for left/right direction, just flipped, which can save half of the space required, but is not usable once the picture contains shadows, etc. */
+When `true`, the same picture is used for left/right direction, just flipped, which can save half of the space required, but is not usable once the picture contains shadows, etc. */
   axially_symmetrical?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined. */
+  /** Only loaded if `layers` is not defined. */
   back_equals_front?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Set to &#x60;true&#x60; to indicate sprites in the spritesheet are in counterclockwise order. */
+Set to `true` to indicate sprites in the spritesheet are in counterclockwise order. */
   counterclockwise?: boolean;
   /** Count of direction (frames) specified. */
   direction_count: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 The path to the sprite file to use. */
   filename?: FileName;
-  /** Only loaded if both &#x60;layers&#x60; and &#x60;filename&#x60; are not defined. */
+  /** Only loaded if both `layers` and `filename` are not defined. */
   filenames: FileName[];
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Unused. */
   generate_sdf?: boolean;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 If this property exists and high resolution sprites are turned on, this is used to load the sprite. */
   hr_version?: RotatedSprite;
-  /** If this property is present, all RotatedSprite definitions have to be placed as entries in the array, and they will all be loaded from there. &#x60;layers&#x60; may not be an empty table. Each definition in the array may also have the &#x60;layers&#x60; property.
+  /** If this property is present, all RotatedSprite definitions have to be placed as entries in the array, and they will all be loaded from there. `layers` may not be an empty table. Each definition in the array may also have the `layers` property.
 
 If this property is present, all other properties, including those inherited from SpriteParameters, are ignored. */
   layers?: RotatedSprite[];
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 Once the specified number of pictures is loaded, other pictures are loaded on other line. This is to allow having more sprites in matrix, to input files with too high width. The game engine limits the width of any input files to 8192px, so it is compatible with most graphics cards. 0 means that all the pictures are in one horizontal line. */
   line_length?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined. Mandatory if &#x60;filenames&#x60; is defined. */
+  /** Only loaded if `layers` is not defined. Mandatory if `filenames` is defined. */
   lines_per_file?: number;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Number of slices this is sliced into when using the &quot;optimized atlas packing&quot; option. If you are a modder, you can just ignore this property. As an example, if this is &#x60;4&#x60;, the sprite will be sliced into a &#x60;4x4&#x60; grid. */
+Number of slices this is sliced into when using the "optimized atlas packing" option. If you are a modder, you can just ignore this property. As an example, if this is `4`, the sprite will be sliced into a `4x4` grid. */
   slice?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Same as &#x60;slice&#x60;, but this specifies only how many slices there are on the x-axis. */
+Same as `slice`, but this specifies only how many slices there are on the x-axis. */
   slice_x?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Same as &#x60;slice&#x60;, but this specifies only how many slices there are on the y-axis. */
+Same as `slice`, but this specifies only how many slices there are on the y-axis. */
   slice_y?: SpriteSizeType;
 }
 
@@ -11214,9 +11240,9 @@ interface _ScrollPaneStyleSpecification {
   extra_bottom_padding_when_activated?: number;
   extra_left_margin_when_activated?: number;
   extra_left_padding_when_activated?: number;
-  /** Sets &#x60;extra_top_margin_when_activated&#x60;, &#x60;extra_bottom_margin_when_activated&#x60;, &#x60;extra_left_margin_when_activated&#x60; and &#x60;extra_right_margin_when_activated&#x60;. */
+  /** Sets `extra_top_margin_when_activated`, `extra_bottom_margin_when_activated`, `extra_left_margin_when_activated` and `extra_right_margin_when_activated`. */
   extra_margin_when_activated?: number;
-  /** Sets &#x60;extra_top_padding_when_activated&#x60;, &#x60;extra_bottom_padding_when_activated&#x60;, &#x60;extra_left_padding_when_activated&#x60; and &#x60;extra_right_padding_when_activated&#x60;. */
+  /** Sets `extra_top_padding_when_activated`, `extra_bottom_padding_when_activated`, `extra_left_padding_when_activated` and `extra_right_padding_when_activated`. */
   extra_padding_when_activated?: number;
   extra_right_margin_when_activated?: number;
   extra_right_padding_when_activated?: number;
@@ -11353,11 +11379,11 @@ export type SimpleModifier = _SimpleModifier &
 
 There are a few simulation-only APIs:
 
-&#x60;&#x60;&#x60;
-game.create_test_player{name&#x3D;string}
-game.activate_rail_planner{position&#x3D;position,ghost_mode&#x3D;bool}
+```
+game.create_test_player{name=string}
+game.activate_rail_planner{position=position,ghost_mode=bool}
 game.deactivate_rail_planner()
-game.move_cursor{position&#x3D;position,speed&#x3D;number}  -- should be called every tick; returns true when target is reached
+game.move_cursor{position=position,speed=number}  -- should be called every tick; returns true when target is reached
 game.activate_selection()
 game.finish_selection()
 game.deactivate_selection()
@@ -11371,33 +11397,33 @@ game.camera_player_cursor_direction [W]
 game.camera_alt_info [W]
 game.smart_belt_building [W]
 player.drag_start_position [W]
-player.raw_build_from_cursor{ghost_mode&#x3D;bool,created_by_moving&#x3D;bool,position&#x3D;position}
-surface.create_entities_from_blueprint_string{string&#x3D;string,position&#x3D;position,force&#x3D;force,direction&#x3D;defines.direction,flip_horizonal&#x3D;bool,flip_vertical&#x3D;bool,by_player&#x3D;player}
-&#x60;&#x60;&#x60; */
+player.raw_build_from_cursor{ghost_mode=bool,created_by_moving=bool,position=position}
+surface.create_entities_from_blueprint_string{string=string,position=position,force=force,direction=defines.direction,flip_horizonal=bool,flip_vertical=bool,by_player=player}
+``` */
 export interface SimulationDefinition {
-  /** If this is true, the map of the simulation is set to be a lab-tile checkerboard in the area of &#x60;{{-20, -15},{20, 15}}&#x60; when the scenario is first initialized (before init/init_file run). */
+  /** If this is true, the map of the simulation is set to be a lab-tile checkerboard in the area of `{{-20, -15},{20, 15}}` when the scenario is first initialized (before init/init_file run). */
   checkboard?: boolean;
-  /** If &#x60;save&#x60; is not given and this is true, a map gets generated by the game for use in the simulation. */
+  /** If `save` is not given and this is true, a map gets generated by the game for use in the simulation. */
   generate_map?: boolean;
-  /** Only loaded if &#x60;init_file&#x60; is not defined.
+  /** Only loaded if `init_file` is not defined.
 
-This code is run as a (silent) console command inside the simulation when it is first initialized. Since this is run as a console command, the restrictions of console commands apply, e.g. &#x60;require&#x60; is not available, see [here](runtime:libraries). */
+This code is run as a (silent) console command inside the simulation when it is first initialized. Since this is run as a console command, the restrictions of console commands apply, e.g. `require` is not available, see [here](runtime:libraries). */
   init?: string;
-  /** This code is run as a (silent) console command inside the simulation when it is first initialized. Since this is run as a console command, the restrictions of console commands apply, e.g. &#x60;require&#x60; is not available, see [here](runtime:libraries). */
+  /** This code is run as a (silent) console command inside the simulation when it is first initialized. Since this is run as a console command, the restrictions of console commands apply, e.g. `require` is not available, see [here](runtime:libraries). */
   init_file?: FileName;
-  /** Amount of ticks that this simulation should run for before the simulation is shown to the player. These updates happen after init/init_file has been run and at the highest possible rate (&gt; 60 UPS). */
+  /** Amount of ticks that this simulation should run for before the simulation is shown to the player. These updates happen after init/init_file has been run and at the highest possible rate (> 60 UPS). */
   init_update_count?: number;
   /** How long this simulation takes. In the main menu simulations, another simulation will start after this simulation ends. */
   length?: number;
-  /** If true, overrides the simulation volume set by the player in the sound settings, simply setting the volume modifier to &#x60;1&#x60;. */
+  /** If true, overrides the simulation volume set by the player in the sound settings, simply setting the volume modifier to `1`. */
   override_volume?: boolean;
-  /** The save file that is used for this simulation. If not given and &#x60;generate_map&#x60; is &#x60;true&#x60;, a map is generated by the game. */
+  /** The save file that is used for this simulation. If not given and `generate_map` is `true`, a map is generated by the game. */
   save?: FileName;
-  /** Only loaded if &#x60;update_file&#x60; is not defined.
+  /** Only loaded if `update_file` is not defined.
 
-This code is run as a (silent) console command inside the simulation every time the simulation is updated. Since this is run as a console command, the restrictions of console commands apply, e.g. &#x60;require&#x60; is not available, see [here](runtime:libraries). */
+This code is run as a (silent) console command inside the simulation every time the simulation is updated. Since this is run as a console command, the restrictions of console commands apply, e.g. `require` is not available, see [here](runtime:libraries). */
   update?: string;
-  /** This code is run as a (silent) console command inside the simulation every time the simulation is updated. Since this is run as a console command, the restrictions of console commands apply, e.g. &#x60;require&#x60; is not available, see [here](runtime:libraries). */
+  /** This code is run as a (silent) console command inside the simulation every time the simulation is updated. Since this is run as a console command, the restrictions of console commands apply, e.g. `require` is not available, see [here](runtime:libraries). */
   update_file?: FileName;
   /** Multiplier for the simulation volume set by the player in the sound settings. */
   volume_modifier?: number;
@@ -11426,7 +11452,7 @@ export function isSliderStyleSpecification(
 export interface SmokeSource {
   deviation?: MapPosition;
   east_position?: Vector;
-  /** Can&#x27;t be negative, NaN or infinite. */
+  /** Can't be negative, NaN or infinite. */
   frequency: number;
   height?: number;
   height_deviation?: number;
@@ -11442,51 +11468,51 @@ export interface SmokeSource {
   starting_frame_speed_deviation?: number;
   starting_vertical_speed?: number;
   starting_vertical_speed_deviation?: number;
-  /** A value between &#x60;0&#x60; and &#x60;1&#x60;. */
+  /** A value between `0` and `1`. */
   vertical_speed_slowdown?: number;
   west_position?: Vector;
 }
 interface _Sound {
   aggregation?: AggregationSpecification;
   allow_random_repeat?: boolean;
-  /** Modifies how far a sound can be heard. Must be between &#x60;0&#x60; and &#x60;1&#x60; inclusive. */
+  /** Modifies how far a sound can be heard. Must be between `0` and `1` inclusive. */
   audible_distance_modifier?: number;
-  /** Supported sound file formats are &#x60;.ogg&#x60;, &#x60;.wav&#x60; and &#x60;.voc&#x60;.
+  /** Supported sound file formats are `.ogg`, `.wav` and `.voc`.
 
-Only loaded if &#x60;variations&#x60; is not defined. */
+Only loaded if `variations` is not defined. */
   filename: FileName;
   game_controller_vibration_data?: GameControllerVibrationData;
-  /** Must be &#x60;&gt;&#x3D; min_speed&#x60;.
+  /** Must be `>= min_speed`.
 
-Only loaded if &#x60;variations&#x60; is not defined. Only loaded, and mandatory if &#x60;min_speed&#x60; is defined. */
+Only loaded if `variations` is not defined. Only loaded, and mandatory if `min_speed` is defined. */
   max_speed?: number;
-  /** Must be &#x60;&gt;&#x3D; 1 / 64&#x60;.
+  /** Must be `>= 1 / 64`.
 
-Only loaded if both &#x60;variations&#x60; and &#x60;speed&#x60; are not defined. */
+Only loaded if both `variations` and `speed` are not defined. */
   min_speed?: number;
-  /** Only loaded if &#x60;variations&#x60; is not defined. */
+  /** Only loaded if `variations` is not defined. */
   preload?: boolean;
-  /** Speed must be &#x60;&gt;&#x3D; 1 / 64&#x60;. This sets both min and max speeds.
+  /** Speed must be `>= 1 / 64`. This sets both min and max speeds.
 
-Only loaded if &#x60;variations&#x60; is not defined. */
+Only loaded if `variations` is not defined. */
   speed?: number;
   variations?: SoundDefinition[];
-  /** Only loaded if &#x60;variations&#x60; is not defined. */
+  /** Only loaded if `variations` is not defined. */
   volume?: number;
 }
 export interface SoundDefinition {
-  /** Supported sound file formats are &#x60;.ogg&#x60;, &#x60;.wav&#x60; and &#x60;.voc&#x60;. */
+  /** Supported sound file formats are `.ogg`, `.wav` and `.voc`. */
   filename: FileName;
-  /** Only loaded, and mandatory, if &#x60;min_speed&#x60; is defined.
+  /** Only loaded, and mandatory, if `min_speed` is defined.
 
-Must be &#x60;&gt;&#x3D; min_speed&#x60;. */
+Must be `>= min_speed`. */
   max_speed?: number;
-  /** Only loaded if &#x60;speed&#x60; is not defined.
+  /** Only loaded if `speed` is not defined.
 
-Must be &#x60;&gt;&#x3D; 1 / 64&#x60;. */
+Must be `>= 1 / 64`. */
   min_speed?: number;
   preload?: boolean;
-  /** Speed must be &#x60;&gt;&#x3D; 1 / 64&#x60;. This sets both min and max speeds. */
+  /** Speed must be `>= 1 / 64`. This sets both min and max speeds. */
   speed?: number;
   volume?: number;
 }
@@ -11495,7 +11521,7 @@ Must be &#x60;&gt;&#x3D; 1 / 64&#x60;. */
 It can be specified as a table with named or numbered keys, but not a mix of both. */
 interface _SpawnPoint {
   evolution_factor: number;
-  /** Must be &#x60;&gt;&#x3D; 0&#x60;. */
+  /** Must be `>= 0`. */
   spawn_weight: number;
 }
 interface _SpeechBubbleStyleSpecification {
@@ -11544,12 +11570,12 @@ export interface SpiderLegPart {
 }
 /** Used by [SpiderEnginePrototype](prototype:SpiderEnginePrototype) for [SpiderVehiclePrototype](prototype:SpiderVehiclePrototype). */
 export interface SpiderLegSpecification {
-  /** The 1-based indices of the legs that should block this leg&#x27;s movement. */
+  /** The 1-based indices of the legs that should block this leg's movement. */
   blocking_legs: number[];
   ground_position: Vector;
   /** Name of a [SpiderLegPrototype](prototype:SpiderLegPrototype). */
   leg: EntityID;
-  /** For triggers, the source and target is the leg entity. Certain effects may not raise as desired, e.g. &#x60;&quot;push-back&quot;&#x60; does nothing, and &#x60;&quot;script&quot;&#x60; has &#x60;leg&#x60; as the source and target of the event. */
+  /** For triggers, the source and target is the leg entity. Certain effects may not raise as desired, e.g. `"push-back"` does nothing, and `"script"` has `leg` as the source and target of the event. */
   leg_hit_the_ground_trigger?: TriggerEffect;
   mount_position: Vector;
 }
@@ -11565,10 +11591,10 @@ export interface SpiderVehicleGraphicsSet {
   autopilot_path_visualisation_on_map_line_width?: number;
   base_animation?: RotatedAnimation;
   base_render_layer?: RenderLayer;
-  /** Placed in multiple positions, as determined by &#x60;light_positions&#x60;. */
+  /** Placed in multiple positions, as determined by `light_positions`. */
   eye_light?: LightDefinition;
   light?: LightDefinition;
-  /** Defines where each &#x60;eye_light&#x60; is placed. One array per eye and each of those arrays should contain one position per body direction. */
+  /** Defines where each `eye_light` is placed. One array per eye and each of those arrays should contain one position per body direction. */
   light_positions?: Vector[][];
   render_layer?: RenderLayer;
   shadow_animation?: RotatedAnimation;
@@ -11578,7 +11604,7 @@ export interface SpotNoiseArguments {
   basement_value: ConstantNoiseNumber;
   /** Integer. How many candidate points to generate. */
   candidate_point_count?: ConstantNoiseNumber;
-  /** Integer. An alternative to &#x60;candidate_point_count&#x60;: number of spots to generate: &#x60;candidate_spot_count &#x3D; X&#x60; is equivalent to &#x60;candidate_point_count / skip_span &#x3D; X&#x60; */
+  /** Integer. An alternative to `candidate_point_count`: number of spots to generate: `candidate_spot_count = X` is equivalent to `candidate_point_count / skip_span = X` */
   candidate_spot_count?: ConstantNoiseNumber;
   comment: NoiseLiteralString;
   /** A numeric expression that will be evaluated for each candidate spot to calculate density at that point. */
@@ -11596,11 +11622,11 @@ export interface SpotNoiseArguments {
   skip_offset?: ConstantNoiseNumber;
   /** Integer. Number of candidate points to skip over after each one used as a spot, including the used one. */
   skip_span?: ConstantNoiseNumber;
-  /** A numeric expression that will be evaluated for each candidate spot to calculate the spot&#x27;s favorability. Spots with higher favorability will be considered first when building the final list of spots for a region. */
+  /** A numeric expression that will be evaluated for each candidate spot to calculate the spot's favorability. Spots with higher favorability will be considered first when building the final list of spots for a region. */
   spot_favorability_expression: NoiseLiteralExpression;
-  /** A numeric expression that will be evaluated for each candidate spot to calculate the spot&#x27;s quantity. */
+  /** A numeric expression that will be evaluated for each candidate spot to calculate the spot's quantity. */
   spot_quantity_expression: NoiseLiteralExpression;
-  /** A numeric expression that will be evaluated for each candidate spot to calculate the spot&#x27;s radius. This, together with quantity, will determine the spots peak value. */
+  /** A numeric expression that will be evaluated for each candidate spot to calculate the spot's radius. This, together with quantity, will determine the spots peak value. */
   spot_radius_expression: NoiseLiteralExpression;
   /** The minimum spacing to *try* to achieve while randomly picking points. Spot noise may end up placing spots closer than this in crowded regions. */
   suggested_minimum_candidate_point_spacing?: ConstantNoiseNumber;
@@ -11611,63 +11637,63 @@ export interface SpotNoiseArguments {
 
 When there is more than one sprite or [Animation](prototype:Animation) frame with the same source file and dimensions/position in the game, they all share the same memory. */
 interface _Sprite {
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 If this property exists and high resolution sprites are turned on, this is used to load the Sprite. */
   hr_version?: Sprite;
-  /** If this property is present, all Sprite definitions have to be placed as entries in the array, and they will all be loaded from there. &#x60;layers&#x60; may not be an empty table. Each definition in the array may also have the &#x60;layers&#x60; property.
+  /** If this property is present, all Sprite definitions have to be placed as entries in the array, and they will all be loaded from there. `layers` may not be an empty table. Each definition in the array may also have the `layers` property.
 
 If this property is present, all other properties, including those inherited from SpriteParameters, are ignored. */
   layers?: Sprite[];
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Number of slices this is sliced into when using the &quot;optimized atlas packing&quot; option. If you are a modder, you can just ignore this property. As an example, if this is &#x60;4&#x60;, the sprite will be sliced into a &#x60;4x4&#x60; grid. */
+Number of slices this is sliced into when using the "optimized atlas packing" option. If you are a modder, you can just ignore this property. As an example, if this is `4`, the sprite will be sliced into a `4x4` grid. */
   slice?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Same as &#x60;slice&#x60;, but this specifies only how many slices there are on the x-axis. */
+Same as `slice`, but this specifies only how many slices there are on the x-axis. */
   slice_x?: SpriteSizeType;
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
-Same as &#x60;slice&#x60;, but this specifies only how many slices there are on the y-axis. */
+Same as `slice`, but this specifies only how many slices there are on the y-axis. */
   slice_y?: SpriteSizeType;
 }
 
 export type Sprite = _Sprite & Omit<SpriteParameters, keyof _Sprite>;
 /** A map of sprites for all 4 directions of the entity.  If this is loaded as a single Sprite, it applies to all directions. */
 interface _Sprite4Way {
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   east: Sprite;
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   north: Sprite;
-  /** Only loaded if &#x60;sheets&#x60; is not defined. */
+  /** Only loaded if `sheets` is not defined. */
   sheet?: SpriteNWaySheet;
   sheets?: SpriteNWaySheet;
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   south: Sprite;
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   west: Sprite;
 }
 /** A map of sprites for all 8 directions of the entity. */
 export interface Sprite8Way {
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   east: Sprite;
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   north: Sprite;
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   north_east: Sprite;
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   north_west: Sprite;
-  /** Only loaded if &#x60;sheets&#x60; is not defined. */
+  /** Only loaded if `sheets` is not defined. */
   sheet?: SpriteNWaySheet;
   sheets?: SpriteNWaySheet;
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   south: Sprite;
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   south_east: Sprite;
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   south_west: Sprite;
-  /** Only loaded if both &#x60;sheets&#x60; and &#x60;sheet&#x60; are not defined. */
+  /** Only loaded if both `sheets` and `sheet` are not defined. */
   west: Sprite;
 }
 interface _SpriteNWaySheet {
@@ -11684,42 +11710,42 @@ export type SpriteNWaySheet = _SpriteNWaySheet &
 export interface SpriteParameters {
   apply_runtime_tint?: boolean;
   blend_mode?: BlendMode;
-  /** Only one of &#x60;draw_as_shadow&#x60;, &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60; can be true. This takes precedence over &#x60;draw_as_light&#x60;.
+  /** Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. This takes precedence over `draw_as_light`.
 
 Draws first as a normal sprite, then again as a light layer. See [https://forums.factorio.com/91682](https://forums.factorio.com/91682). */
   draw_as_glow?: boolean;
-  /** Only one of &#x60;draw_as_shadow&#x60;, &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60; can be true. */
+  /** Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. */
   draw_as_light?: boolean;
-  /** Only one of &#x60;draw_as_shadow&#x60;, &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60; can be true. This takes precedence over &#x60;draw_as_glow&#x60; and &#x60;draw_as_light&#x60;. */
+  /** Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. This takes precedence over `draw_as_glow` and `draw_as_light`. */
   draw_as_shadow?: boolean;
   /** The path to the sprite file to use. */
   filename: FileName;
   flags?: SpriteFlags;
-  /** This property is only used by sprites used in [UtilitySprites](prototype:UtilitySprites) that have the &#x60;&quot;icon&quot;&#x60; flag set.
+  /** This property is only used by sprites used in [UtilitySprites](prototype:UtilitySprites) that have the `"icon"` flag set.
 
-If this is set to &#x60;true&#x60;, the game will generate an icon shadow (using signed distance fields) for the sprite. */
+If this is set to `true`, the game will generate an icon shadow (using signed distance fields) for the sprite. */
   generate_sdf?: boolean;
-  /** Mandatory if &#x60;size&#x60; is not defined.
+  /** Mandatory if `size` is not defined.
 
 Height of the picture in pixels, from 0-8192. */
   height?: SpriteSizeType;
   /** Minimal mode is entered when mod loading fails. You are in it when you see the gray box after (part of) the loading screen that tells you a mod error ([Example](https://cdn.discordapp.com/attachments/340530709712076801/532315796626472972/unknown.png)). Modders can ignore this property. */
   load_in_minimal_mode?: boolean;
-  /** Only loaded if this is an icon, that is it has the flag &#x60;&quot;group&#x3D;icon&quot;&#x60; or &#x60;&quot;group&#x3D;gui&quot;&#x60;. */
+  /** Only loaded if this is an icon, that is it has the flag `"group=icon"` or `"group=gui"`. */
   mipmap_count?: number;
-  /** Loaded only when &#x60;x&#x60; and &#x60;y&#x60; are both &#x60;0&#x60;. The first member of the tuple is &#x60;x&#x60; and the second is &#x60;y&#x60;. */
+  /** Loaded only when `x` and `y` are both `0`. The first member of the tuple is `x` and the second is `y`. */
   position?: [SpriteSizeType, SpriteSizeType];
   /** Whether alpha should be pre-multiplied. */
   premul_alpha?: boolean;
   priority?: SpritePriority;
-  /** Values other than &#x60;1&#x60; specify the scale of the sprite on default zoom. A scale of &#x60;2&#x60; means that the picture will be two times bigger on screen (and thus more pixelated). */
+  /** Values other than `1` specify the scale of the sprite on default zoom. A scale of `2` means that the picture will be two times bigger on screen (and thus more pixelated). */
   scale?: number;
-  /** The shift in tiles. &#x60;util.by_pixel()&#x60; can be used to divide the shift by 32 which is the usual pixel height/width of 1 tile in normal resolution. Note that 32 pixel tile height/width is not enforced anywhere - any other tile height or width is also possible. */
+  /** The shift in tiles. `util.by_pixel()` can be used to divide the shift by 32 which is the usual pixel height/width of 1 tile in normal resolution. Note that 32 pixel tile height/width is not enforced anywhere - any other tile height or width is also possible. */
   shift?: Vector;
   /** The width and height of the sprite. If this is a tuple, the first member of the tuple is the width and the second is the height. Otherwise the size is both width and height. Width and height may only be in the range of 0-8192. */
   size?: SpriteSizeType | [SpriteSizeType, SpriteSizeType];
   tint?: Color;
-  /** Mandatory if &#x60;size&#x60; is not defined.
+  /** Mandatory if `size` is not defined.
 
 Width of the picture in pixels, from 0-8192. */
   width?: SpriteSizeType;
@@ -11729,11 +11755,11 @@ Width of the picture in pixels, from 0-8192. */
   y?: SpriteSizeType;
 }
 interface _SpriteSheet {
-  /** Only loaded if &#x60;layers&#x60; is not defined.
+  /** Only loaded if `layers` is not defined.
 
 If this property exists and high resolution sprites are turned on, this is used to load the SpriteSheet. */
   hr_version?: SpriteSheet;
-  /** If this property is present, all SpriteSheet definitions have to be placed as entries in the array, and they will all be loaded from there. &#x60;layers&#x60; may not be an empty table. Each definition in the array may also have the &#x60;layers&#x60; property.
+  /** If this property is present, all SpriteSheet definitions have to be placed as entries in the array, and they will all be loaded from there. `layers` may not be an empty table. Each definition in the array may also have the `layers` property.
 
 If this property is present, all other properties, including those inherited from SpriteParameters, are ignored. */
   layers?: SpriteSheet[];
@@ -11748,10 +11774,10 @@ interface _SpriteVariations {
   sheet: SpriteSheet;
 }
 interface _StackInserterCapacityBonusModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'stack-inserter-capacity-bonus';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -11776,7 +11802,7 @@ export function isStackTransferTipTrigger(
   return (value as { type: string }).type === 'stack-transfer';
 }
 export interface StateSteeringSettings {
-  /** Used only for special &quot;to look good&quot; purposes (like in trailer). */
+  /** Used only for special "to look good" purposes (like in trailer). */
   force_unit_fuzzy_goto_behavior: boolean;
   /** Not including the radius of the unit. */
   radius: number;
@@ -11949,7 +11975,7 @@ interface _TableStyleSpecification {
   background_graphical_set?: ElementImageSet;
   border?: BorderImageSet;
   bottom_cell_padding?: number;
-  /** Sets &#x60;top_cell_padding&#x60;, &#x60;right_cell_padding&#x60;, &#x60;bottom_cell_padding&#x60; and &#x60;left_cell_padding&#x60; to the same value. */
+  /** Sets `top_cell_padding`, `right_cell_padding`, `bottom_cell_padding` and `left_cell_padding` to the same value. */
   cell_padding?: number;
   clicked_graphical_set?: ElementImageSet;
   column_alignments?: ColumnAlignment[];
@@ -11993,11 +12019,11 @@ export interface TechnologyData {
   enabled?: boolean;
   /** Hides the technology from the tech screen. */
   hidden?: boolean;
-  /** Controls whether the technology cost ignores the tech cost multiplier set in the [DifficultySettings](runtime:DifficultySettings), e.g. &#x60;4&#x60; for the default expensive difficulty. */
+  /** Controls whether the technology cost ignores the tech cost multiplier set in the [DifficultySettings](runtime:DifficultySettings), e.g. `4` for the default expensive difficulty. */
   ignore_tech_cost_multiplier?: boolean;
-  /** &#x60;&quot;infinite&quot;&#x60; for infinite technologies, otherwise &#x60;uint32&#x60;.
+  /** `"infinite"` for infinite technologies, otherwise `uint32`.
 
-Defaults to the same level as the technology, which is &#x60;0&#x60; for non-upgrades, and the level of the upgrade for upgrades. */
+Defaults to the same level as the technology, which is `0` for non-upgrades, and the level of the upgrade for upgrades. */
   max_level?: number | 'infinite';
   /** List of technologies needed to be researched before this one can be researched. */
   prerequisites?: TechnologyID[];
@@ -12005,7 +12031,7 @@ Defaults to the same level as the technology, which is &#x60;0&#x60; for non-upg
   unit: TechnologyUnit;
   /** When set to true, and the technology contains several levels, only the relevant one is displayed in the technology screen. */
   upgrade?: boolean;
-  /** Controls whether the technology is shown in the tech GUI when it is not &#x60;enabled&#x60;. */
+  /** Controls whether the technology is shown in the tech GUI when it is not `enabled`. */
   visible_when_disabled?: boolean;
 }
 interface _TechnologySlotStyleSpecification {
@@ -12056,41 +12082,41 @@ export function isTechnologySlotStyleSpecification(
 ): value is TechnologySlotStyleSpecification {
   return (value as { type: string }).type === 'technology_slot_style';
 }
-/** Either &#x60;count&#x60; or &#x60;count_formula&#x60; must be defined, never both. */
+/** Either `count` or `count_formula` must be defined, never both. */
 export interface TechnologyUnit {
-  /** How many units are needed. Must be &#x60;&gt; 0&#x60;. */
+  /** How many units are needed. Must be `> 0`. */
   count?: number;
   /** Formula that specifies how many units are needed per level of the technology.
 
-If the last characters of the prototype name are &#x60;-&lt;number&gt;&#x60;, the level is taken to be the number, e.g. &#x60;physical-projectile-damage-2&#x60; implies a number of &#x60;2&#x60;. This defaults to &#x60;1&#x60;. There does not need to be lower-level technologies for a technology to be detected as having a level, meaning a technology or sequence of upgrade technologies can begin at any number.
+If the last characters of the prototype name are `-<number>`, the level is taken to be the number, e.g. `physical-projectile-damage-2` implies a number of `2`. This defaults to `1`. There does not need to be lower-level technologies for a technology to be detected as having a level, meaning a technology or sequence of upgrade technologies can begin at any number.
 
-For an infinite technology, the level begins at the given suffix (or &#x60;1&#x60; by default) and gains 1 level upon being researched, or if the &#x60;max_level&#x60; is reached, marked as completed. The initial level of a technology can not be greater than its &#x60;max_level&#x60;.
+For an infinite technology, the level begins at the given suffix (or `1` by default) and gains 1 level upon being researched, or if the `max_level` is reached, marked as completed. The initial level of a technology can not be greater than its `max_level`.
 
 The formula is executed following the BODMAS order (also known as PEMDAS). It supports these operators and characters:
 
-- &#x60;+&#x60;: Addition
+- `+`: Addition
 
-- &#x60;-&#x60;: Subtraction
+- `-`: Subtraction
 
-- &#x60;*&#x60;: Multiplication
+- `*`: Multiplication
 
-- &#x60;^&#x60;: Exponentiation
+- `^`: Exponentiation
 
-- &#x60;()&#x60;: Brackets for order of operations; supports nested brackets
+- `()`: Brackets for order of operations; supports nested brackets
 
-- &#x60;l&#x60; or &#x60;L&#x60;: The current level of the technology
+- `l` or `L`: The current level of the technology
 
 - Digits: Treated as numbers
 
-- &#x60;.&#x60;: Decimal point in numbers
+- `.`: Decimal point in numbers
 
-- &#x60;SPACE&#x60;: Spaces are ignored
+- `SPACE`: Spaces are ignored
 
 Note that this formula can also be used at [runtime](runtime:LuaGameScript::evaluate_expression). */
   count_formula?: string;
   /** List of ingredients needed for one unit of research. The items must all be [ToolPrototypes](prototype:ToolPrototype). */
   ingredients: IngredientPrototype[];
-  /** How much time one unit takes to research. In a lab with a crafting speed of &#x60;1&#x60;, it corresponds to the number of seconds. */
+  /** How much time one unit takes to research. In a lab with a crafting speed of `1`, it corresponds to the number of seconds. */
   time: number;
 }
 interface _TextBoxStyleSpecification {
@@ -12158,9 +12184,9 @@ export interface TileSprite {
   y?: SpriteSizeType;
 }
 interface _TileSpriteWithProbability {
-  /** Probability of 1x1 (size &#x3D; 1) version of tile must be 1. */
+  /** Probability of 1x1 (size = 1) version of tile must be 1. */
   probability?: number;
-  /** Only powers of 2 from 1 to 128 can be used. Square size of the tile arrangement this sprite is used for. Used to calculate the &#x60;width&#x60; and &#x60;height&#x60; of the sprite which cannot be set directly. (width or height) &#x3D; size * 32 / scale. */
+  /** Only powers of 2 from 1 to 128 can be used. Square size of the tile arrangement this sprite is used for. Used to calculate the `width` and `height` of the sprite which cannot be set directly. (width or height) = size * 32 / scale. */
   size: number;
   weights?: number[];
 }
@@ -12174,7 +12200,7 @@ export interface TileTransitionSprite {
   hr_version?: TileTransitionSprite;
   picture: FileName;
   scale?: number;
-  /** If this is true, the shift of the tile transition sprite is set to &#x60;{0, 0.5}&#x60;. */
+  /** If this is true, the shift of the tile transition sprite is set to `{0, 0.5}`. */
   tall?: boolean;
   /** Horizontal position of the sprite in the source file in pixels. */
   x?: SpriteSizeType;
@@ -12188,12 +12214,12 @@ export interface TileTransitions {
   background_layer_offset?: number;
   effect_mask?: Animation;
   empty_transitions?: boolean;
-  /** This or inner_corner_mask needs to be specified if &#x60;empty_transitions&#x60; is not true. */
+  /** This or inner_corner_mask needs to be specified if `empty_transitions` is not true. */
   inner_corner: TileTransitionSprite;
   inner_corner_background?: TileTransitionSprite;
   inner_corner_background_mask?: TileTransitionSprite;
   inner_corner_effect_map?: TileTransitionSprite;
-  /** This or inner_corner needs to be specified if &#x60;empty_transitions&#x60; is not true. */
+  /** This or inner_corner needs to be specified if `empty_transitions` is not true. */
   inner_corner_mask: TileTransitionSprite;
   inner_corner_weights?: number[];
   layer?: number;
@@ -12205,22 +12231,22 @@ export interface TileTransitions {
   o_transition_effect_map?: TileSprite;
   o_transition_mask?: TileSprite;
   offset_background_layer_by_tile_layer?: boolean;
-  /** This or outer_corner_mask needs to be specified if &#x60;empty_transitions&#x60; is not true. */
+  /** This or outer_corner_mask needs to be specified if `empty_transitions` is not true. */
   outer_corner: TileTransitionSprite;
   outer_corner_background?: TileTransitionSprite;
   outer_corner_background_mask?: TileTransitionSprite;
   outer_corner_effect_map?: TileTransitionSprite;
-  /** This or outer_corner needs to be specified if &#x60;empty_transitions&#x60; is not true. */
+  /** This or outer_corner needs to be specified if `empty_transitions` is not true. */
   outer_corner_mask: TileTransitionSprite;
   outer_corner_weights?: number[];
   overlay_layer_group?: TileRenderLayer;
   overlay_layer_offset?: number;
-  /** This or side_mask needs to be specified if &#x60;empty_transitions&#x60; is not true. */
+  /** This or side_mask needs to be specified if `empty_transitions` is not true. */
   side: TileTransitionSprite;
   side_background?: TileTransitionSprite;
   side_background_mask?: TileTransitionSprite;
   side_effect_map?: TileTransitionSprite;
-  /** This or side needs to be specified if &#x60;empty_transitions&#x60; is not true. */
+  /** This or side needs to be specified if `empty_transitions` is not true. */
   side_mask: TileTransitionSprite;
   side_weights?: number[];
   u_transition?: TileTransitionSprite;
@@ -12265,10 +12291,10 @@ export function isTimeElapsedTipTrigger(
   return (value as { type: string }).type === 'time-elapsed';
 }
 interface _TrainBrakingForceBonusModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'train-braking-force-bonus';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12291,7 +12317,7 @@ export interface TrainPathFinderConstants {
   train_in_station_with_no_other_valid_stops_in_schedule: number;
   train_stop_penalty: number;
   train_waiting_at_signal_penalty: number;
-  /** Must be &gt;&#x3D; 0. */
+  /** Must be >= 0. */
   train_waiting_at_signal_tick_multiplier_penalty: number;
   train_with_no_path_penalty: number;
 }
@@ -12368,17 +12394,17 @@ export interface TransportBeltConnectorFrame {
 }
 export interface TreeVariation {
   branch_generation: CreateParticleTriggerEffectItem;
-  /** Only loaded if &#x60;shadow&#x60; is present. Defaults to &#x60;shadow.frame_count - 1&#x60;. */
+  /** Only loaded if `shadow` is present. Defaults to `shadow.frame_count - 1`. */
   disable_shadow_distortion_beginning_at_frame?: number;
   leaf_generation: CreateParticleTriggerEffectItem;
   leaves: Animation;
-  /** Normal must have the same frame_count as &#x60;leaves&#x60;. */
+  /** Normal must have the same frame_count as `leaves`. */
   normal?: Animation;
-  /** Overlay must have the same frame_count as &#x60;leaves&#x60;. Won&#x27;t be tinted by the tree color unless &#x60;apply_runtime_tint&#x60; is set to &#x60;true&#x60; in the sprite definition. See [here](https://forums.factorio.com/viewtopic.php?p&#x3D;547758#p547758). */
+  /** Overlay must have the same frame_count as `leaves`. Won't be tinted by the tree color unless `apply_runtime_tint` is set to `true` in the sprite definition. See [here](https://forums.factorio.com/viewtopic.php?p=547758#p547758). */
   overlay?: Animation;
-  /** Shadow must have 1 less &#x60;frame_count&#x60; than &#x60;leaves&#x60;. */
+  /** Shadow must have 1 less `frame_count` than `leaves`. */
   shadow?: Animation;
-  /** If &#x60;shadow&#x60; is not specified, this has to have one more frame than &#x60;leaves&#x60;. */
+  /** If `shadow` is not specified, this has to have one more frame than `leaves`. */
   trunk: Animation;
   water_reflection?: WaterReflectionDefinition;
 }
@@ -12393,7 +12419,7 @@ export interface TriggerEffectItem {
   affects_target?: boolean;
   /** Guaranteed to work with [EntityWithHealthPrototype::damaged_trigger_effect](prototype:EntityWithHealthPrototype::damaged_trigger_effect) and [EntityWithHealthPrototype::dying_trigger_effect](prototype:EntityWithHealthPrototype::dying_trigger_effect). Unknown if it works with other properties that use [TriggerEffect](prototype:TriggerEffect). */
   damage_type_filters?: DamageTypeFilters;
-  /** Must be greater than &#x60;0&#x60; and less than or equal to &#x60;1&#x60;. */
+  /** Must be greater than `0` and less than or equal to `1`. */
   probability?: number;
   repeat_count?: number;
   repeat_count_deviation?: number;
@@ -12412,17 +12438,18 @@ export interface TriggerItem {
   /** Must be greater than 0 and less than or equal to 1. */
   probability?: number;
   repeat_count?: number;
+  /** The trigger affects only prototypes with these masks. */
   trigger_target_mask?: TriggerTargetMask;
 }
 interface _TurretAttackModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   /** Modification value, which will be added to the current turret attack modifier upon researching. */
   modifier: number;
-  /** Name of the [EntityPrototype](prototype:EntityPrototype) that is affected. This also works for non-turrets such as tanks, however, the bonus does not appear in the entity&#x27;s tooltips. */
+  /** Name of the [EntityPrototype](prototype:EntityPrototype) that is affected. This also works for non-turrets such as tanks, however, the bonus does not appear in the entity's tooltips. */
   turret_id: EntityID;
   type: 'turret-attack';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12488,7 +12515,7 @@ export interface UnitGroupSettings {
   max_member_speedup_when_behind: number;
   /** Maximum size of an attack unit group. This only affects automatically-created unit groups; manual groups created through the API are unaffected. */
   max_unit_group_size: number;
-  /** After the gathering is finished the group can still wait for late members, but it doesn&#x27;t accept new ones anymore. */
+  /** After the gathering is finished the group can still wait for late members, but it doesn't accept new ones anymore. */
   max_wait_time_for_late_members: number;
   /** If a member falls behind more than this time the group radius, it will be removed from the group. */
   member_disown_distance: number;
@@ -12501,13 +12528,13 @@ export interface UnitGroupSettings {
 interface _UnitSpawnDefinition {
   /** Array of evolution and probability info, with the following conditions:
 
-- The &#x60;evolution_factor&#x60; must be ascending from entry to entry.
+- The `evolution_factor` must be ascending from entry to entry.
 
-- The last entry&#x27;s weight will be used when the &#x60;evolution_factor&#x60; is larger than the last entry.
+- The last entry's weight will be used when the `evolution_factor` is larger than the last entry.
 
 - Weights are linearly interpolated between entries.
 
-- Individual weights are scaled linearly so that the cumulative weight is &#x60;1&#x60;. */
+- Individual weights are scaled linearly so that the cumulative weight is `1`. */
   spawn_points: SpawnPoint[];
   unit: EntityID;
 }
@@ -12515,7 +12542,7 @@ interface _UnlockRecipeModifier {
   /** Prototype name of the [RecipePrototype](prototype:RecipePrototype) that is unlocked upon researching. */
   recipe: RecipeID;
   type: 'unlock-recipe';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12575,7 +12602,7 @@ interface _Vector3D {
   z: number;
 }
 export interface VectorRotation {
-  /** The size of all &#x60;frames&#x60; must be the same. */
+  /** The size of all `frames` must be the same. */
   frames: Vector[];
   render_layer?: RenderLayer;
 }
@@ -12650,10 +12677,10 @@ export interface WirePosition {
   red?: Vector;
 }
 interface _WorkerRobotBatteryModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'worker-robot-battery';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12666,10 +12693,10 @@ export function isWorkerRobotBatteryModifier(
   return (value as { type: string }).type === 'worker-robot-battery';
 }
 interface _WorkerRobotSpeedModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'worker-robot-speed';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12682,10 +12709,10 @@ export function isWorkerRobotSpeedModifier(
   return (value as { type: string }).type === 'worker-robot-speed';
 }
 interface _WorkerRobotStorageModifier {
-  /** If set to &#x60;false&#x60;, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
+  /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
   type: 'worker-robot-storage';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12706,9 +12733,9 @@ interface _WorkingSound {
   audible_distance_modifier?: number;
   /** Might not work with all entities that use working_sound. */
   deactivate_sound?: Sound;
-  /** Can&#x27;t be used when &#x60;match_progress_to_activity&#x60; is true. */
+  /** Can't be used when `match_progress_to_activity` is true. */
   fade_in_ticks?: number;
-  /** Can&#x27;t be used when &#x60;match_progress_to_activity&#x60; is true. */
+  /** Can't be used when `match_progress_to_activity` is true. */
   fade_out_ticks?: number;
   /** The sound to be played when the entity is idle. Might not work with all entities that use working_sound. */
   idle_sound?: Sound;
@@ -12736,9 +12763,9 @@ export interface WorkingVisualisation {
     | 'tertiary'
     | 'quaternary'
     | 'none';
-  /** Used by [CraftingMachinePrototype](prototype:CraftingMachinePrototype) (&quot;status&quot; only) and [MiningDrillPrototype](prototype:MiningDrillPrototype).
+  /** Used by [CraftingMachinePrototype](prototype:CraftingMachinePrototype) ("status" only) and [MiningDrillPrototype](prototype:MiningDrillPrototype).
 
-For &quot;status&quot; on CraftingMachine, the colors are specified via [CraftingMachinePrototype::status_colors](prototype:CraftingMachinePrototype::status_colors). For &quot;status&quot; on MiningDrill, the colors are specified via [MiningDrillGraphicsSet::status_colors](prototype:MiningDrillGraphicsSet::status_colors). For &quot;resource-color&quot;, the colors are specified via [ResourceEntityPrototype::mining_visualisation_tint](prototype:ResourceEntityPrototype::mining_visualisation_tint). */
+For "status" on CraftingMachine, the colors are specified via [CraftingMachinePrototype::status_colors](prototype:CraftingMachinePrototype::status_colors). For "status" on MiningDrill, the colors are specified via [MiningDrillGraphicsSet::status_colors](prototype:MiningDrillGraphicsSet::status_colors). For "resource-color", the colors are specified via [ResourceEntityPrototype::mining_visualisation_tint](prototype:ResourceEntityPrototype::mining_visualisation_tint). */
   apply_tint?:
     | 'resource-color'
     | 'input-fluid-base-color'
@@ -12749,29 +12776,29 @@ For &quot;status&quot; on CraftingMachine, the colors are specified via [Craftin
   constant_speed?: boolean;
   draw_as_light?: boolean;
   draw_as_sprite?: boolean;
-  /** Only loaded if &#x60;animation&#x60; is not defined. */
+  /** Only loaded if `animation` is not defined. */
   east_animation?: Animation;
   east_position?: Vector;
   effect?: 'flicker' | 'uranium-glow' | 'none';
   fadeout?: boolean;
   light?: LightDefinition;
-  /** Only loaded if &#x60;animation&#x60; is not defined. */
+  /** Only loaded if `animation` is not defined. */
   north_animation?: Animation;
   north_position?: Vector;
   render_layer?: RenderLayer;
-  /** Used to determine render order for sprites with the same &#x60;render_layer&#x60; in the same position. Sprites with a higher &#x60;secondary_draw_order&#x60; are drawn on top. */
+  /** Used to determine render order for sprites with the same `render_layer` in the same position. Sprites with a higher `secondary_draw_order` are drawn on top. */
   secondary_draw_order?: number;
-  /** Only loaded if &#x60;animation&#x60; is not defined. */
+  /** Only loaded if `animation` is not defined. */
   south_animation?: Animation;
   south_position?: Vector;
   synced_fadeout?: boolean;
-  /** Only loaded if &#x60;animation&#x60; is not defined. */
+  /** Only loaded if `animation` is not defined. */
   west_animation?: Animation;
   west_position?: Vector;
 }
 interface _ZoomToWorldBlueprintEnabledModifier {
   type: 'zoom-to-world-blueprint-enabled';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12786,7 +12813,7 @@ export function isZoomToWorldBlueprintEnabledModifier(
 }
 interface _ZoomToWorldDeconstructionPlannerEnabledModifier {
   type: 'zoom-to-world-deconstruction-planner-enabled';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12804,7 +12831,7 @@ export function isZoomToWorldDeconstructionPlannerEnabledModifier(
 }
 interface _ZoomToWorldEnabledModifier {
   type: 'zoom-to-world-enabled';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12818,7 +12845,7 @@ export function isZoomToWorldEnabledModifier(
 }
 interface _ZoomToWorldGhostBuildingEnabledModifier {
   type: 'zoom-to-world-ghost-building-enabled';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12835,7 +12862,7 @@ export function isZoomToWorldGhostBuildingEnabledModifier(
 }
 interface _ZoomToWorldSelectionToolEnabledModifier {
   type: 'zoom-to-world-selection-tool-enabled';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
@@ -12852,7 +12879,7 @@ export function isZoomToWorldSelectionToolEnabledModifier(
 }
 interface _ZoomToWorldUpgradePlannerEnabledModifier {
   type: 'zoom-to-world-upgrade-planner-enabled';
-  /** If &#x60;false&#x60;, do not draw the small &quot;constant&quot; icon over the technology effect icon. */
+  /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 

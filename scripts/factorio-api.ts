@@ -235,7 +235,7 @@ const generate = async function (): Promise<void> {
 
 {{#interfaces}}
 {{#if description}}
-/** {{description}} */
+/** {{{description}}} */
 {{/if}}
 {{#unless props.length}}
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -246,7 +246,7 @@ const generate = async function (): Promise<void> {
   {{/if}}  
   {{#props}}
   {{#if description}}
-  /** {{description}} */
+  /** {{{description}}} */
   {{/if}}
   {{name}}{{#if optional}}?{{/if}}: {{{type}}};
   {{/props}}
