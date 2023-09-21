@@ -9,6 +9,7 @@ import {
   ObjectiveRational,
   PowerUnit,
   Rational,
+  RecipeRational,
   RecipeSettingsRational,
   Step,
   StepDetail,
@@ -64,24 +65,24 @@ export const getObjectiveRationals = createSelector(
   Settings.getAdjustmentData,
   Items.getItemsState,
   (objectives, adj, itemsState) =>
-    objectives.map(
-      (o) =>
-        new ObjectiveRational(
-          o,
-          isRecipeObjective(o)
-            ? RecipeUtility.adjustRecipe(
-                o.targetId,
-                adj.proliferatorSprayId,
-                adj.miningBonus,
-                adj.researchSpeed,
-                adj.netProductionOnly,
-                new RecipeSettingsRational(o),
-                itemsState,
-                adj.data,
-              )
-            : undefined,
-        ),
-    ),
+    objectives.map((o) => {
+      let recipe: RecipeRational | undefined;
+      if (isRecipeObjective(o)) {
+        recipe = RecipeUtility.adjustRecipe(
+          o.targetId,
+          adj.proliferatorSprayId,
+          adj.miningBonus,
+          adj.researchSpeed,
+          adj.netProductionOnly,
+          new RecipeSettingsRational(o),
+          itemsState,
+          adj.data,
+        );
+        recipe.finalize();
+      }
+
+      return new ObjectiveRational(o, recipe);
+    }),
 );
 
 export const getNormalizedObjectives = createSelector(
