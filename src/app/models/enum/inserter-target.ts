@@ -1,10 +1,10 @@
 import { SelectItem } from 'primeng/api';
 
 export enum InserterTarget {
-  Chest,
-  ExpressTransportBelt,
-  FastTransportBelt,
-  TransportBelt,
+  Chest = 0,
+  ExpressTransportBelt = 1,
+  FastTransportBelt = 2,
+  TransportBelt = 3,
 }
 
 export const inserterTargetOptions: SelectItem<InserterTarget>[] = [

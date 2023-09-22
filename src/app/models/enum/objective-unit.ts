@@ -4,10 +4,10 @@ import { DisplayRateInfo } from './display-rate';
 import { Game } from './game';
 
 export enum ObjectiveUnit {
-  Items,
-  Belts,
-  Wagons,
-  Machines,
+  Items = 0,
+  Belts = 1,
+  Wagons = 2,
+  Machines = 3,
 }
 
 export function objectiveUnitOptions(

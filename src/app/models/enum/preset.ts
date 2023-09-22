@@ -3,10 +3,10 @@ import { SelectItem } from 'primeng/api';
 import { Game } from './game';
 
 export enum Preset {
-  Minimum,
-  Modules,
-  Beacon8,
-  Beacon12,
+  Minimum = 0,
+  Modules = 1,
+  Beacon8 = 2,
+  Beacon12 = 3,
 }
 
 export function presetOptions(game: Game): SelectItem<Preset>[] {
