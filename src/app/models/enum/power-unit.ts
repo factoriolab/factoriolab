@@ -1,10 +1,10 @@
 import { SelectItem } from 'primeng/api';
 
 export enum PowerUnit {
-  Auto,
-  kW,
-  MW,
-  GW,
+  Auto = 0,
+  kW = 1,
+  MW = 2,
+  GW = 3,
 }
 
 export const powerUnitOptions: SelectItem<PowerUnit>[] = [
