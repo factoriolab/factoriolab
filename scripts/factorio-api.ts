@@ -260,14 +260,16 @@ export type {{name}} = _{{name}} & Omit<{{extends}}, keyof _{{name}}>;
 export function is{{name}}(value: unknown): value is {{name}} {
   return (value as { type: string }).type === '{{isTypeFunction}}';
 }
+
 {{/if}}
 {{/interfaces}}
 {{#types}}
 
 {{#if description}}
-/** {{description}} */
+/** {{{description}}} */
 {{/if}}
 export type {{name}} = {{{value}}};
+
 {{/types}}`;
 
   const modelsTemplate = handlebars.compile(modelsSource);
