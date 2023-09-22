@@ -520,6 +520,29 @@ describe('SimplexUtility', () => {
       ]);
     });
 
+    it('should avoid floating point errors in surpluses', () => {
+      const solution: any = {
+        surplus: {
+          [ItemId.Coal]: Rational.from([1183000000001, 100000000000]),
+        },
+        unproduceable: {},
+        excluded: {},
+        recipes: { [RecipeId.Coal]: Rational.from(4) },
+      };
+      const state = getState();
+      state.itemValues[ItemId.Coal] = { out: Rational.zero };
+      state.recipes[RecipeId.Coal] = Mocks.Dataset.recipeR[RecipeId.Coal];
+      SimplexUtility.addItemStep(ItemId.Coal, solution, state);
+      expect(state.steps).toEqual([
+        {
+          id: '0',
+          itemId: ItemId.Coal,
+          items: Rational.from([1183, 100]),
+          surplus: Rational.from([1183, 100]),
+        },
+      ]);
+    });
+
     it('should include input values', () => {
       const solution: any = {
         surplus: {},
