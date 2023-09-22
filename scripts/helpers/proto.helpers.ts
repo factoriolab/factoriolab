@@ -43,36 +43,29 @@ export function getMachineDisallowedEffects(
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto)
-  ) {
+  )
     return undefined;
-  }
 
   return getDisallowedEffects(proto.allowed_effects);
 }
 
 export function getMachineDrain(proto: D.MachineProto): number | undefined {
-  if (M.isOffshorePumpPrototype(proto)) {
+  if (
+    M.isOffshorePumpPrototype(proto) ||
+    proto.energy_source.type !== 'electric'
+  )
     return undefined;
-  }
 
-  if (proto.energy_source.type === 'electric') {
-    if (proto.energy_source.drain != null) {
-      return getPowerInKw(proto.energy_source.drain);
-    } else {
-      if (
-        M.isAssemblingMachinePrototype(proto) ||
-        M.isRocketSiloPrototype(proto) ||
-        M.isFurnacePrototype(proto)
-      ) {
-        const usage = getMachineUsage(proto);
-        if (usage != null) {
-          const idle = M.isRocketSiloPrototype(proto)
-            ? getPowerInKw(proto.idle_energy_usage) ?? 0
-            : 0;
-          return usage / 30 + idle;
-        }
-      }
-    }
+  if (proto.energy_source.drain != null)
+    return getPowerInKw(proto.energy_source.drain);
+
+  if (
+    M.isAssemblingMachinePrototype(proto) ||
+    M.isRocketSiloPrototype(proto) ||
+    M.isFurnacePrototype(proto)
+  ) {
+    const usage = getMachineUsage(proto);
+    if (usage != null) return usage / 30;
   }
 
   return undefined;
@@ -83,17 +76,14 @@ export function getMachineModules(proto: D.MachineProto): number | undefined {
     M.isBoilerPrototype(proto) ||
     M.isOffshorePumpPrototype(proto) ||
     M.isReactorPrototype(proto)
-  ) {
+  )
     return undefined;
-  }
 
   return proto.module_specification?.module_slots;
 }
 
 export function getMachinePollution(proto: D.MachineProto): number | undefined {
-  if (M.isOffshorePumpPrototype(proto)) {
-    return undefined;
-  }
+  if (M.isOffshorePumpPrototype(proto)) return undefined;
 
   return proto.energy_source.emissions_per_minute;
 }
@@ -145,9 +135,7 @@ export function getMachineSilo(
 }
 
 export function getMachineSpeed(proto: D.MachineProto): number {
-  if (M.isReactorPrototype(proto)) {
-    return 1;
-  }
+  if (M.isReactorPrototype(proto)) return 1;
 
   let speed: number;
   if (M.isBoilerPrototype(proto)) {
@@ -166,9 +154,7 @@ export function getMachineSpeed(proto: D.MachineProto): number {
 }
 
 export function getMachineType(proto: D.MachineProto): EnergyType | undefined {
-  if (M.isOffshorePumpPrototype(proto)) {
-    return undefined;
-  }
+  if (M.isOffshorePumpPrototype(proto)) return undefined;
 
   switch (proto.energy_source.type) {
     case 'burner':
