@@ -1,10 +1,10 @@
 import { SelectItem } from 'primeng/api';
 
 export enum ObjectiveType {
-  Output,
-  Input,
-  Maximize,
-  Limit,
+  Output = 0,
+  Input = 1,
+  Maximize = 2,
+  Limit = 3,
 }
 
 export const objectiveTypeOptions: SelectItem<ObjectiveType>[] = [

@@ -1576,7 +1576,7 @@ export class RouterService {
           hash.modules,
         ),
         this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
-        this.zipDiffNumber(state.maximizeType, init.maximizeType),
+        this.zipDiffNNumber(state.maximizeType, init.maximizeType),
         this.zipDiffString(state.costs.factor, init.costs.factor),
         this.zipDiffString(state.costs.machine, init.costs.machine),
         this.zipDiffString(state.costs.unproduceable, init.costs.unproduceable),
@@ -1670,9 +1670,8 @@ export class RouterService {
     }
 
     this.deleteEmptyKeys(obj);
-    if (obj.costs) {
-      this.deleteEmptyKeys(obj.costs);
-    }
+    if (obj.costs) this.deleteEmptyKeys(obj.costs);
+
     return obj;
   }
 
@@ -1730,9 +1729,8 @@ export class RouterService {
     value: DisplayRate | undefined,
     init: DisplayRate | undefined,
   ): string {
-    if (value === init) {
-      return '';
-    }
+    if (value === init) return '';
+
     switch (value) {
       case DisplayRate.PerSecond:
         return '0';
@@ -1835,33 +1833,22 @@ export class RouterService {
   }
 
   parseString(value: string | undefined): string | undefined {
-    if (!value?.length || value === NULL) {
-      return undefined;
-    }
-
+    if (!value?.length || value === NULL) return undefined;
     return value;
   }
 
   parseBool(value: string | undefined): boolean | undefined {
-    if (!value?.length || value === NULL) {
-      return undefined;
-    }
-
+    if (!value?.length || value === NULL) return undefined;
     return value === TRUE;
   }
 
   parseNumber(value: string | undefined): number | undefined {
-    if (!value?.length || value === NULL) {
-      return undefined;
-    }
-
+    if (!value?.length || value === NULL) return undefined;
     return Number(value);
   }
 
   parseDisplayRate(value: string | undefined): DisplayRate | undefined {
-    if (!value?.length || value === NULL) {
-      return undefined;
-    }
+    if (!value?.length || value === NULL) return undefined;
 
     switch (value) {
       case '0':
@@ -1876,44 +1863,30 @@ export class RouterService {
   }
 
   parseArray(value: string | undefined): string[] | undefined {
-    if (!value?.length || value === NULL) {
-      return undefined;
-    }
-
+    if (!value?.length || value === NULL) return undefined;
     return value === EMPTY ? [] : value.split(ARRAYSEP);
   }
 
   parseNullableArray(value: string | undefined): string[] | null | undefined {
     if (!value?.length) return undefined;
-
     if (value === NULL) return null;
-
     return value === EMPTY ? [] : value.split(ARRAYSEP);
   }
 
   parseNString(value: string | undefined, hash: string[]): string | undefined {
     const v = this.parseString(value);
-    if (v == null) {
-      return v;
-    }
-
+    if (v == null) return v;
     return hash[this.getN(v)];
   }
 
   parseNNumber(value: string | undefined): number | undefined {
-    if (!value?.length || value === NULL) {
-      return undefined;
-    }
-
+    if (!value?.length || value === NULL) return undefined;
     return this.getN(value);
   }
 
   parseNArray(value: string | undefined, hash: string[]): string[] | undefined {
     const v = this.parseArray(value);
-    if (v == null) {
-      return v;
-    }
-
+    if (v == null) return v;
     return v.map((a) => hash[this.getN(a)]);
   }
 
@@ -1922,19 +1895,15 @@ export class RouterService {
     hash: string[],
   ): string[] | null | undefined {
     const v = this.parseNullableArray(value);
-    if (v == null) {
-      return v;
-    }
-
+    if (v == null) return v;
     return v.map((a) => hash[this.getN(a)]);
   }
 
   getId(n: number): string {
-    if (n / MAX >= 1) {
+    if (n / MAX >= 1)
       return this.getId(Math.floor(n / MAX)) + this.getId(n % MAX);
-    } else {
-      return BASE64ABC[n];
-    }
+
+    return BASE64ABC[n];
   }
 
   getN(id: string): number {
@@ -1942,9 +1911,9 @@ export class RouterService {
     if (id.length > 1) {
       id = id.substring(1);
       return n * Math.pow(MAX, id.length) + this.getN(id);
-    } else {
-      return n;
     }
+
+    return n;
   }
 
   getBase64Code(charCode: number): number {

@@ -35,6 +35,7 @@
           { "argsIgnorePattern": "^_", "destructuredArrayIgnorePattern": "^_" }
         ],
         "@typescript-eslint/explicit-function-return-type": ["error"],
+        "@typescript-eslint/prefer-enum-initializers": "error",
         "eqeqeq": ["error", "smart"],
         "no-var": "error",
         "prefer-const": "error",
