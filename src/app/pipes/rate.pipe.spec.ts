@@ -39,5 +39,9 @@ describe('RatePipe', () => {
     it('should round to 0 digits', () => {
       expect(pipe.transform(Rational.from([1, 2]), 0)).toEqual('1');
     });
+
+    it('should prepend < to values below minimum rounded-up value', () => {
+      expect(pipe.transform(Rational.from([1, 1000]), 1)).toEqual('<0.1');
+    });
   });
 });
