@@ -875,7 +875,15 @@ export class SimplexUtility {
       steps.push(step);
 
       if (solution.surplus[itemId]?.nonzero()) {
-        step.surplus = solution.surplus[itemId];
+        /**
+         * Check for floating point errors in surplus amount. If surplus only
+         * differs from output by a rounding error, set surplus to the output
+         * amount, since that is the more reliable value.
+         */
+        const diff = Rational.fromNumber(
+          output.sub(solution.surplus[itemId]).toNumber(),
+        );
+        step.surplus = diff.isZero() ? step.items : solution.surplus[itemId];
       }
     }
   }
