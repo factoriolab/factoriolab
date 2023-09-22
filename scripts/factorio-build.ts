@@ -1457,7 +1457,6 @@ async function processMod(): Promise<void> {
             in: {},
             out: { [proto.name]: out },
             producers: [pumpName],
-            cost: 1,
           };
           modData.recipes.push(recipe);
         }
