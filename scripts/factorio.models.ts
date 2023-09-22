@@ -42,6 +42,7 @@ export function isAccumulatorPrototype(
 ): value is AccumulatorPrototype {
   return (value as { type: string }).type === 'accumulator';
 }
+
 /** This prototype definition is used for the in-game achievements. */
 interface _AchievementPrototype {
   type: 'achievement';
@@ -72,6 +73,7 @@ export function isAchievementPrototype(
 ): value is AchievementPrototype {
   return (value as { type: string }).type === 'achievement';
 }
+
 /** Used by [discharge defense](https://wiki.factorio.com/Discharge_defense) and [personal laser defense](https://wiki.factorio.com/Personal_laser_defense). */
 interface _ActiveDefenseEquipmentPrototype {
   type: 'active-defense-equipment';
@@ -87,6 +89,7 @@ export function isActiveDefenseEquipmentPrototype(
 ): value is ActiveDefenseEquipmentPrototype {
   return (value as { type: string }).type === 'active-defense-equipment';
 }
+
 /** This prototype is used to make sound while playing the game. This includes the game's [music](https://store.steampowered.com/app/436090/Factorio__Soundtrack/), composed by Daniel James Taylor. */
 export interface AmbientSound {
   /** Unique textual identification of the prototype. */
@@ -108,6 +111,7 @@ export interface AmbientSound {
 export function isAmbientSound(value: unknown): value is AmbientSound {
   return (value as { type: string }).type === 'ambient-sound';
 }
+
 /** An ammo category. Each weapon has an ammo category, and can use any ammo with the same ammo category. Ammo categories can also be upgraded by technologies. */
 interface _AmmoCategory {
   type: 'ammo-category';
@@ -120,6 +124,7 @@ export type AmmoCategory = _AmmoCategory &
 export function isAmmoCategory(value: unknown): value is AmmoCategory {
   return (value as { type: string }).type === 'ammo-category';
 }
+
 /** Ammo used for a gun. */
 interface _AmmoItemPrototype {
   type: 'ammo';
@@ -141,6 +146,7 @@ export function isAmmoItemPrototype(
 ): value is AmmoItemPrototype {
   return (value as { type: string }).type === 'ammo';
 }
+
 /** A turret that consumes ammo items. */
 interface _AmmoTurretPrototype {
   type: 'ammo-turret';
@@ -158,6 +164,7 @@ export function isAmmoTurretPrototype(
 ): value is AmmoTurretPrototype {
   return (value as { type: string }).type === 'ammo-turret';
 }
+
 /** Specifies an animation that can be used with [LuaRendering::draw_animation](runtime:LuaRendering::draw_animation) at runtime. */
 export interface AnimationPrototype {
   /** Only loaded if `layers` is not defined.
@@ -292,6 +299,7 @@ export function isAnimationPrototype(
 ): value is AnimationPrototype {
   return (value as { type: string }).type === 'animation';
 }
+
 /** An [arithmetic combinator](https://wiki.factorio.com/Arithmetic_combinator). */
 interface _ArithmeticCombinatorPrototype {
   type: 'arithmetic-combinator';
@@ -316,6 +324,7 @@ export function isArithmeticCombinatorPrototype(
 ): value is ArithmeticCombinatorPrototype {
   return (value as { type: string }).type === 'arithmetic-combinator';
 }
+
 /** Armor to wear on your in-game [character](prototype:CharacterPrototype) for defense and buffs. */
 interface _ArmorPrototype {
   type: 'armor';
@@ -333,6 +342,7 @@ export type ArmorPrototype = _ArmorPrototype &
 export function isArmorPrototype(value: unknown): value is ArmorPrototype {
   return (value as { type: string }).type === 'armor';
 }
+
 /** The arrows used for example in the campaign, they are literally just arrows. */
 interface _ArrowPrototype {
   type: 'arrow';
@@ -349,6 +359,7 @@ export type ArrowPrototype = _ArrowPrototype &
 export function isArrowPrototype(value: unknown): value is ArrowPrototype {
   return (value as { type: string }).type === 'arrow';
 }
+
 /** The entity spawned by the [artillery targeting remote](https://wiki.factorio.com/Artillery_targeting_remote). */
 interface _ArtilleryFlarePrototype {
   type: 'artillery-flare';
@@ -389,6 +400,7 @@ export function isArtilleryFlarePrototype(
 ): value is ArtilleryFlarePrototype {
   return (value as { type: string }).type === 'artillery-flare';
 }
+
 /** The projectile shot by [artillery](https://wiki.factorio.com/Artillery). */
 interface _ArtilleryProjectilePrototype {
   type: 'artillery-projectile';
@@ -416,6 +428,7 @@ export function isArtilleryProjectilePrototype(
 ): value is ArtilleryProjectilePrototype {
   return (value as { type: string }).type === 'artillery-projectile';
 }
+
 /** An [artillery turret](https://wiki.factorio.com/Artillery_turret). */
 interface _ArtilleryTurretPrototype {
   type: 'artillery-turret';
@@ -459,6 +472,7 @@ export function isArtilleryTurretPrototype(
 ): value is ArtilleryTurretPrototype {
   return (value as { type: string }).type === 'artillery-turret';
 }
+
 /** An [artillery wagon](https://wiki.factorio.com/Artillery_wagon). */
 interface _ArtilleryWagonPrototype {
   type: 'artillery-wagon';
@@ -496,6 +510,7 @@ export function isArtilleryWagonPrototype(
 ): value is ArtilleryWagonPrototype {
   return (value as { type: string }).type === 'artillery-wagon';
 }
+
 /** An assembling machine - like the assembling machines 1/2/3 in the game, but you can use your own recipe categories. */
 interface _AssemblingMachinePrototype {
   type: 'assembling-machine';
@@ -519,6 +534,7 @@ export function isAssemblingMachinePrototype(
 ): value is AssemblingMachinePrototype {
   return (value as { type: string }).type === 'assembling-machine';
 }
+
 /** A setting in the map creation GUI. Used by the [autoplace system](prototype:AutoplaceSpecification::control). */
 interface _AutoplaceControl {
   type: 'autoplace-control';
@@ -538,6 +554,7 @@ export type AutoplaceControl = _AutoplaceControl &
 export function isAutoplaceControl(value: unknown): value is AutoplaceControl {
   return (value as { type: string }).type === 'autoplace-control';
 }
+
 /** Used by [personal battery](https://wiki.factorio.com/Personal_battery). */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _BatteryEquipmentPrototype {
@@ -552,6 +569,7 @@ export function isBatteryEquipmentPrototype(
 ): value is BatteryEquipmentPrototype {
   return (value as { type: string }).type === 'battery-equipment';
 }
+
 /** Entity with the ability to transfer module's effects to its neighboring entities. */
 interface _BeaconPrototype {
   type: 'beacon';
@@ -584,6 +602,7 @@ export type BeaconPrototype = _BeaconPrototype &
 export function isBeaconPrototype(value: unknown): value is BeaconPrototype {
   return (value as { type: string }).type === 'beacon';
 }
+
 /** Used as a laser beam. */
 interface _BeamPrototype {
   type: 'beam';
@@ -630,6 +649,7 @@ export type BeamPrototype = _BeamPrototype &
 export function isBeamPrototype(value: unknown): value is BeamPrototype {
   return (value as { type: string }).type === 'beam';
 }
+
 /** Used by [belt immunity equipment](https://wiki.factorio.com/Belt_immunity_equipment). */
 interface _BeltImmunityEquipmentPrototype {
   type: 'belt-immunity-equipment';
@@ -645,6 +665,7 @@ export function isBeltImmunityEquipmentPrototype(
 ): value is BeltImmunityEquipmentPrototype {
   return (value as { type: string }).type === 'belt-immunity-equipment';
 }
+
 /** A [blueprint book](https://wiki.factorio.com/Blueprint_book). */
 interface _BlueprintBookPrototype {
   type: 'blueprint-book';
@@ -664,6 +685,7 @@ export function isBlueprintBookPrototype(
 ): value is BlueprintBookPrototype {
   return (value as { type: string }).type === 'blueprint-book';
 }
+
 /** A [blueprint](https://wiki.factorio.com/Blueprint). */
 interface _BlueprintItemPrototype {
   type: 'blueprint';
@@ -707,6 +729,7 @@ export function isBlueprintItemPrototype(
 ): value is BlueprintItemPrototype {
   return (value as { type: string }).type === 'blueprint';
 }
+
 /** A [boiler](https://wiki.factorio.com/Boiler). It heats fluid and optionally outputs it as a different fluid. */
 interface _BoilerPrototype {
   type: 'boiler';
@@ -757,6 +780,7 @@ export type BoilerPrototype = _BoilerPrototype &
 export function isBoilerPrototype(value: unknown): value is BoilerPrototype {
   return (value as { type: string }).type === 'boiler';
 }
+
 /** This prototype is used for receiving an achievement when the player builds an entity. */
 interface _BuildEntityAchievementPrototype {
   type: 'build-entity-achievement';
@@ -778,6 +802,7 @@ export function isBuildEntityAchievementPrototype(
 ): value is BuildEntityAchievementPrototype {
   return (value as { type: string }).type === 'build-entity-achievement';
 }
+
 /** An entity that produces power from a burner energy source. */
 interface _BurnerGeneratorPrototype {
   type: 'burner-generator';
@@ -806,6 +831,7 @@ export function isBurnerGeneratorPrototype(
 ): value is BurnerGeneratorPrototype {
   return (value as { type: string }).type === 'burner-generator';
 }
+
 /** A capsule, for example a [combat robot capsule](https://wiki.factorio.com/Combat_robot_capsules) or the [raw fish](https://wiki.factorio.com/Raw_fish). */
 interface _CapsulePrototype {
   type: 'capsule';
@@ -820,6 +846,7 @@ export type CapsulePrototype = _CapsulePrototype &
 export function isCapsulePrototype(value: unknown): value is CapsulePrototype {
   return (value as { type: string }).type === 'capsule';
 }
+
 /** Entity with specialized properties for acceleration, braking, and turning. */
 interface _CarPrototype {
   type: 'car';
@@ -867,6 +894,7 @@ export type CarPrototype = _CarPrototype &
 export function isCarPrototype(value: unknown): value is CarPrototype {
   return (value as { type: string }).type === 'car';
 }
+
 /** A [cargo wagon](https://wiki.factorio.com/Cargo_wagon). */
 interface _CargoWagonPrototype {
   type: 'cargo-wagon';
@@ -882,6 +910,7 @@ export function isCargoWagonPrototype(
 ): value is CargoWagonPrototype {
   return (value as { type: string }).type === 'cargo-wagon';
 }
+
 /** The corpse of a [CharacterPrototype](prototype:CharacterPrototype). */
 interface _CharacterCorpsePrototype {
   type: 'character-corpse';
@@ -905,6 +934,7 @@ export function isCharacterCorpsePrototype(
 ): value is CharacterCorpsePrototype {
   return (value as { type: string }).type === 'character-corpse';
 }
+
 /** Entity that you move around on the screen during the campaign and freeplay. */
 interface _CharacterPrototype {
   type: 'character';
@@ -976,6 +1006,7 @@ export function isCharacterPrototype(
 ): value is CharacterPrototype {
   return (value as { type: string }).type === 'character';
 }
+
 /** A [cliff](https://wiki.factorio.com/Cliff). */
 interface _CliffPrototype {
   type: 'cliff';
@@ -995,6 +1026,7 @@ export type CliffPrototype = _CliffPrototype &
 export function isCliffPrototype(value: unknown): value is CliffPrototype {
   return (value as { type: string }).type === 'cliff';
 }
+
 /** This prototype is used for receiving an achievement when the player has a certain robot follower count. */
 interface _CombatRobotCountAchievementPrototype {
   type: 'combat-robot-count';
@@ -1011,6 +1043,7 @@ export function isCombatRobotCountAchievementPrototype(
 ): value is CombatRobotCountAchievementPrototype {
   return (value as { type: string }).type === 'combat-robot-count';
 }
+
 /** A combat robot. Can attack enemies. */
 interface _CombatRobotPrototype {
   type: 'combat-robot';
@@ -1036,6 +1069,7 @@ export function isCombatRobotPrototype(
 ): value is CombatRobotPrototype {
   return (value as { type: string }).type === 'combat-robot';
 }
+
 /** Abstract base type for decider and arithmetic combinators. */
 interface _CombinatorPrototype {
   active_energy_usage: Energy;
@@ -1097,6 +1131,7 @@ export function isConstantCombinatorPrototype(
 ): value is ConstantCombinatorPrototype {
   return (value as { type: string }).type === 'constant-combinator';
 }
+
 /** This prototype is used for receiving an achievement when the player constructs enough entities with construction robots. */
 interface _ConstructWithRobotsAchievementPrototype {
   type: 'construct-with-robots-achievement';
@@ -1118,6 +1153,7 @@ export function isConstructWithRobotsAchievementPrototype(
     (value as { type: string }).type === 'construct-with-robots-achievement'
   );
 }
+
 /** A [construction robot](https://wiki.factorio.com/Construction_robot). */
 interface _ConstructionRobotPrototype {
   type: 'construction-robot';
@@ -1140,6 +1176,7 @@ export function isConstructionRobotPrototype(
 ): value is ConstructionRobotPrototype {
   return (value as { type: string }).type === 'construction-robot';
 }
+
 /** A generic container, such as a chest. Can not be rotated. */
 interface _ContainerPrototype {
   type: 'container';
@@ -1171,6 +1208,7 @@ export function isContainerPrototype(
 ): value is ContainerPrototype {
   return (value as { type: string }).type === 'container';
 }
+
 /** A copy-paste or cut-paste tool. */
 interface _CopyPasteToolPrototype {
   type: 'copy-paste-tool';
@@ -1209,6 +1247,7 @@ export function isCopyPasteToolPrototype(
 ): value is CopyPasteToolPrototype {
   return (value as { type: string }).type === 'copy-paste-tool';
 }
+
 /** Used for corpses, for example the remnants when destroying buildings. */
 interface _CorpsePrototype {
   type: 'corpse';
@@ -1255,6 +1294,7 @@ export type CorpsePrototype = _CorpsePrototype &
 export function isCorpsePrototype(value: unknown): value is CorpsePrototype {
   return (value as { type: string }).type === 'corpse';
 }
+
 /** The abstract basis of the assembling machines and furnaces. Contains the properties that both of them have.
 
 Note that a crafting machine cannot be rotated unless it has at least one of the following: a fluid box, a heat energy source, a fluid energy source, or a non-square collision box. Crafting machines with non-square collision boxes can only be rotated before placement, not after. */
@@ -1344,6 +1384,7 @@ export function isCurvedRailPrototype(
 ): value is CurvedRailPrototype {
   return (value as { type: string }).type === 'curved-rail';
 }
+
 /** Used for custom keyboard shortcuts/key bindings in mods. The key associated with the custom input can be changed in the options. This means that `key_sequence` is simply the default key binding. */
 interface _CustomInputPrototype {
   type: 'custom-input';
@@ -1400,6 +1441,7 @@ export function isCustomInputPrototype(
 ): value is CustomInputPrototype {
   return (value as { type: string }).type === 'custom-input';
 }
+
 /** A damage type. This is used in the [damage system](https://wiki.factorio.com/Damage). [A list of built-in damage types can be found here](https://wiki.factorio.com/Damage#Damage_types). */
 interface _DamageType {
   type: 'damage-type';
@@ -1411,6 +1453,7 @@ export type DamageType = _DamageType & Omit<PrototypeBase, keyof _DamageType>;
 export function isDamageType(value: unknown): value is DamageType {
   return (value as { type: string }).type === 'damage-type';
 }
+
 /** A [decider combinator](https://wiki.factorio.com/Decider_combinator). */
 interface _DeciderCombinatorPrototype {
   type: 'decider-combinator';
@@ -1430,6 +1473,7 @@ export function isDeciderCombinatorPrototype(
 ): value is DeciderCombinatorPrototype {
   return (value as { type: string }).type === 'decider-combinator';
 }
+
 /** This prototype is used for receiving an achievement when the player deconstructs enough entities with construction robots. */
 interface _DeconstructWithRobotsAchievementPrototype {
   type: 'deconstruct-with-robots-achievement';
@@ -1451,6 +1495,7 @@ export function isDeconstructWithRobotsAchievementPrototype(
     (value as { type: string }).type === 'deconstruct-with-robots-achievement'
   );
 }
+
 /** Entity used to signify that the tile below it should be deconstructed. */
 interface _DeconstructibleTileProxyPrototype {
   type: 'deconstructible-tile-proxy';
@@ -1467,6 +1512,7 @@ export function isDeconstructibleTileProxyPrototype(
 ): value is DeconstructibleTileProxyPrototype {
   return (value as { type: string }).type === 'deconstructible-tile-proxy';
 }
+
 /** A [deconstruction planner](https://wiki.factorio.com/Deconstruction_planner). */
 interface _DeconstructionItemPrototype {
   type: 'deconstruction-item';
@@ -1512,6 +1558,7 @@ export function isDeconstructionItemPrototype(
 ): value is DeconstructionItemPrototype {
   return (value as { type: string }).type === 'deconstruction-item';
 }
+
 /** Simple decorative purpose objects on the map, they have no health and some of them are removed when the player builds over. Usually used for grass patches, roots, small plants etc. */
 interface _DecorativePrototype {
   type: 'optimized-decorative';
@@ -1540,6 +1587,7 @@ export function isDecorativePrototype(
 ): value is DecorativePrototype {
   return (value as { type: string }).type === 'optimized-decorative';
 }
+
 /** This prototype is used for receiving an achievement, when the player requests and receives enough items using logistic robots. */
 interface _DeliverByRobotsAchievementPrototype {
   type: 'deliver-by-robots-achievement';
@@ -1556,6 +1604,7 @@ export function isDeliverByRobotsAchievementPrototype(
 ): value is DeliverByRobotsAchievementPrototype {
   return (value as { type: string }).type === 'deliver-by-robots-achievement';
 }
+
 /** This prototype is used for receiving an achievement when the player finishes the game without building a specific entity. */
 interface _DontBuildEntityAchievementPrototype {
   type: 'dont-build-entity-achievement';
@@ -1573,6 +1622,7 @@ export function isDontBuildEntityAchievementPrototype(
 ): value is DontBuildEntityAchievementPrototype {
   return (value as { type: string }).type === 'dont-build-entity-achievement';
 }
+
 /** This prototype is used for receiving an achievement when the player finishes the game without crafting more than a set amount. */
 interface _DontCraftManuallyAchievementPrototype {
   type: 'dont-craft-manually-achievement';
@@ -1589,6 +1639,7 @@ export function isDontCraftManuallyAchievementPrototype(
 ): value is DontCraftManuallyAchievementPrototype {
   return (value as { type: string }).type === 'dont-craft-manually-achievement';
 }
+
 /** This prototype is used for receiving an achievement when the player finishes the game without receiving energy from a specific energy source. */
 interface _DontUseEntityInEnergyProductionAchievementPrototype {
   type: 'dont-use-entity-in-energy-production-achievement';
@@ -1615,6 +1666,7 @@ export function isDontUseEntityInEnergyProductionAchievementPrototype(
     'dont-use-entity-in-energy-production-achievement'
   );
 }
+
 /** Properties of the editor controller. */
 export interface EditorControllerPrototype {
   adjust_speed_based_off_zoom: boolean;
@@ -1651,6 +1703,7 @@ export function isEditorControllerPrototype(
 ): value is EditorControllerPrototype {
   return (value as { type: string }).type === 'editor-controller';
 }
+
 /** Entity with electric energy source with that can have some of its values changed runtime. Useful for modding in energy consumers/producers. */
 interface _ElectricEnergyInterfacePrototype {
   type: 'electric-energy-interface';
@@ -1682,6 +1735,7 @@ export function isElectricEnergyInterfacePrototype(
 ): value is ElectricEnergyInterfacePrototype {
   return (value as { type: string }).type === 'electric-energy-interface';
 }
+
 /** An electric pole - part of the [electric system](https://wiki.factorio.com/Electric_system). */
 interface _ElectricPolePrototype {
   type: 'electric-pole';
@@ -1713,6 +1767,7 @@ export function isElectricPolePrototype(
 ): value is ElectricPolePrototype {
   return (value as { type: string }).type === 'electric-pole';
 }
+
 /** A turret that consumes electricity as ammo. */
 interface _ElectricTurretPrototype {
   type: 'electric-turret';
@@ -1727,6 +1782,7 @@ export function isElectricTurretPrototype(
 ): value is ElectricTurretPrototype {
   return (value as { type: string }).type === 'electric-turret';
 }
+
 /** Can spawn entities. Used for biter/spitter nests. */
 interface _EnemySpawnerPrototype {
   type: 'unit-spawner';
@@ -1775,6 +1831,7 @@ export function isEnemySpawnerPrototype(
 ): value is EnemySpawnerPrototype {
   return (value as { type: string }).type === 'unit-spawner';
 }
+
 /** Used by [energy shield](https://wiki.factorio.com/Energy_shield). */
 interface _EnergyShieldEquipmentPrototype {
   type: 'energy-shield-equipment';
@@ -1790,6 +1847,7 @@ export function isEnergyShieldEquipmentPrototype(
 ): value is EnergyShieldEquipmentPrototype {
   return (value as { type: string }).type === 'energy-shield-equipment';
 }
+
 /** The entity used for ghosts of entities. In-game, the inner entity (the entity this is a ghost of) is rendered with a [UtilityConstants::ghost_tint](prototype:UtilityConstants::ghost_tint). */
 interface _EntityGhostPrototype {
   type: 'entity-ghost';
@@ -1807,6 +1865,7 @@ export function isEntityGhostPrototype(
 ): value is EntityGhostPrototype {
   return (value as { type: string }).type === 'entity-ghost';
 }
+
 /** Deprecated in 0.18. The type "particle" has been obsoleted and cannot be created. See [ParticlePrototype](prototype:ParticlePrototype) for particles. */
 interface _EntityParticlePrototype {
   type: 'particle';
@@ -1822,6 +1881,7 @@ export function isEntityParticlePrototype(
 ): value is EntityParticlePrototype {
   return (value as { type: string }).type === 'particle';
 }
+
 /** Abstract base of all entities in the game. Entity is nearly everything that can be on the map(except tiles).
 
 For in game script access to entity, take a look at [LuaEntity](runtime:LuaEntity). */
@@ -1999,6 +2059,7 @@ export function isEquipmentCategory(
 ): value is EquipmentCategory {
   return (value as { type: string }).type === 'equipment-category';
 }
+
 /** The prototype of an equipment grid, for example the one used in a [power armor](https://wiki.factorio.com/Power_armor). */
 interface _EquipmentGridPrototype {
   type: 'equipment-grid';
@@ -2018,6 +2079,7 @@ export function isEquipmentGridPrototype(
 ): value is EquipmentGridPrototype {
   return (value as { type: string }).type === 'equipment-grid';
 }
+
 /** Abstract base of all equipment modules. Equipment modules can be inserted into [equipment grids](prototype:EquipmentGridPrototype). */
 interface _EquipmentPrototype {
   /** The color that the border of the background of this equipment should have when shown inside an equipment grid. */
@@ -2089,6 +2151,7 @@ export function isExplosionPrototype(
 ): value is ExplosionPrototype {
   return (value as { type: string }).type === 'explosion';
 }
+
 /** This prototype is used for receiving an achievement when the player finishes the game. */
 interface _FinishTheGameAchievementPrototype {
   type: 'finish-the-game-achievement';
@@ -2105,6 +2168,7 @@ export function isFinishTheGameAchievementPrototype(
 ): value is FinishTheGameAchievementPrototype {
   return (value as { type: string }).type === 'finish-the-game-achievement';
 }
+
 /** A fire. */
 interface _FireFlamePrototype {
   type: 'fire';
@@ -2174,6 +2238,7 @@ export function isFireFlamePrototype(
 ): value is FireFlamePrototype {
   return (value as { type: string }).type === 'fire';
 }
+
 /** Entity that spawns in water tiles, which can be mined. Moves around unless deactivated with [LuaEntity::active](runtime:LuaEntity::active) = false. */
 interface _FishPrototype {
   type: 'fish';
@@ -2188,6 +2253,7 @@ export type FishPrototype = _FishPrototype &
 export function isFishPrototype(value: unknown): value is FishPrototype {
   return (value as { type: string }).type === 'fish';
 }
+
 /** Explosion that can deal damage. */
 interface _FlameThrowerExplosionPrototype {
   type: 'flame-thrower-explosion';
@@ -2204,6 +2270,7 @@ export function isFlameThrowerExplosionPrototype(
 ): value is FlameThrowerExplosionPrototype {
   return (value as { type: string }).type === 'flame-thrower-explosion';
 }
+
 /** A fluid. */
 interface _FluidPrototype {
   type: 'fluid';
@@ -2249,6 +2316,7 @@ export type FluidPrototype = _FluidPrototype &
 export function isFluidPrototype(value: unknown): value is FluidPrototype {
   return (value as { type: string }).type === 'fluid';
 }
+
 /** Used for example for the handheld flamethrower. */
 interface _FluidStreamPrototype {
   type: 'stream';
@@ -2304,6 +2372,7 @@ export function isFluidStreamPrototype(
 ): value is FluidStreamPrototype {
   return (value as { type: string }).type === 'stream';
 }
+
 /** A turret that consumes fluid as ammo. */
 interface _FluidTurretPrototype {
   type: 'fluid-turret';
@@ -2339,6 +2408,7 @@ export function isFluidTurretPrototype(
 ): value is FluidTurretPrototype {
   return (value as { type: string }).type === 'fluid-turret';
 }
+
 /** A [fluid wagon](https://wiki.factorio.com/Fluid_wagon). */
 interface _FluidWagonPrototype {
   type: 'fluid-wagon';
@@ -2355,6 +2425,7 @@ export function isFluidWagonPrototype(
 ): value is FluidWagonPrototype {
   return (value as { type: string }).type === 'fluid-wagon';
 }
+
 /** Abstract base for construction/logistics and combat robots. */
 interface _FlyingRobotPrototype {
   /** Two entities can collide only if they share a layer from the collision mask. */
@@ -2399,6 +2470,7 @@ export function isFlyingTextPrototype(
 ): value is FlyingTextPrototype {
   return (value as { type: string }).type === 'flying-text';
 }
+
 /** Fonts are used in all GUIs in the game. */
 export interface FontPrototype {
   /** Whether the font has a border. */
@@ -2419,6 +2491,7 @@ export interface FontPrototype {
 export function isFontPrototype(value: unknown): value is FontPrototype {
   return (value as { type: string }).type === 'font';
 }
+
 /** Each item which has a fuel_value must have a fuel category. The fuel categories are used to allow only certain fuels to be used in [EnergySource](prototype:EnergySource). */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _FuelCategory {
@@ -2431,6 +2504,7 @@ export type FuelCategory = _FuelCategory &
 export function isFuelCategory(value: unknown): value is FuelCategory {
   return (value as { type: string }).type === 'fuel-category';
 }
+
 /** A furnace. Normal furnaces only process "smelting" category recipes, but you can make furnaces that process other [recipe categories](prototype:RecipeCategory). The difference to assembling machines is that furnaces automatically choose their recipe based on input. */
 interface _FurnacePrototype {
   type: 'furnace';
@@ -2450,6 +2524,7 @@ export type FurnacePrototype = _FurnacePrototype &
 export function isFurnacePrototype(value: unknown): value is FurnacePrototype {
   return (value as { type: string }).type === 'furnace';
 }
+
 /** A [gate](https://wiki.factorio.com/Gate). */
 interface _GatePrototype {
   type: 'gate';
@@ -2478,6 +2553,7 @@ export type GatePrototype = _GatePrototype &
 export function isGatePrototype(value: unknown): value is GatePrototype {
   return (value as { type: string }).type === 'gate';
 }
+
 /** Used by [portable fusion reactor](https://wiki.factorio.com/Portable_fusion_reactor). Provides power in equipment grids. Can produce power for free or use a burner energy source. */
 interface _GeneratorEquipmentPrototype {
   type: 'generator-equipment';
@@ -2495,6 +2571,7 @@ export function isGeneratorEquipmentPrototype(
 ): value is GeneratorEquipmentPrototype {
   return (value as { type: string }).type === 'generator-equipment';
 }
+
 /** An entity that produces power from fluids, for example a [steam engine](https://wiki.factorio.com/Steam_engine). */
 interface _GeneratorPrototype {
   type: 'generator';
@@ -2543,6 +2620,7 @@ export function isGeneratorPrototype(
 ): value is GeneratorPrototype {
   return (value as { type: string }).type === 'generator';
 }
+
 /** Properties of the god controller. */
 export interface GodControllerPrototype {
   /** Names of the crafting categories the player can craft recipes from. */
@@ -2565,6 +2643,7 @@ export function isGodControllerPrototype(
 ): value is GodControllerPrototype {
   return (value as { type: string }).type === 'god-controller';
 }
+
 /** This prototype is used for receiving an achievement when the player gets attacked due to pollution. */
 interface _GroupAttackAchievementPrototype {
   type: 'group-attack-achievement';
@@ -2580,6 +2659,7 @@ export function isGroupAttackAchievementPrototype(
 ): value is GroupAttackAchievementPrototype {
   return (value as { type: string }).type === 'group-attack-achievement';
 }
+
 /** The available GUI styles. */
 interface _GuiStyle {
   type: 'gui-style';
@@ -2593,6 +2673,7 @@ export type GuiStyle = _GuiStyle & Omit<PrototypeBase, keyof _GuiStyle>;
 export function isGuiStyle(value: unknown): value is GuiStyle {
   return (value as { type: string }).type === 'gui-style';
 }
+
 /** A gun. A weapon to deal damage to entities. */
 interface _GunPrototype {
   type: 'gun';
@@ -2606,6 +2687,7 @@ export type GunPrototype = _GunPrototype &
 export function isGunPrototype(value: unknown): value is GunPrototype {
   return (value as { type: string }).type === 'gun';
 }
+
 /** This entity produces or consumes heat. Its heat settings can be changed runtime. */
 interface _HeatInterfacePrototype {
   type: 'heat-interface';
@@ -2622,6 +2704,7 @@ export function isHeatInterfacePrototype(
 ): value is HeatInterfacePrototype {
   return (value as { type: string }).type === 'heat-interface';
 }
+
 /** A [heat pipe](https://wiki.factorio.com/Heat_pipe). */
 interface _HeatPipePrototype {
   type: 'heat-pipe';
@@ -2640,6 +2723,7 @@ export function isHeatPipePrototype(
 ): value is HeatPipePrototype {
   return (value as { type: string }).type === 'heat-pipe';
 }
+
 /** Used to attach graphics for [cursor boxes](prototype:CursorBoxType) to entities during runtime. HighlightBoxEntity can also be independent from entities so it is simply drawn somewhere in the world. See [LuaSurface::create_entity](runtime:LuaSurface::create_entity) for the available options for type "highlight-box".
 
 The [collision_box](prototype:EntityPrototype::collision_box) of the highlight box prototype is ignored during runtime, instead the "bounding_box" given in create_entity() or the selection box of the target entity is used. */
@@ -2657,6 +2741,7 @@ export function isHighlightBoxEntityPrototype(
 ): value is HighlightBoxEntityPrototype {
   return (value as { type: string }).type === 'highlight-box';
 }
+
 /** A generic container, such as a chest, that can spawn or void items and interact with the logistics network. */
 interface _InfinityContainerPrototype {
   type: 'infinity-container';
@@ -2684,6 +2769,7 @@ export function isInfinityContainerPrototype(
 ): value is InfinityContainerPrototype {
   return (value as { type: string }).type === 'infinity-container';
 }
+
 /** This entity produces or consumes fluids. Its fluid settings can be changed runtime. */
 interface _InfinityPipePrototype {
   type: 'infinity-pipe';
@@ -2698,6 +2784,7 @@ export function isInfinityPipePrototype(
 ): value is InfinityPipePrototype {
   return (value as { type: string }).type === 'infinity-pipe';
 }
+
 /** An [inserter](https://wiki.factorio.com/Inserter). */
 interface _InserterPrototype {
   type: 'inserter';
@@ -2763,6 +2850,7 @@ export function isInserterPrototype(
 ): value is InserterPrototype {
   return (value as { type: string }).type === 'inserter';
 }
+
 /** The entity used for items on the ground. */
 interface _ItemEntityPrototype {
   type: 'item-entity';
@@ -2786,6 +2874,7 @@ export function isItemEntityPrototype(
 ): value is ItemEntityPrototype {
   return (value as { type: string }).type === 'item-entity';
 }
+
 /** An item group. Item groups are shown above the list of craftable items in the player's inventory. The built-in groups are "logistics", "production", "intermediate-products" and "combat" but mods can define their own.
 
 Items are sorted into item groups by sorting them into a [subgroup](prototype:ItemPrototype::subgroup) which then belongs to a [item group](prototype:ItemSubGroup::group). */
@@ -2812,6 +2901,7 @@ export type ItemGroup = _ItemGroup & Omit<PrototypeBase, keyof _ItemGroup>;
 export function isItemGroup(value: unknown): value is ItemGroup {
   return (value as { type: string }).type === 'item-group';
 }
+
 /** Possible configuration for all items. */
 interface _ItemPrototype {
   type: 'item';
@@ -2882,6 +2972,7 @@ export type ItemPrototype = _ItemPrototype &
 export function isItemPrototype(value: unknown): value is ItemPrototype {
   return (value as { type: string }).type === 'item';
 }
+
 /** Entity used to signify that an entity is requesting items, for example modules for an assembling machine after it was blueprinted with modules inside. */
 interface _ItemRequestProxyPrototype {
   type: 'item-request-proxy';
@@ -2899,6 +2990,7 @@ export function isItemRequestProxyPrototype(
 ): value is ItemRequestProxyPrototype {
   return (value as { type: string }).type === 'item-request-proxy';
 }
+
 /** An item subgroup. The built-in subgroups can be found [here](https://wiki.factorio.com/Data.raw#item-subgroup). See [ItemPrototype::subgroup](prototype:ItemPrototype::subgroup). */
 interface _ItemSubGroup {
   type: 'item-subgroup';
@@ -2912,6 +3004,7 @@ export type ItemSubGroup = _ItemSubGroup &
 export function isItemSubGroup(value: unknown): value is ItemSubGroup {
   return (value as { type: string }).type === 'item-subgroup';
 }
+
 /** ItemWithEntityData saves data associated with the entity that it represents, for example the content of the equipment grid of a car. */
 interface _ItemWithEntityDataPrototype {
   type: 'item-with-entity-data';
@@ -2949,6 +3042,7 @@ export function isItemWithEntityDataPrototype(
 ): value is ItemWithEntityDataPrototype {
   return (value as { type: string }).type === 'item-with-entity-data';
 }
+
 /** The inventory allows setting player defined filters similar to cargo wagon inventories. */
 interface _ItemWithInventoryPrototype {
   type: 'item-with-inventory';
@@ -2984,6 +3078,7 @@ export function isItemWithInventoryPrototype(
 ): value is ItemWithInventoryPrototype {
   return (value as { type: string }).type === 'item-with-inventory';
 }
+
 /** Like a normal item but with the ability to have a colored label. */
 interface _ItemWithLabelPrototype {
   type: 'item-with-label';
@@ -3001,6 +3096,7 @@ export function isItemWithLabelPrototype(
 ): value is ItemWithLabelPrototype {
   return (value as { type: string }).type === 'item-with-label';
 }
+
 /** Item type that can store any basic arbitrary Lua data, see [LuaItemStack::tags](runtime:LuaItemStack::tags). */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _ItemWithTagsPrototype {
@@ -3015,6 +3111,7 @@ export function isItemWithTagsPrototype(
 ): value is ItemWithTagsPrototype {
   return (value as { type: string }).type === 'item-with-tags';
 }
+
 /** This prototype is used for receiving an achievement when the player destroys a certain amount of an entity, with a specific damage type. */
 interface _KillAchievementPrototype {
   type: 'kill-achievement';
@@ -3040,6 +3137,7 @@ export function isKillAchievementPrototype(
 ): value is KillAchievementPrototype {
   return (value as { type: string }).type === 'kill-achievement';
 }
+
 /** A [lab](https://wiki.factorio.com/Lab). */
 interface _LabPrototype {
   type: 'lab';
@@ -3073,6 +3171,7 @@ export type LabPrototype = _LabPrototype &
 export function isLabPrototype(value: unknown): value is LabPrototype {
   return (value as { type: string }).type === 'lab';
 }
+
 /** A [lamp](https://wiki.factorio.com/Lamp) to provide light, using energy. */
 interface _LampPrototype {
   type: 'lamp';
@@ -3114,6 +3213,7 @@ export type LampPrototype = _LampPrototype &
 export function isLampPrototype(value: unknown): value is LampPrototype {
   return (value as { type: string }).type === 'lamp';
 }
+
 /** A [land mine](https://wiki.factorio.com/Land_mine). */
 interface _LandMinePrototype {
   type: 'land-mine';
@@ -3147,6 +3247,7 @@ export function isLandMinePrototype(
 ): value is LandMinePrototype {
   return (value as { type: string }).type === 'land-mine';
 }
+
 /** Deprecated in 0.18. Particles that are exclusively meant for leaves of trees. The type "leaf-particle" has been obsoleted and cannot be created. See [ParticlePrototype](prototype:ParticlePrototype) for particles. */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _LeafParticlePrototype {
@@ -3161,6 +3262,7 @@ export function isLeafParticlePrototype(
 ): value is LeafParticlePrototype {
   return (value as { type: string }).type === 'leaf-particle';
 }
+
 /** A belt that can be connected to a belt anywhere else, including on a different surface. The linked belts have to be [connected with console commands](https://wiki.factorio.com/Console#Connect_linked_belts) or runtime scripting in mods or scenarios. [LuaEntity::connect_linked_belts](runtime:LuaEntity::connect_linked_belts) and other runtime functions. */
 interface _LinkedBeltPrototype {
   type: 'linked-belt';
@@ -3181,6 +3283,7 @@ export function isLinkedBeltPrototype(
 ): value is LinkedBeltPrototype {
   return (value as { type: string }).type === 'linked-belt';
 }
+
 /** A container that shares its inventory with containers with the same [link_id](runtime:LuaEntity::link_id), which can be set via the GUI. The link IDs are per prototype and force, so only containers with the **same ID**, **same prototype name** and **same force** will share inventories. */
 interface _LinkedContainerPrototype {
   type: 'linked-container';
@@ -3210,6 +3313,7 @@ export function isLinkedContainerPrototype(
 ): value is LinkedContainerPrototype {
   return (value as { type: string }).type === 'linked-container';
 }
+
 /** Continuously loads and unloads machines, as an alternative to inserters.
 
 This loader type is identical to [Loader1x2Prototype](prototype:Loader1x2Prototype) with the exception of its hardcoded belt_distance. The belt_distance of the loader determines the distance between the position of this loader and the tile of the loader's belt target.
@@ -3228,6 +3332,7 @@ export function isLoader1x1Prototype(
 ): value is Loader1x1Prototype {
   return (value as { type: string }).type === 'loader-1x1';
 }
+
 /** Continuously loads and unloads machines, as an alternative to inserters.
 
 This loader type is identical to [Loader1x1Prototype](prototype:Loader1x1Prototype) with the exception of its hardcoded belt_distance. The belt_distance of the loader determines the distance between the position of this loader and the tile of the loader's belt target.
@@ -3246,6 +3351,7 @@ export function isLoader1x2Prototype(
 ): value is Loader1x2Prototype {
   return (value as { type: string }).type === 'loader';
 }
+
 /** Continuously loads and unloads machines, as an alternative to inserters. */
 interface _LoaderPrototype {
   /** Whether this loader can load and unload stationary inventories such as containers and crafting machines. */
@@ -3295,6 +3401,7 @@ export function isLocomotivePrototype(
 ): value is LocomotivePrototype {
   return (value as { type: string }).type === 'locomotive';
 }
+
 /** A generic container, such as a chest, that interacts with the logistics network. */
 interface _LogisticContainerPrototype {
   type: 'logistic-container';
@@ -3330,6 +3437,7 @@ export function isLogisticContainerPrototype(
 ): value is LogisticContainerPrototype {
   return (value as { type: string }).type === 'logistic-container';
 }
+
 /** A [logistic robot](https://wiki.factorio.com/Logistic_robot). */
 interface _LogisticRobotPrototype {
   type: 'logistic-robot';
@@ -3353,6 +3461,7 @@ export function isLogisticRobotPrototype(
 ): value is LogisticRobotPrototype {
   return (value as { type: string }).type === 'logistic-robot';
 }
+
 /** The available map gen presets. */
 export interface MapGenPresets {
   /** Name of the map gen presets. Base game uses "default". */
@@ -3363,6 +3472,7 @@ export interface MapGenPresets {
 export function isMapGenPresets(value: unknown): value is MapGenPresets {
   return (value as { type: string }).type === 'map-gen-presets';
 }
+
 /** The default map settings. */
 export interface MapSettings {
   difficulty_settings: DifficultySettings;
@@ -3382,6 +3492,7 @@ export interface MapSettings {
 export function isMapSettings(value: unknown): value is MapSettings {
   return (value as { type: string }).type === 'map-settings';
 }
+
 /** Offers can be added to a market and they are shown when opening the entity. Offers allow to spend items to get research bonuses or items. */
 export interface MarketPrototype {
   type: 'market';
@@ -3393,6 +3504,7 @@ export interface MarketPrototype {
 export function isMarketPrototype(value: unknown): value is MarketPrototype {
   return (value as { type: string }).type === 'market';
 }
+
 /** A mining drill for automatically extracting resources from [resource entities](prototype:ResourceEntityPrototype). This prototype type is used by [burner mining drill](https://wiki.factorio.com/Burner_mining_drill), [electric mining drill](https://wiki.factorio.com/Electric_mining_drill) and [pumpjack](https://wiki.factorio.com/Pumpjack) in vanilla. */
 interface _MiningDrillPrototype {
   type: 'mining-drill';
@@ -3457,6 +3569,7 @@ export function isMiningDrillPrototype(
 ): value is MiningDrillPrototype {
   return (value as { type: string }).type === 'mining-drill';
 }
+
 /** Exists only for migration, cannot be used by mods. */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _MiningToolPrototype {
@@ -3471,6 +3584,7 @@ export function isMiningToolPrototype(
 ): value is MiningToolPrototype {
   return (value as { type: string }).type === 'mining-tool';
 }
+
 /** A module category. The built-in categories can be found [here](https://wiki.factorio.com/Data.raw#module-category). See [ModulePrototype::category](prototype:ModulePrototype::category). */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _ModuleCategory {
@@ -3483,6 +3597,7 @@ export type ModuleCategory = _ModuleCategory &
 export function isModuleCategory(value: unknown): value is ModuleCategory {
   return (value as { type: string }).type === 'module-category';
 }
+
 /** A [module](https://wiki.factorio.com/Module). */
 interface _ModulePrototype {
   type: 'module';
@@ -3511,6 +3626,7 @@ export type ModulePrototype = _ModulePrototype &
 export function isModulePrototype(value: unknown): value is ModulePrototype {
   return (value as { type: string }).type === 'module';
 }
+
 /** Used by [SelectionToolPrototype::mouse_cursor](prototype:SelectionToolPrototype::mouse_cursor). */
 export interface MouseCursor {
   /** Mandatory if `system_cursor` is not defined. */
@@ -3536,6 +3652,7 @@ export interface MouseCursor {
 export function isMouseCursor(value: unknown): value is MouseCursor {
   return (value as { type: string }).type === 'mouse-cursor';
 }
+
 /** Used by [exoskeleton](https://wiki.factorio.com/Exoskeleton). Increases max speed of characters or acceleration of vehicles if they have this equipment in their grid. */
 interface _MovementBonusEquipmentPrototype {
   type: 'movement-bonus-equipment';
@@ -3552,6 +3669,7 @@ export function isMovementBonusEquipmentPrototype(
 ): value is MovementBonusEquipmentPrototype {
   return (value as { type: string }).type === 'movement-bonus-equipment';
 }
+
 /** A [NoiseExpression](prototype:NoiseExpression) with a name. The base game uses named noise expressions to specify functions for many map properties to be used in map generation; e.g. the "elevation" expression is used to calculate elevation for every point on a map. For a list of the built-in named noise expressions, see [data.raw](https://wiki.factorio.com/Data.raw#noise-expression).
 
 Named noise expressions can be used by [MapGenSettings](prototype:MapGenSettings) and [MapGenPreset](prototype:MapGenPreset) to override which named expression is used to calculate a given property by having an entry in `property_expression_names`, e.g. `elevation = "0.16-elevation"`.
@@ -3631,6 +3749,7 @@ export function isNamedNoiseExpression(
 ): value is NamedNoiseExpression {
   return (value as { type: string }).type === 'noise-expression';
 }
+
 /** Used by [nightvision](https://wiki.factorio.com/Nightvision). */
 interface _NightVisionEquipmentPrototype {
   type: 'night-vision-equipment';
@@ -3650,6 +3769,7 @@ export function isNightVisionEquipmentPrototype(
 ): value is NightVisionEquipmentPrototype {
   return (value as { type: string }).type === 'night-vision-equipment';
 }
+
 /** A noise layer used by the [autoplace system](prototype:AutoplacePeak::noise_layer). For a list of built-in layers, see [here](https://wiki.factorio.com/Data.raw#noise-layer). */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _NoiseLayer {
@@ -3661,6 +3781,7 @@ export type NoiseLayer = _NoiseLayer & Omit<PrototypeBase, keyof _NoiseLayer>;
 export function isNoiseLayer(value: unknown): value is NoiseLayer {
   return (value as { type: string }).type === 'noise-layer';
 }
+
 /** An [offshore pump](https://wiki.factorio.com/Offshore_pump). */
 interface _OffshorePumpPrototype {
   type: 'offshore-pump';
@@ -3720,6 +3841,7 @@ export function isOffshorePumpPrototype(
 ): value is OffshorePumpPrototype {
   return (value as { type: string }).type === 'offshore-pump';
 }
+
 /** An entity with a limited lifetime that can use trigger effects. */
 interface _ParticlePrototype {
   type: 'optimized-particle';
@@ -3754,6 +3876,7 @@ export function isParticlePrototype(
 ): value is ParticlePrototype {
   return (value as { type: string }).type === 'optimized-particle';
 }
+
 /** Creates particles. */
 interface _ParticleSourcePrototype {
   type: 'particle-source';
@@ -3783,6 +3906,7 @@ export function isParticleSourcePrototype(
 ): value is ParticleSourcePrototype {
   return (value as { type: string }).type === 'particle-source';
 }
+
 /** An entity to transport fluids over a distance and between machines. */
 interface _PipePrototype {
   type: 'pipe';
@@ -3799,6 +3923,7 @@ export type PipePrototype = _PipePrototype &
 export function isPipePrototype(value: unknown): value is PipePrototype {
   return (value as { type: string }).type === 'pipe';
 }
+
 /** A [pipe to ground](https://wiki.factorio.com/Pipe_to_ground). */
 interface _PipeToGroundPrototype {
   type: 'pipe-to-ground';
@@ -3816,6 +3941,7 @@ export function isPipeToGroundPrototype(
 ): value is PipeToGroundPrototype {
   return (value as { type: string }).type === 'pipe-to-ground';
 }
+
 /** This prototype is used for receiving an achievement when the player receives damage. */
 interface _PlayerDamagedAchievementPrototype {
   type: 'player-damaged-achievement';
@@ -3836,6 +3962,7 @@ export function isPlayerDamagedAchievementPrototype(
 ): value is PlayerDamagedAchievementPrototype {
   return (value as { type: string }).type === 'player-damaged-achievement';
 }
+
 /** When a character dies, this entity will immediately respawn the character at the entities location, so there is no respawn time. If there are multiple player ports in the world, the character will respawn at the nearest player port to their death location. */
 interface _PlayerPortPrototype {
   type: 'player-port';
@@ -3854,6 +3981,7 @@ export function isPlayerPortPrototype(
 ): value is PlayerPortPrototype {
   return (value as { type: string }).type === 'player-port';
 }
+
 /** A [power switch](https://wiki.factorio.com/Power_switch). */
 interface _PowerSwitchPrototype {
   type: 'power-switch';
@@ -3879,6 +4007,7 @@ export function isPowerSwitchPrototype(
 ): value is PowerSwitchPrototype {
   return (value as { type: string }).type === 'power-switch';
 }
+
 /** This prototype is used for receiving an achievement when the player produces more than the specified amount of items. */
 interface _ProduceAchievementPrototype {
   type: 'produce-achievement';
@@ -3904,6 +4033,7 @@ export function isProduceAchievementPrototype(
 ): value is ProduceAchievementPrototype {
   return (value as { type: string }).type === 'produce-achievement';
 }
+
 /** This prototype is used for receiving an achievement when the player crafts a specified item a certain amount, in an hour. */
 interface _ProducePerHourAchievementPrototype {
   type: 'produce-per-hour-achievement';
@@ -3928,6 +4058,7 @@ export function isProducePerHourAchievementPrototype(
 ): value is ProducePerHourAchievementPrototype {
   return (value as { type: string }).type === 'produce-per-hour-achievement';
 }
+
 /** A [programmable speaker](https://wiki.factorio.com/Programmable_speaker). */
 interface _ProgrammableSpeakerPrototype {
   type: 'programmable-speaker';
@@ -3952,6 +4083,7 @@ export function isProgrammableSpeakerPrototype(
 ): value is ProgrammableSpeakerPrototype {
   return (value as { type: string }).type === 'programmable-speaker';
 }
+
 /** Entity with limited lifetime that can hit other entities and has triggers when this happens. */
 interface _ProjectilePrototype {
   type: 'projectile';
@@ -3995,6 +4127,7 @@ export function isProjectilePrototype(
 ): value is ProjectilePrototype {
   return (value as { type: string }).type === 'projectile';
 }
+
 /** The abstract base for prototypes. PrototypeBase defines the common features of prototypes, such as localization and order. */
 export interface PrototypeBase {
   /** Overwrites the description set in the [locale file](https://wiki.factorio.com/Tutorial:Localisation). The description is usually shown in the tooltip of the prototype. */
@@ -4056,6 +4189,7 @@ export type PumpPrototype = _PumpPrototype &
 export function isPumpPrototype(value: unknown): value is PumpPrototype {
   return (value as { type: string }).type === 'pump';
 }
+
 /** A [radar](https://wiki.factorio.com/Radar). */
 interface _RadarPrototype {
   type: 'radar';
@@ -4086,6 +4220,7 @@ export type RadarPrototype = _RadarPrototype &
 export function isRadarPrototype(value: unknown): value is RadarPrototype {
   return (value as { type: string }).type === 'radar';
 }
+
 /** A [rail chain signal](https://wiki.factorio.com/Rail_chain_signal). */
 interface _RailChainSignalPrototype {
   type: 'rail-chain-signal';
@@ -4103,6 +4238,7 @@ export function isRailChainSignalPrototype(
 ): value is RailChainSignalPrototype {
   return (value as { type: string }).type === 'rail-chain-signal';
 }
+
 /** A [rail planner](https://wiki.factorio.com/Rail_planner). */
 interface _RailPlannerPrototype {
   type: 'rail-planner';
@@ -4120,6 +4256,7 @@ export function isRailPlannerPrototype(
 ): value is RailPlannerPrototype {
   return (value as { type: string }).type === 'rail-planner';
 }
+
 /** The abstract base of both rail prototypes. */
 interface _RailPrototype {
   /** Has to be 2 for 2x2 grid. */
@@ -4158,6 +4295,7 @@ export function isRailRemnantsPrototype(
 ): value is RailRemnantsPrototype {
   return (value as { type: string }).type === 'rail-remnants';
 }
+
 /** The abstract base entity for both rail signals. */
 interface _RailSignalBasePrototype {
   animation: RotatedAnimation;
@@ -4202,6 +4340,7 @@ export function isRailSignalPrototype(
 ): value is RailSignalPrototype {
   return (value as { type: string }).type === 'rail-signal';
 }
+
 /** A [reactor](https://wiki.factorio.com/Reactor). */
 interface _ReactorPrototype {
   type: 'reactor';
@@ -4243,6 +4382,7 @@ export type ReactorPrototype = _ReactorPrototype &
 export function isReactorPrototype(value: unknown): value is ReactorPrototype {
   return (value as { type: string }).type === 'reactor';
 }
+
 /** A recipe category. The built-in categories can be found [here](https://wiki.factorio.com/Data.raw#recipe-category). See [RecipePrototype::category](prototype:RecipePrototype::category). Recipe categories can be used to specify which [machine](prototype:CraftingMachinePrototype::crafting_categories) can craft which [recipes](prototype:RecipePrototype).
 
 The recipe category with the name "crafting" cannot contain recipes with fluid ingredients or products. */
@@ -4257,6 +4397,7 @@ export type RecipeCategory = _RecipeCategory &
 export function isRecipeCategory(value: unknown): value is RecipeCategory {
   return (value as { type: string }).type === 'recipe-category';
 }
+
 /** A recipe. It can be a crafting recipe, a smelting recipe, or a custom type of recipe, see [RecipeCategory](prototype:RecipeCategory).
 
 This prototype has two different formats that can be specified. If both `normal` and `expensive` are not defined, the standard properties define this recipe. Otherwise, they are ignored, and the `normal` and `expensive` properties are used exclusively to define this recipe. */
@@ -4392,6 +4533,7 @@ export type RecipePrototype = _RecipePrototype &
 export function isRecipePrototype(value: unknown): value is RecipePrototype {
   return (value as { type: string }).type === 'recipe';
 }
+
 /** A [repair pack](https://wiki.factorio.com/Repair_pack). */
 interface _RepairToolPrototype {
   type: 'repair-tool';
@@ -4408,6 +4550,7 @@ export function isRepairToolPrototype(
 ): value is RepairToolPrototype {
   return (value as { type: string }).type === 'repair-tool';
 }
+
 /** This prototype is used for receiving an achievement when the player completes a specific research. */
 interface _ResearchAchievementPrototype {
   type: 'research-achievement';
@@ -4429,6 +4572,7 @@ export function isResearchAchievementPrototype(
 ): value is ResearchAchievementPrototype {
   return (value as { type: string }).type === 'research-achievement';
 }
+
 /** A resource category. The built-in categories can be found [here](https://wiki.factorio.com/Data.raw#resource-category). See [ResourceEntityPrototype::category](prototype:ResourceEntityPrototype::category). */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _ResourceCategory {
@@ -4441,6 +4585,7 @@ export type ResourceCategory = _ResourceCategory &
 export function isResourceCategory(value: unknown): value is ResourceCategory {
   return (value as { type: string }).type === 'resource-category';
 }
+
 /** A mineable/gatherable entity. Its [collision_mask](prototype:EntityPrototype::collision_mask) must contain "resource-layer" if it should be minable with a [MiningDrillPrototype](prototype:MiningDrillPrototype). */
 interface _ResourceEntityPrototype {
   type: 'resource';
@@ -4500,6 +4645,7 @@ export function isResourceEntityPrototype(
 ): value is ResourceEntityPrototype {
   return (value as { type: string }).type === 'resource';
 }
+
 /** Used by [personal roboport](https://wiki.factorio.com/Personal_roboport). */
 interface _RoboportEquipmentPrototype {
   type: 'roboport-equipment';
@@ -4550,6 +4696,7 @@ export function isRoboportEquipmentPrototype(
 ): value is RoboportEquipmentPrototype {
   return (value as { type: string }).type === 'roboport-equipment';
 }
+
 /** A [roboport](https://wiki.factorio.com/Roboport). */
 interface _RoboportPrototype {
   type: 'roboport';
@@ -4627,6 +4774,7 @@ export function isRoboportPrototype(
 ): value is RoboportPrototype {
   return (value as { type: string }).type === 'roboport';
 }
+
 /** The common properties of logistic and construction robots represented by an abstract prototype. */
 interface _RobotWithLogisticInterfacePrototype {
   cargo_centered: Vector;
@@ -4732,6 +4880,7 @@ export function isRocketSiloPrototype(
 ): value is RocketSiloPrototype {
   return (value as { type: string }).type === 'rocket-silo';
 }
+
 /** The rocket inside the rocket silo. */
 interface _RocketSiloRocketPrototype {
   type: 'rocket-silo-rocket';
@@ -4779,6 +4928,7 @@ export function isRocketSiloRocketPrototype(
 ): value is RocketSiloRocketPrototype {
   return (value as { type: string }).type === 'rocket-silo-rocket';
 }
+
 /** The shadow of the rocket inside the rocket silo. */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _RocketSiloRocketShadowPrototype {
@@ -4793,6 +4943,7 @@ export function isRocketSiloRocketShadowPrototype(
 ): value is RocketSiloRocketShadowPrototype {
   return (value as { type: string }).type === 'rocket-silo-rocket-shadow';
 }
+
 /** The abstract base of all rolling stock. */
 interface _RollingStockPrototype {
   air_resistance: number;
@@ -4894,6 +5045,7 @@ export function isSelectionToolPrototype(
 ): value is SelectionToolPrototype {
   return (value as { type: string }).type === 'selection-tool';
 }
+
 /** Definition for a shortcut button in the [shortcut bar](https://wiki.factorio.com/Shortcut_bar).
 
 This is **not** a custom keybinding (keyboard shortcut), for that see [CustomInputPrototype](prototype:CustomInputPrototype). */
@@ -4948,6 +5100,7 @@ export function isShortcutPrototype(
 ): value is ShortcutPrototype {
   return (value as { type: string }).type === 'shortcut';
 }
+
 /** An extremely basic entity with no special functionality. Used for minable rocks. */
 interface _SimpleEntityPrototype {
   type: 'simple-entity';
@@ -4975,6 +5128,7 @@ export function isSimpleEntityPrototype(
 ): value is SimpleEntityPrototype {
   return (value as { type: string }).type === 'simple-entity';
 }
+
 /** By default, this entity will be a priority target for units/turrets, who will choose to attack it even if it does not block their path. Use [SimpleEntityWithOwnerPrototype](prototype:SimpleEntityWithOwnerPrototype) for entities that are only attacked when they block enemies. */
 interface _SimpleEntityWithForcePrototype {
   type: 'simple-entity-with-force';
@@ -4990,6 +5144,7 @@ export function isSimpleEntityWithForcePrototype(
 ): value is SimpleEntityWithForcePrototype {
   return (value as { type: string }).type === 'simple-entity-with-force';
 }
+
 /** Has a force, but unlike [SimpleEntityWithForcePrototype](prototype:SimpleEntityWithForcePrototype) it is only attacked if the biters get stuck on it (or if [EntityWithOwnerPrototype::is_military_target](prototype:EntityWithOwnerPrototype::is_military_target) set to true to make the two entity types equivalent). */
 interface _SimpleEntityWithOwnerPrototype {
   type: 'simple-entity-with-owner';
@@ -5017,6 +5172,7 @@ export function isSimpleEntityWithOwnerPrototype(
 ): value is SimpleEntityWithOwnerPrototype {
   return (value as { type: string }).type === 'simple-entity-with-owner';
 }
+
 /** Deprecated in 0.16. The type "simple-smoke" has been obsoleted and cannot be created. Use [TrivialSmokePrototype](prototype:TrivialSmokePrototype) or [SmokeWithTriggerPrototype](prototype:SmokeWithTriggerPrototype) instead. */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface _SimpleSmokePrototype {
@@ -5031,6 +5187,7 @@ export function isSimpleSmokePrototype(
 ): value is SimpleSmokePrototype {
   return (value as { type: string }).type === 'smoke';
 }
+
 /** Abstract entity that has an animation. */
 interface _SmokePrototype {
   /** Smoke always moves randomly unless `movement_slow_down_factor` is 0. If `affected_by_wind` is true, the smoke will also be moved by wind. */
@@ -5085,6 +5242,7 @@ export function isSmokeWithTriggerPrototype(
 ): value is SmokeWithTriggerPrototype {
   return (value as { type: string }).type === 'smoke-with-trigger';
 }
+
 /** A [portable solar panel](https://wiki.factorio.com/Portable_solar_panel). */
 interface _SolarPanelEquipmentPrototype {
   type: 'solar-panel-equipment';
@@ -5100,6 +5258,7 @@ export function isSolarPanelEquipmentPrototype(
 ): value is SolarPanelEquipmentPrototype {
   return (value as { type: string }).type === 'solar-panel-equipment';
 }
+
 /** A [solar panel](https://wiki.factorio.com/Solar_panel). */
 interface _SolarPanelPrototype {
   type: 'solar-panel';
@@ -5121,6 +5280,7 @@ export function isSolarPanelPrototype(
 ): value is SolarPanelPrototype {
   return (value as { type: string }).type === 'solar-panel';
 }
+
 /** Specifies a sound that can be used with [SoundPath](runtime:SoundPath) at runtime. */
 export interface SoundPrototype {
   aggregation?: AggregationSpecification;
@@ -5158,6 +5318,7 @@ Only loaded if `variations` is not defined. */
 export function isSoundPrototype(value: unknown): value is SoundPrototype {
   return (value as { type: string }).type === 'sound';
 }
+
 /** Properties of the spectator controller. */
 export interface SpectatorControllerPrototype {
   /** Must be >= 0.34375. */
@@ -5172,6 +5333,7 @@ export function isSpectatorControllerPrototype(
 ): value is SpectatorControllerPrototype {
   return (value as { type: string }).type === 'spectator-controller';
 }
+
 /** A speech bubble. It floats in the world and can display text. */
 interface _SpeechBubblePrototype {
   type: 'speech-bubble';
@@ -5193,6 +5355,7 @@ export function isSpeechBubblePrototype(
 ): value is SpeechBubblePrototype {
   return (value as { type: string }).type === 'speech-bubble';
 }
+
 /** Used by [SpiderLegSpecification](prototype:SpiderLegSpecification) for [SpiderVehiclePrototype](prototype:SpiderVehiclePrototype), also known as [spidertron](https://wiki.factorio.com/Spidertron). */
 interface _SpiderLegPrototype {
   type: 'spider-leg';
@@ -5217,6 +5380,7 @@ export function isSpiderLegPrototype(
 ): value is SpiderLegPrototype {
   return (value as { type: string }).type === 'spider-leg';
 }
+
 /** A [spidertron](https://wiki.factorio.com/Spidertron). */
 interface _SpiderVehiclePrototype {
   type: 'spider-vehicle';
@@ -5252,6 +5416,7 @@ export function isSpiderVehiclePrototype(
 ): value is SpiderVehiclePrototype {
   return (value as { type: string }).type === 'spider-vehicle';
 }
+
 /** The [spidertron remote](https://wiki.factorio.com/Spidertron_remote). This remote can only be connected to entities of type [SpiderVehiclePrototype](prototype:SpiderVehiclePrototype). */
 interface _SpidertronRemotePrototype {
   type: 'spidertron-remote';
@@ -5277,6 +5442,7 @@ export function isSpidertronRemotePrototype(
 ): value is SpidertronRemotePrototype {
   return (value as { type: string }).type === 'spidertron-remote';
 }
+
 /** A [splitter](https://wiki.factorio.com/Splitter). */
 interface _SplitterPrototype {
   type: 'splitter';
@@ -5297,6 +5463,7 @@ export function isSplitterPrototype(
 ): value is SplitterPrototype {
   return (value as { type: string }).type === 'splitter';
 }
+
 /** Specifies an image that can be used with [SpritePath](runtime:SpritePath) at runtime. */
 export interface SpritePrototype {
   /** Only loaded if `layers` is not defined. */
@@ -5403,6 +5570,7 @@ Vertical position of the sprite in the source file in pixels. */
 export function isSpritePrototype(value: unknown): value is SpritePrototype {
   return (value as { type: string }).type === 'sprite';
 }
+
 /** Entity that sticks to another entity, and damages/slows it. Stickers can only be attached to [UnitPrototype](prototype:UnitPrototype), [CharacterPrototype](prototype:CharacterPrototype), [CarPrototype](prototype:CarPrototype) and [SpiderVehiclePrototype](prototype:SpiderVehiclePrototype). */
 interface _StickerPrototype {
   type: 'sticker';
@@ -5449,6 +5617,7 @@ export type StickerPrototype = _StickerPrototype &
 export function isStickerPrototype(value: unknown): value is StickerPrototype {
   return (value as { type: string }).type === 'sticker';
 }
+
 /** A [storage tank](https://wiki.factorio.com/Storage_tank). */
 interface _StorageTankPrototype {
   type: 'storage-tank';
@@ -5492,6 +5661,7 @@ export function isStorageTankPrototype(
 ): value is StorageTankPrototype {
   return (value as { type: string }).type === 'storage-tank';
 }
+
 /** A straight rail. */
 interface _StraightRailPrototype {
   type: 'straight-rail';
@@ -5506,6 +5676,7 @@ export function isStraightRailPrototype(
 ): value is StraightRailPrototype {
   return (value as { type: string }).type === 'straight-rail';
 }
+
 /** A [technology](https://wiki.factorio.com/Technologies).
 
 This prototype has two different formats that can be specified. If both `normal` and `expensive` are not defined, the standard properties define this technology. Otherwise, they are ignored, and the `normal` and `expensive` properties are used exclusively to define this technology. */
@@ -5579,6 +5750,7 @@ export function isTechnologyPrototype(
 ): value is TechnologyPrototype {
   return (value as { type: string }).type === 'technology';
 }
+
 /** Used to define the parameters for the water shader. */
 export interface TileEffectDefinition {
   animation_scale: number | [number, number];
@@ -5604,6 +5776,7 @@ export function isTileEffectDefinition(
 ): value is TileEffectDefinition {
   return (value as { type: string }).type === 'tile-effect';
 }
+
 /** The entity used for tile ghosts. */
 interface _TileGhostPrototype {
   type: 'tile-ghost';
@@ -5619,6 +5792,7 @@ export function isTileGhostPrototype(
 ): value is TileGhostPrototype {
   return (value as { type: string }).type === 'tile-ghost';
 }
+
 /** A [tile](https://wiki.factorio.com/Tile). */
 interface _TilePrototype {
   type: 'tile';
@@ -5687,6 +5861,7 @@ export type TilePrototype = _TilePrototype &
 export function isTilePrototype(value: unknown): value is TilePrototype {
   return (value as { type: string }).type === 'tile';
 }
+
 /** A tips and tricks entry. */
 interface _TipsAndTricksItem {
   type: 'tips-and-tricks-item';
@@ -5720,6 +5895,7 @@ export function isTipsAndTricksItem(
 ): value is TipsAndTricksItem {
   return (value as { type: string }).type === 'tips-and-tricks-item';
 }
+
 /** A [TipsAndTricksItem](prototype:TipsAndTricksItem) category, used for sorting of tips and tricks entries: Tips and trick entries are sorted first by category and then by their order within that category. */
 export interface TipsAndTricksItemCategory {
   name: string;
@@ -5733,6 +5909,7 @@ export function isTipsAndTricksItemCategory(
 ): value is TipsAndTricksItemCategory {
   return (value as { type: string }).type === 'tips-and-tricks-item-category';
 }
+
 /** Items with a "durability". Used for [science packs](https://wiki.factorio.com/Science_pack). */
 interface _ToolPrototype {
   type: 'tool';
@@ -5768,6 +5945,7 @@ export type ToolPrototype = _ToolPrototype &
 export function isToolPrototype(value: unknown): value is ToolPrototype {
   return (value as { type: string }).type === 'tool';
 }
+
 /** This prototype is used for receiving an achievement when the player has a specified train path length. */
 interface _TrainPathAchievementPrototype {
   type: 'train-path-achievement';
@@ -5783,6 +5961,7 @@ export function isTrainPathAchievementPrototype(
 ): value is TrainPathAchievementPrototype {
   return (value as { type: string }).type === 'train-path-achievement';
 }
+
 /** A [train stop](https://wiki.factorio.com/Train_stop). */
 interface _TrainStopPrototype {
   type: 'train-stop';
@@ -5827,6 +6006,7 @@ export function isTrainStopPrototype(
 ): value is TrainStopPrototype {
   return (value as { type: string }).type === 'train-stop';
 }
+
 /** Abstract class that anything that is a belt or can connect to belts uses. */
 interface _TransportBeltConnectablePrototype {
   animation_speed_coefficient?: number;
@@ -5900,6 +6080,7 @@ export function isTransportBeltPrototype(
 ): value is TransportBeltPrototype {
   return (value as { type: string }).type === 'transport-belt';
 }
+
 /** A [tree](https://wiki.factorio.com/Tree). */
 interface _TreePrototype {
   type: 'tree';
@@ -5921,6 +6102,7 @@ export type TreePrototype = _TreePrototype &
 export function isTreePrototype(value: unknown): value is TreePrototype {
   return (value as { type: string }).type === 'tree';
 }
+
 /** The base game always internally defines a "common" trigger target type. See [Design discussion: Trigger target type](https://forums.factorio.com/71657). */
 export interface TriggerTargetType {
   name: string;
@@ -5932,6 +6114,7 @@ export function isTriggerTargetType(
 ): value is TriggerTargetType {
   return (value as { type: string }).type === 'trigger-target-type';
 }
+
 /** Smoke, but it's not an entity for optimization purposes. */
 interface _TrivialSmokePrototype {
   type: 'trivial-smoke';
@@ -5965,6 +6148,7 @@ export function isTrivialSmokePrototype(
 ): value is TrivialSmokePrototype {
   return (value as { type: string }).type === 'trivial-smoke';
 }
+
 /** A turret that needs no extra ammunition. See the children for turrets that need some kind of ammunition. */
 interface _TurretPrototype {
   type: 'turret';
@@ -6062,6 +6246,7 @@ export type TurretPrototype = _TurretPrototype &
 export function isTurretPrototype(value: unknown): value is TurretPrototype {
   return (value as { type: string }).type === 'turret';
 }
+
 /** The definition of the tutorial to be used in the tips and tricks, see [TipsAndTricksItem](prototype:TipsAndTricksItem). The actual tutorial code is defined in the tutorials folder, in the folder that has the name of the scenario property. */
 interface _TutorialDefinition {
   type: 'tutorial';
@@ -6077,6 +6262,7 @@ export function isTutorialDefinition(
 ): value is TutorialDefinition {
   return (value as { type: string }).type === 'tutorial';
 }
+
 /** An [underground belt](https://wiki.factorio.com/Underground_belt). */
 interface _UndergroundBeltPrototype {
   type: 'underground-belt';
@@ -6096,6 +6282,7 @@ export function isUndergroundBeltPrototype(
 ): value is UndergroundBeltPrototype {
   return (value as { type: string }).type === 'underground-belt';
 }
+
 /** Entity that moves around and attacks players, for example [biters and spitters](https://wiki.factorio.com/Enemies#Creatures). */
 interface _UnitPrototype {
   type: 'unit';
@@ -6149,6 +6336,7 @@ export type UnitPrototype = _UnitPrototype &
 export function isUnitPrototype(value: unknown): value is UnitPrototype {
   return (value as { type: string }).type === 'unit';
 }
+
 /** An [upgrade planner](https://wiki.factorio.com/Upgrade_planner). */
 interface _UpgradeItemPrototype {
   type: 'upgrade-item';
@@ -6192,6 +6380,7 @@ export function isUpgradeItemPrototype(
 ): value is UpgradeItemPrototype {
   return (value as { type: string }).type === 'upgrade-item';
 }
+
 /** Constants used by the game that are not specific to certain prototypes. See [utility-constants.lua](https://github.com/wube/factorio-data/blob/master/core/prototypes/utility-constants.lua) for the values used by the base game. */
 interface _UtilityConstants {
   type: 'utility-constants';
@@ -6313,6 +6502,7 @@ export type UtilityConstants = _UtilityConstants &
 export function isUtilityConstants(value: unknown): value is UtilityConstants {
   return (value as { type: string }).type === 'utility-constants';
 }
+
 /** Sounds used by the game that are not specific to certain prototypes. */
 interface _UtilitySounds {
   type: 'utility-sounds';
@@ -6385,6 +6575,7 @@ export type UtilitySounds = _UtilitySounds &
 export function isUtilitySounds(value: unknown): value is UtilitySounds {
   return (value as { type: string }).type === 'utility-sounds';
 }
+
 /** Sprites used by the game that are not specific to certain prototypes. */
 interface _UtilitySprites {
   type: 'utility-sprites';
@@ -6932,6 +7123,7 @@ export type UtilitySprites = _UtilitySprites &
 export function isUtilitySprites(value: unknown): value is UtilitySprites {
   return (value as { type: string }).type === 'utility-sprites';
 }
+
 /** Abstract base of all vehicles. */
 interface _VehiclePrototype {
   /** Determines whether this vehicle accepts passengers. This includes both drivers and gunners, if applicable. */
@@ -6992,6 +7184,7 @@ export function isVirtualSignalPrototype(
 ): value is VirtualSignalPrototype {
   return (value as { type: string }).type === 'virtual-signal';
 }
+
 /** A [wall](https://wiki.factorio.com/Wall). */
 interface _WallPrototype {
   type: 'wall';
@@ -7024,6 +7217,7 @@ export type WallPrototype = _WallPrototype &
 export function isWallPrototype(value: unknown): value is WallPrototype {
   return (value as { type: string }).type === 'wall';
 }
+
 /** A wind sound. */
 export interface WindSound {
   /** Unique textual identification of the prototype. */
@@ -7037,6 +7231,7 @@ export interface WindSound {
 export function isWindSound(value: unknown): value is WindSound {
   return (value as { type: string }).type === 'wind-sound';
 }
+
 export interface ActivateEquipmentCapsuleAction {
   /** Activation is only implemented for [ActiveDefenseEquipmentPrototype](prototype:ActiveDefenseEquipmentPrototype). */
   equipment: EquipmentID;
@@ -7048,6 +7243,7 @@ export function isActivateEquipmentCapsuleAction(
 ): value is ActivateEquipmentCapsuleAction {
   return (value as { type: string }).type === 'equipment-remote';
 }
+
 interface _ActivityBarStyleSpecification {
   bar?: Sprite;
   bar_background?: Sprite;
@@ -7066,6 +7262,7 @@ export function isActivityBarStyleSpecification(
 ): value is ActivityBarStyleSpecification {
   return (value as { type: string }).type === 'activity_bar_style';
 }
+
 export interface AdvancedMapGenSettings {
   difficulty_settings?: MapGenPresetDifficultySettings;
   enemy_evolution?: MapGenPresetEnemyEvolutionSettings;
@@ -7100,6 +7297,7 @@ export function isAmmoDamageModifier(
 ): value is AmmoDamageModifier {
   return (value as { type: string }).type === 'ammo-damage';
 }
+
 /** Definition of actual parameters used in attack. */
 export interface AmmoType {
   /** Describes actions taken upon attack happening. */
@@ -7134,6 +7332,7 @@ export interface AndTipTrigger {
 export function isAndTipTrigger(value: unknown): value is AndTipTrigger {
   return (value as { type: string }).type === 'and';
 }
+
 export interface AnimatedVector {
   direction_shift?: DirectionShift;
   /** Default render layer for the rotations. */
@@ -7253,6 +7452,7 @@ export type AreaTriggerItem = _AreaTriggerItem &
 export function isAreaTriggerItem(value: unknown): value is AreaTriggerItem {
   return (value as { type: string }).type === 'area';
 }
+
 interface _ArtilleryRangeModifier {
   /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
@@ -7269,6 +7469,7 @@ export function isArtilleryRangeModifier(
 ): value is ArtilleryRangeModifier {
   return (value as { type: string }).type === 'artillery-range';
 }
+
 export interface ArtilleryRemoteCapsuleAction {
   /** Name of an [ArtilleryFlarePrototype](prototype:ArtilleryFlarePrototype). */
   flare: EntityID;
@@ -7281,6 +7482,7 @@ export function isArtilleryRemoteCapsuleAction(
 ): value is ArtilleryRemoteCapsuleAction {
   return (value as { type: string }).type === 'artillery-remote';
 }
+
 interface _ArtilleryTriggerDelivery {
   /** Maximum deviation of the projectile from source orientation, in +/- (`x radians / 2`). Example: `3.14 radians -> +/- (180° / 2)`, meaning up to 90° deviation in either direction of rotation. */
   direction_deviation?: number;
@@ -7301,6 +7503,7 @@ export function isArtilleryTriggerDelivery(
 ): value is ArtilleryTriggerDelivery {
   return (value as { type: string }).type === 'artillery';
 }
+
 export interface AttackReactionItem {
   action?: Trigger;
   damage_type?: DamageTypeID;
@@ -7699,6 +7902,7 @@ export function isBeamAttackParameters(
 ): value is BeamAttackParameters {
   return (value as { type: string }).type === 'beam';
 }
+
 interface _BeamTriggerDelivery {
   add_to_shooter?: boolean;
   /** Name of a [BeamPrototype](prototype:BeamPrototype). */
@@ -7717,6 +7921,7 @@ export function isBeamTriggerDelivery(
 ): value is BeamTriggerDelivery {
   return (value as { type: string }).type === 'beam';
 }
+
 export interface BeltTraverseTipTrigger {
   count?: number;
   type: 'belt-traverse';
@@ -7727,6 +7932,7 @@ export function isBeltTraverseTipTrigger(
 ): value is BeltTraverseTipTrigger {
   return (value as { type: string }).type === 'belt-traverse';
 }
+
 /** The table itself is required, but it can be empty. */
 export interface BoilerFire {
   east?: Animation;
@@ -7820,6 +8026,7 @@ export function isBuildEntityTipTrigger(
 ): value is BuildEntityTipTrigger {
   return (value as { type: string }).type === 'build-entity';
 }
+
 interface _BurnerEnergySource {
   burnt_inventory_size?: ItemStackIndex;
   /** `1` means 100% effectivity. Must be greater than `0`. Multiplier of the energy output. */
@@ -7844,6 +8051,7 @@ export function isBurnerEnergySource(
 ): value is BurnerEnergySource {
   return (value as { type: string }).type === 'burner';
 }
+
 interface _ButtonStyleSpecification {
   clicked_font_color?: Color;
   clicked_vertical_offset?: number;
@@ -7874,6 +8082,7 @@ export function isButtonStyleSpecification(
 ): value is ButtonStyleSpecification {
   return (value as { type: string }).type === 'button_style';
 }
+
 interface _CameraEffectTriggerEffectItem {
   delay?: number;
   duration: number;
@@ -7895,6 +8104,7 @@ export function isCameraEffectTriggerEffectItem(
 ): value is CameraEffectTriggerEffectItem {
   return (value as { type: string }).type === 'camera-effect';
 }
+
 interface _CameraStyleSpecification {
   type: 'camera_style';
 }
@@ -7907,6 +8117,7 @@ export function isCameraStyleSpecification(
 ): value is CameraStyleSpecification {
   return (value as { type: string }).type === 'camera_style';
 }
+
 /** The data for one variation of character animations. [CharacterPrototype::animations](prototype:CharacterPrototype::animations). */
 export interface CharacterArmorAnimation {
   /** The names of the armors this animation data is used for. Don't define this if you want the animations to be used for the player without armor. */
@@ -7934,6 +8145,7 @@ export function isCharacterBuildDistanceModifier(
 ): value is CharacterBuildDistanceModifier {
   return (value as { type: string }).type === 'character-build-distance';
 }
+
 interface _CharacterCraftingSpeedModifier {
   type: 'character-crafting-speed';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -7948,6 +8160,7 @@ export function isCharacterCraftingSpeedModifier(
 ): value is CharacterCraftingSpeedModifier {
   return (value as { type: string }).type === 'character-crafting-speed';
 }
+
 interface _CharacterHealthBonusModifier {
   type: 'character-health-bonus';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -7962,6 +8175,7 @@ export function isCharacterHealthBonusModifier(
 ): value is CharacterHealthBonusModifier {
   return (value as { type: string }).type === 'character-health-bonus';
 }
+
 interface _CharacterInventorySlotsBonusModifier {
   type: 'character-inventory-slots-bonus';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -7977,6 +8191,7 @@ export function isCharacterInventorySlotsBonusModifier(
 ): value is CharacterInventorySlotsBonusModifier {
   return (value as { type: string }).type === 'character-inventory-slots-bonus';
 }
+
 interface _CharacterItemDropDistanceModifier {
   type: 'character-item-drop-distance';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -7992,6 +8207,7 @@ export function isCharacterItemDropDistanceModifier(
 ): value is CharacterItemDropDistanceModifier {
   return (value as { type: string }).type === 'character-item-drop-distance';
 }
+
 interface _CharacterItemPickupDistanceModifier {
   type: 'character-item-pickup-distance';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -8007,6 +8223,7 @@ export function isCharacterItemPickupDistanceModifier(
 ): value is CharacterItemPickupDistanceModifier {
   return (value as { type: string }).type === 'character-item-pickup-distance';
 }
+
 interface _CharacterLogisticRequestsModifier {
   type: 'character-logistic-requests';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -8022,6 +8239,7 @@ export function isCharacterLogisticRequestsModifier(
 ): value is CharacterLogisticRequestsModifier {
   return (value as { type: string }).type === 'character-logistic-requests';
 }
+
 interface _CharacterLogisticTrashSlotsModifier {
   type: 'character-logistic-trash-slots';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -8037,6 +8255,7 @@ export function isCharacterLogisticTrashSlotsModifier(
 ): value is CharacterLogisticTrashSlotsModifier {
   return (value as { type: string }).type === 'character-logistic-trash-slots';
 }
+
 interface _CharacterLootPickupDistanceModifier {
   type: 'character-loot-pickup-distance';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -8052,6 +8271,7 @@ export function isCharacterLootPickupDistanceModifier(
 ): value is CharacterLootPickupDistanceModifier {
   return (value as { type: string }).type === 'character-loot-pickup-distance';
 }
+
 interface _CharacterMiningSpeedModifier {
   type: 'character-mining-speed';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -8066,6 +8286,7 @@ export function isCharacterMiningSpeedModifier(
 ): value is CharacterMiningSpeedModifier {
   return (value as { type: string }).type === 'character-mining-speed';
 }
+
 interface _CharacterReachDistanceModifier {
   type: 'character-reach-distance';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -8080,6 +8301,7 @@ export function isCharacterReachDistanceModifier(
 ): value is CharacterReachDistanceModifier {
   return (value as { type: string }).type === 'character-reach-distance';
 }
+
 interface _CharacterResourceReachDistanceModifier {
   type: 'character-resource-reach-distance';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -8097,6 +8319,7 @@ export function isCharacterResourceReachDistanceModifier(
     (value as { type: string }).type === 'character-resource-reach-distance'
   );
 }
+
 interface _CharacterRunningSpeedModifier {
   type: 'character-running-speed';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -8111,6 +8334,7 @@ export function isCharacterRunningSpeedModifier(
 ): value is CharacterRunningSpeedModifier {
   return (value as { type: string }).type === 'character-running-speed';
 }
+
 export interface ChartUtilityConstants {
   artillery_range_color: Color;
   blue_signal_color: Color;
@@ -8177,6 +8401,7 @@ export function isCheckBoxStyleSpecification(
 ): value is CheckBoxStyleSpecification {
   return (value as { type: string }).type === 'checkbox_style';
 }
+
 export interface CircuitConnectorLayer {
   east?: RenderLayer;
   north?: RenderLayer;
@@ -8233,6 +8458,7 @@ export function isClearCursorTipTrigger(
 ): value is ClearCursorTipTrigger {
   return (value as { type: string }).type === 'clear-cursor';
 }
+
 export interface CliffPlacementSettings {
   /** Elevation at which the first row of cliffs is placed. Can not be set from the map generation GUI. */
   cliff_elevation_0?: number;
@@ -8259,6 +8485,7 @@ export function isClusterTriggerItem(
 ): value is ClusterTriggerItem {
   return (value as { type: string }).type === 'cluster';
 }
+
 /** Table of red, green, blue, and alpha float values between 0 and 1.Alternatively, values can be from 0-255, they are interpreted as such if at least one value is `> 1`.
 
 Color allows the short-hand notation of passing an array of exactly 3 or 4 numbers.
@@ -8341,6 +8568,7 @@ export function isCraftItemTipTrigger(
 ): value is CraftItemTipTrigger {
   return (value as { type: string }).type === 'craft-item';
 }
+
 /** If no tint is specified, the crafting machine falls back to [CraftingMachinePrototype::default_recipe_tint](prototype:CraftingMachinePrototype::default_recipe_tint). */
 export interface CraftingMachineTint {
   primary?: Color;
@@ -8370,6 +8598,7 @@ export function isCreateDecorativesTriggerEffectItem(
 ): value is CreateDecorativesTriggerEffectItem {
   return (value as { type: string }).type === 'create-decorative';
 }
+
 interface _CreateEntityTriggerEffectItem {
   check_buildability?: boolean;
   /** The name of the entity that should be created. */
@@ -8393,6 +8622,7 @@ export function isCreateEntityTriggerEffectItem(
 ): value is CreateEntityTriggerEffectItem {
   return (value as { type: string }).type === 'create-entity';
 }
+
 interface _CreateExplosionTriggerEffectItem {
   cycle_while_moving?: boolean;
   inherit_movement_distance_from_projectile?: boolean;
@@ -8413,6 +8643,7 @@ export function isCreateExplosionTriggerEffectItem(
 ): value is CreateExplosionTriggerEffectItem {
   return (value as { type: string }).type === 'create-explosion';
 }
+
 interface _CreateFireTriggerEffectItem {
   initial_ground_flame_count?: number;
   type: 'create-fire';
@@ -8426,6 +8657,7 @@ export function isCreateFireTriggerEffectItem(
 ): value is CreateFireTriggerEffectItem {
   return (value as { type: string }).type === 'create-fire';
 }
+
 interface _CreateParticleTriggerEffectItem {
   frame_speed?: number;
   frame_speed_deviation?: number;
@@ -8457,6 +8689,7 @@ export function isCreateParticleTriggerEffectItem(
 ): value is CreateParticleTriggerEffectItem {
   return (value as { type: string }).type === 'create-particle';
 }
+
 interface _CreateSmokeTriggerEffectItem {
   initial_height?: number;
   speed?: Vector;
@@ -8479,6 +8712,7 @@ export function isCreateSmokeTriggerEffectItem(
 ): value is CreateSmokeTriggerEffectItem {
   return (value as { type: string }).type === 'create-smoke';
 }
+
 interface _CreateStickerTriggerEffectItem {
   show_in_tooltip?: boolean;
   /** Name of a [StickerPrototype](prototype:StickerPrototype) that should be created. */
@@ -8496,6 +8730,7 @@ export function isCreateStickerTriggerEffectItem(
 ): value is CreateStickerTriggerEffectItem {
   return (value as { type: string }).type === 'create-sticker';
 }
+
 interface _CreateTrivialSmokeEffectItem {
   initial_height?: number;
   max_radius?: number;
@@ -8522,6 +8757,7 @@ export function isCreateTrivialSmokeEffectItem(
 ): value is CreateTrivialSmokeEffectItem {
   return (value as { type: string }).type === 'create-trivial-smoke';
 }
+
 export interface CursorBoxSpecification {
   blueprint_snap_rectangle: BoxSpecification[];
   copy: BoxSpecification[];
@@ -8567,6 +8803,7 @@ export function isDamageTriggerEffectItem(
 ): value is DamageTriggerEffectItem {
   return (value as { type: string }).type === 'damage';
 }
+
 interface _DamageTypeFilters {
   /** The damage types to filter for. */
   types: DamageTypeID | DamageTypeID[];
@@ -8588,6 +8825,7 @@ export function isDeconstructionTimeToLiveModifier(
 ): value is DeconstructionTimeToLiveModifier {
   return (value as { type: string }).type === 'deconstruction-time-to-live';
 }
+
 export interface DefaultRecipeTint {
   primary?: Color;
   quaternary?: Color;
@@ -8604,6 +8842,7 @@ export function isDependenciesMetTipTrigger(
 ): value is DependenciesMetTipTrigger {
   return (value as { type: string }).type === 'dependencies-met';
 }
+
 export interface DestroyCliffsCapsuleAction {
   attack_parameters: AttackParameters;
   play_sound_on_failure?: boolean;
@@ -8619,6 +8858,7 @@ export function isDestroyCliffsCapsuleAction(
 ): value is DestroyCliffsCapsuleAction {
   return (value as { type: string }).type === 'destroy-cliffs';
 }
+
 interface _DestroyCliffsTriggerEffectItem {
   explosion?: EntityID;
   radius: number;
@@ -8633,6 +8873,7 @@ export function isDestroyCliffsTriggerEffectItem(
 ): value is DestroyCliffsTriggerEffectItem {
   return (value as { type: string }).type === 'destroy-cliffs';
 }
+
 interface _DestroyDecorativesTriggerEffectItem {
   /** If `true`, only decoratives with a [DecorativePrototype::trigger_effect](prototype:DecorativePrototype::trigger_effect) will be destroyed. */
   decoratives_with_trigger_only?: boolean;
@@ -8655,6 +8896,7 @@ export function isDestroyDecorativesTriggerEffectItem(
 ): value is DestroyDecorativesTriggerEffectItem {
   return (value as { type: string }).type === 'destroy-decoratives';
 }
+
 export interface DifficultySettings {
   /** A [defines.difficulty_settings.recipe_difficulty](runtime:defines.difficulty_settings.recipe_difficulty). */
   recipe_difficulty: number;
@@ -8677,6 +8919,7 @@ export function isDirectTriggerItem(
 ): value is DirectTriggerItem {
   return (value as { type: string }).type === 'direct';
 }
+
 export interface DirectionShift {
   east?: Vector;
   north?: Vector;
@@ -8701,6 +8944,7 @@ export function isDoubleSliderStyleSpecification(
 ): value is DoubleSliderStyleSpecification {
   return (value as { type: string }).type === 'double_slider_style';
 }
+
 interface _DropDownStyleSpecification {
   button_style?: ButtonStyleSpecification;
   icon?: Sprite;
@@ -8718,6 +8962,7 @@ export function isDropDownStyleSpecification(
 ): value is DropDownStyleSpecification {
   return (value as { type: string }).type === 'dropdown_style';
 }
+
 /** When applied to modules, the resulting effect is a sum of all module affects, multiplied through calculations: `(1 + sum module effects)` or, for productivity `(0 + sum)`. */
 export interface Effect {
   /** Multiplier to energy used during operation (not idle/drain use). The minimum possible sum is -80%. */
@@ -8754,6 +8999,7 @@ export function isElectricEnergySource(
 ): value is ElectricEnergySource {
   return (value as { type: string }).type === 'electric';
 }
+
 /** If this is loaded as a single ElementImageSetLayer, it gets used as `base`. */
 interface _ElementImageSet {
   base?: ElementImageSetLayer;
@@ -8859,6 +9105,7 @@ export function isEmptyWidgetStyleSpecification(
 ): value is EmptyWidgetStyleSpecification {
   return (value as { type: string }).type === 'empty_widget_style';
 }
+
 export interface EnemyEvolutionSettings {
   /** Percentual increase in the evolution factor for every destroyed spawner */
   destroy_factor: number;
@@ -8909,6 +9156,7 @@ export function isEntityTransferTipTrigger(
 ): value is EntityTransferTipTrigger {
   return (value as { type: string }).type === 'entity-transfer';
 }
+
 /** The shape and dimensions of an equipment module. */
 export interface EquipmentShape {
   height: number;
@@ -8972,6 +9220,7 @@ export function isFastBeltBendTipTrigger(
 ): value is FastBeltBendTipTrigger {
   return (value as { type: string }).type === 'fast-belt-bend';
 }
+
 export interface FastReplaceTipTrigger {
   count?: number;
   match_type_only?: boolean;
@@ -8985,6 +9234,7 @@ export function isFastReplaceTipTrigger(
 ): value is FastReplaceTipTrigger {
   return (value as { type: string }).type === 'fast-replace';
 }
+
 interface _FlameThrowerExplosionTriggerDelivery {
   direction_deviation?: number;
   /** Name of a [FlameThrowerExplosionPrototype](prototype:FlameThrowerExplosionPrototype). */
@@ -9005,6 +9255,7 @@ export function isFlameThrowerExplosionTriggerDelivery(
 ): value is FlameThrowerExplosionTriggerDelivery {
   return (value as { type: string }).type === 'flame-thrower';
 }
+
 interface _FlowStyleSpecification {
   horizontal_spacing?: number;
   max_on_row?: number;
@@ -9020,6 +9271,7 @@ export function isFlowStyleSpecification(
 ): value is FlowStyleSpecification {
   return (value as { type: string }).type === 'flow_style';
 }
+
 /** Used to set the fluid amount an entity can hold, as well as the connection points for pipes leading into and out of the entity.
 
 Entities can have multiple fluidboxes. These can be part of a [FluidEnergySource](prototype:FluidEnergySource), or be specified directly in the entity prototype.
@@ -9106,6 +9358,7 @@ export function isFluidEnergySource(
 ): value is FluidEnergySource {
   return (value as { type: string }).type === 'fluid';
 }
+
 /** A fluid ingredient definition. */
 export interface FluidIngredientPrototype {
   /** Can not be `< 0`. */
@@ -9132,6 +9385,7 @@ export function isFluidIngredientPrototype(
 ): value is FluidIngredientPrototype {
   return (value as { type: string }).type === 'fluid';
 }
+
 /** A fluid product definition. */
 export interface FluidProductPrototype {
   /** Can not be `< 0`. */
@@ -9166,6 +9420,7 @@ export function isFluidProductPrototype(
 ): value is FluidProductPrototype {
   return (value as { type: string }).type === 'fluid';
 }
+
 export interface FluidWagonConnectorGraphics {
   load_animations: PumpConnectorGraphics;
   unload_animations: PumpConnectorGraphics;
@@ -9186,6 +9441,7 @@ export function isFollowerRobotLifetimeModifier(
 ): value is FollowerRobotLifetimeModifier {
   return (value as { type: string }).type === 'follower-robot-lifetime';
 }
+
 export interface FootprintParticle {
   /** The name of the particle that should be created when the character walks on the defined tiles. */
   particle_name?: ParticleID;
@@ -9228,6 +9484,7 @@ export function isFrameStyleSpecification(
 ): value is FrameStyleSpecification {
   return (value as { type: string }).type === 'frame_style';
 }
+
 export interface FrequencySizeRichness {
   frequency?: MapGenSize;
   richness?: MapGenSize;
@@ -9252,6 +9509,7 @@ export function isGateOverRailBuildTipTrigger(
 ): value is GateOverRailBuildTipTrigger {
   return (value as { type: string }).type === 'gate-over-rail-build';
 }
+
 interface _GhostTimeToLiveModifier {
   type: 'ghost-time-to-live';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -9266,6 +9524,7 @@ export function isGhostTimeToLiveModifier(
 ): value is GhostTimeToLiveModifier {
   return (value as { type: string }).type === 'ghost-time-to-live';
 }
+
 interface _GiveItemModifier {
   /** Must be `> 0`. */
   count?: ItemCountType;
@@ -9281,6 +9540,7 @@ export type GiveItemModifier = _GiveItemModifier &
 export function isGiveItemModifier(value: unknown): value is GiveItemModifier {
   return (value as { type: string }).type === 'give-item';
 }
+
 interface _GlowStyleSpecification {
   image_set?: ElementImageSet;
   type: 'glow_style';
@@ -9294,6 +9554,7 @@ export function isGlowStyleSpecification(
 ): value is GlowStyleSpecification {
   return (value as { type: string }).type === 'glow_style';
 }
+
 interface _GraphStyleSpecification {
   background_color?: Color;
   data_line_highlight_distance?: number;
@@ -9320,6 +9581,7 @@ export function isGraphStyleSpecification(
 ): value is GraphStyleSpecification {
   return (value as { type: string }).type === 'graph_style';
 }
+
 export interface GroupAttackTipTrigger {
   count?: number;
   type: 'group-attack';
@@ -9330,6 +9592,7 @@ export function isGroupAttackTipTrigger(
 ): value is GroupAttackTipTrigger {
   return (value as { type: string }).type === 'group-attack';
 }
+
 export interface GunShift4Way {
   east?: Vector;
   north: Vector;
@@ -9354,6 +9617,7 @@ export type GunSpeedModifier = _GunSpeedModifier &
 export function isGunSpeedModifier(value: unknown): value is GunSpeedModifier {
   return (value as { type: string }).type === 'gun-speed';
 }
+
 /** Used to specify heat capacity properties without a [heat energy source](prototype:HeatEnergySource). */
 export interface HeatBuffer {
   /** May contain up to 32 connections. */
@@ -9404,6 +9668,7 @@ export type HeatEnergySource = _HeatEnergySource &
 export function isHeatEnergySource(value: unknown): value is HeatEnergySource {
   return (value as { type: string }).type === 'heat';
 }
+
 interface _HorizontalFlowStyleSpecification {
   horizontal_spacing?: number;
   type: 'horizontal_flow_style';
@@ -9418,6 +9683,7 @@ export function isHorizontalFlowStyleSpecification(
 ): value is HorizontalFlowStyleSpecification {
   return (value as { type: string }).type === 'horizontal_flow_style';
 }
+
 interface _HorizontalScrollBarStyleSpecification {
   type: 'horizontal_scrollbar_style';
 }
@@ -9434,6 +9700,7 @@ export function isHorizontalScrollBarStyleSpecification(
 ): value is HorizontalScrollBarStyleSpecification {
   return (value as { type: string }).type === 'horizontal_scrollbar_style';
 }
+
 /** Icon layering follows the following rules:
 
 - The rendering order of the individual icons follows the array order: Later added icons (higher index) are drawn on top of previously added icons (lower index).
@@ -9477,6 +9744,7 @@ export function isImageStyleSpecification(
 ): value is ImageStyleSpecification {
   return (value as { type: string }).type === 'image_style';
 }
+
 interface _InsertItemTriggerEffectItem {
   count?: number;
   /** Name of the [ItemPrototype](prototype:ItemPrototype) that should be created. */
@@ -9492,6 +9760,7 @@ export function isInsertItemTriggerEffectItem(
 ): value is InsertItemTriggerEffectItem {
   return (value as { type: string }).type === 'insert-item';
 }
+
 interface _InserterStackSizeBonusModifier {
   /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
@@ -9508,6 +9777,7 @@ export function isInserterStackSizeBonusModifier(
 ): value is InserterStackSizeBonusModifier {
   return (value as { type: string }).type === 'inserter-stack-size-bonus';
 }
+
 interface _InstantTriggerDelivery {
   type: 'instant';
 }
@@ -9520,6 +9790,7 @@ export function isInstantTriggerDelivery(
 ): value is InstantTriggerDelivery {
   return (value as { type: string }).type === 'instant';
 }
+
 export interface InterruptibleSound {
   fade_ticks?: number;
   sound: Sound;
@@ -9538,6 +9809,7 @@ export function isInvokeTileEffectTriggerEffectItem(
 ): value is InvokeTileEffectTriggerEffectItem {
   return (value as { type: string }).type === 'invoke-tile-trigger';
 }
+
 /** An item ingredient definition. It can be specified as a table with named or numbered keys, but not a mix of both. */
 interface _ItemIngredientPrototype {
   amount: number;
@@ -9605,6 +9877,7 @@ export function isLabelStyleSpecification(
 ): value is LabelStyleSpecification {
   return (value as { type: string }).type === 'label_style';
 }
+
 interface _LaboratoryProductivityModifier {
   /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
@@ -9621,6 +9894,7 @@ export function isLaboratoryProductivityModifier(
 ): value is LaboratoryProductivityModifier {
   return (value as { type: string }).type === 'laboratory-productivity';
 }
+
 interface _LaboratorySpeedModifier {
   /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
@@ -9637,6 +9911,7 @@ export function isLaboratorySpeedModifier(
 ): value is LaboratorySpeedModifier {
   return (value as { type: string }).type === 'laboratory-speed';
 }
+
 interface _LayeredSound {
   layers: Sound[];
 }
@@ -9683,6 +9958,7 @@ export function isLimitChestTipTrigger(
 ): value is LimitChestTipTrigger {
   return (value as { type: string }).type === 'limit-chest';
 }
+
 interface _LineStyleSpecification {
   border?: BorderImageSet;
   type: 'line_style';
@@ -9696,6 +9972,7 @@ export function isLineStyleSpecification(
 ): value is LineStyleSpecification {
   return (value as { type: string }).type === 'line_style';
 }
+
 interface _LineTriggerItem {
   range: number;
   range_effects?: TriggerEffect;
@@ -9709,6 +9986,7 @@ export type LineTriggerItem = _LineTriggerItem &
 export function isLineTriggerItem(value: unknown): value is LineTriggerItem {
   return (value as { type: string }).type === 'line';
 }
+
 export interface LinkedBeltStructure {
   back_patch?: Sprite4Way;
   direction_in: Sprite4Way;
@@ -9731,6 +10009,7 @@ export function isListBoxStyleSpecification(
 ): value is ListBoxStyleSpecification {
   return (value as { type: string }).type === 'list_box_style';
 }
+
 export interface LoaderStructure {
   back_patch?: Sprite4Way;
   direction_in: Sprite4Way;
@@ -9757,6 +10036,7 @@ export function isLowPowerTipTrigger(
 ): value is LowPowerTipTrigger {
   return (value as { type: string }).type === 'low-power';
 }
+
 export interface ManualTransferTipTrigger {
   count?: number;
   type: 'manual-transfer';
@@ -9767,6 +10047,7 @@ export function isManualTransferTipTrigger(
 ): value is ManualTransferTipTrigger {
   return (value as { type: string }).type === 'manual-transfer';
 }
+
 export interface ManualWireDragTipTrigger {
   count?: number;
   type: 'manual-wire-drag';
@@ -9777,6 +10058,7 @@ export function isManualWireDragTipTrigger(
 ): value is ManualWireDragTipTrigger {
   return (value as { type: string }).type === 'manual-wire-drag';
 }
+
 export interface MapEditorConstants {
   cliff_editor_remove_cliffs_color: Color;
   clone_editor_brush_cursor_preview_tint: Color;
@@ -9904,6 +10186,7 @@ export function isMaxFailedAttemptsPerTickPerConstructionQueueModifier(
     'max-failed-attempts-per-tick-per-construction-queue'
   );
 }
+
 interface _MaxSuccessfulAttemptsPerTickPerConstructionQueueModifier {
   type: 'max-successful-attempts-per-tick-per-construction-queue';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -9925,6 +10208,7 @@ export function isMaxSuccessfulAttemptsPerTickPerConstructionQueueModifier(
     'max-successful-attempts-per-tick-per-construction-queue'
   );
 }
+
 interface _MaximumFollowingRobotsCountModifier {
   /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
@@ -9942,6 +10226,7 @@ export function isMaximumFollowingRobotsCountModifier(
 ): value is MaximumFollowingRobotsCountModifier {
   return (value as { type: string }).type === 'maximum-following-robots-count';
 }
+
 /** The mining properties of objects. For formulas for the mining time, see [mining](https://wiki.factorio.com/Mining). */
 export interface MinableProperties {
   /** Only loaded if `results` is not defined.
@@ -9976,6 +10261,7 @@ export function isMinimapStyleSpecification(
 ): value is MinimapStyleSpecification {
   return (value as { type: string }).type === 'minimap_style';
 }
+
 /** Used by [MiningDrillPrototype](prototype:MiningDrillPrototype). */
 export interface MiningDrillGraphicsSet {
   /** Only loaded if `idle_animation` is defined. */
@@ -10021,6 +10307,7 @@ export function isMiningDrillProductivityBonusModifier(
 ): value is MiningDrillProductivityBonusModifier {
   return (value as { type: string }).type === 'mining-drill-productivity-bonus';
 }
+
 /** The number of module slots in this entity, and their icon positions. */
 export interface ModuleSpecification {
   module_info_icon_scale?: number;
@@ -10045,6 +10332,7 @@ export function isNestedTriggerEffectItem(
 ): value is NestedTriggerEffectItem {
   return (value as { type: string }).type === 'nested-result';
 }
+
 /** `value_expressions` property should be a list of numeric expressions, each of which will be evaluated to come up with the corresponding numeric value in the resulting array.
 
 Used to construct map positions (`{x, y}`) and map position lists (`{{x0,y0}, {y1,y1}, [...]}`) for [offset-points](prototype:NoiseFunctionOffsetPoints) and [distance-from-nearest-point](prototype:NoiseFunctionDistanceFromNearestPoint) functions. */
@@ -10058,6 +10346,7 @@ export function isNoiseArrayConstruction(
 ): value is NoiseArrayConstruction {
   return (value as { type: string }).type === 'array-construction';
 }
+
 /** Takes a single argument and returns its absolute value. Ie. if the argument is negative, it is inverted. */
 export interface NoiseFunctionAbsoluteValue {
   arguments: [NoiseNumber];
@@ -10070,6 +10359,7 @@ export function isNoiseFunctionAbsoluteValue(
 ): value is NoiseFunctionAbsoluteValue {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Takes between 0 and 32 numbers and adds them up. */
 export interface NoiseFunctionAdd {
   arguments: NoiseNumber[];
@@ -10080,6 +10370,7 @@ export interface NoiseFunctionAdd {
 export function isNoiseFunctionAdd(value: unknown): value is NoiseFunctionAdd {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Returns the arc tangent of y/x using the signs of arguments to determine the correct quadrant. */
 export interface NoiseFunctionAtan2 {
   /** The first argument is y and the second is x. */
@@ -10093,6 +10384,7 @@ export function isNoiseFunctionAtan2(
 ): value is NoiseFunctionAtan2 {
   return (value as { type: string }).type === 'function-application';
 }
+
 export interface NoiseFunctionAutoplaceProbability {
   arguments: [NoiseLiteralObject];
   function_name: 'autoplace-probability';
@@ -10104,6 +10396,7 @@ export function isNoiseFunctionAutoplaceProbability(
 ): value is NoiseFunctionAutoplaceProbability {
   return (value as { type: string }).type === 'function-application';
 }
+
 export interface NoiseFunctionAutoplaceRichness {
   arguments: [NoiseLiteralObject];
   function_name: 'autoplace-richness';
@@ -10115,6 +10408,7 @@ export function isNoiseFunctionAutoplaceRichness(
 ): value is NoiseFunctionAutoplaceRichness {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Casts between 0 and 32 numbers to 32-bit integers and performs a bitwise AND on them. */
 export interface NoiseFunctionBitwiseAnd {
   arguments: NoiseNumber[];
@@ -10127,6 +10421,7 @@ export function isNoiseFunctionBitwiseAnd(
 ): value is NoiseFunctionBitwiseAnd {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Casts the single argument to a 32-bit integer and performs bitwise negates it. */
 export interface NoiseFunctionBitwiseNot {
   arguments: [NoiseNumber];
@@ -10139,6 +10434,7 @@ export function isNoiseFunctionBitwiseNot(
 ): value is NoiseFunctionBitwiseNot {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Casts between 0 and 32 numbers to 32-bit integers and performs a bitwise OR on them. */
 export interface NoiseFunctionBitwiseOr {
   arguments: NoiseNumber[];
@@ -10151,6 +10447,7 @@ export function isNoiseFunctionBitwiseOr(
 ): value is NoiseFunctionBitwiseOr {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Casts between 0 and 32 numbers to 32-bit integers and performs a bitwise EXCLUSIVE OR on them. */
 export interface NoiseFunctionBitwiseXor {
   arguments: NoiseNumber[];
@@ -10163,6 +10460,7 @@ export function isNoiseFunctionBitwiseXor(
 ): value is NoiseFunctionBitwiseXor {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Takes a single argument and returns its ceil. */
 export interface NoiseFunctionCeil {
   arguments: [NoiseNumber];
@@ -10175,6 +10473,7 @@ export function isNoiseFunctionCeil(
 ): value is NoiseFunctionCeil {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** The first argument is clamped to be between the second and third. The second is treated as a lower limit and the third the upper limit. */
 export interface NoiseFunctionClamp {
   arguments: [NoiseNumber, NoiseNumber, NoiseNumber];
@@ -10187,6 +10486,7 @@ export function isNoiseFunctionClamp(
 ): value is NoiseFunctionClamp {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Prints between 0 and 32 arguments to the [log file](https://wiki.factorio.com/Log_file) when the expression is compiled. For that it needs to part of another expression that is compiled. The last argument of the `compile-time-log` is returned as the "result" of the `compile-time-log`. */
 export interface NoiseFunctionCompileTimeLog {
   arguments: NoiseExpression[];
@@ -10199,6 +10499,7 @@ export function isNoiseFunctionCompileTimeLog(
 ): value is NoiseFunctionCompileTimeLog {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Takes a single argument and returns its cosine. */
 export interface NoiseFunctionCos {
   arguments: [NoiseNumber];
@@ -10209,6 +10510,7 @@ export interface NoiseFunctionCos {
 export function isNoiseFunctionCos(value: unknown): value is NoiseFunctionCos {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Computes the [euclidean distance](https://en.wikipedia.org/wiki/Euclidean_distance) of the position `{x, y}` to all position listed in points and returns the shortest distance. The returned distance can be `maximum_distance` at most. */
 export interface NoiseFunctionDistanceFromNearestPoint {
   arguments: DistanceFromNearestPointArguments;
@@ -10221,6 +10523,7 @@ export function isNoiseFunctionDistanceFromNearestPoint(
 ): value is NoiseFunctionDistanceFromNearestPoint {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Takes two arguments and divides the first by the second. */
 export interface NoiseFunctionDivide {
   arguments: [NoiseNumber, NoiseNumber];
@@ -10233,6 +10536,7 @@ export function isNoiseFunctionDivide(
 ): value is NoiseFunctionDivide {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Returns the result of first argument == second argument as a literal number that is `0` for false and `1` for true. */
 export interface NoiseFunctionEquals {
   arguments: [NoiseNumber, NoiseNumber];
@@ -10245,6 +10549,7 @@ export function isNoiseFunctionEquals(
 ): value is NoiseFunctionEquals {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Takes two arguments and raises the first to the second power. */
 export interface NoiseFunctionExponentiate {
   arguments: [NoiseNumber, NoiseNumber];
@@ -10257,6 +10562,7 @@ export function isNoiseFunctionExponentiate(
 ): value is NoiseFunctionExponentiate {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Scaling input and output can be accomplished other ways, but are done so commonly as to be built into this function for performance reasons. */
 export interface NoiseFunctionFactorioBasisNoise {
   arguments: FactorioBasisNoiseArguments;
@@ -10269,6 +10575,7 @@ export function isNoiseFunctionFactorioBasisNoise(
 ): value is NoiseFunctionFactorioBasisNoise {
   return (value as { type: string }).type === 'function-application';
 }
+
 export interface NoiseFunctionFactorioMultioctaveNoise {
   arguments: FactorioMultioctaveNoiseArguments;
   function_name: 'factorio-multioctave-noise';
@@ -10280,6 +10587,7 @@ export function isNoiseFunctionFactorioMultioctaveNoise(
 ): value is NoiseFunctionFactorioMultioctaveNoise {
   return (value as { type: string }).type === 'function-application';
 }
+
 export interface NoiseFunctionFactorioQuickMultioctaveNoise {
   arguments: FactorioQuickMultioctaveNoiseArguments;
   function_name: 'factorio-quick-multioctave-noise';
@@ -10291,6 +10599,7 @@ export function isNoiseFunctionFactorioQuickMultioctaveNoise(
 ): value is NoiseFunctionFactorioQuickMultioctaveNoise {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Takes a single argument and returns its floor. */
 export interface NoiseFunctionFloor {
   arguments: [NoiseNumber];
@@ -10303,6 +10612,7 @@ export function isNoiseFunctionFloor(
 ): value is NoiseFunctionFloor {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Returns the result of first argument <= second argument as a literal number that is `0` for false and `1` for true. */
 export interface NoiseFunctionLessOrEqual {
   arguments: [NoiseNumber, NoiseNumber];
@@ -10315,6 +10625,7 @@ export function isNoiseFunctionLessOrEqual(
 ): value is NoiseFunctionLessOrEqual {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Returns the result of first argument < second argument as a literal number that is `0` for false and `1` for true. */
 export interface NoiseFunctionLessThan {
   arguments: [NoiseNumber, NoiseNumber];
@@ -10327,6 +10638,7 @@ export function isNoiseFunctionLessThan(
 ): value is NoiseFunctionLessThan {
   return (value as { type: string }).type === 'function-application';
 }
+
 export interface NoiseFunctionLog2 {
   arguments: [NoiseNumber];
   function_name: 'log2';
@@ -10338,6 +10650,7 @@ export function isNoiseFunctionLog2(
 ): value is NoiseFunctionLog2 {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Takes two arguments and divides the first by the second and returns the remainder. This is implemented using [fmod(double, double)](https://en.cppreference.com/w/cpp/numeric/math/fmod). */
 export interface NoiseFunctionModulo {
   arguments: [NoiseNumber, NoiseNumber];
@@ -10350,6 +10663,7 @@ export function isNoiseFunctionModulo(
 ): value is NoiseFunctionModulo {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Takes between 0 and 32 numbers and multiplies them. */
 export interface NoiseFunctionMultiply {
   arguments: NoiseNumber[];
@@ -10362,6 +10676,7 @@ export function isNoiseFunctionMultiply(
 ): value is NoiseFunctionMultiply {
   return (value as { type: string }).type === 'function-application';
 }
+
 export interface NoiseFunctionNoiseLayerNameToID {
   arguments: [NoiseLiteralString];
   function_name: 'noise-layer-name-to-id';
@@ -10373,6 +10688,7 @@ export function isNoiseFunctionNoiseLayerNameToID(
 ): value is NoiseFunctionNoiseLayerNameToID {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** The first argument represents a vector of how the positions should be shifted, and the second argument lists the positions that should be shifted. */
 export interface NoiseFunctionOffsetPoints {
   arguments: [NoiseArrayConstruction, NoiseArrayConstruction];
@@ -10385,6 +10701,7 @@ export function isNoiseFunctionOffsetPoints(
 ): value is NoiseFunctionOffsetPoints {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Subtracts a random value in the `[0, amplitude)` range from `source` if `source` is larger than `0`. */
 export interface NoiseFunctionRandomPenalty {
   arguments: RandomPenaltyArguments;
@@ -10397,6 +10714,7 @@ export function isNoiseFunctionRandomPenalty(
 ): value is NoiseFunctionRandomPenalty {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Similar to [clamp](prototype:NoiseFunctionClamp), where the first argument is folded back across the third and second limits until it lies between them. */
 export interface NoiseFunctionRidge {
   /** The first argument is the  number to be ridged, the second is the lower limit and the third is the upper limit. */
@@ -10410,6 +10728,7 @@ export function isNoiseFunctionRidge(
 ): value is NoiseFunctionRidge {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Takes a single argument and returns its sine. */
 export interface NoiseFunctionSin {
   arguments: [NoiseNumber];
@@ -10420,6 +10739,7 @@ export interface NoiseFunctionSin {
 export function isNoiseFunctionSin(value: unknown): value is NoiseFunctionSin {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Generates random conical spots. The map is divided into square regions, and within each region, candidate points are chosen at random and target density, spot quantity, and radius are calculated for each point (or one of every `skip_span` candidate points) by configured expressions. Each spot contributes a quantity to a regional target total (which is the average of sampled target densities times the area of the region) until the total has been reached or a maximum spot count is hit. The output value of the function is the maximum height of any spot at a given point.
 
 The parameters that provide expressions to be evaluated for each point (all named something_expression) need to actually return expression objects.
@@ -10438,6 +10758,7 @@ export function isNoiseFunctionSpotNoise(
 ): value is NoiseFunctionSpotNoise {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Takes two arguments and subtracts the second from the first. */
 export interface NoiseFunctionSubtract {
   arguments: [NoiseNumber, NoiseNumber];
@@ -10450,6 +10771,7 @@ export function isNoiseFunctionSubtract(
 ): value is NoiseFunctionSubtract {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** The first argument is the value to be terraced. The second argument is the offset, the third the width, and the fourth the strength. */
 export interface NoiseFunctionTerrace {
   arguments: [
@@ -10467,6 +10789,7 @@ export function isNoiseFunctionTerrace(
 ): value is NoiseFunctionTerrace {
   return (value as { type: string }).type === 'function-application';
 }
+
 /** Has an `arguments` property that is a list of condition-result expression pairs followed by a default result expression, like so:
 
 ```
@@ -10490,6 +10813,7 @@ export interface NoiseIfElseChain {
 export function isNoiseIfElseChain(value: unknown): value is NoiseIfElseChain {
   return (value as { type: string }).type === 'if-else-chain';
 }
+
 /** Evaluates to the same boolean value (true or false) every time, given by the `literal_value` property. May be used as a number value, evaluates to `1` for true and `0` for false. */
 export interface NoiseLiteralBoolean {
   literal_value: boolean;
@@ -10501,6 +10825,7 @@ export function isNoiseLiteralBoolean(
 ): value is NoiseLiteralBoolean {
   return (value as { type: string }).type === 'literal-boolean';
 }
+
 /** Returns the expression represented by its `literal_value` property. Useful mostly for passing expressions (to be evaluated later) to the [spot-noise](prototype:NoiseFunctionSpotNoise) function. */
 export interface NoiseLiteralExpression {
   literal_value: NoiseExpression;
@@ -10512,6 +10837,7 @@ export function isNoiseLiteralExpression(
 ): value is NoiseLiteralExpression {
   return (value as { type: string }).type === 'literal-expression';
 }
+
 /** Evaluates to the same number every time, given by the `literal_value` property. All numbers are treated as [float](prototype:float) internally unless otherwise specified. May be used as a boolean value, evaluates to true for numbers bigger than zero, anything else evaluates to false. */
 export interface NoiseLiteralNumber {
   literal_value: number;
@@ -10523,6 +10849,7 @@ export function isNoiseLiteralNumber(
 ): value is NoiseLiteralNumber {
   return (value as { type: string }).type === 'literal-number';
 }
+
 /** Evaluates to the same object every time, given by the `literal_value` property. Since the noise generation runtime has no notion of objects or use for them, this is useful only in constant contexts, such as the argument of the `autoplace-probability` function (where the 'literal object' is an [AutoplaceSpecification](prototype:AutoplaceSpecification)). */
 export interface NoiseLiteralObject {
   literal_value: AutoplaceSpecification;
@@ -10534,6 +10861,7 @@ export function isNoiseLiteralObject(
 ): value is NoiseLiteralObject {
   return (value as { type: string }).type === 'literal-object';
 }
+
 /** Evaluates to the same string every time, given by the `literal_value` property. Since the noise generation runtime has no notion of strings or use for them, this is useful only in constant contexts. */
 export interface NoiseLiteralString {
   literal_value: string;
@@ -10545,6 +10873,7 @@ export function isNoiseLiteralString(
 ): value is NoiseLiteralString {
   return (value as { type: string }).type === 'literal-string';
 }
+
 /** Evaluates and returns the value of its expression property, which is itself an expression.
 
 This hints to the compiler that it should break the subexpression into its own procedure so that the result can be re-used in multiple places. For instance if you want to re-use the same multioctave noise for determining probability of multiple tiles/entities, wrap the multioctave noise expression in a procedure-delimiter. Alternatively, make the noise its own [NamedNoiseExpression](prototype:NamedNoiseExpression) and reference it by name, using a [NoiseVariable](prototype:NoiseVariable). */
@@ -10558,6 +10887,7 @@ export function isNoiseProcedureDelimiter(
 ): value is NoiseProcedureDelimiter {
   return (value as { type: string }).type === 'procedure-delimiter';
 }
+
 /** Variables referencing named noise expressions may have their reference overridden by other named noise expression if their `intended_property` is the variable name and it is selected by the user in the map generator GUI. See the second example on [NamedNoiseExpression::intended_property](prototype:NamedNoiseExpression::intended_property). */
 export interface NoiseVariable {
   type: 'variable';
@@ -10579,6 +10909,7 @@ The named noise expressions refer to one of the notable [BaseNamedNoiseExpressio
 export function isNoiseVariable(value: unknown): value is NoiseVariable {
   return (value as { type: string }).type === 'variable';
 }
+
 interface _NothingModifier {
   effect_description?: LocalisedString;
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -10610,6 +10941,7 @@ export interface OrTipTrigger {
 export function isOrTipTrigger(value: unknown): value is OrTipTrigger {
   return (value as { type: string }).type === 'or';
 }
+
 export interface OrientedCliffPrototype {
   collision_bounding_box: BoundingBox;
   fill_volume: number;
@@ -10655,6 +10987,7 @@ export function isPasteEntitySettingsTipTrigger(
 ): value is PasteEntitySettingsTipTrigger {
   return (value as { type: string }).type === 'paste-entity-settings';
 }
+
 export interface PathFinderSettings {
   /** When looking for path from cache make sure it doesn't end too far from requested end. This is typically higher than accept value for the start because the end target can be moving. */
   cache_accept_path_end_distance_ratio: number;
@@ -10778,6 +11111,7 @@ export function isPlaceEquipmentTipTrigger(
 ): value is PlaceEquipmentTipTrigger {
   return (value as { type: string }).type === 'place-equipment';
 }
+
 interface _PlaySoundTriggerEffectItem {
   /** Negative values are silently clamped to 0. */
   audible_distance_modifier?: number;
@@ -10800,6 +11134,7 @@ export function isPlaySoundTriggerEffectItem(
 ): value is PlaySoundTriggerEffectItem {
   return (value as { type: string }).type === 'play-sound';
 }
+
 export interface PlayerColorData {
   chat_color: Color;
   name: string;
@@ -10855,6 +11190,7 @@ export function isProgressBarStyleSpecification(
 ): value is ProgressBarStyleSpecification {
   return (value as { type: string }).type === 'progressbar_style';
 }
+
 interface _ProjectileAttackParameters {
   /** When used with `projectile_creation_parameters`, this offsets what the turret's sprite looks at. Setting to `{0,1}` will cause the turret to aim one tile up from the target but the projectile will still aim for the entity. Can be used to give the illusion of height but can also confuse aim logic when set too high.
 
@@ -10878,6 +11214,7 @@ export function isProjectileAttackParameters(
 ): value is ProjectileAttackParameters {
   return (value as { type: string }).type === 'projectile';
 }
+
 interface _ProjectileTriggerDelivery {
   /** Maximum deviation of the projectile from source orientation, in +/- (`x radians / 2`). Example: `3.14 radians -> +/- (180° / 2)`, meaning up to 90° deviation in either direction of rotation. */
   direction_deviation?: number;
@@ -10901,6 +11238,7 @@ export function isProjectileTriggerDelivery(
 ): value is ProjectileTriggerDelivery {
   return (value as { type: string }).type === 'projectile';
 }
+
 /** A mapping of arrays of [PumpConnectorGraphicsAnimations](prototype:PumpConnectorGraphicsAnimation) to all 4 directions of the pump connection (to a fluid wagon). */
 export interface PumpConnectorGraphics {
   /** Size of the array must be 6 or more. */
@@ -10935,6 +11273,7 @@ export function isPushBackTriggerEffectItem(
 ): value is PushBackTriggerEffectItem {
   return (value as { type: string }).type === 'push-back';
 }
+
 interface _RadioButtonStyleSpecification {
   disabled_font_color?: Color;
   /** Name of a [FontPrototype](prototype:FontPrototype). */
@@ -10955,6 +11294,7 @@ export function isRadioButtonStyleSpecification(
 ): value is RadioButtonStyleSpecification {
   return (value as { type: string }).type === 'radiobutton_style';
 }
+
 /** Sprite to be shown around the entity when it is selected/held in the cursor. */
 export interface RadiusVisualisationSpecification {
   /** Must be greater than or equal to 0. */
@@ -11079,6 +11419,7 @@ export function isResearchTechnologyTipTrigger(
 ): value is ResearchTechnologyTipTrigger {
   return (value as { type: string }).type === 'research';
 }
+
 /** Resistances to certain types of attacks from enemy, and physical damage. See [Damage](https://wiki.factorio.com/Damage). */
 export interface Resistances {
   /** The [flat resistance](https://wiki.factorio.com/Damage#Decrease.2C_or_.22flat.22_resistance) to the given damage type. (Higher is better) */
@@ -11226,6 +11567,7 @@ export function isScriptTriggerEffectItem(
 ): value is ScriptTriggerEffectItem {
   return (value as { type: string }).type === 'script';
 }
+
 interface _ScrollBarStyleSpecification {
   background_graphical_set?: ElementImageSet;
   thumb_button_style?: ButtonStyleSpecification;
@@ -11263,6 +11605,7 @@ export function isScrollPaneStyleSpecification(
 ): value is ScrollPaneStyleSpecification {
   return (value as { type: string }).type === 'scroll_pane_style';
 }
+
 export interface SequenceTipTrigger {
   /** List of triggers to fulfill. */
   triggers: TipTrigger[];
@@ -11274,6 +11617,7 @@ export function isSequenceTipTrigger(
 ): value is SequenceTipTrigger {
   return (value as { type: string }).type === 'sequence';
 }
+
 export interface SetFilterTipTrigger {
   consecutive?: boolean;
   count?: number;
@@ -11287,6 +11631,7 @@ export function isSetFilterTipTrigger(
 ): value is SetFilterTipTrigger {
   return (value as { type: string }).type === 'set-filter';
 }
+
 export interface SetLogisticRequestTipTrigger {
   count?: number;
   logistic_chest_only?: boolean;
@@ -11298,6 +11643,7 @@ export function isSetLogisticRequestTipTrigger(
 ): value is SetLogisticRequestTipTrigger {
   return (value as { type: string }).type === 'set-logistic-request';
 }
+
 export interface SetRecipeTipTrigger {
   consecutive?: boolean;
   machine?: EntityID;
@@ -11311,6 +11657,7 @@ export function isSetRecipeTipTrigger(
 ): value is SetRecipeTipTrigger {
   return (value as { type: string }).type === 'set-recipe';
 }
+
 interface _SetTileTriggerEffectItem {
   apply_projection?: boolean;
   radius: number;
@@ -11327,6 +11674,7 @@ export function isSetTileTriggerEffectItem(
 ): value is SetTileTriggerEffectItem {
   return (value as { type: string }).type === 'set-tile';
 }
+
 export interface ShiftAnimationWaypoints {
   east: Vector[];
   north: Vector[];
@@ -11343,6 +11691,7 @@ export function isShiftBuildTipTrigger(
 ): value is ShiftBuildTipTrigger {
   return (value as { type: string }).type === 'shift-build';
 }
+
 interface _ShowExplosionOnChartTriggerEffectItem {
   scale: number;
   type: 'show-explosion-on-chart';
@@ -11357,6 +11706,7 @@ export function isShowExplosionOnChartTriggerEffectItem(
 ): value is ShowExplosionOnChartTriggerEffectItem {
   return (value as { type: string }).type === 'show-explosion-on-chart';
 }
+
 export interface SignalColorMapping {
   color: Color;
   /** Name of the signal that shows this color. */
@@ -11448,6 +11798,7 @@ export function isSliderStyleSpecification(
 ): value is SliderStyleSpecification {
   return (value as { type: string }).type === 'slider_style';
 }
+
 /** Definition of the smoke of an entity. */
 export interface SmokeSource {
   deviation?: MapPosition;
@@ -11542,6 +11893,7 @@ export function isSpeechBubbleStyleSpecification(
 ): value is SpeechBubbleStyleSpecification {
   return (value as { type: string }).type === 'speech_bubble_style';
 }
+
 /** Used by [SpiderVehiclePrototype](prototype:SpiderVehiclePrototype). */
 export interface SpiderEnginePrototype {
   legs: SpiderLegSpecification | SpiderLegSpecification[];
@@ -11790,6 +12142,7 @@ export function isStackInserterCapacityBonusModifier(
 ): value is StackInserterCapacityBonusModifier {
   return (value as { type: string }).type === 'stack-inserter-capacity-bonus';
 }
+
 export interface StackTransferTipTrigger {
   count?: number;
   transfer?: 'stack' | 'inventory' | 'whole-inventory';
@@ -11801,6 +12154,7 @@ export function isStackTransferTipTrigger(
 ): value is StackTransferTipTrigger {
   return (value as { type: string }).type === 'stack-transfer';
 }
+
 export interface StateSteeringSettings {
   /** Used only for special "to look good" purposes (like in trailer). */
   force_unit_fuzzy_goto_behavior: boolean;
@@ -11848,6 +12202,7 @@ export function isStreamAttackParameters(
 ): value is StreamAttackParameters {
   return (value as { type: string }).type === 'stream';
 }
+
 export interface StreamFluidProperties {
   damage_modifier?: number;
   type: FluidID;
@@ -11867,6 +12222,7 @@ export function isStreamTriggerDelivery(
 ): value is StreamTriggerDelivery {
   return (value as { type: string }).type === 'stream';
 }
+
 /** Used as an alternative way to specify animations. */
 export interface Stripe {
   filename: FileName;
@@ -11916,6 +12272,7 @@ export function isSwitchStyleSpecification(
 ): value is SwitchStyleSpecification {
   return (value as { type: string }).type === 'switch_style';
 }
+
 interface _TabStyleSpecification {
   /** Name of a [FontPrototype](prototype:FontPrototype). */
   badge_font?: string;
@@ -11955,6 +12312,7 @@ export function isTabStyleSpecification(
 ): value is TabStyleSpecification {
   return (value as { type: string }).type === 'tab_style';
 }
+
 interface _TabbedPaneStyleSpecification {
   tab_container?: HorizontalFlowStyleSpecification;
   tab_content_frame?: FrameStyleSpecification;
@@ -11970,6 +12328,7 @@ export function isTabbedPaneStyleSpecification(
 ): value is TabbedPaneStyleSpecification {
   return (value as { type: string }).type === 'tabbed_pane_style';
 }
+
 interface _TableStyleSpecification {
   apply_row_graphical_set_per_column?: boolean;
   background_graphical_set?: ElementImageSet;
@@ -12012,6 +12371,7 @@ export function isTableStyleSpecification(
 ): value is TableStyleSpecification {
   return (value as { type: string }).type === 'table_style';
 }
+
 /** Used when defining a [TechnologyPrototype](prototype:TechnologyPrototype) that uses difficulty. For a technology without difficulty, these same properties are defined on the prototype itself. */
 export interface TechnologyData {
   /** List of effects of the technology (applied when the technology is researched). */
@@ -12082,6 +12442,7 @@ export function isTechnologySlotStyleSpecification(
 ): value is TechnologySlotStyleSpecification {
   return (value as { type: string }).type === 'technology_slot_style';
 }
+
 /** Either `count` or `count_formula` must be defined, never both. */
 export interface TechnologyUnit {
   /** How many units are needed. Must be `> 0`. */
@@ -12147,6 +12508,7 @@ export function isTextBoxStyleSpecification(
 ): value is TextBoxStyleSpecification {
   return (value as { type: string }).type === 'textbox_style';
 }
+
 export interface ThrowCapsuleAction {
   attack_parameters: AttackParameters;
   type: 'throw';
@@ -12159,6 +12521,7 @@ export function isThrowCapsuleAction(
 ): value is ThrowCapsuleAction {
   return (value as { type: string }).type === 'throw';
 }
+
 export interface TileAndAlpha {
   alpha: number;
   tile: TileID;
@@ -12290,6 +12653,7 @@ export function isTimeElapsedTipTrigger(
 ): value is TimeElapsedTipTrigger {
   return (value as { type: string }).type === 'time-elapsed';
 }
+
 interface _TrainBrakingForceBonusModifier {
   /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
@@ -12306,6 +12670,7 @@ export function isTrainBrakingForceBonusModifier(
 ): value is TrainBrakingForceBonusModifier {
   return (value as { type: string }).type === 'train-braking-force-bonus';
 }
+
 export interface TrainPathFinderConstants {
   signal_reserved_by_circuit_network_penalty: number;
   stopped_manually_controlled_train_penalty: number;
@@ -12461,6 +12826,7 @@ export function isTurretAttackModifier(
 ): value is TurretAttackModifier {
   return (value as { type: string }).type === 'turret-attack';
 }
+
 export interface UndergroundBeltStructure {
   back_patch?: Sprite4Way;
   direction_in: Sprite4Way;
@@ -12554,6 +12920,7 @@ export function isUnlockRecipeModifier(
 ): value is UnlockRecipeModifier {
   return (value as { type: string }).type === 'unlock-recipe';
 }
+
 export interface UnlockRecipeTipTrigger {
   recipe: RecipeID;
   type: 'unlock-recipe';
@@ -12564,6 +12931,7 @@ export function isUnlockRecipeTipTrigger(
 ): value is UnlockRecipeTipTrigger {
   return (value as { type: string }).type === 'unlock-recipe';
 }
+
 export interface UseConfirmTipTrigger {
   count?: number;
   type: 'use-confirm';
@@ -12574,6 +12942,7 @@ export function isUseConfirmTipTrigger(
 ): value is UseConfirmTipTrigger {
   return (value as { type: string }).type === 'use-confirm';
 }
+
 export interface UseOnSelfCapsuleAction {
   attack_parameters: AttackParameters;
   type: 'use-on-self';
@@ -12586,6 +12955,7 @@ export function isUseOnSelfCapsuleAction(
 ): value is UseOnSelfCapsuleAction {
   return (value as { type: string }).type === 'use-on-self';
 }
+
 export interface UsePipetteTipTrigger {
   count?: number;
   type: 'use-pipette';
@@ -12596,6 +12966,7 @@ export function isUsePipetteTipTrigger(
 ): value is UsePipetteTipTrigger {
   return (value as { type: string }).type === 'use-pipette';
 }
+
 interface _Vector3D {
   x: number;
   y: number;
@@ -12619,6 +12990,7 @@ export function isVerticalFlowStyleSpecification(
 ): value is VerticalFlowStyleSpecification {
   return (value as { type: string }).type === 'vertical_flow_style';
 }
+
 interface _VerticalScrollBarStyleSpecification {
   type: 'vertical_scrollbar_style';
 }
@@ -12635,6 +13007,7 @@ export function isVerticalScrollBarStyleSpecification(
 ): value is VerticalScrollBarStyleSpecification {
   return (value as { type: string }).type === 'vertical_scrollbar_style';
 }
+
 /** Void energy sources provide unlimited free energy. */
 interface _VoidEnergySource {
   type: 'void';
@@ -12646,6 +13019,7 @@ export type VoidEnergySource = _VoidEnergySource &
 export function isVoidEnergySource(value: unknown): value is VoidEnergySource {
   return (value as { type: string }).type === 'void';
 }
+
 export interface WallPictures {
   corner_left_down: SpriteVariations;
   corner_right_down: SpriteVariations;
@@ -12692,6 +13066,7 @@ export function isWorkerRobotBatteryModifier(
 ): value is WorkerRobotBatteryModifier {
   return (value as { type: string }).type === 'worker-robot-battery';
 }
+
 interface _WorkerRobotSpeedModifier {
   /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
@@ -12708,6 +13083,7 @@ export function isWorkerRobotSpeedModifier(
 ): value is WorkerRobotSpeedModifier {
   return (value as { type: string }).type === 'worker-robot-speed';
 }
+
 interface _WorkerRobotStorageModifier {
   /** If set to `false`, use the icon from [UtilitySprites](prototype:UtilitySprites) for this technology effect icon. */
   infer_icon?: boolean;
@@ -12724,6 +13100,7 @@ export function isWorkerRobotStorageModifier(
 ): value is WorkerRobotStorageModifier {
   return (value as { type: string }).type === 'worker-robot-storage';
 }
+
 /** This type is used to produce sound from in-game entities when they are working/idle. */
 interface _WorkingSound {
   /** Might not work with all entities that use working_sound. */
@@ -12811,6 +13188,7 @@ export function isZoomToWorldBlueprintEnabledModifier(
 ): value is ZoomToWorldBlueprintEnabledModifier {
   return (value as { type: string }).type === 'zoom-to-world-blueprint-enabled';
 }
+
 interface _ZoomToWorldDeconstructionPlannerEnabledModifier {
   type: 'zoom-to-world-deconstruction-planner-enabled';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -12829,6 +13207,7 @@ export function isZoomToWorldDeconstructionPlannerEnabledModifier(
     'zoom-to-world-deconstruction-planner-enabled'
   );
 }
+
 interface _ZoomToWorldEnabledModifier {
   type: 'zoom-to-world-enabled';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -12843,6 +13222,7 @@ export function isZoomToWorldEnabledModifier(
 ): value is ZoomToWorldEnabledModifier {
   return (value as { type: string }).type === 'zoom-to-world-enabled';
 }
+
 interface _ZoomToWorldGhostBuildingEnabledModifier {
   type: 'zoom-to-world-ghost-building-enabled';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -12860,6 +13240,7 @@ export function isZoomToWorldGhostBuildingEnabledModifier(
     (value as { type: string }).type === 'zoom-to-world-ghost-building-enabled'
   );
 }
+
 interface _ZoomToWorldSelectionToolEnabledModifier {
   type: 'zoom-to-world-selection-tool-enabled';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -12877,6 +13258,7 @@ export function isZoomToWorldSelectionToolEnabledModifier(
     (value as { type: string }).type === 'zoom-to-world-selection-tool-enabled'
   );
 }
+
 interface _ZoomToWorldUpgradePlannerEnabledModifier {
   type: 'zoom-to-world-upgrade-planner-enabled';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
@@ -12900,13 +13282,13 @@ export type AmmoCategoryID = string;
 
 /** Used to allow specifying different ammo effects depending on which kind of entity the ammo is used in.
 
-If ammo is used in an entity that isn&#x27;t covered by the defined source_types, e.g. only &#x60;&quot;player&quot;&#x60; and &#x60;&quot;vehicle&quot;&#x60; are defined and the ammo is used by a turret, the first defined AmmoType in the [AmmoItemPrototype::ammo_type](prototype:AmmoItemPrototype::ammo_type) array is used. */
+If ammo is used in an entity that isn't covered by the defined source_types, e.g. only `"player"` and `"vehicle"` are defined and the ammo is used by a turret, the first defined AmmoType in the [AmmoItemPrototype::ammo_type](prototype:AmmoItemPrototype::ammo_type) array is used. */
 export type AmmoSourceType = 'default' | 'player' | 'turret' | 'vehicle';
 
 /** If this is loaded as a single Animation, it applies to all directions. */
 export type Animation4Way = _Animation4Way | Animation;
 
-/** This is a list of 1-based frame indices into the spritesheet. The actual length of the animation will then be the length of the frame_sequence (times &#x60;repeat_count&#x60;, times two if &#x60;run_mode&#x60; is &#x60;&quot;forward-then-backward&quot;&#x60;). There is a limit for (actual) animation length of 255 frames.
+/** This is a list of 1-based frame indices into the spritesheet. The actual length of the animation will then be the length of the frame_sequence (times `repeat_count`, times two if `run_mode` is `"forward-then-backward"`). There is a limit for (actual) animation length of 255 frames.
 
 Indices can be used in any order, repeated or not used at all. Unused frames are not loaded into VRAM at all, frames referenced multiple times are loaded just once, see [here](https://forums.factorio.com/53202). */
 export type AnimationFrameSequence = number[];
@@ -12916,7 +13298,7 @@ export type AnimationVariations =
   | Animation
   | Animation[];
 
-/** Loaded as one of the [BaseAttackParameters](prototype:BaseAttackParameters) extensions, based on the value of the &#x60;type&#x60; key. */
+/** Loaded as one of the [BaseAttackParameters](prototype:BaseAttackParameters) extensions, based on the value of the `type` key. */
 export type AttackParameters =
   | ProjectileAttackParameters
   | BeamAttackParameters
@@ -12931,9 +13313,9 @@ Autoplace specification describe conditions for placing tiles, entities, and dec
 
 There are two entirely separate ways to specify the probability and richness:
 
-- The newer noise expression-based system using &#x60;probability_expression&#x60; and &#x60;richness_expression&#x60;.
+- The newer noise expression-based system using `probability_expression` and `richness_expression`.
 
-- The older peaks-based system using &#x60;peaks&#x60; and the properties listed below it. */
+- The older peaks-based system using `peaks` and the properties listed below it. */
 export type AutoplaceSpecification = _AutoplaceSpecification | AutoplacePeak;
 
 /** A list of notable [NamedNoiseExpressions](prototype:NamedNoiseExpression) defined in the base game. A list of all named noise expression defined in the base game can be found [here](https://wiki.factorio.com/Data.raw#noise-expression).
@@ -12955,7 +13337,7 @@ export type BaseNamedNoiseExpressions =
 
 /** Determines how sprites/animations should blend with the background. The possible values are listed below.
 
-Note that in most of Factorio it is assumed colors are in alpha pre-multiplied format, see [FFF #172 - Blending and Rendering](https://www.factorio.com/blog/post/fff-172). Sprites get pre-multiplied when loaded, unless &#x60;premul_alpha&#x60; is set to &#x60;false&#x60; on the sprite/animation itself. Since generating mipmaps doesn&#x27;t respect &#x60;premul_alpha&#x60;, lower mipmap levels will be in pre-multiplied format regardless. */
+Note that in most of Factorio it is assumed colors are in alpha pre-multiplied format, see [FFF #172 - Blending and Rendering](https://www.factorio.com/blog/post/fff-172). Sprites get pre-multiplied when loaded, unless `premul_alpha` is set to `false` on the sprite/animation itself. Since generating mipmaps doesn't respect `premul_alpha`, lower mipmap levels will be in pre-multiplied format regardless. */
 export type BlendMode =
   | 'normal'
   | 'additive'
@@ -12971,7 +13353,7 @@ The first position is leftTop, the second position is rightBottom. There is an u
 Positive x goes towards east, positive y goes towards south. This means that the upper-left point is the least dimension in x and y, and lower-right is the greatest. */
 export type BoundingBox = [MapPosition, MapPosition];
 
-/** Loaded as one of the capsule actions, based on the value of the &#x60;type&#x60; key. */
+/** Loaded as one of the capsule actions, based on the value of the `type` key. */
 export type CapsuleAction =
   | ThrowCapsuleAction
   | ActivateEquipmentCapsuleAction
@@ -13000,7 +13382,7 @@ export type CollisionMask = (
 
 /** A string specifying a collision mask layer.
 
-In addition to the listed layers, there is &#x60;&quot;layer-13&quot;&#x60; through &#x60;&quot;layer-55&quot;&#x60;. These layers are currently unused by the game but may change. If a mod is going to use one of the unused layers it&#x27;s recommended to use the &#x60;collision_mask_util.get_first_unused_layer()&#x60; method from the vanilla [library](https://github.com/wube/factorio-data/blob/master/core/lualib/collision-mask-util.lua). When not using the library, mods should start at the higher layers because the base game will take from the lower ones. */
+In addition to the listed layers, there is `"layer-13"` through `"layer-55"`. These layers are currently unused by the game but may change. If a mod is going to use one of the unused layers it's recommended to use the `collision_mask_util.get_first_unused_layer()` method from the vanilla [library](https://github.com/wube/factorio-data/blob/master/core/lualib/collision-mask-util.lua). When not using the library, mods should start at the higher layers because the base game will take from the lower ones. */
 export type CollisionMaskLayer =
   | 'ground-tile'
   | 'water-tile'
@@ -13015,7 +13397,7 @@ export type CollisionMaskLayer =
   | 'rail-layer'
   | 'transport-belt-layer';
 
-/** Table of red, green, blue, and alpha float values between 0 and 1.Alternatively, values can be from 0-255, they are interpreted as such if at least one value is &#x60;&gt; 1&#x60;.
+/** Table of red, green, blue, and alpha float values between 0 and 1.Alternatively, values can be from 0-255, they are interpreted as such if at least one value is `> 1`.
 
 Color allows the short-hand notation of passing an array of exactly 3 or 4 numbers.
 
@@ -13065,7 +13447,7 @@ export type DecorativeID = string;
 
 export type Direction = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
-/** A list of module effects, or just a single effect. Modules with other effects cannot be used on the machine. This means that both effects from modules and from surrounding beacons are restricted to the listed effects. If &#x60;allowed_effects&#x60; is set to &#x60;nil&#x60;, the machine cannot be affected by modules or beacons. */
+/** A list of module effects, or just a single effect. Modules with other effects cannot be used on the machine. This means that both effects from modules and from surrounding beacons are restricted to the listed effects. If `allowed_effects` is set to `nil`, the machine cannot be affected by modules or beacons. */
 export type EffectTypeLimitation =
   | ('speed' | 'productivity' | 'consumption' | 'pollution')
   | ('speed' | 'productivity' | 'consumption' | 'pollution')[];
@@ -13080,36 +13462,36 @@ export type ElectricUsagePriority =
   | 'solar'
   | 'lamp';
 
-/** If this is loaded as a single ElementImageSetLayer, it gets used as &#x60;base&#x60;. */
+/** If this is loaded as a single ElementImageSetLayer, it gets used as `base`. */
 export type ElementImageSet = _ElementImageSet | ElementImageSetLayer;
 
-/** If this is loaded as a Sprite, it gets used as &#x60;center&#x60;. */
+/** If this is loaded as a Sprite, it gets used as `center`. */
 export type ElementImageSetLayer = _ElementImageSetLayer | Sprite;
 
 /** Specifies an amount of electric energy in joules, or electric energy per time in watts.
 
-Internally, the input in &#x60;Watt&#x60; or &#x60;Joule/second&#x60; is always converted into &#x60;Joule/tick&#x60; or &#x60;Joule/(1/60)second&#x60;, using the following formula: &#x60;Power in Joule/tick &#x3D; Power in Watt / 60&#x60;. See [Power](https://wiki.factorio.com/Units#Power).
+Internally, the input in `Watt` or `Joule/second` is always converted into `Joule/tick` or `Joule/(1/60)second`, using the following formula: `Power in Joule/tick = Power in Watt / 60`. See [Power](https://wiki.factorio.com/Units#Power).
 
 Supported Multipliers:
 
-- &#x60;k/K&#x60;: 10^3, or 1&#x27;000
+- `k/K`: 10^3, or 1'000
 
-- &#x60;M&#x60;: 10^6
+- `M`: 10^6
 
-- &#x60;G&#x60;: 10^9
+- `G`: 10^9
 
-- &#x60;T&#x60;: 10^12
+- `T`: 10^12
 
-- &#x60;P&#x60;: 10^15
+- `P`: 10^15
 
-- &#x60;E&#x60;: 10^18
+- `E`: 10^18
 
-- &#x60;Z&#x60;: 10^21
+- `Z`: 10^21
 
-- &#x60;Y&#x60;: 10^24 */
+- `Y`: 10^24 */
 export type Energy = string;
 
-/** Loaded as one of the [BaseEnergySource](prototype:BaseEnergySource) extensions, based on the value of the &#x60;type&#x60; key. */
+/** Loaded as one of the [BaseEnergySource](prototype:BaseEnergySource) extensions, based on the value of the `type` key. */
 export type EnergySource =
   | ElectricEnergySource
   | BurnerEnergySource
@@ -13161,13 +13543,13 @@ export type EquipmentID = string;
 
 export type ExplosionDefinition = EntityID | _ExplosionDefinition;
 
-/** A slash &#x60;&quot;/&quot;&#x60; is always used as the directory delimiter. A path always begins with the specification of a root, which can be one of three formats:
+/** A slash `"/"` is always used as the directory delimiter. A path always begins with the specification of a root, which can be one of three formats:
 
-- **core**: A path starting with &#x60;__core__&#x60; will access the resources in the data/core directory, these resources are always accessible regardless of mod specifications.
+- **core**: A path starting with `__core__` will access the resources in the data/core directory, these resources are always accessible regardless of mod specifications.
 
-- **base**: A path starting with __base__ will access the resources in the base mod in data/base directory. These resources are usually available, as long as the base mod isn&#x27;t removed/deactivated.
+- **base**: A path starting with __base__ will access the resources in the base mod in data/base directory. These resources are usually available, as long as the base mod isn't removed/deactivated.
 
-- **mod path**: The format &#x60;__&lt;mod-name&gt;__&#x60; is placeholder for root of any other mod (mods/&lt;mod-name&gt;), and is accessible as long as the mod is active. */
+- **mod path**: The format `__<mod-name>__` is placeholder for root of any other mod (mods/<mod-name>), and is accessible as long as the mod is active. */
 export type FileName = string;
 
 /** The name of a [FluidPrototype](prototype:FluidPrototype). */
@@ -13190,7 +13572,7 @@ export type FuelCategoryID = string;
 
 export type HorizontalAlign = 'left' | 'center' | 'right';
 
-/** Icons of reduced size will be used at decreased scale. 0 or 1 mipmaps is a single image. The file must contain half-size images with a geometric-ratio, for each mipmap level. Each next level is aligned to the upper-left corner. Example sequence: &#x60;128x128@(0,0)&#x60;, &#x60;64x64@(128,0)&#x60;, &#x60;32x32@(196,0)&#x60; is three mipmaps.
+/** Icons of reduced size will be used at decreased scale. 0 or 1 mipmaps is a single image. The file must contain half-size images with a geometric-ratio, for each mipmap level. Each next level is aligned to the upper-left corner. Example sequence: `128x128@(0,0)`, `64x64@(128,0)`, `32x32@(196,0)` is three mipmaps.
 
 See [here](https://factorio.com/blog/post/fff-291) for more about the visual effects of icon mipmaps. */
 export type IconMipMapType = number;
@@ -13245,11 +13627,11 @@ export type LightDefinition = _LightDefinition | _LightDefinition[];
 
 It is an array where the first element is the key and the remaining elements are parameters that will be substituted for placeholders in the template designated by the key.
 
-The key identifies the string template. For example, &#x60;&quot;gui-alert-tooltip.attack&quot;&#x60; (for the template &#x60;&quot;__1__ objects are being damaged&quot;&#x60;; see the file &#x60;data/core/locale/en.cfg&#x60;). In the settings and prototype stages, this key cannot be longer than 200 characters.
+The key identifies the string template. For example, `"gui-alert-tooltip.attack"` (for the template `"__1__ objects are being damaged"`; see the file `data/core/locale/en.cfg`). In the settings and prototype stages, this key cannot be longer than 200 characters.
 
-The template can contain placeholders such as &#x60;__1__&#x60; or &#x60;__2__&#x60;. These will be replaced by the respective parameter in the LocalisedString. The parameters themselves can be other localised strings, which will be processed recursively in the same fashion. Localised strings can not be recursed deeper than 20 levels and can not have more than 20 parameters.
+The template can contain placeholders such as `__1__` or `__2__`. These will be replaced by the respective parameter in the LocalisedString. The parameters themselves can be other localised strings, which will be processed recursively in the same fashion. Localised strings can not be recursed deeper than 20 levels and can not have more than 20 parameters.
 
-There are two special flags for the localised string, indicated by the key being a particular string. First, if the key is the empty string (&#x60;&quot;&quot;&#x60;), then all parameters will be concatenated (after processing, if any are localised strings themselves). Second, if the key is a question mark (&#x60;&quot;?&quot;&#x60;), then the first valid parameter will be used. A parameter can be invalid if its name doesn&#x27;t match any string template. If no parameters are valid, the last one is returned. This is useful to implement a fallback for missing locale templates.
+There are two special flags for the localised string, indicated by the key being a particular string. First, if the key is the empty string (`""`), then all parameters will be concatenated (after processing, if any are localised strings themselves). Second, if the key is a question mark (`"?"`), then the first valid parameter will be used. A parameter can be invalid if its name doesn't match any string template. If no parameters are valid, the last one is returned. This is useful to implement a fallback for missing locale templates.
 
 Furthermore, when an API function expects a localised string, it will also accept a regular string (i.e. not a table) which will not be translated, as well as a number or boolean, which will be converted to their textual representation.
 
@@ -13260,7 +13642,7 @@ export type LocalisedString = string | boolean | LocalisedString[];
 
 For backwards compatibility, MapGenSizes can also be specified as one of the following strings, which will be converted to a number (when queried, a number will always be returned):
 
-Each of the values in a triplet (such as &quot;low&quot;, &quot;small&quot;, and &quot;poor&quot;) are synonymous. In-game the values can be set from &#x60;0.166&#x60; to &#x60;6&#x60; via the GUI (respective to the percentages), while &#x60;0&#x60; is used to disable the autoplace control. */
+Each of the values in a triplet (such as "low", "small", and "poor") are synonymous. In-game the values can be set from `0.166` to `6` via the GUI (respective to the percentages), while `0` is used to disable the autoplace control. */
 export type MapGenSize =
   | number
   | 'none'
@@ -13282,14 +13664,14 @@ export type MapGenSize =
 
 /** Coordinates of a tile in a map. Positive x goes towards east, positive y goes towards south, and x is the first dimension in the array format.
 
-The coordinates are saved as a fixed-size 32 bit integer, with 8 bits reserved for decimal precision, meaning the smallest value step is &#x60;1/2^8 &#x3D; 0.00390625&#x60; tiles. */
+The coordinates are saved as a fixed-size 32 bit integer, with 8 bits reserved for decimal precision, meaning the smallest value step is `1/2^8 = 0.00390625` tiles. */
 export type MapPosition = _MapPosition | [number, number];
 
 export type MaterialAmountType = number;
 
 /** The effect that is applied when a [TechnologyPrototype](prototype:TechnologyPrototype) is researched.
 
-Loaded as one of the [BaseModifier](prototype:BaseModifier) extensions, based on the value of the &#x60;type&#x60; key. */
+Loaded as one of the [BaseModifier](prototype:BaseModifier) extensions, based on the value of the `type` key. */
 export type Modifier =
   | InserterStackSizeBonusModifier
   | StackInserterCapacityBonusModifier
@@ -13346,13 +13728,13 @@ export type ModuleTint =
 /** The name of a [MouseCursor](prototype:MouseCursor). */
 export type MouseCursorID = string;
 
-/** Loaded as one of the noise expressions listed in this union, based on the value of the &#x60;type&#x60; key.
+/** Loaded as one of the noise expressions listed in this union, based on the value of the `type` key.
 
 A fragment of a functional program used to generate coherent noise, probably for purposes related to terrain generation.
 
 Noise expressions can be provided as table literals or built using functions in the built-in [noise library](https://github.com/wube/factorio-data/blob/master/core/lualib/noise.lua). The built-in noise library allows writing much more concise code, so its usage will be shown in most examples on this page.
 
-[noise.define_noise_function](https://github.com/wube/factorio-data/blob/master/core/lualib/noise.lua#L272) allows noise expressions to be defined using a shorthand that&#x27;s a subset of Lua (see the example for details).
+[noise.define_noise_function](https://github.com/wube/factorio-data/blob/master/core/lualib/noise.lua#L272) allows noise expressions to be defined using a shorthand that's a subset of Lua (see the example for details).
 
 See [here](https://togos.github.io/togos-example-noise-programs/) for a tutorial on authoring noise expressions. */
 export type NoiseExpression =
@@ -13367,7 +13749,7 @@ export type NoiseExpression =
   | NoiseProcedureDelimiter
   | NoiseIfElseChain;
 
-/** Loaded as one of the NoiseFunctions listed in this union, based on the value of the &#x60;function_name&#x60; key.
+/** Loaded as one of the NoiseFunctions listed in this union, based on the value of the `function_name` key.
 
 Apply a function to a list or associative array of arguments. Some functions expect arguments to be named and some expect them not to be.
 
@@ -13474,7 +13856,7 @@ export type NoiseVariableConstants =
   | 'starting_lake_positions'
   | 'peaceful_mode';
 
-/** The order property is a simple &#x60;string&#x60;. When the game needs to sort prototypes (of the same type), it looks at their order properties and sorts those alphabetically. A prototype with an order string of &#x60;&quot;a&quot;&#x60; will be listed before other prototypes with order string &#x60;&quot;b&quot;&#x60; or &#x60;&quot;c&quot;&#x60;. The &#x60;&quot;-&quot;&#x60; or &#x60;&quot;[]&quot;&#x60; structures that can be found in vanilla order strings do *not* have any special meaning.
+/** The order property is a simple `string`. When the game needs to sort prototypes (of the same type), it looks at their order properties and sorts those alphabetically. A prototype with an order string of `"a"` will be listed before other prototypes with order string `"b"` or `"c"`. The `"-"` or `"[]"` structures that can be found in vanilla order strings do *not* have any special meaning.
 
 The alphabetical sorting uses [lexicographical comparison](https://en.wikipedia.org/wiki/Lexicographic_order) to determine if a given prototype is shown before or after another. If the order strings are equal then the game falls back to comparing the prototype names to determine order. */
 export type Order = string;
@@ -13648,7 +14030,7 @@ export type SpriteFlags = (
   | 'compressed'
 )[];
 
-/** This sets the &quot;caching priority&quot; of a sprite, so deciding priority of it being included in VRAM instead of streaming it and is therefore a purely technical value. See [here](https://forums.factorio.com/viewtopic.php?p&#x3D;437380#p437380) and [here](https://www.factorio.com/blog/post/fff-264). The possible values are listed below. */
+/** This sets the "caching priority" of a sprite, so deciding priority of it being included in VRAM instead of streaming it and is therefore a purely technical value. See [here](https://forums.factorio.com/viewtopic.php?p=437380#p437380) and [here](https://www.factorio.com/blog/post/fff-264). The possible values are listed below. */
 export type SpritePriority =
   | 'extra-high-no-scale'
   | 'extra-high'
@@ -13665,7 +14047,7 @@ export type SpriteVariations = _SpriteVariations | SpriteSheet | Sprite[];
 /** Sets whether a GUI element can be stretched or squashed. */
 export type StretchRule = 'on' | 'off' | 'auto' | 'stretch_and_expand';
 
-/** Loaded as one of the [BaseStyleSpecification](prototype:BaseStyleSpecification) extensions, based on the value of the &#x60;type&#x60; key. */
+/** Loaded as one of the [BaseStyleSpecification](prototype:BaseStyleSpecification) extensions, based on the value of the `type` key. */
 export type StyleSpecification =
   | ActivityBarStyleSpecification
   | ButtonStyleSpecification
@@ -13726,7 +14108,7 @@ export type TipStatus =
   | 'completed-without-tutorial'
   | 'completed';
 
-/** Loaded as one of the tip triggers, based on the value of the &#x60;type&#x60; key. */
+/** Loaded as one of the tip triggers, based on the value of the `type` key. */
 export type TipTrigger =
   | OrTipTrigger
   | AndTipTrigger
@@ -13758,7 +14140,7 @@ export type TipTrigger =
   | GateOverRailBuildTipTrigger
   | ManualWireDragTipTrigger;
 
-/** Loaded as one of the [TriggerItem](prototype:TriggerItem) extensions, based on the value of the &#x60;type&#x60; key. */
+/** Loaded as one of the [TriggerItem](prototype:TriggerItem) extensions, based on the value of the `type` key. */
 export type Trigger =
   | (DirectTriggerItem | AreaTriggerItem | LineTriggerItem | ClusterTriggerItem)
   | (
@@ -13768,7 +14150,7 @@ export type Trigger =
       | ClusterTriggerItem
     )[];
 
-/** Loaded as one of the [TriggerDeliveryItem](prototype:TriggerDeliveryItem) extensions, based on the value of the &#x60;type&#x60; key. */
+/** Loaded as one of the [TriggerDeliveryItem](prototype:TriggerDeliveryItem) extensions, based on the value of the `type` key. */
 export type TriggerDelivery =
   | InstantTriggerDelivery
   | ProjectileTriggerDelivery
@@ -13777,7 +14159,7 @@ export type TriggerDelivery =
   | StreamTriggerDelivery
   | ArtilleryTriggerDelivery;
 
-/** Loaded as one of the [TriggerEffectItem](prototype:TriggerEffectItem) extensions, based on the value of the &#x60;type&#x60; key. */
+/** Loaded as one of the [TriggerEffectItem](prototype:TriggerEffectItem) extensions, based on the value of the `type` key. */
 export type TriggerEffect =
   | (
       | DamageTriggerEffectItem
@@ -13824,7 +14206,7 @@ export type TriggerEffect =
       | CameraEffectTriggerEffectItem
     )[];
 
-/** An array of names of [TriggerTargetType](prototype:TriggerTargetType). See [Design discussion: Trigger target type](https://forums.factorio.com/71657) and [Blacklist for prototypes turrets shouldn&#x27;t attack](https://forums.factorio.com/86164). */
+/** An array of names of [TriggerTargetType](prototype:TriggerTargetType). See [Design discussion: Trigger target type](https://forums.factorio.com/71657) and [Blacklist for prototypes turrets shouldn't attack](https://forums.factorio.com/86164). */
 export type TriggerTargetMask = string[];
 
 /** The name of a [TrivialSmokePrototype](prototype:TrivialSmokePrototype). */
@@ -13835,7 +14217,7 @@ export type UnitSpawnDefinition =
   | _UnitSpawnDefinition
   | [EntityID, SpawnPoint[]];
 
-/** A vector is a two-element array containing the x and y components. Unlike Positions, vectors don&#x27;t use the x, y keys. Positive x goes east, positive y goes south. See also: [Runtime Vector](runtime:Vector). */
+/** A vector is a two-element array containing the x and y components. Unlike Positions, vectors don't use the x, y keys. Positive x goes east, positive y goes south. See also: [Runtime Vector](runtime:Vector). */
 export type Vector = [number, number];
 
 export type Vector3D = _Vector3D | [number, number, number];
