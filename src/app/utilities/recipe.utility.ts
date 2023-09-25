@@ -574,9 +574,9 @@ export class RecipeUtility {
             itemIncludedRecipeIds[productId].push(recipe.id),
           );
 
-          for (const ioId of Object.keys(recipe.output)) {
-            itemIncludedIoRecipeIds[ioId].push(recipe.id);
-          }
+          Object.keys(recipe.output).forEach((ioId) =>
+            itemIncludedIoRecipeIds[ioId].push(recipe.id),
+          );
         }
       });
 
