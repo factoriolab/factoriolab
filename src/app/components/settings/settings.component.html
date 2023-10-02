@@ -402,6 +402,7 @@
                 <p-dropdown
                   *ngIf="machineId; else machineIcon"
                   labDropdownBase="icon"
+                  labNoDrag
                   [tooltip]="'settings.machineTooltip' | translate"
                   [ngModel]="machineId"
                   [options]="vm.machineOptions"
@@ -412,7 +413,6 @@
                       vm.data.defaults?.machineRankIds
                     )
                   "
-                  (mousedown)="$event.stopPropagation()"
                 >
                   <ng-template pTemplate="selectedItem" let-item>
                     <div class="d-flex">
@@ -444,6 +444,7 @@
                 <p-dropdown
                   *ngIf="settings.fuelId"
                   labDropdownBase="icon"
+                  labNoDrag
                   [tooltip]="'settings.fuelTooltip' | translate"
                   [ngModel]="settings.fuelId"
                   [options]="settings.fuelOptions"
@@ -455,7 +456,6 @@
                       vm.settings.fuelRankIds
                     )
                   "
-                  (mousedown)="$event.stopPropagation()"
                 >
                   <ng-template pTemplate="selectedItem" let-item>
                     <div class="d-flex">
@@ -491,6 +491,7 @@
                       vm.data.game !== Game.Satisfactory;
                       else satisfactoryPurityPicker
                     "
+                    labNoDrag
                     appendTo="body"
                     scrollHeight="40vh"
                     styleClass="icon"
@@ -508,7 +509,6 @@
                         defaults?.moduleRankIds
                       )
                     "
-                    (mousedown)="$event.stopPropagation()"
                   >
                     <ng-template pTemplate="selectedItems" let-items>
                       <div class="d-flex">
@@ -541,6 +541,7 @@
                   <ng-template #satisfactoryPurityPicker>
                     <p-dropdown
                       labDropdownBase="icon"
+                      labNoDrag
                       [tooltip]="'settings.modifierTooltip' | translate"
                       [ngModel]="settings.moduleRankIds?.[0]"
                       [options]="settings.moduleOptions ?? []"
@@ -551,7 +552,6 @@
                           vm.data.defaults?.moduleRankIds
                         )
                       "
-                      (mousedown)="$event.stopPropagation()"
                     >
                       <ng-template pTemplate="selectedItem" let-item>
                         <div class="d-flex">
@@ -577,6 +577,7 @@
                 <ng-container *ngIf="vm.data.game === Game.Satisfactory">
                   <p-inputNumber
                     #overclockInput
+                    labNoDrag
                     suffix="%"
                     [min]="1"
                     [max]="250"
@@ -595,7 +596,6 @@
                           : 100
                       )
                     "
-                    (mousedown)="$event.stopPropagation()"
                   >
                   </p-inputNumber>
                 </ng-container>
@@ -603,17 +603,18 @@
                   <ng-container *ngIf="settings.beaconCount != null">
                     <!-- Beacon count input -->
                     <lab-input-number
+                      labNoDrag
                       [pTooltip]="'settings.beaconCountTooltip' | translate"
                       tooltipPosition="top"
                       [value]="settings.beaconCount"
                       (setValue)="
                         setBeaconCount(machineId, $event, defaults?.beaconCount)
                       "
-                      (mousedown)="$event.stopPropagation()"
                     ></lab-input-number>
                     <!-- Beacon dropdown -->
                     <p-dropdown
                       labDropdownBase="icon"
+                      labNoDrag
                       [tooltip]="'settings.beaconTooltip' | translate"
                       tooltipPosition="top"
                       [ngModel]="settings.beaconId"
@@ -621,7 +622,6 @@
                       (onChange)="
                         setBeacon(machineId, $event.value, defaults?.beaconId)
                       "
-                      (mousedown)="$event.stopPropagation()"
                     >
                       <ng-template pTemplate="selectedItem" let-item>
                         <div class="d-flex">
@@ -644,6 +644,7 @@
                     <!-- Beacon module dropdown -->
                     <p-multiSelect
                       *ngIf="settings.beaconModuleRankIds"
+                      labNoDrag
                       appendTo="body"
                       scrollHeight="40vh"
                       styleClass="icon"
@@ -661,7 +662,6 @@
                           defaults
                         )
                       "
-                      (mousedown)="$event.stopPropagation()"
                     >
                       <ng-template pTemplate="selectedItems" let-items>
                         <div class="d-flex">
@@ -696,6 +696,7 @@
                 <button
                   pButton
                   pRipple
+                  labNoDrag
                   type="button"
                   icon="fa-solid fa-xmark"
                   class="p-button-outlined ms-auto"
@@ -704,7 +705,6 @@
                   (click)="
                     removeMachine(machineId, vm.data.defaults?.machineRankIds)
                   "
-                  (mousedown)="$event.stopPropagation()"
                 ></button>
               </div>
             </ng-template>

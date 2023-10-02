@@ -21,6 +21,7 @@
               *ngIf="objective.unit === ObjectiveUnit.Machines; else itemButton"
               pButton
               pRipple
+              labNoDrag
               type="button"
               class="p-button-outlined lab-button-icon-only text-truncate"
               [pTooltip]="'objectives.selectARecipe' | translate"
@@ -33,8 +34,6 @@
                   objective.targetId
                 )
               "
-              (mousedown)="$event.stopPropagation()"
-              (dragstart)="$event.stopPropagation()"
             >
               <i
                 class="p-button-icon"
@@ -52,6 +51,7 @@
             ></lab-picker>
             <ng-template #itemButton>
               <button
+                labNoDrag
                 pButton
                 pRipple
                 type="button"
@@ -72,8 +72,6 @@
                     objective.targetId
                   )
                 "
-                (mousedown)="$event.stopPropagation()"
-                (dragstart)="$event.stopPropagation()"
               ></button>
               <lab-picker
                 #editItemPicker
@@ -82,17 +80,17 @@
               ></lab-picker>
             </ng-template>
             <lab-input-number
+              labNoDrag
               [pTooltip]="'objectives.valueTooltip' | translate"
               tooltipPosition="top"
               [hideButtons]="vm.isMobile"
               [value]="objective.value"
               (setValue)="setValue(objective.id, $event)"
-              (mousedown)="$event.stopPropagation()"
-              (dragstart)="$event.stopPropagation()"
             ></lab-input-number>
             <p-dropdown
               *ngIf="objective.type !== ObjectiveType.Maximize"
               labDropdownTranslate
+              labNoDrag
               [tooltip]="'objectives.unitTooltip' | translate"
               tooltipPosition="top"
               [options]="vm.rateUnitOptions"
@@ -106,30 +104,26 @@
                   chooseRecipePicker
                 )
               "
-              (mousedown)="$event.stopPropagation()"
-              (dragstart)="$event.stopPropagation()"
             ></p-dropdown>
             <p-dropdown
               labDropdownTranslate
+              labNoDrag
               [tooltip]="'objectives.typeTooltip' | translate"
               tooltipPosition="top"
               [options]="objectiveTypeOptions"
               [ngModel]="objective.type"
               (onChange)="setType(objective.id, $event.value)"
-              (mousedown)="$event.stopPropagation()"
-              (dragstart)="$event.stopPropagation()"
             ></p-dropdown>
             <button
               pButton
               pRipple
+              labNoDrag
               type="button"
               class="p-button-outlined"
               icon="fa-solid fa-xmark"
               [pTooltip]="'objectives.removeTooltip' | translate"
               tooltipPosition="left"
               (click)="removeObjective(objective.id)"
-              (mousedown)="$event.stopPropagation()"
-              (dragstart)="$event.stopPropagation()"
             ></button>
           </div>
         </div>
