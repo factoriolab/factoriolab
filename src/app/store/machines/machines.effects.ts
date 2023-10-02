@@ -33,7 +33,7 @@ export class MachinesEffects {
         // Look for recipe settings with module effects specified
         for (const i of Object.keys(rawSettings)) {
           const r = rawSettings[i];
-          const machineId = recipesState[i].machineId;
+          const machineId = recipesState[i]?.machineId;
           if (r && machineId) {
             const machine = data.machineEntities[machineId];
             const recipe = data.recipeEntities[i];
