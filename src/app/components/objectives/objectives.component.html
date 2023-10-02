@@ -33,6 +33,7 @@
                   objective.targetId
                 )
               "
+              (mousedown)="$event.stopPropagation()"
             >
               <i
                 class="p-button-icon"
@@ -70,6 +71,7 @@
                     objective.targetId
                   )
                 "
+                (mousedown)="$event.stopPropagation()"
               ></button>
               <lab-picker
                 #editItemPicker
@@ -83,6 +85,7 @@
               [hideButtons]="vm.isMobile"
               [value]="objective.value"
               (setValue)="setValue(objective.id, $event)"
+              (mousedown)="$event.stopPropagation()"
             ></lab-input-number>
             <p-dropdown
               *ngIf="objective.type !== ObjectiveType.Maximize"
@@ -100,6 +103,7 @@
                   chooseRecipePicker
                 )
               "
+              (mousedown)="$event.stopPropagation()"
             ></p-dropdown>
             <p-dropdown
               labDropdownTranslate
@@ -108,6 +112,7 @@
               [options]="objectiveTypeOptions"
               [ngModel]="objective.type"
               (onChange)="setType(objective.id, $event.value)"
+              (mousedown)="$event.stopPropagation()"
             ></p-dropdown>
             <button
               pButton
@@ -118,6 +123,7 @@
               [pTooltip]="'objectives.removeTooltip' | translate"
               tooltipPosition="left"
               (click)="removeObjective(objective.id)"
+              (mousedown)="$event.stopPropagation()"
             ></button>
           </div>
         </div>

@@ -21,7 +21,7 @@ ConnectedOverlayScrollHandler.prototype.bindScrollListener = function (
     for (const parent of this.scrollableParents) {
       parent.addEventListener('scroll', this.listener);
     }
-  }, 500);
+  });
 };
 
 @Injectable({

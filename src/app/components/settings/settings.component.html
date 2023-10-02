@@ -412,6 +412,7 @@
                       vm.data.defaults?.machineRankIds
                     )
                   "
+                  (mousedown)="$event.stopPropagation()"
                 >
                   <ng-template pTemplate="selectedItem" let-item>
                     <div class="d-flex">
@@ -454,6 +455,7 @@
                       vm.settings.fuelRankIds
                     )
                   "
+                  (mousedown)="$event.stopPropagation()"
                 >
                   <ng-template pTemplate="selectedItem" let-item>
                     <div class="d-flex">
@@ -506,6 +508,7 @@
                         defaults?.moduleRankIds
                       )
                     "
+                    (mousedown)="$event.stopPropagation()"
                   >
                     <ng-template pTemplate="selectedItems" let-items>
                       <div class="d-flex">
@@ -548,6 +551,7 @@
                           vm.data.defaults?.moduleRankIds
                         )
                       "
+                      (mousedown)="$event.stopPropagation()"
                     >
                       <ng-template pTemplate="selectedItem" let-item>
                         <div class="d-flex">
@@ -591,6 +595,7 @@
                           : 100
                       )
                     "
+                    (mousedown)="$event.stopPropagation()"
                   >
                   </p-inputNumber>
                 </ng-container>
@@ -604,6 +609,7 @@
                       (setValue)="
                         setBeaconCount(machineId, $event, defaults?.beaconCount)
                       "
+                      (mousedown)="$event.stopPropagation()"
                     ></lab-input-number>
                     <!-- Beacon dropdown -->
                     <p-dropdown
@@ -615,6 +621,7 @@
                       (onChange)="
                         setBeacon(machineId, $event.value, defaults?.beaconId)
                       "
+                      (mousedown)="$event.stopPropagation()"
                     >
                       <ng-template pTemplate="selectedItem" let-item>
                         <div class="d-flex">
@@ -654,6 +661,7 @@
                           defaults
                         )
                       "
+                      (mousedown)="$event.stopPropagation()"
                     >
                       <ng-template pTemplate="selectedItems" let-items>
                         <div class="d-flex">
@@ -696,6 +704,7 @@
                   (click)="
                     removeMachine(machineId, vm.data.defaults?.machineRankIds)
                   "
+                  (mousedown)="$event.stopPropagation()"
                 ></button>
               </div>
             </ng-template>

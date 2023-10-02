@@ -14,7 +14,6 @@
     (input)="changeValue(input.value, 'input')"
     (blur)="changeValue(input.value, 'blur')"
     (keydown.enter)="changeValue(input.value, 'enter')"
-    (mousedown)="$event.stopPropagation()"
   />
   <span *ngIf="!hideButtons" class="p-inputnumber-button-group">
     <button
