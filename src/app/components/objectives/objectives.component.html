@@ -34,6 +34,7 @@
                 )
               "
               (mousedown)="$event.stopPropagation()"
+              (dragstart)="$event.stopPropagation()"
             >
               <i
                 class="p-button-icon"
@@ -72,6 +73,7 @@
                   )
                 "
                 (mousedown)="$event.stopPropagation()"
+                (dragstart)="$event.stopPropagation()"
               ></button>
               <lab-picker
                 #editItemPicker
@@ -86,6 +88,7 @@
               [value]="objective.value"
               (setValue)="setValue(objective.id, $event)"
               (mousedown)="$event.stopPropagation()"
+              (dragstart)="$event.stopPropagation()"
             ></lab-input-number>
             <p-dropdown
               *ngIf="objective.type !== ObjectiveType.Maximize"
@@ -104,6 +107,7 @@
                 )
               "
               (mousedown)="$event.stopPropagation()"
+              (dragstart)="$event.stopPropagation()"
             ></p-dropdown>
             <p-dropdown
               labDropdownTranslate
@@ -113,6 +117,7 @@
               [ngModel]="objective.type"
               (onChange)="setType(objective.id, $event.value)"
               (mousedown)="$event.stopPropagation()"
+              (dragstart)="$event.stopPropagation()"
             ></p-dropdown>
             <button
               pButton
@@ -124,6 +129,7 @@
               tooltipPosition="left"
               (click)="removeObjective(objective.id)"
               (mousedown)="$event.stopPropagation()"
+              (dragstart)="$event.stopPropagation()"
             ></button>
           </div>
         </div>
