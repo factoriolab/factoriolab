@@ -15,11 +15,13 @@ import { APP, Breakpoint } from '~/models';
 ConnectedOverlayScrollHandler.prototype.bindScrollListener = function (
   this,
 ): void {
-  this.scrollableParents = DomHandler.getScrollableParents(this.element);
-  this.scrollableParents.push(window);
-  for (const parent of this.scrollableParents) {
-    parent.addEventListener('scroll', this.listener);
-  }
+  setTimeout(() => {
+    this.scrollableParents = DomHandler.getScrollableParents(this.element);
+    this.scrollableParents.push(window);
+    for (const parent of this.scrollableParents) {
+      parent.addEventListener('scroll', this.listener);
+    }
+  });
 };
 
 @Injectable({

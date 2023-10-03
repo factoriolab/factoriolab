@@ -47,6 +47,21 @@ describe('Objectives Reducer', () => {
     it('should add a new objective', () => {
       expect(state.ids.length).toEqual(1);
     });
+
+    it('should use the value of the last objective', () => {
+      let result = objectivesReducer(
+        state,
+        new Actions.SetValueAction({ id: '0', value: '60' }),
+      );
+      result = objectivesReducer(
+        result,
+        new Actions.AddAction({
+          targetId: ItemId.Coal,
+          unit: ObjectiveUnit.Items,
+        }),
+      );
+      expect(result.entities['1'].value).toEqual('60');
+    });
   });
 
   describe('CREATE', () => {

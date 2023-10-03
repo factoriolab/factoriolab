@@ -21,6 +21,7 @@
               *ngIf="objective.unit === ObjectiveUnit.Machines; else itemButton"
               pButton
               pRipple
+              labNoDrag
               type="button"
               class="p-button-outlined lab-button-icon-only text-truncate"
               [pTooltip]="'objectives.selectARecipe' | translate"
@@ -50,6 +51,7 @@
             ></lab-picker>
             <ng-template #itemButton>
               <button
+                labNoDrag
                 pButton
                 pRipple
                 type="button"
@@ -78,6 +80,7 @@
               ></lab-picker>
             </ng-template>
             <lab-input-number
+              labNoDrag
               [pTooltip]="'objectives.valueTooltip' | translate"
               tooltipPosition="top"
               [hideButtons]="vm.isMobile"
@@ -87,6 +90,7 @@
             <p-dropdown
               *ngIf="objective.type !== ObjectiveType.Maximize"
               labDropdownTranslate
+              labNoDrag
               [tooltip]="'objectives.unitTooltip' | translate"
               tooltipPosition="top"
               [options]="vm.rateUnitOptions"
@@ -103,6 +107,7 @@
             ></p-dropdown>
             <p-dropdown
               labDropdownTranslate
+              labNoDrag
               [tooltip]="'objectives.typeTooltip' | translate"
               tooltipPosition="top"
               [options]="objectiveTypeOptions"
@@ -112,6 +117,7 @@
             <button
               pButton
               pRipple
+              labNoDrag
               type="button"
               class="p-button-outlined"
               icon="fa-solid fa-xmark"
