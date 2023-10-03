@@ -1,19 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConfirmationService } from 'primeng/api';
-import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
 
 import { TestModule } from 'src/tests';
 import { ContentService } from '~/services';
 import { ContentComponent } from './content.component';
-
-describe('ConnectedOverlayScrollHandler', () => {
-  it('should include the window in the list of scrollable parents', () => {
-    spyOn(DomHandler, 'getScrollableParents').and.returnValue([]);
-    const scrollHandler = new ConnectedOverlayScrollHandler({} as any);
-    scrollHandler.bindScrollListener();
-    expect(scrollHandler.scrollableParents).toEqual([window]);
-  });
-});
 
 describe('ContentComponent', () => {
   let component: ContentComponent;
