@@ -43,6 +43,10 @@ export function objectivesReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialObjectivesState;
     case ObjectivesActionType.ADD: {
+      let value = '1';
+      if (state.ids.length)
+        value = state.entities[state.ids[state.ids.length - 1]].value;
+
       return {
         ...state,
         ...{
@@ -53,7 +57,7 @@ export function objectivesReducer(
               [state.index]: {
                 id: state.index.toString(),
                 targetId: action.payload.targetId,
-                value: '1',
+                value,
                 unit: action.payload.unit,
                 type: ObjectiveType.Output,
               },

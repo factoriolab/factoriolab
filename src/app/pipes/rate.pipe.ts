@@ -20,8 +20,7 @@ export class RatePipe implements PipeTransform {
        * < if so. E.G. if value is 0.001 and rounding to one digit, display <0.1
        */
       const compare = Rational.from([1, Math.pow(10, precision)]);
-      if (value.nonzero() && value.lt(compare))
-        result = `<${result}`;
+      if (value.gt(Rational.zero) && value.lt(compare)) result = `<${result}`;
 
       const split = result.split('.');
       if (split.length > 1) {

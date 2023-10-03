@@ -402,6 +402,7 @@
                 <p-dropdown
                   *ngIf="machineId; else machineIcon"
                   labDropdownBase="icon"
+                  labNoDrag
                   [tooltip]="'settings.machineTooltip' | translate"
                   [ngModel]="machineId"
                   [options]="vm.machineOptions"
@@ -443,6 +444,7 @@
                 <p-dropdown
                   *ngIf="settings.fuelId"
                   labDropdownBase="icon"
+                  labNoDrag
                   [tooltip]="'settings.fuelTooltip' | translate"
                   [ngModel]="settings.fuelId"
                   [options]="settings.fuelOptions"
@@ -489,6 +491,7 @@
                       vm.data.game !== Game.Satisfactory;
                       else satisfactoryPurityPicker
                     "
+                    labNoDrag
                     appendTo="body"
                     scrollHeight="40vh"
                     styleClass="icon"
@@ -538,6 +541,7 @@
                   <ng-template #satisfactoryPurityPicker>
                     <p-dropdown
                       labDropdownBase="icon"
+                      labNoDrag
                       [tooltip]="'settings.modifierTooltip' | translate"
                       [ngModel]="settings.moduleRankIds?.[0]"
                       [options]="settings.moduleOptions ?? []"
@@ -573,6 +577,7 @@
                 <ng-container *ngIf="vm.data.game === Game.Satisfactory">
                   <p-inputNumber
                     #overclockInput
+                    labNoDrag
                     suffix="%"
                     [min]="1"
                     [max]="250"
@@ -598,6 +603,7 @@
                   <ng-container *ngIf="settings.beaconCount != null">
                     <!-- Beacon count input -->
                     <lab-input-number
+                      labNoDrag
                       [pTooltip]="'settings.beaconCountTooltip' | translate"
                       tooltipPosition="top"
                       [value]="settings.beaconCount"
@@ -608,6 +614,7 @@
                     <!-- Beacon dropdown -->
                     <p-dropdown
                       labDropdownBase="icon"
+                      labNoDrag
                       [tooltip]="'settings.beaconTooltip' | translate"
                       tooltipPosition="top"
                       [ngModel]="settings.beaconId"
@@ -637,6 +644,7 @@
                     <!-- Beacon module dropdown -->
                     <p-multiSelect
                       *ngIf="settings.beaconModuleRankIds"
+                      labNoDrag
                       appendTo="body"
                       scrollHeight="40vh"
                       styleClass="icon"
@@ -688,6 +696,7 @@
                 <button
                   pButton
                   pRipple
+                  labNoDrag
                   type="button"
                   icon="fa-solid fa-xmark"
                   class="p-button-outlined ms-auto"
