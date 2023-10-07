@@ -546,7 +546,9 @@ export class RecipeUtility {
           if (settings.machineId != null) {
             const machine = data.machineEntities[settings.machineId];
             if (machine.size != null) {
-              recipe.cost = recipe.cost.mul(machine.size);
+              recipe.cost = recipe.cost.mul(
+                Rational.fromNumber(machine.size[0] * machine.size[1]),
+              );
             }
           }
         }

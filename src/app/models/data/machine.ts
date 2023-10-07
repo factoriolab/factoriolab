@@ -22,8 +22,8 @@ export interface Machine {
   pollution?: number | string;
   silo?: Silo;
   consumption?: Entities<number | string>;
-  /** Collision box area */
-  size?: number;
+  /** Tile size */
+  size?: [number, number];
 }
 
 export class MachineRational {
@@ -42,8 +42,8 @@ export class MachineRational {
   pollution?: Rational;
   silo?: SiloRational;
   consumption?: Entities<Rational>;
-  /** Collision box area */
-  size?: Rational;
+  /** Tile size */
+  size?: [number, number];
 
   constructor(obj: Machine) {
     if (obj.speed) {
@@ -87,8 +87,6 @@ export class MachineRational {
       );
     }
 
-    if (obj.size != null) {
-      this.size = Rational.from(obj.size);
-    }
+    this.size = obj.size;
   }
 }

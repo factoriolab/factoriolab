@@ -134,17 +134,28 @@ export function getMachineSilo(
   return undefined;
 }
 
-export function getMachineSize(proto: D.MachineProto): number {
-  const box = proto.collision_box;
-  if (box === undefined) {
-    return 0;
+export function getMachineSize(proto: D.MachineProto): [number, number] {
+  if (proto.collision_box === undefined) {
+    return [0, 0];
   }
   // MapPositions can be arrays or objects
-  const [[x1, y1], [x2, y2]] = box.map((pos) =>
+  const [[left, top], [right, bottom]] = proto.collision_box.map((pos) =>
     Array.isArray(pos) ? pos : [pos.x, pos.y],
   );
-  // area of collision box
-  return Math.abs(x2 - x1) * Math.abs(y2 - y1);
+  // tile_width and tile_height default to collision box dimensions rounded up
+  // If they are even, collision box origin is offset 0.5 from tile centers
+  const widthEven = ((proto.tile_width ?? Math.ceil(right - left)) & 1) === 0;
+  const heightEven = ((proto.tile_height ?? Math.ceil(bottom - top)) & 1) === 0;
+  // count tile centers occluded by collision box
+  const tileWidth =
+    (widthEven ? 0 : 1) +
+    Math.trunc((widthEven ? 0.5 : 0) - left) +
+    Math.trunc((widthEven ? 0.5 : 0) + right);
+  const tileHeight =
+    (heightEven ? 0 : 1) +
+    Math.trunc((heightEven ? 0.5 : 0) - top) +
+    Math.trunc((heightEven ? 0.5 : 0) + bottom);
+  return [tileWidth, tileHeight];
 }
 
 export function getMachineSpeed(proto: D.MachineProto): number {
