@@ -142,19 +142,24 @@ export function getMachineSize(proto: D.MachineProto): [number, number] {
   const [[left, top], [right, bottom]] = proto.collision_box.map((pos) =>
     Array.isArray(pos) ? pos : [pos.x, pos.y],
   );
-  // tile_width and tile_height default to collision box dimensions rounded up
-  // If they are even, collision box origin is offset 0.5 from tile centers
+  // tile_width and tile_height default to collision box dimensions rounded up.
+  // Only their parities (odd/even) matter
   const widthEven = ((proto.tile_width ?? Math.ceil(right - left)) & 1) === 0;
   const heightEven = ((proto.tile_height ?? Math.ceil(bottom - top)) & 1) === 0;
-  // count tile centers occluded by collision box
-  const tileWidth =
-    (widthEven ? 0 : 1) +
-    Math.trunc((widthEven ? 0.5 : 0) - left) +
-    Math.trunc((widthEven ? 0.5 : 0) + right);
-  const tileHeight =
-    (heightEven ? 0 : 1) +
-    Math.trunc((heightEven ? 0.5 : 0) - top) +
-    Math.trunc((heightEven ? 0.5 : 0) + bottom);
+  // Count tile centers occluded by collision box
+  let tileWidth, tileHeight;
+  if (widthEven) {
+    // Box origin is offset 0.5 from tile centers
+    tileWidth = Math.trunc(0.5 - left) + Math.trunc(0.5 + right);
+  } else {
+    // Add 1 for the box's {0, 0}
+    tileWidth = 1 + Math.trunc(-left) + Math.trunc(right);
+  }
+  if (heightEven) {
+    tileHeight = Math.trunc(0.5 - top) + Math.trunc(0.5 + bottom);
+  } else {
+    tileHeight = 1 + Math.trunc(-top) + Math.trunc(bottom);
+  }
   return [tileWidth, tileHeight];
 }
 
