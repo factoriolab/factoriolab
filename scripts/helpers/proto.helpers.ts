@@ -142,6 +142,9 @@ export function getMachineSize(proto: D.MachineProto): [number, number] {
   const [[left, top], [right, bottom]] = proto.collision_box.map((pos) =>
     Array.isArray(pos) ? pos : [pos.x, pos.y],
   );
+  if (proto.flags?.includes('placeable-off-grid')) {
+    return [right - left, bottom - top];
+  }
   // tile_width and tile_height default to collision box dimensions rounded up.
   // Only their parities (odd/even) matter
   const widthEven = ((proto.tile_width ?? Math.ceil(right - left)) & 1) === 0;
@@ -150,15 +153,15 @@ export function getMachineSize(proto: D.MachineProto): [number, number] {
   let tileWidth, tileHeight;
   if (widthEven) {
     // Box origin is offset 0.5 from tile centers
-    tileWidth = Math.trunc(0.5 - left) + Math.trunc(0.5 + right);
+    tileWidth = Math.floor(0.5 - left) + Math.floor(0.5 + right);
   } else {
     // Add 1 for the box's {0, 0}
-    tileWidth = 1 + Math.trunc(-left) + Math.trunc(right);
+    tileWidth = 1 + Math.floor(-left) + Math.floor(right);
   }
   if (heightEven) {
-    tileHeight = Math.trunc(0.5 - top) + Math.trunc(0.5 + bottom);
+    tileHeight = Math.floor(0.5 - top) + Math.floor(0.5 + bottom);
   } else {
-    tileHeight = 1 + Math.trunc(-top) + Math.trunc(bottom);
+    tileHeight = 1 + Math.floor(-top) + Math.floor(bottom);
   }
   return [tileWidth, tileHeight];
 }
