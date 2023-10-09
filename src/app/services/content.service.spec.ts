@@ -10,7 +10,7 @@ describe('ConnectedOverlayScrollHandler', () => {
     spyOn(DomHandler, 'getScrollableParents').and.returnValue([]);
     const scrollHandler = new ConnectedOverlayScrollHandler({} as any);
     scrollHandler.bindScrollListener();
-    tick();
+    tick(1000);
     expect(scrollHandler.scrollableParents).toEqual([window]);
   }));
 });
