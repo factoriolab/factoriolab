@@ -39,6 +39,7 @@
         *ngIf="vm.data.game === Game.Factorio"
         styleClass="mb-2 w-100"
         [filter]="true"
+        [autofocusFilter]="!vm.isMobile"
         [ngModel]="vm.settings.modId"
         [options]="vm.modOptions"
         (onChange)="setMod($event.value)"

@@ -33,6 +33,7 @@ export class LandingComponent {
     recipeIds: this.store.select(Settings.getAvailableRecipes),
     savedStates: this.store.select(Settings.getSavedStates),
     preferences: this.store.select(Preferences.preferencesState),
+    isMobile: this.contentSvc.isMobile$,
   });
 
   gameInfo = gameInfo;
