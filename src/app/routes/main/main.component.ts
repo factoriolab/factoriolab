@@ -10,7 +10,7 @@ import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { Game, gameInfo, ItemId, MatrixResultType } from '~/models';
+import { Game, gameInfo, ItemId, SimplexResultType } from '~/models';
 import { ContentService, ErrorService } from '~/services';
 import { App, LabState, Objectives, Settings } from '~/store';
 
@@ -75,7 +75,7 @@ export class MainComponent implements AfterViewInit {
 
   Game = Game;
   ItemId = ItemId;
-  MatrixResultType = MatrixResultType;
+  MatrixResultType = SimplexResultType;
 
   constructor(
     public contentSvc: ContentService,

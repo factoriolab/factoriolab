@@ -3,13 +3,13 @@ import {
   DisplayRate,
   displayRateInfo,
   Game,
-  MatrixResultType,
   MaximizeType,
   Objective,
   ObjectiveType,
   ObjectiveUnit,
   PowerUnit,
   Rational,
+  SimplexResultType,
   Step,
   StepDetailTab,
 } from '~/models';
@@ -95,7 +95,7 @@ describe('Objectives Selectors', () => {
     it('should calculate rates using utility method', () => {
       spyOn(SimplexUtility, 'solve').and.returnValue({
         steps: [],
-        resultType: MatrixResultType.Skipped,
+        resultType: SimplexResultType.Skipped,
       });
       Selectors.getMatrixResult.projector(
         Mocks.RationalObjectives,

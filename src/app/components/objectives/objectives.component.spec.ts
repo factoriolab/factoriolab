@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
-import { MatrixResultType, ObjectiveType, ObjectiveUnit } from '~/models';
+import { ObjectiveType, ObjectiveUnit, SimplexResultType } from '~/models';
 import { LabState, Objectives, Preferences, Settings } from '~/store';
 import { ObjectivesComponent } from './objectives.component';
 
@@ -37,7 +37,7 @@ describe('ObjectivesComponent', () => {
         [],
         {
           steps: [],
-          resultType: MatrixResultType.Skipped,
+          resultType: SimplexResultType.Skipped,
         },
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
@@ -50,7 +50,7 @@ describe('ObjectivesComponent', () => {
         [],
         {
           steps: [],
-          resultType: MatrixResultType.Failed,
+          resultType: SimplexResultType.Failed,
         },
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
@@ -71,7 +71,7 @@ describe('ObjectivesComponent', () => {
         ],
         {
           steps: [],
-          resultType: MatrixResultType.Failed,
+          resultType: SimplexResultType.Failed,
           simplexStatus: 'unbounded',
         },
         Mocks.ItemsStateInitial,
@@ -101,7 +101,7 @@ describe('ObjectivesComponent', () => {
         ],
         {
           steps: [],
-          resultType: MatrixResultType.Failed,
+          resultType: SimplexResultType.Failed,
           simplexStatus: 'unbounded',
         },
         { [ItemId.Coal]: { excluded: true } },
@@ -131,7 +131,7 @@ describe('ObjectivesComponent', () => {
         ],
         {
           steps: [],
-          resultType: MatrixResultType.Failed,
+          resultType: SimplexResultType.Failed,
           simplexStatus: 'unbounded',
         },
         Mocks.ItemsStateInitial,
@@ -148,7 +148,7 @@ describe('ObjectivesComponent', () => {
         [],
         {
           steps: [],
-          resultType: MatrixResultType.Failed,
+          resultType: SimplexResultType.Failed,
           simplexStatus: 'unbounded',
         },
         Mocks.ItemsStateInitial,
@@ -163,7 +163,7 @@ describe('ObjectivesComponent', () => {
         [],
         {
           steps: [],
-          resultType: MatrixResultType.Failed,
+          resultType: SimplexResultType.Failed,
           simplexStatus: 'no_feasible',
         },
         Mocks.ItemsStateInitial,

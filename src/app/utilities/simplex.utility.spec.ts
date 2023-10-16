@@ -1,11 +1,11 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Entities,
-  MatrixResultType,
   MaximizeType,
   ObjectiveType,
   ObjectiveUnit,
   Rational,
+  SimplexResultType,
 } from '~/models';
 import { RateUtility } from './rate.utility';
 import {
@@ -40,7 +40,7 @@ describe('SimplexUtility', () => {
     },
   });
   const getResult = (
-    resultType: MatrixResultType = MatrixResultType.Solved,
+    resultType: SimplexResultType = SimplexResultType.Solved,
   ): MatrixSolution => ({
     resultType,
     time: 2,
@@ -83,7 +83,7 @@ describe('SimplexUtility', () => {
         ),
       ).toEqual({
         steps: [],
-        resultType: MatrixResultType.Skipped,
+        resultType: SimplexResultType.Skipped,
       });
     });
 
@@ -91,7 +91,7 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue({
         steps: Mocks.Steps,
       } as any);
-      const result = getResult(MatrixResultType.Solved);
+      const result = getResult(SimplexResultType.Solved);
       spyOn(SimplexUtility, 'getSolution').and.returnValue(result);
       spyOn(SimplexUtility, 'updateSteps');
       expect(
@@ -108,7 +108,7 @@ describe('SimplexUtility', () => {
         ),
       ).toEqual({
         steps: Mocks.Steps,
-        resultType: MatrixResultType.Solved,
+        resultType: SimplexResultType.Solved,
         returnCode: undefined,
         simplexStatus: undefined,
         time: 2,
@@ -290,14 +290,14 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'glpk').and.returnValue({} as any);
       const state = getState();
       const result = SimplexUtility.getSolution(state);
-      expect(result.resultType).toEqual(MatrixResultType.Solved);
+      expect(result.resultType).toEqual(SimplexResultType.Solved);
     });
 
     it('should handle glpk failure', () => {
       spyOn(SimplexUtility, 'glpk').and.returnValue({ error: true } as any);
       const state = getState();
       const result = SimplexUtility.getSolution(state);
-      expect(result.resultType).toEqual(MatrixResultType.Failed);
+      expect(result.resultType).toEqual(SimplexResultType.Failed);
     });
   });
 

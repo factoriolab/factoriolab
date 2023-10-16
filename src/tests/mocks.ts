@@ -275,7 +275,7 @@ export const PreferencesState: Preferences.PreferencesState = {
 };
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
-  resultType: M.MatrixResultType.Solved,
+  resultType: M.SimplexResultType.Solved,
   time: 20,
 };
 export const Flow: M.FlowData = {
