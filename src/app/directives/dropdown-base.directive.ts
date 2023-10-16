@@ -1,13 +1,20 @@
 import { Directive, Input, OnChanges, OnInit, Self } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Dropdown } from 'primeng/dropdown';
 
+import { ContentService } from '~/services';
+
+@UntilDestroy()
 @Directive({
   selector: '[labDropdownBase]',
 })
 export class DropdownBaseDirective implements OnInit, OnChanges {
   @Input() labDropdownBase: 'icon' | '' | undefined;
 
-  constructor(@Self() private readonly pDropdown: Dropdown) {}
+  constructor(
+    private contentSvc: ContentService,
+    @Self() private readonly pDropdown: Dropdown,
+  ) {}
 
   ngOnInit(): void {
     this.pDropdown.appendTo = 'body';
@@ -17,6 +24,10 @@ export class DropdownBaseDirective implements OnInit, OnChanges {
     if (this.labDropdownBase) {
       this.pDropdown.styleClass = this.labDropdownBase;
     }
+
+    this.contentSvc.isMobile$
+      .pipe(untilDestroyed(this))
+      .subscribe((isMobile) => (this.pDropdown.autofocusFilter = !isMobile));
   }
 
   ngOnChanges(): void {

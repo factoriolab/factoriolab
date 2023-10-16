@@ -93,6 +93,7 @@ export class SettingsComponent implements OnInit {
     preferences: this.store.select(Preferences.preferencesState),
     modRecord: this.store.select(Datasets.getModRecord),
     machineIds: this.machineIds$,
+    isMobile: this.contentSvc.isMobile$,
   });
 
   state = '';
