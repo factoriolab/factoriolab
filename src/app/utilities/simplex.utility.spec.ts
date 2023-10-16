@@ -68,6 +68,22 @@ describe('SimplexUtility', () => {
   });
 
   describe('solve', () => {
+    it('should handle calculations paused', () => {
+      expect(
+        SimplexUtility.solve(
+          [],
+          {},
+          {},
+          [],
+          MaximizeType.Weight,
+          false,
+          Mocks.CostRational,
+          Mocks.Dataset,
+          true,
+        ),
+      ).toEqual({ steps: [], resultType: SimplexResultType.Paused });
+    });
+
     it('should handle empty list of objectives', () => {
       expect(
         SimplexUtility.solve(

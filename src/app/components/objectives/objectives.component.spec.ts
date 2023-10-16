@@ -32,6 +32,17 @@ describe('ObjectivesComponent', () => {
   });
 
   describe('getMessages', () => {
+    it('should return an info message when calculations are paused', () => {
+      const result = component.getMessages(
+        [],
+        { steps: [], resultType: SimplexResultType.Paused },
+        Mocks.ItemsStateInitial,
+        Mocks.RecipesStateInitial,
+      );
+      expect(result.length).toEqual(1);
+      expect(result[0].severity).toEqual('info');
+    });
+
     it('should return no errors unless simplex failed', () => {
       const result = component.getMessages(
         [],
