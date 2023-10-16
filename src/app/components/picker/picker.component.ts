@@ -16,7 +16,6 @@ import { FilterService, SelectItem } from 'primeng/api';
 import { combineLatest } from 'rxjs';
 
 import { Category, Entities, RawDataset } from '~/models';
-import { ContentService } from '~/services';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 
@@ -36,10 +35,7 @@ export class PickerComponent implements OnInit {
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<string[]>();
 
-  vm$ = combineLatest({
-    data: this.store.select(Recipes.getAdjustedDataset),
-    isMobile: this.contentSvc.isMobile$,
-  });
+  vm$ = combineLatest({ data: this.store.select(Recipes.getAdjustedDataset) });
 
   searchCtrl = new FormControl('');
   selectAllCtrl = new FormControl(false);
@@ -62,7 +58,6 @@ export class PickerComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private filterSvc: FilterService,
     private store: Store<LabState>,
-    private contentSvc: ContentService,
   ) {}
 
   ngOnInit(): void {
@@ -87,10 +82,6 @@ export class PickerComponent implements OnInit {
       this.selection = selection;
     }
     this.searchCtrl.setValue('');
-    // Wait for input field to appear before attempting to focus
-    setTimeout(() => {
-      this.inputFilter?.nativeElement.focus();
-    });
     this.categoryEntities = data.categoryEntities;
     if (type === 'item') {
       this.categoryRows = {};

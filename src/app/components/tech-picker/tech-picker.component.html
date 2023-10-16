@@ -20,14 +20,7 @@
     <span class="p-inputgroup-addon">
       <i class="fa-solid fa-magnifying-glass"></i>
     </span>
-    <input
-      pInputText
-      type="text"
-      class="w-100"
-      pAutoFocus
-      [autofocus]="!vm.isMobile"
-      [formControl]="filterCtrl"
-    />
+    <input pInputText type="text" class="w-100" [formControl]="filterCtrl" />
     <span class="p-inputgroup-addon flex-shrink-0">
       <p-checkbox
         [binary]="true"
