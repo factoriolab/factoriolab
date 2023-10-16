@@ -12,8 +12,7 @@
     "error": "Error",
     "errorDetail": "The application has encountered an error:",
     "resetTooltip": "Click to reset",
-    "simplexSolved": "Simplex {{ resultType }}: {{ time }}ms, cost: {{ cost }}",
-    "simplexUnsolved": "Simplex {{ resultType }}",
+    "simplexSolved": "Solved, {{ time }}ms, cost: {{ cost }}",
     "migrationWarning": "Migration warning"
   },
   "options": {
@@ -93,6 +92,12 @@
       "speed4": "Research speed 4",
       "speed5": "Research speed 5",
       "speed6": "Research speed 6"
+    },
+    "simplexResultType": {
+      "failed": "Failed",
+      "paused": "Paused",
+      "skipped": "Skipped",
+      "solved": "Solved"
     },
     "stepDetailTab": {
       "item": "Item",
@@ -278,6 +283,7 @@
     "addMachines": "Add machines",
     "selectDisplayRate": "Select display rate",
     "pauseTooltip": "Pause/resume calculations",
+    "pausedMessage": "Calculations are paused. Use play button above to resume.",
     "error": "No solution found",
     "errorDetail": "Check <b>Limit</b> and <b>Maximize</b> objectives and enabled recipes. ",
     "errorUnbounded": "Solution is unbounded",
