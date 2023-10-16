@@ -29,6 +29,7 @@
       [autofocus]="!vm.isMobile"
       [formControl]="searchCtrl"
     />
+    <span>{{ vm.isMobile }}</span>
     <ng-container *ngIf="isMultiselect">
       <span class="p-inputgroup-addon flex-shrink-0">
         <p-checkbox
