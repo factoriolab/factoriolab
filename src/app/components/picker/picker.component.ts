@@ -16,6 +16,7 @@ import { FilterService, SelectItem } from 'primeng/api';
 import { combineLatest } from 'rxjs';
 
 import { Category, Entities, RawDataset } from '~/models';
+import { ContentService } from '~/services';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 
@@ -35,7 +36,10 @@ export class PickerComponent implements OnInit {
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<string[]>();
 
-  vm$ = combineLatest({ data: this.store.select(Recipes.getAdjustedDataset) });
+  vm$ = combineLatest({
+    data: this.store.select(Recipes.getAdjustedDataset),
+    isMobile: this.contentSvc.isMobile$,
+  });
 
   searchCtrl = new FormControl('');
   selectAllCtrl = new FormControl(false);
@@ -56,8 +60,9 @@ export class PickerComponent implements OnInit {
 
   constructor(
     private ref: ChangeDetectorRef,
-    private filterService: FilterService,
+    private filterSvc: FilterService,
     private store: Store<LabState>,
+    private contentSvc: ContentService,
   ) {}
 
   ngOnInit(): void {
@@ -196,7 +201,7 @@ export class PickerComponent implements OnInit {
     }
 
     // Filter for matching item ids
-    const filteredItems: SelectItem[] = this.filterService.filter(
+    const filteredItems: SelectItem[] = this.filterSvc.filter(
       this.allSelectItems,
       ['label'],
       search,

@@ -11,6 +11,7 @@ import { FilterService } from 'primeng/api';
 import { combineLatest, map, Observable, ReplaySubject, startWith } from 'rxjs';
 
 import { Dataset } from '~/models';
+import { ContentService } from '~/services';
 import { LabState, Preferences } from '~/store';
 
 export type UnlockStatus = 'available' | 'locked' | 'researched';
@@ -38,7 +39,7 @@ export class TechPickerComponent {
       let technologyIds = data.technologyIds;
       if (filter) {
         const technologies = technologyIds.map((i) => data.itemEntities[i]);
-        technologyIds = this.filterService
+        technologyIds = this.filterSvc
           .filter(technologies, ['name'], filter, 'contains')
           .map((t) => t.id);
 
@@ -72,6 +73,7 @@ export class TechPickerComponent {
     status: this.status$,
     data: this.data$,
     showTechLabels: this.store.select(Preferences.getShowTechLabels),
+    isMobile: this.contentSvc.isMobile$,
   });
   visible = false;
   importVisible = false;
@@ -79,8 +81,9 @@ export class TechPickerComponent {
 
   constructor(
     private ref: ChangeDetectorRef,
-    private filterService: FilterService,
+    private filterSvc: FilterService,
     private store: Store<LabState>,
+    private contentSvc: ContentService,
   ) {}
 
   clickOpen(data: Dataset, selection: string[] | null): void {

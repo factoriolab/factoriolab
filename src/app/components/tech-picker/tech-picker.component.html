@@ -25,7 +25,7 @@
       type="text"
       class="w-100"
       pAutoFocus
-      [autofocus]="true"
+      [autofocus]="!vm.isMobile"
       [formControl]="filterCtrl"
     />
     <span class="p-inputgroup-addon flex-shrink-0">
