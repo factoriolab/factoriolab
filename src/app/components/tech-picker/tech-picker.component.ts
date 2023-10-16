@@ -38,7 +38,7 @@ export class TechPickerComponent {
       let technologyIds = data.technologyIds;
       if (filter) {
         const technologies = technologyIds.map((i) => data.itemEntities[i]);
-        technologyIds = this.filterService
+        technologyIds = this.filterSvc
           .filter(technologies, ['name'], filter, 'contains')
           .map((t) => t.id);
 
@@ -79,7 +79,7 @@ export class TechPickerComponent {
 
   constructor(
     private ref: ChangeDetectorRef,
-    private filterService: FilterService,
+    private filterSvc: FilterService,
     private store: Store<LabState>,
   ) {}
 

@@ -56,7 +56,7 @@ export class PickerComponent implements OnInit {
 
   constructor(
     private ref: ChangeDetectorRef,
-    private filterService: FilterService,
+    private filterSvc: FilterService,
     private store: Store<LabState>,
   ) {}
 
@@ -82,10 +82,6 @@ export class PickerComponent implements OnInit {
       this.selection = selection;
     }
     this.searchCtrl.setValue('');
-    // Wait for input field to appear before attempting to focus
-    setTimeout(() => {
-      this.inputFilter?.nativeElement.focus();
-    });
     this.categoryEntities = data.categoryEntities;
     if (type === 'item') {
       this.categoryRows = {};
@@ -196,7 +192,7 @@ export class PickerComponent implements OnInit {
     }
 
     // Filter for matching item ids
-    const filteredItems: SelectItem[] = this.filterService.filter(
+    const filteredItems: SelectItem[] = this.filterSvc.filter(
       this.allSelectItems,
       ['label'],
       search,
