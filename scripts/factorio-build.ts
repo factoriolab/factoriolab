@@ -1718,8 +1718,9 @@ async function processMod(): Promise<void> {
     const techData = techDataMap[techRaw.name];
     const technology: Technology = {};
     const id = techId[techRaw.name];
-    if (techData.prerequisites?.length) {
-      technology.prerequisites = techData.prerequisites
+    const prerequisites = coerceArray(techData.prerequisites);
+    if (prerequisites?.length) {
+      technology.prerequisites = prerequisites
         // Ignore any disabled or hidden prerequisites
         .filter((p) => technologyIds.includes(p))
         .map((p) => techId[p]);
