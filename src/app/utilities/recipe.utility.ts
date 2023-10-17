@@ -487,7 +487,7 @@ export class RecipeUtility {
       netProductionOnly,
       data,
     );
-    this.adjustCost(recipeIds, recipeR, recipesState, cost);
+    this.adjustCost(recipeIds, recipeR, recipesState, cost, data);
     return this.finalizeData(recipeIds, excludedRecipeIds, recipeR, data);
   }
 
@@ -525,12 +525,14 @@ export class RecipeUtility {
     recipeR: Entities<RecipeRational>,
     recipesState: Entities<RecipeSettingsRational>,
     cost: CostRationalSettings,
+    data: RawDataset,
   ): void {
     recipeIds
       .map((i) => recipeR[i])
       .forEach((recipe) => {
-        if (recipesState[recipe.id].cost) {
-          recipe.cost = recipesState[recipe.id].cost;
+        const settings = recipesState[recipe.id];
+        if (settings.cost) {
+          recipe.cost = settings.cost;
         } else if (recipe.cost) {
           // Recipe has a declared cost, base this on output items not machines
           // Calculate total output, sum, and multiply cost by output
@@ -539,8 +541,16 @@ export class RecipeUtility {
             .div(recipe.time);
           recipe.cost = output.mul(recipe.cost).mul(cost.factor);
         } else {
-          // Adjust based on recipe time so that this is based on # machines
+          // Adjust based on machine size
           recipe.cost = cost.machine;
+          if (settings.machineId != null) {
+            const machine = data.machineEntities[settings.machineId];
+            if (machine.size != null) {
+              recipe.cost = recipe.cost.mul(
+                Rational.fromNumber(machine.size[0] * machine.size[1]),
+              );
+            }
+          }
         }
       });
   }
