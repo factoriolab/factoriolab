@@ -116,6 +116,7 @@ const mockSettingsState: Settings.SettingsState = {
   costs: {
     factor: '2',
     machine: '10',
+    footprint: '1',
     unproduceable: '0',
     excluded: '100',
     surplus: '0',
@@ -520,6 +521,7 @@ describe('RouterService', () => {
       delete mockStateV1.settingsState?.maximizeType;
       delete mockStateV1.settingsState?.costs?.surplus;
       delete mockStateV1.settingsState?.costs?.maximize;
+      delete mockStateV1.settingsState?.costs?.footprint;
       delete mockStateV1.settingsState?.surplusMachinesOutput;
       expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockStateV1);
       expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
@@ -558,6 +560,7 @@ describe('RouterService', () => {
       delete mockStateV2.settingsState?.maximizeType;
       delete mockStateV2.settingsState?.costs?.surplus;
       delete mockStateV2.settingsState?.costs?.maximize;
+      delete mockStateV2.settingsState?.costs?.footprint;
       delete mockStateV2.settingsState?.surplusMachinesOutput;
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2' +
@@ -602,6 +605,7 @@ describe('RouterService', () => {
       delete mockStateV3.settingsState?.maximizeType;
       delete mockStateV3.settingsState?.costs?.surplus;
       delete mockStateV3.settingsState?.costs?.maximize;
+      delete mockStateV3.settingsState?.costs?.footprint;
       delete mockStateV3.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(
@@ -644,6 +648,7 @@ describe('RouterService', () => {
       delete mockStateV4.settingsState?.maximizeType;
       delete mockStateV4.settingsState?.costs?.surplus;
       delete mockStateV4.settingsState?.costs?.maximize;
+      delete mockStateV4.settingsState?.costs?.footprint;
       delete mockStateV4.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(v4Full, mockStateV4);
@@ -683,6 +688,7 @@ describe('RouterService', () => {
       delete mockStateV5.settingsState?.maximizeType;
       delete mockStateV5.settingsState?.costs?.surplus;
       delete mockStateV5.settingsState?.costs?.maximize;
+      delete mockStateV5.settingsState?.costs?.footprint;
       delete mockStateV5.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(
@@ -724,6 +730,7 @@ describe('RouterService', () => {
       delete mockStateV6.settingsState?.maximizeType;
       delete mockStateV6.settingsState?.costs?.surplus;
       delete mockStateV6.settingsState?.costs?.maximize;
+      delete mockStateV6.settingsState?.costs?.footprint;
       delete mockStateV6.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(v6Full, mockStateV6);
@@ -762,6 +769,7 @@ describe('RouterService', () => {
       delete mockStateV7.settingsState?.maximizeType;
       delete mockStateV7.settingsState?.costs?.surplus;
       delete mockStateV7.settingsState?.costs?.maximize;
+      delete mockStateV7.settingsState?.costs?.footprint;
       delete mockStateV7.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(
@@ -793,9 +801,15 @@ describe('RouterService', () => {
 
       const mockStateV8: App.PartialState = {
         ...mockState,
-        ...{ settingsState: { ...mockState.settingsState } },
+        ...{
+          settingsState: {
+            ...mockState.settingsState,
+            ...{ costs: { ...mockState.settingsState.costs } },
+          },
+        },
       };
       delete mockStateV8.settingsState?.surplusMachinesOutput;
+      delete mockStateV8.settingsState?.costs?.footprint;
 
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100&f1*D~G*1*G*A_B_' +

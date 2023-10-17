@@ -33,6 +33,7 @@ describe('SimplexUtility', () => {
     cost: {
       factor: Rational.one,
       machine: Rational.one,
+      footprint: Rational.one,
       unproduceable: Rational.from(1000000),
       excluded: Rational.zero,
       surplus: Rational.zero,

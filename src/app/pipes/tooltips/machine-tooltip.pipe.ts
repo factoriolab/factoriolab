@@ -81,6 +81,13 @@ export class MachineTooltipPipe implements PipeTransform {
       ]);
     }
 
+    if (machine.size != null) {
+      tableRows.push([
+        this.translateSvc.instant('data.dimensions'),
+        `${machine.size[0]}×${machine.size[1]}`,
+      ]);
+    }
+
     if (machine.silo) {
       tableRows.push([
         this.translateSvc.instant('data.rocketPartsRequired'),

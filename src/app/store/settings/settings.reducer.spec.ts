@@ -256,6 +256,7 @@ describe('Settings Reducer', () => {
       const value: CostSettings = {
         factor: '1',
         machine: '1',
+        footprint: '1',
         unproduceable: '1',
         excluded: '1',
         surplus: '1',

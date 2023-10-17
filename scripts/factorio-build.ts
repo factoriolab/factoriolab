@@ -24,6 +24,7 @@ import {
   getCargoWagon,
   getEnergyInMJ,
   getEntityMap,
+  getEntitySize,
   getFluidWagon,
   getIconText,
   getIngredients,
@@ -36,7 +37,6 @@ import {
   getMachineModules,
   getMachinePollution,
   getMachineSilo,
-  getMachineSize,
   getMachineSpeed,
   getMachineType,
   getMachineUsage,
@@ -500,7 +500,7 @@ async function processMod(): Promise<void> {
       drain: getMachineDrain(proto),
       pollution: getMachinePollution(proto),
       silo: getMachineSilo(proto, dataRaw['rocket-silo-rocket']),
-      size: getMachineSize(proto),
+      size: getEntitySize(proto),
     };
 
     processProducers(proto, name);

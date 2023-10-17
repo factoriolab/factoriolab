@@ -62,6 +62,7 @@ export const initialSettingsState: SettingsState = {
   costs: {
     factor: '1',
     machine: '1',
+    footprint: '1',
     unproduceable: '1000000',
     excluded: '0',
     surplus: '0',

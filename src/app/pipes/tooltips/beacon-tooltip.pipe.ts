@@ -51,6 +51,13 @@ export class BeaconTooltipPipe implements PipeTransform {
       ]);
     }
 
+    if (beacon.size != null) {
+      tableRows.push([
+        this.translateSvc.instant('data.dimensions'),
+        `${beacon.size[0]}×${beacon.size[1]}`,
+      ]);
+    }
+
     html += this.displaySvc.table(tableRows);
 
     html += '</small>';
