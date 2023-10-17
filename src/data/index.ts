@@ -21,6 +21,7 @@ export const data: AppData = {
     { id: 'ffw', name: 'Freight Forwarding', game: Game.Factorio },
     { id: 'ir3', name: 'Industrial Revolution 3', game: Game.Factorio },
     { id: 'kr2', name: 'Krastorio 2', game: Game.Factorio },
+    { id: 'kr2248', name: 'Krastorio 2 + 248K', game: Game.Factorio },
     { id: 'kr2aai', name: 'Krastorio 2 + AAI', game: Game.Factorio },
     { id: 'kr2ffw', name: 'Krastorio 2 + FFW', game: Game.Factorio },
     { id: 'kr2sxp', name: 'Krastorio 2 + SE', game: Game.Factorio },
@@ -96,5 +97,6 @@ export const data: AppData = {
     'kr2ffw',
     'mbf',
     'omf',
+    'kr2248',
   ],
 };
