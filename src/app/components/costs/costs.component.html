@@ -33,11 +33,11 @@
     <tr [pTooltip]="'costs.footprintTooltip' | translate">
       <td>{{ 'costs.footprint' | translate }}</td>
       <td>
-        <lab-input-number
-          width="8rem"
-          [value]="editValue.footprint"
-          (setValue)="editValue.footprint = $event"
-        ></lab-input-number>
+        <p-checkbox
+          [ngModel]="editValue.footprint !== '0'"
+          [binary]="true"
+          (onChange)="editValue.footprint = $event.checked ? '1' : '0'"
+        ></p-checkbox>
       </td>
     </tr>
     <tr [pTooltip]="'costs.unproduceableTooltip' | translate">

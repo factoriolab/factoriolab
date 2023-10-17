@@ -541,9 +541,8 @@ export class RecipeUtility {
             .div(recipe.time);
           recipe.cost = output.mul(recipe.cost).mul(cost.factor);
         } else {
-          // Adjust based on number of machines
           recipe.cost = cost.machine;
-          if (settings.machineId != null) {
+          if (settings.machineId != null && cost.footprint.nonzero()) {
             // Adjust based on machine size
             const machine = data.machineEntities[settings.machineId];
             if (machine.size != null) {
