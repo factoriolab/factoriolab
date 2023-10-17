@@ -3,11 +3,11 @@ import { Rational } from '../rational';
 export type CostKey =
   | 'factor'
   | 'machine'
+  | 'footprint'
   | 'unproduceable'
   | 'excluded'
   | 'surplus'
-  | 'maximize'
-  | 'footprint';
+  | 'maximize';
 
 export type CostSettings = Record<CostKey, string>;
 
