@@ -30,6 +30,16 @@
         ></lab-input-number>
       </td>
     </tr>
+    <tr [pTooltip]="'costs.footprintTooltip' | translate">
+      <td>{{ 'costs.footprint' | translate }}</td>
+      <td>
+        <lab-input-number
+          width="8rem"
+          [value]="editValue.footprint"
+          (setValue)="editValue.footprint = $event"
+        ></lab-input-number>
+      </td>
+    </tr>
     <tr [pTooltip]="'costs.unproduceableTooltip' | translate">
       <td>{{ 'costs.unproduceable' | translate }}</td>
       <td>

@@ -21,6 +21,7 @@ export function getBeacon(proto: M.BeaconPrototype): Beacon {
       proto.energy_source.type === 'electric' ? EnergyType.Electric : undefined,
     usage: getPowerInKw(proto.energy_usage),
     disallowedEffects: getDisallowedEffects(proto.allowed_effects, true),
+    size: getEntitySize(proto),
   };
 }
 
@@ -134,7 +135,9 @@ export function getMachineSilo(
   return undefined;
 }
 
-export function getMachineSize(proto: D.MachineProto): [number, number] {
+export function getEntitySize(
+  proto: D.MachineProto | M.BeaconPrototype,
+): [number, number] {
   if (proto.collision_box === undefined) return [0, 0];
 
   // MapPositions can be arrays or objects

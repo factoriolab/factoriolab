@@ -46,6 +46,12 @@ export class MachineRational {
   size?: [number, number];
 
   constructor(obj: Machine) {
+    this.disallowedEffects = obj.disallowedEffects;
+    this.type = obj.type;
+    this.fuelCategories = obj.fuelCategories;
+    this.fuel = obj.fuel;
+    this.size = obj.size;
+
     if (obj.speed) {
       this.speed = Rational.from(obj.speed);
     }
@@ -54,15 +60,9 @@ export class MachineRational {
       this.modules = Math.round(obj.modules);
     }
 
-    this.disallowedEffects = obj.disallowedEffects;
-    this.type = obj.type;
-
     if (obj.usage != null) {
       this.usage = Rational.from(obj.usage);
     }
-
-    this.fuelCategories = obj.fuelCategories;
-    this.fuel = obj.fuel;
 
     if (obj.drain != null) {
       this.drain = Rational.from(obj.drain);
@@ -86,7 +86,5 @@ export class MachineRational {
         {},
       );
     }
-
-    this.size = obj.size;
   }
 }

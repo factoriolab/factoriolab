@@ -11,6 +11,8 @@ export interface Beacon {
   /** Energy consumption in kW */
   usage?: number;
   disallowedEffects?: ModuleEffect[];
+  /** Width and height in tiles (integers, unless off-grid entity like tree) */
+  size?: [number, number];
 }
 
 export class BeaconRational {
@@ -22,17 +24,19 @@ export class BeaconRational {
   /** Energy consumption in kW */
   usage?: Rational;
   disallowedEffects?: ModuleEffect[];
+  /** Width and height in tiles (integers, unless off-grid entity like tree) */
+  size?: [number, number];
 
   constructor(obj: Beacon) {
     this.effectivity = Rational.from(obj.effectivity);
     this.modules = obj.modules;
     this.range = obj.range;
     this.type = obj.type;
+    this.disallowedEffects = obj.disallowedEffects;
+    this.size = obj.size;
 
     if (obj.usage) {
       this.usage = Rational.fromNumber(obj.usage);
     }
-
-    this.disallowedEffects = obj.disallowedEffects;
   }
 }
