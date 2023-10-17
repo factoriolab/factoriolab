@@ -63,7 +63,7 @@
     "tslib": "^2.6.2",
     "vis-data": "^7.1.6",
     "vis-network": "^9.1.6",
-    "zone.js": "~0.13.1"
+    "zone.js": "~0.14.0"
   },
   "devDependencies": {
     "@angular-devkit/architect": "^0.1602.2",
