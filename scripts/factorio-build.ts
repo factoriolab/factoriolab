@@ -500,7 +500,7 @@ async function processMod(): Promise<void> {
       drain: getMachineDrain(proto),
       pollution: getMachinePollution(proto),
       silo: getMachineSilo(proto, dataRaw['rocket-silo-rocket']),
-      size: getMachineSize(proto)
+      size: getMachineSize(proto),
     };
 
     processProducers(proto, name);
