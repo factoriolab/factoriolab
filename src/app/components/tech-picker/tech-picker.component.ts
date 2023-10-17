@@ -7,10 +7,12 @@ import {
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { FilterService } from 'primeng/api';
 import { combineLatest, map, Observable, ReplaySubject, startWith } from 'rxjs';
 
-import { Dataset } from '~/models';
+import { Dataset, Game } from '~/models';
+import { ContentService } from '~/services';
 import { LabState, Preferences } from '~/store';
 
 export type UnlockStatus = 'available' | 'locked' | 'researched';
@@ -67,20 +69,25 @@ export class TechPickerComponent {
       return { available, locked, researched };
     }),
   );
+  visible = false;
+  importVisible = false;
+  importValue = '';
+
+  Game = Game;
+
   vm$ = combineLatest({
     selection: this.selection$,
     status: this.status$,
     data: this.data$,
     showTechLabels: this.store.select(Preferences.getShowTechLabels),
   });
-  visible = false;
-  importVisible = false;
-  importValue = '';
 
   constructor(
     private ref: ChangeDetectorRef,
     private filterSvc: FilterService,
+    private translateSvc: TranslateService,
     private store: Store<LabState>,
+    private contentSvc: ContentService,
   ) {}
 
   clickOpen(data: Dataset, selection: string[] | null): void {
@@ -99,6 +106,23 @@ export class TechPickerComponent {
   openImport(input: HTMLTextAreaElement): void {
     this.importVisible = true;
     setTimeout(() => input.focus());
+  }
+
+  copyScriptToClipboard(): void {
+    const script = `/c local list = {}
+for _, tech in pairs(game.player.force.technologies) do 
+    if tech.researched then
+    list[#list+1] = tech.name
+  end
+end
+game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
+    window.navigator.clipboard.writeText(script);
+    this.contentSvc.showToast$.next({
+      severity: 'success',
+      detail: this.translateSvc.instant('techPicker.exportScriptCopied'),
+      life: 100000,
+      contentStyleClass: 'detail-only',
+    });
   }
 
   importTechs(data: Dataset): void {
@@ -125,6 +149,7 @@ export class TechPickerComponent {
     this.selection$.next(Array.from(set));
     this.selectAllCtrl.setValue(set.size === data.technologyIds.length);
     this.importValue = '';
+    this.importVisible = false;
   }
 
   clickId(id: string, selection: string[], data: Dataset): void {

@@ -7,6 +7,7 @@ import {
 import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, Mocks, RecipeId, TestModule } from 'src/tests';
+import { ContentService } from '~/services';
 import { LabState, Preferences } from '~/store';
 import { TechPickerComponent, UnlockStatus } from './tech-picker.component';
 
@@ -14,6 +15,7 @@ describe('TechPickerComponent', () => {
   let component: TechPickerComponent;
   let fixture: ComponentFixture<TechPickerComponent>;
   let mockStore: MockStore<LabState>;
+  let contentSvc: ContentService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -23,6 +25,7 @@ describe('TechPickerComponent', () => {
 
     fixture = TestBed.createComponent(TechPickerComponent);
     mockStore = TestBed.inject(MockStore);
+    contentSvc = TestBed.inject(ContentService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -72,6 +75,16 @@ describe('TechPickerComponent', () => {
       expect(component.importVisible).toBeTrue();
       expect(input.focus).toHaveBeenCalled();
     }));
+  });
+
+  describe('copyScriptToClipboard', () => {
+    it('should copy to clipboard and show a toast', () => {
+      spyOn(window.navigator.clipboard, 'writeText');
+      spyOn(contentSvc.showToast$, 'next');
+      component.copyScriptToClipboard();
+      expect(window.navigator.clipboard.writeText).toHaveBeenCalled();
+      expect(contentSvc.showToast$.next).toHaveBeenCalled();
+    });
   });
 
   describe('importTechs', () => {

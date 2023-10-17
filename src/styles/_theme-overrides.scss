@@ -151,3 +151,14 @@ table p-dropdown {
     padding: 0.5rem;
   }
 }
+
+/** Toast style fixes when detail only is shown */
+.p-toast .p-toast-message .p-toast-message-content {
+  &.detail-only {
+    align-items: center;
+
+    .p-toast-detail {
+      margin-top: 0;
+    }
+  }
+}
