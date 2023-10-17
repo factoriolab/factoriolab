@@ -135,16 +135,16 @@ export function getMachineSilo(
 }
 
 export function getMachineSize(proto: D.MachineProto): [number, number] {
-  if (proto.collision_box === undefined) {
-    return [0, 0];
-  }
+  if (proto.collision_box === undefined) return [0, 0];
+
   // MapPositions can be arrays or objects
   const [[left, top], [right, bottom]] = proto.collision_box.map((pos) =>
     Array.isArray(pos) ? pos : [pos.x, pos.y],
   );
-  if (proto.flags?.includes('placeable-off-grid')) {
+
+  if (proto.flags?.includes('placeable-off-grid'))
     return [right - left, bottom - top];
-  }
+
   // tile_width and tile_height default to collision box dimensions rounded up.
   // Only their parities (odd/even) matter
   const widthEven = ((proto.tile_width ?? Math.ceil(right - left)) & 1) === 0;
@@ -163,6 +163,7 @@ export function getMachineSize(proto: D.MachineProto): [number, number] {
   } else {
     tileHeight = 1 + Math.floor(-top) + Math.floor(bottom);
   }
+
   return [tileWidth, tileHeight];
 }
 
