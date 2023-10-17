@@ -66,6 +66,10 @@
           <th>{{ 'data.disallowedEffects' | translate }}</th>
           <td>{{ beacon.disallowedEffects.join(', ') }}</td>
         </tr>
+        <tr *ngIf="beacon.size">
+          <th>{{ 'data.dimensions' | translate }}</th>
+          <td>{{ beacon.size[0] }}×{{ beacon.size[1] }}</td>
+        </tr>
       </ng-container>
       <ng-container *ngIf="vm.obj.belt as belt">
         <tr>
@@ -182,7 +186,7 @@
           <td>{{ machine.pollution }}/m</td>
         </tr>
         <tr *ngIf="machine.consumption">
-          <th>{{ 'data.consumption' }}</th>
+          <th>{{ 'data.consumption' | translate }}</th>
           <td>
             <div
               class="d-flex align-items-center justify-content-center flex-wrap"
@@ -195,6 +199,10 @@
               </i>
             </div>
           </td>
+        </tr>
+        <tr *ngIf="machine.size">
+          <th>{{ 'data.dimensions' | translate }}</th>
+          <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
         </tr>
         <ng-container *ngIf="machine.silo as silo">
           <tr>

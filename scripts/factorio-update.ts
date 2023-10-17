@@ -1,42 +1,18 @@
 import { exec, spawn } from 'child_process';
 import fs from 'fs';
 
+import { Game } from '~/models';
+import { data } from '../src/data';
+
 /**
  * This script is intended to update a specific Factorio mod set or all sets
  */
 
-const CURRENT_FACTORIO_MODS = [
-  '1.1',
-  '1.1e',
-  '248',
-  '248o',
-  '248kr2sxp',
-  'aai',
-  'ang',
-  'bio',
-  'bob',
-  'bobang',
-  'efs',
-  'fep',
-  'ffw',
-  'fpp',
-  'ir3',
-  'kr2',
-  'kr2aai',
-  'kr2ffw',
-  'kr2sxp',
-  'mbf',
-  'msc',
-  'nls',
-  'omf',
-  'pys',
-  'pysalf',
-  'qat',
-  'sea',
-  'sxp',
-  'vbz',
-  'xan',
-];
+/** Old Factorio data sets that cannot be updated via this script */
+const OLD_FACTORIO_MODS = new Set(['1.0', '017', '016']);
+const CURRENT_FACTORIO_MODS = data.mods
+  .filter((m) => m.game === Game.Factorio && !OLD_FACTORIO_MODS.has(m.id))
+  .map((m) => m.id);
 
 function formatTime(milliseconds: number): string {
   const seconds = milliseconds / 1000;

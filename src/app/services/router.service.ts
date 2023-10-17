@@ -1550,6 +1550,7 @@ export class RouterService {
           state.surplusMachinesOutput,
           init.surplusMachinesOutput,
         ),
+        this.zipDiffString(state.costs.footprint, init.costs.footprint),
       ]),
       hash: this.zipFields([
         this.zipDiffNullableNArray(
@@ -1587,6 +1588,7 @@ export class RouterService {
           state.surplusMachinesOutput,
           init.surplusMachinesOutput,
         ),
+        this.zipDiffString(state.costs.footprint, init.costs.footprint),
       ]),
     };
 
@@ -1637,6 +1639,7 @@ export class RouterService {
         },
         surplusMachinesOutput: this.parseBool(s[i++]),
       };
+      obj.costs!.footprint = this.parseString(s[i++]);
     } else {
       obj = {
         modId: this.parseString(s[i++]),
@@ -1667,6 +1670,7 @@ export class RouterService {
         },
         surplusMachinesOutput: this.parseBool(s[i++]),
       };
+      obj.costs!.footprint = this.parseString(s[i++]);
     }
 
     this.deleteEmptyKeys(obj);

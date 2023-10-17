@@ -6,7 +6,8 @@ export type CostKey =
   | 'unproduceable'
   | 'excluded'
   | 'surplus'
-  | 'maximize';
+  | 'maximize'
+  | 'footprint';
 
 export type CostSettings = Record<CostKey, string>;
 
