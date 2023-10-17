@@ -52,7 +52,7 @@ export const initialSettingsState: SettingsState = {
   preset: Preset.Minimum,
   beaconReceivers: null,
   proliferatorSprayId: ItemId.Module,
-  flowRate: 1500,
+  flowRate: 1200,
   inserterTarget: InserterTarget.ExpressTransportBelt,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
