@@ -1,6 +1,6 @@
 import { Injectable, TemplateRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Confirmation } from 'primeng/api';
+import { Confirmation, Message } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
 import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
 
@@ -45,6 +45,7 @@ export class ContentService {
   // Dialogs
   showColumns$ = new Subject<void>();
   showCosts$ = new Subject<void>();
+  showToast$ = new Subject<Message>();
   showConfirm$ = new Subject<Confirmation>();
 
   confirm(confirmation: Confirmation): void {

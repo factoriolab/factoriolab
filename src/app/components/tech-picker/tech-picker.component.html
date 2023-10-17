@@ -61,9 +61,32 @@
       }"
       [breakpoints]="{ '768px': '50vw', '576px': '90vw' }"
       [header]="'techPicker.importHeader' | translate"
-      (onHide)="importTechs(vm.data)"
     >
       <div class="d-flex flex-column">
+        <div *ngIf="vm.data.game === Game.Factorio" class="p-inputgroup mb-3">
+          <span class="p-inputgroup-addon">{{
+            'techPicker.exportFromFactorio' | translate
+          }}</span>
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-outlined"
+            icon="fa-solid fa-copy"
+            [label]="'techPicker.exportCopyScript' | translate"
+            (click)="copyScriptToClipboard()"
+          ></button>
+          <a
+            href="https://mods.factorio.com/mod/export-researched-technologies"
+            target="_blank"
+            pButton
+            pRipple
+            class="text-decoration-none p-inputgroup-addon p-button-outlined"
+            [label]="'techPicker.exportUseMod' | translate"
+            icon="fa-solid fa-link"
+          >
+          </a>
+        </div>
         <div>{{ 'techPicker.importInstructions' | translate }}</div>
         <textarea
           #importInput
@@ -82,7 +105,7 @@
           class="p-button-text"
           icon="fa-solid fa-check"
           [label]="'ok' | translate"
-          (click)="importVisible = false"
+          (click)="importTechs(vm.data)"
         ></button>
       </ng-template>
     </p-dialog>
