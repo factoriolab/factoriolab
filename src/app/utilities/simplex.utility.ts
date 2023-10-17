@@ -16,13 +16,13 @@ import {
   Entities,
   isRecipeRationalObjective,
   MatrixResult,
-  MatrixResultType,
   MaximizeType,
   ObjectiveRational,
   ObjectiveType,
   Rational,
   RecipeObjectiveRational,
   RecipeRational,
+  SimplexResultType,
   Step,
 } from '~/models';
 import { Items, Recipes } from '~/store';
@@ -75,7 +75,7 @@ export interface MatrixState {
 }
 
 export interface MatrixSolution {
-  resultType: MatrixResultType;
+  resultType: SimplexResultType;
   /** GLPK simplex return code */
   returnCode?: Simplex.ReturnCode;
   /** GLPK model simplex status */
@@ -144,8 +144,12 @@ export class SimplexUtility {
     data: Dataset,
     paused: boolean,
   ): MatrixResult {
-    if (paused || objectives.length === 0) {
-      return { steps: [], resultType: MatrixResultType.Skipped };
+    if (paused) {
+      return { steps: [], resultType: SimplexResultType.Paused };
+    }
+
+    if (objectives.length === 0) {
+      return { steps: [], resultType: SimplexResultType.Skipped };
     }
 
     if (researchedTechnologyIds == null) {
@@ -167,7 +171,7 @@ export class SimplexUtility {
     // Get solution for matrix state
     const solution = this.getSolution(state);
 
-    if (solution.resultType === MatrixResultType.Solved) {
+    if (solution.resultType === SimplexResultType.Solved) {
       // Update steps with solution
       this.updateSteps(solution, state);
     }
@@ -388,7 +392,7 @@ export class SimplexUtility {
     if (glpkResult.error) {
       // No solution found
       return {
-        resultType: MatrixResultType.Failed,
+        resultType: SimplexResultType.Failed,
         returnCode: glpkResult.returnCode,
         simplexStatus: glpkResult.status,
         surplus: {},
@@ -410,7 +414,7 @@ export class SimplexUtility {
     const { surplus, unproduceable, excluded, recipes } = glpkResult;
 
     return {
-      resultType: MatrixResultType.Solved,
+      resultType: SimplexResultType.Solved,
       surplus,
       recipes,
       unproduceable,

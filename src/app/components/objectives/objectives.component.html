@@ -167,6 +167,13 @@
         (onChange)="setPaused($event.checked ?? false)"
       ></p-toggleButton>
     </div>
+    <p-messages
+      *ngIf="vm.messages.length"
+      styleClass="mt-2 w-100"
+      [value]="vm.messages"
+      [closable]="false"
+      [escape]="false"
+    ></p-messages>
   </div>
   <lab-picker
     #addItemPicker
@@ -186,11 +193,4 @@
     #chooseRecipePicker
     [header]="'objectives.selectARecipe' | translate"
   ></lab-picker>
-  <p-messages
-    *ngIf="vm.messages.length"
-    styleClass="mt-2 w-100"
-    [value]="vm.messages"
-    [closable]="false"
-    [escape]="false"
-  ></p-messages>
 </p-card>

@@ -9,12 +9,12 @@ import {
   DisplayRate,
   displayRateOptions,
   MatrixResult,
-  MatrixResultType,
   Objective,
   ObjectiveBase,
   ObjectiveType,
   objectiveTypeOptions,
   ObjectiveUnit,
+  SimplexResultType,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
 import {
@@ -81,7 +81,15 @@ export class ObjectivesComponent {
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
   ): Message[] {
-    if (matrixResult.resultType !== MatrixResultType.Failed) return [];
+    if (matrixResult.resultType === SimplexResultType.Paused)
+      return [
+        {
+          severity: 'info',
+          detail: this.translateSvc.instant('objectives.pausedMessage'),
+        },
+      ];
+
+    if (matrixResult.resultType !== SimplexResultType.Failed) return [];
 
     if (matrixResult.simplexStatus === 'unbounded') {
       const maxObjectives = objectives.filter(

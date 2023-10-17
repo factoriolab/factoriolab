@@ -1,7 +1,7 @@
 {
   "name": "factoriolab",
   "description": "Angular-based calculator for the game Factorio",
-  "version": "2.3.65",
+  "version": "2.3.67",
   "private": true,
   "contributors": [
     "Doug Broad (https://github.com/dcbroad3)"
@@ -33,7 +33,7 @@
   },
   "dependencies": {
     "@angular/animations": "^16.2.5",
-    "@angular/cdk": "^16.2.4",
+    "@angular/cdk": "^16.2.5",
     "@angular/common": "^16.2.5",
     "@angular/compiler": "^16.2.5",
     "@angular/core": "^16.2.5",

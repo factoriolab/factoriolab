@@ -44,7 +44,6 @@
                     'app.simplexSolved'
                       | translate
                         : {
-                            resultType: vm.result.resultType.toLowerCase(),
                             time: vm.result.time,
                             cost: vm.result.cost?.toPrecision(2)
                           }
@@ -53,9 +52,8 @@
                 <ng-template #notSolved>
                   <div>
                     {{
-                      'app.simplexUnsolved'
+                      'options.simplexResultType.' + vm.result.resultType
                         | translate
-                          : { resultType: vm.result.resultType.toLowerCase() }
                     }}
                   </div>
                 </ng-template>

@@ -204,6 +204,7 @@
                 inputId="mod"
                 styleClass="w-100"
                 [filter]="true"
+                [autofocusFilter]="!vm.isMobile"
                 [tooltip]="'settings.modSetTooltip' | translate"
                 [ngModel]="vm.settings.modId"
                 [options]="vm.modOptions"
