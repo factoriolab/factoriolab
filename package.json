@@ -22,14 +22,14 @@
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "lint": "ng lint",
     "lint-build": "ng lint --max-warnings 0",
-    "factorio-api": "ts-node scripts/factorio-api.ts",
+    "factorio-api": "ts-node -r tsconfig-paths/register scripts/factorio-api.ts",
     "postfactorio-api": "prettier --write \"scripts/factorio.models.ts\"",
-    "factorio-prep": "ts-node scripts/factorio-prep.ts",
+    "factorio-prep": "ts-node -r tsconfig-paths/register scripts/factorio-prep.ts",
     "factorio-dump": "scripts\\factorio-dump.bat",
-    "factorio-build": "ts-node scripts/factorio-build.ts",
-    "factorio-update": "ts-node scripts/factorio-update.ts",
-    "minify-data": "ts-node scripts/minify-data.ts",
-    "update-hash": "ts-node scripts/update-hash.ts"
+    "factorio-build": "ts-node -r tsconfig-paths/register scripts/factorio-build.ts",
+    "factorio-update": "ts-node -r tsconfig-paths/register scripts/factorio-update.ts",
+    "minify-data": "ts-node -r tsconfig-paths/register scripts/minify-data.ts",
+    "update-hash": "ts-node -r tsconfig-paths/register scripts/update-hash.ts"
   },
   "dependencies": {
     "@angular/animations": "^16.2.5",
@@ -97,6 +97,7 @@
     "sharp": "^0.32.0",
     "spritesmith": "^3.4.1",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "~5.1.6",
     "webpack-bundle-analyzer": "^4.9.0"
   },
