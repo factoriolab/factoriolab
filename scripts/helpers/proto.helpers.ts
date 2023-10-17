@@ -134,6 +134,39 @@ export function getMachineSilo(
   return undefined;
 }
 
+export function getMachineSize(proto: D.MachineProto): [number, number] {
+  if (proto.collision_box === undefined) return [0, 0];
+
+  // MapPositions can be arrays or objects
+  const [[left, top], [right, bottom]] = proto.collision_box.map((pos) =>
+    Array.isArray(pos) ? pos : [pos.x, pos.y],
+  );
+
+  if (proto.flags?.includes('placeable-off-grid'))
+    return [right - left, bottom - top];
+
+  // tile_width and tile_height default to collision box dimensions rounded up.
+  // Only their parities (odd/even) matter
+  const widthEven = ((proto.tile_width ?? Math.ceil(right - left)) & 1) === 0;
+  const heightEven = ((proto.tile_height ?? Math.ceil(bottom - top)) & 1) === 0;
+  // Count tile centers occluded by collision box
+  let tileWidth, tileHeight;
+  if (widthEven) {
+    // Box origin is offset 0.5 from tile centers
+    tileWidth = Math.floor(0.5 - left) + Math.floor(0.5 + right);
+  } else {
+    // Add 1 for the box's {0, 0}
+    tileWidth = 1 + Math.floor(-left) + Math.floor(right);
+  }
+  if (heightEven) {
+    tileHeight = Math.floor(0.5 - top) + Math.floor(0.5 + bottom);
+  } else {
+    tileHeight = 1 + Math.floor(-top) + Math.floor(bottom);
+  }
+
+  return [tileWidth, tileHeight];
+}
+
 export function getMachineSpeed(proto: D.MachineProto): number {
   if (M.isReactorPrototype(proto)) return 1;
 
