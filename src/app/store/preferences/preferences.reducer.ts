@@ -23,6 +23,7 @@ export interface PreferencesState {
   showTechLabels: boolean;
   hideDuplicateIcons: boolean;
   rows: number;
+  disablePaginator: boolean;
   paused: boolean;
 }
 
@@ -41,6 +42,7 @@ export const initialPreferencesState: PreferencesState = {
   showTechLabels: false,
   hideDuplicateIcons: false,
   rows: 50,
+  disablePaginator: false,
   paused: false,
 };
 
@@ -78,6 +80,8 @@ export function preferencesReducer(
       };
     case PreferencesActionType.SET_ROWS:
       return { ...state, ...{ rows: action.payload } };
+    case PreferencesActionType.SET_DISABLE_PAGINATOR:
+      return { ...state, ...{ disablePaginator: action.payload } };
     case PreferencesActionType.SET_LANGUAGE:
       return { ...state, ...{ language: action.payload } };
     case PreferencesActionType.SET_POWER_UNIT:
