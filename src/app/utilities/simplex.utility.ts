@@ -11,9 +11,12 @@ import { StatusSimplex } from 'glpk-ts/dist/status';
 
 import { environment } from 'src/environments';
 import {
+  CostKey,
   CostRationalSettings,
   Dataset,
   Entities,
+  FACTORIO_FLUID_COST_RATIO,
+  Game,
   isRecipeRationalObjective,
   MatrixResult,
   MaximizeType,
@@ -428,6 +431,20 @@ export class SimplexUtility {
     };
   }
 
+  static itemCost(
+    itemId: string,
+    costKey: CostKey,
+    state: MatrixState,
+  ): number {
+    const base =
+      state.data.itemEntities[itemId].stack == null &&
+      state.data.game === Game.Factorio
+        ? FACTORIO_FLUID_COST_RATIO
+        : Rational.one;
+    const cost = state.cost[costKey];
+    return base.mul(cost).toNumber();
+  }
+
   static glpk(state: MatrixState): GlpkResult {
     const itemIds = Object.keys(state.itemValues);
     const recipeIds = Object.keys(state.recipes);
@@ -539,8 +556,9 @@ export class SimplexUtility {
 
     // Add unproduceable vars to model
     for (const itemId of state.unproduceableIds) {
+      const obj = this.itemCost(itemId, 'unproduceable', state);
       const config: VariableProperties = {
-        obj: state.cost.unproduceable.toNumber(),
+        obj,
         lb: 0,
         name: itemId,
       };
@@ -549,8 +567,9 @@ export class SimplexUtility {
 
     // Add excluded vars to model
     for (const itemId of state.excludedIds) {
+      const obj = this.itemCost(itemId, 'excluded', state);
       const config: VariableProperties = {
-        obj: state.cost.excluded.toNumber(),
+        obj,
         lb: 0,
         name: itemId,
       };
@@ -559,8 +578,9 @@ export class SimplexUtility {
 
     // Add input/output vars to model
     for (const itemId of itemIds) {
+      const obj = this.itemCost(itemId, 'surplus', state);
       const config: VariableProperties = {
-        obj: state.cost.surplus.toNumber(),
+        obj,
         lb: 0,
         name: itemId,
       };
