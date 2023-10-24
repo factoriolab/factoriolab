@@ -274,6 +274,7 @@
     "openCosts": "Open cost settings",
     "bypassLanding": "Always skip landing page",
     "hideDuplicateIcons": "Hide duplicate icons",
+    "disablePaginator": "Disable list paginator",
     "netProductionOnly": "Net production only",
     "netProductionOnlyTooltip": "If checked, recipes that both produce and consume the same item are reduced to the net production only",
     "surplusMachinesOutput": "Surplus machines output",
