@@ -1729,6 +1729,7 @@ async function processMod(): Promise<void> {
     }
 
     const inputs = Object.keys(techIngredientsMap[techRaw.name]);
+    const row = inputs.length;
     const producers = labs.filter((l) => {
       const lab = dataRaw.lab[machines.lab[l]];
       const labInputs = coerceArray(lab.inputs);
@@ -1739,7 +1740,7 @@ async function processMod(): Promise<void> {
       id,
       name: techLocale.names[techRaw.name],
       category: 'technology',
-      row: 0,
+      row,
       time: techData.unit.time,
       producers,
       in: techIngredientsMap[techRaw.name],
@@ -1754,7 +1755,7 @@ async function processMod(): Promise<void> {
       id,
       name: recipe.name,
       category: recipe.category,
-      row: 0,
+      row,
       technology,
       icon: recipe.icon,
       iconText: recipe.iconText,

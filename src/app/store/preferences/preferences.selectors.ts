@@ -15,7 +15,6 @@ export const getColumns = createSelector(
   preferencesState,
   (state) => state.columns,
 );
-export const getRows = createSelector(preferencesState, (state) => state.rows);
 export const getPowerUnit = createSelector(
   preferencesState,
   (state) => state.powerUnit,
@@ -35,10 +34,6 @@ export const getBypassLanding = createSelector(
 export const getShowTechLabels = createSelector(
   preferencesState,
   (state) => state.showTechLabels,
-);
-export const getHideDuplicateIcons = createSelector(
-  preferencesState,
-  (state) => state.hideDuplicateIcons,
 );
 export const getPaused = createSelector(
   preferencesState,

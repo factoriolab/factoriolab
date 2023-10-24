@@ -265,6 +265,7 @@ export const PreferencesState: Preferences.PreferencesState = {
   },
   columns: M.initialColumnsState,
   rows: 50,
+  disablePaginator: false,
   powerUnit: M.PowerUnit.Auto,
   language: M.Language.English,
   theme: M.Theme.Dark,
