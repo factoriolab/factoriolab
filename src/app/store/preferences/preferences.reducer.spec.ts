@@ -80,6 +80,16 @@ describe('Preferences Reducer', () => {
     });
   });
 
+  describe('SET_DISABLE_PAGINATOR', () => {
+    it('should set whether paginator is disabled', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetDisablePaginatorAction(true),
+      );
+      expect(result.disablePaginator).toBeTrue();
+    });
+  });
+
   describe('SET_LANGUAGE', () => {
     it('should set the language', () => {
       const result = preferencesReducer(
