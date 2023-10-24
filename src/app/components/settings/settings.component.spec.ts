@@ -383,5 +383,6 @@ describe('SettingsComponent', () => {
       'setHideDuplicateIcons',
       Preferences.SetHideDuplicateIconsAction,
     );
+    dispatch.val('setDisablePaginator', Preferences.SetDisablePaginatorAction);
   });
 });

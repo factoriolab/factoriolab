@@ -471,4 +471,8 @@ export class SettingsComponent implements OnInit {
   setHideDuplicateIcons(value: boolean): void {
     this.store.dispatch(new Preferences.SetHideDuplicateIconsAction(value));
   }
+
+  setDisablePaginator(value: boolean): void {
+    this.store.dispatch(new Preferences.SetDisablePaginatorAction(value));
+  }
 }

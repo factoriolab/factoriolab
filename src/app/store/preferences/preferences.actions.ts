@@ -17,6 +17,7 @@ export const enum PreferencesActionType {
   SET_STATES = '[Preferences] Set States',
   SET_COLUMNS = '[Preferences] Set Columns',
   SET_ROWS = '[Preferences] Set Rows',
+  SET_DISABLE_PAGINATOR = '[Preferences] Set Disable Paginator',
   SET_LANGUAGE = '[Preferences] Set Display Language',
   SET_POWER_UNIT = '[Preferences] Set Power Unit',
   SET_THEME = '[Preferences] Set Theme',
@@ -49,6 +50,11 @@ export class SetColumnsAction implements Action {
 export class SetRowsAction implements Action {
   readonly type = PreferencesActionType.SET_ROWS;
   constructor(public payload: number) {}
+}
+
+export class SetDisablePaginatorAction implements Action {
+  readonly type = PreferencesActionType.SET_DISABLE_PAGINATOR;
+  constructor(public payload: boolean) {}
 }
 
 export class SetLanguageAction implements Action {
@@ -92,6 +98,7 @@ export type PreferencesAction =
   | SetStatesAction
   | SetColumnsAction
   | SetRowsAction
+  | SetDisablePaginatorAction
   | SetLanguageAction
   | SetPowerUnitAction
   | SetThemeAction
