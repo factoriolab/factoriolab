@@ -107,13 +107,6 @@
     },
     "theme": { "light": "Light", "dark": "Dark (Default)", "black": "Black" }
   },
-  "tooltip": {
-    "belt": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Speed</td><td>{{ speed }}{{ suffix }}</td></tr></table></small>",
-    "pipe": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Flow rate</td><td>{{ speed }}{{ suffix }}</td></tr></table></small>",
-    "cargoWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Inventory</td><td>{{ size }} stacks</td></tr></table></small>",
-    "fluidWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Capacity</td><td>{{ size }}</td></tr></table></small>",
-    "fuel": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Category</td><td>{{ category }}</td></tr><tr><td>Value</td><td>{{ value }} MJ</td></tr></table></small>"
-  },
   "columns": {
     "header": "Column settings",
     "visibility": "Visibility",
@@ -331,6 +324,7 @@
     "total": "Total"
   },
   "data": {
+    "openDataPage": "Open data page...",
     "notFound": "Not found",
     "versions": "Versions",
     "collection": "Collection",
@@ -385,6 +379,9 @@
     "speed": "Speed",
     "sprays": "Sprays",
     "proliferator": "Proliferator",
+    "pipe": "Pipe",
+    "pipeFlowRate": "Flow rate (Items/s)",
+    "flowRate": "Flow rate",
     "burntResult": "Burnt result",
     "consumedByRecipes": "Consumed by recipes",
     "producedByRecipes": "Produced by recipes",

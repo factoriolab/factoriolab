@@ -118,51 +118,58 @@
     <h3>{{ 'techPicker.available' | translate }}</h3>
     <div class="d-flex flex-wrap">
       <i *ngIf="vm.status.available.length === 0">{{ 'none' | translate }}</i>
-      <button
-        *ngFor="let id of vm.status.available"
-        pButton
-        pRipple
-        type="button"
-        class="p-button-text me-1 mb-1"
-        [label]="(vm.showTechLabels && vm.data.itemEntities[id]?.name) || ''"
-        [icon]="id | iconSmClass"
-        [pTooltip]="id | itemTooltip: vm.data"
-        [escape]="false"
-        (click)="clickId(id, vm.selection, vm.data)"
-      ></button>
+      <ng-container *ngFor="let id of vm.status.available">
+        <ng-container
+          *ngTemplateOutlet="
+            techButton;
+            context: { id, class: 'p-button-text' }
+          "
+        ></ng-container>
+      </ng-container>
     </div>
     <h3>{{ 'techPicker.locked' | translate }}</h3>
     <div class="d-flex flex-wrap invert">
       <i *ngIf="vm.status.locked.length === 0">{{ 'none' | translate }}</i>
-      <button
-        *ngFor="let id of vm.status.locked"
-        pButton
-        pRipple
-        type="button"
-        class="p-button-danger me-1 mb-1"
-        [label]="(vm.showTechLabels && vm.data.itemEntities[id]?.name) || ''"
-        [icon]="id | iconSmClass"
-        [pTooltip]="id | itemTooltip: vm.data"
-        [escape]="false"
-        (click)="clickId(id, vm.selection, vm.data)"
-      ></button>
+      <ng-container *ngFor="let id of vm.status.locked">
+        <ng-container
+          *ngTemplateOutlet="
+            techButton;
+            context: { id, class: 'p-button-danger' }
+          "
+        ></ng-container>
+      </ng-container>
     </div>
     <h3>{{ 'techPicker.researched' | translate }}</h3>
     <div class="d-flex flex-wrap invert">
       <i *ngIf="vm.status.researched.length === 0">{{ 'none' | translate }}</i>
-      <button
-        *ngFor="let id of vm.status.researched"
+      <ng-container *ngFor="let id of vm.status.researched">
+        <ng-container
+          *ngTemplateOutlet="
+            techButton;
+            context: { id, class: 'p-button-success' }
+          "
+        ></ng-container>
+      </ng-container>
+    </div>
+    <ng-template #techButton let-id="id" let-class="class"
+      ><button
         pButton
         pRipple
         type="button"
-        class="p-button-success me-1 mb-1"
+        class="me-1 mb-1"
+        [class]="class"
         [label]="(vm.showTechLabels && vm.data.itemEntities[id]?.name) || ''"
         [class.hover-active]="vm.selection?.indexOf(id) === -1"
         [icon]="id | iconSmClass"
-        [pTooltip]="id | itemTooltip: vm.data"
-        [escape]="false"
+        [pTooltip]="tooltip"
+        tooltipPosition="bottom"
+        [autoHide]="false"
         (click)="clickId(id, vm.selection, vm.data)"
-      ></button>
-    </div>
+      >
+        <ng-template #tooltip>
+          <lab-tooltip [id]="id" type="technology"></lab-tooltip>
+        </ng-template>
+      </button>
+    </ng-template>
   </p-scrollPanel>
 </p-dialog>
