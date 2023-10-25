@@ -22,12 +22,6 @@ describe('DisplayService', () => {
     });
   });
 
-  describe('table', () => {
-    it('should generate html for a table', () => {
-      expect(service.table([['label', 'value']])).toBeTruthy();
-    });
-  });
-
   describe('round', () => {
     it('should round a rational to two digits', () => {
       expect(service.round(Rational.from([1, 3]))).toEqual('0.33');

@@ -7,7 +7,6 @@ import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { Game } from '~/models';
-import { DisplayService } from '~/services';
 import { Items, LabState, Machines, Settings } from '~/store';
 import { DataRouteService } from '../../data-route.service';
 import { DataSharedModule } from '../../data-shared.module';

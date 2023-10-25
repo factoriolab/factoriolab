@@ -7,7 +7,6 @@ import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { Dataset, Game, RecipeSettings } from '~/models';
-import { DisplayService } from '~/services';
 import { LabState, Recipes } from '~/store';
 import { DataRouteService } from '../../data-route.service';
 import { DetailComponent } from '../../models';
