@@ -102,13 +102,6 @@
     },
     "theme": { "light": "浅色", "dark": "深色 (默认)", "black": "黑色" }
   },
-  "tooltip": {
-    "belt": "{{ name }}\n<small><table class=\"w-100\"><tr><td>速度：</td><td>{{ speed }}</td></tr></table></small>",
-    "pipe": "{{ name }}\n<small><table class=\"w-100\"><tr><td>流速：</td><td>{{ speed }}</td></tr></table></small>",
-    "cargoWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>容量：</td><td>{{ size }} 堆</td></tr></table></small>",
-    "fluidWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>容量：</td><td>{{ size }}</td></tr></table></small>",
-    "fuel": "{{ name }}\n<small><table class=\"w-100\"><tr><td>类型：</td><td>{{ category }}</td></tr><tr><td>能量：</td><td>{{ value }} MJ</td></tr></table></small>"
-  },
   "columns": {
     "header": "列设置",
     "visibility": "是否可见",

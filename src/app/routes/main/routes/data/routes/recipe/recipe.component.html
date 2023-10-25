@@ -166,7 +166,7 @@
       </tr>
       <tr *ngIf="vm.obj.usage">
         <th>{{ 'data.energyConsumption' | translate }}</th>
-        <td>{{ displaySvc.power(vm.obj.usage) }}</td>
+        <td>{{ vm.obj.usage | usage }}</td>
       </tr>
       <tr>
         <th colspan="2">

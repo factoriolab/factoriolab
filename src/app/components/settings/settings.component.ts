@@ -42,7 +42,7 @@ import {
   Theme,
   themeOptions,
 } from '~/models';
-import { ContentService, DisplayService, RouterService } from '~/services';
+import { ContentService, RouterService } from '~/services';
 import {
   App,
   Datasets,
@@ -140,7 +140,6 @@ export class SettingsComponent implements OnInit {
 
   constructor(
     public contentSvc: ContentService,
-    public displaySvc: DisplayService,
     private router: Router,
     private store: Store<LabState>,
     private translateSvc: TranslateService,
