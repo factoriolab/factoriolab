@@ -53,7 +53,6 @@ export class RecipeComponent extends DetailComponent {
     translateSvc: TranslateService,
     private store: Store<LabState>,
     private dataRouteSvc: DataRouteService,
-    public displaySvc: DisplayService,
   ) {
     super(route, translateSvc);
   }

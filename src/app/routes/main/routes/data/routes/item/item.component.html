@@ -60,7 +60,7 @@
         </tr>
         <tr *ngIf="beacon.usage">
           <th>{{ 'data.energyConsumption' | translate }}</th>
-          <td>{{ displaySvc.power(beacon.usage) }}</td>
+          <td>{{ beacon.usage | usage }}</td>
         </tr>
         <tr *ngIf="beacon.disallowedEffects">
           <th>{{ 'data.disallowedEffects' | translate }}</th>
@@ -116,7 +116,7 @@
         </tr>
         <tr>
           <th>{{ 'data.fuelValue' | translate }}</th>
-          <td>{{ displaySvc.round(fuel.value) }} MJ</td>
+          <td>{{ fuel.value | round }} MJ</td>
         </tr>
         <tr *ngIf="fuel.result">
           <th>{{ 'data.burntResult' | translate }}</th>
@@ -169,17 +169,11 @@
         </tr>
         <tr *ngIf="machine.usage">
           <th>{{ 'data.energyConsumption' | translate }}</th>
-          <td>
-            {{
-              machine.usage
-                ? displaySvc.power(machine.usage)
-                : ('none' | translate)
-            }}
-          </td>
+          <td>{{ machine.usage | usage }}</td>
         </tr>
         <tr *ngIf="machine.drain">
           <th>{{ 'data.energyDrain' | translate }}</th>
-          <td>{{ displaySvc.power(machine.drain) }}</td>
+          <td>{{ machine.drain | usage }}</td>
         </tr>
         <tr *ngIf="machine.pollution">
           <th>{{ 'data.pollution' | translate }}</th>
@@ -195,7 +189,7 @@
                 *ngFor="let kv of machine.consumption | keyvalue"
                 [class]="kv.key | iconSmClass: 'item'"
               >
-                <span>{{ displaySvc.round(kv.value) }}</span>
+                <span>{{ kv.value | round }}</span>
               </i>
             </div>
           </td>
@@ -216,7 +210,7 @@
           </tr>
           <tr>
             <th>{{ 'data.rocketLaunchTime' | translate }}</th>
-            <td>{{ displaySvc.round(silo.launch) }}</td>
+            <td>{{ silo.launch | round }}</td>
           </tr>
         </ng-container>
       </ng-container>
@@ -228,23 +222,23 @@
         </tr>
         <tr *ngIf="module.consumption">
           <th>{{ 'data.energyConsumption' | translate }}</th>
-          <td>{{ displaySvc.toBonusPercent(module.consumption) }}</td>
+          <td>{{ module.consumption | bonusPercent }}</td>
         </tr>
         <tr *ngIf="module.pollution">
           <th>{{ 'data.pollution' | translate }}</th>
-          <td>{{ displaySvc.toBonusPercent(module.pollution) }}</td>
+          <td>{{ module.pollution | bonusPercent }}</td>
         </tr>
         <tr *ngIf="module.productivity">
           <th>{{ 'data.productivity' | translate }}</th>
-          <td>{{ displaySvc.toBonusPercent(module.productivity) }}</td>
+          <td>{{ module.productivity | bonusPercent }}</td>
         </tr>
         <tr *ngIf="module.speed">
           <th>{{ 'data.speed' | translate }}</th>
-          <td>{{ displaySvc.toBonusPercent(module.speed) }}</td>
+          <td>{{ module.speed | bonusPercent }}</td>
         </tr>
         <tr *ngIf="module.sprays">
           <th>{{ 'data.sprays' | translate }}</th>
-          <td>{{ displaySvc.round(module.sprays) }}</td>
+          <td>{{ module.sprays | round }}</td>
         </tr>
         <tr *ngIf="module.proliferator">
           <th>{{ 'data.proliferator' | translate }}</th>
@@ -263,6 +257,17 @@
               ></button>
             </a>
           </td>
+        </tr>
+      </ng-container>
+      <ng-container *ngIf="vm.obj.pipe as pipe">
+        <tr>
+          <th colspan="2" class="text-center">
+            <h3>{{ 'data.pipe' | translate }}</h3>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.flowRate' | translate }}</th>
+          <td>{{ pipe.speed }}</td>
         </tr>
       </ng-container>
       <ng-container *ngIf="vm.obj.technology as technology">

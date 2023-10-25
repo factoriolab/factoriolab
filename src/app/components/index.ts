@@ -7,6 +7,7 @@ import { ObjectivesComponent } from './objectives/objectives.component';
 import { PickerComponent } from './picker/picker.component';
 import { SettingsComponent } from './settings/settings.component';
 import { TechPickerComponent } from './tech-picker/tech-picker.component';
+import { TooltipComponent } from './tooltip/tooltip.component';
 
 export const components = [
   ColumnsComponent,
@@ -18,4 +19,5 @@ export const components = [
   ObjectivesComponent,
   SettingsComponent,
   TechPickerComponent,
+  TooltipComponent,
 ];

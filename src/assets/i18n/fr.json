@@ -78,30 +78,6 @@
       "dark": "Sombre"
     }
   },
-  "tooltip": {
-    "speed": "Vitesse",
-    "flowRate": "Débit",
-    "craftingSpeed": "Vitesse de fabrication",
-    "modules": "Modules",
-    "disallowedEffects": "Effets Interdit",
-    "energyType": "Type d'énergie",
-    "fuelCategory": "Catégorie de carburant",
-    "energyUsage": "Utilisation d'énergie",
-    "drain": "Consommation passive",
-    "pollution": "Pollution",
-    "rocketPartsRequired": "Pièces de fusée requise",
-    "launchTime": "Temps de lancement",
-    "consumption": "Consommation",
-    "productivity": "Productivité",
-    "sprays": "Sprays",
-    "effectivity": "Efficacité",
-    "range": "Portée",
-    "belt": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Vitesse</td><td>{{ speed }}</td></tr></table></small>",
-    "pipe": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Débit</td><td>{{ speed }}</td></tr></table></small>",
-    "cargoWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Inventaire</td><td>{{ size }} stacks</td></tr></table></small>",
-    "fluidWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Capacité</td><td>{{ size }}</td></tr></table></small>",
-    "fuel": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Categorie</td><td>{{ category }}</td></tr><tr><td>Valeur</td><td>{{ value }} MJ</td></tr></table></small>"
-  },
   "columns": {
     "header": "Paramètres de colonne",
     "visibility": "Visibilité",

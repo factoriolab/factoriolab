@@ -79,18 +79,18 @@
                 [class.hover-action]="isMultiselect"
                 [class.hover-active]="selection && selection.indexOf(id) !== -1"
                 [icon]="id | iconSmClass: type"
-                [pTooltip]="
-                  type === 'item'
-                    ? (id | itemTooltip: vm.data)
-                    : (id | recipeTooltip: vm.data)
-                "
-                [escape]="false"
+                [pTooltip]="tooltip"
+                tooltipPosition="bottom"
+                [autoHide]="false"
                 (click)="clickId(id)"
               >
                 <i
                   *ngIf="isMultiselect"
                   class="hover-icon fa-solid fa-eye-slash"
                 ></i>
+                <ng-template #tooltip>
+                  <lab-tooltip [id]="id" [type]="type"></lab-tooltip>
+                </ng-template>
               </button>
             </div>
           </p-scrollPanel>

@@ -379,13 +379,19 @@
                   <ng-template pTemplate="item" let-item>
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="item.value | machineTooltip: vm.data"
-                      [escape]="false"
+                      [pTooltip]="tooltip"
+                      [autoHide]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
                       <div class="ms-3 text-truncate">
                         {{ item.label }}
                       </div>
+                      <ng-template #tooltip>
+                        <lab-tooltip
+                          [id]="item.value"
+                          type="machine"
+                        ></lab-tooltip>
+                      </ng-template>
                     </div>
                   </ng-template>
                 </p-dropdown>
@@ -423,13 +429,19 @@
                   <ng-template pTemplate="item" let-item>
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="item.value | machineTooltip: vm.data"
-                      [escape]="false"
+                      [pTooltip]="tooltip"
+                      [autoHide]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
                       <div class="ms-3 text-truncate">
                         {{ item.label }}
                       </div>
+                      <ng-template #tooltip>
+                        <lab-tooltip
+                          [id]="item.value"
+                          type="machine"
+                        ></lab-tooltip>
+                      </ng-template>
                     </div>
                   </ng-template>
                 </p-dropdown>
@@ -466,22 +478,19 @@
                   <ng-template pTemplate="item" let-item>
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="
-                        'tooltip.fuel'
-                          | translate
-                            : {
-                                name: vm.data.itemEntities[item.value].name,
-                                category:
-                                  vm.data.fuelEntities[item.value].category,
-                                value: vm.data.fuelEntities[item.value].value
-                              }
-                      "
-                      [escape]="false"
+                      [pTooltip]="tooltip"
+                      [autoHide]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
                       <div class="ms-3 text-truncate">
                         {{ item.label }}
                       </div>
+                      <ng-template #tooltip>
+                        <lab-tooltip
+                          [id]="item.value"
+                          type="fuel"
+                        ></lab-tooltip>
+                      </ng-template>
                     </div>
                   </ng-template>
                 </p-dropdown>
@@ -529,13 +538,21 @@
                     <ng-template pTemplate="item" let-item>
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="item.value | moduleTooltip: vm.data"
-                        [escape]="false"
+                        [pTooltip]="
+                          item.value !== 'module' ? tooltip : undefined
+                        "
+                        [autoHide]="false"
                       >
                         <i [class]="item.value | iconSmClass"></i>
                         <div class="ms-3 text-truncate">
                           {{ item.label }}
                         </div>
+                        <ng-template #tooltip>
+                          <lab-tooltip
+                            [id]="item.value"
+                            type="module"
+                          ></lab-tooltip>
+                        </ng-template>
                       </div>
                     </ng-template>
                   </p-multiSelect>
@@ -562,13 +579,21 @@
                       <ng-template pTemplate="item" let-item>
                         <div
                           class="d-flex align-items-center py-2 w-100 h-100"
-                          [pTooltip]="item.value | moduleTooltip: vm.data"
-                          [escape]="false"
+                          [pTooltip]="
+                            item.value !== 'module' ? tooltip : undefined
+                          "
+                          [autoHide]="false"
                         >
                           <i [class]="item.value | iconSmClass"></i>
                           <div class="ms-3 text-truncate">
                             {{ item.label }}
                           </div>
+                          <ng-template #tooltip>
+                            <lab-tooltip
+                              [id]="item.value"
+                              type="module"
+                            ></lab-tooltip>
+                          </ng-template>
                         </div>
                       </ng-template>
                     </p-dropdown>
@@ -632,13 +657,19 @@
                       <ng-template pTemplate="item" let-item>
                         <div
                           class="d-flex align-items-center py-2 w-100 h-100"
-                          [pTooltip]="item.value | beaconTooltip: vm.data"
-                          [escape]="false"
+                          [pTooltip]="tooltip"
+                          [autoHide]="false"
                         >
                           <i [class]="item.value | iconSmClass"></i>
                           <div class="ms-3 text-truncate">
                             {{ item.label }}
                           </div>
+                          <ng-template #tooltip>
+                            <lab-tooltip
+                              [id]="item.value"
+                              type="beacon"
+                            ></lab-tooltip>
+                          </ng-template>
                         </div>
                       </ng-template>
                     </p-dropdown>
@@ -682,13 +713,21 @@
                       <ng-template pTemplate="item" let-item>
                         <div
                           class="d-flex align-items-center py-2 w-100 h-100"
-                          [pTooltip]="item.value | moduleTooltip: vm.data"
-                          [escape]="false"
+                          [pTooltip]="
+                            item.value !== 'module' ? tooltip : undefined
+                          "
+                          [autoHide]="false"
                         >
                           <i [class]="item.value | iconSmClass"></i>
                           <div class="ms-3 text-truncate">
                             {{ item.label }}
                           </div>
+                          <ng-template #tooltip>
+                            <lab-tooltip
+                              [id]="item.value"
+                              type="module"
+                            ></lab-tooltip>
+                          </ng-template>
                         </div>
                       </ng-template>
                     </p-multiSelect>
@@ -759,13 +798,19 @@
                 <ng-template pTemplate="item" let-item>
                   <div
                     class="d-flex align-items-center py-2 w-100 h-100"
-                    [pTooltip]="item.value | moduleTooltip: vm.data"
-                    [escape]="false"
+                    [pTooltip]="item.value !== 'module' ? tooltip : undefined"
+                    [autoHide]="false"
                   >
                     <i [class]="item.value | iconSmClass"></i>
                     <div class="ms-3 text-truncate">
                       {{ item.label }}
                     </div>
+                    <ng-template #tooltip>
+                      <lab-tooltip
+                        [id]="item.value"
+                        type="module"
+                      ></lab-tooltip>
+                    </ng-template>
                   </div>
                 </ng-template>
               </p-dropdown>
@@ -795,21 +840,16 @@
                 <ng-template pTemplate="item" let-item>
                   <div
                     class="d-flex align-items-center py-2 w-100 h-100"
-                    [pTooltip]="
-                      'tooltip.belt'
-                        | translate
-                          : {
-                              name: vm.data.itemEntities[item.value].name,
-                              speed: vm.beltSpeedTxt[item.value],
-                              suffix: vm.dispRateInfo.suffix | translate
-                            }
-                    "
-                    [escape]="false"
+                    [pTooltip]="tooltip"
+                    [autoHide]="false"
                   >
                     <i [class]="item.value | iconSmClass"></i>
                     <div class="ms-3 text-truncate">
                       {{ item.label }}
                     </div>
+                    <ng-template #tooltip>
+                      <lab-tooltip [id]="item.value" type="belt"></lab-tooltip>
+                    </ng-template>
                   </div>
                 </ng-template>
               </p-dropdown>
@@ -839,21 +879,16 @@
                 <ng-template pTemplate="item" let-item>
                   <div
                     class="d-flex align-items-center py-2 w-100 h-100"
-                    [pTooltip]="
-                      'tooltip.pipe'
-                        | translate
-                          : {
-                              name: vm.data.itemEntities[item.value].name,
-                              speed: vm.beltSpeedTxt[item.value],
-                              suffix: vm.dispRateInfo.suffix | translate
-                            }
-                    "
-                    [escape]="false"
+                    [pTooltip]="tooltip"
+                    [autoHide]="false"
                   >
                     <i [class]="item.value | iconSmClass"></i>
                     <div class="ms-3 text-truncate">
                       {{ item.label }}
                     </div>
+                    <ng-template #tooltip>
+                      <lab-tooltip [id]="item.value" type="pipe"></lab-tooltip>
+                    </ng-template>
                   </div>
                 </ng-template>
               </p-dropdown>
@@ -885,20 +920,19 @@
                 <ng-template pTemplate="item" let-item>
                   <div
                     class="d-flex align-items-center py-2 w-100 h-100"
-                    [pTooltip]="
-                      'tooltip.cargoWagon'
-                        | translate
-                          : {
-                              name: vm.data.itemEntities[item.value].name,
-                              size: vm.data.cargoWagonEntities[item.value].size
-                            }
-                    "
-                    [escape]="false"
+                    [pTooltip]="tooltip"
+                    [autoHide]="false"
                   >
                     <i [class]="item.value | iconSmClass"></i>
                     <div class="ms-3 text-truncate">
                       {{ item.label }}
                     </div>
+                    <ng-template #tooltip>
+                      <lab-tooltip
+                        [id]="item.value"
+                        type="cargo-wagon"
+                      ></lab-tooltip>
+                    </ng-template>
                   </div>
                 </ng-template>
               </p-dropdown>
@@ -930,21 +964,19 @@
                 <ng-template pTemplate="item" let-item>
                   <div
                     class="d-flex align-items-center py-2 w-100 h-100"
-                    [pTooltip]="
-                      'tooltip.fluidWagon'
-                        | translate
-                          : {
-                              name: vm.data.itemEntities[item.value].name,
-                              size: vm.data.fluidWagonEntities[item.value]
-                                .capacity
-                            }
-                    "
-                    [escape]="false"
+                    [pTooltip]="tooltip"
+                    [autoHide]="false"
                   >
                     <i [class]="item.value | iconSmClass"></i>
                     <div class="ms-3 text-truncate">
                       {{ item.label }}
                     </div>
+                    <ng-template #tooltip>
+                      <lab-tooltip
+                        [id]="item.value"
+                        type="fluid-wagon"
+                      ></lab-tooltip>
+                    </ng-template>
                   </div>
                 </ng-template>
               </p-dropdown>
@@ -989,22 +1021,16 @@
                 <ng-template pTemplate="item" let-item>
                   <div
                     class="d-flex align-items-center py-2 w-100 h-100"
-                    [pTooltip]="
-                      'tooltip.fuel'
-                        | translate
-                          : {
-                              name: vm.data.itemEntities[item.value].name,
-                              category:
-                                vm.data.fuelEntities[item.value].category,
-                              value: vm.data.fuelEntities[item.value].value
-                            }
-                    "
-                    [escape]="false"
+                    [pTooltip]="tooltip"
+                    [autoHide]="false"
                   >
                     <i [class]="item.value | iconSmClass"></i>
                     <div class="ms-3 text-truncate">
                       {{ item.label }}
                     </div>
+                    <ng-template #tooltip>
+                      <lab-tooltip [id]="item.value" type="fuel"></lab-tooltip>
+                    </ng-template>
                   </div>
                 </ng-template>
               </p-multiSelect>
