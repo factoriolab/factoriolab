@@ -318,6 +318,20 @@ describe('SimplexUtility', () => {
     });
   });
 
+  describe('itemCost', () => {
+    it('should adjust cost of fluids', () => {
+      const state = getState();
+      const result = SimplexUtility.itemCost(
+        ItemId.PetroleumGas,
+        'unproduceable',
+        state,
+      );
+      expect(result).toEqual(
+        state.cost.unproduceable.div(Rational.ten).toNumber(),
+      );
+    });
+  });
+
   describe('glpk', () => {
     it('should find a solution using glpk', () => {
       const state = getState();
