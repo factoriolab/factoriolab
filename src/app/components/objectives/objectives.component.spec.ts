@@ -4,7 +4,13 @@ import { Subject } from 'rxjs';
 
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
-import { ObjectiveType, ObjectiveUnit, SimplexResultType } from '~/models';
+import {
+  Objective,
+  ObjectiveRational,
+  ObjectiveType,
+  ObjectiveUnit,
+  SimplexResultType,
+} from '~/models';
 import { LabState, Objectives, Preferences, Settings } from '~/store';
 import { ObjectivesComponent } from './objectives.component';
 
@@ -195,19 +201,40 @@ describe('ObjectivesComponent', () => {
   });
 
   describe('changeUnit', () => {
-    const picker = {
-      selectId: new Subject<string>(),
-      clickOpen: (): void => {},
+    const mockPicker = (id: string): any => {
+      const picker = {
+        selectId: new Subject<string>(),
+        clickOpen: (): void => {},
+      };
+      picker.clickOpen = (): void => picker.selectId.next(id);
+      return picker;
     };
-    picker.clickOpen = (): void => {
-      picker.selectId.next('id');
-    };
+
+    it('should do nothing if it cannot find a matching objective rational', () => {
+      spyOn(component, 'setUnit');
+      component.changeUnit(
+        Mocks.Objective5,
+        ObjectiveUnit.Machines,
+        [],
+        Mocks.ItemsStateInitial,
+        Mocks.BeltSpeed,
+        Mocks.DisplayRateInfo,
+        Mocks.Dataset,
+        {} as any,
+        {} as any,
+      );
+      expect(component.setUnit).not.toHaveBeenCalled();
+    });
 
     it('should do nothing if switching to and from machines', () => {
       spyOn(component, 'setUnit');
       component.changeUnit(
         Mocks.Objective5,
         ObjectiveUnit.Machines,
+        Mocks.RationalObjectives,
+        Mocks.ItemsStateInitial,
+        Mocks.BeltSpeed,
+        Mocks.DisplayRateInfo,
         Mocks.Dataset,
         {} as any,
         {} as any,
@@ -220,6 +247,10 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective1,
         ObjectiveUnit.Machines,
+        Mocks.RationalObjectives,
+        Mocks.ItemsStateInitial,
+        Mocks.BeltSpeed,
+        Mocks.DisplayRateInfo,
         Mocks.Dataset,
         {} as any,
         {} as any,
@@ -232,21 +263,26 @@ describe('ObjectivesComponent', () => {
 
     it('should prompt user to switch from item to recipe', () => {
       spyOn(component, 'setUnit');
+      const objective: Objective = {
+        id: '0',
+        targetId: ItemId.PetroleumGas,
+        value: '1',
+        unit: ObjectiveUnit.Items,
+        type: ObjectiveType.Output,
+      };
       component.changeUnit(
-        {
-          id: '0',
-          targetId: ItemId.PetroleumGas,
-          value: '1',
-          unit: ObjectiveUnit.Items,
-          type: ObjectiveType.Output,
-        },
+        objective,
         ObjectiveUnit.Machines,
+        [new ObjectiveRational(objective)],
+        Mocks.ItemsStateInitial,
+        Mocks.BeltSpeed,
+        Mocks.DisplayRateInfo,
         Mocks.Dataset,
         {} as any,
-        picker as any,
+        mockPicker(RecipeId.AdvancedOilProcessing),
       );
       expect(component.setUnit).toHaveBeenCalledWith('0', {
-        targetId: 'id',
+        targetId: RecipeId.AdvancedOilProcessing,
         unit: ObjectiveUnit.Machines,
       });
     });
@@ -256,6 +292,10 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective5,
         ObjectiveUnit.Items,
+        Mocks.RationalObjectives,
+        Mocks.ItemsStateInitial,
+        Mocks.BeltSpeed,
+        Mocks.DisplayRateInfo,
         Mocks.Dataset,
         {} as any,
         {} as any,
@@ -277,8 +317,12 @@ describe('ObjectivesComponent', () => {
           type: ObjectiveType.Output,
         },
         ObjectiveUnit.Items,
+        Mocks.RationalObjectives,
+        Mocks.ItemsStateInitial,
+        Mocks.BeltSpeed,
+        Mocks.DisplayRateInfo,
         Mocks.Dataset,
-        picker as any,
+        mockPicker('id'),
         {} as any,
       );
       expect(component.setUnit).toHaveBeenCalledWith('0', {
@@ -292,6 +336,10 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective1,
         ObjectiveUnit.Belts,
+        Mocks.RationalObjectives,
+        Mocks.ItemsStateInitial,
+        Mocks.BeltSpeed,
+        Mocks.DisplayRateInfo,
         Mocks.Dataset,
         {} as any,
         {} as any,
@@ -300,6 +348,53 @@ describe('ObjectivesComponent', () => {
         targetId: Mocks.Objective1.targetId,
         unit: ObjectiveUnit.Belts,
       });
+    });
+  });
+
+  describe('convertItemsToMachines', () => {
+    it('should not convert the value on maximize objectives', () => {
+      spyOn(component, 'setValue');
+      component.convertItemsToMachines(
+        Mocks.RationalObjectives[2],
+        RecipeId.AdvancedCircuit,
+        Mocks.ItemsState,
+        Mocks.BeltSpeed,
+        Mocks.DisplayRateInfo,
+        Mocks.Dataset,
+      );
+      expect(component.setValue).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('convertMachinesToItems', () => {
+    it('should not convert the value on maximize objectives', () => {
+      spyOn(component, 'setValue');
+      component.convertMachinesToItems(
+        Mocks.RationalObjectives[2],
+        ItemId.AdvancedCircuit,
+        ObjectiveUnit.Items,
+        Mocks.ItemsState,
+        Mocks.BeltSpeed,
+        Mocks.DisplayRateInfo,
+        Mocks.Dataset,
+      );
+      expect(component.setValue).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('convertItemsToItems', () => {
+    it('should not convert the value on maximize objectives', () => {
+      spyOn(component, 'setValue');
+      component.convertItemsToItems(
+        Mocks.RationalObjectives[2],
+        ItemId.AdvancedCircuit,
+        ObjectiveUnit.Items,
+        Mocks.ItemsState,
+        Mocks.BeltSpeed,
+        Mocks.DisplayRateInfo,
+        Mocks.Dataset,
+      );
+      expect(component.setValue).not.toHaveBeenCalled();
     });
   });
 
