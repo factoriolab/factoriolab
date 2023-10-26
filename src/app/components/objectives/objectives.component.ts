@@ -2,18 +2,22 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Message } from 'primeng/api';
-import { combineLatest, first, map, tap } from 'rxjs';
+import { combineLatest, first, map } from 'rxjs';
 
 import {
   Dataset,
   DisplayRate,
+  DisplayRateInfo,
   displayRateOptions,
+  Entities,
   MatrixResult,
   Objective,
   ObjectiveBase,
+  ObjectiveRational,
   ObjectiveType,
   objectiveTypeOptions,
   ObjectiveUnit,
+  Rational,
   SimplexResultType,
 } from '~/models';
 import { ContentService, TrackService } from '~/services';
@@ -25,6 +29,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
+import { RateUtility } from '~/utilities';
 import { PickerComponent } from '../picker/picker.component';
 
 @Component({
@@ -48,12 +53,14 @@ export class ObjectivesComponent {
     objectives: this.store
       .select(Objectives.getObjectives)
       .pipe(map((o) => [...o])),
+    objectiveRationals: this.store.select(Objectives.getObjectiveRationals),
     matrixResult: this.store.select(Objectives.getMatrixResult),
     itemsState: this.store.select(Items.getItemsState),
     recipesState: this.store.select(Recipes.getRecipesState),
     itemIds: this.store.select(Recipes.getAvailableItems),
     data: this.store.select(Recipes.getAdjustedDataset),
-    displayRate: this.store.select(Settings.getDisplayRate),
+    beltSpeed: this.store.select(Settings.getBeltSpeed),
+    dispRateInfo: this.store.select(Settings.getDisplayRateInfo),
     rateUnitOptions: this.store.select(Settings.getRateUnitOptions),
     options: this.store.select(Settings.getOptions),
     recipeIds: this.store.select(Settings.getAvailableRecipes),
@@ -169,49 +176,189 @@ export class ObjectivesComponent {
   changeUnit(
     objective: Objective,
     unit: ObjectiveUnit,
+    objectiveRationals: ObjectiveRational[],
+    itemsState: Items.ItemsState,
+    beltSpeed: Entities<Rational>,
+    displayRateInfo: DisplayRateInfo,
     data: Dataset,
     chooseItemPicker: PickerComponent,
     chooseRecipePicker: PickerComponent,
   ): void {
+    const objectiveRational = objectiveRationals.find(
+      (o) => o.id === objective.id,
+    );
+    if (objectiveRational == null) return;
+
     if (unit === ObjectiveUnit.Machines) {
-      if (objective.unit === ObjectiveUnit.Machines) {
-        // Units are unchanged, no action required
-      } else {
+      if (objective.unit !== ObjectiveUnit.Machines) {
         const recipeIds = data.itemRecipeIds[objective.targetId];
+        const updateFn = (recipeId: string): void =>
+          this.convertItemsToMachines(
+            objectiveRational,
+            recipeId,
+            itemsState,
+            beltSpeed,
+            displayRateInfo,
+            data,
+          );
         if (recipeIds.length === 1) {
-          this.setUnit(objective.id, {
-            targetId: recipeIds[0],
-            unit,
-          });
+          updateFn(recipeIds[0]);
         } else {
           chooseRecipePicker.selectId
-            .pipe(
-              first(),
-              tap((targetId) => this.setUnit(objective.id, { targetId, unit })),
-            )
-            .subscribe();
+            .pipe(first())
+            .subscribe((targetId) => updateFn(targetId));
           chooseRecipePicker.clickOpen(data, 'recipe', recipeIds);
         }
       }
     } else {
       if (objective.unit === ObjectiveUnit.Machines) {
         const itemIds = Array.from(data.recipeR[objective.targetId].produces);
+        const updateFn = (itemId: string): void =>
+          this.convertMachinesToItems(
+            objectiveRational,
+            itemId,
+            unit,
+            itemsState,
+            beltSpeed,
+            displayRateInfo,
+            data,
+          );
+
         if (itemIds.length === 1) {
-          this.setUnit(objective.id, { targetId: itemIds[0], unit });
+          updateFn(itemIds[0]);
         } else {
           chooseItemPicker.selectId
-            .pipe(
-              first(),
-              tap((targetId) => this.setUnit(objective.id, { targetId, unit })),
-            )
-            .subscribe();
+            .pipe(first())
+            .subscribe((itemId) => updateFn(itemId));
           chooseItemPicker.clickOpen(data, 'item', itemIds);
         }
       } else {
         // No target conversion required
-        this.setUnit(objective.id, { targetId: objective.targetId, unit });
+        this.convertItemsToItems(
+          objectiveRational,
+          objective.targetId,
+          unit,
+          itemsState,
+          beltSpeed,
+          displayRateInfo,
+          data,
+        );
       }
     }
+  }
+
+  /**
+   * Update unit field (non-machines -> machines), then convert and update
+   * objective value so that number of items remains constant
+   */
+  convertItemsToMachines(
+    objective: ObjectiveRational,
+    recipeId: string,
+    itemsState: Items.ItemsState,
+    beltSpeed: Entities<Rational>,
+    displayRateInfo: DisplayRateInfo,
+    data: Dataset,
+  ): void {
+    this.setUnit(objective.id, {
+      targetId: recipeId,
+      unit: ObjectiveUnit.Machines,
+    });
+
+    if (objective.type === ObjectiveType.Maximize) return;
+
+    const oldValue = RateUtility.objectiveNormalizedRate(
+      objective,
+      itemsState,
+      beltSpeed,
+      displayRateInfo,
+      data,
+    );
+    const recipe = data.recipeR[recipeId];
+    const newValue = oldValue.div(recipe.output[objective.targetId]);
+    this.setValue(objective.id, newValue.toString());
+  }
+
+  /**
+   * Update unit field (machines -> non-machines), then convert and update
+   * objective value so that number of items remains constant
+   */
+  convertMachinesToItems(
+    objective: ObjectiveRational,
+    itemId: string,
+    unit: ObjectiveUnit,
+    itemsState: Items.ItemsState,
+    beltSpeed: Entities<Rational>,
+    displayRateInfo: DisplayRateInfo,
+    data: Dataset,
+  ): void {
+    this.setUnit(objective.id, {
+      targetId: itemId,
+      unit,
+    });
+
+    if (objective.type === ObjectiveType.Maximize || objective.recipe == null)
+      return;
+
+    const factor = RateUtility.objectiveNormalizedRate(
+      new ObjectiveRational({
+        id: '',
+        targetId: itemId,
+        value: '1',
+        unit,
+        type: ObjectiveType.Output,
+      }),
+      itemsState,
+      beltSpeed,
+      displayRateInfo,
+      data,
+    );
+    const oldValue = objective.value.mul(objective.recipe.output[itemId]);
+    const newValue = oldValue.div(factor);
+    this.setValue(objective.id, newValue.toString());
+  }
+
+  /**
+   * Update unit field (non-machines -> non-machines), then convert and update
+   * objective value so that number of items remains constant
+   */
+  convertItemsToItems(
+    objective: ObjectiveRational,
+    itemId: string,
+    unit: ObjectiveUnit,
+    itemsState: Items.ItemsState,
+    beltSpeed: Entities<Rational>,
+    displayRateInfo: DisplayRateInfo,
+    data: Dataset,
+  ): void {
+    this.setUnit(objective.id, {
+      targetId: itemId,
+      unit,
+    });
+
+    if (objective.type === ObjectiveType.Maximize) return;
+
+    const oldValue = RateUtility.objectiveNormalizedRate(
+      objective,
+      itemsState,
+      beltSpeed,
+      displayRateInfo,
+      data,
+    );
+    const factor = RateUtility.objectiveNormalizedRate(
+      new ObjectiveRational({
+        id: '',
+        targetId: itemId,
+        value: '1',
+        unit,
+        type: ObjectiveType.Output,
+      }),
+      itemsState,
+      beltSpeed,
+      displayRateInfo,
+      data,
+    );
+    const newValue = oldValue.div(factor);
+    this.setValue(objective.id, newValue.toString());
   }
 
   addItemObjective(targetId: string): void {

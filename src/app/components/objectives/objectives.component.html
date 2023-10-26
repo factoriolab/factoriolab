@@ -99,6 +99,10 @@
                 changeUnit(
                   objective,
                   $event.value,
+                  vm.objectiveRationals,
+                  vm.itemsState,
+                  vm.beltSpeed,
+                  vm.dispRateInfo,
                   vm.data,
                   chooseItemPicker,
                   chooseRecipePicker
@@ -154,9 +158,9 @@
         labDropdownTranslate
         styleClass="h-100"
         [tooltip]="'objectives.selectDisplayRate' | translate"
-        [ngModel]="vm.displayRate"
+        [ngModel]="vm.dispRateInfo.option"
         [options]="displayRateOptions"
-        (onChange)="setDisplayRate($event.value, vm.displayRate)"
+        (onChange)="setDisplayRate($event.value, vm.dispRateInfo.option)"
       >
       </p-dropdown>
       <p-toggleButton
