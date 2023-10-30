@@ -33,8 +33,10 @@ export const data: AppData = {
     { id: 'pysalf', name: 'Pyanodons + AL', game: Game.Factorio },
     { id: 'qat', name: "Qatavin's More Stuff", game: Game.Factorio },
     { id: 'sea', name: 'Sea Block', game: Game.Factorio },
+    { id: 'sbk', name: 'Spaceblock', game: Game.Factorio },
     { id: 'sxp', name: 'Space Exploration', game: Game.Factorio },
     { id: 'vbz', name: 'Very BZ', game: Game.Factorio },
+    { id: 'wt2', name: 'Warptorio2', game: Game.Factorio },
     { id: 'xan', name: 'Xander Mod', game: Game.Factorio },
     { id: 'dsp', name: 'Dyson Sphere Program', game: Game.DysonSphereProgram },
     { id: 'sfy', name: 'Satisfactory', game: Game.Satisfactory },
@@ -98,5 +100,7 @@ export const data: AppData = {
     'mbf',
     'omf',
     'kr2248',
+    'sbk',
+    'wt2',
   ],
 };

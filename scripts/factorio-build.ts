@@ -623,6 +623,7 @@ async function processMod(): Promise<void> {
 
     if (
       itemMap[techRaw.name] ||
+      entityMap[techRaw.name] ||
       dataRaw.recipe[techRaw.name] ||
       dataRaw['item-group'][techRaw.name]
     ) {
@@ -911,7 +912,9 @@ async function processMod(): Promise<void> {
 
   const entitiesUsedProtos = entityKeys
     .filter((id) => !placedEntities.has(id) && !itemsUsed.has(id))
-    .map((id) => entityMap[id]);
+    .map((id) => entityMap[id])
+    // Exclude any entities without icons (non-placeable)
+    .filter((e) => e.icon || e.icons);
 
   // Sort items
   const protos = [
