@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { switchMap } from 'rxjs/operators';
 
@@ -8,6 +8,9 @@ import * as Settings from '../settings';
 
 @Injectable()
 export class DatasetsEffects {
+  actions$ = inject(Actions);
+  dataSvc = inject(DataService);
+
   appLoad$ = createEffect(
     () =>
       this.actions$.pipe(
@@ -43,9 +46,4 @@ export class DatasetsEffects {
       ),
     { dispatch: false },
   );
-
-  constructor(
-    private actions$: Actions,
-    private dataSvc: DataService,
-  ) {}
 }

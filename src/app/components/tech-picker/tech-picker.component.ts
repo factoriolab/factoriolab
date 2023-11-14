@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  inject,
   Output,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
@@ -24,6 +25,12 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TechPickerComponent {
+  ref = inject(ChangeDetectorRef);
+  filterSvc = inject(FilterService);
+  translateSvc = inject(TranslateService);
+  store = inject(Store<LabState>);
+  contentSvc = inject(ContentService);
+
   @Output() selectIds = new EventEmitter<string[] | null>();
 
   filterCtrl = new FormControl('');
@@ -81,14 +88,6 @@ export class TechPickerComponent {
     data: this.data$,
     showTechLabels: this.store.select(Preferences.getShowTechLabels),
   });
-
-  constructor(
-    private ref: ChangeDetectorRef,
-    private filterSvc: FilterService,
-    private translateSvc: TranslateService,
-    private store: Store<LabState>,
-    private contentSvc: ContentService,
-  ) {}
 
   clickOpen(data: Dataset, selection: string[] | null): void {
     this.data$.next(data);

@@ -1,11 +1,11 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 
 import { PowerUnit, Rational } from '~/models';
 import { RatePipe } from './rate.pipe';
 
 @Pipe({ name: 'power' })
 export class PowerPipe implements PipeTransform {
-  constructor(private ratePipe: RatePipe) {}
+  ratePipe = inject(RatePipe);
 
   transform(
     value: Rational,

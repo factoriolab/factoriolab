@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, map, Observable, switchMap } from 'rxjs';
+import { combineLatest, map, switchMap } from 'rxjs';
 
 import {
   ColumnsState,
@@ -19,26 +19,22 @@ import { LabState, Objectives, Preferences, Recipes, Settings } from '~/store';
   providedIn: 'root',
 })
 export class FlowService {
-  flowData$: Observable<FlowData>;
+  translateSvc = inject(TranslateService);
+  store = inject(Store<LabState>);
 
-  constructor(
-    private translateSvc: TranslateService,
-    private store: Store<LabState>,
-  ) {
-    this.flowData$ = combineLatest([
-      this.store.select(Objectives.getSteps),
-      this.store.select(Recipes.getAdjustedDataset),
-      this.store
-        .select(Settings.getDisplayRateInfo)
-        .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
-      this.store.select(Preferences.getColumns),
-      this.store.select(Preferences.getTheme),
-    ]).pipe(
-      map(([steps, data, suffix, columns, theme]) =>
-        this.buildGraph(steps, data, suffix, columns, themeMap[theme]),
-      ),
-    );
-  }
+  flowData$ = combineLatest([
+    this.store.select(Objectives.getSteps),
+    this.store.select(Recipes.getAdjustedDataset),
+    this.store
+      .select(Settings.getDisplayRateInfo)
+      .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
+    this.store.select(Preferences.getColumns),
+    this.store.select(Preferences.getTheme),
+  ]).pipe(
+    map(([steps, data, suffix, columns, theme]) =>
+      this.buildGraph(steps, data, suffix, columns, themeMap[theme]),
+    ),
+  );
 
   buildGraph(
     steps: Step[],

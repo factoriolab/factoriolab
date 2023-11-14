@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 
@@ -25,6 +30,8 @@ type TooltipType =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipComponent {
+  store = inject(Store<LabState>);
+
   @Input() id: string | undefined;
   @Input() type: TooltipType = 'item';
 
@@ -49,6 +56,4 @@ export class TooltipComponent {
   });
 
   Game = Game;
-
-  constructor(private store: Store<LabState>) {}
 }

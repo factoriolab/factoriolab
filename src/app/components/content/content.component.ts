@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  inject,
   OnInit,
   TemplateRef,
   ViewChild,
@@ -20,16 +21,14 @@ import { ContentService } from '~/services';
   providers: [ConfirmationService, MessageService],
 })
 export class ContentComponent implements OnInit, AfterViewInit {
+  confirmationSvc = inject(ConfirmationService);
+  messageSvc = inject(MessageService);
+  contentSvc = inject(ContentService);
+
   @ViewChild('translateSelectedItem') translateSelectedItem:
     | TemplateRef<unknown>
     | undefined;
   @ViewChild('translateItem') translateItem: TemplateRef<unknown> | undefined;
-
-  constructor(
-    private confirmationSvc: ConfirmationService,
-    private messageSvc: MessageService,
-    private contentSvc: ContentService,
-  ) {}
 
   ngOnInit(): void {
     this.contentSvc.showToast$

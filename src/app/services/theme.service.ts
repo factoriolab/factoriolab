@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { fnPropsNotNullish } from '~/helpers';
@@ -14,12 +14,10 @@ const LAB_THEME_STYLE_ID = 'lab-theme-css';
   providedIn: 'root',
 })
 export class ThemeService {
-  head = this.document.getElementsByTagName('head')[0];
+  document = inject(DOCUMENT);
+  store = inject(Store<LabState>);
 
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private store: Store<LabState>,
-  ) {}
+  head = this.document.getElementsByTagName('head')[0];
 
   initialize(): void {
     this.store.select(Settings.getDataset).subscribe((data) => {

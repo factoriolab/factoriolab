@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
@@ -30,6 +31,11 @@ interface MenuLink {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit {
+  title = inject(Title);
+  store = inject(Store<LabState>);
+  translateSvc = inject(TranslateService);
+  contentSvc = inject(ContentService);
+
   @HostBinding('class.sticky') @Input() sticky = false;
   @HostBinding('class.settings-xl-hidden') @Input() settingsXlHidden = false;
 
@@ -61,13 +67,6 @@ export class HeaderComponent implements OnInit {
       href: 'https://ko-fi.com/dcbroad3',
     },
   ];
-
-  constructor(
-    public contentSvc: ContentService,
-    private title: Title,
-    private store: Store<LabState>,
-    private translateSvc: TranslateService,
-  ) {}
 
   ngOnInit(): void {
     combineLatest([

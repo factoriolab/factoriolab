@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';
@@ -28,6 +28,8 @@ export enum WizardState {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardComponent {
+  store = inject(Store<LabState>);
+
   vm$ = combineLatest({
     itemIds: this.store.select(Recipes.getAvailableItems),
     data: this.store.select(Settings.getDataset),
@@ -45,8 +47,6 @@ export class WizardComponent {
 
   RateUnit = ObjectiveUnit;
   WizardState = WizardState;
-
-  constructor(private store: Store<LabState>) {}
 
   selectId(value: string, state: WizardState): void {
     this.id = value;

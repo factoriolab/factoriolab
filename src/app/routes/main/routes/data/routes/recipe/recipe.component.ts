@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -19,6 +19,9 @@ import { DetailComponent } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeComponent extends DetailComponent {
+  store = inject(Store<LabState>);
+  dataRouteSvc = inject(DataRouteService);
+
   vm$ = combineLatest([
     this.id$,
     this.parent$,
@@ -46,15 +49,6 @@ export class RecipeComponent extends DetailComponent {
   trueValue = true;
 
   Game = Game;
-
-  constructor(
-    route: ActivatedRoute,
-    translateSvc: TranslateService,
-    private store: Store<LabState>,
-    private dataRouteSvc: DataRouteService,
-  ) {
-    super(route, translateSvc);
-  }
 
   toggleRecipe(
     id: string,

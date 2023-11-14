@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -19,15 +19,13 @@ import { Datasets, LabState, Settings } from '~/store';
   providedIn: 'root',
 })
 export class DataService {
+  http = inject(HttpClient);
+  store = inject(Store<LabState>);
+  translateSvc = inject(TranslateService);
+
   cacheData: Entities<Observable<ModData>> = {};
   cacheHash: Entities<Observable<ModHash>> = {};
   cacheI18n: Entities<Observable<ModI18n | null>> = {};
-
-  constructor(
-    private http: HttpClient,
-    private store: Store<LabState>,
-    private translateSvc: TranslateService,
-  ) {}
 
   initialize(): void {
     combineLatest([
