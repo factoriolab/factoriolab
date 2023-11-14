@@ -1,4 +1,4 @@
-import { Directive, OnInit, Self } from '@angular/core';
+import { Directive, inject, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Table } from 'primeng/table';
 
@@ -6,10 +6,8 @@ import { Table } from 'primeng/table';
   selector: '[labPagedTable]',
 })
 export class PagedTableDirective implements OnInit {
-  constructor(
-    @Self() private readonly pTable: Table,
-    private translateSvc: TranslateService,
-  ) {}
+  translateSvc = inject(TranslateService);
+  pTable = inject(Table, { self: true });
 
   ngOnInit(): void {
     this.pTable.styleClass = 'p-datatable-sm';

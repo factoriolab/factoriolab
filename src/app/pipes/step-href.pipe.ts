@@ -1,11 +1,11 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 
 import { Dataset, Step } from '~/models';
 import { RouterService, Zip } from '~/services';
 
 @Pipe({ name: 'stepHref' })
 export class StepHrefPipe implements PipeTransform {
-  constructor(private routerSvc: RouterService) {}
+  routerSvc = inject(RouterService);
 
   transform(value: Step, zipPartial: Zip, data: Dataset): string | null {
     let step = value;

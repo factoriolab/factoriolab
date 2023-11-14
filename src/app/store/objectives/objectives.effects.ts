@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map } from 'rxjs/operators';
 
@@ -8,6 +8,8 @@ import { AdjustDisplayRateAction } from './objectives.actions';
 
 @Injectable()
 export class ObjectivesEffects {
+  actions$ = inject(Actions);
+
   adjustDisplayRate$ = createEffect(() =>
     this.actions$.pipe(
       ofType(Settings.SettingsActionType.SET_DISPLAY_RATE),
@@ -19,6 +21,4 @@ export class ObjectivesEffects {
       }),
     ),
   );
-
-  constructor(private actions$: Actions) {}
 }

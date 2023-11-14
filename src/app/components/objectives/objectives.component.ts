@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Message } from 'primeng/api';
@@ -39,6 +39,11 @@ import { PickerComponent } from '../picker/picker.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ObjectivesComponent {
+  store = inject(Store<LabState>);
+  translateSvc = inject(TranslateService);
+  contentSvc = inject(ContentService);
+  trackSvc = inject(TrackService);
+
   messages$ = combineLatest([
     this.store.select(Objectives.getObjectives),
     this.store.select(Objectives.getMatrixResult),
@@ -74,13 +79,6 @@ export class ObjectivesComponent {
 
   ObjectiveUnit = ObjectiveUnit;
   ObjectiveType = ObjectiveType;
-
-  constructor(
-    public trackSvc: TrackService,
-    private store: Store<LabState>,
-    private translateSvc: TranslateService,
-    private contentSvc: ContentService,
-  ) {}
 
   getMessages(
     objectives: Objective[],

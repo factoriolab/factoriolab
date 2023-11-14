@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
   OnInit,
   Output,
@@ -27,6 +28,10 @@ import * as Recipes from '~/store/recipes';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickerComponent implements OnInit {
+  ref = inject(ChangeDetectorRef);
+  filterSvc = inject(FilterService);
+  store = inject(Store<LabState>);
+
   @ViewChild('inputFilter') inputFilter:
     | ElementRef<HTMLInputElement>
     | undefined;
@@ -53,12 +58,6 @@ export class PickerComponent implements OnInit {
   allCategoryIds: string[] = [];
   allCategoryRows: Entities<string[][]> = {};
   activeIndex = 0;
-
-  constructor(
-    private ref: ChangeDetectorRef,
-    private filterSvc: FilterService,
-    private store: Store<LabState>,
-  ) {}
 
   ngOnInit(): void {
     this.searchCtrl.valueChanges

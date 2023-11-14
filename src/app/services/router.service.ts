@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -119,6 +119,13 @@ export interface MigrationState {
   providedIn: 'root',
 })
 export class RouterService {
+  router = inject(Router);
+  gaSvc = inject(GoogleAnalyticsService);
+  store = inject(Store<LabState>);
+  translateSvc = inject(TranslateService);
+  contentSvc = inject(ContentService);
+  dataSvc = inject(DataService);
+
   zip: string | undefined;
   zipConfig$ = new BehaviorSubject<Zip>(this.empty);
   base64codes: Uint8Array;
@@ -141,14 +148,7 @@ export class RouterService {
     return { bare: '', hash: '' };
   }
 
-  constructor(
-    private router: Router,
-    private gaSvc: GoogleAnalyticsService,
-    private store: Store<LabState>,
-    private translateSvc: TranslateService,
-    private contentSvc: ContentService,
-    private dataSvc: DataService,
-  ) {
+  constructor() {
     const l = 256;
     this.base64codes = new Uint8Array(l);
     for (let i = 0; i < l; i++) {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
@@ -24,6 +24,11 @@ import { BrowserUtility } from '~/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingComponent {
+  router = inject(Router);
+  contentSvc = inject(ContentService);
+  store = inject(Store<LabState>);
+  routerSvc = inject(RouterService);
+
   vm$ = combineLatest({
     itemIds: this.store.select(Recipes.getAvailableItems),
     settings: this.store.select(Settings.getSettings),
@@ -41,13 +46,6 @@ export class LandingComponent {
 
   Game = Game;
   BrowserUtility = BrowserUtility;
-
-  constructor(
-    public router: Router,
-    public contentSvc: ContentService,
-    private store: Store<LabState>,
-    private routerSvc: RouterService,
-  ) {}
 
   selectItem(value: string): void {
     this.addItemObjective(value);

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
 import { combineLatest, first, switchMap } from 'rxjs';
@@ -12,6 +12,9 @@ import { MachinesActionType } from './machines.actions';
 
 @Injectable()
 export class MachinesEffects {
+  actions$ = inject(Actions);
+  store = inject(Store<LabState>);
+
   /** Resets recipe settings that are invalidated by changes to machine settings */
   resetRecipeSettings$ = createEffect(() =>
     this.actions$.pipe(
@@ -61,9 +64,4 @@ export class MachinesEffects {
       }),
     ),
   );
-
-  constructor(
-    private actions$: Actions,
-    private store: Store<LabState>,
-  ) {}
 }

@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
@@ -20,6 +18,9 @@ import { DetailComponent } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemComponent extends DetailComponent {
+  store = inject(Store<LabState>);
+  dataRouteSvc = inject(DataRouteService);
+
   vm$ = combineLatest([
     this.id$,
     this.parent$,
@@ -68,15 +69,6 @@ export class ItemComponent extends DetailComponent {
   );
 
   Game = Game;
-
-  constructor(
-    route: ActivatedRoute,
-    translateSvc: TranslateService,
-    private store: Store<LabState>,
-    private dataRouteSvc: DataRouteService,
-  ) {
-    super(route, translateSvc);
-  }
 
   /** Action dispatch methods */
   setItemExcluded(id: string, value: boolean): void {

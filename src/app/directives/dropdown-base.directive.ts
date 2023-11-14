@@ -1,4 +1,4 @@
-import { Directive, Input, OnChanges, OnInit, Self } from '@angular/core';
+import { Directive, inject, Input, OnChanges, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Dropdown } from 'primeng/dropdown';
 
@@ -9,12 +9,10 @@ import { ContentService } from '~/services';
   selector: '[labDropdownBase]',
 })
 export class DropdownBaseDirective implements OnInit, OnChanges {
-  @Input() labDropdownBase: 'icon' | '' | undefined;
+  contentSvc = inject(ContentService);
+  pDropdown = inject(Dropdown, { self: true });
 
-  constructor(
-    private contentSvc: ContentService,
-    @Self() private readonly pDropdown: Dropdown,
-  ) {}
+  @Input() labDropdownBase: 'icon' | '' | undefined;
 
   ngOnInit(): void {
     this.pDropdown.appendTo = 'body';

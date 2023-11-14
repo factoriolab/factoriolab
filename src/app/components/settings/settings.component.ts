@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
@@ -62,6 +63,12 @@ import { BrowserUtility, RecipeUtility } from '~/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
+  contentSvc = inject(ContentService);
+  router = inject(Router);
+  store = inject(Store<LabState>);
+  translateSvc = inject(TranslateService);
+  routerSvc = inject(RouterService);
+
   @HostBinding('class.active') @Input() active = false;
   @HostBinding('class.hidden') @Input() hidden = false;
 
@@ -137,14 +144,6 @@ export class SettingsComponent implements OnInit {
   Game = Game;
   ItemId = ItemId;
   BrowserUtility = BrowserUtility;
-
-  constructor(
-    public contentSvc: ContentService,
-    private router: Router,
-    private store: Store<LabState>,
-    private translateSvc: TranslateService,
-    private routerSvc: RouterService,
-  ) {}
 
   ngOnInit(): void {
     this.store

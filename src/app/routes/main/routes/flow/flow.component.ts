@@ -3,6 +3,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  inject,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import ELK, { ELK as ElkType, ElkNode } from 'elkjs/lib/elk.bundled';
@@ -23,14 +24,11 @@ import { DisplayService, FlowService } from '~/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowComponent implements AfterViewInit {
+  displaySvc = inject(DisplayService);
+  flowSvc = inject(FlowService);
+
   loading$ = new BehaviorSubject(true);
-
   vm$ = combineLatest([this.loading$]).pipe(map(([loading]) => ({ loading })));
-
-  constructor(
-    private displaySvc: DisplayService,
-    private flowSvc: FlowService,
-  ) {}
 
   ngAfterViewInit(): void {
     this.flowSvc.flowData$
