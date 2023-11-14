@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   NgZone,
 } from '@angular/core';
 import { Router } from '@angular/router';
@@ -21,6 +22,13 @@ import { App, LabState, Objectives, Settings } from '~/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent implements AfterViewInit {
+  contentSvc = inject(ContentService);
+  ngZone = inject(NgZone);
+  ref = inject(ChangeDetectorRef);
+  router = inject(Router);
+  store = inject(Store<LabState>);
+  errorSvc = inject(ErrorService);
+
   vm$ = combineLatest([
     this.store.select(Settings.getGame),
     this.store.select(Settings.getMod),
@@ -76,15 +84,6 @@ export class MainComponent implements AfterViewInit {
   Game = Game;
   ItemId = ItemId;
   MatrixResultType = SimplexResultType;
-
-  constructor(
-    public contentSvc: ContentService,
-    private ngZone: NgZone,
-    private ref: ChangeDetectorRef,
-    private router: Router,
-    private store: Store<LabState>,
-    private errorSvc: ErrorService,
-  ) {}
 
   /**
    * This doesn't seem like it should be necessary,

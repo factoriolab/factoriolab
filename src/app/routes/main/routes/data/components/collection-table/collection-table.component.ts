@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, ReplaySubject } from 'rxjs';
 
@@ -15,6 +20,8 @@ type Entity = Category | Item | Recipe;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionTableComponent {
+  store = inject(Store<LabState>);
+
   @Input() set ids(value: string[]) {
     this.ids$.next(value);
   }
@@ -38,8 +45,6 @@ export class CollectionTableComponent {
       options,
     })),
   );
-
-  constructor(private store: Store<LabState>) {}
 
   getCollectionRoute(type: IdType): string {
     if (this.useRelativePath) return '';

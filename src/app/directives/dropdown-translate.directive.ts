@@ -1,4 +1,4 @@
-import { Directive, OnInit, Self, TemplateRef } from '@angular/core';
+import { Directive, inject, OnInit, TemplateRef } from '@angular/core';
 import { Dropdown } from 'primeng/dropdown';
 import { combineLatest, filter, first } from 'rxjs';
 
@@ -8,10 +8,8 @@ import { ContentService } from '~/services';
   selector: '[labDropdownTranslate]',
 })
 export class DropdownTranslateDirective implements OnInit {
-  constructor(
-    @Self() private readonly pDropdown: Dropdown,
-    private contentSvc: ContentService,
-  ) {}
+  contentSvc = inject(ContentService);
+  pDropdown = inject(Dropdown, { self: true });
 
   ngOnInit(): void {
     this.pDropdown.appendTo = 'body';

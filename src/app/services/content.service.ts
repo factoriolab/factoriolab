@@ -1,4 +1,4 @@
-import { Injectable, TemplateRef } from '@angular/core';
+import { inject, Injectable, TemplateRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Confirmation, Message } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
@@ -26,6 +26,8 @@ ConnectedOverlayScrollHandler.prototype.bindScrollListener = function (
   providedIn: 'root',
 })
 export class ContentService {
+  translateSvc = inject(TranslateService);
+
   // Responsive
   scrollTop$ = fromEvent(window, 'scroll').pipe(
     map(
@@ -76,6 +78,4 @@ export class ContentService {
   lang$ = this.translateSvc.onLangChange.pipe(startWith(''));
 
   version = `${APP} ${environment.version}`;
-
-  constructor(private translateSvc: TranslateService) {}
 }

@@ -3,7 +3,7 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  Inject,
+  inject,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -66,6 +66,14 @@ import { RecipeUtility } from '~/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent implements OnInit, AfterViewInit {
+  document = inject(DOCUMENT);
+  route = inject(ActivatedRoute);
+  contentSvc = inject(ContentService);
+  trackSvc = inject(TrackService);
+  store = inject(Store<LabState>);
+  exportSvc = inject(ExportService);
+  routerSvc = inject(RouterService);
+
   vm$ = combineLatest({
     machinesState: this.store.select(Machines.getMachinesState),
     itemsState: this.store.select(Items.getItemsState),
@@ -111,16 +119,6 @@ export class ListComponent implements OnInit, AfterViewInit {
   EnergyType = EnergyType;
   ObjectiveUnit = ObjectiveUnit;
   Rational = Rational;
-
-  constructor(
-    public route: ActivatedRoute,
-    public contentSvc: ContentService,
-    public trackSvc: TrackService,
-    @Inject(DOCUMENT) private document: Document,
-    private store: Store<LabState>,
-    private exportSvc: ExportService,
-    private routerSvc: RouterService,
-  ) {}
 
   ngOnInit(): void {
     this.route.fragment

@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   OnInit,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -20,6 +21,10 @@ import { LabState, Settings } from '~/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CostsComponent implements OnInit {
+  ref = inject(ChangeDetectorRef);
+  store = inject(Store<LabState>);
+  contentSvc = inject(ContentService);
+
   vm$ = combineLatest({
     costs: this.store
       .select(Settings.getCosts)
@@ -35,12 +40,6 @@ export class CostsComponent implements OnInit {
       (k) => this.editValue[k] !== Settings.initialSettingsState.costs[k],
     );
   }
-
-  constructor(
-    private ref: ChangeDetectorRef,
-    private store: Store<LabState>,
-    private contentSvc: ContentService,
-  ) {}
 
   ngOnInit(): void {
     this.contentSvc.showCosts$.pipe(untilDestroyed(this)).subscribe(() => {
