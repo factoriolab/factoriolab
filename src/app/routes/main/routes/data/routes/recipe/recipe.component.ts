@@ -1,8 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
