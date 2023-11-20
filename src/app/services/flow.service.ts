@@ -56,6 +56,7 @@ export class FlowService {
       if (step.recipeId && step.machines) {
         const recipe = data.recipeEntities[step.recipeId];
         const settings = step.recipeSettings;
+        const recipeIcon = data.iconEntities[recipe.icon ?? recipe.id];
 
         if (settings?.machineId != null) {
           const machine = data.itemEntities[settings.machineId];
@@ -72,12 +73,19 @@ export class FlowService {
             recipe,
             machineId: settings.machineId,
             machines: step.machines.toString(machinePrec),
+            color: recipeIcon.color,
+            stepId: step.id,
+            viewBox: `${recipeIcon.position
+              .replace(/px/g, '')
+              .replace(/-/g, '')} 64 64`,
+            href: recipeIcon.file,
           });
         }
       }
 
       if (step.itemId) {
         const item = data.itemEntities[step.itemId];
+        const itemIcon = data.iconEntities[item.icon ?? item.id];
         if (step.surplus) {
           // CREATE NODE: Surplus
           flow.nodes.push({
@@ -85,6 +93,12 @@ export class FlowService {
             type: NodeType.Surplus,
             name: item.name,
             text: `${step.surplus.toString(itemPrec)}${suffix}`,
+            color: itemIcon.color,
+            stepId: step.id,
+            viewBox: `${itemIcon.position
+              .replace(/px/g, '')
+              .replace(/-/g, '')} 64 64`,
+            href: itemIcon.file,
           });
           // Links to surplus node
           for (const sourceStep of steps) {
@@ -99,6 +113,8 @@ export class FlowService {
                   target: `s|${step.itemId}`,
                   name: item.name,
                   text: `${sourceAmount.toString(itemPrec)}${suffix}`,
+                  color: itemIcon.color,
+                  value: sourceAmount.toNumber(),
                 });
               }
             }
@@ -135,6 +151,8 @@ export class FlowService {
                       target: `r|${targetId}`,
                       name: item.name,
                       text: `${sourceAmount.toString(itemPrec)}${suffix}`,
+                      color: itemIcon.color,
+                      value: sourceAmount.toNumber(),
                     });
                   }
                 }
@@ -148,6 +166,8 @@ export class FlowService {
                   target: `r|${targetId}`,
                   name: item.name,
                   text: `${amount.toString(itemPrec)}${suffix}`,
+                  color: itemIcon.color,
+                  value: amount.toNumber(),
                 });
               }
             }
@@ -159,6 +179,12 @@ export class FlowService {
                 type: NodeType.Input,
                 name: item.name,
                 text: `${inputAmount.toString(itemPrec)}${suffix}`,
+                color: itemIcon.color,
+                stepId: step.id,
+                viewBox: `${itemIcon.position
+                  .replace(/px/g, '')
+                  .replace(/-/g, '')} 64 64`,
+                href: itemIcon.file,
               });
             }
           }
@@ -170,6 +196,12 @@ export class FlowService {
               type: NodeType.Output,
               name: item.name,
               text: `${step.output.toString(itemPrec)}${suffix}`,
+              color: itemIcon.color,
+              stepId: step.id,
+              viewBox: `${itemIcon.position
+                .replace(/px/g, '')
+                .replace(/-/g, '')} 64 64`,
+              href: itemIcon.file,
             });
             for (const sourceStep of steps) {
               if (sourceStep.recipeId && sourceStep.outputs) {
@@ -182,6 +214,10 @@ export class FlowService {
                     text: `${step.output
                       .mul(sourceStep.outputs[step.itemId])
                       .toString(itemPrec)}${suffix}`,
+                    color: itemIcon.color,
+                    value: step.output
+                      .mul(sourceStep.outputs[step.itemId])
+                      .toNumber(),
                   });
                 }
               }

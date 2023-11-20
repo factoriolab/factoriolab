@@ -65,6 +65,7 @@
             "allowedCommonJsDependencies": [
               "@sideway/formula",
               "component-emitter",
+              "elementary-circuits-directed-graph",
               "elkjs/lib/elk.bundled",
               "file-saver",
               "glpk-ts"

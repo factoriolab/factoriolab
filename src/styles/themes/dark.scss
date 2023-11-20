@@ -37,6 +37,7 @@ $primary-lighter: color.adjust($primary-color, $lightness: -13%);
   --highlight-bg: rgba(255, 213, 79, 0.16);
   --highlight-text-color: rgba(255, 255, 255, 0.87);
   color-scheme: dark;
+  --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
 * {

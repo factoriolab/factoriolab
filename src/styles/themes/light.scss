@@ -39,6 +39,7 @@ $primary-darker: color.adjust($primary-color, $lightness: -10%);
   --highlight-text-color: #495057;
   --focus-ring: 0 0 0 0.2rem #{$shadow-color};
   color-scheme: light;
+  --shadow-color: rgba(255, 255, 255, 0.3);
 }
 
 * {
