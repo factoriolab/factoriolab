@@ -21,8 +21,8 @@ import {
   SankeyNodeMinimal,
   sankeyRight,
 } from 'd3-sankey';
-import { sankeyCircular } from 'd3-sankey-circular';
 import { select, Selection } from 'd3-selection';
+import { zoom } from 'd3-zoom';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
@@ -31,16 +31,6 @@ import { DisplayService, FlowService } from '~/services';
 import { SankeyLinkExtraProperties } from './d3-sankey/models';
 import { sankey } from './d3-sankey/sankey';
 import { sankeyLinkLoop } from './d3-sankey/sankey-link-horizontal';
-
-// import { SankeyLinkExtraProperties } from './d3-sankey/models';
-// import { sankey } from './d3-sankey/sankey';
-// import {
-//   sankeyLinkHorizontal,
-//   sankeyLinkLoop,
-// } from './d3-sankey/sankey-link-horizontal';
-
-// import { sankey } from './d3-sankey/sankey';
-// import { SankeyLayout } from './d3-sankey/models';
 
 const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
@@ -82,35 +72,13 @@ export class FlowComponent implements AfterViewInit {
     if (!flowData.nodes.length || !flowData.links.length) return;
 
     if (this.svgElement) {
-      // console.log(flowData);
-      // flowData.links.push({
-      //   source: 'r|0',
-      //   target: 'r|1',
-      //   name: 'loop',
-      //   text: 'loop',
-      //   color: 'red',
-      // });
-
-      let circular = true;
-      let skGraph = this.getLayout(flowData, circular, 800, this.height);
-
-      if (
-        !skGraph.nodes.some(
-          (n) =>
-            (n as unknown as { partOfCycle: boolean }).partOfCycle === true,
-        )
-      ) {
-        // No circular references, use built in sankey generator
-        circular = false;
-        skGraph = this.getLayout(flowData, circular, 800, this.height);
-      }
-
+      let skGraph = this.getLayout(flowData, 800, this.height);
       const columns = Math.max(
         ...skGraph.nodes.map((d) => this.orZero(d.depth)),
       );
       const width = (columns + 1) * NODE_WIDTH + columns * NODE_WIDTH * 12;
       const height = Math.min(this.height, width * 0.75);
-      skGraph = this.getLayout(flowData, circular, width, height);
+      skGraph = this.getLayout(flowData, width, height);
 
       this.svg = select(this.svgElement.nativeElement)
         .append('svg')
@@ -121,6 +89,12 @@ export class FlowComponent implements AfterViewInit {
         .style('width', `${width}px`)
         .style('height', `${height}px`)
         .attr('viewBox', `0 0 ${width} ${height}`);
+
+      this.svg.call(
+        zoom<SVGSVGElement, unknown>().on('zoom', (e): void => {
+          this.svg!.selectAll('svg > g').attr('transform', e.transform);
+        }),
+      );
 
       // Draw linkages (draw first so rects are drawn over them)
       const link = this.svg
@@ -136,62 +110,20 @@ export class FlowComponent implements AfterViewInit {
       const path = link
         .append('path')
         .attr('id', (l) => `${l.index}`)
-        .attr('d', (l) => {
-          if ((l as SankeyLinkExtraProperties).direction === 'self') {
-            console.log(l);
-          }
-
-          return (l as SankeyLinkExtraProperties).direction === 'self'
+        .attr('d', (l) =>
+          (l as SankeyLinkExtraProperties).direction !== 'forward'
             ? sankeyLinkLoop(
                 l.width ?? 0,
                 NODE_WIDTH,
                 (l.source as SankeyNode<Node, Link>).y1!,
                 (l.target as SankeyNode<Node, Link>).y1!,
               )(l)
-            : sankeyLinkHorizontal()(l);
-        })
+            : sankeyLinkHorizontal()(l),
+        )
         .attr('stroke', (l) => l.color)
         .attr('stroke-width', (l) => Math.max(1, this.orZero(l.width)));
 
       link.append('title').text((l) => l.name);
-
-      const layout = this.skLayout;
-      const orZero = this.orZero;
-
-      // eslint-disable-next-line no-inner-declarations
-      function dragMove(
-        this: SVGElement,
-        event: { dy: number; dx: number },
-        d: SankeyNode<Node, Link>,
-      ): void {
-        const rectY = parseFloat(select(this).attr('y'));
-        const rectX = parseFloat(select(this).attr('x'));
-        d.y0 = orZero(d.y0) + event.dy;
-        d.x0 = orZero(d.x0) + event.dx;
-        d.x1 = orZero(d.x1) + event.dx;
-        const trX = orZero(d.x0) - rectX;
-        const trY = orZero(d.y0) - rectY;
-        const transform = 'translate(' + trX + ',' + trY + ')';
-        select(this).attr('transform', transform);
-
-        // also move the image
-        select(`[id='image-${d.id}']`).attr('transform', transform);
-        if (layout) {
-          layout.update(skGraph);
-        }
-
-        // force an update of the path
-        path.attr('d', (l) => {
-          return (l as SankeyLinkExtraProperties).direction === 'self'
-            ? sankeyLinkLoop(
-                l.width ?? 0,
-                NODE_WIDTH,
-                (l.source as SankeyNode<Node, Link>).y1! + NODE_WIDTH,
-                (l.target as SankeyNode<Node, Link>).y1! + NODE_WIDTH,
-              )(l)
-            : sankeyLinkHorizontal()(l);
-        });
-      }
 
       this.svg
         .append('g')
@@ -203,10 +135,14 @@ export class FlowComponent implements AfterViewInit {
         .attr('href', (l) => `#${l.index}`)
         .text((l) => `${l.text} ${l.name}`);
 
+      // For use inside drag function
+      const layout = this.skLayout;
+      const orZero = this.orZero;
+
       // Draw rects for nodes
       this.svg
         .append('g')
-        .attr('stroke', 'var(--color-black)')
+        .attr('stroke', 'var(--surface-ground)')
         .selectAll<SVGRectElement, SankeyNode<Node, Link>>('rect')
         .data(skGraph.nodes)
         .join('rect')
@@ -222,7 +158,37 @@ export class FlowComponent implements AfterViewInit {
         .call(
           drag<SVGRectElement, SankeyNode<Node, Link>>()
             .subject((d) => d)
-            .on('drag', dragMove),
+            .on('drag', function (this, event, d) {
+              const rectY = parseFloat(select(this).attr('y'));
+              const rectX = parseFloat(select(this).attr('x'));
+              d.y0 = orZero(d.y0) + event.dy;
+              d.x0 = orZero(d.x0) + event.dx;
+              d.x1 = orZero(d.x1) + event.dx;
+              const trX = orZero(d.x0) - rectX;
+              const trY = orZero(d.y0) - rectY;
+              const transform = 'translate(' + trX + ',' + trY + ')';
+              select(this).attr('transform', transform);
+
+              // also move the image
+              select(`[id='image-${d.id}']`).attr('transform', transform);
+              if (layout) {
+                layout.update(skGraph);
+              }
+
+              // force an update of the path
+              path.attr('d', (l) => {
+                return (l as SankeyLinkExtraProperties).direction !== 'forward'
+                  ? sankeyLinkLoop(
+                      l.width ?? 0,
+                      NODE_WIDTH,
+                      (l.source as SankeyNode<Node, Link>).y1! +
+                        (l.source === d ? trY : 0),
+                      (l.target as SankeyNode<Node, Link>).y1! +
+                        (l.target === d ? trY : 0),
+                    )(l)
+                  : sankeyLinkHorizontal()(l);
+              });
+            }),
         )
         .append('title')
         .text((d) => d.name);
@@ -258,14 +224,9 @@ export class FlowComponent implements AfterViewInit {
 
   getLayout(
     data: FlowData,
-    circular: boolean,
     width: number,
     height: number,
   ): SankeyGraph<Node, Link> {
-    // const fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link> = circular
-    //   ? sankeyCircular
-    //   : sankey;
-    // console.log(circular);
     const fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link> = sankey;
     this.skLayout = fn()
       .nodeId((d) => d.id)

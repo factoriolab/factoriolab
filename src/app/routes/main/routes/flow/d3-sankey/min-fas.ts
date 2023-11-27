@@ -115,7 +115,6 @@ export function minFAS<
     const i = orderMap.get(link.source);
     const j = orderMap.get(link.target);
     if (i === j) {
-      // console.log(link);
       link.direction = 'self';
     } else if (i < j) {
       link.direction = 'forward';

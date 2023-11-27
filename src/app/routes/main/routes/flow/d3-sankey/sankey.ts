@@ -324,12 +324,6 @@ export function sankey<
             next.add(target as SankeyNode<N, L>);
           }
         }
-
-        for (const { source, direction } of node.targetLinks!) {
-          if (direction === 'backward') {
-            next.add(source as SankeyNode<N, L>);
-          }
-        }
       }
 
       if (++x > n) throw new Error('circular link');
@@ -349,12 +343,6 @@ export function sankey<
         for (const { source, direction } of node.targetLinks!) {
           if (direction === 'forward') {
             next.add(source as SankeyNode<N, L>);
-          }
-        }
-
-        for (const { target, direction } of node.sourceLinks!) {
-          if (direction === 'backward') {
-            next.add(target as SankeyNode<N, L>);
           }
         }
       }
