@@ -1,10 +1,16 @@
 import { max, min, sum } from 'd3-array';
-import { SankeyGraph, SankeyLayout, SankeyLink, SankeyNode } from 'd3-sankey';
 
 import { sankeyJustify } from './align';
 import { constant } from './constant';
 import { minFAS } from './min-fas';
-import { SankeyLinkExtraProperties, SankeyNodeExtraProperties } from './models';
+import {
+  SankeyGraph,
+  SankeyLayout,
+  SankeyLink,
+  SankeyLinkExtraProperties,
+  SankeyNode,
+  SankeyNodeExtraProperties,
+} from './models';
 
 function ascendingSourceBreadth<
   N extends SankeyNodeExtraProperties = object,
@@ -97,8 +103,8 @@ function computeLinkBreadths<
 }
 
 export function sankey<
-  N extends SankeyNodeExtraProperties = object,
-  L extends SankeyLinkExtraProperties = object,
+  N extends SankeyNodeExtraProperties,
+  L extends SankeyLinkExtraProperties,
 >(): SankeyLayout<SankeyGraph<N, L>, N, L> {
   let x0 = 0,
     y0 = 0,

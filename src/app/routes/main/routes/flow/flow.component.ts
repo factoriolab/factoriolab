@@ -10,17 +10,6 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { drag } from 'd3-drag';
-import {
-  sankeyCenter,
-  SankeyGraph,
-  sankeyJustify,
-  SankeyLayout,
-  sankeyLeft,
-  sankeyLinkHorizontal,
-  SankeyNode,
-  SankeyNodeMinimal,
-  sankeyRight,
-} from 'd3-sankey';
 import { select, Selection } from 'd3-selection';
 import { zoom } from 'd3-zoom';
 import { BehaviorSubject, combineLatest, map } from 'rxjs';
@@ -28,9 +17,16 @@ import { BehaviorSubject, combineLatest, map } from 'rxjs';
 import { AppSharedModule } from '~/app-shared.module';
 import { FlowData, Link, Node } from '~/models';
 import { DisplayService, FlowService } from '~/services';
-import { SankeyLinkExtraProperties } from './d3-sankey/models';
-import { sankey } from './d3-sankey/sankey';
-import { sankeyLinkLoop } from './d3-sankey/sankey-link-horizontal';
+import {
+  sankey,
+  SankeyGraph,
+  sankeyJustify,
+  SankeyLayout,
+  SankeyLinkExtraProperties,
+  sankeyLinkHorizontal,
+  sankeyLinkLoop,
+  SankeyNode,
+} from './d3-sankey';
 
 const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;

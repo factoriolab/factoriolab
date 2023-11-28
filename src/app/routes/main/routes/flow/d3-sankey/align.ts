@@ -1,7 +1,11 @@
 import { min } from 'd3-array';
-import { SankeyLink, SankeyNode } from 'd3-sankey';
 
-import { SankeyLinkExtraProperties, SankeyNodeExtraProperties } from './models';
+import {
+  SankeyLink,
+  SankeyLinkExtraProperties,
+  SankeyNode,
+  SankeyNodeExtraProperties,
+} from './models';
 
 function targetDepth<
   N extends SankeyNodeExtraProperties = object,

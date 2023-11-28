@@ -1,8 +1,12 @@
 import { Path } from 'd3-path';
-import { SankeyLink, SankeyNode } from 'd3-sankey';
 import { Link, link, linkHorizontal } from 'd3-shape';
 
-import { SankeyLinkExtraProperties, SankeyNodeExtraProperties } from './models';
+import {
+  SankeyLink,
+  SankeyLinkExtraProperties,
+  SankeyNode,
+  SankeyNodeExtraProperties,
+} from './models';
 
 function horizontalSource<
   N extends SankeyNodeExtraProperties = object,
@@ -65,15 +69,15 @@ function bumpSankeyLoopX(
     new BumpSankeyLoop(context, true, width, padding, bottom0, bottom1);
 }
 
-function bumpSankeyLoopY(
-  width: number,
-  padding: number,
-  bottom0: number,
-  bottom1: number,
-): (context: CanvasRenderingContext2D | Path) => BumpSankeyLoop {
-  return (context: CanvasRenderingContext2D | Path) =>
-    new BumpSankeyLoop(context, false, width, padding, bottom0, bottom1);
-}
+// function bumpSankeyLoopY(
+//   width: number,
+//   padding: number,
+//   bottom0: number,
+//   bottom1: number,
+// ): (context: CanvasRenderingContext2D | Path) => BumpSankeyLoop {
+//   return (context: CanvasRenderingContext2D | Path) =>
+//     new BumpSankeyLoop(context, false, width, padding, bottom0, bottom1);
+// }
 
 class BumpSankeyLoop {
   _context: CanvasRenderingContext2D | Path;

@@ -1,6 +1,9 @@
-import { SankeyGraph, SankeyNode } from 'd3-sankey';
-
-import { SankeyLinkExtraProperties, SankeyNodeExtraProperties } from './models';
+import {
+  SankeyGraph,
+  SankeyLinkExtraProperties,
+  SankeyNode,
+  SankeyNodeExtraProperties,
+} from './models';
 
 /**
  * Determine a set of links which need to be reversed to render the graph acyclic.
