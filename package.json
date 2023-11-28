@@ -28,6 +28,7 @@
     "factorio-dump": "scripts\\factorio-dump.bat",
     "factorio-build": "ts-node -r tsconfig-paths/register scripts/factorio-build.ts",
     "factorio-update": "ts-node -r tsconfig-paths/register scripts/factorio-update.ts",
+    "calculate-color": "ts-node -r tsconfig-paths/register scripts/calculate-color.ts",
     "minify-data": "ts-node -r tsconfig-paths/register scripts/minify-data.ts",
     "update-hash": "ts-node -r tsconfig-paths/register scripts/update-hash.ts"
   },
