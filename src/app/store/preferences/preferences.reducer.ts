@@ -4,7 +4,9 @@ import {
   Game,
   initialColumnsState,
   Language,
+  LinkValue,
   PowerUnit,
+  SankeyAlign,
   Theme,
 } from '~/models';
 import * as App from '../app.actions';
@@ -25,6 +27,9 @@ export interface PreferencesState {
   rows: number;
   disablePaginator: boolean;
   paused: boolean;
+  linkSize: LinkValue;
+  linkText: LinkValue;
+  sankeyAlign: SankeyAlign;
 }
 
 export const initialPreferencesState: PreferencesState = {
@@ -44,6 +49,9 @@ export const initialPreferencesState: PreferencesState = {
   rows: 50,
   disablePaginator: false,
   paused: false,
+  linkSize: LinkValue.Items,
+  linkText: LinkValue.Items,
+  sankeyAlign: SankeyAlign.Justify,
 };
 
 export function preferencesReducer(
@@ -96,6 +104,12 @@ export function preferencesReducer(
       return { ...state, ...{ hideDuplicateIcons: action.payload } };
     case PreferencesActionType.SET_PAUSED:
       return { ...state, ...{ paused: action.payload } };
+    case PreferencesActionType.SET_LINK_SIZE:
+      return { ...state, ...{ linkSize: action.payload } };
+    case PreferencesActionType.SET_LINK_TEXT:
+      return { ...state, ...{ linkText: action.payload } };
+    case PreferencesActionType.SET_SANKEY_ALIGN:
+      return { ...state, ...{ sankeyAlign: action.payload } };
     default:
       return state;
   }

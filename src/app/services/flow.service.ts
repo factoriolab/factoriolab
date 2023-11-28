@@ -8,6 +8,8 @@ import {
   Dataset,
   FlowData,
   FlowStyle,
+  LinkValue,
+  MIN_LINK_VALUE,
   NodeType,
   Rational,
   Step,
@@ -228,5 +230,57 @@ export class FlowService {
     }
 
     return flow;
+  }
+
+  stepLinkValue(step: Step, prop: LinkValue): Rational {
+    if (prop === LinkValue.None || prop === LinkValue.Percent)
+      return Rational.one;
+
+    switch (prop) {
+      case LinkValue.Belts:
+        return step.belts ?? Rational.zero;
+      case LinkValue.Wagons:
+        return step.wagons ?? Rational.zero;
+      case LinkValue.Machines:
+        return step.machines ?? Rational.zero;
+      default:
+        return step.items ?? Rational.zero;
+    }
+  }
+
+  linkSize(
+    value: Rational,
+    percent: Rational,
+    prop: LinkValue,
+    stack: Rational | undefined,
+  ): number {
+    if (prop === LinkValue.None) return 1;
+
+    if (prop === LinkValue.Percent) return percent.toNumber() || MIN_LINK_VALUE;
+
+    // Scale link size for fluids to 1/10
+    if (prop === LinkValue.Items && stack == null)
+      value = value.div(Rational.ten);
+
+    return value.mul(percent).toNumber() || MIN_LINK_VALUE;
+  }
+
+  linkText(
+    value: Rational,
+    percent: Rational,
+    prop: LinkValue,
+    precision: number | null,
+  ): string {
+    switch (prop) {
+      case LinkValue.None:
+        return '';
+      case LinkValue.Percent:
+        return `${Math.round(percent.mul(Rational.hundred).toNumber())}%`;
+      default: {
+        const result = value.mul(percent);
+        if (precision == null) return result.toFraction();
+        return result.toPrecision(precision).toString();
+      }
+    }
   }
 }
