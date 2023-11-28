@@ -20,6 +20,7 @@ export interface SankeyNodeMinimal<N extends object, L extends object> {
   x1?: number | undefined;
   y0?: number | undefined;
   y1?: number | undefined;
+  trY?: number | undefined;
 }
 
 export type SankeyNode<N extends object, L extends object> = N &

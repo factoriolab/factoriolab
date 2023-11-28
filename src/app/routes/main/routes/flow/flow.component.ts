@@ -107,14 +107,14 @@ export class FlowComponent implements AfterViewInit {
         .append('path')
         .attr('id', (l) => `${l.index}`)
         .attr('d', (l) =>
-          (l as SankeyLinkExtraProperties).direction !== 'forward'
-            ? sankeyLinkLoop(
+          (l as SankeyLinkExtraProperties).direction === 'forward'
+            ? sankeyLinkHorizontal()(l)
+            : sankeyLinkLoop(
                 l.width ?? 0,
                 NODE_WIDTH,
                 (l.source as SankeyNode<Node, Link>).y1!,
                 (l.target as SankeyNode<Node, Link>).y1!,
-              )(l)
-            : sankeyLinkHorizontal()(l),
+              )(l),
         )
         .attr('stroke', (l) => l.color)
         .attr('stroke-width', (l) => Math.max(1, this.orZero(l.width)));
@@ -164,6 +164,7 @@ export class FlowComponent implements AfterViewInit {
               const trY = orZero(d.y0) - rectY;
               const transform = 'translate(' + trX + ',' + trY + ')';
               select(this).attr('transform', transform);
+              d.trY = trY;
 
               // also move the image
               select(`[id='image-${d.id}']`).attr('transform', transform);
@@ -173,16 +174,18 @@ export class FlowComponent implements AfterViewInit {
 
               // force an update of the path
               path.attr('d', (l) => {
-                return (l as SankeyLinkExtraProperties).direction !== 'forward'
-                  ? sankeyLinkLoop(
-                      l.width ?? 0,
-                      NODE_WIDTH,
-                      (l.source as SankeyNode<Node, Link>).y1! +
-                        (l.source === d ? trY : 0),
-                      (l.target as SankeyNode<Node, Link>).y1! +
-                        (l.target === d ? trY : 0),
-                    )(l)
-                  : sankeyLinkHorizontal()(l);
+                if ((l as SankeyLinkExtraProperties).direction === 'forward')
+                  return sankeyLinkHorizontal()(l);
+
+                const source = l.source as SankeyNode<Node, Link>;
+                const target = l.target as SankeyNode<Node, Link>;
+
+                return sankeyLinkLoop(
+                  l.width ?? 0,
+                  NODE_WIDTH,
+                  source.y1! + orZero(source.trY),
+                  target.y1! + orZero(target.trY),
+                )(l);
               });
             }),
         )

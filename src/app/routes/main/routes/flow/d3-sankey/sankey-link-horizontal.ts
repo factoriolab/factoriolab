@@ -137,27 +137,29 @@ class BumpSankeyLoop {
       case 1:
       default: {
         this._point = 2;
+
+        const bottom =
+          Math.max(this._bottom0, this._bottom1) +
+          this._width / 2 +
+          this._padding;
+        const minRadius = this._width + this._padding;
+        const radius0 = Math.max(minRadius, (bottom - this._y0!) * 0.75);
+        const radius1 = Math.max(minRadius, (bottom - y!) * 0.75);
+
         if (this._x) {
           this._context.bezierCurveTo(
-            this._x0! + this._width + this._padding,
+            this._x0! + radius0,
             this._y0!,
-            this._x0! + this._width + this._padding,
-            (this._bottom0 = this._bottom0 + this._width / 2 + this._padding),
+            this._x0! + radius0,
+            bottom,
             this._x0!,
-            this._bottom0,
+            bottom,
           );
+          this._context.lineTo(x, bottom);
           this._context.bezierCurveTo(
-            (this._x0 = (this._x0! + x) / 2),
-            this._bottom0,
-            this._x0,
-            (this._bottom1 = this._bottom1 + this._width / 2 + this._padding),
-            x,
-            this._bottom1,
-          );
-          this._context.bezierCurveTo(
-            x - this._width - this._padding,
-            this._bottom1,
-            x - this._width - this._padding,
+            x - radius1,
+            bottom,
+            x - radius1,
             y,
             x,
             y,
