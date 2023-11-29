@@ -70,13 +70,13 @@ export class FlowComponent implements AfterViewInit {
 
   @ViewChild('svg') svgElement: ElementRef | undefined;
 
-  selectedId: string | undefined;
   height = window.innerHeight * 0.75;
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
   skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link> | undefined;
 
   loading$ = new BehaviorSubject(true);
-  vm$ = combineLatest({ loading: this.loading$ });
+  selectedId$ = new BehaviorSubject<string | null>(null);
+  vm$ = combineLatest({ loading: this.loading$, selectedId: this.selectedId$ });
 
   ngAfterViewInit(): void {
     combineLatest({
@@ -126,11 +126,6 @@ export class FlowComponent implements AfterViewInit {
 
       this.svg = select(this.svgElement.nativeElement)
         .append('svg')
-        .attr('preserveAspectRatio', 'xMinYMin meet')
-        .attr('width', `${width}px`)
-        .attr('height', `${height}px`)
-        .style('width', `${width}px`)
-        .style('height', `${height}px`)
         .attr('viewBox', `0 0 ${width} ${height}`);
 
       this.svg.call(
@@ -486,7 +481,6 @@ export class FlowComponent implements AfterViewInit {
   }
 
   setSelected(id: string): void {
-    this.selectedId = id;
-    this.ref.detectChanges();
+    this.selectedId$.next(id);
   }
 }

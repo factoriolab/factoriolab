@@ -280,7 +280,7 @@
     "errorNoLimits": "Keine <b>Limit</b> Ziele hinzugefügt. Füge <b>Limit</b> Ziele hinzu um das <b>Maximize</b> Ziel einzuschränken.",
     "errorSimplexInfo": "<i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>"
   },
-  "list": {
+  "steps": {
     "openColumnSettings": "Öffne Spalteneinstellungen",
     "checkedUndoTooltip": "Alle Markierungen rückgängig machen",
     "itemsUndoTooltip": "Alle exkludierten Items rückgängig machen",

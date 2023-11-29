@@ -307,7 +307,7 @@
     "errorNoLimits": "No <b>Limit</b> objectives have been added. Add <b>Limit</b> objectives to restrict the <b>Maximize</b> objective.",
     "errorSimplexInfo": "<i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>"
   },
-  "list": {
+  "steps": {
     "openColumnSettings": "Open column settings",
     "checkedUndoTooltip": "Undo all checkmarks",
     "itemsUndoTooltip": "Undo all excluded items",
@@ -332,7 +332,8 @@
     "inserterCountInfo": "* Inserters are calculated using target/capacity settings and 0.18 experimental data from the <a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">wiki.</a>",
     "includedRecipes": "Included recipes",
     "includedRecipesInfo": "Click recipes to include or exclude them. Excluded recipes will not be used in the solution.",
-    "total": "Total"
+    "total": "Total",
+    "emptyMessage": "Click on a node in the diagram to view details"
   },
   "data": {
     "openDataPage": "Open data page...",
