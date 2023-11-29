@@ -58,14 +58,10 @@ export class FlowService {
       links: [],
     };
 
-    const stepMap: Entities<Step> = {};
-    const itemStep: Entities<Step> = {};
-    const recipeStep: Entities<Step> = {};
-    for (const step of steps) {
-      stepMap[step.id] = step;
-      if (step.itemId) itemStep[step.itemId] = step;
-      if (step.recipeId) recipeStep[step.recipeId] = step;
-    }
+    const stepMap = steps.reduce((e: Entities<Step>, s) => {
+      e[s.id] = s;
+      return e;
+    }, {});
 
     for (const step of steps) {
       const value = this.stepLinkValue(step, preferences.linkSize);
@@ -94,7 +90,7 @@ export class FlowService {
 
         if (step.parents) {
           for (const stepId of Object.keys(step.parents)) {
-            if (stepId === '') continue; // TODO: Handle output
+            if (stepId === '') continue;
 
             flow.links.push({
               source: id,

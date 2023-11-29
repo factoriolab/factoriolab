@@ -35,4 +35,6 @@ export interface Step {
   power?: Rational;
   pollution?: Rational;
   recipeObjectiveId?: string;
+  /** Depth of this node in a justified sankey diagram */
+  depth?: number;
 }

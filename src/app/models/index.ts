@@ -1,3 +1,4 @@
+export * from './d3-sankey';
 export * from './data';
 export * from './enum';
 export * from './settings';

@@ -31,14 +31,8 @@ import {
   FlowDiagram,
   Link,
   Node,
-  SankeyAlign,
-} from '~/models';
-import { DisplayService, FlowService } from '~/services';
-import { LabState, Preferences } from '~/store';
-import { PreferencesState } from '~/store/preferences';
-import { MainSharedModule } from '../../main-shared.module';
-import {
   sankey,
+  SankeyAlign,
   sankeyCenter,
   SankeyGraph,
   sankeyJustify,
@@ -49,7 +43,11 @@ import {
   sankeyLinkLoop,
   SankeyNode,
   sankeyRight,
-} from './d3-sankey';
+} from '~/models';
+import { DisplayService, FlowService } from '~/services';
+import { LabState, Preferences } from '~/store';
+import { PreferencesState } from '~/store/preferences';
+import { MainSharedModule } from '../../main-shared.module';
 
 const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;

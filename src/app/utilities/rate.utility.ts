@@ -11,6 +11,7 @@ import {
   Rational,
   RecipeRational,
   RecipeSettingsRational,
+  sankey,
   Step,
   toEntities,
 } from '~/models';
@@ -149,6 +150,7 @@ export class RateUtility {
       this.calculateChecked(step, itemsState, recipesState, objectiveEntities);
     }
 
+    this.sortBySankey(_steps);
     return this.calculateHierarchy(_steps);
   }
 
@@ -325,6 +327,56 @@ export class RateUtility {
     }
   }
 
+  /** Generates a simple sankey diagram and sorts steps by their node depth */
+  static sortBySankey(steps: Step[]): void {
+    type SimpleNode = { id: string; stepId: string };
+    type SimpleLink = { source: string; target: string; value: number };
+
+    const stepMap = steps.reduce((e: Entities<Step>, s) => {
+      e[s.id] = s;
+      return e;
+    }, {});
+    const nodes: SimpleNode[] = [];
+    const links: SimpleLink[] = [];
+
+    for (const step of steps) {
+      if (step.itemId) {
+        const id = `i|${step.itemId}`;
+        nodes.push({ id, stepId: step.id });
+        if (step.parents) {
+          for (const stepId of Object.keys(step.parents)) {
+            if (stepId === '') continue;
+            links.push({
+              source: id,
+              target: `r|${stepMap[stepId].recipeId}`,
+              value: 1,
+            });
+          }
+        }
+      }
+
+      if (step.recipeId) {
+        const id = `r|${step.recipeId}`;
+        nodes.push({ id, stepId: step.id });
+        if (step.outputs) {
+          for (const itemId of Object.keys(step.outputs)) {
+            links.push({ source: id, target: `i|${itemId}`, value: 1 });
+          }
+        }
+      }
+    }
+
+    const result = sankey<SimpleNode, SimpleLink>().nodeId((d) => d.id)({
+      nodes,
+      links,
+    });
+    for (const step of steps) {
+      step.depth = result.nodes.find((n) => n.stepId === step.id)?.depth;
+    }
+
+    steps.sort((a, b) => (b.depth ?? 0) - (a.depth ?? 0));
+  }
+
   static calculateHierarchy(steps: Step[]): Step[] {
     // Determine parents
     const parents: Entities<string> = {};
@@ -356,49 +408,6 @@ export class RateUtility {
         groups[parentId] = [];
       }
       groups[parentId].push(step);
-    }
-
-    if (groups[ROOT_ID] && groups[ROOT_ID].length) {
-      // Sort root steps based on recipe hierarchy
-      const ungrouped = new Set<Step>(
-        groups[ROOT_ID].filter(
-          (s) => s.parents != null && s.parents[''] == null,
-        ),
-      );
-      const sortList: Step[] = groups[ROOT_ID].filter((s) => !ungrouped.has(s));
-
-      let addList: Step[];
-      do {
-        // Look for steps that can be added under a parent
-        addList = [];
-        for (const step of ungrouped) {
-          let insertIndex: number | undefined;
-          for (let i = 0; i < sortList.length; i++) {
-            if (sortList[i].parents?.[step.id]) {
-              insertIndex = i;
-              break;
-            }
-          }
-
-          if (insertIndex != null) {
-            sortList.splice(insertIndex, 0, step);
-            addList.push(step);
-          }
-        }
-
-        // Couldn't find anything to add under a parent
-        // Add first ungrouped item instead
-        if (addList.length === 0 && ungrouped.size) {
-          const step = Array.from(ungrouped)[0];
-          sortList.push(step);
-          addList.push(step);
-        }
-
-        // Remove items added this loop from the ungrouped list
-        addList.forEach((s) => ungrouped.delete(s));
-      } while (addList.length);
-
-      groups[ROOT_ID] = sortList;
     }
 
     // Perform recursive sort
