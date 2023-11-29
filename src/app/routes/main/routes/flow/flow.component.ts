@@ -36,6 +36,7 @@ import {
 import { DisplayService, FlowService } from '~/services';
 import { LabState, Preferences } from '~/store';
 import { PreferencesState } from '~/store/preferences';
+import { MainSharedModule } from '../../main-shared.module';
 import {
   sankey,
   sankeyCenter,
@@ -56,7 +57,7 @@ const NODE_WIDTH = 32;
 @UntilDestroy()
 @Component({
   standalone: true,
-  imports: [CommonModule, AppSharedModule],
+  imports: [CommonModule, AppSharedModule, MainSharedModule],
   templateUrl: './flow.component.html',
   styleUrls: ['./flow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

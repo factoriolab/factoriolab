@@ -39,7 +39,7 @@ import {
   stepDetailIcon,
   StepDetailTab,
 } from '~/models';
-import { StepIdPipe } from '~/pipes/step-id.pipe';
+import { StepIdPipe } from '~/routes/main/pipes/step-id.pipe';
 import {
   ContentService,
   ExportService,
@@ -56,11 +56,12 @@ import {
   Settings,
 } from '~/store';
 import { RecipeUtility } from '~/utilities';
+import { MainSharedModule } from '../../main-shared.module';
 
 @UntilDestroy()
 @Component({
   standalone: true,
-  imports: [CommonModule, AppSharedModule],
+  imports: [CommonModule, AppSharedModule, MainSharedModule],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -2,21 +2,20 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { AppSharedModule } from '~/app-shared.module';
 import { components } from './components';
 import { directives } from './directives';
 import { pipes } from './pipes';
-import { VendorModule } from './vendor.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, VendorModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, AppSharedModule],
   declarations: [...components, ...directives, ...pipes],
   exports: [
     FormsModule,
     ReactiveFormsModule,
-    VendorModule,
     ...components,
     ...directives,
     ...pipes,
   ],
 })
-export class AppSharedModule {}
+export class MainSharedModule {}
