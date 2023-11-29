@@ -23,8 +23,8 @@ function targetDepth<
 export function sankeyLeft<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
->(node: SankeyNode<N, L>): number | undefined {
-  return node.depth;
+>(node: SankeyNode<N, L>): number {
+  return node.depth ?? 0;
 }
 
 /**
@@ -66,9 +66,9 @@ export function sankeyJustify<
 export function sankeyCenter<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
->(node: SankeyNode<N, L>): number | undefined {
+>(node: SankeyNode<N, L>): number {
   return node.targetLinks!.length
-    ? node.depth
+    ? node.depth ?? 0
     : node.sourceLinks!.length
     ? min(node.sourceLinks!, targetDepth)! - 1
     : 0;

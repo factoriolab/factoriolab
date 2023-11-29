@@ -8,6 +8,7 @@ import {
   Dataset,
   FlowData,
   FlowStyle,
+  Icon,
   LinkValue,
   MIN_LINK_VALUE,
   NodeType,
@@ -45,49 +46,47 @@ export class FlowService {
     columnsState: ColumnsState,
     theme: FlowStyle,
   ): FlowData {
+    const itemPrec = columnsState.items.precision;
+    const machinePrec = columnsState.machines.precision;
+
     const flow: FlowData = {
       theme,
       nodes: [],
       links: [],
     };
 
-    const itemPrec = columnsState.items.precision;
-    const machinePrec = columnsState.machines.precision;
-
     for (const step of steps) {
-      if (step.recipeId && step.machines) {
+      if (step.recipeId && step.machines && step.recipeSettings?.machineId) {
         const recipe = data.recipeEntities[step.recipeId];
-        const settings = step.recipeSettings;
-        const recipeIcon = data.iconEntities[recipe.icon ?? recipe.id];
+        const icon = data.iconEntities[recipe.icon ?? recipe.id];
+        const machine = data.itemEntities[step.recipeSettings.machineId];
+        const machines = step.machines.toString(machinePrec);
 
-        if (settings?.machineId != null) {
-          const machine = data.itemEntities[settings.machineId];
-          // CREATE NODE: Standard recipe
-          flow.nodes.push({
-            id: `r|${step.id}`,
-            type: step.recipeObjectiveId
-              ? NodeType.Output
-              : Object.keys(recipe.in).length === 0
-              ? NodeType.Input
-              : NodeType.Recipe,
-            name: recipe.name,
-            text: `${step.machines.toString(machinePrec)} ${machine.name}`,
-            recipe,
-            machineId: settings.machineId,
-            machines: step.machines.toString(machinePrec),
-            color: recipeIcon.color,
-            stepId: step.id,
-            viewBox: `${recipeIcon.position
-              .replace(/px/g, '')
-              .replace(/-/g, '')} 64 64`,
-            href: recipeIcon.file,
-          });
-        }
+        // CREATE NODE: Standard recipe
+        flow.nodes.push({
+          id: `r|${step.id}`,
+          name: recipe.name,
+          text: `${machines} ${machine.name}`,
+          color: icon.color,
+          type: step.recipeObjectiveId
+            ? NodeType.Output
+            : Object.keys(recipe.in).length === 0
+            ? NodeType.Input
+            : NodeType.Recipe,
+          recipe,
+          machineId: step.recipeSettings.machineId,
+          machines,
+          stepId: step.id,
+          viewBox: this.viewBox(icon),
+          href: icon.file,
+        });
       }
 
       if (step.itemId) {
         const item = data.itemEntities[step.itemId];
-        const itemIcon = data.iconEntities[item.icon ?? item.id];
+        const icon = data.iconEntities[item.icon ?? item.id];
+        const viewBox = this.viewBox(icon);
+
         if (step.surplus) {
           // CREATE NODE: Surplus
           flow.nodes.push({
@@ -95,12 +94,10 @@ export class FlowService {
             type: NodeType.Surplus,
             name: item.name,
             text: `${step.surplus.toString(itemPrec)}${suffix}`,
-            color: itemIcon.color,
+            color: icon.color,
             stepId: step.id,
-            viewBox: `${itemIcon.position
-              .replace(/px/g, '')
-              .replace(/-/g, '')} 64 64`,
-            href: itemIcon.file,
+            viewBox,
+            href: icon.file,
           });
           // Links to surplus node
           for (const sourceStep of steps) {
@@ -115,7 +112,7 @@ export class FlowService {
                   target: `s|${step.itemId}`,
                   name: item.name,
                   text: `${sourceAmount.toString(itemPrec)}${suffix}`,
-                  color: itemIcon.color,
+                  color: icon.color,
                   value: sourceAmount.toNumber(),
                 });
               }
@@ -124,6 +121,18 @@ export class FlowService {
         }
 
         if (step.items) {
+          // CREATE NODE: Items
+          flow.nodes.push({
+            id: `s|${step.itemId}`,
+            type: NodeType.Recipe,
+            name: item.name,
+            text: `${step.items.toString(itemPrec)}${suffix}`,
+            color: icon.color,
+            stepId: step.id,
+            viewBox,
+            href: icon.file,
+          });
+
           let itemAmount = step.items;
           if (step.parents) {
             let inputAmount = Rational.zero;
@@ -153,7 +162,7 @@ export class FlowService {
                       target: `r|${targetId}`,
                       name: item.name,
                       text: `${sourceAmount.toString(itemPrec)}${suffix}`,
-                      color: itemIcon.color,
+                      color: icon.color,
                       value: sourceAmount.toNumber(),
                     });
                   }
@@ -168,7 +177,7 @@ export class FlowService {
                   target: `r|${targetId}`,
                   name: item.name,
                   text: `${amount.toString(itemPrec)}${suffix}`,
-                  color: itemIcon.color,
+                  color: icon.color,
                   value: amount.toNumber(),
                 });
               }
@@ -181,12 +190,10 @@ export class FlowService {
                 type: NodeType.Input,
                 name: item.name,
                 text: `${inputAmount.toString(itemPrec)}${suffix}`,
-                color: itemIcon.color,
+                color: icon.color,
                 stepId: step.id,
-                viewBox: `${itemIcon.position
-                  .replace(/px/g, '')
-                  .replace(/-/g, '')} 64 64`,
-                href: itemIcon.file,
+                viewBox,
+                href: icon.file,
               });
             }
           }
@@ -198,12 +205,10 @@ export class FlowService {
               type: NodeType.Output,
               name: item.name,
               text: `${step.output.toString(itemPrec)}${suffix}`,
-              color: itemIcon.color,
+              color: icon.color,
               stepId: step.id,
-              viewBox: `${itemIcon.position
-                .replace(/px/g, '')
-                .replace(/-/g, '')} 64 64`,
-              href: itemIcon.file,
+              viewBox,
+              href: icon.file,
             });
             for (const sourceStep of steps) {
               if (sourceStep.recipeId && sourceStep.outputs) {
@@ -216,7 +221,7 @@ export class FlowService {
                     text: `${step.output
                       .mul(sourceStep.outputs[step.itemId])
                       .toString(itemPrec)}${suffix}`,
-                    color: itemIcon.color,
+                    color: icon.color,
                     value: step.output
                       .mul(sourceStep.outputs[step.itemId])
                       .toNumber(),
@@ -246,6 +251,10 @@ export class FlowService {
       default:
         return step.items ?? Rational.zero;
     }
+  }
+
+  viewBox(icon: Icon): string {
+    return `${icon.position.replace(/px/g, '').replace(/-/g, '')} 64 64`;
   }
 
   linkSize(

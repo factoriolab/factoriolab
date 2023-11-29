@@ -9,23 +9,45 @@ import {
   ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { drag } from 'd3-drag';
 import { select, Selection } from 'd3-selection';
 import { zoom } from 'd3-zoom';
-import { BehaviorSubject, combineLatest, map } from 'rxjs';
+import ELK, { ELK as ElkType, ElkNode } from 'elkjs/lib/elk.bundled';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { DataSet } from 'vis-data/esnext';
+import {
+  Data,
+  Edge,
+  Network,
+  Node as VisNode,
+  Options,
+} from 'vis-network/esnext';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { FlowData, Link, Node } from '~/models';
+import {
+  Entities,
+  FlowData,
+  FlowDiagram,
+  Link,
+  Node,
+  SankeyAlign,
+} from '~/models';
 import { DisplayService, FlowService } from '~/services';
+import { LabState, Preferences } from '~/store';
+import { PreferencesState } from '~/store/preferences';
 import {
   sankey,
+  sankeyCenter,
   SankeyGraph,
   sankeyJustify,
   SankeyLayout,
+  sankeyLeft,
   SankeyLinkExtraProperties,
   sankeyLinkHorizontal,
   sankeyLinkLoop,
   SankeyNode,
+  sankeyRight,
 } from './d3-sankey';
 
 const SVG_ID = 'lab-flow-svg';
@@ -43,6 +65,7 @@ export class FlowComponent implements AfterViewInit {
   ref = inject(ChangeDetectorRef);
   displaySvc = inject(DisplayService);
   flowSvc = inject(FlowService);
+  store = inject(Store<LabState>);
 
   @ViewChild('svg') svgElement: ElementRef | undefined;
 
@@ -52,33 +75,58 @@ export class FlowComponent implements AfterViewInit {
   skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link> | undefined;
 
   loading$ = new BehaviorSubject(true);
-  vm$ = combineLatest([this.loading$]).pipe(map(([loading]) => ({ loading })));
+  vm$ = combineLatest({ loading: this.loading$ });
 
   ngAfterViewInit(): void {
-    this.flowSvc.flowData$
+    combineLatest({
+      flowData: this.flowSvc.flowData$,
+      preferences: this.store.select(Preferences.preferencesState),
+    })
       .pipe(untilDestroyed(this))
-      .subscribe((flowData) => this.rebuildChart(flowData));
+      .subscribe(({ flowData, preferences }) =>
+        this.rebuildChart(flowData, preferences),
+      );
   }
 
-  rebuildChart(flowData: FlowData): void {
+  rebuildChart(flowData: FlowData, preferences: PreferencesState): void {
+    this.loading$.next(true);
+
+    if (preferences.flowDiagram === FlowDiagram.Sankey) {
+      this.rebuildSankey(flowData, preferences);
+    } else {
+      this.rebuildBoxLine(flowData);
+    }
+
+    this.loading$.next(false);
+    this.ref.detectChanges();
+  }
+
+  rebuildSankey(flowData: FlowData, preferences: PreferencesState): void {
     if (this.svg) {
-      select(`#${SVG_ID}`).remove();
+      select(`#${SVG_ID} > svg`).remove();
     }
 
     if (!flowData.nodes.length || !flowData.links.length) return;
 
     if (this.svgElement) {
-      let skGraph = this.getLayout(flowData, 800, this.height);
-      const columns = Math.max(
-        ...skGraph.nodes.map((d) => this.orZero(d.depth)),
+      let skGraph = this.getLayout(
+        flowData,
+        preferences.sankeyAlign,
+        800,
+        this.height,
       );
-      const width = (columns + 1) * NODE_WIDTH + columns * NODE_WIDTH * 12;
+      const columns = Math.max(...skGraph.nodes.map((d) => d.depth ?? 0));
+      const width = (columns + 1) * NODE_WIDTH + columns * NODE_WIDTH * 8;
       const height = Math.min(this.height, width * 0.75);
-      skGraph = this.getLayout(flowData, width, height);
+      skGraph = this.getLayout(
+        flowData,
+        preferences.sankeyAlign,
+        width,
+        height,
+      );
 
       this.svg = select(this.svgElement.nativeElement)
         .append('svg')
-        .attr('id', SVG_ID)
         .attr('preserveAspectRatio', 'xMinYMin meet')
         .attr('width', `${width}px`)
         .attr('height', `${height}px`)
@@ -117,7 +165,7 @@ export class FlowComponent implements AfterViewInit {
               )(l),
         )
         .attr('stroke', (l) => l.color)
-        .attr('stroke-width', (l) => Math.max(1, this.orZero(l.width)));
+        .attr('stroke-width', (l) => Math.max(1, l.width ?? 0));
 
       link.append('title').text((l) => l.name);
 
@@ -133,7 +181,6 @@ export class FlowComponent implements AfterViewInit {
 
       // For use inside drag function
       const layout = this.skLayout;
-      const orZero = this.orZero;
 
       // Draw rects for nodes
       this.svg
@@ -142,10 +189,10 @@ export class FlowComponent implements AfterViewInit {
         .selectAll<SVGRectElement, SankeyNode<Node, Link>>('rect')
         .data(skGraph.nodes)
         .join('rect')
-        .attr('x', (d) => this.orZero(d.x0))
-        .attr('y', (d) => this.orZero(d.y0))
-        .attr('height', (d) => this.rngY(d))
-        .attr('width', (d) => this.orZero(d.x1) - this.orZero(d.x0))
+        .attr('x', (d) => d.x0 ?? 0)
+        .attr('y', (d) => d.y0 ?? 0)
+        .attr('height', (d) => this.nodeHeight(d))
+        .attr('width', (d) => (d.x1 ?? 0) - (d.x0 ?? 0))
         .attr('fill', (d) => d.color)
         .on('click', (e, d) => {
           if (e.defaultPrevented) return;
@@ -157,14 +204,14 @@ export class FlowComponent implements AfterViewInit {
             .on('drag', function (this, event, d) {
               const rectY = parseFloat(select(this).attr('y'));
               const rectX = parseFloat(select(this).attr('x'));
-              d.y0 = orZero(d.y0) + event.dy;
-              d.x0 = orZero(d.x0) + event.dx;
-              d.x1 = orZero(d.x1) + event.dx;
-              const trX = orZero(d.x0) - rectX;
-              const trY = orZero(d.y0) - rectY;
+              d.y0 = (d.y0 ?? 0) + event.dy;
+              d.y1 = (d.y1 ?? 0) + event.dy;
+              d.x0 = (d.x0 ?? 0) + event.dx;
+              d.x1 = (d.x1 ?? 0) + event.dx;
+              const trX = (d.x0 ?? 0) - rectX;
+              const trY = (d.y0 ?? 0) - rectY;
               const transform = 'translate(' + trX + ',' + trY + ')';
               select(this).attr('transform', transform);
-              d.trY = trY;
 
               // also move the image
               select(`[id='image-${d.id}']`).attr('transform', transform);
@@ -183,8 +230,8 @@ export class FlowComponent implements AfterViewInit {
                 return sankeyLinkLoop(
                   l.width ?? 0,
                   NODE_WIDTH,
-                  source.y1! + orZero(source.trY),
-                  target.y1! + orZero(target.trY),
+                  source.y1!,
+                  target.y1!,
                 )(l);
               });
             }),
@@ -196,24 +243,24 @@ export class FlowComponent implements AfterViewInit {
       this.svg
         .append('g')
         .selectAll('svg')
-        .data(skGraph.nodes.filter((d) => this.rngY(d) >= 16))
+        .data(skGraph.nodes.filter((d) => this.nodeHeight(d) >= 16))
         .join('g')
         .attr('id', (d) => `image-${d.id}`)
         .append('svg')
         .attr('viewBox', (d) => d.viewBox)
-        .attr('width', (d) => Math.min(30, this.rngY(d) - 2))
-        .attr('height', (d) => Math.min(30, this.rngY(d) - 2))
+        .attr('width', (d) => Math.min(30, this.nodeHeight(d) - 2))
+        .attr('height', (d) => Math.min(30, this.nodeHeight(d) - 2))
         .attr(
           'x',
           (d) =>
-            (this.orZero(d.x1) + this.orZero(d.x0)) / 2 -
-            Math.min(30, this.rngY(d) - 2) / 2,
+            ((d.x1 ?? 0) + (d.x0 ?? 0)) / 2 -
+            Math.min(30, this.nodeHeight(d) - 2) / 2,
         )
         .attr(
           'y',
           (d) =>
-            (this.orZero(d.y1) + this.orZero(d.y0)) / 2 -
-            Math.min(30, this.rngY(d) - 2) / 2,
+            ((d.y1 ?? 0) + (d.y0 ?? 0)) / 2 -
+            Math.min(30, this.nodeHeight(d) - 2) / 2,
         )
         .style('pointer-events', 'none')
         .append('image')
@@ -221,17 +268,175 @@ export class FlowComponent implements AfterViewInit {
     }
   }
 
+  rebuildBoxLine(flowData: FlowData): void {
+    const nodes = new DataSet<VisNode>();
+
+    nodes.add(
+      flowData.nodes.map((n) => {
+        const el = document.createElement('div');
+        el.classList.add('d-flex', 'flex-column', 'align-items-center');
+        el.innerHTML += `<div>${n.name}</div>`;
+        if (n.recipe) {
+          el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.recipeProcess(
+            n.recipe,
+          )}</div>`;
+          if (n.machines != null && n.machineId != null) {
+            el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.icon(
+              n.machineId,
+              n.machines,
+            )}</div>`;
+          }
+        }
+        const nodeTheme = flowData.theme.node[n.type];
+        return {
+          id: n.id,
+          label: `<b>${n.name}</b>\n${n.text}`,
+          title: el,
+          color: nodeTheme.background,
+          font: {
+            color: nodeTheme.color,
+          },
+        };
+      }),
+    );
+
+    const edges = new DataSet<Edge>();
+    const duplicateMap: Entities<number> = {};
+    edges.add(
+      flowData.links.map((l) => {
+        const id = `${l.source}|${l.target}`;
+        duplicateMap[id] = (duplicateMap[id] ?? 0) + 1;
+
+        return {
+          from: l.source,
+          to: l.target,
+          label: l.text + '\n' + l.name,
+          title: l.text + '\n' + l.name,
+          smooth: flowData.links.some(
+            (a) =>
+              (a.target === l.source && l.target === a.source) ||
+              (a.target === l.target &&
+                a.source === l.source &&
+                a.name !== l.name),
+          )
+            ? {
+                enabled: true,
+                type: 'curvedCW',
+                roundness: duplicateMap[id] * 0.3,
+              }
+            : { enabled: false },
+          selfReference: {
+            size: duplicateMap[id] * 50,
+          },
+          font: {
+            color: flowData.theme.edge,
+          },
+        };
+      }),
+    );
+    const container = document.getElementById('lab-flow-svg');
+    const data: Data = {
+      nodes: nodes,
+      edges: edges,
+    };
+    const options: Options = {
+      height: '800px',
+      edges: {
+        labelHighlightBold: false,
+        font: {
+          size: 16,
+          multi: 'html',
+          strokeColor: 'rgba(0, 0, 0, 0.2)',
+          face: 'segoe ui',
+          align: 'middle',
+        },
+        arrows: 'to',
+        smooth: false,
+        scaling: {
+          label: false,
+        },
+      },
+      nodes: {
+        labelHighlightBold: false,
+        shape: 'box',
+        font: { multi: 'html' },
+        margin: {
+          top: 10,
+          left: 10,
+          right: 10,
+          bottom: 10,
+        },
+        widthConstraint: {
+          minimum: 50,
+          maximum: 250,
+        },
+      },
+      layout: {
+        improvedLayout: false,
+      },
+      physics: {
+        enabled: false,
+      },
+    };
+
+    if (container) {
+      const network = new Network(container, data, options);
+
+      const graph: ElkNode = {
+        id: 'root',
+        children: flowData.nodes.map((n) => ({
+          id: n.id,
+          width: 250,
+          height: 100,
+        })),
+        edges: flowData.links.map((l) => ({
+          id: '',
+          sources: [l.source],
+          targets: [l.target],
+        })),
+        layoutOptions: {
+          'elk.algorithm': 'org.eclipse.elk.layered',
+          'org.eclipse.elk.layered.nodePlacement.favorStraightEdges': 'true',
+          'org.eclipse.elk.spacing.nodeNode': '40',
+        },
+      };
+
+      const elk = this.getElk();
+
+      elk.layout(graph).then((data) => {
+        if (data.children == null) return;
+
+        const children = data.children;
+
+        nodes.forEach((node) => {
+          const item = children.find((c) => c.id === node.id);
+          if (item) {
+            nodes.update({ id: node.id, x: item.x, y: item.y });
+          }
+        });
+
+        network.fit();
+        this.loading$.next(false);
+      });
+    }
+  }
+
+  /** Mockable helper method for tests */
+  getElk(): ElkType {
+    return new ELK();
+  }
+
   getLayout(
     data: FlowData,
+    align: SankeyAlign,
     width: number,
     height: number,
   ): SankeyGraph<Node, Link> {
-    const fn: () => SankeyLayout<SankeyGraph<Node, Link>, Node, Link> = sankey;
-    this.skLayout = fn()
+    this.skLayout = sankey<Node, Link>()
       .nodeId((d) => d.id)
       .nodeWidth(NODE_WIDTH)
       .nodePadding(8)
-      .nodeAlign(sankeyJustify)
+      .nodeAlign(this.getAlign(align))
       .extent([
         [1, 5],
         [width - 1, height - 5],
@@ -247,12 +452,23 @@ export class FlowComponent implements AfterViewInit {
     });
   }
 
-  orZero(n?: number): number {
-    return n ?? 0;
+  getAlign(
+    align: SankeyAlign | undefined,
+  ): (node: SankeyNode<Node, Link>, n: number) => number {
+    switch (align) {
+      case SankeyAlign.Left:
+        return sankeyLeft;
+      case SankeyAlign.Right:
+        return sankeyRight;
+      case SankeyAlign.Center:
+        return sankeyCenter;
+      default:
+        return sankeyJustify;
+    }
   }
 
-  rngY(d: SankeyNode<Node, Link>): number {
-    return this.orZero(d.y1) - this.orZero(d.y0);
+  nodeHeight(d: SankeyNode<Node, Link>): number {
+    return (d.y1 ?? 0) - (d.y0 ?? 0);
   }
 
   setSelected(id: string): void {

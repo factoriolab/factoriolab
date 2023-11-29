@@ -1,6 +1,7 @@
 import {
   ColumnsState,
   Entities,
+  FlowDiagram,
   Game,
   initialColumnsState,
   Language,
@@ -27,6 +28,7 @@ export interface PreferencesState {
   rows: number;
   disablePaginator: boolean;
   paused: boolean;
+  flowDiagram: FlowDiagram;
   linkSize: LinkValue;
   linkText: LinkValue;
   sankeyAlign: SankeyAlign;
@@ -49,6 +51,7 @@ export const initialPreferencesState: PreferencesState = {
   rows: 50,
   disablePaginator: false,
   paused: false,
+  flowDiagram: FlowDiagram.Sankey,
   linkSize: LinkValue.Items,
   linkText: LinkValue.Items,
   sankeyAlign: SankeyAlign.Justify,
@@ -104,6 +107,8 @@ export function preferencesReducer(
       return { ...state, ...{ hideDuplicateIcons: action.payload } };
     case PreferencesActionType.SET_PAUSED:
       return { ...state, ...{ paused: action.payload } };
+    case PreferencesActionType.SET_FLOW_DIAGRAM:
+      return { ...state, ...{ flowDiagram: action.payload } };
     case PreferencesActionType.SET_LINK_SIZE:
       return { ...state, ...{ linkSize: action.payload } };
     case PreferencesActionType.SET_LINK_TEXT:
