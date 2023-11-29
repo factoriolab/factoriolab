@@ -69,6 +69,7 @@
         </div>
         <div *ngIf="editState; else selectState" class="p-inputgroup mb-2">
           <input
+            #nameCtrl="ngModel"
             pInputText
             pAutoFocus
             [autofocus]="true"
@@ -76,8 +77,9 @@
             [placeholder]="'settings.nameSavedState' | translate"
             [pTooltip]="'settings.nameSavedState' | translate"
             tooltipPosition="top"
+            required
+            [(ngModel)]="editValue"
             (keydown.enter)="clickSaveState(vm.data.game)"
-            [formControl]="editCtrl"
           />
           <button
             pButton
@@ -87,7 +89,7 @@
             icon="fa-solid fa-floppy-disk"
             [pTooltip]="'settings.saveState' | translate"
             tooltipPosition="top"
-            [disabled]="!editCtrl.valid"
+            [disabled]="nameCtrl.invalid"
             (click)="clickSaveState(vm.data.game)"
           ></button>
           <button

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockStore } from '@ngrx/store/testing';
@@ -14,14 +14,13 @@ import { initialState } from './state';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
     HttpClientTestingModule,
     RouterTestingModule,
     NoopAnimationsModule,
     TranslateModule.forRoot(),
     AppSharedModule,
   ],
-  exports: [FormsModule, ReactiveFormsModule, TranslateModule, AppSharedModule],
+  exports: [FormsModule, TranslateModule, AppSharedModule],
   providers: [provideMockStore({ initialState })],
 })
 export class TestModule {}

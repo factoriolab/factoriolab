@@ -6,7 +6,6 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -110,7 +109,7 @@ export class SettingsComponent implements OnInit {
   });
 
   state = '';
-  editCtrl = new FormControl('', Validators.required);
+  editValue = '';
   editState: 'create' | 'edit' | null = null;
   editStateMenu: MenuItem[] = [
     {
@@ -201,21 +200,20 @@ export class SettingsComponent implements OnInit {
   }
 
   clickSaveState(game: Game): void {
-    if (!this.editCtrl.value || !this.editState) return;
+    if (!this.editValue || !this.editState) return;
 
-    this.saveState(game, this.editCtrl.value, BrowserUtility.search);
+    this.saveState(game, this.editValue, BrowserUtility.search);
 
     if (this.editState === 'edit' && this.state) {
       this.removeState(game, this.state);
     }
 
     this.editState = null;
-    this.state = this.editCtrl.value;
+    this.state = this.editValue;
   }
 
   openCreateState(): void {
-    this.editCtrl.setValue('');
-    this.editCtrl.markAsPristine();
+    this.editValue = '';
     this.editState = 'create';
   }
 
@@ -229,8 +227,7 @@ export class SettingsComponent implements OnInit {
   }
 
   openEditState(): void {
-    this.editCtrl.setValue(this.state);
-    this.editCtrl.markAsPristine();
+    this.editValue = this.state;
     this.editState = 'edit';
   }
 

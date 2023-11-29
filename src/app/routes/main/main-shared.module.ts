@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { components } from './components';
@@ -8,14 +8,8 @@ import { directives } from './directives';
 import { pipes } from './pipes';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, AppSharedModule],
+  imports: [CommonModule, FormsModule, AppSharedModule],
   declarations: [...components, ...directives, ...pipes],
-  exports: [
-    FormsModule,
-    ReactiveFormsModule,
-    ...components,
-    ...directives,
-    ...pipes,
-  ],
+  exports: [FormsModule, ...components, ...directives, ...pipes],
 })
 export class MainSharedModule {}
