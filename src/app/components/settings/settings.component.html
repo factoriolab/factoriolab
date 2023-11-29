@@ -1106,6 +1106,97 @@
           </div>
         </div>
       </p-accordionTab>
+      <p-accordionTab>
+        <ng-template pTemplate="header">
+          <div
+            class="d-flex align-items-center justify-content-between flex-grow-1"
+          >
+            <div>{{ 'settings.flow' | translate }}</div>
+            <div *ngIf="flowDiagramDropdown.label">
+              {{ flowDiagramDropdown.label | translate }}
+            </div>
+          </div>
+        </ng-template>
+        <div class="p-fluid">
+          <div class="mt-3 pb-3">
+            <span class="p-float-label">
+              <p-dropdown
+                #flowDiagramDropdown
+                labDropdownTranslate
+                inputId="flow-diagram"
+                [tooltip]="'settings.flowDiagramTooltip' | translate"
+                [ngModel]="vm.preferences.flowDiagram"
+                [options]="flowDiagramOptions"
+                (onChange)="setFlowDiagram($event.value)"
+              >
+              </p-dropdown>
+              <label for="flow-diagram">{{
+                'settings.flowDiagram' | translate
+              }}</label>
+            </span>
+          </div>
+          <div
+            *ngIf="vm.preferences.flowDiagram === FlowDiagram.Sankey"
+            class="mt-3 pb-3"
+          >
+            <span class="p-float-label">
+              <p-dropdown
+                labDropdownTranslate
+                inputId="sankey-align"
+                [tooltip]="'settings.sankeyAlignTooltip' | translate"
+                [ngModel]="vm.preferences.sankeyAlign"
+                [options]="sankeyAlignOptions"
+                (onChange)="setSankeyAlign($event.value)"
+              >
+              </p-dropdown>
+              <label for="sankey-align">{{
+                'settings.sankeyAlign' | translate
+              }}</label>
+            </span>
+          </div>
+          <div class="mt-3 pb-3">
+            <span class="p-float-label">
+              <p-dropdown
+                labDropdownTranslate
+                inputId="link-size"
+                [tooltip]="'settings.linkSizeTooltip' | translate"
+                [ngModel]="vm.preferences.linkSize"
+                [options]="vm.linkValueOptions"
+                (onChange)="setLinkSize($event.value)"
+              >
+              </p-dropdown>
+              <label for="link-size">{{
+                'settings.linkSize' | translate
+              }}</label>
+            </span>
+          </div>
+          <div class="mt-3 pb-3">
+            <span class="p-float-label">
+              <p-dropdown
+                labDropdownTranslate
+                inputId="link-text"
+                [tooltip]="'settings.linkTextTooltip' | translate"
+                [ngModel]="vm.preferences.linkText"
+                [options]="vm.linkValueOptions"
+                (onChange)="setLinkText($event.value)"
+              >
+              </p-dropdown>
+              <label for="link-text">{{
+                'settings.linkText' | translate
+              }}</label>
+            </span>
+          </div>
+          <div class="pb-3">
+            <p-checkbox
+              [ngModel]="vm.preferences.flowHideExcluded"
+              [binary]="true"
+              [label]="'settings.flowHideExcluded' | translate"
+              [pTooltip]="'settings.flowHideExcludedTooltip' | translate"
+              (onChange)="setFlowHideExcluded($event.checked)"
+            ></p-checkbox>
+          </div>
+        </div>
+      </p-accordionTab>
       <p-accordionTab
         *ngIf="vm.data.game === Game.Factorio"
         [header]="'settings.bonuses' | translate"

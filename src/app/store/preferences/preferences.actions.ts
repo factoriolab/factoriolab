@@ -32,6 +32,7 @@ export const enum PreferencesActionType {
   SET_LINK_SIZE = '[Preferences] Set Link Size',
   SET_LINK_TEXT = '[Preferences] Set Link Text',
   SET_SANKEY_ALIGN = '[Preferences] Set Sankey Align',
+  SET_FLOW_HIDE_EXCLUDED = '[Preferences] Set Flow Hide Excluded',
 }
 
 export class SaveStateAction implements Action {
@@ -119,6 +120,11 @@ export class SetSankeyAlignAction implements Action {
   constructor(public payload: SankeyAlign) {}
 }
 
+export class SetFlowHideExcluded implements Action {
+  readonly type = PreferencesActionType.SET_FLOW_HIDE_EXCLUDED;
+  constructor(public payload: boolean) {}
+}
+
 export type PreferencesAction =
   | SaveStateAction
   | RemoveStateAction
@@ -136,4 +142,5 @@ export type PreferencesAction =
   | SetFlowDiagramAction
   | SetLinkSizeAction
   | SetLinkTextAction
-  | SetSankeyAlignAction;
+  | SetSankeyAlignAction
+  | SetFlowHideExcluded;

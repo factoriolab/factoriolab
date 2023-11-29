@@ -32,6 +32,7 @@ export interface PreferencesState {
   linkSize: LinkValue;
   linkText: LinkValue;
   sankeyAlign: SankeyAlign;
+  flowHideExcluded: boolean;
 }
 
 export const initialPreferencesState: PreferencesState = {
@@ -55,6 +56,7 @@ export const initialPreferencesState: PreferencesState = {
   linkSize: LinkValue.Items,
   linkText: LinkValue.Items,
   sankeyAlign: SankeyAlign.Justify,
+  flowHideExcluded: true,
 };
 
 export function preferencesReducer(
@@ -115,6 +117,8 @@ export function preferencesReducer(
       return { ...state, ...{ linkText: action.payload } };
     case PreferencesActionType.SET_SANKEY_ALIGN:
       return { ...state, ...{ sankeyAlign: action.payload } };
+    case PreferencesActionType.SET_FLOW_HIDE_EXCLUDED:
+      return { ...state, ...{ flowHideExcluded: action.payload } };
     default:
       return state;
   }

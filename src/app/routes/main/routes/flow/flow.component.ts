@@ -91,6 +91,8 @@ export class FlowComponent implements AfterViewInit {
   rebuildChart(flowData: FlowData, preferences: PreferencesState): void {
     this.loading$.next(true);
 
+    select(`#${SVG_ID} > *`).remove();
+
     if (preferences.flowDiagram === FlowDiagram.Sankey) {
       this.rebuildSankey(flowData, preferences);
     } else {
@@ -102,10 +104,6 @@ export class FlowComponent implements AfterViewInit {
   }
 
   rebuildSankey(flowData: FlowData, preferences: PreferencesState): void {
-    if (this.svg) {
-      select(`#${SVG_ID} > svg`).remove();
-    }
-
     if (!flowData.nodes.length || !flowData.links.length) return;
 
     if (this.svgElement) {
@@ -287,21 +285,25 @@ export class FlowComponent implements AfterViewInit {
             )}</div>`;
           }
         }
-        const nodeTheme = flowData.theme.node[n.type];
         return {
           id: n.id,
           label: `<b>${n.name}</b>\n${n.text}`,
           title: el,
-          color: nodeTheme.background,
+          color: n.color,
           font: {
-            color: nodeTheme.color,
+            color: this.foreColor(n.color),
           },
+          chosen: { node: () => this.setSelected(n.stepId), label: false },
         };
       }),
     );
 
     const edges = new DataSet<Edge>();
     const duplicateMap: Entities<number> = {};
+    const textColor = getComputedStyle(window.document.body).getPropertyValue(
+      '--text-color',
+    );
+
     edges.add(
       flowData.links.map((l) => {
         const id = `${l.source}|${l.target}`;
@@ -328,8 +330,9 @@ export class FlowComponent implements AfterViewInit {
           selfReference: {
             size: duplicateMap[id] * 50,
           },
+          value: l.value,
           font: {
-            color: flowData.theme.edge,
+            color: textColor,
           },
         };
       }),
@@ -424,6 +427,16 @@ export class FlowComponent implements AfterViewInit {
   /** Mockable helper method for tests */
   getElk(): ElkType {
     return new ELK();
+  }
+
+  foreColor(color: string): string {
+    const rgb = parseInt(color.substring(1), 16);
+    const r = (rgb >> 16) & 0xff;
+    const g = (rgb >> 8) & 0xff;
+    const b = (rgb >> 0) & 0xff;
+    const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+    const value = luma <= 125;
+    return value ? '#fff' : '#000';
   }
 
   getLayout(

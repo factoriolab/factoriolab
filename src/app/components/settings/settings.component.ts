@@ -19,6 +19,8 @@ import {
   DisplayRate,
   displayRateOptions,
   Entities,
+  FlowDiagram,
+  flowDiagramOptions,
   FuelType,
   Game,
   gameInfo,
@@ -32,6 +34,7 @@ import {
   ItemId,
   Language,
   languageOptions,
+  LinkValue,
   MachineSettings,
   MaximizeType,
   maximizeTypeOptions,
@@ -40,6 +43,8 @@ import {
   Preset,
   ResearchSpeed,
   researchSpeedOptions,
+  SankeyAlign,
+  sankeyAlignOptions,
   Theme,
   themeOptions,
 } from '~/models';
@@ -89,6 +94,7 @@ export class SettingsComponent implements OnInit {
     options: this.store.select(Settings.getOptions),
     modOptions: this.store.select(Settings.getModOptions),
     presetOptions: this.store.select(Settings.getPresetOptions),
+    linkValueOptions: this.store.select(Settings.getLinkValueOptions),
     beltSpeedTxt: this.store.select(Settings.getBeltSpeedTxt),
     dispRateInfo: this.store.select(Settings.getDisplayRateInfo),
     researchedTechnologyIds: this.store.select(
@@ -138,11 +144,14 @@ export class SettingsComponent implements OnInit {
   powerUnitOptions = powerUnitOptions;
   researchSpeedOptions = researchSpeedOptions;
   themeOptions = themeOptions;
+  flowDiagramOptions = flowDiagramOptions;
+  sankeyAlignOptions = sankeyAlignOptions;
   maximizeTypeOptions = maximizeTypeOptions;
 
   FuelType = FuelType;
   Game = Game;
   ItemId = ItemId;
+  FlowDiagram = FlowDiagram;
   BrowserUtility = BrowserUtility;
 
   ngOnInit(): void {
@@ -472,5 +481,25 @@ export class SettingsComponent implements OnInit {
 
   setDisablePaginator(value: boolean): void {
     this.store.dispatch(new Preferences.SetDisablePaginatorAction(value));
+  }
+
+  setFlowDiagram(value: FlowDiagram): void {
+    this.store.dispatch(new Preferences.SetFlowDiagramAction(value));
+  }
+
+  setSankeyAlign(value: SankeyAlign): void {
+    this.store.dispatch(new Preferences.SetSankeyAlignAction(value));
+  }
+
+  setLinkSize(value: LinkValue): void {
+    this.store.dispatch(new Preferences.SetLinkSizeAction(value));
+  }
+
+  setLinkText(value: LinkValue): void {
+    this.store.dispatch(new Preferences.SetLinkTextAction(value));
+  }
+
+  setFlowHideExcluded(value: boolean): void {
+    this.store.dispatch(new Preferences.SetFlowHideExcluded(value));
   }
 }
