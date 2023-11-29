@@ -62,7 +62,7 @@
     "rxjs": "~7.8.0",
     "tslib": "^2.6.2",
     "vis-data": "^7.1.6",
-    "vis-network": "^9.1.8",
+    "vis-network": "^9.1.9",
     "zone.js": "~0.13.1"
   },
   "devDependencies": {
