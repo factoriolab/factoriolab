@@ -29,7 +29,7 @@ describe('FlowService', () => {
               Mocks.RecipesStateRationalInitial[RecipeId.CrudeOil],
             machines: Rational.one,
             parents: {
-              [RecipeId.AdvancedOilProcessing]: Rational.one,
+              '1': Rational.one,
               '': Rational.one,
             },
             outputs: { [ItemId.CrudeOil]: Rational.from([1, 2]) },
@@ -75,8 +75,8 @@ describe('FlowService', () => {
         Mocks.Dataset,
       );
 
-      expect(result.nodes.length).toEqual(6);
-      expect(result.links.length).toEqual(4);
+      expect(result.nodes.length).toEqual(5);
+      expect(result.links.length).toEqual(3);
     });
   });
 });

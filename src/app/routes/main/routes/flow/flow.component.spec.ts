@@ -22,7 +22,7 @@ describe('FlowComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('rebuildChart', () => {
+  describe('rebuildBoxLine', () => {
     it('should build the chart from flow data', () => {
       const promise = Promise.resolve({
         children: [{ id: 'a', x: 1, y: 2 }],
@@ -30,7 +30,7 @@ describe('FlowComponent', () => {
       spyOn(component, 'getElk').and.returnValue({
         layout: () => promise,
       } as any);
-      component.rebuildChart(Mocks.Flow, Mocks.PreferencesState);
+      component.rebuildBoxLine(Mocks.Flow);
       expect(component.getElk).toHaveBeenCalled();
     });
 
@@ -41,7 +41,7 @@ describe('FlowComponent', () => {
       spyOn(component, 'getElk').and.returnValue({
         layout: () => promise,
       } as any);
-      component.rebuildChart(Mocks.Flow, Mocks.PreferencesState);
+      component.rebuildBoxLine(Mocks.Flow);
       expect(component.getElk).toHaveBeenCalled();
     });
   });

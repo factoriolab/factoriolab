@@ -90,7 +90,7 @@ export class FlowService {
 
         if (step.parents) {
           for (const stepId of Object.keys(step.parents)) {
-            if (stepId === '') continue;
+            if (stepId === '') continue; // Ignore outputs
 
             flow.links.push({
               source: id,

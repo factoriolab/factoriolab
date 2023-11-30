@@ -22,7 +22,7 @@ import { initialState } from './state';
     AppSharedModule,
     MainSharedModule,
   ],
-  exports: [FormsModule, TranslateModule, AppSharedModule],
+  exports: [FormsModule, TranslateModule, AppSharedModule, MainSharedModule],
   providers: [provideMockStore({ initialState })],
 })
 export class TestModule {}

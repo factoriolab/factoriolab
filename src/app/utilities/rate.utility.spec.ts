@@ -613,7 +613,7 @@ describe('RateUtility', () => {
       expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
         {
           ['2']: [steps[0]],
-          ['']: [steps[4], steps[2], steps[3], steps[1]],
+          ['']: [steps[1], steps[2], steps[3], steps[4]],
         },
         '',
         [],
