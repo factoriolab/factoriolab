@@ -46,7 +46,11 @@ describe('find', () => {
 });
 
 describe('sankey', () => {
-  const fn = sankey();
+  let fn = sankey();
+
+  beforeEach(() => {
+    fn = sankey();
+  });
 
   it('should create', () => {
     expect(fn).toBeTruthy();
