@@ -66,7 +66,7 @@ describe('FlowComponent', () => {
     it('should build the sankey', () => {
       component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
       const gElements = document.getElementsByTagName('g');
-      expect(gElements.length).toEqual(8);
+      expect(gElements.length).toEqual(10);
     });
 
     it('should handle drag and drop', () => {
@@ -74,7 +74,7 @@ describe('FlowComponent', () => {
       TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
       TestUtility.assert(component.svg != null);
       expect(component.svg.select('rect').attr('transform')).toBeTruthy();
-      expect(component.svg.select('#image-a').attr('transform')).toBeTruthy();
+      expect(component.svg.select('#image-0').attr('transform')).toBeTruthy();
     });
 
     it('should handle zoom', () => {
@@ -104,7 +104,7 @@ describe('FlowComponent', () => {
   describe('rebuildBoxLine', () => {
     it('should build the chart from flow data', () => {
       const promise = Promise.resolve({
-        children: [{ id: 'a', x: 1, y: 2 }],
+        children: [{ id: '0', x: 1, y: 2 }],
       } as any);
       spyOn(component, 'getElk').and.returnValue({
         layout: () => promise,

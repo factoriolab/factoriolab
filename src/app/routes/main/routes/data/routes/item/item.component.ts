@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { orEmpty } from '~/helpers';
+import { orString } from '~/helpers';
 import { Game } from '~/models';
 import { Items, LabState, Machines, Settings } from '~/store';
 import { DataRouteService } from '../../data-route.service';
@@ -46,7 +46,7 @@ export class ItemComponent extends DetailComponent {
         id,
         obj: data.itemEntities[id],
         category:
-          data.categoryEntities[orEmpty(data.itemEntities[id]?.category)],
+          data.categoryEntities[orString(data.itemEntities[id]?.category)],
         breadcrumb: [parent, { label: data.itemEntities[id]?.name }],
         producedByRecipeIds: data.recipeIds.filter(
           (r) => data.recipeEntities[r]?.out[id],

@@ -284,49 +284,49 @@ export const MatrixResultSolved: M.MatrixResult = {
   resultType: M.SimplexResultType.Solved,
   time: 20,
 };
-export const Flow: M.FlowData = {
-  nodes: [
-    {
-      name: 'a-name',
-      text: 'a-text',
-      color: 'black',
-      id: 'a',
-      stepId: '0',
-      viewBox: '',
-      href: '',
-    },
-    {
-      name: 'b-name',
-      text: 'b-text',
-      color: 'black',
-      id: 'b',
-      recipe: Data.recipes[0],
-      machines: '1',
-      machineId: 'machineId',
-      stepId: '1',
-      viewBox: '',
-      href: '',
-    },
-  ],
-  links: [
-    {
-      name: 'a-b',
-      text: 'a-b-text',
-      color: 'black',
-      source: 'a',
-      target: 'b',
-      value: 1,
-    },
-    {
-      name: 'b-b',
-      text: 'b-b-text',
-      color: 'black',
-      source: 'b',
-      target: 'b',
-      value: 1,
-    },
-  ],
+
+const node = (i: number, override?: Partial<M.Node>): M.Node => {
+  const id = i.toString();
+  let result = {
+    name: id,
+    text: id,
+    color: 'black',
+    id,
+    stepId: id,
+    viewBox: '',
+    href: '',
+  };
+
+  if (override) {
+    result = { ...result, ...override };
+  }
+
+  return result;
 };
+
+const link = (source: number, target: number): M.Link => {
+  const s = source.toString();
+  const t = target.toString();
+  const name = `${s}-${t}`;
+  return {
+    name,
+    text: name,
+    color: 'black',
+    source: s,
+    target: t,
+    value: 1,
+  };
+};
+
+export const getFlow = (): M.FlowData => ({
+  nodes: [
+    node(0),
+    node(1),
+    node(2, { machines: '1', machineId: 'machineId', recipe: Data.recipes[0] }),
+  ],
+  links: [link(0, 2), link(1, 2), link(2, 2)],
+});
+export const Flow = getFlow();
 export const SimplexModifiers = {
   costInput: M.Rational.from(1000000),
   costExcluded: M.Rational.zero,

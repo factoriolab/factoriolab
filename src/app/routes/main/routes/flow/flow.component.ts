@@ -25,7 +25,7 @@ import {
 } from 'vis-network/esnext';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { orEmpty, orZero } from '~/helpers';
+import { orString, orZero } from '~/helpers';
 import {
   Entities,
   FlowData,
@@ -292,7 +292,7 @@ export class FlowComponent implements AfterViewInit {
       )
       .style('pointer-events', 'none')
       .append('image')
-      .attr('href', (d) => orEmpty(d.href));
+      .attr('href', (d) => orString(d.href));
 
     this.svg = svg;
   }
@@ -337,12 +337,9 @@ export class FlowComponent implements AfterViewInit {
         if (data.children == null) return;
 
         const children = data.children;
-
         nodes.forEach((node) => {
           const item = children.find((c) => c.id === node.id);
-          if (item) {
-            nodes.update({ id: node.id, x: item.x, y: item.y });
-          }
+          if (item) nodes.update({ id: node.id, x: item.x, y: item.y });
         });
 
         network.fit();
@@ -432,7 +429,6 @@ export class FlowComponent implements AfterViewInit {
     this.skLayout = sankey<Node, Link>()
       .nodeId((d) => d.id)
       .nodeWidth(NODE_WIDTH)
-      .nodePadding(8)
       .nodeAlign(this.getAlign(align))
       .extent([
         [1, 5],

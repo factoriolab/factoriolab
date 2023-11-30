@@ -66,12 +66,11 @@ function bumpSankeyLoopX(
   bottom1: number,
 ): (context: CanvasRenderingContext2D | Path) => BumpSankeyLoop {
   return (context: CanvasRenderingContext2D | Path) =>
-    new BumpSankeyLoop(context, true, width, padding, bottom0, bottom1);
+    new BumpSankeyLoop(context, width, padding, bottom0, bottom1);
 }
 
 export class BumpSankeyLoop {
   _context: CanvasRenderingContext2D | Path;
-  _x: boolean;
   _width: number;
   _padding: number;
   _bottom0: number;
@@ -83,14 +82,12 @@ export class BumpSankeyLoop {
 
   constructor(
     context: CanvasRenderingContext2D | Path,
-    x: boolean,
     width: number,
     padding: number,
     bottom0: number,
     bottom1: number,
   ) {
     this._context = context;
-    this._x = x;
     this._width = width;
     this._padding = padding;
     this._bottom0 = bottom0;
@@ -136,33 +133,17 @@ export class BumpSankeyLoop {
         const radius0 = Math.max(minRadius, (bottom - this._y0!) * 0.75);
         const radius1 = Math.max(minRadius, (bottom - y!) * 0.75);
 
-        if (this._x) {
-          this._context.bezierCurveTo(
-            this._x0! + radius0,
-            this._y0!,
-            this._x0! + radius0,
-            bottom,
-            this._x0!,
-            bottom,
-          );
-          this._context.lineTo(x, bottom);
-          this._context.bezierCurveTo(
-            x - radius1,
-            bottom,
-            x - radius1,
-            y,
-            x,
-            y,
-          );
-        } else
-          this._context.bezierCurveTo(
-            this._x0! - 100,
-            (this._y0 = (this._y0! + y) / 2) - 100,
-            x + 100,
-            this._y0 - 100,
-            x,
-            y,
-          );
+        this._context.bezierCurveTo(
+          this._x0! + radius0,
+          this._y0!,
+          this._x0! + radius0,
+          bottom,
+          this._x0!,
+          bottom,
+        );
+        this._context.lineTo(x, bottom);
+        this._context.bezierCurveTo(x - radius1, bottom, x - radius1, y, x, y);
+
         break;
       }
     }

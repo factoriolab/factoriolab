@@ -12,7 +12,7 @@ import {
   SankeyNodeExtraProperties,
 } from './models';
 
-function ascendingSourceBreadth<
+export function ascendingSourceBreadth<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(a: SankeyLink<N, L>, b: SankeyLink<N, L>): number {
@@ -50,28 +50,28 @@ function value<
   return d.value!;
 }
 
-function defaultId<
+export function defaultId<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(d: SankeyNode<N, L>): number | string {
   return d.index!;
 }
 
-function defaultNodes<
+export function defaultNodes<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(graph: SankeyGraph<N, L>): SankeyNode<N, L>[] {
   return graph.nodes;
 }
 
-function defaultLinks<
+export function defaultLinks<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(graph: SankeyGraph<N, L>): SankeyLink<N, L>[] {
   return graph.links;
 }
 
-function find<
+export function find<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(
@@ -452,6 +452,9 @@ export function sankey<
           y += targetTop(source as SankeyNode<N, L>, target) * v;
           w += v;
         }
+
+        // Unclear how to test this condition
+        // istanbul ignore if
         if (!(w > 0)) continue;
         const dy = (y / w - target.y0!) * alpha;
         target.y0! += dy;

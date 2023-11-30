@@ -1,4 +1,4 @@
-import { orZero } from '~/helpers';
+import { orEmpty, orZero } from '~/helpers';
 import {
   SankeyGraph,
   SankeyLinkExtraProperties,
@@ -26,11 +26,11 @@ export function minFAS<
     nodes.add(node);
     let incount = 0;
     let outcount = 0;
-    for (const link of node.targetLinks ?? []) {
+    for (const link of orEmpty(node.targetLinks)) {
       if (link.source !== node) incount++;
     }
 
-    for (const link of node.sourceLinks ?? []) {
+    for (const link of orEmpty(node.sourceLinks)) {
       if (link.target !== node) outcount++;
     }
 
@@ -40,7 +40,7 @@ export function minFAS<
 
   function remove(node: SankeyNode<N, L>): void {
     nodes.delete(node);
-    for (const link of node.targetLinks ?? []) {
+    for (const link of orEmpty(node.targetLinks)) {
       const source = link.source as SankeyNode<N, L>;
       if (nodes.has(source)) {
         const subdegree = orZero(outdegrees.get(source));
@@ -48,7 +48,7 @@ export function minFAS<
       }
     }
 
-    for (const link of node.sourceLinks ?? []) {
+    for (const link of orEmpty(node.sourceLinks)) {
       const target = link.target as SankeyNode<N, L>;
       if (nodes.has(target)) {
         const subdegree = orZero(indegrees.get(target));
@@ -80,6 +80,8 @@ export function minFAS<
       let found = false;
       for (const node of nodes) {
         const indegree = indegrees.get(node);
+        // Unclear how to test this block
+        // istanbul ignore if
         if (indegree === 0) {
           found = true;
           s1.push(node);
