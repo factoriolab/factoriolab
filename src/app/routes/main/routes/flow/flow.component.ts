@@ -92,10 +92,12 @@ export class FlowComponent implements AfterViewInit {
 
     select(`#${SVG_ID} > *`).remove();
 
-    if (preferences.flowDiagram === FlowDiagram.Sankey) {
-      this.rebuildSankey(flowData, preferences);
-    } else {
-      this.rebuildBoxLine(flowData);
+    if (flowData.nodes.length && flowData.links.length) {
+      if (preferences.flowDiagram === FlowDiagram.Sankey) {
+        this.rebuildSankey(flowData, preferences);
+      } else {
+        this.rebuildBoxLine(flowData);
+      }
     }
 
     this.loading$.next(false);

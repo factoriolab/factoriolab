@@ -273,6 +273,11 @@ export const PreferencesState: Preferences.PreferencesState = {
   showTechLabels: false,
   hideDuplicateIcons: false,
   paused: false,
+  flowDiagram: M.FlowDiagram.Sankey,
+  linkSize: M.LinkValue.Items,
+  linkText: M.LinkValue.Items,
+  sankeyAlign: M.SankeyAlign.Justify,
+  flowHideExcluded: true,
 };
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
@@ -280,36 +285,45 @@ export const MatrixResultSolved: M.MatrixResult = {
   time: 20,
 };
 export const Flow: M.FlowData = {
-  theme: M.themeMap[M.Theme.Light],
   nodes: [
     {
       name: 'a-name',
       text: 'a-text',
+      color: 'black',
       id: 'a',
-      type: M.NodeType.Recipe,
+      stepId: '0',
+      viewBox: '',
+      href: '',
     },
     {
       name: 'b-name',
       text: 'b-text',
+      color: 'black',
       id: 'b',
-      type: M.NodeType.Recipe,
       recipe: Data.recipes[0],
       machines: '1',
       machineId: 'machineId',
+      stepId: '1',
+      viewBox: '',
+      href: '',
     },
   ],
   links: [
     {
       name: 'a-b',
       text: 'a-b-text',
+      color: 'black',
       source: 'a',
       target: 'b',
+      value: 1,
     },
     {
       name: 'b-b',
       text: 'b-b-text',
+      color: 'black',
       source: 'b',
       target: 'b',
+      value: 1,
     },
   ],
 };

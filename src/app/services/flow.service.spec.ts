@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
-import { Rational, Theme, themeMap } from '~/models';
+import { Rational } from '~/models';
 import { FlowService } from './flow.service';
 
 describe('FlowService', () => {
@@ -69,10 +69,10 @@ describe('FlowService', () => {
               Mocks.RecipesStateRationalInitial[RecipeId.IronPlate],
           },
         ],
-        Mocks.Dataset,
         '/m',
-        Mocks.PreferencesState.columns,
-        themeMap[Theme.Light],
+        Mocks.ItemsStateInitial,
+        Mocks.PreferencesState,
+        Mocks.Dataset,
       );
 
       expect(result.nodes.length).toEqual(6);

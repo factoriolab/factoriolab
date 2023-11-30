@@ -30,7 +30,7 @@ describe('FlowComponent', () => {
       spyOn(component, 'getElk').and.returnValue({
         layout: () => promise,
       } as any);
-      component.rebuildChart(Mocks.Flow);
+      component.rebuildChart(Mocks.Flow, Mocks.PreferencesState);
       expect(component.getElk).toHaveBeenCalled();
     });
 
@@ -41,7 +41,7 @@ describe('FlowComponent', () => {
       spyOn(component, 'getElk').and.returnValue({
         layout: () => promise,
       } as any);
-      component.rebuildChart(Mocks.Flow);
+      component.rebuildChart(Mocks.Flow, Mocks.PreferencesState);
       expect(component.getElk).toHaveBeenCalled();
     });
   });

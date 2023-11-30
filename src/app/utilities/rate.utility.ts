@@ -366,6 +366,8 @@ export class RateUtility {
       }
     }
 
+    if (!nodes.length || !links.length) return;
+
     const result = sankey<SimpleNode, SimpleLink>().nodeId((d) => d.id)({
       nodes,
       links,
