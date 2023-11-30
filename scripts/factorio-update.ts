@@ -3,6 +3,7 @@ import fs from 'fs';
 
 import { Game } from '~/models';
 import { data } from '../src/data';
+import { logTime } from './helpers';
 
 /**
  * This script is intended to update a specific Factorio mod set or all sets
@@ -14,35 +15,12 @@ const CURRENT_FACTORIO_MODS = data.mods
   .filter((m) => m.game === Game.Factorio && !OLD_FACTORIO_MODS.has(m.id))
   .map((m) => m.id);
 
-function formatTime(milliseconds: number): string {
-  const seconds = milliseconds / 1000;
-  const duration = [
-    Math.floor(seconds / 60 / 60),
-    Math.floor((seconds / 60) % 60),
-    Math.floor(seconds % 60),
-  ]
-    .join(':')
-    .replace(/\b(\d)\b/g, '0$1');
-  return `\x1b[33m${duration}\x1b[0m`;
-}
-
 // Load mods from arguments
 let mods = process.argv.slice(2);
 
 // Fallback to update all mods
 if (mods.length === 0) {
   mods = CURRENT_FACTORIO_MODS;
-}
-
-const start = Date.now();
-let temp = Date.now();
-function logTime(msg: string): void {
-  const now = Date.now();
-  const stepTime = now - temp;
-  const allTime = now - start;
-  temp = now;
-
-  console.log(formatTime(allTime), formatTime(stepTime), msg);
 }
 
 const logsPath = `./scripts/logs`;
@@ -123,11 +101,10 @@ async function updateMod(mod: string): Promise<void> {
 
 /** Run all scripts required to update an array of Factorio mod sets */
 async function updateMods(mods: string[]): Promise<void> {
-  for (let i = 0; i < mods.length; i++) {
-    const mod = mods[i];
+  mods.forEach(async (mod, i) => {
     await updateMod(mod);
     logTime(`Updated mod '${mod}' (${i + 1} of ${mods.length})`);
-  }
+  });
 }
 
 logTime(

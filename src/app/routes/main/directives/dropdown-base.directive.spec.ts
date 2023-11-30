@@ -6,7 +6,7 @@ import { TestModule } from 'src/tests';
 
 @Component({
   template: `<p-dropdown
-      labDropdownBasee
+      labDropdownBase
       [options]="options"
       [ngModel]="value"
       (onChange)="onChange($event)"

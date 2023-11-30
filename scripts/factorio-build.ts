@@ -1,7 +1,9 @@
+import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
+import { orString } from '~/helpers';
 import {
   Category,
   Entities,
@@ -1714,7 +1716,7 @@ async function processMod(): Promise<void> {
     }
 
     // Third, sort by prototype order field
-    return (a.order ?? '').localeCompare(b.order ?? '');
+    return orString(a.order).localeCompare(orString(b.order));
   });
 
   const labs = Object.keys(machines.lab);
@@ -1821,13 +1823,24 @@ async function processMod(): Promise<void> {
       const modIconsPath = `${modPath}/icons.webp`;
       await sharp(result.image).webp().toFile(modIconsPath);
 
-      modData.icons = Object.keys(result.coordinates).map((file) => {
-        const coords = result.coordinates[file];
-        return {
-          id: iconFiles[file],
-          position: `${-coords.x}px ${-coords.y}px`,
-        };
-      });
+      modData.icons = await Promise.all(
+        Object.keys(result.coordinates).map(async (file) => {
+          const coords = result.coordinates[file];
+          const color = await getAverageColor(result.image, {
+            mode: 'precision',
+            top: coords.y,
+            left: coords.x,
+            width: 64,
+            height: 64,
+          });
+
+          return {
+            id: iconFiles[file],
+            position: `${-coords.x}px ${-coords.y}px`,
+            color: color.hex,
+          };
+        }),
+      );
 
       logTime('Writing data');
       writeData();

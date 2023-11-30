@@ -26,14 +26,6 @@ describe('PickerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should watch for search changes', () => {
-      spyOn(component, 'inputSearch');
-      component.searchCtrl.setValue('search');
-      expect(component.inputSearch).toHaveBeenCalled();
-    });
-  });
-
   describe('clickOpen', () => {
     it('should open the items dialog', () => {
       component.clickOpen(
@@ -149,13 +141,15 @@ describe('PickerComponent', () => {
     });
 
     it('should skip if no search is specified', () => {
-      component.inputSearch(null);
+      component.search = '';
+      component.inputSearch();
       expect(component.categoryIds).toEqual(Mocks.RawDataset.categoryIds);
       expect(component.categoryRows).toEqual(Mocks.RawDataset.categoryItemRows);
     });
 
     it('should search items', () => {
-      component.inputSearch('petrol');
+      component.search = 'petrol';
+      component.inputSearch();
       expect(component.categoryIds.length).toEqual(1);
       expect(component.categoryRows[CategoryId.Fluids]).toEqual([
         [ItemId.PetroleumGas],

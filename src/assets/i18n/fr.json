@@ -188,7 +188,7 @@
     "selectDisplayRate": "Séléctionner la cadence affiché"
   },
   "picker": {},
-  "list": {
+  "steps": {
     "openColumnSettings": "Ouvrir les paramètres de colonnes",
     "tree": "Arbre",
     "items": "Articles",

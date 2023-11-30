@@ -1,4 +1,12 @@
-import { Game, Language, PowerUnit, Theme } from '~/models';
+import {
+  FlowDiagram,
+  Game,
+  Language,
+  LinkValue,
+  PowerUnit,
+  SankeyAlign,
+  Theme,
+} from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
@@ -157,6 +165,56 @@ describe('Preferences Reducer', () => {
         new Actions.SetPausedAction(true),
       );
       expect(result.paused).toEqual(true);
+    });
+  });
+
+  describe('SET_FLOW_DIAGRAM', () => {
+    it('should set the flow diagram', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetFlowDiagramAction(FlowDiagram.BoxLine),
+      );
+      expect(result.flowDiagram).toEqual(FlowDiagram.BoxLine);
+    });
+  });
+
+  describe('SET_LINK_SIZE', () => {
+    it('should set the link size', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetLinkSizeAction(LinkValue.Percent),
+      );
+      expect(result.linkSize).toEqual(LinkValue.Percent);
+    });
+  });
+
+  describe('SET_LINK_TEXT', () => {
+    it('should set the link text', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetLinkTextAction(LinkValue.Percent),
+      );
+      expect(result.linkText).toEqual(LinkValue.Percent);
+    });
+  });
+
+  describe('SET_SANKEY_ALIGN', () => {
+    it('should set the sankey align', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetSankeyAlignAction(SankeyAlign.Left),
+      );
+      expect(result.sankeyAlign).toEqual(SankeyAlign.Left);
+    });
+  });
+
+  describe('SET_FLOW_HIDE_EXCLUDED', () => {
+    it('should set flow hide excluded state', () => {
+      const result = preferencesReducer(
+        undefined,
+        new Actions.SetFlowHideExcludedAction(false),
+      );
+      expect(result.flowHideExcluded).toEqual(false);
     });
   });
 

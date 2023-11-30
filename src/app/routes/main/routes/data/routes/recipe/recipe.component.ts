@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
+import { orString } from '~/helpers';
 import { Dataset, Game, RecipeSettings } from '~/models';
 import { LabState, Recipes } from '~/store';
 import { DataRouteService } from '../../data-route.service';
@@ -32,7 +33,8 @@ export class RecipeComponent extends DetailComponent {
       id,
       obj: data.recipeEntities[id],
       recipeR: data.recipeR[id],
-      category: data.categoryEntities[data.recipeEntities[id]?.category ?? ''],
+      category:
+        data.categoryEntities[orString(data.recipeEntities[id]?.category)],
       breadcrumb: [parent, { label: data.recipeEntities[id]?.name }],
       ingredientIds: Object.keys(data.recipeEntities[id]?.in ?? {}),
       catalystIds: Object.keys(data.recipeEntities[id]?.catalyst ?? {}),

@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { ItemId, TestModule } from 'src/tests';
 import { Rational } from '~/models';
 import { MachineRatePipe } from './machine-rate.pipe';
+import { RatePipe } from './rate.pipe';
 
 describe('MachineRatePipe', () => {
   let pipe: MachineRatePipe;
@@ -30,12 +31,9 @@ describe('MachineRatePipe', () => {
     });
 
     it('should transform values using rate pipe', () => {
-      spyOn(pipe['ratePipe'], 'transform');
+      spyOn(RatePipe, 'transform');
       pipe.transform(Rational.one, null, ItemId.AssemblingMachine1);
-      expect(pipe['ratePipe'].transform).toHaveBeenCalledWith(
-        Rational.one,
-        null,
-      );
+      expect(RatePipe.transform).toHaveBeenCalledWith(Rational.one, null);
     });
   });
 });

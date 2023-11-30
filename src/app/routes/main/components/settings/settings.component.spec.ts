@@ -120,7 +120,7 @@ describe('SettingsComponent', () => {
     it('should emit to create the new saved state', () => {
       spyOn(component, 'saveState');
       spyOn(component, 'removeState');
-      component.editCtrl.setValue(id);
+      component.editValue = id;
       component.editState = 'create';
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
       component.clickSaveState(Game.Factorio);
@@ -136,7 +136,7 @@ describe('SettingsComponent', () => {
     it('should emit to edit the saved state', () => {
       spyOn(component, 'saveState');
       spyOn(component, 'removeState');
-      component.editCtrl.setValue(id);
+      component.editValue = id;
       component.editState = 'edit';
       component.state = id;
       spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
@@ -152,10 +152,10 @@ describe('SettingsComponent', () => {
 
     it('should skip if invalid or not editing', () => {
       spyOn(component, 'saveState');
-      component.editCtrl.setValue('');
+      component.editValue = '';
       component.editState = 'create';
       component.clickSaveState(Game.Factorio);
-      component.editCtrl.setValue('id');
+      component.editValue = 'id';
       component.editState = null;
       component.clickSaveState(Game.Factorio);
       expect(component.saveState).not.toHaveBeenCalled();
@@ -164,12 +164,9 @@ describe('SettingsComponent', () => {
 
   describe('openCreateState', () => {
     it('should start the create state from the menu', () => {
-      spyOn(component.editCtrl, 'setValue');
-      spyOn(component.editCtrl, 'markAsPristine');
       component.state = id;
       component.editStateMenu[0].command!({});
-      expect(component.editCtrl.setValue).toHaveBeenCalledWith('');
-      expect(component.editCtrl.markAsPristine).toHaveBeenCalled();
+      expect(component.editValue).toEqual('');
       expect(component.editState).toEqual('create');
     });
   });
@@ -191,12 +188,9 @@ describe('SettingsComponent', () => {
 
   describe('openEditState', () => {
     it('should start the edit state from the menu', () => {
-      spyOn(component.editCtrl, 'setValue');
-      spyOn(component.editCtrl, 'markAsPristine');
       component.state = id;
       component.editStateMenu[2].command!({});
-      expect(component.editCtrl.setValue).toHaveBeenCalledWith(id);
-      expect(component.editCtrl.markAsPristine).toHaveBeenCalled();
+      expect(component.editValue).toEqual(id);
       expect(component.editState).toEqual('edit');
     });
   });
@@ -384,5 +378,10 @@ describe('SettingsComponent', () => {
       Preferences.SetHideDuplicateIconsAction,
     );
     dispatch.val('setDisablePaginator', Preferences.SetDisablePaginatorAction);
+    dispatch.val('setFlowDiagram', Preferences.SetFlowDiagramAction);
+    dispatch.val('setSankeyAlign', Preferences.SetSankeyAlignAction);
+    dispatch.val('setLinkSize', Preferences.SetLinkSizeAction);
+    dispatch.val('setLinkText', Preferences.SetLinkTextAction);
+    dispatch.val('setFlowHideExcluded', Preferences.SetFlowHideExcludedAction);
   });
 });

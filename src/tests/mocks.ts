@@ -273,46 +273,60 @@ export const PreferencesState: Preferences.PreferencesState = {
   showTechLabels: false,
   hideDuplicateIcons: false,
   paused: false,
+  flowDiagram: M.FlowDiagram.Sankey,
+  linkSize: M.LinkValue.Items,
+  linkText: M.LinkValue.Items,
+  sankeyAlign: M.SankeyAlign.Justify,
+  flowHideExcluded: true,
 };
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
   resultType: M.SimplexResultType.Solved,
   time: 20,
 };
-export const Flow: M.FlowData = {
-  theme: M.themeMap[M.Theme.Light],
-  nodes: [
-    {
-      name: 'a-name',
-      text: 'a-text',
-      id: 'a',
-      type: M.NodeType.Recipe,
-    },
-    {
-      name: 'b-name',
-      text: 'b-text',
-      id: 'b',
-      type: M.NodeType.Recipe,
-      recipe: Data.recipes[0],
-      machines: '1',
-      machineId: 'machineId',
-    },
-  ],
-  links: [
-    {
-      name: 'a-b',
-      text: 'a-b-text',
-      source: 'a',
-      target: 'b',
-    },
-    {
-      name: 'b-b',
-      text: 'b-b-text',
-      source: 'b',
-      target: 'b',
-    },
-  ],
+
+const node = (i: number, override?: Partial<M.Node>): M.Node => {
+  const id = i.toString();
+  let result = {
+    name: id,
+    text: id,
+    color: 'black',
+    id,
+    stepId: id,
+    viewBox: '',
+    href: '',
+  };
+
+  if (override) {
+    result = { ...result, ...override };
+  }
+
+  return result;
 };
+
+const link = (source: number, target: number): M.Link => {
+  const s = source.toString();
+  const t = target.toString();
+  const name = `${s}-${t}`;
+  return {
+    name,
+    text: name,
+    color: 'black',
+    source: s,
+    target: t,
+    value: 1,
+  };
+};
+
+export const getFlow = (): M.FlowData => ({
+  nodes: [
+    node(0),
+    node(1),
+    node(2, { machines: '1', machineId: 'machineId', recipe: Data.recipes[0] }),
+  ],
+  links: [link(0, 2), link(1, 2), link(2, 2)],
+});
+export const Flow = getFlow();
 export const SimplexModifiers = {
   costInput: M.Rational.from(1000000),
   costExcluded: M.Rational.zero,
@@ -326,6 +340,61 @@ export const AdjustmentData = {
   data: RawDataset,
 };
 export const DisplayRateInfo = M.displayRateInfo[M.DisplayRate.PerMinute];
+
+export const LightOilSteps: M.Step[] = [
+  {
+    id: '0',
+    itemId: ItemId.LightOil,
+    items: M.Rational.from(60),
+    output: M.Rational.from(60),
+    machines: M.Rational.from([1, 51]),
+    recipeId: RecipeId.HeavyOilCracking,
+    parents: {
+      '': M.Rational.one,
+    },
+    outputs: { [ItemId.LightOil]: M.Rational.from([5, 17]) },
+  },
+  {
+    id: '3',
+    itemId: ItemId.HeavyOil,
+    items: M.Rational.from([400, 17]),
+    machines: M.Rational.from([4, 51]),
+    recipeId: RecipeId.AdvancedOilProcessing,
+    parents: { '0': M.Rational.one },
+    outputs: {
+      [ItemId.HeavyOil]: M.Rational.one,
+      [ItemId.LightOil]: M.Rational.from([12, 17]),
+      [ItemId.PetroleumGas]: M.Rational.one,
+    },
+  },
+  {
+    id: '2',
+    itemId: ItemId.CrudeOil,
+    items: M.Rational.from([1600, 17]),
+    machines: M.Rational.from([8, 51]),
+    recipeId: RecipeId.CrudeOil,
+    parents: { '3': M.Rational.one },
+    outputs: { [ItemId.CrudeOil]: M.Rational.one },
+  },
+  {
+    id: '4',
+    itemId: ItemId.PetroleumGas,
+    items: M.Rational.from([880, 17]),
+    surplus: M.Rational.from([880, 17]),
+  },
+  {
+    id: '1',
+    itemId: ItemId.Water,
+    items: M.Rational.from([1100, 17]),
+    machines: M.Rational.from([11, 12240]),
+    recipeId: RecipeId.Water,
+    outputs: { [ItemId.Water]: M.Rational.one },
+    parents: {
+      '0': M.Rational.from([3, 11]),
+      '1': M.Rational.from([8, 11]),
+    },
+  },
+];
 
 @Component({ standalone: true, template: '' })
 export class MockComponent {}

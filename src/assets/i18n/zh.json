@@ -281,7 +281,7 @@
     "errorNoLimits": "No <b>Limit</b> objectives have been added. Add <b>Limit</b> objectives to restrict the <b>Maximize</b> objective.",
     "errorSimplexInfo": "<i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>"
   },
-  "list": {
+  "steps": {
     "openColumnSettings": "打开列设置",
     "checkedUndoTooltip": "取消所有勾选",
     "itemsUndoTooltip": "取消所有对物品的隐藏",

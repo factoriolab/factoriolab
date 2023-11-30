@@ -4,6 +4,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Message } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
+import { PickerComponent } from '~/components/picker/picker.component';
 import {
   Dataset,
   DisplayRate,
@@ -30,7 +31,6 @@ import {
   Settings,
 } from '~/store';
 import { RateUtility } from '~/utilities';
-import { PickerComponent } from '../picker/picker.component';
 
 @Component({
   selector: 'lab-objectives',

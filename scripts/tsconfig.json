@@ -4,6 +4,7 @@
     "module": "CommonJS"
   },
   "files": [
+    "calculate-color.ts",
     "factorio-api.models.ts",
     "factorio-api.ts",
     "factorio-build.models.ts",

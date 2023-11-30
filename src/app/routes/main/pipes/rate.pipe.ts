@@ -4,7 +4,7 @@ import { Rational } from '~/models';
 
 @Pipe({ name: 'rate' })
 export class RatePipe implements PipeTransform {
-  transform(value: Rational, precision: number | null): string {
+  static transform(value: Rational, precision: number | null): string {
     if (precision == null) return value.toFraction();
 
     if (precision === -2) {
@@ -36,5 +36,9 @@ export class RatePipe implements PipeTransform {
     }
 
     return result;
+  }
+
+  transform(value: Rational, precision: number | null): string {
+    return RatePipe.transform(value, precision);
   }
 }

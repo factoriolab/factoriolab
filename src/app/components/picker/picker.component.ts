@@ -6,12 +6,9 @@ import {
   EventEmitter,
   inject,
   Input,
-  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
 import { combineLatest } from 'rxjs';
@@ -20,14 +17,13 @@ import { Category, Entities, RawDataset } from '~/models';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 
-@UntilDestroy()
 @Component({
   selector: 'lab-picker',
   templateUrl: './picker.component.html',
   styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PickerComponent implements OnInit {
+export class PickerComponent {
   ref = inject(ChangeDetectorRef);
   filterSvc = inject(FilterService);
   store = inject(Store<LabState>);
@@ -42,8 +38,8 @@ export class PickerComponent implements OnInit {
 
   vm$ = combineLatest({ data: this.store.select(Recipes.getAdjustedDataset) });
 
-  searchCtrl = new FormControl('');
-  selectAllCtrl = new FormControl(false);
+  search = '';
+  allSelected = false;
 
   visible = false;
   type: 'item' | 'recipe' = 'item';
@@ -58,12 +54,6 @@ export class PickerComponent implements OnInit {
   allCategoryIds: string[] = [];
   allCategoryRows: Entities<string[][]> = {};
   activeIndex = 0;
-
-  ngOnInit(): void {
-    this.searchCtrl.valueChanges
-      .pipe(untilDestroyed(this))
-      .subscribe((s) => this.inputSearch(s));
-  }
 
   clickOpen(
     data: RawDataset,
@@ -80,7 +70,7 @@ export class PickerComponent implements OnInit {
       this.isMultiselect = false;
       this.selection = selection;
     }
-    this.searchCtrl.setValue('');
+    this.search = '';
     this.categoryEntities = data.categoryEntities;
     if (type === 'item') {
       this.categoryRows = {};
@@ -103,7 +93,7 @@ export class PickerComponent implements OnInit {
       );
 
       if (Array.isArray(selection)) {
-        this.selectAllCtrl.setValue(selection.length === 0);
+        this.allSelected = selection.length === 0;
       } else if (selection != null) {
         const index = data.categoryIds.indexOf(
           data.itemEntities[selection].category,
@@ -131,7 +121,7 @@ export class PickerComponent implements OnInit {
       );
 
       if (Array.isArray(selection)) {
-        this.selectAllCtrl.setValue(selection.length === 0);
+        this.allSelected = selection.length === 0;
         this.default =
           data.defaults != null ? [...data.defaults.excludedRecipeIds] : [];
       } else if (selection) {
@@ -170,7 +160,7 @@ export class PickerComponent implements OnInit {
       } else {
         this.selection.splice(index, 1);
       }
-      this.selectAllCtrl.setValue(this.selection.length === 0);
+      this.allSelected = this.selection.length === 0;
     } else {
       this.selectId.emit(id);
       this.visible = false;
@@ -183,8 +173,8 @@ export class PickerComponent implements OnInit {
     }
   }
 
-  inputSearch(search: string | null): void {
-    if (!search) {
+  inputSearch(): void {
+    if (!this.search) {
       this.categoryIds = this.allCategoryIds;
       this.categoryRows = this.allCategoryRows;
       return;
@@ -194,7 +184,7 @@ export class PickerComponent implements OnInit {
     const filteredItems: SelectItem[] = this.filterSvc.filter(
       this.allSelectItems,
       ['label'],
-      search,
+      this.search,
       'contains',
     );
 
