@@ -99,7 +99,7 @@
     "karma-jasmine-html-reporter": "^2.1.0",
     "ngrx-store-freeze": "~0.2.4",
     "prettier": "^3.0.2",
-    "sharp": "0.31.3",
+    "sharp": "0.32.6",
     "spritesmith": "^3.4.1",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
