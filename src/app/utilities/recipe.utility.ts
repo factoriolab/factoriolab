@@ -1,6 +1,6 @@
 import { SelectItem } from 'primeng/api';
 
-import { fnPropsNotNullish } from '~/helpers';
+import { fnPropsNotNullish, orZero } from '~/helpers';
 import {
   Beacon,
   BeaconRational,
@@ -641,7 +641,7 @@ export class RecipeUtility {
         objective.machineModuleIds = this.defaultModules(
           objective.machineModuleOptions,
           def.moduleRankIds ?? [],
-          machine.modules ?? 0,
+          orZero(machine.modules),
         );
       }
 

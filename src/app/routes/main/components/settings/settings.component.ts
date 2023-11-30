@@ -12,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
+import { orEmpty } from '~/helpers';
 import {
   Dataset,
   Defaults,
@@ -158,10 +159,9 @@ export class SettingsComponent implements OnInit {
       .select(Settings.getGameStates)
       .pipe(first())
       .subscribe((states) => {
-        this.state =
-          Object.keys(states).find(
-            (s) => states[s] === BrowserUtility.search,
-          ) ?? '';
+        this.state = orEmpty(
+          Object.keys(states).find((s) => states[s] === BrowserUtility.search),
+        );
       });
   }
 

@@ -3,6 +3,7 @@ import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
+import { orEmpty } from '~/helpers';
 import {
   Category,
   Entities,
@@ -1715,7 +1716,7 @@ async function processMod(): Promise<void> {
     }
 
     // Third, sort by prototype order field
-    return (a.order ?? '').localeCompare(b.order ?? '');
+    return orEmpty(a.order).localeCompare(orEmpty(b.order));
   });
 
   const labs = Object.keys(machines.lab);

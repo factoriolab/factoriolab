@@ -1,5 +1,6 @@
 import { min } from 'd3-array';
 
+import { orZero } from '~/helpers';
 import {
   SankeyLink,
   SankeyLinkExtraProperties,
@@ -24,7 +25,7 @@ export function sankeyLeft<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(node: SankeyNode<N, L>): number {
-  return node.depth ?? 0;
+  return orZero(node.depth);
 }
 
 /**
@@ -38,7 +39,7 @@ export function sankeyRight<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(node: SankeyNode<N, L>, n: number): number {
-  return n - 1 - (node.height ?? 0);
+  return n - 1 - orZero(node.height);
 }
 
 /**
@@ -53,7 +54,7 @@ export function sankeyJustify<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(node: SankeyNode<N, L>, n: number): number {
-  return node.sourceLinks?.length ? node.depth ?? 0 : n - 1;
+  return node.sourceLinks?.length ? orZero(node.depth) : n - 1;
 }
 
 /**
@@ -67,9 +68,9 @@ export function sankeyCenter<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(node: SankeyNode<N, L>): number {
-  return node.targetLinks!.length
-    ? node.depth ?? 0
-    : node.sourceLinks!.length
-    ? min(node.sourceLinks!, targetDepth)! - 1
+  return node.targetLinks?.length
+    ? orZero(node.depth)
+    : node.sourceLinks?.length
+    ? min(node.sourceLinks, targetDepth)! - 1
     : 0;
 }

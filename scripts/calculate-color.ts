@@ -18,8 +18,8 @@ async function updateMods(mods: string[]): Promise<void> {
     modData.icons = await Promise.all(
       modData.icons.map(async (icon) => {
         const coords = icon.position.match(/-?(\d+)px -?(\d+)px/);
-        const left = Number(coords?.[1]) ?? 0;
-        const top = Number(coords?.[2]) ?? 0;
+        const left = Number(coords?.[1]);
+        const top = Number(coords?.[2]);
         const color = await getAverageColor(image, {
           mode: 'precision',
           top,

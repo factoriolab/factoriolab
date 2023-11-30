@@ -1,19 +1,30 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { select } from 'd3';
 
-import { Mocks, TestModule } from 'src/tests';
+import { Mocks, TestModule, TestUtility } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
 import {
+  FlowDiagram,
   SankeyAlign,
   sankeyCenter,
   sankeyJustify,
   sankeyLeft,
   sankeyRight,
 } from '~/models';
-import { FlowComponent } from './flow.component';
+import { FlowComponent, SVG_ID } from './flow.component';
 
 describe('FlowComponent', () => {
   let component: FlowComponent;
   let fixture: ComponentFixture<FlowComponent>;
+
+  function checkTransform(value: string, x: number, y: number): void {
+    const match = /translate\((.+?),(.+?)\)/g.exec(value);
+    TestUtility.assert(match != null);
+    const xRound = Math.round(Number(match[1]));
+    const yRound = Math.round(Number(match[2]));
+    expect(xRound).toEqual(x);
+    expect(yRound).toEqual(y);
+  }
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -27,6 +38,80 @@ describe('FlowComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('rebuildChart', () => {
+    it('should call to rebuild the sankey', () => {
+      spyOn(component, 'rebuildSankey');
+      component.rebuildChart(Mocks.Flow, Mocks.PreferencesState);
+      expect(component.rebuildSankey).toHaveBeenCalledWith(
+        Mocks.Flow,
+        Mocks.PreferencesState,
+      );
+    });
+
+    it('should call to rebuild the box-line', () => {
+      spyOn(component, 'rebuildBoxLine');
+      component.rebuildChart(Mocks.Flow, {
+        ...Mocks.PreferencesState,
+        ...{ flowDiagram: FlowDiagram.BoxLine },
+      });
+      expect(component.rebuildBoxLine).toHaveBeenCalledWith(Mocks.Flow);
+    });
+  });
+
+  describe('rebuildSankey', () => {
+    beforeEach(() => {
+      select(`#${SVG_ID} > *`).remove();
+    });
+
+    it('should return if the svg container is not found', () => {
+      spyOn(component, 'getLayout');
+      component.svgElement = undefined;
+      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      expect(component.getLayout).not.toHaveBeenCalled();
+    });
+
+    it('should build the sankey', () => {
+      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      const gElements = document.getElementsByTagName('g');
+      expect(gElements.length).toEqual(8);
+    });
+
+    it('should handle drag and drop', () => {
+      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
+      TestUtility.assert(component.svg != null);
+      checkTransform(component.svg.select('rect').attr('transform'), 13, 26);
+      checkTransform(
+        component.svg.select('#image-a').attr('transform'),
+        13,
+        26,
+      );
+    });
+
+    it('should handle zoom', () => {
+      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      TestUtility.zoomSelector(fixture, 'svg', 500);
+      TestUtility.assert(component.svg != null);
+      expect(component.svg.select('g').attr('transform')).toBeTruthy();
+    });
+
+    it('should call setSelected when a rect is clicked', () => {
+      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      spyOn(component.selectedId$, 'next');
+      TestUtility.altClickSelector(fixture, 'rect');
+      expect(component.selectedId$.next).toHaveBeenCalledWith(
+        Mocks.Flow.nodes[0].stepId,
+      );
+    });
+
+    it('should not call setSelected emit when default is prevented', () => {
+      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      spyOn(component.selectedId$, 'next');
+      TestUtility.altClickSelector(fixture, 'rect', 0, true);
+      expect(component.selectedId$.next).not.toHaveBeenCalled();
+    });
   });
 
   describe('rebuildBoxLine', () => {
@@ -50,6 +135,14 @@ describe('FlowComponent', () => {
       } as any);
       component.rebuildBoxLine(Mocks.Flow);
       expect(component.getElk).toHaveBeenCalled();
+    });
+  });
+
+  describe('getVisNodeClickFn', () => {
+    it('should next selectedId$ subject', () => {
+      spyOn(component.selectedId$, 'next');
+      component.getVisNodeClickFn('id')();
+      expect(component.selectedId$.next).toHaveBeenCalledWith('id');
     });
   });
 

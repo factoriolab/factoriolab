@@ -1,3 +1,4 @@
+import { orZero } from '~/helpers';
 import {
   SankeyGraph,
   SankeyLinkExtraProperties,
@@ -42,7 +43,7 @@ export function minFAS<
     for (const link of node.targetLinks ?? []) {
       const source = link.source as SankeyNode<N, L>;
       if (nodes.has(source)) {
-        const subdegree = outdegrees.get(source) ?? 0;
+        const subdegree = orZero(outdegrees.get(source));
         outdegrees.set(source, subdegree - 1);
       }
     }
@@ -50,7 +51,7 @@ export function minFAS<
     for (const link of node.sourceLinks ?? []) {
       const target = link.target as SankeyNode<N, L>;
       if (nodes.has(target)) {
-        const subdegree = indegrees.get(target) ?? 0;
+        const subdegree = orZero(indegrees.get(target));
         indegrees.set(target, subdegree - 1);
       }
     }
@@ -94,7 +95,7 @@ export function minFAS<
     let maxDelta = null;
     let maxNode = null;
     for (const node of nodes) {
-      const delta = (outdegrees.get(node) ?? 0) - (indegrees.get(node) ?? 0);
+      const delta = orZero(outdegrees.get(node)) - orZero(indegrees.get(node));
       if (maxDelta === null || delta > maxDelta) {
         maxDelta = delta;
         maxNode = node;

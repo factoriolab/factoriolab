@@ -69,7 +69,7 @@ function bumpSankeyLoopX(
     new BumpSankeyLoop(context, true, width, padding, bottom0, bottom1);
 }
 
-class BumpSankeyLoop {
+export class BumpSankeyLoop {
   _context: CanvasRenderingContext2D | Path;
   _x: boolean;
   _width: number;

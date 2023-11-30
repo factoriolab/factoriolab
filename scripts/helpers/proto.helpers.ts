@@ -1,3 +1,4 @@
+import { orZero } from '~/helpers';
 import {
   Beacon,
   Belt,
@@ -15,7 +16,7 @@ import { getPowerInKw } from './power.helpers';
 export function getBeacon(proto: M.BeaconPrototype): Beacon {
   return {
     effectivity: proto.distribution_effectivity,
-    modules: proto.module_specification.module_slots ?? 0,
+    modules: orZero(proto.module_specification.module_slots),
     range: proto.supply_area_distance,
     type:
       proto.energy_source.type === 'electric' ? EnergyType.Electric : undefined,

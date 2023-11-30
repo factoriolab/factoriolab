@@ -145,13 +145,21 @@ export class TestUtility {
   static mouseEvent(
     type: string,
     element: HTMLElement,
-    posX: number,
-    posY: number,
+    clientX: number,
+    clientY: number,
   ): void {
     const event = new MouseEvent(type, {
       view: window,
-      clientX: posX,
-      clientY: posY,
+      clientX,
+      clientY,
+    });
+    element.dispatchEvent(event);
+  }
+
+  static wheelEvent(type: string, element: HTMLElement, deltaY: number): void {
+    const event = new WheelEvent(type, {
+      view: window,
+      deltaY,
     });
     element.dispatchEvent(event);
   }
@@ -171,6 +179,15 @@ export class TestUtility {
     this.mouseEvent('mousedown', element, centerX, centerY);
     this.mouseEvent('mousemove', element, centerX + xOffset, centerY + yOffset);
     this.mouseEvent('mouseup', element, centerX + xOffset, centerY + yOffset);
+  }
+
+  static zoomSelector<T>(
+    fixture: ComponentFixture<T>,
+    selector: string,
+    deltaY: number,
+  ): void {
+    const element = this.getSelector(fixture, selector);
+    this.wheelEvent('wheel', element, deltaY);
   }
 
   static assert(condition: boolean, msg?: string): asserts condition {
