@@ -378,5 +378,10 @@ describe('SettingsComponent', () => {
       Preferences.SetHideDuplicateIconsAction,
     );
     dispatch.val('setDisablePaginator', Preferences.SetDisablePaginatorAction);
+    dispatch.val('setFlowDiagram', Preferences.SetFlowDiagramAction);
+    dispatch.val('setSankeyAlign', Preferences.SetSankeyAlignAction);
+    dispatch.val('setLinkSize', Preferences.SetLinkSizeAction);
+    dispatch.val('setLinkText', Preferences.SetLinkTextAction);
+    dispatch.val('setFlowHideExcluded', Preferences.SetFlowHideExcludedAction);
   });
 });

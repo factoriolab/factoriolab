@@ -120,7 +120,7 @@ export class SetSankeyAlignAction implements Action {
   constructor(public payload: SankeyAlign) {}
 }
 
-export class SetFlowHideExcluded implements Action {
+export class SetFlowHideExcludedAction implements Action {
   readonly type = PreferencesActionType.SET_FLOW_HIDE_EXCLUDED;
   constructor(public payload: boolean) {}
 }
@@ -143,4 +143,4 @@ export type PreferencesAction =
   | SetLinkSizeAction
   | SetLinkTextAction
   | SetSankeyAlignAction
-  | SetFlowHideExcluded;
+  | SetFlowHideExcludedAction;

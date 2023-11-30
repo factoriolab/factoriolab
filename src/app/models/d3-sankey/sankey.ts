@@ -332,6 +332,11 @@ export function sankey<
         }
       }
 
+      /**
+       * This should be impossible to hit since circular links are ignored in
+       * this computation, but leaving the condition in case minFAS fails
+       */
+      // istanbul ignore next
       if (++x > n) throw new Error('circular link');
       current = next;
       next = new Set();
@@ -353,6 +358,11 @@ export function sankey<
         }
       }
 
+      /**
+       * This should be impossible to hit since circular links are ignored in
+       * this computation, but leaving the condition in case minFAS fails
+       */
+      // istanbul ignore next
       if (++x > n) throw new Error('circular link');
       current = next;
       next = new Set();

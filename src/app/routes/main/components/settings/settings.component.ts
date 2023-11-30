@@ -497,6 +497,6 @@ export class SettingsComponent implements OnInit {
   }
 
   setFlowHideExcluded(value: boolean): void {
-    this.store.dispatch(new Preferences.SetFlowHideExcluded(value));
+    this.store.dispatch(new Preferences.SetFlowHideExcludedAction(value));
   }
 }

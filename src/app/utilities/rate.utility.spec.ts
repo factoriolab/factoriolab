@@ -564,6 +564,28 @@ describe('RateUtility', () => {
     });
   });
 
+  describe('sortBySankey', () => {
+    it('should sort steps based on sankey node depth', () => {
+      const steps = [...Mocks.LightOilSteps];
+      RateUtility.sortBySankey(steps);
+      const ids = steps.map((s) => s.id);
+      expect(ids).toEqual(['0', '3', '4', '2', '1']);
+    });
+
+    it('should handle invalid steps', () => {
+      const steps = [...Mocks.LightOilSteps, { id: 'a' }, { id: 'b' }];
+      RateUtility.sortBySankey(steps);
+      const ids = steps.map((s) => s.id);
+      expect(ids).toEqual(['0', '3', '4', '2', '1', 'a', 'b']);
+    });
+
+    it('should handle empty steps', () => {
+      const steps: Step[] = [];
+      RateUtility.sortBySankey(steps);
+      expect(steps).toEqual([]);
+    });
+  });
+
   describe('calculateHierarchy', () => {
     it('should set up groups by parents', () => {
       spyOn(RateUtility, 'sortRecursive').and.returnValue([]);

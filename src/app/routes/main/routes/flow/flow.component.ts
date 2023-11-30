@@ -51,6 +51,45 @@ import { MainSharedModule } from '../../main-shared.module';
 
 const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
+const VIS_NETWORK_OPTIONS: Options = {
+  height: '800px',
+  edges: {
+    labelHighlightBold: false,
+    font: {
+      size: 16,
+      multi: 'html',
+      strokeColor: 'rgba(0, 0, 0, 0.2)',
+      face: 'segoe ui',
+      align: 'middle',
+    },
+    arrows: 'to',
+    smooth: false,
+    scaling: {
+      label: false,
+    },
+  },
+  nodes: {
+    labelHighlightBold: false,
+    shape: 'box',
+    font: { multi: 'html' },
+    margin: {
+      top: 10,
+      left: 10,
+      right: 10,
+      bottom: 10,
+    },
+    widthConstraint: {
+      minimum: 50,
+      maximum: 250,
+    },
+  },
+  layout: {
+    improvedLayout: false,
+  },
+  physics: {
+    enabled: false,
+  },
+};
 
 @UntilDestroy()
 @Component({
@@ -190,7 +229,7 @@ export class FlowComponent implements AfterViewInit {
         .attr('fill', (d) => d.color)
         .on('click', (e, d) => {
           if (e.defaultPrevented) return;
-          this.setSelected(d.stepId);
+          this.selectedId$.next(d.stepId);
         })
         .call(
           drag<SVGRectElement, SankeyNode<Node, Link>>()
@@ -262,133 +301,29 @@ export class FlowComponent implements AfterViewInit {
     }
   }
 
-  rebuildBoxLine(flowData: FlowData): void {
+  rebuildBoxLine(flow: FlowData): void {
     const nodes = new DataSet<VisNode>();
-
-    nodes.add(
-      flowData.nodes.map((n) => {
-        const el = document.createElement('div');
-        el.classList.add('d-flex', 'flex-column', 'align-items-center');
-        el.innerHTML += `<div>${n.name}</div>`;
-        if (n.recipe) {
-          el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.recipeProcess(
-            n.recipe,
-          )}</div>`;
-          if (n.machines != null && n.machineId != null) {
-            el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.icon(
-              n.machineId,
-              n.machines,
-            )}</div>`;
-          }
-        }
-        return {
-          id: n.id,
-          label: `<b>${n.name}</b>\n${n.text}`,
-          title: el,
-          color: n.color,
-          font: {
-            color: this.foreColor(n.color),
-          },
-          chosen: { node: () => this.setSelected(n.stepId), label: false },
-        };
-      }),
-    );
+    nodes.add(this.getVisNodes(flow));
 
     const edges = new DataSet<Edge>();
-    const duplicateMap: Entities<number> = {};
-    const textColor = getComputedStyle(window.document.body).getPropertyValue(
-      '--text-color',
-    );
+    edges.add(this.getVisEdges(flow));
 
-    edges.add(
-      flowData.links.map((l) => {
-        const id = `${l.source}|${l.target}`;
-        duplicateMap[id] = (duplicateMap[id] ?? 0) + 1;
-
-        return {
-          from: l.source,
-          to: l.target,
-          label: l.text + '\n' + l.name,
-          title: l.text + '\n' + l.name,
-          smooth: flowData.links.some(
-            (a) =>
-              (a.target === l.source && l.target === a.source) ||
-              (a.target === l.target &&
-                a.source === l.source &&
-                a.name !== l.name),
-          )
-            ? {
-                enabled: true,
-                type: 'curvedCW',
-                roundness: duplicateMap[id] * 0.3,
-              }
-            : { enabled: false },
-          selfReference: {
-            size: duplicateMap[id] * 50,
-          },
-          value: l.value,
-          font: {
-            color: textColor,
-          },
-        };
-      }),
-    );
     const container = document.getElementById('lab-flow-svg');
     const data: Data = {
       nodes: nodes,
       edges: edges,
     };
-    const options: Options = {
-      height: '800px',
-      edges: {
-        labelHighlightBold: false,
-        font: {
-          size: 16,
-          multi: 'html',
-          strokeColor: 'rgba(0, 0, 0, 0.2)',
-          face: 'segoe ui',
-          align: 'middle',
-        },
-        arrows: 'to',
-        smooth: false,
-        scaling: {
-          label: false,
-        },
-      },
-      nodes: {
-        labelHighlightBold: false,
-        shape: 'box',
-        font: { multi: 'html' },
-        margin: {
-          top: 10,
-          left: 10,
-          right: 10,
-          bottom: 10,
-        },
-        widthConstraint: {
-          minimum: 50,
-          maximum: 250,
-        },
-      },
-      layout: {
-        improvedLayout: false,
-      },
-      physics: {
-        enabled: false,
-      },
-    };
 
     if (container) {
-      const network = new Network(container, data, options);
-
+      const network = new Network(container, data, VIS_NETWORK_OPTIONS);
       const graph: ElkNode = {
         id: 'root',
-        children: flowData.nodes.map((n) => ({
+        children: flow.nodes.map((n) => ({
           id: n.id,
           width: 250,
           height: 100,
         })),
-        edges: flowData.links.map((l) => ({
+        edges: flow.links.map((l) => ({
           id: '',
           sources: [l.source],
           targets: [l.target],
@@ -420,19 +355,72 @@ export class FlowComponent implements AfterViewInit {
     }
   }
 
-  /** Mockable helper method for tests */
-  getElk(): ElkType {
-    return new ELK();
+  getVisNodes(flow: FlowData): VisNode[] {
+    return flow.nodes.map((n) => {
+      const el = document.createElement('div');
+      el.classList.add('d-flex', 'flex-column', 'align-items-center');
+      el.innerHTML += `<div>${n.name}</div>`;
+      if (n.recipe) {
+        el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.recipeProcess(
+          n.recipe,
+        )}</div>`;
+        if (n.machines != null && n.machineId != null) {
+          el.innerHTML += `<div class="d-flex align-items-center mt-2">${this.displaySvc.icon(
+            n.machineId,
+            n.machines,
+          )}</div>`;
+        }
+      }
+      return {
+        id: n.id,
+        label: `<b>${n.name}</b>\n${n.text}`,
+        title: el,
+        color: n.color,
+        font: {
+          color: this.foreColor(n.color),
+        },
+        chosen: { node: () => this.selectedId$.next(n.stepId), label: false },
+      };
+    });
   }
 
-  foreColor(color: string): string {
-    const rgb = parseInt(color.substring(1), 16);
-    const r = (rgb >> 16) & 0xff;
-    const g = (rgb >> 8) & 0xff;
-    const b = (rgb >> 0) & 0xff;
-    const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-    const value = luma <= 125;
-    return value ? '#fff' : '#000';
+  getVisEdges(flow: FlowData): Edge[] {
+    const duplicateMap: Entities<number> = {};
+    const textColor = getComputedStyle(window.document.body).getPropertyValue(
+      '--text-color',
+    );
+
+    return flow.links.map((l) => {
+      const id = `${l.source}|${l.target}`;
+      duplicateMap[id] = (duplicateMap[id] ?? 0) + 1;
+
+      return {
+        from: l.source,
+        to: l.target,
+        label: l.text + '\n' + l.name,
+        title: l.text + '\n' + l.name,
+        smooth: flow.links.some(
+          (a) =>
+            (a.target === l.source && l.target === a.source) ||
+            (a.target === l.target &&
+              a.source === l.source &&
+              a.name !== l.name),
+        )
+          ? {
+              enabled: true,
+              type: 'curvedCW',
+              roundness: duplicateMap[id] * 0.3,
+            }
+          : false,
+        selfReference: {
+          size: duplicateMap[id] * 50,
+        },
+        value: l.value,
+        font: {
+          color: textColor,
+        },
+      };
+    });
   }
 
   getLayout(
@@ -461,6 +449,21 @@ export class FlowComponent implements AfterViewInit {
     });
   }
 
+  /** Mockable helper method for tests */
+  getElk(): ElkType {
+    return new ELK();
+  }
+
+  foreColor(color: string): string {
+    const rgb = parseInt(color.substring(1), 16);
+    const r = (rgb >> 16) & 0xff;
+    const g = (rgb >> 8) & 0xff;
+    const b = (rgb >> 0) & 0xff;
+    const luma = 0.299 * r + 0.587 * g + 0.114 * b;
+    const value = luma <= 125;
+    return value ? '#fff' : '#000';
+  }
+
   getAlign(
     align: SankeyAlign | undefined,
   ): (node: SankeyNode<Node, Link>, n: number) => number {
@@ -478,9 +481,5 @@ export class FlowComponent implements AfterViewInit {
 
   nodeHeight(d: SankeyNode<Node, Link>): number {
     return (d.y1 ?? 0) - (d.y0 ?? 0);
-  }
-
-  setSelected(id: string): void {
-    this.selectedId$.next(id);
   }
 }

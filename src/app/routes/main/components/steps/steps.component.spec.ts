@@ -70,6 +70,15 @@ describe('StepsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('steps$', () => {
+    it('should handle focused mode', () => {
+      let steps: Step[] | undefined;
+      component.steps$.subscribe((s) => (steps = s));
+      component.focus = true;
+      expect(steps).toEqual([]);
+    });
+  });
+
   describe('ngAfterViewInit', () => {
     it('should scroll to and expand the fragment id', fakeAsync(() => {
       const domEl = { scrollIntoView: (): void => {} };

@@ -341,5 +341,60 @@ export const AdjustmentData = {
 };
 export const DisplayRateInfo = M.displayRateInfo[M.DisplayRate.PerMinute];
 
+export const LightOilSteps: M.Step[] = [
+  {
+    id: '0',
+    itemId: ItemId.LightOil,
+    items: M.Rational.from(60),
+    output: M.Rational.from(60),
+    machines: M.Rational.from([1, 51]),
+    recipeId: RecipeId.HeavyOilCracking,
+    parents: {
+      '': M.Rational.one,
+    },
+    outputs: { [ItemId.LightOil]: M.Rational.from([5, 17]) },
+  },
+  {
+    id: '3',
+    itemId: ItemId.HeavyOil,
+    items: M.Rational.from([400, 17]),
+    machines: M.Rational.from([4, 51]),
+    recipeId: RecipeId.AdvancedOilProcessing,
+    parents: { '0': M.Rational.one },
+    outputs: {
+      [ItemId.HeavyOil]: M.Rational.one,
+      [ItemId.LightOil]: M.Rational.from([12, 17]),
+      [ItemId.PetroleumGas]: M.Rational.one,
+    },
+  },
+  {
+    id: '2',
+    itemId: ItemId.CrudeOil,
+    items: M.Rational.from([1600, 17]),
+    machines: M.Rational.from([8, 51]),
+    recipeId: RecipeId.CrudeOil,
+    parents: { '3': M.Rational.one },
+    outputs: { [ItemId.CrudeOil]: M.Rational.one },
+  },
+  {
+    id: '4',
+    itemId: ItemId.PetroleumGas,
+    items: M.Rational.from([880, 17]),
+    surplus: M.Rational.from([880, 17]),
+  },
+  {
+    id: '1',
+    itemId: ItemId.Water,
+    items: M.Rational.from([1100, 17]),
+    machines: M.Rational.from([11, 12240]),
+    recipeId: RecipeId.Water,
+    outputs: { [ItemId.Water]: M.Rational.one },
+    parents: {
+      '0': M.Rational.from([3, 11]),
+      '1': M.Rational.from([8, 11]),
+    },
+  },
+];
+
 @Component({ standalone: true, template: '' })
 export class MockComponent {}
