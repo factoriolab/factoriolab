@@ -22,6 +22,7 @@ import {
   InserterData,
   ItemId,
   ItemRational,
+  linkValueOptions,
   MachineRational,
   ModuleRational,
   objectiveUnitOptions,
@@ -165,6 +166,10 @@ export const getModOptions = createSelector(
           value: m.id,
         }),
       ),
+);
+
+export const getLinkValueOptions = createSelector(getGame, (game) =>
+  linkValueOptions(game),
 );
 
 export const getColumnsState = createSelector(

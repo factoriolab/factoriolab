@@ -25,7 +25,8 @@
       pInputText
       type="text"
       class="w-100"
-      [formControl]="searchCtrl"
+      [(ngModel)]="search"
+      (input)="inputSearch()"
     />
     <ng-container *ngIf="isMultiselect">
       <span class="p-inputgroup-addon flex-shrink-0">
@@ -33,7 +34,7 @@
           [binary]="true"
           [label]="'picker.includeAll' | translate"
           labelStyleClass="text-nowrap"
-          [formControl]="selectAllCtrl"
+          [(ngModel)]="allSelected"
           (onChange)="selectAll($event.checked)"
         ></p-checkbox>
       </span>

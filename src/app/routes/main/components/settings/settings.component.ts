@@ -6,19 +6,21 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, first, map } from 'rxjs';
 
+import { orString } from '~/helpers';
 import {
   Dataset,
   Defaults,
   DisplayRate,
   displayRateOptions,
   Entities,
+  FlowDiagram,
+  flowDiagramOptions,
   FuelType,
   Game,
   gameInfo,
@@ -32,6 +34,7 @@ import {
   ItemId,
   Language,
   languageOptions,
+  LinkValue,
   MachineSettings,
   MaximizeType,
   maximizeTypeOptions,
@@ -40,6 +43,8 @@ import {
   Preset,
   ResearchSpeed,
   researchSpeedOptions,
+  SankeyAlign,
+  sankeyAlignOptions,
   Theme,
   themeOptions,
 } from '~/models';
@@ -89,6 +94,7 @@ export class SettingsComponent implements OnInit {
     options: this.store.select(Settings.getOptions),
     modOptions: this.store.select(Settings.getModOptions),
     presetOptions: this.store.select(Settings.getPresetOptions),
+    linkValueOptions: this.store.select(Settings.getLinkValueOptions),
     beltSpeedTxt: this.store.select(Settings.getBeltSpeedTxt),
     dispRateInfo: this.store.select(Settings.getDisplayRateInfo),
     researchedTechnologyIds: this.store.select(
@@ -104,7 +110,7 @@ export class SettingsComponent implements OnInit {
   });
 
   state = '';
-  editCtrl = new FormControl('', Validators.required);
+  editValue = '';
   editState: 'create' | 'edit' | null = null;
   editStateMenu: MenuItem[] = [
     {
@@ -138,11 +144,14 @@ export class SettingsComponent implements OnInit {
   powerUnitOptions = powerUnitOptions;
   researchSpeedOptions = researchSpeedOptions;
   themeOptions = themeOptions;
+  flowDiagramOptions = flowDiagramOptions;
+  sankeyAlignOptions = sankeyAlignOptions;
   maximizeTypeOptions = maximizeTypeOptions;
 
   FuelType = FuelType;
   Game = Game;
   ItemId = ItemId;
+  FlowDiagram = FlowDiagram;
   BrowserUtility = BrowserUtility;
 
   ngOnInit(): void {
@@ -150,10 +159,9 @@ export class SettingsComponent implements OnInit {
       .select(Settings.getGameStates)
       .pipe(first())
       .subscribe((states) => {
-        this.state =
-          Object.keys(states).find(
-            (s) => states[s] === BrowserUtility.search,
-          ) ?? '';
+        this.state = orString(
+          Object.keys(states).find((s) => states[s] === BrowserUtility.search),
+        );
       });
   }
 
@@ -192,21 +200,20 @@ export class SettingsComponent implements OnInit {
   }
 
   clickSaveState(game: Game): void {
-    if (!this.editCtrl.value || !this.editState) return;
+    if (!this.editValue || !this.editState) return;
 
-    this.saveState(game, this.editCtrl.value, BrowserUtility.search);
+    this.saveState(game, this.editValue, BrowserUtility.search);
 
     if (this.editState === 'edit' && this.state) {
       this.removeState(game, this.state);
     }
 
     this.editState = null;
-    this.state = this.editCtrl.value;
+    this.state = this.editValue;
   }
 
   openCreateState(): void {
-    this.editCtrl.setValue('');
-    this.editCtrl.markAsPristine();
+    this.editValue = '';
     this.editState = 'create';
   }
 
@@ -220,8 +227,7 @@ export class SettingsComponent implements OnInit {
   }
 
   openEditState(): void {
-    this.editCtrl.setValue(this.state);
-    this.editCtrl.markAsPristine();
+    this.editValue = this.state;
     this.editState = 'edit';
   }
 
@@ -472,5 +478,25 @@ export class SettingsComponent implements OnInit {
 
   setDisablePaginator(value: boolean): void {
     this.store.dispatch(new Preferences.SetDisablePaginatorAction(value));
+  }
+
+  setFlowDiagram(value: FlowDiagram): void {
+    this.store.dispatch(new Preferences.SetFlowDiagramAction(value));
+  }
+
+  setSankeyAlign(value: SankeyAlign): void {
+    this.store.dispatch(new Preferences.SetSankeyAlignAction(value));
+  }
+
+  setLinkSize(value: LinkValue): void {
+    this.store.dispatch(new Preferences.SetLinkSizeAction(value));
+  }
+
+  setLinkText(value: LinkValue): void {
+    this.store.dispatch(new Preferences.SetLinkTextAction(value));
+  }
+
+  setFlowHideExcluded(value: boolean): void {
+    this.store.dispatch(new Preferences.SetFlowHideExcludedAction(value));
   }
 }

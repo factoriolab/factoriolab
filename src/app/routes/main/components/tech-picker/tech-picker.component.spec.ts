@@ -39,7 +39,7 @@ describe('TechPickerComponent', () => {
       let status: Record<UnlockStatus, string[]> | undefined;
       component.status$.subscribe((s) => (status = s));
       component.clickOpen(Mocks.Dataset, Mocks.RawDataset.technologyIds);
-      component.filterCtrl.setValue('optics');
+      component.filter$.next('optics');
       expect(status?.available.length).toEqual(0);
       expect(status?.locked.length).toEqual(0);
       expect(status?.researched.length).toEqual(1);

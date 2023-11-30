@@ -6,11 +6,16 @@ import {
   inject,
   Output,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { FilterService } from 'primeng/api';
-import { combineLatest, map, Observable, ReplaySubject, startWith } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  map,
+  Observable,
+  ReplaySubject,
+} from 'rxjs';
 
 import { Dataset, Game } from '~/models';
 import { ContentService } from '~/services';
@@ -33,15 +38,16 @@ export class TechPickerComponent {
 
   @Output() selectIds = new EventEmitter<string[] | null>();
 
-  filterCtrl = new FormControl('');
-  selectAllCtrl = new FormControl(false);
+  filter = '';
+  filter$ = new BehaviorSubject(this.filter);
+  allSelected = false;
 
   data$ = new ReplaySubject<Dataset>(1);
   selection$ = new ReplaySubject<string[]>(1);
   status$: Observable<Record<UnlockStatus, string[]>> = combineLatest([
     this.selection$,
     this.data$,
-    this.filterCtrl.valueChanges.pipe(startWith('')),
+    this.filter$,
   ]).pipe(
     map(([selection, data, filter]) => {
       let technologyIds = data.technologyIds;
@@ -93,7 +99,7 @@ export class TechPickerComponent {
     this.data$.next(data);
     selection = [...(selection ?? data.technologyIds)];
     this.selection$.next(selection);
-    this.selectAllCtrl.setValue(selection.length === data.technologyIds.length);
+    this.allSelected = selection.length === data.technologyIds.length;
     this.visible = true;
     this.ref.markForCheck();
   }
@@ -146,7 +152,7 @@ game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
     this.addPrerequisites(set, data);
 
     this.selection$.next(Array.from(set));
-    this.selectAllCtrl.setValue(set.size === data.technologyIds.length);
+    this.allSelected = set.size === data.technologyIds.length;
     this.importValue = '';
     this.importVisible = false;
   }
@@ -177,7 +183,7 @@ game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
     }
 
     this.selection$.next(Array.from(set));
-    this.selectAllCtrl.setValue(set.size === data.technologyIds.length);
+    this.allSelected = set.size === data.technologyIds.length;
   }
 
   // Add any technologies whose prerequisites were not previously met

@@ -261,6 +261,17 @@
     "languageTooltip": "Select language",
     "theme": "Theme",
     "themeTooltip": "Select theme",
+    "flow": "Flow",
+    "flowDiagram": "Visualization Type",
+    "flowDiagramTooltip": "Select which type of flow visualization to use",
+    "linkSize": "Link Size",
+    "linkSizeTooltip": "Select which property to use to determine flow link sizes",
+    "linkText": "Link Text",
+    "linkTextTooltip": "Select which property to display as text on flow links",
+    "sankeyAlign": "Sankey Align",
+    "sankeyAlignTooltip": "Select option to determine how sankey nodes are aligned",
+    "flowHideExcluded": "Hide excluded items",
+    "flowHideExcludedTooltip": "If checked, excluded items will also be excluded from the flow diagram",
     "advanced": "Advanced",
     "maximizeType": "Maximize value type",
     "maximizeTypeTooltip": "Select maximize objective value type",
@@ -296,7 +307,7 @@
     "errorNoLimits": "No <b>Limit</b> objectives have been added. Add <b>Limit</b> objectives to restrict the <b>Maximize</b> objective.",
     "errorSimplexInfo": "<i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>"
   },
-  "list": {
+  "steps": {
     "openColumnSettings": "Open column settings",
     "checkedUndoTooltip": "Undo all checkmarks",
     "itemsUndoTooltip": "Undo all excluded items",
@@ -321,7 +332,8 @@
     "inserterCountInfo": "* Inserters are calculated using target/capacity settings and 0.18 experimental data from the <a href=\"https://wiki.factorio.com/Inserters#Inserter_Throughput\" target=\"_blank\">wiki.</a>",
     "includedRecipes": "Included recipes",
     "includedRecipesInfo": "Click recipes to include or exclude them. Excluded recipes will not be used in the solution.",
-    "total": "Total"
+    "total": "Total",
+    "emptyMessage": "Click on a node in the diagram to view details"
   },
   "data": {
     "openDataPage": "Open data page...",

@@ -1,5 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
+import { orZero } from '~/helpers';
 import {
   Entities,
   Rational,
@@ -63,7 +64,7 @@ export const getRecipesState = createSelector(
           s.machineModuleIds = RecipeUtility.defaultModules(
             s.machineModuleOptions,
             def.moduleRankIds ?? [],
-            machine.modules ?? 0,
+            orZero(machine.modules),
           );
         }
 

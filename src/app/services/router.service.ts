@@ -14,7 +14,7 @@ import {
 import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
-import { filterNullish } from '~/helpers';
+import { filterNullish, orString } from '~/helpers';
 import {
   BeaconSettings,
   DisplayRate,
@@ -1226,11 +1226,12 @@ export class RouterService {
           checked: this.parseBool(s[i++]),
         };
 
-        obj.targetId =
+        obj.targetId = orString(
           this.parseNString(
             obj.targetId,
             isRecipeObjective(obj) ? hash.recipes : hash.items,
-          ) ?? '';
+          ),
+        );
       } else {
         obj = {
           id,
@@ -1297,7 +1298,7 @@ export class RouterService {
       let obj: ItemSettings;
 
       if (hash) {
-        id = this.parseNString(s[i++], hash.items) ?? '';
+        id = orString(this.parseNString(s[i++], hash.items));
         obj = {
           excluded: this.parseBool(s[i++]),
           beltId: this.parseNString(s[i++], hash.belts),
@@ -1372,7 +1373,7 @@ export class RouterService {
       let obj: RecipeSettings;
 
       if (hash) {
-        id = this.parseNString(s[i++], hash.recipes) ?? '';
+        id = orString(this.parseNString(s[i++], hash.recipes));
         obj = {
           excluded: this.parseBool(s[i++]),
           machineId: this.parseNString(s[i++], hash.machines),
@@ -1481,7 +1482,7 @@ export class RouterService {
             id = this.parseNString(id, hash.machines);
           }
           if (loadIds && ids != null) {
-            ids.push(id ?? '');
+            ids.push(orString(id));
           }
         }
       } else {
@@ -1505,7 +1506,7 @@ export class RouterService {
 
       this.deleteEmptyKeys(obj);
       if (Object.keys(obj).length) {
-        entities[id ?? ''] = obj;
+        entities[orString(id)] = obj;
       }
     }
     return { ids, entities };
