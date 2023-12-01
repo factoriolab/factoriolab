@@ -58,23 +58,24 @@ export class FlowService {
       links: [],
     };
 
+    const stepItemMap: Entities<Step> = {};
     const stepMap = steps.reduce((e: Entities<Step>, s) => {
+      if (s.itemId) stepItemMap[s.itemId] = s;
       e[s.id] = s;
       return e;
     }, {});
 
     for (const step of steps) {
-      const value = this.stepLinkValue(step, preferences.linkSize);
-      const text =
-        preferences.linkSize === preferences.linkText
-          ? value
-          : this.stepLinkValue(step, preferences.linkText);
-
       if (
         step.itemId &&
         step.items &&
         (!preferences.flowHideExcluded || !itemsState[step.itemId].excluded)
       ) {
+        const value = this.stepLinkValue(step, preferences.linkSize);
+        const text =
+          preferences.linkSize === preferences.linkText
+            ? value
+            : this.stepLinkValue(step, preferences.linkText);
         const item = data.itemEntities[step.itemId];
         const icon = data.iconEntities[item.icon ?? item.id];
         const id = `i|${step.itemId}`;
@@ -201,6 +202,12 @@ export class FlowService {
           for (const itemId of Object.keys(step.outputs).filter(
             (i) => !preferences.flowHideExcluded || !itemsState[i].excluded,
           )) {
+            const itemStep = stepItemMap[itemId];
+            const value = this.stepLinkValue(itemStep, preferences.linkSize);
+            const text =
+              preferences.linkSize === preferences.linkText
+                ? value
+                : this.stepLinkValue(itemStep, preferences.linkText);
             const item = data.itemEntities[itemId];
             const icon = data.iconEntities[item.icon ?? item.id];
             flow.links.push({
