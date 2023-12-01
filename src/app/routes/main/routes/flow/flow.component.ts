@@ -25,15 +25,8 @@ import {
 } from 'vis-network/esnext';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { orString, orZero } from '~/helpers';
 import {
-  Entities,
-  FlowData,
-  FlowDiagram,
-  Link,
-  Node,
   sankey,
-  SankeyAlign,
   sankeyCenter,
   SankeyGraph,
   sankeyJustify,
@@ -44,6 +37,15 @@ import {
   sankeyLinkLoop,
   SankeyNode,
   sankeyRight,
+} from '~/d3-sankey';
+import { orString, orZero } from '~/helpers';
+import {
+  Entities,
+  FlowData,
+  FlowDiagram,
+  Link,
+  Node,
+  SankeyAlign,
 } from '~/models';
 import { DisplayService, FlowService } from '~/services';
 import { LabState, Preferences } from '~/store';
