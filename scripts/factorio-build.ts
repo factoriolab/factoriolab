@@ -232,11 +232,14 @@ async function processMod(): Promise<void> {
   const iconSet = new Set<string>();
   // Record of file path : icon id
   const iconFiles: Record<string, string> = {};
+  const iconColors: Record<string, string> = {};
 
   async function resizeIcon(path: string, iconId: string): Promise<void> {
     const outPath = `${tempIconsPath}/${iconId}.png`;
+    const color = await getAverageColor(path, { mode: 'precision' });
     await sharp(path).resize(64, 64).png().toFile(outPath);
     iconFiles[outPath] = iconId;
+    iconColors[outPath] = color.hex;
   }
 
   async function getIcon(
@@ -692,6 +695,7 @@ async function processMod(): Promise<void> {
       recipeData.result,
       recipeData.result_count,
     );
+
     if (results[2] === 0) {
       modDataReport.noProducts.push(key);
       include = false;
@@ -1241,8 +1245,21 @@ async function processMod(): Promise<void> {
     if (M.isRecipePrototype(proto)) {
       const recipeData = recipeDataMap[proto.name];
       const [recipeIn, recipeInTemp] = recipeIngredientsMap[proto.name];
-      const [recipeOut] = recipeResultsMap[proto.name];
+      const [_recipeOut, , , temps] = recipeResultsMap[proto.name];
       let [, recipeCatalyst] = recipeResultsMap[proto.name];
+
+      // Convert fluid outputs to use correct ids
+      const recipeOut = { ..._recipeOut };
+      for (const outId of Object.keys(recipeOut)) {
+        if (temps[outId] != null) {
+          const temp = temps[outId];
+          const index = Array.from(fluidTemps[outId]).indexOf(temp);
+          if (index !== 0) {
+            recipeOut[`${outId}-${temp}`] = recipeOut[outId];
+            delete recipeOut[outId];
+          }
+        }
+      }
 
       // Check for calculated catalysts
       for (const outId of Object.keys(recipeOut)) {
@@ -1293,7 +1310,7 @@ async function processMod(): Promise<void> {
             return true;
           });
         }
-        const fluidProducts = Object.keys(recipeOut)
+        const fluidProducts = Object.keys(_recipeOut)
           .map((i) => itemMap[i])
           .filter((i) => M.isFluidPrototype(i));
         if (fluidProducts.length > 0) {
@@ -1826,18 +1843,10 @@ async function processMod(): Promise<void> {
       modData.icons = await Promise.all(
         Object.keys(result.coordinates).map(async (file) => {
           const coords = result.coordinates[file];
-          const color = await getAverageColor(result.image, {
-            mode: 'precision',
-            top: coords.y,
-            left: coords.x,
-            width: 64,
-            height: 64,
-          });
-
           return {
             id: iconFiles[file],
             position: `${-coords.x}px ${-coords.y}px`,
-            color: color.hex,
+            color: iconColors[file],
           };
         }),
       );
