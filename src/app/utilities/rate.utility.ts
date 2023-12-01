@@ -1,3 +1,4 @@
+import { sankey } from '~/d3-sankey';
 import { orZero } from '~/helpers';
 import {
   Dataset,
@@ -12,7 +13,6 @@ import {
   Rational,
   RecipeRational,
   RecipeSettingsRational,
-  sankey,
   Step,
   toEntities,
 } from '~/models';
