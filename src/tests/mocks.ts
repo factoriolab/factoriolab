@@ -5,6 +5,7 @@ import mod from 'src/data/1.1/data.json';
 import hash from 'src/data/1.1/hash.json';
 import i18n from 'src/data/1.1/i18n/zh.json';
 import * as M from '~/models';
+import * as S from '~/services';
 import {
   Datasets,
   Items,
@@ -285,8 +286,7 @@ export const MatrixResultSolved: M.MatrixResult = {
   time: 20,
 };
 
-const node = (i: number, override?: Partial<M.Node>): M.Node => {
-  const id = i.toString();
+const node = (id: string, override?: Partial<M.Node>): M.Node => {
   let result = {
     name: id,
     text: id,
@@ -304,27 +304,37 @@ const node = (i: number, override?: Partial<M.Node>): M.Node => {
   return result;
 };
 
-const link = (source: number, target: number): M.Link => {
-  const s = source.toString();
-  const t = target.toString();
-  const name = `${s}-${t}`;
+const link = (source: string, target: string): M.Link => {
+  const name = `${source}-${target}`;
   return {
     name,
     text: name,
     color: 'black',
-    source: s,
-    target: t,
+    source,
+    target,
     value: 1,
   };
 };
 
 export const getFlow = (): M.FlowData => ({
   nodes: [
-    node(0),
-    node(1),
-    node(2, { machines: '1', machineId: 'machineId', recipe: Data.recipes[0] }),
+    node('r|0'),
+    node('r|1'),
+    node('r|2', {
+      machines: '1',
+      machineId: 'machineId',
+      recipe: Data.recipes[0],
+    }),
+    node('o|3'),
+    node('s|4'),
   ],
-  links: [link(0, 2), link(1, 2), link(2, 2)],
+  links: [
+    link('r|0', 'r|2'),
+    link('r|1', 'r|2'),
+    link('r|2', 'r|2'),
+    link('r|2', 'o|3'),
+    link('r|2', 's|4'),
+  ],
 });
 export const Flow = getFlow();
 export const SimplexModifiers = {
@@ -349,6 +359,7 @@ export const LightOilSteps: M.Step[] = [
     output: M.Rational.from(60),
     machines: M.Rational.from([1, 51]),
     recipeId: RecipeId.HeavyOilCracking,
+    recipeSettings: RecipesStateRationalInitial[RecipeId.HeavyOilCracking],
     parents: {
       '': M.Rational.one,
     },
@@ -360,6 +371,7 @@ export const LightOilSteps: M.Step[] = [
     items: M.Rational.from([400, 17]),
     machines: M.Rational.from([4, 51]),
     recipeId: RecipeId.AdvancedOilProcessing,
+    recipeSettings: RecipesStateRationalInitial[RecipeId.AdvancedOilProcessing],
     parents: { '0': M.Rational.one },
     outputs: {
       [ItemId.HeavyOil]: M.Rational.one,
@@ -373,6 +385,7 @@ export const LightOilSteps: M.Step[] = [
     items: M.Rational.from([1600, 17]),
     machines: M.Rational.from([8, 51]),
     recipeId: RecipeId.CrudeOil,
+    recipeSettings: RecipesStateRationalInitial[RecipeId.CrudeOil],
     parents: { '3': M.Rational.one },
     outputs: { [ItemId.CrudeOil]: M.Rational.one },
   },
@@ -388,6 +401,7 @@ export const LightOilSteps: M.Step[] = [
     items: M.Rational.from([1100, 17]),
     machines: M.Rational.from([11, 12240]),
     recipeId: RecipeId.Water,
+    recipeSettings: RecipesStateRationalInitial[RecipeId.Water],
     outputs: { [ItemId.Water]: M.Rational.one },
     parents: {
       '0': M.Rational.from([3, 11]),
@@ -395,6 +409,14 @@ export const LightOilSteps: M.Step[] = [
     },
   },
 ];
+
+export const ThemeValues: S.ThemeValues = {
+  textColor: 'white',
+  successColor: 'black',
+  successBackground: 'green',
+  dangerColor: 'black',
+  dangerBackground: 'red',
+};
 
 @Component({ standalone: true, template: '' })
 export class MockComponent {}
