@@ -59,9 +59,16 @@ export class FlowService {
     };
 
     const stepItemMap: Entities<Step> = {};
+    const stepValue: Entities<Rational> = {};
+    const stepText: Entities<Rational> = {};
     const stepMap = steps.reduce((e: Entities<Step>, s) => {
       if (s.itemId) stepItemMap[s.itemId] = s;
       e[s.id] = s;
+      stepValue[s.id] = this.stepLinkValue(s, preferences.linkSize);
+      stepText[s.id] =
+        preferences.linkText === preferences.linkSize
+          ? stepValue[s.id]
+          : this.stepLinkValue(s, preferences.linkText);
       return e;
     }, {});
 
@@ -71,11 +78,6 @@ export class FlowService {
         step.items &&
         (!preferences.flowHideExcluded || !itemsState[step.itemId].excluded)
       ) {
-        const value = this.stepLinkValue(step, preferences.linkSize);
-        const text =
-          preferences.linkSize === preferences.linkText
-            ? value
-            : this.stepLinkValue(step, preferences.linkText);
         const item = data.itemEntities[step.itemId];
         const icon = data.iconEntities[item.icon ?? item.id];
         const id = `i|${step.itemId}`;
@@ -98,7 +100,7 @@ export class FlowService {
               target: `r|${stepMap[stepId].recipeId}`,
               name: item.name,
               text: this.linkText(
-                text,
+                stepText[step.id],
                 step.parents[stepId],
                 preferences.linkText,
                 preferences.columns,
@@ -106,7 +108,7 @@ export class FlowService {
               ),
               color: icon.color,
               value: this.linkSize(
-                value,
+                stepValue[stepId],
                 step.parents[stepId],
                 preferences.linkSize,
                 item.stack,
@@ -132,7 +134,7 @@ export class FlowService {
             target: surplusId,
             name: item.name,
             text: this.linkText(
-              text,
+              stepText[step.id],
               percent,
               preferences.linkText,
               preferences.columns,
@@ -140,7 +142,7 @@ export class FlowService {
             ),
             color: icon.color,
             value: this.linkSize(
-              value,
+              stepValue[step.id],
               percent,
               preferences.linkSize,
               item.stack,
@@ -165,7 +167,7 @@ export class FlowService {
             target: outputId,
             name: item.name,
             text: this.linkText(
-              text,
+              stepText[step.id],
               percent,
               preferences.linkText,
               preferences.columns,
@@ -173,7 +175,7 @@ export class FlowService {
             ),
             color: icon.color,
             value: this.linkSize(
-              value,
+              stepValue[step.id],
               percent,
               preferences.linkSize,
               item.stack,
@@ -203,11 +205,6 @@ export class FlowService {
             (i) => !preferences.flowHideExcluded || !itemsState[i].excluded,
           )) {
             const itemStep = stepItemMap[itemId];
-            const value = this.stepLinkValue(itemStep, preferences.linkSize);
-            const text =
-              preferences.linkSize === preferences.linkText
-                ? value
-                : this.stepLinkValue(itemStep, preferences.linkText);
             const item = data.itemEntities[itemId];
             const icon = data.iconEntities[item.icon ?? item.id];
             flow.links.push({
@@ -215,7 +212,7 @@ export class FlowService {
               target: `i|${itemId}`,
               name: item.name,
               text: this.linkText(
-                text,
+                stepText[itemStep.id],
                 step.outputs[itemId],
                 preferences.linkText,
                 preferences.columns,
@@ -223,7 +220,7 @@ export class FlowService {
               ),
               color: icon.color,
               value: this.linkSize(
-                value,
+                stepValue[itemStep.id],
                 step.outputs[itemId],
                 preferences.linkSize,
                 item.stack,
