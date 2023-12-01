@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ReplaySubject } from 'rxjs';
 
 import { fnPropsNotNullish } from '~/helpers';
 import { Theme } from '~/models';
@@ -10,6 +11,14 @@ import { BrowserUtility } from '~/utilities';
 const LAB_ICON_STYLE_ID = 'lab-icon-css';
 const LAB_THEME_STYLE_ID = 'lab-theme-css';
 
+export interface ThemeValues {
+  textColor: string;
+  successColor: string;
+  successBackground: string;
+  dangerColor: string;
+  dangerBackground: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -17,6 +26,7 @@ export class ThemeService {
   document = inject(DOCUMENT);
   store = inject(Store<LabState>);
 
+  themeValues$ = new ReplaySubject<ThemeValues>(1);
   head = this.document.getElementsByTagName('head')[0];
 
   initialize(): void {
@@ -119,8 +129,11 @@ export class ThemeService {
             // New style sheet has loaded, update the main themeLink and delete the temporary link
             themeLink.href = href;
             this.head.removeChild(tempLink);
+            this.updateThemeValues();
           };
           this.head.appendChild(tempLink);
+        } else {
+          this.updateThemeValues();
         }
       }
 
@@ -132,6 +145,18 @@ export class ThemeService {
         }
       }
     });
+  }
+
+  updateThemeValues(): void {
+    const style = getComputedStyle(this.document.body);
+    const values: ThemeValues = {
+      textColor: style.getPropertyValue('--text-color'),
+      successColor: style.getPropertyValue('--success-color'),
+      successBackground: style.getPropertyValue('--success-background'),
+      dangerColor: style.getPropertyValue('--danger-color'),
+      dangerBackground: style.getPropertyValue('--danger-background'),
+    };
+    this.themeValues$.next(values);
   }
 
   themePath(theme: Theme): string {

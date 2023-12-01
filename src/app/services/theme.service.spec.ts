@@ -58,6 +58,18 @@ describe('ThemeService', () => {
     expect(themeLink.href).toEqual('theme-dark.css');
   });
 
+  it('should update theme values on initial pass', () => {
+    spyOn(service, 'updateThemeValues');
+    const themeLink = { href: 'theme-black.css' };
+    spyOn(service['document'], 'getElementById').and.returnValue(
+      themeLink as any,
+    );
+    spyOn(service, 'themePath').and.returnValue('theme-black.css');
+    mockStore.overrideSelector(Preferences.getTheme, Theme.Black);
+    mockStore.refreshState();
+    expect(service.updateThemeValues).toHaveBeenCalled();
+  });
+
   describe('themePath', () => {
     it('should handle various themes', () => {
       expect(service.themePath(Theme.Light)).toEqual('theme-light.css');

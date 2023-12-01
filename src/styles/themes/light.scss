@@ -62,8 +62,12 @@ $primary-darker: color.adjust($primary-color, $lightness: -10%);
   --highlight-bg: #{$primary-light};
   --highlight-text-color: #495057;
   --focus-ring: 0 0 0 0.2rem #{$shadow-color};
-  color-scheme: light;
   --shadow-color: rgba(255, 255, 255, 0.3);
+  --success-color: #fff;
+  --success-background: #689f38;
+  --danger-color: #fff;
+  --danger-background: #d32f2f;
+  color-scheme: light;
 }
 
 .p-editor-container .p-editor-toolbar {

@@ -10,11 +10,13 @@ import {
   sankeyRight,
 } from '~/d3-sankey';
 import { FlowDiagram, SankeyAlign } from '~/models';
+import { ThemeService } from '~/services';
 import { FlowComponent, SVG_ID } from './flow.component';
 
 describe('FlowComponent', () => {
   let component: FlowComponent;
   let fixture: ComponentFixture<FlowComponent>;
+  let themeSvc: ThemeService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -22,6 +24,8 @@ describe('FlowComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(FlowComponent);
+    themeSvc = TestBed.inject(ThemeService);
+    themeSvc.themeValues$.next(Mocks.ThemeValues);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -33,7 +37,11 @@ describe('FlowComponent', () => {
   describe('rebuildChart', () => {
     it('should call to rebuild the sankey', () => {
       spyOn(component, 'rebuildSankey');
-      component.rebuildChart(Mocks.Flow, Mocks.PreferencesState);
+      component.rebuildChart(
+        Mocks.Flow,
+        Mocks.ThemeValues,
+        Mocks.PreferencesState,
+      );
       expect(component.rebuildSankey).toHaveBeenCalledWith(
         Mocks.Flow,
         Mocks.PreferencesState,
@@ -42,11 +50,14 @@ describe('FlowComponent', () => {
 
     it('should call to rebuild the box-line', () => {
       spyOn(component, 'rebuildBoxLine');
-      component.rebuildChart(Mocks.Flow, {
+      component.rebuildChart(Mocks.Flow, Mocks.ThemeValues, {
         ...Mocks.PreferencesState,
         ...{ flowDiagram: FlowDiagram.BoxLine },
       });
-      expect(component.rebuildBoxLine).toHaveBeenCalledWith(Mocks.Flow);
+      expect(component.rebuildBoxLine).toHaveBeenCalledWith(
+        Mocks.Flow,
+        Mocks.ThemeValues,
+      );
     });
   });
 
@@ -65,7 +76,7 @@ describe('FlowComponent', () => {
     it('should build the sankey', () => {
       component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
       const gElements = document.getElementsByTagName('g');
-      expect(gElements.length).toEqual(10);
+      expect(gElements.length).toEqual(14);
     });
 
     it('should handle drag and drop', () => {
@@ -73,7 +84,9 @@ describe('FlowComponent', () => {
       TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
       TestUtility.assert(component.svg != null);
       expect(component.svg.select('rect').attr('transform')).toBeTruthy();
-      expect(component.svg.select('#image-0').attr('transform')).toBeTruthy();
+      expect(
+        component.svg.select('#image-r\\|0').attr('transform'),
+      ).toBeTruthy();
     });
 
     it('should handle zoom', () => {
@@ -103,12 +116,12 @@ describe('FlowComponent', () => {
   describe('rebuildBoxLine', () => {
     it('should build the chart from flow data', () => {
       const promise = Promise.resolve({
-        children: [{ id: '0', x: 1, y: 2 }],
+        children: [{ id: 'r|0', x: 1, y: 2 }],
       } as any);
       spyOn(component, 'getElk').and.returnValue({
         layout: () => promise,
       } as any);
-      component.rebuildBoxLine(Mocks.Flow);
+      component.rebuildBoxLine(Mocks.Flow, Mocks.ThemeValues);
       expect(component.getElk).toHaveBeenCalled();
     });
 
@@ -119,7 +132,7 @@ describe('FlowComponent', () => {
       spyOn(component, 'getElk').and.returnValue({
         layout: () => promise,
       } as any);
-      component.rebuildBoxLine(Mocks.Flow);
+      component.rebuildBoxLine(Mocks.Flow, Mocks.ThemeValues);
       expect(component.getElk).toHaveBeenCalled();
     });
   });

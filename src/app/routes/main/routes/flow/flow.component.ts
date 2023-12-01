@@ -47,7 +47,12 @@ import {
   Node,
   SankeyAlign,
 } from '~/models';
-import { DisplayService, FlowService } from '~/services';
+import {
+  DisplayService,
+  FlowService,
+  ThemeService,
+  ThemeValues,
+} from '~/services';
 import { LabState, Preferences } from '~/store';
 import { PreferencesState } from '~/store/preferences';
 import { MainSharedModule } from '../../main-shared.module';
@@ -104,9 +109,10 @@ const VIS_NETWORK_OPTIONS: Options = {
 })
 export class FlowComponent implements AfterViewInit {
   ref = inject(ChangeDetectorRef);
+  store = inject(Store<LabState>);
   displaySvc = inject(DisplayService);
   flowSvc = inject(FlowService);
-  store = inject(Store<LabState>);
+  themeSvc = inject(ThemeService);
 
   @ViewChild('svg') svgElement: ElementRef | undefined;
 
@@ -121,15 +127,20 @@ export class FlowComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     combineLatest({
       flowData: this.flowSvc.flowData$,
+      themeValues: this.themeSvc.themeValues$,
       preferences: this.store.select(Preferences.preferencesState),
     })
       .pipe(untilDestroyed(this))
-      .subscribe(({ flowData, preferences }) =>
-        this.rebuildChart(flowData, preferences),
+      .subscribe(({ flowData, themeValues, preferences }) =>
+        this.rebuildChart(flowData, themeValues, preferences),
       );
   }
 
-  rebuildChart(flowData: FlowData, preferences: PreferencesState): void {
+  rebuildChart(
+    flowData: FlowData,
+    themeValues: ThemeValues,
+    preferences: PreferencesState,
+  ): void {
     this.loading$.next(true);
 
     select(`#${SVG_ID} > *`).remove();
@@ -138,7 +149,7 @@ export class FlowComponent implements AfterViewInit {
       if (preferences.flowDiagram === FlowDiagram.Sankey) {
         this.rebuildSankey(flowData, preferences);
       } else {
-        this.rebuildBoxLine(flowData);
+        this.rebuildBoxLine(flowData, themeValues);
       }
     }
 
@@ -299,12 +310,12 @@ export class FlowComponent implements AfterViewInit {
     this.svg = svg;
   }
 
-  rebuildBoxLine(flow: FlowData): void {
+  rebuildBoxLine(flow: FlowData, themeValues: ThemeValues): void {
     const nodes = new DataSet<VisNode>();
-    nodes.add(this.getVisNodes(flow));
+    nodes.add(this.getVisNodes(flow, themeValues));
 
     const edges = new DataSet<Edge>();
-    edges.add(this.getVisEdges(flow));
+    edges.add(this.getVisEdges(flow, themeValues));
 
     const container = document.getElementById('lab-flow-svg');
     const data: Data = {
@@ -350,7 +361,7 @@ export class FlowComponent implements AfterViewInit {
     }
   }
 
-  getVisNodes(flow: FlowData): VisNode[] {
+  getVisNodes(flow: FlowData, themeValues: ThemeValues): VisNode[] {
     return flow.nodes.map((n) => {
       const el = document.createElement('div');
       el.classList.add('d-flex', 'flex-column', 'align-items-center');
@@ -366,13 +377,23 @@ export class FlowComponent implements AfterViewInit {
           )}</div>`;
         }
       }
+
       return {
         id: n.id,
         label: `<b>${n.name}</b>\n${n.text}`,
         title: el,
-        color: n.color,
+        color: n.id.startsWith('o')
+          ? themeValues.successBackground
+          : n.id.startsWith('s')
+          ? themeValues.dangerBackground
+          : n.color,
+        shape: n.recipe ? 'box' : 'ellipse',
         font: {
-          color: this.foreColor(n.color),
+          color: n.id.startsWith('o')
+            ? themeValues.successColor
+            : n.id.startsWith('s')
+            ? themeValues.dangerColor
+            : this.foreColor(n.color),
         },
         chosen: { node: this.getVisNodeClickFn(n.stepId), label: false },
       };
@@ -383,11 +404,8 @@ export class FlowComponent implements AfterViewInit {
     return () => this.selectedId$.next(id);
   }
 
-  getVisEdges(flow: FlowData): Edge[] {
+  getVisEdges(flow: FlowData, themeValues: ThemeValues): Edge[] {
     const duplicateMap: Entities<number> = {};
-    const textColor = getComputedStyle(window.document.body).getPropertyValue(
-      '--text-color',
-    );
 
     return flow.links.map((l) => {
       const id = `${l.source}|${l.target}`;
@@ -416,7 +434,7 @@ export class FlowComponent implements AfterViewInit {
         },
         value: l.value,
         font: {
-          color: textColor,
+          color: themeValues.textColor,
         },
       };
     });
