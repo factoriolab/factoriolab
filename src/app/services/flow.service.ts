@@ -198,10 +198,9 @@ export class FlowService {
         });
 
         if (step.outputs) {
-          for (const itemId of Object.keys(step.outputs)) {
-            if (preferences.flowHideExcluded && itemsState[itemId].excluded)
-              continue;
-
+          for (const itemId of Object.keys(step.outputs).filter(
+            (i) => !preferences.flowHideExcluded || !itemsState[i].excluded,
+          )) {
             const item = data.itemEntities[itemId];
             const icon = data.iconEntities[item.icon ?? item.id];
             flow.links.push({
