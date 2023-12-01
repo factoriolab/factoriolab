@@ -4,13 +4,12 @@ import { select } from 'd3';
 import { Mocks, TestModule, TestUtility } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
 import {
-  FlowDiagram,
-  SankeyAlign,
   sankeyCenter,
   sankeyJustify,
   sankeyLeft,
   sankeyRight,
-} from '~/models';
+} from '~/d3-sankey';
+import { FlowDiagram, SankeyAlign } from '~/models';
 import { FlowComponent, SVG_ID } from './flow.component';
 
 describe('FlowComponent', () => {
