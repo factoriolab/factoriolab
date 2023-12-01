@@ -56,7 +56,7 @@ export const initialPreferencesState: PreferencesState = {
   linkSize: LinkValue.Items,
   linkText: LinkValue.Items,
   sankeyAlign: SankeyAlign.Justify,
-  flowHideExcluded: true,
+  flowHideExcluded: false,
 };
 
 export function preferencesReducer(
