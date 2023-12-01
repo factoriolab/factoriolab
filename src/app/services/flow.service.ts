@@ -181,14 +181,15 @@ export class FlowService {
         }
       }
 
-      if (step.recipeId && step.machines) {
+      if (step.recipeId && step.machines && step.recipeSettings?.machineId) {
         const recipe = data.recipeEntities[step.recipeId];
+        const machine = data.itemEntities[step.recipeSettings?.machineId];
         const icon = data.iconEntities[recipe.icon ?? recipe.id];
         const id = `r|${step.recipeId}`;
         flow.nodes.push({
           id,
           name: recipe.name,
-          text: `${step.machines.toString(machinePrec)}${suffix}`,
+          text: `${step.machines.toString(machinePrec)} ${machine.name}`,
           color: icon.color,
           stepId: step.id,
           viewBox: this.viewBox(icon),
