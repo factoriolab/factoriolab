@@ -108,7 +108,7 @@ export class FlowService {
               ),
               color: icon.color,
               value: this.linkSize(
-                stepValue[stepId],
+                stepValue[step.id],
                 step.parents[stepId],
                 preferences.linkSize,
                 item.stack,
