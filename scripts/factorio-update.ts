@@ -101,10 +101,11 @@ async function updateMod(mod: string): Promise<void> {
 
 /** Run all scripts required to update an array of Factorio mod sets */
 async function updateMods(mods: string[]): Promise<void> {
-  mods.forEach(async (mod, i) => {
+  for (let i = 0; i < mods.length; i++) {
+    const mod = mods[i];
     await updateMod(mod);
     logTime(`Updated mod '${mod}' (${i + 1} of ${mods.length})`);
-  });
+  }
 }
 
 logTime(
