@@ -1235,6 +1235,75 @@ async function processMod(): Promise<void> {
     }
   }
 
+  function getRecipeInOptions(
+    recipeIn: Record<string, number>,
+    recipeInTemp: Record<string, [number | undefined, number | undefined]>,
+  ): [Record<string, number>, string[]][] {
+    const fluidTempRules = Object.keys(recipeInTemp);
+    if (fluidTempRules.length === 0) return [[recipeIn, []]];
+
+    /**
+     * Cycle through fluid input temperature rules and find valid
+     * ingredient temperatures
+     */
+    const fluidTempOptions: Record<string, number[]> = {};
+    for (let i = 0; i < fluidTempRules.length; i++) {
+      const fluidId = fluidTempRules[i];
+      const [minTemp, maxTemp] = recipeInTemp[fluidId];
+      const fluid = dataRaw.fluid[fluidId];
+
+      const all = [...fluidTemps[fluid.name]];
+      const ok = all.filter(
+        (a) =>
+          (minTemp == null || minTemp <= a) &&
+          (maxTemp == null || maxTemp >= a),
+      );
+      fluidTempOptions[fluidId] = ok;
+    }
+
+    /**
+     * Cycle through valid fluid temperature options and generate
+     * variants of the recipe inputs with matching temperatures. Each
+     * iteration should create variants of every previous variant, in the
+     * case that there are multiple input fluids with multiple valid
+     * temperatures.
+     */
+    let recipeInOptions: [Record<string, number>, string[]][] = [
+      [recipeIn, []],
+    ];
+    for (const key of Object.keys(fluidTempOptions)) {
+      const defaultTemp = [...fluidTemps[key]][0];
+      const old = [...recipeInOptions];
+      recipeInOptions = []; // Clear out list
+      const options = fluidTempOptions[key];
+      options.forEach((temp) => {
+        recipeInOptions.push(
+          /**
+           * Take each previously generated recipe input set and generate
+           * a variant with this valid input fluid temperature.
+           */
+          ...old.map((data) => {
+            if (temp !== defaultTemp) {
+              const [original, ids] = data;
+              const altered = { ...original };
+              const id = `${key}-${temp}`;
+              altered[id] = altered[key];
+              delete altered[key];
+              return [altered, [...ids, id]] as [
+                Record<string, number>,
+                string[],
+              ];
+            } else {
+              return data;
+            }
+          }),
+        );
+      });
+    }
+
+    return recipeInOptions;
+  }
+
   // Process recipe protos / fake recipes
   const processedLaunchProto = new Set<string>();
   for (const proto of protosSorted) {
@@ -1341,118 +1410,45 @@ async function processMod(): Promise<void> {
           });
         }
 
-        const fluidTempRules = Object.keys(recipeInTemp);
-        if (fluidTempRules.length) {
-          /**
-           * Cycle through fluid input temperature rules and find valid
-           * ingredient temperatures
-           */
-          const fluidTempOptions: Record<string, number[]> = {};
-          for (let i = 0; i < fluidTempRules.length; i++) {
-            const fluidId = fluidTempRules[i];
-            const [minTemp, maxTemp] = recipeInTemp[fluidId];
-            const fluid = dataRaw.fluid[fluidId];
+        const recipeInOptions = getRecipeInOptions(recipeIn, recipeInTemp);
+        // For each set of valid fluid temperature inputs, generate a recipe
+        const icon = await getIcon(proto);
+        for (let i = 0; i < recipeInOptions.length; i++) {
+          // For first option, use proto name, for others append index
+          const [recipeIn, ids] = recipeInOptions[i];
+          const id = i === 0 ? proto.name : `${proto.name}-${ids.join('-')}`;
 
-            const all = [...fluidTemps[fluid.name]];
-            const ok = all.filter(
-              (a) =>
-                (minTemp == null || minTemp <= a) &&
-                (maxTemp == null || maxTemp >= a),
-            );
-            fluidTempOptions[fluidId] = ok;
+          if (proto.name === 'ore-tin') {
+            console.log(recipeInTemp);
           }
 
-          /**
-           * Cycle through valid fluid temperature options and generate
-           * variants of the recipe inputs with matching temperatures. Each
-           * iteration should create variants of every previous variant, in the
-           * case that there are multiple input fluids with multiple valid
-           * temperatures.
-           */
-          let recipeInOptions: [Record<string, number>, string[]][] = [
-            [recipeIn, []],
-          ];
-          for (const key of Object.keys(fluidTempOptions)) {
-            const defaultTemp = [...fluidTemps[key]][0];
-            const old = [...recipeInOptions];
-            recipeInOptions = []; // Clear out list
-            const options = fluidTempOptions[key];
-            options.forEach((temp) => {
-              recipeInOptions.push(
-                /**
-                 * Take each previously generated recipe input set and generate
-                 * a variant with this valid input fluid temperature.
-                 */
-                ...old.map((data) => {
-                  if (temp !== defaultTemp) {
-                    const [original, ids] = data;
-                    const altered = { ...original };
-                    const id = `${key}-${temp}`;
-                    altered[id] = altered[key];
-                    delete altered[key];
-                    return [altered, [...ids, id]] as [
-                      Record<string, number>,
-                      string[],
-                    ];
-                  } else {
-                    return data;
-                  }
-                }),
-              );
-            });
-          }
-
-          // For each set of valid fluid temperature inputs, generate a recipe
-          const icon = await getIcon(proto);
-          for (let i = 0; i < recipeInOptions.length; i++) {
-            // For first option, use proto name, for others append index
-            const [recipeIn, ids] = recipeInOptions[i];
-            const id = i === 0 ? proto.name : `${proto.name}-${ids.join('-')}`;
-
-            const recipe: Recipe = {
-              id,
-              name: recipeLocale.names[proto.name],
-              category: subgroup.group,
-              row: getRecipeRow(proto),
-              time: recipeData.energy_required ?? 0.5,
-              producers,
-              in: recipeIn,
-              /**
-               * Already calculated when determining included recipes.
-               * Note: Output temperatures do not vary
-               */
-              out: recipeOut,
-              catalyst: recipeCatalyst,
-              unlockedBy: recipesUnlocked[proto.name],
-              icon,
-            };
-
-            if (i > 0) {
-              recipe.icon = recipe.icon ?? proto.name;
-              // Add recipe temperature variants to relevant limitations
-              for (const limitationId of Object.keys(modData.limitations)) {
-                const limitation = modData.limitations[limitationId];
-                if (limitation.includes(proto.name)) limitation.push(id);
-              }
-            }
-
-            modData.recipes.push(recipe);
-          }
-        } else {
           const recipe: Recipe = {
-            id: proto.name,
+            id,
             name: recipeLocale.names[proto.name],
             category: subgroup.group,
             row: getRecipeRow(proto),
             time: recipeData.energy_required ?? 0.5,
             producers,
             in: recipeIn,
-            // Already calculated when determining included recipes
+            /**
+             * Already calculated when determining included recipes.
+             * Note: Output temperatures do not vary
+             */
             out: recipeOut,
             catalyst: recipeCatalyst,
             unlockedBy: recipesUnlocked[proto.name],
-            icon: await getIcon(proto),
+            icon,
           };
+
+          if (i > 0) {
+            recipe.icon = recipe.icon ?? proto.name;
+            // Add recipe temperature variants to relevant limitations
+            for (const limitationId of Object.keys(modData.limitations)) {
+              const limitation = modData.limitations[limitationId];
+              if (limitation.includes(proto.name)) limitation.push(id);
+            }
+          }
+
           modData.recipes.push(recipe);
         }
       } else {
@@ -1648,12 +1644,17 @@ async function processMod(): Promise<void> {
     const resource = dataRaw.resource[name];
     if (resource && resource.minable) {
       // Found mining recipe
-
+      const minable = resource.minable;
       let miners = producersMap.resource[resource.category ?? 'basic-solid'];
       const recipeIn: Record<string, number> = {};
-      if (resource.minable.required_fluid && resource.minable.fluid_amount) {
-        const amount = resource.minable.fluid_amount / 10;
-        recipeIn[resource.minable.required_fluid] = amount;
+      const recipeInTemp: Record<
+        string,
+        [number | undefined, number | undefined]
+      > = {};
+      if (minable.required_fluid && minable.fluid_amount) {
+        const amount = minable.fluid_amount / 10;
+        recipeIn[minable.required_fluid] = amount;
+        recipeInTemp[minable.required_fluid] = [undefined, undefined];
         miners = miners.filter((m) => {
           // Only allow producers with fluid boxes
           const item = itemMap[m];
@@ -1668,41 +1669,46 @@ async function processMod(): Promise<void> {
       }
 
       const [recipeOut, recipeCatalyst, total] = getProducts(
-        resource.minable.results,
-        resource.minable.result,
-        resource.minable.count,
+        minable.results,
+        minable.result,
+        minable.count,
       );
 
       const proto = itemMap[Object.keys(recipeOut)[0]];
       if (proto != null) {
         const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
         const group = dataRaw['item-group'][subgroup.group];
-        const id = getFakeRecipeId(proto.name, `${name}-mining`);
+        const fakeId = getFakeRecipeId(proto.name, `${name}-mining`);
 
-        const recipe: Recipe = {
-          id: '',
-          name: M.isFluidPrototype(proto)
-            ? fluidLocale.names[proto.name]
-            : itemLocale.names[proto.name],
-          category: group.name,
-          row: getRecipeRow(proto),
-          time: resource.minable.mining_time,
-          in: recipeIn,
-          out: recipeOut,
-          catalyst: recipeCatalyst,
-          cost: 100 / total,
-          isMining: true,
-          producers: miners,
-        };
+        const recipeInOptions = getRecipeInOptions(recipeIn, recipeInTemp);
+        recipeInOptions.forEach(([recipeIn, ids], i) => {
+          const id = i === 0 ? fakeId : `${fakeId}-${ids.join('-')}`;
 
-        const hash = JSON.stringify(recipe);
-        if (resourceHash.has(hash)) {
-          modDataReport.resourceDuplicate.push(name);
-        } else {
-          recipe.id = id;
-          modData.recipes.push(recipe);
-          resourceHash.add(hash);
-        }
+          const recipe: Recipe = {
+            id: '',
+            name: M.isFluidPrototype(proto)
+              ? fluidLocale.names[proto.name]
+              : itemLocale.names[proto.name],
+            category: group.name,
+            row: getRecipeRow(proto),
+            time: minable.mining_time,
+            in: recipeIn,
+            out: recipeOut,
+            catalyst: recipeCatalyst,
+            cost: 100 / total,
+            isMining: true,
+            producers: miners,
+          };
+
+          const hash = JSON.stringify(recipe);
+          if (resourceHash.has(hash)) {
+            modDataReport.resourceDuplicate.push(name);
+          } else {
+            recipe.id = id;
+            modData.recipes.push(recipe);
+            resourceHash.add(hash);
+          }
+        });
       } else {
         modDataReport.resourceNoMinableProducts.push(name);
       }
