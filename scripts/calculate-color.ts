@@ -9,7 +9,8 @@ const mods = data.mods.map((m) => m.id);
 
 /** Run all scripts required to update an array of Factorio mod sets */
 async function updateMods(mods: string[]): Promise<void> {
-  mods.forEach(async (mod, i) => {
+  for (let i = 0; i < mods.length; i++) {
+    const mod = mods[i];
     const modPath = `./src/data/${mod}`;
     const modDataPath = `${modPath}/data.json`;
     const modData = getJsonData<ModData>(modDataPath);
@@ -34,7 +35,7 @@ async function updateMods(mods: string[]): Promise<void> {
     fs.writeFileSync(modDataPath, JSON.stringify(modData));
 
     logTime(`Updated mod '${mod}' (${i + 1} of ${mods.length})`);
-  });
+  }
 }
 
 logTime(
