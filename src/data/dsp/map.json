@@ -613,9 +613,6 @@
     "5907": "df-space-fleet-expansion-7"
   },
   "unmapped": [
-    "accelerator-1",
-    "accelerator-2",
-    "accelerator-3",
     "accumulator-discharge",
     "belt-st2-1",
     "belt-st2-2",
@@ -643,7 +640,6 @@
     "ocean",
     "optical-grating-crystal-vein",
     "organic-crystal-vein",
-    "photon-formula",
     "proliferator-1-products",
     "proliferator-1-speed",
     "proliferator-2-products",
