@@ -64,7 +64,9 @@ export const getObjectiveRationals = createSelector(
   getObjectives,
   Settings.getAdjustmentData,
   Items.getItemsState,
-  (objectives, adj, itemsState) =>
+  Recipes.getRecipesStateRational,
+  Recipes.getAdjustedDataset,
+  (objectives, adj, itemsState, recipesState, data) =>
     objectives.map((o) => {
       let recipe: RecipeRational | undefined;
       if (isRecipeObjective(o)) {
@@ -76,8 +78,9 @@ export const getObjectiveRationals = createSelector(
           adj.netProductionOnly,
           new RecipeSettingsRational(o),
           itemsState,
-          adj.data,
+          data,
         );
+        RecipeUtility.adjustLaunchRecipeObjective(recipe, recipesState, data);
         recipe.finalize();
       }
 

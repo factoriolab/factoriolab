@@ -419,6 +419,24 @@ export class RecipeUtility {
     return recipe;
   }
 
+  /** Adjust rocket launch objective recipes */
+  static adjustLaunchRecipeObjective(
+    recipe: RecipeRational,
+    settings: Entities<RecipeSettingsRational>,
+    data: Dataset,
+  ): void {
+    if (!recipe.part) return;
+    const partMachineId = settings[recipe.part].machineId;
+    if (!partMachineId) return;
+    const rocketMachine = data.machineEntities[partMachineId];
+    if (!rocketMachine?.silo) return;
+
+    const rocketRecipe = data.recipeR[recipe.part];
+    const itemId = Object.keys(rocketRecipe.out)[0];
+    const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
+    recipe.time = rocketRecipe.time.mul(factor);
+  }
+
   /** Adjust rocket launch and rocket part recipes */
   static adjustSiloRecipes(
     recipeR: Entities<RecipeRational>,
@@ -427,28 +445,27 @@ export class RecipeUtility {
   ): Entities<RecipeRational> {
     for (const partId of Object.keys(recipeR)) {
       const partMachineId = settings[partId].machineId;
-      if (partMachineId) {
-        const rocketMachine = data.machineEntities[partMachineId];
-        const rocketRecipe = recipeR[partId];
-        if (rocketMachine?.silo && !rocketRecipe.part) {
-          const itemId = Object.keys(rocketRecipe.out)[0];
-          const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
-          for (const launchId of Object.keys(recipeR).filter(
-            (i) => recipeR[i].part === partId,
-          )) {
-            if (partMachineId === settings[launchId].machineId) {
-              recipeR[launchId].time = rocketRecipe.time
-                .mul(factor)
-                .add(rocketMachine.silo.launch);
-            }
-          }
+      if (!partMachineId) continue;
 
-          rocketRecipe.time = rocketRecipe.time
-            .mul(factor)
-            .add(rocketMachine.silo.launch)
-            .div(factor);
-        }
+      const rocketMachine = data.machineEntities[partMachineId];
+      const rocketRecipe = recipeR[partId];
+      if (!rocketMachine?.silo || rocketRecipe.part) continue;
+
+      const itemId = Object.keys(rocketRecipe.out)[0];
+      const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
+      for (const launchId of Object.keys(recipeR).filter(
+        (i) =>
+          recipeR[i].part === partId && settings[i].machineId === partMachineId,
+      )) {
+        recipeR[launchId].time = rocketRecipe.time
+          .mul(factor)
+          .add(rocketMachine.silo.launch);
       }
+
+      rocketRecipe.time = rocketRecipe.time
+        .mul(factor)
+        .add(rocketMachine.silo.launch)
+        .div(factor);
     }
 
     return recipeR;
