@@ -44,6 +44,10 @@ export class FlowService {
     ),
   );
 
+  recipeStepNodeType(step: Step): string {
+    return step.recipeObjectiveId ? 'm' : 'r';
+  }
+
   buildGraph(
     steps: Step[],
     suffix: string,
@@ -95,9 +99,10 @@ export class FlowService {
           for (const stepId of Object.keys(step.parents)) {
             if (stepId === '') continue; // Ignore outputs
 
+            const parent = stepMap[stepId];
             flow.links.push({
               source: id,
-              target: `r|${stepMap[stepId].recipeId}`,
+              target: `${this.recipeStepNodeType(parent)}|${parent.recipeId}`,
               name: item.name,
               text: this.linkText(
                 stepText[step.id],
@@ -188,7 +193,7 @@ export class FlowService {
         const recipe = data.recipeEntities[step.recipeId];
         const machine = data.itemEntities[step.recipeSettings?.machineId];
         const icon = data.iconEntities[recipe.icon ?? recipe.id];
-        const id = `r|${step.recipeId}`;
+        const id = `${this.recipeStepNodeType(step)}|${step.recipeId}`;
         flow.nodes.push({
           id,
           name: recipe.name,

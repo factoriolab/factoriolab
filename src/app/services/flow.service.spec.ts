@@ -24,6 +24,15 @@ describe('FlowService', () => {
     expect(service).toBeTruthy();
   });
 
+  describe('recipeStepNodeType', () => {
+    it('should return different prefix for recipe objective steps', () => {
+      expect(service.recipeStepNodeType({} as any)).toEqual('r');
+      expect(
+        service.recipeStepNodeType({ recipeObjectiveId: 'obj' } as any),
+      ).toEqual('m');
+    });
+  });
+
   describe('buildGraph', () => {
     it('should handle various link and node types', () => {
       const result = service.buildGraph(
