@@ -666,21 +666,18 @@ export const getAdjustmentData = createSelector(
   getRationalMiningBonus,
   getResearchFactor,
   getAvailableRecipes,
-  getDataset,
   (
     netProductionOnly,
     proliferatorSprayId,
     miningBonus,
     researchSpeed,
     recipeIds,
-    data,
   ) => ({
     netProductionOnly,
     proliferatorSprayId,
     miningBonus,
     researchSpeed,
     recipeIds,
-    data,
   }),
 );
 

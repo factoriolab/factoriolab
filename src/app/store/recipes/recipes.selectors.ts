@@ -147,7 +147,8 @@ export const getAdjustedDataset = createSelector(
   Items.getItemsState,
   Settings.getRationalCost,
   Settings.getAdjustmentData,
-  (recipesState, excludedRecipeIds, itemsState, cost, adj) =>
+  Settings.getDataset,
+  (recipesState, excludedRecipeIds, itemsState, cost, adj, data) =>
     RecipeUtility.adjustDataset(
       adj.recipeIds,
       excludedRecipeIds,
@@ -158,7 +159,7 @@ export const getAdjustedDataset = createSelector(
       adj.researchSpeed,
       adj.netProductionOnly,
       cost,
-      adj.data,
+      data,
     ),
 );
 

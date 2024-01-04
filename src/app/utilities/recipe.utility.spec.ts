@@ -1,6 +1,7 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Entities,
+  Objective,
   ObjectiveType,
   ObjectiveUnit,
   Rational,
@@ -680,6 +681,68 @@ describe('RecipeUtility', () => {
     });
   });
 
+  describe('adjustLaunchRecipeObjective', () => {
+    it('should skip non-launch objectives', () => {
+      const recipe = new RecipeRational(
+        Mocks.Dataset.recipeEntities[RecipeId.IronPlate],
+      );
+      const time = recipe.time;
+
+      // No recipe part
+      RecipeUtility.adjustLaunchRecipeObjective(
+        recipe,
+        Mocks.RecipesStateRationalInitial,
+        Mocks.Dataset,
+      );
+      expect(recipe.time).toEqual(time);
+
+      // No silo
+      recipe.part = ItemId.IronPlate;
+      RecipeUtility.adjustLaunchRecipeObjective(
+        recipe,
+        Mocks.RecipesStateRationalInitial,
+        Mocks.Dataset,
+      );
+      expect(recipe.time).toEqual(time);
+
+      // No machine id
+      const settings = Mocks.getRecipesStateRational();
+      delete settings[RecipeId.IronPlate].machineId;
+      RecipeUtility.adjustLaunchRecipeObjective(
+        recipe,
+        settings,
+        Mocks.Dataset,
+      );
+      expect(recipe.time).toEqual(time);
+    });
+
+    it('should adjust a launch objective based on rocket part recipe', () => {
+      const objective: Objective = {
+        id: '0',
+        targetId: RecipeId.SpaceSciencePack,
+        value: '1',
+        unit: ObjectiveUnit.Machines,
+        type: ObjectiveType.Output,
+      };
+      const recipe = RecipeUtility.adjustRecipe(
+        objective.targetId,
+        ItemId.Module,
+        Rational.zero,
+        Rational.one,
+        false,
+        new RecipeSettingsRational(objective),
+        Mocks.ItemsStateInitial,
+        Mocks.Dataset,
+      );
+      RecipeUtility.adjustLaunchRecipeObjective(
+        recipe,
+        Mocks.RecipesStateRationalInitial,
+        Mocks.Dataset,
+      );
+      expect(recipe.time).toEqual(Rational.from([82499, 924]));
+    });
+  });
+
   describe('adjustSiloRecipes', () => {
     let recipeR: Entities<RecipeRational>;
 
@@ -722,6 +785,28 @@ describe('RecipeUtility', () => {
         ...{
           [RecipeId.SpaceSciencePack]: {
             machineId: 'id',
+          },
+        },
+      };
+      const result = RecipeUtility.adjustSiloRecipes(
+        recipeR,
+        settings2,
+        Mocks.Dataset,
+      );
+      expect(result[RecipeId.SpaceSciencePack].time).toEqual(
+        Rational.from([203, 5]),
+      );
+      expect(result[RecipeId.RocketPart].time).toEqual(
+        Rational.from([82499, 66000]),
+      );
+    });
+
+    it('should handle missing machine id', () => {
+      const settings2 = {
+        ...Mocks.RecipesStateRationalInitial,
+        ...{
+          [RecipeId.SpaceSciencePack]: {
+            machineId: '',
           },
         },
       };

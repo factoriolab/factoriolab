@@ -221,7 +221,7 @@
     </ng-container>
   </ng-template>
   <ng-template #recipeProcess let-recipe="recipe">
-    <ng-container *ngIf="recipe | asRecipe as recipe">
+    <ng-container *ngIf="vm.data.recipeR[recipe.id] as recipe">
       <div
         class="d-flex align-items-center justify-content-center flex-wrap mt-2"
       >
@@ -231,13 +231,13 @@
         <i
           *ngFor="let input of recipe.in | keyvalue"
           [class]="input.key | iconSmClass"
-          ><span>{{ input.value }}</span></i
+          ><span>{{ input.value | round }}</span></i
         >
         <i class="m-1 me-2 fa-solid fa-arrow-right"></i>
         <i
           *ngFor="let output of recipe.out | keyvalue"
           [class]="output.key | iconSmClass"
-          ><span>{{ output.value }}</span></i
+          ><span>{{ output.value | round }}</span></i
         >
       </div>
       <div class="mt-1">{{ 'data.producers' | translate }}</div>

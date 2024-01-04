@@ -65,11 +65,14 @@ describe('Objectives Selectors', () => {
 
   describe('getObjectiveRationals', () => {
     it('should convert objectives to rationals', () => {
+      const data = Mocks.getDataset();
       spyOn(RecipeUtility, 'adjustRecipe').and.callThrough();
       Selectors.getObjectiveRationals.projector(
         [Mocks.Objective1, Mocks.Objective5],
         Mocks.AdjustmentData,
         Mocks.ItemsStateInitial,
+        Mocks.RecipesStateRationalInitial,
+        data,
       );
       expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(1);
     });
