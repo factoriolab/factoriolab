@@ -244,8 +244,8 @@ export function getDataset(): M.Dataset {
       miningBonus: M.Rational.zero,
       researchSpeed: M.Rational.one,
       recipeIds: RawDataset.recipeIds,
-      data: getRawDataset(),
     },
+    getRawDataset(),
   );
 }
 export const Dataset = getDataset();
