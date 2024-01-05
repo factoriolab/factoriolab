@@ -271,9 +271,9 @@ export const getTotals = createSelector(
             let machine = settings.machineId;
             if (
               data.game === Game.DysonSphereProgram &&
-              machine === ItemId.MiningDrill
+              machine === ItemId.MiningMachine
             ) {
-              // Use recipe id (vein type) in place of mining drill for DSP mining
+              // Use recipe id (vein type) in place of mining machine for DSP mining
               machine = step.recipeId;
             }
             if (machine != null) {
