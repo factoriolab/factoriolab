@@ -236,12 +236,12 @@ describe('Objectives Selectors', () => {
       const result = Selectors.getTotals.projector(
         [
           {
-            id: '0',
+            id: '01',
             recipeId: RecipeId.Coal,
             recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
             machines: Rational.one,
             recipeSettings: {
-              machineId: ItemId.MiningDrill,
+              machineId: ItemId.MiningMachine,
             },
           },
         ],
