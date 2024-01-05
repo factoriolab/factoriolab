@@ -15,8 +15,10 @@ export class DisplayService {
     return `<i class="me-2 lab-icon sm ${type} padded ${id}"><span>${numStr}</span></i>`;
   }
 
-  round(value: Rational): string {
-    return Number(value.toNumber().toFixed(2)).toString();
+  round(value: Rational | string | number): string {
+    if (typeof value === 'string') value = Rational.fromString(value);
+    if (value instanceof Rational) value = value.toNumber();
+    return Number(value.toFixed(2)).toString();
   }
 
   usage(value: Rational | string | number): string {
