@@ -8,7 +8,7 @@ import { DisplayService } from '~/services';
 export class RoundPipe implements PipeTransform {
   displaySvc = inject(DisplayService);
 
-  transform(value: Rational): string {
+  transform(value: Rational | string | number): string {
     return this.displaySvc.round(value);
   }
 }
