@@ -7,8 +7,6 @@ export class MachineShowPipe implements PipeTransform {
   transform(machineId: string | null | undefined, game: Game): boolean {
     if (machineId == null) return false;
 
-    console.log(game, machineId);
-
     return (
       game !== Game.DysonSphereProgram || machineId !== ItemId.MiningMachine
     );

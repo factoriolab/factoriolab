@@ -3,13 +3,9 @@ export enum ItemId {
   Inserter = 'inserter',
   LongHandedInserter = 'long-handed-inserter',
   MineControlTower = 'mine-control-tower',
-  MiningDrill = 'mining-drill',
   MiningMachine = 'mining-machine',
   Module = 'module',
-  NuclearPowerPlant = 'nuclear-power-plant',
   Pipe = 'pipe',
-  ProductivityLimitation = 'productivity-module',
   Pumpjack = 'pumpjack',
   StackInserter = 'stack-inserter',
-  Water = 'water',
 }

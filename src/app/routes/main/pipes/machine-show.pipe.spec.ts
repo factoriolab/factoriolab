@@ -16,9 +16,9 @@ describe('MachineShowPipe', () => {
   });
 
   describe('transform', () => {
-    it('should hide machine icon for DSP Mining Drill', () => {
+    it('should hide machine icon for DSP Mining Machine', () => {
       expect(
-        pipe.transform(ItemId.MiningDrill, Game.DysonSphereProgram),
+        pipe.transform(ItemId.MiningMachine, Game.DysonSphereProgram),
       ).toBeFalse();
     });
 
