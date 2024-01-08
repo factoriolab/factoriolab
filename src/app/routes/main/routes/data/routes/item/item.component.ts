@@ -5,7 +5,7 @@ import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { orString } from '~/helpers';
-import { Game } from '~/models';
+import { Game, ItemId } from '~/models';
 import { Items, LabState, Machines, Settings } from '~/store';
 import { DataRouteService } from '../../data-route.service';
 import { DataSharedModule } from '../../data-shared.module';
@@ -71,6 +71,7 @@ export class ItemComponent extends DetailComponent {
   );
 
   Game = Game;
+  ItemId = ItemId;
 
   /** Action dispatch methods */
   setItemExcluded(id: string, value: boolean): void {
