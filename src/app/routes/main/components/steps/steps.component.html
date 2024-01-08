@@ -1928,17 +1928,33 @@
           <td class="ps-0 inherit">
             <div class="d-flex">
               <div class="d-flex flex-column justify-content-center">
-                <i
+                <ng-container
                   *ngFor="let tot of totals | keyvalue: trackSvc.sortByValue"
-                  class="d-block"
-                  [class]="tot.key | iconClass: 'item'"
-                  [pTooltip]="tooltip"
-                  [autoHide]="false"
                 >
-                  <ng-template #tooltip>
-                    <lab-tooltip [id]="tot.key" [type]="type"></lab-tooltip>
+                  <i
+                    *ngIf="vm.data.itemEntities[tot.key]; else recipeIcon"
+                    class="d-block"
+                    [class]="tot.key | iconClass"
+                    [pTooltip]="tooltip"
+                    [autoHide]="false"
+                  >
+                    <ng-template #tooltip>
+                      <lab-tooltip [id]="tot.key" [type]="type"></lab-tooltip>
+                    </ng-template>
+                  </i>
+                  <ng-template #recipeIcon>
+                    <i
+                      class="d-block"
+                      [class]="tot.key | iconClass: 'recipe'"
+                      [pTooltip]="tooltip"
+                      [autoHide]="false"
+                    >
+                      <ng-template #tooltip>
+                        <lab-tooltip [id]="tot.key" type="recipe"></lab-tooltip>
+                      </ng-template>
+                    </i>
                   </ng-template>
-                </i>
+                </ng-container>
               </div>
               <div class="modules-column">
                 <ng-container
