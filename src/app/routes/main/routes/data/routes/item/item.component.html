@@ -344,7 +344,12 @@
             ></p-checkbox>
           </td>
         </tr>
-        <tr>
+        <tr
+          *ngIf="
+            vm.data.game !== Game.DysonSphereProgram ||
+            vm.itemSettings.beltId !== ItemId.Pipe
+          "
+        >
           <th>{{ 'data.belt' | translate }}</th>
           <td *ngIf="vm.itemSettings.beltId as beltId">
             <a
@@ -371,30 +376,16 @@
             </a>
           </td>
         </tr>
-        <tr *ngIf="vm.obj.stack; else fluidWagon">
-          <th>{{ 'data.cargoWagon' | translate }}</th>
-          <td *ngIf="vm.itemSettings.wagonId as wagonId">
-            <a
-              [routerLink]="'/data/cargo-wagons/' + wagonId"
-              queryParamsHandling="preserve"
-            >
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="p-button-text"
-                [label]="vm.data.itemEntities[wagonId].name"
-                [icon]="wagonId | iconSmClass: 'item'"
-              ></button>
-            </a>
-          </td>
-        </tr>
-        <ng-template #fluidWagon>
-          <tr>
-            <th>{{ 'data.fluidWagon' | translate }}</th>
+        <ng-container
+          *ngIf="
+            vm.data.game === Game.Factorio || vm.data.game === Game.Satisfactory
+          "
+        >
+          <tr *ngIf="vm.obj.stack; else fluidWagon">
+            <th>{{ 'data.cargoWagon' | translate }}</th>
             <td *ngIf="vm.itemSettings.wagonId as wagonId">
               <a
-                [routerLink]="'/data/fluid-wagons/' + wagonId"
+                [routerLink]="'/data/cargo-wagons/' + wagonId"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -408,7 +399,27 @@
               </a>
             </td>
           </tr>
-        </ng-template>
+          <ng-template #fluidWagon>
+            <tr>
+              <th>{{ 'data.fluidWagon' | translate }}</th>
+              <td *ngIf="vm.itemSettings.wagonId as wagonId">
+                <a
+                  [routerLink]="'/data/fluid-wagons/' + wagonId"
+                  queryParamsHandling="preserve"
+                >
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    [label]="vm.data.itemEntities[wagonId].name"
+                    [icon]="wagonId | iconSmClass: 'item'"
+                  ></button>
+                </a>
+              </td>
+            </tr>
+          </ng-template>
+        </ng-container>
       </ng-container>
       <ng-container *ngIf="vm.obj.machine && vm.machineSettings">
         <tr>
