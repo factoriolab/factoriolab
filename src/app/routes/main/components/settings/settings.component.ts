@@ -77,9 +77,6 @@ export class SettingsComponent implements OnInit {
   @HostBinding('class.active') @Input() active = false;
   @HostBinding('class.hidden') @Input() hidden = false;
 
-  machineIds$ = this.store
-    .select(Machines.getMachinesState)
-    .pipe(map((state) => [...state.ids]));
   vm$ = combineLatest({
     itemsState: this.store.select(Items.getItemsState),
     excludedItemIds: this.store.select(Items.getExcludedItemIds),
@@ -88,7 +85,6 @@ export class SettingsComponent implements OnInit {
     itemIds: this.store.select(Recipes.getAvailableItems),
     data: this.store.select(Recipes.getAdjustedDataset),
     machinesState: this.store.select(Machines.getMachinesState),
-    machineOptions: this.store.select(Machines.getMachineOptions),
     settings: this.store.select(Settings.getSettings),
     columnsState: this.store.select(Settings.getColumnsState),
     options: this.store.select(Settings.getOptions),
@@ -105,7 +101,9 @@ export class SettingsComponent implements OnInit {
     savedStates: this.store.select(Settings.getSavedStates),
     preferences: this.store.select(Preferences.preferencesState),
     modRecord: this.store.select(Datasets.getModRecord),
-    machineIds: this.machineIds$,
+    machineIds: this.store
+      .select(Machines.getMachinesState)
+      .pipe(map((state) => [...state.ids])),
     isMobile: this.contentSvc.isMobile$,
   });
 

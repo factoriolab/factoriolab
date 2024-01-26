@@ -559,6 +559,7 @@ export const getOptions = createSelector(
       true,
     ),
     fuels: getIdOptions(data.fuelIds, data.itemEntities),
+    machines: getIdOptions(data.machineIds, data.itemEntities),
     recipes: getIdOptions(data.recipeIds, data.recipeEntities),
   }),
 );

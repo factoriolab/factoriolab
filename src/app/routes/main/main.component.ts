@@ -65,19 +65,16 @@ export class MainComponent implements AfterViewInit {
       label: 'app.list',
       icon: 'fa-solid fa-list',
       routerLink: 'list',
-      queryParamsHandling: 'preserve',
     },
     {
       label: 'app.flow',
       icon: 'fa-solid fa-diagram-project',
       routerLink: 'flow',
-      queryParamsHandling: 'preserve',
     },
     {
       label: 'app.data',
       icon: 'fa-solid fa-database',
       routerLink: 'data',
-      queryParamsHandling: 'preserve',
     },
   ];
 

@@ -273,8 +273,8 @@
             class="d-flex align-items-center justify-content-between flex-grow-1"
           >
             <div>{{ 'settings.factory' | translate }}</div>
-            <div *ngIf="presetDropdown.label">
-              {{ presetDropdown.label | translate }}
+            <div *ngIf="presetDropdown.label()">
+              {{ presetDropdown.label() | translate }}
             </div>
           </div>
         </ng-template>
@@ -359,24 +359,21 @@
             >
               <div
                 *ngIf="settings"
-                class="p-inputgroup flex-wrap machine-preference mb-1"
+                class="p-inputgroup flex-wrap machine-preference"
+                [class.mb-1]="machineId === ''"
               >
                 <!-- Add/Remove machine button -->
                 <p-dropdown
                   *ngIf="machineId === ''; else dragButton"
                   labDropdownBase="icon"
                   [tooltip]="'settings.addMachineTooltip' | translate"
-                  [options]="vm.machineOptions"
+                  [options]="vm.options.machines | filterOptions: vm.machineIds"
                   (onChange)="
                     addMachine($event.value, vm.data.defaults?.machineRankIds)
                   "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
-                    <div
-                      class="d-flex justify-content-center align-items-center h-100 w-100"
-                    >
-                      <i class="fa-solid fa-plus"></i>
-                    </div>
+                    <i class="fa-solid fa-plus"></i>
                   </ng-template>
                   <ng-template pTemplate="item" let-item>
                     <div
@@ -408,45 +405,50 @@
                   ></button>
                 </ng-template>
                 <!-- Machine dropdown -->
-                <p-dropdown
-                  *ngIf="machineId; else machineIcon"
-                  labDropdownBase="icon"
-                  labNoDrag
-                  [tooltip]="'settings.machineTooltip' | translate"
-                  [ngModel]="machineId"
-                  [options]="vm.machineOptions"
-                  (onChange)="
-                    setMachine(
-                      machineId,
-                      $event.value,
-                      vm.data.defaults?.machineRankIds
-                    )
-                  "
-                >
-                  <ng-template pTemplate="selectedItem" let-item>
-                    <div class="d-flex">
-                      <i [class]="item.value | iconSmClass"></i>
-                    </div>
-                  </ng-template>
-                  <ng-template pTemplate="item" let-item>
-                    <div
-                      class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="tooltip"
-                      [autoHide]="false"
-                    >
-                      <i [class]="item.value | iconSmClass"></i>
-                      <div class="ms-3 text-truncate">
-                        {{ item.label }}
+                <ng-container *ngIf="machineId; else machineIcon">
+                  <p-dropdown
+                    labDropdownBase="icon"
+                    labNoDrag
+                    [tooltip]="'settings.machineTooltip' | translate"
+                    [ngModel]="machineId"
+                    [options]="
+                      vm.options.machines
+                        | filterOptions: vm.machineIds : machineId
+                    "
+                    (onChange)="
+                      setMachine(
+                        machineId,
+                        $event.value,
+                        vm.data.defaults?.machineRankIds
+                      )
+                    "
+                  >
+                    <ng-template pTemplate="selectedItem" let-item>
+                      <div *ngIf="item" class="d-flex">
+                        <i [class]="item.value | iconSmClass"></i>
                       </div>
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="item.value"
-                          type="machine"
-                        ></lab-tooltip>
-                      </ng-template>
-                    </div>
-                  </ng-template>
-                </p-dropdown>
+                      <div *ngIf="item == null">{{ machineId }}</div>
+                    </ng-template>
+                    <ng-template pTemplate="item" let-item>
+                      <div
+                        class="d-flex align-items-center py-2 w-100 h-100"
+                        [pTooltip]="tooltip"
+                        [autoHide]="false"
+                      >
+                        <i [class]="item.value | iconSmClass"></i>
+                        <div class="ms-3 text-truncate">
+                          {{ item.label }}
+                        </div>
+                        <ng-template #tooltip>
+                          <lab-tooltip
+                            [id]="item.value"
+                            type="machine"
+                          ></lab-tooltip>
+                        </ng-template>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </ng-container>
                 <ng-template #machineIcon>
                   <span
                     class="p-inputgroup-addon"
@@ -652,7 +654,7 @@
                       "
                     >
                       <ng-template pTemplate="selectedItem" let-item>
-                        <div class="d-flex">
+                        <div *ngIf="item" class="d-flex">
                           <i [class]="item.value | iconSmClass"></i>
                         </div>
                       </ng-template>
@@ -832,7 +834,7 @@
                 (onChange)="setBelt($event.value, vm.data.defaults?.beltId)"
               >
                 <ng-template pTemplate="selectedItem" let-item>
-                  <div class="d-flex align-items-center h-100">
+                  <div *ngIf="item" class="d-flex align-items-center h-100">
                     <i [class]="item.value | iconSmClass"></i>
                     <div class="ms-3 text-truncate">
                       {{ item.label }}
@@ -1114,8 +1116,8 @@
             class="d-flex align-items-center justify-content-between flex-grow-1"
           >
             <div>{{ 'settings.flow' | translate }}</div>
-            <div *ngIf="flowDiagramDropdown.label">
-              {{ flowDiagramDropdown.label | translate }}
+            <div *ngIf="flowDiagramDropdown.label()">
+              {{ flowDiagramDropdown.label() | translate }}
             </div>
           </div>
         </ng-template>

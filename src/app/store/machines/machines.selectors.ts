@@ -1,5 +1,4 @@
 import { createSelector } from '@ngrx/store';
-import { SelectItem } from 'primeng/api';
 
 import { getIdOptions } from '~/helpers';
 import { EnergyType, Entities, Game, MachineSettings } from '~/models';
@@ -84,17 +83,4 @@ export const getMachinesState = createSelector(
 
     return { ids, entities };
   },
-);
-
-export const getMachineOptions = createSelector(
-  getMachinesState,
-  Settings.getDataset,
-  (machines, data) =>
-    data.machineIds.map(
-      (f): SelectItem => ({
-        label: data.itemEntities[f].name,
-        value: f,
-        disabled: machines.ids.indexOf(f) !== -1,
-      }),
-    ),
 );

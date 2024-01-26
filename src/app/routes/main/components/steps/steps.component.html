@@ -352,7 +352,7 @@
                     "
                   >
                     <ng-template pTemplate="selectedItem" let-item>
-                      <div class="d-flex">
+                      <div *ngIf="item" class="d-flex">
                         <i [class]="item.value | iconSmClass"></i>
                       </div>
                     </ng-template>
@@ -478,7 +478,7 @@
                   "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
-                    <div class="d-flex">
+                    <div *ngIf="item" class="d-flex">
                       <i [class]="item.value | iconSmClass"></i>
                     </div>
                   </ng-template>
@@ -528,7 +528,7 @@
                     "
                   >
                     <ng-template pTemplate="selectedItem" let-item>
-                      <div class="d-flex">
+                      <div *ngIf="item" class="d-flex">
                         <i [class]="item.value | iconSmClass"></i>
                       </div>
                     </ng-template>
@@ -636,7 +636,7 @@
                 "
               >
                 <ng-template pTemplate="selectedItem" let-item>
-                  <div class="d-flex">
+                  <div *ngIf="item" class="d-flex">
                     <i [class]="item.value | iconSmClass"></i>
                   </div>
                 </ng-template>
@@ -772,7 +772,7 @@
                   "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
-                    <div class="d-flex">
+                    <div *ngIf="item" class="d-flex">
                       <i [class]="item.value | iconSmClass"></i>
                     </div>
                   </ng-template>
@@ -891,7 +891,7 @@
                   "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
-                    <div class="d-flex">
+                    <div *ngIf="item" class="d-flex">
                       <i [class]="item.value | iconSmClass"></i>
                     </div>
                   </ng-template>
@@ -944,7 +944,7 @@
                   "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
-                    <div class="d-flex">
+                    <div *ngIf="item" class="d-flex">
                       <i [class]="item.value | iconSmClass"></i>
                     </div>
                   </ng-template>
@@ -1076,13 +1076,15 @@
               (activeItemChange)="setActiveItem(step, $event)"
             >
               <ng-template pTemplate="item" let-item>
-                <span
-                  class="p-menuitem-icon"
-                  [class]="$any(stepDetailIcon)[item.label]"
-                ></span>
-                <span class="p-menuitem-text">{{
-                  'options.stepDetailTab.' + item.label | translate
-                }}</span>
+                <a class="p-menuitem-link">
+                  <span
+                    class="p-menuitem-icon"
+                    [class]="$any(stepDetailIcon)[item.label]"
+                  ></span>
+                  <span class="p-menuitem-text">{{
+                    'options.stepDetailTab.' + item.label | translate
+                  }}</span>
+                </a>
               </ng-template>
             </p-tabMenu>
           </td>
