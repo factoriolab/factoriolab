@@ -1,4 +1,4 @@
-import { inject, Injectable, TemplateRef } from '@angular/core';
+import { inject, Injectable, signal, TemplateRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Confirmation, Message } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
@@ -63,15 +63,15 @@ export class ContentService {
   );
 
   // Header
-  settingsActive$ = new BehaviorSubject(false);
-  settingsXlHidden$ = new BehaviorSubject(false);
+  settingsActive = signal(false);
+  settingsXlHidden = signal(false);
 
   toggleSettings(): void {
-    this.settingsActive$.next(!this.settingsActive$.value);
+    this.settingsActive.set(!this.settingsActive());
   }
 
   toggleSettingsXl(): void {
-    this.settingsXlHidden$.next(!this.settingsXlHidden$.value);
+    this.settingsXlHidden.set(!this.settingsXlHidden());
   }
 
   // Watch all language changes

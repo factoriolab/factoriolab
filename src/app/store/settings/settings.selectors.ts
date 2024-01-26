@@ -1,5 +1,5 @@
 import { createSelector } from '@ngrx/store';
-import { SelectItem } from 'primeng/api';
+import { MenuItem, SelectItem } from 'primeng/api';
 
 import { environment } from 'src/environments';
 import { fnPropsNotNullish, getIdOptions } from '~/helpers';
@@ -18,6 +18,7 @@ import {
   Game,
   gameColumnsState,
   gameInfo,
+  gameOptions,
   initialColumnsState,
   InserterData,
   ItemId,
@@ -39,7 +40,7 @@ import {
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
-import { initialSettingsState, SettingsState } from './settings.reducer';
+import { SettingsState } from './settings.reducer';
 
 /* Base selector functions */
 export const settingsState = (state: LabState): SettingsState =>
@@ -134,6 +135,19 @@ export const getSavedStates = createSelector(getGameStates, (states) =>
 );
 
 export const getGameInfo = createSelector(getGame, (game) => gameInfo[game]);
+
+export const getGameOptions = createSelector(getGame, (game) =>
+  gameOptions
+    .map((o) => o.value)
+    .filter((g) => g !== game)
+    .map(
+      (g): MenuItem => ({
+        icon: 'lab-icon small ' + gameInfo[g].icon,
+        label: gameInfo[g].label,
+        routerLink: gameInfo[g].route,
+      }),
+    ),
+);
 
 export const getColumnOptions = createSelector(getGameInfo, (gameInf) =>
   columnOptions(gameInf),
@@ -593,10 +607,6 @@ export const getBeltSpeedTxt = createSelector(
       return e;
     }, {}),
 );
-
-export const getSettingsModified = createSelector(settingsState, (state) => ({
-  costs: state.costs !== initialSettingsState.costs,
-}));
 
 export const getInserterData = createSelector(
   getInserterTarget,

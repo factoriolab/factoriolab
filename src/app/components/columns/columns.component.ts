@@ -55,7 +55,7 @@ export class ColumnsComponent implements OnInit {
     this.store
       .select(Settings.getColumnsState)
       .pipe(untilDestroyed(this))
-      .subscribe((columns) => this.initEdit(columns));
+      .subscribe(this.initEdit.bind(this));
   }
 
   initEdit(columns: ColumnsState): void {

@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -13,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, Game, gameInfo, gameOptions, isRecipeObjective } from '~/models';
+import { APP, gameInfo, gameOptions, isRecipeObjective } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Objectives, Settings } from '~/store';
 
@@ -39,15 +40,25 @@ export class HeaderComponent implements OnInit {
   @HostBinding('class.sticky') @Input() sticky = false;
   @HostBinding('class.settings-xl-hidden') @Input() settingsXlHidden = false;
 
-  vm$ = combineLatest([
-    this.store.select(Settings.getGame),
-    this.contentSvc.settingsXlHidden$,
-  ]).pipe(
-    map(([game, settingsXlHidden]) => ({
-      gameInfo: gameInfo[game],
-      gameOptions: this.buildGameOptions(game),
-      settingsXlHidden,
-    })),
+  gameInfo = this.store.selectSignal(Settings.getGameInfo);
+  gameOptions = toSignal(
+    combineLatest([
+      this.store.select(Settings.getGame),
+      this.contentSvc.lang$,
+    ]).pipe(
+      map(([game]): MenuItem[] => {
+        return gameOptions
+          .map((o) => o.value)
+          .filter((g) => g !== game)
+          .map(
+            (g): MenuItem => ({
+              icon: 'lab-icon small ' + gameInfo[g].icon,
+              label: this.translateSvc.instant(gameInfo[g].label),
+              routerLink: gameInfo[g].route,
+            }),
+          );
+      }),
+    ),
   );
 
   links: MenuLink[] = [
@@ -89,19 +100,6 @@ export class HeaderComponent implements OnInit {
           this.title.setTitle(APP);
         }
       });
-  }
-
-  buildGameOptions(game: Game): MenuItem[] {
-    return gameOptions
-      .map((o) => o.value)
-      .filter((g) => g !== game)
-      .map(
-        (g): MenuItem => ({
-          icon: 'lab-icon small ' + gameInfo[g].icon,
-          label: this.translateSvc.instant(gameInfo[g].label),
-          routerLink: gameInfo[g].route,
-        }),
-      );
   }
 
   cancelRouterLink(event: Event): void {

@@ -33,30 +33,16 @@ export class MainComponent implements AfterViewInit {
     this.store.select(Settings.getGame),
     this.store.select(Settings.getMod),
     this.store.select(Objectives.getMatrixResult),
-    this.contentSvc.settingsActive$,
-    this.contentSvc.settingsXlHidden$,
     this.contentSvc.scrollTop$,
     this.errorSvc.message$,
   ]).pipe(
-    map(
-      ([
-        game,
-        mod,
-        result,
-        settingsActive,
-        settingsXlHidden,
-        scrollTop,
-        errorMsg,
-      ]) => ({
-        game,
-        mod,
-        result,
-        settingsActive,
-        settingsXlHidden,
-        scrollTop,
-        errorMsg,
-      }),
-    ),
+    map(([game, mod, result, scrollTop, errorMsg]) => ({
+      game,
+      mod,
+      result,
+      scrollTop,
+      errorMsg,
+    })),
   );
 
   isResetting = false;

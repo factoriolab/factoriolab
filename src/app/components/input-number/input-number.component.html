@@ -15,7 +15,8 @@
     (blur)="changeValue(input.value, 'blur')"
     (keydown.enter)="changeValue(input.value, 'enter')"
   />
-  <span *ngIf="!hideButtons" class="p-inputnumber-button-group">
+  @if (!hideButtons) {
+  <span class="p-inputnumber-button-group">
     <button
       pButton
       pRipple
@@ -37,4 +38,5 @@
       (click)="decrease()"
     ></button>
   </span>
+  }
 </span>

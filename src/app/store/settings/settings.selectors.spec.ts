@@ -540,18 +540,6 @@ describe('Settings Selectors', () => {
     });
   });
 
-  describe('getSettingsModified', () => {
-    it('should determine whether any settings are modified', () => {
-      const result = Selectors.getSettingsModified.projector({
-        ...initialSettingsState,
-        ...{
-          costs: { excluded: '100' } as any,
-        },
-      });
-      expect(result.costs).toBeTrue();
-    });
-  });
-
   describe('getInserterData', () => {
     it('should get the appropriate set of inserter speed data', () => {
       const result = Selectors.getInserterData.projector(

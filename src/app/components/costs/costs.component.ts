@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { combineLatest, tap } from 'rxjs';
 
 import { CostKey, CostSettings } from '~/models';
 import { ContentService } from '~/services';
@@ -25,13 +24,6 @@ export class CostsComponent implements OnInit {
   store = inject(Store<LabState>);
   contentSvc = inject(ContentService);
 
-  vm$ = combineLatest({
-    costs: this.store
-      .select(Settings.getCosts)
-      .pipe(tap((costs) => this.initEdit(costs))),
-    settingsModified: this.store.select(Settings.getSettingsModified),
-  });
-
   visible = false;
   editValue = { ...Settings.initialSettingsState.costs };
 
@@ -46,6 +38,11 @@ export class CostsComponent implements OnInit {
       this.visible = true;
       this.ref.markForCheck();
     });
+
+    this.store
+      .select(Settings.getCosts)
+      .pipe(untilDestroyed(this))
+      .subscribe(this.initEdit.bind(this));
   }
 
   initEdit(costs: CostSettings): void {
