@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, tap } from 'rxjs';
 
 import {
   ColumnKey,
@@ -31,14 +30,7 @@ export class ColumnsComponent implements OnInit {
   store = inject(Store<LabState>);
   contentSvc = inject(ContentService);
 
-  usesFractions$ = new BehaviorSubject(false);
-  vm$ = combineLatest({
-    columns: this.store
-      .select(Settings.getColumnsState)
-      .pipe(tap((columns) => this.initEdit(columns))),
-    columnOptions: this.store.select(Settings.getColumnOptions),
-    usesFractions: this.usesFractions$,
-  });
+  columnOptions = this.store.selectSignal(Settings.getColumnOptions);
 
   visible = false;
   editValue: Entities<ColumnSettings> = {};
@@ -59,29 +51,24 @@ export class ColumnsComponent implements OnInit {
       this.visible = true;
       this.ref.markForCheck();
     });
+
+    this.store
+      .select(Settings.getColumnsState)
+      .pipe(untilDestroyed(this))
+      .subscribe((columns) => this.initEdit(columns));
   }
 
-  initEdit(columnsState: ColumnsState): void {
-    this.editValue = (Object.keys(columnsState) as ColumnKey[])
+  initEdit(columns: ColumnsState): void {
+    this.editValue = (Object.keys(columns) as ColumnKey[])
       .filter((c) => columnsInfo[c] != null) // Filter out any obsolete keys
       .reduce((e: Entities<ColumnSettings>, c) => {
-        e[c] = { ...columnsState[c] };
+        e[c] = { ...columns[c] };
         return e;
       }, {});
-    this.updateUsesFractions();
   }
 
   changeFraction(value: boolean, column: ColumnKey): void {
     this.editValue[column].precision = value ? null : 1;
-    this.updateUsesFractions();
-  }
-
-  updateUsesFractions(): void {
-    this.usesFractions$.next(
-      (Object.keys(this.editValue) as ColumnKey[]).some(
-        (c) => columnsInfo[c].hasPrecision && this.editValue[c] == null,
-      ),
-    );
   }
 
   reset(): void {
