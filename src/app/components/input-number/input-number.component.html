@@ -16,27 +16,27 @@
     (keydown.enter)="changeValue(input.value, 'enter')"
   />
   @if (!hideButtons) {
-  <span class="p-inputnumber-button-group">
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="p-button-outlined p-inputnumber-button p-inputnumber-button-up"
-      [class.p-button-text]="textButtons"
-      icon="fa-solid fa-angle-up"
-      [disabled]="isMaximum"
-      (click)="increase()"
-    ></button>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="p-button-outlined p-inputnumber-button p-inputnumber-button-down"
-      [class.p-button-text]="textButtons"
-      icon="fa-solid fa-angle-down"
-      [disabled]="isMinimum"
-      (click)="decrease()"
-    ></button>
-  </span>
+    <span class="p-inputnumber-button-group">
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-outlined p-inputnumber-button p-inputnumber-button-up"
+        [class.p-button-text]="textButtons"
+        icon="fa-solid fa-angle-up"
+        [disabled]="isMaximum"
+        (click)="increase()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-outlined p-inputnumber-button p-inputnumber-button-down"
+        [class.p-button-text]="textButtons"
+        icon="fa-solid fa-angle-down"
+        [disabled]="isMinimum"
+        (click)="decrease()"
+      ></button>
+    </span>
   }
 </span>
