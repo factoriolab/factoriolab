@@ -68,11 +68,9 @@ export function machinesReducer(
           ...state,
           ...{ ids, entities: { ...state.entities } },
         };
-        if (newState.entities[action.payload.id]) {
-          newState.entities[action.payload.value] =
-            newState.entities[action.payload.id];
+        if (newState.entities[action.payload.id])
           delete newState.entities[action.payload.id];
-        }
+
         return newState;
       }
       return state;
