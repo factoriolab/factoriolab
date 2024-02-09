@@ -245,7 +245,6 @@
                 [class.hover-active]="vm.itemsState[step.itemId].excluded"
                 [icon]="step.itemId | iconSmClass"
                 [pTooltip]="tooltip"
-                [autoHide]="false"
                 (click)="
                   setItemExcluded(
                     step.itemId,
@@ -262,7 +261,6 @@
                 <i
                   [class]="step.recipeId | iconSmClass: 'recipe'"
                   [pTooltip]="tooltip"
-                  [autoHide]="false"
                 >
                   <span *ngIf="step.recipeObjectiveId != null"
                     >#{{ step.recipeObjectiveId }}</span
@@ -308,7 +306,6 @@
                 [class.hover-active]="vm.itemsState[step.itemId].excluded"
                 [icon]="step.itemId | iconSmClass"
                 [pTooltip]="tooltip"
-                [autoHide]="false"
                 (click)="
                   setItemExcluded(
                     step.itemId,
@@ -344,7 +341,6 @@
                     "
                     labDropdownBase="icon"
                     [pTooltip]="tooltip"
-                    [autoHide]="false"
                     [ngModel]="beltId"
                     [options]="vm.options.belts"
                     (onChange)="
@@ -360,7 +356,6 @@
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
                         [pTooltip]="tooltip"
-                        [autoHide]="false"
                       >
                         <i [class]="item.value | iconSmClass"></i>
                         <div class="ms-3 text-truncate">
@@ -388,7 +383,6 @@
                       "
                       labDropdownBase="icon"
                       [pTooltip]="tooltip"
-                      [autoHide]="false"
                       [ngModel]="beltId"
                       [options]="vm.options.pipes"
                       (onChange)="
@@ -404,7 +398,6 @@
                         <div
                           class="d-flex align-items-center py-2 w-100 h-100"
                           [pTooltip]="tooltip"
-                          [autoHide]="false"
                         >
                           <i [class]="item.value | iconSmClass"></i>
                           <div class="ms-3 text-truncate">
@@ -425,11 +418,7 @@
                   </ng-template>
                   <!-- Pipe icon only -->
                   <ng-template #pipeIcon>
-                    <i
-                      [class]="beltId | iconClass"
-                      [pTooltip]="tooltip"
-                      [autoHide]="false"
-                    >
+                    <i [class]="beltId | iconClass" [pTooltip]="tooltip">
                       <ng-template #tooltip>
                         <lab-tooltip [id]="beltId" type="pipe"></lab-tooltip>
                       </ng-template>
@@ -466,7 +455,6 @@
                   "
                   labDropdownBase="icon"
                   [pTooltip]="tooltip"
-                  [autoHide]="false"
                   [ngModel]="wagonId"
                   [options]="vm.options.cargoWagons"
                   (onChange)="
@@ -486,7 +474,6 @@
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
                       [pTooltip]="tooltip"
-                      [autoHide]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
                       <div class="ms-3 text-truncate">
@@ -516,7 +503,6 @@
                     "
                     labDropdownBase="icon"
                     [pTooltip]="tooltip"
-                    [autoHide]="false"
                     [ngModel]="wagonId"
                     [options]="vm.options.fluidWagons"
                     (onChange)="
@@ -536,7 +522,6 @@
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
                         [pTooltip]="tooltip"
-                        [autoHide]="false"
                       >
                         <i [class]="item.value | iconSmClass"></i>
                         <div class="ms-3 text-truncate">
@@ -596,7 +581,6 @@
                 type="button"
                 class="hover-action p-button-text"
                 [pTooltip]="tooltip"
-                [autoHide]="false"
                 (click)="
                   addObjective({
                     targetId: step.recipeId,
@@ -620,7 +604,6 @@
                 *ngIf="machineId | machineShow: vm.data.game"
                 labDropdownBase="icon"
                 [pTooltip]="tooltip"
-                [autoHide]="false"
                 [options]="
                   step.recipe.producers | options: vm.data.itemEntities
                 "
@@ -644,7 +627,6 @@
                   <div
                     class="d-flex align-items-center py-2 w-100 h-100"
                     [pTooltip]="tooltip"
-                    [autoHide]="false"
                   >
                     <i [class]="item.value | iconSmClass"></i>
                     <div class="ms-3 text-truncate">
@@ -694,7 +676,6 @@
                     class="padded"
                     [class]="fuelId | iconSmClass"
                     [pTooltip]="tooltip"
-                    [autoHide]="false"
                   >
                     <ng-template #tooltip>
                       <lab-tooltip [id]="fuelId" type="fuel"></lab-tooltip>
@@ -705,7 +686,6 @@
                   <p-dropdown
                     labDropdownBase="icon"
                     [pTooltip]="tooltip"
-                    [autoHide]="false"
                     [ngModel]="fuelId"
                     [options]="step.recipeSettings.fuelOptions ?? []"
                     (onChange)="
@@ -727,7 +707,6 @@
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
                         [pTooltip]="tooltip"
-                        [autoHide]="false"
                       >
                         <i [class]="item.value | iconSmClass"></i>
                         <div class="ms-3 text-truncate">
@@ -757,7 +736,6 @@
                   [class.last]="last"
                   [pTooltip]="moduleId !== 'module' ? tooltip : undefined"
                   tooltipPosition="top"
-                  [autoHide]="false"
                   [options]="step.recipeSettings.machineModuleOptions ?? []"
                   [ngModel]="moduleId"
                   (onChange)="
@@ -780,7 +758,6 @@
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
                       [pTooltip]="item.value !== 'module' ? tooltip : undefined"
-                      [autoHide]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
                       <div class="ms-3 text-truncate">
@@ -876,7 +853,6 @@
                   *ngIf="beacon.id"
                   labDropdownBase="icon"
                   [pTooltip]="tooltip"
-                  [autoHide]="false"
                   [options]="vm.options.beacons"
                   [ngModel]="beacon.id"
                   (onChange)="
@@ -899,7 +875,6 @@
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
                       [pTooltip]="tooltip"
-                      [autoHide]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
                       <div class="ms-3 text-truncate">
@@ -928,7 +903,6 @@
                   [class.last]="last"
                   [pTooltip]="moduleId !== 'module' ? tooltip : undefined"
                   tooltipPosition="top"
-                  [autoHide]="false"
                   [options]="beacon.moduleOptions ?? []"
                   [ngModel]="moduleId"
                   (onChange)="
@@ -952,7 +926,6 @@
                     <div
                       class="d-flex align-items-center py-2 w-100 h-100"
                       [pTooltip]="item.value !== 'module' ? tooltip : undefined"
-                      [autoHide]="false"
                     >
                       <i [class]="item.value | iconSmClass"></i>
                       <div class="ms-3 text-truncate">
@@ -1439,18 +1412,13 @@
                         <i
                           [class]="step.recipeId | iconClass: 'recipe'"
                           [pTooltip]="tooltip"
-                          [autoHide]="false"
                         >
                           <ng-template #tooltip>
                             <lab-tooltip [id]="step.recipeId" type="recipe">
                             </lab-tooltip>
                           </ng-template>
                         </i>
-                        <i
-                          [class]="machineId | iconClass"
-                          [pTooltip]="tooltip"
-                          [autoHide]="false"
-                        >
+                        <i [class]="machineId | iconClass" [pTooltip]="tooltip">
                           <ng-template #tooltip>
                             <lab-tooltip
                               [id]="machineId"
@@ -1546,11 +1514,7 @@
                 >
                   <div class="d-flex align-items-center justify-content-end">
                     <span class="monospace">{{ value }}</span>
-                    <i
-                      [class]="itemId | iconClass"
-                      [pTooltip]="tooltip"
-                      [autoHide]="false"
-                    >
+                    <i [class]="itemId | iconClass" [pTooltip]="tooltip">
                       <ng-template #tooltip>
                         <lab-tooltip [id]="itemId"></lab-tooltip>
                       </ng-template>
@@ -1610,7 +1574,6 @@
                       [class.hover-active]="vm.recipesState[recipeId].excluded"
                       [icon]="recipeId | iconSmClass: 'recipe'"
                       [pTooltip]="tooltip"
-                      [autoHide]="false"
                       (click)="toggleRecipe(recipeId, vm.recipesState, vm.data)"
                     >
                       <i class="hover-icon fa-solid fa-eye-slash"></i>
@@ -1676,11 +1639,7 @@
           </td>
           <td class="ps-0">
             <div class="d-flex">
-              <i
-                [class]="itemId | iconClass"
-                [pTooltip]="tooltip"
-                [autoHide]="false"
-              >
+              <i [class]="itemId | iconClass" [pTooltip]="tooltip">
                 <ng-template #tooltip>
                   <lab-tooltip [id]="itemId"></lab-tooltip>
                 </ng-template>
@@ -1696,11 +1655,7 @@
               </td>
               <td class="ps-0">
                 <div class="d-flex">
-                  <i
-                    [class]="beltId | iconClass"
-                    [pTooltip]="tooltip"
-                    [autoHide]="false"
-                  >
+                  <i [class]="beltId | iconClass" [pTooltip]="tooltip">
                     <ng-template #tooltip>
                       <lab-tooltip [id]="beltId" type="belt"></lab-tooltip>
                     </ng-template>
@@ -1725,7 +1680,6 @@
                     "
                     [class]="wagonId | iconClass"
                     [pTooltip]="tooltip"
-                    [autoHide]="false"
                   >
                     <ng-template #tooltip>
                       <lab-tooltip
@@ -1735,11 +1689,7 @@
                     </ng-template>
                   </i>
                   <ng-template #fluidWagonIcon>
-                    <i
-                      [class]="wagonId | iconClass"
-                      [pTooltip]="tooltip"
-                      [autoHide]="false"
-                    >
+                    <i [class]="wagonId | iconClass" [pTooltip]="tooltip">
                       <ng-template #tooltip>
                         <lab-tooltip
                           [id]="wagonId"
@@ -1774,10 +1724,7 @@
               <ng-container
                 *ngIf="machineId | machineShow: vm.data.game; else machineFill"
               >
-                <i
-                  [class]="recipeId | iconClass: 'recipe'"
-                  [pTooltip]="tooltip"
-                  [autoHide]="false"
+                <i [class]="recipeId | iconClass: 'recipe'" [pTooltip]="tooltip"
                   ><span *ngIf="recipeObjectiveId"
                     >#{{ recipeObjectiveId }}</span
                   >
@@ -1785,11 +1732,7 @@
                     <lab-tooltip [id]="recipeId" type="recipe"></lab-tooltip>
                   </ng-template>
                 </i>
-                <i
-                  [class]="machineId | iconClass"
-                  [pTooltip]="tooltip"
-                  [autoHide]="false"
-                >
+                <i [class]="machineId | iconClass" [pTooltip]="tooltip">
                   <ng-template #tooltip>
                     <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
                   </ng-template>
@@ -1821,7 +1764,6 @@
                     destId | iconClass: (destIsRecipe ? 'recipe' : 'item')
                   "
                   [pTooltip]="tooltip"
-                  [autoHide]="false"
                   ><span *ngIf="destRecipeObjectiveId"
                     >#{{ destRecipeObjectiveId }}</span
                   >
@@ -1936,7 +1878,6 @@
                     class="d-block"
                     [class]="tot.key | iconClass"
                     [pTooltip]="tooltip"
-                    [autoHide]="false"
                   >
                     <ng-template #tooltip>
                       <lab-tooltip [id]="tot.key" [type]="type"></lab-tooltip>
@@ -1947,7 +1888,6 @@
                       class="d-block"
                       [class]="tot.key | iconClass: 'recipe'"
                       [pTooltip]="tooltip"
-                      [autoHide]="false"
                     >
                       <ng-template #tooltip>
                         <lab-tooltip [id]="tot.key" type="recipe"></lab-tooltip>
@@ -1969,7 +1909,6 @@
                     class="d-block"
                     [class]="tot.key | iconClass: 'item'"
                     [pTooltip]="tot.key !== 'module' ? tooltip : undefined"
-                    [autoHide]="false"
                   >
                     <ng-template #tooltip>
                       <lab-tooltip [id]="tot.key" type="module"></lab-tooltip>
