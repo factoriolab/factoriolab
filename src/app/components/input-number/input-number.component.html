@@ -7,10 +7,10 @@
     class="text-end"
     [class.hidden-buttons]="hideButtons"
     [style.width]="width"
-    [ngModel]="value"
+    [ngModel]="value()"
     labValidateNumber
-    [minimum]="min"
-    [maximum]="max"
+    [minimum]="min()"
+    [maximum]="max()"
     (input)="changeValue(input.value, 'input')"
     (blur)="changeValue(input.value, 'blur')"
     (keydown.enter)="changeValue(input.value, 'enter')"
@@ -24,7 +24,7 @@
         class="p-button-outlined p-inputnumber-button p-inputnumber-button-up"
         [class.p-button-text]="textButtons"
         icon="fa-solid fa-angle-up"
-        [disabled]="isMaximum"
+        [disabled]="isMaximum()"
         (click)="increase()"
       ></button>
       <button
@@ -34,7 +34,7 @@
         class="p-button-outlined p-inputnumber-button p-inputnumber-button-down"
         [class.p-button-text]="textButtons"
         icon="fa-solid fa-angle-down"
-        [disabled]="isMinimum"
+        [disabled]="isMinimum()"
         (click)="decrease()"
       ></button>
     </span>

@@ -6,7 +6,6 @@ import { IdType } from '~/models';
 export class IconClassPipe implements PipeTransform {
   transform(value: string | null | undefined, type: IdType = 'item'): string {
     if (value == null) return '';
-
     return `lab-icon ${type} ${value}`;
   }
 }
@@ -18,7 +17,6 @@ export class IconSmClassPipe implements PipeTransform {
     type: IdType = 'item',
   ): string {
     if (value == null) return '';
-
     return `lab-icon sm ${type} ${value}`;
   }
 

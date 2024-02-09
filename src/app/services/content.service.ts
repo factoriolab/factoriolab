@@ -1,4 +1,11 @@
-import { inject, Injectable, signal, TemplateRef } from '@angular/core';
+import {
+  computed,
+  inject,
+  Injectable,
+  signal,
+  TemplateRef,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Confirmation, Message } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
@@ -38,11 +45,14 @@ export class ContentService {
     startWith(window.scrollY),
   );
   windowInnerWidth = (): number => window.innerWidth;
-  width$ = fromEvent(window, 'resize').pipe(
-    map(this.windowInnerWidth),
-    startWith(window.innerWidth),
+  width = toSignal(
+    fromEvent(window, 'resize').pipe(map(this.windowInnerWidth)),
   );
-  isMobile$ = this.width$.pipe(map((width) => width < Breakpoint.Small));
+
+  isMobile = computed(() => {
+    const width = this.width() ?? window.innerWidth;
+    return width < Breakpoint.Small;
+  });
 
   // Dialogs
   showColumns$ = new Subject<void>();

@@ -5,7 +5,7 @@ import {
   ElementRef,
   EventEmitter,
   inject,
-  Input,
+  input,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -30,7 +30,7 @@ export class PickerComponent {
     | ElementRef<HTMLInputElement>
     | undefined;
 
-  @Input() header = '';
+  header = input('');
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<string[]>();
 

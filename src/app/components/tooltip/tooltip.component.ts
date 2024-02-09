@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  Input,
+  input,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 
@@ -31,8 +31,8 @@ type TooltipType =
 export class TooltipComponent {
   store = inject(Store<LabState>);
 
-  @Input() id: string | undefined;
-  @Input() type: TooltipType = 'item';
+  id = input.required<string>();
+  type = input<TooltipType>('item');
 
   dataKey: Record<TooltipType, string> = {
     item: 'items',

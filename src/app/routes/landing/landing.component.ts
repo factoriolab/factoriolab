@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 
@@ -37,7 +36,6 @@ export class LandingComponent {
   recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
   savedStates = this.store.selectSignal(Settings.getSavedStates);
   preferences = this.store.selectSignal(Preferences.preferencesState);
-  isMobile = toSignal(this.contentSvc.isMobile$);
 
   gameInfo = gameInfo;
   gameOptions = gameOptions;

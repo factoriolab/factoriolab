@@ -4,8 +4,10 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
+  effect,
   inject,
-  Input,
+  input,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -14,15 +16,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { MenuItem, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
-import {
-  BehaviorSubject,
-  combineLatest,
-  filter,
-  first,
-  map,
-  pairwise,
-  tap,
-} from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, first, pairwise } from 'rxjs';
 
 import {
   ColumnsState,
@@ -78,58 +72,49 @@ export class StepsComponent implements OnInit, AfterViewInit {
   exportSvc = inject(ExportService);
   routerSvc = inject(RouterService);
 
-  focus$ = new BehaviorSubject<boolean>(false);
-  @Input() set focus(value: boolean) {
-    this.focus$.next(value);
-  }
+  focus = input(false);
+  selectedId = input<string | null>();
+  steps = computed(() => {
+    const steps = [...this.store.selectSignal(Objectives.getSteps)()];
+    const focus = this.focus();
+    if (!focus) return steps;
+    const selectedId = this.selectedId();
+    return steps.filter((s) => s.id === selectedId);
+  });
+  activeItemsEffect = effect(() => {
+    const steps = this.steps();
+    const stepDetails = this.store.selectSignal(Objectives.getStepDetails)();
+    this.setActiveItems(steps, stepDetails);
+  });
+  toggleEffect = effect(() => {
+    const focus = this.focus();
+    const steps = this.steps();
+    if (focus) this.stepsTable?.toggleRow(steps[0]);
+  });
 
-  selectedId$ = new BehaviorSubject<string | null>(null);
-  @Input() set selectedId(value: string | null) {
-    this.selectedId$.next(value);
-  }
-
-  steps$ = combineLatest({
-    focus: this.focus$,
-    selectedId: this.selectedId$,
-    steps: this.store.select(Objectives.getSteps),
-  }).pipe(
-    map(({ focus, selectedId, steps }) =>
-      focus ? steps.filter((s) => s.id === selectedId) : steps,
-    ),
+  machinesState = this.store.selectSignal(Machines.getMachinesState);
+  itemsState = this.store.selectSignal(Items.getItemsState);
+  itemsModified = this.store.selectSignal(Items.getItemsModified);
+  stepsModified = this.store.selectSignal(Objectives.getStepsModified);
+  totals = this.store.selectSignal(Objectives.getTotals);
+  stepDetails = this.store.selectSignal(Objectives.getStepDetails);
+  stepById = this.store.selectSignal(Objectives.getStepById);
+  stepByItemEntities = this.store.selectSignal(
+    Objectives.getStepByItemEntities,
   );
-  vm$ = combineLatest({
-    focus: this.focus$,
-    machinesState: this.store.select(Machines.getMachinesState),
-    itemsState: this.store.select(Items.getItemsState),
-    itemsModified: this.store.select(Items.getItemsModified),
-    stepsModified: this.store.select(Objectives.getStepsModified),
-    totals: this.store.select(Objectives.getTotals),
-    steps: this.steps$,
-    stepDetails: this.store.select(Objectives.getStepDetails),
-    stepById: this.store.select(Objectives.getStepById),
-    stepByItemEntities: this.store.select(Objectives.getStepByItemEntities),
-    stepTree: this.store.select(Objectives.getStepTree),
-    effectivePowerUnit: this.store.select(Objectives.getEffectivePowerUnit),
-    recipesState: this.store.select(Recipes.getRecipesState),
-    recipesModified: this.store.select(Objectives.getRecipesModified),
-    data: this.store.select(Recipes.getAdjustedDataset),
-    columnsState: this.store.select(Settings.getColumnsState),
-    settings: this.store.select(Settings.getSettings),
-    dispRateInfo: this.store.select(Settings.getDisplayRateInfo),
-    options: this.store.select(Settings.getOptions),
-    beltSpeed: this.store.select(Settings.getBeltSpeed),
-    beltSpeedTxt: this.store.select(Settings.getBeltSpeedTxt),
-    preferences: this.store.select(Preferences.preferencesState),
-    zipPartial: this.routerSvc.zipConfig$,
-  }).pipe(
-    tap((vm) => {
-      vm.steps = [...vm.steps]; // Preserve original order
-      this.setActiveItems(vm.steps, vm.stepDetails);
-      if (vm.focus) {
-        this.stepsTable?.toggleRow(vm.steps[0]);
-      }
-    }),
+  stepTree = this.store.selectSignal(Objectives.getStepTree);
+  effectivePowerUnit = this.store.selectSignal(
+    Objectives.getEffectivePowerUnit,
   );
+  recipesState = this.store.selectSignal(Recipes.getRecipesState);
+  recipesModified = this.store.selectSignal(Objectives.getRecipesModified);
+  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  columnsState = this.store.selectSignal(Settings.getColumnsState);
+  settings = this.store.selectSignal(Settings.getSettings);
+  dispRateInfo = this.store.selectSignal(Settings.getDisplayRateInfo);
+  options = this.store.selectSignal(Settings.getOptions);
+  beltSpeed = this.store.selectSignal(Settings.getBeltSpeed);
+  preferences = this.store.selectSignal(Preferences.preferencesState);
 
   sortSteps$ = new BehaviorSubject<SortEvent | null>(null);
 
