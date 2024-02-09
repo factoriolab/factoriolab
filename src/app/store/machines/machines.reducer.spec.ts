@@ -99,7 +99,7 @@ describe('Machines Reducer', () => {
         new Actions.SetMachineAction({ id: def, value, def: [def] }),
       );
       expect(result.ids).toEqual([value]);
-      expect(result.entities[value]).toEqual('test' as any);
+      expect(result.entities[value]).toBeUndefined();
     });
 
     it('should do nothing if id is not found', () => {
