@@ -466,66 +466,258 @@
               <td class="ps-0">
                 <div class="d-flex align-items-center">
                   <!-- Cargo wagon dropdown -->
-                  <p-dropdown
-                    *ngIf="
-                      data().cargoWagonIds.indexOf(wagonId) !== -1 &&
-                        settings().cargoWagonId as cargoWagonId;
-                      else fluidWagonsDropdown
-                    "
-                    labDropdownBase="icon"
-                    [pTooltip]="tooltip"
-                    [ngModel]="wagonId"
-                    [options]="options().cargoWagons"
-                    (onChange)="
-                      setWagon(step.itemId, $event.value, cargoWagonId)
-                    "
-                  >
-                    <ng-template pTemplate="selectedItem" let-item>
-                      <div *ngIf="item" class="d-flex">
-                        <i [class]="item.value | iconSmClass"></i>
-                      </div>
-                    </ng-template>
-                    <ng-template pTemplate="item" let-item>
-                      <div
-                        class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="tooltip"
-                      >
-                        <i [class]="item.value | iconSmClass"></i>
-                        <div class="ms-3 text-truncate">
-                          {{ item.label }}
-                        </div>
-                        <ng-template #tooltip>
-                          <lab-tooltip
-                            [id]="item.value"
-                            type="cargo-wagon"
-                          ></lab-tooltip>
-                        </ng-template>
-                      </div>
-                    </ng-template>
-                    <ng-template #tooltip>
-                      <lab-tooltip
-                        [id]="wagonId"
-                        type="cargo-wagon"
-                      ></lab-tooltip>
-                    </ng-template>
-                  </p-dropdown>
-                  <!-- Fluid wagon dropdown -->
-                  <ng-template #fluidWagonsDropdown>
+                  @if (
+                    data().cargoWagonIds.indexOf(wagonId) !== -1 &&
+                      settings().cargoWagonId;
+                    as cargoWagonId
+                  ) {
                     <p-dropdown
-                      *ngIf="
-                        data().fluidWagonIds.indexOf(wagonId) !== -1 &&
-                        settings().fluidWagonId as fluidWagonId
-                      "
                       labDropdownBase="icon"
                       [pTooltip]="tooltip"
                       [ngModel]="wagonId"
-                      [options]="options().fluidWagons"
+                      [options]="options().cargoWagons"
                       (onChange)="
-                        setWagon(step.itemId, $event.value, fluidWagonId)
+                        setWagon(step.itemId, $event.value, cargoWagonId)
                       "
                     >
                       <ng-template pTemplate="selectedItem" let-item>
-                        <div *ngIf="item" class="d-flex">
+                        @if (item) {
+                          <div class="d-flex">
+                            <i [class]="item.value | iconSmClass"></i>
+                          </div>
+                        }
+                      </ng-template>
+                      <ng-template pTemplate="item" let-item>
+                        <div
+                          class="d-flex align-items-center py-2 w-100 h-100"
+                          [pTooltip]="tooltip"
+                        >
+                          <i [class]="item.value | iconSmClass"></i>
+                          <div class="ms-3 text-truncate">
+                            {{ item.label }}
+                          </div>
+                          <ng-template #tooltip>
+                            <lab-tooltip
+                              [id]="item.value"
+                              type="cargo-wagon"
+                            ></lab-tooltip>
+                          </ng-template>
+                        </div>
+                      </ng-template>
+                      <ng-template #tooltip>
+                        <lab-tooltip
+                          [id]="wagonId"
+                          type="cargo-wagon"
+                        ></lab-tooltip>
+                      </ng-template>
+                    </p-dropdown>
+                  } @else {
+                    <!-- Fluid wagon dropdown -->
+                    @if (
+                      data().fluidWagonIds.indexOf(wagonId) !== -1 &&
+                        settings().fluidWagonId;
+                      as fluidWagonId
+                    ) {
+                      <p-dropdown
+                        labDropdownBase="icon"
+                        [pTooltip]="tooltip"
+                        [ngModel]="wagonId"
+                        [options]="options().fluidWagons"
+                        (onChange)="
+                          setWagon(step.itemId, $event.value, fluidWagonId)
+                        "
+                      >
+                        <ng-template pTemplate="selectedItem" let-item>
+                          @if (item) {
+                            <div class="d-flex">
+                              <i [class]="item.value | iconSmClass"></i>
+                            </div>
+                          }
+                        </ng-template>
+                        <ng-template pTemplate="item" let-item>
+                          <div
+                            class="d-flex align-items-center py-2 w-100 h-100"
+                            [pTooltip]="tooltip"
+                          >
+                            <i [class]="item.value | iconSmClass"></i>
+                            <div class="ms-3 text-truncate">
+                              {{ item.label }}
+                            </div>
+                          </div>
+                          <ng-template #tooltip>
+                            <lab-tooltip
+                              [id]="item.value"
+                              type="fluid-wagon"
+                            ></lab-tooltip>
+                          </ng-template>
+                        </ng-template>
+                        <ng-template #tooltip>
+                          <lab-tooltip
+                            [id]="wagonId"
+                            type="fluid-wagon"
+                          ></lab-tooltip>
+                        </ng-template>
+                      </p-dropdown>
+                    }
+                  }
+                </div>
+              </td>
+            }
+          } @else {
+            <td colspan="2"></td>
+          }
+        }
+        <!-- Machines -->
+        @if (step.recipeSettings?.machineId; as machineId) {
+          <td class="w-0 text-end">
+            @if (
+              step.machines &&
+              step.machines.nonzero() &&
+              (machineId | machineShowRate: data().game)
+            ) {
+              <span class="monospace">{{
+                step.machines
+                  | machineRate: columnsState().machines.precision : machineId
+              }}</span>
+            }
+          </td>
+          <td class="ps-0">
+            @if (step.recipeId && step.recipe && step.recipeSettings) {
+              <div class="d-flex align-items-center">
+                <span class="find-text">{{ step.recipe.name }}</span>
+                @if (
+                  !preferences().hideDuplicateIcons ||
+                  (step.itemId != null && step.itemId !== step.recipeId)
+                ) {
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="hover-action p-button-text"
+                    [pTooltip]="tooltip"
+                    (click)="
+                      addObjective({
+                        targetId: step.recipeId,
+                        unit: ObjectiveUnit.Machines
+                      })
+                    "
+                  >
+                    <span
+                      class="p-button-icon"
+                      [class]="step.recipeId | iconSmClass: 'recipe'"
+                      ><span *ngIf="step.recipeObjectiveId"
+                        >#{{ step.recipeObjectiveId }}</span
+                      ></span
+                    >
+                    <i class="hover-icon fa-solid fa-circle-plus"></i>
+                    <ng-template #tooltip>
+                      <lab-tooltip
+                        [id]="step.recipeId"
+                        type="recipe"
+                      ></lab-tooltip>
+                    </ng-template>
+                  </button>
+                }
+                <p-dropdown
+                  *ngIf="machineId | machineShow: data().game"
+                  labDropdownBase="icon"
+                  [pTooltip]="tooltip"
+                  [options]="
+                    step.recipe.producers | options: data().itemEntities
+                  "
+                  [ngModel]="machineId"
+                  (onChange)="
+                    changeRecipeField(
+                      step,
+                      $event.value,
+                      machinesState(),
+                      data(),
+                      RecipeField.Machine
+                    )
+                  "
+                >
+                  <ng-template pTemplate="selectedItem" let-item>
+                    <div *ngIf="item" class="d-flex">
+                      <i [class]="item.value | iconSmClass"></i>
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="item" let-item>
+                    <div
+                      class="d-flex align-items-center py-2 w-100 h-100"
+                      [pTooltip]="tooltip"
+                    >
+                      <i [class]="item.value | iconSmClass"></i>
+                      <div class="ms-3 text-truncate">
+                        {{ item.label }}
+                      </div>
+                      <ng-template #tooltip>
+                        <lab-tooltip
+                          [id]="item.value"
+                          type="machine"
+                        ></lab-tooltip>
+                      </ng-template>
+                    </div>
+                  </ng-template>
+                  <ng-template #tooltip>
+                    <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
+                  </ng-template>
+                </p-dropdown>
+                <p-inputNumber
+                  *ngIf="data().game === Game.Satisfactory"
+                  #overclockInput
+                  suffix="%"
+                  [min]="1"
+                  [max]="250"
+                  [step]="10"
+                  [maxFractionDigits]="2"
+                  [size]="3"
+                  inputStyleClass="text-end"
+                  [pTooltip]="'steps.overclockTooltip' | translate"
+                  [ngModel]="step.recipeSettings.overclock"
+                  (onBlur)="
+                    changeRecipeField(
+                      step,
+                      overclockInput.value ?? 0,
+                      machinesState(),
+                      data(),
+                      RecipeField.Overclock
+                    )
+                  "
+                >
+                </p-inputNumber>
+                <ng-container *ngIf="step.recipeSettings?.fuelId as fuelId">
+                  <div
+                    *ngIf="step.recipe.isBurn; else fuelSelect"
+                    class="d-flex align-items-center"
+                  >
+                    <i
+                      class="padded"
+                      [class]="fuelId | iconSmClass"
+                      [pTooltip]="tooltip"
+                    >
+                      <ng-template #tooltip>
+                        <lab-tooltip [id]="fuelId" type="fuel"></lab-tooltip>
+                      </ng-template>
+                    </i>
+                  </div>
+                  <ng-template #fuelSelect>
+                    <p-dropdown
+                      labDropdownBase="icon"
+                      [pTooltip]="tooltip"
+                      [ngModel]="fuelId"
+                      [options]="step.recipeSettings.fuelOptions ?? []"
+                      (onChange)="
+                        changeRecipeField(
+                          step,
+                          $event.value,
+                          machinesState(),
+                          data(),
+                          RecipeField.Fuel
+                        )
+                      "
+                    >
+                      <ng-template pTemplate="selectedItem" let-item>
+                        <div class="d-flex">
                           <i [class]="item.value | iconSmClass"></i>
                         </div>
                       </ng-template>
@@ -538,187 +730,54 @@
                           <div class="ms-3 text-truncate">
                             {{ item.label }}
                           </div>
+                          <ng-template #tooltip>
+                            <lab-tooltip
+                              [id]="item.value"
+                              type="fuel"
+                            ></lab-tooltip>
+                          </ng-template>
                         </div>
-                        <ng-template #tooltip>
-                          <lab-tooltip
-                            [id]="item.value"
-                            type="fluid-wagon"
-                          ></lab-tooltip>
-                        </ng-template>
                       </ng-template>
                       <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="wagonId"
-                          type="fluid-wagon"
-                        ></lab-tooltip>
+                        <lab-tooltip [id]="fuelId" type="fuel"></lab-tooltip>
                       </ng-template>
                     </p-dropdown>
                   </ng-template>
-                </div>
-              </td>
-            }
-          } @else {
-            <td colspan="2"></td>
-          }
-        }
-        <!-- Machines -->
-        <ng-container
-          *ngIf="step.recipeSettings?.machineId as machineId; else emptyCol2"
-        >
-          <td class="w-0 text-end">
-            <span
-              *ngIf="
-                step.machines &&
-                step.machines.nonzero() &&
-                (machineId | machineShowRate: data().game)
-              "
-              class="monospace"
-              >{{
-                step.machines
-                  | machineRate: columnsState().machines.precision : machineId
-              }}</span
-            >
-          </td>
-          <td class="ps-0">
-            <div
-              *ngIf="step.recipeId && step.recipe && step.recipeSettings"
-              class="d-flex align-items-center"
-            >
-              <span class="find-text">{{ step.recipe.name }}</span>
-              <button
-                *ngIf="
-                  !preferences().hideDuplicateIcons ||
-                  (step.itemId != null && step.itemId !== step.recipeId)
-                "
-                pButton
-                pRipple
-                type="button"
-                class="hover-action p-button-text"
-                [pTooltip]="tooltip"
-                (click)="
-                  addObjective({
-                    targetId: step.recipeId,
-                    unit: ObjectiveUnit.Machines
-                  })
-                "
-              >
-                <span
-                  class="p-button-icon"
-                  [class]="step.recipeId | iconSmClass: 'recipe'"
-                  ><span *ngIf="step.recipeObjectiveId"
-                    >#{{ step.recipeObjectiveId }}</span
-                  ></span
+                </ng-container>
+                <ng-container
+                  *ngIf="step.recipeSettings?.machineModuleIds as moduleIds"
                 >
-                <i class="hover-icon fa-solid fa-circle-plus"></i>
-                <ng-template #tooltip>
-                  <lab-tooltip [id]="step.recipeId" type="recipe"></lab-tooltip>
-                </ng-template>
-              </button>
-              <p-dropdown
-                *ngIf="machineId | machineShow: data().game"
-                labDropdownBase="icon"
-                [pTooltip]="tooltip"
-                [options]="step.recipe.producers | options: data().itemEntities"
-                [ngModel]="machineId"
-                (onChange)="
-                  changeRecipeField(
-                    step,
-                    $event.value,
-                    machinesState(),
-                    data(),
-                    RecipeField.Machine
-                  )
-                "
-              >
-                <ng-template pTemplate="selectedItem" let-item>
-                  <div *ngIf="item" class="d-flex">
-                    <i [class]="item.value | iconSmClass"></i>
-                  </div>
-                </ng-template>
-                <ng-template pTemplate="item" let-item>
-                  <div
-                    class="d-flex align-items-center py-2 w-100 h-100"
-                    [pTooltip]="tooltip"
-                  >
-                    <i [class]="item.value | iconSmClass"></i>
-                    <div class="ms-3 text-truncate">
-                      {{ item.label }}
-                    </div>
-                    <ng-template #tooltip>
-                      <lab-tooltip
-                        [id]="item.value"
-                        type="machine"
-                      ></lab-tooltip>
-                    </ng-template>
-                  </div>
-                </ng-template>
-                <ng-template #tooltip>
-                  <lab-tooltip [id]="machineId" type="machine"></lab-tooltip>
-                </ng-template>
-              </p-dropdown>
-              <p-inputNumber
-                *ngIf="data().game === Game.Satisfactory"
-                #overclockInput
-                suffix="%"
-                [min]="1"
-                [max]="250"
-                [step]="10"
-                [maxFractionDigits]="2"
-                [size]="3"
-                inputStyleClass="text-end"
-                [pTooltip]="'steps.overclockTooltip' | translate"
-                [ngModel]="step.recipeSettings.overclock"
-                (onBlur)="
-                  changeRecipeField(
-                    step,
-                    overclockInput.value ?? 0,
-                    machinesState(),
-                    data(),
-                    RecipeField.Overclock
-                  )
-                "
-              >
-              </p-inputNumber>
-              <ng-container *ngIf="step.recipeSettings?.fuelId as fuelId">
-                <div
-                  *ngIf="step.recipe.isBurn; else fuelSelect"
-                  class="d-flex align-items-center"
-                >
-                  <i
-                    class="padded"
-                    [class]="fuelId | iconSmClass"
-                    [pTooltip]="tooltip"
-                  >
-                    <ng-template #tooltip>
-                      <lab-tooltip [id]="fuelId" type="fuel"></lab-tooltip>
-                    </ng-template>
-                  </i>
-                </div>
-                <ng-template #fuelSelect>
                   <p-dropdown
+                    *ngFor="let moduleId of moduleIds; index as i; last as last"
                     labDropdownBase="icon"
-                    [pTooltip]="tooltip"
-                    [ngModel]="fuelId"
-                    [options]="step.recipeSettings.fuelOptions ?? []"
+                    class="module-dropdown"
+                    [class.last]="last"
+                    [pTooltip]="moduleId !== 'module' ? tooltip : undefined"
+                    tooltipPosition="top"
+                    [options]="step.recipeSettings.machineModuleOptions ?? []"
+                    [ngModel]="moduleId"
                     (onChange)="
                       changeRecipeField(
                         step,
                         $event.value,
                         machinesState(),
                         data(),
-                        RecipeField.Fuel
+                        RecipeField.MachineModules,
+                        i
                       )
                     "
                   >
                     <ng-template pTemplate="selectedItem" let-item>
-                      <div class="d-flex">
+                      <div *ngIf="item" class="d-flex">
                         <i [class]="item.value | iconSmClass"></i>
                       </div>
                     </ng-template>
                     <ng-template pTemplate="item" let-item>
                       <div
                         class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="tooltip"
+                        [pTooltip]="
+                          item.value !== 'module' ? tooltip : undefined
+                        "
                       >
                         <i [class]="item.value | iconSmClass"></i>
                         <div class="ms-3 text-truncate">
@@ -727,70 +786,22 @@
                         <ng-template #tooltip>
                           <lab-tooltip
                             [id]="item.value"
-                            type="fuel"
+                            type="module"
                           ></lab-tooltip>
                         </ng-template>
                       </div>
                     </ng-template>
                     <ng-template #tooltip>
-                      <lab-tooltip [id]="fuelId" type="fuel"></lab-tooltip>
+                      <lab-tooltip [id]="moduleId" type="module"></lab-tooltip>
                     </ng-template>
                   </p-dropdown>
-                </ng-template>
-              </ng-container>
-              <ng-container
-                *ngIf="step.recipeSettings?.machineModuleIds as moduleIds"
-              >
-                <p-dropdown
-                  *ngFor="let moduleId of moduleIds; index as i; last as last"
-                  labDropdownBase="icon"
-                  class="module-dropdown"
-                  [class.last]="last"
-                  [pTooltip]="moduleId !== 'module' ? tooltip : undefined"
-                  tooltipPosition="top"
-                  [options]="step.recipeSettings.machineModuleOptions ?? []"
-                  [ngModel]="moduleId"
-                  (onChange)="
-                    changeRecipeField(
-                      step,
-                      $event.value,
-                      machinesState(),
-                      data(),
-                      RecipeField.MachineModules,
-                      i
-                    )
-                  "
-                >
-                  <ng-template pTemplate="selectedItem" let-item>
-                    <div *ngIf="item" class="d-flex">
-                      <i [class]="item.value | iconSmClass"></i>
-                    </div>
-                  </ng-template>
-                  <ng-template pTemplate="item" let-item>
-                    <div
-                      class="d-flex align-items-center py-2 w-100 h-100"
-                      [pTooltip]="item.value !== 'module' ? tooltip : undefined"
-                    >
-                      <i [class]="item.value | iconSmClass"></i>
-                      <div class="ms-3 text-truncate">
-                        {{ item.label }}
-                      </div>
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="item.value"
-                          type="module"
-                        ></lab-tooltip>
-                      </ng-template>
-                    </div>
-                  </ng-template>
-                  <ng-template #tooltip>
-                    <lab-tooltip [id]="moduleId" type="module"></lab-tooltip>
-                  </ng-template>
-                </p-dropdown>
-              </ng-container>
-            </div>
+                </ng-container>
+              </div>
+            }
           </td>
-        </ng-container>
+        } @else {
+          <td colspan="2"></td>
+        }
         <!-- Beacons -->
         <ng-container *ngIf="columnsState().beacons.show">
           <ng-container
