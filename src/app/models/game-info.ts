@@ -45,4 +45,12 @@ export const gameInfo: Record<Game, GameInfo> = {
     modId: 'coi',
     hideColumns: ['beacons', 'pollution', 'power', 'wagons'],
   },
+  [Game.Techtonica]: {
+    icon: 'techtonica',
+    route: 'techtonica',
+    label: 'options.game.techtonica',
+    meta: 'Techtonica',
+    modId: 'tta',
+    hideColumns: [],
+  },
 };
