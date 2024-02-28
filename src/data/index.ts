@@ -44,6 +44,7 @@ export const data: AppData = {
     { id: 'dsp', name: 'Dyson Sphere Program', game: Game.DysonSphereProgram },
     { id: 'sfy', name: 'Satisfactory', game: Game.Satisfactory },
     { id: 'coi', name: 'Captain of Industry', game: Game.CaptainOfIndustry },
+    { id: 'tta', name: 'Techtonica', game: Game.Techtonica },
   ],
   v0: [
     '1.1',
@@ -108,5 +109,7 @@ export const data: AppData = {
     'ango',
     'kr2p',
     'ram',
+    'tta',
+    'utc',
   ],
 };

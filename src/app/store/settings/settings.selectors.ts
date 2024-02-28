@@ -408,7 +408,7 @@ export const getDataset = createSelector(
       .forEach((r) => {
         const firstOutId = Object.keys(r.out)[0];
         const firstOutItem = itemData[firstOutId];
-
+        
         recipeEntities[r.id] = {
           ...recipeEntities[r.id],
           ...{ icon: firstOutItem.icon ?? firstOutId },

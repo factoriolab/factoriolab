@@ -79,7 +79,7 @@ export class RecipeUtility {
         // Filter for modules allowed on this recipe
         allowed = allowed.filter(
           (m) =>
-            m.module.limitation == null ||
+            !m.module.limitation ||
             data.limitations[m.module.limitation][recipeId],
         );
       }
@@ -127,7 +127,7 @@ export class RecipeUtility {
     const recipe = new RecipeRational(data.recipeEntities[recipeId]);
     if (settings.machineId != null) {
       const machine = data.machineEntities[settings.machineId];
-
+      
       if (machine.speed != null) {
         // Adjust for machine speed
         recipe.time = recipe.time.div(machine.speed);

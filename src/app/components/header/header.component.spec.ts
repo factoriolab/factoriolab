@@ -47,7 +47,7 @@ describe('HeaderComponent', () => {
   describe('buildGameOptions', () => {
     it('should return a filtered list of game menu items', () => {
       const result = component.buildGameOptions(Game.Factorio);
-      expect(result.length).toEqual(3);
+      expect(result.length).toEqual(4);
     });
   });
 

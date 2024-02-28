@@ -41,6 +41,7 @@ export const initialPreferencesState: PreferencesState = {
     [Game.DysonSphereProgram]: {},
     [Game.Satisfactory]: {},
     [Game.CaptainOfIndustry]: {},
+    [Game.Techtonica]: {},
   },
   columns: initialColumnsState,
   language: Language.English,
