@@ -51,6 +51,6 @@ export const gameInfo: Record<Game, GameInfo> = {
     label: 'options.game.techtonica',
     meta: 'Techtonica',
     modId: 'tta',
-    hideColumns: [],
+    hideColumns: ['beacons', 'pollution', 'wagons'],
   },
 };

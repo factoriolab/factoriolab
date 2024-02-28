@@ -110,5 +110,6 @@ export const data: AppData = {
     'kr2p',
     'ram',
     'tta',
+    'utc',
   ],
 };
