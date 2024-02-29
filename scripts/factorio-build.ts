@@ -717,17 +717,19 @@ async function processMod(): Promise<void> {
       }
     }
 
-    /**
-     * Exclude loading / unloading containers from Freight Forwarding
-     * These are imperfect loops that are not detected automatically, because
-     * there is a chance the container will break in the unload recipe
-     */
-    const subgroup = dataRaw['item-subgroup'][getSubgroup(recipe)];
-    if (
-      subgroup.group === 'ic-load-container' ||
-      subgroup.group === 'ic-unload-container'
-    ) {
-      include = false;
+    if (include) {
+      /**
+       * Exclude loading / unloading containers from Freight Forwarding
+       * These are imperfect loops that are not detected automatically, because
+       * there is a chance the container will break in the unload recipe
+       */
+      const subgroup = dataRaw['item-subgroup'][getSubgroup(recipe)];
+      if (
+        subgroup.group === 'ic-load-container' ||
+        subgroup.group === 'ic-unload-container'
+      ) {
+        include = false;
+      }
     }
 
     if (include) {
@@ -1014,8 +1016,8 @@ async function processMod(): Promise<void> {
         a === proto.default_temperature
           ? -1
           : b === proto.default_temperature
-          ? 1
-          : 0,
+            ? 1
+            : 0,
       );
       fluidTemps[proto.name] = new Set(temps);
 
@@ -1657,14 +1659,18 @@ async function processMod(): Promise<void> {
         recipeInTemp[minable.required_fluid] = [undefined, undefined];
         miners = miners.filter((m) => {
           // Only allow producers with fluid boxes
+          const entity = entityMap[m];
+          if (entity != null && M.isMiningDrillPrototype(entity))
+            return entity.input_fluid_box != null;
+
           const item = itemMap[m];
-          if (!M.isFluidPrototype(item) && item.place_result) {
+          if (item != null && !M.isFluidPrototype(item) && item.place_result) {
             const miningDrill = dataRaw['mining-drill'][item.place_result];
             return miningDrill.input_fluid_box != null;
-          } else {
-            // Seems to be an invalid entry
-            return false;
           }
+
+          // Seems to be an invalid entry
+          return false;
         });
       }
 

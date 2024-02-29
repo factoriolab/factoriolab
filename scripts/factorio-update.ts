@@ -57,7 +57,10 @@ async function runFactorioPrep(mod: string): Promise<number | null> {
 /** Start a dump of Factorio using the factorio-dump.bat script */
 async function runFactorioDump(): Promise<number | null> {
   const bat = require.resolve('./factorio-dump.bat');
-  return runCommand(bat);
+  const result = await runCommand(bat);
+  await waitForFactorio(true, 10000);
+  await waitForFactorio(false, 30000);
+  return result;
 }
 
 /** Check whether Factorio is running after a delay */
@@ -76,14 +79,18 @@ async function checkIfFactorioIsRunning(delayMs = 1000): Promise<boolean> {
  * Wait for factorio.exe to exit, since the image dump continues to run after
  * the batch script exits.
  */
-async function waitForFactorioToExit(waitMs = 30000): Promise<void> {
+async function waitForFactorio(
+  running: boolean,
+  waitMs: number,
+): Promise<void> {
   const start = Date.now();
   let result = false;
   let runtime = 0;
   do {
     result = await checkIfFactorioIsRunning();
     runtime = Date.now() - start;
-  } while (result && runtime < waitMs);
+  } while (result !== running && runtime < waitMs);
+  logDebug(`Waited ${runtime} for Factorio to ${running ? 'start' : 'exit'}\n`);
 }
 
 /** Build a Factorio mod data set using the factorio-build.ts script */
@@ -95,7 +102,6 @@ async function runFactorioBuild(mod: string): Promise<number | null> {
 async function updateMod(mod: string): Promise<void> {
   await runFactorioPrep(mod);
   await runFactorioDump();
-  await waitForFactorioToExit();
   await runFactorioBuild(mod);
 }
 
