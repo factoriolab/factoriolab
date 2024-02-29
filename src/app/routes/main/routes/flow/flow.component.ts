@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -8,7 +7,6 @@ import {
   inject,
   ViewChild,
 } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { drag } from 'd3-drag';
 import { select, Selection } from 'd3-selection';
@@ -56,6 +54,7 @@ import {
 import { LabState, Preferences } from '~/store';
 import { PreferencesState } from '~/store/preferences';
 import { MainSharedModule } from '../../main-shared.module';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
@@ -99,7 +98,6 @@ const VIS_NETWORK_OPTIONS: Options = {
   },
 };
 
-@UntilDestroy()
 @Component({
   standalone: true,
   imports: [CommonModule, AppSharedModule, MainSharedModule],
@@ -107,7 +105,7 @@ const VIS_NETWORK_OPTIONS: Options = {
   styleUrls: ['./flow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowComponent implements AfterViewInit {
+export class FlowComponent {
   ref = inject(ChangeDetectorRef);
   store = inject(Store<LabState>);
   displaySvc = inject(DisplayService);
@@ -124,13 +122,13 @@ export class FlowComponent implements AfterViewInit {
   selectedId$ = new BehaviorSubject<string | null>(null);
   vm$ = combineLatest({ loading: this.loading$, selectedId: this.selectedId$ });
 
-  ngAfterViewInit(): void {
+  constructor() {
     combineLatest({
       flowData: this.flowSvc.flowData$,
       themeValues: this.themeSvc.themeValues$,
       preferences: this.store.select(Preferences.preferencesState),
     })
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe(({ flowData, themeValues, preferences }) =>
         this.rebuildChart(flowData, themeValues, preferences),
       );
@@ -385,15 +383,15 @@ export class FlowComponent implements AfterViewInit {
         color: n.id.startsWith('o')
           ? themeValues.successBackground
           : n.id.startsWith('s')
-          ? themeValues.dangerBackground
-          : n.color,
+            ? themeValues.dangerBackground
+            : n.color,
         shape: n.recipe ? 'box' : 'ellipse',
         font: {
           color: n.id.startsWith('o')
             ? themeValues.successColor
             : n.id.startsWith('s')
-            ? themeValues.dangerColor
-            : this.foreColor(n.color),
+              ? themeValues.dangerColor
+              : this.foreColor(n.color),
         },
         chosen: { node: this.getVisNodeClickFn(n.stepId), label: false },
       };

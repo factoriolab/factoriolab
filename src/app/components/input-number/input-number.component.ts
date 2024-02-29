@@ -5,10 +5,9 @@ import {
   EventEmitter,
   HostBinding,
   input,
-  OnInit,
   Output,
 } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounce, map, of, Subject, timer } from 'rxjs';
 
 import { filterNullish } from '~/helpers';
@@ -21,14 +20,13 @@ interface Event {
   type: EventType;
 }
 
-@UntilDestroy(this)
 @Component({
   selector: 'lab-input-number',
   templateUrl: './input-number.component.html',
   styleUrls: ['./input-number.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputNumberComponent implements OnInit {
+export class InputNumberComponent {
   value = input('');
   minimum = input<string | null | undefined>('0');
   maximum = input<string | null | undefined>(null);
@@ -72,13 +70,13 @@ export class InputNumberComponent implements OnInit {
     }
   });
 
-  ngOnInit(): void {
+  constructor() {
     // Watch for all value changes to input field
     // Debounce input events by 300ms to avoid rapid updates
     // If last value is nullish (invalid), do not emit
     this.setValue$
       .pipe(
-        untilDestroyed(this),
+        takeUntilDestroyed(),
         debounce((e) => (e.type === 'input' ? timer(300) : of({}))),
         map((e) => e.value),
         filterNullish(),

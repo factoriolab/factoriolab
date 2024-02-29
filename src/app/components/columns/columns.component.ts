@@ -3,9 +3,8 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
-  OnInit,
 } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 
 import {
@@ -18,14 +17,13 @@ import {
 import { ContentService } from '~/services';
 import { LabState, Preferences, Settings } from '~/store';
 
-@UntilDestroy()
 @Component({
   selector: 'lab-columns',
   templateUrl: './columns.component.html',
   styleUrls: ['./columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColumnsComponent implements OnInit {
+export class ColumnsComponent {
   ref = inject(ChangeDetectorRef);
   store = inject(Store<LabState>);
   contentSvc = inject(ContentService);
@@ -46,15 +44,15 @@ export class ColumnsComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-    this.contentSvc.showColumns$.pipe(untilDestroyed(this)).subscribe(() => {
+  constructor() {
+    this.contentSvc.showColumns$.pipe(takeUntilDestroyed()).subscribe(() => {
       this.visible = true;
       this.ref.markForCheck();
     });
 
     this.store
       .select(Settings.getColumnsState)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe(this.initEdit.bind(this));
   }
 

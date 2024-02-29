@@ -11,8 +11,8 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { MenuItem, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -55,7 +55,6 @@ import { RecipeUtility } from '~/utilities';
 
 export type StepsMode = 'all' | 'focus';
 
-@UntilDestroy()
 @Component({
   selector: 'lab-steps',
   templateUrl: './steps.component.html',
@@ -132,6 +131,17 @@ export class StepsComponent implements OnInit, AfterViewInit {
   ObjectiveUnit = ObjectiveUnit;
   Rational = Rational;
 
+  constructor() {
+    combineLatest([
+      this.sortSteps$.pipe(pairwise()),
+      this.store.select(Objectives.getSteps),
+    ])
+      .pipe(takeUntilDestroyed())
+      .subscribe(([[prev, curr], steps]) => {
+        this.sortSteps(prev, curr, steps);
+      });
+  }
+
   ngOnInit(): void {
     this.route.fragment
       .pipe(
@@ -141,15 +151,6 @@ export class StepsComponent implements OnInit, AfterViewInit {
       .subscribe((id) => {
         // Store the fragment to navigate to it after the component loads
         this.fragmentId = id;
-      });
-
-    combineLatest([
-      this.sortSteps$.pipe(pairwise()),
-      this.store.select(Objectives.getSteps),
-    ])
-      .pipe(untilDestroyed(this))
-      .subscribe(([[prev, curr], steps]) => {
-        this.sortSteps(prev, curr, steps);
       });
   }
 

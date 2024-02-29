@@ -3,16 +3,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { ContentService } from '~/services';
 
-@UntilDestroy()
 @Component({
   selector: 'lab-content',
   templateUrl: './content.component.html',
@@ -20,7 +18,7 @@ import { ContentService } from '~/services';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ConfirmationService, MessageService],
 })
-export class ContentComponent implements OnInit, AfterViewInit {
+export class ContentComponent implements AfterViewInit {
   confirmationSvc = inject(ConfirmationService);
   messageSvc = inject(MessageService);
   contentSvc = inject(ContentService);
@@ -30,12 +28,12 @@ export class ContentComponent implements OnInit, AfterViewInit {
     | undefined;
   @ViewChild('translateItem') translateItem: TemplateRef<unknown> | undefined;
 
-  ngOnInit(): void {
+  constructor() {
     this.contentSvc.showToast$
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe((t) => this.messageSvc.add(t));
     this.contentSvc.showConfirm$
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe((c) => this.confirmationSvc.confirm(c));
   }
 

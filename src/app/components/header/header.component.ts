@@ -4,11 +4,9 @@ import {
   HostBinding,
   inject,
   Input,
-  OnInit,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
@@ -24,14 +22,13 @@ interface MenuLink {
   href: string;
 }
 
-@UntilDestroy()
 @Component({
   selector: 'lab-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   title = inject(Title);
   store = inject(Store<LabState>);
   translateSvc = inject(TranslateService);
@@ -79,13 +76,13 @@ export class HeaderComponent implements OnInit {
     },
   ];
 
-  ngOnInit(): void {
+  constructor() {
     combineLatest([
       this.store.select(Objectives.getBaseObjectives),
       this.store.select(Settings.getDataset),
       this.contentSvc.lang$,
     ])
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe(([objectives, data]) => {
         const name = objectives
           .map((o) =>

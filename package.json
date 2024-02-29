@@ -44,7 +44,6 @@
     "@angular/router": "^17.1.1",
     "@angular/service-worker": "^17.1.1",
     "@fortawesome/fontawesome-free": "^6.4.2",
-    "@ngneat/until-destroy": "^10.0.0",
     "@ngrx/effects": "^17.1.0",
     "@ngrx/store": "^17.1.0",
     "@ngrx/store-devtools": "^17.1.0",
