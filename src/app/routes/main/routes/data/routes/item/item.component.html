@@ -1,6 +1,6 @@
-<ng-container *ngIf="vm$ | async as vm">
+@if (vm$ | async; as vm) {
   <p-breadcrumb [home]="vm.home" [model]="vm.breadcrumb"></p-breadcrumb>
-  <ng-container *ngIf="vm.obj; else notFound">
+  @if (vm.obj) {
     <table class="properties mb-4">
       <tr>
         <th colspan="2" class="text-center">
@@ -12,31 +12,35 @@
           <i class="lg" [class]="vm.id | iconClass: 'item'"></i>
         </td>
       </tr>
-      <tr *ngIf="vm.category">
-        <th>{{ 'data.category' | translate }}</th>
-        <td>
-          <a
-            [routerLink]="'/data/categories/' + vm.obj.category"
-            queryParamsHandling="preserve"
-          >
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="p-button-text"
-              [label]="vm.category.name"
-              [icon]="vm.obj.category | iconSmClass: 'category'"
-            ></button>
-          </a>
-        </td>
-      </tr>
-      <tr *ngIf="vm.obj.stack">
-        <th>{{ 'data.stackSize' | translate }}</th>
-        <td>
-          {{ vm.obj.stack }}
-        </td>
-      </tr>
-      <ng-container *ngIf="vm.obj.beacon as beacon">
+      @if (vm.category) {
+        <tr>
+          <th>{{ 'data.category' | translate }}</th>
+          <td>
+            <a
+              [routerLink]="'/data/categories/' + vm.obj.category"
+              queryParamsHandling="preserve"
+            >
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text"
+                [label]="vm.category.name"
+                [icon]="vm.obj.category | iconSmClass: 'category'"
+              ></button>
+            </a>
+          </td>
+        </tr>
+      }
+      @if (vm.obj.stack) {
+        <tr>
+          <th>{{ 'data.stackSize' | translate }}</th>
+          <td>
+            {{ vm.obj.stack }}
+          </td>
+        </tr>
+      }
+      @if (vm.obj.beacon; as beacon) {
         <tr>
           <th colspan="2" class="text-center">
             <h3>{{ 'data.beacon' | translate }}</h3>
@@ -54,24 +58,32 @@
           <th>{{ 'data.range' | translate }}</th>
           <td>{{ beacon.range }}</td>
         </tr>
-        <tr *ngIf="beacon.type">
-          <th>{{ 'data.energySource' | translate }}</th>
-          <td>{{ beacon.type }}</td>
-        </tr>
-        <tr *ngIf="beacon.usage">
-          <th>{{ 'data.energyConsumption' | translate }}</th>
-          <td>{{ beacon.usage | usage }}</td>
-        </tr>
-        <tr *ngIf="beacon.disallowedEffects">
-          <th>{{ 'data.disallowedEffects' | translate }}</th>
-          <td>{{ beacon.disallowedEffects.join(', ') }}</td>
-        </tr>
-        <tr *ngIf="beacon.size">
-          <th>{{ 'data.dimensions' | translate }}</th>
-          <td>{{ beacon.size[0] }}×{{ beacon.size[1] }}</td>
-        </tr>
-      </ng-container>
-      <ng-container *ngIf="vm.obj.belt as belt">
+        @if (beacon.type) {
+          <tr>
+            <th>{{ 'data.energySource' | translate }}</th>
+            <td>{{ beacon.type }}</td>
+          </tr>
+        }
+        @if (beacon.usage) {
+          <tr>
+            <th>{{ 'data.energyConsumption' | translate }}</th>
+            <td>{{ beacon.usage | usage }}</td>
+          </tr>
+        }
+        @if (beacon.disallowedEffects) {
+          <tr>
+            <th>{{ 'data.disallowedEffects' | translate }}</th>
+            <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+          </tr>
+        }
+        @if (beacon.size) {
+          <tr>
+            <th>{{ 'data.dimensions' | translate }}</th>
+            <td>{{ beacon.size[0] }}×{{ beacon.size[1] }}</td>
+          </tr>
+        }
+      }
+      @if (vm.obj.belt; as belt) {
         <tr>
           <th colspan="2" class="text-center">
             <h3>{{ 'data.belt' | translate }}</h3>
@@ -81,8 +93,8 @@
           <th>{{ 'data.beltSpeed' | translate }}</th>
           <td>{{ belt.speed }}</td>
         </tr>
-      </ng-container>
-      <ng-container *ngIf="vm.obj.cargoWagon as cargoWagon">
+      }
+      @if (vm.obj.cargoWagon; as cargoWagon) {
         <tr>
           <th colspan="2" class="text-center">
             <h3>{{ 'data.cargoWagon' | translate }}</h3>
@@ -92,8 +104,8 @@
           <th>{{ 'data.storageSize' | translate }}</th>
           <td>{{ cargoWagon.size }}</td>
         </tr>
-      </ng-container>
-      <ng-container *ngIf="vm.obj.fluidWagon as fluidWagon">
+      }
+      @if (vm.obj.fluidWagon; as fluidWagon) {
         <tr>
           <th colspan="2" class="text-center">
             <h3>{{ 'data.fluidWagon' | translate }}</h3>
@@ -103,8 +115,8 @@
           <th>{{ 'data.fluidCapacity' | translate }}</th>
           <td>{{ fluidWagon.capacity }}</td>
         </tr>
-      </ng-container>
-      <ng-container *ngIf="vm.obj.fuel as fuel">
+      }
+      @if (vm.obj.fuel; as fuel) {
         <tr>
           <th colspan="2" class="text-center">
             <h3>{{ 'data.fuel' | translate }}</h3>
@@ -118,26 +130,28 @@
           <th>{{ 'data.fuelValue' | translate }}</th>
           <td>{{ fuel.value | round }} MJ</td>
         </tr>
-        <tr *ngIf="fuel.result">
-          <th>{{ 'data.burntResult' | translate }}</th>
-          <td>
-            <a
-              [routerLink]="'/data/items/' + fuel.result"
-              queryParamsHandling="preserve"
-            >
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="p-button-text"
-                [label]="vm.data.itemEntities[fuel.result].name"
-                [icon]="fuel.result | iconSmClass: 'item'"
-              ></button>
-            </a>
-          </td>
-        </tr>
-      </ng-container>
-      <ng-container *ngIf="vm.obj.machine as machine">
+        @if (fuel.result) {
+          <tr>
+            <th>{{ 'data.burntResult' | translate }}</th>
+            <td>
+              <a
+                [routerLink]="'/data/items/' + fuel.result"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="vm.data.itemEntities[fuel.result].name"
+                  [icon]="fuel.result | iconSmClass: 'item'"
+                ></button>
+              </a>
+            </td>
+          </tr>
+        }
+      }
+      @if (vm.obj.machine; as machine) {
         <tr>
           <th colspan="2" class="text-center">
             <h3>{{ 'data.machine' | translate }}</h3>
@@ -147,58 +161,77 @@
           <th>{{ 'data.craftingSpeed' | translate }}</th>
           <td>{{ machine.speed }}</td>
         </tr>
-        <tr *ngIf="machine.modules">
-          <th>{{ 'data.moduleSlots' | translate }}</th>
-          <td>{{ machine.modules }}</td>
-        </tr>
-        <tr *ngIf="machine.disallowedEffects">
-          <th>{{ 'data.disallowedEffects' | translate }}</th>
-          <td>{{ machine.disallowedEffects.join(', ') }}</td>
-        </tr>
-        <tr *ngIf="machine.type">
-          <th>{{ 'data.energySource' | translate }}</th>
-          <td>{{ machine.type }}</td>
-        </tr>
-        <tr *ngIf="machine.fuelCategories">
-          <th>{{ 'data.fuelCategories' | translate }}</th>
-          <td>{{ machine.fuelCategories.join(', ') }}</td>
-        </tr>
-        <tr *ngIf="machine.fuel">
-          <th>{{ 'data.fuel' | translate }}</th>
-          <td>{{ machine.fuel }}</td>
-        </tr>
-        <tr *ngIf="machine.usage">
-          <th>{{ 'data.energyConsumption' | translate }}</th>
-          <td>{{ machine.usage | usage }}</td>
-        </tr>
-        <tr *ngIf="machine.drain">
-          <th>{{ 'data.energyDrain' | translate }}</th>
-          <td>{{ machine.drain | usage }}</td>
-        </tr>
-        <tr *ngIf="machine.pollution">
-          <th>{{ 'data.pollution' | translate }}</th>
-          <td>{{ machine.pollution }}/m</td>
-        </tr>
-        <tr *ngIf="machine.consumption">
-          <th>{{ 'data.consumption' | translate }}</th>
-          <td>
-            <div
-              class="d-flex align-items-center justify-content-center flex-wrap"
-            >
-              <i
-                *ngFor="let kv of machine.consumption | keyvalue"
-                [class]="kv.key | iconSmClass: 'item'"
+        @if (machine.modules) {
+          <tr>
+            <th>{{ 'data.moduleSlots' | translate }}</th>
+            <td>{{ machine.modules }}</td>
+          </tr>
+        }
+        @if (machine.disallowedEffects) {
+          <tr>
+            <th>{{ 'data.disallowedEffects' | translate }}</th>
+            <td>{{ machine.disallowedEffects.join(', ') }}</td>
+          </tr>
+        }
+        @if (machine.type) {
+          <tr>
+            <th>{{ 'data.energySource' | translate }}</th>
+            <td>{{ machine.type }}</td>
+          </tr>
+        }
+        @if (machine.fuelCategories) {
+          <tr>
+            <th>{{ 'data.fuelCategories' | translate }}</th>
+            <td>{{ machine.fuelCategories.join(', ') }}</td>
+          </tr>
+        }
+        @if (machine.fuel) {
+          <tr>
+            <th>{{ 'data.fuel' | translate }}</th>
+            <td>{{ machine.fuel }}</td>
+          </tr>
+        }
+        @if (machine.usage) {
+          <tr>
+            <th>{{ 'data.energyConsumption' | translate }}</th>
+            <td>{{ machine.usage | usage }}</td>
+          </tr>
+        }
+        @if (machine.drain) {
+          <tr>
+            <th>{{ 'data.energyDrain' | translate }}</th>
+            <td>{{ machine.drain | usage }}</td>
+          </tr>
+        }
+        @if (machine.pollution) {
+          <tr>
+            <th>{{ 'data.pollution' | translate }}</th>
+            <td>{{ machine.pollution }}/m</td>
+          </tr>
+        }
+        @if (machine.consumption) {
+          <tr>
+            <th>{{ 'data.consumption' | translate }}</th>
+            <td>
+              <div
+                class="d-flex align-items-center justify-content-center flex-wrap"
               >
-                <span>{{ kv.value | round }}</span>
-              </i>
-            </div>
-          </td>
-        </tr>
-        <tr *ngIf="machine.size">
-          <th>{{ 'data.dimensions' | translate }}</th>
-          <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
-        </tr>
-        <ng-container *ngIf="machine.silo as silo">
+                @for (kv of machine.consumption | keyvalue; track kv.key) {
+                  <i [class]="kv.key | iconSmClass: 'item'">
+                    <span>{{ kv.value | round }}</span>
+                  </i>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+        @if (machine.size) {
+          <tr>
+            <th>{{ 'data.dimensions' | translate }}</th>
+            <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
+          </tr>
+        }
+        @if (machine.silo; as silo) {
           <tr>
             <th colspan="2" class="text-center">
               <h3>{{ 'data.rocketSilo' | translate }}</h3>
@@ -212,54 +245,66 @@
             <th>{{ 'data.rocketLaunchTime' | translate }}</th>
             <td>{{ silo.launch | round }}</td>
           </tr>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="vm.obj.module as module">
+        }
+      }
+      @if (vm.obj.module; as module) {
         <tr>
           <th colspan="2" class="text-center">
             <h3>{{ 'data.module' | translate }}</h3>
           </th>
         </tr>
-        <tr *ngIf="module.consumption">
-          <th>{{ 'data.energyConsumption' | translate }}</th>
-          <td>{{ module.consumption | bonusPercent }}</td>
-        </tr>
-        <tr *ngIf="module.pollution">
-          <th>{{ 'data.pollution' | translate }}</th>
-          <td>{{ module.pollution | bonusPercent }}</td>
-        </tr>
-        <tr *ngIf="module.productivity">
-          <th>{{ 'data.productivity' | translate }}</th>
-          <td>{{ module.productivity | bonusPercent }}</td>
-        </tr>
-        <tr *ngIf="module.speed">
-          <th>{{ 'data.speed' | translate }}</th>
-          <td>{{ module.speed | bonusPercent }}</td>
-        </tr>
-        <tr *ngIf="module.sprays">
-          <th>{{ 'data.sprays' | translate }}</th>
-          <td>{{ module.sprays | round }}</td>
-        </tr>
-        <tr *ngIf="module.proliferator">
-          <th>{{ 'data.proliferator' | translate }}</th>
-          <td>
-            <a
-              [routerLink]="'/data/items/' + module.proliferator"
-              queryParamsHandling="preserve"
-            >
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="p-button-text"
-                [label]="vm.data.itemEntities[module.proliferator].name"
-                [icon]="module.proliferator | iconSmClass: 'item'"
-              ></button>
-            </a>
-          </td>
-        </tr>
-      </ng-container>
-      <ng-container *ngIf="vm.obj.pipe as pipe">
+        @if (module.consumption) {
+          <tr>
+            <th>{{ 'data.energyConsumption' | translate }}</th>
+            <td>{{ module.consumption | bonusPercent }}</td>
+          </tr>
+        }
+        @if (module.pollution) {
+          <tr>
+            <th>{{ 'data.pollution' | translate }}</th>
+            <td>{{ module.pollution | bonusPercent }}</td>
+          </tr>
+        }
+        @if (module.productivity) {
+          <tr>
+            <th>{{ 'data.productivity' | translate }}</th>
+            <td>{{ module.productivity | bonusPercent }}</td>
+          </tr>
+        }
+        @if (module.speed) {
+          <tr>
+            <th>{{ 'data.speed' | translate }}</th>
+            <td>{{ module.speed | bonusPercent }}</td>
+          </tr>
+        }
+        @if (module.sprays) {
+          <tr>
+            <th>{{ 'data.sprays' | translate }}</th>
+            <td>{{ module.sprays | round }}</td>
+          </tr>
+        }
+        @if (module.proliferator) {
+          <tr>
+            <th>{{ 'data.proliferator' | translate }}</th>
+            <td>
+              <a
+                [routerLink]="'/data/items/' + module.proliferator"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="vm.data.itemEntities[module.proliferator].name"
+                  [icon]="module.proliferator | iconSmClass: 'item'"
+                ></button>
+              </a>
+            </td>
+          </tr>
+        }
+      }
+      @if (vm.obj.pipe; as pipe) {
         <tr>
           <th colspan="2" class="text-center">
             <h3>{{ 'data.pipe' | translate }}</h3>
@@ -269,8 +314,8 @@
           <th>{{ 'data.flowRate' | translate }}</th>
           <td>{{ pipe.speed }}</td>
         </tr>
-      </ng-container>
-      <ng-container *ngIf="vm.obj.technology as technology">
+      }
+      @if (vm.obj.technology; as technology) {
         <tr>
           <th colspan="2" class="text-center">
             <h3>{{ 'data.technology' | translate }}</h3>
@@ -279,28 +324,30 @@
         <tr>
           <th>{{ 'data.prerequisites' | translate }}</th>
           <td>
-            <div *ngIf="!technology.prerequisites?.length">
-              {{ 'none' | translate }}
-            </div>
-            <div *ngFor="let i of technology.prerequisites">
-              <a
-                [routerLink]="'/data/technologies/' + i"
-                queryParamsHandling="preserve"
-              >
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-text"
-                  [label]="vm.data.itemEntities[i].name"
-                  [icon]="i | iconSmClass: 'recipe'"
-                ></button>
-              </a>
-            </div>
+            @if (!technology.prerequisites?.length) {
+              <div>{{ 'none' | translate }}</div>
+            }
+            @for (i of technology.prerequisites; track i) {
+              <div>
+                <a
+                  [routerLink]="'/data/technologies/' + i"
+                  queryParamsHandling="preserve"
+                >
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    [label]="vm.data.itemEntities[i].name"
+                    [icon]="i | iconSmClass: 'recipe'"
+                  ></button>
+                </a>
+              </div>
+            }
           </td>
         </tr>
-      </ng-container>
-      <ng-container *ngIf="vm.category">
+      }
+      @if (vm.category) {
         <tr>
           <th colspan="2">
             <div class="d-flex align-items-center justify-content-between">
@@ -344,67 +391,25 @@
             ></p-checkbox>
           </td>
         </tr>
-        <tr
-          *ngIf="
-            vm.data.game !== Game.DysonSphereProgram ||
-            vm.itemSettings.beltId !== ItemId.Pipe
-          "
-        >
-          <th>{{ 'data.belt' | translate }}</th>
-          <td *ngIf="vm.itemSettings.beltId as beltId">
-            <a
-              [routerLink]="
-                '/data/' +
-                (vm.data.beltIds.indexOf(beltId) !== -1
-                  ? 'belts'
-                  : vm.data.pipeIds.indexOf(beltId) !== -1
-                  ? 'pipes'
-                  : 'items') +
-                '/' +
-                beltId
-              "
-              queryParamsHandling="preserve"
-            >
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="p-button-text"
-                [label]="vm.data.itemEntities[beltId].name"
-                [icon]="beltId | iconSmClass: 'item'"
-              ></button>
-            </a>
-          </td>
-        </tr>
-        <ng-container
-          *ngIf="
-            vm.data.game === Game.Factorio || vm.data.game === Game.Satisfactory
-          "
-        >
-          <tr *ngIf="vm.obj.stack; else fluidWagon">
-            <th>{{ 'data.cargoWagon' | translate }}</th>
-            <td *ngIf="vm.itemSettings.wagonId as wagonId">
-              <a
-                [routerLink]="'/data/cargo-wagons/' + wagonId"
-                queryParamsHandling="preserve"
-              >
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-text"
-                  [label]="vm.data.itemEntities[wagonId].name"
-                  [icon]="wagonId | iconSmClass: 'item'"
-                ></button>
-              </a>
-            </td>
-          </tr>
-          <ng-template #fluidWagon>
-            <tr>
-              <th>{{ 'data.fluidWagon' | translate }}</th>
-              <td *ngIf="vm.itemSettings.wagonId as wagonId">
+        @if (
+          vm.data.game !== Game.DysonSphereProgram ||
+          vm.itemSettings.beltId !== ItemId.Pipe
+        ) {
+          <tr>
+            <th>{{ 'data.belt' | translate }}</th>
+            @if (vm.itemSettings.beltId; as beltId) {
+              <td>
                 <a
-                  [routerLink]="'/data/fluid-wagons/' + wagonId"
+                  [routerLink]="
+                    '/data/' +
+                    (vm.data.beltIds.indexOf(beltId) !== -1
+                      ? 'belts'
+                      : vm.data.pipeIds.indexOf(beltId) !== -1
+                        ? 'pipes'
+                        : 'items') +
+                    '/' +
+                    beltId
+                  "
                   queryParamsHandling="preserve"
                 >
                   <button
@@ -412,16 +417,59 @@
                     pRipple
                     type="button"
                     class="p-button-text"
-                    [label]="vm.data.itemEntities[wagonId].name"
-                    [icon]="wagonId | iconSmClass: 'item'"
+                    [label]="vm.data.itemEntities[beltId].name"
+                    [icon]="beltId | iconSmClass: 'item'"
                   ></button>
                 </a>
               </td>
+            }
+          </tr>
+        }
+        @if (
+          vm.data.game === Game.Factorio || vm.data.game === Game.Satisfactory
+        ) {
+          @if (vm.itemSettings.wagonId; as wagonId) {
+            <tr>
+              @if (vm.obj.stack) {
+                <th>{{ 'data.cargoWagon' | translate }}</th>
+                <td>
+                  <a
+                    [routerLink]="'/data/cargo-wagons/' + wagonId"
+                    queryParamsHandling="preserve"
+                  >
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      class="p-button-text"
+                      [label]="vm.data.itemEntities[wagonId].name"
+                      [icon]="wagonId | iconSmClass: 'item'"
+                    ></button>
+                  </a>
+                </td>
+              } @else {
+                <th>{{ 'data.fluidWagon' | translate }}</th>
+                <td>
+                  <a
+                    [routerLink]="'/data/fluid-wagons/' + wagonId"
+                    queryParamsHandling="preserve"
+                  >
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      class="p-button-text"
+                      [label]="vm.data.itemEntities[wagonId].name"
+                      [icon]="wagonId | iconSmClass: 'item'"
+                    ></button>
+                  </a>
+                </td>
+              }
             </tr>
-          </ng-template>
-        </ng-container>
-      </ng-container>
-      <ng-container *ngIf="vm.obj.machine && vm.machineSettings">
+          }
+        }
+      }
+      @if (vm.obj.machine && vm.machineSettings) {
         <tr>
           <th colspan="2">
             <div class="d-flex align-items-center justify-content-between">
@@ -449,63 +497,14 @@
         <tr>
           <th>{{ 'data.moduleRank' | translate }}</th>
           <td>
-            <div *ngIf="!vm.machineSettings.moduleRankIds?.length">
-              {{ 'none' | translate }}
-            </div>
-            <div *ngFor="let moduleId of vm.machineSettings.moduleRankIds">
-              <a
-                [routerLink]="
-                  moduleId === 'module' ? null : '/data/modules/' + moduleId
-                "
-                queryParamsHandling="preserve"
-              >
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-text"
-                  [label]="vm.data.itemEntities[moduleId]?.name ?? ''"
-                  [icon]="moduleId | iconSmClass: 'item'"
-                ></button>
-              </a>
-            </div>
-          </td>
-        </tr>
-        <ng-container *ngIf="vm.data.game === Game.Factorio">
-          <tr>
-            <th>{{ 'data.beacons' | translate }}</th>
-            <td>
-              {{ vm.machineSettings.beaconCount ?? ('none' | translate) }}
-            </td>
-          </tr>
-          <tr>
-            <th>{{ 'data.beacon' | translate }}</th>
-            <td>
-              <a
-                *ngIf="vm.machineSettings.beaconId as beaconId; else none"
-                [routerLink]="'/data/beacons/' + beaconId"
-                queryParamsHandling="preserve"
-              >
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-text"
-                  [label]="vm.data.itemEntities[beaconId].name"
-                  [icon]="beaconId | iconSmClass: 'item'"
-                ></button>
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <th>{{ 'data.beaconModuleRank' | translate }}</th>
-            <td>
-              <div *ngIf="!vm.machineSettings.beaconModuleRankIds?.length">
-                {{ 'none' | translate }}
-              </div>
-              <div
-                *ngFor="let moduleId of vm.machineSettings.beaconModuleRankIds"
-              >
+            @if (!vm.machineSettings.moduleRankIds?.length) {
+              <div>{{ 'none' | translate }}</div>
+            }
+            @for (
+              moduleId of vm.machineSettings.moduleRankIds;
+              track moduleId
+            ) {
+              <div>
                 <a
                   [routerLink]="
                     moduleId === 'module' ? null : '/data/modules/' + moduleId
@@ -522,49 +521,106 @@
                   ></button>
                 </a>
               </div>
+            }
+          </td>
+        </tr>
+        @if (vm.data.game === Game.Factorio) {
+          <tr>
+            <th>{{ 'data.beacons' | translate }}</th>
+            <td>
+              {{ vm.machineSettings.beaconCount ?? ('none' | translate) }}
             </td>
           </tr>
-        </ng-container>
-        <tr *ngIf="vm.data.game === Game.Satisfactory">
-          <th>{{ 'data.overclock' | translate }}</th>
-          <td>{{ vm.machineSettings.overclock }}%</td>
-        </tr>
-      </ng-container>
+          <tr>
+            <th>{{ 'data.beacon' | translate }}</th>
+            <td>
+              @if (vm.machineSettings.beaconId; as beaconId) {
+                <a
+                  [routerLink]="'/data/beacons/' + beaconId"
+                  queryParamsHandling="preserve"
+                >
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    [label]="vm.data.itemEntities[beaconId].name"
+                    [icon]="beaconId | iconSmClass: 'item'"
+                  ></button>
+                </a>
+              } @else {
+                {{ 'none' | translate }}
+              }
+            </td>
+          </tr>
+          <tr>
+            <th>{{ 'data.beaconModuleRank' | translate }}</th>
+            <td>
+              @if (!vm.machineSettings.beaconModuleRankIds?.length) {
+                <div>{{ 'none' | translate }}</div>
+              }
+              @for (
+                moduleId of vm.machineSettings.beaconModuleRankIds;
+                track moduleId
+              ) {
+                <div>
+                  <a
+                    [routerLink]="
+                      moduleId === 'module' ? null : '/data/modules/' + moduleId
+                    "
+                    queryParamsHandling="preserve"
+                  >
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      class="p-button-text"
+                      [label]="vm.data.itemEntities[moduleId]?.name ?? ''"
+                      [icon]="moduleId | iconSmClass: 'item'"
+                    ></button>
+                  </a>
+                </div>
+              }
+            </td>
+          </tr>
+        }
+        @if (vm.data.game === Game.Satisfactory) {
+          <tr>
+            <th>{{ 'data.overclock' | translate }}</th>
+            <td>{{ vm.machineSettings.overclock }}%</td>
+          </tr>
+        }
+      }
     </table>
-
-    <ng-container *ngIf="vm.producedByRecipeIds.length">
+    @if (vm.producedByRecipeIds.length) {
       <h3>{{ 'data.producedByRecipes' | translate }}</h3>
       <lab-collection-table
         [ids]="vm.producedByRecipeIds"
         type="recipe"
       ></lab-collection-table>
-    </ng-container>
-    <ng-container *ngIf="vm.consumedByRecipeIds.length">
+    }
+    @if (vm.consumedByRecipeIds.length) {
       <h3>{{ 'data.consumedByRecipes' | translate }}</h3>
       <lab-collection-table
         [ids]="vm.consumedByRecipeIds"
         type="recipe"
       ></lab-collection-table>
-    </ng-container>
-    <ng-container *ngIf="vm.producibleRecipeIds.length">
+    }
+    @if (vm.producibleRecipeIds.length) {
       <h3>{{ 'data.producibleRecipes' | translate }}</h3>
       <lab-collection-table
         [ids]="vm.producibleRecipeIds"
         type="recipe"
       ></lab-collection-table>
-    </ng-container>
-    <ng-container *ngIf="vm.unlockedRecipeIds.length">
+    }
+    @if (vm.unlockedRecipeIds.length) {
       <h3>{{ 'data.unlockedRecipes' | translate }}</h3>
       <lab-collection-table
         [ids]="vm.unlockedRecipeIds"
         type="recipe"
       ></lab-collection-table>
-    </ng-container>
-  </ng-container>
-  <ng-template #notFound>
+    }
+  } @else {
     <div class="my-5 p-error">{{ 'data.notFound' | translate }}</div>
-  </ng-template>
-  <ng-template #none>
-    {{ 'none' | translate }}
-  </ng-template>
-</ng-container>
+  }
+}

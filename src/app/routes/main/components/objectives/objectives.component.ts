@@ -208,7 +208,7 @@ export class ObjectivesComponent {
           chooseRecipePicker.selectId
             .pipe(first())
             .subscribe((targetId) => updateFn(targetId));
-          chooseRecipePicker.clickOpen(data, 'recipe', recipeIds);
+          chooseRecipePicker.clickOpen('recipe', recipeIds);
         }
       }
     } else {
@@ -231,7 +231,7 @@ export class ObjectivesComponent {
           chooseItemPicker.selectId
             .pipe(first())
             .subscribe((itemId) => updateFn(itemId));
-          chooseItemPicker.clickOpen(data, 'item', itemIds);
+          chooseItemPicker.clickOpen('item', itemIds);
         }
       } else {
         // No target conversion required

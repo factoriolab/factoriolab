@@ -2,24 +2,19 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  computed,
   EventEmitter,
   inject,
   Output,
+  signal,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { FilterService } from 'primeng/api';
-import {
-  BehaviorSubject,
-  combineLatest,
-  map,
-  Observable,
-  ReplaySubject,
-} from 'rxjs';
 
-import { Dataset, Game } from '~/models';
+import { Game } from '~/models';
 import { ContentService } from '~/services';
-import { LabState, Preferences } from '~/store';
+import { LabState, Preferences, Recipes } from '~/store';
 
 export type UnlockStatus = 'available' | 'locked' | 'researched';
 
@@ -38,74 +33,69 @@ export class TechPickerComponent {
 
   @Output() selectIds = new EventEmitter<string[] | null>();
 
-  filter = '';
-  filter$ = new BehaviorSubject(this.filter);
-  allSelected = false;
+  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  showTechLabels = this.store.selectSignal(Preferences.getShowTechLabels);
 
-  data$ = new ReplaySubject<Dataset>(1);
-  selection$ = new ReplaySubject<string[]>(1);
-  status$: Observable<Record<UnlockStatus, string[]>> = combineLatest([
-    this.selection$,
-    this.data$,
-    this.filter$,
-  ]).pipe(
-    map(([selection, data, filter]) => {
-      let technologyIds = data.technologyIds;
-      if (filter) {
-        const technologies = technologyIds.map((i) => data.itemEntities[i]);
-        technologyIds = this.filterSvc
-          .filter(technologies, ['name'], filter, 'contains')
-          .map((t) => t.id);
+  filter = signal('');
+  selection = signal<string[]>([]);
 
-        selection = selection.filter((i) => technologyIds.includes(i));
-      }
+  allSelected = computed(
+    () => this.selection().length === this.data()?.technologyIds.length,
+  );
+  status = computed(() => {
+    const data = this.data();
+    const filter = this.filter();
+    let selection = this.selection();
+    const set = new Set(selection);
+    const researched = selection;
+    const available: string[] = [];
+    const locked: string[] = [];
 
-      const set = new Set(selection);
-      const researched = selection;
-      const available: string[] = [];
-      const locked: string[] = [];
-      for (const id of technologyIds) {
-        if (!set.has(id)) {
-          const tech = data.technologyEntities[id];
+    if (data == null) return { available, locked, researched };
 
-          if (
-            tech.prerequisites == null ||
-            tech.prerequisites.every((p) => set.has(p))
-          ) {
-            available.push(id);
-          } else {
-            locked.push(id);
-          }
+    let technologyIds = data.technologyIds;
+    if (filter) {
+      const technologies = technologyIds.map((i) => data.itemEntities[i]);
+      technologyIds = this.filterSvc
+        .filter(technologies, ['name'], filter, 'contains')
+        .map((t) => t.id);
+
+      selection = selection.filter((i) => technologyIds.includes(i));
+    }
+
+    for (const id of technologyIds) {
+      if (!set.has(id)) {
+        const tech = data.technologyEntities[id];
+
+        if (
+          tech.prerequisites == null ||
+          tech.prerequisites.every((p) => set.has(p))
+        ) {
+          available.push(id);
+        } else {
+          locked.push(id);
         }
       }
+    }
 
-      return { available, locked, researched };
-    }),
-  );
+    return { available, locked, researched };
+  });
+
   visible = false;
   importVisible = false;
   importValue = '';
 
   Game = Game;
 
-  vm$ = combineLatest({
-    selection: this.selection$,
-    status: this.status$,
-    data: this.data$,
-    showTechLabels: this.store.select(Preferences.getShowTechLabels),
-  });
-
-  clickOpen(data: Dataset, selection: string[] | null): void {
-    this.data$.next(data);
-    selection = [...(selection ?? data.technologyIds)];
-    this.selection$.next(selection);
-    this.allSelected = selection.length === data.technologyIds.length;
+  clickOpen(selection: string[] | null): void {
+    selection = [...(selection ?? this.data().technologyIds)];
+    this.selection.set(selection);
     this.visible = true;
     this.ref.markForCheck();
   }
 
-  selectAll(value: boolean, data: Dataset): void {
-    this.selection$.next(value ? [...data.technologyIds] : []);
+  selectAll(value: boolean): void {
+    this.selection.set(value ? [...this.data().technologyIds] : []);
   }
 
   openImport(input: HTMLTextAreaElement): void {
@@ -130,7 +120,7 @@ game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
     });
   }
 
-  importTechs(data: Dataset): void {
+  importTechs(): void {
     const selection = this.importValue
       .split(',')
       .map((v) => v.trim())
@@ -138,9 +128,9 @@ game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
         if (!id) return '';
 
         const alt = `${id}-technology`;
-        if (data.technologyIds.includes(alt)) {
+        if (this.data().technologyIds.includes(alt)) {
           return alt;
-        } else if (data.technologyIds.includes(id)) {
+        } else if (this.data().technologyIds.includes(id)) {
           return id;
         }
 
@@ -149,16 +139,15 @@ game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
       .filter((v) => !!v);
 
     const set = new Set(selection);
-    this.addPrerequisites(set, data);
+    this.addPrerequisites(set);
 
-    this.selection$.next(Array.from(set));
-    this.allSelected = set.size === data.technologyIds.length;
+    this.selection.set(Array.from(set));
     this.importValue = '';
     this.importVisible = false;
   }
 
-  clickId(id: string, selection: string[], data: Dataset): void {
-    const set = new Set(selection);
+  clickId(id: string): void {
+    const set = new Set(this.selection());
     if (set.has(id)) {
       set.delete(id);
 
@@ -168,10 +157,8 @@ game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
         removeIds = new Set<string>();
 
         for (const id of set) {
-          const tech = data.technologyEntities[id];
-          if (tech.prerequisites?.some((p) => !set.has(p))) {
-            removeIds.add(id);
-          }
+          const tech = this.data().technologyEntities[id];
+          if (tech.prerequisites?.some((p) => !set.has(p))) removeIds.add(id);
         }
 
         removeIds.forEach((i) => set.delete(i));
@@ -179,21 +166,20 @@ game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
     } else {
       set.add(id);
 
-      this.addPrerequisites(set, data);
+      this.addPrerequisites(set);
     }
 
-    this.selection$.next(Array.from(set));
-    this.allSelected = set.size === data.technologyIds.length;
+    this.selection.set(Array.from(set));
   }
 
   // Add any technologies whose prerequisites were not previously met
-  addPrerequisites(set: Set<string>, data: Dataset): void {
+  addPrerequisites(set: Set<string>): void {
     let addIds: Set<string>;
     do {
       addIds = new Set<string>();
 
       for (const id of set) {
-        const tech = data.technologyEntities[id];
+        const tech = this.data().technologyEntities[id];
         tech.prerequisites
           ?.filter((p) => !set.has(p))
           .forEach((p) => addIds.add(p));
@@ -203,23 +189,26 @@ game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
     } while (addIds.size);
   }
 
-  onHide(selection: string[], data: Dataset): void {
-    if (selection.length === data.technologyIds.length) {
+  onHide(): void {
+    const selection = this.selection();
+    const data = this.data();
+    if (data == null) return;
+
+    if (selection.length === data.technologyIds.length)
       this.selectIds.emit(null);
-    } else {
-      /**
-       * Filter for only technologies not listed as prerequisites for other
-       * researched technologies, to create minimal set
-       */
-      const filteredSelection = selection.filter(
-        (a) =>
-          !selection.some((b) => {
-            const techB = data.technologyEntities[b];
-            return techB.prerequisites && techB.prerequisites.indexOf(a) !== -1;
-          }),
-      );
-      this.selectIds.emit(filteredSelection);
-    }
+
+    /**
+     * Filter for only technologies not listed as prerequisites for other
+     * researched technologies, to create minimal set
+     */
+    const filteredSelection = selection.filter(
+      (a) =>
+        !selection.some((b) => {
+          const techB = data.technologyEntities[b];
+          return techB.prerequisites && techB.prerequisites.indexOf(a) !== -1;
+        }),
+    );
+    this.selectIds.emit(filteredSelection);
   }
 
   /** Action Dispatch Methods */

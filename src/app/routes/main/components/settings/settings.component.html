@@ -297,7 +297,7 @@
                         })
                   : ('settings.allTechsResearched' | translate)
               "
-              (click)="techPicker.clickOpen(data(), researchedTechnologyIds())"
+              (click)="techPicker.clickOpen(researchedTechnologyIds())"
             ></button>
             <lab-tech-picker
               #techPicker
@@ -1438,12 +1438,7 @@
                       }
               "
               (click)="
-                itemsPicker.clickOpen(
-                  data(),
-                  'item',
-                  itemIds(),
-                  excludedItemIds()
-                )
+                itemsPicker.clickOpen('item', itemIds(), excludedItemIds())
               "
             ></button>
             <lab-picker
@@ -1469,7 +1464,6 @@
               "
               (click)="
                 recipesPicker.clickOpen(
-                  data(),
                   'recipe',
                   recipeIds(),
                   excludedRecipeIds()

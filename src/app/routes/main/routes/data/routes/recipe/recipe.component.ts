@@ -6,8 +6,7 @@ import { combineLatest, map } from 'rxjs';
 import { AppSharedModule } from '~/app-shared.module';
 import { orString } from '~/helpers';
 import { Dataset, Game, RecipeSettings } from '~/models';
-import { LabState, Recipes } from '~/store';
-import { DataRouteService } from '../../data-route.service';
+import { LabState, Recipes, Settings } from '~/store';
 import { DetailComponent } from '../../models';
 
 @Component({
@@ -19,12 +18,11 @@ import { DetailComponent } from '../../models';
 })
 export class RecipeComponent extends DetailComponent {
   store = inject(Store<LabState>);
-  dataRouteSvc = inject(DataRouteService);
 
   vm$ = combineLatest([
     this.id$,
     this.parent$,
-    this.dataRouteSvc.home$,
+    this.store.select(Settings.getModMenuItem),
     this.store.select(Recipes.recipesState),
     this.store.select(Recipes.getRecipesState),
     this.store.select(Recipes.getAdjustedDataset),

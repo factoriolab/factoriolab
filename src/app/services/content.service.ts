@@ -36,23 +36,18 @@ export class ContentService {
   translateSvc = inject(TranslateService);
 
   // Responsive
-  scrollTop$ = fromEvent(window, 'scroll').pipe(
-    map(
-      // Don't test fromEvent
-      // istanbul ignore next
-      () => window.scrollY,
-    ),
-    startWith(window.scrollY),
-  );
+  windowScrollY = (): number => window.scrollY;
   windowInnerWidth = (): number => window.innerWidth;
+  scrollTop = toSignal(
+    fromEvent(window, 'scroll').pipe(map(this.windowScrollY)),
+    { initialValue: window.scrollY },
+  );
   width = toSignal(
     fromEvent(window, 'resize').pipe(map(this.windowInnerWidth)),
+    { initialValue: window.innerWidth },
   );
 
-  isMobile = computed(() => {
-    const width = this.width() ?? window.innerWidth;
-    return width < Breakpoint.Small;
-  });
+  isMobile = computed(() => this.width() < Breakpoint.Small);
 
   // Dialogs
   showColumns$ = new Subject<void>();

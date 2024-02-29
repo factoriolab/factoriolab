@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   ElementRef,
   inject,
+  signal,
   ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -12,7 +14,7 @@ import { drag } from 'd3-drag';
 import { select, Selection } from 'd3-selection';
 import { zoom } from 'd3-zoom';
 import ELK, { ELK as ElkType, ElkNode } from 'elkjs/lib/elk.bundled';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { DataSet } from 'vis-data/esnext';
 import {
   Data,
@@ -105,7 +107,7 @@ const VIS_NETWORK_OPTIONS: Options = {
   styleUrls: ['./flow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FlowComponent {
+export class FlowComponent implements AfterViewInit {
   ref = inject(ChangeDetectorRef);
   store = inject(Store<LabState>);
   displaySvc = inject(DisplayService);
@@ -118,20 +120,17 @@ export class FlowComponent {
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
   skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link> | undefined;
 
-  loading$ = new BehaviorSubject(true);
-  selectedId$ = new BehaviorSubject<string | null>(null);
-  vm$ = combineLatest({ loading: this.loading$, selectedId: this.selectedId$ });
+  loading = signal(true);
+  selectedId = signal<string | null>(null);
 
-  constructor() {
-    combineLatest({
-      flowData: this.flowSvc.flowData$,
-      themeValues: this.themeSvc.themeValues$,
-      preferences: this.store.select(Preferences.preferencesState),
-    })
-      .pipe(takeUntilDestroyed())
-      .subscribe(({ flowData, themeValues, preferences }) =>
-        this.rebuildChart(flowData, themeValues, preferences),
-      );
+  rebuildChart$ = combineLatest([
+    this.flowSvc.flowData$,
+    this.themeSvc.themeValues$,
+    this.store.select(Preferences.preferencesState),
+  ]).pipe(takeUntilDestroyed());
+
+  ngAfterViewInit(): void {
+    this.rebuildChart$.subscribe((args) => this.rebuildChart(...args));
   }
 
   rebuildChart(
@@ -139,7 +138,7 @@ export class FlowComponent {
     themeValues: ThemeValues,
     preferences: PreferencesState,
   ): void {
-    this.loading$.next(true);
+    this.loading.set(true);
 
     select(`#${SVG_ID} > *`).remove();
 
@@ -151,7 +150,7 @@ export class FlowComponent {
       }
     }
 
-    this.loading$.next(false);
+    this.loading.set(false);
     this.ref.detectChanges();
   }
 
@@ -235,7 +234,7 @@ export class FlowComponent {
       .attr('fill', (d) => d.color)
       .on('click', (e, d) => {
         if (e.defaultPrevented) return;
-        this.selectedId$.next(d.stepId);
+        this.selectedId.set(d.stepId);
       })
       .call(
         drag<SVGRectElement, SankeyNode<Node, Link>>()
@@ -354,7 +353,7 @@ export class FlowComponent {
         });
 
         network.fit();
-        this.loading$.next(false);
+        this.loading.set(false);
       });
     }
   }
@@ -399,7 +398,7 @@ export class FlowComponent {
   }
 
   getVisNodeClickFn(id: string): () => void {
-    return () => this.selectedId$.next(id);
+    return () => this.selectedId.set(id);
   }
 
   getVisEdges(flow: FlowData, themeValues: ThemeValues): Edge[] {

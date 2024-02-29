@@ -1,10 +1,7 @@
-<ng-container *ngIf="vm$ | async as vm">
-  <div
-    *ngIf="vm.loading"
-    class="d-flex justify-content-center align-items-center mt-5"
-  >
+@if (loading()) {
+  <div class="d-flex justify-content-center align-items-center mt-5">
     <p-progressSpinner></p-progressSpinner>
   </div>
-  <div [class.invisible]="vm.loading" id="lab-flow-svg" #svg></div>
-  <lab-steps [focus]="true" [selectedId]="vm.selectedId"></lab-steps>
-</ng-container>
+}
+<div [class.invisible]="loading()" id="lab-flow-svg" #svg></div>
+<lab-steps [focus]="true" [selectedId]="selectedId()"></lab-steps>

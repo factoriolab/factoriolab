@@ -5,7 +5,6 @@ import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { LabState, Settings } from '~/store';
-import { DataRouteService } from '../../data-route.service';
 import { DataSharedModule } from '../../data-shared.module';
 import { DetailComponent } from '../../models';
 
@@ -18,19 +17,18 @@ import { DetailComponent } from '../../models';
 })
 export class CategoryComponent extends DetailComponent {
   store = inject(Store<LabState>);
-  dataRouteSvc = inject(DataRouteService);
 
   vm$ = combineLatest([
     this.id$,
     this.parent$,
-    this.dataRouteSvc.home$,
+    this.store.select(Settings.getModMenuItem),
     this.store.select(Settings.getDataset),
   ]).pipe(
     map(([id, parent, home, data]) => ({
       id,
+      home,
       obj: data.categoryEntities[id],
       breadcrumb: [parent, { label: data.categoryEntities[id]?.name }],
-      home,
       itemIds: data.itemIds.filter((i) => data.itemEntities[i].category === id),
       recipeIds: data.recipeIds.filter(
         (i) => data.recipeEntities[i].category === id,

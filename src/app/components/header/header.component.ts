@@ -91,11 +91,7 @@ export class HeaderComponent {
               : data.itemEntities[o.targetId]?.name,
           )
           .find((n) => n != null);
-        if (name != null) {
-          this.title.setTitle(`${name} | ${APP}`);
-        } else {
-          this.title.setTitle(APP);
-        }
+        this.title.setTitle(name != null ? `${name} | ${APP}` : APP);
       });
   }
 

@@ -40,7 +40,7 @@ export class CostsComponent {
     this.store
       .select(Settings.getCosts)
       .pipe(takeUntilDestroyed())
-      .subscribe(this.initEdit.bind(this));
+      .subscribe((c) => this.initEdit(c));
   }
 
   initEdit(costs: CostSettings): void {

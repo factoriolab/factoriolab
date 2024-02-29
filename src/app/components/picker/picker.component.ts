@@ -12,7 +12,7 @@ import {
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
 
-import { Category, Entities, RawDataset } from '~/models';
+import { Category, Entities } from '~/models';
 import { LabState, Recipes } from '~/store';
 
 @Component({
@@ -54,11 +54,11 @@ export class PickerComponent {
   activeIndex = 0;
 
   clickOpen(
-    data: RawDataset,
     type: 'item' | 'recipe',
     allIds: string[],
     selection?: string | string[],
   ): void {
+    const data = this.data();
     this.type = type;
     const allIdsSet = new Set(allIds);
     if (Array.isArray(selection)) {

@@ -53,7 +53,7 @@ export class ColumnsComponent {
     this.store
       .select(Settings.getColumnsState)
       .pipe(takeUntilDestroyed())
-      .subscribe(this.initEdit.bind(this));
+      .subscribe((c) => this.initEdit(c));
   }
 
   initEdit(columns: ColumnsState): void {

@@ -1,16 +1,16 @@
-<p-card *ngIf="vm$ | async as vm">
+<p-card>
   <div class="d-flex flex-column p-fluid">
-    <ng-container [ngSwitch]="state">
-      <ng-container *ngSwitchCase="WizardState.ObjectiveType">
+    @switch (state) {
+      @case ('type') {
         <ng-container *ngTemplateOutlet="objectiveType"></ng-container>
-      </ng-container>
-      <ng-container *ngSwitchCase="WizardState.ItemObjective">
+      }
+      @case ('item') {
         <ng-container *ngTemplateOutlet="itemObjective"></ng-container>
-      </ng-container>
-      <ng-container *ngSwitchCase="WizardState.RecipeObjective">
+      }
+      @case ('recipe') {
         <ng-container *ngTemplateOutlet="recipeObjective"></ng-container>
-      </ng-container>
-    </ng-container>
+      }
+    }
     <button
       pButton
       pRipple
@@ -36,12 +36,12 @@
       class="mt-2"
       icon="fa-solid fa-box"
       [label]="'wizard.produceItemsButton' | translate"
-      (click)="addItemObjectivePicker.clickOpen(vm.data, 'item', vm.itemIds)"
+      (click)="addItemObjectivePicker.clickOpen('item', itemIds())"
     ></button>
     <lab-picker
       #addItemObjectivePicker
       [header]="'wizard.produceItemsButton' | translate"
-      (selectId)="selectId($event, WizardState.ItemObjective)"
+      (selectId)="selectId($event, 'item')"
     ></lab-picker>
     <p-divider></p-divider>
     <span>{{ 'wizard.runMachines' | translate }}</span>
@@ -52,12 +52,12 @@
       class="mt-2"
       icon="fa-solid fa-industry"
       [label]="'wizard.runMachinesButton' | translate"
-      (click)="addRecipePicker.clickOpen(vm.data, 'recipe', vm.recipeIds)"
+      (click)="addRecipePicker.clickOpen('recipe', recipeIds())"
     ></button>
     <lab-picker
       #addRecipePicker
       [header]="'wizard.runMachinesButton' | translate"
-      (selectId)="selectId($event, WizardState.RecipeObjective)"
+      (selectId)="selectId($event, 'recipe')"
     ></lab-picker>
     <p-divider></p-divider>
   </ng-template>
@@ -66,7 +66,7 @@
     <p-divider></p-divider>
     <div class="d-flex align-items-center justify-content-center">
       <i [class]="id | iconClass"></i>
-      <span class="ms-2">{{ vm.data.itemEntities[id].name }}</span>
+      <span class="ms-2">{{ data().itemEntities[id].name }}</span>
     </div>
     <lab-input-number
       class="mt-2 w-100"
@@ -78,9 +78,9 @@
       labDropdownTranslate
       styleClass="mt-2 h-100"
       [tooltip]="'objectives.selectDisplayRate' | translate"
-      [ngModel]="vm.displayRate"
+      [ngModel]="displayRate()"
       [options]="displayRateOptions"
-      (onChange)="setDisplayRate($event.value, vm.displayRate)"
+      (onChange)="setDisplayRate($event.value, displayRate())"
     >
     </p-dropdown>
     <button
@@ -90,7 +90,7 @@
       class="mt-2"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="createItemObjective(id, rate, RateUnit.Items)"
+      (click)="createItemObjective(id, rate, ObjectiveUnit.Items)"
       routerLink="/list"
     ></button>
     <p-divider></p-divider>
@@ -101,7 +101,7 @@
       class="mb-2 p-button-outlined"
       icon="fa-solid fa-arrow-left"
       [label]="'wizard.back' | translate"
-      (click)="state = WizardState.ObjectiveType"
+      (click)="state = 'type'"
     ></button>
   </ng-template>
   <ng-template #recipeObjective>
@@ -109,7 +109,7 @@
     <p-divider></p-divider>
     <div class="d-flex align-items-center justify-content-center">
       <i [class]="id | iconClass"></i>
-      <span class="ms-2">{{ vm.data.recipeEntities[id].name }}</span>
+      <span class="ms-2">{{ data().recipeEntities[id].name }}</span>
     </div>
     <lab-input-number
       class="mt-2 w-100"
@@ -135,7 +135,7 @@
       class="mb-2 p-button-outlined"
       icon="fa-solid fa-arrow-left"
       [label]="'wizard.back' | translate"
-      (click)="state = WizardState.ObjectiveType"
+      (click)="state = 'type'"
     ></button>
   </ng-template>
 </p-card>

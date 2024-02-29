@@ -49,7 +49,7 @@
         type="button"
         icon="fa-solid fa-box"
         [label]="'landing.addItems' | translate"
-        (click)="addItemPicker.clickOpen(data(), 'item', itemIds())"
+        (click)="addItemPicker.clickOpen('item', itemIds())"
       ></button>
       <button
         pButton
@@ -58,7 +58,7 @@
         class="mt-2"
         icon="fa-solid fa-industry"
         [label]="'landing.addMachines' | translate"
-        (click)="addRecipePicker.clickOpen(data(), 'recipe', recipeIds())"
+        (click)="addRecipePicker.clickOpen('recipe', recipeIds())"
       ></button>
       <lab-picker
         #addItemPicker

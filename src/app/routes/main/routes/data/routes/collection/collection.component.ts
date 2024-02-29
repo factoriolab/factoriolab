@@ -8,7 +8,6 @@ import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { LabState, Settings } from '~/store';
-import { DataRouteService } from '../../data-route.service';
 import { DataSharedModule } from '../../data-shared.module';
 import { Collection } from '../../models';
 
@@ -23,7 +22,6 @@ export class CollectionComponent {
   route = inject(ActivatedRoute);
   translateSvc = inject(TranslateService);
   store = inject(Store<LabState>);
-  dataRouteSvc = inject(DataRouteService);
 
   collection$ = this.route.data.pipe(map((data) => data as Collection));
   breadcrumb$ = this.collection$.pipe(
@@ -36,7 +34,7 @@ export class CollectionComponent {
   vm$ = combineLatest([
     this.collection$,
     this.breadcrumb$,
-    this.dataRouteSvc.home$,
+    this.store.select(Settings.getModMenuItem),
     this.store.select(Settings.getDataset),
   ]).pipe(
     map(([collection, breadcrumb, home, data]) => ({

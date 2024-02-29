@@ -7,7 +7,6 @@ import { AppSharedModule } from '~/app-shared.module';
 import { orString } from '~/helpers';
 import { Game, ItemId } from '~/models';
 import { Items, LabState, Machines, Settings } from '~/store';
-import { DataRouteService } from '../../data-route.service';
 import { DataSharedModule } from '../../data-shared.module';
 import { DetailComponent } from '../../models';
 
@@ -20,27 +19,26 @@ import { DetailComponent } from '../../models';
 })
 export class ItemComponent extends DetailComponent {
   store = inject(Store<LabState>);
-  dataRouteSvc = inject(DataRouteService);
 
   vm$ = combineLatest([
     this.id$,
     this.parent$,
-    this.dataRouteSvc.home$,
     this.store.select(Items.itemsState),
     this.store.select(Items.getItemsState),
     this.store.select(Machines.machinesState),
     this.store.select(Machines.getMachinesState),
+    this.store.select(Settings.getModMenuItem),
     this.store.select(Settings.getDataset),
   ]).pipe(
     map(
       ([
         id,
         parent,
-        home,
         itemsStateRaw,
         itemsState,
         machinesStateRaw,
         machinesState,
+        home,
         data,
       ]) => ({
         id,
