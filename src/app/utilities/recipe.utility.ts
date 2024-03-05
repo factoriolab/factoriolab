@@ -1,6 +1,6 @@
 import { SelectItem } from 'primeng/api';
 
-import { fnPropsNotNullish } from '~/helpers';
+import { fnPropsNotNullish, orZero } from '~/helpers';
 import {
   Beacon,
   BeaconRational,
@@ -9,7 +9,6 @@ import {
   Dataset,
   EnergyType,
   Entities,
-  FuelType,
   Game,
   isRecipeObjective,
   ItemId,
@@ -18,6 +17,7 @@ import {
   MachineRational,
   Objective,
   Rational,
+  RawDataset,
   Recipe,
   RecipeRational,
   RecipeSettingsRational,
@@ -27,6 +27,7 @@ import { Machines } from '~/store';
 export class RecipeUtility {
   static MIN_FACTOR = new Rational(BigInt(1), BigInt(5));
   static POLLUTION_FACTOR = new Rational(BigInt(60));
+  static MIN_FACTORIO_RECIPE_TIME = new Rational(BigInt(1), BigInt(60));
 
   /** Determines what option to use based on preferred rank */
   static bestMatch(options: string[], rank: string[]): string {
@@ -41,11 +42,32 @@ export class RecipeUtility {
     return options[0];
   }
 
+  static fuelOptions(
+    entity: Machine | MachineRational,
+    data: RawDataset,
+  ): SelectItem<string>[] {
+    if (entity.fuel) {
+      const fuel = data.itemEntities[entity.fuel];
+      return [{ value: fuel.id, label: fuel.name }];
+    }
+
+    if (entity.fuelCategories == null) return [];
+
+    const fuelCategories = entity.fuelCategories;
+    const allowed = data.fuelIds
+      .map((f) => data.itemEntities[f])
+      .filter(fnPropsNotNullish('fuel'))
+      .filter((f) => fuelCategories.includes(f.fuel.category));
+    return allowed.map(
+      (f): SelectItem<string> => ({ value: f.id, label: f.name }),
+    );
+  }
+
   static moduleOptions(
     entity: Machine | MachineRational | Beacon | BeaconRational,
     recipeId: string | null,
-    data: Dataset
-  ): SelectItem[] {
+    data: RawDataset,
+  ): SelectItem<string>[] {
     // Get all modules
     let allowed = data.moduleIds
       .map((i) => data.itemEntities[i])
@@ -53,12 +75,12 @@ export class RecipeUtility {
 
     if (recipeId != null) {
       const recipe = data.recipeEntities[recipeId];
-      if (!recipe.mining && !recipe.technology) {
+      if (!recipe.isMining && !recipe.isTechnology) {
         // Filter for modules allowed on this recipe
         allowed = allowed.filter(
           (m) =>
-            m.module.limitation == null ||
-            data.limitations[m.module.limitation][recipeId]
+            !m.module.limitation ||
+            data.limitations[m.module.limitation][recipeId],
         );
       }
     }
@@ -70,7 +92,9 @@ export class RecipeUtility {
       }
     }
 
-    const options = allowed.map((m) => ({ value: m.id, label: m.name }));
+    const options = allowed.map(
+      (m): SelectItem<string> => ({ value: m.id, label: m.name }),
+    );
     if (data.game !== Game.Satisfactory) {
       options.unshift({ label: 'None', value: ItemId.Module });
     }
@@ -81,30 +105,29 @@ export class RecipeUtility {
   static defaultModules(
     options: SelectItem[],
     moduleRankIds: string[],
-    count: number
+    count: number,
   ): string[] {
     const module = this.bestMatch(
       options.map((o) => o.value),
-      moduleRankIds
+      moduleRankIds,
     );
     return new Array(count).fill(module);
   }
 
   static adjustRecipe(
     recipeId: string,
-    fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
     settings: RecipeSettingsRational,
     itemsState: Entities<ItemSettings>,
-    data: Dataset
+    data: RawDataset,
   ): RecipeRational {
     const recipe = new RecipeRational(data.recipeEntities[recipeId]);
     if (settings.machineId != null) {
       const machine = data.machineEntities[settings.machineId];
-
+      
       if (machine.speed != null) {
         // Adjust for machine speed
         recipe.time = recipe.time.div(machine.speed);
@@ -128,7 +151,7 @@ export class RecipeUtility {
         recipe.time = recipe.time.div(minSpeed);
       }
 
-      if (recipe.technology) {
+      if (recipe.isTechnology && data.game === Game.Factorio) {
         // Adjust for research factor
         recipe.time = recipe.time.div(researchSpeed);
       }
@@ -139,7 +162,7 @@ export class RecipeUtility {
       let consumption = Rational.one;
       let pollution = Rational.one;
 
-      if (recipe.mining) {
+      if (recipe.isMining) {
         // Adjust for mining bonus
         prod = prod.add(miningBonus);
       }
@@ -189,7 +212,7 @@ export class RecipeUtility {
       if (settings.beacons != null) {
         for (const beaconSettings of settings.beacons) {
           const beaconModules = beaconSettings.moduleIds?.filter(
-            (m) => m !== ItemId.Module && data.moduleEntities[m]
+            (m) => m !== ItemId.Module && data.moduleEntities[m],
           );
           if (
             beaconModules?.length &&
@@ -238,6 +261,14 @@ export class RecipeUtility {
       // Calculate module/beacon effects
       // Speed
       recipe.time = recipe.time.div(speed);
+
+      // In Factorio, minimum recipe time is 1/60s (1 tick)
+      if (
+        recipe.time.lt(this.MIN_FACTORIO_RECIPE_TIME) &&
+        data.game === Game.Factorio
+      ) {
+        recipe.time = this.MIN_FACTORIO_RECIPE_TIME;
+      }
 
       // Productivity
       for (const outId of Object.keys(recipe.out)) {
@@ -293,37 +324,23 @@ export class RecipeUtility {
       }
 
       // Calculate burner fuel inputs
-      if (machine.type === EnergyType.Burner && usage.nonzero()) {
-        let rFuelId = fuelId;
-        if (
-          machine.category != null &&
-          machine.category !== FuelType.Chemical
-        ) {
-          // Try to find matching input for burning recipes
-          const ins = Object.keys(recipe.in);
-          const fuels = data.fuelIds.filter(
-            (i) => data.fuelEntities[i].category === machine.category
-          );
-          rFuelId = ins.find((i) => fuels.indexOf(i) !== -1) || fuels[0];
-        }
-        if (rFuelId) {
-          const fuel = data.fuelEntities[rFuelId];
+      if (settings.fuelId) {
+        const fuel = data.fuelEntities[settings.fuelId];
 
-          if (fuel) {
-            const fuelIn = recipe.time
-              .mul(usage)
-              .div(fuel.value)
-              .div(Rational.thousand);
+        if (fuel) {
+          const fuelIn = recipe.time
+            .mul(usage)
+            .div(fuel.value)
+            .div(Rational.thousand);
 
-            recipe.in[rFuelId] = (recipe.in[rFuelId] || Rational.zero).add(
-              fuelIn
-            );
+          recipe.in[settings.fuelId] = (
+            recipe.in[settings.fuelId] || Rational.zero
+          ).add(fuelIn);
 
-            if (fuel.result) {
-              recipe.out[fuel.result] = (
-                recipe.out[fuel.result] || Rational.zero
-              ).add(fuelIn);
-            }
+          if (fuel.result) {
+            recipe.out[fuel.result] = (
+              recipe.out[fuel.result] || Rational.zero
+            ).add(fuelIn);
           }
         }
       }
@@ -402,35 +419,53 @@ export class RecipeUtility {
     return recipe;
   }
 
+  /** Adjust rocket launch objective recipes */
+  static adjustLaunchRecipeObjective(
+    recipe: RecipeRational,
+    settings: Entities<RecipeSettingsRational>,
+    data: Dataset,
+  ): void {
+    if (!recipe.part) return;
+    const partMachineId = settings[recipe.part].machineId;
+    if (!partMachineId) return;
+    const rocketMachine = data.machineEntities[partMachineId];
+    if (!rocketMachine?.silo) return;
+
+    const rocketRecipe = data.recipeR[recipe.part];
+    const itemId = Object.keys(rocketRecipe.out)[0];
+    const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
+    recipe.time = rocketRecipe.time.mul(factor);
+  }
+
   /** Adjust rocket launch and rocket part recipes */
   static adjustSiloRecipes(
     recipeR: Entities<RecipeRational>,
     settings: Entities<RecipeSettingsRational>,
-    data: Dataset
+    data: RawDataset,
   ): Entities<RecipeRational> {
     for (const partId of Object.keys(recipeR)) {
       const partMachineId = settings[partId].machineId;
-      if (partMachineId) {
-        const rocketMachine = data.machineEntities[partMachineId];
-        const rocketRecipe = recipeR[partId];
-        if (rocketMachine?.silo && !rocketRecipe.part) {
-          const itemId = Object.keys(rocketRecipe.out)[0];
-          const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
-          for (const launchId of Object.keys(recipeR).filter(
-            (i) => recipeR[i].part === partId
-          )) {
-            if (partMachineId === settings[launchId].machineId) {
-              recipeR[launchId].time = rocketRecipe.time
-                .mul(factor)
-                .add(rocketMachine.silo.launch);
-            }
-          }
-          rocketRecipe.time = rocketRecipe.time
-            .mul(factor)
-            .add(rocketMachine.silo.launch)
-            .div(factor);
-        }
+      if (!partMachineId) continue;
+
+      const rocketMachine = data.machineEntities[partMachineId];
+      const rocketRecipe = recipeR[partId];
+      if (!rocketMachine?.silo || rocketRecipe.part) continue;
+
+      const itemId = Object.keys(rocketRecipe.out)[0];
+      const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
+      for (const launchId of Object.keys(recipeR).filter(
+        (i) =>
+          recipeR[i].part === partId && settings[i].machineId === partMachineId,
+      )) {
+        recipeR[launchId].time = rocketRecipe.time
+          .mul(factor)
+          .add(rocketMachine.silo.launch);
       }
+
+      rocketRecipe.time = rocketRecipe.time
+        .mul(factor)
+        .add(rocketMachine.silo.launch)
+        .div(factor);
     }
 
     return recipeR;
@@ -438,7 +473,7 @@ export class RecipeUtility {
 
   static allowsModules(
     recipe: Recipe | RecipeRational,
-    machine: MachineRational
+    machine: MachineRational,
   ): boolean {
     return (
       (!machine.silo || !recipe.part) &&
@@ -448,87 +483,145 @@ export class RecipeUtility {
   }
 
   static adjustDataset(
+    recipeIds: string[],
+    excludedRecipeIds: string[],
     recipesState: Entities<RecipeSettingsRational>,
     itemsState: Entities<ItemSettings>,
-    fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
     cost: CostRationalSettings,
-    data: Dataset
+    data: RawDataset,
   ): Dataset {
     const recipeR = this.adjustRecipes(
+      recipeIds,
       recipesState,
       itemsState,
-      fuelId,
       proliferatorSprayId,
       miningBonus,
       researchSpeed,
       netProductionOnly,
-      data
+      data,
     );
-    this.adjustCost(recipeR, recipesState, cost);
-    return { ...data, ...{ recipeR } };
+    this.adjustCost(recipeIds, recipeR, recipesState, cost, data);
+    return this.finalizeData(recipeIds, excludedRecipeIds, recipeR, data);
   }
 
   static adjustRecipes(
+    recipeIds: string[],
     recipesState: Entities<RecipeSettingsRational>,
     itemsState: Entities<ItemSettings>,
-    fuelId: string | undefined,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    data: Dataset
+    data: RawDataset,
   ): Entities<RecipeRational> {
     return this.adjustSiloRecipes(
-      data.recipeIds.reduce((e: Entities<RecipeRational>, i) => {
+      recipeIds.reduce((e: Entities<RecipeRational>, i) => {
         e[i] = this.adjustRecipe(
           i,
-          fuelId,
           proliferatorSprayId,
           miningBonus,
           researchSpeed,
           netProductionOnly,
           recipesState[i],
           itemsState,
-          data
+          data,
         );
         return e;
       }, {}),
       recipesState,
-      data
+      data,
     );
   }
 
   static adjustCost(
+    recipeIds: string[],
     recipeR: Entities<RecipeRational>,
     recipesState: Entities<RecipeSettingsRational>,
-    cost: CostRationalSettings
+    cost: CostRationalSettings,
+    data: RawDataset,
   ): void {
-    for (const id of Object.keys(recipeR)) {
-      const recipe = recipeR[id];
-      if (recipesState[id].cost) {
-        recipe.cost = recipesState[id].cost;
-      } else if (recipe.cost) {
-        // Recipe has a declared cost, base this on output items not machines
-        // Calculate total output, sum, and multiply cost by output
-        const output = Object.keys(recipe.out)
-          .reduce((v, o) => v.add(recipe.out[o]), Rational.zero)
-          .div(recipe.time);
-        recipe.cost = output.mul(recipe.cost).mul(cost.factor);
-      } else {
-        // Adjust based on recipe time so that this is based on # machines
-        recipe.cost = cost.machine;
-      }
-    }
+    recipeIds
+      .map((i) => recipeR[i])
+      .forEach((recipe) => {
+        const settings = recipesState[recipe.id];
+        if (settings.cost) {
+          recipe.cost = settings.cost;
+        } else if (recipe.cost) {
+          // Recipe has a declared cost, base this on output items not machines
+          // Calculate total output, sum, and multiply cost by output
+          const output = Object.keys(recipe.out)
+            .reduce((v, o) => v.add(recipe.out[o]), Rational.zero)
+            .div(recipe.time);
+          recipe.cost = output.mul(recipe.cost).mul(cost.factor);
+        } else {
+          recipe.cost = cost.machine;
+          if (settings.machineId != null && cost.footprint.nonzero()) {
+            // Adjust based on machine size
+            const machine = data.machineEntities[settings.machineId];
+            if (machine.size != null) {
+              recipe.cost = recipe.cost.mul(
+                Rational.fromNumber(machine.size[0] * machine.size[1]),
+              );
+            }
+          }
+        }
+      });
+  }
+
+  static finalizeData(
+    recipeIds: string[],
+    excludedRecipeIds: string[],
+    recipeR: Entities<RecipeRational>,
+    data: RawDataset,
+  ): Dataset {
+    const excludedSet = new Set(excludedRecipeIds);
+    const itemRecipeIds: Entities<string[]> = {};
+    const itemIncludedRecipeIds: Entities<string[]> = {};
+    const itemIncludedIoRecipeIds: Entities<string[]> = {};
+    data.itemIds.forEach((i) => {
+      itemRecipeIds[i] = [];
+      itemIncludedRecipeIds[i] = [];
+      itemIncludedIoRecipeIds[i] = [];
+    });
+
+    recipeIds
+      .map((i) => recipeR[i])
+      .forEach((recipe) => {
+        recipe.finalize();
+        recipe.produces.forEach((productId) =>
+          itemRecipeIds[productId].push(recipe.id),
+        );
+
+        if (!excludedSet.has(recipe.id)) {
+          recipe.produces.forEach((productId) =>
+            itemIncludedRecipeIds[productId].push(recipe.id),
+          );
+
+          Object.keys(recipe.output).forEach((ioId) =>
+            itemIncludedIoRecipeIds[ioId].push(recipe.id),
+          );
+        }
+      });
+
+    return {
+      ...data,
+      ...{
+        recipeR,
+        itemRecipeIds,
+        itemIncludedRecipeIds,
+        itemIncludedIoRecipeIds,
+      },
+    };
   }
 
   static adjustObjective(
     objective: Objective,
     machinesState: Machines.MachinesState,
-    data: Dataset
+    data: RawDataset,
   ): Objective {
     if (!isRecipeObjective(objective)) return objective;
 
@@ -538,24 +631,34 @@ export class RecipeUtility {
     if (objective.machineId == null) {
       objective.machineId = this.bestMatch(
         recipe.producers,
-        machinesState.ids ?? []
+        machinesState.ids ?? [],
       );
     }
 
     const machine = data.machineEntities[objective.machineId];
     const def = machinesState.entities[objective.machineId];
+
+    if (recipe.isBurn) {
+      objective.fuelId = Object.keys(recipe.in)[0];
+    } else {
+      objective.fuelId = objective.fuelId ?? def?.fuelId;
+    }
+
+    objective.fuelId = objective.fuelId ?? def?.fuelId;
+    objective.fuelOptions = def?.fuelOptions;
+
     if (machine != null && this.allowsModules(recipe, machine)) {
       objective.machineModuleOptions = this.moduleOptions(
         machine,
         objective.targetId,
-        data
+        data,
       );
 
       if (objective.machineModuleIds == null) {
         objective.machineModuleIds = this.defaultModules(
           objective.machineModuleOptions,
           def.moduleRankIds ?? [],
-          machine.modules ?? 0
+          orZero(machine.modules),
         );
       }
 
@@ -576,14 +679,14 @@ export class RecipeUtility {
           beaconSettings.moduleOptions = this.moduleOptions(
             beacon,
             objective.targetId,
-            data
+            data,
           );
 
           if (beaconSettings.moduleIds == null) {
             beaconSettings.moduleIds = RecipeUtility.defaultModules(
               beaconSettings.moduleOptions,
               def.beaconModuleRankIds ?? [],
-              beacon.modules
+              beacon.modules,
             );
           }
         }

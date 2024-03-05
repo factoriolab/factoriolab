@@ -16,6 +16,11 @@ export class BrowserUtility {
     return window.location.href;
   }
 
+  /**
+   * Indicates whether app is running as a standalone PWA. Evaluates only once.
+   */
+  static isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
   static mergeState(initial: LabState): LabState {
     let preferencesState = BrowserUtility.preferencesState;
     if (preferencesState) {
@@ -23,6 +28,10 @@ export class BrowserUtility {
         ...initial.preferencesState,
         ...preferencesState,
         ...{
+          states: {
+            ...initial.preferencesState.states,
+            ...preferencesState.states,
+          },
           columns: {
             ...initial.preferencesState.columns,
             ...preferencesState.columns,
@@ -35,18 +44,6 @@ export class BrowserUtility {
       };
     } else {
       return initial;
-    }
-  }
-
-  static get modState(): string | null {
-    return localStorage.getItem(StorageKey.Mod);
-  }
-
-  static set modState(value: string | null) {
-    if (value == null) {
-      localStorage.removeItem(StorageKey.Mod);
-    } else {
-      localStorage.setItem(StorageKey.Mod, value);
     }
   }
 

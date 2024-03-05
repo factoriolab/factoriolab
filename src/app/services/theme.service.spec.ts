@@ -16,7 +16,7 @@ describe('ThemeService', () => {
     service = TestBed.inject(ThemeService);
     mockStore = TestBed.inject(MockStore);
     // Set up an item icon override to be included
-    const data = Mocks.getDataset();
+    const data = Mocks.getRawDataset();
     data.itemEntities[ItemId.Coal].icon = 'coal';
     data.recipeEntities[RecipeId.Coal].icon = 'coal';
     data.categoryEntities[CategoryId.Combat].icon = 'pistol';
@@ -39,10 +39,10 @@ describe('ThemeService', () => {
     spyOn(service['head'], 'removeChild');
     spyOn(service['head'], 'appendChild');
     spyOn(service['document'], 'getElementById').and.returnValue(
-      themeLink as any
+      themeLink as any,
     );
     spyOn(service['document'], 'createElement').and.returnValue(
-      tempLink as any
+      tempLink as any,
     );
     mockStore.overrideSelector(Preferences.getTheme, Theme.Light);
     mockStore.refreshState();
@@ -56,6 +56,18 @@ describe('ThemeService', () => {
     expect(themeLink.href).toEqual('theme-light.css');
     tempLink.onload();
     expect(themeLink.href).toEqual('theme-dark.css');
+  });
+
+  it('should update theme values on initial pass', () => {
+    spyOn(service, 'updateThemeValues');
+    const themeLink = { href: 'theme-black.css' };
+    spyOn(service['document'], 'getElementById').and.returnValue(
+      themeLink as any,
+    );
+    spyOn(service, 'themePath').and.returnValue('theme-black.css');
+    mockStore.overrideSelector(Preferences.getTheme, Theme.Black);
+    mockStore.refreshState();
+    expect(service.updateThemeValues).toHaveBeenCalled();
   });
 
   describe('themePath', () => {
@@ -74,7 +86,7 @@ describe('ThemeService', () => {
         theme: Theme.Light,
       } as any);
       spyOn(window.document, 'getElementById').and.returnValue(
-        themeLink as any
+        themeLink as any,
       );
       ThemeService.appInitTheme();
       expect(themeLink.href).toEqual('theme-light.css');
@@ -83,7 +95,7 @@ describe('ThemeService', () => {
     it('should skip if specifying to use dark theme', () => {
       const themeLink = { href: '' };
       spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue(
-        null as any
+        null as any,
       );
       ThemeService.appInitTheme();
       expect(themeLink.href).toEqual('');

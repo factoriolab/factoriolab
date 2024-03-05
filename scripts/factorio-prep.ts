@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 import { ModData } from '~/models';
-import * as D from './factorio.models';
+import * as D from './factorio-build.models';
 import { getJsonData } from './helpers';
 
 /**
@@ -12,7 +12,7 @@ import { getJsonData } from './helpers';
 const mod = process.argv[2];
 if (!mod) {
   throw new Error(
-    'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1'
+    'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
   );
 }
 
@@ -23,6 +23,8 @@ const modsPath = `${factorioPath}/mods`;
 const modListPath = `${modsPath}/mod-list.json`;
 const modPath = `./src/data/${mod}`;
 const modDataPath = `${modPath}/data.json`;
+const modSettingsSourcePath = `${modPath}/mod-settings.dat`;
+const modSettingsDestPath = `${modsPath}/mod-settings.dat`;
 
 async function dumpPrep(): Promise<void> {
   // Read mod data
@@ -42,11 +44,17 @@ async function dumpPrep(): Promise<void> {
 
   fs.writeFileSync(modListPath, JSON.stringify(modList));
 
+  if (fs.existsSync(modSettingsSourcePath)) {
+    // Copy settings into mods folder
+    fs.copyFileSync(modSettingsSourcePath, modSettingsDestPath);
+    console.log('Copied saved `mod-settings.dat` file into mods folder');
+  }
+
   console.log(
     `Enabled mods: ${modList.mods
       .filter((m) => m.enabled)
       .map((m) => m.name)
-      .join(', ')}`
+      .join(', ')}`,
   );
 }
 

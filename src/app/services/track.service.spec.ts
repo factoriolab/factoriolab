@@ -24,7 +24,7 @@ describe('TrackService', () => {
   describe('trackByKey', () => {
     it('should return an object key', () => {
       expect(service.trackByKey(0, { key: 'key', value: 'value' })).toEqual(
-        'key'
+        'key',
       );
     });
   });
@@ -32,7 +32,7 @@ describe('TrackService', () => {
   describe('trackByIndex', () => {
     it('should return a string by index only', () => {
       expect(service.trackByIndex(0, { key: 'key', value: 'value' })).toEqual(
-        '0'
+        '0',
       );
     });
   });
@@ -42,8 +42,8 @@ describe('TrackService', () => {
       expect(
         service.sortByValue(
           { key: 'a', value: Rational.one },
-          { key: 'b', value: Rational.two }
-        )
+          { key: 'b', value: Rational.two },
+        ),
       ).toEqual(1);
     });
   });

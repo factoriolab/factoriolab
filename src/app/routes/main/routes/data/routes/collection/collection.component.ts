@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -20,13 +20,18 @@ import { Collection } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionComponent {
+  route = inject(ActivatedRoute);
+  translateSvc = inject(TranslateService);
+  store = inject(Store<LabState>);
+  dataRouteSvc = inject(DataRouteService);
+
   collection$ = this.route.data.pipe(map((data) => data as Collection));
   breadcrumb$ = this.collection$.pipe(
     map((data): MenuItem[] => [
       {
         label: this.translateSvc.instant(data.label ?? 'none'),
       },
-    ])
+    ]),
   );
   vm$ = combineLatest([
     this.collection$,
@@ -39,13 +44,6 @@ export class CollectionComponent {
       breadcrumb,
       ids: data[collection.ids] as string[],
       home,
-    }))
+    })),
   );
-
-  constructor(
-    private route: ActivatedRoute,
-    private translateSvc: TranslateService,
-    private store: Store<LabState>,
-    private dataRouteSvc: DataRouteService
-  ) {}
 }

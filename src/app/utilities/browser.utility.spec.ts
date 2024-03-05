@@ -8,7 +8,7 @@ describe('BrowserUtility', () => {
   describe('search', () => {
     it('should get the window.location property', () => {
       expect(BrowserUtility.search).toEqual(
-        window.location.search.substring(1)
+        window.location.search.substring(1),
       );
     });
   });
@@ -21,13 +21,13 @@ describe('BrowserUtility', () => {
 
   describe('mergeState', () => {
     it('should merge the stored preferences into the state', () => {
-      const preferencesState: any = { pref: 'value', columns: {} };
+      const preferencesState: any = { pref: 'value', columns: {}, states: {} };
       spyOnProperty(BrowserUtility, 'preferencesState', 'get').and.returnValue(
-        preferencesState
+        preferencesState,
       );
       const initial: any = {
         a: { test: 'initial' },
-        preferencesState: { columns: {} },
+        preferencesState: { columns: {}, states: {} },
       };
       expect(BrowserUtility.mergeState(initial)).toEqual({
         a: { test: 'initial' },
@@ -37,19 +37,10 @@ describe('BrowserUtility', () => {
 
     it('should return the initial state if nothing is stored', () => {
       spyOnProperty(BrowserUtility, 'preferencesState', 'get').and.returnValue(
-        null
+        null,
       );
       const state: any = { a: 'a' };
       expect(BrowserUtility.mergeState(state)).toEqual(state);
-    });
-  });
-
-  describe('modState', () => {
-    it('should get/set', () => {
-      BrowserUtility.modState = 'modState';
-      expect(BrowserUtility.modState).toEqual('modState');
-      BrowserUtility.modState = null;
-      expect(BrowserUtility.modState).toEqual(null);
     });
   });
 

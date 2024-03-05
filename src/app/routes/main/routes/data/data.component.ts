@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
@@ -12,6 +12,9 @@ import { DataRouteService } from './data-route.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent {
+  store = inject(Store<LabState>);
+  dataRouteSvc = inject(DataRouteService);
+
   vm$ = combineLatest([
     this.dataRouteSvc.home$,
     this.store.select(Settings.getDataset),
@@ -69,19 +72,14 @@ export class DataComponent {
       id: 'pipeIds',
     },
     {
-      label: 'data.recipes',
-      routerLink: 'recipes',
-      id: 'recipeIds',
-    },
-    {
       label: 'data.technologies',
       routerLink: 'technologies',
       id: 'technologyIds',
     },
+    {
+      label: 'data.recipes',
+      routerLink: 'recipes',
+      id: 'recipeIds',
+    },
   ];
-
-  constructor(
-    private store: Store<LabState>,
-    private dataRouteSvc: DataRouteService
-  ) {}
 }

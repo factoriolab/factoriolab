@@ -1,6 +1,7 @@
 import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
+import { ReplaySubject } from 'rxjs';
 
 import { fnPropsNotNullish } from '~/helpers';
 import { Theme } from '~/models';
@@ -10,16 +11,23 @@ import { BrowserUtility } from '~/utilities';
 const LAB_ICON_STYLE_ID = 'lab-icon-css';
 const LAB_THEME_STYLE_ID = 'lab-theme-css';
 
+export interface ThemeValues {
+  textColor: string;
+  successColor: string;
+  successBackground: string;
+  dangerColor: string;
+  dangerBackground: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ThemeService {
-  head = this.document.getElementsByTagName('head')[0];
+  document = inject(DOCUMENT);
+  store = inject(Store<LabState>);
 
-  constructor(
-    @Inject(DOCUMENT) private document: Document,
-    private store: Store<LabState>
-  ) {}
+  themeValues$ = new ReplaySubject<ThemeValues>(1);
+  head = this.document.getElementsByTagName('head')[0];
 
   initialize(): void {
     this.store.select(Settings.getDataset).subscribe((data) => {
@@ -37,6 +45,8 @@ export class ThemeService {
 
         if (icon.invertLight) {
           css += `body.light .${i}::before { filter: invert(1); } `;
+          css += `.invert .${i}::before { filter: invert(1); } `;
+          css += `body.light .invert .${i}::before { filter: none; } `;
         }
       });
       data.itemIds
@@ -48,6 +58,8 @@ export class ThemeService {
 
           if (icon.invertLight) {
             css += `body.light .${item.id}.item::before { filter: invert(1); } `;
+            css += `.invert .${item.id}::before { filter: invert(1); } `;
+            css += `body.light .invert .${item.id}::before { filter: none; } `;
           }
         });
       data.recipeIds
@@ -59,6 +71,8 @@ export class ThemeService {
 
           if (icon.invertLight) {
             css += `body.light .${recipe.id}.recipe::before { filter: invert(1); } `;
+            css += `.invert .${recipe.id}::before { filter: invert(1); } `;
+            css += `body.light .invert .${recipe.id}::before { filter: none; } `;
           }
         });
       data.categoryIds
@@ -70,6 +84,8 @@ export class ThemeService {
 
           if (icon.invertLight) {
             css += `body.light .${category.id}.category::before { filter: invert(1); } `;
+            css += `.invert .${category.id}::before { filter: invert(1); } `;
+            css += `body.light .invert .${category.id}::before { filter: none; } `;
           }
         });
 
@@ -98,7 +114,7 @@ export class ThemeService {
 
     this.store.select(Preferences.getTheme).subscribe((theme) => {
       const themeLink = this.document.getElementById(
-        LAB_THEME_STYLE_ID
+        LAB_THEME_STYLE_ID,
       ) as HTMLLinkElement | null;
       if (themeLink) {
         const href = this.themePath(theme);
@@ -113,8 +129,11 @@ export class ThemeService {
             // New style sheet has loaded, update the main themeLink and delete the temporary link
             themeLink.href = href;
             this.head.removeChild(tempLink);
+            this.updateThemeValues();
           };
           this.head.appendChild(tempLink);
+        } else {
+          this.updateThemeValues();
         }
       }
 
@@ -126,6 +145,18 @@ export class ThemeService {
         }
       }
     });
+  }
+
+  updateThemeValues(): void {
+    const style = getComputedStyle(this.document.body);
+    const values: ThemeValues = {
+      textColor: style.getPropertyValue('--text-color'),
+      successColor: style.getPropertyValue('--success-color'),
+      successBackground: style.getPropertyValue('--success-background'),
+      dangerColor: style.getPropertyValue('--danger-color'),
+      dangerBackground: style.getPropertyValue('--danger-background'),
+    };
+    this.themeValues$.next(values);
   }
 
   themePath(theme: Theme): string {
@@ -151,7 +182,7 @@ export class ThemeService {
     if (theme === Theme.Light) {
       // Need to switch to light theme before app starts
       const themeLink = window.document.getElementById(
-        LAB_THEME_STYLE_ID
+        LAB_THEME_STYLE_ID,
       ) as HTMLLinkElement | null;
       if (themeLink) {
         themeLink.href = 'theme-light.css';

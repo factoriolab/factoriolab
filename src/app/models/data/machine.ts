@@ -10,8 +10,10 @@ export interface Machine {
   modules?: number;
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
-  /** Fuel category, e.g. chemical or nuclear */
-  category?: string;
+  /** Fuel categories, e.g. chemical or nuclear */
+  fuelCategories?: string[];
+  /** Indicates a specific fuel that must be used */
+  fuel?: string;
   /** Energy consumption in kW */
   usage?: number | string;
   /** Drain in kW */
@@ -20,6 +22,8 @@ export interface Machine {
   pollution?: number | string;
   silo?: Silo;
   consumption?: Entities<number | string>;
+  /** Width and height in tiles (integers, unless off-grid entity like tree) */
+  size?: [number, number];
 }
 
 export class MachineRational {
@@ -28,16 +32,26 @@ export class MachineRational {
   modules?: number;
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
-  /** Fuel category, e.g. chemical or nuclear */
-  category?: string;
+  /** Fuel categories, e.g. chemical or nuclear */
+  fuelCategories?: string[];
+  /** Indicates a specific fuel that must be used */
+  fuel?: string;
   /** Energy consumption in kW */
   usage?: Rational;
   drain?: Rational;
   pollution?: Rational;
   silo?: SiloRational;
   consumption?: Entities<Rational>;
+  /** Width and height in tiles (integers, unless off-grid entity like tree) */
+  size?: [number, number];
 
   constructor(obj: Machine) {
+    this.disallowedEffects = obj.disallowedEffects;
+    this.type = obj.type;
+    this.fuelCategories = obj.fuelCategories;
+    this.fuel = obj.fuel;
+    this.size = obj.size;
+
     if (obj.speed) {
       this.speed = Rational.from(obj.speed);
     }
@@ -46,20 +60,8 @@ export class MachineRational {
       this.modules = Math.round(obj.modules);
     }
 
-    if (obj.disallowedEffects) {
-      this.disallowedEffects = obj.disallowedEffects;
-    }
-
-    if (obj.type != null) {
-      this.type = obj.type;
-    }
-
     if (obj.usage != null) {
       this.usage = Rational.from(obj.usage);
-    }
-
-    if (obj.category) {
-      this.category = obj.category;
     }
 
     if (obj.drain != null) {
@@ -81,7 +83,7 @@ export class MachineRational {
           e[i] = Rational.from(consumption[i]);
           return e;
         },
-        {}
+        {},
       );
     }
   }

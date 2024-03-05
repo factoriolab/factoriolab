@@ -49,7 +49,7 @@ describe('DataService', () => {
           },
           hash: { id: Mocks.Mod.id, value: Mocks.Hash },
           i18n: null,
-        })
+        }),
       );
     });
 

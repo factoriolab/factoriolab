@@ -30,6 +30,16 @@
         ></lab-input-number>
       </td>
     </tr>
+    <tr [pTooltip]="'costs.footprintTooltip' | translate">
+      <td>{{ 'costs.footprint' | translate }}</td>
+      <td>
+        <p-checkbox
+          [ngModel]="editValue.footprint !== '0'"
+          [binary]="true"
+          (onChange)="editValue.footprint = $event.checked ? '1' : '0'"
+        ></p-checkbox>
+      </td>
+    </tr>
     <tr [pTooltip]="'costs.unproduceableTooltip' | translate">
       <td>{{ 'costs.unproduceable' | translate }}</td>
       <td>

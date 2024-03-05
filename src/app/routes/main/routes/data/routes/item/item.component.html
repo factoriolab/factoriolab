@@ -9,7 +9,7 @@
       </tr>
       <tr>
         <td colspan="2" class="text-center">
-          <i class="lg" [class]="vm.id | iconClass : 'item'"></i>
+          <i class="lg" [class]="vm.id | iconClass: 'item'"></i>
         </td>
       </tr>
       <tr *ngIf="vm.category">
@@ -25,7 +25,7 @@
               type="button"
               class="p-button-text"
               [label]="vm.category.name"
-              [icon]="vm.obj.category | iconSmClass : 'category'"
+              [icon]="vm.obj.category | iconSmClass: 'category'"
             ></button>
           </a>
         </td>
@@ -54,17 +54,21 @@
           <th>{{ 'data.range' | translate }}</th>
           <td>{{ beacon.range }}</td>
         </tr>
-        <tr>
+        <tr *ngIf="beacon.type">
           <th>{{ 'data.energySource' | translate }}</th>
           <td>{{ beacon.type }}</td>
         </tr>
-        <tr>
+        <tr *ngIf="beacon.usage">
           <th>{{ 'data.energyConsumption' | translate }}</th>
-          <td>{{ displaySvc.power(beacon.usage) }}</td>
+          <td>{{ beacon.usage | usage }}</td>
         </tr>
         <tr *ngIf="beacon.disallowedEffects">
           <th>{{ 'data.disallowedEffects' | translate }}</th>
           <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+        </tr>
+        <tr *ngIf="beacon.size">
+          <th>{{ 'data.dimensions' | translate }}</th>
+          <td>{{ beacon.size[0] }}×{{ beacon.size[1] }}</td>
         </tr>
       </ng-container>
       <ng-container *ngIf="vm.obj.belt as belt">
@@ -112,7 +116,7 @@
         </tr>
         <tr>
           <th>{{ 'data.fuelValue' | translate }}</th>
-          <td>{{ displaySvc.round(fuel.value) }} MJ</td>
+          <td>{{ fuel.value | round }} MJ</td>
         </tr>
         <tr *ngIf="fuel.result">
           <th>{{ 'data.burntResult' | translate }}</th>
@@ -127,7 +131,7 @@
                 type="button"
                 class="p-button-text"
                 [label]="vm.data.itemEntities[fuel.result].name"
-                [icon]="fuel.result | iconSmClass : 'item'"
+                [icon]="fuel.result | iconSmClass: 'item'"
               ></button>
             </a>
           </td>
@@ -155,42 +159,44 @@
           <th>{{ 'data.energySource' | translate }}</th>
           <td>{{ machine.type }}</td>
         </tr>
-        <tr *ngIf="machine.category">
-          <th>{{ 'data.fuelCategory' | translate }}</th>
-          <td>{{ machine.category }}</td>
+        <tr *ngIf="machine.fuelCategories">
+          <th>{{ 'data.fuelCategories' | translate }}</th>
+          <td>{{ machine.fuelCategories.join(', ') }}</td>
+        </tr>
+        <tr *ngIf="machine.fuel">
+          <th>{{ 'data.fuel' | translate }}</th>
+          <td>{{ machine.fuel }}</td>
         </tr>
         <tr *ngIf="machine.usage">
           <th>{{ 'data.energyConsumption' | translate }}</th>
-          <td>
-            {{
-              machine.usage
-                ? displaySvc.power(machine.usage)
-                : ('none' | translate)
-            }}
-          </td>
+          <td>{{ machine.usage | usage }}</td>
         </tr>
         <tr *ngIf="machine.drain">
           <th>{{ 'data.energyDrain' | translate }}</th>
-          <td>{{ displaySvc.power(machine.drain) }}</td>
+          <td>{{ machine.drain | usage }}</td>
         </tr>
         <tr *ngIf="machine.pollution">
           <th>{{ 'data.pollution' | translate }}</th>
           <td>{{ machine.pollution }}/m</td>
         </tr>
         <tr *ngIf="machine.consumption">
-          <th>{{ 'data.consumption' }}</th>
+          <th>{{ 'data.consumption' | translate }}</th>
           <td>
             <div
               class="d-flex align-items-center justify-content-center flex-wrap"
             >
               <i
                 *ngFor="let kv of machine.consumption | keyvalue"
-                [class]="kv.key | iconSmClass : 'item'"
+                [class]="kv.key | iconSmClass: 'item'"
               >
-                <span>{{ displaySvc.round(kv.value) }}</span>
+                <span>{{ kv.value | round }}</span>
               </i>
             </div>
           </td>
+        </tr>
+        <tr *ngIf="machine.size">
+          <th>{{ 'data.dimensions' | translate }}</th>
+          <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
         </tr>
         <ng-container *ngIf="machine.silo as silo">
           <tr>
@@ -204,7 +210,7 @@
           </tr>
           <tr>
             <th>{{ 'data.rocketLaunchTime' | translate }}</th>
-            <td>{{ displaySvc.round(silo.launch) }}</td>
+            <td>{{ silo.launch | round }}</td>
           </tr>
         </ng-container>
       </ng-container>
@@ -216,23 +222,23 @@
         </tr>
         <tr *ngIf="module.consumption">
           <th>{{ 'data.energyConsumption' | translate }}</th>
-          <td>{{ displaySvc.toBonusPercent(module.consumption) }}</td>
+          <td>{{ module.consumption | bonusPercent }}</td>
         </tr>
         <tr *ngIf="module.pollution">
           <th>{{ 'data.pollution' | translate }}</th>
-          <td>{{ displaySvc.toBonusPercent(module.pollution) }}</td>
+          <td>{{ module.pollution | bonusPercent }}</td>
         </tr>
         <tr *ngIf="module.productivity">
           <th>{{ 'data.productivity' | translate }}</th>
-          <td>{{ displaySvc.toBonusPercent(module.productivity) }}</td>
+          <td>{{ module.productivity | bonusPercent }}</td>
         </tr>
         <tr *ngIf="module.speed">
           <th>{{ 'data.speed' | translate }}</th>
-          <td>{{ displaySvc.toBonusPercent(module.speed) }}</td>
+          <td>{{ module.speed | bonusPercent }}</td>
         </tr>
         <tr *ngIf="module.sprays">
           <th>{{ 'data.sprays' | translate }}</th>
-          <td>{{ displaySvc.round(module.sprays) }}</td>
+          <td>{{ module.sprays | round }}</td>
         </tr>
         <tr *ngIf="module.proliferator">
           <th>{{ 'data.proliferator' | translate }}</th>
@@ -247,9 +253,50 @@
                 type="button"
                 class="p-button-text"
                 [label]="vm.data.itemEntities[module.proliferator].name"
-                [icon]="module.proliferator | iconSmClass : 'item'"
+                [icon]="module.proliferator | iconSmClass: 'item'"
               ></button>
             </a>
+          </td>
+        </tr>
+      </ng-container>
+      <ng-container *ngIf="vm.obj.pipe as pipe">
+        <tr>
+          <th colspan="2" class="text-center">
+            <h3>{{ 'data.pipe' | translate }}</h3>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.flowRate' | translate }}</th>
+          <td>{{ pipe.speed }}</td>
+        </tr>
+      </ng-container>
+      <ng-container *ngIf="vm.obj.technology as technology">
+        <tr>
+          <th colspan="2" class="text-center">
+            <h3>{{ 'data.technology' | translate }}</h3>
+          </th>
+        </tr>
+        <tr>
+          <th>{{ 'data.prerequisites' | translate }}</th>
+          <td>
+            <div *ngIf="!technology.prerequisites?.length">
+              {{ 'none' | translate }}
+            </div>
+            <div *ngFor="let i of technology.prerequisites">
+              <a
+                [routerLink]="'/data/technologies/' + i"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="vm.data.itemEntities[i].name"
+                  [icon]="i | iconSmClass: 'recipe'"
+                ></button>
+              </a>
+            </div>
           </td>
         </tr>
       </ng-container>
@@ -297,7 +344,12 @@
             ></p-checkbox>
           </td>
         </tr>
-        <tr>
+        <tr
+          *ngIf="
+            vm.data.game !== Game.DysonSphereProgram ||
+            vm.itemSettings.beltId !== ItemId.Pipe
+          "
+        >
           <th>{{ 'data.belt' | translate }}</th>
           <td *ngIf="vm.itemSettings.beltId as beltId">
             <a
@@ -319,35 +371,21 @@
                 type="button"
                 class="p-button-text"
                 [label]="vm.data.itemEntities[beltId].name"
-                [icon]="beltId | iconSmClass : 'item'"
+                [icon]="beltId | iconSmClass: 'item'"
               ></button>
             </a>
           </td>
         </tr>
-        <tr *ngIf="vm.obj.stack; else fluidWagon">
-          <th>{{ 'data.cargoWagon' | translate }}</th>
-          <td *ngIf="vm.itemSettings.wagonId as wagonId">
-            <a
-              [routerLink]="'/data/cargo-wagons/' + wagonId"
-              queryParamsHandling="preserve"
-            >
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="p-button-text"
-                [label]="vm.data.itemEntities[wagonId].name"
-                [icon]="wagonId | iconSmClass : 'item'"
-              ></button>
-            </a>
-          </td>
-        </tr>
-        <ng-template #fluidWagon>
-          <tr>
-            <th>{{ 'data.fluidWagon' | translate }}</th>
+        <ng-container
+          *ngIf="
+            vm.data.game === Game.Factorio || vm.data.game === Game.Satisfactory
+          "
+        >
+          <tr *ngIf="vm.obj.stack; else fluidWagon">
+            <th>{{ 'data.cargoWagon' | translate }}</th>
             <td *ngIf="vm.itemSettings.wagonId as wagonId">
               <a
-                [routerLink]="'/data/fluid-wagons/' + wagonId"
+                [routerLink]="'/data/cargo-wagons/' + wagonId"
                 queryParamsHandling="preserve"
               >
                 <button
@@ -356,12 +394,32 @@
                   type="button"
                   class="p-button-text"
                   [label]="vm.data.itemEntities[wagonId].name"
-                  [icon]="wagonId | iconSmClass : 'item'"
+                  [icon]="wagonId | iconSmClass: 'item'"
                 ></button>
               </a>
             </td>
           </tr>
-        </ng-template>
+          <ng-template #fluidWagon>
+            <tr>
+              <th>{{ 'data.fluidWagon' | translate }}</th>
+              <td *ngIf="vm.itemSettings.wagonId as wagonId">
+                <a
+                  [routerLink]="'/data/fluid-wagons/' + wagonId"
+                  queryParamsHandling="preserve"
+                >
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    [label]="vm.data.itemEntities[wagonId].name"
+                    [icon]="wagonId | iconSmClass: 'item'"
+                  ></button>
+                </a>
+              </td>
+            </tr>
+          </ng-template>
+        </ng-container>
       </ng-container>
       <ng-container *ngIf="vm.obj.machine && vm.machineSettings">
         <tr>
@@ -407,7 +465,7 @@
                   type="button"
                   class="p-button-text"
                   [label]="vm.data.itemEntities[moduleId]?.name ?? ''"
-                  [icon]="moduleId | iconSmClass : 'item'"
+                  [icon]="moduleId | iconSmClass: 'item'"
                 ></button>
               </a>
             </div>
@@ -434,7 +492,7 @@
                   type="button"
                   class="p-button-text"
                   [label]="vm.data.itemEntities[beaconId].name"
-                  [icon]="beaconId | iconSmClass : 'item'"
+                  [icon]="beaconId | iconSmClass: 'item'"
                 ></button>
               </a>
             </td>
@@ -460,7 +518,7 @@
                     type="button"
                     class="p-button-text"
                     [label]="vm.data.itemEntities[moduleId]?.name ?? ''"
-                    [icon]="moduleId | iconSmClass : 'item'"
+                    [icon]="moduleId | iconSmClass: 'item'"
                   ></button>
                 </a>
               </div>
@@ -492,6 +550,13 @@
       <h3>{{ 'data.producibleRecipes' | translate }}</h3>
       <lab-collection-table
         [ids]="vm.producibleRecipeIds"
+        type="recipe"
+      ></lab-collection-table>
+    </ng-container>
+    <ng-container *ngIf="vm.unlockedRecipeIds.length">
+      <h3>{{ 'data.unlockedRecipes' | translate }}</h3>
+      <lab-collection-table
+        [ids]="vm.unlockedRecipeIds"
         type="recipe"
       ></lab-collection-table>
     </ng-container>

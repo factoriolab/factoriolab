@@ -1,3 +1,5 @@
+import { sankey } from '~/d3-sankey';
+import { orZero } from '~/helpers';
 import {
   Dataset,
   DisplayRateInfo,
@@ -24,7 +26,7 @@ export class RateUtility {
     itemsState: Items.ItemsState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInfo,
-    data: Dataset
+    data: Dataset,
   ): Rational {
     // Ignore unit entirely when maximizing, do not adjust if unit is Machines
     if (
@@ -67,7 +69,7 @@ export class RateUtility {
 
     // Adjust based on productivity for technology objectives
     const recipe = data.recipeR[data.itemRecipeIds[objective.targetId][0]];
-    if (recipe?.technology) {
+    if (recipe?.isTechnology) {
       factor = factor.mul(recipe.productivity);
     }
 
@@ -78,7 +80,7 @@ export class RateUtility {
     step: Step,
     key: 'parents' | 'outputs',
     parentId: string,
-    value: Rational
+    value: Rational,
   ): void {
     const obj = step[key];
     if (!obj) {
@@ -93,7 +95,7 @@ export class RateUtility {
   static adjustPowerPollution(
     step: Step,
     recipe: RecipeRational,
-    game: Game
+    game: Game,
   ): void {
     if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
@@ -131,7 +133,7 @@ export class RateUtility {
     beaconReceivers: Rational | null,
     beltSpeed: Entities<Rational>,
     dispRateInfo: DisplayRateInfo,
-    data: Dataset
+    data: Dataset,
   ): Step[] {
     const _steps = this.copy(steps);
 
@@ -149,6 +151,7 @@ export class RateUtility {
       this.calculateChecked(step, itemsState, recipesState, objectiveEntities);
     }
 
+    this.sortBySankey(_steps);
     return this.calculateHierarchy(_steps);
   }
 
@@ -174,7 +177,7 @@ export class RateUtility {
               step,
               'outputs',
               itemId,
-              amount.div(itemStep.items)
+              amount.div(itemStep.items),
             );
           }
         }
@@ -185,7 +188,7 @@ export class RateUtility {
   static calculateSettings(
     step: Step,
     objectiveEntities: Entities<ObjectiveRational>,
-    recipesState: Entities<RecipeSettingsRational>
+    recipesState: Entities<RecipeSettingsRational>,
   ): void {
     if (step.recipeId) {
       if (step.recipeObjectiveId) {
@@ -200,7 +203,7 @@ export class RateUtility {
     step: Step,
     itemsState: Entities<ItemSettings>,
     beltSpeed: Entities<Rational>,
-    data: Dataset
+    data: Dataset,
   ): void {
     let noItems = false;
     if (step.recipeId != null && step.recipeSettings != null) {
@@ -209,7 +212,7 @@ export class RateUtility {
         const machine = data.machineEntities[machineId];
         const recipe = data.recipeEntities[step.recipeId];
         // No belts/wagons on research rows or rocket part rows
-        noItems = !!(recipe.technology || (machine.silo && !recipe.part));
+        noItems = !!(recipe.isTechnology || (machine.silo && !recipe.part));
       }
     }
     if (noItems) {
@@ -225,7 +228,7 @@ export class RateUtility {
         const item = data.itemEntities[step.itemId];
         if (item.stack) {
           step.wagons = step.items.div(
-            data.cargoWagonEntities[wagon].size.mul(item.stack)
+            data.cargoWagonEntities[wagon].size.mul(item.stack),
           );
         } else {
           step.wagons = step.items.div(data.fluidWagonEntities[wagon].capacity);
@@ -237,7 +240,7 @@ export class RateUtility {
   static calculateBeacons(
     step: Step,
     beaconReceivers: Rational | null,
-    data: Dataset
+    data: Dataset,
   ): void {
     if (
       !beaconReceivers?.nonzero() ||
@@ -269,9 +272,13 @@ export class RateUtility {
             }
 
             const beacon = data.beaconEntities[b.id];
-            if (beacon.type === EnergyType.Electric && total != null) {
+            if (
+              beacon.type === EnergyType.Electric &&
+              beacon.usage != null &&
+              total != null
+            ) {
               step.power = (step.power ?? Rational.zero).add(
-                total.mul(beacon.usage)
+                total.mul(beacon.usage),
               );
             }
           }
@@ -309,7 +316,7 @@ export class RateUtility {
     step: Step,
     itemsState: Entities<ItemSettings>,
     recipesState: Entities<RecipeSettingsRational>,
-    objectiveEntities: Entities<ObjectiveRational>
+    objectiveEntities: Entities<ObjectiveRational>,
   ): void {
     // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
@@ -319,6 +326,58 @@ export class RateUtility {
     } else if (step.recipeId != null) {
       step.checked = recipesState[step.recipeId].checked;
     }
+  }
+
+  /** Generates a simple sankey diagram and sorts steps by their node depth */
+  static sortBySankey(steps: Step[]): void {
+    type SimpleNode = { id: string; stepId: string };
+    type SimpleLink = { source: string; target: string; value: number };
+
+    const stepMap = steps.reduce((e: Entities<Step>, s) => {
+      e[s.id] = s;
+      return e;
+    }, {});
+    const nodes: SimpleNode[] = [];
+    const links: SimpleLink[] = [];
+
+    for (const step of steps) {
+      if (step.itemId) {
+        const id = `i|${step.itemId}`;
+        nodes.push({ id, stepId: step.id });
+        if (step.parents) {
+          for (const stepId of Object.keys(step.parents)) {
+            if (stepId === '') continue;
+            links.push({
+              source: id,
+              target: `r|${stepMap[stepId].recipeId}`,
+              value: 1,
+            });
+          }
+        }
+      }
+
+      if (step.recipeId) {
+        const id = `r|${step.recipeId}`;
+        nodes.push({ id, stepId: step.id });
+        if (step.outputs) {
+          for (const itemId of Object.keys(step.outputs)) {
+            links.push({ source: id, target: `i|${itemId}`, value: 1 });
+          }
+        }
+      }
+    }
+
+    if (!nodes.length || !links.length) return;
+
+    const result = sankey<SimpleNode, SimpleLink>().nodeId((d) => d.id)({
+      nodes,
+      links,
+    });
+    for (const step of steps) {
+      step.depth = result.nodes.find((n) => n.stepId === step.id)?.depth;
+    }
+
+    steps.sort((a, b) => orZero(b.depth) - orZero(a.depth));
   }
 
   static calculateHierarchy(steps: Step[]): Step[] {
@@ -346,20 +405,19 @@ export class RateUtility {
 
     // Set up hierarchy groups
     const groups: Entities<Step[]> = {};
-    for (let i = 0; i < steps.length; i++) {
-      const s = steps[i];
-      const p = parents[s.id];
-      if (!groups[p]) {
-        groups[p] = [];
+    for (const step of steps) {
+      const parentId = parents[step.id];
+      if (!groups[parentId]) {
+        groups[parentId] = [];
       }
-      groups[p].push(s);
+      groups[parentId].push(step);
     }
 
     // Perform recursive sort
     const sorted = this.sortRecursive(groups, ROOT_ID, []);
 
     // Add back any steps left out (potentially circular loops)
-    sorted.push(...steps.filter((s) => sorted.indexOf(s) === -1));
+    sorted.push(...steps.filter((s) => !sorted.includes(s)));
 
     return sorted;
   }
@@ -367,7 +425,7 @@ export class RateUtility {
   static sortRecursive(
     groups: Entities<Step[]>,
     id: string,
-    result: Step[]
+    result: Step[],
   ): Step[] {
     if (!groups[id]) {
       return [];
@@ -384,7 +442,7 @@ export class RateUtility {
 
   static copy(steps: Step[]): Step[] {
     return steps.map((s) =>
-      s.parents ? { ...s, ...{ parents: { ...s.parents } } } : { ...s }
+      s.parents ? { ...s, ...{ parents: { ...s.parents } } } : { ...s },
     );
   }
 }

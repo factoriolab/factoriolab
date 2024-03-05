@@ -8,8 +8,9 @@ describe('Machines Selectors', () => {
     it('should fill in machine settings', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
+        [ItemId.Coal],
         Mocks.Defaults,
-        Mocks.AdjustedData
+        Mocks.Dataset,
       );
       expect(result.ids?.length).toEqual(3);
       expect(Object.keys(result.entities).length).toEqual(19);
@@ -18,8 +19,9 @@ describe('Machines Selectors', () => {
     it('should handle null defaults', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
+        [ItemId.Coal],
         null,
-        Mocks.AdjustedData
+        Mocks.Dataset,
       );
       expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
@@ -31,21 +33,23 @@ describe('Machines Selectors', () => {
           ids: undefined,
           entities: { [ItemId.AssemblingMachine2]: { beaconCount: '0' } },
         },
+        [ItemId.Coal],
         null,
-        Mocks.AdjustedData
+        Mocks.Dataset,
       );
       expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
       expect(result.entities[ItemId.AssemblingMachine2].beaconCount).toEqual(
-        '0'
+        '0',
       );
     });
 
     it('should use null beaconCount for DSP', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
+        [ItemId.Coal],
         Mocks.Defaults,
-        { ...Mocks.AdjustedData, ...{ game: Game.DysonSphereProgram } }
+        { ...Mocks.Dataset, ...{ game: Game.DysonSphereProgram } },
       );
       expect(result.entities[''].beaconCount).toBeUndefined();
     });
@@ -67,11 +71,12 @@ describe('Machines Selectors', () => {
       };
       const result = Selectors.getMachinesState.projector(
         state,
+        [ItemId.Coal],
         Mocks.Defaults,
         {
-          ...Mocks.AdjustedData,
+          ...Mocks.Dataset,
           ...{ game: Game.Satisfactory },
-        }
+        },
       );
       expect(result.entities[''].overclock).toEqual(200);
     });
@@ -93,11 +98,12 @@ describe('Machines Selectors', () => {
       };
       const result = Selectors.getMachinesState.projector(
         state,
+        [ItemId.Coal],
         Mocks.Defaults,
         {
-          ...Mocks.AdjustedData,
+          ...Mocks.Dataset,
           ...{ game: Game.Satisfactory },
-        }
+        },
       );
       expect(result.entities[''].overclock).toEqual(100);
     });
@@ -106,25 +112,10 @@ describe('Machines Selectors', () => {
   describe('getMachineOptions', () => {
     it('should handle null ids', () => {
       const result = Selectors.getMachineOptions.projector(
-        initialMachinesState,
-        Mocks.Dataset
+        Mocks.MachinesStateInitial,
+        Mocks.RawDataset,
       );
-      expect(result.length).toEqual(Mocks.Dataset.machineIds.length);
-    });
-  });
-
-  describe('getMachineRows', () => {
-    it('should handle null ids', () => {
-      const result = Selectors.getMachineRows.projector(initialMachinesState);
-      expect(result).toEqual(['']);
-    });
-
-    it('should add empty option to beginning of list', () => {
-      const result = Selectors.getMachineRows.projector({
-        ids: [ItemId.AssemblingMachine1],
-        entities: {},
-      });
-      expect(result).toEqual(['', ItemId.AssemblingMachine1]);
+      expect(result.length).toEqual(Mocks.RawDataset.machineIds.length);
     });
   });
 });

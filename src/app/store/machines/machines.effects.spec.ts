@@ -13,7 +13,7 @@ import { MachinesEffects } from './machines.effects';
 
 describe('MachinesEffects', () => {
   let effects: MachinesEffects;
-  let actions: ReplaySubject<any>;
+  let actions: ReplaySubject<unknown>;
   let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
@@ -31,20 +31,20 @@ describe('MachinesEffects', () => {
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
       Recipes.getRecipesState,
-      Mocks.RecipesStateInitial
+      Mocks.RecipesStateInitial,
     );
-    mockStore.overrideSelector(Settings.getDataset, Mocks.Dataset);
+    mockStore.overrideSelector(Settings.getDataset, Mocks.RawDataset);
     mockStore.refreshState();
   });
 
   describe('resetRecipeSetting$', () => {
-    it('should reset when machine modules do not match', () => {
+    it('should reset modules when machine modules do not match', () => {
       actions = new ReplaySubject(1);
       actions.next(
         new Actions.RemoveAction({
           value: ItemId.AssemblingMachine3,
           def: Mocks.Defaults.machineRankIds,
-        })
+        }),
       );
       mockStore.setState({
         ...initialState,
@@ -61,13 +61,36 @@ describe('MachinesEffects', () => {
       ]);
     });
 
+    it('should reset fuel when machine is no longer a burner', () => {
+      actions = new ReplaySubject(1);
+      actions.next(
+        new Actions.RemoveAction({
+          value: ItemId.AssemblingMachine3,
+          def: Mocks.Defaults.machineRankIds,
+        }),
+      );
+      mockStore.setState({
+        ...initialState,
+        ...{
+          recipesState: {
+            [RecipeId.Coal]: { fuelId: ItemId.Wood },
+          },
+        },
+      });
+      const results: Action[] = [];
+      effects.resetRecipeSettings$.subscribe((a) => results.push(a));
+      expect(results).toEqual([
+        new Recipes.ResetRecipeFuelAction(RecipeId.Coal),
+      ]);
+    });
+
     it('should ignore unaffected settings', () => {
       actions = new ReplaySubject(1);
       actions.next(
         new Actions.RemoveAction({
           value: ItemId.AssemblingMachine3,
           def: Mocks.Defaults.machineRankIds,
-        })
+        }),
       );
       mockStore.setState({
         ...initialState,

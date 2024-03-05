@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import {
@@ -19,15 +19,13 @@ import { Datasets, LabState, Settings } from '~/store';
   providedIn: 'root',
 })
 export class DataService {
+  http = inject(HttpClient);
+  store = inject(Store<LabState>);
+  translateSvc = inject(TranslateService);
+
   cacheData: Entities<Observable<ModData>> = {};
   cacheHash: Entities<Observable<ModHash>> = {};
   cacheI18n: Entities<Observable<ModI18n | null>> = {};
-
-  constructor(
-    private http: HttpClient,
-    private store: Store<LabState>,
-    private translateSvc: TranslateService
-  ) {}
 
   initialize(): void {
     combineLatest([
@@ -51,7 +49,7 @@ export class DataService {
         tap((value) => {
           payload.data = { id, value };
         }),
-        shareReplay()
+        shareReplay(),
       );
     }
 
@@ -63,7 +61,7 @@ export class DataService {
         tap((value) => {
           payload.hash = { id, value };
         }),
-        shareReplay()
+        shareReplay(),
       );
     }
 
@@ -90,7 +88,7 @@ export class DataService {
                 payload.i18n = { id: i18nKey, value };
               }
             }),
-            shareReplay()
+            shareReplay(),
           );
       }
       i18n$ = this.cacheI18n[i18nKey];
@@ -101,7 +99,7 @@ export class DataService {
         if (payload.data || payload.hash || payload.i18n) {
           this.store.dispatch(new Datasets.LoadModAction(payload));
         }
-      })
+      }),
     );
   }
 }

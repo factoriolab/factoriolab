@@ -2,7 +2,7 @@ import { createSelector } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 
 import { getIdOptions } from '~/helpers';
-import { Entities, Game, MachineSettings } from '~/models';
+import { EnergyType, Entities, Game, MachineSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Settings from '../settings';
@@ -15,9 +15,10 @@ export const machinesState = (state: LabState): MachinesState =>
 /* Complex selectors */
 export const getMachinesState = createSelector(
   machinesState,
+  Settings.getFuelRankIds,
   Settings.getDefaults,
   Settings.getDataset,
-  (state, defaults, data): MachinesState => {
+  (state, fuelRankIds, defaults, data) => {
     const ids = state.ids ?? defaults?.machineRankIds ?? [];
 
     const entities: Entities<MachineSettings> = {};
@@ -26,7 +27,7 @@ export const getMachinesState = createSelector(
     def.moduleOptions = getIdOptions(
       data.moduleIds,
       data.itemEntities,
-      data.game !== Game.Satisfactory
+      data.game !== Game.Satisfactory,
     );
     if (data.game === Game.Factorio) {
       def.beaconCount = def.beaconCount ?? defaults?.beaconCount;
@@ -49,6 +50,16 @@ export const getMachinesState = createSelector(
       const s: MachineSettings = { ...state.entities[id] };
       const machine = data.machineEntities[id];
 
+      if (machine.type === EnergyType.Burner) {
+        s.fuelOptions = RecipeUtility.fuelOptions(machine, data);
+        s.fuelId =
+          s.fuelId ??
+          RecipeUtility.bestMatch(
+            s.fuelOptions.map((o) => o.value),
+            fuelRankIds,
+          );
+      }
+
       if (machine.modules) {
         s.moduleRankIds = s.moduleRankIds ?? def.moduleRankIds;
         s.moduleOptions = RecipeUtility.moduleOptions(machine, null, data);
@@ -61,7 +72,7 @@ export const getMachinesState = createSelector(
           s.beaconModuleOptions = RecipeUtility.moduleOptions(
             beacon,
             null,
-            data
+            data,
           );
         }
       }
@@ -72,7 +83,7 @@ export const getMachinesState = createSelector(
     }
 
     return { ids, entities };
-  }
+  },
 );
 
 export const getMachineOptions = createSelector(
@@ -83,12 +94,7 @@ export const getMachineOptions = createSelector(
       (f): SelectItem => ({
         label: data.itemEntities[f].name,
         value: f,
-        disabled: (machines.ids ?? []).indexOf(f) !== -1,
-      })
-    )
+        disabled: machines.ids.indexOf(f) !== -1,
+      }),
+    ),
 );
-
-export const getMachineRows = createSelector(getMachinesState, (machines) => [
-  '',
-  ...(machines.ids ?? []),
-]);

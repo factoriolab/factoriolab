@@ -1,0 +1,200 @@
+<p-card *ngIf="vm$ | async as vm" [header]="'objectives.title' | translate">
+  <div class="objectives-content">
+    <p-orderList
+      [value]="vm.objectives"
+      [dragdrop]="true"
+      [trackBy]="trackSvc.trackById"
+      (onReorder)="setObjectiveOrder(vm.objectives)"
+    >
+      <ng-template pTemplate="item" let-objective let-i="index">
+        <div class="mb-1">
+          <div class="p-inputgroup">
+            <button
+              *ngIf="!vm.isMobile"
+              pButton
+              pRipple
+              type="button"
+              class="p-button-outlined border-end-0 cursor-grab"
+              icon="fa-solid fa-grip-lines"
+            ></button>
+            <button
+              *ngIf="objective.unit === ObjectiveUnit.Machines; else itemButton"
+              pButton
+              pRipple
+              labNoDrag
+              type="button"
+              class="p-button-outlined lab-button-icon-only text-truncate"
+              [pTooltip]="'objectives.selectARecipe' | translate"
+              tooltipPosition="top"
+              (click)="
+                editRecipePicker.clickOpen(
+                  vm.data,
+                  'recipe',
+                  vm.recipeIds,
+                  objective.targetId
+                )
+              "
+            >
+              <i
+                class="p-button-icon"
+                [class]="objective.targetId | iconSmClass: 'recipe'"
+                ><span>#{{ objective.id }}</span></i
+              >
+              <span *ngIf="!vm.isMobile" class="p-button-label">{{
+                vm.data.recipeEntities[objective.targetId].name
+              }}</span>
+            </button>
+            <lab-picker
+              #editRecipePicker
+              [header]="'objectives.selectARecipe' | translate"
+              (selectId)="setTarget(objective.id, $event)"
+            ></lab-picker>
+            <ng-template #itemButton>
+              <button
+                labNoDrag
+                pButton
+                pRipple
+                type="button"
+                class="p-button-outlined text-truncate"
+                [icon]="objective.targetId | iconSmClass"
+                [label]="
+                  vm.isMobile
+                    ? ''
+                    : vm.data.itemEntities[objective.targetId].name
+                "
+                [pTooltip]="'objectives.selectAnItem' | translate"
+                tooltipPosition="top"
+                (click)="
+                  editItemPicker.clickOpen(
+                    vm.data,
+                    'item',
+                    vm.itemIds,
+                    objective.targetId
+                  )
+                "
+              ></button>
+              <lab-picker
+                #editItemPicker
+                [header]="'objectives.selectAnItem' | translate"
+                (selectId)="setTarget(objective.id, $event)"
+              ></lab-picker>
+            </ng-template>
+            <lab-input-number
+              labNoDrag
+              [pTooltip]="'objectives.valueTooltip' | translate"
+              tooltipPosition="top"
+              [hideButtons]="vm.isMobile"
+              [value]="objective.value"
+              (setValue)="setValue(objective.id, $event)"
+            ></lab-input-number>
+            <p-dropdown
+              *ngIf="objective.type !== ObjectiveType.Maximize"
+              labDropdownTranslate
+              labNoDrag
+              [tooltip]="'objectives.unitTooltip' | translate"
+              tooltipPosition="top"
+              [options]="vm.rateUnitOptions"
+              [ngModel]="objective.unit"
+              (onChange)="
+                changeUnit(
+                  objective,
+                  $event.value,
+                  vm.objectiveRationals,
+                  vm.itemsState,
+                  vm.beltSpeed,
+                  vm.dispRateInfo,
+                  vm.data,
+                  chooseItemPicker,
+                  chooseRecipePicker
+                )
+              "
+            ></p-dropdown>
+            <p-dropdown
+              labDropdownTranslate
+              labNoDrag
+              [tooltip]="'objectives.typeTooltip' | translate"
+              tooltipPosition="top"
+              [options]="objectiveTypeOptions"
+              [ngModel]="objective.type"
+              (onChange)="setType(objective.id, $event.value)"
+            ></p-dropdown>
+            <button
+              pButton
+              pRipple
+              labNoDrag
+              type="button"
+              class="p-button-outlined"
+              icon="fa-solid fa-xmark"
+              [pTooltip]="'objectives.removeTooltip' | translate"
+              tooltipPosition="left"
+              (click)="removeObjective(objective.id)"
+            ></button>
+          </div>
+        </div>
+      </ng-template>
+    </p-orderList>
+    <div class="objectives-buttons d-flex flex-wrap mt-2">
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="flex-grow-1 p-button-outlined"
+        icon="fa-solid fa-box"
+        tooltipPosition="top"
+        [label]="'objectives.addItems' | translate"
+        (click)="addItemPicker.clickOpen(vm.data, 'item', vm.itemIds)"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="flex-grow-1 p-button-outlined"
+        icon="fa-solid fa-industry"
+        tooltipPosition="top"
+        [label]="'objectives.addMachines' | translate"
+        (click)="addRecipePicker.clickOpen(vm.data, 'recipe', vm.recipeIds)"
+      ></button>
+      <p-dropdown
+        labDropdownTranslate
+        styleClass="h-100"
+        [tooltip]="'objectives.selectDisplayRate' | translate"
+        [ngModel]="vm.dispRateInfo.option"
+        [options]="displayRateOptions"
+        (onChange)="setDisplayRate($event.value, vm.dispRateInfo.option)"
+      >
+      </p-dropdown>
+      <p-toggleButton
+        [ngModel]="vm.paused"
+        [onIcon]="'fa-solid fa-play'"
+        offIcon="fa-solid fa-pause"
+        [pTooltip]="'objectives.pauseTooltip' | translate"
+        (onChange)="setPaused($event.checked ?? false)"
+      ></p-toggleButton>
+    </div>
+    <p-messages
+      *ngIf="vm.messages.length"
+      styleClass="mt-2 w-100"
+      [value]="vm.messages"
+      [closable]="false"
+      [escape]="false"
+    ></p-messages>
+  </div>
+  <lab-picker
+    #addItemPicker
+    [header]="'objectives.selectAnItem' | translate"
+    (selectId)="addItemObjective($event)"
+  ></lab-picker>
+  <lab-picker
+    #addRecipePicker
+    [header]="'objectives.selectARecipe' | translate"
+    (selectId)="addRecipeObjective($event)"
+  ></lab-picker>
+  <lab-picker
+    #chooseItemPicker
+    [header]="'objectives.selectAnItem' | translate"
+  ></lab-picker>
+  <lab-picker
+    #chooseRecipePicker
+    [header]="'objectives.selectARecipe' | translate"
+  ></lab-picker>
+</p-card>

@@ -1,6 +1,5 @@
 import { Entities } from '../entities';
 import { Rational } from '../rational';
-import { Technology } from './technology';
 
 export interface Recipe {
   id: string;
@@ -14,13 +13,13 @@ export interface Recipe {
   /** Denotes amount of output that is not affected by productivity */
   catalyst?: Entities<number | string>;
   cost?: number | string;
-  mining?: boolean;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
   /** If a recipe is locked initially, indicates what technology is required */
   unlockedBy?: string;
-  /** If recipe is a technology, indicates prerequisites */
-  technology?: Technology;
+  isMining?: boolean;
+  isTechnology?: boolean;
+  isBurn?: boolean;
   /** Used to link the recipe to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -42,17 +41,24 @@ export class RecipeRational {
   /** Denotes amount of output that is not affected by productivity */
   catalyst?: Entities<Rational>;
   cost?: Rational;
-  mining?: boolean;
   /** If recipe is a rocket launch, indicates the rocket part recipe used */
   part?: string;
   /** If a recipe is locked initially, indicates what technology unlocks it */
   unlockedBy?: string;
-  /** If recipe is a technology, indicates unlocks / prerequisites */
-  technology?: Technology;
+  isMining?: boolean;
+  isTechnology?: boolean;
+  isBurn?: boolean;
+  /** Used to link the recipe to an alternate icon id */
+  icon?: string;
+  /** Used to add extra text to an already defined icon */
+  iconText?: string;
   usage?: Rational;
   drain?: Rational;
   consumption?: Rational;
   pollution?: Rational;
+
+  produces: Set<string> = new Set();
+  output: Entities<Rational> = {};
 
   constructor(obj: Recipe) {
     this.id = obj.id;
@@ -79,7 +85,7 @@ export class RecipeRational {
           e[i] = Rational.from(catalyst[i]);
           return e;
         },
-        {}
+        {},
       );
     }
 
@@ -87,35 +93,35 @@ export class RecipeRational {
       this.cost = Rational.from(obj.cost);
     }
 
-    if (obj.mining) {
-      this.mining = obj.mining;
-    }
-
-    if (obj.part) {
-      this.part = obj.part;
-    }
-
-    if (obj.technology) {
-      this.technology = obj.technology;
-    }
+    this.part = obj.part;
+    this.isMining = obj.isMining;
+    this.isTechnology = obj.isTechnology;
+    this.isBurn = obj.isBurn;
+    this.icon = obj.icon;
+    this.iconText = obj.iconText;
 
     if (obj.usage != null) {
       this.usage = Rational.from(obj.usage);
     }
   }
 
-  produces(itemId: string): boolean {
-    if (this.out[itemId]) {
-      // Recipe declares this as output, check inputs
-      return this.in[itemId] == null || this.in[itemId].lt(this.out[itemId]);
+  finalize(): void {
+    for (const outId of Object.keys(this.out)) {
+      const output = this.out[outId];
+      if (this.in[outId] == null || this.in[outId].lt(output)) {
+        this.produces.add(outId);
+      }
+
+      this.output[outId] = output
+        .sub(this.in[outId] ?? Rational.zero)
+        .div(this.time);
     }
 
-    return false;
-  }
-
-  output(itemId: string): Rational {
-    return (this.out[itemId] ?? Rational.zero)
-      .sub(this.in[itemId] ?? Rational.zero)
-      .div(this.time);
+    for (const inId of Object.keys(this.in).filter(
+      (i) => this.out[i] == null,
+    )) {
+      const input = this.in[inId];
+      this.output[inId] = input.inverse().div(this.time);
+    }
   }
 }

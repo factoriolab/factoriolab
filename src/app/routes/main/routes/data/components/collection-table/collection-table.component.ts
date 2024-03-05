@@ -1,8 +1,13 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  Input,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, ReplaySubject } from 'rxjs';
 
-import { Category, Dataset, Entities, IdType, Item, Recipe } from '~/models';
+import { Category, Entities, IdType, Item, RawDataset, Recipe } from '~/models';
 import { LabState, Settings } from '~/store';
 import { CollectionItem } from '../../models';
 
@@ -15,6 +20,8 @@ type Entity = Category | Item | Recipe;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionTableComponent {
+  store = inject(Store<LabState>);
+
   @Input() set ids(value: string[]) {
     this.ids$.next(value);
   }
@@ -36,10 +43,8 @@ export class CollectionTableComponent {
       value: this.getValue(ids, type, data),
       route: this.getCollectionRoute(type),
       options,
-    }))
+    })),
   );
-
-  constructor(private store: Store<LabState>) {}
 
   getCollectionRoute(type: IdType): string {
     if (this.useRelativePath) return '';
@@ -54,7 +59,7 @@ export class CollectionTableComponent {
     }
   }
 
-  getValue(ids: string[], type: IdType, data: Dataset): CollectionItem[] {
+  getValue(ids: string[], type: IdType, data: RawDataset): CollectionItem[] {
     if (ids == null) return [];
 
     let entities: Entities<Entity>;

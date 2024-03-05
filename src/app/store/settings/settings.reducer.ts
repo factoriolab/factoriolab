@@ -21,12 +21,13 @@ export interface SettingsState {
    */
   researchedTechnologyIds: string[] | null;
   netProductionOnly: boolean;
+  surplusMachinesOutput: boolean;
   preset: Preset;
   beaconReceivers: string | null;
   proliferatorSprayId: string;
   beltId?: string;
   pipeId?: string;
-  fuelId?: string;
+  fuelRankIds?: string[];
   cargoWagonId?: string;
   fluidWagonId?: string;
   flowRate: number;
@@ -47,10 +48,11 @@ export const initialSettingsState: SettingsState = {
   modId: '1.1',
   researchedTechnologyIds: null,
   netProductionOnly: false,
+  surplusMachinesOutput: false,
   preset: Preset.Minimum,
   beaconReceivers: null,
   proliferatorSprayId: ItemId.Module,
-  flowRate: 1500,
+  flowRate: 1200,
   inserterTarget: InserterTarget.ExpressTransportBelt,
   miningBonus: 0,
   researchSpeed: ResearchSpeed.Speed6,
@@ -60,6 +62,7 @@ export const initialSettingsState: SettingsState = {
   costs: {
     factor: '1',
     machine: '1',
+    footprint: '1',
     unproduceable: '1000000',
     excluded: '0',
     surplus: '0',
@@ -69,7 +72,7 @@ export const initialSettingsState: SettingsState = {
 
 export function settingsReducer(
   state: SettingsState = initialSettingsState,
-  action: SettingsAction | App.AppAction
+  action: SettingsAction | App.AppAction,
 ): SettingsState {
   switch (action.type) {
     case App.AppActionType.LOAD:
@@ -102,7 +105,7 @@ export function settingsReducer(
       };
       delete newState.beltId;
       delete newState.pipeId;
-      delete newState.fuelId;
+      delete newState.fuelRankIds;
       delete newState.cargoWagonId;
       delete newState.fluidWagonId;
       return newState;
@@ -111,6 +114,8 @@ export function settingsReducer(
       return { ...state, ...{ researchedTechnologyIds: action.payload } };
     case SettingsActionType.SET_NET_PRODUCTION_ONLY:
       return { ...state, ...{ netProductionOnly: action.payload } };
+    case SettingsActionType.SET_REQUIRE_MACHINES_OUTPUT:
+      return { ...state, ...{ surplusMachinesOutput: action.payload } };
     case SettingsActionType.SET_PRESET:
       return { ...state, ...{ preset: action.payload } };
     case SettingsActionType.SET_BEACON_RECEIVERS:
@@ -127,10 +132,10 @@ export function settingsReducer(
         ...state,
         ...{ pipeId: StoreUtility.compareValue(action.payload) },
       };
-    case SettingsActionType.SET_FUEL:
+    case SettingsActionType.SET_FUEL_RANK:
       return {
         ...state,
-        ...{ fuelId: StoreUtility.compareValue(action.payload) },
+        ...{ fuelRankIds: StoreUtility.compareValue(action.payload) },
       };
     case SettingsActionType.SET_CARGO_WAGON:
       return {
@@ -158,7 +163,6 @@ export function settingsReducer(
       return { ...state, ...{ maximizeType: action.payload } };
     case SettingsActionType.SET_COSTS:
       return { ...state, ...{ costs: action.payload } };
-
     case SettingsActionType.RESET_COST:
       return {
         ...state,

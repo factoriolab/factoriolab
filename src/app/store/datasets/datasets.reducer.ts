@@ -17,7 +17,7 @@ export const initialDatasetsState: DatasetsState = {
 
 export function datasetsReducer(
   state: DatasetsState = initialDatasetsState,
-  action: DatasetsAction
+  action: DatasetsAction,
 ): DatasetsState {
   switch (action.type) {
     case DatasetsActionType.LOAD_MOD:

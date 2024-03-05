@@ -92,7 +92,7 @@ describe('InputNumberComponent', () => {
       spyOn(component, 'setValue');
       component.child.changeValue('1 1/3', 'blur');
       tick(500);
-      expect(component.setValue).toHaveBeenCalledWith('1 1/3');
+      expect(component.setValue).toHaveBeenCalledWith('4/3');
     }));
 
     it('should not emit invalid values', fakeAsync(() => {

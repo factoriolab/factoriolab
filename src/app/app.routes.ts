@@ -1,6 +1,6 @@
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
-import { LandingGuard } from './guards';
+import { canActivateLanding } from './guards';
 
 export const routes: Routes = [
   {
@@ -11,10 +11,10 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    canActivate: [LandingGuard],
+    canActivate: [canActivateLanding],
     loadComponent: () =>
       import('./routes/landing/landing.component').then(
-        (c) => c.LandingComponent
+        (c) => c.LandingComponent,
       ),
   },
   {
@@ -24,23 +24,27 @@ export const routes: Routes = [
   },
   {
     path: 'factorio',
-    redirectTo: '/?s=&v=8',
+    redirectTo: '/?s=&v=9',
   },
   {
     path: 'coi',
-    redirectTo: '/?s=coi&v=8',
+    redirectTo: '/?s=coi&v=9',
   },
   {
     path: 'dsp',
-    redirectTo: '/?s=dsp&v=8',
+    redirectTo: '/?s=dsp&v=9',
   },
   {
     path: 'satisfactory',
-    redirectTo: '/?s=sfy&v=8',
+    redirectTo: '/?s=sfy&v=9',
+  },
+  {
+    path: 'techtonica',
+    redirectTo: '/?s=tta&v=9',
   },
   {
     path: 'final-factory',
-    redirectTo: '/?s=ffy&v=8',
+    redirectTo: '/?s=ffy&v=9',
   },
   {
     path: '**',

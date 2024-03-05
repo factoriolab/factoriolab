@@ -2,11 +2,12 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  inject,
   OnInit,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, map, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, tap } from 'rxjs';
 
 import {
   ColumnKey,
@@ -26,20 +27,18 @@ import { LabState, Preferences, Settings } from '~/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnsComponent implements OnInit {
+  ref = inject(ChangeDetectorRef);
+  store = inject(Store<LabState>);
+  contentSvc = inject(ContentService);
+
   usesFractions$ = new BehaviorSubject(false);
-  vm$ = combineLatest([
-    this.store
+  vm$ = combineLatest({
+    columns: this.store
       .select(Settings.getColumnsState)
       .pipe(tap((columns) => this.initEdit(columns))),
-    this.store.select(Settings.getColumnOptions),
-    this.usesFractions$,
-  ]).pipe(
-    map(([columns, columnOptions, usesFractions]) => ({
-      columns,
-      columnOptions,
-      usesFractions,
-    }))
-  );
+    columnOptions: this.store.select(Settings.getColumnOptions),
+    usesFractions: this.usesFractions$,
+  });
 
   visible = false;
   editValue: Entities<ColumnSettings> = {};
@@ -51,15 +50,9 @@ export class ColumnsComponent implements OnInit {
         this.editValue[k].precision !==
           Preferences.initialPreferencesState.columns[k].precision ||
         this.editValue[k].show !==
-          Preferences.initialPreferencesState.columns[k].show
+          Preferences.initialPreferencesState.columns[k].show,
     );
   }
-
-  constructor(
-    private ref: ChangeDetectorRef,
-    private store: Store<LabState>,
-    private contentSvc: ContentService
-  ) {}
 
   ngOnInit(): void {
     this.contentSvc.showColumns$.pipe(untilDestroyed(this)).subscribe(() => {
@@ -86,8 +79,8 @@ export class ColumnsComponent implements OnInit {
   updateUsesFractions(): void {
     this.usesFractions$.next(
       (Object.keys(this.editValue) as ColumnKey[]).some(
-        (c) => columnsInfo[c].hasPrecision && this.editValue[c] == null
-      )
+        (c) => columnsInfo[c].hasPrecision && this.editValue[c] == null,
+      ),
     );
   }
 
@@ -97,7 +90,7 @@ export class ColumnsComponent implements OnInit {
 
   save(): void {
     this.store.dispatch(
-      new Preferences.SetColumnsAction(this.editValue as ColumnsState)
+      new Preferences.SetColumnsAction(this.editValue as ColumnsState),
     );
   }
 }

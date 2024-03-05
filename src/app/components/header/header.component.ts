@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostBinding,
+  inject,
   Input,
   OnInit,
 } from '@angular/core';
@@ -30,6 +31,11 @@ interface MenuLink {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent implements OnInit {
+  title = inject(Title);
+  store = inject(Store<LabState>);
+  translateSvc = inject(TranslateService);
+  contentSvc = inject(ContentService);
+
   @HostBinding('class.sticky') @Input() sticky = false;
   @HostBinding('class.settings-xl-hidden') @Input() settingsXlHidden = false;
 
@@ -41,7 +47,7 @@ export class HeaderComponent implements OnInit {
       gameInfo: gameInfo[game],
       gameOptions: this.buildGameOptions(game),
       settingsXlHidden,
-    }))
+    })),
   );
 
   links: MenuLink[] = [
@@ -62,13 +68,6 @@ export class HeaderComponent implements OnInit {
     },
   ];
 
-  constructor(
-    public contentSvc: ContentService,
-    private title: Title,
-    private store: Store<LabState>,
-    private translateSvc: TranslateService
-  ) {}
-
   ngOnInit(): void {
     combineLatest([
       this.store.select(Objectives.getBaseObjectives),
@@ -81,7 +80,7 @@ export class HeaderComponent implements OnInit {
           .map((o) =>
             isRecipeObjective(o)
               ? data.recipeEntities[o.targetId]?.name
-              : data.itemEntities[o.targetId]?.name
+              : data.itemEntities[o.targetId]?.name,
           )
           .find((n) => n != null);
         if (name != null) {
@@ -101,7 +100,7 @@ export class HeaderComponent implements OnInit {
           icon: 'lab-icon small ' + gameInfo[g].icon,
           label: this.translateSvc.instant(gameInfo[g].label),
           routerLink: gameInfo[g].route,
-        })
+        }),
       );
   }
 

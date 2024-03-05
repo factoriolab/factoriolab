@@ -1,8 +1,11 @@
+import { Component } from '@angular/core';
+
 import { data } from 'src/data';
 import mod from 'src/data/1.1/data.json';
 import hash from 'src/data/1.1/hash.json';
 import i18n from 'src/data/1.1/i18n/zh.json';
 import * as M from '~/models';
+import * as S from '~/services';
 import {
   Datasets,
   Items,
@@ -19,28 +22,29 @@ export const Raw = data;
 export const DataState = Datasets.initialDatasetsState;
 export const ModInfo = data.mods[0];
 export const Data = mod as unknown as M.ModData;
+Data.defaults!.excludedRecipes = [RecipeId.NuclearFuelReprocessing];
 export const Hash: M.ModHash = hash;
 export const I18n: M.ModI18n = i18n;
 export const Mod = { ...ModInfo, ...Data } as M.Mod;
 export const Defaults = Settings.getDefaults.projector(
   M.Preset.Beacon8,
-  Mod
+  Mod,
 ) as M.Defaults;
-export function getDataset(): M.Dataset {
+export function getRawDataset(): M.RawDataset {
   Settings.getDataset.release();
   return Settings.getDataset.projector(
     Mod,
     null,
     Hash,
     Defaults,
-    M.Game.Factorio
+    M.Game.Factorio,
   );
 }
-export const Dataset = getDataset();
-export const CategoryId = Dataset.categoryIds[0];
-export const Item1 = Dataset.itemEntities[Dataset.itemIds[0]];
-export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
-export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
+export const RawDataset = getRawDataset();
+export const CategoryId = RawDataset.categoryIds[0];
+export const Item1 = RawDataset.itemEntities[RawDataset.itemIds[0]];
+export const Item2 = RawDataset.itemEntities[RawDataset.itemIds[1]];
+export const Recipe1 = RawDataset.recipeEntities[RawDataset.recipeIds[0]];
 export const Objective1: M.Objective = {
   id: '0',
   targetId: ItemId.AdvancedCircuit,
@@ -112,14 +116,6 @@ export const ObjectivesState: Objectives.ObjectivesState = {
   entities: M.toEntities(ObjectivesList),
   index: ObjectivesList.length + 1,
 };
-export const RationalObjectives = ObjectivesList.map(
-  (o) =>
-    new M.ObjectiveRational(
-      o,
-      M.isRecipeObjective(o) ? Dataset.recipeR[o.targetId] : undefined
-    )
-);
-export const RationalObjective = RationalObjectives[0];
 export const ObjectiveIds = ObjectivesList.map((p) => p.id);
 export const ObjectiveSteps = {
   [Objective1.id]: <[string, M.Rational][]>[],
@@ -186,23 +182,25 @@ export const BeltSpeed: M.Entities<M.Rational> = {
   [ItemId.Pipe]: new M.Rational(BigInt(1500)),
 };
 export const ItemsState: M.Entities<M.ItemSettings> = {};
-for (const item of Dataset.itemIds.map((i) => Dataset.itemEntities[i])) {
+for (const item of RawDataset.itemIds.map((i) => RawDataset.itemEntities[i])) {
   ItemsState[item.id] = { ...ItemSettings1 };
 }
 export const RecipesState: M.Entities<M.RecipeSettings> = {};
-for (const recipe of Dataset.recipeIds.map((i) => Dataset.recipeEntities[i])) {
+for (const recipe of RawDataset.recipeIds.map(
+  (i) => RawDataset.recipeEntities[i],
+)) {
   RecipesState[recipe.id] = { ...RecipeSettings1 };
 }
 export const SettingsStateInitial = Settings.getSettings.projector(
   Settings.initialSettingsState,
-  Defaults
+  Defaults,
 );
-export const ItemsStateInitial = Items.getItemsState.projector({}, Dataset, {
+export const ItemsStateInitial = Items.getItemsState.projector({}, RawDataset, {
   ...Settings.initialSettingsState,
   ...{
     beltId: ItemId.TransportBelt,
     pipeId: ItemId.Pipe,
-    fuelId: ItemId.Coal,
+    fuelRankIds: [ItemId.Coal],
     cargoWagonId: ItemId.CargoWagon,
     fluidWagonId: ItemId.FluidWagon,
     excludedRecipeIds: [],
@@ -210,12 +208,17 @@ export const ItemsStateInitial = Items.getItemsState.projector({}, Dataset, {
 });
 export const MachinesStateInitial = Machines.getMachinesState.projector(
   Machines.initialMachinesState,
+  [ItemId.Coal],
   Defaults,
-  Dataset
+  RawDataset,
 );
 export function getRecipesState(): M.Entities<M.RecipeSettings> {
   Recipes.getRecipesState.release();
-  return Recipes.getRecipesState.projector({}, MachinesStateInitial, Dataset);
+  return Recipes.getRecipesState.projector(
+    {},
+    MachinesStateInitial,
+    RawDataset,
+  );
 }
 export const RecipesStateInitial = getRecipesState();
 export const RecipesStateRational =
@@ -226,68 +229,115 @@ export function getRecipesStateRational(): M.Entities<M.RecipeSettingsRational> 
 }
 export const RecipesStateRationalInitial = getRecipesStateRational();
 export const CostRational = Settings.getRationalCost.projector(
-  Settings.initialSettingsState.costs
+  Settings.initialSettingsState.costs,
 );
-export const AdjustedData = Recipes.getAdjustedDataset.projector(
-  RecipesStateRationalInitial,
-  ItemsStateInitial,
-  CostRational,
-  {
-    netProductionOnly: false,
-    proliferatorSprayId: ItemId.Module,
-    fuelId: ItemId.Coal,
-    miningBonus: M.Rational.zero,
-    researchSpeed: M.Rational.one,
-    data: Dataset,
-  }
+export function getDataset(): M.Dataset {
+  Recipes.getAdjustedDataset.release();
+  return Recipes.getAdjustedDataset.projector(
+    RecipesStateRationalInitial,
+    [],
+    ItemsStateInitial,
+    CostRational,
+    {
+      netProductionOnly: false,
+      proliferatorSprayId: ItemId.Module,
+      miningBonus: M.Rational.zero,
+      researchSpeed: M.Rational.one,
+      recipeIds: RawDataset.recipeIds,
+    },
+    getRawDataset(),
+  );
+}
+export const Dataset = getDataset();
+export const RationalObjectives = ObjectivesList.map(
+  (o) =>
+    new M.ObjectiveRational(
+      o,
+      M.isRecipeObjective(o) ? Dataset.recipeR[o.targetId] : undefined,
+    ),
 );
+export const RationalObjective = RationalObjectives[0];
 export const PreferencesState: Preferences.PreferencesState = {
-  states: { ['name']: 'z=zip' },
+  states: {
+    [M.Game.Factorio]: { ['name']: 'z=zip' },
+    [M.Game.DysonSphereProgram]: {},
+    [M.Game.Satisfactory]: {},
+    [M.Game.CaptainOfIndustry]: {},
+    [M.Game.Techtonica]: {},
+  },
   columns: M.initialColumnsState,
+  rows: 50,
+  disablePaginator: false,
   powerUnit: M.PowerUnit.Auto,
   language: M.Language.English,
   theme: M.Theme.Dark,
   bypassLanding: false,
+  showTechLabels: false,
+  hideDuplicateIcons: false,
+  paused: false,
+  flowDiagram: M.FlowDiagram.Sankey,
+  linkSize: M.LinkValue.Items,
+  linkText: M.LinkValue.Items,
+  sankeyAlign: M.SankeyAlign.Justify,
+  flowHideExcluded: true,
 };
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
-  resultType: M.MatrixResultType.Solved,
+  resultType: M.SimplexResultType.Solved,
   time: 20,
 };
-export const Flow: M.FlowData = {
-  theme: M.themeMap[M.Theme.Light],
+
+const node = (id: string, override?: Partial<M.Node>): M.Node => {
+  let result = {
+    name: id,
+    text: id,
+    color: 'black',
+    id,
+    stepId: id,
+    viewBox: '',
+    href: '',
+  };
+
+  if (override) {
+    result = { ...result, ...override };
+  }
+
+  return result;
+};
+
+const link = (source: string, target: string): M.Link => {
+  const name = `${source}-${target}`;
+  return {
+    name,
+    text: name,
+    color: 'black',
+    source,
+    target,
+    value: 1,
+  };
+};
+
+export const getFlow = (): M.FlowData => ({
   nodes: [
-    {
-      name: 'a-name',
-      text: 'a-text',
-      id: 'a',
-      type: M.NodeType.Recipe,
-    },
-    {
-      name: 'b-name',
-      text: 'b-text',
-      id: 'b',
-      type: M.NodeType.Recipe,
-      recipe: Data.recipes[0],
+    node('r|0'),
+    node('r|1'),
+    node('r|2', {
       machines: '1',
       machineId: 'machineId',
-    },
+      recipe: Data.recipes[0],
+    }),
+    node('o|3'),
+    node('s|4'),
   ],
   links: [
-    {
-      name: 'a-b',
-      text: 'a-b-text',
-      source: 'a',
-      target: 'b',
-    },
-    {
-      name: 'b-b',
-      text: 'b-b-text',
-      source: 'b',
-      target: 'b',
-    },
+    link('r|0', 'r|2'),
+    link('r|1', 'r|2'),
+    link('r|2', 'r|2'),
+    link('r|2', 'o|3'),
+    link('r|2', 's|4'),
   ],
-};
+});
+export const Flow = getFlow();
 export const SimplexModifiers = {
   costInput: M.Rational.from(1000000),
   costExcluded: M.Rational.zero,
@@ -295,11 +345,79 @@ export const SimplexModifiers = {
 export const AdjustmentData = {
   netProductionOnly: false,
   proliferatorSprayId: ItemId.Module,
-  fuelId: ItemId.Coal,
   miningBonus: M.Rational.zero,
   researchSpeed: M.Rational.one,
-  costFactor: M.Rational.one,
-  costMachine: M.Rational.one,
-  data: Dataset,
+  recipeIds: RawDataset.recipeIds,
+  data: RawDataset,
 };
 export const DisplayRateInfo = M.displayRateInfo[M.DisplayRate.PerMinute];
+
+export const LightOilSteps: M.Step[] = [
+  {
+    id: '0',
+    itemId: ItemId.LightOil,
+    items: M.Rational.from(60),
+    output: M.Rational.from(60),
+    machines: M.Rational.from([1, 51]),
+    recipeId: RecipeId.HeavyOilCracking,
+    recipeSettings: RecipesStateRationalInitial[RecipeId.HeavyOilCracking],
+    parents: {
+      '': M.Rational.one,
+    },
+    outputs: { [ItemId.LightOil]: M.Rational.from([5, 17]) },
+  },
+  {
+    id: '3',
+    itemId: ItemId.HeavyOil,
+    items: M.Rational.from([400, 17]),
+    machines: M.Rational.from([4, 51]),
+    recipeId: RecipeId.AdvancedOilProcessing,
+    recipeSettings: RecipesStateRationalInitial[RecipeId.AdvancedOilProcessing],
+    parents: { '0': M.Rational.one },
+    outputs: {
+      [ItemId.HeavyOil]: M.Rational.one,
+      [ItemId.LightOil]: M.Rational.from([12, 17]),
+      [ItemId.PetroleumGas]: M.Rational.one,
+    },
+  },
+  {
+    id: '2',
+    itemId: ItemId.CrudeOil,
+    items: M.Rational.from([1600, 17]),
+    machines: M.Rational.from([8, 51]),
+    recipeId: RecipeId.CrudeOil,
+    recipeSettings: RecipesStateRationalInitial[RecipeId.CrudeOil],
+    parents: { '3': M.Rational.one },
+    outputs: { [ItemId.CrudeOil]: M.Rational.one },
+  },
+  {
+    id: '4',
+    itemId: ItemId.PetroleumGas,
+    items: M.Rational.from([880, 17]),
+    surplus: M.Rational.from([880, 17]),
+  },
+  {
+    id: '1',
+    itemId: ItemId.Water,
+    items: M.Rational.from([1100, 17]),
+    machines: M.Rational.from([11, 12240]),
+    recipeId: RecipeId.Water,
+    recipeSettings: RecipesStateRationalInitial[RecipeId.Water],
+    outputs: { [ItemId.Water]: M.Rational.one },
+    parents: {
+      '0': M.Rational.from([3, 11]),
+      '1': M.Rational.from([8, 11]),
+    },
+  },
+];
+
+export const ThemeValues: S.ThemeValues = {
+  textColor: 'white',
+  successColor: 'black',
+  successBackground: 'green',
+  dangerColor: 'black',
+  dangerBackground: 'red',
+};
+
+@Component({ standalone: true, template: '' })
+export class MockComponent {}

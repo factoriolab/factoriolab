@@ -1,14 +1,20 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "module": "CommonJS"
+    "module": "CommonJS",
   },
   "files": [
+    "calculate-color.ts",
+    "factorio-api.models.ts",
+    "factorio-api.ts",
+    "factorio-build.models.ts",
     "factorio-build.ts",
     "factorio-prep.ts",
+    "factorio-update.ts",
     "factorio.models.ts",
     "generate-hash.ts",
-    "minify-data.ts"
+    "minify-data.ts",
+    "update-hash.ts",
   ],
-  "include": ["**/*.d.ts"]
+  "include": ["**/*.d.ts"],
 }

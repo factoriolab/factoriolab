@@ -1,12 +1,12 @@
 import { SelectItem } from 'primeng/api';
 
 export enum Game {
-  None = 'None',
   Factorio = 'Factorio',
   CaptainOfIndustry = 'CaptainOfIndustry',
   DysonSphereProgram = 'DysonSphereProgram',
   FinalFactory = 'FinalFactory',
   Satisfactory = 'Satisfactory',
+  Techtonica = 'Techtonica',
 }
 
 export const gameOptions: SelectItem<Game>[] = [
@@ -14,5 +14,6 @@ export const gameOptions: SelectItem<Game>[] = [
   { value: Game.DysonSphereProgram, label: 'options.game.dysonSphereProgram' },
   { value: Game.Satisfactory, label: 'options.game.satisfactory' },
   { value: Game.CaptainOfIndustry, label: 'options.game.captainOfIndustry' },
+  { value: Game.Techtonica, label: 'options.game.techtonica' },
   { value: Game.FinalFactory, label: 'options.game.finalFactory' },
 ];

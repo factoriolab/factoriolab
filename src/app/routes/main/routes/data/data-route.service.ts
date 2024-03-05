@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { map } from 'rxjs';
@@ -8,6 +8,8 @@ import { LabState, Settings } from '~/store';
 
 @Injectable({ providedIn: 'root' })
 export class DataRouteService {
+  store = inject(Store<LabState>);
+
   home$ = this.store.select(Settings.getMod).pipe(
     filterNullish(),
     map(
@@ -16,9 +18,7 @@ export class DataRouteService {
         routerLink: '/data',
         queryParamsHandling: 'preserve',
         label: mod.name,
-      })
-    )
+      }),
+    ),
   );
-
-  constructor(private store: Store<LabState>) {}
 }

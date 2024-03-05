@@ -22,23 +22,19 @@ describe('DisplayService', () => {
     });
   });
 
-  describe('table', () => {
-    it('should generate html for a table', () => {
-      expect(service.table([['label', 'value']])).toBeTruthy();
-    });
-  });
-
   describe('round', () => {
-    it('should round a rational to two digits', () => {
+    it('should round a number to two digits', () => {
       expect(service.round(Rational.from([1, 3]))).toEqual('0.33');
+      expect(service.round(0.3333333333333333)).toEqual('0.33');
+      expect(service.round('0.333333333333333333')).toEqual('0.33');
     });
   });
 
   describe('power', () => {
     it('should convert Rational, string, or numbers to power units', () => {
-      expect(service.power('0.3')).toEqual('0.3 kW');
-      expect(service.power(3000)).toEqual('3 MW');
-      expect(service.power(Rational.one)).toEqual('1 kW');
+      expect(service.usage('0.3')).toEqual('0.3 kW');
+      expect(service.usage(3000)).toEqual('3 MW');
+      expect(service.usage(Rational.one)).toEqual('1 kW');
     });
   });
 
@@ -54,38 +50,8 @@ describe('DisplayService', () => {
     it('should generate html for a recipe', () => {
       expect(
         service.recipeProcess(
-          Mocks.Dataset.recipeEntities[RecipeId.ElectronicCircuit]
-        )
-      ).toBeTruthy();
-    });
-  });
-
-  describe('recipeProducedBy', () => {
-    it('should generate html for recipe producers', () => {
-      expect(
-        service.recipeProducedBy(
-          Mocks.Dataset.recipeEntities[RecipeId.ElectronicCircuit]
-        )
-      ).toBeTruthy();
-    });
-  });
-
-  describe('recipeUnlockedBy', () => {
-    it('should generate html for recipe producers', () => {
-      expect(
-        service.recipeUnlockedBy(
-          Mocks.Dataset.recipeEntities[RecipeId.CoalLiquefaction]
-        )
-      ).toBeTruthy();
-    });
-  });
-
-  describe('technologyPrerequisites', () => {
-    it('should generate html for technology prerequisites', () => {
-      expect(
-        service.technologyPrerequisites(
-          Mocks.Dataset.recipeEntities[RecipeId.ArtilleryShellRange].technology
-        )
+          Mocks.RawDataset.recipeEntities[RecipeId.ElectronicCircuit],
+        ),
       ).toBeTruthy();
     });
   });

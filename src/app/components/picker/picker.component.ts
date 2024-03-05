@@ -4,29 +4,30 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  inject,
   Input,
-  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
-import { map } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
-import { Category, Dataset, Entities } from '~/models';
+import { Category, Entities, RawDataset } from '~/models';
 import { LabState } from '~/store';
 import * as Recipes from '~/store/recipes';
 
-@UntilDestroy()
 @Component({
   selector: 'lab-picker',
   templateUrl: './picker.component.html',
   styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PickerComponent implements OnInit {
+export class PickerComponent {
+  ref = inject(ChangeDetectorRef);
+  filterSvc = inject(FilterService);
+  store = inject(Store<LabState>);
+
   @ViewChild('inputFilter') inputFilter:
     | ElementRef<HTMLInputElement>
     | undefined;
@@ -35,12 +36,10 @@ export class PickerComponent implements OnInit {
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<string[]>();
 
-  vm$ = this.store
-    .select(Recipes.getAdjustedDataset)
-    .pipe(map((data) => ({ data })));
+  vm$ = combineLatest({ data: this.store.select(Recipes.getAdjustedDataset) });
 
-  searchCtrl = new FormControl('');
-  selectAllCtrl = new FormControl(false);
+  search = '';
+  allSelected = false;
 
   visible = false;
   type: 'item' | 'recipe' = 'item';
@@ -56,23 +55,11 @@ export class PickerComponent implements OnInit {
   allCategoryRows: Entities<string[][]> = {};
   activeIndex = 0;
 
-  constructor(
-    private ref: ChangeDetectorRef,
-    private filterService: FilterService,
-    private store: Store<LabState>
-  ) {}
-
-  ngOnInit(): void {
-    this.searchCtrl.valueChanges
-      .pipe(untilDestroyed(this))
-      .subscribe((s) => this.inputSearch(s));
-  }
-
   clickOpen(
-    data: Dataset,
+    data: RawDataset,
     type: 'item' | 'recipe',
     allIds: string[],
-    selection?: string | string[]
+    selection?: string | string[],
   ): void {
     this.type = type;
     const allIdsSet = new Set(allIds);
@@ -83,11 +70,7 @@ export class PickerComponent implements OnInit {
       this.isMultiselect = false;
       this.selection = selection;
     }
-    this.searchCtrl.setValue('');
-    // Wait for input field to appear before attempting to focus
-    setTimeout(() => {
-      this.inputFilter?.nativeElement.focus();
-    });
+    this.search = '';
     this.categoryEntities = data.categoryEntities;
     if (type === 'item') {
       this.categoryRows = {};
@@ -106,14 +89,14 @@ export class PickerComponent implements OnInit {
           label: data.itemEntities[i].name,
           value: i,
           title: data.itemEntities[i].category,
-        })
+        }),
       );
 
       if (Array.isArray(selection)) {
-        this.selectAllCtrl.setValue(selection.length === 0);
+        this.allSelected = selection.length === 0;
       } else if (selection != null) {
         const index = data.categoryIds.indexOf(
-          data.itemEntities[selection].category
+          data.itemEntities[selection].category,
         );
         this.activeIndex = index;
       }
@@ -134,22 +117,22 @@ export class PickerComponent implements OnInit {
           label: data.recipeEntities[i].name,
           value: i,
           title: data.recipeEntities[i].category,
-        })
+        }),
       );
 
       if (Array.isArray(selection)) {
-        this.selectAllCtrl.setValue(selection.length === 0);
+        this.allSelected = selection.length === 0;
         this.default =
           data.defaults != null ? [...data.defaults.excludedRecipeIds] : [];
       } else if (selection) {
         const index = data.categoryIds.indexOf(
-          data.recipeEntities[selection].category
+          data.recipeEntities[selection].category,
         );
         this.activeIndex = index;
       }
     }
     this.categoryIds = data.categoryIds.filter(
-      (c) => this.categoryRows[c].length
+      (c) => this.categoryRows[c]?.length,
     );
     this.allCategoryIds = this.categoryIds;
     this.allCategoryRows = this.categoryRows;
@@ -177,7 +160,7 @@ export class PickerComponent implements OnInit {
       } else {
         this.selection.splice(index, 1);
       }
-      this.selectAllCtrl.setValue(this.selection.length === 0);
+      this.allSelected = this.selection.length === 0;
     } else {
       this.selectId.emit(id);
       this.visible = false;
@@ -190,25 +173,25 @@ export class PickerComponent implements OnInit {
     }
   }
 
-  inputSearch(search: string | null): void {
-    if (!search) {
+  inputSearch(): void {
+    if (!this.search) {
       this.categoryIds = this.allCategoryIds;
       this.categoryRows = this.allCategoryRows;
       return;
     }
 
     // Filter for matching item ids
-    const filteredItems: SelectItem[] = this.filterService.filter(
+    const filteredItems: SelectItem[] = this.filterSvc.filter(
       this.allSelectItems,
       ['label'],
-      search,
-      'contains'
+      this.search,
+      'contains',
     );
 
     // Filter for matching category ids
     // (Cache category on the SelectItem `title` field)
     this.categoryIds = this.allCategoryIds.filter((c) =>
-      filteredItems.some((i) => i.title === c)
+      filteredItems.some((i) => i.title === c),
     );
 
     // Filter category rows

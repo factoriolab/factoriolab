@@ -19,7 +19,7 @@ export function machinesReducer(
     | MachinesAction
     | App.AppAction
     | Settings.SetModAction
-    | Settings.SetPresetAction
+    | Settings.SetPresetAction,
 ): MachinesState {
   switch (action.type) {
     case App.AppActionType.LOAD:
@@ -38,7 +38,7 @@ export function machinesReducer(
     }
     case MachinesActionType.REMOVE: {
       const value = (state.ids ?? action.payload.def ?? []).filter(
-        (i) => i !== action.payload.value
+        (i) => i !== action.payload.value,
       );
       const ids = StoreUtility.compareRank(value, action.payload.def);
       const newState = {
@@ -48,26 +48,16 @@ export function machinesReducer(
       delete newState.entities[action.payload.value];
       return newState;
     }
-    case MachinesActionType.RAISE: {
-      const value = [...(state.ids ?? action.payload.def ?? [])];
-      const i = value.indexOf(action.payload.value);
-      if (i !== -1 && i > 0) {
-        value.splice(i - 1, 0, value.splice(i, 1)[0]);
-        const ids = StoreUtility.compareRank(value, action.payload.def);
-        return { ...state, ...{ ids } };
-      }
-      return state;
-    }
-    case MachinesActionType.LOWER: {
-      const value = [...(state.ids ?? action.payload.def ?? [])];
-      const i = value.indexOf(action.payload.value);
-      if (i !== -1 && i < value.length - 1) {
-        value.splice(i + 1, 0, value.splice(i, 1)[0]);
-        const ids = StoreUtility.compareRank(value, action.payload.def);
-        return { ...state, ...{ ids } };
-      }
-      return state;
-    }
+    case MachinesActionType.SET_RANK:
+      return {
+        ...state,
+        ...{
+          ids: StoreUtility.compareRank(
+            action.payload.value,
+            action.payload.def,
+          ),
+        },
+      };
     case MachinesActionType.SET_MACHINE: {
       const value = [...(state.ids ?? action.payload.def ?? [])];
       const i = value.indexOf(action.payload.id);
@@ -78,21 +68,27 @@ export function machinesReducer(
           ...state,
           ...{ ids, entities: { ...state.entities } },
         };
-        if (newState.entities[action.payload.id]) {
-          newState.entities[action.payload.value] =
-            newState.entities[action.payload.id];
+        if (newState.entities[action.payload.id])
           delete newState.entities[action.payload.id];
-        }
+
         return newState;
       }
       return state;
+    }
+    case MachinesActionType.SET_FUEL: {
+      const entities = StoreUtility.compareReset(
+        state.entities,
+        'fuelId',
+        action.payload,
+      );
+      return { ...state, ...{ entities } };
     }
     case MachinesActionType.SET_MODULE_RANK: {
       const entities = StoreUtility.compareReset(
         state.entities,
         'moduleRankIds',
         action.payload,
-        true
+        true,
       );
       return { ...state, ...{ entities } };
     }
@@ -100,7 +96,7 @@ export function machinesReducer(
       const entities = StoreUtility.compareReset(
         state.entities,
         'beaconCount',
-        action.payload
+        action.payload,
       );
       return { ...state, ...{ entities } };
     }
@@ -108,7 +104,7 @@ export function machinesReducer(
       const entities = StoreUtility.resetFields(
         StoreUtility.compareReset(state.entities, 'beaconId', action.payload),
         ['beaconModuleRankIds'],
-        action.payload.id
+        action.payload.id,
       );
       return { ...state, ...{ entities } };
     }
@@ -116,7 +112,7 @@ export function machinesReducer(
       const entities = StoreUtility.compareReset(
         state.entities,
         'beaconModuleRankIds',
-        action.payload
+        action.payload,
       );
       return { ...state, ...{ entities } };
     }
@@ -124,7 +120,7 @@ export function machinesReducer(
       const entities = StoreUtility.compareReset(
         state.entities,
         'overclock',
-        action.payload
+        action.payload,
       );
       return { ...state, ...{ entities } };
     }

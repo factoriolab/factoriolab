@@ -6,6 +6,7 @@ import { FluidWagon, FluidWagonRational } from './fluid-wagon';
 import { Fuel, FuelRational } from './fuel';
 import { Machine, MachineRational } from './machine';
 import { Module, ModuleRational } from './module';
+import { Technology } from './technology';
 
 export interface Item {
   id: string;
@@ -21,6 +22,7 @@ export interface Item {
   fuel?: Fuel;
   cargoWagon?: CargoWagon;
   fluidWagon?: FluidWagon;
+  technology?: Technology;
   /** Used to link the item to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -41,6 +43,7 @@ export class ItemRational {
   fuel?: FuelRational;
   cargoWagon?: CargoWagonRational;
   fluidWagon?: FluidWagonRational;
+  technology?: Technology;
   /** Used to link the item to an alternate icon id */
   icon?: string;
   /** Used to add extra text to an already defined icon */
@@ -88,12 +91,8 @@ export class ItemRational {
       this.fluidWagon = new FluidWagonRational(obj.fluidWagon);
     }
 
-    if (obj.icon) {
-      this.icon = obj.icon;
-    }
-
-    if (obj.iconText) {
-      this.iconText = obj.iconText;
-    }
+    this.technology = obj.technology;
+    this.icon = obj.icon;
+    this.iconText = obj.iconText;
   }
 }

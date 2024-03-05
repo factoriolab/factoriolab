@@ -2,12 +2,13 @@ import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
+  inject,
   OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ConfirmationService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { ContentService } from '~/services';
 
@@ -17,20 +18,22 @@ import { ContentService } from '~/services';
   templateUrl: './content.component.html',
   styleUrls: ['./content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ConfirmationService],
+  providers: [ConfirmationService, MessageService],
 })
 export class ContentComponent implements OnInit, AfterViewInit {
+  confirmationSvc = inject(ConfirmationService);
+  messageSvc = inject(MessageService);
+  contentSvc = inject(ContentService);
+
   @ViewChild('translateSelectedItem') translateSelectedItem:
     | TemplateRef<unknown>
     | undefined;
   @ViewChild('translateItem') translateItem: TemplateRef<unknown> | undefined;
 
-  constructor(
-    private confirmationSvc: ConfirmationService,
-    private contentSvc: ContentService
-  ) {}
-
   ngOnInit(): void {
+    this.contentSvc.showToast$
+      .pipe(untilDestroyed(this))
+      .subscribe((t) => this.messageSvc.add(t));
     this.contentSvc.showConfirm$
       .pipe(untilDestroyed(this))
       .subscribe((c) => this.confirmationSvc.confirm(c));

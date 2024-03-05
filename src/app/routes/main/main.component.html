@@ -18,7 +18,7 @@
       class="layout-content"
       [class.settings-xl-hidden]="vm.settingsXlHidden"
     >
-      <main class="px-1 px-sm-4 py-4">
+      <main class="px-sm-4 py-4">
         <ng-container *ngIf="vm.mod != null; else loading">
           <lab-objectives></lab-objectives>
 
@@ -44,7 +44,6 @@
                     'app.simplexSolved'
                       | translate
                         : {
-                            resultType: vm.result.resultType.toLowerCase(),
                             time: vm.result.time,
                             cost: vm.result.cost?.toPrecision(2)
                           }
@@ -53,9 +52,8 @@
                 <ng-template #notSolved>
                   <div>
                     {{
-                      'app.simplexUnsolved'
+                      'options.simplexResultType.' + vm.result.resultType
                         | translate
-                          : { resultType: vm.result.resultType.toLowerCase() }
                     }}
                   </div>
                 </ng-template>

@@ -1,0 +1,32 @@
+/**
+ * Can't use :host selector to ensure specificity because the dialog is added to
+ * the root of the document, use a class instead.
+ */
+::ng-deep .picker-dialog {
+  .p-dialog-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .p-dialog-content {
+    padding: 0 1rem 1rem 1rem;
+  }
+
+  .p-tabview-panels {
+    padding: 0;
+  }
+
+  .p-scrollpanel-content {
+    padding-top: 0.5rem;
+    padding-left: 1px;
+  }
+
+  .p-tabview-nav-link {
+    max-width: 10rem;
+  }
+
+  p-scrollpanel {
+    .p-button-label {
+      margin-left: 1rem;
+    }
+  }
+}

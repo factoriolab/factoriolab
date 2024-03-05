@@ -10,13 +10,11 @@ import {
   columnOptions,
   CostKey,
   CostRationalSettings,
-  Dataset,
   Defaults,
   displayRateInfo,
   Entities,
   FluidWagonRational,
   FuelRational,
-  FuelType,
   Game,
   gameColumnsState,
   gameInfo,
@@ -24,19 +22,20 @@ import {
   InserterData,
   ItemId,
   ItemRational,
+  linkValueOptions,
   MachineRational,
   ModuleRational,
   objectiveUnitOptions,
+  Options,
   Preset,
   presetOptions,
   Rational,
-  RecipeRational,
+  RawDataset,
   researchSpeedFactor,
   Technology,
   toBoolEntities,
   toEntities,
 } from '~/models';
-import { Options } from '~/models/options';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
@@ -49,48 +48,52 @@ export const settingsState = (state: LabState): SettingsState =>
 export const getModId = createSelector(settingsState, (state) => state.modId);
 export const getResearchedTechnologyIds = createSelector(
   settingsState,
-  (state) => state.researchedTechnologyIds
+  (state) => state.researchedTechnologyIds,
 );
 export const getNetProductionOnly = createSelector(
   settingsState,
-  (state) => state.netProductionOnly
+  (state) => state.netProductionOnly,
 );
 export const getPreset = createSelector(settingsState, (state) => state.preset);
 export const getBeaconReceivers = createSelector(
   settingsState,
-  (state) => state.beaconReceivers
+  (state) => state.beaconReceivers,
 );
 export const getProliferatorSprayId = createSelector(
   settingsState,
-  (state) => state.proliferatorSprayId
+  (state) => state.proliferatorSprayId,
 );
 export const getFlowRate = createSelector(
   settingsState,
-  (state) => state.flowRate
+  (state) => state.flowRate,
 );
 export const getInserterTarget = createSelector(
   settingsState,
-  (state) => state.inserterTarget
+  (state) => state.inserterTarget,
 );
 export const getMiningBonus = createSelector(
   settingsState,
-  (state) => state.miningBonus
+  (state) => state.miningBonus,
 );
 export const getResearchSpeed = createSelector(
   settingsState,
-  (state) => state.researchSpeed
+  (state) => state.researchSpeed,
 );
 export const getInserterCapacity = createSelector(
   settingsState,
-  (state) => state.inserterCapacity
+  (state) => state.inserterCapacity,
 );
 export const getDisplayRate = createSelector(
   settingsState,
-  (state) => state.displayRate
+  (state) => state.displayRate,
 );
 export const getMaximizeType = createSelector(
   settingsState,
-  (state) => state.maximizeType
+  (state) => state.maximizeType,
+);
+export const getSurplusMachinesOutput = createSelector(
+  settingsState,
+  (state) => state.surplusMachinesOutput,
 );
 export const getCosts = createSelector(settingsState, (state) => state.costs);
 
@@ -98,40 +101,57 @@ export const getCosts = createSelector(settingsState, (state) => state.costs);
 export const getMod = createSelector(
   getModId,
   Datasets.getModRecord,
-  (id, data) => data[id]
+  (id, data) => data[id],
 );
 
 export const getHash = createSelector(
   getModId,
   Datasets.getHashRecord,
-  (id, hashEntities) => hashEntities[id]
+  (id, hashEntities) => hashEntities[id],
 );
 
 export const getGame = createSelector(
   getModId,
   Datasets.getModInfoRecord,
-  (id, data) => data[id]?.game ?? Game.None
+  (id, data) => data[id]?.game ?? Game.Factorio,
+);
+
+export const getGameStates = createSelector(
+  getGame,
+  Preferences.getStates,
+  (game, states) => states[game],
+);
+
+export const getSavedStates = createSelector(getGameStates, (states) =>
+  Object.keys(states)
+    .sort()
+    .map(
+      (i): SelectItem => ({
+        label: i,
+        value: i,
+      }),
+    ),
 );
 
 export const getGameInfo = createSelector(getGame, (game) => gameInfo[game]);
 
 export const getColumnOptions = createSelector(getGameInfo, (gameInf) =>
-  columnOptions(gameInf)
+  columnOptions(gameInf),
 );
 
 export const getDisplayRateInfo = createSelector(
   getDisplayRate,
-  (displayRate) => displayRateInfo[displayRate]
+  (displayRate) => displayRateInfo[displayRate],
 );
 
 export const getRateUnitOptions = createSelector(
   getGame,
   getDisplayRateInfo,
-  (game, dispRateInfo) => objectiveUnitOptions(dispRateInfo, game)
+  (game, dispRateInfo) => objectiveUnitOptions(dispRateInfo, game),
 );
 
 export const getPresetOptions = createSelector(getGame, (game) =>
-  presetOptions(game)
+  presetOptions(game),
 );
 
 export const getModOptions = createSelector(
@@ -144,8 +164,12 @@ export const getModOptions = createSelector(
         (m): SelectItem => ({
           label: m.name,
           value: m.id,
-        })
-      )
+        }),
+      ),
+);
+
+export const getLinkValueOptions = createSelector(getGame, (game) =>
+  linkValueOptions(game),
 );
 
 export const getColumnsState = createSelector(
@@ -154,9 +178,9 @@ export const getColumnsState = createSelector(
   (gameInfo, columnsState) => {
     return gameColumnsState(
       { ...initialColumnsState, ...columnsState },
-      gameInfo
+      gameInfo,
     );
-  }
+  },
 );
 
 export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
@@ -207,31 +231,31 @@ export const getSettings = createSelector(
     ...{
       beltId: s.beltId ?? d?.beltId,
       pipeId: s.pipeId ?? d?.pipeId,
-      fuelId: s.fuelId ?? d?.fuelId,
+      fuelRankIds: s.fuelRankIds ?? (d?.fuelId ? [d.fuelId] : []),
       cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
       fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
     },
-  })
+  }),
 );
 
-export const getFuelId = createSelector(getSettings, (s) => s.fuelId);
+export const getFuelRankIds = createSelector(getSettings, (s) => s.fuelRankIds);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
-  Rational.fromNumber(bonus).div(Rational.hundred)
+  Rational.fromNumber(bonus).div(Rational.hundred),
 );
 
 export const getResearchFactor = createSelector(
   getResearchSpeed,
-  (speed) => researchSpeedFactor[speed]
+  (speed) => researchSpeedFactor[speed],
 );
 
 export const getRationalBeaconReceivers = createSelector(
   getBeaconReceivers,
-  (total) => (total ? Rational.fromString(total) : null)
+  (total) => (total ? Rational.fromString(total) : null),
 );
 
 export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
-  Rational.fromNumber(rate)
+  Rational.fromNumber(rate),
 );
 
 export const getRationalCost = createSelector(
@@ -242,15 +266,15 @@ export const getRationalCost = createSelector(
         a[b] = Rational.fromString(cost[b]);
         return a;
       },
-      {}
-    ) as CostRationalSettings
+      {},
+    ) as CostRationalSettings,
 );
 
 export const getI18n = createSelector(
   getMod,
   Datasets.getI18nRecord,
   Preferences.getLanguage,
-  (base, i18n, lang) => (base ? i18n[`${base.id}-${lang}`] : null)
+  (base, i18n, lang) => (base ? i18n[`${base.id}-${lang}`] : null),
 );
 
 export const getDataset = createSelector(
@@ -264,7 +288,7 @@ export const getDataset = createSelector(
     const categoryEntities = toEntities(
       mod?.categories ?? [],
       {},
-      environment.debug
+      environment.debug,
     );
     const modIconPath = `data/${mod?.id}/icons.webp`;
     const iconEntities = toEntities(
@@ -273,20 +297,20 @@ export const getDataset = createSelector(
         ...{ file: i.file ?? modIconPath },
       })),
       {},
-      environment.debug
+      environment.debug,
     );
     const itemData = toEntities(mod?.items ?? [], {}, environment.debug);
     const recipeEntities = toEntities(
       mod?.recipes ?? [],
       {},
-      environment.debug
+      environment.debug,
     );
     const limitations = reduceEntities(mod?.limitations ?? {});
 
     // Apply localization
     if (i18n) {
       for (const i of Object.keys(i18n.categories).filter(
-        (i) => categoryEntities[i]
+        (i) => categoryEntities[i],
       )) {
         categoryEntities[i] = {
           ...categoryEntities[i],
@@ -304,7 +328,7 @@ export const getDataset = createSelector(
         };
       }
       for (const i of Object.keys(i18n.recipes).filter(
-        (i) => recipeEntities[i]
+        (i) => recipeEntities[i],
       )) {
         recipeEntities[i] = {
           ...recipeEntities[i],
@@ -338,13 +362,13 @@ export const getDataset = createSelector(
           ? 0
           : Rational.from(a.belt.speed)
               .sub(Rational.from(b.belt.speed))
-              .toNumber()
+              .toNumber(),
       )
       .map((i) => i.id);
     const pipeIds = items
       .filter(fnPropsNotNullish('pipe'))
       .sort((a, b) =>
-        Rational.from(a.pipe.speed).sub(Rational.from(b.pipe.speed)).toNumber()
+        Rational.from(a.pipe.speed).sub(Rational.from(b.pipe.speed)).toNumber(),
       )
       .map((i) => i.id);
     const cargoWagonIds = items
@@ -356,7 +380,7 @@ export const getDataset = createSelector(
       .sort((a, b) =>
         Rational.from(a.fluidWagon.capacity)
           .sub(Rational.from(b.fluidWagon.capacity))
-          .toNumber()
+          .toNumber(),
       )
       .map((i) => i.id);
     const machineIds = items
@@ -370,14 +394,10 @@ export const getDataset = createSelector(
     const fuels = items
       .filter(fnPropsNotNullish('fuel'))
       .sort((a, b) =>
-        Rational.from(a.fuel.value).sub(Rational.from(b.fuel.value)).toNumber()
+        Rational.from(a.fuel.value).sub(Rational.from(b.fuel.value)).toNumber(),
       );
     const fuelIds = fuels.map((i) => i.id);
-    const chemicalFuelIds = fuels
-      .filter((i) => i.fuel.category === FuelType.Chemical)
-      .map((i) => i.id);
-
-    const technologyIds = recipes
+    const technologyIds = items
       .filter(fnPropsNotNullish('technology'))
       .map((r) => r.id);
 
@@ -386,9 +406,12 @@ export const getDataset = createSelector(
     recipes
       .filter((r) => !iconEntities[r.id] && !recipeEntities[r.id].icon)
       .forEach((r) => {
+        const firstOutId = Object.keys(r.out)[0];
+        const firstOutItem = itemData[firstOutId];
+        
         recipeEntities[r.id] = {
           ...recipeEntities[r.id],
-          ...{ icon: Object.keys(r.out)[0] },
+          ...{ icon: firstOutItem.icon ?? firstOutId },
         };
       });
 
@@ -440,60 +463,48 @@ export const getDataset = createSelector(
     const machineEntities: Entities<MachineRational> = {};
     const moduleEntities: Entities<ModuleRational> = {};
     const fuelEntities: Entities<FuelRational> = {};
+    const technologyEntities: Entities<Technology> = {};
     const itemEntities = itemIds.reduce((e: Entities<ItemRational>, i) => {
       const item = new ItemRational(itemData[i]);
       if (item.beacon) {
         beaconEntities[i] = item.beacon;
       }
+
       if (item.belt) {
         beltEntities[i] = item.belt;
       } else if (item.pipe) {
         beltEntities[i] = item.pipe;
       }
+
       if (item.cargoWagon) {
         cargoWagonEntities[i] = item.cargoWagon;
       }
+
       if (item.fluidWagon) {
         fluidWagonEntities[i] = item.fluidWagon;
       }
+
       if (item.machine) {
         machineEntities[i] = item.machine;
       }
+
       if (item.module) {
         moduleEntities[i] = item.module;
       }
+
       if (item.fuel) {
         fuelEntities[i] = item.fuel;
+      }
+
+      if (item.technology) {
+        technologyEntities[i] = item.technology;
       }
 
       e[i] = item;
       return e;
     }, {});
-    const technologyEntities: Entities<Technology> = {};
-    const recipeR = recipeIds.reduce((e: Entities<RecipeRational>, r) => {
-      const recipe = new RecipeRational(recipeEntities[r]);
-      if (recipe.technology) {
-        technologyEntities[r] = recipe.technology;
-      }
 
-      e[r] = recipe;
-      return e;
-    }, {});
-
-    const itemRecipeIds = itemIds.reduce((e: Entities<string[]>, i) => {
-      e[i] = recipeIds
-        .map((r) => recipeR[r])
-        .filter((r) => r.produces(i))
-        .map((r) => r.id);
-      return e;
-    }, {});
-    const recipeProductIds = recipeIds.reduce((e: Entities<string[]>, r) => {
-      const recipe = recipeR[r];
-      e[r] = Object.keys(recipe.out).filter((i) => recipe.produces(i));
-      return e;
-    }, {});
-
-    const dataset: Dataset = {
+    const dataset: RawDataset = {
       game,
       version: mod?.version ?? {},
       categoryIds,
@@ -504,7 +515,6 @@ export const getDataset = createSelector(
       iconEntities,
       itemIds,
       itemEntities,
-      itemRecipeIds,
       beaconIds,
       beaconEntities,
       beltIds,
@@ -520,20 +530,17 @@ export const getDataset = createSelector(
       proliferatorModuleIds,
       moduleEntities,
       fuelIds,
-      chemicalFuelIds,
       fuelEntities,
       recipeIds,
       recipeEntities,
-      recipeProductIds,
       technologyIds,
       technologyEntities,
-      recipeR,
       limitations,
       hash,
       defaults,
     };
     return dataset;
-  }
+  },
 );
 
 export const getOptions = createSelector(
@@ -549,11 +556,11 @@ export const getOptions = createSelector(
     proliferatorModules: getIdOptions(
       data.proliferatorModuleIds,
       data.itemEntities,
-      true
+      true,
     ),
-    chemicalFuels: getIdOptions(data.chemicalFuelIds, data.itemEntities),
+    fuels: getIdOptions(data.fuelIds, data.itemEntities),
     recipes: getIdOptions(data.recipeIds, data.recipeEntities),
-  })
+  }),
 );
 
 export const getBeltSpeed = createSelector(
@@ -572,7 +579,7 @@ export const getBeltSpeed = createSelector(
       }
     }
     return value;
-  }
+  },
 );
 
 export const getBeltSpeedTxt = createSelector(
@@ -583,31 +590,7 @@ export const getBeltSpeedTxt = createSelector(
       const speed = beltSpeed[beltId].mul(dispRateInfo.value);
       e[beltId] = Number(speed.toNumber().toFixed(2)).toString();
       return e;
-    }, {})
-);
-
-export const getAdjustmentData = createSelector(
-  getNetProductionOnly,
-  getProliferatorSprayId,
-  getFuelId,
-  getRationalMiningBonus,
-  getResearchFactor,
-  getDataset,
-  (
-    netProductionOnly,
-    proliferatorSprayId,
-    fuelId,
-    miningBonus,
-    researchSpeed,
-    data
-  ) => ({
-    netProductionOnly,
-    proliferatorSprayId,
-    fuelId,
-    miningBonus,
-    researchSpeed,
-    data,
-  })
+    }, {}),
 );
 
 export const getSettingsModified = createSelector(settingsState, (state) => ({
@@ -617,20 +600,25 @@ export const getSettingsModified = createSelector(settingsState, (state) => ({
 export const getInserterData = createSelector(
   getInserterTarget,
   getInserterCapacity,
-  (target, capacity) => InserterData[target][capacity]
+  (target, capacity) => InserterData[target][capacity],
 );
 
 export const getAllResearchedTechnologyIds = createSelector(
   getResearchedTechnologyIds,
   getDataset,
-  (researchedTechologyIds, data) => {
+  (researchedTechnologyIds, data) => {
     if (
       /** No need to parse if all researched */
-      researchedTechologyIds == null ||
+      researchedTechnologyIds == null ||
       /** Skip if data is not loaded */
       Object.keys(data.technologyEntities).length === 0
     )
-      return researchedTechologyIds;
+      return researchedTechnologyIds;
+
+    // Filter out any technology ids that are no longer valid
+    const validTechnologyIds = researchedTechnologyIds.filter(
+      (i) => data.technologyEntities[i] != null,
+    );
 
     /**
      * Source technology list includes only minimal set of technologies that
@@ -638,7 +626,7 @@ export const getAllResearchedTechnologyIds = createSelector(
      * to reduce zip size. Need to rehydrate full list of technology ids using
      * their prerequisites.
      */
-    const selection = new Set(researchedTechologyIds);
+    const selection = new Set(validTechnologyIds);
 
     let addIds: Set<string>;
     do {
@@ -655,7 +643,7 @@ export const getAllResearchedTechnologyIds = createSelector(
     } while (addIds.size);
 
     return Array.from(selection);
-  }
+  },
 );
 
 export const getAvailableRecipes = createSelector(
@@ -669,21 +657,33 @@ export const getAvailableRecipes = createSelector(
       const recipe = data.recipeEntities[i];
       return recipe.unlockedBy == null || set.has(recipe.unlockedBy);
     });
-  }
+  },
 );
 
-export const getAvailableItems = createSelector(
+export const getAdjustmentData = createSelector(
+  getNetProductionOnly,
+  getProliferatorSprayId,
+  getRationalMiningBonus,
+  getResearchFactor,
   getAvailableRecipes,
-  getDataset,
-  (recipeIds, data) => {
-    const recipes = recipeIds.map((r) => data.recipeR[r]);
-    return data.itemIds.filter((i) => recipes.some((r) => r.produces(i)));
-  }
+  (
+    netProductionOnly,
+    proliferatorSprayId,
+    miningBonus,
+    researchSpeed,
+    recipeIds,
+  ) => ({
+    netProductionOnly,
+    proliferatorSprayId,
+    miningBonus,
+    researchSpeed,
+    recipeIds,
+  }),
 );
 
 export function reduceEntities(
   value: Entities<string[]>,
-  init: Entities<Entities<boolean>> = {}
+  init: Entities<Entities<boolean>> = {},
 ): Entities<Entities<boolean>> {
   return Object.keys(value).reduce((e: Entities<Entities<boolean>>, x) => {
     e[x] = toBoolEntities(value[x], init[x]);

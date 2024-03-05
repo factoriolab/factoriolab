@@ -39,6 +39,7 @@
         *ngIf="vm.data.game === Game.Factorio"
         styleClass="mb-2 w-100"
         [filter]="true"
+        [autofocusFilter]="!vm.isMobile"
         [ngModel]="vm.settings.modId"
         [options]="vm.modOptions"
         (onChange)="setMod($event.value)"
@@ -62,12 +63,12 @@
       ></button>
       <lab-picker
         #addItemPicker
-        [header]="'landing.addItems' | translate"
+        [header]="'landing.selectAnItem' | translate"
         (selectId)="selectItem($event)"
       ></lab-picker>
       <lab-picker
         #addRecipePicker
-        [header]="'landing.addMachines' | translate"
+        [header]="'landing.selectARecipe' | translate"
         (selectId)="selectRecipe($event)"
       ></lab-picker>
       <p-divider
@@ -81,7 +82,9 @@
           [placeholder]="'landing.loadSavedState' | translate"
           styleClass="w-100"
           [options]="vm.savedStates"
-          (onChange)="setState($event.value, vm.preferences)"
+          (onChange)="
+            setState(vm.preferences.states[vm.data.game][$event.value])
+          "
         ></p-dropdown>
       </span>
       <button

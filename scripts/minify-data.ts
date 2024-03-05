@@ -6,7 +6,7 @@ const mod = process.argv[2];
 
 if (!mod) {
   throw new Error(
-    'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1'
+    'Please specify a mod to process by the folder name, e.g. "1.1" for src/data/1.1',
   );
 }
 

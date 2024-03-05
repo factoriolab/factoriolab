@@ -9,6 +9,7 @@ import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
   BeaconSettings,
   DisplayRate,
+  Game,
   InserterCapacity,
   InserterTarget,
   MaximizeType,
@@ -26,6 +27,7 @@ import {
   LabState,
   Machines,
   Objectives,
+  Preferences,
   Recipes,
   Settings,
 } from '~/store';
@@ -96,11 +98,12 @@ const mockSettingsState: Settings.SettingsState = {
   modId: '1.0',
   researchedTechnologyIds: null,
   netProductionOnly: true,
+  surplusMachinesOutput: false,
   preset: Preset.Modules,
   beaconReceivers: '1',
   proliferatorSprayId: ItemId.ProductivityModule,
   beltId: ItemId.TransportBelt,
-  fuelId: ItemId.Coal,
+  fuelRankIds: [ItemId.Coal],
   cargoWagonId: ItemId.CargoWagon,
   fluidWagonId: ItemId.FluidWagon,
   flowRate: 1200,
@@ -113,6 +116,7 @@ const mockSettingsState: Settings.SettingsState = {
   costs: {
     factor: '2',
     machine: '10',
+    footprint: '1',
     unproduceable: '0',
     excluded: '100',
     surplus: '0',
@@ -129,11 +133,11 @@ const mockZipPartial: Zip = {
     'argo-wagon&r=steel-chest**assembling-machine-2*effectivity-module~effect' +
     'ivity-module*0*200*100&f=1*productivity-module~speed-module*1*speed-modu' +
     'le*beacon_assembling-machine-2_steel-furnace&s=1.0**2*1*transport-belt*c' +
-    'oal*1200*100*0*0*0*cargo-wagon*fluid-wagon**1*productivity-module*1**2*1' +
+    'oal**100*0*0*0*cargo-wagon*fluid-wagon**1*productivity-module*1**2*1' +
     '0*0*100**-100000',
   hash:
     '&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100&f1*D~G*1*G*A_B_Q&s*2*1' +
-    '*C*A*Sw*Bk*A*0*0*A*B**1*D*1**2*10*0*100**-100000',
+    '*C*A**Bk*A*0*0*A*B**1*D*1**2*10*0*100**-100000',
 };
 const mockState: LabState = {
   objectivesState: mockObjectivesState,
@@ -221,6 +225,59 @@ describe('RouterService', () => {
     service.first = true;
   });
 
+  describe('migrateOldStates', () => {
+    it('should skip if keys match', () => {
+      spyOn(mockStore, 'dispatch');
+      service.migrateOldStates(Mocks.PreferencesState.states);
+      expect(mockStore.dispatch).not.toHaveBeenCalled();
+    });
+
+    it('should migrate saved states into correct games', () => {
+      spyOn(mockStore, 'dispatch');
+      service.migrateOldStates({
+        ...Preferences.initialPreferencesState.states,
+        ...{ id: 's=dsp' },
+      } as any);
+      expect(mockStore.dispatch).toHaveBeenCalledWith(
+        new Preferences.SetStatesAction({
+          ...Preferences.initialPreferencesState.states,
+          ...{
+            [Game.DysonSphereProgram]: { id: 's=dsp' },
+          },
+        }),
+      );
+    });
+  });
+
+  describe('getModIdFromState', () => {
+    it('should handle zipped states', () => {
+      let result = service.getModIdFromState(
+        'z=eJwrcInQMlQrcknU0nLScq9zVyuzBAA04gVG&v=9',
+      );
+      expect(result).toBeUndefined();
+
+      result = service.getModIdFromState(
+        'z=eJwrMNcyVEvyUCtyctTSStZyVStWK7MEADvbBYI_&v=9',
+      );
+      expect(result).toEqual('dsp');
+    });
+
+    it('should handle invalid states', () => {
+      let result = service.getModIdFromState('z=');
+      expect(result).toBeUndefined();
+
+      result = service.getModIdFromState('s=');
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('getGameFromModId', () => {
+    it('should return default value', () => {
+      expect(service.getGameFromModId(undefined)).toEqual(Game.Factorio);
+      expect(service.getGameFromModId('fake')).toEqual(Game.Factorio);
+    });
+  });
+
   describe('updateUrl', () => {
     it('should update url with products', () => {
       spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
@@ -231,7 +288,7 @@ describe('RouterService', () => {
         Items.initialItemsState,
         Recipes.initialRecipesState,
         Machines.initialMachinesState,
-        Settings.initialSettingsState
+        Settings.initialSettingsState,
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith('/?test');
     });
@@ -246,7 +303,7 @@ describe('RouterService', () => {
         Items.initialItemsState,
         Recipes.initialRecipesState,
         Machines.initialMachinesState,
-        Settings.initialSettingsState
+        Settings.initialSettingsState,
       );
       expect(router.navigateByUrl).toHaveBeenCalledWith('path?test#hash');
     });
@@ -261,7 +318,7 @@ describe('RouterService', () => {
           Items.initialItemsState,
           Recipes.initialRecipesState,
           Machines.initialMachinesState,
-          Settings.initialSettingsState
+          Settings.initialSettingsState,
         )
         .subscribe((z) => (zip = z));
       expect(zip).toEqual(mockZipData());
@@ -275,7 +332,7 @@ describe('RouterService', () => {
           mockItemsState,
           mockRecipesState,
           mockMachinesState,
-          mockSettingsState
+          mockSettingsState,
         )
         .subscribe((z) => (zip = z));
       expect(zip?.objectives).toEqual(mockZip);
@@ -289,8 +346,8 @@ describe('RouterService', () => {
         service.stepHref(
           { id: '', itemId: ItemId.Wood },
           mockEmptyZip(),
-          undefined
-        )
+          undefined,
+        ),
       ).toBeNull();
     });
 
@@ -299,8 +356,8 @@ describe('RouterService', () => {
         service.stepHref(
           { id: '', itemId: ItemId.Wood },
           mockEmptyZip(),
-          Mocks.Hash
-        )
+          Mocks.Hash,
+        ),
       ).toBeNull();
     });
 
@@ -311,9 +368,9 @@ describe('RouterService', () => {
         service.stepHref(
           { id: '', itemId: ItemId.Wood, items: Rational.one },
           mockEmptyZip(),
-          Mocks.Hash
-        )
-      ).toEqual('?test');
+          Mocks.Hash,
+        ),
+      ).toEqual('list?test');
     });
 
     it('should return get the hash for machines from specific step', () => {
@@ -327,9 +384,9 @@ describe('RouterService', () => {
             machines: Rational.one,
           },
           mockEmptyZip(),
-          Mocks.Hash
-        )
-      ).toEqual('?test');
+          Mocks.Hash,
+        ),
+      ).toEqual('list?test');
     });
   });
 
@@ -418,6 +475,7 @@ describe('RouterService', () => {
       mockStateV0.settingsState!.costs = {};
       delete mockStateV0.settingsState?.proliferatorSprayId;
       delete mockStateV0.settingsState?.netProductionOnly;
+      delete mockStateV0.settingsState?.surplusMachinesOutput;
       expect(service.dispatch).toHaveBeenCalledWith(
         'p=steel-chest*1*1&q=steel-chest*1&b=1&i=steel-chest*1*transport-belt' +
           '*cargo-wagon&r=steel-chest*assembling-machine-2*effectivity-module' +
@@ -425,7 +483,7 @@ describe('RouterService', () => {
           '=1*productivity-module~speed-module*1*speed-module*beacon_assembli' +
           'ng-machine-2_steel-furnace&s=1.0*%3D*1*transport-belt*coal*1200*36' +
           '00*100*0*0*0*cargo-wagon*fluid-wagon*?',
-        mockStateV0
+        mockStateV0,
       );
       expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
@@ -463,6 +521,8 @@ describe('RouterService', () => {
       delete mockStateV1.settingsState?.maximizeType;
       delete mockStateV1.settingsState?.costs?.surplus;
       delete mockStateV1.settingsState?.costs?.maximize;
+      delete mockStateV1.settingsState?.costs?.footprint;
+      delete mockStateV1.settingsState?.surplusMachinesOutput;
       expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockStateV1);
       expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
@@ -470,7 +530,7 @@ describe('RouterService', () => {
     it('should unzip empty v2', () => {
       const url = '/?z=eJwrUCszAgADVAE.';
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null])
+        of([Mocks.Data, Mocks.Hash, null]),
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v2', {} as any);
@@ -483,7 +543,7 @@ describe('RouterService', () => {
         'mFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSMGkU_';
 
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null])
+        of([Mocks.Data, Mocks.Hash, null]),
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       const mockStateV2: App.PartialState = {
@@ -500,10 +560,12 @@ describe('RouterService', () => {
       delete mockStateV2.settingsState?.maximizeType;
       delete mockStateV2.settingsState?.costs?.surplus;
       delete mockStateV2.settingsState?.costs?.maximize;
+      delete mockStateV2.settingsState?.costs?.footprint;
+      delete mockStateV2.settingsState?.surplusMachinesOutput;
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2' +
           '*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
-        mockStateV2
+        mockStateV2,
       );
       expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
@@ -511,7 +573,7 @@ describe('RouterService', () => {
     it('should unzip empty v3', () => {
       const url = '/?z=eJwrUCszBgADVQFA';
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null])
+        of([Mocks.Data, Mocks.Hash, null]),
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
@@ -525,7 +587,7 @@ describe('RouterService', () => {
         'G5w_';
 
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null])
+        of([Mocks.Data, Mocks.Hash, null]),
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
 
@@ -543,11 +605,13 @@ describe('RouterService', () => {
       delete mockStateV3.settingsState?.maximizeType;
       delete mockStateV3.settingsState?.costs?.surplus;
       delete mockStateV3.settingsState?.costs?.maximize;
+      delete mockStateV3.settingsState?.costs?.footprint;
+      delete mockStateV3.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_' +
           'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
-        mockStateV3
+        mockStateV3,
       );
       expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
@@ -584,6 +648,8 @@ describe('RouterService', () => {
       delete mockStateV4.settingsState?.maximizeType;
       delete mockStateV4.settingsState?.costs?.surplus;
       delete mockStateV4.settingsState?.costs?.maximize;
+      delete mockStateV4.settingsState?.costs?.footprint;
+      delete mockStateV4.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(v4Full, mockStateV4);
     });
@@ -591,7 +657,7 @@ describe('RouterService', () => {
     it('should unzip empty v5', () => {
       const url = '/?z=eJwrUCszBQADVwFC&v=5';
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null])
+        of([Mocks.Data, Mocks.Hash, null]),
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v5', {} as any);
@@ -604,7 +670,7 @@ describe('RouterService', () => {
         'BA__&v=5';
 
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null])
+        of([Mocks.Data, Mocks.Hash, null]),
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
 
@@ -622,11 +688,13 @@ describe('RouterService', () => {
       delete mockStateV5.settingsState?.maximizeType;
       delete mockStateV5.settingsState?.costs?.surplus;
       delete mockStateV5.settingsState?.costs?.maximize;
+      delete mockStateV5.settingsState?.costs?.footprint;
+      delete mockStateV5.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_' +
           'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D&v5',
-        mockStateV5
+        mockStateV5,
       );
     });
 
@@ -662,6 +730,8 @@ describe('RouterService', () => {
       delete mockStateV6.settingsState?.maximizeType;
       delete mockStateV6.settingsState?.costs?.surplus;
       delete mockStateV6.settingsState?.costs?.maximize;
+      delete mockStateV6.settingsState?.costs?.footprint;
+      delete mockStateV6.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(v6Full, mockStateV6);
     });
@@ -669,7 +739,7 @@ describe('RouterService', () => {
     it('should unzip empty v7', () => {
       const url = '/?z=eJwrUCszBwADWQFE&v=7';
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null])
+        of([Mocks.Data, Mocks.Hash, null]),
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v7', {} as any);
@@ -682,7 +752,7 @@ describe('RouterService', () => {
         'C.WaHBw_&v=7';
 
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null])
+        of([Mocks.Data, Mocks.Hash, null]),
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
 
@@ -699,18 +769,20 @@ describe('RouterService', () => {
       delete mockStateV7.settingsState?.maximizeType;
       delete mockStateV7.settingsState?.costs?.surplus;
       delete mockStateV7.settingsState?.costs?.maximize;
+      delete mockStateV7.settingsState?.costs?.footprint;
+      delete mockStateV7.settingsState?.surplusMachinesOutput;
 
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&qDB*1&e1*G~G*A*8&bB&iC6*1*C*A&rDB*B*A~A*0*200*100&f1*D~G*1*G' +
           '*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D*1&v7',
-        mockStateV7
+        mockStateV7,
       );
     });
 
     it('should unzip empty v8', () => {
       const url = '/?z=eJwrUCuzAAADWgFF&v=8';
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null])
+        of([Mocks.Data, Mocks.Hash, null]),
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v8', {} as any);
@@ -723,16 +795,26 @@ describe('RouterService', () => {
         'xwOrTh0O&v=8';
 
       spyOn(dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null])
+        of([Mocks.Data, Mocks.Hash, null]),
       );
       (router.events as any).next(new NavigationEnd(2, url, url));
 
-      const mockStateV8: App.PartialState = { ...mockState };
+      const mockStateV8: App.PartialState = {
+        ...mockState,
+        ...{
+          settingsState: {
+            ...mockState.settingsState,
+            ...{ costs: { ...mockState.settingsState.costs } },
+          },
+        },
+      };
+      delete mockStateV8.settingsState?.surplusMachinesOutput;
+      delete mockStateV8.settingsState?.costs?.footprint;
 
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100&f1*D~G*1*G*A_B_' +
           'Q&s?*2*1*C*A*Sw*Bk*A*0*0*A*B**1*D*1*A*2*10*0*100*0*-100000&v8',
-        mockStateV8
+        mockStateV8,
       );
     });
   });
@@ -743,7 +825,7 @@ describe('RouterService', () => {
       service.dispatch('test', mockState);
       expect(service.zip).toEqual('test');
       expect(mockStore.dispatch).toHaveBeenCalledWith(
-        new App.LoadAction(mockState)
+        new App.LoadAction(mockState),
       );
     });
   });
@@ -815,7 +897,7 @@ describe('RouterService', () => {
       });
       expect(params[Section.Objectives]).toEqual('');
       expect(params[Section.RecipeObjectives]).toEqual(
-        'coal*1_iron-plate*1*2_iron-ore*1*3'
+        'coal*1_iron-plate*1*2_iron-ore*1*3',
       );
     });
 
@@ -828,7 +910,7 @@ describe('RouterService', () => {
         isBare: true,
       });
       expect(params[Section.Objectives]).toEqual(
-        'iron-plate*1**2_iron-ore*1**3'
+        'iron-plate*1**2_iron-ore*1**3',
       );
     });
 
@@ -841,7 +923,7 @@ describe('RouterService', () => {
         isBare: true,
       });
       expect(params[Section.Items]).toEqual(
-        'coal*1*transport-belt*cargo-wagon'
+        'coal*1*transport-belt*cargo-wagon',
       );
     });
 
@@ -871,6 +953,21 @@ describe('RouterService', () => {
     });
   });
 
+  describe('migrateV7', () => {
+    it('should convert hashed objectives by machines to use items', () => {
+      const { params } = service.migrateV7({
+        params: {
+          [Section.Objectives]: 'Dc*1*3',
+          [Section.Settings]: '0**=*A**Po**A*0',
+          [Section.Version]: '7',
+        },
+        warnings: [],
+        isBare: false,
+      });
+      expect(params[Section.Objectives]).toEqual('Dc*1*0');
+    });
+  });
+
   describe('migrateV8', () => {
     it('should convert recipe objectives to unified objectives', () => {
       const { params } = service.migrateV8({
@@ -883,7 +980,7 @@ describe('RouterService', () => {
       });
 
       expect(params[Section.Objectives]).toEqual(
-        'steel-chest*1*1_steel-chest*1*3'
+        'steel-chest*1*1_steel-chest*1*3',
       );
     });
   });
@@ -909,7 +1006,7 @@ describe('RouterService', () => {
           },
         ],
         { [RecipeId.IronPlate]: { beacons } },
-        Mocks.Hash
+        Mocks.Hash,
       );
       expect(result.objectives).toEqual(service.empty);
       expect(result.config).toEqual({
@@ -935,7 +1032,7 @@ describe('RouterService', () => {
             type: ObjectiveType.Output,
           },
         ],
-        Mocks.Hash
+        Mocks.Hash,
       );
       expect(zip.objectives).toEqual({
         bare: 'p=steel-chest*1',
@@ -956,7 +1053,7 @@ describe('RouterService', () => {
             type: ObjectiveType.Output,
           },
         ],
-        Mocks.Hash
+        Mocks.Hash,
       );
       expect(zip.objectives).toEqual({
         bare: 'p=steel-chest*1*1',
@@ -977,7 +1074,7 @@ describe('RouterService', () => {
             type: ObjectiveType.Output,
           },
         ],
-        Mocks.Hash
+        Mocks.Hash,
       );
       expect(zip.objectives).toEqual({
         bare: 'p=steel-chest*1*2',
@@ -998,7 +1095,7 @@ describe('RouterService', () => {
             type: ObjectiveType.Output,
           },
         ],
-        Mocks.Hash
+        Mocks.Hash,
       );
       expect(zip.objectives).toEqual({
         bare: 'p=steel-chest*1*3',
@@ -1013,7 +1110,7 @@ describe('RouterService', () => {
         {
           ['p']: 'steel-chest*1*1',
         },
-        []
+        [],
       );
       expect(result).toEqual({
         ids: ['1'],
@@ -1034,7 +1131,7 @@ describe('RouterService', () => {
       const result = service.unzipObjectives(
         { ['p']: '*1**Bd' },
         [],
-        Mocks.Hash
+        Mocks.Hash,
       );
       expect(result).toEqual({
         ids: ['1'],
@@ -1073,7 +1170,7 @@ describe('RouterService', () => {
       const result = service.unzipObjectives(
         { ['p']: '*1*3****0' },
         [],
-        Mocks.Hash
+        Mocks.Hash,
       );
       expect(result).toEqual({
         ids: ['1'],
@@ -1116,7 +1213,7 @@ describe('RouterService', () => {
         {
           ['r']: 'steel-chest**assembling-machine-2*',
         },
-        []
+        [],
       );
       expect(result).toEqual({
         [RecipeId.SteelChest]: { machineId: ItemId.AssemblingMachine2 },
@@ -1158,7 +1255,7 @@ describe('RouterService', () => {
           ids: undefined,
           entities: { ['']: {} },
         },
-        Mocks.Hash
+        Mocks.Hash,
       );
       expect(zip.config).toEqual({ bare: '', hash: '' });
     });
@@ -1298,25 +1395,28 @@ describe('RouterService', () => {
   describe('zipDiffDisplayRate', () => {
     it('should handle default', () => {
       expect(
-        service.zipDiffDisplayRate(DisplayRate.PerMinute, DisplayRate.PerMinute)
+        service.zipDiffDisplayRate(
+          DisplayRate.PerMinute,
+          DisplayRate.PerMinute,
+        ),
       ).toEqual('');
     });
 
     it('should handle falsy', () => {
       expect(
-        service.zipDiffDisplayRate(undefined, DisplayRate.PerMinute)
+        service.zipDiffDisplayRate(undefined, DisplayRate.PerMinute),
       ).toEqual(NULL);
     });
 
     it('should handle truthy', () => {
       expect(
-        service.zipDiffDisplayRate(DisplayRate.PerSecond, undefined)
+        service.zipDiffDisplayRate(DisplayRate.PerSecond, undefined),
       ).toEqual('0');
       expect(
-        service.zipDiffDisplayRate(DisplayRate.PerMinute, undefined)
+        service.zipDiffDisplayRate(DisplayRate.PerMinute, undefined),
       ).toEqual('1');
       expect(
-        service.zipDiffDisplayRate(DisplayRate.PerHour, undefined)
+        service.zipDiffDisplayRate(DisplayRate.PerHour, undefined),
       ).toEqual('2');
     });
   });
@@ -1348,7 +1448,7 @@ describe('RouterService', () => {
 
     it('should handle truthy', () => {
       expect(service.zipDiffNullableArray(['b', 'a'], ['a', 'c'])).toEqual(
-        'a~b'
+        'a~b',
       );
     });
   });
@@ -1399,7 +1499,7 @@ describe('RouterService', () => {
   describe('zipDiffNullableNArray', () => {
     it('should handle default', () => {
       expect(service.zipDiffNullableNArray(['a', 'b'], ['b', 'a'], [])).toEqual(
-        ''
+        '',
       );
     });
 
@@ -1410,7 +1510,7 @@ describe('RouterService', () => {
 
     it('should handle truthy', () => {
       expect(
-        service.zipDiffNullableNArray(['b', 'a'], ['a', 'c'], ['a', 'b'])
+        service.zipDiffNullableNArray(['b', 'a'], ['a', 'c'], ['a', 'b']),
       ).toEqual('A~B');
     });
   });
@@ -1427,7 +1527,7 @@ describe('RouterService', () => {
 
     it('should handle truthy', () => {
       expect(service.zipDiffNRank(['b', 'a'], ['a', 'c'], ['a', 'b'])).toEqual(
-        'B~A'
+        'B~A',
       );
     });
   });
@@ -1608,13 +1708,13 @@ describe('RouterService', () => {
   describe('getBase64Code', () => {
     it('should check charCode validity', () => {
       expect(() => service.getBase64Code(257)).toThrowError(
-        'Unable to parse base64 string.'
+        'Unable to parse base64 string.',
       );
     });
 
     it('should check code validity', () => {
       expect(() => service.getBase64Code(0)).toThrowError(
-        'Unable to parse base64 string.'
+        'Unable to parse base64 string.',
       );
     });
 
@@ -1662,29 +1762,29 @@ describe('RouterService', () => {
   describe('base64ToBytes', () => {
     it('should check for invalid string length', () => {
       expect(() => service.base64ToBytes('aaa')).toThrowError(
-        'Unable to parse base64 string.'
+        'Unable to parse base64 string.',
       );
     });
 
     it('should check for invalid missing octets', () => {
       expect(() => service.base64ToBytes('_aaa')).toThrowError(
-        'Unable to parse base64 string.'
+        'Unable to parse base64 string.',
       );
     });
 
     it('should handle trailing octets', () => {
       expect(
-        inflate(service.base64ToBytes('eJxLTAQAASUAww__'), { to: 'string' })
+        inflate(service.base64ToBytes('eJxLTAQAASUAww__'), { to: 'string' }),
       ).toEqual('aa');
       expect(
-        inflate(service.base64ToBytes('eJxLTEwEAAJJASQ_'), { to: 'string' })
+        inflate(service.base64ToBytes('eJxLTEwEAAJJASQ_'), { to: 'string' }),
       ).toEqual('aaa');
     });
 
     it('should convert string to bytes', () => {
       const result = inflate(
         service.base64ToBytes('eJxLTEpOSU1Lz8jMAgAVhgP4'),
-        { to: 'string' }
+        { to: 'string' },
       );
       expect(result).toEqual('abcdefghij');
     });

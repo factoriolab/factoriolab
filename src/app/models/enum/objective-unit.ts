@@ -4,15 +4,15 @@ import { DisplayRateInfo } from './display-rate';
 import { Game } from './game';
 
 export enum ObjectiveUnit {
-  Items,
-  Belts,
-  Wagons,
-  Machines,
+  Items = 0,
+  Belts = 1,
+  Wagons = 2,
+  Machines = 3,
 }
 
 export function objectiveUnitOptions(
   dispRateInfo: DisplayRateInfo,
-  game: Game
+  game: Game,
 ): SelectItem<ObjectiveUnit>[] {
   const result: SelectItem<ObjectiveUnit>[] = [
     { value: ObjectiveUnit.Items, label: dispRateInfo.itemsLabel },

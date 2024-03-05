@@ -36,7 +36,8 @@
       "factorio": "Factorio",
       "dysonSphereProgram": "Dyson Sphere Program",
       "satisfactory": "Satisfactory",
-      "captainOfIndustry": "Captain of Industry"
+      "captainOfIndustry": "Captain of Industry",
+      "techtonica": "Techtonica"
     },
     "inserterCapacity": {
       "capacity0": "Pas de bonus de capacité",
@@ -78,30 +79,6 @@
       "dark": "Sombre"
     }
   },
-  "tooltip": {
-    "speed": "Vitesse",
-    "flowRate": "Débit",
-    "craftingSpeed": "Vitesse de fabrication",
-    "modules": "Modules",
-    "disallowedEffects": "Effets Interdit",
-    "energyType": "Type d'énergie",
-    "fuelCategory": "Catégorie de carburant",
-    "energyUsage": "Utilisation d'énergie",
-    "drain": "Consommation passive",
-    "pollution": "Pollution",
-    "rocketPartsRequired": "Pièces de fusée requise",
-    "launchTime": "Temps de lancement",
-    "consumption": "Consommation",
-    "productivity": "Productivité",
-    "sprays": "Sprays",
-    "effectivity": "Efficacité",
-    "range": "Portée",
-    "belt": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Vitesse</td><td>{{ speed }}</td></tr></table></small>",
-    "pipe": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Débit</td><td>{{ speed }}</td></tr></table></small>",
-    "cargoWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Inventaire</td><td>{{ size }} stacks</td></tr></table></small>",
-    "fluidWagon": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Capacité</td><td>{{ size }}</td></tr></table></small>",
-    "fuel": "{{ name }}\n<small><table class=\"w-100\"><tr><td>Categorie</td><td>{{ category }}</td></tr><tr><td>Valeur</td><td>{{ value }} MJ</td></tr></table></small>"
-  },
   "columns": {
     "header": "Paramètres de colonne",
     "visibility": "Visibilité",
@@ -116,14 +93,12 @@
     "reset": "Réinitialiser tout les paramètres",
     "resetWarning": "Cela supprimera tous les paramètres FactorioLab enregistré sur ce navigateur, êtes-vous sur de vouloir continuer?",
     "savedStates": "Sauvegardes",
-    "editSavedState": "Nouvelle sauvegarde",
-    "selectSavedState": "Séléctionner une sauvegarde",
+    "createSavedState": "Nouvelle sauvegarde",
+    "editSavedState": "Renommer sauvegarde",
     "deleteSavedState": "Supprimer une sauvegarde",
+    "selectSavedState": "Séléctionner une sauvegarde",
     "nameSavedState": "Entrez un nom",
-    "savedStateName": "Nom de la sauvegarde",
-    "saveSavedState": "Sauvegarder",
-    "savedStatesTooltip": "Cliquez sur le bouton modifier pour nommer et sauvegarder l'état actuel du calculateur. Séléctionnez une sauvegarde en cliquant sur le menu déroulant pour le charger.",
-    "recipes": "Recettes",
+    "saveState": "Sauvegarder",
     "requestMod": "Demander un mod",
     "game": "Jeu",
     "gameTooltip": "Séléctionnez quel jeu le calculateur utilise, ou utilisez le lien sur la barre de titre",
@@ -214,7 +189,7 @@
     "selectDisplayRate": "Séléctionner la cadence affiché"
   },
   "picker": {},
-  "list": {
+  "steps": {
     "openColumnSettings": "Ouvrir les paramètres de colonnes",
     "tree": "Arbre",
     "items": "Articles",

@@ -2,26 +2,27 @@ import { Action } from '@ngrx/store';
 
 import {
   CostSettings,
-  DefaultPayload,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
   MaximizeType,
   Preset,
-  PreviousPayload,
   ResearchSpeed,
+  ValueDefaultPayload,
+  ValuePreviousPayload,
 } from '~/models';
 
 export const enum SettingsActionType {
   SET_MOD = '[Settings] Set Mod',
   SET_RESEARCHED_TECHNOLOGIES = '[Settings] Set Researched Technologies',
   SET_NET_PRODUCTION_ONLY = '[Settings] Set Net Production Only',
+  SET_REQUIRE_MACHINES_OUTPUT = '[Settings] Set Require Machines Output',
   SET_PRESET = '[Settings] Set Preset',
   SET_BEACON_RECEIVERS = '[Settings] Set Beacon Receivers',
   SET_PROLIFERATOR_SPRAY = '[Settings] Set Proliferator Spray',
   SET_BELT = '[Settings] Set Belt',
   SET_PIPE = '[Settings] Set Pipe',
-  SET_FUEL = '[Settings] Set Fuel',
+  SET_FUEL_RANK = '[Settings] Set Fuel Rank',
   SET_CARGO_WAGON = '[Settings] Set Cargo Wagon',
   SET_FLUID_WAGON = '[Settings] Set Fluid Wagon',
   SET_FLOW_RATE = '[Settings] Set Flow Rate',
@@ -50,6 +51,11 @@ export class SetNetProductionOnlyAction implements Action {
   constructor(public payload: boolean) {}
 }
 
+export class SetSurplusMachinesOutputAction implements Action {
+  readonly type = SettingsActionType.SET_REQUIRE_MACHINES_OUTPUT;
+  constructor(public payload: boolean) {}
+}
+
 export class SetPresetAction implements Action {
   readonly type = SettingsActionType.SET_PRESET;
   constructor(public payload: Preset) {}
@@ -67,27 +73,27 @@ export class SetProliferatorSprayAction implements Action {
 
 export class SetBeltAction implements Action {
   readonly type = SettingsActionType.SET_BELT;
-  constructor(public payload: DefaultPayload) {}
+  constructor(public payload: ValueDefaultPayload) {}
 }
 
 export class SetPipeAction implements Action {
   readonly type = SettingsActionType.SET_PIPE;
-  constructor(public payload: DefaultPayload) {}
+  constructor(public payload: ValueDefaultPayload) {}
 }
 
-export class SetFuelAction implements Action {
-  readonly type = SettingsActionType.SET_FUEL;
-  constructor(public payload: DefaultPayload) {}
+export class SetFuelRankAction implements Action {
+  readonly type = SettingsActionType.SET_FUEL_RANK;
+  constructor(public payload: ValueDefaultPayload<string[]>) {}
 }
 
 export class SetCargoWagonAction implements Action {
   readonly type = SettingsActionType.SET_CARGO_WAGON;
-  constructor(public payload: DefaultPayload) {}
+  constructor(public payload: ValueDefaultPayload) {}
 }
 
 export class SetFluidWagonAction implements Action {
   readonly type = SettingsActionType.SET_FLUID_WAGON;
-  constructor(public payload: DefaultPayload) {}
+  constructor(public payload: ValueDefaultPayload) {}
 }
 
 export class SetFlowRateAction implements Action {
@@ -117,7 +123,7 @@ export class SetInserterCapacityAction implements Action {
 
 export class SetDisplayRateAction implements Action {
   readonly type = SettingsActionType.SET_DISPLAY_RATE;
-  constructor(public payload: PreviousPayload<DisplayRate>) {}
+  constructor(public payload: ValuePreviousPayload<DisplayRate>) {}
 }
 
 export class SetMaximizeTypeAction implements Action {
@@ -138,12 +144,13 @@ export type SettingsAction =
   | SetModAction
   | SetResearchedTechnologiesAction
   | SetNetProductionOnlyAction
+  | SetSurplusMachinesOutputAction
   | SetPresetAction
   | SetBeaconReceiversAction
   | SetProliferatorSprayAction
   | SetBeltAction
   | SetPipeAction
-  | SetFuelAction
+  | SetFuelRankAction
   | SetCargoWagonAction
   | SetFluidWagonAction
   | SetFlowRateAction

@@ -1,200 +1,336 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { combineLatest, map, Observable, switchMap } from 'rxjs';
+import { combineLatest, map, switchMap } from 'rxjs';
 
 import {
   ColumnsState,
   Dataset,
+  Entities,
   FlowData,
-  FlowStyle,
-  NodeType,
+  Icon,
+  LinkValue,
+  MIN_LINK_VALUE,
   Rational,
   Step,
-  themeMap,
 } from '~/models';
-import { LabState, Objectives, Preferences, Recipes, Settings } from '~/store';
+import {
+  Items,
+  LabState,
+  Objectives,
+  Preferences,
+  Recipes,
+  Settings,
+} from '~/store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FlowService {
-  flowData$: Observable<FlowData>;
+  translateSvc = inject(TranslateService);
+  store = inject(Store<LabState>);
 
-  constructor(
-    private translateSvc: TranslateService,
-    private store: Store<LabState>
-  ) {
-    this.flowData$ = combineLatest([
-      this.store.select(Objectives.getSteps),
-      this.store.select(Recipes.getAdjustedDataset),
-      this.store
-        .select(Settings.getDisplayRateInfo)
-        .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
-      this.store.select(Preferences.getColumns),
-      this.store.select(Preferences.getTheme),
-    ]).pipe(
-      map(([steps, data, suffix, columns, theme]) =>
-        this.buildGraph(steps, data, suffix, columns, themeMap[theme])
-      )
-    );
+  flowData$ = combineLatest({
+    steps: this.store.select(Objectives.getSteps),
+    suffix: this.store
+      .select(Settings.getDisplayRateInfo)
+      .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
+    itemsState: this.store.select(Items.getItemsState),
+    preferences: this.store.select(Preferences.preferencesState),
+    data: this.store.select(Recipes.getAdjustedDataset),
+  }).pipe(
+    map(({ steps, suffix, itemsState, preferences, data }) =>
+      this.buildGraph(steps, suffix, itemsState, preferences, data),
+    ),
+  );
+
+  recipeStepNodeType(step: Step): string {
+    return step.recipeObjectiveId ? 'm' : 'r';
   }
 
   buildGraph(
     steps: Step[],
-    data: Dataset,
     suffix: string,
-    columnsState: ColumnsState,
-    theme: FlowStyle
+    itemsState: Items.ItemsState,
+    preferences: Preferences.PreferencesState,
+    data: Dataset,
   ): FlowData {
+    const itemPrec = preferences.columns.items.precision;
+    const machinePrec = preferences.columns.machines.precision;
     const flow: FlowData = {
-      theme,
       nodes: [],
       links: [],
     };
 
-    const itemPrec = columnsState.items.precision;
-    const machinePrec = columnsState.machines.precision;
+    const stepItemMap: Entities<Step> = {};
+    const stepValue: Entities<Rational> = {};
+    const stepText: Entities<Rational> = {};
+    const stepMap = steps.reduce((e: Entities<Step>, s) => {
+      if (s.itemId) stepItemMap[s.itemId] = s;
+      e[s.id] = s;
+      stepValue[s.id] = this.stepLinkValue(s, preferences.linkSize);
+      stepText[s.id] =
+        preferences.linkText === preferences.linkSize
+          ? stepValue[s.id]
+          : this.stepLinkValue(s, preferences.linkText);
+      return e;
+    }, {});
 
     for (const step of steps) {
-      if (step.recipeId && step.machines) {
-        const recipe = data.recipeEntities[step.recipeId];
-        const settings = step.recipeSettings;
+      if (
+        step.itemId &&
+        step.items &&
+        (!preferences.flowHideExcluded || !itemsState[step.itemId].excluded)
+      ) {
+        const item = data.itemEntities[step.itemId];
+        const icon = data.iconEntities[item.icon ?? item.id];
+        const id = `i|${step.itemId}`;
+        flow.nodes.push({
+          id,
+          name: item.name,
+          text: `${step.items.toString(itemPrec)}${suffix}`,
+          color: icon.color,
+          stepId: step.id,
+          viewBox: this.viewBox(icon),
+          href: icon.file,
+        });
 
-        if (settings?.machineId != null) {
-          const machine = data.itemEntities[settings.machineId];
-          // CREATE NODE: Standard recipe
+        if (step.parents) {
+          for (const stepId of Object.keys(step.parents)) {
+            if (stepId === '') continue; // Ignore outputs
+
+            const parent = stepMap[stepId];
+            flow.links.push({
+              source: id,
+              target: `${this.recipeStepNodeType(parent)}|${parent.recipeId}`,
+              name: item.name,
+              text: this.linkText(
+                stepText[step.id],
+                step.parents[stepId],
+                preferences.linkText,
+                preferences.columns,
+                suffix,
+              ),
+              color: icon.color,
+              value: this.linkSize(
+                stepValue[step.id],
+                step.parents[stepId],
+                preferences.linkSize,
+                item.stack,
+              ),
+            });
+          }
+        }
+
+        if (step.surplus) {
+          const surplusId = `s|${step.itemId}`;
+          const percent = step.surplus.div(step.items);
           flow.nodes.push({
-            id: `r|${step.id}`,
-            type: step.recipeObjectiveId
-              ? NodeType.Output
-              : Object.keys(recipe.in).length === 0
-              ? NodeType.Input
-              : NodeType.Recipe,
-            name: recipe.name,
-            text: `${step.machines.toString(machinePrec)} ${machine.name}`,
-            recipe,
-            machineId: settings.machineId,
-            machines: step.machines.toString(machinePrec),
+            id: surplusId,
+            name: item.name,
+            text: `${step.surplus.toString(itemPrec)}${suffix}`,
+            color: icon.color,
+            stepId: step.id,
+            viewBox: this.viewBox(icon),
+            href: icon.file,
+          });
+          flow.links.push({
+            source: id,
+            target: surplusId,
+            name: item.name,
+            text: this.linkText(
+              stepText[step.id],
+              percent,
+              preferences.linkText,
+              preferences.columns,
+              suffix,
+            ),
+            color: icon.color,
+            value: this.linkSize(
+              stepValue[step.id],
+              percent,
+              preferences.linkSize,
+              item.stack,
+            ),
+          });
+        }
+
+        if (step.output) {
+          const outputId = `o|${step.itemId}`;
+          const percent = step.output.div(step.items);
+          flow.nodes.push({
+            id: outputId,
+            name: item.name,
+            text: `${step.output.toString(itemPrec)}${suffix}`,
+            color: icon.color,
+            stepId: step.id,
+            viewBox: this.viewBox(icon),
+            href: icon.file,
+          });
+          flow.links.push({
+            source: id,
+            target: outputId,
+            name: item.name,
+            text: this.linkText(
+              stepText[step.id],
+              percent,
+              preferences.linkText,
+              preferences.columns,
+              suffix,
+            ),
+            color: icon.color,
+            value: this.linkSize(
+              stepValue[step.id],
+              percent,
+              preferences.linkSize,
+              item.stack,
+            ),
           });
         }
       }
 
-      if (step.itemId) {
-        const item = data.itemEntities[step.itemId];
-        if (step.surplus) {
-          // CREATE NODE: Surplus
-          flow.nodes.push({
-            id: `s|${step.itemId}`,
-            type: NodeType.Surplus,
-            name: item.name,
-            text: `${step.surplus.toString(itemPrec)}${suffix}`,
-          });
-          // Links to surplus node
-          for (const sourceStep of steps) {
-            if (sourceStep.recipeId && sourceStep.outputs) {
-              if (sourceStep.outputs[step.itemId]) {
-                const sourceAmount = step.surplus.mul(
-                  sourceStep.outputs[step.itemId]
-                );
-                // CREATE LINK: Recipe -> Surplus
-                flow.links.push({
-                  source: `r|${sourceStep.id}`,
-                  target: `s|${step.itemId}`,
-                  name: item.name,
-                  text: `${sourceAmount.toString(itemPrec)}${suffix}`,
-                });
-              }
-            }
-          }
-        }
+      if (step.recipeId && step.machines && step.recipeSettings?.machineId) {
+        const recipe = data.recipeEntities[step.recipeId];
+        const machine = data.itemEntities[step.recipeSettings?.machineId];
+        const icon = data.iconEntities[recipe.icon ?? recipe.id];
+        const id = `${this.recipeStepNodeType(step)}|${step.recipeId}`;
+        flow.nodes.push({
+          id,
+          name: recipe.name,
+          text: `${step.machines.toString(machinePrec)} ${machine.name}`,
+          color: icon.color,
+          stepId: step.id,
+          viewBox: this.viewBox(icon),
+          href: icon.file,
+          recipe,
+        });
 
-        if (step.items) {
-          let itemAmount = step.items;
-          if (step.parents) {
-            let inputAmount = Rational.zero;
-
-            // Links to recipe node
-            for (const targetId of Object.keys(step.parents)) {
-              if (targetId === '') continue; // Skip output parent
-
-              // This is how much is requested by that step,
-              // but need recipe source
-              const targetAmount = step.items.mul(step.parents[targetId]);
-              // Keep track of remaining amounts
-              let amount = targetAmount;
-              itemAmount = itemAmount.sub(amount);
-              for (const sourceStep of steps) {
-                if (sourceStep.recipeId && sourceStep.outputs) {
-                  if (sourceStep.outputs[step.itemId]) {
-                    // This source step produces this item
-                    const sourceAmount = targetAmount.mul(
-                      sourceStep.outputs[step.itemId]
-                    );
-                    amount = amount.sub(sourceAmount);
-
-                    // CREATE LINK: Recipe -> Recipe
-                    flow.links.push({
-                      source: `r|${sourceStep.id}`,
-                      target: `r|${targetId}`,
-                      name: item.name,
-                      text: `${sourceAmount.toString(itemPrec)}${suffix}`,
-                    });
-                  }
-                }
-              }
-
-              if (amount.gt(Rational.zero)) {
-                inputAmount = inputAmount.add(amount);
-                // CREATE LINK: Input -> Recipe
-                flow.links.push({
-                  source: `i|${step.itemId}`,
-                  target: `r|${targetId}`,
-                  name: item.name,
-                  text: `${amount.toString(itemPrec)}${suffix}`,
-                });
-              }
-            }
-
-            if (inputAmount.gt(Rational.zero)) {
-              // CREATE NODE: Input
-              flow.nodes.push({
-                id: `i|${step.itemId}`,
-                type: NodeType.Input,
-                name: item.name,
-                text: `${inputAmount.toString(itemPrec)}${suffix}`,
-              });
-            }
-          }
-
-          if (step.output) {
-            // CREATE NODE: Output
-            flow.nodes.push({
-              id: `o|${step.itemId}`,
-              type: NodeType.Output,
+        if (step.outputs) {
+          for (const itemId of Object.keys(step.outputs).filter(
+            (i) => !preferences.flowHideExcluded || !itemsState[i].excluded,
+          )) {
+            const itemStep = stepItemMap[itemId];
+            const item = data.itemEntities[itemId];
+            const icon = data.iconEntities[item.icon ?? item.id];
+            flow.links.push({
+              source: id,
+              target: `i|${itemId}`,
               name: item.name,
-              text: `${step.output.toString(itemPrec)}${suffix}`,
+              text: this.linkText(
+                stepText[itemStep.id],
+                step.outputs[itemId],
+                preferences.linkText,
+                preferences.columns,
+                suffix,
+              ),
+              color: icon.color,
+              value: this.linkSize(
+                stepValue[itemStep.id],
+                step.outputs[itemId],
+                preferences.linkSize,
+                item.stack,
+              ),
             });
-            for (const sourceStep of steps) {
-              if (sourceStep.recipeId && sourceStep.outputs) {
-                if (sourceStep.outputs[step.itemId]) {
-                  // CREATE LINK: Recipe -> Output
-                  flow.links.push({
-                    source: `r|${sourceStep.id}`,
-                    target: `o|${step.itemId}`,
-                    name: item.name,
-                    text: `${step.output
-                      .mul(sourceStep.outputs[step.itemId])
-                      .toString(itemPrec)}${suffix}`,
-                  });
-                }
-              }
-            }
           }
         }
       }
     }
 
+    // Remove unnecessary item nodes
+    const removeNodes = new Map<string, string>();
+    for (const node of flow.nodes) {
+      if (node.id.startsWith('i')) {
+        const links = flow.links.filter((l) => l.target === node.id);
+        if (links.length === 1) {
+          const link = links[0];
+          removeNodes.set(link.target, link.source);
+        }
+      }
+    }
+
+    flow.nodes = flow.nodes.filter((n) => !removeNodes.has(n.id));
+    flow.links = flow.links.filter((l) => !removeNodes.has(l.target));
+    flow.links.forEach(
+      (l) => (l.source = removeNodes.get(l.source) ?? l.source),
+    );
+
     return flow;
+  }
+
+  stepLinkValue(step: Step, prop: LinkValue): Rational {
+    if (prop === LinkValue.None || prop === LinkValue.Percent)
+      return Rational.one;
+
+    switch (prop) {
+      case LinkValue.Belts:
+        return step.belts ?? Rational.zero;
+      case LinkValue.Wagons:
+        return step.wagons ?? Rational.zero;
+      case LinkValue.Machines:
+        return step.machines ?? Rational.zero;
+      default:
+        return step.items ?? Rational.zero;
+    }
+  }
+
+  viewBox(icon: Icon): string {
+    return `${icon.position.replace(/px/g, '').replace(/-/g, '')} 64 64`;
+  }
+
+  linkSize(
+    value: Rational,
+    percent: Rational,
+    prop: LinkValue,
+    stack: Rational | undefined,
+  ): number {
+    if (prop === LinkValue.None) return 1;
+
+    if (prop === LinkValue.Percent) return percent.toNumber() || MIN_LINK_VALUE;
+
+    // Scale link size for fluids to 1/10
+    if (prop === LinkValue.Items && stack == null)
+      value = value.div(Rational.ten);
+
+    return value.mul(percent).toNumber() || MIN_LINK_VALUE;
+  }
+
+  linkText(
+    value: Rational,
+    percent: Rational,
+    prop: LinkValue,
+    columns: ColumnsState,
+    rateSuffix: string,
+  ): string {
+    switch (prop) {
+      case LinkValue.None:
+        return '';
+      case LinkValue.Percent:
+        return `${Math.round(percent.mul(Rational.hundred).toNumber())}%`;
+      default: {
+        const suffix = [LinkValue.Items, LinkValue.Wagons].includes(prop)
+          ? rateSuffix
+          : '';
+        const result = value.mul(percent);
+        const precision = this.linkPrecision(prop, columns);
+        if (precision == null) return result.toFraction() + suffix;
+        return result.toPrecision(precision).toString() + suffix;
+      }
+    }
+  }
+
+  linkPrecision(prop: LinkValue, columns: ColumnsState): number | null {
+    switch (prop) {
+      case LinkValue.None:
+      case LinkValue.Percent:
+        return null;
+      case LinkValue.Items:
+        return columns.items.precision;
+      case LinkValue.Belts:
+        return columns.belts.precision;
+      case LinkValue.Wagons:
+        return columns.wagons.precision;
+      case LinkValue.Machines:
+        return columns.machines.precision;
+    }
   }
 }

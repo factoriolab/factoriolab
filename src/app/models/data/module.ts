@@ -42,16 +42,12 @@ export class ModuleRational {
       this.pollution = Rational.from(obj.pollution);
     }
 
-    if (obj.limitation) {
-      this.limitation = obj.limitation;
-    }
+    this.limitation = obj.limitation;
 
     if (obj.sprays) {
       this.sprays = Rational.fromNumber(obj.sprays);
     }
 
-    if (obj.proliferator) {
-      this.proliferator = obj.proliferator;
-    }
+    this.proliferator = obj.proliferator;
   }
 }

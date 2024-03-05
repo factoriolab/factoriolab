@@ -26,8 +26,6 @@
   &::after {
     // Styles for text overlay
     position: absolute;
-    bottom: -2px;
-    right: -2px;
 
     font-size: 1rem;
     line-height: 1rem;
@@ -36,9 +34,27 @@
     color: white;
 
     white-space: nowrap;
-    text-shadow: 0px 2px 2px black, 0px -2px 2px black, 2px 0px 2px black,
+    text-shadow:
+      0px 2px 2px black,
+      0px -2px 2px black,
+      2px 0px 2px black,
       -2px 0px 2px black;
     pointer-events: none;
+  }
+
+  /**
+   * E.G. Amount of item in recipe, id of machines objective.
+   * Display in lower right.
+   */
+  > span {
+    bottom: -3px;
+    right: -2px;
+  }
+
+  /** E.G. Temperature of fluid. Display in upper right. */
+  &::after {
+    top: -7px;
+    right: -6px;
   }
 
   &.lg {
@@ -75,10 +91,6 @@
   &::before {
     background-image: url('../assets/icons/icons.webp');
   }
-}
-
-.captain-of-industry::before {
-  background-position: -1px -1px;
 }
 
 .dyson-sphere-program::before {
@@ -125,6 +137,14 @@ body.light .module::before {
   background-position: -131px -131px;
 }
 
-.final-factory::before {
+.captain-of-industry::before {
   background-position: -196px -131px;
+}
+
+.techtonica::before {
+  background-position: -1px -196px;
+}
+
+.final-factory::before {
+  background-position: -66px -196px;
 }

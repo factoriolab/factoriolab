@@ -1,0 +1,252 @@
+<ng-container *ngIf="id && (vm$ | async) as vm">
+  <ng-container *ngIf="type === 'recipe'; else itemTooltip">
+    <ng-container *ngIf="vm.data.recipeEntities[id] as recipe">
+      <div class="title">{{ recipe.name }}</div>
+      <ng-container
+        *ngTemplateOutlet="recipeProcess; context: { recipe }"
+      ></ng-container>
+    </ng-container>
+  </ng-container>
+  <ng-template #itemTooltip>
+    <ng-container *ngIf="vm.data.itemEntities[id] as item">
+      <div class="title">{{ item.name }}</div>
+      <ng-container
+        *ngIf="
+          (type === 'item' || type === 'technology') &&
+          vm.data.itemRecipeIds[id].length === 1 &&
+          vm.data.recipeEntities[vm.data.itemRecipeIds[id][0]] as recipe
+        "
+      >
+        <ng-container *ngTemplateOutlet="recipeProcess; context: { recipe }">
+        </ng-container>
+      </ng-container>
+      <ng-container
+        *ngIf="
+          type === 'technology' &&
+          vm.data.technologyEntities[id].prerequisites as prerequisites
+        "
+      >
+        <div class="mt-1">{{ 'data.prerequisites' | translate }}</div>
+        <div>
+          <i
+            *ngFor="let prerequisite of prerequisites"
+            [class]="prerequisite | iconSmClass"
+          >
+          </i>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-container
+      *ngIf="type === 'beacon' && vm.data.beaconEntities[id] as beacon"
+    >
+      <table>
+        <tr>
+          <td>{{ 'data.efficiency' | translate }}</td>
+          <td>{{ beacon.effectivity | round }}</td>
+        </tr>
+        <tr>
+          <td>{{ 'data.modules' | translate }}</td>
+          <td>{{ beacon.modules }}</td>
+        </tr>
+        <tr>
+          <td>{{ 'data.range' | translate }}</td>
+          <td>{{ beacon.range }}</td>
+        </tr>
+        <tr *ngIf="beacon.type">
+          <td>{{ 'data.energySource' | translate }}</td>
+          <td>{{ beacon.type }}</td>
+        </tr>
+        <tr *ngIf="beacon.usage">
+          <td>{{ 'data.energyConsumption' | translate }}</td>
+          <td>{{ beacon.usage | usage }}</td>
+        </tr>
+        <tr *ngIf="beacon.disallowedEffects">
+          <td>{{ 'data.disallowedEffects' | translate }}</td>
+          <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+        </tr>
+        <tr *ngIf="beacon.size">
+          <td>{{ 'data.dimensions' | translate }}</td>
+          <td>{{ beacon.size[0] }}×{{ beacon.size[1] }}</td>
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container *ngIf="type === 'belt' && vm.data.beltEntities[id] as belt">
+      <table>
+        <tr>
+          <td>{{ 'data.speed' | translate }}</td>
+          <td>
+            {{ vm.beltSpeedTxt[id] }}{{ vm.dispRateInfo.suffix | translate }}
+          </td>
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container
+      *ngIf="
+        type === 'cargo-wagon' && vm.data.cargoWagonEntities[id] as cargoWagon
+      "
+    >
+      <table>
+        <tr>
+          <td>{{ 'data.storageSize' | translate }}</td>
+          <td>{{ cargoWagon.size }}</td>
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container
+      *ngIf="
+        type === 'fluid-wagon' && vm.data.fluidWagonEntities[id] as fluidWagon
+      "
+    >
+      <table>
+        <tr>
+          <td>{{ 'data.fluidCapacity' | translate }}</td>
+          <td>{{ fluidWagon.capacity }}</td>
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container *ngIf="type === 'fuel' && vm.data.fuelEntities[id] as fuel">
+      <table>
+        <tr>
+          <td>{{ 'data.fuelCategory' | translate }}</td>
+          <td>{{ fuel.category }}</td>
+        </tr>
+        <tr>
+          <td>{{ 'data.fuelValue' | translate }}</td>
+          <td>{{ fuel.value | round }} MJ</td>
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container
+      *ngIf="type === 'machine' && vm.data.machineEntities[id] as machine"
+    >
+      <table>
+        <tr *ngIf="machine.speed && vm.data.game !== Game.CaptainOfIndustry">
+          <td>{{ 'data.craftingSpeed' | translate }}</td>
+          <td>{{ machine.speed | round }}</td>
+        </tr>
+        <tr *ngIf="machine.modules && vm.data.game === Game.Factorio">
+          <td>{{ 'data.modules' | translate }}</td>
+          <td>{{ machine.modules }}</td>
+        </tr>
+        <tr *ngIf="machine.disallowedEffects">
+          <td>{{ 'data.disallowedEffects' | translate }}</td>
+          <td>{{ machine.disallowedEffects.join(', ') }}</td>
+        </tr>
+        <tr *ngIf="machine.type">
+          <td>{{ 'data.energySource' | translate }}</td>
+          <td>{{ machine.type }}</td>
+        </tr>
+        <tr *ngIf="machine.fuelCategories">
+          <td>{{ 'data.fuelCategories' | translate }}</td>
+          <td>{{ machine.fuelCategories.join(', ') }}</td>
+        </tr>
+        <tr *ngIf="machine.fuel">
+          <td>{{ 'data.fuel' | translate }}</td>
+          <td>{{ machine.fuel }}</td>
+        </tr>
+        <tr *ngIf="machine.usage && machine.usage.nonzero()">
+          <td>{{ 'data.energyConsumption' | translate }}</td>
+          <td>{{ machine.usage | usage }}</td>
+        </tr>
+        <tr *ngIf="machine.drain && machine.drain.nonzero()">
+          <td>{{ 'data.energyDrain' | translate }}</td>
+          <td>{{ machine.drain | usage }}</td>
+        </tr>
+        <tr *ngIf="machine.pollution && machine.pollution.nonzero()">
+          <td>{{ 'data.pollution' | translate }}</td>
+          <td>{{ machine.pollution | round }}/m</td>
+        </tr>
+        <tr *ngIf="machine.size">
+          <td>{{ 'data.dimensions' | translate }}</td>
+          <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
+        </tr>
+        <ng-container *ngIf="machine.silo">
+          <tr>
+            <td>{{ 'data.rocketPartsRequired' | translate }}</td>
+            <td>{{ machine.silo.parts | round }}</td>
+          </tr>
+          <tr>
+            <td>{{ 'data.rocketLaunchTime' | translate }}</td>
+            <td>{{ machine.silo.launch | round }}s</td>
+          </tr>
+        </ng-container>
+      </table>
+      <div
+        *ngIf="machine.consumption"
+        class="d-flex align-items-center justify-content-center flex-wrap mt-2"
+      >
+        <i
+          *ngFor="let input of machine.consumption | keyvalue"
+          [class]="input.key | iconSmClass"
+        >
+          <span>{{ input.value | round }}</span>
+        </i>
+      </div>
+    </ng-container>
+    <ng-container
+      *ngIf="type === 'module' && vm.data.moduleEntities[id] as module"
+    >
+      <table>
+        <tr *ngIf="module.consumption && module.consumption.nonzero()">
+          <td>{{ 'data.energyConsumption' | translate }}</td>
+          <td>{{ module.consumption | bonusPercent }}</td>
+        </tr>
+        <tr *ngIf="module.speed && module.speed.nonzero()">
+          <td>{{ 'data.speed' | translate }}</td>
+          <td>{{ module.speed | bonusPercent }}</td>
+        </tr>
+        <tr *ngIf="module.productivity && module.productivity.nonzero()">
+          <td>{{ 'data.productivity' | translate }}</td>
+          <td>{{ module.productivity | bonusPercent }}</td>
+        </tr>
+        <tr *ngIf="module.pollution && module.pollution.nonzero()">
+          <td>{{ 'data.pollution' | translate }}</td>
+          <td>{{ module.pollution | bonusPercent }}</td>
+        </tr>
+        <tr *ngIf="module.sprays && module.sprays.nonzero()">
+          <td>{{ 'data.sprays' | translate }}</td>
+          <td>{{ module.sprays | round }}</td>
+        </tr>
+      </table>
+    </ng-container>
+    <ng-container *ngIf="type === 'pipe' && vm.data.beltEntities[id] as pipe">
+      <table>
+        <tr>
+          <td>{{ 'data.flowRate' | translate }}</td>
+          <td>
+            {{ vm.beltSpeedTxt[id] }}{{ vm.dispRateInfo.suffix | translate }}
+          </td>
+        </tr>
+      </table>
+    </ng-container>
+  </ng-template>
+  <ng-template #recipeProcess let-recipe="recipe">
+    <ng-container *ngIf="vm.data.recipeR[recipe.id] as recipe">
+      <div
+        class="d-flex align-items-center justify-content-center flex-wrap mt-2"
+      >
+        <i [class]="'time' | iconSmClass"
+          ><span>{{ recipe.time }}</span></i
+        >
+        <i
+          *ngFor="let input of recipe.in | keyvalue"
+          [class]="input.key | iconSmClass"
+          ><span>{{ input.value | round }}</span></i
+        >
+        <i class="m-1 me-2 fa-solid fa-arrow-right"></i>
+        <i
+          *ngFor="let output of recipe.out | keyvalue"
+          [class]="output.key | iconSmClass"
+          ><span>{{ output.value | round }}</span></i
+        >
+      </div>
+      <div class="mt-1">{{ 'data.producers' | translate }}</div>
+      <div>
+        <i
+          *ngFor="let producer of recipe.producers"
+          [class]="producer | iconSmClass"
+        ></i>
+      </div>
+    </ng-container>
+  </ng-template>
+</ng-container>

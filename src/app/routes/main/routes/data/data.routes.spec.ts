@@ -26,7 +26,7 @@ describe('Data Routes', () => {
     expect(await routes[17].loadComponent!()).toEqual(CollectionComponent);
     expect(await routes[18].loadComponent!()).toEqual(ItemComponent);
     expect(await routes[19].loadComponent!()).toEqual(CollectionComponent);
-    expect(await routes[20].loadComponent!()).toEqual(RecipeComponent);
+    expect(await routes[20].loadComponent!()).toEqual(ItemComponent);
     expect(await routes[21].loadComponent!()).toEqual(CollectionComponent);
     expect(await routes[22].loadComponent!()).toEqual(RecipeComponent);
     expect(await routes[23].loadComponent!()).toEqual(CollectionComponent);

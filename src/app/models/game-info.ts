@@ -13,14 +13,6 @@ export interface GameInfo {
 
 /** Game information data, nonconfigurable */
 export const gameInfo: Record<Game, GameInfo> = {
-  [Game.None]: {
-    icon: 'factorio',
-    route: 'factorio',
-    label: 'options.game.factorio',
-    meta: 'FactorioLab',
-    modId: '1.1',
-    hideColumns: [],
-  },
   [Game.Factorio]: {
     icon: 'factorio',
     route: 'factorio',
@@ -60,5 +52,13 @@ export const gameInfo: Record<Game, GameInfo> = {
     meta: 'Final Factory',
     modId: 'ffy',
     hideColumns: ['beacons', 'pollution', 'power', 'wagons'],
+  },
+  [Game.Techtonica]: {
+    icon: 'techtonica',
+    route: 'techtonica',
+    label: 'options.game.techtonica',
+    meta: 'Techtonica',
+    modId: 'tta',
+    hideColumns: ['beacons', 'pollution', 'wagons'],
   },
 };

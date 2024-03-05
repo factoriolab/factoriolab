@@ -1,11 +1,15 @@
-const MAX_DENOM = 100000;
+import * as formula from '@sideway/formula';
+
+const MAX_DENOM = 10000000;
 const DIVIDE_BY_ZERO = 'Cannot divide by zero';
+const FLOAT_TOLERANCE = 1e-10;
 
 const bigZero = BigInt(0);
 const bigOne = BigInt(1);
 const bigMinusOne = BigInt(-1);
 
 export class Rational {
+  static _gcdCache = new Map<bigint, Map<bigint, bigint>>();
   static zero = new Rational(bigZero);
   static minusOne = new Rational(bigMinusOne);
   static one = new Rational(bigOne);
@@ -19,16 +23,42 @@ export class Rational {
   readonly p: bigint;
   readonly q: bigint;
 
-  static gcd(x: bigint, y: bigint): bigint {
-    x = Rational.abs(x);
-    y = Rational.abs(y);
+  /** Internal, assumes x & y are non-negative */
+  static _gcd(x: bigint, y: bigint): bigint {
+    let t: bigint;
     while (y) {
-      const t = y;
+      t = y;
       y = x % y;
       x = t;
     }
 
     return x;
+  }
+
+  static gcd(x: bigint, y: bigint): bigint {
+    x = Rational.abs(x);
+    y = Rational.abs(y);
+
+    /** Ensure x >= y */
+    if (y > x) {
+      const t = y;
+      y = x;
+      x = t;
+    }
+
+    let cacheX = this._gcdCache.get(x);
+    const cacheResult = cacheX?.get(y);
+    if (cacheResult != null) return cacheResult;
+
+    const result = this._gcd(x, y);
+
+    if (cacheX == null) {
+      cacheX = new Map();
+      this._gcdCache.set(x, cacheX);
+    }
+
+    cacheX.set(y, result);
+    return result;
   }
 
   static abs(x: bigint): bigint {
@@ -54,9 +84,9 @@ export class Rational {
   }
 
   static fromNumber(x: number): Rational {
-    if (Number.isInteger(x)) {
-      return new Rational(BigInt(x), bigOne);
-    }
+    if (Number.isInteger(x)) return new Rational(BigInt(x), bigOne);
+
+    if (Math.abs(x) < FLOAT_TOLERANCE) return Rational.zero;
 
     return this.fromFloat(x);
   }
@@ -71,7 +101,11 @@ export class Rational {
 
     let result: Rational;
 
-    if (x.indexOf('/') === -1) {
+    if (x.startsWith('=')) {
+      // Full math support for equations
+      const value = new formula.Parser(x.substring(1)).evaluate();
+      result = Rational.from(value);
+    } else if (x.indexOf('/') === -1) {
       result = Rational.fromNumber(Number(x));
     } else {
       const f = x.split('/');
@@ -176,9 +210,7 @@ export class Rational {
   }
 
   lt(x: Rational): boolean {
-    if (this.q === x.q) {
-      return this.p < x.p;
-    }
+    if (this.q === x.q) return this.p < x.p;
 
     return this.p * x.q < x.p * this.q;
   }
@@ -200,70 +232,48 @@ export class Rational {
   }
 
   add(x: Rational): Rational {
-    if (x.isZero()) {
-      return this;
-    }
+    if (x.isZero()) return this;
 
     return new Rational(this.p * x.q + this.q * x.p, this.q * x.q);
   }
 
   sub(x: Rational): Rational {
-    if (x.isZero()) {
-      return this;
-    }
+    if (x.isZero()) return this;
 
     return new Rational(this.p * x.q - this.q * x.p, this.q * x.q);
   }
 
   mul(x: Rational): Rational {
-    if (this.isOne()) {
-      return x;
-    }
-
-    if (x.isOne()) {
-      return this;
-    }
-
-    if (this.isZero() || x.isZero()) {
-      return Rational.zero;
-    }
+    if (this.isOne()) return x;
+    if (x.isOne()) return this;
+    if (this.isZero() || x.isZero()) return Rational.zero;
 
     return new Rational(this.p * x.p, this.q * x.q);
   }
 
   div(x: Rational): Rational {
-    if (x.isOne()) {
-      return this;
-    }
-
-    if (this.eq(x)) {
-      return Rational.one;
-    }
+    if (x.isOne() || this.isZero()) return this;
+    if (this.eq(x)) return Rational.one;
 
     return new Rational(this.p * x.q, this.q * x.p);
   }
 
   ceil(): Rational {
-    if (this.isInteger()) {
-      return this;
+    if (this.isInteger()) return this;
+
+    // Calculate ceiling using absolute value
+    const num = new Rational(Rational.abs(this.p) / this.q + bigOne);
+    if (this.p < bigZero) {
+      // Inverse back to negative if necessary
+      return num.inverse();
     } else {
-      // Calculate ceiling using absolute value
-      const num = new Rational(Rational.abs(this.p) / this.q + bigOne);
-      if (this.p < bigZero) {
-        // Inverse back to negative if necessary
-        return num.inverse();
-      } else {
-        return num;
-      }
+      return num;
     }
   }
 
   floor(): Rational {
-    if (this.isInteger()) {
-      return this;
-    } else {
-      return new Rational(this.p / this.q);
-    }
+    if (this.isInteger()) return this;
+    return new Rational(this.p / this.q);
   }
 
   abs(): Rational {
@@ -280,9 +290,7 @@ export class Rational {
   }
 
   toFraction(mixed = true): string {
-    if (this.isInteger()) {
-      return this.p.toString();
-    }
+    if (this.isInteger()) return this.p.toString();
 
     if (mixed && Rational.abs(this.p) > Rational.abs(this.q)) {
       const whole = this.p / this.q;

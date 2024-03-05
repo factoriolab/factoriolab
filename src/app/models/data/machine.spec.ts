@@ -10,7 +10,7 @@ describe('MachineRational', () => {
         speed: 1,
         modules: 2,
         type: EnergyType.Burner,
-        category: FuelType.Chemical,
+        fuelCategories: [FuelType.Chemical],
         usage: 3,
         drain: 5,
         pollution: 4,
@@ -20,18 +20,18 @@ describe('MachineRational', () => {
           [ItemId.Coal]: 1,
         },
         disallowedEffects: ['productivity'],
+        size: [3, 3],
       });
       expect(result.speed).toEqual(Rational.one);
       expect(result.modules).toEqual(2);
       expect(result.type).toEqual(EnergyType.Burner);
-      expect(result.category).toEqual(FuelType.Chemical);
+      expect(result.fuelCategories).toEqual([FuelType.Chemical]);
       expect(result.usage).toEqual(Rational.from(3));
       expect(result.drain).toEqual(Rational.from(5));
       expect(result.pollution).toEqual(Rational.from(4));
-      // expect(result.mining).toBeTrue();
-      // expect(result.research).toBeTrue();
       expect(result.consumption).toEqual({ [ItemId.Coal]: Rational.one });
       expect(result.disallowedEffects).toEqual(['productivity']);
+      expect(result.size).toEqual([3, 3]);
     });
 
     it('should handle string for drain', () => {
@@ -52,13 +52,12 @@ describe('MachineRational', () => {
       expect(result.speed).toEqual(Rational.one);
       expect(result.modules).toEqual(2);
       expect(result.type).toBeUndefined();
-      expect(result.category).toBeUndefined();
+      expect(result.fuelCategories).toBeUndefined();
       expect(result.usage).toBeUndefined();
       expect(result.drain).toBeUndefined();
       expect(result.pollution).toBeUndefined();
-      // expect(result.mining).toBeUndefined();
-      // expect(result.research).toBeUndefined();
       expect(result.consumption).toBeUndefined();
+      expect(result.size).toBeUndefined();
     });
   });
 });

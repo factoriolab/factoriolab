@@ -1,33 +1,39 @@
-export interface IdPayload<T = string> {
-  id: string;
-  value: T;
+interface KeyPayload<T> {
+  key: T;
 }
 
-export interface IdIndexPayload<T = string> {
+interface IdPayload {
   id: string;
+}
+
+interface IndexPayload {
   index: number;
+}
+
+interface ValuePayload<T = string> {
   value: T;
 }
 
-export interface IdIndexDefaultPayload<T = string, D = T> {
-  id: string;
-  index: number;
-  value: T;
-  def: D | undefined;
+interface DefaultPayload<T = string> {
+  def: T | undefined;
 }
 
-export interface IdDefaultPayload<T = string, D = T> {
-  id: string;
-  value: T;
-  def: D | undefined;
-}
-
-export interface DefaultPayload<T = string, D = T> {
-  value: T;
-  def: D | undefined;
-}
-
-export interface PreviousPayload<T = string> {
-  value: T;
+interface PreviousPayload<T = string> {
   prev: T;
 }
+
+export type IdValuePayload<T = string> = IdPayload & ValuePayload<T>;
+export type IdIndexValuePayload<T = string> = IdValuePayload<T> & IndexPayload;
+export type IdIndexValueDefaultPayload<
+  T = string,
+  D = T,
+> = IdIndexValuePayload<T> & DefaultPayload<D>;
+export type IdValueDefaultPayload<T = string, D = T> = IdValuePayload<T> &
+  DefaultPayload<D>;
+export type ValueDefaultPayload<T = string, D = T> = ValuePayload<T> &
+  DefaultPayload<D>;
+export type ValuePreviousPayload<T = string> = ValuePayload<T> &
+  PreviousPayload<T>;
+export type KeyIdPayload<K> = KeyPayload<K> & IdPayload;
+export type KeyIdValuePayload<K, T = string> = KeyPayload<K> &
+  IdValuePayload<T>;

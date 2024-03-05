@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
@@ -16,13 +16,11 @@ import { BrowserUtility } from './utilities';
   `,
 })
 export class AppComponent implements OnInit {
-  constructor(
-    private gaSvc: GoogleAnalyticsService,
-    private store: Store<LabState>,
-    private translateSvc: TranslateService,
-    private routerSvc: RouterService,
-    private themeSvc: ThemeService
-  ) {}
+  gaSvc = inject(GoogleAnalyticsService);
+  store = inject(Store<LabState>);
+  translateSvc = inject(TranslateService);
+  routerSvc = inject(RouterService);
+  themeSvc = inject(ThemeService);
 
   ngOnInit(): void {
     this.themeSvc.initialize();
@@ -41,7 +39,6 @@ export class AppComponent implements OnInit {
 
     this.store.select(Settings.getModId).subscribe((modId) => {
       this.gaSvc.event('set_mod_id', modId);
-      BrowserUtility.modState = modId;
     });
 
     this.store.select(Preferences.preferencesState).subscribe((s) => {

@@ -28,6 +28,12 @@ describe('ContentComponent', () => {
   });
 
   describe('ngOnInit', () => {
+    it('should watch for and open toast messages', () => {
+      spyOn(component['messageSvc'], 'add');
+      contentSvc.showToast$.next({});
+      expect(component['messageSvc'].add).toHaveBeenCalled();
+    });
+
     it('should watch for and open confirmation dialogs', () => {
       spyOn(component['confirmationSvc'], 'confirm');
       contentSvc.showConfirm$.next({});

@@ -25,9 +25,8 @@
       pInputText
       type="text"
       class="w-100"
-      pAutoFocus
-      [autofocus]="true"
-      [formControl]="searchCtrl"
+      [(ngModel)]="search"
+      (input)="inputSearch()"
     />
     <ng-container *ngIf="isMultiselect">
       <span class="p-inputgroup-addon flex-shrink-0">
@@ -35,7 +34,7 @@
           [binary]="true"
           [label]="'picker.includeAll' | translate"
           labelStyleClass="text-nowrap"
-          [formControl]="selectAllCtrl"
+          [(ngModel)]="allSelected"
           (onChange)="selectAll($event.checked)"
         ></p-checkbox>
       </span>
@@ -57,7 +56,7 @@
         [selected]="i === activeIndex"
       >
         <ng-template pTemplate="header">
-          <i [class]="categoryId | iconSmClass : 'category'"></i>
+          <i [class]="categoryId | iconSmClass: 'category'"></i>
           <span
             class="d-none d-lg-inline ms-2 ps-1 text-nowrap text-truncate"
             >{{ category.name }}</span
@@ -80,19 +79,18 @@
                 [class.p-button-text]="id !== selection"
                 [class.hover-action]="isMultiselect"
                 [class.hover-active]="selection && selection.indexOf(id) !== -1"
-                [icon]="id | iconSmClass : type"
-                [pTooltip]="
-                  type === 'item'
-                    ? (id | itemTooltip : vm.data)
-                    : (id | recipeTooltip : vm.data)
-                "
-                [escape]="false"
+                [icon]="id | iconSmClass: type"
+                [pTooltip]="tooltip"
+                tooltipPosition="bottom"
                 (click)="clickId(id)"
               >
                 <i
                   *ngIf="isMultiselect"
                   class="hover-icon fa-solid fa-eye-slash"
                 ></i>
+                <ng-template #tooltip>
+                  <lab-tooltip [id]="id" [type]="type"></lab-tooltip>
+                </ng-template>
               </button>
             </div>
           </p-scrollPanel>

@@ -12,7 +12,7 @@ describe('Recipes Reducer', () => {
         undefined,
         new App.LoadAction({
           recipesState: Mocks.RecipesState,
-        } as any)
+        } as any),
       );
       expect(result).toEqual(Mocks.RecipesState);
     });
@@ -33,7 +33,7 @@ describe('Recipes Reducer', () => {
           id: RecipeId.Coal,
           value: true,
           def: false,
-        })
+        }),
       );
       expect(result[RecipeId.Coal].excluded).toEqual(true);
     });
@@ -45,7 +45,7 @@ describe('Recipes Reducer', () => {
           id: RecipeId.Coal,
           value: true,
           def: true,
-        })
+        }),
       );
       expect(result[RecipeId.Coal]).toBeUndefined();
     });
@@ -58,7 +58,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetExcludedBatchAction([
           { id: RecipeId.Coal, value: true, def: false },
           { id: RecipeId.IronOre, value: false, def: false },
-        ])
+        ]),
       );
       expect(result[ItemId.Coal].excluded).toBeTrue();
       expect(result[ItemId.IronOre]).toBeUndefined();
@@ -73,7 +73,7 @@ describe('Recipes Reducer', () => {
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
           def: undefined,
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id].machineId).toEqual(Mocks.Item1.id);
     });
@@ -93,9 +93,23 @@ describe('Recipes Reducer', () => {
           id: Mocks.Recipe1.id,
           value: Mocks.Item1.id,
           def: undefined,
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id]).toEqual({ machineId: Mocks.Item1.id });
+    });
+  });
+
+  describe('SET_FUEL', () => {
+    it('should set the fuel', () => {
+      const result = recipesReducer(
+        initialRecipesState,
+        new Actions.SetFuelAction({
+          id: Mocks.Recipe1.id,
+          value: Mocks.Item1.id,
+          def: undefined,
+        }),
+      );
+      expect(result[Mocks.Recipe1.id].fuelId).toEqual(Mocks.Item1.id);
     });
   });
 
@@ -107,7 +121,7 @@ describe('Recipes Reducer', () => {
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
           def: undefined,
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id].machineModuleIds).toEqual([
         Mocks.Item1.id,
@@ -119,7 +133,7 @@ describe('Recipes Reducer', () => {
     it('should add a beacon to a recipe', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.AddBeaconAction(Mocks.Recipe1.id)
+        new Actions.AddBeaconAction(Mocks.Recipe1.id),
       );
       expect(result[Mocks.Recipe1.id].beacons?.length).toEqual(2);
     });
@@ -132,7 +146,7 @@ describe('Recipes Reducer', () => {
           ...initialRecipesState,
           ...{ [Mocks.Recipe1.id]: { beacons: undefined } },
         },
-        new Actions.RemoveBeaconAction({ id: Mocks.Recipe1.id, value: 0 })
+        new Actions.RemoveBeaconAction({ id: Mocks.Recipe1.id, value: 0 }),
       );
       expect(result[Mocks.Recipe1.id].beacons?.length).toEqual(0);
     });
@@ -147,7 +161,7 @@ describe('Recipes Reducer', () => {
           index: 0,
           value: '2',
           def: undefined,
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id].beacons?.[0].count).toEqual('2');
     });
@@ -162,7 +176,7 @@ describe('Recipes Reducer', () => {
           index: 0,
           value: ItemId.Beacon,
           def: undefined,
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id].beacons?.[0].id).toEqual(ItemId.Beacon);
     });
@@ -178,7 +192,7 @@ describe('Recipes Reducer', () => {
           index: 0,
           value: ItemId.Beacon,
           def: undefined,
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id]).toEqual({
         beacons: [{ id: ItemId.Beacon }],
@@ -195,7 +209,7 @@ describe('Recipes Reducer', () => {
           index: 0,
           value: [Mocks.Item1.id],
           def: undefined,
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id].beacons?.[0].moduleIds).toEqual([
         Mocks.Item1.id,
@@ -211,7 +225,7 @@ describe('Recipes Reducer', () => {
           id: Mocks.Recipe1.id,
           index: 0,
           value: '200',
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id].beacons?.[0].total).toEqual('200');
     });
@@ -225,7 +239,7 @@ describe('Recipes Reducer', () => {
           id: Mocks.Recipe1.id,
           value: 200,
           def: 100,
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id].overclock).toEqual(200);
     });
@@ -238,7 +252,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetCostAction({
           id: Mocks.Recipe1.id,
           value: '10',
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id].cost).toEqual('10');
     });
@@ -251,7 +265,7 @@ describe('Recipes Reducer', () => {
         new Actions.SetCheckedAction({
           id: Mocks.Recipe1.id,
           value: true,
-        })
+        }),
       );
       expect(result[Mocks.Recipe1.id].checked).toBeTrue();
     });
@@ -261,7 +275,7 @@ describe('Recipes Reducer', () => {
     it('should reset a recipe', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.ResetRecipeAction(Mocks.Recipe1.id)
+        new Actions.ResetRecipeAction(Mocks.Recipe1.id),
       );
       expect(result[Mocks.Recipe1.id]).toBeUndefined();
     });
@@ -273,7 +287,22 @@ describe('Recipes Reducer', () => {
       recipesReducer(undefined, new Actions.ResetExcludedAction());
       expect(StoreUtility.resetField).toHaveBeenCalledWith(
         {},
-        'excluded' as any
+        'excluded' as any,
+      );
+    });
+  });
+
+  describe('RESET_RECIPE_FUEL', () => {
+    it('should call resetField', () => {
+      spyOn(StoreUtility, 'resetField');
+      recipesReducer(
+        undefined,
+        new Actions.ResetRecipeFuelAction(Mocks.Recipe1.id),
+      );
+      expect(StoreUtility.resetField).toHaveBeenCalledWith(
+        {},
+        'fuelId' as any,
+        Mocks.Recipe1.id,
       );
     });
   });
@@ -283,12 +312,12 @@ describe('Recipes Reducer', () => {
       spyOn(StoreUtility, 'resetFields');
       recipesReducer(
         undefined,
-        new Actions.ResetRecipeModulesAction(Mocks.Recipe1.id)
+        new Actions.ResetRecipeModulesAction(Mocks.Recipe1.id),
       );
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(
         {},
         ['machineModuleIds', 'beacons'] as any,
-        Mocks.Recipe1.id
+        Mocks.Recipe1.id,
       );
     });
   });
@@ -299,6 +328,7 @@ describe('Recipes Reducer', () => {
       recipesReducer(undefined, new Actions.ResetMachinesAction());
       expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
         'machineId',
+        'fuelId',
         'overclock',
         'machineModuleIds',
         'beacons',
@@ -312,7 +342,7 @@ describe('Recipes Reducer', () => {
       recipesReducer(undefined, new Actions.ResetBeaconsAction());
       expect(StoreUtility.resetField).toHaveBeenCalledWith(
         {},
-        'beacons' as any
+        'beacons' as any,
       );
     });
   });
@@ -331,14 +361,14 @@ describe('Recipes Reducer', () => {
       recipesReducer(undefined, new Items.ResetCheckedAction());
       expect(StoreUtility.resetField).toHaveBeenCalledWith(
         {},
-        'checked' as any
+        'checked' as any,
       );
     });
   });
 
   it('should return default state', () => {
     expect(recipesReducer(undefined, { type: 'Test' } as any)).toBe(
-      initialRecipesState
+      initialRecipesState,
     );
   });
 });

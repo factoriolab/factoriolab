@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';
-import { combineLatest, map } from 'rxjs';
+import { combineLatest } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import {
@@ -12,12 +12,12 @@ import {
   ObjectiveType,
   ObjectiveUnit,
 } from '~/models';
-import { LabState, Objectives, Settings } from '~/store';
+import { LabState, Objectives, Recipes, Settings } from '~/store';
 
 export enum WizardState {
-  ObjectiveType,
-  ItemObjective,
-  RecipeObjective,
+  ObjectiveType = 0,
+  ItemObjective = 1,
+  RecipeObjective = 2,
 }
 
 @Component({
@@ -28,21 +28,15 @@ export enum WizardState {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardComponent {
-  vm$ = combineLatest([
-    this.store.select(Settings.getDataset),
-    this.store.select(Settings.getAvailableItems),
-    this.store.select(Settings.getAvailableRecipes),
-    this.store.select(Settings.getDisplayRate),
-    this.store.select(Settings.getRateUnitOptions),
-  ]).pipe(
-    map(([data, itemIds, recipeIds, displayRate, rateUnitOptions]) => ({
-      data,
-      itemIds,
-      recipeIds,
-      displayRate,
-      rateUnitOptions,
-    }))
-  );
+  store = inject(Store<LabState>);
+
+  vm$ = combineLatest({
+    itemIds: this.store.select(Recipes.getAvailableItems),
+    data: this.store.select(Settings.getDataset),
+    recipeIds: this.store.select(Settings.getAvailableRecipes),
+    displayRate: this.store.select(Settings.getDisplayRate),
+    rateUnitOptions: this.store.select(Settings.getRateUnitOptions),
+  });
 
   id = '';
   rate = '1';
@@ -53,8 +47,6 @@ export class WizardComponent {
 
   RateUnit = ObjectiveUnit;
   WizardState = WizardState;
-
-  constructor(private store: Store<LabState>) {}
 
   selectId(value: string, state: WizardState): void {
     this.id = value;
@@ -69,7 +61,7 @@ export class WizardComponent {
   createItemObjective(
     targetId: string,
     value: string,
-    unit: ObjectiveUnit
+    unit: ObjectiveUnit,
   ): void {
     this.store.dispatch(
       new Objectives.CreateAction({
@@ -78,7 +70,7 @@ export class WizardComponent {
         value,
         unit,
         type: ObjectiveType.Output,
-      })
+      }),
     );
   }
 
@@ -90,7 +82,7 @@ export class WizardComponent {
         value,
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
-      })
+      }),
     );
   }
 }

@@ -1,13 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
+import { orString } from '~/helpers';
 import { Dataset, Game, RecipeSettings } from '~/models';
-import { DisplayService } from '~/services';
 import { LabState, Recipes } from '~/store';
 import { DataRouteService } from '../../data-route.service';
 import { DetailComponent } from '../../models';
@@ -20,6 +18,9 @@ import { DetailComponent } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeComponent extends DetailComponent {
+  store = inject(Store<LabState>);
+  dataRouteSvc = inject(DataRouteService);
+
   vm$ = combineLatest([
     this.id$,
     this.parent$,
@@ -32,7 +33,8 @@ export class RecipeComponent extends DetailComponent {
       id,
       obj: data.recipeEntities[id],
       recipeR: data.recipeR[id],
-      category: data.categoryEntities[data.recipeEntities[id]?.category ?? ''],
+      category:
+        data.categoryEntities[orString(data.recipeEntities[id]?.category)],
       breadcrumb: [parent, { label: data.recipeEntities[id]?.name }],
       ingredientIds: Object.keys(data.recipeEntities[id]?.in ?? {}),
       catalystIds: Object.keys(data.recipeEntities[id]?.catalyst ?? {}),
@@ -41,27 +43,17 @@ export class RecipeComponent extends DetailComponent {
       recipeSettings: recipesState[id],
       home,
       data,
-    }))
+    })),
   );
 
   trueValue = true;
 
   Game = Game;
 
-  constructor(
-    route: ActivatedRoute,
-    translateSvc: TranslateService,
-    private store: Store<LabState>,
-    private dataRouteSvc: DataRouteService,
-    public displaySvc: DisplayService
-  ) {
-    super(route, translateSvc);
-  }
-
   toggleRecipe(
     id: string,
     recipeSettings: RecipeSettings,
-    data: Dataset
+    data: Dataset,
   ): void {
     const value = !recipeSettings.excluded;
     const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);

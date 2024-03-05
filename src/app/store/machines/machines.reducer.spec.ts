@@ -14,7 +14,7 @@ describe('Machines Reducer', () => {
         undefined,
         new App.LoadAction({
           machinesState: Mocks.MachinesStateInitial,
-        } as any)
+        } as any),
       );
       expect(result).toEqual(Mocks.MachinesStateInitial);
     });
@@ -31,7 +31,7 @@ describe('Machines Reducer', () => {
     it('should add a machine to the list', () => {
       const result = machinesReducer(
         { ids: [], entities: {} },
-        new Actions.AddAction({ value, def: [def] })
+        new Actions.AddAction({ value, def: [def] }),
       );
       expect(result.ids).toEqual([value]);
     });
@@ -39,7 +39,7 @@ describe('Machines Reducer', () => {
     it('should handle undefined ids', () => {
       const result = machinesReducer(
         undefined,
-        new Actions.AddAction({ value, def: [def] })
+        new Actions.AddAction({ value, def: [def] }),
       );
       expect(result.ids).toEqual([def, value]);
     });
@@ -47,7 +47,7 @@ describe('Machines Reducer', () => {
     it('should handle undefined ids and default', () => {
       const result = machinesReducer(
         undefined,
-        new Actions.AddAction({ value, def: undefined })
+        new Actions.AddAction({ value, def: undefined }),
       );
       expect(result.ids).toEqual([value]);
     });
@@ -57,7 +57,7 @@ describe('Machines Reducer', () => {
     it('should remove a machine from the list', () => {
       const result = machinesReducer(
         { ids: [], entities: { [def]: {} } } as any,
-        new Actions.RemoveAction({ value: def, def: [def] })
+        new Actions.RemoveAction({ value: def, def: [def] }),
       );
       expect(result.ids).toEqual([]);
       expect(result.entities[value]).toBeUndefined();
@@ -66,7 +66,7 @@ describe('Machines Reducer', () => {
     it('should handle undefined ids', () => {
       const result = machinesReducer(
         { ids: undefined, entities: { [def]: {} } } as any,
-        new Actions.RemoveAction({ value: def, def: [def] })
+        new Actions.RemoveAction({ value: def, def: [def] }),
       );
       expect(result.ids).toEqual([]);
       expect(result.entities[value]).toBeUndefined();
@@ -75,78 +75,20 @@ describe('Machines Reducer', () => {
     it('should handle undefined ids and default', () => {
       const result = machinesReducer(
         { ids: undefined, entities: { [def]: {} } } as any,
-        new Actions.RemoveAction({ value: def, def: undefined })
+        new Actions.RemoveAction({ value: def, def: undefined }),
       );
       expect(result.ids).toEqual([]);
       expect(result.entities[value]).toBeUndefined();
     });
   });
 
-  describe('RAISE', () => {
-    it('should raise the rank of a machine', () => {
+  describe('SET_RANK', () => {
+    it('should set the order of ids', () => {
       const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.RaiseAction({ value: def, def: [value, def] })
+        undefined,
+        new Actions.SetRankAction({ value: [value], def: undefined }),
       );
-      expect(result.ids).toEqual([def, value]);
-    });
-
-    it('should do nothing if rank is already highest', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.RaiseAction({ value, def: [value, def] })
-      );
-      expect(result.ids).toBeUndefined();
-    });
-
-    it('should handle no match in ids', () => {
-      const result = machinesReducer(
-        { ids: [], entities: {} },
-        new Actions.RaiseAction({ value: def, def: [value, def] })
-      );
-      expect(result.ids).toEqual([]);
-    });
-
-    it('should handle undefined ids and default', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.RaiseAction({ value: def, def: undefined })
-      );
-      expect(result.ids).toBeUndefined();
-    });
-  });
-
-  describe('LOWER', () => {
-    it('should lower the rank of a machine', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.LowerAction({ value, def: [value, def] })
-      );
-      expect(result.ids).toEqual([def, value]);
-    });
-
-    it('should do nothing if rank is already lowest', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.LowerAction({ value: def, def: [value, def] })
-      );
-      expect(result.ids).toBeUndefined();
-    });
-
-    it('should handle no match in ids', () => {
-      const result = machinesReducer(
-        { ids: [], entities: {} },
-        new Actions.LowerAction({ value: def, def: [value, def] })
-      );
-      expect(result.ids).toEqual([]);
-    });
-
-    it('should handle undefined ids and default', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: {} },
-        new Actions.LowerAction({ value: def, def: undefined })
-      );
-      expect(result.ids).toBeUndefined();
+      expect(result.ids).toEqual([value]);
     });
   });
 
@@ -154,16 +96,16 @@ describe('Machines Reducer', () => {
     it('should replace an id in the rank list', () => {
       const result = machinesReducer(
         { ids: undefined, entities: { [def]: 'test' } } as any,
-        new Actions.SetMachineAction({ id: def, value, def: [def] })
+        new Actions.SetMachineAction({ id: def, value, def: [def] }),
       );
       expect(result.ids).toEqual([value]);
-      expect(result.entities[value]).toEqual('test' as any);
+      expect(result.entities[value]).toBeUndefined();
     });
 
     it('should do nothing if id is not found', () => {
       const result = machinesReducer(
         { ids: undefined, entities: { [def]: 'test' } } as any,
-        new Actions.SetMachineAction({ id, value, def: [def] })
+        new Actions.SetMachineAction({ id, value, def: [def] }),
       );
       expect(result.ids).toBeUndefined();
       expect(result.entities[def]).toEqual('test' as any);
@@ -172,7 +114,7 @@ describe('Machines Reducer', () => {
     it('should handle no match in ids', () => {
       const result = machinesReducer(
         { ids: [], entities: { [def]: 'test' } } as any,
-        new Actions.SetMachineAction({ id, value, def: [def] })
+        new Actions.SetMachineAction({ id, value, def: [def] }),
       );
       expect(result.ids).toEqual([]);
       expect(result.entities[def]).toEqual('test' as any);
@@ -181,10 +123,20 @@ describe('Machines Reducer', () => {
     it('should handle undefined ids and default', () => {
       const result = machinesReducer(
         { ids: undefined, entities: { [def]: 'test' } } as any,
-        new Actions.SetMachineAction({ id, value, def: undefined })
+        new Actions.SetMachineAction({ id, value, def: undefined }),
       );
       expect(result.ids).toBeUndefined();
       expect(result.entities[def]).toEqual('test' as any);
+    });
+  });
+
+  describe('SET_FUEL', () => {
+    it('should set the fuel for a machine', () => {
+      const result = machinesReducer(
+        undefined,
+        new Actions.SetFuelAction({ id, value, def: undefined }),
+      );
+      expect(result.entities[id].fuelId).toEqual(value);
     });
   });
 
@@ -192,7 +144,7 @@ describe('Machines Reducer', () => {
     it('should set the module rank for a machine', () => {
       const result = machinesReducer(
         undefined,
-        new Actions.SetModuleRankAction({ id, value: [value], def: [] })
+        new Actions.SetModuleRankAction({ id, value: [value], def: [] }),
       );
       expect(result.entities[id].moduleRankIds).toEqual([value]);
     });
@@ -202,7 +154,7 @@ describe('Machines Reducer', () => {
     it('should set the beacon count for a machine', () => {
       const result = machinesReducer(
         undefined,
-        new Actions.SetBeaconCountAction({ id, value: '2', def: '8' })
+        new Actions.SetBeaconCountAction({ id, value: '2', def: '8' }),
       );
       expect(result.entities[id].beaconCount).toEqual('2');
     });
@@ -212,7 +164,7 @@ describe('Machines Reducer', () => {
     it('should set the beacon for a machine', () => {
       const result = machinesReducer(
         undefined,
-        new Actions.SetBeaconAction({ id, value, def: ItemId.Beacon })
+        new Actions.SetBeaconAction({ id, value, def: ItemId.Beacon }),
       );
       expect(result.entities[id].beaconId).toEqual(value);
     });
@@ -226,7 +178,7 @@ describe('Machines Reducer', () => {
           id,
           value: [value],
           def: [],
-        })
+        }),
       );
       expect(result.entities[id].beaconModuleRankIds).toEqual([value]);
     });
@@ -236,7 +188,7 @@ describe('Machines Reducer', () => {
     it('should set the overclock for a machine', () => {
       const result = machinesReducer(
         undefined,
-        new Actions.SetOverclockAction({ id, value: 200, def: 100 })
+        new Actions.SetOverclockAction({ id, value: 200, def: 100 }),
       );
       expect(result.entities[id].overclock).toEqual(200);
     });
@@ -246,7 +198,7 @@ describe('Machines Reducer', () => {
     it('should reset a machine', () => {
       const result = machinesReducer(
         Mocks.MachinesStateInitial,
-        new Actions.ResetMachineAction(ItemId.AssemblingMachine2)
+        new Actions.ResetMachineAction(ItemId.AssemblingMachine2),
       );
       expect(result.entities[ItemId.AssemblingMachine2]).toBeUndefined();
     });
@@ -254,7 +206,7 @@ describe('Machines Reducer', () => {
 
   it('should return the default state', () => {
     expect(machinesReducer(undefined, { type: 'Test' } as any)).toEqual(
-      initialMachinesState
+      initialMachinesState,
     );
   });
 });

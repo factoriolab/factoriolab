@@ -9,7 +9,6 @@ export * from './defaults';
 export * from './entities';
 export * from './flow';
 export * from './game-info';
-export * from './id-name';
 export * from './inserter-data';
 export * from './matrix-result';
 export * from './mod';

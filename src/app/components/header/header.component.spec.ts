@@ -35,11 +35,11 @@ describe('HeaderComponent', () => {
       spyOn(title, 'setTitle');
       mockStore.overrideSelector(
         Objectives.getBaseObjectives,
-        Mocks.ObjectivesList
+        Mocks.ObjectivesList,
       );
       mockStore.refreshState();
       expect(title.setTitle).toHaveBeenCalledWith(
-        'Advanced circuit | FactorioLab'
+        'Advanced circuit | FactorioLab',
       );
     });
   });
