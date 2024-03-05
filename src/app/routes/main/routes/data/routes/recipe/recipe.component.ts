@@ -1,12 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { combineLatest, map } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { MenuItem } from 'primeng/api';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { orString } from '~/helpers';
-import { Dataset, Game, RecipeSettings } from '~/models';
-import { LabState, Recipes, Settings } from '~/store';
+import { Game, Recipe, RecipeRational, RecipeSettings } from '~/models';
+import { Recipes } from '~/store';
 import { DetailComponent } from '../../models';
 
 @Component({
@@ -17,44 +16,45 @@ import { DetailComponent } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeComponent extends DetailComponent {
-  store = inject(Store<LabState>);
+  recipesStateRaw = this.store.selectSignal(Recipes.recipesState);
+  recipesState = this.store.selectSignal(Recipes.getRecipesState);
 
-  vm$ = combineLatest([
-    this.id$,
-    this.parent$,
-    this.store.select(Settings.getModMenuItem),
-    this.store.select(Recipes.recipesState),
-    this.store.select(Recipes.getRecipesState),
-    this.store.select(Recipes.getAdjustedDataset),
-  ]).pipe(
-    map(([id, parent, home, recipesStateRaw, recipesState, data]) => ({
-      id,
-      obj: data.recipeEntities[id],
-      recipeR: data.recipeR[id],
-      category:
-        data.categoryEntities[orString(data.recipeEntities[id]?.category)],
-      breadcrumb: [parent, { label: data.recipeEntities[id]?.name }],
-      ingredientIds: Object.keys(data.recipeEntities[id]?.in ?? {}),
-      catalystIds: Object.keys(data.recipeEntities[id]?.catalyst ?? {}),
-      productIds: Object.keys(data.recipeEntities[id]?.out ?? {}),
-      recipeSettingsRaw: recipesStateRaw[id],
-      recipeSettings: recipesState[id],
-      home,
-      data,
-    })),
+  obj = computed<Recipe | undefined>(
+    () => this.data().recipeEntities[this.id()],
   );
-
-  trueValue = true;
+  breadcrumb = computed<MenuItem[]>(() => [
+    this.parent(),
+    { label: this.obj()?.name },
+  ]);
+  info = computed(() => {
+    const id = this.id();
+    const data = this.data();
+    const recipe = data.recipeEntities[id];
+    return {
+      category: data.categoryEntities[orString(recipe?.category)],
+      ingredientIds: Object.keys(recipe?.in ?? {}),
+      catalystIds: Object.keys(recipe?.catalyst ?? {}),
+      productIds: Object.keys(recipe?.out ?? {}),
+    };
+  });
+  recipeSettings = computed<RecipeSettings | undefined>(
+    () => this.recipesState()[this.id()],
+  );
+  recipeR = computed<RecipeRational | undefined>(
+    () => this.data().recipeR[this.id()],
+  );
 
   Game = Game;
 
-  toggleRecipe(
-    id: string,
-    recipeSettings: RecipeSettings,
-    data: Dataset,
-  ): void {
+  toggleRecipe(): void {
+    const recipeSettings = this.recipeSettings();
+    if (recipeSettings == null) return;
+
+    const id = this.id();
     const value = !recipeSettings.excluded;
-    const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);
+    const def = (this.data().defaults?.excludedRecipeIds ?? []).some(
+      (i) => i === id,
+    );
     this.setRecipeExcluded(id, value, def);
   }
 

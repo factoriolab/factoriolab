@@ -2,13 +2,117 @@
   <div class="d-flex flex-column p-fluid">
     @switch (state) {
       @case ('type') {
-        <ng-container *ngTemplateOutlet="objectiveType"></ng-container>
+        <div>{{ 'wizard.objectiveType' | translate }}</div>
+        <p-divider></p-divider>
+        <span>{{ 'wizard.produceItems' | translate }}</span>
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="mt-2"
+          icon="fa-solid fa-box"
+          [label]="'wizard.produceItemsButton' | translate"
+          (click)="addItemObjectivePicker.clickOpen('item', itemIds())"
+        ></button>
+        <lab-picker
+          #addItemObjectivePicker
+          [header]="'wizard.produceItemsButton' | translate"
+          (selectId)="selectId($event, 'item')"
+        ></lab-picker>
+        <p-divider></p-divider>
+        <span>{{ 'wizard.runMachines' | translate }}</span>
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="mt-2"
+          icon="fa-solid fa-industry"
+          [label]="'wizard.runMachinesButton' | translate"
+          (click)="addRecipePicker.clickOpen('recipe', recipeIds())"
+        ></button>
+        <lab-picker
+          #addRecipePicker
+          [header]="'wizard.runMachinesButton' | translate"
+          (selectId)="selectId($event, 'recipe')"
+        ></lab-picker>
+        <p-divider></p-divider>
       }
       @case ('item') {
-        <ng-container *ngTemplateOutlet="itemObjective"></ng-container>
+        <div>{{ 'wizard.itemObjectiveItems' | translate }}</div>
+        <p-divider></p-divider>
+        <div class="d-flex align-items-center justify-content-center">
+          <i [class]="id | iconClass"></i>
+          <span class="ms-2">{{ data().itemEntities[id].name }}</span>
+        </div>
+        <lab-input-number
+          class="mt-2 w-100"
+          tooltipPosition="top"
+          [value]="rate"
+          (setValue)="rate = $event"
+        ></lab-input-number>
+        <p-dropdown
+          labDropdownTranslate
+          styleClass="mt-2 h-100"
+          [tooltip]="'objectives.selectDisplayRate' | translate"
+          [ngModel]="displayRate()"
+          [options]="displayRateOptions"
+          (onChange)="setDisplayRate($event.value, displayRate())"
+        >
+        </p-dropdown>
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="mt-2"
+          icon="fa-solid fa-check"
+          [label]="'ok' | translate"
+          (click)="createItemObjective(id, rate, ObjectiveUnit.Items)"
+          routerLink="/list"
+        ></button>
+        <p-divider></p-divider>
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="mb-2 p-button-outlined"
+          icon="fa-solid fa-arrow-left"
+          [label]="'wizard.back' | translate"
+          (click)="state = 'type'"
+        ></button>
       }
       @case ('recipe') {
-        <ng-container *ngTemplateOutlet="recipeObjective"></ng-container>
+        <div>{{ 'wizard.recipeObjectiveMachines' | translate }}</div>
+        <p-divider></p-divider>
+        <div class="d-flex align-items-center justify-content-center">
+          <i [class]="id | iconClass"></i>
+          <span class="ms-2">{{ data().recipeEntities[id].name }}</span>
+        </div>
+        <lab-input-number
+          class="mt-2 w-100"
+          tooltipPosition="top"
+          [value]="count"
+          (setValue)="count = $event"
+        ></lab-input-number>
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="mt-2"
+          icon="fa-solid fa-check"
+          [label]="'ok' | translate"
+          (click)="createRecipeObjective(id, count)"
+          routerLink="/list"
+        ></button>
+        <p-divider></p-divider>
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="mb-2 p-button-outlined"
+          icon="fa-solid fa-arrow-left"
+          [label]="'wizard.back' | translate"
+          (click)="state = 'type'"
+        ></button>
       }
     }
     <button
@@ -22,120 +126,4 @@
       queryParamsHandling="preserve"
     ></button>
   </div>
-
-  <ng-template #objectiveType>
-    <div>
-      {{ 'wizard.objectiveType' | translate }}
-    </div>
-    <p-divider></p-divider>
-    <span>{{ 'wizard.produceItems' | translate }}</span>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-box"
-      [label]="'wizard.produceItemsButton' | translate"
-      (click)="addItemObjectivePicker.clickOpen('item', itemIds())"
-    ></button>
-    <lab-picker
-      #addItemObjectivePicker
-      [header]="'wizard.produceItemsButton' | translate"
-      (selectId)="selectId($event, 'item')"
-    ></lab-picker>
-    <p-divider></p-divider>
-    <span>{{ 'wizard.runMachines' | translate }}</span>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-industry"
-      [label]="'wizard.runMachinesButton' | translate"
-      (click)="addRecipePicker.clickOpen('recipe', recipeIds())"
-    ></button>
-    <lab-picker
-      #addRecipePicker
-      [header]="'wizard.runMachinesButton' | translate"
-      (selectId)="selectId($event, 'recipe')"
-    ></lab-picker>
-    <p-divider></p-divider>
-  </ng-template>
-  <ng-template #itemObjective>
-    <div>{{ 'wizard.itemObjectiveItems' | translate }}</div>
-    <p-divider></p-divider>
-    <div class="d-flex align-items-center justify-content-center">
-      <i [class]="id | iconClass"></i>
-      <span class="ms-2">{{ data().itemEntities[id].name }}</span>
-    </div>
-    <lab-input-number
-      class="mt-2 w-100"
-      tooltipPosition="top"
-      [value]="rate"
-      (setValue)="rate = $event"
-    ></lab-input-number>
-    <p-dropdown
-      labDropdownTranslate
-      styleClass="mt-2 h-100"
-      [tooltip]="'objectives.selectDisplayRate' | translate"
-      [ngModel]="displayRate()"
-      [options]="displayRateOptions"
-      (onChange)="setDisplayRate($event.value, displayRate())"
-    >
-    </p-dropdown>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-check"
-      [label]="'ok' | translate"
-      (click)="createItemObjective(id, rate, ObjectiveUnit.Items)"
-      routerLink="/list"
-    ></button>
-    <p-divider></p-divider>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mb-2 p-button-outlined"
-      icon="fa-solid fa-arrow-left"
-      [label]="'wizard.back' | translate"
-      (click)="state = 'type'"
-    ></button>
-  </ng-template>
-  <ng-template #recipeObjective>
-    <div>{{ 'wizard.recipeObjectiveMachines' | translate }}</div>
-    <p-divider></p-divider>
-    <div class="d-flex align-items-center justify-content-center">
-      <i [class]="id | iconClass"></i>
-      <span class="ms-2">{{ data().recipeEntities[id].name }}</span>
-    </div>
-    <lab-input-number
-      class="mt-2 w-100"
-      tooltipPosition="top"
-      [value]="count"
-      (setValue)="count = $event"
-    ></lab-input-number>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mt-2"
-      icon="fa-solid fa-check"
-      [label]="'ok' | translate"
-      (click)="createRecipeObjective(id, count)"
-      routerLink="/list"
-    ></button>
-    <p-divider></p-divider>
-    <button
-      pButton
-      pRipple
-      type="button"
-      class="mb-2 p-button-outlined"
-      icon="fa-solid fa-arrow-left"
-      [label]="'wizard.back' | translate"
-      (click)="state = 'type'"
-    ></button>
-  </ng-template>
 </p-card>

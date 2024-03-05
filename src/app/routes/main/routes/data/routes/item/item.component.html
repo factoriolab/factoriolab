@@ -1,23 +1,140 @@
-@if (vm$ | async; as vm) {
-  <p-breadcrumb [home]="vm.home" [model]="vm.breadcrumb"></p-breadcrumb>
-  @if (vm.obj) {
-    <table class="properties mb-4">
+<p-breadcrumb [home]="home()" [model]="breadcrumb()"></p-breadcrumb>
+@if (obj(); as obj) {
+  <table class="properties mb-4">
+    <tr>
+      <th colspan="2" class="text-center">
+        <h3>{{ obj.name }}</h3>
+      </th>
+    </tr>
+    <tr>
+      <td colspan="2" class="text-center">
+        <i class="lg" [class]="id() | iconClass: 'item'"></i>
+      </td>
+    </tr>
+    @if (category(); as category) {
+      <tr>
+        <th>{{ 'data.category' | translate }}</th>
+        <td>
+          <a
+            [routerLink]="'/data/categories/' + obj.category"
+            queryParamsHandling="preserve"
+          >
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-text"
+              [label]="category.name"
+              [icon]="obj.category | iconSmClass: 'category'"
+            ></button>
+          </a>
+        </td>
+      </tr>
+    }
+    @if (obj.stack) {
+      <tr>
+        <th>{{ 'data.stackSize' | translate }}</th>
+        <td>
+          {{ obj.stack }}
+        </td>
+      </tr>
+    }
+    @if (obj.beacon; as beacon) {
       <tr>
         <th colspan="2" class="text-center">
-          <h3>{{ vm.obj.name }}</h3>
+          <h3>{{ 'data.beacon' | translate }}</h3>
         </th>
       </tr>
       <tr>
-        <td colspan="2" class="text-center">
-          <i class="lg" [class]="vm.id | iconClass: 'item'"></i>
-        </td>
+        <th>{{ 'data.efficiency' | translate }}</th>
+        <td>{{ beacon.effectivity }}</td>
       </tr>
-      @if (vm.category) {
+      <tr>
+        <th>{{ 'data.moduleSlots' | translate }}</th>
+        <td>{{ beacon.modules }}</td>
+      </tr>
+      <tr>
+        <th>{{ 'data.range' | translate }}</th>
+        <td>{{ beacon.range }}</td>
+      </tr>
+      @if (beacon.type) {
         <tr>
-          <th>{{ 'data.category' | translate }}</th>
+          <th>{{ 'data.energySource' | translate }}</th>
+          <td>{{ beacon.type }}</td>
+        </tr>
+      }
+      @if (beacon.usage) {
+        <tr>
+          <th>{{ 'data.energyConsumption' | translate }}</th>
+          <td>{{ beacon.usage | usage }}</td>
+        </tr>
+      }
+      @if (beacon.disallowedEffects) {
+        <tr>
+          <th>{{ 'data.disallowedEffects' | translate }}</th>
+          <td>{{ beacon.disallowedEffects.join(', ') }}</td>
+        </tr>
+      }
+      @if (beacon.size) {
+        <tr>
+          <th>{{ 'data.dimensions' | translate }}</th>
+          <td>{{ beacon.size[0] }}×{{ beacon.size[1] }}</td>
+        </tr>
+      }
+    }
+    @if (obj.belt; as belt) {
+      <tr>
+        <th colspan="2" class="text-center">
+          <h3>{{ 'data.belt' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.beltSpeed' | translate }}</th>
+        <td>{{ belt.speed }}</td>
+      </tr>
+    }
+    @if (obj.cargoWagon; as cargoWagon) {
+      <tr>
+        <th colspan="2" class="text-center">
+          <h3>{{ 'data.cargoWagon' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.storageSize' | translate }}</th>
+        <td>{{ cargoWagon.size }}</td>
+      </tr>
+    }
+    @if (obj.fluidWagon; as fluidWagon) {
+      <tr>
+        <th colspan="2" class="text-center">
+          <h3>{{ 'data.fluidWagon' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.fluidCapacity' | translate }}</th>
+        <td>{{ fluidWagon.capacity }}</td>
+      </tr>
+    }
+    @if (obj.fuel; as fuel) {
+      <tr>
+        <th colspan="2" class="text-center">
+          <h3>{{ 'data.fuel' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.fuelCategory' | translate }}</th>
+        <td>{{ fuel.category }}</td>
+      </tr>
+      <tr>
+        <th>{{ 'data.fuelValue' | translate }}</th>
+        <td>{{ fuel.value | round }} MJ</td>
+      </tr>
+      @if (fuel.result) {
+        <tr>
+          <th>{{ 'data.burntResult' | translate }}</th>
           <td>
             <a
-              [routerLink]="'/data/categories/' + vm.obj.category"
+              [routerLink]="'/data/items/' + fuel.result"
               queryParamsHandling="preserve"
             >
               <button
@@ -25,391 +142,296 @@
                 pRipple
                 type="button"
                 class="p-button-text"
-                [label]="vm.category.name"
-                [icon]="vm.obj.category | iconSmClass: 'category'"
+                [label]="data().itemEntities[fuel.result].name"
+                [icon]="fuel.result | iconSmClass: 'item'"
               ></button>
             </a>
           </td>
         </tr>
       }
-      @if (vm.obj.stack) {
-        <tr>
-          <th>{{ 'data.stackSize' | translate }}</th>
-          <td>
-            {{ vm.obj.stack }}
-          </td>
-        </tr>
-      }
-      @if (vm.obj.beacon; as beacon) {
-        <tr>
-          <th colspan="2" class="text-center">
-            <h3>{{ 'data.beacon' | translate }}</h3>
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.efficiency' | translate }}</th>
-          <td>{{ beacon.effectivity }}</td>
-        </tr>
+    }
+    @if (obj.machine; as machine) {
+      <tr>
+        <th colspan="2" class="text-center">
+          <h3>{{ 'data.machine' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.craftingSpeed' | translate }}</th>
+        <td>{{ machine.speed }}</td>
+      </tr>
+      @if (machine.modules) {
         <tr>
           <th>{{ 'data.moduleSlots' | translate }}</th>
-          <td>{{ beacon.modules }}</td>
-        </tr>
-        <tr>
-          <th>{{ 'data.range' | translate }}</th>
-          <td>{{ beacon.range }}</td>
-        </tr>
-        @if (beacon.type) {
-          <tr>
-            <th>{{ 'data.energySource' | translate }}</th>
-            <td>{{ beacon.type }}</td>
-          </tr>
-        }
-        @if (beacon.usage) {
-          <tr>
-            <th>{{ 'data.energyConsumption' | translate }}</th>
-            <td>{{ beacon.usage | usage }}</td>
-          </tr>
-        }
-        @if (beacon.disallowedEffects) {
-          <tr>
-            <th>{{ 'data.disallowedEffects' | translate }}</th>
-            <td>{{ beacon.disallowedEffects.join(', ') }}</td>
-          </tr>
-        }
-        @if (beacon.size) {
-          <tr>
-            <th>{{ 'data.dimensions' | translate }}</th>
-            <td>{{ beacon.size[0] }}×{{ beacon.size[1] }}</td>
-          </tr>
-        }
-      }
-      @if (vm.obj.belt; as belt) {
-        <tr>
-          <th colspan="2" class="text-center">
-            <h3>{{ 'data.belt' | translate }}</h3>
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.beltSpeed' | translate }}</th>
-          <td>{{ belt.speed }}</td>
+          <td>{{ machine.modules }}</td>
         </tr>
       }
-      @if (vm.obj.cargoWagon; as cargoWagon) {
+      @if (machine.disallowedEffects) {
         <tr>
-          <th colspan="2" class="text-center">
-            <h3>{{ 'data.cargoWagon' | translate }}</h3>
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.storageSize' | translate }}</th>
-          <td>{{ cargoWagon.size }}</td>
+          <th>{{ 'data.disallowedEffects' | translate }}</th>
+          <td>{{ machine.disallowedEffects.join(', ') }}</td>
         </tr>
       }
-      @if (vm.obj.fluidWagon; as fluidWagon) {
+      @if (machine.type) {
         <tr>
-          <th colspan="2" class="text-center">
-            <h3>{{ 'data.fluidWagon' | translate }}</h3>
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.fluidCapacity' | translate }}</th>
-          <td>{{ fluidWagon.capacity }}</td>
+          <th>{{ 'data.energySource' | translate }}</th>
+          <td>{{ machine.type }}</td>
         </tr>
       }
-      @if (vm.obj.fuel; as fuel) {
+      @if (machine.fuelCategories) {
         <tr>
-          <th colspan="2" class="text-center">
-            <h3>{{ 'data.fuel' | translate }}</h3>
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.fuelCategory' | translate }}</th>
-          <td>{{ fuel.category }}</td>
-        </tr>
-        <tr>
-          <th>{{ 'data.fuelValue' | translate }}</th>
-          <td>{{ fuel.value | round }} MJ</td>
-        </tr>
-        @if (fuel.result) {
-          <tr>
-            <th>{{ 'data.burntResult' | translate }}</th>
-            <td>
-              <a
-                [routerLink]="'/data/items/' + fuel.result"
-                queryParamsHandling="preserve"
-              >
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-text"
-                  [label]="vm.data.itemEntities[fuel.result].name"
-                  [icon]="fuel.result | iconSmClass: 'item'"
-                ></button>
-              </a>
-            </td>
-          </tr>
-        }
-      }
-      @if (vm.obj.machine; as machine) {
-        <tr>
-          <th colspan="2" class="text-center">
-            <h3>{{ 'data.machine' | translate }}</h3>
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.craftingSpeed' | translate }}</th>
-          <td>{{ machine.speed }}</td>
-        </tr>
-        @if (machine.modules) {
-          <tr>
-            <th>{{ 'data.moduleSlots' | translate }}</th>
-            <td>{{ machine.modules }}</td>
-          </tr>
-        }
-        @if (machine.disallowedEffects) {
-          <tr>
-            <th>{{ 'data.disallowedEffects' | translate }}</th>
-            <td>{{ machine.disallowedEffects.join(', ') }}</td>
-          </tr>
-        }
-        @if (machine.type) {
-          <tr>
-            <th>{{ 'data.energySource' | translate }}</th>
-            <td>{{ machine.type }}</td>
-          </tr>
-        }
-        @if (machine.fuelCategories) {
-          <tr>
-            <th>{{ 'data.fuelCategories' | translate }}</th>
-            <td>{{ machine.fuelCategories.join(', ') }}</td>
-          </tr>
-        }
-        @if (machine.fuel) {
-          <tr>
-            <th>{{ 'data.fuel' | translate }}</th>
-            <td>{{ machine.fuel }}</td>
-          </tr>
-        }
-        @if (machine.usage) {
-          <tr>
-            <th>{{ 'data.energyConsumption' | translate }}</th>
-            <td>{{ machine.usage | usage }}</td>
-          </tr>
-        }
-        @if (machine.drain) {
-          <tr>
-            <th>{{ 'data.energyDrain' | translate }}</th>
-            <td>{{ machine.drain | usage }}</td>
-          </tr>
-        }
-        @if (machine.pollution) {
-          <tr>
-            <th>{{ 'data.pollution' | translate }}</th>
-            <td>{{ machine.pollution }}/m</td>
-          </tr>
-        }
-        @if (machine.consumption) {
-          <tr>
-            <th>{{ 'data.consumption' | translate }}</th>
-            <td>
-              <div
-                class="d-flex align-items-center justify-content-center flex-wrap"
-              >
-                @for (kv of machine.consumption | keyvalue; track kv.key) {
-                  <i [class]="kv.key | iconSmClass: 'item'">
-                    <span>{{ kv.value | round }}</span>
-                  </i>
-                }
-              </div>
-            </td>
-          </tr>
-        }
-        @if (machine.size) {
-          <tr>
-            <th>{{ 'data.dimensions' | translate }}</th>
-            <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
-          </tr>
-        }
-        @if (machine.silo; as silo) {
-          <tr>
-            <th colspan="2" class="text-center">
-              <h3>{{ 'data.rocketSilo' | translate }}</h3>
-            </th>
-          </tr>
-          <tr>
-            <th>{{ 'data.rocketPartsRequired' | translate }}</th>
-            <td>{{ silo.parts }}</td>
-          </tr>
-          <tr>
-            <th>{{ 'data.rocketLaunchTime' | translate }}</th>
-            <td>{{ silo.launch | round }}</td>
-          </tr>
-        }
-      }
-      @if (vm.obj.module; as module) {
-        <tr>
-          <th colspan="2" class="text-center">
-            <h3>{{ 'data.module' | translate }}</h3>
-          </th>
-        </tr>
-        @if (module.consumption) {
-          <tr>
-            <th>{{ 'data.energyConsumption' | translate }}</th>
-            <td>{{ module.consumption | bonusPercent }}</td>
-          </tr>
-        }
-        @if (module.pollution) {
-          <tr>
-            <th>{{ 'data.pollution' | translate }}</th>
-            <td>{{ module.pollution | bonusPercent }}</td>
-          </tr>
-        }
-        @if (module.productivity) {
-          <tr>
-            <th>{{ 'data.productivity' | translate }}</th>
-            <td>{{ module.productivity | bonusPercent }}</td>
-          </tr>
-        }
-        @if (module.speed) {
-          <tr>
-            <th>{{ 'data.speed' | translate }}</th>
-            <td>{{ module.speed | bonusPercent }}</td>
-          </tr>
-        }
-        @if (module.sprays) {
-          <tr>
-            <th>{{ 'data.sprays' | translate }}</th>
-            <td>{{ module.sprays | round }}</td>
-          </tr>
-        }
-        @if (module.proliferator) {
-          <tr>
-            <th>{{ 'data.proliferator' | translate }}</th>
-            <td>
-              <a
-                [routerLink]="'/data/items/' + module.proliferator"
-                queryParamsHandling="preserve"
-              >
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-text"
-                  [label]="vm.data.itemEntities[module.proliferator].name"
-                  [icon]="module.proliferator | iconSmClass: 'item'"
-                ></button>
-              </a>
-            </td>
-          </tr>
-        }
-      }
-      @if (vm.obj.pipe; as pipe) {
-        <tr>
-          <th colspan="2" class="text-center">
-            <h3>{{ 'data.pipe' | translate }}</h3>
-          </th>
-        </tr>
-        <tr>
-          <th>{{ 'data.flowRate' | translate }}</th>
-          <td>{{ pipe.speed }}</td>
+          <th>{{ 'data.fuelCategories' | translate }}</th>
+          <td>{{ machine.fuelCategories.join(', ') }}</td>
         </tr>
       }
-      @if (vm.obj.technology; as technology) {
+      @if (machine.fuel) {
         <tr>
-          <th colspan="2" class="text-center">
-            <h3>{{ 'data.technology' | translate }}</h3>
-          </th>
+          <th>{{ 'data.fuel' | translate }}</th>
+          <td>{{ machine.fuel }}</td>
         </tr>
+      }
+      @if (machine.usage) {
         <tr>
-          <th>{{ 'data.prerequisites' | translate }}</th>
+          <th>{{ 'data.energyConsumption' | translate }}</th>
+          <td>{{ machine.usage | usage }}</td>
+        </tr>
+      }
+      @if (machine.drain) {
+        <tr>
+          <th>{{ 'data.energyDrain' | translate }}</th>
+          <td>{{ machine.drain | usage }}</td>
+        </tr>
+      }
+      @if (machine.pollution) {
+        <tr>
+          <th>{{ 'data.pollution' | translate }}</th>
+          <td>{{ machine.pollution }}/m</td>
+        </tr>
+      }
+      @if (machine.consumption) {
+        <tr>
+          <th>{{ 'data.consumption' | translate }}</th>
           <td>
-            @if (!technology.prerequisites?.length) {
-              <div>{{ 'none' | translate }}</div>
-            }
-            @for (i of technology.prerequisites; track i) {
-              <div>
-                <a
-                  [routerLink]="'/data/technologies/' + i"
-                  queryParamsHandling="preserve"
-                >
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    class="p-button-text"
-                    [label]="vm.data.itemEntities[i].name"
-                    [icon]="i | iconSmClass: 'recipe'"
-                  ></button>
-                </a>
-              </div>
-            }
-          </td>
-        </tr>
-      }
-      @if (vm.category) {
-        <tr>
-          <th colspan="2">
-            <div class="d-flex align-items-center justify-content-between">
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="invisible p-button-rounded"
-                icon="fa-solid fa-rotate-right"
-              ></button>
-              <h3>{{ 'data.itemSettings' | translate }}</h3>
-              <button
-                [class.invisible]="!vm.itemSettingsRaw"
-                pButton
-                pRipple
-                type="button"
-                class="ms-2 p-button-rounded"
-                icon="fa-solid fa-rotate-left"
-                (click)="resetItem(vm.id)"
-              ></button>
+            <div
+              class="d-flex align-items-center justify-content-center flex-wrap"
+            >
+              @for (kv of machine.consumption | keyvalue; track kv.key) {
+                <i [class]="kv.key | iconSmClass: 'item'">
+                  <span>{{ kv.value | round }}</span>
+                </i>
+              }
             </div>
+          </td>
+        </tr>
+      }
+      @if (machine.size) {
+        <tr>
+          <th>{{ 'data.dimensions' | translate }}</th>
+          <td>{{ machine.size[0] }}×{{ machine.size[1] }}</td>
+        </tr>
+      }
+      @if (machine.silo; as silo) {
+        <tr>
+          <th colspan="2" class="text-center">
+            <h3>{{ 'data.rocketSilo' | translate }}</h3>
           </th>
         </tr>
         <tr>
-          <th>{{ 'data.excluded' | translate }}</th>
-          <td>
-            <p-checkbox
-              [ngModel]="vm.itemSettings.excluded"
-              [binary]="true"
-              (onChange)="setItemExcluded(vm.id, $event.checked)"
-            ></p-checkbox>
-          </td>
+          <th>{{ 'data.rocketPartsRequired' | translate }}</th>
+          <td>{{ silo.parts }}</td>
         </tr>
         <tr>
-          <th>{{ 'data.checked' | translate }}</th>
+          <th>{{ 'data.rocketLaunchTime' | translate }}</th>
+          <td>{{ silo.launch | round }}</td>
+        </tr>
+      }
+    }
+    @if (obj.module; as module) {
+      <tr>
+        <th colspan="2" class="text-center">
+          <h3>{{ 'data.module' | translate }}</h3>
+        </th>
+      </tr>
+      @if (module.consumption) {
+        <tr>
+          <th>{{ 'data.energyConsumption' | translate }}</th>
+          <td>{{ module.consumption | bonusPercent }}</td>
+        </tr>
+      }
+      @if (module.pollution) {
+        <tr>
+          <th>{{ 'data.pollution' | translate }}</th>
+          <td>{{ module.pollution | bonusPercent }}</td>
+        </tr>
+      }
+      @if (module.productivity) {
+        <tr>
+          <th>{{ 'data.productivity' | translate }}</th>
+          <td>{{ module.productivity | bonusPercent }}</td>
+        </tr>
+      }
+      @if (module.speed) {
+        <tr>
+          <th>{{ 'data.speed' | translate }}</th>
+          <td>{{ module.speed | bonusPercent }}</td>
+        </tr>
+      }
+      @if (module.sprays) {
+        <tr>
+          <th>{{ 'data.sprays' | translate }}</th>
+          <td>{{ module.sprays | round }}</td>
+        </tr>
+      }
+      @if (module.proliferator) {
+        <tr>
+          <th>{{ 'data.proliferator' | translate }}</th>
           <td>
-            <p-checkbox
-              [ngModel]="vm.itemSettings.checked"
-              [binary]="true"
-              (onChange)="setItemChecked(vm.id, $event.checked)"
-            ></p-checkbox>
+            <a
+              [routerLink]="'/data/items/' + module.proliferator"
+              queryParamsHandling="preserve"
+            >
+              <button
+                pButton
+                pRipple
+                type="button"
+                class="p-button-text"
+                [label]="data().itemEntities[module.proliferator].name"
+                [icon]="module.proliferator | iconSmClass: 'item'"
+              ></button>
+            </a>
           </td>
         </tr>
-        @if (
-          vm.data.game !== Game.DysonSphereProgram ||
-          vm.itemSettings.beltId !== ItemId.Pipe
-        ) {
+      }
+    }
+    @if (obj.pipe; as pipe) {
+      <tr>
+        <th colspan="2" class="text-center">
+          <h3>{{ 'data.pipe' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.flowRate' | translate }}</th>
+        <td>{{ pipe.speed }}</td>
+      </tr>
+    }
+    @if (obj.technology; as technology) {
+      <tr>
+        <th colspan="2" class="text-center">
+          <h3>{{ 'data.technology' | translate }}</h3>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.prerequisites' | translate }}</th>
+        <td>
+          @if (!technology.prerequisites?.length) {
+            <div>{{ 'none' | translate }}</div>
+          }
+          @for (i of technology.prerequisites; track i) {
+            <div>
+              <a
+                [routerLink]="'/data/technologies/' + i"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="data().itemEntities[i].name"
+                  [icon]="i | iconSmClass: 'recipe'"
+                ></button>
+              </a>
+            </div>
+          }
+        </td>
+      </tr>
+    }
+    @if (category() && itemSettings(); as itemSettings) {
+      <tr>
+        <th colspan="2">
+          <div class="d-flex align-items-center justify-content-between">
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="invisible p-button-rounded"
+              icon="fa-solid fa-rotate-right"
+            ></button>
+            <h3>{{ 'data.itemSettings' | translate }}</h3>
+            <button
+              [class.invisible]="!itemsStateRaw()[id()]"
+              pButton
+              pRipple
+              type="button"
+              class="ms-2 p-button-rounded"
+              icon="fa-solid fa-rotate-left"
+              (click)="resetItem(id())"
+            ></button>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.excluded' | translate }}</th>
+        <td>
+          <p-checkbox
+            [ngModel]="itemSettings.excluded"
+            [binary]="true"
+            (onChange)="setItemExcluded(id(), $event.checked)"
+          ></p-checkbox>
+        </td>
+      </tr>
+      <tr>
+        <th>{{ 'data.checked' | translate }}</th>
+        <td>
+          <p-checkbox
+            [ngModel]="itemSettings.checked"
+            [binary]="true"
+            (onChange)="setItemChecked(id(), $event.checked)"
+          ></p-checkbox>
+        </td>
+      </tr>
+      @if (
+        data().game !== Game.DysonSphereProgram ||
+        itemSettings.beltId !== ItemId.Pipe
+      ) {
+        <tr>
+          <th>{{ 'data.belt' | translate }}</th>
+          @if (itemSettings.beltId; as beltId) {
+            <td>
+              <a
+                [routerLink]="
+                  '/data/' +
+                  (data().beltIds.indexOf(beltId) !== -1
+                    ? 'belts'
+                    : data().pipeIds.indexOf(beltId) !== -1
+                      ? 'pipes'
+                      : 'items') +
+                  '/' +
+                  beltId
+                "
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="data().itemEntities[beltId].name"
+                  [icon]="beltId | iconSmClass: 'item'"
+                ></button>
+              </a>
+            </td>
+          }
+        </tr>
+      }
+      @if (data().game === Game.Factorio || data().game === Game.Satisfactory) {
+        @if (itemSettings.wagonId; as wagonId) {
           <tr>
-            <th>{{ 'data.belt' | translate }}</th>
-            @if (vm.itemSettings.beltId; as beltId) {
+            @if (obj.stack) {
+              <th>{{ 'data.cargoWagon' | translate }}</th>
               <td>
                 <a
-                  [routerLink]="
-                    '/data/' +
-                    (vm.data.beltIds.indexOf(beltId) !== -1
-                      ? 'belts'
-                      : vm.data.pipeIds.indexOf(beltId) !== -1
-                        ? 'pipes'
-                        : 'items') +
-                    '/' +
-                    beltId
-                  "
+                  [routerLink]="'/data/cargo-wagons/' + wagonId"
                   queryParamsHandling="preserve"
                 >
                   <button
@@ -417,91 +439,122 @@
                     pRipple
                     type="button"
                     class="p-button-text"
-                    [label]="vm.data.itemEntities[beltId].name"
-                    [icon]="beltId | iconSmClass: 'item'"
+                    [label]="data().itemEntities[wagonId].name"
+                    [icon]="wagonId | iconSmClass: 'item'"
+                  ></button>
+                </a>
+              </td>
+            } @else {
+              <th>{{ 'data.fluidWagon' | translate }}</th>
+              <td>
+                <a
+                  [routerLink]="'/data/fluid-wagons/' + wagonId"
+                  queryParamsHandling="preserve"
+                >
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    [label]="data().itemEntities[wagonId].name"
+                    [icon]="wagonId | iconSmClass: 'item'"
                   ></button>
                 </a>
               </td>
             }
           </tr>
         }
-        @if (
-          vm.data.game === Game.Factorio || vm.data.game === Game.Satisfactory
-        ) {
-          @if (vm.itemSettings.wagonId; as wagonId) {
-            <tr>
-              @if (vm.obj.stack) {
-                <th>{{ 'data.cargoWagon' | translate }}</th>
-                <td>
-                  <a
-                    [routerLink]="'/data/cargo-wagons/' + wagonId"
-                    queryParamsHandling="preserve"
-                  >
-                    <button
-                      pButton
-                      pRipple
-                      type="button"
-                      class="p-button-text"
-                      [label]="vm.data.itemEntities[wagonId].name"
-                      [icon]="wagonId | iconSmClass: 'item'"
-                    ></button>
-                  </a>
-                </td>
-              } @else {
-                <th>{{ 'data.fluidWagon' | translate }}</th>
-                <td>
-                  <a
-                    [routerLink]="'/data/fluid-wagons/' + wagonId"
-                    queryParamsHandling="preserve"
-                  >
-                    <button
-                      pButton
-                      pRipple
-                      type="button"
-                      class="p-button-text"
-                      [label]="vm.data.itemEntities[wagonId].name"
-                      [icon]="wagonId | iconSmClass: 'item'"
-                    ></button>
-                  </a>
-                </td>
-              }
-            </tr>
-          }
-        }
       }
-      @if (vm.obj.machine && vm.machineSettings) {
-        <tr>
-          <th colspan="2">
-            <div class="d-flex align-items-center justify-content-between">
-              <button
-                pButton
-                pRipple
-                type="button"
-                class="invisible p-button-rounded"
-                icon="fa-solid fa-rotate-right"
-              ></button>
-              <h3>{{ 'data.machineSettings' | translate }}</h3>
+    }
+    @if (obj.machine && machineSettings(); as machineSettings) {
+      <tr>
+        <th colspan="2">
+          <div class="d-flex align-items-center justify-content-between">
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="invisible p-button-rounded"
+              icon="fa-solid fa-rotate-right"
+            ></button>
+            <h3>{{ 'data.machineSettings' | translate }}</h3>
 
-              <button
-                [class.invisible]="!vm.machineSettingsRaw"
-                pButton
-                pRipple
-                type="button"
-                class="p-button-rounded justify-self-end"
-                icon="fa-solid fa-rotate-left"
-                (click)="resetMachine(vm.id)"
-              ></button>
+            <button
+              [class.invisible]="!machinesStateRaw().entities[id()]"
+              pButton
+              pRipple
+              type="button"
+              class="p-button-rounded justify-self-end"
+              icon="fa-solid fa-rotate-left"
+              (click)="resetMachine(id())"
+            ></button>
+          </div>
+        </th>
+      </tr>
+      <tr>
+        <th>{{ 'data.moduleRank' | translate }}</th>
+        <td>
+          @if (!machineSettings.moduleRankIds?.length) {
+            <div>{{ 'none' | translate }}</div>
+          }
+          @for (moduleId of machineSettings.moduleRankIds; track moduleId) {
+            <div>
+              <a
+                [routerLink]="
+                  moduleId === 'module' ? null : '/data/modules/' + moduleId
+                "
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="data().itemEntities[moduleId]?.name ?? ''"
+                  [icon]="moduleId | iconSmClass: 'item'"
+                ></button>
+              </a>
             </div>
-          </th>
+          }
+        </td>
+      </tr>
+      @if (data().game === Game.Factorio) {
+        <tr>
+          <th>{{ 'data.beacons' | translate }}</th>
+          <td>
+            {{ machineSettings.beaconCount ?? ('none' | translate) }}
+          </td>
         </tr>
         <tr>
-          <th>{{ 'data.moduleRank' | translate }}</th>
+          <th>{{ 'data.beacon' | translate }}</th>
           <td>
-            @if (!vm.machineSettings.moduleRankIds?.length) {
+            @if (machineSettings.beaconId; as beaconId) {
+              <a
+                [routerLink]="'/data/beacons/' + beaconId"
+                queryParamsHandling="preserve"
+              >
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="p-button-text"
+                  [label]="data().itemEntities[beaconId].name"
+                  [icon]="beaconId | iconSmClass: 'item'"
+                ></button>
+              </a>
+            } @else {
+              {{ 'none' | translate }}
+            }
+          </td>
+        </tr>
+        <tr>
+          <th>{{ 'data.beaconModuleRank' | translate }}</th>
+          <td>
+            @if (!machineSettings.beaconModuleRankIds?.length) {
               <div>{{ 'none' | translate }}</div>
             }
             @for (
-              moduleId of vm.machineSettings.moduleRankIds;
+              moduleId of machineSettings.beaconModuleRankIds;
               track moduleId
             ) {
               <div>
@@ -516,7 +569,7 @@
                     pRipple
                     type="button"
                     class="p-button-text"
-                    [label]="vm.data.itemEntities[moduleId]?.name ?? ''"
+                    [label]="data().itemEntities[moduleId]?.name ?? ''"
                     [icon]="moduleId | iconSmClass: 'item'"
                   ></button>
                 </a>
@@ -524,103 +577,43 @@
             }
           </td>
         </tr>
-        @if (vm.data.game === Game.Factorio) {
-          <tr>
-            <th>{{ 'data.beacons' | translate }}</th>
-            <td>
-              {{ vm.machineSettings.beaconCount ?? ('none' | translate) }}
-            </td>
-          </tr>
-          <tr>
-            <th>{{ 'data.beacon' | translate }}</th>
-            <td>
-              @if (vm.machineSettings.beaconId; as beaconId) {
-                <a
-                  [routerLink]="'/data/beacons/' + beaconId"
-                  queryParamsHandling="preserve"
-                >
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    class="p-button-text"
-                    [label]="vm.data.itemEntities[beaconId].name"
-                    [icon]="beaconId | iconSmClass: 'item'"
-                  ></button>
-                </a>
-              } @else {
-                {{ 'none' | translate }}
-              }
-            </td>
-          </tr>
-          <tr>
-            <th>{{ 'data.beaconModuleRank' | translate }}</th>
-            <td>
-              @if (!vm.machineSettings.beaconModuleRankIds?.length) {
-                <div>{{ 'none' | translate }}</div>
-              }
-              @for (
-                moduleId of vm.machineSettings.beaconModuleRankIds;
-                track moduleId
-              ) {
-                <div>
-                  <a
-                    [routerLink]="
-                      moduleId === 'module' ? null : '/data/modules/' + moduleId
-                    "
-                    queryParamsHandling="preserve"
-                  >
-                    <button
-                      pButton
-                      pRipple
-                      type="button"
-                      class="p-button-text"
-                      [label]="vm.data.itemEntities[moduleId]?.name ?? ''"
-                      [icon]="moduleId | iconSmClass: 'item'"
-                    ></button>
-                  </a>
-                </div>
-              }
-            </td>
-          </tr>
-        }
-        @if (vm.data.game === Game.Satisfactory) {
-          <tr>
-            <th>{{ 'data.overclock' | translate }}</th>
-            <td>{{ vm.machineSettings.overclock }}%</td>
-          </tr>
-        }
       }
-    </table>
-    @if (vm.producedByRecipeIds.length) {
-      <h3>{{ 'data.producedByRecipes' | translate }}</h3>
-      <lab-collection-table
-        [ids]="vm.producedByRecipeIds"
-        type="recipe"
-      ></lab-collection-table>
+      @if (data().game === Game.Satisfactory) {
+        <tr>
+          <th>{{ 'data.overclock' | translate }}</th>
+          <td>{{ machineSettings.overclock }}%</td>
+        </tr>
+      }
     }
-    @if (vm.consumedByRecipeIds.length) {
-      <h3>{{ 'data.consumedByRecipes' | translate }}</h3>
-      <lab-collection-table
-        [ids]="vm.consumedByRecipeIds"
-        type="recipe"
-      ></lab-collection-table>
-    }
-    @if (vm.producibleRecipeIds.length) {
-      <h3>{{ 'data.producibleRecipes' | translate }}</h3>
-      <lab-collection-table
-        [ids]="vm.producibleRecipeIds"
-        type="recipe"
-      ></lab-collection-table>
-    }
-    @if (vm.unlockedRecipeIds.length) {
-      <h3>{{ 'data.unlockedRecipes' | translate }}</h3>
-      <lab-collection-table
-        [ids]="vm.unlockedRecipeIds"
-        type="recipe"
-      ></lab-collection-table>
-    }
-  } @else {
-    <div class="my-5 p-error">{{ 'data.notFound' | translate }}</div>
+  </table>
+  @if (recipes().producedBy.length) {
+    <h3>{{ 'data.producedByRecipes' | translate }}</h3>
+    <lab-collection-table
+      [ids]="recipes().producedBy"
+      type="recipe"
+    ></lab-collection-table>
   }
+  @if (recipes().consumedBy.length) {
+    <h3>{{ 'data.consumedByRecipes' | translate }}</h3>
+    <lab-collection-table
+      [ids]="recipes().consumedBy"
+      type="recipe"
+    ></lab-collection-table>
+  }
+  @if (recipes().producible.length) {
+    <h3>{{ 'data.producibleRecipes' | translate }}</h3>
+    <lab-collection-table
+      [ids]="recipes().producible"
+      type="recipe"
+    ></lab-collection-table>
+  }
+  @if (recipes().unlocked.length) {
+    <h3>{{ 'data.unlockedRecipes' | translate }}</h3>
+    <lab-collection-table
+      [ids]="recipes().unlocked"
+      type="recipe"
+    ></lab-collection-table>
+  }
+} @else {
+  <div class="my-5 p-error">{{ 'data.notFound' | translate }}</div>
 }

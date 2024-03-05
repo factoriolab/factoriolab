@@ -13,7 +13,7 @@ import {
 } from '~/models';
 import { LabState, Objectives, Recipes, Settings } from '~/store';
 
-type WizardState = 'type' | 'item' | 'recipe';
+export type WizardState = 'type' | 'item' | 'recipe';
 
 @Component({
   standalone: true,
