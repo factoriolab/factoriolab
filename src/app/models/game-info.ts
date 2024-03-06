@@ -45,6 +45,14 @@ export const gameInfo: Record<Game, GameInfo> = {
     modId: 'coi',
     hideColumns: ['beacons', 'pollution', 'power', 'wagons'],
   },
+  [Game.FinalFactory]: {
+    icon: 'final-factory',
+    route: 'final-factory',
+    label: 'options.game.finalFactory',
+    meta: 'Final Factory',
+    modId: 'ffy',
+    hideColumns: ['beacons', 'pollution', 'power', 'wagons'],
+  },
   [Game.Techtonica]: {
     icon: 'techtonica',
     route: 'techtonica',

@@ -43,6 +43,10 @@ export const routes: Routes = [
     redirectTo: '/?s=tta&v=9',
   },
   {
+    path: 'final-factory',
+    redirectTo: '/?s=ffy&v=9',
+  },
+  {
     path: '**',
     redirectTo: '',
   },

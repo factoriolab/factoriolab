@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-import { Entities } from '~/models';
+import { Entities, ModHash } from '~/models';
 import * as D from '../factorio-build.models';
 import * as M from '../factorio.models';
 import { getJsonData } from './file.helpers';
@@ -163,4 +163,18 @@ export function getVersion(
       version[mod.name] = file.substring(mod.name.length + 1);
       return version;
     }, {});
+}
+
+export function emptyModHash(): ModHash {
+  return {
+    items: [],
+    beacons: [],
+    belts: [],
+    fuels: [],
+    wagons: [],
+    machines: [],
+    modules: [],
+    technologies: [],
+    recipes: [],
+  };
 }
