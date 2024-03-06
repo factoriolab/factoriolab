@@ -264,6 +264,7 @@ export const PreferencesState: Preferences.PreferencesState = {
     [M.Game.Satisfactory]: {},
     [M.Game.CaptainOfIndustry]: {},
     [M.Game.Techtonica]: {},
+    [M.Game.FinalFactory]: {},
   },
   columns: M.initialColumnsState,
   rows: 50,
