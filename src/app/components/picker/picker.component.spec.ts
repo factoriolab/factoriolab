@@ -64,15 +64,16 @@ describe('PickerComponent', () => {
     });
 
     it('should open as recipe multiselect with null defaults', () => {
-      const data = Mocks.getDataset();
-      data.defaults = undefined;
+      const data = { ...Mocks.getDataset(), ...{ defaults: null } };
       mockStore.overrideSelector(Recipes.getAdjustedDataset, data);
+      mockStore.refreshState();
       component.clickOpen('recipe', Mocks.RawDataset.recipeIds, [
         RecipeId.IronPlate,
       ]);
       expect(component.visible).toBeTrue();
       expect(component.isMultiselect).toBeTrue();
       expect(component.selection?.length).toEqual(1);
+      mockStore.resetSelectors();
     });
   });
 

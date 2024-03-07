@@ -23,10 +23,6 @@ describe('RecipeComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    mockStore.resetSelectors();
-  });
-
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -52,8 +48,7 @@ describe('RecipeComponent', () => {
 
     it('should default to empty excluded recipe ids array', () => {
       spyOn(component, 'setRecipeExcluded');
-      const data = Mocks.getDataset();
-      data.defaults = null;
+      const data = { ...Mocks.getDataset(), ...{ defaults: null } };
       mockStore.overrideSelector(Recipes.getAdjustedDataset, data);
       mockStore.refreshState();
       component.toggleRecipe();
@@ -62,6 +57,7 @@ describe('RecipeComponent', () => {
         false,
         false,
       );
+      mockStore.resetSelectors();
     });
   });
 
