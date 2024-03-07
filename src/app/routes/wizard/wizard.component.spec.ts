@@ -4,7 +4,7 @@ import { MockStore } from '@ngrx/store/testing';
 import { DispatchTest, ItemId, RecipeId, TestModule } from 'src/tests';
 import { ObjectiveType, ObjectiveUnit } from '~/models';
 import { LabState, Objectives, Settings } from '~/store';
-import { WizardComponent, WizardState } from './wizard.component';
+import { WizardComponent } from './wizard.component';
 
 describe('WizardComponent', () => {
   let component: WizardComponent;
@@ -28,9 +28,9 @@ describe('WizardComponent', () => {
 
   describe('selectId', () => {
     it('should set the id and state', () => {
-      component.selectId(ItemId.IronPlate, WizardState.ItemObjective);
+      component.selectId(ItemId.IronPlate, 'item');
       expect(component.id).toEqual(ItemId.IronPlate);
-      expect(component.state).toEqual(WizardState.ItemObjective);
+      expect(component.state).toEqual('item');
     });
   });
 

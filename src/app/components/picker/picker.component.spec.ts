@@ -1,12 +1,15 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MockStore } from '@ngrx/store/testing';
 
 import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+import { LabState, Recipes } from '~/store';
 import { PickerComponent } from './picker.component';
 
 describe('PickerComponent', () => {
   let component: PickerComponent;
   let fixture: ComponentFixture<PickerComponent>;
+  let mockStore: MockStore<LabState>;
   let markForCheck: jasmine.Spy;
 
   beforeEach(async () => {
@@ -16,6 +19,7 @@ describe('PickerComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(PickerComponent);
+    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     markForCheck = spyOn(ref.constructor.prototype, 'markForCheck');
@@ -28,19 +32,13 @@ describe('PickerComponent', () => {
 
   describe('clickOpen', () => {
     it('should open the items dialog', () => {
-      component.clickOpen(
-        Mocks.RawDataset,
-        'item',
-        Mocks.RawDataset.itemIds,
-        ItemId.IronPlate,
-      );
+      component.clickOpen('item', Mocks.RawDataset.itemIds, ItemId.IronPlate);
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();
     });
 
     it('should open the recipes dialog', () => {
       component.clickOpen(
-        Mocks.RawDataset,
         'recipe',
         Mocks.RawDataset.recipeIds,
         RecipeId.IronPlate,
@@ -50,30 +48,26 @@ describe('PickerComponent', () => {
     });
 
     it('should open as item multiselect', () => {
-      component.clickOpen(Mocks.RawDataset, 'item', Mocks.RawDataset.itemIds, [
-        ItemId.IronPlate,
-      ]);
+      component.clickOpen('item', Mocks.RawDataset.itemIds, [ItemId.IronPlate]);
       expect(component.visible).toBeTrue();
       expect(component.isMultiselect).toBeTrue();
       expect(component.selection?.length).toEqual(1);
     });
 
     it('should open as recipe multiselect', () => {
-      component.clickOpen(
-        Mocks.RawDataset,
-        'recipe',
-        Mocks.RawDataset.recipeIds,
-        [RecipeId.IronPlate],
-      );
+      component.clickOpen('recipe', Mocks.RawDataset.recipeIds, [
+        RecipeId.IronPlate,
+      ]);
       expect(component.visible).toBeTrue();
       expect(component.isMultiselect).toBeTrue();
       expect(component.selection?.length).toEqual(1);
     });
 
     it('should open as recipe multiselect with null defaults', () => {
-      const data = Mocks.getRawDataset();
+      const data = Mocks.getDataset();
       data.defaults = undefined;
-      component.clickOpen(data, 'recipe', Mocks.RawDataset.recipeIds, [
+      mockStore.overrideSelector(Recipes.getAdjustedDataset, data);
+      component.clickOpen('recipe', Mocks.RawDataset.recipeIds, [
         RecipeId.IronPlate,
       ]);
       expect(component.visible).toBeTrue();
@@ -137,7 +131,7 @@ describe('PickerComponent', () => {
 
   describe('inputSearch', () => {
     beforeEach(() => {
-      component.clickOpen(Mocks.RawDataset, 'item', Mocks.RawDataset.itemIds);
+      component.clickOpen('item', Mocks.RawDataset.itemIds);
     });
 
     it('should skip if no search is specified', () => {

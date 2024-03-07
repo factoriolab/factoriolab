@@ -70,12 +70,10 @@ describe('StepsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('steps$', () => {
+  describe('steps', () => {
     it('should handle focused mode', () => {
-      let steps: Step[] | undefined;
-      component.steps$.subscribe((s) => (steps = s));
-      component.focus = true;
-      expect(steps).toEqual([]);
+      fixture.componentRef.setInput('focus', true);
+      expect(component.steps()).toEqual([]);
     });
   });
 

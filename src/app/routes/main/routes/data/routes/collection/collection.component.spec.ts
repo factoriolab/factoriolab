@@ -14,6 +14,9 @@ describe('CollectionComponent', () => {
 
     fixture = TestBed.createComponent(CollectionComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('label', 'data.categories');
+    fixture.componentRef.setInput('type', 'category');
+    fixture.componentRef.setInput('key', 'categoryIds');
     fixture.detectChanges();
   });
 

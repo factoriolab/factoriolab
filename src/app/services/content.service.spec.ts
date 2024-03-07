@@ -44,17 +44,17 @@ describe('ContentService', () => {
 
   describe('toggleSettings', () => {
     it('should switch the settings active state', () => {
-      const value = service.settingsActive$.value;
+      const value = service.settingsActive();
       service.toggleSettings();
-      expect(service.settingsActive$.value).toEqual(!value);
+      expect(service.settingsActive()).toEqual(!value);
     });
   });
 
   describe('toggleSettingsXl', () => {
     it('should switch the settings (xl) hidden state', () => {
-      const value = service.settingsXlHidden$.value;
+      const value = service.settingsXlHidden();
       service.toggleSettingsXl();
-      expect(service.settingsXlHidden$.value).toEqual(!value);
+      expect(service.settingsXlHidden()).toEqual(!value);
     });
   });
 });

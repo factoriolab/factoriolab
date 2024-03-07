@@ -47,11 +47,8 @@ export class TechPickerComponent {
     const filter = this.filter();
     let selection = this.selection();
     const set = new Set(selection);
-    const researched = selection;
     const available: string[] = [];
     const locked: string[] = [];
-
-    if (data == null) return { available, locked, researched };
 
     let technologyIds = data.technologyIds;
     if (filter) {
@@ -62,6 +59,9 @@ export class TechPickerComponent {
 
       selection = selection.filter((i) => technologyIds.includes(i));
     }
+
+    const researched = selection;
+    if (data == null) return { available, locked, researched };
 
     for (const id of technologyIds) {
       if (!set.has(id)) {

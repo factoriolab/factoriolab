@@ -53,10 +53,12 @@
         <th>{{ 'data.moduleSlots' | translate }}</th>
         <td>{{ beacon.modules }}</td>
       </tr>
-      <tr>
-        <th>{{ 'data.range' | translate }}</th>
-        <td>{{ beacon.range }}</td>
-      </tr>
+      @if (beacon.range) {
+        <tr>
+          <th>{{ 'data.range' | translate }}</th>
+          <td>{{ beacon.range }}</td>
+        </tr>
+      }
       @if (beacon.type) {
         <tr>
           <th>{{ 'data.energySource' | translate }}</th>

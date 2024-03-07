@@ -18,7 +18,13 @@ describe('RecipeComponent', () => {
     fixture = TestBed.createComponent(RecipeComponent);
     mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('id', RecipeId.NuclearFuelReprocessing);
+    fixture.componentRef.setInput('collectionLabel', 'data.recipes');
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    mockStore.resetSelectors();
   });
 
   it('should create', () => {
@@ -26,16 +32,20 @@ describe('RecipeComponent', () => {
   });
 
   describe('toggleRecipe', () => {
+    it('should handle an unrecognized recipe', () => {
+      spyOn(component, 'setRecipeExcluded');
+      fixture.componentRef.setInput('id', 'id');
+      fixture.detectChanges();
+      component.toggleRecipe();
+      expect(component.setRecipeExcluded).not.toHaveBeenCalled();
+    });
+
     it('should calculate default excluded state for a recipe', () => {
       spyOn(component, 'setRecipeExcluded');
-      component.toggleRecipe(
-        RecipeId.NuclearFuelReprocessing,
-        {},
-        Mocks.Dataset,
-      );
+      component.toggleRecipe();
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
-        true,
+        false,
         true,
       );
     });
@@ -44,10 +54,12 @@ describe('RecipeComponent', () => {
       spyOn(component, 'setRecipeExcluded');
       const data = Mocks.getDataset();
       data.defaults = null;
-      component.toggleRecipe(RecipeId.NuclearFuelReprocessing, {}, data);
+      mockStore.overrideSelector(Recipes.getAdjustedDataset, data);
+      mockStore.refreshState();
+      component.toggleRecipe();
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
-        true,
+        false,
         false,
       );
     });

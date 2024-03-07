@@ -28,19 +28,18 @@ export const getRecipesState = createSelector(
     const defaultExcludedRecipeIds = new Set(
       data.defaults?.excludedRecipeIds ?? [],
     );
+
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
       const s: RecipeSettings = { ...state[recipe.id] };
 
-      if (s.excluded == null) {
+      if (s.excluded == null)
         s.excluded = defaultExcludedRecipeIds.has(recipe.id);
-      }
 
-      if (s.machineId == null) {
+      if (s.machineId == null)
         s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
           machinesState.ids,
         );
-      }
 
       const machine = data.machineEntities[s.machineId];
       const def = machinesState.entities[s.machineId];
@@ -60,17 +59,14 @@ export const getRecipesState = createSelector(
           data,
         );
 
-        if (s.machineModuleIds == null) {
+        if (s.machineModuleIds == null)
           s.machineModuleIds = RecipeUtility.defaultModules(
             s.machineModuleOptions,
             def.moduleRankIds ?? [],
             orZero(machine.modules),
           );
-        }
 
-        if (s.beacons == null) {
-          s.beacons = [{}];
-        }
+        if (s.beacons == null) s.beacons = [{}];
 
         s.beacons = s.beacons.map((b) => ({ ...b }));
 
@@ -86,13 +82,12 @@ export const getRecipesState = createSelector(
               data,
             );
 
-            if (beaconSettings.moduleIds == null) {
+            if (beaconSettings.moduleIds == null)
               beaconSettings.moduleIds = RecipeUtility.defaultModules(
                 beaconSettings.moduleOptions,
                 def.beaconModuleRankIds ?? [],
                 beacon.modules,
               );
-            }
           }
         }
       } else {
@@ -107,10 +102,9 @@ export const getRecipesState = createSelector(
             beaconSettings.total != null &&
             (beaconSettings.count == null ||
               Rational.fromString(beaconSettings.count).isZero())
-          ) {
+          )
             // No actual beacons, ignore the total beacons
             delete beaconSettings.total;
-          }
         }
       }
 
