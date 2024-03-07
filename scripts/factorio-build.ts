@@ -21,6 +21,7 @@ import {
   addEntityValue,
   coerceArray,
   coerceString,
+  emptyModHash,
   getBeacon,
   getBelt,
   getCargoWagon,
@@ -529,18 +530,7 @@ async function processMod(): Promise<void> {
     resourceDuplicate: [],
   };
 
-  const modHashReport: ModHash = {
-    items: [],
-    beacons: [],
-    belts: [],
-    fuels: [],
-    wagons: [],
-    machines: [],
-    modules: [],
-    technologies: [],
-    recipes: [],
-  };
-
+  const modHashReport = emptyModHash();
   function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
     if (hash[key] == null) hash[key] = [];
 
