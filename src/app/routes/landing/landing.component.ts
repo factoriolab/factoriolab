@@ -44,13 +44,13 @@ export class LandingComponent {
   BrowserUtility = BrowserUtility;
 
   selectItem(value: string): void {
-    this.addItemObjective(value);
     this.router.navigate(['list']);
+    this.addItemObjective(value);
   }
 
   selectRecipe(value: string): void {
-    this.addRecipeObjective(value);
     this.router.navigate(['list']);
+    this.addRecipeObjective(value);
   }
 
   setState(query: string): void {
