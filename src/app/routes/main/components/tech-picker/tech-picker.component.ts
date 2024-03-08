@@ -40,7 +40,7 @@ export class TechPickerComponent {
   selection = signal<string[]>([]);
 
   allSelected = computed(
-    () => this.selection().length === this.data()?.technologyIds.length,
+    () => this.selection().length === this.data().technologyIds.length,
   );
   status = computed(() => {
     const data = this.data();
@@ -61,8 +61,6 @@ export class TechPickerComponent {
     }
 
     const researched = selection;
-    if (data == null) return { available, locked, researched };
-
     for (const id of technologyIds) {
       if (!set.has(id)) {
         const tech = data.technologyEntities[id];
@@ -192,8 +190,6 @@ game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
   onHide(): void {
     const selection = this.selection();
     const data = this.data();
-    if (data == null) return;
-
     if (selection.length === data.technologyIds.length)
       this.selectIds.emit(null);
 

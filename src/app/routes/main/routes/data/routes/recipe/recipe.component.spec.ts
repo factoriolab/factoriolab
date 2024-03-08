@@ -1,7 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { DispatchTest, Mocks, RecipeId, TestModule } from 'src/tests';
+import {
+  DispatchTest,
+  Mocks,
+  RecipeId,
+  TestModule,
+  TestUtility,
+} from 'src/tests';
 import { LabState, Recipes } from '~/store';
 import { RecipeComponent } from './recipe.component';
 
@@ -18,9 +24,10 @@ describe('RecipeComponent', () => {
     fixture = TestBed.createComponent(RecipeComponent);
     mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('id', RecipeId.NuclearFuelReprocessing);
-    fixture.componentRef.setInput('collectionLabel', 'data.recipes');
-    fixture.detectChanges();
+    TestUtility.setInputs(fixture, {
+      id: RecipeId.NuclearFuelReprocessing,
+      collectionLabel: 'data.recipes',
+    });
   });
 
   it('should create', () => {
@@ -29,8 +36,7 @@ describe('RecipeComponent', () => {
 
   describe('info', () => {
     it('should handle undefined recipe', () => {
-      fixture.componentRef.setInput('id', 'not-found');
-      fixture.detectChanges();
+      TestUtility.setInputs(fixture, { id: 'not-found' });
       const info = component.info();
       expect(info.category).toBeUndefined();
       expect(info.ingredientIds).toEqual([]);
@@ -42,8 +48,7 @@ describe('RecipeComponent', () => {
   describe('toggleRecipe', () => {
     it('should handle an unrecognized recipe', () => {
       spyOn(component, 'setRecipeExcluded');
-      fixture.componentRef.setInput('id', 'id');
-      fixture.detectChanges();
+      TestUtility.setInputs(fixture, { id: 'id' });
       component.toggleRecipe();
       expect(component.setRecipeExcluded).not.toHaveBeenCalled();
     });

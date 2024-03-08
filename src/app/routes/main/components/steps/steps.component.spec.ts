@@ -72,7 +72,7 @@ describe('StepsComponent', () => {
 
   describe('steps', () => {
     it('should handle focused mode', () => {
-      fixture.componentRef.setInput('focus', true);
+      TestUtility.setInputs(fixture, { focus: true });
       expect(component.steps()).toEqual([]);
     });
   });

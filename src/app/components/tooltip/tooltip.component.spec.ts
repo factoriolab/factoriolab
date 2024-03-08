@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ItemId, TestModule } from 'src/tests';
+import { ItemId, TestModule, TestUtility } from 'src/tests';
 import { TooltipComponent } from './tooltip.component';
 
 describe('TooltipComponent', () => {
@@ -14,8 +14,7 @@ describe('TooltipComponent', () => {
     });
     fixture = TestBed.createComponent(TooltipComponent);
     component = fixture.componentInstance;
-    fixture.componentRef.setInput('id', ItemId.IronPlate);
-    fixture.detectChanges();
+    TestUtility.setInputs(fixture, { id: ItemId.IronPlate });
   });
 
   it('should create', () => {
