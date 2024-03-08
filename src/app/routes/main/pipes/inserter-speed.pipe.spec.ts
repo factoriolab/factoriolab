@@ -20,13 +20,13 @@ describe('InserterSpeedPipe', () => {
     it('should return matching inserter data', () => {
       expect(pipe.transform(Rational.one, Mocks.SettingsStateInitial)).toEqual({
         id: ItemId.Inserter,
-        value: Rational.from([100, 243]),
+        value: Rational.from(100, 243),
       });
       expect(
         pipe.transform(Rational.thousand, Mocks.SettingsStateInitial),
       ).toEqual({
         id: ItemId.StackInserter,
-        value: Rational.from([20000, 277]),
+        value: Rational.from(20000, 277),
       });
     });
 

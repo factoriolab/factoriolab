@@ -24,7 +24,7 @@ describe('DisplayService', () => {
 
   describe('round', () => {
     it('should round a number to two digits', () => {
-      expect(service.round(Rational.from([1, 3]))).toEqual('0.33');
+      expect(service.round(Rational.from(1, 3))).toEqual('0.33');
       expect(service.round(0.3333333333333333)).toEqual('0.33');
       expect(service.round('0.333333333333333333')).toEqual('0.33');
     });

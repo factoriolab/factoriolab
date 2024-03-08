@@ -73,7 +73,7 @@ export class ObjectivesComponent {
   data = this.store.selectSignal(Recipes.getAdjustedDataset);
   beltSpeed = this.store.selectSignal(Settings.getBeltSpeed);
   dispRateInfo = this.store.selectSignal(Settings.getDisplayRateInfo);
-  rateUnitOptions = this.store.selectSignal(Settings.getRateUnitOptions);
+  rateUnitOptions = this.store.selectSignal(Settings.getObjectiveUnitOptions);
   recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
   paused = this.store.selectSignal(Preferences.getPaused);
 

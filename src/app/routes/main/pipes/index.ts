@@ -1,5 +1,5 @@
 import { AsStepPipe } from './as-step.pipe';
-import { FilterOptionsPipe } from './filter-options';
+import { FilterOptionsPipe } from './filter-options.pipe';
 import { InserterSpeedPipe } from './inserter-speed.pipe';
 import { LeftPadPipe } from './left-pad.pipe';
 import { MachineRatePipe } from './machine-rate.pipe';

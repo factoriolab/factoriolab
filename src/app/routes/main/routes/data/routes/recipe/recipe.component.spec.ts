@@ -27,6 +27,18 @@ describe('RecipeComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('info', () => {
+    it('should handle undefined recipe', () => {
+      fixture.componentRef.setInput('id', 'not-found');
+      fixture.detectChanges();
+      const info = component.info();
+      expect(info.category).toBeUndefined();
+      expect(info.ingredientIds).toEqual([]);
+      expect(info.catalystIds).toEqual([]);
+      expect(info.productIds).toEqual([]);
+    });
+  });
+
   describe('toggleRecipe', () => {
     it('should handle an unrecognized recipe', () => {
       spyOn(component, 'setRecipeExcluded');

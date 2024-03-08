@@ -170,7 +170,7 @@ describe('SimplexUtility', () => {
           [ItemId.SteelPlate]: { out: Rational.zero },
           [ItemId.CopperPlate]: {
             out: Rational.zero,
-            in: Rational.from([141, 40]),
+            in: Rational.from(141, 40),
           },
           [ItemId.PetroleumGas]: { out: Rational.zero, lim: Rational.hundred },
         },
@@ -499,7 +499,7 @@ describe('SimplexUtility', () => {
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: Rational.from([1183, 200]),
+          items: Rational.from(1183, 200),
           output: Rational.from(3),
           parents: { '': Rational.from(3) },
         },
@@ -525,7 +525,7 @@ describe('SimplexUtility', () => {
         {
           id: '0',
           itemId: ItemId.PiercingRoundsMagazine,
-          items: Rational.from([59, 12]),
+          items: Rational.from(59, 12),
         },
       ]);
     });
@@ -545,7 +545,7 @@ describe('SimplexUtility', () => {
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: Rational.from([1183, 100]),
+          items: Rational.from(1183, 100),
           surplus: Rational.from(3),
         },
       ]);
@@ -554,7 +554,7 @@ describe('SimplexUtility', () => {
     it('should avoid floating point errors in surpluses', () => {
       const solution: any = {
         surplus: {
-          [ItemId.Coal]: Rational.from([1183000000001, 100000000000]),
+          [ItemId.Coal]: Rational.from(1183000000001, 100000000000),
         },
         unproduceable: {},
         excluded: {},
@@ -568,8 +568,8 @@ describe('SimplexUtility', () => {
         {
           id: '0',
           itemId: ItemId.Coal,
-          items: Rational.from([1183, 100]),
-          surplus: Rational.from([1183, 100]),
+          items: Rational.from(1183, 100),
+          surplus: Rational.from(1183, 100),
         },
       ]);
     });

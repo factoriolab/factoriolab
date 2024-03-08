@@ -16,8 +16,7 @@ export class DropdownBaseDirective implements OnInit {
     this.pDropdown.autofocusFilter = !isMobile;
   });
   setStyleClass = effect(() => {
-    const styleClass = this.labDropdownBase();
-    this.pDropdown.styleClass = styleClass ?? undefined;
+    this.pDropdown.styleClass = this.labDropdownBase();
   });
 
   ngOnInit(): void {

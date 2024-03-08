@@ -37,7 +37,7 @@ export class CollectionComponent {
 
   breadcrumb = computed<MenuItem[]>(() => [
     {
-      label: this.translateSvc.instant(this.label() ?? 'none'),
+      label: this.translateSvc.instant(this.label()),
     },
   ]);
   ids = computed<string[]>(() => this.data()[this.key()] as string[]);

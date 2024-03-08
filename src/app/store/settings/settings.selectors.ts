@@ -18,7 +18,6 @@ import {
   Game,
   gameColumnsState,
   gameInfo,
-  gameOptions,
   initialColumnsState,
   InserterData,
   ItemId,
@@ -136,19 +135,6 @@ export const getSavedStates = createSelector(getGameStates, (states) =>
 
 export const getGameInfo = createSelector(getGame, (game) => gameInfo[game]);
 
-export const getGameOptions = createSelector(getGame, (game) =>
-  gameOptions
-    .map((o) => o.value)
-    .filter((g) => g !== game)
-    .map(
-      (g): MenuItem => ({
-        icon: 'lab-icon small ' + gameInfo[g].icon,
-        label: gameInfo[g].label,
-        routerLink: gameInfo[g].route,
-      }),
-    ),
-);
-
 export const getColumnOptions = createSelector(getGameInfo, (gameInf) =>
   columnOptions(gameInf),
 );
@@ -158,7 +144,7 @@ export const getDisplayRateInfo = createSelector(
   (displayRate) => displayRateInfo[displayRate],
 );
 
-export const getRateUnitOptions = createSelector(
+export const getObjectiveUnitOptions = createSelector(
   getGame,
   getDisplayRateInfo,
   (game, dispRateInfo) => objectiveUnitOptions(dispRateInfo, game),

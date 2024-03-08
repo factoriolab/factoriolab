@@ -19,7 +19,7 @@ export class RatePipe implements PipeTransform {
        * Check whether value is lower than minimum rounded-up value, and prepend
        * < if so. E.G. if value is 0.001 and rounding to one digit, display <0.1
        */
-      const compare = Rational.from([1, Math.pow(10, precision)]);
+      const compare = Rational.from(1, Math.pow(10, precision));
       if (value.gt(Rational.zero) && value.lt(compare)) result = `<${result}`;
 
       const split = result.split('.');
