@@ -43,13 +43,13 @@ export class LandingComponent {
   Game = Game;
   BrowserUtility = BrowserUtility;
 
-  selectItem(value: string): void {
-    this.router.navigate(['list']);
+  async selectItem(value: string): Promise<void> {
+    await this.router.navigate(['list']);
     this.addItemObjective(value);
   }
 
-  selectRecipe(value: string): void {
-    this.router.navigate(['list']);
+  async selectRecipe(value: string): Promise<void> {
+    await this.router.navigate(['list']);
     this.addRecipeObjective(value);
   }
 

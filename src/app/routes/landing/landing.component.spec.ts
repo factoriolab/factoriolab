@@ -1,4 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 
@@ -30,25 +35,27 @@ describe('LandingComponent', () => {
   });
 
   describe('selectItem', () => {
-    it('should add an item objective and navigate to the list', () => {
+    it('should add an item objective and navigate to the list', fakeAsync(() => {
       spyOn(component, 'addItemObjective');
-      spyOn(router, 'navigate');
+      spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
       component.selectItem(ItemId.IronPlate);
+      tick();
       expect(component.addItemObjective).toHaveBeenCalledWith(ItemId.IronPlate);
       expect(router.navigate).toHaveBeenCalledWith(['list']);
-    });
+    }));
   });
 
   describe('selectRecipe', () => {
-    it('should add a recipe objective and navigate to the list', () => {
+    it('should add a recipe objective and navigate to the list', fakeAsync(() => {
       spyOn(component, 'addRecipeObjective');
-      spyOn(router, 'navigate');
+      spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
       component.selectRecipe(RecipeId.IronPlate);
+      tick();
       expect(component.addRecipeObjective).toHaveBeenCalledWith(
         ItemId.IronPlate,
       );
       expect(router.navigate).toHaveBeenCalledWith(['list']);
-    });
+    }));
   });
 
   describe('setState', () => {
