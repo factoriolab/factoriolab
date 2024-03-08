@@ -22,6 +22,7 @@
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "lint": "ng lint",
     "lint-build": "ng lint --max-warnings 0",
+    "prettier": "prettier --check .",
     "factorio-api": "ts-node -r tsconfig-paths/register scripts/factorio-api.ts",
     "postfactorio-api": "prettier --write \"scripts/factorio.models.ts\"",
     "factorio-prep": "ts-node -r tsconfig-paths/register scripts/factorio-prep.ts",

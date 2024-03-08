@@ -18,13 +18,13 @@ export function presetOptions(game: Game): SelectItem<Preset>[] {
         { value: Preset.Beacon12, label: 'options.preset.beacon12' },
       ]
     : game === Game.DysonSphereProgram
-    ? [
-        { value: Preset.Minimum, label: 'options.preset.minimum' },
-        { value: Preset.Modules, label: 'options.preset.upgraded' },
-        { value: Preset.Beacon8, label: 'options.preset.proliferated' },
-      ]
-    : [
-        { value: Preset.Minimum, label: 'options.preset.minimum' },
-        { value: Preset.Modules, label: 'options.preset.upgraded' },
-      ];
+      ? [
+          { value: Preset.Minimum, label: 'options.preset.minimum' },
+          { value: Preset.Modules, label: 'options.preset.upgraded' },
+          { value: Preset.Beacon8, label: 'options.preset.proliferated' },
+        ]
+      : [
+          { value: Preset.Minimum, label: 'options.preset.minimum' },
+          { value: Preset.Modules, label: 'options.preset.upgraded' },
+        ];
 }

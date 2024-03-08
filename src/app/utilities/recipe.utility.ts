@@ -127,7 +127,7 @@ export class RecipeUtility {
     const recipe = new RecipeRational(data.recipeEntities[recipeId]);
     if (settings.machineId != null) {
       const machine = data.machineEntities[settings.machineId];
-      
+
       if (machine.speed != null) {
         // Adjust for machine speed
         recipe.time = recipe.time.div(machine.speed);
