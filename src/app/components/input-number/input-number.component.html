@@ -2,11 +2,11 @@
   <input
     #input
     pInputText
-    [id]="inputId"
+    [id]="inputId()"
     type="text"
     class="text-end"
-    [class.hidden-buttons]="hideButtons"
-    [style.width]="width"
+    [class.hidden-buttons]="hideButtons()"
+    [style.width]="width()"
     [ngModel]="value()"
     labValidateNumber
     [minimum]="min()"
@@ -22,7 +22,7 @@
         pRipple
         type="button"
         class="p-button-outlined p-inputnumber-button p-inputnumber-button-up"
-        [class.p-button-text]="textButtons"
+        [class.p-button-text]="textButtons()"
         icon="fa-solid fa-angle-up"
         [disabled]="isMaximum()"
         (click)="increase()"
@@ -32,7 +32,7 @@
         pRipple
         type="button"
         class="p-button-outlined p-inputnumber-button p-inputnumber-button-down"
-        [class.p-button-text]="textButtons"
+        [class.p-button-text]="textButtons()"
         icon="fa-solid fa-angle-down"
         [disabled]="isMinimum()"
         (click)="decrease()"
