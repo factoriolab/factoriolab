@@ -15,16 +15,16 @@ jobs:
       - name: Run build
         run: npm run build -- -c=staging
       - name: Copy index to list
-        run: cp dist/index.html dist/list.html
+        run: cp dist/browser/index.html dist/browser/list.html
       - name: Copy index to flow
-        run: cp dist/index.html dist/flow.html
+        run: cp dist/browser/index.html dist/browser/flow.html
       - name: Copy index to 404
-        run: cp dist/index.html dist/404.html
+        run: cp dist/browser/index.html dist/browser/404.html
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository-name: factoriolab/staging
           branch: main
-          folder: dist
+          folder: dist/browser
           clean: true
