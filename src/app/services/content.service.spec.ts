@@ -26,6 +26,12 @@ describe('ContentService', () => {
     expect(service).toBeTruthy();
   });
 
+  describe('windowScrollY', () => {
+    it('should return the value from the window', () => {
+      expect(service.windowScrollY()).toEqual(window.scrollY);
+    });
+  });
+
   describe('windowInnerWidth', () => {
     it('should return the value from the window', () => {
       expect(service.windowInnerWidth()).toEqual(window.innerWidth);
