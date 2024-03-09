@@ -114,13 +114,14 @@ export class TechPickerComponent {
   }
 
   copyScriptToClipboard(): void {
-    const script = `/c local list = {}
-for _, tech in pairs(game.player.force.technologies) do 
+    const script = `local list = {}
+for _, tech in pairs(game.player.force.technologies) do
     if tech.researched then
-    list[#list+1] = tech.name
-  end
+        list[#list + 1] = tech.name
+    end
 end
-game.write_file("techs.txt", serpent.block(list) .. "\n", true)`;
+game.write_file("techs.txt", table.concat(list, ","))
+`;
     window.navigator.clipboard.writeText(script);
     this.contentSvc.showToast$.next({
       severity: 'success',
