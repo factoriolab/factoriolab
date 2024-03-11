@@ -51,20 +51,9 @@
       @if (mod()) {
         <lab-objectives></lab-objectives>
         <p-card styleClass="mt-4" [header]="'app.factory' | translate">
-          <p-tabMenu [model]="tabItems">
-            <ng-template pTemplate="item" let-item>
-              <a
-                class="p-menuitem-link"
-                [routerLink]="item.routerLink"
-                queryParamsHandling="preserve"
-              >
-                <span class="p-menuitem-icon" [class]="item.icon"></span>
-                <span class="p-menuitem-text">{{
-                  item.label | translate
-                }}</span>
-              </a>
-            </ng-template>
-          </p-tabMenu>
+          @if (tabItems$ | async; as model) {
+            <p-tabMenu [model]="model"></p-tabMenu>
+          }
           <router-outlet></router-outlet>
           <ng-template pTemplate="footer">
             <div class="d-flex align-items-center justify-content-between">
