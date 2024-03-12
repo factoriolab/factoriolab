@@ -1,7 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { DispatchTest, Mocks, RecipeId, TestModule } from 'src/tests';
+import {
+  DispatchTest,
+  Mocks,
+  RecipeId,
+  TestModule,
+  TestUtility,
+} from 'src/tests';
 import { LabState, Recipes } from '~/store';
 import { RecipeComponent } from './recipe.component';
 
@@ -18,38 +24,57 @@ describe('RecipeComponent', () => {
     fixture = TestBed.createComponent(RecipeComponent);
     mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    TestUtility.setInputs(fixture, {
+      id: RecipeId.NuclearFuelReprocessing,
+      collectionLabel: 'data.recipes',
+    });
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('info', () => {
+    it('should handle undefined recipe', () => {
+      TestUtility.setInputs(fixture, { id: 'not-found' });
+      const info = component.info();
+      expect(info.category).toBeUndefined();
+      expect(info.ingredientIds).toEqual([]);
+      expect(info.catalystIds).toEqual([]);
+      expect(info.productIds).toEqual([]);
+    });
+  });
+
   describe('toggleRecipe', () => {
+    it('should handle an unrecognized recipe', () => {
+      spyOn(component, 'setRecipeExcluded');
+      TestUtility.setInputs(fixture, { id: 'id' });
+      component.toggleRecipe();
+      expect(component.setRecipeExcluded).not.toHaveBeenCalled();
+    });
+
     it('should calculate default excluded state for a recipe', () => {
       spyOn(component, 'setRecipeExcluded');
-      component.toggleRecipe(
-        RecipeId.NuclearFuelReprocessing,
-        {},
-        Mocks.Dataset,
-      );
+      component.toggleRecipe();
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
-        true,
+        false,
         true,
       );
     });
 
     it('should default to empty excluded recipe ids array', () => {
       spyOn(component, 'setRecipeExcluded');
-      const data = Mocks.getDataset();
-      data.defaults = null;
-      component.toggleRecipe(RecipeId.NuclearFuelReprocessing, {}, data);
+      const data = { ...Mocks.getDataset(), ...{ defaults: null } };
+      mockStore.overrideSelector(Recipes.getAdjustedDataset, data);
+      mockStore.refreshState();
+      component.toggleRecipe();
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
-        true,
+        false,
         false,
       );
+      mockStore.resetSelectors();
     });
   });
 

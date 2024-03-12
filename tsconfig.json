@@ -19,12 +19,12 @@
     "module": "ES2022",
     "lib": ["ES2020", "dom"],
     "paths": {
-      "~/*": ["src/app/*"]
+      "~/*": ["src/app/*"],
     },
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "useDefineForClassFields": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
@@ -34,8 +34,8 @@
     "strictTemplates": true,
     "extendedDiagnostics": {
       "checks": {
-        "optionalChainNotNullable": "suppress"
-      }
-    }
-  }
+        "optionalChainNotNullable": "suppress",
+      },
+    },
+  },
 }

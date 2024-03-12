@@ -1,4 +1,3 @@
-import { Component, ViewChild } from '@angular/core';
 import {
   ComponentFixture,
   fakeAsync,
@@ -6,132 +5,111 @@ import {
   tick,
 } from '@angular/core/testing';
 
-import { TestModule } from 'src/tests';
+import { TestModule, TestUtility } from 'src/tests';
+import { Rational } from '~/models';
 import { InputNumberComponent } from './input-number.component';
 
-@Component({
-  selector: 'lab-test-input',
-  template: `<lab-input-number
-    [value]="value"
-    [minimum]="minimum"
-    [maximum]="maximum"
-    [width]="width"
-    [inputId]="inputId"
-    (setValue)="setValue($event)"
-  ></lab-input-number>`,
-})
-class TestInputNumberComponent {
-  @ViewChild(InputNumberComponent) child!: InputNumberComponent;
-  value = '10';
-  minimum: string | null = '1';
-  maximum: string | null = '20';
-  width = '';
-  inputId = '';
-  setValue(_: string): void {}
-}
-
 describe('InputNumberComponent', () => {
-  let component: TestInputNumberComponent;
-  let fixture: ComponentFixture<TestInputNumberComponent>;
+  let component: InputNumberComponent;
+  let fixture: ComponentFixture<InputNumberComponent>;
+  let emit: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InputNumberComponent, TestInputNumberComponent],
+      declarations: [InputNumberComponent],
       imports: [TestModule],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(TestInputNumberComponent);
+    fixture = TestBed.createComponent(InputNumberComponent);
     component = fixture.componentInstance;
+    TestUtility.setInputs(fixture, { value: '10', maximum: '100' });
     fixture.detectChanges();
+    emit = spyOn(component.setValue, 'emit');
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnChanges', () => {
-    it('should handle changes to minimum', () => {
-      component.minimum = '10';
-      fixture.detectChanges();
-      expect(component.child.isMinimum).toBeTrue();
+  describe('min', () => {
+    it('should convert to a Rational or return null', () => {
+      expect(component.min()).toEqual(Rational.zero);
+      TestUtility.setInputs(fixture, { minimum: null });
+      expect(component.min()).toBeNull();
     });
+  });
 
-    it('should handle changes to maximum', () => {
-      component.maximum = '0';
-      fixture.detectChanges();
-      expect(component.child.isMaximum).toBeTrue();
+  describe('max', () => {
+    it('should convert to a Rational or return null', () => {
+      expect(component.max()).toEqual(Rational.hundred);
+      TestUtility.setInputs(fixture, { maximum: null });
+      expect(component.max()).toBeNull();
     });
+  });
 
-    it('should handle null values', () => {
-      component.minimum = null;
-      component.maximum = null;
-      fixture.detectChanges();
-      expect(component.child.isMinimum).toBeFalse();
-      expect(component.child.isMaximum).toBeFalse();
+  describe('isMinimum', () => {
+    it('should handle valid/invalid text', () => {
+      expect(component.isMinimum()).toBeFalse();
+      TestUtility.setInputs(fixture, { value: 'err' });
+      expect(component.isMinimum()).toBeFalse();
+      TestUtility.setInputs(fixture, { minimum: null });
+      expect(component.isMinimum()).toBeFalse();
     });
+  });
 
-    it('should handle invalid values', () => {
-      component.maximum = '10';
-      component.value = 'err';
-      fixture.detectChanges();
-      expect(component.child.isMinimum).toBeFalse();
+  describe('isMaximum', () => {
+    it('should handle valid/invalid text', () => {
+      expect(component.isMaximum()).toBeFalse();
+      TestUtility.setInputs(fixture, { value: 'err' });
+      expect(component.isMaximum()).toBeFalse();
+      TestUtility.setInputs(fixture, { maximum: null });
+      expect(component.isMaximum()).toBeFalse();
     });
   });
 
   describe('changeValue', () => {
     it('should emit an input value', fakeAsync(() => {
-      spyOn(component, 'setValue');
-      component.child.changeValue('1 1/3', 'input');
+      component.changeValue('1 1/3', 'input');
       tick(500);
-      expect(component.setValue).toHaveBeenCalledWith('1 1/3');
+      expect(emit).toHaveBeenCalledWith('1 1/3');
     }));
 
     it('should emit a blur value', fakeAsync(() => {
-      spyOn(component, 'setValue');
-      component.child.changeValue('1 1/3', 'blur');
+      component.changeValue('1 1/3', 'blur');
       tick(500);
-      expect(component.setValue).toHaveBeenCalledWith('4/3');
+      expect(emit).toHaveBeenCalledWith('4/3');
     }));
 
     it('should not emit invalid values', fakeAsync(() => {
-      spyOn(component, 'setValue');
-      component.child.changeValue('abc', 'input');
+      component.changeValue('abc', 'input');
       tick(500);
-      expect(component.setValue).not.toHaveBeenCalled();
+      expect(emit).not.toHaveBeenCalled();
     }));
   });
 
   describe('increase', () => {
     it('should emit a value', () => {
-      spyOn(component, 'setValue');
-      component.child.increase();
-      expect(component.setValue).toHaveBeenCalledWith('11');
+      component.increase();
+      expect(emit).toHaveBeenCalledWith('11');
     });
 
     it('should round up a fractional value', () => {
-      component.value = '1.5';
-      fixture.detectChanges();
-      spyOn(component, 'setValue');
-      component.child.increase();
-      expect(component.setValue).toHaveBeenCalledWith('2');
+      TestUtility.setInputs(fixture, { value: '1.5' });
+      component.increase();
+      expect(emit).toHaveBeenCalledWith('2');
     });
   });
 
   describe('decrease', () => {
     it('should emit a value', () => {
-      spyOn(component, 'setValue');
-      component.child.decrease();
-      expect(component.setValue).toHaveBeenCalledWith('9');
+      component.decrease();
+      expect(emit).toHaveBeenCalledWith('9');
     });
 
     it('should round down a fractional value', () => {
-      component.value = '1.5';
-      fixture.detectChanges();
-      spyOn(component, 'setValue');
-      component.child.decrease();
-      expect(component.setValue).toHaveBeenCalledWith('1');
+      TestUtility.setInputs(fixture, { value: '1.5' });
+      component.decrease();
+      expect(emit).toHaveBeenCalledWith('1');
     });
   });
 });

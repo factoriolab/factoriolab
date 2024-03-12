@@ -5,7 +5,7 @@ import { ModuleEffect } from './module';
 export interface Beacon {
   effectivity: number | string;
   modules: number;
-  range: number;
+  range?: number;
   /** Beacons must use electric energy source, if any */
   type?: EnergyType.Electric;
   /** Energy consumption in kW */
@@ -18,7 +18,7 @@ export interface Beacon {
 export class BeaconRational {
   effectivity: Rational;
   modules: number;
-  range: number;
+  range?: number;
   /** Beacons must use electric or void energy source */
   type?: EnergyType.Electric;
   /** Energy consumption in kW */

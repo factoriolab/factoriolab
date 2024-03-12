@@ -5,17 +5,15 @@ import {
   ElementRef,
   EventEmitter,
   inject,
-  Input,
+  input,
   Output,
   ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
-import { combineLatest } from 'rxjs';
 
-import { Category, Entities, RawDataset } from '~/models';
-import { LabState } from '~/store';
-import * as Recipes from '~/store/recipes';
+import { Category, Entities } from '~/models';
+import { LabState, Recipes } from '~/store';
 
 @Component({
   selector: 'lab-picker',
@@ -32,11 +30,11 @@ export class PickerComponent {
     | ElementRef<HTMLInputElement>
     | undefined;
 
-  @Input() header = '';
+  header = input('');
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<string[]>();
 
-  vm$ = combineLatest({ data: this.store.select(Recipes.getAdjustedDataset) });
+  data = this.store.selectSignal(Recipes.getAdjustedDataset);
 
   search = '';
   allSelected = false;
@@ -56,11 +54,11 @@ export class PickerComponent {
   activeIndex = 0;
 
   clickOpen(
-    data: RawDataset,
     type: 'item' | 'recipe',
     allIds: string[],
     selection?: string | string[],
   ): void {
+    const data = this.data();
     this.type = type;
     const allIdsSet = new Set(allIds);
     if (Array.isArray(selection)) {

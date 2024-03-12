@@ -3,7 +3,6 @@ import { Title } from '@angular/platform-browser';
 import { MockStore } from '@ngrx/store/testing';
 
 import { Mocks, TestModule } from 'src/tests';
-import { Game, gameOptions } from '~/models';
 import { Objectives } from '~/store';
 import { HeaderComponent } from './header.component';
 
@@ -41,13 +40,6 @@ describe('HeaderComponent', () => {
       expect(title.setTitle).toHaveBeenCalledWith(
         'Advanced circuit | FactorioLab',
       );
-    });
-  });
-
-  describe('buildGameOptions', () => {
-    it('should return a filtered list of game menu items', () => {
-      const result = component.buildGameOptions(Game.Factorio);
-      expect(result.length).toEqual(gameOptions.length - 1);
     });
   });
 

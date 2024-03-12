@@ -23,7 +23,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.categories',
       type: 'category',
-      ids: 'categoryIds',
+      key: 'categoryIds',
     },
   },
   {
@@ -43,7 +43,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.items',
       type: 'item',
-      ids: 'itemIds',
+      key: 'itemIds',
     },
   },
   {
@@ -63,7 +63,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.beacons',
       type: 'item',
-      ids: 'beaconIds',
+      key: 'beaconIds',
     },
   },
   {
@@ -83,7 +83,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.belts',
       type: 'item',
-      ids: 'beltIds',
+      key: 'beltIds',
     },
   },
   {
@@ -103,7 +103,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.cargoWagons',
       type: 'item',
-      ids: 'cargoWagonIds',
+      key: 'cargoWagonIds',
     },
   },
   {
@@ -123,7 +123,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.fluidWagons',
       type: 'item',
-      ids: 'fluidWagonIds',
+      key: 'fluidWagonIds',
     },
   },
   {
@@ -143,7 +143,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.fuels',
       type: 'item',
-      ids: 'fuelIds',
+      key: 'fuelIds',
     },
   },
   {
@@ -163,7 +163,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.machines',
       type: 'item',
-      ids: 'machineIds',
+      key: 'machineIds',
     },
   },
   {
@@ -183,7 +183,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.modules',
       type: 'item',
-      ids: 'moduleIds',
+      key: 'moduleIds',
     },
   },
   {
@@ -203,7 +203,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.pipes',
       type: 'item',
-      ids: 'pipeIds',
+      key: 'pipeIds',
     },
   },
   {
@@ -223,7 +223,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.technologies',
       type: 'item',
-      ids: 'technologyIds',
+      key: 'technologyIds',
     },
   },
   {
@@ -243,7 +243,7 @@ export const routes: DataRoute[] = [
     data: {
       label: 'data.recipes',
       type: 'recipe',
-      ids: 'recipeIds',
+      key: 'recipeIds',
     },
   },
   {

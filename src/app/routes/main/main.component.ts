@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
@@ -8,10 +7,11 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
-import { combineLatest, map } from 'rxjs';
+import { map } from 'rxjs';
 
-import { Game, gameInfo, ItemId, SimplexResultType } from '~/models';
+import { SimplexResultType } from '~/models';
 import { ContentService, ErrorService } from '~/services';
 import { App, LabState, Objectives, Settings } from '~/store';
 
@@ -21,85 +21,53 @@ import { App, LabState, Objectives, Settings } from '~/store';
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MainComponent implements AfterViewInit {
+export class MainComponent {
   contentSvc = inject(ContentService);
   ngZone = inject(NgZone);
   ref = inject(ChangeDetectorRef);
   router = inject(Router);
   store = inject(Store<LabState>);
   errorSvc = inject(ErrorService);
+  translateSvc = inject(TranslateService);
 
-  vm$ = combineLatest([
-    this.store.select(Settings.getGame),
-    this.store.select(Settings.getMod),
-    this.store.select(Objectives.getMatrixResult),
-    this.contentSvc.settingsActive$,
-    this.contentSvc.settingsXlHidden$,
-    this.contentSvc.scrollTop$,
-    this.errorSvc.message$,
-  ]).pipe(
-    map(
-      ([
-        game,
-        mod,
-        result,
-        settingsActive,
-        settingsXlHidden,
-        scrollTop,
-        errorMsg,
-      ]) => ({
-        game,
-        mod,
-        result,
-        settingsActive,
-        settingsXlHidden,
-        scrollTop,
-        errorMsg,
-      }),
-    ),
-  );
+  gameInfo = this.store.selectSignal(Settings.getGameInfo);
+  mod = this.store.selectSignal(Settings.getMod);
+  result = this.store.selectSignal(Objectives.getMatrixResult);
 
   isResetting = false;
-  tabItems: MenuItem[] = [
-    {
-      label: 'app.list',
-      icon: 'fa-solid fa-list',
-      routerLink: 'list',
-      queryParamsHandling: 'preserve',
-    },
-    {
-      label: 'app.flow',
-      icon: 'fa-solid fa-diagram-project',
-      routerLink: 'flow',
-      queryParamsHandling: 'preserve',
-    },
-    {
-      label: 'app.data',
-      icon: 'fa-solid fa-database',
-      routerLink: 'data',
-      queryParamsHandling: 'preserve',
-    },
-  ];
 
-  Game = Game;
-  ItemId = ItemId;
-  MatrixResultType = SimplexResultType;
+  tabItems$ = this.contentSvc.lang$.pipe(
+    map((): MenuItem[] => [
+      {
+        label: this.translateSvc.instant('app.list'),
+        icon: 'fa-solid fa-list',
+        routerLink: 'list',
+        queryParamsHandling: 'preserve',
+      },
+      {
+        label: this.translateSvc.instant('app.flow'),
+        icon: 'fa-solid fa-diagram-project',
+        routerLink: 'flow',
+        queryParamsHandling: 'preserve',
+      },
+      {
+        label: this.translateSvc.instant('app.data'),
+        icon: 'fa-solid fa-database',
+        routerLink: 'data',
+        queryParamsHandling: 'preserve',
+      },
+    ]),
+  );
 
-  /**
-   * This doesn't seem like it should be necessary,
-   * but error message sometimes does not render without it
-   * */
-  ngAfterViewInit(): void {
-    this.errorSvc.message$.subscribe(() => this.ref.detectChanges());
-  }
+  SimplexResultType = SimplexResultType;
 
-  reset(game: Game): void {
+  reset(): void {
     this.isResetting = true;
     // Give button loading indicator a chance to start
     setTimeout(() => {
       this.ngZone.run(() => {
-        this.errorSvc.message$.next(null);
-        this.router.navigateByUrl(gameInfo[game].route);
+        this.errorSvc.message.set(null);
+        this.router.navigateByUrl(this.gameInfo().route);
         this.store.dispatch(new App.ResetAction());
         this.isResetting = false;
       });

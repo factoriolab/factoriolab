@@ -1,5 +1,5 @@
 import { createSelector } from '@ngrx/store';
-import { SelectItem } from 'primeng/api';
+import { MenuItem, SelectItem } from 'primeng/api';
 
 import { environment } from 'src/environments';
 import { fnPropsNotNullish, getIdOptions } from '~/helpers';
@@ -39,7 +39,7 @@ import {
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
-import { initialSettingsState, SettingsState } from './settings.reducer';
+import { SettingsState } from './settings.reducer';
 
 /* Base selector functions */
 export const settingsState = (state: LabState): SettingsState =>
@@ -144,7 +144,7 @@ export const getDisplayRateInfo = createSelector(
   (displayRate) => displayRateInfo[displayRate],
 );
 
-export const getRateUnitOptions = createSelector(
+export const getObjectiveUnitOptions = createSelector(
   getGame,
   getDisplayRateInfo,
   (game, dispRateInfo) => objectiveUnitOptions(dispRateInfo, game),
@@ -184,43 +184,39 @@ export const getColumnsState = createSelector(
 );
 
 export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
-  if (base) {
-    const m = base.defaults;
-    if (m) {
-      let moduleRank: string[] = [];
-      switch (base.game) {
-        case Game.Factorio: {
-          moduleRank = preset === Preset.Minimum ? [] : m.moduleRank;
-          break;
-        }
-        case Game.DysonSphereProgram: {
-          moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
-          break;
-        }
-        case Game.Satisfactory: {
-          moduleRank = m.moduleRank;
-        }
-      }
-      const defaults: Defaults = {
-        beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
-        pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
-        fuelId: m.fuel,
-        cargoWagonId: m.cargoWagon,
-        fluidWagonId: m.fluidWagon,
-        excludedRecipeIds: m.excludedRecipes,
-        machineRankIds:
-          preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
-        moduleRankIds: moduleRank,
-        beaconCount:
-          preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
-        beaconId: m.beacon,
-        beaconModuleId:
-          preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
-      };
-      return defaults;
+  if (base?.defaults == null) return null;
+
+  const m = base.defaults;
+  let moduleRank: string[] = [];
+  switch (base.game) {
+    case Game.Factorio: {
+      moduleRank = preset === Preset.Minimum ? [] : m.moduleRank;
+      break;
+    }
+    case Game.DysonSphereProgram: {
+      moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
+      break;
+    }
+    case Game.Satisfactory: {
+      moduleRank = m.moduleRank;
     }
   }
-  return null;
+  const defaults: Defaults = {
+    beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
+    pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
+    fuelId: m.fuel,
+    cargoWagonId: m.cargoWagon,
+    fluidWagonId: m.fluidWagon,
+    excludedRecipeIds: m.excludedRecipes,
+    machineRankIds:
+      preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
+    moduleRankIds: moduleRank,
+    beaconCount:
+      preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
+    beaconId: m.beacon,
+    beaconModuleId: preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
+  };
+  return defaults;
 });
 
 export const getSettings = createSelector(
@@ -408,7 +404,7 @@ export const getDataset = createSelector(
       .forEach((r) => {
         const firstOutId = Object.keys(r.out)[0];
         const firstOutItem = itemData[firstOutId];
-        
+
         recipeEntities[r.id] = {
           ...recipeEntities[r.id],
           ...{ icon: firstOutItem.icon ?? firstOutId },
@@ -559,6 +555,7 @@ export const getOptions = createSelector(
       true,
     ),
     fuels: getIdOptions(data.fuelIds, data.itemEntities),
+    machines: getIdOptions(data.machineIds, data.itemEntities),
     recipes: getIdOptions(data.recipeIds, data.recipeEntities),
   }),
 );
@@ -592,10 +589,6 @@ export const getBeltSpeedTxt = createSelector(
       return e;
     }, {}),
 );
-
-export const getSettingsModified = createSelector(settingsState, (state) => ({
-  costs: state.costs !== initialSettingsState.costs,
-}));
 
 export const getInserterData = createSelector(
   getInserterTarget,
@@ -678,6 +671,16 @@ export const getAdjustmentData = createSelector(
     miningBonus,
     researchSpeed,
     recipeIds,
+  }),
+);
+
+export const getModMenuItem = createSelector(
+  getMod,
+  (mod): MenuItem => ({
+    icon: 'fa-solid fa-database',
+    routerLink: '/data',
+    queryParamsHandling: 'preserve',
+    label: mod?.name,
   }),
 );
 

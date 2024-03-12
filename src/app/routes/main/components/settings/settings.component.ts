@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   HostBinding,
   inject,
   Input,
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
-import { combineLatest, first, map } from 'rxjs';
+import { first } from 'rxjs';
 
 import { orString } from '~/helpers';
 import {
@@ -77,37 +78,30 @@ export class SettingsComponent implements OnInit {
   @HostBinding('class.active') @Input() active = false;
   @HostBinding('class.hidden') @Input() hidden = false;
 
-  machineIds$ = this.store
-    .select(Machines.getMachinesState)
-    .pipe(map((state) => [...state.ids]));
-  vm$ = combineLatest({
-    itemsState: this.store.select(Items.getItemsState),
-    excludedItemIds: this.store.select(Items.getExcludedItemIds),
-    recipesState: this.store.select(Recipes.getRecipesState),
-    excludedRecipeIds: this.store.select(Recipes.getExcludedRecipeIds),
-    itemIds: this.store.select(Recipes.getAvailableItems),
-    data: this.store.select(Recipes.getAdjustedDataset),
-    machinesState: this.store.select(Machines.getMachinesState),
-    machineOptions: this.store.select(Machines.getMachineOptions),
-    settings: this.store.select(Settings.getSettings),
-    columnsState: this.store.select(Settings.getColumnsState),
-    options: this.store.select(Settings.getOptions),
-    modOptions: this.store.select(Settings.getModOptions),
-    presetOptions: this.store.select(Settings.getPresetOptions),
-    linkValueOptions: this.store.select(Settings.getLinkValueOptions),
-    beltSpeedTxt: this.store.select(Settings.getBeltSpeedTxt),
-    dispRateInfo: this.store.select(Settings.getDisplayRateInfo),
-    researchedTechnologyIds: this.store.select(
-      Settings.getAllResearchedTechnologyIds,
-    ),
-    recipeIds: this.store.select(Settings.getAvailableRecipes),
-    gameStates: this.store.select(Settings.getGameStates),
-    savedStates: this.store.select(Settings.getSavedStates),
-    preferences: this.store.select(Preferences.preferencesState),
-    modRecord: this.store.select(Datasets.getModRecord),
-    machineIds: this.machineIds$,
-    isMobile: this.contentSvc.isMobile$,
-  });
+  itemsState = this.store.selectSignal(Items.getItemsState);
+  excludedItemIds = this.store.selectSignal(Items.getExcludedItemIds);
+  recipesState = this.store.selectSignal(Recipes.getRecipesState);
+  excludedRecipeIds = this.store.selectSignal(Recipes.getExcludedRecipeIds);
+  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
+  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  machinesState = this.store.selectSignal(Machines.getMachinesState);
+  settings = this.store.selectSignal(Settings.getSettings);
+  columnsState = this.store.selectSignal(Settings.getColumnsState);
+  options = this.store.selectSignal(Settings.getOptions);
+  modOptions = this.store.selectSignal(Settings.getModOptions);
+  presetOptions = this.store.selectSignal(Settings.getPresetOptions);
+  linkValueOptions = this.store.selectSignal(Settings.getLinkValueOptions);
+  researchedTechnologyIds = this.store.selectSignal(
+    Settings.getAllResearchedTechnologyIds,
+  );
+  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
+  gameStates = this.store.selectSignal(Settings.getGameStates);
+  savedStates = this.store.selectSignal(Settings.getSavedStates);
+  preferences = this.store.selectSignal(Preferences.preferencesState);
+  modRecord = this.store.selectSignal(Datasets.getModRecord);
+  machineIds = computed(() => [
+    ...this.store.selectSignal(Machines.getMachinesState)().ids,
+  ]);
 
   state = '';
   editValue = '';

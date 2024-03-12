@@ -1,4 +1,11 @@
-import { inject, Injectable, TemplateRef } from '@angular/core';
+import {
+  computed,
+  inject,
+  Injectable,
+  signal,
+  TemplateRef,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Confirmation, Message } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
@@ -29,20 +36,18 @@ export class ContentService {
   translateSvc = inject(TranslateService);
 
   // Responsive
-  scrollTop$ = fromEvent(window, 'scroll').pipe(
-    map(
-      // Don't test fromEvent
-      // istanbul ignore next
-      () => window.scrollY,
-    ),
-    startWith(window.scrollY),
-  );
+  windowScrollY = (): number => window.scrollY;
   windowInnerWidth = (): number => window.innerWidth;
-  width$ = fromEvent(window, 'resize').pipe(
-    map(this.windowInnerWidth),
-    startWith(window.innerWidth),
+  scrollTop = toSignal(
+    fromEvent(window, 'scroll').pipe(map(this.windowScrollY)),
+    { initialValue: window.scrollY },
   );
-  isMobile$ = this.width$.pipe(map((width) => width < Breakpoint.Small));
+  width = toSignal(
+    fromEvent(window, 'resize').pipe(map(this.windowInnerWidth)),
+    { initialValue: window.innerWidth },
+  );
+
+  isMobile = computed(() => this.width() < Breakpoint.Small);
 
   // Dialogs
   showColumns$ = new Subject<void>();
@@ -63,15 +68,15 @@ export class ContentService {
   );
 
   // Header
-  settingsActive$ = new BehaviorSubject(false);
-  settingsXlHidden$ = new BehaviorSubject(false);
+  settingsActive = signal(false);
+  settingsXlHidden = signal(false);
 
   toggleSettings(): void {
-    this.settingsActive$.next(!this.settingsActive$.value);
+    this.settingsActive.set(!this.settingsActive());
   }
 
   toggleSettingsXl(): void {
-    this.settingsXlHidden$.next(!this.settingsXlHidden$.value);
+    this.settingsXlHidden.set(!this.settingsXlHidden());
   }
 
   // Watch all language changes

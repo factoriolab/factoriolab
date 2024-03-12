@@ -4,16 +4,15 @@ import {
   HostBinding,
   inject,
   Input,
-  OnInit,
 } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, Game, gameInfo, gameOptions, isRecipeObjective } from '~/models';
+import { APP, gameInfo, gameOptions, isRecipeObjective } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Objectives, Settings } from '~/store';
 
@@ -23,14 +22,13 @@ interface MenuLink {
   href: string;
 }
 
-@UntilDestroy()
 @Component({
   selector: 'lab-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   title = inject(Title);
   store = inject(Store<LabState>);
   translateSvc = inject(TranslateService);
@@ -39,15 +37,25 @@ export class HeaderComponent implements OnInit {
   @HostBinding('class.sticky') @Input() sticky = false;
   @HostBinding('class.settings-xl-hidden') @Input() settingsXlHidden = false;
 
-  vm$ = combineLatest([
-    this.store.select(Settings.getGame),
-    this.contentSvc.settingsXlHidden$,
-  ]).pipe(
-    map(([game, settingsXlHidden]) => ({
-      gameInfo: gameInfo[game],
-      gameOptions: this.buildGameOptions(game),
-      settingsXlHidden,
-    })),
+  gameInfo = this.store.selectSignal(Settings.getGameInfo);
+  gameOptions = toSignal(
+    combineLatest([
+      this.store.select(Settings.getGame),
+      this.contentSvc.lang$,
+    ]).pipe(
+      map(([game]): MenuItem[] => {
+        return gameOptions
+          .map((o) => o.value)
+          .filter((g) => g !== game)
+          .map(
+            (g): MenuItem => ({
+              icon: 'lab-icon small ' + gameInfo[g].icon,
+              label: this.translateSvc.instant(gameInfo[g].label),
+              routerLink: gameInfo[g].route,
+            }),
+          );
+      }),
+    ),
   );
 
   links: MenuLink[] = [
@@ -68,13 +76,13 @@ export class HeaderComponent implements OnInit {
     },
   ];
 
-  ngOnInit(): void {
+  constructor() {
     combineLatest([
       this.store.select(Objectives.getBaseObjectives),
       this.store.select(Settings.getDataset),
       this.contentSvc.lang$,
     ])
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe(([objectives, data]) => {
         const name = objectives
           .map((o) =>
@@ -83,25 +91,8 @@ export class HeaderComponent implements OnInit {
               : data.itemEntities[o.targetId]?.name,
           )
           .find((n) => n != null);
-        if (name != null) {
-          this.title.setTitle(`${name} | ${APP}`);
-        } else {
-          this.title.setTitle(APP);
-        }
+        this.title.setTitle(name != null ? `${name} | ${APP}` : APP);
       });
-  }
-
-  buildGameOptions(game: Game): MenuItem[] {
-    return gameOptions
-      .map((o) => o.value)
-      .filter((g) => g !== game)
-      .map(
-        (g): MenuItem => ({
-          icon: 'lab-icon small ' + gameInfo[g].icon,
-          label: this.translateSvc.instant(gameInfo[g].label),
-          routerLink: gameInfo[g].route,
-        }),
-      );
   }
 
   cancelRouterLink(event: Event): void {

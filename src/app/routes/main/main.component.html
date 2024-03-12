@@ -1,105 +1,90 @@
-<ng-container *ngIf="vm$ | async as vm">
-  <lab-header
-    [sticky]="vm.scrollTop > 16"
-    [settingsXlHidden]="vm.settingsXlHidden"
-  ></lab-header>
+<lab-header
+  [sticky]="contentSvc.scrollTop() > 16"
+  [settingsXlHidden]="contentSvc.settingsXlHidden()"
+></lab-header>
 
-  <ng-container *ngIf="vm.errorMsg == null; else errorDialog">
-    <lab-settings
-      [active]="vm.settingsActive"
-      [hidden]="vm.settingsXlHidden"
-    ></lab-settings>
-    <div
-      class="layout-mask"
-      [class.active]="vm.settingsActive"
-      (click)="contentSvc.toggleSettings()"
-    ></div>
-    <div
-      class="layout-content"
-      [class.settings-xl-hidden]="vm.settingsXlHidden"
-    >
-      <main class="px-sm-4 py-4">
-        <ng-container *ngIf="vm.mod != null; else loading">
-          <lab-objectives></lab-objectives>
-
-          <p-card styleClass="mt-4" [header]="'app.factory' | translate">
-            <p-tabMenu [model]="tabItems">
-              <ng-template pTemplate="item" let-item>
-                <span class="p-menuitem-icon" [class]="item.icon"></span>
-                <span class="p-menuitem-text">{{
-                  item.label | translate
-                }}</span>
-              </ng-template>
-            </p-tabMenu>
-            <router-outlet></router-outlet>
-            <ng-template pTemplate="footer">
-              <div class="d-flex align-items-center justify-content-between">
-                <div
-                  *ngIf="
-                    vm.result.resultType === MatrixResultType.Solved;
-                    else notSolved
-                  "
-                >
+@if (errorSvc.message(); as message) {
+  <p-dialog
+    [visible]="true"
+    [modal]="true"
+    [draggable]="false"
+    [resizable]="false"
+    [closable]="false"
+    [closeOnEscape]="false"
+  >
+    <ng-template pTemplate="header">
+      <div class="p-dialog-title p-error">
+        <i class="fa-solid fa-circle-exclamation me-2"></i>
+        <span>{{ 'app.error' | translate }}</span>
+      </div>
+    </ng-template>
+    <div class="p-error">
+      <div>{{ 'app.errorDetail' | translate }}</div>
+      <div class="mt-4">{{ message }}</div>
+      <div class="text-end mt-4">
+        <button
+          pButton
+          pRipple
+          type="button"
+          [label]="'reset' | translate"
+          [loading]="isResetting"
+          (click)="reset()"
+        ></button>
+      </div>
+    </div>
+  </p-dialog>
+} @else {
+  <lab-settings
+    [active]="contentSvc.settingsActive()"
+    [hidden]="contentSvc.settingsXlHidden()"
+  ></lab-settings>
+  <div
+    class="layout-mask"
+    [class.active]="contentSvc.settingsActive()"
+    (click)="contentSvc.toggleSettings()"
+  ></div>
+  <div
+    class="layout-content"
+    [class.settings-xl-hidden]="contentSvc.settingsXlHidden()"
+  >
+    <main class="px-sm-4 py-4">
+      @if (mod()) {
+        <lab-objectives></lab-objectives>
+        <p-card styleClass="mt-4" [header]="'app.factory' | translate">
+          @if (tabItems$ | async; as model) {
+            <p-tabMenu [model]="model"></p-tabMenu>
+          }
+          <router-outlet></router-outlet>
+          <ng-template pTemplate="footer">
+            <div class="d-flex align-items-center justify-content-between">
+              @if (result().resultType === SimplexResultType.Solved) {
+                <div>
                   {{
                     'app.simplexSolved'
                       | translate
                         : {
-                            time: vm.result.time,
-                            cost: vm.result.cost?.toPrecision(2)
+                            time: result().time,
+                            cost: result().cost?.toPrecision(2)
                           }
                   }}
                 </div>
-                <ng-template #notSolved>
-                  <div>
-                    {{
-                      'options.simplexResultType.' + vm.result.resultType
-                        | translate
-                    }}
-                  </div>
-                </ng-template>
-                <span>{{ contentSvc.version }}</span>
-              </div>
-            </ng-template>
-          </p-card>
-        </ng-container>
-        <ng-template #loading>
-          <div class="d-flex flex-column align-items-center mt-5">
-            <p-progressSpinner></p-progressSpinner>
-          </div>
-        </ng-template>
-      </main>
-    </div>
-  </ng-container>
-
-  <ng-template #errorDialog>
-    <p-dialog
-      [visible]="true"
-      [modal]="true"
-      [draggable]="false"
-      [resizable]="false"
-      [closable]="false"
-      [closeOnEscape]="false"
-    >
-      <ng-template pTemplate="header">
-        <div class="p-dialog-title p-error">
-          <i class="fa-solid fa-circle-exclamation me-2"></i>
-          <span>{{ 'app.error' | translate }}</span>
+              } @else {
+                <div>
+                  {{
+                    'options.simplexResultType.' + result().resultType
+                      | translate
+                  }}
+                </div>
+              }
+              <span>{{ contentSvc.version }}</span>
+            </div>
+          </ng-template>
+        </p-card>
+      } @else {
+        <div class="d-flex flex-column align-items-center mt-5">
+          <p-progressSpinner></p-progressSpinner>
         </div>
-      </ng-template>
-      <div class="p-error">
-        <div>{{ 'app.errorDetail' | translate }}</div>
-        <div class="mt-4">{{ vm.errorMsg }}</div>
-        <div class="text-end mt-4">
-          <button
-            pButton
-            pRipple
-            type="button"
-            [label]="'reset' | translate"
-            [loading]="isResetting"
-            (click)="reset(vm.game)"
-          ></button>
-        </div>
-      </div>
-    </p-dialog>
-  </ng-template>
-</ng-container>
+      }
+    </main>
+  </div>
+}

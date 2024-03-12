@@ -1,5 +1,4 @@
 <p-dialog
-  *ngIf="vm$ | async as vm"
   styleClass="picker-dialog"
   [(visible)]="visible"
   [modal]="true"
@@ -14,26 +13,27 @@
     width: '50vw'
   }"
   [breakpoints]="{ '768px': '80vw', '576px': '100vw' }"
-  (onHide)="onHide(vm.selection, vm.data)"
+  (onHide)="onHide()"
 >
   <div class="d-flex w-100 my-1 p-inputgroup">
     <span class="p-inputgroup-addon">
       <i class="fa-solid fa-magnifying-glass"></i>
     </span>
     <input
+      #filterInput
       pInputText
       type="text"
       class="w-100"
-      [(ngModel)]="filter"
-      (input)="filter$.next(filter)"
+      [ngModel]="filter()"
+      (input)="filter.set(filterInput.value)"
     />
     <span class="p-inputgroup-addon flex-shrink-0">
       <p-checkbox
         [binary]="true"
         [label]="'techPicker.unlockAll' | translate"
         labelStyleClass="text-nowrap"
-        [(ngModel)]="allSelected"
-        (onChange)="selectAll($event.checked, vm.data)"
+        [ngModel]="allSelected()"
+        (onChange)="selectAll($event.checked)"
       ></p-checkbox>
     </span>
     <span class="p-inputgroup-addon flex-shrink-0">
@@ -41,7 +41,7 @@
         [binary]="true"
         [label]="'techPicker.showLabels' | translate"
         labelStyleClass="text-nowrap"
-        [ngModel]="vm.showTechLabels"
+        [ngModel]="showTechLabels()"
         (onChange)="setShowTechLabels($event.checked)"
       ></p-checkbox>
     </span>
@@ -69,30 +69,32 @@
       [header]="'techPicker.importHeader' | translate"
     >
       <div class="d-flex flex-column">
-        <div *ngIf="vm.data.game === Game.Factorio" class="p-inputgroup mb-3">
-          <span class="p-inputgroup-addon">{{
-            'techPicker.exportFromFactorio' | translate
-          }}</span>
-          <button
-            pButton
-            pRipple
-            type="button"
-            class="p-button-outlined"
-            icon="fa-solid fa-copy"
-            [label]="'techPicker.exportCopyScript' | translate"
-            (click)="copyScriptToClipboard()"
-          ></button>
-          <a
-            href="https://mods.factorio.com/mod/export-researched-technologies"
-            target="_blank"
-            pButton
-            pRipple
-            class="text-decoration-none p-inputgroup-addon p-button-outlined"
-            [label]="'techPicker.exportUseMod' | translate"
-            icon="fa-solid fa-link"
-          >
-          </a>
-        </div>
+        @if (data().game === Game.Factorio) {
+          <div class="p-inputgroup mb-3">
+            <span class="p-inputgroup-addon">{{
+              'techPicker.exportFromFactorio' | translate
+            }}</span>
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-outlined"
+              icon="fa-solid fa-copy"
+              [label]="'techPicker.exportCopyScript' | translate"
+              (click)="copyScriptToClipboard()"
+            ></button>
+            <a
+              href="https://mods.factorio.com/mod/export-researched-technologies"
+              target="_blank"
+              pButton
+              pRipple
+              class="text-decoration-none p-inputgroup-addon p-button-outlined"
+              [label]="'techPicker.exportUseMod' | translate"
+              icon="fa-solid fa-link"
+            >
+            </a>
+          </div>
+        }
         <div>{{ 'techPicker.importInstructions' | translate }}</div>
         <textarea
           #importInput
@@ -111,70 +113,78 @@
           class="p-button-text"
           icon="fa-solid fa-check"
           [label]="'ok' | translate"
-          (click)="importTechs(vm.data)"
+          (click)="importTechs()"
         ></button>
       </ng-template>
     </p-dialog>
   </div>
 
-  <p-scrollPanel
-    *ngIf="visible"
-    [style]="{ height: 'calc(80vh - 165px)', minHeight: '363px' }"
-  >
-    <h3>{{ 'techPicker.available' | translate }}</h3>
-    <div class="d-flex flex-wrap">
-      <i *ngIf="vm.status.available.length === 0">{{ 'none' | translate }}</i>
-      <ng-container *ngFor="let id of vm.status.available">
-        <ng-container
-          *ngTemplateOutlet="
-            techButton;
-            context: { id, class: 'p-button-text' }
-          "
-        ></ng-container>
-      </ng-container>
-    </div>
-    <h3>{{ 'techPicker.locked' | translate }}</h3>
-    <div class="d-flex flex-wrap invert">
-      <i *ngIf="vm.status.locked.length === 0">{{ 'none' | translate }}</i>
-      <ng-container *ngFor="let id of vm.status.locked">
-        <ng-container
-          *ngTemplateOutlet="
-            techButton;
-            context: { id, class: 'p-button-danger' }
-          "
-        ></ng-container>
-      </ng-container>
-    </div>
-    <h3>{{ 'techPicker.researched' | translate }}</h3>
-    <div class="d-flex flex-wrap invert">
-      <i *ngIf="vm.status.researched.length === 0">{{ 'none' | translate }}</i>
-      <ng-container *ngFor="let id of vm.status.researched">
-        <ng-container
-          *ngTemplateOutlet="
-            techButton;
-            context: { id, class: 'p-button-success' }
-          "
-        ></ng-container>
-      </ng-container>
-    </div>
-    <ng-template #techButton let-id="id" let-class="class"
-      ><button
-        pButton
-        pRipple
-        type="button"
-        class="me-1 mb-1"
-        [class]="class"
-        [label]="(vm.showTechLabels && vm.data.itemEntities[id]?.name) || ''"
-        [class.hover-active]="vm.selection?.indexOf(id) === -1"
-        [icon]="id | iconSmClass"
-        [pTooltip]="tooltip"
-        tooltipPosition="bottom"
-        (click)="clickId(id, vm.selection, vm.data)"
-      >
-        <ng-template #tooltip>
-          <lab-tooltip [id]="id" type="technology"></lab-tooltip>
-        </ng-template>
-      </button>
-    </ng-template>
-  </p-scrollPanel>
+  @if (visible) {
+    <p-scrollPanel
+      [style]="{ height: 'calc(80vh - 165px)', minHeight: '363px' }"
+    >
+      <ng-container
+        *ngTemplateOutlet="
+          techSet;
+          context: {
+            title: 'techPicker.available',
+            ids: status().available,
+            class: 'p-button-text'
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          techSet;
+          context: {
+            title: 'techPicker.locked',
+            ids: status().locked,
+            class: 'p-button-danger'
+          }
+        "
+      ></ng-container>
+      <ng-container
+        *ngTemplateOutlet="
+          techSet;
+          context: {
+            title: 'techPicker.researched',
+            ids: status().researched,
+            class: 'p-button-success'
+          }
+        "
+      ></ng-container>
+      <ng-template #techSet let-title="title" let-ids="ids" let-class="class">
+        <h3>{{ title | translate }}</h3>
+        <div class="d-flex flex-wrap invert">
+          @if (ids.length === 0) {
+            <i>{{ 'none' | translate }}</i>
+          }
+          @for (id of ids; track id) {
+            <ng-container
+              *ngTemplateOutlet="techButton; context: { id, class }"
+            ></ng-container>
+          }
+        </div>
+      </ng-template>
+      <ng-template #techButton let-id="id" let-class="class"
+        ><button
+          pButton
+          pRipple
+          type="button"
+          class="me-1 mb-1"
+          [class]="class"
+          [label]="(showTechLabels() && data().itemEntities[id]?.name) || ''"
+          [class.hover-active]="selection().indexOf(id) === -1"
+          [icon]="id | iconSmClass"
+          [pTooltip]="tooltip"
+          tooltipPosition="bottom"
+          (click)="clickId(id)"
+        >
+          <ng-template #tooltip>
+            <lab-tooltip [id]="id" type="technology"></lab-tooltip>
+          </ng-template>
+        </button>
+      </ng-template>
+    </p-scrollPanel>
+  }
 </p-dialog>

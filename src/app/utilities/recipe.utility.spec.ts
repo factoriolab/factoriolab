@@ -73,10 +73,10 @@ describe('RecipeUtility', () => {
         Mocks.RawDataset.recipeEntities[RecipeId.SteelChest],
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from([2, 3]);
+      expected.time = Rational.from(2, 3);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(150);
-      expected.pollution = Rational.from([1, 20]);
+      expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -95,10 +95,10 @@ describe('RecipeUtility', () => {
       const expected = new RecipeRational(
         Mocks.RawDataset.recipeEntities[RecipeId.CopperCable],
       );
-      expected.time = Rational.from([2, 3]);
+      expected.time = Rational.from(2, 3);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(150);
-      expected.pollution = Rational.from([1, 20]);
+      expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -150,7 +150,7 @@ describe('RecipeUtility', () => {
       expected.time = Rational.two;
       expected.drain = undefined;
       expected.consumption = Rational.from(90);
-      expected.pollution = Rational.from([1, 6]);
+      expected.pollution = Rational.from(1, 6);
       expected.productivity = Rational.from(3);
       expect(result).toEqual(expected);
     });
@@ -203,13 +203,13 @@ describe('RecipeUtility', () => {
         Mocks.RawDataset.recipeEntities[RecipeId.SteelChest],
       );
       expected.out = {
-        [ItemId.SteelChest]: Rational.from([76, 25]),
+        [ItemId.SteelChest]: Rational.from(76, 25),
       };
-      expected.time = Rational.from([40, 81]);
+      expected.time = Rational.from(40, 81);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(255);
-      expected.pollution = Rational.from([1037, 4000]);
-      expected.productivity = Rational.from([76, 25]);
+      expected.pollution = Rational.from(1037, 4000);
+      expected.productivity = Rational.from(76, 25);
       expect(result).toEqual(expected);
     });
 
@@ -259,10 +259,10 @@ describe('RecipeUtility', () => {
       expected.out = {
         [ItemId.SteelChest]: Rational.one,
       };
-      expected.time = Rational.from([10, 3]);
+      expected.time = Rational.from(10, 3);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(30);
-      expected.pollution = Rational.from([1, 500]);
+      expected.pollution = Rational.from(1, 500);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -283,7 +283,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data,
       );
-      expect(result.time).toEqual(Rational.from([1, 60]));
+      expect(result.time).toEqual(Rational.from(1, 60));
     });
 
     it('should find matching nonchemical fuel', () => {
@@ -297,9 +297,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.RawDataset,
       );
-      expect(result.in[ItemId.UraniumFuelCell]).toEqual(
-        Rational.from([1, 200]),
-      );
+      expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
     });
 
     it('should find non-matching nonchemical fuel', () => {
@@ -329,9 +327,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data,
       );
-      expect(result.in[ItemId.UraniumFuelCell]).toEqual(
-        Rational.from([1, 200]),
-      );
+      expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
     });
 
     it('should adjust based on overclock', () => {
@@ -351,10 +347,10 @@ describe('RecipeUtility', () => {
         Mocks.RawDataset.recipeEntities[RecipeId.SteelChest],
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from([1, 3]);
+      expected.time = Rational.from(1, 3);
       expected.drain = Rational.from(5);
-      expected.consumption = Rational.from([136838616, 364903]);
-      expected.pollution = Rational.from([1, 20]);
+      expected.consumption = Rational.from(136838616, 364903);
+      expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -379,10 +375,10 @@ describe('RecipeUtility', () => {
         Mocks.RawDataset.recipeEntities[RecipeId.SteelChest],
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from([1, 3]);
+      expected.time = Rational.from(1, 3);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(-20);
-      expected.pollution = Rational.from([1, 20]);
+      expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -419,10 +415,10 @@ describe('RecipeUtility', () => {
         Mocks.RawDataset.recipeEntities[RecipeId.SteelChest],
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from([2, 3]);
+      expected.time = Rational.from(2, 3);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(10000);
-      expected.pollution = Rational.from([1, 20]);
+      expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expected.usage = Rational.from(10000);
       expect(result).toEqual(expected);
@@ -483,14 +479,14 @@ describe('RecipeUtility', () => {
         data,
       );
       const expected = new RecipeRational(recipe);
-      expected.in[ItemId.ProductivityModule] = Rational.from([11, 10]);
-      expected.in[ItemId.ProductivityModule3] = Rational.from([9, 10]);
-      expected.out = { [ItemId.SteelChest]: Rational.from([11, 10]) };
-      expected.time = Rational.from([8, 97]);
-      expected.drain = Rational.from([25, 2]);
+      expected.in[ItemId.ProductivityModule] = Rational.from(11, 10);
+      expected.in[ItemId.ProductivityModule3] = Rational.from(9, 10);
+      expected.out = { [ItemId.SteelChest]: Rational.from(11, 10) };
+      expected.time = Rational.from(8, 97);
+      expected.drain = Rational.from(25, 2);
       expected.consumption = Rational.from(2775);
-      expected.pollution = Rational.from([407, 1500]);
-      expected.productivity = Rational.from([11, 10]);
+      expected.pollution = Rational.from(407, 1500);
+      expected.productivity = Rational.from(11, 10);
       expect(result).toEqual(expected);
     });
 
@@ -549,14 +545,14 @@ describe('RecipeUtility', () => {
         data,
       );
       const expected = new RecipeRational(recipe);
-      expected.in[ItemId.SpeedModule] = Rational.from([1, 10]);
-      expected.in[ItemId.ProductivityModule3] = Rational.from([9, 10]);
-      expected.out = { [ItemId.SteelChest]: Rational.from([11, 10]) };
-      expected.time = Rational.from([8, 97]);
-      expected.drain = Rational.from([25, 2]);
+      expected.in[ItemId.SpeedModule] = Rational.from(1, 10);
+      expected.in[ItemId.ProductivityModule3] = Rational.from(9, 10);
+      expected.out = { [ItemId.SteelChest]: Rational.from(11, 10) };
+      expected.time = Rational.from(8, 97);
+      expected.drain = Rational.from(25, 2);
       expected.consumption = Rational.from(2775);
-      expected.pollution = Rational.from([407, 1500]);
-      expected.productivity = Rational.from([11, 10]);
+      expected.pollution = Rational.from(407, 1500);
+      expected.productivity = Rational.from(11, 10);
       expect(result).toEqual(expected);
     });
 
@@ -592,12 +588,12 @@ describe('RecipeUtility', () => {
       const expected = new RecipeRational(
         Mocks.RawDataset.recipeEntities[RecipeId.CopperCable],
       );
-      expected.time = Rational.from([2, 3]);
+      expected.time = Rational.from(2, 3);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(150);
-      expected.pollution = Rational.from([1, 20]);
+      expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
-      expected.in[ItemId.Coal] = Rational.from([1, 90]);
+      expected.in[ItemId.Coal] = Rational.from(1, 90);
       expect(result).toEqual(expected);
     });
 
@@ -672,10 +668,10 @@ describe('RecipeUtility', () => {
         Mocks.RawDataset.recipeEntities[RecipeId.SteelChest],
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
-      expected.time = Rational.from([1, 30]);
+      expected.time = Rational.from(1, 30);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(150);
-      expected.pollution = Rational.from([1, 20]);
+      expected.pollution = Rational.from(1, 20);
       expected.productivity = Rational.one;
       expect(result).toEqual(expected);
     });
@@ -739,7 +735,7 @@ describe('RecipeUtility', () => {
         Mocks.RecipesStateRationalInitial,
         Mocks.Dataset,
       );
-      expect(recipe.time).toEqual(Rational.from([82499, 924]));
+      expect(recipe.time).toEqual(Rational.from(82499, 924));
     });
   });
 
@@ -772,10 +768,10 @@ describe('RecipeUtility', () => {
         Mocks.Dataset,
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from([82499, 924]),
+        Rational.from(82499, 924),
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from([82499, 66000]),
+        Rational.from(82499, 66000),
       );
     });
 
@@ -794,10 +790,10 @@ describe('RecipeUtility', () => {
         Mocks.Dataset,
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from([203, 5]),
+        Rational.from(203, 5),
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from([82499, 66000]),
+        Rational.from(82499, 66000),
       );
     });
 
@@ -816,10 +812,10 @@ describe('RecipeUtility', () => {
         Mocks.Dataset,
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from([203, 5]),
+        Rational.from(203, 5),
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from([82499, 66000]),
+        Rational.from(82499, 66000),
       );
     });
   });
@@ -923,7 +919,7 @@ describe('RecipeUtility', () => {
         Mocks.CostRational,
         Mocks.RawDataset,
       );
-      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from([1183, 4]));
+      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from(1183, 4));
       expect(recipeR[RecipeId.CopperCable].cost).toEqual(Rational.from(9));
     });
   });

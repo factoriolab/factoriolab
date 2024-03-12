@@ -1,5 +1,5 @@
-<ng-container *ngIf="vm$ | async as vm">
-  <p-card *ngIf="vm.mod != null; else spinner">
+@if (mod() != null) {
+  <p-card>
     <div class="d-flex flex-column">
       <div class="d-flex justify-content-center">
         <img
@@ -12,45 +12,44 @@
       <div class="mt-2" [innerHTML]="'landing.welcome' | translate"></div>
       <p-dropdown
         styleClass="my-2 w-100"
-        [ngModel]="vm.data.game"
+        [ngModel]="data().game"
         [options]="gameOptions"
         (onChange)="setGame($event.value)"
       >
         <ng-template pTemplate="selectedItem">
-          <div
-            *ngIf="gameInfo[vm.data.game] as info"
-            class="d-flex align-items-center"
-          >
-            <i class="mx-1" [class]="info.icon | iconSmClass"></i>
-            <span class="ms-3">{{ info.label | translate }}</span>
-          </div>
+          @if (gameInfo[data().game]; as info) {
+            <div class="d-flex align-items-center">
+              <i class="mx-1" [class]="info.icon | iconSmClass"></i>
+              <span class="ms-3">{{ info.label | translate }}</span>
+            </div>
+          }
         </ng-template>
         <ng-template pTemplate="item" let-item>
-          <div
-            *ngIf="$any(gameInfo)[item.value] as info"
-            class="d-flex align-items-center"
-          >
-            <i [class]="info.icon | iconSmClass"></i>
-            <span class="ms-3">{{ info.label | translate }}</span>
-          </div>
+          @if ($any(gameInfo)[item.value]; as info) {
+            <div class="d-flex align-items-center">
+              <i [class]="info.icon | iconSmClass"></i>
+              <span class="ms-3">{{ info.label | translate }}</span>
+            </div>
+          }
         </ng-template>
       </p-dropdown>
-      <p-dropdown
-        *ngIf="vm.data.game === Game.Factorio"
-        styleClass="mb-2 w-100"
-        [filter]="true"
-        [autofocusFilter]="!vm.isMobile"
-        [ngModel]="vm.settings.modId"
-        [options]="vm.modOptions"
-        (onChange)="setMod($event.value)"
-      ></p-dropdown>
+      @if (data().game === Game.Factorio) {
+        <p-dropdown
+          styleClass="mb-2 w-100"
+          [filter]="true"
+          [autofocusFilter]="!contentSvc.isMobile"
+          [ngModel]="settings().modId"
+          [options]="modOptions()"
+          (onChange)="setMod($event.value)"
+        ></p-dropdown>
+      }
       <button
         pButton
         pRipple
         type="button"
         icon="fa-solid fa-box"
         [label]="'landing.addItems' | translate"
-        (click)="addItemPicker.clickOpen(vm.data, 'item', vm.itemIds)"
+        (click)="addItemPicker.clickOpen('item', itemIds())"
       ></button>
       <button
         pButton
@@ -59,7 +58,7 @@
         class="mt-2"
         icon="fa-solid fa-industry"
         [label]="'landing.addMachines' | translate"
-        (click)="addRecipePicker.clickOpen(vm.data, 'recipe', vm.recipeIds)"
+        (click)="addRecipePicker.clickOpen('recipe', recipeIds())"
       ></button>
       <lab-picker
         #addItemPicker
@@ -71,32 +70,35 @@
         [header]="'landing.selectARecipe' | translate"
         (selectId)="selectRecipe($event)"
       ></lab-picker>
-      <p-divider
-        *ngIf="vm.savedStates.length || BrowserUtility.routerState"
-      ></p-divider>
-      <span *ngIf="vm.savedStates.length" class="p-inputgroup">
-        <span class="p-inputgroup-addon">
-          <i class="fa-solid fa-file-import"></i>
+      @if (savedStates().length || BrowserUtility.routerState) {
+        <p-divider></p-divider>
+      }
+      @if (savedStates().length) {
+        <span class="p-inputgroup">
+          <span class="p-inputgroup-addon">
+            <i class="fa-solid fa-file-import"></i>
+          </span>
+          <p-dropdown
+            [placeholder]="'landing.loadSavedState' | translate"
+            styleClass="w-100"
+            [options]="savedStates()"
+            (onChange)="
+              setState(preferences().states[data().game][$event.value])
+            "
+          ></p-dropdown>
         </span>
-        <p-dropdown
-          [placeholder]="'landing.loadSavedState' | translate"
-          styleClass="w-100"
-          [options]="vm.savedStates"
-          (onChange)="
-            setState(vm.preferences.states[vm.data.game][$event.value])
-          "
-        ></p-dropdown>
-      </span>
-      <button
-        *ngIf="BrowserUtility.routerState"
-        pButton
-        pRipple
-        type="button"
-        class="mt-2"
-        icon="fa-solid fa-clock-rotate-left"
-        [label]="'landing.loadLastState' | translate"
-        (click)="router.navigateByUrl(BrowserUtility.routerState)"
-      ></button>
+      }
+      @if (BrowserUtility.routerState) {
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="mt-2"
+          icon="fa-solid fa-clock-rotate-left"
+          [label]="'landing.loadLastState' | translate"
+          (click)="router.navigateByUrl(BrowserUtility.routerState)"
+        ></button>
+      }
       <p-divider></p-divider>
       <button
         pButton
@@ -121,15 +123,13 @@
       <p-checkbox
         [binary]="true"
         [label]="'landing.bypass' | translate"
-        [ngModel]="vm.preferences.bypassLanding"
+        [ngModel]="preferences().bypassLanding"
         (onChange)="setBypassLanding($event.checked)"
       ></p-checkbox>
     </div>
   </p-card>
-</ng-container>
-
-<ng-template #spinner>
+} @else {
   <p-progressSpinner></p-progressSpinner>
-</ng-template>
+}
 
 <span class="position-absolute bottom-0 mb-3">{{ contentSvc.version }}</span>

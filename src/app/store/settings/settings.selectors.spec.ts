@@ -84,6 +84,17 @@ describe('Settings Selectors', () => {
     });
   });
 
+  describe('getObjectiveUnitOptions', () => {
+    it('should get appropriate objective unit options for the game', () => {
+      expect(
+        Selectors.getObjectiveUnitOptions.projector(
+          Game.DysonSphereProgram,
+          Mocks.DisplayRateInfo,
+        ).length,
+      ).toEqual(3);
+    });
+  });
+
   describe('getColumnsState', () => {
     it('should override columns for Factorio', () => {
       const result = Selectors.getColumnsState.projector(
@@ -540,15 +551,14 @@ describe('Settings Selectors', () => {
     });
   });
 
-  describe('getSettingsModified', () => {
-    it('should determine whether any settings are modified', () => {
-      const result = Selectors.getSettingsModified.projector({
-        ...initialSettingsState,
-        ...{
-          costs: { excluded: '100' } as any,
-        },
-      });
-      expect(result.costs).toBeTrue();
+  describe('getBeltSpeedTxt', () => {
+    it('should map belt speeds to appropriate rounded values for tooltips', () => {
+      const result = Selectors.getBeltSpeedTxt.projector(
+        { a: Rational.from(1, 60), b: Rational.from(1, 180) },
+        Mocks.DisplayRateInfo,
+      );
+      expect(result['a']).toEqual('1');
+      expect(result['b']).toEqual('0.33');
     });
   });
 

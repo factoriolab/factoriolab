@@ -108,14 +108,4 @@ describe('Machines Selectors', () => {
       expect(result.entities[''].overclock).toEqual(100);
     });
   });
-
-  describe('getMachineOptions', () => {
-    it('should handle null ids', () => {
-      const result = Selectors.getMachineOptions.projector(
-        Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
-      );
-      expect(result.length).toEqual(Mocks.RawDataset.machineIds.length);
-    });
-  });
 });

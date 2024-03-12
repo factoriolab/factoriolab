@@ -71,6 +71,6 @@ export function sankeyCenter<
   return node.targetLinks?.length
     ? orZero(node.depth)
     : node.sourceLinks?.length
-    ? min(node.sourceLinks, targetDepth)! - 1
-    : 0;
+      ? min(node.sourceLinks, targetDepth)! - 1
+      : 0;
 }

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestModule } from 'src/tests';
+import { Mocks, TestModule, TestUtility } from 'src/tests';
 import { CategoryComponent } from './category.component';
 
 describe('CategoryComponent', () => {
@@ -14,7 +14,10 @@ describe('CategoryComponent', () => {
 
     fixture = TestBed.createComponent(CategoryComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    TestUtility.setInputs(fixture, {
+      id: Mocks.CategoryId,
+      collectionLabel: 'data.items',
+    });
   });
 
   it('should create', () => {

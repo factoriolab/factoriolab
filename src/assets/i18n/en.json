@@ -338,7 +338,6 @@
     "emptyMessage": "Click on a node in the diagram to view details"
   },
   "data": {
-    "openDataPage": "Open data page...",
     "notFound": "Not found",
     "versions": "Versions",
     "collection": "Collection",

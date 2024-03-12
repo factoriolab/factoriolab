@@ -1,5 +1,4 @@
 <p-dialog
-  *ngIf="vm$ | async as vm"
   styleClass="picker-dialog"
   [(visible)]="visible"
   [modal]="true"
@@ -7,7 +6,7 @@
   [draggable]="false"
   [resizable]="false"
   appendTo="body"
-  [header]="header"
+  [header]="header()"
   [style]="{
     minHeight: '528px',
     height: '80vh',
@@ -28,7 +27,7 @@
       [(ngModel)]="search"
       (input)="inputSearch()"
     />
-    <ng-container *ngIf="isMultiselect">
+    @if (isMultiselect) {
       <span class="p-inputgroup-addon flex-shrink-0">
         <p-checkbox
           [binary]="true"
@@ -38,64 +37,65 @@
           (onChange)="selectAll($event.checked)"
         ></p-checkbox>
       </span>
-      <button
-        *ngIf="type === 'recipe'"
-        pButton
-        pRipple
-        icon="fa-solid fa-rotate-left"
-        class="flex-shrink-0"
-        [pTooltip]="'reset' | translate"
-        (click)="reset()"
-      ></button>
-    </ng-container>
+      @if (type === 'recipe') {
+        <button
+          pButton
+          pRipple
+          icon="fa-solid fa-rotate-left"
+          class="flex-shrink-0"
+          [pTooltip]="'reset' | translate"
+          (click)="reset()"
+        ></button>
+      }
+    }
   </div>
-  <p-tabView *ngIf="visible" [(activeIndex)]="activeIndex" [scrollable]="true">
-    <ng-container *ngFor="let categoryId of categoryIds; let i = index">
-      <p-tabPanel
-        *ngIf="categoryEntities[categoryId] as category"
-        [selected]="i === activeIndex"
-      >
-        <ng-template pTemplate="header">
-          <i [class]="categoryId | iconSmClass: 'category'"></i>
-          <span
-            class="d-none d-lg-inline ms-2 ps-1 text-nowrap text-truncate"
-            >{{ category.name }}</span
-          >
-        </ng-template>
-        <ng-template pTemplate="content">
-          <p-scrollPanel
-            [style]="{ height: 'calc(80vh - 165px)', minHeight: '363px' }"
-          >
-            <div
-              *ngFor="let ids of categoryRows[categoryId]"
-              class="d-flex flex-wrap"
+  @if (visible) {
+    <p-tabView [(activeIndex)]="activeIndex" [scrollable]="true">
+      @for (categoryId of categoryIds; track categoryId; let i = $index) {
+        <p-tabPanel [selected]="i === activeIndex">
+          <ng-template pTemplate="header">
+            <i [class]="categoryId | iconSmClass: 'category'"></i>
+            <span
+              class="d-none d-lg-inline ms-2 ps-1 text-nowrap text-truncate"
+              >{{ categoryEntities[categoryId].name }}</span
             >
-              <button
-                *ngFor="let id of ids"
-                pButton
-                pRipple
-                type="button"
-                class="me-1 mb-1"
-                [class.p-button-text]="id !== selection"
-                [class.hover-action]="isMultiselect"
-                [class.hover-active]="selection && selection.indexOf(id) !== -1"
-                [icon]="id | iconSmClass: type"
-                [pTooltip]="tooltip"
-                tooltipPosition="bottom"
-                (click)="clickId(id)"
-              >
-                <i
-                  *ngIf="isMultiselect"
-                  class="hover-icon fa-solid fa-eye-slash"
-                ></i>
-                <ng-template #tooltip>
-                  <lab-tooltip [id]="id" [type]="type"></lab-tooltip>
-                </ng-template>
-              </button>
-            </div>
-          </p-scrollPanel>
-        </ng-template>
-      </p-tabPanel>
-    </ng-container>
-  </p-tabView>
+          </ng-template>
+          <ng-template pTemplate="content">
+            <p-scrollPanel
+              [style]="{ height: 'calc(80vh - 165px)', minHeight: '363px' }"
+            >
+              @for (ids of categoryRows[categoryId]; track ids) {
+                <div class="d-flex flex-wrap">
+                  @for (id of ids; track id) {
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      class="me-1 mb-1"
+                      [class.p-button-text]="id !== selection"
+                      [class.hover-action]="isMultiselect"
+                      [class.hover-active]="
+                        selection && selection.indexOf(id) !== -1
+                      "
+                      [icon]="id | iconSmClass: type"
+                      [pTooltip]="tooltip"
+                      tooltipPosition="bottom"
+                      (click)="clickId(id)"
+                    >
+                      @if (isMultiselect) {
+                        <i class="hover-icon fa-solid fa-eye-slash"></i>
+                      }
+                      <ng-template #tooltip>
+                        <lab-tooltip [id]="id" [type]="type"></lab-tooltip>
+                      </ng-template>
+                    </button>
+                  }
+                </div>
+              }
+            </p-scrollPanel>
+          </ng-template>
+        </p-tabPanel>
+      }
+    </p-tabView>
+  }
 </p-dialog>

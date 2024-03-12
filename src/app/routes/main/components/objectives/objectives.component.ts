@@ -1,8 +1,13 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Message } from 'primeng/api';
-import { combineLatest, first, map } from 'rxjs';
+import { first } from 'rxjs';
 
 import { PickerComponent } from '~/components/picker/picker.component';
 import {
@@ -44,35 +49,33 @@ export class ObjectivesComponent {
   contentSvc = inject(ContentService);
   trackSvc = inject(TrackService);
 
-  messages$ = combineLatest([
-    this.store.select(Objectives.getObjectives),
-    this.store.select(Objectives.getMatrixResult),
-    this.store.select(Items.getItemsState),
-    this.store.select(Recipes.getRecipesState),
-  ]).pipe(
-    map(([objectives, result, itemsState, recipesState]) =>
-      this.getMessages(objectives, result, itemsState, recipesState),
-    ),
-  );
-  vm$ = combineLatest({
-    objectives: this.store
-      .select(Objectives.getObjectives)
-      .pipe(map((o) => [...o])),
-    objectiveRationals: this.store.select(Objectives.getObjectiveRationals),
-    matrixResult: this.store.select(Objectives.getMatrixResult),
-    itemsState: this.store.select(Items.getItemsState),
-    recipesState: this.store.select(Recipes.getRecipesState),
-    itemIds: this.store.select(Recipes.getAvailableItems),
-    data: this.store.select(Recipes.getAdjustedDataset),
-    beltSpeed: this.store.select(Settings.getBeltSpeed),
-    dispRateInfo: this.store.select(Settings.getDisplayRateInfo),
-    rateUnitOptions: this.store.select(Settings.getRateUnitOptions),
-    options: this.store.select(Settings.getOptions),
-    recipeIds: this.store.select(Settings.getAvailableRecipes),
-    paused: this.store.select(Preferences.getPaused),
-    isMobile: this.contentSvc.isMobile$,
-    messages: this.messages$,
+  messages = computed(() => {
+    const objectives = this.store.selectSignal(Objectives.getObjectives);
+    const result = this.store.selectSignal(Objectives.getMatrixResult);
+    const itemsState = this.store.selectSignal(Items.getItemsState);
+    const recipesState = this.store.selectSignal(Recipes.getRecipesState);
+    return this.getMessages(
+      objectives(),
+      result(),
+      itemsState(),
+      recipesState(),
+    );
   });
+  objectives = computed(() => {
+    const objectives = this.store.selectSignal(Objectives.getObjectives);
+    return [...objectives()];
+  });
+  objectiveRationals = this.store.selectSignal(
+    Objectives.getObjectiveRationals,
+  );
+  itemsState = this.store.selectSignal(Items.getItemsState);
+  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
+  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  beltSpeed = this.store.selectSignal(Settings.getBeltSpeed);
+  dispRateInfo = this.store.selectSignal(Settings.getDisplayRateInfo);
+  rateUnitOptions = this.store.selectSignal(Settings.getObjectiveUnitOptions);
+  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
+  paused = this.store.selectSignal(Preferences.getPaused);
 
   objectiveTypeOptions = objectiveTypeOptions;
   displayRateOptions = displayRateOptions;
@@ -205,7 +208,7 @@ export class ObjectivesComponent {
           chooseRecipePicker.selectId
             .pipe(first())
             .subscribe((targetId) => updateFn(targetId));
-          chooseRecipePicker.clickOpen(data, 'recipe', recipeIds);
+          chooseRecipePicker.clickOpen('recipe', recipeIds);
         }
       }
     } else {
@@ -228,7 +231,7 @@ export class ObjectivesComponent {
           chooseItemPicker.selectId
             .pipe(first())
             .subscribe((itemId) => updateFn(itemId));
-          chooseItemPicker.clickOpen(data, 'item', itemIds);
+          chooseItemPicker.clickOpen('item', itemIds);
         }
       } else {
         // No target conversion required

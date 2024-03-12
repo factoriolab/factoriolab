@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import {
@@ -29,17 +28,14 @@ export class LandingComponent {
   store = inject(Store<LabState>);
   routerSvc = inject(RouterService);
 
-  vm$ = combineLatest({
-    itemIds: this.store.select(Recipes.getAvailableItems),
-    settings: this.store.select(Settings.getSettings),
-    modOptions: this.store.select(Settings.getModOptions),
-    data: this.store.select(Settings.getDataset),
-    mod: this.store.select(Settings.getMod),
-    recipeIds: this.store.select(Settings.getAvailableRecipes),
-    savedStates: this.store.select(Settings.getSavedStates),
-    preferences: this.store.select(Preferences.preferencesState),
-    isMobile: this.contentSvc.isMobile$,
-  });
+  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
+  settings = this.store.selectSignal(Settings.getSettings);
+  modOptions = this.store.selectSignal(Settings.getModOptions);
+  data = this.store.selectSignal(Settings.getDataset);
+  mod = this.store.selectSignal(Settings.getMod);
+  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
+  savedStates = this.store.selectSignal(Settings.getSavedStates);
+  preferences = this.store.selectSignal(Preferences.preferencesState);
 
   gameInfo = gameInfo;
   gameOptions = gameOptions;
@@ -47,14 +43,14 @@ export class LandingComponent {
   Game = Game;
   BrowserUtility = BrowserUtility;
 
-  selectItem(value: string): void {
+  async selectItem(value: string): Promise<void> {
+    await this.router.navigate(['list']);
     this.addItemObjective(value);
-    this.router.navigate(['list']);
   }
 
-  selectRecipe(value: string): void {
+  async selectRecipe(value: string): Promise<void> {
+    await this.router.navigate(['list']);
     this.addRecipeObjective(value);
-    this.router.navigate(['list']);
   }
 
   setState(query: string): void {
