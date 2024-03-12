@@ -114,7 +114,7 @@ export class TechPickerComponent {
   }
 
   copyScriptToClipboard(): void {
-    const script = `local list = {}
+    const script = `/c local list = {}
 for _, tech in pairs(game.player.force.technologies) do
     if tech.researched then
         list[#list + 1] = tech.name
