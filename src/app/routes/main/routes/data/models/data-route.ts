@@ -5,7 +5,7 @@ import { IdType, RawDataset } from '~/models';
 export interface Collection {
   label: string;
   type: IdType;
-  ids: keyof RawDataset;
+  key: keyof RawDataset;
 }
 
 export interface Detail {

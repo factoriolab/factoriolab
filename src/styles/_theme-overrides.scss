@@ -162,3 +162,12 @@ table p-dropdown {
     }
   }
 }
+
+/** Orderlist */
+.p-orderlist-list-container {
+  border: none; // Don't show border
+}
+
+.p-orderlist-item + .p-orderlist-item {
+  margin-top: 0.25rem; // Margin between items
+}

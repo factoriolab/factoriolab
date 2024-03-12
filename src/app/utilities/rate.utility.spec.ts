@@ -49,7 +49,7 @@ describe('RateUtility', () => {
           Mocks.DisplayRateInfo,
           Mocks.Dataset,
         ),
-      ).toEqual(Rational.from([1, 60]));
+      ).toEqual(Rational.from(1, 60));
     });
 
     it('should normalize item objective rates based on belts', () => {
@@ -85,7 +85,7 @@ describe('RateUtility', () => {
           Mocks.DisplayRateInfo,
           Mocks.Dataset,
         ),
-      ).toEqual(Rational.from([100, 3]));
+      ).toEqual(Rational.from(100, 3));
 
       expect(
         RateUtility.objectiveNormalizedRate(
@@ -101,7 +101,7 @@ describe('RateUtility', () => {
           Mocks.DisplayRateInfo,
           Mocks.Dataset,
         ),
-      ).toEqual(Rational.from([1250, 3]));
+      ).toEqual(Rational.from(1250, 3));
     });
 
     it('should adjust technology objective rate by productivity', () => {
@@ -119,7 +119,7 @@ describe('RateUtility', () => {
           Mocks.DisplayRateInfo,
           Mocks.Dataset,
         ),
-      ).toEqual(Rational.from([1, 50]));
+      ).toEqual(Rational.from(1, 50));
     });
   });
 
@@ -185,7 +185,7 @@ describe('RateUtility', () => {
     });
 
     it('should handle account for non-cumulative DSP drain', () => {
-      const step: any = { machines: Rational.from([1, 3]) };
+      const step: any = { machines: Rational.from(1, 3) };
       const result = { ...step };
       const recipe: any = {
         drain: Rational.two,
@@ -194,8 +194,8 @@ describe('RateUtility', () => {
       };
       RateUtility.adjustPowerPollution(result, recipe, Game.DysonSphereProgram);
       expect(result).toEqual({
-        machines: Rational.from([1, 3]),
-        power: Rational.from([4, 3]),
+        machines: Rational.from(1, 3),
+        power: Rational.from(4, 3),
       });
     });
 
@@ -215,7 +215,7 @@ describe('RateUtility', () => {
     });
 
     it('should calculate power/pollution', () => {
-      const step: any = { machines: Rational.from([3, 2]) };
+      const step: any = { machines: Rational.from(3, 2) };
       const recipe: any = {
         drain: Rational.from(3),
         consumption: Rational.from(4),
@@ -223,9 +223,9 @@ describe('RateUtility', () => {
       };
       RateUtility.adjustPowerPollution(step, recipe, Game.Factorio);
       expect(step).toEqual({
-        machines: Rational.from([3, 2]),
+        machines: Rational.from(3, 2),
         power: Rational.from(12),
-        pollution: Rational.from([15, 2]),
+        pollution: Rational.from(15, 2),
       });
     });
   });
@@ -273,13 +273,13 @@ describe('RateUtility', () => {
         stepB,
         'parents',
         '0',
-        Rational.from([47, 16]),
+        Rational.from(47, 16),
       );
       expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
         stepA,
         'outputs',
         'iron-plate',
-        Rational.from([141, 40]),
+        Rational.from(141, 40),
       );
     });
   });

@@ -3,6 +3,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { EffectsModule } from '@ngrx/effects';
 import { Action, ActionReducerMap, StoreModule } from '@ngrx/store';
@@ -23,7 +24,7 @@ import { PrimeNGConfig } from 'primeng/api';
 import { environment } from '../environments/environment';
 import { AppSharedModule } from './app-shared.module';
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app.routes';
+import { routes } from './app.routes';
 import { LabErrorHandler } from './services';
 import { ThemeService } from './services/theme.service';
 import { LabState, metaReducers, reducers } from './store';
@@ -84,7 +85,6 @@ function initializeApp(
     NgxGoogleAnalyticsModule.forRoot('G-TFR5Z43GPH'),
     NgxGoogleAnalyticsRouterModule,
     /** App modules */
-    AppRoutingModule,
     AppSharedModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
@@ -102,6 +102,7 @@ function initializeApp(
       useFactory: initializeApp,
       multi: true,
     },
+    provideRouter(routes, withComponentInputBinding()),
   ],
   bootstrap: [AppComponent],
 })

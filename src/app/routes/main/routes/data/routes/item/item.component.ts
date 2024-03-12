@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { combineLatest, map } from 'rxjs';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { MenuItem } from 'primeng/api';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { orString } from '~/helpers';
-import { Game, ItemId } from '~/models';
-import { Items, LabState, Machines, Settings } from '~/store';
-import { DataRouteService } from '../../data-route.service';
+import {
+  Category,
+  Game,
+  ItemId,
+  ItemRational,
+  ItemSettings,
+  MachineSettings,
+} from '~/models';
+import { Items, Machines } from '~/store';
 import { DataSharedModule } from '../../data-shared.module';
 import { DetailComponent } from '../../models';
 
@@ -19,55 +24,46 @@ import { DetailComponent } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemComponent extends DetailComponent {
-  store = inject(Store<LabState>);
-  dataRouteSvc = inject(DataRouteService);
+  itemsStateRaw = this.store.selectSignal(Items.itemsState);
+  itemsState = this.store.selectSignal(Items.getItemsState);
+  machinesStateRaw = this.store.selectSignal(Machines.machinesState);
+  machinesState = this.store.selectSignal(Machines.getMachinesState);
 
-  vm$ = combineLatest([
-    this.id$,
-    this.parent$,
-    this.dataRouteSvc.home$,
-    this.store.select(Items.itemsState),
-    this.store.select(Items.getItemsState),
-    this.store.select(Machines.machinesState),
-    this.store.select(Machines.getMachinesState),
-    this.store.select(Settings.getDataset),
-  ]).pipe(
-    map(
-      ([
-        id,
-        parent,
-        home,
-        itemsStateRaw,
-        itemsState,
-        machinesStateRaw,
-        machinesState,
-        data,
-      ]) => ({
-        id,
-        obj: data.itemEntities[id],
-        category:
-          data.categoryEntities[orString(data.itemEntities[id]?.category)],
-        breadcrumb: [parent, { label: data.itemEntities[id]?.name }],
-        producedByRecipeIds: data.recipeIds.filter(
-          (r) => data.recipeEntities[r]?.out[id],
-        ),
-        consumedByRecipeIds: data.recipeIds.filter(
-          (r) => data.recipeEntities[r]?.in[id],
-        ),
-        producibleRecipeIds: data.recipeIds.filter(
-          (r) => data.recipeEntities[r]?.producers.indexOf(id) !== -1,
-        ),
-        unlockedRecipeIds: data.recipeIds.filter(
-          (r) => data.recipeEntities[r]?.unlockedBy === id,
-        ),
-        itemSettingsRaw: itemsStateRaw[id],
-        itemSettings: itemsState[id],
-        machineSettingsRaw: machinesStateRaw.entities[id],
-        machineSettings: machinesState.entities[id],
-        home,
-        data,
-      }),
-    ),
+  obj = computed<ItemRational | undefined>(
+    () => this.data().itemEntities[this.id()],
+  );
+  breadcrumb = computed<MenuItem[]>(() => [
+    this.parent(),
+    { label: this.obj()?.name },
+  ]);
+  category = computed<Category | undefined>(() => {
+    const id = this.id();
+    const data = this.data();
+    return data.categoryEntities[orString(data.itemEntities[id]?.category)];
+  });
+  recipes = computed(() => {
+    const id = this.id();
+    const data = this.data();
+    const producedBy: string[] = [];
+    const consumedBy: string[] = [];
+    const producible: string[] = [];
+    const unlocked: string[] = [];
+
+    for (const r of data.recipeIds) {
+      const recipe = data.recipeEntities[r];
+      if (recipe.out[id]) producedBy.push(r);
+      if (recipe.in[id]) consumedBy.push(r);
+      if (recipe.producers.includes(id)) producible.push(r);
+      if (recipe.unlockedBy === id) unlocked.push(r);
+    }
+
+    return { producedBy, consumedBy, producible, unlocked };
+  });
+  itemSettings = computed<ItemSettings | undefined>(
+    () => this.itemsState()[this.id()],
+  );
+  machineSettings = computed<MachineSettings | undefined>(
+    () => this.machinesState().entities[this.id()],
   );
 
   Game = Game;

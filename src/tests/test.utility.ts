@@ -195,4 +195,14 @@ export class TestUtility {
       throw new Error(msg || 'Assertion error, condition is false.');
     }
   }
+
+  static setInputs<T>(
+    fixture: ComponentFixture<T>,
+    values: Partial<Record<string & keyof T, unknown>>,
+  ): void {
+    for (const key of Object.keys(values) as (keyof T & string)[])
+      fixture.componentRef.setInput(key, values[key]);
+
+    fixture.detectChanges();
+  }
 }

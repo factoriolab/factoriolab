@@ -1,11 +1,16 @@
-import { ErrorHandler, inject, Injectable, NgZone } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {
+  ErrorHandler,
+  inject,
+  Injectable,
+  NgZone,
+  signal,
+} from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ErrorService {
-  message$ = new BehaviorSubject<string | null>(null);
+  message = signal<string | null>(null);
 }
 
 @Injectable()
@@ -14,10 +19,10 @@ export class LabErrorHandler implements ErrorHandler {
   error = inject(ErrorService);
 
   handleError(error: string): void {
-    if (this.error.message$.value == null) {
+    if (this.error.message() == null) {
       this.ngZone.run(() => {
         console.error(error);
-        this.error.message$.next(error);
+        this.error.message.set(error);
       });
     }
   }

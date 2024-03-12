@@ -1,5 +1,4 @@
 <p-dialog
-  *ngIf="vm$ | async as vm"
   [(visible)]="visible"
   [modal]="true"
   [dismissableMask]="true"
@@ -13,7 +12,7 @@
   <p-table
     responsiveLayout="scroll"
     styleClass="p-datatable-sm"
-    [value]="vm.columnOptions"
+    [value]="columnOptions()"
   >
     <ng-template pTemplate="header">
       <tr>
@@ -33,9 +32,7 @@
             [disabled]="column.disabled"
           ></p-checkbox>
         </td>
-        <ng-container
-          *ngIf="$any(columnsInf)[column.value].hasPrecision; else noPrecision"
-        >
+        @if ($any(columnsInf)[column.value].hasPrecision) {
           <td>
             <p-inputNumber
               [min]="0"
@@ -59,26 +56,26 @@
           <td>
             {{ editValue[column.value].precision | precisionExample }}
           </td>
-        </ng-container>
-        <ng-template #noPrecision>
+        } @else {
           <td colspan="3" class="text-center">
             <div class="p-2">{{ 'columns.notApplicable' | translate }}</div>
           </td>
-        </ng-template>
+        }
       </tr>
     </ng-template>
   </p-table>
   <ng-template pTemplate="footer">
-    <button
-      *ngIf="modified"
-      pButton
-      pRipple
-      type="button"
-      class="p-button-text"
-      icon="fa-solid fa-rotate-left"
-      [label]="'reset' | translate"
-      (click)="reset()"
-    ></button>
+    @if (modified) {
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-text"
+        icon="fa-solid fa-rotate-left"
+        [label]="'reset' | translate"
+        (click)="reset()"
+      ></button>
+    }
     <button
       pButton
       pRipple

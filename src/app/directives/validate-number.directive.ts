@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 import {
   AbstractControl,
   NG_VALIDATORS,
@@ -19,8 +19,8 @@ import { Rational } from '~/models';
   ],
 })
 export class ValidateNumberDirective implements Validator {
-  @Input() minimum: Rational | null = Rational.zero;
-  @Input() maximum: Rational | null = null;
+  minimum = input<Rational | null>(Rational.zero);
+  maximum = input<Rational | null>(null);
 
   validate(control: AbstractControl): ValidationErrors | null {
     if (control.value == null) {
@@ -29,9 +29,11 @@ export class ValidateNumberDirective implements Validator {
 
     try {
       const rational = Rational.fromString(control.value);
+      const min = this.minimum();
+      const max = this.maximum();
       if (
-        (this.minimum == null || rational.gte(this.minimum)) &&
-        (this.maximum == null || rational.lte(this.maximum))
+        (min == null || rational.gte(min)) &&
+        (max == null || rational.lte(max))
       )
         return null;
     } catch {

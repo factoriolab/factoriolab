@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
-import { combineLatest, map } from 'rxjs';
 
 import { LabState, Settings } from '~/store';
-import { DataRouteService } from './data-route.service';
 
 @Component({
   templateUrl: './data.component.html',
@@ -13,12 +11,9 @@ import { DataRouteService } from './data-route.service';
 })
 export class DataComponent {
   store = inject(Store<LabState>);
-  dataRouteSvc = inject(DataRouteService);
 
-  vm$ = combineLatest([
-    this.dataRouteSvc.home$,
-    this.store.select(Settings.getDataset),
-  ]).pipe(map(([home, data]) => ({ home, data })));
+  home = this.store.selectSignal(Settings.getModMenuItem);
+  data = this.store.selectSignal(Settings.getDataset);
 
   collections: MenuItem[] = [
     {

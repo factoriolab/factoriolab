@@ -1,13 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
-  Input,
+  input,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, map, ReplaySubject } from 'rxjs';
 
-import { Category, Entities, IdType, Item, RawDataset, Recipe } from '~/models';
+import { Category, Entities, IdType, Item, Recipe } from '~/models';
 import { LabState, Settings } from '~/store';
 import { CollectionItem } from '../../models';
 
@@ -22,32 +22,18 @@ type Entity = Category | Item | Recipe;
 export class CollectionTableComponent {
   store = inject(Store<LabState>);
 
-  @Input() set ids(value: string[]) {
-    this.ids$.next(value);
-  }
-  @Input() set type(value: IdType) {
-    this.type$.next(value);
-  }
-  @Input() useRelativePath = false;
+  ids = input.required<string[]>();
+  type = input.required<IdType>();
+  useRelativePath = input(false);
 
-  ids$ = new ReplaySubject<string[]>();
-  type$ = new ReplaySubject<IdType>();
-  vm$ = combineLatest([
-    this.ids$,
-    this.type$,
-    this.store.select(Settings.getOptions),
-    this.store.select(Settings.getDataset),
-  ]).pipe(
-    map(([ids, type, options, data]) => ({
-      type,
-      value: this.getValue(ids, type, data),
-      route: this.getCollectionRoute(type),
-      options,
-    })),
-  );
+  options = this.store.selectSignal(Settings.getOptions);
+  data = this.store.selectSignal(Settings.getDataset);
 
-  getCollectionRoute(type: IdType): string {
-    if (this.useRelativePath) return '';
+  route = computed(() => {
+    const type = this.type();
+    const useRelativePath = this.useRelativePath();
+
+    if (useRelativePath) return '';
 
     switch (type) {
       case 'category':
@@ -57,10 +43,12 @@ export class CollectionTableComponent {
       case 'recipe':
         return '/data/recipes/';
     }
-  }
+  });
 
-  getValue(ids: string[], type: IdType, data: RawDataset): CollectionItem[] {
-    if (ids == null) return [];
+  value = computed((): CollectionItem[] => {
+    const ids = this.ids();
+    const type = this.type();
+    const data = this.data();
 
     let entities: Entities<Entity>;
     switch (type) {
@@ -90,5 +78,5 @@ export class CollectionTableComponent {
 
         return obj;
       });
-  }
+  });
 }

@@ -1,5 +1,4 @@
 <p-dialog
-  *ngIf="vm$ | async as vm"
   [(visible)]="visible"
   [modal]="true"
   [dismissableMask]="true"
@@ -84,16 +83,17 @@
     </tr>
   </table>
   <ng-template pTemplate="footer">
-    <button
-      *ngIf="modified"
-      pButton
-      pRipple
-      type="button"
-      class="p-button-text"
-      icon="fa-solid fa-rotate-left"
-      [label]="'reset' | translate"
-      (click)="reset()"
-    ></button>
+    @if (modified) {
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-text"
+        icon="fa-solid fa-rotate-left"
+        [label]="'reset' | translate"
+        (click)="reset()"
+      ></button>
+    }
     <button
       pButton
       pRipple

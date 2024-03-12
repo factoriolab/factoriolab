@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Mocks, TestModule } from 'src/tests';
+import { Mocks, TestModule, TestUtility } from 'src/tests';
 import { CollectionTableComponent } from './collection-table.component';
 
 describe('CollectionTableComponent', () => {
@@ -15,49 +15,53 @@ describe('CollectionTableComponent', () => {
 
     fixture = TestBed.createComponent(CollectionTableComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    TestUtility.setInputs(fixture, {
+      ids: Mocks.RawDataset.categoryIds,
+      type: 'category',
+    });
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('getCollectionRoute', () => {
+  describe('route', () => {
     it('should get the correct parent route for the collection', () => {
-      expect(component.getCollectionRoute('category')).toContain('categories');
-      expect(component.getCollectionRoute('item')).toContain('items');
-      expect(component.getCollectionRoute('recipe')).toContain('recipes');
-      component.useRelativePath = true;
-      expect(component.getCollectionRoute('category')).toEqual('');
+      expect(component.route()).toContain('categories');
+      TestUtility.setInputs(fixture, { type: 'item' });
+      expect(component.route()).toContain('items');
+      TestUtility.setInputs(fixture, { type: 'recipe' });
+      expect(component.route()).toContain('recipes');
+      TestUtility.setInputs(fixture, { useRelativePath: true });
+      expect(component.route()).toEqual('');
     });
   });
 
-  describe('getValue', () => {
+  describe('balue', () => {
     it('should get an array of category collection items', () => {
-      const result = component.getValue(
-        Mocks.RawDataset.categoryIds,
-        'category',
-        Mocks.RawDataset,
+      expect(component.value().length).toEqual(
+        Mocks.RawDataset.categoryIds.length,
       );
-      expect(result.length).toEqual(Mocks.RawDataset.categoryIds.length);
     });
 
     it('should get an array of item collection items', () => {
-      const result = component.getValue(
-        Mocks.RawDataset.machineIds,
-        'item',
-        Mocks.RawDataset,
+      TestUtility.setInputs(fixture, {
+        ids: Mocks.RawDataset.machineIds,
+        type: 'item',
+      });
+      expect(component.value().length).toEqual(
+        Mocks.RawDataset.machineIds.length,
       );
-      expect(result.length).toEqual(Mocks.RawDataset.machineIds.length);
     });
 
     it('should get an array of recipe collection items', () => {
-      const result = component.getValue(
-        Mocks.RawDataset.technologyIds,
-        'recipe',
-        Mocks.RawDataset,
+      TestUtility.setInputs(fixture, {
+        ids: Mocks.RawDataset.technologyIds,
+        type: 'recipe',
+      });
+      expect(component.value().length).toEqual(
+        Mocks.RawDataset.technologyIds.length,
       );
-      expect(result.length).toEqual(Mocks.RawDataset.technologyIds.length);
     });
   });
 });

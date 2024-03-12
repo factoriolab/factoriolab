@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';
-import { combineLatest } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import {
@@ -14,11 +13,7 @@ import {
 } from '~/models';
 import { LabState, Objectives, Recipes, Settings } from '~/store';
 
-export enum WizardState {
-  ObjectiveType = 0,
-  ItemObjective = 1,
-  RecipeObjective = 2,
-}
+export type WizardState = 'type' | 'item' | 'recipe';
 
 @Component({
   standalone: true,
@@ -30,23 +25,19 @@ export enum WizardState {
 export class WizardComponent {
   store = inject(Store<LabState>);
 
-  vm$ = combineLatest({
-    itemIds: this.store.select(Recipes.getAvailableItems),
-    data: this.store.select(Settings.getDataset),
-    recipeIds: this.store.select(Settings.getAvailableRecipes),
-    displayRate: this.store.select(Settings.getDisplayRate),
-    rateUnitOptions: this.store.select(Settings.getRateUnitOptions),
-  });
+  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
+  data = this.store.selectSignal(Settings.getDataset);
+  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
+  displayRate = this.store.selectSignal(Settings.getDisplayRate);
 
   id = '';
   rate = '1';
   count = '1';
-  state = WizardState.ObjectiveType;
+  state: WizardState = 'type';
 
   displayRateOptions = displayRateOptions;
 
-  RateUnit = ObjectiveUnit;
-  WizardState = WizardState;
+  ObjectiveUnit = ObjectiveUnit;
 
   selectId(value: string, state: WizardState): void {
     this.id = value;

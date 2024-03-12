@@ -36,9 +36,9 @@ export const reducers: ActionReducerMap<LabState, never> = {
 export const metaReducers: MetaReducer<LabState>[] = environment.testing
   ? [storeFreeze]
   : /* istanbul ignore next */
-  environment.production
-  ? [storageMetaReducer]
-  : [storeFreeze, storageMetaReducer];
+    environment.production
+    ? [storageMetaReducer]
+    : [storeFreeze, storageMetaReducer];
 
 export {
   App,

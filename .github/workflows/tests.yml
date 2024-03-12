@@ -11,6 +11,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: npm ci
+      - name: Run Prettier
+        run: npm run prettier
       - name: Run linting
         run: npm run lint-build
       - name: Run tests

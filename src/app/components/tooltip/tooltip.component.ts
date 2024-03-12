@@ -2,10 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  Input,
+  input,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
 
 import { Game } from '~/models';
 import { LabState, Recipes, Settings } from '~/store';
@@ -32,8 +31,8 @@ type TooltipType =
 export class TooltipComponent {
   store = inject(Store<LabState>);
 
-  @Input() id: string | undefined;
-  @Input() type: TooltipType = 'item';
+  id = input.required<string>();
+  type = input<TooltipType>('item');
 
   dataKey: Record<TooltipType, string> = {
     item: 'items',
@@ -49,11 +48,9 @@ export class TooltipComponent {
     recipe: 'recipes',
   };
 
-  vm$ = combineLatest({
-    beltSpeedTxt: this.store.select(Settings.getBeltSpeedTxt),
-    dispRateInfo: this.store.select(Settings.getDisplayRateInfo),
-    data: this.store.select(Recipes.getAdjustedDataset),
-  });
+  beltSpeedTxt = this.store.selectSignal(Settings.getBeltSpeedTxt);
+  dispRateInfo = this.store.selectSignal(Settings.getDisplayRateInfo);
+  data = this.store.selectSignal(Recipes.getAdjustedDataset);
 
   Game = Game;
 }

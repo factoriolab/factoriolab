@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 
 import { TestModule } from 'src/tests';
-import { Game } from '~/models';
 import { ErrorService } from '~/services';
 import { App, LabState } from '~/store';
 import { MainComponent } from './main.component';
@@ -40,13 +39,13 @@ describe('MainComponent', () => {
 
   describe('reset', () => {
     it('should set loading indicator and reset application', fakeAsync(() => {
-      spyOn(errorSvc.message$, 'next');
+      spyOn(errorSvc.message, 'set');
       spyOn(router, 'navigateByUrl');
       spyOn(mockStore, 'dispatch');
-      component.reset(Game.Factorio);
+      component.reset();
       expect(component.isResetting).toBeTrue();
       tick(100);
-      expect(errorSvc.message$.next).toHaveBeenCalledWith(null);
+      expect(errorSvc.message.set).toHaveBeenCalledWith(null);
       expect(router.navigateByUrl).toHaveBeenCalledWith('factorio');
       expect(mockStore.dispatch).toHaveBeenCalledWith(new App.ResetAction());
       expect(component.isResetting).toBeFalse();

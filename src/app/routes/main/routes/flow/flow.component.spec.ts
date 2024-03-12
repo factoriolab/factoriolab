@@ -98,18 +98,15 @@ describe('FlowComponent', () => {
 
     it('should call setSelected when a rect is clicked', () => {
       component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
-      spyOn(component.selectedId$, 'next');
       TestUtility.altClickSelector(fixture, 'rect');
-      expect(component.selectedId$.next).toHaveBeenCalledWith(
-        Mocks.Flow.nodes[0].stepId,
-      );
+      expect(component.selectedId()).toEqual(Mocks.Flow.nodes[0].stepId);
     });
 
     it('should not call setSelected emit when default is prevented', () => {
       component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
-      spyOn(component.selectedId$, 'next');
+      spyOn(component.selectedId, 'set');
       TestUtility.altClickSelector(fixture, 'rect', 0, true);
-      expect(component.selectedId$.next).not.toHaveBeenCalled();
+      expect(component.selectedId.set).not.toHaveBeenCalled();
     });
   });
 
@@ -139,9 +136,8 @@ describe('FlowComponent', () => {
 
   describe('getVisNodeClickFn', () => {
     it('should next selectedId$ subject', () => {
-      spyOn(component.selectedId$, 'next');
       component.getVisNodeClickFn('id')();
-      expect(component.selectedId$.next).toHaveBeenCalledWith('id');
+      expect(component.selectedId()).toEqual('id');
     });
   });
 

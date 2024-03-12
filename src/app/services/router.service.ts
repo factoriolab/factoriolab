@@ -1,16 +1,10 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { deflate, inflate } from 'pako';
-import {
-  BehaviorSubject,
-  combineLatest,
-  debounceTime,
-  Observable,
-  Subject,
-} from 'rxjs';
+import { combineLatest, debounceTime, Observable, Subject } from 'rxjs';
 import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
@@ -127,7 +121,7 @@ export class RouterService {
   dataSvc = inject(DataService);
 
   zip: string | undefined;
-  zipConfig$ = new BehaviorSubject<Zip>(this.empty);
+  zipConfig = signal<Zip>(this.empty);
   base64codes: Uint8Array;
   // Current hashing algorithm version
   version = ZipVersion.Version9;
@@ -352,7 +346,7 @@ export class RouterService {
         this.zipRecipes(zData, recipesState, hash);
         this.zipMachines(zData, machinesState, hash);
         this.zipSettings(zData, settings, hash);
-        this.zipConfig$.next(zData.config);
+        this.zipConfig.set(zData.config);
         return zData;
       }),
     );
@@ -1715,8 +1709,8 @@ export class RouterService {
     return value == null
       ? ''
       : value.length
-      ? value.map((v) => this.getId(hash.indexOf(v))).join(ARRAYSEP)
-      : EMPTY;
+        ? value.map((v) => this.getId(hash.indexOf(v))).join(ARRAYSEP)
+        : EMPTY;
   }
 
   zipDiffString(
@@ -1785,8 +1779,8 @@ export class RouterService {
     return value === init
       ? ''
       : value == null
-      ? NULL
-      : this.getId(hash.indexOf(value));
+        ? NULL
+        : this.getId(hash.indexOf(value));
   }
 
   zipDiffNNumber(value: number | undefined, init: number | undefined): string {

@@ -6,15 +6,15 @@ import {
   Component,
   ElementRef,
   inject,
+  signal,
   ViewChild,
 } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { drag } from 'd3-drag';
 import { select, Selection } from 'd3-selection';
 import { zoom } from 'd3-zoom';
 import ELK, { ELK as ElkType, ElkNode } from 'elkjs/lib/elk.bundled';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { combineLatest } from 'rxjs';
 import { DataSet } from 'vis-data/esnext';
 import {
   Data,
@@ -56,6 +56,7 @@ import {
 import { LabState, Preferences } from '~/store';
 import { PreferencesState } from '~/store/preferences';
 import { MainSharedModule } from '../../main-shared.module';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
@@ -99,7 +100,6 @@ const VIS_NETWORK_OPTIONS: Options = {
   },
 };
 
-@UntilDestroy()
 @Component({
   standalone: true,
   imports: [CommonModule, AppSharedModule, MainSharedModule],
@@ -120,20 +120,17 @@ export class FlowComponent implements AfterViewInit {
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
   skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link> | undefined;
 
-  loading$ = new BehaviorSubject(true);
-  selectedId$ = new BehaviorSubject<string | null>(null);
-  vm$ = combineLatest({ loading: this.loading$, selectedId: this.selectedId$ });
+  loading = signal(true);
+  selectedId = signal<string | null>(null);
+
+  rebuildChart$ = combineLatest([
+    this.flowSvc.flowData$,
+    this.themeSvc.themeValues$,
+    this.store.select(Preferences.preferencesState),
+  ]).pipe(takeUntilDestroyed());
 
   ngAfterViewInit(): void {
-    combineLatest({
-      flowData: this.flowSvc.flowData$,
-      themeValues: this.themeSvc.themeValues$,
-      preferences: this.store.select(Preferences.preferencesState),
-    })
-      .pipe(untilDestroyed(this))
-      .subscribe(({ flowData, themeValues, preferences }) =>
-        this.rebuildChart(flowData, themeValues, preferences),
-      );
+    this.rebuildChart$.subscribe((args) => this.rebuildChart(...args));
   }
 
   rebuildChart(
@@ -141,7 +138,7 @@ export class FlowComponent implements AfterViewInit {
     themeValues: ThemeValues,
     preferences: PreferencesState,
   ): void {
-    this.loading$.next(true);
+    this.loading.set(true);
 
     select(`#${SVG_ID} > *`).remove();
 
@@ -153,7 +150,7 @@ export class FlowComponent implements AfterViewInit {
       }
     }
 
-    this.loading$.next(false);
+    this.loading.set(false);
     this.ref.detectChanges();
   }
 
@@ -237,7 +234,7 @@ export class FlowComponent implements AfterViewInit {
       .attr('fill', (d) => d.color)
       .on('click', (e, d) => {
         if (e.defaultPrevented) return;
-        this.selectedId$.next(d.stepId);
+        this.selectedId.set(d.stepId);
       })
       .call(
         drag<SVGRectElement, SankeyNode<Node, Link>>()
@@ -356,7 +353,7 @@ export class FlowComponent implements AfterViewInit {
         });
 
         network.fit();
-        this.loading$.next(false);
+        this.loading.set(false);
       });
     }
   }
@@ -385,15 +382,15 @@ export class FlowComponent implements AfterViewInit {
         color: n.id.startsWith('o')
           ? themeValues.successBackground
           : n.id.startsWith('s')
-          ? themeValues.dangerBackground
-          : n.color,
+            ? themeValues.dangerBackground
+            : n.color,
         shape: n.recipe ? 'box' : 'ellipse',
         font: {
           color: n.id.startsWith('o')
             ? themeValues.successColor
             : n.id.startsWith('s')
-            ? themeValues.dangerColor
-            : this.foreColor(n.color),
+              ? themeValues.dangerColor
+              : this.foreColor(n.color),
         },
         chosen: { node: this.getVisNodeClickFn(n.stepId), label: false },
       };
@@ -401,7 +398,7 @@ export class FlowComponent implements AfterViewInit {
   }
 
   getVisNodeClickFn(id: string): () => void {
-    return () => this.selectedId$.next(id);
+    return () => this.selectedId.set(id);
   }
 
   getVisEdges(flow: FlowData, themeValues: ThemeValues): Edge[] {

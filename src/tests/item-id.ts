@@ -52,6 +52,7 @@ export enum ItemId {
   SteelChest = 'steel-chest',
   SteelFurnace = 'steel-furnace',
   SteelPlate = 'steel-plate',
+  SteelProcessing = 'steel-processing',
   StoneFurnace = 'stone-furnace',
   TransportBelt = 'transport-belt',
   Uranium235 = 'uranium-235',
