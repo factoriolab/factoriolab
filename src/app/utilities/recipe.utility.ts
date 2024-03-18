@@ -95,7 +95,7 @@ export class RecipeUtility {
     const options = allowed.map(
       (m): SelectItem<string> => ({ value: m.id, label: m.name }),
     );
-    if (data.game !== Game.Satisfactory) {
+    if (data.game !== Game.Satisfactory && data.game !== Game.FinalFactory) {
       options.unshift({ label: 'None', value: ItemId.Module });
     }
     return options;
@@ -170,22 +170,31 @@ export class RecipeUtility {
       const proliferatorSprays: Entities<Rational> = {};
 
       // Modules
+      // Set up factor for number of Final Factory duplicators
+      const factor =
+        data.game === Game.FinalFactory
+          ? settings.overclock ?? Rational.zero
+          : Rational.one;
       if (settings.machineModuleIds && settings.machineModuleIds.length) {
         for (const id of settings.machineModuleIds) {
           const module = data.moduleEntities[id];
           if (module) {
             if (module.speed) {
-              speed = speed.add(module.speed);
+              speed = speed.add(module.speed.mul(factor));
             }
+
             if (module.productivity) {
-              prod = prod.add(module.productivity);
+              prod = prod.add(module.productivity.mul(factor));
             }
+
             if (module.consumption) {
-              consumption = consumption.add(module.consumption);
+              consumption = consumption.add(module.consumption.mul(factor));
             }
+
             if (module.pollution) {
-              pollution = pollution.add(module.pollution);
+              pollution = pollution.add(module.pollution.mul(factor));
             }
+
             if (module.sprays) {
               let sprays = module.sprays;
               // If proliferator is applied to proliferator, apply productivity bonus to sprays
@@ -253,7 +262,11 @@ export class RecipeUtility {
 
       // Overclock effects
       let oc: Rational | undefined;
-      if (settings.overclock && !settings.overclock.eq(Rational.hundred)) {
+      if (
+        settings.overclock &&
+        data.game !== Game.FinalFactory &&
+        !settings.overclock.eq(Rational.hundred)
+      ) {
         oc = settings.overclock.div(Rational.hundred);
         speed = speed.mul(oc);
       }
@@ -475,11 +488,7 @@ export class RecipeUtility {
     recipe: Recipe | RecipeRational,
     machine: MachineRational,
   ): boolean {
-    return (
-      (!machine.silo || !recipe.part) &&
-      machine.modules != null &&
-      machine.modules > 0
-    );
+    return (!machine.silo || !recipe.part) && !!machine.modules;
   }
 
   static adjustDataset(

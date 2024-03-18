@@ -693,6 +693,31 @@
                   >
                   </p-inputNumber>
                 }
+                @if (data().game === Game.FinalFactory) {
+                  <p-inputNumber
+                    #duplicatorsInput
+                    [min]="0"
+                    [step]="1"
+                    [maxFractionDigits]="0"
+                    [showButtons]="true"
+                    [size]="3"
+                    inputStyleClass="text-end"
+                    [pTooltip]="'steps.modifierCountTooltip' | translate"
+                    incrementButtonClass="p-button-text"
+                    decrementButtonClass="p-button-text"
+                    [ngModel]="step.recipeSettings.overclock"
+                    (onBlur)="
+                      changeRecipeField(
+                        step,
+                        duplicatorsInput.value ?? 0,
+                        machinesState(),
+                        data(),
+                        RecipeField.Overclock
+                      )
+                    "
+                  >
+                  </p-inputNumber>
+                }
                 @if (step.recipeSettings?.fuelId; as fuelId) {
                   @if (step.recipe.isBurn) {
                     <div class="d-flex align-items-center">
