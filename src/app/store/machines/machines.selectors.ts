@@ -26,7 +26,7 @@ export const getMachinesState = createSelector(
     def.moduleOptions = getIdOptions(
       data.moduleIds,
       data.itemEntities,
-      data.game !== Game.Satisfactory,
+      data.game !== Game.Satisfactory && data.game !== Game.FinalFactory,
     );
     if (data.game === Game.Factorio) {
       def.beaconCount = def.beaconCount ?? defaults?.beaconCount;
@@ -43,6 +43,12 @@ export const getMachinesState = createSelector(
       // Default = 100%
       def.overclock = def.overclock ?? 100;
     }
+
+    if (data.game === Game.FinalFactory) {
+      // Default = 0
+      def.overclock = def.overclock ?? 0;
+    }
+
     entities[''] = def;
 
     for (const id of data.machineIds.filter((i) => data.itemEntities[i])) {

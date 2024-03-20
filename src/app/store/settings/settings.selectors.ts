@@ -197,6 +197,7 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
       moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
       break;
     }
+    case Game.FinalFactory:
     case Game.Satisfactory: {
       moduleRank = m.moduleRank;
     }

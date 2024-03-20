@@ -442,8 +442,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
         case RecipeField.Overclock: {
           if (typeof event === 'number') {
             const def = machineSettings.overclock;
-            const value = Math.max(1, Math.min(250, event));
-            this.setOverclock(id, value, def, isObjective);
+            this.setOverclock(id, event, def, isObjective);
           }
           break;
         }
