@@ -1,13 +1,14 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   inject,
+  OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
+import { tap, withLatestFrom } from 'rxjs';
 
-import { CostKey, CostSettings } from '~/models';
+import { CostKey, CostSettings, DialogComponent } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Settings } from '~/store';
 
@@ -17,12 +18,10 @@ import { LabState, Settings } from '~/store';
   styleUrls: ['./costs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CostsComponent {
-  ref = inject(ChangeDetectorRef);
+export class CostsComponent extends DialogComponent implements OnInit {
   store = inject(Store<LabState>);
   contentSvc = inject(ContentService);
 
-  visible = false;
   editValue = { ...Settings.initialSettingsState.costs };
 
   get modified(): boolean {
@@ -31,16 +30,17 @@ export class CostsComponent {
     );
   }
 
-  constructor() {
-    this.contentSvc.showCosts$.pipe(takeUntilDestroyed()).subscribe(() => {
-      this.visible = true;
-      this.ref.markForCheck();
-    });
+  show$ = this.contentSvc.showCosts$.pipe(
+    takeUntilDestroyed(),
+    withLatestFrom(this.store.select(Settings.getCosts)),
+    tap(([_, c]) => {
+      this.initEdit(c);
+      this.show();
+    }),
+  );
 
-    this.store
-      .select(Settings.getCosts)
-      .pipe(takeUntilDestroyed())
-      .subscribe((c) => this.initEdit(c));
+  ngOnInit(): void {
+    this.show$.subscribe();
   }
 
   initEdit(costs: CostSettings): void {

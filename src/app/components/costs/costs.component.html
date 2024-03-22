@@ -4,11 +4,11 @@
   [dismissableMask]="true"
   [draggable]="false"
   [resizable]="false"
-  [style]="{ width: '300px' }"
+  [style]="{ width: '310px' }"
   [header]="'costs.header' | translate"
   (onHide)="save()"
 >
-  <table class="result-info my-2">
+  <table class="w-100">
     <tr [pTooltip]="'costs.recipeTooltip' | translate">
       <td>{{ 'costs.recipe' | translate }}</td>
       <td>
@@ -31,7 +31,7 @@
     </tr>
     <tr [pTooltip]="'costs.footprintTooltip' | translate">
       <td>{{ 'costs.footprint' | translate }}</td>
-      <td>
+      <td class="p-2">
         <p-checkbox
           [ngModel]="editValue.footprint !== '0'"
           [binary]="true"
@@ -88,7 +88,7 @@
         pButton
         pRipple
         type="button"
-        class="p-button-text"
+        class="p-button-outlined"
         icon="fa-solid fa-rotate-left"
         [label]="'reset' | translate"
         (click)="reset()"
@@ -98,10 +98,19 @@
       pButton
       pRipple
       type="button"
-      class="p-button-text"
+      class="p-button-outlined"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="visible = false"
+      (click)="hide()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined p-button-secondary"
+      icon="fa-solid fa-xmark"
+      [label]="'cancel' | translate"
+      (click)="hide(true)"
     ></button>
   </ng-template>
 </p-dialog>

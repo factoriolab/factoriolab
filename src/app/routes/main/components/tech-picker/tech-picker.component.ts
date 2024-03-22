@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   computed,
   EventEmitter,
@@ -13,6 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FilterService } from 'primeng/api';
 
 import { Game } from '~/models';
+import { DialogComponent } from '~/models/modal-component';
 import { ContentService } from '~/services';
 import { LabState, Preferences, Recipes } from '~/store';
 
@@ -24,8 +24,7 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
   styleUrls: ['./tech-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TechPickerComponent {
-  ref = inject(ChangeDetectorRef);
+export class TechPickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
   translateSvc = inject(TranslateService);
   store = inject(Store<LabState>);
@@ -79,7 +78,6 @@ export class TechPickerComponent {
     return { available, locked, researched };
   });
 
-  visible = false;
   importVisible = false;
   importValue = '';
 
@@ -88,8 +86,7 @@ export class TechPickerComponent {
   clickOpen(selection: string[] | null): void {
     selection = [...(selection ?? this.data().technologyIds)];
     this.selection.set(selection);
-    this.visible = true;
-    this.ref.markForCheck();
+    this.show();
   }
 
   selectAll(value: boolean): void {
@@ -98,6 +95,7 @@ export class TechPickerComponent {
 
   openImport(input: HTMLTextAreaElement): void {
     this.importVisible = true;
+    this.importValue = '';
     setTimeout(() => input.focus());
   }
 
@@ -188,7 +186,7 @@ game.write_file("techs.txt", table.concat(list, ","))
     } while (addIds.size);
   }
 
-  onHide(): void {
+  save(): void {
     const selection = this.selection();
     const data = this.data();
     if (selection.length === data.technologyIds.length)

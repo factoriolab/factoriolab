@@ -7,7 +7,7 @@
   [style]="{ width: '400px' }"
   [breakpoints]="{ '400px': '100vw' }"
   [header]="'columns.header' | translate"
-  (onHide)="save()"
+  (onHide)="onHide()"
 >
   <p-table
     responsiveLayout="scroll"
@@ -70,7 +70,7 @@
         pButton
         pRipple
         type="button"
-        class="p-button-text"
+        class="p-button-outlined"
         icon="fa-solid fa-rotate-left"
         [label]="'reset' | translate"
         (click)="reset()"
@@ -80,10 +80,19 @@
       pButton
       pRipple
       type="button"
-      class="p-button-text"
+      class="p-button-outlined"
       icon="fa-solid fa-check"
       [label]="'ok' | translate"
-      (click)="visible = false"
+      (click)="hide()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined p-button-secondary"
+      icon="fa-solid fa-xmark"
+      [label]="'cancel' | translate"
+      (click)="hide(true)"
     ></button>
   </ng-template>
 </p-dialog>
