@@ -12,6 +12,8 @@ import {
 export const enum MachinesActionType {
   SET_FUEL_RANK = '[Machines] Set Fuel Rank',
   SET_MODULE_RANK = '[Machines] Set Module Rank',
+  SET_DEFAULT_BEACONS = '[Machines] Set Default Beacons',
+  SET_DEFAULT_OVERCLOCK = '[Machines] Set Default Overclock',
   ADD = '[Machines] Add',
   REMOVE = '[Machines] Remove',
   SET_RANK = '[Machines] Set Rank',
@@ -31,6 +33,16 @@ export class SetFuelRankAction implements Action {
 export class SetModuleRankAction implements Action {
   readonly type = MachinesActionType.SET_MODULE_RANK;
   constructor(public payload: ValueDefaultPayload<string[]>) {}
+}
+
+export class SetDefaultBeaconsAction implements Action {
+  readonly type = MachinesActionType.SET_DEFAULT_BEACONS;
+  constructor(public payload: BeaconSettings[] | undefined) {}
+}
+
+export class SetDefaultOverclockAction implements Action {
+  readonly type = MachinesActionType.SET_DEFAULT_OVERCLOCK;
+  constructor(public payload: Rational | undefined) {}
 }
 
 export class AddAction implements Action {
@@ -81,6 +93,8 @@ export class ResetMachineAction implements Action {
 export type MachinesAction =
   | SetFuelRankAction
   | SetModuleRankAction
+  | SetDefaultBeaconsAction
+  | SetDefaultOverclockAction
   | AddAction
   | RemoveAction
   | SetRankAction

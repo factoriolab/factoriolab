@@ -458,6 +458,56 @@
                   </div>
                 </ng-template>
               </p-dropdown>
+              @if (data().game === Game.Satisfactory) {
+                <p-inputNumber
+                  #overclockInput
+                  labNoDrag
+                  suffix="%"
+                  [min]="1"
+                  [max]="250"
+                  [step]="10"
+                  [maxFractionDigits]="2"
+                  [showButtons]="true"
+                  inputStyleClass="text-end"
+                  [pTooltip]="'settings.overclockTooltip' | translate"
+                  [ngModel]="machinesState().overclock?.toNumber()"
+                  (onBlur)="
+                    setDefaultOverclock(
+                      Rational.fromNumber(overclockInput.value ?? 100)
+                    )
+                  "
+                >
+                </p-inputNumber>
+              }
+              @if (machinesState().beacons; as beacons) {
+                <button
+                  pButton
+                  pRipple
+                  type="button"
+                  class="hover-action icons p-button-text flex-column"
+                  (click)="beaconsOverlay.show($event, beacons)"
+                >
+                  @for (beacon of beacons; track $index) {
+                    <div class="d-flex">
+                      <i class="p-button-icon" [class]="beacon.id | iconSmClass"
+                        ><span>{{ beacon.count }}</span></i
+                      >
+                      @for (module of beacon.modules; track $index) {
+                        <i
+                          class="p-button-icon"
+                          [class]="module.id | iconSmClass"
+                          ><span>{{ module.count }}</span></i
+                        >
+                      }
+                    </div>
+                  }
+                  <i class="hover-icon fa-solid fa-gear"></i>
+                </button>
+                <lab-beacons-overlay
+                  #beaconsOverlay
+                  (setValue)="setDefaultBeacons($event)"
+                ></lab-beacons-overlay>
+              }
             </div>
             <ng-container
               *ngTemplateOutlet="
@@ -666,7 +716,7 @@
                       [showButtons]="true"
                       inputStyleClass="text-end"
                       [pTooltip]="'settings.overclockTooltip' | translate"
-                      [ngModel]="settings.overclock"
+                      [ngModel]="settings.overclock.toNumber()"
                       (onBlur)="
                         setOverclock(
                           machineId,
@@ -679,12 +729,12 @@
                     >
                     </p-inputNumber>
                   }
-                  @if (settings.beacons) {
+                  @if (settings.beacons.length) {
                     <button
                       pButton
                       pRipple
                       type="button"
-                      class="d-block hover-action icons p-button-text"
+                      class="hover-action icons p-button-text flex-column"
                       (click)="beaconsOverlay.show($event, settings.beacons)"
                     >
                       @for (beacon of settings.beacons; track $index) {

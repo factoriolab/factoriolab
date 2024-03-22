@@ -41,6 +41,10 @@ export function machinesReducer(
       return spread(state, {
         moduleRankIds: StoreUtility.compareValue(action.payload),
       });
+    case MachinesActionType.SET_DEFAULT_BEACONS:
+      return spread(state, { beacons: action.payload });
+    case MachinesActionType.SET_DEFAULT_OVERCLOCK:
+      return spread(state, { overclock: action.payload });
     case MachinesActionType.ADD: {
       const value = [
         ...(state.ids ?? action.payload.def ?? []),

@@ -398,6 +398,14 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.SetModuleRankAction({ value, def }));
   }
 
+  setDefaultBeacons(value: BeaconSettings[] | undefined): void {
+    this.store.dispatch(new Machines.SetDefaultBeaconsAction(value));
+  }
+
+  setDefaultOverclock(value: Rational | undefined): void {
+    this.store.dispatch(new Machines.SetDefaultOverclockAction(value));
+  }
+
   setFlowRate(value: Rational): void {
     this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
