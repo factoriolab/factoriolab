@@ -5,6 +5,7 @@
         width="3rem"
         [value]="entry.count.toString()"
         [maximum]="maximum()[i]"
+        [disabled]="entry.id === ItemId.Module"
         (setValue)="setCount($event, i)"
       ></lab-input-number>
       @if (options().length > 1) {
@@ -39,6 +40,15 @@
           <i [class]="entry.id | iconSmClass"></i>
         </span>
       }
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-solid fa-times"
+        class="p-button-outlined"
+        [disabled]="entry.id === ItemId.Module"
+        (click)="removeEntry(i)"
+      ></button>
     </div>
   }
 </p-overlayPanel>

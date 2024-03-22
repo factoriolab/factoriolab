@@ -33,6 +33,7 @@ export class InputNumberComponent implements OnInit {
   maximum = input<string | null | undefined>(null);
   width = input('');
   inputId = input('inputnumber');
+  disabled = input(false);
   hideButtons = input(false);
   textButtons = input(false);
 

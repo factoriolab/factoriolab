@@ -1587,7 +1587,6 @@ export class RouterService {
     const list = params[Section.Machines].split(LISTSEP);
     const state: Machines.MachinesState = { entities: {} };
     let ids: string[] | undefined;
-    console.log(params[Section.Machines]);
     for (let z = 0; z < list.length; z++) {
       const machine = list[z];
       const s = machine.split(FIELDSEP);

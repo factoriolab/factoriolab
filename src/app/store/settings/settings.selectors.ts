@@ -195,7 +195,7 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
   switch (base.game) {
     case Game.Factorio: {
       moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
-      if (preset > Preset.Modules && m.beacon) {
+      if (m.beacon) {
         const beacon = base.items.find((i) => i.id === m.beacon)?.beacon;
         if (beacon) {
           const id = m.beacon;
@@ -205,7 +205,13 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
               id: m.beaconModule ?? ItemId.Module,
             },
           ];
-          const count = preset === Preset.Beacon8 ? '8' : '12';
+
+          const count =
+            preset < Preset.Beacon8
+              ? '0'
+              : preset === Preset.Beacon8
+                ? '8'
+                : '12';
           beacons = [{ count, id, modules }];
         }
       }

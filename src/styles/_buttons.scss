@@ -4,11 +4,11 @@
   padding: 0.5rem 0;
   justify-content: center;
 
-  > .p-button-icon {
+  .p-button-icon {
     transition: all 300ms ease;
   }
 
-  > .hover-icon {
+  .hover-icon {
     position: absolute;
     z-index: 1;
 
@@ -23,18 +23,18 @@
   // These styles for hover/active
   &:hover,
   &.hover-active {
-    > .p-button-icon {
+    .p-button-icon {
       opacity: 0.3;
     }
 
-    > .hover-icon {
+    .hover-icon {
       opacity: 1;
     }
   }
 
   // These styles for hover & inactive
   &:hover:not(.hover-active) {
-    > .p-button-icon {
+    .p-button-icon {
       opacity: 0.6;
     }
   }
@@ -48,7 +48,7 @@
     padding: 0;
     flex-wrap: wrap;
 
-    > i.p-button-icon {
+    i.p-button-icon {
       margin: 8px;
     }
   }

@@ -58,6 +58,8 @@ export class ModulesOverlayComponent {
     return values.map((e) => e.count.add(remain).toString());
   });
 
+  ItemId = ItemId;
+
   show(
     event: Event,
     values: ModuleSettings[],
@@ -66,7 +68,7 @@ export class ModulesOverlayComponent {
   ): void {
     const slots = entity.modules;
     if (slots == null) return;
-    this.values.set(values.map((v) => ({ ...v })));
+    this.values.set(values);
     this.options.set(
       RecipeUtility.moduleOptions(entity, this.data(), recipeId),
     );
@@ -74,42 +76,61 @@ export class ModulesOverlayComponent {
     this.overlayPanel?.toggle(event);
   }
 
+  clone(values: ModuleSettings[]): ModuleSettings[] {
+    return values.map((v) => ({ ...v }));
+  }
+
   setCount(count: string, i: number): void {
     this.values.update((values) => {
+      values = this.clone(values);
       values[i].count = Rational.fromString(count);
-
-      const slotsNum = this.slots();
-      if (slotsNum !== true) {
-        const slots = Rational.fromNumber(slotsNum);
-        const sum = Rational.sum(values.map((v) => v.count));
-        if (sum.lt(slots)) {
-          const toAdd = slots.sub(sum);
-          const empty = values.find((e) => e.id === ItemId.Module);
-          if (empty) {
-            empty.count = empty.count.add(toAdd);
-          } else {
-            values.push({ id: ItemId.Module, count: toAdd });
-          }
-        } else if (sum.gt(slots)) {
-          const toSubtract = sum.sub(slots);
-          const empty = values.find((e) => e.id === ItemId.Module);
-          if (empty) empty.count = empty.count.sub(toSubtract);
-        }
-      }
-
-      return values.filter((e) => e.count.nonzero());
+      this.updateEmpty(values);
+      return values;
     });
   }
 
   setId(event: DropdownChangeEvent, i: number): void {
     event.originalEvent.stopPropagation();
     this.values.update((values) => {
+      values = this.clone(values);
       values[i].id = event.value;
       return values;
     });
   }
 
+  removeEntry(i: number): void {
+    this.values.update((values) => {
+      values = this.clone(values);
+      values = values.filter((_, vi) => vi !== i);
+      this.updateEmpty(values);
+      return values;
+    });
+  }
+
+  updateEmpty(values: ModuleSettings[]): void {
+    const slotsNum = this.slots();
+    if (slotsNum === true) return;
+    const slots = Rational.fromNumber(slotsNum);
+    const sum = Rational.sum(values.map((e) => e.count));
+    if (sum.lt(slots)) {
+      const toAdd = slots.sub(sum);
+      const empty = values.find((e) => e.id === ItemId.Module);
+      if (empty) {
+        empty.count = empty.count.add(toAdd);
+      } else {
+        values.push({ id: ItemId.Module, count: toAdd });
+      }
+    } else if (sum.gt(slots)) {
+      const toSubtract = sum.sub(slots);
+      const empty = values.find((e) => e.id === ItemId.Module);
+      if (empty) {
+        empty.count = empty.count.sub(toSubtract);
+        if (empty.count.isZero()) values.splice(values.indexOf(empty), 1);
+      }
+    }
+  }
+
   onHide(): void {
-    this.setValue.emit(this.values());
+    this.setValue.emit(this.values().filter((e) => e.count.nonzero()));
   }
 }

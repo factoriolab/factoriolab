@@ -67,7 +67,7 @@ export class BeaconsOverlayComponent {
   }
 
   removeEntry(i: number): void {
-    this.values.update((values) => values.filter((v, vi) => vi !== i));
+    this.values.update((values) => values.filter((_, vi) => vi !== i));
   }
 
   addEntry(): void {

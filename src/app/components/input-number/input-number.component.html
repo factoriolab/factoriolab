@@ -11,6 +11,7 @@
     labValidateNumber
     [minimum]="min()"
     [maximum]="max()"
+    [disabled]="disabled()"
     (input)="changeValue(input.value, 'input')"
     (blur)="changeValue(input.value, 'blur')"
     (keydown.enter)="changeValue(input.value, 'enter')"
@@ -24,7 +25,7 @@
         class="p-button-outlined p-inputnumber-button p-inputnumber-button-up"
         [class.p-button-text]="textButtons()"
         icon="fa-solid fa-angle-up"
-        [disabled]="isMaximum()"
+        [disabled]="disabled() || isMaximum()"
         (click)="increase()"
       ></button>
       <button
@@ -34,7 +35,7 @@
         class="p-button-outlined p-inputnumber-button p-inputnumber-button-down"
         [class.p-button-text]="textButtons()"
         icon="fa-solid fa-angle-down"
-        [disabled]="isMinimum()"
+        [disabled]="disabled() || isMinimum()"
         (click)="decrease()"
       ></button>
     </span>

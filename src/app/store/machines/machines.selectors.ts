@@ -51,8 +51,6 @@ export const getMachinesState = createSelector(
 
       s.overclock = s.overclock ?? overclock;
 
-      console.log(id, s);
-
       entities[id] = s;
     }
 

@@ -684,22 +684,24 @@
                       pButton
                       pRipple
                       type="button"
-                      class="hover-action icons p-button-text"
+                      class="d-block hover-action icons p-button-text"
                       (click)="beaconsOverlay.show($event, settings.beacons)"
                     >
                       @for (beacon of settings.beacons; track $index) {
-                        <i
-                          class="p-button-icon"
-                          [class]="beacon.id | iconSmClass"
-                          ><span>{{ beacon.count }}</span></i
-                        >
-                        @for (module of beacon.modules; track $index) {
+                        <div class="d-flex">
                           <i
                             class="p-button-icon"
-                            [class]="module.id | iconSmClass"
-                            ><span>{{ module.count }}</span></i
+                            [class]="beacon.id | iconSmClass"
+                            ><span>{{ beacon.count }}</span></i
                           >
-                        }
+                          @for (module of beacon.modules; track $index) {
+                            <i
+                              class="p-button-icon"
+                              [class]="module.id | iconSmClass"
+                              ><span>{{ module.count }}</span></i
+                            >
+                          }
+                        </div>
                       }
                       <i class="hover-icon fa-solid fa-gear"></i>
                     </button>
