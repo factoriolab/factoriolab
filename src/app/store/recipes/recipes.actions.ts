@@ -58,7 +58,7 @@ export class SetModulesAction implements Action {
 
 export class SetBeaconsAction implements Action {
   readonly type = RecipesActionType.SET_BEACONS;
-  constructor(public payload: IdValueDefaultPayload<BeaconSettings[]>) {}
+  constructor(public payload: IdValuePayload<BeaconSettings[]>) {}
 }
 
 export class SetOverclockAction implements Action {

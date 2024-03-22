@@ -32,6 +32,7 @@ export class BeaconsOverlayComponent {
 
   values = signal<BeaconSettings[]>([]);
   recipeId = signal<string | undefined>(undefined);
+  cancel = signal(false);
 
   show(event: Event, values: BeaconSettings[], recipeId?: string): void {
     this.values.set(
@@ -41,12 +42,25 @@ export class BeaconsOverlayComponent {
       })),
     );
     this.recipeId.set(recipeId);
+    this.cancel.set(false);
     this.overlayPanel?.toggle(event);
+  }
+
+  hide(cancel?: true): void {
+    if (cancel) this.cancel.set(cancel);
+    this.overlayPanel?.hide();
   }
 
   setCount(count: string, i: number): void {
     this.values.update((values) => {
-      values[i].count = count;
+      values[i].count = Rational.fromString(count);
+      return values;
+    });
+  }
+
+  setTotal(total: string, i: number): void {
+    this.values.update((values) => {
+      values[i].total = Rational.fromString(total);
       return values;
     });
   }
@@ -80,12 +94,13 @@ export class BeaconsOverlayComponent {
           count: count,
         },
       ];
-      values.push({ id, count: '1', modules });
+      values.push({ id, count: Rational.zero, modules });
       return values;
     });
   }
 
   onHide(): void {
-    this.setValue.emit(this.values().filter((v) => v.count !== '0'));
+    if (this.cancel()) return;
+    this.setValue.emit(this.values().filter((v) => v.count.nonzero()));
   }
 }

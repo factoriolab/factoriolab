@@ -208,10 +208,10 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
 
           const count =
             preset < Preset.Beacon8
-              ? '0'
+              ? Rational.zero
               : preset === Preset.Beacon8
-                ? '8'
-                : '12';
+                ? Rational.fromNumber(8)
+                : Rational.fromNumber(12);
           beacons = [{ count, id, modules }];
         }
       }

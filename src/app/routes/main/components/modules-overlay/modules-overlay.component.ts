@@ -43,6 +43,7 @@ export class ModulesOverlayComponent {
   values = signal<ModuleSettings[]>([]);
   options = signal<SelectItem<string>[]>([]);
   slots = signal<number | true>(true);
+  cancel = signal(false);
 
   exclude = computed(() => this.values().map((e) => e.id));
   sum = computed(() => Rational.sum(this.values().map((e) => e.count)));
@@ -73,7 +74,13 @@ export class ModulesOverlayComponent {
       RecipeUtility.moduleOptions(entity, this.data(), recipeId),
     );
     this.slots.set(slots);
+    this.cancel.set(false);
     this.overlayPanel?.toggle(event);
+  }
+
+  hide(cancel?: true): void {
+    if (cancel) this.cancel.set(cancel);
+    this.overlayPanel?.hide();
   }
 
   clone(values: ModuleSettings[]): ModuleSettings[] {
@@ -131,6 +138,7 @@ export class ModulesOverlayComponent {
   }
 
   onHide(): void {
+    if (this.cancel()) return;
     this.setValue.emit(this.values().filter((e) => e.count.nonzero()));
   }
 }

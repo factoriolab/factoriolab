@@ -1,13 +1,25 @@
 <p-overlayPanel appendTo="body" (onHide)="onHide()">
-  @for (entry of values(); let i = $index; track i) {
-    <div class="p-inputgroup">
-      <lab-input-number
-        width="3rem"
-        [value]="entry.count"
-        (setValue)="setCount($event, i)"
-      >
-      </lab-input-number>
-      @if (options().beacons.length > 1) {
+  <div class="d-flex flex-column gap-2">
+    @for (entry of values(); let i = $index; track i) {
+      <div class="p-inputgroup">
+        <lab-input-number
+          width="3rem"
+          [pTooltip]="'beaconsOverlay.eachTooltip' | translate"
+          tooltipPosition="top"
+          [value]="entry.count.toString()"
+          (setValue)="setCount($event, i)"
+        >
+        </lab-input-number>
+        @if (entry.total) {
+          <lab-input-number
+            width="3rem"
+            [pTooltip]="'beaconsOverlay.totalTooltip' | translate"
+            tooltipPosition="top"
+            [value]="entry.total.toString()"
+            (setValue)="setTotal($event, i)"
+          >
+          </lab-input-number>
+        }
         <p-dropdown
           labDropdownBase="icon"
           [ngModel]="entry.id"
@@ -34,52 +46,71 @@
             </div>
           </ng-template>
         </p-dropdown>
-      } @else {
-        <span class="p-inputgroup-addon">
-          <i [class]="entry.id | iconSmClass"></i>
-        </span>
-      }
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="hover-action icons p-button-outlined"
+          (click)="
+            modulesOverlay.show(
+              $event,
+              entry.modules,
+              data().beaconEntities[entry.id],
+              recipeId()
+            )
+          "
+        >
+          @for (module of entry.modules; track module) {
+            <i class="p-button-icon" [class]="module.id | iconSmClass"
+              ><span>{{ module.count }}</span></i
+            >
+          }
+          <i class="hover-icon fa-solid fa-gear"></i>
+        </button>
+        <lab-modules-overlay
+          #modulesOverlay
+          (setValue)="setModules($event, i)"
+        ></lab-modules-overlay>
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="fa-solid fa-times"
+          class="p-button-outlined"
+          (click)="removeEntry(i)"
+        ></button>
+      </div>
+    }
+    <div class="d-flex">
       <button
         pButton
         pRipple
         type="button"
-        class="hover-action icons p-button-text"
-        (click)="
-          modulesOverlay.show(
-            $event,
-            entry.modules,
-            data().beaconEntities[entry.id],
-            recipeId()
-          )
-        "
-      >
-        @for (module of entry.modules; track module) {
-          <i class="p-button-icon" [class]="module.id | iconSmClass"
-            ><span>{{ module.count }}</span></i
-          >
-        }
-        <i class="hover-icon fa-solid fa-gear"></i>
-      </button>
-      <lab-modules-overlay
-        #modulesOverlay
-        (setValue)="setModules($event, i)"
-      ></lab-modules-overlay>
-      <button
-        pButton
-        pRipple
-        type="button"
-        icon="fa-solid fa-times"
-        class="p-button-outlined"
-        (click)="removeEntry(i)"
+        icon="fa-solid fa-plus"
+        class="p-button-outlined p-button-sm flex-grow-1"
+        [label]="'beaconsOverlay.addBeacons' | translate"
+        (click)="addEntry()"
       ></button>
     </div>
-  }
-  <button
-    pButton
-    pRipple
-    type="button"
-    class="mt-2 p-button-outlined p-button-sm w-100"
-    [label]="'beaconsOverlay.addBeacons' | translate"
-    (click)="addEntry()"
-  ></button>
+    <div class="d-flex gap-2">
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-solid fa-check"
+        class="p-button-outlined p-button-sm p-button-success flex-grow-1"
+        [label]="'ok' | translate"
+        (click)="hide()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-solid fa-xmark"
+        class="p-button-outlined p-button-sm p-button-danger flex-grow-1"
+        [label]="'cancel' | translate"
+        (click)="hide(true)"
+      ></button>
+    </div>
+  </div>
 </p-overlayPanel>

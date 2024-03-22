@@ -1243,9 +1243,9 @@ export class RouterService {
     hash: ModHash,
   ): number[] {
     return beacons.map((obj, i) => {
-      const count = this.zipTruthyString(obj.count);
+      const count = this.zipTruthyString(obj.count.toString());
       const modules = this.zipTruthyArray(moduleMap[i]);
-      const total = this.zipTruthyString(obj.total);
+      const total = this.zipTruthyString(obj.total?.toString());
       const zip: Zip = {
         bare: this.zipFields([
           count,
@@ -1282,12 +1282,12 @@ export class RouterService {
       const s = beacon.split(FIELDSEP);
       let i = 0;
       const obj: BeaconSettings = {
-        count: orString(this.parseString(s[i++])),
+        count: Rational.from(this.parseString(s[i++]) ?? 0),
         id: orString(this.parseString(s[i++], hash?.beacons)),
         modules: orEmpty(
           this.parseArray(s[i++])?.map((i) => moduleSettings[Number(i)] ?? {}),
         ),
-        total: this.parseString(s[i++]),
+        total: Rational.from(this.parseString(s[i++])),
       };
 
       this.deleteEmptyKeys(obj);

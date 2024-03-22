@@ -1,11 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import {
-  Entities,
-  Rational,
-  RecipeSettings,
-  RecipeSettingsRational,
-} from '~/models';
+import { Entities, RecipeSettings, RecipeSettingsRational } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
@@ -75,8 +70,7 @@ export const getRecipesState = createSelector(
         for (const beaconSettings of s.beacons) {
           if (
             beaconSettings.total != null &&
-            (beaconSettings.count == null ||
-              Rational.fromString(beaconSettings.count).isZero())
+            (beaconSettings.count == null || beaconSettings.count.isZero())
           )
             // No actual beacons, ignore the total beacons
             delete beaconSettings.total;

@@ -424,6 +424,8 @@
     "cost": "Cost"
   },
   "beaconsOverlay": {
-    "addBeacons": "Add beacons"
+    "addBeacons": "Add beacons",
+    "eachTooltip": "Beacons per machine",
+    "totalTooltip": "Total beacons"
   }
 }

@@ -1,7 +1,7 @@
 import { SelectItem } from 'primeng/api';
 
 import { Rational } from '../rational';
-import { BeaconSettings, BeaconSettingsRational } from './beacon-settings';
+import { BeaconSettings } from './beacon-settings';
 import { ModuleSettings } from './module-settings';
 
 export interface RecipeSettings {
@@ -29,7 +29,7 @@ export class RecipeSettingsRational {
   modules?: ModuleSettings[];
   /** Calculated, not configurable */
   moduleOptions?: SelectItem<string>[];
-  beacons?: BeaconSettingsRational[];
+  beacons?: BeaconSettings[];
   overclock?: Rational;
   cost?: Rational;
 
@@ -41,7 +41,7 @@ export class RecipeSettingsRational {
     this.fuelOptions = obj.fuelOptions;
     this.modules = obj.modules;
     this.moduleOptions = obj.moduleOptions;
-    this.beacons = obj.beacons?.map((b) => new BeaconSettingsRational(b));
+    this.beacons = obj.beacons;
     this.overclock = Rational.from(obj.overclock);
     this.cost = Rational.from(obj.cost);
   }

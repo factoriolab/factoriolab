@@ -183,7 +183,7 @@ export function objectivesReducer(
       return {
         ...state,
         ...{
-          entities: StoreUtility.compareReset(
+          entities: StoreUtility.assignValue(
             state.entities,
             'beacons',
             action.payload,

@@ -62,6 +62,8 @@ body.light .p-button.hover-action.hover-active .p-button-icon {
 // Icon dropdown styles
 .p-dropdown.icon,
 .p-multiselect.icon {
+  min-height: 36px;
+
   .lab-icon,
   .fa-solid {
     transition: opacity 300ms ease;
@@ -92,4 +94,13 @@ body.light .p-button.hover-action.hover-active .p-button-icon {
 
 .p-multiselect.icons {
   min-height: 36px;
+}
+
+.p-inputgroup {
+  > p-dropdown[labdropdownbase='icon'],
+  > p-multiselect[labdropdownbase='icon'] {
+    flex-basis: 36px;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
 }

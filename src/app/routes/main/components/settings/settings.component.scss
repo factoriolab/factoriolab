@@ -48,15 +48,3 @@
     width: 323px;
   }
 }
-
-/** Machine InputGroup styles */
-.p-inputgroup.machine-preference {
-  min-height: 36px;
-
-  p-dropdown,
-  p-multiselect {
-    flex-basis: 36px;
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-}

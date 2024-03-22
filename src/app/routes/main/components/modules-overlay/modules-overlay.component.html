@@ -1,14 +1,14 @@
 <p-overlayPanel appendTo="body" (onHide)="onHide()">
-  @for (entry of values(); let i = $index; track i) {
-    <div class="p-inputgroup">
-      <lab-input-number
-        width="3rem"
-        [value]="entry.count.toString()"
-        [maximum]="maximum()[i]"
-        [disabled]="entry.id === ItemId.Module"
-        (setValue)="setCount($event, i)"
-      ></lab-input-number>
-      @if (options().length > 1) {
+  <div class="d-flex flex-column gap-2">
+    @for (entry of values(); let i = $index; track i) {
+      <div class="p-inputgroup">
+        <lab-input-number
+          width="3rem"
+          [value]="entry.count.toString()"
+          [maximum]="maximum()[i]"
+          [disabled]="entry.id === ItemId.Module"
+          (setValue)="setCount($event, i)"
+        ></lab-input-number>
         <p-dropdown
           labDropdownBase="icon"
           [ngModel]="entry.id"
@@ -35,20 +35,36 @@
             </div>
           </ng-template>
         </p-dropdown>
-      } @else {
-        <span class="p-inputgroup-addon">
-          <i [class]="entry.id | iconSmClass"></i>
-        </span>
-      }
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="fa-solid fa-times"
+          class="p-button-outlined"
+          [disabled]="entry.id === ItemId.Module"
+          (click)="removeEntry(i)"
+        ></button>
+      </div>
+    }
+    <div class="d-flex gap-2">
       <button
         pButton
         pRipple
         type="button"
-        icon="fa-solid fa-times"
-        class="p-button-outlined"
-        [disabled]="entry.id === ItemId.Module"
-        (click)="removeEntry(i)"
+        icon="fa-solid fa-check"
+        class="p-button-outlined p-button-sm p-button-success flex-grow-1"
+        [label]="'ok' | translate"
+        (click)="hide()"
+      ></button>
+      <button
+        pButton
+        pRipple
+        type="button"
+        icon="fa-solid fa-xmark"
+        class="p-button-outlined p-button-sm p-button-danger flex-grow-1"
+        [label]="'cancel' | translate"
+        (click)="hide(true)"
       ></button>
     </div>
-  }
+  </div>
 </p-overlayPanel>
