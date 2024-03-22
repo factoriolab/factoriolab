@@ -1,15 +1,15 @@
 export interface ModDefaults {
-  beacon: string;
-  minBelt: string;
-  maxBelt: string;
+  beacon?: string;
+  minBelt?: string;
+  maxBelt?: string;
   minPipe?: string;
   maxPipe?: string;
-  fuel: string;
-  cargoWagon: string;
-  fluidWagon: string;
+  cargoWagon?: string;
+  fluidWagon?: string;
   excludedRecipes: string[];
-  minMachineRank: string[];
-  maxMachineRank: string[];
-  moduleRank: string[];
-  beaconModule: string;
+  fuelRank?: string[];
+  minMachineRank?: string[];
+  maxMachineRank?: string[];
+  moduleRank?: string[];
+  beaconModule?: string;
 }

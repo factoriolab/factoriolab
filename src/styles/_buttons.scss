@@ -1,6 +1,6 @@
 // Hover icon button styles (e.g. item exclude button)
 .p-button.hover-action {
-  width: 2.571rem;
+  min-width: 2.571rem;
   padding: 0.5rem 0;
   justify-content: center;
 
@@ -16,6 +16,7 @@
 
     transition: opacity 300ms ease;
 
+    color: var(--text-color-secondary);
     text-shadow: 0 0 3px var(--surface-card);
   }
 
@@ -23,7 +24,7 @@
   &:hover,
   &.hover-active {
     > .p-button-icon {
-      opacity: 0.4;
+      opacity: 0.3;
     }
 
     > .hover-icon {
@@ -34,7 +35,21 @@
   // These styles for hover & inactive
   &:hover:not(.hover-active) {
     > .p-button-icon {
-      opacity: 0.8;
+      opacity: 0.6;
+    }
+  }
+
+  &:hover {
+    background-color: var(--surface-b);
+    border: 1px solid var(--primary-color);
+  }
+
+  &.icons {
+    padding: 0;
+    flex-wrap: wrap;
+
+    > i.p-button-icon {
+      margin: 8px;
     }
   }
 }
@@ -73,4 +88,8 @@ body.light .p-button.hover-action.hover-active .p-button-icon {
       opacity: 1;
     }
   }
+}
+
+.p-multiselect.icons {
+  min-height: 36px;
 }

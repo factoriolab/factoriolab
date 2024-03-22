@@ -54,10 +54,7 @@ export class ItemRational {
     this.name = obj.name;
     this.category = obj.category;
     this.row = Math.round(obj.row);
-
-    if (obj.stack) {
-      this.stack = Rational.fromNumber(obj.stack);
-    }
+    this.stack = Rational.from(obj.stack);
 
     if (obj.beacon) {
       this.beacon = new BeaconRational(obj.beacon);

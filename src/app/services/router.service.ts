@@ -8,9 +8,10 @@ import { combineLatest, debounceTime, Observable, Subject } from 'rxjs';
 import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
-import { filterNullish, orString } from '~/helpers';
+import { filterNullish, orEmpty, orString } from '~/helpers';
 import {
   BeaconSettings,
+  CostSettings,
   DisplayRate,
   Entities,
   Game,
@@ -19,6 +20,7 @@ import {
   ItemSettings,
   MachineSettings,
   ModHash,
+  ModuleSettings,
   Objective,
   ObjectiveType,
   ObjectiveUnit,
@@ -68,6 +70,7 @@ export enum Section {
   Items = 'i',
   Recipes = 'r',
   Machines = 'f',
+  Modules = 'm',
   Beacons = 'e',
   Settings = 's',
   Zip = 'z',
@@ -96,11 +99,22 @@ export interface Zip {
   hash: string;
 }
 
+export interface ZipRecipeSettingsInfo {
+  idMap: Entities<number>;
+  list: Zip[];
+}
+
+export interface ZipMachineSettings {
+  moduleMap: Entities<number[]>;
+  beaconMap: Entities<number[]>;
+}
+
 export interface ZipData {
   objectives: Zip;
   config: Zip;
-  objectiveBeaconMap: Entities<number[]>;
-  recipeBeaconMap: Entities<number[]>;
+  objectiveSettings: ZipMachineSettings;
+  recipeSettings: ZipMachineSettings;
+  machineSettings: ZipMachineSettings;
 }
 
 export interface MigrationState {
@@ -140,6 +154,14 @@ export class RouterService {
 
   get empty(): Zip {
     return { bare: '', hash: '' };
+  }
+
+  get emptyRecipeSettingsInfo(): ZipRecipeSettingsInfo {
+    return { idMap: {}, list: [] };
+  }
+
+  get emptyMachineSettings(): ZipMachineSettings {
+    return { moduleMap: {}, beaconMap: {} };
   }
 
   constructor() {
@@ -321,13 +343,18 @@ export class RouterService {
       filter((hash): hash is ModHash => hash != null),
       first(),
       map((hash) => {
-        // Setup object lists
-        const o = objectives.ids.map((i) => objectives.entities[i]);
-
-        // Beacons
-        const zData = this.zipBeacons(o, recipesState, hash);
+        // Modules & Beacons
+        const zData = this.zipModulesBeacons(
+          objectives,
+          recipesState,
+          machinesState,
+          hash,
+        );
 
         // Item Objectives
+        const o = Object.keys(objectives.entities).map(
+          (k) => objectives.entities[k],
+        );
         this.zipObjectives(zData, o, hash);
 
         // Mod (Hashed only, for hash lookup)
@@ -383,8 +410,9 @@ export class RouterService {
     const zData: ZipData = {
       objectives: this.empty,
       config: config,
-      recipeBeaconMap: {},
-      objectiveBeaconMap: {},
+      objectiveSettings: this.emptyMachineSettings,
+      recipeSettings: this.emptyMachineSettings,
+      machineSettings: this.emptyMachineSettings,
     };
     this.zipObjectives(zData, objectives, hash);
     return 'list?' + this.getHash(zData);
@@ -450,10 +478,12 @@ export class RouterService {
           this.displayWarnings(warnings);
           const state: App.PartialState = {};
           if (isBare) {
-            const beaconSettings = this.unzipBeacons(params);
+            const moduleSettings = this.unzipModules(params);
+            const beaconSettings = this.unzipBeacons(params, moduleSettings);
             if (params[Section.Objectives]) {
               state.objectivesState = this.unzipObjectives(
                 params,
+                moduleSettings,
                 beaconSettings,
               );
             }
@@ -461,10 +491,18 @@ export class RouterService {
               state.itemsState = this.unzipItems(params);
             }
             if (params[Section.Recipes]) {
-              state.recipesState = this.unzipRecipes(params, beaconSettings);
+              state.recipesState = this.unzipRecipes(
+                params,
+                moduleSettings,
+                beaconSettings,
+              );
             }
             if (params[Section.Machines]) {
-              state.machinesState = this.unzipMachines(params);
+              state.machinesState = this.unzipMachines(
+                params,
+                moduleSettings,
+                beaconSettings,
+              );
             }
             if (params[Section.Settings]) {
               state.settingsState = this.unzipSettings(params);
@@ -475,10 +513,16 @@ export class RouterService {
             this.dataSvc
               .requestData(modId || Settings.initialSettingsState.modId)
               .subscribe(([_, hash]) => {
-                const beaconSettings = this.unzipBeacons(params, hash);
+                const moduleSettings = this.unzipModules(params, hash);
+                const beaconSettings = this.unzipBeacons(
+                  params,
+                  moduleSettings,
+                  hash,
+                );
                 if (params[Section.Objectives]) {
                   state.objectivesState = this.unzipObjectives(
                     params,
+                    moduleSettings,
                     beaconSettings,
                     hash,
                   );
@@ -489,12 +533,18 @@ export class RouterService {
                 if (params[Section.Recipes]) {
                   state.recipesState = this.unzipRecipes(
                     params,
+                    moduleSettings,
                     beaconSettings,
                     hash,
                   );
                 }
                 if (params[Section.Machines]) {
-                  state.machinesState = this.unzipMachines(params, hash);
+                  state.machinesState = this.unzipMachines(
+                    params,
+                    moduleSettings,
+                    beaconSettings,
+                    hash,
+                  );
                 }
                 if (params[Section.Settings]) {
                   state.settingsState = this.unzipSettings(params, hash);
@@ -1035,111 +1085,210 @@ export class RouterService {
     }
   }
 
-  zipBeacons(
-    objectives: Objective[],
+  zipModulesBeacons(
+    objectives: Objectives.ObjectivesState,
     recipes: Recipes.RecipesState,
+    machines: Machines.MachinesState,
     hash: ModHash,
   ): ZipData {
-    const list: Zip[] = [];
-    const beaconsIdMap: Entities<number> = {};
-    const objectiveBeaconMap: Entities<number[]> = {};
-    const recipeBeaconMap: Entities<number[]> = {};
+    const modulesInfo = this.emptyRecipeSettingsInfo;
+    const beaconsInfo = this.emptyRecipeSettingsInfo;
 
-    for (const objective of objectives) {
-      if (objective.beacons != null) {
-        objectiveBeaconMap[objective.id] = this.zipBeaconArray(
-          objective.beacons,
-          beaconsIdMap,
-          list,
-          hash,
-        );
-      }
+    const objectiveSettings = this.zipMachineSettings(
+      objectives.entities,
+      modulesInfo,
+      beaconsInfo,
+      hash,
+    );
+    const recipeSettings = this.zipMachineSettings(
+      recipes,
+      modulesInfo,
+      beaconsInfo,
+      hash,
+    );
+    const machineSettings = this.zipMachineSettings(
+      machines.entities,
+      modulesInfo,
+      beaconsInfo,
+      hash,
+    );
+
+    if (machines.beacons) {
+      const moduleMap = this.beaconModuleMap(
+        machines.beacons,
+        modulesInfo,
+        hash,
+      );
+      machineSettings.beaconMap[''] = this.zipBeaconArray(
+        machines.beacons,
+        moduleMap,
+        beaconsInfo,
+        hash,
+      );
     }
 
-    for (const recipeId of Object.keys(recipes)) {
-      const recipe = recipes[recipeId];
-      if (recipe.beacons != null) {
-        recipeBeaconMap[recipeId] = this.zipBeaconArray(
-          recipe.beacons,
-          beaconsIdMap,
-          list,
-          hash,
-        );
+    const config = this.empty;
+    const data = [
+      [Section.Modules, modulesInfo.list],
+      [Section.Beacons, beaconsInfo.list],
+    ] as const;
+    data.forEach(([section, list]) => {
+      const z = this.zipList(list);
+      if (z.bare.length) {
+        config.bare += `&${section}=${z.bare}`;
+        config.hash += `&${section}${z.hash}`;
       }
-    }
-
-    const z = this.zipList(list);
-    const config: Zip = z.bare.length
-      ? {
-          bare: `&${Section.Beacons}=${z.bare}`,
-          hash: `&${Section.Beacons}${z.hash}`,
-        }
-      : this.empty;
+    });
 
     return {
       objectives: this.empty,
       config,
-      objectiveBeaconMap: objectiveBeaconMap,
-      recipeBeaconMap,
+      objectiveSettings,
+      recipeSettings,
+      machineSettings,
     };
+  }
+
+  zipMachineSettings(
+    state: Entities<Objective | RecipeSettings | MachineSettings>,
+    modulesInfo: ZipRecipeSettingsInfo,
+    beaconsInfo: ZipRecipeSettingsInfo,
+    hash: ModHash,
+  ): ZipMachineSettings {
+    const result = this.emptyMachineSettings;
+    for (const id of Object.keys(state)) {
+      const value = state[id];
+      if (value.modules != null) {
+        result.moduleMap[id] = this.zipModuleArray(
+          value.modules,
+          modulesInfo,
+          hash,
+        );
+      }
+
+      if (value.beacons != null) {
+        const moduleMap = this.beaconModuleMap(
+          value.beacons,
+          modulesInfo,
+          hash,
+        );
+        result.beaconMap[id] = this.zipBeaconArray(
+          value.beacons,
+          moduleMap,
+          beaconsInfo,
+          hash,
+        );
+      }
+    }
+
+    return result;
+  }
+
+  beaconModuleMap(
+    beacons: BeaconSettings[],
+    modulesInfo: ZipRecipeSettingsInfo,
+    hash: ModHash,
+  ): (number[] | undefined)[] {
+    return beacons.map((beacon) => {
+      if (beacon.modules == null) return undefined;
+      return this.zipModuleArray(beacon.modules, modulesInfo, hash);
+    });
+  }
+
+  zipModuleArray(
+    values: ModuleSettings[],
+    modulesInfo: ZipRecipeSettingsInfo,
+    hash: ModHash,
+  ): number[] {
+    return values.map((obj) => {
+      const count = this.zipTruthyString(obj.count.toString());
+      const zip: Zip = {
+        bare: this.zipFields([count, this.zipTruthyString(obj.id)]),
+        hash: this.zipFields([
+          count,
+          this.zipTruthyNString(obj.id, hash.modules),
+        ]),
+      };
+
+      if (modulesInfo.idMap[zip.bare] == null) {
+        modulesInfo.idMap[zip.bare] = modulesInfo.list.length;
+        modulesInfo.list.push(zip);
+      }
+
+      return modulesInfo.idMap[zip.bare];
+    });
+  }
+
+  unzipModules(params: Entities, hash?: ModHash): ModuleSettings[] {
+    if (!params[Section.Modules]) return [];
+
+    const list = params[Section.Modules].split(LISTSEP);
+    return list.map((module) => {
+      const s = module.split(FIELDSEP);
+      let i = 0;
+      const obj: ModuleSettings = {
+        count: Rational.from(this.parseString(s[i++]) ?? 0),
+        id: this.parseString(s[i++], hash?.modules) ?? '',
+      };
+
+      this.deleteEmptyKeys(obj);
+      return obj;
+    });
   }
 
   zipBeaconArray(
     beacons: BeaconSettings[],
-    beaconsIdMap: Entities<number>,
-    list: Zip[],
+    moduleMap: (number[] | undefined)[],
+    beaconsInfo: ZipRecipeSettingsInfo,
     hash: ModHash,
   ): number[] {
-    return beacons.map((obj) => {
+    return beacons.map((obj, i) => {
+      const count = this.zipTruthyString(obj.count);
+      const modules = this.zipTruthyArray(moduleMap[i]);
+      const total = this.zipTruthyString(obj.total);
       const zip: Zip = {
         bare: this.zipFields([
-          this.zipTruthyString(obj.count),
-          this.zipTruthyArray(obj.moduleIds),
+          count,
           this.zipTruthyString(obj.id),
-          this.zipTruthyString(obj.total),
+          modules,
+          total,
         ]),
         hash: this.zipFields([
-          this.zipTruthyString(obj.count),
-          this.zipTruthyNArray(obj.moduleIds, hash.modules),
+          count,
           this.zipTruthyNString(obj.id, hash.beacons),
-          this.zipTruthyString(obj.total),
+          modules,
+          total,
         ]),
       };
 
-      if (beaconsIdMap[zip.bare] == null) {
-        beaconsIdMap[zip.bare] = list.length;
-        list.push(zip);
+      if (beaconsInfo.idMap[zip.bare] == null) {
+        beaconsInfo.idMap[zip.bare] = beaconsInfo.list.length;
+        beaconsInfo.list.push(zip);
       }
 
-      return beaconsIdMap[zip.bare];
+      return beaconsInfo.idMap[zip.bare];
     });
   }
 
-  unzipBeacons(params: Entities, hash?: ModHash): BeaconSettings[] {
+  unzipBeacons(
+    params: Entities,
+    moduleSettings: ModuleSettings[],
+    hash?: ModHash,
+  ): BeaconSettings[] {
     if (!params[Section.Beacons]) return [];
 
     const list = params[Section.Beacons].split(LISTSEP);
-
     return list.map((beacon) => {
       const s = beacon.split(FIELDSEP);
       let i = 0;
-      let obj: BeaconSettings;
-
-      if (hash) {
-        obj = {
-          count: this.parseString(s[i++]),
-          moduleIds: this.parseNArray(s[i++], hash.modules),
-          id: this.parseNString(s[i++], hash.beacons),
-          total: this.parseString(s[i++]),
-        };
-      } else {
-        obj = {
-          count: this.parseString(s[i++]),
-          moduleIds: this.parseArray(s[i++]),
-          id: this.parseString(s[i++]),
-          total: this.parseString(s[i++]),
-        };
-      }
+      const obj: BeaconSettings = {
+        count: orString(this.parseString(s[i++])),
+        id: orString(this.parseString(s[i++], hash?.beacons)),
+        modules: orEmpty(
+          this.parseArray(s[i++])?.map((i) => moduleSettings[Number(i)] ?? {}),
+        ),
+        total: this.parseString(s[i++]),
+      };
 
       this.deleteEmptyKeys(obj);
       return obj;
@@ -1152,6 +1301,13 @@ export class RouterService {
         const value = Rational.fromString(obj.value).toString();
         const unit = this.zipDiffNumber(obj.unit, ObjectiveUnit.Items);
         const type = this.zipDiffNumber(obj.type, ObjectiveType.Output);
+        const modules = this.zipTruthyArray(
+          data.objectiveSettings.moduleMap[obj.id],
+        );
+        const beacons = this.zipTruthyArray(
+          data.objectiveSettings.beaconMap[obj.id],
+        );
+        const checked = this.zipTruthyBool(obj.checked);
 
         return {
           bare: this.zipFields([
@@ -1160,10 +1316,10 @@ export class RouterService {
             unit,
             type,
             this.zipTruthyString(obj.machineId),
-            this.zipTruthyArray(obj.machineModuleIds),
-            this.zipTruthyArray(data.objectiveBeaconMap[obj.id]),
+            modules,
+            beacons,
             this.zipTruthyNumber(obj.overclock),
-            this.zipTruthyBool(obj.checked),
+            checked,
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(
@@ -1174,10 +1330,10 @@ export class RouterService {
             unit,
             type,
             this.zipTruthyNString(obj.machineId, hash.machines),
-            this.zipTruthyNArray(obj.machineModuleIds, hash.modules),
-            this.zipTruthyArray(data.objectiveBeaconMap[obj.id]),
-            this.zipTruthyNumber(obj.overclock),
-            this.zipTruthyBool(obj.checked),
+            modules,
+            beacons,
+            this.zipTruthyNNumber(obj.overclock),
+            checked,
           ]),
         };
       }),
@@ -1191,6 +1347,7 @@ export class RouterService {
 
   unzipObjectives(
     params: Entities,
+    moduleSettings: ModuleSettings[],
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
   ): Objectives.ObjectivesState {
@@ -1202,45 +1359,30 @@ export class RouterService {
       const s = itemObjective.split(FIELDSEP);
       let i = 0;
       const id = index.toString();
-      let obj: Objective;
+      const obj: Objective = {
+        id: index.toString(),
+        targetId: s[i++], // Convert to real id after determining unit, if hashed
+        value: s[i++],
+        unit: Number(s[i++]) | ObjectiveUnit.Items,
+        type: Number(s[i++]) | ObjectiveType.Output,
+        machineId: this.parseString(s[i++], hash?.machines),
+        modules: this.parseArray(s[i++])?.map(
+          (i) => moduleSettings[Number(i)] ?? {},
+        ),
+        beacons: this.parseArray(s[i++])?.map(
+          (i) => beaconSettings[Number(i)] ?? {},
+        ),
+        overclock: this.parseNumber(s[i++], hash != null),
+        checked: this.parseBool(s[i++]),
+      };
 
       if (hash) {
-        obj = {
-          id,
-          targetId: s[i++], // Convert to real id after determining unit
-          value: s[i++],
-          unit: Number(s[i++]) | ObjectiveUnit.Items,
-          type: Number(s[i++]) | ObjectiveType.Output,
-          machineId: this.parseNString(s[i++], hash.machines),
-          machineModuleIds: this.parseNArray(s[i++], hash.modules),
-          beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)] ?? {},
-          ),
-          overclock: this.parseNumber(s[i++]),
-          checked: this.parseBool(s[i++]),
-        };
-
         obj.targetId = orString(
           this.parseNString(
             obj.targetId,
             isRecipeObjective(obj) ? hash.recipes : hash.items,
           ),
         );
-      } else {
-        obj = {
-          id,
-          targetId: s[i++],
-          value: s[i++],
-          unit: Number(s[i++]) | ObjectiveUnit.Items,
-          type: Number(s[i++]) | ObjectiveType.Output,
-          machineId: this.parseString(s[i++]),
-          machineModuleIds: this.parseArray(s[i++]),
-          beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)] ?? {},
-          ),
-          overclock: this.parseNumber(s[i++]),
-          checked: this.parseBool(s[i++]),
-        };
       }
 
       this.deleteEmptyKeys(obj);
@@ -1253,24 +1395,25 @@ export class RouterService {
 
   zipItems(data: ZipData, state: Items.ItemsState, hash: ModHash): void {
     const z = this.zipList(
-      Object.keys(state).map((i) => {
-        const obj = state[i];
-        const g = this.zipTruthyBool(obj.excluded);
+      Object.keys(state).map((id) => {
+        const obj = state[id];
+        const excluded = this.zipTruthyBool(obj.excluded);
+        const checked = this.zipTruthyBool(obj.checked);
 
         return {
           bare: this.zipFields([
-            i,
-            g,
+            id,
+            excluded,
             this.zipTruthyString(obj.beltId),
             this.zipTruthyString(obj.wagonId),
-            this.zipTruthyBool(obj.checked),
+            checked,
           ]),
           hash: this.zipFields([
-            this.zipTruthyNString(i, hash.items),
-            g,
+            this.zipTruthyNString(id, hash.items),
+            excluded,
             this.zipTruthyNString(obj.beltId, hash.belts),
             this.zipTruthyNString(obj.wagonId, hash.wagons),
-            this.zipTruthyBool(obj.checked),
+            checked,
           ]),
         };
       }),
@@ -1288,26 +1431,13 @@ export class RouterService {
     for (const item of list) {
       const s = item.split(FIELDSEP);
       let i = 0;
-      let id: string;
-      let obj: ItemSettings;
-
-      if (hash) {
-        id = orString(this.parseNString(s[i++], hash.items));
-        obj = {
-          excluded: this.parseBool(s[i++]),
-          beltId: this.parseNString(s[i++], hash.belts),
-          wagonId: this.parseNString(s[i++], hash.wagons),
-          checked: this.parseBool(s[i++]),
-        };
-      } else {
-        id = s[i++];
-        obj = {
-          excluded: this.parseBool(s[i++]),
-          beltId: this.parseString(s[i++]),
-          wagonId: this.parseString(s[i++]),
-          checked: this.parseBool(s[i++]),
-        };
-      }
+      const id = orString(this.parseString(s[i++], hash?.items));
+      const obj: ItemSettings = {
+        excluded: this.parseBool(s[i++]),
+        beltId: this.parseString(s[i++], hash?.belts),
+        wagonId: this.parseString(s[i++], hash?.wagons),
+        checked: this.parseBool(s[i++]),
+      };
 
       this.deleteEmptyKeys(obj);
       entities[id] = obj;
@@ -1319,28 +1449,34 @@ export class RouterService {
     const z = this.zipList(
       Object.keys(state).map((i) => {
         const obj = state[i];
+        const excluded = this.zipTruthyBool(obj.excluded);
+        const modules = this.zipTruthyArray(data.recipeSettings.moduleMap[i]);
+        const beacons = this.zipTruthyArray(data.recipeSettings.beaconMap[i]);
+
+        const cost = this.zipTruthyString(obj.cost);
+        const checked = this.zipTruthyBool(obj.checked);
 
         return {
           bare: this.zipFields([
             i,
-            this.zipTruthyBool(obj.excluded),
+            excluded,
             this.zipTruthyString(obj.machineId),
-            this.zipTruthyArray(obj.machineModuleIds),
-            this.zipTruthyArray(data.recipeBeaconMap[i]),
+            modules,
+            beacons,
             this.zipTruthyNumber(obj.overclock),
-            this.zipTruthyString(obj.cost),
-            this.zipTruthyBool(obj.checked),
+            cost,
+            checked,
             this.zipTruthyString(obj.fuelId),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(i, hash.recipes),
-            this.zipTruthyBool(obj.excluded),
+            excluded,
             this.zipTruthyNString(obj.machineId, hash.machines),
-            this.zipTruthyNArray(obj.machineModuleIds, hash.modules),
-            this.zipTruthyArray(data.recipeBeaconMap[i]),
-            this.zipTruthyNumber(obj.overclock),
-            this.zipTruthyString(obj.cost),
-            this.zipTruthyBool(obj.checked),
+            modules,
+            beacons,
+            this.zipTruthyNNumber(obj.overclock),
+            cost,
+            checked,
             this.zipTruthyNString(obj.fuelId, hash.fuels),
           ]),
         };
@@ -1355,6 +1491,7 @@ export class RouterService {
 
   unzipRecipes(
     params: Entities,
+    moduleSettings: ModuleSettings[],
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
   ): Recipes.RecipesState {
@@ -1363,38 +1500,21 @@ export class RouterService {
     for (const recipe of list) {
       const s = recipe.split(FIELDSEP);
       let i = 0;
-      let id: string;
-      let obj: RecipeSettings;
-
-      if (hash) {
-        id = orString(this.parseNString(s[i++], hash.recipes));
-        obj = {
-          excluded: this.parseBool(s[i++]),
-          machineId: this.parseNString(s[i++], hash.machines),
-          machineModuleIds: this.parseNArray(s[i++], hash.modules),
-          beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)] ?? {},
-          ),
-          overclock: this.parseNumber(s[i++]),
-          cost: this.parseString(s[i++]),
-          checked: this.parseBool(s[i++]),
-          fuelId: this.parseNString(s[i++], hash.fuels),
-        };
-      } else {
-        id = s[i++];
-        obj = {
-          excluded: this.parseBool(s[i++]),
-          machineId: this.parseString(s[i++]),
-          machineModuleIds: this.parseArray(s[i++]),
-          beacons: this.parseArray(s[i++])?.map(
-            (i) => beaconSettings[Number(i)] ?? {},
-          ),
-          overclock: this.parseNumber(s[i++]),
-          cost: this.parseString(s[i++]),
-          checked: this.parseBool(s[i++]),
-          fuelId: this.parseString(s[i++]),
-        };
-      }
+      const id = orString(this.parseString(s[i++], hash?.recipes));
+      const obj: RecipeSettings = {
+        excluded: this.parseBool(s[i++]),
+        machineId: this.parseString(s[i++], hash?.machines),
+        modules: this.parseArray(s[i++])?.map(
+          (i) => moduleSettings[Number(i)] ?? {},
+        ),
+        beacons: this.parseArray(s[i++])?.map(
+          (i) => beaconSettings[Number(i)] ?? {},
+        ),
+        overclock: this.parseNumber(s[i++], hash != null),
+        cost: this.parseString(s[i++]),
+        checked: this.parseBool(s[i++]),
+        fuelId: this.parseString(s[i++], hash?.fuels),
+      };
 
       this.deleteEmptyKeys(obj);
       entities[id] = obj;
@@ -1407,103 +1527,110 @@ export class RouterService {
     state: Machines.MachinesState,
     hash: ModHash,
   ): void {
-    const ids = state.ids ? ['', ...state.ids] : Object.keys(state.entities);
-    const z = this.zipList(
-      ids.map((i) => {
-        const obj = state.entities[i] || {};
-        let h = true;
-        if (i === '') {
-          i = state.ids == null ? '' : TRUE;
-          h = false;
-        }
-        return {
-          bare: this.zipFields([
-            i,
-            this.zipTruthyArray(obj.moduleRankIds),
-            this.zipTruthyString(obj.beaconCount),
-            this.zipTruthyArray(obj.beaconModuleRankIds),
-            this.zipTruthyString(obj.beaconId),
-            this.zipTruthyNumber(obj.overclock),
-            this.zipTruthyString(obj.fuelId),
-          ]),
-          hash: this.zipFields([
-            h ? this.zipTruthyNString(i, hash.machines) : i,
-            this.zipTruthyNArray(obj.moduleRankIds, hash.modules),
-            this.zipTruthyString(obj.beaconCount),
-            this.zipTruthyNArray(obj.beaconModuleRankIds, hash.modules),
-            this.zipTruthyNString(obj.beaconId, hash.beacons),
-            this.zipTruthyNumber(obj.overclock),
-            this.zipTruthyNString(obj.fuelId, hash.fuels),
-          ]),
-        };
-      }),
-    );
+    const id = state.ids ? EMPTY : '';
+    const beacons = this.zipTruthyArray(data.machineSettings.beaconMap[id]);
+    const list: Zip[] = [
+      {
+        bare: this.zipFields([
+          id,
+          this.zipTruthyArray(state.moduleRankIds),
+          beacons,
+          this.zipTruthyArray(state.fuelRankIds),
+          this.zipTruthyNumber(state.overclock),
+        ]),
+        hash: this.zipFields([
+          id,
+          this.zipTruthyNArray(state.moduleRankIds, hash.modules),
+          beacons,
+          this.zipTruthyNArray(state.fuelRankIds, hash.fuels),
+          this.zipTruthyNNumber(state.overclock),
+        ]),
+      },
+    ];
 
+    const ids = state.ids ?? Object.keys(state.entities);
+    ids.forEach((i) => {
+      const obj = state.entities[i] ?? {};
+      const modules = this.zipTruthyArray(data.machineSettings.moduleMap[i]);
+      const beacons = this.zipTruthyArray(data.machineSettings.beaconMap[i]);
+      list.push({
+        bare: this.zipFields([
+          i,
+          modules,
+          beacons,
+          this.zipTruthyString(obj.fuelId),
+          this.zipTruthyNumber(obj.overclock),
+        ]),
+        hash: this.zipFields([
+          this.zipTruthyNString(i, hash.machines),
+          modules,
+          beacons,
+          this.zipTruthyNString(obj.fuelId, hash.fuels),
+          this.zipTruthyNNumber(obj.overclock),
+        ]),
+      });
+    });
+
+    const z = this.zipList(list);
     if (z.bare.length) {
       data.config.bare += `&${Section.Machines}=${z.bare}`;
       data.config.hash += `&${Section.Machines}${z.hash}`;
     }
   }
 
-  unzipMachines(params: Entities, hash?: ModHash): Machines.MachinesState {
+  unzipMachines(
+    params: Entities,
+    moduleSettings: ModuleSettings[],
+    beaconSettings: BeaconSettings[],
+    hash?: ModHash,
+  ): Machines.MachinesState {
     const list = params[Section.Machines].split(LISTSEP);
+    const state: Machines.MachinesState = { entities: {} };
     let ids: string[] | undefined;
-    const entities: Entities<MachineSettings> = {};
-    let loadIds = false;
+    console.log(params[Section.Machines]);
     for (let z = 0; z < list.length; z++) {
       const machine = list[z];
       const s = machine.split(FIELDSEP);
       let i = 0;
-      let id: string | undefined;
-      let obj: Partial<MachineSettings>;
-
-      if (hash) {
-        id = s[i++];
-        obj = {
-          moduleRankIds: this.parseNArray(s[i++], hash.modules),
-          beaconCount: this.parseString(s[i++]),
-          beaconModuleRankIds: this.parseNArray(s[i++], hash.modules),
-          beaconId: this.parseNString(s[i++], hash.beacons),
-          overclock: this.parseNumber(s[i++]),
-          fuelId: this.parseNString(s[i++], hash.fuels),
-        };
-        if (z === 0 && id === TRUE) {
-          loadIds = true;
-          ids = [];
-          id = '';
-        } else {
-          if (id) {
-            id = this.parseNString(id, hash.machines);
-          }
-          if (loadIds && ids != null) {
-            ids.push(orString(id));
-          }
-        }
-      } else {
-        id = s[i++];
-        obj = {
-          moduleRankIds: this.parseArray(s[i++]),
-          beaconCount: this.parseString(s[i++]),
-          beaconModuleRankIds: this.parseArray(s[i++]),
-          beaconId: this.parseString(s[i++]),
-          overclock: this.parseNumber(s[i++]),
-          fuelId: this.parseString(s[i++]),
-        };
-        if (z === 0 && id === TRUE) {
-          loadIds = true;
-          ids = [];
-          id = '';
-        } else if (loadIds && ids != null) {
-          ids.push(id);
-        }
+      let id: string = s[i++];
+      if (z === 0 && id === EMPTY) {
+        ids = [];
+        id = '';
       }
 
-      this.deleteEmptyKeys(obj);
-      if (Object.keys(obj).length) {
-        entities[orString(id)] = obj;
+      if (id && hash) id = orString(this.parseNString(id, hash.machines));
+      if (id && ids) ids.push(id);
+
+      const moduleStr = s[i++];
+      const beacons = this.parseArray(s[i++])?.map(
+        (i) => beaconSettings[Number(i)] ?? {},
+      );
+      const fuelStr = s[i++];
+      const overclock = this.parseNumber(s[i++], hash != null);
+
+      if (id) {
+        const obj: MachineSettings = {
+          modules: this.parseArray(moduleStr)?.map(
+            (i) => moduleSettings[Number(i)] ?? {},
+          ),
+          beacons,
+          fuelId: this.parseString(fuelStr, hash?.fuels),
+          overclock,
+        };
+        this.deleteEmptyKeys(obj);
+        if (Object.keys(obj).length) state.entities[id] = obj;
+      } else {
+        const moduleRankIds = this.parseArray(moduleStr, hash?.modules);
+        const fuelRankIds = this.parseArray(fuelStr, hash?.fuels);
+        if (ids != null) state.ids = ids;
+        if (moduleRankIds != null) state.moduleRankIds = moduleRankIds;
+        if (beacons != null) state.beacons = beacons;
+        if (fuelRankIds != null) state.fuelRankIds = fuelRankIds;
+        if (overclock != null) state.overclock = overclock;
       }
     }
-    return { ids, entities };
+
+    return state;
   }
 
   zipSettings(
@@ -1512,6 +1639,59 @@ export class RouterService {
     hash: ModHash,
   ): void {
     const init = Settings.initialSettingsState;
+    const displayRate = this.zipDiffDisplayRate(
+      state.displayRate,
+      init.displayRate,
+    );
+    const preset = this.zipDiffNumber(state.preset, init.preset);
+    const inserterCapacity = this.zipDiffNumber(
+      state.inserterCapacity,
+      init.inserterCapacity,
+    );
+    const inserterTarget = this.zipDiffNumber(
+      state.inserterTarget,
+      init.inserterTarget,
+    );
+    const beaconReceivers = this.zipDiffString(
+      state.beaconReceivers,
+      init.beaconReceivers,
+    );
+    const netProductionOnly = this.zipDiffBool(
+      state.netProductionOnly,
+      init.netProductionOnly,
+    );
+    const costsFactor = this.zipDiffString(
+      state.costs.factor,
+      init.costs.factor,
+    );
+    const costsMachine = this.zipDiffString(
+      state.costs.machine,
+      init.costs.machine,
+    );
+    const costsUnproduceable = this.zipDiffString(
+      state.costs.unproduceable,
+      init.costs.unproduceable,
+    );
+    const costsExcluded = this.zipDiffString(
+      state.costs.excluded,
+      init.costs.excluded,
+    );
+    const costsSurplus = this.zipDiffString(
+      state.costs.surplus,
+      init.costs.surplus,
+    );
+    const costsMaximize = this.zipDiffString(
+      state.costs.maximize,
+      init.costs.maximize,
+    );
+    const surplusMachinesOutput = this.zipDiffBool(
+      state.surplusMachinesOutput,
+      init.surplusMachinesOutput,
+    );
+    const costsFootprint = this.zipDiffString(
+      state.costs.footprint,
+      init.costs.footprint,
+    );
     const z: Zip = {
       bare: this.zipFields([
         this.zipDiffString(state.modId, init.modId),
@@ -1519,33 +1699,29 @@ export class RouterService {
           state.researchedTechnologyIds,
           init.researchedTechnologyIds,
         ),
-        this.zipDiffDisplayRate(state.displayRate, init.displayRate),
-        this.zipDiffNumber(state.preset, init.preset),
+        displayRate,
+        preset,
         this.zipDiffString(state.beltId, init.beltId),
-        this.zipDiffRank(state.fuelRankIds, init.fuelRankIds),
         this.zipDiffNumber(state.flowRate, init.flowRate),
         this.zipDiffNumber(state.miningBonus, init.miningBonus),
         this.zipDiffNumber(state.researchSpeed, init.researchSpeed),
-        this.zipDiffNumber(state.inserterCapacity, init.inserterCapacity),
-        this.zipDiffNumber(state.inserterTarget, init.inserterTarget),
+        inserterCapacity,
+        inserterTarget,
         this.zipDiffString(state.cargoWagonId, init.cargoWagonId),
         this.zipDiffString(state.fluidWagonId, init.fluidWagonId),
         this.zipDiffString(state.pipeId, init.pipeId),
-        this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
+        beaconReceivers,
         this.zipDiffString(state.proliferatorSprayId, init.proliferatorSprayId),
-        this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
+        netProductionOnly,
         this.zipDiffNumber(state.maximizeType, init.maximizeType),
-        this.zipDiffString(state.costs.factor, init.costs.factor),
-        this.zipDiffString(state.costs.machine, init.costs.machine),
-        this.zipDiffString(state.costs.unproduceable, init.costs.unproduceable),
-        this.zipDiffString(state.costs.excluded, init.costs.excluded),
-        this.zipDiffString(state.costs.surplus, init.costs.surplus),
-        this.zipDiffString(state.costs.maximize, init.costs.maximize),
-        this.zipDiffBool(
-          state.surplusMachinesOutput,
-          init.surplusMachinesOutput,
-        ),
-        this.zipDiffString(state.costs.footprint, init.costs.footprint),
+        costsFactor,
+        costsMachine,
+        costsUnproduceable,
+        costsExcluded,
+        costsSurplus,
+        costsMaximize,
+        surplusMachinesOutput,
+        costsFootprint,
       ]),
       hash: this.zipFields([
         this.zipDiffNullableNArray(
@@ -1553,37 +1729,33 @@ export class RouterService {
           init.researchedTechnologyIds,
           hash.technologies,
         ),
-        this.zipDiffDisplayRate(state.displayRate, init.displayRate),
-        this.zipDiffNumber(state.preset, init.preset),
+        displayRate,
+        preset,
         this.zipDiffNString(state.beltId, init.beltId, hash.belts),
-        this.zipDiffNRank(state.fuelRankIds, init.fuelRankIds, hash.fuels),
         this.zipDiffNNumber(state.flowRate, init.flowRate),
         this.zipDiffNNumber(state.miningBonus, init.miningBonus),
         this.zipDiffNNumber(state.researchSpeed, init.researchSpeed),
-        this.zipDiffNumber(state.inserterCapacity, init.inserterCapacity),
-        this.zipDiffNumber(state.inserterTarget, init.inserterTarget),
+        inserterCapacity,
+        inserterTarget,
         this.zipDiffNString(state.cargoWagonId, init.cargoWagonId, hash.wagons),
         this.zipDiffNString(state.fluidWagonId, init.fluidWagonId, hash.wagons),
         this.zipDiffNString(state.pipeId, init.pipeId, hash.belts),
-        this.zipDiffString(state.beaconReceivers, init.beaconReceivers),
+        beaconReceivers,
         this.zipDiffNString(
           state.proliferatorSprayId,
           init.proliferatorSprayId,
           hash.modules,
         ),
-        this.zipDiffBool(state.netProductionOnly, init.netProductionOnly),
+        netProductionOnly,
         this.zipDiffNNumber(state.maximizeType, init.maximizeType),
-        this.zipDiffString(state.costs.factor, init.costs.factor),
-        this.zipDiffString(state.costs.machine, init.costs.machine),
-        this.zipDiffString(state.costs.unproduceable, init.costs.unproduceable),
-        this.zipDiffString(state.costs.excluded, init.costs.excluded),
-        this.zipDiffString(state.costs.surplus, init.costs.surplus),
-        this.zipDiffString(state.costs.maximize, init.costs.maximize),
-        this.zipDiffBool(
-          state.surplusMachinesOutput,
-          init.surplusMachinesOutput,
-        ),
-        this.zipDiffString(state.costs.footprint, init.costs.footprint),
+        costsFactor,
+        costsMachine,
+        costsUnproduceable,
+        costsExcluded,
+        costsSurplus,
+        costsMaximize,
+        surplusMachinesOutput,
+        costsFootprint,
       ]),
     };
 
@@ -1600,78 +1772,44 @@ export class RouterService {
     const zip = params[Section.Settings];
     const s = zip.split(FIELDSEP);
     let i = 0;
-    let obj: Settings.PartialSettingsState;
+    const state: Settings.PartialSettingsState = {
+      modId: hash == null ? this.parseString(s[i++]) : undefined,
+      researchedTechnologyIds: this.parseNullableArray(
+        s[i++],
+        hash?.technologies,
+      ),
+      displayRate: this.parseDisplayRate(s[i++]),
+      preset: this.parseNumber(s[i++]),
+      beltId: this.parseString(s[i++], hash?.belts),
+      flowRate: this.parseNumber(s[i++], hash != null),
+      miningBonus: this.parseNumber(s[i++], hash != null),
+      researchSpeed: this.parseNumber(s[i++], hash != null),
+      inserterCapacity: this.parseNumber(s[i++], hash != null),
+      inserterTarget: this.parseNumber(s[i++], hash != null),
+      cargoWagonId: this.parseString(s[i++], hash?.wagons),
+      fluidWagonId: this.parseString(s[i++], hash?.wagons),
+      pipeId: this.parseString(s[i++], hash?.belts),
+      beaconReceivers: this.parseString(s[i++]),
+      proliferatorSprayId: this.parseString(s[i++], hash?.modules),
+      netProductionOnly: this.parseBool(s[i++]),
+      maximizeType: this.parseNumber(s[i++], hash != null),
+    };
+    const costs: Partial<CostSettings> = {
+      factor: this.parseString(s[i++]),
+      machine: this.parseString(s[i++]),
+      unproduceable: this.parseString(s[i++]),
+      excluded: this.parseString(s[i++]),
+      surplus: this.parseString(s[i++]),
+      maximize: this.parseString(s[i++]),
+    };
 
-    if (hash) {
-      obj = {
-        researchedTechnologyIds: this.parseNullableNArray(
-          s[i++],
-          hash.technologies,
-        ),
-        displayRate: this.parseDisplayRate(s[i++]),
-        preset: this.parseNumber(s[i++]),
-        beltId: this.parseNString(s[i++], hash.belts),
-        fuelRankIds: this.parseNArray(s[i++], hash.fuels),
-        flowRate: this.parseNNumber(s[i++]),
-        miningBonus: this.parseNNumber(s[i++]),
-        researchSpeed: this.parseNNumber(s[i++]),
-        inserterCapacity: this.parseNumber(s[i++]),
-        inserterTarget: this.parseNumber(s[i++]),
-        cargoWagonId: this.parseNString(s[i++], hash.wagons),
-        fluidWagonId: this.parseNString(s[i++], hash.wagons),
-        pipeId: this.parseNString(s[i++], hash.belts),
-        beaconReceivers: this.parseString(s[i++]),
-        proliferatorSprayId: this.parseNString(s[i++], hash.modules),
-        netProductionOnly: this.parseBool(s[i++]),
-        maximizeType: this.parseNNumber(s[i++]),
-        costs: {
-          factor: this.parseString(s[i++]),
-          machine: this.parseString(s[i++]),
-          unproduceable: this.parseString(s[i++]),
-          excluded: this.parseString(s[i++]),
-          surplus: this.parseString(s[i++]),
-          maximize: this.parseString(s[i++]),
-        },
-        surplusMachinesOutput: this.parseBool(s[i++]),
-      };
-      obj.costs!.footprint = this.parseString(s[i++]);
-    } else {
-      obj = {
-        modId: this.parseString(s[i++]),
-        researchedTechnologyIds: this.parseNullableArray(s[i++]),
-        displayRate: this.parseDisplayRate(s[i++]),
-        preset: this.parseNumber(s[i++]),
-        beltId: this.parseString(s[i++]),
-        fuelRankIds: this.parseArray(s[i++]),
-        flowRate: this.parseNumber(s[i++]),
-        miningBonus: this.parseNumber(s[i++]),
-        researchSpeed: this.parseNumber(s[i++]),
-        inserterCapacity: this.parseNumber(s[i++]),
-        inserterTarget: this.parseNumber(s[i++]),
-        cargoWagonId: this.parseString(s[i++]),
-        fluidWagonId: this.parseString(s[i++]),
-        pipeId: this.parseString(s[i++]),
-        beaconReceivers: this.parseString(s[i++]),
-        proliferatorSprayId: this.parseString(s[i++]),
-        netProductionOnly: this.parseBool(s[i++]),
-        maximizeType: this.parseNumber(s[i++]),
-        costs: {
-          factor: this.parseString(s[i++]),
-          machine: this.parseString(s[i++]),
-          unproduceable: this.parseString(s[i++]),
-          excluded: this.parseString(s[i++]),
-          surplus: this.parseString(s[i++]),
-          maximize: this.parseString(s[i++]),
-        },
-        surplusMachinesOutput: this.parseBool(s[i++]),
-      };
-      obj.costs!.footprint = this.parseString(s[i++]);
-    }
+    state.surplusMachinesOutput = this.parseBool(s[i++]);
+    costs.footprint = this.parseString(s[i++]);
 
-    this.deleteEmptyKeys(obj);
-    if (obj.costs) this.deleteEmptyKeys(obj.costs);
-
-    return obj;
+    this.deleteEmptyKeys(costs);
+    if (Object.keys(costs).length) state.costs = costs;
+    this.deleteEmptyKeys(state);
+    return state;
   }
 
   zipList(list: Zip[]): Zip {
@@ -1703,6 +1841,10 @@ export class RouterService {
 
   zipTruthyNString(value: string | undefined, hash: string[]): string {
     return value == null ? '' : this.getId(hash.indexOf(value));
+  }
+
+  zipTruthyNNumber(value: number | undefined): string {
+    return value == null ? '' : this.getId(value);
   }
 
   zipTruthyNArray(value: string[] | undefined, hash: string[]): string {
@@ -1831,7 +1973,8 @@ export class RouterService {
     return zVal === zInit ? '' : zVal;
   }
 
-  parseString(value: string | undefined): string | undefined {
+  parseString(value: string | undefined, hash?: string[]): string | undefined {
+    if (hash != null) return this.parseNString(value, hash);
     if (!value?.length || value === NULL) return undefined;
     return value;
   }
@@ -1841,7 +1984,11 @@ export class RouterService {
     return value === TRUE;
   }
 
-  parseNumber(value: string | undefined): number | undefined {
+  parseNumber(
+    value: string | undefined,
+    useNNumber?: boolean,
+  ): number | undefined {
+    if (useNNumber) return this.parseNNumber(value);
     if (!value?.length || value === NULL) return undefined;
     return Number(value);
   }
@@ -1861,12 +2008,17 @@ export class RouterService {
     }
   }
 
-  parseArray(value: string | undefined): string[] | undefined {
+  parseArray(value: string | undefined, hash?: string[]): string[] | undefined {
+    if (hash != null) return this.parseNArray(value, hash);
     if (!value?.length || value === NULL) return undefined;
     return value === EMPTY ? [] : value.split(ARRAYSEP);
   }
 
-  parseNullableArray(value: string | undefined): string[] | null | undefined {
+  parseNullableArray(
+    value: string | undefined,
+    hash?: string[],
+  ): string[] | null | undefined {
+    if (hash != null) return this.parseNullableNArray(value, hash);
     if (!value?.length) return undefined;
     if (value === NULL) return null;
     return value === EMPTY ? [] : value.split(ARRAYSEP);

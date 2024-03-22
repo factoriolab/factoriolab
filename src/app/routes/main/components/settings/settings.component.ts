@@ -15,8 +15,8 @@ import { first } from 'rxjs';
 
 import { orString } from '~/helpers';
 import {
+  BeaconSettings,
   Dataset,
-  Defaults,
   DisplayRate,
   displayRateOptions,
   Entities,
@@ -39,9 +39,11 @@ import {
   MachineSettings,
   MaximizeType,
   maximizeTypeOptions,
+  ModuleSettings,
   PowerUnit,
   powerUnitOptions,
   Preset,
+  Rational,
   ResearchSpeed,
   researchSpeedOptions,
   SankeyAlign,
@@ -100,7 +102,7 @@ export class SettingsComponent implements OnInit {
   preferences = this.store.selectSignal(Preferences.preferencesState);
   modRecord = this.store.selectSignal(Datasets.getModRecord);
   machineIds = computed(() => [
-    ...this.store.selectSignal(Machines.getMachinesState)().ids,
+    ...(this.store.selectSignal(Machines.getMachinesState)().ids ?? []),
   ]);
 
   state = '';
@@ -146,6 +148,7 @@ export class SettingsComponent implements OnInit {
   Game = Game;
   ItemId = ItemId;
   FlowDiagram = FlowDiagram;
+  Rational = Rational;
   BrowserUtility = BrowserUtility;
 
   ngOnInit(): void {
@@ -286,22 +289,6 @@ export class SettingsComponent implements OnInit {
     this.setFuel(id, value, def);
   }
 
-  changeBeaconModuleRank(
-    id: string,
-    value: string[],
-    def: MachineSettings | Defaults,
-  ): void {
-    if (id === '') {
-      this.setBeaconModuleRank(id, value, [(def as Defaults).beaconModuleId]);
-    } else {
-      this.setBeaconModuleRank(
-        id,
-        value,
-        (def as MachineSettings).beaconModuleRankIds,
-      );
-    }
-  }
-
   toggleBeaconReceivers(value: boolean): void {
     this.setBeaconReceivers(value ? '1' : null);
   }
@@ -367,30 +354,16 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.SetFuelAction({ id, value, def }));
   }
 
-  setModuleRank(id: string, value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Machines.SetModuleRankAction({ id, value, def }));
+  setModules(id: string, value: ModuleSettings[]): void {
+    this.store.dispatch(new Machines.SetModulesAction({ id, value }));
   }
 
   setOverclock(id: string, value: number, def: number | undefined): void {
     this.store.dispatch(new Machines.SetOverclockAction({ id, value, def }));
   }
 
-  setBeaconCount(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(new Machines.SetBeaconCountAction({ id, value, def }));
-  }
-
-  setBeacon(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(new Machines.SetBeaconAction({ id, value, def }));
-  }
-
-  setBeaconModuleRank(
-    id: string,
-    value: string[],
-    def: string[] | undefined,
-  ): void {
-    this.store.dispatch(
-      new Machines.SetBeaconModuleRankAction({ id, value, def }),
-    );
+  setBeacons(id: string, value: BeaconSettings[]): void {
+    this.store.dispatch(new Machines.SetBeaconsAction({ id, value }));
   }
 
   setBeaconReceivers(value: string | null): void {
@@ -417,8 +390,12 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetFluidWagonAction({ value, def }));
   }
 
-  setFuels(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Settings.SetFuelRankAction({ value, def }));
+  setFuelRank(value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Machines.SetFuelRankAction({ value, def }));
+  }
+
+  setModuleRank(value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Machines.SetModuleRankAction({ value, def }));
   }
 
   setFlowRate(value: number): void {

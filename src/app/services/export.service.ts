@@ -140,10 +140,8 @@ export class ExportService {
             exp.Machines = '=' + step.machines.toString();
           }
           exp.Machine = recipeSettings.machineId;
-          if (allowsModules && recipeSettings.machineModuleIds != null) {
-            exp.MachineModules = `"${recipeSettings.machineModuleIds.join(
-              ',',
-            )}"`;
+          if (allowsModules && recipeSettings.modules != null) {
+            exp.MachineModules = `"${recipeSettings.modules.join(',')}"`;
           }
         }
 
@@ -155,7 +153,7 @@ export class ExportService {
             ?.map((b) => b.id)
             .join(',')}"`;
           exp.BeaconModules = `"${recipeSettings.beacons
-            ?.map((b) => b.moduleIds?.join('|'))
+            ?.map((b) => b.modules?.join('|'))
             .join(',')}"`;
         }
 

@@ -7,7 +7,7 @@ describe('RecipeRationalSettings', () => {
     it('should fill in all fields', () => {
       const result = new RecipeSettingsRational({
         machineId: ItemId.AssemblingMachine1,
-        machineModuleIds: [],
+        modules: [],
         beacons: [],
         overclock: 200,
         cost: '100',

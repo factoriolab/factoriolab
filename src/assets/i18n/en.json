@@ -238,6 +238,8 @@
     "defaultFluidWagonTooltip": "Select the default fluid wagon to be used by all fluids",
     "fuelRank": "Preferred fuels",
     "fuelRankTooltip": "Select the order of preferred fuels to be used where applicable",
+    "modifierRank": "Preferred modifiers",
+    "modifierRankTooltip": "Select the order of preferred modifiers to be used where applicable",
     "flowRateUnit": "u/sec",
     "pipeFlowRate": "Pipe flow rate",
     "pipeFlowRateTooltip": "Enter pipe flow rate",
@@ -420,5 +422,8 @@
     "prerequisites": "Prerequisites",
     "recipeSettings": "Recipe settings",
     "cost": "Cost"
+  },
+  "beaconsOverlay": {
+    "addBeacons": "Add beacons"
   }
 }

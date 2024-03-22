@@ -40,6 +40,10 @@
       }
     }
   }
+
+  > .p-button:focus {
+    box-shadow: none;
+  }
 }
 
 // Prevent horizontal scroll in virtual scroll dropdown
@@ -170,4 +174,38 @@ table p-dropdown {
 
 .p-orderlist-item + .p-orderlist-item {
   margin-top: 0.25rem; // Margin between items
+}
+
+/** Custom styles for picker dialogs */
+p-dialog.picker-dialog {
+  .p-dialog-header {
+    padding: 0.75rem 1rem;
+  }
+
+  .p-dialog-content {
+    padding: 0 1rem 1rem 1rem;
+  }
+
+  .p-tabview-panels {
+    padding: 0;
+  }
+
+  .p-scrollpanel-content {
+    padding-top: 0.5rem;
+    padding-left: 1px;
+  }
+
+  .p-tabview-nav-link {
+    max-width: 11rem;
+  }
+
+  p-scrollpanel {
+    .p-button-label {
+      margin-left: 1rem;
+    }
+  }
+}
+
+.p-overlaypanel-content {
+  padding: 0.5rem;
 }

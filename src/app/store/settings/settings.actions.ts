@@ -22,7 +22,6 @@ export const enum SettingsActionType {
   SET_PROLIFERATOR_SPRAY = '[Settings] Set Proliferator Spray',
   SET_BELT = '[Settings] Set Belt',
   SET_PIPE = '[Settings] Set Pipe',
-  SET_FUEL_RANK = '[Settings] Set Fuel Rank',
   SET_CARGO_WAGON = '[Settings] Set Cargo Wagon',
   SET_FLUID_WAGON = '[Settings] Set Fluid Wagon',
   SET_FLOW_RATE = '[Settings] Set Flow Rate',
@@ -79,11 +78,6 @@ export class SetBeltAction implements Action {
 export class SetPipeAction implements Action {
   readonly type = SettingsActionType.SET_PIPE;
   constructor(public payload: ValueDefaultPayload) {}
-}
-
-export class SetFuelRankAction implements Action {
-  readonly type = SettingsActionType.SET_FUEL_RANK;
-  constructor(public payload: ValueDefaultPayload<string[]>) {}
 }
 
 export class SetCargoWagonAction implements Action {
@@ -150,7 +144,6 @@ export type SettingsAction =
   | SetProliferatorSprayAction
   | SetBeltAction
   | SetPipeAction
-  | SetFuelRankAction
   | SetCargoWagonAction
   | SetFluidWagonAction
   | SetFlowRateAction

@@ -66,8 +66,11 @@ export class Rational {
   }
 
   static from(x: number | string): Rational;
+  static from(x: number | string | undefined): Rational | undefined;
   static from(p: number, q: number): Rational;
-  static from(p: number | string, q?: number): Rational {
+  static from(p?: number | string, q?: number): Rational | undefined {
+    if (p == null) return p;
+
     if (q != null) {
       if (q === 0) throw Error(DIVIDE_BY_ZERO);
       // Parse Rational from array (num/denom pair)
@@ -105,9 +108,7 @@ export class Rational {
       result = Rational.fromNumber(Number(x));
     } else {
       const f = x.split('/');
-      if (f.length > 2) {
-        throw new Error('Too many /');
-      }
+      if (f.length > 2) throw new Error('Too many /');
 
       if (f[0].indexOf(' ') === -1) {
         const p = Number(f[0]);
@@ -115,9 +116,7 @@ export class Rational {
         result = Rational.from(p, q);
       } else {
         const g = f[0].split(' ');
-        if (g.length > 2) {
-          throw new Error('Too many spaces');
-        }
+        if (g.length > 2) throw new Error('Too many spaces');
 
         const n = Number(g[0]);
         const p = Number(g[1]);
@@ -179,6 +178,10 @@ export class Rational {
 
   static max(x: Rational, y: Rational): Rational {
     return x.gt(y) ? x : y;
+  }
+
+  static sum(values: Rational[]): Rational {
+    return values.reduce((result, value) => result.add(value), Rational.zero);
   }
 
   isZero(): boolean {
@@ -340,6 +343,10 @@ export class Rational {
     }
 
     return 0;
+  }
+
+  toJSON(): string {
+    return this.toString();
   }
 
   constructor(p: bigint, q: bigint = bigOne) {

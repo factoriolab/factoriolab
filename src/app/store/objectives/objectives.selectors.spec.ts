@@ -207,7 +207,7 @@ describe('Objectives Selectors', () => {
                 {
                   total: Rational.one,
                   id: ItemId.Beacon,
-                  moduleIds: [ItemId.SpeedModule3, ItemId.SpeedModule3],
+                  modules: [ItemId.SpeedModule3, ItemId.SpeedModule3],
                 },
               ],
             },
@@ -455,7 +455,7 @@ describe('Objectives Selectors', () => {
         {
           [RecipeId.Coal]: {
             machineId: undefined,
-            machineModuleIds: undefined,
+            modules: undefined,
             overclock: 100,
             beacons: [{ total: '1' }],
           },
@@ -475,7 +475,7 @@ describe('Objectives Selectors', () => {
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
         overclock: 100,
-        beacons: [{ moduleIds: [] }],
+        beacons: [{ modules: [] }],
       };
       const result = Selectors.getRecipesModified.projector(
         {

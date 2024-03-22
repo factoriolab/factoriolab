@@ -1,6 +1,5 @@
 import { createSelector } from '@ngrx/store';
 
-import { orZero } from '~/helpers';
 import {
   Entities,
   Rational,
@@ -38,7 +37,7 @@ export const getRecipesState = createSelector(
       if (s.machineId == null)
         s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
-          machinesState.ids,
+          machinesState.ids ?? [],
         );
 
       const machine = data.machineEntities[s.machineId];
@@ -50,49 +49,25 @@ export const getRecipesState = createSelector(
         s.fuelId = s.fuelId ?? def?.fuelId;
       }
 
-      s.fuelOptions = def?.fuelOptions;
-
       if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
-        s.machineModuleOptions = RecipeUtility.moduleOptions(
-          machine,
-          recipe.id,
-          data,
-        );
-
-        if (s.machineModuleIds == null)
-          s.machineModuleIds = RecipeUtility.defaultModules(
-            s.machineModuleOptions,
-            def.moduleRankIds ?? [],
-            orZero(machine.modules),
+        if (s.modules == null) {
+          s.moduleOptions = RecipeUtility.moduleOptions(
+            machine,
+            data,
+            recipe.id,
           );
-
-        if (s.beacons == null) s.beacons = [{}];
-
-        s.beacons = s.beacons.map((b) => ({ ...b }));
-
-        for (const beaconSettings of s.beacons) {
-          beaconSettings.count = beaconSettings.count ?? def.beaconCount;
-          beaconSettings.id = beaconSettings.id ?? def.beaconId;
-
-          if (beaconSettings.id != null) {
-            const beacon = data.beaconEntities[beaconSettings.id];
-            beaconSettings.moduleOptions = RecipeUtility.moduleOptions(
-              beacon,
-              recipe.id,
-              data,
-            );
-
-            if (beaconSettings.moduleIds == null)
-              beaconSettings.moduleIds = RecipeUtility.defaultModules(
-                beaconSettings.moduleOptions,
-                def.beaconModuleRankIds ?? [],
-                beacon.modules,
-              );
-          }
+          s.modules = RecipeUtility.inheritedModules(
+            s.moduleOptions,
+            def.modules,
+            machinesState.moduleRankIds,
+            machine.modules ?? 0,
+          );
         }
+
+        s.beacons = s.beacons ?? def.beacons ?? [];
       } else {
         // Machine doesn't support modules, remove any
-        delete s.machineModuleIds;
+        delete s.modules;
         delete s.beacons;
       }
 

@@ -27,7 +27,6 @@ export interface SettingsState {
   proliferatorSprayId: string;
   beltId?: string;
   pipeId?: string;
-  fuelRankIds?: string[];
   cargoWagonId?: string;
   fluidWagonId?: string;
   flowRate: number;
@@ -105,7 +104,6 @@ export function settingsReducer(
       };
       delete newState.beltId;
       delete newState.pipeId;
-      delete newState.fuelRankIds;
       delete newState.cargoWagonId;
       delete newState.fluidWagonId;
       return newState;
@@ -131,11 +129,6 @@ export function settingsReducer(
       return {
         ...state,
         ...{ pipeId: StoreUtility.compareValue(action.payload) },
-      };
-    case SettingsActionType.SET_FUEL_RANK:
-      return {
-        ...state,
-        ...{ fuelRankIds: StoreUtility.compareValue(action.payload) },
       };
     case SettingsActionType.SET_CARGO_WAGON:
       return {

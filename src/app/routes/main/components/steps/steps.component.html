@@ -684,7 +684,7 @@
                     (onBlur)="
                       changeRecipeField(
                         step,
-                        overclockInput.value ?? 0,
+                        overclockInput.value ?? 100,
                         machinesState(),
                         data(),
                         RecipeField.Overclock
@@ -706,7 +706,7 @@
                         </ng-template>
                       </i>
                     </div>
-                  } @else {
+                  } @else if (step.recipeSettings.machineId) {
                     <p-dropdown
                       labDropdownBase="icon"
                       [pTooltip]="tooltip"
@@ -750,65 +750,75 @@
                     </p-dropdown>
                   }
                 }
-                @if (step.recipeSettings?.machineModuleIds; as moduleIds) {
-                  @for (
-                    moduleId of moduleIds;
-                    track moduleId;
-                    let i = $index;
-                    let last = $last
-                  ) {
-                    <p-dropdown
-                      labDropdownBase="icon"
-                      class="module-dropdown"
-                      [class.last]="last"
-                      [pTooltip]="moduleId !== 'module' ? tooltip : undefined"
-                      tooltipPosition="top"
-                      [options]="step.recipeSettings.machineModuleOptions ?? []"
-                      [ngModel]="moduleId"
-                      (onChange)="
-                        changeRecipeField(
-                          step,
-                          $event.value,
-                          machinesState(),
-                          data(),
-                          RecipeField.MachineModules,
-                          i
-                        )
-                      "
-                    >
-                      <ng-template pTemplate="selectedItem" let-item>
-                        @if (item) {
+                @if (step.recipeSettings?.modules; as modules) {
+                  @if (data().machineEntities[machineId]; as machine) {
+                    @if (machine.modules === 1) {
+                      <p-dropdown
+                        labDropdownBase="icon"
+                        labNoDrag
+                        [tooltip]="'settings.modifierTooltip' | translate"
+                        [ngModel]="modules[0].id"
+                        [options]="step.recipeSettings.moduleOptions ?? []"
+                        (onChange)="
+                          setModules(step.recipeId, [
+                            { id: $event.value, count: Rational.one }
+                          ])
+                        "
+                      >
+                        <ng-template pTemplate="selectedItem" let-item>
                           <div class="d-flex">
                             <i [class]="item.value | iconSmClass"></i>
                           </div>
-                        }
-                      </ng-template>
-                      <ng-template pTemplate="item" let-item>
-                        <div
-                          class="d-flex align-items-center py-2 w-100 h-100"
-                          [pTooltip]="
-                            item.value !== 'module' ? tooltip : undefined
-                          "
-                        >
-                          <i [class]="item.value | iconSmClass"></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label }}
+                        </ng-template>
+                        <ng-template pTemplate="item" let-item>
+                          <div
+                            class="d-flex align-items-center py-2 w-100 h-100"
+                            [pTooltip]="
+                              item.value !== 'module' ? tooltip : undefined
+                            "
+                          >
+                            <i [class]="item.value | iconSmClass"></i>
+                            <div class="ms-3 text-truncate">
+                              {{ item.label }}
+                            </div>
+                            <ng-template #tooltip>
+                              <lab-tooltip
+                                [id]="item.value"
+                                type="module"
+                              ></lab-tooltip>
+                            </ng-template>
                           </div>
-                          <ng-template #tooltip>
-                            <lab-tooltip
-                              [id]="item.value"
-                              type="module"
-                            ></lab-tooltip>
-                          </ng-template>
-                        </div>
-                      </ng-template>
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="moduleId"
-                          type="module"
-                        ></lab-tooltip>
-                      </ng-template>
-                    </p-dropdown>
+                        </ng-template>
+                      </p-dropdown>
+                    } @else if (machine.modules != null) {
+                      <button
+                        pButton
+                        pRipple
+                        type="button"
+                        class="hover-action modules p-button-text"
+                        (click)="
+                          modulePicker.show(
+                            $event,
+                            modules,
+                            machine,
+                            step.recipeId
+                          )
+                        "
+                      >
+                        @for (module of modules; track $index) {
+                          <i
+                            class="p-button-icon"
+                            [class]="module.id | iconSmClass"
+                            ><span>{{ module.count }}</span></i
+                          >
+                        }
+                        <i class="hover-icon fa-solid fa-gear"></i>
+                      </button>
+                      <lab-modules-overlay
+                        #modulePicker
+                        (setValue)="setModules(step.recipeId, $event)"
+                      ></lab-modules-overlay>
+                    }
                   }
                 }
               </div>
@@ -881,7 +891,7 @@
               }
             </td>
             <td class="ps-0">
-              @for (
+              <!-- @for (
                 beacon of step.recipeSettings.beacons;
                 track beacon;
                 let i = $index
@@ -937,64 +947,66 @@
                     </p-dropdown>
                   }
                   @for (
-                    moduleId of beacon.moduleIds;
-                    track moduleId;
+                    module of beacon.modules;
+                    track module.id;
                     let j = $index;
                     let last = $last
                   ) {
-                    <p-dropdown
-                      labDropdownBase="icon"
-                      class="module-dropdown"
-                      [class.last]="last"
-                      [pTooltip]="moduleId !== 'module' ? tooltip : undefined"
-                      tooltipPosition="top"
-                      [options]="beacon.moduleOptions ?? []"
-                      [ngModel]="moduleId"
-                      (onChange)="
-                        changeRecipeField(
-                          step,
-                          $event.value,
-                          machinesState(),
-                          data(),
-                          RecipeField.BeaconModules,
-                          i,
-                          j
-                        )
-                      "
-                    >
-                      <ng-template pTemplate="selectedItem" let-item>
-                        @if (item) {
-                          <div class="d-flex">
+                    @if (module.id; as moduleId) {
+                      <p-dropdown
+                        labDropdownBase="icon"
+                        class="module-dropdown"
+                        [class.last]="last"
+                        [pTooltip]="moduleId !== 'module' ? tooltip : undefined"
+                        tooltipPosition="top"
+                        [options]="beacon.moduleOptions ?? []"
+                        [ngModel]="moduleId"
+                        (onChange)="
+                          changeRecipeField(
+                            step,
+                            $event.value,
+                            machinesState(),
+                            data(),
+                            RecipeField.BeaconModules,
+                            i,
+                            j
+                          )
+                        "
+                      >
+                        <ng-template pTemplate="selectedItem" let-item>
+                          @if (item) {
+                            <div class="d-flex">
+                              <i [class]="item.value | iconSmClass"></i>
+                            </div>
+                          }
+                        </ng-template>
+                        <ng-template pTemplate="item" let-item>
+                          <div
+                            class="d-flex align-items-center py-2 w-100 h-100"
+                            [pTooltip]="
+                              item.value !== 'module' ? tooltip : undefined
+                            "
+                          >
                             <i [class]="item.value | iconSmClass"></i>
+                            <div class="ms-3 text-truncate">
+                              {{ item.label }}
+                            </div>
+                            <ng-template #tooltip>
+                              <lab-tooltip
+                                [id]="item.value"
+                                type="module"
+                              ></lab-tooltip>
+                            </ng-template>
                           </div>
-                        }
-                      </ng-template>
-                      <ng-template pTemplate="item" let-item>
-                        <div
-                          class="d-flex align-items-center py-2 w-100 h-100"
-                          [pTooltip]="
-                            item.value !== 'module' ? tooltip : undefined
-                          "
-                        >
-                          <i [class]="item.value | iconSmClass"></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label }}
-                          </div>
-                          <ng-template #tooltip>
-                            <lab-tooltip
-                              [id]="item.value"
-                              type="module"
-                            ></lab-tooltip>
-                          </ng-template>
-                        </div>
-                      </ng-template>
-                      <ng-template #tooltip>
-                        <lab-tooltip
-                          [id]="moduleId"
-                          type="module"
-                        ></lab-tooltip>
-                      </ng-template>
-                    </p-dropdown>
+                        </ng-template>
+                        <ng-template #tooltip>
+                          <lab-tooltip
+                            [id]="moduleId"
+                            type="module"
+                          ></lab-tooltip>
+                        </ng-template>
+                      </p-dropdown>
+                    }
                   }
                   @if (beacon.total) {
                     <lab-input-number
@@ -1016,7 +1028,7 @@
                     ></lab-input-number>
                   }
                 </div>
-              }
+              } -->
             </td>
           } @else {
             <tr colspan="2"></tr>

@@ -1,0 +1,44 @@
+<p-overlayPanel appendTo="body" (onHide)="onHide()">
+  @for (entry of values(); let i = $index; track i) {
+    <div class="p-inputgroup">
+      <lab-input-number
+        width="3rem"
+        [value]="entry.count.toString()"
+        [maximum]="maximum()[i]"
+        (setValue)="setCount($event, i)"
+      ></lab-input-number>
+      @if (options().length > 1) {
+        <p-dropdown
+          labDropdownBase="icon"
+          [ngModel]="entry.id"
+          [options]="options() | filterOptions: exclude() : entry.id"
+          (onChange)="setId($event, i)"
+        >
+          <ng-template pTemplate="selectedItem" let-item>
+            <div class="d-flex">
+              <i [class]="item.value | iconSmClass"></i>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="item" let-item>
+            <div
+              class="d-flex align-items-center py-2 w-100 h-100"
+              [pTooltip]="item.value !== 'module' ? tooltip : undefined"
+            >
+              <i [class]="item.value | iconSmClass"></i>
+              <div class="ms-3 text-truncate">
+                {{ item.label }}
+              </div>
+              <ng-template #tooltip>
+                <lab-tooltip [id]="item.value" type="module"></lab-tooltip>
+              </ng-template>
+            </div>
+          </ng-template>
+        </p-dropdown>
+      } @else {
+        <span class="p-inputgroup-addon">
+          <i [class]="entry.id | iconSmClass"></i>
+        </span>
+      }
+    </div>
+  }
+</p-overlayPanel>

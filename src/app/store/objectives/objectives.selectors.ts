@@ -198,7 +198,7 @@ export const getStepsModified = createSelector(
     objectives: objectives.reduce((e: Entities<boolean>, p) => {
       e[p.id] =
         p.machineId != null ||
-        p.machineModuleIds != null ||
+        p.modules != null ||
         p.beacons != null ||
         p.overclock != null;
       return e;
@@ -285,12 +285,16 @@ export const getTotals = createSelector(
               machines[machine] = machines[machine].add(value);
 
               // Check for modules to add
-              if (settings.machineModuleIds) {
-                addValueToRecordByIds(
-                  machineModules,
-                  settings.machineModuleIds.filter((i) => i !== ItemId.Module),
-                  value,
-                );
+              if (settings.modules != null) {
+                settings.modules.forEach((m) => {
+                  if (m.id && m.count) {
+                    addValueToRecordByIds(
+                      machineModules,
+                      [m.id],
+                      value.mul(m.count),
+                    );
+                  }
+                });
               }
             }
           }
@@ -313,12 +317,16 @@ export const getTotals = createSelector(
             beacons[beaconId] = beacons[beaconId].add(value);
 
             // Check for modules to add
-            if (beacon.moduleIds != null) {
-              addValueToRecordByIds(
-                beaconModules,
-                beacon.moduleIds.filter((i) => i !== ItemId.Module),
-                value,
-              );
+            if (beacon.modules != null) {
+              beacon.modules.forEach((m) => {
+                if (m.id && m.count) {
+                  addValueToRecordByIds(
+                    beaconModules,
+                    [m.id],
+                    value.mul(m.count),
+                  );
+                }
+              });
             }
           }
         }
@@ -537,14 +545,14 @@ export const getRecipesModified = createSelector(
         (id) =>
           state[id].fuelId != null ||
           state[id].machineId != null ||
-          state[id].machineModuleIds != null ||
+          state[id].modules != null ||
           state[id].overclock != null,
       ) ||
       objectives.some(
         (p) =>
           p.fuelId != null ||
           p.machineId != null ||
-          p.machineModuleIds != null ||
+          p.modules != null ||
           p.overclock != null,
       ),
     beacons:

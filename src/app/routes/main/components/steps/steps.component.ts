@@ -26,6 +26,7 @@ import {
   Game,
   IdValueDefaultPayload,
   ItemId,
+  ModuleSettings,
   ObjectiveBase,
   ObjectiveUnit,
   Rational,
@@ -356,83 +357,80 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
           break;
         }
-        case RecipeField.MachineModules: {
-          if (
-            machineSettings.moduleRankIds != null &&
-            data != null &&
-            typeof event === 'string' &&
-            index != null &&
-            settings.machineModuleIds != null
-          ) {
-            const machine = data.machineEntities[settings.machineId];
-            const count = settings.machineModuleIds.length;
-            const options = RecipeUtility.moduleOptions(
-              machine,
-              step.recipeId,
-              data,
-            );
-            const def = RecipeUtility.defaultModules(
-              options,
-              machineSettings.moduleRankIds,
-              count,
-            );
-            const modules = this.generateModules(
-              index,
-              event,
-              settings.machineModuleIds,
-            );
-            this.setMachineModules(id, modules, def, isObjective);
-          }
-          break;
-        }
-        case RecipeField.BeaconCount: {
-          if (typeof event === 'string' && index != null) {
-            const def = machineSettings.beaconCount;
-            this.setBeaconCount(id, index, event, def, isObjective);
-          }
-          break;
-        }
-        case RecipeField.Beacon: {
-          if (typeof event === 'string' && index != null) {
-            const def = machineSettings.beaconId;
-            this.setBeacon(id, index, event, def, isObjective);
-          }
-          break;
-        }
-        case RecipeField.BeaconModules: {
-          if (
-            machineSettings.beaconModuleRankIds != null &&
-            typeof event === 'string' &&
-            index != null &&
-            subindex != null
-          ) {
-            const beaconSettings = settings.beacons?.[index];
-            if (
-              beaconSettings?.id != null &&
-              beaconSettings?.moduleIds != null
-            ) {
-              const beacon = data.beaconEntities[beaconSettings.id];
-              const count = beaconSettings.moduleIds.length;
-              const options = RecipeUtility.moduleOptions(
-                beacon,
-                step.recipeId,
-                data,
-              );
-              const def = RecipeUtility.defaultModules(
-                options,
-                machineSettings.beaconModuleRankIds,
-                count,
-              );
-              const value = this.generateModules(
-                subindex,
-                event,
-                beaconSettings.moduleIds,
-              );
-              this.setBeaconModules(id, index, value, def, isObjective);
-            }
-          }
-          break;
-        }
+        // case RecipeField.MachineModules: {
+        //   if (
+        //     machineSettings.moduleRankIds != null &&
+        //     data != null &&
+        //     typeof event === 'string' &&
+        //     index != null &&
+        //     settings.machineModuleIds != null
+        //   ) {
+        //     const machine = data.machineEntities[settings.machineId];
+        //     const count = settings.machineModuleIds.length;
+        //     const options = RecipeUtility.moduleOptions(
+        //       machine,
+        //       step.recipeId,
+        //       data,
+        //     );
+        //     const def = RecipeUtility.defaultModules(
+        //       options,
+        //       machineSettings.moduleRankIds,
+        //       count,
+        //     );
+        //     const modules = this.generateModules(
+        //       index,
+        //       event,
+        //       settings.machineModuleIds,
+        //     );
+        //     this.setMachineModules(id, modules, def, isObjective);
+        //   }
+        //   break;
+        // }
+        // case RecipeField.BeaconCount: {
+        //   if (typeof event === 'string' && index != null) {
+        //     const def = machineSettings.beaconCount;
+        //     this.setBeaconCount(id, index, event, def, isObjective);
+        //   }
+        //   break;
+        // }
+        // case RecipeField.Beacon: {
+        //   if (typeof event === 'string' && index != null) {
+        //     const def = machineSettings.beaconId;
+        //     this.setBeacon(id, index, event, def, isObjective);
+        //   }
+        //   break;
+        // }
+        // case RecipeField.BeaconModules: {
+        //   if (
+        //     machineSettings.beaconModuleRankIds != null &&
+        //     typeof event === 'string' &&
+        //     index != null &&
+        //     subindex != null
+        //   ) {
+        //     const beaconSettings = settings.beacons?.[index];
+        //     if (beaconSettings?.id != null && beaconSettings?.modules != null) {
+        //       const beacon = data.beaconEntities[beaconSettings.id];
+        //       const count = beaconSettings.modules.length;
+        //       const options = RecipeUtility.moduleOptions(
+        //         beacon,
+        //         step.recipeId,
+        //         data,
+        //       );
+        //       const def = RecipeUtility.defaultModules(
+        //         options,
+        //         machineSettings.beaconModuleRankIds,
+        //         count,
+        //       );
+        //       const value = this.generateModules(
+        //         subindex,
+        //         event,
+        //         beaconSettings.modules,
+        //       );
+        //       this.setBeaconModules(id, index, value, def, isObjective);
+        //     }
+        //   }
+        //   break;
+        // }
         case RecipeField.BeaconTotal: {
           if (typeof event === 'string' && index != null) {
             this.setBeaconTotal(id, index, event, isObjective);
@@ -442,8 +440,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
         case RecipeField.Overclock: {
           if (typeof event === 'number') {
             const def = machineSettings.overclock;
-            const value = Math.max(1, Math.min(250, event));
-            this.setOverclock(id, value, def, isObjective);
+            this.setOverclock(id, event, def, isObjective);
           }
           break;
         }
@@ -521,30 +518,25 @@ export class StepsComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new action({ id, value, def }));
   }
 
-  setMachineModules(
-    id: string,
-    value: string[],
-    def: string[] | undefined,
-    objective = false,
-  ): void {
+  setModules(id: string, value: ModuleSettings[], objective = false): void {
     const action = objective
-      ? Objectives.SetMachineModulesAction
-      : Recipes.SetMachineModulesAction;
-    this.store.dispatch(new action({ id, value, def }));
+      ? Objectives.SetModulesAction
+      : Recipes.SetModulesAction;
+    this.store.dispatch(new action({ id, value }));
   }
 
   addBeacon(id: string, objective = false): void {
-    const action = objective
-      ? Objectives.AddBeaconAction
-      : Recipes.AddBeaconAction;
-    this.store.dispatch(new action(id));
+    // const action = objective
+    //   ? Objectives.AddBeaconAction
+    //   : Recipes.AddBeaconAction;
+    // this.store.dispatch(new action(id));
   }
 
   removeBeacon(id: string, value: number, objective = false): void {
-    const action = objective
-      ? Objectives.RemoveBeaconAction
-      : Recipes.RemoveBeaconAction;
-    this.store.dispatch(new action({ id, value }));
+    // const action = objective
+    //   ? Objectives.RemoveBeaconAction
+    //   : Recipes.RemoveBeaconAction;
+    // this.store.dispatch(new action({ id, value }));
   }
 
   setBeaconCount(
@@ -554,10 +546,10 @@ export class StepsComponent implements OnInit, AfterViewInit {
     def: string | undefined,
     objective = false,
   ): void {
-    const action = objective
-      ? Objectives.SetBeaconCountAction
-      : Recipes.SetBeaconCountAction;
-    this.store.dispatch(new action({ id, index, value, def }));
+    // const action = objective
+    //   ? Objectives.SetBeaconCountAction
+    //   : Recipes.SetBeaconCountAction;
+    // this.store.dispatch(new action({ id, index, value, def }));
   }
 
   setBeacon(
@@ -567,10 +559,10 @@ export class StepsComponent implements OnInit, AfterViewInit {
     def: string | undefined,
     objective = false,
   ): void {
-    const action = objective
-      ? Objectives.SetBeaconAction
-      : Recipes.SetBeaconAction;
-    this.store.dispatch(new action({ id, index, value, def }));
+    // const action = objective
+    //   ? Objectives.SetBeaconAction
+    //   : Recipes.SetBeaconAction;
+    // this.store.dispatch(new action({ id, index, value, def }));
   }
 
   setBeaconModules(
@@ -580,10 +572,10 @@ export class StepsComponent implements OnInit, AfterViewInit {
     def: string[] | undefined,
     objective = false,
   ): void {
-    const action = objective
-      ? Objectives.SetBeaconModulesAction
-      : Recipes.SetBeaconModulesAction;
-    this.store.dispatch(new action({ id, index, value, def }));
+    // const action = objective
+    //   ? Objectives.SetBeaconModulesAction
+    //   : Recipes.SetBeaconModulesAction;
+    // this.store.dispatch(new action({ id, index, value, def }));
   }
 
   setBeaconTotal(
@@ -592,10 +584,10 @@ export class StepsComponent implements OnInit, AfterViewInit {
     value: string,
     objective = false,
   ): void {
-    const action = objective
-      ? Objectives.SetBeaconTotalAction
-      : Recipes.SetBeaconTotalAction;
-    this.store.dispatch(new action({ id, index, value }));
+    // const action = objective
+    //   ? Objectives.SetBeaconTotalAction
+    //   : Recipes.SetBeaconTotalAction;
+    // this.store.dispatch(new action({ id, index, value }));
   }
 
   setOverclock(

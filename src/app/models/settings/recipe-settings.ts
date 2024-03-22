@@ -1,7 +1,8 @@
 import { SelectItem } from 'primeng/api';
 
 import { Rational } from '../rational';
-import { BeaconRationalSettings, BeaconSettings } from './beacon-settings';
+import { BeaconSettings, BeaconSettingsRational } from './beacon-settings';
+import { ModuleSettings } from './module-settings';
 
 export interface RecipeSettings {
   excluded?: boolean;
@@ -10,9 +11,9 @@ export interface RecipeSettings {
   fuelId?: string;
   /** Calculated, not configurable */
   fuelOptions?: SelectItem<string>[];
-  machineModuleIds?: string[];
+  modules?: ModuleSettings[];
   /** Calculated, not configurable */
-  machineModuleOptions?: SelectItem<string>[];
+  moduleOptions?: SelectItem<string>[];
   beacons?: BeaconSettings[];
   overclock?: number;
   cost?: string;
@@ -25,10 +26,10 @@ export class RecipeSettingsRational {
   fuelId?: string;
   /** Calculated, not configurable */
   fuelOptions?: SelectItem<string>[];
-  machineModuleIds?: string[];
+  modules?: ModuleSettings[];
   /** Calculated, not configurable */
-  machineModuleOptions?: SelectItem<string>[];
-  beacons?: BeaconRationalSettings[];
+  moduleOptions?: SelectItem<string>[];
+  beacons?: BeaconSettingsRational[];
   overclock?: Rational;
   cost?: Rational;
 
@@ -38,19 +39,10 @@ export class RecipeSettingsRational {
     this.machineId = obj.machineId;
     this.fuelId = obj.fuelId;
     this.fuelOptions = obj.fuelOptions;
-    this.machineModuleIds = obj.machineModuleIds;
-    this.machineModuleOptions = obj.machineModuleOptions;
-
-    if (obj.beacons) {
-      this.beacons = obj.beacons.map((b) => new BeaconRationalSettings(b));
-    }
-
-    if (obj.overclock != null) {
-      this.overclock = Rational.fromNumber(obj.overclock);
-    }
-
-    if (obj.cost != null) {
-      this.cost = Rational.fromString(obj.cost);
-    }
+    this.modules = obj.modules;
+    this.moduleOptions = obj.moduleOptions;
+    this.beacons = obj.beacons?.map((b) => new BeaconSettingsRational(b));
+    this.overclock = Rational.from(obj.overclock);
+    this.cost = Rational.from(obj.cost);
   }
 }

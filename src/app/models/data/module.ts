@@ -26,28 +26,12 @@ export class ModuleRational {
   proliferator?: string;
 
   constructor(obj: Module) {
-    if (obj.speed) {
-      this.speed = Rational.from(obj.speed);
-    }
-
-    if (obj.productivity) {
-      this.productivity = Rational.from(obj.productivity);
-    }
-
-    if (obj.consumption) {
-      this.consumption = Rational.from(obj.consumption);
-    }
-
-    if (obj.pollution) {
-      this.pollution = Rational.from(obj.pollution);
-    }
-
+    this.speed = Rational.from(obj.speed);
+    this.productivity = Rational.from(obj.productivity);
+    this.consumption = Rational.from(obj.consumption);
+    this.pollution = Rational.from(obj.pollution);
     this.limitation = obj.limitation;
-
-    if (obj.sprays) {
-      this.sprays = Rational.fromNumber(obj.sprays);
-    }
-
+    this.sprays = Rational.from(obj.sprays);
     this.proliferator = obj.proliferator;
   }
 }

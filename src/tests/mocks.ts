@@ -134,22 +134,22 @@ export const ItemSettings1: M.ItemSettings = {
 };
 export const RecipeSettings1: M.RecipeSettings = {
   machineId: ItemId.AssemblingMachine2,
-  machineModuleIds: [ItemId.Module, ItemId.Module],
+  modules: [ItemId.Module, ItemId.Module],
   beacons: [
     {
       id: ItemId.Beacon,
-      moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+      modules: [ItemId.SpeedModule, ItemId.SpeedModule],
       count: '0',
     },
   ],
 };
 export const RecipeSettings2: M.RecipeSettings = {
   machineId: ItemId.AssemblingMachine2,
-  machineModuleIds: [ItemId.Module, ItemId.Module],
+  modules: [ItemId.Module, ItemId.Module],
   beacons: [
     {
       id: ItemId.Beacon,
-      moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+      modules: [ItemId.SpeedModule, ItemId.SpeedModule],
       count: '0',
     },
   ],

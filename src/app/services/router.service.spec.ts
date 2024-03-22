@@ -70,12 +70,12 @@ const mockItemsState: Items.ItemsState = {
 const mockRecipesState: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
     machineId: ItemId.AssemblingMachine2,
-    machineModuleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
+    modules: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
     beacons: [
       {
         count: '1',
         id: ItemId.Beacon,
-        moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+        modules: [ItemId.SpeedModule, ItemId.SpeedModule],
         total: '8',
       },
     ],
@@ -991,7 +991,7 @@ describe('RouterService', () => {
         {
           count: '1',
           id: ItemId.Beacon,
-          moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+          modules: [ItemId.SpeedModule, ItemId.SpeedModule],
         },
       ];
       const result = service.zipBeacons(

@@ -1,16 +1,15 @@
 import { SelectItem } from 'primeng/api';
 
+import { BeaconSettings } from './beacon-settings';
+import { ModuleSettings } from './module-settings';
+
 export interface MachineSettings {
   fuelId?: string;
   /** Calculated, not configurable */
   fuelOptions?: SelectItem<string>[];
-  moduleRankIds?: string[];
+  modules?: ModuleSettings[];
   /** Calculated, not configurable */
   moduleOptions?: SelectItem[];
-  beaconCount?: string;
-  beaconId?: string;
-  beaconModuleRankIds?: string[];
-  /** Calculated, not configurable */
-  beaconModuleOptions?: SelectItem<string>[];
+  beacons?: BeaconSettings[];
   overclock?: number;
 }

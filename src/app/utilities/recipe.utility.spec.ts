@@ -58,7 +58,7 @@ describe('RecipeUtility', () => {
     it('should adjust a standard recipe', () => {
       const settings = { ...Mocks.RecipesStateRational[RecipeId.SteelChest] };
       settings.machineModuleIds = undefined;
-      settings.beacons = [{ moduleIds: [ItemId.SpeedModule] }];
+      settings.beacons = [{ modules: [ItemId.SpeedModule] }];
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Module,
@@ -166,7 +166,7 @@ describe('RecipeUtility', () => {
         {
           id: ItemId.Beacon,
           count: Rational.one,
-          moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+          modules: [ItemId.SpeedModule, ItemId.SpeedModule],
         },
       ];
       const data = {
@@ -242,7 +242,7 @@ describe('RecipeUtility', () => {
           },
         },
       };
-      settings.beacons = [{ count: Rational.zero, moduleIds: [ItemId.Module] }];
+      settings.beacons = [{ count: Rational.zero, modules: [ItemId.Module] }];
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         ItemId.Module,
@@ -427,7 +427,7 @@ describe('RecipeUtility', () => {
     it('should calculate proliferator usage', () => {
       const settings = new RecipeSettingsRational({
         ...Mocks.RecipesStateInitial[ItemId.SteelChest],
-        ...{ machineModuleIds: [ItemId.ProductivityModule3] },
+        ...{ modules: [ItemId.ProductivityModule3] },
       });
       const recipe = {
         ...Mocks.RawDataset.recipeEntities[RecipeId.SteelChest],
@@ -493,7 +493,7 @@ describe('RecipeUtility', () => {
     it('should ignore proliferator self-spray with no productivity bonus', () => {
       const settings = new RecipeSettingsRational({
         ...Mocks.RecipesStateInitial[ItemId.SteelChest],
-        ...{ machineModuleIds: [ItemId.ProductivityModule3] },
+        ...{ modules: [ItemId.ProductivityModule3] },
       });
       const recipe = {
         ...Mocks.RawDataset.recipeEntities[RecipeId.SteelChest],
@@ -948,15 +948,15 @@ describe('RecipeUtility', () => {
         Mocks.RawDataset,
       );
       expect(result.machineId).toEqual(ItemId.ElectricFurnace);
-      expect(result.machineModuleOptions?.length).toEqual(10);
-      expect(result.machineModuleIds).toEqual([
+      expect(result.moduleOptions?.length).toEqual(10);
+      expect(result.modules).toEqual([
         ItemId.ProductivityModule3,
         ItemId.ProductivityModule3,
       ]);
       expect(result.beacons?.[0].count).toEqual('8');
       expect(result.beacons?.[0].id).toEqual(ItemId.Beacon);
       expect(result.beacons?.[0].moduleOptions?.length).toEqual(7);
-      expect(result.beacons?.[0].moduleIds).toEqual([
+      expect(result.beacons?.[0].modules).toEqual([
         ItemId.SpeedModule3,
         ItemId.SpeedModule3,
       ]);
@@ -1017,8 +1017,8 @@ describe('RecipeUtility', () => {
         data,
       );
       expect(result.machineId).toEqual(ItemId.StoneFurnace);
-      expect(result.machineModuleIds).toEqual([]);
-      expect(result.beacons?.[0].moduleIds).toEqual([
+      expect(result.modules).toEqual([]);
+      expect(result.beacons?.[0].modules).toEqual([
         ItemId.Module,
         ItemId.Module,
       ]);
