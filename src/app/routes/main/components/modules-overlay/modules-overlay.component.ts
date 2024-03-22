@@ -56,7 +56,7 @@ export class ModulesOverlayComponent {
     const empty = values.find((e) => e.id === ItemId.Module);
     if (empty) sum = sum.sub(empty.count);
     const remain = slots.sub(sum);
-    return values.map((e) => e.count.add(remain).toString());
+    return values.map((e) => e.count.add(remain));
   });
 
   ItemId = ItemId;
@@ -87,10 +87,10 @@ export class ModulesOverlayComponent {
     return values.map((v) => ({ ...v }));
   }
 
-  setCount(count: string, i: number): void {
+  setCount(count: Rational, i: number): void {
     this.values.update((values) => {
       values = this.clone(values);
-      values[i].count = Rational.fromString(count);
+      values[i].count = count;
       this.updateEmpty(values);
       return values;
     });

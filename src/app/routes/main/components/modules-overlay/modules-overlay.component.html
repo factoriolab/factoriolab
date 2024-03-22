@@ -4,7 +4,7 @@
       <div class="p-inputgroup">
         <lab-input-number
           width="3rem"
-          [value]="entry.count.toString()"
+          [value]="entry.count"
           [maximum]="maximum()[i]"
           [disabled]="entry.id === ItemId.Module"
           (setValue)="setCount($event, i)"

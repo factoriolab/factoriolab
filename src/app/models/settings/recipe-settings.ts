@@ -15,34 +15,6 @@ export interface RecipeSettings {
   /** Calculated, not configurable */
   moduleOptions?: SelectItem<string>[];
   beacons?: BeaconSettings[];
-  overclock?: number;
-  cost?: string;
-}
-
-export class RecipeSettingsRational {
-  excluded?: boolean;
-  checked?: boolean;
-  machineId?: string;
-  fuelId?: string;
-  /** Calculated, not configurable */
-  fuelOptions?: SelectItem<string>[];
-  modules?: ModuleSettings[];
-  /** Calculated, not configurable */
-  moduleOptions?: SelectItem<string>[];
-  beacons?: BeaconSettings[];
   overclock?: Rational;
   cost?: Rational;
-
-  constructor(obj: RecipeSettings) {
-    this.excluded = obj.excluded;
-    this.checked = obj.checked;
-    this.machineId = obj.machineId;
-    this.fuelId = obj.fuelId;
-    this.fuelOptions = obj.fuelOptions;
-    this.modules = obj.modules;
-    this.moduleOptions = obj.moduleOptions;
-    this.beacons = obj.beacons;
-    this.overclock = Rational.from(obj.overclock);
-    this.cost = Rational.from(obj.cost);
-  }
 }

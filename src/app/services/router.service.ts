@@ -11,7 +11,7 @@ import { data } from 'src/data';
 import { filterNullish, orEmpty, orString } from '~/helpers';
 import {
   BeaconSettings,
-  CostSettings,
+  CostsState,
   DisplayRate,
   Entities,
   Game,
@@ -73,6 +73,7 @@ export enum Section {
   Modules = 'm',
   Beacons = 'e',
   Settings = 's',
+  Costs = 'c',
   Zip = 'z',
 }
 
@@ -388,7 +389,7 @@ export class RouterService {
         {
           id: '0',
           targetId: step.itemId,
-          value: step.items.toString(),
+          value: step.items,
           unit: ObjectiveUnit.Items,
           type: ObjectiveType.Output,
         },
@@ -398,7 +399,7 @@ export class RouterService {
         {
           id: '0',
           targetId: step.recipeId,
-          value: step.machines.toString(),
+          value: step.machines,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
@@ -1298,7 +1299,7 @@ export class RouterService {
   zipObjectives(data: ZipData, objectives: Objective[], hash: ModHash): void {
     const z = this.zipList(
       objectives.map((obj) => {
-        const value = Rational.fromString(obj.value).toString();
+        const value = obj.value.toString();
         const unit = this.zipDiffNumber(obj.unit, ObjectiveUnit.Items);
         const type = this.zipDiffNumber(obj.type, ObjectiveType.Output);
         const modules = this.zipTruthyArray(
@@ -1307,6 +1308,7 @@ export class RouterService {
         const beacons = this.zipTruthyArray(
           data.objectiveSettings.beaconMap[obj.id],
         );
+        const overclock = this.zipTruthyNumber(obj.overclock);
         const checked = this.zipTruthyBool(obj.checked);
 
         return {
@@ -1318,7 +1320,7 @@ export class RouterService {
             this.zipTruthyString(obj.machineId),
             modules,
             beacons,
-            this.zipTruthyNumber(obj.overclock),
+            overclock,
             checked,
           ]),
           hash: this.zipFields([
@@ -1332,7 +1334,7 @@ export class RouterService {
             this.zipTruthyNString(obj.machineId, hash.machines),
             modules,
             beacons,
-            this.zipTruthyNNumber(obj.overclock),
+            overclock,
             checked,
           ]),
         };
@@ -1362,9 +1364,9 @@ export class RouterService {
       const obj: Objective = {
         id: index.toString(),
         targetId: s[i++], // Convert to real id after determining unit, if hashed
-        value: s[i++],
-        unit: Number(s[i++]) | ObjectiveUnit.Items,
-        type: Number(s[i++]) | ObjectiveType.Output,
+        value: this.parseRational(s[i++]) ?? Rational.zero,
+        unit: this.parseNumber(s[i++]) ?? ObjectiveUnit.Items,
+        type: this.parseNumber(s[i++]) ?? ObjectiveType.Output,
         machineId: this.parseString(s[i++], hash?.machines),
         modules: this.parseArray(s[i++])?.map(
           (i) => moduleSettings[Number(i)] ?? {},
@@ -1372,7 +1374,7 @@ export class RouterService {
         beacons: this.parseArray(s[i++])?.map(
           (i) => beaconSettings[Number(i)] ?? {},
         ),
-        overclock: this.parseNumber(s[i++], hash != null),
+        overclock: this.parseRational(s[i++]),
         checked: this.parseBool(s[i++]),
       };
 
@@ -1452,8 +1454,8 @@ export class RouterService {
         const excluded = this.zipTruthyBool(obj.excluded);
         const modules = this.zipTruthyArray(data.recipeSettings.moduleMap[i]);
         const beacons = this.zipTruthyArray(data.recipeSettings.beaconMap[i]);
-
-        const cost = this.zipTruthyString(obj.cost);
+        const overclock = this.zipTruthyNumber(obj.overclock);
+        const cost = this.zipTruthyNumber(obj.cost);
         const checked = this.zipTruthyBool(obj.checked);
 
         return {
@@ -1463,7 +1465,7 @@ export class RouterService {
             this.zipTruthyString(obj.machineId),
             modules,
             beacons,
-            this.zipTruthyNumber(obj.overclock),
+            overclock,
             cost,
             checked,
             this.zipTruthyString(obj.fuelId),
@@ -1474,7 +1476,7 @@ export class RouterService {
             this.zipTruthyNString(obj.machineId, hash.machines),
             modules,
             beacons,
-            this.zipTruthyNNumber(obj.overclock),
+            overclock,
             cost,
             checked,
             this.zipTruthyNString(obj.fuelId, hash.fuels),
@@ -1510,8 +1512,8 @@ export class RouterService {
         beacons: this.parseArray(s[i++])?.map(
           (i) => beaconSettings[Number(i)] ?? {},
         ),
-        overclock: this.parseNumber(s[i++], hash != null),
-        cost: this.parseString(s[i++]),
+        overclock: this.parseRational(s[i++]),
+        cost: this.parseRational(s[i++]),
         checked: this.parseBool(s[i++]),
         fuelId: this.parseString(s[i++], hash?.fuels),
       };
@@ -1529,6 +1531,7 @@ export class RouterService {
   ): void {
     const id = state.ids ? EMPTY : '';
     const beacons = this.zipTruthyArray(data.machineSettings.beaconMap[id]);
+    const overclock = this.zipTruthyNumber(state.overclock);
     const list: Zip[] = [
       {
         bare: this.zipFields([
@@ -1536,14 +1539,14 @@ export class RouterService {
           this.zipTruthyArray(state.moduleRankIds),
           beacons,
           this.zipTruthyArray(state.fuelRankIds),
-          this.zipTruthyNumber(state.overclock),
+          overclock,
         ]),
         hash: this.zipFields([
           id,
           this.zipTruthyNArray(state.moduleRankIds, hash.modules),
           beacons,
           this.zipTruthyNArray(state.fuelRankIds, hash.fuels),
-          this.zipTruthyNNumber(state.overclock),
+          overclock,
         ]),
       },
     ];
@@ -1553,20 +1556,21 @@ export class RouterService {
       const obj = state.entities[i] ?? {};
       const modules = this.zipTruthyArray(data.machineSettings.moduleMap[i]);
       const beacons = this.zipTruthyArray(data.machineSettings.beaconMap[i]);
+      const overclock = this.zipTruthyNumber(obj.overclock);
       list.push({
         bare: this.zipFields([
           i,
           modules,
           beacons,
           this.zipTruthyString(obj.fuelId),
-          this.zipTruthyNumber(obj.overclock),
+          overclock,
         ]),
         hash: this.zipFields([
           this.zipTruthyNString(i, hash.machines),
           modules,
           beacons,
           this.zipTruthyNString(obj.fuelId, hash.fuels),
-          this.zipTruthyNNumber(obj.overclock),
+          overclock,
         ]),
       });
     });
@@ -1605,7 +1609,7 @@ export class RouterService {
         (i) => beaconSettings[Number(i)] ?? {},
       );
       const fuelStr = s[i++];
-      const overclock = this.parseNumber(s[i++], hash != null);
+      const overclock = this.parseRational(s[i++]);
 
       if (id) {
         const obj: MachineSettings = {
@@ -1651,45 +1655,13 @@ export class RouterService {
       state.inserterTarget,
       init.inserterTarget,
     );
-    const beaconReceivers = this.zipDiffString(
+    const beaconReceivers = this.zipDiffNumber(
       state.beaconReceivers,
       init.beaconReceivers,
     );
     const netProductionOnly = this.zipDiffBool(
       state.netProductionOnly,
       init.netProductionOnly,
-    );
-    const costsFactor = this.zipDiffString(
-      state.costs.factor,
-      init.costs.factor,
-    );
-    const costsMachine = this.zipDiffString(
-      state.costs.machine,
-      init.costs.machine,
-    );
-    const costsUnproduceable = this.zipDiffString(
-      state.costs.unproduceable,
-      init.costs.unproduceable,
-    );
-    const costsExcluded = this.zipDiffString(
-      state.costs.excluded,
-      init.costs.excluded,
-    );
-    const costsSurplus = this.zipDiffString(
-      state.costs.surplus,
-      init.costs.surplus,
-    );
-    const costsMaximize = this.zipDiffString(
-      state.costs.maximize,
-      init.costs.maximize,
-    );
-    const surplusMachinesOutput = this.zipDiffBool(
-      state.surplusMachinesOutput,
-      init.surplusMachinesOutput,
-    );
-    const costsFootprint = this.zipDiffString(
-      state.costs.footprint,
-      init.costs.footprint,
     );
     const z: Zip = {
       bare: this.zipFields([
@@ -1713,14 +1685,6 @@ export class RouterService {
         this.zipDiffString(state.proliferatorSprayId, init.proliferatorSprayId),
         netProductionOnly,
         this.zipDiffNumber(state.maximizeType, init.maximizeType),
-        costsFactor,
-        costsMachine,
-        costsUnproduceable,
-        costsExcluded,
-        costsSurplus,
-        costsMaximize,
-        surplusMachinesOutput,
-        costsFootprint,
       ]),
       hash: this.zipFields([
         this.zipDiffNullableNArray(
@@ -1731,8 +1695,8 @@ export class RouterService {
         displayRate,
         preset,
         this.zipDiffNString(state.beltId, init.beltId, hash.belts),
-        this.zipDiffNNumber(state.flowRate, init.flowRate),
-        this.zipDiffNNumber(state.miningBonus, init.miningBonus),
+        this.zipDiffNumber(state.flowRate, init.flowRate),
+        this.zipDiffNumber(state.miningBonus, init.miningBonus),
         this.zipDiffNNumber(state.researchSpeed, init.researchSpeed),
         inserterCapacity,
         inserterTarget,
@@ -1746,15 +1710,7 @@ export class RouterService {
           hash.modules,
         ),
         netProductionOnly,
-        this.zipDiffNNumber(state.maximizeType, init.maximizeType),
-        costsFactor,
-        costsMachine,
-        costsUnproduceable,
-        costsExcluded,
-        costsSurplus,
-        costsMaximize,
-        surplusMachinesOutput,
-        costsFootprint,
+        this.zipDiffNumber(state.maximizeType, init.maximizeType),
       ]),
     };
 
@@ -1762,14 +1718,66 @@ export class RouterService {
       data.config.bare += `&${Section.Settings}=${encodeURIComponent(z.bare)}`;
       data.config.hash += `&${Section.Settings}${z.hash}`;
     }
+
+    const costsFactor = this.zipDiffNumber(
+      state.costs.factor,
+      init.costs.factor,
+    );
+    const costsMachine = this.zipDiffNumber(
+      state.costs.machine,
+      init.costs.machine,
+    );
+    const costsUnproduceable = this.zipDiffNumber(
+      state.costs.unproduceable,
+      init.costs.unproduceable,
+    );
+    const costsExcluded = this.zipDiffNumber(
+      state.costs.excluded,
+      init.costs.excluded,
+    );
+    const costsSurplus = this.zipDiffNumber(
+      state.costs.surplus,
+      init.costs.surplus,
+    );
+    const costsMaximize = this.zipDiffNumber(
+      state.costs.maximize,
+      init.costs.maximize,
+    );
+    const surplusMachinesOutput = this.zipDiffBool(
+      state.surplusMachinesOutput,
+      init.surplusMachinesOutput,
+    );
+    const costsFootprint = this.zipDiffNumber(
+      state.costs.footprint,
+      init.costs.footprint,
+    );
+    const zip = this.zipFields([
+      surplusMachinesOutput,
+      costsFactor,
+      costsMachine,
+      costsUnproduceable,
+      costsExcluded,
+      costsSurplus,
+      costsMaximize,
+      costsFootprint,
+    ]);
+    const costsZ: Zip = {
+      bare: zip,
+      hash: zip,
+    };
+
+    if (costsZ.bare.length) {
+      data.config.bare += `&${Section.Costs}=${encodeURIComponent(costsZ.bare)}`;
+      data.config.hash += `&${Section.Costs}${costsZ.hash}`;
+    }
   }
 
   unzipSettings(
     params: Entities,
     hash?: ModHash,
   ): Settings.PartialSettingsState {
-    const zip = params[Section.Settings];
-    const s = zip.split(FIELDSEP);
+    let zip = params[Section.Settings];
+    let s = zip.split(FIELDSEP);
     let i = 0;
     const state: Settings.PartialSettingsState = {
       modId: hash == null ? this.parseString(s[i++]) : undefined,
@@ -1780,33 +1788,38 @@ export class RouterService {
       displayRate: this.parseDisplayRate(s[i++]),
       preset: this.parseNumber(s[i++]),
       beltId: this.parseString(s[i++], hash?.belts),
-      flowRate: this.parseNumber(s[i++], hash != null),
-      miningBonus: this.parseNumber(s[i++], hash != null),
-      researchSpeed: this.parseNumber(s[i++], hash != null),
-      inserterCapacity: this.parseNumber(s[i++], hash != null),
-      inserterTarget: this.parseNumber(s[i++], hash != null),
+      flowRate: this.parseRational(s[i++]),
+      miningBonus: this.parseRational(s[i++]),
+      researchSpeed: this.parseNumber(s[i++]),
+      inserterCapacity: this.parseNumber(s[i++]),
+      inserterTarget: this.parseNumber(s[i++]),
       cargoWagonId: this.parseString(s[i++], hash?.wagons),
       fluidWagonId: this.parseString(s[i++], hash?.wagons),
       pipeId: this.parseString(s[i++], hash?.belts),
-      beaconReceivers: this.parseString(s[i++]),
+      beaconReceivers: this.parseRational(s[i++]),
       proliferatorSprayId: this.parseString(s[i++], hash?.modules),
       netProductionOnly: this.parseBool(s[i++]),
-      maximizeType: this.parseNumber(s[i++], hash != null),
-    };
-    const costs: Partial<CostSettings> = {
-      factor: this.parseString(s[i++]),
-      machine: this.parseString(s[i++]),
-      unproduceable: this.parseString(s[i++]),
-      excluded: this.parseString(s[i++]),
-      surplus: this.parseString(s[i++]),
-      maximize: this.parseString(s[i++]),
+      maximizeType: this.parseNumber(s[i++]),
+      surplusMachinesOutput: this.parseBool(s[i++]),
     };
 
-    state.surplusMachinesOutput = this.parseBool(s[i++]);
-    costs.footprint = this.parseString(s[i++]);
+    zip = params[Section.Costs];
+    if (zip) {
+      s = zip.split(FIELDSEP);
+      i = 0;
+      const costs: Partial<CostsState> = {
+        factor: this.parseRational(s[i++]),
+        machine: this.parseRational(s[i++]),
+        unproduceable: this.parseRational(s[i++]),
+        excluded: this.parseRational(s[i++]),
+        surplus: this.parseRational(s[i++]),
+        maximize: this.parseRational(s[i++]),
+        footprint: this.parseRational(s[i++]),
+      };
+      this.deleteEmptyKeys(costs);
+      if (Object.keys(costs).length) state.costs = costs;
+    }
 
-    this.deleteEmptyKeys(costs);
-    if (Object.keys(costs).length) state.costs = costs;
     this.deleteEmptyKeys(state);
     return state;
   }
@@ -1826,7 +1839,7 @@ export class RouterService {
     return value == null ? '' : value;
   }
 
-  zipTruthyNumber(value: number | undefined): string {
+  zipTruthyNumber(value: number | Rational | undefined): string {
     return value == null ? '' : value.toString();
   }
 
@@ -1840,10 +1853,6 @@ export class RouterService {
 
   zipTruthyNString(value: string | undefined, hash: string[]): string {
     return value == null ? '' : this.getId(hash.indexOf(value));
-  }
-
-  zipTruthyNNumber(value: number | undefined): string {
-    return value == null ? '' : this.getId(value);
   }
 
   zipTruthyNArray(value: string[] | undefined, hash: string[]): string {
@@ -1861,7 +1870,10 @@ export class RouterService {
     return value === init ? '' : value == null ? NULL : value;
   }
 
-  zipDiffNumber(value: number | undefined, init: number | undefined): string {
+  zipDiffNumber(
+    value: number | Rational | null | undefined,
+    init: number | Rational | null | undefined,
+  ): string {
     return value === init ? '' : value == null ? NULL : value.toString();
   }
 
@@ -1983,11 +1995,7 @@ export class RouterService {
     return value === TRUE;
   }
 
-  parseNumber(
-    value: string | undefined,
-    useNNumber?: boolean,
-  ): number | undefined {
-    if (useNNumber) return this.parseNNumber(value);
+  parseNumber(value: string | undefined): number | undefined {
     if (!value?.length || value === NULL) return undefined;
     return Number(value);
   }
@@ -2011,6 +2019,10 @@ export class RouterService {
     if (hash != null) return this.parseNArray(value, hash);
     if (!value?.length || value === NULL) return undefined;
     return value === EMPTY ? [] : value.split(ARRAYSEP);
+  }
+
+  parseRational(value: string | undefined): Rational | undefined {
+    return Rational.from(this.parseString(value));
   }
 
   parseNullableArray(

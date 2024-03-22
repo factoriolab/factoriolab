@@ -6,7 +6,7 @@
           width="3rem"
           [pTooltip]="'beaconsOverlay.eachTooltip' | translate"
           tooltipPosition="top"
-          [value]="entry.count.toString()"
+          [value]="entry.count"
           (setValue)="setCount($event, i)"
         >
         </lab-input-number>
@@ -15,7 +15,7 @@
             width="3rem"
             [pTooltip]="'beaconsOverlay.totalTooltip' | translate"
             tooltipPosition="top"
-            [value]="entry.total.toString()"
+            [value]="entry.total"
             (setValue)="setTotal($event, i)"
           >
           </lab-input-number>

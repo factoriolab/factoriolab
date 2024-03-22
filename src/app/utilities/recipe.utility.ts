@@ -5,14 +5,13 @@ import {
   Beacon,
   BeaconRational,
   BeltRational,
-  CostRationalSettings,
+  CostsState,
   Dataset,
   EnergyType,
   Entities,
   Game,
   isRecipeObjective,
   ItemId,
-  ItemRational,
   ItemSettings,
   Machine,
   MachineRational,
@@ -22,7 +21,7 @@ import {
   RawDataset,
   Recipe,
   RecipeRational,
-  RecipeSettingsRational,
+  RecipeSettings,
 } from '~/models';
 import { Machines } from '~/store';
 
@@ -137,7 +136,7 @@ export class RecipeUtility {
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    settings: RecipeSettingsRational,
+    settings: RecipeSettings,
     itemsState: Entities<ItemSettings>,
     data: RawDataset,
   ): RecipeRational {
@@ -453,7 +452,7 @@ export class RecipeUtility {
   /** Adjust rocket launch objective recipes */
   static adjustLaunchRecipeObjective(
     recipe: RecipeRational,
-    settings: Entities<RecipeSettingsRational>,
+    settings: Entities<RecipeSettings>,
     data: Dataset,
   ): void {
     if (!recipe.part) return;
@@ -471,7 +470,7 @@ export class RecipeUtility {
   /** Adjust rocket launch and rocket part recipes */
   static adjustSiloRecipes(
     recipeR: Entities<RecipeRational>,
-    settings: Entities<RecipeSettingsRational>,
+    settings: Entities<RecipeSettings>,
     data: RawDataset,
   ): Entities<RecipeRational> {
     for (const partId of Object.keys(recipeR)) {
@@ -512,13 +511,13 @@ export class RecipeUtility {
   static adjustDataset(
     recipeIds: string[],
     excludedRecipeIds: string[],
-    recipesState: Entities<RecipeSettingsRational>,
+    recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    cost: CostRationalSettings,
+    costs: CostsState,
     data: RawDataset,
   ): Dataset {
     const recipeR = this.adjustRecipes(
@@ -531,13 +530,13 @@ export class RecipeUtility {
       netProductionOnly,
       data,
     );
-    this.adjustCost(recipeIds, recipeR, recipesState, cost, data);
+    this.adjustCosts(recipeIds, recipeR, recipesState, costs, data);
     return this.finalizeData(recipeIds, excludedRecipeIds, recipeR, data);
   }
 
   static adjustRecipes(
     recipeIds: string[],
-    recipesState: Entities<RecipeSettingsRational>,
+    recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
     proliferatorSprayId: string,
     miningBonus: Rational,
@@ -564,11 +563,11 @@ export class RecipeUtility {
     );
   }
 
-  static adjustCost(
+  static adjustCosts(
     recipeIds: string[],
     recipeR: Entities<RecipeRational>,
-    recipesState: Entities<RecipeSettingsRational>,
-    cost: CostRationalSettings,
+    recipesState: Entities<RecipeSettings>,
+    costs: CostsState,
     data: RawDataset,
   ): void {
     recipeIds
@@ -583,10 +582,10 @@ export class RecipeUtility {
           const output = Object.keys(recipe.out)
             .reduce((v, o) => v.add(recipe.out[o]), Rational.zero)
             .div(recipe.time);
-          recipe.cost = output.mul(recipe.cost).mul(cost.factor);
+          recipe.cost = output.mul(recipe.cost).mul(costs.factor);
         } else {
-          recipe.cost = cost.machine;
-          if (settings.machineId != null && cost.footprint.nonzero()) {
+          recipe.cost = costs.machine;
+          if (settings.machineId != null && costs.footprint.nonzero()) {
             // Adjust based on machine size
             const machine = data.machineEntities[settings.machineId];
             if (machine.size != null) {
@@ -689,27 +688,6 @@ export class RecipeUtility {
           ...b,
         }));
       }
-
-      // for (const beaconSettings of objective.beacons) {
-      //   beaconSettings.count = beaconSettings.count ?? def.beaconCount;
-      //   beaconSettings.id = beaconSettings.id ?? def.beaconId;
-
-      //   if (beaconSettings.id != null) {
-      //     const beacon = data.beaconEntities[beaconSettings.id];
-      //     beaconSettings.moduleOptions = this.moduleOptions(
-      //       beacon,
-      //       data,
-      //       objective.targetId,
-      //     );
-
-      //     if (beaconSettings.modules == null) {
-      //       beaconSettings.modules = RecipeUtility.defaultModules(
-      //         beaconSettings.moduleOptions,
-      //         def.beaconModules ?? [],
-      //       );
-      //     }
-      //   }
-      // }
     } else {
       // Machine doesn't support modules, remove any
       delete objective.modules;

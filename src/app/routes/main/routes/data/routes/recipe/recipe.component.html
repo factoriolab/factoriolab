@@ -359,7 +359,7 @@
         <th>{{ 'data.cost' | translate }}</th>
         <td>
           <lab-input-number
-            [value]="cost.toString()"
+            [value]="cost"
             (setValue)="setRecipeCost(id(), $event)"
           ></lab-input-number>
         </td>

@@ -1,6 +1,6 @@
 import { ItemId, RecipeId } from 'src/tests';
 import {
-  CostSettings,
+  CostsState,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
@@ -253,7 +253,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_COSTS', () => {
     it('should set cost values', () => {
-      const value: CostSettings = {
+      const value: CostsState = {
         factor: '1',
         machine: '1',
         footprint: '1',

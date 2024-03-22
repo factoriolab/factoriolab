@@ -30,7 +30,7 @@ describe('SimplexUtility', () => {
     data: Mocks.Dataset,
     maximizeType: MaximizeType.Weight,
     surplusMachinesOutput: false,
-    cost: {
+    costs: {
       factor: Rational.one,
       machine: Rational.one,
       footprint: Rational.one,
@@ -191,7 +191,7 @@ describe('SimplexUtility', () => {
         data: Mocks.Dataset,
         maximizeType: MaximizeType.Weight,
         surplusMachinesOutput: false,
-        cost: Mocks.CostRational,
+        costs: Mocks.CostRational,
       });
     });
   });
@@ -327,7 +327,7 @@ describe('SimplexUtility', () => {
         state,
       );
       expect(result).toEqual(
-        state.cost.unproduceable.div(Rational.ten).toNumber(),
+        state.costs.unproduceable.div(Rational.ten).toNumber(),
       );
     });
   });

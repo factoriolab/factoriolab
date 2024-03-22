@@ -9,8 +9,6 @@ import {
   BeltRational,
   CargoWagonRational,
   columnOptions,
-  CostKey,
-  CostRationalSettings,
   Defaults,
   displayRateInfo,
   Entities,
@@ -191,7 +189,7 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
   const m = base.defaults;
   let beacons: BeaconSettings[] = [];
   let moduleRank: string[] | undefined;
-  let overclock: number | undefined;
+  let overclock: Rational | undefined;
   switch (base.game) {
     case Game.Factorio: {
       moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
@@ -223,7 +221,7 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
     }
     case Game.Satisfactory: {
       moduleRank = m.moduleRank;
-      overclock = 100;
+      overclock = Rational.hundred;
       break;
     }
     case Game.FinalFactory: {
@@ -263,34 +261,13 @@ export const getSettings = createSelector(
   }),
 );
 
-export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
-  Rational.fromNumber(bonus).div(Rational.hundred),
+export const getMiningFactor = createSelector(getMiningBonus, (bonus) =>
+  bonus.div(Rational.hundred),
 );
 
 export const getResearchFactor = createSelector(
   getResearchSpeed,
   (speed) => researchSpeedFactor[speed],
-);
-
-export const getRationalBeaconReceivers = createSelector(
-  getBeaconReceivers,
-  (total) => (total ? Rational.fromString(total) : null),
-);
-
-export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
-  Rational.fromNumber(rate),
-);
-
-export const getRationalCost = createSelector(
-  getCosts,
-  (cost): CostRationalSettings =>
-    (Object.keys(cost) as CostKey[]).reduce(
-      (a: Partial<CostRationalSettings>, b) => {
-        a[b] = Rational.fromString(cost[b]);
-        return a;
-      },
-      {},
-    ) as CostRationalSettings,
 );
 
 export const getI18n = createSelector(
@@ -590,7 +567,7 @@ export const getOptions = createSelector(
 
 export const getBeltSpeed = createSelector(
   getDataset,
-  getRationalFlowRate,
+  getFlowRate,
   (data, flowRate) => {
     const value: Entities<Rational> = { [ItemId.Pipe]: flowRate };
     if (data.beltIds) {
@@ -684,7 +661,7 @@ export const getAvailableRecipes = createSelector(
 export const getAdjustmentData = createSelector(
   getNetProductionOnly,
   getProliferatorSprayId,
-  getRationalMiningBonus,
+  getMiningFactor,
   getResearchFactor,
   getAvailableRecipes,
   (

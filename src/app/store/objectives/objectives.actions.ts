@@ -8,6 +8,7 @@ import {
   Objective,
   ObjectiveBase,
   ObjectiveType,
+  Rational,
 } from '~/models';
 
 export const enum ObjectivesActionType {
@@ -56,7 +57,7 @@ export class SetTargetAction implements Action {
 
 export class SetValueAction implements Action {
   readonly type = ObjectivesActionType.SET_VALUE;
-  constructor(public payload: IdValuePayload<string>) {}
+  constructor(public payload: IdValuePayload<Rational>) {}
 }
 
 export class SetUnitAction implements Action {
@@ -91,7 +92,7 @@ export class SetBeaconsAction implements Action {
 
 export class SetOverclockAction implements Action {
   readonly type = ObjectivesActionType.SET_OVERCLOCK;
-  constructor(public payload: IdValueDefaultPayload<number>) {}
+  constructor(public payload: IdValueDefaultPayload<Rational>) {}
 }
 
 export class SetCheckedAction implements Action {

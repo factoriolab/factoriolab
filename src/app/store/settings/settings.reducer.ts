@@ -1,11 +1,12 @@
 import {
-  CostSettings,
+  CostsState,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
   ItemId,
   MaximizeType,
   Preset,
+  Rational,
   ResearchSpeed,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
@@ -23,24 +24,24 @@ export interface SettingsState {
   netProductionOnly: boolean;
   surplusMachinesOutput: boolean;
   preset: Preset;
-  beaconReceivers: string | null;
+  beaconReceivers: Rational | null;
   proliferatorSprayId: string;
   beltId?: string;
   pipeId?: string;
   cargoWagonId?: string;
   fluidWagonId?: string;
-  flowRate: number;
+  flowRate: Rational;
   inserterTarget: InserterTarget;
-  miningBonus: number;
+  miningBonus: Rational;
   researchSpeed: ResearchSpeed;
   inserterCapacity: InserterCapacity;
   displayRate: DisplayRate;
-  costs: CostSettings;
+  costs: CostsState;
   maximizeType: MaximizeType;
 }
 
 export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
-  costs?: Partial<CostSettings>;
+  costs?: Partial<CostsState>;
 };
 
 export const initialSettingsState: SettingsState = {
@@ -51,21 +52,21 @@ export const initialSettingsState: SettingsState = {
   preset: Preset.Minimum,
   beaconReceivers: null,
   proliferatorSprayId: ItemId.Module,
-  flowRate: 1200,
+  flowRate: Rational.from(1200),
   inserterTarget: InserterTarget.ExpressTransportBelt,
-  miningBonus: 0,
+  miningBonus: Rational.zero,
   researchSpeed: ResearchSpeed.Speed6,
   inserterCapacity: InserterCapacity.Capacity7,
   displayRate: DisplayRate.PerMinute,
   maximizeType: MaximizeType.Weight,
   costs: {
-    factor: '1',
-    machine: '1',
-    footprint: '1',
-    unproduceable: '1000000',
-    excluded: '0',
-    surplus: '0',
-    maximize: '-1000000',
+    factor: Rational.one,
+    machine: Rational.one,
+    footprint: Rational.one,
+    unproduceable: Rational.fromNumber(1000000),
+    excluded: Rational.zero,
+    surplus: Rational.zero,
+    maximize: Rational.fromNumber(-1000000),
   },
 };
 
@@ -98,7 +99,7 @@ export function settingsReducer(
           modId: action.payload,
           preset: Preset.Minimum,
           beaconReceivers: null,
-          miningBonus: 0,
+          miningBonus: Rational.zero,
           researchSpeed: ResearchSpeed.Speed6,
         },
       };
@@ -156,7 +157,7 @@ export function settingsReducer(
       return { ...state, ...{ maximizeType: action.payload } };
     case SettingsActionType.SET_COSTS:
       return { ...state, ...{ costs: action.payload } };
-    case SettingsActionType.RESET_COST:
+    case SettingsActionType.RESET_COSTS:
       return {
         ...state,
         ...{

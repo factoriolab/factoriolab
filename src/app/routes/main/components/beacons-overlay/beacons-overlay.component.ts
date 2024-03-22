@@ -51,16 +51,16 @@ export class BeaconsOverlayComponent {
     this.overlayPanel?.hide();
   }
 
-  setCount(count: string, i: number): void {
+  setCount(count: Rational, i: number): void {
     this.values.update((values) => {
-      values[i].count = Rational.fromString(count);
+      values[i].count = count;
       return values;
     });
   }
 
-  setTotal(total: string, i: number): void {
+  setTotal(total: Rational, i: number): void {
     this.values.update((values) => {
-      values[i].total = Rational.fromString(total);
+      values[i].total = total;
       return values;
     });
   }

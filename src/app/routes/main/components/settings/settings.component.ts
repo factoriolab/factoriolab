@@ -290,7 +290,7 @@ export class SettingsComponent implements OnInit {
   }
 
   toggleBeaconReceivers(value: boolean): void {
-    this.setBeaconReceivers(value ? '1' : null);
+    this.setBeaconReceivers(value ? Rational.one : null);
   }
 
   /** Action Dispatch Methods */
@@ -358,7 +358,7 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.SetModulesAction({ id, value }));
   }
 
-  setOverclock(id: string, value: number, def: number | undefined): void {
+  setOverclock(id: string, value: Rational, def: Rational | undefined): void {
     this.store.dispatch(new Machines.SetOverclockAction({ id, value, def }));
   }
 
@@ -366,7 +366,7 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.SetBeaconsAction({ id, value }));
   }
 
-  setBeaconReceivers(value: string | null): void {
+  setBeaconReceivers(value: Rational | null): void {
     this.store.dispatch(new Settings.SetBeaconReceiversAction(value));
   }
 
@@ -398,7 +398,7 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.SetModuleRankAction({ value, def }));
   }
 
-  setFlowRate(value: number): void {
+  setFlowRate(value: Rational): void {
     this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
 
@@ -406,7 +406,7 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetInserterTargetAction(value));
   }
 
-  setMiningBonus(value: number): void {
+  setMiningBonus(value: Rational): void {
     this.store.dispatch(new Settings.SetMiningBonusAction(value));
   }
 

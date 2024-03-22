@@ -8,7 +8,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { tap, withLatestFrom } from 'rxjs';
 
-import { CostKey, CostSettings, DialogComponent } from '~/models';
+import { CostKey, CostsState, DialogComponent, Rational } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Settings } from '~/store';
 
@@ -39,11 +39,13 @@ export class CostsComponent extends DialogComponent implements OnInit {
     }),
   );
 
+  Rational = Rational;
+
   ngOnInit(): void {
     this.show$.subscribe();
   }
 
-  initEdit(costs: CostSettings): void {
+  initEdit(costs: CostsState): void {
     this.editValue = { ...costs };
   }
 

@@ -5,6 +5,7 @@ import {
   IdValueDefaultPayload,
   IdValuePayload,
   ModuleSettings,
+  Rational,
   ValueDefaultPayload,
 } from '~/models';
 
@@ -69,7 +70,7 @@ export class SetBeaconsAction implements Action {
 
 export class SetOverclockAction implements Action {
   readonly type = MachinesActionType.SET_OVERCLOCK;
-  constructor(public payload: IdValueDefaultPayload<number>) {}
+  constructor(public payload: IdValueDefaultPayload<Rational>) {}
 }
 
 export class ResetMachineAction implements Action {

@@ -5,6 +5,7 @@ import {
   IdValueDefaultPayload,
   IdValuePayload,
   ModuleSettings,
+  Rational,
 } from '~/models';
 
 export const enum RecipesActionType {
@@ -63,12 +64,12 @@ export class SetBeaconsAction implements Action {
 
 export class SetOverclockAction implements Action {
   readonly type = RecipesActionType.SET_OVERCLOCK;
-  constructor(public payload: IdValueDefaultPayload<number>) {}
+  constructor(public payload: IdValueDefaultPayload<Rational>) {}
 }
 
 export class SetCostAction implements Action {
   readonly type = RecipesActionType.SET_COST;
-  constructor(public payload: IdValuePayload<string | undefined>) {}
+  constructor(public payload: IdValuePayload<Rational | undefined>) {}
 }
 
 export class ResetRecipeAction implements Action {

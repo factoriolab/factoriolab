@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { Entities, RecipeSettings, RecipeSettingsRational } from '~/models';
+import { Entities, RecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
@@ -86,18 +86,6 @@ export const getRecipesState = createSelector(
   },
 );
 
-export const getRecipesStateRational = createSelector(
-  getRecipesState,
-  (recipesState) =>
-    Object.keys(recipesState).reduce(
-      (e: Entities<RecipeSettingsRational>, i) => {
-        e[i] = new RecipeSettingsRational(recipesState[i]);
-        return e;
-      },
-      {},
-    ),
-);
-
 export const getExcludedRecipeIds = createSelector(
   getRecipesState,
   (recipesState) =>
@@ -105,13 +93,13 @@ export const getExcludedRecipeIds = createSelector(
 );
 
 export const getAdjustedDataset = createSelector(
-  getRecipesStateRational,
+  getRecipesState,
   getExcludedRecipeIds,
   Items.getItemsState,
-  Settings.getRationalCost,
+  Settings.getCosts,
   Settings.getAdjustmentData,
   Settings.getDataset,
-  (recipesState, excludedRecipeIds, itemsState, cost, adj, data) =>
+  (recipesState, excludedRecipeIds, itemsState, costs, adj, data) =>
     RecipeUtility.adjustDataset(
       adj.recipeIds,
       excludedRecipeIds,
@@ -121,7 +109,7 @@ export const getAdjustedDataset = createSelector(
       adj.miningBonus,
       adj.researchSpeed,
       adj.netProductionOnly,
-      cost,
+      costs,
       data,
     ),
 );

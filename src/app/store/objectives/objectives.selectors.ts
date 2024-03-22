@@ -6,11 +6,8 @@ import {
   Game,
   isRecipeObjective,
   ItemId,
-  ObjectiveRational,
   PowerUnit,
   Rational,
-  RecipeRational,
-  RecipeSettingsRational,
   Step,
   StepDetail,
   StepDetailTab,
@@ -60,36 +57,36 @@ export const getObjectives = createSelector(
     ),
 );
 
-export const getObjectiveRationals = createSelector(
+export const getAdjustedObjectives = createSelector(
   getObjectives,
   Settings.getAdjustmentData,
   Items.getItemsState,
-  Recipes.getRecipesStateRational,
+  Recipes.getRecipesState,
   Recipes.getAdjustedDataset,
   (objectives, adj, itemsState, recipesState, data) =>
     objectives.map((o) => {
-      let recipe: RecipeRational | undefined;
       if (isRecipeObjective(o)) {
-        recipe = RecipeUtility.adjustRecipe(
+        const recipe = RecipeUtility.adjustRecipe(
           o.targetId,
           adj.proliferatorSprayId,
           adj.miningBonus,
           adj.researchSpeed,
           adj.netProductionOnly,
-          new RecipeSettingsRational(o),
+          o,
           itemsState,
           data,
         );
         RecipeUtility.adjustLaunchRecipeObjective(recipe, recipesState, data);
         recipe.finalize();
+        o.recipe = recipe;
       }
 
-      return new ObjectiveRational(o, recipe);
+      return o;
     }),
 );
 
 export const getNormalizedObjectives = createSelector(
-  getObjectiveRationals,
+  getAdjustedObjectives,
   Items.getItemsState,
   Settings.getBeltSpeed,
   Settings.getDisplayRateInfo,
@@ -116,7 +113,7 @@ export const getMatrixResult = createSelector(
   Settings.getAllResearchedTechnologyIds,
   Settings.getMaximizeType,
   Settings.getSurplusMachinesOutput,
-  Settings.getRationalCost,
+  Settings.getCosts,
   Recipes.getAdjustedDataset,
   Preferences.getPaused,
   (
@@ -126,7 +123,7 @@ export const getMatrixResult = createSelector(
     researchedTechnologyIds,
     maximizeType,
     surplusMachinesOutput,
-    cost,
+    costs,
     data,
     paused,
   ) =>
@@ -137,7 +134,7 @@ export const getMatrixResult = createSelector(
       researchedTechnologyIds,
       maximizeType,
       surplusMachinesOutput,
-      cost,
+      costs,
       data,
       paused,
     ),
@@ -145,10 +142,10 @@ export const getMatrixResult = createSelector(
 
 export const getSteps = createSelector(
   getMatrixResult,
-  getObjectiveRationals,
+  getAdjustedObjectives,
   Items.getItemsState,
-  Recipes.getRecipesStateRational,
-  Settings.getRationalBeaconReceivers,
+  Recipes.getRecipesState,
+  Settings.getBeaconReceivers,
   Settings.getBeltSpeed,
   Settings.getDisplayRateInfo,
   Recipes.getAdjustedDataset,

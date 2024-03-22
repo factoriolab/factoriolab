@@ -92,9 +92,10 @@ export class Rational {
     return this.fromFloat(x);
   }
 
-  private static fromStringCache: Record<string, Rational> = {};
+  private static fromStringCache = new Map<string, Rational>();
   static fromString(x: string): Rational {
-    if (this.fromStringCache[x]) return this.fromStringCache[x];
+    const cached = this.fromStringCache.get(x);
+    if (cached) return cached;
 
     if (x.length === 0) throw new Error('Empty string');
 
@@ -125,7 +126,7 @@ export class Rational {
       }
     }
 
-    this.fromStringCache[x] = result;
+    this.fromStringCache.set(x, result);
     return result;
   }
 

@@ -43,7 +43,7 @@ export function objectivesReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialObjectivesState;
     case ObjectivesActionType.ADD: {
-      let value = '1';
+      let value = Rational.one;
       if (state.ids.length)
         value = state.entities[state.ids[state.ids.length - 1]].value;
 
@@ -233,9 +233,7 @@ export function objectivesReducer(
             o.type !== ObjectiveType.Maximize &&
             (o.unit === ObjectiveUnit.Items || o.unit === ObjectiveUnit.Wagons),
         )) {
-        const value = Rational.fromString(objective.value)
-          .mul(factor)
-          .toString();
+        const value = objective.value.mul(factor);
         newEntities[objective.id] = { ...objective, ...{ value } };
       }
       return {

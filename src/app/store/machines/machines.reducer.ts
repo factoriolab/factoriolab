@@ -1,5 +1,5 @@
 import { spread } from '~/helpers';
-import { BeaconSettings, Entities, MachineSettings } from '~/models';
+import { BeaconSettings, Entities, MachineSettings, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
@@ -10,7 +10,7 @@ export interface MachinesState {
   fuelRankIds?: string[];
   moduleRankIds?: string[];
   beacons?: BeaconSettings[];
-  overclock?: number;
+  overclock?: Rational;
   entities: Entities<MachineSettings>;
 }
 

@@ -9,9 +9,7 @@ export type CostKey =
   | 'surplus'
   | 'maximize';
 
-export type CostSettings = Record<CostKey, string>;
-
-export type CostRationalSettings = Record<CostKey, Rational>;
+export type CostsState = Record<CostKey, Rational>;
 
 /** In Factorio, one item ~= ten fluid units */
 export const FACTORIO_FLUID_COST_RATIO = Rational.ten.reciprocal();

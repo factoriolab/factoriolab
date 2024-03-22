@@ -901,7 +901,7 @@ describe('RecipeUtility', () => {
           },
         },
       };
-      RecipeUtility.adjustCost(
+      RecipeUtility.adjustCosts(
         Mocks.RawDataset.recipeIds,
         recipeR,
         recipeSettings,
@@ -912,7 +912,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should apply normal recipe and machine costs', () => {
-      RecipeUtility.adjustCost(
+      RecipeUtility.adjustCosts(
         Mocks.RawDataset.recipeIds,
         recipeR,
         Mocks.RecipesStateRationalInitial,

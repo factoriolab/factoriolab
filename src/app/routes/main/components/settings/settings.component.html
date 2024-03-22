@@ -670,10 +670,10 @@
                       (onBlur)="
                         setOverclock(
                           machineId,
-                          overclockInput.value ?? 100,
+                          Rational.fromNumber(overclockInput.value ?? 100),
                           machineId
                             ? machinesState().entities[''].overclock
-                            : 100
+                            : Rational.hundred
                         )
                       "
                     >
@@ -990,7 +990,9 @@
                   decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.pipeFlowRateTooltip' | translate"
                   [ngModel]="settings().flowRate"
-                  (onBlur)="setFlowRate(flowRateInput.value ?? 1500)"
+                  (onBlur)="
+                    setFlowRate(Rational.from(flowRateInput.value ?? 1500))
+                  "
                 ></p-inputNumber>
                 <label for="pipe-flow-rate">{{
                   'settings.pipeFlowRate' | translate
@@ -1034,9 +1036,11 @@
                   incrementButtonClass="p-button-outlined"
                   decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.miningSpeedTooltip' | translate"
-                  [ngModel]="settings().miningBonus + 100"
+                  [ngModel]="settings().miningBonus.toNumber() + 100"
                   (onBlur)="
-                    setMiningBonus((miningBonusInput.value ?? 100) - 100)
+                    setMiningBonus(
+                      Rational.fromNumber((miningBonusInput.value ?? 100) - 100)
+                    )
                   "
                 ></p-inputNumber>
                 <label for="mining-speed">{{
@@ -1154,7 +1158,11 @@
                   decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.miningProductivityTooltip' | translate"
                   [ngModel]="settings().miningBonus"
-                  (onBlur)="setMiningBonus(miningProdInput.value ?? 0)"
+                  (onBlur)="
+                    setMiningBonus(
+                      Rational.fromNumber(miningProdInput.value ?? 0)
+                    )
+                  "
                 ></p-inputNumber>
                 <label for="mining-productivity">{{
                   'settings.miningProductivity' | translate

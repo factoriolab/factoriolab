@@ -28,45 +28,37 @@ interface Event {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InputNumberComponent implements OnInit {
-  value = input('');
-  minimum = input<string | null | undefined>('0');
-  maximum = input<string | null | undefined>(null);
+  value = input.required<Rational>();
+  minimum = input<Rational | null | undefined>(Rational.zero);
+  maximum = input<Rational | null | undefined>(null);
   width = input('');
   inputId = input('inputnumber');
   disabled = input(false);
   hideButtons = input(false);
   textButtons = input(false);
 
-  @Output() setValue = new EventEmitter<string>();
+  @Output() setValue = new EventEmitter<Rational>();
 
   @HostBinding('class') classAttr = 'p-element p-inputwrapper';
 
   setValue$ = new Subject<Event>();
 
-  min = computed(() => {
-    const minimum = this.minimum();
-    return minimum == null ? null : Rational.fromString(minimum);
-  });
-  max = computed(() => {
-    const maximum = this.maximum();
-    return maximum == null ? null : Rational.fromString(maximum);
-  });
   isMinimum = computed(() => {
     const value = this.value();
-    const min = this.min();
+    const min = this.minimum();
     if (min == null) return false;
     try {
-      return Rational.fromString(value).lte(min);
+      return value.lte(min);
     } catch {
       return false;
     }
   });
   isMaximum = computed(() => {
     const value = this.value();
-    const max = this.max();
+    const max = this.maximum();
     if (max == null) return false;
     try {
-      return Rational.fromString(value).gte(max);
+      return value.gte(max);
     } catch {
       return false;
     }
@@ -80,7 +72,7 @@ export class InputNumberComponent implements OnInit {
     debounce((e) => (e.type === 'input' ? timer(300) : of({}))),
     map((e) => e.value),
     filterNullish(),
-    tap((v) => this.setValue.emit(v)),
+    tap((v) => this.setValue.emit(Rational.fromString(v))),
   );
 
   ngOnInit(): void {
@@ -90,8 +82,8 @@ export class InputNumberComponent implements OnInit {
   changeValue(value: string, type: EventType): void {
     try {
       const rational = Rational.fromString(value);
-      const min = this.min();
-      const max = this.max();
+      const min = this.minimum();
+      const max = this.maximum();
       if (
         (min == null || rational.gte(min)) &&
         (max == null || rational.lte(max))
@@ -109,13 +101,12 @@ export class InputNumberComponent implements OnInit {
 
   increase(): void {
     try {
-      const rational = Rational.fromString(this.value());
-      const newValue = rational.isInteger()
-        ? rational.add(Rational.one)
-        : rational.ceil();
-      const max = this.max();
-      if (max == null || newValue.lte(max))
-        this.setValue.emit(newValue.toString());
+      const value = this.value();
+      const newValue = value.isInteger()
+        ? value.add(Rational.one)
+        : value.ceil();
+      const max = this.maximum();
+      if (max == null || newValue.lte(max)) this.setValue.emit(newValue);
     } catch {
       // ignore error
     }
@@ -123,13 +114,12 @@ export class InputNumberComponent implements OnInit {
 
   decrease(): void {
     try {
-      const rational = Rational.fromString(this.value());
-      const newValue = rational.isInteger()
-        ? rational.sub(Rational.one)
-        : rational.floor();
-      const min = this.min();
-      if (min == null || newValue.gte(min))
-        this.setValue.emit(newValue.toString());
+      const value = this.value();
+      const newValue = value.isInteger()
+        ? value.sub(Rational.one)
+        : value.floor();
+      const min = this.minimum();
+      if (min == null || newValue.gte(min)) this.setValue.emit(newValue);
     } catch {
       // ignore error
     }
