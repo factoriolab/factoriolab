@@ -509,16 +509,6 @@
                 ></lab-beacons-overlay>
               }
             </div>
-            <ng-container
-              *ngTemplateOutlet="
-                machineRow;
-                context: {
-                  machineId: '',
-                  settings: machinesState().entities[''],
-                  defaults: data().defaults
-                }
-              "
-            ></ng-container>
             <p-orderList
               [value]="machineIds()"
               [dragdrop]="true"
@@ -527,143 +517,46 @@
               "
             >
               <ng-template pTemplate="item" let-machineId>
-                <ng-container
-                  *ngTemplateOutlet="
-                    machineRow;
-                    context: {
-                      machineId,
-                      settings: machinesState().entities[machineId],
-                      defaults: machinesState().entities['']
-                    }
-                  "
-                ></ng-container>
-              </ng-template>
-            </p-orderList>
-            <ng-template
-              #machineRow
-              let-machineId="machineId"
-              let-settings="settings"
-              let-defaults="defaults"
-            >
-              @if (settings && data().machineEntities[machineId]; as machine) {
-                <div class="p-inputgroup flex-wrap machine-preference">
-                  <button
-                    pButton
-                    pRipple
-                    type="button"
-                    class="p-button-outlined cursor-grab"
-                    [class.invisible]="machineId === ''"
-                    icon="fa-solid fa-grip-lines"
-                  ></button>
-                  <p-dropdown
-                    labDropdownBase="icon"
-                    labNoDrag
-                    [tooltip]="'settings.machineTooltip' | translate"
-                    [ngModel]="machineId"
-                    [options]="
-                      options().machines
-                        | filterOptions: machineIds() : machineId
-                    "
-                    (onChange)="
-                      setMachine(
-                        machineId,
-                        $event.value,
-                        data().defaults?.machineRankIds
-                      )
-                    "
-                  >
-                    <ng-template pTemplate="selectedItem" let-item>
-                      @if (item) {
-                        <div class="d-flex">
-                          <i [class]="item.value | iconSmClass"></i>
-                        </div>
-                      } @else {
-                        <div>{{ machineId }}</div>
-                      }
-                    </ng-template>
-                    <ng-template pTemplate="item" let-item>
-                      <div
-                        class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="tooltip"
-                      >
-                        <i [class]="item.value | iconSmClass"></i>
-                        <div class="ms-3 text-truncate">
-                          {{ item.label }}
-                        </div>
-                        <ng-template #tooltip>
-                          <lab-tooltip
-                            [id]="item.value"
-                            type="machine"
-                          ></lab-tooltip>
-                        </ng-template>
-                      </div>
-                    </ng-template>
-                  </p-dropdown>
-                  @if (settings.fuelId) {
-                    <p-dropdown
-                      labDropdownBase="icon"
-                      labNoDrag
-                      [tooltip]="'settings.fuelTooltip' | translate"
-                      [ngModel]="settings.fuelId"
-                      [options]="settings.fuelOptions"
-                      (onChange)="
-                        changeFuel(
-                          machineId,
-                          $event.value,
-                          settings,
-                          settings().fuelRankIds
-                        )
-                      "
-                    >
-                      <ng-template pTemplate="selectedItem" let-item>
-                        <div class="d-flex">
-                          <i [class]="item.value | iconSmClass"></i>
-                        </div>
-                      </ng-template>
-                      <ng-template pTemplate="item" let-item>
-                        <div
-                          class="d-flex align-items-center py-2 w-100 h-100"
-                          [pTooltip]="tooltip"
-                        >
-                          <i [class]="item.value | iconSmClass"></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label }}
-                          </div>
-                          <ng-template #tooltip>
-                            <lab-tooltip
-                              [id]="item.value"
-                              type="fuel"
-                            ></lab-tooltip>
-                          </ng-template>
-                        </div>
-                      </ng-template>
-                    </p-dropdown>
-                  }
-                  @if (settings.modules && machine.modules) {
-                    @if (machine.modules === 1) {
+                @if (machinesState().entities[machineId]; as settings) {
+                  @if (data().machineEntities[machineId]; as machine) {
+                    <div class="p-inputgroup flex-wrap machine-preference">
+                      <button
+                        pButton
+                        pRipple
+                        type="button"
+                        class="p-button-outlined cursor-grab"
+                        icon="fa-solid fa-grip-lines"
+                      ></button>
                       <p-dropdown
                         labDropdownBase="icon"
                         labNoDrag
-                        [tooltip]="'settings.modifierTooltip' | translate"
-                        [ngModel]="settings.modules[0].id"
-                        [options]="settings.moduleOptions ?? []"
+                        [tooltip]="'settings.machineTooltip' | translate"
+                        [ngModel]="machineId"
+                        [options]="
+                          options().machines
+                            | filterOptions: machineIds() : machineId
+                        "
                         (onChange)="
-                          setModules(machineId, [
-                            { id: $event.value, count: Rational.one }
-                          ])
+                          setMachine(
+                            machineId,
+                            $event.value,
+                            data().defaults?.machineRankIds
+                          )
                         "
                       >
                         <ng-template pTemplate="selectedItem" let-item>
-                          <div class="d-flex">
-                            <i [class]="item.value | iconSmClass"></i>
-                          </div>
+                          @if (item) {
+                            <div class="d-flex">
+                              <i [class]="item.value | iconSmClass"></i>
+                            </div>
+                          } @else {
+                            <div>{{ machineId }}</div>
+                          }
                         </ng-template>
                         <ng-template pTemplate="item" let-item>
                           <div
                             class="d-flex align-items-center py-2 w-100 h-100"
-                            [pTooltip]="
-                              item.value !== 'module' ? tooltip : undefined
-                            "
+                            [pTooltip]="tooltip"
                           >
                             <i [class]="item.value | iconSmClass"></i>
                             <div class="ms-3 text-truncate">
@@ -672,110 +565,202 @@
                             <ng-template #tooltip>
                               <lab-tooltip
                                 [id]="item.value"
-                                type="module"
+                                type="machine"
                               ></lab-tooltip>
                             </ng-template>
                           </div>
                         </ng-template>
                       </p-dropdown>
-                    } @else {
+                      @if (settings.fuelId) {
+                        <p-dropdown
+                          labDropdownBase="icon"
+                          labNoDrag
+                          [tooltip]="'settings.fuelTooltip' | translate"
+                          [ngModel]="settings.fuelId"
+                          [options]="settings.fuelOptions"
+                          (onChange)="
+                            changeFuel(
+                              machineId,
+                              $event.value,
+                              settings,
+                              machinesState().fuelRankIds
+                            )
+                          "
+                        >
+                          <ng-template pTemplate="selectedItem" let-item>
+                            <div class="d-flex">
+                              <i [class]="item.value | iconSmClass"></i>
+                            </div>
+                          </ng-template>
+                          <ng-template pTemplate="item" let-item>
+                            <div
+                              class="d-flex align-items-center py-2 w-100 h-100"
+                              [pTooltip]="tooltip"
+                            >
+                              <i [class]="item.value | iconSmClass"></i>
+                              <div class="ms-3 text-truncate">
+                                {{ item.label }}
+                              </div>
+                              <ng-template #tooltip>
+                                <lab-tooltip
+                                  [id]="item.value"
+                                  type="fuel"
+                                ></lab-tooltip>
+                              </ng-template>
+                            </div>
+                          </ng-template>
+                        </p-dropdown>
+                      }
+                      @if (settings.modules && machine.modules) {
+                        @if (machine.modules === 1) {
+                          <p-dropdown
+                            labDropdownBase="icon"
+                            labNoDrag
+                            [tooltip]="'settings.modifierTooltip' | translate"
+                            [ngModel]="settings.modules[0].id"
+                            [options]="settings.moduleOptions ?? []"
+                            (onChange)="
+                              setModules(machineId, [
+                                { id: $event.value, count: Rational.one }
+                              ])
+                            "
+                          >
+                            <ng-template pTemplate="selectedItem" let-item>
+                              <div class="d-flex">
+                                <i [class]="item.value | iconSmClass"></i>
+                              </div>
+                            </ng-template>
+                            <ng-template pTemplate="item" let-item>
+                              <div
+                                class="d-flex align-items-center py-2 w-100 h-100"
+                                [pTooltip]="
+                                  item.value !== 'module' ? tooltip : undefined
+                                "
+                              >
+                                <i [class]="item.value | iconSmClass"></i>
+                                <div class="ms-3 text-truncate">
+                                  {{ item.label }}
+                                </div>
+                                <ng-template #tooltip>
+                                  <lab-tooltip
+                                    [id]="item.value"
+                                    type="module"
+                                  ></lab-tooltip>
+                                </ng-template>
+                              </div>
+                            </ng-template>
+                          </p-dropdown>
+                        } @else {
+                          <button
+                            pButton
+                            pRipple
+                            type="button"
+                            class="hover-action icons p-button-text"
+                            (click)="
+                              modulesOverlay.show(
+                                $event,
+                                settings.modules,
+                                machine
+                              )
+                            "
+                          >
+                            @for (module of settings.modules; track module) {
+                              <i
+                                class="p-button-icon"
+                                [class]="module.id | iconSmClass"
+                                ><span>{{ module.count }}</span></i
+                              >
+                            }
+                            <i class="hover-icon fa-solid fa-gear"></i>
+                          </button>
+                          <lab-modules-overlay
+                            #modulesOverlay
+                            (setValue)="setModules(machineId, $event)"
+                          ></lab-modules-overlay>
+                        }
+                      }
+                      <!-- Overclock input -->
+                      @if (data().game === Game.Satisfactory) {
+                        <p-inputNumber
+                          #overclockInput
+                          labNoDrag
+                          suffix="%"
+                          [min]="1"
+                          [max]="250"
+                          [step]="10"
+                          [maxFractionDigits]="2"
+                          [showButtons]="true"
+                          inputStyleClass="text-end"
+                          [pTooltip]="'settings.overclockTooltip' | translate"
+                          [ngModel]="settings.overclock?.toNumber()"
+                          (onBlur)="
+                            setOverclock(
+                              machineId,
+                              Rational.fromNumber(overclockInput.value ?? 100),
+                              machineId
+                                ? machinesState().entities[''].overclock
+                                : Rational.hundred
+                            )
+                          "
+                        >
+                        </p-inputNumber>
+                      }
+                      @if (settings.beacons && settings.beacons.length) {
+                        <button
+                          pButton
+                          pRipple
+                          type="button"
+                          class="hover-action icons p-button-text flex-column"
+                          (click)="
+                            beaconsOverlay.show($event, settings.beacons)
+                          "
+                        >
+                          @for (beacon of settings.beacons; track $index) {
+                            <div class="d-flex">
+                              <i
+                                class="p-button-icon"
+                                [class]="beacon.id | iconSmClass"
+                                ><span>{{ beacon.count }}</span></i
+                              >
+                              @for (module of beacon.modules; track $index) {
+                                <i
+                                  class="p-button-icon"
+                                  [class]="module.id | iconSmClass"
+                                  ><span>{{ module.count }}</span></i
+                                >
+                              }
+                            </div>
+                          }
+                          <i class="hover-icon fa-solid fa-gear"></i>
+                        </button>
+                        <lab-beacons-overlay
+                          #beaconsOverlay
+                          (setValue)="setBeacons(machineId, $event)"
+                        ></lab-beacons-overlay>
+                      }
                       <button
                         pButton
                         pRipple
+                        labNoDrag
                         type="button"
-                        class="hover-action icons p-button-text"
-                        (click)="
-                          modulesOverlay.show($event, settings.modules, machine)
+                        icon="fa-solid fa-xmark"
+                        class="p-button-outlined ms-auto"
+                        [class.invisible]="machineId === ''"
+                        [pTooltip]="
+                          'settings.removeMachinePreference' | translate
                         "
-                      >
-                        @for (module of settings.modules; track module) {
-                          <i
-                            class="p-button-icon"
-                            [class]="module.id | iconSmClass"
-                            ><span>{{ module.count }}</span></i
-                          >
-                        }
-                        <i class="hover-icon fa-solid fa-gear"></i>
-                      </button>
-                      <lab-modules-overlay
-                        #modulesOverlay
-                        (setValue)="setModules(machineId, $event)"
-                      ></lab-modules-overlay>
-                    }
+                        (click)="
+                          removeMachine(
+                            machineId,
+                            data().defaults?.machineRankIds
+                          )
+                        "
+                      ></button>
+                    </div>
                   }
-                  <!-- Overclock input -->
-                  @if (data().game === Game.Satisfactory) {
-                    <p-inputNumber
-                      #overclockInput
-                      labNoDrag
-                      suffix="%"
-                      [min]="1"
-                      [max]="250"
-                      [step]="10"
-                      [maxFractionDigits]="2"
-                      [showButtons]="true"
-                      inputStyleClass="text-end"
-                      [pTooltip]="'settings.overclockTooltip' | translate"
-                      [ngModel]="settings.overclock.toNumber()"
-                      (onBlur)="
-                        setOverclock(
-                          machineId,
-                          Rational.fromNumber(overclockInput.value ?? 100),
-                          machineId
-                            ? machinesState().entities[''].overclock
-                            : Rational.hundred
-                        )
-                      "
-                    >
-                    </p-inputNumber>
-                  }
-                  @if (settings.beacons.length) {
-                    <button
-                      pButton
-                      pRipple
-                      type="button"
-                      class="hover-action icons p-button-text flex-column"
-                      (click)="beaconsOverlay.show($event, settings.beacons)"
-                    >
-                      @for (beacon of settings.beacons; track $index) {
-                        <div class="d-flex">
-                          <i
-                            class="p-button-icon"
-                            [class]="beacon.id | iconSmClass"
-                            ><span>{{ beacon.count }}</span></i
-                          >
-                          @for (module of beacon.modules; track $index) {
-                            <i
-                              class="p-button-icon"
-                              [class]="module.id | iconSmClass"
-                              ><span>{{ module.count }}</span></i
-                            >
-                          }
-                        </div>
-                      }
-                      <i class="hover-icon fa-solid fa-gear"></i>
-                    </button>
-                    <lab-beacons-overlay
-                      #beaconsOverlay
-                      (setValue)="setBeacons(machineId, $event)"
-                    ></lab-beacons-overlay>
-                  }
-                  <button
-                    pButton
-                    pRipple
-                    labNoDrag
-                    type="button"
-                    icon="fa-solid fa-xmark"
-                    class="p-button-outlined ms-auto"
-                    [class.invisible]="machineId === ''"
-                    [pTooltip]="'settings.removeMachinePreference' | translate"
-                    (click)="
-                      removeMachine(machineId, data().defaults?.machineRankIds)
-                    "
-                  ></button>
-                </div>
-              }
-            </ng-template>
+                }
+              </ng-template>
+            </p-orderList>
             <div class="pt-2"><!--spacer--></div>
           }
           @if (data().game === Game.Factorio) {

@@ -6,12 +6,10 @@ import {
   inject,
   Output,
   signal,
-  ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 import { DropdownChangeEvent } from 'primeng/dropdown';
-import { OverlayPanel } from 'primeng/overlaypanel';
 
 import {
   Beacon,
@@ -20,6 +18,7 @@ import {
   Machine,
   MachineRational,
   ModuleSettings,
+  OverlayComponent,
   Rational,
 } from '~/models';
 import { LabState, Settings } from '~/store';
@@ -31,10 +30,8 @@ import { RecipeUtility } from '~/utilities';
   styleUrl: './modules-overlay.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModulesOverlayComponent {
+export class ModulesOverlayComponent extends OverlayComponent {
   store = inject(Store<LabState>);
-
-  @ViewChild(OverlayPanel) overlayPanel?: OverlayPanel;
 
   @Output() setValue = new EventEmitter<ModuleSettings[]>();
 
@@ -43,7 +40,6 @@ export class ModulesOverlayComponent {
   values = signal<ModuleSettings[]>([]);
   options = signal<SelectItem<string>[]>([]);
   slots = signal<number | true>(true);
-  cancel = signal(false);
 
   exclude = computed(() => this.values().map((e) => e.id));
   sum = computed(() => Rational.sum(this.values().map((e) => e.count)));
@@ -74,13 +70,7 @@ export class ModulesOverlayComponent {
       RecipeUtility.moduleOptions(entity, this.data(), recipeId),
     );
     this.slots.set(slots);
-    this.cancel.set(false);
-    this.overlayPanel?.toggle(event);
-  }
-
-  hide(cancel?: true): void {
-    if (cancel) this.cancel.set(cancel);
-    this.overlayPanel?.hide();
+    this._show(event);
   }
 
   clone(values: ModuleSettings[]): ModuleSettings[] {
@@ -137,8 +127,7 @@ export class ModulesOverlayComponent {
     }
   }
 
-  onHide(): void {
-    if (this.cancel()) return;
+  save(): void {
     this.setValue.emit(this.values().filter((e) => e.count.nonzero()));
   }
 }

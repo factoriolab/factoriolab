@@ -40,4 +40,21 @@ export abstract class DialogComponent extends ModalComponent {
 @Component({ template: '' })
 export abstract class OverlayComponent extends ModalComponent {
   @ViewChild(OverlayPanel) overlayPanel?: OverlayPanel;
+
+  hide(cancel?: true): void {
+    if (cancel === true) this.cancel.set(cancel);
+    this.overlayPanel?.hide();
+  }
+
+  protected _show(event: Event): void {
+    this.cancel.set(false);
+    this.overlayPanel?.toggle(event);
+  }
+
+  onHide(): void {
+    if (this.cancel()) return;
+    this.save();
+  }
+
+  abstract save(): void;
 }

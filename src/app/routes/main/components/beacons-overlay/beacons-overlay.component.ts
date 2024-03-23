@@ -5,13 +5,17 @@ import {
   inject,
   Output,
   signal,
-  ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { DropdownChangeEvent } from 'primeng/dropdown';
-import { OverlayPanel } from 'primeng/overlaypanel';
 
-import { BeaconSettings, ItemId, ModuleSettings, Rational } from '~/models';
+import {
+  BeaconSettings,
+  ItemId,
+  ModuleSettings,
+  OverlayComponent,
+  Rational,
+} from '~/models';
 import { LabState, Settings } from '~/store';
 
 @Component({
@@ -20,10 +24,8 @@ import { LabState, Settings } from '~/store';
   styleUrl: './beacons-overlay.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BeaconsOverlayComponent {
+export class BeaconsOverlayComponent extends OverlayComponent {
   store = inject(Store<LabState>);
-
-  @ViewChild(OverlayPanel) overlayPanel?: OverlayPanel;
 
   @Output() setValue = new EventEmitter<BeaconSettings[]>();
 
@@ -32,7 +34,6 @@ export class BeaconsOverlayComponent {
 
   values = signal<BeaconSettings[]>([]);
   recipeId = signal<string | undefined>(undefined);
-  cancel = signal(false);
 
   show(event: Event, values: BeaconSettings[], recipeId?: string): void {
     this.values.set(
@@ -42,13 +43,7 @@ export class BeaconsOverlayComponent {
       })),
     );
     this.recipeId.set(recipeId);
-    this.cancel.set(false);
-    this.overlayPanel?.toggle(event);
-  }
-
-  hide(cancel?: true): void {
-    if (cancel) this.cancel.set(cancel);
-    this.overlayPanel?.hide();
+    this._show(event);
   }
 
   setCount(count: Rational, i: number): void {
@@ -99,8 +94,7 @@ export class BeaconsOverlayComponent {
     });
   }
 
-  onHide(): void {
-    if (this.cancel()) return;
-    this.setValue.emit(this.values().filter((v) => v.count.nonzero()));
+  save(): void {
+    this.setValue.emit(this.values());
   }
 }
