@@ -128,6 +128,8 @@ export class ModulesOverlayComponent extends OverlayComponent {
   }
 
   save(): void {
-    this.setValue.emit(this.values().filter((e) => e.count.nonzero()));
+    let values = this.values();
+    if (this.slots() !== true) values = values.filter((e) => e.count.nonzero());
+    this.setValue.emit(values);
   }
 }

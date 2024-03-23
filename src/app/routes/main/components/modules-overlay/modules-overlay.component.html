@@ -35,15 +35,17 @@
             </div>
           </ng-template>
         </p-dropdown>
-        <button
-          pButton
-          pRipple
-          type="button"
-          icon="fa-solid fa-times"
-          class="p-button-outlined"
-          [disabled]="entry.id === ItemId.Module"
-          (click)="removeEntry(i)"
-        ></button>
+        @if (slots() !== true) {
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="fa-solid fa-times"
+            class="p-button-outlined"
+            [disabled]="entry.id === ItemId.Module"
+            (click)="removeEntry(i)"
+          ></button>
+        }
       </div>
     }
     <div class="d-flex gap-2">

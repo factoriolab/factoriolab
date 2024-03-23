@@ -479,7 +479,10 @@
                 >
                 </p-inputNumber>
               }
-              @if (machinesState().beacons; as beacons) {
+              @if (
+                data().game === Game.Factorio && machinesState().beacons;
+                as beacons
+              ) {
                 <button
                   pButton
                   pRipple
