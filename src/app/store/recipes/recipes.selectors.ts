@@ -1,12 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { orZero } from '~/helpers';
-import {
-  Entities,
-  Rational,
-  RecipeSettings,
-  RecipeSettingsRational,
-} from '~/models';
+import { Entities, RecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
@@ -38,7 +32,7 @@ export const getRecipesState = createSelector(
       if (s.machineId == null)
         s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
-          machinesState.ids,
+          machinesState.ids ?? [],
         );
 
       const machine = data.machineEntities[s.machineId];
@@ -50,49 +44,25 @@ export const getRecipesState = createSelector(
         s.fuelId = s.fuelId ?? def?.fuelId;
       }
 
-      s.fuelOptions = def?.fuelOptions;
-
       if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
-        s.machineModuleOptions = RecipeUtility.moduleOptions(
-          machine,
-          recipe.id,
-          data,
-        );
-
-        if (s.machineModuleIds == null)
-          s.machineModuleIds = RecipeUtility.defaultModules(
-            s.machineModuleOptions,
-            def.moduleRankIds ?? [],
-            orZero(machine.modules),
+        if (s.modules == null) {
+          s.moduleOptions = RecipeUtility.moduleOptions(
+            machine,
+            data,
+            recipe.id,
           );
-
-        if (s.beacons == null) s.beacons = [{}];
-
-        s.beacons = s.beacons.map((b) => ({ ...b }));
-
-        for (const beaconSettings of s.beacons) {
-          beaconSettings.count = beaconSettings.count ?? def.beaconCount;
-          beaconSettings.id = beaconSettings.id ?? def.beaconId;
-
-          if (beaconSettings.id != null) {
-            const beacon = data.beaconEntities[beaconSettings.id];
-            beaconSettings.moduleOptions = RecipeUtility.moduleOptions(
-              beacon,
-              recipe.id,
-              data,
-            );
-
-            if (beaconSettings.moduleIds == null)
-              beaconSettings.moduleIds = RecipeUtility.defaultModules(
-                beaconSettings.moduleOptions,
-                def.beaconModuleRankIds ?? [],
-                beacon.modules,
-              );
-          }
+          s.modules = RecipeUtility.inheritedModules(
+            s.moduleOptions,
+            def.modules,
+            machinesState.moduleRankIds,
+            machine.modules ?? 0,
+          );
         }
+
+        s.beacons = s.beacons ?? def.beacons ?? [];
       } else {
         // Machine doesn't support modules, remove any
-        delete s.machineModuleIds;
+        delete s.modules;
         delete s.beacons;
       }
 
@@ -100,8 +70,7 @@ export const getRecipesState = createSelector(
         for (const beaconSettings of s.beacons) {
           if (
             beaconSettings.total != null &&
-            (beaconSettings.count == null ||
-              Rational.fromString(beaconSettings.count).isZero())
+            (beaconSettings.count == null || beaconSettings.count.isZero())
           )
             // No actual beacons, ignore the total beacons
             delete beaconSettings.total;
@@ -117,18 +86,6 @@ export const getRecipesState = createSelector(
   },
 );
 
-export const getRecipesStateRational = createSelector(
-  getRecipesState,
-  (recipesState) =>
-    Object.keys(recipesState).reduce(
-      (e: Entities<RecipeSettingsRational>, i) => {
-        e[i] = new RecipeSettingsRational(recipesState[i]);
-        return e;
-      },
-      {},
-    ),
-);
-
 export const getExcludedRecipeIds = createSelector(
   getRecipesState,
   (recipesState) =>
@@ -136,13 +93,13 @@ export const getExcludedRecipeIds = createSelector(
 );
 
 export const getAdjustedDataset = createSelector(
-  getRecipesStateRational,
+  getRecipesState,
   getExcludedRecipeIds,
   Items.getItemsState,
-  Settings.getRationalCost,
+  Settings.getCosts,
   Settings.getAdjustmentData,
   Settings.getDataset,
-  (recipesState, excludedRecipeIds, itemsState, cost, adj, data) =>
+  (recipesState, excludedRecipeIds, itemsState, costs, adj, data) =>
     RecipeUtility.adjustDataset(
       adj.recipeIds,
       excludedRecipeIds,
@@ -152,7 +109,7 @@ export const getAdjustedDataset = createSelector(
       adj.miningBonus,
       adj.researchSpeed,
       adj.netProductionOnly,
-      cost,
+      costs,
       data,
     ),
 );

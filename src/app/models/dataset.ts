@@ -1,3 +1,5 @@
+import { SelectItem } from 'primeng/api';
+
 import {
   BeaconRational,
   BeltRational,

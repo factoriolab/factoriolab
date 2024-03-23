@@ -89,20 +89,14 @@ export class RecipeRational {
       );
     }
 
-    if (obj.cost) {
-      this.cost = Rational.from(obj.cost);
-    }
-
+    this.cost = Rational.from(obj.cost);
     this.part = obj.part;
     this.isMining = obj.isMining;
     this.isTechnology = obj.isTechnology;
     this.isBurn = obj.isBurn;
     this.icon = obj.icon;
     this.iconText = obj.iconText;
-
-    if (obj.usage != null) {
-      this.usage = Rational.from(obj.usage);
-    }
+    this.usage = Rational.from(obj.usage);
   }
 
   finalize(): void {

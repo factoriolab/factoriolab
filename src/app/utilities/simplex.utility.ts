@@ -12,18 +12,18 @@ import { StatusSimplex } from 'glpk-ts/dist/status';
 import { environment } from 'src/environments';
 import {
   CostKey,
-  CostRationalSettings,
+  CostsState,
   Dataset,
   Entities,
   FACTORIO_FLUID_COST_RATIO,
   Game,
-  isRecipeRationalObjective,
+  isRecipeObjective,
   MatrixResult,
   MaximizeType,
-  ObjectiveRational,
+  Objective,
   ObjectiveType,
   Rational,
-  RecipeObjectiveRational,
+  RecipeObjective,
   RecipeRational,
   SimplexResultType,
   Step,
@@ -49,13 +49,13 @@ export interface ItemValues {
 }
 
 export interface MatrixState {
-  objectives: ObjectiveRational[];
+  objectives: Objective[];
   /**
    * Output & Maximize recipe objectives
    *  * Limits moved to `recipeLimits`
    *  * Inputs added to `itemValues`
    */
-  recipeObjectives: RecipeObjectiveRational[];
+  recipeObjectives: RecipeObjective[];
   steps: Step[];
   /** Recipes used in the matrix */
   recipes: Entities<RecipeRational>;
@@ -74,7 +74,7 @@ export interface MatrixState {
   data: Dataset;
   maximizeType: MaximizeType;
   surplusMachinesOutput: boolean;
-  cost: CostRationalSettings;
+  costs: CostsState;
 }
 
 export interface MatrixSolution {
@@ -137,13 +137,13 @@ export class SimplexUtility {
   }
 
   static solve(
-    objectives: ObjectiveRational[],
+    objectives: Objective[],
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     researchedTechnologyIds: string[] | null,
     maximizeType: MaximizeType,
     surplusMachinesOutput: boolean,
-    cost: CostRationalSettings,
+    costs: CostsState,
     data: Dataset,
     paused: boolean,
   ): MatrixResult {
@@ -167,7 +167,7 @@ export class SimplexUtility {
       researchedTechnologyIds,
       maximizeType,
       surplusMachinesOutput,
-      cost,
+      costs,
       data,
     );
 
@@ -191,21 +191,21 @@ export class SimplexUtility {
 
   //#region Setup
   static getState(
-    objectives: ObjectiveRational[],
+    objectives: Objective[],
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     researchedTechnologyIds: string[],
     maximizeType: MaximizeType,
     surplusMachinesOutput: boolean,
-    cost: CostRationalSettings,
+    costs: CostsState,
     data: Dataset,
   ): MatrixState {
     // Set up state object
     const state: MatrixState = {
       objectives,
       recipeObjectives: objectives.filter(
-        (o): o is RecipeObjectiveRational =>
-          isRecipeRationalObjective(o) &&
+        (o): o is RecipeObjective =>
+          isRecipeObjective(o) &&
           [ObjectiveType.Output, ObjectiveType.Maximize].includes(o.type),
       ),
       steps: [],
@@ -226,13 +226,13 @@ export class SimplexUtility {
       itemIds: data.itemIds.filter((i) => !itemsState[i].excluded),
       maximizeType,
       surplusMachinesOutput,
-      cost,
+      costs: costs,
       data,
     };
 
     // Add item objectives to matrix state
     for (const obj of objectives) {
-      if (isRecipeRationalObjective(obj)) {
+      if (isRecipeObjective(obj)) {
         switch (obj.type) {
           case ObjectiveType.Output:
           case ObjectiveType.Maximize: {
@@ -441,7 +441,7 @@ export class SimplexUtility {
       state.data.game === Game.Factorio
         ? FACTORIO_FLUID_COST_RATIO
         : Rational.one;
-    const cost = state.cost[costKey];
+    const cost = state.costs[costKey];
     return base.mul(cost).toNumber();
   }
 
@@ -475,7 +475,7 @@ export class SimplexUtility {
     const recipeObjectiveConstrEntities: Entities<Constraint> = {};
     // Variable for maximization ratio
     const config: VariableProperties = {
-      obj: state.cost.maximize.toNumber(),
+      obj: state.costs.maximize.toNumber(),
       lb: 0,
       name: 'maximize',
     };
@@ -519,7 +519,7 @@ export class SimplexUtility {
         switch (state.maximizeType) {
           case MaximizeType.Weight: {
             const varConfig: VariableProperties = {
-              obj: obj.value.mul(state.cost.maximize).toNumber(),
+              obj: obj.value.mul(state.costs.maximize).toNumber(),
               lb: 0,
               name: obj.id,
             };
@@ -667,7 +667,7 @@ export class SimplexUtility {
         switch (state.maximizeType) {
           case MaximizeType.Weight: {
             const config: VariableProperties = {
-              obj: values.max.mul(state.cost.maximize).toNumber(),
+              obj: values.max.mul(state.costs.maximize).toNumber(),
               lb: 0,
               name: itemId,
             };
@@ -961,7 +961,7 @@ export class SimplexUtility {
     recipe: RecipeRational,
     solution: MatrixSolution,
     state: MatrixState,
-    recipeObjective?: RecipeObjectiveRational,
+    recipeObjective?: RecipeObjective,
   ): void {
     const steps = state.steps;
     // Don't assign to any step that already has a recipe or objective assigned

@@ -1,7 +1,7 @@
 import { RecipeRational } from './data';
 import { Entities } from './entities';
 import { Rational } from './rational';
-import { RecipeSettingsRational } from './settings';
+import { RecipeSettings } from './settings';
 
 export interface Step {
   id: string;
@@ -30,7 +30,7 @@ export interface Step {
   outputs?: Entities<Rational>;
   recipeId?: string;
   recipe?: RecipeRational;
-  recipeSettings?: RecipeSettingsRational;
+  recipeSettings?: RecipeSettings;
   machines?: Rational;
   power?: Rational;
   pollution?: Rational;

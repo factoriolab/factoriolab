@@ -34,9 +34,6 @@ export class BeaconRational {
     this.type = obj.type;
     this.disallowedEffects = obj.disallowedEffects;
     this.size = obj.size;
-
-    if (obj.usage) {
-      this.usage = Rational.fromNumber(obj.usage);
-    }
+    this.usage = Rational.from(obj.usage);
   }
 }

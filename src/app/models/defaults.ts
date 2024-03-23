@@ -1,13 +1,15 @@
+import { Rational } from './rational';
+import { BeaconSettings } from './settings';
+
 export interface Defaults {
-  beltId: string;
+  beltId?: string;
   pipeId?: string;
-  fuelId: string;
-  cargoWagonId: string;
-  fluidWagonId: string;
+  cargoWagonId?: string;
+  fluidWagonId?: string;
   excludedRecipeIds: string[];
+  fuelRankIds: string[];
   machineRankIds: string[];
   moduleRankIds: string[];
-  beaconCount: string;
-  beaconId: string;
-  beaconModuleId: string;
+  beacons: BeaconSettings[];
+  overclock?: Rational;
 }

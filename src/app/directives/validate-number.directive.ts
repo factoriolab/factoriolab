@@ -19,8 +19,8 @@ import { Rational } from '~/models';
   ],
 })
 export class ValidateNumberDirective implements Validator {
-  minimum = input<Rational | null>(Rational.zero);
-  maximum = input<Rational | null>(null);
+  minimum = input<Rational | null | undefined>(Rational.zero);
+  maximum = input<Rational | null | undefined>(null);
 
   validate(control: AbstractControl): ValidationErrors | null {
     if (control.value == null) {

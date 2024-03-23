@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -12,7 +11,7 @@ import {
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
 
-import { Category, Entities } from '~/models';
+import { Category, DialogComponent, Entities } from '~/models';
 import { LabState, Recipes } from '~/store';
 
 @Component({
@@ -21,8 +20,7 @@ import { LabState, Recipes } from '~/store';
   styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PickerComponent {
-  ref = inject(ChangeDetectorRef);
+export class PickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
   store = inject(Store<LabState>);
 
@@ -39,7 +37,6 @@ export class PickerComponent {
   search = '';
   allSelected = false;
 
-  visible = false;
   type: 'item' | 'recipe' = 'item';
   isMultiselect = false;
   selection: string | string[] | undefined;
@@ -134,8 +131,7 @@ export class PickerComponent {
     );
     this.allCategoryIds = this.categoryIds;
     this.allCategoryRows = this.categoryRows;
-    this.visible = true;
-    this.ref.markForCheck();
+    this.show();
   }
 
   selectAll(value: boolean): void {
@@ -165,7 +161,7 @@ export class PickerComponent {
     }
   }
 
-  onHide(): void {
+  save(): void {
     if (Array.isArray(this.selection)) {
       this.selectIds.emit(this.selection);
     }

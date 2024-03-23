@@ -19,7 +19,6 @@ import {
   MatrixResult,
   Objective,
   ObjectiveBase,
-  ObjectiveRational,
   ObjectiveType,
   objectiveTypeOptions,
   ObjectiveUnit,
@@ -66,7 +65,7 @@ export class ObjectivesComponent {
     return [...objectives()];
   });
   objectiveRationals = this.store.selectSignal(
-    Objectives.getObjectiveRationals,
+    Objectives.getAdjustedObjectives,
   );
   itemsState = this.store.selectSignal(Items.getItemsState);
   itemIds = this.store.selectSignal(Recipes.getAvailableItems);
@@ -177,7 +176,7 @@ export class ObjectivesComponent {
   changeUnit(
     objective: Objective,
     unit: ObjectiveUnit,
-    objectiveRationals: ObjectiveRational[],
+    objectiveRationals: Objective[],
     itemsState: Items.ItemsState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInfo,
@@ -253,7 +252,7 @@ export class ObjectivesComponent {
    * objective value so that number of items remains constant
    */
   convertItemsToMachines(
-    objective: ObjectiveRational,
+    objective: Objective,
     recipeId: string,
     itemsState: Items.ItemsState,
     beltSpeed: Entities<Rational>,
@@ -276,7 +275,7 @@ export class ObjectivesComponent {
     );
     const recipe = data.recipeR[recipeId];
     const newValue = oldValue.div(recipe.output[objective.targetId]);
-    this.setValue(objective.id, newValue.toString());
+    this.setValue(objective.id, newValue);
   }
 
   /**
@@ -284,7 +283,7 @@ export class ObjectivesComponent {
    * objective value so that number of items remains constant
    */
   convertMachinesToItems(
-    objective: ObjectiveRational,
+    objective: Objective,
     itemId: string,
     unit: ObjectiveUnit,
     itemsState: Items.ItemsState,
@@ -301,13 +300,13 @@ export class ObjectivesComponent {
       return;
 
     const factor = RateUtility.objectiveNormalizedRate(
-      new ObjectiveRational({
+      {
         id: '',
         targetId: itemId,
-        value: '1',
+        value: Rational.one,
         unit,
         type: ObjectiveType.Output,
-      }),
+      },
       itemsState,
       beltSpeed,
       displayRateInfo,
@@ -315,7 +314,7 @@ export class ObjectivesComponent {
     );
     const oldValue = objective.value.mul(objective.recipe.output[itemId]);
     const newValue = oldValue.div(factor);
-    this.setValue(objective.id, newValue.toString());
+    this.setValue(objective.id, newValue);
   }
 
   /**
@@ -323,7 +322,7 @@ export class ObjectivesComponent {
    * objective value so that number of items remains constant
    */
   convertItemsToItems(
-    objective: ObjectiveRational,
+    objective: Objective,
     itemId: string,
     unit: ObjectiveUnit,
     itemsState: Items.ItemsState,
@@ -346,20 +345,20 @@ export class ObjectivesComponent {
       data,
     );
     const factor = RateUtility.objectiveNormalizedRate(
-      new ObjectiveRational({
+      {
         id: '',
         targetId: itemId,
-        value: '1',
+        value: Rational.one,
         unit,
         type: ObjectiveType.Output,
-      }),
+      },
       itemsState,
       beltSpeed,
       displayRateInfo,
       data,
     );
     const newValue = oldValue.div(factor);
-    this.setValue(objective.id, newValue.toString());
+    this.setValue(objective.id, newValue);
   }
 
   addItemObjective(targetId: string): void {
@@ -383,7 +382,7 @@ export class ObjectivesComponent {
     this.store.dispatch(new Objectives.SetTargetAction({ id, value }));
   }
 
-  setValue(id: string, value: string): void {
+  setValue(id: string, value: Rational): void {
     this.store.dispatch(new Objectives.SetValueAction({ id, value }));
   }
 

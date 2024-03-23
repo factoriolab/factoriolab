@@ -62,7 +62,7 @@
           </ng-template>
           <ng-template pTemplate="content">
             <p-scrollPanel
-              [style]="{ height: 'calc(80vh - 165px)', minHeight: '363px' }"
+              [style]="{ height: 'calc(80vh - 213px)', minHeight: '300px' }"
             >
               @for (ids of categoryRows[categoryId]; track ids) {
                 <div class="d-flex flex-wrap">
@@ -98,4 +98,27 @@
       }
     </p-tabView>
   }
+
+  <ng-template pTemplate="footer">
+    @if (isMultiselect) {
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-outlined"
+        icon="fa-solid fa-check"
+        [label]="'ok' | translate"
+        (click)="hide()"
+      ></button>
+    }
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined p-button-secondary"
+      icon="fa-solid fa-xmark"
+      [label]="'cancel' | translate"
+      (click)="hide(true)"
+    ></button>
+  </ng-template>
 </p-dialog>

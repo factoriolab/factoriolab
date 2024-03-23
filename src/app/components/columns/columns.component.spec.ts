@@ -72,7 +72,7 @@ describe('ColumnsComponent', () => {
   describe('save', () => {
     it('should dispatch the action', () => {
       spyOn(mockStore, 'dispatch');
-      component.save();
+      component.onHide();
       expect(mockStore.dispatch).toHaveBeenCalledWith(
         new Preferences.SetColumnsAction(component.editValue as any),
       );

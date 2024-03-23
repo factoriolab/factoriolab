@@ -496,31 +496,33 @@
       <tr>
         <th>{{ 'data.moduleRank' | translate }}</th>
         <td>
-          @if (!machineSettings.moduleRankIds?.length) {
+          @if (!machineSettings.modules?.length) {
             <div>{{ 'none' | translate }}</div>
           }
-          @for (moduleId of machineSettings.moduleRankIds; track moduleId) {
-            <div>
-              <a
-                [routerLink]="
-                  moduleId === 'module' ? null : '/data/modules/' + moduleId
-                "
-                queryParamsHandling="preserve"
-              >
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-text"
-                  [label]="data().itemEntities[moduleId]?.name ?? ''"
-                  [icon]="moduleId | iconSmClass: 'item'"
-                ></button>
-              </a>
-            </div>
+          @for (module of machineSettings.modules; track module.id) {
+            @if (module.id; as moduleId) {
+              <div>
+                <a
+                  [routerLink]="
+                    moduleId === 'module' ? null : '/data/modules/' + moduleId
+                  "
+                  queryParamsHandling="preserve"
+                >
+                  <button
+                    pButton
+                    pRipple
+                    type="button"
+                    class="p-button-text"
+                    [label]="data().itemEntities[moduleId]?.name ?? ''"
+                    [icon]="moduleId | iconSmClass: 'item'"
+                  ></button>
+                </a>
+              </div>
+            }
           }
         </td>
       </tr>
-      @if (data().game === Game.Factorio) {
+      <!-- @if (data().game === Game.Factorio) {
         <tr>
           <th>{{ 'data.beacons' | translate }}</th>
           <td>
@@ -552,13 +554,10 @@
         <tr>
           <th>{{ 'data.beaconModuleRank' | translate }}</th>
           <td>
-            @if (!machineSettings.beaconModuleRankIds?.length) {
+            @if (!machineSettings.beacons?.length) {
               <div>{{ 'none' | translate }}</div>
             }
-            @for (
-              moduleId of machineSettings.beaconModuleRankIds;
-              track moduleId
-            ) {
+            @for (moduleId of machineSettings.beacons; track moduleId) {
               <div>
                 <a
                   [routerLink]="
@@ -579,7 +578,7 @@
             }
           </td>
         </tr>
-      }
+      } -->
       @if (data().game === Game.Satisfactory) {
         <tr>
           <th>{{ 'data.overclock' | translate }}</th>

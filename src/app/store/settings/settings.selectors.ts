@@ -5,11 +5,10 @@ import { environment } from 'src/environments';
 import { fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
   BeaconRational,
+  BeaconSettings,
   BeltRational,
   CargoWagonRational,
   columnOptions,
-  CostKey,
-  CostRationalSettings,
   Defaults,
   displayRateInfo,
   Entities,
@@ -25,6 +24,7 @@ import {
   linkValueOptions,
   MachineRational,
   ModuleRational,
+  ModuleSettings,
   objectiveUnitOptions,
   Options,
   Preset,
@@ -187,34 +187,62 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
   if (base?.defaults == null) return null;
 
   const m = base.defaults;
-  let moduleRank: string[] = [];
+  let beacons: BeaconSettings[] = [];
+  let moduleRank: string[] | undefined;
+  let overclock: Rational | undefined;
   switch (base.game) {
     case Game.Factorio: {
-      moduleRank = preset === Preset.Minimum ? [] : m.moduleRank;
+      moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
+      if (m.beacon) {
+        const beacon = base.items.find((i) => i.id === m.beacon)?.beacon;
+        if (beacon) {
+          const id = m.beacon;
+          const modules: ModuleSettings[] = [
+            {
+              count: Rational.fromNumber(beacon.modules),
+              id: m.beaconModule ?? ItemId.Module,
+            },
+          ];
+
+          const count =
+            preset < Preset.Beacon8
+              ? Rational.zero
+              : preset === Preset.Beacon8
+                ? Rational.fromNumber(8)
+                : Rational.fromNumber(12);
+          beacons = [{ count, id, modules }];
+        }
+      }
       break;
     }
     case Game.DysonSphereProgram: {
-      moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
+      moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
       break;
     }
     case Game.Satisfactory: {
       moduleRank = m.moduleRank;
+      overclock = Rational.hundred;
+      break;
+    }
+    case Game.FinalFactory: {
+      moduleRank = m.moduleRank;
+      break;
     }
   }
+
+  const machineRankIds =
+    preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
   const defaults: Defaults = {
     beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
     pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
-    fuelId: m.fuel,
     cargoWagonId: m.cargoWagon,
     fluidWagonId: m.fluidWagon,
     excludedRecipeIds: m.excludedRecipes,
-    machineRankIds:
-      preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
-    moduleRankIds: moduleRank,
-    beaconCount:
-      preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
-    beaconId: m.beacon,
-    beaconModuleId: preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
+    machineRankIds: machineRankIds ?? [],
+    fuelRankIds: m.fuelRank ?? [],
+    moduleRankIds: moduleRank ?? [],
+    beacons,
+    overclock,
   };
   return defaults;
 });
@@ -227,43 +255,19 @@ export const getSettings = createSelector(
     ...{
       beltId: s.beltId ?? d?.beltId,
       pipeId: s.pipeId ?? d?.pipeId,
-      fuelRankIds: s.fuelRankIds ?? (d?.fuelId ? [d.fuelId] : []),
       cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
       fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
     },
   }),
 );
 
-export const getFuelRankIds = createSelector(getSettings, (s) => s.fuelRankIds);
-
-export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
-  Rational.fromNumber(bonus).div(Rational.hundred),
+export const getMiningFactor = createSelector(getMiningBonus, (bonus) =>
+  bonus.div(Rational.hundred),
 );
 
 export const getResearchFactor = createSelector(
   getResearchSpeed,
   (speed) => researchSpeedFactor[speed],
-);
-
-export const getRationalBeaconReceivers = createSelector(
-  getBeaconReceivers,
-  (total) => (total ? Rational.fromString(total) : null),
-);
-
-export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
-  Rational.fromNumber(rate),
-);
-
-export const getRationalCost = createSelector(
-  getCosts,
-  (cost): CostRationalSettings =>
-    (Object.keys(cost) as CostKey[]).reduce(
-      (a: Partial<CostRationalSettings>, b) => {
-        a[b] = Rational.fromString(cost[b]);
-        return a;
-      },
-      {},
-    ) as CostRationalSettings,
 );
 
 export const getI18n = createSelector(
@@ -549,12 +553,13 @@ export const getOptions = createSelector(
     pipes: getIdOptions(data.pipeIds, data.itemEntities),
     cargoWagons: getIdOptions(data.cargoWagonIds, data.itemEntities),
     fluidWagons: getIdOptions(data.fluidWagonIds, data.itemEntities),
+    fuels: getIdOptions(data.fuelIds, data.itemEntities),
+    modules: getIdOptions(data.moduleIds, data.itemEntities),
     proliferatorModules: getIdOptions(
       data.proliferatorModuleIds,
       data.itemEntities,
       true,
     ),
-    fuels: getIdOptions(data.fuelIds, data.itemEntities),
     machines: getIdOptions(data.machineIds, data.itemEntities),
     recipes: getIdOptions(data.recipeIds, data.recipeEntities),
   }),
@@ -562,7 +567,7 @@ export const getOptions = createSelector(
 
 export const getBeltSpeed = createSelector(
   getDataset,
-  getRationalFlowRate,
+  getFlowRate,
   (data, flowRate) => {
     const value: Entities<Rational> = { [ItemId.Pipe]: flowRate };
     if (data.beltIds) {
@@ -656,7 +661,7 @@ export const getAvailableRecipes = createSelector(
 export const getAdjustmentData = createSelector(
   getNetProductionOnly,
   getProliferatorSprayId,
-  getRationalMiningBonus,
+  getMiningFactor,
   getResearchFactor,
   getAvailableRecipes,
   (

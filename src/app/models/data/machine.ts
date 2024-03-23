@@ -7,7 +7,7 @@ import { Silo, SiloRational } from './silo';
 export interface Machine {
   /** If undefined, speed is based on belt speed */
   speed?: number | string;
-  modules?: number;
+  modules?: number | true;
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
@@ -29,7 +29,7 @@ export interface Machine {
 export class MachineRational {
   /** If undefined, speed is based on belt speed */
   speed?: Rational;
-  modules?: number;
+  modules?: number | true;
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
@@ -51,26 +51,11 @@ export class MachineRational {
     this.fuelCategories = obj.fuelCategories;
     this.fuel = obj.fuel;
     this.size = obj.size;
-
-    if (obj.speed) {
-      this.speed = Rational.from(obj.speed);
-    }
-
-    if (obj.modules != null) {
-      this.modules = Math.round(obj.modules);
-    }
-
-    if (obj.usage != null) {
-      this.usage = Rational.from(obj.usage);
-    }
-
-    if (obj.drain != null) {
-      this.drain = Rational.from(obj.drain);
-    }
-
-    if (obj.pollution != null) {
-      this.pollution = Rational.from(obj.pollution);
-    }
+    this.speed = Rational.from(obj.speed);
+    this.modules = obj.modules;
+    this.usage = Rational.from(obj.usage);
+    this.drain = Rational.from(obj.drain);
+    this.pollution = Rational.from(obj.pollution);
 
     if (obj.silo) {
       this.silo = new SiloRational(obj.silo);

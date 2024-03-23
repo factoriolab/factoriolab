@@ -4,7 +4,13 @@ import { MenuItem } from 'primeng/api';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { orString } from '~/helpers';
-import { Game, Recipe, RecipeRational, RecipeSettings } from '~/models';
+import {
+  Game,
+  Rational,
+  Recipe,
+  RecipeRational,
+  RecipeSettings,
+} from '~/models';
 import { Recipes } from '~/store';
 import { DetailComponent } from '../../models';
 
@@ -67,7 +73,7 @@ export class RecipeComponent extends DetailComponent {
     this.store.dispatch(new Recipes.SetCheckedAction({ id, value }));
   }
 
-  setRecipeCost(id: string, value: string): void {
+  setRecipeCost(id: string, value: Rational): void {
     this.store.dispatch(new Recipes.SetCostAction({ id, value }));
   }
 

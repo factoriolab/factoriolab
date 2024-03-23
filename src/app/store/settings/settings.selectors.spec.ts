@@ -270,7 +270,7 @@ describe('Settings Selectors', () => {
 
   describe('getRationalMiningBonus', () => {
     it('should convert the numeric value to a percent Rational', () => {
-      const result = Selectors.getRationalMiningBonus.projector(100);
+      const result = Selectors.getMiningFactor.projector(100);
       expect(result).toEqual(Rational.one);
     });
   });

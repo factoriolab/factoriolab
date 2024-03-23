@@ -185,15 +185,13 @@ describe('Objectives Reducer', () => {
     it('should set machine modules on an objective', () => {
       const result = objectivesReducer(
         state,
-        new Actions.SetMachineModulesAction({
+        new Actions.SetModulesAction({
           id: '0',
           value: [ItemId.SpeedModule],
           def: [ItemId.Module],
         }),
       );
-      expect(result.entities['0'].machineModuleIds).toEqual([
-        ItemId.SpeedModule,
-      ]);
+      expect(result.entities['0'].modules).toEqual([ItemId.SpeedModule]);
     });
   });
 
@@ -255,7 +253,7 @@ describe('Objectives Reducer', () => {
           def: [ItemId.Module],
         }),
       );
-      expect(result.entities['0'].beacons?.[0].moduleIds).toEqual([
+      expect(result.entities['0'].beacons?.[0].modules).toEqual([
         ItemId.SpeedModule,
       ]);
     });
@@ -319,7 +317,7 @@ describe('Objectives Reducer', () => {
               {
                 count: 'beaconCount',
                 id: 'beaconId',
-                moduleIds: ['beaconModuleIds'],
+                modules: ['beaconModuleIds'],
               },
             ],
           },
@@ -385,7 +383,7 @@ describe('Objectives Reducer', () => {
               {
                 count: 'beaconCount',
                 id: 'beaconId',
-                moduleIds: ['beaconModuleIds'],
+                modules: ['beaconModuleIds'],
               },
             ],
           },
@@ -423,7 +421,7 @@ describe('Objectives Reducer', () => {
               {
                 count: 'beaconCount',
                 id: 'beaconId',
-                moduleIds: ['beaconModuleIds'],
+                modules: ['beaconModuleIds'],
               },
             ],
           },

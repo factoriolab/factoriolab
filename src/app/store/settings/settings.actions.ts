@@ -1,12 +1,13 @@
 import { Action } from '@ngrx/store';
 
 import {
-  CostSettings,
+  CostsState,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
   MaximizeType,
   Preset,
+  Rational,
   ResearchSpeed,
   ValueDefaultPayload,
   ValuePreviousPayload,
@@ -22,7 +23,6 @@ export const enum SettingsActionType {
   SET_PROLIFERATOR_SPRAY = '[Settings] Set Proliferator Spray',
   SET_BELT = '[Settings] Set Belt',
   SET_PIPE = '[Settings] Set Pipe',
-  SET_FUEL_RANK = '[Settings] Set Fuel Rank',
   SET_CARGO_WAGON = '[Settings] Set Cargo Wagon',
   SET_FLUID_WAGON = '[Settings] Set Fluid Wagon',
   SET_FLOW_RATE = '[Settings] Set Flow Rate',
@@ -33,7 +33,7 @@ export const enum SettingsActionType {
   SET_DISPLAY_RATE = '[Settings] Set Display Rate',
   SET_MAXIMIZE_TYPE = '[Settings] Set Maximize Type',
   SET_COSTS = '[Settings] Set Costs',
-  RESET_COST = '[Settings] Reset Cost Modifiers',
+  RESET_COSTS = '[Settings] Reset Costs',
 }
 
 export class SetModAction implements Action {
@@ -63,7 +63,7 @@ export class SetPresetAction implements Action {
 
 export class SetBeaconReceiversAction implements Action {
   readonly type = SettingsActionType.SET_BEACON_RECEIVERS;
-  constructor(public payload: string | null) {}
+  constructor(public payload: Rational | null) {}
 }
 
 export class SetProliferatorSprayAction implements Action {
@@ -81,11 +81,6 @@ export class SetPipeAction implements Action {
   constructor(public payload: ValueDefaultPayload) {}
 }
 
-export class SetFuelRankAction implements Action {
-  readonly type = SettingsActionType.SET_FUEL_RANK;
-  constructor(public payload: ValueDefaultPayload<string[]>) {}
-}
-
 export class SetCargoWagonAction implements Action {
   readonly type = SettingsActionType.SET_CARGO_WAGON;
   constructor(public payload: ValueDefaultPayload) {}
@@ -98,7 +93,7 @@ export class SetFluidWagonAction implements Action {
 
 export class SetFlowRateAction implements Action {
   readonly type = SettingsActionType.SET_FLOW_RATE;
-  constructor(public payload: number) {}
+  constructor(public payload: Rational) {}
 }
 
 export class SetInserterTargetAction implements Action {
@@ -108,7 +103,7 @@ export class SetInserterTargetAction implements Action {
 
 export class SetMiningBonusAction implements Action {
   readonly type = SettingsActionType.SET_MINING_BONUS;
-  constructor(public payload: number) {}
+  constructor(public payload: Rational) {}
 }
 
 export class SetResearchSpeedAction implements Action {
@@ -133,11 +128,11 @@ export class SetMaximizeTypeAction implements Action {
 
 export class SetCostsAction implements Action {
   readonly type = SettingsActionType.SET_COSTS;
-  constructor(public payload: CostSettings) {}
+  constructor(public payload: CostsState) {}
 }
 
 export class ResetCostAction implements Action {
-  readonly type = SettingsActionType.RESET_COST;
+  readonly type = SettingsActionType.RESET_COSTS;
 }
 
 export type SettingsAction =
@@ -150,7 +145,6 @@ export type SettingsAction =
   | SetProliferatorSprayAction
   | SetBeltAction
   | SetPipeAction
-  | SetFuelRankAction
   | SetCargoWagonAction
   | SetFluidWagonAction
   | SetFlowRateAction

@@ -43,7 +43,7 @@ export function objectivesReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialObjectivesState;
     case ObjectivesActionType.ADD: {
-      let value = '1';
+      let value = Rational.one;
       if (state.ids.length)
         value = state.entities[state.ids[state.ids.length - 1]].value;
 
@@ -103,7 +103,7 @@ export function objectivesReducer(
         ...{
           entities: StoreUtility.resetFields(
             entities,
-            ['machineId', 'machineModuleIds', 'beacons', 'overclock'],
+            ['machineId', 'modules', 'beacons', 'overclock'],
             action.payload.id,
           ),
         },
@@ -152,7 +152,7 @@ export function objectivesReducer(
               'machineId',
               action.payload,
             ),
-            ['machineModuleIds', 'beacons'],
+            ['modules', 'beacons'],
             action.payload.id,
           ),
         },
@@ -168,107 +168,24 @@ export function objectivesReducer(
           ),
         },
       };
-    case ObjectivesActionType.SET_MACHINE_MODULES:
+    case ObjectivesActionType.SET_MODULES:
       return {
         ...state,
         ...{
-          entities: StoreUtility.compareReset(
+          entities: StoreUtility.assignValue(
             state.entities,
-            'machineModuleIds',
+            'modules',
             action.payload,
           ),
         },
       };
-    case ObjectivesActionType.ADD_BEACON:
+    case ObjectivesActionType.SET_BEACONS:
       return {
         ...state,
         ...{
-          entities: {
-            ...state.entities,
-            ...{
-              [action.payload]: {
-                ...state.entities[action.payload],
-                ...{
-                  beacons: [
-                    ...(state.entities[action.payload]?.beacons ?? [{}]),
-                    {},
-                  ],
-                },
-              },
-            },
-          },
-        },
-      };
-    case ObjectivesActionType.REMOVE_BEACON:
-      return {
-        ...state,
-        ...{
-          entities: {
-            ...state.entities,
-            ...{
-              [action.payload.id]: {
-                ...state.entities[action.payload.id],
-                ...{
-                  beacons: (
-                    state.entities[action.payload.id].beacons ?? [{}]
-                  ).filter((v, i) => i !== action.payload.value),
-                },
-              },
-            },
-          },
-        },
-      };
-    case ObjectivesActionType.SET_BEACON_COUNT:
-      return {
-        ...state,
-        ...{
-          entities: StoreUtility.compareResetIndex(
+          entities: StoreUtility.assignValue(
             state.entities,
             'beacons',
-            'count',
-            action.payload,
-          ),
-        },
-      };
-    case ObjectivesActionType.SET_BEACON:
-      return {
-        ...state,
-        ...{
-          entities: StoreUtility.resetFieldIndex(
-            StoreUtility.compareResetIndex(
-              state.entities,
-              'beacons',
-              'id',
-              action.payload,
-            ),
-            'beacons',
-            'moduleIds',
-            action.payload.index,
-            action.payload.id,
-          ),
-        },
-      };
-    case ObjectivesActionType.SET_BEACON_MODULES:
-      return {
-        ...state,
-        ...{
-          entities: StoreUtility.compareResetIndex(
-            state.entities,
-            'beacons',
-            'moduleIds',
-            action.payload,
-            true,
-          ),
-        },
-      };
-    case ObjectivesActionType.SET_BEACON_TOTAL:
-      return {
-        ...state,
-        ...{
-          entities: StoreUtility.assignIndexValue(
-            state.entities,
-            'beacons',
-            'total',
             action.payload,
           ),
         },
@@ -301,7 +218,7 @@ export function objectivesReducer(
         ...{
           entities: StoreUtility.resetFields(
             state.entities,
-            ['machineId', 'overclock', 'machineModuleIds', 'beacons'],
+            ['machineId', 'overclock', 'modules', 'beacons'],
             action.payload,
           ),
         },
@@ -316,9 +233,7 @@ export function objectivesReducer(
             o.type !== ObjectiveType.Maximize &&
             (o.unit === ObjectiveUnit.Items || o.unit === ObjectiveUnit.Wagons),
         )) {
-        const value = Rational.fromString(objective.value)
-          .mul(factor)
-          .toString();
+        const value = objective.value.mul(factor);
         newEntities[objective.id] = { ...objective, ...{ value } };
       }
       return {
@@ -333,7 +248,7 @@ export function objectivesReducer(
           entities: StoreUtility.resetFields(state.entities, [
             'machineId',
             'overclock',
-            'machineModuleIds',
+            'modules',
             'beacons',
           ]),
         },
