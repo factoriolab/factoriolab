@@ -101,7 +101,7 @@ export function machinesReducer(
       return spread(state, { entities });
     }
     case MachinesActionType.SET_MODULES: {
-      const entities = StoreUtility.assignValue(
+      const entities = StoreUtility.setValue(
         state.entities,
         'modules',
         action.payload,
@@ -109,7 +109,7 @@ export function machinesReducer(
       return spread(state, { entities });
     }
     case MachinesActionType.SET_BEACONS: {
-      const entities = StoreUtility.assignValue(
+      const entities = StoreUtility.setValue(
         state.entities,
         'beacons',
         action.payload,

@@ -53,9 +53,9 @@ export function recipesReducer(
     case RecipesActionType.SET_FUEL:
       return StoreUtility.compareReset(state, 'fuelId', action.payload);
     case RecipesActionType.SET_MODULES:
-      return StoreUtility.assignValue(state, 'modules', action.payload);
+      return StoreUtility.setValue(state, 'modules', action.payload);
     case RecipesActionType.SET_BEACONS:
-      return StoreUtility.assignValue(state, 'beacons', action.payload);
+      return StoreUtility.setValue(state, 'beacons', action.payload);
     case RecipesActionType.SET_OVERCLOCK:
       return StoreUtility.compareReset(state, 'overclock', action.payload);
     case RecipesActionType.SET_COST:

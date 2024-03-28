@@ -20,6 +20,7 @@ import { BehaviorSubject, combineLatest, filter, first, pairwise } from 'rxjs';
 
 import {
   BeaconSettings,
+  beaconSettingsPayload,
   ColumnsState,
   Dataset,
   EnergyType,
@@ -28,10 +29,10 @@ import {
   IdValueDefaultPayload,
   ItemId,
   ModuleSettings,
+  moduleSettingsPayload,
   ObjectiveBase,
   ObjectiveUnit,
   Rational,
-  RecipeField,
   Step,
   StepDetail,
   stepDetailIcon,
@@ -128,7 +129,6 @@ export class StepsComponent implements OnInit, AfterViewInit {
   ItemId = ItemId;
   StepDetailTab = StepDetailTab;
   Game = Game;
-  RecipeField = RecipeField;
   EnergyType = EnergyType;
   ObjectiveUnit = ObjectiveUnit;
   Rational = Rational;
@@ -316,53 +316,70 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
   changeRecipeField(
     step: Step,
-    event: string | number,
-    machinesState: Machines.MachinesState,
-    data: Dataset,
-    field: RecipeField,
+    event: string | number | ModuleSettings[] | BeaconSettings[],
+    field: 'machine' | 'fuel' | 'modules' | 'beacons' | 'overclock',
   ): void {
     if (step.recipeId == null) return;
 
+    const settings = step.recipeSettings;
+    if (settings?.machineId == null) return;
+
     const id = step.recipeObjectiveId ?? step.recipeId;
     const isObjective = step.recipeObjectiveId != null;
-    const settings = step.recipeSettings;
-    if (settings?.machineId) {
-      const machineSettings = machinesState.entities[settings.machineId];
-      switch (field) {
-        case RecipeField.Machine: {
-          if (typeof event === 'string' && machinesState.ids != null) {
-            this.setMachine(
-              step.recipeObjectiveId ?? step.recipeId,
-              event,
-              RecipeUtility.bestMatch(
-                data.recipeEntities[step.recipeId].producers,
-                machinesState.ids,
-              ),
-              step.recipeObjectiveId != null,
-            );
-          }
+    const machinesState = this.machinesState();
+    const machineSettings = machinesState.entities[settings.machineId];
+    switch (field) {
+      case 'machine': {
+        if (typeof event !== 'string') return;
+        const data = this.data();
+        this.setMachine(
+          id,
+          event,
+          RecipeUtility.bestMatch(
+            data.recipeEntities[step.recipeId].producers,
+            machinesState.ids,
+          ),
+          isObjective,
+        );
+        break;
+      }
+      case 'fuel': {
+        if (typeof event !== 'string') return;
+        this.setFuel(id, event, machineSettings.fuelId, isObjective);
+        break;
+      }
+      case 'modules': {
+        if (!Array.isArray(event)) return;
+        const machine = this.data().machineEntities[settings.machineId];
+        const def = RecipeUtility.inheritedModules(
+          settings.moduleOptions ?? [],
+          machineSettings.modules,
+          machinesState.moduleRankIds,
+          machine.modules ?? 0,
+        );
+        this.setModules(
+          id,
+          moduleSettingsPayload(event as ModuleSettings[], def),
+          isObjective,
+        );
+        break;
+      }
+      case 'beacons': {
+        if (!Array.isArray(event)) return;
+        const def = machineSettings.beacons;
+        this.setBeacons(
+          id,
+          beaconSettingsPayload(event as BeaconSettings[], def),
+          isObjective,
+        );
 
-          break;
-        }
-        case RecipeField.Fuel: {
-          if (typeof event === 'string') {
-            this.setFuel(
-              step.recipeObjectiveId ?? step.recipeId,
-              event,
-              machineSettings.fuelId,
-              step.recipeObjectiveId != null,
-            );
-          }
-
-          break;
-        }
-        case RecipeField.Overclock: {
-          if (typeof event === 'number') {
-            const def = machineSettings.overclock;
-            this.setOverclock(id, Rational.fromNumber(event), def, isObjective);
-          }
-          break;
-        }
+        break;
+      }
+      case 'overclock': {
+        if (typeof event !== 'number') return;
+        const def = machineSettings.overclock;
+        this.setOverclock(id, Rational.fromNumber(event), def, isObjective);
+        break;
       }
     }
   }
@@ -437,14 +454,22 @@ export class StepsComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new action({ id, value, def }));
   }
 
-  setModules(id: string, value: ModuleSettings[], objective = false): void {
+  setModules(
+    id: string,
+    value: ModuleSettings[] | undefined,
+    objective = false,
+  ): void {
     const action = objective
       ? Objectives.SetModulesAction
       : Recipes.SetModulesAction;
     this.store.dispatch(new action({ id, value }));
   }
 
-  setBeacons(id: string, value: BeaconSettings[], objective = false): void {
+  setBeacons(
+    id: string,
+    value: BeaconSettings[] | undefined,
+    objective = false,
+  ): void {
     const action = objective
       ? Objectives.SetBeaconsAction
       : Recipes.SetBeaconsAction;

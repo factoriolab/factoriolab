@@ -628,13 +628,7 @@
                     "
                     [ngModel]="machineId"
                     (onChange)="
-                      changeRecipeField(
-                        step,
-                        $event.value,
-                        machinesState(),
-                        data(),
-                        RecipeField.Machine
-                      )
+                      changeRecipeField(step, $event.value, 'machine')
                     "
                   >
                     <ng-template pTemplate="selectedItem" let-item>
@@ -685,9 +679,7 @@
                       changeRecipeField(
                         step,
                         overclockInput.value ?? 100,
-                        machinesState(),
-                        data(),
-                        RecipeField.Overclock
+                        'overclock'
                       )
                     "
                   >
@@ -712,15 +704,7 @@
                       [pTooltip]="tooltip"
                       [ngModel]="fuelId"
                       [options]="step.recipeSettings.fuelOptions ?? []"
-                      (onChange)="
-                        changeRecipeField(
-                          step,
-                          $event.value,
-                          machinesState(),
-                          data(),
-                          RecipeField.Fuel
-                        )
-                      "
+                      (onChange)="changeRecipeField(step, $event.value, 'fuel')"
                     >
                       <ng-template pTemplate="selectedItem" let-item>
                         <div class="d-flex">
@@ -760,9 +744,11 @@
                         [ngModel]="modules[0].id"
                         [options]="step.recipeSettings.moduleOptions ?? []"
                         (onChange)="
-                          setModules(step.recipeId, [
-                            { id: $event.value, count: Rational.one }
-                          ])
+                          changeRecipeField(
+                            step,
+                            [{ id: $event.value, count: Rational.one }],
+                            'modules'
+                          )
                         "
                       >
                         <ng-template pTemplate="selectedItem" let-item>
@@ -816,7 +802,7 @@
                       </button>
                       <lab-modules-overlay
                         #modulePicker
-                        (setValue)="setModules(step.recipeId, $event)"
+                        (setValue)="changeRecipeField(step, $event, 'modules')"
                       ></lab-modules-overlay>
                     }
                   }
@@ -867,7 +853,7 @@
               </button>
               <lab-beacons-overlay
                 #beaconsOverlay
-                (setValue)="setBeacons(step.recipeId, $event)"
+                (setValue)="changeRecipeField(step, $event, 'beacons')"
               ></lab-beacons-overlay>
             }
           </td>

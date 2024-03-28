@@ -355,7 +355,7 @@ describe('StepsComponent', () => {
         ItemId.SpeedModule3,
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
-        RecipeField.MachineModules,
+        RecipeField.Modules,
         0,
       );
       expect(component.setMachineModules).toHaveBeenCalledWith(

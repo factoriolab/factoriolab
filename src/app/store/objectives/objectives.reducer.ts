@@ -172,7 +172,7 @@ export function objectivesReducer(
       return {
         ...state,
         ...{
-          entities: StoreUtility.assignValue(
+          entities: StoreUtility.setValue(
             state.entities,
             'modules',
             action.payload,
@@ -183,7 +183,7 @@ export function objectivesReducer(
       return {
         ...state,
         ...{
-          entities: StoreUtility.assignValue(
+          entities: StoreUtility.setValue(
             state.entities,
             'beacons',
             action.payload,

@@ -266,21 +266,7 @@
               </span>
             </div>
           }
-        </div>
-      </p-accordionTab>
-      <p-accordionTab [selected]="true">
-        <ng-template pTemplate="header">
-          <div
-            class="d-flex align-items-center justify-content-between flex-grow-1"
-          >
-            <div>{{ 'settings.factory' | translate }}</div>
-            @if (presetDropdown.label(); as label) {
-              <div>{{ label | translate }}</div>
-            }
-          </div>
-        </ng-template>
-        <div class="p-fluid">
-          <div class="pb-3">
+          <div class="mt-3 pb-3">
             <button
               pButton
               pRipple
@@ -304,6 +290,74 @@
               (selectIds)="setResearchedTechnologies($event)"
             ></lab-tech-picker>
           </div>
+          <div class="pb-3">
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-rounded p-button-outlined"
+              icon="fa-solid fa-flask-vial"
+              [pTooltip]="'settings.recipesTooltip' | translate"
+              [label]="
+                'settings.recipesExcluded'
+                  | translate
+                    : {
+                        count: excludedRecipeIds().length
+                      }
+              "
+              (click)="
+                recipesPicker.clickOpen(
+                  'recipe',
+                  recipeIds(),
+                  excludedRecipeIds()
+                )
+              "
+            ></button>
+            <lab-picker
+              #recipesPicker
+              [header]="'settings.recipesHeader' | translate"
+              (selectIds)="setExcludedRecipes($event, recipesState(), data())"
+            ></lab-picker>
+          </div>
+          <div class="pb-3">
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-rounded p-button-outlined"
+              icon="fa-solid fa-boxes-stacked"
+              [pTooltip]="'settings.itemsTooltip' | translate"
+              [label]="
+                'settings.itemsExcluded'
+                  | translate
+                    : {
+                        count: excludedItemIds().length
+                      }
+              "
+              (click)="
+                itemsPicker.clickOpen('item', itemIds(), excludedItemIds())
+              "
+            ></button>
+            <lab-picker
+              #itemsPicker
+              [header]="'settings.itemsHeader' | translate"
+              (selectIds)="setExcludedItems($event, itemsState(), data())"
+            ></lab-picker>
+          </div>
+        </div>
+      </p-accordionTab>
+      <p-accordionTab [selected]="true">
+        <ng-template pTemplate="header">
+          <div
+            class="d-flex align-items-center justify-content-between flex-grow-1"
+          >
+            <div>{{ 'settings.factory' | translate }}</div>
+            @if (presetDropdown.label(); as label) {
+              <div>{{ label | translate }}</div>
+            }
+          </div>
+        </ng-template>
+        <div class="p-fluid">
           <div class="mt-3 pb-3">
             <span class="p-float-label">
               <p-dropdown
@@ -1388,60 +1442,6 @@
               [pTooltip]="'settings.surplusMachinesOutputTooltip' | translate"
               (onChange)="setSurplusMachinesOutput($event.checked)"
             ></p-checkbox>
-          </div>
-          <div class="pb-3">
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="p-button-rounded p-button-outlined"
-              icon="fa-solid fa-boxes-stacked"
-              [pTooltip]="'settings.itemsTooltip' | translate"
-              [label]="
-                'settings.itemsExcluded'
-                  | translate
-                    : {
-                        count: excludedItemIds().length
-                      }
-              "
-              (click)="
-                itemsPicker.clickOpen('item', itemIds(), excludedItemIds())
-              "
-            ></button>
-            <lab-picker
-              #itemsPicker
-              [header]="'settings.itemsHeader' | translate"
-              (selectIds)="setExcludedItems($event, itemsState(), data())"
-            ></lab-picker>
-          </div>
-          <div class="pb-3">
-            <button
-              pButton
-              pRipple
-              type="button"
-              class="p-button-rounded p-button-outlined"
-              icon="fa-solid fa-flask-vial"
-              [pTooltip]="'settings.recipesTooltip' | translate"
-              [label]="
-                'settings.recipesExcluded'
-                  | translate
-                    : {
-                        count: excludedRecipeIds().length
-                      }
-              "
-              (click)="
-                recipesPicker.clickOpen(
-                  'recipe',
-                  recipeIds(),
-                  excludedRecipeIds()
-                )
-              "
-            ></button>
-            <lab-picker
-              #recipesPicker
-              [header]="'settings.recipesHeader' | translate"
-              (selectIds)="setExcludedRecipes($event, recipesState(), data())"
-            ></lab-picker>
           </div>
           <button
             pButton

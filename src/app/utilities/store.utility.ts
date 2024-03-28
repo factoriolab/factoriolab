@@ -1,3 +1,4 @@
+import { spread } from '~/helpers';
 import {
   Entities,
   IdIndexValueDefaultPayload,
@@ -118,6 +119,29 @@ export class StoreUtility {
         [payload.id]: { ...state[payload.id], ...{ [field]: payload.value } },
       },
     };
+  }
+
+  static setValue<T extends object, K extends keyof T>(
+    state: Entities<T>,
+    field: K,
+    payload: IdValuePayload<T[K]>,
+  ): Entities<T> {
+    if (payload.value === undefined) {
+      state = { ...state };
+      if (state[payload.id] !== undefined) {
+        state[payload.id] = { ...state[payload.id] };
+        if (state[payload.id][field] !== undefined)
+          delete state[payload.id][field];
+        if (Object.keys(state[payload.id]).length === 0)
+          delete state[payload.id];
+      }
+
+      return state;
+    }
+
+    return spread(state, {
+      [payload.id]: { ...state[payload.id], ...{ [field]: payload.value } },
+    });
   }
 
   static compareValue<T>(payload: ValueDefaultPayload<T>): T | undefined {

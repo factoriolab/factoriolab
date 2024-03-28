@@ -4,7 +4,6 @@ export * from './settings';
 
 export * from './app-data';
 export * from './constants';
-export * from './count-id';
 export * from './dataset';
 export * from './defaults';
 export * from './entities';

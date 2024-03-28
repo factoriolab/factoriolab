@@ -72,12 +72,12 @@ export class SetFuelAction implements Action {
 
 export class SetModulesAction implements Action {
   readonly type = MachinesActionType.SET_MODULES;
-  constructor(public payload: IdValuePayload<ModuleSettings[]>) {}
+  constructor(public payload: IdValuePayload<ModuleSettings[] | undefined>) {}
 }
 
 export class SetBeaconsAction implements Action {
   readonly type = MachinesActionType.SET_BEACONS;
-  constructor(public payload: IdValuePayload<BeaconSettings[]>) {}
+  constructor(public payload: IdValuePayload<BeaconSettings[] | undefined>) {}
 }
 
 export class SetOverclockAction implements Action {
