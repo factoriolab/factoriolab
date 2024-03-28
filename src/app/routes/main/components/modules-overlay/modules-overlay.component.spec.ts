@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TestModule } from 'src/tests';
+import { AppSharedModule } from '~/app-shared.module';
 import { ModulesOverlayComponent } from './modules-overlay.component';
 
 describe('ModulesOverlayComponent', () => {
@@ -8,7 +10,8 @@ describe('ModulesOverlayComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ModulesOverlayComponent],
+      declarations: [ModulesOverlayComponent],
+      imports: [AppSharedModule, TestModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ModulesOverlayComponent);

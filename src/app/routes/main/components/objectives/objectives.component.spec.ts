@@ -333,7 +333,7 @@ describe('ObjectivesComponent', () => {
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'setValue');
       component.convertItemsToMachines(
-        Mocks.RationalObjectives[2],
+        Mocks.ObjectivesList[2],
         RecipeId.AdvancedCircuit,
         Mocks.ItemsState,
         Mocks.BeltSpeed,
@@ -348,7 +348,7 @@ describe('ObjectivesComponent', () => {
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'setValue');
       component.convertMachinesToItems(
-        Mocks.RationalObjectives[2],
+        Mocks.ObjectivesList[2],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Items,
         Mocks.ItemsState,
@@ -364,7 +364,7 @@ describe('ObjectivesComponent', () => {
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'setValue');
       component.convertItemsToItems(
-        Mocks.RationalObjectives[2],
+        Mocks.ObjectivesList[2],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Items,
         Mocks.ItemsState,

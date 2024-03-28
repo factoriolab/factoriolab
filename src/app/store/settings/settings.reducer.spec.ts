@@ -6,6 +6,7 @@ import {
   InserterTarget,
   MaximizeType,
   Preset,
+  Rational,
   ResearchSpeed,
 } from '~/models';
 import * as App from '../app.actions';
@@ -97,7 +98,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_BEACON_RECEIVERS', () => {
     it('should set default beacon receivers', () => {
-      const value = '1';
+      const value = Rational.one;
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetBeaconReceiversAction(value),
@@ -139,17 +140,6 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_FUEL_RANK', () => {
-    it('should set the fuel', () => {
-      const value = [ItemId.Wood];
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFuelRankAction({ value, def: undefined }),
-      );
-      expect(result.fuelRankIds).toEqual(value);
-    });
-  });
-
   describe('SET_CARGO_WAGON', () => {
     it('should set the default cargo wagon', () => {
       const value = ItemId.CargoWagon;
@@ -174,7 +164,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_FLOW_RATE', () => {
     it('should set the flow rate', () => {
-      const value = 6000;
+      const value = Rational.fromNumber(6000);
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetFlowRateAction(value),
@@ -196,7 +186,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_MINING_BONUS', () => {
     it('should set the mining bonus', () => {
-      const value = 10;
+      const value = Rational.ten;
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetMiningBonusAction(value),
@@ -254,13 +244,13 @@ describe('Settings Reducer', () => {
   describe('SET_COSTS', () => {
     it('should set cost values', () => {
       const value: CostsState = {
-        factor: '1',
-        machine: '1',
-        footprint: '1',
-        unproduceable: '1',
-        excluded: '1',
-        surplus: '1',
-        maximize: '-1',
+        factor: Rational.one,
+        machine: Rational.one,
+        footprint: Rational.one,
+        unproduceable: Rational.one,
+        excluded: Rational.one,
+        surplus: Rational.one,
+        maximize: Rational.minusOne,
       };
       const result = settingsReducer(
         initialSettingsState,

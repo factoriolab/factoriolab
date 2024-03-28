@@ -88,6 +88,7 @@ export enum ZipVersion {
   Version7 = '7', // Hash
   Version8 = '8', // Unified
   Version9 = '9', // Unified
+  Version10 = 'A', // Unified
 }
 
 export enum MigrationWarning {
@@ -139,7 +140,7 @@ export class RouterService {
   zipConfig = signal<Zip>(this.empty);
   base64codes: Uint8Array;
   // Current hashing algorithm version
-  version = ZipVersion.Version9;
+  version = ZipVersion.Version10;
   zipTail: Zip = {
     bare: `&${Section.Version}=${this.version}`,
     hash: `&${Section.Version}${this.version}`,
@@ -608,6 +609,8 @@ export class RouterService {
         return this.migrateV7(state);
       case ZipVersion.Version8:
         return this.migrateV8(state);
+      case ZipVersion.Version9:
+        return this.migrateV9(state);
       default:
         return { params, warnings, isBare };
     }
@@ -1070,7 +1073,15 @@ export class RouterService {
       params[Section.Objectives] = objectives.join(LISTSEP);
     }
 
-    params[Section.Version] = ZipVersion.Version9;
+    return this.migrateV9(state);
+  }
+
+  migrateV9(state: MigrationState): MigrationState {
+    const { params } = state;
+
+    // TODO: Perform migrations
+
+    params[Section.Version] = ZipVersion.Version10;
     return state;
   }
 
@@ -1080,7 +1091,6 @@ export class RouterService {
         message,
         header: this.translateSvc.instant('app.migrationWarning'),
         acceptLabel: this.translateSvc.instant('OK'),
-        // acceptVisible: false,
         rejectVisible: false,
       });
     }
@@ -1300,7 +1310,7 @@ export class RouterService {
   zipObjectives(data: ZipData, objectives: Objective[], hash: ModHash): void {
     const z = this.zipList(
       objectives.map((obj) => {
-        const value = obj.value.toString();
+        const value = this.zipDiffString(obj.value.toString(), '1');
         const unit = this.zipDiffNumber(obj.unit, ObjectiveUnit.Items);
         const type = this.zipDiffNumber(obj.type, ObjectiveType.Output);
         const modules = this.zipTruthyArray(
@@ -1365,7 +1375,7 @@ export class RouterService {
       const obj: Objective = {
         id: index.toString(),
         targetId: s[i++], // Convert to real id after determining unit, if hashed
-        value: this.parseRational(s[i++]) ?? Rational.zero,
+        value: this.parseRational(s[i++]) ?? Rational.one,
         unit: this.parseNumber(s[i++]) ?? ObjectiveUnit.Items,
         type: this.parseNumber(s[i++]) ?? ObjectiveType.Output,
         machineId: this.parseString(s[i++], hash?.machines),

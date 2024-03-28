@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { Objective, ObjectiveType, ObjectiveUnit } from '~/models';
+import { Objective, ObjectiveType, ObjectiveUnit, Rational } from '~/models';
 import { Items } from '../';
 import * as App from '../app.actions';
 import * as Recipes from '../recipes';
@@ -51,7 +51,7 @@ describe('Objectives Reducer', () => {
     it('should use the value of the last objective', () => {
       let result = objectivesReducer(
         state,
-        new Actions.SetValueAction({ id: '0', value: '60' }),
+        new Actions.SetValueAction({ id: '0', value: Rational.fromNumber(60) }),
       );
       result = objectivesReducer(
         result,
@@ -60,7 +60,7 @@ describe('Objectives Reducer', () => {
           unit: ObjectiveUnit.Items,
         }),
       );
-      expect(result.entities['1'].value).toEqual('60');
+      expect(result.entities['1'].value).toEqual(Rational.fromNumber(60));
     });
   });
 
@@ -69,7 +69,7 @@ describe('Objectives Reducer', () => {
       const objective: Objective = {
         id: '1',
         targetId: RecipeId.IronPlate,
-        value: '2',
+        value: Rational.two,
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       };
@@ -80,7 +80,7 @@ describe('Objectives Reducer', () => {
       expect(result.entities['0']).toEqual({
         id: '0',
         targetId: RecipeId.IronPlate,
-        value: '2',
+        value: Rational.two,
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       });
@@ -119,9 +119,9 @@ describe('Objectives Reducer', () => {
     it('should set value of an objective', () => {
       const result = objectivesReducer(
         state,
-        new Actions.SetValueAction({ id: '0', value: '30' }),
+        new Actions.SetValueAction({ id: '0', value: Rational.fromNumber(30) }),
       );
-      expect(result.entities['0'].value).toEqual('30');
+      expect(result.entities['0'].value).toEqual(Rational.fromNumber(30));
     });
   });
 
@@ -181,95 +181,37 @@ describe('Objectives Reducer', () => {
     });
   });
 
-  describe('SET_MACHINE_MODULES', () => {
-    it('should set machine modules on an objective', () => {
+  describe('SET_MODULES', () => {
+    it('should set modules on an objective', () => {
+      const value = [{ count: Rational.one, id: ItemId.SpeedModule }];
       const result = objectivesReducer(
         state,
         new Actions.SetModulesAction({
           id: '0',
-          value: [ItemId.SpeedModule],
-          def: [ItemId.Module],
+          value,
         }),
       );
-      expect(result.entities['0'].modules).toEqual([ItemId.SpeedModule]);
+      expect(result.entities['0'].modules).toEqual(value);
     });
   });
 
-  describe('ADD_BEACON', () => {
-    it('should add a beacon to an objective', () => {
-      const result = objectivesReducer(state, new Actions.AddBeaconAction('0'));
-      expect(result.entities['0'].beacons?.length).toEqual(2);
-    });
-  });
-
-  describe('REMOVE_BEACON', () => {
-    it('should remove a beacon from an objective', () => {
+  describe('SET_BEACONS', () => {
+    it('should set beacons on an objective', () => {
+      const value = [
+        {
+          count: Rational.zero,
+          id: ItemId.Beacon,
+          modules: [{ count: Rational.two, id: ItemId.Module }],
+        },
+      ];
       const result = objectivesReducer(
         state,
-        new Actions.RemoveBeaconAction({ id: '0', value: 0 }),
-      );
-      expect(result.entities['0'].beacons?.length).toEqual(0);
-    });
-  });
-
-  describe('SET_BEACON_COUNT', () => {
-    it('should set beacon count on an objective', () => {
-      const result = objectivesReducer(
-        state,
-        new Actions.SetBeaconCountAction({
+        new Actions.SetBeaconsAction({
           id: '0',
-          index: 0,
-          value: '8',
-          def: '0',
+          value,
         }),
       );
-      expect(result.entities['0'].beacons?.[0].count).toEqual('8');
-    });
-  });
-
-  describe('SET_BEACON', () => {
-    it('should set beacon on an objective', () => {
-      const result = objectivesReducer(
-        state,
-        new Actions.SetBeaconAction({
-          id: '0',
-          index: 0,
-          value: ItemId.Beacon,
-          def: ItemId.AssemblingMachine1,
-        }),
-      );
-      expect(result.entities['0'].beacons?.[0].id).toEqual(ItemId.Beacon);
-    });
-  });
-
-  describe('SET_BEACON_MODULES', () => {
-    it('should set beacon modules on an objective', () => {
-      const result = objectivesReducer(
-        state,
-        new Actions.SetBeaconModulesAction({
-          id: '0',
-          index: 0,
-          value: [ItemId.SpeedModule],
-          def: [ItemId.Module],
-        }),
-      );
-      expect(result.entities['0'].beacons?.[0].modules).toEqual([
-        ItemId.SpeedModule,
-      ]);
-    });
-  });
-
-  describe('SET_BEACON_TOTAL', () => {
-    it('should set the beacon total', () => {
-      const result = objectivesReducer(
-        state,
-        new Actions.SetBeaconTotalAction({
-          id: '0',
-          index: 0,
-          value: '200',
-        }),
-      );
-      expect(result.entities['0'].beacons?.[0].total).toEqual('200');
+      expect(result.entities['0'].beacons).toEqual(value);
     });
   });
 
@@ -279,11 +221,11 @@ describe('Objectives Reducer', () => {
         state,
         new Actions.SetOverclockAction({
           id: '0',
-          value: 200,
-          def: 100,
+          value: Rational.fromNumber(200),
+          def: Rational.hundred,
         }),
       );
-      expect(result.entities['0'].overclock).toEqual(200);
+      expect(result.entities['0'].overclock).toEqual(Rational.fromNumber(200));
     });
   });
 
@@ -308,16 +250,16 @@ describe('Objectives Reducer', () => {
           ['0']: {
             id: '0',
             targetId: RecipeId.WoodenChest,
-            value: '30',
+            value: Rational.fromNumber(30),
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             machineId: 'machineId',
-            overclock: 100,
+            overclock: Rational.hundred,
             beacons: [
               {
-                count: 'beaconCount',
-                id: 'beaconId',
-                modules: ['beaconModuleIds'],
+                count: Rational.one,
+                id: ItemId.Beacon,
+                modules: [{ count: Rational.two, id: ItemId.Module }],
               },
             ],
           },
@@ -331,7 +273,7 @@ describe('Objectives Reducer', () => {
       expect(result.entities['0']).toEqual({
         id: '0',
         targetId: RecipeId.WoodenChest,
-        value: '30',
+        value: Rational.fromNumber(30),
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       });
@@ -342,9 +284,11 @@ describe('Objectives Reducer', () => {
     it('should adjust rates for objectives when display rate changes', () => {
       const result = objectivesReducer(
         state,
-        new Actions.AdjustDisplayRateAction('1/60'),
+        new Actions.AdjustDisplayRateAction(Rational.from(1, 60)),
       );
-      expect(result.entities[Mocks.Objective1.id].value).toEqual('1/60');
+      expect(result.entities[Mocks.Objective1.id].value).toEqual(
+        Rational.from(1, 60),
+      );
     });
 
     it('should not adjust rates when rate type unaffected by display rate', () => {
@@ -360,9 +304,9 @@ describe('Objectives Reducer', () => {
       );
       result = objectivesReducer(
         result,
-        new Actions.AdjustDisplayRateAction('1/60'),
+        new Actions.AdjustDisplayRateAction(Rational.from(1, 60)),
       );
-      expect(result.entities['0'].value).toEqual('1');
+      expect(result.entities['0'].value).toEqual(Rational.one);
     });
   });
 
@@ -374,16 +318,16 @@ describe('Objectives Reducer', () => {
           ['0']: {
             id: '0',
             targetId: RecipeId.WoodenChest,
-            value: '30',
+            value: Rational.fromNumber(30),
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             machineId: 'machineId',
-            overclock: 100,
+            overclock: Rational.hundred,
             beacons: [
               {
-                count: 'beaconCount',
-                id: 'beaconId',
-                modules: ['beaconModuleIds'],
+                count: Rational.one,
+                id: ItemId.Beacon,
+                modules: [{ count: Rational.two, id: ItemId.Module }],
               },
             ],
           },
@@ -397,7 +341,7 @@ describe('Objectives Reducer', () => {
       expect(result.entities['0']).toEqual({
         id: '0',
         targetId: RecipeId.WoodenChest,
-        value: '30',
+        value: Rational.fromNumber(30),
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       });
@@ -412,16 +356,16 @@ describe('Objectives Reducer', () => {
           ['0']: {
             id: '0',
             targetId: RecipeId.WoodenChest,
-            value: '30',
+            value: Rational.fromNumber(30),
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             machineId: 'machineId',
-            overclock: 100,
+            overclock: Rational.hundred,
             beacons: [
               {
-                count: 'beaconCount',
-                id: 'beaconId',
-                modules: ['beaconModuleIds'],
+                count: Rational.one,
+                id: ItemId.Beacon,
+                modules: [{ count: Rational.two, id: ItemId.Module }],
               },
             ],
           },
@@ -432,11 +376,11 @@ describe('Objectives Reducer', () => {
       expect(result.entities['0']).toEqual({
         id: '0',
         targetId: RecipeId.WoodenChest,
-        value: '30',
+        value: Rational.fromNumber(30),
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
         machineId: 'machineId',
-        overclock: 100,
+        overclock: Rational.hundred,
       });
     });
   });
@@ -449,7 +393,7 @@ describe('Objectives Reducer', () => {
           ['0']: {
             id: '0',
             targetId: RecipeId.WoodenChest,
-            value: '30',
+            value: Rational.fromNumber(30),
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             checked: true,
@@ -461,7 +405,7 @@ describe('Objectives Reducer', () => {
       expect(result.entities['0']).toEqual({
         id: '0',
         targetId: RecipeId.WoodenChest,
-        value: '30',
+        value: Rational.fromNumber(30),
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       });

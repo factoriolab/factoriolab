@@ -1,4 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
+import { Rational } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './machines.actions';
 import { initialMachinesState, machinesReducer } from './machines.reducer';
@@ -144,43 +145,29 @@ describe('Machines Reducer', () => {
     it('should set the module rank for a machine', () => {
       const result = machinesReducer(
         undefined,
-        new Actions.SetModuleRankAction({ id, value: [value], def: [] }),
+        new Actions.SetModuleRankAction({ value: [value], def: [] }),
       );
-      expect(result.entities[id].moduleRankIds).toEqual([value]);
+      expect(result.moduleRankIds).toEqual([value]);
     });
   });
 
-  describe('SET_BEACON_COUNT', () => {
+  describe('SET_BEACONS', () => {
     it('should set the beacon count for a machine', () => {
+      const value = [
+        {
+          count: Rational.zero,
+          id: ItemId.Beacon,
+          modules: [{ count: Rational.two, id: ItemId.Module }],
+        },
+      ];
       const result = machinesReducer(
         undefined,
-        new Actions.SetBeaconCountAction({ id, value: '2', def: '8' }),
-      );
-      expect(result.entities[id].beaconCount).toEqual('2');
-    });
-  });
-
-  describe('SET_BEACON', () => {
-    it('should set the beacon for a machine', () => {
-      const result = machinesReducer(
-        undefined,
-        new Actions.SetBeaconAction({ id, value, def: ItemId.Beacon }),
-      );
-      expect(result.entities[id].beaconId).toEqual(value);
-    });
-  });
-
-  describe('SET_BEACON_MODULE', () => {
-    it('should set the beacon module for a machine', () => {
-      const result = machinesReducer(
-        undefined,
-        new Actions.SetBeaconModuleRankAction({
+        new Actions.SetBeaconsAction({
           id,
-          value: [value],
-          def: [],
+          value,
         }),
       );
-      expect(result.entities[id].beaconModuleRankIds).toEqual([value]);
+      expect(result.entities[id].beacons).toEqual(value);
     });
   });
 
@@ -188,9 +175,13 @@ describe('Machines Reducer', () => {
     it('should set the overclock for a machine', () => {
       const result = machinesReducer(
         undefined,
-        new Actions.SetOverclockAction({ id, value: 200, def: 100 }),
+        new Actions.SetOverclockAction({
+          id,
+          value: Rational.fromNumber(200),
+          def: Rational.hundred,
+        }),
       );
-      expect(result.entities[id].overclock).toEqual(200);
+      expect(result.entities[id].overclock).toEqual(Rational.fromNumber(200));
     });
   });
 

@@ -15,7 +15,7 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
-import { Entities, Step, StepDetail, StepDetailTab } from '~/models';
+import { Entities, Rational, Step, StepDetail, StepDetailTab } from '~/models';
 import { Items, LabState, Objectives, Preferences, Recipes } from '~/store';
 import { StepsComponent } from './steps.component';
 
@@ -290,7 +290,7 @@ describe('StepsComponent', () => {
     const step: Step = {
       id: '0',
       recipeId: RecipeId.WoodenChest,
-      recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.WoodenChest],
+      recipeSettings: Mocks.RecipesStateInitial[RecipeId.WoodenChest],
     };
 
     it('should skip a step with no recipe', () => {
@@ -322,111 +322,41 @@ describe('StepsComponent', () => {
     });
 
     it('should set up default for machine modules', () => {
-      spyOn(component, 'setMachineModules');
-      component.changeRecipeField(
-        step,
-        ItemId.SpeedModule3,
-        Mocks.MachinesStateInitial,
-        Mocks.Dataset,
-        RecipeField.Modules,
-        0,
-      );
-      expect(component.setMachineModules).toHaveBeenCalledWith(
+      spyOn(component, 'setModules');
+      const modules = [
+        { count: Rational.fromNumber(4), id: ItemId.SpeedModule3 },
+      ];
+      component.changeRecipeField(step, modules, 'modules');
+      expect(component.setModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
-        new Array(4).fill(ItemId.SpeedModule3),
-        new Array(4).fill(ItemId.SpeedModule3),
+        modules,
         false,
       );
     });
 
-    it('should set up default for beacon count', () => {
-      spyOn(component, 'setBeaconCount');
-      component.changeRecipeField(
-        step,
-        '4',
-        Mocks.MachinesStateInitial,
-        Mocks.Dataset,
-        RecipeField.BeaconCount,
-        0,
-      );
-      expect(component.setBeaconCount).toHaveBeenCalledWith(
+    it('should set up default for beacons', () => {
+      spyOn(component, 'setBeacons');
+      const beacons = [
+        {
+          count: Rational.one,
+          id: ItemId.Beacon,
+          modules: [{ count: Rational.two, id: ItemId.Module }],
+        },
+      ];
+      component.changeRecipeField(step, beacons, 'beacons');
+      expect(component.setBeacons).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
-        0,
-        '4',
-        '8',
-        false,
-      );
-    });
-
-    it('should set up default for beacon', () => {
-      spyOn(component, 'setBeacon');
-      component.changeRecipeField(
-        step,
-        ItemId.Beacon,
-        Mocks.MachinesStateInitial,
-        Mocks.Dataset,
-        RecipeField.Beacon,
-        0,
-      );
-      expect(component.setBeacon).toHaveBeenCalledWith(
-        RecipeId.WoodenChest,
-        0,
-        ItemId.Beacon,
-        ItemId.Beacon,
-        false,
-      );
-    });
-
-    it('should set up default for beacon modules', () => {
-      spyOn(component, 'setBeaconModules');
-      component.changeRecipeField(
-        step,
-        ItemId.SpeedModule3,
-        Mocks.MachinesStateInitial,
-        Mocks.Dataset,
-        RecipeField.BeaconModules,
-        0,
-        0,
-      );
-      expect(component.setBeaconModules).toHaveBeenCalledWith(
-        RecipeId.WoodenChest,
-        0,
-        new Array(2).fill(ItemId.SpeedModule3),
-        new Array(2).fill(ItemId.SpeedModule3),
-        false,
-      );
-    });
-
-    it('should call to set the beacon total', () => {
-      spyOn(component, 'setBeaconTotal');
-      component.changeRecipeField(
-        step,
-        '8',
-        Mocks.MachinesStateInitial,
-        Mocks.Dataset,
-        RecipeField.BeaconTotal,
-        0,
-      );
-      expect(component.setBeaconTotal).toHaveBeenCalledWith(
-        RecipeId.WoodenChest,
-        0,
-        '8',
+        beacons,
         false,
       );
     });
 
     it('should set up default for overclock', () => {
       spyOn(component, 'setOverclock');
-      component.changeRecipeField(
-        step,
-        100,
-        Mocks.MachinesStateInitial,
-        Mocks.Dataset,
-        RecipeField.Overclock,
-      );
+      component.changeRecipeField(step, 100, 'overclock');
       expect(component.setOverclock).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
-        100,
+        Rational.hundred,
         undefined,
         false,
       );
@@ -473,23 +403,10 @@ describe('StepsComponent', () => {
     dispatch.idValDefAlt('setMachine', Objectives.SetMachineAction);
     dispatch.idValDef('setFuel', Recipes.SetFuelAction);
     dispatch.idValDefAlt('setFuel', Objectives.SetFuelAction);
-    dispatch.idValDef('setMachineModules', Recipes.SetModulesAction);
-    dispatch.idValDefAlt('setMachineModules', Objectives.SetModulesAction);
-    dispatch.val('addBeacon', Recipes.AddBeaconAction);
-    dispatch.valAlt('addBeacon', Objectives.AddBeaconAction);
-    dispatch.idVal('removeBeacon', Recipes.RemoveBeaconAction);
-    dispatch.idValAlt('removeBeacon', Objectives.RemoveBeaconAction);
-    dispatch.idIndValDef('setBeaconCount', Recipes.SetBeaconCountAction);
-    dispatch.idIndValDefAlt('setBeaconCount', Objectives.SetBeaconCountAction);
-    dispatch.idIndValDef('setBeacon', Recipes.SetBeaconAction);
-    dispatch.idIndValDefAlt('setBeacon', Objectives.SetBeaconAction);
-    dispatch.idIndValDef('setBeaconModules', Recipes.SetBeaconModulesAction);
-    dispatch.idIndValDefAlt(
-      'setBeaconModules',
-      Objectives.SetBeaconModulesAction,
-    );
-    dispatch.idIndVal('setBeaconTotal', Recipes.SetBeaconTotalAction);
-    dispatch.idIndValAlt('setBeaconTotal', Objectives.SetBeaconTotalAction);
+    dispatch.idValDef('setModules', Recipes.SetModulesAction);
+    dispatch.idValDefAlt('setModules', Objectives.SetModulesAction);
+    dispatch.idValDef('setBeacons', Recipes.SetBeaconsAction);
+    dispatch.idValDefAlt('setBeacons', Objectives.SetBeaconsAction);
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
     dispatch.idValDefAlt('setOverclock', Objectives.SetOverclockAction);
     dispatch.idVal('setRecipeChecked', Recipes.SetCheckedAction);

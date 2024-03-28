@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { TestModule } from 'src/tests';
+import { AppSharedModule } from '~/app-shared.module';
 import { BeaconsOverlayComponent } from './beacons-overlay.component';
 
 describe('BeaconsOverlayComponent', () => {
@@ -8,10 +10,10 @@ describe('BeaconsOverlayComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BeaconsOverlayComponent]
-    })
-    .compileComponents();
-    
+      declarations: [BeaconsOverlayComponent],
+      imports: [AppSharedModule, TestModule],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(BeaconsOverlayComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

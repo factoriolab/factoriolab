@@ -278,31 +278,31 @@ describe('SettingsComponent', () => {
     });
   });
 
-  describe('changeBeaconModuleRank', () => {
-    it('should set the defaults for the default machine', () => {
-      spyOn(component, 'setBeaconModuleRank');
-      component.changeBeaconModuleRank('', [], {
-        beaconModuleId: 'beaconModuleId',
-      } as any);
-      expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
-        '',
-        [],
-        ['beaconModuleId'],
-      );
-    });
+  // describe('changeBeaconModuleRank', () => {
+  //   it('should set the defaults for the default machine', () => {
+  //     spyOn(component, 'setBeaconModuleRank');
+  //     component.changeBeaconModuleRank('', [], {
+  //       beaconModuleId: 'beaconModuleId',
+  //     } as any);
+  //     expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
+  //       '',
+  //       [],
+  //       ['beaconModuleId'],
+  //     );
+  //   });
 
-    it('should set the defaults for a specific machine', () => {
-      spyOn(component, 'setBeaconModuleRank');
-      component.changeBeaconModuleRank(ItemId.AssemblingMachine1, [], {
-        beaconModuleRankIds: ['beaconModuleId'],
-      } as any);
-      expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
-        ItemId.AssemblingMachine1,
-        [],
-        ['beaconModuleId'],
-      );
-    });
-  });
+  //   it('should set the defaults for a specific machine', () => {
+  //     spyOn(component, 'setBeaconModuleRank');
+  //     component.changeBeaconModuleRank(ItemId.AssemblingMachine1, [], {
+  //       beaconModuleRankIds: ['beaconModuleId'],
+  //     } as any);
+  //     expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
+  //       ItemId.AssemblingMachine1,
+  //       [],
+  //       ['beaconModuleId'],
+  //     );
+  //   });
+  // });
 
   describe('toggleBeaconReceivers', () => {
     it('should turn off beacon power estimation', () => {
@@ -328,41 +328,38 @@ describe('SettingsComponent', () => {
       'setResearchedTechnologies',
       Settings.SetResearchedTechnologiesAction,
     );
-    dispatch.val('setItemExcludedBatch', Items.SetExcludedBatchAction);
     dispatch.val('setRecipeExcludedBatch', Recipes.SetExcludedBatchAction);
-    dispatch.val('setNetProductionOnly', Settings.SetNetProductionOnlyAction);
-    dispatch.val(
-      'setSurplusMachinesOutput',
-      Settings.SetSurplusMachinesOutputAction,
-    );
+    dispatch.val('setItemExcludedBatch', Items.SetExcludedBatchAction);
     dispatch.val('setPreset', Settings.SetPresetAction);
-    dispatch.valDef('removeMachine', Machines.RemoveAction);
+    dispatch.valDef('setFuelRank', Machines.SetFuelRankAction);
+    dispatch.valDef('setModuleRank', Machines.SetModuleRankAction);
+    dispatch.valDef('addMachine', Machines.AddAction);
+    dispatch.val('setDefaultBeacons', Machines.SetDefaultBeaconsAction);
+    dispatch.val('setDefaultOverclock', Machines.SetDefaultOverclockAction);
+    dispatch.valDef('setMachineRank', Machines.SetRankAction);
     dispatch.idValDef('setMachine', Machines.SetMachineAction);
     dispatch.idValDef('setFuel', Machines.SetFuelAction);
-    dispatch.idValDef('setModuleRank', Machines.SetModuleRankAction);
+    dispatch.idVal('setModules', Machines.SetModulesAction);
+    dispatch.idVal('setBeacons', Machines.SetBeaconsAction);
     dispatch.idValDef('setOverclock', Machines.SetOverclockAction);
-    dispatch.idValDef('setBeaconCount', Machines.SetBeaconCountAction);
-    dispatch.idValDef('setBeacon', Machines.SetBeaconAction);
-    dispatch.idValDef(
-      'setBeaconModuleRank',
-      Machines.SetBeaconModuleRankAction,
-    );
-    dispatch.valDef('setMachineRank', Machines.SetRankAction);
-    dispatch.valDef('addMachine', Machines.AddAction);
+    dispatch.valDef('removeMachine', Machines.RemoveAction);
     dispatch.val('setBeaconReceivers', Settings.SetBeaconReceiversAction);
     dispatch.val('setProliferatorSpray', Settings.SetProliferatorSprayAction);
     dispatch.valDef('setBelt', Settings.SetBeltAction);
     dispatch.valDef('setPipe', Settings.SetPipeAction);
     dispatch.valDef('setCargoWagon', Settings.SetCargoWagonAction);
     dispatch.valDef('setFluidWagon', Settings.SetFluidWagonAction);
-    dispatch.valDef('setFuels', Settings.SetFuelRankAction);
     dispatch.val('setFlowRate', Settings.SetFlowRateAction);
     dispatch.val('setInserterTarget', Settings.SetInserterTargetAction);
+    dispatch.val('setFlowDiagram', Preferences.SetFlowDiagramAction);
+    dispatch.val('setSankeyAlign', Preferences.SetSankeyAlignAction);
+    dispatch.val('setLinkSize', Preferences.SetLinkSizeAction);
+    dispatch.val('setLinkText', Preferences.SetLinkTextAction);
+    dispatch.val('setFlowHideExcluded', Preferences.SetFlowHideExcludedAction);
     dispatch.val('setMiningBonus', Settings.SetMiningBonusAction);
     dispatch.val('setResearchSpeed', Settings.SetResearchSpeedAction);
     dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
-    dispatch.val('setMaximizeType', Settings.SetMaximizeTypeAction);
     dispatch.val('setPowerUnit', Preferences.SetPowerUnitAction);
     dispatch.val('setLanguage', Preferences.SetLanguageAction);
     dispatch.val('setTheme', Preferences.SetThemeAction);
@@ -372,10 +369,11 @@ describe('SettingsComponent', () => {
       Preferences.SetHideDuplicateIconsAction,
     );
     dispatch.val('setDisablePaginator', Preferences.SetDisablePaginatorAction);
-    dispatch.val('setFlowDiagram', Preferences.SetFlowDiagramAction);
-    dispatch.val('setSankeyAlign', Preferences.SetSankeyAlignAction);
-    dispatch.val('setLinkSize', Preferences.SetLinkSizeAction);
-    dispatch.val('setLinkText', Preferences.SetLinkTextAction);
-    dispatch.val('setFlowHideExcluded', Preferences.SetFlowHideExcludedAction);
+    dispatch.val('setMaximizeType', Settings.SetMaximizeTypeAction);
+    dispatch.val('setNetProductionOnly', Settings.SetNetProductionOnlyAction);
+    dispatch.val(
+      'setSurplusMachinesOutput',
+      Settings.SetSurplusMachinesOutputAction,
+    );
   });
 });

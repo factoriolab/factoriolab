@@ -152,14 +152,25 @@ describe('Settings Selectors', () => {
         Mocks.Mod.defaults!.minMachineRank!,
       );
       expect(result.moduleRankIds).toEqual([]);
-      expect(result.beaconModuleId).toEqual(ItemId.Module);
-      expect(result.beaconCount).toEqual('0');
+      expect(result.beacons).toEqual([
+        {
+          count: Rational.zero,
+          id: ItemId.Beacon,
+          modules: [{ count: Rational.two, id: ItemId.Module }],
+        },
+      ]);
     });
 
     it('should use 8 beacons', () => {
       const result = Selectors.getDefaults.projector(Preset.Beacon8, Mocks.Mod);
       TestUtility.assert(result != null);
-      expect(result.beaconCount).toEqual('8');
+      expect(result.beacons).toEqual([
+        {
+          count: Rational.fromNumber(8),
+          id: ItemId.Beacon,
+          modules: [{ count: Rational.two, id: ItemId.SpeedModule3 }],
+        },
+      ]);
     });
 
     it('should use 12 beacons', () => {
@@ -168,7 +179,13 @@ describe('Settings Selectors', () => {
         Mocks.Mod,
       );
       TestUtility.assert(result != null);
-      expect(result.beaconCount).toEqual('12');
+      expect(result.beacons).toEqual([
+        {
+          count: Rational.fromNumber(12),
+          id: ItemId.Beacon,
+          modules: [{ count: Rational.two, id: ItemId.SpeedModule3 }],
+        },
+      ]);
     });
 
     it('should get the defaults from the current base mod', () => {
@@ -191,7 +208,7 @@ describe('Settings Selectors', () => {
         ...{ game: Game.DysonSphereProgram },
       });
       TestUtility.assert(result != null);
-      expect(result.moduleRankIds).toEqual(Mocks.Mod.defaults!.moduleRank);
+      expect(result.moduleRankIds).toEqual(Mocks.Mod.defaults!.moduleRank!);
     });
 
     it('should handle Satisfactory module rank', () => {
@@ -259,18 +276,9 @@ describe('Settings Selectors', () => {
     });
   });
 
-  describe('getFuelId', () => {
-    it('should return fuel from settings', () => {
-      const result = Selectors.getFuelRankIds.projector(
-        Mocks.SettingsStateInitial,
-      );
-      expect(result).toEqual(Mocks.SettingsStateInitial.fuelRankIds);
-    });
-  });
-
   describe('getRationalMiningBonus', () => {
     it('should convert the numeric value to a percent Rational', () => {
-      const result = Selectors.getMiningFactor.projector(100);
+      const result = Selectors.getMiningFactor.projector(Rational.hundred);
       expect(result).toEqual(Rational.one);
     });
   });
@@ -280,25 +288,6 @@ describe('Settings Selectors', () => {
       const result = Selectors.getResearchFactor.projector(
         ResearchSpeed.Speed0,
       );
-      expect(result).toEqual(Rational.one);
-    });
-  });
-
-  describe('getRationalBeaconReceivers', () => {
-    it('should convert the string value to a Rational', () => {
-      const result = Selectors.getRationalBeaconReceivers.projector('1');
-      expect(result).toEqual(Rational.one);
-    });
-
-    it('should handle null setting', () => {
-      const result = Selectors.getRationalBeaconReceivers.projector(null);
-      expect(result).toBeNull();
-    });
-  });
-
-  describe('getRationalFlowRate', () => {
-    it('should convert the numeric value to a Rational', () => {
-      const result = Selectors.getRationalFlowRate.projector(1);
       expect(result).toEqual(Rational.one);
     });
   });

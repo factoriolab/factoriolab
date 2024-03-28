@@ -71,7 +71,7 @@ describe('Objectives Selectors', () => {
         [Mocks.Objective1, Mocks.Objective5],
         Mocks.AdjustmentData,
         Mocks.ItemsStateInitial,
-        Mocks.RecipesStateRationalInitial,
+        Mocks.RecipesStateInitial,
         data,
       );
       expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(1);
@@ -82,14 +82,14 @@ describe('Objectives Selectors', () => {
     it('should map objectives to rates', () => {
       spyOn(RateUtility, 'objectiveNormalizedRate');
       Selectors.getNormalizedObjectives.projector(
-        Mocks.RationalObjectives,
+        Mocks.ObjectivesList,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         displayRateInfo[DisplayRate.PerMinute],
         Mocks.Dataset,
       );
       expect(RateUtility.objectiveNormalizedRate).toHaveBeenCalledTimes(
-        Mocks.RationalObjectives.length,
+        Mocks.ObjectivesList.length,
       );
     });
   });
@@ -101,13 +101,13 @@ describe('Objectives Selectors', () => {
         resultType: SimplexResultType.Skipped,
       });
       Selectors.getMatrixResult.projector(
-        Mocks.RationalObjectives,
+        Mocks.ObjectivesList,
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         [],
         MaximizeType.Weight,
         false,
-        Mocks.CostRational,
+        Mocks.Costs,
         Mocks.Dataset,
         false,
       );
@@ -178,10 +178,17 @@ describe('Objectives Selectors', () => {
             recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
-              machineModuleIds: [ItemId.ProductivityModule3],
+              modules: [
+                {
+                  count: Rational.fromNumber(3),
+                  id: ItemId.ProductivityModule3,
+                },
+              ],
               beacons: [
                 {
+                  count: Rational.zero,
                   id: ItemId.Beacon,
+                  modules: [{ count: Rational.two, id: ItemId.Module }],
                 },
               ],
             },
@@ -198,16 +205,16 @@ describe('Objectives Selectors', () => {
             recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
-              machineModuleIds: [
-                ItemId.Module,
-                ItemId.SpeedModule3,
-                ItemId.SpeedModule3,
+              modules: [
+                { count: Rational.one, id: ItemId.Module },
+                { count: Rational.two, id: ItemId.SpeedModule3 },
               ],
               beacons: [
                 {
-                  total: Rational.one,
+                  count: Rational.two,
                   id: ItemId.Beacon,
-                  modules: [ItemId.SpeedModule3, ItemId.SpeedModule3],
+                  modules: [{ count: Rational.two, id: ItemId.SpeedModule3 }],
+                  total: Rational.one,
                 },
               ],
             },
@@ -456,8 +463,15 @@ describe('Objectives Selectors', () => {
           [RecipeId.Coal]: {
             machineId: undefined,
             modules: undefined,
-            overclock: 100,
-            beacons: [{ total: '1' }],
+            overclock: Rational.hundred,
+            beacons: [
+              {
+                count: Rational.one,
+                id: ItemId.Beacon,
+                modules: [{ count: Rational.two, id: ItemId.Module }],
+                total: Rational.one,
+              },
+            ],
           },
         },
         [],
@@ -471,11 +485,17 @@ describe('Objectives Selectors', () => {
       const objective: Objective = {
         id: '1',
         targetId: RecipeId.Coal,
-        value: '1',
+        value: Rational.one,
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
-        overclock: 100,
-        beacons: [{ modules: [] }],
+        overclock: Rational.hundred,
+        beacons: [
+          {
+            count: Rational.one,
+            id: ItemId.Beacon,
+            modules: [{ count: Rational.two, id: ItemId.Module }],
+          },
+        ],
       };
       const result = Selectors.getRecipesModified.projector(
         {

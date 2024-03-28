@@ -69,8 +69,14 @@ describe('ExportService', () => {
     };
     const fullRecipe: RecipeSettings = {
       machineId: ItemId.AssemblingMachine2,
-      modules: ['a', 'b'],
-      beacons: [{ count: '8', id: 'beacon', modules: ['c', 'd'] }],
+      modules: [{ count: Rational.two, id: ItemId.SpeedModule }],
+      beacons: [
+        {
+          count: Rational.fromNumber(8),
+          id: ItemId.Beacon,
+          modules: [{ count: Rational.two, id: ItemId.SpeedModule3 }],
+        },
+      ],
     };
 
     it('should fill in all fields', () => {
@@ -96,10 +102,8 @@ describe('ExportService', () => {
         Recipe: recipeId,
         Machines: '=5',
         Machine: fullRecipe.machineId,
-        MachineModules: '"a,b"',
-        Beacons: '"8"',
-        Beacon: '"beacon"',
-        BeaconModules: '"c|d"',
+        Modules: '"2 speed-module"',
+        Beacons: '"8 beacon (2 speed-module-3)"',
         Power: '=6',
         Pollution: '=7',
       });
@@ -120,10 +124,8 @@ describe('ExportService', () => {
         Wagon: 'wagon',
         Recipe: recipeId,
         Machine: ItemId.AssemblingMachine2,
-        MachineModules: '"a,b"',
-        Beacons: '"8"',
-        Beacon: '"beacon"',
-        BeaconModules: '"c|d"',
+        Modules: '"2 speed-module"',
+        Beacons: '"8 beacon (2 speed-module-3)"',
       });
     });
   });

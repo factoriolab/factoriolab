@@ -32,10 +32,8 @@ export interface StepExport {
   Recipe?: string;
   Machines?: string;
   Machine?: string;
-  MachineModules?: string;
+  Modules?: string;
   Beacons?: string;
-  Beacon?: string;
-  BeaconModules?: string;
   Power?: string;
   Pollution?: string;
 }
@@ -141,19 +139,16 @@ export class ExportService {
           }
           exp.Machine = recipeSettings.machineId;
           if (allowsModules && recipeSettings.modules != null) {
-            exp.MachineModules = `"${recipeSettings.modules.join(',')}"`;
+            exp.Modules = `"${recipeSettings.modules.map((m) => `${m.count.toString()} ${m.id}`).join(',')}"`;
           }
         }
 
         if (columns.beacons.show && allowsModules) {
           exp.Beacons = `"${recipeSettings.beacons
-            ?.map((b) => b.count)
-            .join(',')}"`;
-          exp.Beacon = `"${recipeSettings.beacons
-            ?.map((b) => b.id)
-            .join(',')}"`;
-          exp.BeaconModules = `"${recipeSettings.beacons
-            ?.map((b) => b.modules?.join('|'))
+            ?.map(
+              (b) =>
+                `${b.count.toString()} ${b.id} (${b.modules.map((m) => `${m.count.toString()} ${m.id}`).join(',')})`,
+            )
             .join(',')}"`;
         }
 

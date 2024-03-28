@@ -1,5 +1,5 @@
-import { ItemId, Mocks } from 'src/tests';
-import { Game } from '~/models';
+import { Mocks } from 'src/tests';
+import { Game, Rational } from '~/models';
 import { initialMachinesState } from './machines.reducer';
 import * as Selectors from './machines.selectors';
 
@@ -8,7 +8,6 @@ describe('Machines Selectors', () => {
     it('should fill in machine settings', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
-        [ItemId.Coal],
         Mocks.Defaults,
         Mocks.Dataset,
       );
@@ -19,7 +18,6 @@ describe('Machines Selectors', () => {
     it('should handle null defaults', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
-        [ItemId.Coal],
         null,
         Mocks.Dataset,
       );
@@ -27,32 +25,30 @@ describe('Machines Selectors', () => {
       expect(Object.keys(result.entities).length).toEqual(19);
     });
 
-    it('should read number of beacons', () => {
-      const result = Selectors.getMachinesState.projector(
-        {
-          ids: undefined,
-          entities: { [ItemId.AssemblingMachine2]: { beaconCount: '0' } },
-        },
-        [ItemId.Coal],
-        null,
-        Mocks.Dataset,
-      );
-      expect(result.ids?.length).toEqual(0);
-      expect(Object.keys(result.entities).length).toEqual(19);
-      expect(result.entities[ItemId.AssemblingMachine2].beaconCount).toEqual(
-        '0',
-      );
-    });
+    // it('should read number of beacons', () => {
+    //   const result = Selectors.getMachinesState.projector(
+    //     {
+    //       ids: undefined,
+    //       entities: { [ItemId.AssemblingMachine2]: { beaconCount: '0' } },
+    //     },
+    //     null,
+    //     Mocks.Dataset,
+    //   );
+    //   expect(result.ids?.length).toEqual(0);
+    //   expect(Object.keys(result.entities).length).toEqual(19);
+    //   expect(result.entities[ItemId.AssemblingMachine2].beaconCount).toEqual(
+    //     '0',
+    //   );
+    // });
 
-    it('should use null beaconCount for DSP', () => {
-      const result = Selectors.getMachinesState.projector(
-        initialMachinesState,
-        [ItemId.Coal],
-        Mocks.Defaults,
-        { ...Mocks.Dataset, ...{ game: Game.DysonSphereProgram } },
-      );
-      expect(result.entities[''].beaconCount).toBeUndefined();
-    });
+    // it('should use null beaconCount for DSP', () => {
+    //   const result = Selectors.getMachinesState.projector(
+    //     initialMachinesState,
+    //     Mocks.Defaults,
+    //     { ...Mocks.Dataset, ...{ game: Game.DysonSphereProgram } },
+    //   );
+    //   expect(result.entities[''].beaconCount).toBeUndefined();
+    // });
 
     it('should include overclock in Satisfactory', () => {
       const state = {
@@ -63,7 +59,7 @@ describe('Machines Selectors', () => {
             ...{
               '': {
                 ...initialMachinesState.entities[''],
-                ...{ overclock: 200 },
+                ...{ overclock: Rational.fromNumber(200) },
               },
             },
           },
@@ -71,14 +67,13 @@ describe('Machines Selectors', () => {
       };
       const result = Selectors.getMachinesState.projector(
         state,
-        [ItemId.Coal],
         Mocks.Defaults,
         {
           ...Mocks.Dataset,
           ...{ game: Game.Satisfactory },
         },
       );
-      expect(result.entities[''].overclock).toEqual(200);
+      expect(result.entities[''].overclock).toEqual(Rational.fromNumber(200));
     });
 
     it('should default overclock to 100 in Satisfactory', () => {
@@ -98,14 +93,13 @@ describe('Machines Selectors', () => {
       };
       const result = Selectors.getMachinesState.projector(
         state,
-        [ItemId.Coal],
         Mocks.Defaults,
         {
           ...Mocks.Dataset,
           ...{ game: Game.Satisfactory },
         },
       );
-      expect(result.entities[''].overclock).toEqual(100);
+      expect(result.entities[''].overclock).toEqual(Rational.hundred);
     });
   });
 });
