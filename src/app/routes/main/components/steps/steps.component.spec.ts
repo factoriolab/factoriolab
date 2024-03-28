@@ -15,14 +15,7 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
-import {
-  Entities,
-  RecipeField,
-  Step,
-  StepDetail,
-  StepDetailTab,
-} from '~/models';
-import { ExportService } from '~/services';
+import { Entities, Step, StepDetail, StepDetailTab } from '~/models';
 import { Items, LabState, Objectives, Preferences, Recipes } from '~/store';
 import { StepsComponent } from './steps.component';
 
@@ -34,7 +27,6 @@ describe('StepsComponent', () => {
   let component: StepsComponent;
   let fixture: ComponentFixture<StepsComponent>;
   let mockStore: MockStore<LabState>;
-  let exportSvc: ExportService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -61,7 +53,6 @@ describe('StepsComponent', () => {
         return e;
       }, {}),
     );
-    exportSvc = TestBed.inject(ExportService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -243,10 +234,10 @@ describe('StepsComponent', () => {
 
   describe('export', () => {
     it('should call the export service', () => {
-      spyOn(exportSvc, 'stepsToCsv');
+      spyOn(component.exportSvc, 'stepsToCsv');
       TestUtility.clickDt(fixture, DataTest.Export);
       fixture.detectChanges();
-      expect(exportSvc.stepsToCsv).toHaveBeenCalled();
+      expect(component.exportSvc.stepsToCsv).toHaveBeenCalled();
     });
   });
 
@@ -304,25 +295,13 @@ describe('StepsComponent', () => {
 
     it('should skip a step with no recipe', () => {
       spyOn(component, 'setMachine');
-      component.changeRecipeField(
-        { id: '0' },
-        '1',
-        Mocks.MachinesStateInitial,
-        Mocks.Dataset,
-        RecipeField.Machine,
-      );
+      component.changeRecipeField({ id: '0' }, '1', 'machine');
       expect(component.setMachine).not.toHaveBeenCalled();
     });
 
     it('should set up default for machine', () => {
       spyOn(component, 'setMachine');
-      component.changeRecipeField(
-        step,
-        ItemId.AssemblingMachine2,
-        Mocks.MachinesStateInitial,
-        Mocks.Dataset,
-        RecipeField.Machine,
-      );
+      component.changeRecipeField(step, ItemId.AssemblingMachine2, 'machine');
       expect(component.setMachine).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         ItemId.AssemblingMachine2,
@@ -333,13 +312,7 @@ describe('StepsComponent', () => {
 
     it('should set up default for fuel', () => {
       spyOn(component, 'setFuel');
-      component.changeRecipeField(
-        step,
-        ItemId.Coal,
-        Mocks.MachinesStateInitial,
-        Mocks.Dataset,
-        RecipeField.Fuel,
-      );
+      component.changeRecipeField(step, ItemId.Coal, 'fuel');
       expect(component.setFuel).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         ItemId.Coal,

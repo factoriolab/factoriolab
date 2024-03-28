@@ -6,10 +6,6 @@ interface IdPayload {
   id: string;
 }
 
-interface IndexPayload {
-  index: number;
-}
-
 interface ValuePayload<T = string> {
   value: T;
 }
@@ -23,11 +19,6 @@ interface PreviousPayload<T = string> {
 }
 
 export type IdValuePayload<T = string> = IdPayload & ValuePayload<T>;
-export type IdIndexValuePayload<T = string> = IdValuePayload<T> & IndexPayload;
-export type IdIndexValueDefaultPayload<
-  T = string,
-  D = T,
-> = IdIndexValuePayload<T> & DefaultPayload<D>;
 export type IdValueDefaultPayload<T = string, D = T> = IdValuePayload<T> &
   DefaultPayload<D>;
 export type ValueDefaultPayload<T = string, D = T> = ValuePayload<T> &

@@ -6,9 +6,9 @@ import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
 import {
   Objective,
-  ObjectiveRational,
   ObjectiveType,
   ObjectiveUnit,
+  Rational,
   SimplexResultType,
 } from '~/models';
 import { LabState, Objectives, Preferences, Settings } from '~/store';
@@ -82,7 +82,7 @@ describe('ObjectivesComponent', () => {
             id: '0',
             type: ObjectiveType.Maximize,
             targetId: ItemId.Coal,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Items,
           },
         ],
@@ -105,14 +105,14 @@ describe('ObjectivesComponent', () => {
             id: '0',
             type: ObjectiveType.Maximize,
             targetId: ItemId.Coal,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Items,
           },
           {
             id: '1',
             type: ObjectiveType.Limit,
             targetId: ItemId.Coal,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Items,
           },
         ],
@@ -135,14 +135,14 @@ describe('ObjectivesComponent', () => {
             id: '0',
             type: ObjectiveType.Maximize,
             targetId: RecipeId.Coal,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Machines,
           },
           {
             id: '1',
             type: ObjectiveType.Limit,
             targetId: ItemId.Coal,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Items,
           },
         ],
@@ -210,28 +210,11 @@ describe('ObjectivesComponent', () => {
       return picker;
     };
 
-    it('should do nothing if it cannot find a matching objective rational', () => {
-      spyOn(component, 'setUnit');
-      component.changeUnit(
-        Mocks.Objective5,
-        ObjectiveUnit.Machines,
-        [],
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.DisplayRateInfo,
-        Mocks.Dataset,
-        {} as any,
-        {} as any,
-      );
-      expect(component.setUnit).not.toHaveBeenCalled();
-    });
-
     it('should do nothing if switching to and from machines', () => {
       spyOn(component, 'setUnit');
       component.changeUnit(
         Mocks.Objective5,
         ObjectiveUnit.Machines,
-        Mocks.RationalObjectives,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.DisplayRateInfo,
@@ -247,7 +230,6 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective1,
         ObjectiveUnit.Machines,
-        Mocks.RationalObjectives,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.DisplayRateInfo,
@@ -266,14 +248,13 @@ describe('ObjectivesComponent', () => {
       const objective: Objective = {
         id: '0',
         targetId: ItemId.PetroleumGas,
-        value: '1',
+        value: Rational.one,
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       };
       component.changeUnit(
         objective,
         ObjectiveUnit.Machines,
-        [new ObjectiveRational(objective)],
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.DisplayRateInfo,
@@ -292,7 +273,6 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective5,
         ObjectiveUnit.Items,
-        Mocks.RationalObjectives,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.DisplayRateInfo,
@@ -312,12 +292,11 @@ describe('ObjectivesComponent', () => {
         {
           id: '0',
           targetId: RecipeId.AdvancedOilProcessing,
-          value: '1',
+          value: Rational.one,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
         ObjectiveUnit.Items,
-        Mocks.RationalObjectives,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.DisplayRateInfo,
@@ -336,7 +315,6 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective1,
         ObjectiveUnit.Belts,
-        Mocks.RationalObjectives,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         Mocks.DisplayRateInfo,

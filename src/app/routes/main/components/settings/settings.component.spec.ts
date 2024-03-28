@@ -4,7 +4,6 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 import { Confirmation } from 'primeng/api';
 
@@ -16,8 +15,7 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
-import { Game } from '~/models';
-import { ContentService } from '~/services';
+import { Game, Rational } from '~/models';
 import {
   App,
   Items,
@@ -33,9 +31,7 @@ import { SettingsComponent } from './settings.component';
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
   let fixture: ComponentFixture<SettingsComponent>;
-  let router: Router;
   let mockStore: MockStore<LabState>;
-  let contentSvc: ContentService;
   const id = 'id';
   const value = 'value';
 
@@ -46,13 +42,11 @@ describe('SettingsComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsComponent);
-    router = TestBed.inject(Router);
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
       Settings.getGameStates,
       Mocks.PreferencesState.states[Game.Factorio],
     );
-    contentSvc = TestBed.inject(ContentService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -76,7 +70,7 @@ describe('SettingsComponent', () => {
   describe('clickResetSettings', () => {
     it('should set up a confirmation dialog and clear settings', () => {
       let confirm: Confirmation | undefined;
-      spyOn(contentSvc, 'confirm').and.callFake(
+      spyOn(component.contentSvc, 'confirm').and.callFake(
         (c: Confirmation) => (confirm = c),
       );
       component.clickResetSettings();
@@ -91,9 +85,9 @@ describe('SettingsComponent', () => {
 
   describe('setSearch', () => {
     it('should call the router to navigate', () => {
-      spyOn(router, 'navigateByUrl');
+      spyOn(component.router, 'navigateByUrl');
       component.setSearch('v=9');
-      expect(router.navigateByUrl).toHaveBeenCalled();
+      expect(component.router.navigateByUrl).toHaveBeenCalled();
     });
   });
 
@@ -107,10 +101,10 @@ describe('SettingsComponent', () => {
 
   describe('setState', () => {
     it('should call the router to navigate', () => {
-      spyOn(router, 'navigate');
+      spyOn(component.router, 'navigate');
       component.setState('name', Mocks.PreferencesState.states[Game.Factorio]);
       expect(component.state).toEqual('name');
-      expect(router.navigate).toHaveBeenCalledWith([], {
+      expect(component.router.navigate).toHaveBeenCalledWith([], {
         queryParams: { z: 'zip' },
       });
     });
@@ -320,7 +314,7 @@ describe('SettingsComponent', () => {
     it('should turn on beacon power estimation', () => {
       spyOn(component, 'setBeaconReceivers');
       component.toggleBeaconReceivers(true);
-      expect(component.setBeaconReceivers).toHaveBeenCalledWith('1');
+      expect(component.setBeaconReceivers).toHaveBeenCalledWith(Rational.one);
     });
   });
 

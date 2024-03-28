@@ -10,13 +10,11 @@ import {
   sankeyRight,
 } from '~/d3-sankey';
 import { FlowDiagram, SankeyAlign } from '~/models';
-import { ThemeService } from '~/services';
 import { FlowComponent, SVG_ID } from './flow.component';
 
 describe('FlowComponent', () => {
   let component: FlowComponent;
   let fixture: ComponentFixture<FlowComponent>;
-  let themeSvc: ThemeService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -24,9 +22,8 @@ describe('FlowComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(FlowComponent);
-    themeSvc = TestBed.inject(ThemeService);
-    themeSvc.themeValues$.next(Mocks.ThemeValues);
     component = fixture.componentInstance;
+    component.themeSvc.themeValues$.next(Mocks.ThemeValues);
     fixture.detectChanges();
   });
 

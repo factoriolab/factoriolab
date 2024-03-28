@@ -64,9 +64,6 @@ export class ObjectivesComponent {
     const objectives = this.store.selectSignal(Objectives.getObjectives);
     return [...objectives()];
   });
-  objectiveRationals = this.store.selectSignal(
-    Objectives.getAdjustedObjectives,
-  );
   itemsState = this.store.selectSignal(Items.getItemsState);
   itemIds = this.store.selectSignal(Recipes.getAvailableItems);
   data = this.store.selectSignal(Recipes.getAdjustedDataset);
@@ -176,7 +173,6 @@ export class ObjectivesComponent {
   changeUnit(
     objective: Objective,
     unit: ObjectiveUnit,
-    objectiveRationals: Objective[],
     itemsState: Items.ItemsState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInfo,
@@ -184,17 +180,12 @@ export class ObjectivesComponent {
     chooseItemPicker: PickerComponent,
     chooseRecipePicker: PickerComponent,
   ): void {
-    const objectiveRational = objectiveRationals.find(
-      (o) => o.id === objective.id,
-    );
-    if (objectiveRational == null) return;
-
     if (unit === ObjectiveUnit.Machines) {
       if (objective.unit !== ObjectiveUnit.Machines) {
         const recipeIds = data.itemRecipeIds[objective.targetId];
         const updateFn = (recipeId: string): void =>
           this.convertItemsToMachines(
-            objectiveRational,
+            objective,
             recipeId,
             itemsState,
             beltSpeed,
@@ -215,7 +206,7 @@ export class ObjectivesComponent {
         const itemIds = Array.from(data.recipeR[objective.targetId].produces);
         const updateFn = (itemId: string): void =>
           this.convertMachinesToItems(
-            objectiveRational,
+            objective,
             itemId,
             unit,
             itemsState,
@@ -235,7 +226,7 @@ export class ObjectivesComponent {
       } else {
         // No target conversion required
         this.convertItemsToItems(
-          objectiveRational,
+          objective,
           objective.targetId,
           unit,
           itemsState,

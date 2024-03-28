@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { NavigationEnd, NavigationStart } from '@angular/router';
 import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
 import { deflate, inflate } from 'pako';
@@ -31,8 +31,6 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { ContentService } from './content.service';
-import { DataService } from './data.service';
 import {
   EMPTY,
   FALSE,
@@ -49,7 +47,7 @@ import {
 const mockObjective: Objective = {
   id: '1',
   targetId: ItemId.SteelChest,
-  value: '1',
+  value: Rational.one,
   unit: ObjectiveUnit.Belts,
   type: ObjectiveType.Output,
 };
@@ -171,9 +169,6 @@ describe('RouterService', () => {
       settings: Settings.SettingsState;
     }
   >;
-  let router: Router;
-  let dataSvc: DataService;
-  let contentSvc: ContentService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -193,9 +188,6 @@ describe('RouterService', () => {
       machinesState: Machines.initialMachinesState,
       settings: Settings.initialSettingsState,
     });
-    router = TestBed.inject(Router);
-    dataSvc = TestBed.inject(DataService);
-    contentSvc = TestBed.inject(ContentService);
   });
 
   it('should be created', () => {
@@ -204,12 +196,12 @@ describe('RouterService', () => {
 
   it('should update state from router', () => {
     spyOn(service, 'updateState');
-    (router.events as any).next(new NavigationEnd(2, '/', '/'));
+    (service.router.events as any).next(new NavigationEnd(2, '/', '/'));
     expect(service.updateState).toHaveBeenCalled();
   });
 
   it('should run first update of url if settings modified', (done) => {
-    (router.events as any).next(new NavigationEnd(2, '/', '/'));
+    (service.router.events as any).next(new NavigationEnd(2, '/', '/'));
     spyOn(service, 'updateUrl').and.callFake(() => {
       expect(service.updateUrl).toHaveBeenCalled();
       done();
@@ -282,7 +274,7 @@ describe('RouterService', () => {
     it('should update url with products', () => {
       spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
       spyOn(service, 'getHash').and.returnValue('test');
-      spyOn(router, 'navigateByUrl');
+      spyOn(service.router, 'navigateByUrl');
       service.updateUrl(
         Objectives.initialObjectivesState,
         Items.initialItemsState,
@@ -290,14 +282,14 @@ describe('RouterService', () => {
         Machines.initialMachinesState,
         Settings.initialSettingsState,
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/?test');
+      expect(service.router.navigateByUrl).toHaveBeenCalledWith('/?test');
     });
 
     it('should preserve a hash', () => {
       spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
       spyOn(service, 'getHash').and.returnValue('test');
-      spyOn(router, 'navigateByUrl');
-      spyOnProperty(router, 'url').and.returnValue('path#hash');
+      spyOn(service.router, 'navigateByUrl');
+      spyOnProperty(service.router, 'url').and.returnValue('path#hash');
       service.updateUrl(
         Objectives.initialObjectivesState,
         Items.initialItemsState,
@@ -305,7 +297,9 @@ describe('RouterService', () => {
         Machines.initialMachinesState,
         Settings.initialSettingsState,
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith('path?test#hash');
+      expect(service.router.navigateByUrl).toHaveBeenCalledWith(
+        'path?test#hash',
+      );
     });
   });
 
@@ -424,19 +418,19 @@ describe('RouterService', () => {
     });
 
     it('should skip unless event is NavigationEnd', () => {
-      (router.events as any).next(new NavigationStart(2, ''));
+      (service.router.events as any).next(new NavigationStart(2, ''));
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
     it('should skip unless hash is found', () => {
-      (router.events as any).next(new NavigationEnd(2, '/', '/'));
+      (service.router.events as any).next(new NavigationEnd(2, '/', '/'));
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
     it('should skip unless new zip is found', () => {
       service.zip = mockZip.bare;
       const url = `/#${mockZip.bare}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
@@ -452,18 +446,18 @@ describe('RouterService', () => {
 
     it('should unzip empty v0', () => {
       const url = '/#z=eJwrsAUAAR8Arg==';
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p=', {} as any);
     });
 
     it('should unzip v0', () => {
-      spyOn(contentSvc, 'confirm');
+      spyOn(service.contentSvc, 'confirm');
       const url =
         '/#z=eJxtUNsKwyAM.Zr5EHDUFsZeZC.7j6E2toJVp3ZjL.v2dbSD2pUQyOXk5CSBp4xo' +
         'qeoxZWDAyL2sEMkZMRtUjsKl4GOmEm0GJWLn6VN03pFYQEVKOEhrXEcHoXrjkNaAWqPK' +
         '5mHyiw6-HS2-.0vTlhQQ2x9inYBEobyDuqqATX4mmjMIcWpueIupknEhue1JvM036DE6' +
         'oZAkzo4VHJrrzuleWGBfIc1pUTPb6ieg7WjaJb58AJs7glk_';
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV0: App.PartialState = {
         ...mockState,
@@ -485,18 +479,18 @@ describe('RouterService', () => {
           '00*100*0*0*0*cargo-wagon*fluid-wagon*?',
         mockStateV0,
       );
-      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
+      expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v1', () => {
       const v1Empty = 'p=&v=1';
       const url = `/?${v1Empty}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v1Empty, {} as any);
     });
 
     it('should unzip v1', () => {
-      spyOn(contentSvc, 'confirm');
+      spyOn(service.contentSvc, 'confirm');
       const v1Full =
         'p=steel-chest*1*1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel' +
         '-chest*assembling-machine-2*effectivity-module~effectivity-module*1*' +
@@ -505,7 +499,7 @@ describe('RouterService', () => {
         '&s=1.0*2*1*=*transport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-' +
         'wagon*?*2*10*0*100*1*productivity-module&v=1';
       const url = `/?${v1Full}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV1: App.PartialState = {
         ...mockState,
@@ -524,28 +518,28 @@ describe('RouterService', () => {
       delete mockStateV1.settingsState?.costs?.footprint;
       delete mockStateV1.settingsState?.surplusMachinesOutput;
       expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockStateV1);
-      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
+      expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v2', () => {
       const url = '/?z=eJwrUCszAgADVAE.';
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v2', {} as any);
     });
 
     it('should unzip v2', () => {
-      spyOn(contentSvc, 'confirm');
+      spyOn(service.contentSvc, 'confirm');
       const url =
         '/?z=eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78m' +
         'mFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSMGkU_';
 
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       const mockStateV2: App.PartialState = {
         ...mockState,
         ...{
@@ -567,29 +561,29 @@ describe('RouterService', () => {
           '*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
         mockStateV2,
       );
-      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
+      expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v3', () => {
       const url = '/?z=eJwrUCszBgADVQFA';
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
     });
 
     it('should unzip v3', () => {
-      spyOn(contentSvc, 'confirm');
+      spyOn(service.contentSvc, 'confirm');
       const url =
         '/?z=eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX' +
         '5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6AbeM' +
         'G5w_';
 
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV3: App.PartialState = {
         ...mockState,
@@ -613,13 +607,13 @@ describe('RouterService', () => {
           'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
         mockStateV3,
       );
-      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
+      expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v4', () => {
       const v4Empty = 'p=&v=4';
       const url = `/?${v4Empty}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v4Empty, {} as any);
     });
 
@@ -632,7 +626,7 @@ describe('RouterService', () => {
         '-2_steel-furnace&s=1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
         'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module&v=4';
       const url = `/?${v4Full}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV4: App.PartialState = {
         ...mockState,
@@ -656,10 +650,10 @@ describe('RouterService', () => {
 
     it('should unzip empty v5', () => {
       const url = '/?z=eJwrUCszBQADVwFC&v=5';
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v5', {} as any);
     });
 
@@ -669,10 +663,10 @@ describe('RouterService', () => {
         'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4DZYwb' +
         'BA__&v=5';
 
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV5: App.PartialState = {
         ...mockState,
@@ -701,7 +695,7 @@ describe('RouterService', () => {
     it('should unzip empty v6', () => {
       const v6Empty = 'p=&v=6';
       const url = `/?${v6Empty}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v6Empty, {} as any);
     });
 
@@ -714,7 +708,7 @@ describe('RouterService', () => {
         'hine-2_steel-furnace&s=1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*' +
         '0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module*1&v=6';
       const url = `/?${v6Full}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV6: App.PartialState = {
         ...mockState,
@@ -738,10 +732,10 @@ describe('RouterService', () => {
 
     it('should unzip empty v7', () => {
       const url = '/?z=eJwrUCszBwADWQFE&v=7';
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v7', {} as any);
     });
 
@@ -751,10 +745,10 @@ describe('RouterService', () => {
         'GuM54jzkGfK-2YDLP2ngp6M0qpiqvIySbi7wJZZJtiaPvvrMB.Gh2poZkKh2q1tKftq7' +
         'C.WaHBw_&v=7';
 
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV7: App.PartialState = {
         ...mockState,
@@ -781,10 +775,10 @@ describe('RouterService', () => {
 
     it('should unzip empty v8', () => {
       const url = '/?z=eJwrUCuzAAADWgFF&v=8';
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v8', {} as any);
     });
 
@@ -794,10 +788,10 @@ describe('RouterService', () => {
         'QjLatezxWyfS3nNBkXvi9O6Eu92DWbAUcq31bJ8T.V.gslFPGu1KyWL12YC2yVd2Kp19' +
         'xwOrTh0O&v=8';
 
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV8: App.PartialState = {
         ...mockState,
