@@ -1,5 +1,4 @@
 import { sankey } from '~/d3-sankey';
-import { orZero } from '~/helpers';
 import {
   Dataset,
   DisplayRateInfo,
@@ -377,7 +376,7 @@ export class RateUtility {
       step.depth = result.nodes.find((n) => n.stepId === step.id)?.depth;
     }
 
-    steps.sort((a, b) => orZero(b.depth) - orZero(a.depth));
+    steps.sort((a, b) => (b.depth ?? 0) - (a.depth ?? 0));
   }
 
   static calculateHierarchy(steps: Step[]): Step[] {

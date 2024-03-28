@@ -8,7 +8,7 @@ import { combineLatest, debounceTime, Observable, Subject } from 'rxjs';
 import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
-import { filterNullish, orEmpty, orString } from '~/helpers';
+import { filterNullish } from '~/helpers';
 import {
   BeaconSettings,
   CostsState,
@@ -1284,10 +1284,11 @@ export class RouterService {
       let i = 0;
       const obj: BeaconSettings = {
         count: Rational.from(this.parseString(s[i++]) ?? 0),
-        id: orString(this.parseString(s[i++], hash?.beacons)),
-        modules: orEmpty(
-          this.parseArray(s[i++])?.map((i) => moduleSettings[Number(i)] ?? {}),
-        ),
+        id: this.parseString(s[i++], hash?.beacons) ?? '',
+        modules:
+          this.parseArray(s[i++])?.map(
+            (i) => moduleSettings[Number(i)] ?? {},
+          ) ?? [],
         total: Rational.from(this.parseString(s[i++])),
       };
 
@@ -1379,12 +1380,11 @@ export class RouterService {
       };
 
       if (hash) {
-        obj.targetId = orString(
+        obj.targetId =
           this.parseNString(
             obj.targetId,
             isRecipeObjective(obj) ? hash.recipes : hash.items,
-          ),
-        );
+          ) ?? '';
       }
 
       this.deleteEmptyKeys(obj);
@@ -1433,7 +1433,7 @@ export class RouterService {
     for (const item of list) {
       const s = item.split(FIELDSEP);
       let i = 0;
-      const id = orString(this.parseString(s[i++], hash?.items));
+      const id = this.parseString(s[i++], hash?.items) ?? '';
       const obj: ItemSettings = {
         excluded: this.parseBool(s[i++]),
         beltId: this.parseString(s[i++], hash?.belts),
@@ -1502,7 +1502,7 @@ export class RouterService {
     for (const recipe of list) {
       const s = recipe.split(FIELDSEP);
       let i = 0;
-      const id = orString(this.parseString(s[i++], hash?.recipes));
+      const id = this.parseString(s[i++], hash?.recipes) ?? '';
       const obj: RecipeSettings = {
         excluded: this.parseBool(s[i++]),
         machineId: this.parseString(s[i++], hash?.machines),
@@ -1601,7 +1601,7 @@ export class RouterService {
         id = '';
       }
 
-      if (id && hash) id = orString(this.parseNString(id, hash.machines));
+      if (id && hash) id = this.parseNString(id, hash.machines) ?? '';
       if (id && ids) ids.push(id);
 
       const moduleStr = s[i++];

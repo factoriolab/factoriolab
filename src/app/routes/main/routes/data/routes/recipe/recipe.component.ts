@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { orString } from '~/helpers';
 import {
   Game,
   Rational,
@@ -37,7 +36,7 @@ export class RecipeComponent extends DetailComponent {
     const data = this.data();
     const recipe = data.recipeEntities[id];
     return {
-      category: data.categoryEntities[orString(recipe?.category)],
+      category: data.categoryEntities[recipe?.category ?? ''],
       ingredientIds: Object.keys(recipe?.in ?? {}),
       catalystIds: Object.keys(recipe?.catalyst ?? {}),
       productIds: Object.keys(recipe?.out ?? {}),

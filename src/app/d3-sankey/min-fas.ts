@@ -1,4 +1,3 @@
-import { orEmpty, orZero } from '~/helpers';
 import {
   SankeyGraph,
   SankeyLinkExtraProperties,
@@ -26,11 +25,11 @@ export function minFAS<
     nodes.add(node);
     let incount = 0;
     let outcount = 0;
-    for (const link of orEmpty(node.targetLinks)) {
+    for (const link of node.targetLinks ?? []) {
       if (link.source !== node) incount++;
     }
 
-    for (const link of orEmpty(node.sourceLinks)) {
+    for (const link of node.sourceLinks ?? []) {
       if (link.target !== node) outcount++;
     }
 
@@ -40,18 +39,18 @@ export function minFAS<
 
   function remove(node: SankeyNode<N, L>): void {
     nodes.delete(node);
-    for (const link of orEmpty(node.targetLinks)) {
+    for (const link of node.targetLinks ?? []) {
       const source = link.source as SankeyNode<N, L>;
       if (nodes.has(source)) {
-        const subdegree = orZero(outdegrees.get(source));
+        const subdegree = outdegrees.get(source) ?? 0;
         outdegrees.set(source, subdegree - 1);
       }
     }
 
-    for (const link of orEmpty(node.sourceLinks)) {
+    for (const link of node.sourceLinks ?? []) {
       const target = link.target as SankeyNode<N, L>;
       if (nodes.has(target)) {
-        const subdegree = orZero(indegrees.get(target));
+        const subdegree = indegrees.get(target) ?? 0;
         indegrees.set(target, subdegree - 1);
       }
     }
@@ -97,7 +96,7 @@ export function minFAS<
     let maxDelta = null;
     let maxNode = null;
     for (const node of nodes) {
-      const delta = orZero(outdegrees.get(node)) - orZero(indegrees.get(node));
+      const delta = (outdegrees.get(node) ?? 0) - (indegrees.get(node) ?? 0);
       if (maxDelta === null || delta > maxDelta) {
         maxDelta = delta;
         maxNode = node;
