@@ -284,13 +284,12 @@ export const getTotals = createSelector(
               // Check for modules to add
               if (settings.modules != null) {
                 settings.modules.forEach((m) => {
-                  if (m.id && m.count) {
-                    addValueToRecordByIds(
-                      machineModules,
-                      [m.id],
-                      value.mul(m.count),
-                    );
-                  }
+                  if (m.id === ItemId.Module) return;
+                  addValueToRecordByIds(
+                    machineModules,
+                    [m.id],
+                    value.mul(m.count),
+                  );
                 });
               }
             }
@@ -316,13 +315,12 @@ export const getTotals = createSelector(
             // Check for modules to add
             if (beacon.modules != null) {
               beacon.modules.forEach((m) => {
-                if (m.id && m.count) {
-                  addValueToRecordByIds(
-                    beaconModules,
-                    [m.id],
-                    value.mul(m.count),
-                  );
-                }
+                if (m.id === ItemId.Module) return;
+                addValueToRecordByIds(
+                  beaconModules,
+                  [m.id],
+                  value.mul(m.count),
+                );
               });
             }
           }

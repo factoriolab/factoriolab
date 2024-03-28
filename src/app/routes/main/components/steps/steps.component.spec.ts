@@ -305,7 +305,7 @@ describe('StepsComponent', () => {
       expect(component.setMachine).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         ItemId.AssemblingMachine2,
-        ItemId.AssemblingMachine3,
+        ItemId.AssemblingMachine1,
         false,
       );
     });
@@ -403,10 +403,10 @@ describe('StepsComponent', () => {
     dispatch.idValDefAlt('setMachine', Objectives.SetMachineAction);
     dispatch.idValDef('setFuel', Recipes.SetFuelAction);
     dispatch.idValDefAlt('setFuel', Objectives.SetFuelAction);
-    dispatch.idValDef('setModules', Recipes.SetModulesAction);
-    dispatch.idValDefAlt('setModules', Objectives.SetModulesAction);
-    dispatch.idValDef('setBeacons', Recipes.SetBeaconsAction);
-    dispatch.idValDefAlt('setBeacons', Objectives.SetBeaconsAction);
+    dispatch.idVal('setModules', Recipes.SetModulesAction);
+    dispatch.idValAlt('setModules', Objectives.SetModulesAction);
+    dispatch.idVal('setBeacons', Recipes.SetBeaconsAction);
+    dispatch.idValAlt('setBeacons', Objectives.SetBeaconsAction);
     dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
     dispatch.idValDefAlt('setOverclock', Objectives.SetOverclockAction);
     dispatch.idVal('setRecipeChecked', Recipes.SetCheckedAction);

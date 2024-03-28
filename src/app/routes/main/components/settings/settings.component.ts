@@ -292,6 +292,22 @@ export class SettingsComponent implements OnInit {
     this.setFuel(id, value, def);
   }
 
+  changeModules(id: string, value: ModuleSettings[]): void {
+    const state = this.machinesState();
+    const machine = this.data().machineEntities[id];
+    const def = RecipeUtility.defaultModules(
+      state.entities[id].moduleOptions ?? [],
+      state.moduleRankIds,
+      machine.modules ?? 0,
+    );
+    this.setModules(id, moduleSettingsPayload(value, def));
+  }
+
+  changeBeacons(id: string, value: BeaconSettings[]): void {
+    const def = this.machinesState().beacons;
+    this.setBeacons(id, beaconSettingsPayload(value, def));
+  }
+
   toggleBeaconReceivers(value: boolean): void {
     this.setBeaconReceivers(value ? Rational.one : null);
   }
@@ -364,20 +380,10 @@ export class SettingsComponent implements OnInit {
   }
 
   setModules(id: string, value: ModuleSettings[] | undefined): void {
-    const state = this.machinesState();
-    const machine = this.data().machineEntities[id];
-    const def = RecipeUtility.defaultModules(
-      state.entities[id].moduleOptions ?? [],
-      state.moduleRankIds,
-      machine.modules ?? 0,
-    );
-    value = moduleSettingsPayload(value, def);
     this.store.dispatch(new Machines.SetModulesAction({ id, value }));
   }
 
   setBeacons(id: string, value: BeaconSettings[] | undefined): void {
-    const def = this.machinesState().beacons;
-    value = beaconSettingsPayload(value, def);
     this.store.dispatch(new Machines.SetBeaconsAction({ id, value }));
   }
 

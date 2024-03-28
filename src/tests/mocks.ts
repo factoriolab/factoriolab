@@ -239,6 +239,10 @@ export function getDataset(): M.Dataset {
   );
 }
 export const Dataset = getDataset();
+export const RecipeObjective = {
+  ...Objective5,
+  recipe: Dataset.recipeR[RecipeId.PiercingRoundsMagazine],
+} as M.RecipeObjective;
 export const PreferencesState: Preferences.PreferencesState = {
   states: {
     [M.Game.Factorio]: { ['name']: 'z=zip' },

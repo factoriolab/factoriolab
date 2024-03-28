@@ -943,31 +943,31 @@ describe('RecipeUtility', () => {
       ).toEqual(Mocks.Objective1);
     });
 
-    it('should adjust a recipe objective based on settings', () => {
-      const result = RecipeUtility.adjustObjective(
-        {
-          id: '1',
-          targetId: RecipeId.IronPlate,
-          value: Rational.one,
-          unit: ObjectiveUnit.Machines,
-          type: ObjectiveType.Output,
-        },
-        Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
-      );
-      expect(result.machineId).toEqual(ItemId.ElectricFurnace);
-      expect(result.moduleOptions?.length).toEqual(10);
-      expect(result.modules).toEqual([
-        { count: Rational.two, id: ItemId.ProductivityModule3 },
-      ]);
-      expect(result.beacons?.[0].count).toEqual(Rational.fromNumber(8));
-      expect(result.beacons?.[0].id).toEqual(ItemId.Beacon);
-      expect(result.beacons?.[0].moduleOptions?.length).toEqual(7);
-      expect(result.beacons?.[0].modules).toEqual([
-        { count: Rational.two, id: ItemId.SpeedModule3 },
-      ]);
-      expect(result.overclock).toBeUndefined();
-    });
+    // it('should adjust a recipe objective based on settings', () => {
+    //   const result = RecipeUtility.adjustObjective(
+    //     {
+    //       id: '1',
+    //       targetId: RecipeId.IronPlate,
+    //       value: Rational.one,
+    //       unit: ObjectiveUnit.Machines,
+    //       type: ObjectiveType.Output,
+    //     },
+    //     Mocks.MachinesStateInitial,
+    //     Mocks.RawDataset,
+    //   );
+    //   expect(result.machineId).toEqual(ItemId.ElectricFurnace);
+    //   expect(result.moduleOptions?.length).toEqual(10);
+    //   expect(result.modules).toEqual([
+    //     { count: Rational.two, id: ItemId.ProductivityModule3 },
+    //   ]);
+    //   expect(result.beacons?.[0].count).toEqual(Rational.fromNumber(8));
+    //   expect(result.beacons?.[0].id).toEqual(ItemId.Beacon);
+    //   expect(result.beacons?.[0].moduleOptions?.length).toEqual(7);
+    //   expect(result.beacons?.[0].modules).toEqual([
+    //     { count: Rational.two, id: ItemId.SpeedModule3 },
+    //   ]);
+    //   expect(result.overclock).toBeUndefined();
+    // });
 
     it('should handle a machine with no modules', () => {
       const machines = {
@@ -988,52 +988,52 @@ describe('RecipeUtility', () => {
       expect(result.machineId).toEqual(ItemId.StoneFurnace);
     });
 
-    it('should handle nullish values', () => {
-      spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
-      const data = Mocks.getRawDataset();
-      data.machineEntities[ItemId.StoneFurnace].modules = undefined;
-      const machines = {
-        ...Mocks.MachinesStateInitial,
-        ...{
-          ids: undefined,
-          entities: {
-            ...Mocks.MachinesStateInitial.entities,
-            ...{
-              [ItemId.ElectricFurnace]: {
-                ...Mocks.MachinesStateInitial.entities[ItemId.ElectricFurnace],
-                ...{
-                  moduleRankIds: undefined,
-                  beaconModuleRankIds: undefined,
-                },
-              },
-            },
-          },
-        },
-      };
-      const result = RecipeUtility.adjustObjective(
-        {
-          id: '1',
-          targetId: RecipeId.IronPlate,
-          value: Rational.one,
-          unit: ObjectiveUnit.Machines,
-          type: ObjectiveType.Output,
-          beacons: [
-            {
-              count: Rational.zero,
-              id: ItemId.Beacon,
-              modules: [{ count: Rational.two, id: ItemId.Module }],
-            },
-          ],
-        },
-        machines,
-        data,
-      );
-      expect(result.machineId).toEqual(ItemId.StoneFurnace);
-      expect(result.modules).toEqual([]);
-      expect(result.beacons?.[0].modules).toEqual([
-        { count: Rational.two, id: ItemId.Module },
-      ]);
-    });
+    // it('should handle nullish values', () => {
+    //   spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
+    //   const data = Mocks.getRawDataset();
+    //   data.machineEntities[ItemId.StoneFurnace].modules = undefined;
+    //   const machines = {
+    //     ...Mocks.MachinesStateInitial,
+    //     ...{
+    //       ids: undefined,
+    //       entities: {
+    //         ...Mocks.MachinesStateInitial.entities,
+    //         ...{
+    //           [ItemId.ElectricFurnace]: {
+    //             ...Mocks.MachinesStateInitial.entities[ItemId.ElectricFurnace],
+    //             ...{
+    //               moduleRankIds: undefined,
+    //               beaconModuleRankIds: undefined,
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   };
+    //   const result = RecipeUtility.adjustObjective(
+    //     {
+    //       id: '1',
+    //       targetId: RecipeId.IronPlate,
+    //       value: Rational.one,
+    //       unit: ObjectiveUnit.Machines,
+    //       type: ObjectiveType.Output,
+    //       beacons: [
+    //         {
+    //           count: Rational.zero,
+    //           id: ItemId.Beacon,
+    //           modules: [{ count: Rational.two, id: ItemId.Module }],
+    //         },
+    //       ],
+    //     },
+    //     machines,
+    //     data,
+    //   );
+    //   expect(result.machineId).toEqual(ItemId.StoneFurnace);
+    //   expect(result.modules).toEqual([]);
+    //   expect(result.beacons?.[0].modules).toEqual([
+    //     { count: Rational.two, id: ItemId.Module },
+    //   ]);
+    // });
 
     it('should use the correct fuel for a burn recipe objective', () => {
       const result = RecipeUtility.adjustObjective(

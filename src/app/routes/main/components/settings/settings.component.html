@@ -677,7 +677,7 @@
                             [ngModel]="settings.modules[0].id"
                             [options]="settings.moduleOptions ?? []"
                             (onChange)="
-                              setModules(machineId, [
+                              changeModules(machineId, [
                                 { id: $event.value, count: Rational.one }
                               ])
                             "
@@ -792,7 +792,7 @@
                         </button>
                         <lab-beacons-overlay
                           #beaconsOverlay
-                          (setValue)="setBeacons(machineId, $event)"
+                          (setValue)="changeBeacons(machineId, $event)"
                         ></lab-beacons-overlay>
                       }
                       <button

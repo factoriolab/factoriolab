@@ -917,7 +917,6 @@ export class SimplexUtility {
     const steps = state.steps;
     const recipes = Object.keys(solution.recipes).map((r) => state.recipes[r]);
     recipes.push(...state.recipeObjectives.map((p) => p.recipe));
-
     // Check for exact id matches
     for (const step of steps.filter((s) => s.recipeId == null)) {
       const i = recipes.findIndex(

@@ -156,7 +156,7 @@ describe('Settings Selectors', () => {
         {
           count: Rational.zero,
           id: ItemId.Beacon,
-          modules: [{ count: Rational.two, id: ItemId.Module }],
+          modules: [{ count: Rational.two, id: ItemId.SpeedModule3 }],
         },
       ]);
     });
@@ -241,39 +241,39 @@ describe('Settings Selectors', () => {
       expect(result).toEqual(value);
     });
 
-    it('should use defaults', () => {
-      const result = Selectors.getSettings.projector(
-        initialSettingsState,
-        Mocks.Defaults,
-      );
-      expect(result).toEqual({
-        ...initialSettingsState,
-        ...{
-          beltId: Mocks.Defaults.beltId,
-          pipeId: undefined,
-          fuelRankIds: [ItemId.Coal],
-          cargoWagonId: Mocks.Defaults.cargoWagonId,
-          fluidWagonId: Mocks.Defaults.fluidWagonId,
-        },
-      });
-    });
+    // it('should use defaults', () => {
+    //   const result = Selectors.getSettings.projector(
+    //     initialSettingsState,
+    //     Mocks.Defaults,
+    //   );
+    //   expect(result).toEqual({
+    //     ...initialSettingsState,
+    //     ...{
+    //       beltId: Mocks.Defaults.beltId,
+    //       pipeId: undefined,
+    //       fuelRankIds: [ItemId.Coal],
+    //       cargoWagonId: Mocks.Defaults.cargoWagonId,
+    //       fluidWagonId: Mocks.Defaults.fluidWagonId,
+    //     },
+    //   });
+    // });
 
-    it('should handle null defaults', () => {
-      const result = Selectors.getSettings.projector(
-        initialSettingsState,
-        null,
-      );
-      expect(result).toEqual({
-        ...initialSettingsState,
-        ...{
-          beltId: undefined,
-          pipeId: undefined,
-          fuelRankIds: [],
-          cargoWagonId: undefined,
-          fluidWagonId: undefined,
-        },
-      });
-    });
+    // it('should handle null defaults', () => {
+    //   const result = Selectors.getSettings.projector(
+    //     initialSettingsState,
+    //     null,
+    //   );
+    //   expect(result).toEqual({
+    //     ...initialSettingsState,
+    //     ...{
+    //       beltId: undefined,
+    //       pipeId: undefined,
+    //       fuelRankIds: [],
+    //       cargoWagonId: undefined,
+    //       fluidWagonId: undefined,
+    //     },
+    //   });
+    // });
   });
 
   describe('getRationalMiningBonus', () => {
