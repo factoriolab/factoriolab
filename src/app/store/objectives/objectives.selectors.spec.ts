@@ -232,7 +232,7 @@ describe('Objectives Selectors', () => {
       });
     });
 
-    it('calculate dsp mining total by recipe', () => {
+    it('should calculate dsp mining total by recipe', () => {
       const result = Selectors.getTotals.projector(
         [
           {
@@ -253,6 +253,36 @@ describe('Objectives Selectors', () => {
         wagons: {},
         machines: { [RecipeId.Coal]: Rational.one },
         machineModules: {},
+        beacons: {},
+        beaconModules: {},
+        power: Rational.zero,
+        pollution: Rational.zero,
+      });
+    });
+
+    it('should calculate Final Factory duplicator total', () => {
+      const result = Selectors.getTotals.projector(
+        [
+          {
+            id: '01',
+            recipeId: RecipeId.Coal,
+            recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
+            machines: Rational.one,
+            recipeSettings: {
+              machineId: ItemId.AssemblingMachine2,
+              machineModuleIds: [ItemId.SpeedModule],
+              overclock: Rational.two,
+            },
+          },
+        ],
+        Mocks.ItemsStateInitial,
+        { ...Mocks.Dataset, ...{ game: Game.FinalFactory } },
+      );
+      expect(result).toEqual({
+        belts: {},
+        wagons: {},
+        machines: { [ItemId.AssemblingMachine2]: Rational.one },
+        machineModules: { [ItemId.SpeedModule]: Rational.two },
         beacons: {},
         beaconModules: {},
         power: Rational.zero,

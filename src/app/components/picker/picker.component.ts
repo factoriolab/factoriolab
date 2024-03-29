@@ -7,7 +7,7 @@ import {
   inject,
   input,
   Output,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
@@ -26,9 +26,7 @@ export class PickerComponent {
   filterSvc = inject(FilterService);
   store = inject(Store<LabState>);
 
-  @ViewChild('inputFilter') inputFilter:
-    | ElementRef<HTMLInputElement>
-    | undefined;
+  inputFilter = viewChild.required<ElementRef<HTMLInputElement>>('inputFilter');
 
   header = input('');
   @Output() selectId = new EventEmitter<string>();

@@ -286,10 +286,19 @@ export const getTotals = createSelector(
 
               // Check for modules to add
               if (settings.machineModuleIds) {
+                let modules = value;
+                if (
+                  data.game === Game.FinalFactory &&
+                  step.recipeSettings.overclock
+                ) {
+                  // Multiply by overclock (num of duplicators)
+                  modules = modules.mul(step.recipeSettings.overclock);
+                }
+
                 addValueToRecordByIds(
                   machineModules,
                   settings.machineModuleIds.filter((i) => i !== ItemId.Module),
-                  value,
+                  modules,
                 );
               }
             }

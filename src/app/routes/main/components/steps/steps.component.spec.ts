@@ -83,11 +83,11 @@ describe('StepsComponent', () => {
       spyOn(domEl, 'scrollIntoView');
       spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
       TestUtility.assert(component.stepsTable != null);
-      spyOn(component.stepsTable, 'toggleRow');
+      spyOn(component.stepsTable(), 'toggleRow');
       component.fragmentId = 'step_' + Mocks.Step1.id;
       component.ngAfterViewInit();
       tick(100);
-      expect(component.stepsTable.toggleRow).toHaveBeenCalled();
+      expect(component.stepsTable().toggleRow).toHaveBeenCalled();
       expect(domEl.scrollIntoView).toHaveBeenCalled();
     }));
 
@@ -96,11 +96,11 @@ describe('StepsComponent', () => {
       spyOn(domEl, 'click');
       spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
       TestUtility.assert(component.stepsTable != null);
-      spyOn(component.stepsTable, 'toggleRow');
+      spyOn(component.stepsTable(), 'toggleRow');
       component.fragmentId = 'step_' + Mocks.Step1.id + '_item';
       component.ngAfterViewInit();
       tick(100);
-      expect(component.stepsTable.toggleRow).toHaveBeenCalled();
+      expect(component.stepsTable().toggleRow).toHaveBeenCalled();
       expect(domEl.click).toHaveBeenCalled();
     }));
 
@@ -156,10 +156,10 @@ describe('StepsComponent', () => {
         field: 'items',
         data: [...Mocks.Steps],
       } as SortEvent;
-      spyOn(component.stepsTable!, 'reset');
+      spyOn(component.stepsTable(), 'reset');
       spyOn(component.sortSteps$, 'next');
       component.sortSteps(prev, curr, Mocks.Steps);
-      expect(component.stepsTable!.reset).toHaveBeenCalled();
+      expect(component.stepsTable().reset).toHaveBeenCalled();
       expect(component.sortSteps$.next).toHaveBeenCalled();
     });
   });
