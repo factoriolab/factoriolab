@@ -202,6 +202,15 @@ describe('Settings Selectors', () => {
       TestUtility.assert(result != null);
       expect(result.moduleRankIds).toEqual(Mocks.Defaults.moduleRankIds);
     });
+
+    it('should handle Final Factory module rank', () => {
+      const result = Selectors.getDefaults.projector(Preset.Minimum, {
+        ...Mocks.Mod,
+        ...{ game: Game.FinalFactory },
+      });
+      TestUtility.assert(result != null);
+      expect(result.moduleRankIds).toEqual(Mocks.Defaults.moduleRankIds);
+    });
   });
 
   describe('getSettings', () => {

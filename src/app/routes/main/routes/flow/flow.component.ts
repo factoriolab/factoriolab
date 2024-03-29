@@ -155,8 +155,6 @@ export class FlowComponent implements AfterViewInit {
   }
 
   rebuildSankey(flowData: FlowData, preferences: PreferencesState): void {
-    if (!this.svgElement) return;
-
     let skGraph = this.getLayout(
       flowData,
       preferences.sankeyAlign,
