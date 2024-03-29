@@ -7,8 +7,9 @@ import {
   ElementRef,
   inject,
   signal,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { drag } from 'd3-drag';
 import { select, Selection } from 'd3-selection';
@@ -56,7 +57,6 @@ import {
 import { LabState, Preferences } from '~/store';
 import { PreferencesState } from '~/store/preferences';
 import { MainSharedModule } from '../../main-shared.module';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
@@ -114,7 +114,7 @@ export class FlowComponent implements AfterViewInit {
   flowSvc = inject(FlowService);
   themeSvc = inject(ThemeService);
 
-  @ViewChild('svg') svgElement: ElementRef | undefined;
+  svgElement = viewChild.required<ElementRef>('svg');
 
   height = window.innerHeight * 0.75;
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
@@ -168,7 +168,7 @@ export class FlowComponent implements AfterViewInit {
     const height = Math.min(this.height, width * 0.75);
     skGraph = this.getLayout(flowData, preferences.sankeyAlign, width, height);
 
-    const svg = select(this.svgElement.nativeElement)
+    const svg = select(this.svgElement().nativeElement)
       .append('svg')
       .attr('viewBox', `0 0 ${width} ${height}`);
 

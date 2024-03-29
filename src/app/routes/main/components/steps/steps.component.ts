@@ -9,7 +9,7 @@ import {
   inject,
   input,
   OnInit,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
@@ -88,7 +88,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
   toggleEffect = effect(() => {
     const focus = this.focus();
     const steps = this.steps();
-    if (focus) this.stepsTable?.toggleRow(steps[0]);
+    if (focus) this.stepsTable().toggleRow(steps[0]);
   });
 
   machinesState = this.store.selectSignal(Machines.getMachinesState);
@@ -117,7 +117,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
   sortSteps$ = new BehaviorSubject<SortEvent | null>(null);
 
-  @ViewChild('stepsTable') stepsTable: Table | undefined;
+  stepsTable = viewChild.required<Table>('stepsTable');
 
   activeItem: Entities<MenuItem> = {};
   fragmentId: string | null | undefined;
@@ -170,7 +170,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
               const tabs = stepDetails[step.id].tabs;
               if (tabs.length) {
                 if (this.stepsTable) {
-                  this.stepsTable.toggleRow(step);
+                  this.stepsTable().toggleRow(step);
                   setTimeout(() => {
                     if (tabId) {
                       const tab = this.document.querySelector(
@@ -225,9 +225,9 @@ export class StepsComponent implements OnInit, AfterViewInit {
         const diff = steps.indexOf(a) - steps.indexOf(b);
         return diff;
       });
-      this.stepsTable.sortOrder = 0;
-      this.stepsTable.sortField = '';
-      this.stepsTable.reset();
+      this.stepsTable().sortOrder = 0;
+      this.stepsTable().sortField = '';
+      this.stepsTable().reset();
       return this.sortSteps$.next(null);
     }
 
