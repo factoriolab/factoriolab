@@ -185,15 +185,13 @@ describe('Objectives Reducer', () => {
     it('should set machine modules on an objective', () => {
       const result = objectivesReducer(
         state,
-        new Actions.SetMachineModulesAction({
+        new Actions.SetModulesAction({
           id: '0',
           value: [ItemId.SpeedModule],
           def: [ItemId.Module],
         }),
       );
-      expect(result.entities['0'].machineModuleIds).toEqual([
-        ItemId.SpeedModule,
-      ]);
+      expect(result.entities['0'].moduleIds).toEqual([ItemId.SpeedModule]);
     });
   });
 

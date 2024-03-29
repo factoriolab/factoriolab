@@ -210,9 +210,9 @@ describe('Settings Reducer', () => {
       const value = ResearchSpeed.Speed1;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetResearchSpeedAction(value),
+        new Actions.SetResearchBonusAction(value),
       );
-      expect(result.researchSpeed).toEqual(value);
+      expect(result.researchBonus).toEqual(value);
     });
   });
   describe('SET_INSERTER_CAPACITY', () => {

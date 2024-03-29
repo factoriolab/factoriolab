@@ -178,7 +178,7 @@ describe('Objectives Selectors', () => {
             recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
-              machineModuleIds: [ItemId.ProductivityModule3],
+              moduleIds: [ItemId.ProductivityModule3],
               beacons: [
                 {
                   id: ItemId.Beacon,
@@ -198,7 +198,7 @@ describe('Objectives Selectors', () => {
             recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
-              machineModuleIds: [
+              moduleIds: [
                 ItemId.Module,
                 ItemId.SpeedModule3,
                 ItemId.SpeedModule3,
@@ -270,7 +270,7 @@ describe('Objectives Selectors', () => {
             machines: Rational.one,
             recipeSettings: {
               machineId: ItemId.AssemblingMachine2,
-              machineModuleIds: [ItemId.SpeedModule],
+              moduleIds: [ItemId.SpeedModule],
               overclock: Rational.two,
             },
           },
@@ -485,7 +485,7 @@ describe('Objectives Selectors', () => {
         {
           [RecipeId.Coal]: {
             machineId: undefined,
-            machineModuleIds: undefined,
+            moduleIds: undefined,
             overclock: 100,
             beacons: [{ total: '1' }],
           },

@@ -84,7 +84,7 @@ describe('Recipes Reducer', () => {
           ...initialRecipesState,
           ...{
             [Mocks.Recipe1.id]: {
-              machineModuleIds: ['test'],
+              moduleIds: ['test'],
               beacons: [{ count: '20', id: 'test', moduleIds: ['test'] }],
             },
           },
@@ -117,15 +117,13 @@ describe('Recipes Reducer', () => {
     it('should set the modules', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetMachineModulesAction({
+        new Actions.SetModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
           def: undefined,
         }),
       );
-      expect(result[Mocks.Recipe1.id].machineModuleIds).toEqual([
-        Mocks.Item1.id,
-      ]);
+      expect(result[Mocks.Recipe1.id].moduleIds).toEqual([Mocks.Item1.id]);
     });
   });
 

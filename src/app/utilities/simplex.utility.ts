@@ -12,7 +12,7 @@ import { StatusSimplex } from 'glpk-ts/dist/status';
 import { environment } from 'src/environments';
 import {
   CostKey,
-  CostRationalSettings,
+  CostSettings,
   Dataset,
   Entities,
   FACTORIO_FLUID_COST_RATIO,
@@ -20,10 +20,10 @@ import {
   isRecipeRationalObjective,
   MatrixResult,
   MaximizeType,
-  ObjectiveRational,
+  Objective,
   ObjectiveType,
   Rational,
-  RecipeObjectiveRational,
+  RecipeObjective,
   RecipeRational,
   SimplexResultType,
   Step,
@@ -49,13 +49,13 @@ export interface ItemValues {
 }
 
 export interface MatrixState {
-  objectives: ObjectiveRational[];
+  objectives: Objective[];
   /**
    * Output & Maximize recipe objectives
    *  * Limits moved to `recipeLimits`
    *  * Inputs added to `itemValues`
    */
-  recipeObjectives: RecipeObjectiveRational[];
+  recipeObjectives: RecipeObjective[];
   steps: Step[];
   /** Recipes used in the matrix */
   recipes: Entities<RecipeRational>;
@@ -74,7 +74,7 @@ export interface MatrixState {
   data: Dataset;
   maximizeType: MaximizeType;
   surplusMachinesOutput: boolean;
-  cost: CostRationalSettings;
+  cost: CostSettings;
 }
 
 export interface MatrixSolution {
@@ -137,13 +137,13 @@ export class SimplexUtility {
   }
 
   static solve(
-    objectives: ObjectiveRational[],
+    objectives: Objective[],
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     researchedTechnologyIds: string[] | null,
     maximizeType: MaximizeType,
     surplusMachinesOutput: boolean,
-    cost: CostRationalSettings,
+    cost: CostSettings,
     data: Dataset,
     paused: boolean,
   ): MatrixResult {
@@ -191,20 +191,20 @@ export class SimplexUtility {
 
   //#region Setup
   static getState(
-    objectives: ObjectiveRational[],
+    objectives: Objective[],
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     researchedTechnologyIds: string[],
     maximizeType: MaximizeType,
     surplusMachinesOutput: boolean,
-    cost: CostRationalSettings,
+    cost: CostSettings,
     data: Dataset,
   ): MatrixState {
     // Set up state object
     const state: MatrixState = {
       objectives,
       recipeObjectives: objectives.filter(
-        (o): o is RecipeObjectiveRational =>
+        (o): o is RecipeObjective =>
           isRecipeRationalObjective(o) &&
           [ObjectiveType.Output, ObjectiveType.Maximize].includes(o.type),
       ),
@@ -961,7 +961,7 @@ export class SimplexUtility {
     recipe: RecipeRational,
     solution: MatrixSolution,
     state: MatrixState,
-    recipeObjective?: RecipeObjectiveRational,
+    recipeObjective?: RecipeObjective,
   ): void {
     const steps = state.steps;
     // Don't assign to any step that already has a recipe or objective assigned

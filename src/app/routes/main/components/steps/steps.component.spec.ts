@@ -355,10 +355,10 @@ describe('StepsComponent', () => {
         ItemId.SpeedModule3,
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
-        RecipeField.MachineModules,
+        RecipeField.Modules,
         0,
       );
-      expect(component.setMachineModules).toHaveBeenCalledWith(
+      expect(component.setModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         new Array(4).fill(ItemId.SpeedModule3),
         new Array(4).fill(ItemId.SpeedModule3),
@@ -500,11 +500,8 @@ describe('StepsComponent', () => {
     dispatch.idValDefAlt('setMachine', Objectives.SetMachineAction);
     dispatch.idValDef('setFuel', Recipes.SetFuelAction);
     dispatch.idValDefAlt('setFuel', Objectives.SetFuelAction);
-    dispatch.idValDef('setMachineModules', Recipes.SetMachineModulesAction);
-    dispatch.idValDefAlt(
-      'setMachineModules',
-      Objectives.SetMachineModulesAction,
-    );
+    dispatch.idValDef('setMachineModules', Recipes.SetModulesAction);
+    dispatch.idValDefAlt('setMachineModules', Objectives.SetModulesAction);
     dispatch.val('addBeacon', Recipes.AddBeaconAction);
     dispatch.valAlt('addBeacon', Objectives.AddBeaconAction);
     dispatch.idVal('removeBeacon', Recipes.RemoveBeaconAction);

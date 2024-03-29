@@ -979,8 +979,8 @@ describe('RecipeUtility', () => {
         Mocks.RawDataset,
       );
       expect(result.machineId).toEqual(ItemId.ElectricFurnace);
-      expect(result.machineModuleOptions?.length).toEqual(10);
-      expect(result.machineModuleIds).toEqual([
+      expect(result.moduleOptions?.length).toEqual(10);
+      expect(result.moduleIds).toEqual([
         ItemId.ProductivityModule3,
         ItemId.ProductivityModule3,
       ]);
@@ -1048,7 +1048,7 @@ describe('RecipeUtility', () => {
         data,
       );
       expect(result.machineId).toEqual(ItemId.StoneFurnace);
-      expect(result.machineModuleIds).toEqual([]);
+      expect(result.moduleIds).toEqual([]);
       expect(result.beacons?.[0].moduleIds).toEqual([
         ItemId.Module,
         ItemId.Module,

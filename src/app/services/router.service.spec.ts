@@ -70,7 +70,7 @@ const mockItemsState: Items.ItemsState = {
 const mockRecipesState: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
     machineId: ItemId.AssemblingMachine2,
-    machineModuleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
+    moduleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
     beacons: [
       {
         count: '1',
@@ -109,7 +109,7 @@ const mockSettingsState: Settings.SettingsState = {
   flowRate: 1200,
   inserterTarget: InserterTarget.Chest,
   miningBonus: 100,
-  researchSpeed: ResearchSpeed.Speed0,
+  researchBonus: ResearchSpeed.Speed0,
   inserterCapacity: InserterCapacity.Capacity0,
   displayRate: DisplayRate.PerHour,
   maximizeType: MaximizeType.Weight,

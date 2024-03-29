@@ -6,11 +6,9 @@ import {
   Game,
   isRecipeObjective,
   ItemId,
-  ObjectiveRational,
   PowerUnit,
   Rational,
   RecipeRational,
-  RecipeSettingsRational,
   Step,
   StepDetail,
   StepDetailTab,
@@ -64,7 +62,7 @@ export const getObjectiveRationals = createSelector(
   getObjectives,
   Settings.getAdjustmentData,
   Items.getItemsState,
-  Recipes.getRecipesStateRational,
+  Recipes.getRecipesState,
   Recipes.getAdjustedDataset,
   (objectives, adj, itemsState, recipesState, data) =>
     objectives.map((o) => {
@@ -76,7 +74,7 @@ export const getObjectiveRationals = createSelector(
           adj.miningBonus,
           adj.researchSpeed,
           adj.netProductionOnly,
-          new RecipeSettingsRational(o),
+          o,
           itemsState,
           data,
         );
@@ -84,7 +82,7 @@ export const getObjectiveRationals = createSelector(
         recipe.finalize();
       }
 
-      return new ObjectiveRational(o, recipe);
+      return { ...o, recipe };
     }),
 );
 
@@ -116,7 +114,7 @@ export const getMatrixResult = createSelector(
   Settings.getAllResearchedTechnologyIds,
   Settings.getMaximizeType,
   Settings.getSurplusMachinesOutput,
-  Settings.getRationalCost,
+  Settings.getCosts,
   Recipes.getAdjustedDataset,
   Preferences.getPaused,
   (
@@ -126,7 +124,7 @@ export const getMatrixResult = createSelector(
     researchedTechnologyIds,
     maximizeType,
     surplusMachinesOutput,
-    cost,
+    costs,
     data,
     paused,
   ) =>
@@ -137,7 +135,7 @@ export const getMatrixResult = createSelector(
       researchedTechnologyIds,
       maximizeType,
       surplusMachinesOutput,
-      cost,
+      costs,
       data,
       paused,
     ),
@@ -147,8 +145,8 @@ export const getSteps = createSelector(
   getMatrixResult,
   getObjectiveRationals,
   Items.getItemsState,
-  Recipes.getRecipesStateRational,
-  Settings.getRationalBeaconReceivers,
+  Recipes.getRecipesState,
+  Settings.getBeaconReceivers,
   Settings.getBeltSpeed,
   Settings.getDisplayRateInfo,
   Recipes.getAdjustedDataset,
@@ -198,7 +196,7 @@ export const getStepsModified = createSelector(
     objectives: objectives.reduce((e: Entities<boolean>, p) => {
       e[p.id] =
         p.machineId != null ||
-        p.machineModuleIds != null ||
+        p.moduleIds != null ||
         p.beacons != null ||
         p.overclock != null;
       return e;
@@ -226,7 +224,7 @@ export const getTotals = createSelector(
     const belts: Entities<Rational> = {};
     const wagons: Entities<Rational> = {};
     const machines: Entities<Rational> = {};
-    const machineModules: Entities<Rational> = {};
+    const modules: Entities<Rational> = {};
     const beacons: Entities<Rational> = {};
     const beaconModules: Entities<Rational> = {};
     let power = Rational.zero;
@@ -285,20 +283,20 @@ export const getTotals = createSelector(
               machines[machine] = machines[machine].add(value);
 
               // Check for modules to add
-              if (settings.machineModuleIds) {
-                let modules = value;
+              if (settings.moduleIds) {
+                let count = value;
                 if (
                   data.game === Game.FinalFactory &&
                   step.recipeSettings.overclock
                 ) {
                   // Multiply by overclock (num of duplicators)
-                  modules = modules.mul(step.recipeSettings.overclock);
+                  count = count.mul(step.recipeSettings.overclock);
                 }
 
                 addValueToRecordByIds(
-                  machineModules,
-                  settings.machineModuleIds.filter((i) => i !== ItemId.Module),
                   modules,
+                  settings.moduleIds.filter((i) => i !== ItemId.Module),
+                  count,
                 );
               }
             }
@@ -348,7 +346,7 @@ export const getTotals = createSelector(
       belts,
       wagons,
       machines,
-      machineModules,
+      modules,
       beacons,
       beaconModules,
       power,
@@ -546,14 +544,14 @@ export const getRecipesModified = createSelector(
         (id) =>
           state[id].fuelId != null ||
           state[id].machineId != null ||
-          state[id].machineModuleIds != null ||
+          state[id].moduleIds != null ||
           state[id].overclock != null,
       ) ||
       objectives.some(
         (p) =>
           p.fuelId != null ||
           p.machineId != null ||
-          p.machineModuleIds != null ||
+          p.moduleIds != null ||
           p.overclock != null,
       ),
     beacons:

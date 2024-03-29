@@ -9,8 +9,8 @@
     [style.width]="width()"
     [ngModel]="value()"
     labValidateNumber
-    [minimum]="min()"
-    [maximum]="max()"
+    [minimum]="minimum()"
+    [maximum]="maximum()"
     (input)="changeValue(input.value, 'input')"
     (blur)="changeValue(input.value, 'blur')"
     (keydown.enter)="changeValue(input.value, 'enter')"

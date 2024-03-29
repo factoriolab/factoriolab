@@ -1,3 +1,5 @@
+import { Rational } from './rational';
+
 export interface Defaults {
   beltId: string;
   pipeId?: string;
@@ -7,7 +9,7 @@ export interface Defaults {
   excludedRecipeIds: string[];
   machineRankIds: string[];
   moduleRankIds: string[];
-  beaconCount: string;
+  beaconCount: Rational;
   beaconId: string;
   beaconModuleId: string;
 }

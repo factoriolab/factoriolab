@@ -1,4 +1,9 @@
-import { Entities, IdValueDefaultPayload, RecipeSettings } from '~/models';
+import {
+  Entities,
+  IdValueDefaultPayload,
+  Rational,
+  RecipeSettings,
+} from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Items from '../items';
@@ -42,17 +47,13 @@ export function recipesReducer(
     case RecipesActionType.SET_MACHINE:
       return StoreUtility.resetFields(
         StoreUtility.compareReset(state, 'machineId', action.payload),
-        ['fuelId', 'machineModuleIds', 'beacons'],
+        ['fuelId', 'moduleIds', 'beacons'],
         action.payload.id,
       );
     case RecipesActionType.SET_FUEL:
       return StoreUtility.compareReset(state, 'fuelId', action.payload);
-    case RecipesActionType.SET_MACHINE_MODULES:
-      return StoreUtility.compareReset(
-        state,
-        'machineModuleIds',
-        action.payload,
-      );
+    case RecipesActionType.SET_MODULES:
+      return StoreUtility.compareReset(state, 'moduleIds', action.payload);
     case RecipesActionType.ADD_BEACON:
       return {
         ...state,
@@ -115,7 +116,7 @@ export function recipesReducer(
       return StoreUtility.compareReset(
         state,
         'cost',
-        action.payload as IdValueDefaultPayload,
+        action.payload as IdValueDefaultPayload<Rational>,
       );
     case RecipesActionType.RESET_RECIPE: {
       const newState = { ...state };
@@ -129,7 +130,7 @@ export function recipesReducer(
     case RecipesActionType.RESET_RECIPE_MODULES:
       return StoreUtility.resetFields(
         state,
-        ['machineModuleIds', 'beacons'],
+        ['moduleIds', 'beacons'],
         action.payload,
       );
     case RecipesActionType.RESET_MACHINES:
@@ -137,7 +138,7 @@ export function recipesReducer(
         'machineId',
         'fuelId',
         'overclock',
-        'machineModuleIds',
+        'moduleIds',
         'beacons',
       ]);
     case Items.ItemsActionType.RESET_CHECKED:

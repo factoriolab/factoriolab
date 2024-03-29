@@ -32,7 +32,7 @@ export interface StepExport {
   Recipe?: string;
   Machines?: string;
   Machine?: string;
-  MachineModules?: string;
+  Modules?: string;
   Beacons?: string;
   Beacon?: string;
   BeaconModules?: string;
@@ -140,10 +140,8 @@ export class ExportService {
             exp.Machines = '=' + step.machines.toString();
           }
           exp.Machine = recipeSettings.machineId;
-          if (allowsModules && recipeSettings.machineModuleIds != null) {
-            exp.MachineModules = `"${recipeSettings.machineModuleIds.join(
-              ',',
-            )}"`;
+          if (allowsModules && recipeSettings.moduleIds != null) {
+            exp.Modules = `"${recipeSettings.moduleIds.join(',')}"`;
           }
         }
 

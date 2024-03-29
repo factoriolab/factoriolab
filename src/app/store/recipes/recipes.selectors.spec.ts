@@ -90,7 +90,7 @@ describe('Recipes Selectors', () => {
         Mocks.MachinesStateInitial,
         Mocks.RawDataset,
       );
-      expect(result[Mocks.Item1.id].machineModuleIds).toEqual([stringValue]);
+      expect(result[Mocks.Item1.id].moduleIds).toEqual([stringValue]);
     });
 
     it('should use beacon count override', () => {

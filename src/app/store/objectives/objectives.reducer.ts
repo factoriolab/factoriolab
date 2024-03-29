@@ -43,7 +43,7 @@ export function objectivesReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialObjectivesState;
     case ObjectivesActionType.ADD: {
-      let value = '1';
+      let value = Rational.one;
       if (state.ids.length)
         value = state.entities[state.ids[state.ids.length - 1]].value;
 
@@ -103,7 +103,7 @@ export function objectivesReducer(
         ...{
           entities: StoreUtility.resetFields(
             entities,
-            ['machineId', 'machineModuleIds', 'beacons', 'overclock'],
+            ['machineId', 'moduleIds', 'beacons', 'overclock'],
             action.payload.id,
           ),
         },
@@ -152,7 +152,7 @@ export function objectivesReducer(
               'machineId',
               action.payload,
             ),
-            ['machineModuleIds', 'beacons'],
+            ['moduleIds', 'beacons'],
             action.payload.id,
           ),
         },
@@ -168,13 +168,13 @@ export function objectivesReducer(
           ),
         },
       };
-    case ObjectivesActionType.SET_MACHINE_MODULES:
+    case ObjectivesActionType.SET_MODULES:
       return {
         ...state,
         ...{
           entities: StoreUtility.compareReset(
             state.entities,
-            'machineModuleIds',
+            'moduleIds',
             action.payload,
           ),
         },
@@ -301,7 +301,7 @@ export function objectivesReducer(
         ...{
           entities: StoreUtility.resetFields(
             state.entities,
-            ['machineId', 'overclock', 'machineModuleIds', 'beacons'],
+            ['machineId', 'overclock', 'moduleIds', 'beacons'],
             action.payload,
           ),
         },
@@ -316,10 +316,8 @@ export function objectivesReducer(
             o.type !== ObjectiveType.Maximize &&
             (o.unit === ObjectiveUnit.Items || o.unit === ObjectiveUnit.Wagons),
         )) {
-        const value = Rational.fromString(objective.value)
-          .mul(factor)
-          .toString();
-        newEntities[objective.id] = { ...objective, ...{ value } };
+        const value = objective.value.mul(factor);
+        newEntities[objective.id] = { ...objective, value };
       }
       return {
         ...state,
@@ -333,7 +331,7 @@ export function objectivesReducer(
           entities: StoreUtility.resetFields(state.entities, [
             'machineId',
             'overclock',
-            'machineModuleIds',
+            'moduleIds',
             'beacons',
           ]),
         },

@@ -69,7 +69,7 @@ describe('ExportService', () => {
     };
     const fullRecipe: RecipeSettings = {
       machineId: ItemId.AssemblingMachine2,
-      machineModuleIds: ['a', 'b'],
+      moduleIds: ['a', 'b'],
       beacons: [{ count: '8', id: 'beacon', moduleIds: ['c', 'd'] }],
     };
 
@@ -96,7 +96,7 @@ describe('ExportService', () => {
         Recipe: recipeId,
         Machines: '=5',
         Machine: fullRecipe.machineId,
-        MachineModules: '"a,b"',
+        Modules: '"a,b"',
         Beacons: '"8"',
         Beacon: '"beacon"',
         BeaconModules: '"c|d"',
@@ -120,7 +120,7 @@ describe('ExportService', () => {
         Wagon: 'wagon',
         Recipe: recipeId,
         Machine: ItemId.AssemblingMachine2,
-        MachineModules: '"a,b"',
+        Modules: '"a,b"',
         Beacons: '"8"',
         Beacon: '"beacon"',
         BeaconModules: '"c|d"',

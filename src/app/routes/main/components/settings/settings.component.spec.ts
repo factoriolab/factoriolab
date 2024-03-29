@@ -365,7 +365,7 @@ describe('SettingsComponent', () => {
     dispatch.val('setFlowRate', Settings.SetFlowRateAction);
     dispatch.val('setInserterTarget', Settings.SetInserterTargetAction);
     dispatch.val('setMiningBonus', Settings.SetMiningBonusAction);
-    dispatch.val('setResearchSpeed', Settings.SetResearchSpeedAction);
+    dispatch.val('setResearchSpeed', Settings.SetResearchBonusAction);
     dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
     dispatch.val('setMaximizeType', Settings.SetMaximizeTypeAction);

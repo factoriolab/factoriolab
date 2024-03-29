@@ -8,7 +8,7 @@ import {
   ObjectiveType,
   ObjectiveUnit,
   Rational,
-  RecipeObjectiveRational,
+  RecipeObjective,
   RecipeSettingsRational,
   Step,
 } from '~/models';
@@ -306,7 +306,7 @@ describe('RateUtility', () => {
         recipeId: RecipeId.Coal,
         recipeObjectiveId: '0',
       };
-      const recipeObjectives: Entities<RecipeObjectiveRational> = {
+      const recipeObjectives: Entities<RecipeObjective> = {
         ['0']: {
           id: '0',
           targetId: RecipeId.Coal,

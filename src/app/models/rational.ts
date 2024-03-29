@@ -4,21 +4,17 @@ const MAX_DENOM = 10000000;
 const DIVIDE_BY_ZERO = 'Cannot divide by zero';
 const FLOAT_TOLERANCE = 1e-10;
 
-const bigZero = BigInt(0);
-const bigOne = BigInt(1);
-const bigMinusOne = BigInt(-1);
-
 export class Rational {
   static _gcdCache = new Map<bigint, Map<bigint, bigint>>();
-  static zero = new Rational(bigZero);
-  static minusOne = new Rational(bigMinusOne);
-  static one = new Rational(bigOne);
-  static two = new Rational(BigInt(2));
-  static ten = new Rational(BigInt(10));
-  static sixty = new Rational(BigInt(60));
-  static hundred = new Rational(BigInt(100));
-  static thousand = new Rational(BigInt(1000));
-  static million = new Rational(BigInt(1000000));
+  static zero = new Rational(0n);
+  static minusOne = new Rational(-1n);
+  static one = new Rational(1n);
+  static two = new Rational(2n);
+  static ten = new Rational(10n);
+  static sixty = new Rational(60n);
+  static hundred = new Rational(100n);
+  static thousand = new Rational(1000n);
+  static million = new Rational(1000000n);
 
   readonly p: bigint;
   readonly q: bigint;
@@ -62,12 +58,18 @@ export class Rational {
   }
 
   static abs(x: bigint): bigint {
-    return x < bigZero ? x * bigMinusOne : x;
+    return x < 0n ? x * -1n : x;
   }
 
   static from(x: number | string): Rational;
+  static from(x: number | string | undefined): Rational | undefined;
   static from(p: number, q: number): Rational;
-  static from(p: number | string, q?: number): Rational {
+  static from(
+    p: number | string | undefined,
+    q?: number,
+  ): Rational | undefined {
+    if (p == null) return p;
+
     if (q != null) {
       if (q === 0) throw Error(DIVIDE_BY_ZERO);
       // Parse Rational from array (num/denom pair)
@@ -82,16 +84,17 @@ export class Rational {
   }
 
   static fromNumber(x: number): Rational {
-    if (Number.isInteger(x)) return new Rational(BigInt(x), bigOne);
+    if (Number.isInteger(x)) return new Rational(BigInt(x));
 
     if (Math.abs(x) < FLOAT_TOLERANCE) return Rational.zero;
 
     return this.fromFloat(x);
   }
 
-  private static fromStringCache: Record<string, Rational> = {};
+  private static fromStringCache = new Map<string, Rational>();
   static fromString(x: string): Rational {
-    if (this.fromStringCache[x]) return this.fromStringCache[x];
+    const cached = this.fromStringCache.get(x);
+    if (cached) return cached;
 
     if (x.length === 0) throw new Error('Empty string');
 
@@ -105,9 +108,7 @@ export class Rational {
       result = Rational.fromNumber(Number(x));
     } else {
       const f = x.split('/');
-      if (f.length > 2) {
-        throw new Error('Too many /');
-      }
+      if (f.length > 2) throw new Error('Too many /');
 
       if (f[0].indexOf(' ') === -1) {
         const p = Number(f[0]);
@@ -115,9 +116,7 @@ export class Rational {
         result = Rational.from(p, q);
       } else {
         const g = f[0].split(' ');
-        if (g.length > 2) {
-          throw new Error('Too many spaces');
-        }
+        if (g.length > 2) throw new Error('Too many spaces');
 
         const n = Number(g[0]);
         const p = Number(g[1]);
@@ -126,7 +125,7 @@ export class Rational {
       }
     }
 
-    this.fromStringCache[x] = result;
+    this.fromStringCache.set(x, result);
     return result;
   }
 
@@ -182,19 +181,19 @@ export class Rational {
   }
 
   isZero(): boolean {
-    return this.p === bigZero;
+    return this.p === 0n;
   }
 
   isOne(): boolean {
-    return this.p === bigOne && this.q === bigOne;
+    return this.p === 1n && this.q === 1n;
   }
 
   nonzero(): boolean {
-    return this.p !== bigZero;
+    return this.p !== 0n;
   }
 
   isInteger(): boolean {
-    return this.q === bigOne;
+    return this.q === 1n;
   }
 
   inverse(): Rational {
@@ -258,8 +257,8 @@ export class Rational {
     if (this.isInteger()) return this;
 
     // Calculate ceiling using absolute value
-    const num = new Rational(Rational.abs(this.p) / this.q + bigOne);
-    if (this.p < bigZero) {
+    const num = new Rational(Rational.abs(this.p) / this.q + 1n);
+    if (this.p < 0n) {
       // Inverse back to negative if necessary
       return num.inverse();
     }
@@ -342,16 +341,22 @@ export class Rational {
     return 0;
   }
 
-  constructor(p: bigint, q: bigint = bigOne) {
-    if (q < bigZero) {
+  toJSON(): string {
+    return this.toString();
+  }
+
+  constructor(p: bigint, q: bigint = 1n) {
+    if (q < 0n) {
       p = -p;
       q = -q;
     }
 
-    const gcd = Rational.gcd(Rational.abs(p), q);
-    if (gcd > bigOne) {
-      p = p / gcd;
-      q = q / gcd;
+    if (q !== 1n) {
+      const gcd = Rational.gcd(Rational.abs(p), q);
+      if (gcd > 1n) {
+        p = p / gcd;
+        q = q / gcd;
+      }
     }
 
     this.p = p;

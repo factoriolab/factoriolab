@@ -50,7 +50,7 @@ describe('MachinesEffects', () => {
         ...initialState,
         ...{
           recipesState: {
-            [RecipeId.Coal]: { machineModuleIds: [ItemId.SpeedModule] },
+            [RecipeId.Coal]: { moduleIds: [ItemId.SpeedModule] },
           },
         },
       });

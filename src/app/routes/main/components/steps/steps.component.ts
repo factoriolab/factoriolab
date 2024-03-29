@@ -314,7 +314,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
   changeRecipeField(
     step: Step,
-    event: string | number,
+    event: string | number | Rational,
     machinesState: Machines.MachinesState,
     data: Dataset,
     field: RecipeField,
@@ -356,16 +356,16 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
           break;
         }
-        case RecipeField.MachineModules: {
+        case RecipeField.Modules: {
           if (
             machineSettings.moduleRankIds != null &&
             data != null &&
             typeof event === 'string' &&
             index != null &&
-            settings.machineModuleIds != null
+            settings.moduleIds != null
           ) {
             const machine = data.machineEntities[settings.machineId];
-            const count = settings.machineModuleIds.length;
+            const count = settings.moduleIds.length;
             const options = RecipeUtility.moduleOptions(
               machine,
               step.recipeId,
@@ -379,14 +379,14 @@ export class StepsComponent implements OnInit, AfterViewInit {
             const modules = this.generateModules(
               index,
               event,
-              settings.machineModuleIds,
+              settings.moduleIds,
             );
-            this.setMachineModules(id, modules, def, isObjective);
+            this.setModules(id, modules, def, isObjective);
           }
           break;
         }
         case RecipeField.BeaconCount: {
-          if (typeof event === 'string' && index != null) {
+          if (event instanceof Rational && index != null) {
             const def = machineSettings.beaconCount;
             this.setBeaconCount(id, index, event, def, isObjective);
           }
@@ -434,7 +434,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
           break;
         }
         case RecipeField.BeaconTotal: {
-          if (typeof event === 'string' && index != null) {
+          if (event instanceof Rational && index != null) {
             this.setBeaconTotal(id, index, event, isObjective);
           }
           break;
@@ -442,7 +442,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
         case RecipeField.Overclock: {
           if (typeof event === 'number') {
             const def = machineSettings.overclock;
-            this.setOverclock(id, event, def, isObjective);
+            this.setOverclock(id, Rational.fromNumber(event), def, isObjective);
           }
           break;
         }
@@ -520,15 +520,15 @@ export class StepsComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new action({ id, value, def }));
   }
 
-  setMachineModules(
+  setModules(
     id: string,
     value: string[],
     def: string[] | undefined,
     objective = false,
   ): void {
     const action = objective
-      ? Objectives.SetMachineModulesAction
-      : Recipes.SetMachineModulesAction;
+      ? Objectives.SetModulesAction
+      : Recipes.SetModulesAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
@@ -549,8 +549,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
   setBeaconCount(
     id: string,
     index: number,
-    value: string,
-    def: string | undefined,
+    value: Rational,
+    def: Rational | undefined,
     objective = false,
   ): void {
     const action = objective
@@ -588,7 +588,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
   setBeaconTotal(
     id: string,
     index: number,
-    value: string,
+    value: Rational,
     objective = false,
   ): void {
     const action = objective
@@ -599,8 +599,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
   setOverclock(
     id: string,
-    value: number,
-    def: number | undefined,
+    value: Rational,
+    def: Rational | undefined,
     objective = false,
   ): void {
     const action = objective

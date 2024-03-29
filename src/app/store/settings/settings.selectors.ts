@@ -8,8 +8,6 @@ import {
   BeltRational,
   CargoWagonRational,
   columnOptions,
-  CostKey,
-  CostRationalSettings,
   Defaults,
   displayRateInfo,
   Entities,
@@ -31,7 +29,6 @@ import {
   presetOptions,
   Rational,
   RawDataset,
-  researchSpeedFactor,
   Technology,
   toBoolEntities,
   toEntities,
@@ -77,7 +74,7 @@ export const getMiningBonus = createSelector(
 );
 export const getResearchSpeed = createSelector(
   settingsState,
-  (state) => state.researchSpeed,
+  (state) => state.researchBonus,
 );
 export const getInserterCapacity = createSelector(
   settingsState,
@@ -213,7 +210,11 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
       preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
     moduleRankIds: moduleRank,
     beaconCount:
-      preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
+      preset < Preset.Beacon8
+        ? Rational.zero
+        : preset < Preset.Beacon12
+          ? new Rational(8n)
+          : new Rational(12n),
     beaconId: m.beacon,
     beaconModuleId: preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
   };
@@ -238,33 +239,11 @@ export const getSettings = createSelector(
 export const getFuelRankIds = createSelector(getSettings, (s) => s.fuelRankIds);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
-  Rational.fromNumber(bonus).div(Rational.hundred),
+  bonus.div(Rational.hundred),
 );
 
-export const getResearchFactor = createSelector(
-  getResearchSpeed,
-  (speed) => researchSpeedFactor[speed],
-);
-
-export const getRationalBeaconReceivers = createSelector(
-  getBeaconReceivers,
-  (total) => (total ? Rational.fromString(total) : null),
-);
-
-export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
-  Rational.fromNumber(rate),
-);
-
-export const getRationalCost = createSelector(
-  getCosts,
-  (cost): CostRationalSettings =>
-    (Object.keys(cost) as CostKey[]).reduce(
-      (a: Partial<CostRationalSettings>, b) => {
-        a[b] = Rational.fromString(cost[b]);
-        return a;
-      },
-      {},
-    ) as CostRationalSettings,
+export const getResearchFactor = createSelector(getResearchSpeed, (speed) =>
+  speed.add(Rational.hundred).div(Rational.hundred),
 );
 
 export const getI18n = createSelector(
@@ -563,7 +542,7 @@ export const getOptions = createSelector(
 
 export const getBeltSpeed = createSelector(
   getDataset,
-  getRationalFlowRate,
+  getFlowRate,
   (data, flowRate) => {
     const value: Entities<Rational> = { [ItemId.Pipe]: flowRate };
     if (data.beltIds) {

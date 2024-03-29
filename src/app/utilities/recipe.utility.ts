@@ -1,11 +1,11 @@
 import { SelectItem } from 'primeng/api';
 
-import { fnPropsNotNullish, orZero } from '~/helpers';
+import { fnPropsNotNullish } from '~/helpers';
 import {
   Beacon,
   BeaconRational,
   BeltRational,
-  CostRationalSettings,
+  CostSettings,
   Dataset,
   EnergyType,
   Entities,
@@ -20,7 +20,7 @@ import {
   RawDataset,
   Recipe,
   RecipeRational,
-  RecipeSettingsRational,
+  RecipeSettings,
 } from '~/models';
 import { Machines } from '~/store';
 
@@ -120,7 +120,7 @@ export class RecipeUtility {
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    settings: RecipeSettingsRational,
+    settings: RecipeSettings,
     itemsState: Entities<ItemSettings>,
     data: RawDataset,
   ): RecipeRational {
@@ -175,8 +175,8 @@ export class RecipeUtility {
         data.game === Game.FinalFactory
           ? settings.overclock ?? Rational.zero
           : Rational.one;
-      if (settings.machineModuleIds && settings.machineModuleIds.length) {
-        for (const id of settings.machineModuleIds) {
+      if (settings.moduleIds && settings.moduleIds.length) {
+        for (const id of settings.moduleIds) {
           const module = data.moduleEntities[id];
           if (module) {
             if (module.speed) {
@@ -435,7 +435,7 @@ export class RecipeUtility {
   /** Adjust rocket launch objective recipes */
   static adjustLaunchRecipeObjective(
     recipe: RecipeRational,
-    settings: Entities<RecipeSettingsRational>,
+    settings: Entities<RecipeSettings>,
     data: Dataset,
   ): void {
     if (!recipe.part) return;
@@ -453,7 +453,7 @@ export class RecipeUtility {
   /** Adjust rocket launch and rocket part recipes */
   static adjustSiloRecipes(
     recipeR: Entities<RecipeRational>,
-    settings: Entities<RecipeSettingsRational>,
+    settings: Entities<RecipeSettings>,
     data: RawDataset,
   ): Entities<RecipeRational> {
     for (const partId of Object.keys(recipeR)) {
@@ -494,13 +494,13 @@ export class RecipeUtility {
   static adjustDataset(
     recipeIds: string[],
     excludedRecipeIds: string[],
-    recipesState: Entities<RecipeSettingsRational>,
+    recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
     proliferatorSprayId: string,
     miningBonus: Rational,
     researchSpeed: Rational,
     netProductionOnly: boolean,
-    cost: CostRationalSettings,
+    cost: CostSettings,
     data: RawDataset,
   ): Dataset {
     const recipeR = this.adjustRecipes(
@@ -519,7 +519,7 @@ export class RecipeUtility {
 
   static adjustRecipes(
     recipeIds: string[],
-    recipesState: Entities<RecipeSettingsRational>,
+    recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
     proliferatorSprayId: string,
     miningBonus: Rational,
@@ -549,8 +549,8 @@ export class RecipeUtility {
   static adjustCost(
     recipeIds: string[],
     recipeR: Entities<RecipeRational>,
-    recipesState: Entities<RecipeSettingsRational>,
-    cost: CostRationalSettings,
+    recipesState: Entities<RecipeSettings>,
+    cost: CostSettings,
     data: RawDataset,
   ): void {
     recipeIds
@@ -657,17 +657,17 @@ export class RecipeUtility {
     objective.fuelOptions = def?.fuelOptions;
 
     if (machine != null && this.allowsModules(recipe, machine)) {
-      objective.machineModuleOptions = this.moduleOptions(
+      objective.moduleOptions = this.moduleOptions(
         machine,
         objective.targetId,
         data,
       );
 
-      if (objective.machineModuleIds == null) {
-        objective.machineModuleIds = this.defaultModules(
-          objective.machineModuleOptions,
+      if (objective.moduleIds == null) {
+        objective.moduleIds = this.defaultModules(
+          objective.moduleOptions,
           def.moduleRankIds ?? [],
-          orZero(machine.modules),
+          machine.modules ?? 0,
         );
       }
 
@@ -702,7 +702,7 @@ export class RecipeUtility {
       }
     } else {
       // Machine doesn't support modules, remove any
-      delete objective.machineModuleIds;
+      delete objective.moduleIds;
       delete objective.beacons;
     }
 

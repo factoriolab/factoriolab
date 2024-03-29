@@ -1,5 +1,4 @@
 import { sankey } from '~/d3-sankey';
-import { orZero } from '~/helpers';
 import {
   Dataset,
   DisplayRateInfo,
@@ -7,12 +6,12 @@ import {
   Entities,
   Game,
   ItemSettings,
-  ObjectiveRational,
+  Objective,
   ObjectiveType,
   ObjectiveUnit,
   Rational,
   RecipeRational,
-  RecipeSettingsRational,
+  RecipeSettings,
   Step,
   toEntities,
 } from '~/models';
@@ -22,7 +21,7 @@ const ROOT_ID = '';
 
 export class RateUtility {
   static objectiveNormalizedRate(
-    objective: ObjectiveRational,
+    objective: Objective,
     itemsState: Items.ItemsState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInfo,
@@ -127,9 +126,9 @@ export class RateUtility {
 
   static normalizeSteps(
     steps: Step[],
-    objectives: ObjectiveRational[],
+    objectives: Objective[],
     itemsState: Entities<ItemSettings>,
-    recipesState: Entities<RecipeSettingsRational>,
+    recipesState: Entities<RecipeSettings>,
     beaconReceivers: Rational | null,
     beltSpeed: Entities<Rational>,
     dispRateInfo: DisplayRateInfo,
@@ -187,8 +186,8 @@ export class RateUtility {
 
   static calculateSettings(
     step: Step,
-    objectiveEntities: Entities<ObjectiveRational>,
-    recipesState: Entities<RecipeSettingsRational>,
+    objectiveEntities: Entities<Objective>,
+    recipesState: Entities<RecipeSettings>,
   ): void {
     if (step.recipeId) {
       if (step.recipeObjectiveId) {
@@ -315,8 +314,8 @@ export class RateUtility {
   static calculateChecked(
     step: Step,
     itemsState: Entities<ItemSettings>,
-    recipesState: Entities<RecipeSettingsRational>,
-    objectiveEntities: Entities<ObjectiveRational>,
+    recipesState: Entities<RecipeSettings>,
+    objectiveEntities: Entities<Objective>,
   ): void {
     // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
@@ -377,7 +376,7 @@ export class RateUtility {
       step.depth = result.nodes.find((n) => n.stepId === step.id)?.depth;
     }
 
-    steps.sort((a, b) => orZero(b.depth) - orZero(a.depth));
+    steps.sort((a, b) => (b.depth ?? 0) - (a.depth ?? 0));
   }
 
   static calculateHierarchy(steps: Step[]): Step[] {

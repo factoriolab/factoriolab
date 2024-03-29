@@ -28,7 +28,7 @@ export class ValidateNumberDirective implements Validator {
     }
 
     try {
-      const rational = Rational.fromString(control.value);
+      const rational = control.value;
       const min = this.minimum();
       const max = this.maximum();
       if (

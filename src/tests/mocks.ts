@@ -134,7 +134,7 @@ export const ItemSettings1: M.ItemSettings = {
 };
 export const RecipeSettings1: M.RecipeSettings = {
   machineId: ItemId.AssemblingMachine2,
-  machineModuleIds: [ItemId.Module, ItemId.Module],
+  moduleIds: [ItemId.Module, ItemId.Module],
   beacons: [
     {
       id: ItemId.Beacon,
@@ -145,7 +145,7 @@ export const RecipeSettings1: M.RecipeSettings = {
 };
 export const RecipeSettings2: M.RecipeSettings = {
   machineId: ItemId.AssemblingMachine2,
-  machineModuleIds: [ItemId.Module, ItemId.Module],
+  moduleIds: [ItemId.Module, ItemId.Module],
   beacons: [
     {
       id: ItemId.Beacon,
