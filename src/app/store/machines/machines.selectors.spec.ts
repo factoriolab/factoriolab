@@ -107,5 +107,32 @@ describe('Machines Selectors', () => {
       );
       expect(result.entities[''].overclock).toEqual(100);
     });
+
+    it('should default overclock to 0 in Final Factory', () => {
+      const state = {
+        ...initialMachinesState,
+        ...{
+          entities: {
+            ...initialMachinesState.entities,
+            ...{
+              '': {
+                ...initialMachinesState.entities[''],
+                ...{ overclock: undefined },
+              },
+            },
+          },
+        },
+      };
+      const result = Selectors.getMachinesState.projector(
+        state,
+        [ItemId.Coal],
+        Mocks.Defaults,
+        {
+          ...Mocks.Dataset,
+          ...{ game: Game.FinalFactory },
+        },
+      );
+      expect(result.entities[''].overclock).toEqual(0);
+    });
   });
 });

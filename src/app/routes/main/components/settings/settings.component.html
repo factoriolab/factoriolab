@@ -151,7 +151,7 @@
             pButton
             pRipple
             type="button"
-            icon="fa-solid fa-floppy-disk"
+            icon="fa-solid fa-plus"
             class="p-button-outlined p-button-rounded w-100"
             [label]="'settings.createSavedState' | translate"
             (click)="openCreateState()"
@@ -255,7 +255,7 @@
                         pButton
                         pRipple
                         type="button"
-                        class="p-button-text"
+                        class="p-button-outlined"
                         icon="fa-solid fa-check"
                         [label]="'ok' | translate"
                         (click)="versionsVisible = false"
@@ -319,7 +319,7 @@
               <label for="preset">{{ 'settings.preset' | translate }}</label>
             </span>
           </div>
-          @if (data().game !== Game.Satisfactory) {
+          @if (data().game !== Game.CaptainOfIndustry) {
             <ng-container
               *ngTemplateOutlet="
                 machineRow;
@@ -353,51 +353,16 @@
             <ng-template
               #machineRow
               let-machineId="machineId"
-              let-settings="settings"
+              let-machineSettings="settings"
               let-defaults="defaults"
             >
-              @if (settings) {
+              @if (machineSettings) {
                 <div
                   class="p-inputgroup flex-wrap machine-preference"
                   [class.mb-1]="machineId === ''"
                 >
                   <!-- Add/Remove machine button -->
-                  @if (machineId === '') {
-                    <p-dropdown
-                      labDropdownBase="icon"
-                      [tooltip]="'settings.addMachineTooltip' | translate"
-                      [options]="
-                        options().machines | filterOptions: machineIds()
-                      "
-                      (onChange)="
-                        addMachine(
-                          $event.value,
-                          data().defaults?.machineRankIds
-                        )
-                      "
-                    >
-                      <ng-template pTemplate="selectedItem" let-item>
-                        <i class="fa-solid fa-plus"></i>
-                      </ng-template>
-                      <ng-template pTemplate="item" let-item>
-                        <div
-                          class="d-flex align-items-center py-2 w-100 h-100"
-                          [pTooltip]="tooltip"
-                        >
-                          <i [class]="item.value | iconSmClass"></i>
-                          <div class="ms-3 text-truncate">
-                            {{ item.label }}
-                          </div>
-                          <ng-template #tooltip>
-                            <lab-tooltip
-                              [id]="item.value"
-                              type="machine"
-                            ></lab-tooltip>
-                          </ng-template>
-                        </div>
-                      </ng-template>
-                    </p-dropdown>
-                  } @else {
+                  @if (machineId) {
                     <button
                       pButton
                       pRipple
@@ -406,6 +371,13 @@
                       [class.invisible]="machineId === ''"
                       icon="fa-solid fa-grip-lines"
                     ></button>
+                  } @else {
+                    <span
+                      class="p-inputgroup-addon"
+                      [pTooltip]="'settings.machineDefaults' | translate"
+                    >
+                      <i class="fa-solid fa-industry"></i>
+                    </span>
                   }
                   <!-- Machine dropdown -->
                   @if (machineId) {
@@ -454,26 +426,59 @@
                       </ng-template>
                     </p-dropdown>
                   } @else {
-                    <span
-                      class="p-inputgroup-addon"
-                      [pTooltip]="'settings.machineDefaults' | translate"
+                    <p-dropdown
+                      labDropdownBase="icon"
+                      [ngModel]="options().machines[0]?.value"
+                      [tooltip]="'settings.addMachineTooltip' | translate"
+                      [options]="
+                        options().machines | filterOptions: machineIds()
+                      "
+                      (onChange)="
+                        addMachine(
+                          $event.value,
+                          data().defaults?.machineRankIds
+                        )
+                      "
                     >
-                      <i class="fa-solid fa-industry"></i>
-                    </span>
+                      <ng-template pTemplate="selectedItem" let-item>
+                        <div
+                          class="d-flex align-items-center justify-content-center h-100"
+                        >
+                          <i class="fa-solid fa-plus"></i>
+                        </div>
+                      </ng-template>
+                      <ng-template pTemplate="item" let-item>
+                        <div
+                          class="d-flex align-items-center py-2 w-100 h-100"
+                          [pTooltip]="tooltip"
+                        >
+                          <i [class]="item.value | iconSmClass"></i>
+                          <div class="ms-3 text-truncate">
+                            {{ item.label }}
+                          </div>
+                          <ng-template #tooltip>
+                            <lab-tooltip
+                              [id]="item.value"
+                              type="machine"
+                            ></lab-tooltip>
+                          </ng-template>
+                        </div>
+                      </ng-template>
+                    </p-dropdown>
                   }
                   <!-- Fuel dropdown -->
-                  @if (settings.fuelId) {
+                  @if (machineSettings.fuelId) {
                     <p-dropdown
                       labDropdownBase="icon"
                       labNoDrag
                       [tooltip]="'settings.fuelTooltip' | translate"
-                      [ngModel]="settings.fuelId"
-                      [options]="settings.fuelOptions"
+                      [ngModel]="machineSettings.fuelId"
+                      [options]="machineSettings.fuelOptions"
                       (onChange)="
                         changeFuel(
                           machineId,
                           $event.value,
-                          settings,
+                          machineSettings,
                           settings().fuelRankIds
                         )
                       "
@@ -503,8 +508,11 @@
                     </p-dropdown>
                   }
                   <!-- Modifiers multiselect -->
-                  @if (settings.moduleRankIds) {
-                    @if (data().game !== Game.Satisfactory) {
+                  @if (machineSettings.moduleRankIds) {
+                    @if (
+                      data().game !== Game.Satisfactory &&
+                      data().game !== Game.FinalFactory
+                    ) {
                       <p-multiSelect
                         labNoDrag
                         appendTo="body"
@@ -515,8 +523,8 @@
                         [selectionLimit]="2"
                         [tooltip]="'settings.modifierTooltip' | translate"
                         tooltipPosition="top"
-                        [ngModel]="settings.moduleRankIds"
-                        [options]="settings.moduleOptions ?? []"
+                        [ngModel]="machineSettings.moduleRankIds"
+                        [options]="machineSettings.moduleOptions ?? []"
                         (onChange)="
                           setModuleRank(
                             machineId,
@@ -559,12 +567,39 @@
                         </ng-template>
                       </p-multiSelect>
                     } @else {
+                      @if (data().game === Game.FinalFactory) {
+                        <p-inputNumber
+                          #duplicatorsInput
+                          labNoDrag
+                          [min]="0"
+                          [step]="1"
+                          [maxFractionDigits]="0"
+                          [showButtons]="true"
+                          incrementButtonClass="p-button-outlined"
+                          decrementButtonClass="p-button-outlined"
+                          inputStyleClass="text-end"
+                          [pTooltip]="
+                            'settings.modifierCountTooltip' | translate
+                          "
+                          [ngModel]="machineSettings.overclock"
+                          (onBlur)="
+                            setOverclock(
+                              machineId,
+                              duplicatorsInput.value ?? 0,
+                              machineId
+                                ? machinesState().entities[''].overclock
+                                : 0
+                            )
+                          "
+                        >
+                        </p-inputNumber>
+                      }
                       <p-dropdown
                         labDropdownBase="icon"
                         labNoDrag
                         [tooltip]="'settings.modifierTooltip' | translate"
-                        [ngModel]="settings.moduleRankIds?.[0]"
-                        [options]="settings.moduleOptions ?? []"
+                        [ngModel]="machineSettings.moduleRankIds?.[0]"
+                        [options]="machineSettings.moduleOptions ?? []"
                         (onChange)="
                           setModuleRank(
                             machineId,
@@ -611,13 +646,15 @@
                       [step]="10"
                       [maxFractionDigits]="2"
                       [showButtons]="true"
+                      incrementButtonClass="p-button-outlined"
+                      decrementButtonClass="p-button-outlined"
                       inputStyleClass="text-end"
                       [pTooltip]="'settings.overclockTooltip' | translate"
-                      [ngModel]="settings.overclock"
+                      [ngModel]="machineSettings.overclock"
                       (onBlur)="
                         setOverclock(
                           machineId,
-                          overclockInput.value ?? 0,
+                          overclockInput.value ?? 100,
                           machineId
                             ? machinesState().entities[''].overclock
                             : 100
@@ -628,14 +665,14 @@
                   }
                   @if (
                     data().game === Game.Factorio &&
-                    settings.beaconCount != null
+                    machineSettings.beaconCount != null
                   ) {
                     <!-- Beacon count input -->
                     <lab-input-number
                       labNoDrag
                       [pTooltip]="'settings.beaconCountTooltip' | translate"
                       tooltipPosition="top"
-                      [value]="settings.beaconCount"
+                      [value]="machineSettings.beaconCount"
                       (setValue)="
                         setBeaconCount(machineId, $event, defaults?.beaconCount)
                       "
@@ -646,7 +683,7 @@
                       labNoDrag
                       [tooltip]="'settings.beaconTooltip' | translate"
                       tooltipPosition="top"
-                      [ngModel]="settings.beaconId"
+                      [ngModel]="machineSettings.beaconId"
                       [options]="options().beacons"
                       (onChange)="
                         setBeacon(machineId, $event.value, defaults?.beaconId)
@@ -678,7 +715,7 @@
                       </ng-template>
                     </p-dropdown>
                     <!-- Beacon module dropdown -->
-                    @if (settings.beaconModuleRankIds) {
+                    @if (machineSettings.beaconModuleRankIds) {
                       <p-multiSelect
                         labNoDrag
                         appendTo="body"
@@ -689,8 +726,8 @@
                         [selectionLimit]="2"
                         [tooltip]="'settings.beaconModuleTooltip' | translate"
                         tooltipPosition="top"
-                        [ngModel]="settings.beaconModuleRankIds"
-                        [options]="settings.beaconModuleOptions ?? []"
+                        [ngModel]="machineSettings.beaconModuleRankIds"
+                        [options]="machineSettings.beaconModuleOptions ?? []"
                         (onChange)="
                           changeBeaconModuleRank(
                             machineId,
@@ -750,7 +787,7 @@
                 </div>
               }
             </ng-template>
-            <div class="pt-2"><!--spacer--></div>
+            <div class="pt-3"><!--spacer--></div>
           }
           @if (data().game === Game.Factorio) {
             <div class="pb-3">

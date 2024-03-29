@@ -1,6 +1,7 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import {
   Entities,
+  Game,
   Objective,
   ObjectiveType,
   ObjectiveUnit,
@@ -669,6 +670,36 @@ describe('RecipeUtility', () => {
       );
       expected.out = { [ItemId.SteelChest]: Rational.one };
       expected.time = Rational.from(1, 30);
+      expected.drain = Rational.from(5);
+      expected.consumption = Rational.from(150);
+      expected.pollution = Rational.from(1, 20);
+      expected.productivity = Rational.one;
+      expect(result).toEqual(expected);
+    });
+
+    it('should adjust based on number of Final Factory duplicators', () => {
+      const data = Mocks.getRawDataset();
+      data.game = Game.FinalFactory;
+      const settings = {
+        ...Mocks.RecipesStateRational[RecipeId.SteelChest],
+        ...{ overclock: undefined },
+      };
+
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        ItemId.Module,
+        Rational.zero,
+        Rational.zero,
+        false,
+        settings,
+        Mocks.ItemsStateInitial,
+        data,
+      );
+      const expected = new RecipeRational(
+        Mocks.RawDataset.recipeEntities[RecipeId.SteelChest],
+      );
+      expected.out = { [ItemId.SteelChest]: Rational.one };
+      expected.time = Rational.from(2, 3);
       expected.drain = Rational.from(5);
       expected.consumption = Rational.from(150);
       expected.pollution = Rational.from(1, 20);
