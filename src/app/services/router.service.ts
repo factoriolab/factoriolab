@@ -980,13 +980,13 @@ export class RouterService {
   /** Migrates V6 bare zip to latest format */
   migrateV6(state: MigrationState): MigrationState {
     state.isBare = true;
-    return this.migrateToV8(state);
+    return this.migrateV8(this.migrateToV8(state));
   }
 
   /** Migrates V7 hash zip to latest format */
   migrateV7(state: MigrationState): MigrationState {
     state.isBare = false;
-    return this.migrateToV8(state);
+    return this.migrateV8(this.migrateToV8(state));
   }
 
   migrateV8(state: MigrationState): MigrationState {
@@ -995,9 +995,8 @@ export class RouterService {
     // Need to convert Recipe Objectives to unified Objectives
     if (params[Section.RecipeObjectives]) {
       let objectives: string[] = [];
-      if (params[Section.Objectives]) {
+      if (params[Section.Objectives])
         objectives = params[Section.Objectives].split(LISTSEP);
-      }
 
       const list = params[Section.RecipeObjectives].split(LISTSEP);
       for (let i = 0; i < list.length; i++) {
@@ -1016,6 +1015,7 @@ export class RouterService {
         objectives.push(n);
       }
 
+      params[Section.RecipeObjectives] = '';
       params[Section.Objectives] = objectives.join(LISTSEP);
     }
 
@@ -1445,15 +1445,6 @@ export class RouterService {
       init.displayRate,
     );
     const preset = this.zipDiffNumber(state.preset, init.preset);
-    const flowRate = this.zipDiffRational(state.flowRate, init.flowRate);
-    const miningBonus = this.zipDiffRational(
-      state.miningBonus,
-      init.miningBonus,
-    );
-    const researchBonus = this.zipDiffRational(
-      state.researchBonus,
-      init.researchBonus,
-    );
     const inserterCapacity = this.zipDiffNumber(
       state.inserterCapacity,
       init.inserterCapacity,
@@ -1469,10 +1460,6 @@ export class RouterService {
     const netProductionOnly = this.zipDiffBool(
       state.netProductionOnly,
       init.netProductionOnly,
-    );
-    const maximizeType = this.zipDiffNumber(
-      state.maximizeType,
-      init.maximizeType,
     );
     const costFactor = this.zipDiffRational(
       state.costs.factor,
@@ -1517,9 +1504,9 @@ export class RouterService {
         preset,
         this.zipDiffString(state.beltId, init.beltId),
         this.zipDiffRank(state.fuelRankIds, init.fuelRankIds),
-        flowRate,
-        miningBonus,
-        researchBonus,
+        this.zipDiffRational(state.flowRate, init.flowRate),
+        this.zipDiffRational(state.miningBonus, init.miningBonus),
+        this.zipDiffRational(state.researchBonus, init.researchBonus),
         inserterCapacity,
         inserterTarget,
         this.zipDiffString(state.cargoWagonId, init.cargoWagonId),
@@ -1528,7 +1515,7 @@ export class RouterService {
         beaconReceivers,
         this.zipDiffString(state.proliferatorSprayId, init.proliferatorSprayId),
         netProductionOnly,
-        maximizeType,
+        this.zipDiffNumber(state.maximizeType, init.maximizeType),
         costFactor,
         costMachine,
         costUnproduceable,
@@ -1548,10 +1535,9 @@ export class RouterService {
         preset,
         this.zipDiffNString(state.beltId, init.beltId, hash.belts),
         this.zipDiffNRank(state.fuelRankIds, init.fuelRankIds, hash.fuels),
-
-        flowRate,
-        miningBonus,
-        researchBonus,
+        this.zipDiffNRational(state.flowRate, init.flowRate),
+        this.zipDiffNRational(state.miningBonus, init.miningBonus),
+        this.zipDiffNRational(state.researchBonus, init.researchBonus),
         inserterCapacity,
         inserterTarget,
         this.zipDiffNString(state.cargoWagonId, init.cargoWagonId, hash.wagons),
@@ -1564,7 +1550,7 @@ export class RouterService {
           hash.modules,
         ),
         netProductionOnly,
-        maximizeType,
+        this.zipDiffNNumber(state.maximizeType, init.maximizeType),
         costFactor,
         costMachine,
         costUnproduceable,
@@ -1589,7 +1575,6 @@ export class RouterService {
     const zip = params[Section.Settings];
     const s = zip.split(FIELDSEP);
     let i = 0;
-
     const obj: Settings.PartialSettingsState = {
       modId: hash == null ? this.parseString(s[i++]) : undefined,
       researchedTechnologyIds: this.parseNullableArray(
@@ -1600,9 +1585,9 @@ export class RouterService {
       preset: this.parseNumber(s[i++]),
       beltId: this.parseString(s[i++], hash?.belts),
       fuelRankIds: this.parseArray(s[i++], hash?.fuels),
-      flowRate: this.parseRational(s[i++]),
-      miningBonus: this.parseRational(s[i++]),
-      researchBonus: this.parseRational(s[i++]),
+      flowRate: this.parseRational(s[i++], hash != null),
+      miningBonus: this.parseRational(s[i++], hash != null),
+      researchBonus: this.parseRational(s[i++], hash != null),
       inserterCapacity: this.parseNumber(s[i++]),
       inserterTarget: this.parseNumber(s[i++]),
       cargoWagonId: this.parseString(s[i++], hash?.wagons),
@@ -1611,7 +1596,7 @@ export class RouterService {
       beaconReceivers: this.parseRational(s[i++]),
       proliferatorSprayId: this.parseString(s[i++], hash?.modules),
       netProductionOnly: this.parseBool(s[i++]),
-      maximizeType: this.parseNNumber(s[i++]),
+      maximizeType: this.parseNumber(s[i++], hash != null),
       costs: {
         factor: this.parseRational(s[i++]),
         machine: this.parseRational(s[i++]),
@@ -1678,6 +1663,13 @@ export class RouterService {
 
   zipDiffNumber(value: number | undefined, init: number | undefined): string {
     return value === init ? '' : value == null ? NULL : value.toString();
+  }
+
+  zipDiffNRational(
+    value: Rational | null | undefined,
+    init: Rational | null | undefined,
+  ): string {
+    return this.zipDiffNNumber(value?.toNumber(), init?.toNumber());
   }
 
   zipDiffRational(
@@ -1809,12 +1801,20 @@ export class RouterService {
     return value === TRUE;
   }
 
-  parseNumber(value: string | undefined): number | undefined {
+  parseNumber(
+    value: string | undefined,
+    useNNumber = false,
+  ): number | undefined {
+    if (useNNumber) return this.parseNNumber(value);
     if (!value?.length || value === NULL) return undefined;
     return Number(value);
   }
 
-  parseRational(value: string | undefined): Rational | undefined {
+  parseRational(
+    value: string | undefined,
+    useNNumber = false,
+  ): Rational | undefined {
+    if (useNNumber) return Rational.from(this.parseNNumber(value));
     if (!value?.length || value === NULL) return undefined;
     return Rational.fromString(value);
   }

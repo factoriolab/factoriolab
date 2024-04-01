@@ -7,7 +7,6 @@ import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
-  BeaconSettings,
   DisplayRate,
   Game,
   InserterCapacity,
@@ -42,7 +41,6 @@ import {
   TRUE,
   Zip,
   ZipData,
-  ZipVersion,
 } from './router.service';
 
 const mockObjective: Objective = {
@@ -58,6 +56,20 @@ const mockObjectivesState: Objectives.ObjectivesState = {
     ['1']: mockObjective,
   },
   index: 2,
+};
+const mockMigratedObjectivesState: Objectives.ObjectivesState = {
+  ids: ['1', '2'],
+  entities: {
+    ['1']: mockObjective,
+    ['2']: {
+      id: '2',
+      targetId: ItemId.SteelChest,
+      value: Rational.one,
+      unit: ObjectiveUnit.Machines,
+      type: ObjectiveType.Output,
+    },
+  },
+  index: 3,
 };
 const mockItemsState: Items.ItemsState = {
   [ItemId.SteelChest]: {
@@ -123,8 +135,8 @@ const mockSettingsState: Settings.SettingsState = {
   },
 };
 const mockZip: Zip = {
-  bare: 'p=steel-chest*1*1',
-  hash: 'pC6*1*1',
+  bare: 'p=steel-chest**1',
+  hash: 'pC6**1',
 };
 const mockZipPartial: Zip = {
   bare:
@@ -157,7 +169,7 @@ function mockZipData(objectives?: Zip, config?: Zip): ZipData {
   };
 }
 
-xdescribe('RouterService', () => {
+describe('RouterService', () => {
   let service: RouterService;
   let mockStore: MockStore<LabState>;
   let mockGetZipState: MemoizedSelector<
@@ -466,7 +478,10 @@ xdescribe('RouterService', () => {
 
       const mockStateV0: App.PartialState = {
         ...mockState,
-        ...{ settingsState: { ...mockState.settingsState } },
+        ...{
+          objectivesState: mockMigratedObjectivesState,
+          settingsState: { ...mockState.settingsState },
+        },
       };
       delete mockStateV0.settingsState?.beaconReceivers;
       delete mockStateV0.settingsState?.researchedTechnologyIds;
@@ -593,6 +608,7 @@ xdescribe('RouterService', () => {
       const mockStateV3: App.PartialState = {
         ...mockState,
         ...{
+          objectivesState: mockMigratedObjectivesState,
           settingsState: {
             ...mockState.settingsState,
             ...{ costs: { ...mockState.settingsState.costs } },
@@ -636,6 +652,7 @@ xdescribe('RouterService', () => {
       const mockStateV4: App.PartialState = {
         ...mockState,
         ...{
+          objectivesState: mockMigratedObjectivesState,
           settingsState: {
             ...mockState.settingsState,
             ...{ costs: { ...mockState.settingsState.costs } },
@@ -676,6 +693,7 @@ xdescribe('RouterService', () => {
       const mockStateV5: App.PartialState = {
         ...mockState,
         ...{
+          objectivesState: mockMigratedObjectivesState,
           settingsState: {
             ...mockState.settingsState,
             ...{ costs: { ...mockState.settingsState.costs } },
@@ -718,6 +736,7 @@ xdescribe('RouterService', () => {
       const mockStateV6: App.PartialState = {
         ...mockState,
         ...{
+          objectivesState: mockMigratedObjectivesState,
           settingsState: {
             ...mockState.settingsState,
             ...{ costs: { ...mockState.settingsState.costs } },
@@ -758,6 +777,7 @@ xdescribe('RouterService', () => {
       const mockStateV7: App.PartialState = {
         ...mockState,
         ...{
+          objectivesState: mockMigratedObjectivesState,
           settingsState: {
             ...mockState.settingsState,
             ...{ costs: { ...mockState.settingsState.costs } },
@@ -831,7 +851,7 @@ xdescribe('RouterService', () => {
 
   describe('migrate', () => {
     it('should return latest version without alteration', () => {
-      const originalParams = { [Section.Version]: ZipVersion.Version9 };
+      const originalParams = { [Section.Version]: service.version };
       const { params } = service.migrate({ ...originalParams }, false);
       expect(params).toEqual(originalParams);
     });
@@ -873,7 +893,7 @@ xdescribe('RouterService', () => {
   });
 
   describe('migrateV6', () => {
-    it('should convert item objectives by machines into recipe objectives', () => {
+    it('should convert item objectives by machines into recipe objectives and into unified objective', () => {
       const { params } = service.migrateV6({
         params: {
           [Section.Objectives]: 'coal*1*3',
@@ -881,11 +901,10 @@ xdescribe('RouterService', () => {
         warnings: [],
         isBare: true,
       });
-      expect(params[Section.Objectives]).toEqual('');
-      expect(params[Section.RecipeObjectives]).toEqual('coal*1');
+      expect(params[Section.Objectives]).toEqual('coal*1*3');
     });
 
-    it('should convert item objective by machines with limit step into maximize / limit recipe objectives', () => {
+    it('should convert item objective by machines with limit step into maximize / limit recipe objectives and into unified objective', () => {
       const { params } = service.migrateV6({
         params: {
           [Section.Objectives]: 'iron-plate*1*3*iron-ore',
@@ -894,10 +913,10 @@ xdescribe('RouterService', () => {
         warnings: [],
         isBare: true,
       });
-      expect(params[Section.Objectives]).toEqual('');
-      expect(params[Section.RecipeObjectives]).toEqual(
-        'coal*1_iron-plate*1*2_iron-ore*1*3',
+      expect(params[Section.Objectives]).toEqual(
+        'coal*1*3_iron-plate*1*3*2_iron-ore*1*3*3',
       );
+      expect(params[Section.RecipeObjectives]).toEqual('');
     });
 
     it('should convert item objective with limit step into maximize / limit item objectives', () => {

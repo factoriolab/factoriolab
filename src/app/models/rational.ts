@@ -129,12 +129,13 @@ export class Rational {
     return result;
   }
 
-  private static fromFloatCache: Record<number, Rational> = {};
+  private static fromFloatCache = new Map<number, Rational>();
   /**
    * Source: https://www.ics.uci.edu/%7Eeppstein/numth/frap.c
    */
   private static fromFloat(startx: number): Rational {
-    if (this.fromFloatCache[startx]) return this.fromFloatCache[startx];
+    const cached = this.fromFloatCache.get(startx);
+    if (cached != null) return cached;
 
     let ai = startx,
       x = startx;
@@ -168,7 +169,7 @@ export class Rational {
     const errB = Math.abs(startx - optB.toNumber());
 
     const result = errA < errB ? optA : optB;
-    this.fromFloatCache[startx] = result;
+    this.fromFloatCache.set(startx, result);
     return result;
   }
 
