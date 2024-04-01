@@ -6,8 +6,8 @@ import { AppSharedModule } from '~/app-shared.module';
 import {
   Category,
   Game,
+  Item,
   ItemId,
-  ItemRational,
   ItemSettings,
   MachineSettings,
 } from '~/models';
@@ -28,9 +28,7 @@ export class ItemComponent extends DetailComponent {
   machinesStateRaw = this.store.selectSignal(Machines.machinesState);
   machinesState = this.store.selectSignal(Machines.getMachinesState);
 
-  obj = computed<ItemRational | undefined>(
-    () => this.data().itemEntities[this.id()],
-  );
+  obj = computed<Item | undefined>(() => this.data().itemEntities[this.id()]);
   breadcrumb = computed<MenuItem[]>(() => [
     this.parent(),
     { label: this.obj()?.name },

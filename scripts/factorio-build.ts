@@ -3,17 +3,16 @@ import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
-import { orString } from '~/helpers';
 import {
-  Category,
+  CategoryJson,
   Entities,
-  Fuel,
-  Item,
-  Machine,
+  FuelJson,
+  ItemJson,
+  MachineJson,
   ModData,
   ModHash,
-  Recipe,
-  Technology,
+  RecipeJson,
+  TechnologyJson,
 } from '~/models';
 import * as D from './factorio-build.models';
 import * as M from './factorio.models';
@@ -495,8 +494,8 @@ async function processMod(): Promise<void> {
     return [record, catalyst, total, temps];
   }
 
-  function getMachine(proto: D.MachineProto, name: string): Machine {
-    const machine: Machine = {
+  function getMachine(proto: D.MachineProto, name: string): MachineJson {
+    const machine: MachineJson = {
       speed: getMachineSpeed(proto),
       modules: getMachineModules(proto),
       disallowedEffects: getMachineDisallowedEffects(proto),
@@ -987,7 +986,7 @@ async function processMod(): Promise<void> {
         }
       }
 
-      let fuel: Fuel | undefined;
+      let fuel: FuelJson | undefined;
       if (proto.fuel_value) {
         fuel = {
           category: ANY_FLUID_BURN,
@@ -1013,7 +1012,7 @@ async function processMod(): Promise<void> {
 
       temps.forEach((temp, i) => {
         const id = i === 0 ? proto.name : `${proto.name}-${temp}`;
-        const itemTemp: Item = {
+        const itemTemp: ItemJson = {
           id,
           name: fluidLocale.names[proto.name],
           category: group.name,
@@ -1033,7 +1032,7 @@ async function processMod(): Promise<void> {
             const tempDiff = temp - proto.default_temperature;
             const energyGenerated =
               tempDiff * getEnergyInMJ(proto.heat_capacity ?? '1KJ');
-            const heatFuel: Fuel = {
+            const heatFuel: FuelJson = {
               category: ANY_FLUID_HEAT,
               value: round(energyGenerated, 10),
             };
@@ -1110,7 +1109,7 @@ async function processMod(): Promise<void> {
         fluidWagon: getFluidWagon(proto),
       });
     } else {
-      const item: Item = {
+      const item: ItemJson = {
         id: proto.name,
         name: itemLocale.names[proto.name],
         category: group.name,
@@ -1414,7 +1413,7 @@ async function processMod(): Promise<void> {
             console.log(recipeInTemp);
           }
 
-          const recipe: Recipe = {
+          const recipe: RecipeJson = {
             id,
             name: recipeLocale.names[proto.name],
             category: subgroup.group,
@@ -1458,7 +1457,7 @@ async function processMod(): Promise<void> {
             `${pumpName}-${proto.name}-pump`,
           );
           const out = offshorePump.pumping_speed * 60;
-          const recipe: Recipe = {
+          const recipe: RecipeJson = {
             id,
             name: `${itemLocale.names[pumpName]} : ${
               fluidLocale.names[proto.name]
@@ -1497,7 +1496,7 @@ async function processMod(): Promise<void> {
           const energyReqd =
             tempDiff * getEnergyInMJ(inputProto.heat_capacity ?? '1KJ') * 1000;
 
-          const recipe: Recipe = {
+          const recipe: RecipeJson = {
             id,
             name: `${itemLocale.names[boilerName]} : ${
               fluidLocale.names[proto.name]
@@ -1586,7 +1585,7 @@ async function processMod(): Promise<void> {
 
               if (part == null) continue;
 
-              const recipe: Recipe = {
+              const recipe: RecipeJson = {
                 id,
                 name,
                 category: group.name,
@@ -1613,7 +1612,7 @@ async function processMod(): Promise<void> {
       ) {
         // Found burn recipe
         const id = getFakeRecipeId(proto.burnt_result, `${proto.name}-burn`);
-        const recipe: Recipe = {
+        const recipe: RecipeJson = {
           id,
           name: `${itemLocale.names[proto.name]} : ${
             itemLocale.names[proto.burnt_result]
@@ -1680,7 +1679,7 @@ async function processMod(): Promise<void> {
         recipeInOptions.forEach(([recipeIn, ids], i) => {
           const id = i === 0 ? fakeId : `${fakeId}-${ids.join('-')}`;
 
-          const recipe: Recipe = {
+          const recipe: RecipeJson = {
             id: '',
             name: M.isFluidPrototype(proto)
               ? fluidLocale.names[proto.name]
@@ -1735,14 +1734,14 @@ async function processMod(): Promise<void> {
     }
 
     // Third, sort by prototype order field
-    return orString(a.order).localeCompare(orString(b.order));
+    return (a.order ?? '').localeCompare(b.order ?? '');
   });
 
   const labs = Object.keys(machines.lab);
   const technologyIds = technologies.map((t) => t.name);
   for (const techRaw of technologies) {
     const techData = techDataMap[techRaw.name];
-    const technology: Technology = {};
+    const technology: TechnologyJson = {};
     const id = techId[techRaw.name];
     const prerequisites = coerceArray(techData.prerequisites);
     if (prerequisites?.length) {
@@ -1760,7 +1759,7 @@ async function processMod(): Promise<void> {
       return inputs.every((i) => labInputs.includes(i));
     });
 
-    const recipe: Recipe = {
+    const recipe: RecipeJson = {
       id,
       name: techLocale.names[techRaw.name],
       category: 'technology',
@@ -1775,7 +1774,7 @@ async function processMod(): Promise<void> {
     };
     modData.recipes.push(recipe);
 
-    const item: Item = {
+    const item: ItemJson = {
       id,
       name: recipe.name,
       category: recipe.category,
@@ -1797,7 +1796,7 @@ async function processMod(): Promise<void> {
 
   for (const id of groupsUsed) {
     const itemGroup = dataRaw['item-group'][id];
-    const category: Category = {
+    const category: CategoryJson = {
       id,
       name: groupLocale.names[id],
       icon: await getIcon(itemGroup),

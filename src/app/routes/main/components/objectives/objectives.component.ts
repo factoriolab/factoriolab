@@ -11,11 +11,9 @@ import { first } from 'rxjs';
 
 import { PickerComponent } from '~/components/picker/picker.component';
 import {
-  Dataset,
+  AdjustedDataset,
   DisplayRate,
-  DisplayRateInfo,
   displayRateOptions,
-  Entities,
   MatrixResult,
   Objective,
   ObjectiveBase,
@@ -64,9 +62,6 @@ export class ObjectivesComponent {
     const objectives = this.store.selectSignal(Objectives.getObjectives);
     return [...objectives()];
   });
-  objectiveRationals = this.store.selectSignal(
-    Objectives.getObjectiveRationals,
-  );
   itemsState = this.store.selectSignal(Items.getItemsState);
   itemIds = this.store.selectSignal(Recipes.getAvailableItems);
   data = this.store.selectSignal(Recipes.getAdjustedDataset);
@@ -176,31 +171,15 @@ export class ObjectivesComponent {
   changeUnit(
     objective: Objective,
     unit: ObjectiveUnit,
-    objectiveRationals: Objective[],
-    itemsState: Items.ItemsState,
-    beltSpeed: Entities<Rational>,
-    displayRateInfo: DisplayRateInfo,
-    data: Dataset,
     chooseItemPicker: PickerComponent,
     chooseRecipePicker: PickerComponent,
   ): void {
-    const objectiveRational = objectiveRationals.find(
-      (o) => o.id === objective.id,
-    );
-    if (objectiveRational == null) return;
-
+    const data = this.data();
     if (unit === ObjectiveUnit.Machines) {
       if (objective.unit !== ObjectiveUnit.Machines) {
         const recipeIds = data.itemRecipeIds[objective.targetId];
         const updateFn = (recipeId: string): void =>
-          this.convertItemsToMachines(
-            objectiveRational,
-            recipeId,
-            itemsState,
-            beltSpeed,
-            displayRateInfo,
-            data,
-          );
+          this.convertItemsToMachines(objective, recipeId, data);
         if (recipeIds.length === 1) {
           updateFn(recipeIds[0]);
         } else {
@@ -212,17 +191,11 @@ export class ObjectivesComponent {
       }
     } else {
       if (objective.unit === ObjectiveUnit.Machines) {
-        const itemIds = Array.from(data.recipeR[objective.targetId].produces);
+        const itemIds = Array.from(
+          data.adjustedRecipe[objective.targetId].produces,
+        );
         const updateFn = (itemId: string): void =>
-          this.convertMachinesToItems(
-            objectiveRational,
-            itemId,
-            unit,
-            itemsState,
-            beltSpeed,
-            displayRateInfo,
-            data,
-          );
+          this.convertMachinesToItems(objective, itemId, unit, data);
 
         if (itemIds.length === 1) {
           updateFn(itemIds[0]);
@@ -234,15 +207,7 @@ export class ObjectivesComponent {
         }
       } else {
         // No target conversion required
-        this.convertItemsToItems(
-          objectiveRational,
-          objective.targetId,
-          unit,
-          itemsState,
-          beltSpeed,
-          displayRateInfo,
-          data,
-        );
+        this.convertItemsToItems(objective, objective.targetId, unit, data);
       }
     }
   }
@@ -254,10 +219,7 @@ export class ObjectivesComponent {
   convertItemsToMachines(
     objective: Objective,
     recipeId: string,
-    itemsState: Items.ItemsState,
-    beltSpeed: Entities<Rational>,
-    displayRateInfo: DisplayRateInfo,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     this.setUnit(objective.id, {
       targetId: recipeId,
@@ -266,14 +228,17 @@ export class ObjectivesComponent {
 
     if (objective.type === ObjectiveType.Maximize) return;
 
+    const itemsState = this.itemsState();
+    const beltSpeed = this.beltSpeed();
+    const dispRateInfo = this.dispRateInfo();
     const oldValue = RateUtility.objectiveNormalizedRate(
       objective,
       itemsState,
       beltSpeed,
-      displayRateInfo,
+      dispRateInfo,
       data,
     );
-    const recipe = data.recipeR[recipeId];
+    const recipe = data.adjustedRecipe[recipeId];
     const newValue = oldValue.div(recipe.output[objective.targetId]);
     this.setValue(objective.id, newValue);
   }
@@ -286,10 +251,7 @@ export class ObjectivesComponent {
     objective: Objective,
     itemId: string,
     unit: ObjectiveUnit,
-    itemsState: Items.ItemsState,
-    beltSpeed: Entities<Rational>,
-    displayRateInfo: DisplayRateInfo,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     this.setUnit(objective.id, {
       targetId: itemId,
@@ -299,6 +261,9 @@ export class ObjectivesComponent {
     if (objective.type === ObjectiveType.Maximize || objective.recipe == null)
       return;
 
+    const itemsState = this.itemsState();
+    const beltSpeed = this.beltSpeed();
+    const dispRateInfo = this.dispRateInfo();
     const factor = RateUtility.objectiveNormalizedRate(
       {
         id: '',
@@ -309,7 +274,7 @@ export class ObjectivesComponent {
       },
       itemsState,
       beltSpeed,
-      displayRateInfo,
+      dispRateInfo,
       data,
     );
     const oldValue = objective.value.mul(objective.recipe.output[itemId]);
@@ -325,10 +290,7 @@ export class ObjectivesComponent {
     objective: Objective,
     itemId: string,
     unit: ObjectiveUnit,
-    itemsState: Items.ItemsState,
-    beltSpeed: Entities<Rational>,
-    displayRateInfo: DisplayRateInfo,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     this.setUnit(objective.id, {
       targetId: itemId,
@@ -337,11 +299,14 @@ export class ObjectivesComponent {
 
     if (objective.type === ObjectiveType.Maximize) return;
 
+    const itemsState = this.itemsState();
+    const beltSpeed = this.beltSpeed();
+    const dispRateInfo = this.dispRateInfo();
     const oldValue = RateUtility.objectiveNormalizedRate(
       objective,
       itemsState,
       beltSpeed,
-      displayRateInfo,
+      dispRateInfo,
       data,
     );
     const factor = RateUtility.objectiveNormalizedRate(
@@ -354,7 +319,7 @@ export class ObjectivesComponent {
       },
       itemsState,
       beltSpeed,
-      displayRateInfo,
+      dispRateInfo,
       data,
     );
     const newValue = oldValue.div(factor);

@@ -8,7 +8,7 @@ export * from './icon';
 export * from './item';
 export * from './machine';
 export * from './mod-data';
-export * from './mod-defaults';
+export * from './defaults';
 export * from './mod-hash';
 export * from './mod-i18n';
 export * from './module';

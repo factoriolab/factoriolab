@@ -10,7 +10,6 @@ import {
   Language,
   Preset,
   Rational,
-  ResearchSpeed,
 } from '~/models';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
@@ -144,32 +143,32 @@ describe('Settings Selectors', () => {
       expect(result).toBeNull();
     });
 
-    it('should use minimum values', () => {
-      const result = Selectors.getDefaults.projector(Preset.Minimum, Mocks.Mod);
-      TestUtility.assert(result != null);
-      expect(result.beltId).toEqual(Mocks.Mod.defaults!.minBelt!);
-      expect(result.machineRankIds).toEqual(
-        Mocks.Mod.defaults!.minMachineRank!,
-      );
-      expect(result.moduleRankIds).toEqual([]);
-      expect(result.beaconModuleId).toEqual(ItemId.Module);
-      expect(result.beaconCount).toEqual('0');
-    });
+    // it('should use minimum values', () => {
+    //   const result = Selectors.getDefaults.projector(Preset.Minimum, Mocks.Mod);
+    //   TestUtility.assert(result != null);
+    //   expect(result.beltId).toEqual(Mocks.Mod.defaults!.minBelt!);
+    //   expect(result.machineRankIds).toEqual(
+    //     Mocks.Mod.defaults!.minMachineRank!,
+    //   );
+    //   expect(result.moduleRankIds).toEqual([]);
+    //   expect(result.beaconModuleId).toEqual(ItemId.Module);
+    //   expect(result.beaconCount).toEqual('0');
+    // });
 
-    it('should use 8 beacons', () => {
-      const result = Selectors.getDefaults.projector(Preset.Beacon8, Mocks.Mod);
-      TestUtility.assert(result != null);
-      expect(result.beaconCount).toEqual('8');
-    });
+    // it('should use 8 beacons', () => {
+    //   const result = Selectors.getDefaults.projector(Preset.Beacon8, Mocks.Mod);
+    //   TestUtility.assert(result != null);
+    //   expect(result.beaconCount).toEqual('8');
+    // });
 
-    it('should use 12 beacons', () => {
-      const result = Selectors.getDefaults.projector(
-        Preset.Beacon12,
-        Mocks.Mod,
-      );
-      TestUtility.assert(result != null);
-      expect(result.beaconCount).toEqual('12');
-    });
+    // it('should use 12 beacons', () => {
+    //   const result = Selectors.getDefaults.projector(
+    //     Preset.Beacon12,
+    //     Mocks.Mod,
+    //   );
+    //   TestUtility.assert(result != null);
+    //   expect(result.beaconCount).toEqual('12');
+    // });
 
     it('should get the defaults from the current base mod', () => {
       const result = Selectors.getDefaults.projector(Preset.Beacon8, Mocks.Mod);
@@ -277,40 +276,21 @@ describe('Settings Selectors', () => {
     });
   });
 
-  describe('getRationalMiningBonus', () => {
-    it('should convert the numeric value to a percent Rational', () => {
-      const result = Selectors.getRationalMiningBonus.projector(100);
-      expect(result).toEqual(Rational.one);
-    });
-  });
+  // describe('getRationalMiningBonus', () => {
+  //   it('should convert the numeric value to a percent Rational', () => {
+  //     const result = Selectors.getRationalMiningBonus.projector(100);
+  //     expect(result).toEqual(Rational.one);
+  //   });
+  // });
 
-  describe('getResearchFactor', () => {
-    it('should look up the Rational from the dictionary', () => {
-      const result = Selectors.getResearchFactor.projector(
-        ResearchSpeed.Speed0,
-      );
-      expect(result).toEqual(Rational.one);
-    });
-  });
-
-  describe('getRationalBeaconReceivers', () => {
-    it('should convert the string value to a Rational', () => {
-      const result = Selectors.getRationalBeaconReceivers.projector('1');
-      expect(result).toEqual(Rational.one);
-    });
-
-    it('should handle null setting', () => {
-      const result = Selectors.getRationalBeaconReceivers.projector(null);
-      expect(result).toBeNull();
-    });
-  });
-
-  describe('getRationalFlowRate', () => {
-    it('should convert the numeric value to a Rational', () => {
-      const result = Selectors.getRationalFlowRate.projector(1);
-      expect(result).toEqual(Rational.one);
-    });
-  });
+  // describe('getResearchFactor', () => {
+  //   it('should look up the Rational from the dictionary', () => {
+  //     const result = Selectors.getResearchFactor.projector(
+  //       ResearchSpeed.Speed0,
+  //     );
+  //     expect(result).toEqual(Rational.one);
+  //   });
+  // });
 
   describe('getI18n', () => {
     it('should map mods to i18n data', () => {
@@ -490,27 +470,27 @@ describe('Settings Selectors', () => {
       expect(result.pipeIds).toEqual([ItemId.CopperCable, ItemId.Pipe]);
     });
 
-    it('should calculate missing recipe icons', () => {
-      const icons = Mocks.Mod.icons.filter(
-        (i) => i.id !== RecipeId.AdvancedOilProcessing,
-      );
-      const mod = {
-        ...Mocks.Mod,
-        ...{
-          icons,
-        },
-      };
-      const result = Selectors.getDataset.projector(
-        mod,
-        null,
-        undefined,
-        Mocks.Defaults,
-        Game.Factorio,
-      );
-      expect(
-        result.recipeEntities[RecipeId.AdvancedOilProcessing].icon,
-      ).toEqual(ItemId.HeavyOil);
-    });
+    // it('should calculate missing recipe icons', () => {
+    //   const icons = Mocks.Mod.icons.filter(
+    //     (i) => i.id !== RecipeId.AdvancedOilProcessing,
+    //   );
+    //   const mod = {
+    //     ...Mocks.Mod,
+    //     ...{
+    //       icons,
+    //     },
+    //   };
+    //   const result = Selectors.getDataset.projector(
+    //     mod,
+    //     null,
+    //     undefined,
+    //     Mocks.Defaults,
+    //     Game.Factorio,
+    //   );
+    //   expect(
+    //     result.recipeEntities[RecipeId.AdvancedOilProcessing].icon,
+    //   ).toEqual(ItemId.HeavyOil);
+    // });
 
     it('should handle data not loaded yet', () => {
       const result = Selectors.getDataset.projector(

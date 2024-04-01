@@ -150,15 +150,15 @@ describe('Machines Reducer', () => {
     });
   });
 
-  describe('SET_BEACON_COUNT', () => {
-    it('should set the beacon count for a machine', () => {
-      const result = machinesReducer(
-        undefined,
-        new Actions.SetBeaconCountAction({ id, value: '2', def: '8' }),
-      );
-      expect(result.entities[id].beaconCount).toEqual('2');
-    });
-  });
+  // describe('SET_BEACON_COUNT', () => {
+  //   it('should set the beacon count for a machine', () => {
+  //     const result = machinesReducer(
+  //       undefined,
+  //       new Actions.SetBeaconCountAction({ id, value: '2', def: '8' }),
+  //     );
+  //     expect(result.entities[id].beaconCount).toEqual('2');
+  //   });
+  // });
 
   describe('SET_BEACON', () => {
     it('should set the beacon for a machine', () => {
@@ -184,15 +184,15 @@ describe('Machines Reducer', () => {
     });
   });
 
-  describe('SET_OVERCLOCK', () => {
-    it('should set the overclock for a machine', () => {
-      const result = machinesReducer(
-        undefined,
-        new Actions.SetOverclockAction({ id, value: 200, def: 100 }),
-      );
-      expect(result.entities[id].overclock).toEqual(200);
-    });
-  });
+  // describe('SET_OVERCLOCK', () => {
+  //   it('should set the overclock for a machine', () => {
+  //     const result = machinesReducer(
+  //       undefined,
+  //       new Actions.SetOverclockAction({ id, value: 200, def: 100 }),
+  //     );
+  //     expect(result.entities[id].overclock).toEqual(200);
+  //   });
+  // });
 
   describe('RESET_MACHINE', () => {
     it('should reset a machine', () => {

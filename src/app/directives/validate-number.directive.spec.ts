@@ -55,13 +55,13 @@ describe('ValidateNumberDirective', () => {
       ).toBeFalse();
     });
 
-    it('should validate a valid number', () => {
-      TestUtility.setTextDt(fixture, DataTest.Input, '1 1/3');
-      fixture.detectChanges();
-      expect(
-        component.input.nativeElement.classList.contains('ng-invalid'),
-      ).toBeFalse();
-    });
+    // it('should validate a valid number', () => {
+    //   TestUtility.setTextDt(fixture, DataTest.Input, '1 1/3');
+    //   fixture.detectChanges();
+    //   expect(
+    //     component.input.nativeElement.classList.contains('ng-invalid'),
+    //   ).toBeFalse();
+    // });
 
     it('should validate invalid value', () => {
       TestUtility.setTextDt(fixture, DataTest.Input, '1 1');

@@ -45,12 +45,15 @@ export const getItemsState = createSelector(
   },
 );
 
-export const getItemsModified = createSelector(itemsState, (state) => ({
-  excluded: Object.keys(state).some((id) => state[id].excluded != null),
-  checked: Object.keys(state).some((id) => state[id].checked != null),
-  belts: Object.keys(state).some((id) => state[id].beltId != null),
-  wagons: Object.keys(state).some((id) => state[id].wagonId != null),
-}));
+export const getItemsModified = createSelector(
+  itemsState,
+  (state): Record<keyof ItemSettings, boolean> => ({
+    excluded: Object.keys(state).some((id) => state[id].excluded != null),
+    checked: Object.keys(state).some((id) => state[id].checked != null),
+    beltId: Object.keys(state).some((id) => state[id].beltId != null),
+    wagonId: Object.keys(state).some((id) => state[id].wagonId != null),
+  }),
+);
 
 export const getExcludedItemIds = createSelector(getItemsState, (itemsState) =>
   Object.keys(itemsState).filter((i) => itemsState[i]?.excluded),

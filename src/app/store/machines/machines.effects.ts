@@ -51,7 +51,8 @@ export class MachinesEffects {
               // Check that these recipe settings are still valid
               if (
                 !RecipeUtility.allowsModules(recipe, machine) ||
-                (r.moduleIds && r.moduleIds.length !== machine.modules)
+                (r.moduleIds &&
+                  r.moduleIds.length !== machine.modules?.toNumber())
               ) {
                 // Machine does not support module effects, reset these settings
                 effects.push(new Recipes.ResetRecipeModulesAction(i));

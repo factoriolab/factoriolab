@@ -38,8 +38,8 @@ describe('Items Selectors', () => {
         Mocks.ItemsStateInitial,
       );
       expect(result.excluded).toBeTrue();
-      expect(result.belts).toBeTrue();
-      expect(result.wagons).toBeTrue();
+      expect(result.beltId).toBeTrue();
+      expect(result.wagonId).toBeTrue();
     });
   });
 });

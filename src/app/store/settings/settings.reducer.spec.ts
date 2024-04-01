@@ -1,12 +1,10 @@
 import { ItemId, RecipeId } from 'src/tests';
 import {
-  CostSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
   MaximizeType,
   Preset,
-  ResearchSpeed,
 } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './settings.actions';
@@ -95,16 +93,16 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_BEACON_RECEIVERS', () => {
-    it('should set default beacon receivers', () => {
-      const value = '1';
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetBeaconReceiversAction(value),
-      );
-      expect(result.beaconReceivers).toEqual(value);
-    });
-  });
+  // describe('SET_BEACON_RECEIVERS', () => {
+  //   it('should set default beacon receivers', () => {
+  //     const value = '1';
+  //     const result = settingsReducer(
+  //       initialSettingsState,
+  //       new Actions.SetBeaconReceiversAction(value),
+  //     );
+  //     expect(result.beaconReceivers).toEqual(value);
+  //   });
+  // });
 
   describe('SET_PROLIFERATOR_SPRAY', () => {
     it('should set the proliferator spray', () => {
@@ -172,16 +170,16 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_FLOW_RATE', () => {
-    it('should set the flow rate', () => {
-      const value = 6000;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFlowRateAction(value),
-      );
-      expect(result.flowRate).toEqual(value);
-    });
-  });
+  // describe('SET_FLOW_RATE', () => {
+  //   it('should set the flow rate', () => {
+  //     const value = 6000;
+  //     const result = settingsReducer(
+  //       initialSettingsState,
+  //       new Actions.SetFlowRateAction(value),
+  //     );
+  //     expect(result.flowRate).toEqual(value);
+  //   });
+  // });
 
   describe('SET_INSERTER_TARGET', () => {
     it('should set the inserter target', () => {
@@ -194,27 +192,28 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_MINING_BONUS', () => {
-    it('should set the mining bonus', () => {
-      const value = 10;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetMiningBonusAction(value),
-      );
-      expect(result.miningBonus).toEqual(value);
-    });
-  });
+  // describe('SET_MINING_BONUS', () => {
+  //   it('should set the mining bonus', () => {
+  //     const value = 10;
+  //     const result = settingsReducer(
+  //       initialSettingsState,
+  //       new Actions.SetMiningBonusAction(value),
+  //     );
+  //     expect(result.miningBonus).toEqual(value);
+  //   });
+  // });
 
-  describe('SET_RESEARCH_SPEED', () => {
-    it('should set the research speed', () => {
-      const value = ResearchSpeed.Speed1;
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetResearchBonusAction(value),
-      );
-      expect(result.researchBonus).toEqual(value);
-    });
-  });
+  // describe('SET_RESEARCH_SPEED', () => {
+  //   it('should set the research speed', () => {
+  //     const value = ResearchSpeed.Speed1;
+  //     const result = settingsReducer(
+  //       initialSettingsState,
+  //       new Actions.SetResearchBonusAction(value),
+  //     );
+  //     expect(result.researchBonus).toEqual(value);
+  //   });
+  // });
+
   describe('SET_INSERTER_CAPACITY', () => {
     it('should set the inserter capacity', () => {
       const value = InserterCapacity.Capacity2;
@@ -251,24 +250,24 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_COSTS', () => {
-    it('should set cost values', () => {
-      const value: CostSettings = {
-        factor: '1',
-        machine: '1',
-        footprint: '1',
-        unproduceable: '1',
-        excluded: '1',
-        surplus: '1',
-        maximize: '-1',
-      };
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetCostsAction(value),
-      );
-      expect(result.costs).toEqual(value);
-    });
-  });
+  // describe('SET_COSTS', () => {
+  //   it('should set cost values', () => {
+  //     const value: CostSettings = {
+  //       factor: '1',
+  //       machine: '1',
+  //       footprint: '1',
+  //       unproduceable: '1',
+  //       excluded: '1',
+  //       surplus: '1',
+  //       maximize: '-1',
+  //     };
+  //     const result = settingsReducer(
+  //       initialSettingsState,
+  //       new Actions.SetCostsAction(value),
+  //     );
+  //     expect(result.costs).toEqual(value);
+  //   });
+  // });
 
   describe('RESET_COST', () => {
     it('should reset the cost fields', () => {

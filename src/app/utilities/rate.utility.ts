@@ -1,6 +1,6 @@
 import { sankey } from '~/d3-sankey';
 import {
-  Dataset,
+  AdjustedDataset,
   DisplayRateInfo,
   EnergyType,
   Entities,
@@ -10,7 +10,7 @@ import {
   ObjectiveType,
   ObjectiveUnit,
   Rational,
-  RecipeRational,
+  Recipe,
   RecipeSettings,
   Step,
   toEntities,
@@ -25,7 +25,7 @@ export class RateUtility {
     itemsState: Items.ItemsState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInfo,
-    data: Dataset,
+    data: AdjustedDataset,
   ): Rational {
     // Ignore unit entirely when maximizing, do not adjust if unit is Machines
     if (
@@ -67,7 +67,8 @@ export class RateUtility {
     }
 
     // Adjust based on productivity for technology objectives
-    const recipe = data.recipeR[data.itemRecipeIds[objective.targetId][0]];
+    const recipe =
+      data.adjustedRecipe[data.itemRecipeIds[objective.targetId][0]];
     if (recipe?.isTechnology) {
       factor = factor.mul(recipe.productivity);
     }
@@ -91,11 +92,7 @@ export class RateUtility {
     }
   }
 
-  static adjustPowerPollution(
-    step: Step,
-    recipe: RecipeRational,
-    game: Game,
-  ): void {
+  static adjustPowerPollution(step: Step, recipe: Recipe, game: Game): void {
     if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
         // Reset power
@@ -132,7 +129,7 @@ export class RateUtility {
     beaconReceivers: Rational | null,
     beltSpeed: Entities<Rational>,
     dispRateInfo: DisplayRateInfo,
-    data: Dataset,
+    data: AdjustedDataset,
   ): Step[] {
     const _steps = this.copy(steps);
 
@@ -202,7 +199,7 @@ export class RateUtility {
     step: Step,
     itemsState: Entities<ItemSettings>,
     beltSpeed: Entities<Rational>,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     let noItems = false;
     if (step.recipeId != null && step.recipeSettings != null) {
@@ -239,7 +236,7 @@ export class RateUtility {
   static calculateBeacons(
     step: Step,
     beaconReceivers: Rational | null,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     if (
       !beaconReceivers?.nonzero() ||

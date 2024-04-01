@@ -16,7 +16,7 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
-import { Game } from '~/models';
+import { Game, Rational } from '~/models';
 import { ContentService } from '~/services';
 import {
   App,
@@ -320,7 +320,7 @@ describe('SettingsComponent', () => {
     it('should turn on beacon power estimation', () => {
       spyOn(component, 'setBeaconReceivers');
       component.toggleBeaconReceivers(true);
-      expect(component.setBeaconReceivers).toHaveBeenCalledWith('1');
+      expect(component.setBeaconReceivers).toHaveBeenCalledWith(Rational.one);
     });
   });
 

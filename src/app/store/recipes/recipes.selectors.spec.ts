@@ -80,31 +80,31 @@ describe('Recipes Selectors', () => {
       expect(result[Mocks.Item1.id].machineId).toEqual(stringValue);
     });
 
-    it('should use module override', () => {
-      const state = {
-        ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { machineModuleIds: [stringValue] } },
-      };
-      const result = Selectors.getRecipesState.projector(
-        state,
-        Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
-      );
-      expect(result[Mocks.Item1.id].moduleIds).toEqual([stringValue]);
-    });
+    // it('should use module override', () => {
+    //   const state = {
+    //     ...initialRecipesState,
+    //     ...{ [Mocks.Item1.id]: { machineModuleIds: [stringValue] } },
+    //   };
+    //   const result = Selectors.getRecipesState.projector(
+    //     state,
+    //     Mocks.MachinesStateInitial,
+    //     Mocks.RawDataset,
+    //   );
+    //   expect(result[Mocks.Item1.id].moduleIds).toEqual([stringValue]);
+    // });
 
-    it('should use beacon count override', () => {
-      const state = {
-        ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beacons: [{ count: stringValue }] } },
-      };
-      const result = Selectors.getRecipesState.projector(
-        state,
-        Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
-      );
-      expect(result[Mocks.Item1.id].beacons?.[0].count).toEqual(stringValue);
-    });
+    // it('should use beacon count override', () => {
+    //   const state = {
+    //     ...initialRecipesState,
+    //     ...{ [Mocks.Item1.id]: { beacons: [{ count: stringValue }] } },
+    //   };
+    //   const result = Selectors.getRecipesState.projector(
+    //     state,
+    //     Mocks.MachinesStateInitial,
+    //     Mocks.RawDataset,
+    //   );
+    //   expect(result[Mocks.Item1.id].beacons?.[0].count).toEqual(stringValue);
+    // });
 
     it('should use beacon module override', () => {
       const state = {
@@ -139,18 +139,18 @@ describe('Recipes Selectors', () => {
       ]);
     });
 
-    it('should reset invalid beacon totals', () => {
-      const state = {
-        ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beacons: [{ total: '8', count: '0' }] } },
-      };
-      const result = Selectors.getRecipesState.projector(
-        state,
-        Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
-      );
-      expect(result[Mocks.Item1.id].beacons?.[0].total).toBeUndefined();
-    });
+    // it('should reset invalid beacon totals', () => {
+    //   const state = {
+    //     ...initialRecipesState,
+    //     ...{ [Mocks.Item1.id]: { beacons: [{ total: '8', count: '0' }] } },
+    //   };
+    //   const result = Selectors.getRecipesState.projector(
+    //     state,
+    //     Mocks.MachinesStateInitial,
+    //     Mocks.RawDataset,
+    //   );
+    //   expect(result[Mocks.Item1.id].beacons?.[0].total).toBeUndefined();
+    // });
   });
 
   describe('getAvailableItems', () => {

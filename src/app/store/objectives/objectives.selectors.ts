@@ -8,7 +8,6 @@ import {
   ItemId,
   PowerUnit,
   Rational,
-  RecipeRational,
   Step,
   StepDetail,
   StepDetailTab,
@@ -50,44 +49,29 @@ export const getBaseObjectives = createSelector(
 
 export const getObjectives = createSelector(
   getBaseObjectives,
+  Items.getItemsState,
+  Recipes.getRecipesState,
   Machines.getMachinesState,
-  Settings.getDataset,
-  (objectives, machinesState, data) =>
+  Settings.getAdjustmentData,
+  Recipes.getAdjustedDataset,
+  (objectives, itemsState, recipesState, machinesState, adj, data) =>
     objectives.map((o) =>
-      RecipeUtility.adjustObjective(o, machinesState, data),
+      RecipeUtility.adjustObjective(
+        o,
+        itemsState,
+        recipesState,
+        machinesState,
+        adj.proliferatorSprayId,
+        adj.miningBonus,
+        adj.researchSpeed,
+        adj.netProductionOnly,
+        data,
+      ),
     ),
 );
 
-export const getObjectiveRationals = createSelector(
-  getObjectives,
-  Settings.getAdjustmentData,
-  Items.getItemsState,
-  Recipes.getRecipesState,
-  Recipes.getAdjustedDataset,
-  (objectives, adj, itemsState, recipesState, data) =>
-    objectives.map((o) => {
-      let recipe: RecipeRational | undefined;
-      if (isRecipeObjective(o)) {
-        recipe = RecipeUtility.adjustRecipe(
-          o.targetId,
-          adj.proliferatorSprayId,
-          adj.miningBonus,
-          adj.researchSpeed,
-          adj.netProductionOnly,
-          o,
-          itemsState,
-          data,
-        );
-        RecipeUtility.adjustLaunchRecipeObjective(recipe, recipesState, data);
-        recipe.finalize();
-      }
-
-      return { ...o, recipe };
-    }),
-);
-
 export const getNormalizedObjectives = createSelector(
-  getObjectiveRationals,
+  getObjectives,
   Items.getItemsState,
   Settings.getBeltSpeed,
   Settings.getDisplayRateInfo,
@@ -143,7 +127,7 @@ export const getMatrixResult = createSelector(
 
 export const getSteps = createSelector(
   getMatrixResult,
-  getObjectiveRationals,
+  getObjectives,
   Items.getItemsState,
   Recipes.getRecipesState,
   Settings.getBeaconReceivers,

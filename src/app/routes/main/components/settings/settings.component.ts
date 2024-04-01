@@ -14,7 +14,7 @@ import { MenuItem } from 'primeng/api';
 import { first } from 'rxjs';
 
 import {
-  Dataset,
+  AdjustedDataset,
   Defaults,
   DisplayRate,
   displayRateOptions,
@@ -243,7 +243,7 @@ export class SettingsComponent implements OnInit {
   setExcludedRecipes(
     checked: string[],
     recipesState: Recipes.RecipesState,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     const payload: IdValueDefaultPayload<boolean>[] = [];
     for (const id of data.recipeIds) {
@@ -262,7 +262,7 @@ export class SettingsComponent implements OnInit {
   setExcludedItems(
     checked: string[],
     itemsState: Items.ItemsState,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     const payload: IdValuePayload<boolean>[] = [];
     for (const id of data.itemIds) {

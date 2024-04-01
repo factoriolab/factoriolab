@@ -3,8 +3,8 @@ import { saveAs } from 'file-saver';
 
 import { notNullish } from '~/helpers';
 import {
+  AdjustedDataset,
   ColumnsState,
-  Dataset,
   Entities,
   ItemSettings,
   Rational,
@@ -49,7 +49,7 @@ export class ExportService {
     columnsState: ColumnsState,
     itemsState: Entities<ItemSettings>,
     recipesState: Entities<RecipeSettings>,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     const json = steps.map((s) =>
       this.stepToJson(s, steps, columnsState, itemsState, recipesState, data),
@@ -85,7 +85,7 @@ export class ExportService {
     columns: ColumnsState,
     itemsState: Entities<ItemSettings>,
     recipesState: Entities<RecipeSettings>,
-    data: Dataset,
+    data: AdjustedDataset,
   ): StepExport {
     const exp: StepExport = {};
     if (step.itemId != null) {
@@ -117,7 +117,7 @@ export class ExportService {
     if (step.recipeId != null) {
       exp.Recipe = step.recipeId;
 
-      const recipe = data.recipeR[step.recipeId];
+      const recipe = data.adjustedRecipe[step.recipeId];
       const recipeSettings = recipesState[step.recipeId];
       const inputs = Object.keys(recipe.in)
         .map((i) => {

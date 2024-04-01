@@ -3,13 +3,7 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
 import { AppSharedModule } from '~/app-shared.module';
-import {
-  Game,
-  Rational,
-  Recipe,
-  RecipeRational,
-  RecipeSettings,
-} from '~/models';
+import { Game, Rational, Recipe, RecipeSettings } from '~/models';
 import { Recipes } from '~/store';
 import { DetailComponent } from '../../models';
 
@@ -45,8 +39,8 @@ export class RecipeComponent extends DetailComponent {
   recipeSettings = computed<RecipeSettings | undefined>(
     () => this.recipesState()[this.id()],
   );
-  recipeR = computed<RecipeRational | undefined>(
-    () => this.data().recipeR[this.id()],
+  recipeR = computed<Recipe | undefined>(
+    () => this.data().adjustedRecipe[this.id()],
   );
 
   Game = Game;

@@ -1,21 +1,26 @@
 import { Rational } from '../rational';
 
-export interface Fuel {
+export interface FuelJson {
   category: string;
   /** Fuel value in MJ */
   value: number | string;
   result?: string;
 }
 
-export class FuelRational {
+export interface Fuel {
   category: string;
   /** Fuel value in MJ */
   value: Rational;
   result?: string;
+}
 
-  constructor(obj: Fuel) {
-    this.category = obj.category;
-    this.value = Rational.from(obj.value);
-    this.result = obj.result;
-  }
+export function parseFuel(json: FuelJson): Fuel;
+export function parseFuel(json: FuelJson | undefined): Fuel | undefined;
+export function parseFuel(json: FuelJson | undefined): Fuel | undefined {
+  if (json == null) return;
+  return {
+    category: json.category,
+    value: Rational.from(json.value),
+    result: json.result,
+  };
 }
