@@ -55,26 +55,6 @@ export interface Recipe {
   drain?: Rational;
   consumption?: Rational;
   pollution?: Rational;
-
-  // finalize(): void {
-  //   for (const outId of Object.keys(this.out)) {
-  //     const output = this.out[outId];
-  //     if (this.in[outId] == null || this.in[outId].lt(output)) {
-  //       this.produces.add(outId);
-  //     }
-
-  //     this.output[outId] = output
-  //       .sub(this.in[outId] ?? Rational.zero)
-  //       .div(this.time);
-  //   }
-
-  //   for (const inId of Object.keys(this.in).filter(
-  //     (i) => this.out[i] == null,
-  //   )) {
-  //     const input = this.in[inId];
-  //     this.output[inId] = input.inverse().div(this.time);
-  //   }
-  // }
 }
 
 export function parseRecipe(json: RecipeJson): Recipe {
