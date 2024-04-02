@@ -322,20 +322,31 @@ describe('ObjectivesComponent', () => {
       component.convertItemsToMachines(
         Mocks.Objectives[2],
         RecipeId.AdvancedCircuit,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setValue).not.toHaveBeenCalled();
     });
   });
 
   describe('convertMachinesToItems', () => {
+    it('should convert the objective value', () => {
+      spyOn(component, 'setValue');
+      component.convertMachinesToItems(
+        Mocks.Objectives[4],
+        ItemId.PiercingRoundsMagazine,
+        ObjectiveUnit.Items,
+        Mocks.AdjustedDataset,
+      );
+      expect(component.setValue).toHaveBeenCalledWith('4', new Rational(175n));
+    });
+
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'setValue');
       component.convertMachinesToItems(
         Mocks.Objectives[2],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Items,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setValue).not.toHaveBeenCalled();
     });
@@ -348,7 +359,7 @@ describe('ObjectivesComponent', () => {
         Mocks.Objectives[2],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Items,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setValue).not.toHaveBeenCalled();
     });

@@ -307,7 +307,6 @@ export function objectivesReducer(
         },
       };
     case ObjectivesActionType.ADJUST_DISPLAY_RATE: {
-      const factor = Rational.fromString(action.payload);
       const newEntities = { ...state.entities };
       for (const objective of state.ids
         .map((i) => state.entities[i])
@@ -316,7 +315,7 @@ export function objectivesReducer(
             o.type !== ObjectiveType.Maximize &&
             (o.unit === ObjectiveUnit.Items || o.unit === ObjectiveUnit.Wagons),
         )) {
-        const value = objective.value.mul(factor);
+        const value = objective.value.mul(action.payload);
         newEntities[objective.id] = { ...objective, value };
       }
       return {

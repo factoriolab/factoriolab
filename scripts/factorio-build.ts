@@ -3,6 +3,7 @@ import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
+import { coalesce } from '~/helpers';
 import {
   CategoryJson,
   Entities,
@@ -1734,7 +1735,7 @@ async function processMod(): Promise<void> {
     }
 
     // Third, sort by prototype order field
-    return (a.order ?? '').localeCompare(b.order ?? '');
+    return coalesce(a.order, '').localeCompare(coalesce(b.order, ''));
   });
 
   const labs = Object.keys(machines.lab);

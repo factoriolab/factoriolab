@@ -76,10 +76,7 @@ export class Rational {
       return new Rational(BigInt(p), BigInt(q));
     }
 
-    // Parse Rational from number
     if (typeof p === 'number') return this.fromNumber(p);
-
-    // Parse Rational from string
     return this.fromString(p);
   }
 
@@ -347,17 +344,23 @@ export class Rational {
   }
 
   constructor(p: bigint, q: bigint = 1n) {
+    if (q === 1n) {
+      this.p = p;
+      this.q = q;
+      return;
+    }
+
+    if (q === 0n) throw new Error(DIVIDE_BY_ZERO);
+
     if (q < 0n) {
       p = -p;
       q = -q;
     }
 
-    if (q !== 1n) {
-      const gcd = Rational.gcd(Rational.abs(p), q);
-      if (gcd > 1n) {
-        p = p / gcd;
-        q = q / gcd;
-      }
+    const gcd = Rational.gcd(Rational.abs(p), q);
+    if (gcd > 1n) {
+      p = p / gcd;
+      q = q / gcd;
     }
 
     this.p = p;

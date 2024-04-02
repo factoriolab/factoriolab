@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
 import { AppSharedModule } from '~/app-shared.module';
+import { coalesce } from '~/helpers';
 import {
   Category,
   Game,
@@ -36,7 +37,7 @@ export class ItemComponent extends DetailComponent {
   category = computed<Category | undefined>(() => {
     const id = this.id();
     const data = this.data();
-    return data.categoryEntities[data.itemEntities[id]?.category ?? ''];
+    return data.categoryEntities[coalesce(data.itemEntities[id]?.category, '')];
   });
   recipes = computed(() => {
     const id = this.id();

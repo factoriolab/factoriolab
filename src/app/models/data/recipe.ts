@@ -92,6 +92,7 @@ export function parseRecipe(json: RecipeJson): Recipe {
     part: json.part,
     unlockedBy: json.unlockedBy,
     isMining: json.isMining,
+    isTechnology: json.isTechnology,
     isBurn: json.isBurn,
     icon: json.icon,
     iconText: json.iconText,

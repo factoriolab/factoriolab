@@ -36,7 +36,7 @@ describe('TechPickerComponent', () => {
 
   describe('status', () => {
     it('should filter technologies and selection', () => {
-      component.clickOpen(Mocks.RawDataset.technologyIds);
+      component.clickOpen(Mocks.AdjustedDataset.technologyIds);
       component.filter.set('optics');
       const status = component.status();
       expect(status.available.length).toEqual(0);
@@ -68,7 +68,7 @@ describe('TechPickerComponent', () => {
       spyOn(component.selection, 'set');
       component.selectAll(true);
       expect(component.selection.set).toHaveBeenCalledWith(
-        Mocks.RawDataset.technologyIds,
+        Mocks.AdjustedDataset.technologyIds,
       );
     });
 
@@ -141,7 +141,7 @@ describe('TechPickerComponent', () => {
     });
 
     it('should emit null if all technologies are selected', () => {
-      component.selection.set(Mocks.RawDataset.technologyIds);
+      component.selection.set(Mocks.AdjustedDataset.technologyIds);
       spyOn(component.selectIds, 'emit');
       component.onHide();
       expect(component.selectIds.emit).toHaveBeenCalledWith(null);

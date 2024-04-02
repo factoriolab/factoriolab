@@ -1,4 +1,5 @@
 import { sankey } from '~/d3-sankey';
+import { coalesce } from '~/helpers';
 import {
   AdjustedDataset,
   DisplayRateInfo,
@@ -373,7 +374,7 @@ export class RateUtility {
       step.depth = result.nodes.find((n) => n.stepId === step.id)?.depth;
     }
 
-    steps.sort((a, b) => (b.depth ?? 0) - (a.depth ?? 0));
+    steps.sort((a, b) => coalesce(b.depth, 0) - coalesce(a.depth, 0));
   }
 
   static calculateHierarchy(steps: Step[]): Step[] {

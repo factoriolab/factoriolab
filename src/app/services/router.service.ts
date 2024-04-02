@@ -8,7 +8,7 @@ import { combineLatest, debounceTime, Observable, Subject } from 'rxjs';
 import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { data } from 'src/data';
-import { filterNullish } from '~/helpers';
+import { coalesce, filterNullish } from '~/helpers';
 import {
   BeaconSettings,
   DisplayRate,
@@ -1200,7 +1200,7 @@ export class RouterService {
       const obj: Objective = {
         id: index.toString(),
         targetId: s[i++], // Convert hash to real id after determining unit
-        value: this.parseRational(s[i++]) ?? Rational.one,
+        value: coalesce(this.parseRational(s[i++]), Rational.one),
         unit: Number(s[i++]) || ObjectiveUnit.Items,
         type: Number(s[i++]) || ObjectiveType.Output,
         machineId: this.parseString(s[i++], hash?.machines),
@@ -1213,11 +1213,13 @@ export class RouterService {
       };
 
       if (hash) {
-        obj.targetId =
+        obj.targetId = coalesce(
           this.parseNString(
             obj.targetId,
             isRecipeObjective(obj) ? hash.recipes : hash.items,
-          ) ?? '';
+          ),
+          '',
+        );
       }
 
       this.deleteEmptyKeys(obj);
@@ -1266,7 +1268,7 @@ export class RouterService {
     for (const item of list) {
       const s = item.split(FIELDSEP);
       let i = 0;
-      const id = this.parseString(s[i++], hash?.items) ?? '';
+      const id = coalesce(this.parseString(s[i++], hash?.items), '');
       const obj: ItemSettings = {
         excluded: this.parseBool(s[i++]),
         beltId: this.parseString(s[i++], hash?.belts),
@@ -1333,7 +1335,7 @@ export class RouterService {
     for (const recipe of list) {
       const s = recipe.split(FIELDSEP);
       let i = 0;
-      const id = this.parseString(s[i++], hash?.recipes) ?? '';
+      const id = coalesce(this.parseString(s[i++], hash?.recipes), '');
       const obj: RecipeSettings = {
         excluded: this.parseBool(s[i++]),
         machineId: this.parseString(s[i++], hash?.machines),
@@ -1424,8 +1426,8 @@ export class RouterService {
         ids = [];
         id = '';
       } else {
-        if (id && hash) id = this.parseNString(id, hash.machines) ?? '';
-        if (loadIds && ids != null) ids.push(id ?? '');
+        if (id && hash) id = coalesce(this.parseNString(id, hash.machines), '');
+        if (loadIds && ids != null) ids.push(coalesce(id, ''));
       }
 
       this.deleteEmptyKeys(obj);

@@ -1,5 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
+import { coalesce } from '~/helpers';
 import { Entities, Rational, RecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
@@ -20,7 +21,7 @@ export const getRecipesState = createSelector(
   (state, machinesState, data) => {
     const value: Entities<RecipeSettings> = {};
     const defaultExcludedRecipeIds = new Set(
-      data.defaults?.excludedRecipeIds ?? [],
+      coalesce(data.defaults?.excludedRecipeIds, []),
     );
 
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
@@ -52,7 +53,7 @@ export const getRecipesState = createSelector(
         if (s.moduleIds == null)
           s.moduleIds = RecipeUtility.defaultModules(
             s.moduleOptions,
-            def.moduleRankIds ?? [],
+            coalesce(def.moduleRankIds, []),
             machine.modules ?? Rational.zero,
           );
 
@@ -75,7 +76,7 @@ export const getRecipesState = createSelector(
             if (beaconSettings.moduleIds == null)
               beaconSettings.moduleIds = RecipeUtility.defaultModules(
                 beaconSettings.moduleOptions,
-                def.beaconModuleRankIds ?? [],
+                coalesce(def.beaconModuleRankIds, []),
                 beacon.modules,
               );
           }
@@ -116,19 +117,25 @@ export const getAdjustedDataset = createSelector(
   getRecipesState,
   getExcludedRecipeIds,
   Items.getItemsState,
+  Settings.getAvailableRecipes,
   Settings.getCosts,
   Settings.getAdjustmentData,
   Settings.getDataset,
-  (recipesState, excludedRecipeIds, itemsState, costs, adj, data) =>
+  (
+    recipesState,
+    excludedRecipeIds,
+    itemsState,
+    recipeIds,
+    costs,
+    adjustmentData,
+    data,
+  ) =>
     RecipeUtility.adjustDataset(
-      adj.recipeIds,
+      recipeIds,
       excludedRecipeIds,
       recipesState,
       itemsState,
-      adj.proliferatorSprayId,
-      adj.miningBonus,
-      adj.researchSpeed,
-      adj.netProductionOnly,
+      adjustmentData,
       costs,
       data,
     ),

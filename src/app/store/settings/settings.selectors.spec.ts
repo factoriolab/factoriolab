@@ -143,32 +143,32 @@ describe('Settings Selectors', () => {
       expect(result).toBeNull();
     });
 
-    // it('should use minimum values', () => {
-    //   const result = Selectors.getDefaults.projector(Preset.Minimum, Mocks.Mod);
-    //   TestUtility.assert(result != null);
-    //   expect(result.beltId).toEqual(Mocks.Mod.defaults!.minBelt!);
-    //   expect(result.machineRankIds).toEqual(
-    //     Mocks.Mod.defaults!.minMachineRank!,
-    //   );
-    //   expect(result.moduleRankIds).toEqual([]);
-    //   expect(result.beaconModuleId).toEqual(ItemId.Module);
-    //   expect(result.beaconCount).toEqual('0');
-    // });
+    it('should use minimum values', () => {
+      const result = Selectors.getDefaults.projector(Preset.Minimum, Mocks.Mod);
+      TestUtility.assert(result != null);
+      expect(result.beltId).toEqual(Mocks.Mod.defaults!.minBelt!);
+      expect(result.machineRankIds).toEqual(
+        Mocks.Mod.defaults!.minMachineRank!,
+      );
+      expect(result.moduleRankIds).toEqual([]);
+      expect(result.beaconModuleId).toEqual(ItemId.Module);
+      expect(result.beaconCount).toEqual(Rational.zero);
+    });
 
-    // it('should use 8 beacons', () => {
-    //   const result = Selectors.getDefaults.projector(Preset.Beacon8, Mocks.Mod);
-    //   TestUtility.assert(result != null);
-    //   expect(result.beaconCount).toEqual('8');
-    // });
+    it('should use 8 beacons', () => {
+      const result = Selectors.getDefaults.projector(Preset.Beacon8, Mocks.Mod);
+      TestUtility.assert(result != null);
+      expect(result.beaconCount).toEqual(new Rational(8n));
+    });
 
-    // it('should use 12 beacons', () => {
-    //   const result = Selectors.getDefaults.projector(
-    //     Preset.Beacon12,
-    //     Mocks.Mod,
-    //   );
-    //   TestUtility.assert(result != null);
-    //   expect(result.beaconCount).toEqual('12');
-    // });
+    it('should use 12 beacons', () => {
+      const result = Selectors.getDefaults.projector(
+        Preset.Beacon12,
+        Mocks.Mod,
+      );
+      TestUtility.assert(result != null);
+      expect(result.beaconCount).toEqual(new Rational(12n));
+    });
 
     it('should get the defaults from the current base mod', () => {
       const result = Selectors.getDefaults.projector(Preset.Beacon8, Mocks.Mod);
@@ -470,27 +470,27 @@ describe('Settings Selectors', () => {
       expect(result.pipeIds).toEqual([ItemId.CopperCable, ItemId.Pipe]);
     });
 
-    // it('should calculate missing recipe icons', () => {
-    //   const icons = Mocks.Mod.icons.filter(
-    //     (i) => i.id !== RecipeId.AdvancedOilProcessing,
-    //   );
-    //   const mod = {
-    //     ...Mocks.Mod,
-    //     ...{
-    //       icons,
-    //     },
-    //   };
-    //   const result = Selectors.getDataset.projector(
-    //     mod,
-    //     null,
-    //     undefined,
-    //     Mocks.Defaults,
-    //     Game.Factorio,
-    //   );
-    //   expect(
-    //     result.recipeEntities[RecipeId.AdvancedOilProcessing].icon,
-    //   ).toEqual(ItemId.HeavyOil);
-    // });
+    it('should calculate missing recipe icons', () => {
+      const icons = Mocks.Mod.icons.filter(
+        (i) => i.id !== RecipeId.AdvancedOilProcessing,
+      );
+      const mod = {
+        ...Mocks.Mod,
+        ...{
+          icons,
+        },
+      };
+      const result = Selectors.getDataset.projector(
+        mod,
+        null,
+        undefined,
+        Mocks.Defaults,
+        Game.Factorio,
+      );
+      expect(
+        result.recipeEntities[RecipeId.AdvancedOilProcessing].icon,
+      ).toEqual(ItemId.HeavyOil);
+    });
 
     it('should handle data not loaded yet', () => {
       const result = Selectors.getDataset.projector(
@@ -508,25 +508,25 @@ describe('Settings Selectors', () => {
     it('should return the map of belt speeds', () => {
       const flowRate = Rational.from(2000);
       const result = Selectors.getBeltSpeed.projector(
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
         flowRate,
       );
       expect(result[ItemId.TransportBelt]).toEqual(
-        Mocks.RawDataset.beltEntities[ItemId.TransportBelt].speed,
+        Mocks.AdjustedDataset.beltEntities[ItemId.TransportBelt].speed,
       );
       expect(result[ItemId.Pipe]).toEqual(flowRate);
     });
 
     it('should include pipe speeds', () => {
       const data = {
-        ...Mocks.RawDataset,
+        ...Mocks.AdjustedDataset,
         ...{
           pipeIds: [ItemId.Pipe],
           beltEntities: {
-            ...Mocks.RawDataset.beltEntities,
+            ...Mocks.AdjustedDataset.beltEntities,
             ...{
               [ItemId.Pipe]: {
-                ...Mocks.RawDataset.beltEntities[ItemId.Pipe],
+                ...Mocks.AdjustedDataset.beltEntities[ItemId.Pipe],
                 ...{
                   speed: Rational.ten,
                 },
@@ -567,7 +567,7 @@ describe('Settings Selectors', () => {
     it('should expand minimal set of technology ids into full list', () => {
       const result = Selectors.getAllResearchedTechnologyIds.projector(
         [RecipeId.ArtilleryShellRange],
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result?.length).toEqual(54);
     });
@@ -575,7 +575,7 @@ describe('Settings Selectors', () => {
     it('should return value if null', () => {
       const result = Selectors.getAllResearchedTechnologyIds.projector(
         null,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result).toBeNull();
     });
@@ -585,15 +585,15 @@ describe('Settings Selectors', () => {
     it('should return full list if value is null', () => {
       const result = Selectors.getAvailableRecipes.projector(
         null,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
-      expect(result).toEqual(Mocks.RawDataset.recipeIds);
+      expect(result).toEqual(Mocks.AdjustedDataset.recipeIds);
     });
 
     it('should filter for only unlocked recipes', () => {
       const result = Selectors.getAvailableRecipes.projector(
         [RecipeId.Automation],
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result.length).toEqual(234);
     });

@@ -9,11 +9,11 @@ describe('Items Selectors', () => {
     it('should return the item configs', () => {
       const result = Selectors.getItemsState.projector(
         initialItemsState,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
         Mocks.SettingsStateInitial,
       );
       expect(Object.keys(result).length).toEqual(
-        Mocks.RawDataset.itemIds.length,
+        Mocks.AdjustedDataset.itemIds.length,
       );
     });
 
@@ -24,7 +24,7 @@ describe('Items Selectors', () => {
       };
       const result = Selectors.getItemsState.projector(
         state,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
         Mocks.SettingsStateInitial,
       );
       expect(result[Mocks.Item1.id].beltId).toEqual(stringValue);
@@ -38,8 +38,8 @@ describe('Items Selectors', () => {
         Mocks.ItemsStateInitial,
       );
       expect(result.excluded).toBeTrue();
-      expect(result.beltId).toBeTrue();
-      expect(result.wagonId).toBeTrue();
+      expect(result.belts).toBeTrue();
+      expect(result.wagons).toBeTrue();
     });
   });
 });

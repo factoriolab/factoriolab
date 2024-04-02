@@ -218,9 +218,9 @@ describe('SettingsComponent', () => {
     it('should set up a batch of actions to set recipe excluded states', () => {
       spyOn(component, 'setRecipeExcludedBatch');
       component.setExcludedRecipes(
-        [...Mocks.RawDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
+        [...Mocks.AdjustedDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
         Mocks.RecipesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
         { id: RecipeId.Coal, value: true, def: false },
@@ -230,10 +230,10 @@ describe('SettingsComponent', () => {
     it('should handle null defaults', () => {
       spyOn(component, 'setRecipeExcludedBatch');
       component.setExcludedRecipes(
-        [...Mocks.RawDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
+        [...Mocks.AdjustedDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
         Mocks.RecipesStateInitial,
         {
-          ...Mocks.Dataset,
+          ...Mocks.AdjustedDataset,
           ...{ defaults: undefined },
         },
       );
@@ -249,7 +249,7 @@ describe('SettingsComponent', () => {
       component.setExcludedItems(
         [ItemId.Coal],
         Mocks.ItemsStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setItemExcludedBatch).toHaveBeenCalledWith([
         { id: ItemId.Coal, value: true },

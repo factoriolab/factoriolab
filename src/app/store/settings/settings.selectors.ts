@@ -2,7 +2,7 @@ import { createSelector } from '@ngrx/store';
 import { MenuItem, SelectItem } from 'primeng/api';
 
 import { environment } from 'src/environments';
-import { fnPropsNotNullish, getIdOptions } from '~/helpers';
+import { coalesce, fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
   Beacon,
   Belt,
@@ -36,6 +36,7 @@ import {
   toBoolEntities,
   toEntities,
 } from '~/models';
+import { AdjustmentData } from '~/models/adjustment-data';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
@@ -265,21 +266,29 @@ export const getDataset = createSelector(
   (mod, i18n, hash, defaults, game) => {
     // Map out entities with mods
     const categoryEntities = toEntities(
-      mod?.categories ?? [],
+      coalesce(mod?.categories, []),
       {},
       environment.debug,
     );
     const modIconPath = `data/${mod?.id}/icons.webp`;
     const iconEntities = toEntities(
-      (mod?.icons ?? []).map((i) => ({
+      coalesce(mod?.icons, []).map((i) => ({
         ...i,
         ...{ file: i.file ?? modIconPath },
       })),
       {},
       environment.debug,
     );
-    const itemData = toEntities(mod?.items ?? [], {}, environment.debug);
-    const recipeData = toEntities(mod?.recipes ?? [], {}, environment.debug);
+    const itemData = toEntities(
+      coalesce(mod?.items, []),
+      {},
+      environment.debug,
+    );
+    const recipeData = toEntities(
+      coalesce(mod?.recipes, []),
+      {},
+      environment.debug,
+    );
     const limitations = reduceEntities(mod?.limitations ?? {});
 
     // Apply localization
@@ -369,15 +378,11 @@ export const getDataset = createSelector(
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output item
     recipes
-      .filter((r) => !iconEntities[r.id] && !recipeData[r.id].icon)
+      .filter((r) => !iconEntities[r.id] && !r.icon)
       .forEach((r) => {
         const firstOutId = Object.keys(r.out)[0];
         const firstOutItem = itemData[firstOutId];
-
-        recipeData[r.id] = {
-          ...recipeData[r.id],
-          ...{ icon: firstOutItem.icon ?? firstOutId },
-        };
+        r.icon = firstOutItem.icon ?? firstOutId;
       });
 
     // Calculate category item rows
@@ -608,19 +613,16 @@ export const getAdjustmentData = createSelector(
   getProliferatorSprayId,
   getRationalMiningBonus,
   getResearchFactor,
-  getAvailableRecipes,
   (
     netProductionOnly,
     proliferatorSprayId,
     miningBonus,
-    researchSpeed,
-    recipeIds,
-  ) => ({
+    researchBonus,
+  ): AdjustmentData => ({
     netProductionOnly,
     proliferatorSprayId,
     miningBonus,
-    researchSpeed,
-    recipeIds,
+    researchBonus,
   }),
 );
 

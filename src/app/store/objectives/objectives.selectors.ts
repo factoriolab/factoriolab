@@ -54,17 +54,14 @@ export const getObjectives = createSelector(
   Machines.getMachinesState,
   Settings.getAdjustmentData,
   Recipes.getAdjustedDataset,
-  (objectives, itemsState, recipesState, machinesState, adj, data) =>
+  (objectives, itemsState, recipesState, machinesState, adjustmentData, data) =>
     objectives.map((o) =>
       RecipeUtility.adjustObjective(
         o,
         itemsState,
         recipesState,
         machinesState,
-        adj.proliferatorSprayId,
-        adj.miningBonus,
-        adj.researchSpeed,
-        adj.netProductionOnly,
+        adjustmentData,
         data,
       ),
     ),

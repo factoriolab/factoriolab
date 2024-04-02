@@ -14,113 +14,113 @@ import {
 import { RateUtility } from './rate.utility';
 
 describe('RateUtility', () => {
-  // describe('objectiveNormalizedRate', () => {
-  // it('should skip on maximize objectives', () => {
-  //   expect(
-  //     RateUtility.objectiveNormalizedRate(
-  //       new ObjectiveRational({
-  //         id: '0',
-  //         targetId: ItemId.Coal,
-  //         value: '1',
-  //         unit: ObjectiveUnit.Belts,
-  //         type: ObjectiveType.Maximize,
-  //       }),
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.BeltSpeed,
-  //       Mocks.DisplayRateInfo,
-  //       Mocks.Dataset,
-  //     ),
-  //   ).toEqual(Rational.one);
-  // });
+  describe('objectiveNormalizedRate', () => {
+    it('should skip on maximize objectives', () => {
+      expect(
+        RateUtility.objectiveNormalizedRate(
+          {
+            id: '0',
+            targetId: ItemId.Coal,
+            value: Rational.one,
+            unit: ObjectiveUnit.Belts,
+            type: ObjectiveType.Maximize,
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.AdjustedDataset,
+        ),
+      ).toEqual(Rational.one);
+    });
 
-  // it('should normalize item objective rates based on display rate', () => {
-  //   expect(
-  //     RateUtility.objectiveNormalizedRate(
-  //       new ObjectiveRational({
-  //         id: '0',
-  //         targetId: ItemId.Coal,
-  //         value: '1',
-  //         unit: ObjectiveUnit.Items,
-  //         type: ObjectiveType.Output,
-  //       }),
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.BeltSpeed,
-  //       Mocks.DisplayRateInfo,
-  //       Mocks.Dataset,
-  //     ),
-  //   ).toEqual(Rational.from(1, 60));
-  // });
+    it('should normalize item objective rates based on display rate', () => {
+      expect(
+        RateUtility.objectiveNormalizedRate(
+          {
+            id: '0',
+            targetId: ItemId.Coal,
+            value: Rational.one,
+            unit: ObjectiveUnit.Items,
+            type: ObjectiveType.Output,
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.AdjustedDataset,
+        ),
+      ).toEqual(new Rational(1n, 60n));
+    });
 
-  // it('should normalize item objective rates based on belts', () => {
-  //   expect(
-  //     RateUtility.objectiveNormalizedRate(
-  //       new ObjectiveRational({
-  //         id: '0',
-  //         targetId: ItemId.Coal,
-  //         value: '1',
-  //         unit: ObjectiveUnit.Belts,
-  //         type: ObjectiveType.Output,
-  //       }),
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.BeltSpeed,
-  //       Mocks.DisplayRateInfo,
-  //       Mocks.Dataset,
-  //     ),
-  //   ).toEqual(Rational.from(15));
-  // });
+    it('should normalize item objective rates based on belts', () => {
+      expect(
+        RateUtility.objectiveNormalizedRate(
+          {
+            id: '0',
+            targetId: ItemId.Coal,
+            value: Rational.one,
+            unit: ObjectiveUnit.Belts,
+            type: ObjectiveType.Output,
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.AdjustedDataset,
+        ),
+      ).toEqual(new Rational(15n));
+    });
 
-  // it('should normalize item objective rates based on wagons', () => {
-  //   expect(
-  //     RateUtility.objectiveNormalizedRate(
-  //       new ObjectiveRational({
-  //         id: '0',
-  //         targetId: ItemId.Coal,
-  //         value: '1',
-  //         unit: ObjectiveUnit.Wagons,
-  //         type: ObjectiveType.Output,
-  //       }),
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.BeltSpeed,
-  //       Mocks.DisplayRateInfo,
-  //       Mocks.Dataset,
-  //     ),
-  //   ).toEqual(Rational.from(100, 3));
+    it('should normalize item objective rates based on wagons', () => {
+      expect(
+        RateUtility.objectiveNormalizedRate(
+          {
+            id: '0',
+            targetId: ItemId.Coal,
+            value: Rational.one,
+            unit: ObjectiveUnit.Wagons,
+            type: ObjectiveType.Output,
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.AdjustedDataset,
+        ),
+      ).toEqual(new Rational(100n, 3n));
 
-  //   expect(
-  //     RateUtility.objectiveNormalizedRate(
-  //       new ObjectiveRational({
-  //         id: '0',
-  //         targetId: ItemId.PetroleumGas,
-  //         value: '1',
-  //         unit: ObjectiveUnit.Wagons,
-  //         type: ObjectiveType.Output,
-  //       }),
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.BeltSpeed,
-  //       Mocks.DisplayRateInfo,
-  //       Mocks.Dataset,
-  //     ),
-  //   ).toEqual(Rational.from(1250, 3));
-  // });
+      expect(
+        RateUtility.objectiveNormalizedRate(
+          {
+            id: '0',
+            targetId: ItemId.PetroleumGas,
+            value: Rational.one,
+            unit: ObjectiveUnit.Wagons,
+            type: ObjectiveType.Output,
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.AdjustedDataset,
+        ),
+      ).toEqual(new Rational(1250n, 3n));
+    });
 
-  //   it('should adjust technology objective rate by productivity', () => {
-  //     expect(
-  //       RateUtility.objectiveNormalizedRate(
-  //         new ObjectiveRational({
-  //           id: '0',
-  //           targetId: ItemId.ArtilleryShellRange,
-  //           value: '1',
-  //           unit: ObjectiveUnit.Items,
-  //           type: ObjectiveType.Output,
-  //         }),
-  //         Mocks.ItemsStateInitial,
-  //         Mocks.BeltSpeed,
-  //         Mocks.DisplayRateInfo,
-  //         Mocks.Dataset,
-  //       ),
-  //     ).toEqual(Rational.from(1, 50));
-  //   });
-  // });
+    it('should adjust technology objective rate by productivity', () => {
+      expect(
+        RateUtility.objectiveNormalizedRate(
+          {
+            id: '0',
+            targetId: ItemId.ArtilleryShellRange,
+            value: Rational.one,
+            unit: ObjectiveUnit.Items,
+            type: ObjectiveType.Output,
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.BeltSpeed,
+          Mocks.DisplayRateInfo,
+          Mocks.AdjustedDataset,
+        ),
+      ).toEqual(new Rational(1n, 50n));
+    });
+  });
 
   describe('addEntityValue', () => {
     it('should add parents field to step', () => {
@@ -154,7 +154,7 @@ describe('RateUtility', () => {
       const result = { ...step };
       RateUtility.adjustPowerPollution(
         result,
-        Mocks.Dataset.adjustedRecipe[RecipeId.WoodenChest],
+        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.WoodenChest],
         Game.Factorio,
       );
       expect(result).toEqual(step);
@@ -245,7 +245,7 @@ describe('RateUtility', () => {
         null,
         {},
         displayRateInfo[DisplayRate.PerMinute],
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(RateUtility.calculateParentsOutputs).toHaveBeenCalledTimes(2);
       expect(RateUtility.calculateSettings).toHaveBeenCalledTimes(2);
@@ -263,7 +263,7 @@ describe('RateUtility', () => {
         id: '0',
         items: Rational.one,
         itemId: ItemId.IronPlate,
-        recipe: Mocks.Dataset.adjustedRecipe[RecipeId.IronPlate],
+        recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.IronPlate],
         machines: Rational.one,
       };
       const stepB: Step = { id: '1', itemId: ItemId.IronOre };
@@ -308,7 +308,7 @@ describe('RateUtility', () => {
           value: Rational.one,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
-          recipe: Mocks.Dataset.adjustedRecipe[RecipeId.Coal],
+          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
         },
       };
       RateUtility.calculateSettings(
@@ -330,7 +330,7 @@ describe('RateUtility', () => {
         step,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(step.belts).toBeUndefined();
     });
@@ -346,7 +346,7 @@ describe('RateUtility', () => {
         step,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(step.belts).toEqual(Rational.one);
       expect(step.wagons).toEqual(new Rational(BigInt(3), BigInt(400)));
@@ -363,30 +363,30 @@ describe('RateUtility', () => {
         step,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(step.wagons).toEqual(Rational.one);
     });
 
-    // it('should set to null for research recipes', () => {
-    //   const step: Step = {
-    //     id: 'id',
-    //     itemId: ItemId.ArtilleryShellRange,
-    //     recipeId: RecipeId.ArtilleryShellRange,
-    //     items: Rational.one,
-    //     belts: Rational.one,
-    //     wagons: Rational.one,
-    //     recipeSettings: Mocks.RecipesStateInitial[RecipeId.ArtilleryShellRange],
-    //   };
-    //   RateUtility.calculateBelts(
-    //     step,
-    //     Mocks.ItemsStateInitial,
-    //     Mocks.BeltSpeed,
-    //     Mocks.Dataset,
-    //   );
-    //   expect(step.belts).toBeUndefined();
-    //   expect(step.wagons).toBeUndefined();
-    // });
+    it('should set to null for research recipes', () => {
+      const step: Step = {
+        id: 'id',
+        itemId: ItemId.ArtilleryShellRange,
+        recipeId: RecipeId.ArtilleryShellRange,
+        items: Rational.one,
+        belts: Rational.one,
+        wagons: Rational.one,
+        recipeSettings: Mocks.RecipesStateInitial[RecipeId.ArtilleryShellRange],
+      };
+      RateUtility.calculateBelts(
+        step,
+        Mocks.ItemsStateInitial,
+        Mocks.BeltSpeed,
+        Mocks.AdjustedDataset,
+      );
+      expect(step.belts).toBeUndefined();
+      expect(step.wagons).toBeUndefined();
+    });
 
     it('should set to null for rocket part recipes', () => {
       const step: Step = {
@@ -402,7 +402,7 @@ describe('RateUtility', () => {
         step,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(step.belts).toBeUndefined();
       expect(step.wagons).toBeUndefined();
@@ -420,7 +420,7 @@ describe('RateUtility', () => {
         power: Rational.zero,
         recipeSettings: Mocks.RecipesStateInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, Rational.one, Mocks.Dataset);
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedDataset);
       expect(step.power).toEqual(Rational.from(3840));
     });
 
@@ -434,7 +434,11 @@ describe('RateUtility', () => {
         power: Rational.zero,
         recipeSettings: Mocks.RecipesStateInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, Rational.hundred, Mocks.Dataset);
+      RateUtility.calculateBeacons(
+        step,
+        Rational.hundred,
+        Mocks.AdjustedDataset,
+      );
       expect(step.recipeSettings?.beacons?.[0].total).toEqual(Rational.from(8));
     });
 
@@ -447,7 +451,7 @@ describe('RateUtility', () => {
         machines: Rational.one,
         recipeSettings: Mocks.RecipesStateInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, Rational.one, Mocks.Dataset);
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedDataset);
       expect(step.power).toEqual(Rational.from(3840));
     });
 
@@ -470,13 +474,13 @@ describe('RateUtility', () => {
         power: Rational.zero,
         recipeSettings,
       };
-      RateUtility.calculateBeacons(step, Rational.one, Mocks.Dataset);
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedDataset);
       expect(step.power).toEqual(Rational.from(480));
     });
 
     it('should do nothing if beaconReceivers is unset', () => {
       const step: Step = { id: 'id' };
-      RateUtility.calculateBeacons(step, null, Mocks.Dataset);
+      RateUtility.calculateBeacons(step, null, Mocks.AdjustedDataset);
       expect(step).toEqual({ id: 'id' });
     });
 
@@ -490,7 +494,7 @@ describe('RateUtility', () => {
         },
       };
       const stepExpect = { ...step };
-      RateUtility.calculateBeacons(step, Rational.one, Mocks.Dataset);
+      RateUtility.calculateBeacons(step, Rational.one, Mocks.AdjustedDataset);
       expect(step).toEqual(stepExpect);
     });
   });
@@ -642,7 +646,7 @@ describe('RateUtility', () => {
           id: 'id',
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
-          recipe: Mocks.Dataset.adjustedRecipe[RecipeId.Coal],
+          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
           items: Rational.one,
           parents: { [RecipeId.PlasticBar]: Rational.one },
         },
@@ -650,7 +654,7 @@ describe('RateUtility', () => {
           id: 'id',
           itemId: ItemId.PlasticBar,
           recipeId: RecipeId.PlasticBar,
-          recipe: Mocks.Dataset.adjustedRecipe[RecipeId.PlasticBar],
+          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.PlasticBar],
           items: Rational.one,
           parents: { [RecipeId.Coal]: Rational.one },
         },

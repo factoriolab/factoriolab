@@ -30,7 +30,7 @@ export const Defaults = Settings.getDefaults.projector(
   M.Preset.Beacon8,
   Mod,
 ) as M.Defaults;
-export function getRawDataset(): M.Dataset {
+export function getDataset(): M.Dataset {
   Settings.getDataset.release();
   return Settings.getDataset.projector(
     Mod,
@@ -40,11 +40,11 @@ export function getRawDataset(): M.Dataset {
     M.Game.Factorio,
   );
 }
-export const RawDataset = getRawDataset();
-export const CategoryId = RawDataset.categoryIds[0];
-export const Item1 = RawDataset.itemEntities[RawDataset.itemIds[0]];
-export const Item2 = RawDataset.itemEntities[RawDataset.itemIds[1]];
-export const Recipe1 = RawDataset.recipeEntities[RawDataset.recipeIds[0]];
+export const Dataset = getDataset();
+export const CategoryId = Dataset.categoryIds[0];
+export const Item1 = Dataset.itemEntities[Dataset.itemIds[0]];
+export const Item2 = Dataset.itemEntities[Dataset.itemIds[1]];
+export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
 export const Objective1: M.Objective = {
   id: '0',
   targetId: ItemId.AdvancedCircuit,
@@ -182,20 +182,18 @@ export const BeltSpeed: M.Entities<M.Rational> = {
   [ItemId.Pipe]: new M.Rational(1500n),
 };
 export const ItemsState: M.Entities<M.ItemSettings> = {};
-for (const item of RawDataset.itemIds.map((i) => RawDataset.itemEntities[i])) {
+for (const item of Dataset.itemIds.map((i) => Dataset.itemEntities[i])) {
   ItemsState[item.id] = { ...ItemSettings1 };
 }
 export const RecipesState: M.Entities<M.RecipeSettings> = {};
-for (const recipe of RawDataset.recipeIds.map(
-  (i) => RawDataset.recipeEntities[i],
-)) {
+for (const recipe of Dataset.recipeIds.map((i) => Dataset.recipeEntities[i])) {
   RecipesState[recipe.id] = { ...RecipeSettings1 };
 }
 export const SettingsStateInitial = Settings.getSettings.projector(
   Settings.initialSettingsState,
   Defaults,
 );
-export const ItemsStateInitial = Items.getItemsState.projector({}, RawDataset, {
+export const ItemsStateInitial = Items.getItemsState.projector({}, Dataset, {
   ...Settings.initialSettingsState,
   ...{
     beltId: ItemId.TransportBelt,
@@ -210,41 +208,37 @@ export const MachinesStateInitial = Machines.getMachinesState.projector(
   Machines.initialMachinesState,
   [ItemId.Coal],
   Defaults,
-  RawDataset,
+  Dataset,
 );
 export function getRecipesState(): M.Entities<M.RecipeSettings> {
   Recipes.getRecipesState.release();
-  return Recipes.getRecipesState.projector(
-    {},
-    MachinesStateInitial,
-    RawDataset,
-  );
+  return Recipes.getRecipesState.projector({}, MachinesStateInitial, Dataset);
 }
 export const RecipesStateInitial = getRecipesState();
 export const Costs = Settings.initialSettingsState.costs;
-export function getDataset(): M.AdjustedDataset {
+export function getAdjustedDataset(): M.AdjustedDataset {
   Recipes.getAdjustedDataset.release();
   return Recipes.getAdjustedDataset.projector(
     RecipesStateInitial,
     [],
     ItemsStateInitial,
+    Dataset.recipeIds,
     Costs,
     {
       netProductionOnly: false,
       proliferatorSprayId: ItemId.Module,
       miningBonus: M.Rational.zero,
-      researchSpeed: M.Rational.one,
-      recipeIds: RawDataset.recipeIds,
+      researchBonus: M.Rational.one,
     },
-    getRawDataset(),
+    getDataset(),
   );
 }
-export const Dataset = getDataset();
+export const AdjustedDataset = getAdjustedDataset();
 export const Objectives = ObjectivesList.map((o) => ({
   ...o,
   ...{
     recipe: M.isRecipeObjective(o)
-      ? Dataset.adjustedRecipe[o.targetId]
+      ? AdjustedDataset.adjustedRecipe[o.targetId]
       : undefined,
   },
 }));
@@ -317,7 +311,7 @@ export const getFlow = (): M.FlowData => ({
     node('r|2', {
       machines: '1',
       machineId: 'machineId',
-      recipe: Dataset.recipeEntities[Dataset.recipeIds[0]],
+      recipe: AdjustedDataset.recipeEntities[AdjustedDataset.recipeIds[0]],
     }),
     node('o|3'),
     node('s|4'),
@@ -335,13 +329,11 @@ export const SimplexModifiers = {
   costInput: M.Rational.from(1000000),
   costExcluded: M.Rational.zero,
 };
-export const AdjustmentData = {
+export const AdjustmentData: M.AdjustmentData = {
   netProductionOnly: false,
   proliferatorSprayId: ItemId.Module,
   miningBonus: M.Rational.zero,
-  researchSpeed: M.Rational.one,
-  recipeIds: RawDataset.recipeIds,
-  data: RawDataset,
+  researchBonus: M.Rational.one,
 };
 export const DisplayRateInfo = M.displayRateInfo[M.DisplayRate.PerMinute];
 

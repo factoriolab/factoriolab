@@ -17,6 +17,7 @@ import {
 } from 'src/tests';
 import {
   Entities,
+  Rational,
   RecipeField,
   Step,
   StepDetail,
@@ -267,7 +268,7 @@ describe('StepsComponent', () => {
   describe('toggleRecipe', () => {
     it('should disable a recipe', () => {
       spyOn(component, 'setRecipeExcluded');
-      const data = { ...Mocks.Dataset, ...{ defaults: undefined } };
+      const data = { ...Mocks.AdjustedDataset, ...{ defaults: undefined } };
       component.toggleRecipe(
         RecipeId.AdvancedOilProcessing,
         Mocks.RecipesStateInitial,
@@ -285,7 +286,7 @@ describe('StepsComponent', () => {
       component.toggleRecipe(
         RecipeId.NuclearFuelReprocessing,
         Mocks.RecipesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
@@ -308,7 +309,7 @@ describe('StepsComponent', () => {
         { id: '0' },
         '1',
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.Machine,
       );
       expect(component.setMachine).not.toHaveBeenCalled();
@@ -320,7 +321,7 @@ describe('StepsComponent', () => {
         step,
         ItemId.AssemblingMachine2,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.Machine,
       );
       expect(component.setMachine).toHaveBeenCalledWith(
@@ -337,7 +338,7 @@ describe('StepsComponent', () => {
         step,
         ItemId.Coal,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.Fuel,
       );
       expect(component.setFuel).toHaveBeenCalledWith(
@@ -348,42 +349,42 @@ describe('StepsComponent', () => {
       );
     });
 
-    // it('should set up default for machine modules', () => {
-    //   spyOn(component, 'setMachineModules');
-    //   component.changeRecipeField(
-    //     step,
-    //     ItemId.SpeedModule3,
-    //     Mocks.MachinesStateInitial,
-    //     Mocks.Dataset,
-    //     RecipeField.Modules,
-    //     0,
-    //   );
-    //   expect(component.setModules).toHaveBeenCalledWith(
-    //     RecipeId.WoodenChest,
-    //     new Array(4).fill(ItemId.SpeedModule3),
-    //     new Array(4).fill(ItemId.SpeedModule3),
-    //     false,
-    //   );
-    // });
+    it('should set up default for machine modules', () => {
+      spyOn(component, 'setModules');
+      component.changeRecipeField(
+        step,
+        ItemId.SpeedModule3,
+        Mocks.MachinesStateInitial,
+        Mocks.AdjustedDataset,
+        RecipeField.Modules,
+        0,
+      );
+      expect(component.setModules).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        new Array(4).fill(ItemId.SpeedModule3),
+        new Array(4).fill(ItemId.SpeedModule3),
+        false,
+      );
+    });
 
-    // it('should set up default for beacon count', () => {
-    //   spyOn(component, 'setBeaconCount');
-    //   component.changeRecipeField(
-    //     step,
-    //     '4',
-    //     Mocks.MachinesStateInitial,
-    //     Mocks.Dataset,
-    //     RecipeField.BeaconCount,
-    //     0,
-    //   );
-    //   expect(component.setBeaconCount).toHaveBeenCalledWith(
-    //     RecipeId.WoodenChest,
-    //     0,
-    //     '4',
-    //     '8',
-    //     false,
-    //   );
-    // });
+    it('should set up default for beacon count', () => {
+      spyOn(component, 'setBeaconCount');
+      component.changeRecipeField(
+        step,
+        new Rational(4n),
+        Mocks.MachinesStateInitial,
+        Mocks.AdjustedDataset,
+        RecipeField.BeaconCount,
+        0,
+      );
+      expect(component.setBeaconCount).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        0,
+        new Rational(4n),
+        new Rational(8n),
+        false,
+      );
+    });
 
     it('should set up default for beacon', () => {
       spyOn(component, 'setBeacon');
@@ -391,7 +392,7 @@ describe('StepsComponent', () => {
         step,
         ItemId.Beacon,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.Beacon,
         0,
       );
@@ -410,7 +411,7 @@ describe('StepsComponent', () => {
         step,
         ItemId.SpeedModule3,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.BeaconModules,
         0,
         0,
@@ -424,40 +425,40 @@ describe('StepsComponent', () => {
       );
     });
 
-    // it('should call to set the beacon total', () => {
-    //   spyOn(component, 'setBeaconTotal');
-    //   component.changeRecipeField(
-    //     step,
-    //     '8',
-    //     Mocks.MachinesStateInitial,
-    //     Mocks.Dataset,
-    //     RecipeField.BeaconTotal,
-    //     0,
-    //   );
-    //   expect(component.setBeaconTotal).toHaveBeenCalledWith(
-    //     RecipeId.WoodenChest,
-    //     0,
-    //     '8',
-    //     false,
-    //   );
-    // });
+    it('should call to set the beacon total', () => {
+      spyOn(component, 'setBeaconTotal');
+      component.changeRecipeField(
+        step,
+        new Rational(8n),
+        Mocks.MachinesStateInitial,
+        Mocks.AdjustedDataset,
+        RecipeField.BeaconTotal,
+        0,
+      );
+      expect(component.setBeaconTotal).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        0,
+        new Rational(8n),
+        false,
+      );
+    });
 
-    // it('should set up default for overclock', () => {
-    //   spyOn(component, 'setOverclock');
-    //   component.changeRecipeField(
-    //     step,
-    //     100,
-    //     Mocks.MachinesStateInitial,
-    //     Mocks.Dataset,
-    //     RecipeField.Overclock,
-    //   );
-    //   expect(component.setOverclock).toHaveBeenCalledWith(
-    //     RecipeId.WoodenChest,
-    //     100,
-    //     undefined,
-    //     false,
-    //   );
-    // });
+    it('should set up default for overclock', () => {
+      spyOn(component, 'setOverclock');
+      component.changeRecipeField(
+        step,
+        100,
+        Mocks.MachinesStateInitial,
+        Mocks.AdjustedDataset,
+        RecipeField.Overclock,
+      );
+      expect(component.setOverclock).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        Rational.hundred,
+        undefined,
+        false,
+      );
+    });
   });
 
   describe('changeStepChecked', () => {

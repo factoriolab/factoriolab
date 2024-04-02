@@ -18,6 +18,7 @@ import { MenuItem, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { BehaviorSubject, combineLatest, filter, first, pairwise } from 'rxjs';
 
+import { coalesce } from '~/helpers';
 import {
   AdjustedDataset,
   ColumnsState,
@@ -296,7 +297,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
       (id): IdValueDefaultPayload<boolean> => ({
         id,
         value,
-        def: (data.defaults?.excludedRecipeIds ?? []).includes(id),
+        def: coalesce(data.defaults?.excludedRecipeIds, []).includes(id),
       }),
     );
     this.setRecipeExcludedBatch(payload);
@@ -308,7 +309,9 @@ export class StepsComponent implements OnInit, AfterViewInit {
     data: AdjustedDataset,
   ): void {
     const value = !recipesState[id].excluded;
-    const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);
+    const def = coalesce(data.defaults?.excludedRecipeIds, []).some(
+      (i) => i === id,
+    );
     this.setRecipeExcluded(id, value, def);
   }
 

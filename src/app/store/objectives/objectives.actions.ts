@@ -137,7 +137,7 @@ export class ResetObjectiveAction implements Action {
 
 export class AdjustDisplayRateAction implements Action {
   readonly type = ObjectivesActionType.ADJUST_DISPLAY_RATE;
-  constructor(public payload: string) {}
+  constructor(public payload: Rational) {}
 }
 
 export type ObjectivesAction =

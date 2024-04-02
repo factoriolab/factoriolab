@@ -13,6 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { first } from 'rxjs';
 
+import { coalesce } from '~/helpers';
 import {
   AdjustedDataset,
   Defaults,
@@ -153,10 +154,10 @@ export class SettingsComponent implements OnInit {
       .select(Settings.getGameStates)
       .pipe(first())
       .subscribe((states) => {
-        this.state =
-          Object.keys(states).find(
-            (s) => states[s] === BrowserUtility.search,
-          ) ?? '';
+        this.state = coalesce(
+          Object.keys(states).find((s) => states[s] === BrowserUtility.search),
+          '',
+        );
       });
   }
 
@@ -250,7 +251,7 @@ export class SettingsComponent implements OnInit {
       const value = checked.some((i) => i === id);
       if (value !== recipesState[id].excluded) {
         // Needs to change, find default value
-        const def = (data.defaults?.excludedRecipeIds ?? []).some(
+        const def = coalesce(data.defaults?.excludedRecipeIds, []).some(
           (i) => i === id,
         );
         payload.push({ id, value, def });
@@ -281,7 +282,10 @@ export class SettingsComponent implements OnInit {
     fuelRankIds: string[],
   ): void {
     const def = RecipeUtility.bestMatch(
-      settings.fuelOptions?.map((o) => o.value) ?? [],
+      coalesce(
+        settings.fuelOptions?.map((o) => o.value),
+        [],
+      ),
       fuelRankIds,
     );
     this.setFuel(id, value, def);

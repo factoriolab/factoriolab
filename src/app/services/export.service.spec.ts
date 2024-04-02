@@ -29,7 +29,7 @@ describe('ExportService', () => {
         initialColumnsState,
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(service.saveAsCsv).toHaveBeenCalled();
     });
@@ -82,7 +82,7 @@ describe('ExportService', () => {
         initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe },
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(result).toEqual({
         Item: itemId,
@@ -114,7 +114,7 @@ describe('ExportService', () => {
         initialColumnsState,
         { [itemId]: itemS },
         { [recipeId]: fullRecipe },
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(result).toEqual({
         Item: itemId,
