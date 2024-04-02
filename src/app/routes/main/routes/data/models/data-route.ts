@@ -1,11 +1,11 @@
 import { Route } from '@angular/router';
 
-import { IdType, RawDataset } from '~/models';
+import { Dataset, IdType } from '~/models';
 
 export interface Collection {
   label: string;
   type: IdType;
-  key: keyof RawDataset;
+  key: keyof Dataset;
 }
 
 export interface Detail {

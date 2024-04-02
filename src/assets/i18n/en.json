@@ -86,7 +86,7 @@
       "pollutionPerMinute": "Pollution/m",
       "pollutionPerHour": "Pollution/h"
     },
-    "researchSpeed": {
+    "researchBonus": {
       "speed0": "No research bonus",
       "speed1": "Research speed 1",
       "speed2": "Research speed 2",

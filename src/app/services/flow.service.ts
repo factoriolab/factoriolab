@@ -4,8 +4,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, switchMap } from 'rxjs';
 
 import {
+  AdjustedDataset,
   ColumnsState,
-  Dataset,
   Entities,
   FlowData,
   Icon,
@@ -53,7 +53,7 @@ export class FlowService {
     suffix: string,
     itemsState: Items.ItemsState,
     preferences: Preferences.PreferencesState,
-    data: Dataset,
+    data: AdjustedDataset,
   ): FlowData {
     const itemPrec = preferences.columns.items.precision;
     const machinePrec = preferences.columns.machines.precision;

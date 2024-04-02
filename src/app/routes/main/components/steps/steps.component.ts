@@ -18,9 +18,9 @@ import { MenuItem, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { BehaviorSubject, combineLatest, filter, first, pairwise } from 'rxjs';
 
+import { coalesce } from '~/helpers';
 import {
-  ColumnsState,
-  Dataset,
+  AdjustedDataset,
   EnergyType,
   Entities,
   Game,
@@ -275,28 +275,12 @@ export class StepsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  export(
-    steps: Step[],
-    itemsState: Items.ItemsState,
-    recipesState: Recipes.RecipesState,
-    columnsState: ColumnsState,
-    data: Dataset,
-  ): void {
-    this.exportSvc.stepsToCsv(
-      steps,
-      columnsState,
-      itemsState,
-      recipesState,
-      data,
-    );
-  }
-
-  toggleRecipes(ids: string[], value: boolean, data: Dataset): void {
+  toggleRecipes(ids: string[], value: boolean, data: AdjustedDataset): void {
     const payload = ids.map(
       (id): IdValueDefaultPayload<boolean> => ({
         id,
         value,
-        def: (data.defaults?.excludedRecipeIds ?? []).includes(id),
+        def: coalesce(data.defaults?.excludedRecipeIds, []).includes(id),
       }),
     );
     this.setRecipeExcludedBatch(payload);
@@ -305,18 +289,20 @@ export class StepsComponent implements OnInit, AfterViewInit {
   toggleRecipe(
     id: string,
     recipesState: Recipes.RecipesState,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     const value = !recipesState[id].excluded;
-    const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);
+    const def = coalesce(data.defaults?.excludedRecipeIds, []).some(
+      (i) => i === id,
+    );
     this.setRecipeExcluded(id, value, def);
   }
 
   changeRecipeField(
     step: Step,
-    event: string | number,
+    event: string | number | Rational,
     machinesState: Machines.MachinesState,
-    data: Dataset,
+    data: AdjustedDataset,
     field: RecipeField,
     index?: number,
     subindex?: number,
@@ -356,16 +342,16 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
           break;
         }
-        case RecipeField.MachineModules: {
+        case RecipeField.Modules: {
           if (
             machineSettings.moduleRankIds != null &&
             data != null &&
             typeof event === 'string' &&
             index != null &&
-            settings.machineModuleIds != null
+            settings.moduleIds != null
           ) {
             const machine = data.machineEntities[settings.machineId];
-            const count = settings.machineModuleIds.length;
+            const count = Rational.from(settings.moduleIds.length);
             const options = RecipeUtility.moduleOptions(
               machine,
               step.recipeId,
@@ -379,14 +365,14 @@ export class StepsComponent implements OnInit, AfterViewInit {
             const modules = this.generateModules(
               index,
               event,
-              settings.machineModuleIds,
+              settings.moduleIds,
             );
-            this.setMachineModules(id, modules, def, isObjective);
+            this.setModules(id, modules, def, isObjective);
           }
           break;
         }
         case RecipeField.BeaconCount: {
-          if (typeof event === 'string' && index != null) {
+          if (event instanceof Rational && index != null) {
             const def = machineSettings.beaconCount;
             this.setBeaconCount(id, index, event, def, isObjective);
           }
@@ -412,7 +398,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
               beaconSettings?.moduleIds != null
             ) {
               const beacon = data.beaconEntities[beaconSettings.id];
-              const count = beaconSettings.moduleIds.length;
+              const count = Rational.from(beaconSettings.moduleIds.length);
               const options = RecipeUtility.moduleOptions(
                 beacon,
                 step.recipeId,
@@ -434,7 +420,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
           break;
         }
         case RecipeField.BeaconTotal: {
-          if (typeof event === 'string' && index != null) {
+          if (event instanceof Rational && index != null) {
             this.setBeaconTotal(id, index, event, isObjective);
           }
           break;
@@ -442,7 +428,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
         case RecipeField.Overclock: {
           if (typeof event === 'number') {
             const def = machineSettings.overclock;
-            this.setOverclock(id, event, def, isObjective);
+            this.setOverclock(id, Rational.fromNumber(event), def, isObjective);
           }
           break;
         }
@@ -520,15 +506,15 @@ export class StepsComponent implements OnInit, AfterViewInit {
     this.store.dispatch(new action({ id, value, def }));
   }
 
-  setMachineModules(
+  setModules(
     id: string,
     value: string[],
     def: string[] | undefined,
     objective = false,
   ): void {
     const action = objective
-      ? Objectives.SetMachineModulesAction
-      : Recipes.SetMachineModulesAction;
+      ? Objectives.SetModulesAction
+      : Recipes.SetModulesAction;
     this.store.dispatch(new action({ id, value, def }));
   }
 
@@ -549,8 +535,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
   setBeaconCount(
     id: string,
     index: number,
-    value: string,
-    def: string | undefined,
+    value: Rational,
+    def: Rational | undefined,
     objective = false,
   ): void {
     const action = objective
@@ -588,7 +574,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
   setBeaconTotal(
     id: string,
     index: number,
-    value: string,
+    value: Rational,
     objective = false,
   ): void {
     const action = objective
@@ -599,8 +585,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
   setOverclock(
     id: string,
-    value: number,
-    def: number | undefined,
+    value: Rational,
+    def: Rational | undefined,
     objective = false,
   ): void {
     const action = objective

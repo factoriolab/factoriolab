@@ -17,24 +17,19 @@ import {
 } from 'src/tests';
 import {
   Entities,
+  Rational,
   RecipeField,
   Step,
   StepDetail,
   StepDetailTab,
 } from '~/models';
-import { ExportService } from '~/services';
 import { Items, LabState, Objectives, Preferences, Recipes } from '~/store';
 import { StepsComponent } from './steps.component';
-
-enum DataTest {
-  Export = 'lab-list-export',
-}
 
 describe('StepsComponent', () => {
   let component: StepsComponent;
   let fixture: ComponentFixture<StepsComponent>;
   let mockStore: MockStore<LabState>;
-  let exportSvc: ExportService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -61,7 +56,6 @@ describe('StepsComponent', () => {
         return e;
       }, {}),
     );
-    exportSvc = TestBed.inject(ExportService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -241,15 +235,6 @@ describe('StepsComponent', () => {
     });
   });
 
-  describe('export', () => {
-    it('should call the export service', () => {
-      spyOn(exportSvc, 'stepsToCsv');
-      TestUtility.clickDt(fixture, DataTest.Export);
-      fixture.detectChanges();
-      expect(exportSvc.stepsToCsv).toHaveBeenCalled();
-    });
-  });
-
   describe('toggleRecipes', () => {
     it('should toggle a set of recipes', () => {
       spyOn(component, 'setRecipeExcludedBatch');
@@ -267,7 +252,7 @@ describe('StepsComponent', () => {
   describe('toggleRecipe', () => {
     it('should disable a recipe', () => {
       spyOn(component, 'setRecipeExcluded');
-      const data = { ...Mocks.Dataset, ...{ defaults: undefined } };
+      const data = { ...Mocks.AdjustedDataset, ...{ defaults: undefined } };
       component.toggleRecipe(
         RecipeId.AdvancedOilProcessing,
         Mocks.RecipesStateInitial,
@@ -285,7 +270,7 @@ describe('StepsComponent', () => {
       component.toggleRecipe(
         RecipeId.NuclearFuelReprocessing,
         Mocks.RecipesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
@@ -299,7 +284,7 @@ describe('StepsComponent', () => {
     const step: Step = {
       id: '0',
       recipeId: RecipeId.WoodenChest,
-      recipeSettings: Mocks.RecipesStateRationalInitial[RecipeId.WoodenChest],
+      recipeSettings: Mocks.RecipesStateInitial[RecipeId.WoodenChest],
     };
 
     it('should skip a step with no recipe', () => {
@@ -308,7 +293,7 @@ describe('StepsComponent', () => {
         { id: '0' },
         '1',
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.Machine,
       );
       expect(component.setMachine).not.toHaveBeenCalled();
@@ -320,7 +305,7 @@ describe('StepsComponent', () => {
         step,
         ItemId.AssemblingMachine2,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.Machine,
       );
       expect(component.setMachine).toHaveBeenCalledWith(
@@ -337,7 +322,7 @@ describe('StepsComponent', () => {
         step,
         ItemId.Coal,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.Fuel,
       );
       expect(component.setFuel).toHaveBeenCalledWith(
@@ -349,16 +334,16 @@ describe('StepsComponent', () => {
     });
 
     it('should set up default for machine modules', () => {
-      spyOn(component, 'setMachineModules');
+      spyOn(component, 'setModules');
       component.changeRecipeField(
         step,
         ItemId.SpeedModule3,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
-        RecipeField.MachineModules,
+        Mocks.AdjustedDataset,
+        RecipeField.Modules,
         0,
       );
-      expect(component.setMachineModules).toHaveBeenCalledWith(
+      expect(component.setModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         new Array(4).fill(ItemId.SpeedModule3),
         new Array(4).fill(ItemId.SpeedModule3),
@@ -370,17 +355,17 @@ describe('StepsComponent', () => {
       spyOn(component, 'setBeaconCount');
       component.changeRecipeField(
         step,
-        '4',
+        new Rational(4n),
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.BeaconCount,
         0,
       );
       expect(component.setBeaconCount).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         0,
-        '4',
-        '8',
+        new Rational(4n),
+        new Rational(8n),
         false,
       );
     });
@@ -391,7 +376,7 @@ describe('StepsComponent', () => {
         step,
         ItemId.Beacon,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.Beacon,
         0,
       );
@@ -410,7 +395,7 @@ describe('StepsComponent', () => {
         step,
         ItemId.SpeedModule3,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.BeaconModules,
         0,
         0,
@@ -428,16 +413,16 @@ describe('StepsComponent', () => {
       spyOn(component, 'setBeaconTotal');
       component.changeRecipeField(
         step,
-        '8',
+        new Rational(8n),
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.BeaconTotal,
         0,
       );
       expect(component.setBeaconTotal).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         0,
-        '8',
+        new Rational(8n),
         false,
       );
     });
@@ -448,12 +433,12 @@ describe('StepsComponent', () => {
         step,
         100,
         Mocks.MachinesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
         RecipeField.Overclock,
       );
       expect(component.setOverclock).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
-        100,
+        Rational.hundred,
         undefined,
         false,
       );
@@ -500,11 +485,8 @@ describe('StepsComponent', () => {
     dispatch.idValDefAlt('setMachine', Objectives.SetMachineAction);
     dispatch.idValDef('setFuel', Recipes.SetFuelAction);
     dispatch.idValDefAlt('setFuel', Objectives.SetFuelAction);
-    dispatch.idValDef('setMachineModules', Recipes.SetMachineModulesAction);
-    dispatch.idValDefAlt(
-      'setMachineModules',
-      Objectives.SetMachineModulesAction,
-    );
+    dispatch.idValDef('setModules', Recipes.SetModulesAction);
+    dispatch.idValDefAlt('setModules', Objectives.SetModulesAction);
     dispatch.val('addBeacon', Recipes.AddBeaconAction);
     dispatch.valAlt('addBeacon', Objectives.AddBeaconAction);
     dispatch.idVal('removeBeacon', Recipes.RemoveBeaconAction);

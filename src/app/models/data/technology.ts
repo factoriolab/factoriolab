@@ -1,3 +1,5 @@
-export interface Technology {
+export interface TechnologyJson {
   prerequisites?: string[];
 }
+
+export type Technology = TechnologyJson;

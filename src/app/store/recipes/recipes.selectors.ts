@@ -1,12 +1,7 @@
 import { createSelector } from '@ngrx/store';
 
-import { orZero } from '~/helpers';
-import {
-  Entities,
-  Rational,
-  RecipeSettings,
-  RecipeSettingsRational,
-} from '~/models';
+import { coalesce } from '~/helpers';
+import { Entities, Rational, RecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
@@ -26,7 +21,7 @@ export const getRecipesState = createSelector(
   (state, machinesState, data) => {
     const value: Entities<RecipeSettings> = {};
     const defaultExcludedRecipeIds = new Set(
-      data.defaults?.excludedRecipeIds ?? [],
+      coalesce(data.defaults?.excludedRecipeIds, []),
     );
 
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
@@ -53,17 +48,13 @@ export const getRecipesState = createSelector(
       s.fuelOptions = def?.fuelOptions;
 
       if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
-        s.machineModuleOptions = RecipeUtility.moduleOptions(
-          machine,
-          recipe.id,
-          data,
-        );
+        s.moduleOptions = RecipeUtility.moduleOptions(machine, recipe.id, data);
 
-        if (s.machineModuleIds == null)
-          s.machineModuleIds = RecipeUtility.defaultModules(
-            s.machineModuleOptions,
-            def.moduleRankIds ?? [],
-            orZero(machine.modules),
+        if (s.moduleIds == null)
+          s.moduleIds = RecipeUtility.defaultModules(
+            s.moduleOptions,
+            coalesce(def.moduleRankIds, []),
+            machine.modules ?? Rational.zero,
           );
 
         if (s.beacons == null) s.beacons = [{}];
@@ -85,14 +76,14 @@ export const getRecipesState = createSelector(
             if (beaconSettings.moduleIds == null)
               beaconSettings.moduleIds = RecipeUtility.defaultModules(
                 beaconSettings.moduleOptions,
-                def.beaconModuleRankIds ?? [],
+                coalesce(def.beaconModuleRankIds, []),
                 beacon.modules,
               );
           }
         }
       } else {
         // Machine doesn't support modules, remove any
-        delete s.machineModuleIds;
+        delete s.moduleIds;
         delete s.beacons;
       }
 
@@ -100,8 +91,7 @@ export const getRecipesState = createSelector(
         for (const beaconSettings of s.beacons) {
           if (
             beaconSettings.total != null &&
-            (beaconSettings.count == null ||
-              Rational.fromString(beaconSettings.count).isZero())
+            (beaconSettings.count == null || beaconSettings.count.isZero())
           )
             // No actual beacons, ignore the total beacons
             delete beaconSettings.total;
@@ -117,18 +107,6 @@ export const getRecipesState = createSelector(
   },
 );
 
-export const getRecipesStateRational = createSelector(
-  getRecipesState,
-  (recipesState) =>
-    Object.keys(recipesState).reduce(
-      (e: Entities<RecipeSettingsRational>, i) => {
-        e[i] = new RecipeSettingsRational(recipesState[i]);
-        return e;
-      },
-      {},
-    ),
-);
-
 export const getExcludedRecipeIds = createSelector(
   getRecipesState,
   (recipesState) =>
@@ -136,23 +114,29 @@ export const getExcludedRecipeIds = createSelector(
 );
 
 export const getAdjustedDataset = createSelector(
-  getRecipesStateRational,
+  getRecipesState,
   getExcludedRecipeIds,
   Items.getItemsState,
-  Settings.getRationalCost,
+  Settings.getAvailableRecipes,
+  Settings.getCosts,
   Settings.getAdjustmentData,
   Settings.getDataset,
-  (recipesState, excludedRecipeIds, itemsState, cost, adj, data) =>
+  (
+    recipesState,
+    excludedRecipeIds,
+    itemsState,
+    recipeIds,
+    costs,
+    adjustmentData,
+    data,
+  ) =>
     RecipeUtility.adjustDataset(
-      adj.recipeIds,
+      recipeIds,
       excludedRecipeIds,
       recipesState,
       itemsState,
-      adj.proliferatorSprayId,
-      adj.miningBonus,
-      adj.researchSpeed,
-      adj.netProductionOnly,
-      cost,
+      adjustmentData,
+      costs,
       data,
     ),
 );

@@ -1,6 +1,6 @@
 import { Action } from '@ngrx/store';
 
-import { IdValueDefaultPayload, ValueDefaultPayload } from '~/models';
+import { IdValueDefaultPayload, Rational, ValueDefaultPayload } from '~/models';
 
 export const enum MachinesActionType {
   ADD = '[Machines] Add',
@@ -48,7 +48,7 @@ export class SetModuleRankAction implements Action {
 
 export class SetBeaconCountAction implements Action {
   readonly type = MachinesActionType.SET_BEACON_COUNT;
-  constructor(public payload: IdValueDefaultPayload<string>) {}
+  constructor(public payload: IdValueDefaultPayload<Rational>) {}
 }
 
 export class SetBeaconAction implements Action {
@@ -63,7 +63,7 @@ export class SetBeaconModuleRankAction implements Action {
 
 export class SetOverclockAction implements Action {
   readonly type = MachinesActionType.SET_OVERCLOCK;
-  constructor(public payload: IdValueDefaultPayload<number>) {}
+  constructor(public payload: IdValueDefaultPayload<Rational>) {}
 }
 
 export class ResetMachineAction implements Action {

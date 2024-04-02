@@ -2,40 +2,41 @@ import { createSelector } from '@ngrx/store';
 import { MenuItem, SelectItem } from 'primeng/api';
 
 import { environment } from 'src/environments';
-import { fnPropsNotNullish, getIdOptions } from '~/helpers';
+import { coalesce, fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
-  BeaconRational,
-  BeltRational,
-  CargoWagonRational,
+  Beacon,
+  Belt,
+  CargoWagon,
   columnOptions,
-  CostKey,
-  CostRationalSettings,
+  Dataset,
   Defaults,
   displayRateInfo,
   Entities,
-  FluidWagonRational,
-  FuelRational,
+  FluidWagon,
+  Fuel,
   Game,
   gameColumnsState,
   gameInfo,
   initialColumnsState,
   InserterData,
+  Item,
   ItemId,
-  ItemRational,
   linkValueOptions,
-  MachineRational,
-  ModuleRational,
+  Machine,
+  Module,
   objectiveUnitOptions,
   Options,
+  parseItem,
+  parseRecipe,
   Preset,
   presetOptions,
   Rational,
-  RawDataset,
-  researchSpeedFactor,
+  Recipe,
   Technology,
   toBoolEntities,
   toEntities,
 } from '~/models';
+import { AdjustmentData } from '~/models/adjustment-data';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
@@ -77,7 +78,7 @@ export const getMiningBonus = createSelector(
 );
 export const getResearchSpeed = createSelector(
   settingsState,
-  (state) => state.researchSpeed,
+  (state) => state.researchBonus,
 );
 export const getInserterCapacity = createSelector(
   settingsState,
@@ -213,7 +214,11 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
       preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
     moduleRankIds: moduleRank,
     beaconCount:
-      preset < Preset.Beacon8 ? '0' : preset < Preset.Beacon12 ? '8' : '12',
+      preset < Preset.Beacon8
+        ? Rational.zero
+        : preset < Preset.Beacon12
+          ? new Rational(8n)
+          : new Rational(12n),
     beaconId: m.beacon,
     beaconModuleId: preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
   };
@@ -238,33 +243,11 @@ export const getSettings = createSelector(
 export const getFuelRankIds = createSelector(getSettings, (s) => s.fuelRankIds);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
-  Rational.fromNumber(bonus).div(Rational.hundred),
+  bonus.div(Rational.hundred),
 );
 
-export const getResearchFactor = createSelector(
-  getResearchSpeed,
-  (speed) => researchSpeedFactor[speed],
-);
-
-export const getRationalBeaconReceivers = createSelector(
-  getBeaconReceivers,
-  (total) => (total ? Rational.fromString(total) : null),
-);
-
-export const getRationalFlowRate = createSelector(getFlowRate, (rate) =>
-  Rational.fromNumber(rate),
-);
-
-export const getRationalCost = createSelector(
-  getCosts,
-  (cost): CostRationalSettings =>
-    (Object.keys(cost) as CostKey[]).reduce(
-      (a: Partial<CostRationalSettings>, b) => {
-        a[b] = Rational.fromString(cost[b]);
-        return a;
-      },
-      {},
-    ) as CostRationalSettings,
+export const getResearchFactor = createSelector(getResearchSpeed, (speed) =>
+  speed.add(Rational.hundred).div(Rational.hundred),
 );
 
 export const getI18n = createSelector(
@@ -283,22 +266,26 @@ export const getDataset = createSelector(
   (mod, i18n, hash, defaults, game) => {
     // Map out entities with mods
     const categoryEntities = toEntities(
-      mod?.categories ?? [],
+      coalesce(mod?.categories, []),
       {},
       environment.debug,
     );
     const modIconPath = `data/${mod?.id}/icons.webp`;
     const iconEntities = toEntities(
-      (mod?.icons ?? []).map((i) => ({
+      coalesce(mod?.icons, []).map((i) => ({
         ...i,
         ...{ file: i.file ?? modIconPath },
       })),
       {},
       environment.debug,
     );
-    const itemData = toEntities(mod?.items ?? [], {}, environment.debug);
-    const recipeEntities = toEntities(
-      mod?.recipes ?? [],
+    const itemData = toEntities(
+      coalesce(mod?.items, []),
+      {},
+      environment.debug,
+    );
+    const recipeData = toEntities(
+      coalesce(mod?.recipes, []),
       {},
       environment.debug,
     );
@@ -324,11 +311,9 @@ export const getDataset = createSelector(
           },
         };
       }
-      for (const i of Object.keys(i18n.recipes).filter(
-        (i) => recipeEntities[i],
-      )) {
-        recipeEntities[i] = {
-          ...recipeEntities[i],
+      for (const i of Object.keys(i18n.recipes).filter((i) => recipeData[i])) {
+        recipeData[i] = {
+          ...recipeData[i],
           ...{
             name: i18n.recipes[i],
           },
@@ -340,16 +325,16 @@ export const getDataset = createSelector(
     const categoryIds = Object.keys(categoryEntities);
     const iconIds = Object.keys(iconEntities);
     const itemIds = Object.keys(itemData);
-    const recipeIds = Object.keys(recipeEntities);
+    const recipeIds = Object.keys(recipeData);
 
     // Generate temporary object arrays
-    const items = itemIds.map((i) => itemData[i]);
-    const recipes = recipeIds.map((r) => recipeEntities[r]);
+    const items = itemIds.map((i) => parseItem(itemData[i]));
+    const recipes = recipeIds.map((r) => parseRecipe(recipeData[r]));
 
     // Filter for item types
     const beaconIds = items
       .filter(fnPropsNotNullish('beacon'))
-      .sort((a, b) => a.beacon.modules - b.beacon.modules)
+      .sort((a, b) => a.beacon.modules.sub(b.beacon.modules).toNumber())
       .map((i) => i.id);
     const beltIds = items
       .filter(fnPropsNotNullish('belt'))
@@ -357,27 +342,21 @@ export const getDataset = createSelector(
         /** Don't sort belts in DSP, leave based on stacks */
         game === Game.DysonSphereProgram
           ? 0
-          : Rational.from(a.belt.speed)
-              .sub(Rational.from(b.belt.speed))
-              .toNumber(),
+          : a.belt.speed.sub(b.belt.speed).toNumber(),
       )
       .map((i) => i.id);
     const pipeIds = items
       .filter(fnPropsNotNullish('pipe'))
-      .sort((a, b) =>
-        Rational.from(a.pipe.speed).sub(Rational.from(b.pipe.speed)).toNumber(),
-      )
+      .sort((a, b) => a.pipe.speed.sub(b.pipe.speed).toNumber())
       .map((i) => i.id);
     const cargoWagonIds = items
       .filter(fnPropsNotNullish('cargoWagon'))
-      .sort((a, b) => a.cargoWagon.size - b.cargoWagon.size)
+      .sort((a, b) => a.cargoWagon.size.sub(b.cargoWagon.size).toNumber())
       .map((i) => i.id);
     const fluidWagonIds = items
       .filter(fnPropsNotNullish('fluidWagon'))
       .sort((a, b) =>
-        Rational.from(a.fluidWagon.capacity)
-          .sub(Rational.from(b.fluidWagon.capacity))
-          .toNumber(),
+        a.fluidWagon.capacity.sub(b.fluidWagon.capacity).toNumber(),
       )
       .map((i) => i.id);
     const machineIds = items
@@ -390,9 +369,7 @@ export const getDataset = createSelector(
       .map((i) => i.id);
     const fuels = items
       .filter(fnPropsNotNullish('fuel'))
-      .sort((a, b) =>
-        Rational.from(a.fuel.value).sub(Rational.from(b.fuel.value)).toNumber(),
-      );
+      .sort((a, b) => a.fuel.value.sub(b.fuel.value).toNumber());
     const fuelIds = fuels.map((i) => i.id);
     const technologyIds = items
       .filter(fnPropsNotNullish('technology'))
@@ -401,15 +378,11 @@ export const getDataset = createSelector(
     // Calculate missing implicit recipe icons
     // For recipes with no icon, use icon of first output item
     recipes
-      .filter((r) => !iconEntities[r.id] && !recipeEntities[r.id].icon)
+      .filter((r) => !iconEntities[r.id] && !r.icon)
       .forEach((r) => {
         const firstOutId = Object.keys(r.out)[0];
         const firstOutItem = itemData[firstOutId];
-
-        recipeEntities[r.id] = {
-          ...recipeEntities[r.id],
-          ...{ icon: firstOutItem.icon ?? firstOutId },
-        };
+        r.icon = firstOutItem.icon ?? firstOutId;
       });
 
     // Calculate category item rows
@@ -453,55 +426,36 @@ export const getDataset = createSelector(
     }
 
     // Convert to rationals
-    const beaconEntities: Entities<BeaconRational> = {};
-    const beltEntities: Entities<BeltRational> = {};
-    const cargoWagonEntities: Entities<CargoWagonRational> = {};
-    const fluidWagonEntities: Entities<FluidWagonRational> = {};
-    const machineEntities: Entities<MachineRational> = {};
-    const moduleEntities: Entities<ModuleRational> = {};
-    const fuelEntities: Entities<FuelRational> = {};
+    const beaconEntities: Entities<Beacon> = {};
+    const beltEntities: Entities<Belt> = {};
+    const cargoWagonEntities: Entities<CargoWagon> = {};
+    const fluidWagonEntities: Entities<FluidWagon> = {};
+    const machineEntities: Entities<Machine> = {};
+    const moduleEntities: Entities<Module> = {};
+    const fuelEntities: Entities<Fuel> = {};
     const technologyEntities: Entities<Technology> = {};
-    const itemEntities = itemIds.reduce((e: Entities<ItemRational>, i) => {
-      const item = new ItemRational(itemData[i]);
-      if (item.beacon) {
-        beaconEntities[i] = item.beacon;
-      }
+    const itemEntities = items.reduce((e: Entities<Item>, i) => {
+      if (i.beacon) beaconEntities[i.id] = i.beacon;
 
-      if (item.belt) {
-        beltEntities[i] = item.belt;
-      } else if (item.pipe) {
-        beltEntities[i] = item.pipe;
-      }
+      if (i.belt) beltEntities[i.id] = i.belt;
+      else if (i.pipe) beltEntities[i.id] = i.pipe;
 
-      if (item.cargoWagon) {
-        cargoWagonEntities[i] = item.cargoWagon;
-      }
+      if (i.cargoWagon) cargoWagonEntities[i.id] = i.cargoWagon;
+      if (i.fluidWagon) fluidWagonEntities[i.id] = i.fluidWagon;
+      if (i.machine) machineEntities[i.id] = i.machine;
+      if (i.module) moduleEntities[i.id] = i.module;
+      if (i.fuel) fuelEntities[i.id] = i.fuel;
+      if (i.technology) technologyEntities[i.id] = i.technology;
 
-      if (item.fluidWagon) {
-        fluidWagonEntities[i] = item.fluidWagon;
-      }
-
-      if (item.machine) {
-        machineEntities[i] = item.machine;
-      }
-
-      if (item.module) {
-        moduleEntities[i] = item.module;
-      }
-
-      if (item.fuel) {
-        fuelEntities[i] = item.fuel;
-      }
-
-      if (item.technology) {
-        technologyEntities[i] = item.technology;
-      }
-
-      e[i] = item;
+      e[i.id] = i;
+      return e;
+    }, {});
+    const recipeEntities = recipes.reduce((e: Entities<Recipe>, r) => {
+      e[r.id] = r;
       return e;
     }, {});
 
-    const dataset: RawDataset = {
+    const dataset: Dataset = {
       game,
       version: mod?.version ?? {},
       categoryIds,
@@ -563,7 +517,7 @@ export const getOptions = createSelector(
 
 export const getBeltSpeed = createSelector(
   getDataset,
-  getRationalFlowRate,
+  getFlowRate,
   (data, flowRate) => {
     const value: Entities<Rational> = { [ItemId.Pipe]: flowRate };
     if (data.beltIds) {
@@ -659,19 +613,16 @@ export const getAdjustmentData = createSelector(
   getProliferatorSprayId,
   getRationalMiningBonus,
   getResearchFactor,
-  getAvailableRecipes,
   (
     netProductionOnly,
     proliferatorSprayId,
     miningBonus,
-    researchSpeed,
-    recipeIds,
-  ) => ({
+    researchBonus,
+  ): AdjustmentData => ({
     netProductionOnly,
     proliferatorSprayId,
     miningBonus,
-    researchSpeed,
-    recipeIds,
+    researchBonus,
   }),
 );
 

@@ -86,7 +86,7 @@
       "pollutionPerMinute": "污染/分",
       "pollutionPerHour": "污染/时"
     },
-    "researchSpeed": {
+    "researchBonus": {
       "speed0": "无研发速度加成",
       "speed1": "研发速度 1",
       "speed2": "研发速度 2",

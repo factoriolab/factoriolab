@@ -6,7 +6,8 @@ import {
   InserterTarget,
   MaximizeType,
   Preset,
-  ResearchSpeed,
+  Rational,
+  researchBonus,
 } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './settings.actions';
@@ -97,7 +98,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_BEACON_RECEIVERS', () => {
     it('should set default beacon receivers', () => {
-      const value = '1';
+      const value = Rational.one;
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetBeaconReceiversAction(value),
@@ -174,7 +175,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_FLOW_RATE', () => {
     it('should set the flow rate', () => {
-      const value = 6000;
+      const value = new Rational(6000n);
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetFlowRateAction(value),
@@ -196,7 +197,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_MINING_BONUS', () => {
     it('should set the mining bonus', () => {
-      const value = 10;
+      const value = Rational.ten;
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetMiningBonusAction(value),
@@ -207,14 +208,15 @@ describe('Settings Reducer', () => {
 
   describe('SET_RESEARCH_SPEED', () => {
     it('should set the research speed', () => {
-      const value = ResearchSpeed.Speed1;
+      const value = researchBonus.speed1;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetResearchSpeedAction(value),
+        new Actions.SetResearchBonusAction(value),
       );
-      expect(result.researchSpeed).toEqual(value);
+      expect(result.researchBonus).toEqual(value);
     });
   });
+
   describe('SET_INSERTER_CAPACITY', () => {
     it('should set the inserter capacity', () => {
       const value = InserterCapacity.Capacity2;
@@ -254,13 +256,13 @@ describe('Settings Reducer', () => {
   describe('SET_COSTS', () => {
     it('should set cost values', () => {
       const value: CostSettings = {
-        factor: '1',
-        machine: '1',
-        footprint: '1',
-        unproduceable: '1',
-        excluded: '1',
-        surplus: '1',
-        maximize: '-1',
+        factor: Rational.one,
+        machine: Rational.one,
+        footprint: Rational.one,
+        unproduceable: Rational.one,
+        excluded: Rational.one,
+        surplus: Rational.one,
+        maximize: Rational.minusOne,
       };
       const result = settingsReducer(
         initialSettingsState,

@@ -1,18 +1,18 @@
 import { sankey } from '~/d3-sankey';
-import { orZero } from '~/helpers';
+import { coalesce } from '~/helpers';
 import {
-  Dataset,
+  AdjustedDataset,
   DisplayRateInfo,
   EnergyType,
   Entities,
   Game,
   ItemSettings,
-  ObjectiveRational,
+  Objective,
   ObjectiveType,
   ObjectiveUnit,
   Rational,
-  RecipeRational,
-  RecipeSettingsRational,
+  Recipe,
+  RecipeSettings,
   Step,
   toEntities,
 } from '~/models';
@@ -22,11 +22,11 @@ const ROOT_ID = '';
 
 export class RateUtility {
   static objectiveNormalizedRate(
-    objective: ObjectiveRational,
+    objective: Objective,
     itemsState: Items.ItemsState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInfo,
-    data: Dataset,
+    data: AdjustedDataset,
   ): Rational {
     // Ignore unit entirely when maximizing, do not adjust if unit is Machines
     if (
@@ -68,7 +68,8 @@ export class RateUtility {
     }
 
     // Adjust based on productivity for technology objectives
-    const recipe = data.recipeR[data.itemRecipeIds[objective.targetId][0]];
+    const recipe =
+      data.adjustedRecipe[data.itemRecipeIds[objective.targetId][0]];
     if (recipe?.isTechnology) {
       factor = factor.mul(recipe.productivity);
     }
@@ -92,11 +93,7 @@ export class RateUtility {
     }
   }
 
-  static adjustPowerPollution(
-    step: Step,
-    recipe: RecipeRational,
-    game: Game,
-  ): void {
+  static adjustPowerPollution(step: Step, recipe: Recipe, game: Game): void {
     if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
         // Reset power
@@ -127,13 +124,13 @@ export class RateUtility {
 
   static normalizeSteps(
     steps: Step[],
-    objectives: ObjectiveRational[],
+    objectives: Objective[],
     itemsState: Entities<ItemSettings>,
-    recipesState: Entities<RecipeSettingsRational>,
+    recipesState: Entities<RecipeSettings>,
     beaconReceivers: Rational | null,
     beltSpeed: Entities<Rational>,
     dispRateInfo: DisplayRateInfo,
-    data: Dataset,
+    data: AdjustedDataset,
   ): Step[] {
     const _steps = this.copy(steps);
 
@@ -187,8 +184,8 @@ export class RateUtility {
 
   static calculateSettings(
     step: Step,
-    objectiveEntities: Entities<ObjectiveRational>,
-    recipesState: Entities<RecipeSettingsRational>,
+    objectiveEntities: Entities<Objective>,
+    recipesState: Entities<RecipeSettings>,
   ): void {
     if (step.recipeId) {
       if (step.recipeObjectiveId) {
@@ -203,7 +200,7 @@ export class RateUtility {
     step: Step,
     itemsState: Entities<ItemSettings>,
     beltSpeed: Entities<Rational>,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     let noItems = false;
     if (step.recipeId != null && step.recipeSettings != null) {
@@ -240,7 +237,7 @@ export class RateUtility {
   static calculateBeacons(
     step: Step,
     beaconReceivers: Rational | null,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     if (
       !beaconReceivers?.nonzero() ||
@@ -315,8 +312,8 @@ export class RateUtility {
   static calculateChecked(
     step: Step,
     itemsState: Entities<ItemSettings>,
-    recipesState: Entities<RecipeSettingsRational>,
-    objectiveEntities: Entities<ObjectiveRational>,
+    recipesState: Entities<RecipeSettings>,
+    objectiveEntities: Entities<Objective>,
   ): void {
     // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
@@ -377,7 +374,7 @@ export class RateUtility {
       step.depth = result.nodes.find((n) => n.stepId === step.id)?.depth;
     }
 
-    steps.sort((a, b) => orZero(b.depth) - orZero(a.depth));
+    steps.sort((a, b) => coalesce(b.depth, 0) - coalesce(a.depth, 0));
   }
 
   static calculateHierarchy(steps: Step[]): Step[] {

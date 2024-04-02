@@ -1,4 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
+import { Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { Items } from '../';
 import * as App from '../app.actions';
@@ -84,8 +85,10 @@ describe('Recipes Reducer', () => {
           ...initialRecipesState,
           ...{
             [Mocks.Recipe1.id]: {
-              machineModuleIds: ['test'],
-              beacons: [{ count: '20', id: 'test', moduleIds: ['test'] }],
+              moduleIds: ['test'],
+              beacons: [
+                { count: new Rational(20n), id: 'test', moduleIds: ['test'] },
+              ],
             },
           },
         },
@@ -117,15 +120,13 @@ describe('Recipes Reducer', () => {
     it('should set the modules', () => {
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetMachineModulesAction({
+        new Actions.SetModulesAction({
           id: Mocks.Recipe1.id,
           value: [Mocks.Item1.id],
           def: undefined,
         }),
       );
-      expect(result[Mocks.Recipe1.id].machineModuleIds).toEqual([
-        Mocks.Item1.id,
-      ]);
+      expect(result[Mocks.Recipe1.id].moduleIds).toEqual([Mocks.Item1.id]);
     });
   });
 
@@ -159,11 +160,11 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconCountAction({
           id: Mocks.Recipe1.id,
           index: 0,
-          value: '2',
+          value: Rational.two,
           def: undefined,
         }),
       );
-      expect(result[Mocks.Recipe1.id].beacons?.[0].count).toEqual('2');
+      expect(result[Mocks.Recipe1.id].beacons?.[0].count).toEqual(Rational.two);
     });
   });
 
@@ -224,10 +225,12 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconTotalAction({
           id: Mocks.Recipe1.id,
           index: 0,
-          value: '200',
+          value: new Rational(200n),
         }),
       );
-      expect(result[Mocks.Recipe1.id].beacons?.[0].total).toEqual('200');
+      expect(result[Mocks.Recipe1.id].beacons?.[0].total).toEqual(
+        new Rational(200n),
+      );
     });
   });
 
@@ -237,11 +240,11 @@ describe('Recipes Reducer', () => {
         initialRecipesState,
         new Actions.SetOverclockAction({
           id: Mocks.Recipe1.id,
-          value: 200,
-          def: 100,
+          value: new Rational(200n),
+          def: Rational.hundred,
         }),
       );
-      expect(result[Mocks.Recipe1.id].overclock).toEqual(200);
+      expect(result[Mocks.Recipe1.id].overclock).toEqual(new Rational(200n));
     });
   });
 
@@ -251,10 +254,10 @@ describe('Recipes Reducer', () => {
         initialRecipesState,
         new Actions.SetCostAction({
           id: Mocks.Recipe1.id,
-          value: '10',
+          value: Rational.ten,
         }),
       );
-      expect(result[Mocks.Recipe1.id].cost).toEqual('10');
+      expect(result[Mocks.Recipe1.id].cost).toEqual(Rational.ten);
     });
   });
 
@@ -316,7 +319,7 @@ describe('Recipes Reducer', () => {
       );
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(
         {},
-        ['machineModuleIds', 'beacons'] as any,
+        ['moduleIds', 'beacons'] as any,
         Mocks.Recipe1.id,
       );
     });
@@ -330,7 +333,7 @@ describe('Recipes Reducer', () => {
         'machineId',
         'fuelId',
         'overclock',
-        'machineModuleIds',
+        'moduleIds',
         'beacons',
       ] as any);
     });

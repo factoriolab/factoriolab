@@ -1,11 +1,11 @@
-import { orZero } from '~/helpers';
+import { coalesce } from '~/helpers';
 import {
-  Beacon,
-  Belt,
-  CargoWagon,
-  FluidWagon,
+  BeaconJson,
+  BeltJson,
+  CargoWagonJson,
+  FluidWagonJson,
   ModuleEffect,
-  Silo,
+  SiloJson,
 } from '~/models';
 import { EnergyType } from '../../src/app/models';
 import * as D from '../factorio-build.models';
@@ -13,10 +13,10 @@ import * as M from '../factorio.models';
 import { getDisallowedEffects } from './data.helpers';
 import { getPowerInKw } from './power.helpers';
 
-export function getBeacon(proto: M.BeaconPrototype): Beacon {
+export function getBeacon(proto: M.BeaconPrototype): BeaconJson {
   return {
     effectivity: proto.distribution_effectivity,
-    modules: orZero(proto.module_specification.module_slots),
+    modules: coalesce(proto.module_specification.module_slots),
     range: proto.supply_area_distance,
     type:
       proto.energy_source.type === 'electric' ? EnergyType.Electric : undefined,
@@ -26,15 +26,15 @@ export function getBeacon(proto: M.BeaconPrototype): Beacon {
   };
 }
 
-export function getBelt(proto: M.TransportBeltPrototype): Belt {
+export function getBelt(proto: M.TransportBeltPrototype): BeltJson {
   return { speed: proto.speed * 480 };
 }
 
-export function getCargoWagon(proto: M.CargoWagonPrototype): CargoWagon {
+export function getCargoWagon(proto: M.CargoWagonPrototype): CargoWagonJson {
   return { size: proto.inventory_size };
 }
 
-export function getFluidWagon(proto: M.FluidWagonPrototype): FluidWagon {
+export function getFluidWagon(proto: M.FluidWagonPrototype): FluidWagonJson {
   return { capacity: proto.capacity };
 }
 
@@ -93,7 +93,7 @@ export function getMachinePollution(proto: D.MachineProto): number | undefined {
 export function getMachineSilo(
   proto: D.MachineProto,
   rocketSiloRocket: Record<string, M.RocketSiloRocketPrototype>,
-): Silo | undefined {
+): SiloJson | undefined {
   if (M.isRocketSiloPrototype(proto)) {
     const rocket = rocketSiloRocket[proto.rocket_entity];
 

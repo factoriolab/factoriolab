@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
 import { TestModule } from 'src/tests';
+import { Rational } from '~/models';
 import { ContentService } from '~/services';
 import { Settings } from '~/store';
 import { CostsComponent } from './costs.component';
@@ -37,7 +38,7 @@ describe('CostsComponent', () => {
     it('should determine whether the value matches the initial state', () => {
       component.reset();
       expect(component.modified).toBeFalse();
-      component.editValue['surplus'] = '1';
+      component.editValue['surplus'] = Rational.one;
       expect(component.modified).toBeTrue();
     });
   });

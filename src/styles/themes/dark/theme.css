@@ -48,6 +48,11 @@
   --highlight-bg: rgba(255, 213, 79, 0.16);
   --highlight-text-color: rgba(255, 255, 255, 0.87);
   color-scheme: dark;
+  /* NOTE: These values were manually restored */
+  --success-color: #121212;
+  --success-background: #c5e1a5;
+  --danger-color: #121212;
+  --danger-background: #f48fb1;
 }
 
 :root {

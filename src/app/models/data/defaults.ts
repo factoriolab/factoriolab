@@ -1,4 +1,4 @@
-export interface ModDefaults {
+export interface DefaultsJson {
   beacon: string;
   minBelt: string;
   maxBelt: string;

@@ -12,7 +12,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { IdType, RawDataset } from '~/models';
+import { Dataset, IdType } from '~/models';
 import { LabState, Recipes, Settings } from '~/store';
 import { DataSharedModule } from '../../data-shared.module';
 
@@ -33,7 +33,7 @@ export class CollectionComponent {
 
   label = input.required<string>();
   type = input.required<IdType>();
-  key = input.required<keyof RawDataset>();
+  key = input.required<keyof Dataset>();
 
   breadcrumb = computed<MenuItem[]>(() => [
     {

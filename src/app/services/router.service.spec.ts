@@ -18,7 +18,6 @@ import {
   ObjectiveUnit,
   Preset,
   Rational,
-  ResearchSpeed,
 } from '~/models';
 import {
   App,
@@ -43,13 +42,12 @@ import {
   TRUE,
   Zip,
   ZipData,
-  ZipVersion,
 } from './router.service';
 
 const mockObjective: Objective = {
   id: '1',
   targetId: ItemId.SteelChest,
-  value: '1',
+  value: Rational.one,
   unit: ObjectiveUnit.Belts,
   type: ObjectiveType.Output,
 };
@@ -59,6 +57,20 @@ const mockObjectivesState: Objectives.ObjectivesState = {
     ['1']: mockObjective,
   },
   index: 2,
+};
+const mockMigratedObjectivesState: Objectives.ObjectivesState = {
+  ids: ['1', '2'],
+  entities: {
+    ['1']: mockObjective,
+    ['2']: {
+      id: '2',
+      targetId: ItemId.SteelChest,
+      value: Rational.one,
+      unit: ObjectiveUnit.Machines,
+      type: ObjectiveType.Output,
+    },
+  },
+  index: 3,
 };
 const mockItemsState: Items.ItemsState = {
   [ItemId.SteelChest]: {
@@ -70,17 +82,17 @@ const mockItemsState: Items.ItemsState = {
 const mockRecipesState: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
     machineId: ItemId.AssemblingMachine2,
-    machineModuleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
+    moduleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
     beacons: [
       {
-        count: '1',
+        count: Rational.one,
         id: ItemId.Beacon,
         moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
-        total: '8',
+        total: new Rational(8n),
       },
     ],
-    overclock: 200,
-    cost: '100',
+    overclock: new Rational(200n),
+    cost: Rational.hundred,
   },
 };
 const mockMachinesState: Machines.MachinesState = {
@@ -88,7 +100,7 @@ const mockMachinesState: Machines.MachinesState = {
   entities: {
     ['']: {
       moduleRankIds: [ItemId.ProductivityModule, ItemId.SpeedModule],
-      beaconCount: '1',
+      beaconCount: Rational.one,
       beaconId: ItemId.Beacon,
       beaconModuleRankIds: [ItemId.SpeedModule],
     },
@@ -100,32 +112,32 @@ const mockSettingsState: Settings.SettingsState = {
   netProductionOnly: true,
   surplusMachinesOutput: false,
   preset: Preset.Modules,
-  beaconReceivers: '1',
+  beaconReceivers: Rational.one,
   proliferatorSprayId: ItemId.ProductivityModule,
   beltId: ItemId.TransportBelt,
   fuelRankIds: [ItemId.Coal],
   cargoWagonId: ItemId.CargoWagon,
   fluidWagonId: ItemId.FluidWagon,
-  flowRate: 1200,
+  flowRate: new Rational(1200n),
   inserterTarget: InserterTarget.Chest,
-  miningBonus: 100,
-  researchSpeed: ResearchSpeed.Speed0,
+  miningBonus: Rational.hundred,
+  researchBonus: Rational.zero,
   inserterCapacity: InserterCapacity.Capacity0,
   displayRate: DisplayRate.PerHour,
   maximizeType: MaximizeType.Weight,
   costs: {
-    factor: '2',
-    machine: '10',
-    footprint: '1',
-    unproduceable: '0',
-    excluded: '100',
-    surplus: '0',
-    maximize: '-100000',
+    factor: new Rational(2n),
+    machine: Rational.ten,
+    footprint: Rational.one,
+    unproduceable: Rational.zero,
+    excluded: Rational.hundred,
+    surplus: Rational.zero,
+    maximize: new Rational(-100000n),
   },
 };
 const mockZip: Zip = {
-  bare: 'p=steel-chest*1*1',
-  hash: 'pC6*1*1',
+  bare: 'p=steel-chest**1',
+  hash: 'pC6**1',
 };
 const mockZipPartial: Zip = {
   bare:
@@ -467,7 +479,10 @@ describe('RouterService', () => {
 
       const mockStateV0: App.PartialState = {
         ...mockState,
-        ...{ settingsState: { ...mockState.settingsState } },
+        ...{
+          objectivesState: mockMigratedObjectivesState,
+          settingsState: { ...mockState.settingsState },
+        },
       };
       delete mockStateV0.settingsState?.beaconReceivers;
       delete mockStateV0.settingsState?.researchedTechnologyIds;
@@ -594,6 +609,7 @@ describe('RouterService', () => {
       const mockStateV3: App.PartialState = {
         ...mockState,
         ...{
+          objectivesState: mockMigratedObjectivesState,
           settingsState: {
             ...mockState.settingsState,
             ...{ costs: { ...mockState.settingsState.costs } },
@@ -637,6 +653,7 @@ describe('RouterService', () => {
       const mockStateV4: App.PartialState = {
         ...mockState,
         ...{
+          objectivesState: mockMigratedObjectivesState,
           settingsState: {
             ...mockState.settingsState,
             ...{ costs: { ...mockState.settingsState.costs } },
@@ -677,6 +694,7 @@ describe('RouterService', () => {
       const mockStateV5: App.PartialState = {
         ...mockState,
         ...{
+          objectivesState: mockMigratedObjectivesState,
           settingsState: {
             ...mockState.settingsState,
             ...{ costs: { ...mockState.settingsState.costs } },
@@ -719,6 +737,7 @@ describe('RouterService', () => {
       const mockStateV6: App.PartialState = {
         ...mockState,
         ...{
+          objectivesState: mockMigratedObjectivesState,
           settingsState: {
             ...mockState.settingsState,
             ...{ costs: { ...mockState.settingsState.costs } },
@@ -759,6 +778,7 @@ describe('RouterService', () => {
       const mockStateV7: App.PartialState = {
         ...mockState,
         ...{
+          objectivesState: mockMigratedObjectivesState,
           settingsState: {
             ...mockState.settingsState,
             ...{ costs: { ...mockState.settingsState.costs } },
@@ -832,7 +852,7 @@ describe('RouterService', () => {
 
   describe('migrate', () => {
     it('should return latest version without alteration', () => {
-      const originalParams = { [Section.Version]: ZipVersion.Version9 };
+      const originalParams = { [Section.Version]: service.version };
       const { params } = service.migrate({ ...originalParams }, false);
       expect(params).toEqual(originalParams);
     });
@@ -874,7 +894,7 @@ describe('RouterService', () => {
   });
 
   describe('migrateV6', () => {
-    it('should convert item objectives by machines into recipe objectives', () => {
+    it('should convert item objectives by machines into recipe objectives and into unified objective', () => {
       const { params } = service.migrateV6({
         params: {
           [Section.Objectives]: 'coal*1*3',
@@ -882,11 +902,10 @@ describe('RouterService', () => {
         warnings: [],
         isBare: true,
       });
-      expect(params[Section.Objectives]).toEqual('');
-      expect(params[Section.RecipeObjectives]).toEqual('coal*1');
+      expect(params[Section.Objectives]).toEqual('coal*1*3');
     });
 
-    it('should convert item objective by machines with limit step into maximize / limit recipe objectives', () => {
+    it('should convert item objective by machines with limit step into maximize / limit recipe objectives and into unified objective', () => {
       const { params } = service.migrateV6({
         params: {
           [Section.Objectives]: 'iron-plate*1*3*iron-ore',
@@ -895,10 +914,10 @@ describe('RouterService', () => {
         warnings: [],
         isBare: true,
       });
-      expect(params[Section.Objectives]).toEqual('');
-      expect(params[Section.RecipeObjectives]).toEqual(
-        'coal*1_iron-plate*1*2_iron-ore*1*3',
+      expect(params[Section.Objectives]).toEqual(
+        'coal*1*3_iron-plate*1*3*2_iron-ore*1*3*3',
       );
+      expect(params[Section.RecipeObjectives]).toEqual('');
     });
 
     it('should convert item objective with limit step into maximize / limit item objectives', () => {
@@ -989,7 +1008,7 @@ describe('RouterService', () => {
     it('should generate maps for objective and recipe beacons', () => {
       const beacons: BeaconSettings[] = [
         {
-          count: '1',
+          count: Rational.one,
           id: ItemId.Beacon,
           moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
         },
@@ -999,7 +1018,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: RecipeId.IronPlate,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             beacons,
@@ -1027,7 +1046,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: ItemId.SteelChest,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
@@ -1035,8 +1054,8 @@ describe('RouterService', () => {
         Mocks.Hash,
       );
       expect(zip.objectives).toEqual({
-        bare: 'p=steel-chest*1',
-        hash: 'pC6*1',
+        bare: 'p=steel-chest',
+        hash: 'pC6',
       });
     });
 
@@ -1048,7 +1067,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: ItemId.SteelChest,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
@@ -1056,8 +1075,8 @@ describe('RouterService', () => {
         Mocks.Hash,
       );
       expect(zip.objectives).toEqual({
-        bare: 'p=steel-chest*1*1',
-        hash: 'pC6*1*1',
+        bare: 'p=steel-chest**1',
+        hash: 'pC6**1',
       });
     });
 
@@ -1069,7 +1088,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: ItemId.SteelChest,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           },
@@ -1077,8 +1096,8 @@ describe('RouterService', () => {
         Mocks.Hash,
       );
       expect(zip.objectives).toEqual({
-        bare: 'p=steel-chest*1*2',
-        hash: 'pC6*1*2',
+        bare: 'p=steel-chest**2',
+        hash: 'pC6**2',
       });
     });
 
@@ -1090,7 +1109,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: RecipeId.SteelChest,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
           },
@@ -1098,8 +1117,8 @@ describe('RouterService', () => {
         Mocks.Hash,
       );
       expect(zip.objectives).toEqual({
-        bare: 'p=steel-chest*1*3',
-        hash: 'pDB*1*3',
+        bare: 'p=steel-chest**3',
+        hash: 'pDB**3',
       });
     });
   });
@@ -1118,7 +1137,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: ItemId.SteelChest,
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
@@ -1139,7 +1158,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: '',
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
@@ -1156,7 +1175,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: '',
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             beacons: [{}],
@@ -1178,7 +1197,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: '',
-            value: '1',
+            value: Rational.one,
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             beacons: [{}],
@@ -1282,7 +1301,7 @@ describe('RouterService', () => {
       const result = service.unzipMachines({ ['f']: '1_?**1' }, Mocks.Hash);
       expect(result).toEqual({
         ids: [''],
-        entities: { ['']: { beaconCount: '1' } },
+        entities: { ['']: { beaconCount: Rational.one } },
       });
     });
   });
@@ -1389,6 +1408,20 @@ describe('RouterService', () => {
 
     it('should handle truthy', () => {
       expect(service.zipDiffNumber(0, 1)).toEqual('0');
+    });
+  });
+
+  describe('zipDiffRational', () => {
+    it('should handle default', () => {
+      expect(service.zipDiffRational(Rational.one, Rational.one)).toEqual('');
+    });
+
+    it('should handle nullish', () => {
+      expect(service.zipDiffRational(null, Rational.one)).toEqual(NULL);
+    });
+
+    it('should handle nondefault', () => {
+      expect(service.zipDiffRational(Rational.one, null)).toEqual('1');
     });
   });
 

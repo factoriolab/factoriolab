@@ -1,3 +1,5 @@
+import { Rational } from './rational';
+
 export type Entities<T = string> = Record<string, T>;
 
 export function toEntities<T extends { id: string }>(
@@ -29,4 +31,31 @@ export function toBoolEntities(
     e[v] = true;
     return e;
   }, init);
+}
+
+export function toRationalEntities(
+  value: Entities<string | number>,
+): Entities<Rational>;
+export function toRationalEntities(
+  value: Entities<string | number> | undefined,
+): Entities<Rational> | undefined;
+export function toRationalEntities(
+  value: Entities<string | number> | undefined,
+): Entities<Rational> | undefined {
+  if (value == null) return;
+  return Object.keys(value).reduce((e: Entities<Rational>, v) => {
+    e[v] = Rational.from(value[v]);
+    return e;
+  }, {});
+}
+
+export function cloneEntities<T>(value: Entities<T>): Entities<T>;
+export function cloneEntities<T>(
+  value: Entities<T> | undefined,
+): Entities<T> | undefined;
+export function cloneEntities<T>(
+  value: Entities<T> | undefined,
+): Entities<T> | undefined {
+  if (value == null) return;
+  return { ...value };
 }

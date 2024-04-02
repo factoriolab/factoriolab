@@ -1,4 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
+import { Rational } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
@@ -21,10 +22,10 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipesState.projector(
         initialRecipesState,
         Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(Object.keys(result).length).toEqual(
-        Mocks.RawDataset.recipeIds.length,
+        Mocks.AdjustedDataset.recipeIds.length,
       );
     });
 
@@ -34,14 +35,16 @@ describe('Recipes Selectors', () => {
         ...{ [Mocks.Item1.id]: { machineId: ItemId.AssemblingMachine3 } },
       };
       const data = {
-        ...Mocks.RawDataset,
+        ...Mocks.AdjustedDataset,
         ...{
           defaults: undefined,
           machineEntities: {
-            ...Mocks.RawDataset.machineEntities,
+            ...Mocks.AdjustedDataset.machineEntities,
             ...{
               [ItemId.AssemblingMachine3]: {
-                ...Mocks.RawDataset.machineEntities[ItemId.AssemblingMachine3],
+                ...Mocks.AdjustedDataset.machineEntities[
+                  ItemId.AssemblingMachine3
+                ],
                 ...{ modules: undefined },
               },
             },
@@ -75,7 +78,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result[Mocks.Item1.id].machineId).toEqual(stringValue);
     });
@@ -83,27 +86,27 @@ describe('Recipes Selectors', () => {
     it('should use module override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { machineModuleIds: [stringValue] } },
+        ...{ [Mocks.Item1.id]: { moduleIds: [stringValue] } },
       };
       const result = Selectors.getRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
+        Mocks.Dataset,
       );
-      expect(result[Mocks.Item1.id].machineModuleIds).toEqual([stringValue]);
+      expect(result[Mocks.Item1.id].moduleIds).toEqual([stringValue]);
     });
 
     it('should use beacon count override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beacons: [{ count: stringValue }] } },
+        ...{ [Mocks.Item1.id]: { beacons: [{ count: Rational.one }] } },
       };
       const result = Selectors.getRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
+        Mocks.Dataset,
       );
-      expect(result[Mocks.Item1.id].beacons?.[0].count).toEqual(stringValue);
+      expect(result[Mocks.Item1.id].beacons?.[0].count).toEqual(Rational.one);
     });
 
     it('should use beacon module override', () => {
@@ -132,7 +135,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.getRecipesState.projector(
         state,
         machines,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result[Mocks.Item1.id].beacons?.[0].moduleIds).toEqual([
         stringValue,
@@ -142,12 +145,16 @@ describe('Recipes Selectors', () => {
     it('should reset invalid beacon totals', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beacons: [{ total: '8', count: '0' }] } },
+        ...{
+          [Mocks.Item1.id]: {
+            beacons: [{ total: new Rational(8n), count: Rational.zero }],
+          },
+        },
       };
       const result = Selectors.getRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
+        Mocks.Dataset,
       );
       expect(result[Mocks.Item1.id].beacons?.[0].total).toBeUndefined();
     });
@@ -155,9 +162,11 @@ describe('Recipes Selectors', () => {
 
   describe('getAvailableItems', () => {
     it('should return items with some recipe available to produce it', () => {
-      const result = Selectors.getAvailableItems.projector(Mocks.Dataset);
+      const result = Selectors.getAvailableItems.projector(
+        Mocks.AdjustedDataset,
+      );
       // Cannot produce wood in vanilla Factorio
-      expect(result.length).toEqual(Mocks.RawDataset.itemIds.length - 1);
+      expect(result.length).toEqual(Mocks.AdjustedDataset.itemIds.length - 1);
     });
   });
 });

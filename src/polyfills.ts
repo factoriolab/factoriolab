@@ -50,11 +50,3 @@ import 'zone.js'; // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
-/* BigInt polyfill for iOS < 14 */
-import bigInt from 'big-integer';
-
-/* No test run where BigInt is undefined */
-/* istanbul ignore if */
-if (typeof BigInt === 'undefined') {
-  window.BigInt = bigInt as unknown as BigIntConstructor;
-}

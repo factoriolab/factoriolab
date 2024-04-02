@@ -1,5 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
-import { Game } from '~/models';
+import { Game, Rational } from '~/models';
 import { initialMachinesState } from './machines.reducer';
 import * as Selectors from './machines.selectors';
 
@@ -10,7 +10,7 @@ describe('Machines Selectors', () => {
         initialMachinesState,
         [ItemId.Coal],
         Mocks.Defaults,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(result.ids?.length).toEqual(3);
       expect(Object.keys(result.entities).length).toEqual(19);
@@ -21,7 +21,7 @@ describe('Machines Selectors', () => {
         initialMachinesState,
         [ItemId.Coal],
         null,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
@@ -31,7 +31,9 @@ describe('Machines Selectors', () => {
       const result = Selectors.getMachinesState.projector(
         {
           ids: undefined,
-          entities: { [ItemId.AssemblingMachine2]: { beaconCount: '0' } },
+          entities: {
+            [ItemId.AssemblingMachine2]: { beaconCount: Rational.zero },
+          },
         },
         [ItemId.Coal],
         null,
@@ -40,7 +42,7 @@ describe('Machines Selectors', () => {
       expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
       expect(result.entities[ItemId.AssemblingMachine2].beaconCount).toEqual(
-        '0',
+        Rational.zero,
       );
     });
 
@@ -49,7 +51,7 @@ describe('Machines Selectors', () => {
         initialMachinesState,
         [ItemId.Coal],
         Mocks.Defaults,
-        { ...Mocks.Dataset, ...{ game: Game.DysonSphereProgram } },
+        { ...Mocks.AdjustedDataset, ...{ game: Game.DysonSphereProgram } },
       );
       expect(result.entities[''].beaconCount).toBeUndefined();
     });
@@ -63,7 +65,7 @@ describe('Machines Selectors', () => {
             ...{
               '': {
                 ...initialMachinesState.entities[''],
-                ...{ overclock: 200 },
+                ...{ overclock: new Rational(200n) },
               },
             },
           },
@@ -78,7 +80,7 @@ describe('Machines Selectors', () => {
           ...{ game: Game.Satisfactory },
         },
       );
-      expect(result.entities[''].overclock).toEqual(200);
+      expect(result.entities[''].overclock).toEqual(new Rational(200n));
     });
 
     it('should default overclock to 100 in Satisfactory', () => {
@@ -105,7 +107,7 @@ describe('Machines Selectors', () => {
           ...{ game: Game.Satisfactory },
         },
       );
-      expect(result.entities[''].overclock).toEqual(100);
+      expect(result.entities[''].overclock).toEqual(Rational.hundred);
     });
 
     it('should default overclock to 0 in Final Factory', () => {
@@ -132,7 +134,7 @@ describe('Machines Selectors', () => {
           ...{ game: Game.FinalFactory },
         },
       );
-      expect(result.entities[''].overclock).toEqual(0);
+      expect(result.entities[''].overclock).toEqual(Rational.zero);
     });
   });
 });

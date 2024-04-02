@@ -41,7 +41,7 @@ describe('Objectives Selectors', () => {
       const result = Selectors.getBaseObjectives.projector(
         Mocks.ObjectivesState.ids,
         Mocks.ObjectivesState.entities,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result).toEqual(Mocks.ObjectivesList);
     });
@@ -52,29 +52,20 @@ describe('Objectives Selectors', () => {
       spyOn(RecipeUtility, 'adjustObjective');
       Selectors.getObjectives.projector(
         [Mocks.Objective5],
+        Mocks.ItemsStateInitial,
+        Mocks.RecipesStateInitial,
         Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
+        Mocks.AdjustmentData,
+        Mocks.AdjustedDataset,
       );
       expect(RecipeUtility.adjustObjective).toHaveBeenCalledWith(
         Mocks.Objective5,
-        Mocks.MachinesStateInitial,
-        Mocks.RawDataset,
-      );
-    });
-  });
-
-  describe('getObjectiveRationals', () => {
-    it('should convert objectives to rationals', () => {
-      const data = Mocks.getDataset();
-      spyOn(RecipeUtility, 'adjustRecipe').and.callThrough();
-      Selectors.getObjectiveRationals.projector(
-        [Mocks.Objective1, Mocks.Objective5],
-        Mocks.AdjustmentData,
         Mocks.ItemsStateInitial,
-        Mocks.RecipesStateRationalInitial,
-        data,
+        Mocks.RecipesStateInitial,
+        Mocks.MachinesStateInitial,
+        Mocks.AdjustmentData,
+        Mocks.AdjustedDataset,
       );
-      expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -82,14 +73,14 @@ describe('Objectives Selectors', () => {
     it('should map objectives to rates', () => {
       spyOn(RateUtility, 'objectiveNormalizedRate');
       Selectors.getNormalizedObjectives.projector(
-        Mocks.RationalObjectives,
+        Mocks.Objectives,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
         displayRateInfo[DisplayRate.PerMinute],
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(RateUtility.objectiveNormalizedRate).toHaveBeenCalledTimes(
-        Mocks.RationalObjectives.length,
+        Mocks.Objectives.length,
       );
     });
   });
@@ -101,14 +92,14 @@ describe('Objectives Selectors', () => {
         resultType: SimplexResultType.Skipped,
       });
       Selectors.getMatrixResult.projector(
-        Mocks.RationalObjectives,
+        Mocks.Objectives,
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         [],
         MaximizeType.Weight,
         false,
-        Mocks.CostRational,
-        Mocks.Dataset,
+        Mocks.Costs,
+        Mocks.AdjustedDataset,
         false,
       );
       expect(SimplexUtility.solve).toHaveBeenCalled();
@@ -126,7 +117,7 @@ describe('Objectives Selectors', () => {
         null,
         {},
         displayRateInfo[DisplayRate.PerMinute],
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(RateUtility.normalizeSteps).toHaveBeenCalled();
     });
@@ -175,10 +166,10 @@ describe('Objectives Selectors', () => {
             id: '0',
             itemId: ItemId.Coal,
             recipeId: RecipeId.Coal,
-            recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
+            recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
-              machineModuleIds: [ItemId.ProductivityModule3],
+              moduleIds: [ItemId.ProductivityModule3],
               beacons: [
                 {
                   id: ItemId.Beacon,
@@ -195,10 +186,10 @@ describe('Objectives Selectors', () => {
             machines: Rational.one,
             power: Rational.one,
             pollution: Rational.one,
-            recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
+            recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
-              machineModuleIds: [
+              moduleIds: [
                 ItemId.Module,
                 ItemId.SpeedModule3,
                 ItemId.SpeedModule3,
@@ -214,13 +205,13 @@ describe('Objectives Selectors', () => {
           },
         ],
         Mocks.ItemsStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(result).toEqual({
         belts: { [ItemId.TransportBelt]: Rational.one },
         wagons: { [ItemId.CargoWagon]: Rational.one },
         machines: { [ItemId.ElectricMiningDrill]: Rational.one },
-        machineModules: {
+        modules: {
           [ItemId.SpeedModule3]: Rational.from(2),
         },
         beacons: { [ItemId.Beacon]: Rational.one },
@@ -238,7 +229,7 @@ describe('Objectives Selectors', () => {
           {
             id: '01',
             recipeId: RecipeId.Coal,
-            recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
+            recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
             machines: Rational.one,
             recipeSettings: {
               machineId: ItemId.MiningMachine,
@@ -246,13 +237,13 @@ describe('Objectives Selectors', () => {
           },
         ],
         Mocks.ItemsStateInitial,
-        { ...Mocks.Dataset, ...{ game: Game.DysonSphereProgram } },
+        { ...Mocks.AdjustedDataset, ...{ game: Game.DysonSphereProgram } },
       );
       expect(result).toEqual({
         belts: {},
         wagons: {},
         machines: { [RecipeId.Coal]: Rational.one },
-        machineModules: {},
+        modules: {},
         beacons: {},
         beaconModules: {},
         power: Rational.zero,
@@ -266,23 +257,23 @@ describe('Objectives Selectors', () => {
           {
             id: '01',
             recipeId: RecipeId.Coal,
-            recipe: Mocks.Dataset.recipeR[RecipeId.Coal],
+            recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
             machines: Rational.one,
             recipeSettings: {
               machineId: ItemId.AssemblingMachine2,
-              machineModuleIds: [ItemId.SpeedModule],
+              moduleIds: [ItemId.SpeedModule],
               overclock: Rational.two,
             },
           },
         ],
         Mocks.ItemsStateInitial,
-        { ...Mocks.Dataset, ...{ game: Game.FinalFactory } },
+        { ...Mocks.AdjustedDataset, ...{ game: Game.FinalFactory } },
       );
       expect(result).toEqual({
         belts: {},
         wagons: {},
         machines: { [ItemId.AssemblingMachine2]: Rational.one },
-        machineModules: { [ItemId.SpeedModule]: Rational.two },
+        modules: { [ItemId.SpeedModule]: Rational.two },
         beacons: {},
         beaconModules: {},
         power: Rational.zero,
@@ -315,7 +306,7 @@ describe('Objectives Selectors', () => {
       const result = Selectors.getStepDetails.projector(
         steps,
         Mocks.RecipesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(result).toEqual({
         ['0']: {
@@ -485,9 +476,9 @@ describe('Objectives Selectors', () => {
         {
           [RecipeId.Coal]: {
             machineId: undefined,
-            machineModuleIds: undefined,
-            overclock: 100,
-            beacons: [{ total: '1' }],
+            moduleIds: undefined,
+            overclock: Rational.hundred,
+            beacons: [{ total: Rational.one }],
           },
         },
         [],
@@ -501,10 +492,10 @@ describe('Objectives Selectors', () => {
       const objective: Objective = {
         id: '1',
         targetId: RecipeId.Coal,
-        value: '1',
+        value: Rational.one,
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
-        overclock: 100,
+        overclock: Rational.hundred,
         beacons: [{ moduleIds: [] }],
       };
       const result = Selectors.getRecipesModified.projector(
