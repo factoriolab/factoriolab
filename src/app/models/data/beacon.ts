@@ -2,23 +2,23 @@ import { EnergyType } from '../enum';
 import { Rational } from '../rational';
 import { ModuleEffect } from './module';
 
-export interface Beacon {
+export interface BeaconJson {
   effectivity: number | string;
-  modules: number;
-  range?: number;
+  modules: number | string;
+  range?: number | string;
   /** Beacons must use electric energy source, if any */
   type?: EnergyType.Electric;
   /** Energy consumption in kW */
-  usage?: number;
+  usage?: number | string;
   disallowedEffects?: ModuleEffect[];
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
 }
 
-export class BeaconRational {
+export interface Beacon {
   effectivity: Rational;
-  modules: number;
-  range?: number;
+  modules: Rational;
+  range?: Rational;
   /** Beacons must use electric or void energy source */
   type?: EnergyType.Electric;
   /** Energy consumption in kW */
@@ -26,17 +26,19 @@ export class BeaconRational {
   disallowedEffects?: ModuleEffect[];
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
+}
 
-  constructor(obj: Beacon) {
-    this.effectivity = Rational.from(obj.effectivity);
-    this.modules = obj.modules;
-    this.range = obj.range;
-    this.type = obj.type;
-    this.disallowedEffects = obj.disallowedEffects;
-    this.size = obj.size;
-
-    if (obj.usage) {
-      this.usage = Rational.fromNumber(obj.usage);
-    }
-  }
+export function parseBeacon(json: BeaconJson): Beacon;
+export function parseBeacon(json: BeaconJson | undefined): Beacon | undefined;
+export function parseBeacon(json: BeaconJson | undefined): Beacon | undefined {
+  if (json == null) return;
+  return {
+    effectivity: Rational.from(json.effectivity),
+    modules: Rational.from(json.modules),
+    range: Rational.from(json.range),
+    type: json.type,
+    usage: Rational.from(json.usage),
+    disallowedEffects: json.disallowedEffects,
+    size: json.size,
+  };
 }

@@ -13,9 +13,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { first } from 'rxjs';
 
-import { orString } from '~/helpers';
+import { coalesce } from '~/helpers';
 import {
-  Dataset,
+  AdjustedDataset,
   Defaults,
   DisplayRate,
   displayRateOptions,
@@ -42,8 +42,8 @@ import {
   PowerUnit,
   powerUnitOptions,
   Preset,
-  ResearchSpeed,
-  researchSpeedOptions,
+  Rational,
+  researchBonusOptions,
   SankeyAlign,
   sankeyAlignOptions,
   Theme,
@@ -136,7 +136,7 @@ export class SettingsComponent implements OnInit {
   inserterTargetOptions = inserterTargetOptions;
   languageOptions = languageOptions;
   powerUnitOptions = powerUnitOptions;
-  researchSpeedOptions = researchSpeedOptions;
+  researchSpeedOptions = researchBonusOptions;
   themeOptions = themeOptions;
   flowDiagramOptions = flowDiagramOptions;
   sankeyAlignOptions = sankeyAlignOptions;
@@ -147,14 +147,16 @@ export class SettingsComponent implements OnInit {
   ItemId = ItemId;
   FlowDiagram = FlowDiagram;
   BrowserUtility = BrowserUtility;
+  Rational = Rational;
 
   ngOnInit(): void {
     this.store
       .select(Settings.getGameStates)
       .pipe(first())
       .subscribe((states) => {
-        this.state = orString(
+        this.state = coalesce(
           Object.keys(states).find((s) => states[s] === BrowserUtility.search),
+          '',
         );
       });
   }
@@ -242,14 +244,14 @@ export class SettingsComponent implements OnInit {
   setExcludedRecipes(
     checked: string[],
     recipesState: Recipes.RecipesState,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     const payload: IdValueDefaultPayload<boolean>[] = [];
     for (const id of data.recipeIds) {
       const value = checked.some((i) => i === id);
       if (value !== recipesState[id].excluded) {
         // Needs to change, find default value
-        const def = (data.defaults?.excludedRecipeIds ?? []).some(
+        const def = coalesce(data.defaults?.excludedRecipeIds, []).some(
           (i) => i === id,
         );
         payload.push({ id, value, def });
@@ -261,7 +263,7 @@ export class SettingsComponent implements OnInit {
   setExcludedItems(
     checked: string[],
     itemsState: Items.ItemsState,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     const payload: IdValuePayload<boolean>[] = [];
     for (const id of data.itemIds) {
@@ -280,7 +282,10 @@ export class SettingsComponent implements OnInit {
     fuelRankIds: string[],
   ): void {
     const def = RecipeUtility.bestMatch(
-      settings.fuelOptions?.map((o) => o.value) ?? [],
+      coalesce(
+        settings.fuelOptions?.map((o) => o.value),
+        [],
+      ),
       fuelRankIds,
     );
     this.setFuel(id, value, def);
@@ -303,7 +308,7 @@ export class SettingsComponent implements OnInit {
   }
 
   toggleBeaconReceivers(value: boolean): void {
-    this.setBeaconReceivers(value ? '1' : null);
+    this.setBeaconReceivers(value ? Rational.one : null);
   }
 
   /** Action Dispatch Methods */
@@ -371,11 +376,11 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.SetModuleRankAction({ id, value, def }));
   }
 
-  setOverclock(id: string, value: number, def: number | undefined): void {
+  setOverclock(id: string, value: Rational, def: Rational | undefined): void {
     this.store.dispatch(new Machines.SetOverclockAction({ id, value, def }));
   }
 
-  setBeaconCount(id: string, value: string, def: string | undefined): void {
+  setBeaconCount(id: string, value: Rational, def: Rational | undefined): void {
     this.store.dispatch(new Machines.SetBeaconCountAction({ id, value, def }));
   }
 
@@ -393,7 +398,7 @@ export class SettingsComponent implements OnInit {
     );
   }
 
-  setBeaconReceivers(value: string | null): void {
+  setBeaconReceivers(value: Rational | null): void {
     this.store.dispatch(new Settings.SetBeaconReceiversAction(value));
   }
 
@@ -421,7 +426,7 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetFuelRankAction({ value, def }));
   }
 
-  setFlowRate(value: number): void {
+  setFlowRate(value: Rational): void {
     this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
 
@@ -429,12 +434,12 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetInserterTargetAction(value));
   }
 
-  setMiningBonus(value: number): void {
+  setMiningBonus(value: Rational): void {
     this.store.dispatch(new Settings.SetMiningBonusAction(value));
   }
 
-  setResearchSpeed(value: ResearchSpeed): void {
-    this.store.dispatch(new Settings.SetResearchSpeedAction(value));
+  setResearchSpeed(value: Rational): void {
+    this.store.dispatch(new Settings.SetResearchBonusAction(value));
   }
 
   setInserterCapacity(value: InserterCapacity): void {

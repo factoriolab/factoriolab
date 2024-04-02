@@ -17,7 +17,7 @@ export class ObjectivesEffects {
         const factor = displayRateInfo[a.payload.value].value.div(
           displayRateInfo[a.payload.prev].value,
         );
-        return new AdjustDisplayRateAction(factor.toString());
+        return new AdjustDisplayRateAction(factor);
       }),
     ),
   );

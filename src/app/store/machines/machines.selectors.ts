@@ -1,7 +1,13 @@
 import { createSelector } from '@ngrx/store';
 
 import { getIdOptions } from '~/helpers';
-import { EnergyType, Entities, Game, MachineSettings } from '~/models';
+import {
+  EnergyType,
+  Entities,
+  Game,
+  MachineSettings,
+  Rational,
+} from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Settings from '../settings';
@@ -41,12 +47,12 @@ export const getMachinesState = createSelector(
 
     if (data.game === Game.Satisfactory) {
       // Default = 100%
-      def.overclock = def.overclock ?? 100;
+      def.overclock = def.overclock ?? Rational.hundred;
     }
 
     if (data.game === Game.FinalFactory) {
       // Default = 0
-      def.overclock = def.overclock ?? 0;
+      def.overclock = def.overclock ?? Rational.zero;
     }
 
     entities[''] = def;

@@ -1,12 +1,12 @@
 import { Rational } from '../rational';
 
 export type ModuleEffect =
-  | 'speed'
-  | 'productivity'
   | 'consumption'
-  | 'pollution';
+  | 'pollution'
+  | 'productivity'
+  | 'speed';
 
-export interface Module {
+export interface ModuleJson {
   consumption?: number | string;
   pollution?: number | string;
   productivity?: number | string;
@@ -16,38 +16,27 @@ export interface Module {
   proliferator?: string;
 }
 
-export class ModuleRational {
-  speed?: Rational;
-  productivity?: Rational;
+export interface Module {
   consumption?: Rational;
   pollution?: Rational;
+  productivity?: Rational;
+  speed?: Rational;
   limitation?: string;
   sprays?: Rational;
   proliferator?: string;
+}
 
-  constructor(obj: Module) {
-    if (obj.speed) {
-      this.speed = Rational.from(obj.speed);
-    }
-
-    if (obj.productivity) {
-      this.productivity = Rational.from(obj.productivity);
-    }
-
-    if (obj.consumption) {
-      this.consumption = Rational.from(obj.consumption);
-    }
-
-    if (obj.pollution) {
-      this.pollution = Rational.from(obj.pollution);
-    }
-
-    this.limitation = obj.limitation;
-
-    if (obj.sprays) {
-      this.sprays = Rational.fromNumber(obj.sprays);
-    }
-
-    this.proliferator = obj.proliferator;
-  }
+export function parseModule(json: ModuleJson): Module;
+export function parseModule(json: ModuleJson | undefined): Module | undefined;
+export function parseModule(json: ModuleJson | undefined): Module | undefined {
+  if (json == null) return;
+  return {
+    consumption: Rational.from(json.consumption),
+    pollution: Rational.from(json.pollution),
+    productivity: Rational.from(json.productivity),
+    speed: Rational.from(json.speed),
+    limitation: json.limitation,
+    sprays: Rational.from(json.sprays),
+    proliferator: json.proliferator,
+  };
 }

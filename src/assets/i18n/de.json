@@ -83,7 +83,7 @@
       "pollutionPerMinute": "Umweltverschmutzung/min",
       "pollutionPerHour": "Umweltverschmutzung/h"
     },
-    "researchSpeed": {
+    "researchBonus": {
       "speed0": "Kein Forschungsbonus",
       "speed1": "Forschungsgeschwindigkeit 1",
       "speed2": "Forschungsgeschwindigkeit 2",

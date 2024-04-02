@@ -5,6 +5,7 @@ import {
   IdIndexValuePayload,
   IdValueDefaultPayload,
   IdValuePayload,
+  Rational,
 } from '~/models';
 
 export const enum RecipesActionType {
@@ -13,7 +14,7 @@ export const enum RecipesActionType {
   SET_CHECKED = '[Recipes] Set Checked',
   SET_MACHINE = '[Recipes] Set Machine',
   SET_FUEL = '[Recipes] Set Fuel',
-  SET_MACHINE_MODULES = '[Recipes] Set Machine Modules',
+  SET_MODULES = '[Recipes] Set Modules',
   ADD_BEACON = '[Recipes] Add Beacon',
   REMOVE_BEACON = '[Recipes] Remove Beacon',
   SET_BEACON_COUNT = '[Recipes] Set Beacon Count',
@@ -56,8 +57,8 @@ export class SetFuelAction implements Action {
   constructor(public payload: IdValueDefaultPayload) {}
 }
 
-export class SetMachineModulesAction implements Action {
-  readonly type = RecipesActionType.SET_MACHINE_MODULES;
+export class SetModulesAction implements Action {
+  readonly type = RecipesActionType.SET_MODULES;
   constructor(public payload: IdValueDefaultPayload<string[]>) {}
 }
 
@@ -73,7 +74,7 @@ export class RemoveBeaconAction implements Action {
 
 export class SetBeaconCountAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_COUNT;
-  constructor(public payload: IdIndexValueDefaultPayload) {}
+  constructor(public payload: IdIndexValueDefaultPayload<Rational>) {}
 }
 
 export class SetBeaconAction implements Action {
@@ -88,17 +89,17 @@ export class SetBeaconModulesAction implements Action {
 
 export class SetBeaconTotalAction implements Action {
   readonly type = RecipesActionType.SET_BEACON_TOTAL;
-  constructor(public payload: IdIndexValuePayload) {}
+  constructor(public payload: IdIndexValuePayload<Rational>) {}
 }
 
 export class SetOverclockAction implements Action {
   readonly type = RecipesActionType.SET_OVERCLOCK;
-  constructor(public payload: IdValueDefaultPayload<number>) {}
+  constructor(public payload: IdValueDefaultPayload<Rational>) {}
 }
 
 export class SetCostAction implements Action {
   readonly type = RecipesActionType.SET_COST;
-  constructor(public payload: IdValuePayload<string | undefined>) {}
+  constructor(public payload: IdValuePayload<Rational | undefined>) {}
 }
 
 export class ResetRecipeAction implements Action {
@@ -138,7 +139,7 @@ export type RecipesAction =
   | SetCheckedAction
   | SetMachineAction
   | SetFuelAction
-  | SetMachineModulesAction
+  | SetModulesAction
   | AddBeaconAction
   | RemoveBeaconAction
   | SetBeaconCountAction

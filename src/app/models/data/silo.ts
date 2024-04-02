@@ -2,21 +2,26 @@ import { Rational } from '../rational';
 
 const secs = Rational.from(60);
 
-export interface Silo {
+export interface SiloJson {
   /** Number of rocket parts required */
-  parts: number;
+  parts: number | string;
   /** Launch animation delay, in ticks */
-  launch: number;
+  launch: number | string;
 }
 
-export class SiloRational {
+export interface Silo {
   /** Number of rocket parts required */
   parts: Rational;
   /** Launch animation delay, in seconds */
   launch: Rational;
+}
 
-  constructor(obj: Silo) {
-    this.parts = Rational.fromNumber(obj.parts);
-    this.launch = Rational.fromNumber(obj.launch).div(secs);
-  }
+export function parseSilo(json: SiloJson): Silo;
+export function parseSilo(json: SiloJson | undefined): Silo | undefined;
+export function parseSilo(json: SiloJson | undefined): Silo | undefined {
+  if (json == null) return;
+  return {
+    parts: Rational.from(json.parts),
+    launch: Rational.from(json.launch).div(secs),
+  };
 }

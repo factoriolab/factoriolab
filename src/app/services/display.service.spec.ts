@@ -50,7 +50,7 @@ describe('DisplayService', () => {
     it('should generate html for a recipe', () => {
       expect(
         service.recipeProcess(
-          Mocks.RawDataset.recipeEntities[RecipeId.ElectronicCircuit],
+          Mocks.AdjustedDataset.recipeEntities[RecipeId.ElectronicCircuit],
         ),
       ).toBeTruthy();
     });

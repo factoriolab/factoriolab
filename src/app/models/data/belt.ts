@@ -1,13 +1,18 @@
 import { Rational } from '../rational';
 
-export interface Belt {
+export interface BeltJson {
   speed: number | string;
 }
 
-export class BeltRational {
+export interface Belt {
   speed: Rational;
+}
 
-  constructor(obj: Belt) {
-    this.speed = Rational.from(obj.speed);
-  }
+export function parseBelt(json: BeltJson): Belt;
+export function parseBelt(json: BeltJson | undefined): Belt | undefined;
+export function parseBelt(json: BeltJson | undefined): Belt | undefined {
+  if (json == null) return;
+  return {
+    speed: Rational.from(json.speed),
+  };
 }

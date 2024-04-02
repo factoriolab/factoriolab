@@ -10,7 +10,6 @@ import {
   Language,
   Preset,
   Rational,
-  ResearchSpeed,
 } from '~/models';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
@@ -153,13 +152,13 @@ describe('Settings Selectors', () => {
       );
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beaconModuleId).toEqual(ItemId.Module);
-      expect(result.beaconCount).toEqual('0');
+      expect(result.beaconCount).toEqual(Rational.zero);
     });
 
     it('should use 8 beacons', () => {
       const result = Selectors.getDefaults.projector(Preset.Beacon8, Mocks.Mod);
       TestUtility.assert(result != null);
-      expect(result.beaconCount).toEqual('8');
+      expect(result.beaconCount).toEqual(new Rational(8n));
     });
 
     it('should use 12 beacons', () => {
@@ -168,7 +167,7 @@ describe('Settings Selectors', () => {
         Mocks.Mod,
       );
       TestUtility.assert(result != null);
-      expect(result.beaconCount).toEqual('12');
+      expect(result.beaconCount).toEqual(new Rational(12n));
     });
 
     it('should get the defaults from the current base mod', () => {
@@ -274,41 +273,6 @@ describe('Settings Selectors', () => {
         Mocks.SettingsStateInitial,
       );
       expect(result).toEqual(Mocks.SettingsStateInitial.fuelRankIds);
-    });
-  });
-
-  describe('getRationalMiningBonus', () => {
-    it('should convert the numeric value to a percent Rational', () => {
-      const result = Selectors.getRationalMiningBonus.projector(100);
-      expect(result).toEqual(Rational.one);
-    });
-  });
-
-  describe('getResearchFactor', () => {
-    it('should look up the Rational from the dictionary', () => {
-      const result = Selectors.getResearchFactor.projector(
-        ResearchSpeed.Speed0,
-      );
-      expect(result).toEqual(Rational.one);
-    });
-  });
-
-  describe('getRationalBeaconReceivers', () => {
-    it('should convert the string value to a Rational', () => {
-      const result = Selectors.getRationalBeaconReceivers.projector('1');
-      expect(result).toEqual(Rational.one);
-    });
-
-    it('should handle null setting', () => {
-      const result = Selectors.getRationalBeaconReceivers.projector(null);
-      expect(result).toBeNull();
-    });
-  });
-
-  describe('getRationalFlowRate', () => {
-    it('should convert the numeric value to a Rational', () => {
-      const result = Selectors.getRationalFlowRate.projector(1);
-      expect(result).toEqual(Rational.one);
     });
   });
 
@@ -528,25 +492,25 @@ describe('Settings Selectors', () => {
     it('should return the map of belt speeds', () => {
       const flowRate = Rational.from(2000);
       const result = Selectors.getBeltSpeed.projector(
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
         flowRate,
       );
       expect(result[ItemId.TransportBelt]).toEqual(
-        Mocks.RawDataset.beltEntities[ItemId.TransportBelt].speed,
+        Mocks.AdjustedDataset.beltEntities[ItemId.TransportBelt].speed,
       );
       expect(result[ItemId.Pipe]).toEqual(flowRate);
     });
 
     it('should include pipe speeds', () => {
       const data = {
-        ...Mocks.RawDataset,
+        ...Mocks.AdjustedDataset,
         ...{
           pipeIds: [ItemId.Pipe],
           beltEntities: {
-            ...Mocks.RawDataset.beltEntities,
+            ...Mocks.AdjustedDataset.beltEntities,
             ...{
               [ItemId.Pipe]: {
-                ...Mocks.RawDataset.beltEntities[ItemId.Pipe],
+                ...Mocks.AdjustedDataset.beltEntities[ItemId.Pipe],
                 ...{
                   speed: Rational.ten,
                 },
@@ -587,7 +551,7 @@ describe('Settings Selectors', () => {
     it('should expand minimal set of technology ids into full list', () => {
       const result = Selectors.getAllResearchedTechnologyIds.projector(
         [RecipeId.ArtilleryShellRange],
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result?.length).toEqual(54);
     });
@@ -595,7 +559,7 @@ describe('Settings Selectors', () => {
     it('should return value if null', () => {
       const result = Selectors.getAllResearchedTechnologyIds.projector(
         null,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result).toBeNull();
     });
@@ -605,15 +569,15 @@ describe('Settings Selectors', () => {
     it('should return full list if value is null', () => {
       const result = Selectors.getAvailableRecipes.projector(
         null,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
-      expect(result).toEqual(Mocks.RawDataset.recipeIds);
+      expect(result).toEqual(Mocks.AdjustedDataset.recipeIds);
     });
 
     it('should filter for only unlocked recipes', () => {
       const result = Selectors.getAvailableRecipes.projector(
         [RecipeId.Automation],
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result.length).toEqual(234);
     });

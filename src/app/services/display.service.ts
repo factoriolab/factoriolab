@@ -35,12 +35,12 @@ export class DisplayService {
   }
 
   recipeProcess(recipe: Recipe): string {
-    const timeHtml = this.icon('time', recipe.time);
+    const timeHtml = this.icon('time', recipe.time.toNumber());
     const inHtml = Object.keys(recipe.in)
-      .map((i) => this.icon(i, recipe.in[i]))
+      .map((i) => this.icon(i, recipe.in[i].toNumber()))
       .join('');
     const outHtml = Object.keys(recipe.out)
-      .map((i) => this.icon(i, recipe.out[i]))
+      .map((i) => this.icon(i, recipe.out[i].toNumber()))
       .join('');
     return `${timeHtml}${inHtml}<i class="m-1 me-2 fa-solid fa-arrow-right"></i>${outHtml}`;
   }

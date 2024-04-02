@@ -33,7 +33,7 @@ describe('MachinesEffects', () => {
       Recipes.getRecipesState,
       Mocks.RecipesStateInitial,
     );
-    mockStore.overrideSelector(Settings.getDataset, Mocks.RawDataset);
+    mockStore.overrideSelector(Settings.getDataset, Mocks.AdjustedDataset);
     mockStore.refreshState();
   });
 
@@ -50,7 +50,7 @@ describe('MachinesEffects', () => {
         ...initialState,
         ...{
           recipesState: {
-            [RecipeId.Coal]: { machineModuleIds: [ItemId.SpeedModule] },
+            [RecipeId.Coal]: { moduleIds: [ItemId.SpeedModule] },
           },
         },
       });

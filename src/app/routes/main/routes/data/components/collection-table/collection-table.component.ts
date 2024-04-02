@@ -7,11 +7,11 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { Category, Entities, IdType, Item, Recipe } from '~/models';
+import { Category, Entities, IdType, Item, RecipeJson } from '~/models';
 import { LabState, Settings } from '~/store';
 import { CollectionItem } from '../../models';
 
-type Entity = Category | Item | Recipe;
+type Entity = Category | Item | RecipeJson;
 
 @Component({
   selector: 'lab-collection-table',
@@ -73,7 +73,7 @@ export class CollectionTableComponent {
 
         if (type !== 'category') {
           obj.category =
-            data.categoryEntities[(entity as Item | Recipe).category];
+            data.categoryEntities[(entity as Item | RecipeJson).category];
         }
 
         return obj;

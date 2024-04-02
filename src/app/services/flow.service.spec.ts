@@ -40,7 +40,7 @@ describe('FlowService', () => {
         '/m',
         Mocks.ItemsStateInitial,
         Mocks.PreferencesState,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
 
       expect(result.nodes.length).toEqual(7);
@@ -53,7 +53,7 @@ describe('FlowService', () => {
         '/m',
         Mocks.ItemsStateInitial,
         { ...Mocks.PreferencesState, ...{ linkText: LinkValue.None } },
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
 
       expect(result.nodes.length).toEqual(7);

@@ -16,7 +16,7 @@ describe('ThemeService', () => {
     service = TestBed.inject(ThemeService);
     mockStore = TestBed.inject(MockStore);
     // Set up an item icon override to be included
-    const data = Mocks.getRawDataset();
+    const data = Mocks.getAdjustedDataset();
     data.itemEntities[ItemId.Coal].icon = 'coal';
     data.recipeEntities[RecipeId.Coal].icon = 'coal';
     data.categoryEntities[CategoryId.Combat].icon = 'pistol';

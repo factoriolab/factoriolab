@@ -33,9 +33,11 @@
       <td>{{ 'costs.footprint' | translate }}</td>
       <td>
         <p-checkbox
-          [ngModel]="editValue.footprint !== '0'"
+          [ngModel]="editValue.footprint.nonzero()"
           [binary]="true"
-          (onChange)="editValue.footprint = $event.checked ? '1' : '0'"
+          (onChange)="
+            editValue.footprint = $event.checked ? Rational.one : Rational.zero
+          "
         ></p-checkbox>
       </td>
     </tr>
@@ -76,7 +78,7 @@
           width="8rem"
           [value]="editValue.maximize"
           [minimum]="null"
-          maximum="0"
+          [maximum]="Rational.zero"
           (setValue)="editValue.maximize = $event"
         ></lab-input-number>
       </td>

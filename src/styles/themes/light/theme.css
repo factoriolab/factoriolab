@@ -47,7 +47,12 @@
   --highlight-bg: #fff3e0;
   --highlight-text-color: #495057;
   --focus-ring: 0 0 0 0.2rem #dab997;
-  color-scheme: light;
+  color-scheme: light; 
+  /* NOTE: These values were manually restored */
+   --success-color: #fff;
+  --success-background: #689f38;
+  --danger-color: #fff;
+  --danger-background: #d32f2f;
 }
 
 :root {

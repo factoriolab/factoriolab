@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
 import { AppSharedModule } from '~/app-shared.module';
-import { orString } from '~/helpers';
-import { Game, Recipe, RecipeRational, RecipeSettings } from '~/models';
+import { coalesce } from '~/helpers';
+import { Game, Rational, Recipe, RecipeSettings } from '~/models';
 import { Recipes } from '~/store';
 import { DetailComponent } from '../../models';
 
@@ -31,7 +31,7 @@ export class RecipeComponent extends DetailComponent {
     const data = this.data();
     const recipe = data.recipeEntities[id];
     return {
-      category: data.categoryEntities[orString(recipe?.category)],
+      category: data.categoryEntities[coalesce(recipe?.category, '')],
       ingredientIds: Object.keys(recipe?.in ?? {}),
       catalystIds: Object.keys(recipe?.catalyst ?? {}),
       productIds: Object.keys(recipe?.out ?? {}),
@@ -40,8 +40,8 @@ export class RecipeComponent extends DetailComponent {
   recipeSettings = computed<RecipeSettings | undefined>(
     () => this.recipesState()[this.id()],
   );
-  recipeR = computed<RecipeRational | undefined>(
-    () => this.data().recipeR[this.id()],
+  recipeR = computed<Recipe | undefined>(
+    () => this.data().adjustedRecipe[this.id()],
   );
 
   Game = Game;
@@ -52,7 +52,7 @@ export class RecipeComponent extends DetailComponent {
 
     const id = this.id();
     const value = !recipeSettings.excluded;
-    const def = (this.data().defaults?.excludedRecipeIds ?? []).some(
+    const def = coalesce(this.data().defaults?.excludedRecipeIds, []).some(
       (i) => i === id,
     );
     this.setRecipeExcluded(id, value, def);
@@ -67,7 +67,7 @@ export class RecipeComponent extends DetailComponent {
     this.store.dispatch(new Recipes.SetCheckedAction({ id, value }));
   }
 
-  setRecipeCost(id: string, value: string): void {
+  setRecipeCost(id: string, value: Rational): void {
     this.store.dispatch(new Recipes.SetCostAction({ id, value }));
   }
 

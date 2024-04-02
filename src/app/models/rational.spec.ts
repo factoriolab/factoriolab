@@ -31,13 +31,13 @@ describe('Rational', () => {
       });
 
       it('should generate a Rational from number', () => {
-        expect(Rational.fromNumber(0.25)).toEqual(Rational.from(1, 4));
+        expect(Rational.fromNumber(0.25)).toEqual(new Rational(1n, 4n));
         expect(Rational.fromNumber(0.007342528014038914)).toEqual(
-          Rational.from(8000, 1089543),
+          new Rational(8000n, 1089543n),
         );
         // Test known number to hit alternate solution in `fromFloat`
         expect(Rational.fromNumber(0.00734252802)).toEqual(
-          Rational.from(68827, 9373747),
+          new Rational(68827n, 9373747n),
         );
       });
 
@@ -48,15 +48,15 @@ describe('Rational', () => {
 
     describe('fromString', () => {
       it('should generate a Rational from a decimal', () => {
-        expect(Rational.fromString('0.5')).toEqual(Rational.from(1, 2));
+        expect(Rational.fromString('0.5')).toEqual(new Rational(1n, 2n));
       });
 
       it('should generate a Rational from a fraction', () => {
-        expect(Rational.fromString('1/2')).toEqual(Rational.from(1, 2));
+        expect(Rational.fromString('1/2')).toEqual(new Rational(1n, 2n));
       });
 
       it('should generate a Rational from a mixed fraction', () => {
-        expect(Rational.fromString('1 1/2')).toEqual(Rational.from(3, 2));
+        expect(Rational.fromString('1 1/2')).toEqual(new Rational(3n, 2n));
       });
 
       it('should throw on empty string', () => {
@@ -129,7 +129,7 @@ describe('Rational', () => {
     describe('reciprocal', () => {
       it('should switch p and q', () => {
         expect(Rational.one.reciprocal()).toEqual(Rational.one);
-        expect(Rational.two.reciprocal()).toEqual(Rational.from(1, 2));
+        expect(Rational.two.reciprocal()).toEqual(new Rational(1n, 2n));
       });
     });
 
@@ -307,6 +307,14 @@ describe('Rational', () => {
       });
     });
 
+    describe('toJson', () => {
+      it('should alias toString', () => {
+        spyOn(Rational.one, 'toString');
+        Rational.one.toJSON();
+        expect(Rational.one.toString).toHaveBeenCalled();
+      });
+    });
+
     describe('constructor', () => {
       it('should handle negative quotient', () => {
         expect(new Rational(BigInt(1), BigInt(-1))).toEqual(
@@ -318,6 +326,10 @@ describe('Rational', () => {
         expect(new Rational(BigInt(8), BigInt(12))).toEqual(
           new Rational(BigInt(2), BigInt(3)),
         );
+      });
+
+      it('should throw on zero quotient', () => {
+        expect(() => new Rational(1n, 0n)).toThrow();
       });
     });
   });

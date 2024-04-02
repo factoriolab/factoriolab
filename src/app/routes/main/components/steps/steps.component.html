@@ -185,18 +185,9 @@
             type="button"
             class="p-button-outlined p-button-rounded"
             icon="fa-solid fa-file-arrow-down"
-            data-test="lab-list-export"
             [pTooltip]="'steps.downloadTooltip' | translate"
             tooltipPosition="left"
-            (click)="
-              export(
-                steps(),
-                itemsState(),
-                recipesState(),
-                columnsState(),
-                data()
-              )
-            "
+            (click)="exportSvc.stepsToCsv(steps())"
           ></button>
         </th>
       }
@@ -775,7 +766,7 @@
                     </p-dropdown>
                   }
                 }
-                @if (step.recipeSettings?.machineModuleIds; as moduleIds) {
+                @if (step.recipeSettings?.moduleIds; as moduleIds) {
                   @for (
                     moduleId of moduleIds;
                     track moduleId;
@@ -788,7 +779,7 @@
                       [class.last]="last"
                       [pTooltip]="moduleId !== 'module' ? tooltip : undefined"
                       tooltipPosition="top"
-                      [options]="step.recipeSettings.machineModuleOptions ?? []"
+                      [options]="step.recipeSettings.moduleOptions ?? []"
                       [ngModel]="moduleId"
                       (onChange)="
                         changeRecipeField(
@@ -796,7 +787,7 @@
                           $event.value,
                           machinesState(),
                           data(),
-                          RecipeField.MachineModules,
+                          RecipeField.Modules,
                           i
                         )
                       "
@@ -888,7 +879,7 @@
                       tooltipPosition="left"
                       class="text-end"
                       width="2.5rem"
-                      [value]="beacon.count.toString()"
+                      [value]="beacon.count"
                       [textButtons]="true"
                       (setValue)="
                         changeRecipeField(
@@ -1026,7 +1017,7 @@
                       [pTooltip]="'steps.beaconTotalTooltip' | translate"
                       class="text-end"
                       width="3rem"
-                      [value]="beacon.total.toString()"
+                      [value]="beacon.total"
                       [textButtons]="true"
                       (setValue)="
                         changeRecipeField(
@@ -1114,7 +1105,7 @@
     <!-- Details row tab menu -->
     @if (_step | asStep; as step) {
       <tr class="detail">
-        <td>
+        <td class="px-1">
           <a
             class="text-decoration-none"
             routerLink="."
@@ -1906,7 +1897,7 @@
             context: {
               columnSettings: columnsState().machines,
               totals: totals().machines,
-              modulesTotals: totals().machineModules,
+              modulesTotals: totals().modules,
               type: 'machine'
             }
           "

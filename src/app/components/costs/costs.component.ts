@@ -7,7 +7,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 
-import { CostKey, CostSettings } from '~/models';
+import { CostKey, CostSettings, Rational } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Settings } from '~/store';
 
@@ -24,6 +24,8 @@ export class CostsComponent {
 
   visible = false;
   editValue = { ...Settings.initialSettingsState.costs };
+
+  Rational = Rational;
 
   get modified(): boolean {
     return (Object.keys(this.editValue) as CostKey[]).some(

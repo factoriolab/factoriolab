@@ -1,7 +1,7 @@
 export enum RecipeField {
   Machine = 0,
   Fuel = 1,
-  MachineModules = 2,
+  Modules = 2,
   BeaconCount = 3,
   Beacon = 4,
   BeaconModules = 5,

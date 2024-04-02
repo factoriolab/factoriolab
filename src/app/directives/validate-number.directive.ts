@@ -22,18 +22,17 @@ export class ValidateNumberDirective implements Validator {
   minimum = input<Rational | null>(Rational.zero);
   maximum = input<Rational | null>(null);
 
-  validate(control: AbstractControl): ValidationErrors | null {
-    if (control.value == null) {
-      return null;
-    }
+  validate(
+    control: AbstractControl<Rational | null | undefined>,
+  ): ValidationErrors | null {
+    if (control.value == null) return null;
 
     try {
-      const rational = Rational.fromString(control.value);
       const min = this.minimum();
       const max = this.maximum();
       if (
-        (min == null || rational.gte(min)) &&
-        (max == null || rational.lte(max))
+        (min == null || control.value.gte(min)) &&
+        (max == null || control.value.lte(max))
       )
         return null;
     } catch {
