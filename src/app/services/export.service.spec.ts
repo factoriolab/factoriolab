@@ -1,20 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ItemId, Mocks, RecipeId } from 'src/tests';
-import {
-  initialColumnsState,
-  ItemSettings,
-  Rational,
-  RecipeSettings,
-  Step,
-} from '~/models';
+import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+import { Rational, Step } from '~/models';
 import { ExportService } from './export.service';
 
 describe('ExportService', () => {
   let service: ExportService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(ExportService);
   });
 
@@ -24,13 +18,7 @@ describe('ExportService', () => {
   describe('saveAsCsv', () => {
     it('should save the csv', () => {
       spyOn(service, 'saveAsCsv');
-      service.stepsToCsv(
-        Mocks.Steps,
-        initialColumnsState,
-        Mocks.ItemsStateInitial,
-        Mocks.RecipesStateInitial,
-        Mocks.AdjustedDataset,
-      );
+      service.stepsToCsv(Mocks.Steps);
       expect(service.saveAsCsv).toHaveBeenCalled();
     });
   });
@@ -63,27 +51,9 @@ describe('ExportService', () => {
       itemId: itemId,
       recipeId: recipeId,
     };
-    const itemS: ItemSettings = {
-      beltId: 'belt',
-      wagonId: 'wagon',
-    };
-    const fullRecipe: RecipeSettings = {
-      machineId: ItemId.AssemblingMachine2,
-      moduleIds: ['a', 'b'],
-      beacons: [
-        { count: new Rational(8n), id: 'beacon', moduleIds: ['c', 'd'] },
-      ],
-    };
 
     it('should fill in all fields', () => {
-      const result = service.stepToJson(
-        fullStep,
-        [inStep, fullStep],
-        initialColumnsState,
-        { [itemId]: itemS },
-        { [recipeId]: fullRecipe },
-        Mocks.AdjustedDataset,
-      );
+      const result = service.stepToJson(fullStep, [inStep, fullStep]);
       expect(result).toEqual({
         Item: itemId,
         Items: '=1',
@@ -92,40 +62,33 @@ describe('ExportService', () => {
         Outputs: '"iron-plate:8"',
         Targets: '"iron-plate:9"',
         Belts: '=3',
-        Belt: itemS.beltId,
+        Belt: ItemId.TransportBelt,
         Wagons: '=4',
-        Wagon: itemS.wagonId,
+        Wagon: ItemId.CargoWagon,
         Recipe: recipeId,
         Machines: '=5',
-        Machine: fullRecipe.machineId,
-        Modules: '"a,b"',
-        Beacons: '"8"',
+        Machine: ItemId.ElectricFurnace,
+        Modules: '"module,module"',
+        Beacons: '"0"',
         Beacon: '"beacon"',
-        BeaconModules: '"c|d"',
+        BeaconModules: '"module|module"',
         Power: '=6',
         Pollution: '=7',
       });
     });
 
     it('should handle empty fields', () => {
-      const result = service.stepToJson(
-        minStep,
-        [minStep],
-        initialColumnsState,
-        { [itemId]: itemS },
-        { [recipeId]: fullRecipe },
-        Mocks.AdjustedDataset,
-      );
+      const result = service.stepToJson(minStep, [minStep]);
       expect(result).toEqual({
         Item: itemId,
-        Belt: 'belt',
-        Wagon: 'wagon',
+        Belt: ItemId.TransportBelt,
+        Wagon: ItemId.CargoWagon,
         Recipe: recipeId,
-        Machine: ItemId.AssemblingMachine2,
-        Modules: '"a,b"',
-        Beacons: '"8"',
+        Machine: ItemId.ElectricFurnace,
+        Modules: '"module,module"',
+        Beacons: '"0"',
         Beacon: '"beacon"',
-        BeaconModules: '"c|d"',
+        BeaconModules: '"module|module"',
       });
     });
   });

@@ -185,18 +185,9 @@
             type="button"
             class="p-button-outlined p-button-rounded"
             icon="fa-solid fa-file-arrow-down"
-            data-test="lab-list-export"
             [pTooltip]="'steps.downloadTooltip' | translate"
             tooltipPosition="left"
-            (click)="
-              export(
-                steps(),
-                itemsState(),
-                recipesState(),
-                columnsState(),
-                data()
-              )
-            "
+            (click)="exportSvc.stepsToCsv(steps())"
           ></button>
         </th>
       }

@@ -23,19 +23,13 @@ import {
   StepDetail,
   StepDetailTab,
 } from '~/models';
-import { ExportService } from '~/services';
 import { Items, LabState, Objectives, Preferences, Recipes } from '~/store';
 import { StepsComponent } from './steps.component';
-
-enum DataTest {
-  Export = 'lab-list-export',
-}
 
 describe('StepsComponent', () => {
   let component: StepsComponent;
   let fixture: ComponentFixture<StepsComponent>;
   let mockStore: MockStore<LabState>;
-  let exportSvc: ExportService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -62,7 +56,6 @@ describe('StepsComponent', () => {
         return e;
       }, {}),
     );
-    exportSvc = TestBed.inject(ExportService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -239,15 +232,6 @@ describe('StepsComponent', () => {
       expect(component.resetItem).toHaveBeenCalled();
       expect(component.resetRecipe).toHaveBeenCalled();
       expect(component.resetRecipeObjective).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('export', () => {
-    it('should call the export service', () => {
-      spyOn(exportSvc, 'stepsToCsv');
-      TestUtility.clickDt(fixture, DataTest.Export);
-      fixture.detectChanges();
-      expect(exportSvc.stepsToCsv).toHaveBeenCalled();
     });
   });
 

@@ -21,7 +21,6 @@ import { BehaviorSubject, combineLatest, filter, first, pairwise } from 'rxjs';
 import { coalesce } from '~/helpers';
 import {
   AdjustedDataset,
-  ColumnsState,
   EnergyType,
   Entities,
   Game,
@@ -274,22 +273,6 @@ export class StepsComponent implements OnInit, AfterViewInit {
     } else if (step.recipeId) {
       this.resetRecipe(step.recipeId);
     }
-  }
-
-  export(
-    steps: Step[],
-    itemsState: Items.ItemsState,
-    recipesState: Recipes.RecipesState,
-    columnsState: ColumnsState,
-    data: AdjustedDataset,
-  ): void {
-    this.exportSvc.stepsToCsv(
-      steps,
-      columnsState,
-      itemsState,
-      recipesState,
-      data,
-    );
   }
 
   toggleRecipes(ids: string[], value: boolean, data: AdjustedDataset): void {
