@@ -1297,13 +1297,13 @@ describe('RouterService', () => {
       });
     });
 
-    // it('hash should map values to empty strings if null', () => {
-    //   const result = service.unzipMachines({ ['f']: '1_?**1' }, Mocks.Hash);
-    //   expect(result).toEqual({
-    //     ids: [''],
-    //     entities: { ['']: { beaconCount: '1' } },
-    //   });
-    // });
+    it('hash should map values to empty strings if null', () => {
+      const result = service.unzipMachines({ ['f']: '1_?**1' }, Mocks.Hash);
+      expect(result).toEqual({
+        ids: [''],
+        entities: { ['']: { beaconCount: Rational.one } },
+      });
+    });
   });
 
   describe('zipList', () => {

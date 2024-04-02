@@ -276,22 +276,6 @@ describe('Settings Selectors', () => {
     });
   });
 
-  // describe('getRationalMiningBonus', () => {
-  //   it('should convert the numeric value to a percent Rational', () => {
-  //     const result = Selectors.getRationalMiningBonus.projector(100);
-  //     expect(result).toEqual(Rational.one);
-  //   });
-  // });
-
-  // describe('getResearchFactor', () => {
-  //   it('should look up the Rational from the dictionary', () => {
-  //     const result = Selectors.getResearchFactor.projector(
-  //       ResearchSpeed.Speed0,
-  //     );
-  //     expect(result).toEqual(Rational.one);
-  //   });
-  // });
-
   describe('getI18n', () => {
     it('should map mods to i18n data', () => {
       const result = Selectors.getI18n.projector(
