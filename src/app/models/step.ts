@@ -1,4 +1,4 @@
-import { AdjustedRecipe, Recipe } from './data';
+import { AdjustedRecipe } from './data';
 import { Entities } from './entities';
 import { Rational } from './rational';
 import { RecipeSettings } from './settings';
