@@ -114,7 +114,7 @@
     "path": false
   },
   "release": {
-    "branches": [
+    "branche": [
       "main"
     ],
     "plugins": [
