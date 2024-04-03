@@ -12,12 +12,8 @@ jobs:
         run: npm ci
       - name: Run build
         run: npm run build -- -c=staging
-      - name: Copy index to list
-        run: cp dist/browser/index.html dist/browser/list.html
-      - name: Copy index to flow
-        run: cp dist/browser/index.html dist/browser/flow.html
-      - name: Copy index to 404
-        run: cp dist/browser/index.html dist/browser/404.html
+      - name: Semantic release
+        run: npx semantic-release
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -26,3 +22,8 @@ jobs:
           branch: main
           folder: dist/browser
           clean: true
+      - name: Discord webhook test
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: ${{ secrets.TEST_WEBHOOK_URL }}
+          content: Hello webhook
