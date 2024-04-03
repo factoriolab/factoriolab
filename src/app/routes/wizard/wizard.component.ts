@@ -10,7 +10,7 @@ import {
   displayRateOptions,
   ObjectiveType,
   ObjectiveUnit,
-  Rational,
+  rational,
 } from '~/models';
 import { LabState, Objectives, Recipes, Settings } from '~/store';
 
@@ -32,7 +32,7 @@ export class WizardComponent {
   displayRate = this.store.selectSignal(Settings.getDisplayRate);
 
   id = '';
-  value = Rational.one;
+  value = rational(1n);
   state: WizardState = 'type';
 
   displayRateOptions = displayRateOptions;

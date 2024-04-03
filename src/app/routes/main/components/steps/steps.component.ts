@@ -28,6 +28,7 @@ import {
   ItemId,
   ObjectiveBase,
   ObjectiveUnit,
+  rational,
   Rational,
   RecipeField,
   Step,
@@ -129,7 +130,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
   RecipeField = RecipeField;
   EnergyType = EnergyType;
   ObjectiveUnit = ObjectiveUnit;
-  Rational = Rational;
+  rational = rational;
 
   constructor() {
     combineLatest([
@@ -233,7 +234,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
     // Sort by numeric field
     curr.data?.sort((a: Step, b: Step) => {
-      const diff = (a[field] ?? Rational.zero).sub(b[field] ?? Rational.zero);
+      const diff = (a[field] ?? rational(0n)).sub(b[field] ?? rational(0n));
       return diff.toNumber() * order;
     });
   }
@@ -351,7 +352,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
             settings.moduleIds != null
           ) {
             const machine = data.machineEntities[settings.machineId];
-            const count = Rational.from(settings.moduleIds.length);
+            const count = rational(settings.moduleIds.length);
             const options = RecipeUtility.moduleOptions(
               machine,
               step.recipeId,
@@ -398,7 +399,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
               beaconSettings?.moduleIds != null
             ) {
               const beacon = data.beaconEntities[beaconSettings.id];
-              const count = Rational.from(beaconSettings.moduleIds.length);
+              const count = rational(beaconSettings.moduleIds.length);
               const options = RecipeUtility.moduleOptions(
                 beacon,
                 step.recipeId,
@@ -428,7 +429,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
         case RecipeField.Overclock: {
           if (typeof event === 'number') {
             const def = machineSettings.overclock;
-            this.setOverclock(id, Rational.fromNumber(event), def, isObjective);
+            this.setOverclock(id, rational(event), def, isObjective);
           }
           break;
         }

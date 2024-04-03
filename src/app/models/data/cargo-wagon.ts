@@ -1,4 +1,4 @@
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
 export interface CargoWagonJson {
   size: number | string;
@@ -16,5 +16,5 @@ export function parseCargoWagon(
   json: CargoWagonJson | undefined,
 ): CargoWagon | undefined {
   if (json == null) return;
-  return { size: Rational.from(json.size) };
+  return { size: rational(json.size) };
 }

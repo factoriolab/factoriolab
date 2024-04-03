@@ -1,4 +1,4 @@
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 import { Beacon, BeaconJson, parseBeacon } from './beacon';
 import { Belt, BeltJson, parseBelt } from './belt';
 import { CargoWagon, CargoWagonJson, parseCargoWagon } from './cargo-wagon';
@@ -56,7 +56,7 @@ export function parseItem(json: ItemJson): Item {
     name: json.name,
     category: json.category,
     row: json.row,
-    stack: Rational.from(json.stack),
+    stack: rational(json.stack),
     beacon: parseBeacon(json.beacon),
     belt: parseBelt(json.belt),
     pipe: parseBelt(json.pipe),

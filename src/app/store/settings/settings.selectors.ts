@@ -30,6 +30,7 @@ import {
   parseRecipe,
   Preset,
   presetOptions,
+  rational,
   Rational,
   Recipe,
   Technology,
@@ -215,10 +216,10 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
     moduleRankIds: moduleRank,
     beaconCount:
       preset < Preset.Beacon8
-        ? Rational.zero
+        ? rational(0n)
         : preset < Preset.Beacon12
-          ? new Rational(8n)
-          : new Rational(12n),
+          ? rational(8n)
+          : rational(12n),
     beaconId: m.beacon,
     beaconModuleId: preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
   };
@@ -243,11 +244,11 @@ export const getSettings = createSelector(
 export const getFuelRankIds = createSelector(getSettings, (s) => s.fuelRankIds);
 
 export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
-  bonus.div(Rational.hundred),
+  bonus.div(rational(100n)),
 );
 
 export const getResearchFactor = createSelector(getResearchSpeed, (speed) =>
-  speed.add(Rational.hundred).div(Rational.hundred),
+  speed.add(rational(100n)).div(rational(100n)),
 );
 
 export const getI18n = createSelector(

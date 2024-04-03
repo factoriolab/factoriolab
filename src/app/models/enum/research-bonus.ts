@@ -1,15 +1,15 @@
 import { SelectItem } from 'primeng/api';
 
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
 export const researchBonus = {
-  speed0: Rational.zero,
-  speed1: new Rational(20n),
-  speed2: new Rational(50n),
-  speed3: new Rational(90n),
-  speed4: new Rational(140n),
-  speed5: new Rational(190n),
-  speed6: new Rational(250n),
+  speed0: rational(0n),
+  speed1: rational(20n),
+  speed2: rational(50n),
+  speed3: rational(90n),
+  speed4: rational(140n),
+  speed5: rational(190n),
+  speed6: rational(250n),
 };
 
 export const researchBonusOptions: SelectItem<Rational>[] = [

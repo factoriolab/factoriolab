@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { saveAs } from 'file-saver';
 
 import { notNullish } from '~/helpers';
-import { Rational, Step } from '~/models';
+import { rational, Step } from '~/models';
 import { Items, LabState, Recipes, Settings } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 
@@ -76,14 +76,13 @@ export class ExportService {
     const itemsState = this.itemsState();
     const recipesState = this.recipesState();
     const data = this.data();
-
     const exp: StepExport = {};
     if (step.itemId != null) {
       exp.Item = step.itemId;
       const itemSettings = itemsState[step.itemId];
       if (step.items != null) {
         exp.Items =
-          '=' + step.items.sub(step.surplus ?? Rational.zero).toString();
+          '=' + step.items.sub(step.surplus ?? rational(0n)).toString();
       }
 
       if (step.surplus != null) exp.Surplus = '=' + step.surplus.toString();

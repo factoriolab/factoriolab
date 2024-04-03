@@ -20,6 +20,7 @@ import {
   ObjectiveType,
   objectiveTypeOptions,
   ObjectiveUnit,
+  rational,
   Rational,
   SimplexResultType,
 } from '~/models';
@@ -268,7 +269,7 @@ export class ObjectivesComponent {
       {
         id: '',
         targetId: itemId,
-        value: Rational.one,
+        value: rational(1n),
         unit,
         type: ObjectiveType.Output,
       },
@@ -313,7 +314,7 @@ export class ObjectivesComponent {
       {
         id: '',
         targetId: itemId,
-        value: Rational.one,
+        value: rational(1n),
         unit,
         type: ObjectiveType.Output,
       },

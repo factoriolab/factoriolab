@@ -7,6 +7,7 @@ import {
   isRecipeObjective,
   ItemId,
   PowerUnit,
+  rational,
   Rational,
   Step,
   StepDetail,
@@ -208,8 +209,8 @@ export const getTotals = createSelector(
     const modules: Entities<Rational> = {};
     const beacons: Entities<Rational> = {};
     const beaconModules: Entities<Rational> = {};
-    let power = Rational.zero;
-    let pollution = Rational.zero;
+    let power = rational(0n);
+    let pollution = rational(0n);
 
     for (const step of steps) {
       if (step.itemId != null) {
@@ -218,7 +219,7 @@ export const getTotals = createSelector(
           const belt = itemsSettings[step.itemId].beltId;
           if (belt != null) {
             if (!belts[belt]) {
-              belts[belt] = Rational.zero;
+              belts[belt] = rational(0n);
             }
             belts[belt] = belts[belt].add(step.belts.ceil());
           }
@@ -229,7 +230,7 @@ export const getTotals = createSelector(
           const wagon = itemsSettings[step.itemId].wagonId;
           if (wagon != null) {
             if (!wagons[wagon]) {
-              wagons[wagon] = Rational.zero;
+              wagons[wagon] = rational(0n);
             }
             wagons[wagon] = wagons[wagon].add(step.wagons.ceil());
           }
@@ -257,7 +258,7 @@ export const getTotals = createSelector(
             }
             if (machine != null) {
               if (!machines[machine]) {
-                machines[machine] = Rational.zero;
+                machines[machine] = rational(0n);
               }
 
               const value = step.machines.ceil();
@@ -294,7 +295,7 @@ export const getTotals = createSelector(
             if (beaconId == null || !total?.nonzero()) continue;
 
             if (!beacons[beaconId]) {
-              beacons[beaconId] = Rational.zero;
+              beacons[beaconId] = rational(0n);
             }
 
             const value = total.ceil();
@@ -343,7 +344,7 @@ function addValueToRecordByIds(
 ): void {
   ids.forEach((id) => {
     if (!record[id]) {
-      record[id] = Rational.zero;
+      record[id] = rational(0n);
     }
 
     record[id] = record[id].add(value);
@@ -376,12 +377,12 @@ export const getStepDetails = createSelector(
 
         const inputs = outputs.reduce((r: Rational, o) => {
           return r.sub(o.value);
-        }, Rational.one);
+        }, rational(1n));
         if (inputs.nonzero()) {
           outputs.push({
             inputs: true,
             value: inputs,
-            machines: Rational.zero,
+            machines: rational(0n),
           });
         }
 
@@ -499,10 +500,10 @@ export const getEffectivePowerUnit = createSelector(
           }
         }
       }
-      minPower = minPower ?? Rational.zero;
-      if (minPower.lt(Rational.thousand)) {
+      minPower = minPower ?? rational(0n);
+      if (minPower.lt(rational(1000n))) {
         return PowerUnit.kW;
-      } else if (minPower.lt(Rational.million)) {
+      } else if (minPower.lt(rational(1000000n))) {
         return PowerUnit.MW;
       } else {
         return PowerUnit.GW;

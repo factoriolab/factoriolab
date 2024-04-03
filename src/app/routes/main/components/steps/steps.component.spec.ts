@@ -17,7 +17,7 @@ import {
 } from 'src/tests';
 import {
   Entities,
-  Rational,
+  rational,
   RecipeField,
   Step,
   StepDetail,
@@ -355,7 +355,7 @@ describe('StepsComponent', () => {
       spyOn(component, 'setBeaconCount');
       component.changeRecipeField(
         step,
-        new Rational(4n),
+        rational(4n),
         Mocks.MachinesStateInitial,
         Mocks.AdjustedDataset,
         RecipeField.BeaconCount,
@@ -364,8 +364,8 @@ describe('StepsComponent', () => {
       expect(component.setBeaconCount).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         0,
-        new Rational(4n),
-        new Rational(8n),
+        rational(4n),
+        rational(8n),
         false,
       );
     });
@@ -413,7 +413,7 @@ describe('StepsComponent', () => {
       spyOn(component, 'setBeaconTotal');
       component.changeRecipeField(
         step,
-        new Rational(8n),
+        rational(8n),
         Mocks.MachinesStateInitial,
         Mocks.AdjustedDataset,
         RecipeField.BeaconTotal,
@@ -422,7 +422,7 @@ describe('StepsComponent', () => {
       expect(component.setBeaconTotal).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
         0,
-        new Rational(8n),
+        rational(8n),
         false,
       );
     });
@@ -438,7 +438,7 @@ describe('StepsComponent', () => {
       );
       expect(component.setOverclock).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
-        Rational.hundred,
+        rational(100n),
         undefined,
         false,
       );

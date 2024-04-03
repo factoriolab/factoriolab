@@ -9,7 +9,7 @@ import {
   InserterTarget,
   Language,
   Preset,
-  Rational,
+  rational,
 } from '~/models';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
@@ -152,13 +152,13 @@ describe('Settings Selectors', () => {
       );
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beaconModuleId).toEqual(ItemId.Module);
-      expect(result.beaconCount).toEqual(Rational.zero);
+      expect(result.beaconCount).toEqual(rational(0n));
     });
 
     it('should use 8 beacons', () => {
       const result = Selectors.getDefaults.projector(Preset.Beacon8, Mocks.Mod);
       TestUtility.assert(result != null);
-      expect(result.beaconCount).toEqual(new Rational(8n));
+      expect(result.beaconCount).toEqual(rational(8n));
     });
 
     it('should use 12 beacons', () => {
@@ -167,7 +167,7 @@ describe('Settings Selectors', () => {
         Mocks.Mod,
       );
       TestUtility.assert(result != null);
-      expect(result.beaconCount).toEqual(new Rational(12n));
+      expect(result.beaconCount).toEqual(rational(12n));
     });
 
     it('should get the defaults from the current base mod', () => {
@@ -490,7 +490,7 @@ describe('Settings Selectors', () => {
 
   describe('getBeltSpeed', () => {
     it('should return the map of belt speeds', () => {
-      const flowRate = Rational.from(2000);
+      const flowRate = rational(2000n);
       const result = Selectors.getBeltSpeed.projector(
         Mocks.AdjustedDataset,
         flowRate,
@@ -512,22 +512,22 @@ describe('Settings Selectors', () => {
               [ItemId.Pipe]: {
                 ...Mocks.AdjustedDataset.beltEntities[ItemId.Pipe],
                 ...{
-                  speed: Rational.ten,
+                  speed: rational(10n),
                 },
               },
             },
           },
         },
       };
-      const result = Selectors.getBeltSpeed.projector(data, Rational.from(0));
-      expect(result[ItemId.Pipe]).toEqual(Rational.ten);
+      const result = Selectors.getBeltSpeed.projector(data, rational(0n));
+      expect(result[ItemId.Pipe]).toEqual(rational(10n));
     });
   });
 
   describe('getBeltSpeedTxt', () => {
     it('should map belt speeds to appropriate rounded values for tooltips', () => {
       const result = Selectors.getBeltSpeedTxt.projector(
-        { a: Rational.from(1, 60), b: Rational.from(1, 180) },
+        { a: rational(1n, 60n), b: rational(1n, 180n) },
         Mocks.DisplayRateInfo,
       );
       expect(result['a']).toEqual('1');

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { PowerUnit, Rational } from '~/models';
+import { PowerUnit, Rational, rational } from '~/models';
 import { RatePipe } from './rate.pipe';
 
 @Pipe({ name: 'power' })
@@ -13,12 +13,12 @@ export class PowerPipe implements PipeTransform {
     switch (unit) {
       case PowerUnit.GW:
         return `${RatePipe.transform(
-          value.div(Rational.million),
+          value.div(rational(1000000n)),
           precision,
         )} GW`;
       case PowerUnit.MW:
         return `${RatePipe.transform(
-          value.div(Rational.thousand),
+          value.div(rational(1000n)),
           precision,
         )} MW`;
       default:

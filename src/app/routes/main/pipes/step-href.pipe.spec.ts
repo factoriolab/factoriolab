@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { Mocks, RecipeId, TestModule } from 'src/tests';
-import { Rational, Step } from '~/models';
+import { rational, Step } from '~/models';
 import { RouterService } from '~/services';
 import { StepHrefPipe } from './step-href.pipe';
 
@@ -27,7 +27,7 @@ describe('StepHrefPipe', () => {
       spyOn(routerService, 'stepHref');
       const step: Step = {
         id: '0',
-        items: Rational.one,
+        items: rational(1n),
         recipeId: RecipeId.ArtilleryShellRange,
       };
       expect(

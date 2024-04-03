@@ -8,6 +8,7 @@ import {
   MaximizeType,
   Preset,
   Rational,
+  rational,
   researchBonus,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
@@ -54,21 +55,21 @@ export const initialSettingsState: SettingsState = {
   preset: Preset.Minimum,
   beaconReceivers: null,
   proliferatorSprayId: ItemId.Module,
-  flowRate: Rational.from(1200),
+  flowRate: rational(1200n),
   inserterTarget: InserterTarget.ExpressTransportBelt,
-  miningBonus: Rational.zero,
+  miningBonus: rational(0n),
   researchBonus: researchBonus.speed6,
   inserterCapacity: InserterCapacity.Capacity7,
   displayRate: DisplayRate.PerMinute,
   maximizeType: MaximizeType.Weight,
   costs: {
-    factor: Rational.one,
-    machine: Rational.one,
-    footprint: Rational.one,
-    unproduceable: Rational.from(1000000),
-    excluded: Rational.zero,
-    surplus: Rational.zero,
-    maximize: Rational.from(-1000000),
+    factor: rational(1n),
+    machine: rational(1n),
+    footprint: rational(1n),
+    unproduceable: rational(1000000n),
+    excluded: rational(0n),
+    surplus: rational(0n),
+    maximize: rational(-1000000n),
   },
 };
 

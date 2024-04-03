@@ -48,56 +48,56 @@ export const Recipe1 = Dataset.recipeEntities[Dataset.recipeIds[0]];
 export const Objective1: M.Objective = {
   id: '0',
   targetId: ItemId.AdvancedCircuit,
-  value: M.Rational.one,
+  value: M.rational(1n),
   unit: M.ObjectiveUnit.Items,
   type: M.ObjectiveType.Output,
 };
 export const Objective2: M.Objective = {
   id: '1',
   targetId: ItemId.IronPlate,
-  value: M.Rational.one,
+  value: M.rational(1n),
   unit: M.ObjectiveUnit.Belts,
   type: M.ObjectiveType.Input,
 };
 export const Objective3: M.Objective = {
   id: '2',
   targetId: ItemId.PlasticBar,
-  value: M.Rational.one,
+  value: M.rational(1n),
   unit: M.ObjectiveUnit.Items,
   type: M.ObjectiveType.Maximize,
 };
 export const Objective4: M.Objective = {
   id: '3',
   targetId: ItemId.PetroleumGas,
-  value: M.Rational.hundred,
+  value: M.rational(100n),
   unit: M.ObjectiveUnit.Items,
   type: M.ObjectiveType.Limit,
 };
 export const Objective5: M.Objective = {
   id: '4',
   targetId: RecipeId.PiercingRoundsMagazine,
-  value: M.Rational.one,
+  value: M.rational(1n),
   unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Output,
 };
 export const Objective6: M.Objective = {
   id: '5',
   targetId: RecipeId.CopperPlate,
-  value: M.Rational.one,
+  value: M.rational(1n),
   unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Input,
 };
 export const Objective7: M.Objective = {
   id: '6',
   targetId: RecipeId.FirearmMagazine,
-  value: M.Rational.one,
+  value: M.rational(1n),
   unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Maximize,
 };
 export const Objective8: M.Objective = {
   id: '7',
   targetId: RecipeId.IronPlate,
-  value: M.Rational.ten,
+  value: M.rational(10n),
   unit: M.ObjectiveUnit.Machines,
   type: M.ObjectiveType.Limit,
 };
@@ -121,10 +121,10 @@ export const ObjectiveSteps = {
   [Objective1.id]: <[string, M.Rational][]>[],
   [Objective2.id]: <[string, M.Rational][]>[],
   [Objective3.id]: <[string, M.Rational][]>[
-    [ItemId.PetroleumGas, M.Rational.one],
+    [ItemId.PetroleumGas, M.rational(1n)],
   ],
   [Objective4.id]: <[string, M.Rational][]>[
-    [RecipeId.TransportBelt, M.Rational.one],
+    [RecipeId.TransportBelt, M.rational(1n)],
   ],
 };
 export const ItemSettings1: M.ItemSettings = {
@@ -139,7 +139,7 @@ export const RecipeSettings1: M.RecipeSettings = {
     {
       id: ItemId.Beacon,
       moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
-      count: M.Rational.zero,
+      count: M.rational(0n),
     },
   ],
 };
@@ -150,7 +150,7 @@ export const RecipeSettings2: M.RecipeSettings = {
     {
       id: ItemId.Beacon,
       moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
-      count: M.Rational.zero,
+      count: M.rational(0n),
     },
   ],
 };
@@ -159,27 +159,27 @@ export const Step1: M.Step = {
   itemId: Item1.id,
   recipeId: Item1.id,
   items: Objective1.value,
-  belts: M.Rational.fromNumber(0.5),
-  wagons: M.Rational.two,
-  machines: M.Rational.one,
-  power: M.Rational.one,
-  pollution: M.Rational.one,
+  belts: M.rational(1n, 2n),
+  wagons: M.rational(2n),
+  machines: M.rational(1n),
+  power: M.rational(1n),
+  pollution: M.rational(1n),
 };
 export const Step2: M.Step = {
   id: `${Item2.id}.${Item2.id}`,
   itemId: Item2.id,
   recipeId: Item2.id,
   items: Objective2.value,
-  belts: M.Rational.one,
-  wagons: M.Rational.one,
-  machines: M.Rational.two,
-  power: M.Rational.zero,
-  pollution: M.Rational.zero,
+  belts: M.rational(1n),
+  wagons: M.rational(1n),
+  machines: M.rational(2n),
+  power: M.rational(0n),
+  pollution: M.rational(0n),
 };
 export const Steps = [Step1, Step2];
 export const BeltSpeed: M.Entities<M.Rational> = {
-  [ItemId.TransportBelt]: new M.Rational(15n),
-  [ItemId.Pipe]: new M.Rational(1500n),
+  [ItemId.TransportBelt]: M.rational(15n),
+  [ItemId.Pipe]: M.rational(1500n),
 };
 export const ItemsState: M.Entities<M.ItemSettings> = {};
 for (const item of Dataset.itemIds.map((i) => Dataset.itemEntities[i])) {
@@ -227,8 +227,8 @@ export function getAdjustedDataset(): M.AdjustedDataset {
     {
       netProductionOnly: false,
       proliferatorSprayId: ItemId.Module,
-      miningBonus: M.Rational.zero,
-      researchBonus: M.Rational.one,
+      miningBonus: M.rational(0n),
+      researchBonus: M.rational(1n),
     },
     getDataset(),
   );
@@ -326,14 +326,14 @@ export const getFlow = (): M.FlowData => ({
 });
 export const Flow = getFlow();
 export const SimplexModifiers = {
-  costInput: M.Rational.from(1000000),
-  costExcluded: M.Rational.zero,
+  costInput: M.rational(1000000n),
+  costExcluded: M.rational(0n),
 };
 export const AdjustmentData: M.AdjustmentData = {
   netProductionOnly: false,
   proliferatorSprayId: ItemId.Module,
-  miningBonus: M.Rational.zero,
-  researchBonus: M.Rational.one,
+  miningBonus: M.rational(0n),
+  researchBonus: M.rational(1n),
 };
 export const DisplayRateInfo = M.displayRateInfo[M.DisplayRate.PerMinute];
 
@@ -341,57 +341,57 @@ export const LightOilSteps: M.Step[] = [
   {
     id: '0',
     itemId: ItemId.LightOil,
-    items: M.Rational.from(60),
-    output: M.Rational.from(60),
-    machines: M.Rational.from(1, 51),
+    items: M.rational(60n),
+    output: M.rational(60n),
+    machines: M.rational(1n, 51n),
     recipeId: RecipeId.HeavyOilCracking,
     recipeSettings: RecipesStateInitial[RecipeId.HeavyOilCracking],
     parents: {
-      '': M.Rational.one,
+      '': M.rational(1n),
     },
-    outputs: { [ItemId.LightOil]: M.Rational.from(5, 17) },
+    outputs: { [ItemId.LightOil]: M.rational(5n, 17n) },
   },
   {
     id: '3',
     itemId: ItemId.HeavyOil,
-    items: M.Rational.from(400, 17),
-    machines: M.Rational.from(4, 51),
+    items: M.rational(4000n, 17n),
+    machines: M.rational(4n, 51n),
     recipeId: RecipeId.AdvancedOilProcessing,
     recipeSettings: RecipesStateInitial[RecipeId.AdvancedOilProcessing],
-    parents: { '0': M.Rational.one },
+    parents: { '0': M.rational(1n) },
     outputs: {
-      [ItemId.HeavyOil]: M.Rational.one,
-      [ItemId.LightOil]: M.Rational.from(12, 17),
-      [ItemId.PetroleumGas]: M.Rational.one,
+      [ItemId.HeavyOil]: M.rational(1n),
+      [ItemId.LightOil]: M.rational(12n, 17n),
+      [ItemId.PetroleumGas]: M.rational(1n),
     },
   },
   {
     id: '2',
     itemId: ItemId.CrudeOil,
-    items: M.Rational.from(1600, 17),
-    machines: M.Rational.from(8, 51),
+    items: M.rational(1600n, 17n),
+    machines: M.rational(8n, 51n),
     recipeId: RecipeId.CrudeOil,
     recipeSettings: RecipesStateInitial[RecipeId.CrudeOil],
-    parents: { '3': M.Rational.one },
-    outputs: { [ItemId.CrudeOil]: M.Rational.one },
+    parents: { '3': M.rational(1n) },
+    outputs: { [ItemId.CrudeOil]: M.rational(1n) },
   },
   {
     id: '4',
     itemId: ItemId.PetroleumGas,
-    items: M.Rational.from(880, 17),
-    surplus: M.Rational.from(880, 17),
+    items: M.rational(880n, 17n),
+    surplus: M.rational(880n, 17n),
   },
   {
     id: '1',
     itemId: ItemId.Water,
-    items: M.Rational.from(1100, 17),
-    machines: M.Rational.from(11, 12240),
+    items: M.rational(1100n, 17n),
+    machines: M.rational(11n, 12240n),
     recipeId: RecipeId.Water,
     recipeSettings: RecipesStateInitial[RecipeId.Water],
-    outputs: { [ItemId.Water]: M.Rational.one },
+    outputs: { [ItemId.Water]: M.rational(1n) },
     parents: {
-      '0': M.Rational.from(3, 11),
-      '1': M.Rational.from(8, 11),
+      '0': M.rational(3n, 11n),
+      '1': M.rational(8n, 11n),
     },
   },
 ];

@@ -1,5 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './machines.actions';
 import { initialMachinesState, machinesReducer } from './machines.reducer';
@@ -157,11 +157,11 @@ describe('Machines Reducer', () => {
         undefined,
         new Actions.SetBeaconCountAction({
           id,
-          value: Rational.two,
-          def: new Rational(8n),
+          value: rational(2n),
+          def: rational(8n),
         }),
       );
-      expect(result.entities[id].beaconCount).toEqual(Rational.two);
+      expect(result.entities[id].beaconCount).toEqual(rational(2n));
     });
   });
 
@@ -195,11 +195,11 @@ describe('Machines Reducer', () => {
         undefined,
         new Actions.SetOverclockAction({
           id,
-          value: new Rational(200n),
-          def: new Rational(100n),
+          value: rational(200n),
+          def: rational(100n),
         }),
       );
-      expect(result.entities[id].overclock).toEqual(new Rational(200n));
+      expect(result.entities[id].overclock).toEqual(rational(200n));
     });
   });
 

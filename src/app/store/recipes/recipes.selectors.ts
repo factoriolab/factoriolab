@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 
 import { coalesce } from '~/helpers';
-import { Entities, Rational, RecipeSettings } from '~/models';
+import { Entities, rational, RecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
@@ -54,7 +54,7 @@ export const getRecipesState = createSelector(
           s.moduleIds = RecipeUtility.defaultModules(
             s.moduleOptions,
             coalesce(def.moduleRankIds, []),
-            machine.modules ?? Rational.zero,
+            machine.modules ?? rational(0n),
           );
 
         if (s.beacons == null) s.beacons = [{}];

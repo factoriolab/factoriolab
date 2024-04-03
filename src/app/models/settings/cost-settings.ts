@@ -1,4 +1,4 @@
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
 export type CostKey =
   | 'factor'
@@ -12,4 +12,4 @@ export type CostKey =
 export type CostSettings = Record<CostKey, Rational>;
 
 /** In Factorio, one item ~= ten fluid units */
-export const FACTORIO_FLUID_COST_RATIO = Rational.ten.reciprocal();
+export const FACTORIO_FLUID_COST_RATIO = rational(1n, 10n);
