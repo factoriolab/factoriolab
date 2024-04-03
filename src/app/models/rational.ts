@@ -70,8 +70,7 @@ export class Rational {
     return x.lt(this);
   }
 
-  gte(x: Rational | bigint): boolean {
-    if (typeof x === 'bigint') x = new Rational(x);
+  gte(x: Rational): boolean {
     return this.eq(x) || this.gt(x);
   }
 
@@ -81,13 +80,11 @@ export class Rational {
 
   add(x: Rational): Rational {
     if (x.isZero()) return this;
-
     return new Rational(this.p * x.q + this.q * x.p, this.q * x.q);
   }
 
   sub(x: Rational): Rational {
     if (x.isZero()) return this;
-
     return new Rational(this.p * x.q - this.q * x.p, this.q * x.q);
   }
 
@@ -95,14 +92,12 @@ export class Rational {
     if (this.isOne()) return x;
     if (x.isOne()) return this;
     if (this.isZero() || x.isZero()) return zero;
-
     return new Rational(this.p * x.p, this.q * x.q);
   }
 
   div(x: Rational): Rational {
     if (x.isOne() || this.isZero()) return this;
     if (this.eq(x)) return one;
-
     return new Rational(this.p * x.q, this.q * x.p);
   }
 
@@ -111,11 +106,8 @@ export class Rational {
 
     // Calculate ceiling using absolute value
     const num = new Rational(abs(this.p) / this.q + 1n);
-    if (this.p < 0n) {
-      // Inverse back to negative if necessary
-      return num.inverse();
-    }
-
+    // Inverse back to negative if necessary
+    if (this.p < 0n) return num.inverse();
     return num;
   }
 
@@ -175,15 +167,11 @@ export class Rational {
       // Regex pattern should match all known number toString formats
       // istanbul ignore else
       if (match) {
-        if (match[2]) {
-          // Found decimal portion, add length
-          decimals += match[2].length;
-        }
+        // If decimal portion found, add length
+        if (match[2]) decimals += match[2].length;
 
-        if (match[4]) {
-          // Found negative exponent, add value
-          decimals += Number(match[4]);
-        }
+        // If negative exponent found, add value
+        if (match[4]) decimals += Number(match[4]);
       } else {
         console.warn('Number did not match expected pattern', num);
       }
