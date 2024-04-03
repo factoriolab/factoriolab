@@ -3,7 +3,7 @@ import {
   Objective,
   ObjectiveType,
   ObjectiveUnit,
-  Rational,
+  rational,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
@@ -43,7 +43,7 @@ export function objectivesReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialObjectivesState;
     case ObjectivesActionType.ADD: {
-      let value = Rational.one;
+      let value = rational(1n);
       if (state.ids.length)
         value = state.entities[state.ids[state.ids.length - 1]].value;
 

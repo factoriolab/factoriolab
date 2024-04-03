@@ -1,6 +1,6 @@
 import { Entities, toRationalEntities } from '../entities';
 import { EnergyType } from '../enum';
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 import { ModuleEffect } from './module';
 import { parseSilo, Silo, SiloJson } from './silo';
 
@@ -55,15 +55,15 @@ export function parseMachine(
 ): Machine | undefined {
   if (json == null) return;
   return {
-    speed: Rational.from(json.speed),
-    modules: Rational.from(json.modules),
+    speed: rational(json.speed),
+    modules: rational(json.modules),
     disallowedEffects: json.disallowedEffects,
     type: json.type,
     fuelCategories: json.fuelCategories,
     fuel: json.fuel,
-    usage: Rational.from(json.usage),
-    drain: Rational.from(json.drain),
-    pollution: Rational.from(json.pollution),
+    usage: rational(json.usage),
+    drain: rational(json.drain),
+    pollution: rational(json.pollution),
     silo: parseSilo(json.silo),
     consumption: toRationalEntities(json.consumption),
     size: json.size,

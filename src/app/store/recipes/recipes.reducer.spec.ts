@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { Items } from '../';
 import * as App from '../app.actions';
@@ -87,7 +87,7 @@ describe('Recipes Reducer', () => {
             [Mocks.Recipe1.id]: {
               moduleIds: ['test'],
               beacons: [
-                { count: new Rational(20n), id: 'test', moduleIds: ['test'] },
+                { count: rational(20n), id: 'test', moduleIds: ['test'] },
               ],
             },
           },
@@ -160,11 +160,11 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconCountAction({
           id: Mocks.Recipe1.id,
           index: 0,
-          value: Rational.two,
+          value: rational(2n),
           def: undefined,
         }),
       );
-      expect(result[Mocks.Recipe1.id].beacons?.[0].count).toEqual(Rational.two);
+      expect(result[Mocks.Recipe1.id].beacons?.[0].count).toEqual(rational(2n));
     });
   });
 
@@ -225,11 +225,11 @@ describe('Recipes Reducer', () => {
         new Actions.SetBeaconTotalAction({
           id: Mocks.Recipe1.id,
           index: 0,
-          value: new Rational(200n),
+          value: rational(200n),
         }),
       );
       expect(result[Mocks.Recipe1.id].beacons?.[0].total).toEqual(
-        new Rational(200n),
+        rational(200n),
       );
     });
   });
@@ -240,11 +240,11 @@ describe('Recipes Reducer', () => {
         initialRecipesState,
         new Actions.SetOverclockAction({
           id: Mocks.Recipe1.id,
-          value: new Rational(200n),
-          def: Rational.hundred,
+          value: rational(200n),
+          def: rational(100n),
         }),
       );
-      expect(result[Mocks.Recipe1.id].overclock).toEqual(new Rational(200n));
+      expect(result[Mocks.Recipe1.id].overclock).toEqual(rational(200n));
     });
   });
 
@@ -254,10 +254,10 @@ describe('Recipes Reducer', () => {
         initialRecipesState,
         new Actions.SetCostAction({
           id: Mocks.Recipe1.id,
-          value: Rational.ten,
+          value: rational(10n),
         }),
       );
-      expect(result[Mocks.Recipe1.id].cost).toEqual(Rational.ten);
+      expect(result[Mocks.Recipe1.id].cost).toEqual(rational(10n));
     });
   });
 

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { DisplayService } from '~/services';
 import { RoundPipe } from './round.pipe';
 
@@ -21,7 +21,7 @@ describe('RoundPipe', () => {
   describe('transform', () => {
     it('should call DisplayService method', () => {
       spyOn(service, 'round').and.callThrough();
-      expect(pipe.transform(Rational.from(1, 3))).toEqual('0.33');
+      expect(pipe.transform(rational(1n, 3n))).toEqual('0.33');
       expect(service.round).toHaveBeenCalled();
     });
   });

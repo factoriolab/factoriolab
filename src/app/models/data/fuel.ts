@@ -1,4 +1,4 @@
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
 export interface FuelJson {
   category: string;
@@ -20,7 +20,7 @@ export function parseFuel(json: FuelJson | undefined): Fuel | undefined {
   if (json == null) return;
   return {
     category: json.category,
-    value: Rational.from(json.value),
+    value: rational(json.value),
     result: json.result,
   };
 }

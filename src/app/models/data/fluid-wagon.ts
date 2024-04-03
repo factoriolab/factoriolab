@@ -1,4 +1,4 @@
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
 export interface FluidWagonJson {
   capacity: number | string;
@@ -16,5 +16,5 @@ export function parseFluidWagon(
   json: FluidWagonJson | undefined,
 ): FluidWagon | undefined {
   if (json == null) return;
-  return { capacity: Rational.from(json.capacity) };
+  return { capacity: rational(json.capacity) };
 }

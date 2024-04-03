@@ -6,7 +6,7 @@ import {
   Entities,
   Game,
   MachineSettings,
-  Rational,
+  rational,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
@@ -47,12 +47,12 @@ export const getMachinesState = createSelector(
 
     if (data.game === Game.Satisfactory) {
       // Default = 100%
-      def.overclock = def.overclock ?? Rational.hundred;
+      def.overclock = def.overclock ?? rational(100n);
     }
 
     if (data.game === Game.FinalFactory) {
       // Default = 0
-      def.overclock = def.overclock ?? Rational.zero;
+      def.overclock = def.overclock ?? rational(0n);
     }
 
     entities[''] = def;

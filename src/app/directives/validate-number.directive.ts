@@ -6,7 +6,7 @@ import {
   Validator,
 } from '@angular/forms';
 
-import { Rational } from '~/models';
+import { Rational, rational } from '~/models';
 
 @Directive({
   selector: '[labValidateNumber][ngModel]',
@@ -19,7 +19,7 @@ import { Rational } from '~/models';
   ],
 })
 export class ValidateNumberDirective implements Validator {
-  minimum = input<Rational | null>(Rational.zero);
+  minimum = input<Rational | null>(rational(0n));
   maximum = input<Rational | null>(null);
 
   validate(

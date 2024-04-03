@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
-import { Rational, Step } from '~/models';
+import { rational, Step } from '~/models';
 import { ExportService } from './export.service';
 
 describe('ExportService', () => {
@@ -30,20 +30,20 @@ describe('ExportService', () => {
       id: '0',
       itemId: ItemId.IronOre,
       recipeId: RecipeId.IronPlate,
-      parents: { ['1']: Rational.one },
+      parents: { ['1']: rational(1n) },
     };
     const fullStep: Step = {
       id: '1',
       itemId,
-      items: Rational.from(3),
-      surplus: Rational.two,
-      belts: Rational.from(3),
-      wagons: Rational.from(4),
-      machines: Rational.from(5),
-      power: Rational.from(6),
-      pollution: Rational.from(7),
-      outputs: { [itemId]: Rational.from(8) },
-      parents: { ['1']: Rational.from(9) },
+      items: rational(3n),
+      surplus: rational(2n),
+      belts: rational(3n),
+      wagons: rational(4n),
+      machines: rational(5n),
+      power: rational(6n),
+      pollution: rational(7n),
+      outputs: { [itemId]: rational(8n) },
+      parents: { ['1']: rational(9n) },
       recipeId,
     };
     const minStep: Step = {

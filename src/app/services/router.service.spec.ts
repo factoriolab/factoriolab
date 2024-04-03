@@ -17,7 +17,7 @@ import {
   ObjectiveType,
   ObjectiveUnit,
   Preset,
-  Rational,
+  rational,
 } from '~/models';
 import {
   App,
@@ -47,7 +47,7 @@ import {
 const mockObjective: Objective = {
   id: '1',
   targetId: ItemId.SteelChest,
-  value: Rational.one,
+  value: rational(1n),
   unit: ObjectiveUnit.Belts,
   type: ObjectiveType.Output,
 };
@@ -65,7 +65,7 @@ const mockMigratedObjectivesState: Objectives.ObjectivesState = {
     ['2']: {
       id: '2',
       targetId: ItemId.SteelChest,
-      value: Rational.one,
+      value: rational(1n),
       unit: ObjectiveUnit.Machines,
       type: ObjectiveType.Output,
     },
@@ -85,14 +85,14 @@ const mockRecipesState: Recipes.RecipesState = {
     moduleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
     beacons: [
       {
-        count: Rational.one,
+        count: rational(1n),
         id: ItemId.Beacon,
         moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
-        total: new Rational(8n),
+        total: rational(8n),
       },
     ],
-    overclock: new Rational(200n),
-    cost: Rational.hundred,
+    overclock: rational(200n),
+    cost: rational(100n),
   },
 };
 const mockMachinesState: Machines.MachinesState = {
@@ -100,7 +100,7 @@ const mockMachinesState: Machines.MachinesState = {
   entities: {
     ['']: {
       moduleRankIds: [ItemId.ProductivityModule, ItemId.SpeedModule],
-      beaconCount: Rational.one,
+      beaconCount: rational(1n),
       beaconId: ItemId.Beacon,
       beaconModuleRankIds: [ItemId.SpeedModule],
     },
@@ -112,27 +112,27 @@ const mockSettingsState: Settings.SettingsState = {
   netProductionOnly: true,
   surplusMachinesOutput: false,
   preset: Preset.Modules,
-  beaconReceivers: Rational.one,
+  beaconReceivers: rational(1n),
   proliferatorSprayId: ItemId.ProductivityModule,
   beltId: ItemId.TransportBelt,
   fuelRankIds: [ItemId.Coal],
   cargoWagonId: ItemId.CargoWagon,
   fluidWagonId: ItemId.FluidWagon,
-  flowRate: new Rational(1200n),
+  flowRate: rational(1200n),
   inserterTarget: InserterTarget.Chest,
-  miningBonus: Rational.hundred,
-  researchBonus: Rational.zero,
+  miningBonus: rational(100n),
+  researchBonus: rational(0n),
   inserterCapacity: InserterCapacity.Capacity0,
   displayRate: DisplayRate.PerHour,
   maximizeType: MaximizeType.Weight,
   costs: {
-    factor: new Rational(2n),
-    machine: Rational.ten,
-    footprint: Rational.one,
-    unproduceable: Rational.zero,
-    excluded: Rational.hundred,
-    surplus: Rational.zero,
-    maximize: new Rational(-100000n),
+    factor: rational(2n),
+    machine: rational(10n),
+    footprint: rational(1n),
+    unproduceable: rational(0n),
+    excluded: rational(100n),
+    surplus: rational(0n),
+    maximize: rational(-100000n),
   },
 };
 const mockZip: Zip = {
@@ -378,7 +378,7 @@ describe('RouterService', () => {
       spyOn(service, 'getHash').and.returnValue('test');
       expect(
         service.stepHref(
-          { id: '', itemId: ItemId.Wood, items: Rational.one },
+          { id: '', itemId: ItemId.Wood, items: rational(1n) },
           mockEmptyZip(),
           Mocks.Hash,
         ),
@@ -393,7 +393,7 @@ describe('RouterService', () => {
           {
             id: '',
             recipeId: RecipeId.AdvancedCircuit,
-            machines: Rational.one,
+            machines: rational(1n),
           },
           mockEmptyZip(),
           Mocks.Hash,
@@ -1008,7 +1008,7 @@ describe('RouterService', () => {
     it('should generate maps for objective and recipe beacons', () => {
       const beacons: BeaconSettings[] = [
         {
-          count: Rational.one,
+          count: rational(1n),
           id: ItemId.Beacon,
           moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
         },
@@ -1018,7 +1018,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: RecipeId.IronPlate,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             beacons,
@@ -1046,7 +1046,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: ItemId.SteelChest,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
@@ -1067,7 +1067,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: ItemId.SteelChest,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
@@ -1088,7 +1088,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: ItemId.SteelChest,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           },
@@ -1109,7 +1109,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: RecipeId.SteelChest,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
           },
@@ -1137,7 +1137,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: ItemId.SteelChest,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
@@ -1158,7 +1158,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: '',
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
@@ -1175,7 +1175,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: '',
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             beacons: [{}],
@@ -1197,7 +1197,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: '',
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             beacons: [{}],
@@ -1301,7 +1301,7 @@ describe('RouterService', () => {
       const result = service.unzipMachines({ ['f']: '1_?**1' }, Mocks.Hash);
       expect(result).toEqual({
         ids: [''],
-        entities: { ['']: { beaconCount: Rational.one } },
+        entities: { ['']: { beaconCount: rational(1n) } },
       });
     });
   });
@@ -1413,15 +1413,15 @@ describe('RouterService', () => {
 
   describe('zipDiffRational', () => {
     it('should handle default', () => {
-      expect(service.zipDiffRational(Rational.one, Rational.one)).toEqual('');
+      expect(service.zipDiffRational(rational(1n), rational(1n))).toEqual('');
     });
 
     it('should handle nullish', () => {
-      expect(service.zipDiffRational(null, Rational.one)).toEqual(NULL);
+      expect(service.zipDiffRational(null, rational(1n))).toEqual(NULL);
     });
 
     it('should handle nondefault', () => {
-      expect(service.zipDiffRational(Rational.one, null)).toEqual('1');
+      expect(service.zipDiffRational(rational(1n), null)).toEqual('1');
     });
   });
 

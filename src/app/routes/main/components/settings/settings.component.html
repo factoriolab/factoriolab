@@ -585,10 +585,10 @@
                           (onBlur)="
                             setOverclock(
                               machineId,
-                              Rational.fromNumber(duplicatorsInput.value ?? 0),
+                              rational(duplicatorsInput.value ?? 0),
                               machineId
                                 ? machinesState().entities[''].overclock
-                                : Rational.zero
+                                : rational(0)
                             )
                           "
                         >
@@ -654,10 +654,10 @@
                       (onBlur)="
                         setOverclock(
                           machineId,
-                          Rational.fromNumber(overclockInput.value ?? 100),
+                          rational(overclockInput.value ?? 100),
                           machineId
                             ? machinesState().entities[''].overclock
-                            : Rational.hundred
+                            : rational(100)
                         )
                       "
                     >
@@ -1106,11 +1106,7 @@
                   decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.pipeFlowRateTooltip' | translate"
                   [ngModel]="settings().flowRate.toNumber()"
-                  (onBlur)="
-                    setFlowRate(
-                      Rational.fromNumber(flowRateInput.value ?? 1500)
-                    )
-                  "
+                  (onBlur)="setFlowRate(rational(flowRateInput.value ?? 1500))"
                 ></p-inputNumber>
                 <label for="pipe-flow-rate">{{
                   'settings.pipeFlowRate' | translate
@@ -1155,11 +1151,11 @@
                   decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.miningSpeedTooltip' | translate"
                   [ngModel]="
-                    settings().miningBonus.add(Rational.hundred).toNumber()
+                    settings().miningBonus.add(rational(100)).toNumber()
                   "
                   (onBlur)="
                     setMiningBonus(
-                      Rational.fromNumber((miningBonusInput.value ?? 100) - 100)
+                      rational((miningBonusInput.value ?? 100) - 100)
                     )
                   "
                 ></p-inputNumber>
@@ -1279,9 +1275,7 @@
                   [pTooltip]="'settings.miningProductivityTooltip' | translate"
                   [ngModel]="settings().miningBonus.toNumber()"
                   (onBlur)="
-                    setMiningBonus(
-                      Rational.fromNumber(miningProdInput.value ?? 0)
-                    )
+                    setMiningBonus(rational(miningProdInput.value ?? 0))
                   "
                 ></p-inputNumber>
                 <label for="mining-productivity">{{

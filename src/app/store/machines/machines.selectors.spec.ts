@@ -1,5 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
-import { Game, Rational } from '~/models';
+import { Game, rational } from '~/models';
 import { initialMachinesState } from './machines.reducer';
 import * as Selectors from './machines.selectors';
 
@@ -32,7 +32,7 @@ describe('Machines Selectors', () => {
         {
           ids: undefined,
           entities: {
-            [ItemId.AssemblingMachine2]: { beaconCount: Rational.zero },
+            [ItemId.AssemblingMachine2]: { beaconCount: rational(0n) },
           },
         },
         [ItemId.Coal],
@@ -42,7 +42,7 @@ describe('Machines Selectors', () => {
       expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
       expect(result.entities[ItemId.AssemblingMachine2].beaconCount).toEqual(
-        Rational.zero,
+        rational(0n),
       );
     });
 
@@ -65,7 +65,7 @@ describe('Machines Selectors', () => {
             ...{
               '': {
                 ...initialMachinesState.entities[''],
-                ...{ overclock: new Rational(200n) },
+                ...{ overclock: rational(200n) },
               },
             },
           },
@@ -80,7 +80,7 @@ describe('Machines Selectors', () => {
           ...{ game: Game.Satisfactory },
         },
       );
-      expect(result.entities[''].overclock).toEqual(new Rational(200n));
+      expect(result.entities[''].overclock).toEqual(rational(200n));
     });
 
     it('should default overclock to 100 in Satisfactory', () => {
@@ -107,7 +107,7 @@ describe('Machines Selectors', () => {
           ...{ game: Game.Satisfactory },
         },
       );
-      expect(result.entities[''].overclock).toEqual(Rational.hundred);
+      expect(result.entities[''].overclock).toEqual(rational(100n));
     });
 
     it('should default overclock to 0 in Final Factory', () => {
@@ -134,7 +134,7 @@ describe('Machines Selectors', () => {
           ...{ game: Game.FinalFactory },
         },
       );
-      expect(result.entities[''].overclock).toEqual(Rational.zero);
+      expect(result.entities[''].overclock).toEqual(rational(0n));
     });
   });
 });

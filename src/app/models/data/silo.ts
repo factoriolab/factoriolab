@@ -1,6 +1,4 @@
-import { Rational } from '../rational';
-
-const secs = Rational.from(60);
+import { Rational, rational } from '../rational';
 
 export interface SiloJson {
   /** Number of rocket parts required */
@@ -21,7 +19,7 @@ export function parseSilo(json: SiloJson | undefined): Silo | undefined;
 export function parseSilo(json: SiloJson | undefined): Silo | undefined {
   if (json == null) return;
   return {
-    parts: Rational.from(json.parts),
-    launch: Rational.from(json.launch).div(secs),
+    parts: rational(json.parts),
+    launch: rational(json.launch).div(rational(60n)),
   };
 }

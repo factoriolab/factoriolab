@@ -1,5 +1,5 @@
 import { cloneEntities, Entities, toRationalEntities } from '../entities';
-import { Rational } from '../rational';
+import { rational, Rational } from '../rational';
 
 export interface RecipeJson {
   id: string;
@@ -63,12 +63,12 @@ export function parseRecipe(json: RecipeJson): Recipe {
     name: json.name,
     category: json.category,
     row: json.row,
-    time: Rational.from(json.time),
+    time: rational(json.time),
     producers: json.producers,
     in: toRationalEntities(json.in),
     out: toRationalEntities(json.out),
     catalyst: toRationalEntities(json.catalyst),
-    cost: Rational.from(json.cost),
+    cost: rational(json.cost),
     part: json.part,
     unlockedBy: json.unlockedBy,
     isMining: json.isMining,
@@ -76,7 +76,7 @@ export function parseRecipe(json: RecipeJson): Recipe {
     isBurn: json.isBurn,
     icon: json.icon,
     iconText: json.iconText,
-    usage: Rational.from(json.usage),
+    usage: rational(json.usage),
   };
 }
 
@@ -105,7 +105,7 @@ export function finalizeRecipe(recipe: AdjustedRecipe): void {
     }
 
     recipe.output[outId] = output
-      .sub(recipe.in[outId] ?? Rational.zero)
+      .sub(recipe.in[outId] ?? rational(0n))
       .div(recipe.time);
   }
 
