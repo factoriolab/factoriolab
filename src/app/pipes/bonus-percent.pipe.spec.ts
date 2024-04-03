@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { DisplayService } from '~/services';
 import { BonusPercentPipe } from './bonus-percent.pipe';
 
@@ -21,7 +21,7 @@ describe('BonusPercentPipe', () => {
   describe('transform', () => {
     it('should call DisplayService method', () => {
       spyOn(service, 'toBonusPercent').and.callThrough();
-      expect(pipe.transform(Rational.one)).toEqual('+100%');
+      expect(pipe.transform(rational(1n))).toEqual('+100%');
       expect(service.toBonusPercent).toHaveBeenCalled();
     });
   });

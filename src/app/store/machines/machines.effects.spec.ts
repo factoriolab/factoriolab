@@ -37,6 +37,8 @@ describe('MachinesEffects', () => {
     mockStore.refreshState();
   });
 
+  afterEach(() => mockStore.resetSelectors());
+
   describe('resetRecipeSetting$', () => {
     it('should reset modules when machine modules do not match', () => {
       actions = new ReplaySubject(1);

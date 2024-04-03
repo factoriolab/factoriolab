@@ -1,4 +1,4 @@
-import { Rational } from './rational';
+import { Rational, rational } from './rational';
 
 export type Entities<T = string> = Record<string, T>;
 
@@ -44,7 +44,7 @@ export function toRationalEntities(
 ): Entities<Rational> | undefined {
   if (value == null) return;
   return Object.keys(value).reduce((e: Entities<Rational>, v) => {
-    e[v] = Rational.from(value[v]);
+    e[v] = rational(value[v]);
     return e;
   }, {});
 }

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, ItemId, RecipeId, TestModule } from 'src/tests';
-import { ObjectiveType, ObjectiveUnit, Rational } from '~/models';
+import { ObjectiveType, ObjectiveUnit, rational } from '~/models';
 import { LabState, Objectives, Settings } from '~/store';
 import { WizardComponent } from './wizard.component';
 
@@ -43,7 +43,7 @@ describe('WizardComponent', () => {
       new Objectives.CreateAction({
         id: '0',
         targetId: ItemId.IronPlate,
-        value: Rational.one,
+        value: rational(1n),
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       }),
@@ -54,7 +54,7 @@ describe('WizardComponent', () => {
       new Objectives.CreateAction({
         id: '0',
         targetId: ItemId.IronPlate,
-        value: Rational.one,
+        value: rational(1n),
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       }),

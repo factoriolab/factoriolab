@@ -1,4 +1,4 @@
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
 export type ModuleEffect =
   | 'consumption'
@@ -31,12 +31,12 @@ export function parseModule(json: ModuleJson | undefined): Module | undefined;
 export function parseModule(json: ModuleJson | undefined): Module | undefined {
   if (json == null) return;
   return {
-    consumption: Rational.from(json.consumption),
-    pollution: Rational.from(json.pollution),
-    productivity: Rational.from(json.productivity),
-    speed: Rational.from(json.speed),
+    consumption: rational(json.consumption),
+    pollution: rational(json.pollution),
+    productivity: rational(json.productivity),
+    speed: rational(json.speed),
     limitation: json.limitation,
-    sprays: Rational.from(json.sprays),
+    sprays: rational(json.sprays),
     proliferator: json.proliferator,
   };
 }

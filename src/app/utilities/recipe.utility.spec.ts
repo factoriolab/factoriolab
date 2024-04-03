@@ -7,7 +7,7 @@ import {
   Objective,
   ObjectiveType,
   ObjectiveUnit,
-  Rational,
+  rational,
   Recipe,
   RecipeSettings,
 } from '~/models';
@@ -54,7 +54,7 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.defaultModules(
         [{ value: ItemId.SpeedModule }],
         [ItemId.ProductivityModule, ItemId.SpeedModule],
-        Rational.one,
+        rational(1n),
       );
       expect(result).toEqual([ItemId.SpeedModule]);
     });
@@ -75,12 +75,12 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.SteelChest],
         ...{
-          out: { [ItemId.SteelChest]: Rational.one },
-          time: Rational.from(2, 3),
-          drain: Rational.from(5),
-          consumption: Rational.from(150),
-          pollution: Rational.from(1, 20),
-          productivity: Rational.one,
+          out: { [ItemId.SteelChest]: rational(1n) },
+          time: rational(2n, 3n),
+          drain: rational(5n),
+          consumption: rational(150n),
+          pollution: rational(1n, 20n),
+          productivity: rational(1n),
           produces: new Set(),
           output: {},
         },
@@ -99,11 +99,11 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.CopperCable],
         ...{
-          time: Rational.from(2, 3),
-          drain: Rational.from(5),
-          consumption: Rational.from(150),
-          pollution: Rational.from(1, 20),
-          productivity: Rational.one,
+          time: rational(2n, 3n),
+          drain: rational(5n),
+          consumption: rational(150n),
+          pollution: rational(1n, 20n),
+          productivity: rational(1n),
           produces: new Set(),
           output: {},
         },
@@ -120,7 +120,7 @@ describe('RecipeUtility', () => {
         RecipeId.MiningProductivity,
         {
           ...Mocks.AdjustmentData,
-          ...{ researchBonus: Rational.two },
+          ...{ researchBonus: rational(2n) },
         },
         settings,
         Mocks.ItemsStateInitial,
@@ -129,12 +129,12 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.MiningProductivity],
         ...{
-          out: { [ItemId.MiningProductivity]: Rational.one },
-          time: Rational.from(30),
+          out: { [ItemId.MiningProductivity]: rational(1n) },
+          time: rational(30n),
           drain: undefined,
-          consumption: Rational.from(60),
-          pollution: Rational.zero,
-          productivity: Rational.one,
+          consumption: rational(60n),
+          pollution: rational(0n),
+          productivity: rational(1n),
           produces: new Set(),
           output: {},
         },
@@ -149,7 +149,7 @@ describe('RecipeUtility', () => {
         RecipeId.IronOre,
         {
           ...Mocks.AdjustmentData,
-          ...{ miningBonus: Rational.two },
+          ...{ miningBonus: rational(2n) },
         },
         settings,
         Mocks.ItemsStateInitial,
@@ -158,12 +158,12 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.IronOre],
         ...{
-          out: { [ItemId.IronOre]: new Rational(3n) },
-          time: new Rational(2n),
+          out: { [ItemId.IronOre]: rational(3n) },
+          time: rational(2n),
           drain: undefined,
-          consumption: new Rational(90n),
-          pollution: new Rational(1n, 6n),
-          productivity: new Rational(3n),
+          consumption: rational(90n),
+          pollution: rational(1n, 6n),
+          productivity: rational(3n),
           produces: new Set(),
           output: {},
         },
@@ -181,7 +181,7 @@ describe('RecipeUtility', () => {
       settings.beacons = [
         {
           id: ItemId.Beacon,
-          count: Rational.one,
+          count: rational(1n),
           moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
         },
       ];
@@ -194,7 +194,7 @@ describe('RecipeUtility', () => {
               // To verify all factors work in beacons
               [ItemId.SpeedModule]: {
                 ...Mocks.AdjustedDataset.moduleEntities[ItemId.SpeedModule],
-                ...{ productivity: Rational.one, pollution: Rational.one },
+                ...{ productivity: rational(1n), pollution: rational(1n) },
               },
               // To verify null consumption works
               [ItemId.ProductivityModule]: {
@@ -217,12 +217,12 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.SteelChest],
         ...{
-          out: { [ItemId.SteelChest]: new Rational(76n, 25n) },
-          time: new Rational(40n, 81n),
-          drain: new Rational(5n),
-          consumption: new Rational(255n),
-          pollution: new Rational(1037n, 4000n),
-          productivity: new Rational(76n, 25n),
+          out: { [ItemId.SteelChest]: rational(76n, 25n) },
+          time: rational(40n, 81n),
+          drain: rational(5n),
+          consumption: rational(255n),
+          pollution: rational(1037n, 4000n),
+          productivity: rational(76n, 25n),
           produces: new Set(),
           output: {},
         },
@@ -263,7 +263,7 @@ describe('RecipeUtility', () => {
           },
         },
       };
-      settings.beacons = [{ count: Rational.zero, moduleIds: [ItemId.Module] }];
+      settings.beacons = [{ count: rational(0n), moduleIds: [ItemId.Module] }];
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         Mocks.AdjustmentData,
@@ -274,12 +274,12 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.SteelChest],
         ...{
-          out: { [ItemId.SteelChest]: Rational.one },
-          time: new Rational(10n, 3n),
-          drain: new Rational(5n),
-          consumption: new Rational(30n),
-          pollution: new Rational(1n, 500n),
-          productivity: Rational.one,
+          out: { [ItemId.SteelChest]: rational(1n) },
+          time: rational(10n, 3n),
+          drain: rational(5n),
+          consumption: rational(30n),
+          pollution: rational(1n, 500n),
+          productivity: rational(1n),
           produces: new Set(),
           output: {},
         },
@@ -291,7 +291,7 @@ describe('RecipeUtility', () => {
       const data = Mocks.getAdjustedDataset();
       data.recipeEntities[RecipeId.SteelChest] = {
         ...data.recipeEntities[RecipeId.SteelChest],
-        ...{ time: new Rational(1n, 10000n) },
+        ...{ time: rational(1n, 10000n) },
       };
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
@@ -300,7 +300,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data,
       );
-      expect(result.time).toEqual(Rational.from(1, 60));
+      expect(result.time).toEqual(rational(1n, 60n));
     });
 
     it('should find matching nonchemical fuel', () => {
@@ -311,7 +311,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.AdjustedDataset,
       );
-      expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
+      expect(result.in[ItemId.UraniumFuelCell]).toEqual(rational(1n, 200n));
     });
 
     it('should find non-matching nonchemical fuel', () => {
@@ -338,12 +338,12 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data,
       );
-      expect(result.in[ItemId.UraniumFuelCell]).toEqual(Rational.from(1, 200));
+      expect(result.in[ItemId.UraniumFuelCell]).toEqual(rational(1n, 200n));
     });
 
     it('should adjust based on overclock', () => {
       const settings = { ...Mocks.RecipesState[RecipeId.SteelChest] };
-      settings.overclock = Rational.from(200);
+      settings.overclock = rational(200n);
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         Mocks.AdjustmentData,
@@ -354,12 +354,12 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.SteelChest],
         ...{
-          out: { [ItemId.SteelChest]: Rational.one },
-          time: new Rational(1n, 3n),
-          drain: new Rational(5n),
-          consumption: new Rational(136838616n, 364903n),
-          pollution: new Rational(1n, 20n),
-          productivity: Rational.one,
+          out: { [ItemId.SteelChest]: rational(1n) },
+          time: rational(1n, 3n),
+          drain: rational(5n),
+          consumption: rational(136838616n, 364903n),
+          pollution: rational(1n, 20n),
+          productivity: rational(1n),
           produces: new Set(),
           output: {},
         },
@@ -369,10 +369,9 @@ describe('RecipeUtility', () => {
 
     it('should adjust a power producer based on overclock', () => {
       const settings = { ...Mocks.RecipesState[RecipeId.SteelChest] };
-      settings.overclock = Rational.from(200);
+      settings.overclock = rational(200n);
       const data = Mocks.getDataset();
-      data.machineEntities[ItemId.AssemblingMachine2].usage =
-        Rational.from(-10);
+      data.machineEntities[ItemId.AssemblingMachine2].usage = rational(-10n);
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         Mocks.AdjustmentData,
@@ -383,12 +382,12 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.SteelChest],
         ...{
-          out: { [ItemId.SteelChest]: Rational.one },
-          time: new Rational(1n, 3n),
-          drain: new Rational(5n),
-          consumption: new Rational(-20n),
-          pollution: new Rational(1n, 20n),
-          productivity: Rational.one,
+          out: { [ItemId.SteelChest]: rational(1n) },
+          time: rational(1n, 3n),
+          drain: rational(5n),
+          consumption: rational(-20n),
+          pollution: rational(1n, 20n),
+          productivity: rational(1n),
           produces: new Set(),
           output: {},
         },
@@ -407,7 +406,7 @@ describe('RecipeUtility', () => {
               [RecipeId.SteelChest]: {
                 ...Mocks.Dataset.recipeEntities[RecipeId.SteelChest],
                 ...{
-                  usage: new Rational(10000n),
+                  usage: rational(10000n),
                 },
               },
             },
@@ -424,13 +423,13 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.SteelChest],
         ...{
-          out: { [ItemId.SteelChest]: Rational.one },
-          time: new Rational(2n, 3n),
-          drain: new Rational(5n),
-          consumption: new Rational(10000n),
-          pollution: new Rational(1n, 20n),
-          productivity: Rational.one,
-          usage: new Rational(10000n),
+          out: { [ItemId.SteelChest]: rational(1n) },
+          time: rational(2n, 3n),
+          drain: rational(5n),
+          consumption: rational(10000n),
+          pollution: rational(1n, 20n),
+          productivity: rational(1n),
+          usage: rational(10000n),
           produces: new Set(),
           output: {},
         },
@@ -448,7 +447,7 @@ describe('RecipeUtility', () => {
         ...{
           in: {
             ...Mocks.Dataset.recipeEntities[RecipeId.SteelChest].in,
-            ...{ [ItemId.ProductivityModule]: Rational.one },
+            ...{ [ItemId.ProductivityModule]: rational(1n) },
           },
         },
       };
@@ -467,14 +466,14 @@ describe('RecipeUtility', () => {
               [ItemId.ProductivityModule3]: {
                 ...Mocks.Dataset.moduleEntities[ItemId.ProductivityModule3],
                 ...{
-                  sprays: Rational.ten,
+                  sprays: rational(10n),
                   proliferator: ItemId.ProductivityModule3,
                 },
               },
               [ItemId.ProductivityModule]: {
                 ...Mocks.Dataset.moduleEntities[ItemId.ProductivityModule],
                 ...{
-                  sprays: Rational.ten,
+                  sprays: rational(10n),
                   proliferator: ItemId.ProductivityModule,
                 },
               },
@@ -496,16 +495,16 @@ describe('RecipeUtility', () => {
         ...recipe,
         ...{
           in: {
-            [ItemId.SteelPlate]: new Rational(8n),
-            [ItemId.ProductivityModule]: new Rational(11n, 10n),
-            [ItemId.ProductivityModule3]: new Rational(9n, 10n),
+            [ItemId.SteelPlate]: rational(8n),
+            [ItemId.ProductivityModule]: rational(11n, 10n),
+            [ItemId.ProductivityModule3]: rational(9n, 10n),
           },
-          out: { [ItemId.SteelChest]: new Rational(11n, 10n) },
-          time: new Rational(8n, 97n),
-          drain: new Rational(25n, 2n),
-          consumption: new Rational(2775n),
-          pollution: new Rational(407n, 1500n),
-          productivity: new Rational(11n, 10n),
+          out: { [ItemId.SteelChest]: rational(11n, 10n) },
+          time: rational(8n, 97n),
+          drain: rational(25n, 2n),
+          consumption: rational(2775n),
+          pollution: rational(407n, 1500n),
+          productivity: rational(11n, 10n),
           produces: new Set(),
           output: {},
         },
@@ -516,7 +515,7 @@ describe('RecipeUtility', () => {
     it('should add machine consumption', () => {
       const data = Mocks.getDataset();
       data.machineEntities[ItemId.AssemblingMachine2].consumption = {
-        [ItemId.Coal]: Rational.one,
+        [ItemId.Coal]: rational(1n),
       };
       const result = RecipeUtility.adjustRecipe(
         RecipeId.CopperCable,
@@ -529,14 +528,14 @@ describe('RecipeUtility', () => {
         ...Mocks.Dataset.recipeEntities[RecipeId.CopperCable],
         ...{
           in: {
-            [ItemId.CopperPlate]: Rational.one,
-            [ItemId.Coal]: new Rational(1n, 90n),
+            [ItemId.CopperPlate]: rational(1n),
+            [ItemId.Coal]: rational(1n, 90n),
           },
-          time: new Rational(2n, 3n),
-          drain: new Rational(5n),
-          consumption: new Rational(150n),
-          pollution: new Rational(1n, 20n),
-          productivity: Rational.one,
+          time: rational(2n, 3n),
+          drain: rational(5n),
+          consumption: rational(150n),
+          pollution: rational(1n, 20n),
+          productivity: rational(1n),
           produces: new Set(),
           output: {},
         },
@@ -547,9 +546,9 @@ describe('RecipeUtility', () => {
     it('should reduce net production to output only', () => {
       const data = Mocks.getDataset();
       data.recipeEntities[RecipeId.CoalLiquefaction].in[ItemId.HeavyOil] =
-        Rational.one;
+        rational(1n);
       data.recipeEntities[RecipeId.CoalLiquefaction].out[ItemId.HeavyOil] =
-        Rational.two;
+        rational(2n);
       const result = RecipeUtility.adjustRecipe(
         RecipeId.CoalLiquefaction,
         {
@@ -561,15 +560,15 @@ describe('RecipeUtility', () => {
         data,
       );
       expect(result.in[ItemId.HeavyOil]).toBeUndefined();
-      expect(result.out[ItemId.HeavyOil]).toEqual(Rational.one);
+      expect(result.out[ItemId.HeavyOil]).toEqual(rational(1n));
     });
 
     it('should reduce net production to input only', () => {
       const data = Mocks.getDataset();
       data.recipeEntities[RecipeId.CoalLiquefaction].in[ItemId.HeavyOil] =
-        Rational.two;
+        rational(2n);
       data.recipeEntities[RecipeId.CoalLiquefaction].out[ItemId.HeavyOil] =
-        Rational.one;
+        rational(1n);
       const result = RecipeUtility.adjustRecipe(
         RecipeId.CoalLiquefaction,
         {
@@ -580,16 +579,16 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         data,
       );
-      expect(result.in[ItemId.HeavyOil]).toEqual(Rational.one);
+      expect(result.in[ItemId.HeavyOil]).toEqual(rational(1n));
       expect(result.out[ItemId.HeavyOil]).toBeUndefined();
     });
 
     it('should reduce net production to no input/output', () => {
       const data = Mocks.getDataset();
       data.recipeEntities[RecipeId.CoalLiquefaction].in[ItemId.HeavyOil] =
-        Rational.one;
+        rational(1n);
       data.recipeEntities[RecipeId.CoalLiquefaction].out[ItemId.HeavyOil] =
-        Rational.one;
+        rational(1n);
       const result = RecipeUtility.adjustRecipe(
         RecipeId.CoalLiquefaction,
         {
@@ -617,12 +616,12 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.SteelChest],
         ...{
-          out: { [ItemId.SteelChest]: Rational.one },
-          time: new Rational(1n, 30n),
-          drain: new Rational(5n),
-          consumption: new Rational(150n),
-          pollution: new Rational(1n, 20n),
-          productivity: Rational.one,
+          out: { [ItemId.SteelChest]: rational(1n) },
+          time: rational(1n, 30n),
+          drain: rational(5n),
+          consumption: rational(150n),
+          pollution: rational(1n, 20n),
+          productivity: rational(1n),
           produces: new Set(),
           output: {},
         },
@@ -648,12 +647,12 @@ describe('RecipeUtility', () => {
       const expected: AdjustedRecipe = {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.SteelChest],
         ...{
-          out: { [ItemId.SteelChest]: Rational.one },
-          time: new Rational(2n, 3n),
-          drain: new Rational(5n),
-          consumption: new Rational(150n),
-          pollution: new Rational(1n, 20n),
-          productivity: Rational.one,
+          out: { [ItemId.SteelChest]: rational(1n) },
+          time: rational(2n, 3n),
+          drain: rational(5n),
+          consumption: rational(150n),
+          pollution: rational(1n, 20n),
+          productivity: rational(1n),
           produces: new Set(),
           output: {},
         },
@@ -699,7 +698,7 @@ describe('RecipeUtility', () => {
       const objective: Objective = {
         id: '0',
         targetId: RecipeId.SpaceSciencePack,
-        value: Rational.one,
+        value: rational(1n),
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       };
@@ -715,7 +714,7 @@ describe('RecipeUtility', () => {
         Mocks.RecipesStateInitial,
         Mocks.AdjustedDataset,
       );
-      expect(recipe.time).toEqual(new Rational(82499n, 924n));
+      expect(recipe.time).toEqual(rational(82499n, 924n));
     });
   });
 
@@ -745,10 +744,10 @@ describe('RecipeUtility', () => {
         Mocks.Dataset,
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from(82499, 924),
+        rational(82499n, 924n),
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from(82499, 66000),
+        rational(82499n, 66000n),
       );
     });
 
@@ -767,10 +766,10 @@ describe('RecipeUtility', () => {
         Mocks.Dataset,
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from(203, 5),
+        rational(203n, 5n),
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from(82499, 66000),
+        rational(82499n, 66000n),
       );
     });
 
@@ -789,10 +788,10 @@ describe('RecipeUtility', () => {
         Mocks.Dataset,
       );
       expect(result[RecipeId.SpaceSciencePack].time).toEqual(
-        Rational.from(203, 5),
+        rational(203n, 5n),
       );
       expect(result[RecipeId.RocketPart].time).toEqual(
-        Rational.from(82499, 66000),
+        rational(82499n, 66000n),
       );
     });
   });
@@ -868,7 +867,7 @@ describe('RecipeUtility', () => {
         ...{
           [RecipeId.Coal]: {
             ...Mocks.RecipesStateInitial[RecipeId.Coal],
-            ...{ cost: Rational.two },
+            ...{ cost: rational(2n) },
           },
         },
       };
@@ -879,7 +878,7 @@ describe('RecipeUtility', () => {
         Mocks.Costs,
         Mocks.AdjustedDataset,
       );
-      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.two);
+      expect(recipeR[RecipeId.Coal].cost).toEqual(rational(2n));
     });
 
     it('should apply normal recipe and machine costs', () => {
@@ -890,8 +889,8 @@ describe('RecipeUtility', () => {
         Mocks.Costs,
         Mocks.AdjustedDataset,
       );
-      expect(recipeR[RecipeId.Coal].cost).toEqual(Rational.from(1183, 4));
-      expect(recipeR[RecipeId.CopperCable].cost).toEqual(Rational.from(9));
+      expect(recipeR[RecipeId.Coal].cost).toEqual(rational(1183n, 4n));
+      expect(recipeR[RecipeId.CopperCable].cost).toEqual(rational(9n));
     });
   });
 
@@ -914,7 +913,7 @@ describe('RecipeUtility', () => {
         {
           id: '1',
           targetId: RecipeId.IronPlate,
-          value: Rational.one,
+          value: rational(1n),
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
@@ -930,7 +929,7 @@ describe('RecipeUtility', () => {
         ItemId.ProductivityModule3,
         ItemId.ProductivityModule3,
       ]);
-      expect(result.beacons?.[0].count).toEqual(new Rational(8n));
+      expect(result.beacons?.[0].count).toEqual(rational(8n));
       expect(result.beacons?.[0].id).toEqual(ItemId.Beacon);
       expect(result.beacons?.[0].moduleOptions?.length).toEqual(7);
       expect(result.beacons?.[0].moduleIds).toEqual([
@@ -949,7 +948,7 @@ describe('RecipeUtility', () => {
         {
           id: '1',
           targetId: RecipeId.IronPlate,
-          value: Rational.one,
+          value: rational(1n),
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
@@ -988,7 +987,7 @@ describe('RecipeUtility', () => {
         {
           id: '1',
           targetId: RecipeId.IronPlate,
-          value: Rational.one,
+          value: rational(1n),
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
           beacons: [{ id: ItemId.Beacon }],
@@ -1012,7 +1011,7 @@ describe('RecipeUtility', () => {
         {
           id: '1',
           targetId: RecipeId.UsedUpUraniumFuelCell,
-          value: Rational.one,
+          value: rational(1n),
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
           fuelId: ItemId.Coal,

@@ -6,7 +6,7 @@ import {
   InserterTarget,
   MaximizeType,
   Preset,
-  Rational,
+  rational,
   researchBonus,
 } from '~/models';
 import * as App from '../app.actions';
@@ -98,7 +98,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_BEACON_RECEIVERS', () => {
     it('should set default beacon receivers', () => {
-      const value = Rational.one;
+      const value = rational(1n);
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetBeaconReceiversAction(value),
@@ -175,7 +175,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_FLOW_RATE', () => {
     it('should set the flow rate', () => {
-      const value = new Rational(6000n);
+      const value = rational(6000n);
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetFlowRateAction(value),
@@ -197,7 +197,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_MINING_BONUS', () => {
     it('should set the mining bonus', () => {
-      const value = Rational.ten;
+      const value = rational(10n);
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetMiningBonusAction(value),
@@ -256,13 +256,13 @@ describe('Settings Reducer', () => {
   describe('SET_COSTS', () => {
     it('should set cost values', () => {
       const value: CostSettings = {
-        factor: Rational.one,
-        machine: Rational.one,
-        footprint: Rational.one,
-        unproduceable: Rational.one,
-        excluded: Rational.one,
-        surplus: Rational.one,
-        maximize: Rational.minusOne,
+        factor: rational(1n),
+        machine: rational(1n),
+        footprint: rational(1n),
+        unproduceable: rational(1n),
+        excluded: rational(1n),
+        surplus: rational(1n),
+        maximize: rational(-1n),
       };
       const result = settingsReducer(
         initialSettingsState,

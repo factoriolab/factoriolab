@@ -300,7 +300,7 @@
               </span>
             }
             <span class="monospace">{{
-              step.items.sub(step.surplus || Rational.zero)
+              step.items.sub(step.surplus ?? rational(0))
                 | rate: columnsState().items.precision
             }}</span>
           </td>
@@ -1479,7 +1479,7 @@
                     <tr>
                       <td class="w-0 text-end">
                         <span class="monospace">{{
-                          Rational.one | rate: columnsState().machines.precision
+                          rational(1) | rate: columnsState().machines.precision
                         }}</span>
                       </td>
                       <td>

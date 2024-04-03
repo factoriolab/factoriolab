@@ -29,6 +29,8 @@ describe('ThemeService', () => {
     localStorage.clear();
   });
 
+  afterEach(() => mockStore.resetSelectors());
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });

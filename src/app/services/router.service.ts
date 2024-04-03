@@ -22,6 +22,7 @@ import {
   Objective,
   ObjectiveType,
   ObjectiveUnit,
+  rational,
   Rational,
   RecipeSettings,
   Step,
@@ -1200,7 +1201,7 @@ export class RouterService {
       const obj: Objective = {
         id: index.toString(),
         targetId: s[i++], // Convert hash to real id after determining unit
-        value: coalesce(this.parseRational(s[i++]), Rational.one),
+        value: coalesce(this.parseRational(s[i++]), rational(1n)),
         unit: Number(s[i++]) || ObjectiveUnit.Items,
         type: Number(s[i++]) || ObjectiveType.Output,
         machineId: this.parseString(s[i++], hash?.machines),
@@ -1816,9 +1817,9 @@ export class RouterService {
     value: string | undefined,
     useNNumber = false,
   ): Rational | undefined {
-    if (useNNumber) return Rational.from(this.parseNNumber(value));
+    if (useNNumber) return rational(this.parseNNumber(value));
     if (!value?.length || value === NULL) return undefined;
-    return Rational.fromString(value);
+    return rational(value);
   }
 
   parseDisplayRate(value: string | undefined): DisplayRate | undefined {

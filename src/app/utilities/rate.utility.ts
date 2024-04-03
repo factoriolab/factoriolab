@@ -11,6 +11,7 @@ import {
   ObjectiveType,
   ObjectiveUnit,
   Rational,
+  rational,
   Recipe,
   RecipeSettings,
   Step,
@@ -37,7 +38,7 @@ export class RateUtility {
     }
 
     const rate = objective.value;
-    let factor = Rational.one;
+    let factor = rational(1n);
     switch (objective.unit) {
       case ObjectiveUnit.Items: {
         factor = displayRateInfo.value.reciprocal();
@@ -97,7 +98,7 @@ export class RateUtility {
     if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
         // Reset power
-        step.power = Rational.zero;
+        step.power = rational(0n);
 
         // Calculate drain
         if (recipe.drain?.nonzero()) {
@@ -274,7 +275,7 @@ export class RateUtility {
               beacon.usage != null &&
               total != null
             ) {
-              step.power = (step.power ?? Rational.zero).add(
+              step.power = (step.power ?? rational(0n)).add(
                 total.mul(beacon.usage),
               );
             }

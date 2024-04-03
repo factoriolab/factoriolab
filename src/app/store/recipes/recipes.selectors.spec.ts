@@ -1,5 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { initialRecipesState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
@@ -99,14 +99,14 @@ describe('Recipes Selectors', () => {
     it('should use beacon count override', () => {
       const state = {
         ...initialRecipesState,
-        ...{ [Mocks.Item1.id]: { beacons: [{ count: Rational.one }] } },
+        ...{ [Mocks.Item1.id]: { beacons: [{ count: rational(1n) }] } },
       };
       const result = Selectors.getRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
       );
-      expect(result[Mocks.Item1.id].beacons?.[0].count).toEqual(Rational.one);
+      expect(result[Mocks.Item1.id].beacons?.[0].count).toEqual(rational(1n));
     });
 
     it('should use beacon module override', () => {
@@ -147,7 +147,7 @@ describe('Recipes Selectors', () => {
         ...initialRecipesState,
         ...{
           [Mocks.Item1.id]: {
-            beacons: [{ total: new Rational(8n), count: Rational.zero }],
+            beacons: [{ total: rational(8n), count: rational(0n) }],
           },
         },
       };

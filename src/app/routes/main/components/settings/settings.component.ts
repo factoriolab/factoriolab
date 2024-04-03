@@ -42,6 +42,7 @@ import {
   PowerUnit,
   powerUnitOptions,
   Preset,
+  rational,
   Rational,
   researchBonusOptions,
   SankeyAlign,
@@ -147,7 +148,7 @@ export class SettingsComponent implements OnInit {
   ItemId = ItemId;
   FlowDiagram = FlowDiagram;
   BrowserUtility = BrowserUtility;
-  Rational = Rational;
+  rational = rational;
 
   ngOnInit(): void {
     this.store
@@ -308,7 +309,7 @@ export class SettingsComponent implements OnInit {
   }
 
   toggleBeaconReceivers(value: boolean): void {
-    this.setBeaconReceivers(value ? Rational.one : null);
+    this.setBeaconReceivers(value ? rational(1n) : null);
   }
 
   /** Action Dispatch Methods */

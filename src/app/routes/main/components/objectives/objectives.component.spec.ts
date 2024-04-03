@@ -8,7 +8,7 @@ import {
   Objective,
   ObjectiveType,
   ObjectiveUnit,
-  Rational,
+  rational,
   SimplexResultType,
 } from '~/models';
 import { LabState, Objectives, Preferences, Settings } from '~/store';
@@ -82,7 +82,7 @@ describe('ObjectivesComponent', () => {
             id: '0',
             type: ObjectiveType.Maximize,
             targetId: ItemId.Coal,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Items,
           },
         ],
@@ -105,14 +105,14 @@ describe('ObjectivesComponent', () => {
             id: '0',
             type: ObjectiveType.Maximize,
             targetId: ItemId.Coal,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Items,
           },
           {
             id: '1',
             type: ObjectiveType.Limit,
             targetId: ItemId.Coal,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Items,
           },
         ],
@@ -135,14 +135,14 @@ describe('ObjectivesComponent', () => {
             id: '0',
             type: ObjectiveType.Maximize,
             targetId: RecipeId.Coal,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Machines,
           },
           {
             id: '1',
             type: ObjectiveType.Limit,
             targetId: ItemId.Coal,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Items,
           },
         ],
@@ -251,7 +251,7 @@ describe('ObjectivesComponent', () => {
       const objective: Objective = {
         id: '0',
         targetId: ItemId.PetroleumGas,
-        value: Rational.one,
+        value: rational(1n),
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       };
@@ -287,7 +287,7 @@ describe('ObjectivesComponent', () => {
         {
           id: '0',
           targetId: RecipeId.AdvancedOilProcessing,
-          value: Rational.one,
+          value: rational(1n),
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
@@ -337,7 +337,7 @@ describe('ObjectivesComponent', () => {
         ObjectiveUnit.Items,
         Mocks.AdjustedDataset,
       );
-      expect(component.setValue).toHaveBeenCalledWith('4', new Rational(175n));
+      expect(component.setValue).toHaveBeenCalledWith('4', rational(175n));
     });
 
     it('should not convert the value on maximize objectives', () => {

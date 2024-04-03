@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { TestModule } from 'src/tests';
-import { PowerUnit, Rational } from '~/models';
+import { PowerUnit, rational } from '~/models';
 import { PowerPipe } from './power.pipe';
 
 describe('PowerPipe', () => {
@@ -21,13 +21,13 @@ describe('PowerPipe', () => {
 
   describe('transform', () => {
     it('should handle GW/MW/kW', () => {
-      expect(
-        pipe.transform(Rational.from(1000000), null, PowerUnit.GW),
-      ).toEqual('1 GW');
-      expect(pipe.transform(Rational.thousand, null, PowerUnit.MW)).toEqual(
+      expect(pipe.transform(rational(1000000n), null, PowerUnit.GW)).toEqual(
+        '1 GW',
+      );
+      expect(pipe.transform(rational(1000n), null, PowerUnit.MW)).toEqual(
         '1 MW',
       );
-      expect(pipe.transform(Rational.one, null, PowerUnit.kW)).toEqual('1 kW');
+      expect(pipe.transform(rational(1n), null, PowerUnit.kW)).toEqual('1 kW');
     });
   });
 });

@@ -1,4 +1,4 @@
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
 export interface BeltJson {
   speed: number | string;
@@ -13,6 +13,6 @@ export function parseBelt(json: BeltJson | undefined): Belt | undefined;
 export function parseBelt(json: BeltJson | undefined): Belt | undefined {
   if (json == null) return;
   return {
-    speed: Rational.from(json.speed),
+    speed: rational(json.speed),
   };
 }

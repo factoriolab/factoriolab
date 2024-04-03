@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { TrackService } from './track.service';
 
 describe('TrackService', () => {
@@ -41,8 +41,8 @@ describe('TrackService', () => {
     it('should return a diff', () => {
       expect(
         service.sortByValue(
-          { key: 'a', value: Rational.one },
-          { key: 'b', value: Rational.two },
+          { key: 'a', value: rational(1n) },
+          { key: 'b', value: rational(2n) },
         ),
       ).toEqual(1);
     });
