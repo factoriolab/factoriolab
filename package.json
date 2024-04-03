@@ -99,6 +99,8 @@
     "karma-jasmine-html-reporter": "^2.1.0",
     "ngrx-store-freeze": "~0.2.4",
     "prettier": "^3.2.4",
+    "semantic-release": "^23.0.7",
+    "semantic-release-discord": "^1.2.0",
     "sharp": "0.31.3",
     "spritesmith": "^3.4.1",
     "ts-node": "^10.9.1",
@@ -110,5 +112,13 @@
     "crypto": false,
     "fs": false,
     "path": false
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/github",
+      "semantic-release-discord"
+    ]
   }
 }
