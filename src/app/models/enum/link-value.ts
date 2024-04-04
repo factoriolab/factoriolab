@@ -13,12 +13,12 @@ export enum LinkValue {
 
 export function linkValueOptions(game: Game): SelectItem<LinkValue>[] {
   const result: SelectItem<LinkValue>[] = [
-    { label: 'None', value: LinkValue.None },
-    { label: 'Percent', value: LinkValue.Percent },
-    { label: 'Items', value: LinkValue.Items },
-    { label: 'Belts', value: LinkValue.Belts },
-    { label: 'Wagons', value: LinkValue.Wagons },
-    { label: 'Machines', value: LinkValue.Machines },
+    { label: 'options.linkValue.none', value: LinkValue.None },
+    { label: 'options.linkValue.percent', value: LinkValue.Percent },
+    { label: 'options.linkValue.items', value: LinkValue.Items },
+    { label: 'options.linkValue.belts', value: LinkValue.Belts },
+    { label: 'options.linkValue.wagons', value: LinkValue.Wagons },
+    { label: 'options.linkValue.machines', value: LinkValue.Machines },
   ];
 
   if (game === Game.DysonSphereProgram || game === Game.CaptainOfIndustry) {
