@@ -16,7 +16,7 @@ import { getPowerInKw } from './power.helpers';
 export function getBeacon(proto: M.BeaconPrototype): BeaconJson {
   return {
     effectivity: proto.distribution_effectivity,
-    modules: coalesce(proto.module_specification.module_slots),
+    modules: coalesce(proto.module_specification.module_slots, 0),
     range: proto.supply_area_distance,
     type:
       proto.energy_source.type === 'electric' ? EnergyType.Electric : undefined,

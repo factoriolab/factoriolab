@@ -900,7 +900,7 @@ async function processMod(): Promise<void> {
     (key) => itemMap[key],
   );
 
-  // Add any entities that are not placed by the added items
+  // Exclude any entities that are placed by the added items
   const placedEntities = new Set<string>();
   for (const proto of itemsUsedProtos) {
     if (!M.isFluidPrototype(proto) && proto.place_result != null) {
@@ -1120,54 +1120,65 @@ async function processMod(): Promise<void> {
       };
 
       if (proto.place_result) {
+        let result = proto.place_result;
+        /**
+         * GH Issue #1310 - Freight Forwarding rocket silo appears to be placed
+         * by a script on top of a `ff-rocket-silo-dummy` automatically, which
+         * is a mining drill, so that the rocket silo is forced to be placed in
+         * a specific place (leveraging drill placement rules). There does not
+         * appear to be any connection between the entities in the raw data, so
+         * this needs to be a hard-coded conversion.
+         */
+        if (result === 'ff-rocket-silo-dummy') result = 'rocket-silo';
+
         // Parse beacon
-        if (dataRaw.beacon[proto.place_result]) {
-          const entity = dataRaw.beacon[proto.place_result];
+        if (dataRaw.beacon[result]) {
+          const entity = dataRaw.beacon[result];
           item.beacon = getBeacon(entity);
         }
 
         // Parse machine
-        if (dataRaw.boiler[proto.place_result]) {
-          const entity = dataRaw.boiler[proto.place_result];
+        if (dataRaw.boiler[result]) {
+          const entity = dataRaw.boiler[result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['assembling-machine'][proto.place_result]) {
-          const entity = dataRaw['assembling-machine'][proto.place_result];
+        } else if (dataRaw['assembling-machine'][result]) {
+          const entity = dataRaw['assembling-machine'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['rocket-silo'][proto.place_result]) {
-          const entity = dataRaw['rocket-silo'][proto.place_result];
+        } else if (dataRaw['rocket-silo'][result]) {
+          const entity = dataRaw['rocket-silo'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw.furnace[proto.place_result]) {
-          const entity = dataRaw.furnace[proto.place_result];
+        } else if (dataRaw.furnace[result]) {
+          const entity = dataRaw.furnace[result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw.lab[proto.place_result]) {
-          const entity = dataRaw.lab[proto.place_result];
+        } else if (dataRaw.lab[result]) {
+          const entity = dataRaw.lab[result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['mining-drill'][proto.place_result]) {
-          const entity = dataRaw['mining-drill'][proto.place_result];
+        } else if (dataRaw['mining-drill'][result]) {
+          const entity = dataRaw['mining-drill'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['offshore-pump'][proto.place_result]) {
-          const entity = dataRaw['offshore-pump'][proto.place_result];
+        } else if (dataRaw['offshore-pump'][result]) {
+          const entity = dataRaw['offshore-pump'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['reactor'][proto.place_result]) {
-          const entity = dataRaw['reactor'][proto.place_result];
+        } else if (dataRaw['reactor'][result]) {
+          const entity = dataRaw['reactor'][result];
           item.machine = getMachine(entity, proto.name);
         }
 
         // Parse transport belt
-        if (dataRaw['transport-belt'][proto.place_result]) {
-          const entity = dataRaw['transport-belt'][proto.place_result];
+        if (dataRaw['transport-belt'][result]) {
+          const entity = dataRaw['transport-belt'][result];
           item.belt = getBelt(entity);
         }
 
         // Parse cargo wagon
-        if (dataRaw['cargo-wagon'][proto.place_result]) {
-          const entity = dataRaw['cargo-wagon'][proto.place_result];
+        if (dataRaw['cargo-wagon'][result]) {
+          const entity = dataRaw['cargo-wagon'][result];
           item.cargoWagon = getCargoWagon(entity);
         }
 
         // Parse fluid wagon
-        if (dataRaw['fluid-wagon'][proto.place_result]) {
-          const entity = dataRaw['fluid-wagon'][proto.place_result];
+        if (dataRaw['fluid-wagon'][result]) {
+          const entity = dataRaw['fluid-wagon'][result];
           item.fluidWagon = getFluidWagon(entity);
         }
       }
