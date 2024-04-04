@@ -60,17 +60,17 @@ export class HeaderComponent {
 
   links: MenuLink[] = [
     {
-      label: 'Source',
+      label: 'header.source',
       icon: 'fa-brands fa-github',
       href: 'https://github.com/factoriolab/factoriolab',
     },
     {
-      label: 'Discord',
+      label: 'header.discord',
       icon: 'fa-brands fa-discord',
       href: 'https://discord.gg/N4FKV687x2',
     },
     {
-      label: 'Support',
+      label: 'header.support',
       icon: 'fa-solid fa-mug-hot',
       href: 'https://ko-fi.com/dcbroad3',
     },
