@@ -8,26 +8,10 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { Confirmation, Message } from 'primeng/api';
-import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
 import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
 
 import { environment } from 'src/environments';
 import { APP, Breakpoint } from '~/models';
-
-/**
- * Workaround for https://github.com/primefaces/primeng/issues/12114.
- * Manually add the main window to the list of scrollable parents, so that when
- * the main window is scrolled, dropdowns will be closed.
- */
-ConnectedOverlayScrollHandler.prototype.bindScrollListener = function (
-  this,
-): void {
-  this.scrollableParents = DomHandler.getScrollableParents(this.element);
-  this.scrollableParents.push(window);
-  for (const parent of this.scrollableParents) {
-    parent.addEventListener('scroll', this.listener);
-  }
-};
 
 @Injectable({
   providedIn: 'root',

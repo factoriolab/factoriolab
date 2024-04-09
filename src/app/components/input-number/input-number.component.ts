@@ -5,8 +5,10 @@ import {
   EventEmitter,
   HostBinding,
   input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounce, map, of, Subject, tap, timer } from 'rxjs';
@@ -27,7 +29,7 @@ interface Event {
   styleUrls: ['./input-number.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputNumberComponent implements OnInit {
+export class InputNumberComponent implements OnInit, OnChanges {
   value = input(rational(0n));
   minimum = input<Rational | null>(rational(0n));
   maximum = input<Rational | null>(null);
@@ -35,6 +37,8 @@ export class InputNumberComponent implements OnInit {
   inputId = input('inputnumber');
   hideButtons = input(false);
   textButtons = input(false);
+
+  _value = '';
 
   @Output() setValue = new EventEmitter<Rational>();
 
@@ -78,14 +82,25 @@ export class InputNumberComponent implements OnInit {
     this.emitFilteredValues$.subscribe();
   }
 
-  changeValue(value: string, type: EventType): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['value']) return;
+    if (!this._value || !rational(this._value).eq(this.value()))
+      this._value = this.value().toString();
+  }
+
+  changeValue(type: EventType): void {
     try {
+      let value = this._value;
       const rat = rational(value);
       const min = this.minimum();
       const max = this.maximum();
       if ((min == null || rat.gte(min)) && (max == null || rat.lte(max))) {
-        // Simplify value once user is finished
-        if (type !== 'input') value = rat.toString();
+        if (type === 'enter') {
+          // Simplify value if user hits enter
+          value = rat.toString();
+          this._value = value;
+        }
+
         this.setValue$.next({ value, type });
         return;
       }
