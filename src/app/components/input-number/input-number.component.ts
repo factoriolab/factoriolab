@@ -90,13 +90,17 @@ export class InputNumberComponent implements OnInit, OnChanges {
 
   changeValue(type: EventType): void {
     try {
-      const value = this._value;
+      let value = this._value;
       const rat = rational(value);
       const min = this.minimum();
       const max = this.maximum();
       if ((min == null || rat.gte(min)) && (max == null || rat.lte(max))) {
-        // Simplify value if user hits enter
-        if (type === 'enter') this._value = rat.toString();
+        if (type === 'enter') {
+          // Simplify value if user hits enter
+          value = rat.toString();
+          this._value = value;
+        }
+
         this.setValue$.next({ value, type });
         return;
       }
