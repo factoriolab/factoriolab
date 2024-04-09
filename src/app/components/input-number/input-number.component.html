@@ -1,19 +1,18 @@
 <span class="p-inputnumber p-component p-inputnumber-buttons-stacked">
   <input
-    #input
     pInputText
     [id]="inputId()"
     type="text"
     class="text-end"
     [class.hidden-buttons]="hideButtons()"
     [style.width]="width()"
-    [ngModel]="value()"
+    [(ngModel)]="_value"
     labValidateNumber
     [minimum]="minimum()"
     [maximum]="maximum()"
-    (input)="changeValue(input.value, 'input')"
-    (blur)="changeValue(input.value, 'blur')"
-    (keydown.enter)="changeValue(input.value, 'enter')"
+    (input)="changeValue('input')"
+    (blur)="changeValue('blur')"
+    (keydown.enter)="changeValue('enter')"
   />
   @if (!hideButtons()) {
     <span class="p-inputnumber-button-group">
