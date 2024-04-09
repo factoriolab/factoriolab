@@ -321,6 +321,8 @@
     "selectAnItem": "Select an item",
     "selectARecipe": "Select a recipe",
     "valueTooltip": "Set value",
+    "valueWeightTooltip": "Set weight",
+    "valueRatioTooltip": "Set ratio",
     "unitTooltip": "Select units",
     "addItems": "Add items",
     "addMachines": "Add machines",
