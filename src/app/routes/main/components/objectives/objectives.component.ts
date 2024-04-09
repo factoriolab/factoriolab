@@ -15,6 +15,7 @@ import {
   DisplayRate,
   displayRateOptions,
   MatrixResult,
+  MaximizeType,
   Objective,
   ObjectiveBase,
   ObjectiveType,
@@ -47,34 +48,32 @@ export class ObjectivesComponent {
   contentSvc = inject(ContentService);
   trackSvc = inject(TrackService);
 
-  messages = computed(() => {
-    const objectives = this.store.selectSignal(Objectives.getObjectives);
-    const result = this.store.selectSignal(Objectives.getMatrixResult);
-    const itemsState = this.store.selectSignal(Items.getItemsState);
-    const recipesState = this.store.selectSignal(Recipes.getRecipesState);
-    return this.getMessages(
-      objectives(),
-      result(),
-      itemsState(),
-      recipesState(),
-    );
-  });
-  objectives = computed(() => {
-    const objectives = this.store.selectSignal(Objectives.getObjectives);
-    return [...objectives()];
-  });
+  _objectives = this.store.selectSignal(Objectives.getObjectives);
+  result = this.store.selectSignal(Objectives.getMatrixResult);
   itemsState = this.store.selectSignal(Items.getItemsState);
+  recipesState = this.store.selectSignal(Recipes.getRecipesState);
   itemIds = this.store.selectSignal(Recipes.getAvailableItems);
   data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  maximizeType = this.store.selectSignal(Settings.getMaximizeType);
   beltSpeed = this.store.selectSignal(Settings.getBeltSpeed);
   dispRateInfo = this.store.selectSignal(Settings.getDisplayRateInfo);
   rateUnitOptions = this.store.selectSignal(Settings.getObjectiveUnitOptions);
   recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
   paused = this.store.selectSignal(Preferences.getPaused);
+  objectives = computed(() => [...this._objectives()]);
+  messages = computed(() =>
+    this.getMessages(
+      this._objectives(),
+      this.result(),
+      this.itemsState(),
+      this.recipesState(),
+    ),
+  );
 
   objectiveTypeOptions = objectiveTypeOptions;
   displayRateOptions = displayRateOptions;
 
+  MaximizeType = MaximizeType;
   ObjectiveUnit = ObjectiveUnit;
   ObjectiveType = ObjectiveType;
 
