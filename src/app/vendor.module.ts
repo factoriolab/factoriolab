@@ -44,6 +44,7 @@ ConnectedOverlayScrollHandler.prototype.bindScrollListener = function (
     parent.addEventListener('scroll', this.listener);
 };
 
+// istanbul ignore next
 /** Allow entering spaces inside orderlist items */
 OrderList.prototype.onSpaceKey = function (): void {};
 

@@ -56,21 +56,32 @@ describe('InputNumberComponent', () => {
 
   describe('changeValue', () => {
     it('should emit an input value', fakeAsync(() => {
-      component.changeValue('1 1/3', 'input');
+      component._value = '1 1/3';
+      component.changeValue('input');
       tick(500);
       expect(emit).toHaveBeenCalledWith(rational(4n, 3n));
     }));
 
     it('should emit a blur value', fakeAsync(() => {
-      component.changeValue('1 1/3', 'blur');
+      component._value = '1 1/3';
+      component.changeValue('blur');
       tick(500);
       expect(emit).toHaveBeenCalledWith(rational(4n, 3n));
     }));
 
     it('should not emit invalid values', fakeAsync(() => {
-      component.changeValue('abc', 'input');
+      component._value = 'abc';
+      component.changeValue('input');
       tick(500);
       expect(emit).not.toHaveBeenCalled();
+    }));
+
+    it('should simplify values when the user hits enter', fakeAsync(() => {
+      component._value = '1 1/3';
+      component.changeValue('enter');
+      tick(500);
+      expect(emit).toHaveBeenCalledWith(rational(4n, 3n));
+      expect(component._value).toEqual('4/3');
     }));
   });
 

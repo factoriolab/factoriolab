@@ -7,7 +7,7 @@ import {
 } from '@angular/core/testing';
 import { FormsModule, NgForm } from '@angular/forms';
 
-import { Rational, rational } from '~/models';
+import { rational } from '~/models';
 import { ValidateNumberDirective } from './validate-number.directive';
 
 @Component({
@@ -22,7 +22,7 @@ import { ValidateNumberDirective } from './validate-number.directive';
 })
 class TestValidateNumberDirectiveComponent {
   frm = viewChild.required<NgForm>('frm');
-  model: Rational | null = null;
+  model?: string;
   minimum = rational(1n);
 }
 
@@ -54,14 +54,14 @@ describe('ValidateNumberDirective', () => {
     });
 
     it('should validate a valid number', fakeAsync(() => {
-      component.model = rational(4n, 3n);
+      component.model = '4/3';
       fixture.detectChanges();
       tick();
       expect(component.frm().valid).toBeTrue();
     }));
 
     it('should invalidate value below minimum value', fakeAsync(() => {
-      component.model = rational(0n);
+      component.model = '0';
       fixture.detectChanges();
       tick();
       expect(component.frm().valid).toBeFalse();
