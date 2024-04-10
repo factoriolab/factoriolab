@@ -63,12 +63,12 @@ describe('FlowComponent', () => {
       select(`#${SVG_ID} > *`).remove();
     });
 
-    it('should return if the svg container is not found', () => {
-      spyOn(component, 'getLayout');
-      component.svgElement = undefined;
-      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
-      expect(component.getLayout).not.toHaveBeenCalled();
-    });
+    // it('should return if the svg container is not found', () => {
+    //   spyOn(component, 'getLayout');
+    //   component.svgElement = undefined;
+    //   component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+    //   expect(component.getLayout).not.toHaveBeenCalled();
+    // });
 
     it('should build the sankey', () => {
       component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);

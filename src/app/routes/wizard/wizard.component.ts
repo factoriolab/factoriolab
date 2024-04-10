@@ -10,7 +10,7 @@ import {
   displayRateOptions,
   ObjectiveType,
   ObjectiveUnit,
-  Rational,
+  rational,
 } from '~/models';
 import { LabState, Objectives, Recipes, Settings } from '~/store';
 
@@ -32,7 +32,7 @@ export class WizardComponent {
   displayRate = this.store.selectSignal(Settings.getDisplayRate);
 
   id = '';
-  value = Rational.one;
+  value = rational(1n);
   state: WizardState = 'type';
 
   displayRateOptions = displayRateOptions;
@@ -49,13 +49,13 @@ export class WizardComponent {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  createItemObjective(targetId: string, unit: ObjectiveUnit): void {
+  createItemObjective(targetId: string): void {
     this.store.dispatch(
       new Objectives.CreateAction({
         id: '0',
         targetId,
         value: this.value,
-        unit,
+        unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       }),
     );

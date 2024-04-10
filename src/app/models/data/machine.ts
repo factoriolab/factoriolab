@@ -1,10 +1,10 @@
-import { Entities } from '../entities';
+import { Entities, toRationalEntities } from '../entities';
 import { EnergyType } from '../enum';
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 import { ModuleEffect } from './module';
-import { Silo, SiloRational } from './silo';
+import { parseSilo, Silo, SiloJson } from './silo';
 
-export interface Machine {
+export interface MachineJson {
   /** If undefined, speed is based on belt speed */
   speed?: number | string;
   modules?: number | true;
@@ -20,16 +20,16 @@ export interface Machine {
   drain?: number | string;
   /** Pollution in #/m */
   pollution?: number | string;
-  silo?: Silo;
+  silo?: SiloJson;
   consumption?: Entities<number | string>;
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
 }
 
-export class MachineRational {
+export interface Machine {
   /** If undefined, speed is based on belt speed */
   speed?: Rational;
-  modules?: number | true;
+  modules?: Rational | true;
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
@@ -40,36 +40,32 @@ export class MachineRational {
   usage?: Rational;
   drain?: Rational;
   pollution?: Rational;
-  silo?: SiloRational;
+  silo?: Silo;
   consumption?: Entities<Rational>;
   /** Width and height in tiles (integers, unless off-grid entity like tree) */
   size?: [number, number];
+}
 
-  constructor(obj: Machine) {
-    this.disallowedEffects = obj.disallowedEffects;
-    this.type = obj.type;
-    this.fuelCategories = obj.fuelCategories;
-    this.fuel = obj.fuel;
-    this.size = obj.size;
-    this.speed = Rational.from(obj.speed);
-    this.modules = obj.modules;
-    this.usage = Rational.from(obj.usage);
-    this.drain = Rational.from(obj.drain);
-    this.pollution = Rational.from(obj.pollution);
-
-    if (obj.silo) {
-      this.silo = new SiloRational(obj.silo);
-    }
-
-    if (obj.consumption) {
-      const consumption = obj.consumption;
-      this.consumption = Object.keys(consumption).reduce(
-        (e: Entities<Rational>, i) => {
-          e[i] = Rational.from(consumption[i]);
-          return e;
-        },
-        {},
-      );
-    }
-  }
+export function parseMachine(json: MachineJson): Machine;
+export function parseMachine(
+  json: MachineJson | undefined,
+): Machine | undefined;
+export function parseMachine(
+  json: MachineJson | undefined,
+): Machine | undefined {
+  if (json == null) return;
+  return {
+    speed: rational(json.speed),
+    modules: json.modules === true ? json.modules : rational(json.modules),
+    disallowedEffects: json.disallowedEffects,
+    type: json.type,
+    fuelCategories: json.fuelCategories,
+    fuel: json.fuel,
+    usage: rational(json.usage),
+    drain: rational(json.drain),
+    pollution: rational(json.pollution),
+    silo: parseSilo(json.silo),
+    consumption: toRationalEntities(json.consumption),
+    size: json.size,
+  };
 }

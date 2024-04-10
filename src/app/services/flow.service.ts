@@ -4,13 +4,14 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, switchMap } from 'rxjs';
 
 import {
+  AdjustedDataset,
   ColumnsState,
-  Dataset,
   Entities,
   FlowData,
   Icon,
   LinkValue,
   MIN_LINK_VALUE,
+  rational,
   Rational,
   Step,
 } from '~/models';
@@ -53,7 +54,7 @@ export class FlowService {
     suffix: string,
     itemsState: Items.ItemsState,
     preferences: Preferences.PreferencesState,
-    data: Dataset,
+    data: AdjustedDataset,
   ): FlowData {
     const itemPrec = preferences.columns.items.precision;
     const machinePrec = preferences.columns.machines.precision;
@@ -259,17 +260,17 @@ export class FlowService {
 
   stepLinkValue(step: Step, prop: LinkValue): Rational {
     if (prop === LinkValue.None || prop === LinkValue.Percent)
-      return Rational.one;
+      return rational(1n);
 
     switch (prop) {
       case LinkValue.Belts:
-        return step.belts ?? Rational.zero;
+        return step.belts ?? rational(0n);
       case LinkValue.Wagons:
-        return step.wagons ?? Rational.zero;
+        return step.wagons ?? rational(0n);
       case LinkValue.Machines:
-        return step.machines ?? Rational.zero;
+        return step.machines ?? rational(0n);
       default:
-        return step.items ?? Rational.zero;
+        return step.items ?? rational(0n);
     }
   }
 
@@ -289,7 +290,7 @@ export class FlowService {
 
     // Scale link size for fluids to 1/10
     if (prop === LinkValue.Items && stack == null)
-      value = value.div(Rational.ten);
+      value = value.div(rational(10n));
 
     return value.mul(percent).toNumber() || MIN_LINK_VALUE;
   }
@@ -305,7 +306,7 @@ export class FlowService {
       case LinkValue.None:
         return '';
       case LinkValue.Percent:
-        return `${Math.round(percent.mul(Rational.hundred).toNumber())}%`;
+        return `${Math.round(percent.mul(rational(100n)).toNumber())}%`;
       default: {
         const suffix = [LinkValue.Items, LinkValue.Wagons].includes(prop)
           ? rateSuffix

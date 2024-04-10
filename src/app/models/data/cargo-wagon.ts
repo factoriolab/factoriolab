@@ -1,13 +1,20 @@
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
-export interface CargoWagon {
-  size: number;
+export interface CargoWagonJson {
+  size: number | string;
 }
 
-export class CargoWagonRational {
+export interface CargoWagon {
   size: Rational;
+}
 
-  constructor(obj: CargoWagon) {
-    this.size = Rational.from(obj.size);
-  }
+export function parseCargoWagon(json: CargoWagonJson): CargoWagon;
+export function parseCargoWagon(
+  json: CargoWagonJson | undefined,
+): CargoWagon | undefined;
+export function parseCargoWagon(
+  json: CargoWagonJson | undefined,
+): CargoWagon | undefined {
+  if (json == null) return;
+  return { size: rational(json.size) };
 }

@@ -1,14 +1,13 @@
 import { Action } from '@ngrx/store';
 
 import {
-  CostsState,
+  CostSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
   MaximizeType,
   Preset,
   Rational,
-  ResearchSpeed,
   ValueDefaultPayload,
   ValuePreviousPayload,
 } from '~/models';
@@ -28,7 +27,7 @@ export const enum SettingsActionType {
   SET_FLOW_RATE = '[Settings] Set Flow Rate',
   SET_INSERTER_TARGET = '[Settings] Set Inserter Target',
   SET_MINING_BONUS = '[Settings] Set Mining Bonus',
-  SET_RESEARCH_SPEED = '[Settings] Set Research Speed',
+  SET_RESEARCH_BONUS = '[Settings] Set Research Bonus',
   SET_INSERTER_CAPACITY = '[Settings] Set Inserter Capacity',
   SET_DISPLAY_RATE = '[Settings] Set Display Rate',
   SET_MAXIMIZE_TYPE = '[Settings] Set Maximize Type',
@@ -106,9 +105,9 @@ export class SetMiningBonusAction implements Action {
   constructor(public payload: Rational) {}
 }
 
-export class SetResearchSpeedAction implements Action {
-  readonly type = SettingsActionType.SET_RESEARCH_SPEED;
-  constructor(public payload: ResearchSpeed) {}
+export class SetResearchBonusAction implements Action {
+  readonly type = SettingsActionType.SET_RESEARCH_BONUS;
+  constructor(public payload: Rational) {}
 }
 
 export class SetInserterCapacityAction implements Action {
@@ -128,7 +127,7 @@ export class SetMaximizeTypeAction implements Action {
 
 export class SetCostsAction implements Action {
   readonly type = SettingsActionType.SET_COSTS;
-  constructor(public payload: CostsState) {}
+  constructor(public payload: CostSettings) {}
 }
 
 export class ResetCostAction implements Action {
@@ -150,7 +149,7 @@ export type SettingsAction =
   | SetFlowRateAction
   | SetInserterTargetAction
   | SetMiningBonusAction
-  | SetResearchSpeedAction
+  | SetResearchBonusAction
   | SetInserterCapacityAction
   | SetDisplayRateAction
   | SetMaximizeTypeAction

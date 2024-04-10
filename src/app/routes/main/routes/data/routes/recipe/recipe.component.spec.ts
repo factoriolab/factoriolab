@@ -30,6 +30,8 @@ describe('RecipeComponent', () => {
     });
   });
 
+  afterEach(() => mockStore.resetSelectors());
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -65,7 +67,7 @@ describe('RecipeComponent', () => {
 
     it('should default to empty excluded recipe ids array', () => {
       spyOn(component, 'setRecipeExcluded');
-      const data = { ...Mocks.getDataset(), ...{ defaults: null } };
+      const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
       mockStore.overrideSelector(Recipes.getAdjustedDataset, data);
       mockStore.refreshState();
       component.toggleRecipe();

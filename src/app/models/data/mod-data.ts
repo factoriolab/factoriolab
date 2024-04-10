@@ -1,17 +1,17 @@
 import { Entities } from '../entities';
-import { Category } from './category';
-import { Icon } from './icon';
-import { Item } from './item';
-import { ModDefaults } from './mod-defaults';
-import { Recipe } from './recipe';
+import { CategoryJson } from './category';
+import { DefaultsJson } from './defaults';
+import { IconJson } from './icon';
+import { ItemJson } from './item';
+import { RecipeJson } from './recipe';
 
 export interface ModData {
   version: Entities<string>;
   expensive?: boolean;
-  categories: Category[];
-  icons: Icon[];
-  items: Item[];
-  recipes: Recipe[];
+  categories: CategoryJson[];
+  icons: IconJson[];
+  items: ItemJson[];
+  recipes: RecipeJson[];
   limitations: Entities<string[]>;
-  defaults?: ModDefaults;
+  defaults?: DefaultsJson;
 }

@@ -1,6 +1,7 @@
 import { createSelector } from '@ngrx/store';
 
-import { Entities, RecipeSettings } from '~/models';
+import { coalesce } from '~/helpers';
+import { Entities, rational, RecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
@@ -20,7 +21,7 @@ export const getRecipesState = createSelector(
   (state, machinesState, data) => {
     const value: Entities<RecipeSettings> = {};
     const defaultExcludedRecipeIds = new Set(
-      data.defaults?.excludedRecipeIds ?? [],
+      coalesce(data.defaults?.excludedRecipeIds, []),
     );
 
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
@@ -55,7 +56,7 @@ export const getRecipesState = createSelector(
             s.moduleOptions,
             def.modules,
             machinesState.moduleRankIds,
-            machine.modules ?? 0,
+            coalesce(machine.modules, rational(0n)),
           );
         }
 
@@ -96,19 +97,25 @@ export const getAdjustedDataset = createSelector(
   getRecipesState,
   getExcludedRecipeIds,
   Items.getItemsState,
+  Settings.getAvailableRecipes,
   Settings.getCosts,
   Settings.getAdjustmentData,
   Settings.getDataset,
-  (recipesState, excludedRecipeIds, itemsState, costs, adj, data) =>
+  (
+    recipesState,
+    excludedRecipeIds,
+    itemsState,
+    recipeIds,
+    costs,
+    adjustmentData,
+    data,
+  ) =>
     RecipeUtility.adjustDataset(
-      adj.recipeIds,
+      recipeIds,
       excludedRecipeIds,
       recipesState,
       itemsState,
-      adj.proliferatorSprayId,
-      adj.miningBonus,
-      adj.researchSpeed,
-      adj.netProductionOnly,
+      adjustmentData,
       costs,
       data,
     ),

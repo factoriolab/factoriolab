@@ -185,18 +185,9 @@
             type="button"
             class="p-button-outlined p-button-rounded"
             icon="fa-solid fa-file-arrow-down"
-            data-test="lab-list-export"
             [pTooltip]="'steps.downloadTooltip' | translate"
             tooltipPosition="left"
-            (click)="
-              export(
-                steps(),
-                itemsState(),
-                recipesState(),
-                columnsState(),
-                data()
-              )
-            "
+            (click)="exportSvc.stepsToCsv(steps())"
           ></button>
         </th>
       }
@@ -309,7 +300,7 @@
               </span>
             }
             <span class="monospace">{{
-              step.items.sub(step.surplus || Rational.zero)
+              step.items.sub(step.surplus ?? rational(0))
                 | rate: columnsState().items.precision
             }}</span>
           </td>
@@ -736,7 +727,7 @@
                 }
                 @if (step.recipeSettings?.modules; as modules) {
                   @if (data().machineEntities[machineId]; as machine) {
-                    @if (machine.modules === 1) {
+                    @if (machine.modules !== true && machine.modules?.isOne()) {
                       <p-dropdown
                         labDropdownBase="icon"
                         labNoDrag
@@ -746,7 +737,7 @@
                         (onChange)="
                           changeRecipeField(
                             step,
-                            [{ id: $event.value, count: Rational.one }],
+                            [{ id: $event.value, count: rational(1) }],
                             'modules'
                           )
                         "
@@ -925,7 +916,7 @@
     <!-- Details row tab menu -->
     @if (_step | asStep; as step) {
       <tr class="detail">
-        <td>
+        <td class="px-1">
           <a
             class="text-decoration-none"
             routerLink="."
@@ -1299,7 +1290,7 @@
                     <tr>
                       <td class="w-0 text-end">
                         <span class="monospace">{{
-                          Rational.one | rate: columnsState().machines.precision
+                          rational(1) | rate: columnsState().machines.precision
                         }}</span>
                       </td>
                       <td>
@@ -1717,7 +1708,7 @@
             context: {
               columnSettings: columnsState().machines,
               totals: totals().machines,
-              modulesTotals: totals().machineModules,
+              modulesTotals: totals().modules,
               type: 'machine'
             }
           "
@@ -1807,7 +1798,7 @@
                 tot of modulesTotals | keyvalue: trackSvc.sortByValue;
                 track tot.key
               ) {
-                <div class="py-2 icon-height">
+                <div class="p-2 icon-height text-end">
                   <span class="monospace">{{ tot.value }}</span>
                 </div>
                 <i

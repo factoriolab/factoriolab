@@ -2,7 +2,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestModule } from 'src/tests';
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { Settings } from '~/store';
 import { CostsComponent } from './costs.component';
 
@@ -32,7 +32,7 @@ describe('CostsComponent', () => {
     it('should determine whether the value matches the initial state', () => {
       component.reset();
       expect(component.modified).toBeFalse();
-      component.editValue['surplus'] = Rational.one;
+      component.editValue['surplus'] = rational(1n);
       expect(component.modified).toBeTrue();
     });
   });

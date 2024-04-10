@@ -1,4 +1,4 @@
-export interface ModDefaults {
+export interface DefaultsJson {
   beacon?: string;
   minBelt?: string;
   maxBelt?: string;
@@ -6,7 +6,7 @@ export interface ModDefaults {
   maxPipe?: string;
   cargoWagon?: string;
   fluidWagon?: string;
-  excludedRecipes: string[];
+  excludedRecipes?: string[];
   fuelRank?: string[];
   minMachineRank?: string[];
   maxMachineRank?: string[];

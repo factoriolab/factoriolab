@@ -86,7 +86,7 @@
       "pollutionPerMinute": "Pollution/m",
       "pollutionPerHour": "Pollution/h"
     },
-    "researchSpeed": {
+    "researchBonus": {
       "speed0": "No research bonus",
       "speed1": "Research speed 1",
       "speed2": "Research speed 2",
@@ -107,7 +107,28 @@
       "machine": "Machine",
       "recipes": "Recipes"
     },
-    "theme": { "light": "Light", "dark": "Dark (Default)", "black": "Black" }
+    "theme": { "light": "Light", "dark": "Dark (Default)", "black": "Black" },
+    "flowDiagram": { "sankey": "Sankey", "boxLine": "Box-line" },
+    "linkValue": {
+      "none": "None",
+      "percent": "Percent",
+      "items": "Items",
+      "belts": "Belts",
+      "wagons": "Wagons",
+      "machines": "Machines"
+    },
+    "powerUnit": {
+      "auto": "Auto",
+      "kW": "kW",
+      "MW": "MW",
+      "GW": "GW"
+    },
+    "sankeyAlign": {
+      "justify": "Justify",
+      "left": "Left",
+      "right": "Right",
+      "center": "Center"
+    }
   },
   "columns": {
     "header": "Column settings",
@@ -154,6 +175,11 @@
     "available": "Available",
     "locked": "Locked",
     "researched": "Researched"
+  },
+  "header": {
+    "source": "Source",
+    "discord": "Discord",
+    "support": "Support"
   },
   "landing": {
     "welcome": "Welcome to <b>FactorioLab</b>! Let's get to work.",
@@ -214,6 +240,7 @@
     "machineDefaults": "Machine defaults",
     "machineTooltip": "Select machine preference",
     "fuelTooltip": "Select fuel",
+    "modifierCountTooltip": "Select modifier count",
     "modifierTooltip": "Select modifier",
     "overclockTooltip": "Set overclock percentage",
     "beaconCountTooltip": "Set beacon count",
@@ -260,6 +287,7 @@
     "displayRateTooltip": "Set the unit of time to use in rates",
     "powerUnit": "Power units",
     "powerUnitTooltip": "Set the unit of power to use in the power column",
+    "wiki": "Wiki",
     "helpTranslate": "Help translate",
     "language": "Language",
     "languageTooltip": "Select language",
@@ -295,6 +323,8 @@
     "selectAnItem": "Select an item",
     "selectARecipe": "Select a recipe",
     "valueTooltip": "Set value",
+    "valueWeightTooltip": "Set weight",
+    "valueRatioTooltip": "Set ratio",
     "unitTooltip": "Select units",
     "addItems": "Add items",
     "addMachines": "Add machines",
@@ -322,6 +352,7 @@
     "downloadTooltip": "Download list as CSV",
     "showDetails": "Show details",
     "hideDetails": "Hide details",
+    "modifierCountTooltip": "Select modifier count",
     "overclockTooltip": "Overclock percentage",
     "beaconEachTooltip": "Beacons per machine",
     "beaconTotalTooltip": "Total beacons",

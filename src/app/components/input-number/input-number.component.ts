@@ -5,14 +5,16 @@ import {
   EventEmitter,
   HostBinding,
   input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { debounce, map, of, Subject, tap, timer } from 'rxjs';
 
 import { filterNullish } from '~/helpers';
-import { Rational } from '~/models';
+import { rational, Rational } from '~/models';
 
 type EventType = 'input' | 'blur' | 'enter';
 
@@ -27,15 +29,17 @@ interface Event {
   styleUrls: ['./input-number.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputNumberComponent implements OnInit {
-  value = input.required<Rational>();
-  minimum = input<Rational | null | undefined>(Rational.zero);
-  maximum = input<Rational | null | undefined>(null);
+export class InputNumberComponent implements OnInit, OnChanges {
+  value = input(rational(0n));
+  minimum = input<Rational | null>(rational(0n));
+  maximum = input<Rational | null>(null);
   width = input('');
   inputId = input('inputnumber');
   disabled = input(false);
   hideButtons = input(false);
   textButtons = input(false);
+
+  _value = '';
 
   @Output() setValue = new EventEmitter<Rational>();
 
@@ -72,24 +76,32 @@ export class InputNumberComponent implements OnInit {
     debounce((e) => (e.type === 'input' ? timer(300) : of({}))),
     map((e) => e.value),
     filterNullish(),
-    tap((v) => this.setValue.emit(Rational.fromString(v))),
+    tap((v) => this.setValue.emit(rational(v))),
   );
 
   ngOnInit(): void {
     this.emitFilteredValues$.subscribe();
   }
 
-  changeValue(value: string, type: EventType): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['value']) return;
+    if (!this._value || !rational(this._value).eq(this.value()))
+      this._value = this.value().toString();
+  }
+
+  changeValue(type: EventType): void {
     try {
-      const rational = Rational.fromString(value);
+      let value = this._value;
+      const rat = rational(value);
       const min = this.minimum();
       const max = this.maximum();
-      if (
-        (min == null || rational.gte(min)) &&
-        (max == null || rational.lte(max))
-      ) {
-        // Simplify value once user is finished
-        if (type !== 'input') value = rational.toString();
+      if ((min == null || rat.gte(min)) && (max == null || rat.lte(max))) {
+        if (type === 'enter') {
+          // Simplify value if user hits enter
+          value = rat.toString();
+          this._value = value;
+        }
+
         this.setValue$.next({ value, type });
         return;
       }
@@ -103,7 +115,7 @@ export class InputNumberComponent implements OnInit {
     try {
       const value = this.value();
       const newValue = value.isInteger()
-        ? value.add(Rational.one)
+        ? value.add(rational(1n))
         : value.ceil();
       const max = this.maximum();
       if (max == null || newValue.lte(max)) this.setValue.emit(newValue);
@@ -116,7 +128,7 @@ export class InputNumberComponent implements OnInit {
     try {
       const value = this.value();
       const newValue = value.isInteger()
-        ? value.sub(Rational.one)
+        ? value.sub(rational(1n))
         : value.floor();
       const min = this.minimum();
       if (min == null || newValue.gte(min)) this.setValue.emit(newValue);

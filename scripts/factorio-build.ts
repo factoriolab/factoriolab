@@ -3,16 +3,17 @@ import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
+import { coalesce } from '~/helpers';
 import {
-  Category,
+  CategoryJson,
   Entities,
-  Fuel,
-  Item,
-  Machine,
+  FuelJson,
+  ItemJson,
+  MachineJson,
   ModData,
   ModHash,
-  Recipe,
-  Technology,
+  RecipeJson,
+  TechnologyJson,
 } from '~/models';
 import * as D from './factorio-build.models';
 import * as M from './factorio.models';
@@ -494,8 +495,8 @@ async function processMod(): Promise<void> {
     return [record, catalyst, total, temps];
   }
 
-  function getMachine(proto: D.MachineProto, name: string): Machine {
-    const machine: Machine = {
+  function getMachine(proto: D.MachineProto, name: string): MachineJson {
+    const machine: MachineJson = {
       speed: getMachineSpeed(proto),
       modules: getMachineModules(proto),
       disallowedEffects: getMachineDisallowedEffects(proto),
@@ -899,7 +900,7 @@ async function processMod(): Promise<void> {
     (key) => itemMap[key],
   );
 
-  // Add any entities that are not placed by the added items
+  // Exclude any entities that are placed by the added items
   const placedEntities = new Set<string>();
   for (const proto of itemsUsedProtos) {
     if (!M.isFluidPrototype(proto) && proto.place_result != null) {
@@ -986,7 +987,7 @@ async function processMod(): Promise<void> {
         }
       }
 
-      let fuel: Fuel | undefined;
+      let fuel: FuelJson | undefined;
       if (proto.fuel_value) {
         fuel = {
           category: ANY_FLUID_BURN,
@@ -1012,7 +1013,7 @@ async function processMod(): Promise<void> {
 
       temps.forEach((temp, i) => {
         const id = i === 0 ? proto.name : `${proto.name}-${temp}`;
-        const itemTemp: Item = {
+        const itemTemp: ItemJson = {
           id,
           name: fluidLocale.names[proto.name],
           category: group.name,
@@ -1032,7 +1033,7 @@ async function processMod(): Promise<void> {
             const tempDiff = temp - proto.default_temperature;
             const energyGenerated =
               tempDiff * getEnergyInMJ(proto.heat_capacity ?? '1KJ');
-            const heatFuel: Fuel = {
+            const heatFuel: FuelJson = {
               category: ANY_FLUID_HEAT,
               value: round(energyGenerated, 10),
             };
@@ -1109,7 +1110,7 @@ async function processMod(): Promise<void> {
         fluidWagon: getFluidWagon(proto),
       });
     } else {
-      const item: Item = {
+      const item: ItemJson = {
         id: proto.name,
         name: itemLocale.names[proto.name],
         category: group.name,
@@ -1119,54 +1120,65 @@ async function processMod(): Promise<void> {
       };
 
       if (proto.place_result) {
+        let result = proto.place_result;
+        /**
+         * GH Issue #1310 - Freight Forwarding rocket silo appears to be placed
+         * by a script on top of a `ff-rocket-silo-dummy` automatically, which
+         * is a mining drill, so that the rocket silo is forced to be placed in
+         * a specific place (leveraging drill placement rules). There does not
+         * appear to be any connection between the entities in the raw data, so
+         * this needs to be a hard-coded conversion.
+         */
+        if (result === 'ff-rocket-silo-dummy') result = 'rocket-silo';
+
         // Parse beacon
-        if (dataRaw.beacon[proto.place_result]) {
-          const entity = dataRaw.beacon[proto.place_result];
+        if (dataRaw.beacon[result]) {
+          const entity = dataRaw.beacon[result];
           item.beacon = getBeacon(entity);
         }
 
         // Parse machine
-        if (dataRaw.boiler[proto.place_result]) {
-          const entity = dataRaw.boiler[proto.place_result];
+        if (dataRaw.boiler[result]) {
+          const entity = dataRaw.boiler[result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['assembling-machine'][proto.place_result]) {
-          const entity = dataRaw['assembling-machine'][proto.place_result];
+        } else if (dataRaw['assembling-machine'][result]) {
+          const entity = dataRaw['assembling-machine'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['rocket-silo'][proto.place_result]) {
-          const entity = dataRaw['rocket-silo'][proto.place_result];
+        } else if (dataRaw['rocket-silo'][result]) {
+          const entity = dataRaw['rocket-silo'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw.furnace[proto.place_result]) {
-          const entity = dataRaw.furnace[proto.place_result];
+        } else if (dataRaw.furnace[result]) {
+          const entity = dataRaw.furnace[result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw.lab[proto.place_result]) {
-          const entity = dataRaw.lab[proto.place_result];
+        } else if (dataRaw.lab[result]) {
+          const entity = dataRaw.lab[result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['mining-drill'][proto.place_result]) {
-          const entity = dataRaw['mining-drill'][proto.place_result];
+        } else if (dataRaw['mining-drill'][result]) {
+          const entity = dataRaw['mining-drill'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['offshore-pump'][proto.place_result]) {
-          const entity = dataRaw['offshore-pump'][proto.place_result];
+        } else if (dataRaw['offshore-pump'][result]) {
+          const entity = dataRaw['offshore-pump'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['reactor'][proto.place_result]) {
-          const entity = dataRaw['reactor'][proto.place_result];
+        } else if (dataRaw['reactor'][result]) {
+          const entity = dataRaw['reactor'][result];
           item.machine = getMachine(entity, proto.name);
         }
 
         // Parse transport belt
-        if (dataRaw['transport-belt'][proto.place_result]) {
-          const entity = dataRaw['transport-belt'][proto.place_result];
+        if (dataRaw['transport-belt'][result]) {
+          const entity = dataRaw['transport-belt'][result];
           item.belt = getBelt(entity);
         }
 
         // Parse cargo wagon
-        if (dataRaw['cargo-wagon'][proto.place_result]) {
-          const entity = dataRaw['cargo-wagon'][proto.place_result];
+        if (dataRaw['cargo-wagon'][result]) {
+          const entity = dataRaw['cargo-wagon'][result];
           item.cargoWagon = getCargoWagon(entity);
         }
 
         // Parse fluid wagon
-        if (dataRaw['fluid-wagon'][proto.place_result]) {
-          const entity = dataRaw['fluid-wagon'][proto.place_result];
+        if (dataRaw['fluid-wagon'][result]) {
+          const entity = dataRaw['fluid-wagon'][result];
           item.fluidWagon = getFluidWagon(entity);
         }
       }
@@ -1413,7 +1425,7 @@ async function processMod(): Promise<void> {
             console.log(recipeInTemp);
           }
 
-          const recipe: Recipe = {
+          const recipe: RecipeJson = {
             id,
             name: recipeLocale.names[proto.name],
             category: subgroup.group,
@@ -1457,7 +1469,7 @@ async function processMod(): Promise<void> {
             `${pumpName}-${proto.name}-pump`,
           );
           const out = offshorePump.pumping_speed * 60;
-          const recipe: Recipe = {
+          const recipe: RecipeJson = {
             id,
             name: `${itemLocale.names[pumpName]} : ${
               fluidLocale.names[proto.name]
@@ -1496,7 +1508,7 @@ async function processMod(): Promise<void> {
           const energyReqd =
             tempDiff * getEnergyInMJ(inputProto.heat_capacity ?? '1KJ') * 1000;
 
-          const recipe: Recipe = {
+          const recipe: RecipeJson = {
             id,
             name: `${itemLocale.names[boilerName]} : ${
               fluidLocale.names[proto.name]
@@ -1585,7 +1597,7 @@ async function processMod(): Promise<void> {
 
               if (part == null) continue;
 
-              const recipe: Recipe = {
+              const recipe: RecipeJson = {
                 id,
                 name,
                 category: group.name,
@@ -1612,7 +1624,7 @@ async function processMod(): Promise<void> {
       ) {
         // Found burn recipe
         const id = getFakeRecipeId(proto.burnt_result, `${proto.name}-burn`);
-        const recipe: Recipe = {
+        const recipe: RecipeJson = {
           id,
           name: `${itemLocale.names[proto.name]} : ${
             itemLocale.names[proto.burnt_result]
@@ -1679,7 +1691,7 @@ async function processMod(): Promise<void> {
         recipeInOptions.forEach(([recipeIn, ids], i) => {
           const id = i === 0 ? fakeId : `${fakeId}-${ids.join('-')}`;
 
-          const recipe: Recipe = {
+          const recipe: RecipeJson = {
             id: '',
             name: M.isFluidPrototype(proto)
               ? fluidLocale.names[proto.name]
@@ -1734,14 +1746,14 @@ async function processMod(): Promise<void> {
     }
 
     // Third, sort by prototype order field
-    return (a.order ?? '').localeCompare(b.order ?? '');
+    return coalesce(a.order, '').localeCompare(coalesce(b.order, ''));
   });
 
   const labs = Object.keys(machines.lab);
   const technologyIds = technologies.map((t) => t.name);
   for (const techRaw of technologies) {
     const techData = techDataMap[techRaw.name];
-    const technology: Technology = {};
+    const technology: TechnologyJson = {};
     const id = techId[techRaw.name];
     const prerequisites = coerceArray(techData.prerequisites);
     if (prerequisites?.length) {
@@ -1759,7 +1771,7 @@ async function processMod(): Promise<void> {
       return inputs.every((i) => labInputs.includes(i));
     });
 
-    const recipe: Recipe = {
+    const recipe: RecipeJson = {
       id,
       name: techLocale.names[techRaw.name],
       category: 'technology',
@@ -1774,7 +1786,7 @@ async function processMod(): Promise<void> {
     };
     modData.recipes.push(recipe);
 
-    const item: Item = {
+    const item: ItemJson = {
       id,
       name: recipe.name,
       category: recipe.category,
@@ -1796,7 +1808,7 @@ async function processMod(): Promise<void> {
 
   for (const id of groupsUsed) {
     const itemGroup = dataRaw['item-group'][id];
-    const category: Category = {
+    const category: CategoryJson = {
       id,
       name: groupLocale.names[id],
       icon: await getIcon(itemGroup),

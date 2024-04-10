@@ -1,26 +1,26 @@
 import { SelectItem } from 'primeng/api';
 
 import {
-  BeaconRational,
-  BeltRational,
-  CargoWagonRational,
+  AdjustedRecipe,
+  Beacon,
+  Belt,
+  CargoWagon,
   Category,
-  FluidWagonRational,
-  FuelRational,
+  FluidWagon,
+  Fuel,
   Icon,
-  ItemRational,
-  MachineRational,
+  Item,
+  Machine,
   ModHash,
-  ModuleRational,
+  Module,
   Recipe,
-  RecipeRational,
   Technology,
 } from './data';
 import { Defaults } from './defaults';
 import { Entities } from './entities';
 import { Game } from './enum';
 
-export interface RawDataset {
+export interface Dataset {
   game: Game;
   version: Entities<string>;
   categoryIds: string[];
@@ -30,22 +30,22 @@ export interface RawDataset {
   iconIds: string[];
   iconEntities: Entities<Icon>;
   itemIds: string[];
-  itemEntities: Entities<ItemRational>;
+  itemEntities: Entities<Item>;
   beaconIds: string[];
-  beaconEntities: Entities<BeaconRational>;
+  beaconEntities: Entities<Beacon>;
   beltIds: string[];
   pipeIds: string[];
-  beltEntities: Entities<BeltRational>;
+  beltEntities: Entities<Belt>;
   cargoWagonIds: string[];
-  cargoWagonEntities: Entities<CargoWagonRational>;
+  cargoWagonEntities: Entities<CargoWagon>;
   fluidWagonIds: string[];
-  fluidWagonEntities: Entities<FluidWagonRational>;
+  fluidWagonEntities: Entities<FluidWagon>;
   machineIds: string[];
-  machineEntities: Entities<MachineRational>;
+  machineEntities: Entities<Machine>;
   moduleIds: string[];
-  moduleEntities: Entities<ModuleRational>;
+  moduleEntities: Entities<Module>;
   fuelIds: string[];
-  fuelEntities: Entities<FuelRational>;
+  fuelEntities: Entities<Fuel>;
   recipeIds: string[];
   recipeEntities: Entities<Recipe>;
   technologyIds: string[];
@@ -56,8 +56,8 @@ export interface RawDataset {
   defaults?: Defaults | null;
 }
 
-export interface Dataset extends RawDataset {
-  recipeR: Entities<RecipeRational>;
+export interface AdjustedDataset extends Dataset {
+  adjustedRecipe: Entities<AdjustedRecipe>;
   /** For each item, all recipe ids that produce the item */
   itemRecipeIds: Entities<string[]>;
   /** For each item, all included recipe ids that produce the item */

@@ -15,13 +15,9 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
-import { Entities, Rational, Step, StepDetail, StepDetailTab } from '~/models';
+import { Entities, rational, Step, StepDetail, StepDetailTab } from '~/models';
 import { Items, LabState, Objectives, Preferences, Recipes } from '~/store';
 import { StepsComponent } from './steps.component';
-
-enum DataTest {
-  Export = 'lab-list-export',
-}
 
 describe('StepsComponent', () => {
   let component: StepsComponent;
@@ -74,11 +70,11 @@ describe('StepsComponent', () => {
       spyOn(domEl, 'scrollIntoView');
       spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
       TestUtility.assert(component.stepsTable != null);
-      spyOn(component.stepsTable, 'toggleRow');
+      spyOn(component.stepsTable(), 'toggleRow');
       component.fragmentId = 'step_' + Mocks.Step1.id;
       component.ngAfterViewInit();
       tick(100);
-      expect(component.stepsTable.toggleRow).toHaveBeenCalled();
+      expect(component.stepsTable().toggleRow).toHaveBeenCalled();
       expect(domEl.scrollIntoView).toHaveBeenCalled();
     }));
 
@@ -87,11 +83,11 @@ describe('StepsComponent', () => {
       spyOn(domEl, 'click');
       spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
       TestUtility.assert(component.stepsTable != null);
-      spyOn(component.stepsTable, 'toggleRow');
+      spyOn(component.stepsTable(), 'toggleRow');
       component.fragmentId = 'step_' + Mocks.Step1.id + '_item';
       component.ngAfterViewInit();
       tick(100);
-      expect(component.stepsTable.toggleRow).toHaveBeenCalled();
+      expect(component.stepsTable().toggleRow).toHaveBeenCalled();
       expect(domEl.click).toHaveBeenCalled();
     }));
 
@@ -147,10 +143,10 @@ describe('StepsComponent', () => {
         field: 'items',
         data: [...Mocks.Steps],
       } as SortEvent;
-      spyOn(component.stepsTable!, 'reset');
+      spyOn(component.stepsTable(), 'reset');
       spyOn(component.sortSteps$, 'next');
       component.sortSteps(prev, curr, Mocks.Steps);
-      expect(component.stepsTable!.reset).toHaveBeenCalled();
+      expect(component.stepsTable().reset).toHaveBeenCalled();
       expect(component.sortSteps$.next).toHaveBeenCalled();
     });
   });
@@ -232,15 +228,6 @@ describe('StepsComponent', () => {
     });
   });
 
-  describe('export', () => {
-    it('should call the export service', () => {
-      spyOn(component.exportSvc, 'stepsToCsv');
-      TestUtility.clickDt(fixture, DataTest.Export);
-      fixture.detectChanges();
-      expect(component.exportSvc.stepsToCsv).toHaveBeenCalled();
-    });
-  });
-
   describe('toggleRecipes', () => {
     it('should toggle a set of recipes', () => {
       spyOn(component, 'setRecipeExcludedBatch');
@@ -258,7 +245,7 @@ describe('StepsComponent', () => {
   describe('toggleRecipe', () => {
     it('should disable a recipe', () => {
       spyOn(component, 'setRecipeExcluded');
-      const data = { ...Mocks.Dataset, ...{ defaults: undefined } };
+      const data = { ...Mocks.AdjustedDataset, ...{ defaults: undefined } };
       component.toggleRecipe(
         RecipeId.AdvancedOilProcessing,
         Mocks.RecipesStateInitial,
@@ -276,7 +263,7 @@ describe('StepsComponent', () => {
       component.toggleRecipe(
         RecipeId.NuclearFuelReprocessing,
         Mocks.RecipesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
@@ -323,9 +310,7 @@ describe('StepsComponent', () => {
 
     it('should set up default for machine modules', () => {
       spyOn(component, 'setModules');
-      const modules = [
-        { count: Rational.fromNumber(4), id: ItemId.SpeedModule3 },
-      ];
+      const modules = [{ count: rational(4n), id: ItemId.SpeedModule3 }];
       component.changeRecipeField(step, modules, 'modules');
       expect(component.setModules).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
@@ -338,9 +323,9 @@ describe('StepsComponent', () => {
       spyOn(component, 'setBeacons');
       const beacons = [
         {
-          count: Rational.one,
+          count: rational(1n),
           id: ItemId.Beacon,
-          modules: [{ count: Rational.two, id: ItemId.Module }],
+          modules: [{ count: rational(2n), id: ItemId.Module }],
         },
       ];
       component.changeRecipeField(step, beacons, 'beacons');
@@ -356,7 +341,7 @@ describe('StepsComponent', () => {
       component.changeRecipeField(step, 100, 'overclock');
       expect(component.setOverclock).toHaveBeenCalledWith(
         RecipeId.WoodenChest,
-        Rational.hundred,
+        rational(100n),
         undefined,
         false,
       );

@@ -75,7 +75,13 @@
           }
           <lab-input-number
             labNoDrag
-            [pTooltip]="'objectives.valueTooltip' | translate"
+            [pTooltip]="
+              objective.type === ObjectiveType.Maximize
+                ? maximizeType() === MaximizeType.Weight
+                  ? ('objectives.valueWeightTooltip' | translate)
+                  : ('objectives.valueRatioTooltip' | translate)
+                : ('objectives.valueTooltip' | translate)
+            "
             tooltipPosition="top"
             [hideButtons]="contentSvc.isMobile()"
             [value]="objective.value"
@@ -93,10 +99,6 @@
                 changeUnit(
                   objective,
                   $event.value,
-                  itemsState(),
-                  beltSpeed(),
-                  dispRateInfo(),
-                  data(),
                   chooseItemPicker,
                   chooseRecipePicker
                 )

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { Mocks } from 'src/tests';
-import { InserterTarget, ItemId, Rational } from '~/models';
+import { InserterTarget, ItemId, rational } from '~/models';
 import { InserterSpeedPipe } from './inserter-speed.pipe';
 
 describe('InserterSpeedPipe', () => {
@@ -18,21 +18,21 @@ describe('InserterSpeedPipe', () => {
 
   describe('transform', () => {
     it('should return matching inserter data', () => {
-      expect(pipe.transform(Rational.one, Mocks.SettingsStateInitial)).toEqual({
+      expect(pipe.transform(rational(1n), Mocks.SettingsStateInitial)).toEqual({
         id: ItemId.Inserter,
-        value: Rational.from(100, 243),
+        value: rational(100n, 243n),
       });
       expect(
-        pipe.transform(Rational.thousand, Mocks.SettingsStateInitial),
+        pipe.transform(rational(1000n), Mocks.SettingsStateInitial),
       ).toEqual({
         id: ItemId.StackInserter,
-        value: Rational.from(20000, 277),
+        value: rational(20000n, 277n),
       });
     });
 
     it('should handle invalid state where no match is found', () => {
       expect(
-        pipe.transform(Rational.one, {
+        pipe.transform(rational(1n), {
           inserterTarget: InserterTarget.Chest,
         } as any),
       ).toBeNull();

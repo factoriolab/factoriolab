@@ -6,17 +6,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          persist-credentials: false
+          node-version: 'lts/*'
       - name: Install dependencies
         run: npm ci
+      - name: Semantic release
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Run build
         run: npm run build -- -c=production
       - name: Copy index to list
         run: cp dist/browser/index.html dist/browser/list.html
       - name: Copy index to flow
         run: cp dist/browser/index.html dist/browser/flow.html
+      - name: Copy index to data
+        run: cp dist/browser/index.html dist/browser/data.html
       - name: Copy index to 404
         run: cp dist/browser/index.html dist/browser/404.html
       - name: Deploy to GitHub Pages

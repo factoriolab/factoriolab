@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { IdType, Rational, Recipe } from '~/models';
+import { IdType, Rational, rational, Recipe } from '~/models';
 
 @Injectable({ providedIn: 'root' })
 export class DisplayService {
@@ -16,31 +16,31 @@ export class DisplayService {
   }
 
   round(value: Rational | string | number): string {
-    if (typeof value === 'string') value = Rational.fromString(value);
+    if (typeof value === 'string') value = rational(value);
     if (value instanceof Rational) value = value.toNumber();
     return Number(value.toFixed(2)).toString();
   }
 
   usage(value: Rational | string | number): string {
-    if (!(value instanceof Rational)) value = Rational.from(value);
-    if (value.abs().lt(Rational.thousand)) return `${this.round(value)} kW`;
-    return `${this.round(value.div(Rational.thousand))} MW`;
+    if (!(value instanceof Rational)) value = rational(value);
+    if (value.abs().lt(rational(1000n))) return `${this.round(value)} kW`;
+    return `${this.round(value.div(rational(1000n)))} MW`;
   }
 
   toBonusPercent(value: Rational): string {
-    const rational = this.round(value.mul(Rational.hundred));
-    if (value.gt(Rational.zero)) return `+${rational}%`;
-    if (value.lt(Rational.zero)) return `${rational}%`;
+    const rat = this.round(value.mul(rational(100n)));
+    if (value.gt(rational(0n))) return `+${rat}%`;
+    if (value.lt(rational(0n))) return `${rat}%`;
     return '';
   }
 
   recipeProcess(recipe: Recipe): string {
-    const timeHtml = this.icon('time', recipe.time);
+    const timeHtml = this.icon('time', recipe.time.toNumber());
     const inHtml = Object.keys(recipe.in)
-      .map((i) => this.icon(i, recipe.in[i]))
+      .map((i) => this.icon(i, recipe.in[i].toNumber()))
       .join('');
     const outHtml = Object.keys(recipe.out)
-      .map((i) => this.icon(i, recipe.out[i]))
+      .map((i) => this.icon(i, recipe.out[i].toNumber()))
       .join('');
     return `${timeHtml}${inHtml}<i class="m-1 me-2 fa-solid fa-arrow-right"></i>${outHtml}`;
   }

@@ -1,29 +1,29 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { Component, viewChild } from '@angular/core';
+import {
+  ComponentFixture,
+  fakeAsync,
+  TestBed,
+  tick,
+} from '@angular/core/testing';
+import { FormsModule, NgForm } from '@angular/forms';
 
-import { TestUtility } from 'src/tests';
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { ValidateNumberDirective } from './validate-number.directive';
 
-enum DataTest {
-  Input = 'lab-validate-number-input',
-}
-
 @Component({
-  template: `<input
-    #input
-    labValidateNumber
-    [minimum]="minimum"
-    [(ngModel)]="model"
-    data-test="lab-validate-number-input"
-  />`,
+  template: `<form #frm="ngForm">
+    <input
+      labValidateNumber
+      [minimum]="minimum"
+      [(ngModel)]="model"
+      name="value"
+    />
+  </form>`,
 })
 class TestValidateNumberDirectiveComponent {
-  @ViewChild('input') input!: ElementRef<HTMLInputElement>;
-
-  model = null;
-  minimum = Rational.one;
+  frm = viewChild.required<NgForm>('frm');
+  model?: string;
+  minimum = rational(1n);
 }
 
 describe('ValidateNumberDirective', () => {
@@ -50,33 +50,21 @@ describe('ValidateNumberDirective', () => {
 
   describe('validate', () => {
     it('should validate null value', () => {
-      expect(
-        component.input.nativeElement.classList.contains('ng-invalid'),
-      ).toBeFalse();
+      expect(component.frm().valid).toBeTrue();
     });
 
-    it('should validate a valid number', () => {
-      TestUtility.setTextDt(fixture, DataTest.Input, '1 1/3');
+    it('should validate a valid number', fakeAsync(() => {
+      component.model = '4/3';
       fixture.detectChanges();
-      expect(
-        component.input.nativeElement.classList.contains('ng-invalid'),
-      ).toBeFalse();
-    });
+      tick();
+      expect(component.frm().valid).toBeTrue();
+    }));
 
-    it('should validate invalid value', () => {
-      TestUtility.setTextDt(fixture, DataTest.Input, '1 1');
+    it('should invalidate value below minimum value', fakeAsync(() => {
+      component.model = '0';
       fixture.detectChanges();
-      expect(
-        component.input.nativeElement.classList.contains('ng-invalid'),
-      ).toBeTrue();
-    });
-
-    it('should validate value below minimum value', () => {
-      TestUtility.setTextDt(fixture, DataTest.Input, '0');
-      fixture.detectChanges();
-      expect(
-        component.input.nativeElement.classList.contains('ng-invalid'),
-      ).toBeTrue();
-    });
+      tick();
+      expect(component.frm().valid).toBeFalse();
+    }));
   });
 });

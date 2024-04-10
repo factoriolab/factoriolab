@@ -8,8 +8,8 @@ export enum PowerUnit {
 }
 
 export const powerUnitOptions: SelectItem<PowerUnit>[] = [
-  { label: 'Auto', value: PowerUnit.Auto },
-  { label: 'kW', value: PowerUnit.kW },
-  { label: 'MW', value: PowerUnit.MW },
-  { label: 'GW', value: PowerUnit.GW },
+  { label: 'options.powerUnit.auto', value: PowerUnit.Auto },
+  { label: 'options.powerUnit.kW', value: PowerUnit.kW },
+  { label: 'options.powerUnit.MW', value: PowerUnit.MW },
+  { label: 'options.powerUnit.GW', value: PowerUnit.GW },
 ];

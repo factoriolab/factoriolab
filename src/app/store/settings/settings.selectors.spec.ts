@@ -9,8 +9,7 @@ import {
   InserterTarget,
   Language,
   Preset,
-  Rational,
-  ResearchSpeed,
+  rational,
 } from '~/models';
 import { initialSettingsState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
@@ -154,9 +153,9 @@ describe('Settings Selectors', () => {
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beacons).toEqual([
         {
-          count: Rational.zero,
+          count: rational(0n),
           id: ItemId.Beacon,
-          modules: [{ count: Rational.two, id: ItemId.SpeedModule3 }],
+          modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
         },
       ]);
     });
@@ -166,9 +165,9 @@ describe('Settings Selectors', () => {
       TestUtility.assert(result != null);
       expect(result.beacons).toEqual([
         {
-          count: Rational.fromNumber(8),
+          count: rational(8n),
           id: ItemId.Beacon,
-          modules: [{ count: Rational.two, id: ItemId.SpeedModule3 }],
+          modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
         },
       ]);
     });
@@ -181,9 +180,9 @@ describe('Settings Selectors', () => {
       TestUtility.assert(result != null);
       expect(result.beacons).toEqual([
         {
-          count: Rational.fromNumber(12),
+          count: rational(12n),
           id: ItemId.Beacon,
-          modules: [{ count: Rational.two, id: ItemId.SpeedModule3 }],
+          modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
         },
       ]);
     });
@@ -215,6 +214,15 @@ describe('Settings Selectors', () => {
       const result = Selectors.getDefaults.projector(Preset.Minimum, {
         ...Mocks.Mod,
         ...{ game: Game.Satisfactory },
+      });
+      TestUtility.assert(result != null);
+      expect(result.moduleRankIds).toEqual(Mocks.Defaults.moduleRankIds);
+    });
+
+    it('should handle Final Factory module rank', () => {
+      const result = Selectors.getDefaults.projector(Preset.Minimum, {
+        ...Mocks.Mod,
+        ...{ game: Game.FinalFactory },
       });
       TestUtility.assert(result != null);
       expect(result.moduleRankIds).toEqual(Mocks.Defaults.moduleRankIds);
@@ -274,22 +282,6 @@ describe('Settings Selectors', () => {
     //     },
     //   });
     // });
-  });
-
-  describe('getRationalMiningBonus', () => {
-    it('should convert the numeric value to a percent Rational', () => {
-      const result = Selectors.getMiningFactor.projector(Rational.hundred);
-      expect(result).toEqual(Rational.one);
-    });
-  });
-
-  describe('getResearchFactor', () => {
-    it('should look up the Rational from the dictionary', () => {
-      const result = Selectors.getResearchFactor.projector(
-        ResearchSpeed.Speed0,
-      );
-      expect(result).toEqual(Rational.one);
-    });
   });
 
   describe('getI18n', () => {
@@ -506,44 +498,44 @@ describe('Settings Selectors', () => {
 
   describe('getBeltSpeed', () => {
     it('should return the map of belt speeds', () => {
-      const flowRate = Rational.from(2000);
+      const flowRate = rational(2000n);
       const result = Selectors.getBeltSpeed.projector(
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
         flowRate,
       );
       expect(result[ItemId.TransportBelt]).toEqual(
-        Mocks.RawDataset.beltEntities[ItemId.TransportBelt].speed,
+        Mocks.AdjustedDataset.beltEntities[ItemId.TransportBelt].speed,
       );
       expect(result[ItemId.Pipe]).toEqual(flowRate);
     });
 
     it('should include pipe speeds', () => {
       const data = {
-        ...Mocks.RawDataset,
+        ...Mocks.AdjustedDataset,
         ...{
           pipeIds: [ItemId.Pipe],
           beltEntities: {
-            ...Mocks.RawDataset.beltEntities,
+            ...Mocks.AdjustedDataset.beltEntities,
             ...{
               [ItemId.Pipe]: {
-                ...Mocks.RawDataset.beltEntities[ItemId.Pipe],
+                ...Mocks.AdjustedDataset.beltEntities[ItemId.Pipe],
                 ...{
-                  speed: Rational.ten,
+                  speed: rational(10n),
                 },
               },
             },
           },
         },
       };
-      const result = Selectors.getBeltSpeed.projector(data, Rational.from(0));
-      expect(result[ItemId.Pipe]).toEqual(Rational.ten);
+      const result = Selectors.getBeltSpeed.projector(data, rational(0n));
+      expect(result[ItemId.Pipe]).toEqual(rational(10n));
     });
   });
 
   describe('getBeltSpeedTxt', () => {
     it('should map belt speeds to appropriate rounded values for tooltips', () => {
       const result = Selectors.getBeltSpeedTxt.projector(
-        { a: Rational.from(1, 60), b: Rational.from(1, 180) },
+        { a: rational(1n, 60n), b: rational(1n, 180n) },
         Mocks.DisplayRateInfo,
       );
       expect(result['a']).toEqual('1');
@@ -567,7 +559,7 @@ describe('Settings Selectors', () => {
     it('should expand minimal set of technology ids into full list', () => {
       const result = Selectors.getAllResearchedTechnologyIds.projector(
         [RecipeId.ArtilleryShellRange],
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result?.length).toEqual(54);
     });
@@ -575,7 +567,7 @@ describe('Settings Selectors', () => {
     it('should return value if null', () => {
       const result = Selectors.getAllResearchedTechnologyIds.projector(
         null,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result).toBeNull();
     });
@@ -585,15 +577,15 @@ describe('Settings Selectors', () => {
     it('should return full list if value is null', () => {
       const result = Selectors.getAvailableRecipes.projector(
         null,
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
-      expect(result).toEqual(Mocks.RawDataset.recipeIds);
+      expect(result).toEqual(Mocks.AdjustedDataset.recipeIds);
     });
 
     it('should filter for only unlocked recipes', () => {
       const result = Selectors.getAvailableRecipes.projector(
         [RecipeId.Automation],
-        Mocks.RawDataset,
+        Mocks.AdjustedDataset,
       );
       expect(result.length).toEqual(234);
     });

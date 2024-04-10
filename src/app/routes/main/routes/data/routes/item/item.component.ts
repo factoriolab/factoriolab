@@ -3,11 +3,12 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
 import { AppSharedModule } from '~/app-shared.module';
+import { coalesce } from '~/helpers';
 import {
   Category,
   Game,
+  Item,
   ItemId,
-  ItemRational,
   ItemSettings,
   MachineSettings,
 } from '~/models';
@@ -28,9 +29,7 @@ export class ItemComponent extends DetailComponent {
   machinesStateRaw = this.store.selectSignal(Machines.machinesState);
   machinesState = this.store.selectSignal(Machines.getMachinesState);
 
-  obj = computed<ItemRational | undefined>(
-    () => this.data().itemEntities[this.id()],
-  );
+  obj = computed<Item | undefined>(() => this.data().itemEntities[this.id()]);
   breadcrumb = computed<MenuItem[]>(() => [
     this.parent(),
     { label: this.obj()?.name },
@@ -38,7 +37,7 @@ export class ItemComponent extends DetailComponent {
   category = computed<Category | undefined>(() => {
     const id = this.id();
     const data = this.data();
-    return data.categoryEntities[data.itemEntities[id]?.category ?? ''];
+    return data.categoryEntities[coalesce(data.itemEntities[id]?.category, '')];
   });
   recipes = computed(() => {
     const id = this.id();

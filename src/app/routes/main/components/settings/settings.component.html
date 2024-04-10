@@ -526,9 +526,7 @@
                   [pTooltip]="'settings.overclockTooltip' | translate"
                   [ngModel]="machinesState().overclock?.toNumber()"
                   (onBlur)="
-                    setDefaultOverclock(
-                      Rational.fromNumber(overclockInput.value ?? 100)
-                    )
+                    setDefaultOverclock(rational(overclockInput.value ?? 100))
                   "
                 >
                 </p-inputNumber>
@@ -669,7 +667,9 @@
                         </p-dropdown>
                       }
                       @if (settings.modules && machine.modules) {
-                        @if (machine.modules === 1) {
+                        @if (
+                          machine.modules !== true && machine.modules?.isOne()
+                        ) {
                           <p-dropdown
                             labDropdownBase="icon"
                             labNoDrag
@@ -678,7 +678,7 @@
                             [options]="settings.moduleOptions ?? []"
                             (onChange)="
                               changeModules(machineId, [
-                                { id: $event.value, count: Rational.one }
+                                { id: $event.value, count: rational(1) }
                               ])
                             "
                           >
@@ -753,10 +753,10 @@
                           (onBlur)="
                             setOverclock(
                               machineId,
-                              Rational.fromNumber(overclockInput.value ?? 100),
+                              rational(overclockInput.value ?? 100),
                               machineId
                                 ? machinesState().entities[''].overclock
-                                : Rational.hundred
+                                : rational(100)
                             )
                           "
                         >
@@ -1081,10 +1081,8 @@
                   incrementButtonClass="p-button-outlined"
                   decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.pipeFlowRateTooltip' | translate"
-                  [ngModel]="settings().flowRate"
-                  (onBlur)="
-                    setFlowRate(Rational.from(flowRateInput.value ?? 1500))
-                  "
+                  [ngModel]="settings().flowRate.toNumber()"
+                  (onBlur)="setFlowRate(rational(flowRateInput.value ?? 1500))"
                 ></p-inputNumber>
                 <label for="pipe-flow-rate">{{
                   'settings.pipeFlowRate' | translate
@@ -1093,7 +1091,7 @@
                   <a
                     href="https://wiki.factorio.com/Fluid_system#Pipelines"
                     target="_blank"
-                    >Wiki</a
+                    >{{ 'settings.wiki' | translate }}</a
                   >
                 </small>
               </div>
@@ -1128,10 +1126,12 @@
                   incrementButtonClass="p-button-outlined"
                   decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.miningSpeedTooltip' | translate"
-                  [ngModel]="settings().miningBonus.toNumber() + 100"
+                  [ngModel]="
+                    settings().miningBonus.add(rational(100)).toNumber()
+                  "
                   (onBlur)="
                     setMiningBonus(
-                      Rational.fromNumber((miningBonusInput.value ?? 100) - 100)
+                      rational((miningBonusInput.value ?? 100) - 100)
                     )
                   "
                 ></p-inputNumber>
@@ -1249,11 +1249,9 @@
                   incrementButtonClass="p-button-outlined"
                   decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.miningProductivityTooltip' | translate"
-                  [ngModel]="settings().miningBonus"
+                  [ngModel]="settings().miningBonus.toNumber()"
                   (onBlur)="
-                    setMiningBonus(
-                      Rational.fromNumber(miningProdInput.value ?? 0)
-                    )
+                    setMiningBonus(rational(miningProdInput.value ?? 0))
                   "
                 ></p-inputNumber>
                 <label for="mining-productivity">{{
@@ -1265,9 +1263,9 @@
               <div class="p-float-label">
                 <p-dropdown
                   labDropdownTranslate
-                  inputId="research-speed"
+                  inputId="research-bonus"
                   [pTooltip]="'settings.researchSpeedTooltip' | translate"
-                  [ngModel]="settings().researchSpeed"
+                  [ngModel]="settings().researchBonus"
                   [options]="researchSpeedOptions"
                   (onChange)="setResearchSpeed($event.value)"
                 >

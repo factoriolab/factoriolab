@@ -15,7 +15,7 @@ export * from './objective-type';
 export * from './objective-unit';
 export * from './power-unit';
 export * from './preset';
-export * from './research-speed';
+export * from './research-bonus';
 export * from './sankey-align';
 export * from './simplex-result-type';
 export * from './step-detail-tab';

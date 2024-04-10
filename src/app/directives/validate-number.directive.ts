@@ -6,7 +6,7 @@ import {
   Validator,
 } from '@angular/forms';
 
-import { Rational } from '~/models';
+import { Rational, rational } from '~/models';
 
 @Directive({
   selector: '[labValidateNumber][ngModel]',
@@ -19,22 +19,19 @@ import { Rational } from '~/models';
   ],
 })
 export class ValidateNumberDirective implements Validator {
-  minimum = input<Rational | null | undefined>(Rational.zero);
-  maximum = input<Rational | null | undefined>(null);
+  minimum = input<Rational | null>(rational(0n));
+  maximum = input<Rational | null>(null);
 
-  validate(control: AbstractControl): ValidationErrors | null {
-    if (control.value == null) {
-      return null;
-    }
+  validate(
+    control: AbstractControl<string | null | undefined>,
+  ): ValidationErrors | null {
+    if (control.value == null) return null;
 
     try {
-      const rational = Rational.fromString(control.value);
+      const value = rational(control.value);
       const min = this.minimum();
       const max = this.maximum();
-      if (
-        (min == null || rational.gte(min)) &&
-        (max == null || rational.lte(max))
-      )
+      if ((min == null || value.gte(min)) && (max == null || value.lte(max)))
         return null;
     } catch {
       // ignore error

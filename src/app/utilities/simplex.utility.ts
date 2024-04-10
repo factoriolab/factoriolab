@@ -11,9 +11,10 @@ import { StatusSimplex } from 'glpk-ts/dist/status';
 
 import { environment } from 'src/environments';
 import {
+  AdjustedDataset,
+  AdjustedRecipe,
   CostKey,
-  CostsState,
-  Dataset,
+  CostSettings,
   Entities,
   FACTORIO_FLUID_COST_RATIO,
   Game,
@@ -22,9 +23,10 @@ import {
   MaximizeType,
   Objective,
   ObjectiveType,
+  rational,
   Rational,
+  Recipe,
   RecipeObjective,
-  RecipeRational,
   SimplexResultType,
   Step,
 } from '~/models';
@@ -58,7 +60,7 @@ export interface MatrixState {
   recipeObjectives: RecipeObjective[];
   steps: Step[];
   /** Recipes used in the matrix */
-  recipes: Entities<RecipeRational>;
+  recipes: Entities<AdjustedRecipe>;
   /** Items used in the matrix */
   itemValues: Entities<ItemValues>;
   /** Recipe limits */
@@ -71,10 +73,10 @@ export interface MatrixState {
   recipeIds: string[];
   /** All items that are included */
   itemIds: string[];
-  data: Dataset;
+  data: AdjustedDataset;
   maximizeType: MaximizeType;
   surplusMachinesOutput: boolean;
-  costs: CostsState;
+  costs: CostSettings;
 }
 
 export interface MatrixSolution {
@@ -121,7 +123,7 @@ export class SimplexUtility {
   static addItemValue(
     obj: Entities<ItemValues>,
     id: string,
-    value: Rational = Rational.zero,
+    value = rational(0n),
     key: keyof ItemValues = 'out',
   ): void {
     if (obj[id]) {
@@ -132,7 +134,7 @@ export class SimplexUtility {
         obj[id][key] = value;
       }
     } else {
-      obj[id] = { ...{ out: Rational.zero }, [key]: value };
+      obj[id] = { ...{ out: rational(0n) }, [key]: value };
     }
   }
 
@@ -143,8 +145,8 @@ export class SimplexUtility {
     researchedTechnologyIds: string[] | null,
     maximizeType: MaximizeType,
     surplusMachinesOutput: boolean,
-    costs: CostsState,
-    data: Dataset,
+    costs: CostSettings,
+    data: AdjustedDataset,
     paused: boolean,
   ): MatrixResult {
     if (paused) {
@@ -197,8 +199,8 @@ export class SimplexUtility {
     researchedTechnologyIds: string[],
     maximizeType: MaximizeType,
     surplusMachinesOutput: boolean,
-    costs: CostsState,
-    data: Dataset,
+    costs: CostSettings,
+    data: AdjustedDataset,
   ): MatrixState {
     // Set up state object
     const state: MatrixState = {
@@ -318,10 +320,10 @@ export class SimplexUtility {
   }
 
   /** Find matching recipes for an item that have not yet been parsed */
-  static recipeMatches(itemId: string, state: MatrixState): RecipeRational[] {
+  static recipeMatches(itemId: string, state: MatrixState): Recipe[] {
     const recipes = state.data.itemIncludedRecipeIds[itemId]
       .filter((r) => !state.recipes[r])
-      .map((r) => state.data.recipeR[r]);
+      .map((r) => state.data.adjustedRecipe[r]);
 
     recipes.forEach((r) => (state.recipes[r.id] = r));
 
@@ -329,7 +331,7 @@ export class SimplexUtility {
   }
 
   /** Find matching item inputs for a recipe that have not yet been parsed */
-  static itemMatches(recipe: RecipeRational, state: MatrixState): string[] {
+  static itemMatches(recipe: Recipe, state: MatrixState): string[] {
     const itemIds = Object.keys(recipe.in).filter(
       (i) => state.itemValues[i]?.out == null,
     );
@@ -340,10 +342,7 @@ export class SimplexUtility {
   }
 
   /** Look for item inputs for a recipe, recursively */
-  static parseRecipeRecursively(
-    recipe: RecipeRational,
-    state: MatrixState,
-  ): void {
+  static parseRecipeRecursively(recipe: Recipe, state: MatrixState): void {
     if (recipe.in) {
       const matches = this.itemMatches(recipe, state);
       for (const itemId of matches.filter(
@@ -403,7 +402,7 @@ export class SimplexUtility {
         excluded: {},
         recipes: {},
         time: 0,
-        cost: Rational.zero,
+        cost: rational(0n),
         itemIds: [],
         recipeIds: [],
         unproduceableIds: [],
@@ -440,7 +439,7 @@ export class SimplexUtility {
       state.data.itemEntities[itemId].stack == null &&
       state.data.game === Game.Factorio
         ? FACTORIO_FLUID_COST_RATIO
-        : Rational.one;
+        : rational(1n);
     const cost = state.costs[costKey];
     return base.mul(cost).toNumber();
   }
@@ -482,12 +481,12 @@ export class SimplexUtility {
     const maximizeVar = m.addVar(config);
 
     // Used to track quantities from maximization ratio
-    let maximizeFactor = Rational.zero;
+    let maximizeFactor = rational(0n);
 
     // Add recipe vars to model
     for (const recipeId of recipeIds) {
       const config: VariableProperties = {
-        obj: (state.recipes[recipeId].cost ?? Rational.zero).toNumber(),
+        obj: (state.recipes[recipeId].cost ?? rational(0n)).toNumber(),
         lb: 0,
         name: recipeId,
       };
@@ -624,7 +623,7 @@ export class SimplexUtility {
         const recipe = obj.recipe;
         const val = recipe.output[itemId];
         if (val?.nonzero()) {
-          if (val.gt(Rational.zero) && !state.surplusMachinesOutput) {
+          if (val.gt(rational(0n)) && !state.surplusMachinesOutput) {
             if (recipeObjectiveOutput[itemId] == null)
               recipeObjectiveOutput[itemId] = {};
             recipeObjectiveOutput[itemId][obj.id] = val;
@@ -716,7 +715,7 @@ export class SimplexUtility {
     const unproduceable: Entities<Rational> = {};
     const excluded: Entities<Rational> = {};
     const recipes: Entities<Rational> = {};
-    const cost = Rational.fromNumber(m.value);
+    const cost = rational(m.value);
 
     if (returnCode !== 'ok' || status !== 'optimal') {
       return {
@@ -735,14 +734,14 @@ export class SimplexUtility {
     // Parse solution
     for (const itemId of itemIds) {
       const values = state.itemValues[itemId];
-      const val = Rational.fromNumber(surplusVarEntities[itemId].value);
+      const val = rational(surplusVarEntities[itemId].value);
       if (val.nonzero()) surplus[itemId] = val;
 
       if (recipeObjectiveOutput[itemId]) {
         for (const objId of Object.keys(recipeObjectiveOutput[itemId])) {
           const outRat = recipeObjectiveOutput[itemId][objId];
           const recipeVal = recipeObjectiveVarEntities[objId].value;
-          const recipeValRat = Rational.fromNumber(recipeVal);
+          const recipeValRat = rational(recipeVal);
           const val = recipeValRat.mul(outRat);
           values.out = values.out.add(val);
         }
@@ -752,7 +751,7 @@ export class SimplexUtility {
         switch (state.maximizeType) {
           case MaximizeType.Ratio: {
             const maxVal = maximizeVar.value;
-            const maxRat = Rational.fromNumber(maxVal);
+            const maxRat = rational(maxVal);
             const val = maxRat.mul(values.max);
             // Add maximize output to items output
             values.out = values.out.add(val);
@@ -760,7 +759,7 @@ export class SimplexUtility {
           }
           case MaximizeType.Weight: {
             const maxVal = maximizeItemVarEntities[itemId].value;
-            const val = Rational.fromNumber(maxVal);
+            const val = rational(maxVal);
             // Add maximize output to items output
             values.out = values.out.add(val);
             break;
@@ -770,32 +769,24 @@ export class SimplexUtility {
     }
 
     for (const recipeId of recipeIds) {
-      const val = Rational.fromNumber(recipeVarEntities[recipeId].value);
-      if (val.nonzero()) {
-        recipes[recipeId] = val;
-      }
+      const val = rational(recipeVarEntities[recipeId].value);
+      if (val.nonzero()) recipes[recipeId] = val;
     }
 
     for (const itemId of state.unproduceableIds) {
-      const val = Rational.fromNumber(unproduceableVarEntities[itemId].value);
-      if (val.nonzero()) {
-        unproduceable[itemId] = val;
-      }
+      const val = rational(unproduceableVarEntities[itemId].value);
+      if (val.nonzero()) unproduceable[itemId] = val;
     }
 
     for (const itemId of state.excludedIds) {
-      const val = Rational.fromNumber(excludedVarEntities[itemId].value);
-      if (val.nonzero()) {
-        excluded[itemId] = val;
-      }
+      const val = rational(excludedVarEntities[itemId].value);
+      if (val.nonzero()) excluded[itemId] = val;
     }
 
     // Update recipe objective counts to account for maximizations
     state.recipeObjectives = state.recipeObjectives.map((o) => ({
       ...o,
-      ...{
-        value: Rational.fromNumber(recipeObjectiveVarEntities[o.id].value),
-      },
+      ...{ value: rational(recipeObjectiveVarEntities[o.id].value) },
     }));
 
     return {
@@ -850,7 +841,7 @@ export class SimplexUtility {
   ): void {
     const values = state.itemValues[itemId];
     const steps = state.steps;
-    let output = Rational.zero;
+    let output = rational(0n);
     state.data.itemIncludedIoRecipeIds[itemId].forEach((recipeId) => {
       const recipeAmt = solution.recipes[recipeId];
       if (recipeAmt == null) return;
@@ -865,9 +856,7 @@ export class SimplexUtility {
     });
 
     const input = state.itemValues[itemId].in;
-    if (input) {
-      output = output.add(input);
-    }
+    if (input) output = output.add(input);
 
     for (const objective of state.recipeObjectives) {
       const recipe = objective.recipe;
@@ -877,13 +866,11 @@ export class SimplexUtility {
       );
     }
 
-    if (solution.unproduceable[itemId]) {
+    if (solution.unproduceable[itemId])
       output = output.add(solution.unproduceable[itemId]);
-    }
 
-    if (solution.excluded[itemId]) {
+    if (solution.excluded[itemId])
       output = output.add(solution.excluded[itemId]);
-    }
 
     if (output.nonzero()) {
       const step: Step = {
@@ -891,7 +878,7 @@ export class SimplexUtility {
         itemId,
         items: output,
       };
-      if (values.out.gt(Rational.zero)) {
+      if (values.out.gt(rational(0n))) {
         step.output = values.out;
         step.parents = { '': step.output };
       }
@@ -904,9 +891,7 @@ export class SimplexUtility {
          * differs from output by a rounding error, set surplus to the output
          * amount, since that is the more reliable value.
          */
-        const diff = Rational.fromNumber(
-          output.sub(solution.surplus[itemId]).toNumber(),
-        );
+        const diff = rational(output.sub(solution.surplus[itemId]).toNumber());
         step.surplus = diff.isZero() ? step.items : solution.surplus[itemId];
       }
     }
@@ -957,7 +942,7 @@ export class SimplexUtility {
 
   /** Update steps with recipe from matrix solution */
   static addRecipeStep(
-    recipe: RecipeRational,
+    recipe: AdjustedRecipe,
     solution: MatrixSolution,
     state: MatrixState,
     recipeObjective?: RecipeObjective,
@@ -1000,7 +985,7 @@ export class SimplexUtility {
       step.recipeObjectiveId = recipeObjective.id;
     } else {
       step.machines = solution.recipes[recipe.id].add(
-        step.machines || Rational.zero,
+        step.machines || rational(0n),
       );
     }
 

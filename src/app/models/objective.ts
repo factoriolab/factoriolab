@@ -1,4 +1,4 @@
-import { RecipeRational } from './data';
+import { AdjustedRecipe } from './data';
 import { ObjectiveType, ObjectiveUnit } from './enum';
 import { Rational } from './rational';
 import { RecipeSettings } from './settings';
@@ -20,10 +20,10 @@ export interface Objective extends ObjectiveBase, RecipeSettings {
   value: Rational;
   unit: ObjectiveUnit;
   type: ObjectiveType;
-  recipe?: RecipeRational;
+  recipe?: AdjustedRecipe;
 }
 
 export interface RecipeObjective extends Objective {
   unit: ObjectiveUnit.Machines;
-  recipe: RecipeRational;
+  recipe: AdjustedRecipe;
 }

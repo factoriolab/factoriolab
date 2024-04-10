@@ -8,8 +8,8 @@ export enum SankeyAlign {
 }
 
 export const sankeyAlignOptions: SelectItem<SankeyAlign>[] = [
-  { label: 'Justify', value: SankeyAlign.Justify },
-  { label: 'Left', value: SankeyAlign.Left },
-  { label: 'Right', value: SankeyAlign.Right },
-  { label: 'Center', value: SankeyAlign.Center },
+  { label: 'options.sankeyAlign.justify', value: SankeyAlign.Justify },
+  { label: 'options.sankeyAlign.left', value: SankeyAlign.Left },
+  { label: 'options.sankeyAlign.right', value: SankeyAlign.Right },
+  { label: 'options.sankeyAlign.center', value: SankeyAlign.Center },
 ];

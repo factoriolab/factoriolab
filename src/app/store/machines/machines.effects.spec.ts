@@ -5,7 +5,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ReplaySubject } from 'rxjs';
 
 import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { LabState } from '../';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -34,9 +34,11 @@ describe('MachinesEffects', () => {
       Recipes.getRecipesState,
       Mocks.RecipesStateInitial,
     );
-    mockStore.overrideSelector(Settings.getDataset, Mocks.RawDataset);
+    mockStore.overrideSelector(Settings.getDataset, Mocks.AdjustedDataset);
     mockStore.refreshState();
   });
+
+  afterEach(() => mockStore.resetSelectors());
 
   describe('resetRecipeSetting$', () => {
     it('should reset modules when machine modules do not match', () => {
@@ -52,7 +54,7 @@ describe('MachinesEffects', () => {
         ...{
           recipesState: {
             [RecipeId.Coal]: {
-              modules: [{ count: Rational.one, id: ItemId.SpeedModule }],
+              modules: [{ count: rational(1n), id: ItemId.SpeedModule }],
             },
           },
         },
@@ -102,9 +104,9 @@ describe('MachinesEffects', () => {
             [RecipeId.Coal]: {
               beacons: [
                 {
-                  count: Rational.zero,
+                  count: rational(0n),
                   id: ItemId.Beacon,
-                  modules: [{ count: Rational.two, id: ItemId.SpeedModule }],
+                  modules: [{ count: rational(2n), id: ItemId.SpeedModule }],
                 },
               ],
             },

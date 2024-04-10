@@ -8,7 +8,13 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { tap, withLatestFrom } from 'rxjs';
 
-import { CostKey, CostsState, DialogComponent, Rational } from '~/models';
+import {
+  CostKey,
+  CostSettings,
+  DialogComponent,
+  Rational,
+  rational,
+} from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Settings } from '~/store';
 
@@ -23,6 +29,8 @@ export class CostsComponent extends DialogComponent implements OnInit {
   contentSvc = inject(ContentService);
 
   editValue = { ...Settings.initialSettingsState.costs };
+
+  rational = rational;
 
   get modified(): boolean {
     return (Object.keys(this.editValue) as CostKey[]).some(
@@ -45,7 +53,7 @@ export class CostsComponent extends DialogComponent implements OnInit {
     this.show$.subscribe();
   }
 
-  initEdit(costs: CostsState): void {
+  initEdit(costs: CostSettings): void {
     this.editValue = { ...costs };
   }
 

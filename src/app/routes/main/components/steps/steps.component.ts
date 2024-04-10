@@ -9,7 +9,7 @@ import {
   inject,
   input,
   OnInit,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
@@ -18,11 +18,10 @@ import { MenuItem, SortEvent } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { BehaviorSubject, combineLatest, filter, first, pairwise } from 'rxjs';
 
+import { coalesce } from '~/helpers';
 import {
+  AdjustedDataset,
   BeaconSettings,
-  beaconSettingsPayload,
-  ColumnsState,
-  Dataset,
   EnergyType,
   Entities,
   Game,
@@ -32,6 +31,7 @@ import {
   moduleSettingsPayload,
   ObjectiveBase,
   ObjectiveUnit,
+  rational,
   Rational,
   Step,
   StepDetail,
@@ -91,7 +91,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
   toggleEffect = effect(() => {
     const focus = this.focus();
     const steps = this.steps();
-    if (focus) this.stepsTable?.toggleRow(steps[0]);
+    if (focus) this.stepsTable().toggleRow(steps[0]);
   });
 
   machinesState = this.store.selectSignal(Machines.getMachinesState);
@@ -120,7 +120,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
   sortSteps$ = new BehaviorSubject<SortEvent | null>(null);
 
-  @ViewChild('stepsTable') stepsTable: Table | undefined;
+  stepsTable = viewChild.required<Table>('stepsTable');
 
   activeItem: Entities<MenuItem> = {};
   fragmentId: string | null | undefined;
@@ -131,7 +131,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
   Game = Game;
   EnergyType = EnergyType;
   ObjectiveUnit = ObjectiveUnit;
-  Rational = Rational;
+  rational = rational;
 
   constructor() {
     combineLatest([
@@ -172,7 +172,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
               const tabs = stepDetails[step.id].tabs;
               if (tabs.length) {
                 if (this.stepsTable) {
-                  this.stepsTable.toggleRow(step);
+                  this.stepsTable().toggleRow(step);
                   setTimeout(() => {
                     if (tabId) {
                       const tab = this.document.querySelector(
@@ -227,15 +227,15 @@ export class StepsComponent implements OnInit, AfterViewInit {
         const diff = steps.indexOf(a) - steps.indexOf(b);
         return diff;
       });
-      this.stepsTable.sortOrder = 0;
-      this.stepsTable.sortField = '';
-      this.stepsTable.reset();
+      this.stepsTable().sortOrder = 0;
+      this.stepsTable().sortField = '';
+      this.stepsTable().reset();
       return this.sortSteps$.next(null);
     }
 
     // Sort by numeric field
     curr.data?.sort((a: Step, b: Step) => {
-      const diff = (a[field] ?? Rational.zero).sub(b[field] ?? Rational.zero);
+      const diff = (a[field] ?? rational(0n)).sub(b[field] ?? rational(0n));
       return diff.toNumber() * order;
     });
   }
@@ -277,28 +277,12 @@ export class StepsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  export(
-    steps: Step[],
-    itemsState: Items.ItemsState,
-    recipesState: Recipes.RecipesState,
-    columnsState: ColumnsState,
-    data: Dataset,
-  ): void {
-    this.exportSvc.stepsToCsv(
-      steps,
-      columnsState,
-      itemsState,
-      recipesState,
-      data,
-    );
-  }
-
-  toggleRecipes(ids: string[], value: boolean, data: Dataset): void {
+  toggleRecipes(ids: string[], value: boolean, data: AdjustedDataset): void {
     const payload = ids.map(
       (id): IdValueDefaultPayload<boolean> => ({
         id,
         value,
-        def: (data.defaults?.excludedRecipeIds ?? []).includes(id),
+        def: coalesce(data.defaults?.excludedRecipeIds, []).includes(id),
       }),
     );
     this.setRecipeExcludedBatch(payload);
@@ -307,10 +291,12 @@ export class StepsComponent implements OnInit, AfterViewInit {
   toggleRecipe(
     id: string,
     recipesState: Recipes.RecipesState,
-    data: Dataset,
+    data: AdjustedDataset,
   ): void {
     const value = !recipesState[id].excluded;
-    const def = (data.defaults?.excludedRecipeIds ?? []).some((i) => i === id);
+    const def = coalesce(data.defaults?.excludedRecipeIds, []).some(
+      (i) => i === id,
+    );
     this.setRecipeExcluded(id, value, def);
   }
 
@@ -355,7 +341,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
           settings.moduleOptions ?? [],
           machineSettings.modules,
           machinesState.moduleRankIds,
-          machine.modules ?? 0,
+          coalesce(machine.modules, rational(0n)),
         );
         this.setModules(
           id,
@@ -367,18 +353,18 @@ export class StepsComponent implements OnInit, AfterViewInit {
       case 'beacons': {
         if (!Array.isArray(event)) return;
         const def = machineSettings.beacons;
-        this.setBeacons(
-          id,
-          beaconSettingsPayload(event as BeaconSettings[], def),
-          isObjective,
-        );
+        // this.setBeacons(
+        //   id,
+        //   beaconSettingsPayload(event as BeaconSettings[], def),
+        //   isObjective,
+        // );
 
         break;
       }
       case 'overclock': {
         if (typeof event !== 'number') return;
         const def = machineSettings.overclock;
-        this.setOverclock(id, Rational.fromNumber(event), def, isObjective);
+        this.setOverclock(id, rational(event), def, isObjective);
         break;
       }
     }

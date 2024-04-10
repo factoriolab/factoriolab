@@ -1,13 +1,13 @@
 import { ItemId, RecipeId } from 'src/tests';
 import {
-  CostsState,
+  CostSettings,
   DisplayRate,
   InserterCapacity,
   InserterTarget,
   MaximizeType,
   Preset,
-  Rational,
-  ResearchSpeed,
+  rational,
+  researchBonus,
 } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './settings.actions';
@@ -98,7 +98,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_BEACON_RECEIVERS', () => {
     it('should set default beacon receivers', () => {
-      const value = Rational.one;
+      const value = rational(1n);
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetBeaconReceiversAction(value),
@@ -164,7 +164,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_FLOW_RATE', () => {
     it('should set the flow rate', () => {
-      const value = Rational.fromNumber(6000);
+      const value = rational(6000n);
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetFlowRateAction(value),
@@ -186,7 +186,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_MINING_BONUS', () => {
     it('should set the mining bonus', () => {
-      const value = Rational.ten;
+      const value = rational(10n);
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetMiningBonusAction(value),
@@ -197,14 +197,15 @@ describe('Settings Reducer', () => {
 
   describe('SET_RESEARCH_SPEED', () => {
     it('should set the research speed', () => {
-      const value = ResearchSpeed.Speed1;
+      const value = researchBonus.speed1;
       const result = settingsReducer(
         initialSettingsState,
-        new Actions.SetResearchSpeedAction(value),
+        new Actions.SetResearchBonusAction(value),
       );
-      expect(result.researchSpeed).toEqual(value);
+      expect(result.researchBonus).toEqual(value);
     });
   });
+
   describe('SET_INSERTER_CAPACITY', () => {
     it('should set the inserter capacity', () => {
       const value = InserterCapacity.Capacity2;
@@ -243,14 +244,14 @@ describe('Settings Reducer', () => {
 
   describe('SET_COSTS', () => {
     it('should set cost values', () => {
-      const value: CostsState = {
-        factor: Rational.one,
-        machine: Rational.one,
-        footprint: Rational.one,
-        unproduceable: Rational.one,
-        excluded: Rational.one,
-        surplus: Rational.one,
-        maximize: Rational.minusOne,
+      const value: CostSettings = {
+        factor: rational(1n),
+        machine: rational(1n),
+        footprint: rational(1n),
+        unproduceable: rational(1n),
+        excluded: rational(1n),
+        surplus: rational(1n),
+        maximize: rational(-1n),
       };
       const result = settingsReducer(
         initialSettingsState,

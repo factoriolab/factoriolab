@@ -6,7 +6,7 @@ import {
 } from '@angular/core/testing';
 
 import { TestModule, TestUtility } from 'src/tests';
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { InputNumberComponent } from './input-number.component';
 
 describe('InputNumberComponent', () => {
@@ -23,8 +23,8 @@ describe('InputNumberComponent', () => {
     fixture = TestBed.createComponent(InputNumberComponent);
     component = fixture.componentInstance;
     TestUtility.setInputs(fixture, {
-      value: Rational.ten,
-      maximum: Rational.hundred,
+      value: rational(10n),
+      maximum: rational(100n),
     });
     fixture.detectChanges();
     emit = spyOn(component.setValue, 'emit');
@@ -56,47 +56,58 @@ describe('InputNumberComponent', () => {
 
   describe('changeValue', () => {
     it('should emit an input value', fakeAsync(() => {
-      component.changeValue('1 1/3', 'input');
+      component._value = '1 1/3';
+      component.changeValue('input');
       tick(500);
-      expect(emit).toHaveBeenCalledWith(Rational.from(4, 3));
+      expect(emit).toHaveBeenCalledWith(rational(4n, 3n));
     }));
 
     it('should emit a blur value', fakeAsync(() => {
-      component.changeValue('1 1/3', 'blur');
+      component._value = '1 1/3';
+      component.changeValue('blur');
       tick(500);
-      expect(emit).toHaveBeenCalledWith(Rational.from(4, 3));
+      expect(emit).toHaveBeenCalledWith(rational(4n, 3n));
     }));
 
     it('should not emit invalid values', fakeAsync(() => {
-      component.changeValue('abc', 'input');
+      component._value = 'abc';
+      component.changeValue('input');
       tick(500);
       expect(emit).not.toHaveBeenCalled();
+    }));
+
+    it('should simplify values when the user hits enter', fakeAsync(() => {
+      component._value = '1 1/3';
+      component.changeValue('enter');
+      tick(500);
+      expect(emit).toHaveBeenCalledWith(rational(4n, 3n));
+      expect(component._value).toEqual('4/3');
     }));
   });
 
   describe('increase', () => {
     it('should emit a value', () => {
       component.increase();
-      expect(emit).toHaveBeenCalledWith(Rational.fromNumber(11));
+      expect(emit).toHaveBeenCalledWith(rational(11n));
     });
 
     it('should round up a fractional value', () => {
-      TestUtility.setInputs(fixture, { value: Rational.from(3, 2) });
+      TestUtility.setInputs(fixture, { value: rational(3n, 2n) });
       component.increase();
-      expect(emit).toHaveBeenCalledWith(Rational.two);
+      expect(emit).toHaveBeenCalledWith(rational(2n));
     });
   });
 
   describe('decrease', () => {
     it('should emit a value', () => {
       component.decrease();
-      expect(emit).toHaveBeenCalledWith(Rational.fromNumber(9));
+      expect(emit).toHaveBeenCalledWith(rational(9n));
     });
 
     it('should round down a fractional value', () => {
-      TestUtility.setInputs(fixture, { value: Rational.from(3, 2) });
+      TestUtility.setInputs(fixture, { value: rational(3n, 2n) });
       component.decrease();
-      expect(emit).toHaveBeenCalledWith(Rational.one);
+      expect(emit).toHaveBeenCalledWith(rational(1n));
     });
   });
 });

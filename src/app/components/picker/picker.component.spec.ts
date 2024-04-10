@@ -26,13 +26,19 @@ describe('PickerComponent', () => {
     fixture.detectChanges();
   });
 
+  afterEach(() => mockStore.resetSelectors());
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
   describe('clickOpen', () => {
     it('should open the items dialog', () => {
-      component.clickOpen('item', Mocks.RawDataset.itemIds, ItemId.IronPlate);
+      component.clickOpen(
+        'item',
+        Mocks.AdjustedDataset.itemIds,
+        ItemId.IronPlate,
+      );
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();
     });
@@ -40,7 +46,7 @@ describe('PickerComponent', () => {
     it('should open the recipes dialog', () => {
       component.clickOpen(
         'recipe',
-        Mocks.RawDataset.recipeIds,
+        Mocks.AdjustedDataset.recipeIds,
         RecipeId.IronPlate,
       );
       expect(component.visible).toBeTrue();
@@ -48,14 +54,16 @@ describe('PickerComponent', () => {
     });
 
     it('should open as item multiselect', () => {
-      component.clickOpen('item', Mocks.RawDataset.itemIds, [ItemId.IronPlate]);
+      component.clickOpen('item', Mocks.AdjustedDataset.itemIds, [
+        ItemId.IronPlate,
+      ]);
       expect(component.visible).toBeTrue();
       expect(component.isMultiselect).toBeTrue();
       expect(component.selection?.length).toEqual(1);
     });
 
     it('should open as recipe multiselect', () => {
-      component.clickOpen('recipe', Mocks.RawDataset.recipeIds, [
+      component.clickOpen('recipe', Mocks.AdjustedDataset.recipeIds, [
         RecipeId.IronPlate,
       ]);
       expect(component.visible).toBeTrue();
@@ -64,10 +72,10 @@ describe('PickerComponent', () => {
     });
 
     it('should open as recipe multiselect with null defaults', () => {
-      const data = { ...Mocks.getDataset(), ...{ defaults: null } };
+      const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
       mockStore.overrideSelector(Recipes.getAdjustedDataset, data);
       mockStore.refreshState();
-      component.clickOpen('recipe', Mocks.RawDataset.recipeIds, [
+      component.clickOpen('recipe', Mocks.AdjustedDataset.recipeIds, [
         RecipeId.IronPlate,
       ]);
       expect(component.visible).toBeTrue();
@@ -132,14 +140,16 @@ describe('PickerComponent', () => {
 
   describe('inputSearch', () => {
     beforeEach(() => {
-      component.clickOpen('item', Mocks.RawDataset.itemIds);
+      component.clickOpen('item', Mocks.AdjustedDataset.itemIds);
     });
 
     it('should skip if no search is specified', () => {
       component.search = '';
       component.inputSearch();
-      expect(component.categoryIds).toEqual(Mocks.RawDataset.categoryIds);
-      expect(component.categoryRows).toEqual(Mocks.RawDataset.categoryItemRows);
+      expect(component.categoryIds).toEqual(Mocks.AdjustedDataset.categoryIds);
+      expect(component.categoryRows).toEqual(
+        Mocks.AdjustedDataset.categoryItemRows,
+      );
     });
 
     it('should search items', () => {

@@ -1,13 +1,20 @@
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
-export interface FluidWagon {
+export interface FluidWagonJson {
   capacity: number | string;
 }
 
-export class FluidWagonRational {
+export interface FluidWagon {
   capacity: Rational;
+}
 
-  constructor(obj: FluidWagon) {
-    this.capacity = Rational.from(obj.capacity);
-  }
+export function parseFluidWagon(json: FluidWagonJson): FluidWagon;
+export function parseFluidWagon(
+  json: FluidWagonJson | undefined,
+): FluidWagon | undefined;
+export function parseFluidWagon(
+  json: FluidWagonJson | undefined,
+): FluidWagon | undefined {
+  if (json == null) return;
+  return { capacity: rational(json.capacity) };
 }

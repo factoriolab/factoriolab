@@ -8,7 +8,7 @@ import {
   Objective,
   ObjectiveType,
   ObjectiveUnit,
-  Rational,
+  rational,
   SimplexResultType,
 } from '~/models';
 import { LabState, Objectives, Preferences, Settings } from '~/store';
@@ -82,7 +82,7 @@ describe('ObjectivesComponent', () => {
             id: '0',
             type: ObjectiveType.Maximize,
             targetId: ItemId.Coal,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Items,
           },
         ],
@@ -105,14 +105,14 @@ describe('ObjectivesComponent', () => {
             id: '0',
             type: ObjectiveType.Maximize,
             targetId: ItemId.Coal,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Items,
           },
           {
             id: '1',
             type: ObjectiveType.Limit,
             targetId: ItemId.Coal,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Items,
           },
         ],
@@ -135,14 +135,14 @@ describe('ObjectivesComponent', () => {
             id: '0',
             type: ObjectiveType.Maximize,
             targetId: RecipeId.Coal,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Machines,
           },
           {
             id: '1',
             type: ObjectiveType.Limit,
             targetId: ItemId.Coal,
-            value: Rational.one,
+            value: rational(1n),
             unit: ObjectiveUnit.Items,
           },
         ],
@@ -210,15 +210,22 @@ describe('ObjectivesComponent', () => {
       return picker;
     };
 
+    it('should do nothing if it cannot find a matching objective rational', () => {
+      spyOn(component, 'setUnit');
+      component.changeUnit(
+        Mocks.Objective5,
+        ObjectiveUnit.Machines,
+        {} as any,
+        {} as any,
+      );
+      expect(component.setUnit).not.toHaveBeenCalled();
+    });
+
     it('should do nothing if switching to and from machines', () => {
       spyOn(component, 'setUnit');
       component.changeUnit(
         Mocks.Objective5,
         ObjectiveUnit.Machines,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.DisplayRateInfo,
-        Mocks.Dataset,
         {} as any,
         {} as any,
       );
@@ -230,10 +237,6 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective1,
         ObjectiveUnit.Machines,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.DisplayRateInfo,
-        Mocks.Dataset,
         {} as any,
         {} as any,
       );
@@ -248,17 +251,13 @@ describe('ObjectivesComponent', () => {
       const objective: Objective = {
         id: '0',
         targetId: ItemId.PetroleumGas,
-        value: Rational.one,
+        value: rational(1n),
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       };
       component.changeUnit(
         objective,
         ObjectiveUnit.Machines,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.DisplayRateInfo,
-        Mocks.Dataset,
         {} as any,
         mockPicker(RecipeId.AdvancedOilProcessing),
       );
@@ -273,10 +272,6 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective5,
         ObjectiveUnit.Items,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.DisplayRateInfo,
-        Mocks.Dataset,
         {} as any,
         {} as any,
       );
@@ -292,15 +287,11 @@ describe('ObjectivesComponent', () => {
         {
           id: '0',
           targetId: RecipeId.AdvancedOilProcessing,
-          value: Rational.one,
+          value: rational(1n),
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
         ObjectiveUnit.Items,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.DisplayRateInfo,
-        Mocks.Dataset,
         mockPicker('id'),
         {} as any,
       );
@@ -315,10 +306,6 @@ describe('ObjectivesComponent', () => {
       component.changeUnit(
         Mocks.Objective1,
         ObjectiveUnit.Belts,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.DisplayRateInfo,
-        Mocks.Dataset,
         {} as any,
         {} as any,
       );
@@ -333,28 +320,33 @@ describe('ObjectivesComponent', () => {
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'setValue');
       component.convertItemsToMachines(
-        Mocks.ObjectivesList[2],
+        Mocks.Objectives[2],
         RecipeId.AdvancedCircuit,
-        Mocks.ItemsState,
-        Mocks.BeltSpeed,
-        Mocks.DisplayRateInfo,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setValue).not.toHaveBeenCalled();
     });
   });
 
   describe('convertMachinesToItems', () => {
+    it('should convert the objective value', () => {
+      spyOn(component, 'setValue');
+      component.convertMachinesToItems(
+        Mocks.Objectives[4],
+        ItemId.PiercingRoundsMagazine,
+        ObjectiveUnit.Items,
+        Mocks.AdjustedDataset,
+      );
+      expect(component.setValue).toHaveBeenCalledWith('4', rational(175n));
+    });
+
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'setValue');
       component.convertMachinesToItems(
-        Mocks.ObjectivesList[2],
+        Mocks.Objectives[2],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Items,
-        Mocks.ItemsState,
-        Mocks.BeltSpeed,
-        Mocks.DisplayRateInfo,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setValue).not.toHaveBeenCalled();
     });
@@ -364,13 +356,10 @@ describe('ObjectivesComponent', () => {
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'setValue');
       component.convertItemsToItems(
-        Mocks.ObjectivesList[2],
+        Mocks.Objectives[2],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Items,
-        Mocks.ItemsState,
-        Mocks.BeltSpeed,
-        Mocks.DisplayRateInfo,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setValue).not.toHaveBeenCalled();
     });

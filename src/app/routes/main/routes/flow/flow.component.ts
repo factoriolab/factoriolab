@@ -7,7 +7,7 @@ import {
   ElementRef,
   inject,
   signal,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
@@ -39,6 +39,7 @@ import {
   SankeyNode,
   sankeyRight,
 } from '~/d3-sankey';
+import { coalesce } from '~/helpers';
 import {
   Entities,
   FlowData,
@@ -113,7 +114,7 @@ export class FlowComponent implements AfterViewInit {
   flowSvc = inject(FlowService);
   themeSvc = inject(ThemeService);
 
-  @ViewChild('svg') svgElement: ElementRef | undefined;
+  svgElement = viewChild.required<ElementRef>('svg');
 
   height = window.innerHeight * 0.75;
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
@@ -154,20 +155,18 @@ export class FlowComponent implements AfterViewInit {
   }
 
   rebuildSankey(flowData: FlowData, preferences: PreferencesState): void {
-    if (!this.svgElement) return;
-
     let skGraph = this.getLayout(
       flowData,
       preferences.sankeyAlign,
       800,
       this.height,
     );
-    const columns = Math.max(...skGraph.nodes.map((d) => d.depth ?? 0));
+    const columns = Math.max(...skGraph.nodes.map((d) => coalesce(d.depth, 0)));
     const width = (columns + 1) * NODE_WIDTH + columns * NODE_WIDTH * 8;
     const height = Math.min(this.height, width * 0.75);
     skGraph = this.getLayout(flowData, preferences.sankeyAlign, width, height);
 
-    const svg = select(this.svgElement.nativeElement)
+    const svg = select(this.svgElement().nativeElement)
       .append('svg')
       .attr('viewBox', `0 0 ${width} ${height}`);
 
@@ -195,14 +194,14 @@ export class FlowComponent implements AfterViewInit {
         (l as SankeyLinkExtraProperties).direction === 'forward'
           ? sankeyLinkHorizontal()(l)
           : sankeyLinkLoop(
-              l.width ?? 0,
+              coalesce(l.width, 0),
               NODE_WIDTH,
               (l.source as SankeyNode<Node, Link>).y1!,
               (l.target as SankeyNode<Node, Link>).y1!,
             )(l),
       )
       .attr('stroke', (l) => l.color)
-      .attr('stroke-width', (l) => Math.max(1, l.width ?? 0));
+      .attr('stroke-width', (l) => Math.max(1, coalesce(l.width, 0)));
 
     link.append('title').text((l) => l.name);
 
@@ -226,10 +225,10 @@ export class FlowComponent implements AfterViewInit {
       .selectAll<SVGRectElement, SankeyNode<Node, Link>>('rect')
       .data(skGraph.nodes)
       .join('rect')
-      .attr('x', (d) => d.x0 ?? 0)
-      .attr('y', (d) => d.y0 ?? 0)
+      .attr('x', (d) => coalesce(d.x0, 0))
+      .attr('y', (d) => coalesce(d.y0, 0))
       .attr('height', (d) => this.nodeHeight(d))
-      .attr('width', (d) => (d.x1 ?? 0) - (d.x0 ?? 0))
+      .attr('width', (d) => coalesce(d.x1, 0) - coalesce(d.x0, 0))
       .attr('fill', (d) => d.color)
       .on('click', (e, d) => {
         if (e.defaultPrevented) return;
@@ -241,12 +240,12 @@ export class FlowComponent implements AfterViewInit {
           .on('drag', function (this, event, d) {
             const rectY = parseFloat(select(this).attr('y'));
             const rectX = parseFloat(select(this).attr('x'));
-            d.y0 = (d.y0 ?? 0) + event.dy;
-            d.y1 = (d.y1 ?? 0) + event.dy;
-            d.x0 = (d.x0 ?? 0) + event.dx;
-            d.x1 = (d.x1 ?? 0) + event.dx;
-            const trX = (d.x0 ?? 0) - rectX;
-            const trY = (d.y0 ?? 0) - rectY;
+            d.y0 = coalesce(d.y0, 0) + event.dy;
+            d.y1 = coalesce(d.y1, 0) + event.dy;
+            d.x0 = coalesce(d.x0, 0) + event.dx;
+            d.x1 = coalesce(d.x1, 0) + event.dx;
+            const trX = coalesce(d.x0, 0) - rectX;
+            const trY = coalesce(d.y0, 0) - rectY;
             const transform = 'translate(' + trX + ',' + trY + ')';
             select(this).attr('transform', transform);
 
@@ -265,7 +264,7 @@ export class FlowComponent implements AfterViewInit {
               const target = l.target as SankeyNode<Node, Link>;
 
               return sankeyLinkLoop(
-                l.width ?? 0,
+                coalesce(l.width, 0),
                 NODE_WIDTH,
                 source.y1!,
                 target.y1!,
@@ -290,18 +289,18 @@ export class FlowComponent implements AfterViewInit {
       .attr(
         'x',
         (d) =>
-          ((d.x1 ?? 0) + (d.x0 ?? 0)) / 2 -
+          (coalesce(d.x1, 0) + coalesce(d.x0, 0)) / 2 -
           Math.min(30, this.nodeHeight(d) - 2) / 2,
       )
       .attr(
         'y',
         (d) =>
-          ((d.y1 ?? 0) + (d.y0 ?? 0)) / 2 -
+          (coalesce(d.y1, 0) + coalesce(d.y0, 0)) / 2 -
           Math.min(30, this.nodeHeight(d) - 2) / 2,
       )
       .style('pointer-events', 'none')
       .append('image')
-      .attr('href', (d) => d.href ?? '');
+      .attr('href', (d) => coalesce(d.href, ''));
 
     this.svg = svg;
   }
@@ -405,7 +404,7 @@ export class FlowComponent implements AfterViewInit {
 
     return flow.links.map((l) => {
       const id = `${l.source}|${l.target}`;
-      duplicateMap[id] = (duplicateMap[id] ?? 0) + 1;
+      duplicateMap[id] = coalesce(duplicateMap[id], 0) + 1;
 
       return {
         from: l.source,
@@ -492,6 +491,6 @@ export class FlowComponent implements AfterViewInit {
   }
 
   nodeHeight(d: SankeyNode<Node, Link>): number {
-    return (d.y1 ?? 0) - (d.y0 ?? 0);
+    return coalesce(d.y1, 0) - coalesce(d.y0, 0);
   }
 }

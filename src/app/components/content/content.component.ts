@@ -4,7 +4,7 @@ import {
   Component,
   inject,
   TemplateRef,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -23,10 +23,10 @@ export class ContentComponent implements AfterViewInit {
   messageSvc = inject(MessageService);
   contentSvc = inject(ContentService);
 
-  @ViewChild('translateSelectedItem') translateSelectedItem:
-    | TemplateRef<unknown>
-    | undefined;
-  @ViewChild('translateItem') translateItem: TemplateRef<unknown> | undefined;
+  translateSelectedItem = viewChild.required<TemplateRef<unknown>>(
+    'translateSelectedItem',
+  );
+  translateItem = viewChild.required<TemplateRef<unknown>>('translateItem');
 
   constructor() {
     this.contentSvc.showToast$
@@ -38,7 +38,7 @@ export class ContentComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.contentSvc.translateSelectedItem$.next(this.translateSelectedItem);
-    this.contentSvc.translateItem$.next(this.translateItem);
+    this.contentSvc.translateSelectedItem$.next(this.translateSelectedItem());
+    this.contentSvc.translateItem$.next(this.translateItem());
   }
 }

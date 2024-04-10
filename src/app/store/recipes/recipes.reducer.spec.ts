@@ -1,5 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import { Items } from '../';
 import * as App from '../app.actions';
@@ -85,12 +85,12 @@ describe('Recipes Reducer', () => {
           ...initialRecipesState,
           ...{
             [Mocks.Recipe1.id]: {
-              modules: [{ count: Rational.one, id: ItemId.Module }],
+              modules: [{ count: rational(1n), id: ItemId.Module }],
               beacons: [
                 {
-                  count: Rational.ten,
+                  count: rational(10n),
                   id: ItemId.Beacon,
-                  modules: [{ count: Rational.two, id: ItemId.Module }],
+                  modules: [{ count: rational(2n), id: ItemId.Module }],
                 },
               ],
             },
@@ -122,7 +122,7 @@ describe('Recipes Reducer', () => {
 
   describe('SET_MODULES', () => {
     it('should set the modules', () => {
-      const value = [{ count: Rational.one, id: ItemId.Module }];
+      const value = [{ count: rational(1n), id: ItemId.Module }];
       const result = recipesReducer(
         initialRecipesState,
         new Actions.SetModulesAction({
@@ -138,9 +138,9 @@ describe('Recipes Reducer', () => {
     it('should set the beacons', () => {
       const value = [
         {
-          count: Rational.one,
+          count: rational(1n),
           id: ItemId.Beacon,
-          modules: [{ count: Rational.two, id: ItemId.Module }],
+          modules: [{ count: rational(2n), id: ItemId.Module }],
         },
       ];
       const result = recipesReducer(
@@ -156,13 +156,13 @@ describe('Recipes Reducer', () => {
 
   describe('SET_OVERCLOCK', () => {
     it('should set the overclock', () => {
-      const value = Rational.fromNumber(200);
+      const value = rational(200n);
       const result = recipesReducer(
         initialRecipesState,
         new Actions.SetOverclockAction({
           id: Mocks.Recipe1.id,
           value,
-          def: Rational.hundred,
+          def: rational(100n),
         }),
       );
       expect(result[Mocks.Recipe1.id].overclock).toEqual(value);
@@ -175,10 +175,10 @@ describe('Recipes Reducer', () => {
         initialRecipesState,
         new Actions.SetCostAction({
           id: Mocks.Recipe1.id,
-          value: Rational.ten,
+          value: rational(10n),
         }),
       );
-      expect(result[Mocks.Recipe1.id].cost).toEqual(Rational.ten);
+      expect(result[Mocks.Recipe1.id].cost).toEqual(rational(10n));
     });
   });
 
@@ -231,34 +231,34 @@ describe('Recipes Reducer', () => {
     });
   });
 
-  // describe('RESET_RECIPE_MODULES', () => {
-  //   it(`should reset a recipe's modules`, () => {
-  //     spyOn(StoreUtility, 'resetFields');
-  //     recipesReducer(
-  //       undefined,
-  //       new Actions.ResetRecipeModulesAction(Mocks.Recipe1.id),
-  //     );
-  //     expect(StoreUtility.resetFields).toHaveBeenCalledWith(
-  //       {},
-  //       ['machineModuleIds', 'beacons'] as any,
-  //       Mocks.Recipe1.id,
-  //     );
-  //   });
-  // });
+  describe('RESET_RECIPE_MODULES', () => {
+    it(`should reset a recipe's modules`, () => {
+      spyOn(StoreUtility, 'resetFields');
+      recipesReducer(
+        undefined,
+        new Actions.ResetRecipeModulesAction(Mocks.Recipe1.id),
+      );
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith(
+        {},
+        ['moduleIds', 'beacons'] as any,
+        Mocks.Recipe1.id,
+      );
+    });
+  });
 
-  // describe('RESET_MACHINE', () => {
-  //   it('should call resetField', () => {
-  //     spyOn(StoreUtility, 'resetFields');
-  //     recipesReducer(undefined, new Actions.ResetMachinesAction());
-  //     expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
-  //       'machineId',
-  //       'fuelId',
-  //       'overclock',
-  //       'machineModuleIds',
-  //       'beacons',
-  //     ] as any);
-  //   });
-  // });
+  describe('RESET_MACHINE', () => {
+    it('should call resetField', () => {
+      spyOn(StoreUtility, 'resetFields');
+      recipesReducer(undefined, new Actions.ResetMachinesAction());
+      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
+        'machineId',
+        'fuelId',
+        'overclock',
+        'moduleIds',
+        'beacons',
+      ] as any);
+    });
+  });
 
   describe('RESET_BEACONS', () => {
     it('should call resetField', () => {

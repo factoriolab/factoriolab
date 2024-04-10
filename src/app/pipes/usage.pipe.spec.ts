@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import { DisplayService } from '~/services';
 import { UsagePipe } from './usage.pipe';
 
@@ -21,7 +21,7 @@ describe('UsagePipe', () => {
   describe('transform', () => {
     it('should call DisplayService method', () => {
       spyOn(service, 'usage').and.callThrough();
-      expect(pipe.transform(Rational.one)).toEqual('1 kW');
+      expect(pipe.transform(rational(1n))).toEqual('1 kW');
       expect(service.usage).toHaveBeenCalled();
     });
   });

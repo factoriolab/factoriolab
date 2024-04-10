@@ -1,20 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ItemId, Mocks, RecipeId } from 'src/tests';
-import {
-  initialColumnsState,
-  ItemSettings,
-  Rational,
-  RecipeSettings,
-  Step,
-} from '~/models';
+import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+import { rational, Step } from '~/models';
 import { ExportService } from './export.service';
 
 describe('ExportService', () => {
   let service: ExportService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(ExportService);
   });
 
@@ -24,13 +18,7 @@ describe('ExportService', () => {
   describe('saveAsCsv', () => {
     it('should save the csv', () => {
       spyOn(service, 'saveAsCsv');
-      service.stepsToCsv(
-        Mocks.Steps,
-        initialColumnsState,
-        Mocks.ItemsStateInitial,
-        Mocks.RecipesStateInitial,
-        Mocks.Dataset,
-      );
+      service.stepsToCsv(Mocks.Steps);
       expect(service.saveAsCsv).toHaveBeenCalled();
     });
   });
@@ -42,20 +30,20 @@ describe('ExportService', () => {
       id: '0',
       itemId: ItemId.IronOre,
       recipeId: RecipeId.IronPlate,
-      parents: { ['1']: Rational.one },
+      parents: { ['1']: rational(1n) },
     };
     const fullStep: Step = {
       id: '1',
       itemId,
-      items: Rational.from(3),
-      surplus: Rational.two,
-      belts: Rational.from(3),
-      wagons: Rational.from(4),
-      machines: Rational.from(5),
-      power: Rational.from(6),
-      pollution: Rational.from(7),
-      outputs: { [itemId]: Rational.from(8) },
-      parents: { ['1']: Rational.from(9) },
+      items: rational(3n),
+      surplus: rational(2n),
+      belts: rational(3n),
+      wagons: rational(4n),
+      machines: rational(5n),
+      power: rational(6n),
+      pollution: rational(7n),
+      outputs: { [itemId]: rational(8n) },
+      parents: { ['1']: rational(9n) },
       recipeId,
     };
     const minStep: Step = {
@@ -63,31 +51,9 @@ describe('ExportService', () => {
       itemId: itemId,
       recipeId: recipeId,
     };
-    const itemS: ItemSettings = {
-      beltId: 'belt',
-      wagonId: 'wagon',
-    };
-    const fullRecipe: RecipeSettings = {
-      machineId: ItemId.AssemblingMachine2,
-      modules: [{ count: Rational.two, id: ItemId.SpeedModule }],
-      beacons: [
-        {
-          count: Rational.fromNumber(8),
-          id: ItemId.Beacon,
-          modules: [{ count: Rational.two, id: ItemId.SpeedModule3 }],
-        },
-      ],
-    };
 
     it('should fill in all fields', () => {
-      const result = service.stepToJson(
-        fullStep,
-        [inStep, fullStep],
-        initialColumnsState,
-        { [itemId]: itemS },
-        { [recipeId]: fullRecipe },
-        Mocks.Dataset,
-      );
+      const result = service.stepToJson(fullStep, [inStep, fullStep]);
       expect(result).toEqual({
         Item: itemId,
         Items: '=1',
@@ -96,36 +62,29 @@ describe('ExportService', () => {
         Outputs: '"iron-plate:8"',
         Targets: '"iron-plate:9"',
         Belts: '=3',
-        Belt: itemS.beltId,
+        Belt: ItemId.TransportBelt,
         Wagons: '=4',
-        Wagon: itemS.wagonId,
+        Wagon: ItemId.CargoWagon,
         Recipe: recipeId,
         Machines: '=5',
-        Machine: fullRecipe.machineId,
-        Modules: '"2 speed-module"',
-        Beacons: '"8 beacon (2 speed-module-3)"',
+        Machine: ItemId.ElectricFurnace,
+        Modules: '"module,module"',
+        Beacons: '"0"',
         Power: '=6',
         Pollution: '=7',
       });
     });
 
     it('should handle empty fields', () => {
-      const result = service.stepToJson(
-        minStep,
-        [minStep],
-        initialColumnsState,
-        { [itemId]: itemS },
-        { [recipeId]: fullRecipe },
-        Mocks.Dataset,
-      );
+      const result = service.stepToJson(minStep, [minStep]);
       expect(result).toEqual({
         Item: itemId,
-        Belt: 'belt',
-        Wagon: 'wagon',
+        Belt: ItemId.TransportBelt,
+        Wagon: ItemId.CargoWagon,
         Recipe: recipeId,
-        Machine: ItemId.AssemblingMachine2,
-        Modules: '"2 speed-module"',
-        Beacons: '"8 beacon (2 speed-module-3)"',
+        Machine: ItemId.ElectricFurnace,
+        Modules: '"module,module"',
+        Beacons: '"0"',
       });
     });
   });

@@ -1,5 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
-import { Rational } from '~/models';
+import { rational } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './machines.actions';
 import { initialMachinesState, machinesReducer } from './machines.reducer';
@@ -155,9 +155,9 @@ describe('Machines Reducer', () => {
     it('should set the beacon count for a machine', () => {
       const value = [
         {
-          count: Rational.zero,
+          count: rational(0n),
           id: ItemId.Beacon,
-          modules: [{ count: Rational.two, id: ItemId.Module }],
+          modules: [{ count: rational(2n), id: ItemId.Module }],
         },
       ];
       const result = machinesReducer(
@@ -177,11 +177,11 @@ describe('Machines Reducer', () => {
         undefined,
         new Actions.SetOverclockAction({
           id,
-          value: Rational.fromNumber(200),
-          def: Rational.hundred,
+          value: rational(200n),
+          def: rational(100n),
         }),
       );
-      expect(result.entities[id].overclock).toEqual(Rational.fromNumber(200));
+      expect(result.entities[id].overclock).toEqual(rational(200n));
     });
   });
 

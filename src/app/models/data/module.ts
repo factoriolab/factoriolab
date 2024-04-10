@@ -1,12 +1,12 @@
-import { Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
 export type ModuleEffect =
-  | 'speed'
-  | 'productivity'
   | 'consumption'
-  | 'pollution';
+  | 'pollution'
+  | 'productivity'
+  | 'speed';
 
-export interface Module {
+export interface ModuleJson {
   consumption?: number | string;
   pollution?: number | string;
   productivity?: number | string;
@@ -16,22 +16,27 @@ export interface Module {
   proliferator?: string;
 }
 
-export class ModuleRational {
-  speed?: Rational;
-  productivity?: Rational;
+export interface Module {
   consumption?: Rational;
   pollution?: Rational;
+  productivity?: Rational;
+  speed?: Rational;
   limitation?: string;
   sprays?: Rational;
   proliferator?: string;
+}
 
-  constructor(obj: Module) {
-    this.speed = Rational.from(obj.speed);
-    this.productivity = Rational.from(obj.productivity);
-    this.consumption = Rational.from(obj.consumption);
-    this.pollution = Rational.from(obj.pollution);
-    this.limitation = obj.limitation;
-    this.sprays = Rational.from(obj.sprays);
-    this.proliferator = obj.proliferator;
-  }
+export function parseModule(json: ModuleJson): Module;
+export function parseModule(json: ModuleJson | undefined): Module | undefined;
+export function parseModule(json: ModuleJson | undefined): Module | undefined {
+  if (json == null) return;
+  return {
+    consumption: rational(json.consumption),
+    pollution: rational(json.pollution),
+    productivity: rational(json.productivity),
+    speed: rational(json.speed),
+    limitation: json.limitation,
+    sprays: rational(json.sprays),
+    proliferator: json.proliferator,
+  };
 }

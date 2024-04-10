@@ -15,7 +15,7 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
-import { Game, Rational } from '~/models';
+import { Game, rational } from '~/models';
 import {
   App,
   Items,
@@ -212,9 +212,9 @@ describe('SettingsComponent', () => {
     it('should set up a batch of actions to set recipe excluded states', () => {
       spyOn(component, 'setRecipeExcludedBatch');
       component.setExcludedRecipes(
-        [...Mocks.RawDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
+        [...Mocks.AdjustedDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
         Mocks.RecipesStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
         { id: RecipeId.Coal, value: true, def: false },
@@ -224,10 +224,10 @@ describe('SettingsComponent', () => {
     it('should handle null defaults', () => {
       spyOn(component, 'setRecipeExcludedBatch');
       component.setExcludedRecipes(
-        [...Mocks.RawDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
+        [...Mocks.AdjustedDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
         Mocks.RecipesStateInitial,
         {
-          ...Mocks.Dataset,
+          ...Mocks.AdjustedDataset,
           ...{ defaults: undefined },
         },
       );
@@ -243,7 +243,7 @@ describe('SettingsComponent', () => {
       component.setExcludedItems(
         [ItemId.Coal],
         Mocks.ItemsStateInitial,
-        Mocks.Dataset,
+        Mocks.AdjustedDataset,
       );
       expect(component.setItemExcludedBatch).toHaveBeenCalledWith([
         { id: ItemId.Coal, value: true },
@@ -314,7 +314,7 @@ describe('SettingsComponent', () => {
     it('should turn on beacon power estimation', () => {
       spyOn(component, 'setBeaconReceivers');
       component.toggleBeaconReceivers(true);
-      expect(component.setBeaconReceivers).toHaveBeenCalledWith(Rational.one);
+      expect(component.setBeaconReceivers).toHaveBeenCalledWith(rational(1n));
     });
   });
 
@@ -357,7 +357,7 @@ describe('SettingsComponent', () => {
     dispatch.val('setLinkText', Preferences.SetLinkTextAction);
     dispatch.val('setFlowHideExcluded', Preferences.SetFlowHideExcludedAction);
     dispatch.val('setMiningBonus', Settings.SetMiningBonusAction);
-    dispatch.val('setResearchSpeed', Settings.SetResearchSpeedAction);
+    dispatch.val('setResearchSpeed', Settings.SetResearchBonusAction);
     dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
     dispatch.val('setPowerUnit', Preferences.SetPowerUnitAction);
