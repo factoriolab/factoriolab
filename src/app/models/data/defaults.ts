@@ -4,10 +4,10 @@ export interface DefaultsJson {
   maxBelt?: string;
   minPipe?: string;
   maxPipe?: string;
+  fuelRank?: string[];
   cargoWagon?: string;
   fluidWagon?: string;
   excludedRecipes?: string[];
-  fuelRank?: string[];
   minMachineRank?: string[];
   maxMachineRank?: string[];
   moduleRank?: string[];

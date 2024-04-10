@@ -1,5 +1,3 @@
-import { SelectItem } from 'primeng/api';
-
 import {
   AdjustedRecipe,
   Beacon,

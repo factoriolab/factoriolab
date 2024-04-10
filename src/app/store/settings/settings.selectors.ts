@@ -193,7 +193,6 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
   const m = base.defaults;
   let beacons: BeaconSettings[] = [];
   let moduleRank: string[] | undefined;
-  let overclock: Rational | undefined;
   switch (base.game) {
     case Game.Factorio: {
       moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
@@ -223,12 +222,8 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
       moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
       break;
     }
+    case Game.FinalFactory:
     case Game.Satisfactory: {
-      moduleRank = m.moduleRank;
-      overclock = rational(100n);
-      break;
-    }
-    case Game.FinalFactory: {
       moduleRank = m.moduleRank;
       break;
     }
@@ -246,7 +241,6 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
     fuelRankIds: coalesce(m.fuelRank, []),
     moduleRankIds: coalesce(moduleRank, []),
     beacons,
-    overclock,
   };
   return defaults;
 });
