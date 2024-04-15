@@ -334,21 +334,16 @@ describe('Objectives Selectors', () => {
           ],
           outputs: [
             {
-              recipeId: RecipeId.Coal,
-              recipeObjectiveId: undefined,
               value: rational(2n),
-              machines: rational(1n),
+              step: steps[0],
             },
             {
-              recipeId: RecipeId.CrudeOil,
-              recipeObjectiveId: undefined,
               value: rational(1n),
-              machines: rational(2n),
+              step: steps[1],
             },
             {
               inputs: true,
               value: rational(-2n),
-              machines: rational(0n),
             },
           ],
           recipeIds: [
