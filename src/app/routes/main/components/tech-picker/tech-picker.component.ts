@@ -114,7 +114,6 @@ game.write_file("techs.txt", table.concat(list, ","))
     this.contentSvc.showToast$.next({
       severity: 'success',
       detail: this.translateSvc.instant('techPicker.exportScriptCopied'),
-      life: 100000,
       contentStyleClass: 'detail-only',
     });
   }
