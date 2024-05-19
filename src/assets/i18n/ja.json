@@ -107,8 +107,15 @@
       "machine": "機械",
       "recipes": "レシピ"
     },
-    "theme": { "light": "ライト", "dark": "ダーク (既定)", "black": "ブラック" },
-    "flowDiagram": { "sankey": "サンキーグラフ", "boxLine": "ボックス-ライン" },
+    "theme": {
+      "light": "ライト",
+      "dark": "ダーク (既定)",
+      "black": "ブラック"
+    },
+    "flowDiagram": {
+      "sankey": "サンキーグラフ",
+      "boxLine": "ボックス-ライン"
+    },
     "linkValue": {
       "none": "None",
       "percent": "比率 (%)",
