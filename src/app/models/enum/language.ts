@@ -6,6 +6,7 @@ export enum Language {
   German = 'de',
   French = 'fr',
   Russian = 'ru',
+  Japanese = 'ja',
 }
 
 export const languageOptions: SelectItem<Language>[] = [
@@ -14,4 +15,5 @@ export const languageOptions: SelectItem<Language>[] = [
   { label: 'Deutsch (German)', value: Language.German },
   { label: 'Français (French)', value: Language.French },
   { label: 'русский (Russian)', value: Language.Russian },
+  { label: '日本語 (Japanese)', value: Language.Japanese },
 ];
