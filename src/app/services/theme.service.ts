@@ -41,12 +41,13 @@ export class ThemeService {
       let css = '';
       data.iconIds.forEach((i) => {
         const icon = data.iconEntities[i];
-        css += `.${i}::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+        const selector = this.escapeSelector(i);
+        css += `.${selector}::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
 
         if (icon.invertLight) {
-          css += `body.light .${i}::before { filter: invert(1); } `;
-          css += `.invert .${i}::before { filter: invert(1); } `;
-          css += `body.light .invert .${i}::before { filter: none; } `;
+          css += `body.light .${selector}::before { filter: invert(1); } `;
+          css += `.invert .${selector}::before { filter: invert(1); } `;
+          css += `body.light .invert .${selector}::before { filter: none; } `;
         }
       });
       data.itemIds
@@ -54,12 +55,13 @@ export class ThemeService {
         .filter(fnPropsNotNullish('icon'))
         .forEach((item) => {
           const icon = data.iconEntities[item.icon];
-          css += `.${item.id}.item::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+          const selector = this.escapeSelector(item.id);
+          css += `.${selector}.item::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
 
           if (icon.invertLight) {
-            css += `body.light .${item.id}.item::before { filter: invert(1); } `;
-            css += `.invert .${item.id}::before { filter: invert(1); } `;
-            css += `body.light .invert .${item.id}::before { filter: none; } `;
+            css += `body.light .${selector}.item::before { filter: invert(1); } `;
+            css += `.invert .${selector}::before { filter: invert(1); } `;
+            css += `body.light .invert .${selector}::before { filter: none; } `;
           }
         });
       data.recipeIds
@@ -67,12 +69,13 @@ export class ThemeService {
         .filter(fnPropsNotNullish('icon'))
         .forEach((recipe) => {
           const icon = data.iconEntities[recipe.icon];
-          css += `.${recipe.id}.recipe::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+          const selector = this.escapeSelector(recipe.id);
+          css += `.${selector}.recipe::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
 
           if (icon.invertLight) {
-            css += `body.light .${recipe.id}.recipe::before { filter: invert(1); } `;
-            css += `.invert .${recipe.id}::before { filter: invert(1); } `;
-            css += `body.light .invert .${recipe.id}::before { filter: none; } `;
+            css += `body.light .${selector}.recipe::before { filter: invert(1); } `;
+            css += `.invert .${selector}::before { filter: invert(1); } `;
+            css += `body.light .invert .${selector}::before { filter: none; } `;
           }
         });
       data.categoryIds
@@ -80,12 +83,13 @@ export class ThemeService {
         .filter(fnPropsNotNullish('icon'))
         .forEach((category) => {
           const icon = data.iconEntities[category.icon];
-          css += `.${category.id}.category::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+          const selector = this.escapeSelector(category.id);
+          css += `.${selector}.category::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
 
           if (icon.invertLight) {
-            css += `body.light .${category.id}.category::before { filter: invert(1); } `;
-            css += `.invert .${category.id}::before { filter: invert(1); } `;
-            css += `body.light .invert .${category.id}::before { filter: none; } `;
+            css += `body.light .${selector}.category::before { filter: invert(1); } `;
+            css += `.invert .${selector}::before { filter: invert(1); } `;
+            css += `body.light .invert .${selector}::before { filter: none; } `;
           }
         });
 
@@ -93,19 +97,22 @@ export class ThemeService {
         .map((i) => data.itemEntities[i])
         .filter(fnPropsNotNullish('iconText'))
         .forEach((item) => {
-          css += `.${item.id}.item::after { content: "${item.iconText}"; } `;
+          const selector = this.escapeSelector(item.id);
+          css += `.${selector}.item::after { content: "${item.iconText}"; } `;
         });
       data.recipeIds
         .map((i) => data.recipeEntities[i])
         .filter(fnPropsNotNullish('iconText'))
         .forEach((recipe) => {
-          css += `.${recipe.id}.recipe::after { content: "${recipe.iconText}"; } `;
+          const selector = this.escapeSelector(recipe.id);
+          css += `.${selector}.recipe::after { content: "${recipe.iconText}"; } `;
         });
       data.categoryIds
         .map((i) => data.categoryEntities[i])
         .filter(fnPropsNotNullish('iconText'))
         .forEach((category) => {
-          css += `.${category.id}.category::after { content: "${category.iconText}"; } `;
+          const selector = this.escapeSelector(category.id);
+          css += `.${selector}.category::after { content: "${category.iconText}"; } `;
         });
 
       style.innerText = css;
@@ -168,6 +175,10 @@ export class ThemeService {
       default:
         return 'theme-dark.css';
     }
+  }
+
+  private escapeSelector(className: string): string {
+    return className.replace(/([^A-Za-z0-9_-])/g, '\\$1');
   }
 
   /**
