@@ -64,7 +64,9 @@ if (!mod) {
 }
 
 // Set up paths
-const appDataPath = process.env['AppData'];
+const appDataPath =
+  process.env['AppData'] ||
+  `${process.env['HOME']}/Library/Application Support`;
 const factorioPath = `${appDataPath}/Factorio`;
 const modsPath = `${factorioPath}/mods`;
 const scriptOutputPath = `${factorioPath}/script-output`;
