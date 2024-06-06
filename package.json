@@ -27,6 +27,7 @@
     "postfactorio-api": "prettier --write \"scripts/factorio.models.ts\"",
     "factorio-prep": "ts-node -r tsconfig-paths/register scripts/factorio-prep.ts",
     "factorio-dump": "scripts\\factorio-dump.bat",
+    "factorio-dump:mac": "scripts/factorio-dump.sh",
     "factorio-build": "ts-node -r tsconfig-paths/register scripts/factorio-build.ts",
     "factorio-update": "ts-node -r tsconfig-paths/register scripts/factorio-update.ts",
     "calculate-color": "ts-node -r tsconfig-paths/register scripts/calculate-color.ts",
