@@ -1966,7 +1966,7 @@
     >
       @if (columnSettings.show) {
         <td class="w-0 text-end inherit">
-          @for (tot of totals | keyvalue: trackSvc.sortByValue; track tot.key) {
+          @for (tot of totals | keyvalue: trackSvc.sortByValue; track tot) {
             <div class="py-2 icon-height">
               <span class="monospace">{{
                 tot.value | rate: columnSettings.precision
@@ -1977,10 +1977,7 @@
         <td class="ps-0 inherit">
           <div class="d-flex">
             <div class="d-flex flex-column justify-content-center">
-              @for (
-                tot of totals | keyvalue: trackSvc.sortByValue;
-                track tot.key
-              ) {
+              @for (tot of totals | keyvalue: trackSvc.sortByValue; track tot) {
                 @if (data().itemEntities[tot.key]) {
                   <i
                     class="d-block"
@@ -2007,7 +2004,7 @@
             <div class="modules-column">
               @for (
                 tot of modulesTotals | keyvalue: trackSvc.sortByValue;
-                track tot.key
+                track tot
               ) {
                 <div class="p-2 icon-height text-end">
                   <span class="monospace">{{ tot.value }}</span>
