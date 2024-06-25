@@ -12,8 +12,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
-      - name: Test env var
-        run: echo "DEPLOY=true" >> "$GITHUB_ENV"
       - name: Install dependencies
         run: npm ci
         if: env.DEPLOY == 'true'
