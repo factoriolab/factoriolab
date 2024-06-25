@@ -16,14 +16,12 @@ jobs:
         run: npm ci
       - name: Run build
         run: npm run build -- -c=staging
-      - name: Copy index to list
-        run: cp dist/browser/index.html dist/browser/list.html
-      - name: Copy index to flow
-        run: cp dist/browser/index.html dist/browser/flow.html
-      - name: Copy index to data
-        run: cp dist/browser/index.html dist/browser/data.html
-      - name: Copy index to 404
-        run: cp dist/browser/index.html dist/browser/404.html
+      - name: Copy index to routes
+        run: |
+          cp dist/browser/index.html dist/browser/list.html
+          cp dist/browser/index.html dist/browser/flow.html
+          cp dist/browser/index.html dist/browser/data.html
+          cp dist/browser/index.html dist/browser/404.html
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:

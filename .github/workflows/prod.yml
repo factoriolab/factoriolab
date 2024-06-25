@@ -20,16 +20,17 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Run build
         run: npm run build -- -c=production
-      - name: Copy index to list
-        run: cp dist/browser/index.html dist/browser/list.html
-      - name: Copy index to flow
-        run: cp dist/browser/index.html dist/browser/flow.html
-      - name: Copy index to data
-        run: cp dist/browser/index.html dist/browser/data.html
-      - name: Copy index to 404
-        run: cp dist/browser/index.html dist/browser/404.html
+        if: env.DEPLOY == 'true'
+      - name: Copy index to routes
+        run: |
+          cp dist/browser/index.html dist/browser/list.html
+          cp dist/browser/index.html dist/browser/flow.html
+          cp dist/browser/index.html dist/browser/data.html
+          cp dist/browser/index.html dist/browser/404.html
+        if: env.DEPLOY == 'true'
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
+        if: env.DEPLOY == 'true'
         with:
           token: ${{ secrets.ACCESS_TOKEN }}
           repository-name: factoriolab/factoriolab.github.io

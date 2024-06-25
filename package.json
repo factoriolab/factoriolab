@@ -18,7 +18,7 @@
     "build": "ng build",
     "build-stats": "ng build --stats-json",
     "test": "ng test",
-    "test-build": "ng test --no-watch --browsers=ChromeHeadless",
+    "test-build": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "lint": "ng lint",
     "lint-build": "ng lint --max-warnings 0",
@@ -79,6 +79,7 @@
     "@angular/cli": "^17.3.2",
     "@angular/compiler-cli": "^17.3.2",
     "@angular/language-service": "^17.3.2",
+    "@semantic-release/exec": "^6.0.3",
     "@types/d3": "^7.4.3",
     "@types/file-saver": "^2.0.5",
     "@types/jasmine": "^4.3.1",
@@ -131,6 +132,12 @@
               "branch": "main"
             }
           ]
+        }
+      ],
+      [
+        "@semantic-release/exec",
+        {
+          "successCmd": "echo \"DEPLOY=true\" >> \"$GITHUB_ENV\""
         }
       ]
     ]
