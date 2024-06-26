@@ -5,6 +5,7 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ReplaySubject } from 'rxjs';
 
 import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
+import { rational } from '~/models';
 import { LabState } from '../';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
@@ -52,7 +53,9 @@ describe('MachinesEffects', () => {
         ...initialState,
         ...{
           recipesState: {
-            [RecipeId.Coal]: { moduleIds: [ItemId.SpeedModule] },
+            [RecipeId.Coal]: {
+              modules: [{ count: rational(1n), id: ItemId.SpeedModule }],
+            },
           },
         },
       });
@@ -98,7 +101,15 @@ describe('MachinesEffects', () => {
         ...initialState,
         ...{
           recipesState: {
-            [RecipeId.Coal]: { beacons: [{ moduleIds: [ItemId.SpeedModule] }] },
+            [RecipeId.Coal]: {
+              beacons: [
+                {
+                  count: rational(0n),
+                  id: ItemId.Beacon,
+                  modules: [{ count: rational(2n), id: ItemId.SpeedModule }],
+                },
+              ],
+            },
           },
         },
       });

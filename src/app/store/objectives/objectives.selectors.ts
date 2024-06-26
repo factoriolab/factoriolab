@@ -178,7 +178,7 @@ export const getStepsModified = createSelector(
     objectives: objectives.reduce((e: Entities<boolean>, p) => {
       e[p.id] =
         p.machineId != null ||
-        p.moduleIds != null ||
+        p.modules != null ||
         p.beacons != null ||
         p.overclock != null;
       return e;
@@ -265,21 +265,16 @@ export const getTotals = createSelector(
               machines[machine] = machines[machine].add(value);
 
               // Check for modules to add
-              if (settings.moduleIds) {
-                let count = value;
-                if (
-                  data.game === Game.FinalFactory &&
-                  step.recipeSettings.overclock
-                ) {
-                  // Multiply by overclock (num of duplicators)
-                  count = count.mul(step.recipeSettings.overclock);
-                }
-
-                addValueToRecordByIds(
-                  modules,
-                  settings.moduleIds.filter((i) => i !== ItemId.Module),
-                  count,
-                );
+              if (settings.modules != null) {
+                settings.modules.forEach((m) => {
+                  if (m.id === ItemId.Module) return;
+                  // TODO: Restore this code
+                  // addValueToRecordByIds(
+                  //   modules,
+                  //   [m.id],
+                  //   value.mul(m.count),
+                  // );
+                });
               }
             }
           }
@@ -302,12 +297,16 @@ export const getTotals = createSelector(
             beacons[beaconId] = beacons[beaconId].add(value);
 
             // Check for modules to add
-            if (beacon.moduleIds != null) {
-              addValueToRecordByIds(
-                beaconModules,
-                beacon.moduleIds.filter((i) => i !== ItemId.Module),
-                value,
-              );
+            if (beacon.modules != null) {
+              beacon.modules.forEach((m) => {
+                if (m.id === ItemId.Module) return;
+                // TODO: Restore this code
+                // addValueToRecordByIds(
+                //   beaconModules,
+                //   [m.id],
+                //   value.mul(m.count),
+                // );
+              });
             }
           }
         }
@@ -525,14 +524,14 @@ export const getRecipesModified = createSelector(
         (id) =>
           state[id].fuelId != null ||
           state[id].machineId != null ||
-          state[id].moduleIds != null ||
+          state[id].modules != null ||
           state[id].overclock != null,
       ) ||
       objectives.some(
         (p) =>
           p.fuelId != null ||
           p.machineId != null ||
-          p.moduleIds != null ||
+          p.modules != null ||
           p.overclock != null,
       ),
     beacons:

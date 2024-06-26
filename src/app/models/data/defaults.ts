@@ -1,15 +1,15 @@
 export interface DefaultsJson {
-  beacon: string;
-  minBelt: string;
-  maxBelt: string;
+  beacon?: string;
+  minBelt?: string;
+  maxBelt?: string;
   minPipe?: string;
   maxPipe?: string;
-  fuel: string;
-  cargoWagon: string;
-  fluidWagon: string;
-  excludedRecipes: string[];
-  minMachineRank: string[];
-  maxMachineRank: string[];
-  moduleRank: string[];
-  beaconModule: string;
+  fuelRank?: string[];
+  cargoWagon?: string;
+  fluidWagon?: string;
+  excludedRecipes?: string[];
+  minMachineRank?: string[];
+  maxMachineRank?: string[];
+  moduleRank?: string[];
+  beaconModule?: string;
 }

@@ -457,7 +457,7 @@ describe('RateUtility', () => {
           {
             count: rational(8n),
             id: ItemId.Beacon,
-            total: rational(1n),
+            modules: [{ count: rational(2n), id: ItemId.Module }],
           },
         ],
       };

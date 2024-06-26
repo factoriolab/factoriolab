@@ -3,13 +3,7 @@ import { ObjectiveType, ObjectiveUnit } from './enum';
 import { Rational } from './rational';
 import { RecipeSettings } from './settings';
 
-export function isRecipeObjective(obj: Objective): boolean {
-  return obj.unit === ObjectiveUnit.Machines;
-}
-
-export function isRecipeRationalObjective(
-  obj: Objective,
-): obj is RecipeObjective {
+export function isRecipeObjective(obj: Objective): obj is RecipeObjective {
   return obj.unit === ObjectiveUnit.Machines;
 }
 

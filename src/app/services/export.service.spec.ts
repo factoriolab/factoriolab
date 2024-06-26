@@ -70,8 +70,6 @@ describe('ExportService', () => {
         Machine: ItemId.ElectricFurnace,
         Modules: '"module,module"',
         Beacons: '"0"',
-        Beacon: '"beacon"',
-        BeaconModules: '"module|module"',
         Power: '=6',
         Pollution: '=7',
       });
@@ -87,8 +85,6 @@ describe('ExportService', () => {
         Machine: ItemId.ElectricFurnace,
         Modules: '"module,module"',
         Beacons: '"0"',
-        Beacon: '"beacon"',
-        BeaconModules: '"module|module"',
       });
     });
   });

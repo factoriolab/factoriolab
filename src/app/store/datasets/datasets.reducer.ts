@@ -1,4 +1,5 @@
 import { data } from 'src/data';
+import { spread } from '~/helpers';
 import { AppData, Entities, ModData, ModHash, ModI18n } from '~/models';
 import { DatasetsAction, DatasetsActionType } from './datasets.actions';
 
@@ -25,22 +26,19 @@ export function datasetsReducer(
         ...state,
         ...{
           dataRecord: action.payload.data
-            ? {
-                ...state.dataRecord,
-                ...{ [action.payload.data.id]: action.payload.data.value },
-              }
+            ? spread(state.dataRecord, {
+                [action.payload.data.id]: action.payload.data.value,
+              })
             : state.dataRecord,
           hashRecord: action.payload.hash
-            ? {
-                ...state.hashRecord,
-                ...{ [action.payload.hash.id]: action.payload.hash.value },
-              }
+            ? spread(state.hashRecord, {
+                [action.payload.hash.id]: action.payload.hash.value,
+              })
             : state.hashRecord,
           i18nRecord: action.payload.i18n
-            ? {
-                ...state.i18nRecord,
-                ...{ [action.payload.i18n.id]: action.payload.i18n.value },
-              }
+            ? spread(state.i18nRecord, {
+                [action.payload.i18n.id]: action.payload.i18n.value,
+              })
             : state.i18nRecord,
         },
       };

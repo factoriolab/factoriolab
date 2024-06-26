@@ -5,6 +5,7 @@ import { environment } from 'src/environments';
 import { coalesce, fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
   Beacon,
+  BeaconSettings,
   Belt,
   CargoWagon,
   columnOptions,
@@ -24,6 +25,7 @@ import {
   linkValueOptions,
   Machine,
   Module,
+  ModuleSettings,
   objectiveUnitOptions,
   Options,
   parseItem,
@@ -77,7 +79,7 @@ export const getMiningBonus = createSelector(
   settingsState,
   (state) => state.miningBonus,
 );
-export const getResearchSpeed = createSelector(
+export const getResearchBonus = createSelector(
   settingsState,
   (state) => state.researchBonus,
 );
@@ -189,39 +191,56 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
   if (base?.defaults == null) return null;
 
   const m = base.defaults;
-  let moduleRank: string[] = [];
+  let beacons: BeaconSettings[] = [];
+  let moduleRank: string[] | undefined;
   switch (base.game) {
     case Game.Factorio: {
-      moduleRank = preset === Preset.Minimum ? [] : m.moduleRank;
+      moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
+      if (m.beacon) {
+        const beacon = base.items.find((i) => i.id === m.beacon)?.beacon;
+        if (beacon) {
+          const id = m.beacon;
+          const modules: ModuleSettings[] = [
+            {
+              count: rational(beacon.modules),
+              id: m.beaconModule ?? ItemId.Module,
+            },
+          ];
+
+          const count =
+            preset < Preset.Beacon8
+              ? rational(0n)
+              : preset === Preset.Beacon8
+                ? rational(8n)
+                : rational(12n);
+          beacons = [{ count, id, modules }];
+        }
+      }
       break;
     }
     case Game.DysonSphereProgram: {
-      moduleRank = preset === Preset.Beacon8 ? m.moduleRank : [];
+      moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
       break;
     }
     case Game.FinalFactory:
     case Game.Satisfactory: {
       moduleRank = m.moduleRank;
+      break;
     }
   }
+
+  const machineRankIds =
+    preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
   const defaults: Defaults = {
     beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
     pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
-    fuelId: m.fuel,
     cargoWagonId: m.cargoWagon,
     fluidWagonId: m.fluidWagon,
-    excludedRecipeIds: m.excludedRecipes,
-    machineRankIds:
-      preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank,
-    moduleRankIds: moduleRank,
-    beaconCount:
-      preset < Preset.Beacon8
-        ? rational(0n)
-        : preset < Preset.Beacon12
-          ? rational(8n)
-          : rational(12n),
-    beaconId: m.beacon,
-    beaconModuleId: preset < Preset.Beacon8 ? ItemId.Module : m.beaconModule,
+    excludedRecipeIds: coalesce(m.excludedRecipes, []),
+    machineRankIds: coalesce(machineRankIds, []),
+    fuelRankIds: coalesce(m.fuelRank, []),
+    moduleRankIds: coalesce(moduleRank, []),
+    beacons,
   };
   return defaults;
 });
@@ -234,21 +253,14 @@ export const getSettings = createSelector(
     ...{
       beltId: s.beltId ?? d?.beltId,
       pipeId: s.pipeId ?? d?.pipeId,
-      fuelRankIds: s.fuelRankIds ?? (d?.fuelId ? [d.fuelId] : []),
       cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
       fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
     },
   }),
 );
 
-export const getFuelRankIds = createSelector(getSettings, (s) => s.fuelRankIds);
-
-export const getRationalMiningBonus = createSelector(getMiningBonus, (bonus) =>
+export const getMiningFactor = createSelector(getMiningBonus, (bonus) =>
   bonus.div(rational(100n)),
-);
-
-export const getResearchFactor = createSelector(getResearchSpeed, (speed) =>
-  speed.add(rational(100n)).div(rational(100n)),
 );
 
 export const getI18n = createSelector(
@@ -505,12 +517,13 @@ export const getOptions = createSelector(
     pipes: getIdOptions(data.pipeIds, data.itemEntities),
     cargoWagons: getIdOptions(data.cargoWagonIds, data.itemEntities),
     fluidWagons: getIdOptions(data.fluidWagonIds, data.itemEntities),
+    fuels: getIdOptions(data.fuelIds, data.itemEntities),
+    modules: getIdOptions(data.moduleIds, data.itemEntities),
     proliferatorModules: getIdOptions(
       data.proliferatorModuleIds,
       data.itemEntities,
       true,
     ),
-    fuels: getIdOptions(data.fuelIds, data.itemEntities),
     machines: getIdOptions(data.machineIds, data.itemEntities),
     recipes: getIdOptions(data.recipeIds, data.recipeEntities),
   }),
@@ -609,11 +622,12 @@ export const getAvailableRecipes = createSelector(
   },
 );
 
+// TODO: Convert this to just use settings directly
 export const getAdjustmentData = createSelector(
   getNetProductionOnly,
   getProliferatorSprayId,
-  getRationalMiningBonus,
-  getResearchFactor,
+  getMiningFactor,
+  getResearchBonus,
   (
     netProductionOnly,
     proliferatorSprayId,

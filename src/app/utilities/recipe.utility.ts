@@ -19,6 +19,7 @@ import {
   ItemSettings,
   Machine,
   MachineJson,
+  ModuleSettings,
   Objective,
   rational,
   Rational,
@@ -37,10 +38,8 @@ export class RecipeUtility {
   static bestMatch(options: string[], rank: string[]): string {
     if (options.length > 1) {
       for (const r of rank) {
-        if (options.indexOf(r) !== -1) {
-          // Return first matching option in rank list
-          return r;
-        }
+        // Return first matching option in rank list
+        if (options.includes(r)) return r;
       }
     }
     return options[0];
@@ -69,8 +68,8 @@ export class RecipeUtility {
 
   static moduleOptions(
     entity: Machine | Beacon,
-    recipeId: string | null,
     data: Dataset,
+    recipeId?: string,
   ): SelectItem<string>[] {
     // Get all modules
     let allowed = data.moduleIds
@@ -105,17 +104,33 @@ export class RecipeUtility {
     return options;
   }
 
-  /** Determines default array of modules for a given recipe */
+  /** Determines inherited modules for a recipe */
+  static inheritedModules(
+    options: SelectItem<string>[],
+    def: ModuleSettings[] | undefined,
+    moduleRankIds: string[] | undefined,
+    count: Rational | true,
+  ): ModuleSettings[] {
+    if (def) {
+      const set = new Set(options.map((o) => o.value));
+      if (def.every((m) => m.id && set.has(m.id))) return def;
+    }
+
+    return this.defaultModules(options, moduleRankIds, count);
+  }
+
+  /** Determines default modules for a recipe/machine */
   static defaultModules(
-    options: SelectItem[],
-    moduleRankIds: string[],
-    count: Rational,
-  ): string[] {
-    const module = this.bestMatch(
+    options: SelectItem<string>[],
+    moduleRankIds: string[] | undefined,
+    modules: Rational | true,
+  ): ModuleSettings[] {
+    const id = this.bestMatch(
       options.map((o) => o.value),
-      moduleRankIds,
+      moduleRankIds ?? [],
     );
-    return new Array(count.toNumber()).fill(module);
+    const count = modules === true ? rational(0n) : modules;
+    return [{ count, id }];
   }
 
   static adjustRecipe(
@@ -180,15 +195,73 @@ export class RecipeUtility {
       const proliferatorSprays: Entities<Rational> = {};
 
       // Modules
-      // Set up factor for number of Final Factory duplicators
-      const factor =
-        data.game === Game.FinalFactory
-          ? coalesce(settings.overclock, rational(0n))
-          : rational(1n);
-      if (settings.moduleIds && settings.moduleIds.length) {
-        for (const id of settings.moduleIds) {
+      if (settings.modules) {
+        for (const { id, count } of settings.modules) {
+          if (id == null || count == null) continue;
           const module = data.moduleEntities[id];
-          if (module) {
+          if (module == null) continue;
+
+          if (module.speed) {
+            speed = speed.add(module.speed.mul(count));
+          }
+
+          if (module.productivity) {
+            prod = prod.add(module.productivity.mul(count));
+          }
+
+          if (module.consumption) {
+            consumption = consumption.add(module.consumption.mul(count));
+          }
+
+          if (module.pollution) {
+            pollution = pollution.add(module.pollution.mul(count));
+          }
+
+          // Note: Count is ignored for proliferator / sprays (assumed to be 1)
+          if (module.sprays) {
+            let sprays = module.sprays;
+            // If proliferator is applied to proliferator, apply productivity bonus to sprays
+            const pModule = data.moduleEntities[proliferatorSprayId];
+            if (pModule) {
+              sprays = sprays
+                .mul(
+                  rational(1n).add(
+                    coalesce(pModule.productivity, rational(0n)),
+                  ),
+                )
+                .floor(); // DSP rounds down # of sprays
+            }
+            // Calculate amount of proliferator required for this recipe
+            const pId = module.proliferator;
+            if (pId) {
+              if (!proliferatorSprays[pId]) {
+                proliferatorSprays[pId] = rational(0n);
+              }
+              proliferatorSprays[pId] = proliferatorSprays[pId].add(sprays);
+            }
+          }
+        }
+      }
+
+      // Beacons
+      if (settings.beacons != null) {
+        for (const beaconSettings of settings.beacons) {
+          if (
+            !beaconSettings.count?.nonzero() ||
+            beaconSettings.id == null ||
+            beaconSettings.modules == null
+          ) {
+            continue;
+          }
+
+          for (const { id, count } of beaconSettings.modules) {
+            if (id == null || id === ItemId.Module || count == null) continue;
+            const module = data.moduleEntities[id];
+            const beacon = data.beaconEntities[beaconSettings.id];
+            const factor = beaconSettings.count // Num of beacons
+              .mul(beacon.effectivity) // Effectivity of beacons
+              .mul(count); // Num of modules/beacon
+
             if (module.speed) {
               speed = speed.add(module.speed.mul(factor));
             }
@@ -204,61 +277,6 @@ export class RecipeUtility {
             if (module.pollution) {
               pollution = pollution.add(module.pollution.mul(factor));
             }
-
-            if (module.sprays) {
-              let sprays = module.sprays;
-              // If proliferator is applied to proliferator, apply productivity bonus to sprays
-              const pModule = data.moduleEntities[proliferatorSprayId];
-              if (pModule) {
-                sprays = sprays
-                  .mul(
-                    rational(1n).add(
-                      coalesce(pModule.productivity, rational(0n)),
-                    ),
-                  )
-                  .floor(); // DSP rounds down # of sprays
-              }
-              // Calculate amount of proliferator required for this recipe
-              const pId = module.proliferator;
-              if (pId) {
-                if (!proliferatorSprays[pId]) {
-                  proliferatorSprays[pId] = rational(0n);
-                }
-                proliferatorSprays[pId] = proliferatorSprays[pId].add(sprays);
-              }
-            }
-          }
-        }
-      }
-
-      // Beacons
-      if (settings.beacons != null) {
-        for (const beaconSettings of settings.beacons) {
-          const beaconModules = beaconSettings.moduleIds?.filter(
-            (m) => m !== ItemId.Module && data.moduleEntities[m],
-          );
-          if (
-            beaconModules?.length &&
-            beaconSettings.id &&
-            beaconSettings.count?.nonzero()
-          ) {
-            for (const id of beaconModules) {
-              const module = data.moduleEntities[id];
-              const beacon = data.beaconEntities[beaconSettings.id];
-              const factor = beaconSettings.count.mul(beacon.effectivity);
-              if (module.speed) {
-                speed = speed.add(module.speed.mul(factor));
-              }
-              if (module.productivity) {
-                prod = prod.add(module.productivity.mul(factor));
-              }
-              if (module.consumption) {
-                consumption = consumption.add(module.consumption.mul(factor));
-              }
-              if (module.pollution) {
-                pollution = pollution.add(module.pollution.mul(factor));
-              }
-            }
           }
         }
       }
@@ -267,9 +285,11 @@ export class RecipeUtility {
       if (speed.lt(this.MIN_FACTOR)) {
         speed = this.MIN_FACTOR;
       }
+
       if (consumption.lt(this.MIN_FACTOR)) {
         consumption = this.MIN_FACTOR;
       }
+
       if (pollution.lt(this.MIN_FACTOR)) {
         pollution = this.MIN_FACTOR;
       }
@@ -508,18 +528,23 @@ export class RecipeUtility {
     recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
     adjustmentData: AdjustmentData,
-    cost: CostSettings,
+    costs: CostSettings,
     data: Dataset,
   ): AdjustedDataset {
-    const recipeR = this.adjustRecipes(
+    const adjustedRecipe = this.adjustRecipes(
       recipeIds,
       recipesState,
       itemsState,
       adjustmentData,
       data,
     );
-    this.adjustCost(recipeIds, recipeR, recipesState, cost, data);
-    return this.finalizeData(recipeIds, excludedRecipeIds, recipeR, data);
+    this.adjustCosts(recipeIds, adjustedRecipe, recipesState, costs, data);
+    return this.finalizeData(
+      recipeIds,
+      excludedRecipeIds,
+      adjustedRecipe,
+      data,
+    );
   }
 
   static adjustRecipes(
@@ -545,15 +570,15 @@ export class RecipeUtility {
     );
   }
 
-  static adjustCost(
+  static adjustCosts(
     recipeIds: string[],
-    recipeR: Entities<Recipe>,
+    adjustedRecipe: Entities<Recipe>,
     recipesState: Entities<RecipeSettings>,
     costs: CostSettings,
     data: Dataset,
   ): void {
     recipeIds
-      .map((i) => recipeR[i])
+      .map((i) => adjustedRecipe[i])
       .forEach((recipe) => {
         const settings = recipesState[recipe.id];
         if (settings.cost) {
@@ -655,56 +680,27 @@ export class RecipeUtility {
       objective.fuelId = objective.fuelId ?? def?.fuelId;
     }
 
-    objective.fuelId = objective.fuelId ?? def?.fuelId;
-    objective.fuelOptions = def?.fuelOptions;
-
     if (machine != null && this.allowsModules(recipe, machine)) {
-      objective.moduleOptions = this.moduleOptions(
-        machine,
-        objective.targetId,
-        data,
-      );
-
-      if (objective.moduleIds == null) {
-        objective.moduleIds = this.defaultModules(
-          objective.moduleOptions,
-          coalesce(def.moduleRankIds, []),
+      if (objective.modules == null) {
+        const options = this.moduleOptions(machine, data, objective.targetId);
+        objective.modules = this.inheritedModules(
+          options,
+          def.modules,
+          machinesState.moduleRankIds,
           coalesce(machine.modules, rational(0n)),
         );
       }
 
       if (objective.beacons == null) {
-        objective.beacons = [{}];
+        objective.beacons = [];
       } else {
         objective.beacons = objective.beacons.map((b) => ({
           ...b,
         }));
       }
-
-      for (const beaconSettings of objective.beacons) {
-        beaconSettings.count = beaconSettings.count ?? def.beaconCount;
-        beaconSettings.id = beaconSettings.id ?? def.beaconId;
-
-        if (beaconSettings.id != null) {
-          const beacon = data.beaconEntities[beaconSettings.id];
-          beaconSettings.moduleOptions = this.moduleOptions(
-            beacon,
-            objective.targetId,
-            data,
-          );
-
-          if (beaconSettings.moduleIds == null) {
-            beaconSettings.moduleIds = RecipeUtility.defaultModules(
-              beaconSettings.moduleOptions,
-              coalesce(def.beaconModuleRankIds, []),
-              beacon.modules,
-            );
-          }
-        }
-      }
     } else {
       // Machine doesn't support modules, remove any
-      delete objective.moduleIds;
+      delete objective.modules;
       delete objective.beacons;
     }
 

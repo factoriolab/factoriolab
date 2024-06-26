@@ -47,12 +47,11 @@ export class MachinesEffects {
               }
             }
 
-            if (r.moduleIds != null || r.beacons != null) {
+            if (r.modules != null || r.beacons != null) {
               // Check that these recipe settings are still valid
               if (
                 !RecipeUtility.allowsModules(recipe, machine) ||
-                (r.moduleIds &&
-                  r.moduleIds.length !== machine.modules?.toNumber())
+                (r.modules && r.modules.length !== machine.modules)
               ) {
                 // Machine does not support module effects, reset these settings
                 effects.push(new Recipes.ResetRecipeModulesAction(i));

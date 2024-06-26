@@ -1,10 +1,8 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 
 import { TestModule } from 'src/tests';
 import { rational } from '~/models';
-import { ContentService } from '~/services';
 import { Settings } from '~/store';
 import { CostsComponent } from './costs.component';
 
@@ -12,8 +10,6 @@ describe('CostsComponent', () => {
   let component: CostsComponent;
   let fixture: ComponentFixture<CostsComponent>;
   let markForCheck: jasmine.Spy;
-  let mockStore: MockStore;
-  let contentSvc: ContentService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -24,8 +20,6 @@ describe('CostsComponent', () => {
     fixture = TestBed.createComponent(CostsComponent);
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     markForCheck = spyOn(ref.constructor.prototype, 'markForCheck');
-    mockStore = TestBed.inject(MockStore);
-    contentSvc = TestBed.inject(ContentService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -45,7 +39,7 @@ describe('CostsComponent', () => {
 
   describe('ngOnInit', () => {
     it('should watch subject to show dialog', () => {
-      contentSvc.showCosts$.next();
+      component.contentSvc.showCosts$.next();
       expect(component.visible).toBeTrue();
       expect(markForCheck).toHaveBeenCalled();
     });
@@ -61,9 +55,9 @@ describe('CostsComponent', () => {
 
   describe('save', () => {
     it('should dispatch the action', () => {
-      spyOn(mockStore, 'dispatch');
+      spyOn(component.store, 'dispatch');
       component.save();
-      expect(mockStore.dispatch).toHaveBeenCalledWith(
+      expect(component.store.dispatch).toHaveBeenCalledWith(
         new Settings.SetCostsAction(component.editValue as any),
       );
     });

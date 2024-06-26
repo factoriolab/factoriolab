@@ -16,7 +16,7 @@ import { first } from 'rxjs';
 import { coalesce } from '~/helpers';
 import {
   AdjustedDataset,
-  Defaults,
+  BeaconSettings,
   DisplayRate,
   displayRateOptions,
   Entities,
@@ -39,6 +39,8 @@ import {
   MachineSettings,
   MaximizeType,
   maximizeTypeOptions,
+  ModuleSettings,
+  moduleSettingsPayload,
   PowerUnit,
   powerUnitOptions,
   Preset,
@@ -101,8 +103,9 @@ export class SettingsComponent implements OnInit {
   preferences = this.store.selectSignal(Preferences.preferencesState);
   modRecord = this.store.selectSignal(Datasets.getModRecord);
   machineIds = computed(() => [
-    ...this.store.selectSignal(Machines.getMachinesState)().ids,
+    ...(this.store.selectSignal(Machines.getMachinesState)().ids ?? []),
   ]);
+  defaults = this.store.selectSignal(Settings.getDefaults);
 
   state = '';
   editValue = '';
@@ -292,20 +295,21 @@ export class SettingsComponent implements OnInit {
     this.setFuel(id, value, def);
   }
 
-  changeBeaconModuleRank(
-    id: string,
-    value: string[],
-    def: MachineSettings | Defaults,
-  ): void {
-    if (id === '') {
-      this.setBeaconModuleRank(id, value, [(def as Defaults).beaconModuleId]);
-    } else {
-      this.setBeaconModuleRank(
-        id,
-        value,
-        (def as MachineSettings).beaconModuleRankIds,
-      );
-    }
+  changeModules(id: string, value: ModuleSettings[]): void {
+    const state = this.machinesState();
+    const machine = this.data().machineEntities[id];
+    const def = RecipeUtility.defaultModules(
+      state.entities[id].moduleOptions ?? [],
+      state.moduleRankIds,
+      coalesce(machine.modules, rational(0n)),
+    );
+    this.setModules(id, moduleSettingsPayload(value, def));
+  }
+
+  changeBeacons(id: string, value: BeaconSettings[]): void {
+    const def = this.machinesState().beacons;
+    // this.setBeacons(id, beaconSettingsPayload(value, def));
+    this.setBeacons(id, value);
   }
 
   toggleBeaconReceivers(value: boolean): void {
@@ -333,32 +337,38 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetResearchedTechnologiesAction(value));
   }
 
-  setItemExcludedBatch(payload: IdValuePayload<boolean>[]): void {
-    this.store.dispatch(new Items.SetExcludedBatchAction(payload));
-  }
-
   setRecipeExcludedBatch(payload: IdValueDefaultPayload<boolean>[]): void {
     this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
   }
 
-  setNetProductionOnly(value: boolean): void {
-    this.store.dispatch(new Settings.SetNetProductionOnlyAction(value));
-  }
-
-  setSurplusMachinesOutput(value: boolean): void {
-    this.store.dispatch(new Settings.SetSurplusMachinesOutputAction(value));
+  setItemExcludedBatch(payload: IdValuePayload<boolean>[]): void {
+    this.store.dispatch(new Items.SetExcludedBatchAction(payload));
   }
 
   setPreset(value: Preset): void {
     this.store.dispatch(new Settings.SetPresetAction(value));
   }
 
+  setFuelRank(value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Machines.SetFuelRankAction({ value, def }));
+  }
+
+  setModuleRank(value: string[], def: string[] | undefined): void {
+    this.store.dispatch(new Machines.SetModuleRankAction({ value, def }));
+  }
+
   addMachine(value: string, def: string[] | undefined): void {
     this.store.dispatch(new Machines.AddAction({ value, def }));
   }
 
-  removeMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.RemoveAction({ value, def }));
+  setDefaultBeacons(value: BeaconSettings[] | undefined): void {
+    const def = this.defaults()?.beacons;
+    // value = beaconSettingsPayload(value, def);
+    this.store.dispatch(new Machines.SetDefaultBeaconsAction(value));
+  }
+
+  setDefaultOverclock(value: Rational | undefined): void {
+    this.store.dispatch(new Machines.SetDefaultOverclockAction(value));
   }
 
   setMachineRank(value: string[], def: string[] | undefined): void {
@@ -373,30 +383,20 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.SetFuelAction({ id, value, def }));
   }
 
-  setModuleRank(id: string, value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Machines.SetModuleRankAction({ id, value, def }));
+  setModules(id: string, value: ModuleSettings[] | undefined): void {
+    this.store.dispatch(new Machines.SetModulesAction({ id, value }));
+  }
+
+  setBeacons(id: string, value: BeaconSettings[] | undefined): void {
+    this.store.dispatch(new Machines.SetBeaconsAction({ id, value }));
   }
 
   setOverclock(id: string, value: Rational, def: Rational | undefined): void {
     this.store.dispatch(new Machines.SetOverclockAction({ id, value, def }));
   }
 
-  setBeaconCount(id: string, value: Rational, def: Rational | undefined): void {
-    this.store.dispatch(new Machines.SetBeaconCountAction({ id, value, def }));
-  }
-
-  setBeacon(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(new Machines.SetBeaconAction({ id, value, def }));
-  }
-
-  setBeaconModuleRank(
-    id: string,
-    value: string[],
-    def: string[] | undefined,
-  ): void {
-    this.store.dispatch(
-      new Machines.SetBeaconModuleRankAction({ id, value, def }),
-    );
+  removeMachine(value: string, def: string[] | undefined): void {
+    this.store.dispatch(new Machines.RemoveAction({ value, def }));
   }
 
   setBeaconReceivers(value: Rational | null): void {
@@ -423,16 +423,32 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Settings.SetFluidWagonAction({ value, def }));
   }
 
-  setFuels(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Settings.SetFuelRankAction({ value, def }));
-  }
-
   setFlowRate(value: Rational): void {
     this.store.dispatch(new Settings.SetFlowRateAction(value));
   }
 
   setInserterTarget(value: InserterTarget): void {
     this.store.dispatch(new Settings.SetInserterTargetAction(value));
+  }
+
+  setFlowDiagram(value: FlowDiagram): void {
+    this.store.dispatch(new Preferences.SetFlowDiagramAction(value));
+  }
+
+  setSankeyAlign(value: SankeyAlign): void {
+    this.store.dispatch(new Preferences.SetSankeyAlignAction(value));
+  }
+
+  setLinkSize(value: LinkValue): void {
+    this.store.dispatch(new Preferences.SetLinkSizeAction(value));
+  }
+
+  setLinkText(value: LinkValue): void {
+    this.store.dispatch(new Preferences.SetLinkTextAction(value));
+  }
+
+  setFlowHideExcluded(value: boolean): void {
+    this.store.dispatch(new Preferences.SetFlowHideExcludedAction(value));
   }
 
   setMiningBonus(value: Rational): void {
@@ -449,10 +465,6 @@ export class SettingsComponent implements OnInit {
 
   setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
-  }
-
-  setMaximizeType(value: MaximizeType): void {
-    this.store.dispatch(new Settings.SetMaximizeTypeAction(value));
   }
 
   setPowerUnit(value: PowerUnit): void {
@@ -480,23 +492,15 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Preferences.SetDisablePaginatorAction(value));
   }
 
-  setFlowDiagram(value: FlowDiagram): void {
-    this.store.dispatch(new Preferences.SetFlowDiagramAction(value));
+  setMaximizeType(value: MaximizeType): void {
+    this.store.dispatch(new Settings.SetMaximizeTypeAction(value));
   }
 
-  setSankeyAlign(value: SankeyAlign): void {
-    this.store.dispatch(new Preferences.SetSankeyAlignAction(value));
+  setNetProductionOnly(value: boolean): void {
+    this.store.dispatch(new Settings.SetNetProductionOnlyAction(value));
   }
 
-  setLinkSize(value: LinkValue): void {
-    this.store.dispatch(new Preferences.SetLinkSizeAction(value));
-  }
-
-  setLinkText(value: LinkValue): void {
-    this.store.dispatch(new Preferences.SetLinkTextAction(value));
-  }
-
-  setFlowHideExcluded(value: boolean): void {
-    this.store.dispatch(new Preferences.SetFlowHideExcludedAction(value));
+  setSurplusMachinesOutput(value: boolean): void {
+    this.store.dispatch(new Settings.SetSurplusMachinesOutputAction(value));
   }
 }

@@ -28,11 +28,11 @@ export interface StepExport {
   Machine?: string;
   Modules?: string;
   Beacons?: string;
-  Beacon?: string;
-  BeaconModules?: string;
   Power?: string;
   Pollution?: string;
 }
+
+// TODO: Test CSV export
 
 @Injectable({
   providedIn: 'root',
@@ -120,19 +120,17 @@ export class ExportService {
           if (step.machines != null)
             exp.Machines = '=' + step.machines.toString();
           exp.Machine = recipeSettings.machineId;
-          if (allowsModules && recipeSettings.moduleIds != null)
-            exp.Modules = `"${recipeSettings.moduleIds.join(',')}"`;
+          if (allowsModules && recipeSettings.modules != null) {
+            exp.Modules = `"${recipeSettings.modules.map((m) => `${m.count.toString()} ${m.id}`).join(',')}"`;
+          }
         }
 
         if (columns.beacons.show && allowsModules) {
           exp.Beacons = `"${recipeSettings.beacons
-            ?.map((b) => b.count)
-            .join(',')}"`;
-          exp.Beacon = `"${recipeSettings.beacons
-            ?.map((b) => b.id)
-            .join(',')}"`;
-          exp.BeaconModules = `"${recipeSettings.beacons
-            ?.map((b) => b.moduleIds?.join('|'))
+            ?.map(
+              (b) =>
+                `${b.count?.toString()} ${b.id} (${b.modules?.map((m) => `${m.count.toString()} ${m.id}`).join(',')})`,
+            )
             .join(',')}"`;
         }
 

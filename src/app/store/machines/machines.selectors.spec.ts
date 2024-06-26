@@ -8,23 +8,21 @@ describe('Machines Selectors', () => {
     it('should fill in machine settings', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
-        [ItemId.Coal],
         Mocks.Defaults,
         Mocks.AdjustedDataset,
       );
       expect(result.ids?.length).toEqual(3);
-      expect(Object.keys(result.entities).length).toEqual(19);
+      expect(Object.keys(result.entities).length).toEqual(18);
     });
 
     it('should handle null defaults', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
-        [ItemId.Coal],
         null,
         Mocks.AdjustedDataset,
       );
       expect(result.ids?.length).toEqual(0);
-      expect(Object.keys(result.entities).length).toEqual(19);
+      expect(Object.keys(result.entities).length).toEqual(18);
     });
 
     it('should read number of beacons', () => {
@@ -32,28 +30,26 @@ describe('Machines Selectors', () => {
         {
           ids: undefined,
           entities: {
-            [ItemId.AssemblingMachine2]: { beaconCount: rational(0n) },
+            [ItemId.AssemblingMachine2]: { beacons: [{ count: rational(0n) }] },
           },
         },
-        [ItemId.Coal],
         null,
         Mocks.Dataset,
       );
       expect(result.ids?.length).toEqual(0);
       expect(Object.keys(result.entities).length).toEqual(19);
-      expect(result.entities[ItemId.AssemblingMachine2].beaconCount).toEqual(
-        rational(0n),
-      );
+      expect(
+        result.entities[ItemId.AssemblingMachine2].beacons?.[0].count,
+      ).toEqual(rational(0n));
     });
 
     it('should use null beaconCount for DSP', () => {
       const result = Selectors.getMachinesState.projector(
         initialMachinesState,
-        [ItemId.Coal],
         Mocks.Defaults,
         { ...Mocks.AdjustedDataset, ...{ game: Game.DysonSphereProgram } },
       );
-      expect(result.entities[''].beaconCount).toBeUndefined();
+      expect(result.entities[''].beacons?.[0].count).toBeUndefined();
     });
 
     it('should include overclock in Satisfactory', () => {
@@ -73,7 +69,6 @@ describe('Machines Selectors', () => {
       };
       const result = Selectors.getMachinesState.projector(
         state,
-        [ItemId.Coal],
         Mocks.Defaults,
         {
           ...Mocks.Dataset,
@@ -100,7 +95,6 @@ describe('Machines Selectors', () => {
       };
       const result = Selectors.getMachinesState.projector(
         state,
-        [ItemId.Coal],
         Mocks.Defaults,
         {
           ...Mocks.Dataset,
@@ -127,7 +121,6 @@ describe('Machines Selectors', () => {
       };
       const result = Selectors.getMachinesState.projector(
         state,
-        [ItemId.Coal],
         Mocks.Defaults,
         {
           ...Mocks.Dataset,

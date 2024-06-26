@@ -145,47 +145,29 @@ describe('Machines Reducer', () => {
     it('should set the module rank for a machine', () => {
       const result = machinesReducer(
         undefined,
-        new Actions.SetModuleRankAction({ id, value: [value], def: [] }),
+        new Actions.SetModuleRankAction({ value: [value], def: [] }),
       );
-      expect(result.entities[id].moduleRankIds).toEqual([value]);
+      expect(result.moduleRankIds).toEqual([value]);
     });
   });
 
-  describe('SET_BEACON_COUNT', () => {
+  describe('SET_BEACONS', () => {
     it('should set the beacon count for a machine', () => {
+      const value = [
+        {
+          count: rational(0n),
+          id: ItemId.Beacon,
+          modules: [{ count: rational(2n), id: ItemId.Module }],
+        },
+      ];
       const result = machinesReducer(
         undefined,
-        new Actions.SetBeaconCountAction({
+        new Actions.SetBeaconsAction({
           id,
-          value: rational(2n),
-          def: rational(8n),
+          value,
         }),
       );
-      expect(result.entities[id].beaconCount).toEqual(rational(2n));
-    });
-  });
-
-  describe('SET_BEACON', () => {
-    it('should set the beacon for a machine', () => {
-      const result = machinesReducer(
-        undefined,
-        new Actions.SetBeaconAction({ id, value, def: ItemId.Beacon }),
-      );
-      expect(result.entities[id].beaconId).toEqual(value);
-    });
-  });
-
-  describe('SET_BEACON_MODULE', () => {
-    it('should set the beacon module for a machine', () => {
-      const result = machinesReducer(
-        undefined,
-        new Actions.SetBeaconModuleRankAction({
-          id,
-          value: [value],
-          def: [],
-        }),
-      );
-      expect(result.entities[id].beaconModuleRankIds).toEqual([value]);
+      expect(result.entities[id].beacons).toEqual(value);
     });
   });
 

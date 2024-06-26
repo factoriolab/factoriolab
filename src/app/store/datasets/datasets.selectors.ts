@@ -36,9 +36,7 @@ export const getModRecord = createSelector(
   (mods, entities) =>
     mods.reduce((e: Entities<Mod | undefined>, m) => {
       const data = entities[m.id];
-      if (data != null) {
-        e[m.id] = { ...m, ...data };
-      }
+      if (data != null) e[m.id] = { ...m, ...data };
       return e;
     }, {}),
 );

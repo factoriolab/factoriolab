@@ -180,95 +180,37 @@ describe('Objectives Reducer', () => {
     });
   });
 
-  describe('SET_MACHINE_MODULES', () => {
-    it('should set machine modules on an objective', () => {
+  describe('SET_MODULES', () => {
+    it('should set modules on an objective', () => {
+      const value = [{ count: rational(1n), id: ItemId.SpeedModule }];
       const result = objectivesReducer(
         state,
         new Actions.SetModulesAction({
           id: '0',
-          value: [ItemId.SpeedModule],
-          def: [ItemId.Module],
+          value,
         }),
       );
-      expect(result.entities['0'].moduleIds).toEqual([ItemId.SpeedModule]);
+      expect(result.entities['0'].modules).toEqual(value);
     });
   });
 
-  describe('ADD_BEACON', () => {
-    it('should add a beacon to an objective', () => {
-      const result = objectivesReducer(state, new Actions.AddBeaconAction('0'));
-      expect(result.entities['0'].beacons?.length).toEqual(2);
-    });
-  });
-
-  describe('REMOVE_BEACON', () => {
-    it('should remove a beacon from an objective', () => {
+  describe('SET_BEACONS', () => {
+    it('should set beacons on an objective', () => {
+      const value = [
+        {
+          count: rational(0n),
+          id: ItemId.Beacon,
+          modules: [{ count: rational(2n), id: ItemId.Module }],
+        },
+      ];
       const result = objectivesReducer(
         state,
-        new Actions.RemoveBeaconAction({ id: '0', value: 0 }),
-      );
-      expect(result.entities['0'].beacons?.length).toEqual(0);
-    });
-  });
-
-  describe('SET_BEACON_COUNT', () => {
-    it('should set beacon count on an objective', () => {
-      const result = objectivesReducer(
-        state,
-        new Actions.SetBeaconCountAction({
+        new Actions.SetBeaconsAction({
           id: '0',
-          index: 0,
-          value: rational(8n),
-          def: rational(0n),
+          value,
         }),
       );
-      expect(result.entities['0'].beacons?.[0].count).toEqual(rational(8n));
-    });
-  });
-
-  describe('SET_BEACON', () => {
-    it('should set beacon on an objective', () => {
-      const result = objectivesReducer(
-        state,
-        new Actions.SetBeaconAction({
-          id: '0',
-          index: 0,
-          value: ItemId.Beacon,
-          def: ItemId.AssemblingMachine1,
-        }),
-      );
-      expect(result.entities['0'].beacons?.[0].id).toEqual(ItemId.Beacon);
-    });
-  });
-
-  describe('SET_BEACON_MODULES', () => {
-    it('should set beacon modules on an objective', () => {
-      const result = objectivesReducer(
-        state,
-        new Actions.SetBeaconModulesAction({
-          id: '0',
-          index: 0,
-          value: [ItemId.SpeedModule],
-          def: [ItemId.Module],
-        }),
-      );
-      expect(result.entities['0'].beacons?.[0].moduleIds).toEqual([
-        ItemId.SpeedModule,
-      ]);
-    });
-  });
-
-  describe('SET_BEACON_TOTAL', () => {
-    it('should set the beacon total', () => {
-      const result = objectivesReducer(
-        state,
-        new Actions.SetBeaconTotalAction({
-          id: '0',
-          index: 0,
-          value: rational(200n),
-        }),
-      );
-      expect(result.entities['0'].beacons?.[0].total).toEqual(rational(200n));
+      expect(result.entities['0'].beacons).toEqual(value);
     });
   });
 
@@ -316,7 +258,7 @@ describe('Objectives Reducer', () => {
               {
                 count: rational(8n),
                 id: 'beaconId',
-                moduleIds: ['beaconModuleIds'],
+                modules: [{ count: rational(2n), id: ItemId.Module }],
               },
             ],
           },
@@ -384,7 +326,7 @@ describe('Objectives Reducer', () => {
               {
                 count: rational(8n),
                 id: 'beaconId',
-                moduleIds: ['beaconModuleIds'],
+                modules: [{ count: rational(2n), id: ItemId.Module }],
               },
             ],
           },
@@ -422,7 +364,7 @@ describe('Objectives Reducer', () => {
               {
                 count: rational(8n),
                 id: 'beaconId',
-                moduleIds: ['beaconModuleIds'],
+                modules: [{ count: rational(2n), id: ItemId.Module }],
               },
             ],
           },

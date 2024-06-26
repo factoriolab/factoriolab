@@ -134,23 +134,23 @@ export const ItemSettings1: M.ItemSettings = {
 };
 export const RecipeSettings1: M.RecipeSettings = {
   machineId: ItemId.AssemblingMachine2,
-  moduleIds: [ItemId.Module, ItemId.Module],
+  modules: [{ count: M.rational(2n), id: ItemId.Module }],
   beacons: [
     {
-      id: ItemId.Beacon,
-      moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
       count: M.rational(0n),
+      id: ItemId.Beacon,
+      modules: [{ count: M.rational(2n), id: ItemId.SpeedModule }],
     },
   ],
 };
 export const RecipeSettings2: M.RecipeSettings = {
   machineId: ItemId.AssemblingMachine2,
-  moduleIds: [ItemId.Module, ItemId.Module],
+  modules: [{ count: M.rational(2n), id: ItemId.Module }],
   beacons: [
     {
-      id: ItemId.Beacon,
-      moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
       count: M.rational(0n),
+      id: ItemId.Beacon,
+      modules: [{ count: M.rational(2n), id: ItemId.SpeedModule }],
     },
   ],
 };
@@ -206,7 +206,6 @@ export const ItemsStateInitial = Items.getItemsState.projector({}, Dataset, {
 });
 export const MachinesStateInitial = Machines.getMachinesState.projector(
   Machines.initialMachinesState,
-  [ItemId.Coal],
   Defaults,
   Dataset,
 );

@@ -1,7 +1,6 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-import { TranslateService } from '@ngx-translate/core';
 import { EMPTY, of } from 'rxjs';
 
 import { Mocks, TestModule } from 'src/tests';
@@ -13,14 +12,12 @@ describe('DataService', () => {
   let service: DataService;
   let http: HttpTestingController;
   let mockStore: MockStore<LabState>;
-  let translateSvc: TranslateService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(DataService);
     http = TestBed.inject(HttpTestingController);
     mockStore = TestBed.inject(MockStore);
-    translateSvc = TestBed.inject(TranslateService);
     service.initialize();
   });
 
@@ -31,7 +28,7 @@ describe('DataService', () => {
   describe('constructor', () => {
     it('should watch for language changes', () => {
       spyOn(service, 'requestData').and.returnValue(EMPTY);
-      translateSvc.use('test');
+      service.translateSvc.use('test');
       expect(service.requestData).toHaveBeenCalledWith('1.1');
     });
   });
@@ -54,7 +51,7 @@ describe('DataService', () => {
     });
 
     it('should get values from cache', () => {
-      translateSvc.use('zh');
+      service.translateSvc.use('zh');
       service.cacheData['id'] = of(Mocks.Data);
       service.cacheI18n['id-zh'] = of(Mocks.I18n);
       service.cacheHash['id'] = of(Mocks.Hash);
@@ -65,7 +62,7 @@ describe('DataService', () => {
 
     it('should handle missing translations', () => {
       spyOn(console, 'warn');
-      translateSvc.use('err');
+      service.translateSvc.use('err');
       service.cacheData['id'] = of(Mocks.Data);
       service.cacheHash['id'] = of(Mocks.Hash);
       let data: [ModData, ModHash, ModI18n | null] | undefined;
@@ -76,7 +73,7 @@ describe('DataService', () => {
     });
 
     it('should load translation data', () => {
-      translateSvc.use('zh');
+      service.translateSvc.use('zh');
       service.cacheData['id'] = of(Mocks.Data);
       service.cacheHash['id'] = of(Mocks.Hash);
       let data: [ModData, ModHash, ModI18n | null] | undefined;

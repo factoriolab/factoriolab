@@ -7,7 +7,7 @@ import { parseSilo, Silo, SiloJson } from './silo';
 export interface MachineJson {
   /** If undefined, speed is based on belt speed */
   speed?: number | string;
-  modules?: number;
+  modules?: number | true;
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
@@ -29,7 +29,7 @@ export interface MachineJson {
 export interface Machine {
   /** If undefined, speed is based on belt speed */
   speed?: Rational;
-  modules?: Rational;
+  modules?: Rational | true;
   disallowedEffects?: ModuleEffect[];
   type?: EnergyType;
   /** Fuel categories, e.g. chemical or nuclear */
@@ -56,7 +56,7 @@ export function parseMachine(
   if (json == null) return;
   return {
     speed: rational(json.speed),
-    modules: rational(json.modules),
+    modules: json.modules === true ? json.modules : rational(json.modules),
     disallowedEffects: json.disallowedEffects,
     type: json.type,
     fuelCategories: json.fuelCategories,
