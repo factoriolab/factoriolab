@@ -75,6 +75,8 @@ function parseType(type: M.DataType, structName?: string): string {
         return 'number';
       case 'string':
         return 'string';
+      case 'DataExtendMethod':
+        return '() => void';
       default:
         return type;
     }

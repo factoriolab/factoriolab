@@ -977,12 +977,10 @@
                     beltId: itemsState()[step.itemId].beltId,
                     wagons: step.wagons?.mul(output.value),
                     wagonId: itemsState()[step.itemId].wagonId,
-                    machines: output.machines,
-                    machineId:
-                      output.recipeId &&
-                      recipesState()[output.recipeId].machineId,
-                    recipeId: output.recipeId,
-                    recipeObjectiveId: output.recipeObjectiveId,
+                    machines: output.step?.machines,
+                    machineId: output.step?.recipeSettings?.machineId,
+                    recipeId: output.step?.recipeId,
+                    recipeObjectiveId: output.step?.recipeObjectiveId,
                     percent: output.value,
                     percentOnDest: true,
                     destId: step.itemId,
@@ -1077,7 +1075,7 @@
                 }
               }
             }
-            @if (step.recipe && (step.recipe.in | keyvalue).length) {
+            @if ((step.recipe.in | keyvalue).length) {
               <tr class="detail">
                 <ng-container *ngTemplateOutlet="leftPad"></ng-container>
                 <td colspan="100" class="fw-bold">
@@ -1096,28 +1094,53 @@
                   as row
                 ) {
                   @if (row.step.itemId && row.percent) {
-                    <ng-container
-                      *ngTemplateOutlet="
-                        detailRow;
-                        context: {
-                          items: row.step.items?.mul(row.percent),
-                          itemId: input.key,
-                          belts: row.step.belts?.mul(row.percent),
-                          beltId: itemsState()[row.step.itemId].beltId,
-                          wagons: row.step.wagons?.mul(row.percent),
-                          wagonId: itemsState()[row.step.itemId].wagonId,
-                          machines: row.step.machines?.mul(row.percent),
-                          machineId: row.step.recipeSettings?.machineId,
-                          recipeId: row.step.recipeId,
-                          recipeObjectiveId: row.step.recipeObjectiveId,
-                          percent: row.percent,
-                          destId: step.recipeId,
-                          destRecipeObjectiveId: step.recipeObjectiveId,
-                          destIsRecipe: true
-                        }
-                      "
-                    >
-                    </ng-container>
+                    @if (
+                      stepDetails()[row.step.id].outputs.length === 1 &&
+                        stepDetails()[row.step.id].outputs[0];
+                      as output
+                    ) {
+                      <ng-container
+                        *ngTemplateOutlet="
+                          detailRow;
+                          context: {
+                            items: row.step.items?.mul(row.percent),
+                            itemId: input.key,
+                            belts: row.step.belts?.mul(row.percent),
+                            beltId: itemsState()[row.step.itemId].beltId,
+                            wagons: row.step.wagons?.mul(row.percent),
+                            wagonId: itemsState()[row.step.itemId].wagonId,
+                            machines: output.step?.machines,
+                            machineId: output.step?.recipeSettings?.machineId,
+                            recipeId: output.step?.recipeId,
+                            recipeObjectiveId: output.step?.recipeObjectiveId,
+                            percent: row.percent,
+                            destId: step.recipeId,
+                            destRecipeObjectiveId: step.recipeObjectiveId,
+                            destIsRecipe: true
+                          }
+                        "
+                      >
+                      </ng-container>
+                    } @else {
+                      <ng-container
+                        *ngTemplateOutlet="
+                          detailRow;
+                          context: {
+                            items: row.step.items?.mul(row.percent),
+                            itemId: input.key,
+                            belts: row.step.belts?.mul(row.percent),
+                            beltId: itemsState()[row.step.itemId].beltId,
+                            wagons: row.step.wagons?.mul(row.percent),
+                            wagonId: itemsState()[row.step.itemId].wagonId,
+                            percent: row.percent,
+                            destId: step.recipeId,
+                            destRecipeObjectiveId: step.recipeObjectiveId,
+                            destIsRecipe: true
+                          }
+                        "
+                      >
+                      </ng-container>
+                    }
                   }
                 }
               }
@@ -1168,15 +1191,14 @@
                         beltId: itemsState()[row.step.itemId].beltId,
                         wagons: row.step.wagons?.mul(row.percent),
                         wagonId: itemsState()[row.step.itemId].wagonId,
-                        machines: row.step.machines?.mul(row.percent),
-                        machineId: row.step.recipeSettings?.machineId,
-                        recipeId: row.step.recipeId,
-                        recipeObjectiveId: row.step.recipeObjectiveId,
+                        machines: step.machines,
+                        machineId: step.recipeSettings?.machineId,
+                        recipeId: step.recipeId,
+                        recipeObjectiveId: step.recipeObjectiveId,
                         percent: row.percent,
                         percentOnDest: true,
-                        destId: step.recipeId,
-                        destRecipeObjectiveId: step.recipeObjectiveId,
-                        destIsRecipe: true
+                        destId: output.key,
+                        destRecipeObjectiveId: step.recipeObjectiveId
                       }
                     "
                   >
@@ -1755,7 +1777,7 @@
     >
       @if (columnSettings.show) {
         <td class="w-0 text-end inherit">
-          @for (tot of totals | keyvalue: trackSvc.sortByValue; track tot.key) {
+          @for (tot of totals | keyvalue: trackSvc.sortByValue; track tot) {
             <div class="py-2 icon-height">
               <span class="monospace">{{
                 tot.value | rate: columnSettings.precision
@@ -1766,10 +1788,7 @@
         <td class="ps-0 inherit">
           <div class="d-flex">
             <div class="d-flex flex-column justify-content-center">
-              @for (
-                tot of totals | keyvalue: trackSvc.sortByValue;
-                track tot.key
-              ) {
+              @for (tot of totals | keyvalue: trackSvc.sortByValue; track tot) {
                 @if (data().itemEntities[tot.key]) {
                   <i
                     class="d-block"
@@ -1796,7 +1815,7 @@
             <div class="modules-column">
               @for (
                 tot of modulesTotals | keyvalue: trackSvc.sortByValue;
-                track tot.key
+                track tot
               ) {
                 <div class="p-2 icon-height text-end">
                   <span class="monospace">{{ tot.value }}</span>

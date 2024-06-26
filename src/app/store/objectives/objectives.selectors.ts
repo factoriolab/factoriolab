@@ -366,12 +366,12 @@ export const getStepDetails = createSelector(
           ...steps
             .filter(fnPropsNotNullish('outputs', 'recipeId', 'machines'))
             .filter((s) => s.outputs[itemId] != null)
-            .map((s) => ({
-              recipeId: s.recipeId,
-              recipeObjectiveId: s.recipeObjectiveId,
-              value: s.outputs[itemId],
-              machines: s.machines,
-            })),
+            .map(
+              (s): StepOutput => ({
+                step: s,
+                value: s.outputs[itemId],
+              }),
+            ),
         );
 
         const inputs = outputs.reduce((r: Rational, o) => {
@@ -381,7 +381,6 @@ export const getStepDetails = createSelector(
           outputs.push({
             inputs: true,
             value: inputs,
-            machines: rational(0n),
           });
         }
 

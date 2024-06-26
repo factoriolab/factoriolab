@@ -1,13 +1,12 @@
 import { MenuItem } from 'primeng/api';
 
 import { Rational } from './rational';
+import { Step } from './step';
 
 export interface StepOutput {
-  recipeId?: string;
-  recipeObjectiveId?: string;
   inputs?: boolean;
   value: Rational;
-  machines: Rational;
+  step?: Step;
 }
 
 export interface StepDetail {
