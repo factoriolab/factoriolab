@@ -2,8 +2,8 @@
 
 /**
  * Application: factorio
- * Version: 1.1.91
- * API Version: 4
+ * Version: 1.1.109
+ * API Version: 5
  */
 
 /** Entity with energy source with specialised animation for charging/discharging. Used for the [accumulator](https://wiki.factorio.com/Accumulator) entity. */
@@ -31,7 +31,7 @@ interface _AccumulatorPrototype {
   draw_copper_wires?: boolean;
   /** The capacity of the energy source buffer specifies the capacity of the accumulator. */
   energy_source: ElectricEnergySource;
-  picture: Sprite;
+  picture?: Sprite;
 }
 
 export type AccumulatorPrototype = _AccumulatorPrototype &
@@ -55,7 +55,7 @@ Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
 Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
@@ -147,7 +147,7 @@ export function isAmmoItemPrototype(
   return (value as { type: string }).type === 'ammo';
 }
 
-/** A turret that consumes ammo items. */
+/** A turret that consumes [ammo items](prototype:AmmoItemPrototype). */
 interface _AmmoTurretPrototype {
   type: 'ammo-turret';
   automated_ammo_count: ItemCountType;
@@ -200,7 +200,7 @@ Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. Th
   /** Only loaded if `layers` is not defined. Mandatory if `stripes` is not defined.
 
 The path to the sprite file to use. */
-  filename: FileName;
+  filename?: FileName;
   /** Only loaded if `layers` is not defined. */
   flags?: SpriteFlags;
   /** Only loaded if `layers` is not defined.
@@ -223,10 +223,10 @@ If this property exists and high resolution sprites are turned on, this is used 
   hr_version?: Animation;
   /** If this property is present, all Animation definitions have to be placed as entries in the array, and they will all be loaded from there. `layers` may not be an empty table. Each definition in the array may also have the `layers` property.
 
-`animation_speed` and `max_advance` only have to be defined in one layer. All layers will run at the same speed.
+`animation_speed` and `max_advance` of the first layer are used for all layers. All layers will run at the same speed.
 
 If this property is present, all other properties besides `name` and `type` are ignored. */
-  layers: Animation[];
+  layers?: Animation[];
   /** Only loaded if `layers` is not defined.
 
 Once the specified number of pictures is loaded, other pictures are loaded on other line. This is to allow having longer animations in matrix, to input files with too high width. The game engine limits the width of any input files to 8192px, so it is compatible with most graphics cards. `0` means that all the pictures are in one horizontal line. */
@@ -237,7 +237,9 @@ Minimal mode is entered when mod loading fails. You are in it when you see the g
   load_in_minimal_mode?: boolean;
   /** Only loaded if `layers` is not defined.
 
-If `layers` are used, `max_advance` only has to be defined in one layer. */
+If `layers` are used, `max_advance` of the first layer is used for all layers.
+
+Maximum amount of frames the animation can move forward in one update. */
   max_advance?: number;
   /** Only loaded if `layers` is not defined.
 
@@ -303,17 +305,17 @@ export function isAnimationPrototype(
 /** An [arithmetic combinator](https://wiki.factorio.com/Arithmetic_combinator). */
 interface _ArithmeticCombinatorPrototype {
   type: 'arithmetic-combinator';
-  and_symbol_sprites: Sprite4Way;
-  divide_symbol_sprites: Sprite4Way;
-  left_shift_symbol_sprites: Sprite4Way;
-  minus_symbol_sprites: Sprite4Way;
-  modulo_symbol_sprites: Sprite4Way;
-  multiply_symbol_sprites: Sprite4Way;
-  or_symbol_sprites: Sprite4Way;
-  plus_symbol_sprites: Sprite4Way;
-  power_symbol_sprites: Sprite4Way;
-  right_shift_symbol_sprites: Sprite4Way;
-  xor_symbol_sprites: Sprite4Way;
+  and_symbol_sprites?: Sprite4Way;
+  divide_symbol_sprites?: Sprite4Way;
+  left_shift_symbol_sprites?: Sprite4Way;
+  minus_symbol_sprites?: Sprite4Way;
+  modulo_symbol_sprites?: Sprite4Way;
+  multiply_symbol_sprites?: Sprite4Way;
+  or_symbol_sprites?: Sprite4Way;
+  plus_symbol_sprites?: Sprite4Way;
+  power_symbol_sprites?: Sprite4Way;
+  right_shift_symbol_sprites?: Sprite4Way;
+  xor_symbol_sprites?: Sprite4Way;
 }
 
 export type ArithmeticCombinatorPrototype = _ArithmeticCombinatorPrototype &
@@ -333,7 +335,7 @@ interface _ArmorPrototype {
   /** By how many slots the inventory of the player is expanded when the armor is worn. */
   inventory_size_bonus?: ItemStackIndex;
   /** What amount of damage the armor takes on what type of damage is incoming. */
-  resistances?: Resistances;
+  resistances?: Resistance[];
 }
 
 export type ArmorPrototype = _ArmorPrototype &
@@ -570,10 +572,10 @@ export function isBatteryEquipmentPrototype(
   return (value as { type: string }).type === 'battery-equipment';
 }
 
-/** Entity with the ability to transfer module's effects to its neighboring entities. */
+/** Entity with the ability to transfer [module](prototype:ModulePrototype) effects to its neighboring entities. */
 interface _BeaconPrototype {
   type: 'beacon';
-  /** The types of modules that a player can place inside of the beacon. */
+  /** The types of [modules](prototype:ModulePrototype) that a player can place inside of the beacon. */
   allowed_effects?: EffectTypeLimitation;
   /** Only loaded if `graphics_set` is not defined.
 
@@ -582,10 +584,11 @@ The animation for the beacon, when in use. */
   /** Only loaded if `graphics_set` is not defined.
 
 The picture of the beacon when it is not on. */
-  base_picture?: Sprite;
+  base_picture?: Animation;
   /** The multiplier of the module's effects, when shared between neighbors. */
   distribution_effectivity: number;
   energy_source: ElectricEnergySource | VoidEnergySource;
+  /** The constant power usage of this beacon. */
   energy_usage: Energy;
   /** The graphics for the beacon. */
   graphics_set?: BeaconGraphicsSet;
@@ -809,7 +812,7 @@ interface _BurnerGeneratorPrototype {
   /** Whether the `idle_animation` should also play when the generator is active. */
   always_draw_idle_animation?: boolean;
   /** Plays when the generator is active. `idle_animation` must have the same frame count as animation. */
-  animation: Animation4Way;
+  animation?: Animation4Way;
   /** The input energy source of the generator. */
   burner: BurnerEnergySource;
   /** The output energy source of the generator. Any emissions specified on this energy source are ignored, they must be specified on `burner`. */
@@ -1054,7 +1057,7 @@ interface _CombatRobotPrototype {
   friction?: number;
   idle: RotatedAnimation;
   in_motion: RotatedAnimation;
-  light: LightDefinition;
+  light?: LightDefinition;
   range_from_player?: number;
   shadow_idle: RotatedAnimation;
   shadow_in_motion: RotatedAnimation;
@@ -1076,7 +1079,7 @@ interface _CombinatorPrototype {
   activity_led_hold_time?: number;
   activity_led_light?: LightDefinition;
   activity_led_light_offsets: [Vector, Vector, Vector, Vector];
-  activity_led_sprites: Sprite4Way;
+  activity_led_sprites?: Sprite4Way;
   /** The maximum circuit wire distance for this entity. */
   circuit_wire_max_distance?: number;
   draw_circuit_wires?: boolean;
@@ -1098,7 +1101,7 @@ interface _CombinatorPrototype {
   ];
   screen_light?: LightDefinition;
   screen_light_offsets: [Vector, Vector, Vector, Vector];
-  sprites: Sprite4Way;
+  sprites?: Sprite4Way;
 }
 
 export type CombinatorPrototype = _CombinatorPrototype &
@@ -1108,7 +1111,7 @@ interface _ConstantCombinatorPrototype {
   type: 'constant-combinator';
   activity_led_light?: LightDefinition;
   activity_led_light_offsets: [Vector, Vector, Vector, Vector];
-  activity_led_sprites: Sprite4Way;
+  activity_led_sprites?: Sprite4Way;
   circuit_wire_connection_points: [
     WireConnectionPoint,
     WireConnectionPoint,
@@ -1120,7 +1123,7 @@ interface _ConstantCombinatorPrototype {
   draw_circuit_wires?: boolean;
   draw_copper_wires?: boolean;
   item_slot_count: number;
-  sprites: Sprite4Way;
+  sprites?: Sprite4Way;
 }
 
 export type ConstantCombinatorPrototype = _ConstantCombinatorPrototype &
@@ -1177,7 +1180,7 @@ export function isConstructionRobotPrototype(
   return (value as { type: string }).type === 'construction-robot';
 }
 
-/** A generic container, such as a chest. Can not be rotated. */
+/** A generic container, such as a chest. Cannot be rotated. */
 interface _ContainerPrototype {
   type: 'container';
   /** The pictures displayed for circuit connections to this container. */
@@ -1299,7 +1302,7 @@ export function isCorpsePrototype(value: unknown): value is CorpsePrototype {
 
 Note that a crafting machine cannot be rotated unless it has at least one of the following: a fluid box, a heat energy source, a fluid energy source, or a non-square collision box. Crafting machines with non-square collision boxes can only be rotated before placement, not after. */
 interface _CraftingMachinePrototype {
-  /** Sets the module effects that are allowed to be used on this machine.
+  /** Sets the [modules](prototype:ModulePrototype) and [beacon](prototype:BeaconPrototype) effects that are allowed to be used on this machine.
 
 Note: If the time to complete a recipe is shorter than one tick, only one craft can be completed per tick, but productivity bonus is applied to the non-limited ''completable'' work. For a simple example, if a recipe were to take half a tick, only one recipe would be completed, but twice the productivity bonus would occur. The surplus production from productivity is **not** limited to one craft per tick. */
   allowed_effects?: EffectTypeLimitation;
@@ -1399,9 +1402,15 @@ interface _CustomInputPrototype {
   alternative_key_sequence?: string;
   /** Sets whether internal game events associated with the same key sequence should be fired or blocked. If they are fired ("none"), then the custom input event will happen before the internal game event. */
   consuming?: ConsumingType;
-  /** The alternative controller (game pad) keybinding for this control. See `key_sequence` for the format. */
+  /** The alternative controller (game pad) keybinding for this control. See `controller_key_sequence` for the format. */
   controller_alternative_key_sequence?: string;
-  /** The controller (game pad) keybinding for this control. See `key_sequence` for the format. */
+  /** The controller (game pad) keybinding for this control. Use "" (empty string) for unassigned.
+
+" + " is used to separate modifier buttons from normal buttons: <code>"controller-righttrigger + controller-a"</code>.
+
+For modifier buttons, the following names are used: "controller-righttrigger", "controller-lefttrigger".
+
+A key binding can contain an unlimited amount of modifier buttons (listed above) but only one normal button (listed below). */
   controller_key_sequence?: string;
   /** If this custom input is enabled. Disabled custom inputs exist but are not used by the game. If disabled, no event is raised when the input is used. */
   enabled?: boolean;
@@ -1424,7 +1433,7 @@ For modifier keys, the following names are used: "CONTROL", "SHIFT", "ALT", "COM
 A key binding can contain an unlimited amount of modifier keys (listed above) but only one normal key (listed below). */
   key_sequence: string;
   /** When a custom-input is linked to a game control it won't show up in the control-settings GUI and will fire when the linked control is pressed. */
-  linked_game_control?: string;
+  linked_game_control?: LinkedGameControl;
   /** Unique textual identification of the prototype. May not contain a dot, nor exceed a length of 200 characters.
 
 For a list of all names used in vanilla, see [data.raw](https://wiki.factorio.com/Data.raw).
@@ -1457,12 +1466,12 @@ export function isDamageType(value: unknown): value is DamageType {
 /** A [decider combinator](https://wiki.factorio.com/Decider_combinator). */
 interface _DeciderCombinatorPrototype {
   type: 'decider-combinator';
-  equal_symbol_sprites: Sprite4Way;
-  greater_or_equal_symbol_sprites: Sprite4Way;
-  greater_symbol_sprites: Sprite4Way;
-  less_or_equal_symbol_sprites: Sprite4Way;
-  less_symbol_sprites: Sprite4Way;
-  not_equal_symbol_sprites: Sprite4Way;
+  equal_symbol_sprites?: Sprite4Way;
+  greater_or_equal_symbol_sprites?: Sprite4Way;
+  greater_symbol_sprites?: Sprite4Way;
+  less_or_equal_symbol_sprites?: Sprite4Way;
+  less_symbol_sprites?: Sprite4Way;
+  not_equal_symbol_sprites?: Sprite4Way;
 }
 
 export type DeciderCombinatorPrototype = _DeciderCombinatorPrototype &
@@ -1646,7 +1655,7 @@ interface _DontUseEntityInEnergyProductionAchievementPrototype {
   /** This will **not** disable the achievement, if this entity is placed, and you have received any amount of power from it. */
   excluded: EntityID | EntityID[];
   /** This will disable the achievement, if this entity is placed, and you have received any amount of power from it. If you finish the game without receiving power from this entity, you receive the achievement. */
-  included: EntityID | EntityID[];
+  included?: EntityID | EntityID[];
   last_hour_only?: boolean;
   minimum_energy_produced?: Energy;
 }
@@ -1768,7 +1777,7 @@ export function isElectricPolePrototype(
   return (value as { type: string }).type === 'electric-pole';
 }
 
-/** A turret that consumes electricity as ammo. */
+/** A turret that uses electricity as ammunition. */
 interface _ElectricTurretPrototype {
   type: 'electric-turret';
   energy_source: ElectricEnergySource | VoidEnergySource;
@@ -1815,7 +1824,7 @@ interface _EnemySpawnerPrototype {
     | CreateDecorativesTriggerEffectItem[];
   /** Whether `spawn_decoration` should be spawned when enemies [expand](https://wiki.factorio.com/Enemies#Expansions). */
   spawn_decorations_on_expansion?: boolean;
-  /** Ticks for cooldown after unit is spawned */
+  /** Ticks for cooldown after unit is spawned. The first member of the tuple is min, the second member of the tuple is max. */
   spawning_cooldown: [number, number];
   /** How far from the spawner can the units be spawned. */
   spawning_radius: number;
@@ -1882,7 +1891,7 @@ export function isEntityParticlePrototype(
   return (value as { type: string }).type === 'particle';
 }
 
-/** Abstract base of all entities in the game. Entity is nearly everything that can be on the map(except tiles).
+/** Abstract base of all entities in the game. Entity is nearly everything that can be on the map (except tiles).
 
 For in game script access to entity, take a look at [LuaEntity](runtime:LuaEntity). */
 interface _EntityPrototype {
@@ -1914,9 +1923,9 @@ Note, that for buildings, it is customary to leave 0.1 wide border between the e
   created_effect?: Trigger;
   /** The smoke that is shown when the entity is placed. */
   created_smoke?: CreateTrivialSmokeEffectItem;
-  /** Specification of space needed to see the whole entity. This is used to calculate the correct zoom and positioning in the entity info gui. */
+  /** Specification of space needed to see the whole entity in GUIs. This is used to calculate the correct zoom and positioning in the entity info gui, for example in the entity tooltip. */
   drawing_box?: BoundingBox;
-  /** Amount of emissions created (positive number) or cleaned (negative number) every second by the entity. This is passive, and it is independent concept of the emissions of machines, these are created actively depending on the power consumption. Currently used just for trees. */
+  /** Amount of emissions created (positive number) or cleaned (negative number) every second by the entity. This is passive and currently used just for trees and fires. This is independent of the [emissions of energy sources](prototype:BaseEnergySource::emissions_per_minute) used by machines, which are created actively depending on the power consumption. */
   emissions_per_second?: number;
   enemy_map_color?: Color;
   /** This allows you to replace an entity that's already placed, with a different one in your inventory. For example, replacing a burner inserter with a fast inserter. The replacement entity can be a different rotation to the replaced entity and you can replace an entity with the same type.
@@ -1935,7 +1944,7 @@ Only loaded if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
 Only loaded if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
@@ -1946,12 +1955,13 @@ Either this or `icon` is mandatory for entities that have at least one of these 
   map_color?: Color;
   /** Used instead of the collision box during map generation. Allows space entities differently during map generation, for example if the box is bigger, the entities will be placed farther apart. */
   map_generator_bounding_box?: BoundingBox;
+  /** The item given to the player when they mine the entity and other properties relevant to mining this entity. */
   minable?: MinableProperties;
   mined_sound?: Sound;
   mining_sound?: Sound;
   /** Name of the entity that will be automatically selected as the upgrade of this entity when using the [upgrade planner](https://wiki.factorio.com/Upgrade_planner) without configuration.
 
-This entity may not have "not-upgradable" flag set and must be minable. This entity mining result must not contain item product with "hidden" flag set. Mining results with no item products are allowed. The entity may not be a [RollingStockPrototype](prototype:RollingStockPrototype).
+This entity may not have "not-upgradable" flag set and must be minable. This entity mining result must not contain item product with "hidden" flag set. Mining results with no item products are allowed. This entity may not be a [RollingStockPrototype](prototype:RollingStockPrototype).
 
 The upgrade target entity needs to have the same bounding box, collision mask, and fast replaceable group as this entity. The upgrade target entity must have least 1 item that builds it that isn't hidden. */
   next_upgrade?: EntityID;
@@ -1960,7 +1970,7 @@ The upgrade target entity needs to have the same bounding box, collision mask, a
 
 The order string is taken from the items in `placeable_by` if they exist, or from an item that has its [place_result](prototype:ItemPrototype::place_result) set to this entity. */
   order?: Order;
-  /** Item that when placed creates this entity. Determines which item is picked when "Q" (smart pipette) is used on the entity, determines which item is needed in a blueprint of this entity.
+  /** Item that when placed creates this entity. Determines which item is picked when "Q" (smart pipette) is used on this entity. Determines which item and item amount is needed in a blueprint of this entity and to revive a ghost of this entity.
 
 The item count specified here can't be larger than the stack size of that item. */
   placeable_by?: ItemToPlace | ItemToPlace[];
@@ -1969,13 +1979,15 @@ The item count specified here can't be larger than the stack size of that item. 
   radius_visualisation_specification?: RadiusVisualisationSpecification;
   /** The entity that remains when this one is mined, deconstructed or fast-replaced. The entity wont actually be spawned if it would collide with the entity that is in the process of being mined. */
   remains_when_mined?: EntityID | EntityID[];
-  /** Whether this entity should remove decoratives that collide with it when this entity is built. When set to "automatic", if the entity type is considered [a building](runtime:LuaEntityPrototype::is_building) (e.g. an assembling machine or a wall) it will remove decoratives. */
-  remove_decoratives?: 'automatic' | 'true' | 'false';
+  /** Whether this entity should remove decoratives that collide with it when this entity is built. When set to "automatic", if the entity type is considered [a building](runtime:LuaEntityPrototype::is_building) (e.g. an assembling machine or a wall) it will remove decoratives.
+
+Using boolean values for this property is deprecated, however they have the same meaning as the corresponding strings. */
+  remove_decoratives?: 'automatic' | 'true' | 'false' | true | false;
   rotated_sound?: Sound;
   selectable_in_game?: boolean;
   /** Specification of the entity selection area. When empty the entity will have no selection area (and thus is not selectable).
 
-The selection box is usually a little bit bigger than the collision box, for tileable entities (like buildings) it should match the tile size of the building. */
+The selection box is usually a little bit bigger than the collision box. For tileable entities (like buildings) it should match the tile size of the building. */
   selection_box?: BoundingBox;
   /** The entity with the higher number is selectable before the entity with the lower number. When two entities have the same selection priority, the one with the highest [collision mask](prototype:CollisionMask) (as determined by the order on that page) is selected. */
   selection_priority?: number;
@@ -1994,7 +2006,7 @@ When the tile width is odd, the center will be in the center of the tile, when i
   trigger_target_mask?: TriggerTargetMask;
   /** When playing this sound, the volume is scaled by the speed of the vehicle when colliding with this entity. */
   vehicle_impact_sound?: Sound;
-  /** May also be defined inside `graphics_set` instead of directly in the entity prototype. This is useful for entities that use the a `graphics_set` property to define their graphics, because then all graphics can be defined in one place.
+  /** May also be defined inside `graphics_set` instead of directly in the entity prototype. This is useful for entities that use a `graphics_set` property to define their graphics, because then all graphics can be defined in one place.
 
 [Currently only renders](https://forums.factorio.com/100703) for [EntityWithHealthPrototype](prototype:EntityWithHealthPrototype). */
   water_reflection?: WaterReflectionDefinition;
@@ -2007,7 +2019,7 @@ export type EntityPrototype = _EntityPrototype &
 /** Abstract base of all entities with health in the game. */
 interface _EntityWithHealthPrototype {
   alert_when_damaged?: boolean;
-  attack_reaction?: AttackReactionItem[];
+  attack_reaction?: AttackReactionItem | AttackReactionItem[];
   /** Specifies the names of the [CorpsePrototype](prototype:CorpsePrototype) to be used when this entity dies. */
   corpse?: EntityID | EntityID[];
   create_ghost_on_death?: boolean;
@@ -2027,10 +2039,12 @@ interface _EntityWithHealthPrototype {
   /** The unit health can never go over the maximum. Default health of units on creation is set to max. Must be greater than 0. */
   max_health?: number;
   random_corpse_variation?: boolean;
+  /** Played when this entity is repaired with a [RepairToolPrototype](prototype:RepairToolPrototype). */
   repair_sound?: Sound;
+  /** Multiplier of [RepairToolPrototype::speed](prototype:RepairToolPrototype::speed) for this entity prototype. */
   repair_speed_modifier?: number;
   /** See [damage](https://wiki.factorio.com/Damage). */
-  resistances?: Resistances;
+  resistances?: Resistance[];
 }
 
 export type EntityWithHealthPrototype = _EntityWithHealthPrototype &
@@ -2276,7 +2290,7 @@ interface _FluidPrototype {
   type: 'fluid';
   /** Whether the fluid should be included in the barrel recipes automatically generated by the base mod.
 
-This property is not read by the game engine itself, but the base mod's data-updates.lua script. This means it is not available to read at runtime. */
+This property is not read by the game engine itself, but the base mod's data-updates.lua file. This means it is discarded by the game engine after loading finishes. */
   auto_barrel?: boolean;
   /** Used by bars that show the fluid color, like the flamethrower turret fill bar in the tooltip, or the fill bar for the fluid wagon tooltip; and for the pipe windows and storage tank fill gauges. */
   base_color: Color;
@@ -2299,14 +2313,14 @@ Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
 Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
   /** Can't be an empty array. */
   icons?: IconData[];
   max_temperature?: number;
-  /** The value of this property may not be an empty string. It either has to be nil, or a non-empty string. */
+  /** The name of the [subgroup](prototype:ItemSubGroup) of this fluid. The value of this property may not be an empty string. It either has to be `nil`, or a non-empty string. */
   subgroup?: ItemSubGroupID;
 }
 
@@ -2373,10 +2387,10 @@ export function isFluidStreamPrototype(
   return (value as { type: string }).type === 'stream';
 }
 
-/** A turret that consumes fluid as ammo. */
+/** A turret that uses [fluid](prototype:FluidPrototype) as ammunition. */
 interface _FluidTurretPrototype {
   type: 'fluid-turret';
-  /** Before an turret that was out of ammo is able to fire again, the `fluid_buffer_size` must fill to this proportion. */
+  /** Before an turret that was out of fluid ammunition is able to fire again, the `fluid_buffer_size` must fill to this proportion. */
   activation_buffer_ratio: number;
   /** Requires ammo_type in attack_parameters. */
   attack_parameters: StreamAttackParameters;
@@ -2393,6 +2407,7 @@ interface _FluidTurretPrototype {
   muzzle_light?: LightDefinition;
   not_enough_fuel_indicator_light?: LightDefinition;
   not_enough_fuel_indicator_picture?: Sprite4Way;
+  /** The sprite will be drawn on top of fluid turrets that are out of fluid ammunition. If the `out_of_ammo_alert_icon` is not set, [UtilitySprites::fluid_icon](prototype:UtilitySprites::fluid_icon) will be used instead. */
   out_of_ammo_alert_icon?: Sprite;
   prepared_muzzle_animation_shift?: AnimatedVector;
   preparing_muzzle_animation_shift?: AnimatedVector;
@@ -2430,21 +2445,35 @@ export function isFluidWagonPrototype(
 interface _FlyingRobotPrototype {
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
-  /** How much does it cost to move 1 tile. */
+  /** How much energy does it cost to move 1 tile.
+
+Used only by [robots with logistic interface](prototype:RobotWithLogisticInterfacePrototype). */
   energy_per_move?: Energy;
+  /** How much energy does it cost to fly for 1 tick.
+
+Used only by [robots with logistic interface](prototype:RobotWithLogisticInterfacePrototype). */
   energy_per_tick?: Energy;
   /** Whether this prototype should be a high priority target for enemy forces. See [Military units and structures](https://wiki.factorio.com/Military_units_and_structures). */
   is_military_target?: boolean;
-  /** How much energy can be stored in the batteries. */
+  /** How much energy can be stored in the batteries.
+
+Used only by [robots with logistic interface](prototype:RobotWithLogisticInterfacePrototype). */
   max_energy?: Energy;
-  /** The maximum speed of the robot. Useful to limit the impact of [worker robot speed (research)](https://wiki.factorio.com/Worker_robot_speed_(research)). */
+  /** The maximum flying speed of the robot, in tiles/tick. Useful to limit the impact of [worker robot speed (research)](https://wiki.factorio.com/Worker_robot_speed_(research)). */
   max_speed?: number;
-  /** If the robot has more energy than this, it does not need to charge before stationing. */
+  /** If the robot's battery fill ratio is more than this, it does not need to charge before stationing.
+
+Used only by [robots with logistic interface](prototype:RobotWithLogisticInterfacePrototype). */
   max_to_charge?: number;
-  /** The robot will go to charge when it has less energy than this. */
+  /** The robot will go to charge when its battery fill ratio is less than this.
+
+Used only by [robots with logistic interface](prototype:RobotWithLogisticInterfacePrototype). */
   min_to_charge?: number;
+  /** The flying speed of the robot, in tiles/tick. */
   speed: number;
-  /** Some robots simply crash, some slowdown but keep going. 0 means crash. */
+  /** Some robots simply crash, some slowdown but keep going. 0 means crash.
+
+Used only by [robots with logistic interface](prototype:RobotWithLogisticInterfacePrototype). */
   speed_multiplier_when_out_of_energy?: number;
 }
 
@@ -2529,6 +2558,8 @@ export function isFurnacePrototype(value: unknown): value is FurnacePrototype {
 interface _GatePrototype {
   type: 'gate';
   activation_distance: number;
+  /** Played when the gate closes. */
+  close_sound: Sound;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
   fadeout_interval?: number;
@@ -2536,6 +2567,8 @@ interface _GatePrototype {
   horizontal_rail_animation_left: Animation;
   horizontal_rail_animation_right: Animation;
   horizontal_rail_base: Animation;
+  /** Played when the gate opens. */
+  open_sound: Sound;
   /** This collision mask is used when the gate is open. */
   opened_collision_mask?: CollisionMask;
   opening_speed: number;
@@ -2584,13 +2617,13 @@ This property is also used when `burns_fluid` is false and the fluid is at defau
 In these cases, this property determines whether the fluid should be destroyed, meaning that the fluid is consumed at the rate of `fluid_usage_per_tick`, without producing any power. */
   destroy_non_fuel_fluid?: boolean;
   /** How much energy the generator produces compared to how much energy it consumes. For example, an effectivity of 0.5 means that half of the consumed energy is output as power. */
-  effectivity: number;
+  effectivity?: number;
   energy_source: ElectricEnergySource;
   /** This must have a filter if `max_power_output` is not defined. */
   fluid_box: FluidBox;
   /** The number of fluid units the generator uses per tick. */
   fluid_usage_per_tick: number;
-  horizontal_animation: Animation;
+  horizontal_animation?: Animation;
   /** The power production of the generator is capped to this value. This is also the value that is shown as the maximum power output in the tooltip of the generator.
 
 `fluid_box` must have a filter if this is not defined. */
@@ -2609,7 +2642,7 @@ Setting this to true prevents the generator from overconsuming fluid, for exampl
 If scale_fluid_usage is false, the generator consumes the full `fluid_usage_per_tick` and any of the extra energy in the fluid (in the form of higher temperature) is wasted. The [steam engine](https://wiki.factorio.com/Steam_engine) exhibits this behavior when fed steam from [heat exchangers](https://wiki.factorio.com/Heat_exchanger). */
   scale_fluid_usage?: boolean;
   smoke?: SmokeSource[];
-  vertical_animation: Animation;
+  vertical_animation?: Animation;
 }
 
 export type GeneratorPrototype = _GeneratorPrototype &
@@ -2875,9 +2908,9 @@ export function isItemEntityPrototype(
   return (value as { type: string }).type === 'item-entity';
 }
 
-/** An item group. Item groups are shown above the list of craftable items in the player's inventory. The built-in groups are "logistics", "production", "intermediate-products" and "combat" but mods can define their own.
+/** An item group. Item groups are the tabs shown above the list of craftable items in the player's inventory GUI. The built-in groups are "logistics", "production", "intermediate-products" and "combat" but mods can define their own.
 
-Items are sorted into item groups by sorting them into a [subgroup](prototype:ItemPrototype::subgroup) which then belongs to a [item group](prototype:ItemSubGroup::group). */
+Items are sorted into item groups by sorting them into a [subgroup](prototype:ItemPrototype::subgroup) which then belongs to an [item group](prototype:ItemSubGroup::group). */
 interface _ItemGroup {
   type: 'item-group';
   /** Path to the icon that is shown to represent this item group.
@@ -2886,7 +2919,7 @@ Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
 Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
@@ -2908,7 +2941,9 @@ interface _ItemPrototype {
   /** The item that is the result when this item gets burned as fuel. */
   burnt_result?: ItemID;
   close_sound?: Sound;
-  /** Path to the icon file.
+  /** If this is set, it is used to show items in alt-mode instead of the normal item icon. This can be useful to increase the contrast of the icon with the dark alt-mode [icon outline](prototype:UtilityConstants::item_outline_color).
+
+Path to the icon file.
 
 Only loaded if `dark_background_icons` is not defined.
 
@@ -2928,7 +2963,9 @@ Uses the basic `icon_size` and `icon_mipmaps` properties. */
   /** Colors the glow of the burner energy source when this fuel is burned. Can also be used to color the glow of reactors burning the fuel, see [ReactorPrototype::use_fuel_glow_color](prototype:ReactorPrototype::use_fuel_glow_color). */
   fuel_glow_color?: Color;
   fuel_top_speed_multiplier?: number;
-  /** Mandatory when `fuel_acceleration_multiplier`, `fuel_top_speed_multiplier` or `fuel_emissions_multiplier` or `fuel_glow_color` are used. Amount of energy it gives when used as fuel. */
+  /** Amount of energy the item gives when used as fuel.
+
+Mandatory if `fuel_acceleration_multiplier`, `fuel_top_speed_multiplier` or `fuel_emissions_multiplier` or `fuel_glow_color` are used. */
   fuel_value?: Energy;
   /** Path to the icon file.
 
@@ -2938,7 +2975,7 @@ Mandatory if `icons` is not defined. */
 
 This definition applies to all icon-type properties, both on here and on any children. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
 This definition applies to all icon-type properties, both on here and on any children.
 
@@ -2947,7 +2984,9 @@ Mandatory if `icons` is not defined, or if `icon_size` is not specified for all 
   /** Can't be an empty array. */
   icons?: IconData[];
   open_sound?: Sound;
-  /** Used to give the item multiple different icons so that they look less uniform on belts etc. For inventory icons and similar, `icon/icons` will be used. Maximum number of variations is 16. */
+  /** Used to give the item multiple different icons so that they look less uniform on belts. For inventory icons and similar, `icon/icons` will be used. Maximum number of variations is 16.
+
+The expected size for icons of items on belts is 16px. So when using sprites of size `64` (same as base game icons), the `scale` should be set to 0.25. */
   pictures?: SpriteVariations;
   place_as_tile?: PlaceAsTile;
   /** Name of the [EntityPrototype](prototype:EntityPrototype) that can be built using this item. If this item should be the one that construction bots use to build the specified `place_result`, set the `"primary-place-result"` [item flag](prototype:ItemPrototypeFlags).
@@ -2960,7 +2999,9 @@ The localised name of the entity will be used as the in-game item name. This beh
   rocket_launch_products?: ItemProductPrototype[];
   /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: ItemCountType;
-  /** Empty text of subgroup is not allowed. (You can omit the definition to get the default "other"). */
+  /** The name of the [subgroup](prototype:ItemSubGroup) this item should be sorted into in item selection GUIs like logistic requests.
+
+Empty text of subgroup is not allowed. (You can omit the definition to get the default "other"). */
   subgroup?: ItemSubGroupID;
   /** The number of items needed to connect 2 entities with this as wire. In the base game, [green wire](https://wiki.factorio.com/Green_wire), [red wire](https://wiki.factorio.com/Red_wire) and [copper cable](https://wiki.factorio.com/Copper_cable) have this set to 1. */
   wire_count?: ItemCountType;
@@ -2991,7 +3032,9 @@ export function isItemRequestProxyPrototype(
   return (value as { type: string }).type === 'item-request-proxy';
 }
 
-/** An item subgroup. The built-in subgroups can be found [here](https://wiki.factorio.com/Data.raw#item-subgroup). See [ItemPrototype::subgroup](prototype:ItemPrototype::subgroup). */
+/** An item subgroup. Item subgroups are the rows in the recipe list in the player's inventory GUI. The subgroup of a prototype also determines its item [group](prototype:ItemGroup::group) (tab in the recipe list).
+
+The built-in subgroups can be found [here](https://wiki.factorio.com/Data.raw#item-subgroup). See [ItemPrototype::subgroup](prototype:ItemPrototype::subgroup) for setting the subgroup of an item. */
 interface _ItemSubGroup {
   type: 'item-subgroup';
   /** The item group this subgroup is located in. */
@@ -3064,7 +3107,7 @@ interface _ItemWithInventoryPrototype {
   item_filters?: ItemID[];
   /** A list of explicit item group names to be used as filters. */
   item_group_filters?: ItemGroupID[];
-  /** A list of explicit item subgroup names to be used as filters. */
+  /** A list of explicit [item subgroup](prototype:ItemSubGroup) names to be used as filters. */
   item_subgroup_filters?: ItemSubGroupID[];
   /** Count of items of the same name that can be stored in one inventory slot. Must be 1 when the `"not-stackable"` flag is set. */
   stack_size: 1;
@@ -3138,10 +3181,10 @@ export function isKillAchievementPrototype(
   return (value as { type: string }).type === 'kill-achievement';
 }
 
-/** A [lab](https://wiki.factorio.com/Lab). */
+/** A [lab](https://wiki.factorio.com/Lab). It consumes [science packs](prototype:ToolPrototype) to research [technologies](prototype:TechnologyPrototype). */
 interface _LabPrototype {
   type: 'lab';
-  /** Sets the module effects that are allowed to be used on this lab. */
+  /** Sets the [modules](prototype:ModulePrototype) and [beacon](prototype:BeaconPrototype) effects that are allowed to be used on this lab. */
   allowed_effects?: EffectTypeLimitation;
   /** Productivity bonus that this machine always has. */
   base_productivity?: number;
@@ -3358,7 +3401,7 @@ interface _LoaderPrototype {
   allow_container_interaction?: boolean;
   /** Whether this loader can load and unload [RollingStockPrototype](prototype:RollingStockPrototype). */
   allow_rail_interaction?: boolean;
-  /** How long this loader's belt is. Should be the same as belt_distance, which is hardcoded to `0.5` for [Loader1x2Prototype](prototype:Loader1x2Prototype) and to 0 for [Loader1x1Prototype](prototype:Loader1x1Prototype). */
+  /** How long this loader's belt is. Should be the same as belt_distance, which is hardcoded to `0.5` for [Loader1x2Prototype](prototype:Loader1x2Prototype) and to 0 for [Loader1x1Prototype](prototype:Loader1x1Prototype). See the linked prototypes for an explanation of belt_distance. */
   belt_length?: number;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
@@ -3494,12 +3537,15 @@ export function isMapSettings(value: unknown): value is MapSettings {
 }
 
 /** Offers can be added to a market and they are shown when opening the entity. Offers allow to spend items to get research bonuses or items. */
-export interface MarketPrototype {
+interface _MarketPrototype {
   type: 'market';
   /** Whether all forces are allowed to open this market. */
   allow_access_to_all_forces?: boolean;
   picture: Sprite;
 }
+
+export type MarketPrototype = _MarketPrototype &
+  Omit<EntityWithOwnerPrototype, keyof _MarketPrototype>;
 
 export function isMarketPrototype(value: unknown): value is MarketPrototype {
   return (value as { type: string }).type === 'market';
@@ -3508,6 +3554,7 @@ export function isMarketPrototype(value: unknown): value is MarketPrototype {
 /** A mining drill for automatically extracting resources from [resource entities](prototype:ResourceEntityPrototype). This prototype type is used by [burner mining drill](https://wiki.factorio.com/Burner_mining_drill), [electric mining drill](https://wiki.factorio.com/Electric_mining_drill) and [pumpjack](https://wiki.factorio.com/Pumpjack) in vanilla. */
 interface _MiningDrillPrototype {
   type: 'mining-drill';
+  /** Sets the [modules](prototype:ModulePrototype) and [beacon](prototype:BeaconPrototype) effects that are allowed to be used on this mining drill. */
   allowed_effects?: EffectTypeLimitation;
   /** Only loaded if `graphics_set` is not defined. */
   animations?: Animation4Way;
@@ -3598,18 +3645,19 @@ export function isModuleCategory(value: unknown): value is ModuleCategory {
   return (value as { type: string }).type === 'module-category';
 }
 
-/** A [module](https://wiki.factorio.com/Module). */
+/** A [module](https://wiki.factorio.com/Module). They are used to affect the capabilities of existing machines, for example by increasing the crafting speed of a [crafting machine](prototype:CraftingMachinePrototype). */
 interface _ModulePrototype {
   type: 'module';
-  /** Chooses with what art style the module is shown inside beacons. See [BeaconModuleVisualizations::art_style](prototype:BeaconModuleVisualizations::art_style). Vanilla uses "vanilla" here. */
+  /** Chooses with what art style the module is shown inside [beacons](prototype:BeaconPrototype). See [BeaconModuleVisualizations::art_style](prototype:BeaconModuleVisualizations::art_style). Vanilla uses `"vanilla"` here. */
   art_style?: string;
   beacon_tint?: BeaconVisualizationTints;
   /** Used when upgrading modules: Ctrl + click modules into an entity and it will replace lower tier modules of the same category with higher tier modules. */
   category: ModuleCategoryID;
+  /** The effect of the module on the machine it's inserted in, such as increased pollution. */
   effect: Effect;
-  /** Array of recipe names this module can be used on. If empty, the module can be used on all recipes. */
+  /** Array of [recipe names](prototype:RecipePrototype) this module can be used on. If empty, the module can be used on all recipes. */
   limitation?: RecipeID[];
-  /** Array of recipe names this module can **not** be used on, implicitly allowing its use on all other recipes. This property has no effect if set to an empty table.
+  /** Array of [recipe names](prototype:RecipePrototype) this module can **not** be used on, implicitly allowing its use on all other recipes. This property has no effect if set to an empty table.
 
 Note that the game converts this into a normal list of limitations internally, so reading [LuaItemPrototype::limitations](runtime:LuaItemPrototype::limitations) at runtime will be the product of both ways of defining limitations. */
   limitation_blacklist?: RecipeID[];
@@ -3676,7 +3724,7 @@ Named noise expressions can be used by [MapGenSettings](prototype:MapGenSettings
 
 Alternate expressions can be made available in the map generator GUI by setting their `intended_property` to the name of the property they should override.
 
-Named noise expressions can also be used by [noise variables](prototype:NoiseExpression::variable), e.g. `noise.var("my-named-expression")`. */
+Named noise expressions can also be used by [noise variables](prototype:NoiseVariable), e.g. `noise.var("my-named-expression")`. */
 interface _NamedNoiseExpression {
   type: 'noise-expression';
   /** The noise expression itself. This is where most of the noise magic happens. */
@@ -3685,7 +3733,7 @@ interface _NamedNoiseExpression {
 
 Note that the "Map type" dropdown in the map generation GUI is actually a selector for "elevation" generators. If generators are available for other properties, the "Map type" dropdown in the GUI will be renamed to "elevation" and shown along with selectors for the other selectable properties.
 
-For example if a noise expression is intended to be used as an alternative temperature generator, `intended_property` should be "temperature". The base game uses the intended_properties elevation, temperature, moisture and aux. For how the named noise expression with those intended_properties are used in the base game see the notable named noise expression list on [NoiseExpression::variable](prototype:NoiseExpression::variable). Mods may add any other intended_property or modify the existing noise expressions to change/remove their intended properties. Furthermore, mods may remove the use of those named noise expressions from the map generation code or change what they affect.
+For example if a noise expression is intended to be used as an alternative temperature generator, `intended_property` should be "temperature". The base game uses the intended_properties elevation, temperature, moisture and aux. For how the named noise expression with those intended_properties are used in the base game see the notable named noise expression list on [BaseNamedNoiseExpressions](prototype:BaseNamedNoiseExpressions). Mods may add any other intended_property or modify the existing noise expressions to change/remove their intended properties. Furthermore, mods may remove the use of those named noise expressions from the map generation code or change what they affect.
 
 **intended_property in the base game:** The base game defines two named noise expressions that have the `intended_property` "elevation" so that are selectable via the "Map type" dropdown (which actually selects elevation generators)
 
@@ -3710,7 +3758,7 @@ data:extend{
 
 **Mods can define any intended_property with any name**. This examples aims to show what this is useful for.
 
-A [NoiseExpression::variable](prototype:NoiseExpression::variable) can reference a named noise expression, so by defining the "test" named noise expression, `noise.var("test")` may be used in other [noise expressions](prototype:NoiseExpression). Intended_property allows to override what the variable references: With the example, if "more-test" is selected in the dropdown in the map generator GUI, its `expression` (`noise.ridge(noise.var("y"), -10, 6`) will provide the value for the noise variable "test" instead.
+A [NoiseVariable](prototype:NoiseVariable) can reference a named noise expression, so by defining the "test" named noise expression, `noise.var("test")` may be used in other [noise expressions](prototype:NoiseExpression). Intended_property allows to override what the variable references: With the example, if "more-test" is selected in the dropdown in the map generator GUI, its `expression` (`noise.ridge(noise.var("y"), -10, 6`) will provide the value for the noise variable "test" instead.
 
 For easy demonstration, that value is assigned to the "elevation" named noise expression, so changing the "test" generator changes the `noise.var("test")` which in turn is used by the "elevation" named noise expression. The "elevation" noise variable is used by water generation, so changing the test generators is immediately visible in the map generation preview.
 
@@ -3826,7 +3874,7 @@ If set, this specifies whether collision with tiles should (true) or should not 
   /** Mandatory if `graphics_set` is not defined.
 
 Deprecated, use `graphics_set` instead. */
-  picture?: Sprite4Way;
+  picture?: Animation4Way;
   placeable_position_visualization?: Sprite;
   /** How many units of fluid are produced per tick. Must be > 0. */
   pumping_speed: number;
@@ -3913,6 +3961,7 @@ interface _PipePrototype {
   /** The area of the entity where fluid/gas inputs, and outputs. */
   fluid_box: FluidBox;
   horizontal_window_bounding_box: BoundingBox;
+  /** All graphics for this pipe. */
   pictures: PipePictures;
   vertical_window_bounding_box: BoundingBox;
 }
@@ -4091,7 +4140,7 @@ interface _ProjectilePrototype {
   acceleration: number;
   /** Executed when the projectile hits something. */
   action?: Trigger;
-  animation?: Animation;
+  animation?: AnimationVariations;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
   /** Setting this to true can be used to disable projectile homing behaviour. */
@@ -4111,7 +4160,7 @@ interface _ProjectilePrototype {
   piercing_damage?: number;
   /** Whether the animation of the projectile is rotated to match the direction of travel. */
   rotatable?: boolean;
-  shadow?: Animation;
+  shadow?: AnimationVariations;
   smoke?: SmokeSource[];
   speed_modifier?: Vector;
   /** Must be greater than or equal to 0. */
@@ -4195,7 +4244,7 @@ interface _RadarPrototype {
   type: 'radar';
   /** The amount of energy the radar has to consume for nearby scan to be performed. This value doesn't have any effect on sector scanning.
 
-Performance warning: nearby scan causes re-charting of many chunks, which is expensive operation. If you want to make a radar that updates map more in real time, you should keep its range low. If you are making radar with high range, you should set this value such that nearby scan is performed once a second or so. For example if you set `energy_usage` to 100kW, setting` energy_per_nearby_scan` to 100kJ will cause nearby scan happen once per second. */
+Performance warning: nearby scan causes re-charting of many chunks, which is expensive operation. If you want to make a radar that updates map more in real time, you should keep its range low. If you are making radar with high range, you should set this value such that nearby scan is performed once a second or so. For example if you set `energy_usage` to 100kW, setting `energy_per_nearby_scan` to 100kJ will cause nearby scan to happen once per second. */
   energy_per_nearby_scan: Energy;
   /** The amount of energy it takes to scan a sector. This value doesn't have any effect on nearby scanning. */
   energy_per_sector: Energy;
@@ -4427,7 +4476,7 @@ Only loaded if neither `normal` nor `expensive` are defined. */
 
 Only loaded if neither `normal` nor `expensive` are defined. */
   always_show_products?: boolean;
-  /** Controls which category of machines can craft this recipe.
+  /** The [category](prototype:RecipeCategory) of this recipe. Controls which machines can craft this recipe.
 
 The built-in categories can be found [here](https://wiki.factorio.com/Data.raw#recipe-category). The base `"crafting"` category can not contain recipes with fluid ingredients or products. */
   category?: RecipeCategoryID;
@@ -4467,15 +4516,15 @@ Mandatory if `icons` is not defined for a recipe with more than one product and 
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
-Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
+Only loaded if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
   /** Can't be an empty array. */
   icons?: IconData[];
   /** A table containing ingredient names and counts. Can also contain information about fluid temperature and catalyst amounts. The catalyst amounts are automatically calculated from the recipe, or can be set manually in the IngredientPrototype (see [here](https://factorio.com/blog/post/fff-256)).
 
-The maximum ingredient amount is 65535. Can be set to an empty table to create a recipe that needs no ingredients.
+The maximum ingredient amount is 65 535. Can be set to an empty table to create a recipe that needs no ingredients.
 
 Duplicate ingredients, e.g. two entries with the same name, are *not* allowed. In-game, the item ingredients are ordered by [ItemGroup::order_in_recipe](prototype:ItemGroup::order_in_recipe).
 
@@ -4501,7 +4550,7 @@ Only loaded if neither `normal` nor `expensive` are defined. */
   requester_paste_multiplier?: number;
   /** The item created by this recipe. Must be the name of an [item](prototype:ItemPrototype), such as `"iron-gear-wheel"`.
 
-Only loaded if neither `results`, `normal` nor `expensive` are defined. */
+Only loaded, and mandatory if neither `results`, `normal` nor `expensive` are defined. */
   result?: ItemID;
   /** The number of items created by this recipe.
 
@@ -4511,13 +4560,13 @@ Only loaded if neither `results`, `normal` nor `expensive` are defined. */
 
 Can be set to an empty table to create a recipe that produces nothing. Duplicate results, e.g. two entries with the same name, are allowed.
 
-Mandatory if neither `normal` nor `expensive` are defined. */
+Only loaded if neither `normal` nor `expensive` are defined. */
   results?: ProductPrototype[];
-  /** Whether the recipe name should have the product amount in front of it, e.g. "2x Transport belt".
+  /** Whether the recipe name should have the product amount in front of it. E.g. "2x Transport belt".
 
 Only loaded if neither `normal` nor `expensive` are defined. */
   show_amount_in_title?: boolean;
-  /** The subgroup of this recipe. If not specified, it defaults to the subgroup of the product if there is only one, or of the `main_product` if multiple products exist.
+  /** The name of the [subgroup](prototype:ItemSubGroup) of this recipe. If not specified, it defaults to the subgroup of the product if there is only one, or of the `main_product` if multiple products exist.
 
 Mandatory if multiple products exist and no `main_product` is specified, or if there is no product. */
   subgroup?: ItemSubGroupID;
@@ -4534,11 +4583,14 @@ export function isRecipePrototype(value: unknown): value is RecipePrototype {
   return (value as { type: string }).type === 'recipe';
 }
 
-/** A [repair pack](https://wiki.factorio.com/Repair_pack). */
+/** A [repair pack](https://wiki.factorio.com/Repair_pack). Using the tool decreases durability to restore entity health. */
 interface _RepairToolPrototype {
   type: 'repair-tool';
   /** This does nothing, it is never triggered. */
   repair_result?: Trigger;
+  /** Entity health repaired per used [ToolPrototype::durability](prototype:ToolPrototype::durability). E.g. a repair tool with 5 durability and a repair speed of 2 will restore 10 health.
+
+This is then multiplied by the [EntityWithHealthPrototype::repair_speed_modifier](prototype:EntityWithHealthPrototype::repair_speed_modifier) of the entity. */
   speed: number;
 }
 
@@ -4591,6 +4643,8 @@ interface _ResourceEntityPrototype {
   type: 'resource';
   /** The category for the resource. Available categories in vanilla can be found [here](https://wiki.factorio.com/Data.raw#resource-category). */
   category?: ResourceCategoryID;
+  /** Must be greater than or equal to `0`. */
+  cliff_removal_probability?: number;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
   /** How long it takes `stages_effect` to go from `min_effect_alpha` to `max_effect_alpha`. */
@@ -4631,7 +4685,7 @@ When using [AnimationVariations::sheet](prototype:AnimationVariations::sheet), `
   stages_effect?: AnimationVariations;
   /** Must be positive when `tree_removal_probability` is set. */
   tree_removal_max_distance?: number;
-  /** Must be positive. */
+  /** Must be greater than or equal to `0`. */
   tree_removal_probability?: number;
   /** Sound played when the player walks over this resource. */
   walking_sound?: Sound;
@@ -4811,7 +4865,7 @@ interface _RocketSiloPrototype {
   base_engine_light?: LightDefinition;
   base_front_sprite: Sprite;
   base_light?: LightDefinition;
-  /** Drawn instead of `base_day_sprite` during the night i.e. when [LuaSurface::darkness](runtime:LuaSurface::darkness) is larger than 0.3. */
+  /** Drawn instead of `base_day_sprite` during the night, that is when [LuaSurface::darkness](runtime:LuaSurface::darkness) is larger than 0.3. */
   base_night_sprite?: Sprite;
   /** Played when switching into the [arms_retract](runtime:defines.rocket_silo_status.arms_retract) state. */
   clamps_off_sound?: Sound;
@@ -4838,7 +4892,7 @@ interface _RocketSiloPrototype {
   hole_sprite: Sprite;
   /** May be 0.
 
-Additional energy used during the night i.e. when [LuaSurface::darkness](runtime:LuaSurface::darkness) is larger than 0.3. */
+Additional energy used during the night, that is when [LuaSurface::darkness](runtime:LuaSurface::darkness) is larger than 0.3. */
   lamp_energy_usage: Energy;
   /** The time to wait in the [launch_started](runtime:defines.rocket_silo_status.launch_started) state before switching to [engine_starting](runtime:defines.rocket_silo_status.engine_starting). */
   launch_wait_time?: number;
@@ -4861,8 +4915,8 @@ Additional energy used during the night i.e. when [LuaSurface::darkness](runtime
   /** The time to wait in the [doors_opened](runtime:defines.rocket_silo_status.doors_opened) state before switching to [rocket_rising](runtime:defines.rocket_silo_status.rocket_rising). */
   rocket_rising_delay?: number;
   rocket_shadow_overlay_sprite: Sprite;
-  satellite_animation: Animation;
-  satellite_shadow_animation: Animation;
+  satellite_animation?: Animation;
+  satellite_shadow_animation?: Animation;
   shadow_sprite: Sprite;
   silo_fade_out_end_distance: number;
   silo_fade_out_start_distance: number;
@@ -5101,16 +5155,15 @@ export function isShortcutPrototype(
   return (value as { type: string }).type === 'shortcut';
 }
 
-/** An extremely basic entity with no special functionality. Used for minable rocks. */
+/** An extremely basic entity with no special functionality. Used for minable rocks. Cannot be rotated. */
 interface _SimpleEntityPrototype {
   type: 'simple-entity';
-  /** Mandatory if both `picture` and `pictures` are not defined. */
   animations?: AnimationVariations;
   /** Whether this entity should be treated as a rock for the purpose of deconstruction and for [CarPrototype::immune_to_rock_impacts](prototype:CarPrototype::immune_to_rock_impacts). */
   count_as_rock_for_filtered_deconstruction?: boolean;
-  /** Mandatory if both `pictures` and `animations` are not defined. Takes priority over `animations`. */
-  picture?: Sprite;
-  /** Mandatory if both `picture` and `animations` are not defined. Takes priority over `picture` and `animations`. */
+  /** Takes priority over `animations`. Only the `north` sprite is used because this entity cannot be rotated. */
+  picture?: Sprite4Way;
+  /** Takes priority over `picture` and `animations`. */
   pictures?: SpriteVariations;
   random_animation_offset?: boolean;
   /** Whether a random graphics variation is chosen when placing the entity/creating it via script/creating it via map generation. If this is `false`, the entity will use the first variation instead of a random one. */
@@ -5129,7 +5182,7 @@ export function isSimpleEntityPrototype(
   return (value as { type: string }).type === 'simple-entity';
 }
 
-/** By default, this entity will be a priority target for units/turrets, who will choose to attack it even if it does not block their path. Use [SimpleEntityWithOwnerPrototype](prototype:SimpleEntityWithOwnerPrototype) for entities that are only attacked when they block enemies. */
+/** By default, this entity will be a priority target for units/turrets, who will choose to attack it even if it does not block their path. Setting [EntityWithOwnerPrototype::is_military_target](prototype:EntityWithOwnerPrototype::is_military_target) to `false` will turn this off, which then makes this type equivalent to [SimpleEntityWithOwnerPrototype](prototype:SimpleEntityWithOwnerPrototype). */
 interface _SimpleEntityWithForcePrototype {
   type: 'simple-entity-with-force';
   /** Whether this prototype should be a high priority target for enemy forces. See [Military units and structures](https://wiki.factorio.com/Military_units_and_structures). */
@@ -5145,16 +5198,17 @@ export function isSimpleEntityWithForcePrototype(
   return (value as { type: string }).type === 'simple-entity-with-force';
 }
 
-/** Has a force, but unlike [SimpleEntityWithForcePrototype](prototype:SimpleEntityWithForcePrototype) it is only attacked if the biters get stuck on it (or if [EntityWithOwnerPrototype::is_military_target](prototype:EntityWithOwnerPrototype::is_military_target) set to true to make the two entity types equivalent). */
+/** Has a force, but unlike [SimpleEntityWithForcePrototype](prototype:SimpleEntityWithForcePrototype) it is only attacked if the biters get stuck on it (or if [EntityWithOwnerPrototype::is_military_target](prototype:EntityWithOwnerPrototype::is_military_target) set to true to make the two entity types equivalent).
+
+Can be rotated in 4 directions. `picture` can be used to specify different graphics per direction. */
 interface _SimpleEntityWithOwnerPrototype {
   type: 'simple-entity-with-owner';
-  /** Mandatory if both `picture` and `pictures` are not defined. */
   animations?: AnimationVariations;
   /** If the entity is not visible to a player, the player cannot select it. */
   force_visibility?: ForceCondition;
-  /** Mandatory if both `pictures` and `animations` are not defined. */
-  picture?: Sprite;
-  /** Mandatory if both `picture` and `animations` are not defined. */
+  /** Takes priority over `animations`. */
+  picture?: Sprite4Way;
+  /** Takes priority over `picture` and `animations`. */
   pictures?: SpriteVariations;
   random_animation_offset?: boolean;
   /** Whether a random graphics variation is chosen when placing the entity/creating it via script/creating it via map generation. If this is false, the entity will use the first variation instead of a random one. */
@@ -5288,10 +5342,10 @@ export interface SoundPrototype {
   /** Modifies how far a sound can be heard. Must be between `0` and `1` inclusive. */
   audible_distance_modifier?: number;
   category?: SoundType;
-  /** Supported sound file formats are `.ogg`, `.wav` and `.voc`.
+  /** Supported sound file formats are `.ogg` (Vorbis) and `.wav`.
 
-Only loaded if `variations` is not defined. */
-  filename: FileName;
+Only loaded, and mandatory if `variations` is not defined. */
+  filename?: FileName;
   game_controller_vibration_data?: GameControllerVibrationData;
   /** Must be `>= min_speed`.
 
@@ -5484,10 +5538,10 @@ Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. */
 
 Only one of `draw_as_shadow`, `draw_as_glow` and `draw_as_light` can be true. This takes precedence over `draw_as_glow` and `draw_as_light`. */
   draw_as_shadow?: boolean;
-  /** Only loaded if `layers` is not defined.
+  /** Only loaded, and mandatory if `layers` is not defined.
 
 The path to the sprite file to use. */
-  filename: FileName;
+  filename?: FileName;
   /** Only loaded if `layers` is not defined. */
   flags?: SpriteFlags;
   /** Only loaded if `layers` is not defined.
@@ -5648,6 +5702,8 @@ The x position of the sprite will be `((game.tick % flow_length_in_ticks) ÷ flo
   pictures: StorageTankPictures;
   /** If the icons of fluids shown in alt-mode should be scaled to the storage tank's size. */
   scale_info_icons?: boolean;
+  /** Whether the "alt-mode icon" should be drawn at all. */
+  show_fluid_icon?: boolean;
   two_direction_only?: boolean;
   /** The location of the window showing the contents. Note that for `window_background` the width and height are determined by the sprite and window_bounding_box only determines the drawing location. For `fluid_background` the width is determined by the sprite and the height and drawing location are determined by window_bounding_box. */
   window_bounding_box: BoundingBox;
@@ -5702,13 +5758,13 @@ Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
 Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
   /** Can't be an empty array. */
   icons?: IconData[];
-  /** Controls whether the technology cost ignores the tech cost multiplier set in the [DifficultySettings](runtime:DifficultySettings), e.g. `4` for the default expensive difficulty.
+  /** Controls whether the technology cost ignores the tech cost multiplier set in the [DifficultySettings](runtime:DifficultySettings). E.g. `4` for the default expensive difficulty.
 
 Only loaded if neither `normal` nor `expensive` are defined. */
   ignore_tech_cost_multiplier?: boolean;
@@ -5820,7 +5876,7 @@ Only loaded if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
 Only loaded if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
@@ -5913,7 +5969,7 @@ export function isTipsAndTricksItemCategory(
 /** Items with a "durability". Used for [science packs](https://wiki.factorio.com/Science_pack). */
 interface _ToolPrototype {
   type: 'tool';
-  /** The durability of this tool. Must be positive. Mandatory if <code>infinite</code> is false. Ignored if <code>infinite</code> is true. */
+  /** The durability of this tool. Must be positive. Mandatory if `infinite` is false. Ignored if <code>infinite</code> is true. */
   durability?: number;
   /** May not be longer than 200 characters. */
   durability_description_key?: string;
@@ -5935,7 +5991,7 @@ is applied to a tool with 2 remaining durability out of 8 it will be displayed a
 
 `Remaining durability is 2 out of 8 which is 25 %` */
   durability_description_value?: string;
-  /** Whether this tool has infinite durability. If this is false, <code>durability</code> must be specified. */
+  /** Whether this tool has infinite durability. If this is false, `durability` must be specified. */
   infinite?: boolean;
 }
 
@@ -6029,7 +6085,7 @@ interface _TransportBeltConnectablePrototype {
   /** Mandatory if `belt_animation_set` is not defined. */
   ending_top?: Animation;
   ends_with_stopper?: boolean;
-  /** Transport belt connectable entities cannot have the "placeable-off-grid" flag specified. */
+  /** Transport belt connectable entities cannot have the `"building-direction-8-way"` flag. */
   flags?: EntityPrototypeFlags;
   /** The speed of the belt: `speed × 480 = x Items/second`.
 
@@ -6060,7 +6116,7 @@ Transport belts must have 12 animations. */
   /** The pictures displayed for circuit connections to this transport belt. */
   circuit_connector_sprites?: CircuitConnectorSprites[];
   /** Defines how wires visually connect to this transport belt. */
-  circuit_wire_connection_point?: WireConnectionPoint[];
+  circuit_wire_connection_points?: WireConnectionPoint[];
   /** The maximum circuit wire distance for this entity. */
   circuit_wire_max_distance?: number;
   /** Two entities can collide only if they share a layer from the collision mask. */
@@ -6247,10 +6303,10 @@ export function isTurretPrototype(value: unknown): value is TurretPrototype {
   return (value as { type: string }).type === 'turret';
 }
 
-/** The definition of the tutorial to be used in the tips and tricks, see [TipsAndTricksItem](prototype:TipsAndTricksItem). The actual tutorial code is defined in the tutorials folder, in the folder that has the name of the scenario property. */
+/** The definition of the tutorial to be used in the tips and tricks, see [TipsAndTricksItem](prototype:TipsAndTricksItem). The actual tutorial scripting code is defined in the tutorial scenario. The scenario must be placed in the `tutorials` folder in the mod. */
 interface _TutorialDefinition {
   type: 'tutorial';
-  /** Name of the folder for this tutorial in the tutorials folder. */
+  /** Name of the folder for this tutorial scenario in the [`tutorials` folder](https://wiki.factorio.com/Tutorial:Mod_structure#Subfolders). */
   scenario: string;
 }
 
@@ -6859,6 +6915,7 @@ interface _UtilitySprites {
   export: Sprite;
   export_slot: Sprite;
   favourite_server_icon: Sprite;
+  /** The sprite will be drawn on top of [fluid turrets](prototype:FluidTurretPrototype) that are out of fluid ammunition and don't have [FluidTurretPrototype::out_of_ammo_alert_icon](prototype:FluidTurretPrototype::out_of_ammo_alert_icon) set. */
   fluid_icon: Sprite;
   fluid_indication_arrow: Sprite;
   fluid_indication_arrow_both_ways: Sprite;
@@ -7128,7 +7185,7 @@ export function isUtilitySprites(value: unknown): value is UtilitySprites {
 interface _VehiclePrototype {
   /** Determines whether this vehicle accepts passengers. This includes both drivers and gunners, if applicable. */
   allow_passengers?: boolean;
-  /** Must be positive. There is no difference between the two ways to set braking power/force. */
+  /** Must be positive. There is no functional difference between the two ways to set braking power/force. */
   braking_power: Energy | number;
   /** Two entities can collide only if they share a layer from the collision mask. */
   collision_mask?: CollisionMask;
@@ -7137,7 +7194,7 @@ interface _VehiclePrototype {
   energy_per_hit_point: number;
   /** The name of the [EquipmentGridPrototype](prototype:EquipmentGridPrototype) this vehicle has. */
   equipment_grid?: EquipmentGridID;
-  /** Must be positive. There is no difference between the two ways to set friction force. */
+  /** Must be positive. There is no functional difference between the two ways to set friction force. */
   friction: number;
   /** The sprite that represents this vehicle on the map/minimap. */
   minimap_representation?: Sprite;
@@ -7166,13 +7223,13 @@ Mandatory if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
 Mandatory if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
   /** The icon that is used to represent this virtual signal. Can't be an empty array. */
   icons?: IconData[];
-  /** The name of a [ItemSubGroup](prototype:ItemSubGroup). */
+  /** The name of an [ItemSubGroup](prototype:ItemSubGroup). */
   subgroup?: ItemSubGroupID;
 }
 
@@ -7346,17 +7403,17 @@ interface _Animation {
   /** Only loaded if `layers` is not defined. Mandatory if `stripes` is not defined.
 
 The path to the sprite file to use. */
-  filename: FileName;
+  filename?: FileName;
   /** Only loaded if `layers` is not defined.
 
 If this property exists and high resolution sprites are turned on, this is used to load the Animation. */
   hr_version?: Animation;
   /** If this property is present, all Animation definitions have to be placed as entries in the array, and they will all be loaded from there. `layers` may not be an empty table. Each definition in the array may also have the `layers` property.
 
-`animation_speed` and `max_advance` only have to be defined in one layer. All layers will run at the same speed.
+`animation_speed` and `max_advance` of the first layer are used for all layers. All layers will run at the same speed.
 
 If this property is present, all other properties, including those inherited from AnimationParameters, are ignored. */
-  layers: Animation[];
+  layers?: Animation[];
   /** Only loaded if `layers` is not defined. */
   stripes?: Stripe[];
 }
@@ -7403,6 +7460,7 @@ Height of one frame in pixels, from 0-8192. */
   height?: SpriteSizeType;
   /** Specifies how many pictures are on each horizontal line in the image file. `0` means that all the pictures are in one horizontal line. Once the specified number of pictures are loaded from a line, the pictures from the next line are loaded. This is to allow having longer animations loaded in to Factorio's graphics matrix than the game engine's width limit of 8192px per input file. The restriction on input files is to be compatible with most graphics cards. */
   line_length?: number;
+  /** Maximum amount of frames the animation can move forward in one update. Useful to cap the animation speed on entities where it is variable, such as car animations. */
   max_advance?: number;
   /** Only loaded if this is an icon, that is it has the flag `"group=icon"` or `"group=gui"`.
 
@@ -7433,9 +7491,9 @@ export type AnimationSheet = _AnimationSheet &
   Omit<AnimationParameters, keyof _AnimationSheet>;
 interface _AnimationVariations {
   /** The variations are arranged vertically in the file, one row for each variation. */
-  sheet: AnimationSheet;
+  sheet?: AnimationSheet;
   /** Only loaded if `sheet` is not defined. */
-  sheets: AnimationSheet[];
+  sheets?: AnimationSheet[];
 }
 interface _AreaTriggerItem {
   collision_mode?: 'distance-from-collision-box' | 'distance-from-center';
@@ -7667,7 +7725,7 @@ interface _AutoplaceSpecification {
   coverage?: number;
   /** Indicates whether the thing should be placed even if [MapGenSettings](runtime:MapGenSettings) do not provide frequency/size/richness for it. (either for the specific prototype or for the control named by AutoplaceSpecification.control).
 
-If true, normal frequency/size/richness (`value=1`) are used in that case.  Otherwise it is treated as if 'none' were selected. */
+If true, normal frequency/size/richness (`value=1`) are used in that case. Otherwise it is treated as if 'none' were selected. */
   default_enabled?: boolean;
   /** Force of the placed entity. Can be a custom force name. Only relevant for [EntityWithOwnerPrototype](prototype:EntityWithOwnerPrototype). */
   force?: 'enemy' | 'player' | 'neutral' | string;
@@ -7730,7 +7788,7 @@ For example, an activation_type of "throw" will result in the tooltip category "
   /** Must be between `0` and `1`. */
   cooldown_deviation?: number;
   /** Played during the attack. */
-  cyclic_sound: CyclicSound;
+  cyclic_sound?: CyclicSound;
   damage_modifier?: number;
   /** Used when searching for the nearest enemy, when this is > 0, enemies that aren't burning are preferred over burning enemies. Definition of "burning" for this: Entity has sticker attached to it, and the sticker has a [spread_fire_entity](prototype:StickerPrototype::spread_fire_entity) set. */
   fire_penalty?: number;
@@ -7776,7 +7834,7 @@ Only loaded if `icons` is not defined. */
   icon?: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
 Only loaded if `icons` is not defined, or if `icon_size` is not specified for all instances of `icons`. */
   icon_size?: SpriteSizeType;
@@ -8001,12 +8059,12 @@ export interface BorderImageSet {
 export interface BoxSpecification {
   /** Whether this is a complete box or just the top left corner. If this is true, `side_length` and `side_height` must be present. Otherwise `max_side_length` must be present. */
   is_whole_box?: boolean;
-  /** Only read if `is_whole_box` is false. */
-  max_side_length: number;
-  /** Only read if `is_whole_box` is true. */
-  side_height: number;
-  /** Only read if `is_whole_box` is true. */
-  side_length: number;
+  /** Only loaded, and mandatory if `is_whole_box` is `false`. */
+  max_side_length?: number;
+  /** Only loaded, and mandatory if `is_whole_box` is `true`. */
+  side_height?: number;
+  /** Only loaded, and mandatory if `is_whole_box` is `true`. */
+  side_length?: number;
   sprite: Sprite;
 }
 export interface BuildEntityTipTrigger {
@@ -8040,7 +8098,8 @@ Only loaded if `fuel_categories` is not defined. */
   fuel_inventory_size: ItemStackIndex;
   light_flicker?: LightFlickeringDefinition;
   smoke?: SmokeSource[];
-  type: 'burner';
+  /** This is only loaded, and mandatory if the energy source can be loaded as multiple energy source types. */
+  type?: 'burner';
 }
 
 export type BurnerEnergySource = _BurnerEnergySource &
@@ -8118,7 +8177,7 @@ export function isCameraStyleSpecification(
   return (value as { type: string }).type === 'camera_style';
 }
 
-/** The data for one variation of character animations. [CharacterPrototype::animations](prototype:CharacterPrototype::animations). */
+/** The data for one variation of [character animations](prototype:CharacterPrototype::animations). */
 export interface CharacterArmorAnimation {
   /** The names of the armors this animation data is used for. Don't define this if you want the animations to be used for the player without armor. */
   armors?: ItemID[];
@@ -8382,6 +8441,7 @@ export interface ChartUtilityConstants {
 interface _CheckBoxStyleSpecification {
   checkmark?: Sprite;
   disabled_checkmark?: Sprite;
+  disabled_font_color?: Color;
   /** Name of a [FontPrototype](prototype:FontPrototype). */
   font?: string;
   font_color?: Color;
@@ -8486,9 +8546,9 @@ export function isClusterTriggerItem(
   return (value as { type: string }).type === 'cluster';
 }
 
-/** Table of red, green, blue, and alpha float values between 0 and 1.Alternatively, values can be from 0-255, they are interpreted as such if at least one value is `> 1`.
+/** Table of red, green, blue, and alpha float values between 0 and 1. Alternatively, values can be from 0-255, they are interpreted as such if at least one value is `> 1`.
 
-Color allows the short-hand notation of passing an array of exactly 3 or 4 numbers.
+Color allows the short-hand notation of passing an array of exactly 3 or 4 numbers. The array items are r, g, b and optionally a, in that order.
 
 The game usually expects colors to be in pre-multiplied form (color channels are pre-multiplied by alpha). */
 interface _Color {
@@ -8605,7 +8665,7 @@ interface _CreateEntityTriggerEffectItem {
   entity_name: EntityID;
   offset_deviation?: BoundingBox;
   /** If multiple offsets are specified, multiple entities are created. The projectile of the [Distractor capsule](https://wiki.factorio.com/Distractor_capsule) uses this property to spawn three Distractors. */
-  offsets?: Vector[];
+  offsets?: Vector | Vector[];
   show_in_tooltip?: boolean;
   /** Entity creation will not occur if any tile matches the collision condition. Defaults to no collisions. */
   tile_collision_mask?: CollisionMask;
@@ -8666,7 +8726,7 @@ interface _CreateParticleTriggerEffectItem {
   initial_vertical_speed?: number;
   initial_vertical_speed_deviation?: number;
   offset_deviation?: BoundingBox;
-  offsets?: Vector[];
+  offsets?: Vector | Vector[];
   particle_name: ParticleID;
   rotate_offsets?: boolean;
   show_in_tooltip?: boolean;
@@ -8735,7 +8795,7 @@ interface _CreateTrivialSmokeEffectItem {
   initial_height?: number;
   max_radius?: number;
   offset_deviation?: BoundingBox;
-  offsets?: Vector[];
+  offsets?: Vector | Vector[];
   smoke_name: TrivialSmokeID;
   speed?: Vector;
   speed_from_center?: number;
@@ -8809,6 +8869,21 @@ interface _DamageTypeFilters {
   types: DamageTypeID | DamageTypeID[];
   /** Whether this is a whitelist or a blacklist of damage types. Defaults to being a blacklist. */
   whitelist?: boolean;
+}
+/** The data table is read by the game to load all prototypes.
+
+At the end of the prototype stage, the data table is loaded by the game engine and the format of the prototypes is validated. Any extra properties are ignored. See [Data Lifecycle](runtime:data-lifecycle) for more information.
+
+The data table and its properties are defined in Lua, so their source code can be viewed in [dataloader.lua](https://github.com/wube/factorio-data/blob/master/core/lualib/dataloader.lua). */
+export interface Data {
+  /** The primary way to add prototypes to the data table. */
+  extend: () => void;
+  /** Set by the game based on whether the demo or retail version is running. Should not be used by mods. */
+  is_demo: boolean;
+  /** A dictionary of prototype types to values that themselves are dictionaries of prototype names to specific prototypes.
+
+This means that individual prototypes can be accessed with `local prototype = data.raw["prototype-type"]["internal-name"]`. */
+  raw: Record<string, Record<string, AnyPrototype>>;
 }
 interface _DeconstructionTimeToLiveModifier {
   type: 'deconstruction-time-to-live';
@@ -8903,7 +8978,7 @@ export interface DifficultySettings {
   research_queue_setting?: 'always' | 'after-victory' | 'never';
   /** A [defines.difficulty_settings.technology_difficulty](runtime:defines.difficulty_settings.technology_difficulty). */
   technology_difficulty: number;
-  /** Optional, defaults to 1. - Must be >= 0.001 and <= 1000. */
+  /** Must be >= 0.001 and <= 1000. */
   technology_price_multiplier?: number;
 }
 interface _DirectTriggerItem {
@@ -8928,7 +9003,7 @@ export interface DirectionShift {
 }
 export interface DistanceFromNearestPointArguments {
   maximum_distance?: ConstantNoiseNumber;
-  points: NoiseArrayConstruction;
+  points: NoiseArray;
   x: NoiseNumber;
   y: NoiseNumber;
 }
@@ -8963,7 +9038,7 @@ export function isDropDownStyleSpecification(
   return (value as { type: string }).type === 'dropdown_style';
 }
 
-/** When applied to modules, the resulting effect is a sum of all module affects, multiplied through calculations: `(1 + sum module effects)` or, for productivity `(0 + sum)`. */
+/** When applied to [modules](prototype:ModulePrototype), the resulting effect is a sum of all module effects, multiplied through calculations: `(1 + sum module effects)` or, for productivity `(0 + sum)`. */
 export interface Effect {
   /** Multiplier to energy used during operation (not idle/drain use). The minimum possible sum is -80%. */
   consumption?: EffectValue;
@@ -8975,7 +9050,7 @@ export interface Effect {
   speed?: EffectValue;
 }
 export interface EffectValue {
-  /** Precision is ignored beyond two decimals - 17.567 results in 17.56 etc. */
+  /** Precision is ignored beyond two decimals - `0.567` results in `0.56` and means 56% etc. Values can range from `-327.68` to `327.67`. Numbers outside of this range will wrap around. */
   bonus?: number;
 }
 interface _ElectricEnergySource {
@@ -8987,7 +9062,8 @@ interface _ElectricEnergySource {
   input_flow_limit?: Energy;
   /** The rate at which energy can be provided, to the network, from the energy buffer. `0` means no transfer. */
   output_flow_limit?: Energy;
-  type: 'electric';
+  /** This is only loaded, and mandatory if the energy source can be loaded as multiple energy source types. */
+  type?: 'electric';
   usage_priority: ElectricUsagePriority;
 }
 
@@ -9175,7 +9251,7 @@ export interface FactorioBasisNoiseArguments {
   input_scale?: ConstantNoiseNumber;
   /** The output will be multiplied by this value before returning. */
   output_scale?: ConstantNoiseNumber;
-  /** Integer between 0 and 4'294'967'295 (inclusive) used to populate the backing random noise. */
+  /** Integer between 0 and 4 294 967 295 (inclusive) used to populate the backing random noise. */
   seed0: ConstantNoiseNumber;
   /** Integer between 0 and 255 (inclusive) used to provide extra randomness when sampling. */
   seed1: ConstantNoiseNumber;
@@ -9191,7 +9267,7 @@ export interface FactorioMultioctaveNoiseArguments {
   output_scale?: ConstantNoiseNumber;
   /** How strong is each layer compared to the next larger one. */
   persistence: ConstantNoiseNumber;
-  /** Integer between 0 and 4'294'967'295 (inclusive) used to populate the backing random noise. */
+  /** Integer between 0 and 4 294 967 295 (inclusive) used to populate the backing random noise. */
   seed0: ConstantNoiseNumber;
   /** Integer between 0 and 255 (inclusive) used to provide extra randomness when sampling. */
   seed1: ConstantNoiseNumber;
@@ -9282,19 +9358,9 @@ export interface FluidBox {
   base_area?: number;
   /** Base level is the elevation of the invisible fluid box. `0` is ground level.
 
-`-1` puts the top of the fluid box at the bottom of a pipe connection (base_level `0`, height `1`), so fluid "falls" in to it, and can't get out.
+For example, if the base level is `-1` and the height is `1`, it puts the top of the fluid box at the bottom of a pipe connection with base_level `0` and height `1`. This means fluid "falls" in to the fluid box, and can't get out.
 
-`1` puts the bottom of the fluid box at the top of a pipe connection, so fluid "falls" out of it, but fluids already outside cannot get into it.
-
-In other words:
-
-- `1` = output only (and will attempt to empty as fast as possible)
-
-- `-1` = input only (and will attempt to fill as fast as possible)
-
-- `0` means fluids can freely flow in and out (and like a pipe, will balance to the level of the pipe next to it)
-
-Having a `-1` or `1` improperly set on an output or input, respectively, will cause issues like output fluid not leaving the building, or input fluid not entering, regardless of fluid levels in the pipe or fluid box. */
+For example, if the base level is `1`, it puts the bottom of the fluid box at the top of a pipe connection with base_level `0` and height `1`. This means fluid "falls" out of the fluid box, but fluids already outside can't get into it. */
   base_level?: number;
   /** Can be used to specify which fluid is allowed to enter this fluid box. See [here](https://forums.factorio.com/viewtopic.php?f=28&t=46302). */
   filter?: FluidID;
@@ -9337,12 +9403,14 @@ In those cases, this property determines whether the fluid should be destroyed, 
   destroy_non_fuel_fluid?: boolean;
   /** `1` means 100% effectivity. Must be greater than `0`. Multiplier of the energy output. */
   effectivity?: number;
-  /** All standard fluid box configurations are acceptable, but the type must be `"input"` or `"input-output"` to function correctly. `scale_fluid_usage`, `fluid_usage_per_tick`, or a filter on the fluidbox must be set to be able to calculate the fluid usage of the energy source. */
+  /** All standard fluid box configurations are acceptable, but the type must be `"input"` or `"input-output"` to function correctly. `scale_fluid_usage = true`, `fluid_usage_per_tick`, or a filter on the fluidbox must be set to be able to calculate the fluid usage of the energy source. */
   fluid_box: FluidBox;
   /** The number of fluid units the energy source uses per tick. If used with `scale_fluid_usage`, this specifies the maximum. If this value is not set, `scale_energy_usage` is `false` and a fluid box filter is set, the game will attempt to calculate this value from the fluid box filter's fluid's `fuel_value` or `heat_capacity` and the entity's `energy_usage`. If `burns_fluid` is `false`, `maximum_temperature` will also be used. If the attempt of the game to calculate this value fails (`scale_energy_usage` is `false` and a fluid box filter is set), then `scale_energy_usage` will be forced to `true`, to prevent the energy source from being an infinite fluid sink. More context [on the forums](https://forums.factorio.com/90613). */
   fluid_usage_per_tick?: number;
   light_flicker?: LightFlickeringDefinition;
-  /** `0` means unlimited maximum temperature. If specified while `scale_fluid_usage` is `false` and `fluid_usage_per_tick` is not specified, the game will use this value to calculate `fluid_usage_per_tick`. */
+  /** `0` means unlimited maximum temperature. If this is non-zero while `scale_fluid_usage` is `false` and `fluid_usage_per_tick` is not specified, the game will use this value to calculate `fluid_usage_per_tick`. To do that, the filter on the `fluid_box` must be set.
+
+Only loaded if `burns_fluid` is `false`. */
   maximum_temperature?: number;
   /** If set to `true`, the energy source will consume as much fluid as required to produce the desired power, otherwise it will consume as much as it is allowed to, wasting any excess. */
   scale_fluid_usage?: boolean;
@@ -9361,13 +9429,13 @@ export function isFluidEnergySource(
 
 /** A fluid ingredient definition. */
 export interface FluidIngredientPrototype {
-  /** Can not be `< 0`. */
+  /** Can not be `<= 0`. */
   amount: number;
   /** Amount of this ingredient that should not be included in the fluid consumption statistics. Usually used together with an equal catalyst amount on the "product" of the catalyst in the recipe.
 
 If this FluidIngredientPrototype is used in a recipe, the `catalyst_amount` is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
   catalyst_amount?: number;
-  /** Used to specify which [CraftingMachinePrototype::fluid_boxes](prototype:CraftingMachinePrototype::fluid_boxes) this ingredient should use. It will use this one fluidbox. */
+  /** Used to specify which [CraftingMachinePrototype::fluid_boxes](prototype:CraftingMachinePrototype::fluid_boxes) this ingredient should use. It will use this one fluidbox. The index is 1-based and separate for input and output fluidboxes. */
   fluidbox_index?: number;
   /** If `temperature` is not set, this sets the expected maximum temperature of the fluid ingredient. */
   maximum_temperature?: number;
@@ -9390,23 +9458,27 @@ export function isFluidIngredientPrototype(
 export interface FluidProductPrototype {
   /** Can not be `< 0`. */
   amount?: number;
-  /** Only loaded if `amount` is not defined.
+  /** Only loaded, and mandatory if `amount` is not defined.
 
 If set to a number that is less than `amount_min`, the game will use `amount_min` instead. */
-  amount_max: MaterialAmountType;
-  /** Only loaded if `amount` is not defined.
+  amount_max?: MaterialAmountType;
+  /** Only loaded, and mandatory if `amount` is not defined.
 
 Can not be `< 0`. */
-  amount_min: MaterialAmountType;
+  amount_min?: MaterialAmountType;
   /** Amount that should not be affected by productivity modules (not yielded from bonus production) and should not be included in the fluid production statistics.
 
 If this FluidProductPrototype is used in a recipe, the `catalyst_amount` is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
   catalyst_amount?: number;
-  /** Used to specify which [CraftingMachinePrototype::fluid_boxes](prototype:CraftingMachinePrototype::fluid_boxes) this product should use. It will use this one fluidbox. */
+  /** Used to specify which [CraftingMachinePrototype::fluid_boxes](prototype:CraftingMachinePrototype::fluid_boxes) this product should use. It will use this one fluidbox. The index is 1-based and separate for input and output fluidboxes. */
   fluidbox_index?: number;
   /** The name of a [FluidPrototype](prototype:FluidPrototype). */
   name: FluidID;
-  /** Value between 0 and 1, `0` for 0% chance and `1` for 100% chance. */
+  /** Value between 0 and 1, `0` for 0% chance and `1` for 100% chance.
+
+The effect of probability is no product, or a linear distribution on [min, max]. For a recipe with probability `p`, amount_min `min`, and amount_max `max`, the Expected Value of this product can be expressed as `p * (0.5 * (max + min))`. This is what will be shown in a recipe tooltip. The effect of `catalyst_amount` on the product is not shown.
+
+When `amount_min` and `amount_max` are not provided, `amount` applies as min and max. The Expected Value simplifies to `p * amount`, providing `0` product, or `amount` product, on recipe completion. */
   probability?: number;
   /** When hovering over a recipe in the crafting menu the recipe tooltip will be shown. An additional item tooltip will be shown for every product, as a separate tooltip, if the item tooltip has a description and/or properties to show and if `show_details_in_recipe_tooltip` is `true`. */
   show_details_in_recipe_tooltip?: boolean;
@@ -9464,7 +9536,6 @@ interface _FrameStyleSpecification {
   background_graphical_set?: ElementImageSet;
   border?: BorderImageSet;
   drag_by_title?: boolean;
-  flow_style?: FlowStyleSpecification;
   graphical_set?: ElementImageSet;
   header_background?: ElementImageSet;
   header_filler_style?: EmptyWidgetStyleSpecification;
@@ -9647,6 +9718,8 @@ interface _HeatEnergySource {
   /** May contain up to 32 connections. */
   connections?: HeatConnection[];
   default_temperature?: number;
+  /** Heat energy sources do not support producing pollution. */
+  emissions_per_minute?: number;
   heat_glow?: Sprite4Way;
   heat_picture?: Sprite4Way;
   heat_pipe_covers?: Sprite4Way;
@@ -9717,10 +9790,10 @@ export interface IconData {
   icon: FileName;
   /** Icons of reduced size will be used at decreased scale. */
   icon_mipmaps?: IconMipMapType;
-  /** The size of the square icon, in pixels, e.g. `32` for a 32px by 32px icon.
+  /** The size of the square icon, in pixels. E.g. `32` for a 32px by 32px icon.
 
 Mandatory if `icon_size` is not specified outside of `icons`. */
-  icon_size: SpriteSizeType;
+  icon_size?: SpriteSizeType;
   /** Defaults to `32/icon_size` for items and recipes, and `256/icon_size` for technologies.
 
 Specifies the scale of the icon on the GUI scale. A scale of `2` means that the icon will be two times bigger on screen (and thus more pixelated). */
@@ -9810,7 +9883,7 @@ export function isInvokeTileEffectTriggerEffectItem(
   return (value as { type: string }).type === 'invoke-tile-trigger';
 }
 
-/** An item ingredient definition. It can be specified as a table with named or numbered keys, but not a mix of both. */
+/** An item ingredient definition. It can be specified as a table with named or numbered keys, but not a mix of both. If this is specified as a table with numbered keys then the first value is the item name and the second is the amount. */
 interface _ItemIngredientPrototype {
   amount: number;
   /** Amount of this ingredient that should not be included in the item consumption statistics. Usually used together with an equal catalyst amount on the "product" of the catalyst in the recipe.
@@ -9820,15 +9893,15 @@ If this fluid is used in a recipe, the `catalyst_amount` is calculated automatic
   name: ItemID;
   type?: 'item';
 }
-/** An item product definition. It can be specified as a table with named or numbered keys, but not a mix of both. */
+/** An item product definition. It can be specified as a table with named or numbered keys, but not a mix of both. If this is specified as a table with numbered keys then the first value is the item name and the second is the amount. */
 interface _ItemProductPrototype {
   amount?: number;
-  /** Only loaded if `amount` is not defined.
+  /** Only loaded, and mandatory if `amount` is not defined.
 
 If set to a number that is less than `amount_min`, the game will use `amount_min` instead. */
-  amount_max: number;
-  /** Only loaded if `amount` is not defined. */
-  amount_min: number;
+  amount_max?: number;
+  /** Only loaded, and mandatory if `amount` is not defined. */
+  amount_min?: number;
   /** Amount that should not be affected by productivity modules (not yielded from bonus production) and should not be included in the item production statistics.
 
 If this item is used in a recipe, the `catalyst_amount` is calculated automatically based on the [RecipePrototype::ingredients](prototype:RecipePrototype::ingredients) and [RecipePrototype::results](prototype:RecipePrototype::results). See [here](https://factorio.com/blog/post/fff-256). */
@@ -9847,9 +9920,9 @@ When `amount_min` and `amount_max` are not provided, `amount` applies as min and
 }
 /** Item that when placed creates this entity/tile. */
 export interface ItemToPlace {
-  /** How many items are used to place one of this entity. Can't be larger than the stack size of the item. */
+  /** How many items are used to place one of this entity/tile. Can't be larger than the stack size of the item. */
   count: number;
-  /** The item used to place this entity. */
+  /** The item used to place this entity/tile. */
   item: ItemID;
 }
 interface _LabelStyleSpecification {
@@ -9923,8 +9996,8 @@ interface _LightDefinition {
   /** Brightness of the light in the range `[0, 1]`, where `0` is no light and `1` is the maximum light. */
   intensity: number;
   minimum_darkness?: number;
-  /** Only loaded if `type` is `"oriented"`. */
-  picture: Sprite;
+  /** Only loaded, and mandatory if `type` is `"oriented"`. */
+  picture?: Sprite;
   /** Only loaded if `type` is `"oriented"`. */
   rotation_shift?: RealOrientation;
   shift?: Vector;
@@ -10120,7 +10193,7 @@ export interface MapGenPresetEnemyExpansionSettings {
 }
 /** The pollution settings, the values are for 60 ticks (1 second). */
 export interface MapGenPresetPollutionSettings {
-  /** Must be >= 0.1. Also known as dissipation rate. */
+  /** Must be >= 0.1. Also known as absorption modifier and previously dissipation rate. */
   ageing?: number;
   /** Must be <= 0.25. Amount that is diffused to neighboring chunks. */
   diffusion_ratio?: number;
@@ -10140,10 +10213,10 @@ export interface MapGenSettings {
   cliff_settings?: CliffPlacementSettings;
   /** Whether undefined `autoplace_controls` should fall back to the default controls or not. */
   default_enable_all_autoplace_controls?: boolean;
-  /** Height of the map in tiles. Silently limited to 2'000'000, ie. +/- 1 million tiles from the center in both directions. */
+  /** Height of the map in tiles. Silently limited to 2 000 000, ie. +/- 1 million tiles from the center in both directions. */
   height?: number;
   peaceful_mode?: boolean;
-  /** Map of property name (e.g. "elevation") to name of noise expression that will provide it. Entries may be omitted. A notable usage is changing autoplace behavior of an entity based on the preset, which cannot be read from a noise expression. */
+  /** Map of property name (`"elevation"`, etc) to name of noise expression that will provide it. Entries may be omitted. A notable usage is changing autoplace behavior of an entity based on the preset, which cannot be read from a noise expression. */
   property_expression_names?: Record<string, string | boolean | number>;
   /** Read by the game, but not used or set in the GUI. */
   seed?: number;
@@ -10155,7 +10228,7 @@ export interface MapGenSettings {
   terrain_segmentation?: MapGenSize;
   /** Shown as water coverage in the map generator GUI. */
   water?: MapGenSize;
-  /** Width of the map in tiles. Silently limited to 2'000'000, ie. +/- 1 million tiles from the center in both directions. */
+  /** Width of the map in tiles. Silently limited to 2 000 000, ie. +/- 1 million tiles from the center in both directions. */
   width?: number;
 }
 /** Coordinates of a tile in a map. Positive x goes towards east, positive y goes towards south, and x is the first dimension in the array format.
@@ -10239,9 +10312,9 @@ How many of result are dropped. */
   mining_particle?: ParticleID;
   /** How many seconds are required to mine this object at 1 mining speed. */
   mining_time: number;
-  mining_trigger: Trigger;
+  mining_trigger?: Trigger;
   /** Name of a [FluidPrototype](prototype:FluidPrototype). The fluid that is used up when this object is mined. */
-  required_fluid: FluidID;
+  required_fluid?: FluidID;
   /** Only loaded if `results` is not defined.
 
 Which item is dropped when this is mined. Cannot be empty. If you want the entity to not be minable, don't specify the minable properties, if you want it to be minable with no result item, don't specify the result at all. */
@@ -10308,6 +10381,11 @@ export function isMiningDrillProductivityBonusModifier(
   return (value as { type: string }).type === 'mining-drill-productivity-bonus';
 }
 
+/** The user-set value of a startup [mod setting](https://wiki.factorio.com/Tutorial:Mod_settings). */
+export interface ModSetting {
+  /** The value of the mod setting. The type depends on the kind of setting. */
+  value: number | number | boolean | string | Color;
+}
 /** The number of module slots in this entity, and their icon positions. */
 export interface ModuleSpecification {
   module_info_icon_scale?: number;
@@ -10691,7 +10769,7 @@ export function isNoiseFunctionNoiseLayerNameToID(
 
 /** The first argument represents a vector of how the positions should be shifted, and the second argument lists the positions that should be shifted. */
 export interface NoiseFunctionOffsetPoints {
-  arguments: [NoiseArrayConstruction, NoiseArrayConstruction];
+  arguments: [NoiseArray, NoiseArray];
   function_name: 'offset-points';
   type: 'function-application';
 }
@@ -10717,7 +10795,7 @@ export function isNoiseFunctionRandomPenalty(
 
 /** Similar to [clamp](prototype:NoiseFunctionClamp), where the first argument is folded back across the third and second limits until it lies between them. */
 export interface NoiseFunctionRidge {
-  /** The first argument is the  number to be ridged, the second is the lower limit and the third is the upper limit. */
+  /** The first argument is the number to be ridged, the second is the lower limit and the third is the upper limit. */
   arguments: [NoiseNumber, NoiseNumber, NoiseNumber];
   function_name: 'ridge';
   type: 'function-application';
@@ -10912,12 +10990,18 @@ export function isNoiseVariable(value: unknown): value is NoiseVariable {
 
 interface _NothingModifier {
   effect_description?: LocalisedString;
+  type: 'nothing';
   /** If `false`, do not draw the small "constant" icon over the technology effect icon. */
   use_icon_overlay_constant?: boolean;
 }
 
 export type NothingModifier = _NothingModifier &
   Omit<BaseModifier, keyof _NothingModifier>;
+
+export function isNothingModifier(value: unknown): value is NothingModifier {
+  return (value as { type: string }).type === 'nothing';
+}
+
 export interface OffshorePumpGraphicsSet {
   /** Rendered in "object" layer, with secondary draw order 0. */
   animation: Animation4Way;
@@ -10944,6 +11028,7 @@ export function isOrTipTrigger(value: unknown): value is OrTipTrigger {
 
 export interface OrientedCliffPrototype {
   collision_bounding_box: BoundingBox;
+  /** Unused. */
   fill_volume: number;
   pictures: SpriteVariations;
 }
@@ -11054,12 +11139,12 @@ export interface PipeConnectionDefinition {
   max_underground_distance?: number;
   /** Where pipes can connect to this fluidbox regardless the directions of entity. */
   position?: Vector;
-  /** Only loaded if `position` is not defined.
+  /** Only loaded, and mandatory if `position` is not defined.
 
 Where pipes can connect to this fluidbox, depending on the entity direction.
 
 Table must have 4 members, which are 4 explicit positions corresponding to the 4 directions of entity. Positions must correspond to directions going one after another. */
-  positions: Vector[];
+  positions?: Vector[];
   type?: 'input' | 'input-output' | 'output';
 }
 export interface PipePictures {
@@ -11073,10 +11158,14 @@ export interface PipePictures {
   ending_right: Sprite;
   ending_up: Sprite;
   fluid_background: Sprite;
+  /** Visualizes the flow of the fluid in the pipe. Drawn when the fluid's temperature is above [FluidPrototype::gas_temperature](prototype:FluidPrototype::gas_temperature). */
   gas_flow: Animation;
+  /** Visualizes the flow of the fluid in the pipe. Drawn when `(fluid_temp - fluid_min_temp) / (fluid_max_temp - fluid_min_temp)` is larger than `2/3` and the fluid's temperature is below [FluidPrototype::gas_temperature](prototype:FluidPrototype::gas_temperature). */
   high_temperature_flow: Sprite;
   horizontal_window_background: Sprite;
+  /** Visualizes the flow of the fluid in the pipe. Drawn when `(fluid_temp - fluid_min_temp) / (fluid_max_temp - fluid_min_temp)` is less than or equal to `1/3` and the fluid's temperature is below [FluidPrototype::gas_temperature](prototype:FluidPrototype::gas_temperature). */
   low_temperature_flow: Sprite;
+  /** Visualizes the flow of the fluid in the pipe. Drawn when `(fluid_temp - fluid_min_temp) / (fluid_max_temp - fluid_min_temp)` is larger than `1/3` and less than or equal to `2/3` and the fluid's temperature is below [FluidPrototype::gas_temperature](prototype:FluidPrototype::gas_temperature). */
   middle_temperature_flow: Sprite;
   straight_horizontal: Sprite;
   straight_horizontal_window: Sprite;
@@ -11142,7 +11231,7 @@ export interface PlayerColorData {
 }
 /** The pollution settings, the values are for 60 ticks (1 second). */
 export interface PollutionSettings {
-  /** Constant modifier a percentage of 1; the pollution eaten by a chunks tiles. */
+  /** Constant modifier a percentage of 1; the pollution eaten by a chunks tiles. Also known as absorption modifier. */
   ageing: number;
   /** Amount that is diffused to neighboring chunks. */
   diffusion_ratio: number;
@@ -11179,6 +11268,7 @@ interface _ProgressBarStyleSpecification {
   font?: string;
   font_color?: Color;
   other_colors?: OtherColors[];
+  side_text_padding?: number;
   type: 'progressbar_style';
 }
 
@@ -11201,7 +11291,7 @@ When used without `projectile_creation_parameters`, this sets the turret's rotat
   projectile_creation_parameters?: CircularProjectileCreationSpecification;
   /** Used to shoot from different sides of the turret. Setting to `0.25` shoots from the right side, `0.5` shoots from the back, and `0.75` shoots from the left. The turret will look at the enemy as normal but the bullet will spawn from the offset position. Can be used to create right-handed weapons. */
   projectile_orientation_offset?: number;
-  /** Used to show bullet shells/casings being ejected from the gun, e.g. [artillery shell casings](https://factorio.com/blog/post/fff-345). */
+  /** Used to show bullet shells/casings being ejected from the gun, see [artillery shell casings](https://factorio.com/blog/post/fff-345). */
   shell_particle?: CircularParticleCreationSpecification;
   type: 'projectile';
 }
@@ -11379,7 +11469,7 @@ If a recipe is unlocked via technology, this should be set to `false`. */
   hide_from_stats?: boolean;
   /** A table containing ingredient names and counts. Can also contain information about fluid temperature and catalyst amounts. The catalyst amounts are automatically calculated from the recipe, or can be set manually in the IngredientPrototype (see [here](https://factorio.com/blog/post/fff-256)).
 
-The maximum ingredient amount is 65535. Can be set to an empty table to create a recipe that needs no ingredients.
+The maximum ingredient amount is 65 535. Can be set to an empty table to create a recipe that needs no ingredients.
 
 Duplicate ingredients, e.g. two entries with the same name, are *not* allowed. In-game, the item ingredients are ordered by [ItemGroup::order_in_recipe](prototype:ItemGroup::order_in_recipe). */
   ingredients: IngredientPrototype[];
@@ -11394,7 +11484,7 @@ If set to `0`, it instead uses the following formula: `1.166 / (energy_required 
   requester_paste_multiplier?: number;
   /** The item created by this recipe. Must be the name of an [item](prototype:ItemPrototype), such as `"iron-gear-wheel"`.
 
-Only loaded if `results` is not defined. */
+Only loaded, and mandatory if `results` is not defined. */
   result?: ItemID;
   /** The number of items created by this recipe.
 
@@ -11403,8 +11493,8 @@ Only loaded if `results` is not defined. */
   /** A table containing result names and counts. Can also contain information about fluid temperature and catalyst amounts. The catalyst amounts are automatically calculated from the recipe, or can be set manually in the ProductPrototype (see [here](https://factorio.com/blog/post/fff-256)).
 
 Can be set to an empty table to create a recipe that produces nothing. Duplicate results, e.g. two entries with the same name, are allowed. */
-  results: ProductPrototype[];
-  /** Whether the recipe name should have the product amount in front of it, e.g. "2x Transport belt" */
+  results?: ProductPrototype[];
+  /** Whether the recipe name should have the product amount in front of it. E.g. "2x Transport belt" */
   show_amount_in_title?: boolean;
   /** Whether enabling this recipe unlocks its item products to show in selection lists (item filters, logistic requests, etc.). */
   unlock_results?: boolean;
@@ -11421,7 +11511,7 @@ export function isResearchTechnologyTipTrigger(
 }
 
 /** Resistances to certain types of attacks from enemy, and physical damage. See [Damage](https://wiki.factorio.com/Damage). */
-export interface Resistances {
+export interface Resistance {
   /** The [flat resistance](https://wiki.factorio.com/Damage#Decrease.2C_or_.22flat.22_resistance) to the given damage type. (Higher is better) */
   decrease?: number;
   /** The [percentage resistance](https://wiki.factorio.com/Damage#Percentage_resistance) to the given damage type. (Higher is better) */
@@ -11437,7 +11527,7 @@ If `true`, `direction_count` must be greater than `1`. */
   axially_symmetrical?: boolean;
   /** Only loaded if `layers` is not defined. */
   counterclockwise?: boolean;
-  /** Only loaded if `layers` is not defined.
+  /** Only loaded, and mandatory if `layers` is not defined.
 
 The sequential animation instance is loaded equal to the entities direction within the `direction_count` setting.
 
@@ -11450,11 +11540,11 @@ Direction count to [Direction](prototype:Direction) (animation sequence number):
 - `4`: North (1), East (2), South (3), West (4)
 
 - `8`: North (1), Northeast (2), East (3), Southeast (4), South (5), Southwest (6), West (7), Northwest (8) */
-  direction_count: number;
-  /** Only loaded if `layers`, `stripes`, and `filenames` are not defined.
+  direction_count?: number;
+  /** Only loaded, and mandatory if `layers`, `stripes`, and `filenames` are not defined.
 
 The path to the sprite file to use. */
-  filename: FileName;
+  filename?: FileName;
   /** Only loaded if both `layers` and `stripes` are not defined. */
   filenames?: FileName[];
   /** Only loaded if `layers` is not defined.
@@ -11511,14 +11601,16 @@ When `true`, the same picture is used for left/right direction, just flipped, wh
 
 Set to `true` to indicate sprites in the spritesheet are in counterclockwise order. */
   counterclockwise?: boolean;
-  /** Count of direction (frames) specified. */
-  direction_count: number;
+  /** Only loaded, and mandatory if `layers` is not defined.
+
+Count of direction (frames) specified. */
+  direction_count?: number;
   /** Only loaded if `layers` is not defined.
 
 The path to the sprite file to use. */
   filename?: FileName;
-  /** Only loaded if both `layers` and `filename` are not defined. */
-  filenames: FileName[];
+  /** Only loaded, and mandatory if both `layers` and `filename` are not defined. */
+  filenames?: FileName[];
   /** Only loaded if `layers` is not defined.
 
 Unused. */
@@ -11675,6 +11767,11 @@ export function isSetTileTriggerEffectItem(
   return (value as { type: string }).type === 'set-tile';
 }
 
+/** A struct that provides access to the user-set values of startup [mod settings](https://wiki.factorio.com/Tutorial:Mod_settings). */
+export interface Settings {
+  /** All startup mod settings, indexed by the name of the setting. */
+  startup: Record<string, ModSetting>;
+}
 export interface ShiftAnimationWaypoints {
   east: Vector[];
   north: Vector[];
@@ -11748,7 +11845,7 @@ game.camera_alt_info [W]
 game.smart_belt_building [W]
 player.drag_start_position [W]
 player.raw_build_from_cursor{ghost_mode=bool,created_by_moving=bool,position=position}
-surface.create_entities_from_blueprint_string{string=string,position=position,force=force,direction=defines.direction,flip_horizonal=bool,flip_vertical=bool,by_player=player}
+surface.create_entities_from_blueprint_string{string=string,position=position,force=force,direction=defines.direction,flip_horizontal=bool,flip_vertical=bool,by_player=player}
 ``` */
 export interface SimulationDefinition {
   /** If this is true, the map of the simulation is set to be a lab-tile checkerboard in the area of `{{-20, -15},{20, 15}}` when the scenario is first initialized (before init/init_file run). */
@@ -11765,6 +11862,8 @@ This code is run as a (silent) console command inside the simulation when it is 
   init_update_count?: number;
   /** How long this simulation takes. In the main menu simulations, another simulation will start after this simulation ends. */
   length?: number;
+  /** An array of mods that will be run in this simulation if they are present and enabled. */
+  mods?: string[];
   /** If true, overrides the simulation volume set by the player in the sound settings, simply setting the volume modifier to `1`. */
   override_volume?: boolean;
   /** The save file that is used for this simulation. If not given and `generate_map` is `true`, a map is generated by the game. */
@@ -11828,10 +11927,10 @@ interface _Sound {
   allow_random_repeat?: boolean;
   /** Modifies how far a sound can be heard. Must be between `0` and `1` inclusive. */
   audible_distance_modifier?: number;
-  /** Supported sound file formats are `.ogg`, `.wav` and `.voc`.
+  /** Supported sound file formats are `.ogg` (Vorbis) and `.wav`.
 
-Only loaded if `variations` is not defined. */
-  filename: FileName;
+Only loaded, and mandatory if `variations` is not defined. */
+  filename?: FileName;
   game_controller_vibration_data?: GameControllerVibrationData;
   /** Must be `>= min_speed`.
 
@@ -11852,7 +11951,7 @@ Only loaded if `variations` is not defined. */
   volume?: number;
 }
 export interface SoundDefinition {
-  /** Supported sound file formats are `.ogg`, `.wav` and `.voc`. */
+  /** Supported sound file formats are `.ogg` (Vorbis) and `.wav`. */
   filename: FileName;
   /** Only loaded, and mandatory, if `min_speed` is defined.
 
@@ -11869,7 +11968,7 @@ Must be `>= 1 / 64`. */
 }
 /** The definition of a evolution and probability weights for a [spawnable unit](prototype:UnitSpawnDefinition) for a [EnemySpawnerPrototype](prototype:EnemySpawnerPrototype).
 
-It can be specified as a table with named or numbered keys, but not a mix of both. */
+It can be specified as a table with named or numbered keys, but not a mix of both. If this is specified as a table with numbered keys then the first value is the evolution factor and the second is the spawn weight. */
 interface _SpawnPoint {
   evolution_factor: number;
   /** Must be `>= 0`. */
@@ -11958,7 +12057,7 @@ export interface SpotNoiseArguments {
   candidate_point_count?: ConstantNoiseNumber;
   /** Integer. An alternative to `candidate_point_count`: number of spots to generate: `candidate_spot_count = X` is equivalent to `candidate_point_count / skip_span = X` */
   candidate_spot_count?: ConstantNoiseNumber;
-  comment: NoiseLiteralString;
+  comment?: NoiseLiteralString;
   /** A numeric expression that will be evaluated for each candidate spot to calculate density at that point. */
   density_expression: NoiseLiteralExpression;
   /** Whether to place a hard limit on the total quantity in each region by reducing the size of any spot (which will be the last spot chosen) that would put it over the limit. */
@@ -11989,6 +12088,10 @@ export interface SpotNoiseArguments {
 
 When there is more than one sprite or [Animation](prototype:Animation) frame with the same source file and dimensions/position in the game, they all share the same memory. */
 interface _Sprite {
+  /** Only loaded, and mandatory if `layers` is not defined.
+
+The path to the sprite file to use. */
+  filename?: FileName;
   /** Only loaded if `layers` is not defined.
 
 If this property exists and high resolution sprites are turned on, this is used to load the Sprite. */
@@ -12012,41 +12115,41 @@ Same as `slice`, but this specifies only how many slices there are on the y-axis
 }
 
 export type Sprite = _Sprite & Omit<SpriteParameters, keyof _Sprite>;
-/** A map of sprites for all 4 directions of the entity.  If this is loaded as a single Sprite, it applies to all directions. */
+/** A map of sprites for all 4 directions of the entity. If this is loaded as a single Sprite, it applies to all directions. */
 interface _Sprite4Way {
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  east: Sprite;
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  north: Sprite;
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  east?: Sprite;
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  north?: Sprite;
   /** Only loaded if `sheets` is not defined. */
   sheet?: SpriteNWaySheet;
-  sheets?: SpriteNWaySheet;
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  south: Sprite;
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  west: Sprite;
+  sheets?: SpriteNWaySheet[];
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  south?: Sprite;
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  west?: Sprite;
 }
 /** A map of sprites for all 8 directions of the entity. */
 export interface Sprite8Way {
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  east: Sprite;
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  north: Sprite;
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  north_east: Sprite;
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  north_west: Sprite;
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  east?: Sprite;
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  north?: Sprite;
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  north_east?: Sprite;
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  north_west?: Sprite;
   /** Only loaded if `sheets` is not defined. */
   sheet?: SpriteNWaySheet;
-  sheets?: SpriteNWaySheet;
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  south: Sprite;
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  south_east: Sprite;
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  south_west: Sprite;
-  /** Only loaded if both `sheets` and `sheet` are not defined. */
-  west: Sprite;
+  sheets?: SpriteNWaySheet[];
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  south?: Sprite;
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  south_east?: Sprite;
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  south_west?: Sprite;
+  /** Only loaded, and mandatory if both `sheets` and `sheet` are not defined. */
+  west?: Sprite;
 }
 interface _SpriteNWaySheet {
   /** Specifies how many of the directions of the SpriteNWay are filled up with this sheet. */
@@ -12379,7 +12482,7 @@ export interface TechnologyData {
   enabled?: boolean;
   /** Hides the technology from the tech screen. */
   hidden?: boolean;
-  /** Controls whether the technology cost ignores the tech cost multiplier set in the [DifficultySettings](runtime:DifficultySettings), e.g. `4` for the default expensive difficulty. */
+  /** Controls whether the technology cost ignores the tech cost multiplier set in the [DifficultySettings](runtime:DifficultySettings). E.g. `4` for the default expensive difficulty. */
   ignore_tech_cost_multiplier?: boolean;
   /** `"infinite"` for infinite technologies, otherwise `uint32`.
 
@@ -12533,9 +12636,13 @@ export interface TileBuildSound {
 }
 /** Used by [TilePrototype](prototype:TilePrototype). */
 export interface TileSprite {
-  /** Frame count. */
+  /** Frame count.
+
+Optional if it is loaded inside of a `hr_version`, see that property for more information. */
   count: number;
-  /** If this property exists and high resolution sprites are turned on, its contents are used to load the tile sprite. */
+  /** If this property exists and high resolution sprites are turned on, its contents are used to load the tile sprite.
+
+`count` in `hr_version` has to be either unspecified or the same as for normal resolution definition. */
   hr_version?: TileSprite;
   /** Once the specified number of pictures is loaded, other pictures are loaded on other line. This is to allow having longer animations in matrix, to input files with too high width. The game engine limits the width of any input files to 8192px, so it is compatible with most graphics cards. 0 means that all the pictures are in one horizontal line. */
   line_length?: number;
@@ -12577,13 +12684,13 @@ export interface TileTransitions {
   background_layer_offset?: number;
   effect_mask?: Animation;
   empty_transitions?: boolean;
-  /** This or inner_corner_mask needs to be specified if `empty_transitions` is not true. */
-  inner_corner: TileTransitionSprite;
+  /** This or `inner_corner_mask` needs to be specified if `empty_transitions` is not true. */
+  inner_corner?: TileTransitionSprite;
   inner_corner_background?: TileTransitionSprite;
   inner_corner_background_mask?: TileTransitionSprite;
   inner_corner_effect_map?: TileTransitionSprite;
-  /** This or inner_corner needs to be specified if `empty_transitions` is not true. */
-  inner_corner_mask: TileTransitionSprite;
+  /** This or `inner_corner` needs to be specified if `empty_transitions` is not true. */
+  inner_corner_mask?: TileTransitionSprite;
   inner_corner_weights?: number[];
   layer?: number;
   masked_background_layer_offset?: number;
@@ -12594,23 +12701,23 @@ export interface TileTransitions {
   o_transition_effect_map?: TileSprite;
   o_transition_mask?: TileSprite;
   offset_background_layer_by_tile_layer?: boolean;
-  /** This or outer_corner_mask needs to be specified if `empty_transitions` is not true. */
-  outer_corner: TileTransitionSprite;
+  /** This or `outer_corner_mask` needs to be specified if `empty_transitions` is not true. */
+  outer_corner?: TileTransitionSprite;
   outer_corner_background?: TileTransitionSprite;
   outer_corner_background_mask?: TileTransitionSprite;
   outer_corner_effect_map?: TileTransitionSprite;
-  /** This or outer_corner needs to be specified if `empty_transitions` is not true. */
-  outer_corner_mask: TileTransitionSprite;
+  /** This or `outer_corner` needs to be specified if `empty_transitions` is not true. */
+  outer_corner_mask?: TileTransitionSprite;
   outer_corner_weights?: number[];
   overlay_layer_group?: TileRenderLayer;
   overlay_layer_offset?: number;
-  /** This or side_mask needs to be specified if `empty_transitions` is not true. */
-  side: TileTransitionSprite;
+  /** This or `side_mask` needs to be specified if `empty_transitions` is not true. */
+  side?: TileTransitionSprite;
   side_background?: TileTransitionSprite;
   side_background_mask?: TileTransitionSprite;
   side_effect_map?: TileTransitionSprite;
-  /** This or side needs to be specified if `empty_transitions` is not true. */
-  side_mask: TileTransitionSprite;
+  /** This or `side` needs to be specified if `empty_transitions` is not true. */
+  side_mask?: TileTransitionSprite;
   side_weights?: number[];
   u_transition?: TileTransitionSprite;
   u_transition_background?: TileTransitionSprite;
@@ -12755,6 +12862,7 @@ export interface TransportBeltConnectorFrame {
   frame_main_scanner_vertical_end_shift: Vector;
   frame_main_scanner_vertical_rotation: RealOrientation;
   frame_main_scanner_vertical_start_shift: Vector;
+  frame_main_scanner_vertical_y_scale: number;
   frame_shadow: AnimationVariations;
 }
 export interface TreeVariation {
@@ -12890,7 +12998,7 @@ export interface UnitGroupSettings {
   min_group_radius: number;
   tick_tolerance_when_member_arrives: number;
 }
-/** It can be specified as a table with named or numbered keys, but not a mix of both. */
+/** It can be specified as a table with named or numbered keys, but not a mix of both. If this is specified as a table with numbered keys then the first value is the unit and the second is the spawn points. */
 interface _UnitSpawnDefinition {
   /** Array of evolution and probability info, with the following conditions:
 
@@ -12967,6 +13075,12 @@ export function isUsePipetteTipTrigger(
   return (value as { type: string }).type === 'use-pipette';
 }
 
+/** A vector is a two-element array or dictionary containing the x and y components. Positive x goes east, positive y goes south. */
+interface _Vector {
+  x: number;
+  y: number;
+}
+/** If this is specified as a three-element array then the array items are x, y and z, in that order. */
 interface _Vector3D {
   x: number;
   y: number;
@@ -13132,7 +13246,7 @@ export interface WorkingVisualisation {
   align_to_waypoint?: boolean;
   always_draw?: boolean;
   animated_shift?: boolean;
-  animation: Animation;
+  animation?: Animation;
   /** Used by [CraftingMachinePrototype](prototype:CraftingMachinePrototype). */
   apply_recipe_tint?:
     | 'primary'
@@ -13298,6 +13412,27 @@ export type AnimationVariations =
   | Animation
   | Animation[];
 
+/** A union of all prototypes. A specific prototype is loaded based on the value of the `type` key.
+
+See the [Prototypes page](prototype:prototypes) for more information. */
+export type AnyPrototype =
+  | PrototypeBase
+  | AmbientSound
+  | AnimationPrototype
+  | EditorControllerPrototype
+  | FontPrototype
+  | GodControllerPrototype
+  | MapGenPresets
+  | MapSettings
+  | MouseCursor
+  | SoundPrototype
+  | SpectatorControllerPrototype
+  | SpritePrototype
+  | TileEffectDefinition
+  | TipsAndTricksItemCategory
+  | TriggerTargetType
+  | WindSound;
+
 /** Loaded as one of the [BaseAttackParameters](prototype:BaseAttackParameters) extensions, based on the value of the `type` key. */
 export type AttackParameters =
   | ProjectileAttackParameters
@@ -13397,9 +13532,9 @@ export type CollisionMaskLayer =
   | 'rail-layer'
   | 'transport-belt-layer';
 
-/** Table of red, green, blue, and alpha float values between 0 and 1.Alternatively, values can be from 0-255, they are interpreted as such if at least one value is `> 1`.
+/** Table of red, green, blue, and alpha float values between 0 and 1. Alternatively, values can be from 0-255, they are interpreted as such if at least one value is `> 1`.
 
-Color allows the short-hand notation of passing an array of exactly 3 or 4 numbers.
+Color allows the short-hand notation of passing an array of exactly 3 or 4 numbers. The array items are r, g, b and optionally a, in that order.
 
 The game usually expects colors to be in pre-multiplied form (color channels are pre-multiplied by alpha). */
 export type Color =
@@ -13407,7 +13542,7 @@ export type Color =
   | [number, number, number]
   | [number, number, number, number];
 
-/** A constant boolean noise expression, such as a literal boolean. When using a constant number,  it evaluates to true for numbers bigger than zero, anything else evaluates to false. */
+/** A constant boolean noise expression, such as a literal boolean. When using a constant number, it evaluates to true for numbers bigger than zero, anything else evaluates to false. */
 export type ConstantNoiseBoolean = NoiseLiteralBoolean | ConstantNoiseNumber;
 
 /** A constant numeric noise expression, such as a literal number, the result of addition of constants or multioctave noise that uses only constant arguments. */
@@ -13439,15 +13574,16 @@ export type DamageTypeID = string;
 
 If there is only one tuple, it means that the LUT will be used all the time, regardless of the value of the first member of the tuple.
 
-The second member of the tuple is a lookup table (LUT) for the color which maps the original color to a position in the sprite where is the replacement color is found. The file pointed to by the filename must be a sprite of size 256×16 or 16×256. */
+The second member of the tuple is a lookup table (LUT) for the color which maps the original color to a position in the sprite where is the replacement color is found. The file pointed to by the filename must be a sprite of size 256×16. */
 export type DaytimeColorLookupTable = [number, FileName | 'identity'][];
 
 /** The name of a [DecorativePrototype](prototype:DecorativePrototype). */
 export type DecorativeID = string;
 
+/** Usually specified by using [defines.direction](runtime:defines.direction). */
 export type Direction = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
-/** A list of module effects, or just a single effect. Modules with other effects cannot be used on the machine. This means that both effects from modules and from surrounding beacons are restricted to the listed effects. If `allowed_effects` is set to `nil`, the machine cannot be affected by modules or beacons. */
+/** A list of [module](prototype:ModulePrototype) effects, or just a single effect. Modules with other effects cannot be used on the machine. This means that both effects from modules and from surrounding beacons are restricted to the listed effects. If `allowed_effects` is an empty array, the machine cannot be affected by modules or beacons. */
 export type EffectTypeLimitation =
   | ('speed' | 'productivity' | 'consumption' | 'pollution')
   | ('speed' | 'productivity' | 'consumption' | 'pollution')[];
@@ -13470,11 +13606,11 @@ export type ElementImageSetLayer = _ElementImageSetLayer | Sprite;
 
 /** Specifies an amount of electric energy in joules, or electric energy per time in watts.
 
-Internally, the input in `Watt` or `Joule/second` is always converted into `Joule/tick` or `Joule/(1/60)second`, using the following formula: `Power in Joule/tick = Power in Watt / 60`. See [Power](https://wiki.factorio.com/Units#Power).
+Internally, the input in `Watt` or `Joule/second` is always converted into `Joule/tick`, where 1 second is equal to 60 ticks. This means it uses the following formula: `Power in Joule/tick = Power in Watt / 60`. See [Power](https://wiki.factorio.com/Units#Power).
 
 Supported Multipliers:
 
-- `k/K`: 10^3, or 1'000
+- `k/K`: 10^3, or 1 000
 
 - `M`: 10^6
 
@@ -13502,7 +13638,13 @@ export type EnergySource =
 /** The name of an [EntityPrototype](prototype:EntityPrototype). */
 export type EntityID = string;
 
-/** An array containing the following values. */
+/** An array containing the following values.
+
+If an entity is a [building](runtime:LuaEntityPrototype::is_building) and has the `"player-creation"` flag set, it is considered for multiple enemy/unit behaviors:
+
+- Autonomous enemy attacks (usually triggered by pollution) can only attack within chunks that contain at least one entity that is both a building and a player-creation.
+
+- Enemy expansion considers entities that are both buildings and player-creations as "enemy" entities that may block expansion. */
 export type EntityPrototypeFlags = (
   | 'not-rotatable'
   | 'placeable-neutral'
@@ -13547,7 +13689,7 @@ export type ExplosionDefinition = EntityID | _ExplosionDefinition;
 
 - **core**: A path starting with `__core__` will access the resources in the data/core directory, these resources are always accessible regardless of mod specifications.
 
-- **base**: A path starting with __base__ will access the resources in the base mod in data/base directory. These resources are usually available, as long as the base mod isn't removed/deactivated.
+- **base**: A path starting with `__base__` will access the resources in the base mod in data/base directory. These resources are usually available, as long as the base mod isn't removed/deactivated.
 
 - **mod path**: The format `__<mod-name>__` is placeholder for root of any other mod (mods/<mod-name>), and is accessible as long as the mod is active. */
 export type FileName = string;
@@ -13572,12 +13714,12 @@ export type FuelCategoryID = string;
 
 export type HorizontalAlign = 'left' | 'center' | 'right';
 
-/** Icons of reduced size will be used at decreased scale. 0 or 1 mipmaps is a single image. The file must contain half-size images with a geometric-ratio, for each mipmap level. Each next level is aligned to the upper-left corner. Example sequence: `128x128@(0,0)`, `64x64@(128,0)`, `32x32@(196,0)` is three mipmaps.
+/** Icons of reduced size will be used at decreased scale. 0 or 1 mipmaps is a single image. The file must contain half-size images with a geometric-ratio, for each mipmap level. Each next level is aligned to the upper-left corner, with no extra padding. Example sequence: `128x128@(0,0)`, `64x64@(128,0)`, `32x32@(192,0)` is three mipmaps.
 
 See [here](https://factorio.com/blog/post/fff-291) for more about the visual effects of icon mipmaps. */
 export type IconMipMapType = number;
 
-/** Defaults to loading ingredients as items. */
+/** Defaults to loading ingredients as items. This allows [ItemIngredientPrototype](prototype:ItemIngredientPrototype) to load in a shorthand array format. */
 export type IngredientPrototype =
   | ItemIngredientPrototype
   | FluidIngredientPrototype;
@@ -13590,12 +13732,12 @@ export type ItemGroupID = string;
 /** The name of an [ItemPrototype](prototype:ItemPrototype). */
 export type ItemID = string;
 
-/** An item ingredient definition. It can be specified as a table with named or numbered keys, but not a mix of both. */
+/** An item ingredient definition. It can be specified as a table with named or numbered keys, but not a mix of both. If this is specified as a table with numbered keys then the first value is the item name and the second is the amount. */
 export type ItemIngredientPrototype =
   | _ItemIngredientPrototype
   | [ItemID, number];
 
-/** An item product definition. It can be specified as a table with named or numbered keys, but not a mix of both. */
+/** An item product definition. It can be specified as a table with named or numbered keys, but not a mix of both. If this is specified as a table with numbered keys then the first value is the item name and the second is the amount. */
 export type ItemProductPrototype = _ItemProductPrototype | [ItemID, number];
 
 /** An array containing the following values. */
@@ -13623,6 +13765,155 @@ export type LayeredSound = _LayeredSound | Sound;
 /** Specifies a light source. This is loaded either as a single light source or as an array of light sources. */
 export type LightDefinition = _LightDefinition | _LightDefinition[];
 
+/** The internal name of a game control (key binding). */
+export type LinkedGameControl =
+  | 'action-bar-select-page-1'
+  | 'action-bar-select-page-10'
+  | 'action-bar-select-page-2'
+  | 'action-bar-select-page-3'
+  | 'action-bar-select-page-4'
+  | 'action-bar-select-page-5'
+  | 'action-bar-select-page-6'
+  | 'action-bar-select-page-7'
+  | 'action-bar-select-page-8'
+  | 'action-bar-select-page-9'
+  | 'activate-tooltip'
+  | 'add-station'
+  | 'add-temporary-station'
+  | 'alt-zoom-in'
+  | 'alt-zoom-out'
+  | 'build'
+  | 'build-ghost'
+  | 'build-with-obstacle-avoidance'
+  | 'cancel-craft'
+  | 'cancel-craft-5'
+  | 'cancel-craft-all'
+  | 'clear-cursor'
+  | 'confirm-gui'
+  | 'confirm-message'
+  | 'connect-train'
+  | 'controller-gui-crafting-tab'
+  | 'controller-gui-logistics-tab'
+  | 'copy'
+  | 'copy-entity-settings'
+  | 'craft'
+  | 'craft-5'
+  | 'craft-all'
+  | 'cursor-split'
+  | 'cut'
+  | 'cycle-blueprint-backwards'
+  | 'cycle-blueprint-forwards'
+  | 'cycle-clipboard-backwards'
+  | 'cycle-clipboard-forwards'
+  | 'debug-reset-zoom'
+  | 'debug-reset-zoom-2x'
+  | 'debug-toggle-atlas-gui'
+  | 'debug-toggle-basic'
+  | 'debug-toggle-debug-settings'
+  | 'decrease-ui-scale'
+  | 'disconnect-train'
+  | 'drag-map'
+  | 'drop-cursor'
+  | 'editor-clone-item'
+  | 'editor-delete-item'
+  | 'editor-next-variation'
+  | 'editor-previous-variation'
+  | 'editor-remove-scripting-object'
+  | 'editor-reset-speed'
+  | 'editor-set-clone-brush-destination'
+  | 'editor-set-clone-brush-source'
+  | 'editor-speed-down'
+  | 'editor-speed-up'
+  | 'editor-switch-to-surface'
+  | 'editor-tick-once'
+  | 'editor-toggle-pause'
+  | 'fast-entity-split'
+  | 'fast-entity-transfer'
+  | 'flip-blueprint-horizontal'
+  | 'flip-blueprint-vertical'
+  | 'focus-search'
+  | 'increase-ui-scale'
+  | 'inventory-split'
+  | 'inventory-transfer'
+  | 'larger-terrain-building-area'
+  | 'logistic-networks'
+  | 'mine'
+  | 'move-down'
+  | 'move-left'
+  | 'move-right'
+  | 'move-up'
+  | 'next-active-quick-bar'
+  | 'next-player-in-replay'
+  | 'next-weapon'
+  | 'open-character-gui'
+  | 'open-gui'
+  | 'open-item'
+  | 'open-prototype-explorer-gui'
+  | 'open-prototypes-gui'
+  | 'open-technology-gui'
+  | 'open-trains-gui'
+  | 'order-to-follow'
+  | 'paste'
+  | 'paste-entity-settings'
+  | 'pause-game'
+  | 'pick-item'
+  | 'pick-items'
+  | 'place-in-chat'
+  | 'place-ping'
+  | 'previous-active-quick-bar'
+  | 'previous-mod'
+  | 'previous-technology'
+  | 'production-statistics'
+  | 'quick-bar-button-1'
+  | 'quick-bar-button-1-secondary'
+  | 'quick-bar-button-10'
+  | 'quick-bar-button-10-secondary'
+  | 'quick-bar-button-2'
+  | 'quick-bar-button-2-secondary'
+  | 'quick-bar-button-3'
+  | 'quick-bar-button-3-secondary'
+  | 'quick-bar-button-4'
+  | 'quick-bar-button-4-secondary'
+  | 'quick-bar-button-5'
+  | 'quick-bar-button-5-secondary'
+  | 'quick-bar-button-6'
+  | 'quick-bar-button-6-secondary'
+  | 'quick-bar-button-7'
+  | 'quick-bar-button-7-secondary'
+  | 'quick-bar-button-8'
+  | 'quick-bar-button-8-secondary'
+  | 'quick-bar-button-9'
+  | 'quick-bar-button-9-secondary'
+  | 'remove-pole-cables'
+  | 'reset-ui-scale'
+  | 'reverse-rotate'
+  | 'reverse-select'
+  | 'alt-reverse-select'
+  | 'rotate'
+  | 'rotate-active-quick-bars'
+  | 'select-for-blueprint'
+  | 'select-for-cancel-deconstruct'
+  | 'shoot-enemy'
+  | 'shoot-selected'
+  | 'show-info'
+  | 'smaller-terrain-building-area'
+  | 'smart-pipette'
+  | 'stack-split'
+  | 'stack-transfer'
+  | 'toggle-blueprint-library'
+  | 'toggle-console'
+  | 'toggle-driving'
+  | 'toggle-filter'
+  | 'toggle-gui-debug'
+  | 'toggle-gui-glows'
+  | 'toggle-gui-shadows'
+  | 'toggle-gui-style-view'
+  | 'toggle-map'
+  | 'toggle-menu'
+  | 'undo'
+  | 'zoom-in'
+  | 'zoom-out';
+
 /** Localised strings are a way to support translation of in-game text. They offer a language-independent code representation of the text that should be shown to players.
 
 It is an array where the first element is the key and the remaining elements are parameters that will be substituted for placeholders in the template designated by the key.
@@ -13636,11 +13927,11 @@ There are two special flags for the localised string, indicated by the key being
 Furthermore, when an API function expects a localised string, it will also accept a regular string (i.e. not a table) which will not be translated, as well as a number or boolean, which will be converted to their textual representation.
 
 See [Tutorial:Localisation](https://wiki.factorio.com/Tutorial:Localisation) for more information. */
-export type LocalisedString = string | boolean | LocalisedString[];
+export type LocalisedString = string | number | boolean | LocalisedString[];
 
 /** A floating point number specifying an amount.
 
-For backwards compatibility, MapGenSizes can also be specified as one of the following strings, which will be converted to a number (when queried, a number will always be returned):
+For backwards compatibility, MapGenSizes can also be specified as one of the following strings, which will be converted to a number:
 
 Each of the values in a triplet (such as "low", "small", and "poor") are synonymous. In-game the values can be set from `0.166` to `6` via the GUI (respective to the percentages), while `0` is used to disable the autoplace control. */
 export type MapGenSize =
@@ -13715,6 +14006,9 @@ export type Modifier =
   | ZoomToWorldSelectionToolEnabledModifier
   | NothingModifier;
 
+/** A dictionary of mod names to mod versions of all active mods. It can be used to adjust mod functionality based on the presence of other mods. */
+export type Mods = Record<string, string>;
+
 /** The name of a [ModuleCategory](prototype:ModuleCategory). */
 export type ModuleCategoryID = string;
 
@@ -13728,15 +14022,23 @@ export type ModuleTint =
 /** The name of a [MouseCursor](prototype:MouseCursor). */
 export type MouseCursorID = string;
 
+/** An array-like noise expression, for example constructed with [NoiseArrayConstruction](prototype:NoiseArrayConstruction) or a variable such as `noise.var("starting_positions")`. */
+export type NoiseArray =
+  | NoiseVariable
+  | NoiseArrayConstruction
+  | NoiseFunctionOffsetPoints;
+
 /** Loaded as one of the noise expressions listed in this union, based on the value of the `type` key.
 
 A fragment of a functional program used to generate coherent noise, probably for purposes related to terrain generation.
 
-Noise expressions can be provided as table literals or built using functions in the built-in [noise library](https://github.com/wube/factorio-data/blob/master/core/lualib/noise.lua). The built-in noise library allows writing much more concise code, so its usage will be shown in most examples on this page.
+Noise expressions can be provided as table literals or built using functions in the built-in [noise library](https://github.com/wube/factorio-data/blob/master/core/lualib/noise.lua). The built-in noise library allows writing much more concise code, so its usage will be shown in most examples for noise expressions.
 
 [noise.define_noise_function](https://github.com/wube/factorio-data/blob/master/core/lualib/noise.lua#L272) allows noise expressions to be defined using a shorthand that's a subset of Lua (see the example for details).
 
-See [here](https://togos.github.io/togos-example-noise-programs/) for a tutorial on authoring noise expressions. */
+See [here](https://togos.github.io/togos-example-noise-programs/) for a tutorial on authoring noise expressions.
+
+The most frequently used noise functions are loaded via [NoiseFunctionApplication](prototype:NoiseFunctionApplication). */
 export type NoiseExpression =
   | NoiseVariable
   | NoiseFunctionApplication
@@ -13948,32 +14250,59 @@ export type RotatedAnimation4Way = _RotatedAnimation4Way | RotatedAnimation;
 export type RotatedAnimationVariations = RotatedAnimation | RotatedAnimation[];
 
 /** An array containing the following values. */
-export type SelectionModeFlags = (
-  | 'blueprint'
-  | 'deconstruct'
-  | 'cancel-deconstruct'
-  | 'items'
-  | 'trees'
-  | 'buildable-type'
-  | 'nothing'
-  | 'items-to-place'
-  | 'any-entity'
-  | 'any-tile'
-  | 'same-force'
-  | 'not-same-force'
-  | 'friend'
-  | 'enemy'
-  | 'upgrade'
-  | 'cancel-upgrade'
-  | 'downgrade'
-  | 'entity-with-health'
-  | 'entity-with-force'
-  | 'is-military-target'
-  | 'entity-with-owner'
-  | 'avoid-rolling-stock'
-  | 'entity-ghost'
-  | 'tile-ghost'
-)[];
+export type SelectionModeFlags =
+  | (
+      | 'blueprint'
+      | 'deconstruct'
+      | 'cancel-deconstruct'
+      | 'items'
+      | 'trees'
+      | 'buildable-type'
+      | 'nothing'
+      | 'items-to-place'
+      | 'any-entity'
+      | 'any-tile'
+      | 'same-force'
+      | 'not-same-force'
+      | 'friend'
+      | 'enemy'
+      | 'upgrade'
+      | 'cancel-upgrade'
+      | 'downgrade'
+      | 'entity-with-health'
+      | 'entity-with-force'
+      | 'is-military-target'
+      | 'entity-with-owner'
+      | 'avoid-rolling-stock'
+      | 'entity-ghost'
+      | 'tile-ghost'
+    )
+  | (
+      | 'blueprint'
+      | 'deconstruct'
+      | 'cancel-deconstruct'
+      | 'items'
+      | 'trees'
+      | 'buildable-type'
+      | 'nothing'
+      | 'items-to-place'
+      | 'any-entity'
+      | 'any-tile'
+      | 'same-force'
+      | 'not-same-force'
+      | 'friend'
+      | 'enemy'
+      | 'upgrade'
+      | 'cancel-upgrade'
+      | 'downgrade'
+      | 'entity-with-health'
+      | 'entity-with-force'
+      | 'is-military-target'
+      | 'entity-with-owner'
+      | 'avoid-rolling-stock'
+      | 'entity-ghost'
+      | 'tile-ghost'
+    )[];
 
 export type Sound = _Sound | SoundDefinition[];
 
@@ -13989,10 +14318,10 @@ export type SoundType =
 
 /** The definition of a evolution and probability weights for a [spawnable unit](prototype:UnitSpawnDefinition) for a [EnemySpawnerPrototype](prototype:EnemySpawnerPrototype).
 
-It can be specified as a table with named or numbered keys, but not a mix of both. */
+It can be specified as a table with named or numbered keys, but not a mix of both. If this is specified as a table with numbered keys then the first value is the evolution factor and the second is the spawn weight. */
 export type SpawnPoint = _SpawnPoint | [number, number];
 
-/** A map of sprites for all 4 directions of the entity.  If this is loaded as a single Sprite, it applies to all directions. */
+/** A map of sprites for all 4 directions of the entity. If this is loaded as a single Sprite, it applies to all directions. */
 export type Sprite4Way = _Sprite4Way | Sprite;
 
 /** An array containing the following values. */
@@ -14212,14 +14541,15 @@ export type TriggerTargetMask = string[];
 /** The name of a [TrivialSmokePrototype](prototype:TrivialSmokePrototype). */
 export type TrivialSmokeID = string;
 
-/** It can be specified as a table with named or numbered keys, but not a mix of both. */
+/** It can be specified as a table with named or numbered keys, but not a mix of both. If this is specified as a table with numbered keys then the first value is the unit and the second is the spawn points. */
 export type UnitSpawnDefinition =
   | _UnitSpawnDefinition
   | [EntityID, SpawnPoint[]];
 
-/** A vector is a two-element array containing the x and y components. Unlike Positions, vectors don't use the x, y keys. Positive x goes east, positive y goes south. See also: [Runtime Vector](runtime:Vector). */
-export type Vector = [number, number];
+/** A vector is a two-element array or dictionary containing the x and y components. Positive x goes east, positive y goes south. */
+export type Vector = _Vector | [number, number];
 
+/** If this is specified as a three-element array then the array items are x, y and z, in that order. */
 export type Vector3D = _Vector3D | [number, number, number];
 
 export type VerticalAlign = 'top' | 'center' | 'bottom';
