@@ -20,7 +20,14 @@ describe('MachinesEffects', () => {
     TestBed.configureTestingModule({
       providers: [
         provideMockStore({
-          initialState,
+          initialState: {
+            ...initialState,
+            ...{
+              recipesState: {
+                [ItemId.Coal]: { beacons: [] },
+              },
+            },
+          },
         }),
         provideMockActions(() => actions),
         MachinesEffects,
@@ -40,7 +47,7 @@ describe('MachinesEffects', () => {
   afterEach(() => mockStore.resetSelectors());
 
   describe('resetRecipeSetting$', () => {
-    it('should reset modules when machine modules do not match', () => {
+    it('should reset modules when machine is implicitly changed', () => {
       actions = new ReplaySubject(1);
       actions.next(
         new Actions.RemoveAction({
@@ -48,63 +55,26 @@ describe('MachinesEffects', () => {
           def: Mocks.Defaults.machineRankIds,
         }),
       );
-      mockStore.setState({
-        ...initialState,
+      const results: Action[] = [];
+      effects.resetRecipeSettings$.subscribe((a) => results.push(a));
+      const mock = mockStore.overrideSelector(
+        Recipes.getRecipesState,
+        Mocks.RecipesStateInitial,
+      );
+      mockStore.refreshState();
+      mock.setResult({
+        ...Mocks.RecipesStateInitial,
         ...{
-          recipesState: {
-            [RecipeId.Coal]: { moduleIds: [ItemId.SpeedModule] },
+          [RecipeId.Coal]: {
+            ...Mocks.RecipesStateInitial,
+            ...{ machineId: ItemId.AssemblingMachine1 },
           },
         },
       });
-      const results: Action[] = [];
-      effects.resetRecipeSettings$.subscribe((a) => results.push(a));
+      mockStore.refreshState();
       expect(results).toEqual([
-        new Recipes.ResetRecipeModulesAction(RecipeId.Coal),
+        new Recipes.ResetRecipeMachineAction(RecipeId.Coal),
       ]);
-    });
-
-    it('should reset fuel when machine is no longer a burner', () => {
-      actions = new ReplaySubject(1);
-      actions.next(
-        new Actions.RemoveAction({
-          value: ItemId.AssemblingMachine3,
-          def: Mocks.Defaults.machineRankIds,
-        }),
-      );
-      mockStore.setState({
-        ...initialState,
-        ...{
-          recipesState: {
-            [RecipeId.Coal]: { fuelId: ItemId.Wood },
-          },
-        },
-      });
-      const results: Action[] = [];
-      effects.resetRecipeSettings$.subscribe((a) => results.push(a));
-      expect(results).toEqual([
-        new Recipes.ResetRecipeFuelAction(RecipeId.Coal),
-      ]);
-    });
-
-    it('should ignore unaffected settings', () => {
-      actions = new ReplaySubject(1);
-      actions.next(
-        new Actions.RemoveAction({
-          value: ItemId.AssemblingMachine3,
-          def: Mocks.Defaults.machineRankIds,
-        }),
-      );
-      mockStore.setState({
-        ...initialState,
-        ...{
-          recipesState: {
-            [RecipeId.Coal]: { beacons: [{ moduleIds: [ItemId.SpeedModule] }] },
-          },
-        },
-      });
-      const results: Action[] = [];
-      effects.resetRecipeSettings$.subscribe((a) => results.push(a));
-      expect(results).toEqual([]);
     });
   });
 });
