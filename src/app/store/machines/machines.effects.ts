@@ -1,13 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { combineLatest, first, switchMap } from 'rxjs';
+import { map, pairwise, switchMap, withLatestFrom } from 'rxjs';
 
-import { EnergyType } from '~/models';
-import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Recipes from '../recipes';
-import * as Settings from '../settings';
 import { MachinesActionType } from './machines.actions';
 
 @Injectable()
@@ -15,51 +12,48 @@ export class MachinesEffects {
   actions$ = inject(Actions);
   store = inject(Store<LabState>);
 
-  /** Resets recipe settings that are invalidated by changes to machine settings */
+  /**
+   * Resets machine-specific recipe settings when default machine is implicitly
+   * changed. Effects should match the field resets that occur when a recipe's
+   * machine is explicitly changed from one to another, defined by
+   * `RecipesActionType.SET_MACHINE`. This effect handles cases that can cause
+   * the recipe's machine to implicitly change.
+   */
   resetRecipeSettings$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(
-        MachinesActionType.ADD,
-        MachinesActionType.REMOVE,
-        MachinesActionType.SET_RANK,
-        MachinesActionType.SET_MACHINE,
+    this.store.select(Recipes.getRecipesState).pipe(
+      pairwise(),
+      switchMap((x) =>
+        this.actions$.pipe(
+          ofType(
+            MachinesActionType.ADD,
+            MachinesActionType.REMOVE,
+            MachinesActionType.SET_RANK,
+            MachinesActionType.SET_MACHINE,
+          ),
+          map(() => x),
+        ),
       ),
-      switchMap(() =>
-        combineLatest([
-          this.store.select(Recipes.recipesState),
-          this.store.select(Recipes.getRecipesState),
-          this.store.select(Settings.getDataset),
-        ]).pipe(first()),
-      ),
-      switchMap(([rawSettings, recipesState, data]) => {
+      withLatestFrom(this.store.select(Recipes.recipesState)),
+      switchMap(([[before, after], recipesRaw]) => {
         const effects: Action[] = [];
-        // Look for recipe settings with module effects specified
-        for (const i of Object.keys(rawSettings)) {
-          const r = rawSettings[i];
-          const machineId = recipesState[i]?.machineId;
-          if (r && machineId) {
-            const machine = data.machineEntities[machineId];
-            const recipe = data.recipeEntities[i];
-            if (r.fuelId != null) {
-              // Check that fuel setting is still valid
-              if (machine.type !== EnergyType.Burner) {
-                effects.push(new Recipes.ResetRecipeFuelAction(i));
-              }
-            }
-
-            if (r.moduleIds != null || r.beacons != null) {
-              // Check that these recipe settings are still valid
-              if (
-                !RecipeUtility.allowsModules(recipe, machine) ||
-                (r.moduleIds &&
-                  r.moduleIds.length !== machine.modules?.toNumber())
-              ) {
-                // Machine does not support module effects, reset these settings
-                effects.push(new Recipes.ResetRecipeModulesAction(i));
-              }
-            }
-          }
+        for (const recipeId of Object.keys(recipesRaw)) {
+          const raw = recipesRaw[recipeId];
+          /**
+           * Reset recipe machine fields where both are true:
+           *   A) Some machine field has been modified from the default
+           *      (`fuelId`, `moduleIds`, or `beacons`)
+           *   B) The selected machine has been changed as a result of this
+           *      action
+           */
+          if (
+            (raw.fuelId != null ||
+              raw.moduleIds != null ||
+              raw.beacons != null) &&
+            after[recipeId].machineId !== before[recipeId].machineId
+          )
+            effects.push(new Recipes.ResetRecipeMachineAction(recipeId));
         }
+
         return effects;
       }),
     ),
