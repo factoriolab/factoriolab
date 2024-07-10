@@ -497,7 +497,10 @@ async function processMod(): Promise<void> {
     return [record, catalyst, total, temps];
   }
 
-  function getMachine(proto: D.MachineProto, name: string): MachineJson {
+  function getMachine(
+    proto: D.MachineProto,
+    name: string,
+  ): MachineJson | undefined {
     const machine: MachineJson = {
       speed: getMachineSpeed(proto),
       modules: getMachineModules(proto),
@@ -510,6 +513,11 @@ async function processMod(): Promise<void> {
       silo: getMachineSilo(proto, dataRaw['rocket-silo-rocket']),
       size: getEntitySize(proto),
     };
+
+    if (machine.speed === 0) {
+      modDataReport.machineSpeedZero.push(name);
+      return undefined;
+    }
 
     processProducers(proto, name);
 
@@ -526,6 +534,7 @@ async function processMod(): Promise<void> {
   };
 
   const modDataReport: D.ModDataReport = {
+    machineSpeedZero: [],
     noProducts: [],
     noProducers: [],
     resourceNoMinableProducts: [],
@@ -1875,6 +1884,13 @@ async function processMod(): Promise<void> {
       ).some((k) => modDataReport[k].length);
 
       if (warnings) logWarn('\nWARNINGS:');
+
+      if (modDataReport.machineSpeedZero.length) {
+        logWarn(
+          `Machines with zero crafting speed: ${modDataReport.machineSpeedZero.length}`,
+        );
+        console.log('These machines have been removed.');
+      }
 
       if (modDataReport.noProducers.length) {
         logWarn(
