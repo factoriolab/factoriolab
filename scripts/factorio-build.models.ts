@@ -134,6 +134,7 @@ export type AnyEntityPrototype =
   | M.FluidWagonPrototype;
 
 export interface ModDataReport {
+  machineSpeedZero: string[];
   noProducers: string[];
   noProducts: string[];
   resourceNoMinableProducts: string[];
