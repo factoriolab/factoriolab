@@ -53,16 +53,16 @@ export const getObjectives = createSelector(
   Items.getItemsState,
   Recipes.getRecipesState,
   Machines.getMachinesState,
-  Settings.getAdjustmentData,
+  Settings.settingsState,
   Recipes.getAdjustedDataset,
-  (objectives, itemsState, recipesState, machinesState, adjustmentData, data) =>
+  (objectives, itemsState, recipesState, machinesState, settings, data) =>
     objectives.map((o) =>
       RecipeUtility.adjustObjective(
         o,
         itemsState,
         recipesState,
         machinesState,
-        adjustmentData,
+        settings,
         data,
       ),
     ),
@@ -135,8 +135,8 @@ export const getSteps = createSelector(
   (
     result,
     objectives,
-    itemsSettings,
-    recipesSettings,
+    itemsState,
+    recipesState,
     beaconReceivers,
     beltSpeed,
     dispRateInfo,
@@ -145,8 +145,8 @@ export const getSteps = createSelector(
     RateUtility.normalizeSteps(
       result.steps,
       objectives,
-      itemsSettings,
-      recipesSettings,
+      itemsState,
+      recipesState,
       beaconReceivers,
       beltSpeed,
       dispRateInfo,
@@ -267,13 +267,9 @@ export const getTotals = createSelector(
               // Check for modules to add
               if (settings.modules != null) {
                 settings.modules.forEach((m) => {
-                  if (m.id === ItemId.Module) return;
-                  // TODO: Restore this code
-                  // addValueToRecordByIds(
-                  //   modules,
-                  //   [m.id],
-                  //   value.mul(m.count),
-                  // );
+                  if (m.id == null || m.count == null || m.id === ItemId.Module)
+                    return;
+                  addValueToRecordByIds(modules, [m.id], value.mul(m.count));
                 });
               }
             }
@@ -299,13 +295,13 @@ export const getTotals = createSelector(
             // Check for modules to add
             if (beacon.modules != null) {
               beacon.modules.forEach((m) => {
-                if (m.id === ItemId.Module) return;
-                // TODO: Restore this code
-                // addValueToRecordByIds(
-                //   beaconModules,
-                //   [m.id],
-                //   value.mul(m.count),
-                // );
+                if (m.id == null || m.count == null || m.id === ItemId.Module)
+                  return;
+                addValueToRecordByIds(
+                  beaconModules,
+                  [m.id],
+                  value.mul(m.count),
+                );
               });
             }
           }

@@ -46,19 +46,16 @@ export const getRecipesState = createSelector(
       }
 
       if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
-        if (s.modules == null) {
-          s.moduleOptions = RecipeUtility.moduleOptions(
-            machine,
-            data,
-            recipe.id,
-          );
-          s.modules = RecipeUtility.inheritedModules(
+        s.moduleOptions = RecipeUtility.moduleOptions(machine, data, recipe.id);
+        s.modules = coalesce(
+          s.modules,
+          RecipeUtility.inheritedModules(
             s.moduleOptions,
             def.modules,
             machinesState.moduleRankIds,
             coalesce(machine.modules, rational(0n)),
-          );
-        }
+          ),
+        );
 
         s.beacons = s.beacons ?? def.beacons ?? [];
       } else {
@@ -98,25 +95,15 @@ export const getAdjustedDataset = createSelector(
   getExcludedRecipeIds,
   Items.getItemsState,
   Settings.getAvailableRecipes,
-  Settings.getCosts,
-  Settings.getAdjustmentData,
+  Settings.settingsState,
   Settings.getDataset,
-  (
-    recipesState,
-    excludedRecipeIds,
-    itemsState,
-    recipeIds,
-    costs,
-    adjustmentData,
-    data,
-  ) =>
+  (recipesState, excludedRecipeIds, itemsState, recipeIds, settings, data) =>
     RecipeUtility.adjustDataset(
       recipeIds,
       excludedRecipeIds,
       recipesState,
       itemsState,
-      adjustmentData,
-      costs,
+      settings,
       data,
     ),
 );

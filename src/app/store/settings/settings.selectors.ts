@@ -39,7 +39,6 @@ import {
   toBoolEntities,
   toEntities,
 } from '~/models';
-import { AdjustmentData } from '~/models/adjustment-data';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
@@ -620,25 +619,6 @@ export const getAvailableRecipes = createSelector(
       return recipe.unlockedBy == null || set.has(recipe.unlockedBy);
     });
   },
-);
-
-// TODO: Convert this to just use settings directly
-export const getAdjustmentData = createSelector(
-  getNetProductionOnly,
-  getProliferatorSprayId,
-  getMiningFactor,
-  getResearchBonus,
-  (
-    netProductionOnly,
-    proliferatorSprayId,
-    miningBonus,
-    researchBonus,
-  ): AdjustmentData => ({
-    netProductionOnly,
-    proliferatorSprayId,
-    miningBonus,
-    researchBonus,
-  }),
 );
 
 export const getModMenuItem = createSelector(
