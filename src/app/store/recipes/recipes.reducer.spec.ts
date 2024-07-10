@@ -216,31 +216,16 @@ describe('Recipes Reducer', () => {
     });
   });
 
-  describe('RESET_RECIPE_FUEL', () => {
-    it('should call resetField', () => {
-      spyOn(StoreUtility, 'resetField');
-      recipesReducer(
-        undefined,
-        new Actions.ResetRecipeFuelAction(Mocks.Recipe1.id),
-      );
-      expect(StoreUtility.resetField).toHaveBeenCalledWith(
-        {},
-        'fuelId' as any,
-        Mocks.Recipe1.id,
-      );
-    });
-  });
-
   describe('RESET_RECIPE_MODULES', () => {
     it(`should reset a recipe's modules`, () => {
       spyOn(StoreUtility, 'resetFields');
       recipesReducer(
         undefined,
-        new Actions.ResetRecipeModulesAction(Mocks.Recipe1.id),
+        new Actions.ResetRecipeMachineAction(Mocks.Recipe1.id),
       );
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(
         {},
-        ['moduleIds', 'beacons'] as any,
+        ['fuelId', 'moduleIds', 'beacons'] as any,
         Mocks.Recipe1.id,
       );
     });
