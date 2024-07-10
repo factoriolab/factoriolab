@@ -108,8 +108,10 @@ export class RecipeUtility {
     options: SelectItem<string>[],
     def: ModuleSettings[] | undefined,
     moduleRankIds: string[] | undefined,
-    count: Rational | true,
-  ): ModuleSettings[] {
+    count: Rational | true | undefined,
+  ): ModuleSettings[] | undefined {
+    if (count == null) return undefined;
+
     if (def) {
       const set = new Set(options.map((o) => o.value));
       if (def.every((m) => m.id && set.has(m.id))) return def;
@@ -693,7 +695,7 @@ export class RecipeUtility {
           options,
           def.modules,
           machinesState.moduleRankIds,
-          coalesce(machine.modules, rational(0n)),
+          machine.modules,
         );
       }
 

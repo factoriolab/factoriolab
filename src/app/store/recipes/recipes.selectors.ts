@@ -53,7 +53,7 @@ export const getRecipesState = createSelector(
             s.moduleOptions,
             def.modules,
             machinesState.moduleRankIds,
-            coalesce(machine.modules, rational(0n)),
+            machine.modules,
           ),
         );
 
