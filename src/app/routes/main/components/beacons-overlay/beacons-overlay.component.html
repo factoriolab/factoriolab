@@ -6,7 +6,7 @@
           width="3rem"
           [pTooltip]="'beaconsOverlay.eachTooltip' | translate"
           tooltipPosition="top"
-          [value]="entry.count"
+          [value]="entry.count ?? zero"
           (setValue)="setCount($event, i)"
         >
         </lab-input-number>
@@ -46,27 +46,29 @@
             </div>
           </ng-template>
         </p-dropdown>
-        <button
-          pButton
-          pRipple
-          type="button"
-          class="hover-action icons p-button-outlined"
-          (click)="
-            modulesOverlay.show(
-              $event,
-              entry.modules,
-              data().beaconEntities[entry.id],
-              recipeId()
-            )
-          "
-        >
-          @for (module of entry.modules; track module) {
-            <i class="p-button-icon" [class]="module.id | iconSmClass"
-              ><span>{{ module.count }}</span></i
-            >
-          }
-          <i class="hover-icon fa-solid fa-gear"></i>
-        </button>
+        @if (entry.id && entry.modules) {
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="hover-action icons p-button-outlined"
+            (click)="
+              modulesOverlay.show(
+                $event,
+                entry.modules,
+                data().beaconEntities[entry.id],
+                recipeId()
+              )
+            "
+          >
+            @for (module of entry.modules; track module) {
+              <i class="p-button-icon" [class]="module.id | iconSmClass"
+                ><span>{{ module.count }}</span></i
+              >
+            }
+            <i class="hover-icon fa-solid fa-gear"></i>
+          </button>
+        }
         <lab-modules-overlay
           #modulesOverlay
           (setValue)="setModules($event, i)"

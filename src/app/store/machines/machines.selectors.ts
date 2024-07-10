@@ -20,7 +20,7 @@ export const getMachinesState = createSelector(
     const fuelRankIds = state.fuelRankIds ?? defaults?.fuelRankIds ?? [];
     const moduleRankIds = state.moduleRankIds ?? defaults?.moduleRankIds ?? [];
     const beacons = state.beacons ?? defaults?.beacons ?? [];
-    const overclock = state.overclock ?? defaults?.overclock;
+    const overclock = state.overclock;
     const entities: Entities<MachineSettings> = {};
 
     for (const id of data.machineIds) {

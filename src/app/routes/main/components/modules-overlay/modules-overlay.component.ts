@@ -11,14 +11,14 @@ import { Store } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 import { DropdownChangeEvent } from 'primeng/dropdown';
 
+import { coalesce, notNullish } from '~/helpers';
 import {
   Beacon,
-  BeaconRational,
   ItemId,
   Machine,
-  MachineRational,
   ModuleSettings,
   OverlayComponent,
+  rational,
   Rational,
 } from '~/models';
 import { LabState, Settings } from '~/store';
@@ -39,28 +39,37 @@ export class ModulesOverlayComponent extends OverlayComponent {
 
   values = signal<ModuleSettings[]>([]);
   options = signal<SelectItem<string>[]>([]);
-  slots = signal<number | true>(true);
+  slots = signal<Rational | true>(true);
 
-  exclude = computed(() => this.values().map((e) => e.id));
-  sum = computed(() => Rational.sum(this.values().map((e) => e.count)));
+  exclude = computed(() =>
+    this.values()
+      .map((m) => m.id)
+      .filter(notNullish),
+  );
+  sum = computed(() =>
+    this.values()
+      .map((m) => m.count)
+      .filter(notNullish)
+      .reduce((s, c) => s.add(c), rational(0n)),
+  );
   maximum = computed(() => {
     const values = this.values();
-    const slotsNum = this.slots();
-    if (slotsNum === true) return values.map(() => undefined);
-    const slots = Rational.fromNumber(slotsNum);
+    const slots = this.slots();
+    if (slots === true) return values.map(() => null);
     let sum = this.sum();
     const empty = values.find((e) => e.id === ItemId.Module);
-    if (empty) sum = sum.sub(empty.count);
+    if (empty) sum = sum.sub(coalesce(empty.count, rational(0n)));
     const remain = slots.sub(sum);
-    return values.map((e) => e.count.add(remain));
+    return values.map((e) => coalesce(e.count, rational(0n)).add(remain));
   });
 
   ItemId = ItemId;
+  zero = rational(0n);
 
   show(
     event: Event,
     values: ModuleSettings[],
-    entity: Machine | MachineRational | Beacon | BeaconRational,
+    entity: Machine | Beacon,
     recipeId?: string,
   ): void {
     const slots = entity.modules;
@@ -105,15 +114,17 @@ export class ModulesOverlayComponent extends OverlayComponent {
   }
 
   updateEmpty(values: ModuleSettings[]): void {
-    const slotsNum = this.slots();
-    if (slotsNum === true) return;
-    const slots = Rational.fromNumber(slotsNum);
-    const sum = Rational.sum(values.map((e) => e.count));
+    const slots = this.slots();
+    if (slots === true) return;
+    const sum = values
+      .map((m) => m.count)
+      .filter(notNullish)
+      .reduce((s, c) => s.add(c), rational(0n));
     if (sum.lt(slots)) {
       const toAdd = slots.sub(sum);
       const empty = values.find((e) => e.id === ItemId.Module);
       if (empty) {
-        empty.count = empty.count.add(toAdd);
+        empty.count = coalesce(empty.count, rational(0n)).add(toAdd);
       } else {
         values.push({ id: ItemId.Module, count: toAdd });
       }
@@ -121,7 +132,7 @@ export class ModulesOverlayComponent extends OverlayComponent {
       const toSubtract = sum.sub(slots);
       const empty = values.find((e) => e.id === ItemId.Module);
       if (empty) {
-        empty.count = empty.count.sub(toSubtract);
+        empty.count = coalesce(empty.count, rational(0n)).sub(toSubtract);
         if (empty.count.isZero()) values.splice(values.indexOf(empty), 1);
       }
     }
@@ -129,7 +140,8 @@ export class ModulesOverlayComponent extends OverlayComponent {
 
   save(): void {
     let values = this.values();
-    if (this.slots() !== true) values = values.filter((e) => e.count.nonzero());
+    if (this.slots() !== true)
+      values = values.filter((e) => e.count?.nonzero());
     this.setValue.emit(values);
   }
 }

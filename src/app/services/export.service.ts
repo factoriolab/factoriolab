@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { saveAs } from 'file-saver';
 
-import { notNullish } from '~/helpers';
+import { fnPropsNotNullish, notNullish } from '~/helpers';
 import { rational, Step } from '~/models';
 import { Items, LabState, Recipes, Settings } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
@@ -121,7 +121,10 @@ export class ExportService {
             exp.Machines = '=' + step.machines.toString();
           exp.Machine = recipeSettings.machineId;
           if (allowsModules && recipeSettings.modules != null) {
-            exp.Modules = `"${recipeSettings.modules.map((m) => `${m.count.toString()} ${m.id}`).join(',')}"`;
+            exp.Modules = `"${recipeSettings.modules
+              .filter(fnPropsNotNullish('count', 'id'))
+              .map((m) => `${m.count.toString()} ${m.id}`)
+              .join(',')}"`;
           }
         }
 
@@ -129,7 +132,10 @@ export class ExportService {
           exp.Beacons = `"${recipeSettings.beacons
             ?.map(
               (b) =>
-                `${b.count?.toString()} ${b.id} (${b.modules?.map((m) => `${m.count.toString()} ${m.id}`).join(',')})`,
+                `${b.count?.toString()} ${b.id} (${b.modules
+                  ?.filter(fnPropsNotNullish('count', 'id'))
+                  .map((m) => `${m.count.toString()} ${m.id}`)
+                  .join(',')})`,
             )
             .join(',')}"`;
         }

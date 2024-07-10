@@ -14,6 +14,7 @@ import {
   ItemId,
   ModuleSettings,
   OverlayComponent,
+  rational,
   Rational,
 } from '~/models';
 import { LabState, Settings } from '~/store';
@@ -34,12 +35,13 @@ export class BeaconsOverlayComponent extends OverlayComponent {
 
   values = signal<BeaconSettings[]>([]);
   recipeId = signal<string | undefined>(undefined);
+  zero = rational(0n);
 
   show(event: Event, values: BeaconSettings[], recipeId?: string): void {
     this.values.set(
       values.map((v) => ({
         ...v,
-        ...{ modules: v.modules.map((m) => ({ ...m })) },
+        ...{ modules: v.modules?.map((m) => ({ ...m })) },
       })),
     );
     this.recipeId.set(recipeId);
@@ -82,14 +84,14 @@ export class BeaconsOverlayComponent extends OverlayComponent {
   addEntry(): void {
     this.values.update((values) => {
       const id = this.options().beacons[0].value;
-      const count = Rational.fromNumber(this.data().beaconEntities[id].modules);
+      const count = this.data().beaconEntities[id].modules;
       const modules: ModuleSettings[] = [
         {
           id: ItemId.Module,
           count: count,
         },
       ];
-      values.push({ id, count: Rational.zero, modules });
+      values.push({ id, count: rational(0n), modules });
       return values;
     });
   }

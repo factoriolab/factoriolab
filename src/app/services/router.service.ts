@@ -1821,6 +1821,8 @@ export class RouterService {
     obj.costs!.footprint = this.parseRational(s[i++]);
 
     this.deleteEmptyKeys(obj);
+    if (obj.costs) this.deleteEmptyKeys(obj.costs);
+
     return obj;
   }
 

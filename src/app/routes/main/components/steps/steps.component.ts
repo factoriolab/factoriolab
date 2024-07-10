@@ -22,6 +22,7 @@ import { coalesce } from '~/helpers';
 import {
   AdjustedDataset,
   BeaconSettings,
+  beaconSettingsPayload,
   EnergyType,
   Entities,
   Game,
@@ -353,11 +354,11 @@ export class StepsComponent implements OnInit, AfterViewInit {
       case 'beacons': {
         if (!Array.isArray(event)) return;
         const def = machineSettings.beacons;
-        // this.setBeacons(
-        //   id,
-        //   beaconSettingsPayload(event as BeaconSettings[], def),
-        //   isObjective,
-        // );
+        this.setBeacons(
+          id,
+          beaconSettingsPayload(event as BeaconSettings[], def),
+          isObjective,
+        );
 
         break;
       }

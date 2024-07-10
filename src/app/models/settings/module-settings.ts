@@ -1,4 +1,3 @@
-import { isArrayEqual } from '~/helpers';
 import { Rational } from '../rational';
 
 export interface ModuleSettings {
@@ -6,16 +5,14 @@ export interface ModuleSettings {
   id?: string;
 }
 
-// export function isModuleSettingsEqual(
-//   a: ModuleSettings,
-//   b: ModuleSettings,
-// ): boolean {
-//   return a.count.eq(b.count) && a.id === b.id;
-// }
+export function moduleSettingsPayload(
+  value: ModuleSettings[] | undefined,
+  def: ModuleSettings[] | undefined,
+): ModuleSettings[] | undefined {
+  if (JSON.stringify(value) === JSON.stringify(def)) return undefined;
 
-// export function moduleSettingsPayload(
-//   value: ModuleSettings[] | undefined,
-//   def: ModuleSettings[] | undefined,
-// ): ModuleSettings[] | undefined {
-//   return isArrayEqual(value, def, isModuleSettingsEqual) ? undefined : value;
-// }
+  // TODO: Compare individual module entries and mark properties as `undefined`
+  // where properties match defaults
+
+  return value;
+}

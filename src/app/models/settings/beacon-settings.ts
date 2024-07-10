@@ -12,21 +12,14 @@ export interface BeaconSettings {
   total?: Rational;
 }
 
-// export function isBeaconSettingsEqual(
-//   a: BeaconSettings,
-//   b: BeaconSettings,
-// ): boolean {
-//   return (
-//     a.count.eq(b.count) &&
-//     a.id === b.id &&
-//     isArrayEqual(a.modules, b.modules, isModuleSettingsEqual) &&
-//     (a.total == null || (b.total != null && a.total.eq(b.total)))
-//   );
-// }
+export function beaconSettingsPayload(
+  value: BeaconSettings[] | undefined,
+  def: BeaconSettings[] | undefined,
+): BeaconSettings[] | undefined {
+  if (JSON.stringify(value) === JSON.stringify(def)) return undefined;
 
-// export function beaconSettingsPayload(
-//   value: BeaconSettings[] | undefined,
-//   def: BeaconSettings[] | undefined,
-// ): BeaconSettings[] | undefined {
-//   return isArrayEqual(value, def, isBeaconSettingsEqual) ? undefined : value;
-// }
+  // TODO: Compare individual beacon entries and mark properties as `undefined`
+  // where properties match defaults
+
+  return value;
+}
