@@ -41,7 +41,6 @@ import {
   MaximizeType,
   maximizeTypeOptions,
   ModuleSettings,
-  moduleSettingsPayload,
   PowerUnit,
   powerUnitOptions,
   Preset,
@@ -299,17 +298,20 @@ export class SettingsComponent implements OnInit {
   changeModules(id: string, value: ModuleSettings[]): void {
     const state = this.machinesState();
     const machine = this.data().machineEntities[id];
-    const def = RecipeUtility.defaultModules(
-      state.entities[id].moduleOptions ?? [],
-      state.moduleRankIds,
-      coalesce(machine.modules, rational(0n)),
+    this.setModules(
+      id,
+      RecipeUtility.dehydrateModules(
+        value,
+        state.entities[id].moduleOptions ?? [],
+        state.moduleRankIds,
+        machine.modules,
+      ),
     );
-    this.setModules(id, moduleSettingsPayload(value, def));
   }
 
   changeBeacons(id: string, value: BeaconSettings[]): void {
     const def = this.machinesState().beacons;
-    this.setBeacons(id, beaconSettingsPayload(value, def));
+    this.setBeacons(id, beaconSettingsPayload(value, def, rational(0n), ''));
   }
 
   toggleBeaconReceivers(value: boolean): void {
@@ -361,10 +363,13 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.AddAction({ value, def }));
   }
 
-  setDefaultBeacons(value: BeaconSettings[] | undefined): void {
+  setDefaultBeacons(value: BeaconSettings[]): void {
     const def = this.defaults()?.beacons;
-    value = beaconSettingsPayload(value, def);
-    this.store.dispatch(new Machines.SetDefaultBeaconsAction(value));
+    this.store.dispatch(
+      new Machines.SetDefaultBeaconsAction(
+        beaconSettingsPayload(value, def, rational(0n), ''),
+      ),
+    );
   }
 
   setDefaultOverclock(value: Rational | undefined): void {

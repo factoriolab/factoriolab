@@ -39,13 +39,12 @@ export const getMachinesState = createSelector(
 
       if (machine.modules) {
         s.moduleOptions = RecipeUtility.moduleOptions(machine, data);
-        s.modules =
-          s.modules ??
-          RecipeUtility.defaultModules(
-            s.moduleOptions,
-            moduleRankIds,
-            machine.modules,
-          );
+        s.modules = RecipeUtility.hydrateModules(
+          s.modules,
+          s.moduleOptions,
+          moduleRankIds,
+          machine.modules,
+        );
         s.beacons = s.beacons ?? beacons;
       }
 

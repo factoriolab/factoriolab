@@ -13,13 +13,14 @@ export interface BeaconSettings {
 }
 
 export function beaconSettingsPayload(
-  value: BeaconSettings[] | undefined,
+  value: BeaconSettings[],
   def: BeaconSettings[] | undefined,
+  count: Rational,
+  id: string,
 ): BeaconSettings[] | undefined {
   if (JSON.stringify(value) === JSON.stringify(def)) return undefined;
-
-  // TODO: Compare individual beacon entries and mark properties as `undefined`
-  // where properties match defaults
-
-  return value;
+  return value.map((v) => ({
+    count: v.count?.eq(count) ? undefined : v.count,
+    id: v.id === id ? undefined : v.id,
+  }));
 }

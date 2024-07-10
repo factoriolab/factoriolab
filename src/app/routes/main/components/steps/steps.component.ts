@@ -29,7 +29,6 @@ import {
   IdValueDefaultPayload,
   ItemId,
   ModuleSettings,
-  moduleSettingsPayload,
   ObjectiveBase,
   ObjectiveUnit,
   rational,
@@ -337,16 +336,17 @@ export class StepsComponent implements OnInit, AfterViewInit {
       }
       case 'modules': {
         if (!Array.isArray(event)) return;
+        event = event as ModuleSettings[];
         const machine = this.data().machineEntities[settings.machineId];
-        const def = RecipeUtility.inheritedModules(
-          settings.moduleOptions ?? [],
-          machineSettings.modules,
-          machinesState.moduleRankIds,
-          coalesce(machine.modules, rational(0n)),
-        );
         this.setModules(
           id,
-          moduleSettingsPayload(event as ModuleSettings[], def),
+          RecipeUtility.dehydrateModules(
+            event,
+            settings.moduleOptions ?? [],
+            machinesState.moduleRankIds,
+            machine.modules,
+            machineSettings.modules,
+          ),
           isObjective,
         );
         break;
@@ -356,7 +356,12 @@ export class StepsComponent implements OnInit, AfterViewInit {
         const def = machineSettings.beacons;
         this.setBeacons(
           id,
-          beaconSettingsPayload(event as BeaconSettings[], def),
+          beaconSettingsPayload(
+            event as BeaconSettings[],
+            def,
+            rational(0n),
+            '',
+          ),
           isObjective,
         );
 

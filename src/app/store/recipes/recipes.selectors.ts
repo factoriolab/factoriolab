@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 
 import { coalesce } from '~/helpers';
-import { Entities, rational, RecipeSettings } from '~/models';
+import { Entities, RecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
@@ -47,16 +47,13 @@ export const getRecipesState = createSelector(
 
       if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
         s.moduleOptions = RecipeUtility.moduleOptions(machine, data, recipe.id);
-        s.modules = coalesce(
+        s.modules = RecipeUtility.hydrateModules(
           s.modules,
-          RecipeUtility.inheritedModules(
-            s.moduleOptions,
-            def.modules,
-            machinesState.moduleRankIds,
-            machine.modules,
-          ),
+          s.moduleOptions,
+          machinesState.moduleRankIds,
+          machine.modules,
+          def.modules,
         );
-
         s.beacons = s.beacons ?? def.beacons ?? [];
       } else {
         // Machine doesn't support modules, remove any

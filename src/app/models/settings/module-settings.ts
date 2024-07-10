@@ -5,16 +5,9 @@ export interface ModuleSettings {
   id?: string;
 }
 
-export function moduleSettingsPayload(
-  value: ModuleSettings[] | undefined,
-  def: ModuleSettings[] | undefined,
-): ModuleSettings[] | undefined {
-  if (JSON.stringify(value) === JSON.stringify(def)) return undefined;
-
-  console.log(JSON.stringify(value), JSON.stringify(def));
-
-  // TODO: Compare individual module entries and mark properties as `undefined`
-  // where properties match defaults
-
-  return value;
+export function areModuleSettingsEqual(
+  a: ModuleSettings,
+  b: ModuleSettings,
+): boolean {
+  return a.count?.toString() === b.count?.toString() && a.id === b.id;
 }

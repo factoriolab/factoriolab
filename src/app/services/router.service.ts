@@ -88,7 +88,7 @@ export enum ZipVersion {
   Version7 = '7', // Hash
   Version8 = '8', // Unified
   Version9 = '9', // Unified
-  Version10 = 'A', // Unified
+  Version10 = '10', // Unified
 }
 
 export enum MigrationWarning {
@@ -430,6 +430,7 @@ export class RouterService {
     const zip = `z=${this.bytesToBase64(deflate(hash))}&${Section.Version}=${
       this.version
     }`;
+    console.log(bare);
     return bare.length < Math.max(zip.length, MIN_ZIP) ? bare : zip;
   }
 
@@ -1239,7 +1240,7 @@ export class RouterService {
       let i = 0;
       const obj: ModuleSettings = {
         count: this.parseRational(this.parseString(s[i++])),
-        id: this.parseString(s[i++], hash?.modules) ?? '',
+        id: this.parseString(s[i++], hash?.modules),
       };
 
       this.deleteEmptyKeys(obj);

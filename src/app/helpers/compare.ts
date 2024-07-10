@@ -1,4 +1,4 @@
-export function isArrayEqual<T>(
+export function areArraysEqual<T>(
   a: T[] | null | undefined,
   b: T[] | null | undefined,
   compareFn: (a: T, b: T) => boolean,

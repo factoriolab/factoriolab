@@ -54,6 +54,10 @@
   }
 }
 
+.p-button.modules > i {
+  margin: 0 6px;
+}
+
 // Adjust opacity for light mode
 body.light .p-button.hover-action.hover-active .p-button-icon {
   opacity: 0.6;

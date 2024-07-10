@@ -1,9 +1,10 @@
 import { SelectItem } from 'primeng/api';
 
-import { coalesce, fnPropsNotNullish } from '~/helpers';
+import { areArraysEqual, coalesce, fnPropsNotNullish } from '~/helpers';
 import {
   AdjustedDataset,
   AdjustedRecipe,
+  areModuleSettingsEqual,
   Beacon,
   Belt,
   cloneRecipe,
@@ -103,35 +104,28 @@ export class RecipeUtility {
     return options;
   }
 
-  /** Determines inherited modules for a recipe */
-  static inheritedModules(
-    options: SelectItem<string>[],
-    def: ModuleSettings[] | undefined,
-    moduleRankIds: string[] | undefined,
-    count: Rational | true | undefined,
-  ): ModuleSettings[] | undefined {
-    if (count == null) return undefined;
-
-    if (def) {
-      const set = new Set(options.map((o) => o.value));
-      if (def.every((m) => m.id && set.has(m.id))) return def;
-    }
-
-    return this.defaultModules(options, moduleRankIds, count);
-  }
-
   /** Determines default modules for a recipe/machine */
   static defaultModules(
     options: SelectItem<string>[],
     moduleRankIds: string[] | undefined,
-    modules: Rational | true,
-  ): ModuleSettings[] {
-    const id = this.bestMatch(
-      options.map((o) => o.value),
-      moduleRankIds ?? [],
-    );
-    const count = modules === true ? rational(0n) : modules;
-    return [{ count, id }];
+    count: Rational | true | undefined,
+    machineValue?: ModuleSettings[] | undefined,
+    moduleId?: string,
+  ): ModuleSettings[] | undefined {
+    if (count == null) return undefined;
+
+    if (machineValue) {
+      const set = new Set(options.map((o) => o.value));
+      if (machineValue.every((m) => m.id && set.has(m.id))) return machineValue;
+    }
+
+    if (moduleId == null)
+      moduleId = this.bestMatch(
+        options.map((o) => o.value),
+        moduleRankIds ?? [],
+      );
+    count = count === true ? rational(0n) : count;
+    return [{ id: moduleId, count }];
   }
 
   static adjustRecipe(
@@ -689,15 +683,14 @@ export class RecipeUtility {
     }
 
     if (machine != null && this.allowsModules(recipe, machine)) {
-      if (objective.modules == null) {
-        const options = this.moduleOptions(machine, data, objective.targetId);
-        objective.modules = this.inheritedModules(
-          options,
-          def.modules,
-          machinesState.moduleRankIds,
-          machine.modules,
-        );
-      }
+      const options = this.moduleOptions(machine, data, objective.targetId);
+      objective.modules = this.hydrateModules(
+        objective.modules,
+        options,
+        machinesState.moduleRankIds ?? [],
+        machine.modules,
+        def.modules,
+      );
 
       if (objective.beacons == null) {
         objective.beacons = [];
@@ -729,5 +722,59 @@ export class RecipeUtility {
     finalizeRecipe(objective.recipe);
 
     return objective;
+  }
+
+  static dehydrateModules(
+    value: ModuleSettings[],
+    options: SelectItem<string>[],
+    moduleRankIds: string[],
+    count: Rational | true | undefined,
+    machineValue?: ModuleSettings[] | undefined,
+  ): ModuleSettings[] | undefined {
+    const def = this.defaultModules(
+      options,
+      moduleRankIds,
+      count,
+      machineValue,
+    );
+    if (areArraysEqual(value, def, areModuleSettingsEqual)) return undefined;
+
+    const moduleId = this.bestMatch(
+      options.map((o) => o.value),
+      moduleRankIds,
+    );
+    const moduleCount = count === true || count == null ? rational(0n) : count;
+    const result = value.map((m) => {
+      const r = {} as ModuleSettings;
+      if (m.id !== moduleId) r.id = m.id;
+      if (!m.count?.eq(moduleCount)) r.count = m.count;
+      return r;
+    });
+
+    if (result.length === 1 && Object.keys(result[0]).length === 0)
+      return undefined;
+
+    return result;
+  }
+
+  static hydrateModules(
+    value: ModuleSettings[] | undefined,
+    options: SelectItem<string>[],
+    moduleRankIds: string[],
+    count: Rational | true | undefined,
+    machineValue?: ModuleSettings[] | undefined,
+  ): ModuleSettings[] | undefined {
+    if (value == null)
+      return this.defaultModules(options, moduleRankIds, count, machineValue);
+
+    const moduleId = this.bestMatch(
+      options.map((o) => o.value),
+      moduleRankIds,
+    );
+    const moduleCount = count === true || count == null ? rational(0n) : count;
+    return value.map((m) => ({
+      id: m.id ?? moduleId,
+      count: m.count ?? moduleCount,
+    }));
   }
 }
