@@ -157,7 +157,7 @@
       <!-- Power -->
       @if (columnsState().power.show) {
         <th pSortableColumn="power">
-          <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center justify-content-end">
             <span>{{ 'options.column.power' | translate }}</span>
             @if (!focus()) {
               <p-sortIcon field="power"></p-sortIcon>
@@ -168,7 +168,7 @@
       <!-- Pollution -->
       @if (columnsState().pollution.show) {
         <th pSortableColumn="pollution">
-          <div class="d-flex align-items-center">
+          <div class="d-flex align-items-center justify-content-end">
             <span>{{ dispRateInfo().pollutionLabel | translate }}</span>
             @if (!focus()) {
               <p-sortIcon field="pollution"></p-sortIcon>

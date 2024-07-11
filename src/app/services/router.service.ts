@@ -430,7 +430,6 @@ export class RouterService {
     const zip = `z=${this.bytesToBase64(deflate(hash))}&${Section.Version}=${
       this.version
     }`;
-    console.log(bare);
     return bare.length < Math.max(zip.length, MIN_ZIP) ? bare : zip;
   }
 
