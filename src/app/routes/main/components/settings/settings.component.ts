@@ -17,7 +17,6 @@ import { coalesce } from '~/helpers';
 import {
   AdjustedDataset,
   BeaconSettings,
-  beaconSettingsPayload,
   DisplayRate,
   displayRateOptions,
   Entities,
@@ -311,7 +310,7 @@ export class SettingsComponent implements OnInit {
 
   changeBeacons(id: string, value: BeaconSettings[]): void {
     const def = this.machinesState().beacons;
-    this.setBeacons(id, beaconSettingsPayload(value, def, rational(0n), ''));
+    this.setBeacons(id, RecipeUtility.dehydrateBeacons(value, def));
   }
 
   toggleBeaconReceivers(value: boolean): void {
@@ -367,7 +366,7 @@ export class SettingsComponent implements OnInit {
     const def = this.defaults()?.beacons;
     this.store.dispatch(
       new Machines.SetDefaultBeaconsAction(
-        beaconSettingsPayload(value, def, rational(0n), ''),
+        RecipeUtility.dehydrateBeacons(value, def),
       ),
     );
   }

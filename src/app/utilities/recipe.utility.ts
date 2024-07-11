@@ -4,8 +4,10 @@ import { areArraysEqual, coalesce, fnPropsNotNullish } from '~/helpers';
 import {
   AdjustedDataset,
   AdjustedRecipe,
+  areBeaconSettingsEqual,
   areModuleSettingsEqual,
   Beacon,
+  BeaconSettings,
   Belt,
   cloneRecipe,
   CostSettings,
@@ -119,13 +121,18 @@ export class RecipeUtility {
       if (machineValue.every((m) => m.id && set.has(m.id))) return machineValue;
     }
 
-    if (moduleId == null)
-      moduleId = this.bestMatch(
+    const id =
+      moduleId ??
+      this.bestMatch(
         options.map((o) => o.value),
         moduleRankIds ?? [],
       );
     count = count === true ? rational(0n) : count;
-    return [{ id: moduleId, count }];
+    return [{ id, count }];
+  }
+
+  static defaultBeacons(): BeaconSettings[] | undefined {
+    return undefined;
   }
 
   static adjustRecipe(
@@ -775,6 +782,57 @@ export class RecipeUtility {
     return value.map((m) => ({
       id: m.id ?? moduleId,
       count: m.count ?? moduleCount,
+    }));
+  }
+
+  static dehydrateBeacons(
+    value: BeaconSettings[],
+    def: BeaconSettings[] | undefined,
+  ): BeaconSettings[] | undefined {
+    if (areArraysEqual(value, def, areBeaconSettingsEqual)) return undefined;
+
+    if (def == null || def.length === 0) return value;
+    const beaconSettings = def[0];
+
+    const result = value.map((m) => {
+      const r = {} as BeaconSettings;
+      if (m.id !== beaconSettings.id) r.id = m.id;
+      if (!m.count?.eq(beaconSettings.count ?? rational(0n))) r.count = m.count;
+      if (
+        !areArraysEqual(
+          m.modules,
+          beaconSettings.modules,
+          areModuleSettingsEqual,
+        )
+      )
+        r.modules = m.modules;
+      if (m.total) r.total = m.total;
+      return r;
+    });
+
+    if (result.length === 1 && Object.keys(result[0]).length === 0)
+      return undefined;
+
+    return result;
+  }
+
+  static hydrateBeacons(
+    value: BeaconSettings[] | undefined,
+    def: BeaconSettings[] | undefined,
+  ): BeaconSettings[] | undefined {
+    if (value == null || def == null || def.length === 0) return def;
+
+    const beaconSettings = def[0];
+    const moduleSettings = beaconSettings.modules?.[0];
+    return value.map((b) => ({
+      id: b.id ?? beaconSettings.id,
+      count: b.count ?? beaconSettings.count,
+      modules:
+        b.modules?.map((m) => ({
+          id: m.id ?? moduleSettings?.id,
+          count: m.count ?? moduleSettings?.count,
+        })) ?? beaconSettings.modules,
+      total: b.total ?? beaconSettings.total,
     }));
   }
 }

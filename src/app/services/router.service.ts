@@ -1294,8 +1294,8 @@ export class RouterService {
       const s = beacon.split(FIELDSEP);
       let i = 0;
       const obj: BeaconSettings = {
-        count: this.parseRational(this.parseString(s[i++]) ?? '0'),
-        id: this.parseString(s[i++], hash?.beacons) ?? '',
+        count: this.parseRational(this.parseString(s[i++])),
+        id: this.parseString(s[i++], hash?.beacons),
         modules:
           this.parseArray(s[i++])?.map(
             (i) => moduleSettings[Number(i)] ?? {},

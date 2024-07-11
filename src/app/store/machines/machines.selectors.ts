@@ -45,7 +45,7 @@ export const getMachinesState = createSelector(
           moduleRankIds,
           machine.modules,
         );
-        s.beacons = s.beacons ?? beacons;
+        s.beacons = RecipeUtility.hydrateBeacons(s.beacons, beacons);
       }
 
       s.overclock = s.overclock ?? overclock;

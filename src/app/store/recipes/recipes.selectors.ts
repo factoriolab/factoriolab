@@ -54,7 +54,7 @@ export const getRecipesState = createSelector(
           machine.modules,
           def.modules,
         );
-        s.beacons = s.beacons ?? def.beacons ?? [];
+        s.beacons = RecipeUtility.hydrateBeacons(s.beacons, def.beacons);
       } else {
         // Machine doesn't support modules, remove any
         delete s.modules;
