@@ -37,7 +37,7 @@
         <p-dropdown
           styleClass="mb-2 w-100"
           [filter]="true"
-          [autofocusFilter]="!contentSvc.isMobile"
+          [autofocusFilter]="!contentSvc.isMobile()"
           [ngModel]="settings().modId"
           [options]="modOptions()"
           (onChange)="setMod($event.value)"
