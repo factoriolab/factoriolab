@@ -7,6 +7,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -28,6 +29,7 @@ import { initialState } from './state';
     provideMockStore({ initialState }),
     provideHttpClient(withInterceptorsFromDi()),
     provideHttpClientTesting(),
+    provideRouter([]),
   ],
 })
 export class TestModule {}
