@@ -375,7 +375,13 @@ export class RateUtility {
       step.depth = result.nodes.find((n) => n.stepId === step.id)?.depth;
     }
 
-    steps.sort((a, b) => coalesce(b.depth, 0) - coalesce(a.depth, 0));
+    // Rank output steps highest, then rank by sankey depth
+    function stepRank(step: Step): number {
+      if (step.output) return 100000;
+      return coalesce(step.depth, 0);
+    }
+
+    steps.sort((a, b) => stepRank(b) - stepRank(a));
   }
 
   static calculateHierarchy(steps: Step[]): Step[] {
