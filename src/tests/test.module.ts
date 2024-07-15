@@ -1,9 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -12,17 +16,20 @@ import { MainSharedModule } from '~/routes/main/main-shared.module';
 import { initialState } from './state';
 
 @NgModule({
+  exports: [FormsModule, TranslateModule, AppSharedModule, MainSharedModule],
   imports: [
     CommonModule,
     FormsModule,
-    HttpClientTestingModule,
-    RouterTestingModule,
     NoopAnimationsModule,
     TranslateModule.forRoot(),
     AppSharedModule,
     MainSharedModule,
   ],
-  exports: [FormsModule, TranslateModule, AppSharedModule, MainSharedModule],
-  providers: [provideMockStore({ initialState })],
+  providers: [
+    provideMockStore({ initialState }),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClientTesting(),
+    provideRouter([]),
+  ],
 })
 export class TestModule {}

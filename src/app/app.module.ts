@@ -1,5 +1,9 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {
+  HttpClient,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { APP_INITIALIZER, ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -54,11 +58,11 @@ function initializeApp(
 
 @NgModule({
   declarations: [AppComponent],
+  bootstrap: [AppComponent],
   imports: [
     /** Angular modules */
     BrowserModule,
     BrowserAnimationsModule,
-    HttpClientModule,
     /** Vendor modules */
     StoreModule.forRoot(reducers as ActionReducerMap<LabState, Action>, {
       metaReducers,
@@ -103,7 +107,7 @@ function initializeApp(
       multi: true,
     },
     provideRouter(routes, withComponentInputBinding()),
+    provideHttpClient(withInterceptorsFromDi()),
   ],
-  bootstrap: [AppComponent],
 })
 export class AppModule {}
