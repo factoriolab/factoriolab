@@ -12,6 +12,7 @@ import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
 
 import { Category, DialogComponent, Entities } from '~/models';
+import { ContentService } from '~/services';
 import { LabState, Recipes } from '~/store';
 
 @Component({
@@ -23,8 +24,9 @@ import { LabState, Recipes } from '~/store';
 export class PickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
   store = inject(Store<LabState>);
+  contentSvc = inject(ContentService);
 
-  inputFilter = viewChild.required<ElementRef<HTMLInputElement>>('inputFilter');
+  filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 
   header = input('');
   @Output() selectId = new EventEmitter<string>();
@@ -130,6 +132,12 @@ export class PickerComponent extends DialogComponent {
     this.allCategoryIds = this.categoryIds;
     this.allCategoryRows = this.categoryRows;
     this.show();
+
+    if (!this.contentSvc.isMobile()) {
+      setTimeout(() => {
+        this.filterInput().nativeElement.focus();
+      });
+    }
   }
 
   selectAll(value: boolean): void {
