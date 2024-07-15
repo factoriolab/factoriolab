@@ -1203,7 +1203,7 @@ async function processMod(): Promise<void> {
           speed: proto.effect.speed?.bonus || undefined,
         };
 
-        let limitation = proto.limitation;
+        let limitation = coerceArray(proto.limitation);
         if (proto.limitation_blacklist) {
           limitation = limitation ?? Object.keys(recipesEnabled);
           limitation = limitation.filter(
