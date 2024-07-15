@@ -3,10 +3,12 @@ import {
   ChangeDetectorRef,
   Component,
   computed,
+  ElementRef,
   EventEmitter,
   inject,
   Output,
   signal,
+  viewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -30,6 +32,8 @@ export class TechPickerComponent {
   translateSvc = inject(TranslateService);
   store = inject(Store<LabState>);
   contentSvc = inject(ContentService);
+
+  filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 
   @Output() selectIds = new EventEmitter<string[] | null>();
 
@@ -90,6 +94,12 @@ export class TechPickerComponent {
     this.selection.set(selection);
     this.visible = true;
     this.ref.markForCheck();
+
+    if (!this.contentSvc.isMobile()) {
+      setTimeout(() => {
+        this.filterInput().nativeElement.focus();
+      });
+    }
   }
 
   selectAll(value: boolean): void {
