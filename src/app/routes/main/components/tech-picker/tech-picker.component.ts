@@ -13,8 +13,8 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { FilterService } from 'primeng/api';
 
+import { DialogComponent } from '~/components';
 import { Game } from '~/models';
-import { DialogComponent } from '~/models/modal-component';
 import { ContentService } from '~/services';
 import { LabState, Preferences, Recipes } from '~/store';
 

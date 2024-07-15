@@ -11,13 +11,13 @@ import { Store } from '@ngrx/store';
 import { SelectItem } from 'primeng/api';
 import { DropdownChangeEvent } from 'primeng/dropdown';
 
+import { OverlayComponent } from '~/components';
 import { coalesce, notNullish } from '~/helpers';
 import {
   Beacon,
   ItemId,
   Machine,
   ModuleSettings,
-  OverlayComponent,
   rational,
   Rational,
 } from '~/models';

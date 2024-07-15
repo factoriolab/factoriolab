@@ -12,7 +12,6 @@ export * from './game-info';
 export * from './inserter-data';
 export * from './matrix-result';
 export * from './mod';
-export * from './modal-component';
 export * from './nullable';
 export * from './objective';
 export * from './options';

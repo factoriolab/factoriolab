@@ -11,9 +11,10 @@ import {
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
 
-import { Category, DialogComponent, Entities } from '~/models';
+import { Category, Entities } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Recipes } from '~/store';
+import { DialogComponent } from '../modal-component';
 
 @Component({
   selector: 'lab-picker',

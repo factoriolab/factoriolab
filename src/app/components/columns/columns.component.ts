@@ -13,12 +13,12 @@ import {
   ColumnSettings,
   columnsInfo,
   ColumnsState,
-  DialogComponent,
   Entities,
   initialColumnsState,
 } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Preferences, Settings } from '~/store';
+import { DialogComponent } from '../modal-component';
 
 @Component({
   selector: 'lab-columns',

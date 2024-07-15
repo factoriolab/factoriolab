@@ -9,11 +9,11 @@ import {
 import { Store } from '@ngrx/store';
 import { DropdownChangeEvent } from 'primeng/dropdown';
 
+import { OverlayComponent } from '~/components';
 import {
   BeaconSettings,
   ItemId,
   ModuleSettings,
-  OverlayComponent,
   rational,
   Rational,
 } from '~/models';

@@ -222,13 +222,7 @@ export function getAdjustedDataset(): M.AdjustedDataset {
     [],
     ItemsStateInitial,
     Dataset.recipeIds,
-    Costs,
-    {
-      netProductionOnly: false,
-      proliferatorSprayId: ItemId.Module,
-      miningBonus: M.rational(0n),
-      researchBonus: M.rational(1n),
-    },
+    Settings.initialSettingsState,
     getDataset(),
   );
 }
@@ -327,12 +321,6 @@ export const Flow = getFlow();
 export const SimplexModifiers = {
   costInput: M.rational(1000000n),
   costExcluded: M.rational(0n),
-};
-export const AdjustmentData: M.AdjustmentData = {
-  netProductionOnly: false,
-  proliferatorSprayId: ItemId.Module,
-  miningBonus: M.rational(0n),
-  researchBonus: M.rational(1n),
 };
 export const DisplayRateInfo = M.displayRateInfo[M.DisplayRate.PerMinute];
 

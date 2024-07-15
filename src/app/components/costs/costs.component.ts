@@ -8,15 +8,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { tap, withLatestFrom } from 'rxjs';
 
-import {
-  CostKey,
-  CostSettings,
-  DialogComponent,
-  Rational,
-  rational,
-} from '~/models';
+import { CostKey, CostSettings, Rational, rational } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Settings } from '~/store';
+import { DialogComponent } from '../modal-component';
 
 @Component({
   selector: 'lab-costs',
