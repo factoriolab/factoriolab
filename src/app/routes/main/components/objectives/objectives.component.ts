@@ -334,6 +334,14 @@ export class ObjectivesComponent {
     this.addObjective({ targetId, unit: ObjectiveUnit.Machines });
   }
 
+  addRecipeLimit(targetId: string): void {
+    this.addObjective({
+      targetId,
+      unit: ObjectiveUnit.Machines,
+      type: ObjectiveType.Limit,
+    });
+  }
+
   /** Action Dispatch Methods */
   removeObjective(id: string): void {
     this.store.dispatch(new Objectives.RemoveAction(id));

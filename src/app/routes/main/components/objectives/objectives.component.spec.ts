@@ -387,6 +387,18 @@ describe('ObjectivesComponent', () => {
     });
   });
 
+  describe('addRecipeLimit', () => {
+    it('should use ObjectiveUnit.Machines and ObjectiveType.Limit', () => {
+      spyOn(component, 'addObjective');
+      component.addRecipeLimit(RecipeId.AdvancedCircuit);
+      expect(component.addObjective).toHaveBeenCalledWith({
+        targetId: RecipeId.AdvancedCircuit,
+        unit: ObjectiveUnit.Machines,
+        type: ObjectiveType.Limit,
+      });
+    });
+  });
+
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.val('removeObjective', Objectives.RemoveAction);
