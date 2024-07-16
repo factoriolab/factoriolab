@@ -17,6 +17,7 @@ export interface ObjectiveBase {
   /** If unit is ObjectiveUnit.Machines, a recipe id; otherwise an item id */
   targetId: string;
   unit: ObjectiveUnit;
+  type?: ObjectiveType;
 }
 
 export interface Objective extends ObjectiveBase, RecipeSettings {

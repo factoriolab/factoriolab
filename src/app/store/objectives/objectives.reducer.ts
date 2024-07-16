@@ -59,7 +59,7 @@ export function objectivesReducer(
                 targetId: action.payload.targetId,
                 value,
                 unit: action.payload.unit,
-                type: ObjectiveType.Output,
+                type: action.payload.type ?? ObjectiveType.Output,
               },
             },
           },

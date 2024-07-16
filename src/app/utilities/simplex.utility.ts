@@ -10,6 +10,7 @@ import {
 import { StatusSimplex } from 'glpk-ts/dist/status';
 
 import { environment } from 'src/environments';
+import { contains } from '~/helpers';
 import {
   AdjustedDataset,
   AdjustedRecipe,
@@ -85,6 +86,8 @@ export interface MatrixSolution {
   returnCode?: Simplex.ReturnCode;
   /** GLPK model simplex status */
   simplexStatus?: StatusSimplex;
+  /** If simplex solution is unbounded, the recipe that represents the ray */
+  unboundedRecipeId?: string;
   /** Runtime in ms */
   time: number;
   /** Overall simplex solution cost */
@@ -115,6 +118,7 @@ export interface GlpkResult {
   cost: Rational;
   returnCode: Simplex.ReturnCode;
   status: Status;
+  unboundedRecipeId?: string;
   error: boolean;
   time: number;
 }
@@ -186,6 +190,7 @@ export class SimplexUtility {
       resultType: solution.resultType,
       returnCode: solution.returnCode,
       simplexStatus: solution.simplexStatus,
+      unboundedRecipeId: solution.unboundedRecipeId,
       time: solution.time,
       cost: solution.cost,
     };
@@ -397,6 +402,7 @@ export class SimplexUtility {
         resultType: SimplexResultType.Failed,
         returnCode: glpkResult.returnCode,
         simplexStatus: glpkResult.status,
+        unboundedRecipeId: glpkResult.unboundedRecipeId,
         surplus: {},
         unproduceable: {},
         excluded: {},
@@ -718,9 +724,22 @@ export class SimplexUtility {
     const cost = rational(m.value);
 
     if (returnCode !== 'ok' || status !== 'optimal') {
+      let ray: Constraint | Variable | undefined;
+      try {
+        ray = m.ray;
+      } catch {
+        // Ignore error
+      }
+
+      let unboundedRecipeId: string | undefined;
+      if (ray && contains(recipeVarEntities, ray)) {
+        unboundedRecipeId = ray.name;
+      }
+
       return {
         returnCode,
         status,
+        unboundedRecipeId,
         time,
         surplus,
         unproduceable,

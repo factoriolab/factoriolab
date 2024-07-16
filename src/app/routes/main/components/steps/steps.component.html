@@ -238,10 +238,15 @@
           <td class="overflow-hidden px-1 py-0">
             <div class="d-flex align-items-center links">
               @if (!stepsTable.sortField && stepTree()[step.id]?.length) {
-                @for (i of stepTree()[step.id]; track i; let last = $last) {
+                @for (
+                  trail of stepTree()[step.id];
+                  track i;
+                  let i = $index;
+                  let last = $last
+                ) {
                   <div
                     class="connect"
-                    [class.trail]="i"
+                    [class.trail]="trail"
                     [class.last]="last"
                   ></div>
                 }
@@ -769,7 +774,7 @@
                 @if (step.recipeSettings?.moduleIds; as moduleIds) {
                   @for (
                     moduleId of moduleIds;
-                    track moduleId;
+                    track i;
                     let i = $index;
                     let last = $last
                   ) {
@@ -954,7 +959,7 @@
                   }
                   @for (
                     moduleId of beacon.moduleIds;
-                    track moduleId;
+                    track j;
                     let j = $index;
                     let last = $last
                   ) {
