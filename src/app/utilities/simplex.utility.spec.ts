@@ -128,10 +128,36 @@ describe('SimplexUtility', () => {
         resultType: SimplexResultType.Solved,
         returnCode: undefined,
         simplexStatus: undefined,
+        unboundedRecipeId: undefined,
         time: 2,
         cost: rational(1n),
       });
       expect(SimplexUtility.updateSteps).toHaveBeenCalled();
+    });
+
+    it('should determine the unbounded ray result', () => {
+      const result = SimplexUtility.solve(
+        [
+          {
+            id: '0',
+            targetId: RecipeId.AdvancedCircuit,
+            value: rational(1n),
+            unit: ObjectiveUnit.Machines,
+            type: ObjectiveType.Maximize,
+            recipe:
+              Mocks.AdjustedDataset.adjustedRecipe[RecipeId.AdvancedCircuit],
+          },
+        ],
+        Mocks.ItemsStateInitial,
+        Mocks.RecipesStateInitial,
+        null,
+        MaximizeType.Weight,
+        false,
+        Mocks.Costs,
+        Mocks.AdjustedDataset,
+        false,
+      );
+      expect(result.unboundedRecipeId).toBeDefined();
     });
   });
 
