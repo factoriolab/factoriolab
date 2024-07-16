@@ -12,6 +12,8 @@ export interface MatrixResult {
   returnCode?: Simplex.ReturnCode;
   /** GLPK model simplex status */
   simplexStatus?: StatusSimplex;
+  /** If simplex solution is unbounded, the recipe that represents the ray */
+  unboundedRecipeId?: string;
   /** Runtime in ms */
   time?: number;
   /** Total cost of solution */
