@@ -15,11 +15,20 @@ describe('ExportService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-  describe('saveAsCsv', () => {
+
+  describe('stepsToCsv', () => {
     it('should save the csv', () => {
       spyOn(service, 'saveAsCsv');
       service.stepsToCsv(Mocks.Steps);
       expect(service.saveAsCsv).toHaveBeenCalled();
+    });
+  });
+
+  describe('flowToJson', () => {
+    it('should save the json', () => {
+      spyOn(service, 'saveAsJson');
+      service.flowToJson(Mocks.Flow);
+      expect(service.saveAsJson).toHaveBeenCalled();
     });
   });
 

@@ -181,7 +181,7 @@
               </p-dropdown>
               <label for="game">{{ 'settings.game' | translate }}</label>
               @if (data().game !== Game.Factorio) {
-                @for (mod of data().version | keyvalue; track mod) {
+                @for (mod of data().version | keyvalue; track mod.key) {
                   <small class="position-absolute end-0 bottom-100 me-1 mb-1">
                     {{ mod.value }}
                   </small>
