@@ -315,14 +315,14 @@
     "errorSimplexInfo": "<i>Код возврата: {{ returnCode }}, статус Simplex: {{ simplexStatus }}</i>"
   },
   "steps": {
-    "openColumnSettings": "Открыть настройки столбца",
+    "columnSettings": "Открыть настройки столбца",
     "checkedUndoTooltip": "Отменить все галочки",
     "itemsUndoTooltip": "Отменить все исключенные элементы",
     "beltsUndoTooltip": "Отменить все изменения ремня",
     "wagonsUndoTooltip": "Отменить все модификации вагона",
     "machinesUndoTooltip": "Отменить все модификации машины",
     "beaconsUndoTooltip": "Отменить все модификации маяка",
-    "downloadTooltip": "Загрузить список в формате CSV",
+    "downloadAsCsv": "Загрузить список в формате CSV",
     "showDetails": "Показать детали",
     "hideDetails": "Скрыть детали",
     "modifierCountTooltip": "Выберите количество модификаторов",

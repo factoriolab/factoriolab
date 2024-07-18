@@ -282,14 +282,14 @@
     "errorSimplexInfo": "<i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>"
   },
   "steps": {
-    "openColumnSettings": "Öffne Spalteneinstellungen",
+    "columnSettings": "Öffne Spalteneinstellungen",
     "checkedUndoTooltip": "Alle Markierungen rückgängig machen",
     "itemsUndoTooltip": "Alle exkludierten Items rückgängig machen",
     "beltsUndoTooltip": "Alle Förderbandveränderungen rückgängig machen",
     "wagonsUndoTooltip": "Alle Wagonveränderungen rückgängig machen",
     "machinesUndoTooltip": "Alle Maschinenveränderungen rückgängig machen",
     "beaconsUndoTooltip": "Alle Effektverteilerveränderungen rückgängig machen",
-    "downloadTooltip": "Liste als CSV-Datei herunterladen",
+    "downloadAsCsv": "Liste als CSV-Datei herunterladen",
     "showDetails": "Details einblenden",
     "hideDetails": "Details ausblenden",
     "overclockTooltip": "Übertaktung in Prozent",
