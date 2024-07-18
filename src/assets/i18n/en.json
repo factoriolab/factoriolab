@@ -342,14 +342,14 @@
     "errorSimplexUnboundedAddRecipeLimit": "Add a limit for this recipe"
   },
   "steps": {
-    "openColumnSettings": "Open column settings",
+    "columnSettings": "Column settings",
     "checkedUndoTooltip": "Undo all checkmarks",
     "itemsUndoTooltip": "Undo all excluded items",
     "beltsUndoTooltip": "Undo all belt modifications",
     "wagonsUndoTooltip": "Undo all wagon modifications",
     "machinesUndoTooltip": "Undo all machine modifications",
     "beaconsUndoTooltip": "Undo all beacon modifications",
-    "downloadTooltip": "Download list as CSV",
+    "downloadAsCsv": "Download as CSV",
     "showDetails": "Show details",
     "hideDetails": "Hide details",
     "modifierCountTooltip": "Select modifier count",
@@ -369,6 +369,9 @@
     "includedRecipesInfo": "Click recipes to include or exclude them. Excluded recipes will not be used in the solution.",
     "total": "Total",
     "emptyMessage": "Click on a node in the diagram to view details"
+  },
+  "flow": {
+    "downloadAsJson": "Download as JSON"
   },
   "data": {
     "notFound": "Not found",

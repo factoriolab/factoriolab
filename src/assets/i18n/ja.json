@@ -347,14 +347,14 @@
     "errorSimplexInfo": "<i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>"
   },
   "steps": {
-    "openColumnSettings": "列設定を開く",
+    "columnSettings": "列設定を開く",
     "checkedUndoTooltip": "すべてのチェックマークをもとに戻す",
     "itemsUndoTooltip": "すべての除外されたアイテムをもとに戻す",
     "beltsUndoTooltip": "ベルトのすべての変更をもとに戻す",
     "wagonsUndoTooltip": "貨物車両のすべての変更をもとに戻す",
     "machinesUndoTooltip": "機械のすべての変更をもとに戻す",
     "beaconsUndoTooltip": "ビーコンのすべての変更をもとに戻す",
-    "downloadTooltip": "リストをCSVでダウンロード",
+    "downloadAsCsv": "リストをCSVでダウンロード",
     "showDetails": "詳細を表示",
     "hideDetails": "詳細を非表示",
     "modifierCountTooltip": "モジュールの数を選んでください。",

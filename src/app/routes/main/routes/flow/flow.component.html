@@ -3,5 +3,18 @@
     <p-progressSpinner></p-progressSpinner>
   </div>
 }
+<div class="d-flex gap-2 py-2">
+  @if (flowSvc.flowData$ | async; as flowData) {
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined"
+      icon="fa-solid fa-file-arrow-down"
+      [label]="'flow.downloadAsJson' | translate"
+      (click)="exportSvc.flowToJson(flowData)"
+    ></button>
+  }
+</div>
 <div [class.invisible]="loading()" id="lab-flow-svg" #svg></div>
 <lab-steps [focus]="true" [selectedId]="selectedId()"></lab-steps>

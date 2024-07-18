@@ -50,6 +50,7 @@ import {
 } from '~/models';
 import {
   DisplayService,
+  ExportService,
   FlowService,
   ThemeService,
   ThemeValues,
@@ -113,6 +114,7 @@ export class FlowComponent implements AfterViewInit {
   displaySvc = inject(DisplayService);
   flowSvc = inject(FlowService);
   themeSvc = inject(ThemeService);
+  exportSvc = inject(ExportService);
 
   svgElement = viewChild.required<ElementRef>('svg');
 
