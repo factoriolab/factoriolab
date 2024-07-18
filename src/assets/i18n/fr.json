@@ -190,7 +190,7 @@
   },
   "picker": {},
   "steps": {
-    "openColumnSettings": "Ouvrir les paramètres de colonnes",
+    "columnSettings": "Ouvrir les paramètres de colonnes",
     "tree": "Arbre",
     "items": "Articles",
     "itemsUndoTooltip": "Annuler tout les articles ignorés",
@@ -204,7 +204,7 @@
     "beaconsUndoTooltip": "Annuler toutes les modifications de balises",
     "power": "Energie",
     "pollution": "Pollution",
-    "downloadTooltip": "Télécharger la liste sous CSV",
+    "downloadAsCsv": "Télécharger la liste sous CSV",
     "showDetails": "montrer les details",
     "hideDetails": "cacher les details",
     "overclockTooltip": "Pourcentage d'overclock",

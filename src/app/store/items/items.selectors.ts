@@ -17,9 +17,9 @@ export const getItemsState = createSelector(
     const value: Entities<ItemSettings> = {};
     if (data?.itemIds?.length) {
       for (const item of data.itemIds.map((i) => data.itemEntities[i])) {
-        const itemSettings: ItemSettings = state[item.id]
-          ? { ...state[item.id] }
-          : { excluded: false };
+        const itemSettings: ItemSettings = { ...state[item.id] };
+
+        if (itemSettings.excluded == null) itemSettings.excluded = false;
 
         // Belt (or Pipe)
         if (!itemSettings.beltId) {

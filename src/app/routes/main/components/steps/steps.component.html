@@ -16,18 +16,35 @@
 >
   <ng-template pTemplate="header">
     <tr>
+      <!-- Table actions row -->
+      <td colspan="100">
+        <div class="d-flex gap-2 py-2">
+          <button
+            pButton
+            pRipple
+            type="button"
+            class="p-button-outlined"
+            icon="fa-solid fa-table-columns"
+            [label]="'steps.columnSettings' | translate"
+            (click)="contentSvc.showColumns$.next()"
+          ></button>
+          @if (steps().length) {
+            <button
+              pButton
+              pRipple
+              type="button"
+              class="p-button-outlined"
+              icon="fa-solid fa-file-arrow-down"
+              [label]="'steps.downloadAsCsv' | translate"
+              (click)="exportSvc.stepsToCsv(steps())"
+            ></button>
+          }
+        </div>
+      </td>
+    </tr>
+    <tr class="column-header-row">
       <!-- Row actions -->
-      <th class="w-0 px-1">
-        <button
-          pButton
-          pRipple
-          type="button"
-          class="p-button-outlined p-button-rounded"
-          icon="fa-solid fa-table-columns"
-          [pTooltip]="'steps.openColumnSettings' | translate"
-          (click)="contentSvc.showColumns$.next()"
-        ></button>
-      </th>
+      <th></th>
       <!-- Checkbox -->
       @if (!focus() && columnsState().checkbox.show) {
         <th>
@@ -178,18 +195,7 @@
       }
       <!-- Link -->
       @if (columnsState().link.show) {
-        <th class="w-0 px-1">
-          <button
-            pButton
-            pRipple
-            type="button"
-            class="p-button-outlined p-button-rounded"
-            icon="fa-solid fa-file-arrow-down"
-            [pTooltip]="'steps.downloadTooltip' | translate"
-            tooltipPosition="left"
-            (click)="exportSvc.stepsToCsv(steps())"
-          ></button>
-        </th>
+        <th></th>
       }
     </tr>
   </ng-template>
@@ -240,7 +246,7 @@
               @if (!stepsTable.sortField && stepTree()[step.id]?.length) {
                 @for (
                   trail of stepTree()[step.id];
-                  track i;
+                  track $index;
                   let i = $index;
                   let last = $last
                 ) {
@@ -357,14 +363,16 @@
                   <!-- Belt dropdown -->
                   @if (
                     data().beltIds.indexOf(beltId) !== -1 && settings().beltId;
-                    as beltId
+                    as defaultBeltId
                   ) {
                     <p-dropdown
                       labDropdownBase="icon"
                       [pTooltip]="tooltip"
                       [ngModel]="beltId"
                       [options]="options().belts"
-                      (onChange)="setBelt(step.itemId, $event.value, beltId)"
+                      (onChange)="
+                        setBelt(step.itemId, $event.value, defaultBeltId)
+                      "
                     >
                       <ng-template pTemplate="selectedItem" let-item>
                         @if (item) {
@@ -398,7 +406,7 @@
                     @if (
                       data().pipeIds.indexOf(beltId) !== -1 &&
                         settings().pipeId;
-                      as pipeId
+                      as defaultPipeId
                     ) {
                       <!-- Pipes dropdown -->
                       <p-dropdown
@@ -406,7 +414,9 @@
                         [pTooltip]="tooltip"
                         [ngModel]="beltId"
                         [options]="options().pipes"
-                        (onChange)="setBelt(step.itemId, $event.value, pipeId)"
+                        (onChange)="
+                          setBelt(step.itemId, $event.value, defaultPipeId)
+                        "
                       >
                         <ng-template pTemplate="selectedItem" let-item>
                           <div class="d-flex">
@@ -465,7 +475,7 @@
                   @if (
                     data().cargoWagonIds.indexOf(wagonId) !== -1 &&
                       settings().cargoWagonId;
-                    as cargoWagonId
+                    as defaultCargoWagonId
                   ) {
                     <p-dropdown
                       labDropdownBase="icon"
@@ -473,7 +483,7 @@
                       [ngModel]="wagonId"
                       [options]="options().cargoWagons"
                       (onChange)="
-                        setWagon(step.itemId, $event.value, cargoWagonId)
+                        setWagon(step.itemId, $event.value, defaultCargoWagonId)
                       "
                     >
                       <ng-template pTemplate="selectedItem" let-item>
@@ -512,7 +522,7 @@
                     @if (
                       data().fluidWagonIds.indexOf(wagonId) !== -1 &&
                         settings().fluidWagonId;
-                      as fluidWagonId
+                      as defaultFluidWagonId
                     ) {
                       <p-dropdown
                         labDropdownBase="icon"
@@ -520,7 +530,11 @@
                         [ngModel]="wagonId"
                         [options]="options().fluidWagons"
                         (onChange)="
-                          setWagon(step.itemId, $event.value, fluidWagonId)
+                          setWagon(
+                            step.itemId,
+                            $event.value,
+                            defaultFluidWagonId
+                          )
                         "
                       >
                         <ng-template pTemplate="selectedItem" let-item>
@@ -774,7 +788,7 @@
                 @if (step.recipeSettings?.moduleIds; as moduleIds) {
                   @for (
                     moduleId of moduleIds;
-                    track i;
+                    track $index;
                     let i = $index;
                     let last = $last
                   ) {
@@ -844,7 +858,7 @@
             <td class="w-0 pe-0">
               @for (
                 beacon of step.recipeSettings.beacons;
-                track beacon;
+                track $index;
                 let i = $index
               ) {
                 <div class="d-flex">
@@ -904,7 +918,7 @@
             <td class="ps-0">
               @for (
                 beacon of step.recipeSettings.beacons;
-                track beacon;
+                track $index;
                 let i = $index
               ) {
                 <div class="d-flex">
@@ -959,7 +973,7 @@
                   }
                   @for (
                     moduleId of beacon.moduleIds;
-                    track j;
+                    track $index;
                     let j = $index;
                     let last = $last
                   ) {
@@ -1159,7 +1173,7 @@
               </td>
             </tr>
           }
-          @for (output of stepDetails()[step.id].outputs; track output) {
+          @for (output of stepDetails()[step.id].outputs; track $index) {
             @if (step.itemId) {
               <ng-container
                 *ngTemplateOutlet="
@@ -1971,7 +1985,7 @@
     >
       @if (columnSettings.show) {
         <td class="w-0 text-end inherit">
-          @for (tot of totals | keyvalue: trackSvc.sortByValue; track tot) {
+          @for (tot of totals | keyvalue: trackSvc.sortByValue; track tot.key) {
             <div class="py-2 icon-height">
               <span class="monospace">{{
                 tot.value | rate: columnSettings.precision
@@ -1982,7 +1996,10 @@
         <td class="ps-0 inherit">
           <div class="d-flex">
             <div class="d-flex flex-column justify-content-center">
-              @for (tot of totals | keyvalue: trackSvc.sortByValue; track tot) {
+              @for (
+                tot of totals | keyvalue: trackSvc.sortByValue;
+                track tot.key
+              ) {
                 @if (data().itemEntities[tot.key]) {
                   <i
                     class="d-block"
@@ -2009,7 +2026,7 @@
             <div class="modules-column">
               @for (
                 tot of modulesTotals | keyvalue: trackSvc.sortByValue;
-                track tot
+                track tot.key
               ) {
                 <div class="p-2 icon-height text-end">
                   <span class="monospace">{{ tot.value }}</span>

@@ -190,7 +190,7 @@
       <div
         class="d-flex align-items-center justify-content-center flex-wrap mt-2"
       >
-        @for (input of machine.consumption | keyvalue; track input) {
+        @for (input of machine.consumption | keyvalue; track input.key) {
           <i [class]="input.key | iconSmClass">
             <span>{{ input.value | round }}</span>
           </i>
@@ -251,13 +251,13 @@
       <i [class]="'time' | iconSmClass"
         ><span>{{ recipe.time }}</span></i
       >
-      @for (input of recipe.in | keyvalue; track input) {
+      @for (input of recipe.in | keyvalue; track input.key) {
         <i [class]="input.key | iconSmClass"
           ><span>{{ input.value | round }}</span></i
         >
       }
       <i class="m-1 me-2 fa-solid fa-arrow-right"></i>
-      @for (output of recipe.out | keyvalue; track output) {
+      @for (output of recipe.out | keyvalue; track output.key) {
         <i [class]="output.key | iconSmClass"
           ><span>{{ output.value | round }}</span></i
         >

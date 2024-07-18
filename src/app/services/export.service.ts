@@ -3,7 +3,7 @@ import { Store } from '@ngrx/store';
 import { saveAs } from 'file-saver';
 
 import { notNullish } from '~/helpers';
-import { rational, Step } from '~/models';
+import { FlowData, rational, Step } from '~/models';
 import { Items, LabState, Recipes, Settings } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 
@@ -34,6 +34,28 @@ export interface StepExport {
   Pollution?: string;
 }
 
+export const StepKeys = [
+  'Item',
+  'Items',
+  'Surplus',
+  'Inputs',
+  'Outputs',
+  'Targets',
+  'Belts',
+  'Belt',
+  'Wagons',
+  'Wagon',
+  'Recipes',
+  'Machines',
+  'Machine',
+  'Modules',
+  'Beacons',
+  'Beacon',
+  'BeaconModules',
+  'Power',
+  'Pollution',
+] as (keyof StepExport)[];
+
 @Injectable({
   providedIn: 'root',
 })
@@ -46,29 +68,27 @@ export class ExportService {
 
   stepsToCsv(steps: Step[]): void {
     const json = steps.map((s) => this.stepToJson(s, steps));
-    const fields = Object.keys(json[0]) as (keyof StepExport)[];
+    const fields = StepKeys.filter((k) => json.some((s) => s[k] != null));
     const csv = json.map((row) => fields.map((f) => row[f]).join(','));
     csv.unshift(fields.join(','));
     csv.unshift(`"${BrowserUtility.href}"`);
-    this.saveAsCsv(csv.join('\r\n'));
+    this.saveAsCsv(csv.join('\r\n'), 'factoriolab_list');
+  }
+
+  flowToJson(flowData: FlowData): void {
+    this.saveAsJson(JSON.stringify(flowData), 'factoriolab_flow');
   }
 
   /* Don't test dependencies (file-saver) */
   /* istanbul ignore next */
-  saveAsCsv(data: string): void {
-    saveAs(
-      new Blob([data], { type: CSV_TYPE }),
-      'factoriolab_list' + CSV_EXTENSION,
-    );
+  saveAsCsv(data: string, name: string): void {
+    saveAs(new Blob([data], { type: CSV_TYPE }), name + CSV_EXTENSION);
   }
 
   /* Don't test dependencies (file-saver) */
   /* istanbul ignore next */
-  saveAsJson(data: string): void {
-    saveAs(
-      new Blob([data], { type: JSON_TYPE }),
-      'factoriolab_flow' + JSON_EXTENSION,
-    );
+  saveAsJson(data: string, name: string): void {
+    saveAs(new Blob([data], { type: JSON_TYPE }), name + JSON_EXTENSION);
   }
 
   stepToJson(step: Step, steps: Step[]): StepExport {

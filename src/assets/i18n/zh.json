@@ -283,14 +283,14 @@
     "errorSimplexInfo": "<i>Return code: {{ returnCode }}, Simplex status: {{ simplexStatus }}</i>"
   },
   "steps": {
-    "openColumnSettings": "打开列设置",
+    "columnSettings": "打开列设置",
     "checkedUndoTooltip": "取消所有勾选",
     "itemsUndoTooltip": "取消所有对物品的隐藏",
     "beltsUndoTooltip": "取消所有对传送带的修改",
     "wagonsUndoTooltip": "取消所有对车厢的修改",
     "machinesUndoTooltip": "取消所有对工厂的修改",
     "beaconsUndoTooltip": "取消所有对插件的修改",
-    "downloadTooltip": "保存列表为 csv 文件",
+    "downloadAsCsv": "保存列表为 csv 文件",
     "showDetails": "展开详情",
     "hideDetails": "隐藏详情",
     "overclockTooltip": "超频百分比",
