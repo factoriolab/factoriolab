@@ -60,6 +60,7 @@
           <lab-modules
             [entity]="data().beaconEntities[entry.id]"
             [modules]="entry.modules"
+            [recipeId]="recipeId()"
             (setValue)="setModules(i, $event)"
           ></lab-modules>
         }
