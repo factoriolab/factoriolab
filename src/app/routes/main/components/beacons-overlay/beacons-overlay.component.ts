@@ -48,21 +48,14 @@ export class BeaconsOverlayComponent extends OverlayComponent {
     this._show(event);
   }
 
-  setCount(count: Rational, i: number): void {
+  setCount(i: number, count: Rational): void {
     this.values.update((values) => {
       values[i].count = count;
       return values;
     });
   }
 
-  setTotal(total: Rational, i: number): void {
-    this.values.update((values) => {
-      values[i].total = total;
-      return values;
-    });
-  }
-
-  setId(event: DropdownChangeEvent, i: number): void {
+  setId(i: number, event: DropdownChangeEvent): void {
     event.originalEvent.stopPropagation();
     this.values.update((values) => {
       values[i].id = event.value;
@@ -70,9 +63,16 @@ export class BeaconsOverlayComponent extends OverlayComponent {
     });
   }
 
-  setModules(modules: ModuleSettings[], i: number): void {
+  setModules(i: number, modules: ModuleSettings[]): void {
     this.values.update((values) => {
       values[i].modules = modules;
+      return values;
+    });
+  }
+
+  setTotal(i: number, total: Rational): void {
+    this.values.update((values) => {
+      values[i].total = total;
       return values;
     });
   }

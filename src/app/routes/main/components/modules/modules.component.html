@@ -1,0 +1,50 @@
+<div class="d-flex flex-column">
+  @for (entry of modules(); let i = $index; track i) {
+    <div class="p-inputgroup">
+      <lab-input-number
+        width="3rem"
+        [value]="entry.count ?? zero"
+        [maximum]="maximum()[i]"
+        [disabled]="entry.id === ItemId.Module"
+        (setValue)="setCount(i, $event)"
+      ></lab-input-number>
+      <p-dropdown
+        labDropdownBase="icon"
+        [ngModel]="entry.id"
+        [options]="options() | filterOptions: exclude() : entry.id"
+        (onChange)="setId(i, $event)"
+      >
+        <ng-template pTemplate="selectedItem" let-item>
+          <div class="d-flex">
+            <i [class]="item.value | iconSmClass"></i>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="item" let-item>
+          <div
+            class="d-flex align-items-center py-2 w-100 h-100"
+            [pTooltip]="item.value !== 'module' ? tooltip : undefined"
+          >
+            <i [class]="item.value | iconSmClass"></i>
+            <div class="ms-3 text-truncate">
+              {{ item.label }}
+            </div>
+            <ng-template #tooltip>
+              <lab-tooltip [id]="item.value" type="module"></lab-tooltip>
+            </ng-template>
+          </div>
+        </ng-template>
+      </p-dropdown>
+      @if (entity().modules !== true) {
+        <button
+          pButton
+          pRipple
+          type="button"
+          icon="fa-solid fa-times"
+          class="p-button-outlined"
+          [disabled]="entry.id === ItemId.Module"
+          (click)="removeEntry(i)"
+        ></button>
+      }
+    </div>
+  }
+</div>

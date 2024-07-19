@@ -1,86 +1,68 @@
 <p-overlayPanel appendTo="body" (onHide)="onHide()">
   <div class="d-flex flex-column gap-2">
     @for (entry of values(); let i = $index; track i) {
-      <div class="p-inputgroup">
-        <lab-input-number
-          width="3rem"
-          [pTooltip]="'beaconsOverlay.eachTooltip' | translate"
-          tooltipPosition="top"
-          [value]="entry.count ?? zero"
-          (setValue)="setCount($event, i)"
-        >
-        </lab-input-number>
-        @if (entry.total) {
+      <div class="d-flex flex-column">
+        <div class="p-inputgroup">
           <lab-input-number
             width="3rem"
-            [pTooltip]="'beaconsOverlay.totalTooltip' | translate"
+            [pTooltip]="'beaconsOverlay.eachTooltip' | translate"
             tooltipPosition="top"
-            [value]="entry.total"
-            (setValue)="setTotal($event, i)"
+            [value]="entry.count ?? zero"
+            (setValue)="setCount(i, $event)"
           >
           </lab-input-number>
-        }
-        <p-dropdown
-          labDropdownBase="icon"
-          [ngModel]="entry.id"
-          [options]="options().beacons"
-          (onChange)="setId($event, i)"
-        >
-          <ng-template pTemplate="selectedItem" let-item>
-            <div class="d-flex">
-              <i [class]="item.value | iconSmClass"></i>
-            </div>
-          </ng-template>
-          <ng-template pTemplate="item" let-item>
-            <div
-              class="d-flex align-items-center py-2 w-100 h-100"
-              [pTooltip]="tooltip"
+          @if (entry.total) {
+            <lab-input-number
+              width="3rem"
+              [pTooltip]="'beaconsOverlay.totalTooltip' | translate"
+              tooltipPosition="top"
+              [value]="entry.total"
+              (setValue)="setTotal(i, $event)"
             >
-              <i [class]="item.value | iconSmClass"></i>
-              <div class="ms-3 text-truncate">
-                {{ item.label }}
+            </lab-input-number>
+          }
+          <p-dropdown
+            labDropdownBase="icon"
+            [ngModel]="entry.id"
+            [options]="options().beacons"
+            (onChange)="setId(i, $event)"
+          >
+            <ng-template pTemplate="selectedItem" let-item>
+              <div class="d-flex">
+                <i [class]="item.value | iconSmClass"></i>
               </div>
-              <ng-template #tooltip>
-                <lab-tooltip [id]="item.value" type="beacon"></lab-tooltip>
-              </ng-template>
-            </div>
-          </ng-template>
-        </p-dropdown>
-        @if (entry.id && entry.modules) {
+            </ng-template>
+            <ng-template pTemplate="item" let-item>
+              <div
+                class="d-flex align-items-center py-2 w-100 h-100"
+                [pTooltip]="tooltip"
+              >
+                <i [class]="item.value | iconSmClass"></i>
+                <div class="ms-3 text-truncate">
+                  {{ item.label }}
+                </div>
+                <ng-template #tooltip>
+                  <lab-tooltip [id]="item.value" type="beacon"></lab-tooltip>
+                </ng-template>
+              </div>
+            </ng-template>
+          </p-dropdown>
           <button
             pButton
             pRipple
             type="button"
-            class="hover-action icons p-button-outlined"
-            (click)="
-              modulesOverlay.show(
-                $event,
-                entry.modules,
-                data().beaconEntities[entry.id],
-                recipeId()
-              )
-            "
-          >
-            @for (module of entry.modules; track module) {
-              <i class="p-button-icon" [class]="module.id | iconSmClass"
-                ><span>{{ module.count }}</span></i
-              >
-            }
-            <i class="hover-icon fa-solid fa-gear"></i>
-          </button>
+            icon="fa-solid fa-times"
+            class="p-button-outlined"
+            (click)="removeEntry(i)"
+          ></button>
+        </div>
+        @if (entry.id && entry.modules) {
+          <lab-modules
+            [entity]="data().beaconEntities[entry.id]"
+            [modules]="entry.modules"
+            (setValue)="setModules(i, $event)"
+          ></lab-modules>
         }
-        <lab-modules-overlay
-          #modulesOverlay
-          (setValue)="setModules($event, i)"
-        ></lab-modules-overlay>
-        <button
-          pButton
-          pRipple
-          type="button"
-          icon="fa-solid fa-times"
-          class="p-button-outlined"
-          (click)="removeEntry(i)"
-        ></button>
       </div>
     }
     <div class="d-flex">
