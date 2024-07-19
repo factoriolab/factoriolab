@@ -7,7 +7,6 @@ import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
-  BeaconSettings,
   DisplayRate,
   Game,
   InserterCapacity,
