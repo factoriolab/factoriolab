@@ -203,7 +203,7 @@
     @if (_step | asStep; as step) {
       <tr>
         <!-- Expand row -->
-        <td class="w-0 px-1 position-relative">
+        <td class="w-0 px-0 px-sm-1 position-relative">
           <div [id]="'step_' + step.id" class="fragment"></div>
           @for (item of stepDetails()[step.id].tabs; track item.id) {
             <div
@@ -229,7 +229,7 @@
         </td>
         <!-- Checkbox -->
         @if (!focus() && columnsState().checkbox.show) {
-          <td>
+          <td class="px-0 px-sm-2">
             <div class="d-flex justify-content-center">
               <p-checkbox
                 [binary]="true"
@@ -241,7 +241,7 @@
         }
         <!-- Tree -->
         @if (!focus() && columnsState().tree.show) {
-          <td class="overflow-hidden px-1 py-0">
+          <td class="overflow-hidden px-0 px-sm-1 py-0">
             <div class="d-flex align-items-center links">
               @if (!stepsTable.sortField && stepTree()[step.id]?.length) {
                 @for (
@@ -304,7 +304,7 @@
         }
         <!-- Items (Value / Icon) -->
         @if (step.itemId && step.items) {
-          <td class="w-0 text-end">
+          <td class="w-0 px-0 px-sm-2 text-end">
             @if (step.surplus && step.surplus.nonzero()) {
               <span class="monospace"
                 >(+{{ step.surplus | rate: columnsState().items.precision }})
@@ -315,7 +315,7 @@
                 | rate: columnsState().items.precision
             }}</span>
           </td>
-          <td class="ps-0">
+          <td class="px-0 pe-sm-2">
             <div class="d-flex align-items-center">
               <span class="find-text">{{
                 data().itemEntities[step.itemId].name
@@ -353,12 +353,12 @@
         @if (columnsState().belts.show) {
           @if (step.itemId && step.belts) {
             @if (itemsState()[step.itemId].beltId; as beltId) {
-              <td class="w-0 text-end">
+              <td class="w-0 px-0 px-sm-2 text-end">
                 <span class="monospace">{{
                   step.belts | rate: columnsState().belts.precision
                 }}</span>
               </td>
-              <td class="ps-0">
+              <td class="px-0 pe-sm-2">
                 <div class="d-flex align-items-center">
                   <!-- Belt dropdown -->
                   @if (
@@ -464,12 +464,12 @@
         @if (columnsState().wagons.show) {
           @if (step.itemId && step.wagons) {
             @if (itemsState()[step.itemId].wagonId; as wagonId) {
-              <td class="w-0 text-end">
+              <td class="w-0 px-0 px-sm-2 text-end">
                 <span class="monospace">{{
                   step.wagons | rate: columnsState().wagons.precision
                 }}</span>
               </td>
-              <td class="ps-0">
+              <td class="px-0 pe-sm-2">
                 <div class="d-flex align-items-center">
                   <!-- Cargo wagon dropdown -->
                   @if (
@@ -579,7 +579,7 @@
         }
         <!-- Machines -->
         @if (step.recipeSettings?.machineId; as machineId) {
-          <td class="w-0 text-end">
+          <td class="w-0 px-0 px-sm-2 text-end">
             @if (
               step.machines &&
               step.machines.nonzero() &&
@@ -591,7 +591,7 @@
               }}</span>
             }
           </td>
-          <td class="ps-0">
+          <td class="px-0 pe-sm-2">
             @if (step.recipeId && step.recipe && step.recipeSettings) {
               <div class="d-flex align-items-center">
                 <span class="find-text">{{ step.recipe.name }}</span>
@@ -825,7 +825,7 @@
         }
         <!-- Beacons -->
         @if (columnsState().beacons.show) {
-          <td>
+          <td class="px-0 px-sm-2">
             @if (
               step.recipeId &&
               step.recipeSettings &&
@@ -870,7 +870,7 @@
         }
         <!-- Power -->
         @if (columnsState().power.show) {
-          <td class="text-end">
+          <td class="px-0 px-sm-2 text-end">
             @if (step.power && step.power.nonzero()) {
               <span class="monospace">{{
                 step.power
@@ -881,7 +881,7 @@
         }
         <!-- Pollution -->
         @if (columnsState().pollution.show) {
-          <td class="text-end">
+          <td class="px-0 px-sm-2 text-end">
             @if (step.pollution && step.pollution.nonzero()) {
               <span class="monospace">{{
                 step.pollution | rate: columnsState().pollution.precision
@@ -891,7 +891,7 @@
         }
         <!-- Link -->
         @if (columnsState().link.show) {
-          <td class="w-0 px-1">
+          <td class="w-0 px-0 ps-sm-1">
             <div class="d-flex">
               <a
                 class="text-decoration-none"
