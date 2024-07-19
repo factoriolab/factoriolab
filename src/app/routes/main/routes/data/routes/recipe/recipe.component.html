@@ -300,7 +300,7 @@
         <tr>
           <th>{{ 'data.beacons' | translate }}</th>
           <td>
-            @for (beacon of recipeSettings.beacons; track beacon) {
+            @for (beacon of recipeSettings.beacons; track $index) {
               <div>
                 @if (beacon.id) {
                   <a

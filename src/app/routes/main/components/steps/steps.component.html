@@ -154,7 +154,7 @@
       </th>
       <!-- Beacons -->
       @if (columnsState().beacons.show) {
-        <th>
+        <th colspan="2">
           <div class="d-flex align-items-center">
             <span>{{ 'options.column.beacons' | translate }}</span>
             @if (recipesModified().beacons) {
@@ -801,7 +801,7 @@
                           )
                         "
                       >
-                        @for (module of modules; track $index) {
+                        @for (module of modules; track module.id) {
                           <i
                             class="p-button-icon"
                             [class]="module.id | iconSmClass"
@@ -825,7 +825,7 @@
         }
         <!-- Beacons -->
         @if (columnsState().beacons.show) {
-          <td class="px-0 px-sm-2">
+          <td colspan="2" class="px-0 px-sm-2">
             @if (
               step.recipeId &&
               step.recipeSettings &&
@@ -852,7 +852,7 @@
                         ><span>{{ beacon.total }}</span></i
                       >
                     }
-                    @for (module of beacon.modules; track $index) {
+                    @for (module of beacon.modules; track module.id) {
                       <i class="p-button-icon" [class]="module.id | iconSmClass"
                         ><span>{{ module.count }}</span></i
                       >

@@ -547,7 +547,7 @@
                       <i class="p-button-icon" [class]="beacon.id | iconSmClass"
                         ><span>{{ beacon.count }}</span></i
                       >
-                      @for (module of beacon.modules; track $index) {
+                      @for (module of beacon.modules; track module.id) {
                         <i
                           class="p-button-icon"
                           [class]="module.id | iconSmClass"
@@ -721,7 +721,7 @@
                               )
                             "
                           >
-                            @for (module of settings.modules; track module) {
+                            @for (module of settings.modules; track module.id) {
                               <i
                                 class="p-button-icon"
                                 [class]="module.id | iconSmClass"
@@ -779,7 +779,7 @@
                                 [class]="beacon.id | iconSmClass"
                                 ><span>{{ beacon.count }}</span></i
                               >
-                              @for (module of beacon.modules; track $index) {
+                              @for (module of beacon.modules; track module.id) {
                                 <i
                                   class="p-button-icon"
                                   [class]="module.id | iconSmClass"

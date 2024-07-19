@@ -698,14 +698,7 @@ export class RecipeUtility {
         machine.modules,
         def.modules,
       );
-
-      if (objective.beacons == null) {
-        objective.beacons = [];
-      } else {
-        objective.beacons = objective.beacons.map((b) => ({
-          ...b,
-        }));
-      }
+      objective.beacons = this.hydrateBeacons(objective.beacons, def.beacons);
     } else {
       // Machine doesn't support modules, remove any
       delete objective.modules;

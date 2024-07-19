@@ -54,8 +54,6 @@ export const StepKeys = [
   'Pollution',
 ] as (keyof StepExport)[];
 
-// TODO: Test CSV export
-
 @Injectable({
   providedIn: 'root',
 })

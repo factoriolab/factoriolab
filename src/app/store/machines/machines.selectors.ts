@@ -19,7 +19,10 @@ export const getMachinesState = createSelector(
     const ids = state.ids ?? defaults?.machineRankIds ?? [];
     const fuelRankIds = state.fuelRankIds ?? defaults?.fuelRankIds ?? [];
     const moduleRankIds = state.moduleRankIds ?? defaults?.moduleRankIds ?? [];
-    const beacons = state.beacons ?? defaults?.beacons ?? [];
+    const beacons = RecipeUtility.hydrateBeacons(
+      state.beacons,
+      defaults?.beacons,
+    );
     const overclock = state.overclock;
     const entities: Entities<MachineSettings> = {};
 

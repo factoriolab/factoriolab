@@ -66,14 +66,14 @@ export enum Section {
   Version = 'v',
   Mod = 'b',
   Objectives = 'p',
-  RecipeObjectives = 'q', // Obsolete
+  /** DEPRECATED IN V8 */
+  RecipeObjectives = 'q',
   Items = 'i',
   Recipes = 'r',
   Machines = 'f',
   Modules = 'm',
   Beacons = 'e',
   Settings = 's',
-  Costs = 'c',
   Zip = 'z',
 }
 
@@ -1076,10 +1076,142 @@ export class RouterService {
     return this.migrateV9(state);
   }
 
+  private migrateInlineModulesSection(
+    params: Entities,
+    section: Section,
+    index: number,
+    modules: string[],
+  ): void {
+    if (params[section]) {
+      const zip = params[section];
+      const list = zip.split(LISTSEP);
+      const migrated: string[] = [];
+
+      for (const s of list.map((z) => z.split(FIELDSEP))) {
+        if (s.length > index) {
+          const moduleIdsStr = s[index];
+          const moduleIds = this.parseArray(moduleIdsStr);
+          if (moduleIds == null) continue;
+          const moduleMap = new Map<string, number>();
+
+          for (const moduleId of moduleIds) {
+            const value = moduleMap.get(moduleId) ?? 0;
+            moduleMap.set(moduleId, value + 1);
+          }
+
+          const moduleIndices = Array.from(moduleMap.keys()).map(
+            (_, i) => modules.length + i,
+          );
+
+          // Replace moduleIds field with modules field
+          s[index] = this.zipTruthyArray(moduleIndices);
+
+          // Add module settings
+          for (const key of moduleMap.keys()) {
+            modules.push(
+              this.zipFields([moduleMap.get(key)?.toString() ?? '', key]),
+            );
+          }
+        }
+
+        migrated.push(this.zipFields(s));
+      }
+
+      params[section] = migrated.join(LISTSEP);
+    }
+  }
+
   migrateV9(state: MigrationState): MigrationState {
     const { params } = state;
 
-    // TODO: Perform migrations
+    const modules: string[] = [];
+    this.migrateInlineModulesSection(state.params, Section.Beacons, 1, modules);
+    this.migrateInlineModulesSection(state.params, Section.Recipes, 3, modules);
+    this.migrateInlineModulesSection(
+      state.params,
+      Section.Objectives,
+      5,
+      modules,
+    );
+
+    // Migrate machines state
+    if (state.params[Section.Machines]) {
+      const zip = params[Section.Machines];
+      const list = zip.split(LISTSEP);
+      const migrated: string[] = [];
+      const beacons = state.params[Section.Beacons]
+        ? state.params[Section.Beacons].split(LISTSEP)
+        : [];
+
+      const countIndex = 2;
+      const moduleIdsIndex = countIndex + 1;
+      const idIndex = moduleIdsIndex + 1;
+      list
+        .map((z) => z.split(FIELDSEP))
+        .forEach((s, i) => {
+          if (i === 0 && s[0] === TRUE) s[0] = EMPTY;
+
+          // Move overclock after fuelId/fuelRankIds
+          this.migrateMoveUpField(s, 5, 6);
+
+          if (s[0] !== EMPTY && s[0] !== '') {
+            if (s.length > 1) {
+              // Convert module rank to modules
+              const moduleIdsStr = s[1];
+              if (moduleIdsStr) {
+                const moduleId = moduleIdsStr.split(ARRAYSEP)[0];
+                s[1] = this.zipTruthyArray([modules.length]);
+                modules.push(this.zipFields(['', moduleId]));
+              }
+            }
+          }
+
+          // Convert beacon properties to beacons
+          if (s.length > 2) {
+            let id: string | undefined;
+            let moduleIndices: number[] | undefined;
+
+            // Move backwards from the last index, removing found properties
+            if (s.length > idIndex) {
+              // Remove beaconId field
+              id = s.splice(idIndex, 1)[0];
+            }
+
+            if (s.length > moduleIdsIndex) {
+              // Remove modules field
+              const moduleIdsStr = s.splice(moduleIdsIndex, 1)[0];
+              if (moduleIdsStr) {
+                const moduleId = moduleIdsStr.split(ARRAYSEP)[0];
+                moduleIndices = [modules.length];
+                modules.push(this.zipFields(['', moduleId]));
+              }
+            }
+
+            // Get beaconCount field
+            const count = s[countIndex];
+
+            // Replace beaconCount field with beacons field
+            s[countIndex] = this.zipTruthyArray([beacons.length]);
+
+            // Add beacon settings
+            beacons.push(
+              this.zipFields([
+                count,
+                this.zipTruthyArray(moduleIndices),
+                this.zipTruthyString(id),
+              ]),
+            );
+          }
+
+          migrated.push(this.zipFields(s));
+        });
+
+      if (beacons.length) state.params[Section.Beacons] = beacons.join(LISTSEP);
+
+      state.params[Section.Machines] = migrated.join(LISTSEP);
+    }
+
+    if (modules.length) state.params[Section.Modules] = modules.join(LISTSEP);
 
     params[Section.Version] = ZipVersion.Version10;
     return state;
@@ -1260,14 +1392,14 @@ export class RouterService {
       const zip: Zip = {
         bare: this.zipFields([
           count,
-          this.zipTruthyString(obj.id),
           modules,
+          this.zipTruthyString(obj.id),
           total,
         ]),
         hash: this.zipFields([
           count,
-          this.zipTruthyNString(obj.id, hash.beacons),
           modules,
+          this.zipTruthyNString(obj.id, hash.beacons),
           total,
         ]),
       };
@@ -1294,11 +1426,10 @@ export class RouterService {
       let i = 0;
       const obj: BeaconSettings = {
         count: this.parseRational(this.parseString(s[i++])),
+        modules: this.parseArray(s[i++])?.map(
+          (i) => moduleSettings[Number(i)] ?? {},
+        ),
         id: this.parseString(s[i++], hash?.beacons),
-        modules:
-          this.parseArray(s[i++])?.map(
-            (i) => moduleSettings[Number(i)] ?? {},
-          ) ?? [],
         total: this.parseRational(this.parseString(s[i++])),
       };
 

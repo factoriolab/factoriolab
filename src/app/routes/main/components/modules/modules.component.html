@@ -1,5 +1,5 @@
 <div class="d-flex flex-column">
-  @for (entry of modules(); let i = $index; track i) {
+  @for (entry of modules(); let i = $index; track entry.id) {
     <div class="p-inputgroup">
       <lab-input-number
         width="3rem"
