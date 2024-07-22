@@ -20,8 +20,6 @@ import {
   DisplayRate,
   displayRateOptions,
   Entities,
-  FlowDiagram,
-  flowDiagramOptions,
   FuelType,
   Game,
   gameInfo,
@@ -35,7 +33,6 @@ import {
   ItemId,
   Language,
   languageOptions,
-  LinkValue,
   MachineSettings,
   MaximizeType,
   maximizeTypeOptions,
@@ -46,8 +43,6 @@ import {
   rational,
   Rational,
   researchBonusOptions,
-  SankeyAlign,
-  sankeyAlignOptions,
   Theme,
   themeOptions,
 } from '~/models';
@@ -92,7 +87,6 @@ export class SettingsComponent implements OnInit {
   options = this.store.selectSignal(Settings.getOptions);
   modOptions = this.store.selectSignal(Settings.getModOptions);
   presetOptions = this.store.selectSignal(Settings.getPresetOptions);
-  linkValueOptions = this.store.selectSignal(Settings.getLinkValueOptions);
   researchedTechnologyIds = this.store.selectSignal(
     Settings.getAllResearchedTechnologyIds,
   );
@@ -141,14 +135,11 @@ export class SettingsComponent implements OnInit {
   powerUnitOptions = powerUnitOptions;
   researchSpeedOptions = researchBonusOptions;
   themeOptions = themeOptions;
-  flowDiagramOptions = flowDiagramOptions;
-  sankeyAlignOptions = sankeyAlignOptions;
   maximizeTypeOptions = maximizeTypeOptions;
 
   FuelType = FuelType;
   Game = Game;
   ItemId = ItemId;
-  FlowDiagram = FlowDiagram;
   BrowserUtility = BrowserUtility;
   rational = rational;
 
@@ -433,26 +424,6 @@ export class SettingsComponent implements OnInit {
 
   setInserterTarget(value: InserterTarget): void {
     this.store.dispatch(new Settings.SetInserterTargetAction(value));
-  }
-
-  setFlowDiagram(value: FlowDiagram): void {
-    this.store.dispatch(new Preferences.SetFlowDiagramAction(value));
-  }
-
-  setSankeyAlign(value: SankeyAlign): void {
-    this.store.dispatch(new Preferences.SetSankeyAlignAction(value));
-  }
-
-  setLinkSize(value: LinkValue): void {
-    this.store.dispatch(new Preferences.SetLinkSizeAction(value));
-  }
-
-  setLinkText(value: LinkValue): void {
-    this.store.dispatch(new Preferences.SetLinkTextAction(value));
-  }
-
-  setFlowHideExcluded(value: boolean): void {
-    this.store.dispatch(new Preferences.SetFlowHideExcludedAction(value));
   }
 
   setMiningBonus(value: Rational): void {

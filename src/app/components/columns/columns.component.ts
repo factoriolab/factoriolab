@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   OnInit,
 } from '@angular/core';
@@ -29,6 +30,7 @@ import { DialogComponent } from '../modal-component';
 export class ColumnsComponent extends DialogComponent implements OnInit {
   store = inject(Store<LabState>);
   contentSvc = inject(ContentService);
+  destroyRef = inject(DestroyRef);
 
   columnOptions = this.store.selectSignal(Settings.getColumnOptions);
 
@@ -45,17 +47,17 @@ export class ColumnsComponent extends DialogComponent implements OnInit {
     );
   }
 
-  show$ = this.contentSvc.showColumns$.pipe(
-    takeUntilDestroyed(),
-    withLatestFrom(this.store.select(Settings.getColumnsState)),
-    tap(([_, c]) => {
-      this.initEdit(c);
-      this.show();
-    }),
-  );
-
   ngOnInit(): void {
-    this.show$.subscribe();
+    this.contentSvc.showColumns$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        withLatestFrom(this.store.select(Settings.getColumnsState)),
+        tap(([_, c]) => {
+          this.initEdit(c);
+          this.show();
+        }),
+      )
+      .subscribe();
   }
 
   initEdit(columns: ColumnsState): void {

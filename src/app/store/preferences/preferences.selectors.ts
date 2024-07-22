@@ -39,3 +39,7 @@ export const getPaused = createSelector(
   preferencesState,
   (state) => state.paused,
 );
+export const getFlowSettings = createSelector(
+  preferencesState,
+  (state) => state.flowSettings,
+);

@@ -69,11 +69,14 @@ export class FlowService {
     const stepMap = steps.reduce((e: Entities<Step>, s) => {
       if (s.itemId) stepItemMap[s.itemId] = s;
       e[s.id] = s;
-      stepValue[s.id] = this.stepLinkValue(s, preferences.linkSize);
+      stepValue[s.id] = this.stepLinkValue(
+        s,
+        preferences.flowSettings.linkSize,
+      );
       stepText[s.id] =
-        preferences.linkText === preferences.linkSize
+        preferences.flowSettings.linkText === preferences.flowSettings.linkSize
           ? stepValue[s.id]
-          : this.stepLinkValue(s, preferences.linkText);
+          : this.stepLinkValue(s, preferences.flowSettings.linkText);
       return e;
     }, {});
 
@@ -81,7 +84,8 @@ export class FlowService {
       if (
         step.itemId &&
         step.items &&
-        (!preferences.flowHideExcluded || !itemsState[step.itemId].excluded)
+        (!preferences.flowSettings.hideExcluded ||
+          !itemsState[step.itemId].excluded)
       ) {
         const item = data.itemEntities[step.itemId];
         const icon = data.iconEntities[item.icon ?? item.id];
@@ -108,7 +112,7 @@ export class FlowService {
               text: this.linkText(
                 stepText[step.id],
                 step.parents[stepId],
-                preferences.linkText,
+                preferences.flowSettings.linkText,
                 preferences.columns,
                 suffix,
               ),
@@ -116,7 +120,7 @@ export class FlowService {
               value: this.linkSize(
                 stepValue[step.id],
                 step.parents[stepId],
-                preferences.linkSize,
+                preferences.flowSettings.linkSize,
                 item.stack,
               ),
             });
@@ -142,7 +146,7 @@ export class FlowService {
             text: this.linkText(
               stepText[step.id],
               percent,
-              preferences.linkText,
+              preferences.flowSettings.linkText,
               preferences.columns,
               suffix,
             ),
@@ -150,7 +154,7 @@ export class FlowService {
             value: this.linkSize(
               stepValue[step.id],
               percent,
-              preferences.linkSize,
+              preferences.flowSettings.linkSize,
               item.stack,
             ),
           });
@@ -175,7 +179,7 @@ export class FlowService {
             text: this.linkText(
               stepText[step.id],
               percent,
-              preferences.linkText,
+              preferences.flowSettings.linkText,
               preferences.columns,
               suffix,
             ),
@@ -183,7 +187,7 @@ export class FlowService {
             value: this.linkSize(
               stepValue[step.id],
               percent,
-              preferences.linkSize,
+              preferences.flowSettings.linkSize,
               item.stack,
             ),
           });
@@ -208,7 +212,8 @@ export class FlowService {
 
         if (step.outputs) {
           for (const itemId of Object.keys(step.outputs).filter(
-            (i) => !preferences.flowHideExcluded || !itemsState[i].excluded,
+            (i) =>
+              !preferences.flowSettings.hideExcluded || !itemsState[i].excluded,
           )) {
             const itemStep = stepItemMap[itemId];
             const item = data.itemEntities[itemId];
@@ -220,7 +225,7 @@ export class FlowService {
               text: this.linkText(
                 stepText[itemStep.id],
                 step.outputs[itemId],
-                preferences.linkText,
+                preferences.flowSettings.linkText,
                 preferences.columns,
                 suffix,
               ),
@@ -228,7 +233,7 @@ export class FlowService {
               value: this.linkSize(
                 stepValue[itemStep.id],
                 step.outputs[itemId],
-                preferences.linkSize,
+                preferences.flowSettings.linkSize,
                 item.stack,
               ),
             });

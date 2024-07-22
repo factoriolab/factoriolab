@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -17,7 +16,7 @@ import { BrowserUtility } from '~/utilities';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, AppSharedModule],
+  imports: [AppSharedModule],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

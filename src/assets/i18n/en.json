@@ -293,17 +293,6 @@
     "languageTooltip": "Select language",
     "theme": "Theme",
     "themeTooltip": "Select theme",
-    "flow": "Flow",
-    "flowDiagram": "Visualization Type",
-    "flowDiagramTooltip": "Select which type of flow visualization to use",
-    "linkSize": "Link Size",
-    "linkSizeTooltip": "Select which property to use to determine flow link sizes",
-    "linkText": "Link Text",
-    "linkTextTooltip": "Select which property to display as text on flow links",
-    "sankeyAlign": "Sankey Align",
-    "sankeyAlignTooltip": "Select option to determine how sankey nodes are aligned",
-    "flowHideExcluded": "Hide excluded items",
-    "flowHideExcludedTooltip": "If checked, excluded items will also be excluded from the flow diagram",
     "advanced": "Advanced",
     "maximizeType": "Maximize value type",
     "maximizeTypeTooltip": "Select maximize objective value type",
@@ -373,7 +362,20 @@
     "emptyMessage": "Click on a node in the diagram to view details"
   },
   "flow": {
-    "downloadAsJson": "Download as JSON"
+    "downloadAsJson": "Download as JSON",
+    "flowSettings": "Flow settings"
+  },
+  "flowSettings": {
+    "diagram": "Visualization Type",
+    "diagramTooltip": "Select which type of flow visualization to use",
+    "linkSize": "Link Size",
+    "linkSizeTooltip": "Select which property to use to determine flow link sizes",
+    "linkText": "Link Text",
+    "linkTextTooltip": "Select which property to display as text on flow links",
+    "sankeyAlign": "Sankey Align",
+    "sankeyAlignTooltip": "Select option to determine how sankey nodes are aligned",
+    "hideExcluded": "Hide excluded items",
+    "hideExcludedTooltip": "If checked, excluded items will also be excluded from the flow diagram"
   },
   "data": {
     "notFound": "Not found",

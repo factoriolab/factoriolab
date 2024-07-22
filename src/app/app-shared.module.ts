@@ -10,6 +10,13 @@ import { VendorModule } from './vendor.module';
 @NgModule({
   imports: [CommonModule, FormsModule, VendorModule],
   declarations: [...components, ...directives, ...pipes],
-  exports: [FormsModule, VendorModule, ...components, ...directives, ...pipes],
+  exports: [
+    CommonModule,
+    FormsModule,
+    VendorModule,
+    ...components,
+    ...directives,
+    ...pipes,
+  ],
 })
 export class AppSharedModule {}

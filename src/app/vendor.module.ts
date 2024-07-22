@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AccordionModule } from 'primeng/accordion';
@@ -85,7 +84,7 @@ const modules = [
 ];
 
 @NgModule({
-  imports: [CommonModule, ...modules],
+  imports: [...modules],
   exports: [...modules],
 })
 export class VendorModule {}

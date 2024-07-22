@@ -5,6 +5,15 @@
 }
 @if (flowSvc.flowData$ | async; as flowData) {
   <div class="d-flex gap-2 py-2">
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined"
+      icon="fa-solid fa-gear"
+      [label]="'flow.flowSettings' | translate"
+      (click)="flowSettingsDlg.open(flowSettings())"
+    ></button>
     @if (flowData.nodes.length) {
       <button
         pButton
@@ -20,3 +29,4 @@
 }
 <div [class.invisible]="loading()" id="lab-flow-svg" #svg></div>
 <lab-steps [focus]="true" [selectedId]="selectedId()"></lab-steps>
+<lab-flow-settings #flowSettingsDlg></lab-flow-settings>

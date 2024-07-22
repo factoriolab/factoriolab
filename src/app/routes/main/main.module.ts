@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { AppSharedModule } from '~/app-shared.module';
@@ -7,7 +6,7 @@ import { MainComponent } from './main.component';
 import { MainRoutingModule } from './main.routes';
 
 @NgModule({
-  imports: [CommonModule, AppSharedModule, MainSharedModule, MainRoutingModule],
+  imports: [AppSharedModule, MainSharedModule, MainRoutingModule],
   declarations: [MainComponent],
 })
 export class MainModule {}
