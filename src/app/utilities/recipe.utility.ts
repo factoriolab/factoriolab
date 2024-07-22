@@ -155,6 +155,9 @@ export class RecipeUtility {
     } = settings;
 
     const miningFactor = miningBonus.div(rational(100n));
+    const researchFactor = researchBonus
+      .add(rational(100n))
+      .div(rational(100n));
 
     if (recipeSettings.machineId != null) {
       const machine = data.machineEntities[recipeSettings.machineId];
@@ -182,7 +185,7 @@ export class RecipeUtility {
 
       if (recipe.isTechnology && data.game === Game.Factorio) {
         // Adjust for research factor
-        recipe.time = recipe.time.div(researchBonus);
+        recipe.time = recipe.time.div(researchFactor);
       }
 
       // Calculate factors

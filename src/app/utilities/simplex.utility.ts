@@ -1004,7 +1004,7 @@ export class SimplexUtility {
       step.recipeObjectiveId = recipeObjective.id;
     } else {
       step.machines = solution.recipes[recipe.id].add(
-        step.machines || rational(0n),
+        step.machines ?? rational(0n),
       );
     }
 
