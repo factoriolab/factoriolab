@@ -28,12 +28,12 @@ export class ModulesOverlayComponent extends OverlayComponent {
 
   show(
     event: Event,
-    values: ModuleSettings[],
+    modules: ModuleSettings[],
     machine: Machine,
     recipeId?: string,
   ): void {
     this.machine.set(machine);
-    this.modules.set(values);
+    this.modules.set(modules.map((m) => ({ ...m })));
     this.recipeId.set(recipeId);
     this._show(event);
   }

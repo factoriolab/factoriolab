@@ -17,7 +17,7 @@
           #flowDiagramDropdown
           labDropdownTranslate
           inputId="flow-diagram"
-          [tooltip]="'flowSettings.diagramTooltip' | translate"
+          [pTooltip]="'flowSettings.diagramTooltip' | translate"
           [ngModel]="editValue.diagram"
           [options]="flowDiagramOptions"
           (onChange)="editValue.diagram = $event.value"
@@ -34,7 +34,7 @@
           <p-dropdown
             labDropdownTranslate
             inputId="sankey-align"
-            [tooltip]="'flowSettings.sankeyAlignTooltip' | translate"
+            [pTooltip]="'flowSettings.sankeyAlignTooltip' | translate"
             [ngModel]="editValue.sankeyAlign"
             [options]="sankeyAlignOptions"
             (onChange)="editValue.sankeyAlign = $event.value"
@@ -51,7 +51,7 @@
         <p-dropdown
           labDropdownTranslate
           inputId="link-size"
-          [tooltip]="'flowSettings.linkSizeTooltip' | translate"
+          [pTooltip]="'flowSettings.linkSizeTooltip' | translate"
           [ngModel]="editValue.linkSize"
           [options]="linkValueOptions()"
           (onChange)="editValue.linkSize = $event.value"
@@ -65,7 +65,7 @@
         <p-dropdown
           labDropdownTranslate
           inputId="link-text"
-          [tooltip]="'flowSettings.linkTextTooltip' | translate"
+          [pTooltip]="'flowSettings.linkTextTooltip' | translate"
           [ngModel]="editValue.linkText"
           [options]="linkValueOptions()"
           (onChange)="editValue.linkText = $event.value"

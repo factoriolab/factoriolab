@@ -11,6 +11,7 @@
       <p-dropdown
         labDropdownBase="icon"
         [ngModel]="entry.id"
+        [pTooltip]="tooltip"
         [options]="options() | filterOptions: exclude() : entry.id"
         (onChange)="setId(i, $event)"
       >
@@ -34,6 +35,11 @@
           </div>
         </ng-template>
       </p-dropdown>
+      <ng-template #tooltip>
+        @if (entry.id) {
+          <lab-tooltip [id]="entry.id" type="module"></lab-tooltip>
+        }
+      </ng-template>
       @if (entity().modules !== true) {
         <button
           pButton

@@ -111,7 +111,7 @@
           <div class="p-inputgroup">
             <p-dropdown
               [placeholder]="'settings.selectSavedState' | translate"
-              [tooltip]="'settings.selectSavedState' | translate"
+              [pTooltip]="'settings.selectSavedState' | translate"
               tooltipPosition="top"
               [ngModel]="state"
               [options]="savedStates()"
@@ -173,7 +173,7 @@
               <p-dropdown
                 labDropdownTranslate
                 inputId="game"
-                [tooltip]="'settings.gameTooltip' | translate"
+                [pTooltip]="'settings.gameTooltip' | translate"
                 [ngModel]="data().game"
                 [options]="gameOptions"
                 (onChange)="setGame($event.value)"
@@ -207,7 +207,7 @@
                   styleClass="w-100"
                   [filter]="true"
                   [autofocusFilter]="!contentSvc.isMobile()"
-                  [tooltip]="'settings.modSetTooltip' | translate"
+                  [pTooltip]="'settings.modSetTooltip' | translate"
                   [ngModel]="settings().modId"
                   [options]="modOptions()"
                   (onChange)="setMod($event.value)"
@@ -364,7 +364,7 @@
                 #presetDropdown
                 labDropdownTranslate
                 inputId="preset"
-                [tooltip]="'settings.presetTooltip' | translate"
+                [pTooltip]="'settings.presetTooltip' | translate"
                 [ngModel]="settings().preset"
                 [options]="presetOptions()"
                 (onChange)="setPreset($event.value)"
@@ -373,98 +373,96 @@
               <label for="preset">{{ 'settings.preset' | translate }}</label>
             </span>
           </div>
-          @if (data().fuelIds.length && data().game !== Game.Satisfactory) {
+          @if (data().moduleIds.length > 1) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
-                @if (data(); as data) {
-                  <p-multiSelect
-                    inputId="fuel-rank"
-                    styleClass="icons"
-                    appendTo="body"
-                    scrollHeight="40vh"
-                    [tooltip]="'settings.fuelRankTooltip' | translate"
-                    [ngModel]="machinesState().fuelRankIds"
-                    [options]="options().fuels"
-                    (onChange)="
-                      setFuelRank($event.value, data.defaults?.fuelRankIds)
-                    "
-                  >
-                    <ng-template pTemplate="selectedItems" let-items>
-                      <div class="d-flex">
-                        @for (item of items; track item; let i = $index) {
-                          <i class="mx-2" [class]="item | iconSmClass"></i>
-                        }
+                <p-multiSelect
+                  inputId="modifier-rank"
+                  styleClass="icons"
+                  appendTo="body"
+                  scrollHeight="40vh"
+                  panelStyleClass="tooltip"
+                  [pTooltip]="'settings.modifierRankTooltip' | translate"
+                  [ngModel]="machinesState().moduleRankIds"
+                  [options]="options().modules"
+                  (onChange)="
+                    setModuleRank($event.value, data().defaults?.moduleRankIds)
+                  "
+                >
+                  <ng-template pTemplate="selectedItems" let-items>
+                    <div class="d-flex">
+                      @for (item of items; track item; let i = $index) {
+                        <i class="mx-2" [class]="item | iconSmClass"></i>
+                      }
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="item" let-item>
+                    <div
+                      class="d-flex align-items-center p-2 w-100 h-100"
+                      [pTooltip]="tooltip"
+                    >
+                      <i [class]="item.value | iconSmClass"></i>
+                      <div class="ms-3 text-truncate">
+                        {{ item.label }}
                       </div>
-                    </ng-template>
-                    <ng-template pTemplate="item" let-item>
-                      <div
-                        class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="tooltip"
-                      >
-                        <i [class]="item.value | iconSmClass"></i>
-                        <div class="ms-3 text-truncate">
-                          {{ item.label }}
-                        </div>
-                        <ng-template #tooltip>
-                          <lab-tooltip
-                            [id]="item.value"
-                            type="fuel"
-                          ></lab-tooltip>
-                        </ng-template>
-                      </div>
-                    </ng-template>
-                  </p-multiSelect>
-                }
-                <label for="fuel-rank">{{
-                  'settings.fuelRank' | translate
+                      <ng-template #tooltip>
+                        <lab-tooltip
+                          [id]="item.value"
+                          type="fuel"
+                        ></lab-tooltip>
+                      </ng-template>
+                    </div>
+                  </ng-template>
+                </p-multiSelect>
+                <label for="modifier-rank">{{
+                  'settings.modifierRank' | translate
                 }}</label>
               </div>
             </div>
           }
-          @if (data().moduleIds.length > 1) {
+          @if (data().fuelIds.length && data().game !== Game.Satisfactory) {
             <div class="mt-3 pb-3">
               <div class="p-float-label">
-                @if (data(); as data) {
-                  <p-multiSelect
-                    inputId="modifier-rank"
-                    styleClass="icons"
-                    appendTo="body"
-                    scrollHeight="40vh"
-                    [tooltip]="'settings.modifierRankTooltip' | translate"
-                    [ngModel]="machinesState().moduleRankIds"
-                    [options]="options().modules"
-                    (onChange)="
-                      setModuleRank($event.value, data.defaults?.moduleRankIds)
-                    "
-                  >
-                    <ng-template pTemplate="selectedItems" let-items>
-                      <div class="d-flex">
-                        @for (item of items; track item; let i = $index) {
-                          <i class="mx-2" [class]="item | iconSmClass"></i>
-                        }
+                <p-multiSelect
+                  inputId="fuel-rank"
+                  styleClass="icons"
+                  appendTo="body"
+                  scrollHeight="40vh"
+                  panelStyleClass="tooltip"
+                  [pTooltip]="'settings.fuelRankTooltip' | translate"
+                  [ngModel]="machinesState().fuelRankIds"
+                  [options]="options().fuels"
+                  (onChange)="
+                    setFuelRank($event.value, data().defaults?.fuelRankIds)
+                  "
+                >
+                  <ng-template pTemplate="selectedItems" let-items>
+                    <div class="d-flex">
+                      @for (item of items; track item; let i = $index) {
+                        <i class="mx-2" [class]="item | iconSmClass"></i>
+                      }
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="item" let-item>
+                    <div
+                      class="d-flex align-items-center p-2 w-100 h-100"
+                      [pTooltip]="tooltip"
+                    >
+                      <i [class]="item.value | iconSmClass"></i>
+                      <div class="ms-3 text-truncate">
+                        {{ item.label }}
                       </div>
-                    </ng-template>
-                    <ng-template pTemplate="item" let-item>
-                      <div
-                        class="d-flex align-items-center py-2 w-100 h-100"
-                        [pTooltip]="tooltip"
-                      >
-                        <i [class]="item.value | iconSmClass"></i>
-                        <div class="ms-3 text-truncate">
-                          {{ item.label }}
-                        </div>
-                        <ng-template #tooltip>
-                          <lab-tooltip
-                            [id]="item.value"
-                            type="fuel"
-                          ></lab-tooltip>
-                        </ng-template>
-                      </div>
-                    </ng-template>
-                  </p-multiSelect>
-                }
-                <label for="modifier-rank">{{
-                  'settings.modifierRank' | translate
+                      <ng-template #tooltip>
+                        <lab-tooltip
+                          [id]="item.value"
+                          type="fuel"
+                        ></lab-tooltip>
+                      </ng-template>
+                    </div>
+                  </ng-template>
+                </p-multiSelect>
+                <label for="fuel-rank">{{
+                  'settings.fuelRank' | translate
                 }}</label>
               </div>
             </div>
@@ -481,7 +479,7 @@
                 labDropdownBase="icon"
                 [class.invisible]="!options().machines.length"
                 [ngModel]="options().machines[0]?.value"
-                [tooltip]="'settings.addMachineTooltip' | translate"
+                [pTooltip]="'settings.addMachineTooltip' | translate"
                 [options]="options().machines | filterOptions: machineIds()"
                 (onChange)="
                   addMachine($event.value, data().defaults?.machineRankIds)
@@ -540,6 +538,7 @@
                   pRipple
                   type="button"
                   class="hover-action icons p-button-text flex-column"
+                  [pTooltip]="tooltip"
                   (click)="beaconsOverlay.show($event, beacons)"
                 >
                   @for (beacon of beacons; track $index) {
@@ -562,6 +561,11 @@
                   #beaconsOverlay
                   (setValue)="setDefaultBeacons($event)"
                 ></lab-beacons-overlay>
+                <ng-template #tooltip>
+                  @if (beacons?.[0]?.id; as beaconId) {
+                    <lab-tooltip [id]="beaconId" type="beacon"></lab-tooltip>
+                  }
+                </ng-template>
               }
             </div>
             <p-orderList
@@ -585,7 +589,7 @@
                       <p-dropdown
                         labDropdownBase="icon"
                         labNoDrag
-                        [tooltip]="'settings.machineTooltip' | translate"
+                        [pTooltip]="'settings.machineTooltip' | translate"
                         [ngModel]="machineId"
                         [options]="
                           options().machines
@@ -630,7 +634,7 @@
                         <p-dropdown
                           labDropdownBase="icon"
                           labNoDrag
-                          [tooltip]="'settings.fuelTooltip' | translate"
+                          [pTooltip]="'settings.fuelTooltip' | translate"
                           [ngModel]="settings.fuelId"
                           [options]="settings.fuelOptions"
                           (onChange)="
@@ -673,7 +677,7 @@
                           <p-dropdown
                             labDropdownBase="icon"
                             labNoDrag
-                            [tooltip]="'settings.modifierTooltip' | translate"
+                            [pTooltip]="'settings.modifierTooltip' | translate"
                             [ngModel]="settings.modules[0].id"
                             [options]="settings.moduleOptions ?? []"
                             (onChange)="
@@ -713,6 +717,7 @@
                             pRipple
                             type="button"
                             class="hover-action icons p-button-text"
+                            [pTooltip]="tooltip"
                             (click)="
                               modulesOverlay.show(
                                 $event,
@@ -734,6 +739,16 @@
                             #modulesOverlay
                             (setValue)="setModules(machineId, $event)"
                           ></lab-modules-overlay>
+                          <ng-template #tooltip>
+                            @for (module of settings.modules; track module.id) {
+                              @if (module.id) {
+                                <lab-tooltip
+                                  [id]="module.id"
+                                  type="module"
+                                ></lab-tooltip>
+                              }
+                            }
+                          </ng-template>
                         }
                       }
                       <!-- Overclock input -->
@@ -768,6 +783,7 @@
                           pRipple
                           type="button"
                           class="hover-action icons p-button-text flex-column"
+                          [pTooltip]="tooltip"
                           (click)="
                             beaconsOverlay.show($event, settings.beacons)
                           "
@@ -794,6 +810,14 @@
                           #beaconsOverlay
                           (setValue)="changeBeacons(machineId, $event)"
                         ></lab-beacons-overlay>
+                        <ng-template #tooltip>
+                          @if (settings.beacons?.[0]?.id; as beaconId) {
+                            <lab-tooltip
+                              [id]="beaconId"
+                              type="beacon"
+                            ></lab-tooltip>
+                          }
+                        </ng-template>
                       }
                       <button
                         pButton
@@ -829,6 +853,7 @@
                 [pTooltip]="
                   'settings.estimateBeaconPowerUsageTooltip' | translate
                 "
+                tooltipPosition="bottom"
                 (onChange)="toggleBeaconReceivers($event.checked)"
               ></p-checkbox>
             </div>
@@ -856,7 +881,7 @@
                   labDropdownBase
                   inputId="proliferator-self-spray"
                   [autoDisplayFirst]="false"
-                  [tooltip]="
+                  [pTooltip]="
                     'settings.proliferatorSelfSprayTooltip' | translate
                   "
                   [ngModel]="settings().proliferatorSprayId"
@@ -900,7 +925,7 @@
               <p-dropdown
                 labDropdownBase
                 inputId="default-transport-belt"
-                [tooltip]="'settings.defaultTransportBeltTooltip' | translate"
+                [pTooltip]="'settings.defaultTransportBeltTooltip' | translate"
                 [ngModel]="settings().beltId"
                 [options]="options().belts"
                 (onChange)="setBelt($event.value, data().defaults?.beltId)"
@@ -941,7 +966,7 @@
                 <p-dropdown
                   labDropdownBase
                   inputId="default-pipe"
-                  [tooltip]="'settings.defaultPipeTooltip' | translate"
+                  [pTooltip]="'settings.defaultPipeTooltip' | translate"
                   [ngModel]="settings().pipeId"
                   [options]="options().pipes"
                   (onChange)="setPipe($event.value, data().defaults?.pipeId)"
@@ -984,7 +1009,7 @@
                 <p-dropdown
                   labDropdownBase
                   inputId="default-cargo-wagon"
-                  [tooltip]="'settings.defaultCargoWagonTooltip' | translate"
+                  [pTooltip]="'settings.defaultCargoWagonTooltip' | translate"
                   [ngModel]="settings().cargoWagonId"
                   [options]="options().cargoWagons"
                   (onChange)="
@@ -1029,7 +1054,7 @@
                 <p-dropdown
                   labDropdownBase
                   inputId="default-fluid-wagon"
-                  [tooltip]="'settings.defaultFluidWagonTooltip' | translate"
+                  [pTooltip]="'settings.defaultFluidWagonTooltip' | translate"
                   [ngModel]="settings().fluidWagonId"
                   [options]="options().fluidWagons"
                   (onChange)="
@@ -1101,7 +1126,7 @@
                 <p-dropdown
                   labDropdownTranslate
                   inputId="inserter-target"
-                  [tooltip]="'settings.inserterTargetTooltip' | translate"
+                  [pTooltip]="'settings.inserterTargetTooltip' | translate"
                   [ngModel]="settings().inserterTarget"
                   [options]="inserterTargetOptions"
                   (onChange)="setInserterTarget($event.value)"
@@ -1190,7 +1215,7 @@
                 <p-dropdown
                   labDropdownTranslate
                   inputId="inserter-capacity"
-                  [tooltip]="'settings.inserterCapacityTooltip' | translate"
+                  [pTooltip]="'settings.inserterCapacityTooltip' | translate"
                   [ngModel]="settings().inserterCapacity"
                   [options]="inserterCapacityOptions"
                   (onChange)="setInserterCapacity($event.value)"
@@ -1220,7 +1245,7 @@
               <p-dropdown
                 labDropdownTranslate
                 inputId="display-rate"
-                [tooltip]="'settings.displayRateTooltip' | translate"
+                [pTooltip]="'settings.displayRateTooltip' | translate"
                 [ngModel]="settings().displayRate"
                 [options]="displayRateOptions"
                 (onChange)="
@@ -1239,7 +1264,7 @@
                 <p-dropdown
                   labDropdownTranslate
                   inputId="power-unit"
-                  [tooltip]="'settings.powerUnitTooltip' | translate"
+                  [pTooltip]="'settings.powerUnitTooltip' | translate"
                   [ngModel]="preferences().powerUnit"
                   [options]="powerUnitOptions"
                   (onChange)="setPowerUnit($event.value)"
@@ -1257,7 +1282,7 @@
               <p-dropdown
                 labDropdownTranslate
                 inputId="language"
-                [tooltip]="'settings.languageTooltip' | translate"
+                [pTooltip]="'settings.languageTooltip' | translate"
                 [ngModel]="preferences().language"
                 [options]="languageOptions"
                 (onChange)="setLanguage($event.value)"
@@ -1280,7 +1305,7 @@
               <p-dropdown
                 labDropdownTranslate
                 inputId="theme"
-                [tooltip]="'settings.themeTooltip' | translate"
+                [pTooltip]="'settings.themeTooltip' | translate"
                 [ngModel]="preferences().theme"
                 [options]="themeOptions"
                 (onChange)="setTheme($event.value)"
@@ -1322,7 +1347,7 @@
               <p-dropdown
                 labDropdownTranslate
                 inputId="maximize-type"
-                [tooltip]="'settings.maximizeTypeTooltip' | translate"
+                [pTooltip]="'settings.maximizeTypeTooltip' | translate"
                 [ngModel]="settings().maximizeType"
                 [options]="maximizeTypeOptions"
                 (onChange)="setMaximizeType($event.value)"

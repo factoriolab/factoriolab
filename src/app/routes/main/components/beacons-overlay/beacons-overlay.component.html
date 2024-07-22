@@ -24,6 +24,7 @@
           <p-dropdown
             labDropdownBase="icon"
             [ngModel]="entry.id"
+            [pTooltip]="tooltip"
             [options]="options().beacons"
             (onChange)="setId(i, $event)"
           >
@@ -47,6 +48,11 @@
               </div>
             </ng-template>
           </p-dropdown>
+          <ng-template #tooltip>
+            @if (entry.id) {
+              <lab-tooltip [id]="entry.id" type="beacon"></lab-tooltip>
+            }
+          </ng-template>
           <button
             pButton
             pRipple

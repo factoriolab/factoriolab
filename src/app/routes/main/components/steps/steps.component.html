@@ -749,7 +749,7 @@
                       <p-dropdown
                         labDropdownBase="icon"
                         labNoDrag
-                        [tooltip]="'settings.modifierTooltip' | translate"
+                        [pTooltip]="'settings.modifierTooltip' | translate"
                         [ngModel]="modules[0].id"
                         [options]="step.recipeSettings.moduleOptions ?? []"
                         (onChange)="
@@ -791,6 +791,7 @@
                         pRipple
                         type="button"
                         class="hover-action modules p-button-text"
+                        [pTooltip]="tooltip"
                         (click)="
                           modulePicker.show(
                             $event,
@@ -813,6 +814,16 @@
                         #modulePicker
                         (setValue)="changeRecipeField(step, $event, 'modules')"
                       ></lab-modules-overlay>
+                      <ng-template #tooltip>
+                        @for (module of modules; track module.id) {
+                          @if (module.id) {
+                            <lab-tooltip
+                              [id]="module.id"
+                              type="module"
+                            ></lab-tooltip>
+                          }
+                        }
+                      </ng-template>
                     }
                   }
                 }
@@ -835,6 +846,7 @@
                 pRipple
                 type="button"
                 class="hover-action icons p-button-text flex-column"
+                [pTooltip]="tooltip"
                 (click)="
                   beaconsOverlay.show($event, step.recipeSettings.beacons)
                 "
@@ -864,6 +876,11 @@
                 #beaconsOverlay
                 (setValue)="changeRecipeField(step, $event, 'beacons')"
               ></lab-beacons-overlay>
+              <ng-template #tooltip>
+                @if (step.recipeSettings.beacons?.[0]?.id; as beaconId) {
+                  <lab-tooltip [id]="beaconId" type="beacon"></lab-tooltip>
+                }
+              </ng-template>
             }
           </td>
         }
