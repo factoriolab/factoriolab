@@ -478,4 +478,8 @@ export class SettingsComponent implements OnInit {
   setSurplusMachinesOutput(value: boolean): void {
     this.store.dispatch(new Settings.SetSurplusMachinesOutputAction(value));
   }
+
+  setConvertObjectiveValues(value: boolean): void {
+    this.store.dispatch(new Preferences.SetConvertObjectiveValuesAction(value));
+  }
 }

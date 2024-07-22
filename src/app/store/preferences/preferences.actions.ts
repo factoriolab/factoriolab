@@ -26,6 +26,7 @@ export const enum PreferencesActionType {
   SET_SHOW_TECH_LABELS = '[Preferences] Set Show Tech Labels',
   SET_HIDE_DUPLICATE_ICONS = '[Preferences] Set Hide Duplicate Icons',
   SET_PAUSED = '[Preferences] Set Paused',
+  SET_CONVERT_OBJECTIVE_VALUES = '[Prefrences] Set Convert Objective Values',
   SET_FLOW_SETTINGS = '[Preferences] Set Flow Settings',
 }
 
@@ -94,6 +95,11 @@ export class SetPausedAction implements Action {
   constructor(public payload: boolean) {}
 }
 
+export class SetConvertObjectiveValuesAction implements Action {
+  readonly type = PreferencesActionType.SET_CONVERT_OBJECTIVE_VALUES;
+  constructor(public payload: boolean) {}
+}
+
 export class SetFlowSettingsAction implements Action {
   readonly type = PreferencesActionType.SET_FLOW_SETTINGS;
   constructor(public payload: FlowSettings) {}
@@ -113,4 +119,5 @@ export type PreferencesAction =
   | SetShowTechLabelsAction
   | SetHideDuplicateIconsAction
   | SetPausedAction
+  | SetConvertObjectiveValuesAction
   | SetFlowSettingsAction;

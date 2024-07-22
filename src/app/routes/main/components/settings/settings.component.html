@@ -1364,6 +1364,7 @@
               [binary]="true"
               [label]="'settings.netProductionOnly' | translate"
               [pTooltip]="'settings.netProductionOnlyTooltip' | translate"
+              tooltipPosition="top"
               (onChange)="setNetProductionOnly($event.checked)"
             ></p-checkbox>
           </div>
@@ -1373,7 +1374,18 @@
               [binary]="true"
               [label]="'settings.surplusMachinesOutput' | translate"
               [pTooltip]="'settings.surplusMachinesOutputTooltip' | translate"
+              tooltipPosition="top"
               (onChange)="setSurplusMachinesOutput($event.checked)"
+            ></p-checkbox>
+          </div>
+          <div class="pb-3">
+            <p-checkbox
+              [ngModel]="preferences().convertObjectiveValues"
+              [binary]="true"
+              [label]="'settings.convertObjectiveValues' | translate"
+              [pTooltip]="'settings.convertObjectiveValuesTooltip' | translate"
+              tooltipPosition="top"
+              (onChange)="setConvertObjectiveValues($event.checked)"
             ></p-checkbox>
           </div>
           <button

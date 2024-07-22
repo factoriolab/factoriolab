@@ -303,7 +303,9 @@
     "netProductionOnly": "Net production only",
     "netProductionOnlyTooltip": "If checked, recipes that both produce and consume the same item are reduced to the net production only",
     "surplusMachinesOutput": "Surplus machines output",
-    "surplusMachinesOutputTooltip": "If checked, output from machine objectives will be treated as surplus instead of required."
+    "surplusMachinesOutputTooltip": "If checked, output from machine objectives will be treated as surplus instead of required.",
+    "convertObjectiveValues": "Convert objective values",
+    "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity."
   },
   "objectives": {
     "title": "Objectives",

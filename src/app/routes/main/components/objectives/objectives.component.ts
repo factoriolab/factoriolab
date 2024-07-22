@@ -60,6 +60,9 @@ export class ObjectivesComponent {
   rateUnitOptions = this.store.selectSignal(Settings.getObjectiveUnitOptions);
   recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
   paused = this.store.selectSignal(Preferences.getPaused);
+  convertObjectiveValues = this.store.selectSignal(
+    Preferences.getConvertObjectiveValues,
+  );
   objectives = computed(() => [...this._objectives()]);
   messages = computed(() =>
     this.getMessages(
@@ -226,7 +229,11 @@ export class ObjectivesComponent {
       unit: ObjectiveUnit.Machines,
     });
 
-    if (objective.type === ObjectiveType.Maximize) return;
+    if (
+      !this.convertObjectiveValues() ||
+      objective.type === ObjectiveType.Maximize
+    )
+      return;
 
     const itemsState = this.itemsState();
     const beltSpeed = this.beltSpeed();
@@ -258,7 +265,11 @@ export class ObjectivesComponent {
       unit,
     });
 
-    if (objective.type === ObjectiveType.Maximize || objective.recipe == null)
+    if (
+      !this.convertObjectiveValues() ||
+      objective.type === ObjectiveType.Maximize ||
+      objective.recipe == null
+    )
       return;
 
     const itemsState = this.itemsState();

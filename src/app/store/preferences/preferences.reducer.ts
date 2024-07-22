@@ -30,6 +30,7 @@ export interface PreferencesState {
   rows: number;
   disablePaginator: boolean;
   paused: boolean;
+  convertObjectiveValues: boolean;
   flowSettings: FlowSettings;
 }
 
@@ -52,6 +53,7 @@ export const initialPreferencesState: PreferencesState = {
   rows: 50,
   disablePaginator: false,
   paused: false,
+  convertObjectiveValues: false,
   flowSettings: {
     diagram: FlowDiagram.Sankey,
     linkSize: LinkValue.Items,
@@ -106,6 +108,8 @@ export function preferencesReducer(
       return spread(state, { hideDuplicateIcons: action.payload });
     case PreferencesActionType.SET_PAUSED:
       return spread(state, { paused: action.payload });
+    case PreferencesActionType.SET_CONVERT_OBJECTIVE_VALUES:
+      return spread(state, { convertObjectiveValues: action.payload });
     case PreferencesActionType.SET_FLOW_SETTINGS:
       return spread(state, { flowSettings: action.payload });
     default:

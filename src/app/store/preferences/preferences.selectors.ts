@@ -43,3 +43,7 @@ export const getFlowSettings = createSelector(
   preferencesState,
   (state) => state.flowSettings,
 );
+export const getConvertObjectiveValues = createSelector(
+  preferencesState,
+  (state) => state.convertObjectiveValues,
+);
