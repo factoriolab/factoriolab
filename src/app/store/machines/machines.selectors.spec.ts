@@ -1,5 +1,4 @@
-import { ItemId, Mocks } from 'src/tests';
-import { Game, rational } from '~/models';
+import { Mocks } from 'src/tests';
 import { initialMachinesState } from './machines.reducer';
 import * as Selectors from './machines.selectors';
 

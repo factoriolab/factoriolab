@@ -1,12 +1,4 @@
-import {
-  FlowDiagram,
-  Game,
-  Language,
-  LinkValue,
-  PowerUnit,
-  SankeyAlign,
-  Theme,
-} from '~/models';
+import { Game, Language, PowerUnit, Theme } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {

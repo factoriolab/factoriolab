@@ -56,20 +56,20 @@ const mockObjectivesState: Objectives.ObjectivesState = {
   },
   index: 2,
 };
-const mockMigratedObjectivesState: Objectives.ObjectivesState = {
-  ids: ['1', '2'],
-  entities: {
-    ['1']: mockObjective,
-    ['2']: {
-      id: '2',
-      targetId: ItemId.SteelChest,
-      value: rational(1n),
-      unit: ObjectiveUnit.Machines,
-      type: ObjectiveType.Output,
-    },
-  },
-  index: 3,
-};
+// const mockMigratedObjectivesState: Objectives.ObjectivesState = {
+//   ids: ['1', '2'],
+//   entities: {
+//     ['1']: mockObjective,
+//     ['2']: {
+//       id: '2',
+//       targetId: ItemId.SteelChest,
+//       value: rational(1n),
+//       unit: ObjectiveUnit.Machines,
+//       type: ObjectiveType.Output,
+//     },
+//   },
+//   index: 3,
+// };
 const mockItemsState: Items.ItemsState = {
   [ItemId.SteelChest]: {
     excluded: true,
@@ -138,18 +138,18 @@ const mockZip: Zip = {
   bare: 'p=steel-chest**1',
   hash: 'pC6**1',
 };
-const mockZipPartial: Zip = {
-  bare:
-    '&e=1*speed-module~speed-module*beacon*8&i=steel-chest*1*transport-belt*c' +
-    'argo-wagon&r=steel-chest**assembling-machine-2*effectivity-module~effect' +
-    'ivity-module*0*200*100&f=1*productivity-module~speed-module*1*speed-modu' +
-    'le*beacon_assembling-machine-2_steel-furnace&s=1.0**2*1*transport-belt*c' +
-    'oal**100*0*0*0*cargo-wagon*fluid-wagon**1*productivity-module*1**2*1' +
-    '0*0*100**-100000',
-  hash:
-    '&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100&f1*D~G*1*G*A_B_Q&s*2*1' +
-    '*C*A**Bk*A*0*0*A*B**1*D*1**2*10*0*100**-100000',
-};
+// const mockZipPartial: Zip = {
+//   bare:
+//     '&e=1*speed-module~speed-module*beacon*8&i=steel-chest*1*transport-belt*c' +
+//     'argo-wagon&r=steel-chest**assembling-machine-2*effectivity-module~effect' +
+//     'ivity-module*0*200*100&f=1*productivity-module~speed-module*1*speed-modu' +
+//     'le*beacon_assembling-machine-2_steel-furnace&s=1.0**2*1*transport-belt*c' +
+//     'oal**100*0*0*0*cargo-wagon*fluid-wagon**1*productivity-module*1**2*1' +
+//     '0*0*100**-100000',
+//   hash:
+//     '&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100&f1*D~G*1*G*A_B_Q&s*2*1' +
+//     '*C*A**Bk*A*0*0*A*B**1*D*1**2*10*0*100**-100000',
+// };
 const mockState: LabState = {
   objectivesState: mockObjectivesState,
   itemsState: mockItemsState,

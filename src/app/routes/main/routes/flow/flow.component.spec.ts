@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { select } from 'd3';
 
-import { Mocks, TestModule, TestUtility } from 'src/tests';
+import { Mocks, TestModule } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
 import {
   sankeyCenter,
@@ -9,8 +8,8 @@ import {
   sankeyLeft,
   sankeyRight,
 } from '~/d3-sankey';
-import { FlowDiagram, SankeyAlign } from '~/models';
-import { FlowComponent, SVG_ID } from './flow.component';
+import { SankeyAlign } from '~/models';
+import { FlowComponent } from './flow.component';
 
 describe('FlowComponent', () => {
   let component: FlowComponent;

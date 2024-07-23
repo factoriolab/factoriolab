@@ -8,7 +8,6 @@ import {
   ObjectiveUnit,
   rational,
   RecipeObjective,
-  RecipeSettings,
   Step,
 } from '~/models';
 import { RateUtility } from './rate.utility';
