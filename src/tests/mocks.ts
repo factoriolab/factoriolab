@@ -386,6 +386,25 @@ export const LightOilSteps: M.Step[] = [
   },
 ];
 
+export const ModuleSettings: M.ModuleSettings[] = [
+  {
+    id: ItemId.ProductivityModule3,
+    count: M.rational(3n),
+  },
+  {
+    id: ItemId.Module,
+    count: M.rational(1n),
+  },
+];
+
+export const BeaconSettings: M.BeaconSettings[] = [
+  {
+    count: M.rational(8n),
+    id: ItemId.Beacon,
+    modules: [{ id: ItemId.SpeedModule3, count: M.rational(2n) }],
+  },
+];
+
 export const ThemeValues: S.ThemeValues = {
   textColor: 'white',
   successColor: 'black',

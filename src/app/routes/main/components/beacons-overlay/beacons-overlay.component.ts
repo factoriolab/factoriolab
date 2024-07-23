@@ -33,12 +33,12 @@ export class BeaconsOverlayComponent extends OverlayComponent {
   data = this.store.selectSignal(Settings.getDataset);
   options = this.store.selectSignal(Settings.getOptions);
 
-  values = signal<BeaconSettings[]>([]);
+  beacons = signal<BeaconSettings[]>([]);
   recipeId = signal<string | undefined>(undefined);
   zero = rational(0n);
 
   show(event: Event, values: BeaconSettings[], recipeId?: string): void {
-    this.values.set(
+    this.beacons.set(
       values.map((v) => ({
         ...v,
         ...{ modules: v.modules?.map((m) => ({ ...m })) },
@@ -49,7 +49,7 @@ export class BeaconsOverlayComponent extends OverlayComponent {
   }
 
   setCount(i: number, count: Rational): void {
-    this.values.update((values) => {
+    this.beacons.update((values) => {
       values[i].count = count;
       return values;
     });
@@ -57,32 +57,32 @@ export class BeaconsOverlayComponent extends OverlayComponent {
 
   setId(i: number, event: DropdownChangeEvent): void {
     event.originalEvent.stopPropagation();
-    this.values.update((values) => {
+    this.beacons.update((values) => {
       values[i].id = event.value;
       return values;
     });
   }
 
   setModules(i: number, modules: ModuleSettings[]): void {
-    this.values.update((values) => {
+    this.beacons.update((values) => {
       values[i].modules = modules;
       return values;
     });
   }
 
   setTotal(i: number, total: Rational): void {
-    this.values.update((values) => {
+    this.beacons.update((values) => {
       values[i].total = total;
       return values;
     });
   }
 
   removeEntry(i: number): void {
-    this.values.update((values) => values.filter((_, vi) => vi !== i));
+    this.beacons.update((values) => values.filter((_, vi) => vi !== i));
   }
 
   addEntry(): void {
-    this.values.update((values) => {
+    this.beacons.update((values) => {
       const id = this.options().beacons[0].value;
       const count = this.data().beaconEntities[id].modules;
       const modules: ModuleSettings[] = [
@@ -97,6 +97,6 @@ export class BeaconsOverlayComponent extends OverlayComponent {
   }
 
   save(): void {
-    this.setValue.emit(this.values());
+    this.setValue.emit(this.beacons());
   }
 }

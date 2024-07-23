@@ -58,7 +58,7 @@ export class ModulesComponent {
   });
   maximum = computed(() => {
     const values = this.modules();
-    const slots = this.entity().modules ?? rational(0n);
+    const slots = coalesce(this.entity().modules, rational(0n));
     if (slots === true) return values.map(() => null);
     let sum = this.sum();
     const empty = values.find((e) => e.id === ItemId.Module);
