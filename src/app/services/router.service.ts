@@ -1109,7 +1109,10 @@ export class RouterService {
           // Add module settings
           for (const key of moduleMap.keys()) {
             modules.push(
-              this.zipFields([moduleMap.get(key)?.toString() ?? '', key]),
+              this.zipFields([
+                coalesce(moduleMap.get(key)?.toString(), ''),
+                key,
+              ]),
             );
           }
         }
@@ -1216,8 +1219,9 @@ export class RouterService {
     // Move fuelRankIds to Machines state
     if (params[Section.Settings]) {
       const s = params[Section.Settings].split(FIELDSEP);
-      if (s.length > 4) {
-        const fuelRankIds = s.splice(4, 1)[0];
+      const index = state.isBare ? 5 : 4;
+      if (s.length > index) {
+        const fuelRankIds = s.splice(index, 1)[0];
 
         if (params[Section.Machines]) {
           const list = params[Section.Machines]
@@ -1455,8 +1459,8 @@ export class RouterService {
       let i = 0;
       const obj: BeaconSettings = {
         count: this.parseRational(this.parseString(s[i++])),
-        modules: this.parseArray(s[i++])?.map(
-          (i) => moduleSettings[Number(i)] ?? {},
+        modules: this.parseArray(s[i++])?.map((i) =>
+          coalesce(moduleSettings[Number(i)], {}),
         ),
         id: this.parseString(s[i++], hash?.beacons),
         total: this.parseRational(this.parseString(s[i++])),
@@ -1702,7 +1706,7 @@ export class RouterService {
     hash: ModHash,
   ): void {
     const id = state.ids ? EMPTY : '';
-    const beacons = this.zipTruthyArray(data.machineSettings.beaconMap[id]);
+    const beacons = this.zipTruthyArray(data.machineSettings.beaconMap['']);
     const overclock = this.zipTruthyNumber(state.overclock);
     const list: Zip[] = [
       {
@@ -1773,7 +1777,7 @@ export class RouterService {
         id = '';
       }
 
-      if (id && hash) id = this.parseNString(id, hash.machines) ?? '';
+      if (id && hash) id = coalesce(this.parseNString(id, hash.machines), '');
       if (id && ids) ids.push(id);
 
       const moduleStr = s[i++];
@@ -2188,15 +2192,9 @@ export class RouterService {
     value: string | undefined,
     useNNumber = false,
   ): Rational | undefined {
-    try {
-      if (useNNumber) return rational(this.parseNNumber(value));
-      if (!value?.length || value === NULL) return undefined;
-      return rational(value);
-    } catch (ex) {
-      console.log(ex);
-      console.log(value, useNNumber);
-      throw ex;
-    }
+    if (useNNumber) return rational(this.parseNNumber(value));
+    if (!value?.length || value === NULL) return undefined;
+    return rational(value);
   }
 
   parseDisplayRate(value: string | undefined): DisplayRate | undefined {
