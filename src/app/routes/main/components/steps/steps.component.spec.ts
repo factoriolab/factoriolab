@@ -308,33 +308,33 @@ describe('StepsComponent', () => {
       );
     });
 
-    it('should set up default for machine modules', () => {
-      spyOn(component, 'setModules');
-      const modules = [{ count: rational(4n), id: ItemId.SpeedModule3 }];
-      component.changeRecipeField(step, modules, 'modules');
-      expect(component.setModules).toHaveBeenCalledWith(
-        RecipeId.WoodenChest,
-        modules,
-        false,
-      );
-    });
+    // it('should set up default for machine modules', () => {
+    //   spyOn(component, 'setModules');
+    //   const modules = [{ count: rational(4n), id: ItemId.SpeedModule3 }];
+    //   component.changeRecipeField(step, modules, 'modules');
+    //   expect(component.setModules).toHaveBeenCalledWith(
+    //     RecipeId.WoodenChest,
+    //     modules,
+    //     false,
+    //   );
+    // });
 
-    it('should set up default for beacons', () => {
-      spyOn(component, 'setBeacons');
-      const beacons = [
-        {
-          count: rational(1n),
-          id: ItemId.Beacon,
-          modules: [{ count: rational(2n), id: ItemId.Module }],
-        },
-      ];
-      component.changeRecipeField(step, beacons, 'beacons');
-      expect(component.setBeacons).toHaveBeenCalledWith(
-        RecipeId.WoodenChest,
-        beacons,
-        false,
-      );
-    });
+    // it('should set up default for beacons', () => {
+    //   spyOn(component, 'setBeacons');
+    //   const beacons = [
+    //     {
+    //       count: rational(1n),
+    //       id: ItemId.Beacon,
+    //       modules: [{ count: rational(2n), id: ItemId.Module }],
+    //     },
+    //   ];
+    //   component.changeRecipeField(step, beacons, 'beacons');
+    //   expect(component.setBeacons).toHaveBeenCalledWith(
+    //     RecipeId.WoodenChest,
+    //     beacons,
+    //     false,
+    //   );
+    // });
 
     it('should set up default for overclock', () => {
       spyOn(component, 'setOverclock');

@@ -255,11 +255,14 @@ export const PreferencesState: Preferences.PreferencesState = {
   showTechLabels: false,
   hideDuplicateIcons: false,
   paused: false,
-  flowDiagram: M.FlowDiagram.Sankey,
-  linkSize: M.LinkValue.Items,
-  linkText: M.LinkValue.Items,
-  sankeyAlign: M.SankeyAlign.Justify,
-  flowHideExcluded: true,
+  convertObjectiveValues: false,
+  flowSettings: {
+    diagram: M.FlowDiagram.Sankey,
+    linkSize: M.LinkValue.Items,
+    linkText: M.LinkValue.Items,
+    sankeyAlign: M.SankeyAlign.Justify,
+    hideExcluded: true,
+  },
 };
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,

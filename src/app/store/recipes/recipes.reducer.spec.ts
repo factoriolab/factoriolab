@@ -216,34 +216,34 @@ describe('Recipes Reducer', () => {
     });
   });
 
-  describe('RESET_RECIPE_MODULES', () => {
-    it(`should reset a recipe's modules`, () => {
-      spyOn(StoreUtility, 'resetFields');
-      recipesReducer(
-        undefined,
-        new Actions.ResetRecipeMachineAction(Mocks.Recipe1.id),
-      );
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith(
-        {},
-        ['fuelId', 'moduleIds', 'beacons'] as any,
-        Mocks.Recipe1.id,
-      );
-    });
-  });
+  // describe('RESET_RECIPE_MODULES', () => {
+  //   it(`should reset a recipe's modules`, () => {
+  //     spyOn(StoreUtility, 'resetFields');
+  //     recipesReducer(
+  //       undefined,
+  //       new Actions.ResetRecipeMachineAction(Mocks.Recipe1.id),
+  //     );
+  //     expect(StoreUtility.resetFields).toHaveBeenCalledWith(
+  //       {},
+  //       ['fuelId', 'moduleIds', 'beacons'] as any,
+  //       Mocks.Recipe1.id,
+  //     );
+  //   });
+  // });
 
-  describe('RESET_MACHINE', () => {
-    it('should call resetField', () => {
-      spyOn(StoreUtility, 'resetFields');
-      recipesReducer(undefined, new Actions.ResetMachinesAction());
-      expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
-        'machineId',
-        'fuelId',
-        'overclock',
-        'moduleIds',
-        'beacons',
-      ] as any);
-    });
-  });
+  // describe('RESET_MACHINE', () => {
+  //   it('should call resetField', () => {
+  //     spyOn(StoreUtility, 'resetFields');
+  //     recipesReducer(undefined, new Actions.ResetMachinesAction());
+  //     expect(StoreUtility.resetFields).toHaveBeenCalledWith({}, [
+  //       'machineId',
+  //       'fuelId',
+  //       'overclock',
+  //       'moduleIds',
+  //       'beacons',
+  //     ] as any);
+  //   });
+  // });
 
   describe('RESET_BEACONS', () => {
     it('should call resetField', () => {

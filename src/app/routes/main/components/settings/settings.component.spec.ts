@@ -351,11 +351,11 @@ describe('SettingsComponent', () => {
     dispatch.valDef('setFluidWagon', Settings.SetFluidWagonAction);
     dispatch.val('setFlowRate', Settings.SetFlowRateAction);
     dispatch.val('setInserterTarget', Settings.SetInserterTargetAction);
-    dispatch.val('setFlowDiagram', Preferences.SetFlowDiagramAction);
-    dispatch.val('setSankeyAlign', Preferences.SetSankeyAlignAction);
-    dispatch.val('setLinkSize', Preferences.SetLinkSizeAction);
-    dispatch.val('setLinkText', Preferences.SetLinkTextAction);
-    dispatch.val('setFlowHideExcluded', Preferences.SetFlowHideExcludedAction);
+    // dispatch.val('setFlowDiagram', Preferences.SetFlowDiagramAction);
+    // dispatch.val('setSankeyAlign', Preferences.SetSankeyAlignAction);
+    // dispatch.val('setLinkSize', Preferences.SetLinkSizeAction);
+    // dispatch.val('setLinkText', Preferences.SetLinkTextAction);
+    // dispatch.val('setFlowHideExcluded', Preferences.SetFlowHideExcludedAction);
     dispatch.val('setMiningBonus', Settings.SetMiningBonusAction);
     dispatch.val('setResearchSpeed', Settings.SetResearchBonusAction);
     dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);

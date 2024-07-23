@@ -559,7 +559,7 @@
                 </button>
                 <lab-beacons-overlay
                   #beaconsOverlay
-                  (setValue)="setDefaultBeacons($event)"
+                  (setValue)="changeDefaultBeacons($event)"
                 ></lab-beacons-overlay>
                 <ng-template #tooltip>
                   @if (beacons?.[0]?.id; as beaconId) {

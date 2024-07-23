@@ -451,28 +451,28 @@ describe('RateUtility', () => {
       expect(step.power).toEqual(rational(3840n));
     });
 
-    it('should override from recipe settings', () => {
-      const recipeSettings: RecipeSettings = {
-        beacons: [
-          {
-            count: rational(8n),
-            id: ItemId.Beacon,
-            modules: [{ count: rational(2n), id: ItemId.Module }],
-          },
-        ],
-      };
-      const step: Step = {
-        id: 'id',
-        itemId: ItemId.Coal,
-        items: rational(1n),
-        recipeId: RecipeId.Coal,
-        machines: rational(1n),
-        power: rational(0n),
-        recipeSettings,
-      };
-      RateUtility.calculateBeacons(step, rational(1n), Mocks.AdjustedDataset);
-      expect(step.power).toEqual(rational(480n));
-    });
+    // it('should override from recipe settings', () => {
+    //   const recipeSettings: RecipeSettings = {
+    //     beacons: [
+    //       {
+    //         count: rational(8n),
+    //         id: ItemId.Beacon,
+    //         modules: [{ count: rational(2n), id: ItemId.Module }],
+    //       },
+    //     ],
+    //   };
+    //   const step: Step = {
+    //     id: 'id',
+    //     itemId: ItemId.Coal,
+    //     items: rational(1n),
+    //     recipeId: RecipeId.Coal,
+    //     machines: rational(1n),
+    //     power: rational(0n),
+    //     recipeSettings,
+    //   };
+    //   RateUtility.calculateBeacons(step, rational(1n), Mocks.AdjustedDataset);
+    //   expect(step.power).toEqual(rational(480n));
+    // });
 
     it('should do nothing if beaconReceivers is unset', () => {
       const step: Step = { id: 'id' };

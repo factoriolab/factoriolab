@@ -304,6 +304,11 @@ export class SettingsComponent implements OnInit {
     this.setBeacons(id, RecipeUtility.dehydrateBeacons(value, def));
   }
 
+  changeDefaultBeacons(value: BeaconSettings[]): void {
+    const def = this.defaults()?.beacons;
+    this.setDefaultBeacons(RecipeUtility.dehydrateBeacons(value, def));
+  }
+
   toggleBeaconReceivers(value: boolean): void {
     this.setBeaconReceivers(value ? rational(1n) : null);
   }
@@ -353,13 +358,8 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(new Machines.AddAction({ value, def }));
   }
 
-  setDefaultBeacons(value: BeaconSettings[]): void {
-    const def = this.defaults()?.beacons;
-    this.store.dispatch(
-      new Machines.SetDefaultBeaconsAction(
-        RecipeUtility.dehydrateBeacons(value, def),
-      ),
-    );
+  setDefaultBeacons(value: BeaconSettings[] | undefined): void {
+    this.store.dispatch(new Machines.SetDefaultBeaconsAction(value));
   }
 
   setDefaultOverclock(value: Rational | undefined): void {

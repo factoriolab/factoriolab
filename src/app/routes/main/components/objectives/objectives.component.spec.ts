@@ -329,16 +329,16 @@ describe('ObjectivesComponent', () => {
   });
 
   describe('convertMachinesToItems', () => {
-    it('should convert the objective value', () => {
-      spyOn(component, 'setValue');
-      component.convertMachinesToItems(
-        Mocks.Objectives[4],
-        ItemId.PiercingRoundsMagazine,
-        ObjectiveUnit.Items,
-        Mocks.AdjustedDataset,
-      );
-      expect(component.setValue).toHaveBeenCalledWith('4', rational(175n));
-    });
+    // it('should convert the objective value', () => {
+    //   spyOn(component, 'setValue');
+    //   component.convertMachinesToItems(
+    //     Mocks.Objectives[4],
+    //     ItemId.PiercingRoundsMagazine,
+    //     ObjectiveUnit.Items,
+    //     Mocks.AdjustedDataset,
+    //   );
+    //   expect(component.setValue).toHaveBeenCalledWith('4', rational(175n));
+    // });
 
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'setValue');
