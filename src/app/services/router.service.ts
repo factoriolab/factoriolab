@@ -1213,6 +1213,35 @@ export class RouterService {
 
     if (modules.length) state.params[Section.Modules] = modules.join(LISTSEP);
 
+    // Move fuelRankIds to Machines state
+    if (params[Section.Settings]) {
+      const s = params[Section.Settings].split(FIELDSEP);
+      if (s.length > 4) {
+        const fuelRankIds = s.splice(4, 1)[0];
+
+        if (params[Section.Machines]) {
+          const list = params[Section.Machines]
+            .split(LISTSEP)
+            .map((l) => l.split(FIELDSEP));
+          const s = list.find((l) => l[0] === EMPTY || l[0] === '');
+          if (s) {
+            while (s.length < 4) s.push('');
+            s[3] = fuelRankIds;
+          } else {
+            list.unshift(['', '', '', fuelRankIds]);
+          }
+
+          params[Section.Machines] = list
+            .map((l) => this.zipFields(l))
+            .join(LISTSEP);
+        } else {
+          params[Section.Machines] = ['', '', '', fuelRankIds].join(FIELDSEP);
+        }
+
+        params[Section.Settings] = s.join(FIELDSEP);
+      }
+    }
+
     params[Section.Version] = ZipVersion.Version10;
     return state;
   }
@@ -2159,9 +2188,15 @@ export class RouterService {
     value: string | undefined,
     useNNumber = false,
   ): Rational | undefined {
-    if (useNNumber) return rational(this.parseNNumber(value));
-    if (!value?.length || value === NULL) return undefined;
-    return rational(value);
+    try {
+      if (useNNumber) return rational(this.parseNNumber(value));
+      if (!value?.length || value === NULL) return undefined;
+      return rational(value);
+    } catch (ex) {
+      console.log(ex);
+      console.log(value, useNNumber);
+      throw ex;
+    }
   }
 
   parseDisplayRate(value: string | undefined): DisplayRate | undefined {
