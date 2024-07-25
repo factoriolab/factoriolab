@@ -308,7 +308,11 @@ export class ObjectivesComponent {
       unit,
     });
 
-    if (objective.type === ObjectiveType.Maximize) return;
+    if (
+      !this.convertObjectiveValues() ||
+      objective.type === ObjectiveType.Maximize
+    )
+      return;
 
     const itemsState = this.itemsState();
     const beltSpeed = this.beltSpeed();

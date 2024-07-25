@@ -96,7 +96,7 @@ export class SettingsComponent implements OnInit {
   preferences = this.store.selectSignal(Preferences.preferencesState);
   modRecord = this.store.selectSignal(Datasets.getModRecord);
   machineIds = computed(() => [
-    ...(this.store.selectSignal(Machines.getMachinesState)().ids ?? []),
+    ...coalesce(this.store.selectSignal(Machines.getMachinesState)().ids, []),
   ]);
   defaults = this.store.selectSignal(Settings.getDefaults);
 
@@ -292,7 +292,7 @@ export class SettingsComponent implements OnInit {
       id,
       RecipeUtility.dehydrateModules(
         value,
-        state.entities[id].moduleOptions ?? [],
+        coalesce(state.entities[id].moduleOptions, []),
         state.moduleRankIds,
         machine.modules,
       ),

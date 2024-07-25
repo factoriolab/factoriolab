@@ -11,7 +11,7 @@ import { tap, withLatestFrom } from 'rxjs';
 import { CostKey, CostSettings, Rational, rational } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Settings } from '~/store';
-import { DialogComponent } from '../modal-component';
+import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-costs',

@@ -84,7 +84,10 @@ describe('Recipes Selectors', () => {
     });
 
     it('should use modules override', () => {
-      const modules = [{ count: rational(1n), id: stringValue }];
+      const modules = [
+        { count: rational(1n), id: stringValue },
+        { count: rational(3n), id: ItemId.Module },
+      ];
       const state = {
         ...initialRecipesState,
         ...{ [Mocks.Item1.id]: { modules } },

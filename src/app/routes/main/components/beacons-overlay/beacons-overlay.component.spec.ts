@@ -17,6 +17,7 @@ describe('BeaconsOverlayComponent', () => {
 
     fixture = TestBed.createComponent(BeaconsOverlayComponent);
     component = fixture.componentInstance;
+    spyOn(component as any, '_show');
     component.show({} as any, Mocks.BeaconSettings, RecipeId.AdvancedCircuit);
     fixture.detectChanges();
   });
@@ -28,7 +29,6 @@ describe('BeaconsOverlayComponent', () => {
   describe('show', () => {
     it('should show the overlay', () => {
       const event = {} as any;
-      spyOn(component as any, '_show');
       component.show(event, Mocks.BeaconSettings, RecipeId.AdvancedCircuit);
       expect(component.beacons()).toEqual(Mocks.BeaconSettings);
       expect(component.beacons()).not.toBe(Mocks.BeaconSettings);

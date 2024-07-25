@@ -19,7 +19,7 @@ import {
 } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Preferences, Settings } from '~/store';
-import { DialogComponent } from '../modal-component';
+import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-columns',

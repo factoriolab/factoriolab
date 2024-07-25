@@ -59,6 +59,7 @@
             type="button"
             icon="fa-solid fa-times"
             class="p-button-outlined"
+            [disabled]="beacons().length === 1"
             (click)="removeEntry(i)"
           ></button>
         </div>

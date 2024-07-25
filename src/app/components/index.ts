@@ -6,7 +6,7 @@ import { InputNumberComponent } from './input-number/input-number.component';
 import { PickerComponent } from './picker/picker.component';
 import { TooltipComponent } from './tooltip/tooltip.component';
 
-export * from './modal-component';
+export * from './modal';
 
 export const components = [
   ColumnsComponent,

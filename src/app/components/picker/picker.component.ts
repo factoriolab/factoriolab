@@ -14,7 +14,7 @@ import { FilterService, SelectItem } from 'primeng/api';
 import { Category, Entities } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Recipes } from '~/store';
-import { DialogComponent } from '../modal-component';
+import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-picker',

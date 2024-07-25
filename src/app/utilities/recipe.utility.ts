@@ -112,7 +112,6 @@ export class RecipeUtility {
     moduleRankIds: string[] | undefined,
     count: Rational | true | undefined,
     machineValue?: ModuleSettings[] | undefined,
-    moduleId?: string,
   ): ModuleSettings[] | undefined {
     if (count == null) return undefined;
 
@@ -121,18 +120,12 @@ export class RecipeUtility {
       if (machineValue.every((m) => m.id && set.has(m.id))) return machineValue;
     }
 
-    const id =
-      moduleId ??
-      this.bestMatch(
-        options.map((o) => o.value),
-        moduleRankIds ?? [],
-      );
+    const id = this.bestMatch(
+      options.map((o) => o.value),
+      coalesce(moduleRankIds, []),
+    );
     count = count === true ? rational(0n) : count;
     return [{ id, count }];
-  }
-
-  static defaultBeacons(): BeaconSettings[] | undefined {
-    return undefined;
   }
 
   static adjustRecipe(
@@ -693,11 +686,15 @@ export class RecipeUtility {
     }
 
     if (machine != null && this.allowsModules(recipe, machine)) {
-      const options = this.moduleOptions(machine, data, objective.targetId);
+      objective.moduleOptions = this.moduleOptions(
+        machine,
+        data,
+        objective.targetId,
+      );
       objective.modules = this.hydrateModules(
         objective.modules,
-        options,
-        machinesState.moduleRankIds ?? [],
+        objective.moduleOptions,
+        coalesce(machinesState.moduleRankIds, []),
         machine.modules,
         def.modules,
       );
@@ -747,15 +744,17 @@ export class RecipeUtility {
       moduleRankIds,
     );
     const moduleCount = count === true || count == null ? rational(0n) : count;
-    const result = value.map((m) => {
-      const r = {} as ModuleSettings;
-      if (m.id !== moduleId) r.id = m.id;
-      if (!m.count?.eq(moduleCount)) r.count = m.count;
-      return r;
-    });
+    const result = value
+      // Exclude empty module entry
+      .filter((m) => m.id !== ItemId.Module)
+      .map((m) => {
+        const r = {} as ModuleSettings;
+        if (m.id !== moduleId) r.id = m.id;
+        if (!m.count?.eq(moduleCount)) r.count = m.count;
+        return r;
+      });
 
-    if (result.length === 1 && Object.keys(result[0]).length === 0)
-      return undefined;
+    if (result.every((r) => Object.keys(r).length === 0)) return [];
 
     return result;
   }
@@ -770,15 +769,25 @@ export class RecipeUtility {
     if (value == null)
       return this.defaultModules(options, moduleRankIds, count, machineValue);
 
+    const moduleCount = count === true || count == null ? rational(0n) : count;
     const moduleId = this.bestMatch(
       options.map((o) => o.value),
       moduleRankIds,
     );
-    const moduleCount = count === true || count == null ? rational(0n) : count;
-    return value.map((m) => ({
-      id: m.id ?? moduleId,
-      count: m.count ?? moduleCount,
+    const result = value.map((m) => ({
+      count: coalesce(m.count, moduleCount),
+      id: coalesce(m.id, moduleId),
     }));
+
+    if (moduleCount.nonzero()) {
+      // Restore empty module entry
+      const total = result.reduce((a, b) => a.add(b.count), rational(0n));
+      const empty = moduleCount.sub(total);
+      if (empty.gt(rational(0n)))
+        result.push({ count: empty, id: ItemId.Module });
+    }
+
+    return result;
   }
 
   static dehydrateBeacons(
@@ -788,26 +797,38 @@ export class RecipeUtility {
     if (areArraysEqual(value, def, areBeaconSettingsEqual)) return undefined;
 
     if (def == null || def.length === 0) return value;
-    const beaconSettings = def[0];
 
-    const result = value.map((m) => {
+    const beaconSettings = def[0];
+    const moduleId = beaconSettings?.modules?.[0].id;
+    const moduleCount = coalesce(
+      beaconSettings?.modules?.[0].count,
+      rational(0n),
+    );
+    const result = value.map((b) => {
       const r = {} as BeaconSettings;
-      if (m.id !== beaconSettings.id) r.id = m.id;
-      if (!m.count?.eq(beaconSettings.count ?? rational(0n))) r.count = m.count;
+      if (b.id && b.id !== beaconSettings.id) r.id = b.id;
+      if (!b.count?.eq(coalesce(beaconSettings.count, rational(0n))))
+        r.count = b.count;
       if (
         !areArraysEqual(
-          m.modules,
+          b.modules,
           beaconSettings.modules,
           areModuleSettingsEqual,
         )
       )
-        r.modules = m.modules;
-      if (m.total) r.total = m.total;
+        r.modules = b.modules
+          ?.filter((m) => m.id !== ItemId.Module)
+          .map((m) => {
+            const r = {} as ModuleSettings;
+            if (m.id !== moduleId) r.id = m.id;
+            if (!m.count?.eq(moduleCount)) r.count = m.count;
+            return r;
+          });
+      if (b.total) r.total = b.total;
       return r;
     });
 
-    if (result.length === 1 && Object.keys(result[0]).length === 0)
-      return undefined;
+    if (result.every((r) => Object.keys(r).length === 0)) return [];
 
     return result;
   }
@@ -820,15 +841,34 @@ export class RecipeUtility {
 
     const beaconSettings = def[0];
     const moduleSettings = beaconSettings.modules?.[0];
-    return value.map((b) => ({
-      id: b.id ?? beaconSettings.id,
+    const result = value.map((b) => ({
+      id: coalesce(b.id, beaconSettings.id),
       count: b.count ?? beaconSettings.count,
-      modules:
+      modules: coalesce(
         b.modules?.map((m) => ({
-          id: m.id ?? moduleSettings?.id,
-          count: m.count ?? moduleSettings?.count,
-        })) ?? beaconSettings.modules,
-      total: b.total ?? beaconSettings.total,
+          id: coalesce(m.id, moduleSettings?.id),
+          count: coalesce(m.count, moduleSettings?.count),
+        })),
+        beaconSettings.modules,
+      ),
+      total: coalesce(b.total, beaconSettings.total),
     }));
+
+    if (moduleSettings?.count == null) return result;
+
+    return result.map((b) => {
+      // Restore empty module entry
+      // Safe to assert b.modules != null because code would have returned early
+      // above; each entry's modules have already been coalesced
+      const total = b.modules!.reduce(
+        (a, b) => a.add(coalesce(b.count, rational(0n))),
+        rational(0n),
+      );
+      const empty = moduleSettings?.count?.sub(total);
+      if (empty?.gt(rational(0n)))
+        b.modules!.push({ count: empty, id: ItemId.Module });
+
+      return b;
+    });
   }
 }

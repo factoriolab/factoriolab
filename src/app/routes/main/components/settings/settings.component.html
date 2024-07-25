@@ -737,7 +737,7 @@
                           </button>
                           <lab-modules-overlay
                             #modulesOverlay
-                            (setValue)="setModules(machineId, $event)"
+                            (setValue)="changeModules(machineId, $event)"
                           ></lab-modules-overlay>
                           <ng-template #tooltip>
                             @for (module of settings.modules; track module.id) {

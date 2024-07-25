@@ -25,7 +25,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { BrowserUtility } from '~/utilities';
+import { BrowserUtility, RecipeUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
 
 describe('SettingsComponent', () => {
@@ -278,31 +278,35 @@ describe('SettingsComponent', () => {
     });
   });
 
-  // describe('changeBeaconModuleRank', () => {
-  //   it('should set the defaults for the default machine', () => {
-  //     spyOn(component, 'setBeaconModuleRank');
-  //     component.changeBeaconModuleRank('', [], {
-  //       beaconModuleId: 'beaconModuleId',
-  //     } as any);
-  //     expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
-  //       '',
-  //       [],
-  //       ['beaconModuleId'],
-  //     );
-  //   });
+  describe('changeModules', () => {
+    it('should dehydrate the modules', () => {
+      spyOn(RecipeUtility, 'dehydrateModules');
+      spyOn(component, 'setModules');
+      component.changeModules(ItemId.AssemblingMachine2, []);
+      expect(RecipeUtility.dehydrateModules).toHaveBeenCalled();
+      expect(component.setModules).toHaveBeenCalled();
+    });
+  });
 
-  //   it('should set the defaults for a specific machine', () => {
-  //     spyOn(component, 'setBeaconModuleRank');
-  //     component.changeBeaconModuleRank(ItemId.AssemblingMachine1, [], {
-  //       beaconModuleRankIds: ['beaconModuleId'],
-  //     } as any);
-  //     expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
-  //       ItemId.AssemblingMachine1,
-  //       [],
-  //       ['beaconModuleId'],
-  //     );
-  //   });
-  // });
+  describe('changeBeacons', () => {
+    it('should dehydrate the beacons', () => {
+      spyOn(RecipeUtility, 'dehydrateBeacons');
+      spyOn(component, 'setBeacons');
+      component.changeBeacons(ItemId.AssemblingMachine2, []);
+      expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
+      expect(component.setBeacons).toHaveBeenCalled();
+    });
+  });
+
+  describe('changeDefaultBeacons', () => {
+    it('should dehydrate the beacons', () => {
+      spyOn(RecipeUtility, 'dehydrateBeacons');
+      spyOn(component, 'setDefaultBeacons');
+      component.changeDefaultBeacons([]);
+      expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
+      expect(component.setDefaultBeacons).toHaveBeenCalled();
+    });
+  });
 
   describe('toggleBeaconReceivers', () => {
     it('should turn off beacon power estimation', () => {
@@ -351,11 +355,6 @@ describe('SettingsComponent', () => {
     dispatch.valDef('setFluidWagon', Settings.SetFluidWagonAction);
     dispatch.val('setFlowRate', Settings.SetFlowRateAction);
     dispatch.val('setInserterTarget', Settings.SetInserterTargetAction);
-    // dispatch.val('setFlowDiagram', Preferences.SetFlowDiagramAction);
-    // dispatch.val('setSankeyAlign', Preferences.SetSankeyAlignAction);
-    // dispatch.val('setLinkSize', Preferences.SetLinkSizeAction);
-    // dispatch.val('setLinkText', Preferences.SetLinkTextAction);
-    // dispatch.val('setFlowHideExcluded', Preferences.SetFlowHideExcludedAction);
     dispatch.val('setMiningBonus', Settings.SetMiningBonusAction);
     dispatch.val('setResearchSpeed', Settings.SetResearchBonusAction);
     dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);
@@ -374,6 +373,10 @@ describe('SettingsComponent', () => {
     dispatch.val(
       'setSurplusMachinesOutput',
       Settings.SetSurplusMachinesOutputAction,
+    );
+    dispatch.val(
+      'setConvertObjectiveValues',
+      Preferences.SetConvertObjectiveValuesAction,
     );
   });
 });

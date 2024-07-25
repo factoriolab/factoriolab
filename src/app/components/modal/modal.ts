@@ -3,13 +3,20 @@ import {
   Component,
   inject,
   signal,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { OverlayPanel } from 'primeng/overlaypanel';
 
 @Component({ template: '' })
-abstract class ModalComponent {
+export abstract class ModalComponent {
   cancel = signal(false);
+
+  onHide(): void {
+    if (this.cancel()) return;
+    this.save();
+  }
+
+  abstract save(): void;
 }
 
 @Component({ template: '' })
@@ -28,33 +35,19 @@ export abstract class DialogComponent extends ModalComponent {
     this.visible = true;
     this.ref.markForCheck();
   }
-
-  onHide(): void {
-    if (this.cancel()) return;
-    this.save();
-  }
-
-  abstract save(): void;
 }
 
 @Component({ template: '' })
 export abstract class OverlayComponent extends ModalComponent {
-  @ViewChild(OverlayPanel) overlayPanel?: OverlayPanel;
+  overlayPanel = viewChild.required(OverlayPanel);
 
   hide(cancel?: true): void {
     if (cancel === true) this.cancel.set(cancel);
-    this.overlayPanel?.hide();
+    this.overlayPanel().hide();
   }
 
   protected _show(event: Event): void {
     this.cancel.set(false);
-    this.overlayPanel?.toggle(event);
+    this.overlayPanel().toggle(event);
   }
-
-  onHide(): void {
-    if (this.cancel()) return;
-    this.save();
-  }
-
-  abstract save(): void;
 }

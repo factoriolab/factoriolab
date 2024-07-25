@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import { DropdownChangeEvent } from 'primeng/dropdown';
 
 import { OverlayComponent } from '~/components';
+import { spread } from '~/helpers';
 import {
   BeaconSettings,
   ItemId,
@@ -97,6 +98,9 @@ export class BeaconsOverlayComponent extends OverlayComponent {
   }
 
   save(): void {
-    this.setValue.emit(this.beacons());
+    const value = this.beacons().map((b) =>
+      spread(b, { modules: b.modules?.filter((m) => m.count?.nonzero()) }),
+    );
+    this.setValue.emit(value);
   }
 }

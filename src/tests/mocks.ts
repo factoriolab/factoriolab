@@ -236,6 +236,13 @@ export const Objectives = ObjectivesList.map((o) => ({
   },
 }));
 export const Objective = Objectives[0];
+export const FlowSettings: M.FlowSettings = {
+  diagram: M.FlowDiagram.Sankey,
+  linkSize: M.LinkValue.Items,
+  linkText: M.LinkValue.Items,
+  sankeyAlign: M.SankeyAlign.Justify,
+  hideExcluded: true,
+};
 export const PreferencesState: Preferences.PreferencesState = {
   states: {
     [M.Game.Factorio]: { ['name']: 'z=zip' },
@@ -256,13 +263,7 @@ export const PreferencesState: Preferences.PreferencesState = {
   hideDuplicateIcons: false,
   paused: false,
   convertObjectiveValues: false,
-  flowSettings: {
-    diagram: M.FlowDiagram.Sankey,
-    linkSize: M.LinkValue.Items,
-    linkText: M.LinkValue.Items,
-    sankeyAlign: M.SankeyAlign.Justify,
-    hideExcluded: true,
-  },
+  flowSettings: FlowSettings,
 };
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
