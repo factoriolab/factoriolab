@@ -1,4 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
+import { Entities } from '~/models';
 import { StoreUtility } from './store.utility';
 
 describe('StoreUtility', () => {
@@ -188,6 +189,18 @@ describe('StoreUtility', () => {
         payload,
       );
       expect(result).toEqual({} as any);
+    });
+  });
+
+  describe('setValue', () => {
+    it('should clean up object if setting to undefined', () => {
+      const entities: Entities<{ value?: string }> = { id: { value: 'value' } };
+      expect(
+        StoreUtility.setValue(entities, 'value', {
+          id: 'id',
+          value: undefined,
+        }),
+      ).toEqual({});
     });
   });
 

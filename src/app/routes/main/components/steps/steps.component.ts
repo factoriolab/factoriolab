@@ -341,7 +341,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
           id,
           RecipeUtility.dehydrateModules(
             event,
-            settings.moduleOptions ?? [],
+            coalesce(settings.moduleOptions, []),
             machinesState.moduleRankIds,
             machine.modules,
             machineSettings.modules,
@@ -369,15 +369,6 @@ export class StepsComponent implements OnInit, AfterViewInit {
         break;
       }
     }
-  }
-
-  generateModules(index: number, value: string, original: string[]): string[] {
-    const modules = [...original]; // Copy
-    // Fill in index to the right
-    for (let i = index; i < modules.length; i++) {
-      modules[i] = value;
-    }
-    return modules;
   }
 
   changeStepChecked(step: Step, checked: boolean): void {

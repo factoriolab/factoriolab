@@ -33,7 +33,7 @@ export const getRecipesState = createSelector(
       if (s.machineId == null)
         s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
-          machinesState.ids ?? [],
+          coalesce(machinesState.ids, []),
         );
 
       const machine = data.machineEntities[s.machineId];

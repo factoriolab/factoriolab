@@ -53,18 +53,10 @@ export const getResearchedTechnologyIds = createSelector(
   settingsState,
   (state) => state.researchedTechnologyIds,
 );
-export const getNetProductionOnly = createSelector(
-  settingsState,
-  (state) => state.netProductionOnly,
-);
 export const getPreset = createSelector(settingsState, (state) => state.preset);
 export const getBeaconReceivers = createSelector(
   settingsState,
   (state) => state.beaconReceivers,
-);
-export const getProliferatorSprayId = createSelector(
-  settingsState,
-  (state) => state.proliferatorSprayId,
 );
 export const getFlowRate = createSelector(
   settingsState,
@@ -73,14 +65,6 @@ export const getFlowRate = createSelector(
 export const getInserterTarget = createSelector(
   settingsState,
   (state) => state.inserterTarget,
-);
-export const getMiningBonus = createSelector(
-  settingsState,
-  (state) => state.miningBonus,
-);
-export const getResearchBonus = createSelector(
-  settingsState,
-  (state) => state.researchBonus,
 );
 export const getInserterCapacity = createSelector(
   settingsState,
@@ -202,7 +186,7 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
           const modules: ModuleSettings[] = [
             {
               count: rational(beacon.modules),
-              id: m.beaconModule ?? ItemId.Module,
+              id: coalesce(m.beaconModule, ItemId.Module),
             },
           ];
 
@@ -256,10 +240,6 @@ export const getSettings = createSelector(
       fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
     },
   }),
-);
-
-export const getMiningFactor = createSelector(getMiningBonus, (bonus) =>
-  bonus.div(rational(100n)),
 );
 
 export const getI18n = createSelector(

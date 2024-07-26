@@ -17,6 +17,7 @@ import {
 } from 'src/tests';
 import { Entities, rational, Step, StepDetail, StepDetailTab } from '~/models';
 import { Items, LabState, Objectives, Preferences, Recipes } from '~/store';
+import { RecipeUtility } from '~/utilities';
 import { StepsComponent } from './steps.component';
 
 describe('StepsComponent', () => {
@@ -286,6 +287,16 @@ describe('StepsComponent', () => {
       expect(component.setMachine).not.toHaveBeenCalled();
     });
 
+    it('should skip a step with no machine', () => {
+      spyOn(component, 'setMachine');
+      component.changeRecipeField(
+        { id: '0', recipeId: RecipeId.AdvancedCircuit },
+        '1',
+        'machine',
+      );
+      expect(component.setMachine).not.toHaveBeenCalled();
+    });
+
     it('should set up default for machine', () => {
       spyOn(component, 'setMachine');
       component.changeRecipeField(step, ItemId.AssemblingMachine2, 'machine');
@@ -295,6 +306,12 @@ describe('StepsComponent', () => {
         ItemId.AssemblingMachine1,
         false,
       );
+    });
+
+    it('should ignore invalid machine event', () => {
+      spyOn(component, 'setMachine');
+      component.changeRecipeField(step, 0, 'machine');
+      expect(component.setMachine).not.toHaveBeenCalled();
     });
 
     it('should set up default for fuel', () => {
@@ -308,33 +325,37 @@ describe('StepsComponent', () => {
       );
     });
 
-    // it('should set up default for machine modules', () => {
-    //   spyOn(component, 'setModules');
-    //   const modules = [{ count: rational(4n), id: ItemId.SpeedModule3 }];
-    //   component.changeRecipeField(step, modules, 'modules');
-    //   expect(component.setModules).toHaveBeenCalledWith(
-    //     RecipeId.WoodenChest,
-    //     modules,
-    //     false,
-    //   );
-    // });
+    it('should ignore invalid fuel event', () => {
+      spyOn(component, 'setFuel');
+      component.changeRecipeField(step, 0, 'fuel');
+      expect(component.setFuel).not.toHaveBeenCalled();
+    });
 
-    // it('should set up default for beacons', () => {
-    //   spyOn(component, 'setBeacons');
-    //   const beacons = [
-    //     {
-    //       count: rational(1n),
-    //       id: ItemId.Beacon,
-    //       modules: [{ count: rational(2n), id: ItemId.Module }],
-    //     },
-    //   ];
-    //   component.changeRecipeField(step, beacons, 'beacons');
-    //   expect(component.setBeacons).toHaveBeenCalledWith(
-    //     RecipeId.WoodenChest,
-    //     beacons,
-    //     false,
-    //   );
-    // });
+    it('should set up default for modules', () => {
+      spyOn(RecipeUtility, 'dehydrateModules');
+      spyOn(component, 'setModules');
+      component.changeRecipeField(step, [], 'modules');
+      expect(component.setModules).toHaveBeenCalled();
+    });
+
+    it('should ignore invalid modules event', () => {
+      spyOn(component, 'setModules');
+      component.changeRecipeField(step, ItemId.AdvancedCircuit, 'modules');
+      expect(component.setModules).not.toHaveBeenCalled();
+    });
+
+    it('should set up default for beacons', () => {
+      spyOn(RecipeUtility, 'dehydrateBeacons');
+      spyOn(component, 'setBeacons');
+      component.changeRecipeField(step, [], 'beacons');
+      expect(component.setBeacons).toHaveBeenCalled();
+    });
+
+    it('should ignore invalid beacons event', () => {
+      spyOn(component, 'setBeacons');
+      component.changeRecipeField(step, ItemId.AdvancedCircuit, 'beacons');
+      expect(component.setBeacons).not.toHaveBeenCalled();
+    });
 
     it('should set up default for overclock', () => {
       spyOn(component, 'setOverclock');
@@ -345,6 +366,12 @@ describe('StepsComponent', () => {
         undefined,
         false,
       );
+    });
+
+    it('should ignore invalid overclock event', () => {
+      spyOn(component, 'setOverclock');
+      component.changeRecipeField(step, ItemId.AdvancedCircuit, 'overclock');
+      expect(component.setOverclock).not.toHaveBeenCalled();
     });
   });
 

@@ -317,7 +317,19 @@ describe('ObjectivesComponent', () => {
   });
 
   describe('convertItemsToMachines', () => {
+    it('should convert the objective value', () => {
+      spyOn(component, 'convertObjectiveValues').and.returnValue(true);
+      spyOn(component, 'setValue');
+      component.convertItemsToMachines(
+        Mocks.Objectives[0],
+        RecipeId.AdvancedCircuit,
+        Mocks.AdjustedDataset,
+      );
+      expect(component.setValue).toHaveBeenCalledWith('0', rational(1n, 77n));
+    });
+
     it('should not convert the value on maximize objectives', () => {
+      spyOn(component, 'convertObjectiveValues').and.returnValue(true);
       spyOn(component, 'setValue');
       component.convertItemsToMachines(
         Mocks.Objectives[2],
@@ -329,18 +341,20 @@ describe('ObjectivesComponent', () => {
   });
 
   describe('convertMachinesToItems', () => {
-    // it('should convert the objective value', () => {
-    //   spyOn(component, 'setValue');
-    //   component.convertMachinesToItems(
-    //     Mocks.Objectives[4],
-    //     ItemId.PiercingRoundsMagazine,
-    //     ObjectiveUnit.Items,
-    //     Mocks.AdjustedDataset,
-    //   );
-    //   expect(component.setValue).toHaveBeenCalledWith('4', rational(175n));
-    // });
+    it('should convert the objective value', () => {
+      spyOn(component, 'convertObjectiveValues').and.returnValue(true);
+      spyOn(component, 'setValue');
+      component.convertMachinesToItems(
+        Mocks.Objectives[4],
+        ItemId.PiercingRoundsMagazine,
+        ObjectiveUnit.Items,
+        Mocks.AdjustedDataset,
+      );
+      expect(component.setValue).toHaveBeenCalledWith('4', rational(175n));
+    });
 
     it('should not convert the value on maximize objectives', () => {
+      spyOn(component, 'convertObjectiveValues').and.returnValue(true);
       spyOn(component, 'setValue');
       component.convertMachinesToItems(
         Mocks.Objectives[2],
@@ -353,7 +367,20 @@ describe('ObjectivesComponent', () => {
   });
 
   describe('convertItemsToItems', () => {
+    it('should convert the objective value', () => {
+      spyOn(component, 'convertObjectiveValues').and.returnValue(true);
+      spyOn(component, 'setValue');
+      component.convertItemsToItems(
+        Mocks.Objectives[0],
+        ItemId.AdvancedCircuit,
+        ObjectiveUnit.Belts,
+        Mocks.AdjustedDataset,
+      );
+      expect(component.setValue).toHaveBeenCalledWith('0', rational(1n, 900n));
+    });
+
     it('should not convert the value on maximize objectives', () => {
+      spyOn(component, 'convertObjectiveValues').and.returnValue(true);
       spyOn(component, 'setValue');
       component.convertItemsToItems(
         Mocks.Objectives[2],
