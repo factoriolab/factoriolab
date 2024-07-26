@@ -1,11 +1,13 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  DestroyRef,
   inject,
+  OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
+import { tap, withLatestFrom } from 'rxjs';
 
 import {
   ColumnKey,
@@ -13,9 +15,11 @@ import {
   columnsInfo,
   ColumnsState,
   Entities,
+  initialColumnsState,
 } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Preferences, Settings } from '~/store';
+import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-columns',
@@ -23,15 +27,14 @@ import { LabState, Preferences, Settings } from '~/store';
   styleUrls: ['./columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColumnsComponent {
-  ref = inject(ChangeDetectorRef);
+export class ColumnsComponent extends DialogComponent implements OnInit {
   store = inject(Store<LabState>);
   contentSvc = inject(ContentService);
+  destroyRef = inject(DestroyRef);
 
   columnOptions = this.store.selectSignal(Settings.getColumnOptions);
 
-  visible = false;
-  editValue: Entities<ColumnSettings> = {};
+  editValue: Entities<ColumnSettings> = initialColumnsState;
   columnsInf = columnsInfo;
 
   get modified(): boolean {
@@ -44,16 +47,17 @@ export class ColumnsComponent {
     );
   }
 
-  constructor() {
-    this.contentSvc.showColumns$.pipe(takeUntilDestroyed()).subscribe(() => {
-      this.visible = true;
-      this.ref.markForCheck();
-    });
-
-    this.store
-      .select(Settings.getColumnsState)
-      .pipe(takeUntilDestroyed())
-      .subscribe((c) => this.initEdit(c));
+  ngOnInit(): void {
+    this.contentSvc.showColumns$
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        withLatestFrom(this.store.select(Settings.getColumnsState)),
+        tap(([_, c]) => {
+          this.initEdit(c);
+          this.show();
+        }),
+      )
+      .subscribe();
   }
 
   initEdit(columns: ColumnsState): void {

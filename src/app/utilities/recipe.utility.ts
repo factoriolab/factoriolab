@@ -1,11 +1,13 @@
 import { SelectItem } from 'primeng/api';
 
-import { coalesce, fnPropsNotNullish } from '~/helpers';
+import { areArraysEqual, coalesce, fnPropsNotNullish } from '~/helpers';
 import {
   AdjustedDataset,
   AdjustedRecipe,
-  AdjustmentData,
+  areBeaconSettingsEqual,
+  areModuleSettingsEqual,
   Beacon,
+  BeaconSettings,
   Belt,
   cloneRecipe,
   CostSettings,
@@ -19,6 +21,7 @@ import {
   ItemSettings,
   Machine,
   MachineJson,
+  ModuleSettings,
   Objective,
   rational,
   Rational,
@@ -26,7 +29,7 @@ import {
   RecipeJson,
   RecipeSettings,
 } from '~/models';
-import { Items, Machines, Recipes } from '~/store';
+import { Items, Machines, Recipes, Settings } from '~/store';
 
 export class RecipeUtility {
   static MIN_FACTOR = rational(1n, 5n);
@@ -37,10 +40,8 @@ export class RecipeUtility {
   static bestMatch(options: string[], rank: string[]): string {
     if (options.length > 1) {
       for (const r of rank) {
-        if (options.indexOf(r) !== -1) {
-          // Return first matching option in rank list
-          return r;
-        }
+        // Return first matching option in rank list
+        if (options.includes(r)) return r;
       }
     }
     return options[0];
@@ -69,8 +70,8 @@ export class RecipeUtility {
 
   static moduleOptions(
     entity: Machine | Beacon,
-    recipeId: string | null,
     data: Dataset,
+    recipeId?: string,
   ): SelectItem<string>[] {
     // Get all modules
     let allowed = data.moduleIds
@@ -105,24 +106,33 @@ export class RecipeUtility {
     return options;
   }
 
-  /** Determines default array of modules for a given recipe */
+  /** Determines default modules for a recipe/machine */
   static defaultModules(
-    options: SelectItem[],
-    moduleRankIds: string[],
-    count: Rational,
-  ): string[] {
-    const module = this.bestMatch(
+    options: SelectItem<string>[],
+    moduleRankIds: string[] | undefined,
+    count: Rational | true | undefined,
+    machineValue?: ModuleSettings[] | undefined,
+  ): ModuleSettings[] | undefined {
+    if (count == null) return undefined;
+
+    if (machineValue) {
+      const set = new Set(options.map((o) => o.value));
+      if (machineValue.every((m) => m.id && set.has(m.id))) return machineValue;
+    }
+
+    const id = this.bestMatch(
       options.map((o) => o.value),
-      moduleRankIds,
+      coalesce(moduleRankIds, []),
     );
-    return new Array(count.toNumber()).fill(module);
+    count = count === true ? rational(0n) : count;
+    return [{ id, count }];
   }
 
   static adjustRecipe(
     recipeId: string,
-    adjustmentData: AdjustmentData,
-    settings: RecipeSettings,
+    recipeSettings: RecipeSettings,
     itemsState: Entities<ItemSettings>,
+    settings: Settings.SettingsState,
     data: Dataset,
   ): AdjustedRecipe {
     const recipe: AdjustedRecipe = {
@@ -135,10 +145,15 @@ export class RecipeUtility {
       miningBonus,
       researchBonus,
       netProductionOnly,
-    } = adjustmentData;
+    } = settings;
 
-    if (settings.machineId != null) {
-      const machine = data.machineEntities[settings.machineId];
+    const miningFactor = miningBonus.div(rational(100n));
+    const researchFactor = researchBonus
+      .add(rational(100n))
+      .div(rational(100n));
+
+    if (recipeSettings.machineId != null) {
+      const machine = data.machineEntities[recipeSettings.machineId];
 
       if (machine.speed != null) {
         // Adjust for machine speed
@@ -163,7 +178,7 @@ export class RecipeUtility {
 
       if (recipe.isTechnology && data.game === Game.Factorio) {
         // Adjust for research factor
-        recipe.time = recipe.time.div(researchBonus);
+        recipe.time = recipe.time.div(researchFactor);
       }
 
       // Calculate factors
@@ -174,21 +189,79 @@ export class RecipeUtility {
 
       if (recipe.isMining) {
         // Adjust for mining bonus
-        prod = prod.add(miningBonus);
+        prod = prod.add(miningFactor);
       }
 
       const proliferatorSprays: Entities<Rational> = {};
 
       // Modules
-      // Set up factor for number of Final Factory duplicators
-      const factor =
-        data.game === Game.FinalFactory
-          ? coalesce(settings.overclock, rational(0n))
-          : rational(1n);
-      if (settings.moduleIds && settings.moduleIds.length) {
-        for (const id of settings.moduleIds) {
+      if (recipeSettings.modules) {
+        for (const { id, count } of recipeSettings.modules) {
+          if (id == null || count == null) continue;
           const module = data.moduleEntities[id];
-          if (module) {
+          if (module == null) continue;
+
+          if (module.speed) {
+            speed = speed.add(module.speed.mul(count));
+          }
+
+          if (module.productivity) {
+            prod = prod.add(module.productivity.mul(count));
+          }
+
+          if (module.consumption) {
+            consumption = consumption.add(module.consumption.mul(count));
+          }
+
+          if (module.pollution) {
+            pollution = pollution.add(module.pollution.mul(count));
+          }
+
+          // Note: Count is ignored for proliferator / sprays (assumed to be 1)
+          if (module.sprays) {
+            let sprays = module.sprays;
+            // If proliferator is applied to proliferator, apply productivity bonus to sprays
+            const pModule = data.moduleEntities[proliferatorSprayId];
+            if (pModule) {
+              sprays = sprays
+                .mul(
+                  rational(1n).add(
+                    coalesce(pModule.productivity, rational(0n)),
+                  ),
+                )
+                .floor(); // DSP rounds down # of sprays
+            }
+            // Calculate amount of proliferator required for this recipe
+            const pId = module.proliferator;
+            if (pId) {
+              if (!proliferatorSprays[pId]) {
+                proliferatorSprays[pId] = rational(0n);
+              }
+              proliferatorSprays[pId] = proliferatorSprays[pId].add(sprays);
+            }
+          }
+        }
+      }
+
+      // Beacons
+      if (recipeSettings.beacons != null) {
+        for (const beaconSettings of recipeSettings.beacons) {
+          if (
+            !beaconSettings.count?.nonzero() ||
+            beaconSettings.id == null ||
+            beaconSettings.modules == null
+          ) {
+            continue;
+          }
+
+          for (const { id, count } of beaconSettings.modules) {
+            if (id == null || id === ItemId.Module || count == null) continue;
+            const module = data.moduleEntities[id];
+            const beacon = data.beaconEntities[beaconSettings.id];
+            const factor = beaconSettings.count // Num of beacons
+              .mul(beacon.effectivity) // Effectivity of beacons
+              .mul(count); // Num of modules/beacon
+
             if (module.speed) {
               speed = speed.add(module.speed.mul(factor));
             }
@@ -204,61 +277,6 @@ export class RecipeUtility {
             if (module.pollution) {
               pollution = pollution.add(module.pollution.mul(factor));
             }
-
-            if (module.sprays) {
-              let sprays = module.sprays;
-              // If proliferator is applied to proliferator, apply productivity bonus to sprays
-              const pModule = data.moduleEntities[proliferatorSprayId];
-              if (pModule) {
-                sprays = sprays
-                  .mul(
-                    rational(1n).add(
-                      coalesce(pModule.productivity, rational(0n)),
-                    ),
-                  )
-                  .floor(); // DSP rounds down # of sprays
-              }
-              // Calculate amount of proliferator required for this recipe
-              const pId = module.proliferator;
-              if (pId) {
-                if (!proliferatorSprays[pId]) {
-                  proliferatorSprays[pId] = rational(0n);
-                }
-                proliferatorSprays[pId] = proliferatorSprays[pId].add(sprays);
-              }
-            }
-          }
-        }
-      }
-
-      // Beacons
-      if (settings.beacons != null) {
-        for (const beaconSettings of settings.beacons) {
-          const beaconModules = beaconSettings.moduleIds?.filter(
-            (m) => m !== ItemId.Module && data.moduleEntities[m],
-          );
-          if (
-            beaconModules?.length &&
-            beaconSettings.id &&
-            beaconSettings.count?.nonzero()
-          ) {
-            for (const id of beaconModules) {
-              const module = data.moduleEntities[id];
-              const beacon = data.beaconEntities[beaconSettings.id];
-              const factor = beaconSettings.count.mul(beacon.effectivity);
-              if (module.speed) {
-                speed = speed.add(module.speed.mul(factor));
-              }
-              if (module.productivity) {
-                prod = prod.add(module.productivity.mul(factor));
-              }
-              if (module.consumption) {
-                consumption = consumption.add(module.consumption.mul(factor));
-              }
-              if (module.pollution) {
-                pollution = pollution.add(module.pollution.mul(factor));
-              }
-            }
           }
         }
       }
@@ -267,9 +285,11 @@ export class RecipeUtility {
       if (speed.lt(this.MIN_FACTOR)) {
         speed = this.MIN_FACTOR;
       }
+
       if (consumption.lt(this.MIN_FACTOR)) {
         consumption = this.MIN_FACTOR;
       }
+
       if (pollution.lt(this.MIN_FACTOR)) {
         pollution = this.MIN_FACTOR;
       }
@@ -277,11 +297,11 @@ export class RecipeUtility {
       // Overclock effects
       let oc: Rational | undefined;
       if (
-        settings.overclock &&
+        recipeSettings.overclock &&
         data.game !== Game.FinalFactory &&
-        !settings.overclock.eq(rational(100n))
+        !recipeSettings.overclock.eq(rational(100n))
       ) {
-        oc = settings.overclock.div(rational(100n));
+        oc = recipeSettings.overclock.div(rational(100n));
         speed = speed.mul(oc);
       }
 
@@ -333,7 +353,7 @@ export class RecipeUtility {
 
       // Pollution
       recipe.pollution =
-        machine.pollution && settings.machineId !== ItemId.Pumpjack
+        machine.pollution && recipeSettings.machineId !== ItemId.Pumpjack
           ? machine.pollution
               .div(this.POLLUTION_FACTOR)
               .mul(pollution)
@@ -350,8 +370,8 @@ export class RecipeUtility {
       }
 
       // Calculate burner fuel inputs
-      if (settings.fuelId) {
-        const fuel = data.fuelEntities[settings.fuelId];
+      if (recipeSettings.fuelId) {
+        const fuel = data.fuelEntities[recipeSettings.fuelId];
 
         if (fuel) {
           const fuelIn = recipe.time
@@ -359,8 +379,8 @@ export class RecipeUtility {
             .div(fuel.value)
             .div(rational(1000n));
 
-          recipe.in[settings.fuelId] = (
-            recipe.in[settings.fuelId] || rational(0n)
+          recipe.in[recipeSettings.fuelId] = (
+            recipe.in[recipeSettings.fuelId] || rational(0n)
           ).add(fuelIn);
 
           if (fuel.result) {
@@ -507,35 +527,45 @@ export class RecipeUtility {
     excludedRecipeIds: string[],
     recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
-    adjustmentData: AdjustmentData,
-    cost: CostSettings,
+    settings: Settings.SettingsState,
     data: Dataset,
   ): AdjustedDataset {
-    const recipeR = this.adjustRecipes(
+    const adjustedRecipe = this.adjustRecipes(
       recipeIds,
       recipesState,
       itemsState,
-      adjustmentData,
+      settings,
       data,
     );
-    this.adjustCost(recipeIds, recipeR, recipesState, cost, data);
-    return this.finalizeData(recipeIds, excludedRecipeIds, recipeR, data);
+    this.adjustCosts(
+      recipeIds,
+      adjustedRecipe,
+      recipesState,
+      settings.costs,
+      data,
+    );
+    return this.finalizeData(
+      recipeIds,
+      excludedRecipeIds,
+      adjustedRecipe,
+      data,
+    );
   }
 
   static adjustRecipes(
     recipeIds: string[],
     recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
-    adjustmentData: AdjustmentData,
+    settings: Settings.SettingsState,
     data: Dataset,
   ): Entities<AdjustedRecipe> {
     return this.adjustSiloRecipes(
       recipeIds.reduce((e: Entities<AdjustedRecipe>, i) => {
         e[i] = this.adjustRecipe(
           i,
-          adjustmentData,
           recipesState[i],
           itemsState,
+          settings,
           data,
         );
         return e;
@@ -545,15 +575,15 @@ export class RecipeUtility {
     );
   }
 
-  static adjustCost(
+  static adjustCosts(
     recipeIds: string[],
-    recipeR: Entities<Recipe>,
+    adjustedRecipe: Entities<Recipe>,
     recipesState: Entities<RecipeSettings>,
     costs: CostSettings,
     data: Dataset,
   ): void {
     recipeIds
-      .map((i) => recipeR[i])
+      .map((i) => adjustedRecipe[i])
       .forEach((recipe) => {
         const settings = recipesState[recipe.id];
         if (settings.cost) {
@@ -631,7 +661,7 @@ export class RecipeUtility {
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     machinesState: Machines.MachinesState,
-    adjustmentData: AdjustmentData,
+    settings: Settings.SettingsState,
     data: AdjustedDataset,
   ): Objective {
     if (!isRecipeObjective(objective)) return objective;
@@ -655,56 +685,23 @@ export class RecipeUtility {
       objective.fuelId = objective.fuelId ?? def?.fuelId;
     }
 
-    objective.fuelId = objective.fuelId ?? def?.fuelId;
-    objective.fuelOptions = def?.fuelOptions;
-
     if (machine != null && this.allowsModules(recipe, machine)) {
       objective.moduleOptions = this.moduleOptions(
         machine,
-        objective.targetId,
         data,
+        objective.targetId,
       );
-
-      if (objective.moduleIds == null) {
-        objective.moduleIds = this.defaultModules(
-          objective.moduleOptions,
-          coalesce(def.moduleRankIds, []),
-          coalesce(machine.modules, rational(0n)),
-        );
-      }
-
-      if (objective.beacons == null) {
-        objective.beacons = [{}];
-      } else {
-        objective.beacons = objective.beacons.map((b) => ({
-          ...b,
-        }));
-      }
-
-      for (const beaconSettings of objective.beacons) {
-        beaconSettings.count = beaconSettings.count ?? def.beaconCount;
-        beaconSettings.id = beaconSettings.id ?? def.beaconId;
-
-        if (beaconSettings.id != null) {
-          const beacon = data.beaconEntities[beaconSettings.id];
-          beaconSettings.moduleOptions = this.moduleOptions(
-            beacon,
-            objective.targetId,
-            data,
-          );
-
-          if (beaconSettings.moduleIds == null) {
-            beaconSettings.moduleIds = RecipeUtility.defaultModules(
-              beaconSettings.moduleOptions,
-              coalesce(def.beaconModuleRankIds, []),
-              beacon.modules,
-            );
-          }
-        }
-      }
+      objective.modules = this.hydrateModules(
+        objective.modules,
+        objective.moduleOptions,
+        coalesce(machinesState.moduleRankIds, []),
+        machine.modules,
+        def.modules,
+      );
+      objective.beacons = this.hydrateBeacons(objective.beacons, def.beacons);
     } else {
       // Machine doesn't support modules, remove any
-      delete objective.moduleIds;
+      delete objective.modules;
       delete objective.beacons;
     }
 
@@ -712,9 +709,9 @@ export class RecipeUtility {
 
     objective.recipe = RecipeUtility.adjustRecipe(
       objective.targetId,
-      adjustmentData,
       objective,
       itemsState,
+      settings,
       data,
     );
     RecipeUtility.adjustLaunchRecipeObjective(
@@ -725,5 +722,153 @@ export class RecipeUtility {
     finalizeRecipe(objective.recipe);
 
     return objective;
+  }
+
+  static dehydrateModules(
+    value: ModuleSettings[],
+    options: SelectItem<string>[],
+    moduleRankIds: string[],
+    count: Rational | true | undefined,
+    machineValue?: ModuleSettings[] | undefined,
+  ): ModuleSettings[] | undefined {
+    const def = this.defaultModules(
+      options,
+      moduleRankIds,
+      count,
+      machineValue,
+    );
+    if (areArraysEqual(value, def, areModuleSettingsEqual)) return undefined;
+
+    const moduleId = this.bestMatch(
+      options.map((o) => o.value),
+      moduleRankIds,
+    );
+    const moduleCount = count === true || count == null ? rational(0n) : count;
+    const result = value
+      // Exclude empty module entry
+      .filter((m) => m.id !== ItemId.Module)
+      .map((m) => {
+        const r = {} as ModuleSettings;
+        if (m.id !== moduleId) r.id = m.id;
+        if (!m.count?.eq(moduleCount)) r.count = m.count;
+        return r;
+      });
+
+    if (result.every((r) => Object.keys(r).length === 0)) return [];
+
+    return result;
+  }
+
+  static hydrateModules(
+    value: ModuleSettings[] | undefined,
+    options: SelectItem<string>[],
+    moduleRankIds: string[],
+    count: Rational | true | undefined,
+    machineValue?: ModuleSettings[] | undefined,
+  ): ModuleSettings[] | undefined {
+    if (value == null)
+      return this.defaultModules(options, moduleRankIds, count, machineValue);
+
+    const moduleCount = count === true || count == null ? rational(0n) : count;
+    const moduleId = this.bestMatch(
+      options.map((o) => o.value),
+      moduleRankIds,
+    );
+    const result = value.map((m) => ({
+      count: coalesce(m.count, moduleCount),
+      id: coalesce(m.id, moduleId),
+    }));
+
+    if (moduleCount.nonzero()) {
+      // Restore empty module entry
+      const total = result.reduce((a, b) => a.add(b.count), rational(0n));
+      const empty = moduleCount.sub(total);
+      if (empty.gt(rational(0n)))
+        result.push({ count: empty, id: ItemId.Module });
+    }
+
+    return result;
+  }
+
+  static dehydrateBeacons(
+    value: BeaconSettings[],
+    def: BeaconSettings[] | undefined,
+  ): BeaconSettings[] | undefined {
+    if (areArraysEqual(value, def, areBeaconSettingsEqual)) return undefined;
+
+    if (def == null || def.length === 0) return value;
+
+    const beaconSettings = def[0];
+    const moduleId = beaconSettings?.modules?.[0].id;
+    const moduleCount = coalesce(
+      beaconSettings?.modules?.[0].count,
+      rational(0n),
+    );
+    const result = value.map((b) => {
+      const r = {} as BeaconSettings;
+      if (b.id && b.id !== beaconSettings.id) r.id = b.id;
+      if (!b.count?.eq(coalesce(beaconSettings.count, rational(0n))))
+        r.count = b.count;
+      if (
+        !areArraysEqual(
+          b.modules,
+          beaconSettings.modules,
+          areModuleSettingsEqual,
+        )
+      )
+        r.modules = b.modules
+          ?.filter((m) => m.id !== ItemId.Module)
+          .map((m) => {
+            const r = {} as ModuleSettings;
+            if (m.id !== moduleId) r.id = m.id;
+            if (!m.count?.eq(moduleCount)) r.count = m.count;
+            return r;
+          });
+      if (b.total) r.total = b.total;
+      return r;
+    });
+
+    if (result.every((r) => Object.keys(r).length === 0)) return [];
+
+    return result;
+  }
+
+  static hydrateBeacons(
+    value: BeaconSettings[] | undefined,
+    def: BeaconSettings[] | undefined,
+  ): BeaconSettings[] | undefined {
+    if (value == null || def == null || def.length === 0) return def;
+
+    const beaconSettings = def[0];
+    const moduleSettings = beaconSettings.modules?.[0];
+    const result = value.map((b) => ({
+      id: coalesce(b.id, beaconSettings.id),
+      count: b.count ?? beaconSettings.count,
+      modules: coalesce(
+        b.modules?.map((m) => ({
+          id: coalesce(m.id, moduleSettings?.id),
+          count: coalesce(m.count, moduleSettings?.count),
+        })),
+        beaconSettings.modules,
+      ),
+      total: coalesce(b.total, beaconSettings.total),
+    }));
+
+    if (moduleSettings?.count == null) return result;
+
+    return result.map((b) => {
+      // Restore empty module entry
+      // Safe to assert b.modules != null because code would have returned early
+      // above; each entry's modules have already been coalesced
+      const total = b.modules!.reduce(
+        (a, b) => a.add(coalesce(b.count, rational(0n))),
+        rational(0n),
+      );
+      const empty = moduleSettings?.count?.sub(total);
+      if (empty?.gt(rational(0n)))
+        b.modules!.push({ count: empty, id: ItemId.Module });
+
+      return b;
+    });
   }
 }

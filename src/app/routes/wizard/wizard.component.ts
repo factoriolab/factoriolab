@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { RadioButtonModule } from 'primeng/radiobutton';
@@ -18,7 +17,7 @@ export type WizardState = 'type' | 'item' | 'recipe';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, RadioButtonModule, StepsModule, AppSharedModule],
+  imports: [RadioButtonModule, StepsModule, AppSharedModule],
   templateUrl: './wizard.component.html',
   styleUrls: ['./wizard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

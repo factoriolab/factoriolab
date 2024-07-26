@@ -1,0 +1,119 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [focusOnShow]="false"
+  [style]="{ width: '320px' }"
+  [breakpoints]="{ '320px': '100vw' }"
+  [header]="'flow.flowSettings' | translate"
+  (onHide)="onHide()"
+>
+  <div class="p-fluid">
+    <div class="mt-4 pb-3">
+      <span class="p-float-label">
+        <p-dropdown
+          #flowDiagramDropdown
+          labDropdownTranslate
+          inputId="flow-diagram"
+          [pTooltip]="'flowSettings.diagramTooltip' | translate"
+          [ngModel]="editValue.diagram"
+          [options]="flowDiagramOptions"
+          (onChange)="editValue.diagram = $event.value"
+        >
+        </p-dropdown>
+        <label for="flow-diagram">{{
+          'flowSettings.diagram' | translate
+        }}</label>
+      </span>
+    </div>
+    @if (editValue.diagram === FlowDiagram.Sankey) {
+      <div class="mt-3 pb-3">
+        <span class="p-float-label">
+          <p-dropdown
+            labDropdownTranslate
+            inputId="sankey-align"
+            [pTooltip]="'flowSettings.sankeyAlignTooltip' | translate"
+            [ngModel]="editValue.sankeyAlign"
+            [options]="sankeyAlignOptions"
+            (onChange)="editValue.sankeyAlign = $event.value"
+          >
+          </p-dropdown>
+          <label for="sankey-align">{{
+            'flowSettings.sankeyAlign' | translate
+          }}</label>
+        </span>
+      </div>
+    }
+    <div class="mt-3 pb-3">
+      <span class="p-float-label">
+        <p-dropdown
+          labDropdownTranslate
+          inputId="link-size"
+          [pTooltip]="'flowSettings.linkSizeTooltip' | translate"
+          [ngModel]="editValue.linkSize"
+          [options]="linkValueOptions()"
+          (onChange)="editValue.linkSize = $event.value"
+        >
+        </p-dropdown>
+        <label for="link-size">{{ 'flowSettings.linkSize' | translate }}</label>
+      </span>
+    </div>
+    <div class="mt-3 pb-3">
+      <span class="p-float-label">
+        <p-dropdown
+          labDropdownTranslate
+          inputId="link-text"
+          [pTooltip]="'flowSettings.linkTextTooltip' | translate"
+          [ngModel]="editValue.linkText"
+          [options]="linkValueOptions()"
+          (onChange)="editValue.linkText = $event.value"
+        >
+        </p-dropdown>
+        <label for="link-text">{{ 'flowSettings.linkText' | translate }}</label>
+      </span>
+    </div>
+    <div>
+      <p-checkbox
+        [ngModel]="editValue.hideExcluded"
+        [binary]="true"
+        [label]="'flowSettings.hideExcluded' | translate"
+        [pTooltip]="'flowSettings.hideExcludedTooltip' | translate"
+        tooltipPosition="top"
+        (onChange)="editValue.hideExcluded = $event.checked"
+      ></p-checkbox>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    @if (modified) {
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-outlined"
+        icon="fa-solid fa-rotate-left"
+        [label]="'reset' | translate"
+        (click)="reset()"
+      ></button>
+    }
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="hide()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined p-button-secondary"
+      icon="fa-solid fa-xmark"
+      [label]="'cancel' | translate"
+      (click)="hide(true)"
+    ></button>
+  </ng-template>
+</p-dialog>

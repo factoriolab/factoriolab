@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   ElementRef,
   inject,
   signal,
@@ -44,6 +44,7 @@ import {
   Entities,
   FlowData,
   FlowDiagram,
+  FlowSettings,
   Link,
   Node,
   SankeyAlign,
@@ -56,8 +57,8 @@ import {
   ThemeValues,
 } from '~/services';
 import { LabState, Preferences } from '~/store';
-import { PreferencesState } from '~/store/preferences';
 import { MainSharedModule } from '../../main-shared.module';
+import { FlowSettingsComponent } from './components/flow-settings/flow-settings.component';
 
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
@@ -103,7 +104,7 @@ const VIS_NETWORK_OPTIONS: Options = {
 
 @Component({
   standalone: true,
-  imports: [CommonModule, AppSharedModule, MainSharedModule],
+  imports: [AppSharedModule, MainSharedModule, FlowSettingsComponent],
   templateUrl: './flow.component.html',
   styleUrls: ['./flow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -115,6 +116,9 @@ export class FlowComponent implements AfterViewInit {
   flowSvc = inject(FlowService);
   themeSvc = inject(ThemeService);
   exportSvc = inject(ExportService);
+  destroyRef = inject(DestroyRef);
+
+  flowSettings = this.store.selectSignal(Preferences.getFlowSettings);
 
   svgElement = viewChild.required<ElementRef>('svg');
 
@@ -125,28 +129,28 @@ export class FlowComponent implements AfterViewInit {
   loading = signal(true);
   selectedId = signal<string | null>(null);
 
-  rebuildChart$ = combineLatest([
-    this.flowSvc.flowData$,
-    this.themeSvc.themeValues$,
-    this.store.select(Preferences.preferencesState),
-  ]).pipe(takeUntilDestroyed());
-
   ngAfterViewInit(): void {
-    this.rebuildChart$.subscribe((args) => this.rebuildChart(...args));
+    combineLatest([
+      this.flowSvc.flowData$,
+      this.themeSvc.themeValues$,
+      this.store.select(Preferences.getFlowSettings),
+    ])
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((args) => this.rebuildChart(...args));
   }
 
   rebuildChart(
     flowData: FlowData,
     themeValues: ThemeValues,
-    preferences: PreferencesState,
+    flowSettings: FlowSettings,
   ): void {
     this.loading.set(true);
 
     select(`#${SVG_ID} > *`).remove();
 
     if (flowData.nodes.length && flowData.links.length) {
-      if (preferences.flowDiagram === FlowDiagram.Sankey) {
-        this.rebuildSankey(flowData, preferences);
+      if (flowSettings.diagram === FlowDiagram.Sankey) {
+        this.rebuildSankey(flowData, flowSettings);
       } else {
         this.rebuildBoxLine(flowData, themeValues);
       }
@@ -156,17 +160,17 @@ export class FlowComponent implements AfterViewInit {
     this.ref.detectChanges();
   }
 
-  rebuildSankey(flowData: FlowData, preferences: PreferencesState): void {
+  rebuildSankey(flowData: FlowData, flowSettings: FlowSettings): void {
     let skGraph = this.getLayout(
       flowData,
-      preferences.sankeyAlign,
+      flowSettings.sankeyAlign,
       800,
       this.height,
     );
     const columns = Math.max(...skGraph.nodes.map((d) => coalesce(d.depth, 0)));
     const width = (columns + 1) * NODE_WIDTH + columns * NODE_WIDTH * 8;
     const height = Math.min(this.height, width * 0.75);
-    skGraph = this.getLayout(flowData, preferences.sankeyAlign, width, height);
+    skGraph = this.getLayout(flowData, flowSettings.sankeyAlign, width, height);
 
     const svg = select(this.svgElement().nativeElement)
       .append('svg')

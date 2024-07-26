@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -15,6 +14,7 @@ import { FilterService, SelectItem } from 'primeng/api';
 import { Category, Entities } from '~/models';
 import { ContentService } from '~/services';
 import { LabState, Recipes } from '~/store';
+import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-picker',
@@ -22,8 +22,7 @@ import { LabState, Recipes } from '~/store';
   styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PickerComponent {
-  ref = inject(ChangeDetectorRef);
+export class PickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
   store = inject(Store<LabState>);
   contentSvc = inject(ContentService);
@@ -39,7 +38,6 @@ export class PickerComponent {
   search = '';
   allSelected = false;
 
-  visible = false;
   type: 'item' | 'recipe' = 'item';
   isMultiselect = false;
   selection: string | string[] | undefined;
@@ -134,8 +132,7 @@ export class PickerComponent {
     );
     this.allCategoryIds = this.categoryIds;
     this.allCategoryRows = this.categoryRows;
-    this.visible = true;
-    this.ref.markForCheck();
+    this.show();
 
     if (!this.contentSvc.isMobile()) {
       setTimeout(() => {
@@ -171,7 +168,7 @@ export class PickerComponent {
     }
   }
 
-  onHide(): void {
+  save(): void {
     if (Array.isArray(this.selection)) {
       this.selectIds.emit(this.selection);
     }

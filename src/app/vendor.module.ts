@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AccordionModule } from 'primeng/accordion';
@@ -19,6 +18,7 @@ import { MenuModule } from 'primeng/menu';
 import { MessagesModule } from 'primeng/messages';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OrderList, OrderListModule } from 'primeng/orderlist';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
@@ -67,6 +67,7 @@ const modules = [
   MessagesModule,
   MultiSelectModule,
   OrderListModule,
+  OverlayPanelModule,
   ProgressSpinnerModule,
   RippleModule,
   ScrollPanelModule,
@@ -83,7 +84,7 @@ const modules = [
 ];
 
 @NgModule({
-  imports: [CommonModule, ...modules],
+  imports: [...modules],
   exports: [...modules],
 })
 export class VendorModule {}

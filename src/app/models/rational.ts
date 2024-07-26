@@ -317,7 +317,6 @@ export function rational(
   if (q != null) {
     p = BigInt(p);
     q = BigInt(q);
-    if (q === 0n) throw Error(DIVIDE_BY_ZERO);
     // Parse Rational from array (num/denom pair)
     return new Rational(p, q);
   }

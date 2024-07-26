@@ -77,10 +77,8 @@ describe('ExportService', () => {
         Recipe: recipeId,
         Machines: '=5',
         Machine: ItemId.ElectricFurnace,
-        Modules: '"module,module"',
-        Beacons: '"0"',
-        Beacon: '"beacon"',
-        BeaconModules: '"module|module"',
+        Modules: '"2 module"',
+        Beacons: '"0 beacon (2 speed-module-3)"',
         Power: '=6',
         Pollution: '=7',
       });
@@ -94,10 +92,8 @@ describe('ExportService', () => {
         Wagon: ItemId.CargoWagon,
         Recipe: recipeId,
         Machine: ItemId.ElectricFurnace,
-        Modules: '"module,module"',
-        Beacons: '"0"',
-        Beacon: '"beacon"',
-        BeaconModules: '"module|module"',
+        Modules: '"2 module"',
+        Beacons: '"0 beacon (2 speed-module-3)"',
       });
     });
   });

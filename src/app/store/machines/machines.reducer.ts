@@ -1,13 +1,18 @@
-import { Entities, MachineSettings } from '~/models';
+import { spread } from '~/helpers';
+import { BeaconSettings, Entities, MachineSettings, Rational } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
 import { MachinesAction, MachinesActionType } from './machines.actions';
 
-export type MachinesState = {
+export interface MachinesState {
   ids?: string[];
+  fuelRankIds?: string[];
+  moduleRankIds?: string[];
+  beacons?: BeaconSettings[];
+  overclock?: Rational;
   entities: Entities<MachineSettings>;
-};
+}
 
 export const initialMachinesState: MachinesState = {
   entities: {},
@@ -28,6 +33,18 @@ export function machinesReducer(
     case Settings.SettingsActionType.SET_MOD:
     case Settings.SettingsActionType.SET_PRESET:
       return initialMachinesState;
+    case MachinesActionType.SET_FUEL_RANK:
+      return spread(state, {
+        fuelRankIds: StoreUtility.compareValue(action.payload),
+      });
+    case MachinesActionType.SET_MODULE_RANK:
+      return spread(state, {
+        moduleRankIds: StoreUtility.compareValue(action.payload),
+      });
+    case MachinesActionType.SET_DEFAULT_BEACONS:
+      return spread(state, { beacons: action.payload });
+    case MachinesActionType.SET_DEFAULT_OVERCLOCK:
+      return spread(state, { overclock: action.payload });
     case MachinesActionType.ADD: {
       const value = [
         ...(state.ids ?? action.payload.def ?? []),
@@ -81,40 +98,23 @@ export function machinesReducer(
         'fuelId',
         action.payload,
       );
-      return { ...state, ...{ entities } };
+      return spread(state, { entities });
     }
-    case MachinesActionType.SET_MODULE_RANK: {
-      const entities = StoreUtility.compareReset(
+    case MachinesActionType.SET_MODULES: {
+      const entities = StoreUtility.setValue(
         state.entities,
-        'moduleRankIds',
-        action.payload,
-        true,
-      );
-      return { ...state, ...{ entities } };
-    }
-    case MachinesActionType.SET_BEACON_COUNT: {
-      const entities = StoreUtility.compareReset(
-        state.entities,
-        'beaconCount',
+        'modules',
         action.payload,
       );
-      return { ...state, ...{ entities } };
+      return spread(state, { entities });
     }
-    case MachinesActionType.SET_BEACON: {
-      const entities = StoreUtility.resetFields(
-        StoreUtility.compareReset(state.entities, 'beaconId', action.payload),
-        ['beaconModuleRankIds'],
-        action.payload.id,
-      );
-      return { ...state, ...{ entities } };
-    }
-    case MachinesActionType.SET_BEACON_MODULE_RANK: {
-      const entities = StoreUtility.compareReset(
+    case MachinesActionType.SET_BEACONS: {
+      const entities = StoreUtility.setValue(
         state.entities,
-        'beaconModuleRankIds',
+        'beacons',
         action.payload,
       );
-      return { ...state, ...{ entities } };
+      return spread(state, { entities });
     }
     case MachinesActionType.SET_OVERCLOCK: {
       const entities = StoreUtility.compareReset(
@@ -122,12 +122,12 @@ export function machinesReducer(
         'overclock',
         action.payload,
       );
-      return { ...state, ...{ entities } };
+      return spread(state, { entities });
     }
     case MachinesActionType.RESET_MACHINE: {
       const entities = { ...state.entities };
       delete entities[action.payload];
-      return { ...state, ...{ entities } };
+      return spread(state, { entities });
     }
     default:
       return state;

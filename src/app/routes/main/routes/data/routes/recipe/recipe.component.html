@@ -266,30 +266,32 @@
           }
         </td>
       </tr>
-      @if (recipeSettings.moduleIds?.length) {
+      @if (recipeSettings.modules?.length) {
         <tr>
           <th>{{ 'data.modules' | translate }}</th>
           <td>
-            @for (moduleId of recipeSettings.moduleIds; track moduleId) {
-              <div>
-                @if (moduleId === 'module') {
-                  <i [class]="moduleId | iconSmClass"></i>
-                } @else {
-                  <a
-                    [routerLink]="'/data/modules/' + moduleId"
-                    queryParamsHandling="preserve"
-                  >
-                    <button
-                      pButton
-                      pRipple
-                      type="button"
-                      class="p-button-text"
-                      [label]="data().itemEntities[moduleId].name"
-                      [icon]="moduleId | iconSmClass"
-                    ></button>
-                  </a>
-                }
-              </div>
+            @for (module of recipeSettings.modules; track module.id) {
+              @if (module.id; as moduleId) {
+                <div>
+                  @if (moduleId === 'module') {
+                    <i [class]="moduleId | iconSmClass"></i>
+                  } @else {
+                    <a
+                      [routerLink]="'/data/modules/' + moduleId"
+                      queryParamsHandling="preserve"
+                    >
+                      <button
+                        pButton
+                        pRipple
+                        type="button"
+                        class="p-button-text"
+                        [label]="data().itemEntities[moduleId].name"
+                        [icon]="moduleId | iconSmClass"
+                      ></button>
+                    </a>
+                  }
+                </div>
+              }
             }
           </td>
         </tr>
@@ -298,7 +300,7 @@
         <tr>
           <th>{{ 'data.beacons' | translate }}</th>
           <td>
-            @for (beacon of recipeSettings.beacons; track beacon) {
+            @for (beacon of recipeSettings.beacons; track $index) {
               <div>
                 @if (beacon.id) {
                   <a
@@ -317,26 +319,28 @@
                 }
                 <span class="ms-3">{{ beacon.count }}</span>
               </div>
-              @for (moduleId of beacon.moduleIds; track moduleId) {
-                <div>
-                  @if (moduleId === 'module') {
-                    <i [class]="moduleId | iconSmClass"> </i>
-                  } @else {
-                    <a
-                      [routerLink]="'/data/modules/' + moduleId"
-                      queryParamsHandling="preserve"
-                    >
-                      <button
-                        pButton
-                        pRipple
-                        type="button"
-                        class="p-button-text"
-                        [label]="data().itemEntities[moduleId].name"
-                        [icon]="moduleId | iconSmClass"
-                      ></button>
-                    </a>
-                  }
-                </div>
+              @for (module of beacon.modules; track module.id) {
+                @if (module.id; as moduleId) {
+                  <div>
+                    @if (moduleId === 'module') {
+                      <i [class]="moduleId | iconSmClass"> </i>
+                    } @else {
+                      <a
+                        [routerLink]="'/data/modules/' + moduleId"
+                        queryParamsHandling="preserve"
+                      >
+                        <button
+                          pButton
+                          pRipple
+                          type="button"
+                          class="p-button-text"
+                          [label]="data().itemEntities[moduleId].name"
+                          [icon]="moduleId | iconSmClass"
+                        ></button>
+                      </a>
+                    }
+                  </div>
+                }
               }
             }
           </td>

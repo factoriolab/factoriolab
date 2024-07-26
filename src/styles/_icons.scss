@@ -84,6 +84,10 @@
       margin-left: 0.75rem;
     }
   }
+
+  &.sum::after {
+    content: 'Σ';
+  }
 }
 
 /** Set up base app related icons sprite sheet */

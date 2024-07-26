@@ -30,7 +30,6 @@ export interface SettingsState {
   proliferatorSprayId: string;
   beltId?: string;
   pipeId?: string;
-  fuelRankIds?: string[];
   cargoWagonId?: string;
   fluidWagonId?: string;
   flowRate: Rational;
@@ -106,7 +105,6 @@ export function settingsReducer(
 
       delete state.beltId;
       delete state.pipeId;
-      delete state.fuelRankIds;
       delete state.cargoWagonId;
       delete state.fluidWagonId;
       return state;
@@ -130,10 +128,6 @@ export function settingsReducer(
     case SettingsActionType.SET_PIPE:
       return spread(state, {
         pipeId: StoreUtility.compareValue(action.payload),
-      });
-    case SettingsActionType.SET_FUEL_RANK:
-      return spread(state, {
-        fuelRankIds: StoreUtility.compareValue(action.payload),
       });
     case SettingsActionType.SET_CARGO_WAGON:
       return spread(state, {
@@ -159,7 +153,7 @@ export function settingsReducer(
       return spread(state, { maximizeType: action.payload });
     case SettingsActionType.SET_COSTS:
       return spread(state, { costs: action.payload });
-    case SettingsActionType.RESET_COST:
+    case SettingsActionType.RESET_COSTS:
       return spread(state, {
         costs: initialSettingsState.costs,
       });

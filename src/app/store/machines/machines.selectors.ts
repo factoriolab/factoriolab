@@ -1,13 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { getIdOptions } from '~/helpers';
-import {
-  EnergyType,
-  Entities,
-  Game,
-  MachineSettings,
-  rational,
-} from '~/models';
+import { EnergyType, Entities, MachineSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Settings from '../settings';
@@ -20,44 +13,20 @@ export const machinesState = (state: LabState): MachinesState =>
 /* Complex selectors */
 export const getMachinesState = createSelector(
   machinesState,
-  Settings.getFuelRankIds,
   Settings.getDefaults,
   Settings.getDataset,
-  (state, fuelRankIds, defaults, data) => {
+  (state, defaults, data) => {
     const ids = state.ids ?? defaults?.machineRankIds ?? [];
-
-    const entities: Entities<MachineSettings> = {};
-    const def: MachineSettings = { ...state.entities[''] };
-    def.moduleRankIds = def.moduleRankIds ?? defaults?.moduleRankIds ?? [];
-    def.moduleOptions = getIdOptions(
-      data.moduleIds,
-      data.itemEntities,
-      data.game !== Game.Satisfactory && data.game !== Game.FinalFactory,
+    const fuelRankIds = state.fuelRankIds ?? defaults?.fuelRankIds ?? [];
+    const moduleRankIds = state.moduleRankIds ?? defaults?.moduleRankIds ?? [];
+    const beacons = RecipeUtility.hydrateBeacons(
+      state.beacons,
+      defaults?.beacons,
     );
-    if (data.game === Game.Factorio) {
-      def.beaconCount = def.beaconCount ?? defaults?.beaconCount;
-    }
-    def.beaconId = def.beaconId ?? defaults?.beaconId;
-    def.beaconModuleRankIds =
-      def.beaconModuleRankIds ?? (defaults ? [defaults.beaconModuleId] : []);
-    if (def.beaconId) {
-      const beacon = data.beaconEntities[def.beaconId];
-      def.beaconModuleOptions = RecipeUtility.moduleOptions(beacon, null, data);
-    }
+    const overclock = state.overclock;
+    const entities: Entities<MachineSettings> = {};
 
-    if (data.game === Game.Satisfactory) {
-      // Default = 100%
-      def.overclock = def.overclock ?? rational(100n);
-    }
-
-    if (data.game === Game.FinalFactory) {
-      // Default = 0
-      def.overclock = def.overclock ?? rational(0n);
-    }
-
-    entities[''] = def;
-
-    for (const id of data.machineIds.filter((i) => data.itemEntities[i])) {
+    for (const id of data.machineIds) {
       const s: MachineSettings = { ...state.entities[id] };
       const machine = data.machineEntities[id];
 
@@ -72,27 +41,21 @@ export const getMachinesState = createSelector(
       }
 
       if (machine.modules) {
-        s.moduleRankIds = s.moduleRankIds ?? def.moduleRankIds;
-        s.moduleOptions = RecipeUtility.moduleOptions(machine, null, data);
-        s.beaconCount = s.beaconCount != null ? s.beaconCount : def.beaconCount;
-        s.beaconId = s.beaconId ?? def.beaconId;
-        s.beaconModuleRankIds =
-          s.beaconModuleRankIds ?? def.beaconModuleRankIds;
-        if (s.beaconId) {
-          const beacon = data.beaconEntities[s.beaconId];
-          s.beaconModuleOptions = RecipeUtility.moduleOptions(
-            beacon,
-            null,
-            data,
-          );
-        }
+        s.moduleOptions = RecipeUtility.moduleOptions(machine, data);
+        s.modules = RecipeUtility.hydrateModules(
+          s.modules,
+          s.moduleOptions,
+          moduleRankIds,
+          machine.modules,
+        );
+        s.beacons = RecipeUtility.hydrateBeacons(s.beacons, beacons);
       }
 
-      s.overclock = s.overclock ?? def.overclock;
+      s.overclock = s.overclock ?? overclock;
 
       entities[id] = s;
     }
 
-    return { ids, entities };
+    return { ids, fuelRankIds, moduleRankIds, beacons, overclock, entities };
   },
 );

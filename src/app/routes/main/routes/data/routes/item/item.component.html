@@ -496,69 +496,11 @@
       <tr>
         <th>{{ 'data.moduleRank' | translate }}</th>
         <td>
-          @if (!machineSettings.moduleRankIds?.length) {
+          @if (!machineSettings.modules?.length) {
             <div>{{ 'none' | translate }}</div>
           }
-          @for (moduleId of machineSettings.moduleRankIds; track moduleId) {
-            <div>
-              <a
-                [routerLink]="
-                  moduleId === 'module' ? null : '/data/modules/' + moduleId
-                "
-                queryParamsHandling="preserve"
-              >
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-text"
-                  [label]="data().itemEntities[moduleId]?.name ?? ''"
-                  [icon]="moduleId | iconSmClass: 'item'"
-                ></button>
-              </a>
-            </div>
-          }
-        </td>
-      </tr>
-      @if (data().game === Game.Factorio) {
-        <tr>
-          <th>{{ 'data.beacons' | translate }}</th>
-          <td>
-            {{ machineSettings.beaconCount ?? ('none' | translate) }}
-          </td>
-        </tr>
-        <tr>
-          <th>{{ 'data.beacon' | translate }}</th>
-          <td>
-            @if (machineSettings.beaconId; as beaconId) {
-              <a
-                [routerLink]="'/data/beacons/' + beaconId"
-                queryParamsHandling="preserve"
-              >
-                <button
-                  pButton
-                  pRipple
-                  type="button"
-                  class="p-button-text"
-                  [label]="data().itemEntities[beaconId].name"
-                  [icon]="beaconId | iconSmClass: 'item'"
-                ></button>
-              </a>
-            } @else {
-              {{ 'none' | translate }}
-            }
-          </td>
-        </tr>
-        <tr>
-          <th>{{ 'data.beaconModuleRank' | translate }}</th>
-          <td>
-            @if (!machineSettings.beaconModuleRankIds?.length) {
-              <div>{{ 'none' | translate }}</div>
-            }
-            @for (
-              moduleId of machineSettings.beaconModuleRankIds;
-              track moduleId
-            ) {
+          @for (module of machineSettings.modules; track module.id) {
+            @if (module.id; as moduleId) {
               <div>
                 <a
                   [routerLink]="
@@ -576,6 +518,56 @@
                   ></button>
                 </a>
               </div>
+            }
+          }
+        </td>
+      </tr>
+      @if (data().game === Game.Factorio) {
+        <tr>
+          <th>{{ 'data.beacons' | translate }}</th>
+          <td>
+            @for (beacon of machineSettings.beacons; track $index) {
+              <div>
+                @if (beacon.id) {
+                  <a
+                    [routerLink]="'/data/beacons/' + beacon.id"
+                    queryParamsHandling="preserve"
+                  >
+                    <button
+                      pButton
+                      pRipple
+                      type="button"
+                      class="p-button-text"
+                      [label]="data().itemEntities[beacon.id].name"
+                      [icon]="beacon.id | iconSmClass"
+                    ></button>
+                  </a>
+                }
+                <span class="ms-3">{{ beacon.count }}</span>
+              </div>
+              @for (module of beacon.modules; track module.id) {
+                @if (module.id; as moduleId) {
+                  <div>
+                    @if (moduleId === 'module') {
+                      <i [class]="moduleId | iconSmClass"> </i>
+                    } @else {
+                      <a
+                        [routerLink]="'/data/modules/' + moduleId"
+                        queryParamsHandling="preserve"
+                      >
+                        <button
+                          pButton
+                          pRipple
+                          type="button"
+                          class="p-button-text"
+                          [label]="data().itemEntities[moduleId].name"
+                          [icon]="moduleId | iconSmClass"
+                        ></button>
+                      </a>
+                    }
+                  </div>
+                }
+              }
             }
           </td>
         </tr>

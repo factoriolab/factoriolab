@@ -47,7 +47,7 @@ export class MachinesEffects {
            */
           if (
             (raw.fuelId != null ||
-              raw.moduleIds != null ||
+              raw.modules != null ||
               raw.beacons != null) &&
             after[recipeId].machineId !== before[recipeId].machineId
           )

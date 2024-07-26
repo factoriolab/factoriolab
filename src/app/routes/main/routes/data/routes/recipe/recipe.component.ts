@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
@@ -10,7 +9,7 @@ import { DetailComponent } from '../../models';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, AppSharedModule],
+  imports: [AppSharedModule],
   templateUrl: './recipe.component.html',
   styleUrls: ['./recipe.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

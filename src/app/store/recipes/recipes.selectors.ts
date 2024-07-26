@@ -1,7 +1,7 @@
 import { createSelector } from '@ngrx/store';
 
 import { coalesce } from '~/helpers';
-import { Entities, rational, RecipeSettings } from '~/models';
+import { Entities, RecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Items from '../items';
@@ -33,7 +33,7 @@ export const getRecipesState = createSelector(
       if (s.machineId == null)
         s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
-          machinesState.ids,
+          coalesce(machinesState.ids, []),
         );
 
       const machine = data.machineEntities[s.machineId];
@@ -45,45 +45,19 @@ export const getRecipesState = createSelector(
         s.fuelId = s.fuelId ?? def?.fuelId;
       }
 
-      s.fuelOptions = def?.fuelOptions;
-
       if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
-        s.moduleOptions = RecipeUtility.moduleOptions(machine, recipe.id, data);
-
-        if (s.moduleIds == null)
-          s.moduleIds = RecipeUtility.defaultModules(
-            s.moduleOptions,
-            coalesce(def.moduleRankIds, []),
-            machine.modules ?? rational(0n),
-          );
-
-        if (s.beacons == null) s.beacons = [{}];
-
-        s.beacons = s.beacons.map((b) => ({ ...b }));
-
-        for (const beaconSettings of s.beacons) {
-          beaconSettings.count = beaconSettings.count ?? def.beaconCount;
-          beaconSettings.id = beaconSettings.id ?? def.beaconId;
-
-          if (beaconSettings.id != null) {
-            const beacon = data.beaconEntities[beaconSettings.id];
-            beaconSettings.moduleOptions = RecipeUtility.moduleOptions(
-              beacon,
-              recipe.id,
-              data,
-            );
-
-            if (beaconSettings.moduleIds == null)
-              beaconSettings.moduleIds = RecipeUtility.defaultModules(
-                beaconSettings.moduleOptions,
-                coalesce(def.beaconModuleRankIds, []),
-                beacon.modules,
-              );
-          }
-        }
+        s.moduleOptions = RecipeUtility.moduleOptions(machine, data, recipe.id);
+        s.modules = RecipeUtility.hydrateModules(
+          s.modules,
+          s.moduleOptions,
+          machinesState.moduleRankIds,
+          machine.modules,
+          def.modules,
+        );
+        s.beacons = RecipeUtility.hydrateBeacons(s.beacons, def.beacons);
       } else {
         // Machine doesn't support modules, remove any
-        delete s.moduleIds;
+        delete s.modules;
         delete s.beacons;
       }
 
@@ -118,25 +92,15 @@ export const getAdjustedDataset = createSelector(
   getExcludedRecipeIds,
   Items.getItemsState,
   Settings.getAvailableRecipes,
-  Settings.getCosts,
-  Settings.getAdjustmentData,
+  Settings.settingsState,
   Settings.getDataset,
-  (
-    recipesState,
-    excludedRecipeIds,
-    itemsState,
-    recipeIds,
-    costs,
-    adjustmentData,
-    data,
-  ) =>
+  (recipesState, excludedRecipeIds, itemsState, recipeIds, settings, data) =>
     RecipeUtility.adjustDataset(
       recipeIds,
       excludedRecipeIds,
       recipesState,
       itemsState,
-      adjustmentData,
-      costs,
+      settings,
       data,
     ),
 );

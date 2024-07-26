@@ -4,7 +4,6 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 import { Confirmation } from 'primeng/api';
 
@@ -17,7 +16,6 @@ import {
   TestUtility,
 } from 'src/tests';
 import { Game, rational } from '~/models';
-import { ContentService } from '~/services';
 import {
   App,
   Items,
@@ -27,15 +25,13 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { BrowserUtility } from '~/utilities';
+import { BrowserUtility, RecipeUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
   let fixture: ComponentFixture<SettingsComponent>;
-  let router: Router;
   let mockStore: MockStore<LabState>;
-  let contentSvc: ContentService;
   const id = 'id';
   const value = 'value';
 
@@ -46,13 +42,11 @@ describe('SettingsComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsComponent);
-    router = TestBed.inject(Router);
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
       Settings.getGameStates,
       Mocks.PreferencesState.states[Game.Factorio],
     );
-    contentSvc = TestBed.inject(ContentService);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -76,7 +70,7 @@ describe('SettingsComponent', () => {
   describe('clickResetSettings', () => {
     it('should set up a confirmation dialog and clear settings', () => {
       let confirm: Confirmation | undefined;
-      spyOn(contentSvc, 'confirm').and.callFake(
+      spyOn(component.contentSvc, 'confirm').and.callFake(
         (c: Confirmation) => (confirm = c),
       );
       component.clickResetSettings();
@@ -91,9 +85,9 @@ describe('SettingsComponent', () => {
 
   describe('setSearch', () => {
     it('should call the router to navigate', () => {
-      spyOn(router, 'navigateByUrl');
+      spyOn(component.router, 'navigateByUrl');
       component.setSearch('v=9');
-      expect(router.navigateByUrl).toHaveBeenCalled();
+      expect(component.router.navigateByUrl).toHaveBeenCalled();
     });
   });
 
@@ -107,10 +101,10 @@ describe('SettingsComponent', () => {
 
   describe('setState', () => {
     it('should call the router to navigate', () => {
-      spyOn(router, 'navigate');
+      spyOn(component.router, 'navigate');
       component.setState('name', Mocks.PreferencesState.states[Game.Factorio]);
       expect(component.state).toEqual('name');
-      expect(router.navigate).toHaveBeenCalledWith([], {
+      expect(component.router.navigate).toHaveBeenCalledWith([], {
         queryParams: { z: 'zip' },
       });
     });
@@ -284,29 +278,33 @@ describe('SettingsComponent', () => {
     });
   });
 
-  describe('changeBeaconModuleRank', () => {
-    it('should set the defaults for the default machine', () => {
-      spyOn(component, 'setBeaconModuleRank');
-      component.changeBeaconModuleRank('', [], {
-        beaconModuleId: 'beaconModuleId',
-      } as any);
-      expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
-        '',
-        [],
-        ['beaconModuleId'],
-      );
+  describe('changeModules', () => {
+    it('should dehydrate the modules', () => {
+      spyOn(RecipeUtility, 'dehydrateModules');
+      spyOn(component, 'setModules');
+      component.changeModules(ItemId.AssemblingMachine2, []);
+      expect(RecipeUtility.dehydrateModules).toHaveBeenCalled();
+      expect(component.setModules).toHaveBeenCalled();
     });
+  });
 
-    it('should set the defaults for a specific machine', () => {
-      spyOn(component, 'setBeaconModuleRank');
-      component.changeBeaconModuleRank(ItemId.AssemblingMachine1, [], {
-        beaconModuleRankIds: ['beaconModuleId'],
-      } as any);
-      expect(component.setBeaconModuleRank).toHaveBeenCalledWith(
-        ItemId.AssemblingMachine1,
-        [],
-        ['beaconModuleId'],
-      );
+  describe('changeBeacons', () => {
+    it('should dehydrate the beacons', () => {
+      spyOn(RecipeUtility, 'dehydrateBeacons');
+      spyOn(component, 'setBeacons');
+      component.changeBeacons(ItemId.AssemblingMachine2, []);
+      expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
+      expect(component.setBeacons).toHaveBeenCalled();
+    });
+  });
+
+  describe('changeDefaultBeacons', () => {
+    it('should dehydrate the beacons', () => {
+      spyOn(RecipeUtility, 'dehydrateBeacons');
+      spyOn(component, 'setDefaultBeacons');
+      component.changeDefaultBeacons([]);
+      expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
+      expect(component.setDefaultBeacons).toHaveBeenCalled();
     });
   });
 
@@ -334,41 +332,33 @@ describe('SettingsComponent', () => {
       'setResearchedTechnologies',
       Settings.SetResearchedTechnologiesAction,
     );
-    dispatch.val('setItemExcludedBatch', Items.SetExcludedBatchAction);
     dispatch.val('setRecipeExcludedBatch', Recipes.SetExcludedBatchAction);
-    dispatch.val('setNetProductionOnly', Settings.SetNetProductionOnlyAction);
-    dispatch.val(
-      'setSurplusMachinesOutput',
-      Settings.SetSurplusMachinesOutputAction,
-    );
+    dispatch.val('setItemExcludedBatch', Items.SetExcludedBatchAction);
     dispatch.val('setPreset', Settings.SetPresetAction);
-    dispatch.valDef('removeMachine', Machines.RemoveAction);
+    dispatch.valDef('setFuelRank', Machines.SetFuelRankAction);
+    dispatch.valDef('setModuleRank', Machines.SetModuleRankAction);
+    dispatch.valDef('addMachine', Machines.AddAction);
+    dispatch.val('setDefaultBeacons', Machines.SetDefaultBeaconsAction);
+    dispatch.val('setDefaultOverclock', Machines.SetDefaultOverclockAction);
+    dispatch.valDef('setMachineRank', Machines.SetRankAction);
     dispatch.idValDef('setMachine', Machines.SetMachineAction);
     dispatch.idValDef('setFuel', Machines.SetFuelAction);
-    dispatch.idValDef('setModuleRank', Machines.SetModuleRankAction);
+    dispatch.idVal('setModules', Machines.SetModulesAction);
+    dispatch.idVal('setBeacons', Machines.SetBeaconsAction);
     dispatch.idValDef('setOverclock', Machines.SetOverclockAction);
-    dispatch.idValDef('setBeaconCount', Machines.SetBeaconCountAction);
-    dispatch.idValDef('setBeacon', Machines.SetBeaconAction);
-    dispatch.idValDef(
-      'setBeaconModuleRank',
-      Machines.SetBeaconModuleRankAction,
-    );
-    dispatch.valDef('setMachineRank', Machines.SetRankAction);
-    dispatch.valDef('addMachine', Machines.AddAction);
+    dispatch.valDef('removeMachine', Machines.RemoveAction);
     dispatch.val('setBeaconReceivers', Settings.SetBeaconReceiversAction);
     dispatch.val('setProliferatorSpray', Settings.SetProliferatorSprayAction);
     dispatch.valDef('setBelt', Settings.SetBeltAction);
     dispatch.valDef('setPipe', Settings.SetPipeAction);
     dispatch.valDef('setCargoWagon', Settings.SetCargoWagonAction);
     dispatch.valDef('setFluidWagon', Settings.SetFluidWagonAction);
-    dispatch.valDef('setFuels', Settings.SetFuelRankAction);
     dispatch.val('setFlowRate', Settings.SetFlowRateAction);
     dispatch.val('setInserterTarget', Settings.SetInserterTargetAction);
     dispatch.val('setMiningBonus', Settings.SetMiningBonusAction);
     dispatch.val('setResearchSpeed', Settings.SetResearchBonusAction);
     dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
-    dispatch.val('setMaximizeType', Settings.SetMaximizeTypeAction);
     dispatch.val('setPowerUnit', Preferences.SetPowerUnitAction);
     dispatch.val('setLanguage', Preferences.SetLanguageAction);
     dispatch.val('setTheme', Preferences.SetThemeAction);
@@ -378,10 +368,15 @@ describe('SettingsComponent', () => {
       Preferences.SetHideDuplicateIconsAction,
     );
     dispatch.val('setDisablePaginator', Preferences.SetDisablePaginatorAction);
-    dispatch.val('setFlowDiagram', Preferences.SetFlowDiagramAction);
-    dispatch.val('setSankeyAlign', Preferences.SetSankeyAlignAction);
-    dispatch.val('setLinkSize', Preferences.SetLinkSizeAction);
-    dispatch.val('setLinkText', Preferences.SetLinkTextAction);
-    dispatch.val('setFlowHideExcluded', Preferences.SetFlowHideExcludedAction);
+    dispatch.val('setMaximizeType', Settings.SetMaximizeTypeAction);
+    dispatch.val('setNetProductionOnly', Settings.SetNetProductionOnlyAction);
+    dispatch.val(
+      'setSurplusMachinesOutput',
+      Settings.SetSurplusMachinesOutputAction,
+    );
+    dispatch.val(
+      'setConvertObjectiveValues',
+      Preferences.SetConvertObjectiveValuesAction,
+    );
   });
 });
