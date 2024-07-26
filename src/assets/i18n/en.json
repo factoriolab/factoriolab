@@ -265,6 +265,8 @@
     "defaultFluidWagonTooltip": "Select the default fluid wagon to be used by all fluids",
     "fuelRank": "Preferred fuels",
     "fuelRankTooltip": "Select the order of preferred fuels to be used where applicable",
+    "modifierRank": "Preferred modifiers",
+    "modifierRankTooltip": "Select the order of preferred modifiers to be used where applicable",
     "flowRateUnit": "u/sec",
     "pipeFlowRate": "Pipe flow rate",
     "pipeFlowRateTooltip": "Enter pipe flow rate",
@@ -291,17 +293,6 @@
     "languageTooltip": "Select language",
     "theme": "Theme",
     "themeTooltip": "Select theme",
-    "flow": "Flow",
-    "flowDiagram": "Visualization Type",
-    "flowDiagramTooltip": "Select which type of flow visualization to use",
-    "linkSize": "Link Size",
-    "linkSizeTooltip": "Select which property to use to determine flow link sizes",
-    "linkText": "Link Text",
-    "linkTextTooltip": "Select which property to display as text on flow links",
-    "sankeyAlign": "Sankey Align",
-    "sankeyAlignTooltip": "Select option to determine how sankey nodes are aligned",
-    "flowHideExcluded": "Hide excluded items",
-    "flowHideExcludedTooltip": "If checked, excluded items will also be excluded from the flow diagram",
     "advanced": "Advanced",
     "maximizeType": "Maximize value type",
     "maximizeTypeTooltip": "Select maximize objective value type",
@@ -312,7 +303,9 @@
     "netProductionOnly": "Net production only",
     "netProductionOnlyTooltip": "If checked, recipes that both produce and consume the same item are reduced to the net production only",
     "surplusMachinesOutput": "Surplus machines output",
-    "surplusMachinesOutputTooltip": "If checked, output from machine objectives will be treated as surplus instead of required."
+    "surplusMachinesOutputTooltip": "If checked, output from machine objectives will be treated as surplus instead of required.",
+    "convertObjectiveValues": "Convert objective values",
+    "convertObjectiveValuesTooltip": "If checked, objective values will be converted when the type is changed to preserve the item quantity."
   },
   "objectives": {
     "title": "Objectives",
@@ -371,7 +364,20 @@
     "emptyMessage": "Click on a node in the diagram to view details"
   },
   "flow": {
-    "downloadAsJson": "Download as JSON"
+    "downloadAsJson": "Download as JSON",
+    "flowSettings": "Flow settings"
+  },
+  "flowSettings": {
+    "diagram": "Visualization Type",
+    "diagramTooltip": "Select which type of flow visualization to use",
+    "linkSize": "Link Size",
+    "linkSizeTooltip": "Select which property to use to determine flow link sizes",
+    "linkText": "Link Text",
+    "linkTextTooltip": "Select which property to display as text on flow links",
+    "sankeyAlign": "Sankey Align",
+    "sankeyAlignTooltip": "Select option to determine how sankey nodes are aligned",
+    "hideExcluded": "Hide excluded items",
+    "hideExcludedTooltip": "If checked, excluded items will also be excluded from the flow diagram"
   },
   "data": {
     "notFound": "Not found",
@@ -456,5 +462,10 @@
     "prerequisites": "Prerequisites",
     "recipeSettings": "Recipe settings",
     "cost": "Cost"
+  },
+  "beaconsOverlay": {
+    "addBeacons": "Add beacons",
+    "eachTooltip": "Beacons per machine",
+    "totalTooltip": "Total beacons"
   }
 }

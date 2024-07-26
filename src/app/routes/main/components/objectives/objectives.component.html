@@ -91,7 +91,7 @@
             <p-dropdown
               labDropdownTranslate
               labNoDrag
-              [tooltip]="'objectives.unitTooltip' | translate"
+              [pTooltip]="'objectives.unitTooltip' | translate"
               tooltipPosition="top"
               [options]="rateUnitOptions()"
               [ngModel]="objective.unit"
@@ -108,7 +108,7 @@
           <p-dropdown
             labDropdownTranslate
             labNoDrag
-            [tooltip]="'objectives.typeTooltip' | translate"
+            [pTooltip]="'objectives.typeTooltip' | translate"
             tooltipPosition="top"
             [options]="objectiveTypeOptions"
             [ngModel]="objective.type"
@@ -152,7 +152,7 @@
       <p-dropdown
         labDropdownTranslate
         styleClass="h-100"
-        [tooltip]="'objectives.selectDisplayRate' | translate"
+        [pTooltip]="'objectives.selectDisplayRate' | translate"
         [ngModel]="dispRateInfo().option"
         [options]="displayRateOptions"
         (onChange)="setDisplayRate($event.value, dispRateInfo().option)"

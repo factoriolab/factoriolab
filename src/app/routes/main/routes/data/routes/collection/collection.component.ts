@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -18,7 +17,7 @@ import { DataSharedModule } from '../../data-shared.module';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, AppSharedModule, DataSharedModule],
+  imports: [AppSharedModule, DataSharedModule],
   templateUrl: './collection.component.html',
   styleUrls: ['./collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

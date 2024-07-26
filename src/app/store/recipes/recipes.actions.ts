@@ -1,10 +1,10 @@
 import { Action } from '@ngrx/store';
 
 import {
-  IdIndexValueDefaultPayload,
-  IdIndexValuePayload,
+  BeaconSettings,
   IdValueDefaultPayload,
   IdValuePayload,
+  ModuleSettings,
   Rational,
 } from '~/models';
 
@@ -15,12 +15,7 @@ export const enum RecipesActionType {
   SET_MACHINE = '[Recipes] Set Machine',
   SET_FUEL = '[Recipes] Set Fuel',
   SET_MODULES = '[Recipes] Set Modules',
-  ADD_BEACON = '[Recipes] Add Beacon',
-  REMOVE_BEACON = '[Recipes] Remove Beacon',
-  SET_BEACON_COUNT = '[Recipes] Set Beacon Count',
-  SET_BEACON = '[Recipes] Set Beacon',
-  SET_BEACON_MODULES = '[Recipes] Set Beacon Modules',
-  SET_BEACON_TOTAL = '[Recipes] Set Beacon Total',
+  SET_BEACONS = '[Recipes] Set Beacons',
   SET_OVERCLOCK = '[Recipes] Set Overclock',
   SET_COST = '[Recipes] Set Cost',
   RESET_RECIPE = '[Recipes] Reset Recipe',
@@ -58,37 +53,12 @@ export class SetFuelAction implements Action {
 
 export class SetModulesAction implements Action {
   readonly type = RecipesActionType.SET_MODULES;
-  constructor(public payload: IdValueDefaultPayload<string[]>) {}
+  constructor(public payload: IdValuePayload<ModuleSettings[] | undefined>) {}
 }
 
-export class AddBeaconAction implements Action {
-  readonly type = RecipesActionType.ADD_BEACON;
-  constructor(public payload: string) {}
-}
-
-export class RemoveBeaconAction implements Action {
-  readonly type = RecipesActionType.REMOVE_BEACON;
-  constructor(public payload: IdValuePayload<number>) {}
-}
-
-export class SetBeaconCountAction implements Action {
-  readonly type = RecipesActionType.SET_BEACON_COUNT;
-  constructor(public payload: IdIndexValueDefaultPayload<Rational>) {}
-}
-
-export class SetBeaconAction implements Action {
-  readonly type = RecipesActionType.SET_BEACON;
-  constructor(public payload: IdIndexValueDefaultPayload) {}
-}
-
-export class SetBeaconModulesAction implements Action {
-  readonly type = RecipesActionType.SET_BEACON_MODULES;
-  constructor(public payload: IdIndexValueDefaultPayload<string[]>) {}
-}
-
-export class SetBeaconTotalAction implements Action {
-  readonly type = RecipesActionType.SET_BEACON_TOTAL;
-  constructor(public payload: IdIndexValuePayload<Rational>) {}
+export class SetBeaconsAction implements Action {
+  readonly type = RecipesActionType.SET_BEACONS;
+  constructor(public payload: IdValuePayload<BeaconSettings[] | undefined>) {}
 }
 
 export class SetOverclockAction implements Action {
@@ -134,12 +104,7 @@ export type RecipesAction =
   | SetMachineAction
   | SetFuelAction
   | SetModulesAction
-  | AddBeaconAction
-  | RemoveBeaconAction
-  | SetBeaconCountAction
-  | SetBeaconAction
-  | SetBeaconModulesAction
-  | SetBeaconTotalAction
+  | SetBeaconsAction
   | SetOverclockAction
   | SetCostAction
   | ResetRecipeAction

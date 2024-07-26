@@ -35,6 +35,7 @@ export class InputNumberComponent implements OnInit, OnChanges {
   maximum = input<Rational | null>(null);
   width = input('');
   inputId = input('inputnumber');
+  disabled = input(false);
   hideButtons = input(false);
   textButtons = input(false);
 

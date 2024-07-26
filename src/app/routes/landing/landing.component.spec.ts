@@ -4,7 +4,6 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { Router } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, ItemId, RecipeId, TestModule } from 'src/tests';
@@ -15,7 +14,6 @@ import { LandingComponent } from './landing.component';
 describe('LandingComponent', () => {
   let component: LandingComponent;
   let fixture: ComponentFixture<LandingComponent>;
-  let router: Router;
   let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
@@ -24,7 +22,6 @@ describe('LandingComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(LandingComponent);
-    router = TestBed.inject(Router);
     mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -37,32 +34,36 @@ describe('LandingComponent', () => {
   describe('selectItem', () => {
     it('should add an item objective and navigate to the list', fakeAsync(() => {
       spyOn(component, 'addItemObjective');
-      spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+      spyOn(component.router, 'navigate').and.returnValue(
+        Promise.resolve(true),
+      );
       component.selectItem(ItemId.IronPlate);
       tick();
       expect(component.addItemObjective).toHaveBeenCalledWith(ItemId.IronPlate);
-      expect(router.navigate).toHaveBeenCalledWith(['list']);
+      expect(component.router.navigate).toHaveBeenCalledWith(['list']);
     }));
   });
 
   describe('selectRecipe', () => {
     it('should add a recipe objective and navigate to the list', fakeAsync(() => {
       spyOn(component, 'addRecipeObjective');
-      spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+      spyOn(component.router, 'navigate').and.returnValue(
+        Promise.resolve(true),
+      );
       component.selectRecipe(RecipeId.IronPlate);
       tick();
       expect(component.addRecipeObjective).toHaveBeenCalledWith(
         ItemId.IronPlate,
       );
-      expect(router.navigate).toHaveBeenCalledWith(['list']);
+      expect(component.router.navigate).toHaveBeenCalledWith(['list']);
     }));
   });
 
   describe('setState', () => {
     it('should call the router to navigate', () => {
-      spyOn(router, 'navigate');
+      spyOn(component.router, 'navigate');
       component.setState('z=zip');
-      expect(router.navigate).toHaveBeenCalledWith(['list'], {
+      expect(component.router.navigate).toHaveBeenCalledWith(['list'], {
         queryParams: { z: 'zip' },
       });
     });

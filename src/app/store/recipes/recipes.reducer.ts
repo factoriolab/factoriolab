@@ -47,69 +47,15 @@ export function recipesReducer(
     case RecipesActionType.SET_MACHINE:
       return StoreUtility.resetFields(
         StoreUtility.compareReset(state, 'machineId', action.payload),
-        ['fuelId', 'moduleIds', 'beacons'],
+        ['fuelId', 'modules', 'beacons'],
         action.payload.id,
       );
     case RecipesActionType.SET_FUEL:
       return StoreUtility.compareReset(state, 'fuelId', action.payload);
     case RecipesActionType.SET_MODULES:
-      return StoreUtility.compareReset(state, 'moduleIds', action.payload);
-    case RecipesActionType.ADD_BEACON:
-      return {
-        ...state,
-        ...{
-          [action.payload]: {
-            ...(state[action.payload] ?? {}),
-            ...{
-              beacons: [...(state[action.payload]?.beacons ?? [{}]), {}],
-            },
-          },
-        },
-      };
-    case RecipesActionType.REMOVE_BEACON:
-      return {
-        ...state,
-        ...{
-          [action.payload.id]: {
-            ...state[action.payload.id],
-            ...{
-              beacons: (state[action.payload.id].beacons ?? [{}]).filter(
-                (v, i) => i !== action.payload.value,
-              ),
-            },
-          },
-        },
-      };
-    case RecipesActionType.SET_BEACON_COUNT:
-      return StoreUtility.compareResetIndex(
-        state,
-        'beacons',
-        'count',
-        action.payload,
-      );
-    case RecipesActionType.SET_BEACON:
-      return StoreUtility.resetFieldIndex(
-        StoreUtility.compareResetIndex(state, 'beacons', 'id', action.payload),
-        'beacons',
-        'moduleIds',
-        action.payload.index,
-        action.payload.id,
-      );
-    case RecipesActionType.SET_BEACON_MODULES:
-      return StoreUtility.compareResetIndex(
-        state,
-        'beacons',
-        'moduleIds',
-        action.payload,
-        true,
-      );
-    case RecipesActionType.SET_BEACON_TOTAL:
-      return StoreUtility.assignIndexValue(
-        state,
-        'beacons',
-        'total',
-        action.payload,
-      );
+      return StoreUtility.setValue(state, 'modules', action.payload);
+    case RecipesActionType.SET_BEACONS:
+      return StoreUtility.setValue(state, 'beacons', action.payload);
     case RecipesActionType.SET_OVERCLOCK:
       return StoreUtility.compareReset(state, 'overclock', action.payload);
     case RecipesActionType.SET_COST:
@@ -128,7 +74,7 @@ export function recipesReducer(
     case RecipesActionType.RESET_RECIPE_MACHINE:
       return StoreUtility.resetFields(
         state,
-        ['fuelId', 'moduleIds', 'beacons'],
+        ['fuelId', 'modules', 'beacons'],
         action.payload,
       );
     case RecipesActionType.RESET_MACHINES:
@@ -136,7 +82,7 @@ export function recipesReducer(
         'machineId',
         'fuelId',
         'overclock',
-        'moduleIds',
+        'modules',
         'beacons',
       ]);
     case Items.ItemsActionType.RESET_CHECKED:

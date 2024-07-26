@@ -140,17 +140,6 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_FUEL_RANK', () => {
-    it('should set the fuel', () => {
-      const value = [ItemId.Wood];
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFuelRankAction({ value, def: undefined }),
-      );
-      expect(result.fuelRankIds).toEqual(value);
-    });
-  });
-
   describe('SET_CARGO_WAGON', () => {
     it('should set the default cargo wagon', () => {
       const value = ItemId.CargoWagon;

@@ -1,12 +1,6 @@
-import {
-  FlowDiagram,
-  Game,
-  Language,
-  LinkValue,
-  PowerUnit,
-  SankeyAlign,
-  Theme,
-} from '~/models';
+import { Mocks } from 'src/tests';
+import { spread } from '~/helpers';
+import { FlowDiagram, Game, Language, PowerUnit, Theme } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import {
@@ -168,53 +162,26 @@ describe('Preferences Reducer', () => {
     });
   });
 
-  describe('SET_FLOW_DIAGRAM', () => {
-    it('should set the flow diagram', () => {
+  describe('SET_CONVERT_OBJECTIVE_VALUES', () => {
+    it('should set the convert objective values state', () => {
       const result = preferencesReducer(
         undefined,
-        new Actions.SetFlowDiagramAction(FlowDiagram.BoxLine),
+        new Actions.SetConvertObjectiveValuesAction(true),
       );
-      expect(result.flowDiagram).toEqual(FlowDiagram.BoxLine);
+      expect(result.convertObjectiveValues).toEqual(true);
     });
   });
 
-  describe('SET_LINK_SIZE', () => {
-    it('should set the link size', () => {
+  describe('SET_FLOW_SETTINGS', () => {
+    it('should set the flow settings', () => {
+      const value = spread(Mocks.FlowSettings, {
+        diagram: FlowDiagram.BoxLine,
+      });
       const result = preferencesReducer(
         undefined,
-        new Actions.SetLinkSizeAction(LinkValue.Percent),
+        new Actions.SetFlowSettingsAction(value),
       );
-      expect(result.linkSize).toEqual(LinkValue.Percent);
-    });
-  });
-
-  describe('SET_LINK_TEXT', () => {
-    it('should set the link text', () => {
-      const result = preferencesReducer(
-        undefined,
-        new Actions.SetLinkTextAction(LinkValue.Percent),
-      );
-      expect(result.linkText).toEqual(LinkValue.Percent);
-    });
-  });
-
-  describe('SET_SANKEY_ALIGN', () => {
-    it('should set the sankey align', () => {
-      const result = preferencesReducer(
-        undefined,
-        new Actions.SetSankeyAlignAction(SankeyAlign.Left),
-      );
-      expect(result.sankeyAlign).toEqual(SankeyAlign.Left);
-    });
-  });
-
-  describe('SET_FLOW_HIDE_EXCLUDED', () => {
-    it('should set flow hide excluded state', () => {
-      const result = preferencesReducer(
-        undefined,
-        new Actions.SetFlowHideExcludedAction(false),
-      );
-      expect(result.flowHideExcluded).toEqual(false);
+      expect(result.flowSettings).toEqual(value);
     });
   });
 

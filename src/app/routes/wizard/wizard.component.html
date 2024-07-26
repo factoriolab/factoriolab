@@ -53,7 +53,7 @@
         <p-dropdown
           labDropdownTranslate
           styleClass="mt-2 h-100"
-          [tooltip]="'objectives.selectDisplayRate' | translate"
+          [pTooltip]="'objectives.selectDisplayRate' | translate"
           [ngModel]="displayRate()"
           [options]="displayRateOptions"
           (onChange)="setDisplayRate($event.value, displayRate())"

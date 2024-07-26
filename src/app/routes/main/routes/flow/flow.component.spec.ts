@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { select } from 'd3';
+import { select } from 'd3-selection';
 
 import { Mocks, TestModule, TestUtility } from 'src/tests';
 import { AppSharedModule } from '~/app-shared.module';
@@ -9,14 +9,13 @@ import {
   sankeyLeft,
   sankeyRight,
 } from '~/d3-sankey';
+import { spread } from '~/helpers';
 import { FlowDiagram, SankeyAlign } from '~/models';
-import { ThemeService } from '~/services';
 import { FlowComponent, SVG_ID } from './flow.component';
 
 describe('FlowComponent', () => {
   let component: FlowComponent;
   let fixture: ComponentFixture<FlowComponent>;
-  let themeSvc: ThemeService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -24,9 +23,8 @@ describe('FlowComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(FlowComponent);
-    themeSvc = TestBed.inject(ThemeService);
-    themeSvc.themeValues$.next(Mocks.ThemeValues);
     component = fixture.componentInstance;
+    component.themeSvc.themeValues$.next(Mocks.ThemeValues);
     fixture.detectChanges();
   });
 
@@ -37,23 +35,20 @@ describe('FlowComponent', () => {
   describe('rebuildChart', () => {
     it('should call to rebuild the sankey', () => {
       spyOn(component, 'rebuildSankey');
-      component.rebuildChart(
-        Mocks.Flow,
-        Mocks.ThemeValues,
-        Mocks.PreferencesState,
-      );
+      component.rebuildChart(Mocks.Flow, Mocks.ThemeValues, Mocks.FlowSettings);
       expect(component.rebuildSankey).toHaveBeenCalledWith(
         Mocks.Flow,
-        Mocks.PreferencesState,
+        Mocks.FlowSettings,
       );
     });
 
     it('should call to rebuild the box-line', () => {
       spyOn(component, 'rebuildBoxLine');
-      component.rebuildChart(Mocks.Flow, Mocks.ThemeValues, {
-        ...Mocks.PreferencesState,
-        ...{ flowDiagram: FlowDiagram.BoxLine },
-      });
+      component.rebuildChart(
+        Mocks.Flow,
+        Mocks.ThemeValues,
+        spread(Mocks.FlowSettings, { diagram: FlowDiagram.BoxLine }),
+      );
       expect(component.rebuildBoxLine).toHaveBeenCalledWith(
         Mocks.Flow,
         Mocks.ThemeValues,
@@ -66,21 +61,14 @@ describe('FlowComponent', () => {
       select(`#${SVG_ID} > *`).remove();
     });
 
-    // it('should return if the svg container is not found', () => {
-    //   spyOn(component, 'getLayout');
-    //   component.svgElement = undefined;
-    //   component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
-    //   expect(component.getLayout).not.toHaveBeenCalled();
-    // });
-
     it('should build the sankey', () => {
-      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      component.rebuildSankey(Mocks.Flow, Mocks.FlowSettings);
       const gElements = document.getElementsByTagName('g');
       expect(gElements.length).toEqual(14);
     });
 
     it('should handle drag and drop', () => {
-      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      component.rebuildSankey(Mocks.Flow, Mocks.FlowSettings);
       TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
       TestUtility.assert(component.svg != null);
       expect(component.svg.select('rect').attr('transform')).toBeTruthy();
@@ -90,20 +78,20 @@ describe('FlowComponent', () => {
     });
 
     it('should handle zoom', () => {
-      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      component.rebuildSankey(Mocks.Flow, Mocks.FlowSettings);
       TestUtility.zoomSelector(fixture, 'svg', 500);
       TestUtility.assert(component.svg != null);
       expect(component.svg.select('g').attr('transform')).toBeTruthy();
     });
 
     it('should call setSelected when a rect is clicked', () => {
-      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      component.rebuildSankey(Mocks.Flow, Mocks.FlowSettings);
       TestUtility.altClickSelector(fixture, 'rect');
       expect(component.selectedId()).toEqual(Mocks.Flow.nodes[0].stepId);
     });
 
     it('should not call setSelected emit when default is prevented', () => {
-      component.rebuildSankey(Mocks.Flow, Mocks.PreferencesState);
+      component.rebuildSankey(Mocks.Flow, Mocks.FlowSettings);
       spyOn(component.selectedId, 'set');
       TestUtility.altClickSelector(fixture, 'rect', 0, true);
       expect(component.selectedId.set).not.toHaveBeenCalled();

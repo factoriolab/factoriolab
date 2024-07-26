@@ -19,7 +19,7 @@ import {
   Entities,
   FACTORIO_FLUID_COST_RATIO,
   Game,
-  isRecipeRationalObjective,
+  isRecipeObjective,
   MatrixResult,
   MaximizeType,
   Objective,
@@ -77,7 +77,7 @@ export interface MatrixState {
   data: AdjustedDataset;
   maximizeType: MaximizeType;
   surplusMachinesOutput: boolean;
-  cost: CostSettings;
+  costs: CostSettings;
 }
 
 export interface MatrixSolution {
@@ -149,7 +149,7 @@ export class SimplexUtility {
     researchedTechnologyIds: string[] | null,
     maximizeType: MaximizeType,
     surplusMachinesOutput: boolean,
-    cost: CostSettings,
+    costs: CostSettings,
     data: AdjustedDataset,
     paused: boolean,
   ): MatrixResult {
@@ -173,7 +173,7 @@ export class SimplexUtility {
       researchedTechnologyIds,
       maximizeType,
       surplusMachinesOutput,
-      cost,
+      costs,
       data,
     );
 
@@ -204,7 +204,7 @@ export class SimplexUtility {
     researchedTechnologyIds: string[],
     maximizeType: MaximizeType,
     surplusMachinesOutput: boolean,
-    cost: CostSettings,
+    costs: CostSettings,
     data: AdjustedDataset,
   ): MatrixState {
     // Set up state object
@@ -212,7 +212,7 @@ export class SimplexUtility {
       objectives,
       recipeObjectives: objectives.filter(
         (o): o is RecipeObjective =>
-          isRecipeRationalObjective(o) &&
+          isRecipeObjective(o) &&
           [ObjectiveType.Output, ObjectiveType.Maximize].includes(o.type),
       ),
       steps: [],
@@ -233,13 +233,13 @@ export class SimplexUtility {
       itemIds: data.itemIds.filter((i) => !itemsState[i].excluded),
       maximizeType,
       surplusMachinesOutput,
-      cost,
+      costs: costs,
       data,
     };
 
     // Add item objectives to matrix state
     for (const obj of objectives) {
-      if (isRecipeRationalObjective(obj)) {
+      if (isRecipeObjective(obj)) {
         switch (obj.type) {
           case ObjectiveType.Output:
           case ObjectiveType.Maximize: {
@@ -446,7 +446,7 @@ export class SimplexUtility {
       state.data.game === Game.Factorio
         ? FACTORIO_FLUID_COST_RATIO
         : rational(1n);
-    const cost = state.cost[costKey];
+    const cost = state.costs[costKey];
     return base.mul(cost).toNumber();
   }
 
@@ -480,7 +480,7 @@ export class SimplexUtility {
     const recipeObjectiveConstrEntities: Entities<Constraint> = {};
     // Variable for maximization ratio
     const config: VariableProperties = {
-      obj: state.cost.maximize.toNumber(),
+      obj: state.costs.maximize.toNumber(),
       lb: 0,
       name: 'maximize',
     };
@@ -524,7 +524,7 @@ export class SimplexUtility {
         switch (state.maximizeType) {
           case MaximizeType.Weight: {
             const varConfig: VariableProperties = {
-              obj: obj.value.mul(state.cost.maximize).toNumber(),
+              obj: obj.value.mul(state.costs.maximize).toNumber(),
               lb: 0,
               name: obj.id,
             };
@@ -672,7 +672,7 @@ export class SimplexUtility {
         switch (state.maximizeType) {
           case MaximizeType.Weight: {
             const config: VariableProperties = {
-              obj: values.max.mul(state.cost.maximize).toNumber(),
+              obj: values.max.mul(state.costs.maximize).toNumber(),
               lb: 0,
               name: itemId,
             };
@@ -921,7 +921,6 @@ export class SimplexUtility {
     const steps = state.steps;
     const recipes = Object.keys(solution.recipes).map((r) => state.recipes[r]);
     recipes.push(...state.recipeObjectives.map((p) => p.recipe));
-
     // Check for exact id matches
     for (const step of steps.filter((s) => s.recipeId == null)) {
       const i = recipes.findIndex(
@@ -1005,7 +1004,7 @@ export class SimplexUtility {
       step.recipeObjectiveId = recipeObjective.id;
     } else {
       step.machines = solution.recipes[recipe.id].add(
-        step.machines || rational(0n),
+        step.machines ?? rational(0n),
       );
     }
 

@@ -1,4 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
+import { Entities } from '~/models';
 import { StoreUtility } from './store.utility';
 
 describe('StoreUtility', () => {
@@ -191,6 +192,18 @@ describe('StoreUtility', () => {
     });
   });
 
+  describe('setValue', () => {
+    it('should clean up object if setting to undefined', () => {
+      const entities: Entities<{ value?: string }> = { id: { value: 'value' } };
+      expect(
+        StoreUtility.setValue(entities, 'value', {
+          id: 'id',
+          value: undefined,
+        }),
+      ).toEqual({});
+    });
+  });
+
   describe('compareValue', () => {
     it('should return null if equal to default', () => {
       expect(
@@ -270,76 +283,6 @@ describe('StoreUtility', () => {
       expect(result[Mocks.Item2.id]).toEqual({
         beacons: [{ count: '2' }],
       } as any);
-    });
-  });
-
-  describe('compareResetIndex', () => {
-    const id = 'id';
-    const index = 0;
-    const field = 'beacons';
-    const subfield = 'count';
-
-    it('should set field when not equal to default', () => {
-      const payload = { id, index, value: 'a', def: 'b' };
-      const result = StoreUtility.compareResetIndex(
-        { [id]: { [field]: [{ [subfield]: '' }] } },
-        field,
-        subfield,
-        payload,
-      );
-      expect(result[id][field][index][subfield]).toEqual('a');
-    });
-
-    it('should do nothing if null and equal to default', () => {
-      const payload = { id, index, value: 'a', def: 'a' };
-      const result = StoreUtility.compareResetIndex(
-        { [id]: { [field]: [{ [subfield]: '' }] } },
-        field,
-        subfield,
-        payload,
-      );
-      expect(result).toEqual({});
-    });
-
-    it('should delete field when equal to default', () => {
-      const payload = { id, index, value: 'a', def: 'a' };
-      const result = StoreUtility.compareResetIndex(
-        { [id]: { [field]: [{ other: 'b', [subfield]: 'b' }] } },
-        field,
-        subfield,
-        payload,
-      );
-      expect(result[id][field][index][subfield]).toBeUndefined();
-    });
-  });
-
-  describe('assignIndexValue', () => {
-    const id = 'id';
-    const index = 0;
-    const field = 'beacons';
-    const subfield = 'count';
-
-    it('should assign a field at a passed index', () => {
-      const payload = { id, index, value: 'a', def: 'b' };
-      const result = StoreUtility.assignIndexValue(
-        { [id]: { [field]: [{ count: '' }, { count: 'c' }] } },
-        field,
-        subfield,
-        payload,
-      );
-      expect(result[id][field][index][subfield]).toEqual('a');
-      expect(result[id][field][1][subfield]).toEqual('c');
-    });
-
-    it('should generate a new field at a passed index', () => {
-      const payload = { id, index, value: 'a', def: 'b' };
-      const result = StoreUtility.assignIndexValue(
-        { [id]: { [field]: undefined } },
-        field,
-        subfield,
-        payload as any,
-      );
-      expect(result[id][field]?.[index][subfield]).toEqual('a' as any);
     });
   });
 });

@@ -2,6 +2,7 @@ import { SelectItem } from 'primeng/api';
 
 import { Rational } from '../rational';
 import { BeaconSettings } from './beacon-settings';
+import { ModuleSettings } from './module-settings';
 
 export interface RecipeSettings {
   excluded?: boolean;
@@ -10,7 +11,7 @@ export interface RecipeSettings {
   fuelId?: string;
   /** Calculated, not configurable */
   fuelOptions?: SelectItem<string>[];
-  moduleIds?: string[];
+  modules?: ModuleSettings[];
   /** Calculated, not configurable */
   moduleOptions?: SelectItem<string>[];
   beacons?: BeaconSettings[];

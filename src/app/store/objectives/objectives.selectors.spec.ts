@@ -55,7 +55,7 @@ describe('Objectives Selectors', () => {
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         Mocks.MachinesStateInitial,
-        Mocks.AdjustmentData,
+        Settings.initialSettingsState,
         Mocks.AdjustedDataset,
       );
       expect(RecipeUtility.adjustObjective).toHaveBeenCalledWith(
@@ -63,7 +63,7 @@ describe('Objectives Selectors', () => {
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         Mocks.MachinesStateInitial,
-        Mocks.AdjustmentData,
+        Settings.initialSettingsState,
         Mocks.AdjustedDataset,
       );
     });
@@ -169,10 +169,17 @@ describe('Objectives Selectors', () => {
             recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
-              moduleIds: [ItemId.ProductivityModule3],
+              modules: [
+                {
+                  count: rational(3n),
+                  id: ItemId.ProductivityModule3,
+                },
+              ],
               beacons: [
                 {
+                  count: rational(0n),
                   id: ItemId.Beacon,
+                  modules: [{ count: rational(2n), id: ItemId.Module }],
                 },
               ],
             },
@@ -189,16 +196,19 @@ describe('Objectives Selectors', () => {
             recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
-              moduleIds: [
-                ItemId.Module,
-                ItemId.SpeedModule3,
-                ItemId.SpeedModule3,
+              modules: [
+                { count: rational(1n), id: ItemId.Module },
+                { count: rational(2n), id: ItemId.SpeedModule3 },
               ],
               beacons: [
                 {
-                  total: rational(1n),
+                  count: rational(2n),
                   id: ItemId.Beacon,
-                  moduleIds: [ItemId.SpeedModule3, ItemId.SpeedModule3],
+                  modules: [
+                    { count: rational(1n), id: ItemId.SpeedModule3 },
+                    { count: rational(1n), id: ItemId.Module },
+                  ],
+                  total: rational(1n),
                 },
               ],
             },
@@ -216,7 +226,7 @@ describe('Objectives Selectors', () => {
         },
         beacons: { [ItemId.Beacon]: rational(1n) },
         beaconModules: {
-          [ItemId.SpeedModule3]: rational(2n),
+          [ItemId.SpeedModule3]: rational(1n),
         },
         power: rational(1n),
         pollution: rational(1n),
@@ -244,36 +254,6 @@ describe('Objectives Selectors', () => {
         wagons: {},
         machines: { [RecipeId.Coal]: rational(1n) },
         modules: {},
-        beacons: {},
-        beaconModules: {},
-        power: rational(0n),
-        pollution: rational(0n),
-      });
-    });
-
-    it('should calculate Final Factory duplicator total', () => {
-      const result = Selectors.getTotals.projector(
-        [
-          {
-            id: '01',
-            recipeId: RecipeId.Coal,
-            recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
-            machines: rational(1n),
-            recipeSettings: {
-              machineId: ItemId.AssemblingMachine2,
-              moduleIds: [ItemId.SpeedModule],
-              overclock: rational(2n),
-            },
-          },
-        ],
-        Mocks.ItemsStateInitial,
-        { ...Mocks.AdjustedDataset, ...{ game: Game.FinalFactory } },
-      );
-      expect(result).toEqual({
-        belts: {},
-        wagons: {},
-        machines: { [ItemId.AssemblingMachine2]: rational(1n) },
-        modules: { [ItemId.SpeedModule]: rational(2n) },
         beacons: {},
         beaconModules: {},
         power: rational(0n),
@@ -471,9 +451,16 @@ describe('Objectives Selectors', () => {
         {
           [RecipeId.Coal]: {
             machineId: undefined,
-            moduleIds: undefined,
+            modules: undefined,
             overclock: rational(100n),
-            beacons: [{ total: rational(1n) }],
+            beacons: [
+              {
+                count: rational(1n),
+                id: ItemId.Beacon,
+                modules: [{ count: rational(2n), id: ItemId.Module }],
+                total: rational(1n),
+              },
+            ],
           },
         },
         [],
@@ -491,7 +478,13 @@ describe('Objectives Selectors', () => {
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
         overclock: rational(100n),
-        beacons: [{ moduleIds: [] }],
+        beacons: [
+          {
+            count: rational(1n),
+            id: ItemId.Beacon,
+            modules: [{ count: rational(2n), id: ItemId.Module }],
+          },
+        ],
       };
       const result = Selectors.getRecipesModified.projector(
         {

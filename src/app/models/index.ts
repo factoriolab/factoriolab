@@ -2,7 +2,6 @@ export * from './data';
 export * from './enum';
 export * from './settings';
 
-export * from './adjustment-data';
 export * from './app-data';
 export * from './constants';
 export * from './dataset';

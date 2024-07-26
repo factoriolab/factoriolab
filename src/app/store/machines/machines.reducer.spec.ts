@@ -28,6 +28,46 @@ describe('Machines Reducer', () => {
     });
   });
 
+  describe('SET_FUEL_RANK', () => {
+    it('should set the default fuel rank', () => {
+      const result = machinesReducer(
+        undefined,
+        new Actions.SetFuelRankAction({ value: [value], def: [def] }),
+      );
+      expect(result.fuelRankIds).toEqual([value]);
+    });
+  });
+
+  describe('SET_MODULE_RANK', () => {
+    it('should set the default module rank', () => {
+      const result = machinesReducer(
+        undefined,
+        new Actions.SetModuleRankAction({ value: [value], def: [def] }),
+      );
+      expect(result.moduleRankIds).toEqual([value]);
+    });
+  });
+
+  describe('SET_DEFAULT_BEACONS', () => {
+    it('should set the default beacons', () => {
+      const result = machinesReducer(
+        undefined,
+        new Actions.SetDefaultBeaconsAction([]),
+      );
+      expect(result.beacons).toEqual([]);
+    });
+  });
+
+  describe('SET_DEFAULT_OVERCLOCK', () => {
+    it('should set the default overclock', () => {
+      const result = machinesReducer(
+        undefined,
+        new Actions.SetDefaultOverclockAction(rational(100n)),
+      );
+      expect(result.overclock).toEqual(rational(100n));
+    });
+  });
+
   describe('ADD', () => {
     it('should add a machine to the list', () => {
       const result = machinesReducer(
@@ -141,51 +181,37 @@ describe('Machines Reducer', () => {
     });
   });
 
-  describe('SET_MODULE_RANK', () => {
-    it('should set the module rank for a machine', () => {
+  describe('SET_MODULES', () => {
+    it('should set the modules for a machine', () => {
+      const value = [{ count: rational(2n), id: ItemId.Module }];
       const result = machinesReducer(
         undefined,
-        new Actions.SetModuleRankAction({ id, value: [value], def: [] }),
-      );
-      expect(result.entities[id].moduleRankIds).toEqual([value]);
-    });
-  });
-
-  describe('SET_BEACON_COUNT', () => {
-    it('should set the beacon count for a machine', () => {
-      const result = machinesReducer(
-        undefined,
-        new Actions.SetBeaconCountAction({
+        new Actions.SetModulesAction({
           id,
-          value: rational(2n),
-          def: rational(8n),
+          value,
         }),
       );
-      expect(result.entities[id].beaconCount).toEqual(rational(2n));
+      expect(result.entities[id].modules).toEqual(value);
     });
   });
 
-  describe('SET_BEACON', () => {
-    it('should set the beacon for a machine', () => {
+  describe('SET_BEACONS', () => {
+    it('should set the beacons for a machine', () => {
+      const value = [
+        {
+          count: rational(0n),
+          id: ItemId.Beacon,
+          modules: [{ count: rational(2n), id: ItemId.Module }],
+        },
+      ];
       const result = machinesReducer(
         undefined,
-        new Actions.SetBeaconAction({ id, value, def: ItemId.Beacon }),
-      );
-      expect(result.entities[id].beaconId).toEqual(value);
-    });
-  });
-
-  describe('SET_BEACON_MODULE', () => {
-    it('should set the beacon module for a machine', () => {
-      const result = machinesReducer(
-        undefined,
-        new Actions.SetBeaconModuleRankAction({
+        new Actions.SetBeaconsAction({
           id,
-          value: [value],
-          def: [],
+          value,
         }),
       );
-      expect(result.entities[id].beaconModuleRankIds).toEqual([value]);
+      expect(result.entities[id].beacons).toEqual(value);
     });
   });
 

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   provideHttpClient,
   withInterceptorsFromDi,
@@ -18,7 +17,6 @@ import { initialState } from './state';
 @NgModule({
   exports: [FormsModule, TranslateModule, AppSharedModule, MainSharedModule],
   imports: [
-    CommonModule,
     FormsModule,
     NoopAnimationsModule,
     TranslateModule.forRoot(),

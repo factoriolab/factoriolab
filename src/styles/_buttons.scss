@@ -1,14 +1,14 @@
 // Hover icon button styles (e.g. item exclude button)
 .p-button.hover-action {
-  width: 2.571rem;
+  min-width: 2.571rem;
   padding: 0.5rem 0;
   justify-content: center;
 
-  > .p-button-icon {
+  .p-button-icon {
     transition: all 300ms ease;
   }
 
-  > .hover-icon {
+  .hover-icon {
     position: absolute;
     z-index: 1;
 
@@ -16,27 +16,46 @@
 
     transition: opacity 300ms ease;
 
+    color: var(--text-color-secondary);
     text-shadow: 0 0 3px var(--surface-card);
   }
 
   // These styles for hover/active
   &:hover,
   &.hover-active {
-    > .p-button-icon {
-      opacity: 0.4;
+    .p-button-icon {
+      opacity: 0.3;
     }
 
-    > .hover-icon {
+    .hover-icon {
       opacity: 1;
     }
   }
 
   // These styles for hover & inactive
   &:hover:not(.hover-active) {
-    > .p-button-icon {
-      opacity: 0.8;
+    .p-button-icon {
+      opacity: 0.6;
     }
   }
+
+  &:hover {
+    background-color: var(--surface-b);
+    border: 1px solid var(--primary-color);
+  }
+
+  &.icons {
+    padding: 0;
+    flex-wrap: wrap;
+
+    i.p-button-icon {
+      margin: 8px;
+    }
+  }
+}
+
+.p-button.modules > i {
+  margin: 0 6px;
 }
 
 // Adjust opacity for light mode
@@ -47,6 +66,8 @@ body.light .p-button.hover-action.hover-active .p-button-icon {
 // Icon dropdown styles
 .p-dropdown.icon,
 .p-multiselect.icon {
+  min-height: 36px;
+
   .lab-icon,
   .fa-solid {
     transition: opacity 300ms ease;
@@ -72,5 +93,18 @@ body.light .p-button.hover-action.hover-active .p-button-icon {
     .p-multiselect-trigger {
       opacity: 1;
     }
+  }
+}
+
+.p-multiselect.icons {
+  min-height: 36px;
+}
+
+.p-inputgroup {
+  > p-dropdown[labdropdownbase='icon'],
+  > p-multiselect[labdropdownbase='icon'] {
+    flex-basis: 36px;
+    flex-grow: 0;
+    flex-shrink: 0;
   }
 }

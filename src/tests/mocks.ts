@@ -134,23 +134,23 @@ export const ItemSettings1: M.ItemSettings = {
 };
 export const RecipeSettings1: M.RecipeSettings = {
   machineId: ItemId.AssemblingMachine2,
-  moduleIds: [ItemId.Module, ItemId.Module],
+  modules: [{ count: M.rational(2n), id: ItemId.Module }],
   beacons: [
     {
-      id: ItemId.Beacon,
-      moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
       count: M.rational(0n),
+      id: ItemId.Beacon,
+      modules: [{ count: M.rational(2n), id: ItemId.SpeedModule }],
     },
   ],
 };
 export const RecipeSettings2: M.RecipeSettings = {
   machineId: ItemId.AssemblingMachine2,
-  moduleIds: [ItemId.Module, ItemId.Module],
+  modules: [{ count: M.rational(2n), id: ItemId.Module }],
   beacons: [
     {
-      id: ItemId.Beacon,
-      moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
       count: M.rational(0n),
+      id: ItemId.Beacon,
+      modules: [{ count: M.rational(2n), id: ItemId.SpeedModule }],
     },
   ],
 };
@@ -206,7 +206,6 @@ export const ItemsStateInitial = Items.getItemsState.projector({}, Dataset, {
 });
 export const MachinesStateInitial = Machines.getMachinesState.projector(
   Machines.initialMachinesState,
-  [ItemId.Coal],
   Defaults,
   Dataset,
 );
@@ -223,13 +222,7 @@ export function getAdjustedDataset(): M.AdjustedDataset {
     [],
     ItemsStateInitial,
     Dataset.recipeIds,
-    Costs,
-    {
-      netProductionOnly: false,
-      proliferatorSprayId: ItemId.Module,
-      miningBonus: M.rational(0n),
-      researchBonus: M.rational(1n),
-    },
+    Settings.initialSettingsState,
     getDataset(),
   );
 }
@@ -243,6 +236,13 @@ export const Objectives = ObjectivesList.map((o) => ({
   },
 }));
 export const Objective = Objectives[0];
+export const FlowSettings: M.FlowSettings = {
+  diagram: M.FlowDiagram.Sankey,
+  linkSize: M.LinkValue.Items,
+  linkText: M.LinkValue.Items,
+  sankeyAlign: M.SankeyAlign.Justify,
+  hideExcluded: true,
+};
 export const PreferencesState: Preferences.PreferencesState = {
   states: {
     [M.Game.Factorio]: { ['name']: 'z=zip' },
@@ -262,11 +262,8 @@ export const PreferencesState: Preferences.PreferencesState = {
   showTechLabels: false,
   hideDuplicateIcons: false,
   paused: false,
-  flowDiagram: M.FlowDiagram.Sankey,
-  linkSize: M.LinkValue.Items,
-  linkText: M.LinkValue.Items,
-  sankeyAlign: M.SankeyAlign.Justify,
-  flowHideExcluded: true,
+  convertObjectiveValues: false,
+  flowSettings: FlowSettings,
 };
 export const MatrixResultSolved: M.MatrixResult = {
   steps: Steps,
@@ -329,12 +326,6 @@ export const SimplexModifiers = {
   costInput: M.rational(1000000n),
   costExcluded: M.rational(0n),
 };
-export const AdjustmentData: M.AdjustmentData = {
-  netProductionOnly: false,
-  proliferatorSprayId: ItemId.Module,
-  miningBonus: M.rational(0n),
-  researchBonus: M.rational(1n),
-};
 export const DisplayRateInfo = M.displayRateInfo[M.DisplayRate.PerMinute];
 
 export const LightOilSteps: M.Step[] = [
@@ -393,6 +384,25 @@ export const LightOilSteps: M.Step[] = [
       '0': M.rational(3n, 11n),
       '1': M.rational(8n, 11n),
     },
+  },
+];
+
+export const ModuleSettings: M.ModuleSettings[] = [
+  {
+    id: ItemId.ProductivityModule3,
+    count: M.rational(3n),
+  },
+  {
+    id: ItemId.Module,
+    count: M.rational(1n),
+  },
+];
+
+export const BeaconSettings: M.BeaconSettings[] = [
+  {
+    count: M.rational(8n),
+    id: ItemId.Beacon,
+    modules: [{ id: ItemId.SpeedModule3, count: M.rational(2n) }],
   },
 ];
 

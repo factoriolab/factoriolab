@@ -5,6 +5,7 @@
   [dismissableMask]="true"
   [draggable]="false"
   [resizable]="false"
+  [focusOnShow]="false"
   appendTo="body"
   [header]="'techPicker.header' | translate"
   [style]="{
@@ -102,7 +103,7 @@
           rows="10"
           pInputTextarea
           [(ngModel)]="importValue"
-          (keydown.enter)="importVisible = false"
+          (keydown.enter)="importTechs()"
         ></textarea>
       </div>
       <ng-template pTemplate="footer">
@@ -110,10 +111,19 @@
           pButton
           pRipple
           type="button"
-          class="p-button-text"
+          class="p-button-outlined"
           icon="fa-solid fa-check"
           [label]="'ok' | translate"
           (click)="importTechs()"
+        ></button>
+        <button
+          pButton
+          pRipple
+          type="button"
+          class="p-button-outlined p-button-secondary"
+          icon="fa-solid fa-xmark"
+          [label]="'cancel' | translate"
+          (click)="importVisible = false"
         ></button>
       </ng-template>
     </p-dialog>
@@ -187,4 +197,25 @@
       </ng-template>
     </p-scrollPanel>
   }
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined"
+      icon="fa-solid fa-check"
+      [label]="'ok' | translate"
+      (click)="hide()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      type="button"
+      class="p-button-outlined p-button-secondary"
+      icon="fa-solid fa-xmark"
+      [label]="'cancel' | translate"
+      (click)="hide(true)"
+    ></button>
+  </ng-template>
 </p-dialog>

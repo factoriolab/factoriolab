@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { NavigationEnd, NavigationStart, Router } from '@angular/router';
+import { NavigationEnd, NavigationStart } from '@angular/router';
 import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
 import { deflate, inflate } from 'pako';
@@ -7,7 +7,6 @@ import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import {
-  BeaconSettings,
   DisplayRate,
   Game,
   InserterCapacity,
@@ -30,8 +29,6 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { ContentService } from './content.service';
-import { DataService } from './data.service';
 import {
   EMPTY,
   FALSE,
@@ -42,6 +39,7 @@ import {
   TRUE,
   Zip,
   ZipData,
+  ZipMachineSettings,
 } from './router.service';
 
 const mockObjective: Objective = {
@@ -82,12 +80,12 @@ const mockItemsState: Items.ItemsState = {
 const mockRecipesState: Recipes.RecipesState = {
   [RecipeId.SteelChest]: {
     machineId: ItemId.AssemblingMachine2,
-    moduleIds: [ItemId.EfficiencyModule, ItemId.EfficiencyModule],
+    modules: [{ count: rational(2n), id: ItemId.EfficiencyModule }],
     beacons: [
       {
         count: rational(1n),
         id: ItemId.Beacon,
-        moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+        modules: [{ count: rational(2n), id: ItemId.SpeedModule }],
         total: rational(8n),
       },
     ],
@@ -97,14 +95,16 @@ const mockRecipesState: Recipes.RecipesState = {
 };
 const mockMachinesState: Machines.MachinesState = {
   ids: [ItemId.AssemblingMachine2, ItemId.SteelFurnace],
-  entities: {
-    ['']: {
-      moduleRankIds: [ItemId.ProductivityModule, ItemId.SpeedModule],
-      beaconCount: rational(1n),
-      beaconId: ItemId.Beacon,
-      beaconModuleRankIds: [ItemId.SpeedModule],
+  fuelRankIds: [ItemId.Coal],
+  moduleRankIds: [ItemId.ProductivityModule, ItemId.SpeedModule],
+  beacons: [
+    {
+      count: rational(1n),
+      id: ItemId.Beacon,
+      modules: [{ id: ItemId.SpeedModule }],
     },
-  },
+  ],
+  entities: {},
 };
 const mockSettingsState: Settings.SettingsState = {
   modId: '1.0',
@@ -115,7 +115,6 @@ const mockSettingsState: Settings.SettingsState = {
   beaconReceivers: rational(1n),
   proliferatorSprayId: ItemId.ProductivityModule,
   beltId: ItemId.TransportBelt,
-  fuelRankIds: [ItemId.Coal],
   cargoWagonId: ItemId.CargoWagon,
   fluidWagonId: ItemId.FluidWagon,
   flowRate: rational(1200n),
@@ -141,15 +140,14 @@ const mockZip: Zip = {
 };
 const mockZipPartial: Zip = {
   bare:
-    '&e=1*speed-module~speed-module*beacon*8&i=steel-chest*1*transport-belt*c' +
-    'argo-wagon&r=steel-chest**assembling-machine-2*effectivity-module~effect' +
-    'ivity-module*0*200*100&f=1*productivity-module~speed-module*1*speed-modu' +
-    'le*beacon_assembling-machine-2_steel-furnace&s=1.0**2*1*transport-belt*c' +
-    'oal**100*0*0*0*cargo-wagon*fluid-wagon**1*productivity-module*1**2*1' +
-    '0*0*100**-100000',
+    '&m=2*effectivity-module_2*speed-module_*speed-module&e=1*1*beacon*8_1*2*' +
+    'beacon&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest**assembl' +
+    'ing-machine-2*0*0*200*100&f=%3D*productivity-module~speed-module*1*coal_' +
+    'assembling-machine-2_steel-furnace&s=1.0**2*1*transport-belt**100*0*0*0*' +
+    'cargo-wagon*fluid-wagon**1*productivity-module*1**2*10*0*100**-100000',
   hash:
-    '&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100&f1*D~G*1*G*A_B_Q&s*2*1' +
-    '*C*A**Bk*A*0*0*A*B**1*D*1**2*10*0*100**-100000',
+    '&m2*A_2*G_*G&e1*1*A*8_1*2*A&bB&iC6*1*C*A&rDB**B*0*0*200*100&f=*D~G*1*A_B' +
+    '_Q&s*2*1*C**Bk*A*0*0*A*B**1*D*1**2*10*0*100**-100000',
 };
 const mockState: LabState = {
   objectivesState: mockObjectivesState,
@@ -161,12 +159,16 @@ const mockState: LabState = {
 function mockEmptyZip(): Zip {
   return { bare: '', hash: '' };
 }
+function mockEmptyMachineSettings(): ZipMachineSettings {
+  return { moduleMap: {}, beaconMap: {} };
+}
 function mockZipData(objectives?: Zip, config?: Zip): ZipData {
   return {
     objectives: objectives ?? mockEmptyZip(),
     config: config ?? mockEmptyZip(),
-    objectiveBeaconMap: {},
-    recipeBeaconMap: {},
+    objectiveSettings: mockEmptyMachineSettings(),
+    recipeSettings: mockEmptyMachineSettings(),
+    machineSettings: mockEmptyMachineSettings(),
   };
 }
 
@@ -183,9 +185,6 @@ describe('RouterService', () => {
       settings: Settings.SettingsState;
     }
   >;
-  let router: Router;
-  let dataSvc: DataService;
-  let contentSvc: ContentService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -205,9 +204,6 @@ describe('RouterService', () => {
       machinesState: Machines.initialMachinesState,
       settings: Settings.initialSettingsState,
     });
-    router = TestBed.inject(Router);
-    dataSvc = TestBed.inject(DataService);
-    contentSvc = TestBed.inject(ContentService);
   });
 
   it('should be created', () => {
@@ -216,12 +212,12 @@ describe('RouterService', () => {
 
   it('should update state from router', () => {
     spyOn(service, 'updateState');
-    (router.events as any).next(new NavigationEnd(2, '/', '/'));
+    (service.router.events as any).next(new NavigationEnd(2, '/', '/'));
     expect(service.updateState).toHaveBeenCalled();
   });
 
   it('should run first update of url if settings modified', (done) => {
-    (router.events as any).next(new NavigationEnd(2, '/', '/'));
+    (service.router.events as any).next(new NavigationEnd(2, '/', '/'));
     spyOn(service, 'updateUrl').and.callFake(() => {
       expect(service.updateUrl).toHaveBeenCalled();
       done();
@@ -294,7 +290,7 @@ describe('RouterService', () => {
     it('should update url with products', () => {
       spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
       spyOn(service, 'getHash').and.returnValue('test');
-      spyOn(router, 'navigateByUrl');
+      spyOn(service.router, 'navigateByUrl');
       service.updateUrl(
         Objectives.initialObjectivesState,
         Items.initialItemsState,
@@ -302,14 +298,14 @@ describe('RouterService', () => {
         Machines.initialMachinesState,
         Settings.initialSettingsState,
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith('/?test');
+      expect(service.router.navigateByUrl).toHaveBeenCalledWith('/?test');
     });
 
     it('should preserve a hash', () => {
       spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
       spyOn(service, 'getHash').and.returnValue('test');
-      spyOn(router, 'navigateByUrl');
-      spyOnProperty(router, 'url').and.returnValue('path#hash');
+      spyOn(service.router, 'navigateByUrl');
+      spyOnProperty(service.router, 'url').and.returnValue('path#hash');
       service.updateUrl(
         Objectives.initialObjectivesState,
         Items.initialItemsState,
@@ -317,7 +313,9 @@ describe('RouterService', () => {
         Machines.initialMachinesState,
         Settings.initialSettingsState,
       );
-      expect(router.navigateByUrl).toHaveBeenCalledWith('path?test#hash');
+      expect(service.router.navigateByUrl).toHaveBeenCalledWith(
+        'path?test#hash',
+      );
     });
   });
 
@@ -436,19 +434,19 @@ describe('RouterService', () => {
     });
 
     it('should skip unless event is NavigationEnd', () => {
-      (router.events as any).next(new NavigationStart(2, ''));
+      (service.router.events as any).next(new NavigationStart(2, ''));
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
     it('should skip unless hash is found', () => {
-      (router.events as any).next(new NavigationEnd(2, '/', '/'));
+      (service.router.events as any).next(new NavigationEnd(2, '/', '/'));
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
     it('should skip unless new zip is found', () => {
       service.zip = mockZip.bare;
       const url = `/#${mockZip.bare}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
@@ -464,18 +462,18 @@ describe('RouterService', () => {
 
     it('should unzip empty v0', () => {
       const url = '/#z=eJwrsAUAAR8Arg==';
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p=', {} as any);
     });
 
     it('should unzip v0', () => {
-      spyOn(contentSvc, 'confirm');
+      spyOn(service.contentSvc, 'confirm');
       const url =
         '/#z=eJxtUNsKwyAM.Zr5EHDUFsZeZC.7j6E2toJVp3ZjL.v2dbSD2pUQyOXk5CSBp4xo' +
         'qeoxZWDAyL2sEMkZMRtUjsKl4GOmEm0GJWLn6VN03pFYQEVKOEhrXEcHoXrjkNaAWqPK' +
         '5mHyiw6-HS2-.0vTlhQQ2x9inYBEobyDuqqATX4mmjMIcWpueIupknEhue1JvM036DE6' +
         'oZAkzo4VHJrrzuleWGBfIc1pUTPb6ieg7WjaJb58AJs7glk_';
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV0: App.PartialState = {
         ...mockState,
@@ -500,18 +498,18 @@ describe('RouterService', () => {
           '00*100*0*0*0*cargo-wagon*fluid-wagon*?',
         mockStateV0,
       );
-      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
+      expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v1', () => {
       const v1Empty = 'p=&v=1';
       const url = `/?${v1Empty}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v1Empty, {} as any);
     });
 
     it('should unzip v1', () => {
-      spyOn(contentSvc, 'confirm');
+      spyOn(service.contentSvc, 'confirm');
       const v1Full =
         'p=steel-chest*1*1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel' +
         '-chest*assembling-machine-2*effectivity-module~effectivity-module*1*' +
@@ -520,7 +518,7 @@ describe('RouterService', () => {
         '&s=1.0*2*1*=*transport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-' +
         'wagon*?*2*10*0*100*1*productivity-module&v=1';
       const url = `/?${v1Full}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV1: App.PartialState = {
         ...mockState,
@@ -539,28 +537,28 @@ describe('RouterService', () => {
       delete mockStateV1.settingsState?.costs?.footprint;
       delete mockStateV1.settingsState?.surplusMachinesOutput;
       expect(service.dispatch).toHaveBeenCalledWith(v1Full, mockStateV1);
-      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
+      expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v2', () => {
       const url = '/?z=eJwrUCszAgADVAE.';
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v2', {} as any);
     });
 
     it('should unzip v2', () => {
-      spyOn(contentSvc, 'confirm');
+      spyOn(service.contentSvc, 'confirm');
       const url =
         '/?z=eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78m' +
         'mFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSMGkU_';
 
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       const mockStateV2: App.PartialState = {
         ...mockState,
         ...{
@@ -582,29 +580,29 @@ describe('RouterService', () => {
           '*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
         mockStateV2,
       );
-      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
+      expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v3', () => {
       const url = '/?z=eJwrUCszBgADVQFA';
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
     });
 
     it('should unzip v3', () => {
-      spyOn(contentSvc, 'confirm');
+      spyOn(service.contentSvc, 'confirm');
       const url =
         '/?z=eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX' +
         '5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6AbeM' +
         'G5w_';
 
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV3: App.PartialState = {
         ...mockState,
@@ -629,13 +627,13 @@ describe('RouterService', () => {
           'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
         mockStateV3,
       );
-      expect(contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
+      expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
     it('should unzip empty v4', () => {
       const v4Empty = 'p=&v=4';
       const url = `/?${v4Empty}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v4Empty, {} as any);
     });
 
@@ -648,7 +646,7 @@ describe('RouterService', () => {
         '-2_steel-furnace&s=1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
         'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module&v=4';
       const url = `/?${v4Full}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV4: App.PartialState = {
         ...mockState,
@@ -673,10 +671,10 @@ describe('RouterService', () => {
 
     it('should unzip empty v5', () => {
       const url = '/?z=eJwrUCszBQADVwFC&v=5';
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v5', {} as any);
     });
 
@@ -686,10 +684,10 @@ describe('RouterService', () => {
         'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4DZYwb' +
         'BA__&v=5';
 
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV5: App.PartialState = {
         ...mockState,
@@ -719,7 +717,7 @@ describe('RouterService', () => {
     it('should unzip empty v6', () => {
       const v6Empty = 'p=&v=6';
       const url = `/?${v6Empty}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v6Empty, {} as any);
     });
 
@@ -732,7 +730,7 @@ describe('RouterService', () => {
         'hine-2_steel-furnace&s=1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*' +
         '0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module*1&v=6';
       const url = `/?${v6Full}`;
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV6: App.PartialState = {
         ...mockState,
@@ -757,10 +755,10 @@ describe('RouterService', () => {
 
     it('should unzip empty v7', () => {
       const url = '/?z=eJwrUCszBwADWQFE&v=7';
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v7', {} as any);
     });
 
@@ -770,10 +768,10 @@ describe('RouterService', () => {
         'GuM54jzkGfK-2YDLP2ngp6M0qpiqvIySbi7wJZZJtiaPvvrMB.Gh2poZkKh2q1tKftq7' +
         'C.WaHBw_&v=7';
 
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV7: App.PartialState = {
         ...mockState,
@@ -801,10 +799,10 @@ describe('RouterService', () => {
 
     it('should unzip empty v8', () => {
       const url = '/?z=eJwrUCuzAAADWgFF&v=8';
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v8', {} as any);
     });
 
@@ -814,10 +812,10 @@ describe('RouterService', () => {
         'QjLatezxWyfS3nNBkXvi9O6Eu92DWbAUcq31bJ8T.V.gslFPGu1KyWL12YC2yVd2Kp19' +
         'xwOrTh0O&v=8';
 
-      spyOn(dataSvc, 'requestData').and.returnValue(
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (router.events as any).next(new NavigationEnd(2, url, url));
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
 
       const mockStateV8: App.PartialState = {
         ...mockState,
@@ -834,6 +832,43 @@ describe('RouterService', () => {
       expect(service.dispatch).toHaveBeenCalledWith(
         'pC6*1*1&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100&f1*D~G*1*G*A_B_' +
           'Q&s?*2*1*C*A*Sw*Bk*A*0*0*A*B**1*D*1*A*2*10*0*100*0*-100000&v8',
+        mockStateV8,
+      );
+    });
+
+    it('should unzip empty v9', () => {
+      const url = '/?z=eJwrUCuzBAADWwFG&v=9';
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
+        of([Mocks.Data, Mocks.Hash, null]),
+      );
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      expect(service.dispatch).toHaveBeenCalledWith('p&v9', {} as any);
+    });
+
+    it('should unzip v9', () => {
+      const url =
+        '/?z=eJwljEEKwlAMRG-TxQMh6ULsSpIWuhYP8EGoIG5EQXc9u.N1IBMY5s1j2hOErcGyLSQHu5TdfulE2nMuKHJLnMGdcG9Jl12DWYxIslU72evI8Oc4f6g7HXK5NtTVZS.0TDPynZ5k7.ELdcIegQ__&v=9';
+
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
+        of([Mocks.Data, Mocks.Hash, null]),
+      );
+      (service.router.events as any).next(new NavigationEnd(2, url, url));
+
+      const mockStateV8: App.PartialState = {
+        ...mockState,
+        ...{
+          settingsState: {
+            ...mockState.settingsState,
+            ...{ costs: { ...mockState.settingsState.costs } },
+          },
+        },
+      };
+      delete mockStateV8.settingsState?.surplusMachinesOutput;
+      delete mockStateV8.settingsState?.costs?.footprint;
+
+      expect(service.dispatch).toHaveBeenCalledWith(
+        'pC6*1*1&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100_A*****&f1*D~G*1*G*A_B_' +
+          'Q&s?*2*1*C*A*Sw*Bk*A*0*0*A*B**1*D*1*A*2*10*0*100*0*-100000&v9',
         mockStateV8,
       );
     });
@@ -1004,36 +1039,43 @@ describe('RouterService', () => {
     });
   });
 
-  describe('zipBeacons', () => {
-    it('should generate maps for objective and recipe beacons', () => {
-      const beacons: BeaconSettings[] = [
-        {
-          count: rational(1n),
-          id: ItemId.Beacon,
-          moduleIds: [ItemId.SpeedModule, ItemId.SpeedModule],
+  describe('migrateV9', () => {
+    it('should handle migrating machine modules', () => {
+      const { params } = service.migrateV9({
+        params: {
+          [Section.Machines]: '1_A*speed-module',
         },
-      ];
-      const result = service.zipBeacons(
-        [
-          {
-            id: '0',
-            targetId: RecipeId.IronPlate,
-            value: rational(1n),
-            unit: ObjectiveUnit.Machines,
-            type: ObjectiveType.Output,
-            beacons,
-          },
-        ],
-        { [RecipeId.IronPlate]: { beacons } },
+        warnings: [],
+        isBare: true,
+      });
+
+      expect(params[Section.Machines]).toEqual('=_A*0');
+      expect(params[Section.Modules]).toEqual('*speed-module');
+    });
+
+    it('should handle migrating fuel rank', () => {
+      const { params } = service.migrateV9({
+        params: {
+          [Section.Machines]: 'A',
+          [Section.Settings]: '*****coal',
+        },
+        warnings: [],
+        isBare: true,
+      });
+
+      expect(params[Section.Machines]).toEqual('***coal_A');
+      expect(params[Section.Settings]).toEqual('****');
+    });
+  });
+
+  describe('beaconModuleMap', () => {
+    it('should return undefined for beacons without modules', () => {
+      const result = service.beaconModuleMap(
+        [{}],
+        service.emptyRecipeSettingsInfo,
         Mocks.Hash,
       );
-      expect(result.objectives).toEqual(service.empty);
-      expect(result.config).toEqual({
-        bare: '&e=1*speed-module~speed-module*beacon',
-        hash: '&e1*G~G*A',
-      });
-      expect(result.objectiveBeaconMap).toEqual({ ['0']: [0] });
-      expect(result.recipeBeaconMap).toEqual({ [RecipeId.IronPlate]: [0] });
+      expect(result[0]).toBeUndefined();
     });
   });
 
@@ -1130,6 +1172,7 @@ describe('RouterService', () => {
           ['p']: 'steel-chest*1*1',
         },
         [],
+        [],
       );
       expect(result).toEqual({
         ids: ['1'],
@@ -1148,7 +1191,8 @@ describe('RouterService', () => {
 
     it('hash should map values to empty strings if null', () => {
       const result = service.unzipObjectives(
-        { ['p']: '*1**Bd' },
+        { ['p']: '*1' },
+        [],
         [],
         Mocks.Hash,
       );
@@ -1167,8 +1211,8 @@ describe('RouterService', () => {
       });
     });
 
-    it('bare should map beacons', () => {
-      const result = service.unzipObjectives({ ['p']: '*1*3****0' }, []);
+    it('should map modules and beacons', () => {
+      const result = service.unzipObjectives({ ['p']: '*1*3***0*0' }, [], []);
       expect(result).toEqual({
         ids: ['1'],
         entities: {
@@ -1178,28 +1222,7 @@ describe('RouterService', () => {
             value: rational(1n),
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
-            beacons: [{}],
-          },
-        },
-        index: 2,
-      });
-    });
-
-    it('hash should map beacons', () => {
-      const result = service.unzipObjectives(
-        { ['p']: '*1*3****0' },
-        [],
-        Mocks.Hash,
-      );
-      expect(result).toEqual({
-        ids: ['1'],
-        entities: {
-          ['1']: {
-            id: '1',
-            targetId: '',
-            value: rational(1n),
-            unit: ObjectiveUnit.Machines,
-            type: ObjectiveType.Output,
+            modules: [{}],
             beacons: [{}],
           },
         },
@@ -1233,6 +1256,7 @@ describe('RouterService', () => {
           ['r']: 'steel-chest**assembling-machine-2*',
         },
         [],
+        [],
       );
       expect(result).toEqual({
         [RecipeId.SteelChest]: { machineId: ItemId.AssemblingMachine2 },
@@ -1240,68 +1264,51 @@ describe('RouterService', () => {
     });
 
     it('hash should map values to empty strings if null', () => {
-      const result = service.unzipRecipes({ ['r']: '**A*' }, [], Mocks.Hash);
+      const result = service.unzipRecipes(
+        { ['r']: '**A*' },
+        [],
+        [],
+        Mocks.Hash,
+      );
       expect(result).toEqual({
         ['']: { machineId: ItemId.AssemblingMachine1 },
       });
     });
 
-    it('bare should map beacons', () => {
-      const result = service.unzipRecipes({ ['r']: 'iron-plate****0' }, []);
+    it('should map modules and beacons', () => {
+      const result = service.unzipRecipes(
+        { ['r']: 'iron-plate***0*0' },
+        [],
+        [],
+      );
       expect(result).toEqual({
         [ItemId.IronPlate]: {
+          modules: [{}],
           beacons: [{}],
         },
       });
-    });
-
-    it('hash should map beacons', () => {
-      const result = service.unzipRecipes({ ['r']: 'B****0' }, [], Mocks.Hash);
-      expect(result).toEqual({
-        [RecipeId.AdvancedCircuit]: {
-          beacons: [{}],
-        },
-      });
-    });
-  });
-
-  describe('zipMachines', () => {
-    it('should handle null ids', () => {
-      const zip = mockZipData();
-      service.zipMachines(
-        zip,
-        {
-          ids: undefined,
-          entities: { ['']: {} },
-        },
-        Mocks.Hash,
-      );
-      expect(zip.config).toEqual({ bare: '', hash: '' });
     });
   });
 
   describe('unzipMachines', () => {
-    it('bare should unzip empty ids', () => {
-      const result = service.unzipMachines({ ['f']: '_' });
+    it('should unzip', () => {
+      const result = service.unzipMachines(
+        { ['f']: '=*speed-module*0*coal*100_assembling-machine-2*0*0' },
+        [],
+        [],
+      );
       expect(result).toEqual({
-        ids: undefined,
-        entities: {},
-      });
-    });
-
-    it('hash should unzip empty ids', () => {
-      const result = service.unzipMachines({ ['f']: '_' }, Mocks.Hash);
-      expect(result).toEqual({
-        ids: undefined,
-        entities: {},
-      });
-    });
-
-    it('hash should map values to empty strings if null', () => {
-      const result = service.unzipMachines({ ['f']: '1_?**1' }, Mocks.Hash);
-      expect(result).toEqual({
-        ids: [''],
-        entities: { ['']: { beaconCount: rational(1n) } },
+        ids: ['assembling-machine-2'],
+        moduleRankIds: ['speed-module'],
+        beacons: [{}],
+        fuelRankIds: ['coal'],
+        overclock: rational(100n),
+        entities: {
+          ['assembling-machine-2']: {
+            modules: [{}],
+            beacons: [{}],
+          },
+        },
       });
     });
   });

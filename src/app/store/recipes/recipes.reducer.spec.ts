@@ -85,9 +85,13 @@ describe('Recipes Reducer', () => {
           ...initialRecipesState,
           ...{
             [Mocks.Recipe1.id]: {
-              moduleIds: ['test'],
+              modules: [{ count: rational(1n), id: ItemId.Module }],
               beacons: [
-                { count: rational(20n), id: 'test', moduleIds: ['test'] },
+                {
+                  count: rational(10n),
+                  id: ItemId.Beacon,
+                  modules: [{ count: rational(2n), id: ItemId.Module }],
+                },
               ],
             },
           },
@@ -116,135 +120,52 @@ describe('Recipes Reducer', () => {
     });
   });
 
-  describe('SET_MACHINE_MODULES', () => {
+  describe('SET_MODULES', () => {
     it('should set the modules', () => {
+      const value = [{ count: rational(1n), id: ItemId.Module }];
       const result = recipesReducer(
         initialRecipesState,
         new Actions.SetModulesAction({
           id: Mocks.Recipe1.id,
-          value: [Mocks.Item1.id],
-          def: undefined,
+          value,
         }),
       );
-      expect(result[Mocks.Recipe1.id].moduleIds).toEqual([Mocks.Item1.id]);
+      expect(result[Mocks.Recipe1.id].modules).toEqual(value);
     });
   });
 
-  describe('ADD_BEACON', () => {
-    it('should add a beacon to a recipe', () => {
-      const result = recipesReducer(
-        initialRecipesState,
-        new Actions.AddBeaconAction(Mocks.Recipe1.id),
-      );
-      expect(result[Mocks.Recipe1.id].beacons?.length).toEqual(2);
-    });
-  });
-
-  describe('REMOVE_BEACON', () => {
-    it('should remove a beacon from a recipe', () => {
-      const result = recipesReducer(
+  describe('SET_BEACONS', () => {
+    it('should set the beacons', () => {
+      const value = [
         {
-          ...initialRecipesState,
-          ...{ [Mocks.Recipe1.id]: { beacons: undefined } },
+          count: rational(1n),
+          id: ItemId.Beacon,
+          modules: [{ count: rational(2n), id: ItemId.Module }],
         },
-        new Actions.RemoveBeaconAction({ id: Mocks.Recipe1.id, value: 0 }),
-      );
-      expect(result[Mocks.Recipe1.id].beacons?.length).toEqual(0);
-    });
-  });
-
-  describe('SET_BEACON_COUNT', () => {
-    it('should set the beacon count', () => {
+      ];
       const result = recipesReducer(
         initialRecipesState,
-        new Actions.SetBeaconCountAction({
+        new Actions.SetBeaconsAction({
           id: Mocks.Recipe1.id,
-          index: 0,
-          value: rational(2n),
-          def: undefined,
+          value,
         }),
       );
-      expect(result[Mocks.Recipe1.id].beacons?.[0].count).toEqual(rational(2n));
-    });
-  });
-
-  describe('SET_BEACON', () => {
-    it('should set the beacon', () => {
-      const result = recipesReducer(
-        initialRecipesState,
-        new Actions.SetBeaconAction({
-          id: Mocks.Recipe1.id,
-          index: 0,
-          value: ItemId.Beacon,
-          def: undefined,
-        }),
-      );
-      expect(result[Mocks.Recipe1.id].beacons?.[0].id).toEqual(ItemId.Beacon);
-    });
-
-    it('should reset the beacon modules', () => {
-      const result = recipesReducer(
-        {
-          ...initialRecipesState,
-          ...{ [Mocks.Recipe1.id]: { beacons: [{ moduleIds: ['test'] }] } },
-        },
-        new Actions.SetBeaconAction({
-          id: Mocks.Recipe1.id,
-          index: 0,
-          value: ItemId.Beacon,
-          def: undefined,
-        }),
-      );
-      expect(result[Mocks.Recipe1.id]).toEqual({
-        beacons: [{ id: ItemId.Beacon }],
-      });
-    });
-  });
-
-  describe('SET_BEACON_MODULES', () => {
-    it('should set the beacon module', () => {
-      const result = recipesReducer(
-        initialRecipesState,
-        new Actions.SetBeaconModulesAction({
-          id: Mocks.Recipe1.id,
-          index: 0,
-          value: [Mocks.Item1.id],
-          def: undefined,
-        }),
-      );
-      expect(result[Mocks.Recipe1.id].beacons?.[0].moduleIds).toEqual([
-        Mocks.Item1.id,
-      ]);
-    });
-  });
-
-  describe('SET_BEACON_TOTAL', () => {
-    it('should set the beacon total', () => {
-      const result = recipesReducer(
-        initialRecipesState,
-        new Actions.SetBeaconTotalAction({
-          id: Mocks.Recipe1.id,
-          index: 0,
-          value: rational(200n),
-        }),
-      );
-      expect(result[Mocks.Recipe1.id].beacons?.[0].total).toEqual(
-        rational(200n),
-      );
+      expect(result[Mocks.Recipe1.id].beacons).toEqual(value);
     });
   });
 
   describe('SET_OVERCLOCK', () => {
     it('should set the overclock', () => {
+      const value = rational(200n);
       const result = recipesReducer(
         initialRecipesState,
         new Actions.SetOverclockAction({
           id: Mocks.Recipe1.id,
-          value: rational(200n),
+          value,
           def: rational(100n),
         }),
       );
-      expect(result[Mocks.Recipe1.id].overclock).toEqual(rational(200n));
+      expect(result[Mocks.Recipe1.id].overclock).toEqual(value);
     });
   });
 
@@ -304,7 +225,7 @@ describe('Recipes Reducer', () => {
       );
       expect(StoreUtility.resetFields).toHaveBeenCalledWith(
         {},
-        ['fuelId', 'moduleIds', 'beacons'] as any,
+        ['fuelId', 'modules', 'beacons'] as any,
         Mocks.Recipe1.id,
       );
     });
@@ -318,7 +239,7 @@ describe('Recipes Reducer', () => {
         'machineId',
         'fuelId',
         'overclock',
-        'moduleIds',
+        'modules',
         'beacons',
       ] as any);
     });
