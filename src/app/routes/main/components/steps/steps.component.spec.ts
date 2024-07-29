@@ -17,7 +17,8 @@ import {
 } from 'src/tests';
 import { Entities, rational, Step, StepDetail, StepDetailTab } from '~/models';
 import { Items, LabState, Objectives, Preferences, Recipes } from '~/store';
-import { RecipeUtility } from '~/utilities';
+import { BrowserUtility, RecipeUtility } from '~/utilities';
+import { StepIdPipe } from '../../pipes';
 import { StepsComponent } from './steps.component';
 
 describe('StepsComponent', () => {
@@ -153,19 +154,13 @@ describe('StepsComponent', () => {
   });
 
   describe('setActiveItems', () => {
-    it('should try to restore old active detail tab', () => {
+    it('should call to update active item for each step', () => {
       const tab1: MenuItem = { label: 'tab1' };
       const tab2: MenuItem = { label: 'tab2' };
       component.activeItem = { ['2']: tab2, ['3']: tab2 };
       component.setActiveItems(
         [{ id: '0' }, { id: '1' }, { id: '2' }, { id: '3' }],
         {
-          ['1']: {
-            tabs: [tab1],
-            outputs: [],
-            recipeIds: [],
-            allRecipesIncluded: true,
-          },
           ['2']: {
             tabs: [tab1, tab2],
             outputs: [],
@@ -180,15 +175,59 @@ describe('StepsComponent', () => {
           },
         },
       );
-      expect(component.activeItem).toEqual({
-        ['1']: tab1,
-        ['2']: tab2,
-        ['3']: tab1,
-      });
+      expect(component.activeItem).toEqual({ ['2']: tab2, ['3']: tab1 });
+    });
+  });
+
+  describe('expandRow', () => {
+    it('should return if the row is collapsing', () => {
+      spyOn(component as any, '_updateActiveItem');
+      component.expandRow(Mocks.Step1, true);
+      expect(component['_updateActiveItem']).not.toHaveBeenCalled();
+    });
+
+    it('should pick the last open tab to show on expand', () => {
+      const tab: MenuItem = { label: 'machine' };
+      const stepDetails: Entities<StepDetail> = {
+        [Mocks.Step1.id]: {
+          tabs: [tab],
+          outputs: [],
+          recipeIds: [],
+          allRecipesIncluded: false,
+        },
+      };
+      spyOn(component, 'stepDetails').and.returnValue(stepDetails);
+      spyOnProperty(BrowserUtility, 'stepDetailTab').and.returnValue(
+        StepDetailTab.Machine,
+      );
+      const id = StepIdPipe.transform(Mocks.Step1);
+      component.expandRow(Mocks.Step1, false);
+      expect(component.activeItem[id]).toEqual(tab);
+    });
+
+    it('should pick a default tab to show on expand', () => {
+      const tab: MenuItem = { label: 'machine' };
+      const stepDetails: Entities<StepDetail> = {
+        [Mocks.Step1.id]: {
+          tabs: [tab],
+          outputs: [],
+          recipeIds: [],
+          allRecipesIncluded: false,
+        },
+      };
+      spyOn(component, 'stepDetails').and.returnValue(stepDetails);
+      const id = StepIdPipe.transform(Mocks.Step1);
+      component.expandRow(Mocks.Step1, false);
+      expect(component.activeItem[id]).toEqual(tab);
     });
   });
 
   describe('setActiveItem', () => {
+    it('should return if passed item is nullish', () => {
+      component.setActiveItem({ id: '0' }, undefined);
+      expect(component.activeItem['0']).toBeUndefined();
+    });
+
     it('should cache the active detail tab', () => {
       const tab1: MenuItem = { label: 'tab1' };
       component.setActiveItem({ id: '0' }, tab1);
