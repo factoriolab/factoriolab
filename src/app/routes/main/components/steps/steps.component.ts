@@ -37,7 +37,7 @@ import {
   stepDetailIcon,
   StepDetailTab,
 } from '~/models';
-import { StepIdPipe } from '~/routes/main/pipes/step-id.pipe';
+import { StepIdPipe } from '~/routes/main/pipes';
 import {
   ContentService,
   ExportService,
@@ -238,32 +238,28 @@ export class StepsComponent implements OnInit, AfterViewInit {
   }
 
   setActiveItems(steps: Step[], stepDetails: Entities<StepDetail>): void {
-    steps.forEach((step) => this.updateActiveItem(step, stepDetails, false));
+    steps.forEach((step) => this._updateActiveItem(step, stepDetails, false));
   }
 
   expandRow(step: Step, expanded: boolean): void {
     if (expanded) return;
-    this.updateActiveItem(step, this.stepDetails(), true);
+    this._updateActiveItem(step, this.stepDetails(), true);
   }
 
-  private updateActiveItem(
+  private _updateActiveItem(
     step: Step,
     stepDetails: Entities<StepDetail>,
     force: boolean,
   ): void {
     const id = StepIdPipe.transform(step);
-    const item = this.getActiveItem(step, id, stepDetails, force);
+    const item = this._getActiveItem(step, id, stepDetails, force);
     if (item) {
       const id = StepIdPipe.transform(step);
       this.activeItem[id] = item;
     }
   }
 
-  /**
-   * Get the active expansion tab for a step
-   * @param force If false, only return a match for the existing expanded tab
-   */
-  private getActiveItem(
+  private _getActiveItem(
     step: Step,
     id: string,
     stepDetails: Entities<StepDetail>,
@@ -279,7 +275,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
       if (match != null) return match;
     }
 
-    if (!force) return null;
+    if (old == null && !force) return null;
 
     const userTab = BrowserUtility.stepDetailTab;
     if (userTab) {

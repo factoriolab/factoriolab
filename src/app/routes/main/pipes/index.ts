@@ -25,3 +25,5 @@ export const pipes = [
   StepHrefPipe,
   StepIdPipe,
 ];
+
+export { StepIdPipe };
