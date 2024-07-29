@@ -224,6 +224,7 @@
                   | translate
               "
               [pRowToggler]="step"
+              (click)="expandRow(step, expanded)"
             ></button>
           </div>
         </td>
@@ -976,7 +977,7 @@
             (activeItemChange)="setActiveItem(step, $event)"
           >
             <ng-template pTemplate="item" let-item>
-              <a class="p-menuitem-link">
+              <a class="p-menuitem-link" [id]="item.id">
                 <span
                   class="p-menuitem-icon"
                   [class]="$any(stepDetailIcon)[item.label]"

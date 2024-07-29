@@ -1,9 +1,12 @@
 #lab-flow-svg {
-  display: flex;
   overflow: auto;
 }
 
 :host ::ng-deep {
+  svg {
+    min-height: 75vh;
+  }
+
   text {
     fill: var(--text-color);
     font-family: var(--font-family);

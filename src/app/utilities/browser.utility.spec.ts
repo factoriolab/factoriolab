@@ -1,3 +1,4 @@
+import { StepDetailTab } from '~/models';
 import { BrowserUtility, StorageKey } from './browser.utility';
 
 describe('BrowserUtility', () => {
@@ -50,12 +51,12 @@ describe('BrowserUtility', () => {
       BrowserUtility.preferencesState = preferencesState;
       expect(BrowserUtility.preferencesState).toEqual(preferencesState);
       BrowserUtility.preferencesState = null;
-      expect(BrowserUtility.preferencesState).toEqual(null);
+      expect(BrowserUtility.preferencesState).toBeNull();
     });
 
     it('should handle parsing errors', () => {
       localStorage.setItem(StorageKey.Preferences, '{[');
-      expect(BrowserUtility.preferencesState).toEqual(null);
+      expect(BrowserUtility.preferencesState).toBeNull();
     });
   });
 
@@ -64,7 +65,16 @@ describe('BrowserUtility', () => {
       BrowserUtility.routerState = 'routerState';
       expect(BrowserUtility.routerState).toEqual('routerState');
       BrowserUtility.routerState = null;
-      expect(BrowserUtility.routerState).toEqual(null);
+      expect(BrowserUtility.routerState).toBeNull();
+    });
+  });
+
+  describe('stepDetailTab', () => {
+    it('should get/set', () => {
+      BrowserUtility.stepDetailTab = StepDetailTab.Item;
+      expect(BrowserUtility.stepDetailTab).toEqual(StepDetailTab.Item);
+      BrowserUtility.stepDetailTab = null;
+      expect(BrowserUtility.stepDetailTab).toBeNull();
     });
   });
 });
