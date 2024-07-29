@@ -53,7 +53,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
-import { RecipeUtility } from '~/utilities';
+import { BrowserUtility, RecipeUtility } from '~/utilities';
 
 export type StepsMode = 'all' | 'focus';
 
@@ -177,9 +177,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
                       const tab = this.document.querySelector(
                         '#' + this.fragmentId,
                       ) as HTMLElement | null;
-                      if (tab) {
-                        tab.click();
-                      }
+                      if (tab) tab.click();
                     } else {
                       this.document
                         .querySelector('#' + this.fragmentId)
@@ -240,28 +238,63 @@ export class StepsComponent implements OnInit, AfterViewInit {
   }
 
   setActiveItems(steps: Step[], stepDetails: Entities<StepDetail>): void {
-    steps.forEach((s) => {
-      const id = StepIdPipe.transform(s);
-      const old = this.activeItem[id];
-      const detail = stepDetails[s.id];
-      if (detail == null) return;
-
-      if (old == null) {
-        this.activeItem[id] = detail.tabs[0];
-      } else {
-        const match = detail.tabs.find((t) => t.label === old.label);
-        if (match == null) {
-          this.activeItem[id] = detail.tabs[0];
-        } else {
-          this.activeItem[id] = match;
-        }
-      }
-    });
+    steps.forEach((step) => this.updateActiveItem(step, stepDetails, false));
   }
 
-  setActiveItem(step: Step, item: MenuItem): void {
+  expandRow(step: Step, expanded: boolean): void {
+    if (expanded) return;
+    this.updateActiveItem(step, this.stepDetails(), true);
+  }
+
+  private updateActiveItem(
+    step: Step,
+    stepDetails: Entities<StepDetail>,
+    force: boolean,
+  ): void {
+    const id = StepIdPipe.transform(step);
+    const item = this.getActiveItem(step, id, stepDetails, force);
+    if (item) {
+      const id = StepIdPipe.transform(step);
+      this.activeItem[id] = item;
+    }
+  }
+
+  /**
+   * Get the active expansion tab for a step
+   * @param force If false, only return a match for the existing expanded tab
+   */
+  private getActiveItem(
+    step: Step,
+    id: string,
+    stepDetails: Entities<StepDetail>,
+    force: boolean,
+  ): MenuItem | null | undefined {
+    const old = this.activeItem[id];
+    const detail = stepDetails[step.id];
+
+    if (detail == null) return null;
+
+    if (old != null) {
+      const match = detail.tabs.find((t) => t.label === old.label);
+      if (match != null) return match;
+    }
+
+    if (!force) return null;
+
+    const userTab = BrowserUtility.stepDetailTab;
+    if (userTab) {
+      const match = detail.tabs.find((t) => t.label === userTab);
+      if (match != null) return match;
+    }
+
+    return detail.tabs[0];
+  }
+
+  setActiveItem(step: Step, item: MenuItem | null | undefined): void {
+    if (item == null) return;
     const id = StepIdPipe.transform(step);
     this.activeItem[id] = item;
+    BrowserUtility.stepDetailTab = item.label as StepDetailTab;
   }
 
   resetStep(step: Step): void {

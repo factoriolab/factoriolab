@@ -1,10 +1,11 @@
+import { StepDetailTab } from '~/models';
 import { LabState } from '~/store';
 import { PreferencesState } from '~/store/preferences';
 
 export enum StorageKey {
-  Mod = 'mod',
   Router = 'router',
   Preferences = 'preferences',
+  StepDetailTab = 'stepDetailTab',
 }
 
 export class BrowserUtility {
@@ -76,6 +77,18 @@ export class BrowserUtility {
       localStorage.removeItem(StorageKey.Router);
     } else {
       localStorage.setItem(StorageKey.Router, value);
+    }
+  }
+
+  static get stepDetailTab(): StepDetailTab | null {
+    return localStorage.getItem(StorageKey.StepDetailTab) as StepDetailTab;
+  }
+
+  static set stepDetailTab(value: StepDetailTab | null) {
+    if (value == null) {
+      localStorage.removeItem(StorageKey.StepDetailTab);
+    } else {
+      localStorage.setItem(StorageKey.StepDetailTab, value);
     }
   }
 }
