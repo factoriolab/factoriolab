@@ -26,10 +26,6 @@ import {
 } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { loadModule } from 'glpk-ts';
-import {
-  NgxGoogleAnalyticsModule,
-  NgxGoogleAnalyticsRouterModule,
-} from 'ngx-google-analytics';
 import { PrimeNGConfig } from 'primeng/api';
 
 import { environment } from 'src/environments';
@@ -106,8 +102,6 @@ export const appConfig: ApplicationConfig = {
         },
         defaultLanguage: 'en',
       }),
-      NgxGoogleAnalyticsModule.forRoot('G-TFR5Z43GPH'),
-      NgxGoogleAnalyticsRouterModule,
     ),
   ],
 };

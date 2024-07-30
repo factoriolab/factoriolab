@@ -1,19 +1,18 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect } from '@ngrx/effects';
-import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { tap } from 'rxjs';
+
+import { AnalyticsService } from '~/services';
 
 @Injectable()
 export class AnalyticsEffects {
-  gaSvc = inject(GoogleAnalyticsService);
+  analyticsSvc = inject(AnalyticsService);
   actions$ = inject(Actions);
 
   logEvent$ = createEffect(
     () =>
       this.actions$.pipe(
-        tap((action) => {
-          this.gaSvc.event('action', action.type);
-        }),
+        tap((action) => this.analyticsSvc.event('action', action.type)),
       ),
     { dispatch: false },
   );

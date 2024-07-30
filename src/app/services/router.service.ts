@@ -2,7 +2,6 @@ import { inject, Injectable, signal } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { GoogleAnalyticsService } from 'ngx-google-analytics';
 import { deflate, inflate } from 'pako';
 import { combineLatest, debounceTime, Observable, Subject } from 'rxjs';
 import { filter, first, map, switchMap, tap } from 'rxjs/operators';
@@ -40,6 +39,7 @@ import {
   Settings,
 } from '~/store';
 import { BrowserUtility } from '~/utilities';
+import { AnalyticsService } from './analytics.service';
 import { ContentService } from './content.service';
 import { DataService } from './data.service';
 
@@ -130,7 +130,7 @@ export interface MigrationState {
 })
 export class RouterService {
   router = inject(Router);
-  gaSvc = inject(GoogleAnalyticsService);
+  analyticsSvc = inject(AnalyticsService);
   store = inject(Store<LabState>);
   translateSvc = inject(TranslateService);
   contentSvc = inject(ContentService);
@@ -581,7 +581,7 @@ export class RouterService {
   migrate(params: Entities, isBare: boolean): MigrationState {
     const warnings: string[] = [];
     const v = (params[Section.Version] as ZipVersion) ?? ZipVersion.Version0;
-    this.gaSvc.event('unzip_version', v);
+    this.analyticsSvc.event('unzip_version', v);
 
     if (isBare || v === ZipVersion.Version0) {
       Object.keys(params).forEach((k) => {

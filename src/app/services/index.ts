@@ -1,3 +1,4 @@
+export * from './analytics.service';
 export * from './content.service';
 export * from './data.service';
 export * from './display.service';
