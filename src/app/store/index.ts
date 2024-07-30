@@ -1,4 +1,4 @@
-import { ActionReducerMap, MetaReducer } from '@ngrx/store';
+import { Action, ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 
 import { environment } from 'src/environments/environment';
@@ -22,7 +22,7 @@ export interface LabState {
   preferencesState: Preferences.PreferencesState;
 }
 
-export const reducers: ActionReducerMap<LabState, never> = {
+export const reducers = {
   datasetsState: Datasets.datasetsReducer,
   objectivesState: Objectives.objectivesReducer,
   itemsState: Items.itemsReducer,
@@ -30,7 +30,7 @@ export const reducers: ActionReducerMap<LabState, never> = {
   machinesState: Machines.machinesReducer,
   settingsState: Settings.settingsReducer,
   preferencesState: Preferences.preferencesReducer,
-};
+} as ActionReducerMap<LabState, Action>;
 
 /* No need to test without storeFreeze, ignore that branch here. */
 export const metaReducers: MetaReducer<LabState>[] = environment.testing

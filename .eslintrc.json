@@ -11,7 +11,9 @@
         "eslint:recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:import/recommended",
+        "plugin:import/typescript"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
@@ -34,8 +36,42 @@
           "warn",
           { "argsIgnorePattern": "^_", "destructuredArrayIgnorePattern": "^_" }
         ],
-        "@typescript-eslint/explicit-function-return-type": ["error"],
+        "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/prefer-enum-initializers": "error",
+        "import/no-unresolved": "off",
+        "import/order": [
+          "error",
+          {
+            "groups": [
+              ["builtin", "external"],
+              ["internal", "parent", "sibling", "index"]
+            ],
+            "pathGroups": [
+              {
+                "pattern": "src/**",
+                "group": "internal",
+                "position": "before"
+              },
+              {
+                "pattern": "~/**",
+                "group": "internal",
+                "position": "before"
+              },
+              {
+                "pattern": "./**",
+                "group": "sibling",
+                "position": "after"
+              }
+            ],
+            "pathGroupsExcludedImportTypes": ["src/**"],
+            "newlines-between": "always",
+            "distinctGroup": false,
+            "alphabetize": {
+              "order": "asc",
+              "caseInsensitive": true
+            }
+          }
+        ],
         "eqeqeq": ["error", "smart"],
         "no-var": "error",
         "prefer-const": "error",

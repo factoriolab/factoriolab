@@ -1,15 +1,19 @@
 import { Component, inject, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { GoogleAnalyticsService } from 'ngx-google-analytics';
 
 import { environment } from 'src/environments';
 import { LabState, Preferences, Settings } from '~/store';
+import { AppSharedModule } from './app-shared.module';
 import { RouterService, ThemeService } from './services';
 import { BrowserUtility } from './utilities';
 
 @Component({
   selector: 'lab-root',
+  standalone: true,
+  imports: [RouterOutlet, AppSharedModule],
   template: `
     <router-outlet></router-outlet>
     <lab-content></lab-content>

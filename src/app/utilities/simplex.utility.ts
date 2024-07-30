@@ -7,7 +7,7 @@ import {
   Variable,
   VariableProperties,
 } from 'glpk-ts';
-import { StatusSimplex } from 'glpk-ts/dist/status';
+import { StatusSimplex } from 'node_modules/glpk-ts/dist/status';
 
 import { environment } from 'src/environments';
 import { contains } from '~/helpers';

@@ -1,4 +1,4 @@
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { canActivateLanding } from './guards';
 
@@ -51,8 +51,3 @@ export const routes: Routes = [
     redirectTo: '',
   },
 ];
-
-export const AppRoutingModule = RouterModule.forRoot(routes, {
-  preloadingStrategy: PreloadAllModules,
-  paramsInheritanceStrategy: 'always',
-});
