@@ -1,10 +1,9 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import {
   APP_INITIALIZER,
   ApplicationConfig,
   ErrorHandler,
-  importProvidersFrom,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideAnimations } from '@angular/platform-browser/animations';

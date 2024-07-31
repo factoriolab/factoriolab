@@ -14,15 +14,15 @@ import { Store } from '@ngrx/store';
 import { drag } from 'd3-drag';
 import { select, Selection } from 'd3-selection';
 import { zoom } from 'd3-zoom';
-import ELK, { ELK as ElkType, ElkNode } from 'elkjs/lib/elk.bundled';
+import ELK, { ElkNode, ELK as ElkType } from 'elkjs/lib/elk.bundled';
 import { combineLatest } from 'rxjs';
 import { DataSet } from 'vis-data/esnext';
 import {
   Data,
   Edge,
   Network,
-  Node as VisNode,
   Options,
+  Node as VisNode,
 } from 'vis-network/esnext';
 
 import { AppSharedModule } from '~/app-shared.module';
