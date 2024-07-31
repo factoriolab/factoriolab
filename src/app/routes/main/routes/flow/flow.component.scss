@@ -3,7 +3,7 @@
 }
 
 :host ::ng-deep {
-  svg {
+  #lab-flow-svg > svg {
     min-height: 75vh;
   }
 
