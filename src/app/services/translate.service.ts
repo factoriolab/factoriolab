@@ -37,7 +37,7 @@ export class TranslateService {
     switchMap((lang) => this._getLangData(lang)),
   );
 
-  private _getLangData(lang: string): Observable<LangData> {
+  protected _getLangData(lang: string): Observable<LangData> {
     if (this._langDataCache[lang] == null) {
       this._langDataCache[lang] = this.httpClient
         .get<LangData>(`/assets/i18n/${lang}.json`)

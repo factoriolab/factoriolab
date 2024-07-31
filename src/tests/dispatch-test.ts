@@ -5,12 +5,14 @@ import { MockStore } from '@ngrx/store/testing';
 /* Don't care about coverage on test tools */
 /* istanbul ignore next */
 export class DispatchTest<T> {
-  spy = spyOn(this.mockStore, 'dispatch');
+  spy: jasmine.Spy;
 
   constructor(
     public mockStore: MockStore,
     public component: T,
-  ) {}
+  ) {
+    this.spy = spyOn(this.mockStore, 'dispatch');
+  }
 
   void(key: keyof T, action: Type<Action>): void {
     this.spy.calls.reset();

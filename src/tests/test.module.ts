@@ -11,6 +11,8 @@ import { provideMockStore } from '@ngrx/store/testing';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { MainSharedModule } from '~/routes/main/main-shared.module';
+import { DEFAULT_LANGUAGE, TranslateService } from '~/services';
+import { TestTranslateService } from '~/services/translate.service.spec';
 import { initialState } from './state';
 
 @NgModule({
@@ -22,6 +24,8 @@ import { initialState } from './state';
     MainSharedModule,
   ],
   providers: [
+    { provide: DEFAULT_LANGUAGE, useValue: 'en' },
+    { provide: TranslateService, useClass: TestTranslateService },
     provideMockStore({ initialState }),
     provideHttpClient(withInterceptorsFromDi()),
     provideHttpClientTesting(),

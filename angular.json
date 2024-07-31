@@ -156,6 +156,7 @@
                 "with": "src/environments/environment.test.ts"
               }
             ],
+            "main": "src/test.ts",
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/assets/i18n",

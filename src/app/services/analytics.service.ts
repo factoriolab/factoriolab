@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 
+import { environment } from 'src/environments';
+
 interface EventData {
   event_category?: string;
   event_label?: string;
@@ -13,6 +15,7 @@ declare const gtag: (type: string, name: string, data: EventData) => void;
 })
 export class AnalyticsService {
   event(name: string, category: string): void {
-    gtag('event', name, { event_category: category });
+    if (environment.production)
+      gtag('event', name, { event_category: category });
   }
 }
