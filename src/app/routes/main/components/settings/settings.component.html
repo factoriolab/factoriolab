@@ -132,6 +132,17 @@
                   [popup]="true"
                   [model]="editStateMenu"
                 >
+                  <ng-template pTemplate="item" let-item>
+                    <a pRipple class="p-menuitem-link">
+                      <span
+                        class="p-menuitem-icon"
+                        [ngClass]="item.icon"
+                      ></span>
+                      <span class="p-menuitem-text">{{
+                        item.label | translate
+                      }}</span>
+                    </a>
+                  </ng-template>
                 </p-menu>
               </button>
             } @else {

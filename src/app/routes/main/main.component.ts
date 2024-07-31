@@ -7,12 +7,11 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { map } from 'rxjs';
 
 import { SimplexResultType } from '~/models';
-import { ContentService, ErrorService } from '~/services';
+import { ContentService, ErrorService, TranslateService } from '~/services';
 import { App, LabState, Objectives, Settings } from '~/store';
 
 @Component({
@@ -36,28 +35,30 @@ export class MainComponent {
 
   isResetting = false;
 
-  tabItems$ = this.contentSvc.lang$.pipe(
-    map((): MenuItem[] => [
-      {
-        label: this.translateSvc.instant('app.list'),
-        icon: 'fa-solid fa-list',
-        routerLink: 'list',
-        queryParamsHandling: 'preserve',
-      },
-      {
-        label: this.translateSvc.instant('app.flow'),
-        icon: 'fa-solid fa-diagram-project',
-        routerLink: 'flow',
-        queryParamsHandling: 'preserve',
-      },
-      {
-        label: this.translateSvc.instant('app.data'),
-        icon: 'fa-solid fa-database',
-        routerLink: 'data',
-        queryParamsHandling: 'preserve',
-      },
-    ]),
-  );
+  tabItems$ = this.translateSvc
+    .multi(['app.list', 'app.flow', 'app.data'])
+    .pipe(
+      map(([list, flow, data]): MenuItem[] => [
+        {
+          label: list,
+          icon: 'fa-solid fa-list',
+          routerLink: 'list',
+          queryParamsHandling: 'preserve',
+        },
+        {
+          label: flow,
+          icon: 'fa-solid fa-diagram-project',
+          routerLink: 'flow',
+          queryParamsHandling: 'preserve',
+        },
+        {
+          label: data,
+          icon: 'fa-solid fa-database',
+          routerLink: 'data',
+          queryParamsHandling: 'preserve',
+        },
+      ]),
+    );
 
   SimplexResultType = SimplexResultType;
 

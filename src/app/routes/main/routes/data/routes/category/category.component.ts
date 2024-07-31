@@ -18,7 +18,7 @@ export class CategoryComponent extends DetailComponent {
     () => this.data().categoryEntities[this.id()],
   );
   breadcrumb = computed<MenuItem[]>(() => [
-    this.parent(),
+    this.parent() ?? {},
     { label: this.obj()?.name },
   ]);
   itemIds = computed(() => {

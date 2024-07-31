@@ -1,11 +1,21 @@
-import { Directive, inject, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import {
+  ChangeDetectorRef,
+  DestroyRef,
+  Directive,
+  inject,
+  OnInit,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Table } from 'primeng/table';
+
+import { TranslateService } from '~/services';
 
 @Directive({
   selector: '[labPagedTable]',
 })
 export class PagedTableDirective implements OnInit {
+  ref = inject(ChangeDetectorRef);
+  destroyRef = inject(DestroyRef);
   translateSvc = inject(TranslateService);
   pTable = inject(Table, { self: true });
 
@@ -14,8 +24,12 @@ export class PagedTableDirective implements OnInit {
     this.pTable.rows = 10;
     this.pTable.rowsPerPageOptions = [10, 25, 50, 100, 250];
     this.pTable.showCurrentPageReport = true;
-    this.pTable.currentPageReportTemplate = this.translateSvc.instant(
-      'data.currentPageReportTemplate',
-    );
+    this.translateSvc
+      .get('data.currentPageReportTemplate')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((currentPageReportTemplate) => {
+        this.pTable.currentPageReportTemplate = currentPageReportTemplate;
+        this.ref.markForCheck();
+      });
   }
 }

@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { first } from 'rxjs';
 
@@ -46,7 +45,7 @@ import {
   Theme,
   themeOptions,
 } from '~/models';
-import { ContentService, RouterService } from '~/services';
+import { ContentService, RouterService, TranslateService } from '~/services';
 import {
   App,
   Datasets,
@@ -105,22 +104,22 @@ export class SettingsComponent implements OnInit {
   editState: 'create' | 'edit' | null = null;
   editStateMenu: MenuItem[] = [
     {
-      label: this.translateSvc.instant('settings.createSavedState'),
+      label: 'settings.createSavedState',
       icon: 'fa-solid fa-plus',
       command: (): void => this.openCreateState(),
     },
     {
-      label: this.translateSvc.instant('settings.saveSavedState'),
+      label: 'settings.saveSavedState',
       icon: 'fa-solid fa-floppy-disk',
       command: (): void => this.overwriteState(),
     },
     {
-      label: this.translateSvc.instant('settings.editSavedState'),
+      label: 'settings.editSavedState',
       icon: 'fa-solid fa-pencil',
       command: (): void => this.openEditState(),
     },
     {
-      label: this.translateSvc.instant('settings.deleteSavedState'),
+      label: 'settings.deleteSavedState',
       icon: 'fa-solid fa-trash',
       command: (): void => this.clickDeleteState(),
     },
@@ -156,17 +155,22 @@ export class SettingsComponent implements OnInit {
   }
 
   clickResetSettings(): void {
-    this.contentSvc.confirm({
-      icon: 'fa-solid fa-exclamation-triangle',
-      header: this.translateSvc.instant('settings.reset'),
-      message: this.translateSvc.instant('settings.resetWarning'),
-      acceptLabel: this.translateSvc.instant('yes'),
-      rejectLabel: this.translateSvc.instant('cancel'),
-      accept: () => {
-        localStorage.clear();
-        this.resetSettings();
-      },
-    });
+    this.translateSvc
+      .multi(['settings.reset', 'settings.resetWarning', 'yes', 'cancel'])
+      .pipe(first())
+      .subscribe(([header, message, acceptLabel, rejectLabel]) => {
+        this.contentSvc.confirm({
+          icon: 'fa-solid fa-exclamation-triangle',
+          header,
+          message,
+          acceptLabel,
+          rejectLabel,
+          accept: () => {
+            localStorage.clear();
+            this.resetSettings();
+          },
+        });
+      });
   }
 
   setSearch(search: string): void {
@@ -447,7 +451,6 @@ export class SettingsComponent implements OnInit {
   }
 
   setLanguage(value: Language): void {
-    this.translateSvc.use(value);
     this.store.dispatch(new Preferences.SetLanguageAction(value));
   }
 

@@ -30,7 +30,7 @@ export class ItemComponent extends DetailComponent {
 
   obj = computed<Item | undefined>(() => this.data().itemEntities[this.id()]);
   breadcrumb = computed<MenuItem[]>(() => [
-    this.parent(),
+    this.parent() ?? {},
     { label: this.obj()?.name },
   ]);
   category = computed<Category | undefined>(() => {

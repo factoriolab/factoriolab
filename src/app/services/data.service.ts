@@ -1,19 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import {
   catchError,
   combineLatest,
   Observable,
   of,
   shareReplay,
-  startWith,
   tap,
 } from 'rxjs';
 
 import { Entities, ModData, ModHash, ModI18n } from '~/models';
 import { Datasets, LabState, Settings } from '~/store';
+import { TranslateService } from './translate.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +29,7 @@ export class DataService {
   initialize(): void {
     combineLatest([
       this.store.select(Settings.getModId),
-      this.translateSvc.onLangChange.pipe(startWith('en')),
+      this.translateSvc.lang$,
     ]).subscribe(([id]) => {
       this.requestData(id).subscribe();
     });

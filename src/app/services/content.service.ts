@@ -1,14 +1,7 @@
-import {
-  computed,
-  inject,
-  Injectable,
-  signal,
-  TemplateRef,
-} from '@angular/core';
+import { computed, Injectable, signal, TemplateRef } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { TranslateService } from '@ngx-translate/core';
 import { Confirmation, Message } from 'primeng/api';
-import { BehaviorSubject, fromEvent, map, startWith, Subject } from 'rxjs';
+import { BehaviorSubject, fromEvent, map, Subject } from 'rxjs';
 
 import { environment } from 'src/environments';
 import { APP, Breakpoint } from '~/models';
@@ -17,8 +10,6 @@ import { APP, Breakpoint } from '~/models';
   providedIn: 'root',
 })
 export class ContentService {
-  translateSvc = inject(TranslateService);
-
   // Responsive
   windowScrollY = (): number => window.scrollY;
   windowInnerWidth = (): number => window.innerWidth;
@@ -62,9 +53,6 @@ export class ContentService {
   toggleSettingsXl(): void {
     this.settingsXlHidden.set(!this.settingsXlHidden());
   }
-
-  // Watch all language changes
-  lang$ = this.translateSvc.onLangChange.pipe(startWith(''));
 
   version = `${APP} ${environment.version}`;
 }

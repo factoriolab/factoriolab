@@ -10,12 +10,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { FilterService } from 'primeng/api';
+import { first } from 'rxjs';
 
 import { DialogComponent } from '~/components';
 import { Game } from '~/models';
-import { ContentService } from '~/services';
+import { ContentService, TranslateService } from '~/services';
 import { LabState, Preferences, Recipes } from '~/store';
 
 export type UnlockStatus = 'available' | 'locked' | 'researched';
@@ -119,11 +119,16 @@ end
 game.write_file("techs.txt", table.concat(list, ","))
 `;
     window.navigator.clipboard.writeText(script);
-    this.contentSvc.showToast$.next({
-      severity: 'success',
-      detail: this.translateSvc.instant('techPicker.exportScriptCopied'),
-      contentStyleClass: 'detail-only',
-    });
+    this.translateSvc
+      .get('techPicker.exportScriptCopied')
+      .pipe(first())
+      .subscribe((detail) => {
+        this.contentSvc.showToast$.next({
+          severity: 'success',
+          detail,
+          contentStyleClass: 'detail-only',
+        });
+      });
   }
 
   importTechs(): void {

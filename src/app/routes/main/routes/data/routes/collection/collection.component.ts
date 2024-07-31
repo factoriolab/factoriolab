@@ -5,13 +5,15 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
+import { map, switchMap } from 'rxjs';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { Dataset, IdType } from '~/models';
+import { TranslateService } from '~/services';
 import { LabState, Recipes, Settings } from '~/store';
 import { DataSharedModule } from '../../data-shared.module';
 
@@ -23,8 +25,8 @@ import { DataSharedModule } from '../../data-shared.module';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionComponent {
-  route = inject(ActivatedRoute);
   translateSvc = inject(TranslateService);
+  route = inject(ActivatedRoute);
   store = inject(Store<LabState>);
 
   home = this.store.selectSignal(Settings.getModMenuItem);
@@ -34,10 +36,11 @@ export class CollectionComponent {
   type = input.required<IdType>();
   key = input.required<keyof Dataset>();
 
-  breadcrumb = computed<MenuItem[]>(() => [
-    {
-      label: this.translateSvc.instant(this.label()),
-    },
-  ]);
+  breadcrumb = toSignal(
+    toObservable(this.label).pipe(
+      switchMap((label) => this.translateSvc.get(label)),
+      map((label): MenuItem[] => [{ label }]),
+    ),
+  );
   ids = computed<string[]>(() => this.data()[this.key()] as string[]);
 }

@@ -8,3 +8,4 @@ export * from './flow.service';
 export * from './router.service';
 export * from './theme.service';
 export * from './track.service';
+export * from './translate.service';

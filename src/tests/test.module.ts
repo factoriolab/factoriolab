@@ -8,18 +8,16 @@ import { FormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
-import { TranslateModule } from '@ngx-translate/core';
 
 import { AppSharedModule } from '~/app-shared.module';
 import { MainSharedModule } from '~/routes/main/main-shared.module';
 import { initialState } from './state';
 
 @NgModule({
-  exports: [FormsModule, TranslateModule, AppSharedModule, MainSharedModule],
+  exports: [FormsModule, AppSharedModule, MainSharedModule],
   imports: [
     FormsModule,
     NoopAnimationsModule,
-    TranslateModule.forRoot(),
     AppSharedModule,
     MainSharedModule,
   ],

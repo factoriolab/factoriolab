@@ -22,7 +22,7 @@ export class RecipeComponent extends DetailComponent {
     () => this.data().recipeEntities[this.id()],
   );
   breadcrumb = computed<MenuItem[]>(() => [
-    this.parent(),
+    this.parent() ?? {},
     { label: this.obj()?.name },
   ]);
   info = computed(() => {

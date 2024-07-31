@@ -1,12 +1,16 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 
 import { environment } from 'src/environments';
 import { LabState, Preferences, Settings } from '~/store';
 import { AppSharedModule } from './app-shared.module';
-import { RouterService, ThemeService, AnalyticsService } from './services';
+import {
+  AnalyticsService,
+  RouterService,
+  ThemeService,
+  TranslateService,
+} from './services';
 import { BrowserUtility } from './utilities';
 
 @Component({

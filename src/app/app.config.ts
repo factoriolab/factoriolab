@@ -19,37 +19,30 @@ import { provideServiceWorker } from '@angular/service-worker';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import {
-  TranslateLoader,
-  TranslateModule,
-  TranslateService,
-} from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { loadModule } from 'glpk-ts';
 import { PrimeNGConfig } from 'primeng/api';
 
 import { environment } from 'src/environments';
 import { routes } from './app.routes';
-import { LabErrorHandler, ThemeService } from './services';
+import {
+  DEFAULT_LANGUAGE,
+  LabErrorHandler,
+  ThemeService,
+  TranslateService,
+} from './services';
 import { metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
 import { MachinesEffects } from './store/machines/machines.effects';
 import { ObjectivesEffects } from './store/objectives/objectives.effects';
 
-function initializeApp(
-  primengConfig: PrimeNGConfig,
-  translateSvc: TranslateService,
-): () => Promise<unknown> {
+function initializeApp(primengConfig: PrimeNGConfig): () => Promise<unknown> {
   return () => {
     // Enable ripple
     primengConfig.ripple = true;
 
     // Set up initial theme
     ThemeService.appInitTheme();
-
-    // Initialize translate service with default to English
-    translateSvc.setDefaultLang('en');
 
     // Load glpk-wasm
     return loadModule('assets/glpk-wasm/glpk.all.wasm');
@@ -59,10 +52,18 @@ function initializeApp(
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },
+    { provide: DEFAULT_LANGUAGE, useValue: 'en' },
     { provide: ErrorHandler, useClass: LabErrorHandler },
     {
       provide: APP_INITIALIZER,
-      deps: [PrimeNGConfig, TranslateService],
+      deps: [
+        PrimeNGConfig,
+        /**
+         * Not actually used by `initializeApp`; included to ensure service
+         * constructor is run so language data is requested immediately.
+         */
+        TranslateService,
+      ],
       useFactory: initializeApp,
       multi: true,
     },
@@ -90,18 +91,6 @@ export const appConfig: ApplicationConfig = {
       ObjectivesEffects,
       MachinesEffects,
       AnalyticsEffects,
-    ),
-    importProvidersFrom(
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: (http: HttpClient) => {
-            return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-          },
-          deps: [HttpClient],
-        },
-        defaultLanguage: 'en',
-      }),
     ),
   ],
 };

@@ -8,12 +8,11 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, gameInfo, gameOptions, isRecipeObjective } from '~/models';
-import { ContentService } from '~/services';
+import { APP, Game, gameInfo, gameOptions, isRecipeObjective } from '~/models';
+import { ContentService, TranslateService } from '~/services';
 import { LabState, Objectives, Settings } from '~/store';
 
 interface MenuLink {
@@ -41,16 +40,16 @@ export class HeaderComponent {
   gameOptions = toSignal(
     combineLatest([
       this.store.select(Settings.getGame),
-      this.contentSvc.lang$,
+      ...gameOptions.map((o) => this.translateSvc.get(gameInfo[o.value].label)),
     ]).pipe(
-      map(([game]): MenuItem[] => {
+      map(([game, ...labels]): MenuItem[] => {
         return gameOptions
-          .map((o) => o.value)
-          .filter((g) => g !== game)
+          .map((o, i): [Game, string] => [o.value, labels[i]])
+          .filter(([g]) => g !== game)
           .map(
-            (g): MenuItem => ({
+            ([g, label]): MenuItem => ({
               icon: 'lab-icon small ' + gameInfo[g].icon,
-              label: this.translateSvc.instant(gameInfo[g].label),
+              label,
               routerLink: gameInfo[g].route,
             }),
           );
@@ -80,7 +79,7 @@ export class HeaderComponent {
     combineLatest([
       this.store.select(Objectives.getBaseObjectives),
       this.store.select(Settings.getDataset),
-      this.contentSvc.lang$,
+      this.translateSvc.lang$,
     ])
       .pipe(takeUntilDestroyed())
       .subscribe(([objectives, data]) => {

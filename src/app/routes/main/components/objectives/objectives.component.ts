@@ -5,9 +5,8 @@ import {
   inject,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { Message } from 'primeng/api';
-import { first } from 'rxjs';
+import { combineLatest, EMPTY, first, map, Observable } from 'rxjs';
 
 import { PickerComponent } from '~/components/picker/picker.component';
 import {
@@ -25,7 +24,7 @@ import {
   Rational,
   SimplexResultType,
 } from '~/models';
-import { ContentService, TrackService } from '~/services';
+import { ContentService, TrackService, TranslateService } from '~/services';
 import {
   Items,
   LabState,
@@ -85,16 +84,14 @@ export class ObjectivesComponent {
     matrixResult: MatrixResult,
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
-  ): Message[] {
-    if (matrixResult.resultType === SimplexResultType.Paused)
-      return [
-        {
-          severity: 'info',
-          detail: this.translateSvc.instant('objectives.pausedMessage'),
-        },
-      ];
+  ): Observable<Message[]> {
+    if (matrixResult.resultType === SimplexResultType.Paused) {
+      return this.translateSvc
+        .get('objectives.pausedMessage')
+        .pipe(map((detail): Message[] => [{ severity: 'info', detail }]));
+    }
 
-    if (matrixResult.resultType !== SimplexResultType.Failed) return [];
+    if (matrixResult.resultType !== SimplexResultType.Failed) return EMPTY;
 
     if (matrixResult.simplexStatus === 'unbounded') {
       const maxObjectives = objectives.filter(
@@ -152,19 +149,23 @@ export class ObjectivesComponent {
     summary: string,
     detail: string,
     matrixResult: MatrixResult,
-  ): Message[] {
-    return [
-      {
-        severity: 'error',
-        summary: this.translateSvc.instant(summary),
-        detail: `${this.translateSvc.instant(
-          detail,
-        )} ${this.translateSvc.instant('objectives.errorSimplexInfo', {
-          returnCode: matrixResult.returnCode ?? 'unknown',
-          simplexStatus: matrixResult.simplexStatus ?? 'unknown',
-        })}`,
-      },
-    ];
+  ): Observable<Message[]> {
+    return combineLatest([
+      this.translateSvc.get(summary),
+      this.translateSvc.get(detail),
+      this.translateSvc.get('objectives.errorSimplexInfo', {
+        returnCode: matrixResult.returnCode ?? 'unknown',
+        simplexStatus: matrixResult.simplexStatus ?? 'unknown',
+      }),
+    ]).pipe(
+      map(([summary, detail, detailInfo]): Message[] => [
+        {
+          severity: 'error',
+          summary,
+          detail: `${detail} ${detailInfo}`,
+        },
+      ]),
+    );
   }
 
   setObjectiveOrder(objectives: Objective[]): void {

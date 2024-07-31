@@ -3,6 +3,7 @@ import { BonusPercentPipe } from './bonus-percent.pipe';
 import { IconClassPipe, IconSmClassPipe } from './icon-class.pipe';
 import { PrecisionExamplePipe } from './precision-example.pipe';
 import { RoundPipe } from './round.pipe';
+import { TranslatePipe } from './translate.pipe';
 import { UsagePipe } from './usage.pipe';
 
 export const pipes = [
@@ -12,5 +13,6 @@ export const pipes = [
   IconSmClassPipe,
   PrecisionExamplePipe,
   RoundPipe,
+  TranslatePipe,
   UsagePipe,
 ];

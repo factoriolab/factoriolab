@@ -38,6 +38,13 @@
         ],
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/prefer-enum-initializers": "error",
+        "sort-imports": [
+          "error",
+          {
+            "ignoreCase": true,
+            "ignoreDeclarationSort": true
+          }
+        ],
         "import/no-unresolved": "off",
         "import/order": [
           "error",

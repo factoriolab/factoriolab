@@ -1,7 +1,6 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { deflate, inflate } from 'pako';
 import { combineLatest, debounceTime, Observable, Subject } from 'rxjs';
 import { filter, first, map, switchMap, tap } from 'rxjs/operators';
@@ -42,6 +41,7 @@ import { BrowserUtility } from '~/utilities';
 import { AnalyticsService } from './analytics.service';
 import { ContentService } from './content.service';
 import { DataService } from './data.service';
+import { TranslateService } from './translate.service';
 
 export const NULL = '?'; // Encoded, previously 'n'
 export const EMPTY = '='; // Encoded, previously 'e'
@@ -1251,14 +1251,19 @@ export class RouterService {
   }
 
   displayWarnings(warnings: string[]): void {
-    for (const message of warnings) {
-      this.contentSvc.confirm({
-        message,
-        header: this.translateSvc.instant('app.migrationWarning'),
-        acceptLabel: this.translateSvc.instant('OK'),
-        rejectVisible: false,
+    this.translateSvc
+      .multi(['app.migrationWarning', 'OK'])
+      .pipe(first())
+      .subscribe(([header, acceptLabel]) => {
+        for (const message of warnings) {
+          this.contentSvc.confirm({
+            message,
+            header,
+            acceptLabel,
+            rejectVisible: false,
+          });
+        }
       });
-    }
   }
 
   zipModulesBeacons(

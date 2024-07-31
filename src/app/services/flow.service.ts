@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, switchMap } from 'rxjs';
 
 import {
@@ -23,6 +22,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
+import { TranslateService } from './translate.service';
 
 @Injectable({
   providedIn: 'root',

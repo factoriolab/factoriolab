@@ -119,9 +119,10 @@
               ]
             },
             "development": {
+              "optimization": false,
               "extractLicenses": false,
               "sourceMap": true,
-              "optimization": false
+              "namedChunks": true
             }
           },
           "defaultConfiguration": "production"
