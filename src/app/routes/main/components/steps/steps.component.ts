@@ -89,8 +89,11 @@ export class StepsComponent implements OnInit, AfterViewInit {
   });
   toggleEffect = effect(() => {
     const focus = this.focus();
-    const steps = this.steps();
-    if (focus) this.stepsTable().toggleRow(steps[0]);
+    const step = this.steps()[0];
+    if (focus && step) {
+      this.stepsTable().toggleRow(step);
+      this.expandRow(step, false);
+    }
   });
 
   machinesState = this.store.selectSignal(Machines.getMachinesState);
