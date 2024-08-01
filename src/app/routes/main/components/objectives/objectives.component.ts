@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Message } from 'primeng/api';
-import { combineLatest, EMPTY, first, map, Observable } from 'rxjs';
+import { combineLatest, EMPTY, first, map, Observable, switchMap } from 'rxjs';
 
 import { PickerComponent } from '~/components/picker/picker.component';
 import {
@@ -50,7 +50,6 @@ export class ObjectivesComponent {
   _objectives = this.store.selectSignal(Objectives.getObjectives);
   result = this.store.selectSignal(Objectives.getMatrixResult);
   itemsState = this.store.selectSignal(Items.getItemsState);
-  recipesState = this.store.selectSignal(Recipes.getRecipesState);
   itemIds = this.store.selectSignal(Recipes.getAvailableItems);
   data = this.store.selectSignal(Recipes.getAdjustedDataset);
   maximizeType = this.store.selectSignal(Settings.getMaximizeType);
@@ -63,12 +62,14 @@ export class ObjectivesComponent {
     Preferences.getConvertObjectiveValues,
   );
   objectives = computed(() => [...this._objectives()]);
-  messages = computed(() =>
-    this.getMessages(
-      this._objectives(),
-      this.result(),
-      this.itemsState(),
-      this.recipesState(),
+  messages$ = combineLatest({
+    objectives: this.store.select(Objectives.getObjectives),
+    matrixResult: this.store.select(Objectives.getMatrixResult),
+    itemsState: this.store.select(Items.getItemsState),
+    recipesState: this.store.select(Recipes.getRecipesState),
+  }).pipe(
+    switchMap(({ objectives, matrixResult, itemsState, recipesState }) =>
+      this.getMessages(objectives, matrixResult, itemsState, recipesState),
     ),
   );
 

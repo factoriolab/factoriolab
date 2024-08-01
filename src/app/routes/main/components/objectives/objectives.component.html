@@ -200,13 +200,15 @@
         </ng-template>
       </p-messages>
     } @else {
-      @if (messages() | async; as messages) {
-        <p-messages
-          styleClass="mt-2"
-          [value]="messages"
-          [closable]="false"
-          [escape]="false"
-        ></p-messages>
+      @if (messages$ | async; as messages) {
+        @if (messages.length) {
+          <p-messages
+            styleClass="mt-2"
+            [value]="messages"
+            [closable]="false"
+            [escape]="false"
+          ></p-messages>
+        }
       }
     }
   </div>

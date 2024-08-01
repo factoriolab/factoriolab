@@ -67,7 +67,7 @@ export class DataService {
     const hash$ = this.cacheHash[id];
 
     /** Setup observable for i18n */
-    const i18nLang = this.translateSvc.currentLang ?? 'en';
+    const i18nLang = this.translateSvc.currentLang;
     const i18nKey = `${id}-${i18nLang}`;
     const skipI18n = i18nLang === 'en';
     let i18n$: Observable<ModI18n | null>;

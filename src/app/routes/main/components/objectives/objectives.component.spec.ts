@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
+import { Message } from 'primeng/api';
 import { Subject } from 'rxjs';
 
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
@@ -37,158 +38,178 @@ describe('ObjectivesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('getMessages', () => {
-  //   it('should return an info message when calculations are paused', () => {
-  //     const result = component.getMessages(
-  //       [],
-  //       { steps: [], resultType: SimplexResultType.Paused },
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.RecipesStateInitial,
-  //     );
-  //     expect(result.length).toEqual(1);
-  //     expect(result[0].severity).toEqual('info');
-  //   });
+  describe('getMessages', () => {
+    let result: Message[];
 
-  //   it('should return no errors unless simplex failed', () => {
-  //     const result = component.getMessages(
-  //       [],
-  //       {
-  //         steps: [],
-  //         resultType: SimplexResultType.Skipped,
-  //       },
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.RecipesStateInitial,
-  //     );
-  //     expect(result.length).toEqual(0);
-  //   });
+    beforeEach(() => (result = []));
 
-  //   it('should build an error message to display to the user', () => {
-  //     const result = component.getMessages(
-  //       [],
-  //       {
-  //         steps: [],
-  //         resultType: SimplexResultType.Failed,
-  //       },
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.RecipesStateInitial,
-  //     );
-  //     expect(result.length).toEqual(1);
-  //   });
+    it('should return an info message when calculations are paused', () => {
+      component
+        .getMessages(
+          [],
+          { steps: [], resultType: SimplexResultType.Paused },
+          Mocks.ItemsStateInitial,
+          Mocks.RecipesStateInitial,
+        )
+        .subscribe((r) => (result = r));
+      expect(result.length).toEqual(1);
+      expect(result[0].severity).toEqual('info');
+    });
 
-  //   it('should handle some specific known problems with specific error messages', () => {
-  //     let result = component.getMessages(
-  //       [
-  //         {
-  //           id: '0',
-  //           type: ObjectiveType.Maximize,
-  //           targetId: ItemId.Coal,
-  //           value: rational(1n),
-  //           unit: ObjectiveUnit.Items,
-  //         },
-  //       ],
-  //       {
-  //         steps: [],
-  //         resultType: SimplexResultType.Failed,
-  //         simplexStatus: 'unbounded',
-  //       },
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.RecipesStateInitial,
-  //     );
-  //     expect(result[0].summary).toEqual('objectives.errorUnbounded');
-  //     expect(
-  //       result[0].detail?.startsWith('objectives.errorNoLimits'),
-  //     ).toBeTrue();
+    it('should return no errors unless simplex failed', () => {
+      component
+        .getMessages(
+          [],
+          {
+            steps: [],
+            resultType: SimplexResultType.Skipped,
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.RecipesStateInitial,
+        )
+        .subscribe((r) => (result = r));
+      expect(result.length).toEqual(0);
+    });
 
-  //     result = component.getMessages(
-  //       [
-  //         {
-  //           id: '0',
-  //           type: ObjectiveType.Maximize,
-  //           targetId: ItemId.Coal,
-  //           value: rational(1n),
-  //           unit: ObjectiveUnit.Items,
-  //         },
-  //         {
-  //           id: '1',
-  //           type: ObjectiveType.Limit,
-  //           targetId: ItemId.Coal,
-  //           value: rational(1n),
-  //           unit: ObjectiveUnit.Items,
-  //         },
-  //       ],
-  //       {
-  //         steps: [],
-  //         resultType: SimplexResultType.Failed,
-  //         simplexStatus: 'unbounded',
-  //       },
-  //       { [ItemId.Coal]: { excluded: true } },
-  //       Mocks.RecipesStateInitial,
-  //     );
-  //     expect(result[0].summary).toEqual('objectives.errorUnbounded');
-  //     expect(
-  //       result[0].detail?.startsWith('objectives.errorMaximizeExcluded'),
-  //     ).toBeTrue();
+    it('should build an error message to display to the user', () => {
+      component
+        .getMessages(
+          [],
+          {
+            steps: [],
+            resultType: SimplexResultType.Failed,
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.RecipesStateInitial,
+        )
+        .subscribe((r) => (result = r));
+      expect(result.length).toEqual(1);
+    });
 
-  //     result = component.getMessages(
-  //       [
-  //         {
-  //           id: '0',
-  //           type: ObjectiveType.Maximize,
-  //           targetId: RecipeId.Coal,
-  //           value: rational(1n),
-  //           unit: ObjectiveUnit.Machines,
-  //         },
-  //         {
-  //           id: '1',
-  //           type: ObjectiveType.Limit,
-  //           targetId: ItemId.Coal,
-  //           value: rational(1n),
-  //           unit: ObjectiveUnit.Items,
-  //         },
-  //       ],
-  //       {
-  //         steps: [],
-  //         resultType: SimplexResultType.Failed,
-  //         simplexStatus: 'unbounded',
-  //       },
-  //       Mocks.ItemsStateInitial,
-  //       { [RecipeId.Coal]: { excluded: true } },
-  //     );
-  //     expect(result[0].summary).toEqual('objectives.errorUnbounded');
-  //     expect(
-  //       result[0].detail?.startsWith('objectives.errorMaximizeExcluded'),
-  //     ).toBeTrue();
-  //   });
+    it('should handle some specific known problems with specific error messages', () => {
+      component
+        .getMessages(
+          [
+            {
+              id: '0',
+              type: ObjectiveType.Maximize,
+              targetId: ItemId.Coal,
+              value: rational(1n),
+              unit: ObjectiveUnit.Items,
+            },
+          ],
+          {
+            steps: [],
+            resultType: SimplexResultType.Failed,
+            simplexStatus: 'unbounded',
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.RecipesStateInitial,
+        )
+        .subscribe((r) => (result = r));
+      expect(result[0].summary).toEqual('objectives.errorUnbounded');
+      expect(
+        result[0].detail?.startsWith('objectives.errorNoLimits'),
+      ).toBeTrue();
 
-  //   it('should build generic error messages for each simplex status', () => {
-  //     let result = component.getMessages(
-  //       [],
-  //       {
-  //         steps: [],
-  //         resultType: SimplexResultType.Failed,
-  //         simplexStatus: 'unbounded',
-  //       },
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.RecipesStateInitial,
-  //     );
-  //     expect(result[0].summary).toEqual('objectives.errorUnbounded');
-  //     expect(
-  //       result[0].detail?.startsWith('objectives.errorUnboundedDetail'),
-  //     ).toBeTrue();
+      component
+        .getMessages(
+          [
+            {
+              id: '0',
+              type: ObjectiveType.Maximize,
+              targetId: ItemId.Coal,
+              value: rational(1n),
+              unit: ObjectiveUnit.Items,
+            },
+            {
+              id: '1',
+              type: ObjectiveType.Limit,
+              targetId: ItemId.Coal,
+              value: rational(1n),
+              unit: ObjectiveUnit.Items,
+            },
+          ],
+          {
+            steps: [],
+            resultType: SimplexResultType.Failed,
+            simplexStatus: 'unbounded',
+          },
+          { [ItemId.Coal]: { excluded: true } },
+          Mocks.RecipesStateInitial,
+        )
+        .subscribe((r) => (result = r));
+      expect(result[0].summary).toEqual('objectives.errorUnbounded');
+      expect(
+        result[0].detail?.startsWith('objectives.errorMaximizeExcluded'),
+      ).toBeTrue();
 
-  //     result = component.getMessages(
-  //       [],
-  //       {
-  //         steps: [],
-  //         resultType: SimplexResultType.Failed,
-  //         simplexStatus: 'no_feasible',
-  //       },
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.RecipesStateInitial,
-  //     );
-  //     expect(result[0].summary).toEqual('objectives.errorInfeasible');
-  //   });
-  // });
+      component
+        .getMessages(
+          [
+            {
+              id: '0',
+              type: ObjectiveType.Maximize,
+              targetId: RecipeId.Coal,
+              value: rational(1n),
+              unit: ObjectiveUnit.Machines,
+            },
+            {
+              id: '1',
+              type: ObjectiveType.Limit,
+              targetId: ItemId.Coal,
+              value: rational(1n),
+              unit: ObjectiveUnit.Items,
+            },
+          ],
+          {
+            steps: [],
+            resultType: SimplexResultType.Failed,
+            simplexStatus: 'unbounded',
+          },
+          Mocks.ItemsStateInitial,
+          { [RecipeId.Coal]: { excluded: true } },
+        )
+        .subscribe((r) => (result = r));
+      expect(result[0].summary).toEqual('objectives.errorUnbounded');
+      expect(
+        result[0].detail?.startsWith('objectives.errorMaximizeExcluded'),
+      ).toBeTrue();
+    });
+
+    it('should build generic error messages for each simplex status', () => {
+      component
+        .getMessages(
+          [],
+          {
+            steps: [],
+            resultType: SimplexResultType.Failed,
+            simplexStatus: 'unbounded',
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.RecipesStateInitial,
+        )
+        .subscribe((r) => (result = r));
+      expect(result[0].summary).toEqual('objectives.errorUnbounded');
+      expect(
+        result[0].detail?.startsWith('objectives.errorUnboundedDetail'),
+      ).toBeTrue();
+
+      component
+        .getMessages(
+          [],
+          {
+            steps: [],
+            resultType: SimplexResultType.Failed,
+            simplexStatus: 'no_feasible',
+          },
+          Mocks.ItemsStateInitial,
+          Mocks.RecipesStateInitial,
+        )
+        .subscribe((r) => (result = r));
+      expect(result[0].summary).toEqual('objectives.errorInfeasible');
+    });
+  });
 
   describe('setObjectiveOrder', () => {
     it('should map objectives to ids', () => {
