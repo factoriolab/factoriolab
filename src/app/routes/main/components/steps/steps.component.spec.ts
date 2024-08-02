@@ -40,9 +40,9 @@ describe('StepsComponent', () => {
       Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
         e[s.id] = {
           tabs: [
-            { label: StepDetailTab.Item },
-            { label: StepDetailTab.Recipe },
-            { label: StepDetailTab.Machine },
+            { id: '0', label: StepDetailTab.Item },
+            { id: '1', label: StepDetailTab.Recipe },
+            { id: '2', label: StepDetailTab.Machine },
           ],
           outputs: [],
           recipeIds: [],
@@ -63,6 +63,17 @@ describe('StepsComponent', () => {
     it('should handle focused mode', () => {
       TestUtility.setInputs(fixture, { focus: true });
       expect(component.steps()).toEqual([]);
+    });
+  });
+
+  describe('toggleEffect', () => {
+    it('should toggle and expand a row in focus mode', () => {
+      spyOn(component, 'expandRow');
+      TestUtility.setInputs(fixture, {
+        focus: true,
+        selectedId: Mocks.Step1.id,
+      });
+      expect(component.expandRow).toHaveBeenCalled();
     });
   });
 
