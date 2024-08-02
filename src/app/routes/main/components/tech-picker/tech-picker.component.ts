@@ -23,7 +23,6 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
 @Component({
   selector: 'lab-tech-picker',
   templateUrl: './tech-picker.component.html',
-  styleUrls: ['./tech-picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TechPickerComponent extends DialogComponent {

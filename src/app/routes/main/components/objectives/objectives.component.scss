@@ -1,6 +1,6 @@
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins/_breakpoints';
+@import 'bootstrap/scss/mixins/breakpoints';
 
 .objectives-content {
   max-width: 1000px;
@@ -33,9 +33,8 @@
   @include media-breakpoint-down(sm) {
     button.lab-button-icon-only {
       justify-content: center;
-
-      width: 2.571rem;
       padding: 0.5rem 0;
+      width: 2.571rem;
 
       .p-button-icon {
         margin: 0;
@@ -43,9 +42,7 @@
 
       .p-button-label {
         flex: 0 0 auto;
-
         visibility: hidden;
-
         width: 0;
       }
     }

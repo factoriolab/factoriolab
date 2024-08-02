@@ -19,7 +19,6 @@ const initialValue = Preferences.initialPreferencesState.flowSettings;
   standalone: true,
   imports: [AppSharedModule, MainSharedModule],
   templateUrl: './flow-settings.component.html',
-  styleUrl: './flow-settings.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowSettingsComponent extends DialogComponent {

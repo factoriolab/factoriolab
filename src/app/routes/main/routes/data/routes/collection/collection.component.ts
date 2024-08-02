@@ -21,7 +21,6 @@ import { DataSharedModule } from '../../data-shared.module';
   standalone: true,
   imports: [AppSharedModule, DataSharedModule],
   templateUrl: './collection.component.html',
-  styleUrls: ['./collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionComponent {

@@ -5,20 +5,14 @@
 div.vis-tooltip {
   position: absolute;
   visibility: hidden;
+  z-index: 5;
+  border-radius: 3px;
+  box-shadow: 3px 3px 10px rgb(0 0 0 / 20%);
+  background-color: var(--surface-d);
   padding: 5px;
   white-space: nowrap;
-
+  color: var(--text-color);
   font-family: var(--font-family);
   font-size: 1rem;
-  color: var(--text-color);
-  background-color: var(--surface-d);
-
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
-
-  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
   pointer-events: none;
-
-  z-index: 5;
 }

@@ -1,8 +1,8 @@
 // Hover icon button styles (e.g. item exclude button)
 .p-button.hover-action {
-  min-width: 2.571rem;
-  padding: 0.5rem 0;
   justify-content: center;
+  padding: 0.5rem 0;
+  min-width: 2.571rem;
 
   .p-button-icon {
     transition: all 300ms ease;
@@ -10,14 +10,11 @@
 
   .hover-icon {
     position: absolute;
-    z-index: 1;
-
-    opacity: 0;
-
     transition: opacity 300ms ease;
-
-    color: var(--text-color-secondary);
+    opacity: 0;
+    z-index: 1;
     text-shadow: 0 0 3px var(--surface-card);
+    color: var(--text-color-secondary);
   }
 
   // These styles for hover/active
@@ -40,13 +37,13 @@
   }
 
   &:hover {
-    background-color: var(--surface-b);
     border: 1px solid var(--primary-color);
+    background-color: var(--surface-b);
   }
 
   &.icons {
-    padding: 0;
     flex-wrap: wrap;
+    padding: 0;
 
     i.p-button-icon {
       margin: 8px;
@@ -77,10 +74,8 @@ body.light .p-button.hover-action.hover-active .p-button-icon {
   .p-multiselect-trigger {
     position: absolute;
     bottom: 10px;
-
-    opacity: 0;
-
     transition: opacity 300ms ease;
+    opacity: 0;
   }
 
   &:hover {
@@ -103,8 +98,6 @@ body.light .p-button.hover-action.hover-active .p-button-icon {
 .p-inputgroup {
   > p-dropdown[labdropdownbase='icon'],
   > p-multiselect[labdropdownbase='icon'] {
-    flex-basis: 36px;
-    flex-grow: 0;
-    flex-shrink: 0;
+    flex: 0 0 36px;
   }
 }

@@ -19,7 +19,6 @@ import { DetailComponent } from '../../models';
   standalone: true,
   imports: [AppSharedModule, DataSharedModule],
   templateUrl: './item.component.html',
-  styleUrls: ['./item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemComponent extends DetailComponent {

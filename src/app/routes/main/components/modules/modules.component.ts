@@ -24,7 +24,6 @@ import { RecipeUtility } from '~/utilities';
 @Component({
   selector: 'lab-modules',
   templateUrl: './modules.component.html',
-  styleUrl: './modules.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModulesComponent {

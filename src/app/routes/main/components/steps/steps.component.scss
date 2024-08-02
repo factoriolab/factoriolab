@@ -1,6 +1,6 @@
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins/_breakpoints';
+@import 'bootstrap/scss/mixins/breakpoints';
 
 .links {
   // Tree container
@@ -9,9 +9,8 @@
   // One width segment of the tree
   .connect {
     position: relative;
-
-    height: 100vh;
     margin-left: 16px;
+    height: 100vh;
 
     // Segment contains trail
     &.last,
@@ -49,7 +48,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
     width: 32px;
     height: 32px;
   }
@@ -59,37 +57,10 @@
   // Mask input fields
   .p-dropdown,
   .p-inputtext {
-    &:not(:hover):not(:focus):not(.ng-invalid) {
+    // For some reason, this breaks unless ::ng-deep is included on each
+    &:not(:is(:hover, ::ng-deep :focus, ::ng-deep .ng-invalid)) {
       border-color: transparent;
-
       background-color: transparent;
-    }
-  }
-
-  // Highlight modules to right of the hovered module
-  .module-dropdown:not(.last) {
-    margin-right: -0.5rem;
-
-    .p-dropdown {
-      border-right-color: transparent;
-      border-top-right-radius: 0;
-      border-bottom-right-radius: 0;
-    }
-  }
-
-  .module-dropdown:hover ~ .module-dropdown {
-    .lab-icon.sm {
-      opacity: 0.3;
-    }
-
-    &:not(.last) .p-dropdown {
-      border-top-color: var(--primary-color);
-      border-bottom-color: var(--primary-color);
-    }
-
-    &.last .p-dropdown {
-      border-color: var(--primary-color);
-      border-left-color: transparent;
     }
   }
 }
@@ -121,7 +92,6 @@ tr.detail {
 .fragment {
   position: absolute;
   top: -10rem;
-
   visibility: hidden;
 }
 

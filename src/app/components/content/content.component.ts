@@ -14,7 +14,6 @@ import { ContentService } from '~/services';
 @Component({
   selector: 'lab-content',
   templateUrl: './content.component.html',
-  styleUrls: ['./content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ConfirmationService, MessageService],
 })

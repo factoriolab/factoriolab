@@ -8,17 +8,17 @@
   }
 
   text {
-    fill: var(--text-color);
-    font-family: var(--font-family);
     transform: translateY(5px);
+    font-family: var(--font-family);
+    fill: var(--text-color);
 
     textPath {
-      pointer-events: none;
       text-shadow:
         -1px -1px 0 var(--shadow-color),
         1px -1px 0 var(--shadow-color),
         -1px 1px 0 var(--shadow-color),
         1px 1px 0 var(--shadow-color);
+      pointer-events: none;
     }
   }
 

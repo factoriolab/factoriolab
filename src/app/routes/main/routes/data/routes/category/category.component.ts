@@ -10,7 +10,6 @@ import { DetailComponent } from '../../models';
   standalone: true,
   imports: [AppSharedModule, DataSharedModule],
   templateUrl: './category.component.html',
-  styleUrls: ['./category.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CategoryComponent extends DetailComponent {

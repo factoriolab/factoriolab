@@ -2,6 +2,7 @@
 @import 'styles/bootstrap';
 @import 'styles/theme-overrides';
 @import 'styles/vis-network';
+
 // Local
 @import 'styles/typography';
 @import 'styles/icons';
@@ -16,12 +17,10 @@ html {
 
 body {
   margin: 0;
-  line-height: 20px;
-
   background-color: var(--surface-ground);
-
-  font-family: var(--font-family);
+  line-height: 20px;
   color: var(--text-color);
+  font-family: var(--font-family);
 }
 
 * {

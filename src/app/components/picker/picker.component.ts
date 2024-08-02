@@ -19,7 +19,6 @@ import { DialogComponent } from '../modal';
 @Component({
   selector: 'lab-picker',
   templateUrl: './picker.component.html',
-  styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickerComponent extends DialogComponent {

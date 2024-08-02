@@ -23,7 +23,6 @@ import { LabState, Settings } from '~/store';
 @Component({
   selector: 'lab-beacons-overlay',
   templateUrl: './beacons-overlay.component.html',
-  styleUrl: './beacons-overlay.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BeaconsOverlayComponent extends OverlayComponent {

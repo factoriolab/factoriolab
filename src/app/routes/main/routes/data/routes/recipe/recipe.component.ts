@@ -11,7 +11,6 @@ import { DetailComponent } from '../../models';
   standalone: true,
   imports: [AppSharedModule],
   templateUrl: './recipe.component.html',
-  styleUrls: ['./recipe.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeComponent extends DetailComponent {

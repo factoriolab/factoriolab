@@ -7,7 +7,6 @@ import { MainSharedModule } from '../../main-shared.module';
   standalone: true,
   imports: [AppSharedModule, MainSharedModule],
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent {}
