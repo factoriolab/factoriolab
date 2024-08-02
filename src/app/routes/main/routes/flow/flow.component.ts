@@ -99,10 +99,8 @@ export class FlowComponent implements AfterViewInit {
     this.loading.set(true);
 
     select(`#${SVG_ID} > *`).remove();
-    if (this.cy) {
-      this.cy.destroy();
-      delete this.cy;
-    }
+    this.cy?.destroy();
+    delete this.cy;
 
     if (flowData.nodes.length && flowData.links.length) {
       if (flowSettings.diagram === FlowDiagram.Sankey) {
@@ -284,9 +282,10 @@ export class FlowComponent implements AfterViewInit {
       },
     }));
     const max = Math.max(...flow.links.map((l) => l.value));
-    const color = getComputedStyle(
-      this.svgElement().nativeElement,
-    ).getPropertyValue('--text-color');
+    const color =
+      getComputedStyle(this.svgElement().nativeElement).getPropertyValue(
+        '--text-color',
+      ) || 'black';
     const layout = {
       name: 'elk',
       fit: true,
@@ -388,6 +387,8 @@ export class FlowComponent implements AfterViewInit {
     return coalesce(d.y1, 0) - coalesce(d.y0, 0);
   }
 
+  /* Don't test dependencies (file-saver/cytoscape) */
+  /* istanbul ignore next */
   saveCytoscapePng(cy: cytoscape.Core): void {
     saveAs(cy.png(), 'factoriolab_flow.png');
   }

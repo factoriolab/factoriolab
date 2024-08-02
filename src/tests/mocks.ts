@@ -4,6 +4,7 @@ import { data } from 'src/data';
 import mod from 'src/data/1.1/data.json';
 import hash from 'src/data/1.1/hash.json';
 import i18n from 'src/data/1.1/i18n/zh.json';
+import { spread } from '~/helpers';
 import * as M from '~/models';
 import * as S from '~/services';
 import {
@@ -271,21 +272,24 @@ export const MatrixResultSolved: M.MatrixResult = {
   time: 20,
 };
 
-const node = (id: string, override?: Partial<M.Node>): M.Node => {
-  let result = {
+const node = (
+  id: string,
+  includeHref: boolean,
+  override?: Partial<M.Node>,
+): M.Node => {
+  const result = {
     name: id,
     text: id,
     color: 'black',
     id,
     stepId: id,
-    viewBox: '',
-    href: '',
+    posX: '0',
+    posY: '0',
+    viewBox: '0 0 64 64',
+    href: includeHref ? 'data/1.1/icons.png' : '',
   };
 
-  if (override) {
-    result = { ...result, ...override };
-  }
-
+  if (override) return spread(result, override);
   return result;
 };
 
@@ -301,17 +305,17 @@ const link = (source: string, target: string): M.Link => {
   };
 };
 
-export const getFlow = (): M.FlowData => ({
+export const getFlow = (includeHref = false): M.FlowData => ({
   nodes: [
-    node('r|0'),
-    node('r|1'),
-    node('r|2', {
+    node('r|0', includeHref),
+    node('r|1', includeHref),
+    node('r|2', includeHref, {
       machines: '1',
       machineId: 'machineId',
       recipe: AdjustedDataset.recipeEntities[AdjustedDataset.recipeIds[0]],
     }),
-    node('o|3'),
-    node('s|4'),
+    node('o|3', includeHref),
+    node('s|4', includeHref),
   ],
   links: [
     link('r|0', 'r|2'),

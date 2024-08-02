@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+import { TestModule } from 'src/tests';
 import { rational } from '~/models';
 import { DisplayService } from './display.service';
 
@@ -14,12 +14,6 @@ describe('DisplayService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
-  });
-
-  describe('icon', () => {
-    it('should handle null values', () => {
-      expect(service.icon(ItemId.Module)).toBeTruthy();
-    });
   });
 
   describe('round', () => {
@@ -43,16 +37,6 @@ describe('DisplayService', () => {
       expect(service.toBonusPercent(rational(1n))).toEqual('+100%');
       expect(service.toBonusPercent(rational(0n))).toEqual('');
       expect(service.toBonusPercent(rational(-1n))).toEqual('-100%');
-    });
-  });
-
-  describe('recipeProcess', () => {
-    it('should generate html for a recipe', () => {
-      expect(
-        service.recipeProcess(
-          Mocks.AdjustedDataset.recipeEntities[RecipeId.ElectronicCircuit],
-        ),
-      ).toBeTruthy();
     });
   });
 });

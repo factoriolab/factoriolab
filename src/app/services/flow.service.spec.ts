@@ -42,6 +42,7 @@ describe('FlowService', () => {
         Mocks.ItemsStateInitial,
         Mocks.PreferencesState,
         Mocks.AdjustedDataset,
+        Mocks.ThemeValues,
       );
 
       expect(result.nodes.length).toEqual(7);
@@ -59,6 +60,7 @@ describe('FlowService', () => {
           }),
         }),
         Mocks.AdjustedDataset,
+        Mocks.ThemeValues,
       );
 
       expect(result.nodes.length).toEqual(7);
