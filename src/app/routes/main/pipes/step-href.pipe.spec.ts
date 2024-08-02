@@ -24,7 +24,7 @@ describe('StepHrefPipe', () => {
       spyOn(pipe.routerSvc, 'stepHref');
       const step: Step = {
         id: '0',
-        items: rational(1n),
+        items: rational.one,
         recipeId: RecipeId.ArtilleryShellRange,
       };
       expect(

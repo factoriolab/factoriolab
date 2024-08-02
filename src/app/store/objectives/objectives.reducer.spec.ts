@@ -182,7 +182,7 @@ describe('Objectives Reducer', () => {
 
   describe('SET_MODULES', () => {
     it('should set modules on an objective', () => {
-      const value = [{ count: rational(1n), id: ItemId.SpeedModule }];
+      const value = [{ count: rational.one, id: ItemId.SpeedModule }];
       const result = objectivesReducer(
         state,
         new Actions.SetModulesAction({
@@ -198,7 +198,7 @@ describe('Objectives Reducer', () => {
     it('should set beacons on an objective', () => {
       const value = [
         {
-          count: rational(0n),
+          count: rational.zero,
           id: ItemId.Beacon,
           modules: [{ count: rational(2n), id: ItemId.Module }],
         },
@@ -305,7 +305,7 @@ describe('Objectives Reducer', () => {
         result,
         new Actions.AdjustDisplayRateAction(rational(1n, 60n)),
       );
-      expect(result.entities['0'].value).toEqual(rational(1n));
+      expect(result.entities['0'].value).toEqual(rational.one);
     });
   });
 

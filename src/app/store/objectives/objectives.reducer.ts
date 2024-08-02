@@ -43,7 +43,7 @@ export function objectivesReducer(
     case Settings.SettingsActionType.SET_MOD:
       return initialObjectivesState;
     case ObjectivesActionType.ADD: {
-      let value = rational(1n);
+      let value = rational.one;
       if (state.ids.length)
         value = state.entities[state.ids[state.ids.length - 1]].value;
 

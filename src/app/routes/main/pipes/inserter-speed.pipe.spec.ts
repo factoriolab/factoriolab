@@ -18,7 +18,7 @@ describe('InserterSpeedPipe', () => {
 
   describe('transform', () => {
     it('should return matching inserter data', () => {
-      expect(pipe.transform(rational(1n), Mocks.SettingsStateInitial)).toEqual({
+      expect(pipe.transform(rational.one, Mocks.SettingsStateInitial)).toEqual({
         id: ItemId.Inserter,
         value: rational(100n, 243n),
       });
@@ -32,7 +32,7 @@ describe('InserterSpeedPipe', () => {
 
     it('should handle invalid state where no match is found', () => {
       expect(
-        pipe.transform(rational(1n), {
+        pipe.transform(rational.one, {
           inserterTarget: InserterTarget.Chest,
         } as any),
       ).toBeNull();

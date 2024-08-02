@@ -21,7 +21,7 @@ describe('BonusPercentPipe', () => {
   describe('transform', () => {
     it('should call DisplayService method', () => {
       spyOn(service, 'toBonusPercent').and.callThrough();
-      expect(pipe.transform(rational(1n))).toEqual('+100%');
+      expect(pipe.transform(rational.one)).toEqual('+100%');
       expect(service.toBonusPercent).toHaveBeenCalled();
     });
   });

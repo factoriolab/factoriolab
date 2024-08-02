@@ -1544,7 +1544,7 @@ export class RouterService {
       const obj: Objective = {
         id: index.toString(),
         targetId: s[i++], // Convert to real id after determining unit, if hashed
-        value: coalesce(this.parseRational(s[i++]), rational(1n)),
+        value: coalesce(this.parseRational(s[i++]), rational.one),
         unit: this.parseNumber(s[i++]) ?? ObjectiveUnit.Items,
         type: this.parseNumber(s[i++]) ?? ObjectiveType.Output,
         machineId: this.parseString(s[i++], hash?.machines),

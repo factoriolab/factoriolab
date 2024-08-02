@@ -199,7 +199,7 @@ describe('Machines Reducer', () => {
     it('should set the beacons for a machine', () => {
       const value = [
         {
-          count: rational(0n),
+          count: rational.zero,
           id: ItemId.Beacon,
           modules: [{ count: rational(2n), id: ItemId.Module }],
         },

@@ -85,7 +85,7 @@ describe('Recipes Reducer', () => {
           ...initialRecipesState,
           ...{
             [Mocks.Recipe1.id]: {
-              modules: [{ count: rational(1n), id: ItemId.Module }],
+              modules: [{ count: rational.one, id: ItemId.Module }],
               beacons: [
                 {
                   count: rational(10n),
@@ -122,7 +122,7 @@ describe('Recipes Reducer', () => {
 
   describe('SET_MODULES', () => {
     it('should set the modules', () => {
-      const value = [{ count: rational(1n), id: ItemId.Module }];
+      const value = [{ count: rational.one, id: ItemId.Module }];
       const result = recipesReducer(
         initialRecipesState,
         new Actions.SetModulesAction({
@@ -138,7 +138,7 @@ describe('Recipes Reducer', () => {
     it('should set the beacons', () => {
       const value = [
         {
-          count: rational(1n),
+          count: rational.one,
           id: ItemId.Beacon,
           modules: [{ count: rational(2n), id: ItemId.Module }],
         },

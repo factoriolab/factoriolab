@@ -314,7 +314,7 @@ export class SettingsComponent implements OnInit {
   }
 
   toggleBeaconReceivers(value: boolean): void {
-    this.setBeaconReceivers(value ? rational(1n) : null);
+    this.setBeaconReceivers(value ? rational.one : null);
   }
 
   /** Action Dispatch Methods */

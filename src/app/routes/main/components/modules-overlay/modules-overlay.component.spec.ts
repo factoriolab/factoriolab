@@ -48,7 +48,7 @@ describe('ModulesOverlayComponent', () => {
     it('should emit a list filtered for nonzero module entries', () => {
       spyOn(component.setValue, 'emit');
       component.modules.set([
-        { id: ItemId.ProductivityModule, count: rational(0n) },
+        { id: ItemId.ProductivityModule, count: rational.zero },
       ]);
       component.save();
       expect(component.setValue.emit).toHaveBeenCalledWith([]);

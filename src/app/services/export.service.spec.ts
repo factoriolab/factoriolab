@@ -39,7 +39,7 @@ describe('ExportService', () => {
       id: '0',
       itemId: ItemId.IronOre,
       recipeId: RecipeId.IronPlate,
-      parents: { ['1']: rational(1n) },
+      parents: { ['1']: rational.one },
     };
     const fullStep: Step = {
       id: '1',

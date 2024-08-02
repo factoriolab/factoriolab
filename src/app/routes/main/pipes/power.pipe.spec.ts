@@ -27,7 +27,7 @@ describe('PowerPipe', () => {
       expect(pipe.transform(rational(1000n), null, PowerUnit.MW)).toEqual(
         '1 MW',
       );
-      expect(pipe.transform(rational(1n), null, PowerUnit.kW)).toEqual('1 kW');
+      expect(pipe.transform(rational.one, null, PowerUnit.kW)).toEqual('1 kW');
     });
   });
 });

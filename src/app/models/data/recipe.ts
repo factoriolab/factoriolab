@@ -105,7 +105,7 @@ export function finalizeRecipe(recipe: AdjustedRecipe): void {
     }
 
     recipe.output[outId] = output
-      .sub(recipe.in[outId] ?? rational(0n))
+      .sub(recipe.in[outId] ?? rational.zero)
       .div(recipe.time);
   }
 

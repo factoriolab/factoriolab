@@ -3,7 +3,7 @@
     <div class="p-inputgroup">
       <lab-input-number
         width="3rem"
-        [value]="entry.count ?? zero"
+        [value]="entry.count ?? rational.zero"
         [maximum]="maximum()[i]"
         [disabled]="entry.id === ItemId.Module"
         (setValue)="setCount(i, $event)"

@@ -28,14 +28,14 @@ describe('DisplayService', () => {
     it('should convert Rational, string, or numbers to power units', () => {
       expect(service.usage('0.3')).toEqual('0.3 kW');
       expect(service.usage(3000)).toEqual('3 MW');
-      expect(service.usage(rational(1n))).toEqual('1 kW');
+      expect(service.usage(rational.one)).toEqual('1 kW');
     });
   });
 
   describe('toBonusPercent', () => {
     it('should handle negative, positive, and zero bonus percent values', () => {
-      expect(service.toBonusPercent(rational(1n))).toEqual('+100%');
-      expect(service.toBonusPercent(rational(0n))).toEqual('');
+      expect(service.toBonusPercent(rational.one)).toEqual('+100%');
+      expect(service.toBonusPercent(rational.zero)).toEqual('');
       expect(service.toBonusPercent(rational(-1n))).toEqual('-100%');
     });
   });

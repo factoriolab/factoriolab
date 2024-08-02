@@ -85,7 +85,7 @@ describe('Recipes Selectors', () => {
 
     it('should use modules override', () => {
       const modules = [
-        { count: rational(1n), id: stringValue },
+        { count: rational.one, id: stringValue },
         { count: rational(3n), id: ItemId.Module },
       ];
       const state = {
@@ -100,26 +100,6 @@ describe('Recipes Selectors', () => {
       expect(result[Mocks.Item1.id].modules).toEqual(modules);
     });
 
-    // it('should use beacons override', () => {
-    //   const beacons = [
-    //     {
-    //       count: rational(1n),
-    //       id: stringValue,
-    //       modules: [{ count: rational(2n), id: ItemId.Module }],
-    //     },
-    //   ];
-    //   const state = {
-    //     ...initialRecipesState,
-    //     ...{ [Mocks.Item1.id]: { beacons } },
-    //   };
-    //   const result = Selectors.getRecipesState.projector(
-    //     state,
-    //     Mocks.MachinesStateInitial,
-    //     Mocks.AdjustedDataset,
-    //   );
-    //   expect(result[Mocks.Item1.id].beacons).toEqual(beacons);
-    // });
-
     it('should reset invalid beacon totals', () => {
       const state = {
         ...initialRecipesState,
@@ -128,7 +108,7 @@ describe('Recipes Selectors', () => {
             beacons: [
               {
                 total: rational(8n),
-                count: rational(0n),
+                count: rational.zero,
                 id: ItemId.Beacon,
                 modules: [{ count: rational(2n), id: ItemId.Module }],
               },

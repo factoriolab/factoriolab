@@ -98,7 +98,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_BEACON_RECEIVERS', () => {
     it('should set default beacon receivers', () => {
-      const value = rational(1n);
+      const value = rational.one;
       const result = settingsReducer(
         initialSettingsState,
         new Actions.SetBeaconReceiversAction(value),
@@ -245,12 +245,12 @@ describe('Settings Reducer', () => {
   describe('SET_COSTS', () => {
     it('should set cost values', () => {
       const value: CostSettings = {
-        factor: rational(1n),
-        machine: rational(1n),
-        footprint: rational(1n),
-        unproduceable: rational(1n),
-        excluded: rational(1n),
-        surplus: rational(1n),
+        factor: rational.one,
+        machine: rational.one,
+        footprint: rational.one,
+        unproduceable: rational.one,
+        excluded: rational.one,
+        surplus: rational.one,
         maximize: rational(-1n),
       };
       const result = settingsReducer(

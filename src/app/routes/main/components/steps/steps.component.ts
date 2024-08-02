@@ -235,7 +235,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
 
     // Sort by numeric field
     curr.data?.sort((a: Step, b: Step) => {
-      const diff = (a[field] ?? rational(0n)).sub(b[field] ?? rational(0n));
+      const diff = (a[field] ?? rational.zero).sub(b[field] ?? rational.zero);
       return diff.toNumber() * order;
     });
   }

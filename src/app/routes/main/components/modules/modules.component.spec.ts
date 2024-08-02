@@ -84,7 +84,7 @@ describe('ModulesComponent', () => {
 
     it('should increase the count of empty module slots', () => {
       const modules: ModuleSettings[] = [
-        { id: ItemId.Module, count: rational(0n) },
+        { id: ItemId.Module, count: rational.zero },
       ];
       component.updateEmpty(modules);
       expect(modules[0].count).toEqual(rational(4n));

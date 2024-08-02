@@ -71,10 +71,10 @@ describe('FlowService', () => {
   describe('stepLinkValue', () => {
     it('should handle all possible options', () => {
       expect(service.stepLinkValue(fullStep, LinkValue.None)).toEqual(
-        rational(1n),
+        rational.one,
       );
       expect(service.stepLinkValue(fullStep, LinkValue.Percent)).toEqual(
-        rational(1n),
+        rational.one,
       );
       expect(service.stepLinkValue(fullStep, LinkValue.Items)).toEqual(
         rational(2n),
@@ -92,16 +92,16 @@ describe('FlowService', () => {
 
     it('should handle undefined values', () => {
       expect(service.stepLinkValue(emptyStep, LinkValue.Items)).toEqual(
-        rational(0n),
+        rational.zero,
       );
       expect(service.stepLinkValue(emptyStep, LinkValue.Belts)).toEqual(
-        rational(0n),
+        rational.zero,
       );
       expect(service.stepLinkValue(emptyStep, LinkValue.Wagons)).toEqual(
-        rational(0n),
+        rational.zero,
       );
       expect(service.stepLinkValue(emptyStep, LinkValue.Machines)).toEqual(
-        rational(0n),
+        rational.zero,
       );
     });
   });
@@ -110,26 +110,26 @@ describe('FlowService', () => {
     it('should handle all possible options', () => {
       expect(
         service.linkSize(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.None,
-          rational(1n),
+          rational.one,
         ),
       ).toEqual(1);
       expect(
         service.linkSize(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.Percent,
-          rational(1n),
+          rational.one,
         ),
       ).toEqual(1);
       expect(
         service.linkSize(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.Items,
-          rational(1n),
+          rational.one,
         ),
       ).toEqual(1);
     });
@@ -137,18 +137,18 @@ describe('FlowService', () => {
     it('should fall back to minimum values', () => {
       expect(
         service.linkSize(
-          rational(1n),
-          rational(0n),
+          rational.one,
+          rational.zero,
           LinkValue.Percent,
-          rational(1n),
+          rational.one,
         ),
       ).toEqual(MIN_LINK_VALUE);
       expect(
         service.linkSize(
-          rational(1n),
-          rational(0n),
+          rational.one,
+          rational.zero,
           LinkValue.Items,
-          rational(1n),
+          rational.one,
         ),
       ).toEqual(MIN_LINK_VALUE);
     });
@@ -158,8 +158,8 @@ describe('FlowService', () => {
     it('should handle all possible options', () => {
       expect(
         service.linkText(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.None,
           Mocks.PreferencesState.columns,
           '/m',
@@ -167,8 +167,8 @@ describe('FlowService', () => {
       ).toEqual('');
       expect(
         service.linkText(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.Percent,
           Mocks.PreferencesState.columns,
           '/m',
@@ -176,8 +176,8 @@ describe('FlowService', () => {
       ).toEqual('100%');
       expect(
         service.linkText(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.Items,
           Mocks.PreferencesState.columns,
           '/m',
@@ -189,8 +189,8 @@ describe('FlowService', () => {
       spyOn(service, 'linkPrecision').and.returnValue(null);
       expect(
         service.linkText(
-          rational(1n),
-          rational(1n),
+          rational.one,
+          rational.one,
           LinkValue.Machines,
           Mocks.PreferencesState.columns,
           '/m',

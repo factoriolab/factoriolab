@@ -31,7 +31,7 @@ export class WizardComponent {
   displayRate = this.store.selectSignal(Settings.getDisplayRate);
 
   id = '';
-  value = rational(1n);
+  value = rational.one;
   state: WizardState = 'type';
 
   displayRateOptions = displayRateOptions;

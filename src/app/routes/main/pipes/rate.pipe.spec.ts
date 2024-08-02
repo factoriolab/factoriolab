@@ -21,7 +21,7 @@ describe('RatePipe', () => {
     });
 
     it('should convert to percentage', () => {
-      expect(pipe.transform(rational(1n), -2)).toEqual('100');
+      expect(pipe.transform(rational.one, -2)).toEqual('100');
     });
 
     it('should round to specified digits and add extra zeroes', () => {
@@ -29,7 +29,7 @@ describe('RatePipe', () => {
     });
 
     it('should round to specified digits and add spaces for integers', () => {
-      expect(pipe.transform(rational(1n), 2)).toEqual('1   ');
+      expect(pipe.transform(rational.one, 2)).toEqual('1   ');
     });
 
     it('should add zeroes to values rounded to integers', () => {

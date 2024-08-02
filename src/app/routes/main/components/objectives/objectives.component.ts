@@ -281,7 +281,7 @@ export class ObjectivesComponent {
       {
         id: '',
         targetId: itemId,
-        value: rational(1n),
+        value: rational.one,
         unit,
         type: ObjectiveType.Output,
       },
@@ -330,7 +330,7 @@ export class ObjectivesComponent {
       {
         id: '',
         targetId: itemId,
-        value: rational(1n),
+        value: rational.one,
         unit,
         type: ObjectiveType.Output,
       },

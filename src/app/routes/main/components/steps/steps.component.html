@@ -311,7 +311,7 @@
               </span>
             }
             <span class="monospace">{{
-              step.items.sub(step.surplus ?? rational(0))
+              step.items.sub(step.surplus ?? rational.zero)
                 | rate: columnsState().items.precision
             }}</span>
           </td>
@@ -756,7 +756,7 @@
                         (onChange)="
                           changeRecipeField(
                             step,
-                            [{ id: $event.value, count: rational(1) }],
+                            [{ id: $event.value, count: rational.one }],
                             'modules'
                           )
                         "
@@ -1348,7 +1348,7 @@
                     <tr>
                       <td class="w-0 text-end">
                         <span class="monospace">{{
-                          rational(1) | rate: columnsState().machines.precision
+                          rational.one | rate: columnsState().machines.precision
                         }}</span>
                       </td>
                       <td>

@@ -318,7 +318,7 @@ describe('SettingsComponent', () => {
     it('should turn on beacon power estimation', () => {
       spyOn(component, 'setBeaconReceivers');
       component.toggleBeaconReceivers(true);
-      expect(component.setBeaconReceivers).toHaveBeenCalledWith(rational(1n));
+      expect(component.setBeaconReceivers).toHaveBeenCalledWith(rational.one);
     });
   });
 

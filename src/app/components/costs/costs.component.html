@@ -37,7 +37,7 @@
           [ngModel]="editValue.footprint.nonzero()"
           [binary]="true"
           (onChange)="
-            editValue.footprint = $event.checked ? rational(1) : rational(0)
+            editValue.footprint = $event.checked ? rational.one : rational.zero
           "
         ></p-checkbox>
       </td>
@@ -79,7 +79,7 @@
           width="8rem"
           [value]="editValue.maximize"
           [minimum]="null"
-          [maximum]="rational(0)"
+          [maximum]="rational.zero"
           (setValue)="editValue.maximize = $event"
         ></lab-input-number>
       </td>

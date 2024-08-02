@@ -127,7 +127,7 @@ export class SimplexUtility {
   static addItemValue(
     obj: Entities<ItemValues>,
     id: string,
-    value = rational(0n),
+    value = rational.zero,
     key: keyof ItemValues = 'out',
   ): void {
     if (obj[id]) {
@@ -138,7 +138,7 @@ export class SimplexUtility {
         obj[id][key] = value;
       }
     } else {
-      obj[id] = { ...{ out: rational(0n) }, [key]: value };
+      obj[id] = { ...{ out: rational.zero }, [key]: value };
     }
   }
 
@@ -408,7 +408,7 @@ export class SimplexUtility {
         excluded: {},
         recipes: {},
         time: 0,
-        cost: rational(0n),
+        cost: rational.zero,
         itemIds: [],
         recipeIds: [],
         unproduceableIds: [],
@@ -445,7 +445,7 @@ export class SimplexUtility {
       state.data.itemEntities[itemId].stack == null &&
       state.data.game === Game.Factorio
         ? FACTORIO_FLUID_COST_RATIO
-        : rational(1n);
+        : rational.one;
     const cost = state.costs[costKey];
     return base.mul(cost).toNumber();
   }
@@ -487,12 +487,12 @@ export class SimplexUtility {
     const maximizeVar = m.addVar(config);
 
     // Used to track quantities from maximization ratio
-    let maximizeFactor = rational(0n);
+    let maximizeFactor = rational.zero;
 
     // Add recipe vars to model
     for (const recipeId of recipeIds) {
       const config: VariableProperties = {
-        obj: (state.recipes[recipeId].cost ?? rational(0n)).toNumber(),
+        obj: (state.recipes[recipeId].cost ?? rational.zero).toNumber(),
         lb: 0,
         name: recipeId,
       };
@@ -629,7 +629,7 @@ export class SimplexUtility {
         const recipe = obj.recipe;
         const val = recipe.output[itemId];
         if (val?.nonzero()) {
-          if (val.gt(rational(0n)) && !state.surplusMachinesOutput) {
+          if (val.gt(rational.zero) && !state.surplusMachinesOutput) {
             if (recipeObjectiveOutput[itemId] == null)
               recipeObjectiveOutput[itemId] = {};
             recipeObjectiveOutput[itemId][obj.id] = val;
@@ -860,7 +860,7 @@ export class SimplexUtility {
   ): void {
     const values = state.itemValues[itemId];
     const steps = state.steps;
-    let output = rational(0n);
+    let output = rational.zero;
     state.data.itemIncludedIoRecipeIds[itemId].forEach((recipeId) => {
       const recipeAmt = solution.recipes[recipeId];
       if (recipeAmt == null) return;
@@ -897,7 +897,7 @@ export class SimplexUtility {
         itemId,
         items: output,
       };
-      if (values.out.gt(rational(0n))) {
+      if (values.out.gt(rational.zero)) {
         step.output = values.out;
         step.parents = { '': step.output };
       }
@@ -1004,7 +1004,7 @@ export class SimplexUtility {
       step.recipeObjectiveId = recipeObjective.id;
     } else {
       step.machines = solution.recipes[recipe.id].add(
-        step.machines ?? rational(0n),
+        step.machines ?? rational.zero,
       );
     }
 

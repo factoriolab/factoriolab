@@ -302,13 +302,13 @@ export function fromString(x: string): Rational {
   return result;
 }
 
-export function rational(x: number | bigint | string): Rational;
-export function rational(
+export function rationalFn(x: number | bigint | string): Rational;
+export function rationalFn(
   x: number | bigint | string | undefined,
 ): Rational | undefined;
-export function rational(p: number, q: number): Rational;
-export function rational(p: bigint, q: bigint): Rational;
-export function rational(
+export function rationalFn(p: number, q: number): Rational;
+export function rationalFn(p: bigint, q: bigint): Rational;
+export function rationalFn(
   p: number | bigint | string | undefined,
   q?: number | bigint,
 ): Rational | undefined {
@@ -330,3 +330,8 @@ export function rational(
       return fromString(p);
   }
 }
+
+export const rational = Object.assign(rationalFn, {
+  zero,
+  one,
+});

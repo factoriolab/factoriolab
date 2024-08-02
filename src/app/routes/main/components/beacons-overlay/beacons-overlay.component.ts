@@ -35,7 +35,7 @@ export class BeaconsOverlayComponent extends OverlayComponent {
 
   beacons = signal<BeaconSettings[]>([]);
   recipeId = signal<string | undefined>(undefined);
-  zero = rational(0n);
+  rational = rational;
 
   show(event: Event, values: BeaconSettings[], recipeId?: string): void {
     this.beacons.set(
@@ -91,7 +91,7 @@ export class BeaconsOverlayComponent extends OverlayComponent {
           count: count,
         },
       ];
-      values.push({ id, count: rational(0n), modules });
+      values.push({ id, count: rational.zero, modules });
       return values;
     });
   }

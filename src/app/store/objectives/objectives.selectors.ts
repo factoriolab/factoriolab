@@ -209,8 +209,8 @@ export const getTotals = createSelector(
     const modules: Entities<Rational> = {};
     const beacons: Entities<Rational> = {};
     const beaconModules: Entities<Rational> = {};
-    let power = rational(0n);
-    let pollution = rational(0n);
+    let power = rational.zero;
+    let pollution = rational.zero;
 
     for (const step of steps) {
       if (step.itemId != null) {
@@ -219,7 +219,7 @@ export const getTotals = createSelector(
           const belt = itemsSettings[step.itemId].beltId;
           if (belt != null) {
             if (!belts[belt]) {
-              belts[belt] = rational(0n);
+              belts[belt] = rational.zero;
             }
             belts[belt] = belts[belt].add(step.belts.ceil());
           }
@@ -230,7 +230,7 @@ export const getTotals = createSelector(
           const wagon = itemsSettings[step.itemId].wagonId;
           if (wagon != null) {
             if (!wagons[wagon]) {
-              wagons[wagon] = rational(0n);
+              wagons[wagon] = rational.zero;
             }
             wagons[wagon] = wagons[wagon].add(step.wagons.ceil());
           }
@@ -258,7 +258,7 @@ export const getTotals = createSelector(
             }
             if (machine != null) {
               if (!machines[machine]) {
-                machines[machine] = rational(0n);
+                machines[machine] = rational.zero;
               }
 
               const value = step.machines.ceil();
@@ -286,7 +286,7 @@ export const getTotals = createSelector(
             if (beaconId == null || !total?.nonzero()) continue;
 
             if (!beacons[beaconId]) {
-              beacons[beaconId] = rational(0n);
+              beacons[beaconId] = rational.zero;
             }
 
             const value = total.ceil();
@@ -339,7 +339,7 @@ function addValueToRecordByIds(
 ): void {
   ids.forEach((id) => {
     if (!record[id]) {
-      record[id] = rational(0n);
+      record[id] = rational.zero;
     }
 
     record[id] = record[id].add(value);
@@ -372,7 +372,7 @@ export const getStepDetails = createSelector(
 
         const inputs = outputs.reduce((r: Rational, o) => {
           return r.sub(o.value);
-        }, rational(1n));
+        }, rational.one);
         if (inputs.nonzero()) {
           outputs.push({
             inputs: true,
@@ -494,7 +494,7 @@ export const getEffectivePowerUnit = createSelector(
           }
         }
       }
-      minPower = minPower ?? rational(0n);
+      minPower = minPower ?? rational.zero;
       if (minPower.lt(rational(1000n))) {
         return PowerUnit.kW;
       } else if (minPower.lt(rational(1000000n))) {

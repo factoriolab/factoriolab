@@ -3,7 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { Rational, rational } from '../rational';
 
 export const researchBonus = {
-  speed0: rational(0n),
+  speed0: rational.zero,
   speed1: rational(20n),
   speed2: rational(50n),
   speed3: rational(90n),

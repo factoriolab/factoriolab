@@ -124,7 +124,7 @@ export class RecipeUtility {
       options.map((o) => o.value),
       coalesce(moduleRankIds, []),
     );
-    count = count === true ? rational(0n) : count;
+    count = count === true ? rational.zero : count;
     return [{ id, count }];
   }
 
@@ -137,7 +137,7 @@ export class RecipeUtility {
   ): AdjustedRecipe {
     const recipe: AdjustedRecipe = {
       ...cloneRecipe(data.recipeEntities[recipeId]),
-      ...{ productivity: rational(1n), produces: new Set(), output: {} },
+      ...{ productivity: rational.one, produces: new Set(), output: {} },
     };
 
     const {
@@ -169,7 +169,7 @@ export class RecipeUtility {
           .map((i) => itemsState[i].beltId)
           .filter((b): b is string => b != null)
           .map((beltId) => data.beltEntities[beltId]);
-        let minSpeed = rational(0n);
+        let minSpeed = rational.zero;
         for (const b of belts.filter((b): b is Belt => b != null)) {
           if (minSpeed.lt(b.speed)) minSpeed = b.speed;
         }
@@ -182,10 +182,10 @@ export class RecipeUtility {
       }
 
       // Calculate factors
-      let speed = rational(1n);
-      let prod = rational(1n);
-      let consumption = rational(1n);
-      let pollution = rational(1n);
+      let speed = rational.one;
+      let prod = rational.one;
+      let consumption = rational.one;
+      let pollution = rational.one;
 
       if (recipe.isMining) {
         // Adjust for mining bonus
@@ -225,8 +225,8 @@ export class RecipeUtility {
             if (pModule) {
               sprays = sprays
                 .mul(
-                  rational(1n).add(
-                    coalesce(pModule.productivity, rational(0n)),
+                  rational.one.add(
+                    coalesce(pModule.productivity, rational.zero),
                   ),
                 )
                 .floor(); // DSP rounds down # of sprays
@@ -235,7 +235,7 @@ export class RecipeUtility {
             const pId = module.proliferator;
             if (pId) {
               if (!proliferatorSprays[pId]) {
-                proliferatorSprays[pId] = rational(0n);
+                proliferatorSprays[pId] = rational.zero;
               }
               proliferatorSprays[pId] = proliferatorSprays[pId].add(sprays);
             }
@@ -324,7 +324,7 @@ export class RecipeUtility {
           const catalyst = recipe.catalyst[outId];
           const affected = recipe.out[outId].sub(catalyst);
           // Only change output if affected amount > 0
-          if (affected.gt(rational(0n))) {
+          if (affected.gt(rational.zero)) {
             recipe.out[outId] = catalyst.add(affected.mul(prod));
           }
         } else {
@@ -336,9 +336,10 @@ export class RecipeUtility {
 
       // Power
       recipe.drain = machine.drain;
-      let usage = (recipe.usage ? recipe.usage : machine.usage) || rational(0n);
+      let usage =
+        (recipe.usage ? recipe.usage : machine.usage) || rational.zero;
       if (oc) {
-        if (machine.usage?.gt(rational(0n))) {
+        if (machine.usage?.gt(rational.zero)) {
           // Polynomial effect only on production buildings, not power generation
           const factor = Math.pow(oc.toNumber(), 1.321928);
           usage = usage.mul(rational(factor));
@@ -349,7 +350,7 @@ export class RecipeUtility {
       recipe.consumption =
         machine.type === EnergyType.Electric
           ? usage.mul(consumption)
-          : rational(0n);
+          : rational.zero;
 
       // Pollution
       recipe.pollution =
@@ -358,14 +359,14 @@ export class RecipeUtility {
               .div(this.POLLUTION_FACTOR)
               .mul(pollution)
               .mul(consumption)
-          : rational(0n);
+          : rational.zero;
 
       // Add machine consumption
       if (machine.consumption) {
         const consumption = machine.consumption;
         for (const id of Object.keys(consumption)) {
           const amount = recipe.time.div(rational(60n)).mul(consumption[id]);
-          recipe.in[id] = (recipe.in[id] || rational(0n)).add(amount);
+          recipe.in[id] = (recipe.in[id] || rational.zero).add(amount);
         }
       }
 
@@ -380,12 +381,12 @@ export class RecipeUtility {
             .div(rational(1000n));
 
           recipe.in[recipeSettings.fuelId] = (
-            recipe.in[recipeSettings.fuelId] || rational(0n)
+            recipe.in[recipeSettings.fuelId] || rational.zero
           ).add(fuelIn);
 
           if (fuel.result) {
             recipe.out[fuel.result] = (
-              recipe.out[fuel.result] || rational(0n)
+              recipe.out[fuel.result] || rational.zero
             ).add(fuelIn);
           }
         }
@@ -396,7 +397,7 @@ export class RecipeUtility {
         const proliferatorUses: Entities<Rational> = {};
 
         for (const pId of Object.keys(proliferatorSprays)) {
-          proliferatorUses[pId] = rational(0n);
+          proliferatorUses[pId] = rational.zero;
 
           for (const id of Object.keys(recipe.in)) {
             const sprays = proliferatorSprays[pId];
@@ -409,10 +410,12 @@ export class RecipeUtility {
         const pModule = data.moduleEntities[proliferatorSprayId];
         if (pModule && pModule.sprays) {
           const sprays = pModule.sprays
-            .mul(rational(1n).add(coalesce(pModule.productivity, rational(0n))))
+            .mul(
+              rational.one.add(coalesce(pModule.productivity, rational.zero)),
+            )
             .floor() // DSP rounds down # of sprays
-            .sub(rational(1n)); // Subtract one spray of self
-          let usage = rational(0n);
+            .sub(rational.one); // Subtract one spray of self
+          let usage = rational.zero;
           for (const id of Object.keys(proliferatorUses)) {
             const amount = proliferatorUses[id].div(sprays);
             usage = usage.add(amount);
@@ -420,7 +423,7 @@ export class RecipeUtility {
           const pId = pModule.proliferator;
           if (pId) {
             if (!proliferatorUses[pId]) {
-              proliferatorUses[pId] = rational(0n);
+              proliferatorUses[pId] = rational.zero;
             }
             proliferatorUses[pId] = proliferatorUses[pId].add(usage);
           }
@@ -592,7 +595,7 @@ export class RecipeUtility {
           // Recipe has a declared cost, base this on output items not machines
           // Calculate total output, sum, and multiply cost by output
           const output = Object.keys(recipe.out)
-            .reduce((v, o) => v.add(recipe.out[o]), rational(0n))
+            .reduce((v, o) => v.add(recipe.out[o]), rational.zero)
             .div(recipe.time);
           recipe.cost = output.mul(recipe.cost).mul(costs.factor);
         } else {
@@ -743,7 +746,7 @@ export class RecipeUtility {
       options.map((o) => o.value),
       moduleRankIds,
     );
-    const moduleCount = count === true || count == null ? rational(0n) : count;
+    const moduleCount = count === true || count == null ? rational.zero : count;
     const result = value
       // Exclude empty module entry
       .filter((m) => m.id !== ItemId.Module)
@@ -769,7 +772,7 @@ export class RecipeUtility {
     if (value == null)
       return this.defaultModules(options, moduleRankIds, count, machineValue);
 
-    const moduleCount = count === true || count == null ? rational(0n) : count;
+    const moduleCount = count === true || count == null ? rational.zero : count;
     const moduleId = this.bestMatch(
       options.map((o) => o.value),
       moduleRankIds,
@@ -781,9 +784,9 @@ export class RecipeUtility {
 
     if (moduleCount.nonzero()) {
       // Restore empty module entry
-      const total = result.reduce((a, b) => a.add(b.count), rational(0n));
+      const total = result.reduce((a, b) => a.add(b.count), rational.zero);
       const empty = moduleCount.sub(total);
-      if (empty.gt(rational(0n)))
+      if (empty.gt(rational.zero))
         result.push({ count: empty, id: ItemId.Module });
     }
 
@@ -802,12 +805,12 @@ export class RecipeUtility {
     const moduleId = beaconSettings?.modules?.[0].id;
     const moduleCount = coalesce(
       beaconSettings?.modules?.[0].count,
-      rational(0n),
+      rational.zero,
     );
     const result = value.map((b) => {
       const r = {} as BeaconSettings;
       if (b.id && b.id !== beaconSettings.id) r.id = b.id;
-      if (!b.count?.eq(coalesce(beaconSettings.count, rational(0n))))
+      if (!b.count?.eq(coalesce(beaconSettings.count, rational.zero)))
         r.count = b.count;
       if (
         !areArraysEqual(
@@ -861,11 +864,11 @@ export class RecipeUtility {
       // Safe to assert b.modules != null because code would have returned early
       // above; each entry's modules have already been coalesced
       const total = b.modules!.reduce(
-        (a, b) => a.add(coalesce(b.count, rational(0n))),
-        rational(0n),
+        (a, b) => a.add(coalesce(b.count, rational.zero)),
+        rational.zero,
       );
       const empty = moduleSettings?.count?.sub(total);
-      if (empty?.gt(rational(0n)))
+      if (empty?.gt(rational.zero))
         b.modules!.push({ count: empty, id: ItemId.Module });
 
       return b;

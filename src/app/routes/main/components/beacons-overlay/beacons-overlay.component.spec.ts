@@ -39,8 +39,8 @@ describe('BeaconsOverlayComponent', () => {
 
   describe('setCount', () => {
     it('should update the signal', () => {
-      component.setCount(0, rational(0n));
-      expect(component.beacons()[0].count).toEqual(rational(0n));
+      component.setCount(0, rational.zero);
+      expect(component.beacons()[0].count).toEqual(rational.zero);
     });
   });
 
@@ -64,8 +64,8 @@ describe('BeaconsOverlayComponent', () => {
 
   describe('setTotal', () => {
     it('should update the signal', () => {
-      component.setTotal(0, rational(1n));
-      expect(component.beacons()[0].total).toEqual(rational(1n));
+      component.setTotal(0, rational.one);
+      expect(component.beacons()[0].total).toEqual(rational.one);
     });
   });
 

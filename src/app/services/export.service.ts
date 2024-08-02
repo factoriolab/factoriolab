@@ -100,7 +100,7 @@ export class ExportService {
       const itemSettings = itemsState[step.itemId];
       if (step.items != null) {
         exp.Items =
-          '=' + step.items.sub(step.surplus ?? rational(0n)).toString();
+          '=' + step.items.sub(step.surplus ?? rational.zero).toString();
       }
 
       if (step.surplus != null) exp.Surplus = '=' + step.surplus.toString();

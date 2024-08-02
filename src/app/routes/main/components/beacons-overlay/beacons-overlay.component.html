@@ -7,7 +7,7 @@
             width="3rem"
             [pTooltip]="'beaconsOverlay.eachTooltip' | translate"
             tooltipPosition="top"
-            [value]="entry.count ?? zero"
+            [value]="entry.count ?? rational.zero"
             (setValue)="setCount(i, $event)"
           >
           </lab-input-number>

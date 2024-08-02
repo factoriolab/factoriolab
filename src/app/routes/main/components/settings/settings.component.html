@@ -693,7 +693,7 @@
                             [options]="settings.moduleOptions ?? []"
                             (onChange)="
                               changeModules(machineId, [
-                                { id: $event.value, count: rational(1) }
+                                { id: $event.value, count: rational.one }
                               ])
                             "
                           >

@@ -43,7 +43,7 @@ describe('WizardComponent', () => {
       new Objectives.CreateAction({
         id: '0',
         targetId: ItemId.IronPlate,
-        value: rational(1n),
+        value: rational.one,
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       }),
@@ -54,7 +54,7 @@ describe('WizardComponent', () => {
       new Objectives.CreateAction({
         id: '0',
         targetId: ItemId.IronPlate,
-        value: rational(1n),
+        value: rational.one,
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       }),

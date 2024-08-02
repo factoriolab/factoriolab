@@ -19,7 +19,7 @@ import { Rational, rational } from '~/models';
   ],
 })
 export class ValidateNumberDirective implements Validator {
-  minimum = input<Rational | null>(rational(0n));
+  minimum = input<Rational | null>(rational.zero);
   maximum = input<Rational | null>(null);
 
   validate(

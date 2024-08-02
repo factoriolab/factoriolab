@@ -276,17 +276,17 @@ export class FlowService {
 
   stepLinkValue(step: Step, prop: LinkValue): Rational {
     if (prop === LinkValue.None || prop === LinkValue.Percent)
-      return rational(1n);
+      return rational.one;
 
     switch (prop) {
       case LinkValue.Belts:
-        return step.belts ?? rational(0n);
+        return step.belts ?? rational.zero;
       case LinkValue.Wagons:
-        return step.wagons ?? rational(0n);
+        return step.wagons ?? rational.zero;
       case LinkValue.Machines:
-        return step.machines ?? rational(0n);
+        return step.machines ?? rational.zero;
       default:
-        return step.items ?? rational(0n);
+        return step.items ?? rational.zero;
     }
   }
 

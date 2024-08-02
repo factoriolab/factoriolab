@@ -18,8 +18,8 @@ export class DisplayService {
 
   toBonusPercent(value: Rational): string {
     const rat = this.round(value.mul(rational(100n)));
-    if (value.gt(rational(0n))) return `+${rat}%`;
-    if (value.lt(rational(0n))) return `${rat}%`;
+    if (value.gt(rational.zero)) return `+${rat}%`;
+    if (value.lt(rational.zero)) return `${rat}%`;
     return '';
   }
 }

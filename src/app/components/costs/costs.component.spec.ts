@@ -32,7 +32,7 @@ describe('CostsComponent', () => {
     it('should determine whether the value matches the initial state', () => {
       component.reset();
       expect(component.modified).toBeFalse();
-      component.editValue['surplus'] = rational(1n);
+      component.editValue['surplus'] = rational.one;
       expect(component.modified).toBeTrue();
     });
   });

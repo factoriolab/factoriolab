@@ -177,7 +177,7 @@ describe('Objectives Selectors', () => {
               ],
               beacons: [
                 {
-                  count: rational(0n),
+                  count: rational.zero,
                   id: ItemId.Beacon,
                   modules: [{ count: rational(2n), id: ItemId.Module }],
                 },
@@ -188,16 +188,16 @@ describe('Objectives Selectors', () => {
             id: '1',
             itemId: ItemId.Coal,
             recipeId: RecipeId.Coal,
-            belts: rational(1n),
-            wagons: rational(1n),
-            machines: rational(1n),
-            power: rational(1n),
-            pollution: rational(1n),
+            belts: rational.one,
+            wagons: rational.one,
+            machines: rational.one,
+            power: rational.one,
+            pollution: rational.one,
             recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
               modules: [
-                { count: rational(1n), id: ItemId.Module },
+                { count: rational.one, id: ItemId.Module },
                 { count: rational(2n), id: ItemId.SpeedModule3 },
               ],
               beacons: [
@@ -205,10 +205,10 @@ describe('Objectives Selectors', () => {
                   count: rational(2n),
                   id: ItemId.Beacon,
                   modules: [
-                    { count: rational(1n), id: ItemId.SpeedModule3 },
-                    { count: rational(1n), id: ItemId.Module },
+                    { count: rational.one, id: ItemId.SpeedModule3 },
+                    { count: rational.one, id: ItemId.Module },
                   ],
-                  total: rational(1n),
+                  total: rational.one,
                 },
               ],
             },
@@ -218,18 +218,18 @@ describe('Objectives Selectors', () => {
         Mocks.AdjustedDataset,
       );
       expect(result).toEqual({
-        belts: { [ItemId.TransportBelt]: rational(1n) },
-        wagons: { [ItemId.CargoWagon]: rational(1n) },
-        machines: { [ItemId.ElectricMiningDrill]: rational(1n) },
+        belts: { [ItemId.TransportBelt]: rational.one },
+        wagons: { [ItemId.CargoWagon]: rational.one },
+        machines: { [ItemId.ElectricMiningDrill]: rational.one },
         modules: {
           [ItemId.SpeedModule3]: rational(2n),
         },
-        beacons: { [ItemId.Beacon]: rational(1n) },
+        beacons: { [ItemId.Beacon]: rational.one },
         beaconModules: {
-          [ItemId.SpeedModule3]: rational(1n),
+          [ItemId.SpeedModule3]: rational.one,
         },
-        power: rational(1n),
-        pollution: rational(1n),
+        power: rational.one,
+        pollution: rational.one,
       });
     });
 
@@ -240,7 +240,7 @@ describe('Objectives Selectors', () => {
             id: '01',
             recipeId: RecipeId.Coal,
             recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
-            machines: rational(1n),
+            machines: rational.one,
             recipeSettings: {
               machineId: ItemId.MiningMachine,
             },
@@ -252,12 +252,12 @@ describe('Objectives Selectors', () => {
       expect(result).toEqual({
         belts: {},
         wagons: {},
-        machines: { [RecipeId.Coal]: rational(1n) },
+        machines: { [RecipeId.Coal]: rational.one },
         modules: {},
         beacons: {},
         beaconModules: {},
-        power: rational(0n),
-        pollution: rational(0n),
+        power: rational.zero,
+        pollution: rational.zero,
       });
     });
   });
@@ -268,16 +268,16 @@ describe('Objectives Selectors', () => {
         {
           id: '0',
           itemId: ItemId.PetroleumGas,
-          items: rational(1n),
+          items: rational.one,
           recipeId: RecipeId.Coal,
-          machines: rational(1n),
+          machines: rational.one,
           outputs: { [ItemId.PetroleumGas]: rational(2n) },
         },
         {
           id: '1',
           recipeId: RecipeId.CrudeOil,
           machines: rational(2n),
-          outputs: { [ItemId.PetroleumGas]: rational(1n) },
+          outputs: { [ItemId.PetroleumGas]: rational.one },
         },
         {
           id: '2',
@@ -318,7 +318,7 @@ describe('Objectives Selectors', () => {
               step: steps[0],
             },
             {
-              value: rational(1n),
+              value: rational.one,
               step: steps[1],
             },
             {
@@ -387,21 +387,21 @@ describe('Objectives Selectors', () => {
           id: '1',
           recipeId: RecipeId.Coal,
           parents: {
-            ['0']: rational(1n),
+            ['0']: rational.one,
           },
         },
         {
           id: '2',
-          parents: { ['1']: rational(1n) },
+          parents: { ['1']: rational.one },
         },
         {
           id: '3',
-          parents: { ['1']: rational(1n) },
+          parents: { ['1']: rational.one },
         },
         {
           id: '4',
           parents: {
-            ['0']: rational(1n),
+            ['0']: rational.one,
           },
         },
       ];
@@ -455,10 +455,10 @@ describe('Objectives Selectors', () => {
             overclock: rational(100n),
             beacons: [
               {
-                count: rational(1n),
+                count: rational.one,
                 id: ItemId.Beacon,
                 modules: [{ count: rational(2n), id: ItemId.Module }],
-                total: rational(1n),
+                total: rational.one,
               },
             ],
           },
@@ -474,13 +474,13 @@ describe('Objectives Selectors', () => {
       const objective: Objective = {
         id: '1',
         targetId: RecipeId.Coal,
-        value: rational(1n),
+        value: rational.one,
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
         overclock: rational(100n),
         beacons: [
           {
-            count: rational(1n),
+            count: rational.one,
             id: ItemId.Beacon,
             modules: [{ count: rational(2n), id: ItemId.Module }],
           },

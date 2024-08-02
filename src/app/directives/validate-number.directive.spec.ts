@@ -23,7 +23,7 @@ import { ValidateNumberDirective } from './validate-number.directive';
 class TestValidateNumberDirectiveComponent {
   frm = viewChild.required<NgForm>('frm');
   model?: string;
-  minimum = rational(1n);
+  minimum = rational.one;
 }
 
 describe('ValidateNumberDirective', () => {

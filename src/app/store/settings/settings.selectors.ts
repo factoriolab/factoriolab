@@ -192,7 +192,7 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
 
           const count =
             preset < Preset.Beacon8
-              ? rational(0n)
+              ? rational.zero
               : preset === Preset.Beacon8
                 ? rational(8n)
                 : rational(12n);

@@ -22,7 +22,7 @@ describe('MachineRatePipe', () => {
 
   describe('transform', () => {
     it('should transform pumpjack values to percentages', () => {
-      expect(pipe.transform(rational(1n), null, ItemId.Pumpjack)).toEqual(
+      expect(pipe.transform(rational.one, null, ItemId.Pumpjack)).toEqual(
         '100%',
       );
       expect(pipe.transform(rational(1n, 3n), 3, ItemId.Pumpjack)).toEqual(
@@ -32,8 +32,8 @@ describe('MachineRatePipe', () => {
 
     it('should transform values using rate pipe', () => {
       spyOn(RatePipe, 'transform');
-      pipe.transform(rational(1n), null, ItemId.AssemblingMachine1);
-      expect(RatePipe.transform).toHaveBeenCalledWith(rational(1n), null);
+      pipe.transform(rational.one, null, ItemId.AssemblingMachine1);
+      expect(RatePipe.transform).toHaveBeenCalledWith(rational.one, null);
     });
   });
 });

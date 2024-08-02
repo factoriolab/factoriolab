@@ -153,7 +153,7 @@ describe('Settings Selectors', () => {
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beacons).toEqual([
         {
-          count: rational(0n),
+          count: rational.zero,
           id: ItemId.Beacon,
           modules: [{ count: rational(2n), id: ItemId.SpeedModule3 }],
         },
@@ -248,40 +248,6 @@ describe('Settings Selectors', () => {
       const result = Selectors.getSettings.projector(value, Mocks.Defaults);
       expect(result).toEqual(value);
     });
-
-    // it('should use defaults', () => {
-    //   const result = Selectors.getSettings.projector(
-    //     initialSettingsState,
-    //     Mocks.Defaults,
-    //   );
-    //   expect(result).toEqual({
-    //     ...initialSettingsState,
-    //     ...{
-    //       beltId: Mocks.Defaults.beltId,
-    //       pipeId: undefined,
-    //       fuelRankIds: [ItemId.Coal],
-    //       cargoWagonId: Mocks.Defaults.cargoWagonId,
-    //       fluidWagonId: Mocks.Defaults.fluidWagonId,
-    //     },
-    //   });
-    // });
-
-    // it('should handle null defaults', () => {
-    //   const result = Selectors.getSettings.projector(
-    //     initialSettingsState,
-    //     null,
-    //   );
-    //   expect(result).toEqual({
-    //     ...initialSettingsState,
-    //     ...{
-    //       beltId: undefined,
-    //       pipeId: undefined,
-    //       fuelRankIds: [],
-    //       cargoWagonId: undefined,
-    //       fluidWagonId: undefined,
-    //     },
-    //   });
-    // });
   });
 
   describe('getI18n', () => {
@@ -527,7 +493,7 @@ describe('Settings Selectors', () => {
           },
         },
       };
-      const result = Selectors.getBeltSpeed.projector(data, rational(0n));
+      const result = Selectors.getBeltSpeed.projector(data, rational.zero);
       expect(result[ItemId.Pipe]).toEqual(rational(10n));
     });
   });

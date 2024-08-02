@@ -45,7 +45,7 @@ import {
 const mockObjective: Objective = {
   id: '1',
   targetId: ItemId.SteelChest,
-  value: rational(1n),
+  value: rational.one,
   unit: ObjectiveUnit.Belts,
   type: ObjectiveType.Output,
 };
@@ -63,7 +63,7 @@ const mockMigratedObjectivesState: Objectives.ObjectivesState = {
     ['2']: {
       id: '2',
       targetId: ItemId.SteelChest,
-      value: rational(1n),
+      value: rational.one,
       unit: ObjectiveUnit.Machines,
       type: ObjectiveType.Output,
     },
@@ -83,7 +83,7 @@ const mockRecipesState: Recipes.RecipesState = {
     modules: [{ count: rational(2n), id: ItemId.EfficiencyModule }],
     beacons: [
       {
-        count: rational(1n),
+        count: rational.one,
         id: ItemId.Beacon,
         modules: [{ count: rational(2n), id: ItemId.SpeedModule }],
         total: rational(8n),
@@ -99,7 +99,7 @@ const mockMachinesState: Machines.MachinesState = {
   moduleRankIds: [ItemId.ProductivityModule, ItemId.SpeedModule],
   beacons: [
     {
-      count: rational(1n),
+      count: rational.one,
       id: ItemId.Beacon,
       modules: [{ id: ItemId.SpeedModule }],
     },
@@ -112,7 +112,7 @@ const mockSettingsState: Settings.SettingsState = {
   netProductionOnly: true,
   surplusMachinesOutput: false,
   preset: Preset.Modules,
-  beaconReceivers: rational(1n),
+  beaconReceivers: rational.one,
   proliferatorSprayId: ItemId.ProductivityModule,
   beltId: ItemId.TransportBelt,
   cargoWagonId: ItemId.CargoWagon,
@@ -120,17 +120,17 @@ const mockSettingsState: Settings.SettingsState = {
   flowRate: rational(1200n),
   inserterTarget: InserterTarget.Chest,
   miningBonus: rational(100n),
-  researchBonus: rational(0n),
+  researchBonus: rational.zero,
   inserterCapacity: InserterCapacity.Capacity0,
   displayRate: DisplayRate.PerHour,
   maximizeType: MaximizeType.Weight,
   costs: {
     factor: rational(2n),
     machine: rational(10n),
-    footprint: rational(1n),
-    unproduceable: rational(0n),
+    footprint: rational.one,
+    unproduceable: rational.zero,
     excluded: rational(100n),
-    surplus: rational(0n),
+    surplus: rational.zero,
     maximize: rational(-100000n),
   },
 };
@@ -376,7 +376,7 @@ describe('RouterService', () => {
       spyOn(service, 'getHash').and.returnValue('test');
       expect(
         service.stepHref(
-          { id: '', itemId: ItemId.Wood, items: rational(1n) },
+          { id: '', itemId: ItemId.Wood, items: rational.one },
           mockEmptyZip(),
           Mocks.Hash,
         ),
@@ -391,7 +391,7 @@ describe('RouterService', () => {
           {
             id: '',
             recipeId: RecipeId.AdvancedCircuit,
-            machines: rational(1n),
+            machines: rational.one,
           },
           mockEmptyZip(),
           Mocks.Hash,
@@ -1088,7 +1088,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: ItemId.SteelChest,
-            value: rational(1n),
+            value: rational.one,
             unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
@@ -1109,7 +1109,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: ItemId.SteelChest,
-            value: rational(1n),
+            value: rational.one,
             unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
@@ -1130,7 +1130,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: ItemId.SteelChest,
-            value: rational(1n),
+            value: rational.one,
             unit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           },
@@ -1151,7 +1151,7 @@ describe('RouterService', () => {
           {
             id: '0',
             targetId: RecipeId.SteelChest,
-            value: rational(1n),
+            value: rational.one,
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
           },
@@ -1180,7 +1180,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: ItemId.SteelChest,
-            value: rational(1n),
+            value: rational.one,
             unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
@@ -1202,7 +1202,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: '',
-            value: rational(1n),
+            value: rational.one,
             unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
@@ -1219,7 +1219,7 @@ describe('RouterService', () => {
           ['1']: {
             id: '1',
             targetId: '',
-            value: rational(1n),
+            value: rational.one,
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
             modules: [{}],
@@ -1420,15 +1420,15 @@ describe('RouterService', () => {
 
   describe('zipDiffRational', () => {
     it('should handle default', () => {
-      expect(service.zipDiffRational(rational(1n), rational(1n))).toEqual('');
+      expect(service.zipDiffRational(rational.one, rational.one)).toEqual('');
     });
 
     it('should handle nullish', () => {
-      expect(service.zipDiffRational(null, rational(1n))).toEqual(NULL);
+      expect(service.zipDiffRational(null, rational.one)).toEqual(NULL);
     });
 
     it('should handle nondefault', () => {
-      expect(service.zipDiffRational(rational(1n), null)).toEqual('1');
+      expect(service.zipDiffRational(rational.one, null)).toEqual('1');
     });
   });
 
