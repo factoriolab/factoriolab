@@ -1,9 +1,10 @@
 {
   "recommendations": [
     "angular.ng-template",
+    "davidanson.vscode-markdownlint",
     "dbaeumer.vscode-eslint",
     "eamodio.gitlens",
-    "davidanson.vscode-markdownlint",
-    "esbenp.prettier-vscode"
+    "esbenp.prettier-vscode",
+    "stylelint.vscode-stylelint"
   ]
 }
