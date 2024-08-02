@@ -52,8 +52,9 @@
     "@ngrx/store-devtools": "^18.0.1",
     "@sideway/formula": "^3.0.1",
     "bootstrap": "^5.3.1",
+    "cytoscape": "^3.30.1",
+    "cytoscape-elk": "^2.2.0",
     "d3": "^7.8.5",
-    "elkjs": "^0.8.2",
     "file-saver": "^2.0.5",
     "glpk-ts": "^0.0.11",
     "pako": "^2.1.0",
@@ -61,8 +62,7 @@
     "primeng": "^17.18.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.6.2",
-    "vis-data": "^7.1.6",
-    "vis-network": "^9.1.8",
+    "web-worker": "^1.3.0",
     "zone.js": "~0.14.3"
   },
   "devDependencies": {
@@ -77,6 +77,7 @@
     "@angular/compiler-cli": "^18.1.0",
     "@angular/language-service": "^18.1.0",
     "@semantic-release/exec": "^6.0.3",
+    "@types/cytoscape": "^3.21.5",
     "@types/d3": "^7.4.3",
     "@types/file-saver": "^2.0.5",
     "@types/jasmine": "^4.3.1",

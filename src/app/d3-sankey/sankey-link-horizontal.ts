@@ -1,5 +1,4 @@
-import { Path } from 'd3-path';
-import { Link, link, linkHorizontal } from 'd3-shape';
+import { link, Link, linkHorizontal, Path } from 'd3';
 
 import {
   SankeyLink,

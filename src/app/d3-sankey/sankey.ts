@@ -1,4 +1,4 @@
-import { max, min, sum } from 'd3-array';
+import { max, min, sum } from 'd3';
 
 import { sankeyJustify } from './align';
 import { constant } from './constant';
