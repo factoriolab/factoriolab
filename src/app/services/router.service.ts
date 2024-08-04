@@ -1502,6 +1502,7 @@ export class RouterService {
             beacons,
             overclock,
             checked,
+            this.zipTruthyString(obj.fuelId),
           ]),
           hash: this.zipFields([
             this.zipTruthyNString(
@@ -1516,6 +1517,7 @@ export class RouterService {
             beacons,
             overclock,
             checked,
+            this.zipTruthyNString(obj.fuelId, hash.fuels),
           ]),
         };
       }),
@@ -1556,6 +1558,7 @@ export class RouterService {
         ),
         overclock: this.parseRational(s[i++]),
         checked: this.parseBool(s[i++]),
+        fuelId: this.parseString(s[i++], hash?.fuels),
       };
 
       if (hash) {
