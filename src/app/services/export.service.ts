@@ -43,7 +43,7 @@ export const StepKeys = [
   'Belt',
   'Wagons',
   'Wagon',
-  'Recipes',
+  'Recipe',
   'Machines',
   'Machine',
   'Modules',
