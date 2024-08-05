@@ -48,8 +48,6 @@ export const StepKeys = [
   'Machine',
   'Modules',
   'Beacons',
-  'Beacon',
-  'BeaconModules',
   'Power',
   'Pollution',
 ] as (keyof StepExport)[];
