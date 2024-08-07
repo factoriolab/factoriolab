@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestModule } from 'src/tests';
+import { Mocks, TestModule } from 'src/tests';
 import { Preferences } from '~/store';
 import { ColumnsComponent } from './columns.component';
 
@@ -28,6 +28,17 @@ describe('ColumnsComponent', () => {
       expect(component.modified).toBeFalse();
       component.editValue['wagons'].show = false;
       expect(component.modified).toBeTrue();
+    });
+  });
+
+  describe('open', () => {
+    it('should set up the editValue and show the dialog', () => {
+      spyOn(component, 'show');
+      component.editValue = null as any;
+      component.open(Mocks.PreferencesState.columns);
+      expect(component.editValue).toEqual(Mocks.PreferencesState.columns);
+      expect(component.editValue).not.toBe(Mocks.PreferencesState.columns);
+      expect(component.show).toHaveBeenCalled();
     });
   });
 

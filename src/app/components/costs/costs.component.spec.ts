@@ -1,7 +1,6 @@
-import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestModule } from 'src/tests';
+import { Mocks, TestModule } from 'src/tests';
 import { rational } from '~/models';
 import { Settings } from '~/store';
 import { CostsComponent } from './costs.component';
@@ -9,7 +8,6 @@ import { CostsComponent } from './costs.component';
 describe('CostsComponent', () => {
   let component: CostsComponent;
   let fixture: ComponentFixture<CostsComponent>;
-  let markForCheck: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -17,8 +15,6 @@ describe('CostsComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(CostsComponent);
-    const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
-    markForCheck = spyOn(ref.constructor.prototype, 'markForCheck');
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -36,11 +32,14 @@ describe('CostsComponent', () => {
     });
   });
 
-  describe('ngOnInit', () => {
-    it('should watch subject to show dialog', () => {
-      component.contentSvc.showCosts$.next();
-      expect(component.visible).toBeTrue();
-      expect(markForCheck).toHaveBeenCalled();
+  describe('open', () => {
+    it('should set up the editValue and show the dialog', () => {
+      spyOn(component, 'show');
+      component.editValue = null as any;
+      component.open(Mocks.Costs);
+      expect(component.editValue).toEqual(Mocks.Costs);
+      expect(component.editValue).not.toBe(Mocks.Costs);
+      expect(component.show).toHaveBeenCalled();
     });
   });
 
