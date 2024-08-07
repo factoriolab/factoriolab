@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  OnInit,
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
@@ -13,7 +6,6 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TableModule } from 'primeng/table';
-import { tap, withLatestFrom } from 'rxjs';
 
 import {
   ColumnKey,
@@ -24,7 +16,6 @@ import {
   initialColumnsState,
 } from '~/models';
 import { PrecisionExamplePipe, TranslatePipe } from '~/pipes';
-import { ContentService } from '~/services';
 import { Preferences, Settings } from '~/store';
 import { DialogComponent } from '../modal';
 
@@ -45,10 +36,8 @@ import { DialogComponent } from '../modal';
   styleUrls: ['./columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColumnsComponent extends DialogComponent implements OnInit {
+export class ColumnsComponent extends DialogComponent {
   store = inject(Store);
-  contentSvc = inject(ContentService);
-  destroyRef = inject(DestroyRef);
 
   columnOptions = this.store.selectSignal(Settings.selectColumnOptions);
 
@@ -64,19 +53,6 @@ export class ColumnsComponent extends DialogComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-    this.contentSvc.showColumns$
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        withLatestFrom(this.store.select(Settings.selectColumnsState)),
-        tap(([_, c]) => {
-          this.initEdit(c);
-          this.show();
-        }),
-      )
-      .subscribe();
-  }
-
   initEdit(columns: ColumnsState): void {
     this.editValue = (Object.keys(columns) as ColumnKey[])
       .filter((c) => columnsInfo[c] != null) // Filter out any obsolete keys
@@ -84,6 +60,11 @@ export class ColumnsComponent extends DialogComponent implements OnInit {
         e[c] = { ...columns[c] };
         return e;
       }, {});
+  }
+
+  open(value: ColumnsState): void {
+    this.initEdit(value);
+    this.show();
   }
 
   changeFraction(value: boolean, column: ColumnKey): void {

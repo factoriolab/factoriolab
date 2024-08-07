@@ -26,7 +26,7 @@
             class="p-button-outlined"
             icon="fa-solid fa-table-columns"
             [label]="'steps.columnSettings' | translate"
-            (click)="contentSvc.showColumns$.next()"
+            (click)="columnsDlg.open(columnsState())"
           ></button>
           @if (steps().length) {
             <button
@@ -1878,3 +1878,4 @@
     </ng-template>
   </ng-template>
 </p-table>
+<lab-columns #columnsDlg></lab-columns>

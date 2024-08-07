@@ -4,7 +4,9 @@ import { Confirmation, Message } from 'primeng/api';
 import { BehaviorSubject, fromEvent, map, Subject } from 'rxjs';
 
 import { environment } from 'src/environments';
-import { APP, Breakpoint } from '~/models';
+import { APP } from '~/models';
+
+const BREAKPOINT_SMALL = 576;
 
 @Injectable({
   providedIn: 'root',
@@ -22,11 +24,9 @@ export class ContentService {
     { initialValue: window.innerWidth },
   );
 
-  isMobile = computed(() => this.width() < Breakpoint.Small);
+  isMobile = computed(() => this.width() < BREAKPOINT_SMALL);
 
   // Dialogs
-  showColumns$ = new Subject<void>();
-  showCosts$ = new Subject<void>();
   showToast$ = new Subject<Message>();
   showConfirm$ = new Subject<Confirmation>();
 

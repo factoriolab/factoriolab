@@ -1,19 +1,12 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
-import { tap, withLatestFrom } from 'rxjs';
 
-import { CostKey, CostSettings, Rational, rational } from '~/models';
+import { CostKey, CostSettings, rational } from '~/models';
 import { TranslatePipe } from '~/pipes';
 import { ContentService } from '~/services';
 import { Settings } from '~/store';
@@ -36,7 +29,7 @@ import { DialogComponent } from '../modal';
   styleUrls: ['./costs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CostsComponent extends DialogComponent implements OnInit {
+export class CostsComponent extends DialogComponent {
   store = inject(Store);
   contentSvc = inject(ContentService);
 
@@ -50,23 +43,13 @@ export class CostsComponent extends DialogComponent implements OnInit {
     );
   }
 
-  show$ = this.contentSvc.showCosts$.pipe(
-    takeUntilDestroyed(),
-    withLatestFrom(this.store.select(Settings.selectCosts)),
-    tap(([_, c]) => {
-      this.initEdit(c);
-      this.show();
-    }),
-  );
-
-  Rational = Rational;
-
-  ngOnInit(): void {
-    this.show$.subscribe();
-  }
-
   initEdit(costs: CostSettings): void {
     this.editValue = { ...costs };
+  }
+
+  open(value: CostSettings): void {
+    this.initEdit(value);
+    this.show();
   }
 
   reset(): void {

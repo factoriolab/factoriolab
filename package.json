@@ -113,8 +113,7 @@
     "stylelint-order": "^6.0.4",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "~5.5.3",
-    "webpack-bundle-analyzer": "^4.9.0"
+    "typescript": "~5.5.3"
   },
   "browser": {
     "crypto": false,

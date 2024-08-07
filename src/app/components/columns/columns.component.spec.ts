@@ -1,4 +1,3 @@
-import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestModule } from 'src/tests';
@@ -8,7 +7,6 @@ import { ColumnsComponent } from './columns.component';
 describe('ColumnsComponent', () => {
   let component: ColumnsComponent;
   let fixture: ComponentFixture<ColumnsComponent>;
-  let markForCheck: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,8 +14,6 @@ describe('ColumnsComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(ColumnsComponent);
-    const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
-    markForCheck = spyOn(ref.constructor.prototype, 'markForCheck');
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -32,14 +28,6 @@ describe('ColumnsComponent', () => {
       expect(component.modified).toBeFalse();
       component.editValue['wagons'].show = false;
       expect(component.modified).toBeTrue();
-    });
-  });
-
-  describe('ngOnInit', () => {
-    it('should watch subject to show dialog', () => {
-      component.contentSvc.showColumns$.next();
-      expect(component.visible).toBeTrue();
-      expect(markForCheck).toHaveBeenCalled();
     });
   });
 

@@ -1397,10 +1397,11 @@
             class="p-button-rounded p-button-outlined mb-4"
             icon="fa-solid fa-dollar-sign"
             [label]="'settings.openCosts' | translate"
-            (click)="contentSvc.showCosts$.next()"
+            (click)="costsDlg.open(settings().costs)"
           ></button>
         </div>
       </p-accordionTab>
     </p-accordion>
   </p-scrollPanel>
 </div>
+<lab-costs #costsDlg></lab-costs>

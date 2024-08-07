@@ -30,7 +30,6 @@ import { coalesce } from '~/helpers';
 import {
   AdjustedDataset,
   BeaconSettings,
-  EnergyType,
   Entities,
   Game,
   ItemId,
@@ -76,6 +75,7 @@ import {
 } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 import { BeaconsOverlayComponent } from '../beacons-overlay/beacons-overlay.component';
+import { ColumnsComponent } from '../columns/columns.component';
 import { ModulesOverlayComponent } from '../modules-overlay/modules-overlay.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 
@@ -98,6 +98,7 @@ export type StepsMode = 'all' | 'focus';
     TooltipModule,
     AsStepPipe,
     BeaconsOverlayComponent,
+    ColumnsComponent,
     DropdownBaseDirective,
     IconClassPipe,
     IconSmClassPipe,
@@ -189,7 +190,6 @@ export class StepsComponent implements OnInit, AfterViewInit {
   ItemId = ItemId;
   StepDetailTab = StepDetailTab;
   Game = Game;
-  EnergyType = EnergyType;
   ObjectiveUnit = ObjectiveUnit;
   rational = rational;
 

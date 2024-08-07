@@ -65,7 +65,8 @@
             "allowedCommonJsDependencies": [
               "@sideway/formula",
               "component-emitter",
-              "elkjs/lib/elk.bundled",
+              "cytoscape-elk",
+              "deep-freeze-strict",
               "file-saver",
               "glpk-ts"
             ],

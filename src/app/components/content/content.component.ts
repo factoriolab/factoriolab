@@ -15,8 +15,6 @@ import { ToastModule } from 'primeng/toast';
 
 import { TranslatePipe } from '~/pipes';
 import { ContentService } from '~/services';
-import { ColumnsComponent } from '../columns/columns.component';
-import { CostsComponent } from '../costs/costs.component';
 
 /**
  * Workaround for https://github.com/primefaces/primeng/issues/12114.
@@ -39,13 +37,7 @@ OrderList.prototype.onSpaceKey = function (): void {};
 @Component({
   selector: 'lab-content',
   standalone: true,
-  imports: [
-    ConfirmDialogModule,
-    ToastModule,
-    ColumnsComponent,
-    CostsComponent,
-    TranslatePipe,
-  ],
+  imports: [ConfirmDialogModule, ToastModule, TranslatePipe],
   templateUrl: './content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [ConfirmationService, MessageService],

@@ -74,6 +74,7 @@ import {
 } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 import { BeaconsOverlayComponent } from '../beacons-overlay/beacons-overlay.component';
+import { CostsComponent } from '../costs/costs.component';
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { ModulesOverlayComponent } from '../modules-overlay/modules-overlay.component';
 import { PickerComponent } from '../picker/picker.component';
@@ -100,6 +101,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     TableModule,
     TooltipModule,
     BeaconsOverlayComponent,
+    CostsComponent,
     DropdownBaseDirective,
     DropdownTranslateDirective,
     FilterOptionsPipe,
