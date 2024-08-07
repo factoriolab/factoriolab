@@ -1,15 +1,37 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { InputNumberComponent } from '~/components';
 import { coalesce } from '~/helpers';
 import { Game, Rational, Recipe, RecipeSettings } from '~/models';
+import {
+  IconClassPipe,
+  IconSmClassPipe,
+  RoundPipe,
+  TranslatePipe,
+  UsagePipe,
+} from '~/pipes';
 import { Recipes } from '~/store';
 import { DetailComponent } from '../../models';
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule],
+  imports: [
+    FormsModule,
+    BreadcrumbModule,
+    ButtonModule,
+    CheckboxModule,
+    IconClassPipe,
+    IconSmClassPipe,
+    InputNumberComponent,
+    RoundPipe,
+    TranslatePipe,
+    UsagePipe,
+  ],
   templateUrl: './recipe.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

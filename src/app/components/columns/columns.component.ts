@@ -6,7 +6,13 @@ import {
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { TableModule } from 'primeng/table';
 import { tap, withLatestFrom } from 'rxjs';
 
 import {
@@ -17,12 +23,24 @@ import {
   Entities,
   initialColumnsState,
 } from '~/models';
+import { PrecisionExamplePipe, TranslatePipe } from '~/pipes';
 import { ContentService } from '~/services';
 import { Preferences, Settings } from '~/store';
 import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-columns',
+  standalone: true,
+  imports: [
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    DialogModule,
+    InputNumberModule,
+    TableModule,
+    PrecisionExamplePipe,
+    TranslatePipe,
+  ],
   templateUrl: './columns.component.html',
   styleUrls: ['./columns.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

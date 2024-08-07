@@ -20,7 +20,7 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./routes/main/main.module').then((m) => m.MainModule),
+      import('./routes/main/main.routes').then((m) => m.routes),
   },
   {
     path: 'factorio',

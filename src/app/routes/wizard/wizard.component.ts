@@ -1,9 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { DividerModule } from 'primeng/divider';
+import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { InputNumberComponent, PickerComponent } from '~/components';
+import { DropdownTranslateDirective } from '~/directives';
 import {
   DisplayRate,
   displayRateOptions,
@@ -11,13 +17,27 @@ import {
   ObjectiveUnit,
   rational,
 } from '~/models';
+import { IconClassPipe, TranslatePipe } from '~/pipes';
 import { Objectives, Recipes, Settings } from '~/store';
 
 export type WizardState = 'type' | 'item' | 'recipe';
 
 @Component({
   standalone: true,
-  imports: [RadioButtonModule, StepsModule, AppSharedModule],
+  imports: [
+    FormsModule,
+    ButtonModule,
+    CardModule,
+    DividerModule,
+    DropdownModule,
+    RadioButtonModule,
+    StepsModule,
+    DropdownTranslateDirective,
+    IconClassPipe,
+    InputNumberComponent,
+    PickerComponent,
+    TranslatePipe,
+  ],
   templateUrl: './wizard.component.html',
   styleUrls: ['./wizard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

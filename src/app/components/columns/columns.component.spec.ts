@@ -12,8 +12,7 @@ describe('ColumnsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ColumnsComponent],
-      imports: [TestModule],
+      imports: [TestModule, ColumnsComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ColumnsComponent);

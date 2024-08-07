@@ -1,18 +1,20 @@
-import { AsRecipePipe } from './as-recipe.pipe';
-import { BonusPercentPipe } from './bonus-percent.pipe';
-import { IconClassPipe, IconSmClassPipe } from './icon-class.pipe';
-import { PrecisionExamplePipe } from './precision-example.pipe';
-import { RoundPipe } from './round.pipe';
-import { TranslatePipe } from './translate.pipe';
-import { UsagePipe } from './usage.pipe';
-
-export const pipes = [
-  AsRecipePipe,
-  BonusPercentPipe,
-  IconClassPipe,
-  IconSmClassPipe,
-  PrecisionExamplePipe,
-  RoundPipe,
-  TranslatePipe,
-  UsagePipe,
-];
+export * from './as-recipe.pipe';
+export * from './as-step.pipe';
+export * from './bonus-percent.pipe';
+export * from './filter-options.pipe';
+export * from './icon-class.pipe';
+export * from './inserter-speed.pipe';
+export * from './left-pad.pipe';
+export * from './machine-rate.pipe';
+export * from './machine-show-rate.pipe';
+export * from './machine-show.pipe';
+export * from './module-options.pipe';
+export * from './options.pipe';
+export * from './power.pipe';
+export * from './precision-example.pipe';
+export * from './rate.pipe';
+export * from './round.pipe';
+export * from './step-href.pipe';
+export * from './step-id.pipe';
+export * from './translate.pipe';
+export * from './usage.pipe';

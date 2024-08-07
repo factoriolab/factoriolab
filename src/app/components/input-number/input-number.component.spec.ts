@@ -16,8 +16,7 @@ describe('InputNumberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InputNumberComponent],
-      imports: [TestModule],
+      imports: [TestModule, InputNumberComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InputNumberComponent);

@@ -5,16 +5,33 @@ import {
   OnInit,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
 import { tap, withLatestFrom } from 'rxjs';
 
 import { CostKey, CostSettings, Rational, rational } from '~/models';
+import { TranslatePipe } from '~/pipes';
 import { ContentService } from '~/services';
 import { Settings } from '~/store';
+import { InputNumberComponent } from '../input-number/input-number.component';
 import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-costs',
+  standalone: true,
+  imports: [
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    DialogModule,
+    TooltipModule,
+    InputNumberComponent,
+    TranslatePipe,
+  ],
   templateUrl: './costs.component.html',
   styleUrls: ['./costs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

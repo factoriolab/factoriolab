@@ -7,7 +7,6 @@ import {
 import { select } from 'd3';
 
 import { Mocks, TestModule, TestUtility } from 'src/tests';
-import { AppSharedModule } from '~/app-shared.module';
 import {
   sankeyCenter,
   sankeyJustify,
@@ -25,7 +24,7 @@ describe('FlowComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestModule, AppSharedModule, FlowComponent],
+      imports: [TestModule, FlowComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(FlowComponent);

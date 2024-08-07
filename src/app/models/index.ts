@@ -3,6 +3,7 @@ export * from './enum';
 export * from './settings';
 
 export * from './app-data';
+export * from './collection-item';
 export * from './constants';
 export * from './dataset';
 export * from './defaults';

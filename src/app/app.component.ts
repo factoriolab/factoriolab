@@ -5,7 +5,7 @@ import { tap } from 'rxjs';
 
 import { environment } from 'src/environments';
 import { Preferences, Settings } from '~/store';
-import { AppSharedModule } from './app-shared.module';
+import { ContentComponent } from './components';
 import {
   AnalyticsService,
   RouterService,
@@ -17,7 +17,7 @@ import { BrowserUtility } from './utilities';
 @Component({
   selector: 'lab-root',
   standalone: true,
-  imports: [RouterOutlet, AppSharedModule],
+  imports: [RouterOutlet, ContentComponent],
   template: `
     <router-outlet></router-outlet>
     <lab-content></lab-content>

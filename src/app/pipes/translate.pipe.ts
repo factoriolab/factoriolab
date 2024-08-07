@@ -14,6 +14,7 @@ import { InterpolateVal, TranslateService } from '~/services';
 
 @Pipe({
   name: 'translate',
+  standalone: true,
   pure: false,
 })
 export class TranslatePipe implements PipeTransform {

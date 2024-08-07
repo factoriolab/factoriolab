@@ -1,14 +1,20 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { CollectionTableComponent } from '~/components';
 import { Category } from '~/models';
-import { DataSharedModule } from '../../data-shared.module';
+import { IconClassPipe, TranslatePipe } from '~/pipes';
 import { DetailComponent } from '../../models';
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule, DataSharedModule],
+  imports: [
+    BreadcrumbModule,
+    CollectionTableComponent,
+    IconClassPipe,
+    TranslatePipe,
+  ],
   templateUrl: './category.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

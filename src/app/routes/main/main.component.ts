@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -8,14 +9,37 @@ import {
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TabMenuModule } from 'primeng/tabmenu';
 import { map } from 'rxjs';
 
+import {
+  HeaderComponent,
+  ObjectivesComponent,
+  SettingsComponent,
+} from '~/components';
 import { SimplexResultType } from '~/models';
+import { TranslatePipe } from '~/pipes';
 import { ContentService, ErrorService, TranslateService } from '~/services';
 import { App, Objectives, Settings } from '~/store';
 
 @Component({
-  selector: 'lab-main',
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    ButtonModule,
+    CardModule,
+    DialogModule,
+    ProgressSpinnerModule,
+    TabMenuModule,
+    HeaderComponent,
+    ObjectivesComponent,
+    SettingsComponent,
+    TranslatePipe,
+  ],
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

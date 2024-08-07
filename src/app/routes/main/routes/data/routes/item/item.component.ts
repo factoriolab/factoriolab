@@ -1,7 +1,12 @@
+import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { CollectionTableComponent } from '~/components';
 import { coalesce } from '~/helpers';
 import {
   Category,
@@ -11,13 +16,33 @@ import {
   ItemSettings,
   MachineSettings,
 } from '~/models';
+import {
+  BonusPercentPipe,
+  IconClassPipe,
+  IconSmClassPipe,
+  RoundPipe,
+  TranslatePipe,
+  UsagePipe,
+} from '~/pipes';
 import { Items, Machines } from '~/store';
-import { DataSharedModule } from '../../data-shared.module';
 import { DetailComponent } from '../../models';
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule, DataSharedModule],
+  imports: [
+    FormsModule,
+    KeyValuePipe,
+    BreadcrumbModule,
+    ButtonModule,
+    CheckboxModule,
+    BonusPercentPipe,
+    CollectionTableComponent,
+    IconClassPipe,
+    IconSmClassPipe,
+    RoundPipe,
+    TranslatePipe,
+    UsagePipe,
+  ],
   templateUrl: './item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

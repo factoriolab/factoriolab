@@ -1,8 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DividerModule } from 'primeng/divider';
+import { DropdownModule } from 'primeng/dropdown';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { PickerComponent } from '~/components';
 import {
   Game,
   gameInfo,
@@ -10,13 +17,26 @@ import {
   ObjectiveBase,
   ObjectiveUnit,
 } from '~/models';
+import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService, RouterService } from '~/services';
 import { Objectives, Preferences, Recipes, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule],
+  imports: [
+    FormsModule,
+    RouterLink,
+    ButtonModule,
+    CardModule,
+    CheckboxModule,
+    DividerModule,
+    DropdownModule,
+    ProgressSpinnerModule,
+    IconSmClassPipe,
+    PickerComponent,
+    TranslatePipe,
+  ],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -14,8 +14,7 @@ describe('PickerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PickerComponent],
-      imports: [TestModule],
+      imports: [TestModule, PickerComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PickerComponent);

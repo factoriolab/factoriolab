@@ -7,11 +7,16 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
+import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { TooltipModule } from 'primeng/tooltip';
 import { combineLatest, map } from 'rxjs';
 
 import { APP, Game, gameInfo, gameOptions, isRecipeObjective } from '~/models';
+import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService, TranslateService } from '~/services';
 import { Objectives, Settings } from '~/store';
 
@@ -23,6 +28,15 @@ interface MenuLink {
 
 @Component({
   selector: 'lab-header',
+  standalone: true,
+  imports: [
+    RouterLink,
+    ButtonModule,
+    SplitButtonModule,
+    TooltipModule,
+    IconSmClassPipe,
+    TranslatePipe,
+  ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

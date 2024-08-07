@@ -8,8 +8,8 @@ import { map, switchMap } from 'rxjs';
 import { TranslateService } from '~/services';
 import { Recipes, Settings } from '~/store';
 
-@Component({ selector: 'lab-detail', template: '' })
-export class DetailComponent {
+@Component({ template: '' })
+export abstract class DetailComponent {
   route = inject(ActivatedRoute);
   translateSvc = inject(TranslateService);
   store = inject(Store);

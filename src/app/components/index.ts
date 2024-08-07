@@ -1,19 +1,17 @@
-import { ColumnsComponent } from './columns/columns.component';
-import { ContentComponent } from './content/content.component';
-import { CostsComponent } from './costs/costs.component';
-import { HeaderComponent } from './header/header.component';
-import { InputNumberComponent } from './input-number/input-number.component';
-import { PickerComponent } from './picker/picker.component';
-import { TooltipComponent } from './tooltip/tooltip.component';
-
+export * from './beacons-overlay/beacons-overlay.component';
+export * from './collection-table/collection-table.component';
+export * from './columns/columns.component';
+export * from './content/content.component';
+export * from './costs/costs.component';
+export * from './flow-settings/flow-settings.component';
+export * from './header/header.component';
+export * from './input-number/input-number.component';
 export * from './modal';
-
-export const components = [
-  ColumnsComponent,
-  ContentComponent,
-  CostsComponent,
-  HeaderComponent,
-  InputNumberComponent,
-  PickerComponent,
-  TooltipComponent,
-];
+export * from './modules/modules.component';
+export * from './modules-overlay/modules-overlay.component';
+export * from './objectives/objectives.component';
+export * from './picker/picker.component';
+export * from './settings/settings.component';
+export * from './steps/steps.component';
+export * from './tech-picker/tech-picker.component';
+export * from './tooltip/tooltip.component';

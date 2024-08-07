@@ -9,17 +9,17 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { map, switchMap } from 'rxjs';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { CollectionTableComponent } from '~/components';
 import { Dataset, IdType } from '~/models';
 import { TranslateService } from '~/services';
 import { Recipes, Settings } from '~/store';
-import { DataSharedModule } from '../../data-shared.module';
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule, DataSharedModule],
+  imports: [BreadcrumbModule, CollectionTableComponent],
   templateUrl: './collection.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -10,6 +10,7 @@ import { Rational, rational } from '~/models';
 
 @Directive({
   selector: '[labValidateNumber][ngModel]',
+  standalone: true,
   providers: [
     {
       provide: NG_VALIDATORS,

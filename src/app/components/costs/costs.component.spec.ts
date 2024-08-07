@@ -13,8 +13,7 @@ describe('CostsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CostsComponent],
-      imports: [TestModule],
+      imports: [TestModule, CostsComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CostsComponent);

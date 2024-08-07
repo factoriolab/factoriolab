@@ -4,7 +4,7 @@ import { Rational } from '~/models';
 import { DisplayService } from '~/services';
 
 /** Used in tooltips / data pages to format strings describing module effects */
-@Pipe({ name: 'bonusPercent' })
+@Pipe({ name: 'bonusPercent', standalone: true })
 export class BonusPercentPipe implements PipeTransform {
   displaySvc = inject(DisplayService);
 

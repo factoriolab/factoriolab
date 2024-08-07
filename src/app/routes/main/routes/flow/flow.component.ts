@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -16,9 +17,11 @@ import cytoscape from 'cytoscape';
 import elk from 'cytoscape-elk';
 import { drag, select, Selection, zoom } from 'd3';
 import { saveAs } from 'file-saver';
+import { ButtonModule } from 'primeng/button';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { combineLatest, debounceTime, delay, Subject } from 'rxjs';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { FlowSettingsComponent, StepsComponent } from '~/components';
 import {
   sankey,
   sankeyCenter,
@@ -41,10 +44,9 @@ import {
   Node,
   SankeyAlign,
 } from '~/models';
+import { TranslatePipe } from '~/pipes';
 import { DisplayService, ExportService, FlowService } from '~/services';
 import { Preferences } from '~/store';
-import { MainSharedModule } from '../../main-shared.module';
-import { FlowSettingsComponent } from './components/flow-settings/flow-settings.component';
 
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
@@ -52,7 +54,14 @@ cytoscape.use(elk);
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule, MainSharedModule, FlowSettingsComponent],
+  imports: [
+    AsyncPipe,
+    ButtonModule,
+    ProgressSpinnerModule,
+    FlowSettingsComponent,
+    StepsComponent,
+    TranslatePipe,
+  ],
   templateUrl: './flow.component.html',
   styleUrls: ['./flow.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

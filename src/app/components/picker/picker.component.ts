@@ -8,16 +8,42 @@ import {
   Output,
   viewChild,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { TabViewModule } from 'primeng/tabview';
+import { TooltipModule } from 'primeng/tooltip';
 
+import { TabViewOverrideDirective } from '~/directives';
 import { Category, Entities } from '~/models';
+import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService } from '~/services';
 import { Recipes } from '~/store';
 import { DialogComponent } from '../modal';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'lab-picker',
+  standalone: true,
+  imports: [
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    DialogModule,
+    InputTextModule,
+    ScrollPanelModule,
+    TooltipModule,
+    TabViewModule,
+    IconSmClassPipe,
+    TabViewOverrideDirective,
+    TooltipComponent,
+    TranslatePipe,
+  ],
   templateUrl: './picker.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

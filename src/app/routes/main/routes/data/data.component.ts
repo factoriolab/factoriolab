@@ -1,10 +1,23 @@
+import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { ButtonModule } from 'primeng/button';
+import { TableModule } from 'primeng/table';
 
+import { TranslatePipe } from '~/pipes';
 import { Settings } from '~/store';
 
 @Component({
+  standalone: true,
+  imports: [
+    KeyValuePipe,
+    BreadcrumbModule,
+    ButtonModule,
+    TableModule,
+    TranslatePipe,
+  ],
   templateUrl: './data.component.html',
   styleUrls: ['./data.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
