@@ -38,7 +38,7 @@ describe('TranslateService', () => {
   describe('_getLangData', () => {
     it('should set up an http request for language data', () => {
       service['_getLangData']('en').subscribe();
-      const req = http.expectOne('/assets/i18n/en.json');
+      const req = http.expectOne('assets/i18n/en.json');
       expect(req.request.method).toEqual('GET');
     });
   });
@@ -72,7 +72,7 @@ describe('TranslateService', () => {
       let result: string | undefined;
       service.use('de');
       service.get('ok').subscribe((r) => (result = r));
-      http.expectOne('/assets/i18n/de.json').flush(MockLangData);
+      http.expectOne('assets/i18n/de.json').flush(MockLangData);
       expect(result).toEqual('OK');
     });
 
@@ -80,8 +80,8 @@ describe('TranslateService', () => {
       let result: string | undefined;
       service.use('de');
       service.get('ok').subscribe((r) => (result = r));
-      http.expectOne('/assets/i18n/de.json').flush({});
-      http.expectOne('/assets/i18n/en.json').flush(MockLangData);
+      http.expectOne('assets/i18n/de.json').flush({});
+      http.expectOne('assets/i18n/en.json').flush(MockLangData);
       expect(result).toEqual('OK');
     });
 
@@ -89,8 +89,8 @@ describe('TranslateService', () => {
       let result: string | undefined;
       service.use('de');
       service.get('asdf').subscribe((r) => (result = r));
-      http.expectOne('/assets/i18n/de.json').flush({});
-      http.expectOne('/assets/i18n/en.json').flush(MockLangData);
+      http.expectOne('assets/i18n/de.json').flush({});
+      http.expectOne('assets/i18n/en.json').flush(MockLangData);
       expect(result).toEqual('asdf');
     });
   });
@@ -99,7 +99,7 @@ describe('TranslateService', () => {
     it('should get multiple translation strings at once', () => {
       let result: [string, string] | undefined;
       service.multi(['ok', 'app.list']).subscribe((r) => (result = r));
-      http.expectOne('/assets/i18n/en.json').flush(MockLangData);
+      http.expectOne('assets/i18n/en.json').flush(MockLangData);
       expect(result).toEqual(['OK', 'List']);
     });
   });
