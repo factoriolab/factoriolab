@@ -115,6 +115,7 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "~5.5.3"
   },
+  "sideEffects": false,
   "browser": {
     "crypto": false,
     "fs": false,

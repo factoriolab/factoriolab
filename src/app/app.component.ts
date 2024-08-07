@@ -5,7 +5,7 @@ import { tap } from 'rxjs';
 
 import { environment } from 'src/environments';
 import { Preferences, Settings } from '~/store';
-import { ContentComponent } from './components/content/content.component';
+import { ContentComponent } from './components';
 import {
   AnalyticsService,
   RouterService,
