@@ -1495,21 +1495,6 @@ describe('RouterService', () => {
     });
   });
 
-  describe('zipDiffRank', () => {
-    it('should handle default', () => {
-      expect(service.zipDiffRank(['a', 'b'], ['a', 'b'])).toEqual('');
-    });
-
-    it('should handle falsy', () => {
-      expect(service.zipDiffRank(undefined, [])).toEqual(NULL);
-      expect(service.zipDiffRank([], undefined)).toEqual(EMPTY);
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipDiffRank(['a', 'b'], ['b', 'a'])).toEqual('a~b');
-    });
-  });
-
   describe('zipDiffNString', () => {
     it('should handle default', () => {
       expect(service.zipDiffNString('a', 'a', [])).toEqual('');
@@ -1554,23 +1539,6 @@ describe('RouterService', () => {
       expect(
         service.zipDiffNullableNArray(['b', 'a'], ['a', 'c'], ['a', 'b']),
       ).toEqual('A~B');
-    });
-  });
-
-  describe('zipDiffNRank', () => {
-    it('should handle default', () => {
-      expect(service.zipDiffNRank(['a', 'b'], ['a', 'b'], [])).toEqual('');
-    });
-
-    it('should handle falsy', () => {
-      expect(service.zipDiffNRank(undefined, [], [])).toEqual(NULL);
-      expect(service.zipDiffNRank([], undefined, [])).toEqual(EMPTY);
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipDiffNRank(['b', 'a'], ['a', 'c'], ['a', 'b'])).toEqual(
-        'B~A',
-      );
     });
   });
 

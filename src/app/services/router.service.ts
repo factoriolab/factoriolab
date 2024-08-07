@@ -2113,12 +2113,6 @@ export class RouterService {
     return zVal === zInit ? '' : zVal;
   }
 
-  zipDiffRank(value: string[] | undefined, init: string[] | undefined): string {
-    const zVal = value ? (value.length ? value.join(ARRAYSEP) : EMPTY) : NULL;
-    const zInit = init ? (init.length ? init.join(ARRAYSEP) : EMPTY) : NULL;
-    return zVal === zInit ? '' : zVal;
-  }
-
   zipDiffNString(
     value: string | undefined,
     init: string | undefined,
@@ -2158,24 +2152,6 @@ export class RouterService {
               .join(ARRAYSEP)
           : EMPTY
         : NULL;
-    return zVal === zInit ? '' : zVal;
-  }
-
-  zipDiffNRank(
-    value: string[] | undefined,
-    init: string[] | undefined,
-    hash: string[],
-  ): string {
-    const zVal = value
-      ? value.length
-        ? value.map((v) => this.getId(hash.indexOf(v))).join(ARRAYSEP)
-        : EMPTY
-      : NULL;
-    const zInit = init
-      ? init.length
-        ? init.map((v) => this.getId(hash.indexOf(v))).join(ARRAYSEP)
-        : EMPTY
-      : NULL;
     return zVal === zInit ? '' : zVal;
   }
 
