@@ -38,7 +38,6 @@ import {
   DisplayRate,
   displayRateOptions,
   Entities,
-  FuelType,
   Game,
   gameInfo,
   gameOptions,
@@ -192,7 +191,6 @@ export class SettingsComponent implements OnInit {
   themeOptions = themeOptions;
   maximizeTypeOptions = maximizeTypeOptions;
 
-  FuelType = FuelType;
   Game = Game;
   ItemId = ItemId;
   BrowserUtility = BrowserUtility;

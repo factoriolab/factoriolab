@@ -2,7 +2,6 @@ export * from './breakpoint';
 export * from './display-rate';
 export * from './energy-type';
 export * from './flow-diagram';
-export * from './fuel-type';
 export * from './game';
 export * from './id-type';
 export * from './inserter-capacity';
