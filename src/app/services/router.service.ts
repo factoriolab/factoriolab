@@ -12,7 +12,6 @@ import {
   DisplayRate,
   Entities,
   Game,
-  IdValueDefaultPayload,
   isRecipeObjective,
   ItemSettings,
   MachineSettings,
@@ -30,7 +29,6 @@ import {
   App,
   Datasets,
   Items,
-  LabState,
   Machines,
   Objectives,
   Preferences,
@@ -131,7 +129,7 @@ export interface MigrationState {
 export class RouterService {
   router = inject(Router);
   analyticsSvc = inject(AnalyticsService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   translateSvc = inject(TranslateService);
   contentSvc = inject(ContentService);
   dataSvc = inject(DataService);
@@ -184,27 +182,32 @@ export class RouterService {
     this.fixV8ExcludedRecipes$
       .pipe(
         switchMap(() =>
-          this.store.select(Settings.getMod).pipe(
+          this.store.select(Settings.selectMod).pipe(
+            // eslint-disable-next-line @ngrx/avoid-mapping-selectors
             map((m) => m?.defaults),
             filterNullish(),
             first(),
           ),
         ),
         switchMap(() =>
-          combineLatest([
-            this.store.select(Recipes.recipesState),
-            this.store.select(Recipes.getRecipesState),
-          ]).pipe(first()),
+          combineLatest({
+            recipesRaw: this.store.select(Recipes.recipesState),
+            recipesState: this.store.select(Recipes.selectRecipesState),
+          }).pipe(first()),
         ),
-        tap(([recipesRaw, recipesState]) => {
-          const payload: IdValueDefaultPayload<boolean>[] = [];
+        tap(({ recipesRaw, recipesState }) => {
+          const values: {
+            id: string;
+            value: boolean;
+            def: boolean | undefined;
+          }[] = [];
           for (const id of Object.keys(recipesState)) {
             const value = recipesState[id].excluded;
             if (value && !recipesRaw[id]?.excluded) {
-              payload.push({ id, value: false, def: true });
+              values.push({ id, value: false, def: true });
             }
           }
-          this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
+          this.store.dispatch(Recipes.setExcludedBatch({ values }));
         }),
       )
       .subscribe();
@@ -217,7 +220,7 @@ export class RouterService {
       .pipe(
         first(),
         tap(() => this.dataSvc.initialize()),
-        switchMap(() => this.store.select(Objectives.getZipState)),
+        switchMap(() => this.store.select(Objectives.selectZipState)),
         debounceTime(0),
         tap((s) =>
           this.updateUrl(
@@ -232,7 +235,7 @@ export class RouterService {
       .subscribe();
 
     this.store
-      .select(Preferences.getStates)
+      .select(Preferences.selectStates)
       .pipe(first())
       .subscribe((states) => this.migrateOldStates(states));
   }
@@ -241,7 +244,7 @@ export class RouterService {
   migrateOldStates(states: Record<Game, Entities<string>>): void {
     if (
       Object.keys(states).every(
-        (k) => Preferences.initialPreferencesState.states[k as Game] != null,
+        (k) => Preferences.initialState.states[k as Game] != null,
       )
     )
       return; // Does not need to be migrated
@@ -268,9 +271,9 @@ export class RouterService {
     }
 
     this.store.dispatch(
-      new Preferences.SetStatesAction(
-        migratingStates as unknown as Record<Game, Entities<string>>,
-      ),
+      Preferences.setStates({
+        states: migratingStates as unknown as Record<Game, Entities<string>>,
+      }),
     );
   }
 
@@ -291,7 +294,7 @@ export class RouterService {
       if (matchModId == null) return;
 
       const zipModId = matchModId[2];
-      return this.parseNString(zipModId, data.hash);
+      return this.parseNString(zipModId, data.modHash);
     } else {
       // Unzipped saved state
       const match = state.match('s=(.+?)(&|$)');
@@ -340,7 +343,7 @@ export class RouterService {
     machinesState: Machines.MachinesState,
     settings: Settings.SettingsState,
   ): Observable<ZipData> {
-    return this.store.select(Datasets.getHashRecord).pipe(
+    return this.store.select(Datasets.selectHash).pipe(
       map((hashEntities) => hashEntities[settings.modId]),
       filter((hash): hash is ModHash => hash != null),
       first(),
@@ -362,11 +365,11 @@ export class RouterService {
         // Mod (Hashed only, for hash lookup)
         const zMod = this.zipDiffString(
           settings.modId,
-          Settings.initialSettingsState.modId,
+          Settings.initialState.modId,
         );
         if (zMod.length) {
           zData.config.hash += `&${Section.Mod}${this.getId(
-            data.hash.indexOf(zMod),
+            data.modHash.indexOf(zMod),
           )}`;
         }
 
@@ -511,9 +514,9 @@ export class RouterService {
             }
             this.dispatch(zip, state);
           } else {
-            const modId = this.parseNString(params[Section.Mod], data.hash);
+            const modId = this.parseNString(params[Section.Mod], data.modHash);
             this.dataSvc
-              .requestData(modId || Settings.initialSettingsState.modId)
+              .requestData(modId || Settings.initialState.modId)
               .subscribe(([_, hash]) => {
                 const moduleSettings = this.unzipModules(params, hash);
                 const beaconSettings = this.unzipBeacons(
@@ -571,9 +574,9 @@ export class RouterService {
     }
   }
 
-  dispatch(zip: string, state: App.PartialState): void {
+  dispatch(zip: string, partial: App.PartialState): void {
     this.zip = zip;
-    this.store.dispatch(new App.LoadAction(state));
+    this.store.dispatch(App.load({ partial }));
     this.ready$.next();
   }
 
@@ -625,14 +628,14 @@ export class RouterService {
       const s = zip.split(FIELDSEP);
       // Convert modId to V1
       let modId = this.parseString(s[0]);
-      modId = modId && data.hash[data.v0.indexOf(modId)];
+      modId = modId && data.modHash[data.modHashV0.indexOf(modId)];
       modId = modId ?? NULL;
       // Convert displayRate to V1
       const displayRateV0 =
-        this.parseNumber(s[6]) ?? Settings.initialSettingsState.displayRate;
+        this.parseNumber(s[6]) ?? Settings.initialState.displayRate;
       const displayRateV1 = this.zipDiffDisplayRate(
         displayRateV0,
-        Settings.initialSettingsState.displayRate,
+        Settings.initialState.displayRate,
       );
       params[Section.Settings] = this.zipFields([
         modId,
@@ -1825,7 +1828,7 @@ export class RouterService {
     state: Settings.SettingsState,
     hash: ModHash,
   ): void {
-    const init = Settings.initialSettingsState;
+    const init = Settings.initialState;
     const displayRate = this.zipDiffDisplayRate(
       state.displayRate,
       init.displayRate,

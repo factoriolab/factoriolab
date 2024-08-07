@@ -1,74 +1,31 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
-import { IdValueDefaultPayload, IdValuePayload } from '~/models';
-
-export const enum ItemsActionType {
-  SET_EXCLUDED = '[Items] Set Excluded',
-  SET_EXCLUDED_BATCH = '[Items] Set Excluded Batch',
-  SET_CHECKED = '[Items] Set Checked',
-  SET_BELT = '[Items] Set Belt',
-  SET_WAGON = '[Items] Set Wagon',
-  RESET_ITEM = '[Items] Reset Item',
-  RESET_EXCLUDED = '[Items] Reset Excluded',
-  RESET_CHECKED = '[Items] Reset Checked',
-  RESET_BELTS = '[Items] Reset Belts',
-  RESET_WAGONS = '[Items] Reset Wagon',
-}
-
-export class SetExcludedAction implements Action {
-  readonly type = ItemsActionType.SET_EXCLUDED;
-  constructor(public payload: IdValuePayload<boolean>) {}
-}
-
-export class SetExcludedBatchAction implements Action {
-  readonly type = ItemsActionType.SET_EXCLUDED_BATCH;
-  constructor(public payload: IdValuePayload<boolean>[]) {}
-}
-
-export class SetCheckedAction implements Action {
-  readonly type = ItemsActionType.SET_CHECKED;
-  constructor(public payload: IdValuePayload<boolean>) {}
-}
-
-export class SetBeltAction implements Action {
-  readonly type = ItemsActionType.SET_BELT;
-  constructor(public payload: IdValueDefaultPayload) {}
-}
-
-export class SetWagonAction implements Action {
-  readonly type = ItemsActionType.SET_WAGON;
-  constructor(public payload: IdValueDefaultPayload) {}
-}
-
-export class ResetItemAction implements Action {
-  readonly type = ItemsActionType.RESET_ITEM;
-  constructor(public payload: string) {}
-}
-
-export class ResetExcludedAction implements Action {
-  readonly type = ItemsActionType.RESET_EXCLUDED;
-}
-
-export class ResetCheckedAction implements Action {
-  readonly type = ItemsActionType.RESET_CHECKED;
-}
-
-export class ResetBeltsAction implements Action {
-  readonly type = ItemsActionType.RESET_BELTS;
-}
-
-export class ResetWagonsAction implements Action {
-  readonly type = ItemsActionType.RESET_WAGONS;
-}
-
-export type ItemsAction =
-  | SetExcludedAction
-  | SetExcludedBatchAction
-  | SetCheckedAction
-  | SetBeltAction
-  | SetWagonAction
-  | ResetItemAction
-  | ResetExcludedAction
-  | ResetCheckedAction
-  | ResetBeltsAction
-  | ResetWagonsAction;
+const key = '[Items]';
+export const setExcluded = createAction(
+  `${key} Set Excluded`,
+  props<{ id: string; value: boolean }>(),
+);
+export const setExcludedBatch = createAction(
+  `${key} Set Excluded Batch`,
+  props<{ values: { id: string; value: boolean }[] }>(),
+);
+export const setChecked = createAction(
+  `${key} Set Checked`,
+  props<{ id: string; value: boolean }>(),
+);
+export const setBelt = createAction(
+  `${key} Set Belt`,
+  props<{ id: string; value: string; def: string | undefined }>(),
+);
+export const setWagon = createAction(
+  `${key} Set Wagon`,
+  props<{ id: string; value: string; def: string | undefined }>(),
+);
+export const resetItem = createAction(
+  `${key} Reset Item`,
+  props<{ id: string }>(),
+);
+export const resetExcluded = createAction(`${key} Reset Excluded`);
+export const resetChecked = createAction(`${key} Reset Checked`);
+export const resetBelts = createAction(`${key} Reset Belts`);
+export const resetWagons = createAction(`${key} Reset Wagons`);

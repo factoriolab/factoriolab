@@ -14,14 +14,7 @@ import {
   Rational,
   Step,
 } from '~/models';
-import {
-  Items,
-  LabState,
-  Objectives,
-  Preferences,
-  Recipes,
-  Settings,
-} from '~/store';
+import { Items, Objectives, Preferences, Recipes, Settings } from '~/store';
 import { ThemeService, ThemeValues } from './theme.service';
 import { TranslateService } from './translate.service';
 
@@ -30,17 +23,17 @@ import { TranslateService } from './translate.service';
 })
 export class FlowService {
   translateSvc = inject(TranslateService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   themeSvc = inject(ThemeService);
 
   flowData$ = combineLatest({
-    steps: this.store.select(Objectives.getSteps),
+    steps: this.store.select(Objectives.selectSteps),
     suffix: this.store
-      .select(Settings.getDisplayRateInfo)
+      .select(Settings.selectDisplayRateInfo)
       .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
-    itemsState: this.store.select(Items.getItemsState),
+    itemsState: this.store.select(Items.selectItemsState),
     preferences: this.store.select(Preferences.preferencesState),
-    data: this.store.select(Recipes.getAdjustedDataset),
+    data: this.store.select(Recipes.selectAdjustedDataset),
     themeValues: this.themeSvc.themeValues$,
   }).pipe(
     map(({ steps, suffix, itemsState, preferences, data, themeValues }) =>

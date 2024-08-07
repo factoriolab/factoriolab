@@ -8,7 +8,7 @@ import {
 import { Store } from '@ngrx/store';
 
 import { Category, Entities, IdType, Item, RecipeJson } from '~/models';
-import { LabState, Settings } from '~/store';
+import { Settings } from '~/store';
 import { CollectionItem } from '../../models';
 
 type Entity = Category | Item | RecipeJson;
@@ -20,14 +20,14 @@ type Entity = Category | Item | RecipeJson;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionTableComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
   ids = input.required<string[]>();
   type = input.required<IdType>();
   useRelativePath = input(false);
 
-  options = this.store.selectSignal(Settings.getOptions);
-  data = this.store.selectSignal(Settings.getDataset);
+  options = this.store.selectSignal(Settings.selectOptions);
+  data = this.store.selectSignal(Settings.selectDataset);
 
   route = computed(() => {
     const type = this.type();

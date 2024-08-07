@@ -36,27 +36,31 @@ describe('WizardComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
+    dispatch.props('setDisplayRate', Settings.setDisplayRate);
     dispatch.spy.calls.reset();
     component.createItemObjective(ItemId.IronPlate);
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-      new Objectives.CreateAction({
-        id: '0',
-        targetId: ItemId.IronPlate,
-        value: rational.one,
-        unit: ObjectiveUnit.Items,
-        type: ObjectiveType.Output,
+      Objectives.create({
+        objective: {
+          id: '0',
+          targetId: ItemId.IronPlate,
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        },
       }),
     );
     dispatch.spy.calls.reset();
     component.createRecipeObjective(RecipeId.IronPlate);
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-      new Objectives.CreateAction({
-        id: '0',
-        targetId: ItemId.IronPlate,
-        value: rational.one,
-        unit: ObjectiveUnit.Machines,
-        type: ObjectiveType.Output,
+      Objectives.create({
+        objective: {
+          id: '0',
+          targetId: ItemId.IronPlate,
+          value: rational.one,
+          unit: ObjectiveUnit.Machines,
+          type: ObjectiveType.Output,
+        },
       }),
     );
   });

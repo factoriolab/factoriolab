@@ -12,7 +12,7 @@ import { map } from 'rxjs';
 
 import { SimplexResultType } from '~/models';
 import { ContentService, ErrorService, TranslateService } from '~/services';
-import { App, LabState, Objectives, Settings } from '~/store';
+import { App, Objectives, Settings } from '~/store';
 
 @Component({
   selector: 'lab-main',
@@ -25,13 +25,13 @@ export class MainComponent {
   ngZone = inject(NgZone);
   ref = inject(ChangeDetectorRef);
   router = inject(Router);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   errorSvc = inject(ErrorService);
   translateSvc = inject(TranslateService);
 
-  gameInfo = this.store.selectSignal(Settings.getGameInfo);
-  mod = this.store.selectSignal(Settings.getMod);
-  result = this.store.selectSignal(Objectives.getMatrixResult);
+  gameInfo = this.store.selectSignal(Settings.selectGameInfo);
+  mod = this.store.selectSignal(Settings.selectMod);
+  result = this.store.selectSignal(Objectives.selectMatrixResult);
 
   isResetting = false;
 
@@ -69,7 +69,7 @@ export class MainComponent {
       this.ngZone.run(() => {
         this.errorSvc.message.set(null);
         this.router.navigateByUrl(this.gameInfo().route);
-        this.store.dispatch(new App.ResetAction());
+        this.store.dispatch(App.reset());
         this.isResetting = false;
       });
     }, 10);

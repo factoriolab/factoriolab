@@ -4,7 +4,7 @@ import { saveAs } from 'file-saver';
 
 import { fnPropsNotNullish, notNullish } from '~/helpers';
 import { FlowData, rational, Step } from '~/models';
-import { Items, LabState, Recipes, Settings } from '~/store';
+import { Items, Recipes, Settings } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
@@ -58,11 +58,11 @@ export const StepKeys = [
   providedIn: 'root',
 })
 export class ExportService {
-  store = inject(Store<LabState>);
-  itemsState = this.store.selectSignal(Items.getItemsState);
-  recipesState = this.store.selectSignal(Recipes.getRecipesState);
-  columnsState = this.store.selectSignal(Settings.getColumnsState);
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  store = inject(Store);
+  itemsState = this.store.selectSignal(Items.selectItemsState);
+  recipesState = this.store.selectSignal(Recipes.selectRecipesState);
+  columnsState = this.store.selectSignal(Settings.selectColumnsState);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
   stepsToCsv(steps: Step[]): void {
     const json = steps.map((s) => this.stepToJson(s, steps));

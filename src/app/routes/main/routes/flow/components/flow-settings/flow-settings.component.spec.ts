@@ -48,7 +48,7 @@ describe('FlowSettingsComponent', () => {
       component.editValue = null as any;
       component.reset();
       expect(component.editValue).toEqual(
-        Preferences.initialPreferencesState.flowSettings,
+        Preferences.initialState.flowSettings,
       );
     });
   });
@@ -58,7 +58,7 @@ describe('FlowSettingsComponent', () => {
       spyOn(component.store, 'dispatch');
       component.onHide();
       expect(component.store.dispatch).toHaveBeenCalledWith(
-        new Preferences.SetFlowSettingsAction(component.editValue),
+        Preferences.setFlowSettings({ flowSettings: component.editValue }),
       );
     });
   });

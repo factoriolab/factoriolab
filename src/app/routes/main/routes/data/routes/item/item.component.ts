@@ -23,9 +23,9 @@ import { DetailComponent } from '../../models';
 })
 export class ItemComponent extends DetailComponent {
   itemsStateRaw = this.store.selectSignal(Items.itemsState);
-  itemsState = this.store.selectSignal(Items.getItemsState);
+  itemsState = this.store.selectSignal(Items.selectItemsState);
   machinesStateRaw = this.store.selectSignal(Machines.machinesState);
-  machinesState = this.store.selectSignal(Machines.getMachinesState);
+  machinesState = this.store.selectSignal(Machines.selectMachinesState);
 
   obj = computed<Item | undefined>(() => this.data().itemEntities[this.id()]);
   breadcrumb = computed<MenuItem[]>(() => [
@@ -67,18 +67,18 @@ export class ItemComponent extends DetailComponent {
 
   /** Action dispatch methods */
   setItemExcluded(id: string, value: boolean): void {
-    this.store.dispatch(new Items.SetExcludedAction({ id, value }));
+    this.store.dispatch(Items.setExcluded({ id, value }));
   }
 
   setItemChecked(id: string, value: boolean): void {
-    this.store.dispatch(new Items.SetCheckedAction({ id, value }));
+    this.store.dispatch(Items.setChecked({ id, value }));
   }
 
-  resetItem(value: string): void {
-    this.store.dispatch(new Items.ResetItemAction(value));
+  resetItem(id: string): void {
+    this.store.dispatch(Items.resetItem({ id }));
   }
 
-  resetMachine(value: string): void {
-    this.store.dispatch(new Machines.ResetMachineAction(value));
+  resetMachine(id: string): void {
+    this.store.dispatch(Machines.resetMachine({ id }));
   }
 }

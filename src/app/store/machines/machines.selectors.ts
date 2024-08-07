@@ -11,10 +11,10 @@ export const machinesState = (state: LabState): MachinesState =>
   state.machinesState;
 
 /* Complex selectors */
-export const getMachinesState = createSelector(
+export const selectMachinesState = createSelector(
   machinesState,
-  Settings.getDefaults,
-  Settings.getDataset,
+  Settings.selectDefaults,
+  Settings.selectDataset,
   (state, defaults, data) => {
     const ids = state.ids ?? defaults?.machineRankIds ?? [];
     const fuelRankIds = state.fuelRankIds ?? defaults?.fuelRankIds ?? [];

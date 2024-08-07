@@ -12,6 +12,7 @@
         "plugin:@typescript-eslint/recommended",
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
+        "plugin:@ngrx/all",
         "plugin:import/recommended",
         "plugin:import/typescript"
       ],

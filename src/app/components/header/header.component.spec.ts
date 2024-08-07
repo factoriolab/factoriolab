@@ -30,7 +30,7 @@ describe('HeaderComponent', () => {
     it('should update the page title with the first objective name', () => {
       spyOn(component.title, 'setTitle');
       mockStore.overrideSelector(
-        Objectives.getBaseObjectives,
+        Objectives.selectBaseObjectives,
         Mocks.ObjectivesList,
       );
       mockStore.refreshState();

@@ -18,7 +18,7 @@ import {
   Rational,
   rational,
 } from '~/models';
-import { LabState, Settings } from '~/store';
+import { Settings } from '~/store';
 import { RecipeUtility } from '~/utilities';
 
 @Component({
@@ -27,7 +27,7 @@ import { RecipeUtility } from '~/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModulesComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
   entity = input.required<Machine | Beacon>();
   modules = input.required<ModuleSettings[]>();
@@ -35,7 +35,7 @@ export class ModulesComponent {
 
   setValue = output<ModuleSettings[]>();
 
-  data = this.store.selectSignal(Settings.getDataset);
+  data = this.store.selectSignal(Settings.selectDataset);
 
   exclude = computed(() =>
     this.modules()

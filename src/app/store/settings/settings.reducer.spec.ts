@@ -7,28 +7,27 @@ import {
   MaximizeType,
   Preset,
   rational,
-  researchBonus,
+  researchBonusValue,
 } from '~/models';
 import * as App from '../app.actions';
 import * as Actions from './settings.actions';
-import { initialSettingsState, settingsReducer } from './settings.reducer';
+import { initialState, settingsReducer } from './settings.reducer';
 
 describe('Settings Reducer', () => {
   describe('LOAD', () => {
     it('should return state if settings state is not included', () => {
-      const result = settingsReducer(
-        initialSettingsState,
-        new App.LoadAction({} as any),
-      );
-      expect(result).toEqual(initialSettingsState);
+      const result = settingsReducer(initialState, App.load({ partial: {} }));
+      expect(result).toEqual(initialState);
     });
 
     it('should load settings', () => {
       const result = settingsReducer(
         undefined,
-        new App.LoadAction({
-          settingsState: { displayRate: DisplayRate.PerHour },
-        } as any),
+        App.load({
+          partial: {
+            settingsState: { displayRate: DisplayRate.PerHour },
+          },
+        }),
       );
       expect(result.displayRate).toEqual(DisplayRate.PerHour);
     });
@@ -36,207 +35,204 @@ describe('Settings Reducer', () => {
 
   describe('RESET', () => {
     it('should return the initial state', () => {
-      const result = settingsReducer(undefined, new App.ResetAction());
-      expect(result).toEqual(initialSettingsState);
+      const result = settingsReducer(undefined, App.reset());
+      expect(result).toEqual(initialState);
     });
   });
 
   describe('SET_MOD', () => {
     it('should set the mod id', () => {
-      const value = 'dsp';
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetModAction(value),
-      );
-      expect(result.modId).toEqual(value);
+      const modId = 'dsp';
+      const result = settingsReducer(initialState, Actions.setMod({ modId }));
+      expect(result.modId).toEqual(modId);
     });
   });
 
   describe('SET_RESEARCHED_TECHNOLOGIES', () => {
     it('should set the researched technology ids', () => {
-      const value = [RecipeId.ArtilleryShellRange];
+      const researchedTechnologyIds = [RecipeId.ArtilleryShellRange];
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetResearchedTechnologiesAction(value),
+        initialState,
+        Actions.setResearchedTechnologies({ researchedTechnologyIds }),
       );
-      expect(result.researchedTechnologyIds).toEqual(value);
+      expect(result.researchedTechnologyIds).toEqual(researchedTechnologyIds);
     });
   });
 
   describe('SET_NET_PRODUCTION_ONLY', () => {
     it('should set the net production only value', () => {
-      const value = true;
+      const netProductionOnly = true;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetNetProductionOnlyAction(value),
+        initialState,
+        Actions.setNetProductionOnly({ netProductionOnly }),
       );
-      expect(result.netProductionOnly).toEqual(value);
+      expect(result.netProductionOnly).toEqual(netProductionOnly);
     });
   });
 
   describe('SET_SURPLUS_MACHINES_OUTPUT', () => {
     it('should set the surplus machines output value', () => {
-      const value = true;
+      const surplusMachinesOutput = true;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetSurplusMachinesOutputAction(value),
+        initialState,
+        Actions.setSurplusMachinesOutput({ surplusMachinesOutput }),
       );
-      expect(result.surplusMachinesOutput).toEqual(value);
+      expect(result.surplusMachinesOutput).toEqual(surplusMachinesOutput);
     });
   });
 
   describe('SET_PRESET', () => {
     it('should set the preset', () => {
-      const value = Preset.Modules;
+      const preset = Preset.Modules;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetPresetAction(value),
+        initialState,
+        Actions.setPreset({ preset }),
       );
-      expect(result.preset).toEqual(value);
+      expect(result.preset).toEqual(preset);
     });
   });
 
   describe('SET_BEACON_RECEIVERS', () => {
     it('should set default beacon receivers', () => {
-      const value = rational.one;
+      const beaconReceivers = rational.one;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetBeaconReceiversAction(value),
+        initialState,
+        Actions.setBeaconReceivers({ beaconReceivers }),
       );
-      expect(result.beaconReceivers).toEqual(value);
+      expect(result.beaconReceivers).toEqual(beaconReceivers);
     });
   });
 
   describe('SET_PROLIFERATOR_SPRAY', () => {
     it('should set the proliferator spray', () => {
-      const value = ItemId.ProductivityModule;
+      const proliferatorSprayId = ItemId.ProductivityModule;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetProliferatorSprayAction(value),
+        initialState,
+        Actions.setProliferatorSpray({ proliferatorSprayId }),
       );
-      expect(result.proliferatorSprayId).toEqual(value);
+      expect(result.proliferatorSprayId).toEqual(proliferatorSprayId);
     });
   });
 
   describe('SET_BELT', () => {
     it('should set the default belt', () => {
-      const value = ItemId.TransportBelt;
+      const id = ItemId.TransportBelt;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetBeltAction({ value, def: undefined }),
+        initialState,
+        Actions.setBelt({ id, def: undefined }),
       );
-      expect(result.beltId).toEqual(value);
+      expect(result.beltId).toEqual(id);
     });
   });
 
   describe('SET_PIPE', () => {
     it('should set the default pipe', () => {
-      const value = ItemId.Pipe;
+      const id = ItemId.Pipe;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetPipeAction({ value, def: undefined }),
+        initialState,
+        Actions.setPipe({ id, def: undefined }),
       );
-      expect(result.pipeId).toEqual(value);
+      expect(result.pipeId).toEqual(id);
     });
   });
 
   describe('SET_CARGO_WAGON', () => {
     it('should set the default cargo wagon', () => {
-      const value = ItemId.CargoWagon;
+      const id = ItemId.CargoWagon;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetCargoWagonAction({ value, def: undefined }),
+        initialState,
+        Actions.setCargoWagon({ id, def: undefined }),
       );
-      expect(result.cargoWagonId).toEqual(value);
+      expect(result.cargoWagonId).toEqual(id);
     });
   });
 
   describe('SET_FlUID_WAGON', () => {
     it('should set the default fluid wagon', () => {
-      const value = ItemId.FluidWagon;
+      const id = ItemId.FluidWagon;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFluidWagonAction({ value, def: undefined }),
+        initialState,
+        Actions.setFluidWagon({ id, def: undefined }),
       );
-      expect(result.fluidWagonId).toEqual(value);
+      expect(result.fluidWagonId).toEqual(id);
     });
   });
 
   describe('SET_FLOW_RATE', () => {
     it('should set the flow rate', () => {
-      const value = rational(6000n);
+      const flowRate = rational(6000n);
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetFlowRateAction(value),
+        initialState,
+        Actions.setFlowRate({ flowRate }),
       );
-      expect(result.flowRate).toEqual(value);
+      expect(result.flowRate).toEqual(flowRate);
     });
   });
 
   describe('SET_INSERTER_TARGET', () => {
     it('should set the inserter target', () => {
-      const value = InserterTarget.Chest;
+      const inserterTarget = InserterTarget.Chest;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetInserterTargetAction(value),
+        initialState,
+        Actions.setInserterTarget({ inserterTarget }),
       );
-      expect(result.inserterTarget).toEqual(value);
+      expect(result.inserterTarget).toEqual(inserterTarget);
     });
   });
 
   describe('SET_MINING_BONUS', () => {
     it('should set the mining bonus', () => {
-      const value = rational(10n);
+      const miningBonus = rational(10n);
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetMiningBonusAction(value),
+        initialState,
+        Actions.setMiningBonus({ miningBonus }),
       );
-      expect(result.miningBonus).toEqual(value);
+      expect(result.miningBonus).toEqual(miningBonus);
     });
   });
 
   describe('SET_RESEARCH_SPEED', () => {
     it('should set the research speed', () => {
-      const value = researchBonus.speed1;
+      const researchBonus = researchBonusValue.speed1;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetResearchBonusAction(value),
+        initialState,
+        Actions.setResearchBonus({ researchBonus }),
       );
-      expect(result.researchBonus).toEqual(value);
+      expect(result.researchBonus).toEqual(researchBonus);
     });
   });
 
   describe('SET_INSERTER_CAPACITY', () => {
     it('should set the inserter capacity', () => {
-      const value = InserterCapacity.Capacity2;
+      const inserterCapacity = InserterCapacity.Capacity2;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetInserterCapacityAction(value),
+        initialState,
+        Actions.setInserterCapacity({ inserterCapacity }),
       );
-      expect(result.inserterCapacity).toEqual(value);
+      expect(result.inserterCapacity).toEqual(inserterCapacity);
     });
   });
 
   describe('SET_DISPLAY_RATE', () => {
     it('should set the display rate', () => {
-      const value = DisplayRate.PerHour;
+      const displayRate = DisplayRate.PerHour;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetDisplayRateAction({
-          value,
-          prev: DisplayRate.PerSecond,
+        initialState,
+        Actions.setDisplayRate({
+          displayRate,
+          previous: DisplayRate.PerSecond,
         }),
       );
-      expect(result.displayRate).toEqual(value);
+      expect(result.displayRate).toEqual(displayRate);
     });
   });
 
   describe('SET_MAXIMIZE_TYPE', () => {
     it('should set the maximize type', () => {
-      const value = MaximizeType.Ratio;
+      const maximizeType = MaximizeType.Ratio;
       const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetMaximizeTypeAction(value),
+        initialState,
+        Actions.setMaximizeType({ maximizeType }),
       );
       expect(result.maximizeType).toEqual(MaximizeType.Ratio);
     });
@@ -244,7 +240,7 @@ describe('Settings Reducer', () => {
 
   describe('SET_COSTS', () => {
     it('should set cost values', () => {
-      const value: CostSettings = {
+      const costs: CostSettings = {
         factor: rational.one,
         machine: rational.one,
         footprint: rational.one,
@@ -253,11 +249,8 @@ describe('Settings Reducer', () => {
         surplus: rational.one,
         maximize: rational(-1n),
       };
-      const result = settingsReducer(
-        initialSettingsState,
-        new Actions.SetCostsAction(value),
-      );
-      expect(result.costs).toEqual(value);
+      const result = settingsReducer(initialState, Actions.setCosts({ costs }));
+      expect(result.costs).toEqual(costs);
     });
   });
 
@@ -274,15 +267,15 @@ describe('Settings Reducer', () => {
             maximize: 'f',
           },
         } as any,
-        new Actions.ResetCostAction(),
+        Actions.resetCosts(),
       );
-      expect(result.costs).toEqual(initialSettingsState.costs);
+      expect(result.costs).toEqual(initialState.costs);
     });
   });
 
   it('should return default state', () => {
     expect(settingsReducer(undefined, { type: 'Test' } as any)).toBe(
-      initialSettingsState,
+      initialState,
     );
   });
 });

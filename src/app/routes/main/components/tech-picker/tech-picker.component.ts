@@ -16,7 +16,7 @@ import { first } from 'rxjs';
 import { DialogComponent } from '~/components';
 import { Game } from '~/models';
 import { ContentService, TranslateService } from '~/services';
-import { LabState, Preferences, Recipes } from '~/store';
+import { Preferences, Recipes } from '~/store';
 
 export type UnlockStatus = 'available' | 'locked' | 'researched';
 
@@ -28,15 +28,15 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
 export class TechPickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
   translateSvc = inject(TranslateService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   contentSvc = inject(ContentService);
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 
   @Output() selectIds = new EventEmitter<string[] | null>();
 
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
-  showTechLabels = this.store.selectSignal(Preferences.getShowTechLabels);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
+  showTechLabels = this.store.selectSignal(Preferences.selectShowTechLabels);
 
   filter = signal('');
   selection = signal<string[]>([]);
@@ -220,7 +220,7 @@ game.write_file("techs.txt", table.concat(list, ","))
   }
 
   /** Action Dispatch Methods */
-  setShowTechLabels(value: boolean): void {
-    this.store.dispatch(new Preferences.SetShowTechLabelsAction(value));
+  setShowTechLabels(showTechLabels: boolean): void {
+    this.store.dispatch(Preferences.setShowTechLabels({ showTechLabels }));
   }
 }

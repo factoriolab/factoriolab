@@ -10,9 +10,9 @@ import {
   sankeyAlignOptions,
 } from '~/models';
 import { MainSharedModule } from '~/routes/main/main-shared.module';
-import { LabState, Preferences, Settings } from '~/store';
+import { Preferences, Settings } from '~/store';
 
-const initialValue = Preferences.initialPreferencesState.flowSettings;
+const initialValue = Preferences.initialState.flowSettings;
 
 @Component({
   selector: 'lab-flow-settings',
@@ -22,9 +22,9 @@ const initialValue = Preferences.initialPreferencesState.flowSettings;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowSettingsComponent extends DialogComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
-  linkValueOptions = this.store.selectSignal(Settings.getLinkValueOptions);
+  linkValueOptions = this.store.selectSignal(Settings.selectLinkValueOptions);
 
   editValue = { ...initialValue };
 
@@ -53,6 +53,7 @@ export class FlowSettingsComponent extends DialogComponent {
   }
 
   save(): void {
-    this.store.dispatch(new Preferences.SetFlowSettingsAction(this.editValue));
+    const flowSettings = this.editValue;
+    this.store.dispatch(Preferences.setFlowSettings({ flowSettings }));
   }
 }

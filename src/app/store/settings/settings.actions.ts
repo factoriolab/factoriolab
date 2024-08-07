@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 import {
   CostSettings,
@@ -8,150 +8,83 @@ import {
   MaximizeType,
   Preset,
   Rational,
-  ValueDefaultPayload,
-  ValuePreviousPayload,
 } from '~/models';
 
-export const enum SettingsActionType {
-  SET_MOD = '[Settings] Set Mod',
-  SET_RESEARCHED_TECHNOLOGIES = '[Settings] Set Researched Technologies',
-  SET_NET_PRODUCTION_ONLY = '[Settings] Set Net Production Only',
-  SET_REQUIRE_MACHINES_OUTPUT = '[Settings] Set Require Machines Output',
-  SET_PRESET = '[Settings] Set Preset',
-  SET_BEACON_RECEIVERS = '[Settings] Set Beacon Receivers',
-  SET_PROLIFERATOR_SPRAY = '[Settings] Set Proliferator Spray',
-  SET_BELT = '[Settings] Set Belt',
-  SET_PIPE = '[Settings] Set Pipe',
-  SET_CARGO_WAGON = '[Settings] Set Cargo Wagon',
-  SET_FLUID_WAGON = '[Settings] Set Fluid Wagon',
-  SET_FLOW_RATE = '[Settings] Set Flow Rate',
-  SET_INSERTER_TARGET = '[Settings] Set Inserter Target',
-  SET_MINING_BONUS = '[Settings] Set Mining Bonus',
-  SET_RESEARCH_BONUS = '[Settings] Set Research Bonus',
-  SET_INSERTER_CAPACITY = '[Settings] Set Inserter Capacity',
-  SET_DISPLAY_RATE = '[Settings] Set Display Rate',
-  SET_MAXIMIZE_TYPE = '[Settings] Set Maximize Type',
-  SET_COSTS = '[Settings] Set Costs',
-  RESET_COSTS = '[Settings] Reset Costs',
-}
-
-export class SetModAction implements Action {
-  readonly type = SettingsActionType.SET_MOD;
-  constructor(public payload: string) {}
-}
-
-export class SetResearchedTechnologiesAction implements Action {
-  readonly type = SettingsActionType.SET_RESEARCHED_TECHNOLOGIES;
-  constructor(public payload: string[] | null) {}
-}
-
-export class SetNetProductionOnlyAction implements Action {
-  readonly type = SettingsActionType.SET_NET_PRODUCTION_ONLY;
-  constructor(public payload: boolean) {}
-}
-
-export class SetSurplusMachinesOutputAction implements Action {
-  readonly type = SettingsActionType.SET_REQUIRE_MACHINES_OUTPUT;
-  constructor(public payload: boolean) {}
-}
-
-export class SetPresetAction implements Action {
-  readonly type = SettingsActionType.SET_PRESET;
-  constructor(public payload: Preset) {}
-}
-
-export class SetBeaconReceiversAction implements Action {
-  readonly type = SettingsActionType.SET_BEACON_RECEIVERS;
-  constructor(public payload: Rational | null) {}
-}
-
-export class SetProliferatorSprayAction implements Action {
-  readonly type = SettingsActionType.SET_PROLIFERATOR_SPRAY;
-  constructor(public payload: string) {}
-}
-
-export class SetBeltAction implements Action {
-  readonly type = SettingsActionType.SET_BELT;
-  constructor(public payload: ValueDefaultPayload) {}
-}
-
-export class SetPipeAction implements Action {
-  readonly type = SettingsActionType.SET_PIPE;
-  constructor(public payload: ValueDefaultPayload) {}
-}
-
-export class SetCargoWagonAction implements Action {
-  readonly type = SettingsActionType.SET_CARGO_WAGON;
-  constructor(public payload: ValueDefaultPayload) {}
-}
-
-export class SetFluidWagonAction implements Action {
-  readonly type = SettingsActionType.SET_FLUID_WAGON;
-  constructor(public payload: ValueDefaultPayload) {}
-}
-
-export class SetFlowRateAction implements Action {
-  readonly type = SettingsActionType.SET_FLOW_RATE;
-  constructor(public payload: Rational) {}
-}
-
-export class SetInserterTargetAction implements Action {
-  readonly type = SettingsActionType.SET_INSERTER_TARGET;
-  constructor(public payload: InserterTarget) {}
-}
-
-export class SetMiningBonusAction implements Action {
-  readonly type = SettingsActionType.SET_MINING_BONUS;
-  constructor(public payload: Rational) {}
-}
-
-export class SetResearchBonusAction implements Action {
-  readonly type = SettingsActionType.SET_RESEARCH_BONUS;
-  constructor(public payload: Rational) {}
-}
-
-export class SetInserterCapacityAction implements Action {
-  readonly type = SettingsActionType.SET_INSERTER_CAPACITY;
-  constructor(public payload: InserterCapacity) {}
-}
-
-export class SetDisplayRateAction implements Action {
-  readonly type = SettingsActionType.SET_DISPLAY_RATE;
-  constructor(public payload: ValuePreviousPayload<DisplayRate>) {}
-}
-
-export class SetMaximizeTypeAction implements Action {
-  readonly type = SettingsActionType.SET_MAXIMIZE_TYPE;
-  constructor(public payload: MaximizeType) {}
-}
-
-export class SetCostsAction implements Action {
-  readonly type = SettingsActionType.SET_COSTS;
-  constructor(public payload: CostSettings) {}
-}
-
-export class ResetCostAction implements Action {
-  readonly type = SettingsActionType.RESET_COSTS;
-}
-
-export type SettingsAction =
-  | SetModAction
-  | SetResearchedTechnologiesAction
-  | SetNetProductionOnlyAction
-  | SetSurplusMachinesOutputAction
-  | SetPresetAction
-  | SetBeaconReceiversAction
-  | SetProliferatorSprayAction
-  | SetBeltAction
-  | SetPipeAction
-  | SetCargoWagonAction
-  | SetFluidWagonAction
-  | SetFlowRateAction
-  | SetInserterTargetAction
-  | SetMiningBonusAction
-  | SetResearchBonusAction
-  | SetInserterCapacityAction
-  | SetDisplayRateAction
-  | SetMaximizeTypeAction
-  | SetCostsAction
-  | ResetCostAction;
+const key = '[Settings]';
+export const setMod = createAction(
+  `${key} Set Mod`,
+  props<{ modId: string }>(),
+);
+export const setResearchedTechnologies = createAction(
+  `${key} Set Researched Technologies`,
+  props<{ researchedTechnologyIds: string[] | null }>(),
+);
+export const setNetProductionOnly = createAction(
+  `${key} Set Net Production Only`,
+  props<{ netProductionOnly: boolean }>(),
+);
+export const setSurplusMachinesOutput = createAction(
+  `${key} Set Surplus Machines Output`,
+  props<{ surplusMachinesOutput: boolean }>(),
+);
+export const setPreset = createAction(
+  `${key} Set Preset`,
+  props<{ preset: Preset }>(),
+);
+export const setBeaconReceivers = createAction(
+  `${key} Set Beacon Receivers`,
+  props<{ beaconReceivers: Rational | null }>(),
+);
+export const setProliferatorSpray = createAction(
+  `${key} Set Proliferator Spray`,
+  props<{ proliferatorSprayId: string }>(),
+);
+export const setBelt = createAction(
+  `${key} Set Belt`,
+  props<{ id: string; def: string | undefined }>(),
+);
+export const setPipe = createAction(
+  `${key} Set Pipe`,
+  props<{ id: string; def: string | undefined }>(),
+);
+export const setCargoWagon = createAction(
+  `${key} Set Cargo Wagon`,
+  props<{ id: string; def: string | undefined }>(),
+);
+export const setFluidWagon = createAction(
+  `${key} Set Fluid Wagon`,
+  props<{ id: string; def: string | undefined }>(),
+);
+export const setFlowRate = createAction(
+  `${key} Set Flow Rate`,
+  props<{ flowRate: Rational }>(),
+);
+export const setInserterTarget = createAction(
+  `${key} Set Inserter Target`,
+  props<{ inserterTarget: InserterTarget }>(),
+);
+export const setMiningBonus = createAction(
+  `${key} Set Mining Bonus`,
+  props<{ miningBonus: Rational }>(),
+);
+export const setResearchBonus = createAction(
+  `${key} Set Research Bonus`,
+  props<{ researchBonus: Rational }>(),
+);
+export const setInserterCapacity = createAction(
+  `${key} Set Inserter Capacity`,
+  props<{ inserterCapacity: InserterCapacity }>(),
+);
+export const setDisplayRate = createAction(
+  `${key} Set Display Rate`,
+  props<{ displayRate: DisplayRate; previous: DisplayRate }>(),
+);
+export const setMaximizeType = createAction(
+  `${key} Set Maximize Type`,
+  props<{ maximizeType: MaximizeType }>(),
+);
+export const setCosts = createAction(
+  `${key} Set Costs`,
+  props<{ costs: CostSettings }>(),
+);
+export const resetCosts = createAction(`${key} Reset Costs`);

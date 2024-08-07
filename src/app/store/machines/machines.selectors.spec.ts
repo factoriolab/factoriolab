@@ -1,12 +1,12 @@
 import { Mocks } from 'src/tests';
-import { initialMachinesState } from './machines.reducer';
+import { initialState } from './machines.reducer';
 import * as Selectors from './machines.selectors';
 
 describe('Machines Selectors', () => {
   describe('getMachineSettings', () => {
     it('should fill in machine settings', () => {
-      const result = Selectors.getMachinesState.projector(
-        initialMachinesState,
+      const result = Selectors.selectMachinesState.projector(
+        initialState,
         Mocks.Defaults,
         Mocks.AdjustedDataset,
       );
@@ -15,8 +15,8 @@ describe('Machines Selectors', () => {
     });
 
     it('should handle null defaults', () => {
-      const result = Selectors.getMachinesState.projector(
-        initialMachinesState,
+      const result = Selectors.selectMachinesState.projector(
+        initialState,
         null,
         Mocks.AdjustedDataset,
       );

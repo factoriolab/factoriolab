@@ -73,7 +73,7 @@ describe('PickerComponent', () => {
 
     it('should open as recipe multiselect with null defaults', () => {
       const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
-      mockStore.overrideSelector(Recipes.getAdjustedDataset, data);
+      mockStore.overrideSelector(Recipes.selectAdjustedDataset, data);
       mockStore.refreshState();
       component.clickOpen('recipe', Mocks.AdjustedDataset.recipeIds, [
         RecipeId.IronPlate,

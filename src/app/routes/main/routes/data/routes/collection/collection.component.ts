@@ -14,7 +14,7 @@ import { map, switchMap } from 'rxjs';
 import { AppSharedModule } from '~/app-shared.module';
 import { Dataset, IdType } from '~/models';
 import { TranslateService } from '~/services';
-import { LabState, Recipes, Settings } from '~/store';
+import { Recipes, Settings } from '~/store';
 import { DataSharedModule } from '../../data-shared.module';
 
 @Component({
@@ -26,10 +26,10 @@ import { DataSharedModule } from '../../data-shared.module';
 export class CollectionComponent {
   translateSvc = inject(TranslateService);
   route = inject(ActivatedRoute);
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
-  home = this.store.selectSignal(Settings.getModMenuItem);
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  home = this.store.selectSignal(Settings.selectModMenuItem);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
   label = input.required<string>();
   type = input.required<IdType>();

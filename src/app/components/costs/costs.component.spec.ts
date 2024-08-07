@@ -49,7 +49,7 @@ describe('CostsComponent', () => {
     it('should set the value back to the initial state', () => {
       component.editValue = null as any;
       component.reset();
-      expect(component.editValue).toEqual(Settings.initialSettingsState.costs);
+      expect(component.editValue).toEqual(Settings.initialState.costs);
     });
   });
 
@@ -58,7 +58,7 @@ describe('CostsComponent', () => {
       spyOn(component.store, 'dispatch');
       component.save();
       expect(component.store.dispatch).toHaveBeenCalledWith(
-        new Settings.SetCostsAction(component.editValue as any),
+        Settings.setCosts({ costs: component.editValue }),
       );
     });
   });

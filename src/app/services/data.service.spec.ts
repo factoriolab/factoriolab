@@ -39,13 +39,12 @@ describe('DataService', () => {
       http.expectOne(`data/${Mocks.Mod.id}/data.json`).flush(Mocks.Data);
       http.expectOne(`data/${Mocks.Mod.id}/hash.json`).flush(Mocks.Hash);
       expect(mockStore.dispatch).toHaveBeenCalledWith(
-        new Datasets.LoadModAction({
-          data: {
-            id: Mocks.Mod.id,
-            value: Mocks.Data,
-          },
-          hash: { id: Mocks.Mod.id, value: Mocks.Hash },
-          i18n: null,
+        Datasets.loadMod({
+          id: Mocks.Mod.id,
+          i18nId: Mocks.Mod.id + '-en',
+          data: Mocks.Data,
+          hash: Mocks.Hash,
+          i18n: undefined,
         }),
       );
     });

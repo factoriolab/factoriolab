@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 
-import { LabState, Settings } from '~/store';
+import { Settings } from '~/store';
 
 @Component({
   templateUrl: './data.component.html',
@@ -10,10 +10,10 @@ import { LabState, Settings } from '~/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
-  home = this.store.selectSignal(Settings.getModMenuItem);
-  data = this.store.selectSignal(Settings.getDataset);
+  home = this.store.selectSignal(Settings.selectModMenuItem);
+  data = this.store.selectSignal(Settings.selectDataset);
 
   collections: MenuItem[] = [
     {

@@ -14,10 +14,10 @@ export const recipesState = (state: LabState): RecipesState =>
   state.recipesState;
 
 /* Complex selectors */
-export const getRecipesState = createSelector(
+export const selectRecipesState = createSelector(
   recipesState,
-  Machines.getMachinesState,
-  Settings.getDataset,
+  Machines.selectMachinesState,
+  Settings.selectDataset,
   (state, machinesState, data) => {
     const value: Entities<RecipeSettings> = {};
     const defaultExcludedRecipeIds = new Set(
@@ -81,19 +81,19 @@ export const getRecipesState = createSelector(
   },
 );
 
-export const getExcludedRecipeIds = createSelector(
-  getRecipesState,
+export const selectExcludedRecipeIds = createSelector(
+  selectRecipesState,
   (recipesState) =>
     Object.keys(recipesState).filter((i) => recipesState[i].excluded),
 );
 
-export const getAdjustedDataset = createSelector(
-  getRecipesState,
-  getExcludedRecipeIds,
-  Items.getItemsState,
-  Settings.getAvailableRecipes,
+export const selectAdjustedDataset = createSelector(
+  selectRecipesState,
+  selectExcludedRecipeIds,
+  Items.selectItemsState,
+  Settings.selectAvailableRecipes,
   Settings.settingsState,
-  Settings.getDataset,
+  Settings.selectDataset,
   (recipesState, excludedRecipeIds, itemsState, recipeIds, settings, data) =>
     RecipeUtility.adjustDataset(
       recipeIds,
@@ -105,6 +105,7 @@ export const getAdjustedDataset = createSelector(
     ),
 );
 
-export const getAvailableItems = createSelector(getAdjustedDataset, (data) =>
-  data.itemIds.filter((i) => data.itemRecipeIds[i].length),
+export const selectAvailableItems = createSelector(
+  selectAdjustedDataset,
+  (data) => data.itemIds.filter((i) => data.itemRecipeIds[i].length),
 );

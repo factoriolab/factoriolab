@@ -10,7 +10,7 @@ import { tap, withLatestFrom } from 'rxjs';
 
 import { CostKey, CostSettings, Rational, rational } from '~/models';
 import { ContentService } from '~/services';
-import { LabState, Settings } from '~/store';
+import { Settings } from '~/store';
 import { DialogComponent } from '../modal';
 
 @Component({
@@ -20,22 +20,22 @@ import { DialogComponent } from '../modal';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CostsComponent extends DialogComponent implements OnInit {
-  store = inject(Store<LabState>);
+  store = inject(Store);
   contentSvc = inject(ContentService);
 
-  editValue = { ...Settings.initialSettingsState.costs };
+  editValue = { ...Settings.initialState.costs };
 
   rational = rational;
 
   get modified(): boolean {
     return (Object.keys(this.editValue) as CostKey[]).some(
-      (k) => this.editValue[k] !== Settings.initialSettingsState.costs[k],
+      (k) => this.editValue[k] !== Settings.initialState.costs[k],
     );
   }
 
   show$ = this.contentSvc.showCosts$.pipe(
     takeUntilDestroyed(),
-    withLatestFrom(this.store.select(Settings.getCosts)),
+    withLatestFrom(this.store.select(Settings.selectCosts)),
     tap(([_, c]) => {
       this.initEdit(c);
       this.show();
@@ -53,10 +53,11 @@ export class CostsComponent extends DialogComponent implements OnInit {
   }
 
   reset(): void {
-    this.editValue = { ...Settings.initialSettingsState.costs };
+    this.editValue = { ...Settings.initialState.costs };
   }
 
   save(): void {
-    this.store.dispatch(new Settings.SetCostsAction(this.editValue));
+    const costs = this.editValue;
+    this.store.dispatch(Settings.setCosts({ costs }));
   }
 }

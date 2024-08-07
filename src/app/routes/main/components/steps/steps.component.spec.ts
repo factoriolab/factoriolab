@@ -34,9 +34,9 @@ describe('StepsComponent', () => {
 
     fixture = TestBed.createComponent(StepsComponent);
     mockStore = TestBed.inject(MockStore);
-    mockStore.overrideSelector(Objectives.getSteps, Mocks.Steps);
+    mockStore.overrideSelector(Objectives.selectSteps, Mocks.Steps);
     mockStore.overrideSelector(
-      Objectives.getStepDetails,
+      Objectives.selectStepDetails,
       Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
         e[s.id] = {
           tabs: [
@@ -453,34 +453,34 @@ describe('StepsComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.val('setRows', Preferences.SetRowsAction);
-    dispatch.idVal('setItemExcluded', Items.SetExcludedAction);
-    dispatch.idVal('setItemChecked', Items.SetCheckedAction);
-    dispatch.idValDef('setBelt', Items.SetBeltAction);
-    dispatch.idValDef('setWagon', Items.SetWagonAction);
-    dispatch.idValDef('setRecipeExcluded', Recipes.SetExcludedAction);
-    dispatch.val('setRecipeExcludedBatch', Recipes.SetExcludedBatchAction);
-    dispatch.val('addObjective', Objectives.AddAction);
-    dispatch.idValDef('setMachine', Recipes.SetMachineAction);
-    dispatch.idValDefAlt('setMachine', Objectives.SetMachineAction);
-    dispatch.idValDef('setFuel', Recipes.SetFuelAction);
-    dispatch.idValDefAlt('setFuel', Objectives.SetFuelAction);
-    dispatch.idVal('setModules', Recipes.SetModulesAction);
-    dispatch.idValAlt('setModules', Objectives.SetModulesAction);
-    dispatch.idVal('setBeacons', Recipes.SetBeaconsAction);
-    dispatch.idValAlt('setBeacons', Objectives.SetBeaconsAction);
-    dispatch.idValDef('setOverclock', Recipes.SetOverclockAction);
-    dispatch.idValDefAlt('setOverclock', Objectives.SetOverclockAction);
-    dispatch.idVal('setRecipeChecked', Recipes.SetCheckedAction);
-    dispatch.idValAlt('setRecipeChecked', Objectives.SetCheckedAction);
-    dispatch.val('resetItem', Items.ResetItemAction);
-    dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
-    dispatch.val('resetRecipeObjective', Objectives.ResetObjectiveAction);
-    dispatch.void('resetChecked', Items.ResetCheckedAction);
-    dispatch.void('resetExcluded', Items.ResetExcludedAction);
-    dispatch.void('resetBelts', Items.ResetBeltsAction);
-    dispatch.void('resetWagons', Items.ResetWagonsAction);
-    dispatch.void('resetMachines', Recipes.ResetMachinesAction);
-    dispatch.void('resetBeacons', Recipes.ResetBeaconsAction);
+    dispatch.props('setRows', Preferences.setRows);
+    dispatch.props('setItemExcluded', Items.setExcluded);
+    dispatch.props('setItemChecked', Items.setChecked);
+    dispatch.props('setBelt', Items.setBelt);
+    dispatch.props('setWagon', Items.setWagon);
+    dispatch.props('setRecipeExcluded', Recipes.setExcluded);
+    dispatch.props('setRecipeExcludedBatch', Recipes.setExcludedBatch);
+    dispatch.props('addObjective', Objectives.add);
+    dispatch.props('setMachine', Recipes.setMachine);
+    dispatch.props('setMachine', Objectives.setMachine, ['', '', '', true]);
+    dispatch.props('setFuel', Recipes.setFuel);
+    dispatch.props('setFuel', Objectives.setFuel, ['', '', '', true]);
+    dispatch.props('setModules', Recipes.setModules);
+    dispatch.props('setModules', Objectives.setModules, ['', '', true]);
+    dispatch.props('setBeacons', Recipes.setBeacons);
+    dispatch.props('setBeacons', Objectives.setBeacons, ['', '', true]);
+    dispatch.props('setOverclock', Recipes.setOverclock);
+    dispatch.props('setOverclock', Objectives.setOverclock, ['', '', '', true]);
+    dispatch.props('setRecipeChecked', Recipes.setChecked);
+    dispatch.props('setRecipeChecked', Objectives.setChecked, ['', '', true]);
+    dispatch.props('resetItem', Items.resetItem);
+    dispatch.props('resetRecipe', Recipes.resetRecipe);
+    dispatch.props('resetRecipeObjective', Objectives.resetObjective);
+    dispatch.void('resetChecked', Items.resetChecked);
+    dispatch.void('resetExcluded', Items.resetExcluded);
+    dispatch.void('resetBelts', Items.resetBelts);
+    dispatch.void('resetWagons', Items.resetWagons);
+    dispatch.void('resetMachines', Recipes.resetMachines);
+    dispatch.void('resetBeacons', Recipes.resetBeacons);
   });
 });

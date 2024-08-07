@@ -1,9 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { tap } from 'rxjs';
 
 import { environment } from 'src/environments';
-import { LabState, Preferences, Settings } from '~/store';
+import { Preferences, Settings } from '~/store';
 import { AppSharedModule } from './app-shared.module';
 import {
   AnalyticsService,
@@ -24,7 +25,7 @@ import { BrowserUtility } from './utilities';
 })
 export class AppComponent implements OnInit {
   analyticsSvc = inject(AnalyticsService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   translateSvc = inject(TranslateService);
   routerSvc = inject(RouterService);
   themeSvc = inject(ThemeService);
@@ -35,21 +36,41 @@ export class AppComponent implements OnInit {
 
     this.analyticsSvc.event('version', environment.version);
 
-    this.store.select(Settings.getGame).subscribe((game) => {
-      this.analyticsSvc.event('set_game', game);
-    });
+    this.store
+      .select(Settings.selectGame)
+      .pipe(
+        tap((game) => {
+          this.analyticsSvc.event('set_game', game);
+        }),
+      )
+      .subscribe();
 
-    this.store.select(Preferences.getLanguage).subscribe((lang) => {
-      this.translateSvc.use(lang);
-      this.analyticsSvc.event('set_lang', lang);
-    });
+    this.store
+      .select(Preferences.selectLanguage)
+      .pipe(
+        tap((lang) => {
+          this.translateSvc.use(lang);
+          this.analyticsSvc.event('set_lang', lang);
+        }),
+      )
+      .subscribe();
 
-    this.store.select(Settings.getModId).subscribe((modId) => {
-      this.analyticsSvc.event('set_mod_id', modId);
-    });
+    this.store
+      .select(Settings.selectModId)
+      .pipe(
+        tap((modId) => {
+          this.analyticsSvc.event('set_mod_id', modId);
+        }),
+      )
+      .subscribe();
 
-    this.store.select(Preferences.preferencesState).subscribe((s) => {
-      BrowserUtility.preferencesState = s;
-    });
+    this.store
+      .select(Preferences.preferencesState)
+      .pipe(
+        tap((s) => {
+          BrowserUtility.preferencesState = s;
+        }),
+      )
+      .subscribe();
   }
 }

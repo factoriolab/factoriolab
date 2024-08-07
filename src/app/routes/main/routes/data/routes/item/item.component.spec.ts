@@ -43,9 +43,9 @@ describe('ItemComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.idVal('setItemExcluded', Items.SetExcludedAction);
-    dispatch.idVal('setItemChecked', Items.SetCheckedAction);
-    dispatch.val('resetItem', Items.ResetItemAction);
-    dispatch.val('resetMachine', Machines.ResetMachineAction);
+    dispatch.props('setItemExcluded', Items.setExcluded);
+    dispatch.props('setItemChecked', Items.setChecked);
+    dispatch.props('resetItem', Items.resetItem);
+    dispatch.props('resetMachine', Machines.resetMachine);
   });
 });

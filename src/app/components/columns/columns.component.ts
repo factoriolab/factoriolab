@@ -18,7 +18,7 @@ import {
   initialColumnsState,
 } from '~/models';
 import { ContentService } from '~/services';
-import { LabState, Preferences, Settings } from '~/store';
+import { Preferences, Settings } from '~/store';
 import { DialogComponent } from '../modal';
 
 @Component({
@@ -28,11 +28,11 @@ import { DialogComponent } from '../modal';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnsComponent extends DialogComponent implements OnInit {
-  store = inject(Store<LabState>);
+  store = inject(Store);
   contentSvc = inject(ContentService);
   destroyRef = inject(DestroyRef);
 
-  columnOptions = this.store.selectSignal(Settings.getColumnOptions);
+  columnOptions = this.store.selectSignal(Settings.selectColumnOptions);
 
   editValue: Entities<ColumnSettings> = initialColumnsState;
   columnsInf = columnsInfo;
@@ -41,9 +41,8 @@ export class ColumnsComponent extends DialogComponent implements OnInit {
     return (Object.keys(this.editValue) as ColumnKey[]).some(
       (k) =>
         this.editValue[k].precision !==
-          Preferences.initialPreferencesState.columns[k].precision ||
-        this.editValue[k].show !==
-          Preferences.initialPreferencesState.columns[k].show,
+          Preferences.initialState.columns[k].precision ||
+        this.editValue[k].show !== Preferences.initialState.columns[k].show,
     );
   }
 
@@ -51,7 +50,7 @@ export class ColumnsComponent extends DialogComponent implements OnInit {
     this.contentSvc.showColumns$
       .pipe(
         takeUntilDestroyed(this.destroyRef),
-        withLatestFrom(this.store.select(Settings.getColumnsState)),
+        withLatestFrom(this.store.select(Settings.selectColumnsState)),
         tap(([_, c]) => {
           this.initEdit(c);
           this.show();
@@ -74,12 +73,11 @@ export class ColumnsComponent extends DialogComponent implements OnInit {
   }
 
   reset(): void {
-    this.initEdit(Preferences.initialPreferencesState.columns);
+    this.initEdit(Preferences.initialState.columns);
   }
 
   save(): void {
-    this.store.dispatch(
-      new Preferences.SetColumnsAction(this.editValue as ColumnsState),
-    );
+    const columns = this.editValue as ColumnsState;
+    this.store.dispatch(Preferences.setColumns({ columns }));
   }
 }

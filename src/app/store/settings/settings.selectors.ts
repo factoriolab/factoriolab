@@ -1,6 +1,7 @@
 import { createSelector } from '@ngrx/store';
 import { MenuItem, SelectItem } from 'primeng/api';
 
+import { data } from 'src/data';
 import { environment } from 'src/environments';
 import { coalesce, fnPropsNotNullish, getIdOptions } from '~/helpers';
 import {
@@ -48,68 +49,77 @@ import { SettingsState } from './settings.reducer';
 export const settingsState = (state: LabState): SettingsState =>
   state.settingsState;
 
-export const getModId = createSelector(settingsState, (state) => state.modId);
-export const getResearchedTechnologyIds = createSelector(
+export const selectModId = createSelector(
+  settingsState,
+  (state) => state.modId,
+);
+export const selectResearchedTechnologyIds = createSelector(
   settingsState,
   (state) => state.researchedTechnologyIds,
 );
-export const getPreset = createSelector(settingsState, (state) => state.preset);
-export const getBeaconReceivers = createSelector(
+export const selectPreset = createSelector(
+  settingsState,
+  (state) => state.preset,
+);
+export const selectBeaconReceivers = createSelector(
   settingsState,
   (state) => state.beaconReceivers,
 );
-export const getFlowRate = createSelector(
+export const selectFlowRate = createSelector(
   settingsState,
   (state) => state.flowRate,
 );
-export const getInserterTarget = createSelector(
+export const selectInserterTarget = createSelector(
   settingsState,
   (state) => state.inserterTarget,
 );
-export const getInserterCapacity = createSelector(
+export const selectInserterCapacity = createSelector(
   settingsState,
   (state) => state.inserterCapacity,
 );
-export const getDisplayRate = createSelector(
+export const selectDisplayRate = createSelector(
   settingsState,
   (state) => state.displayRate,
 );
-export const getMaximizeType = createSelector(
+export const selectMaximizeType = createSelector(
   settingsState,
   (state) => state.maximizeType,
 );
-export const getSurplusMachinesOutput = createSelector(
+export const selectSurplusMachinesOutput = createSelector(
   settingsState,
   (state) => state.surplusMachinesOutput,
 );
-export const getCosts = createSelector(settingsState, (state) => state.costs);
+export const selectCosts = createSelector(
+  settingsState,
+  (state) => state.costs,
+);
 
 /* Complex selectors */
-export const getMod = createSelector(
-  getModId,
-  Datasets.getModRecord,
+export const selectMod = createSelector(
+  selectModId,
+  Datasets.selectModEntities,
   (id, data) => data[id],
 );
 
-export const getHash = createSelector(
-  getModId,
-  Datasets.getHashRecord,
+export const selectHash = createSelector(
+  selectModId,
+  Datasets.selectHash,
   (id, hashEntities) => hashEntities[id],
 );
 
-export const getGame = createSelector(
-  getModId,
-  Datasets.getModInfoRecord,
+export const selectGame = createSelector(
+  selectModId,
+  Datasets.selectModEntities,
   (id, data) => data[id]?.game ?? Game.Factorio,
 );
 
-export const getGameStates = createSelector(
-  getGame,
-  Preferences.getStates,
+export const selectGameStates = createSelector(
+  selectGame,
+  Preferences.selectStates,
   (game, states) => states[game],
 );
 
-export const getSavedStates = createSelector(getGameStates, (states) =>
+export const selectSavedStates = createSelector(selectGameStates, (states) =>
   Object.keys(states)
     .sort()
     .map(
@@ -120,48 +130,48 @@ export const getSavedStates = createSelector(getGameStates, (states) =>
     ),
 );
 
-export const getGameInfo = createSelector(getGame, (game) => gameInfo[game]);
+export const selectGameInfo = createSelector(
+  selectGame,
+  (game) => gameInfo[game],
+);
 
-export const getColumnOptions = createSelector(getGameInfo, (gameInf) =>
+export const selectColumnOptions = createSelector(selectGameInfo, (gameInf) =>
   columnOptions(gameInf),
 );
 
-export const getDisplayRateInfo = createSelector(
-  getDisplayRate,
+export const selectDisplayRateInfo = createSelector(
+  selectDisplayRate,
   (displayRate) => displayRateInfo[displayRate],
 );
 
-export const getObjectiveUnitOptions = createSelector(
-  getGame,
-  getDisplayRateInfo,
+export const selectObjectiveUnitOptions = createSelector(
+  selectGame,
+  selectDisplayRateInfo,
   (game, dispRateInfo) => objectiveUnitOptions(dispRateInfo, game),
 );
 
-export const getPresetOptions = createSelector(getGame, (game) =>
+export const selectPresetOptions = createSelector(selectGame, (game) =>
   presetOptions(game),
 );
 
-export const getModOptions = createSelector(
-  getGame,
-  Datasets.getModSets,
-  (game, modSets) =>
-    modSets
-      .filter((b) => b.game === game)
-      .map(
-        (m): SelectItem => ({
-          label: m.name,
-          value: m.id,
-        }),
-      ),
+export const selectModOptions = createSelector(selectGame, (game) =>
+  data.mods
+    .filter((b) => b.game === game)
+    .map(
+      (m): SelectItem => ({
+        label: m.name,
+        value: m.id,
+      }),
+    ),
 );
 
-export const getLinkValueOptions = createSelector(getGame, (game) =>
+export const selectLinkValueOptions = createSelector(selectGame, (game) =>
   linkValueOptions(game),
 );
 
-export const getColumnsState = createSelector(
-  getGameInfo,
-  Preferences.getColumns,
+export const selectColumnsState = createSelector(
+  selectGameInfo,
+  Preferences.selectColumns,
   (gameInfo, columnsState) => {
     return gameColumnsState(
       { ...initialColumnsState, ...columnsState },
@@ -170,67 +180,71 @@ export const getColumnsState = createSelector(
   },
 );
 
-export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
-  if (base?.defaults == null) return null;
+export const selectDefaults = createSelector(
+  selectPreset,
+  selectMod,
+  (preset, base) => {
+    if (base?.defaults == null) return null;
 
-  const m = base.defaults;
-  let beacons: BeaconSettings[] = [];
-  let moduleRank: string[] | undefined;
-  switch (base.game) {
-    case Game.Factorio: {
-      moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
-      if (m.beacon) {
-        const beacon = base.items.find((i) => i.id === m.beacon)?.beacon;
-        if (beacon) {
-          const id = m.beacon;
-          const modules: ModuleSettings[] = [
-            {
-              count: rational(beacon.modules),
-              id: coalesce(m.beaconModule, ItemId.Module),
-            },
-          ];
+    const m = base.defaults;
+    let beacons: BeaconSettings[] = [];
+    let moduleRank: string[] | undefined;
+    switch (base.game) {
+      case Game.Factorio: {
+        moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
+        if (m.beacon) {
+          const beacon = base.items.find((i) => i.id === m.beacon)?.beacon;
+          if (beacon) {
+            const id = m.beacon;
+            const modules: ModuleSettings[] = [
+              {
+                count: rational(beacon.modules),
+                id: coalesce(m.beaconModule, ItemId.Module),
+              },
+            ];
 
-          const count =
-            preset < Preset.Beacon8
-              ? rational.zero
-              : preset === Preset.Beacon8
-                ? rational(8n)
-                : rational(12n);
-          beacons = [{ count, id, modules }];
+            const count =
+              preset < Preset.Beacon8
+                ? rational.zero
+                : preset === Preset.Beacon8
+                  ? rational(8n)
+                  : rational(12n);
+            beacons = [{ count, id, modules }];
+          }
         }
+        break;
       }
-      break;
+      case Game.DysonSphereProgram: {
+        moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
+        break;
+      }
+      case Game.FinalFactory:
+      case Game.Satisfactory: {
+        moduleRank = m.moduleRank;
+        break;
+      }
     }
-    case Game.DysonSphereProgram: {
-      moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
-      break;
-    }
-    case Game.FinalFactory:
-    case Game.Satisfactory: {
-      moduleRank = m.moduleRank;
-      break;
-    }
-  }
 
-  const machineRankIds =
-    preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
-  const defaults: Defaults = {
-    beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
-    pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
-    cargoWagonId: m.cargoWagon,
-    fluidWagonId: m.fluidWagon,
-    excludedRecipeIds: coalesce(m.excludedRecipes, []),
-    machineRankIds: coalesce(machineRankIds, []),
-    fuelRankIds: coalesce(m.fuelRank, []),
-    moduleRankIds: coalesce(moduleRank, []),
-    beacons,
-  };
-  return defaults;
-});
+    const machineRankIds =
+      preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
+    const defaults: Defaults = {
+      beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
+      pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
+      cargoWagonId: m.cargoWagon,
+      fluidWagonId: m.fluidWagon,
+      excludedRecipeIds: coalesce(m.excludedRecipes, []),
+      machineRankIds: coalesce(machineRankIds, []),
+      fuelRankIds: coalesce(m.fuelRank, []),
+      moduleRankIds: coalesce(moduleRank, []),
+      beacons,
+    };
+    return defaults;
+  },
+);
 
-export const getSettings = createSelector(
+export const selectSettings = createSelector(
   settingsState,
-  getDefaults,
+  selectDefaults,
   (s, d) => ({
     ...s,
     ...{
@@ -242,19 +256,19 @@ export const getSettings = createSelector(
   }),
 );
 
-export const getI18n = createSelector(
-  getMod,
-  Datasets.getI18nRecord,
-  Preferences.getLanguage,
+export const selectI18n = createSelector(
+  selectMod,
+  Datasets.selectI18n,
+  Preferences.selectLanguage,
   (base, i18n, lang) => (base ? i18n[`${base.id}-${lang}`] : null),
 );
 
-export const getDataset = createSelector(
-  getMod,
-  getI18n,
-  getHash,
-  getDefaults,
-  getGame,
+export const selectDataset = createSelector(
+  selectMod,
+  selectI18n,
+  selectHash,
+  selectDefaults,
+  selectGame,
   (mod, i18n, hash, defaults, game) => {
     // Map out entities with mods
     const categoryEntities = toEntities(
@@ -486,8 +500,8 @@ export const getDataset = createSelector(
   },
 );
 
-export const getOptions = createSelector(
-  getDataset,
+export const selectOptions = createSelector(
+  selectDataset,
   (data): Options => ({
     categories: getIdOptions(data.categoryIds, data.categoryEntities),
     items: getIdOptions(data.itemIds, data.itemEntities),
@@ -508,9 +522,9 @@ export const getOptions = createSelector(
   }),
 );
 
-export const getBeltSpeed = createSelector(
-  getDataset,
-  getFlowRate,
+export const selectBeltSpeed = createSelector(
+  selectDataset,
+  selectFlowRate,
   (data, flowRate) => {
     const value: Entities<Rational> = { [ItemId.Pipe]: flowRate };
     if (data.beltIds) {
@@ -527,9 +541,9 @@ export const getBeltSpeed = createSelector(
   },
 );
 
-export const getBeltSpeedTxt = createSelector(
-  getBeltSpeed,
-  getDisplayRateInfo,
+export const selectBeltSpeedTxt = createSelector(
+  selectBeltSpeed,
+  selectDisplayRateInfo,
   (beltSpeed, dispRateInfo) =>
     Object.keys(beltSpeed).reduce((e: Entities<string>, beltId) => {
       const speed = beltSpeed[beltId].mul(dispRateInfo.value);
@@ -538,15 +552,15 @@ export const getBeltSpeedTxt = createSelector(
     }, {}),
 );
 
-export const getInserterData = createSelector(
-  getInserterTarget,
-  getInserterCapacity,
+export const selectInserterData = createSelector(
+  selectInserterTarget,
+  selectInserterCapacity,
   (target, capacity) => InserterData[target][capacity],
 );
 
-export const getAllResearchedTechnologyIds = createSelector(
-  getResearchedTechnologyIds,
-  getDataset,
+export const selectAllResearchedTechnologyIds = createSelector(
+  selectResearchedTechnologyIds,
+  selectDataset,
   (researchedTechnologyIds, data) => {
     if (
       /** No need to parse if all researched */
@@ -587,9 +601,9 @@ export const getAllResearchedTechnologyIds = createSelector(
   },
 );
 
-export const getAvailableRecipes = createSelector(
-  getAllResearchedTechnologyIds,
-  getDataset,
+export const selectAvailableRecipes = createSelector(
+  selectAllResearchedTechnologyIds,
+  selectDataset,
   (researchedTechnologyIds, data) => {
     if (researchedTechnologyIds == null) return data.recipeIds;
 
@@ -601,8 +615,8 @@ export const getAvailableRecipes = createSelector(
   },
 );
 
-export const getModMenuItem = createSelector(
-  getMod,
+export const selectModMenuItem = createSelector(
+  selectMod,
   (mod): MenuItem => ({
     icon: 'fa-solid fa-database',
     routerLink: '/data',

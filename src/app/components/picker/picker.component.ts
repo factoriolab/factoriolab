@@ -13,7 +13,7 @@ import { FilterService, SelectItem } from 'primeng/api';
 
 import { Category, Entities } from '~/models';
 import { ContentService } from '~/services';
-import { LabState, Recipes } from '~/store';
+import { Recipes } from '~/store';
 import { DialogComponent } from '../modal';
 
 @Component({
@@ -23,7 +23,7 @@ import { DialogComponent } from '../modal';
 })
 export class PickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   contentSvc = inject(ContentService);
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
@@ -32,7 +32,7 @@ export class PickerComponent extends DialogComponent {
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<string[]>();
 
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
   search = '';
   allSelected = false;

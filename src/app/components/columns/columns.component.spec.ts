@@ -57,9 +57,7 @@ describe('ColumnsComponent', () => {
     it('should set the value back to the initial state', () => {
       component.editValue = null as any;
       component.reset();
-      expect(component.editValue).toEqual(
-        Preferences.initialPreferencesState.columns,
-      );
+      expect(component.editValue).toEqual(Preferences.initialState.columns);
     });
   });
 
@@ -68,7 +66,7 @@ describe('ColumnsComponent', () => {
       spyOn(component.store, 'dispatch');
       component.onHide();
       expect(component.store.dispatch).toHaveBeenCalledWith(
-        new Preferences.SetColumnsAction(component.editValue as any),
+        Preferences.setColumns({ columns: component.editValue as any }),
       );
     });
   });

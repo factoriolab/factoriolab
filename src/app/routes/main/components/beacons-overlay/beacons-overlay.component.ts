@@ -18,7 +18,7 @@ import {
   rational,
   Rational,
 } from '~/models';
-import { LabState, Settings } from '~/store';
+import { Settings } from '~/store';
 
 @Component({
   selector: 'lab-beacons-overlay',
@@ -26,12 +26,12 @@ import { LabState, Settings } from '~/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BeaconsOverlayComponent extends OverlayComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
   @Output() setValue = new EventEmitter<BeaconSettings[]>();
 
-  data = this.store.selectSignal(Settings.getDataset);
-  options = this.store.selectSignal(Settings.getOptions);
+  data = this.store.selectSignal(Settings.selectDataset);
+  options = this.store.selectSignal(Settings.selectOptions);
 
   beacons = signal<BeaconSettings[]>([]);
   recipeId = signal<string | undefined>(undefined);

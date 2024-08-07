@@ -449,14 +449,14 @@ describe('ObjectivesComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.val('removeObjective', Objectives.RemoveAction);
-    dispatch.val('setOrder', Objectives.SetOrderAction);
-    dispatch.idVal('setTarget', Objectives.SetTargetAction);
-    dispatch.idVal('setValue', Objectives.SetValueAction);
-    dispatch.idVal('setUnit', Objectives.SetUnitAction);
-    dispatch.idVal('setType', Objectives.SetTypeAction);
-    dispatch.val('addObjective', Objectives.AddAction);
-    dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
-    dispatch.val('setPaused', Preferences.SetPausedAction);
+    dispatch.props('removeObjective', Objectives.remove);
+    dispatch.props('setOrder', Objectives.setOrder);
+    dispatch.props('setTarget', Objectives.setTarget);
+    dispatch.props('setValue', Objectives.setValue);
+    dispatch.props('setUnit', Objectives.setUnit);
+    dispatch.props('setType', Objectives.setType);
+    dispatch.props('addObjective', Objectives.add);
+    dispatch.props('setDisplayRate', Settings.setDisplayRate);
+    dispatch.props('setPaused', Preferences.setPaused);
   });
 });

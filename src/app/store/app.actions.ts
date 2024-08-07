@@ -1,4 +1,4 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 
 import { DatasetsState } from './datasets';
 import { ItemsState } from './items';
@@ -16,18 +16,9 @@ export interface PartialState {
   settingsState?: PartialSettingsState;
 }
 
-export enum AppActionType {
-  LOAD = '[App] Load',
-  RESET = '[App] Reset',
-}
-
-export class LoadAction implements Action {
-  readonly type = AppActionType.LOAD;
-  constructor(public payload: PartialState) {}
-}
-
-export class ResetAction implements Action {
-  readonly type = AppActionType.RESET;
-}
-
-export type AppAction = LoadAction | ResetAction;
+const key = '[App]';
+export const load = createAction(
+  `${key} Load`,
+  props<{ partial: PartialState }>(),
+);
+export const reset = createAction(`${key} Reset`);

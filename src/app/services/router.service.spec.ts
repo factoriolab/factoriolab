@@ -6,6 +6,7 @@ import { deflate, inflate } from 'pako';
 import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+import { spread } from '~/helpers';
 import {
   DisplayRate,
   Game,
@@ -175,7 +176,7 @@ function mockZipData(objectives?: Zip, config?: Zip): ZipData {
 describe('RouterService', () => {
   let service: RouterService;
   let mockStore: MockStore<LabState>;
-  let mockGetZipState: MemoizedSelector<
+  let selectMockGetZipState: MemoizedSelector<
     LabState,
     {
       objectives: Objectives.ObjectivesState;
@@ -193,17 +194,20 @@ describe('RouterService', () => {
     service = TestBed.inject(RouterService);
     service.initialize();
     mockStore = TestBed.inject(MockStore);
-    mockStore.overrideSelector(Datasets.getHashRecord, {
-      [Settings.initialSettingsState.modId]: Mocks.Hash,
+    mockStore.overrideSelector(Datasets.selectHash, {
+      [Settings.initialState.modId]: Mocks.Hash,
       [mockSettingsState.modId]: Mocks.Hash,
     });
-    mockGetZipState = mockStore.overrideSelector(Objectives.getZipState, {
-      objectives: Objectives.initialObjectivesState,
-      itemsState: Items.initialItemsState,
-      recipesState: Recipes.initialRecipesState,
-      machinesState: Machines.initialMachinesState,
-      settings: Settings.initialSettingsState,
-    });
+    selectMockGetZipState = mockStore.overrideSelector(
+      Objectives.selectZipState,
+      {
+        objectives: Objectives.initialState,
+        itemsState: Items.initialState,
+        recipesState: Recipes.initialState,
+        machinesState: Machines.initialState,
+        settings: Settings.initialState,
+      },
+    );
   });
 
   it('should be created', () => {
@@ -222,12 +226,12 @@ describe('RouterService', () => {
       expect(service.updateUrl).toHaveBeenCalled();
       done();
     });
-    mockGetZipState.setResult({
-      objectives: Objectives.initialObjectivesState,
+    selectMockGetZipState.setResult({
+      objectives: Objectives.initialState,
       itemsState: { [ItemId.Wood]: { excluded: true } },
-      recipesState: Recipes.initialRecipesState,
-      machinesState: Machines.initialMachinesState,
-      settings: Settings.initialSettingsState,
+      recipesState: Recipes.initialState,
+      machinesState: Machines.initialState,
+      settings: Settings.initialState,
     });
     mockStore.refreshState();
     service.first = true;
@@ -242,16 +246,14 @@ describe('RouterService', () => {
 
     it('should migrate saved states into correct games', () => {
       spyOn(mockStore, 'dispatch');
-      service.migrateOldStates({
-        ...Preferences.initialPreferencesState.states,
-        ...{ id: 's=dsp' },
-      } as any);
+      service.migrateOldStates(
+        spread(Preferences.initialState.states, { id: 's=dsp' } as any),
+      );
       expect(mockStore.dispatch).toHaveBeenCalledWith(
-        new Preferences.SetStatesAction({
-          ...Preferences.initialPreferencesState.states,
-          ...{
+        Preferences.setStates({
+          states: spread(Preferences.initialState.states, {
             [Game.DysonSphereProgram]: { id: 's=dsp' },
-          },
+          }),
         }),
       );
     });
@@ -292,11 +294,11 @@ describe('RouterService', () => {
       spyOn(service, 'getHash').and.returnValue('test');
       spyOn(service.router, 'navigateByUrl');
       service.updateUrl(
-        Objectives.initialObjectivesState,
-        Items.initialItemsState,
-        Recipes.initialRecipesState,
-        Machines.initialMachinesState,
-        Settings.initialSettingsState,
+        Objectives.initialState,
+        Items.initialState,
+        Recipes.initialState,
+        Machines.initialState,
+        Settings.initialState,
       );
       expect(service.router.navigateByUrl).toHaveBeenCalledWith('/?test');
     });
@@ -307,11 +309,11 @@ describe('RouterService', () => {
       spyOn(service.router, 'navigateByUrl');
       spyOnProperty(service.router, 'url').and.returnValue('path#hash');
       service.updateUrl(
-        Objectives.initialObjectivesState,
-        Items.initialItemsState,
-        Recipes.initialRecipesState,
-        Machines.initialMachinesState,
-        Settings.initialSettingsState,
+        Objectives.initialState,
+        Items.initialState,
+        Recipes.initialState,
+        Machines.initialState,
+        Settings.initialState,
       );
       expect(service.router.navigateByUrl).toHaveBeenCalledWith(
         'path?test#hash',
@@ -324,11 +326,11 @@ describe('RouterService', () => {
       let zip: ZipData | undefined;
       service
         .zipState(
-          Objectives.initialObjectivesState,
-          Items.initialItemsState,
-          Recipes.initialRecipesState,
-          Machines.initialMachinesState,
-          Settings.initialSettingsState,
+          Objectives.initialState,
+          Items.initialState,
+          Recipes.initialState,
+          Machines.initialState,
+          Settings.initialState,
         )
         .subscribe((z) => (zip = z));
       expect(zip).toEqual(mockZipData());
@@ -880,7 +882,7 @@ describe('RouterService', () => {
       service.dispatch('test', mockState);
       expect(service.zip).toEqual('test');
       expect(mockStore.dispatch).toHaveBeenCalledWith(
-        new App.LoadAction(mockState),
+        App.load({ partial: mockState }),
       );
     });
   });

@@ -24,15 +24,15 @@ describe('ObjectivesEffects', () => {
     it('should dispatch an action to adjust objective rates', () => {
       actions = new ReplaySubject(1);
       actions.next(
-        new Settings.SetDisplayRateAction({
-          value: DisplayRate.PerSecond,
-          prev: DisplayRate.PerMinute,
+        Settings.setDisplayRate({
+          displayRate: DisplayRate.PerSecond,
+          previous: DisplayRate.PerMinute,
         }),
       );
       const results: Action[] = [];
       effects.adjustDisplayRate$.subscribe((a) => results.push(a));
       expect(results).toEqual([
-        new Actions.AdjustDisplayRateAction(rational(1n, 60n)),
+        Actions.adjustDisplayRate({ factor: rational(1n, 60n) }),
       ]);
     });
   });

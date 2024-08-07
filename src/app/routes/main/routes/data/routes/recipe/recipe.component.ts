@@ -15,7 +15,7 @@ import { DetailComponent } from '../../models';
 })
 export class RecipeComponent extends DetailComponent {
   recipesStateRaw = this.store.selectSignal(Recipes.recipesState);
-  recipesState = this.store.selectSignal(Recipes.getRecipesState);
+  recipesState = this.store.selectSignal(Recipes.selectRecipesState);
 
   obj = computed<Recipe | undefined>(
     () => this.data().recipeEntities[this.id()],
@@ -58,18 +58,18 @@ export class RecipeComponent extends DetailComponent {
 
   /** Action dispatch methods */
   setRecipeExcluded(id: string, value: boolean, def: boolean): void {
-    this.store.dispatch(new Recipes.SetExcludedAction({ id, value, def }));
+    this.store.dispatch(Recipes.setExcluded({ id, value, def }));
   }
 
   setRecipeChecked(id: string, value: boolean): void {
-    this.store.dispatch(new Recipes.SetCheckedAction({ id, value }));
+    this.store.dispatch(Recipes.setChecked({ id, value }));
   }
 
   setRecipeCost(id: string, value: Rational): void {
-    this.store.dispatch(new Recipes.SetCostAction({ id, value }));
+    this.store.dispatch(Recipes.setCost({ id, value }));
   }
 
-  resetRecipe(value: string): void {
-    this.store.dispatch(new Recipes.ResetRecipeAction(value));
+  resetRecipe(id: string): void {
+    this.store.dispatch(Recipes.resetRecipe({ id }));
   }
 }

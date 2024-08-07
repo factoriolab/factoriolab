@@ -38,9 +38,7 @@ describe('MainComponent', () => {
       tick(100);
       expect(component.errorSvc.message.set).toHaveBeenCalledWith(null);
       expect(component.router.navigateByUrl).toHaveBeenCalledWith('factorio');
-      expect(component.store.dispatch).toHaveBeenCalledWith(
-        new App.ResetAction(),
-      );
+      expect(component.store.dispatch).toHaveBeenCalledWith(App.reset());
       expect(component.isResetting).toBeFalse();
     }));
   });

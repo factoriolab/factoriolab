@@ -10,10 +10,11 @@ export class AnalyticsEffects {
   actions$ = inject(Actions);
 
   logEvent$ = createEffect(
-    () =>
-      this.actions$.pipe(
+    () => {
+      return this.actions$.pipe(
         tap((action) => this.analyticsSvc.event('action', action.type)),
-      ),
+      );
+    },
     { dispatch: false },
   );
 }

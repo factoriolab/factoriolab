@@ -25,7 +25,6 @@ import {
   EnergyType,
   Entities,
   Game,
-  IdValueDefaultPayload,
   ItemId,
   ModuleSettings,
   ObjectiveBase,
@@ -46,7 +45,6 @@ import {
 } from '~/services';
 import {
   Items,
-  LabState,
   Machines,
   Objectives,
   Preferences,
@@ -69,14 +67,14 @@ export class StepsComponent implements OnInit, AfterViewInit {
   ref = inject(ChangeDetectorRef);
   contentSvc = inject(ContentService);
   trackSvc = inject(TrackService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   exportSvc = inject(ExportService);
   routerSvc = inject(RouterService);
 
   focus = input(false);
   selectedId = input<string | null>();
   steps = computed(() => {
-    const steps = [...this.store.selectSignal(Objectives.getSteps)()];
+    const steps = [...this.store.selectSignal(Objectives.selectSteps)()];
     const focus = this.focus();
     if (!focus) return steps;
     const selectedId = this.selectedId();
@@ -84,7 +82,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
   });
   activeItemsEffect = effect(() => {
     const steps = this.steps();
-    const stepDetails = this.store.selectSignal(Objectives.getStepDetails)();
+    const stepDetails = this.store.selectSignal(Objectives.selectStepDetails)();
     this.setActiveItems(steps, stepDetails);
   });
   toggleEffect = effect(() => {
@@ -96,28 +94,28 @@ export class StepsComponent implements OnInit, AfterViewInit {
     }
   });
 
-  machinesState = this.store.selectSignal(Machines.getMachinesState);
-  itemsState = this.store.selectSignal(Items.getItemsState);
-  itemsModified = this.store.selectSignal(Items.getItemsModified);
-  stepsModified = this.store.selectSignal(Objectives.getStepsModified);
-  totals = this.store.selectSignal(Objectives.getTotals);
-  stepDetails = this.store.selectSignal(Objectives.getStepDetails);
-  stepById = this.store.selectSignal(Objectives.getStepById);
+  machinesState = this.store.selectSignal(Machines.selectMachinesState);
+  itemsState = this.store.selectSignal(Items.selectItemsState);
+  itemsModified = this.store.selectSignal(Items.selectItemsModified);
+  stepsModified = this.store.selectSignal(Objectives.selectStepsModified);
+  totals = this.store.selectSignal(Objectives.selectTotals);
+  stepDetails = this.store.selectSignal(Objectives.selectStepDetails);
+  stepById = this.store.selectSignal(Objectives.selectStepById);
   stepByItemEntities = this.store.selectSignal(
-    Objectives.getStepByItemEntities,
+    Objectives.selectStepByItemEntities,
   );
-  stepTree = this.store.selectSignal(Objectives.getStepTree);
+  stepTree = this.store.selectSignal(Objectives.selectStepTree);
   effectivePowerUnit = this.store.selectSignal(
-    Objectives.getEffectivePowerUnit,
+    Objectives.selectEffectivePowerUnit,
   );
-  recipesState = this.store.selectSignal(Recipes.getRecipesState);
-  recipesModified = this.store.selectSignal(Objectives.getRecipesModified);
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
-  columnsState = this.store.selectSignal(Settings.getColumnsState);
-  settings = this.store.selectSignal(Settings.getSettings);
-  dispRateInfo = this.store.selectSignal(Settings.getDisplayRateInfo);
-  options = this.store.selectSignal(Settings.getOptions);
-  beltSpeed = this.store.selectSignal(Settings.getBeltSpeed);
+  recipesState = this.store.selectSignal(Recipes.selectRecipesState);
+  recipesModified = this.store.selectSignal(Objectives.selectRecipesModified);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
+  columnsState = this.store.selectSignal(Settings.selectColumnsState);
+  settings = this.store.selectSignal(Settings.selectSettings);
+  dispRateInfo = this.store.selectSignal(Settings.selectDisplayRateInfo);
+  options = this.store.selectSignal(Settings.selectOptions);
+  beltSpeed = this.store.selectSignal(Settings.selectBeltSpeed);
   preferences = this.store.selectSignal(Preferences.preferencesState);
 
   sortSteps$ = new BehaviorSubject<SortEvent | null>(null);
@@ -138,7 +136,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
   constructor() {
     combineLatest([
       this.sortSteps$.pipe(pairwise()),
-      this.store.select(Objectives.getSteps),
+      this.store.select(Objectives.selectSteps),
     ])
       .pipe(takeUntilDestroyed())
       .subscribe(([[prev, curr], steps]) => {
@@ -163,12 +161,12 @@ export class StepsComponent implements OnInit, AfterViewInit {
     try {
       if (this.fragmentId) {
         const [_, stepId, tabId] = this.fragmentId.split('_');
-        combineLatest([
-          this.store.select(Objectives.getSteps),
-          this.store.select(Objectives.getStepDetails),
-        ])
+        combineLatest({
+          steps: this.store.select(Objectives.selectSteps),
+          stepDetails: this.store.select(Objectives.selectStepDetails),
+        })
           .pipe(first())
-          .subscribe(([steps, stepDetails]) => {
+          .subscribe(({ steps, stepDetails }) => {
             const step = steps.find((s) => s.id === stepId);
             if (step) {
               const tabs = stepDetails[step.id].tabs;
@@ -309,13 +307,11 @@ export class StepsComponent implements OnInit, AfterViewInit {
   }
 
   toggleRecipes(ids: string[], value: boolean, data: AdjustedDataset): void {
-    const payload = ids.map(
-      (id): IdValueDefaultPayload<boolean> => ({
-        id,
-        value,
-        def: coalesce(data.defaults?.excludedRecipeIds, []).includes(id),
-      }),
-    );
+    const payload = ids.map((id) => ({
+      id,
+      value,
+      def: coalesce(data.defaults?.excludedRecipeIds, []).includes(id),
+    }));
     this.setRecipeExcludedBatch(payload);
   }
 
@@ -415,43 +411,43 @@ export class StepsComponent implements OnInit, AfterViewInit {
   }
 
   /** Action Dispatch Methods */
-  setRows(value: number): void {
-    this.store.dispatch(new Preferences.SetRowsAction(value));
+  setRows(rows: number): void {
+    this.store.dispatch(Preferences.setRows({ rows }));
   }
 
   setItemExcluded(id: string, value: boolean): void {
-    this.store.dispatch(new Items.SetExcludedAction({ id, value }));
+    this.store.dispatch(Items.setExcluded({ id, value }));
   }
 
   setItemChecked(id: string, value: boolean): void {
-    this.store.dispatch(new Items.SetCheckedAction({ id, value }));
+    this.store.dispatch(Items.setChecked({ id, value }));
   }
 
   setBelt(id: string, value: string, def: string): void {
-    this.store.dispatch(new Items.SetBeltAction({ id, value, def }));
+    this.store.dispatch(Items.setBelt({ id, value, def }));
   }
 
   setWagon(id: string, value: string, def: string): void {
-    this.store.dispatch(new Items.SetWagonAction({ id, value, def }));
+    this.store.dispatch(Items.setWagon({ id, value, def }));
   }
 
   setRecipeExcluded(id: string, value: boolean, def: boolean): void {
-    this.store.dispatch(new Recipes.SetExcludedAction({ id, value, def }));
+    this.store.dispatch(Recipes.setExcluded({ id, value, def }));
   }
 
-  setRecipeExcludedBatch(payload: IdValueDefaultPayload<boolean>[]): void {
-    this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
+  setRecipeExcludedBatch(
+    values: { id: string; value: boolean; def: boolean | undefined }[],
+  ): void {
+    this.store.dispatch(Recipes.setExcludedBatch({ values }));
   }
 
-  addObjective(value: ObjectiveBase): void {
-    this.store.dispatch(new Objectives.AddAction(value));
+  addObjective(objective: ObjectiveBase): void {
+    this.store.dispatch(Objectives.add({ objective }));
   }
 
   setMachine(id: string, value: string, def: string, objective = false): void {
-    const action = objective
-      ? Objectives.SetMachineAction
-      : Recipes.SetMachineAction;
-    this.store.dispatch(new action({ id, value, def }));
+    const action = objective ? Objectives.setMachine : Recipes.setMachine;
+    this.store.dispatch(action({ id, value, def }));
   }
 
   setFuel(
@@ -460,8 +456,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
     def: string | undefined,
     objective = false,
   ): void {
-    const action = objective ? Objectives.SetFuelAction : Recipes.SetFuelAction;
-    this.store.dispatch(new action({ id, value, def }));
+    const action = objective ? Objectives.setFuel : Recipes.setFuel;
+    this.store.dispatch(action({ id, value, def }));
   }
 
   setModules(
@@ -469,10 +465,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
     value: ModuleSettings[] | undefined,
     objective = false,
   ): void {
-    const action = objective
-      ? Objectives.SetModulesAction
-      : Recipes.SetModulesAction;
-    this.store.dispatch(new action({ id, value }));
+    const action = objective ? Objectives.setModules : Recipes.setModules;
+    this.store.dispatch(action({ id, value }));
   }
 
   setBeacons(
@@ -480,10 +474,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
     value: BeaconSettings[] | undefined,
     objective = false,
   ): void {
-    const action = objective
-      ? Objectives.SetBeaconsAction
-      : Recipes.SetBeaconsAction;
-    this.store.dispatch(new action({ id, value }));
+    const action = objective ? Objectives.setBeacons : Recipes.setBeacons;
+    this.store.dispatch(action({ id, value }));
   }
 
   setOverclock(
@@ -492,52 +484,48 @@ export class StepsComponent implements OnInit, AfterViewInit {
     def: Rational | undefined,
     objective = false,
   ): void {
-    const action = objective
-      ? Objectives.SetOverclockAction
-      : Recipes.SetOverclockAction;
-    this.store.dispatch(new action({ id, value, def }));
+    const action = objective ? Objectives.setOverclock : Recipes.setOverclock;
+    this.store.dispatch(action({ id, value, def }));
   }
 
   setRecipeChecked(id: string, value: boolean, objective = false): void {
-    const action = objective
-      ? Objectives.SetCheckedAction
-      : Recipes.SetCheckedAction;
-    this.store.dispatch(new action({ id, value }));
+    const action = objective ? Objectives.setChecked : Recipes.setChecked;
+    this.store.dispatch(action({ id, value }));
   }
 
-  resetItem(value: string): void {
-    this.store.dispatch(new Items.ResetItemAction(value));
+  resetItem(id: string): void {
+    this.store.dispatch(Items.resetItem({ id }));
   }
 
-  resetRecipe(value: string): void {
-    this.store.dispatch(new Recipes.ResetRecipeAction(value));
+  resetRecipe(id: string): void {
+    this.store.dispatch(Recipes.resetRecipe({ id }));
   }
 
-  resetRecipeObjective(value: string): void {
-    this.store.dispatch(new Objectives.ResetObjectiveAction(value));
+  resetRecipeObjective(id: string): void {
+    this.store.dispatch(Objectives.resetObjective({ id }));
   }
 
   resetChecked(): void {
-    this.store.dispatch(new Items.ResetCheckedAction());
+    this.store.dispatch(Items.resetChecked());
   }
 
   resetExcluded(): void {
-    this.store.dispatch(new Items.ResetExcludedAction());
+    this.store.dispatch(Items.resetExcluded());
   }
 
   resetBelts(): void {
-    this.store.dispatch(new Items.ResetBeltsAction());
+    this.store.dispatch(Items.resetBelts());
   }
 
   resetWagons(): void {
-    this.store.dispatch(new Items.ResetWagonsAction());
+    this.store.dispatch(Items.resetWagons());
   }
 
   resetMachines(): void {
-    this.store.dispatch(new Recipes.ResetMachinesAction());
+    this.store.dispatch(Recipes.resetMachines());
   }
 
   resetBeacons(): void {
-    this.store.dispatch(new Recipes.ResetBeaconsAction());
+    this.store.dispatch(Recipes.resetBeacons());
   }
 }

@@ -7,7 +7,7 @@ import {
 import { Store } from '@ngrx/store';
 
 import { Game } from '~/models';
-import { LabState, Recipes, Settings } from '~/store';
+import { Recipes, Settings } from '~/store';
 
 type TooltipType =
   | 'item'
@@ -29,7 +29,7 @@ type TooltipType =
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
   id = input.required<string>();
   type = input<TooltipType>('item');
@@ -48,9 +48,9 @@ export class TooltipComponent {
     recipe: 'recipes',
   };
 
-  beltSpeedTxt = this.store.selectSignal(Settings.getBeltSpeedTxt);
-  dispRateInfo = this.store.selectSignal(Settings.getDisplayRateInfo);
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  beltSpeedTxt = this.store.selectSignal(Settings.selectBeltSpeedTxt);
+  dispRateInfo = this.store.selectSignal(Settings.selectDisplayRateInfo);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
   Game = Game;
 }

@@ -1,3 +1,5 @@
+import { createReducer, on } from '@ngrx/store';
+
 import { spread } from '~/helpers';
 import {
   CostSettings,
@@ -9,11 +11,11 @@ import {
   Preset,
   Rational,
   rational,
-  researchBonus,
+  researchBonusValue,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
-import { SettingsAction, SettingsActionType } from './settings.actions';
+import * as Actions from './settings.actions';
 
 export interface SettingsState {
   modId: string;
@@ -46,7 +48,7 @@ export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
   costs?: Partial<CostSettings>;
 };
 
-export const initialSettingsState: SettingsState = {
+export const initialState: SettingsState = {
   modId: '1.1',
   researchedTechnologyIds: null,
   netProductionOnly: false,
@@ -57,7 +59,7 @@ export const initialSettingsState: SettingsState = {
   flowRate: rational(1200n),
   inserterTarget: InserterTarget.ExpressTransportBelt,
   miningBonus: rational.zero,
-  researchBonus: researchBonus.speed6,
+  researchBonus: researchBonusValue.speed6,
   inserterCapacity: InserterCapacity.Capacity7,
   displayRate: DisplayRate.PerMinute,
   maximizeType: MaximizeType.Weight,
@@ -72,92 +74,65 @@ export const initialSettingsState: SettingsState = {
   },
 };
 
-export function settingsReducer(
-  state: SettingsState = initialSettingsState,
-  action: SettingsAction | App.AppAction,
-): SettingsState {
-  switch (action.type) {
-    case App.AppActionType.LOAD:
-      return action.payload.settingsState
-        ? {
-            ...initialSettingsState,
-            ...{
-              ...action.payload.settingsState,
-              ...{
-                costs: {
-                  ...initialSettingsState.costs,
-                  ...action.payload.settingsState.costs,
-                },
-              },
-            },
-          }
-        : initialSettingsState;
-    case App.AppActionType.RESET:
-      return initialSettingsState;
-    case SettingsActionType.SET_MOD: {
-      state = spread(state, {
-        modId: action.payload,
-        preset: initialSettingsState.preset,
-        beaconReceivers: initialSettingsState.beaconReceivers,
-        miningBonus: initialSettingsState.miningBonus,
-        researchBonus: initialSettingsState.researchBonus,
-      });
+export const settingsReducer = createReducer(
+  initialState,
+  on(
+    App.load,
+    (_, { partial }): SettingsState =>
+      spread(
+        initialState,
+        spread(partial.settingsState ?? {}, {
+          costs: spread(initialState.costs, partial.settingsState?.costs ?? {}),
+        }) as Partial<SettingsState>,
+      ),
+  ),
+  on(App.reset, (): SettingsState => initialState),
+  on(Actions.setMod, (state, { modId }) => {
+    state = spread(state, {
+      modId,
+      researchedTechnologyIds: initialState.researchedTechnologyIds,
+      preset: initialState.preset,
+      miningBonus: initialState.miningBonus,
+      researchBonus: initialState.researchBonus,
+    });
 
-      delete state.beltId;
-      delete state.pipeId;
-      delete state.cargoWagonId;
-      delete state.fluidWagonId;
-      return state;
-    }
-    case SettingsActionType.SET_RESEARCHED_TECHNOLOGIES:
-      return spread(state, { researchedTechnologyIds: action.payload });
-    case SettingsActionType.SET_NET_PRODUCTION_ONLY:
-      return spread(state, { netProductionOnly: action.payload });
-    case SettingsActionType.SET_REQUIRE_MACHINES_OUTPUT:
-      return spread(state, { surplusMachinesOutput: action.payload });
-    case SettingsActionType.SET_PRESET:
-      return spread(state, { preset: action.payload });
-    case SettingsActionType.SET_BEACON_RECEIVERS:
-      return spread(state, { beaconReceivers: action.payload });
-    case SettingsActionType.SET_PROLIFERATOR_SPRAY:
-      return spread(state, { proliferatorSprayId: action.payload });
-    case SettingsActionType.SET_BELT:
-      return spread(state, {
-        beltId: StoreUtility.compareValue(action.payload),
-      });
-    case SettingsActionType.SET_PIPE:
-      return spread(state, {
-        pipeId: StoreUtility.compareValue(action.payload),
-      });
-    case SettingsActionType.SET_CARGO_WAGON:
-      return spread(state, {
-        cargoWagonId: StoreUtility.compareValue(action.payload),
-      });
-    case SettingsActionType.SET_FLUID_WAGON:
-      return spread(state, {
-        fluidWagonId: StoreUtility.compareValue(action.payload),
-      });
-    case SettingsActionType.SET_FLOW_RATE:
-      return spread(state, { flowRate: action.payload });
-    case SettingsActionType.SET_INSERTER_TARGET:
-      return spread(state, { inserterTarget: action.payload });
-    case SettingsActionType.SET_MINING_BONUS:
-      return spread(state, { miningBonus: action.payload });
-    case SettingsActionType.SET_RESEARCH_BONUS:
-      return spread(state, { researchBonus: action.payload });
-    case SettingsActionType.SET_INSERTER_CAPACITY:
-      return spread(state, { inserterCapacity: action.payload });
-    case SettingsActionType.SET_DISPLAY_RATE:
-      return spread(state, { displayRate: action.payload.value });
-    case SettingsActionType.SET_MAXIMIZE_TYPE:
-      return spread(state, { maximizeType: action.payload });
-    case SettingsActionType.SET_COSTS:
-      return spread(state, { costs: action.payload });
-    case SettingsActionType.RESET_COSTS:
-      return spread(state, {
-        costs: initialSettingsState.costs,
-      });
-    default:
-      return state;
-  }
-}
+    delete state.beltId;
+    delete state.pipeId;
+    delete state.cargoWagonId;
+    delete state.fluidWagonId;
+
+    return state;
+  }),
+  on(Actions.setBelt, (state, { id, def }) =>
+    spread(state, { beltId: StoreUtility.compareValue(id, def) }),
+  ),
+  on(Actions.setPipe, (state, { id, def }) =>
+    spread(state, { pipeId: StoreUtility.compareValue(id, def) }),
+  ),
+  on(Actions.setCargoWagon, (state, { id, def }) =>
+    spread(state, { cargoWagonId: StoreUtility.compareValue(id, def) }),
+  ),
+  on(Actions.setFluidWagon, (state, { id, def }) =>
+    spread(state, { fluidWagonId: StoreUtility.compareValue(id, def) }),
+  ),
+  on(
+    Actions.setResearchedTechnologies,
+    Actions.setNetProductionOnly,
+    Actions.setSurplusMachinesOutput,
+    Actions.setPreset,
+    Actions.setBeaconReceivers,
+    Actions.setProliferatorSpray,
+    Actions.setFlowRate,
+    Actions.setInserterTarget,
+    Actions.setMiningBonus,
+    Actions.setResearchBonus,
+    Actions.setInserterCapacity,
+    Actions.setDisplayRate,
+    Actions.setMaximizeType,
+    Actions.setCosts,
+    (state, payload) => spread(state, payload),
+  ),
+  on(Actions.resetCosts, (state) =>
+    spread(state, { costs: initialState.costs }),
+  ),
+);

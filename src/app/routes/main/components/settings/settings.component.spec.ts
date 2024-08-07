@@ -44,7 +44,7 @@ describe('SettingsComponent', () => {
     fixture = TestBed.createComponent(SettingsComponent);
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
-      Settings.getGameStates,
+      Settings.selectGameStates,
       Mocks.PreferencesState.states[Game.Factorio],
     );
     component = fixture.componentInstance;
@@ -168,7 +168,7 @@ describe('SettingsComponent', () => {
   describe('overwriteState', () => {
     it('should re-save the state with the new value', () => {
       spyOn(component, 'saveState');
-      mockStore.overrideSelector(Settings.getGame, Game.Factorio);
+      mockStore.overrideSelector(Settings.selectGame, Game.Factorio);
       component.state = 'id';
       spyOnProperty(BrowserUtility, 'search').and.returnValue('search');
       component.editStateMenu[1].command!({});
@@ -324,59 +324,56 @@ describe('SettingsComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.void('resetSettings', App.ResetAction);
-    dispatch.keyIdVal('saveState', Preferences.SaveStateAction);
-    dispatch.keyId('removeState', Preferences.RemoveStateAction);
-    dispatch.val('setMod', Settings.SetModAction);
-    dispatch.val(
+    dispatch.void('resetSettings', App.reset);
+    dispatch.props('saveState', Preferences.saveState);
+    dispatch.props('removeState', Preferences.removeState);
+    dispatch.props('setMod', Settings.setMod);
+    dispatch.props(
       'setResearchedTechnologies',
-      Settings.SetResearchedTechnologiesAction,
+      Settings.setResearchedTechnologies,
     );
-    dispatch.val('setRecipeExcludedBatch', Recipes.SetExcludedBatchAction);
-    dispatch.val('setItemExcludedBatch', Items.SetExcludedBatchAction);
-    dispatch.val('setPreset', Settings.SetPresetAction);
-    dispatch.valDef('setFuelRank', Machines.SetFuelRankAction);
-    dispatch.valDef('setModuleRank', Machines.SetModuleRankAction);
-    dispatch.valDef('addMachine', Machines.AddAction);
-    dispatch.val('setDefaultBeacons', Machines.SetDefaultBeaconsAction);
-    dispatch.val('setDefaultOverclock', Machines.SetDefaultOverclockAction);
-    dispatch.valDef('setMachineRank', Machines.SetRankAction);
-    dispatch.idValDef('setMachine', Machines.SetMachineAction);
-    dispatch.idValDef('setFuel', Machines.SetFuelAction);
-    dispatch.idVal('setModules', Machines.SetModulesAction);
-    dispatch.idVal('setBeacons', Machines.SetBeaconsAction);
-    dispatch.idValDef('setOverclock', Machines.SetOverclockAction);
-    dispatch.valDef('removeMachine', Machines.RemoveAction);
-    dispatch.val('setBeaconReceivers', Settings.SetBeaconReceiversAction);
-    dispatch.val('setProliferatorSpray', Settings.SetProliferatorSprayAction);
-    dispatch.valDef('setBelt', Settings.SetBeltAction);
-    dispatch.valDef('setPipe', Settings.SetPipeAction);
-    dispatch.valDef('setCargoWagon', Settings.SetCargoWagonAction);
-    dispatch.valDef('setFluidWagon', Settings.SetFluidWagonAction);
-    dispatch.val('setFlowRate', Settings.SetFlowRateAction);
-    dispatch.val('setInserterTarget', Settings.SetInserterTargetAction);
-    dispatch.val('setMiningBonus', Settings.SetMiningBonusAction);
-    dispatch.val('setResearchSpeed', Settings.SetResearchBonusAction);
-    dispatch.val('setInserterCapacity', Settings.SetInserterCapacityAction);
-    dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
-    dispatch.val('setPowerUnit', Preferences.SetPowerUnitAction);
-    dispatch.val('setLanguage', Preferences.SetLanguageAction);
-    dispatch.val('setTheme', Preferences.SetThemeAction);
-    dispatch.val('setBypassLanding', Preferences.SetBypassLandingAction);
-    dispatch.val(
-      'setHideDuplicateIcons',
-      Preferences.SetHideDuplicateIconsAction,
-    );
-    dispatch.val('setDisablePaginator', Preferences.SetDisablePaginatorAction);
-    dispatch.val('setMaximizeType', Settings.SetMaximizeTypeAction);
-    dispatch.val('setNetProductionOnly', Settings.SetNetProductionOnlyAction);
-    dispatch.val(
+    dispatch.props('setRecipeExcludedBatch', Recipes.setExcludedBatch);
+    dispatch.props('setItemExcludedBatch', Items.setExcludedBatch);
+    dispatch.props('setPreset', Settings.setPreset);
+    dispatch.props('setFuelRank', Machines.setFuelRank);
+    dispatch.props('setModuleRank', Machines.setModuleRank);
+    dispatch.props('addMachine', Machines.add);
+    dispatch.props('setDefaultBeacons', Machines.setDefaultBeacons);
+    dispatch.props('setDefaultOverclock', Machines.setDefaultOverclock);
+    dispatch.props('setMachineRank', Machines.setRank);
+    dispatch.props('setMachine', Machines.setMachine);
+    dispatch.props('setFuel', Machines.setFuel);
+    dispatch.props('setModules', Machines.setModules);
+    dispatch.props('setBeacons', Machines.setBeacons);
+    dispatch.props('setOverclock', Machines.setOverclock);
+    dispatch.props('removeMachine', Machines.remove);
+    dispatch.props('setBeaconReceivers', Settings.setBeaconReceivers);
+    dispatch.props('setProliferatorSpray', Settings.setProliferatorSpray);
+    dispatch.props('setBelt', Settings.setBelt);
+    dispatch.props('setPipe', Settings.setPipe);
+    dispatch.props('setCargoWagon', Settings.setCargoWagon);
+    dispatch.props('setFluidWagon', Settings.setFluidWagon);
+    dispatch.props('setFlowRate', Settings.setFlowRate);
+    dispatch.props('setInserterTarget', Settings.setInserterTarget);
+    dispatch.props('setMiningBonus', Settings.setMiningBonus);
+    dispatch.props('setResearchSpeed', Settings.setResearchBonus);
+    dispatch.props('setInserterCapacity', Settings.setInserterCapacity);
+    dispatch.props('setDisplayRate', Settings.setDisplayRate);
+    dispatch.props('setPowerUnit', Preferences.setPowerUnit);
+    dispatch.props('setLanguage', Preferences.setLanguage);
+    dispatch.props('setTheme', Preferences.setTheme);
+    dispatch.props('setBypassLanding', Preferences.setBypassLanding);
+    dispatch.props('setHideDuplicateIcons', Preferences.setHideDuplicateIcons);
+    dispatch.props('setDisablePaginator', Preferences.setDisablePaginator);
+    dispatch.props('setMaximizeType', Settings.setMaximizeType);
+    dispatch.props('setNetProductionOnly', Settings.setNetProductionOnly);
+    dispatch.props(
       'setSurplusMachinesOutput',
-      Settings.SetSurplusMachinesOutputAction,
+      Settings.setSurplusMachinesOutput,
     );
-    dispatch.val(
+    dispatch.props(
       'setConvertObjectiveValues',
-      Preferences.SetConvertObjectiveValuesAction,
+      Preferences.setConvertObjectiveValues,
     );
   });
 });

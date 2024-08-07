@@ -6,16 +6,16 @@ import { MenuItem } from 'primeng/api';
 import { map, switchMap } from 'rxjs';
 
 import { TranslateService } from '~/services';
-import { LabState, Recipes, Settings } from '~/store';
+import { Recipes, Settings } from '~/store';
 
 @Component({ selector: 'lab-detail', template: '' })
 export class DetailComponent {
   route = inject(ActivatedRoute);
   translateSvc = inject(TranslateService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
-  home = this.store.selectSignal(Settings.getModMenuItem);
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  home = this.store.selectSignal(Settings.selectModMenuItem);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
   id = input.required<string>();
   collectionLabel = input.required<string>();

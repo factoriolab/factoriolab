@@ -101,8 +101,8 @@ describe('LandingComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.val('setMod', Settings.SetModAction);
-    dispatch.val('addObjective', Objectives.AddAction);
-    dispatch.val('setBypassLanding', Preferences.SetBypassLandingAction);
+    dispatch.props('setMod', Settings.setMod);
+    dispatch.props('addObjective', Objectives.add);
+    dispatch.props('setBypassLanding', Preferences.setBypassLanding);
   });
 });

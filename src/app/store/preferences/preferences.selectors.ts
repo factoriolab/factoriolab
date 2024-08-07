@@ -7,43 +7,43 @@ import { PreferencesState } from './preferences.reducer';
 export const preferencesState = (state: LabState): PreferencesState =>
   state.preferencesState;
 
-export const getStates = createSelector(
+export const selectStates = createSelector(
   preferencesState,
   (state) => state.states,
 );
-export const getColumns = createSelector(
+export const selectColumns = createSelector(
   preferencesState,
   (state) => state.columns,
 );
-export const getPowerUnit = createSelector(
+export const selectPowerUnit = createSelector(
   preferencesState,
   (state) => state.powerUnit,
 );
-export const getLanguage = createSelector(
+export const selectLanguage = createSelector(
   preferencesState,
   (state) => state.language,
 );
-export const getTheme = createSelector(
+export const selectTheme = createSelector(
   preferencesState,
   (state) => state.theme,
 );
-export const getBypassLanding = createSelector(
+export const selectBypassLanding = createSelector(
   preferencesState,
   (state) => state.bypassLanding,
 );
-export const getShowTechLabels = createSelector(
+export const selectShowTechLabels = createSelector(
   preferencesState,
   (state) => state.showTechLabels,
 );
-export const getPaused = createSelector(
+export const selectPaused = createSelector(
   preferencesState,
   (state) => state.paused,
 );
-export const getFlowSettings = createSelector(
+export const selectFlowSettings = createSelector(
   preferencesState,
   (state) => state.flowSettings,
 );
-export const getConvertObjectiveValues = createSelector(
+export const selectConvertObjectiveValues = createSelector(
   preferencesState,
   (state) => state.convertObjectiveValues,
 );

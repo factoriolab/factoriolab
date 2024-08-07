@@ -10,7 +10,6 @@ import { Store } from '@ngrx/store';
 
 import { OverlayComponent } from '~/components';
 import { Machine, ModuleSettings } from '~/models';
-import { LabState } from '~/store';
 
 @Component({
   selector: 'lab-modules-overlay',
@@ -18,7 +17,7 @@ import { LabState } from '~/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModulesOverlayComponent extends OverlayComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
   @Output() setValue = new EventEmitter<ModuleSettings[]>();
 

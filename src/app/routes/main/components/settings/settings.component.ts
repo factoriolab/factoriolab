@@ -23,8 +23,6 @@ import {
   Game,
   gameInfo,
   gameOptions,
-  IdValueDefaultPayload,
-  IdValuePayload,
   InserterCapacity,
   inserterCapacityOptions,
   InserterTarget,
@@ -50,7 +48,6 @@ import {
   App,
   Datasets,
   Items,
-  LabState,
   Machines,
   Preferences,
   Recipes,
@@ -67,37 +64,40 @@ import { BrowserUtility, RecipeUtility } from '~/utilities';
 export class SettingsComponent implements OnInit {
   contentSvc = inject(ContentService);
   router = inject(Router);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   translateSvc = inject(TranslateService);
   routerSvc = inject(RouterService);
 
   @HostBinding('class.active') @Input() active = false;
   @HostBinding('class.hidden') @Input() hidden = false;
 
-  itemsState = this.store.selectSignal(Items.getItemsState);
-  excludedItemIds = this.store.selectSignal(Items.getExcludedItemIds);
-  recipesState = this.store.selectSignal(Recipes.getRecipesState);
-  excludedRecipeIds = this.store.selectSignal(Recipes.getExcludedRecipeIds);
-  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
-  machinesState = this.store.selectSignal(Machines.getMachinesState);
-  settings = this.store.selectSignal(Settings.getSettings);
-  columnsState = this.store.selectSignal(Settings.getColumnsState);
-  options = this.store.selectSignal(Settings.getOptions);
-  modOptions = this.store.selectSignal(Settings.getModOptions);
-  presetOptions = this.store.selectSignal(Settings.getPresetOptions);
+  itemsState = this.store.selectSignal(Items.selectItemsState);
+  excludedItemIds = this.store.selectSignal(Items.selectExcludedItemIds);
+  recipesState = this.store.selectSignal(Recipes.selectRecipesState);
+  excludedRecipeIds = this.store.selectSignal(Recipes.selectExcludedRecipeIds);
+  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
+  machinesState = this.store.selectSignal(Machines.selectMachinesState);
+  settings = this.store.selectSignal(Settings.selectSettings);
+  columnsState = this.store.selectSignal(Settings.selectColumnsState);
+  options = this.store.selectSignal(Settings.selectOptions);
+  modOptions = this.store.selectSignal(Settings.selectModOptions);
+  presetOptions = this.store.selectSignal(Settings.selectPresetOptions);
   researchedTechnologyIds = this.store.selectSignal(
-    Settings.getAllResearchedTechnologyIds,
+    Settings.selectAllResearchedTechnologyIds,
   );
-  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
-  gameStates = this.store.selectSignal(Settings.getGameStates);
-  savedStates = this.store.selectSignal(Settings.getSavedStates);
+  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
+  gameStates = this.store.selectSignal(Settings.selectGameStates);
+  savedStates = this.store.selectSignal(Settings.selectSavedStates);
   preferences = this.store.selectSignal(Preferences.preferencesState);
-  modRecord = this.store.selectSignal(Datasets.getModRecord);
+  modRecord = this.store.selectSignal(Datasets.selectModEntities);
   machineIds = computed(() => [
-    ...coalesce(this.store.selectSignal(Machines.getMachinesState)().ids, []),
+    ...coalesce(
+      this.store.selectSignal(Machines.selectMachinesState)().ids,
+      [],
+    ),
   ]);
-  defaults = this.store.selectSignal(Settings.getDefaults);
+  defaults = this.store.selectSignal(Settings.selectDefaults);
 
   state = '';
   editValue = '';
@@ -144,7 +144,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.store
-      .select(Settings.getGameStates)
+      .select(Settings.selectGameStates)
       .pipe(first())
       .subscribe((states) => {
         this.state = coalesce(
@@ -213,7 +213,7 @@ export class SettingsComponent implements OnInit {
 
   overwriteState(): void {
     this.store
-      .select(Settings.getGame)
+      .select(Settings.selectGame)
       .pipe(first())
       .subscribe((game) => {
         this.saveState(game, this.state, BrowserUtility.search);
@@ -227,7 +227,7 @@ export class SettingsComponent implements OnInit {
 
   clickDeleteState(): void {
     this.store
-      .select(Settings.getGame)
+      .select(Settings.selectGame)
       .pipe(first())
       .subscribe((game) => {
         this.removeState(game, this.state);
@@ -244,7 +244,8 @@ export class SettingsComponent implements OnInit {
     recipesState: Recipes.RecipesState,
     data: AdjustedDataset,
   ): void {
-    const payload: IdValueDefaultPayload<boolean>[] = [];
+    const payload: { id: string; value: boolean; def: boolean | undefined }[] =
+      [];
     for (const id of data.recipeIds) {
       const value = checked.some((i) => i === id);
       if (value !== recipesState[id].excluded) {
@@ -263,7 +264,7 @@ export class SettingsComponent implements OnInit {
     itemsState: Items.ItemsState,
     data: AdjustedDataset,
   ): void {
-    const payload: IdValuePayload<boolean>[] = [];
+    const payload: { id: string; value: boolean }[] = [];
     for (const id of data.itemIds) {
       const value = checked.some((i) => i === id);
       if (value !== itemsState[id].excluded) {
@@ -319,170 +320,180 @@ export class SettingsComponent implements OnInit {
 
   /** Action Dispatch Methods */
   resetSettings(): void {
-    this.store.dispatch(new App.ResetAction());
+    this.store.dispatch(App.reset());
   }
 
   saveState(key: Game, id: string, value: string): void {
-    this.store.dispatch(new Preferences.SaveStateAction({ key, id, value }));
+    this.store.dispatch(Preferences.saveState({ key, id, value }));
   }
 
   removeState(key: Game, id: string): void {
-    this.store.dispatch(new Preferences.RemoveStateAction({ key, id }));
+    this.store.dispatch(Preferences.removeState({ key, id }));
   }
 
-  setMod(value: string): void {
-    this.store.dispatch(new Settings.SetModAction(value));
+  setMod(modId: string): void {
+    this.store.dispatch(Settings.setMod({ modId }));
   }
 
-  setResearchedTechnologies(value: string[] | null): void {
-    this.store.dispatch(new Settings.SetResearchedTechnologiesAction(value));
+  setResearchedTechnologies(researchedTechnologyIds: string[] | null): void {
+    this.store.dispatch(
+      Settings.setResearchedTechnologies({ researchedTechnologyIds }),
+    );
   }
 
-  setRecipeExcludedBatch(payload: IdValueDefaultPayload<boolean>[]): void {
-    this.store.dispatch(new Recipes.SetExcludedBatchAction(payload));
+  setRecipeExcludedBatch(
+    values: { id: string; value: boolean; def: boolean | undefined }[],
+  ): void {
+    this.store.dispatch(Recipes.setExcludedBatch({ values }));
   }
 
-  setItemExcludedBatch(payload: IdValuePayload<boolean>[]): void {
-    this.store.dispatch(new Items.SetExcludedBatchAction(payload));
+  setItemExcludedBatch(values: { id: string; value: boolean }[]): void {
+    this.store.dispatch(Items.setExcludedBatch({ values }));
   }
 
-  setPreset(value: Preset): void {
-    this.store.dispatch(new Settings.SetPresetAction(value));
+  setPreset(preset: Preset): void {
+    this.store.dispatch(Settings.setPreset({ preset }));
   }
 
   setFuelRank(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Machines.SetFuelRankAction({ value, def }));
+    this.store.dispatch(Machines.setFuelRank({ value, def }));
   }
 
   setModuleRank(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Machines.SetModuleRankAction({ value, def }));
+    this.store.dispatch(Machines.setModuleRank({ value, def }));
   }
 
-  addMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.AddAction({ value, def }));
+  addMachine(id: string, def: string[] | undefined): void {
+    this.store.dispatch(Machines.add({ id, def }));
   }
 
-  setDefaultBeacons(value: BeaconSettings[] | undefined): void {
-    this.store.dispatch(new Machines.SetDefaultBeaconsAction(value));
+  setDefaultBeacons(beacons: BeaconSettings[] | undefined): void {
+    this.store.dispatch(Machines.setDefaultBeacons({ beacons }));
   }
 
-  setDefaultOverclock(value: Rational | undefined): void {
-    this.store.dispatch(new Machines.SetDefaultOverclockAction(value));
+  setDefaultOverclock(overclock: Rational | undefined): void {
+    this.store.dispatch(Machines.setDefaultOverclock({ overclock }));
   }
 
   setMachineRank(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(new Machines.SetRankAction({ value, def }));
+    this.store.dispatch(Machines.setRank({ value, def }));
   }
 
   setMachine(id: string, value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.SetMachineAction({ id, value, def }));
+    this.store.dispatch(Machines.setMachine({ id, value, def }));
   }
 
   setFuel(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(new Machines.SetFuelAction({ id, value, def }));
+    this.store.dispatch(Machines.setFuel({ id, value, def }));
   }
 
   setModules(id: string, value: ModuleSettings[] | undefined): void {
-    this.store.dispatch(new Machines.SetModulesAction({ id, value }));
+    this.store.dispatch(Machines.setModules({ id, value }));
   }
 
   setBeacons(id: string, value: BeaconSettings[] | undefined): void {
-    this.store.dispatch(new Machines.SetBeaconsAction({ id, value }));
+    this.store.dispatch(Machines.setBeacons({ id, value }));
   }
 
   setOverclock(id: string, value: Rational, def: Rational | undefined): void {
-    this.store.dispatch(new Machines.SetOverclockAction({ id, value, def }));
+    this.store.dispatch(Machines.setOverclock({ id, value, def }));
   }
 
-  removeMachine(value: string, def: string[] | undefined): void {
-    this.store.dispatch(new Machines.RemoveAction({ value, def }));
+  removeMachine(id: string, def: string[] | undefined): void {
+    this.store.dispatch(Machines.remove({ id, def }));
   }
 
-  setBeaconReceivers(value: Rational | null): void {
-    this.store.dispatch(new Settings.SetBeaconReceiversAction(value));
+  setBeaconReceivers(beaconReceivers: Rational | null): void {
+    this.store.dispatch(Settings.setBeaconReceivers({ beaconReceivers }));
   }
 
-  setProliferatorSpray(value: string): void {
-    this.store.dispatch(new Settings.SetProliferatorSprayAction(value));
+  setProliferatorSpray(proliferatorSprayId: string): void {
+    this.store.dispatch(Settings.setProliferatorSpray({ proliferatorSprayId }));
   }
 
-  setBelt(value: string, def: string | undefined): void {
-    this.store.dispatch(new Settings.SetBeltAction({ value, def }));
+  setBelt(id: string, def: string | undefined): void {
+    this.store.dispatch(Settings.setBelt({ id, def }));
   }
 
-  setPipe(value: string, def: string | undefined): void {
-    this.store.dispatch(new Settings.SetPipeAction({ value, def }));
+  setPipe(id: string, def: string | undefined): void {
+    this.store.dispatch(Settings.setPipe({ id, def }));
   }
 
-  setCargoWagon(value: string, def: string | undefined): void {
-    this.store.dispatch(new Settings.SetCargoWagonAction({ value, def }));
+  setCargoWagon(id: string, def: string | undefined): void {
+    this.store.dispatch(Settings.setCargoWagon({ id, def }));
   }
 
-  setFluidWagon(value: string, def: string | undefined): void {
-    this.store.dispatch(new Settings.SetFluidWagonAction({ value, def }));
+  setFluidWagon(id: string, def: string | undefined): void {
+    this.store.dispatch(Settings.setFluidWagon({ id, def }));
   }
 
-  setFlowRate(value: Rational): void {
-    this.store.dispatch(new Settings.SetFlowRateAction(value));
+  setFlowRate(flowRate: Rational): void {
+    this.store.dispatch(Settings.setFlowRate({ flowRate }));
   }
 
-  setInserterTarget(value: InserterTarget): void {
-    this.store.dispatch(new Settings.SetInserterTargetAction(value));
+  setInserterTarget(inserterTarget: InserterTarget): void {
+    this.store.dispatch(Settings.setInserterTarget({ inserterTarget }));
   }
 
-  setMiningBonus(value: Rational): void {
-    this.store.dispatch(new Settings.SetMiningBonusAction(value));
+  setMiningBonus(miningBonus: Rational): void {
+    this.store.dispatch(Settings.setMiningBonus({ miningBonus }));
   }
 
-  setResearchSpeed(value: Rational): void {
-    this.store.dispatch(new Settings.SetResearchBonusAction(value));
+  setResearchSpeed(researchBonus: Rational): void {
+    this.store.dispatch(Settings.setResearchBonus({ researchBonus }));
   }
 
-  setInserterCapacity(value: InserterCapacity): void {
-    this.store.dispatch(new Settings.SetInserterCapacityAction(value));
+  setInserterCapacity(inserterCapacity: InserterCapacity): void {
+    this.store.dispatch(Settings.setInserterCapacity({ inserterCapacity }));
   }
 
-  setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
-    this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
+  setDisplayRate(displayRate: DisplayRate, previous: DisplayRate): void {
+    this.store.dispatch(Settings.setDisplayRate({ displayRate, previous }));
   }
 
-  setPowerUnit(value: PowerUnit): void {
-    this.store.dispatch(new Preferences.SetPowerUnitAction(value));
+  setPowerUnit(powerUnit: PowerUnit): void {
+    this.store.dispatch(Preferences.setPowerUnit({ powerUnit }));
   }
 
-  setLanguage(value: Language): void {
-    this.store.dispatch(new Preferences.SetLanguageAction(value));
+  setLanguage(language: Language): void {
+    this.store.dispatch(Preferences.setLanguage({ language }));
   }
 
-  setTheme(value: Theme): void {
-    this.store.dispatch(new Preferences.SetThemeAction(value));
+  setTheme(theme: Theme): void {
+    this.store.dispatch(Preferences.setTheme({ theme }));
   }
 
-  setBypassLanding(value: boolean): void {
-    this.store.dispatch(new Preferences.SetBypassLandingAction(value));
+  setBypassLanding(bypassLanding: boolean): void {
+    this.store.dispatch(Preferences.setBypassLanding({ bypassLanding }));
   }
 
-  setHideDuplicateIcons(value: boolean): void {
-    this.store.dispatch(new Preferences.SetHideDuplicateIconsAction(value));
+  setHideDuplicateIcons(hideDuplicateIcons: boolean): void {
+    this.store.dispatch(
+      Preferences.setHideDuplicateIcons({ hideDuplicateIcons }),
+    );
   }
 
-  setDisablePaginator(value: boolean): void {
-    this.store.dispatch(new Preferences.SetDisablePaginatorAction(value));
+  setDisablePaginator(disablePaginator: boolean): void {
+    this.store.dispatch(Preferences.setDisablePaginator({ disablePaginator }));
   }
 
-  setMaximizeType(value: MaximizeType): void {
-    this.store.dispatch(new Settings.SetMaximizeTypeAction(value));
+  setMaximizeType(maximizeType: MaximizeType): void {
+    this.store.dispatch(Settings.setMaximizeType({ maximizeType }));
   }
 
-  setNetProductionOnly(value: boolean): void {
-    this.store.dispatch(new Settings.SetNetProductionOnlyAction(value));
+  setNetProductionOnly(netProductionOnly: boolean): void {
+    this.store.dispatch(Settings.setNetProductionOnly({ netProductionOnly }));
   }
 
-  setSurplusMachinesOutput(value: boolean): void {
-    this.store.dispatch(new Settings.SetSurplusMachinesOutputAction(value));
+  setSurplusMachinesOutput(surplusMachinesOutput: boolean): void {
+    this.store.dispatch(
+      Settings.setSurplusMachinesOutput({ surplusMachinesOutput }),
+    );
   }
 
-  setConvertObjectiveValues(value: boolean): void {
-    this.store.dispatch(new Preferences.SetConvertObjectiveValuesAction(value));
+  setConvertObjectiveValues(convertObjectiveValues: boolean): void {
+    this.store.dispatch(
+      Preferences.setConvertObjectiveValues({ convertObjectiveValues }),
+    );
   }
 }

@@ -147,6 +147,6 @@ describe('TechPickerComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.val('setShowTechLabels', Preferences.SetShowTechLabelsAction);
+    dispatch.props('setShowTechLabels', Preferences.setShowTechLabels);
   });
 });

@@ -11,7 +11,7 @@ import {
   ObjectiveUnit,
 } from '~/models';
 import { ContentService, RouterService } from '~/services';
-import { LabState, Objectives, Preferences, Recipes, Settings } from '~/store';
+import { Objectives, Preferences, Recipes, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
@@ -24,16 +24,16 @@ import { BrowserUtility } from '~/utilities';
 export class LandingComponent {
   router = inject(Router);
   contentSvc = inject(ContentService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   routerSvc = inject(RouterService);
 
-  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
-  settings = this.store.selectSignal(Settings.getSettings);
-  modOptions = this.store.selectSignal(Settings.getModOptions);
-  data = this.store.selectSignal(Settings.getDataset);
-  mod = this.store.selectSignal(Settings.getMod);
-  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
-  savedStates = this.store.selectSignal(Settings.getSavedStates);
+  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
+  settings = this.store.selectSignal(Settings.selectSettings);
+  modOptions = this.store.selectSignal(Settings.selectModOptions);
+  data = this.store.selectSignal(Settings.selectDataset);
+  mod = this.store.selectSignal(Settings.selectMod);
+  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
+  savedStates = this.store.selectSignal(Settings.selectSavedStates);
   preferences = this.store.selectSignal(Preferences.preferencesState);
 
   gameInfo = gameInfo;
@@ -72,15 +72,15 @@ export class LandingComponent {
   }
 
   /** Action Dispatch Methods */
-  setMod(value: string): void {
-    this.store.dispatch(new Settings.SetModAction(value));
+  setMod(modId: string): void {
+    this.store.dispatch(Settings.setMod({ modId }));
   }
 
-  addObjective(value: ObjectiveBase): void {
-    this.store.dispatch(new Objectives.AddAction(value));
+  addObjective(objective: ObjectiveBase): void {
+    this.store.dispatch(Objectives.add({ objective }));
   }
 
-  setBypassLanding(value: boolean): void {
-    this.store.dispatch(new Preferences.SetBypassLandingAction(value));
+  setBypassLanding(bypassLanding: boolean): void {
+    this.store.dispatch(Preferences.setBypassLanding({ bypassLanding }));
   }
 }

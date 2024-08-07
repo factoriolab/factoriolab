@@ -11,7 +11,7 @@ import {
   ObjectiveUnit,
   rational,
 } from '~/models';
-import { LabState, Objectives, Recipes, Settings } from '~/store';
+import { Objectives, Recipes, Settings } from '~/store';
 
 export type WizardState = 'type' | 'item' | 'recipe';
 
@@ -23,12 +23,12 @@ export type WizardState = 'type' | 'item' | 'recipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
-  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
-  data = this.store.selectSignal(Settings.getDataset);
-  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
-  displayRate = this.store.selectSignal(Settings.getDisplayRate);
+  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
+  data = this.store.selectSignal(Settings.selectDataset);
+  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
+  displayRate = this.store.selectSignal(Settings.selectDisplayRate);
 
   id = '';
   value = rational.one;
@@ -44,30 +44,34 @@ export class WizardComponent {
   }
 
   /** Action Dispatch Methods */
-  setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
-    this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
+  setDisplayRate(displayRate: DisplayRate, previous: DisplayRate): void {
+    this.store.dispatch(Settings.setDisplayRate({ displayRate, previous }));
   }
 
   createItemObjective(targetId: string): void {
     this.store.dispatch(
-      new Objectives.CreateAction({
-        id: '0',
-        targetId,
-        value: this.value,
-        unit: ObjectiveUnit.Items,
-        type: ObjectiveType.Output,
+      Objectives.create({
+        objective: {
+          id: '0',
+          targetId,
+          value: this.value,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        },
       }),
     );
   }
 
   createRecipeObjective(targetId: string): void {
     this.store.dispatch(
-      new Objectives.CreateAction({
-        id: '0',
-        targetId,
-        value: this.value,
-        unit: ObjectiveUnit.Machines,
-        type: ObjectiveType.Output,
+      Objectives.create({
+        objective: {
+          id: '0',
+          targetId,
+          value: this.value,
+          unit: ObjectiveUnit.Machines,
+          type: ObjectiveType.Output,
+        },
       }),
     );
   }

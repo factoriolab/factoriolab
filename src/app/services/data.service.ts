@@ -11,7 +11,7 @@ import {
 } from 'rxjs';
 
 import { Entities, ModData, ModHash, ModI18n } from '~/models';
-import { Datasets, LabState, Settings } from '~/store';
+import { Datasets, Settings } from '~/store';
 import { TranslateService } from './translate.service';
 
 @Injectable({
@@ -19,7 +19,7 @@ import { TranslateService } from './translate.service';
 })
 export class DataService {
   http = inject(HttpClient);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   translateSvc = inject(TranslateService);
 
   cacheData: Entities<Observable<ModData>> = {};
@@ -28,7 +28,7 @@ export class DataService {
 
   initialize(): void {
     combineLatest([
-      this.store.select(Settings.getModId),
+      this.store.select(Settings.selectModId),
       this.translateSvc.lang$,
     ]).subscribe(([id]) => {
       this.requestData(id).subscribe();
@@ -36,18 +36,14 @@ export class DataService {
   }
 
   requestData(id: string): Observable<[ModData, ModHash, ModI18n | null]> {
-    const payload: Datasets.DatasetPayload = {
-      data: null,
-      hash: null,
-      i18n: null,
-    };
+    let data: ModData | undefined;
+    let hash: ModHash | undefined;
+    let i18n: ModI18n | undefined;
 
     /** Setup observable for data */
     if (!this.cacheData[id]) {
       this.cacheData[id] = this.http.get<ModData>(`data/${id}/data.json`).pipe(
-        tap((value) => {
-          payload.data = { id, value };
-        }),
+        tap((value) => (data = value)),
         shareReplay(),
       );
     }
@@ -57,9 +53,7 @@ export class DataService {
     /** Setup observable for hash */
     if (!this.cacheHash[id]) {
       this.cacheHash[id] = this.http.get<ModHash>(`data/${id}/hash.json`).pipe(
-        tap((value) => {
-          payload.hash = { id, value };
-        }),
+        tap((value) => (hash = value)),
         shareReplay(),
       );
     }
@@ -68,35 +62,33 @@ export class DataService {
 
     /** Setup observable for i18n */
     const i18nLang = this.translateSvc.currentLang;
-    const i18nKey = `${id}-${i18nLang}`;
+    const i18nId = `${id}-${i18nLang}`;
     const skipI18n = i18nLang === 'en';
     let i18n$: Observable<ModI18n | null>;
     if (skipI18n) {
       i18n$ = of(null);
     } else {
-      if (!this.cacheI18n[i18nKey]) {
-        this.cacheI18n[i18nKey] = this.http
+      if (!this.cacheI18n[i18nId]) {
+        this.cacheI18n[i18nId] = this.http
           .get<ModI18n>(`data/${id}/i18n/${i18nLang}.json`)
           .pipe(
             catchError(() => {
-              console.warn(`No localization file found for ${i18nKey}`);
+              console.warn(`No localization file found for ${i18nId}`);
               return of(null);
             }),
-            tap((value) => {
-              if (value) {
-                payload.i18n = { id: i18nKey, value };
-              }
-            }),
+            tap((value) => (i18n = value ?? undefined)),
             shareReplay(),
           );
       }
-      i18n$ = this.cacheI18n[i18nKey];
+      i18n$ = this.cacheI18n[i18nId];
     }
 
     return combineLatest([data$, hash$, i18n$]).pipe(
       tap(() => {
-        if (payload.data || payload.hash || payload.i18n) {
-          this.store.dispatch(new Datasets.LoadModAction(payload));
+        if (data || hash || i18n) {
+          this.store.dispatch(
+            Datasets.loadMod({ id, i18nId, data, hash, i18n }),
+          );
         }
       }),
     );

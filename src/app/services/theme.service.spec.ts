@@ -23,7 +23,7 @@ describe('ThemeService', () => {
     data.categoryEntities[CategoryId.Combat].iconText = 'test';
     data.iconEntities['coal'].invertLight = true;
     data.iconEntities['pistol'].invertLight = true;
-    mockStore.overrideSelector(Settings.getDataset, data);
+    mockStore.overrideSelector(Settings.selectDataset, data);
     mockStore.refreshState();
     service.initialize();
     localStorage.clear();
@@ -46,13 +46,13 @@ describe('ThemeService', () => {
     spyOn(service['document'], 'createElement').and.returnValue(
       tempLink as any,
     );
-    mockStore.overrideSelector(Preferences.getTheme, Theme.Light);
+    mockStore.overrideSelector(Preferences.selectTheme, Theme.Light);
     mockStore.refreshState();
     expect(tempLink.href).toEqual('theme-light.css');
     expect(themeLink.href).toEqual('');
     tempLink.onload();
     expect(themeLink.href).toEqual('theme-light.css');
-    mockStore.overrideSelector(Preferences.getTheme, Theme.Dark);
+    mockStore.overrideSelector(Preferences.selectTheme, Theme.Dark);
     mockStore.refreshState();
     expect(tempLink.href).toEqual('theme-dark.css');
     expect(themeLink.href).toEqual('theme-light.css');
@@ -67,7 +67,7 @@ describe('ThemeService', () => {
       themeLink as any,
     );
     spyOn(service, 'themePath').and.returnValue('theme-black.css');
-    mockStore.overrideSelector(Preferences.getTheme, Theme.Black);
+    mockStore.overrideSelector(Preferences.selectTheme, Theme.Black);
     mockStore.refreshState();
     expect(service.updateThemeValues).toHaveBeenCalled();
   });

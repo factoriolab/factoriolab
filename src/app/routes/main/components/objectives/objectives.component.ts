@@ -25,14 +25,7 @@ import {
   SimplexResultType,
 } from '~/models';
 import { ContentService, TrackService, TranslateService } from '~/services';
-import {
-  Items,
-  LabState,
-  Objectives,
-  Preferences,
-  Recipes,
-  Settings,
-} from '~/store';
+import { Items, Objectives, Preferences, Recipes, Settings } from '~/store';
 import { RateUtility } from '~/utilities';
 
 @Component({
@@ -42,31 +35,33 @@ import { RateUtility } from '~/utilities';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ObjectivesComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
   translateSvc = inject(TranslateService);
   contentSvc = inject(ContentService);
   trackSvc = inject(TrackService);
 
-  _objectives = this.store.selectSignal(Objectives.getObjectives);
-  result = this.store.selectSignal(Objectives.getMatrixResult);
-  itemsState = this.store.selectSignal(Items.getItemsState);
-  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
-  maximizeType = this.store.selectSignal(Settings.getMaximizeType);
-  beltSpeed = this.store.selectSignal(Settings.getBeltSpeed);
-  dispRateInfo = this.store.selectSignal(Settings.getDisplayRateInfo);
-  rateUnitOptions = this.store.selectSignal(Settings.getObjectiveUnitOptions);
-  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
-  paused = this.store.selectSignal(Preferences.getPaused);
+  _objectives = this.store.selectSignal(Objectives.selectObjectives);
+  result = this.store.selectSignal(Objectives.selectMatrixResult);
+  itemsState = this.store.selectSignal(Items.selectItemsState);
+  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
+  maximizeType = this.store.selectSignal(Settings.selectMaximizeType);
+  beltSpeed = this.store.selectSignal(Settings.selectBeltSpeed);
+  dispRateInfo = this.store.selectSignal(Settings.selectDisplayRateInfo);
+  rateUnitOptions = this.store.selectSignal(
+    Settings.selectObjectiveUnitOptions,
+  );
+  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
+  paused = this.store.selectSignal(Preferences.selectPaused);
   convertObjectiveValues = this.store.selectSignal(
-    Preferences.getConvertObjectiveValues,
+    Preferences.selectConvertObjectiveValues,
   );
   objectives = computed(() => [...this._objectives()]);
   messages$ = combineLatest({
-    objectives: this.store.select(Objectives.getObjectives),
-    matrixResult: this.store.select(Objectives.getMatrixResult),
-    itemsState: this.store.select(Items.getItemsState),
-    recipesState: this.store.select(Recipes.getRecipesState),
+    objectives: this.store.select(Objectives.selectObjectives),
+    matrixResult: this.store.select(Objectives.selectMatrixResult),
+    itemsState: this.store.select(Items.selectItemsState),
+    recipesState: this.store.select(Recipes.selectRecipesState),
   }).pipe(
     switchMap(({ objectives, matrixResult, itemsState, recipesState }) =>
       this.getMessages(objectives, matrixResult, itemsState, recipesState),
@@ -361,38 +356,38 @@ export class ObjectivesComponent {
 
   /** Action Dispatch Methods */
   removeObjective(id: string): void {
-    this.store.dispatch(new Objectives.RemoveAction(id));
+    this.store.dispatch(Objectives.remove({ id }));
   }
 
   setOrder(ids: string[]): void {
-    this.store.dispatch(new Objectives.SetOrderAction(ids));
+    this.store.dispatch(Objectives.setOrder({ ids }));
   }
 
   setTarget(id: string, value: string): void {
-    this.store.dispatch(new Objectives.SetTargetAction({ id, value }));
+    this.store.dispatch(Objectives.setTarget({ id, value }));
   }
 
   setValue(id: string, value: Rational): void {
-    this.store.dispatch(new Objectives.SetValueAction({ id, value }));
+    this.store.dispatch(Objectives.setValue({ id, value }));
   }
 
-  setUnit(id: string, value: ObjectiveBase): void {
-    this.store.dispatch(new Objectives.SetUnitAction({ id, value }));
+  setUnit(id: string, objective: ObjectiveBase): void {
+    this.store.dispatch(Objectives.setUnit({ id, objective }));
   }
 
   setType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(new Objectives.SetTypeAction({ id, value }));
+    this.store.dispatch(Objectives.setType({ id, value }));
   }
 
-  addObjective(value: ObjectiveBase): void {
-    this.store.dispatch(new Objectives.AddAction(value));
+  addObjective(objective: ObjectiveBase): void {
+    this.store.dispatch(Objectives.add({ objective }));
   }
 
-  setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
-    this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
+  setDisplayRate(displayRate: DisplayRate, previous: DisplayRate): void {
+    this.store.dispatch(Settings.setDisplayRate({ displayRate, previous }));
   }
 
-  setPaused(value: boolean): void {
-    this.store.dispatch(new Preferences.SetPausedAction(value));
+  setPaused(paused: boolean): void {
+    this.store.dispatch(Preferences.setPaused({ paused }));
   }
 }

@@ -4,7 +4,7 @@ import { Items, Recipes } from '../';
 import * as App from '../app.actions';
 import * as Actions from './objectives.actions';
 import {
-  initialObjectivesState,
+  initialState,
   objectivesReducer,
   ObjectivesState,
 } from './objectives.reducer';
@@ -12,7 +12,9 @@ import {
 describe('Objectives Reducer', () => {
   const state = objectivesReducer(
     undefined,
-    new Actions.AddAction({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items }),
+    Actions.add({
+      objective: { targetId: ItemId.Coal, unit: ObjectiveUnit.Items },
+    }),
   );
 
   describe('LOAD', () => {
@@ -24,21 +26,21 @@ describe('Objectives Reducer', () => {
       };
       const result = objectivesReducer(
         undefined,
-        new App.LoadAction({ objectivesState }),
+        App.load({ partial: { objectivesState } }),
       );
       expect(result).toEqual(objectivesState);
     });
 
     it('should skip loading objectives state if null', () => {
-      const result = objectivesReducer(undefined, new App.LoadAction({}));
-      expect(result).toEqual(initialObjectivesState);
+      const result = objectivesReducer(undefined, App.load({ partial: {} }));
+      expect(result).toEqual(initialState);
     });
   });
 
   describe('App RESET', () => {
     it('should reset the reducer', () => {
-      const result = objectivesReducer(undefined, new App.ResetAction());
-      expect(result).toEqual(initialObjectivesState);
+      const result = objectivesReducer(undefined, App.reset());
+      expect(result).toEqual(initialState);
     });
   });
 
@@ -50,13 +52,15 @@ describe('Objectives Reducer', () => {
     it('should use the value of the last objective', () => {
       let result = objectivesReducer(
         state,
-        new Actions.SetValueAction({ id: '0', value: rational(60n) }),
+        Actions.setValue({ id: '0', value: rational(60n) }),
       );
       result = objectivesReducer(
         result,
-        new Actions.AddAction({
-          targetId: ItemId.Coal,
-          unit: ObjectiveUnit.Items,
+        Actions.add({
+          objective: {
+            targetId: ItemId.Coal,
+            unit: ObjectiveUnit.Items,
+          },
         }),
       );
       expect(result.entities['1'].value).toEqual(rational(60n));
@@ -72,10 +76,7 @@ describe('Objectives Reducer', () => {
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       };
-      const result = objectivesReducer(
-        state,
-        new Actions.CreateAction(objective),
-      );
+      const result = objectivesReducer(state, Actions.create({ objective }));
       expect(result.entities['0']).toEqual({
         id: '0',
         targetId: RecipeId.IronPlate,
@@ -89,7 +90,7 @@ describe('Objectives Reducer', () => {
 
   describe('REMOVE', () => {
     it('should remove an objective', () => {
-      const result = objectivesReducer(state, new Actions.RemoveAction('0'));
+      const result = objectivesReducer(state, Actions.remove({ id: '0' }));
       expect(result.ids.length).toEqual(0);
     });
   });
@@ -98,7 +99,7 @@ describe('Objectives Reducer', () => {
     it('should set the order of objectives', () => {
       const result = objectivesReducer(
         undefined,
-        new Actions.SetOrderAction(['1', '0']),
+        Actions.setOrder({ ids: ['1', '0'] }),
       );
       expect(result.ids).toEqual(['1', '0']);
     });
@@ -108,7 +109,7 @@ describe('Objectives Reducer', () => {
     it('should set recipe on an objective', () => {
       const result = objectivesReducer(
         state,
-        new Actions.SetTargetAction({ id: '0', value: RecipeId.Coal }),
+        Actions.setTarget({ id: '0', value: RecipeId.Coal }),
       );
       expect(result.entities['0'].targetId).toEqual(RecipeId.Coal);
     });
@@ -118,7 +119,7 @@ describe('Objectives Reducer', () => {
     it('should set value of an objective', () => {
       const result = objectivesReducer(
         state,
-        new Actions.SetValueAction({ id: '0', value: rational(30n) }),
+        Actions.setValue({ id: '0', value: rational(30n) }),
       );
       expect(result.entities['0'].value).toEqual(rational(30n));
     });
@@ -128,9 +129,9 @@ describe('Objectives Reducer', () => {
     it('should set target and unit of an objective', () => {
       const result = objectivesReducer(
         state,
-        new Actions.SetUnitAction({
+        Actions.setUnit({
           id: '0',
-          value: {
+          objective: {
             targetId: ItemId.AdvancedCircuit,
             unit: ObjectiveUnit.Belts,
           },
@@ -146,7 +147,7 @@ describe('Objectives Reducer', () => {
       const value = ObjectiveType.Limit;
       const result = objectivesReducer(
         state,
-        new Actions.SetTypeAction({ id: '0', value }),
+        Actions.setType({ id: '0', value }),
       );
       expect(result.entities['0'].type).toEqual(value);
     });
@@ -156,7 +157,7 @@ describe('Objectives Reducer', () => {
     it('should set machine on an objective', () => {
       const result = objectivesReducer(
         state,
-        new Actions.SetMachineAction({
+        Actions.setMachine({
           id: '0',
           value: ItemId.AssemblingMachine2,
           def: ItemId.AssemblingMachine1,
@@ -170,7 +171,7 @@ describe('Objectives Reducer', () => {
     it('should set machine fuel on an objective', () => {
       const result = objectivesReducer(
         state,
-        new Actions.SetFuelAction({
+        Actions.setFuel({
           id: '0',
           value: ItemId.Coal,
           def: undefined,
@@ -185,7 +186,7 @@ describe('Objectives Reducer', () => {
       const value = [{ count: rational.one, id: ItemId.SpeedModule }];
       const result = objectivesReducer(
         state,
-        new Actions.SetModulesAction({
+        Actions.setModules({
           id: '0',
           value,
         }),
@@ -205,7 +206,7 @@ describe('Objectives Reducer', () => {
       ];
       const result = objectivesReducer(
         state,
-        new Actions.SetBeaconsAction({
+        Actions.setBeacons({
           id: '0',
           value,
         }),
@@ -218,7 +219,7 @@ describe('Objectives Reducer', () => {
     it('should set overclock on an objective', () => {
       const result = objectivesReducer(
         state,
-        new Actions.SetOverclockAction({
+        Actions.setOverclock({
           id: '0',
           value: rational(200n),
           def: rational(100n),
@@ -232,7 +233,7 @@ describe('Objectives Reducer', () => {
     it('should set checked state on an objective', () => {
       const result = objectivesReducer(
         state,
-        new Actions.SetCheckedAction({
+        Actions.setChecked({
           id: '0',
           value: true,
         }),
@@ -267,7 +268,7 @@ describe('Objectives Reducer', () => {
       };
       const result = objectivesReducer(
         state,
-        new Actions.ResetObjectiveAction('0'),
+        Actions.resetObjective({ id: '0' }),
       );
       expect(result.entities['0']).toEqual({
         id: '0',
@@ -283,7 +284,7 @@ describe('Objectives Reducer', () => {
     it('should adjust rates for objectives when display rate changes', () => {
       const result = objectivesReducer(
         state,
-        new Actions.AdjustDisplayRateAction(rational(1n, 60n)),
+        Actions.adjustDisplayRate({ factor: rational(1n, 60n) }),
       );
       expect(result.entities[Mocks.Objective1.id].value).toEqual(
         rational(1n, 60n),
@@ -293,9 +294,9 @@ describe('Objectives Reducer', () => {
     it('should not adjust rates when rate type unaffected by display rate', () => {
       let result = objectivesReducer(
         state,
-        new Actions.SetUnitAction({
+        Actions.setUnit({
           id: '0',
-          value: {
+          objective: {
             targetId: ItemId.Coal,
             unit: ObjectiveUnit.Belts,
           },
@@ -303,7 +304,7 @@ describe('Objectives Reducer', () => {
       );
       result = objectivesReducer(
         result,
-        new Actions.AdjustDisplayRateAction(rational(1n, 60n)),
+        Actions.adjustDisplayRate({ factor: rational(1n, 60n) }),
       );
       expect(result.entities['0'].value).toEqual(rational.one);
     });
@@ -333,10 +334,7 @@ describe('Objectives Reducer', () => {
         },
         index: 1,
       };
-      const result = objectivesReducer(
-        state,
-        new Recipes.ResetMachinesAction(),
-      );
+      const result = objectivesReducer(state, Recipes.resetMachines());
       expect(result.entities['0']).toEqual({
         id: '0',
         targetId: RecipeId.WoodenChest,
@@ -371,7 +369,7 @@ describe('Objectives Reducer', () => {
         },
         index: 1,
       };
-      const result = objectivesReducer(state, new Recipes.ResetBeaconsAction());
+      const result = objectivesReducer(state, Recipes.resetBeacons());
       expect(result.entities['0']).toEqual({
         id: '0',
         targetId: RecipeId.WoodenChest,
@@ -400,7 +398,7 @@ describe('Objectives Reducer', () => {
         },
         index: 1,
       };
-      const result = objectivesReducer(state, new Items.ResetCheckedAction());
+      const result = objectivesReducer(state, Items.resetChecked());
       expect(result.entities['0']).toEqual({
         id: '0',
         targetId: RecipeId.WoodenChest,

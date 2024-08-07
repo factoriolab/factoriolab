@@ -20,20 +20,20 @@ import { ItemId } from './item-id';
 import { RecipeId } from './recipe-id';
 
 export const Raw = data;
-export const DataState = Datasets.initialDatasetsState;
+export const DataState = Datasets.initialState;
 export const ModInfo = data.mods[0];
 export const Data = mod as unknown as M.ModData;
 Data.defaults!.excludedRecipes = [RecipeId.NuclearFuelReprocessing];
 export const Hash: M.ModHash = hash;
 export const I18n: M.ModI18n = i18n;
 export const Mod = { ...ModInfo, ...Data } as M.Mod;
-export const Defaults = Settings.getDefaults.projector(
+export const Defaults = Settings.selectDefaults.projector(
   M.Preset.Beacon8,
   Mod,
 ) as M.Defaults;
 export function getDataset(): M.Dataset {
-  Settings.getDataset.release();
-  return Settings.getDataset.projector(
+  Settings.selectDataset.release();
+  return Settings.selectDataset.projector(
     Mod,
     null,
     Hash,
@@ -190,12 +190,12 @@ export const RecipesState: M.Entities<M.RecipeSettings> = {};
 for (const recipe of Dataset.recipeIds.map((i) => Dataset.recipeEntities[i])) {
   RecipesState[recipe.id] = { ...RecipeSettings1 };
 }
-export const SettingsStateInitial = Settings.getSettings.projector(
-  Settings.initialSettingsState,
+export const SettingsStateInitial = Settings.selectSettings.projector(
+  Settings.initialState,
   Defaults,
 );
-export const ItemsStateInitial = Items.getItemsState.projector({}, Dataset, {
-  ...Settings.initialSettingsState,
+export const ItemsStateInitial = Items.selectItemsState.projector({}, Dataset, {
+  ...Settings.initialState,
   ...{
     beltId: ItemId.TransportBelt,
     pipeId: ItemId.Pipe,
@@ -205,25 +205,29 @@ export const ItemsStateInitial = Items.getItemsState.projector({}, Dataset, {
     excludedRecipeIds: [],
   },
 });
-export const MachinesStateInitial = Machines.getMachinesState.projector(
-  Machines.initialMachinesState,
+export const MachinesStateInitial = Machines.selectMachinesState.projector(
+  Machines.initialState,
   Defaults,
   Dataset,
 );
 export function getRecipesState(): M.Entities<M.RecipeSettings> {
-  Recipes.getRecipesState.release();
-  return Recipes.getRecipesState.projector({}, MachinesStateInitial, Dataset);
+  Recipes.selectRecipesState.release();
+  return Recipes.selectRecipesState.projector(
+    {},
+    MachinesStateInitial,
+    Dataset,
+  );
 }
 export const RecipesStateInitial = getRecipesState();
-export const Costs = Settings.initialSettingsState.costs;
+export const Costs = Settings.initialState.costs;
 export function getAdjustedDataset(): M.AdjustedDataset {
-  Recipes.getAdjustedDataset.release();
-  return Recipes.getAdjustedDataset.projector(
+  Recipes.selectAdjustedDataset.release();
+  return Recipes.selectAdjustedDataset.projector(
     RecipesStateInitial,
     [],
     ItemsStateInitial,
     Dataset.recipeIds,
-    Settings.initialSettingsState,
+    Settings.initialState,
     getDataset(),
   );
 }

@@ -1,7 +1,7 @@
 import { ItemId, Mocks } from 'src/tests';
 import { rational } from '~/models';
 import { RecipeUtility } from '~/utilities';
-import { initialRecipesState } from './recipes.reducer';
+import { initialState } from './recipes.reducer';
 import * as Selectors from './recipes.selectors';
 
 describe('Recipes Selectors', () => {
@@ -19,8 +19,8 @@ describe('Recipes Selectors', () => {
 
   describe('getRecipesState', () => {
     it('should return the recipe settings', () => {
-      const result = Selectors.getRecipesState.projector(
-        initialRecipesState,
+      const result = Selectors.selectRecipesState.projector(
+        initialState,
         Mocks.MachinesStateInitial,
         Mocks.AdjustedDataset,
       );
@@ -31,7 +31,7 @@ describe('Recipes Selectors', () => {
 
     it('should handle null settings', () => {
       const state = {
-        ...initialRecipesState,
+        ...initialState,
         ...{ [Mocks.Item1.id]: { machineId: ItemId.AssemblingMachine3 } },
       };
       const data = {
@@ -52,7 +52,7 @@ describe('Recipes Selectors', () => {
         },
       };
       spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.selectRecipesState.projector(
         state,
         {
           ...Mocks.MachinesStateInitial,
@@ -72,10 +72,10 @@ describe('Recipes Selectors', () => {
 
     it('should use machine override', () => {
       const state = {
-        ...initialRecipesState,
+        ...initialState,
         ...{ [Mocks.Item1.id]: { machineId: stringValue } },
       };
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.selectRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
         Mocks.AdjustedDataset,
@@ -89,10 +89,10 @@ describe('Recipes Selectors', () => {
         { count: rational(3n), id: ItemId.Module },
       ];
       const state = {
-        ...initialRecipesState,
+        ...initialState,
         ...{ [Mocks.Item1.id]: { modules } },
       };
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.selectRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
@@ -102,7 +102,7 @@ describe('Recipes Selectors', () => {
 
     it('should reset invalid beacon totals', () => {
       const state = {
-        ...initialRecipesState,
+        ...initialState,
         ...{
           [Mocks.Item1.id]: {
             beacons: [
@@ -116,7 +116,7 @@ describe('Recipes Selectors', () => {
           },
         },
       };
-      const result = Selectors.getRecipesState.projector(
+      const result = Selectors.selectRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
         Mocks.Dataset,
@@ -127,7 +127,7 @@ describe('Recipes Selectors', () => {
 
   describe('getAvailableItems', () => {
     it('should return items with some recipe available to produce it', () => {
-      const result = Selectors.getAvailableItems.projector(
+      const result = Selectors.selectAvailableItems.projector(
         Mocks.AdjustedDataset,
       );
       // Cannot produce wood in vanilla Factorio

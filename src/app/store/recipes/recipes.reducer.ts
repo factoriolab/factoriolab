@@ -1,97 +1,86 @@
-import {
-  Entities,
-  IdValueDefaultPayload,
-  Rational,
-  RecipeSettings,
-} from '~/models';
+import { createReducer, on } from '@ngrx/store';
+
+import { spread } from '~/helpers';
+import { Entities, RecipeSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Items from '../items';
 import * as Settings from '../settings';
-import { RecipesAction, RecipesActionType } from './recipes.actions';
+import * as Actions from './recipes.actions';
 
 export type RecipesState = Entities<RecipeSettings>;
 
-export const initialRecipesState: RecipesState = {};
+export const initialState: RecipesState = {};
 
-export function recipesReducer(
-  state: RecipesState = initialRecipesState,
-  action:
-    | RecipesAction
-    | App.AppAction
-    | Settings.SetModAction
-    | Items.ResetCheckedAction,
-): RecipesState {
-  switch (action.type) {
-    case App.AppActionType.LOAD:
-      return { ...initialRecipesState, ...action.payload.recipesState };
-    case App.AppActionType.RESET:
-    case Settings.SettingsActionType.SET_MOD:
-      return initialRecipesState;
-    case RecipesActionType.SET_EXCLUDED:
-      return StoreUtility.compareReset(state, 'excluded', action.payload);
-    case RecipesActionType.SET_EXCLUDED_BATCH: {
-      state = { ...state };
-      for (const entry of action.payload) {
-        state = StoreUtility.compareReset(state, 'excluded', entry);
-      }
+export const recipesReducer = createReducer(
+  initialState,
+  on(App.load, (_, { partial }) =>
+    spread(initialState, partial.recipesState ?? {}),
+  ),
+  on(App.reset, Settings.setMod, (): RecipesState => initialState),
+  on(Actions.setExcluded, (state, { id, value, def }) =>
+    StoreUtility.compareReset(state, 'excluded', id, value, def),
+  ),
+  on(Actions.setExcludedBatch, (state, { values }) => {
+    for (const { id, value, def } of values) {
+      state = StoreUtility.compareReset(state, 'excluded', id, value, def);
+    }
 
-      return state;
-    }
-    case RecipesActionType.SET_CHECKED:
-      return StoreUtility.compareReset(state, 'checked', {
-        id: action.payload.id,
-        value: action.payload.value,
-        def: false,
-      });
-    case RecipesActionType.SET_MACHINE:
-      return StoreUtility.resetFields(
-        StoreUtility.compareReset(state, 'machineId', action.payload),
-        ['fuelId', 'modules', 'beacons'],
-        action.payload.id,
-      );
-    case RecipesActionType.SET_FUEL:
-      return StoreUtility.compareReset(state, 'fuelId', action.payload);
-    case RecipesActionType.SET_MODULES:
-      return StoreUtility.setValue(state, 'modules', action.payload);
-    case RecipesActionType.SET_BEACONS:
-      return StoreUtility.setValue(state, 'beacons', action.payload);
-    case RecipesActionType.SET_OVERCLOCK:
-      return StoreUtility.compareReset(state, 'overclock', action.payload);
-    case RecipesActionType.SET_COST:
-      return StoreUtility.compareReset(
-        state,
-        'cost',
-        action.payload as IdValueDefaultPayload<Rational>,
-      );
-    case RecipesActionType.RESET_RECIPE: {
-      const newState = { ...state };
-      delete newState[action.payload];
-      return newState;
-    }
-    case RecipesActionType.RESET_EXCLUDED:
-      return StoreUtility.resetField(state, 'excluded');
-    case RecipesActionType.RESET_RECIPE_MACHINE:
-      return StoreUtility.resetFields(
+    return state;
+  }),
+  on(Actions.setChecked, (state, { id, value }) =>
+    StoreUtility.compareReset(state, 'checked', id, value, false),
+  ),
+  on(Actions.setMachine, (state, { id, value, def }) => {
+    state = StoreUtility.compareReset(state, 'machineId', id, value, def);
+    return StoreUtility.resetFields(
+      state,
+      ['fuelId', 'modules', 'beacons'],
+      id,
+    );
+  }),
+  on(Actions.setFuel, (state, { id, value, def }) =>
+    StoreUtility.compareReset(state, 'fuelId', id, value, def),
+  ),
+  on(Actions.setModules, (state, { id, value }) =>
+    StoreUtility.setValue(state, 'modules', id, value),
+  ),
+  on(Actions.setBeacons, (state, { id, value }) =>
+    StoreUtility.setValue(state, 'beacons', id, value),
+  ),
+  on(Actions.setOverclock, (state, { id, value, def }) =>
+    StoreUtility.compareReset(state, 'overclock', id, value, def),
+  ),
+  on(Actions.setCost, (state, { id, value }) =>
+    StoreUtility.compareReset(state, 'cost', id, value, undefined),
+  ),
+  on(Actions.resetRecipe, (state, { id }) =>
+    StoreUtility.removeEntry(state, id),
+  ),
+  on(Actions.resetRecipeMachines, (state, { ids }) => {
+    for (const id of ids)
+      state = StoreUtility.resetFields(
         state,
         ['fuelId', 'modules', 'beacons'],
-        action.payload,
+        id,
       );
-    case RecipesActionType.RESET_MACHINES:
-      return StoreUtility.resetFields(state, [
-        'machineId',
-        'fuelId',
-        'overclock',
-        'modules',
-        'beacons',
-      ]);
-    case Items.ItemsActionType.RESET_CHECKED:
-      return StoreUtility.resetField(state, 'checked');
-    case RecipesActionType.RESET_BEACONS:
-      return StoreUtility.resetField(state, 'beacons');
-    case RecipesActionType.RESET_COST:
-      return StoreUtility.resetField(state, 'cost');
-    default:
-      return state;
-  }
-}
+    return state;
+  }),
+  on(Actions.resetExcluded, (state) =>
+    StoreUtility.resetField(state, 'excluded'),
+  ),
+  on(Actions.resetMachines, (state) =>
+    StoreUtility.resetFields(state, [
+      'machineId',
+      'fuelId',
+      'overclock',
+      'modules',
+      'beacons',
+    ]),
+  ),
+  on(Actions.resetBeacons, (state) =>
+    StoreUtility.resetField(state, 'beacons'),
+  ),
+  on(Actions.resetCost, (state) => StoreUtility.resetField(state, 'cost')),
+  on(Items.resetChecked, (state) => StoreUtility.resetField(state, 'checked')),
+);

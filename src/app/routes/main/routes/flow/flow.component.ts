@@ -42,7 +42,7 @@ import {
   SankeyAlign,
 } from '~/models';
 import { DisplayService, ExportService, FlowService } from '~/services';
-import { LabState, Preferences } from '~/store';
+import { Preferences } from '~/store';
 import { MainSharedModule } from '../../main-shared.module';
 import { FlowSettingsComponent } from './components/flow-settings/flow-settings.component';
 
@@ -59,13 +59,13 @@ cytoscape.use(elk);
 })
 export class FlowComponent implements AfterViewInit {
   ref = inject(ChangeDetectorRef);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   displaySvc = inject(DisplayService);
   flowSvc = inject(FlowService);
   exportSvc = inject(ExportService);
   destroyRef = inject(DestroyRef);
 
-  flowSettings = this.store.selectSignal(Preferences.getFlowSettings);
+  flowSettings = this.store.selectSignal(Preferences.selectFlowSettings);
 
   svgElement = viewChild.required<ElementRef>('svg');
   cy?: cytoscape.Core;
@@ -85,7 +85,7 @@ export class FlowComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     combineLatest([
       this.flowSvc.flowData$,
-      this.store.select(Preferences.getFlowSettings),
+      this.store.select(Preferences.selectFlowSettings),
     ])
       .pipe(debounceTime(0), takeUntilDestroyed(this.destroyRef))
       .subscribe((args) => this.rebuildChart(...args));
