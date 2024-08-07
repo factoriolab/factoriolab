@@ -22,7 +22,7 @@ export type InterpolateVal = string | number | null | undefined;
   providedIn: 'root',
 })
 export class TranslateService {
-  httpClient = inject(HttpClient);
+  http = inject(HttpClient);
 
   private _templateMatcher: RegExp = /{{\s?([^{}\s]*)\s?}}/g;
   private _langDataCache: Entities<Observable<LangData>> = {};
@@ -39,8 +39,8 @@ export class TranslateService {
 
   protected _getLangData(lang: string): Observable<LangData> {
     if (this._langDataCache[lang] == null) {
-      this._langDataCache[lang] = this.httpClient
-        .get<LangData>(`/assets/i18n/${lang}.json`)
+      this._langDataCache[lang] = this.http
+        .get<LangData>(`assets/i18n/${lang}.json`)
         .pipe(shareReplay(1));
     }
 
