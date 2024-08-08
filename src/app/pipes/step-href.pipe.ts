@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
+import { inject, Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { Step, Zip } from '~/models';
@@ -9,7 +9,6 @@ import { Recipes } from '~/store';
 export class StepHrefPipe implements PipeTransform {
   store = inject(Store);
   routerSvc = inject(RouterService);
-  ref = inject(ChangeDetectorRef);
 
   data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 

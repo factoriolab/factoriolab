@@ -38,9 +38,9 @@ export class CompressionService {
     return this.bytesToBase64(bytes);
   }
 
-  inflate(str: string): Promise<string> {
+  async inflate(str: string): Promise<string> {
     try {
-      return this.inflateStr(str);
+      return await this.inflateStr(str);
     } catch {
       console.warn(
         'Router failed to parse url, checking for missing trailing characters...',
@@ -48,18 +48,18 @@ export class CompressionService {
     }
 
     try {
-      return this.inflateMend(str, '-');
+      return await this.inflateMend(str, '-');
     } catch {
       // ignore error
     }
 
     try {
-      return this.inflateMend(str, '.');
+      return await this.inflateMend(str, '.');
     } catch {
       // ignore error
     }
 
-    return this.inflateMend(str, '_');
+    return await this.inflateMend(str, '_');
   }
 
   private async inflateMend(str: string, char: string): Promise<string> {
@@ -161,8 +161,8 @@ export class CompressionService {
   ): Promise<string> {
     const cs = new DecompressionStream(encoding);
     const writer = cs.writable.getWriter();
-    writer.write(byteArray);
-    writer.close();
+    writer.write(byteArray).catch(() => {});
+    writer.close().catch(() => {});
     const arrayBuffer = new Response(cs.readable).arrayBuffer();
     return new TextDecoder().decode(await arrayBuffer);
   }

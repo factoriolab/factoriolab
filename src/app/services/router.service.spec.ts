@@ -1,22 +1,25 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { NavigationEnd, NavigationStart } from '@angular/router';
 import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
-import { spread } from '~/helpers';
 import {
   DisplayRate,
   Game,
   InserterCapacity,
   InserterTarget,
   MaximizeType,
+  MIN_ZIP,
   Objective,
   ObjectiveType,
   ObjectiveUnit,
   Preset,
   rational,
+  Zip,
+  ZipData,
+  ZipMachineSettings,
 } from '~/models';
 import {
   App,
@@ -25,22 +28,10 @@ import {
   LabState,
   Machines,
   Objectives,
-  Preferences,
   Recipes,
   Settings,
 } from '~/store';
-import {
-  EMPTY,
-  FALSE,
-  MIN_ZIP,
-  NULL,
-  RouterService,
-  Section,
-  TRUE,
-  Zip,
-  ZipData,
-  ZipMachineSettings,
-} from './router.service';
+import { RouterService } from './router.service';
 
 const mockObjective: Objective = {
   id: '1',
@@ -219,12 +210,8 @@ describe('RouterService', () => {
     expect(service.updateState).toHaveBeenCalled();
   });
 
-  it('should run first update of url if settings modified', (done) => {
-    (service.router.events as any).next(new NavigationEnd(2, '/', '/'));
-    spyOn(service, 'updateUrl').and.callFake(() => {
-      expect(service.updateUrl).toHaveBeenCalled();
-      done();
-    });
+  it('should run first update of url if settings modified', fakeAsync(() => {
+    spyOn(service, 'updateUrl');
     selectMockGetZipState.setResult({
       objectives: Objectives.initialState,
       itemsState: { [ItemId.Wood]: { excluded: true } },
@@ -234,49 +221,35 @@ describe('RouterService', () => {
     });
     mockStore.refreshState();
     service.first = true;
-  });
-
-  describe('migrateOldStates', () => {
-    it('should skip if keys match', () => {
-      spyOn(mockStore, 'dispatch');
-      service.migrateOldStates(Mocks.PreferencesState.states);
-      expect(mockStore.dispatch).not.toHaveBeenCalled();
-    });
-
-    it('should migrate saved states into correct games', () => {
-      spyOn(mockStore, 'dispatch');
-      service.migrateOldStates(
-        spread(Preferences.initialState.states, { id: 's=dsp' } as any),
-      );
-      expect(mockStore.dispatch).toHaveBeenCalledWith(
-        Preferences.setStates({
-          states: spread(Preferences.initialState.states, {
-            [Game.DysonSphereProgram]: { id: 's=dsp' },
-          }),
-        }),
-      );
-    });
-  });
+    service.updateState(new NavigationEnd(2, '/', '/'));
+    tick();
+    expect(service.updateUrl).toHaveBeenCalled();
+  }));
 
   describe('getModIdFromState', () => {
-    it('should handle zipped states', () => {
-      let result = service.getModIdFromState(
+    it('should handle zipped states', async () => {
+      let result = await service.getModIdFromState(
         'z=eJwrcInQMlQrcknU0nLScq9zVyuzBAA04gVG&v=9',
       );
       expect(result).toBeUndefined();
 
-      result = service.getModIdFromState(
+      result = await service.getModIdFromState(
         'z=eJwrMNcyVEvyUCtyctTSStZyVStWK7MEADvbBYI_&v=9',
       );
       expect(result).toEqual('dsp');
     });
 
-    it('should handle invalid states', () => {
-      let result = service.getModIdFromState('z=');
+    it('should handle invalid states', async () => {
+      let result = await service.getModIdFromState('z=');
       expect(result).toBeUndefined();
 
-      result = service.getModIdFromState('s=');
+      result = await service.getModIdFromState('s=');
       expect(result).toBeUndefined();
+    });
+
+    it('should handle bare states', async () => {
+      const result = await service.getModIdFromState('s=dsp');
+      expect(result).toEqual('dsp');
     });
   });
 
@@ -288,9 +261,9 @@ describe('RouterService', () => {
   });
 
   describe('updateUrl', () => {
-    it('should update url with products', () => {
+    it('should update url with products', fakeAsync(() => {
       spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
-      spyOn(service, 'getHash').and.returnValue('test');
+      spyOn(service, 'getHash').and.returnValue(Promise.resolve('test'));
       spyOn(service.router, 'navigateByUrl');
       service.updateUrl(
         Objectives.initialState,
@@ -299,12 +272,13 @@ describe('RouterService', () => {
         Machines.initialState,
         Settings.initialState,
       );
+      tick();
       expect(service.router.navigateByUrl).toHaveBeenCalledWith('/?test');
-    });
+    }));
 
-    it('should preserve a hash', () => {
+    it('should preserve a hash', fakeAsync(() => {
       spyOn(service, 'zipState').and.returnValue(of(mockZipData()));
-      spyOn(service, 'getHash').and.returnValue('test');
+      spyOn(service, 'getHash').and.returnValue(Promise.resolve('test'));
       spyOn(service.router, 'navigateByUrl');
       spyOnProperty(service.router, 'url').and.returnValue('path#hash');
       service.updateUrl(
@@ -314,10 +288,11 @@ describe('RouterService', () => {
         Machines.initialState,
         Settings.initialState,
       );
+      tick();
       expect(service.router.navigateByUrl).toHaveBeenCalledWith(
         'path?test#hash',
       );
-    });
+    }));
   });
 
   describe('zipState', () => {
@@ -352,66 +327,66 @@ describe('RouterService', () => {
   });
 
   describe('stepHref', () => {
-    it('should return null if hash is undefined', () => {
-      expect(
-        service.stepHref(
-          { id: '', itemId: ItemId.Wood },
-          mockEmptyZip(),
-          undefined,
-        ),
-      ).toBeNull();
+    it('should return null if hash is undefined', async () => {
+      const result = await service.stepHref(
+        { id: '', itemId: ItemId.Wood },
+        mockEmptyZip(),
+        undefined,
+      );
+      expect(result).toBeNull();
     });
 
-    it('should return null for no items or machines', () => {
-      expect(
-        service.stepHref(
-          { id: '', itemId: ItemId.Wood },
-          mockEmptyZip(),
-          Mocks.Hash,
-        ),
-      ).toBeNull();
+    it('should return null for no items or machines', async () => {
+      const result = await service.stepHref(
+        { id: '', itemId: ItemId.Wood },
+        mockEmptyZip(),
+        Mocks.Hash,
+      );
+      expect(result).toBeNull();
     });
 
-    it('should return get the hash for items from specific step', () => {
+    it('should return get the hash for items from specific step', async () => {
       spyOn(service, 'zipObjectives');
-      spyOn(service, 'getHash').and.returnValue('test');
-      expect(
-        service.stepHref(
-          { id: '', itemId: ItemId.Wood, items: rational.one },
-          mockEmptyZip(),
-          Mocks.Hash,
-        ),
-      ).toEqual('list?test');
+      spyOn(service, 'getHash').and.returnValue(Promise.resolve('test'));
+      const result = await service.stepHref(
+        { id: '', itemId: ItemId.Wood, items: rational.one },
+        mockEmptyZip(),
+        Mocks.Hash,
+      );
+      expect(result).toEqual('list?test');
     });
 
-    it('should return get the hash for machines from specific step', () => {
+    it('should return get the hash for machines from specific step', async () => {
       spyOn(service, 'zipObjectives');
-      spyOn(service, 'getHash').and.returnValue('test');
-      expect(
-        service.stepHref(
-          {
-            id: '',
-            recipeId: RecipeId.AdvancedCircuit,
-            machines: rational.one,
-          },
-          mockEmptyZip(),
-          Mocks.Hash,
-        ),
-      ).toEqual('list?test');
+      spyOn(service, 'getHash').and.returnValue(Promise.resolve('test'));
+      const result = await service.stepHref(
+        {
+          id: '',
+          recipeId: RecipeId.AdvancedCircuit,
+          machines: rational.one,
+        },
+        mockEmptyZip(),
+        Mocks.Hash,
+      );
+      expect(result).toEqual('list?test');
     });
   });
 
   describe('getHash', () => {
-    it('should preserve a small state', () => {
-      spyOn(service, 'bytesToBase64').and.returnValue('');
-      const result = service.getHash(mockZipData(mockZip));
+    it('should preserve a small state', async () => {
+      spyOn(service.compressionSvc, 'deflate').and.returnValue(
+        Promise.resolve(''),
+      );
+      const result = await service.getHash(mockZipData(mockZip));
       expect(result).toEqual(`${mockZip.bare}&v=${service.version}`);
     });
 
-    it('should zip a large state', () => {
-      spyOn(service, 'bytesToBase64').and.returnValue('test');
+    it('should zip a large state', async () => {
+      spyOn(service.compressionSvc, 'deflate').and.returnValue(
+        Promise.resolve('test'),
+      );
       service.zipTail.bare = 'a'.repeat(MIN_ZIP);
-      const result = service.getHash(mockZipData());
+      const result = await service.getHash(mockZipData());
       expect(result).toEqual('z=test&v=' + service.version);
     });
   });
@@ -434,47 +409,47 @@ describe('RouterService', () => {
       spyOn(service, 'dispatch');
     });
 
-    it('should skip unless event is NavigationEnd', () => {
-      (service.router.events as any).next(new NavigationStart(2, ''));
+    it('should skip unless event is NavigationEnd', async () => {
+      await service.updateState(new NavigationStart(2, ''));
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
-    it('should skip unless hash is found', () => {
-      (service.router.events as any).next(new NavigationEnd(2, '/', '/'));
+    it('should skip unless hash is found', async () => {
+      await service.updateState(new NavigationEnd(2, '/', '/'));
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
-    it('should skip unless new zip is found', () => {
+    it('should skip unless new zip is found', async () => {
       service.zip = mockZip.bare;
       const url = `/#${mockZip.bare}`;
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).not.toHaveBeenCalled();
     });
 
-    it('should log warning on bad zipped url', () => {
+    it('should log warning on bad zipped url', async () => {
       spyOn(console, 'warn');
       spyOn(console, 'error');
-      expect(() => {
-        service.updateState(new NavigationEnd(2, '/#z=test', '/#z=test'));
-      }).toThrow();
+      await expectAsync(
+        service.updateState(new NavigationEnd(2, '/#z=test', '/#z=test')),
+      ).toBeRejected();
       expect(console.warn).toHaveBeenCalledTimes(1);
       expect(console.error).toHaveBeenCalledTimes(1);
     });
 
-    it('should unzip empty v0', () => {
+    it('should unzip empty v0', async () => {
       const url = '/#z=eJwrsAUAAR8Arg==';
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p=', {} as any);
     });
 
-    it('should unzip v0', () => {
+    it('should unzip v0', async () => {
       spyOn(service.contentSvc, 'confirm');
       const url =
         '/#z=eJxtUNsKwyAM.Zr5EHDUFsZeZC.7j6E2toJVp3ZjL.v2dbSD2pUQyOXk5CSBp4xo' +
         'qeoxZWDAyL2sEMkZMRtUjsKl4GOmEm0GJWLn6VN03pFYQEVKOEhrXEcHoXrjkNaAWqPK' +
         '5mHyiw6-HS2-.0vTlhQQ2x9inYBEobyDuqqATX4mmjMIcWpueIupknEhue1JvM036DE6' +
         'oZAkzo4VHJrrzuleWGBfIc1pUTPb6ieg7WjaJb58AJs7glk_';
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
 
       const mockStateV0: App.PartialState = {
         ...mockState,
@@ -502,14 +477,14 @@ describe('RouterService', () => {
       expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
-    it('should unzip empty v1', () => {
+    it('should unzip empty v1', async () => {
       const v1Empty = 'p=&v=1';
       const url = `/?${v1Empty}`;
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v1Empty, {} as any);
     });
 
-    it('should unzip v1', () => {
+    it('should unzip v1', async () => {
       spyOn(service.contentSvc, 'confirm');
       const v1Full =
         'p=steel-chest*1*1&i=steel-chest*1*transport-belt*cargo-wagon&r=steel' +
@@ -519,7 +494,7 @@ describe('RouterService', () => {
         '&s=1.0*2*1*=*transport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-' +
         'wagon*?*2*10*0*100*1*productivity-module&v=1';
       const url = `/?${v1Full}`;
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
 
       const mockStateV1: App.PartialState = {
         ...mockState,
@@ -541,16 +516,16 @@ describe('RouterService', () => {
       expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
-    it('should unzip empty v2', () => {
+    it('should unzip empty v2', async () => {
       const url = '/?z=eJwrUCszAgADVAE.';
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v2', {} as any);
     });
 
-    it('should unzip v2', () => {
+    it('should unzip v2', async () => {
       spyOn(service.contentSvc, 'confirm');
       const url =
         '/?z=eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78m' +
@@ -559,7 +534,7 @@ describe('RouterService', () => {
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       const mockStateV2: App.PartialState = {
         ...mockState,
         ...{
@@ -584,16 +559,16 @@ describe('RouterService', () => {
       expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
-    it('should unzip empty v3', () => {
+    it('should unzip empty v3', async () => {
       const url = '/?z=eJwrUCszBgADVQFA';
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v3', {} as any);
     });
 
-    it('should unzip v3', () => {
+    it('should unzip v3', async () => {
       spyOn(service.contentSvc, 'confirm');
       const url =
         '/?z=eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX' +
@@ -603,7 +578,7 @@ describe('RouterService', () => {
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
 
       const mockStateV3: App.PartialState = {
         ...mockState,
@@ -631,14 +606,14 @@ describe('RouterService', () => {
       expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
     });
 
-    it('should unzip empty v4', () => {
+    it('should unzip empty v4', async () => {
       const v4Empty = 'p=&v=4';
       const url = `/?${v4Empty}`;
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v4Empty, {} as any);
     });
 
-    it('should unzip v4', () => {
+    it('should unzip v4', async () => {
       const v4Full =
         'p=steel-chest*1*1&q=steel-chest*1&i=steel-chest*1*transport-belt*car' +
         'go-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effec' +
@@ -647,7 +622,7 @@ describe('RouterService', () => {
         '-2_steel-furnace&s=1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
         'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module&v=4';
       const url = `/?${v4Full}`;
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
 
       const mockStateV4: App.PartialState = {
         ...mockState,
@@ -670,16 +645,16 @@ describe('RouterService', () => {
       expect(service.dispatch).toHaveBeenCalledWith(v4Full, mockStateV4);
     });
 
-    it('should unzip empty v5', () => {
+    it('should unzip empty v5', async () => {
       const url = '/?z=eJwrUCszBQADVwFC&v=5';
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v5', {} as any);
     });
 
-    it('should unzip v5', () => {
+    it('should unzip v5', async () => {
       const url =
         '/?z=eJwdjDsKgDAQRG-zxVRJQLGx2E0gtXiAgIUgNn5Au5zdiSz7mTfMHrGHh5czGedi' +
         'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4DZYwb' +
@@ -688,7 +663,7 @@ describe('RouterService', () => {
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
 
       const mockStateV5: App.PartialState = {
         ...mockState,
@@ -715,14 +690,14 @@ describe('RouterService', () => {
       );
     });
 
-    it('should unzip empty v6', () => {
+    it('should unzip empty v6', async () => {
       const v6Empty = 'p=&v=6';
       const url = `/?${v6Empty}`;
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith(v6Empty, {} as any);
     });
 
-    it('should unzip v6', () => {
+    it('should unzip v6', async () => {
       const v6Full =
         'p=steel-chest*1*1&q=steel-chest*1&e=1*speed-module~speed-module*beac' +
         'on*8&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assemb' +
@@ -731,7 +706,7 @@ describe('RouterService', () => {
         'hine-2_steel-furnace&s=1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*' +
         '0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module*1&v=6';
       const url = `/?${v6Full}`;
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
 
       const mockStateV6: App.PartialState = {
         ...mockState,
@@ -754,16 +729,16 @@ describe('RouterService', () => {
       expect(service.dispatch).toHaveBeenCalledWith(v6Full, mockStateV6);
     });
 
-    it('should unzip empty v7', () => {
+    it('should unzip empty v7', async () => {
       const url = '/?z=eJwrUCszBwADWQFE&v=7';
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v7', {} as any);
     });
 
-    it('should unzip v7', () => {
+    it('should unzip v7', async () => {
       const url =
         '/?z=eJwdjbEKg1AMRf8mw5kSB-3ikPjAWfwAoWChdGkr6Oa3m-dyueGcS75Di2HyK5G5' +
         'GuM54jzkGfK-2YDLP2ngp6M0qpiqvIySbi7wJZZJtiaPvvrMB.Gh2poZkKh2q1tKftq7' +
@@ -772,7 +747,7 @@ describe('RouterService', () => {
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
 
       const mockStateV7: App.PartialState = {
         ...mockState,
@@ -798,16 +773,16 @@ describe('RouterService', () => {
       );
     });
 
-    it('should unzip empty v8', () => {
+    it('should unzip empty v8', async () => {
       const url = '/?z=eJwrUCuzAAADWgFF&v=8';
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v8', {} as any);
     });
 
-    it('should unzip v8', () => {
+    it('should unzip v8', async () => {
       const url =
         '/?z=eJwli0EKwlAMRG-TxYNC0kXpTpIWuhYPUBAUxI0o2F3P3vkayAwM772mgSDsFiz7' +
         'QjLatezxWyfS3nNBkXvi9O6Eu92DWbAUcq31bJ8T.V.gslFPGu1KyWL12YC2yVd2Kp19' +
@@ -816,7 +791,7 @@ describe('RouterService', () => {
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
 
       const mockStateV8: App.PartialState = {
         ...mockState,
@@ -837,23 +812,23 @@ describe('RouterService', () => {
       );
     });
 
-    it('should unzip empty v9', () => {
+    it('should unzip empty v9', async () => {
       const url = '/?z=eJwrUCuzBAADWwFG&v=9';
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
       expect(service.dispatch).toHaveBeenCalledWith('p&v9', {} as any);
     });
 
-    it('should unzip v9', () => {
+    it('should unzip v9', async () => {
       const url =
         '/?z=eJwljEEKwlAMRG-TxQMh6ULsSpIWuhYP8EGoIG5EQXc9u.N1IBMY5s1j2hOErcGyLSQHu5TdfulE2nMuKHJLnMGdcG9Jl12DWYxIslU72evI8Oc4f6g7HXK5NtTVZS.0TDPynZ5k7.ELdcIegQ__&v=9';
 
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
-      (service.router.events as any).next(new NavigationEnd(2, url, url));
+      await service.updateState(new NavigationEnd(2, url, url));
 
       const mockStateV8: App.PartialState = {
         ...mockState,
@@ -883,189 +858,6 @@ describe('RouterService', () => {
       expect(mockStore.dispatch).toHaveBeenCalledWith(
         App.load({ partial: mockState }),
       );
-    });
-  });
-
-  describe('migrate', () => {
-    it('should return latest version without alteration', () => {
-      const originalParams = { [Section.Version]: service.version };
-      const { params } = service.migrate({ ...originalParams }, false);
-      expect(params).toEqual(originalParams);
-    });
-  });
-
-  describe('migrateV0', () => {
-    it('should handle unrecognized/null baseid', () => {
-      const { params } = service.migrateV0({
-        params: { [Section.Settings]: '---' },
-        warnings: [],
-        isBare: true,
-      });
-      expect(params[Section.Settings]).toEqual(NULL);
-    });
-
-    it('should handle preset without other settings', () => {
-      const { params } = service.migrateV0({
-        params: { [Section.Mod]: '0' },
-        warnings: [],
-        isBare: true,
-      });
-      expect(params[Section.Settings]).toEqual('?**?*0');
-    });
-  });
-
-  describe('migrateV2', () => {
-    it('should handle undefined beaconCount', () => {
-      const { params } = service.migrateV2({
-        params: {
-          [Section.Recipes]: '***?',
-          [Section.Machines]: '**?',
-        },
-        warnings: [],
-        isBare: false,
-      });
-      expect(params[Section.Recipes]).toEqual('');
-      expect(params[Section.Machines]).toEqual('');
-    });
-  });
-
-  describe('migrateV6', () => {
-    it('should convert item objectives by machines into recipe objectives and into unified objective', () => {
-      const { params } = service.migrateV6({
-        params: {
-          [Section.Objectives]: 'coal*1*3',
-        },
-        warnings: [],
-        isBare: true,
-      });
-      expect(params[Section.Objectives]).toEqual('coal*1*3');
-    });
-
-    it('should convert item objective by machines with limit step into maximize / limit recipe objectives and into unified objective', () => {
-      const { params } = service.migrateV6({
-        params: {
-          [Section.Objectives]: 'iron-plate*1*3*iron-ore',
-          [Section.RecipeObjectives]: 'coal*1',
-        },
-        warnings: [],
-        isBare: true,
-      });
-      expect(params[Section.Objectives]).toEqual(
-        'coal*1*3_iron-plate*1*3*2_iron-ore*1*3*3',
-      );
-      expect(params[Section.RecipeObjectives]).toEqual('');
-    });
-
-    it('should convert item objective with limit step into maximize / limit item objectives', () => {
-      const { params } = service.migrateV6({
-        params: {
-          [Section.Objectives]: 'iron-plate*1**iron-ore',
-        },
-        warnings: [],
-        isBare: true,
-      });
-      expect(params[Section.Objectives]).toEqual(
-        'iron-plate*1**2_iron-ore*1**3',
-      );
-    });
-
-    it('should remove item default recipe', () => {
-      const { params } = service.migrateV6({
-        params: {
-          [Section.Items]: 'coal*1*transport-belt*cargo-wagon*coal',
-        },
-        warnings: [],
-        isBare: true,
-      });
-      expect(params[Section.Items]).toEqual(
-        'coal*1*transport-belt*cargo-wagon',
-      );
-    });
-
-    it('should convert disabled recipes into excluded recipes', () => {
-      const { params } = service.migrateV6({
-        params: {
-          [Section.Settings]: '***coal',
-        },
-        warnings: [],
-        isBare: true,
-      });
-      expect(params[Section.Settings]).toEqual('');
-      expect(params[Section.Recipes]).toEqual('coal*1');
-    });
-
-    it('should convert disabled recipes into excluded recipes on existing recipe settings', () => {
-      const { params } = service.migrateV6({
-        params: {
-          [Section.Settings]: '***coal',
-          [Section.Recipes]: 'coal*electric-mining-drill',
-        },
-        warnings: [],
-        isBare: true,
-      });
-      expect(params[Section.Settings]).toEqual('');
-      expect(params[Section.Recipes]).toEqual('coal*1*electric-mining-drill');
-    });
-  });
-
-  describe('migrateV7', () => {
-    it('should convert hashed objectives by machines to use items', () => {
-      const { params } = service.migrateV7({
-        params: {
-          [Section.Objectives]: 'Dc*1*3',
-          [Section.Settings]: '0**=*A**Po**A*0',
-          [Section.Version]: '7',
-        },
-        warnings: [],
-        isBare: false,
-      });
-      expect(params[Section.Objectives]).toEqual('Dc*1*0');
-    });
-  });
-
-  describe('migrateV8', () => {
-    it('should convert recipe objectives to unified objectives', () => {
-      const { params } = service.migrateV8({
-        params: {
-          [Section.Objectives]: 'steel-chest*1*1',
-          [Section.RecipeObjectives]: 'steel-chest*1',
-        },
-        warnings: [],
-        isBare: true,
-      });
-
-      expect(params[Section.Objectives]).toEqual(
-        'steel-chest*1*1_steel-chest*1*3',
-      );
-    });
-  });
-
-  describe('migrateV9', () => {
-    it('should handle migrating machine modules', () => {
-      const { params } = service.migrateV9({
-        params: {
-          [Section.Machines]: '1_A*speed-module',
-        },
-        warnings: [],
-        isBare: true,
-      });
-
-      expect(params[Section.Machines]).toEqual('=_A*0');
-      expect(params[Section.Modules]).toEqual('*speed-module');
-    });
-
-    it('should handle migrating fuel rank', () => {
-      const { params } = service.migrateV9({
-        params: {
-          [Section.Machines]: 'A',
-          [Section.Settings]: '*****coal',
-        },
-        warnings: [],
-        isBare: true,
-      });
-
-      expect(params[Section.Machines]).toEqual('***coal_A');
-      expect(params[Section.Settings]).toEqual('****');
     });
   });
 
@@ -1311,491 +1103,6 @@ describe('RouterService', () => {
           },
         },
       });
-    });
-  });
-
-  describe('zipList', () => {
-    it('should zip a list of strings', () => {
-      expect(service.zipList([mockZip, mockZip])).toEqual({
-        bare: encodeURIComponent(mockZip.bare + '_' + mockZip.bare),
-        hash: mockZip.hash + '_' + mockZip.hash,
-      });
-    });
-  });
-
-  describe('zipFields', () => {
-    it('should zip a list of fields', () => {
-      expect(service.zipFields(['a', 'b', '', ''])).toEqual('a*b');
-    });
-  });
-
-  describe('zipTruthyString', () => {
-    it('should handle falsy', () => {
-      expect(service.zipTruthyString(undefined)).toEqual('');
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipTruthyString('a')).toEqual('a');
-    });
-  });
-
-  describe('zipTruthyNum', () => {
-    it('should handle falsy', () => {
-      expect(service.zipTruthyNumber(undefined)).toEqual('');
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipTruthyNumber(1)).toEqual('1');
-    });
-  });
-
-  describe('zipTruthyBool', () => {
-    it('should handle falsy', () => {
-      expect(service.zipTruthyBool(undefined)).toEqual('');
-    });
-
-    it('should handle false', () => {
-      expect(service.zipTruthyBool(false)).toEqual(FALSE);
-    });
-
-    it('should handle true', () => {
-      expect(service.zipTruthyBool(true)).toEqual(TRUE);
-    });
-  });
-
-  describe('zipTruthyArray', () => {
-    it('should handle falsy', () => {
-      expect(service.zipTruthyArray(undefined)).toEqual('');
-    });
-
-    it('should handle empty', () => {
-      expect(service.zipTruthyArray([])).toEqual(EMPTY);
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipTruthyArray(['a'])).toEqual('a');
-    });
-  });
-
-  describe('zipTruthyNArray', () => {
-    it('should handle falsy', () => {
-      expect(service.zipTruthyNArray(undefined, [])).toEqual('');
-    });
-
-    it('should handle empty', () => {
-      expect(service.zipTruthyNArray([], [])).toEqual(EMPTY);
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipTruthyNArray(['a'], ['a'])).toEqual('A');
-    });
-  });
-
-  describe('zipDiffString', () => {
-    it('should handle default', () => {
-      expect(service.zipDiffString('a', 'a')).toEqual('');
-    });
-
-    it('should handle falsy', () => {
-      expect(service.zipDiffString(undefined, 'a')).toEqual(NULL);
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipDiffString('a', 'b')).toEqual('a');
-    });
-  });
-
-  describe('zipDiffNumber', () => {
-    it('should handle default', () => {
-      expect(service.zipDiffNumber(0, 0)).toEqual('');
-    });
-
-    it('should handle falsy', () => {
-      expect(service.zipDiffNumber(undefined, 0)).toEqual(NULL);
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipDiffNumber(0, 1)).toEqual('0');
-    });
-  });
-
-  describe('zipDiffRational', () => {
-    it('should handle default', () => {
-      expect(service.zipDiffRational(rational.one, rational.one)).toEqual('');
-    });
-
-    it('should handle nullish', () => {
-      expect(service.zipDiffRational(null, rational.one)).toEqual(NULL);
-    });
-
-    it('should handle nondefault', () => {
-      expect(service.zipDiffRational(rational.one, null)).toEqual('1');
-    });
-  });
-
-  describe('zipDiffDisplayRate', () => {
-    it('should handle default', () => {
-      expect(
-        service.zipDiffDisplayRate(
-          DisplayRate.PerMinute,
-          DisplayRate.PerMinute,
-        ),
-      ).toEqual('');
-    });
-
-    it('should handle falsy', () => {
-      expect(
-        service.zipDiffDisplayRate(undefined, DisplayRate.PerMinute),
-      ).toEqual(NULL);
-    });
-
-    it('should handle truthy', () => {
-      expect(
-        service.zipDiffDisplayRate(DisplayRate.PerSecond, undefined),
-      ).toEqual('0');
-      expect(
-        service.zipDiffDisplayRate(DisplayRate.PerMinute, undefined),
-      ).toEqual('1');
-      expect(
-        service.zipDiffDisplayRate(DisplayRate.PerHour, undefined),
-      ).toEqual('2');
-    });
-  });
-
-  describe('zipDiffBool', () => {
-    it('should handle default', () => {
-      expect(service.zipDiffBool(false, false)).toEqual('');
-    });
-
-    it('should handle falsy', () => {
-      expect(service.zipDiffBool(undefined, false)).toEqual(NULL);
-    });
-
-    it('should handle true/false', () => {
-      expect(service.zipDiffBool(false, true)).toEqual(FALSE);
-      expect(service.zipDiffBool(true, false)).toEqual(TRUE);
-    });
-  });
-
-  describe('zipDiffNullableArray', () => {
-    it('should handle default', () => {
-      expect(service.zipDiffNullableArray(['a', 'b'], ['b', 'a'])).toEqual('');
-    });
-
-    it('should handle falsy', () => {
-      expect(service.zipDiffNullableArray(undefined, [])).toEqual(NULL);
-      expect(service.zipDiffNullableArray([], undefined)).toEqual(EMPTY);
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipDiffNullableArray(['b', 'a'], ['a', 'c'])).toEqual(
-        'a~b',
-      );
-    });
-  });
-
-  describe('zipDiffNString', () => {
-    it('should handle default', () => {
-      expect(service.zipDiffNString('a', 'a', [])).toEqual('');
-    });
-
-    it('should handle falsy', () => {
-      expect(service.zipDiffNString(undefined, 'a', [])).toEqual(NULL);
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipDiffNString('a', 'b', ['a'])).toEqual('A');
-    });
-  });
-
-  describe('zipDiffNNumber', () => {
-    it('should handle default', () => {
-      expect(service.zipDiffNNumber(0, 0)).toEqual('');
-    });
-
-    it('should handle falsy', () => {
-      expect(service.zipDiffNNumber(undefined, 0)).toEqual(NULL);
-    });
-
-    it('should handle truthy', () => {
-      expect(service.zipDiffNNumber(0, 1)).toEqual('A');
-    });
-  });
-
-  describe('zipDiffNullableNArray', () => {
-    it('should handle default', () => {
-      expect(service.zipDiffNullableNArray(['a', 'b'], ['b', 'a'], [])).toEqual(
-        '',
-      );
-    });
-
-    it('should handle falsy', () => {
-      expect(service.zipDiffNullableNArray(undefined, [], [])).toEqual(NULL);
-      expect(service.zipDiffNullableNArray([], undefined, [])).toEqual(EMPTY);
-    });
-
-    it('should handle truthy', () => {
-      expect(
-        service.zipDiffNullableNArray(['b', 'a'], ['a', 'c'], ['a', 'b']),
-      ).toEqual('A~B');
-    });
-  });
-
-  describe('parseString', () => {
-    it('should handle undefined', () => {
-      expect(service.parseString(undefined)).toBeUndefined();
-      expect(service.parseString(undefined)).toBeUndefined();
-      expect(service.parseString('')).toBeUndefined();
-    });
-
-    it('should parse null', () => {
-      expect(service.parseString(NULL)).toBeUndefined();
-    });
-
-    it('should parse value', () => {
-      expect(service.parseString('a')).toEqual('a');
-    });
-  });
-
-  describe('parseBool', () => {
-    it('should handle undefined', () => {
-      expect(service.parseBool(undefined)).toBeUndefined();
-      expect(service.parseBool('')).toBeUndefined();
-    });
-
-    it('should parse null', () => {
-      expect(service.parseBool(NULL)).toBeUndefined();
-    });
-
-    it('should parse false', () => {
-      expect(service.parseBool(FALSE)).toBeFalse();
-    });
-
-    it('should parse true', () => {
-      expect(service.parseBool(TRUE)).toBeTrue();
-    });
-  });
-
-  describe('parseNumber', () => {
-    it('should handle undefined', () => {
-      expect(service.parseNumber(undefined)).toBeUndefined();
-      expect(service.parseNumber('')).toBeUndefined();
-    });
-
-    it('should parse null', () => {
-      expect(service.parseNumber(NULL)).toBeUndefined();
-    });
-
-    it('should parse value', () => {
-      expect(service.parseNumber('1')).toEqual(1);
-    });
-  });
-
-  describe('parseDisplayRate', () => {
-    it('should handle undefined', () => {
-      expect(service.parseDisplayRate(undefined)).toBeUndefined();
-      expect(service.parseDisplayRate('')).toBeUndefined();
-    });
-
-    it('should parse null', () => {
-      expect(service.parseDisplayRate(NULL)).toBeUndefined();
-    });
-
-    it('should parse value', () => {
-      expect(service.parseDisplayRate('0')).toEqual(DisplayRate.PerSecond);
-      expect(service.parseDisplayRate('1')).toEqual(DisplayRate.PerMinute);
-      expect(service.parseDisplayRate('2')).toEqual(DisplayRate.PerHour);
-    });
-
-    it('should return null if unrecognized', () => {
-      expect(service.parseDisplayRate('3')).toBeUndefined();
-    });
-  });
-
-  describe('parseArray', () => {
-    it('should handle undefined', () => {
-      expect(service.parseArray(undefined)).toBeUndefined();
-      expect(service.parseArray('')).toBeUndefined();
-    });
-
-    it('should parse null', () => {
-      expect(service.parseArray(NULL)).toBeUndefined();
-    });
-
-    it('should parse empty', () => {
-      expect(service.parseArray(EMPTY)).toEqual([]);
-    });
-
-    it('should parse value', () => {
-      expect(service.parseArray('a~b')).toEqual(['a', 'b']);
-    });
-  });
-
-  describe('parseNString', () => {
-    it('should handle undefined', () => {
-      expect(service.parseNString(undefined, [])).toBeUndefined();
-      expect(service.parseNString('', [])).toBeUndefined();
-    });
-
-    it('should parse null', () => {
-      expect(service.parseNString(NULL, [])).toBeUndefined();
-    });
-
-    it('should parse value', () => {
-      expect(service.parseNString('A', ['a'])).toEqual('a');
-    });
-  });
-
-  describe('parseNNumber', () => {
-    it('should handle undefined', () => {
-      expect(service.parseNNumber(undefined)).toBeUndefined();
-      expect(service.parseNNumber('')).toBeUndefined();
-    });
-
-    it('should parse null', () => {
-      expect(service.parseNNumber(NULL)).toBeUndefined();
-    });
-
-    it('should parse value', () => {
-      expect(service.parseNNumber('A')).toEqual(0);
-    });
-  });
-
-  describe('parseNArray', () => {
-    it('should handle undefined', () => {
-      expect(service.parseNArray(undefined, [])).toBeUndefined();
-      expect(service.parseNArray('', [])).toBeUndefined();
-    });
-
-    it('should parse null', () => {
-      expect(service.parseNArray(NULL, [])).toBeUndefined();
-    });
-
-    it('should parse empty', () => {
-      expect(service.parseNArray(EMPTY, [])).toEqual([]);
-    });
-
-    it('should parse value', () => {
-      expect(service.parseNArray('A~B', ['a', 'b'])).toEqual(['a', 'b']);
-    });
-  });
-
-  describe('parseNullableNArray', () => {
-    it('should handle undefined', () => {
-      expect(service.parseNullableNArray(undefined, [])).toBeUndefined();
-      expect(service.parseNullableNArray('', [])).toBeUndefined();
-    });
-
-    it('should parse null', () => {
-      expect(service.parseNullableNArray(NULL, [])).toBeNull();
-    });
-
-    it('should parse empty', () => {
-      expect(service.parseNullableNArray(EMPTY, [])).toEqual([]);
-    });
-
-    it('should parse value', () => {
-      expect(service.parseNullableNArray('A~B', ['a', 'b'])).toEqual([
-        'a',
-        'b',
-      ]);
-    });
-  });
-
-  describe('getId', () => {
-    it('should convert n to id', () => {
-      expect(service.getId(600)).toEqual('JY');
-    });
-  });
-
-  describe('getN', () => {
-    it('should convert id to n', () => {
-      expect(service.getN('JY')).toEqual(600);
-    });
-  });
-
-  describe('getBase64Code', () => {
-    it('should check charCode validity', () => {
-      expect(() => service.getBase64Code(257)).toThrowError(
-        'Unable to parse base64 string.',
-      );
-    });
-
-    it('should check code validity', () => {
-      expect(() => service.getBase64Code(0)).toThrowError(
-        'Unable to parse base64 string.',
-      );
-    });
-
-    it('should return a valid code', () => {
-      expect(service.getBase64Code(45)).toEqual(62);
-    });
-  });
-
-  describe('bytesToBase64', () => {
-    it('should convert Uint8array to string', () => {
-      const z = 'abcdefghij';
-      const result = service.bytesToBase64(deflate(z));
-      expect(result).toEqual('eJxLTEpOSU1Lz8jMAgAVhgP4');
-    });
-
-    it('should handle trailing octets', () => {
-      expect(service.bytesToBase64(deflate('aa'))).toEqual('eJxLTAQAASUAww__');
-      expect(service.bytesToBase64(deflate('aaa'))).toEqual('eJxLTEwEAAJJASQ_');
-    });
-  });
-
-  describe('inflateSafe', () => {
-    it('should attempt to mend a bad zip', () => {
-      spyOn(console, 'warn');
-      spyOn(service, 'inflateMend').and.callThrough();
-      expect(() => service.inflateSafe('abcde')).toThrow();
-      expect(console.warn).toHaveBeenCalled();
-      expect(service.inflateMend).toHaveBeenCalledTimes(3);
-    });
-  });
-
-  describe('inflateMend', () => {
-    it('should attempt to inflate the zip and warn if successful', () => {
-      spyOn(console, 'warn');
-      expect(service.inflateMend('eJxLTAQAASUAww_', '_')).toEqual('aa');
-      expect(console.warn).toHaveBeenCalled();
-    });
-
-    it('should assume failure if return is empty/null', () => {
-      spyOn(service, 'inflate').and.returnValue('');
-      expect(() => service.inflateMend('eJxLTAQAASUAww_', '_')).toThrow();
-    });
-  });
-
-  describe('base64ToBytes', () => {
-    it('should check for invalid string length', () => {
-      expect(() => service.base64ToBytes('aaa')).toThrowError(
-        'Unable to parse base64 string.',
-      );
-    });
-
-    it('should check for invalid missing octets', () => {
-      expect(() => service.base64ToBytes('_aaa')).toThrowError(
-        'Unable to parse base64 string.',
-      );
-    });
-
-    it('should handle trailing octets', () => {
-      expect(
-        inflate(service.base64ToBytes('eJxLTAQAASUAww__'), { to: 'string' }),
-      ).toEqual('aa');
-      expect(
-        inflate(service.base64ToBytes('eJxLTEwEAAJJASQ_'), { to: 'string' }),
-      ).toEqual('aaa');
-    });
-
-    it('should convert string to bytes', () => {
-      const result = inflate(
-        service.base64ToBytes('eJxLTEpOSU1Lz8jMAgAVhgP4'),
-        { to: 'string' },
-      );
-      expect(result).toEqual('abcdefghij');
     });
   });
 });
