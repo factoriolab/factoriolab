@@ -1,20 +1,22 @@
-import { inject, Pipe, PipeTransform } from '@angular/core';
+import { ChangeDetectorRef, inject, Pipe, PipeTransform } from '@angular/core';
+import { Store } from '@ngrx/store';
 
-import { AdjustedDataset, Step } from '~/models';
-import { RouterService, Zip } from '~/services';
+import { Step, Zip } from '~/models';
+import { RouterService } from '~/services';
+import { Recipes } from '~/store';
 
 @Pipe({ name: 'stepHref', standalone: true })
 export class StepHrefPipe implements PipeTransform {
+  store = inject(Store);
   routerSvc = inject(RouterService);
+  ref = inject(ChangeDetectorRef);
 
-  transform(
-    value: Step,
-    zipPartial: Zip,
-    data: AdjustedDataset,
-  ): string | null {
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
+
+  async transform(value: Step, zipPartial: Zip): Promise<string | null> {
     let step = value;
     if (step.recipeId) {
-      const recipe = data.adjustedRecipe[step.recipeId];
+      const recipe = this.data().adjustedRecipe[step.recipeId];
       if (recipe.isTechnology && recipe.productivity && value.items) {
         // Adjust items to account for productivity bonus
         step = {
@@ -23,6 +25,6 @@ export class StepHrefPipe implements PipeTransform {
         };
       }
     }
-    return this.routerSvc.stepHref(step, zipPartial, data.hash);
+    return this.routerSvc.stepHref(step, zipPartial, this.data().hash);
   }
 }

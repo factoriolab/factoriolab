@@ -19,3 +19,4 @@ export * from './options';
 export { rational, Rational } from './rational';
 export * from './step-detail';
 export * from './step';
+export * from './zip';

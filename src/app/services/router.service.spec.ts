@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 import { NavigationEnd, NavigationStart } from '@angular/router';
 import { MemoizedSelector } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
-import { deflate, inflate } from 'pako';
 import { of } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';

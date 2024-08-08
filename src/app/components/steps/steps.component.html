@@ -913,7 +913,7 @@
               <a
                 class="text-decoration-none"
                 target="_blank"
-                [href]="step | stepHref: routerSvc.zipConfig() : data()"
+                [href]="step | stepHref: routerSvc.zipConfig() | async"
               >
                 <button
                   pButton

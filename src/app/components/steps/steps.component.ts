@@ -1,4 +1,9 @@
-import { DOCUMENT, KeyValuePipe, NgTemplateOutlet } from '@angular/common';
+import {
+  AsyncPipe,
+  DOCUMENT,
+  KeyValuePipe,
+  NgTemplateOutlet,
+} from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -85,6 +90,7 @@ export type StepsMode = 'all' | 'focus';
   selector: 'lab-steps',
   standalone: true,
   imports: [
+    AsyncPipe,
     FormsModule,
     KeyValuePipe,
     NgTemplateOutlet,

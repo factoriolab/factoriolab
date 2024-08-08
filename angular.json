@@ -64,7 +64,6 @@
             "scripts": [],
             "allowedCommonJsDependencies": [
               "@sideway/formula",
-              "component-emitter",
               "cytoscape-elk",
               "deep-freeze-strict",
               "file-saver",
