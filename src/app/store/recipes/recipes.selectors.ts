@@ -45,7 +45,7 @@ export const selectRecipesState = createSelector(
         s.fuelId = s.fuelId ?? def?.fuelId;
       }
 
-      s.fuelOptions = def.fuelOptions;
+      s.fuelOptions = def?.fuelOptions;
 
       if (machine != null && RecipeUtility.allowsModules(recipe, machine)) {
         s.moduleOptions = RecipeUtility.moduleOptions(machine, data, recipe.id);
