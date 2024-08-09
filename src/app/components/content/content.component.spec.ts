@@ -10,8 +10,7 @@ describe('ContentComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ContentComponent],
-      imports: [TestModule],
+      imports: [TestModule, ContentComponent],
       providers: [ConfirmationService],
     }).compileComponents();
 

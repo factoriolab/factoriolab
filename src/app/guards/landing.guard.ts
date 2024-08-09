@@ -17,7 +17,7 @@ export const canActivateLanding: CanActivateFn = (
 ) => {
   const router = inject(Router);
   return inject(Store<LabState>)
-    .select(Preferences.getBypassLanding)
+    .select(Preferences.selectBypassLanding)
     .pipe(
       first(),
       map((bypassLanding) => {

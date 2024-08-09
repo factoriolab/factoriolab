@@ -40,7 +40,7 @@ describe('canActivateLanding', () => {
   });
 
   it('should load the last saved state', async () => {
-    mockStore.overrideSelector(Preferences.getBypassLanding, true);
+    mockStore.overrideSelector(Preferences.selectBypassLanding, true);
     mockStore.refreshState();
     spyOnProperty(BrowserUtility, 'routerState').and.returnValue('/urltree');
     await RouterTestingHarness.create('/');
@@ -48,14 +48,14 @@ describe('canActivateLanding', () => {
   });
 
   it('should navigate to the list', async () => {
-    mockStore.overrideSelector(Preferences.getBypassLanding, true);
+    mockStore.overrideSelector(Preferences.selectBypassLanding, true);
     mockStore.refreshState();
     await RouterTestingHarness.create('/?v=6');
     expect(router.url).toEqual('/list?v=6');
   });
 
   it('should allow navigating to the landing page', async () => {
-    mockStore.overrideSelector(Preferences.getBypassLanding, false);
+    mockStore.overrideSelector(Preferences.selectBypassLanding, false);
     mockStore.refreshState();
     await RouterTestingHarness.create('/');
     expect(router.url).toEqual('/');

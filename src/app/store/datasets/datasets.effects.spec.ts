@@ -27,10 +27,10 @@ describe('DatasetsEffects', () => {
     it('should load the default base mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(EMPTY);
       actions = new ReplaySubject(1);
-      actions.next(new App.LoadAction({}));
+      actions.next(App.load({ partial: {} }));
       effects.appLoad$.subscribe();
       expect(dataSvc.requestData).toHaveBeenCalledWith(
-        Settings.initialSettingsState.modId,
+        Settings.initialState.modId,
       );
     });
   });
@@ -39,10 +39,10 @@ describe('DatasetsEffects', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(EMPTY);
       actions = new ReplaySubject(1);
-      actions.next(new App.ResetAction());
+      actions.next(App.reset());
       effects.appReset$.subscribe();
       expect(dataSvc.requestData).toHaveBeenCalledWith(
-        Settings.initialSettingsState.modId,
+        Settings.initialState.modId,
       );
     });
   });
@@ -51,7 +51,7 @@ describe('DatasetsEffects', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(EMPTY);
       actions = new ReplaySubject(1);
-      actions.next(new Settings.SetModAction(Mocks.Mod.id));
+      actions.next(Settings.setMod({ modId: Mocks.Mod.id }));
       effects.setModId$.subscribe();
       expect(dataSvc.requestData).toHaveBeenCalledWith(Mocks.Mod.id);
     });

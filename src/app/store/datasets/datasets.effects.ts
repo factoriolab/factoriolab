@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 import { DataService } from '~/services';
 import * as App from '../app.actions';
@@ -12,38 +12,36 @@ export class DatasetsEffects {
   dataSvc = inject(DataService);
 
   appLoad$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(App.AppActionType.LOAD),
-        switchMap((a: App.LoadAction) => {
-          const id =
-            a.payload.settingsState?.modId ||
-            Settings.initialSettingsState.modId;
-          return this.dataSvc.requestData(id);
-        }),
-      ),
+    () => {
+      return this.actions$.pipe(
+        ofType(App.load),
+        map(
+          ({ partial }) =>
+            partial.settingsState?.modId || Settings.initialState.modId,
+        ),
+        switchMap((id) => this.dataSvc.requestData(id)),
+      );
+    },
     { dispatch: false },
   );
 
   appReset$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(App.AppActionType.RESET),
-        switchMap(() =>
-          this.dataSvc.requestData(Settings.initialSettingsState.modId),
-        ),
-      ),
+    () => {
+      return this.actions$.pipe(
+        ofType(App.reset),
+        switchMap(() => this.dataSvc.requestData(Settings.initialState.modId)),
+      );
+    },
     { dispatch: false },
   );
 
   setModId$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType(Settings.SettingsActionType.SET_MOD),
-        switchMap((a: Settings.SetModAction) =>
-          this.dataSvc.requestData(a.payload),
-        ),
-      ),
+    () => {
+      return this.actions$.pipe(
+        ofType(Settings.setMod),
+        switchMap(({ modId }) => this.dataSvc.requestData(modId)),
+      );
+    },
     { dispatch: false },
   );
 }

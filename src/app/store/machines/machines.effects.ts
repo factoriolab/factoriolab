@@ -1,16 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Action, Store } from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import { map, pairwise, switchMap, withLatestFrom } from 'rxjs';
 
-import { LabState } from '../';
 import * as Recipes from '../recipes';
-import { MachinesActionType } from './machines.actions';
+import * as MachinesActions from './machines.actions';
 
 @Injectable()
 export class MachinesEffects {
   actions$ = inject(Actions);
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
   /**
    * Resets machine-specific recipe settings when default machine is implicitly
@@ -19,23 +18,23 @@ export class MachinesEffects {
    * `RecipesActionType.SET_MACHINE`. This effect handles cases that can cause
    * the recipe's machine to implicitly change.
    */
-  resetRecipeSettings$ = createEffect(() =>
-    this.store.select(Recipes.getRecipesState).pipe(
+  resetRecipeSettings$ = createEffect(() => {
+    return this.store.select(Recipes.selectRecipesState).pipe(
       pairwise(),
       switchMap((x) =>
         this.actions$.pipe(
           ofType(
-            MachinesActionType.ADD,
-            MachinesActionType.REMOVE,
-            MachinesActionType.SET_RANK,
-            MachinesActionType.SET_MACHINE,
+            MachinesActions.add,
+            MachinesActions.remove,
+            MachinesActions.setRank,
+            MachinesActions.setMachine,
           ),
           map(() => x),
         ),
       ),
       withLatestFrom(this.store.select(Recipes.recipesState)),
-      switchMap(([[before, after], recipesRaw]) => {
-        const effects: Action[] = [];
+      map(([[before, after], recipesRaw]) => {
+        const ids: string[] = [];
         for (const recipeId of Object.keys(recipesRaw)) {
           const raw = recipesRaw[recipeId];
           /**
@@ -51,11 +50,11 @@ export class MachinesEffects {
               raw.beacons != null) &&
             after[recipeId].machineId !== before[recipeId].machineId
           )
-            effects.push(new Recipes.ResetRecipeMachineAction(recipeId));
+            ids.push(recipeId);
         }
 
-        return effects;
+        return Recipes.resetRecipeMachines({ ids });
       }),
-    ),
-  );
+    );
+  });
 }

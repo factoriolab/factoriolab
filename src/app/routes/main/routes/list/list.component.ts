@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { AppSharedModule } from '~/app-shared.module';
-import { MainSharedModule } from '../../main-shared.module';
+import { StepsComponent } from '~/components';
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule, MainSharedModule],
+  imports: [StepsComponent],
   templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent {}

@@ -4,21 +4,21 @@ import { map } from 'rxjs/operators';
 
 import { displayRateInfo } from '~/models';
 import * as Settings from '../settings';
-import { AdjustDisplayRateAction } from './objectives.actions';
+import * as ObjectivesActions from './objectives.actions';
 
 @Injectable()
 export class ObjectivesEffects {
   actions$ = inject(Actions);
 
-  adjustDisplayRate$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(Settings.SettingsActionType.SET_DISPLAY_RATE),
-      map((a: Settings.SetDisplayRateAction) => {
-        const factor = displayRateInfo[a.payload.value].value.div(
-          displayRateInfo[a.payload.prev].value,
+  adjustDisplayRate$ = createEffect(() => {
+    return this.actions$.pipe(
+      ofType(Settings.setDisplayRate),
+      map(({ displayRate, previous }) => {
+        const factor = displayRateInfo[displayRate].value.div(
+          displayRateInfo[previous].value,
         );
-        return new AdjustDisplayRateAction(factor);
+        return ObjectivesActions.adjustDisplayRate({ factor });
       }),
-    ),
-  );
+    );
+  });
 }

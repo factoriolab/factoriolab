@@ -364,6 +364,7 @@
     "emptyMessage": "Click on a node in the diagram to view details"
   },
   "flow": {
+    "downloadAsPng": "Download as PNG",
     "downloadAsJson": "Download as JSON",
     "flowSettings": "Flow settings"
   },

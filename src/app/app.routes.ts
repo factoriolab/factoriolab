@@ -1,4 +1,4 @@
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { canActivateLanding } from './guards';
 
@@ -20,7 +20,7 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./routes/main/main.module').then((m) => m.MainModule),
+      import('./routes/main/main.routes').then((m) => m.routes),
   },
   {
     path: 'factorio',
@@ -51,8 +51,3 @@ export const routes: Routes = [
     redirectTo: '',
   },
 ];
-
-export const AppRoutingModule = RouterModule.forRoot(routes, {
-  preloadingStrategy: PreloadAllModules,
-  paramsInheritanceStrategy: 'always',
-});

@@ -41,7 +41,7 @@ describe('TrackService', () => {
     it('should return a diff', () => {
       expect(
         service.sortByValue(
-          { key: 'a', value: rational(1n) },
+          { key: 'a', value: rational.one },
           { key: 'b', value: rational(2n) },
         ),
       ).toEqual(1);

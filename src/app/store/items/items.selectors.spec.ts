@@ -1,5 +1,5 @@
 import { Mocks } from 'src/tests';
-import { initialItemsState } from './items.reducer';
+import { initialState } from './items.reducer';
 import * as Selectors from './items.selectors';
 
 describe('Items Selectors', () => {
@@ -7,8 +7,8 @@ describe('Items Selectors', () => {
 
   describe('getItemConfigs', () => {
     it('should return the item configs', () => {
-      const result = Selectors.getItemsState.projector(
-        initialItemsState,
+      const result = Selectors.selectItemsState.projector(
+        initialState,
         Mocks.AdjustedDataset,
         Mocks.SettingsStateInitial,
       );
@@ -19,10 +19,10 @@ describe('Items Selectors', () => {
 
     it('should use the passed overrides', () => {
       const state = {
-        ...initialItemsState,
+        ...initialState,
         ...{ [Mocks.Item1.id]: { beltId: stringValue, wagonId: stringValue } },
       };
-      const result = Selectors.getItemsState.projector(
+      const result = Selectors.selectItemsState.projector(
         state,
         Mocks.AdjustedDataset,
         Mocks.SettingsStateInitial,
@@ -34,7 +34,7 @@ describe('Items Selectors', () => {
 
   describe('getItemsModified', () => {
     it('should determine whether columns are modified', () => {
-      const result = Selectors.getItemsModified.projector(
+      const result = Selectors.selectItemsModified.projector(
         Mocks.ItemsStateInitial,
       );
       expect(result.excluded).toBeTrue();

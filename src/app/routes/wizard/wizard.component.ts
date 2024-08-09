@@ -1,9 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { DividerModule } from 'primeng/divider';
+import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { InputNumberComponent, PickerComponent } from '~/components';
+import { DropdownTranslateDirective } from '~/directives';
 import {
   DisplayRate,
   displayRateOptions,
@@ -11,27 +17,41 @@ import {
   ObjectiveUnit,
   rational,
 } from '~/models';
-import { LabState, Objectives, Recipes, Settings } from '~/store';
+import { IconClassPipe, TranslatePipe } from '~/pipes';
+import { Objectives, Recipes, Settings } from '~/store';
 
 export type WizardState = 'type' | 'item' | 'recipe';
 
 @Component({
   standalone: true,
-  imports: [RadioButtonModule, StepsModule, AppSharedModule],
+  imports: [
+    FormsModule,
+    ButtonModule,
+    CardModule,
+    DividerModule,
+    DropdownModule,
+    RadioButtonModule,
+    StepsModule,
+    DropdownTranslateDirective,
+    IconClassPipe,
+    InputNumberComponent,
+    PickerComponent,
+    TranslatePipe,
+  ],
   templateUrl: './wizard.component.html',
   styleUrls: ['./wizard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
-  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
-  data = this.store.selectSignal(Settings.getDataset);
-  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
-  displayRate = this.store.selectSignal(Settings.getDisplayRate);
+  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
+  data = this.store.selectSignal(Settings.selectDataset);
+  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
+  displayRate = this.store.selectSignal(Settings.selectDisplayRate);
 
   id = '';
-  value = rational(1n);
+  value = rational.one;
   state: WizardState = 'type';
 
   displayRateOptions = displayRateOptions;
@@ -44,30 +64,34 @@ export class WizardComponent {
   }
 
   /** Action Dispatch Methods */
-  setDisplayRate(value: DisplayRate, prev: DisplayRate): void {
-    this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
+  setDisplayRate(displayRate: DisplayRate, previous: DisplayRate): void {
+    this.store.dispatch(Settings.setDisplayRate({ displayRate, previous }));
   }
 
   createItemObjective(targetId: string): void {
     this.store.dispatch(
-      new Objectives.CreateAction({
-        id: '0',
-        targetId,
-        value: this.value,
-        unit: ObjectiveUnit.Items,
-        type: ObjectiveType.Output,
+      Objectives.create({
+        objective: {
+          id: '0',
+          targetId,
+          value: this.value,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        },
       }),
     );
   }
 
   createRecipeObjective(targetId: string): void {
     this.store.dispatch(
-      new Objectives.CreateAction({
-        id: '0',
-        targetId,
-        value: this.value,
-        unit: ObjectiveUnit.Machines,
-        type: ObjectiveType.Output,
+      Objectives.create({
+        objective: {
+          id: '0',
+          targetId,
+          value: this.value,
+          unit: ObjectiveUnit.Machines,
+          type: ObjectiveType.Output,
+        },
       }),
     );
   }

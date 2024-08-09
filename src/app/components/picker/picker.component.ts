@@ -8,23 +8,48 @@ import {
   Output,
   viewChild,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { TabViewModule } from 'primeng/tabview';
+import { TooltipModule } from 'primeng/tooltip';
 
+import { TabViewOverrideDirective } from '~/directives';
 import { Category, Entities } from '~/models';
+import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService } from '~/services';
-import { LabState, Recipes } from '~/store';
+import { Recipes } from '~/store';
 import { DialogComponent } from '../modal';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'lab-picker',
+  standalone: true,
+  imports: [
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    DialogModule,
+    InputTextModule,
+    ScrollPanelModule,
+    TooltipModule,
+    TabViewModule,
+    IconSmClassPipe,
+    TabViewOverrideDirective,
+    TooltipComponent,
+    TranslatePipe,
+  ],
   templateUrl: './picker.component.html',
-  styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   contentSvc = inject(ContentService);
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
@@ -33,7 +58,7 @@ export class PickerComponent extends DialogComponent {
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<string[]>();
 
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
   search = '';
   allSelected = false;

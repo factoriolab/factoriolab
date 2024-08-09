@@ -16,8 +16,7 @@ describe('InputNumberComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [InputNumberComponent],
-      imports: [TestModule],
+      imports: [TestModule, InputNumberComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(InputNumberComponent);
@@ -107,7 +106,7 @@ describe('InputNumberComponent', () => {
     it('should round down a fractional value', () => {
       TestUtility.setInputs(fixture, { value: rational(3n, 2n) });
       component.decrease();
-      expect(emit).toHaveBeenCalledWith(rational(1n));
+      expect(emit).toHaveBeenCalledWith(rational.one);
     });
   });
 });

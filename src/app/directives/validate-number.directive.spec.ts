@@ -11,6 +11,8 @@ import { rational } from '~/models';
 import { ValidateNumberDirective } from './validate-number.directive';
 
 @Component({
+  standalone: true,
+  imports: [FormsModule, ValidateNumberDirective],
   template: `<form #frm="ngForm">
     <input
       labValidateNumber
@@ -23,7 +25,7 @@ import { ValidateNumberDirective } from './validate-number.directive';
 class TestValidateNumberDirectiveComponent {
   frm = viewChild.required<NgForm>('frm');
   model?: string;
-  minimum = rational(1n);
+  minimum = rational.one;
 }
 
 describe('ValidateNumberDirective', () => {
@@ -32,11 +34,7 @@ describe('ValidateNumberDirective', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        ValidateNumberDirective,
-        TestValidateNumberDirectiveComponent,
-      ],
-      imports: [FormsModule],
+      imports: [TestValidateNumberDirectiveComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TestValidateNumberDirectiveComponent);

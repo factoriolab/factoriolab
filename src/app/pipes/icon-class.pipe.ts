@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { IdType } from '~/models';
 
-@Pipe({ name: 'iconClass' })
+@Pipe({ name: 'iconClass', standalone: true })
 export class IconClassPipe implements PipeTransform {
   transform(value: string | null | undefined, type: IdType = 'item'): string {
     if (value == null) return '';
@@ -10,7 +10,7 @@ export class IconClassPipe implements PipeTransform {
   }
 }
 
-@Pipe({ name: 'iconSmClass' })
+@Pipe({ name: 'iconSmClass', standalone: true })
 export class IconSmClassPipe implements PipeTransform {
   static transform(
     value: string | null | undefined,

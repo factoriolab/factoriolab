@@ -1,7 +1,12 @@
+import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { CollectionTableComponent } from '~/components';
 import { coalesce } from '~/helpers';
 import {
   Category,
@@ -11,26 +16,45 @@ import {
   ItemSettings,
   MachineSettings,
 } from '~/models';
+import {
+  BonusPercentPipe,
+  IconClassPipe,
+  IconSmClassPipe,
+  RoundPipe,
+  TranslatePipe,
+  UsagePipe,
+} from '~/pipes';
 import { Items, Machines } from '~/store';
-import { DataSharedModule } from '../../data-shared.module';
 import { DetailComponent } from '../../models';
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule, DataSharedModule],
+  imports: [
+    FormsModule,
+    KeyValuePipe,
+    BreadcrumbModule,
+    ButtonModule,
+    CheckboxModule,
+    BonusPercentPipe,
+    CollectionTableComponent,
+    IconClassPipe,
+    IconSmClassPipe,
+    RoundPipe,
+    TranslatePipe,
+    UsagePipe,
+  ],
   templateUrl: './item.component.html',
-  styleUrls: ['./item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemComponent extends DetailComponent {
   itemsStateRaw = this.store.selectSignal(Items.itemsState);
-  itemsState = this.store.selectSignal(Items.getItemsState);
+  itemsState = this.store.selectSignal(Items.selectItemsState);
   machinesStateRaw = this.store.selectSignal(Machines.machinesState);
-  machinesState = this.store.selectSignal(Machines.getMachinesState);
+  machinesState = this.store.selectSignal(Machines.selectMachinesState);
 
   obj = computed<Item | undefined>(() => this.data().itemEntities[this.id()]);
   breadcrumb = computed<MenuItem[]>(() => [
-    this.parent(),
+    this.parent() ?? {},
     { label: this.obj()?.name },
   ]);
   category = computed<Category | undefined>(() => {
@@ -68,18 +92,18 @@ export class ItemComponent extends DetailComponent {
 
   /** Action dispatch methods */
   setItemExcluded(id: string, value: boolean): void {
-    this.store.dispatch(new Items.SetExcludedAction({ id, value }));
+    this.store.dispatch(Items.setExcluded({ id, value }));
   }
 
   setItemChecked(id: string, value: boolean): void {
-    this.store.dispatch(new Items.SetCheckedAction({ id, value }));
+    this.store.dispatch(Items.setChecked({ id, value }));
   }
 
-  resetItem(value: string): void {
-    this.store.dispatch(new Items.ResetItemAction(value));
+  resetItem(id: string): void {
+    this.store.dispatch(Items.resetItem({ id }));
   }
 
-  resetMachine(value: string): void {
-    this.store.dispatch(new Machines.ResetMachineAction(value));
+  resetMachine(id: string): void {
+    this.store.dispatch(Machines.resetMachine({ id }));
   }
 }

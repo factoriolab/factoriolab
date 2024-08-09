@@ -9,10 +9,10 @@ import { ItemsState } from './items.reducer';
 export const itemsState = (state: LabState): ItemsState => state.itemsState;
 
 /* Complex selectors */
-export const getItemsState = createSelector(
+export const selectItemsState = createSelector(
   itemsState,
-  Settings.getDataset,
-  Settings.getSettings,
+  Settings.selectDataset,
+  Settings.selectSettings,
   (state, data, settings) => {
     const value: Entities<ItemSettings> = {};
     if (data?.itemIds?.length) {
@@ -45,13 +45,15 @@ export const getItemsState = createSelector(
   },
 );
 
-export const getItemsModified = createSelector(itemsState, (state) => ({
+export const selectItemsModified = createSelector(itemsState, (state) => ({
   excluded: Object.keys(state).some((id) => state[id].excluded != null),
   checked: Object.keys(state).some((id) => state[id].checked != null),
   belts: Object.keys(state).some((id) => state[id].beltId != null),
   wagons: Object.keys(state).some((id) => state[id].wagonId != null),
 }));
 
-export const getExcludedItemIds = createSelector(getItemsState, (itemsState) =>
-  Object.keys(itemsState).filter((i) => itemsState[i]?.excluded),
+export const selectExcludedItemIds = createSelector(
+  selectItemsState,
+  (itemsState) =>
+    Object.keys(itemsState).filter((i) => itemsState[i]?.excluded),
 );

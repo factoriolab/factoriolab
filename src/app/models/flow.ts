@@ -18,6 +18,8 @@ export interface Node extends FlowBase {
   machineId?: string;
 
   stepId: string;
+  posX: string;
+  posY: string;
   viewBox: string;
   href: string | undefined;
 }

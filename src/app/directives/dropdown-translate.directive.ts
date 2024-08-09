@@ -6,6 +6,7 @@ import { ContentService } from '~/services';
 
 @Directive({
   selector: '[labDropdownTranslate]',
+  standalone: true,
 })
 export class DropdownTranslateDirective implements OnInit {
   contentSvc = inject(ContentService);

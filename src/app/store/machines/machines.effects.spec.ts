@@ -37,10 +37,10 @@ describe('MachinesEffects', () => {
     effects = TestBed.inject(MachinesEffects);
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
-      Recipes.getRecipesState,
+      Recipes.selectRecipesState,
       Mocks.RecipesStateInitial,
     );
-    mockStore.overrideSelector(Settings.getDataset, Mocks.AdjustedDataset);
+    mockStore.overrideSelector(Settings.selectDataset, Mocks.AdjustedDataset);
     mockStore.refreshState();
   });
 
@@ -50,15 +50,15 @@ describe('MachinesEffects', () => {
     it('should reset modules when machine is implicitly changed', () => {
       actions = new ReplaySubject(1);
       actions.next(
-        new Actions.RemoveAction({
-          value: ItemId.AssemblingMachine3,
+        Actions.remove({
+          id: ItemId.AssemblingMachine3,
           def: Mocks.Defaults.machineRankIds,
         }),
       );
       const results: Action[] = [];
       effects.resetRecipeSettings$.subscribe((a) => results.push(a));
       const mock = mockStore.overrideSelector(
-        Recipes.getRecipesState,
+        Recipes.selectRecipesState,
         Mocks.RecipesStateInitial,
       );
       mockStore.refreshState();
@@ -73,7 +73,7 @@ describe('MachinesEffects', () => {
       });
       mockStore.refreshState();
       expect(results).toEqual([
-        new Recipes.ResetRecipeMachineAction(RecipeId.Coal),
+        Recipes.resetRecipeMachines({ ids: [RecipeId.Coal] }),
       ]);
     });
   });

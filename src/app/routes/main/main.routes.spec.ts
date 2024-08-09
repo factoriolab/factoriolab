@@ -1,5 +1,5 @@
 import { routes } from './main.routes';
-import { DataModule } from './routes/data/data.module';
+import { routes as dataRoutes } from './routes/data/data.routes';
 import { FlowComponent } from './routes/flow/flow.component';
 import { ListComponent } from './routes/list/list.component';
 
@@ -11,6 +11,6 @@ describe('Main Routes', () => {
     expect(await routes[0].children![1].loadComponent!()).toEqual(
       FlowComponent,
     );
-    expect(await routes[0].children![2].loadChildren!()).toEqual(DataModule);
+    expect(await routes[0].children![2].loadChildren!()).toEqual(dataRoutes);
   });
 });

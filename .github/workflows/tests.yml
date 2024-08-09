@@ -17,8 +17,10 @@ jobs:
         run: npm ci
       - name: Run Prettier
         run: npm run prettier
-      - name: Run linting
+      - name: Run ESLint
         run: npm run lint-build
+      - name: Run Stylelint
+        run: npm run stylelint
       - name: Run tests
         run: npm run test-build
       - uses: codecov/codecov-action@v3

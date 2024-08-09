@@ -1,65 +1,48 @@
+import { createReducer, on } from '@ngrx/store';
+
+import { spread } from '~/helpers';
 import { Entities, ItemSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
 import * as Settings from '../settings';
-import { ItemsAction, ItemsActionType } from './items.actions';
+import * as Actions from './items.actions';
 
 export type ItemsState = Entities<ItemSettings>;
 
-export const initialItemsState: ItemsState = {};
+export const initialState: ItemsState = {};
 
-export function itemsReducer(
-  state: ItemsState = initialItemsState,
-  action: ItemsAction | App.AppAction | Settings.SetModAction,
-): ItemsState {
-  switch (action.type) {
-    case App.AppActionType.LOAD:
-      return { ...initialItemsState, ...action.payload.itemsState };
-    case App.AppActionType.RESET:
-    case Settings.SettingsActionType.SET_MOD:
-      return initialItemsState;
-    case ItemsActionType.SET_EXCLUDED:
-      return StoreUtility.compareReset(state, 'excluded', {
-        id: action.payload.id,
-        value: action.payload.value,
-        def: false,
-      });
-    case ItemsActionType.SET_EXCLUDED_BATCH: {
-      state = { ...state };
-      for (const entry of action.payload) {
-        state = StoreUtility.compareReset(state, 'excluded', {
-          id: entry.id,
-          value: entry.value,
-          def: false,
-        });
-      }
+export const itemsReducer = createReducer(
+  initialState,
+  on(App.load, (_, { partial }) =>
+    spread(initialState, partial.itemsState ?? {}),
+  ),
+  on(App.reset, Settings.setMod, (): ItemsState => initialState),
+  on(Actions.setExcluded, (state, { id, value }) =>
+    StoreUtility.compareReset(state, 'excluded', id, value, false),
+  ),
+  on(Actions.setExcludedBatch, (state, { values }) => {
+    for (const { id, value } of values) {
+      state = StoreUtility.compareReset(state, 'excluded', id, value, false);
+    }
 
-      return state;
-    }
-    case ItemsActionType.SET_CHECKED:
-      return StoreUtility.compareReset(state, 'checked', {
-        id: action.payload.id,
-        value: action.payload.value,
-        def: false,
-      });
-    case ItemsActionType.SET_BELT:
-      return StoreUtility.compareReset(state, 'beltId', action.payload);
-    case ItemsActionType.SET_WAGON:
-      return StoreUtility.compareReset(state, 'wagonId', action.payload);
-    case ItemsActionType.RESET_ITEM: {
-      const newState = { ...state };
-      delete newState[action.payload];
-      return newState;
-    }
-    case ItemsActionType.RESET_EXCLUDED:
-      return StoreUtility.resetField(state, 'excluded');
-    case ItemsActionType.RESET_CHECKED:
-      return StoreUtility.resetField(state, 'checked');
-    case ItemsActionType.RESET_BELTS:
-      return StoreUtility.resetField(state, 'beltId');
-    case ItemsActionType.RESET_WAGONS:
-      return StoreUtility.resetField(state, 'wagonId');
-    default:
-      return state;
-  }
-}
+    return state;
+  }),
+  on(Actions.setChecked, (state, { id, value }) =>
+    StoreUtility.compareReset(state, 'checked', id, value, false),
+  ),
+  on(Actions.setBelt, (state, { id, value, def }) =>
+    StoreUtility.compareReset(state, 'beltId', id, value, def),
+  ),
+  on(Actions.setWagon, (state, { id, value, def }) =>
+    StoreUtility.compareReset(state, 'wagonId', id, value, def),
+  ),
+  on(Actions.resetItem, (state, { id }) => StoreUtility.removeEntry(state, id)),
+  on(Actions.resetExcluded, (state) =>
+    StoreUtility.resetField(state, 'excluded'),
+  ),
+  on(Actions.resetChecked, (state) =>
+    StoreUtility.resetField(state, 'checked'),
+  ),
+  on(Actions.resetBelts, (state) => StoreUtility.resetField(state, 'beltId')),
+  on(Actions.resetWagons, (state) => StoreUtility.resetField(state, 'wagonId')),
+);

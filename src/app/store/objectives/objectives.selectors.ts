@@ -27,17 +27,17 @@ import { ObjectivesState } from './objectives.reducer';
 export const objectivesState = (state: LabState): ObjectivesState =>
   state.objectivesState;
 
-export const getIds = createSelector(objectivesState, (state) => state.ids);
-export const getEntities = createSelector(
+export const selectIds = createSelector(objectivesState, (state) => state.ids);
+export const selectEntities = createSelector(
   objectivesState,
   (state) => state.entities,
 );
 
 /** Complex selectors */
-export const getBaseObjectives = createSelector(
-  getIds,
-  getEntities,
-  Settings.getDataset,
+export const selectBaseObjectives = createSelector(
+  selectIds,
+  selectEntities,
+  Settings.selectDataset,
   (ids, entities, data) =>
     ids
       .map((i) => entities[i])
@@ -48,13 +48,13 @@ export const getBaseObjectives = createSelector(
       ),
 );
 
-export const getObjectives = createSelector(
-  getBaseObjectives,
-  Items.getItemsState,
-  Recipes.getRecipesState,
-  Machines.getMachinesState,
+export const selectObjectives = createSelector(
+  selectBaseObjectives,
+  Items.selectItemsState,
+  Recipes.selectRecipesState,
+  Machines.selectMachinesState,
   Settings.settingsState,
-  Recipes.getAdjustedDataset,
+  Recipes.selectAdjustedDataset,
   (objectives, itemsState, recipesState, machinesState, settings, data) =>
     objectives.map((o) =>
       RecipeUtility.adjustObjective(
@@ -68,12 +68,12 @@ export const getObjectives = createSelector(
     ),
 );
 
-export const getNormalizedObjectives = createSelector(
-  getObjectives,
-  Items.getItemsState,
-  Settings.getBeltSpeed,
-  Settings.getDisplayRateInfo,
-  Recipes.getAdjustedDataset,
+export const selectNormalizedObjectives = createSelector(
+  selectObjectives,
+  Items.selectItemsState,
+  Settings.selectBeltSpeed,
+  Settings.selectDisplayRateInfo,
+  Recipes.selectAdjustedDataset,
   (objectives, itemsSettings, beltSpeed, displayRateInfo, data) =>
     objectives.map((o) => ({
       ...o,
@@ -89,16 +89,16 @@ export const getNormalizedObjectives = createSelector(
     })),
 );
 
-export const getMatrixResult = createSelector(
-  getNormalizedObjectives,
-  Items.getItemsState,
-  Recipes.getRecipesState,
-  Settings.getAllResearchedTechnologyIds,
-  Settings.getMaximizeType,
-  Settings.getSurplusMachinesOutput,
-  Settings.getCosts,
-  Recipes.getAdjustedDataset,
-  Preferences.getPaused,
+export const selectMatrixResult = createSelector(
+  selectNormalizedObjectives,
+  Items.selectItemsState,
+  Recipes.selectRecipesState,
+  Settings.selectAllResearchedTechnologyIds,
+  Settings.selectMaximizeType,
+  Settings.selectSurplusMachinesOutput,
+  Settings.selectCosts,
+  Recipes.selectAdjustedDataset,
+  Preferences.selectPaused,
   (
     objectives,
     itemsSettings,
@@ -123,15 +123,15 @@ export const getMatrixResult = createSelector(
     ),
 );
 
-export const getSteps = createSelector(
-  getMatrixResult,
-  getObjectives,
-  Items.getItemsState,
-  Recipes.getRecipesState,
-  Settings.getBeaconReceivers,
-  Settings.getBeltSpeed,
-  Settings.getDisplayRateInfo,
-  Recipes.getAdjustedDataset,
+export const selectSteps = createSelector(
+  selectMatrixResult,
+  selectObjectives,
+  Items.selectItemsState,
+  Recipes.selectRecipesState,
+  Settings.selectBeaconReceivers,
+  Settings.selectBeltSpeed,
+  Settings.selectDisplayRateInfo,
+  Recipes.selectAdjustedDataset,
   (
     result,
     objectives,
@@ -154,7 +154,7 @@ export const getSteps = createSelector(
     ),
 );
 
-export const getZipState = createSelector(
+export const selectZipState = createSelector(
   objectivesState,
   Items.itemsState,
   Recipes.recipesState,
@@ -169,9 +169,9 @@ export const getZipState = createSelector(
   }),
 );
 
-export const getStepsModified = createSelector(
-  getSteps,
-  getBaseObjectives,
+export const selectStepsModified = createSelector(
+  selectSteps,
+  selectBaseObjectives,
   Items.itemsState,
   Recipes.recipesState,
   (steps, objectives, itemsSettings, recipesSettings) => ({
@@ -198,10 +198,10 @@ export const getStepsModified = createSelector(
   }),
 );
 
-export const getTotals = createSelector(
-  getSteps,
-  Items.getItemsState,
-  Recipes.getAdjustedDataset,
+export const selectTotals = createSelector(
+  selectSteps,
+  Items.selectItemsState,
+  Recipes.selectAdjustedDataset,
   (steps, itemsSettings, data) => {
     const belts: Entities<Rational> = {};
     const wagons: Entities<Rational> = {};
@@ -209,8 +209,8 @@ export const getTotals = createSelector(
     const modules: Entities<Rational> = {};
     const beacons: Entities<Rational> = {};
     const beaconModules: Entities<Rational> = {};
-    let power = rational(0n);
-    let pollution = rational(0n);
+    let power = rational.zero;
+    let pollution = rational.zero;
 
     for (const step of steps) {
       if (step.itemId != null) {
@@ -219,7 +219,7 @@ export const getTotals = createSelector(
           const belt = itemsSettings[step.itemId].beltId;
           if (belt != null) {
             if (!belts[belt]) {
-              belts[belt] = rational(0n);
+              belts[belt] = rational.zero;
             }
             belts[belt] = belts[belt].add(step.belts.ceil());
           }
@@ -230,7 +230,7 @@ export const getTotals = createSelector(
           const wagon = itemsSettings[step.itemId].wagonId;
           if (wagon != null) {
             if (!wagons[wagon]) {
-              wagons[wagon] = rational(0n);
+              wagons[wagon] = rational.zero;
             }
             wagons[wagon] = wagons[wagon].add(step.wagons.ceil());
           }
@@ -258,7 +258,7 @@ export const getTotals = createSelector(
             }
             if (machine != null) {
               if (!machines[machine]) {
-                machines[machine] = rational(0n);
+                machines[machine] = rational.zero;
               }
 
               const value = step.machines.ceil();
@@ -286,7 +286,7 @@ export const getTotals = createSelector(
             if (beaconId == null || !total?.nonzero()) continue;
 
             if (!beacons[beaconId]) {
-              beacons[beaconId] = rational(0n);
+              beacons[beaconId] = rational.zero;
             }
 
             const value = total.ceil();
@@ -339,17 +339,17 @@ function addValueToRecordByIds(
 ): void {
   ids.forEach((id) => {
     if (!record[id]) {
-      record[id] = rational(0n);
+      record[id] = rational.zero;
     }
 
     record[id] = record[id].add(value);
   });
 }
 
-export const getStepDetails = createSelector(
-  getSteps,
-  Recipes.getRecipesState,
-  Recipes.getAdjustedDataset,
+export const selectStepDetails = createSelector(
+  selectSteps,
+  Recipes.selectRecipesState,
+  Recipes.selectAdjustedDataset,
   (steps, recipesState, data) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
@@ -372,7 +372,7 @@ export const getStepDetails = createSelector(
 
         const inputs = outputs.reduce((r: Rational, o) => {
           return r.sub(o.value);
-        }, rational(1n));
+        }, rational.one);
         if (inputs.nonzero()) {
           outputs.push({
             inputs: true,
@@ -425,14 +425,14 @@ export const getStepDetails = createSelector(
     }, {}),
 );
 
-export const getStepById = createSelector(getSteps, (steps) =>
+export const selectStepById = createSelector(selectSteps, (steps) =>
   steps.reduce((e: Entities<Step>, s) => {
     e[s.id] = s;
     return e;
   }, {}),
 );
 
-export const getStepByItemEntities = createSelector(getSteps, (steps) =>
+export const selectStepByItemEntities = createSelector(selectSteps, (steps) =>
   steps.reduce((e: Entities<Step>, s) => {
     if (s.itemId != null) {
       e[s.itemId] = s;
@@ -441,7 +441,7 @@ export const getStepByItemEntities = createSelector(getSteps, (steps) =>
   }, {}),
 );
 
-export const getStepTree = createSelector(getSteps, (steps) => {
+export const selectStepTree = createSelector(selectSteps, (steps) => {
   const tree: Entities<boolean[]> = {};
   const indents: Entities<number> = {};
   for (const step of steps) {
@@ -481,9 +481,9 @@ export const getStepTree = createSelector(getSteps, (steps) => {
   return tree;
 });
 
-export const getEffectivePowerUnit = createSelector(
-  getSteps,
-  Preferences.getPowerUnit,
+export const selectEffectivePowerUnit = createSelector(
+  selectSteps,
+  Preferences.selectPowerUnit,
   (steps, powerUnit) => {
     if (powerUnit === PowerUnit.Auto) {
       let minPower: Rational | undefined;
@@ -494,7 +494,7 @@ export const getEffectivePowerUnit = createSelector(
           }
         }
       }
-      minPower = minPower ?? rational(0n);
+      minPower = minPower ?? rational.zero;
       if (minPower.lt(rational(1000n))) {
         return PowerUnit.kW;
       } else if (minPower.lt(rational(1000000n))) {
@@ -508,9 +508,9 @@ export const getEffectivePowerUnit = createSelector(
   },
 );
 
-export const getRecipesModified = createSelector(
+export const selectRecipesModified = createSelector(
   Recipes.recipesState,
-  getBaseObjectives,
+  selectBaseObjectives,
   (state, objectives) => ({
     checked:
       Object.keys(state).some((id) => state[id].checked != null) ||

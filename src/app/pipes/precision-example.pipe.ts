@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 import { rational } from '~/models';
 
-@Pipe({ name: 'precisionExample' })
+@Pipe({ name: 'precisionExample', standalone: true })
 export class PrecisionExamplePipe implements PipeTransform {
   static value = rational(1n, 3n);
 

@@ -1,3 +1,4 @@
+import { KeyValuePipe, NgTemplateOutlet } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +8,14 @@ import {
 import { Store } from '@ngrx/store';
 
 import { Game } from '~/models';
-import { LabState, Recipes, Settings } from '~/store';
+import {
+  BonusPercentPipe,
+  IconSmClassPipe,
+  RoundPipe,
+  TranslatePipe,
+  UsagePipe,
+} from '~/pipes';
+import { Recipes, Settings } from '~/store';
 
 type TooltipType =
   | 'item'
@@ -24,12 +32,22 @@ type TooltipType =
 
 @Component({
   selector: 'lab-tooltip',
+  standalone: true,
+  imports: [
+    KeyValuePipe,
+    NgTemplateOutlet,
+    BonusPercentPipe,
+    IconSmClassPipe,
+    RoundPipe,
+    TranslatePipe,
+    UsagePipe,
+  ],
   templateUrl: './tooltip.component.html',
   styleUrls: ['./tooltip.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TooltipComponent {
-  store = inject(Store<LabState>);
+  store = inject(Store);
 
   id = input.required<string>();
   type = input<TooltipType>('item');
@@ -48,9 +66,9 @@ export class TooltipComponent {
     recipe: 'recipes',
   };
 
-  beltSpeedTxt = this.store.selectSignal(Settings.getBeltSpeedTxt);
-  dispRateInfo = this.store.selectSignal(Settings.getDisplayRateInfo);
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  beltSpeedTxt = this.store.selectSignal(Settings.selectBeltSpeedTxt);
+  dispRateInfo = this.store.selectSignal(Settings.selectDisplayRateInfo);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
   Game = Game;
 }

@@ -1,3 +1,5 @@
+import { createReducer, on } from '@ngrx/store';
+
 import { spread } from '~/helpers';
 import {
   ColumnsState,
@@ -12,11 +14,9 @@ import {
   SankeyAlign,
   Theme,
 } from '~/models';
+import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
-import {
-  PreferencesAction,
-  PreferencesActionType,
-} from './preferences.actions';
+import * as Actions from './preferences.actions';
 
 export interface PreferencesState {
   states: Record<Game, Entities<string>>;
@@ -34,7 +34,7 @@ export interface PreferencesState {
   flowSettings: FlowSettings;
 }
 
-export const initialPreferencesState: PreferencesState = {
+export const initialState: PreferencesState = {
   states: {
     [Game.Factorio]: {},
     [Game.DysonSphereProgram]: {},
@@ -63,56 +63,33 @@ export const initialPreferencesState: PreferencesState = {
   },
 };
 
-export function preferencesReducer(
-  state: PreferencesState = initialPreferencesState,
-  action: PreferencesAction | App.AppAction,
-): PreferencesState {
-  switch (action.type) {
-    case App.AppActionType.RESET:
-      return initialPreferencesState;
-    case PreferencesActionType.SAVE_STATE: {
-      const { key, id, value } = action.payload;
-      const gameStates = spread(state.states[key], { [id]: value });
-      const states = spread(state.states, { [key]: gameStates });
-      return spread(state, { states });
-    }
-    case PreferencesActionType.REMOVE_STATE: {
-      const { key, id } = action.payload;
-      const gameStates = { ...state.states[key] };
-      delete gameStates[id];
-      const states = spread(state.states, { [key]: gameStates });
-      return spread(state, { states });
-    }
-    case PreferencesActionType.SET_STATES:
-      return spread(state, { states: action.payload });
-    case PreferencesActionType.SET_COLUMNS:
-      return spread(state, {
-        columns: action.payload,
-        powerUnit: action.payload.power.show ? state.powerUnit : PowerUnit.Auto,
-      });
-    case PreferencesActionType.SET_ROWS:
-      return spread(state, { rows: action.payload });
-    case PreferencesActionType.SET_DISABLE_PAGINATOR:
-      return spread(state, { disablePaginator: action.payload });
-    case PreferencesActionType.SET_LANGUAGE:
-      return spread(state, { language: action.payload });
-    case PreferencesActionType.SET_POWER_UNIT:
-      return spread(state, { powerUnit: action.payload });
-    case PreferencesActionType.SET_THEME:
-      return spread(state, { theme: action.payload });
-    case PreferencesActionType.SET_BYPASS_LANDING:
-      return spread(state, { bypassLanding: action.payload });
-    case PreferencesActionType.SET_SHOW_TECH_LABELS:
-      return spread(state, { showTechLabels: action.payload });
-    case PreferencesActionType.SET_HIDE_DUPLICATE_ICONS:
-      return spread(state, { hideDuplicateIcons: action.payload });
-    case PreferencesActionType.SET_PAUSED:
-      return spread(state, { paused: action.payload });
-    case PreferencesActionType.SET_CONVERT_OBJECTIVE_VALUES:
-      return spread(state, { convertObjectiveValues: action.payload });
-    case PreferencesActionType.SET_FLOW_SETTINGS:
-      return spread(state, { flowSettings: action.payload });
-    default:
-      return state;
-  }
-}
+export const preferencesReducer = createReducer(
+  initialState,
+  on(App.reset, (): PreferencesState => initialState),
+  on(Actions.saveState, (state, { key, id, value }) => {
+    const gameStates = spread(state.states[key], { [id]: value });
+    const states = spread(state.states, { [key]: gameStates });
+    return spread(state, { states });
+  }),
+  on(Actions.removeState, (state, { key, id }) => {
+    const gameStates = StoreUtility.removeEntry(state.states[key], id);
+    const states = spread(state.states, { [key]: gameStates });
+    return spread(state, { states });
+  }),
+  on(
+    Actions.setStates,
+    Actions.setColumns,
+    Actions.setRows,
+    Actions.setDisablePaginator,
+    Actions.setLanguage,
+    Actions.setPowerUnit,
+    Actions.setTheme,
+    Actions.setBypassLanding,
+    Actions.setShowTechLabels,
+    Actions.setHideDuplicateIcons,
+    Actions.setPaused,
+    Actions.setConvertObjectiveValues,
+    Actions.setFlowSettings,
+    (state, payload) => spread(state, payload),
+  ),
+);

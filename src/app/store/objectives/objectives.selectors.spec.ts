@@ -27,10 +27,10 @@ describe('Objectives Selectors', () => {
           objectivesState: Mocks.ObjectivesState,
         } as any),
       ).toEqual(Mocks.ObjectivesState);
-      expect(Selectors.getIds.projector(Mocks.ObjectivesState)).toEqual(
+      expect(Selectors.selectIds.projector(Mocks.ObjectivesState)).toEqual(
         Mocks.ObjectivesState.ids,
       );
-      expect(Selectors.getEntities.projector(Mocks.ObjectivesState)).toEqual(
+      expect(Selectors.selectEntities.projector(Mocks.ObjectivesState)).toEqual(
         Mocks.ObjectivesState.entities,
       );
     });
@@ -38,7 +38,7 @@ describe('Objectives Selectors', () => {
 
   describe('getBaseObjectives', () => {
     it('should return the array of objectives', () => {
-      const result = Selectors.getBaseObjectives.projector(
+      const result = Selectors.selectBaseObjectives.projector(
         Mocks.ObjectivesState.ids,
         Mocks.ObjectivesState.entities,
         Mocks.AdjustedDataset,
@@ -50,12 +50,12 @@ describe('Objectives Selectors', () => {
   describe('getObjectives', () => {
     it('should adjust recipe objectives based on settings', () => {
       spyOn(RecipeUtility, 'adjustObjective');
-      Selectors.getObjectives.projector(
+      Selectors.selectObjectives.projector(
         [Mocks.Objective5],
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         Mocks.MachinesStateInitial,
-        Settings.initialSettingsState,
+        Settings.initialState,
         Mocks.AdjustedDataset,
       );
       expect(RecipeUtility.adjustObjective).toHaveBeenCalledWith(
@@ -63,7 +63,7 @@ describe('Objectives Selectors', () => {
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         Mocks.MachinesStateInitial,
-        Settings.initialSettingsState,
+        Settings.initialState,
         Mocks.AdjustedDataset,
       );
     });
@@ -72,7 +72,7 @@ describe('Objectives Selectors', () => {
   describe('getNormalizedObjectives', () => {
     it('should map objectives to rates', () => {
       spyOn(RateUtility, 'objectiveNormalizedRate');
-      Selectors.getNormalizedObjectives.projector(
+      Selectors.selectNormalizedObjectives.projector(
         Mocks.Objectives,
         Mocks.ItemsStateInitial,
         Mocks.BeltSpeed,
@@ -91,7 +91,7 @@ describe('Objectives Selectors', () => {
         steps: [],
         resultType: SimplexResultType.Skipped,
       });
-      Selectors.getMatrixResult.projector(
+      Selectors.selectMatrixResult.projector(
         Mocks.Objectives,
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
@@ -109,7 +109,7 @@ describe('Objectives Selectors', () => {
   describe('getSteps', () => {
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'normalizeSteps');
-      Selectors.getSteps.projector(
+      Selectors.selectSteps.projector(
         Mocks.MatrixResultSolved,
         [],
         {},
@@ -129,8 +129,8 @@ describe('Objectives Selectors', () => {
       const itemsState = Mocks.ItemsState;
       const recipesState = Mocks.RecipesState;
       const machinesState = Mocks.MachinesStateInitial;
-      const settings = Settings.initialSettingsState;
-      const result = Selectors.getZipState.projector(
+      const settings = Settings.initialState;
+      const result = Selectors.selectZipState.projector(
         objectives,
         itemsState,
         recipesState,
@@ -147,11 +147,11 @@ describe('Objectives Selectors', () => {
 
   describe('getStepsModified', () => {
     it('should determine which steps have modified item or recipe settings', () => {
-      const result = Selectors.getStepsModified.projector(
+      const result = Selectors.selectStepsModified.projector(
         Mocks.Steps,
         Mocks.ObjectivesList,
-        Items.initialItemsState,
-        Recipes.initialRecipesState,
+        Items.initialState,
+        Recipes.initialState,
       );
       expect(result.items[Mocks.Step1.itemId!]).toBeFalse();
       expect(result.recipes[Mocks.Step1.recipeId!]).toBeFalse();
@@ -160,7 +160,7 @@ describe('Objectives Selectors', () => {
 
   describe('getTotals', () => {
     it('should get totals for columns', () => {
-      const result = Selectors.getTotals.projector(
+      const result = Selectors.selectTotals.projector(
         [
           {
             id: '0',
@@ -177,7 +177,7 @@ describe('Objectives Selectors', () => {
               ],
               beacons: [
                 {
-                  count: rational(0n),
+                  count: rational.zero,
                   id: ItemId.Beacon,
                   modules: [{ count: rational(2n), id: ItemId.Module }],
                 },
@@ -188,16 +188,16 @@ describe('Objectives Selectors', () => {
             id: '1',
             itemId: ItemId.Coal,
             recipeId: RecipeId.Coal,
-            belts: rational(1n),
-            wagons: rational(1n),
-            machines: rational(1n),
-            power: rational(1n),
-            pollution: rational(1n),
+            belts: rational.one,
+            wagons: rational.one,
+            machines: rational.one,
+            power: rational.one,
+            pollution: rational.one,
             recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
             recipeSettings: {
               machineId: ItemId.ElectricMiningDrill,
               modules: [
-                { count: rational(1n), id: ItemId.Module },
+                { count: rational.one, id: ItemId.Module },
                 { count: rational(2n), id: ItemId.SpeedModule3 },
               ],
               beacons: [
@@ -205,10 +205,10 @@ describe('Objectives Selectors', () => {
                   count: rational(2n),
                   id: ItemId.Beacon,
                   modules: [
-                    { count: rational(1n), id: ItemId.SpeedModule3 },
-                    { count: rational(1n), id: ItemId.Module },
+                    { count: rational.one, id: ItemId.SpeedModule3 },
+                    { count: rational.one, id: ItemId.Module },
                   ],
-                  total: rational(1n),
+                  total: rational.one,
                 },
               ],
             },
@@ -218,29 +218,29 @@ describe('Objectives Selectors', () => {
         Mocks.AdjustedDataset,
       );
       expect(result).toEqual({
-        belts: { [ItemId.TransportBelt]: rational(1n) },
-        wagons: { [ItemId.CargoWagon]: rational(1n) },
-        machines: { [ItemId.ElectricMiningDrill]: rational(1n) },
+        belts: { [ItemId.TransportBelt]: rational.one },
+        wagons: { [ItemId.CargoWagon]: rational.one },
+        machines: { [ItemId.ElectricMiningDrill]: rational.one },
         modules: {
           [ItemId.SpeedModule3]: rational(2n),
         },
-        beacons: { [ItemId.Beacon]: rational(1n) },
+        beacons: { [ItemId.Beacon]: rational.one },
         beaconModules: {
-          [ItemId.SpeedModule3]: rational(1n),
+          [ItemId.SpeedModule3]: rational.one,
         },
-        power: rational(1n),
-        pollution: rational(1n),
+        power: rational.one,
+        pollution: rational.one,
       });
     });
 
     it('should calculate dsp mining total by recipe', () => {
-      const result = Selectors.getTotals.projector(
+      const result = Selectors.selectTotals.projector(
         [
           {
             id: '01',
             recipeId: RecipeId.Coal,
             recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
-            machines: rational(1n),
+            machines: rational.one,
             recipeSettings: {
               machineId: ItemId.MiningMachine,
             },
@@ -252,12 +252,12 @@ describe('Objectives Selectors', () => {
       expect(result).toEqual({
         belts: {},
         wagons: {},
-        machines: { [RecipeId.Coal]: rational(1n) },
+        machines: { [RecipeId.Coal]: rational.one },
         modules: {},
         beacons: {},
         beaconModules: {},
-        power: rational(0n),
-        pollution: rational(0n),
+        power: rational.zero,
+        pollution: rational.zero,
       });
     });
   });
@@ -268,22 +268,22 @@ describe('Objectives Selectors', () => {
         {
           id: '0',
           itemId: ItemId.PetroleumGas,
-          items: rational(1n),
+          items: rational.one,
           recipeId: RecipeId.Coal,
-          machines: rational(1n),
+          machines: rational.one,
           outputs: { [ItemId.PetroleumGas]: rational(2n) },
         },
         {
           id: '1',
           recipeId: RecipeId.CrudeOil,
           machines: rational(2n),
-          outputs: { [ItemId.PetroleumGas]: rational(1n) },
+          outputs: { [ItemId.PetroleumGas]: rational.one },
         },
         {
           id: '2',
         },
       ];
-      const result = Selectors.getStepDetails.projector(
+      const result = Selectors.selectStepDetails.projector(
         steps,
         Mocks.RecipesStateInitial,
         Mocks.AdjustedDataset,
@@ -318,7 +318,7 @@ describe('Objectives Selectors', () => {
               step: steps[0],
             },
             {
-              value: rational(1n),
+              value: rational.one,
               step: steps[1],
             },
             {
@@ -364,14 +364,14 @@ describe('Objectives Selectors', () => {
 
   describe('getStepById', () => {
     it('should create a map of step ids to steps', () => {
-      const result = Selectors.getStepById.projector(Mocks.Steps);
+      const result = Selectors.selectStepById.projector(Mocks.Steps);
       expect(Object.keys(result).length).toEqual(Mocks.Steps.length);
     });
   });
 
   describe('getStepByItemEntities', () => {
     it('should create a map of item ids to steps', () => {
-      const result = Selectors.getStepByItemEntities.projector(Mocks.Steps);
+      const result = Selectors.selectStepByItemEntities.projector(Mocks.Steps);
       expect(Object.keys(result).length).toEqual(Mocks.Steps.length);
     });
   });
@@ -387,25 +387,25 @@ describe('Objectives Selectors', () => {
           id: '1',
           recipeId: RecipeId.Coal,
           parents: {
-            ['0']: rational(1n),
+            ['0']: rational.one,
           },
         },
         {
           id: '2',
-          parents: { ['1']: rational(1n) },
+          parents: { ['1']: rational.one },
         },
         {
           id: '3',
-          parents: { ['1']: rational(1n) },
+          parents: { ['1']: rational.one },
         },
         {
           id: '4',
           parents: {
-            ['0']: rational(1n),
+            ['0']: rational.one,
           },
         },
       ];
-      const result = Selectors.getStepTree.projector(steps);
+      const result = Selectors.selectStepTree.projector(steps);
       expect(result).toEqual({
         ['0']: [],
         ['1']: [true],
@@ -419,16 +419,16 @@ describe('Objectives Selectors', () => {
   describe('getEffectivePowerUnit', () => {
     it('should calculate an auto power unit', () => {
       expect(
-        Selectors.getEffectivePowerUnit.projector([], PowerUnit.Auto),
+        Selectors.selectEffectivePowerUnit.projector([], PowerUnit.Auto),
       ).toEqual(PowerUnit.kW);
       expect(
-        Selectors.getEffectivePowerUnit.projector(
+        Selectors.selectEffectivePowerUnit.projector(
           [{ id: '0', power: rational(1000n) }],
           PowerUnit.Auto,
         ),
       ).toEqual(PowerUnit.MW);
       expect(
-        Selectors.getEffectivePowerUnit.projector(
+        Selectors.selectEffectivePowerUnit.projector(
           [
             { id: '0', power: rational(1000000n) },
             { id: '1', power: rational(1000000n) },
@@ -440,14 +440,14 @@ describe('Objectives Selectors', () => {
 
     it('should override with specified power unit', () => {
       expect(
-        Selectors.getEffectivePowerUnit.projector([], PowerUnit.GW),
+        Selectors.selectEffectivePowerUnit.projector([], PowerUnit.GW),
       ).toEqual(PowerUnit.GW);
     });
   });
 
   describe('getRecipesModified', () => {
     it('should determine whether columns are modified', () => {
-      const result = Selectors.getRecipesModified.projector(
+      const result = Selectors.selectRecipesModified.projector(
         {
           [RecipeId.Coal]: {
             machineId: undefined,
@@ -455,10 +455,10 @@ describe('Objectives Selectors', () => {
             overclock: rational(100n),
             beacons: [
               {
-                count: rational(1n),
+                count: rational.one,
                 id: ItemId.Beacon,
                 modules: [{ count: rational(2n), id: ItemId.Module }],
-                total: rational(1n),
+                total: rational.one,
               },
             ],
           },
@@ -474,19 +474,19 @@ describe('Objectives Selectors', () => {
       const objective: Objective = {
         id: '1',
         targetId: RecipeId.Coal,
-        value: rational(1n),
+        value: rational.one,
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
         overclock: rational(100n),
         beacons: [
           {
-            count: rational(1n),
+            count: rational.one,
             id: ItemId.Beacon,
             modules: [{ count: rational(2n), id: ItemId.Module }],
           },
         ],
       };
-      const result = Selectors.getRecipesModified.projector(
+      const result = Selectors.selectRecipesModified.projector(
         {
           [RecipeId.Coal]: {},
         },

@@ -1,28 +1,49 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { InputNumberComponent } from '~/components';
 import { coalesce } from '~/helpers';
 import { Game, Rational, Recipe, RecipeSettings } from '~/models';
+import {
+  IconClassPipe,
+  IconSmClassPipe,
+  RoundPipe,
+  TranslatePipe,
+  UsagePipe,
+} from '~/pipes';
 import { Recipes } from '~/store';
 import { DetailComponent } from '../../models';
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule],
+  imports: [
+    FormsModule,
+    BreadcrumbModule,
+    ButtonModule,
+    CheckboxModule,
+    IconClassPipe,
+    IconSmClassPipe,
+    InputNumberComponent,
+    RoundPipe,
+    TranslatePipe,
+    UsagePipe,
+  ],
   templateUrl: './recipe.component.html',
-  styleUrls: ['./recipe.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeComponent extends DetailComponent {
   recipesStateRaw = this.store.selectSignal(Recipes.recipesState);
-  recipesState = this.store.selectSignal(Recipes.getRecipesState);
+  recipesState = this.store.selectSignal(Recipes.selectRecipesState);
 
   obj = computed<Recipe | undefined>(
     () => this.data().recipeEntities[this.id()],
   );
   breadcrumb = computed<MenuItem[]>(() => [
-    this.parent(),
+    this.parent() ?? {},
     { label: this.obj()?.name },
   ]);
   info = computed(() => {
@@ -59,18 +80,18 @@ export class RecipeComponent extends DetailComponent {
 
   /** Action dispatch methods */
   setRecipeExcluded(id: string, value: boolean, def: boolean): void {
-    this.store.dispatch(new Recipes.SetExcludedAction({ id, value, def }));
+    this.store.dispatch(Recipes.setExcluded({ id, value, def }));
   }
 
   setRecipeChecked(id: string, value: boolean): void {
-    this.store.dispatch(new Recipes.SetCheckedAction({ id, value }));
+    this.store.dispatch(Recipes.setChecked({ id, value }));
   }
 
   setRecipeCost(id: string, value: Rational): void {
-    this.store.dispatch(new Recipes.SetCostAction({ id, value }));
+    this.store.dispatch(Recipes.setCost({ id, value }));
   }
 
-  resetRecipe(value: string): void {
-    this.store.dispatch(new Recipes.ResetRecipeAction(value));
+  resetRecipe(id: string): void {
+    this.store.dispatch(Recipes.resetRecipe({ id }));
   }
 }

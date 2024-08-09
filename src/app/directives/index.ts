@@ -1,9 +1,6 @@
-import { DropdownTranslateDirective } from './dropdown-translate.directive';
-import { TabViewOverrideDirective } from './tabview-override.directive';
-import { ValidateNumberDirective } from './validate-number.directive';
-
-export const directives = [
-  DropdownTranslateDirective,
-  TabViewOverrideDirective,
-  ValidateNumberDirective,
-];
+export * from './dropdown-base.directive';
+export * from './dropdown-translate.directive';
+export * from './paged-table.directive';
+export * from './no-drag.directive';
+export * from './tabview-override.directive';
+export * from './validate-number.directive';

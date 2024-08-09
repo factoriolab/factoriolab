@@ -1,4 +1,4 @@
-import { min } from 'd3-array';
+import { min } from 'd3';
 
 import { coalesce } from '~/helpers';
 import {

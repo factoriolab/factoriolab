@@ -1,8 +1,15 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DividerModule } from 'primeng/divider';
+import { DropdownModule } from 'primeng/dropdown';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { PickerComponent } from '~/components';
 import {
   Game,
   gameInfo,
@@ -10,13 +17,26 @@ import {
   ObjectiveBase,
   ObjectiveUnit,
 } from '~/models';
+import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService, RouterService } from '~/services';
-import { LabState, Objectives, Preferences, Recipes, Settings } from '~/store';
+import { Objectives, Preferences, Recipes, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule],
+  imports: [
+    FormsModule,
+    RouterLink,
+    ButtonModule,
+    CardModule,
+    CheckboxModule,
+    DividerModule,
+    DropdownModule,
+    ProgressSpinnerModule,
+    IconSmClassPipe,
+    PickerComponent,
+    TranslatePipe,
+  ],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -24,16 +44,16 @@ import { BrowserUtility } from '~/utilities';
 export class LandingComponent {
   router = inject(Router);
   contentSvc = inject(ContentService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
   routerSvc = inject(RouterService);
 
-  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
-  settings = this.store.selectSignal(Settings.getSettings);
-  modOptions = this.store.selectSignal(Settings.getModOptions);
-  data = this.store.selectSignal(Settings.getDataset);
-  mod = this.store.selectSignal(Settings.getMod);
-  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
-  savedStates = this.store.selectSignal(Settings.getSavedStates);
+  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
+  settings = this.store.selectSignal(Settings.selectSettings);
+  modOptions = this.store.selectSignal(Settings.selectModOptions);
+  data = this.store.selectSignal(Settings.selectDataset);
+  mod = this.store.selectSignal(Settings.selectMod);
+  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
+  savedStates = this.store.selectSignal(Settings.selectSavedStates);
   preferences = this.store.selectSignal(Preferences.preferencesState);
 
   gameInfo = gameInfo;
@@ -72,15 +92,15 @@ export class LandingComponent {
   }
 
   /** Action Dispatch Methods */
-  setMod(value: string): void {
-    this.store.dispatch(new Settings.SetModAction(value));
+  setMod(modId: string): void {
+    this.store.dispatch(Settings.setMod({ modId }));
   }
 
-  addObjective(value: ObjectiveBase): void {
-    this.store.dispatch(new Objectives.AddAction(value));
+  addObjective(objective: ObjectiveBase): void {
+    this.store.dispatch(Objectives.add({ objective }));
   }
 
-  setBypassLanding(value: boolean): void {
-    this.store.dispatch(new Preferences.SetBypassLandingAction(value));
+  setBypassLanding(bypassLanding: boolean): void {
+    this.store.dispatch(Preferences.setBypassLanding({ bypassLanding }));
   }
 }

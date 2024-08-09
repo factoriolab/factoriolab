@@ -3,6 +3,7 @@ export * from './enum';
 export * from './settings';
 
 export * from './app-data';
+export * from './collection-item';
 export * from './constants';
 export * from './dataset';
 export * from './defaults';
@@ -15,7 +16,7 @@ export * from './mod';
 export * from './nullable';
 export * from './objective';
 export * from './options';
-export * from './payload';
 export { rational, Rational } from './rational';
 export * from './step-detail';
 export * from './step';
+export * from './zip';

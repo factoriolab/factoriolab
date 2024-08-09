@@ -12,8 +12,7 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [HeaderComponent],
-      imports: [TestModule],
+      imports: [TestModule, HeaderComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
@@ -30,7 +29,7 @@ describe('HeaderComponent', () => {
     it('should update the page title with the first objective name', () => {
       spyOn(component.title, 'setTitle');
       mockStore.overrideSelector(
-        Objectives.getBaseObjectives,
+        Objectives.selectBaseObjectives,
         Mocks.ObjectivesList,
       );
       mockStore.refreshState();

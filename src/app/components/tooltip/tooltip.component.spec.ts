@@ -9,8 +9,7 @@ describe('TooltipComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TooltipComponent],
-      imports: [TestModule],
+      imports: [TestModule, TooltipComponent],
     });
     fixture = TestBed.createComponent(TooltipComponent);
     component = fixture.componentInstance;

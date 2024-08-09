@@ -5,39 +5,41 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { map, switchMap } from 'rxjs';
 
-import { AppSharedModule } from '~/app-shared.module';
+import { CollectionTableComponent } from '~/components';
 import { Dataset, IdType } from '~/models';
-import { LabState, Recipes, Settings } from '~/store';
-import { DataSharedModule } from '../../data-shared.module';
+import { TranslateService } from '~/services';
+import { Recipes, Settings } from '~/store';
 
 @Component({
   standalone: true,
-  imports: [AppSharedModule, DataSharedModule],
+  imports: [BreadcrumbModule, CollectionTableComponent],
   templateUrl: './collection.component.html',
-  styleUrls: ['./collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionComponent {
-  route = inject(ActivatedRoute);
   translateSvc = inject(TranslateService);
-  store = inject(Store<LabState>);
+  route = inject(ActivatedRoute);
+  store = inject(Store);
 
-  home = this.store.selectSignal(Settings.getModMenuItem);
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  home = this.store.selectSignal(Settings.selectModMenuItem);
+  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
   label = input.required<string>();
   type = input.required<IdType>();
   key = input.required<keyof Dataset>();
 
-  breadcrumb = computed<MenuItem[]>(() => [
-    {
-      label: this.translateSvc.instant(this.label()),
-    },
-  ]);
+  breadcrumb = toSignal(
+    toObservable(this.label).pipe(
+      switchMap((label) => this.translateSvc.get(label)),
+      map((label): MenuItem[] => [{ label }]),
+    ),
+  );
   ids = computed<string[]>(() => this.data()[this.key()] as string[]);
 }

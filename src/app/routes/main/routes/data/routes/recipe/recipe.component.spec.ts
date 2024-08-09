@@ -68,7 +68,7 @@ describe('RecipeComponent', () => {
     it('should default to empty excluded recipe ids array', () => {
       spyOn(component, 'setRecipeExcluded');
       const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
-      mockStore.overrideSelector(Recipes.getAdjustedDataset, data);
+      mockStore.overrideSelector(Recipes.selectAdjustedDataset, data);
       mockStore.refreshState();
       component.toggleRecipe();
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
@@ -82,9 +82,9 @@ describe('RecipeComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.idValDef('setRecipeExcluded', Recipes.SetExcludedAction);
-    dispatch.idVal('setRecipeChecked', Recipes.SetCheckedAction);
-    dispatch.idVal('setRecipeCost', Recipes.SetCostAction);
-    dispatch.val('resetRecipe', Recipes.ResetRecipeAction);
+    dispatch.props('setRecipeExcluded', Recipes.setExcluded);
+    dispatch.props('setRecipeChecked', Recipes.setChecked);
+    dispatch.props('setRecipeCost', Recipes.setCost);
+    dispatch.props('resetRecipe', Recipes.resetRecipe);
   });
 });

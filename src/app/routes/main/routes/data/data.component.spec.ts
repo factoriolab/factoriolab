@@ -9,8 +9,7 @@ describe('DataComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DataComponent],
-      imports: [TestModule],
+      imports: [TestModule, DataComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DataComponent);

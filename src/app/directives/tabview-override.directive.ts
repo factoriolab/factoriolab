@@ -3,7 +3,7 @@ import { DomHandler } from 'primeng/dom';
 import { TabView } from 'primeng/tabview';
 
 // eslint-disable-next-line @angular-eslint/directive-selector
-@Directive({ selector: 'p-tabView' })
+@Directive({ selector: 'p-tabView', standalone: true })
 export class TabViewOverrideDirective {
   constructor() {
     const tabView = inject(TabView, { self: true });

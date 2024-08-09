@@ -21,7 +21,7 @@ describe('UsagePipe', () => {
   describe('transform', () => {
     it('should call DisplayService method', () => {
       spyOn(service, 'usage').and.callThrough();
-      expect(pipe.transform(rational(1n))).toEqual('1 kW');
+      expect(pipe.transform(rational.one)).toEqual('1 kW');
       expect(service.usage).toHaveBeenCalled();
     });
   });

@@ -1,62 +1,63 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnInit,
-} from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { tap, withLatestFrom } from 'rxjs';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { TooltipModule } from 'primeng/tooltip';
 
-import { CostKey, CostSettings, Rational, rational } from '~/models';
+import { CostKey, CostSettings, rational } from '~/models';
+import { TranslatePipe } from '~/pipes';
 import { ContentService } from '~/services';
-import { LabState, Settings } from '~/store';
+import { Settings } from '~/store';
+import { InputNumberComponent } from '../input-number/input-number.component';
 import { DialogComponent } from '../modal';
 
 @Component({
   selector: 'lab-costs',
+  standalone: true,
+  imports: [
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    DialogModule,
+    TooltipModule,
+    InputNumberComponent,
+    TranslatePipe,
+  ],
   templateUrl: './costs.component.html',
   styleUrls: ['./costs.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CostsComponent extends DialogComponent implements OnInit {
-  store = inject(Store<LabState>);
+export class CostsComponent extends DialogComponent {
+  store = inject(Store);
   contentSvc = inject(ContentService);
 
-  editValue = { ...Settings.initialSettingsState.costs };
+  editValue = { ...Settings.initialState.costs };
 
   rational = rational;
 
   get modified(): boolean {
     return (Object.keys(this.editValue) as CostKey[]).some(
-      (k) => this.editValue[k] !== Settings.initialSettingsState.costs[k],
+      (k) => this.editValue[k] !== Settings.initialState.costs[k],
     );
-  }
-
-  show$ = this.contentSvc.showCosts$.pipe(
-    takeUntilDestroyed(),
-    withLatestFrom(this.store.select(Settings.getCosts)),
-    tap(([_, c]) => {
-      this.initEdit(c);
-      this.show();
-    }),
-  );
-
-  Rational = Rational;
-
-  ngOnInit(): void {
-    this.show$.subscribe();
   }
 
   initEdit(costs: CostSettings): void {
     this.editValue = { ...costs };
   }
 
+  open(value: CostSettings): void {
+    this.initEdit(value);
+    this.show();
+  }
+
   reset(): void {
-    this.editValue = { ...Settings.initialSettingsState.costs };
+    this.editValue = { ...Settings.initialState.costs };
   }
 
   save(): void {
-    this.store.dispatch(new Settings.SetCostsAction(this.editValue));
+    const costs = this.editValue;
+    this.store.dispatch(Settings.setCosts({ costs }));
   }
 }

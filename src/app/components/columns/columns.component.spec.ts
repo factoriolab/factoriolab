@@ -1,24 +1,19 @@
-import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestModule } from 'src/tests';
+import { Mocks, TestModule } from 'src/tests';
 import { Preferences } from '~/store';
 import { ColumnsComponent } from './columns.component';
 
 describe('ColumnsComponent', () => {
   let component: ColumnsComponent;
   let fixture: ComponentFixture<ColumnsComponent>;
-  let markForCheck: jasmine.Spy;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ColumnsComponent],
-      imports: [TestModule],
+      imports: [TestModule, ColumnsComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ColumnsComponent);
-    const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
-    markForCheck = spyOn(ref.constructor.prototype, 'markForCheck');
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -36,11 +31,14 @@ describe('ColumnsComponent', () => {
     });
   });
 
-  describe('ngOnInit', () => {
-    it('should watch subject to show dialog', () => {
-      component.contentSvc.showColumns$.next();
-      expect(component.visible).toBeTrue();
-      expect(markForCheck).toHaveBeenCalled();
+  describe('open', () => {
+    it('should set up the editValue and show the dialog', () => {
+      spyOn(component, 'show');
+      component.editValue = null as any;
+      component.open(Mocks.PreferencesState.columns);
+      expect(component.editValue).toEqual(Mocks.PreferencesState.columns);
+      expect(component.editValue).not.toBe(Mocks.PreferencesState.columns);
+      expect(component.show).toHaveBeenCalled();
     });
   });
 
@@ -57,9 +55,7 @@ describe('ColumnsComponent', () => {
     it('should set the value back to the initial state', () => {
       component.editValue = null as any;
       component.reset();
-      expect(component.editValue).toEqual(
-        Preferences.initialPreferencesState.columns,
-      );
+      expect(component.editValue).toEqual(Preferences.initialState.columns);
     });
   });
 
@@ -68,7 +64,7 @@ describe('ColumnsComponent', () => {
       spyOn(component.store, 'dispatch');
       component.onHide();
       expect(component.store.dispatch).toHaveBeenCalledWith(
-        new Preferences.SetColumnsAction(component.editValue as any),
+        Preferences.setColumns({ columns: component.editValue as any }),
       );
     });
   });

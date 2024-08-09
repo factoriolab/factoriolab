@@ -4,7 +4,7 @@ import { Rational } from '~/models';
 import { DisplayService } from '~/services';
 
 /** Used in tooltips / data pages to do a simple round on power usage values */
-@Pipe({ name: 'usage' })
+@Pipe({ name: 'usage', standalone: true })
 export class UsagePipe implements PipeTransform {
   displaySvc = inject(DisplayService);
 

@@ -6,6 +6,10 @@
 
 // Use InputNumber styles
 :host ::ng-deep {
+  .p-inputtext {
+    text-align: inherit;
+  }
+
   .p-inputnumber.p-component.p-inputnumber-buttons-stacked
     > .p-inputtext:not(.hidden-buttons) {
     border-top-right-radius: 0;
@@ -32,9 +36,5 @@
     &.p-inputnumber-button-down {
       padding: 0;
     }
-  }
-
-  .p-inputtext {
-    text-align: inherit;
   }
 }

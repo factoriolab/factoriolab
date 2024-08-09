@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { combineLatest, map, switchMap } from 'rxjs';
 
 import {
@@ -15,33 +14,37 @@ import {
   Rational,
   Step,
 } from '~/models';
-import {
-  Items,
-  LabState,
-  Objectives,
-  Preferences,
-  Recipes,
-  Settings,
-} from '~/store';
+import { Items, Objectives, Preferences, Recipes, Settings } from '~/store';
+import { ThemeService, ThemeValues } from './theme.service';
+import { TranslateService } from './translate.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FlowService {
   translateSvc = inject(TranslateService);
-  store = inject(Store<LabState>);
+  store = inject(Store);
+  themeSvc = inject(ThemeService);
 
   flowData$ = combineLatest({
-    steps: this.store.select(Objectives.getSteps),
+    steps: this.store.select(Objectives.selectSteps),
     suffix: this.store
-      .select(Settings.getDisplayRateInfo)
+      .select(Settings.selectDisplayRateInfo)
       .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
-    itemsState: this.store.select(Items.getItemsState),
+    itemsState: this.store.select(Items.selectItemsState),
     preferences: this.store.select(Preferences.preferencesState),
-    data: this.store.select(Recipes.getAdjustedDataset),
+    data: this.store.select(Recipes.selectAdjustedDataset),
+    themeValues: this.themeSvc.themeValues$,
   }).pipe(
-    map(({ steps, suffix, itemsState, preferences, data }) =>
-      this.buildGraph(steps, suffix, itemsState, preferences, data),
+    map(({ steps, suffix, itemsState, preferences, data, themeValues }) =>
+      this.buildGraph(
+        steps,
+        suffix,
+        itemsState,
+        preferences,
+        data,
+        themeValues,
+      ),
     ),
   );
 
@@ -55,6 +58,7 @@ export class FlowService {
     itemsState: Items.ItemsState,
     preferences: Preferences.PreferencesState,
     data: AdjustedDataset,
+    themeValues: ThemeValues,
   ): FlowData {
     const itemPrec = preferences.columns.items.precision;
     const machinePrec = preferences.columns.machines.precision;
@@ -96,8 +100,8 @@ export class FlowService {
           text: `${step.items.toString(itemPrec)}${suffix}`,
           color: icon.color,
           stepId: step.id,
-          viewBox: this.viewBox(icon),
           href: icon.file,
+          ...this.positionProps(icon),
         });
 
         if (step.parents) {
@@ -134,10 +138,10 @@ export class FlowService {
             id: surplusId,
             name: item.name,
             text: `${step.surplus.toString(itemPrec)}${suffix}`,
-            color: icon.color,
+            color: themeValues.dangerBackground,
             stepId: step.id,
-            viewBox: this.viewBox(icon),
             href: icon.file,
+            ...this.positionProps(icon),
           });
           flow.links.push({
             source: id,
@@ -167,10 +171,10 @@ export class FlowService {
             id: outputId,
             name: item.name,
             text: `${step.output.toString(itemPrec)}${suffix}`,
-            color: icon.color,
+            color: themeValues.successBackground,
             stepId: step.id,
-            viewBox: this.viewBox(icon),
             href: icon.file,
+            ...this.positionProps(icon),
           });
           flow.links.push({
             source: id,
@@ -205,9 +209,9 @@ export class FlowService {
           text: `${step.machines.toString(machinePrec)} ${machine.name}`,
           color: icon.color,
           stepId: step.id,
-          viewBox: this.viewBox(icon),
           href: icon.file,
           recipe,
+          ...this.positionProps(icon),
         });
 
         if (step.outputs) {
@@ -265,22 +269,24 @@ export class FlowService {
 
   stepLinkValue(step: Step, prop: LinkValue): Rational {
     if (prop === LinkValue.None || prop === LinkValue.Percent)
-      return rational(1n);
+      return rational.one;
 
     switch (prop) {
       case LinkValue.Belts:
-        return step.belts ?? rational(0n);
+        return step.belts ?? rational.zero;
       case LinkValue.Wagons:
-        return step.wagons ?? rational(0n);
+        return step.wagons ?? rational.zero;
       case LinkValue.Machines:
-        return step.machines ?? rational(0n);
+        return step.machines ?? rational.zero;
       default:
-        return step.items ?? rational(0n);
+        return step.items ?? rational.zero;
     }
   }
 
-  viewBox(icon: Icon): string {
-    return `${icon.position.replace(/px/g, '').replace(/-/g, '')} 64 64`;
+  positionProps(icon: Icon): { posX: string; posY: string; viewBox: string } {
+    const [posX, posY] = icon.position.split(' ');
+    const viewBox = `${icon.position.replace(/px/g, '').replace(/-/g, '')} 64 64`;
+    return { posX, posY, viewBox };
   }
 
   linkSize(
