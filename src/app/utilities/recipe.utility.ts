@@ -688,6 +688,8 @@ export class RecipeUtility {
       objective.fuelId = objective.fuelId ?? def?.fuelId;
     }
 
+    objective.fuelOptions = def.fuelOptions;
+
     if (machine != null && this.allowsModules(recipe, machine)) {
       objective.moduleOptions = this.moduleOptions(
         machine,
