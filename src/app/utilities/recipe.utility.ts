@@ -750,8 +750,7 @@ export class RecipeUtility {
       .map((m) => {
         const r = {} as ModuleSettings;
         if (m.id !== moduleId) r.id = m.id;
-        if (m.id == null || !m.count?.eq(moduleCount))
-          r.count = m.count;
+        if (m.id == null || !m.count?.eq(moduleCount)) r.count = m.count;
         return r;
       });
 
@@ -767,7 +766,7 @@ export class RecipeUtility {
   ): ModuleSettings[] | undefined {
     if (value == null)
       return this.defaultModules(options, moduleRankIds, count, machineValue);
-    
+
     const moduleCount = count === true || count == null ? rational(0n) : count;
     const moduleId = this.bestMatch(
       options.map((o) => o.value),
