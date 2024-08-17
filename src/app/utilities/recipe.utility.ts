@@ -750,8 +750,7 @@ export class RecipeUtility {
       .map((m) => {
         const r = {} as ModuleSettings;
         if (m.id !== moduleId) r.id = m.id;
-        if (m.id == null || !m.count?.eq(moduleCount))
-          r.count = m.count;
+        if (m.id == null || !m.count?.eq(moduleCount)) r.count = m.count;
         return r;
       });
 
