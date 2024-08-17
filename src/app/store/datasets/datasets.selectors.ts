@@ -3,6 +3,7 @@ import { createSelector } from '@ngrx/store';
 import { Entities, Mod, ModInfo } from '~/models';
 import { LabState } from '../';
 import { DatasetsState } from './datasets.reducer';
+import { spread } from '~/helpers';
 
 /* Base selector functions */
 export const datasetsState = (state: LabState): DatasetsState =>
@@ -36,7 +37,7 @@ export const getModRecord = createSelector(
   (mods, entities) =>
     mods.reduce((e: Entities<Mod | undefined>, m) => {
       const data = entities[m.id];
-      if (data != null) e[m.id] = { ...m, ...data };
+      if (data != null) e[m.id] = spread(m, data as Partial<ModInfo>) as Mod;
       return e;
     }, {}),
 );
