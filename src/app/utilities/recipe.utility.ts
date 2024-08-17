@@ -769,6 +769,9 @@ export class RecipeUtility {
     if (value == null)
       return this.defaultModules(options, moduleRankIds, count, machineValue);
 
+    if (value.length === 0)
+      value.push({});
+    
     const moduleCount = count === true || count == null ? rational(0n) : count;
     const moduleId = this.bestMatch(
       options.map((o) => o.value),
