@@ -12,7 +12,10 @@ export class StepHrefPipe implements PipeTransform {
 
   data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
-  async transform(value: Step, zipPartial: Zip): Promise<string | null> {
+  async transform(
+    value: Step,
+    zipPartial: Zip<URLSearchParams>,
+  ): Promise<string | null> {
     let step = value;
     if (step.recipeId) {
       const recipe = this.data().adjustedRecipe[step.recipeId];

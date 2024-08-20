@@ -53,7 +53,7 @@ export const selectObjectives = createSelector(
   Items.selectItemsState,
   Recipes.selectRecipesState,
   Machines.selectMachinesState,
-  Settings.settingsState,
+  Settings.selectSettings,
   Recipes.selectAdjustedDataset,
   (objectives, itemsState, recipesState, machinesState, settings, data) =>
     objectives.map((o) =>
@@ -91,36 +91,11 @@ export const selectNormalizedObjectives = createSelector(
 
 export const selectMatrixResult = createSelector(
   selectNormalizedObjectives,
-  Items.selectItemsState,
-  Recipes.selectRecipesState,
-  Settings.selectAllResearchedTechnologyIds,
-  Settings.selectMaximizeType,
-  Settings.selectSurplusMachinesOutput,
-  Settings.selectCosts,
+  Settings.selectSettings,
   Recipes.selectAdjustedDataset,
   Preferences.selectPaused,
-  (
-    objectives,
-    itemsSettings,
-    recipesSettings,
-    researchedTechnologyIds,
-    maximizeType,
-    surplusMachinesOutput,
-    costs,
-    data,
-    paused,
-  ) =>
-    SimplexUtility.solve(
-      objectives,
-      itemsSettings,
-      recipesSettings,
-      researchedTechnologyIds,
-      maximizeType,
-      surplusMachinesOutput,
-      costs,
-      data,
-      paused,
-    ),
+  (objectives, settings, data, paused) =>
+    SimplexUtility.solve(objectives, settings, data, paused),
 );
 
 export const selectSteps = createSelector(
@@ -128,18 +103,18 @@ export const selectSteps = createSelector(
   selectObjectives,
   Items.selectItemsState,
   Recipes.selectRecipesState,
-  Settings.selectBeaconReceivers,
   Settings.selectBeltSpeed,
   Settings.selectDisplayRateInfo,
+  Settings.selectSettings,
   Recipes.selectAdjustedDataset,
   (
     result,
     objectives,
     itemsState,
     recipesState,
-    beaconReceivers,
     beltSpeed,
     dispRateInfo,
+    settings,
     data,
   ) =>
     RateUtility.normalizeSteps(
@@ -147,9 +122,9 @@ export const selectSteps = createSelector(
       objectives,
       itemsState,
       recipesState,
-      beaconReceivers,
       beltSpeed,
       dispRateInfo,
+      settings,
       data,
     ),
 );
@@ -348,9 +323,9 @@ function addValueToRecordByIds(
 
 export const selectStepDetails = createSelector(
   selectSteps,
-  Recipes.selectRecipesState,
+  Settings.selectSettings,
   Recipes.selectAdjustedDataset,
-  (steps, recipesState, data) =>
+  (steps, settings, data) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
       const outputs: StepOutput[] = [];
@@ -418,7 +393,9 @@ export const selectStepDetails = createSelector(
         }),
         outputs,
         recipeIds,
-        allRecipesIncluded: recipeIds.every((r) => !recipesState[r].excluded),
+        allRecipesIncluded: recipeIds.every(
+          (r) => !settings.excludedRecipeIds.has(r),
+        ),
       };
 
       return e;
@@ -512,9 +489,6 @@ export const selectRecipesModified = createSelector(
   Recipes.recipesState,
   selectBaseObjectives,
   (state, objectives) => ({
-    checked:
-      Object.keys(state).some((id) => state[id].checked != null) ||
-      objectives.some((p) => p.checked != null),
     machines:
       Object.keys(state).some(
         (id) =>

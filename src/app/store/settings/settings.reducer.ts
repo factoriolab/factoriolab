@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 
 import { spread } from '~/helpers';
 import {
+  BeaconSettings,
   CostSettings,
   DisplayRate,
   InserterCapacity,
@@ -19,29 +20,39 @@ import * as Actions from './settings.actions';
 
 export interface SettingsState {
   modId: string;
-  /**
-   * Use null value to indicate all researched. This list is filtered to the
-   * minimal set of technologies not listed as prerequisites for other
-   * researched technologies, to reduce zip size.
-   */
-  researchedTechnologyIds: string[] | null;
-  netProductionOnly: boolean;
-  surplusMachinesOutput: boolean;
+  checkedObjectiveIds: Set<string>;
   preset: Preset;
-  beaconReceivers: Rational | null;
-  proliferatorSprayId: string;
+  maximizeType: MaximizeType;
+  surplusMachinesOutput: boolean;
+  displayRate: DisplayRate;
+  excludedItemIds: Set<string>;
+  checkedItemIds: Set<string>;
   beltId?: string;
   pipeId?: string;
   cargoWagonId?: string;
   fluidWagonId?: string;
   flowRate: Rational;
+  excludedRecipeIds?: Set<string>;
+  checkedRecipeIds: Set<string>;
+  netProductionOnly: boolean;
+  machineRankIds?: string[];
+  fuelRankIds?: string[];
+  moduleRankIds?: string[];
+  beacons?: BeaconSettings[];
+  overclock?: Rational;
+  beaconReceivers: Rational | null;
+  proliferatorSprayId: string;
   inserterTarget: InserterTarget;
   miningBonus: Rational;
   researchBonus: Rational;
   inserterCapacity: InserterCapacity;
-  displayRate: DisplayRate;
+  /**
+   * Use null value to indicate all researched. This list is filtered to the
+   * minimal set of technologies not listed as prerequisites for other
+   * researched technologies, to reduce zip size.
+   */
+  researchedTechnologyIds: Set<string> | null;
   costs: CostSettings;
-  maximizeType: MaximizeType;
 }
 
 export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
@@ -50,19 +61,23 @@ export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
 
 export const initialState: SettingsState = {
   modId: '1.1',
-  researchedTechnologyIds: null,
-  netProductionOnly: false,
-  surplusMachinesOutput: false,
+  checkedObjectiveIds: new Set(),
   preset: Preset.Minimum,
+  maximizeType: MaximizeType.Weight,
+  surplusMachinesOutput: false,
+  displayRate: DisplayRate.PerMinute,
+  excludedItemIds: new Set(),
+  checkedItemIds: new Set(),
+  flowRate: rational(1200n),
+  checkedRecipeIds: new Set(),
+  netProductionOnly: false,
   beaconReceivers: null,
   proliferatorSprayId: ItemId.Module,
-  flowRate: rational(1200n),
   inserterTarget: InserterTarget.ExpressTransportBelt,
   miningBonus: rational.zero,
   researchBonus: researchBonusValue.speed6,
   inserterCapacity: InserterCapacity.Capacity7,
-  displayRate: DisplayRate.PerMinute,
-  maximizeType: MaximizeType.Weight,
+  researchedTechnologyIds: null,
   costs: {
     factor: rational.one,
     machine: rational.one,
@@ -103,6 +118,15 @@ export const settingsReducer = createReducer(
 
     return state;
   }),
+  on(Actions.setMachineRank, (state, { value, def }) =>
+    spread(state, { machineRankIds: StoreUtility.compareRank(value, def) }),
+  ),
+  on(Actions.setFuelRank, (state, { value, def }) =>
+    spread(state, { fuelRankIds: StoreUtility.compareRank(value, def) }),
+  ),
+  on(Actions.setModuleRank, (state, { value, def }) =>
+    spread(state, { moduleRankIds: StoreUtility.compareRank(value, def) }),
+  ),
   on(Actions.setBelt, (state, { id, def }) =>
     spread(state, { beltId: StoreUtility.compareValue(id, def) }),
   ),
@@ -115,22 +139,41 @@ export const settingsReducer = createReducer(
   on(Actions.setFluidWagon, (state, { id, def }) =>
     spread(state, { fluidWagonId: StoreUtility.compareValue(id, def) }),
   ),
+  on(Actions.setExcludedRecipes, (state, { value, def }) =>
+    spread(state, { excludedRecipeIds: StoreUtility.compareSet(value, def) }),
+  ),
   on(
-    Actions.setResearchedTechnologies,
-    Actions.setNetProductionOnly,
-    Actions.setSurplusMachinesOutput,
+    Actions.setCheckedObjectives,
     Actions.setPreset,
+    Actions.setMaximizeType,
+    Actions.setSurplusMachinesOutput,
+    Actions.setDisplayRate,
+    Actions.setExcludedItems,
+    Actions.setCheckedItems,
+    Actions.setFlowRate,
+    Actions.setCheckedRecipes,
+    Actions.setNetProductionOnly,
+    Actions.setBeacons,
+    Actions.setOverclock,
     Actions.setBeaconReceivers,
     Actions.setProliferatorSpray,
-    Actions.setFlowRate,
     Actions.setInserterTarget,
     Actions.setMiningBonus,
     Actions.setResearchBonus,
     Actions.setInserterCapacity,
-    Actions.setDisplayRate,
-    Actions.setMaximizeType,
+    Actions.setResearchedTechnologies,
     Actions.setCosts,
     (state, payload) => spread(state, payload),
+  ),
+  on(Actions.resetExcludedItems, (state) =>
+    spread(state, { excludedItemIds: initialState.excludedItemIds }),
+  ),
+  on(Actions.resetChecked, (state) =>
+    spread(state, {
+      checkedItemIds: initialState.checkedItemIds,
+      checkedRecipeIds: initialState.checkedRecipeIds,
+      checkedObjectiveIds: initialState.checkedObjectiveIds,
+    }),
   ),
   on(Actions.resetCosts, (state) =>
     spread(state, { costs: initialState.costs }),

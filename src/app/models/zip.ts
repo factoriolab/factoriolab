@@ -1,13 +1,13 @@
 import { Entities } from './entities';
 
-export interface Zip {
-  bare: string;
-  hash: string;
+export interface Zip<T> {
+  bare: T;
+  hash: T;
 }
 
 export interface ZipRecipeSettingsInfo {
   idMap: Entities<number>;
-  list: Zip[];
+  list: Zip<string>[];
 }
 
 export interface ZipMachineSettings {
@@ -16,9 +16,10 @@ export interface ZipMachineSettings {
 }
 
 export interface ZipData {
-  objectives: Zip;
-  config: Zip;
+  objectives: Zip<URLSearchParams>;
+  config: Zip<URLSearchParams>;
   objectiveSettings: ZipMachineSettings;
   recipeSettings: ZipMachineSettings;
   machineSettings: ZipMachineSettings;
+  beacons?: number[];
 }

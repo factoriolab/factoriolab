@@ -226,40 +226,6 @@ describe('RouterService', () => {
     expect(service.updateUrl).toHaveBeenCalled();
   }));
 
-  describe('getModIdFromState', () => {
-    it('should handle zipped states', async () => {
-      let result = await service.getModIdFromState(
-        'z=eJwrcInQMlQrcknU0nLScq9zVyuzBAA04gVG&v=9',
-      );
-      expect(result).toBeUndefined();
-
-      result = await service.getModIdFromState(
-        'z=eJwrMNcyVEvyUCtyctTSStZyVStWK7MEADvbBYI_&v=9',
-      );
-      expect(result).toEqual('dsp');
-    });
-
-    it('should handle invalid states', async () => {
-      let result = await service.getModIdFromState('z=');
-      expect(result).toBeUndefined();
-
-      result = await service.getModIdFromState('s=');
-      expect(result).toBeUndefined();
-    });
-
-    it('should handle bare states', async () => {
-      const result = await service.getModIdFromState('s=dsp');
-      expect(result).toEqual('dsp');
-    });
-  });
-
-  describe('getGameFromModId', () => {
-    it('should return default value', () => {
-      expect(service.getGameFromModId(undefined)).toEqual(Game.Factorio);
-      expect(service.getGameFromModId('fake')).toEqual(Game.Factorio);
-    });
-  });
-
   describe('updateUrl', () => {
     it('should update url with products', fakeAsync(() => {
       spyOn(service, 'zipState').and.returnValue(of(mockZipData()));

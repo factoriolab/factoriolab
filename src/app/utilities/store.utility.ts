@@ -111,6 +111,11 @@ export class StoreUtility {
     return value === def ? undefined : value;
   }
 
+  static compareSet<T>(value: Set<T>, def: Set<T>): Set<T> | undefined {
+    if (value.size !== def.size) return value;
+    return Array.from(value).every((v) => def.has(v)) ? undefined : value;
+  }
+
   static compareRank(
     value: string[],
     def: string[] | undefined,

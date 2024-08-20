@@ -5,14 +5,14 @@ import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { ReplaySubject } from 'rxjs';
 
 import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
-import { LabState } from '../';
+import * as Settings from '.';
+import { LabState } from '..';
 import * as Recipes from '../recipes';
-import * as Settings from '../settings';
-import * as Actions from './machines.actions';
-import { MachinesEffects } from './machines.effects';
+import * as Actions from './settings.actions';
+import { SettingsEffects } from './settings.effects';
 
-describe('MachinesEffects', () => {
-  let effects: MachinesEffects;
+describe('SettingsEffects', () => {
+  let effects: SettingsEffects;
   let actions: ReplaySubject<unknown>;
   let mockStore: MockStore<LabState>;
 
@@ -30,11 +30,11 @@ describe('MachinesEffects', () => {
           },
         }),
         provideMockActions(() => actions),
-        MachinesEffects,
+        SettingsEffects,
       ],
     });
 
-    effects = TestBed.inject(MachinesEffects);
+    effects = TestBed.inject(SettingsEffects);
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
       Recipes.selectRecipesState,

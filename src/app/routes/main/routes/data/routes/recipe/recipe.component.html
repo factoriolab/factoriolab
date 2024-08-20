@@ -230,9 +230,9 @@
         <th>{{ 'data.excluded' | translate }}</th>
         <td>
           <p-checkbox
-            [ngModel]="recipeSettings.excluded"
+            [ngModel]="settings().excludedRecipeIds.has(id())"
             [binary]="true"
-            (onChange)="toggleRecipe()"
+            (onChange)="changeExcluded($event.checked)"
           ></p-checkbox>
         </td>
       </tr>
@@ -240,9 +240,9 @@
         <th>{{ 'data.checked' | translate }}</th>
         <td>
           <p-checkbox
-            [ngModel]="recipeSettings.checked"
+            [ngModel]="settings().checkedRecipeIds.has(id())"
             [binary]="true"
-            (onChange)="setRecipeChecked(id(), $event.checked)"
+            (onChange)="changeChecked($event.checked)"
           ></p-checkbox>
         </td>
       </tr>

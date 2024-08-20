@@ -55,7 +55,7 @@ export class TechPickerComponent extends DialogComponent {
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 
-  @Output() selectIds = new EventEmitter<string[] | null>();
+  @Output() selectIds = new EventEmitter<Set<string> | null>();
 
   data = this.store.selectSignal(Recipes.selectAdjustedDataset);
   showTechLabels = this.store.selectSignal(Preferences.selectShowTechLabels);
@@ -108,9 +108,8 @@ export class TechPickerComponent extends DialogComponent {
 
   Game = Game;
 
-  clickOpen(selection: string[] | null): void {
-    selection = [...(selection ?? this.data().technologyIds)];
-    this.selection.set(selection);
+  clickOpen(selection: Set<string>): void {
+    this.selection.set(Array.from(selection));
     this.show();
 
     if (!this.contentSvc.isMobile()) {
@@ -238,7 +237,7 @@ game.write_file("techs.txt", table.concat(list, ","))
           return techB.prerequisites && techB.prerequisites.indexOf(a) !== -1;
         }),
     );
-    this.selectIds.emit(filteredSelection);
+    this.selectIds.emit(new Set(filteredSelection));
   }
 
   /** Action Dispatch Methods */

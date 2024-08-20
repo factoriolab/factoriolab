@@ -53,6 +53,7 @@ const NODE_WIDTH = 32;
 cytoscape.use(elk);
 
 @Component({
+  selector: 'lab-flow',
   standalone: true,
   imports: [
     AsyncPipe,

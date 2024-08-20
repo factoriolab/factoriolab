@@ -44,63 +44,63 @@ describe('ZipService', () => {
 
   describe('zipTruthyString', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyString(undefined)).toEqual('');
+      expect(service.zipString(undefined)).toEqual('');
     });
 
     it('should handle truthy', () => {
-      expect(service.zipTruthyString('a')).toEqual('a');
+      expect(service.zipString('a')).toEqual('a');
     });
   });
 
   describe('zipTruthyNum', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyNumber(undefined)).toEqual('');
+      expect(service.zipNumber(undefined)).toEqual('');
     });
 
     it('should handle truthy', () => {
-      expect(service.zipTruthyNumber(1)).toEqual('1');
+      expect(service.zipNumber(1)).toEqual('1');
     });
   });
 
   describe('zipTruthyBool', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyBool(undefined)).toEqual('');
+      expect(service.zipBool(undefined)).toEqual('');
     });
 
     it('should handle false', () => {
-      expect(service.zipTruthyBool(false)).toEqual(ZFALSE);
+      expect(service.zipBool(false)).toEqual(ZFALSE);
     });
 
     it('should handle true', () => {
-      expect(service.zipTruthyBool(true)).toEqual(ZTRUE);
+      expect(service.zipBool(true)).toEqual(ZTRUE);
     });
   });
 
   describe('zipTruthyArray', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyArray(undefined)).toEqual('');
+      expect(service.zipArray(undefined)).toEqual('');
     });
 
     it('should handle empty', () => {
-      expect(service.zipTruthyArray([])).toEqual(ZEMPTY);
+      expect(service.zipArray([])).toEqual(ZEMPTY);
     });
 
     it('should handle truthy', () => {
-      expect(service.zipTruthyArray(['a'])).toEqual('a');
+      expect(service.zipArray(['a'])).toEqual('a');
     });
   });
 
   describe('zipTruthyNArray', () => {
     it('should handle falsy', () => {
-      expect(service.zipTruthyNArray(undefined, [])).toEqual('');
+      expect(service.zipNArray(undefined, [])).toEqual('');
     });
 
     it('should handle empty', () => {
-      expect(service.zipTruthyNArray([], [])).toEqual(ZEMPTY);
+      expect(service.zipNArray([], [])).toEqual(ZEMPTY);
     });
 
     it('should handle truthy', () => {
-      expect(service.zipTruthyNArray(['a'], ['a'])).toEqual('A');
+      expect(service.zipNArray(['a'], ['a'])).toEqual('A');
     });
   });
 

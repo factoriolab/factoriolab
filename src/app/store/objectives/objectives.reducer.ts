@@ -10,7 +10,6 @@ import {
 } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
-import * as Items from '../items';
 import * as Recipes from '../recipes';
 import * as Settings from '../settings';
 import * as Actions from './objectives.actions';
@@ -149,17 +148,6 @@ export const objectivesReducer = createReducer(
       ),
     }),
   ),
-  on(Actions.setChecked, (state, { id, value }) =>
-    spread(state, {
-      entities: StoreUtility.compareReset(
-        state.entities,
-        'checked',
-        id,
-        value,
-        false,
-      ),
-    }),
-  ),
   on(Actions.resetObjective, (state, { id }) =>
     spread(state, {
       entities: StoreUtility.resetFields(
@@ -196,11 +184,6 @@ export const objectivesReducer = createReducer(
   on(Recipes.resetBeacons, (state) =>
     spread(state, {
       entities: StoreUtility.resetField(state.entities, 'beacons'),
-    }),
-  ),
-  on(Items.resetChecked, (state) =>
-    spread(state, {
-      entities: StoreUtility.resetField(state.entities, 'checked'),
     }),
   ),
 );

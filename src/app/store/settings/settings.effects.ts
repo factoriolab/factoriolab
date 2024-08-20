@@ -4,10 +4,10 @@ import { Store } from '@ngrx/store';
 import { map, pairwise, switchMap, withLatestFrom } from 'rxjs';
 
 import * as Recipes from '../recipes';
-import * as MachinesActions from './machines.actions';
+import * as SettingsActions from './settings.actions';
 
 @Injectable()
-export class MachinesEffects {
+export class SettingsEffects {
   actions$ = inject(Actions);
   store = inject(Store);
 
@@ -23,12 +23,7 @@ export class MachinesEffects {
       pairwise(),
       switchMap((x) =>
         this.actions$.pipe(
-          ofType(
-            MachinesActions.add,
-            MachinesActions.remove,
-            MachinesActions.setRank,
-            MachinesActions.setMachine,
-          ),
+          ofType(SettingsActions.setMachineRank),
           map(() => x),
         ),
       ),

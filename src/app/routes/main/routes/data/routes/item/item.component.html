@@ -376,9 +376,9 @@
         <th>{{ 'data.excluded' | translate }}</th>
         <td>
           <p-checkbox
-            [ngModel]="itemSettings.excluded"
+            [ngModel]="settings().excludedItemIds.has(id())"
             [binary]="true"
-            (onChange)="setItemExcluded(id(), $event.checked)"
+            (onChange)="changeExcluded($event.checked)"
           ></p-checkbox>
         </td>
       </tr>
@@ -386,9 +386,9 @@
         <th>{{ 'data.checked' | translate }}</th>
         <td>
           <p-checkbox
-            [ngModel]="itemSettings.checked"
+            [ngModel]="settings().checkedItemIds.has(id())"
             [binary]="true"
-            (onChange)="setItemChecked(id(), $event.checked)"
+            (onChange)="changeChecked($event.checked)"
           ></p-checkbox>
         </td>
       </tr>
@@ -482,7 +482,7 @@
             <h3>{{ 'data.machineSettings' | translate }}</h3>
 
             <button
-              [class.invisible]="!machinesStateRaw().entities[id()]"
+              [class.invisible]="!machinesStateRaw()[id()]"
               pButton
               pRipple
               type="button"

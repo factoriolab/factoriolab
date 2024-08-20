@@ -281,7 +281,7 @@ describe('StepsComponent', () => {
   describe('toggleRecipes', () => {
     it('should toggle a set of recipes', () => {
       spyOn(component, 'setRecipeExcludedBatch');
-      component.toggleRecipes(
+      component.changeRecipesExcluded(
         [RecipeId.AdvancedOilProcessing],
         true,
         {} as any,

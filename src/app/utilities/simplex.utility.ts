@@ -28,10 +28,10 @@ import {
   Rational,
   Recipe,
   RecipeObjective,
+  SettingsComplete,
   SimplexResultType,
   Step,
 } from '~/models';
-import { Items, Recipes } from '~/store';
 import { RateUtility } from './rate.utility';
 
 const simplexConfig: Simplex.Options = environment.debug
@@ -67,9 +67,9 @@ export interface MatrixState {
   /** Recipe limits */
   recipeLimits: Entities<Rational>;
   /** Items that have no included recipe */
-  unproduceableIds: string[];
+  unproduceableIds: Set<string>;
   /** Items that are explicitly excluded */
-  excludedIds: string[];
+  excludedIds: Set<string>;
   /** All recipes that are included */
   recipeIds: string[];
   /** All items that are included */
@@ -97,9 +97,9 @@ export interface MatrixSolution {
   /** Recipes in tableau */
   recipeIds: string[];
   /** Items identified as unproduceable */
-  unproduceableIds: string[];
+  unproduceableIds: Set<string>;
   /** Items excluded */
-  excludedIds: string[];
+  excludedIds: Set<string>;
   /** Surplus items, may be empty */
   surplus: Entities<Rational>;
   /** Unproduceable items (no recipe), may be empty */
@@ -144,12 +144,7 @@ export class SimplexUtility {
 
   static solve(
     objectives: Objective[],
-    itemsState: Items.ItemsState,
-    recipesState: Recipes.RecipesState,
-    researchedTechnologyIds: string[] | null,
-    maximizeType: MaximizeType,
-    surplusMachinesOutput: boolean,
-    costs: CostSettings,
+    settings: SettingsComplete,
     data: AdjustedDataset,
     paused: boolean,
   ): MatrixResult {
@@ -161,21 +156,8 @@ export class SimplexUtility {
       return { steps: [], resultType: SimplexResultType.Skipped };
     }
 
-    if (researchedTechnologyIds == null) {
-      researchedTechnologyIds = data.technologyIds;
-    }
-
     // Get matrix state
-    const state = this.getState(
-      objectives,
-      itemsState,
-      recipesState,
-      researchedTechnologyIds,
-      maximizeType,
-      surplusMachinesOutput,
-      costs,
-      data,
-    );
+    const state = this.getState(objectives, settings, data);
 
     // Get solution for matrix state
     const solution = this.getSolution(state);
@@ -199,12 +181,7 @@ export class SimplexUtility {
   //#region Setup
   static getState(
     objectives: Objective[],
-    itemsState: Items.ItemsState,
-    recipesState: Recipes.RecipesState,
-    researchedTechnologyIds: string[],
-    maximizeType: MaximizeType,
-    surplusMachinesOutput: boolean,
-    costs: CostSettings,
+    settings: SettingsComplete,
     data: AdjustedDataset,
   ): MatrixState {
     // Set up state object
@@ -219,21 +196,21 @@ export class SimplexUtility {
       recipes: {},
       itemValues: {},
       recipeLimits: {},
-      unproduceableIds: [],
-      excludedIds: data.itemIds.filter((i) => itemsState[i].excluded),
+      unproduceableIds: new Set(),
+      excludedIds: settings.excludedItemIds,
       recipeIds: data.recipeIds.filter((r) => {
         // Filter for included, unlocked recipes
         const recipe = data.recipeEntities[r];
         return (
-          !recipesState[r].excluded &&
+          !settings.excludedRecipeIds.has(r) &&
           (recipe.unlockedBy == null ||
-            researchedTechnologyIds.indexOf(recipe.unlockedBy) !== -1)
+            settings.researchedTechnologyIds.has(recipe.unlockedBy))
         );
       }),
-      itemIds: data.itemIds.filter((i) => !itemsState[i].excluded),
-      maximizeType,
-      surplusMachinesOutput,
-      costs: costs,
+      itemIds: data.itemIds.filter((i) => !settings.excludedItemIds.has(i)),
+      maximizeType: settings.maximizeType,
+      surplusMachinesOutput: settings.surplusMachinesOutput,
+      costs: settings.costs,
       data,
     };
 
@@ -385,8 +362,10 @@ export class SimplexUtility {
   static parseUnproduceable(state: MatrixState): void {
     const itemIds = Object.keys(state.itemValues);
     const recipeSet = new Set(Object.keys(state.recipes));
-    state.unproduceableIds = itemIds.filter((i) =>
-      state.data.itemIncludedRecipeIds[i].every((r) => !recipeSet.has(r)),
+    state.unproduceableIds = new Set(
+      itemIds.filter((i) =>
+        state.data.itemIncludedRecipeIds[i].every((r) => !recipeSet.has(r)),
+      ),
     );
   }
   //#endregion
@@ -411,8 +390,8 @@ export class SimplexUtility {
         cost: rational.zero,
         itemIds: [],
         recipeIds: [],
-        unproduceableIds: [],
-        excludedIds: [],
+        unproduceableIds: new Set(),
+        excludedIds: new Set(),
       };
     }
 
@@ -650,12 +629,12 @@ export class SimplexUtility {
       }
 
       // Add unproduceable coeff
-      if (state.unproduceableIds.includes(itemId)) {
+      if (state.unproduceableIds.has(itemId)) {
         netCoeffs.push([unproduceableVarEntities[itemId], 1]);
       }
 
       // Add excluded coeff
-      if (state.excludedIds.includes(itemId)) {
+      if (state.excludedIds.has(itemId)) {
         netCoeffs.push([excludedVarEntities[itemId], 1]);
       }
 

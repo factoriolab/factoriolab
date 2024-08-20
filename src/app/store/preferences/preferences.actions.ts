@@ -31,7 +31,6 @@ export const setRows = createAction(
   `${key} Set Rows`,
   props<{ rows: number }>(),
 );
-// TODO: Should this just be calculated as `rows === 0`?
 export const setDisablePaginator = createAction(
   `${key} Set Disable Paginator`,
   props<{ disablePaginator: boolean }>(),

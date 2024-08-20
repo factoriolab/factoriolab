@@ -8,8 +8,6 @@ import {
   ZEMPTY,
   ZFALSE,
   ZFIELDSEP,
-  Zip,
-  ZLISTSEP,
   ZNULL,
   ZTRUE,
 } from '~/models';
@@ -21,38 +19,31 @@ import { CompressionService } from './compression.service';
 export class ZipService {
   compressionSvc = inject(CompressionService);
 
-  zipList(list: Zip[]): Zip {
-    return {
-      bare: encodeURIComponent(list.map((i) => i.bare).join(ZLISTSEP)),
-      hash: list.map((i) => i.hash).join(ZLISTSEP),
-    };
-  }
-
   zipFields(fields: string[]): string {
     return fields.join(ZFIELDSEP).replace(/\**$/, '');
   }
 
-  zipTruthyString(value: string | undefined): string {
+  zipString(value: string | undefined): string {
     return value == null ? '' : value;
   }
 
-  zipTruthyNumber(value: number | Rational | undefined): string {
+  zipNumber(value: number | Rational | undefined): string {
     return value == null ? '' : value.toString();
   }
 
-  zipTruthyBool(value: boolean | undefined): string {
+  zipBool(value: boolean | undefined): string {
     return value == null ? '' : value ? ZTRUE : ZFALSE;
   }
 
-  zipTruthyArray(value: string[] | number[] | undefined): string {
+  zipArray(value: string[] | number[] | undefined): string {
     return value == null ? '' : value.length ? value.join(ZARRAYSEP) : ZEMPTY;
   }
 
-  zipTruthyNString(value: string | undefined, hash: string[]): string {
+  zipNString(value: string | undefined, hash: string[]): string {
     return value == null ? '' : this.compressionSvc.nToId(hash.indexOf(value));
   }
 
-  zipTruthyNArray(value: string[] | undefined, hash: string[]): string {
+  zipNArray(value: string[] | undefined, hash: string[]): string {
     return value == null
       ? ''
       : value.length
@@ -60,6 +51,36 @@ export class ZipService {
             .map((v) => this.compressionSvc.nToId(hash.indexOf(v)))
             .join(ZARRAYSEP)
         : ZEMPTY;
+  }
+
+  zipSubset(value: string[] | null | undefined, hash: string[]): string {
+    if (value === undefined) return '';
+    if (value === null) return ZNULL;
+    if (!value.length) return ZEMPTY;
+
+    const set = new Set(value);
+    const result: string[] = [];
+    let start: string | undefined;
+    let end: string | undefined;
+    hash.forEach((h, i) => {
+      if (set.has(h)) {
+        const j = this.compressionSvc.nToId(i);
+        if (start == null) start = j;
+        else end = j;
+      } else if (start != null) {
+        if (end == null) result.push(start);
+        else result.push(start + ZARRAYSEP + end);
+        start = undefined;
+        end = undefined;
+      }
+    });
+
+    if (start != null) {
+      if (end == null) result.push(start);
+      else result.push(start + ZARRAYSEP + end);
+    }
+
+    return result.join(ZFIELDSEP);
   }
 
   zipDiffString(
@@ -265,5 +286,27 @@ export class ZipService {
     const v = this.parseNullableArray(value);
     if (v == null) return v;
     return v.map((a) => hash[this.compressionSvc.idToN(a)]);
+  }
+
+  parseSubset(
+    value: string | undefined,
+    hash: string[],
+  ): string[] | null | undefined {
+    if (!value?.length) return undefined;
+    if (value === ZNULL) return null;
+    if (value === ZEMPTY) return [];
+
+    const ranges = value.split(ZFIELDSEP);
+    const result: string[] = [];
+    for (const range of ranges) {
+      const [start, end] = range
+        .split(ZARRAYSEP)
+        .map((i) => this.compressionSvc.idToN(i));
+      const sliceEnd = end != null ? end + 1 : start + 1;
+      const slice = hash.slice(start, sliceEnd);
+      result.push(...slice);
+    }
+
+    return result;
   }
 }

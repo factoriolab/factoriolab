@@ -14,6 +14,7 @@ import {
   rational,
   Recipe,
   RecipeSettings,
+  SettingsComplete,
   Step,
   toEntities,
 } from '~/models';
@@ -128,9 +129,9 @@ export class RateUtility {
     objectives: Objective[],
     itemsState: Entities<ItemSettings>,
     recipesState: Entities<RecipeSettings>,
-    beaconReceivers: Rational | null,
     beltSpeed: Entities<Rational>,
     dispRateInfo: DisplayRateInfo,
+    settings: SettingsComplete,
     data: AdjustedDataset,
   ): Step[] {
     const _steps = this.copy(steps);
@@ -144,9 +145,9 @@ export class RateUtility {
     for (const step of _steps) {
       this.calculateSettings(step, objectiveEntities, recipesState);
       this.calculateBelts(step, itemsState, beltSpeed, data);
-      this.calculateBeacons(step, beaconReceivers, data);
+      this.calculateBeacons(step, settings.beaconReceivers, data);
       this.calculateDisplayRate(step, dispRateInfo);
-      this.calculateChecked(step, itemsState, recipesState, objectiveEntities);
+      this.calculateChecked(step, settings);
     }
 
     this.sortBySankey(_steps);
@@ -310,19 +311,14 @@ export class RateUtility {
     }
   }
 
-  static calculateChecked(
-    step: Step,
-    itemsState: Entities<ItemSettings>,
-    recipesState: Entities<RecipeSettings>,
-    objectiveEntities: Entities<Objective>,
-  ): void {
+  static calculateChecked(step: Step, settings: SettingsComplete): void {
     // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
-      step.checked = itemsState[step.itemId].checked;
+      step.checked = settings.checkedItemIds.has(step.itemId);
     } else if (step.recipeObjectiveId != null) {
-      step.checked = objectiveEntities[step.recipeObjectiveId].checked;
+      step.checked = settings.checkedObjectiveIds.has(step.recipeObjectiveId);
     } else if (step.recipeId != null) {
-      step.checked = recipesState[step.recipeId].checked;
+      step.checked = settings.checkedRecipeIds.has(step.recipeId);
     }
   }
 

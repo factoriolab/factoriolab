@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -46,6 +46,7 @@ export class LandingComponent {
   contentSvc = inject(ContentService);
   store = inject(Store);
   routerSvc = inject(RouterService);
+  route = inject(ActivatedRoute);
 
   itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
   settings = this.store.selectSignal(Settings.selectSettings);
@@ -63,19 +64,19 @@ export class LandingComponent {
   BrowserUtility = BrowserUtility;
 
   async selectItem(value: string): Promise<void> {
-    await this.router.navigate(['list']);
+    await this.router.navigate(['list'], { relativeTo: this.route });
     this.addItemObjective(value);
   }
 
   async selectRecipe(value: string): Promise<void> {
-    await this.router.navigate(['list']);
+    await this.router.navigate(['list'], { relativeTo: this.route });
     this.addRecipeObjective(value);
   }
 
   setState(query: string): void {
     if (query) {
       const queryParams = this.routerSvc.getParams(query);
-      this.router.navigate(['list'], { queryParams });
+      this.router.navigate(['list'], { queryParams, relativeTo: this.route });
     }
   }
 

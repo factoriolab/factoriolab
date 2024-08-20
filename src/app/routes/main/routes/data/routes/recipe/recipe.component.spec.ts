@@ -51,13 +51,13 @@ describe('RecipeComponent', () => {
     it('should handle an unrecognized recipe', () => {
       spyOn(component, 'setRecipeExcluded');
       TestUtility.setInputs(fixture, { id: 'id' });
-      component.toggleRecipe();
+      component.toggleExcluded();
       expect(component.setRecipeExcluded).not.toHaveBeenCalled();
     });
 
     it('should calculate default excluded state for a recipe', () => {
       spyOn(component, 'setRecipeExcluded');
-      component.toggleRecipe();
+      component.toggleExcluded();
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
         false,
@@ -70,7 +70,7 @@ describe('RecipeComponent', () => {
       const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
       mockStore.overrideSelector(Recipes.selectAdjustedDataset, data);
       mockStore.refreshState();
-      component.toggleRecipe();
+      component.toggleExcluded();
       expect(component.setRecipeExcluded).toHaveBeenCalledWith(
         RecipeId.NuclearFuelReprocessing,
         false,

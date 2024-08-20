@@ -5,7 +5,6 @@ export const MIN_LINK_VALUE = 1e-10;
 export const MIN_ZIP = 100;
 export const ZNULL = '?'; // Encoded, previously 'n' (NEXT: !)
 export const ZEMPTY = '='; // Encoded, previously 'e' (NEXT: ' or _)
-export const ZLISTSEP = '_'; // Unreserved, previously ',' (NEXT: Obsolete)
 export const ZARRAYSEP = '~'; // Unreserved, previously '+'
 export const ZFIELDSEP = '*'; // Reserved, unescaped by encoding
 export const ZTRUE = '1';

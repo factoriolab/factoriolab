@@ -10,6 +10,7 @@ import { TranslatePipe } from '~/pipes';
 import { Settings } from '~/store';
 
 @Component({
+  selector: 'lab-data',
   standalone: true,
   imports: [
     KeyValuePipe,

@@ -59,10 +59,6 @@ export const setOverclock = createAction(
   `${key} Set Overclock`,
   props<{ id: string; value: Rational; def: Rational | undefined }>(),
 );
-export const setChecked = createAction(
-  `${key} Set Checked`,
-  props<{ id: string; value: boolean }>(),
-);
 export const resetObjective = createAction(
   `${key} Reset Objective`,
   props<{ id: string }>(),
