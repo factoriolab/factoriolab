@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';
@@ -18,7 +18,7 @@ export type WizardState = 'type' | 'item' | 'recipe';
 
 @Component({
   standalone: true,
-  imports: [RadioButtonModule, StepsModule, RouterLink, AppSharedModule],
+  imports: [RadioButtonModule, StepsModule, AppSharedModule],
   templateUrl: './wizard.component.html',
   styleUrls: ['./wizard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
