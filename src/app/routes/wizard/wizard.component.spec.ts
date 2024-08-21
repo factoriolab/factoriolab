@@ -34,11 +34,12 @@ describe('WizardComponent', () => {
     });
   });
 
-  it('should dispatch actions', () => {
+  it('should dispatch actions', async () => {
+    spyOn(component.router, 'navigate').and.returnValue(Promise.resolve(true));
     const dispatch = new DispatchTest(mockStore, component);
     dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
     dispatch.spy.calls.reset();
-    component.createItemObjective(ItemId.IronPlate);
+    await component.createItemObjective(ItemId.IronPlate);
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
       new Objectives.CreateAction({
         id: '0',
@@ -49,7 +50,7 @@ describe('WizardComponent', () => {
       }),
     );
     dispatch.spy.calls.reset();
-    component.createRecipeObjective(RecipeId.IronPlate);
+    await component.createRecipeObjective(RecipeId.IronPlate);
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
       new Objectives.CreateAction({
         id: '0',

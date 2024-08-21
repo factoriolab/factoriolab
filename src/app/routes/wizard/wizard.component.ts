@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';
@@ -23,6 +24,7 @@ export type WizardState = 'type' | 'item' | 'recipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardComponent {
+  router = inject(Router);
   store = inject(Store<LabState>);
 
   itemIds = this.store.selectSignal(Recipes.getAvailableItems);
@@ -48,7 +50,8 @@ export class WizardComponent {
     this.store.dispatch(new Settings.SetDisplayRateAction({ value, prev }));
   }
 
-  createItemObjective(targetId: string): void {
+  async createItemObjective(targetId: string): Promise<void> {
+    await this.router.navigate(['list']);
     this.store.dispatch(
       new Objectives.CreateAction({
         id: '0',
@@ -60,7 +63,8 @@ export class WizardComponent {
     );
   }
 
-  createRecipeObjective(targetId: string): void {
+  async createRecipeObjective(targetId: string): Promise<void> {
+    await this.router.navigate(['list']);
     this.store.dispatch(
       new Objectives.CreateAction({
         id: '0',
