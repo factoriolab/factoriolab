@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -45,6 +45,7 @@ export type WizardState = 'type' | 'item' | 'recipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WizardComponent {
+  router = inject(Router);
   store = inject(Store);
 
   itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
@@ -70,7 +71,8 @@ export class WizardComponent {
     this.store.dispatch(Settings.setDisplayRate({ displayRate, previous }));
   }
 
-  createItemObjective(targetId: string): void {
+  async createItemObjective(targetId: string): Promise<void> {
+    await this.router.navigate(['list']);
     this.store.dispatch(
       Objectives.create({
         objective: {
@@ -84,7 +86,8 @@ export class WizardComponent {
     );
   }
 
-  createRecipeObjective(targetId: string): void {
+  async createRecipeObjective(targetId: string): Promise<void> {
+    await this.router.navigate(['list']);
     this.store.dispatch(
       Objectives.create({
         objective: {
