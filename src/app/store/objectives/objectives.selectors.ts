@@ -2,10 +2,13 @@ import { createSelector } from '@ngrx/store';
 
 import { fnPropsNotNullish } from '~/helpers';
 import {
+  Dataset,
   Entities,
   Game,
   isRecipeObjective,
   ItemId,
+  ModData,
+  ModHash,
   PowerUnit,
   rational,
   Rational,
@@ -135,12 +138,32 @@ export const selectZipState = createSelector(
   Recipes.recipesState,
   Machines.machinesState,
   Settings.settingsState,
-  (objectives, itemsState, recipesState, machinesState, settings) => ({
+  Settings.selectDataset,
+  Settings.selectHash,
+  (
     objectives,
     itemsState,
     recipesState,
     machinesState,
     settings,
+    data,
+    hash,
+  ): {
+    objectives: ObjectivesState;
+    itemsState: Items.ItemsState;
+    recipesState: Recipes.RecipesState;
+    machinesState: Machines.MachinesState;
+    settings: Settings.SettingsState;
+    data: Dataset;
+    hash?: ModHash;
+  } => ({
+    objectives,
+    itemsState,
+    recipesState,
+    machinesState,
+    settings,
+    data,
+    hash,
   }),
 );
 

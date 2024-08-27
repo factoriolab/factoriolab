@@ -3,9 +3,9 @@ import { SelectItem } from 'primeng/api';
 import { Rational, rational } from '../rational';
 
 export enum DisplayRate {
-  PerSecond = 1,
-  PerMinute = 60,
-  PerHour = 3600,
+  PerSecond = 0,
+  PerMinute = 1,
+  PerHour = 2,
 }
 
 export const displayRateOptions: SelectItem<DisplayRate>[] = [
@@ -30,7 +30,7 @@ export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
     itemsLabel: 'options.objectiveUnit.itemsPerSecond',
     wagonsLabel: 'options.objectiveUnit.wagonsPerSecond',
     pollutionLabel: 'options.objectiveUnit.pollutionPerSecond',
-    value: rational(DisplayRate.PerSecond),
+    value: rational.one,
   },
   [DisplayRate.PerMinute]: {
     option: DisplayRate.PerMinute,
@@ -38,7 +38,7 @@ export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
     itemsLabel: 'options.objectiveUnit.itemsPerMinute',
     wagonsLabel: 'options.objectiveUnit.wagonsPerMinute',
     pollutionLabel: 'options.objectiveUnit.pollutionPerMinute',
-    value: rational(DisplayRate.PerMinute),
+    value: rational(60n),
   },
   [DisplayRate.PerHour]: {
     option: DisplayRate.PerHour,
@@ -46,6 +46,6 @@ export const displayRateInfo: Record<DisplayRate, DisplayRateInfo> = {
     itemsLabel: 'options.objectiveUnit.itemsPerHour',
     wagonsLabel: 'options.objectiveUnit.wagonsPerHour',
     pollutionLabel: 'options.objectiveUnit.pollutionPerHour',
-    value: rational(DisplayRate.PerHour),
+    value: rational(3600n),
   },
 };

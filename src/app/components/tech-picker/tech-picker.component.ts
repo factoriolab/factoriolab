@@ -226,18 +226,7 @@ game.write_file("techs.txt", table.concat(list, ","))
     if (selection.length === data.technologyIds.length)
       this.selectIds.emit(null);
 
-    /**
-     * Filter for only technologies not listed as prerequisites for other
-     * researched technologies, to create minimal set
-     */
-    const filteredSelection = selection.filter(
-      (a) =>
-        !selection.some((b) => {
-          const techB = data.technologyEntities[b];
-          return techB.prerequisites && techB.prerequisites.indexOf(a) !== -1;
-        }),
-    );
-    this.selectIds.emit(new Set(filteredSelection));
+    this.selectIds.emit(new Set(selection));
   }
 
   /** Action Dispatch Methods */

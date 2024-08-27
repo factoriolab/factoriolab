@@ -14,7 +14,6 @@ import {
   ZNULL,
   ZTRUE,
 } from '~/models';
-import { Settings } from '~/store';
 import { AnalyticsService } from './analytics.service';
 import { ContentService } from './content.service';
 import { TranslateService } from './translate.service';
@@ -116,12 +115,10 @@ export class MigrationService {
       modId = modId && data.modHash[data.modHashV0.indexOf(modId)];
       modId = modId ?? ZNULL;
       // Convert displayRate to V1
-      const displayRateV0 =
-        this.zipSvc.parseNumber(s[6]) ?? Settings.initialState.displayRate;
-      const displayRateV1 = this.zipSvc.zipDiffDisplayRate(
-        displayRateV0,
-        Settings.initialState.displayRate,
-      );
+      const displayRateV0 = this.zipSvc.parseNumber(s[6]) ?? 60;
+      const displayRateV1 =
+        displayRateV0 === 1 ? '0' : displayRateV0 === 3600 ? '2' : '1';
+
       params[ZipSectionV10.Settings] = this.zipSvc.zipFields([
         modId,
         displayRateV1,

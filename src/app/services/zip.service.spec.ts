@@ -192,18 +192,16 @@ describe('ZipService', () => {
 
   describe('zipDiffNullableArray', () => {
     it('should handle default', () => {
-      expect(service.zipDiffNullableArray(['a', 'b'], ['b', 'a'])).toEqual('');
+      expect(service.zipDiffArray(['a', 'b'], ['b', 'a'])).toEqual('');
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffNullableArray(undefined, [])).toEqual(ZNULL);
-      expect(service.zipDiffNullableArray([], undefined)).toEqual(ZEMPTY);
+      expect(service.zipDiffArray(undefined, [])).toEqual(ZNULL);
+      expect(service.zipDiffArray([], undefined)).toEqual(ZEMPTY);
     });
 
     it('should handle truthy', () => {
-      expect(service.zipDiffNullableArray(['b', 'a'], ['a', 'c'])).toEqual(
-        'a~b',
-      );
+      expect(service.zipDiffArray(['b', 'a'], ['a', 'c'])).toEqual('a~b');
     });
   });
 
@@ -237,20 +235,18 @@ describe('ZipService', () => {
 
   describe('zipDiffNullableNArray', () => {
     it('should handle default', () => {
-      expect(service.zipDiffNullableNArray(['a', 'b'], ['b', 'a'], [])).toEqual(
-        '',
-      );
+      expect(service.zipDiffNArray(['a', 'b'], ['b', 'a'], [])).toEqual('');
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffNullableNArray(undefined, [], [])).toEqual(ZNULL);
-      expect(service.zipDiffNullableNArray([], undefined, [])).toEqual(ZEMPTY);
+      expect(service.zipDiffNArray(undefined, [], [])).toEqual(ZNULL);
+      expect(service.zipDiffNArray([], undefined, [])).toEqual(ZEMPTY);
     });
 
     it('should handle truthy', () => {
-      expect(
-        service.zipDiffNullableNArray(['b', 'a'], ['a', 'c'], ['a', 'b']),
-      ).toEqual('A~B');
+      expect(service.zipDiffNArray(['b', 'a'], ['a', 'c'], ['a', 'b'])).toEqual(
+        'A~B',
+      );
     });
   });
 

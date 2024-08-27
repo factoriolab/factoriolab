@@ -20,10 +20,6 @@ export const setCheckedObjectives = createAction(
   `${key} Set Checked Objectives`,
   props<{ checkedObjectiveIds: Set<string> }>(),
 );
-export const setPreset = createAction(
-  `${key} Set Preset`,
-  props<{ preset: Preset }>(),
-);
 export const setMaximizeType = createAction(
   `${key} Set Maximize Type`,
   props<{ maximizeType: MaximizeType }>(),
@@ -75,6 +71,10 @@ export const setCheckedRecipes = createAction(
 export const setNetProductionOnly = createAction(
   `${key} Set Net Production Only`,
   props<{ netProductionOnly: boolean }>(),
+);
+export const setPreset = createAction(
+  `${key} Set Preset`,
+  props<{ preset: Preset }>(),
 );
 export const setMachineRank = createAction(
   `${key} Set Machine Rank`,

@@ -21,7 +21,6 @@ import * as Actions from './settings.actions';
 export interface SettingsState {
   modId: string;
   checkedObjectiveIds: Set<string>;
-  preset: Preset;
   maximizeType: MaximizeType;
   surplusMachinesOutput: boolean;
   displayRate: DisplayRate;
@@ -35,6 +34,7 @@ export interface SettingsState {
   excludedRecipeIds?: Set<string>;
   checkedRecipeIds: Set<string>;
   netProductionOnly: boolean;
+  preset: Preset;
   machineRankIds?: string[];
   fuelRankIds?: string[];
   moduleRankIds?: string[];

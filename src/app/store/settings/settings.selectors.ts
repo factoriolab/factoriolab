@@ -504,34 +504,7 @@ export const selectAllResearchedTechnologyIds = createSelector(
     )
       return new Set(allTechnologyIds);
 
-    // Filter out any technology ids that are no longer valid
-    const validTechnologyIds = Array.from(researchedTechnologyIds).filter(
-      (i) => data.technologyEntities[i] != null,
-    );
-
-    /**
-     * Source technology list includes only minimal set of technologies that
-     * are not required as prerequisites for other researched technologies,
-     * to reduce zip size. Need to rehydrate full list of technology ids using
-     * their prerequisites.
-     */
-    const selection = new Set(validTechnologyIds);
-
-    let addIds: Set<string>;
-    do {
-      addIds = new Set<string>();
-
-      for (const id of selection) {
-        const tech = data.technologyEntities[id];
-        tech.prerequisites
-          ?.filter((p) => !selection.has(p))
-          .forEach((p) => addIds.add(p));
-      }
-
-      addIds.forEach((i) => selection.add(i));
-    } while (addIds.size);
-
-    return selection;
+    return researchedTechnologyIds;
   },
 );
 

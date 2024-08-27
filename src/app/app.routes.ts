@@ -1,10 +1,13 @@
 import { Routes } from '@angular/router';
 
-import { canActivateLanding } from './guards';
+import { canActivateId, canActivateLanding } from './guards';
 
 export const routes: Routes = [
   {
     path: ':id',
+    canActivate: [canActivateId],
+    loadComponent: () =>
+      import('./routes/id.component').then((c) => c.IdComponent),
     children: [
       {
         path: 'wizard',

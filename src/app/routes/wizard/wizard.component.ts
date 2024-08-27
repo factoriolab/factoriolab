@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -27,6 +28,7 @@ export type WizardState = 'type' | 'item' | 'recipe';
   imports: [
     FormsModule,
     ButtonModule,
+    RouterLink,
     CardModule,
     DividerModule,
     DropdownModule,

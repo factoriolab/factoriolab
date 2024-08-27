@@ -6,12 +6,7 @@ import { tap } from 'rxjs';
 import { environment } from 'src/environments';
 import { Preferences, Settings } from '~/store';
 import { ContentComponent } from './components';
-import {
-  AnalyticsService,
-  RouterService,
-  ThemeService,
-  TranslateService,
-} from './services';
+import { AnalyticsService, ThemeService, TranslateService } from './services';
 import { BrowserUtility } from './utilities';
 
 @Component({
@@ -27,12 +22,10 @@ export class AppComponent implements OnInit {
   analyticsSvc = inject(AnalyticsService);
   store = inject(Store);
   translateSvc = inject(TranslateService);
-  routerSvc = inject(RouterService);
   themeSvc = inject(ThemeService);
 
   ngOnInit(): void {
     this.themeSvc.initialize();
-    this.routerSvc.initialize();
 
     this.analyticsSvc.event('version', environment.version);
 
