@@ -2,7 +2,7 @@ import { Entities } from './entities';
 
 export const APP = 'FactorioLab';
 export const MIN_LINK_VALUE = 1e-10;
-export const MIN_ZIP = 100;
+export const MIN_ZIP = 200;
 export const ZNULL = '?'; // Encoded, previously 'n' (NEXT: !)
 export const ZEMPTY = '='; // Encoded, previously 'e' (NEXT: ' or _)
 // export const ZEMPTYOBJ = '_' // represents {}?

@@ -3,6 +3,7 @@ import {
   ActivatedRoute,
   convertToParamMap,
   ParamMap,
+  Params,
   Router,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -52,13 +53,12 @@ import { MigrationService } from './migration.service';
 import { TranslateService } from './translate.service';
 import { ZipService } from './zip.service';
 
-const ZLISTSEP = '_'; // TODO: REMOVE
-
 @Injectable({
   providedIn: 'root',
 })
 export class RouterService {
   router = inject(Router);
+  route: ActivatedRoute | undefined;
   store = inject(Store);
   translateSvc = inject(TranslateService);
   contentSvc = inject(ContentService);
@@ -87,6 +87,7 @@ export class RouterService {
 
   _initSub: Subscription | undefined;
   initialize(route: ActivatedRoute): void {
+    this.route = route;
     if (this._initSub) this._initSub.unsubscribe();
     this._initSub = combineLatest({
       paramMap: route.paramMap,
@@ -125,11 +126,15 @@ export class RouterService {
 
   async updateUrl(zData: ZipData): Promise<void> {
     const zip = await this.getHash(zData);
-    const hash = this.router.url.split('#');
-    const url = `${hash[0].split('?')[0]}?${zip}${
-      (hash[1] && `#${hash[1]}`) || ''
-    }`;
-    this.router.navigateByUrl(url);
+    const queryParams: Params = {};
+    for (const key of zip.keys()) queryParams[key] = zip.getAll(key);
+
+    await this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      preserveFragment: true,
+    });
+    const url = this.router.url;
     // Don't cache landing or wizard
     if (!url.startsWith('/?') && !url.startsWith('/wizard'))
       BrowserUtility.routerState = url;
@@ -144,7 +149,6 @@ export class RouterService {
     data: Dataset,
     hash: ModHash,
   ): ZipData {
-    console.time('zipState');
     // Modules & Beacons
     const zData = this.zipModulesBeacons(
       objectives,
@@ -168,7 +172,6 @@ export class RouterService {
     zData.config.bare.set(QueryField.Version, this.version);
     zData.config.hash.set(QueryField.Version, this.version);
     this.zipConfig.set(zData.config);
-    console.timeEnd('zipState');
     return zData;
   }
 
@@ -216,16 +219,21 @@ export class RouterService {
     return `list?${zHash}`;
   }
 
-  async getHash(zData: ZipData): Promise<string> {
+  async getHash(zData: ZipData): Promise<URLSearchParams> {
     const bare = new URLSearchParams(zData.objectives.bare);
     zData.config.bare.forEach((value, key) => bare.append(key, value));
-    const bareStr = bare.toString();
     const hash = new URLSearchParams(zData.objectives.hash);
     zData.config.hash.forEach((value, key) => hash.append(key, value));
     const hashStr = hash.toString();
     const zStr = await this.compressionSvc.deflate(hashStr);
-    const zip = `z=${zStr}&${QueryField.Version}=${this.version}`;
-    return bareStr.length < Math.max(zip.length, MIN_ZIP) ? bareStr : zip;
+    const zip = new URLSearchParams({
+      [QueryField.Zip]: zStr,
+      [QueryField.Version]: this.version,
+    });
+
+    const bareLen = bare.toString().length;
+    const zipLen = zip.toString().length;
+    return bareLen < Math.max(zipLen, MIN_ZIP) ? bare : zip;
   }
 
   getParams(zip: string): Entities {
@@ -247,20 +255,22 @@ export class RouterService {
         return;
       }
 
-      console.time('updateState');
       let isBare = true;
       const zipSection = params.get(QueryField.Zip);
       if (zipSection != null) {
         const zip = await this.compressionSvc.inflate(zipSection);
-        params = convertToParamMap(this.getParams(zip));
+        const urlParams = new URLSearchParams(zip);
+        const ngParams: Params = {};
+        for (const key of urlParams.keys())
+          ngParams[key] = urlParams.getAll(key);
+
+        params = convertToParamMap(ngParams);
         isBare = false;
       }
 
-      console.time('requestData');
-      const [data, hash] = await firstValueFrom(
+      const [_, hash] = await firstValueFrom(
         this.dataSvc.requestData(modId || Settings.initialState.modId),
       );
-      console.timeEnd('requestData');
 
       const state: App.PartialState = {};
       const useHash = isBare ? undefined : hash;
@@ -283,7 +293,6 @@ export class RouterService {
       console.error(err);
       throw new Error('RouterService failed to parse url');
     }
-    console.timeEnd('updateState');
   }
 
   dispatch(partial: App.PartialState): void {
@@ -428,10 +437,7 @@ export class RouterService {
   }
 
   unzipModules(params: ParamMap, hash?: ModHash): ModuleSettings[] {
-    const str = params.get(QueryField.Module);
-    if (!str) return [];
-
-    const list = str.split(ZLISTSEP);
+    const list = params.getAll(QueryField.Module);
     return list.map((module) => {
       const s = module.split(ZFIELDSEP);
       let i = 0;
@@ -484,10 +490,7 @@ export class RouterService {
     moduleSettings: ModuleSettings[],
     hash?: ModHash,
   ): BeaconSettings[] {
-    const str = params.get(QueryField.Beacon);
-    if (!str) return [];
-
-    const list = str.split(ZLISTSEP);
+    const list = params.getAll(QueryField.Beacon);
     return list.map((beacon) => {
       const s = beacon.split(ZFIELDSEP);
       let i = 0;
@@ -558,10 +561,9 @@ export class RouterService {
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
   ): Objectives.ObjectivesState | undefined {
-    const str = params.get(QueryField.Objective);
-    if (!str) return undefined;
+    const list = params.getAll(QueryField.Objective);
+    if (!list.length) return undefined;
 
-    const list = str.split(ZLISTSEP);
     const ids: string[] = [];
     const entities: Entities<Objective> = {};
     let index = 1;
@@ -627,10 +629,9 @@ export class RouterService {
   }
 
   unzipItems(params: ParamMap, hash?: ModHash): Items.ItemsState | undefined {
-    const str = params.get(QueryField.Item);
-    if (!str) return undefined;
+    const list = params.getAll(QueryField.Item);
+    if (!list.length) return undefined;
 
-    const list = str.split(ZLISTSEP);
     const entities: Items.ItemsState = {};
     for (const item of list) {
       const s = item.split(ZFIELDSEP);
@@ -688,10 +689,9 @@ export class RouterService {
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
   ): Recipes.RecipesState | undefined {
-    const str = params.get(QueryField.Recipe);
-    if (!str) return undefined;
+    const list = params.getAll(QueryField.Recipe);
+    if (!list.length) return undefined;
 
-    const list = str.split(ZLISTSEP);
     const entities: Recipes.RecipesState = {};
     for (const recipe of list) {
       const s = recipe.split(ZFIELDSEP);
@@ -756,10 +756,9 @@ export class RouterService {
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
   ): Machines.MachinesState | undefined {
-    const str = params.get(QueryField.Machine);
-    if (!str) return undefined;
+    const list = params.getAll(QueryField.Machine);
+    if (!list.length) return undefined;
 
-    const list = str.split(ZLISTSEP);
     const entities: Machines.MachinesState = {};
     for (const machine of list) {
       const s = machine.split(ZFIELDSEP);
