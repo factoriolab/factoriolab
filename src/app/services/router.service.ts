@@ -14,7 +14,7 @@ import {
   Subject,
   Subscription,
 } from 'rxjs';
-import { first, map, switchMap, tap } from 'rxjs/operators';
+import { filter, first, map, switchMap, tap } from 'rxjs/operators';
 
 import { coalesce, filterPropsNullish, prune } from '~/helpers';
 import {
@@ -70,8 +70,8 @@ export class RouterService {
   zipConfig = signal(this.empty);
   // Current hashing algorithm version
   version = ZipVersion.Version11;
-  first = true;
   ready$ = new Subject<void>();
+  zip: string | undefined;
 
   get empty(): Zip<URLSearchParams> {
     return { bare: new URLSearchParams(), hash: new URLSearchParams() };
@@ -94,6 +94,11 @@ export class RouterService {
       queryParamMap: route.queryParamMap,
     })
       .pipe(
+        filter(() => {
+          const write = decodeURIComponent(this.zip ?? '');
+          const read = BrowserUtility.search;
+          return write !== read;
+        }),
         switchMap(({ paramMap, queryParamMap }) =>
           this.updateState(paramMap.get('id'), queryParamMap),
         ),
@@ -121,7 +126,6 @@ export class RouterService {
         switchMap((z) => this.updateUrl(z)),
       )
       .subscribe();
-    this.ready$.next();
   }
 
   async updateUrl(zData: ZipData): Promise<void> {
@@ -129,6 +133,7 @@ export class RouterService {
     const queryParams: Params = {};
     for (const key of zip.keys()) queryParams[key] = zip.getAll(key);
 
+    this.zip = zip.toString();
     await this.router.navigate([], {
       relativeTo: this.route,
       queryParams,
@@ -247,14 +252,12 @@ export class RouterService {
   }
 
   async updateState(modId: string | null, params: ParamMap): Promise<void> {
-    if (modId == null) return;
+    if (modId == null || Object.keys(params).length === 0) {
+      this.ready$.next();
+      return;
+    }
 
     try {
-      if (Object.keys(params).length === 0) {
-        this.ready$.next();
-        return;
-      }
-
       let isBare = true;
       const zipSection = params.get(QueryField.Zip);
       if (zipSection != null) {
@@ -292,6 +295,8 @@ export class RouterService {
     } catch (err) {
       console.error(err);
       throw new Error('RouterService failed to parse url');
+    } finally {
+      this.ready$.next();
     }
   }
 
