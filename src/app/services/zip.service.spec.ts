@@ -192,16 +192,16 @@ describe('ZipService', () => {
 
   describe('zipDiffNullableArray', () => {
     it('should handle default', () => {
-      expect(service.zipDiffArray(['a', 'b'], ['b', 'a'])).toEqual('');
+      expect(service.zipDiffIndices(['a', 'b'], ['b', 'a'])).toEqual('');
     });
 
     it('should handle falsy', () => {
-      expect(service.zipDiffArray(undefined, [])).toEqual(ZNULL);
-      expect(service.zipDiffArray([], undefined)).toEqual(ZEMPTY);
+      expect(service.zipDiffIndices(undefined, [])).toEqual(ZNULL);
+      expect(service.zipDiffIndices([], undefined)).toEqual(ZEMPTY);
     });
 
     it('should handle truthy', () => {
-      expect(service.zipDiffArray(['b', 'a'], ['a', 'c'])).toEqual('a~b');
+      expect(service.zipDiffIndices(['b', 'a'], ['a', 'c'])).toEqual('a~b');
     });
   });
 

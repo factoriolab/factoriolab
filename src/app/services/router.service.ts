@@ -315,24 +315,14 @@ export class RouterService {
     const modulesInfo = this.emptyRecipeSettingsInfo;
     const beaconsInfo = this.emptyRecipeSettingsInfo;
 
-    const objectiveSettings = this.zipMachineSettings(
-      objectives.entities,
-      modulesInfo,
-      beaconsInfo,
-      hash,
-    );
-    const recipeSettings = this.zipMachineSettings(
-      recipes,
-      modulesInfo,
-      beaconsInfo,
-      hash,
-    );
-    const machineSettings = this.zipMachineSettings(
-      machines,
-      modulesInfo,
-      beaconsInfo,
-      hash,
-    );
+    const zip = (
+      entities: Entities<Objective | RecipeSettings | MachineSettings>,
+    ): ZipMachineSettings => {
+      return this.zipMachineSettings(entities, modulesInfo, beaconsInfo, hash);
+    };
+    const objectiveSettings = zip(objectives.entities);
+    const recipeSettings = zip(recipes);
+    const machineSettings = zip(machines);
 
     let beacons: number[] | undefined;
     if (settings.beacons) {
@@ -795,252 +785,112 @@ export class RouterService {
     hash: ModHash,
   ): void {
     const init = Settings.initialState;
-    this.setSubset(
+
+    const Q = QueryField;
+
+    const subs = this.set(
       zData,
-      QueryField.ObjectiveChecked,
-      state.checkedObjectiveIds,
-      init.checkedObjectiveIds,
+      state,
+      init,
+      <T extends Nullable<Set<string>>>(
+        s: T,
+        i: T,
+        ...args: [string[], string[]]
+      ) => this.zipSvc.zipDiffSubset(s, i, ...args),
+    );
+    const numb = this.set(zData, state, init, <T extends number>(s: T, i: T) =>
+      this.zipSvc.zipDiffNumber(s, i),
+    );
+    const bool = this.set(zData, state, init, <T extends boolean>(s: T, i: T) =>
+      this.zipSvc.zipDiffBool(s, i),
+    );
+    const idst = this.set(
+      zData,
+      state,
+      init,
+      <T extends Nullable<string>>(s: T, i: T, ...args: [string[]]) =>
+        this.zipSvc.zipDiffString(s, i, ...args),
+    );
+    const ratl = this.set(
+      zData,
+      state,
+      init,
+      <T extends Nullable<Rational>>(s: T, i: T) =>
+        this.zipSvc.zipDiffRational(s, i),
+    );
+    const idra = this.set(
+      zData,
+      state,
+      init,
+      <T extends Nullable<string[]>>(s: T, i: T, ...args: [string[]]) =>
+        this.zipSvc.zipDiffArray(s, i, ...args),
+    );
+    const arry = this.set(
+      zData,
+      state,
+      init,
+      <T extends Nullable<number[]>>(s: T, i: T) =>
+        this.zipSvc.zipDiffIndices(s, i),
+    );
+
+    subs(
+      Q.ObjectiveChecked,
+      (s) => s.checkedObjectiveIds,
+      objectiveIds,
       objectiveIds,
     );
-
-    this.setNumber(
-      zData,
-      QueryField.ObjectiveMaximizeType,
-      state.maximizeType,
-      init.maximizeType,
-    );
-
-    this.setBool(
-      zData,
-      QueryField.ObjectiveSurplusMachines,
-      state.surplusMachinesOutput,
-      init.surplusMachinesOutput,
-    );
-
-    this.setNumber(
-      zData,
-      QueryField.ObjectiveDisplayRate,
-      state.displayRate,
-      init.displayRate,
-    );
-
-    this.setSubset(
-      zData,
-      QueryField.ItemExcluded,
-      state.excludedItemIds,
-      init.excludedItemIds,
-      hash.items,
-      data.itemIds,
-    );
-
-    this.setSubset(
-      zData,
-      QueryField.ItemChecked,
-      state.checkedItemIds,
-      init.checkedItemIds,
-      hash.items,
-      data.itemIds,
-    );
-
-    this.setId(
-      zData,
-      QueryField.ItemBelt,
-      state.beltId,
-      init.beltId,
-      hash.belts,
-    );
-
-    this.setId(
-      zData,
-      QueryField.ItemPipe,
-      state.pipeId,
-      init.pipeId,
-      hash.belts,
-    );
-
-    this.setId(
-      zData,
-      QueryField.ItemCargoWagon,
-      state.cargoWagonId,
-      init.cargoWagonId,
-      hash.wagons,
-    );
-
-    this.setId(
-      zData,
-      QueryField.ItemFluidWagon,
-      state.fluidWagonId,
-      init.fluidWagonId,
-      hash.wagons,
-    );
-
-    this.setRational(
-      zData,
-      QueryField.ItemFlowRate,
-      state.flowRate,
-      init.flowRate,
-    );
-
-    this.setSubset(
-      zData,
-      QueryField.RecipeExcluded,
-      state.excludedRecipeIds,
-      init.excludedRecipeIds,
+    numb(Q.ObjectiveMaximizeType, (s) => s.maximizeType);
+    bool(Q.ObjectiveSurplusMachines, (s) => s.surplusMachinesOutput);
+    numb(Q.ObjectiveDisplayRate, (s) => s.displayRate);
+    subs(Q.ItemExcluded, (s) => s.excludedItemIds, hash.items, data.itemIds);
+    subs(Q.ItemChecked, (s) => s.checkedItemIds, hash.items, data.itemIds);
+    idst(Q.ItemBelt, (s) => s.beltId, hash.belts);
+    idst(Q.ItemPipe, (s) => s.pipeId, hash.belts);
+    idst(Q.ItemCargoWagon, (s) => s.cargoWagonId, hash.wagons);
+    idst(Q.ItemFluidWagon, (s) => s.fluidWagonId, hash.wagons);
+    ratl(Q.ItemFlowRate, (s) => s.flowRate);
+    subs(
+      Q.RecipeExcluded,
+      (s) => s.excludedRecipeIds,
       hash.recipes,
       data.recipeIds,
     );
-
-    this.setSubset(
-      zData,
-      QueryField.RecipeChecked,
-      state.checkedRecipeIds,
-      init.checkedRecipeIds,
+    subs(
+      Q.RecipeChecked,
+      (s) => s.checkedRecipeIds,
       hash.recipes,
       data.recipeIds,
     );
-
-    this.setBool(
-      zData,
-      QueryField.RecipeNetProduction,
-      state.netProductionOnly,
-      init.netProductionOnly,
-    );
-
-    this.setNumber(zData, QueryField.MachinePreset, state.preset, init.preset);
-
-    this.setIdRank(
-      zData,
-      QueryField.MachineRank,
-      state.machineRankIds,
-      init.machineRankIds,
-      hash.machines,
-    );
-
-    this.setIdRank(
-      zData,
-      QueryField.MachineFuelRank,
-      state.fuelRankIds,
-      init.fuelRankIds,
-      hash.fuels,
-    );
-
-    this.setIdRank(
-      zData,
-      QueryField.MachineModuleRank,
-      state.moduleRankIds,
-      init.moduleRankIds,
+    bool(Q.RecipeNetProduction, (s) => s.netProductionOnly);
+    numb(Q.MachinePreset, (s) => s.preset);
+    idra(Q.MachineRank, (s) => s.machineRankIds, hash.machines);
+    idra(Q.MachineFuelRank, (s) => s.fuelRankIds, hash.fuels);
+    idra(Q.MachineModuleRank, (s) => s.moduleRankIds, hash.modules);
+    arry(Q.MachineBeacons, (s) => (s === init ? undefined : zData.beacons));
+    ratl(Q.MachineOverclock, (s) => s.overclock);
+    ratl(Q.MachineBeaconReceivers, (s) => s.beaconReceivers);
+    idst(
+      Q.MachineProliferatorSpray,
+      (s) => s.proliferatorSprayId,
       hash.modules,
     );
-
-    this.setArray(zData, QueryField.MachineBeacons, zData.beacons);
-
-    this.setRational(
-      zData,
-      QueryField.MachineOverclock,
-      state.overclock,
-      init.overclock,
-    );
-
-    this.setRational(
-      zData,
-      QueryField.MachineBeaconReceivers,
-      state.beaconReceivers,
-      init.beaconReceivers,
-    );
-
-    this.setId(
-      zData,
-      QueryField.MachineProliferatorSpray,
-      state.proliferatorSprayId,
-      init.proliferatorSprayId,
-      hash.modules,
-    );
-
-    this.setNumber(
-      zData,
-      QueryField.MachineInserterTarget,
-      state.inserterTarget,
-      init.inserterTarget,
-    );
-
-    this.setRational(
-      zData,
-      QueryField.BonusMining,
-      state.miningBonus,
-      init.miningBonus,
-    );
-
-    this.setRational(
-      zData,
-      QueryField.BonusResearch,
-      state.researchBonus,
-      init.researchBonus,
-    );
-
-    this.setNumber(
-      zData,
-      QueryField.BonusInserterCapacity,
-      state.inserterCapacity,
-      init.inserterCapacity,
-    );
-
-    this.setSubset(
-      zData,
-      QueryField.TechnologyResearched,
-      state.researchedTechnologyIds,
-      init.researchedTechnologyIds,
+    numb(Q.MachineInserterTarget, (s) => s.inserterTarget);
+    ratl(Q.BonusMining, (s) => s.miningBonus);
+    ratl(Q.BonusResearch, (s) => s.researchBonus);
+    numb(Q.BonusInserterCapacity, (s) => s.inserterCapacity);
+    subs(
+      Q.TechnologyResearched,
+      (s) => s.researchedTechnologyIds,
       hash.technologies,
       data.technologyIds,
     );
-
-    this.setRational(
-      zData,
-      QueryField.CostFactor,
-      state.costs.factor,
-      init.costs.factor,
-    );
-
-    this.setRational(
-      zData,
-      QueryField.CostMachine,
-      state.costs.machine,
-      init.costs.machine,
-    );
-
-    this.setRational(
-      zData,
-      QueryField.CostFootprint,
-      state.costs.footprint,
-      init.costs.footprint,
-    );
-
-    this.setRational(
-      zData,
-      QueryField.CostUnproduceable,
-      state.costs.unproduceable,
-      init.costs.unproduceable,
-    );
-
-    this.setRational(
-      zData,
-      QueryField.CostExcluded,
-      state.costs.excluded,
-      init.costs.excluded,
-    );
-
-    this.setRational(
-      zData,
-      QueryField.CostSurplus,
-      state.costs.surplus,
-      init.costs.surplus,
-    );
-
-    this.setRational(
-      zData,
-      QueryField.CostMaximize,
-      state.costs.maximize,
-      init.costs.maximize,
-    );
+    ratl(Q.CostFactor, (s) => s.costs.factor);
+    ratl(Q.CostMachine, (s) => s.costs.machine);
+    ratl(Q.CostFootprint, (s) => s.costs.footprint);
+    ratl(Q.CostUnproduceable, (s) => s.costs.unproduceable);
+    ratl(Q.CostExcluded, (s) => s.costs.excluded);
+    ratl(Q.CostSurplus, (s) => s.costs.surplus);
+    ratl(Q.CostMaximize, (s) => s.costs.maximize);
   }
 
   unzipSettings(
@@ -1091,10 +941,7 @@ export class RouterService {
         params.get(QueryField.ItemFluidWagon),
         hash?.wagons,
       ),
-      flowRate: this.zipSvc.parseRational(
-        params.get(QueryField.ItemFlowRate),
-        !hash,
-      ),
+      flowRate: this.zipSvc.parseRational(params.get(QueryField.ItemFlowRate)),
       excludedRecipeIds:
         this.zipSvc.parseSubset(
           params.get(QueryField.RecipeExcluded),
@@ -1175,103 +1022,25 @@ export class RouterService {
     return obj;
   }
 
-  setBool(
+  set<T = unknown, V = unknown, A extends Array<unknown> = []>(
     zipData: ZipData,
-    field: QueryField,
-    value: boolean,
-    init: boolean,
-  ): void {
-    const zip = this.zipSvc.zipDiffBool(value, init);
-    if (zip) {
-      zipData.config.bare.set(field, zip);
-      zipData.config.hash.set(field, zip);
-    }
-  }
+    state: T,
+    init: T,
+    value: (v: V, i: V, ...args: A) => string | [string, string],
+  ): (query: QueryField, locator: (state: T) => V, ...args: A) => void {
+    return (query, locator, ...args): void => {
+      const s = locator(state),
+        i = locator(init),
+        v = value(s, i, ...args);
+      let b: string | undefined;
+      let h: string | undefined;
 
-  setNumber(
-    zipData: ZipData,
-    field: QueryField,
-    value: Nullable<number>,
-    init: Nullable<number>,
-  ): void {
-    const zip = this.zipSvc.zipDiffNumber(value, init);
-    if (zip) {
-      zipData.config.bare.set(field, zip);
-      zipData.config.hash.set(field, zip);
-    }
-  }
+      if (Array.isArray(v)) [b, h] = [...v];
+      else b = h = v;
 
-  setRational(
-    zipData: ZipData,
-    field: QueryField,
-    value: Nullable<Rational>,
-    init: Nullable<Rational>,
-  ): void {
-    const zip = this.zipSvc.zipDiffRational(value, init);
-    if (zip) {
-      zipData.config.bare.set(field, zip);
-      const hashZip = this.zipSvc.zipDiffNNumber(
-        value?.toNumber(),
-        init?.toNumber(),
-      );
-      zipData.config.hash.set(field, hashZip);
-    }
-  }
-
-  setId(
-    zipData: ZipData,
-    field: QueryField,
-    value: Nullable<string>,
-    init: Nullable<string>,
-    hash: string[],
-  ): void {
-    const zip = this.zipSvc.zipDiffString(value, init);
-    if (zip) {
-      zipData.config.bare.set(field, zip);
-      const hashZip = this.zipSvc.zipDiffNString(value, init, hash);
-      zipData.config.hash.set(field, hashZip);
-    }
-  }
-
-  setIdRank(
-    zipData: ZipData,
-    field: QueryField,
-    value: Nullable<string[]>,
-    init: Nullable<string[]>,
-    hash: string[],
-  ): void {
-    const zip = this.zipSvc.zipDiffArray(value, init);
-    if (zip) {
-      zipData.config.bare.set(field, zip);
-      const hashZip = this.zipSvc.zipDiffNArray(value, init, hash);
-      zipData.config.hash.set(field, hashZip);
-    }
-  }
-
-  setArray(
-    zipData: ZipData,
-    field: QueryField,
-    value: Nullable<number[]>,
-  ): void {
-    const zip = this.zipSvc.zipDiffArray(value, undefined);
-    if (zip) {
-      zipData.config.bare.set(field, zip);
-      zipData.config.hash.set(field, zip);
-    }
-  }
-
-  setSubset(
-    zipData: ZipData,
-    field: QueryField,
-    value: Nullable<Set<string>>,
-    init: Nullable<Set<string>>,
-    hash: string[],
-    all: string[] = hash,
-  ): void {
-    const zip = this.zipSvc.zipDiffSubset(value, init, all, hash);
-    if (zip) {
-      zipData.config.bare.set(field, zip);
-      zipData.config.hash.set(field, zip);
-    }
+      if (!b) return;
+      zipData.config.bare.set(query, b);
+      zipData.config.hash.set(query, h);
+    };
   }
 }
