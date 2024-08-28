@@ -106,10 +106,7 @@ export class RouterService {
     const zip = await this.getHash(zData);
     const queryParams: Params = {};
     for (const key of zip.keys()) queryParams[key] = zip.getAll(key);
-    await this.router.navigate([], {
-      queryParams,
-      preserveFragment: true,
-    });
+    await this.router.navigate([], { queryParams });
     const url = this.router.url;
     const path = url.split('?')[0];
     // Only cache list / flow routes
