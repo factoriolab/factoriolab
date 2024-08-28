@@ -1,6 +1,6 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
 import { Objective, ObjectiveType, ObjectiveUnit, rational } from '~/models';
-import { Items, Recipes } from '../';
+import { Recipes } from '../';
 import * as App from '../app.actions';
 import * as Actions from './objectives.actions';
 import {
@@ -229,19 +229,6 @@ describe('Objectives Reducer', () => {
     });
   });
 
-  describe('SET_CHECKED', () => {
-    it('should set checked state on an objective', () => {
-      const result = objectivesReducer(
-        state,
-        Actions.setChecked({
-          id: '0',
-          value: true,
-        }),
-      );
-      expect(result.entities['0'].checked).toBeTrue();
-    });
-  });
-
   describe('RESET_OBJECTIVE', () => {
     it('should reset an objective', () => {
       const state: ObjectivesState = {
@@ -378,33 +365,6 @@ describe('Objectives Reducer', () => {
         type: ObjectiveType.Output,
         machineId: 'machineId',
         overclock: rational(100n),
-      });
-    });
-  });
-
-  describe('Items RESET_CHECKED', () => {
-    it('should reset checked on all objectives', () => {
-      const state: ObjectivesState = {
-        ids: ['0'],
-        entities: {
-          ['0']: {
-            id: '0',
-            targetId: RecipeId.WoodenChest,
-            value: rational(30n),
-            unit: ObjectiveUnit.Machines,
-            type: ObjectiveType.Output,
-            checked: true,
-          },
-        },
-        index: 1,
-      };
-      const result = objectivesReducer(state, Items.resetChecked());
-      expect(result.entities['0']).toEqual({
-        id: '0',
-        targetId: RecipeId.WoodenChest,
-        value: rational(30n),
-        unit: ObjectiveUnit.Machines,
-        type: ObjectiveType.Output,
       });
     });
   });

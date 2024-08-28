@@ -14,7 +14,6 @@ import {
   ZNULL,
   ZTRUE,
 } from '~/models';
-import { Settings } from '~/store';
 import { CompressionService } from './compression.service';
 
 @Injectable({

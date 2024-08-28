@@ -7,7 +7,6 @@ import {
   Game,
   isRecipeObjective,
   ItemId,
-  ModData,
   ModHash,
   PowerUnit,
   rational,

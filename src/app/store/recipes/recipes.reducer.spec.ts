@@ -1,7 +1,6 @@
-import { ItemId, Mocks, RecipeId } from 'src/tests';
+import { ItemId, Mocks } from 'src/tests';
 import { rational, RecipeSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
-import { Items } from '../';
 import * as App from '../app.actions';
 import * as Actions from './recipes.actions';
 import { initialState, recipesReducer } from './recipes.reducer';
@@ -30,48 +29,6 @@ describe('Recipes Reducer', () => {
     it('should return the initial state', () => {
       const result = recipesReducer(undefined, App.reset());
       expect(result).toEqual(initialState);
-    });
-  });
-
-  describe('SET_EXCLUDED', () => {
-    it('should set excluded state of an item', () => {
-      const result = recipesReducer(
-        initialState,
-        Actions.setExcluded({
-          id: RecipeId.Coal,
-          value: true,
-          def: false,
-        }),
-      );
-      expect(result[RecipeId.Coal].excluded).toEqual(true);
-    });
-
-    it('should delete key if exclude matches default value', () => {
-      const result = recipesReducer(
-        initialState,
-        Actions.setExcluded({
-          id: RecipeId.Coal,
-          value: true,
-          def: true,
-        }),
-      );
-      expect(result[RecipeId.Coal]).toBeUndefined();
-    });
-  });
-
-  describe('SET_EXCLUDED_BATCH', () => {
-    it('should apply multiple changes to excluded state', () => {
-      const result = recipesReducer(
-        initialState,
-        Actions.setExcludedBatch({
-          values: [
-            { id: RecipeId.Coal, value: true, def: false },
-            { id: RecipeId.IronOre, value: false, def: false },
-          ],
-        }),
-      );
-      expect(result[ItemId.Coal].excluded).toBeTrue();
-      expect(result[ItemId.IronOre]).toBeUndefined();
     });
   });
 
@@ -191,19 +148,6 @@ describe('Recipes Reducer', () => {
     });
   });
 
-  describe('SET_CHECKED', () => {
-    it('should set the checked state', () => {
-      const result = recipesReducer(
-        initialState,
-        Actions.setChecked({
-          id: Mocks.Recipe1.id,
-          value: true,
-        }),
-      );
-      expect(result[Mocks.Recipe1.id].checked).toBeTrue();
-    });
-  });
-
   describe('RESET_RECIPE', () => {
     it('should reset a recipe', () => {
       const result = recipesReducer(
@@ -211,17 +155,6 @@ describe('Recipes Reducer', () => {
         Actions.resetRecipe({ id: Mocks.Recipe1.id }),
       );
       expect(result[Mocks.Recipe1.id]).toBeUndefined();
-    });
-  });
-
-  describe('RESET_EXCLUDED', () => {
-    it('should call resetField', () => {
-      spyOn(StoreUtility, 'resetField');
-      recipesReducer(undefined, Actions.resetExcluded());
-      expect(StoreUtility.resetField<RecipeSettings>).toHaveBeenCalledWith(
-        {},
-        'excluded',
-      );
     });
   });
 
@@ -269,17 +202,6 @@ describe('Recipes Reducer', () => {
       expect(StoreUtility.resetField<RecipeSettings>).toHaveBeenCalledWith(
         {},
         'cost',
-      );
-    });
-  });
-
-  describe('Items RESET_CHECKED', () => {
-    it('should call resetField', () => {
-      spyOn(StoreUtility, 'resetField');
-      recipesReducer(undefined, Items.resetChecked());
-      expect(StoreUtility.resetField<RecipeSettings>).toHaveBeenCalledWith(
-        {},
-        'checked',
       );
     });
   });
