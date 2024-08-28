@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -46,6 +46,7 @@ export type WizardState = 'type' | 'item' | 'recipe';
 })
 export class WizardComponent {
   router = inject(Router);
+  route = inject(ActivatedRoute);
   store = inject(Store);
 
   itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
@@ -72,7 +73,7 @@ export class WizardComponent {
   }
 
   async createItemObjective(targetId: string): Promise<void> {
-    await this.router.navigate(['list']);
+    await this.router.navigate(['../list'], { relativeTo: this.route });
     this.store.dispatch(
       Objectives.create({
         objective: {
@@ -87,7 +88,7 @@ export class WizardComponent {
   }
 
   async createRecipeObjective(targetId: string): Promise<void> {
-    await this.router.navigate(['list']);
+    await this.router.navigate(['../list'], { relativeTo: this.route });
     this.store.dispatch(
       Objectives.create({
         objective: {
