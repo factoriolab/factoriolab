@@ -21,7 +21,7 @@ import {
   tap,
 } from 'rxjs';
 
-import { coalesce, filterPropsNullish, prune } from '~/helpers';
+import { coalesce, filterPropsNullish, prune, toParams } from '~/helpers';
 import {
   BeaconSettings,
   CostSettings,
@@ -136,10 +136,7 @@ export class RouterService {
     const zip = await this.getHash(zData);
     this.zip = zip.toString();
 
-    const queryParams: Params = {};
-    for (const key of zip.keys()) queryParams[key] = zip.getAll(key);
-
-    await this.router.navigate([], { queryParams });
+    await this.router.navigate([], { queryParams: toParams(zip) });
     const url = this.router.url;
     const path = url.split('?')[0];
     // Only cache list / flow routes
@@ -241,16 +238,6 @@ export class RouterService {
     const bareLen = bare.toString().length;
     const zipLen = zip.toString().length;
     return bareLen < Math.max(zipLen, MIN_ZIP) ? bare : zip;
-  }
-
-  getParams(zip: string): Entities {
-    const sections = zip.split('&');
-    const substr = sections[0][1] === '=' ? 2 : 1;
-    const params = sections.reduce((e: Entities, v) => {
-      e[v[0]] = v.substring(substr);
-      return e;
-    }, {});
-    return params;
   }
 
   async updateState(modId: string | null, params: ParamMap): Promise<void> {

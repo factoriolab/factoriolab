@@ -10,6 +10,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { PickerComponent } from '~/components';
+import { toParams } from '~/helpers';
 import {
   Game,
   gameInfo,
@@ -74,10 +75,11 @@ export class LandingComponent {
   }
 
   setState(query: string): void {
-    if (query) {
-      const queryParams = this.routerSvc.getParams(query);
-      this.router.navigate(['list'], { queryParams, relativeTo: this.route });
-    }
+    if (!query) return;
+    this.router.navigate(['list'], {
+      queryParams: toParams(query),
+      relativeTo: this.route,
+    });
   }
 
   setGame(game: Game): void {

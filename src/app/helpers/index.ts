@@ -5,4 +5,5 @@ export * from './nullish-checks';
 export * from './options';
 export * from './prune';
 export * from './spread';
+export * from './to-params';
 export * from './toggle-set-ids';

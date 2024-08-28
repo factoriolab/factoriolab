@@ -32,7 +32,7 @@ import {
   DropdownTranslateDirective,
   NoDragDirective,
 } from '~/directives';
-import { coalesce } from '~/helpers';
+import { coalesce, toParams } from '~/helpers';
 import {
   BeaconSettings,
   DisplayRate,
@@ -236,11 +236,9 @@ export class SettingsComponent implements OnInit {
 
   setState(id: string, states: Entities<string>): void {
     const query = states[id];
-    if (query) {
-      const queryParams = this.routerSvc.getParams(query);
-      this.state = id;
-      this.router.navigate([], { queryParams });
-    }
+    if (!query) return;
+    this.state = id;
+    this.router.navigate([], { queryParams: toParams(query) });
   }
 
   clickSaveState(game: Game): void {
