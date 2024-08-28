@@ -1,14 +1,25 @@
 import { inject, Injectable, signal } from '@angular/core';
 import {
-  ActivatedRouteSnapshot,
+  ActivatedRoute,
   convertToParamMap,
   ParamMap,
   Params,
   Router,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { debounceTime, firstValueFrom, Subject } from 'rxjs';
-import { first, map, switchMap, tap } from 'rxjs/operators';
+import {
+  combineLatest,
+  debounceTime,
+  filter,
+  first,
+  firstValueFrom,
+  map,
+  ReplaySubject,
+  Subject,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
 
 import { coalesce, filterPropsNullish, prune } from '~/helpers';
 import {
@@ -61,7 +72,8 @@ export class RouterService {
   zipConfig = signal(this.empty);
   // Current hashing algorithm version
   version = ZipVersion.Version11;
-  ready$ = new Subject<void>();
+  ready$ = new ReplaySubject<void>(1);
+  zip: string | undefined;
 
   get empty(): Zip<URLSearchParams> {
     return { bare: new URLSearchParams(), hash: new URLSearchParams() };
@@ -75,9 +87,26 @@ export class RouterService {
     return { moduleMap: {}, beaconMap: {} };
   }
 
-  initialize(snapshot: ActivatedRouteSnapshot): void {
-    const { paramMap, queryParamMap } = snapshot;
-    this.updateState(paramMap.get('id'), queryParamMap);
+  private reinit = new Subject<void>();
+  initialize(route: ActivatedRoute): void {
+    this.reinit.next();
+    combineLatest({
+      paramMap: route.paramMap,
+      queryParamMap: route.queryParamMap,
+    })
+      .pipe(
+        filter(() => {
+          const write = decodeURIComponent(this.zip ?? '');
+          const read = BrowserUtility.search;
+          if (!read) this.ready$.next();
+          return write !== read;
+        }),
+        switchMap(({ paramMap, queryParamMap }) =>
+          this.updateState(paramMap.get('id'), queryParamMap),
+        ),
+        takeUntil(this.reinit),
+      )
+      .subscribe();
 
     this.ready$
       .pipe(
@@ -98,14 +127,18 @@ export class RouterService {
           ),
         ),
         switchMap((z) => this.updateUrl(z)),
+        takeUntil(this.reinit),
       )
       .subscribe();
   }
 
   async updateUrl(zData: ZipData): Promise<void> {
     const zip = await this.getHash(zData);
+    this.zip = zip.toString();
+
     const queryParams: Params = {};
     for (const key of zip.keys()) queryParams[key] = zip.getAll(key);
+
     await this.router.navigate([], { queryParams });
     const url = this.router.url;
     const path = url.split('?')[0];

@@ -18,6 +18,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OrderListModule } from 'primeng/orderlist';
@@ -93,6 +94,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     DialogModule,
     DropdownModule,
     InputNumberModule,
+    InputTextModule,
     MenuModule,
     MultiSelectModule,
     OrderListModule,
