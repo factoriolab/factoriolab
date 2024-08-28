@@ -762,73 +762,64 @@ export class RouterService {
 
     // Set up shorthand functions to zip state
     const set = this.zipSvc.set(zData, state, init);
-    const subs = set(this.zipSvc.zipDiffSubset);
-    const numb = set(this.zipSvc.zipDiffNumber);
-    const bool = set(this.zipSvc.zipDiffBool);
-    const idst = set(this.zipSvc.zipDiffString);
-    const ratl = set(this.zipSvc.zipDiffRational);
-    const idra = set(this.zipSvc.zipDiffArray);
-    const arry = set(this.zipSvc.zipDiffIndices);
+    const sub = set(this.zipSvc.zipDiffSubset);
+    const num = set(this.zipSvc.zipDiffNumber);
+    const bln = set(this.zipSvc.zipDiffBool);
+    const str = set(this.zipSvc.zipDiffString);
+    const rat = set(this.zipSvc.zipDiffRational);
+    const rnk = set(this.zipSvc.zipDiffArray);
+    const arr = set(this.zipSvc.zipDiffIndices);
 
     // Zip state
-    subs(
-      Q.ObjectiveChecked,
-      (s) => s.checkedObjectiveIds,
-      objectiveIds,
-      objectiveIds,
-    );
-    numb(Q.ObjectiveMaximizeType, (s) => s.maximizeType);
-    bool(Q.ObjectiveSurplusMachines, (s) => s.surplusMachinesOutput);
-    numb(Q.ObjectiveDisplayRate, (s) => s.displayRate);
-    subs(Q.ItemExcluded, (s) => s.excludedItemIds, hash.items, data.itemIds);
-    subs(Q.ItemChecked, (s) => s.checkedItemIds, hash.items, data.itemIds);
-    idst(Q.ItemBelt, (s) => s.beltId, hash.belts);
-    idst(Q.ItemPipe, (s) => s.pipeId, hash.belts);
-    idst(Q.ItemCargoWagon, (s) => s.cargoWagonId, hash.wagons);
-    idst(Q.ItemFluidWagon, (s) => s.fluidWagonId, hash.wagons);
-    ratl(Q.ItemFlowRate, (s) => s.flowRate);
-    subs(
+    sub(Q.ObjectiveChecked, (s) => s.checkedObjectiveIds, objectiveIds);
+    num(Q.ObjectiveMaximizeType, (s) => s.maximizeType);
+    bln(Q.ObjectiveSurplusMachines, (s) => s.surplusMachinesOutput);
+    num(Q.ObjectiveDisplayRate, (s) => s.displayRate);
+    sub(Q.ItemExcluded, (s) => s.excludedItemIds, hash.items, data.itemIds);
+    sub(Q.ItemChecked, (s) => s.checkedItemIds, hash.items, data.itemIds);
+    str(Q.ItemBelt, (s) => s.beltId, hash.belts);
+    str(Q.ItemPipe, (s) => s.pipeId, hash.belts);
+    str(Q.ItemCargoWagon, (s) => s.cargoWagonId, hash.wagons);
+    str(Q.ItemFluidWagon, (s) => s.fluidWagonId, hash.wagons);
+    rat(Q.ItemFlowRate, (s) => s.flowRate);
+    sub(
       Q.RecipeExcluded,
       (s) => s.excludedRecipeIds,
       hash.recipes,
       data.recipeIds,
     );
-    subs(
+    sub(
       Q.RecipeChecked,
       (s) => s.checkedRecipeIds,
       hash.recipes,
       data.recipeIds,
     );
-    bool(Q.RecipeNetProduction, (s) => s.netProductionOnly);
-    numb(Q.MachinePreset, (s) => s.preset);
-    idra(Q.MachineRank, (s) => s.machineRankIds, hash.machines);
-    idra(Q.MachineFuelRank, (s) => s.fuelRankIds, hash.fuels);
-    idra(Q.MachineModuleRank, (s) => s.moduleRankIds, hash.modules);
-    arry(Q.MachineBeacons, (s) => (s === init ? undefined : zData.beacons));
-    ratl(Q.MachineOverclock, (s) => s.overclock);
-    ratl(Q.MachineBeaconReceivers, (s) => s.beaconReceivers);
-    idst(
-      Q.MachineProliferatorSpray,
-      (s) => s.proliferatorSprayId,
-      hash.modules,
-    );
-    numb(Q.MachineInserterTarget, (s) => s.inserterTarget);
-    ratl(Q.BonusMining, (s) => s.miningBonus);
-    ratl(Q.BonusResearch, (s) => s.researchBonus);
-    numb(Q.BonusInserterCapacity, (s) => s.inserterCapacity);
-    subs(
+    bln(Q.RecipeNetProduction, (s) => s.netProductionOnly);
+    num(Q.MachinePreset, (s) => s.preset);
+    rnk(Q.MachineRank, (s) => s.machineRankIds, hash.machines);
+    rnk(Q.MachineFuelRank, (s) => s.fuelRankIds, hash.fuels);
+    rnk(Q.MachineModuleRank, (s) => s.moduleRankIds, hash.modules);
+    arr(Q.MachineBeacons, (s) => (s === init ? undefined : zData.beacons));
+    rat(Q.MachineOverclock, (s) => s.overclock);
+    rat(Q.MachineBeaconReceivers, (s) => s.beaconReceivers);
+    str(Q.MachineProliferatorSpray, (s) => s.proliferatorSprayId, hash.modules);
+    num(Q.MachineInserterTarget, (s) => s.inserterTarget);
+    rat(Q.BonusMining, (s) => s.miningBonus);
+    rat(Q.BonusResearch, (s) => s.researchBonus);
+    num(Q.BonusInserterCapacity, (s) => s.inserterCapacity);
+    sub(
       Q.TechnologyResearched,
       (s) => s.researchedTechnologyIds,
       hash.technologies,
       data.technologyIds,
     );
-    ratl(Q.CostFactor, (s) => s.costs.factor);
-    ratl(Q.CostMachine, (s) => s.costs.machine);
-    ratl(Q.CostFootprint, (s) => s.costs.footprint);
-    ratl(Q.CostUnproduceable, (s) => s.costs.unproduceable);
-    ratl(Q.CostExcluded, (s) => s.costs.excluded);
-    ratl(Q.CostSurplus, (s) => s.costs.surplus);
-    ratl(Q.CostMaximize, (s) => s.costs.maximize);
+    rat(Q.CostFactor, (s) => s.costs.factor);
+    rat(Q.CostMachine, (s) => s.costs.machine);
+    rat(Q.CostFootprint, (s) => s.costs.footprint);
+    rat(Q.CostUnproduceable, (s) => s.costs.unproduceable);
+    rat(Q.CostExcluded, (s) => s.costs.excluded);
+    rat(Q.CostSurplus, (s) => s.costs.surplus);
+    rat(Q.CostMaximize, (s) => s.costs.maximize);
   }
 
   unzipSettings(
@@ -842,56 +833,56 @@ export class RouterService {
 
     // Set up shorthand functions to parse state
     const get = this.zipSvc.get(params);
-    const subs = get(this.zipSvc.parseSubset);
-    const nsub = get(this.zipSvc.parseNullableSubset);
-    const numb = get(this.zipSvc.parseNumber);
-    const bool = get(this.zipSvc.parseBool);
-    const idst = get(this.zipSvc.parseString);
-    const ratl = get(this.zipSvc.parseRational);
-    const idra = get(this.zipSvc.parseArray);
-    const arry = get(this.zipSvc.parseIndices);
+    const sub = get(this.zipSvc.parseSubset);
+    const nsb = get(this.zipSvc.parseNullableSubset);
+    const num = get(this.zipSvc.parseNumber);
+    const bln = get(this.zipSvc.parseBool);
+    const str = get(this.zipSvc.parseString);
+    const rat = get(this.zipSvc.parseRational);
+    const rnk = get(this.zipSvc.parseArray);
+    const arr = get(this.zipSvc.parseIndices);
 
     const obj: Settings.PartialSettingsState = {
-      checkedObjectiveIds: subs(Q.ObjectiveMaximizeType, objectiveIds),
-      maximizeType: numb(Q.ObjectiveMaximizeType),
-      surplusMachinesOutput: bool(Q.ObjectiveSurplusMachines),
-      displayRate: numb(Q.ObjectiveDisplayRate),
-      excludedItemIds: subs(Q.ItemExcluded, modHash.items),
-      checkedItemIds: subs(Q.ItemChecked, modHash.items),
-      beltId: idst(Q.ItemBelt, hash?.belts),
-      pipeId: idst(Q.ItemPipe, hash?.belts),
-      cargoWagonId: idst(Q.ItemCargoWagon, hash?.wagons),
-      fluidWagonId: idst(Q.ItemFluidWagon, hash?.wagons),
-      flowRate: ratl(Q.ItemFlowRate),
-      excludedRecipeIds: subs(Q.RecipeExcluded, modHash.recipes),
-      checkedRecipeIds: subs(Q.RecipeChecked, modHash.recipes),
-      netProductionOnly: bool(Q.RecipeNetProduction),
-      preset: numb(Q.MachinePreset),
-      machineRankIds: idra(Q.MachineRank, hash?.machines),
-      fuelRankIds: idra(Q.MachineFuelRank, hash?.fuels),
-      moduleRankIds: idra(Q.MachineModuleRank, hash?.modules),
-      beacons: arry(Q.MachineBeacons)?.map((i) => beaconSettings[i] ?? {}),
-      overclock: ratl(Q.MachineOverclock),
-      beaconReceivers: ratl(Q.MachineBeaconReceivers),
-      proliferatorSprayId: idst(Q.MachineProliferatorSpray, hash?.modules),
-      inserterTarget: numb(Q.MachineInserterTarget),
-      miningBonus: ratl(Q.BonusMining),
-      researchBonus: ratl(Q.BonusResearch),
-      inserterCapacity: numb(Q.BonusInserterCapacity),
-      researchedTechnologyIds: nsub(
+      checkedObjectiveIds: sub(Q.ObjectiveMaximizeType, objectiveIds),
+      maximizeType: num(Q.ObjectiveMaximizeType),
+      surplusMachinesOutput: bln(Q.ObjectiveSurplusMachines),
+      displayRate: num(Q.ObjectiveDisplayRate),
+      excludedItemIds: sub(Q.ItemExcluded, modHash.items),
+      checkedItemIds: sub(Q.ItemChecked, modHash.items),
+      beltId: str(Q.ItemBelt, hash?.belts),
+      pipeId: str(Q.ItemPipe, hash?.belts),
+      cargoWagonId: str(Q.ItemCargoWagon, hash?.wagons),
+      fluidWagonId: str(Q.ItemFluidWagon, hash?.wagons),
+      flowRate: rat(Q.ItemFlowRate),
+      excludedRecipeIds: sub(Q.RecipeExcluded, modHash.recipes),
+      checkedRecipeIds: sub(Q.RecipeChecked, modHash.recipes),
+      netProductionOnly: bln(Q.RecipeNetProduction),
+      preset: num(Q.MachinePreset),
+      machineRankIds: rnk(Q.MachineRank, hash?.machines),
+      fuelRankIds: rnk(Q.MachineFuelRank, hash?.fuels),
+      moduleRankIds: rnk(Q.MachineModuleRank, hash?.modules),
+      beacons: arr(Q.MachineBeacons)?.map((i) => beaconSettings[i] ?? {}),
+      overclock: rat(Q.MachineOverclock),
+      beaconReceivers: rat(Q.MachineBeaconReceivers),
+      proliferatorSprayId: str(Q.MachineProliferatorSpray, hash?.modules),
+      inserterTarget: num(Q.MachineInserterTarget),
+      miningBonus: rat(Q.BonusMining),
+      researchBonus: rat(Q.BonusResearch),
+      inserterCapacity: num(Q.BonusInserterCapacity),
+      researchedTechnologyIds: nsb(
         Q.TechnologyResearched,
         modHash.technologies,
       ),
     };
 
     const costs: Partial<CostSettings> = {
-      factor: ratl(Q.CostFactor),
-      machine: ratl(Q.CostMachine),
-      footprint: ratl(Q.CostFootprint),
-      unproduceable: ratl(Q.CostUnproduceable),
-      excluded: ratl(Q.CostExcluded),
-      surplus: ratl(Q.CostSurplus),
-      maximize: ratl(Q.CostMaximize),
+      factor: rat(Q.CostFactor),
+      machine: rat(Q.CostMachine),
+      footprint: rat(Q.CostFootprint),
+      unproduceable: rat(Q.CostUnproduceable),
+      excluded: rat(Q.CostExcluded),
+      surplus: rat(Q.CostSurplus),
+      maximize: rat(Q.CostMaximize),
     };
 
     prune(costs);
