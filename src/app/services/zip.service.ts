@@ -1,16 +1,20 @@
 import { inject, Injectable } from '@angular/core';
+import { ParamMap } from '@angular/router';
 
 import {
   Nullable,
+  QueryField,
   rational,
   Rational,
   ZARRAYSEP,
   ZEMPTY,
   ZFALSE,
   ZFIELDSEP,
+  ZipData,
   ZNULL,
   ZTRUE,
 } from '~/models';
+import { Settings } from '~/store';
 import { CompressionService } from './compression.service';
 
 @Injectable({
@@ -161,8 +165,7 @@ export class ZipService {
     return value === ZTRUE;
   }
 
-  parseNumber(value: Nullable<string>, useNNumber = false): number | undefined {
-    if (useNNumber) return this.parseNNumber(value);
+  parseNumber(value: Nullable<string>): number | undefined {
     if (!value?.length || value === ZNULL) return undefined;
     return Number(value);
   }
@@ -176,6 +179,12 @@ export class ZipService {
     if (hash) return this.parseNArray(value, hash);
     if (!value?.length || value === ZNULL) return undefined;
     return value === ZEMPTY ? [] : value.split(ZARRAYSEP);
+  }
+
+  parseIndices(value: Nullable<string>): number[] | undefined {
+    if (!value?.length || value === ZNULL) return undefined;
+    if (value === ZEMPTY) return [];
+    return value.split(ZARRAYSEP).map((s) => Number(s));
   }
 
   parseNString(value: Nullable<string>, hash: string[]): string | undefined {
@@ -195,12 +204,19 @@ export class ZipService {
     return v.map((a) => hash[this.compressionSvc.idToN(a)]);
   }
 
+  parseNullableSubset(
+    value: Nullable<string>,
+    hash: string[],
+  ): Nullable<Set<string>> {
+    if (value === ZNULL) return null;
+    return this.parseSubset(value, hash);
+  }
+
   parseSubset(
     value: Nullable<string>,
     hash: string[],
-  ): Set<string> | null | undefined {
+  ): Set<string> | undefined {
     if (!value?.length) return undefined;
-    if (value === ZNULL) return null;
     if (value === ZEMPTY) return new Set();
 
     const ranges = value.split(ZFIELDSEP);
@@ -215,5 +231,80 @@ export class ZipService {
     }
 
     return result;
+  }
+
+  /**
+   * Sets up a curried function stack to generate functions to add settings
+   * query parameters to the `ZipData` `URLSearchParams`.
+   */
+  set<T>(
+    zipData: ZipData,
+    state: T,
+    init: T,
+  ): <V, A extends Array<unknown>>(
+    value: (v: V, i: V, ...args: A) => string | [string, string],
+  ) => (query: QueryField, locator: (state: T) => V, ...args: A) => void {
+    /**
+     * Accepts a function to convert the state value to a string, or a pair of
+     * bare / hashed strings, and returns a curried function. Caller is expected
+     * to pass in a reference to a `zip` method on this service.
+     */
+    return (value) => {
+      // Bind the method reference to this service before use.
+      value = value.bind(this);
+      /**
+       * Accepts a query parameter name, locator function to get the state
+       * value, and any additional arguments to the value function.
+       */
+      return (query, locator, ...args): void => {
+        /**
+         * Get current state and initial values, then run value function to get
+         * query parameter value.
+         */
+        const s = locator(state),
+          i = locator(init),
+          v = value(s, i, ...args);
+
+        /**
+         * If value function returned a tuple of bare / hash values, spread
+         * them into local variables. Otherwise, set both variables to the
+         * result of the value function.
+         */
+        let b: string | undefined;
+        let h: string | undefined;
+        if (Array.isArray(v)) [b, h] = [...v];
+        else b = h = v;
+
+        /**
+         * If the bare value is defined, set the bare and hash values on thir
+         * corresponding `URLSearchParams` objects.
+         */
+        if (!b) return;
+        zipData.config.bare.set(query, b);
+        zipData.config.hash.set(query, h);
+      };
+    };
+  }
+
+  /**
+   * Sets up a curried function stack to generate functions to get settings
+   * state values from a `ParamMap`.
+   */
+  get(
+    params: ParamMap,
+  ): <V, A extends Array<unknown>>(
+    value: (s: Nullable<string>, ...args: A) => V,
+  ) => (query: QueryField, ...args: A) => V | undefined {
+    /**
+     * Accepts a function to convert the query parameter value to its
+     * state value, and returns a curried function. Caller is expected
+     * to pass in a reference to a `parse` method on this service.
+     */
+    return (value) => {
+      // Bind the method reference to this service before use.
+      value = value.bind(this);
+      // Run value function to get state value
+      return (query, ...args) => value(params.get(query), ...args);
+    };
   }
 }

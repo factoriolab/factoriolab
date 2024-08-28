@@ -1,20 +1,14 @@
 import { inject, Injectable, signal } from '@angular/core';
 import {
-  ActivatedRoute,
+  ActivatedRouteSnapshot,
   convertToParamMap,
   ParamMap,
   Params,
   Router,
 } from '@angular/router';
 import { Store } from '@ngrx/store';
-import {
-  combineLatest,
-  debounceTime,
-  firstValueFrom,
-  Subject,
-  Subscription,
-} from 'rxjs';
-import { filter, first, map, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, firstValueFrom, Subject } from 'rxjs';
+import { first, map, switchMap, tap } from 'rxjs/operators';
 
 import { coalesce, filterPropsNullish, prune } from '~/helpers';
 import {
@@ -28,12 +22,10 @@ import {
   MIN_ZIP,
   ModHash,
   ModuleSettings,
-  Nullable,
   Objective,
   ObjectiveType,
   ObjectiveUnit,
   QueryField,
-  Rational,
   rational,
   RecipeSettings,
   Step,
@@ -58,7 +50,6 @@ import { ZipService } from './zip.service';
 })
 export class RouterService {
   router = inject(Router);
-  route: ActivatedRoute | undefined;
   store = inject(Store);
   translateSvc = inject(TranslateService);
   contentSvc = inject(ContentService);
@@ -71,7 +62,6 @@ export class RouterService {
   // Current hashing algorithm version
   version = ZipVersion.Version11;
   ready$ = new Subject<void>();
-  zip: string | undefined;
 
   get empty(): Zip<URLSearchParams> {
     return { bare: new URLSearchParams(), hash: new URLSearchParams() };
@@ -85,25 +75,9 @@ export class RouterService {
     return { moduleMap: {}, beaconMap: {} };
   }
 
-  _initSub: Subscription | undefined;
-  initialize(route: ActivatedRoute): void {
-    this.route = route;
-    if (this._initSub) this._initSub.unsubscribe();
-    this._initSub = combineLatest({
-      paramMap: route.paramMap,
-      queryParamMap: route.queryParamMap,
-    })
-      .pipe(
-        filter(() => {
-          const write = decodeURIComponent(this.zip ?? '');
-          const read = BrowserUtility.search;
-          return write !== read;
-        }),
-        switchMap(({ paramMap, queryParamMap }) =>
-          this.updateState(paramMap.get('id'), queryParamMap),
-        ),
-      )
-      .subscribe();
+  initialize(snapshot: ActivatedRouteSnapshot): void {
+    const { paramMap, queryParamMap } = snapshot;
+    this.updateState(paramMap.get('id'), queryParamMap);
 
     this.ready$
       .pipe(
@@ -132,16 +106,14 @@ export class RouterService {
     const zip = await this.getHash(zData);
     const queryParams: Params = {};
     for (const key of zip.keys()) queryParams[key] = zip.getAll(key);
-
-    this.zip = zip.toString();
     await this.router.navigate([], {
-      relativeTo: this.route,
       queryParams,
       preserveFragment: true,
     });
     const url = this.router.url;
-    // Don't cache landing or wizard
-    if (!url.startsWith('/?') && !url.startsWith('/wizard'))
+    const path = url.split('?')[0];
+    // Only cache list / flow routes
+    if (path.endsWith('list') || path.endsWith('flow'))
       BrowserUtility.routerState = url;
   }
 
@@ -788,51 +760,17 @@ export class RouterService {
 
     const Q = QueryField;
 
-    const subs = this.set(
-      zData,
-      state,
-      init,
-      <T extends Nullable<Set<string>>>(
-        s: T,
-        i: T,
-        ...args: [string[], string[]]
-      ) => this.zipSvc.zipDiffSubset(s, i, ...args),
-    );
-    const numb = this.set(zData, state, init, <T extends number>(s: T, i: T) =>
-      this.zipSvc.zipDiffNumber(s, i),
-    );
-    const bool = this.set(zData, state, init, <T extends boolean>(s: T, i: T) =>
-      this.zipSvc.zipDiffBool(s, i),
-    );
-    const idst = this.set(
-      zData,
-      state,
-      init,
-      <T extends Nullable<string>>(s: T, i: T, ...args: [string[]]) =>
-        this.zipSvc.zipDiffString(s, i, ...args),
-    );
-    const ratl = this.set(
-      zData,
-      state,
-      init,
-      <T extends Nullable<Rational>>(s: T, i: T) =>
-        this.zipSvc.zipDiffRational(s, i),
-    );
-    const idra = this.set(
-      zData,
-      state,
-      init,
-      <T extends Nullable<string[]>>(s: T, i: T, ...args: [string[]]) =>
-        this.zipSvc.zipDiffArray(s, i, ...args),
-    );
-    const arry = this.set(
-      zData,
-      state,
-      init,
-      <T extends Nullable<number[]>>(s: T, i: T) =>
-        this.zipSvc.zipDiffIndices(s, i),
-    );
+    // Set up shorthand functions to zip state
+    const set = this.zipSvc.set(zData, state, init);
+    const subs = set(this.zipSvc.zipDiffSubset);
+    const numb = set(this.zipSvc.zipDiffNumber);
+    const bool = set(this.zipSvc.zipDiffBool);
+    const idst = set(this.zipSvc.zipDiffString);
+    const ratl = set(this.zipSvc.zipDiffRational);
+    const idra = set(this.zipSvc.zipDiffArray);
+    const arry = set(this.zipSvc.zipDiffIndices);
 
+    // Zip state
     subs(
       Q.ObjectiveChecked,
       (s) => s.checkedObjectiveIds,
@@ -900,117 +838,60 @@ export class RouterService {
     modHash: ModHash,
     hash?: ModHash,
   ): Settings.PartialSettingsState | undefined {
+    const Q = QueryField;
+
+    // Set up shorthand functions to parse state
+    const get = this.zipSvc.get(params);
+    const subs = get(this.zipSvc.parseSubset);
+    const nsub = get(this.zipSvc.parseNullableSubset);
+    const numb = get(this.zipSvc.parseNumber);
+    const bool = get(this.zipSvc.parseBool);
+    const idst = get(this.zipSvc.parseString);
+    const ratl = get(this.zipSvc.parseRational);
+    const idra = get(this.zipSvc.parseArray);
+    const arry = get(this.zipSvc.parseIndices);
+
     const obj: Settings.PartialSettingsState = {
-      checkedObjectiveIds:
-        this.zipSvc.parseSubset(
-          params.get(QueryField.ObjectiveChecked),
-          objectiveIds,
-        ) ?? undefined,
-      maximizeType: this.zipSvc.parseNumber(
-        params.get(QueryField.ObjectiveMaximizeType),
-      ),
-      surplusMachinesOutput: this.zipSvc.parseBool(
-        params.get(QueryField.ObjectiveSurplusMachines),
-      ),
-      displayRate: this.zipSvc.parseNumber(
-        params.get(QueryField.ObjectiveDisplayRate),
-      ),
-      excludedItemIds:
-        this.zipSvc.parseSubset(
-          params.get(QueryField.ItemExcluded),
-          modHash.items,
-        ) ?? undefined,
-      checkedItemIds:
-        this.zipSvc.parseSubset(
-          params.get(QueryField.ItemChecked),
-          modHash.items,
-        ) ?? undefined,
-      beltId: this.zipSvc.parseString(
-        params.get(QueryField.ItemBelt),
-        hash?.belts,
-      ),
-      pipeId: this.zipSvc.parseString(
-        params.get(QueryField.ItemPipe),
-        hash?.belts,
-      ),
-      cargoWagonId: this.zipSvc.parseString(
-        params.get(QueryField.ItemCargoWagon),
-        hash?.wagons,
-      ),
-      fluidWagonId: this.zipSvc.parseString(
-        params.get(QueryField.ItemFluidWagon),
-        hash?.wagons,
-      ),
-      flowRate: this.zipSvc.parseRational(params.get(QueryField.ItemFlowRate)),
-      excludedRecipeIds:
-        this.zipSvc.parseSubset(
-          params.get(QueryField.RecipeExcluded),
-          modHash.recipes,
-        ) ?? undefined,
-      checkedRecipeIds:
-        this.zipSvc.parseSubset(
-          params.get(QueryField.RecipeChecked),
-          modHash.recipes,
-        ) ?? undefined,
-      netProductionOnly: this.zipSvc.parseBool(
-        params.get(QueryField.RecipeNetProduction),
-      ),
-      preset: this.zipSvc.parseNumber(params.get(QueryField.MachinePreset)),
-      machineRankIds: this.zipSvc.parseArray(
-        params.get(QueryField.MachineRank),
-        hash?.machines,
-      ),
-      fuelRankIds: this.zipSvc.parseArray(
-        params.get(QueryField.MachineFuelRank),
-        hash?.fuels,
-      ),
-      moduleRankIds: this.zipSvc.parseArray(
-        params.get(QueryField.MachineModuleRank),
-        hash?.modules,
-      ),
-      beacons: this.zipSvc
-        .parseArray(params.get(QueryField.MachineBeacons))
-        ?.map((i) => beaconSettings[Number(i)] ?? {}),
-      overclock: this.zipSvc.parseRational(
-        params.get(QueryField.MachineOverclock),
-      ),
-      beaconReceivers: this.zipSvc.parseRational(
-        params.get(QueryField.MachineBeaconReceivers),
-      ),
-      proliferatorSprayId: this.zipSvc.parseString(
-        params.get(QueryField.MachineProliferatorSpray),
-        hash?.modules,
-      ),
-      inserterTarget: this.zipSvc.parseNumber(
-        params.get(QueryField.MachineInserterTarget),
-      ),
-      miningBonus: this.zipSvc.parseRational(
-        params.get(QueryField.BonusMining),
-      ),
-      researchBonus: this.zipSvc.parseRational(
-        params.get(QueryField.BonusResearch),
-      ),
-      inserterCapacity: this.zipSvc.parseNumber(
-        params.get(QueryField.BonusInserterCapacity),
-      ),
-      researchedTechnologyIds: this.zipSvc.parseSubset(
-        params.get(QueryField.TechnologyResearched),
+      checkedObjectiveIds: subs(Q.ObjectiveMaximizeType, objectiveIds),
+      maximizeType: numb(Q.ObjectiveMaximizeType),
+      surplusMachinesOutput: bool(Q.ObjectiveSurplusMachines),
+      displayRate: numb(Q.ObjectiveDisplayRate),
+      excludedItemIds: subs(Q.ItemExcluded, modHash.items),
+      checkedItemIds: subs(Q.ItemChecked, modHash.items),
+      beltId: idst(Q.ItemBelt, hash?.belts),
+      pipeId: idst(Q.ItemPipe, hash?.belts),
+      cargoWagonId: idst(Q.ItemCargoWagon, hash?.wagons),
+      fluidWagonId: idst(Q.ItemFluidWagon, hash?.wagons),
+      flowRate: ratl(Q.ItemFlowRate),
+      excludedRecipeIds: subs(Q.RecipeExcluded, modHash.recipes),
+      checkedRecipeIds: subs(Q.RecipeChecked, modHash.recipes),
+      netProductionOnly: bool(Q.RecipeNetProduction),
+      preset: numb(Q.MachinePreset),
+      machineRankIds: idra(Q.MachineRank, hash?.machines),
+      fuelRankIds: idra(Q.MachineFuelRank, hash?.fuels),
+      moduleRankIds: idra(Q.MachineModuleRank, hash?.modules),
+      beacons: arry(Q.MachineBeacons)?.map((i) => beaconSettings[i] ?? {}),
+      overclock: ratl(Q.MachineOverclock),
+      beaconReceivers: ratl(Q.MachineBeaconReceivers),
+      proliferatorSprayId: idst(Q.MachineProliferatorSpray, hash?.modules),
+      inserterTarget: numb(Q.MachineInserterTarget),
+      miningBonus: ratl(Q.BonusMining),
+      researchBonus: ratl(Q.BonusResearch),
+      inserterCapacity: numb(Q.BonusInserterCapacity),
+      researchedTechnologyIds: nsub(
+        Q.TechnologyResearched,
         modHash.technologies,
       ),
     };
 
     const costs: Partial<CostSettings> = {
-      factor: this.zipSvc.parseRational(params.get(QueryField.CostFactor)),
-      machine: this.zipSvc.parseRational(params.get(QueryField.CostMachine)),
-      footprint: this.zipSvc.parseRational(
-        params.get(QueryField.CostFootprint),
-      ),
-      unproduceable: this.zipSvc.parseRational(
-        params.get(QueryField.CostUnproduceable),
-      ),
-      excluded: this.zipSvc.parseRational(params.get(QueryField.CostExcluded)),
-      surplus: this.zipSvc.parseRational(params.get(QueryField.CostSurplus)),
-      maximize: this.zipSvc.parseRational(params.get(QueryField.CostMaximize)),
+      factor: ratl(Q.CostFactor),
+      machine: ratl(Q.CostMachine),
+      footprint: ratl(Q.CostFootprint),
+      unproduceable: ratl(Q.CostUnproduceable),
+      excluded: ratl(Q.CostExcluded),
+      surplus: ratl(Q.CostSurplus),
+      maximize: ratl(Q.CostMaximize),
     };
 
     prune(costs);
@@ -1020,27 +901,5 @@ export class RouterService {
     if (Object.keys(obj).length === 0) return undefined;
 
     return obj;
-  }
-
-  set<T = unknown, V = unknown, A extends Array<unknown> = []>(
-    zipData: ZipData,
-    state: T,
-    init: T,
-    value: (v: V, i: V, ...args: A) => string | [string, string],
-  ): (query: QueryField, locator: (state: T) => V, ...args: A) => void {
-    return (query, locator, ...args): void => {
-      const s = locator(state),
-        i = locator(init),
-        v = value(s, i, ...args);
-      let b: string | undefined;
-      let h: string | undefined;
-
-      if (Array.isArray(v)) [b, h] = [...v];
-      else b = h = v;
-
-      if (!b) return;
-      zipData.config.bare.set(query, b);
-      zipData.config.hash.set(query, h);
-    };
   }
 }

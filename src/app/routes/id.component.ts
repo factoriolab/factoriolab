@@ -15,6 +15,6 @@ export class IdComponent implements OnInit {
   routerSvc = inject(RouterService);
 
   ngOnInit(): void {
-    this.routerSvc.initialize(this.route);
+    this.routerSvc.initialize(this.route.snapshot);
   }
 }
