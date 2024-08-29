@@ -83,7 +83,9 @@ export class LandingComponent {
   }
 
   setGame(game: Game): void {
-    this.setMod(gameInfo[game].modId);
+    const modId = gameInfo[game].modId;
+    this.setMod(modId);
+    this.router.navigate([modId]);
   }
 
   addItemObjective(targetId: string): void {

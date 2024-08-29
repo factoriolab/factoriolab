@@ -50,10 +50,8 @@ import {
 import { App, Items, Machines, Objectives, Recipes, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 import { CompressionService } from './compression.service';
-import { ContentService } from './content.service';
 import { DataService } from './data.service';
 import { MigrationService } from './migration.service';
-import { TranslateService } from './translate.service';
 import { ZipService } from './zip.service';
 
 @Injectable({
@@ -62,8 +60,6 @@ import { ZipService } from './zip.service';
 export class RouterService {
   router = inject(Router);
   store = inject(Store);
-  translateSvc = inject(TranslateService);
-  contentSvc = inject(ContentService);
   dataSvc = inject(DataService);
   compressionSvc = inject(CompressionService);
   zipSvc = inject(ZipService);
@@ -96,7 +92,7 @@ export class RouterService {
     })
       .pipe(
         filter(() => {
-          const write = decodeURIComponent(this.zip ?? '');
+          const write = this.zip ?? '';
           const read = BrowserUtility.search;
           if (!read) this.ready$.next();
           return write !== read;
@@ -228,15 +224,17 @@ export class RouterService {
     zData.config.bare.forEach((value, key) => bare.append(key, value));
     const hash = new URLSearchParams(zData.objectives.hash);
     zData.config.hash.forEach((value, key) => hash.append(key, value));
-    const hashStr = hash.toString();
+    const hashStr = decodeURIComponent(hash.toString());
     const zStr = await this.compressionSvc.deflate(hashStr);
     const zip = new URLSearchParams({
       [QueryField.Zip]: zStr,
       [QueryField.Version]: this.version,
     });
 
-    const bareLen = bare.toString().length;
-    const zipLen = zip.toString().length;
+    const bareStr = decodeURIComponent(bare.toString());
+    const bareLen = bareStr.length;
+    const zipStr = decodeURIComponent(zip.toString());
+    const zipLen = zipStr.length;
     return bareLen < Math.max(zipLen, MIN_ZIP) ? bare : zip;
   }
 
@@ -273,6 +271,7 @@ export class RouterService {
       state.recipesState = this.unzipRecipes(params, ms, bs, useHash);
       state.machinesState = this.unzipMachines(params, ms, bs, useHash);
       state.settingsState = this.unzipSettings(
+        modId,
         params,
         bs,
         state.objectivesState?.ids ?? [],
@@ -792,8 +791,8 @@ export class RouterService {
     num(Q.ObjectiveMaximizeType, (s) => s.maximizeType);
     bln(Q.ObjectiveSurplusMachines, (s) => s.surplusMachinesOutput);
     num(Q.ObjectiveDisplayRate, (s) => s.displayRate);
-    sub(Q.ItemExcluded, (s) => s.excludedItemIds, hash.items, data.itemIds);
-    sub(Q.ItemChecked, (s) => s.checkedItemIds, hash.items, data.itemIds);
+    sub(Q.ItemExcluded, (s) => s.excludedItemIds, data.itemIds, hash.items);
+    sub(Q.ItemChecked, (s) => s.checkedItemIds, data.itemIds, hash.items);
     str(Q.ItemBelt, (s) => s.beltId, hash.belts);
     str(Q.ItemPipe, (s) => s.pipeId, hash.belts);
     str(Q.ItemCargoWagon, (s) => s.cargoWagonId, hash.wagons);
@@ -802,14 +801,14 @@ export class RouterService {
     sub(
       Q.RecipeExcluded,
       (s) => s.excludedRecipeIds,
-      hash.recipes,
       data.recipeIds,
+      hash.recipes,
     );
     sub(
       Q.RecipeChecked,
       (s) => s.checkedRecipeIds,
-      hash.recipes,
       data.recipeIds,
+      hash.recipes,
     );
     bln(Q.RecipeNetProduction, (s) => s.netProductionOnly);
     num(Q.MachinePreset, (s) => s.preset);
@@ -827,8 +826,8 @@ export class RouterService {
     sub(
       Q.TechnologyResearched,
       (s) => s.researchedTechnologyIds,
-      hash.technologies,
       data.technologyIds,
+      hash.technologies,
     );
     rat(Q.CostFactor, (s) => s.costs.factor);
     rat(Q.CostMachine, (s) => s.costs.machine);
@@ -840,6 +839,7 @@ export class RouterService {
   }
 
   unzipSettings(
+    modId: string,
     params: ParamMap,
     beaconSettings: BeaconSettings[],
     objectiveIds: string[],
@@ -860,6 +860,7 @@ export class RouterService {
     const arr = get(this.zipSvc.parseIndices);
 
     const obj: Settings.PartialSettingsState = {
+      modId,
       checkedObjectiveIds: sub(Q.ObjectiveMaximizeType, objectiveIds),
       maximizeType: num(Q.ObjectiveMaximizeType),
       surplusMachinesOutput: bln(Q.ObjectiveSurplusMachines),
