@@ -319,7 +319,7 @@
               (click)="
                 recipesPicker.clickOpen(
                   'recipe',
-                  recipeIds(),
+                  data().recipeIds,
                   settings().excludedRecipeIds
                 )
               "
@@ -348,7 +348,7 @@
               (click)="
                 itemsPicker.clickOpen(
                   'item',
-                  itemIds(),
+                  data().itemIds,
                   settings().excludedItemIds
                 )
               "

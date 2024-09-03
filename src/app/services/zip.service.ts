@@ -10,7 +10,7 @@ import {
   ZEMPTY,
   ZFALSE,
   ZFIELDSEP,
-  ZipData,
+  Zip,
   ZNULL,
   ZTRUE,
 } from '~/models';
@@ -28,6 +28,10 @@ export class ZipService {
 
   zipString(value: string | undefined): string {
     return value == null ? '' : value;
+  }
+
+  zipRational(value: Rational | undefined): string {
+    return value == null ? '' : value.toString();
   }
 
   zipNumber(value: number | Rational | undefined): string {
@@ -180,10 +184,16 @@ export class ZipService {
     return value === ZEMPTY ? [] : value.split(ZARRAYSEP);
   }
 
-  parseIndices(value: Nullable<string>): number[] | undefined {
+  parseIndices<T extends object>(
+    value: Nullable<string>,
+    arr: T[],
+  ): T[] | undefined {
     if (!value?.length || value === ZNULL) return undefined;
     if (value === ZEMPTY) return [];
-    return value.split(ZARRAYSEP).map((s) => Number(s));
+    return value
+      .split(ZARRAYSEP)
+      .map((s) => Number(s))
+      .map((i) => arr[i] ?? {});
   }
 
   parseNString(value: Nullable<string>, hash: string[]): string | undefined {
@@ -237,7 +247,7 @@ export class ZipService {
    * query parameters to the `ZipData` `URLSearchParams`.
    */
   set<T>(
-    zipData: ZipData,
+    zip: Zip<URLSearchParams>,
     state: T,
     init: T,
   ): <V, A extends Array<unknown>>(
@@ -279,8 +289,8 @@ export class ZipService {
          * corresponding `URLSearchParams` objects.
          */
         if (!b) return;
-        zipData.config.bare.set(query, b);
-        zipData.config.hash.set(query, h);
+        zip.bare.set(query, b);
+        zip.hash.set(query, h);
       };
     };
   }

@@ -15,7 +15,7 @@ export interface GameInfo {
 export const gameInfo: Record<Game, GameInfo> = {
   [Game.Factorio]: {
     icon: 'factorio',
-    route: 'factorio',
+    route: '/1.1',
     label: 'options.game.factorio',
     meta: 'Factorio',
     modId: '1.1',
@@ -23,7 +23,7 @@ export const gameInfo: Record<Game, GameInfo> = {
   },
   [Game.DysonSphereProgram]: {
     icon: 'dyson-sphere-program',
-    route: 'dsp',
+    route: '/dsp',
     label: 'options.game.dysonSphereProgram',
     meta: 'Dyson Sphere Program',
     modId: 'dsp',
@@ -31,7 +31,7 @@ export const gameInfo: Record<Game, GameInfo> = {
   },
   [Game.Satisfactory]: {
     icon: 'satisfactory',
-    route: 'satisfactory',
+    route: '/sfy',
     label: 'options.game.satisfactory',
     meta: 'Satisfactory',
     modId: 'sfy',
@@ -39,7 +39,7 @@ export const gameInfo: Record<Game, GameInfo> = {
   },
   [Game.CaptainOfIndustry]: {
     icon: 'captain-of-industry',
-    route: 'coi',
+    route: '/coi',
     label: 'options.game.captainOfIndustry',
     meta: 'Captain of Industry',
     modId: 'coi',
@@ -47,7 +47,7 @@ export const gameInfo: Record<Game, GameInfo> = {
   },
   [Game.FinalFactory]: {
     icon: 'final-factory',
-    route: 'final-factory',
+    route: '/ffy',
     label: 'options.game.finalFactory',
     meta: 'Final Factory',
     modId: 'ffy',
@@ -55,7 +55,7 @@ export const gameInfo: Record<Game, GameInfo> = {
   },
   [Game.Techtonica]: {
     icon: 'techtonica',
-    route: 'techtonica',
+    route: '/tta',
     label: 'options.game.techtonica',
     meta: 'Techtonica',
     modId: 'tta',

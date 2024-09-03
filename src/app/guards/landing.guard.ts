@@ -8,7 +8,7 @@ import {
 import { Store } from '@ngrx/store';
 import { first, map } from 'rxjs';
 
-import { LabState, Preferences } from '~/store';
+import { LabState, Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
 
 export const canActivateLanding: CanActivateFn = (
@@ -28,7 +28,10 @@ export const canActivateLanding: CanActivateFn = (
           }
 
           // Navigate to list, preserving query params from target route
-          return router.parseUrl('/list' + state.url.substring(1));
+          const id = route.paramMap.get('id') ?? Settings.initialState.modId;
+          return router.createUrlTree([id, 'list'], {
+            queryParams: route.queryParams,
+          });
         }
 
         return true;

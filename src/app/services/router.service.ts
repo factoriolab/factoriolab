@@ -8,6 +8,7 @@ import {
 } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {
+  BehaviorSubject,
   combineLatest,
   debounceTime,
   filter,
@@ -17,11 +18,17 @@ import {
   ReplaySubject,
   Subject,
   switchMap,
-  takeUntil,
   tap,
+  withLatestFrom,
 } from 'rxjs';
 
-import { coalesce, filterPropsNullish, prune, toParams } from '~/helpers';
+import {
+  coalesce,
+  filterPropsNullish,
+  paramsString,
+  prune,
+  toParams,
+} from '~/helpers';
 import {
   BeaconSettings,
   CostSettings,
@@ -36,7 +43,7 @@ import {
   Objective,
   ObjectiveType,
   ObjectiveUnit,
-  QueryField,
+  QueryField as QF,
   rational,
   RecipeSettings,
   Step,
@@ -68,8 +75,9 @@ export class RouterService {
   zipConfig = signal(this.empty);
   // Current hashing algorithm version
   version = ZipVersion.Version11;
+  route$ = new Subject<ActivatedRoute>();
   ready$ = new ReplaySubject<void>(1);
-  zip: string | undefined;
+  navigating$ = new BehaviorSubject<boolean>(false);
 
   get empty(): Zip<URLSearchParams> {
     return { bare: new URLSearchParams(), hash: new URLSearchParams() };
@@ -83,24 +91,21 @@ export class RouterService {
     return { moduleMap: {}, beaconMap: {} };
   }
 
-  private reinit = new Subject<void>();
-  initialize(route: ActivatedRoute): void {
-    this.reinit.next();
-    combineLatest({
-      paramMap: route.paramMap,
-      queryParamMap: route.queryParamMap,
-    })
+  constructor() {
+    this.route$
       .pipe(
-        filter(() => {
-          const write = this.zip ?? '';
-          const read = BrowserUtility.search;
-          if (!read) this.ready$.next();
-          return write !== read;
-        }),
+        switchMap((r) =>
+          combineLatest({
+            paramMap: r.paramMap,
+            queryParamMap: r.queryParamMap,
+          }),
+        ),
+        withLatestFrom(this.navigating$),
+        filter(([_, navigating]) => !navigating),
+        map(([route]) => route),
         switchMap(({ paramMap, queryParamMap }) =>
           this.updateState(paramMap.get('id'), queryParamMap),
         ),
-        takeUntil(this.reinit),
       )
       .subscribe();
 
@@ -123,16 +128,15 @@ export class RouterService {
           ),
         ),
         switchMap((z) => this.updateUrl(z)),
-        takeUntil(this.reinit),
       )
       .subscribe();
   }
 
   async updateUrl(zData: ZipData): Promise<void> {
     const zip = await this.getHash(zData);
-    this.zip = zip.toString();
-
+    this.navigating$.next(true);
     await this.router.navigate([], { queryParams: toParams(zip) });
+    this.navigating$.next(false);
     const url = this.router.url;
     const path = url.split('?')[0];
     // Only cache list / flow routes
@@ -169,8 +173,8 @@ export class RouterService {
     this.zipRecipes(zData, recipesState, hash);
     this.zipMachines(zData, machinesState, hash);
     this.zipSettings(zData, settings, objectives.ids, data, hash);
-    zData.config.bare.set(QueryField.Version, this.version);
-    zData.config.hash.set(QueryField.Version, this.version);
+    zData.config.bare.set(QF.Version, this.version);
+    zData.config.hash.set(QF.Version, this.version);
     this.zipConfig.set(zData.config);
     return zData;
   }
@@ -224,16 +228,16 @@ export class RouterService {
     zData.config.bare.forEach((value, key) => bare.append(key, value));
     const hash = new URLSearchParams(zData.objectives.hash);
     zData.config.hash.forEach((value, key) => hash.append(key, value));
-    const hashStr = decodeURIComponent(hash.toString());
+    const hashStr = paramsString(hash);
     const zStr = await this.compressionSvc.deflate(hashStr);
     const zip = new URLSearchParams({
-      [QueryField.Zip]: zStr,
-      [QueryField.Version]: this.version,
+      [QF.Zip]: zStr,
+      [QF.Version]: this.version,
     });
 
-    const bareStr = decodeURIComponent(bare.toString());
+    const bareStr = paramsString(bare);
     const bareLen = bareStr.length;
-    const zipStr = decodeURIComponent(zip.toString());
+    const zipStr = paramsString(zip);
     const zipLen = zipStr.length;
     return bareLen < Math.max(zipLen, MIN_ZIP) ? bare : zip;
   }
@@ -246,7 +250,7 @@ export class RouterService {
 
     try {
       let isBare = true;
-      const zipSection = params.get(QueryField.Zip);
+      const zipSection = params.get(QF.Zip);
       if (zipSection != null) {
         const zip = await this.compressionSvc.inflate(zipSection);
         const urlParams = new URLSearchParams(zip);
@@ -329,8 +333,8 @@ export class RouterService {
 
     const config = this.empty;
     const data = [
-      [QueryField.Module, modulesInfo.list],
-      [QueryField.Beacon, beaconsInfo.list],
+      [QF.Module, modulesInfo.list],
+      [QF.Beacon, beaconsInfo.list],
     ] as const;
     data.forEach(([section, list]) => {
       list.forEach((e) => {
@@ -401,7 +405,7 @@ export class RouterService {
     hash: ModHash,
   ): number[] {
     return values.map((obj) => {
-      const count = this.zipSvc.zipString(obj.count?.toString());
+      const count = this.zipSvc.zipRational(obj.count);
       const zip: Zip<string> = {
         bare: this.zipSvc.zipFields([count, this.zipSvc.zipString(obj.id)]),
         hash: this.zipSvc.zipFields([
@@ -420,12 +424,12 @@ export class RouterService {
   }
 
   unzipModules(params: ParamMap, hash?: ModHash): ModuleSettings[] {
-    const list = params.getAll(QueryField.Module);
+    const list = params.getAll(QF.Module);
     return list.map((module) => {
       const s = module.split(ZFIELDSEP);
       let i = 0;
       const obj: ModuleSettings = {
-        count: this.zipSvc.parseRational(this.zipSvc.parseString(s[i++])),
+        count: this.zipSvc.parseRational(s[i++]),
         id: this.zipSvc.parseString(s[i++], hash?.modules),
       };
 
@@ -441,9 +445,9 @@ export class RouterService {
     hash: ModHash,
   ): number[] {
     return beacons.map((obj, i) => {
-      const count = this.zipSvc.zipString(obj.count?.toString());
+      const count = this.zipSvc.zipRational(obj.count);
       const modules = this.zipSvc.zipArray(moduleMap[i]);
-      const total = this.zipSvc.zipString(obj.total?.toString());
+      const total = this.zipSvc.zipRational(obj.total);
       const zip: Zip<string> = {
         bare: this.zipSvc.zipFields([
           count,
@@ -473,17 +477,15 @@ export class RouterService {
     moduleSettings: ModuleSettings[],
     hash?: ModHash,
   ): BeaconSettings[] {
-    const list = params.getAll(QueryField.Beacon);
+    const list = params.getAll(QF.Beacon);
     return list.map((beacon) => {
       const s = beacon.split(ZFIELDSEP);
       let i = 0;
       const obj: BeaconSettings = {
-        count: this.zipSvc.parseRational(this.zipSvc.parseString(s[i++])),
-        modules: this.zipSvc
-          .parseArray(s[i++])
-          ?.map((i) => coalesce(moduleSettings[Number(i)], {})),
+        count: this.zipSvc.parseRational(s[i++]),
+        modules: this.zipSvc.parseIndices(s[i++], moduleSettings),
         id: this.zipSvc.parseString(s[i++], hash?.beacons),
-        total: this.zipSvc.parseRational(this.zipSvc.parseString(s[i++])),
+        total: this.zipSvc.parseRational(s[i++]),
       };
 
       prune(obj);
@@ -505,7 +507,7 @@ export class RouterService {
       const overclock = this.zipSvc.zipNumber(obj.overclock);
 
       data.objectives.bare.append(
-        QueryField.Objective,
+        QF.Objective,
         this.zipSvc.zipFields([
           obj.targetId,
           value,
@@ -519,7 +521,7 @@ export class RouterService {
         ]),
       );
       data.objectives.hash.append(
-        QueryField.Objective,
+        QF.Objective,
         this.zipSvc.zipFields([
           this.zipSvc.zipNString(
             obj.targetId,
@@ -544,7 +546,7 @@ export class RouterService {
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
   ): Objectives.ObjectivesState | undefined {
-    const list = params.getAll(QueryField.Objective);
+    const list = params.getAll(QF.Objective);
     if (!list.length) return undefined;
 
     const ids: string[] = [];
@@ -561,12 +563,8 @@ export class RouterService {
         unit: this.zipSvc.parseNumber(s[i++]) ?? ObjectiveUnit.Items,
         type: this.zipSvc.parseNumber(s[i++]) ?? ObjectiveType.Output,
         machineId: this.zipSvc.parseString(s[i++], hash?.machines),
-        modules: this.zipSvc
-          .parseArray(s[i++])
-          ?.map((i) => moduleSettings[Number(i)] ?? {}),
-        beacons: this.zipSvc
-          .parseArray(s[i++])
-          ?.map((i) => beaconSettings[Number(i)] ?? {}),
+        modules: this.zipSvc.parseIndices(s[i++], moduleSettings),
+        beacons: this.zipSvc.parseIndices(s[i++], beaconSettings),
         overclock: this.zipSvc.parseRational(s[i++]),
         fuelId: this.zipSvc.parseString(s[i++], hash?.fuels),
       };
@@ -593,7 +591,7 @@ export class RouterService {
     Object.keys(state).forEach((i) => {
       const obj = state[i];
       data.config.bare.append(
-        QueryField.Item,
+        QF.Item,
         this.zipSvc.zipFields([
           i,
           this.zipSvc.zipString(obj.beltId),
@@ -601,7 +599,7 @@ export class RouterService {
         ]),
       );
       data.config.hash.append(
-        QueryField.Item,
+        QF.Item,
         this.zipSvc.zipFields([
           this.zipSvc.zipNString(i, hash.items),
           this.zipSvc.zipNString(obj.beltId, hash.belts),
@@ -612,7 +610,7 @@ export class RouterService {
   }
 
   unzipItems(params: ParamMap, hash?: ModHash): Items.ItemsState | undefined {
-    const list = params.getAll(QueryField.Item);
+    const list = params.getAll(QF.Item);
     if (!list.length) return undefined;
 
     const entities: Items.ItemsState = {};
@@ -640,7 +638,7 @@ export class RouterService {
       const cost = this.zipSvc.zipNumber(obj.cost);
 
       data.config.bare.append(
-        QueryField.Recipe,
+        QF.Recipe,
         this.zipSvc.zipFields([
           i,
           this.zipSvc.zipString(obj.machineId),
@@ -652,7 +650,7 @@ export class RouterService {
         ]),
       );
       data.config.hash.append(
-        QueryField.Recipe,
+        QF.Recipe,
         this.zipSvc.zipFields([
           this.zipSvc.zipNString(i, hash.recipes),
           this.zipSvc.zipNString(obj.machineId, hash.machines),
@@ -672,7 +670,7 @@ export class RouterService {
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
   ): Recipes.RecipesState | undefined {
-    const list = params.getAll(QueryField.Recipe);
+    const list = params.getAll(QF.Recipe);
     if (!list.length) return undefined;
 
     const entities: Recipes.RecipesState = {};
@@ -711,7 +709,7 @@ export class RouterService {
       const overclock = this.zipSvc.zipNumber(obj.overclock);
 
       data.config.bare.append(
-        QueryField.Machine,
+        QF.Machine,
         this.zipSvc.zipFields([
           i,
           modules,
@@ -721,7 +719,7 @@ export class RouterService {
         ]),
       );
       data.config.hash.append(
-        QueryField.Machine,
+        QF.Machine,
         this.zipSvc.zipFields([
           this.zipSvc.zipNString(i, hash.machines),
           modules,
@@ -739,7 +737,7 @@ export class RouterService {
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
   ): Machines.MachinesState | undefined {
-    const list = params.getAll(QueryField.Machine);
+    const list = params.getAll(QF.Machine);
     if (!list.length) return undefined;
 
     const entities: Machines.MachinesState = {};
@@ -774,10 +772,8 @@ export class RouterService {
   ): void {
     const init = Settings.initialState;
 
-    const Q = QueryField;
-
     // Set up shorthand functions to zip state
-    const set = this.zipSvc.set(zData, state, init);
+    const set = this.zipSvc.set(zData.config, state, init);
     const sub = set(this.zipSvc.zipDiffSubset);
     const num = set(this.zipSvc.zipDiffNumber);
     const bln = set(this.zipSvc.zipDiffBool);
@@ -787,55 +783,59 @@ export class RouterService {
     const arr = set(this.zipSvc.zipDiffIndices);
 
     // Zip state
-    sub(Q.ObjectiveChecked, (s) => s.checkedObjectiveIds, objectiveIds);
-    num(Q.ObjectiveMaximizeType, (s) => s.maximizeType);
-    bln(Q.ObjectiveSurplusMachines, (s) => s.surplusMachinesOutput);
-    num(Q.ObjectiveDisplayRate, (s) => s.displayRate);
-    sub(Q.ItemExcluded, (s) => s.excludedItemIds, data.itemIds, hash.items);
-    sub(Q.ItemChecked, (s) => s.checkedItemIds, data.itemIds, hash.items);
-    str(Q.ItemBelt, (s) => s.beltId, hash.belts);
-    str(Q.ItemPipe, (s) => s.pipeId, hash.belts);
-    str(Q.ItemCargoWagon, (s) => s.cargoWagonId, hash.wagons);
-    str(Q.ItemFluidWagon, (s) => s.fluidWagonId, hash.wagons);
-    rat(Q.ItemFlowRate, (s) => s.flowRate);
+    sub(QF.ObjectiveChecked, (s) => s.checkedObjectiveIds, objectiveIds);
+    num(QF.ObjectiveMaximizeType, (s) => s.maximizeType);
+    bln(QF.ObjectiveSurplusMachines, (s) => s.surplusMachinesOutput);
+    num(QF.ObjectiveDisplayRate, (s) => s.displayRate);
+    sub(QF.ItemExcluded, (s) => s.excludedItemIds, data.itemIds, hash.items);
+    sub(QF.ItemChecked, (s) => s.checkedItemIds, data.itemIds, hash.items);
+    str(QF.ItemBelt, (s) => s.beltId, hash.belts);
+    str(QF.ItemPipe, (s) => s.pipeId, hash.belts);
+    str(QF.ItemCargoWagon, (s) => s.cargoWagonId, hash.wagons);
+    str(QF.ItemFluidWagon, (s) => s.fluidWagonId, hash.wagons);
+    rat(QF.ItemFlowRate, (s) => s.flowRate);
     sub(
-      Q.RecipeExcluded,
+      QF.RecipeExcluded,
       (s) => s.excludedRecipeIds,
       data.recipeIds,
       hash.recipes,
     );
     sub(
-      Q.RecipeChecked,
+      QF.RecipeChecked,
       (s) => s.checkedRecipeIds,
       data.recipeIds,
       hash.recipes,
     );
-    bln(Q.RecipeNetProduction, (s) => s.netProductionOnly);
-    num(Q.MachinePreset, (s) => s.preset);
-    rnk(Q.MachineRank, (s) => s.machineRankIds, hash.machines);
-    rnk(Q.MachineFuelRank, (s) => s.fuelRankIds, hash.fuels);
-    rnk(Q.MachineModuleRank, (s) => s.moduleRankIds, hash.modules);
-    arr(Q.MachineBeacons, (s) => (s === init ? undefined : zData.beacons));
-    rat(Q.MachineOverclock, (s) => s.overclock);
-    rat(Q.MachineBeaconReceivers, (s) => s.beaconReceivers);
-    str(Q.MachineProliferatorSpray, (s) => s.proliferatorSprayId, hash.modules);
-    num(Q.MachineInserterTarget, (s) => s.inserterTarget);
-    rat(Q.BonusMining, (s) => s.miningBonus);
-    rat(Q.BonusResearch, (s) => s.researchBonus);
-    num(Q.BonusInserterCapacity, (s) => s.inserterCapacity);
+    bln(QF.RecipeNetProduction, (s) => s.netProductionOnly);
+    num(QF.MachinePreset, (s) => s.preset);
+    rnk(QF.MachineRank, (s) => s.machineRankIds, hash.machines);
+    rnk(QF.MachineFuelRank, (s) => s.fuelRankIds, hash.fuels);
+    rnk(QF.MachineModuleRank, (s) => s.moduleRankIds, hash.modules);
+    arr(QF.MachineBeacons, (s) => (s === init ? undefined : zData.beacons));
+    rat(QF.MachineOverclock, (s) => s.overclock);
+    rat(QF.MachineBeaconReceivers, (s) => s.beaconReceivers);
+    str(
+      QF.MachineProliferatorSpray,
+      (s) => s.proliferatorSprayId,
+      hash.modules,
+    );
+    num(QF.MachineInserterTarget, (s) => s.inserterTarget);
+    rat(QF.BonusMining, (s) => s.miningBonus);
+    rat(QF.BonusResearch, (s) => s.researchBonus);
+    num(QF.BonusInserterCapacity, (s) => s.inserterCapacity);
     sub(
-      Q.TechnologyResearched,
+      QF.TechnologyResearched,
       (s) => s.researchedTechnologyIds,
       data.technologyIds,
       hash.technologies,
     );
-    rat(Q.CostFactor, (s) => s.costs.factor);
-    rat(Q.CostMachine, (s) => s.costs.machine);
-    rat(Q.CostFootprint, (s) => s.costs.footprint);
-    rat(Q.CostUnproduceable, (s) => s.costs.unproduceable);
-    rat(Q.CostExcluded, (s) => s.costs.excluded);
-    rat(Q.CostSurplus, (s) => s.costs.surplus);
-    rat(Q.CostMaximize, (s) => s.costs.maximize);
+    rat(QF.CostFactor, (s) => s.costs.factor);
+    rat(QF.CostMachine, (s) => s.costs.machine);
+    rat(QF.CostFootprint, (s) => s.costs.footprint);
+    rat(QF.CostUnproduceable, (s) => s.costs.unproduceable);
+    rat(QF.CostExcluded, (s) => s.costs.excluded);
+    rat(QF.CostSurplus, (s) => s.costs.surplus);
+    rat(QF.CostMaximize, (s) => s.costs.maximize);
   }
 
   unzipSettings(
@@ -846,8 +846,6 @@ export class RouterService {
     modHash: ModHash,
     hash?: ModHash,
   ): Settings.PartialSettingsState | undefined {
-    const Q = QueryField;
-
     // Set up shorthand functions to parse state
     const get = this.zipSvc.get(params);
     const sub = get(this.zipSvc.parseSubset);
@@ -861,46 +859,46 @@ export class RouterService {
 
     const obj: Settings.PartialSettingsState = {
       modId,
-      checkedObjectiveIds: sub(Q.ObjectiveMaximizeType, objectiveIds),
-      maximizeType: num(Q.ObjectiveMaximizeType),
-      surplusMachinesOutput: bln(Q.ObjectiveSurplusMachines),
-      displayRate: num(Q.ObjectiveDisplayRate),
-      excludedItemIds: sub(Q.ItemExcluded, modHash.items),
-      checkedItemIds: sub(Q.ItemChecked, modHash.items),
-      beltId: str(Q.ItemBelt, hash?.belts),
-      pipeId: str(Q.ItemPipe, hash?.belts),
-      cargoWagonId: str(Q.ItemCargoWagon, hash?.wagons),
-      fluidWagonId: str(Q.ItemFluidWagon, hash?.wagons),
-      flowRate: rat(Q.ItemFlowRate),
-      excludedRecipeIds: sub(Q.RecipeExcluded, modHash.recipes),
-      checkedRecipeIds: sub(Q.RecipeChecked, modHash.recipes),
-      netProductionOnly: bln(Q.RecipeNetProduction),
-      preset: num(Q.MachinePreset),
-      machineRankIds: rnk(Q.MachineRank, hash?.machines),
-      fuelRankIds: rnk(Q.MachineFuelRank, hash?.fuels),
-      moduleRankIds: rnk(Q.MachineModuleRank, hash?.modules),
-      beacons: arr(Q.MachineBeacons)?.map((i) => beaconSettings[i] ?? {}),
-      overclock: rat(Q.MachineOverclock),
-      beaconReceivers: rat(Q.MachineBeaconReceivers),
-      proliferatorSprayId: str(Q.MachineProliferatorSpray, hash?.modules),
-      inserterTarget: num(Q.MachineInserterTarget),
-      miningBonus: rat(Q.BonusMining),
-      researchBonus: rat(Q.BonusResearch),
-      inserterCapacity: num(Q.BonusInserterCapacity),
+      checkedObjectiveIds: sub(QF.ObjectiveMaximizeType, objectiveIds),
+      maximizeType: num(QF.ObjectiveMaximizeType),
+      surplusMachinesOutput: bln(QF.ObjectiveSurplusMachines),
+      displayRate: num(QF.ObjectiveDisplayRate),
+      excludedItemIds: sub(QF.ItemExcluded, modHash.items),
+      checkedItemIds: sub(QF.ItemChecked, modHash.items),
+      beltId: str(QF.ItemBelt, hash?.belts),
+      pipeId: str(QF.ItemPipe, hash?.belts),
+      cargoWagonId: str(QF.ItemCargoWagon, hash?.wagons),
+      fluidWagonId: str(QF.ItemFluidWagon, hash?.wagons),
+      flowRate: rat(QF.ItemFlowRate),
+      excludedRecipeIds: sub(QF.RecipeExcluded, modHash.recipes),
+      checkedRecipeIds: sub(QF.RecipeChecked, modHash.recipes),
+      netProductionOnly: bln(QF.RecipeNetProduction),
+      preset: num(QF.MachinePreset),
+      machineRankIds: rnk(QF.MachineRank, hash?.machines),
+      fuelRankIds: rnk(QF.MachineFuelRank, hash?.fuels),
+      moduleRankIds: rnk(QF.MachineModuleRank, hash?.modules),
+      beacons: arr(QF.MachineBeacons, beaconSettings),
+      overclock: rat(QF.MachineOverclock),
+      beaconReceivers: rat(QF.MachineBeaconReceivers),
+      proliferatorSprayId: str(QF.MachineProliferatorSpray, hash?.modules),
+      inserterTarget: num(QF.MachineInserterTarget),
+      miningBonus: rat(QF.BonusMining),
+      researchBonus: rat(QF.BonusResearch),
+      inserterCapacity: num(QF.BonusInserterCapacity),
       researchedTechnologyIds: nsb(
-        Q.TechnologyResearched,
+        QF.TechnologyResearched,
         modHash.technologies,
       ),
     };
 
     const costs: Partial<CostSettings> = {
-      factor: rat(Q.CostFactor),
-      machine: rat(Q.CostMachine),
-      footprint: rat(Q.CostFootprint),
-      unproduceable: rat(Q.CostUnproduceable),
-      excluded: rat(Q.CostExcluded),
-      surplus: rat(Q.CostSurplus),
-      maximize: rat(Q.CostMaximize),
+      factor: rat(QF.CostFactor),
+      machine: rat(QF.CostMachine),
+      footprint: rat(QF.CostFootprint),
+      unproduceable: rat(QF.CostUnproduceable),
+      excluded: rat(QF.CostExcluded),
+      surplus: rat(QF.CostSurplus),
+      maximize: rat(QF.CostMaximize),
     };
 
     prune(costs);

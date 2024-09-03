@@ -131,7 +131,6 @@ export class SettingsComponent implements OnInit {
 
   itemsState = this.store.selectSignal(Items.selectItemsState);
   recipesState = this.store.selectSignal(Recipes.selectRecipesState);
-  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
   data = this.store.selectSignal(Recipes.selectAdjustedDataset);
   machinesState = this.store.selectSignal(Machines.selectMachinesState);
   settings = this.store.selectSignal(Settings.selectSettings);
@@ -142,7 +141,6 @@ export class SettingsComponent implements OnInit {
   researchedTechnologyIds = this.store.selectSignal(
     Settings.selectAllResearchedTechnologyIds,
   );
-  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
   gameStates = this.store.selectSignal(Settings.selectGameStates);
   savedStates = this.store.selectSignal(Settings.selectSavedStates);
   preferences = this.store.selectSignal(Preferences.preferencesState);
@@ -287,6 +285,10 @@ export class SettingsComponent implements OnInit {
     this.setMod(gameInfo[game].modId);
   }
 
+  setMod(modId: string): void {
+    this.router.navigate([modId, 'list']);
+  }
+
   changeExcludedRecipes(value: Set<string>): void {
     this.setExcludedRecipes(
       value,
@@ -365,10 +367,6 @@ export class SettingsComponent implements OnInit {
 
   removeState(key: Game, id: string): void {
     this.store.dispatch(Preferences.removeState({ key, id }));
-  }
-
-  setMod(modId: string): void {
-    this.store.dispatch(Settings.setMod({ modId }));
   }
 
   setResearchedTechnologies(researchedTechnologyIds: Set<string> | null): void {
