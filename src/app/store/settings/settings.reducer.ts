@@ -40,7 +40,7 @@ export interface SettingsState {
   moduleRankIds?: string[];
   beacons?: BeaconSettings[];
   overclock?: Rational;
-  beaconReceivers: Rational | null;
+  beaconReceivers?: Rational;
   proliferatorSprayId: string;
   inserterTarget: InserterTarget;
   miningBonus: Rational;
@@ -71,7 +71,6 @@ export const initialState: SettingsState = {
   flowRate: rational(1200n),
   checkedRecipeIds: new Set(),
   netProductionOnly: false,
-  beaconReceivers: null,
   proliferatorSprayId: ItemId.Module,
   inserterTarget: InserterTarget.ExpressTransportBelt,
   miningBonus: rational.zero,

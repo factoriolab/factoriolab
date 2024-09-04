@@ -1,4 +1,5 @@
 import { inject, Injectable } from '@angular/core';
+import { Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs';
 
@@ -6,6 +7,7 @@ import { data } from 'src/data';
 import { coalesce } from '~/helpers';
 import {
   Entities,
+  LabParams,
   ObjectiveType,
   ZARRAYSEP,
   ZEMPTY,
@@ -14,6 +16,7 @@ import {
   ZNULL,
   ZTRUE,
 } from '~/models';
+import { Settings } from '~/store';
 import { AnalyticsService } from './analytics.service';
 import { ContentService } from './content.service';
 import { TranslateService } from './translate.service';
@@ -37,7 +40,8 @@ export enum ZipSectionV10 {
 }
 
 interface MigrationState {
-  params: Entities<string>;
+  modId?: string;
+  params: Params;
   warnings: string[];
   isBare: boolean;
 }
@@ -58,23 +62,37 @@ export class MigrationService {
   zipSvc = inject(ZipService);
 
   /** Migrates older zip params to latest bare/hash formats */
-  migrate(params: Entities, isBare: boolean): MigrationState {
-    const v =
-      (params[ZipSectionV10.Version] as ZipVersion) ?? ZipVersion.Version0;
+  migrate(modId: string | undefined, params: Params): [string, LabParams] {
+    const v = (params['v'] as ZipVersion) ?? ZipVersion.Version0;
     this.analyticsSvc.event('unzip_version', v);
 
+    const isBare = params['z'] == null;
     if (isBare || v === ZipVersion.Version0) {
       Object.keys(params).forEach((k) => {
-        params[k] = decodeURIComponent(params[k]);
+        if (Array.isArray(params[k])) {
+          params[k] = params[k].map((v) => decodeURIComponent(v));
+        } else {
+          params[k] = decodeURIComponent(params[k]);
+        }
       });
     }
 
     const result = this.migrateAny(params, isBare, v);
     this.displayWarnings(result.warnings);
-    return result;
+
+    const coerceArrayKeys = ['o', 'i', 'r', 'm', 'e', 'b'] as const;
+    coerceArrayKeys.forEach((k) => {
+      const value = result.params[k];
+      if (typeof value === 'string') result.params[k] = [value];
+    });
+
+    return [
+      result.modId ?? Settings.initialState.modId,
+      result.params as LabParams,
+    ];
   }
 
-  migrateAny(params: Entities, isBare: boolean, v: ZipVersion): MigrationState {
+  migrateAny(params: Params, isBare: boolean, v: ZipVersion): MigrationState {
     const warnings: string[] = [];
     const state: MigrationState = { params, warnings, isBare };
     switch (v) {
@@ -637,7 +655,7 @@ export class MigrationService {
 
     // Migrate machines state
     if (state.params[ZipSectionV10.Machines]) {
-      const zip = params[ZipSectionV10.Machines];
+      const zip = params[ZipSectionV10.Machines] as string;
       const list = zip.split(ZLISTSEP);
       const migrated: string[] = [];
       const beacons = state.params[ZipSectionV10.Beacons]
@@ -724,7 +742,7 @@ export class MigrationService {
         const fuelRankIds = s.splice(index, 1)[0];
 
         if (params[ZipSectionV10.Machines]) {
-          const list = params[ZipSectionV10.Machines]
+          const list = (params[ZipSectionV10.Machines] as string)
             .split(ZLISTSEP)
             .map((l) => l.split(ZFIELDSEP));
           const s = list.find((l) => l[0] === ZEMPTY || l[0] === '');

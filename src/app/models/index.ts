@@ -11,6 +11,8 @@ export * from './entities';
 export * from './flow';
 export * from './game-info';
 export * from './inserter-data';
+export * from './keys-matching';
+export * from './lab-params';
 export * from './matrix-result';
 export * from './mod';
 export * from './nullable';

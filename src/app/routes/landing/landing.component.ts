@@ -10,7 +10,6 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 import { PickerComponent } from '~/components';
-import { toParams } from '~/helpers';
 import {
   Game,
   gameInfo,
@@ -64,28 +63,36 @@ export class LandingComponent {
   Game = Game;
   BrowserUtility = BrowserUtility;
 
-  async selectItem(value: string): Promise<void> {
-    await this.router.navigate(['list'], { relativeTo: this.route });
+  selectItem(value: string): void {
+    const modId = this.mod()?.id ?? Settings.initialState.modId;
+    this.setMod(modId);
     this.addItemObjective(value);
+    this.router.navigate(['list'], {
+      relativeTo: this.route,
+      queryParamsHandling: 'preserve',
+    });
   }
 
-  async selectRecipe(value: string): Promise<void> {
-    await this.router.navigate(['list'], { relativeTo: this.route });
+  selectRecipe(value: string): void {
+    const modId = this.mod()?.id ?? Settings.initialState.modId;
+    this.setMod(modId);
     this.addRecipeObjective(value);
+    this.router.navigate(['list'], {
+      relativeTo: this.route,
+      queryParamsHandling: 'preserve',
+    });
   }
 
   setState(query: string): void {
     if (!query) return;
     this.router.navigate(['list'], {
-      queryParams: toParams(query),
+      queryParams: this.routerSvc.toParams(query),
       relativeTo: this.route,
     });
   }
 
   setGame(game: Game): void {
-    const modId = gameInfo[game].modId;
-    this.setMod(modId);
-    this.router.navigate([modId]);
+    this.setMod(gameInfo[game].modId);
   }
 
   addItemObjective(targetId: string): void {

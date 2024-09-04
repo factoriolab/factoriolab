@@ -1,4 +1,5 @@
 import { Entities } from './entities';
+import { LabParams } from './lab-params';
 
 export interface Zip<T> {
   bare: T;
@@ -16,8 +17,8 @@ export interface ZipMachineSettings {
 }
 
 export interface ZipData {
-  objectives: Zip<URLSearchParams>;
-  config: Zip<URLSearchParams>;
+  objectives: Zip<LabParams>;
+  config: Zip<LabParams>;
   objectiveSettings: ZipMachineSettings;
   recipeSettings: ZipMachineSettings;
   machineSettings: ZipMachineSettings;

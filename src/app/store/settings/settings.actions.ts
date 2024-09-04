@@ -98,7 +98,7 @@ export const setOverclock = createAction(
 );
 export const setBeaconReceivers = createAction(
   `${key} Set Beacon Receivers`,
-  props<{ beaconReceivers: Rational | null }>(),
+  props<{ beaconReceivers: Rational | undefined }>(),
 );
 export const setProliferatorSpray = createAction(
   `${key} Set Proliferator Spray`,

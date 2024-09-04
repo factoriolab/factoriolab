@@ -13,7 +13,6 @@ export * from './objective-type';
 export * from './objective-unit';
 export * from './power-unit';
 export * from './preset';
-export * from './query-field';
 export * from './research-bonus';
 export * from './sankey-align';
 export * from './simplex-result-type';

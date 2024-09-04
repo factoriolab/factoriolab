@@ -1,7 +1,7 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { Step, Zip } from '~/models';
+import { LabParams, Step, Zip } from '~/models';
 import { RouterService } from '~/services';
 import { Recipes } from '~/store';
 
@@ -14,7 +14,7 @@ export class StepHrefPipe implements PipeTransform {
 
   async transform(
     value: Step,
-    zipPartial: Zip<URLSearchParams>,
+    zipPartial: Zip<LabParams>,
   ): Promise<string | null> {
     let step = value;
     if (step.recipeId) {

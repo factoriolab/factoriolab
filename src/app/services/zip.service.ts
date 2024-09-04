@@ -1,9 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { ParamMap } from '@angular/router';
 
 import {
+  KeysMatching,
+  LabParams,
   Nullable,
-  QueryField,
   rational,
   Rational,
   ZARRAYSEP,
@@ -244,15 +244,19 @@ export class ZipService {
 
   /**
    * Sets up a curried function stack to generate functions to add settings
-   * query parameters to the `ZipData` `URLSearchParams`.
+   * query parameters to the `ZipData` `LabParams`.
    */
   set<T>(
-    zip: Zip<URLSearchParams>,
+    zip: Zip<LabParams>,
     state: T,
     init: T,
   ): <V, A extends Array<unknown>>(
     value: (v: V, i: V, ...args: A) => string | [string, string],
-  ) => (query: QueryField, locator: (state: T) => V, ...args: A) => void {
+  ) => (
+    name: KeysMatching<LabParams, Nullable<string>>,
+    locator: (state: T) => V,
+    ...args: A
+  ) => void {
     /**
      * Accepts a function to convert the state value to a string, or a pair of
      * bare / hashed strings, and returns a curried function. Caller is expected
@@ -265,7 +269,7 @@ export class ZipService {
        * Accepts a query parameter name, locator function to get the state
        * value, and any additional arguments to the value function.
        */
-      return (query, locator, ...args): void => {
+      return (name, locator, ...args): void => {
         /**
          * Get current state and initial values, then run value function to get
          * query parameter value.
@@ -286,24 +290,27 @@ export class ZipService {
 
         /**
          * If the bare value is defined, set the bare and hash values on thir
-         * corresponding `URLSearchParams` objects.
+         * corresponding `LabParams` objects.
          */
         if (!b) return;
-        zip.bare.set(query, b);
-        zip.hash.set(query, h);
+        zip.bare[name] = b;
+        zip.hash[name] = h;
       };
     };
   }
 
   /**
    * Sets up a curried function stack to generate functions to get settings
-   * state values from a `ParamMap`.
+   * state values from `LabParams`.
    */
   get(
-    params: ParamMap,
+    params: LabParams,
   ): <V, A extends Array<unknown>>(
     value: (s: Nullable<string>, ...args: A) => V,
-  ) => (query: QueryField, ...args: A) => V | undefined {
+  ) => (
+    name: KeysMatching<LabParams, Nullable<string>>,
+    ...args: A
+  ) => V | undefined {
     /**
      * Accepts a function to convert the query parameter value to its
      * state value, and returns a curried function. Caller is expected
@@ -313,7 +320,7 @@ export class ZipService {
       // Bind the method reference to this service before use.
       value = value.bind(this);
       // Run value function to get state value
-      return (query, ...args) => value(params.get(query), ...args);
+      return (name, ...args) => value(params[name], ...args);
     };
   }
 }

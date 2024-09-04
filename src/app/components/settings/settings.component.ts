@@ -32,7 +32,7 @@ import {
   DropdownTranslateDirective,
   NoDragDirective,
 } from '~/directives';
-import { coalesce, toParams } from '~/helpers';
+import { coalesce } from '~/helpers';
 import {
   BeaconSettings,
   DisplayRate,
@@ -236,7 +236,7 @@ export class SettingsComponent implements OnInit {
     const query = states[id];
     if (!query) return;
     this.state = id;
-    this.router.navigate([], { queryParams: toParams(query) });
+    this.router.navigate([], { queryParams: this.routerSvc.toParams(query) });
   }
 
   clickSaveState(game: Game): void {
@@ -335,7 +335,7 @@ export class SettingsComponent implements OnInit {
   }
 
   toggleBeaconReceivers(value: boolean): void {
-    this.setBeaconReceivers(value ? rational.one : null);
+    this.setBeaconReceivers(value ? rational.one : undefined);
   }
 
   addMachine(id: string, def: string[] | undefined): void {
@@ -423,7 +423,7 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(Machines.setOverclock({ id, value, def }));
   }
 
-  setBeaconReceivers(beaconReceivers: Rational | null): void {
+  setBeaconReceivers(beaconReceivers: Rational | undefined): void {
     this.store.dispatch(Settings.setBeaconReceivers({ beaconReceivers }));
   }
 
