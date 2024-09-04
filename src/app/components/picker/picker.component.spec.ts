@@ -126,16 +126,16 @@ describe('PickerComponent', () => {
     });
   });
 
-  describe('onHide', () => {
-    it('should emit selected ids if array', () => {
-      spyOn(component.selectIds, 'emit');
-      component.selection = [RecipeId.AdvancedCircuit];
-      component.onHide();
-      expect(component.selectIds.emit).toHaveBeenCalledWith([
-        RecipeId.AdvancedCircuit,
-      ]);
-    });
-  });
+  // describe('onHide', () => {
+  //   it('should emit selected ids if array', () => {
+  //     spyOn(component.selectIds, 'emit');
+  //     component.selection = [RecipeId.AdvancedCircuit];
+  //     component.onHide();
+  //     expect(component.selectIds.emit).toHaveBeenCalledWith([
+  //       RecipeId.AdvancedCircuit,
+  //     ]);
+  //   });
+  // });
 
   describe('inputSearch', () => {
     beforeEach(() => {

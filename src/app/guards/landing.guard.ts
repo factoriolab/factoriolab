@@ -1,10 +1,5 @@
 import { inject } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivateFn,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateFn, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { first, map } from 'rxjs';
 
@@ -13,7 +8,6 @@ import { BrowserUtility } from '~/utilities';
 
 export const canActivateLanding: CanActivateFn = (
   route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
 ) => {
   const router = inject(Router);
   return inject(Store<LabState>)
@@ -22,7 +16,10 @@ export const canActivateLanding: CanActivateFn = (
       first(),
       map((bypassLanding) => {
         if (bypassLanding) {
-          if (BrowserUtility.routerState && state.url === '/') {
+          if (
+            BrowserUtility.routerState &&
+            Object.keys(route.queryParams).length === 0
+          ) {
             // Navigating to root with no query params, use last known state
             return router.parseUrl(BrowserUtility.routerState);
           }

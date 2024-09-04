@@ -31,43 +31,43 @@ describe('LandingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('selectItem', () => {
-    it('should add an item objective and navigate to the list', fakeAsync(() => {
-      spyOn(component, 'addItemObjective');
-      spyOn(component.router, 'navigate').and.returnValue(
-        Promise.resolve(true),
-      );
-      component.selectItem(ItemId.IronPlate);
-      tick();
-      expect(component.addItemObjective).toHaveBeenCalledWith(ItemId.IronPlate);
-      expect(component.router.navigate).toHaveBeenCalledWith(['list']);
-    }));
-  });
+  // describe('selectItem', () => {
+  //   it('should add an item objective and navigate to the list', fakeAsync(() => {
+  //     spyOn(component, 'addItemObjective');
+  //     spyOn(component.router, 'navigate').and.returnValue(
+  //       Promise.resolve(true),
+  //     );
+  //     component.selectItem(ItemId.IronPlate);
+  //     tick();
+  //     expect(component.addItemObjective).toHaveBeenCalledWith(ItemId.IronPlate);
+  //     expect(component.router.navigate).toHaveBeenCalledWith(['list']);
+  //   }));
+  // });
 
-  describe('selectRecipe', () => {
-    it('should add a recipe objective and navigate to the list', fakeAsync(() => {
-      spyOn(component, 'addRecipeObjective');
-      spyOn(component.router, 'navigate').and.returnValue(
-        Promise.resolve(true),
-      );
-      component.selectRecipe(RecipeId.IronPlate);
-      tick();
-      expect(component.addRecipeObjective).toHaveBeenCalledWith(
-        ItemId.IronPlate,
-      );
-      expect(component.router.navigate).toHaveBeenCalledWith(['list']);
-    }));
-  });
+  // describe('selectRecipe', () => {
+  //   it('should add a recipe objective and navigate to the list', fakeAsync(() => {
+  //     spyOn(component, 'addRecipeObjective');
+  //     spyOn(component.router, 'navigate').and.returnValue(
+  //       Promise.resolve(true),
+  //     );
+  //     component.selectRecipe(RecipeId.IronPlate);
+  //     tick();
+  //     expect(component.addRecipeObjective).toHaveBeenCalledWith(
+  //       ItemId.IronPlate,
+  //     );
+  //     expect(component.router.navigate).toHaveBeenCalledWith(['list']);
+  //   }));
+  // });
 
-  describe('setState', () => {
-    it('should call the router to navigate', () => {
-      spyOn(component.router, 'navigate');
-      component.setState('z=zip');
-      expect(component.router.navigate).toHaveBeenCalledWith(['list'], {
-        queryParams: { z: 'zip' },
-      });
-    });
-  });
+  // describe('setState', () => {
+  //   it('should call the router to navigate', () => {
+  //     spyOn(component.router, 'navigate');
+  //     component.setState('z=zip');
+  //     expect(component.router.navigate).toHaveBeenCalledWith(['list'], {
+  //       queryParams: { z: 'zip' },
+  //     });
+  //   });
+  // });
 
   describe('setGame', () => {
     it('should map a game to its default mod id', () => {

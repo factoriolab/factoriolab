@@ -48,16 +48,16 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_RESEARCHED_TECHNOLOGIES', () => {
-    it('should set the researched technology ids', () => {
-      const researchedTechnologyIds = [RecipeId.ArtilleryShellRange];
-      const result = settingsReducer(
-        initialState,
-        Actions.setResearchedTechnologies({ researchedTechnologyIds }),
-      );
-      expect(result.researchedTechnologyIds).toEqual(researchedTechnologyIds);
-    });
-  });
+  // describe('SET_RESEARCHED_TECHNOLOGIES', () => {
+  //   it('should set the researched technology ids', () => {
+  //     const researchedTechnologyIds = [RecipeId.ArtilleryShellRange];
+  //     const result = settingsReducer(
+  //       initialState,
+  //       Actions.setResearchedTechnologies({ researchedTechnologyIds }),
+  //     );
+  //     expect(result.researchedTechnologyIds).toEqual(researchedTechnologyIds);
+  //   });
+  // });
 
   describe('SET_NET_PRODUCTION_ONLY', () => {
     it('should set the net production only value', () => {

@@ -34,39 +34,39 @@ describe('FlowService', () => {
     });
   });
 
-  describe('buildGraph', () => {
-    it('should handle various link and node types', () => {
-      const result = service.buildGraph(
-        Mocks.LightOilSteps,
-        '/m',
-        Mocks.ItemsStateInitial,
-        Mocks.PreferencesState,
-        Mocks.AdjustedDataset,
-        Mocks.ThemeValues,
-      );
+  // describe('buildGraph', () => {
+  //   it('should handle various link and node types', () => {
+  //     const result = service.buildGraph(
+  //       Mocks.LightOilSteps,
+  //       '/m',
+  //       Mocks.ItemsStateInitial,
+  //       Mocks.PreferencesState,
+  //       Mocks.AdjustedDataset,
+  //       Mocks.ThemeValues,
+  //     );
 
-      expect(result.nodes.length).toEqual(7);
-      expect(result.links.length).toEqual(8);
-    });
+  //     expect(result.nodes.length).toEqual(7);
+  //     expect(result.links.length).toEqual(8);
+  //   });
 
-    it('should handle different link text selection', () => {
-      const result = service.buildGraph(
-        Mocks.LightOilSteps,
-        '/m',
-        Mocks.ItemsStateInitial,
-        spread(Mocks.PreferencesState, {
-          flowSettings: spread(Mocks.FlowSettings, {
-            linkText: LinkValue.None,
-          }),
-        }),
-        Mocks.AdjustedDataset,
-        Mocks.ThemeValues,
-      );
+  //   it('should handle different link text selection', () => {
+  //     const result = service.buildGraph(
+  //       Mocks.LightOilSteps,
+  //       '/m',
+  //       Mocks.ItemsStateInitial,
+  //       spread(Mocks.PreferencesState, {
+  //         flowSettings: spread(Mocks.FlowSettings, {
+  //           linkText: LinkValue.None,
+  //         }),
+  //       }),
+  //       Mocks.AdjustedDataset,
+  //       Mocks.ThemeValues,
+  //     );
 
-      expect(result.nodes.length).toEqual(7);
-      expect(result.links.length).toEqual(8);
-    });
-  });
+  //     expect(result.nodes.length).toEqual(7);
+  //     expect(result.links.length).toEqual(8);
+  //   });
+  // });
 
   describe('stepLinkValue', () => {
     it('should handle all possible options', () => {

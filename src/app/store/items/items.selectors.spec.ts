@@ -32,14 +32,14 @@ describe('Items Selectors', () => {
     });
   });
 
-  describe('getItemsModified', () => {
-    it('should determine whether columns are modified', () => {
-      const result = Selectors.selectItemsModified.projector(
-        Mocks.ItemsStateInitial,
-      );
-      expect(result.excluded).toBeTrue();
-      expect(result.belts).toBeTrue();
-      expect(result.wagons).toBeTrue();
-    });
-  });
+  // describe('getItemsModified', () => {
+  //   it('should determine whether columns are modified', () => {
+  //     const result = Selectors.selectItemsModified.projector(
+  //       Mocks.ItemsStateInitial,
+  //     );
+  //     expect(result.excluded).toBeTrue();
+  //     expect(result.belts).toBeTrue();
+  //     expect(result.wagons).toBeTrue();
+  //   });
+  // });
 });

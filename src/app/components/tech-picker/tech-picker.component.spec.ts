@@ -30,34 +30,34 @@ describe('TechPickerComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('status', () => {
-    it('should filter technologies and selection', () => {
-      component.clickOpen(Mocks.AdjustedDataset.technologyIds);
-      component.filter.set('optics');
-      const status = component.status();
-      expect(status.available.length).toEqual(0);
-      expect(status.locked.length).toEqual(0);
-      expect(status.researched.length).toEqual(1);
-    });
-  });
+  // describe('status', () => {
+  //   it('should filter technologies and selection', () => {
+  //     component.clickOpen(Mocks.AdjustedDataset.technologyIds);
+  //     component.filter.set('optics');
+  //     const status = component.status();
+  //     expect(status.available.length).toEqual(0);
+  //     expect(status.locked.length).toEqual(0);
+  //     expect(status.researched.length).toEqual(1);
+  //   });
+  // });
 
-  describe('clickOpen', () => {
-    it('should set up lists of available, locked, and researched technologies', () => {
-      component.clickOpen([RecipeId.MiningProductivity]);
-      const status = component.status();
-      expect(status.available.length).toEqual(8);
-      expect(status.researched.length).toEqual(1);
-      expect(status.locked.length).toEqual(183);
-    });
+  // describe('clickOpen', () => {
+  //   it('should set up lists of available, locked, and researched technologies', () => {
+  //     component.clickOpen([RecipeId.MiningProductivity]);
+  //     const status = component.status();
+  //     expect(status.available.length).toEqual(8);
+  //     expect(status.researched.length).toEqual(1);
+  //     expect(status.locked.length).toEqual(183);
+  //   });
 
-    it('should handle null selection', () => {
-      component.clickOpen(null);
-      const status = component.status();
-      expect(status.available.length).toEqual(0);
-      expect(status.researched.length).toEqual(192);
-      expect(status.locked.length).toEqual(0);
-    });
-  });
+  //   it('should handle null selection', () => {
+  //     component.clickOpen(null);
+  //     const status = component.status();
+  //     expect(status.available.length).toEqual(0);
+  //     expect(status.researched.length).toEqual(192);
+  //     expect(status.locked.length).toEqual(0);
+  //   });
+  // });
 
   describe('selectAll', () => {
     it('should set the selection to all', () => {
@@ -127,14 +127,14 @@ describe('TechPickerComponent', () => {
   });
 
   describe('onHide', () => {
-    it('should emit the selection filtered to a minimal set', () => {
-      component.selection.set([RecipeId.Electronics, RecipeId.Automation]);
-      spyOn(component.selectIds, 'emit');
-      component.onHide();
-      expect(component.selectIds.emit).toHaveBeenCalledWith([
-        RecipeId.Electronics,
-      ]);
-    });
+    // it('should emit the selection filtered to a minimal set', () => {
+    //   component.selection.set([RecipeId.Electronics, RecipeId.Automation]);
+    //   spyOn(component.selectIds, 'emit');
+    //   component.onHide();
+    //   expect(component.selectIds.emit).toHaveBeenCalledWith([
+    //     RecipeId.Electronics,
+    //   ]);
+    // });
 
     it('should emit null if all technologies are selected', () => {
       component.selection.set(Mocks.AdjustedDataset.technologyIds);

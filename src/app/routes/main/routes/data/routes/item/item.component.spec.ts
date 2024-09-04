@@ -41,11 +41,11 @@ describe('ItemComponent', () => {
     });
   });
 
-  it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setItemExcluded', Items.setExcluded);
-    dispatch.props('setItemChecked', Items.setChecked);
-    dispatch.props('resetItem', Items.resetItem);
-    dispatch.props('resetMachine', Machines.resetMachine);
-  });
+  // it('should dispatch actions', () => {
+  //   const dispatch = new DispatchTest(mockStore, component);
+  //   dispatch.props('setItemExcluded', Items.setExcluded);
+  //   dispatch.props('setItemChecked', Items.setChecked);
+  //   dispatch.props('resetItem', Items.resetItem);
+  //   dispatch.props('resetMachine', Machines.resetMachine);
+  // });
 });

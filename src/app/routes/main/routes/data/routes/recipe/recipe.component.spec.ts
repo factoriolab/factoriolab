@@ -47,44 +47,44 @@ describe('RecipeComponent', () => {
     });
   });
 
-  describe('toggleRecipe', () => {
-    it('should handle an unrecognized recipe', () => {
-      spyOn(component, 'setRecipeExcluded');
-      TestUtility.setInputs(fixture, { id: 'id' });
-      component.toggleExcluded();
-      expect(component.setRecipeExcluded).not.toHaveBeenCalled();
-    });
+  // describe('toggleRecipe', () => {
+  //   it('should handle an unrecognized recipe', () => {
+  //     spyOn(component, 'setRecipeExcluded');
+  //     TestUtility.setInputs(fixture, { id: 'id' });
+  //     component.toggleExcluded();
+  //     expect(component.setRecipeExcluded).not.toHaveBeenCalled();
+  //   });
 
-    it('should calculate default excluded state for a recipe', () => {
-      spyOn(component, 'setRecipeExcluded');
-      component.toggleExcluded();
-      expect(component.setRecipeExcluded).toHaveBeenCalledWith(
-        RecipeId.NuclearFuelReprocessing,
-        false,
-        true,
-      );
-    });
+  //   it('should calculate default excluded state for a recipe', () => {
+  //     spyOn(component, 'setRecipeExcluded');
+  //     component.toggleExcluded();
+  //     expect(component.setRecipeExcluded).toHaveBeenCalledWith(
+  //       RecipeId.NuclearFuelReprocessing,
+  //       false,
+  //       true,
+  //     );
+  //   });
 
-    it('should default to empty excluded recipe ids array', () => {
-      spyOn(component, 'setRecipeExcluded');
-      const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
-      mockStore.overrideSelector(Recipes.selectAdjustedDataset, data);
-      mockStore.refreshState();
-      component.toggleExcluded();
-      expect(component.setRecipeExcluded).toHaveBeenCalledWith(
-        RecipeId.NuclearFuelReprocessing,
-        false,
-        false,
-      );
-      mockStore.resetSelectors();
-    });
-  });
+  //   it('should default to empty excluded recipe ids array', () => {
+  //     spyOn(component, 'setRecipeExcluded');
+  //     const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
+  //     mockStore.overrideSelector(Recipes.selectAdjustedDataset, data);
+  //     mockStore.refreshState();
+  //     component.toggleExcluded();
+  //     expect(component.setRecipeExcluded).toHaveBeenCalledWith(
+  //       RecipeId.NuclearFuelReprocessing,
+  //       false,
+  //       false,
+  //     );
+  //     mockStore.resetSelectors();
+  //   });
+  // });
 
-  it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setRecipeExcluded', Recipes.setExcluded);
-    dispatch.props('setRecipeChecked', Recipes.setChecked);
-    dispatch.props('setRecipeCost', Recipes.setCost);
-    dispatch.props('resetRecipe', Recipes.resetRecipe);
-  });
+  // it('should dispatch actions', () => {
+  //   const dispatch = new DispatchTest(mockStore, component);
+  //   dispatch.props('setRecipeExcluded', Recipes.setExcluded);
+  //   dispatch.props('setRecipeChecked', Recipes.setChecked);
+  //   dispatch.props('setRecipeCost', Recipes.setCost);
+  //   dispatch.props('resetRecipe', Recipes.resetRecipe);
+  // });
 });

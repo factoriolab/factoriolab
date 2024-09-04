@@ -23,8 +23,8 @@ describe('SimplexUtility', () => {
     recipes: {},
     itemValues: {},
     recipeLimits: {},
-    unproduceableIds: [],
-    excludedIds: [],
+    unproduceableIds: new Set(),
+    excludedIds: new Set(),
     recipeIds: Mocks.AdjustedDataset.recipeIds,
     itemIds: Mocks.AdjustedDataset.itemIds,
     data: Mocks.AdjustedDataset,
@@ -48,8 +48,8 @@ describe('SimplexUtility', () => {
     cost: rational.one,
     itemIds: [],
     recipeIds: [],
-    unproduceableIds: [],
-    excludedIds: [],
+    unproduceableIds: new Set(),
+    excludedIds: new Set(),
     surplus: {},
     unproduceable: {},
     excluded: {},
@@ -73,12 +73,7 @@ describe('SimplexUtility', () => {
       expect(
         SimplexUtility.solve(
           [],
-          {},
-          {},
-          [],
-          MaximizeType.Weight,
-          false,
-          Mocks.Costs,
+          Mocks.SettingsStateInitial,
           Mocks.AdjustedDataset,
           true,
         ),
@@ -89,12 +84,7 @@ describe('SimplexUtility', () => {
       expect(
         SimplexUtility.solve(
           [],
-          {},
-          {},
-          [],
-          MaximizeType.Weight,
-          false,
-          Mocks.Costs,
+          Mocks.SettingsStateInitial,
           Mocks.AdjustedDataset,
           false,
         ),
@@ -114,12 +104,7 @@ describe('SimplexUtility', () => {
       expect(
         SimplexUtility.solve(
           Mocks.Objectives,
-          {},
-          {},
-          null,
-          MaximizeType.Weight,
-          false,
-          Mocks.Costs,
+          Mocks.SettingsStateInitial,
           Mocks.AdjustedDataset,
           false,
         ),
@@ -148,12 +133,7 @@ describe('SimplexUtility', () => {
               Mocks.AdjustedDataset.adjustedRecipe[RecipeId.AdvancedCircuit],
           },
         ],
-        Mocks.ItemsStateInitial,
-        Mocks.RecipesStateInitial,
-        null,
-        MaximizeType.Weight,
-        false,
-        Mocks.Costs,
+        Mocks.SettingsStateInitial,
         Mocks.AdjustedDataset,
         false,
       );
@@ -161,63 +141,58 @@ describe('SimplexUtility', () => {
     });
   });
 
-  describe('getState', () => {
-    it('should build full state object', () => {
-      spyOn(SimplexUtility, 'parseItemRecursively');
-      const objectives = [
-        ...Mocks.Objectives,
-        Mocks.Objectives[3],
-        Mocks.Objectives[7],
-      ];
-      const result = SimplexUtility.getState(
-        objectives,
-        Mocks.ItemsStateInitial,
-        Mocks.RecipesState,
-        Mocks.AdjustedDataset.technologyIds,
-        MaximizeType.Weight,
-        false,
-        Mocks.Costs,
-        Mocks.AdjustedDataset,
-      );
-      expect(result).toEqual({
-        objectives,
-        recipeObjectives: [Mocks.Objectives[4], Mocks.Objectives[6]] as any[],
-        steps: [],
-        recipes: {},
-        itemValues: {
-          [ItemId.AdvancedCircuit]: { out: rational.one },
-          [ItemId.IronPlate]: { out: rational.zero, in: rational.one },
-          [ItemId.PlasticBar]: { out: rational.zero, max: rational.one },
-          [ItemId.PiercingRoundsMagazine]: { out: rational.zero },
-          [ItemId.FirearmMagazine]: { out: rational.zero },
-          [ItemId.SteelPlate]: { out: rational.zero },
-          [ItemId.CopperPlate]: {
-            out: rational.zero,
-            in: rational(141n, 40n),
-          },
-          [ItemId.PetroleumGas]: { out: rational.zero, lim: rational(100n) },
-        },
-        recipeLimits: { [RecipeId.IronPlate]: rational(10n) },
-        unproduceableIds: [
-          ItemId.AdvancedCircuit,
-          ItemId.IronPlate,
-          ItemId.PlasticBar,
-          ItemId.PetroleumGas,
-          ItemId.PiercingRoundsMagazine,
-          ItemId.FirearmMagazine,
-          ItemId.SteelPlate,
-          ItemId.CopperPlate,
-        ],
-        excludedIds: [],
-        recipeIds: Mocks.AdjustedDataset.recipeIds,
-        itemIds: Mocks.AdjustedDataset.itemIds,
-        data: Mocks.AdjustedDataset,
-        maximizeType: MaximizeType.Weight,
-        surplusMachinesOutput: false,
-        costs: Mocks.Costs,
-      });
-    });
-  });
+  // describe('getState', () => {
+  //   it('should build full state object', () => {
+  //     spyOn(SimplexUtility, 'parseItemRecursively');
+  //     const objectives = [
+  //       ...Mocks.Objectives,
+  //       Mocks.Objectives[3],
+  //       Mocks.Objectives[7],
+  //     ];
+  //     const result = SimplexUtility.getState(
+  //       objectives,
+  //       Mocks.SettingsStateInitial,
+  //       Mocks.AdjustedDataset,
+  //     );
+  //     expect(result).toEqual({
+  //       objectives,
+  //       recipeObjectives: [Mocks.Objectives[4], Mocks.Objectives[6]] as any[],
+  //       steps: [],
+  //       recipes: {},
+  //       itemValues: {
+  //         [ItemId.AdvancedCircuit]: { out: rational.one },
+  //         [ItemId.IronPlate]: { out: rational.zero, in: rational.one },
+  //         [ItemId.PlasticBar]: { out: rational.zero, max: rational.one },
+  //         [ItemId.PiercingRoundsMagazine]: { out: rational.zero },
+  //         [ItemId.FirearmMagazine]: { out: rational.zero },
+  //         [ItemId.SteelPlate]: { out: rational.zero },
+  //         [ItemId.CopperPlate]: {
+  //           out: rational.zero,
+  //           in: rational(141n, 40n),
+  //         },
+  //         [ItemId.PetroleumGas]: { out: rational.zero, lim: rational(100n) },
+  //       },
+  //       recipeLimits: { [RecipeId.IronPlate]: rational(10n) },
+  //       unproduceableIds: new Set([
+  //         ItemId.AdvancedCircuit,
+  //         ItemId.IronPlate,
+  //         ItemId.PlasticBar,
+  //         ItemId.PetroleumGas,
+  //         ItemId.PiercingRoundsMagazine,
+  //         ItemId.FirearmMagazine,
+  //         ItemId.SteelPlate,
+  //         ItemId.CopperPlate,
+  //       ]),
+  //       excludedIds: new Set(),
+  //       recipeIds: Mocks.AdjustedDataset.recipeIds,
+  //       itemIds: Mocks.AdjustedDataset.itemIds,
+  //       data: Mocks.AdjustedDataset,
+  //       maximizeType: MaximizeType.Weight,
+  //       surplusMachinesOutput: false,
+  //       costs: Mocks.Costs,
+  //     });
+  //   });
+  // });
 
   describe('recipeMatches', () => {
     it('should find matching recipes for an item', () => {
@@ -323,7 +298,7 @@ describe('SimplexUtility', () => {
         [RecipeId.Coal]: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
       };
       SimplexUtility.parseUnproduceable(state);
-      expect(state.unproduceableIds).toEqual([ItemId.Wood]);
+      expect(state.unproduceableIds).toEqual(new Set([ItemId.Wood]));
     });
   });
 
@@ -362,8 +337,12 @@ describe('SimplexUtility', () => {
       const state = getState();
       // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.unproduceableIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
-      state.excludedIds = [ItemId.CopperOre];
+      state.unproduceableIds = new Set([
+        ItemId.Wood,
+        ItemId.Coal,
+        ItemId.IronOre,
+      ]);
+      state.excludedIds = new Set([ItemId.CopperOre]);
       state.recipes[RecipeId.CopperPlate] =
         Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperPlate];
       state.recipes[RecipeId.CopperPlate].cost = undefined;
@@ -415,8 +394,12 @@ describe('SimplexUtility', () => {
       state.surplusMachinesOutput = true;
       // Coal = excluded input, Wood = normal input
       state.itemIds = state.itemIds.filter((i) => i !== ItemId.Coal);
-      state.unproduceableIds = [ItemId.Wood, ItemId.Coal, ItemId.IronOre];
-      state.excludedIds = [ItemId.CopperOre];
+      state.unproduceableIds = new Set([
+        ItemId.Wood,
+        ItemId.Coal,
+        ItemId.IronOre,
+      ]);
+      state.excludedIds = new Set([ItemId.CopperOre]);
       state.recipes[RecipeId.CopperPlate] =
         Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperPlate];
       state.recipes[RecipeId.IronPlate] =

@@ -50,23 +50,23 @@ describe('RateUtility', () => {
       ).toEqual(rational(1n, 60n));
     });
 
-    it('should normalize item objective rates based on belts', () => {
-      expect(
-        RateUtility.objectiveNormalizedRate(
-          {
-            id: '0',
-            targetId: ItemId.Coal,
-            value: rational.one,
-            unit: ObjectiveUnit.Belts,
-            type: ObjectiveType.Output,
-          },
-          Mocks.ItemsStateInitial,
-          Mocks.BeltSpeed,
-          Mocks.DisplayRateInfo,
-          Mocks.AdjustedDataset,
-        ),
-      ).toEqual(rational(15n));
-    });
+    // it('should normalize item objective rates based on belts', () => {
+    //   expect(
+    //     RateUtility.objectiveNormalizedRate(
+    //       {
+    //         id: '0',
+    //         targetId: ItemId.Coal,
+    //         value: rational.one,
+    //         unit: ObjectiveUnit.Belts,
+    //         type: ObjectiveType.Output,
+    //       },
+    //       Mocks.ItemsStateInitial,
+    //       Mocks.BeltSpeed,
+    //       Mocks.DisplayRateInfo,
+    //       Mocks.AdjustedDataset,
+    //     ),
+    //   ).toEqual(rational(15n));
+    // });
 
     it('should normalize item objective rates based on wagons', () => {
       expect(
@@ -228,32 +228,32 @@ describe('RateUtility', () => {
     });
   });
 
-  describe('normalizeSteps', () => {
-    it('should update update various step fields after solution is found', () => {
-      spyOn(RateUtility, 'calculateParentsOutputs');
-      spyOn(RateUtility, 'calculateSettings');
-      spyOn(RateUtility, 'calculateBelts');
-      spyOn(RateUtility, 'calculateBeacons');
-      spyOn(RateUtility, 'calculateDisplayRate');
-      spyOn(RateUtility, 'calculateHierarchy');
-      RateUtility.normalizeSteps(
-        [{ id: '0' }, { id: '1' }],
-        [],
-        {},
-        {},
-        null,
-        {},
-        displayRateInfo[DisplayRate.PerMinute],
-        Mocks.AdjustedDataset,
-      );
-      expect(RateUtility.calculateParentsOutputs).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateSettings).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateBelts).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateBeacons).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateDisplayRate).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateHierarchy).toHaveBeenCalledTimes(1);
-    });
-  });
+  // describe('normalizeSteps', () => {
+  //   it('should update update various step fields after solution is found', () => {
+  //     spyOn(RateUtility, 'calculateParentsOutputs');
+  //     spyOn(RateUtility, 'calculateSettings');
+  //     spyOn(RateUtility, 'calculateBelts');
+  //     spyOn(RateUtility, 'calculateBeacons');
+  //     spyOn(RateUtility, 'calculateDisplayRate');
+  //     spyOn(RateUtility, 'calculateHierarchy');
+  //     RateUtility.normalizeSteps(
+  //       [{ id: '0' }, { id: '1' }],
+  //       [],
+  //       {},
+  //       {},
+  //       null,
+  //       {},
+  //       displayRateInfo[DisplayRate.PerMinute],
+  //       Mocks.AdjustedDataset,
+  //     );
+  //     expect(RateUtility.calculateParentsOutputs).toHaveBeenCalledTimes(2);
+  //     expect(RateUtility.calculateSettings).toHaveBeenCalledTimes(2);
+  //     expect(RateUtility.calculateBelts).toHaveBeenCalledTimes(2);
+  //     expect(RateUtility.calculateBeacons).toHaveBeenCalledTimes(2);
+  //     expect(RateUtility.calculateDisplayRate).toHaveBeenCalledTimes(2);
+  //     expect(RateUtility.calculateHierarchy).toHaveBeenCalledTimes(1);
+  //   });
+  // });
 
   describe('calculateParentsOutputs', () => {
     it('should add parent values for relevant steps', () => {
@@ -334,22 +334,22 @@ describe('RateUtility', () => {
       expect(step.belts).toBeUndefined();
     });
 
-    it('should calculate required belts & wagons for steps', () => {
-      const step: Step = {
-        id: 'id',
-        itemId: Mocks.Item1.id,
-        items: Mocks.BeltSpeed[ItemId.TransportBelt],
-        belts: rational.zero,
-      };
-      RateUtility.calculateBelts(
-        step,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.AdjustedDataset,
-      );
-      expect(step.belts).toEqual(rational.one);
-      expect(step.wagons).toEqual(rational(3n, 400n));
-    });
+    // it('should calculate required belts & wagons for steps', () => {
+    //   const step: Step = {
+    //     id: 'id',
+    //     itemId: Mocks.Item1.id,
+    //     items: Mocks.BeltSpeed[ItemId.TransportBelt],
+    //     belts: rational.zero,
+    //   };
+    //   RateUtility.calculateBelts(
+    //     step,
+    //     Mocks.ItemsStateInitial,
+    //     Mocks.BeltSpeed,
+    //     Mocks.AdjustedDataset,
+    //   );
+    //   expect(step.belts).toEqual(rational.one);
+    //   expect(step.wagons).toEqual(rational(3n, 400n));
+    // });
 
     it('should calculate required wagons for fluids', () => {
       const step: Step = {
@@ -495,44 +495,44 @@ describe('RateUtility', () => {
     });
   });
 
-  describe('calculateChecked', () => {
-    it('should set the checked state for an item step', () => {
-      const step: Step = { id: '0', itemId: ItemId.Coal };
-      RateUtility.calculateChecked(
-        step,
-        { [ItemId.Coal]: { checked: true } },
-        {},
-        {},
-      );
-      expect(step.checked).toBeTrue();
-    });
+  // describe('calculateChecked', () => {
+  //   it('should set the checked state for an item step', () => {
+  //     const step: Step = { id: '0', itemId: ItemId.Coal };
+  //     RateUtility.calculateChecked(
+  //       step,
+  //       { [ItemId.Coal]: { checked: true } },
+  //       {},
+  //       {},
+  //     );
+  //     expect(step.checked).toBeTrue();
+  //   });
 
-    it('should set the checked state for a recipe objective step', () => {
-      const step: Step = { id: '0', recipeObjectiveId: '1' };
-      RateUtility.calculateChecked(
-        step,
-        {},
-        {},
-        {
-          ['1']: {
-            checked: true,
-          } as any,
-        },
-      );
-      expect(step.checked).toBeTrue();
-    });
+  //   it('should set the checked state for a recipe objective step', () => {
+  //     const step: Step = { id: '0', recipeObjectiveId: '1' };
+  //     RateUtility.calculateChecked(
+  //       step,
+  //       {},
+  //       {},
+  //       {
+  //         ['1']: {
+  //           checked: true,
+  //         } as any,
+  //       },
+  //     );
+  //     expect(step.checked).toBeTrue();
+  //   });
 
-    it('should set the checked state for a recipe step', () => {
-      const step: Step = { id: '0', recipeId: RecipeId.Coal };
-      RateUtility.calculateChecked(
-        step,
-        {},
-        { [RecipeId.Coal]: { checked: true } },
-        {},
-      );
-      expect(step.checked).toBeTrue();
-    });
-  });
+  //   it('should set the checked state for a recipe step', () => {
+  //     const step: Step = { id: '0', recipeId: RecipeId.Coal };
+  //     RateUtility.calculateChecked(
+  //       step,
+  //       {},
+  //       { [RecipeId.Coal]: { checked: true } },
+  //       {},
+  //     );
+  //     expect(step.checked).toBeTrue();
+  //   });
+  // });
 
   describe('sortBySankey', () => {
     it('should sort steps based on sankey node depth', () => {

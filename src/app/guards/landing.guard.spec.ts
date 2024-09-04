@@ -22,8 +22,19 @@ describe('canActivateLanding', () => {
             component: Mocks.MockComponent,
           },
           {
-            path: 'list',
-            component: Mocks.MockComponent,
+            path: ':id',
+            children: [
+              {
+                path: 'list',
+                component: Mocks.MockComponent,
+              },
+              {
+                path: '',
+                pathMatch: 'full',
+                canActivate: [canActivateLanding],
+                component: Mocks.MockComponent,
+              },
+            ],
           },
           {
             path: '',
@@ -51,7 +62,7 @@ describe('canActivateLanding', () => {
     mockStore.overrideSelector(Preferences.selectBypassLanding, true);
     mockStore.refreshState();
     await RouterTestingHarness.create('/?v=6');
-    expect(router.url).toEqual('/list?v=6');
+    expect(router.url).toEqual('/1.1/list?v=6');
   });
 
   it('should allow navigating to the landing page', async () => {
