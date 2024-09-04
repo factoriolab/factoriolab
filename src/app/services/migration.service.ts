@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { first } from 'rxjs';
 
 import { data } from 'src/data';
-import { coalesce } from '~/helpers';
+import { coalesce, prune } from '~/helpers';
 import {
   Entities,
   LabParams,
@@ -68,8 +68,11 @@ export class MigrationService {
 
   /** Migrates older zip params to latest bare/hash formats */
   migrate(modId: string | undefined, params: Params): [string, LabParams] {
+    if (Object.keys(params).length === 0)
+      return [Settings.initialState.modId, params];
+
     params = { ...params };
-    const v = (params['v'] as ZipVersion) ?? ZipVersion.Version0;
+    const v = coalesce(params['v'] as ZipVersion, ZipVersion.Version0);
     this.analyticsSvc.event('unzip_version', v);
 
     const isBare = params['z'] == null;
@@ -800,6 +803,7 @@ export class MigrationService {
     // Modules
     const oldModules = params[ZipSectionV10.Modules] as Nullable<string>;
     const newModules = oldModules?.split(ZLISTSEP);
+    delete params[ZipSectionV10.Modules];
 
     // Beacons
     const oldBeacons = params[ZipSectionV10.Beacons] as Nullable<string>;
@@ -863,18 +867,18 @@ export class MigrationService {
     oldMachines?.split(ZLISTSEP).forEach((entry, i) => {
       const s = entry.split(ZFIELDSEP);
       const id = s[0];
-      if (i === 0 && id === ZEMPTY) {
-        machineRank = [];
+      if (i === 0) {
+        if (id === ZEMPTY) machineRank = [];
         moduleRankIds = s[1];
         beacons = s[2];
         fuelRankIds = s[3];
         overclock = s[4];
       } else {
         if (machineRank != null) machineRank.push(id);
-        newMachines.push(entry);
+        if (entry) newMachines.push(entry);
       }
     });
-    params['m'] = newMachines;
+    if (newMachines.length) params['m'] = newMachines;
     params['mmr'] = machineRank?.join(ZFIELDSEP);
     params['mfr'] = fuelRankIds;
     params['mer'] = moduleRankIds;
@@ -899,29 +903,34 @@ export class MigrationService {
           new Set(oldResearchedTechnologies.split(ZARRAYSEP)),
         );
 
-      params['odr'] = s[1];
-      params['mpr'] = s[2];
-      params['ibe'] = s[3];
-      params['ifr'] = s[4];
-      params['bmi'] = s[5];
-      params['bre'] = s[6];
-      params['bic'] = s[7];
-      params['mit'] = s[8];
-      params['icw'] = s[9];
-      params['ifw'] = s[10];
-      params['ipi'] = s[11];
-      params['mbr'] = s[12];
-      params['mps'] = s[13];
-      params['rnp'] = s[14];
-      params['omt'] = s[15];
-      params['cfa'] = s[16];
-      params['cma'] = s[17];
-      params['cun'] = s[18];
-      params['cex'] = s[19];
-      params['csu'] = s[20];
-      params['cmx'] = s[21];
-      params['osm'] = s[22];
-      params['cfp'] = s[23];
+      const keys = [
+        'odr',
+        'mpr',
+        'ibe',
+        'ifr',
+        'bmi',
+        'bre',
+        'bic',
+        'mit',
+        'icw',
+        'ifw',
+        'ipi',
+        'mbr',
+        'mps',
+        'rnp',
+        'omt',
+        'cfa',
+        'cma',
+        'cun',
+        'cex',
+        'csu',
+        'cmx',
+        'osm',
+        'cfp',
+      ];
+      keys.forEach((k, i) => {
+        params[k] = s[i + 1] || undefined;
+      });
     }
 
     // Mod
@@ -931,16 +940,17 @@ export class MigrationService {
       newMod = data.modHash[this.compressionSvc.idToN(newMod)];
     if (newMod) state.modId = newMod;
 
-    delete params[ZipSectionV10.Mod];
-    delete params[ZipSectionV10.Modules];
-    delete params[ZipSectionV10.Beacons];
     delete params[ZipSectionV10.Objectives];
+    delete params[ZipSectionV10.RecipeObjectives];
+    delete params[ZipSectionV10.Machines];
+    delete params[ZipSectionV10.Settings];
 
     params['e'] = newModules;
     params['b'] = newBeacons;
     params['o'] = newObjectives;
-
     params['v'] = ZipVersion.Version11;
+
+    prune(params);
     return state;
   }
 

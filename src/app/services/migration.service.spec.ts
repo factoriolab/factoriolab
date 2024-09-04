@@ -1,206 +1,193 @@
-// import { TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-// import { TestModule } from 'src/tests';
-// import { QueryField, ZNULL } from '~/models';
-// import { MigrationService } from './migration.service';
-// import { RouterService } from './router.service';
+import { ItemId, TestModule } from 'src/tests';
+import { ZNULL } from '~/models';
+import { MigrationService } from './migration.service';
+import { RouterService } from './router.service';
 
-// describe('MigrationService', () => {
-//   let service: MigrationService;
-//   let routerSvc: RouterService;
+describe('MigrationService', () => {
+  let service: MigrationService;
+  let routerSvc: RouterService;
 
-//   beforeEach(() => {
-//     TestBed.configureTestingModule({
-//       imports: [TestModule],
-//     });
-//     service = TestBed.inject(MigrationService);
-//     routerSvc = TestBed.inject(RouterService);
-//   });
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [TestModule],
+    });
+    service = TestBed.inject(MigrationService);
+    routerSvc = TestBed.inject(RouterService);
+  });
 
-//   it('should be created', () => {
-//     expect(service).toBeTruthy();
-//   });
+  it('should be created', () => {
+    expect(service).toBeTruthy();
+  });
 
-//   describe('migrate', () => {
-//     it('should return latest version without alteration', () => {
-//       const originalParams = { [QueryField.Version]: routerSvc.version };
-//       const { params } = service.migrate({ ...originalParams }, false);
-//       expect(params).toEqual(originalParams);
-//     });
-//   });
+  describe('migrate', () => {
+    it('should return empty params without alteration', () => {
+      const originalParams = {};
+      const [_, params] = service.migrate(undefined, originalParams);
+      expect(params).toEqual(originalParams);
+    });
 
-//   describe('migrateV0', () => {
-//     it('should handle unrecognized/null baseid', () => {
-//       const { params } = service.migrateV0({
-//         params: { [QueryField.Settings]: '---' },
-//         warnings: [],
-//         isBare: true,
-//       });
-//       expect(params[QueryField.Settings]).toEqual(ZNULL);
-//     });
+    it('should return latest version without alteration', () => {
+      const originalParams = { v: routerSvc.version };
+      const [_, params] = service.migrate(undefined, originalParams);
+      expect(params).toEqual(originalParams);
+    });
 
-//     it('should handle preset without other settings', () => {
-//       const { params } = service.migrateV0({
-//         params: { [QueryField.Mod]: '0' },
-//         warnings: [],
-//         isBare: true,
-//       });
-//       expect(params[QueryField.Settings]).toEqual('?**?*0');
-//     });
-//   });
+    it('should decode v0 parameters', () => {
+      const originalParams = { p: '%3D', z: 'z' };
+      const [_, params] = service.migrate(undefined, originalParams);
+      expect(params).toEqual({ o: ['='], v: routerSvc.version, z: 'z' });
+    });
 
-//   describe('migrateV2', () => {
-//     it('should handle undefined beaconCount', () => {
-//       const { params } = service.migrateV2({
-//         params: {
-//           [QueryField.Recipe]: '***?',
-//           [QueryField.Machine]: '**?',
-//         },
-//         warnings: [],
-//         isBare: false,
-//       });
-//       expect(params[QueryField.Recipe]).toEqual('');
-//       expect(params[QueryField.Machine]).toEqual('');
-//     });
-//   });
+    it('should decode array parameters', () => {
+      const originalParams = { a: ['%3D'] };
+      const [_, params] = service.migrate(undefined, originalParams);
+      expect(params).toEqual({ a: ['='], v: routerSvc.version } as any);
+    });
 
-//   describe('migrateV6', () => {
-//     it('should convert item objectives by machines into recipe objectives and into unified objective', () => {
-//       const { params } = service.migrateV6({
-//         params: {
-//           [QueryField.Objective]: 'coal*1*3',
-//         },
-//         warnings: [],
-//         isBare: true,
-//       });
-//       expect(params[QueryField.Objective]).toEqual('coal*1*3');
-//     });
+    it('should coerce expected keys into arrays', () => {
+      const originalParams = { o: ItemId.Coal, v: routerSvc.version };
+      const [_, params] = service.migrate(undefined, originalParams);
+      expect(params).toEqual({ o: [ItemId.Coal], v: routerSvc.version });
+    });
+  });
 
-//     it('should convert item objective by machines with limit step into maximize / limit recipe objectives and into unified objective', () => {
-//       const { params } = service.migrateV6({
-//         params: {
-//           [QueryField.Objective]: 'iron-plate*1*3*iron-ore',
-//           [QueryField.RecipeObjectives]: 'coal*1',
-//         },
-//         warnings: [],
-//         isBare: true,
-//       });
-//       expect(params[QueryField.Objective]).toEqual(
-//         'coal*1*3_iron-plate*1*3*2_iron-ore*1*3*3',
-//       );
-//       expect(params[QueryField.RecipeObjectives]).toEqual('');
-//     });
+  describe('migrateV0', () => {
+    it('should handle unrecognized/null baseid', () => {
+      const state = service.migrateV0({
+        params: { s: '---' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(state.modId).toEqual(ZNULL);
+    });
 
-//     it('should convert item objective with limit step into maximize / limit item objectives', () => {
-//       const { params } = service.migrateV6({
-//         params: {
-//           [QueryField.Objective]: 'iron-plate*1**iron-ore',
-//         },
-//         warnings: [],
-//         isBare: true,
-//       });
-//       expect(params[QueryField.Objective]).toEqual(
-//         'iron-plate*1**2_iron-ore*1**3',
-//       );
-//     });
+    it('should handle preset without other settings', () => {
+      const { params } = service.migrateV0({
+        params: { b: '0' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['mpr']).toEqual('0');
+    });
+  });
 
-//     it('should remove item default recipe', () => {
-//       const { params } = service.migrateV6({
-//         params: {
-//           [QueryField.Item]: 'coal*1*transport-belt*cargo-wagon*coal',
-//         },
-//         warnings: [],
-//         isBare: true,
-//       });
-//       expect(params[QueryField.Item]).toEqual(
-//         'coal*1*transport-belt*cargo-wagon',
-//       );
-//     });
+  describe('migrateV2', () => {
+    it('should handle undefined beaconCount', () => {
+      const { params } = service.migrateV2({
+        params: { r: '***?', f: '**?' },
+        warnings: [],
+        isBare: false,
+      });
+      expect(params['r']).toEqual(['']);
+      expect(params['m']).toBeUndefined();
+    });
+  });
 
-//     it('should convert disabled recipes into excluded recipes', () => {
-//       const { params } = service.migrateV6({
-//         params: {
-//           [QueryField.Settings]: '***coal',
-//         },
-//         warnings: [],
-//         isBare: true,
-//       });
-//       expect(params[QueryField.Settings]).toEqual('');
-//       expect(params[QueryField.Recipe]).toEqual('coal*1');
-//     });
+  describe('migrateV6', () => {
+    it('should convert item objectives by machines into recipe objectives and into unified objective', () => {
+      const { params } = service.migrateV6({
+        params: { p: 'coal*1*3' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['o']).toEqual(['coal*1*3']);
+    });
 
-//     it('should convert disabled recipes into excluded recipes on existing recipe settings', () => {
-//       const { params } = service.migrateV6({
-//         params: {
-//           [QueryField.Settings]: '***coal',
-//           [QueryField.Recipe]: 'coal*electric-mining-drill',
-//         },
-//         warnings: [],
-//         isBare: true,
-//       });
-//       expect(params[QueryField.Settings]).toEqual('');
-//       expect(params[QueryField.Recipe]).toEqual('coal*1*electric-mining-drill');
-//     });
-//   });
+    it('should convert item objective by machines with limit step into maximize / limit recipe objectives and into unified objective', () => {
+      const { params } = service.migrateV6({
+        params: { p: 'iron-plate*1*3*iron-ore', q: 'coal*1' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['o']).toEqual([
+        'coal*1*3',
+        'iron-plate*1*3*2',
+        'iron-ore*1*3*3',
+      ]);
+      expect(params['q']).toBeUndefined();
+    });
 
-//   describe('migrateV7', () => {
-//     it('should convert hashed objectives by machines to use items', () => {
-//       const { params } = service.migrateV7({
-//         params: {
-//           [QueryField.Objective]: 'Dc*1*3',
-//           [QueryField.Settings]: '0**=*A**Po**A*0',
-//           [QueryField.Version]: '7',
-//         },
-//         warnings: [],
-//         isBare: false,
-//       });
-//       expect(params[QueryField.Objective]).toEqual('Dc*1*0');
-//     });
-//   });
+    it('should convert item objective with limit step into maximize / limit item objectives', () => {
+      const { params } = service.migrateV6({
+        params: { p: 'iron-plate*1**iron-ore' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['o']).toEqual(['iron-plate*1**2', 'iron-ore*1**3']);
+    });
 
-//   describe('migrateV8', () => {
-//     it('should convert recipe objectives to unified objectives', () => {
-//       const { params } = service.migrateV8({
-//         params: {
-//           [QueryField.Objective]: 'steel-chest*1*1',
-//           [QueryField.RecipeObjectives]: 'steel-chest*1',
-//         },
-//         warnings: [],
-//         isBare: true,
-//       });
+    it('should remove item default recipe', () => {
+      const { params } = service.migrateV6({
+        params: { i: 'coal*1*transport-belt*cargo-wagon*coal' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['i']).toEqual(['coal*transport-belt*cargo-wagon']);
+    });
 
-//       expect(params[QueryField.Objective]).toEqual(
-//         'steel-chest*1*1_steel-chest*1*3',
-//       );
-//     });
-//   });
+    it('should convert disabled recipes into excluded recipes', () => {
+      const { params } = service.migrateV6({
+        params: { s: '***coal' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['v10rex']).toEqual('coal');
+    });
 
-//   describe('migrateV9', () => {
-//     it('should handle migrating machine modules', () => {
-//       const { params } = service.migrateV9({
-//         params: {
-//           [QueryField.Machine]: '1_A*speed-module',
-//         },
-//         warnings: [],
-//         isBare: true,
-//       });
+    it('should convert disabled recipes into excluded recipes on existing recipe settings', () => {
+      const { params } = service.migrateV6({
+        params: { s: '***coal', r: 'coal*electric-mining-drill' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['v10rex']).toEqual('coal');
+    });
+  });
 
-//       expect(params[QueryField.Machine]).toEqual('=_A*0');
-//       expect(params[QueryField.Module]).toEqual('*speed-module');
-//     });
+  describe('migrateV7', () => {
+    it('should convert hashed objectives by machines to use items', () => {
+      const { params } = service.migrateV7({
+        params: { p: 'Dc*1*3', s: '0**=*A**Po**A*0', v: '7' },
+        warnings: [],
+        isBare: false,
+      });
+      expect(params['o']).toEqual(['Dc*1*0']);
+    });
+  });
 
-//     it('should handle migrating fuel rank', () => {
-//       const { params } = service.migrateV9({
-//         params: {
-//           [QueryField.Machine]: 'A',
-//           [QueryField.Settings]: '*****coal',
-//         },
-//         warnings: [],
-//         isBare: true,
-//       });
+  describe('migrateV8', () => {
+    it('should convert recipe objectives to unified objectives', () => {
+      const { params } = service.migrateV8({
+        params: { p: 'steel-chest*1*1', q: 'steel-chest*1' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['o']).toEqual(['steel-chest*1*1', 'steel-chest*1*3']);
+    });
+  });
 
-//       expect(params[QueryField.Machine]).toEqual('***coal_A');
-//       expect(params[QueryField.Settings]).toEqual('****');
-//     });
-//   });
-// });
+  describe('migrateV9', () => {
+    it('should handle migrating machine modules', () => {
+      const { params } = service.migrateV9({
+        params: { f: '1_A*speed-module' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['mmr']).toEqual('A');
+      expect(params['m']).toEqual(['A*0']);
+      expect(params['e']).toEqual(['*speed-module']);
+    });
+
+    it('should handle migrating fuel rank', () => {
+      const { params } = service.migrateV9({
+        params: { f: 'A', s: '*****coal' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['m']).toEqual(['A']);
+      expect(params['mfr']).toEqual('coal');
+    });
+  });
+});
