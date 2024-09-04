@@ -27,6 +27,7 @@ import {
   LabParams,
   MachineSettings,
   MIN_ZIP,
+  ModData,
   ModHash,
   ModuleSettings,
   Objective,
@@ -274,7 +275,7 @@ export class RouterService {
       queryParams['z'] = zip;
     }
 
-    return { ...queryParams };
+    return queryParams;
   }
 
   async updateState(
@@ -287,7 +288,7 @@ export class RouterService {
     }
 
     try {
-      const [_, modHash] = await firstValueFrom(
+      const [modData, modHash] = await firstValueFrom(
         this.dataSvc.requestData(modId || Settings.initialState.modId),
       );
 
@@ -305,6 +306,7 @@ export class RouterService {
         params,
         bs,
         state.objectivesState?.ids ?? [],
+        modData,
         modHash,
         hash,
       );
@@ -656,7 +658,7 @@ export class RouterService {
       };
 
       prune(obj);
-      entities[id] = obj;
+      if (Object.keys(obj).length) entities[id] = obj;
     }
     return entities;
   }
@@ -725,7 +727,7 @@ export class RouterService {
       };
 
       prune(obj);
-      entities[id] = obj;
+      if (Object.keys(obj).length) entities[id] = obj;
     }
     return entities;
   }
@@ -791,7 +793,7 @@ export class RouterService {
       };
 
       prune(obj);
-      entities[id] = obj;
+      if (Object.keys(obj).length) entities[id] = obj;
     }
 
     return entities;
@@ -863,6 +865,7 @@ export class RouterService {
     params: LabParams,
     beaconSettings: BeaconSettings[],
     objectiveIds: string[],
+    modData: ModData,
     modHash: ModHash,
     hash?: ModHash,
   ): Settings.PartialSettingsState | undefined {
@@ -917,6 +920,29 @@ export class RouterService {
       surplus: rat('csu'),
       maximize: rat('cmx'),
     };
+
+    if (params.v10iex)
+      obj.excludedItemIds = this.zipSvc.parseSet(params.v10iex, hash?.items);
+    if (params.v10ich)
+      obj.checkedItemIds = this.zipSvc.parseSet(params.v10ich, hash?.items);
+    if (params.v10rex)
+      obj.excludedRecipeIds = this.zipSvc.parseSet(
+        params.v10rex,
+        hash?.recipes,
+      );
+    if (params.v10rch)
+      obj.checkedRecipeIds = this.zipSvc.parseSet(params.v10rch, hash?.recipes);
+    if (params.v10tre) {
+      obj.researchedTechnologyIds = this.zipSvc.parseNullableSet(
+        params.v10tre,
+        hash?.technologies,
+      );
+      obj.researchedTechnologyIds =
+        this.migrationSvc.restoreV10ResearchedTechnologies(
+          obj.researchedTechnologyIds,
+          modData,
+        );
+    }
 
     prune(costs);
     if (Object.keys(costs).length) obj.costs = costs;

@@ -27,6 +27,10 @@ export interface LabParams {
   iex?: string;
   /** `Set` Checked items */
   ich?: string;
+  /** V10 Legacy excluded items */
+  v10iex?: string;
+  /** V10 Legacy checked items */
+  v10ich?: string;
   /** `string` Belt */
   ibe?: string;
   /** `string` Pipe */
@@ -41,6 +45,10 @@ export interface LabParams {
   rex?: string;
   /** `Set` Checked recipes */
   rch?: string;
+  /** V10 Legacy excluded recipes */
+  v10rex?: string;
+  /** V10 Legacy checked recipes */
+  v10rch?: string;
   /** `boolean` Net production only */
   rnp?: string;
   /** `number` Preset */
@@ -69,6 +77,8 @@ export interface LabParams {
   bic?: string;
   /** `Set` Researched technologies */
   tre?: string;
+  /** V10 Legacy researched technologies */
+  v10tre?: string;
   /** `Rational` Cost factor */
   cfa?: string;
   /** `Rational` Cost machine */

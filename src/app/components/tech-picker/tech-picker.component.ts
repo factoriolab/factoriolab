@@ -16,6 +16,8 @@ import { FilterService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TooltipModule } from 'primeng/tooltip';
 import { first } from 'rxjs';
@@ -38,6 +40,8 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
     ButtonModule,
     CheckboxModule,
     DialogModule,
+    InputTextModule,
+    InputTextareaModule,
     ScrollPanelModule,
     TooltipModule,
     IconSmClassPipe,

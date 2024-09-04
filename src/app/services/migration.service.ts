@@ -8,7 +8,10 @@ import { coalesce } from '~/helpers';
 import {
   Entities,
   LabParams,
+  ModData,
+  Nullable,
   ObjectiveType,
+  toEntities,
   ZARRAYSEP,
   ZEMPTY,
   ZFIELDSEP,
@@ -18,6 +21,7 @@ import {
 } from '~/models';
 import { Settings } from '~/store';
 import { AnalyticsService } from './analytics.service';
+import { CompressionService } from './compression.service';
 import { ContentService } from './content.service';
 import { TranslateService } from './translate.service';
 import { ZipService } from './zip.service';
@@ -57,12 +61,14 @@ enum MigrationWarning {
 export class MigrationService {
   store = inject(Store);
   analyticsSvc = inject(AnalyticsService);
+  compressionSvc = inject(CompressionService);
   contentSvc = inject(ContentService);
   translateSvc = inject(TranslateService);
   zipSvc = inject(ZipService);
 
   /** Migrates older zip params to latest bare/hash formats */
   migrate(modId: string | undefined, params: Params): [string, LabParams] {
+    params = { ...params };
     const v = (params['v'] as ZipVersion) ?? ZipVersion.Version0;
     this.analyticsSvc.event('unzip_version', v);
 
@@ -77,7 +83,7 @@ export class MigrationService {
       });
     }
 
-    const result = this.migrateAny(params, isBare, v);
+    const result = this.migrateAny(modId, params, isBare, v);
     this.displayWarnings(result.warnings);
 
     const coerceArrayKeys = ['o', 'i', 'r', 'm', 'e', 'b'] as const;
@@ -92,9 +98,14 @@ export class MigrationService {
     ];
   }
 
-  migrateAny(params: Params, isBare: boolean, v: ZipVersion): MigrationState {
+  migrateAny(
+    modId: string | undefined,
+    params: Params,
+    isBare: boolean,
+    v: ZipVersion,
+  ): MigrationState {
     const warnings: string[] = [];
-    const state: MigrationState = { params, warnings, isBare };
+    const state: MigrationState = { modId, params, warnings, isBare };
     switch (v) {
       case ZipVersion.Version0:
         return this.migrateV0(state);
@@ -116,6 +127,8 @@ export class MigrationService {
         return this.migrateV8(state);
       case ZipVersion.Version9:
         return this.migrateV9(state);
+      case ZipVersion.Version10:
+        return this.migrateV10(state);
       default:
         return { params, warnings, isBare };
     }
@@ -767,7 +780,203 @@ export class MigrationService {
     }
 
     params[ZipSectionV10.Version] = ZipVersion.Version10;
+    return this.migrateV10(state);
+  }
+
+  migrateV10(state: MigrationState): MigrationState {
+    const { params } = state;
+
+    const checkedObjectiveIds = new Set<string>();
+    const excludedItemIds = new Set<string>();
+    const checkedItemIds = new Set<string>();
+    const excludedRecipeIds = new Set<string>();
+    const checkedRecipeIds = new Set<string>();
+
+    function appendSet(key: string, set: Set<string>): void {
+      if (set.size === 0) return;
+      params[key] = Array.from(set).join(ZARRAYSEP);
+    }
+
+    // Modules
+    const oldModules = params[ZipSectionV10.Modules] as Nullable<string>;
+    const newModules = oldModules?.split(ZLISTSEP);
+
+    // Beacons
+    const oldBeacons = params[ZipSectionV10.Beacons] as Nullable<string>;
+    const newBeacons = oldBeacons?.split(ZLISTSEP);
+
+    // Objectives
+    const oldObjectives = params[ZipSectionV10.Objectives] as Nullable<string>;
+    const objectiveIds: string[] = [];
+    const newObjectives = oldObjectives?.split(ZLISTSEP).map((entry, i) => {
+      const s = entry.split(ZFIELDSEP);
+      const id = i.toString();
+      objectiveIds.push(id);
+      if (s[8] === ZTRUE) checkedObjectiveIds.add(id);
+      s.splice(8, 1);
+      return s.join(ZFIELDSEP);
+    });
+    if (checkedObjectiveIds.size) {
+      params['och'] = this.zipSvc.zipDiffSubset(
+        checkedObjectiveIds,
+        undefined,
+        objectiveIds,
+      );
+    }
+
+    // Items
+    const oldItems = params[ZipSectionV10.Items] as Nullable<string>;
+    params['i'] = oldItems?.split(ZLISTSEP).map((entry) => {
+      const s = entry.split(ZFIELDSEP);
+      const id = s[0];
+      if (s[1] === ZTRUE) excludedItemIds.add(id);
+      if (s[4] === ZTRUE) checkedItemIds.add(id);
+      s.splice(4, 1);
+      s.splice(1, 1);
+      return s.join(ZFIELDSEP);
+    });
+    appendSet('v10iex', excludedItemIds);
+    appendSet('v10ich', checkedItemIds);
+
+    // Recipes
+    const oldRecipes = params[ZipSectionV10.Recipes] as Nullable<string>;
+    params['r'] = oldRecipes?.split(ZLISTSEP).map((entry) => {
+      const s = entry.split(ZFIELDSEP);
+      const id = s[0];
+      if (s[1] === ZTRUE) excludedRecipeIds.add(id);
+      if (s[7] === ZTRUE) checkedRecipeIds.add(id);
+      s.splice(7, 1);
+      s.splice(1, 1);
+      return s.join(ZFIELDSEP);
+    });
+    appendSet('v10rex', excludedRecipeIds);
+    appendSet('v10rch', checkedRecipeIds);
+
+    // Machines
+    const oldMachines = params[ZipSectionV10.Machines] as Nullable<string>;
+    let machineRank: string[] | undefined;
+    let fuelRankIds: string | undefined;
+    let moduleRankIds: string | undefined;
+    let beacons: string | undefined;
+    let overclock: string | undefined;
+    const newMachines: string[] = [];
+    oldMachines?.split(ZLISTSEP).forEach((entry, i) => {
+      const s = entry.split(ZFIELDSEP);
+      const id = s[0];
+      if (i === 0 && id === ZEMPTY) {
+        machineRank = [];
+        moduleRankIds = s[1];
+        beacons = s[2];
+        fuelRankIds = s[3];
+        overclock = s[4];
+      } else {
+        if (machineRank != null) machineRank.push(id);
+        newMachines.push(entry);
+      }
+    });
+    params['m'] = newMachines;
+    params['mmr'] = machineRank?.join(ZFIELDSEP);
+    params['mfr'] = fuelRankIds;
+    params['mer'] = moduleRankIds;
+    params['mbe'] = beacons;
+    params['moc'] = overclock;
+
+    // Settings
+    const oldSettings = params[ZipSectionV10.Settings] as Nullable<string>;
+    if (oldSettings) {
+      const s = oldSettings.split(ZFIELDSEP);
+
+      // Mod
+      const modId = state.isBare ? s.splice(0, 1)[0] : undefined;
+      if (modId) state.modId = modId;
+
+      // Researched technologies
+      const oldResearchedTechnologies = s[0];
+      if (oldResearchedTechnologies === ZNULL) params['_v10tre'] = ZNULL;
+      else if (oldResearchedTechnologies)
+        appendSet(
+          'v10tre',
+          new Set(oldResearchedTechnologies.split(ZARRAYSEP)),
+        );
+
+      params['odr'] = s[1];
+      params['mpr'] = s[2];
+      params['ibe'] = s[3];
+      params['ifr'] = s[4];
+      params['bmi'] = s[5];
+      params['bre'] = s[6];
+      params['bic'] = s[7];
+      params['mit'] = s[8];
+      params['icw'] = s[9];
+      params['ifw'] = s[10];
+      params['ipi'] = s[11];
+      params['mbr'] = s[12];
+      params['mps'] = s[13];
+      params['rnp'] = s[14];
+      params['omt'] = s[15];
+      params['cfa'] = s[16];
+      params['cma'] = s[17];
+      params['cun'] = s[18];
+      params['cex'] = s[19];
+      params['csu'] = s[20];
+      params['cmx'] = s[21];
+      params['osm'] = s[22];
+      params['cfp'] = s[23];
+    }
+
+    // Mod
+    const oldMod = params[ZipSectionV10.Mod] as Nullable<string>;
+    let newMod = oldMod;
+    if (newMod && !state.isBare)
+      newMod = data.modHash[this.compressionSvc.idToN(newMod)];
+    if (newMod) state.modId = newMod;
+
+    delete params[ZipSectionV10.Mod];
+    delete params[ZipSectionV10.Modules];
+    delete params[ZipSectionV10.Beacons];
+    delete params[ZipSectionV10.Objectives];
+
+    params['e'] = newModules;
+    params['b'] = newBeacons;
+    params['o'] = newObjectives;
+
+    params['v'] = ZipVersion.Version11;
     return state;
+  }
+
+  restoreV10ResearchedTechnologies(
+    value: Nullable<Set<string>>,
+    data: ModData,
+  ): Set<string> | null {
+    const technologies = data.items.filter((i) => i.technology);
+    const technologyIds = technologies.map((t) => t.id);
+    if (value == null || !technologyIds.length) return null;
+
+    /**
+     * Source technology list includes only minimal set of technologies that
+     * are not required as prerequisites for other researched technologies,
+     * to reduce zip size. Need to rehydrate full list of technology ids using
+     * their prerequisites.
+     */
+    const selection = new Set(value);
+
+    const techEntities = toEntities(technologies);
+    let addIds: Set<string>;
+    do {
+      addIds = new Set<string>();
+
+      for (const id of selection) {
+        const tech = techEntities[id].technology;
+        tech?.prerequisites
+          ?.filter((p) => !selection.has(p))
+          .forEach((p) => addIds.add(p));
+      }
+
+      addIds.forEach((i) => selection.add(i));
+    } while (addIds.size);
+
+    if (selection.size === technologyIds.length) return null;
+    return selection;
   }
 
   displayWarnings(warnings: string[]): void {

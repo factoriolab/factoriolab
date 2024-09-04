@@ -5,13 +5,17 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
+import { from, map } from 'rxjs';
 
-const old = new Set(['list', 'wizard', 'flow', 'data']);
+import { MigrationService, RouterService } from '~/services';
+
 export const canActivateId: CanActivateFn = (
   route: ActivatedRouteSnapshot,
   _: RouterStateSnapshot,
 ) => {
   const router = inject(Router);
+  const migrationSvc = inject(MigrationService);
+  const routerSvc = inject(RouterService);
   const id = route.params['id'];
 
   // Migrate old states
@@ -19,10 +23,14 @@ export const canActivateId: CanActivateFn = (
     case 'list':
     case 'wizard':
     case 'flow':
-    case 'data':
-      // TODO: Migrate old states
-      console.log('old route', id, route, _);
-      break;
+    case 'data': {
+      return from(routerSvc.unzipQueryParams(route.queryParams)).pipe(
+        map((queryParams) => migrationSvc.migrate(undefined, queryParams)),
+        map(([modId, queryParams]) =>
+          router.createUrlTree([modId, id], { queryParams }),
+        ),
+      );
+    }
     case 'factorio':
       return router.createUrlTree(['1.1']);
     case 'satisfactory':
@@ -33,10 +41,5 @@ export const canActivateId: CanActivateFn = (
       return router.createUrlTree(['ffy']);
   }
 
-  if (old.has(id)) {
-    // TODO: Migrate old states
-    console.log('old route', id, route, _);
-    return inject(Router).createUrlTree(['']);
-  }
   return true;
 };

@@ -242,6 +242,21 @@ export class ZipService {
     return result;
   }
 
+  parseNullableSet(
+    value: Nullable<string>,
+    hash?: string[],
+  ): Nullable<Set<string>> {
+    if (value === null) return value;
+    return this.parseSet(value, hash);
+  }
+
+  parseSet(value: Nullable<string>, hash?: string[]): Set<string> | undefined {
+    if (value == null) return undefined;
+    const result = value.split(ZARRAYSEP);
+    if (hash == null) return new Set(result);
+    return new Set(result.map((v) => hash[this.compressionSvc.idToN(v)]));
+  }
+
   /**
    * Sets up a curried function stack to generate functions to add settings
    * query parameters to the `ZipData` `LabParams`.
