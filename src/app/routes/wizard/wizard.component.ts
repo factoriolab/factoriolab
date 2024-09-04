@@ -14,6 +14,7 @@ import { DropdownTranslateDirective } from '~/directives';
 import {
   DisplayRate,
   displayRateOptions,
+  Objective,
   ObjectiveType,
   ObjectiveUnit,
   rational,
@@ -72,33 +73,36 @@ export class WizardComponent {
     this.store.dispatch(Settings.setDisplayRate({ displayRate, previous }));
   }
 
-  async createItemObjective(targetId: string): Promise<void> {
-    await this.router.navigate(['../list'], { relativeTo: this.route });
-    this.store.dispatch(
-      Objectives.create({
-        objective: {
-          id: '0',
-          targetId,
-          value: this.value,
-          unit: ObjectiveUnit.Items,
-          type: ObjectiveType.Output,
-        },
-      }),
-    );
+  createItemObjective(targetId: string): void {
+    this.createObjective({
+      id: '0',
+      targetId,
+      value: this.value,
+      unit: ObjectiveUnit.Items,
+      type: ObjectiveType.Output,
+    });
+    this.router.navigate(['../list'], {
+      relativeTo: this.route,
+      queryParamsHandling: 'preserve',
+    });
   }
 
-  async createRecipeObjective(targetId: string): Promise<void> {
-    await this.router.navigate(['../list'], { relativeTo: this.route });
-    this.store.dispatch(
-      Objectives.create({
-        objective: {
-          id: '0',
-          targetId,
-          value: this.value,
-          unit: ObjectiveUnit.Machines,
-          type: ObjectiveType.Output,
-        },
-      }),
-    );
+  createRecipeObjective(targetId: string): void {
+    this.createObjective({
+      id: '0',
+      targetId,
+      value: this.value,
+      unit: ObjectiveUnit.Machines,
+      type: ObjectiveType.Output,
+    });
+    this.router.navigate(['../list'], {
+      relativeTo: this.route,
+      queryParamsHandling: 'preserve',
+    });
+  }
+
+  /** Action Dispatch Methods */
+  createObjective(objective: Objective): void {
+    this.store.dispatch(Objectives.create({ objective }));
   }
 }

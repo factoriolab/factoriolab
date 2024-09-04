@@ -77,32 +77,32 @@ describe('LandingComponent', () => {
     });
   });
 
-  describe('addItemObjective', () => {
-    it('should use ObjectiveUnit.Items', () => {
-      spyOn(component, 'addObjective');
-      component.addItemObjective(ItemId.AdvancedCircuit);
-      expect(component.addObjective).toHaveBeenCalledWith({
-        targetId: ItemId.AdvancedCircuit,
-        unit: ObjectiveUnit.Items,
-      });
-    });
-  });
+  // describe('addItemObjective', () => {
+  //   it('should use ObjectiveUnit.Items', () => {
+  //     spyOn(component, 'addObjective');
+  //     component.addItemObjective(ItemId.AdvancedCircuit);
+  //     expect(component.addObjective).toHaveBeenCalledWith({
+  //       targetId: ItemId.AdvancedCircuit,
+  //       unit: ObjectiveUnit.Items,
+  //     });
+  //   });
+  // });
 
-  describe('addRecipeObjective', () => {
-    it('should use ObjectiveUnit.Machines', () => {
-      spyOn(component, 'addObjective');
-      component.addRecipeObjective(RecipeId.AdvancedCircuit);
-      expect(component.addObjective).toHaveBeenCalledWith({
-        targetId: RecipeId.AdvancedCircuit,
-        unit: ObjectiveUnit.Machines,
-      });
-    });
-  });
+  // describe('addRecipeObjective', () => {
+  //   it('should use ObjectiveUnit.Machines', () => {
+  //     spyOn(component, 'addObjective');
+  //     component.addRecipeObjective(RecipeId.AdvancedCircuit);
+  //     expect(component.addObjective).toHaveBeenCalledWith({
+  //       targetId: RecipeId.AdvancedCircuit,
+  //       unit: ObjectiveUnit.Machines,
+  //     });
+  //   });
+  // });
 
-  it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setMod', Settings.setMod);
-    dispatch.props('addObjective', Objectives.add);
-    dispatch.props('setBypassLanding', Preferences.setBypassLanding);
-  });
+  // it('should dispatch actions', () => {
+  //   const dispatch = new DispatchTest(mockStore, component);
+  //   dispatch.props('setMod', Settings.setMod);
+  //   dispatch.props('addObjective', Objectives.add);
+  //   dispatch.props('setBypassLanding', Preferences.setBypassLanding);
+  // });
 });

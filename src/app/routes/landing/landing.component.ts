@@ -14,8 +14,10 @@ import {
   Game,
   gameInfo,
   gameOptions,
-  ObjectiveBase,
+  Objective,
+  ObjectiveType,
   ObjectiveUnit,
+  rational,
 } from '~/models';
 import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService, RouterService } from '~/services';
@@ -63,20 +65,28 @@ export class LandingComponent {
   Game = Game;
   BrowserUtility = BrowserUtility;
 
-  selectItem(value: string): void {
-    const modId = this.mod()?.id ?? Settings.initialState.modId;
-    this.setMod(modId);
-    this.addItemObjective(value);
+  selectItem(targetId: string): void {
+    this.createObjective({
+      id: '0',
+      targetId,
+      value: rational.one,
+      unit: ObjectiveUnit.Items,
+      type: ObjectiveType.Output,
+    });
     this.router.navigate(['list'], {
       relativeTo: this.route,
       queryParamsHandling: 'preserve',
     });
   }
 
-  selectRecipe(value: string): void {
-    const modId = this.mod()?.id ?? Settings.initialState.modId;
-    this.setMod(modId);
-    this.addRecipeObjective(value);
+  selectRecipe(targetId: string): void {
+    this.createObjective({
+      id: '0',
+      targetId,
+      value: rational.one,
+      unit: ObjectiveUnit.Machines,
+      type: ObjectiveType.Output,
+    });
     this.router.navigate(['list'], {
       relativeTo: this.route,
       queryParamsHandling: 'preserve',
@@ -95,21 +105,13 @@ export class LandingComponent {
     this.setMod(gameInfo[game].modId);
   }
 
-  addItemObjective(targetId: string): void {
-    this.addObjective({ targetId, unit: ObjectiveUnit.Items });
-  }
-
-  addRecipeObjective(targetId: string): void {
-    this.addObjective({ targetId, unit: ObjectiveUnit.Machines });
-  }
-
   /** Action Dispatch Methods */
   setMod(modId: string): void {
     this.store.dispatch(Settings.setMod({ modId }));
   }
 
-  addObjective(objective: ObjectiveBase): void {
-    this.store.dispatch(Objectives.add({ objective }));
+  createObjective(objective: Objective): void {
+    this.store.dispatch(Objectives.create({ objective }));
   }
 
   setBypassLanding(bypassLanding: boolean): void {
