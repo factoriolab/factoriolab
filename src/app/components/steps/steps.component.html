@@ -921,7 +921,8 @@
               <a
                 class="text-decoration-none"
                 target="_blank"
-                [href]="step | stepHref: routerSvc.zipConfig() | async"
+                routerLink="."
+                [queryParams]="step | stepHref: routerSvc.zipConfig() | async"
               >
                 <button
                   pButton

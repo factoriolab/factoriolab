@@ -26,8 +26,8 @@ export const canActivateId: CanActivateFn = (
     case 'data': {
       return from(routerSvc.unzipQueryParams(route.queryParams)).pipe(
         map((queryParams) => migrationSvc.migrate(undefined, queryParams)),
-        map(([modId, queryParams]) =>
-          router.createUrlTree([modId, id], { queryParams }),
+        map(({ modId, params }) =>
+          router.createUrlTree([modId, id], { queryParams: params }),
         ),
       );
     }

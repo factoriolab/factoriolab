@@ -1,14 +1,14 @@
 import { Entities } from './entities';
 import { LabParams } from './lab-params';
 
-export interface Zip<T> {
+export interface Zip<T = string> {
   bare: T;
   hash: T;
 }
 
 export interface ZipRecipeSettingsInfo {
   idMap: Entities<number>;
-  list: Zip<string>[];
+  list: Zip[];
 }
 
 export interface ZipMachineSettings {

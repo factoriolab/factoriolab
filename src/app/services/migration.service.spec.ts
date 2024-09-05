@@ -24,31 +24,31 @@ describe('MigrationService', () => {
   describe('migrate', () => {
     it('should return empty params without alteration', () => {
       const originalParams = {};
-      const [_, params] = service.migrate(undefined, originalParams);
+      const { params } = service.migrate(undefined, originalParams);
       expect(params).toEqual(originalParams);
     });
 
     it('should return latest version without alteration', () => {
       const originalParams = { v: routerSvc.version };
-      const [_, params] = service.migrate(undefined, originalParams);
+      const { params } = service.migrate(undefined, originalParams);
       expect(params).toEqual(originalParams);
     });
 
     it('should decode v0 parameters', () => {
       const originalParams = { p: '%3D', z: 'z' };
-      const [_, params] = service.migrate(undefined, originalParams);
+      const { params } = service.migrate(undefined, originalParams);
       expect(params).toEqual({ o: ['='], v: routerSvc.version, z: 'z' });
     });
 
     it('should decode array parameters', () => {
       const originalParams = { a: ['%3D'] };
-      const [_, params] = service.migrate(undefined, originalParams);
+      const { params } = service.migrate(undefined, originalParams);
       expect(params).toEqual({ a: ['='], v: routerSvc.version } as any);
     });
 
     it('should coerce expected keys into arrays', () => {
       const originalParams = { o: ItemId.Coal, v: routerSvc.version };
-      const [_, params] = service.migrate(undefined, originalParams);
+      const { params } = service.migrate(undefined, originalParams);
       expect(params).toEqual({ o: [ItemId.Coal], v: routerSvc.version });
     });
   });
@@ -80,7 +80,7 @@ describe('MigrationService', () => {
         warnings: [],
         isBare: false,
       });
-      expect(params['r']).toEqual(['']);
+      expect(params['r']).toBeUndefined();
       expect(params['m']).toBeUndefined();
     });
   });
@@ -186,7 +186,7 @@ describe('MigrationService', () => {
         warnings: [],
         isBare: true,
       });
-      expect(params['m']).toEqual(['A']);
+      expect(params['m']).toBeUndefined();
       expect(params['mfr']).toEqual('coal');
     });
   });

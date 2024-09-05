@@ -15,7 +15,7 @@ export class StepHrefPipe implements PipeTransform {
   async transform(
     value: Step,
     zipPartial: Zip<LabParams>,
-  ): Promise<string | null> {
+  ): Promise<LabParams | null> {
     let step = value;
     if (step.recipeId) {
       const recipe = this.data().adjustedRecipe[step.recipeId];

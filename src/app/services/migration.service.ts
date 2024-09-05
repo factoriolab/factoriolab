@@ -50,6 +50,12 @@ interface MigrationState {
   isBare: boolean;
 }
 
+export interface MigrationResult {
+  modId?: string;
+  params: LabParams;
+  isBare: boolean;
+}
+
 enum MigrationWarning {
   ExpensiveDeprecation = 'The expensive setting has been removed. Please use or request an expensive data set instead.',
   LimitStepDeprecation = 'Limit steps have been replaced by limit objectives. Results may differ if using multiple objectives as limits apply to all objectives.',
@@ -67,9 +73,13 @@ export class MigrationService {
   zipSvc = inject(ZipService);
 
   /** Migrates older zip params to latest bare/hash formats */
-  migrate(modId: string | undefined, params: Params): [string, LabParams] {
+  migrate(modId: string | undefined, params: Params): MigrationResult {
     if (Object.keys(params).length === 0)
-      return [Settings.initialState.modId, params];
+      return {
+        modId: modId ?? Settings.initialState.modId,
+        params: {},
+        isBare: true,
+      };
 
     params = { ...params };
     const v = coalesce(params['v'] as ZipVersion, ZipVersion.Version0);
@@ -95,10 +105,11 @@ export class MigrationService {
       if (typeof value === 'string') result.params[k] = [value];
     });
 
-    return [
-      result.modId ?? Settings.initialState.modId,
-      result.params as LabParams,
-    ];
+    return {
+      modId: result.modId,
+      params: result.params as LabParams,
+      isBare: result.isBare,
+    };
   }
 
   migrateAny(
@@ -133,7 +144,7 @@ export class MigrationService {
       case ZipVersion.Version10:
         return this.migrateV10(state);
       default:
-        return { params, warnings, isBare };
+        return state;
     }
   }
 
@@ -177,6 +188,7 @@ export class MigrationService {
       ]);
     }
 
+    delete params[ZipSectionV10.Mod];
     params[ZipSectionV10.Version] = ZipVersion.Version1;
     return this.migrateV1(state);
   }
@@ -789,6 +801,8 @@ export class MigrationService {
   migrateV10(state: MigrationState): MigrationState {
     const { params } = state;
 
+    delete params[ZipSectionV10.RecipeObjectives];
+
     const checkedObjectiveIds = new Set<string>();
     const excludedItemIds = new Set<string>();
     const checkedItemIds = new Set<string>();
@@ -802,24 +816,30 @@ export class MigrationService {
 
     // Modules
     const oldModules = params[ZipSectionV10.Modules] as Nullable<string>;
-    const newModules = oldModules?.split(ZLISTSEP);
     delete params[ZipSectionV10.Modules];
+    const newModules = oldModules?.split(ZLISTSEP);
 
     // Beacons
     const oldBeacons = params[ZipSectionV10.Beacons] as Nullable<string>;
+    delete params[ZipSectionV10.Beacons];
     const newBeacons = oldBeacons?.split(ZLISTSEP);
 
     // Objectives
     const oldObjectives = params[ZipSectionV10.Objectives] as Nullable<string>;
+    delete params[ZipSectionV10.Objectives];
     const objectiveIds: string[] = [];
-    const newObjectives = oldObjectives?.split(ZLISTSEP).map((entry, i) => {
-      const s = entry.split(ZFIELDSEP);
-      const id = i.toString();
-      objectiveIds.push(id);
-      if (s[8] === ZTRUE) checkedObjectiveIds.add(id);
-      s.splice(8, 1);
-      return s.join(ZFIELDSEP);
-    });
+    const newObjectives = oldObjectives
+      ?.split(ZLISTSEP)
+      .map((entry, i) => {
+        const s = entry.split(ZFIELDSEP);
+        const id = i.toString();
+        objectiveIds.push(id);
+        if (s[8] === ZTRUE) checkedObjectiveIds.add(id);
+        s.splice(8, 1);
+        return s.join(ZFIELDSEP);
+      })
+      .filter((o) => o);
+    if (newObjectives?.length) params['o'] = newObjectives;
     if (checkedObjectiveIds.size) {
       params['och'] = this.zipSvc.zipDiffSubset(
         checkedObjectiveIds,
@@ -830,34 +850,45 @@ export class MigrationService {
 
     // Items
     const oldItems = params[ZipSectionV10.Items] as Nullable<string>;
-    params['i'] = oldItems?.split(ZLISTSEP).map((entry) => {
-      const s = entry.split(ZFIELDSEP);
-      const id = s[0];
-      if (s[1] === ZTRUE) excludedItemIds.add(id);
-      if (s[4] === ZTRUE) checkedItemIds.add(id);
-      s.splice(4, 1);
-      s.splice(1, 1);
-      return s.join(ZFIELDSEP);
-    });
+    delete params[ZipSectionV10.Items];
+    const newItems = oldItems
+      ?.split(ZLISTSEP)
+      .map((entry) => {
+        const s = entry.split(ZFIELDSEP);
+        const id = s[0];
+        if (s[1] === ZTRUE) excludedItemIds.add(id);
+        if (s[4] === ZTRUE) checkedItemIds.add(id);
+        s.splice(4, 1);
+        s.splice(1, 1);
+        return s.join(ZFIELDSEP);
+      })
+      .filter((i) => i);
+    if (newItems?.length) params['i'] = newItems;
     appendSet('v10iex', excludedItemIds);
     appendSet('v10ich', checkedItemIds);
 
     // Recipes
     const oldRecipes = params[ZipSectionV10.Recipes] as Nullable<string>;
-    params['r'] = oldRecipes?.split(ZLISTSEP).map((entry) => {
-      const s = entry.split(ZFIELDSEP);
-      const id = s[0];
-      if (s[1] === ZTRUE) excludedRecipeIds.add(id);
-      if (s[7] === ZTRUE) checkedRecipeIds.add(id);
-      s.splice(7, 1);
-      s.splice(1, 1);
-      return s.join(ZFIELDSEP);
-    });
+    delete params[ZipSectionV10.Recipes];
+    const newRecipes = oldRecipes
+      ?.split(ZLISTSEP)
+      .map((entry) => {
+        const s = entry.split(ZFIELDSEP);
+        const id = s[0];
+        if (s[1] === ZTRUE) excludedRecipeIds.add(id);
+        if (s[7] === ZTRUE) checkedRecipeIds.add(id);
+        s.splice(7, 1);
+        s.splice(1, 1);
+        return s.join(ZFIELDSEP);
+      })
+      .filter((r) => r);
+    if (newRecipes?.length) params['r'] = newRecipes;
     appendSet('v10rex', excludedRecipeIds);
     appendSet('v10rch', checkedRecipeIds);
 
     // Machines
     const oldMachines = params[ZipSectionV10.Machines] as Nullable<string>;
+    delete params[ZipSectionV10.Machines];
     let machineRank: string[] | undefined;
     let fuelRankIds: string | undefined;
     let moduleRankIds: string | undefined;
@@ -875,11 +906,11 @@ export class MigrationService {
         overclock = s[4];
       } else {
         if (machineRank != null) machineRank.push(id);
-        if (entry) newMachines.push(entry);
+        if (s.length > 1) newMachines.push(entry);
       }
     });
     if (newMachines.length) params['m'] = newMachines;
-    params['mmr'] = machineRank?.join(ZFIELDSEP);
+    params['mmr'] = machineRank?.join(ZARRAYSEP);
     params['mfr'] = fuelRankIds;
     params['mer'] = moduleRankIds;
     params['mbe'] = beacons;
@@ -887,6 +918,7 @@ export class MigrationService {
 
     // Settings
     const oldSettings = params[ZipSectionV10.Settings] as Nullable<string>;
+    delete params[ZipSectionV10.Settings];
     if (oldSettings) {
       const s = oldSettings.split(ZFIELDSEP);
 
@@ -935,19 +967,14 @@ export class MigrationService {
 
     // Mod
     const oldMod = params[ZipSectionV10.Mod] as Nullable<string>;
+    delete params[ZipSectionV10.Mod];
     let newMod = oldMod;
     if (newMod && !state.isBare)
       newMod = data.modHash[this.compressionSvc.idToN(newMod)];
     if (newMod) state.modId = newMod;
 
-    delete params[ZipSectionV10.Objectives];
-    delete params[ZipSectionV10.RecipeObjectives];
-    delete params[ZipSectionV10.Machines];
-    delete params[ZipSectionV10.Settings];
-
     params['e'] = newModules;
     params['b'] = newBeacons;
-    params['o'] = newObjectives;
     params['v'] = ZipVersion.Version11;
 
     prune(params);

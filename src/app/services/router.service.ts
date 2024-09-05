@@ -64,6 +64,7 @@ export class RouterService {
   zipConfig = signal(this.empty);
   // Current hashing algorithm version
   version = ZipVersion.Version11;
+  zipTail: LabParams = { v: this.version };
   route$ = new Subject<ActivatedRoute>();
   ready$ = new ReplaySubject<void>(1);
   navigating$ = new BehaviorSubject<boolean>(false);
@@ -99,7 +100,9 @@ export class RouterService {
         map(({ params, queryParams }) =>
           this.migrationSvc.migrate(params['id'], queryParams),
         ),
-        switchMap((args) => this.updateState(...args)),
+        switchMap(({ modId, params, isBare }) =>
+          this.updateState(modId, params, isBare),
+        ),
       )
       .subscribe();
 
@@ -167,8 +170,6 @@ export class RouterService {
     this.zipRecipes(zData, recipesState, hash);
     this.zipMachines(zData, machinesState, hash);
     this.zipSettings(zData, settings, objectives.ids, data, hash);
-    zData.config.bare.v = this.version;
-    zData.config.hash.v = this.version;
     this.zipConfig.set(zData.config);
     return zData;
   }
@@ -177,7 +178,7 @@ export class RouterService {
     step: Step,
     config: Zip<LabParams>,
     hash: ModHash | undefined,
-  ): Promise<string | null> {
+  ): Promise<LabParams | null> {
     if (hash == null) return null;
 
     let objectives: Objective[] | undefined;
@@ -213,13 +214,12 @@ export class RouterService {
       machineSettings: this.emptyMachineSettings,
     };
     this.zipObjectives(zData, objectives, hash);
-    const zHash = await this.getHash(zData);
-    return `list?${zHash}`;
+    return await this.getHash(zData);
   }
 
   async getHash(zData: ZipData): Promise<LabParams> {
-    const bare = spread(zData.objectives.bare, zData.config.bare);
-    const hash = spread(zData.objectives.hash, zData.config.hash);
+    const bare = spread(zData.objectives.bare, zData.config.bare, this.zipTail);
+    const hash = spread(zData.objectives.hash, zData.config.hash, this.zipTail);
     const hashStr = this.toString(hash);
     const zStr = await this.compressionSvc.deflate(hashStr);
     const zip: LabParams = {
@@ -261,18 +261,22 @@ export class RouterService {
       .join('&');
   }
 
-  toList(value: string | string[] | undefined): string[] {
-    if (value == null) return [];
-    if (Array.isArray(value)) return value;
-    return [value];
-  }
-
   async unzipQueryParams(queryParams: Params): Promise<Params> {
     const zip = queryParams['z'];
     if (zip != null) {
-      const unzip = await this.compressionSvc.inflate(zip);
-      queryParams = this.toParams(unzip);
-      queryParams['z'] = zip;
+      try {
+        // Upgrade V0 query-unsafe zipped characters
+        const zSafe = zip
+          .replace(/\+/g, '-')
+          .replace(/\//g, '.')
+          .replace(/=/g, '_');
+        const unzip = await this.compressionSvc.inflate(zSafe);
+        queryParams = this.toParams(unzip);
+        queryParams['z'] = zip;
+      } catch (err) {
+        console.error(err);
+        throw new Error('RouterService failed to parse url');
+      }
     }
 
     return queryParams;
@@ -281,43 +285,37 @@ export class RouterService {
   async updateState(
     modId: string | undefined,
     params: LabParams,
+    isBare: boolean,
   ): Promise<void> {
-    if (modId == null || Object.keys(params).length === 0) {
-      this.ready$.next();
-      return;
+    if (modId == null && Object.keys(params).length === 0) {
+      // Nothing to set up
+      return this.ready$.next();
     }
 
-    try {
-      const [modData, modHash] = await firstValueFrom(
-        this.dataSvc.requestData(modId || Settings.initialState.modId),
-      );
+    const [modData, modHash] = await firstValueFrom(
+      this.dataSvc.requestData(modId ?? Settings.initialState.modId),
+    );
 
-      const state: App.PartialState = {};
-      const isBare = params.z == null;
-      const hash = isBare ? undefined : modHash;
-      const ms = this.unzipModules(params, hash);
-      const bs = this.unzipBeacons(params, ms, hash);
-      state.objectivesState = this.unzipObjectives(params, ms, bs, hash);
-      state.itemsState = this.unzipItems(params, hash);
-      state.recipesState = this.unzipRecipes(params, ms, bs, hash);
-      state.machinesState = this.unzipMachines(params, ms, bs, hash);
-      state.settingsState = this.unzipSettings(
-        modId,
-        params,
-        bs,
-        state.objectivesState?.ids ?? [],
-        modData,
-        modHash,
-        hash,
-      );
-      prune(state);
-      this.dispatch(state);
-    } catch (err) {
-      console.error(err);
-      throw new Error('RouterService failed to parse url');
-    } finally {
-      this.ready$.next();
-    }
+    const state: App.PartialState = {};
+    const hash = isBare ? undefined : modHash;
+    const ms = this.unzipModules(params, hash);
+    const bs = this.unzipBeacons(params, ms, hash);
+    state.objectivesState = this.unzipObjectives(params, ms, bs, hash);
+    state.itemsState = this.unzipItems(params, hash);
+    state.recipesState = this.unzipRecipes(params, ms, bs, hash);
+    state.machinesState = this.unzipMachines(params, ms, bs, hash);
+    state.settingsState = this.unzipSettings(
+      modId,
+      params,
+      bs,
+      coalesce(state.objectivesState?.ids, []),
+      modData,
+      modHash,
+      hash,
+    );
+    prune(state);
+    this.dispatch(state);
+    this.ready$.next();
   }
 
   dispatch(partial: App.PartialState): void {
@@ -437,7 +435,7 @@ export class RouterService {
   ): number[] {
     return values.map((obj) => {
       const count = this.zipSvc.zipRational(obj.count);
-      const zip: Zip<string> = {
+      const zip: Zip = {
         bare: this.zipSvc.zipFields([count, this.zipSvc.zipString(obj.id)]),
         hash: this.zipSvc.zipFields([
           count,
@@ -479,7 +477,7 @@ export class RouterService {
       const count = this.zipSvc.zipRational(obj.count);
       const modules = this.zipSvc.zipArray(moduleMap[i]);
       const total = this.zipSvc.zipRational(obj.total);
-      const zip: Zip<string> = {
+      const zip: Zip = {
         bare: this.zipSvc.zipFields([
           count,
           modules,
@@ -861,7 +859,7 @@ export class RouterService {
   }
 
   unzipSettings(
-    modId: string,
+    modId: string | undefined,
     params: LabParams,
     beaconSettings: BeaconSettings[],
     objectiveIds: string[],
