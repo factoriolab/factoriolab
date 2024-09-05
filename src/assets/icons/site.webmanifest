@@ -1,6 +1,13 @@
 {
   "name": "FactorioLab",
   "short_name": "FactorioLab",
+  "description": "A feature-rich factory production calculator for Factorio and other factory games. Determine resource and machine requirements for your desired objectives.",
+  "id": "/",
+  "start_url": "/",
+  "theme_color": "#009fce",
+  "background_color": "#121212",
+  "display": "standalone",
+  "categories": ["games", "utilities"],
   "icons": [
     {
       "src": "/android-chrome-192x192.png?v=1",
@@ -13,7 +20,12 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#009fce",
-  "background_color": "#000000",
-  "display": "standalone"
+  "shortcuts": [
+    { "name": "Factorio", "url": "1.1" },
+    { "name": "Dyson Sphere Program", "url": "dsp" },
+    { "name": "Satisfactory", "url": "sfy" },
+    { "name": "Captain of Industry", "url": "coi" },
+    { "name": "Techtonica", "url": "tta" },
+    { "name": "Final Factory", "url": "ffy" }
+  ]
 }
