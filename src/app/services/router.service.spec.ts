@@ -87,17 +87,18 @@ const mockRecipesState: Recipes.RecipesState = {
 const mockMachinesState: Machines.MachinesState = {};
 const mockSettingsState: Settings.SettingsState = {
   modId: '1.0',
-  checkedObjectiveIds: new Set(),
+  checkedObjectiveIds: new Set(['1']),
   maximizeType: MaximizeType.Weight,
   surplusMachinesOutput: false,
   displayRate: DisplayRate.PerHour,
   excludedItemIds: new Set([ItemId.SteelChest]),
-  checkedItemIds: new Set(),
+  checkedItemIds: new Set([ItemId.SteelChest]),
   beltId: ItemId.TransportBelt,
   cargoWagonId: ItemId.CargoWagon,
   fluidWagonId: ItemId.FluidWagon,
   flowRate: rational(1200n),
-  checkedRecipeIds: new Set(),
+  excludedRecipeIds: new Set([RecipeId.SteelChest]),
+  checkedRecipeIds: new Set([RecipeId.SteelChest]),
   netProductionOnly: true,
   preset: Preset.Modules,
   machineRankIds: [ItemId.AssemblingMachine2, ItemId.SteelFurnace],
@@ -159,6 +160,10 @@ const mockZipPartial: Zip<LabParams> = {
     cex: '100',
     cmx: '-100000',
     iex: 'C6',
+    och: 'A',
+    ich: 'C6',
+    rex: 'DB',
+    rch: 'DB',
   },
   hash: {
     e: ['2*A', '2*G', '*G'],
@@ -187,6 +192,10 @@ const mockZipPartial: Zip<LabParams> = {
     cex: '100',
     cmx: '-100000',
     iex: 'C6',
+    och: 'A',
+    ich: 'C6',
+    rex: 'DB',
+    rch: 'DB',
   },
 };
 const mockState: LabState = {
@@ -401,15 +410,20 @@ describe('RouterService', () => {
   describe('updateState', async () => {
     let dispatch: jasmine.Spy;
 
-    const mockStateV8: App.PartialState = spread(mockState, {
+    const mockStateV10: App.PartialState = spread(mockState, {
       settingsState: spread(mockState.settingsState, {
         costs: { ...mockState.settingsState.costs },
       }),
     });
-    delete mockStateV8.settingsState?.surplusMachinesOutput;
-    delete mockStateV8.settingsState?.costs?.footprint;
+    delete mockStateV10.settingsState?.surplusMachinesOutput;
+    delete mockStateV10.settingsState?.costs?.footprint;
+
+    const mockStateV8: App.PartialState = spread(mockStateV10, {
+      settingsState: { ...mockStateV10.settingsState },
+    });
     delete mockStateV8.settingsState?.checkedObjectiveIds;
     delete mockStateV8.settingsState?.checkedItemIds;
+    delete mockStateV8.settingsState?.excludedRecipeIds;
     delete mockStateV8.settingsState?.checkedRecipeIds;
 
     const mockStateV6: App.PartialState = spread(mockStateV8, {
@@ -723,6 +737,28 @@ describe('RouterService', () => {
         },
       );
     });
+
+    it('should unzip empty v10', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual({});
+        done();
+      });
+      mockRoute.next({}, { z: 'eJyrsjU0AAADNQEZ', v: '10' });
+    });
+
+    it('should unzip v10', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV10);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwdjEsKAjEQRG.TiwdCVxbiZpDOBLIWDxAQRhARREF3nl06BW9Tv-e6R4gp2Sac4DBEIexS7TYLK4Hs1SoicYo7Suy60H4dEaOOk72PlLk4f6l3Ap-XFUTLVsbp5drZyVP2kduj0EchBv0P4nkhKQ__',
+          v: '9',
+        },
+      );
+    });
   });
 
   describe('dispatch', () => {
@@ -940,6 +976,20 @@ describe('RouterService', () => {
           beacons: [{}],
         },
       });
+    });
+  });
+
+  describe('zipMachines', () => {
+    it('should ignore empty state', () => {
+      const zip = mockZipData();
+      service.zipMachines(zip, {}, Mocks.Hash);
+      expect(zip.config.bare.m).toBeUndefined();
+    });
+
+    it('should zip', () => {
+      const zip = mockZipData();
+      service.zipMachines(zip, { [ItemId.AssemblingMachine1]: {} }, Mocks.Hash);
+      expect(zip.config.bare.m).toEqual(['assembling-machine-1']);
     });
   });
 

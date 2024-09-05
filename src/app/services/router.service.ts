@@ -710,7 +710,7 @@ export class RouterService {
     for (const recipe of params.r) {
       const s = recipe.split(ZFIELDSEP);
       let i = 0;
-      const id = this.zipSvc.parseString(s[i++], hash?.recipes) ?? '';
+      const id = coalesce(this.zipSvc.parseString(s[i++], hash?.recipes), '');
       const obj: RecipeSettings = {
         machineId: this.zipSvc.parseString(s[i++], hash?.machines),
         modules: this.zipSvc
@@ -778,7 +778,7 @@ export class RouterService {
     for (const machine of params.m) {
       const s = machine.split(ZFIELDSEP);
       let i = 0;
-      const id = this.zipSvc.parseString(s[i++], hash?.machines) ?? '';
+      const id = coalesce(this.zipSvc.parseString(s[i++], hash?.machines), '');
       const obj: MachineSettings = {
         modules: this.zipSvc
           .parseArray(s[i++])
