@@ -928,7 +928,7 @@ export class MigrationService {
 
       // Researched technologies
       const oldResearchedTechnologies = s[0];
-      if (oldResearchedTechnologies === ZNULL) params['_v10tre'] = ZNULL;
+      if (oldResearchedTechnologies === ZNULL) params['v10tre'] = ZNULL;
       else if (oldResearchedTechnologies)
         appendSet(
           'v10tre',
@@ -963,6 +963,15 @@ export class MigrationService {
       keys.forEach((k, i) => {
         params[k] = s[i + 1] || undefined;
       });
+
+      if (!state.isBare) {
+        const fixNNumber = ['ifr', 'bmi', 'bre', 'omt'] as const;
+        fixNNumber
+          .filter((k) => params[k] != null)
+          .forEach((k) => {
+            params[k] = this.zipSvc.parseNNumber(params[k])?.toString();
+          });
+      }
     }
 
     // Mod

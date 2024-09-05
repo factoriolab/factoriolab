@@ -246,7 +246,7 @@ export class ZipService {
     value: Nullable<string>,
     hash?: string[],
   ): Nullable<Set<string>> {
-    if (value === null) return value;
+    if (value === ZNULL) return null;
     return this.parseSet(value, hash);
   }
 

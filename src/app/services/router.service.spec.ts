@@ -1,26 +1,17 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  NavigationStart,
-  Params,
-} from '@angular/router';
-import { MemoizedSelector } from '@ngrx/store';
+import { ActivatedRoute, Params } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 import { of, Subject } from 'rxjs';
 
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 import { spread } from '~/helpers';
 import {
-  Dataset,
   DisplayRate,
-  Game,
   InserterCapacity,
   InserterTarget,
   LabParams,
   MaximizeType,
   MIN_ZIP,
-  ModHash,
   Objective,
   ObjectiveType,
   ObjectiveUnit,
@@ -208,18 +199,6 @@ const mockState: LabState = {
 describe('RouterService', () => {
   let service: RouterService;
   let mockStore: MockStore<LabState>;
-  let selectMockGetZipState: MemoizedSelector<
-    LabState,
-    {
-      objectives: Objectives.ObjectivesState;
-      itemsState: Items.ItemsState;
-      recipesState: Recipes.RecipesState;
-      machinesState: Machines.MachinesState;
-      settings: Settings.SettingsState;
-      data: Dataset;
-      hash?: ModHash;
-    }
-  >;
   const mockRoute = {
     params: new Subject<Params>(),
     queryParams: new Subject<Params>(),
@@ -259,18 +238,15 @@ describe('RouterService', () => {
       [Settings.initialState.modId]: Mocks.Hash,
       [mockSettingsState.modId]: Mocks.Hash,
     });
-    selectMockGetZipState = mockStore.overrideSelector(
-      Objectives.selectZipState,
-      {
-        objectives: Objectives.initialState,
-        itemsState: Items.initialState,
-        recipesState: Recipes.initialState,
-        machinesState: Machines.initialState,
-        settings: Mocks.SettingsStateInitial,
-        data: Mocks.Dataset,
-        hash: Mocks.Hash,
-      },
-    );
+    mockStore.overrideSelector(Objectives.selectZipState, {
+      objectives: Objectives.initialState,
+      itemsState: Items.initialState,
+      recipesState: Recipes.initialState,
+      machinesState: Machines.initialState,
+      settings: Mocks.SettingsStateInitial,
+      data: Mocks.Dataset,
+      hash: Mocks.Hash,
+    });
   });
 
   it('should be created', () => {
@@ -424,11 +400,58 @@ describe('RouterService', () => {
 
   describe('updateState', async () => {
     let dispatch: jasmine.Spy;
+
+    const mockStateV8: App.PartialState = spread(mockState, {
+      settingsState: spread(mockState.settingsState, {
+        costs: { ...mockState.settingsState.costs },
+      }),
+    });
+    delete mockStateV8.settingsState?.surplusMachinesOutput;
+    delete mockStateV8.settingsState?.costs?.footprint;
+    delete mockStateV8.settingsState?.checkedObjectiveIds;
+    delete mockStateV8.settingsState?.checkedItemIds;
+    delete mockStateV8.settingsState?.checkedRecipeIds;
+
+    const mockStateV6: App.PartialState = spread(mockStateV8, {
+      objectivesState: mockMigratedObjectivesState,
+      settingsState: spread(mockStateV8.settingsState, {
+        costs: { ...mockStateV8.settingsState?.costs },
+      }),
+    });
+    delete mockStateV6.settingsState?.maximizeType;
+    delete mockStateV6.settingsState?.researchedTechnologyIds;
+    delete mockStateV6.settingsState?.costs?.surplus;
+    delete mockStateV6.settingsState?.costs?.maximize;
+
+    const mockStateV3: App.PartialState = spread(mockStateV6, {
+      settingsState: { ...mockStateV6.settingsState },
+    });
+    delete mockStateV3.settingsState?.netProductionOnly;
+
+    const mockStateV1: App.PartialState = spread(mockStateV3, {
+      objectivesState: mockState.objectivesState,
+      settingsState: { ...mockStateV3.settingsState },
+    });
+
+    const mockStateV0: App.PartialState = spread(mockStateV3, {
+      objectivesState: mockMigratedObjectivesState,
+      settingsState: { ...mockStateV1.settingsState },
+    });
+    delete mockStateV0.settingsState?.beaconReceivers;
+    delete mockStateV0.settingsState?.proliferatorSprayId;
+    delete mockStateV0.settingsState?.costs;
+
     beforeEach(() => {
       dispatch = spyOn(service, 'dispatch');
       spyOn(service.dataSvc, 'requestData').and.returnValue(
         of([Mocks.Data, Mocks.Hash, null]),
       );
+    });
+
+    it('should skip if loading empty, current state', async () => {
+      spyOn(service.ready$, 'next');
+      service.updateState(undefined, {}, true);
+      expect(service.ready$.next).toHaveBeenCalled();
     });
 
     it('should unzip empty v0', (done) => {
@@ -440,20 +463,6 @@ describe('RouterService', () => {
     });
 
     it('should unzip v0', (done) => {
-      const mockStateV0: App.PartialState = spread(mockState, {
-        objectivesState: mockMigratedObjectivesState,
-        settingsState: { ...mockState.settingsState },
-      });
-      delete mockStateV0.settingsState?.beaconReceivers;
-      delete mockStateV0.settingsState?.researchedTechnologyIds;
-      delete mockStateV0.settingsState?.maximizeType;
-      delete mockStateV0.settingsState?.costs;
-      delete mockStateV0.settingsState?.proliferatorSprayId;
-      delete mockStateV0.settingsState?.netProductionOnly;
-      delete mockStateV0.settingsState?.surplusMachinesOutput;
-      delete mockStateV0.settingsState?.checkedObjectiveIds;
-      delete mockStateV0.settingsState?.checkedItemIds;
-      delete mockStateV0.settingsState?.checkedRecipeIds;
       dispatch.and.callFake((v) => {
         expect(v).toEqual(mockStateV0);
         done();
@@ -479,22 +488,6 @@ describe('RouterService', () => {
     });
 
     it('should unzip v1', (done) => {
-      const mockStateV1: App.PartialState = spread(mockState, {
-        settingsState: spread(mockState.settingsState, {
-          costs: { ...mockState.settingsState.costs },
-        }),
-      });
-      delete mockStateV1.settingsState?.netProductionOnly;
-      delete mockStateV1.settingsState?.researchedTechnologyIds;
-      delete mockStateV1.settingsState?.maximizeType;
-      delete mockStateV1.settingsState?.costs?.surplus;
-      delete mockStateV1.settingsState?.costs?.maximize;
-      delete mockStateV1.settingsState?.costs?.footprint;
-      delete mockStateV1.settingsState?.surplusMachinesOutput;
-      delete mockStateV1.settingsState?.checkedObjectiveIds;
-      delete mockStateV1.settingsState?.checkedItemIds;
-      delete mockStateV1.settingsState?.checkedRecipeIds;
-      delete mockStateV1.machinesState;
       dispatch.and.callFake((v) => {
         expect(v).toEqual(mockStateV1);
         done();
@@ -504,9 +497,15 @@ describe('RouterService', () => {
         {
           p: 'steel-chest*1*1',
           i: 'steel-chest*1*transport-belt*cargo-wagon',
-          r: 'steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module~speed-module*beacon*200*100*8',
-          f: '1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine-2_steel-furnace',
-          s: '1.0*2*1*=*transport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid-wagon*?*2*10*0*100*1*productivity-module',
+          r:
+            'steel-chest*assembling-machine-2*effectivity-module~effectivity-' +
+            'module*1*speed-module~speed-module*beacon*200*100*8',
+          f:
+            '1*productivity-module~speed-module*1*speed-module*beacon_assembl' +
+            'ing-machine-2_steel-furnace',
+          s:
+            '1.0*2*1*=*transport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid' +
+            '-wagon*?*2*10*0*100*1*productivity-module',
           v: '1',
         },
       );
@@ -520,39 +519,21 @@ describe('RouterService', () => {
       mockRoute.next({}, { z: 'eJwrUCszAgADVAE.' });
     });
 
-    //     it('should unzip v2', async () => {
-    //       spyOn(service.contentSvc, 'confirm');
-    //       const url =
-    //         '/?z=eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78m' +
-    //         'mFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSMGkU_';
-
-    //       spyOn(service.dataSvc, 'requestData').and.returnValue(
-    //         of([Mocks.Data, Mocks.Hash, null]),
-    //       );
-    //       await service.updateState(new NavigationEnd(2, url, url));
-    //       const mockStateV2: App.PartialState = {
-    //         ...mockState,
-    //         ...{
-    //           settingsState: {
-    //             ...mockState.settingsState,
-    //             ...{ costs: { ...mockState.settingsState.costs } },
-    //           },
-    //         },
-    //       };
-    //       delete mockStateV2.settingsState?.netProductionOnly;
-    //       delete mockStateV2.settingsState?.researchedTechnologyIds;
-    //       delete mockStateV2.settingsState?.maximizeType;
-    //       delete mockStateV2.settingsState?.costs?.surplus;
-    //       delete mockStateV2.settingsState?.costs?.maximize;
-    //       delete mockStateV2.settingsState?.costs?.footprint;
-    //       delete mockStateV2.settingsState?.surplusMachinesOutput;
-    //       expect(service.dispatch).toHaveBeenCalledWith(
-    //         'pC6*1*1&bB&iC6*1*C*A&rDB*B*A~A*B*G~G*A*200*100*8&f1*D~G*B*G*A_B_Q&s2' +
-    //           '*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v2',
-    //         mockStateV2,
-    //       );
-    //       expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
-    //     });
+    it('should unzip v2', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV1);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78m' +
+            'mFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSM' +
+            'GkU_',
+        },
+      );
+    });
 
     it('should unzip empty v3', (done) => {
       dispatch.and.callFake((v) => {
@@ -562,43 +543,21 @@ describe('RouterService', () => {
       mockRoute.next({}, { z: 'eJwrUCszBgADVQFA' });
     });
 
-    //     it('should unzip v3', async () => {
-    //       spyOn(service.contentSvc, 'confirm');
-    //       const url =
-    //         '/?z=eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX' +
-    //         '5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6AbeM' +
-    //         'G5w_';
-
-    //       spyOn(service.dataSvc, 'requestData').and.returnValue(
-    //         of([Mocks.Data, Mocks.Hash, null]),
-    //       );
-    //       await service.updateState(new NavigationEnd(2, url, url));
-
-    //       const mockStateV3: App.PartialState = {
-    //         ...mockState,
-    //         ...{
-    //           objectivesState: mockMigratedObjectivesState,
-    //           settingsState: {
-    //             ...mockState.settingsState,
-    //             ...{ costs: { ...mockState.settingsState.costs } },
-    //           },
-    //         },
-    //       };
-    //       delete mockStateV3.settingsState?.netProductionOnly;
-    //       delete mockStateV3.settingsState?.researchedTechnologyIds;
-    //       delete mockStateV3.settingsState?.maximizeType;
-    //       delete mockStateV3.settingsState?.costs?.surplus;
-    //       delete mockStateV3.settingsState?.costs?.maximize;
-    //       delete mockStateV3.settingsState?.costs?.footprint;
-    //       delete mockStateV3.settingsState?.surplusMachinesOutput;
-
-    //       expect(service.dispatch).toHaveBeenCalledWith(
-    //         'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_' +
-    //           'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*1*A*B*?*2*10*0*100*1*D&v3',
-    //         mockStateV3,
-    //       );
-    //       expect(service.contentSvc.confirm).toHaveBeenCalled(); // Log warning for expensive field
-    //     });
+    it('should unzip v3', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV3);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX' +
+            '5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6' +
+            'AbeMG5w_',
+        },
+      );
+    });
 
     it('should unzip empty v4', (done) => {
       dispatch.and.callFake((v) => {
@@ -608,37 +567,28 @@ describe('RouterService', () => {
       mockRoute.next({}, { p: '', v: '4' });
     });
 
-    //     it('should unzip v4', async () => {
-    //       const v4Full =
-    //         'p=steel-chest*1*1&q=steel-chest*1&i=steel-chest*1*transport-belt*car' +
-    //         'go-wagon&r=steel-chest*assembling-machine-2*effectivity-module~effec' +
-    //         'tivity-module*1*speed-module~speed-module*beacon*200*100*8&f=1*produ' +
-    //         'ctivity-module~speed-module*1*speed-module*beacon_assembling-machine' +
-    //         '-2_steel-furnace&s=1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
-    //         'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module&v=4';
-    //       const url = `/?${v4Full}`;
-    //       await service.updateState(new NavigationEnd(2, url, url));
-
-    //       const mockStateV4: App.PartialState = {
-    //         ...mockState,
-    //         ...{
-    //           objectivesState: mockMigratedObjectivesState,
-    //           settingsState: {
-    //             ...mockState.settingsState,
-    //             ...{ costs: { ...mockState.settingsState.costs } },
-    //           },
-    //         },
-    //       };
-    //       delete mockStateV4.settingsState?.netProductionOnly;
-    //       delete mockStateV4.settingsState?.researchedTechnologyIds;
-    //       delete mockStateV4.settingsState?.maximizeType;
-    //       delete mockStateV4.settingsState?.costs?.surplus;
-    //       delete mockStateV4.settingsState?.costs?.maximize;
-    //       delete mockStateV4.settingsState?.costs?.footprint;
-    //       delete mockStateV4.settingsState?.surplusMachinesOutput;
-
-    //       expect(service.dispatch).toHaveBeenCalledWith(v4Full, mockStateV4);
-    //     });
+    it('should unzip v4', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV3);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          p: 'steel-chest*1*1',
+          q: 'steel-chest*1',
+          i: 'steel-chest*1*transport-belt*cargo-wagon',
+          r: 'steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module~speed-module*beacon*200*100*8',
+          f:
+            '1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine' +
+            '-2_steel-furnace',
+          s:
+            '1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
+            'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
+          v: '4',
+        },
+      );
+    });
 
     it('should unzip empty v5', (done) => {
       dispatch.and.callFake((v) => {
@@ -648,41 +598,22 @@ describe('RouterService', () => {
       mockRoute.next({}, { z: 'eJwrUCszBQADVwFC', v: '5' });
     });
 
-    //     it('should unzip v5', async () => {
-    //       const url =
-    //         '/?z=eJwdjDsKgDAQRG-zxVRJQLGx2E0gtXiAgIUgNn5Au5zdiSz7mTfMHrGHh5czGedi' +
-    //         'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4DZYwb' +
-    //         'BA__&v=5';
-
-    //       spyOn(service.dataSvc, 'requestData').and.returnValue(
-    //         of([Mocks.Data, Mocks.Hash, null]),
-    //       );
-    //       await service.updateState(new NavigationEnd(2, url, url));
-
-    //       const mockStateV5: App.PartialState = {
-    //         ...mockState,
-    //         ...{
-    //           objectivesState: mockMigratedObjectivesState,
-    //           settingsState: {
-    //             ...mockState.settingsState,
-    //             ...{ costs: { ...mockState.settingsState.costs } },
-    //           },
-    //         },
-    //       };
-    //       delete mockStateV5.settingsState?.netProductionOnly;
-    //       delete mockStateV5.settingsState?.researchedTechnologyIds;
-    //       delete mockStateV5.settingsState?.maximizeType;
-    //       delete mockStateV5.settingsState?.costs?.surplus;
-    //       delete mockStateV5.settingsState?.costs?.maximize;
-    //       delete mockStateV5.settingsState?.costs?.footprint;
-    //       delete mockStateV5.settingsState?.surplusMachinesOutput;
-
-    //       expect(service.dispatch).toHaveBeenCalledWith(
-    //         'pC6*1*1&qDB*1&bB&iC6*1*C*A&rDB*B*A~A*1*G~G*A*200*100*8&f1*D~G*1*G*A_' +
-    //           'B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D&v5',
-    //         mockStateV5,
-    //       );
-    //     });
+    it('should unzip v5', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV3);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwdjDsKgDAQRG-zxVRJQLGx2E0gtXiAgIUgNn5Au5zdiSz7mTfMHrGHh5czGedi' +
+            'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4D' +
+            'ZYwbBA__',
+          v: '5',
+        },
+      );
+    });
 
     it('should unzip empty v6', (done) => {
       dispatch.and.callFake((v) => {
@@ -692,37 +623,31 @@ describe('RouterService', () => {
       mockRoute.next({}, { p: '', v: '6' });
     });
 
-    //     it('should unzip v6', async () => {
-    //       const v6Full =
-    //         'p=steel-chest*1*1&q=steel-chest*1&e=1*speed-module~speed-module*beac' +
-    //         'on*8&i=steel-chest*1*transport-belt*cargo-wagon&r=steel-chest*assemb' +
-    //         'ling-machine-2*effectivity-module~effectivity-module*0*200*100&f=1*p' +
-    //         'roductivity-module~speed-module*1*speed-module*beacon_assembling-mac' +
-    //         'hine-2_steel-furnace&s=1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*' +
-    //         '0*cargo-wagon*fluid-wagon**2*10*0*100*1*productivity-module*1&v=6';
-    //       const url = `/?${v6Full}`;
-    //       await service.updateState(new NavigationEnd(2, url, url));
-
-    //       const mockStateV6: App.PartialState = {
-    //         ...mockState,
-    //         ...{
-    //           objectivesState: mockMigratedObjectivesState,
-    //           settingsState: {
-    //             ...mockState.settingsState,
-    //             ...{ costs: { ...mockState.settingsState.costs } },
-    //           },
-    //         },
-    //       };
-    //       // delete mockStateV6.settingsState?.netProductionOnly;
-    //       delete mockStateV6.settingsState?.researchedTechnologyIds;
-    //       delete mockStateV6.settingsState?.maximizeType;
-    //       delete mockStateV6.settingsState?.costs?.surplus;
-    //       delete mockStateV6.settingsState?.costs?.maximize;
-    //       delete mockStateV6.settingsState?.costs?.footprint;
-    //       delete mockStateV6.settingsState?.surplusMachinesOutput;
-
-    //       expect(service.dispatch).toHaveBeenCalledWith(v6Full, mockStateV6);
-    //     });
+    it('should unzip v6', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV6);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          p: 'steel-chest*1*1',
+          q: 'steel-chest*1',
+          e: '1*speed-module~speed-module*beacon*8',
+          i: 'steel-chest*1*transport-belt*cargo-wagon',
+          r:
+            'steel-chest*assembling-machine-2*effectivity-module~effectivity-' +
+            'module*0*200*100',
+          f:
+            '1*productivity-module~speed-module*1*speed-module*beacon_assembl' +
+            'ing-machine-2_steel-furnace',
+          s:
+            '1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*cargo-wagon*fluid' +
+            '-wagon**2*10*0*100*1*productivity-module*1',
+          v: '6',
+        },
+      );
+    });
 
     it('should unzip empty v7', (done) => {
       dispatch.and.callFake((v) => {
@@ -732,40 +657,22 @@ describe('RouterService', () => {
       mockRoute.next({}, { z: 'eJwrUCszBwADWQFE', v: '7' });
     });
 
-    //     it('should unzip v7', async () => {
-    //       const url =
-    //         '/?z=eJwdjbEKg1AMRf8mw5kSB-3ikPjAWfwAoWChdGkr6Oa3m-dyueGcS75Di2HyK5G5' +
-    //         'GuM54jzkGfK-2YDLP2ngp6M0qpiqvIySbi7wJZZJtiaPvvrMB.Gh2poZkKh2q1tKftq7' +
-    //         'C.WaHBw_&v=7';
-
-    //       spyOn(service.dataSvc, 'requestData').and.returnValue(
-    //         of([Mocks.Data, Mocks.Hash, null]),
-    //       );
-    //       await service.updateState(new NavigationEnd(2, url, url));
-
-    //       const mockStateV7: App.PartialState = {
-    //         ...mockState,
-    //         ...{
-    //           objectivesState: mockMigratedObjectivesState,
-    //           settingsState: {
-    //             ...mockState.settingsState,
-    //             ...{ costs: { ...mockState.settingsState.costs } },
-    //           },
-    //         },
-    //       };
-    //       delete mockStateV7.settingsState?.researchedTechnologyIds;
-    //       delete mockStateV7.settingsState?.maximizeType;
-    //       delete mockStateV7.settingsState?.costs?.surplus;
-    //       delete mockStateV7.settingsState?.costs?.maximize;
-    //       delete mockStateV7.settingsState?.costs?.footprint;
-    //       delete mockStateV7.settingsState?.surplusMachinesOutput;
-
-    //       expect(service.dispatch).toHaveBeenCalledWith(
-    //         'pC6*1*1&qDB*1&e1*G~G*A*8&bB&iC6*1*C*A&rDB*B*A~A*0*200*100&f1*D~G*1*G' +
-    //           '*A_B_Q&s2*1*=*C*A*Sw*Bk*A*0*0*A*B**2*10*0*100*1*D*1&v7',
-    //         mockStateV7,
-    //       );
-    //     });
+    it('should unzip v7', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV6);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwdjbEKg1AMRf8mw5kSB-3ikPjAWfwAoWChdGkr6Oa3m-dyueGcS75Di2HyK5G5' +
+            'GuM54jzkGfK-2YDLP2ngp6M0qpiqvIySbi7wJZZJtiaPvvrMB.Gh2poZkKh2q1tK' +
+            'ftq7C.WaHBw_',
+          v: '7',
+        },
+      );
+    });
 
     it('should unzip empty v8', (done) => {
       dispatch.and.callFake((v) => {
@@ -775,35 +682,22 @@ describe('RouterService', () => {
       mockRoute.next({}, { z: 'eJwrUCuzAAADWgFF', v: '8' });
     });
 
-    //     it('should unzip v8', async () => {
-    //       const url =
-    //         '/?z=eJwli0EKwlAMRG-TxYNC0kXpTpIWuhYPUBAUxI0o2F3P3vkayAwM772mgSDsFiz7' +
-    //         'QjLatezxWyfS3nNBkXvi9O6Eu92DWbAUcq31bJ8T.V.gslFPGu1KyWL12YC2yVd2Kp19' +
-    //         'xwOrTh0O&v=8';
-
-    //       spyOn(service.dataSvc, 'requestData').and.returnValue(
-    //         of([Mocks.Data, Mocks.Hash, null]),
-    //       );
-    //       await service.updateState(new NavigationEnd(2, url, url));
-
-    //       const mockStateV8: App.PartialState = {
-    //         ...mockState,
-    //         ...{
-    //           settingsState: {
-    //             ...mockState.settingsState,
-    //             ...{ costs: { ...mockState.settingsState.costs } },
-    //           },
-    //         },
-    //       };
-    //       delete mockStateV8.settingsState?.surplusMachinesOutput;
-    //       delete mockStateV8.settingsState?.costs?.footprint;
-
-    //       expect(service.dispatch).toHaveBeenCalledWith(
-    //         'pC6*1*1&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100&f1*D~G*1*G*A_B_' +
-    //           'Q&s?*2*1*C*A*Sw*Bk*A*0*0*A*B**1*D*1*A*2*10*0*100*0*-100000&v8',
-    //         mockStateV8,
-    //       );
-    //     });
+    it('should unzip v8', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV8);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwli0EKwlAMRG-TxYNC0kXpTpIWuhYPUBAUxI0o2F3P3vkayAwM772mgSDsFiz7' +
+            'QjLatezxWyfS3nNBkXvi9O6Eu92DWbAUcq31bJ8T.V.gslFPGu1KyWL12YC2yVd2' +
+            'Kp19xwOrTh0O',
+          v: '8',
+        },
+      );
+    });
 
     it('should unzip empty v9', (done) => {
       dispatch.and.callFake((v) => {
@@ -813,288 +707,255 @@ describe('RouterService', () => {
       mockRoute.next({}, { z: 'eJwrUCuzBAADWwFG', v: '9' });
     });
 
-    //     it('should unzip v9', async () => {
-    //       const url =
-    //         '/?z=eJwljEEKwlAMRG-TxQMh6ULsSpIWuhYP8EGoIG5EQXc9u.N1IBMY5s1j2hOErcGyLSQHu5TdfulE2nMuKHJLnMGdcG9Jl12DWYxIslU72evI8Oc4f6g7HXK5NtTVZS.0TDPynZ5k7.ELdcIegQ__&v=9';
-
-    //       spyOn(service.dataSvc, 'requestData').and.returnValue(
-    //         of([Mocks.Data, Mocks.Hash, null]),
-    //       );
-    //       await service.updateState(new NavigationEnd(2, url, url));
-
-    //       const mockStateV8: App.PartialState = {
-    //         ...mockState,
-    //         ...{
-    //           settingsState: {
-    //             ...mockState.settingsState,
-    //             ...{ costs: { ...mockState.settingsState.costs } },
-    //           },
-    //         },
-    //       };
-    //       delete mockStateV8.settingsState?.surplusMachinesOutput;
-    //       delete mockStateV8.settingsState?.costs?.footprint;
-
-    //       expect(service.dispatch).toHaveBeenCalledWith(
-    //         'pC6*1*1&e1*G~G*A*8&bB&iC6*1*C*A&rDB**B*A~A*0*200*100_A*****&f1*D~G*1*G*A_B_' +
-    //           'Q&s?*2*1*C*A*Sw*Bk*A*0*0*A*B**1*D*1*A*2*10*0*100*0*-100000&v9',
-    //         mockStateV8,
-    //       );
-    //     });
+    it('should unzip v9', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV8);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwljEEKwlAMRG-TxQMh6ULsSpIWuhYP8EGoIG5EQXc9u.N1IBMY5s1j2hOErcGy' +
+            'LSQHu5TdfulE2nMuKHJLnMGdcG9Jl12DWYxIslU72evI8Oc4f6g7HXK5NtTVZS.0' +
+            'TDPynZ5k7.ELdcIegQ__',
+          v: '9',
+        },
+      );
+    });
   });
 
-  //   describe('dispatch', () => {
-  //     it('should dispatch a state', () => {
-  //       spyOn(mockStore, 'dispatch');
-  //       service.dispatch('test', mockState);
-  //       expect(service.zip).toEqual('test');
-  //       expect(mockStore.dispatch).toHaveBeenCalledWith(
-  //         App.load({ partial: mockState }),
-  //       );
-  //     });
-  //   });
+  describe('dispatch', () => {
+    it('should dispatch a state', () => {
+      spyOn(mockStore, 'dispatch');
+      service.dispatch(mockState);
+      expect(mockStore.dispatch).toHaveBeenCalledWith(
+        App.load({ partial: mockState }),
+      );
+    });
+  });
 
-  //   describe('beaconModuleMap', () => {
-  //     it('should return undefined for beacons without modules', () => {
-  //       const result = service.beaconModuleMap(
-  //         [{}],
-  //         service.emptyRecipeSettingsInfo,
-  //         Mocks.Hash,
-  //       );
-  //       expect(result[0]).toBeUndefined();
-  //     });
-  //   });
+  describe('beaconModuleMap', () => {
+    it('should return undefined for beacons without modules', () => {
+      const result = service.beaconModuleMap(
+        [{}],
+        service.emptyRecipeSettingsInfo,
+        Mocks.Hash,
+      );
+      expect(result[0]).toBeUndefined();
+    });
+  });
 
-  //   describe('zipObjectives', () => {
-  //     it('should handle RateUnit Items', () => {
-  //       const zip = mockZipData();
-  //       service.zipObjectives(
-  //         zip,
-  //         [
-  //           {
-  //             id: '0',
-  //             targetId: ItemId.SteelChest,
-  //             value: rational.one,
-  //             unit: ObjectiveUnit.Items,
-  //             type: ObjectiveType.Output,
-  //           },
-  //         ],
-  //         Mocks.Hash,
-  //       );
-  //       expect(zip.objectives).toEqual({
-  //         bare: 'p=steel-chest',
-  //         hash: 'pC6',
-  //       });
-  //     });
+  describe('zipObjectives', () => {
+    it('should handle RateUnit Items', () => {
+      const zip = mockZipData();
+      service.zipObjectives(
+        zip,
+        [
+          {
+            id: '0',
+            targetId: ItemId.SteelChest,
+            value: rational.one,
+            unit: ObjectiveUnit.Items,
+            type: ObjectiveType.Output,
+          },
+        ],
+        Mocks.Hash,
+      );
+      expect(zip.objectives).toEqual({
+        bare: { o: ['steel-chest'] },
+        hash: { o: ['C6'] },
+      });
+    });
 
-  //     it('should handle RateUnit Belts', () => {
-  //       const zip = mockZipData();
-  //       service.zipObjectives(
-  //         zip,
-  //         [
-  //           {
-  //             id: '0',
-  //             targetId: ItemId.SteelChest,
-  //             value: rational.one,
-  //             unit: ObjectiveUnit.Belts,
-  //             type: ObjectiveType.Output,
-  //           },
-  //         ],
-  //         Mocks.Hash,
-  //       );
-  //       expect(zip.objectives).toEqual({
-  //         bare: 'p=steel-chest**1',
-  //         hash: 'pC6**1',
-  //       });
-  //     });
+    it('should handle RateUnit Belts', () => {
+      const zip = mockZipData();
+      service.zipObjectives(
+        zip,
+        [
+          {
+            id: '0',
+            targetId: ItemId.SteelChest,
+            value: rational.one,
+            unit: ObjectiveUnit.Belts,
+            type: ObjectiveType.Output,
+          },
+        ],
+        Mocks.Hash,
+      );
+      expect(zip.objectives).toEqual({
+        bare: { o: ['steel-chest**1'] },
+        hash: { o: ['C6**1'] },
+      });
+    });
 
-  //     it('should handle RateUnit Wagons', () => {
-  //       const zip = mockZipData();
-  //       service.zipObjectives(
-  //         zip,
-  //         [
-  //           {
-  //             id: '0',
-  //             targetId: ItemId.SteelChest,
-  //             value: rational.one,
-  //             unit: ObjectiveUnit.Wagons,
-  //             type: ObjectiveType.Output,
-  //           },
-  //         ],
-  //         Mocks.Hash,
-  //       );
-  //       expect(zip.objectives).toEqual({
-  //         bare: 'p=steel-chest**2',
-  //         hash: 'pC6**2',
-  //       });
-  //     });
+    it('should handle RateUnit Wagons', () => {
+      const zip = mockZipData();
+      service.zipObjectives(
+        zip,
+        [
+          {
+            id: '0',
+            targetId: ItemId.SteelChest,
+            value: rational.one,
+            unit: ObjectiveUnit.Wagons,
+            type: ObjectiveType.Output,
+          },
+        ],
+        Mocks.Hash,
+      );
+      expect(zip.objectives).toEqual({
+        bare: { o: ['steel-chest**2'] },
+        hash: { o: ['C6**2'] },
+      });
+    });
 
-  //     it('should handle RateUnit Machines', () => {
-  //       const zip = mockZipData();
-  //       service.zipObjectives(
-  //         zip,
-  //         [
-  //           {
-  //             id: '0',
-  //             targetId: RecipeId.SteelChest,
-  //             value: rational.one,
-  //             unit: ObjectiveUnit.Machines,
-  //             type: ObjectiveType.Output,
-  //           },
-  //         ],
-  //         Mocks.Hash,
-  //       );
-  //       expect(zip.objectives).toEqual({
-  //         bare: 'p=steel-chest**3',
-  //         hash: 'pDB**3',
-  //       });
-  //     });
-  //   });
+    it('should handle RateUnit Machines', () => {
+      const zip = mockZipData();
+      service.zipObjectives(
+        zip,
+        [
+          {
+            id: '0',
+            targetId: RecipeId.SteelChest,
+            value: rational.one,
+            unit: ObjectiveUnit.Machines,
+            type: ObjectiveType.Output,
+          },
+        ],
+        Mocks.Hash,
+      );
+      expect(zip.objectives).toEqual({
+        bare: { o: ['steel-chest**3'] },
+        hash: { o: ['DB**3'] },
+      });
+    });
+  });
 
-  //   describe('unzipObjectives', () => {
-  //     it('bare should unzip', () => {
-  //       const result = service.unzipObjectives(
-  //         {
-  //           ['p']: 'steel-chest*1*1',
-  //         },
-  //         [],
-  //         [],
-  //       );
-  //       expect(result).toEqual({
-  //         ids: ['1'],
-  //         entities: {
-  //           ['1']: {
-  //             id: '1',
-  //             targetId: ItemId.SteelChest,
-  //             value: rational.one,
-  //             unit: ObjectiveUnit.Belts,
-  //             type: ObjectiveType.Output,
-  //           },
-  //         },
-  //         index: 2,
-  //       });
-  //     });
+  describe('unzipObjectives', () => {
+    it('bare should unzip', () => {
+      const result = service.unzipObjectives(
+        {
+          o: ['steel-chest*1*1'],
+        },
+        [],
+        [],
+      );
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            targetId: ItemId.SteelChest,
+            value: rational.one,
+            unit: ObjectiveUnit.Belts,
+            type: ObjectiveType.Output,
+          },
+        },
+        index: 2,
+      });
+    });
 
-  //     it('hash should map values to empty strings if null', () => {
-  //       const result = service.unzipObjectives(
-  //         { ['p']: '*1' },
-  //         [],
-  //         [],
-  //         Mocks.Hash,
-  //       );
-  //       expect(result).toEqual({
-  //         ids: ['1'],
-  //         entities: {
-  //           ['1']: {
-  //             id: '1',
-  //             targetId: '',
-  //             value: rational.one,
-  //             unit: ObjectiveUnit.Items,
-  //             type: ObjectiveType.Output,
-  //           },
-  //         },
-  //         index: 2,
-  //       });
-  //     });
+    it('hash should map values to empty strings if null', () => {
+      const result = service.unzipObjectives({ o: ['*1'] }, [], [], Mocks.Hash);
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            targetId: '',
+            value: rational.one,
+            unit: ObjectiveUnit.Items,
+            type: ObjectiveType.Output,
+          },
+        },
+        index: 2,
+      });
+    });
 
-  //     it('should map modules and beacons', () => {
-  //       const result = service.unzipObjectives({ ['p']: '*1*3***0*0' }, [], []);
-  //       expect(result).toEqual({
-  //         ids: ['1'],
-  //         entities: {
-  //           ['1']: {
-  //             id: '1',
-  //             targetId: '',
-  //             value: rational.one,
-  //             unit: ObjectiveUnit.Machines,
-  //             type: ObjectiveType.Output,
-  //             modules: [{}],
-  //             beacons: [{}],
-  //           },
-  //         },
-  //         index: 2,
-  //       });
-  //     });
-  //   });
+    it('should map modules and beacons', () => {
+      const result = service.unzipObjectives({ o: ['*1*3***0*0'] }, [], []);
+      expect(result).toEqual({
+        ids: ['1'],
+        entities: {
+          ['1']: {
+            id: '1',
+            targetId: '',
+            value: rational.one,
+            unit: ObjectiveUnit.Machines,
+            type: ObjectiveType.Output,
+            modules: [{}],
+            beacons: [{}],
+          },
+        },
+        index: 2,
+      });
+    });
+  });
 
-  //   describe('unzipItems', () => {
-  //     it('should remove unspecified fields', () => {
-  //       const result = service.unzipItems({
-  //         ['i']: 'steel-chest*1*transport-belt*',
-  //       });
-  //       expect(result).toEqual({
-  //         [ItemId.SteelChest]: { excluded: true, beltId: ItemId.TransportBelt },
-  //       });
-  //     });
+  describe('unzipItems', () => {
+    it('should remove unspecified fields', () => {
+      const result = service.unzipItems({
+        i: ['steel-chest*transport-belt*'],
+      });
+      expect(result).toEqual({
+        [ItemId.SteelChest]: { beltId: ItemId.TransportBelt },
+      });
+    });
 
-  //     it('hash should map id to empty string if null', () => {
-  //       const result = service.unzipItems({ ['i']: '*1*C*' }, Mocks.Hash);
-  //       expect(result).toEqual({
-  //         ['']: { excluded: true, beltId: ItemId.TransportBelt },
-  //       });
-  //     });
-  //   });
+    it('hash should map id to empty string if null', () => {
+      const result = service.unzipItems({ i: ['*C*'] }, Mocks.Hash);
+      expect(result).toEqual({
+        ['']: { beltId: ItemId.TransportBelt },
+      });
+    });
+  });
 
-  //   describe('unzipRecipes', () => {
-  //     it('should remove unspecified fields', () => {
-  //       const result = service.unzipRecipes(
-  //         {
-  //           ['r']: 'steel-chest**assembling-machine-2*',
-  //         },
-  //         [],
-  //         [],
-  //       );
-  //       expect(result).toEqual({
-  //         [RecipeId.SteelChest]: { machineId: ItemId.AssemblingMachine2 },
-  //       });
-  //     });
+  describe('unzipRecipes', () => {
+    it('should remove unspecified fields', () => {
+      const result = service.unzipRecipes(
+        {
+          r: ['steel-chest*assembling-machine-2*'],
+        },
+        [],
+        [],
+      );
+      expect(result).toEqual({
+        [RecipeId.SteelChest]: { machineId: ItemId.AssemblingMachine2 },
+      });
+    });
 
-  //     it('hash should map values to empty strings if null', () => {
-  //       const result = service.unzipRecipes(
-  //         { ['r']: '**A*' },
-  //         [],
-  //         [],
-  //         Mocks.Hash,
-  //       );
-  //       expect(result).toEqual({
-  //         ['']: { machineId: ItemId.AssemblingMachine1 },
-  //       });
-  //     });
+    it('hash should map values to empty strings if null', () => {
+      const result = service.unzipRecipes({ r: ['*A*'] }, [], [], Mocks.Hash);
+      expect(result).toEqual({
+        ['']: { machineId: ItemId.AssemblingMachine1 },
+      });
+    });
 
-  //     it('should map modules and beacons', () => {
-  //       const result = service.unzipRecipes(
-  //         { ['r']: 'iron-plate***0*0' },
-  //         [],
-  //         [],
-  //       );
-  //       expect(result).toEqual({
-  //         [ItemId.IronPlate]: {
-  //           modules: [{}],
-  //           beacons: [{}],
-  //         },
-  //       });
-  //     });
-  //   });
+    it('should map modules and beacons', () => {
+      const result = service.unzipRecipes({ r: ['iron-plate**0*0'] }, [], []);
+      expect(result).toEqual({
+        [ItemId.IronPlate]: {
+          modules: [{}],
+          beacons: [{}],
+        },
+      });
+    });
+  });
 
-  //   describe('unzipMachines', () => {
-  //     it('should unzip', () => {
-  //       const result = service.unzipMachines(
-  //         { ['f']: '=*speed-module*0*coal*100_assembling-machine-2*0*0' },
-  //         [],
-  //         [],
-  //       );
-  //       expect(result).toEqual({
-  //         ids: ['assembling-machine-2'],
-  //         moduleRankIds: ['speed-module'],
-  //         beacons: [{}],
-  //         fuelRankIds: ['coal'],
-  //         overclock: rational(100n),
-  //         entities: {
-  //           ['assembling-machine-2']: {
-  //             modules: [{}],
-  //             beacons: [{}],
-  //           },
-  //         },
-  //       });
-  //     });
-  //   });
+  describe('unzipMachines', () => {
+    it('should unzip', () => {
+      const result = service.unzipMachines(
+        { m: ['assembling-machine-2*0*0'] },
+        [],
+        [],
+      );
+      expect(result).toEqual({
+        ['assembling-machine-2']: {
+          modules: [{}],
+          beacons: [{}],
+        },
+      });
+    });
+  });
 });
