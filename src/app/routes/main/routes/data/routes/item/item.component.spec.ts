@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
 import { DispatchTest, ItemId, TestModule, TestUtility } from 'src/tests';
-import { Items, LabState, Machines } from '~/store';
+import { Items, LabState, Machines, Settings } from '~/store';
 import { ItemComponent } from './item.component';
 
 describe('ItemComponent', () => {
@@ -41,11 +41,31 @@ describe('ItemComponent', () => {
     });
   });
 
-  // it('should dispatch actions', () => {
-  //   const dispatch = new DispatchTest(mockStore, component);
-  //   dispatch.props('setItemExcluded', Items.setExcluded);
-  //   dispatch.props('setItemChecked', Items.setChecked);
-  //   dispatch.props('resetItem', Items.resetItem);
-  //   dispatch.props('resetMachine', Machines.resetMachine);
-  // });
+  describe('changeExcluded', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component, 'setExcludedItems');
+      component.changeExcluded(true);
+      expect(component.setExcludedItems).toHaveBeenCalledWith(
+        new Set([ItemId.AssemblingMachine2]),
+      );
+    });
+  });
+
+  describe('changeChecked', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component, 'setCheckedItems');
+      component.changeChecked(true);
+      expect(component.setCheckedItems).toHaveBeenCalledWith(
+        new Set([ItemId.AssemblingMachine2]),
+      );
+    });
+  });
+
+  it('should dispatch actions', () => {
+    const dispatch = new DispatchTest(mockStore, component);
+    dispatch.props('setExcludedItems', Settings.setExcludedItems);
+    dispatch.props('setCheckedItems', Settings.setCheckedItems);
+    dispatch.props('resetItem', Items.resetItem);
+    dispatch.props('resetMachine', Machines.resetMachine);
+  });
 });

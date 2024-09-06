@@ -17,7 +17,14 @@ import {
 } from 'src/tests';
 import { Entities, rational, Step, StepDetail, StepDetailTab } from '~/models';
 import { StepIdPipe } from '~/pipes';
-import { Items, LabState, Objectives, Preferences, Recipes } from '~/store';
+import {
+  Items,
+  LabState,
+  Objectives,
+  Preferences,
+  Recipes,
+  Settings,
+} from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 import { StepsComponent } from './steps.component';
 
@@ -278,50 +285,26 @@ describe('StepsComponent', () => {
     });
   });
 
-  // describe('toggleRecipes', () => {
-  //   it('should toggle a set of recipes', () => {
-  //     spyOn(component, 'setRecipeExcludedBatch');
-  //     component.changeRecipesExcluded(
-  //       [RecipeId.AdvancedOilProcessing],
-  //       true,
-  //       {} as any,
-  //     );
-  //     expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
-  //       { id: RecipeId.AdvancedOilProcessing, value: true, def: false },
-  //     ]);
-  //   });
-  // });
+  describe('changeItemExcluded', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component, 'setExcludedItems');
+      component.changeItemExcluded(ItemId.Coal, true);
+      expect(component.setExcludedItems).toHaveBeenCalledWith(
+        new Set([ItemId.Coal]),
+      );
+    });
+  });
 
-  // describe('toggleRecipe', () => {
-  //   it('should disable a recipe', () => {
-  //     spyOn(component, 'setRecipeExcluded');
-  //     const data = { ...Mocks.AdjustedDataset, ...{ defaults: undefined } };
-  //     component.toggleRecipe(
-  //       RecipeId.AdvancedOilProcessing,
-  //       Mocks.RecipesStateInitial,
-  //       data,
-  //     );
-  //     expect(component.setRecipeExcluded).toHaveBeenCalledWith(
-  //       RecipeId.AdvancedOilProcessing,
-  //       true,
-  //       false,
-  //     );
-  //   });
-
-  //   it('should enable a recipe', () => {
-  //     spyOn(component, 'setRecipeExcluded');
-  //     component.toggleRecipe(
-  //       RecipeId.NuclearFuelReprocessing,
-  //       Mocks.RecipesStateInitial,
-  //       Mocks.AdjustedDataset,
-  //     );
-  //     expect(component.setRecipeExcluded).toHaveBeenCalledWith(
-  //       RecipeId.NuclearFuelReprocessing,
-  //       false,
-  //       true,
-  //     );
-  //   });
-  // });
+  describe('changeRecipesExcluded', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component, 'setExcludedRecipes');
+      component.changeRecipesExcluded([RecipeId.Coal], true);
+      expect(component.setExcludedRecipes).toHaveBeenCalledWith(
+        new Set([RecipeId.NuclearFuelReprocessing, RecipeId.Coal]),
+        new Set([RecipeId.NuclearFuelReprocessing]),
+      );
+    });
+  });
 
   describe('changeRecipeField', () => {
     const step: Step = {
@@ -424,62 +407,64 @@ describe('StepsComponent', () => {
     });
   });
 
-  // describe('changeStepChecked', () => {
-  //   it('should set for an item step', () => {
-  //     spyOn(component, 'setItemChecked');
-  //     component.changeStepChecked({ id: '0', itemId: ItemId.Coal }, true);
-  //     expect(component.setItemChecked).toHaveBeenCalledWith(ItemId.Coal, true);
-  //   });
+  describe('changeStepChecked', () => {
+    it('should set for an item step', () => {
+      spyOn(component, 'setCheckedItems');
+      component.changeStepChecked({ id: '0', itemId: ItemId.Coal }, true);
+      expect(component.setCheckedItems).toHaveBeenCalledWith(
+        new Set([ItemId.Coal]),
+      );
+    });
 
-  //   it('should set for a recipe objective step', () => {
-  //     spyOn(component, 'setRecipeChecked');
-  //     component.changeStepChecked(
-  //       { id: '0', recipeObjectiveId: '1', recipeId: RecipeId.Coal },
-  //       true,
-  //     );
-  //     expect(component.setRecipeChecked).toHaveBeenCalledWith('1', true, true);
-  //   });
+    it('should set for a recipe objective step', () => {
+      spyOn(component, 'setCheckedObjectives');
+      component.changeStepChecked(
+        { id: '0', recipeObjectiveId: '1', recipeId: RecipeId.Coal },
+        true,
+      );
+      expect(component.setCheckedObjectives).toHaveBeenCalledWith(
+        new Set(['1']),
+      );
+    });
 
-  //   it('should set for a recipe step', () => {
-  //     spyOn(component, 'setRecipeChecked');
-  //     component.changeStepChecked({ id: '0', recipeId: RecipeId.Coal }, true);
-  //     expect(component.setRecipeChecked).toHaveBeenCalledWith(
-  //       RecipeId.Coal,
-  //       true,
-  //     );
-  //   });
-  // });
+    it('should set for a recipe step', () => {
+      spyOn(component, 'setCheckedRecipes');
+      component.changeStepChecked({ id: '0', recipeId: RecipeId.Coal }, true);
+      expect(component.setCheckedRecipes).toHaveBeenCalledWith(
+        new Set([RecipeId.Coal]),
+      );
+    });
+  });
 
-  // it('should dispatch actions', () => {
-  //   const dispatch = new DispatchTest(mockStore, component);
-  //   dispatch.props('setRows', Preferences.setRows);
-  //   dispatch.props('setItemExcluded', Items.setExcluded);
-  //   dispatch.props('setItemChecked', Items.setChecked);
-  //   dispatch.props('setBelt', Items.setBelt);
-  //   dispatch.props('setWagon', Items.setWagon);
-  //   dispatch.props('setRecipeExcluded', Recipes.setExcluded);
-  //   dispatch.props('setRecipeExcludedBatch', Recipes.setExcludedBatch);
-  //   dispatch.props('addObjective', Objectives.add);
-  //   dispatch.props('setMachine', Recipes.setMachine);
-  //   dispatch.props('setMachine', Objectives.setMachine, ['', '', '', true]);
-  //   dispatch.props('setFuel', Recipes.setFuel);
-  //   dispatch.props('setFuel', Objectives.setFuel, ['', '', '', true]);
-  //   dispatch.props('setModules', Recipes.setModules);
-  //   dispatch.props('setModules', Objectives.setModules, ['', '', true]);
-  //   dispatch.props('setBeacons', Recipes.setBeacons);
-  //   dispatch.props('setBeacons', Objectives.setBeacons, ['', '', true]);
-  //   dispatch.props('setOverclock', Recipes.setOverclock);
-  //   dispatch.props('setOverclock', Objectives.setOverclock, ['', '', '', true]);
-  //   dispatch.props('setRecipeChecked', Recipes.setChecked);
-  //   dispatch.props('setRecipeChecked', Objectives.setChecked, ['', '', true]);
-  //   dispatch.props('resetItem', Items.resetItem);
-  //   dispatch.props('resetRecipe', Recipes.resetRecipe);
-  //   dispatch.props('resetRecipeObjective', Objectives.resetObjective);
-  //   dispatch.void('resetChecked', Items.resetChecked);
-  //   dispatch.void('resetExcluded', Items.resetExcluded);
-  //   dispatch.void('resetBelts', Items.resetBelts);
-  //   dispatch.void('resetWagons', Items.resetWagons);
-  //   dispatch.void('resetMachines', Recipes.resetMachines);
-  //   dispatch.void('resetBeacons', Recipes.resetBeacons);
-  // });
+  it('should dispatch actions', () => {
+    const dispatch = new DispatchTest(mockStore, component);
+    dispatch.props('setRows', Preferences.setRows);
+    dispatch.props('setExcludedItems', Settings.setExcludedItems);
+    dispatch.props('setBelt', Items.setBelt);
+    dispatch.props('setWagon', Items.setWagon);
+    dispatch.props('setExcludedRecipes', Settings.setExcludedRecipes);
+    dispatch.props('addObjective', Objectives.add);
+    dispatch.props('setMachine', Recipes.setMachine);
+    dispatch.props('setMachine', Objectives.setMachine, ['', '', '', true]);
+    dispatch.props('setFuel', Recipes.setFuel);
+    dispatch.props('setFuel', Objectives.setFuel, ['', '', '', true]);
+    dispatch.props('setModules', Recipes.setModules);
+    dispatch.props('setModules', Objectives.setModules, ['', '', true]);
+    dispatch.props('setBeacons', Recipes.setBeacons);
+    dispatch.props('setBeacons', Objectives.setBeacons, ['', '', true]);
+    dispatch.props('setOverclock', Recipes.setOverclock);
+    dispatch.props('setOverclock', Objectives.setOverclock, ['', '', '', true]);
+    dispatch.props('setCheckedItems', Settings.setCheckedItems);
+    dispatch.props('setCheckedRecipes', Settings.setCheckedRecipes);
+    dispatch.props('setCheckedObjectives', Settings.setCheckedObjectives);
+    dispatch.props('resetItem', Items.resetItem);
+    dispatch.props('resetRecipe', Recipes.resetRecipe);
+    dispatch.props('resetRecipeObjective', Objectives.resetObjective);
+    dispatch.void('resetChecked', Settings.resetChecked);
+    dispatch.void('resetExcludedItems', Settings.resetExcludedItems);
+    dispatch.void('resetBelts', Items.resetBelts);
+    dispatch.void('resetWagons', Items.resetWagons);
+    dispatch.void('resetMachines', Recipes.resetMachines);
+    dispatch.void('resetBeacons', Recipes.resetBeacons);
+  });
 });

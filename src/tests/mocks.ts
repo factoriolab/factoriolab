@@ -178,6 +178,7 @@ export const Step2: M.Step = {
 };
 export const Steps = [Step1, Step2];
 export const BeltSpeed: M.Entities<M.Rational> = {
+  [ItemId.ExpressTransportBelt]: M.rational(45n),
   [ItemId.TransportBelt]: M.rational(15n),
   [ItemId.Pipe]: M.rational(1500n),
 };

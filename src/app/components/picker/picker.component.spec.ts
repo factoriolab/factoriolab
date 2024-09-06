@@ -52,6 +52,16 @@ describe('PickerComponent', () => {
       expect(markForCheck).toHaveBeenCalled();
     });
 
+    it('should handle a set', () => {
+      component.clickOpen(
+        'item',
+        Mocks.AdjustedDataset.itemIds,
+        new Set([ItemId.IronPlate]),
+      );
+      expect(component.visible).toBeTrue();
+      expect(markForCheck).toHaveBeenCalled();
+    });
+
     it('should open as item multiselect', () => {
       component.clickOpen('item', Mocks.AdjustedDataset.itemIds, [
         ItemId.IronPlate,
@@ -126,16 +136,16 @@ describe('PickerComponent', () => {
     });
   });
 
-  // describe('onHide', () => {
-  //   it('should emit selected ids if array', () => {
-  //     spyOn(component.selectIds, 'emit');
-  //     component.selection = [RecipeId.AdvancedCircuit];
-  //     component.onHide();
-  //     expect(component.selectIds.emit).toHaveBeenCalledWith([
-  //       RecipeId.AdvancedCircuit,
-  //     ]);
-  //   });
-  // });
+  describe('onHide', () => {
+    it('should emit selected ids if array', () => {
+      spyOn(component.selectIds, 'emit');
+      component.selection = [RecipeId.AdvancedCircuit];
+      component.onHide();
+      expect(component.selectIds.emit).toHaveBeenCalledWith(
+        new Set([RecipeId.AdvancedCircuit]),
+      );
+    });
+  });
 
   describe('inputSearch', () => {
     beforeEach(() => {

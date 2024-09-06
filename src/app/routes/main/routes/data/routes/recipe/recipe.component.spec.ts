@@ -1,14 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import {
-  DispatchTest,
-  Mocks,
-  RecipeId,
-  TestModule,
-  TestUtility,
-} from 'src/tests';
-import { LabState, Recipes } from '~/store';
+import { DispatchTest, RecipeId, TestModule, TestUtility } from 'src/tests';
+import { LabState, Recipes, Settings } from '~/store';
 import { RecipeComponent } from './recipe.component';
 
 describe('RecipeComponent', () => {
@@ -47,44 +41,32 @@ describe('RecipeComponent', () => {
     });
   });
 
-  // describe('toggleRecipe', () => {
-  //   it('should handle an unrecognized recipe', () => {
-  //     spyOn(component, 'setRecipeExcluded');
-  //     TestUtility.setInputs(fixture, { id: 'id' });
-  //     component.toggleExcluded();
-  //     expect(component.setRecipeExcluded).not.toHaveBeenCalled();
-  //   });
+  describe('changeExcluded', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component, 'setExcludedRecipes');
+      component.changeExcluded(false);
+      expect(component.setExcludedRecipes).toHaveBeenCalledWith(
+        new Set(),
+        new Set([RecipeId.NuclearFuelReprocessing]),
+      );
+    });
+  });
 
-  //   it('should calculate default excluded state for a recipe', () => {
-  //     spyOn(component, 'setRecipeExcluded');
-  //     component.toggleExcluded();
-  //     expect(component.setRecipeExcluded).toHaveBeenCalledWith(
-  //       RecipeId.NuclearFuelReprocessing,
-  //       false,
-  //       true,
-  //     );
-  //   });
+  describe('changeChecked', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component, 'setCheckedRecipes');
+      component.changeChecked(true);
+      expect(component.setCheckedRecipes).toHaveBeenCalledWith(
+        new Set([RecipeId.NuclearFuelReprocessing]),
+      );
+    });
+  });
 
-  //   it('should default to empty excluded recipe ids array', () => {
-  //     spyOn(component, 'setRecipeExcluded');
-  //     const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
-  //     mockStore.overrideSelector(Recipes.selectAdjustedDataset, data);
-  //     mockStore.refreshState();
-  //     component.toggleExcluded();
-  //     expect(component.setRecipeExcluded).toHaveBeenCalledWith(
-  //       RecipeId.NuclearFuelReprocessing,
-  //       false,
-  //       false,
-  //     );
-  //     mockStore.resetSelectors();
-  //   });
-  // });
-
-  // it('should dispatch actions', () => {
-  //   const dispatch = new DispatchTest(mockStore, component);
-  //   dispatch.props('setRecipeExcluded', Recipes.setExcluded);
-  //   dispatch.props('setRecipeChecked', Recipes.setChecked);
-  //   dispatch.props('setRecipeCost', Recipes.setCost);
-  //   dispatch.props('resetRecipe', Recipes.resetRecipe);
-  // });
+  it('should dispatch actions', () => {
+    const dispatch = new DispatchTest(mockStore, component);
+    dispatch.props('setExcludedRecipes', Settings.setExcludedRecipes);
+    dispatch.props('setCheckedRecipes', Settings.setCheckedRecipes);
+    dispatch.props('setRecipeCost', Recipes.setCost);
+    dispatch.props('resetRecipe', Recipes.resetRecipe);
+  });
 });

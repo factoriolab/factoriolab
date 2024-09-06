@@ -67,10 +67,6 @@ export const selectBeaconReceivers = createSelector(
   settingsState,
   (state) => state.beaconReceivers,
 );
-export const selectMachineRankIds = createSelector(
-  settingsState,
-  (state) => state.machineRankIds,
-);
 export const selectFlowRate = createSelector(
   settingsState,
   (state) => state.flowRate,
@@ -90,14 +86,6 @@ export const selectDisplayRate = createSelector(
 export const selectMaximizeType = createSelector(
   settingsState,
   (state) => state.maximizeType,
-);
-export const selectSurplusMachinesOutput = createSelector(
-  settingsState,
-  (state) => state.surplusMachinesOutput,
-);
-export const selectCosts = createSelector(
-  settingsState,
-  (state) => state.costs,
 );
 
 /* Complex selectors */
@@ -591,15 +579,14 @@ export const selectInserterData = createSelector(
 export const selectAvailableRecipes = createSelector(
   selectAllResearchedTechnologyIds,
   selectDataset,
-  (researchedTechnologyIds, data) => {
-    if (researchedTechnologyIds == null) return data.recipeIds;
-
-    const set = new Set(researchedTechnologyIds);
-    return data.recipeIds.filter((i) => {
+  (researchedTechnologyIds, data) =>
+    data.recipeIds.filter((i) => {
       const recipe = data.recipeEntities[i];
-      return recipe.unlockedBy == null || set.has(recipe.unlockedBy);
-    });
-  },
+      return (
+        recipe.unlockedBy == null ||
+        researchedTechnologyIds.has(recipe.unlockedBy)
+      );
+    }),
 );
 
 export const selectModMenuItem = createSelector(

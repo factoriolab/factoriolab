@@ -1534,8 +1534,8 @@
                       [icon]="recipeId | iconSmClass: 'recipe'"
                       [pTooltip]="tooltip"
                       (click)="
-                        changeRecipeExcluded(
-                          recipeId,
+                        changeRecipesExcluded(
+                          [recipeId],
                           !settings().excludedRecipeIds.has(recipeId)
                         )
                       "

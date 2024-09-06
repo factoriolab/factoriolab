@@ -384,13 +384,6 @@ export class StepsComponent implements OnInit, AfterViewInit {
     );
   }
 
-  changeRecipeExcluded(id: string, value: boolean): void {
-    this.setExcludedRecipes(
-      updateSetIds(id, value, this.settings().excludedRecipeIds),
-      new Set(coalesce(this.data().defaults?.excludedRecipeIds, [])),
-    );
-  }
-
   changeRecipeField(
     step: Step,
     event: string | number | ModuleSettings[] | BeaconSettings[],
