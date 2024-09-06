@@ -16,15 +16,7 @@ import {
   TestUtility,
 } from 'src/tests';
 import { Game, rational } from '~/models';
-import {
-  App,
-  Items,
-  LabState,
-  Machines,
-  Preferences,
-  Recipes,
-  Settings,
-} from '~/store';
+import { App, LabState, Machines, Preferences, Settings } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 import { SettingsComponent } from './settings.component';
 
@@ -106,6 +98,12 @@ describe('SettingsComponent', () => {
       expect(component.router.navigate).toHaveBeenCalledWith([], {
         queryParams: { z: 'zip' },
       });
+    });
+
+    it('should return if the state is falsy', () => {
+      spyOn(component.router, 'navigate');
+      component.setState('', {});
+      expect(component.router.navigate).not.toHaveBeenCalled();
     });
   });
 
@@ -207,48 +205,25 @@ describe('SettingsComponent', () => {
     });
   });
 
-  // describe('setExcludedRecipes', () => {
-  //   it('should set up a batch of actions to set recipe excluded states', () => {
-  //     spyOn(component, 'setRecipeExcludedBatch');
-  //     component.setExcludedRecipes(
-  //       [...Mocks.AdjustedDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
-  //       Mocks.RecipesStateInitial,
-  //       Mocks.AdjustedDataset,
-  //     );
-  //     expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
-  //       { id: RecipeId.Coal, value: true, def: false },
-  //     ]);
-  //   });
+  describe('setMod', () => {
+    it('should map a game to its default mod id', () => {
+      spyOn(component.router, 'navigate');
+      component.setMod('mod');
+      expect(component.router.navigate).toHaveBeenCalledWith(['mod', 'list']);
+    });
+  });
 
-  //   it('should handle null defaults', () => {
-  //     spyOn(component, 'setRecipeExcludedBatch');
-  //     component.setExcludedRecipes(
-  //       [...Mocks.AdjustedDataset.defaults!.excludedRecipeIds, RecipeId.Coal],
-  //       Mocks.RecipesStateInitial,
-  //       {
-  //         ...Mocks.AdjustedDataset,
-  //         ...{ defaults: undefined },
-  //       },
-  //     );
-  //     expect(component.setRecipeExcludedBatch).toHaveBeenCalledWith([
-  //       { id: RecipeId.Coal, value: true, def: false },
-  //     ]);
-  //   });
-  // });
-
-  // describe('setExcludedItems', () => {
-  //   it('should set up a batch of actions to set item excluded states', () => {
-  //     spyOn(component, 'setItemExcludedBatch');
-  //     component.setExcludedItems(
-  //       [ItemId.Coal],
-  //       Mocks.ItemsStateInitial,
-  //       Mocks.AdjustedDataset,
-  //     );
-  //     expect(component.setItemExcludedBatch).toHaveBeenCalledWith([
-  //       { id: ItemId.Coal, value: true },
-  //     ]);
-  //   });
-  // });
+  describe('changeExcludedRecipes', () => {
+    it('should set up defaults to pass to the store action', () => {
+      spyOn(component, 'setExcludedRecipes');
+      const set = new Set([RecipeId.AdvancedCircuit]);
+      component.changeExcludedRecipes(set);
+      expect(component.setExcludedRecipes).toHaveBeenCalledWith(
+        set,
+        new Set([RecipeId.NuclearFuelReprocessing]),
+      );
+    });
+  });
 
   describe('changeFuel', () => {
     it('should calculate the default value for the passed machine', () => {
@@ -308,11 +283,11 @@ describe('SettingsComponent', () => {
   });
 
   describe('toggleBeaconReceivers', () => {
-    // it('should turn off beacon power estimation', () => {
-    //   spyOn(component, 'setBeaconReceivers');
-    //   component.toggleBeaconReceivers(false);
-    //   expect(component.setBeaconReceivers).toHaveBeenCalledWith(null);
-    // });
+    it('should turn off beacon power estimation', () => {
+      spyOn(component, 'setBeaconReceivers');
+      component.toggleBeaconReceivers(false);
+      expect(component.setBeaconReceivers).toHaveBeenCalledWith(undefined);
+    });
 
     it('should turn on beacon power estimation', () => {
       spyOn(component, 'setBeaconReceivers');
@@ -321,58 +296,100 @@ describe('SettingsComponent', () => {
     });
   });
 
-  // it('should dispatch actions', () => {
-  //   const dispatch = new DispatchTest(mockStore, component);
-  //   dispatch.void('resetSettings', App.reset);
-  //   dispatch.props('saveState', Preferences.saveState);
-  //   dispatch.props('removeState', Preferences.removeState);
-  //   dispatch.props('setMod', Settings.setMod);
-  //   dispatch.props(
-  //     'setResearchedTechnologies',
-  //     Settings.setResearchedTechnologies,
-  //   );
-  //   dispatch.props('setRecipeExcludedBatch', Recipes.setExcludedBatch);
-  //   dispatch.props('setItemExcludedBatch', Items.setExcludedBatch);
-  //   dispatch.props('setPreset', Settings.setPreset);
-  //   dispatch.props('setFuelRank', Machines.setFuelRank);
-  //   dispatch.props('setModuleRank', Machines.setModuleRank);
-  //   dispatch.props('addMachine', Machines.add);
-  //   dispatch.props('setDefaultBeacons', Machines.setDefaultBeacons);
-  //   dispatch.props('setDefaultOverclock', Machines.setDefaultOverclock);
-  //   dispatch.props('setMachineRank', Machines.setRank);
-  //   dispatch.props('setMachine', Machines.setMachine);
-  //   dispatch.props('setFuel', Machines.setFuel);
-  //   dispatch.props('setModules', Machines.setModules);
-  //   dispatch.props('setBeacons', Machines.setBeacons);
-  //   dispatch.props('setOverclock', Machines.setOverclock);
-  //   dispatch.props('removeMachine', Machines.remove);
-  //   dispatch.props('setBeaconReceivers', Settings.setBeaconReceivers);
-  //   dispatch.props('setProliferatorSpray', Settings.setProliferatorSpray);
-  //   dispatch.props('setBelt', Settings.setBelt);
-  //   dispatch.props('setPipe', Settings.setPipe);
-  //   dispatch.props('setCargoWagon', Settings.setCargoWagon);
-  //   dispatch.props('setFluidWagon', Settings.setFluidWagon);
-  //   dispatch.props('setFlowRate', Settings.setFlowRate);
-  //   dispatch.props('setInserterTarget', Settings.setInserterTarget);
-  //   dispatch.props('setMiningBonus', Settings.setMiningBonus);
-  //   dispatch.props('setResearchSpeed', Settings.setResearchBonus);
-  //   dispatch.props('setInserterCapacity', Settings.setInserterCapacity);
-  //   dispatch.props('setDisplayRate', Settings.setDisplayRate);
-  //   dispatch.props('setPowerUnit', Preferences.setPowerUnit);
-  //   dispatch.props('setLanguage', Preferences.setLanguage);
-  //   dispatch.props('setTheme', Preferences.setTheme);
-  //   dispatch.props('setBypassLanding', Preferences.setBypassLanding);
-  //   dispatch.props('setHideDuplicateIcons', Preferences.setHideDuplicateIcons);
-  //   dispatch.props('setDisablePaginator', Preferences.setDisablePaginator);
-  //   dispatch.props('setMaximizeType', Settings.setMaximizeType);
-  //   dispatch.props('setNetProductionOnly', Settings.setNetProductionOnly);
-  //   dispatch.props(
-  //     'setSurplusMachinesOutput',
-  //     Settings.setSurplusMachinesOutput,
-  //   );
-  //   dispatch.props(
-  //     'setConvertObjectiveValues',
-  //     Preferences.setConvertObjectiveValues,
-  //   );
-  // });
+  describe('addMachine', () => {
+    it('should update the set and pass to the store action', () => {
+      spyOn(component, 'setMachineRank');
+      component.addMachine(ItemId.AssemblingMachine2, undefined);
+      expect(component.setMachineRank).toHaveBeenCalledWith(
+        [
+          ItemId.AssemblingMachine1,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+          ItemId.AssemblingMachine2,
+        ],
+        undefined,
+      );
+    });
+  });
+
+  describe('setMachine', () => {
+    it('should update the set and pass to the store action', () => {
+      spyOn(component, 'setMachineRank');
+      component.setMachine(
+        ItemId.AssemblingMachine1,
+        ItemId.AssemblingMachine2,
+        undefined,
+      );
+      expect(component.setMachineRank).toHaveBeenCalledWith(
+        [
+          ItemId.AssemblingMachine2,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+        ],
+        undefined,
+      );
+    });
+  });
+
+  describe('removeMachine', () => {
+    it('should update the set and pass to the store action', () => {
+      spyOn(component, 'setMachineRank');
+      component.removeMachine(ItemId.AssemblingMachine1, undefined);
+      expect(component.setMachineRank).toHaveBeenCalledWith(
+        [ItemId.ElectricFurnace, ItemId.ElectricMiningDrill],
+        undefined,
+      );
+    });
+  });
+
+  it('should dispatch actions', () => {
+    const dispatch = new DispatchTest(mockStore, component);
+    dispatch.void('resetSettings', App.reset);
+    dispatch.props('saveState', Preferences.saveState);
+    dispatch.props('removeState', Preferences.removeState);
+    dispatch.props(
+      'setResearchedTechnologies',
+      Settings.setResearchedTechnologies,
+    );
+    dispatch.props('setExcludedItems', Settings.setExcludedItems);
+    dispatch.props('setExcludedRecipes', Settings.setExcludedRecipes);
+    dispatch.props('setPreset', Settings.setPreset);
+    dispatch.props('setFuelRank', Settings.setFuelRank);
+    dispatch.props('setModuleRank', Settings.setModuleRank);
+    dispatch.props('setDefaultBeacons', Settings.setBeacons);
+    dispatch.props('setDefaultOverclock', Settings.setOverclock);
+    dispatch.props('setMachineRank', Settings.setMachineRank);
+    dispatch.props('setFuel', Machines.setFuel);
+    dispatch.props('setModules', Machines.setModules);
+    dispatch.props('setBeacons', Machines.setBeacons);
+    dispatch.props('setOverclock', Machines.setOverclock);
+    dispatch.props('setBeaconReceivers', Settings.setBeaconReceivers);
+    dispatch.props('setProliferatorSpray', Settings.setProliferatorSpray);
+    dispatch.props('setBelt', Settings.setBelt);
+    dispatch.props('setPipe', Settings.setPipe);
+    dispatch.props('setCargoWagon', Settings.setCargoWagon);
+    dispatch.props('setFluidWagon', Settings.setFluidWagon);
+    dispatch.props('setFlowRate', Settings.setFlowRate);
+    dispatch.props('setInserterTarget', Settings.setInserterTarget);
+    dispatch.props('setMiningBonus', Settings.setMiningBonus);
+    dispatch.props('setResearchSpeed', Settings.setResearchBonus);
+    dispatch.props('setInserterCapacity', Settings.setInserterCapacity);
+    dispatch.props('setDisplayRate', Settings.setDisplayRate);
+    dispatch.props('setPowerUnit', Preferences.setPowerUnit);
+    dispatch.props('setLanguage', Preferences.setLanguage);
+    dispatch.props('setTheme', Preferences.setTheme);
+    dispatch.props('setBypassLanding', Preferences.setBypassLanding);
+    dispatch.props('setHideDuplicateIcons', Preferences.setHideDuplicateIcons);
+    dispatch.props('setDisablePaginator', Preferences.setDisablePaginator);
+    dispatch.props('setMaximizeType', Settings.setMaximizeType);
+    dispatch.props('setNetProductionOnly', Settings.setNetProductionOnly);
+    dispatch.props(
+      'setSurplusMachinesOutput',
+      Settings.setSurplusMachinesOutput,
+    );
+    dispatch.props(
+      'setConvertObjectiveValues',
+      Preferences.setConvertObjectiveValues,
+    );
+  });
 });
