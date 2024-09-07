@@ -122,7 +122,7 @@ export const setInserterCapacity = createAction(
 );
 export const setResearchedTechnologies = createAction(
   `${key} Set Researched Technologies`,
-  props<{ researchedTechnologyIds: Set<string> | null }>(),
+  props<{ researchedTechnologyIds: Set<string> | undefined }>(),
 );
 export const setCosts = createAction(
   `${key} Set Costs`,

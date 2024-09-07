@@ -52,6 +52,7 @@ import {
   MaximizeType,
   maximizeTypeOptions,
   ModuleSettings,
+  Optional,
   PowerUnit,
   powerUnitOptions,
   Preset,
@@ -369,7 +370,9 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(Preferences.removeState({ key, id }));
   }
 
-  setResearchedTechnologies(researchedTechnologyIds: Set<string> | null): void {
+  setResearchedTechnologies(
+    researchedTechnologyIds: Optional<Set<string>>,
+  ): void {
     this.store.dispatch(
       Settings.setResearchedTechnologies({ researchedTechnologyIds }),
     );

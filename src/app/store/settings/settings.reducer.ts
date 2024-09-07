@@ -46,12 +46,7 @@ export interface SettingsState {
   miningBonus: Rational;
   researchBonus: Rational;
   inserterCapacity: InserterCapacity;
-  /**
-   * Use null value to indicate all researched. This list is filtered to the
-   * minimal set of technologies not listed as prerequisites for other
-   * researched technologies, to reduce zip size.
-   */
-  researchedTechnologyIds: Set<string> | null;
+  researchedTechnologyIds?: Set<string>;
   costs: CostSettings;
 }
 
@@ -76,7 +71,6 @@ export const initialState: SettingsState = {
   miningBonus: rational.zero,
   researchBonus: researchBonusValue.speed6,
   inserterCapacity: InserterCapacity.Capacity7,
-  researchedTechnologyIds: null,
   costs: {
     factor: rational.one,
     machine: rational.one,

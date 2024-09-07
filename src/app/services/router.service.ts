@@ -870,7 +870,6 @@ export class RouterService {
     // Set up shorthand functions to parse state
     const get = this.zipSvc.get(params);
     const sub = get(this.zipSvc.parseSubset);
-    const nsb = get(this.zipSvc.parseNullableSubset);
     const num = get(this.zipSvc.parseNumber);
     const bln = get(this.zipSvc.parseBool);
     const str = get(this.zipSvc.parseString);
@@ -906,7 +905,7 @@ export class RouterService {
       miningBonus: rat('bmi'),
       researchBonus: rat('bre'),
       inserterCapacity: num('bic'),
-      researchedTechnologyIds: nsb('tre', modHash.technologies),
+      researchedTechnologyIds: sub('tre', modHash.technologies),
     };
 
     const costs: Partial<CostSettings> = {
@@ -919,22 +918,14 @@ export class RouterService {
       maximize: rat('cmx'),
     };
 
-    if (params.v10iex)
-      obj.excludedItemIds = this.zipSvc.parseSet(params.v10iex, hash?.items);
-    if (params.v10ich)
-      obj.checkedItemIds = this.zipSvc.parseSet(params.v10ich, hash?.items);
+    const mps = this.migrationSvc.parseSet.bind(this.migrationSvc);
+    if (params.v10iex) obj.excludedItemIds = mps(params.v10iex, hash?.items);
+    if (params.v10ich) obj.checkedItemIds = mps(params.v10ich, hash?.items);
     if (params.v10rex)
-      obj.excludedRecipeIds = this.zipSvc.parseSet(
-        params.v10rex,
-        hash?.recipes,
-      );
-    if (params.v10rch)
-      obj.checkedRecipeIds = this.zipSvc.parseSet(params.v10rch, hash?.recipes);
+      obj.excludedRecipeIds = mps(params.v10rex, hash?.recipes);
+    if (params.v10rch) obj.checkedRecipeIds = mps(params.v10rch, hash?.recipes);
     if (params.v10tre) {
-      obj.researchedTechnologyIds = this.zipSvc.parseNullableSet(
-        params.v10tre,
-        hash?.technologies,
-      );
+      obj.researchedTechnologyIds = mps(params.v10tre, hash?.technologies);
       obj.researchedTechnologyIds =
         this.migrationSvc.restoreV10ResearchedTechnologies(
           obj.researchedTechnologyIds,

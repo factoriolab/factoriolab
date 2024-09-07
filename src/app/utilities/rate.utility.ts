@@ -7,7 +7,7 @@ import {
   Entities,
   Game,
   ItemSettings,
-  Nullable,
+  Optional,
   Objective,
   ObjectiveType,
   ObjectiveUnit,
@@ -239,7 +239,7 @@ export class RateUtility {
 
   static calculateBeacons(
     step: Step,
-    beaconReceivers: Nullable<Rational>,
+    beaconReceivers: Optional<Rational>,
     data: AdjustedDataset,
   ): void {
     if (

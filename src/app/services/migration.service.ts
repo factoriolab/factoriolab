@@ -9,14 +9,13 @@ import {
   Entities,
   LabParams,
   ModData,
-  Nullable,
   ObjectiveType,
+  Optional,
   toEntities,
   ZARRAYSEP,
   ZEMPTY,
   ZFIELDSEP,
   ZipVersion,
-  ZNULL,
   ZTRUE,
 } from '~/models';
 import { Settings } from '~/store';
@@ -26,7 +25,8 @@ import { ContentService } from './content.service';
 import { TranslateService } from './translate.service';
 import { ZipService } from './zip.service';
 
-const ZLISTSEP = '_'; // OBSOLETE: V11
+export const V10LISTSEP = '_'; // V11: Deprecated
+export const V10NULL = '?'; // V11: Deprecated
 
 export enum ZipSectionV10 {
   Version = 'v',
@@ -158,7 +158,7 @@ export class MigrationService {
       // Convert modId to V1
       let modId = this.zipSvc.parseString(s[0]);
       modId = modId && data.modHash[data.modHashV0.indexOf(modId)];
-      modId = modId ?? ZNULL;
+      modId = modId ?? '';
       // Convert displayRate to V1
       const displayRateV0 = this.zipSvc.parseNumber(s[6]) ?? 60;
       const displayRateV1 =
@@ -182,8 +182,8 @@ export class MigrationService {
       ]);
     } else if (params[ZipSectionV10.Mod]) {
       params[ZipSectionV10.Settings] = this.zipSvc.zipFields([
-        ZNULL,
-        ZNULL,
+        V10NULL,
+        V10NULL,
         params[ZipSectionV10.Mod], // Legacy preset
       ]);
     }
@@ -222,41 +222,41 @@ export class MigrationService {
     if (params[ZipSectionV10.Recipes]) {
       // Convert recipe settings
       const zip = params[ZipSectionV10.Recipes];
-      const list = zip.split(ZLISTSEP);
+      const list = zip.split(V10LISTSEP);
       const migrated = [];
       const index = 3; // Index of beaconCount field
       for (const recipe of list) {
         const s = recipe.split(ZFIELDSEP);
         if (s.length > index) {
           // Convert beaconCount from number to string format
-          const asString = this.zipSvc.parseNNumber(s[index])?.toString();
+          const asString = this.parseNNumber(s[index])?.toString();
           s[index] = this.zipSvc.zipString(asString);
         }
 
         migrated.push(this.zipSvc.zipFields(s));
       }
 
-      params[ZipSectionV10.Recipes] = migrated.join(ZLISTSEP);
+      params[ZipSectionV10.Recipes] = migrated.join(V10LISTSEP);
     }
 
     if (params[ZipSectionV10.Machines]) {
       // Convert machine settings
       const zip = params[ZipSectionV10.Machines];
-      const list = zip.split(ZLISTSEP);
+      const list = zip.split(V10LISTSEP);
       const migrated: string[] = [];
       const index = 2; // Index of beaconCount field
       for (const machine of list) {
         const s = machine.split(ZFIELDSEP);
         if (s.length > index) {
           // Convert beaconCount from number to string format
-          const asString = this.zipSvc.parseNNumber(s[index])?.toString();
+          const asString = this.parseNNumber(s[index])?.toString();
           s[index] = this.zipSvc.zipString(asString);
         }
 
         migrated.push(this.zipSvc.zipFields(s));
       }
 
-      params[ZipSectionV10.Machines] = migrated.join(ZLISTSEP);
+      params[ZipSectionV10.Machines] = migrated.join(V10LISTSEP);
     }
 
     params[ZipSectionV10.Version] = ZipVersion.Version3;
@@ -294,7 +294,7 @@ export class MigrationService {
   ): void {
     if (params[section]) {
       const zip = params[section];
-      const list = zip.split(ZLISTSEP);
+      const list = zip.split(V10LISTSEP);
       const migrated: string[] = [];
 
       for (const s of list.map((z) => z.split(ZFIELDSEP))) {
@@ -343,7 +343,7 @@ export class MigrationService {
         migrated.push(this.zipSvc.zipFields(s));
       }
 
-      params[section] = migrated.join(ZLISTSEP);
+      params[section] = migrated.join(V10LISTSEP);
     }
   }
 
@@ -365,7 +365,7 @@ export class MigrationService {
 
     if (list.length) {
       // Add beacon settings
-      state.params[ZipSectionV10.Beacons] = list.join(ZLISTSEP);
+      state.params[ZipSectionV10.Beacons] = list.join(V10LISTSEP);
     }
 
     return state;
@@ -391,7 +391,7 @@ export class MigrationService {
     index: number,
   ): void {
     if (params[section]) {
-      const list = params[section].split(ZLISTSEP);
+      const list = params[section].split(V10LISTSEP);
       for (let i = 0; i < list.length; i++) {
         const o = list[i].split(ZFIELDSEP);
         if (o.length > index) {
@@ -400,7 +400,7 @@ export class MigrationService {
         }
       }
 
-      params[section] = list.join(ZLISTSEP);
+      params[section] = list.join(V10LISTSEP);
     }
   }
 
@@ -410,7 +410,7 @@ export class MigrationService {
     index: number,
   ): void {
     if (params[section]) {
-      const list = params[section].split(ZLISTSEP);
+      const list = params[section].split(V10LISTSEP);
       for (let i = 0; i < list.length; i++) {
         const o = list[i].split(ZFIELDSEP);
         if (o.length > index) {
@@ -419,7 +419,7 @@ export class MigrationService {
         }
       }
 
-      params[section] = list.join(ZLISTSEP);
+      params[section] = list.join(V10LISTSEP);
     }
   }
 
@@ -452,7 +452,7 @@ export class MigrationService {
      * recipe objectives
      */
     if (params[ZipSectionV10.Objectives]) {
-      const list = params[ZipSectionV10.Objectives].split(ZLISTSEP);
+      const list = params[ZipSectionV10.Objectives].split(V10LISTSEP);
       const migrated = [...list];
       for (let i = 0; i < list.length; i++) {
         const obj = list[i];
@@ -462,7 +462,7 @@ export class MigrationService {
           if (isBare) {
             // Convert old RateType.Machines to recipe objectives
             const recipes = params[ZipSectionV10.RecipeObjectives]
-              ? params[ZipSectionV10.RecipeObjectives].split(ZLISTSEP)
+              ? params[ZipSectionV10.RecipeObjectives].split(V10LISTSEP)
               : [];
             if (o.length > 3) {
               // Also switch into limit / maximize objectives
@@ -476,7 +476,7 @@ export class MigrationService {
             }
 
             migrated.splice(i, 1);
-            params[ZipSectionV10.RecipeObjectives] = recipes.join(ZLISTSEP);
+            params[ZipSectionV10.RecipeObjectives] = recipes.join(V10LISTSEP);
           } else {
             /**
              * Convert hashed RateType.Machines to simple item objective by a
@@ -504,7 +504,7 @@ export class MigrationService {
         state.warnings.push(MigrationWarning.LimitStepDeprecation);
       }
 
-      params[ZipSectionV10.Objectives] = migrated.join(ZLISTSEP);
+      params[ZipSectionV10.Objectives] = migrated.join(V10LISTSEP);
     }
 
     // Items: Remove recipeId
@@ -526,7 +526,7 @@ export class MigrationService {
         const disabledRecipeIds = this.zipSvc.parseArray(s[2 + x]);
         if (disabledRecipeIds) {
           const recipes = params[ZipSectionV10.Recipes];
-          const list = recipes ? recipes.split(ZLISTSEP) : [];
+          const list = recipes ? recipes.split(V10LISTSEP) : [];
           for (const id of disabledRecipeIds) {
             let found = false;
             for (let i = 0; i < list.length; i++) {
@@ -543,7 +543,7 @@ export class MigrationService {
             }
           }
 
-          params[ZipSectionV10.Recipes] = list.join(ZLISTSEP);
+          params[ZipSectionV10.Recipes] = list.join(V10LISTSEP);
         }
 
         s.splice(2 + x, 1);
@@ -584,9 +584,9 @@ export class MigrationService {
     if (params[ZipSectionV10.RecipeObjectives]) {
       let objectives: string[] = [];
       if (params[ZipSectionV10.Objectives])
-        objectives = params[ZipSectionV10.Objectives].split(ZLISTSEP);
+        objectives = params[ZipSectionV10.Objectives].split(V10LISTSEP);
 
-      const list = params[ZipSectionV10.RecipeObjectives].split(ZLISTSEP);
+      const list = params[ZipSectionV10.RecipeObjectives].split(V10LISTSEP);
       for (let i = 0; i < list.length; i++) {
         const o = list[i].split(ZFIELDSEP);
         const n = this.zipSvc.zipFields([
@@ -604,7 +604,7 @@ export class MigrationService {
       }
 
       params[ZipSectionV10.RecipeObjectives] = '';
-      params[ZipSectionV10.Objectives] = objectives.join(ZLISTSEP);
+      params[ZipSectionV10.Objectives] = objectives.join(V10LISTSEP);
     }
 
     return this.migrateV9(state);
@@ -618,7 +618,7 @@ export class MigrationService {
   ): void {
     if (params[section]) {
       const zip = params[section];
-      const list = zip.split(ZLISTSEP);
+      const list = zip.split(V10LISTSEP);
       const migrated: string[] = [];
 
       for (const s of list.map((z) => z.split(ZFIELDSEP))) {
@@ -654,7 +654,7 @@ export class MigrationService {
         migrated.push(this.zipSvc.zipFields(s));
       }
 
-      params[section] = migrated.join(ZLISTSEP);
+      params[section] = migrated.join(V10LISTSEP);
     }
   }
 
@@ -684,10 +684,10 @@ export class MigrationService {
     // Migrate machines state
     if (state.params[ZipSectionV10.Machines]) {
       const zip = params[ZipSectionV10.Machines] as string;
-      const list = zip.split(ZLISTSEP);
+      const list = zip.split(V10LISTSEP);
       const migrated: string[] = [];
       const beacons = state.params[ZipSectionV10.Beacons]
-        ? state.params[ZipSectionV10.Beacons].split(ZLISTSEP)
+        ? state.params[ZipSectionV10.Beacons].split(V10LISTSEP)
         : [];
 
       const countIndex = 2;
@@ -754,13 +754,13 @@ export class MigrationService {
         });
 
       if (beacons.length)
-        state.params[ZipSectionV10.Beacons] = beacons.join(ZLISTSEP);
+        state.params[ZipSectionV10.Beacons] = beacons.join(V10LISTSEP);
 
-      state.params[ZipSectionV10.Machines] = migrated.join(ZLISTSEP);
+      state.params[ZipSectionV10.Machines] = migrated.join(V10LISTSEP);
     }
 
     if (modules.length)
-      state.params[ZipSectionV10.Modules] = modules.join(ZLISTSEP);
+      state.params[ZipSectionV10.Modules] = modules.join(V10LISTSEP);
 
     // Move fuelRankIds to Machines state
     if (params[ZipSectionV10.Settings]) {
@@ -771,7 +771,7 @@ export class MigrationService {
 
         if (params[ZipSectionV10.Machines]) {
           const list = (params[ZipSectionV10.Machines] as string)
-            .split(ZLISTSEP)
+            .split(V10LISTSEP)
             .map((l) => l.split(ZFIELDSEP));
           const s = list.find((l) => l[0] === ZEMPTY || l[0] === '');
           if (s) {
@@ -783,7 +783,7 @@ export class MigrationService {
 
           params[ZipSectionV10.Machines] = list
             .map((l) => this.zipSvc.zipFields(l))
-            .join(ZLISTSEP);
+            .join(V10LISTSEP);
         } else {
           params[ZipSectionV10.Machines] = ['', '', '', fuelRankIds].join(
             ZFIELDSEP,
@@ -815,21 +815,21 @@ export class MigrationService {
     }
 
     // Modules
-    const oldModules = params[ZipSectionV10.Modules] as Nullable<string>;
+    const oldModules = params[ZipSectionV10.Modules] as Optional<string>;
     delete params[ZipSectionV10.Modules];
-    const newModules = oldModules?.split(ZLISTSEP);
+    const newModules = oldModules?.split(V10LISTSEP);
 
     // Beacons
-    const oldBeacons = params[ZipSectionV10.Beacons] as Nullable<string>;
+    const oldBeacons = params[ZipSectionV10.Beacons] as Optional<string>;
     delete params[ZipSectionV10.Beacons];
-    const newBeacons = oldBeacons?.split(ZLISTSEP);
+    const newBeacons = oldBeacons?.split(V10LISTSEP);
 
     // Objectives
-    const oldObjectives = params[ZipSectionV10.Objectives] as Nullable<string>;
+    const oldObjectives = params[ZipSectionV10.Objectives] as Optional<string>;
     delete params[ZipSectionV10.Objectives];
     const objectiveIds: string[] = [];
     const newObjectives = oldObjectives
-      ?.split(ZLISTSEP)
+      ?.split(V10LISTSEP)
       .map((entry, i) => {
         const s = entry.split(ZFIELDSEP);
         const id = i.toString();
@@ -849,10 +849,10 @@ export class MigrationService {
     }
 
     // Items
-    const oldItems = params[ZipSectionV10.Items] as Nullable<string>;
+    const oldItems = params[ZipSectionV10.Items] as Optional<string>;
     delete params[ZipSectionV10.Items];
     const newItems = oldItems
-      ?.split(ZLISTSEP)
+      ?.split(V10LISTSEP)
       .map((entry) => {
         const s = entry.split(ZFIELDSEP);
         const id = s[0];
@@ -868,10 +868,10 @@ export class MigrationService {
     appendSet('v10ich', checkedItemIds);
 
     // Recipes
-    const oldRecipes = params[ZipSectionV10.Recipes] as Nullable<string>;
+    const oldRecipes = params[ZipSectionV10.Recipes] as Optional<string>;
     delete params[ZipSectionV10.Recipes];
     const newRecipes = oldRecipes
-      ?.split(ZLISTSEP)
+      ?.split(V10LISTSEP)
       .map((entry) => {
         const s = entry.split(ZFIELDSEP);
         const id = s[0];
@@ -887,7 +887,7 @@ export class MigrationService {
     appendSet('v10rch', checkedRecipeIds);
 
     // Machines
-    const oldMachines = params[ZipSectionV10.Machines] as Nullable<string>;
+    const oldMachines = params[ZipSectionV10.Machines] as Optional<string>;
     delete params[ZipSectionV10.Machines];
     let machineRank: string[] | undefined;
     let fuelRankIds: string | undefined;
@@ -895,7 +895,7 @@ export class MigrationService {
     let beacons: string | undefined;
     let overclock: string | undefined;
     const newMachines: string[] = [];
-    oldMachines?.split(ZLISTSEP).forEach((entry, i) => {
+    oldMachines?.split(V10LISTSEP).forEach((entry, i) => {
       const s = entry.split(ZFIELDSEP);
       const id = s[0];
       if (i === 0) {
@@ -909,6 +909,7 @@ export class MigrationService {
         if (s.length > 1) newMachines.push(entry);
       }
     });
+
     if (newMachines.length) params['m'] = newMachines;
     params['mmr'] = machineRank?.join(ZARRAYSEP);
     params['mfr'] = fuelRankIds;
@@ -917,7 +918,7 @@ export class MigrationService {
     params['moc'] = overclock;
 
     // Settings
-    const oldSettings = params[ZipSectionV10.Settings] as Nullable<string>;
+    const oldSettings = params[ZipSectionV10.Settings] as Optional<string>;
     delete params[ZipSectionV10.Settings];
     if (oldSettings) {
       const s = oldSettings.split(ZFIELDSEP);
@@ -928,8 +929,7 @@ export class MigrationService {
 
       // Researched technologies
       const oldResearchedTechnologies = s[0];
-      if (oldResearchedTechnologies === ZNULL) params['v10tre'] = ZNULL;
-      else if (oldResearchedTechnologies)
+      if (oldResearchedTechnologies !== V10NULL)
         appendSet(
           'v10tre',
           new Set(oldResearchedTechnologies.split(ZARRAYSEP)),
@@ -969,13 +969,13 @@ export class MigrationService {
         fixNNumber
           .filter((k) => params[k] != null)
           .forEach((k) => {
-            params[k] = this.zipSvc.parseNNumber(params[k])?.toString();
+            params[k] = this.parseNNumber(params[k])?.toString();
           });
       }
     }
 
     // Mod
-    const oldMod = params[ZipSectionV10.Mod] as Nullable<string>;
+    const oldMod = params[ZipSectionV10.Mod] as Optional<string>;
     delete params[ZipSectionV10.Mod];
     let newMod = oldMod;
     if (newMod && !state.isBare)
@@ -987,16 +987,28 @@ export class MigrationService {
     params['v'] = ZipVersion.Version11;
 
     prune(params);
+
+    function replaceDeprecated(v: string): string {
+      return v.replaceAll(V10NULL, '').replaceAll(ZEMPTY, ZEMPTY);
+    }
+
+    Object.keys(params).forEach((k) => {
+      const value = params[k];
+      if (Array.isArray(value))
+        params[k] = value.map((v) => replaceDeprecated(v));
+      else params[k] = replaceDeprecated(value);
+    });
+
     return state;
   }
 
   restoreV10ResearchedTechnologies(
-    value: Nullable<Set<string>>,
+    value: Optional<Set<string>>,
     data: ModData,
-  ): Set<string> | null {
+  ): Optional<Set<string>> {
     const technologies = data.items.filter((i) => i.technology);
     const technologyIds = technologies.map((t) => t.id);
-    if (value == null || !technologyIds.length) return null;
+    if (value == null || !technologyIds.length) return undefined;
 
     /**
      * Source technology list includes only minimal set of technologies that
@@ -1021,8 +1033,22 @@ export class MigrationService {
       addIds.forEach((i) => selection.add(i));
     } while (addIds.size);
 
-    if (selection.size === technologyIds.length) return null;
+    if (selection.size === technologyIds.length) return undefined;
     return selection;
+  }
+
+  /** V11: Deprecated */
+  parseNNumber(value: Optional<string>): number | undefined {
+    if (!value?.length) return undefined;
+    return this.compressionSvc.idToN(value);
+  }
+
+  /* Only for use in migrations */
+  parseSet(value: Optional<string>, hash?: string[]): Set<string> | undefined {
+    if (value == null) return undefined;
+    const result = value.split(ZARRAYSEP);
+    if (hash == null) return new Set(result);
+    return new Set(result.map((v) => hash[this.compressionSvc.idToN(v)]));
   }
 
   displayWarnings(warnings: string[]): void {

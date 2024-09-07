@@ -138,6 +138,26 @@ describe('StoreUtility', () => {
     });
   });
 
+  describe('compareSet', () => {
+    it('should return value if size does not match', () => {
+      expect(StoreUtility.compareSet(new Set([1]), new Set())).toEqual(
+        new Set([1]),
+      );
+    });
+
+    it('should return undefined if equal to default', () => {
+      expect(
+        StoreUtility.compareSet(new Set([1]), new Set([1])),
+      ).toBeUndefined();
+    });
+
+    it('should return value if not equal to default', () => {
+      expect(StoreUtility.compareSet(new Set([1]), new Set([2]))).toEqual(
+        new Set([1]),
+      );
+    });
+  });
+
   describe('compareRank', () => {
     it('should return null if equal to default', () => {
       expect(StoreUtility.compareRank(['a', 'b'], ['a', 'b'])).toBeUndefined();

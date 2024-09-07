@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ItemId, TestModule } from 'src/tests';
-import { ZNULL } from '~/models';
+import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+import { ZEMPTY } from '~/models';
 import { MigrationService } from './migration.service';
 import { RouterService } from './router.service';
 
@@ -37,13 +37,13 @@ describe('MigrationService', () => {
     it('should decode v0 parameters', () => {
       const originalParams = { p: '%3D', z: 'z' };
       const { params } = service.migrate(undefined, originalParams);
-      expect(params).toEqual({ o: ['='], v: routerSvc.version, z: 'z' });
+      expect(params).toEqual({ o: [ZEMPTY], v: routerSvc.version, z: 'z' });
     });
 
     it('should decode array parameters', () => {
       const originalParams = { a: ['%3D'] };
       const { params } = service.migrate(undefined, originalParams);
-      expect(params).toEqual({ a: ['='], v: routerSvc.version } as any);
+      expect(params).toEqual({ a: [ZEMPTY], v: routerSvc.version } as any);
     });
 
     it('should coerce expected keys into arrays', () => {
@@ -60,7 +60,7 @@ describe('MigrationService', () => {
         warnings: [],
         isBare: true,
       });
-      expect(state.modId).toEqual(ZNULL);
+      expect(state.modId).toBeUndefined();
     });
 
     it('should handle preset without other settings', () => {
@@ -70,6 +70,15 @@ describe('MigrationService', () => {
         isBare: true,
       });
       expect(params['mpr']).toEqual('0');
+    });
+
+    it('should parse old display rate', () => {
+      const { params } = service.migrateV0({
+        params: { s: '******1' },
+        warnings: [],
+        isBare: true,
+      });
+      expect(params['odr']).toEqual('0');
     });
   });
 
@@ -188,6 +197,57 @@ describe('MigrationService', () => {
       });
       expect(params['m']).toBeUndefined();
       expect(params['mfr']).toEqual('coal');
+    });
+  });
+
+  describe('restoreV10ResearchedTechnologies', () => {
+    it('should return undefined if no technologies are found', () => {
+      const result = service.restoreV10ResearchedTechnologies(
+        new Set([RecipeId.ArtilleryShellRange]),
+        { items: [] } as any,
+      );
+      expect(result).toBeUndefined();
+    });
+
+    it('should restore the old filtered style list of technologies', () => {
+      const result = service.restoreV10ResearchedTechnologies(
+        new Set([RecipeId.ArtilleryShellRange]),
+        Mocks.Data,
+      );
+      expect(result?.size).toEqual(54);
+    });
+
+    it('should return undefined if all researched', () => {
+      const result = service.restoreV10ResearchedTechnologies(
+        new Set(Mocks.Dataset.technologyIds),
+        Mocks.Data,
+      );
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('parseNNumber', () => {
+    it('should parse undefined', () => {
+      expect(service.parseNNumber(undefined)).toBeUndefined();
+      expect(service.parseNNumber('')).toBeUndefined();
+    });
+
+    it('should parse value', () => {
+      expect(service.parseNNumber('A')).toEqual(0);
+    });
+  });
+
+  describe('parseSet', () => {
+    it('should parse undefined', () => {
+      expect(service.parseSet(undefined)).toBeUndefined();
+    });
+
+    it('should parse without a hash', () => {
+      expect(service.parseSet('1~2')).toEqual(new Set(['1', '2']));
+    });
+
+    it('should parse with a hash', () => {
+      expect(service.parseSet('A~B', ['a', 'b'])).toEqual(new Set(['a', 'b']));
     });
   });
 });

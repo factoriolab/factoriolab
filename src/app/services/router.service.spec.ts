@@ -117,7 +117,7 @@ const mockSettingsState: Settings.SettingsState = {
   miningBonus: rational(100n),
   researchBonus: rational.zero,
   inserterCapacity: InserterCapacity.Capacity0,
-  researchedTechnologyIds: null,
+  researchedTechnologyIds: new Set([ItemId.Automation]),
   costs: {
     factor: rational(2n),
     machine: rational(10n),
@@ -164,6 +164,7 @@ const mockZipPartial: Zip<LabParams> = {
     ich: 'C6',
     rex: 'DB',
     rch: 'DB',
+    tre: 'A',
   },
   hash: {
     e: ['2*A', '2*G', '*G'],
@@ -196,6 +197,7 @@ const mockZipPartial: Zip<LabParams> = {
     ich: 'C6',
     rex: 'DB',
     rch: 'DB',
+    tre: 'A',
   },
 };
 const mockState: LabState = {
@@ -425,6 +427,7 @@ describe('RouterService', () => {
     delete mockStateV8.settingsState?.checkedItemIds;
     delete mockStateV8.settingsState?.excludedRecipeIds;
     delete mockStateV8.settingsState?.checkedRecipeIds;
+    delete mockStateV8.settingsState?.researchedTechnologyIds;
 
     const mockStateV6: App.PartialState = spread(mockStateV8, {
       objectivesState: mockMigratedObjectivesState,
@@ -754,7 +757,7 @@ describe('RouterService', () => {
       mockRoute.next(
         {},
         {
-          z: 'eJwdjEsKAjEQRG.TiwdCVxbiZpDOBLIWDxAQRhARREF3nl06BW9Tv-e6R4gp2Sac4DBEIexS7TYLK4Hs1SoicYo7Suy60H4dEaOOk72PlLk4f6l3Ap-XFUTLVsbp5drZyVP2kduj0EchBv0P4nkhKQ__',
+          z: 'eJwdjDsKAkEQRG.TwQOhawIx2aBnByaWPcCAsIKIIAqaeXbpKXhJ.Z7rESGmZLtwgtMQhbBLtdssrASyV6uIxCnuKLHrQvt1RIw6zvYOylxsX-qdwOdlBdGylXF6uXYO8pR95PYo9FGIQf8D4wMhKw__',
           v: '9',
         },
       );

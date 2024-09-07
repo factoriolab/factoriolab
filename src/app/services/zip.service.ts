@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import {
   KeysMatching,
   LabParams,
-  Nullable,
+  Optional,
   rational,
   Rational,
   ZARRAYSEP,
@@ -11,7 +11,6 @@ import {
   ZFALSE,
   ZFIELDSEP,
   Zip,
-  ZNULL,
   ZTRUE,
 } from '~/models';
 import { CompressionService } from './compression.service';
@@ -42,25 +41,22 @@ export class ZipService {
     return value == null ? '' : value.length ? value.join(ZARRAYSEP) : ZEMPTY;
   }
 
-  zipNString(value: Nullable<string>, hash: string[]): string {
+  zipNString(value: Optional<string>, hash: string[]): string {
     return value == null ? '' : this.compressionSvc.nToId(hash.indexOf(value));
   }
 
   zipDiffSubset(
-    value: Nullable<Set<string>>,
-    init: Nullable<Set<string>>,
+    value: Optional<Set<string>>,
+    init: Optional<Set<string>>,
     all: string[],
     hash: string[] = all,
   ): string {
-    if (value == null) {
-      if (init == null) return '';
-      return ZNULL;
-    }
-
-    if (value.size === 0) {
-      if (init?.size === 0) return '';
-      return ZEMPTY;
-    }
+    if (
+      value == null ||
+      (init != null && Array.from(value).every((v) => init.has(v)))
+    )
+      return '';
+    if (value.size === 0) return ZEMPTY;
 
     const allSet = new Set(all);
     const result: string[] = [];
@@ -90,27 +86,22 @@ export class ZipService {
   }
 
   zipDiffString(
-    value: Nullable<string>,
-    init: Nullable<string>,
+    value: Optional<string>,
+    init: Optional<string>,
     hash: string[],
   ): string | [string, string] {
-    return value === init
-      ? ''
-      : value == null
-        ? ZNULL
-        : [value, this.compressionSvc.nToId(hash.indexOf(value))];
+    if (value === init || value == null) return '';
+    return [value, this.compressionSvc.nToId(hash.indexOf(value))];
   }
 
-  zipDiffNumber(value: Nullable<number>, init: Nullable<number>): string {
-    return value === init ? '' : value == null ? ZNULL : value.toString();
+  zipDiffNumber(value: Optional<number>, init: Optional<number>): string {
+    if (value === init || value == null) return '';
+    return value.toString();
   }
 
-  zipDiffRational(value: Nullable<Rational>, init: Nullable<Rational>): string {
-    return (value == null ? init == null : init != null && value.eq(init))
-      ? ''
-      : value == null
-        ? ZNULL
-        : value.toString();
+  zipDiffRational(value: Optional<Rational>, init: Optional<Rational>): string {
+    if (value == null || (init != null && value.eq(init))) return '';
+    return value.toString();
   }
 
   zipDiffBool(value: boolean, init: boolean): string {
@@ -118,77 +109,67 @@ export class ZipService {
   }
 
   zipDiffIndices(
-    value: Nullable<number[]>,
-    init: Nullable<number[]>,
+    value: Optional<number[]>,
+    init: Optional<number[]>,
   ): string | [string, string] {
     const zVal =
-      value != null
-        ? value.length > 0
-          ? value.join(ZARRAYSEP)
-          : ZEMPTY
-        : ZNULL;
+      value != null ? (value.length > 0 ? value.join(ZARRAYSEP) : ZEMPTY) : '';
     const zInit =
-      init != null ? (init.length > 0 ? init.join(ZARRAYSEP) : ZEMPTY) : ZNULL;
+      init != null ? (init.length > 0 ? init.join(ZARRAYSEP) : ZEMPTY) : '';
     return zVal === zInit ? '' : zVal;
   }
 
   zipDiffArray(
-    value: Nullable<string[]>,
-    init: Nullable<string[]>,
+    value: Optional<string[]>,
+    init: Optional<string[]>,
     hash: string[],
   ): string | [string, string] {
     const zVal =
-      value != null
-        ? value.length > 0
-          ? value.join(ZARRAYSEP)
-          : ZEMPTY
-        : ZNULL;
+      value != null ? (value.length > 0 ? value.join(ZARRAYSEP) : ZEMPTY) : '';
     const zInit =
-      init != null ? (init.length > 0 ? init.join(ZARRAYSEP) : ZEMPTY) : ZNULL;
-    return zVal === zInit
-      ? ''
-      : value == null
-        ? ZNULL
-        : [
-            zVal,
-            value
-              .map((v) => this.compressionSvc.nToId(hash.indexOf(v)))
-              .join(ZARRAYSEP),
-          ];
+      init != null ? (init.length > 0 ? init.join(ZARRAYSEP) : ZEMPTY) : '';
+    if (zVal === zInit) return '';
+    if (value == null || value.length === 0) return zVal;
+    return [
+      zVal,
+      value
+        .map((v) => this.compressionSvc.nToId(hash.indexOf(v)))
+        .join(ZARRAYSEP),
+    ];
   }
 
-  parseString(value: Nullable<string>, hash?: string[]): string | undefined {
+  parseString(value: Optional<string>, hash?: string[]): string | undefined {
     if (hash != null) return this.parseNString(value, hash);
-    if (!value?.length || value === ZNULL) return undefined;
+    if (!value?.length) return undefined;
     return value;
   }
 
-  parseBool(value: Nullable<string>): boolean | undefined {
-    if (!value?.length || value === ZNULL) return undefined;
+  parseBool(value: Optional<string>): boolean | undefined {
+    if (!value?.length) return undefined;
     return value === ZTRUE;
   }
 
-  parseNumber(value: Nullable<string>): number | undefined {
-    if (!value?.length || value === ZNULL) return undefined;
+  parseNumber(value: Optional<string>): number | undefined {
+    if (!value?.length) return undefined;
     return Number(value);
   }
 
-  parseRational(value: Nullable<string>): Rational | undefined {
-    if (!value?.length || value === ZNULL) return undefined;
+  parseRational(value: Optional<string>): Rational | undefined {
+    if (!value?.length) return undefined;
     return rational(value);
   }
 
-  parseArray(value: Nullable<string>, hash?: string[]): string[] | undefined {
+  parseArray(value: Optional<string>, hash?: string[]): string[] | undefined {
     if (hash) return this.parseNArray(value, hash);
-    if (!value?.length || value === ZNULL) return undefined;
+    if (!value?.length) return undefined;
     return value === ZEMPTY ? [] : value.split(ZARRAYSEP);
   }
 
   parseIndices<T extends object>(
-    value: Nullable<string>,
+    value: Optional<string>,
     arr: T[],
   ): T[] | undefined {
-    if (!value?.length || value === ZNULL) return undefined;
+    if (!value?.length) return undefined;
     if (value === ZEMPTY) return [];
     return value
       .split(ZARRAYSEP)
@@ -196,33 +177,20 @@ export class ZipService {
       .map((i) => arr[i] ?? {});
   }
 
-  parseNString(value: Nullable<string>, hash: string[]): string | undefined {
+  parseNString(value: Optional<string>, hash: string[]): string | undefined {
     const v = this.parseString(value);
     if (v == null) return v;
     return hash[this.compressionSvc.idToN(v)];
   }
 
-  parseNNumber(value: Nullable<string>): number | undefined {
-    if (!value?.length || value === ZNULL) return undefined;
-    return this.compressionSvc.idToN(value);
-  }
-
-  parseNArray(value: Nullable<string>, hash: string[]): string[] | undefined {
+  parseNArray(value: Optional<string>, hash: string[]): string[] | undefined {
     const v = this.parseArray(value);
     if (v == null) return v;
     return v.map((a) => hash[this.compressionSvc.idToN(a)]);
   }
 
-  parseNullableSubset(
-    value: Nullable<string>,
-    hash: string[],
-  ): Nullable<Set<string>> {
-    if (value === ZNULL) return null;
-    return this.parseSubset(value, hash);
-  }
-
   parseSubset(
-    value: Nullable<string>,
+    value: Optional<string>,
     hash: string[],
   ): Set<string> | undefined {
     if (!value?.length) return undefined;
@@ -242,21 +210,6 @@ export class ZipService {
     return result;
   }
 
-  parseNullableSet(
-    value: Nullable<string>,
-    hash?: string[],
-  ): Nullable<Set<string>> {
-    if (value === ZNULL) return null;
-    return this.parseSet(value, hash);
-  }
-
-  parseSet(value: Nullable<string>, hash?: string[]): Set<string> | undefined {
-    if (value == null) return undefined;
-    const result = value.split(ZARRAYSEP);
-    if (hash == null) return new Set(result);
-    return new Set(result.map((v) => hash[this.compressionSvc.idToN(v)]));
-  }
-
   /**
    * Sets up a curried function stack to generate functions to add settings
    * query parameters to the `ZipData` `LabParams`.
@@ -268,7 +221,7 @@ export class ZipService {
   ): <V, A extends Array<unknown>>(
     value: (v: V, i: V, ...args: A) => string | [string, string],
   ) => (
-    name: KeysMatching<LabParams, Nullable<string>>,
+    name: KeysMatching<LabParams, Optional<string>>,
     locator: (state: T) => V,
     ...args: A
   ) => void {
@@ -321,9 +274,9 @@ export class ZipService {
   get(
     params: LabParams,
   ): <V, A extends Array<unknown>>(
-    value: (s: Nullable<string>, ...args: A) => V,
+    value: (s: Optional<string>, ...args: A) => V,
   ) => (
-    name: KeysMatching<LabParams, Nullable<string>>,
+    name: KeysMatching<LabParams, Optional<string>>,
     ...args: A
   ) => V | undefined {
     /**

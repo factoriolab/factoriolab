@@ -22,7 +22,7 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TooltipModule } from 'primeng/tooltip';
 import { first } from 'rxjs';
 
-import { Game } from '~/models';
+import { Game, Optional } from '~/models';
 import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService, TranslateService } from '~/services';
 import { Preferences, Recipes } from '~/store';
@@ -59,7 +59,7 @@ export class TechPickerComponent extends DialogComponent {
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 
-  @Output() selectIds = new EventEmitter<Set<string> | null>();
+  @Output() selectIds = new EventEmitter<Optional<Set<string>>>();
 
   data = this.store.selectSignal(Recipes.selectAdjustedDataset);
   showTechLabels = this.store.selectSignal(Preferences.selectShowTechLabels);
@@ -228,7 +228,7 @@ game.write_file("techs.txt", table.concat(list, ","))
     const selection = this.selection();
     const data = this.data();
     if (selection.length === data.technologyIds.length)
-      this.selectIds.emit(null);
+      this.selectIds.emit(undefined);
 
     this.selectIds.emit(new Set(selection));
   }

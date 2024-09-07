@@ -131,7 +131,7 @@ describe('TechPickerComponent', () => {
       component.selection.set(Mocks.AdjustedDataset.technologyIds);
       spyOn(component.selectIds, 'emit');
       component.onHide();
-      expect(component.selectIds.emit).toHaveBeenCalledWith(null);
+      expect(component.selectIds.emit).toHaveBeenCalledWith(undefined);
     });
   });
 

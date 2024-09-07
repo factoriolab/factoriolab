@@ -452,7 +452,7 @@ describe('RateUtility', () => {
 
     it('should do nothing if beaconReceivers is unset', () => {
       const step: Step = { id: 'id' };
-      RateUtility.calculateBeacons(step, null, Mocks.AdjustedDataset);
+      RateUtility.calculateBeacons(step, undefined, Mocks.AdjustedDataset);
       expect(step).toEqual({ id: 'id' });
     });
 
