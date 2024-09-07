@@ -1,3 +1,4 @@
+import { Rational } from './rational';
 import { BeaconSettings } from './settings';
 
 export interface Defaults {
@@ -10,4 +11,5 @@ export interface Defaults {
   machineRankIds: string[];
   moduleRankIds: string[];
   beacons: BeaconSettings[];
+  overclock?: Rational;
 }

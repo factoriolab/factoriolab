@@ -7,7 +7,6 @@ import { initialState, machinesReducer } from './machines.reducer';
 describe('Machines Reducer', () => {
   const id = 'id';
   const value = 'value';
-  const def = 'default';
 
   describe('LOAD', () => {
     it('should load machine settings', () => {
@@ -35,156 +34,13 @@ describe('Machines Reducer', () => {
     });
   });
 
-  describe('SET_FUEL_RANK', () => {
-    it('should set the default fuel rank', () => {
-      const result = machinesReducer(
-        undefined,
-        Actions.setFuelRank({ value: [value], def: [def] }),
-      );
-      expect(result.fuelRankIds).toEqual([value]);
-    });
-  });
-
-  describe('SET_MODULE_RANK', () => {
-    it('should set the default module rank', () => {
-      const result = machinesReducer(
-        undefined,
-        Actions.setModuleRank({ value: [value], def: [def] }),
-      );
-      expect(result.moduleRankIds).toEqual([value]);
-    });
-  });
-
-  describe('SET_DEFAULT_BEACONS', () => {
-    it('should set the default beacons', () => {
-      const result = machinesReducer(
-        undefined,
-        Actions.setDefaultBeacons({ beacons: [] }),
-      );
-      expect(result.beacons).toEqual([]);
-    });
-  });
-
-  describe('SET_DEFAULT_OVERCLOCK', () => {
-    it('should set the default overclock', () => {
-      const result = machinesReducer(
-        undefined,
-        Actions.setDefaultOverclock({ overclock: rational(100n) }),
-      );
-      expect(result.overclock).toEqual(rational(100n));
-    });
-  });
-
-  describe('ADD', () => {
-    it('should add a machine to the list', () => {
-      const result = machinesReducer(
-        { ids: [], entities: {} },
-        Actions.add({ id: value, def: [def] }),
-      );
-      expect(result.ids).toEqual([value]);
-    });
-
-    it('should handle undefined ids', () => {
-      const result = machinesReducer(
-        undefined,
-        Actions.add({ id: value, def: [def] }),
-      );
-      expect(result.ids).toEqual([def, value]);
-    });
-
-    it('should handle undefined ids and default', () => {
-      const result = machinesReducer(
-        undefined,
-        Actions.add({ id: value, def: undefined }),
-      );
-      expect(result.ids).toEqual([value]);
-    });
-  });
-
-  describe('REMOVE', () => {
-    it('should remove a machine from the list', () => {
-      const result = machinesReducer(
-        { ids: [], entities: { [def]: {} } } as any,
-        Actions.remove({ id: def, def: [def] }),
-      );
-      expect(result.ids).toEqual([]);
-      expect(result.entities[value]).toBeUndefined();
-    });
-
-    it('should handle undefined ids', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: { [def]: {} } } as any,
-        Actions.remove({ id: def, def: [def] }),
-      );
-      expect(result.ids).toEqual([]);
-      expect(result.entities[value]).toBeUndefined();
-    });
-
-    it('should handle undefined ids and default', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: { [def]: {} } } as any,
-        Actions.remove({ id: def, def: undefined }),
-      );
-      expect(result.ids).toEqual([]);
-      expect(result.entities[value]).toBeUndefined();
-    });
-  });
-
-  describe('SET_RANK', () => {
-    it('should set the order of ids', () => {
-      const result = machinesReducer(
-        undefined,
-        Actions.setRank({ value: [value], def: undefined }),
-      );
-      expect(result.ids).toEqual([value]);
-    });
-  });
-
-  describe('SET_MACHINE', () => {
-    it('should replace an id in the rank list', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: { [def]: 'test' } } as any,
-        Actions.setMachine({ id: def, value, def: [def] }),
-      );
-      expect(result.ids).toEqual([value]);
-      expect(result.entities[value]).toBeUndefined();
-    });
-
-    it('should do nothing if id is not found', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: { [def]: 'test' } } as any,
-        Actions.setMachine({ id, value, def: [def] }),
-      );
-      expect(result.ids).toBeUndefined();
-      expect(result.entities[def]).toEqual('test' as any);
-    });
-
-    it('should handle no match in ids', () => {
-      const result = machinesReducer(
-        { ids: [], entities: { [def]: 'test' } } as any,
-        Actions.setMachine({ id, value, def: [def] }),
-      );
-      expect(result.ids).toEqual([]);
-      expect(result.entities[def]).toEqual('test' as any);
-    });
-
-    it('should handle undefined ids and default', () => {
-      const result = machinesReducer(
-        { ids: undefined, entities: { [def]: 'test' } } as any,
-        Actions.setMachine({ id, value, def: undefined }),
-      );
-      expect(result.ids).toBeUndefined();
-      expect(result.entities[def]).toEqual('test' as any);
-    });
-  });
-
   describe('SET_FUEL', () => {
     it('should set the fuel for a machine', () => {
       const result = machinesReducer(
         undefined,
         Actions.setFuel({ id, value, def: undefined }),
       );
-      expect(result.entities[id].fuelId).toEqual(value);
+      expect(result[id].fuelId).toEqual(value);
     });
   });
 
@@ -198,7 +54,7 @@ describe('Machines Reducer', () => {
           value,
         }),
       );
-      expect(result.entities[id].modules).toEqual(value);
+      expect(result[id].modules).toEqual(value);
     });
   });
 
@@ -218,7 +74,7 @@ describe('Machines Reducer', () => {
           value,
         }),
       );
-      expect(result.entities[id].beacons).toEqual(value);
+      expect(result[id].beacons).toEqual(value);
     });
   });
 
@@ -232,7 +88,7 @@ describe('Machines Reducer', () => {
           def: rational(100n),
         }),
       );
-      expect(result.entities[id].overclock).toEqual(rational(200n));
+      expect(result[id].overclock).toEqual(rational(200n));
     });
   });
 
@@ -242,7 +98,7 @@ describe('Machines Reducer', () => {
         Mocks.MachinesStateInitial,
         Actions.resetMachine({ id: ItemId.AssemblingMachine2 }),
       );
-      expect(result.entities[ItemId.AssemblingMachine2]).toBeUndefined();
+      expect(result[ItemId.AssemblingMachine2]).toBeUndefined();
     });
   });
 

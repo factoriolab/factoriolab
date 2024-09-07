@@ -6,3 +6,4 @@ export * from './item-settings';
 export * from './machine-settings';
 export * from './module-settings';
 export * from './recipe-settings';
+export * from './settings-complete';

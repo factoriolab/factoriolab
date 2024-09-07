@@ -4,6 +4,7 @@ import { Message } from 'primeng/api';
 import { Subject } from 'rxjs';
 
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+import { spread } from '~/helpers';
 import {
   Objective,
   ObjectiveType,
@@ -46,8 +47,7 @@ describe('ObjectivesComponent', () => {
         .getMessages(
           [],
           { steps: [], resultType: SimplexResultType.Paused },
-          Mocks.ItemsStateInitial,
-          Mocks.RecipesStateInitial,
+          Mocks.SettingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result.length).toEqual(1);
@@ -62,8 +62,7 @@ describe('ObjectivesComponent', () => {
             steps: [],
             resultType: SimplexResultType.Skipped,
           },
-          Mocks.ItemsStateInitial,
-          Mocks.RecipesStateInitial,
+          Mocks.SettingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result.length).toEqual(0);
@@ -77,8 +76,7 @@ describe('ObjectivesComponent', () => {
             steps: [],
             resultType: SimplexResultType.Failed,
           },
-          Mocks.ItemsStateInitial,
-          Mocks.RecipesStateInitial,
+          Mocks.SettingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result.length).toEqual(1);
@@ -101,8 +99,7 @@ describe('ObjectivesComponent', () => {
             resultType: SimplexResultType.Failed,
             simplexStatus: 'unbounded',
           },
-          Mocks.ItemsStateInitial,
-          Mocks.RecipesStateInitial,
+          Mocks.SettingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result[0].summary).toEqual('objectives.errorUnbounded');
@@ -133,8 +130,9 @@ describe('ObjectivesComponent', () => {
             resultType: SimplexResultType.Failed,
             simplexStatus: 'unbounded',
           },
-          { [ItemId.Coal]: { excluded: true } },
-          Mocks.RecipesStateInitial,
+          spread(Mocks.SettingsStateInitial, {
+            excludedItemIds: new Set([ItemId.Coal]),
+          }),
         )
         .subscribe((r) => (result = r));
       expect(result[0].summary).toEqual('objectives.errorUnbounded');
@@ -165,8 +163,9 @@ describe('ObjectivesComponent', () => {
             resultType: SimplexResultType.Failed,
             simplexStatus: 'unbounded',
           },
-          Mocks.ItemsStateInitial,
-          { [RecipeId.Coal]: { excluded: true } },
+          spread(Mocks.SettingsStateInitial, {
+            excludedRecipeIds: new Set([RecipeId.Coal]),
+          }),
         )
         .subscribe((r) => (result = r));
       expect(result[0].summary).toEqual('objectives.errorUnbounded');
@@ -184,8 +183,7 @@ describe('ObjectivesComponent', () => {
             resultType: SimplexResultType.Failed,
             simplexStatus: 'unbounded',
           },
-          Mocks.ItemsStateInitial,
-          Mocks.RecipesStateInitial,
+          Mocks.SettingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result[0].summary).toEqual('objectives.errorUnbounded');
@@ -201,8 +199,7 @@ describe('ObjectivesComponent', () => {
             resultType: SimplexResultType.Failed,
             simplexStatus: 'no_feasible',
           },
-          Mocks.ItemsStateInitial,
-          Mocks.RecipesStateInitial,
+          Mocks.SettingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result[0].summary).toEqual('objectives.errorInfeasible');

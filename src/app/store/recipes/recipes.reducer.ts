@@ -4,7 +4,6 @@ import { spread } from '~/helpers';
 import { Entities, RecipeSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
-import * as Items from '../items';
 import * as Settings from '../settings';
 import * as Actions from './recipes.actions';
 
@@ -18,19 +17,6 @@ export const recipesReducer = createReducer(
     spread(initialState, partial.recipesState ?? {}),
   ),
   on(App.reset, Settings.setMod, (): RecipesState => initialState),
-  on(Actions.setExcluded, (state, { id, value, def }) =>
-    StoreUtility.compareReset(state, 'excluded', id, value, def),
-  ),
-  on(Actions.setExcludedBatch, (state, { values }) => {
-    for (const { id, value, def } of values) {
-      state = StoreUtility.compareReset(state, 'excluded', id, value, def);
-    }
-
-    return state;
-  }),
-  on(Actions.setChecked, (state, { id, value }) =>
-    StoreUtility.compareReset(state, 'checked', id, value, false),
-  ),
   on(Actions.setMachine, (state, { id, value, def }) => {
     state = StoreUtility.compareReset(state, 'machineId', id, value, def);
     return StoreUtility.resetFields(
@@ -66,9 +52,6 @@ export const recipesReducer = createReducer(
       );
     return state;
   }),
-  on(Actions.resetExcluded, (state) =>
-    StoreUtility.resetField(state, 'excluded'),
-  ),
   on(Actions.resetMachines, (state) =>
     StoreUtility.resetFields(state, [
       'machineId',
@@ -82,5 +65,4 @@ export const recipesReducer = createReducer(
     StoreUtility.resetField(state, 'beacons'),
   ),
   on(Actions.resetCost, (state) => StoreUtility.resetField(state, 'cost')),
-  on(Items.resetChecked, (state) => StoreUtility.resetField(state, 'checked')),
 );

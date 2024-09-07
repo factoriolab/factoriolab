@@ -1,7 +1,9 @@
 import { inject, Injectable } from '@angular/core';
 
 import {
-  DisplayRate,
+  KeysMatching,
+  LabParams,
+  Optional,
   rational,
   Rational,
   ZARRAYSEP,
@@ -9,8 +11,6 @@ import {
   ZFALSE,
   ZFIELDSEP,
   Zip,
-  ZLISTSEP,
-  ZNULL,
   ZTRUE,
 } from '~/models';
 import { CompressionService } from './compression.service';
@@ -21,249 +21,274 @@ import { CompressionService } from './compression.service';
 export class ZipService {
   compressionSvc = inject(CompressionService);
 
-  zipList(list: Zip[]): Zip {
-    return {
-      bare: encodeURIComponent(list.map((i) => i.bare).join(ZLISTSEP)),
-      hash: list.map((i) => i.hash).join(ZLISTSEP),
-    };
-  }
-
   zipFields(fields: string[]): string {
     return fields.join(ZFIELDSEP).replace(/\**$/, '');
   }
 
-  zipTruthyString(value: string | undefined): string {
+  zipString(value: string | undefined): string {
     return value == null ? '' : value;
   }
 
-  zipTruthyNumber(value: number | Rational | undefined): string {
+  zipRational(value: Rational | undefined): string {
     return value == null ? '' : value.toString();
   }
 
-  zipTruthyBool(value: boolean | undefined): string {
-    return value == null ? '' : value ? ZTRUE : ZFALSE;
+  zipNumber(value: number | Rational | undefined): string {
+    return value == null ? '' : value.toString();
   }
 
-  zipTruthyArray(value: string[] | number[] | undefined): string {
+  zipArray(value: string[] | number[] | undefined): string {
     return value == null ? '' : value.length ? value.join(ZARRAYSEP) : ZEMPTY;
   }
 
-  zipTruthyNString(value: string | undefined, hash: string[]): string {
+  zipNString(value: Optional<string>, hash: string[]): string {
     return value == null ? '' : this.compressionSvc.nToId(hash.indexOf(value));
   }
 
-  zipTruthyNArray(value: string[] | undefined, hash: string[]): string {
-    return value == null
-      ? ''
-      : value.length
-        ? value
-            .map((v) => this.compressionSvc.nToId(hash.indexOf(v)))
-            .join(ZARRAYSEP)
-        : ZEMPTY;
+  zipDiffSubset(
+    value: Optional<Set<string>>,
+    init: Optional<Set<string>>,
+    all: string[],
+    hash: string[] = all,
+  ): string {
+    if (
+      value == null ||
+      (init != null && Array.from(value).every((v) => init.has(v)))
+    )
+      return '';
+    if (value.size === 0) return ZEMPTY;
+
+    const allSet = new Set(all);
+    const result: string[] = [];
+    let start: string | undefined;
+    let end: string | undefined;
+    hash.forEach((h, i) => {
+      if (!allSet.has(h)) return;
+
+      if (value.has(h)) {
+        const j = this.compressionSvc.nToId(i);
+        if (start == null) start = j;
+        else end = j;
+      } else if (start != null) {
+        if (end == null) result.push(start);
+        else result.push(start + ZARRAYSEP + end);
+        start = undefined;
+        end = undefined;
+      }
+    });
+
+    if (start != null) {
+      if (end == null) result.push(start);
+      else result.push(start + ZARRAYSEP + end);
+    }
+
+    return result.join(ZFIELDSEP);
   }
 
   zipDiffString(
-    value: string | null | undefined,
-    init: string | null | undefined,
-  ): string {
-    return value === init ? '' : value == null ? ZNULL : value;
+    value: Optional<string>,
+    init: Optional<string>,
+    hash: string[],
+  ): string | [string, string] {
+    if (value === init || value == null) return '';
+    return [value, this.compressionSvc.nToId(hash.indexOf(value))];
   }
 
-  zipDiffNumber(
-    value: number | Rational | null | undefined,
-    init: number | Rational | null | undefined,
-  ): string {
-    return value === init ? '' : value == null ? ZNULL : value.toString();
+  zipDiffNumber(value: Optional<number>, init: Optional<number>): string {
+    if (value === init || value == null) return '';
+    return value.toString();
   }
 
-  zipDiffNRational(
-    value: Rational | null | undefined,
-    init: Rational | null | undefined,
-  ): string {
-    return this.zipDiffNNumber(value?.toNumber(), init?.toNumber());
+  zipDiffRational(value: Optional<Rational>, init: Optional<Rational>): string {
+    if (value == null || (init != null && value.eq(init))) return '';
+    return value.toString();
   }
 
-  zipDiffRational(
-    value: Rational | null | undefined,
-    init: Rational | null | undefined,
-  ): string {
-    return (value == null ? init == null : init != null && value.eq(init))
-      ? ''
-      : value == null
-        ? ZNULL
-        : value.toString();
+  zipDiffBool(value: boolean, init: boolean): string {
+    return value === init ? '' : value ? ZTRUE : ZFALSE;
   }
 
-  zipDiffDisplayRate(
-    value: DisplayRate | undefined,
-    init: DisplayRate | undefined,
-  ): string {
-    if (value === init) return '';
-
-    switch (value) {
-      case DisplayRate.PerSecond:
-        return '0';
-      case DisplayRate.PerMinute:
-        return '1';
-      case DisplayRate.PerHour:
-        return '2';
-      default:
-        return ZNULL;
-    }
-  }
-
-  zipDiffBool(value: boolean | undefined, init: boolean | undefined): string {
-    return value === init ? '' : value == null ? ZNULL : value ? ZTRUE : ZFALSE;
-  }
-
-  zipDiffNullableArray(
-    value: string[] | null | undefined,
-    init: string[] | null | undefined,
-  ): string {
+  zipDiffIndices(
+    value: Optional<number[]>,
+    init: Optional<number[]>,
+  ): string | [string, string] {
     const zVal =
-      value != null
-        ? value.length > 0
-          ? [...value].sort().join(ZARRAYSEP)
-          : ZEMPTY
-        : ZNULL;
+      value != null ? (value.length > 0 ? value.join(ZARRAYSEP) : ZEMPTY) : '';
     const zInit =
-      init != null
-        ? init.length > 0
-          ? [...init].sort().join(ZARRAYSEP)
-          : ZEMPTY
-        : ZNULL;
+      init != null ? (init.length > 0 ? init.join(ZARRAYSEP) : ZEMPTY) : '';
     return zVal === zInit ? '' : zVal;
   }
 
-  zipDiffNString(
-    value: string | undefined,
-    init: string | undefined,
+  zipDiffArray(
+    value: Optional<string[]>,
+    init: Optional<string[]>,
     hash: string[],
-  ): string {
-    return value === init
-      ? ''
-      : value == null
-        ? ZNULL
-        : this.compressionSvc.nToId(hash.indexOf(value));
-  }
-
-  zipDiffNNumber(value: number | undefined, init: number | undefined): string {
-    return value === init
-      ? ''
-      : value == null
-        ? ZNULL
-        : this.compressionSvc.nToId(value);
-  }
-
-  zipDiffNullableNArray(
-    value: string[] | null | undefined,
-    init: string[] | null | undefined,
-    hash: string[],
-  ): string {
+  ): string | [string, string] {
     const zVal =
-      value != null
-        ? value.length > 0
-          ? value
-              .map((v) => this.compressionSvc.nToId(hash.indexOf(v)))
-              .sort()
-              .join(ZARRAYSEP)
-          : ZEMPTY
-        : ZNULL;
+      value != null ? (value.length > 0 ? value.join(ZARRAYSEP) : ZEMPTY) : '';
     const zInit =
-      init != null
-        ? init.length > 0
-          ? init
-              .map((v) => this.compressionSvc.nToId(hash.indexOf(v)))
-              .sort()
-              .join(ZARRAYSEP)
-          : ZEMPTY
-        : ZNULL;
-    return zVal === zInit ? '' : zVal;
+      init != null ? (init.length > 0 ? init.join(ZARRAYSEP) : ZEMPTY) : '';
+    if (zVal === zInit) return '';
+    if (value == null || value.length === 0) return zVal;
+    return [
+      zVal,
+      value
+        .map((v) => this.compressionSvc.nToId(hash.indexOf(v)))
+        .join(ZARRAYSEP),
+    ];
   }
 
-  parseString(value: string | undefined, hash?: string[]): string | undefined {
+  parseString(value: Optional<string>, hash?: string[]): string | undefined {
     if (hash != null) return this.parseNString(value, hash);
-    if (!value?.length || value === ZNULL) return undefined;
+    if (!value?.length) return undefined;
     return value;
   }
 
-  parseBool(value: string | undefined): boolean | undefined {
-    if (!value?.length || value === ZNULL) return undefined;
+  parseBool(value: Optional<string>): boolean | undefined {
+    if (!value?.length) return undefined;
     return value === ZTRUE;
   }
 
-  parseNumber(
-    value: string | undefined,
-    useNNumber = false,
-  ): number | undefined {
-    if (useNNumber) return this.parseNNumber(value);
-    if (!value?.length || value === ZNULL) return undefined;
+  parseNumber(value: Optional<string>): number | undefined {
+    if (!value?.length) return undefined;
     return Number(value);
   }
 
-  parseRational(
-    value: string | undefined,
-    useNNumber = false,
-  ): Rational | undefined {
-    if (useNNumber) return rational(this.parseNNumber(value));
-    if (!value?.length || value === ZNULL) return undefined;
+  parseRational(value: Optional<string>): Rational | undefined {
+    if (!value?.length) return undefined;
     return rational(value);
   }
 
-  parseDisplayRate(value: string | undefined): DisplayRate | undefined {
-    if (!value?.length || value === ZNULL) return undefined;
-
-    switch (value) {
-      case '0':
-        return DisplayRate.PerSecond;
-      case '1':
-        return DisplayRate.PerMinute;
-      case '2':
-        return DisplayRate.PerHour;
-      default:
-        return undefined;
-    }
-  }
-
-  parseArray(value: string | undefined, hash?: string[]): string[] | undefined {
+  parseArray(value: Optional<string>, hash?: string[]): string[] | undefined {
     if (hash) return this.parseNArray(value, hash);
-    if (!value?.length || value === ZNULL) return undefined;
-    return value === ZEMPTY ? [] : value.split(ZARRAYSEP);
-  }
-
-  parseNullableArray(
-    value: string | undefined,
-    hash?: string[],
-  ): string[] | null | undefined {
-    if (hash) return this.parseNullableNArray(value, hash);
     if (!value?.length) return undefined;
-    if (value === ZNULL) return null;
     return value === ZEMPTY ? [] : value.split(ZARRAYSEP);
   }
 
-  parseNString(value: string | undefined, hash: string[]): string | undefined {
+  parseIndices<T extends object>(
+    value: Optional<string>,
+    arr: T[],
+  ): T[] | undefined {
+    if (!value?.length) return undefined;
+    if (value === ZEMPTY) return [];
+    return value
+      .split(ZARRAYSEP)
+      .map((s) => Number(s))
+      .map((i) => arr[i] ?? {});
+  }
+
+  parseNString(value: Optional<string>, hash: string[]): string | undefined {
     const v = this.parseString(value);
     if (v == null) return v;
     return hash[this.compressionSvc.idToN(v)];
   }
 
-  parseNNumber(value: string | undefined): number | undefined {
-    if (!value?.length || value === ZNULL) return undefined;
-    return this.compressionSvc.idToN(value);
-  }
-
-  parseNArray(value: string | undefined, hash: string[]): string[] | undefined {
+  parseNArray(value: Optional<string>, hash: string[]): string[] | undefined {
     const v = this.parseArray(value);
     if (v == null) return v;
     return v.map((a) => hash[this.compressionSvc.idToN(a)]);
   }
 
-  parseNullableNArray(
-    value: string | undefined,
+  parseSubset(
+    value: Optional<string>,
     hash: string[],
-  ): string[] | null | undefined {
-    const v = this.parseNullableArray(value);
-    if (v == null) return v;
-    return v.map((a) => hash[this.compressionSvc.idToN(a)]);
+  ): Set<string> | undefined {
+    if (!value?.length) return undefined;
+    if (value === ZEMPTY) return new Set();
+
+    const ranges = value.split(ZFIELDSEP);
+    const result = new Set<string>();
+    for (const range of ranges) {
+      const [start, end] = range
+        .split(ZARRAYSEP)
+        .map((i) => this.compressionSvc.idToN(i));
+      const sliceEnd = end != null ? end + 1 : start + 1;
+      const slice = hash.slice(start, sliceEnd);
+      slice.forEach((i) => result.add(i));
+    }
+
+    return result;
+  }
+
+  /**
+   * Sets up a curried function stack to generate functions to add settings
+   * query parameters to the `ZipData` `LabParams`.
+   */
+  set<T>(
+    zip: Zip<LabParams>,
+    state: T,
+    init: T,
+  ): <V, A extends Array<unknown>>(
+    value: (v: V, i: V, ...args: A) => string | [string, string],
+  ) => (
+    name: KeysMatching<LabParams, Optional<string>>,
+    locator: (state: T) => V,
+    ...args: A
+  ) => void {
+    /**
+     * Accepts a function to convert the state value to a string, or a pair of
+     * bare / hashed strings, and returns a curried function. Caller is expected
+     * to pass in a reference to a `zip` method on this service.
+     */
+    return (value) => {
+      // Bind the method reference to this service before use.
+      value = value.bind(this);
+      /**
+       * Accepts a query parameter name, locator function to get the state
+       * value, and any additional arguments to the value function.
+       */
+      return (name, locator, ...args): void => {
+        /**
+         * Get current state and initial values, then run value function to get
+         * query parameter value.
+         */
+        const s = locator(state),
+          i = locator(init),
+          v = value(s, i, ...args);
+
+        /**
+         * If value function returned a tuple of bare / hash values, spread
+         * them into local variables. Otherwise, set both variables to the
+         * result of the value function.
+         */
+        let b: string | undefined;
+        let h: string | undefined;
+        if (Array.isArray(v)) [b, h] = [...v];
+        else b = h = v;
+
+        /**
+         * If the bare value is defined, set the bare and hash values on thir
+         * corresponding `LabParams` objects.
+         */
+        if (!b) return;
+        zip.bare[name] = b;
+        zip.hash[name] = h;
+      };
+    };
+  }
+
+  /**
+   * Sets up a curried function stack to generate functions to get settings
+   * state values from `LabParams`.
+   */
+  get(
+    params: LabParams,
+  ): <V, A extends Array<unknown>>(
+    value: (s: Optional<string>, ...args: A) => V,
+  ) => (
+    name: KeysMatching<LabParams, Optional<string>>,
+    ...args: A
+  ) => V | undefined {
+    /**
+     * Accepts a function to convert the query parameter value to its
+     * state value, and returns a curried function. Caller is expected
+     * to pass in a reference to a `parse` method on this service.
+     */
+    return (value) => {
+      // Bind the method reference to this service before use.
+      value = value.bind(this);
+      // Run value function to get state value
+      return (name, ...args) => value(params[name], ...args);
+    };
   }
 }

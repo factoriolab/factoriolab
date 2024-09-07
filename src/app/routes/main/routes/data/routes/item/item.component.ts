@@ -7,7 +7,7 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 
 import { CollectionTableComponent } from '~/components';
-import { coalesce } from '~/helpers';
+import { coalesce, updateSetIds } from '~/helpers';
 import {
   Category,
   Game,
@@ -24,7 +24,7 @@ import {
   TranslatePipe,
   UsagePipe,
 } from '~/pipes';
-import { Items, Machines } from '~/store';
+import { Items, Machines, Settings } from '~/store';
 import { DetailComponent } from '../../models';
 
 @Component({
@@ -51,6 +51,7 @@ export class ItemComponent extends DetailComponent {
   itemsState = this.store.selectSignal(Items.selectItemsState);
   machinesStateRaw = this.store.selectSignal(Machines.machinesState);
   machinesState = this.store.selectSignal(Machines.selectMachinesState);
+  settings = this.store.selectSignal(Settings.selectSettings);
 
   obj = computed<Item | undefined>(() => this.data().itemEntities[this.id()]);
   breadcrumb = computed<MenuItem[]>(() => [
@@ -84,19 +85,31 @@ export class ItemComponent extends DetailComponent {
     () => this.itemsState()[this.id()],
   );
   machineSettings = computed<MachineSettings | undefined>(
-    () => this.machinesState().entities[this.id()],
+    () => this.machinesState()[this.id()],
   );
 
   Game = Game;
   ItemId = ItemId;
 
-  /** Action dispatch methods */
-  setItemExcluded(id: string, value: boolean): void {
-    this.store.dispatch(Items.setExcluded({ id, value }));
+  changeExcluded(value: boolean): void {
+    this.setExcludedItems(
+      updateSetIds(this.id(), value, this.settings().excludedItemIds),
+    );
   }
 
-  setItemChecked(id: string, value: boolean): void {
-    this.store.dispatch(Items.setChecked({ id, value }));
+  changeChecked(value: boolean): void {
+    this.setCheckedItems(
+      updateSetIds(this.id(), value, this.settings().checkedItemIds),
+    );
+  }
+
+  /** Action dispatch methods */
+  setExcludedItems(excludedItemIds: Set<string>): void {
+    this.store.dispatch(Settings.setExcludedItems({ excludedItemIds }));
+  }
+
+  setCheckedItems(checkedItemIds: Set<string>): void {
+    this.store.dispatch(Settings.setCheckedItems({ checkedItemIds }));
   }
 
   resetItem(id: string): void {

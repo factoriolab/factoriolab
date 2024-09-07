@@ -18,6 +18,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { OrderListModule } from 'primeng/orderlist';
@@ -33,7 +34,6 @@ import {
 } from '~/directives';
 import { coalesce } from '~/helpers';
 import {
-  AdjustedDataset,
   BeaconSettings,
   DisplayRate,
   displayRateOptions,
@@ -52,6 +52,7 @@ import {
   MaximizeType,
   maximizeTypeOptions,
   ModuleSettings,
+  Optional,
   PowerUnit,
   powerUnitOptions,
   Preset,
@@ -94,6 +95,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     DialogModule,
     DropdownModule,
     InputNumberModule,
+    InputTextModule,
     MenuModule,
     MultiSelectModule,
     OrderListModule,
@@ -129,10 +131,7 @@ export class SettingsComponent implements OnInit {
   @HostBinding('class.hidden') @Input() hidden = false;
 
   itemsState = this.store.selectSignal(Items.selectItemsState);
-  excludedItemIds = this.store.selectSignal(Items.selectExcludedItemIds);
   recipesState = this.store.selectSignal(Recipes.selectRecipesState);
-  excludedRecipeIds = this.store.selectSignal(Recipes.selectExcludedRecipeIds);
-  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
   data = this.store.selectSignal(Recipes.selectAdjustedDataset);
   machinesState = this.store.selectSignal(Machines.selectMachinesState);
   settings = this.store.selectSignal(Settings.selectSettings);
@@ -143,17 +142,11 @@ export class SettingsComponent implements OnInit {
   researchedTechnologyIds = this.store.selectSignal(
     Settings.selectAllResearchedTechnologyIds,
   );
-  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
   gameStates = this.store.selectSignal(Settings.selectGameStates);
   savedStates = this.store.selectSignal(Settings.selectSavedStates);
   preferences = this.store.selectSignal(Preferences.preferencesState);
   modRecord = this.store.selectSignal(Datasets.selectModEntities);
-  machineIds = computed(() => [
-    ...coalesce(
-      this.store.selectSignal(Machines.selectMachinesState)().ids,
-      [],
-    ),
-  ]);
+  machineIds = computed(() => [...this.settings().machineRankIds]);
   defaults = this.store.selectSignal(Settings.selectDefaults);
 
   state = '';
@@ -242,11 +235,9 @@ export class SettingsComponent implements OnInit {
 
   setState(id: string, states: Entities<string>): void {
     const query = states[id];
-    if (query) {
-      const queryParams = this.routerSvc.getParams(query);
-      this.state = id;
-      this.router.navigate([], { queryParams });
-    }
+    if (!query) return;
+    this.state = id;
+    this.router.navigate([], { queryParams: this.routerSvc.toParams(query) });
   }
 
   clickSaveState(game: Game): void {
@@ -295,39 +286,15 @@ export class SettingsComponent implements OnInit {
     this.setMod(gameInfo[game].modId);
   }
 
-  setExcludedRecipes(
-    checked: string[],
-    recipesState: Recipes.RecipesState,
-    data: AdjustedDataset,
-  ): void {
-    const payload: { id: string; value: boolean; def: boolean | undefined }[] =
-      [];
-    for (const id of data.recipeIds) {
-      const value = checked.some((i) => i === id);
-      if (value !== recipesState[id].excluded) {
-        // Needs to change, find default value
-        const def = coalesce(data.defaults?.excludedRecipeIds, []).some(
-          (i) => i === id,
-        );
-        payload.push({ id, value, def });
-      }
-    }
-    this.setRecipeExcludedBatch(payload);
+  setMod(modId: string): void {
+    this.router.navigate([modId, 'list']);
   }
 
-  setExcludedItems(
-    checked: string[],
-    itemsState: Items.ItemsState,
-    data: AdjustedDataset,
-  ): void {
-    const payload: { id: string; value: boolean }[] = [];
-    for (const id of data.itemIds) {
-      const value = checked.some((i) => i === id);
-      if (value !== itemsState[id].excluded) {
-        payload.push({ id, value });
-      }
-    }
-    this.setItemExcludedBatch(payload);
+  changeExcludedRecipes(value: Set<string>): void {
+    this.setExcludedRecipes(
+      value,
+      new Set(coalesce(this.data().defaults?.excludedRecipeIds, [])),
+    );
   }
 
   changeFuel(
@@ -347,21 +314,19 @@ export class SettingsComponent implements OnInit {
   }
 
   changeModules(id: string, value: ModuleSettings[]): void {
-    const state = this.machinesState();
-    const machine = this.data().machineEntities[id];
     this.setModules(
       id,
       RecipeUtility.dehydrateModules(
         value,
-        coalesce(state.entities[id].moduleOptions, []),
-        state.moduleRankIds,
-        machine.modules,
+        coalesce(this.machinesState()[id].moduleOptions, []),
+        this.settings().moduleRankIds,
+        this.data().machineEntities[id].modules,
       ),
     );
   }
 
   changeBeacons(id: string, value: BeaconSettings[]): void {
-    const def = this.machinesState().beacons;
+    const def = this.settings().beacons;
     this.setBeacons(id, RecipeUtility.dehydrateBeacons(value, def));
   }
 
@@ -371,7 +336,25 @@ export class SettingsComponent implements OnInit {
   }
 
   toggleBeaconReceivers(value: boolean): void {
-    this.setBeaconReceivers(value ? rational.one : null);
+    this.setBeaconReceivers(value ? rational.one : undefined);
+  }
+
+  addMachine(id: string, def: string[] | undefined): void {
+    const ids = [...this.settings().machineRankIds];
+    if (!ids.includes(id)) ids.push(id);
+    this.setMachineRank(ids, def);
+  }
+
+  setMachine(id: string, value: string, def: string[] | undefined): void {
+    const ids = [...this.settings().machineRankIds];
+    const i = ids.indexOf(id);
+    if (i !== -1) ids[i] = value;
+    this.setMachineRank(ids, def);
+  }
+
+  removeMachine(id: string, def: string[] | undefined): void {
+    const ids = this.settings().machineRankIds.filter((i) => i !== id);
+    this.setMachineRank(ids, def);
   }
 
   /** Action Dispatch Methods */
@@ -387,24 +370,20 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(Preferences.removeState({ key, id }));
   }
 
-  setMod(modId: string): void {
-    this.store.dispatch(Settings.setMod({ modId }));
-  }
-
-  setResearchedTechnologies(researchedTechnologyIds: string[] | null): void {
+  setResearchedTechnologies(
+    researchedTechnologyIds: Optional<Set<string>>,
+  ): void {
     this.store.dispatch(
       Settings.setResearchedTechnologies({ researchedTechnologyIds }),
     );
   }
 
-  setRecipeExcludedBatch(
-    values: { id: string; value: boolean; def: boolean | undefined }[],
-  ): void {
-    this.store.dispatch(Recipes.setExcludedBatch({ values }));
+  setExcludedItems(excludedItemIds: Set<string>): void {
+    this.store.dispatch(Settings.setExcludedItems({ excludedItemIds }));
   }
 
-  setItemExcludedBatch(values: { id: string; value: boolean }[]): void {
-    this.store.dispatch(Items.setExcludedBatch({ values }));
+  setExcludedRecipes(value: Set<string>, def: Set<string>): void {
+    this.store.dispatch(Settings.setExcludedRecipes({ value, def }));
   }
 
   setPreset(preset: Preset): void {
@@ -412,31 +391,23 @@ export class SettingsComponent implements OnInit {
   }
 
   setFuelRank(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(Machines.setFuelRank({ value, def }));
+    this.store.dispatch(Settings.setFuelRank({ value, def }));
   }
 
   setModuleRank(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(Machines.setModuleRank({ value, def }));
-  }
-
-  addMachine(id: string, def: string[] | undefined): void {
-    this.store.dispatch(Machines.add({ id, def }));
+    this.store.dispatch(Settings.setModuleRank({ value, def }));
   }
 
   setDefaultBeacons(beacons: BeaconSettings[] | undefined): void {
-    this.store.dispatch(Machines.setDefaultBeacons({ beacons }));
+    this.store.dispatch(Settings.setBeacons({ beacons }));
   }
 
   setDefaultOverclock(overclock: Rational | undefined): void {
-    this.store.dispatch(Machines.setDefaultOverclock({ overclock }));
+    this.store.dispatch(Settings.setOverclock({ overclock }));
   }
 
   setMachineRank(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(Machines.setRank({ value, def }));
-  }
-
-  setMachine(id: string, value: string, def: string[] | undefined): void {
-    this.store.dispatch(Machines.setMachine({ id, value, def }));
+    this.store.dispatch(Settings.setMachineRank({ value, def }));
   }
 
   setFuel(id: string, value: string, def: string | undefined): void {
@@ -455,11 +426,7 @@ export class SettingsComponent implements OnInit {
     this.store.dispatch(Machines.setOverclock({ id, value, def }));
   }
 
-  removeMachine(id: string, def: string[] | undefined): void {
-    this.store.dispatch(Machines.remove({ id, def }));
-  }
-
-  setBeaconReceivers(beaconReceivers: Rational | null): void {
+  setBeaconReceivers(beaconReceivers: Rational | undefined): void {
     this.store.dispatch(Settings.setBeaconReceivers({ beaconReceivers }));
   }
 

@@ -1,13 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { InserterData, InserterSpeed, ItemId, Rational } from '~/models';
-import { Settings } from '~/store';
+import {
+  InserterData,
+  InserterSpeed,
+  ItemId,
+  Rational,
+  SettingsComplete,
+} from '~/models';
 
 @Pipe({ name: 'inserterSpeed', standalone: true })
 export class InserterSpeedPipe implements PipeTransform {
   transform(
     value: Rational | undefined,
-    settings: Settings.SettingsState,
+    settings: SettingsComplete,
   ): InserterSpeed | null {
     if (value != null) {
       const inserter = InserterData[settings.inserterTarget][

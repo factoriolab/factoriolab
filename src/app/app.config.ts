@@ -32,8 +32,8 @@ import {
 import { metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';
-import { MachinesEffects } from './store/machines/machines.effects';
 import { ObjectivesEffects } from './store/objectives/objectives.effects';
+import { SettingsEffects } from './store/settings/settings.effects';
 
 function initializeApp(primengConfig: PrimeNGConfig): () => Promise<unknown> {
   return () => {
@@ -88,7 +88,7 @@ export const appConfig: ApplicationConfig = {
     provideEffects(
       DatasetsEffects,
       ObjectivesEffects,
-      MachinesEffects,
+      SettingsEffects,
       AnalyticsEffects,
     ),
   ],

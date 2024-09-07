@@ -13,21 +13,12 @@ export const machinesState = (state: LabState): MachinesState =>
 /* Complex selectors */
 export const selectMachinesState = createSelector(
   machinesState,
-  Settings.selectDefaults,
+  Settings.selectSettings,
   Settings.selectDataset,
-  (state, defaults, data) => {
-    const ids = state.ids ?? defaults?.machineRankIds ?? [];
-    const fuelRankIds = state.fuelRankIds ?? defaults?.fuelRankIds ?? [];
-    const moduleRankIds = state.moduleRankIds ?? defaults?.moduleRankIds ?? [];
-    const beacons = RecipeUtility.hydrateBeacons(
-      state.beacons,
-      defaults?.beacons,
-    );
-    const overclock = state.overclock;
-    const entities: Entities<MachineSettings> = {};
-
+  (state, settings, data) => {
+    const value: Entities<MachineSettings> = {};
     for (const id of data.machineIds) {
-      const s: MachineSettings = { ...state.entities[id] };
+      const s: MachineSettings = { ...state[id] };
       const machine = data.machineEntities[id];
 
       if (machine.type === EnergyType.Burner) {
@@ -36,7 +27,7 @@ export const selectMachinesState = createSelector(
           s.fuelId ??
           RecipeUtility.bestMatch(
             s.fuelOptions.map((o) => o.value),
-            fuelRankIds,
+            settings.fuelRankIds,
           );
       }
 
@@ -45,17 +36,17 @@ export const selectMachinesState = createSelector(
         s.modules = RecipeUtility.hydrateModules(
           s.modules,
           s.moduleOptions,
-          moduleRankIds,
+          settings.moduleRankIds,
           machine.modules,
         );
-        s.beacons = RecipeUtility.hydrateBeacons(s.beacons, beacons);
+        s.beacons = RecipeUtility.hydrateBeacons(s.beacons, settings.beacons);
       }
 
-      s.overclock = s.overclock ?? overclock;
+      s.overclock = s.overclock ?? settings.overclock;
 
-      entities[id] = s;
+      value[id] = s;
     }
 
-    return { ids, fuelRankIds, moduleRankIds, beacons, overclock, entities };
+    return value;
   },
 );

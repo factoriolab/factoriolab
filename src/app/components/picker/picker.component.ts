@@ -56,7 +56,7 @@ export class PickerComponent extends DialogComponent {
 
   header = input('');
   @Output() selectId = new EventEmitter<string>();
-  @Output() selectIds = new EventEmitter<string[]>();
+  @Output() selectIds = new EventEmitter<Set<string>>();
 
   data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
@@ -79,11 +79,12 @@ export class PickerComponent extends DialogComponent {
   clickOpen(
     type: 'item' | 'recipe',
     allIds: string[],
-    selection?: string | string[],
+    selection?: string | string[] | Set<string>,
   ): void {
     const data = this.data();
     this.type = type;
     const allIdsSet = new Set(allIds);
+    if (selection instanceof Set) selection = Array.from(selection);
     if (Array.isArray(selection)) {
       this.isMultiselect = true;
       this.selection = [...selection];
@@ -195,7 +196,7 @@ export class PickerComponent extends DialogComponent {
 
   save(): void {
     if (Array.isArray(this.selection)) {
-      this.selectIds.emit(this.selection);
+      this.selectIds.emit(new Set(this.selection));
     }
   }
 

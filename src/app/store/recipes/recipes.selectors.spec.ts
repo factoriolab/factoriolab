@@ -1,4 +1,5 @@
 import { ItemId, Mocks } from 'src/tests';
+import { spread } from '~/helpers';
 import { rational } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { initialState } from './recipes.reducer';
@@ -22,6 +23,7 @@ describe('Recipes Selectors', () => {
       const result = Selectors.selectRecipesState.projector(
         initialState,
         Mocks.MachinesStateInitial,
+        Mocks.SettingsStateInitial,
         Mocks.AdjustedDataset,
       );
       expect(Object.keys(result).length).toEqual(
@@ -30,39 +32,23 @@ describe('Recipes Selectors', () => {
     });
 
     it('should handle null settings', () => {
-      const state = {
-        ...initialState,
-        ...{ [Mocks.Item1.id]: { machineId: ItemId.AssemblingMachine3 } },
-      };
-      const data = {
-        ...Mocks.AdjustedDataset,
-        ...{
-          defaults: undefined,
-          machineEntities: {
-            ...Mocks.AdjustedDataset.machineEntities,
-            ...{
-              [ItemId.AssemblingMachine3]: {
-                ...Mocks.AdjustedDataset.machineEntities[
-                  ItemId.AssemblingMachine3
-                ],
-                ...{ modules: undefined },
-              },
-            },
-          },
-        },
-      };
+      const state = spread(initialState, {
+        [Mocks.Item1.id]: { machineId: ItemId.AssemblingMachine3 },
+      });
+      const data = spread(Mocks.AdjustedDataset, {
+        defaults: undefined,
+        machineEntities: spread(Mocks.AdjustedDataset.machineEntities, {
+          [ItemId.AssemblingMachine3]: spread(
+            Mocks.AdjustedDataset.machineEntities[ItemId.AssemblingMachine3],
+            { modules: undefined },
+          ),
+        }),
+      });
       spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
       const result = Selectors.selectRecipesState.projector(
         state,
-        {
-          ...Mocks.MachinesStateInitial,
-          ...{
-            entities: {
-              ...Mocks.MachinesStateInitial.entities,
-              ...{ [ItemId.AssemblingMachine3]: {} },
-            },
-          },
-        },
+        spread(Mocks.MachinesStateInitial, { [ItemId.AssemblingMachine3]: {} }),
+        Mocks.SettingsStateInitial,
         data,
       );
       expect(result[Mocks.Item1.id].machineId).toEqual(
@@ -71,13 +57,13 @@ describe('Recipes Selectors', () => {
     });
 
     it('should use machine override', () => {
-      const state = {
-        ...initialState,
-        ...{ [Mocks.Item1.id]: { machineId: stringValue } },
-      };
+      const state = spread(initialState, {
+        [Mocks.Item1.id]: { machineId: stringValue },
+      });
       const result = Selectors.selectRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
+        Mocks.SettingsStateInitial,
         Mocks.AdjustedDataset,
       );
       expect(result[Mocks.Item1.id].machineId).toEqual(stringValue);
@@ -88,37 +74,33 @@ describe('Recipes Selectors', () => {
         { count: rational.one, id: stringValue },
         { count: rational(3n), id: ItemId.Module },
       ];
-      const state = {
-        ...initialState,
-        ...{ [Mocks.Item1.id]: { modules } },
-      };
+      const state = spread(initialState, { [Mocks.Item1.id]: { modules } });
       const result = Selectors.selectRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
+        Mocks.SettingsStateInitial,
         Mocks.Dataset,
       );
       expect(result[Mocks.Item1.id].modules).toEqual(modules);
     });
 
     it('should reset invalid beacon totals', () => {
-      const state = {
-        ...initialState,
-        ...{
-          [Mocks.Item1.id]: {
-            beacons: [
-              {
-                total: rational(8n),
-                count: rational.zero,
-                id: ItemId.Beacon,
-                modules: [{ count: rational(2n), id: ItemId.Module }],
-              },
-            ],
-          },
+      const state = spread(initialState, {
+        [Mocks.Item1.id]: {
+          beacons: [
+            {
+              total: rational(8n),
+              count: rational.zero,
+              id: ItemId.Beacon,
+              modules: [{ count: rational(2n), id: ItemId.Module }],
+            },
+          ],
         },
-      };
+      });
       const result = Selectors.selectRecipesState.projector(
         state,
         Mocks.MachinesStateInitial,
+        Mocks.SettingsStateInitial,
         Mocks.Dataset,
       );
       expect(result[Mocks.Item1.id].beacons?.[0].total).toBeUndefined();

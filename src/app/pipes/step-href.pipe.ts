@@ -1,7 +1,7 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { Step, Zip } from '~/models';
+import { LabParams, Step, Zip } from '~/models';
 import { RouterService } from '~/services';
 import { Recipes } from '~/store';
 
@@ -12,7 +12,10 @@ export class StepHrefPipe implements PipeTransform {
 
   data = this.store.selectSignal(Recipes.selectAdjustedDataset);
 
-  async transform(value: Step, zipPartial: Zip): Promise<string | null> {
+  async transform(
+    value: Step,
+    zipPartial: Zip<LabParams>,
+  ): Promise<LabParams | null> {
     let step = value;
     if (step.recipeId) {
       const recipe = this.data().adjustedRecipe[step.recipeId];

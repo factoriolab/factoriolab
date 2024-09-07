@@ -27,11 +27,11 @@ describe('StepHrefPipe', () => {
         items: rational.one,
         recipeId: RecipeId.ArtilleryShellRange,
       };
-      expect(pipe.transform(step, { bare: '', hash: '' }));
+      expect(pipe.transform(step, { bare: {}, hash: {} }));
       expect(pipe.routerSvc.stepHref).toHaveBeenCalled();
       expect(pipe.routerSvc.stepHref).not.toHaveBeenCalledWith(
         Mocks.Step1,
-        { bare: '', hash: '' },
+        { bare: {}, hash: {} },
         '' as any,
       );
     });

@@ -36,7 +36,7 @@ describe('MainComponent', () => {
       expect(component.isResetting).toBeTrue();
       tick(100);
       expect(component.errorSvc.message.set).toHaveBeenCalledWith(null);
-      expect(component.router.navigateByUrl).toHaveBeenCalledWith('factorio');
+      expect(component.router.navigateByUrl).toHaveBeenCalledWith('/1.1');
       expect(component.store.dispatch).toHaveBeenCalledWith(App.reset());
       expect(component.isResetting).toBeFalse();
     }));

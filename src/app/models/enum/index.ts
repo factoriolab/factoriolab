@@ -18,5 +18,4 @@ export * from './sankey-align';
 export * from './simplex-result-type';
 export * from './step-detail-tab';
 export * from './theme';
-export * from './zip-section';
 export * from './zip-version';

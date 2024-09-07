@@ -1,8 +1,9 @@
 import { Entities } from './entities';
+import { LabParams } from './lab-params';
 
-export interface Zip {
-  bare: string;
-  hash: string;
+export interface Zip<T = string> {
+  bare: T;
+  hash: T;
 }
 
 export interface ZipRecipeSettingsInfo {
@@ -16,9 +17,10 @@ export interface ZipMachineSettings {
 }
 
 export interface ZipData {
-  objectives: Zip;
-  config: Zip;
+  objectives: Zip<LabParams>;
+  config: Zip<LabParams>;
   objectiveSettings: ZipMachineSettings;
   recipeSettings: ZipMachineSettings;
   machineSettings: ZipMachineSettings;
+  beacons?: number[];
 }

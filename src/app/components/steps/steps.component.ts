@@ -31,9 +31,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import { BehaviorSubject, combineLatest, filter, first, pairwise } from 'rxjs';
 
 import { DropdownBaseDirective, NoDragDirective } from '~/directives';
-import { coalesce } from '~/helpers';
+import { coalesce, updateSetIds } from '~/helpers';
 import {
-  AdjustedDataset,
   BeaconSettings,
   Entities,
   Game,
@@ -372,25 +371,17 @@ export class StepsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  toggleRecipes(ids: string[], value: boolean, data: AdjustedDataset): void {
-    const payload = ids.map((id) => ({
-      id,
-      value,
-      def: coalesce(data.defaults?.excludedRecipeIds, []).includes(id),
-    }));
-    this.setRecipeExcludedBatch(payload);
+  changeItemExcluded(id: string, value: boolean): void {
+    this.setExcludedItems(
+      updateSetIds(id, value, this.settings().excludedItemIds),
+    );
   }
 
-  toggleRecipe(
-    id: string,
-    recipesState: Recipes.RecipesState,
-    data: AdjustedDataset,
-  ): void {
-    const value = !recipesState[id].excluded;
-    const def = coalesce(data.defaults?.excludedRecipeIds, []).some(
-      (i) => i === id,
+  changeRecipesExcluded(ids: string[], value: boolean): void {
+    this.setExcludedRecipes(
+      updateSetIds(ids, value, this.settings().excludedRecipeIds),
+      new Set(coalesce(this.data().defaults?.excludedRecipeIds, [])),
     );
-    this.setRecipeExcluded(id, value, def);
   }
 
   changeRecipeField(
@@ -406,7 +397,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
     const id = step.recipeObjectiveId ?? step.recipeId;
     const isObjective = step.recipeObjectiveId != null;
     const machinesState = this.machinesState();
-    const machineSettings = machinesState.entities[settings.machineId];
+    const settingsState = this.settings();
+    const machineSettings = machinesState[settings.machineId];
     switch (field) {
       case 'machine': {
         if (typeof event !== 'string') return;
@@ -416,7 +408,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
           event,
           RecipeUtility.bestMatch(
             data.recipeEntities[step.recipeId].producers,
-            machinesState.ids,
+            settingsState.machineRankIds,
           ),
           isObjective,
         );
@@ -436,7 +428,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
           RecipeUtility.dehydrateModules(
             event,
             coalesce(settings.moduleOptions, []),
-            machinesState.moduleRankIds,
+            settingsState.moduleRankIds,
             machine.modules,
             machineSettings.modules,
           ),
@@ -465,14 +457,24 @@ export class StepsComponent implements OnInit, AfterViewInit {
     }
   }
 
-  changeStepChecked(step: Step, checked: boolean): void {
+  changeStepChecked(step: Step, value: boolean): void {
     // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
-      this.setItemChecked(step.itemId, checked);
+      this.setCheckedItems(
+        updateSetIds(step.itemId, value, this.settings().checkedItemIds),
+      );
     } else if (step.recipeObjectiveId != null) {
-      this.setRecipeChecked(step.recipeObjectiveId, checked, true);
+      this.setCheckedObjectives(
+        updateSetIds(
+          step.recipeObjectiveId,
+          value,
+          this.settings().checkedObjectiveIds,
+        ),
+      );
     } else if (step.recipeId != null) {
-      this.setRecipeChecked(step.recipeId, checked);
+      this.setCheckedRecipes(
+        updateSetIds(step.recipeId, value, this.settings().checkedRecipeIds),
+      );
     }
   }
 
@@ -481,12 +483,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
     this.store.dispatch(Preferences.setRows({ rows }));
   }
 
-  setItemExcluded(id: string, value: boolean): void {
-    this.store.dispatch(Items.setExcluded({ id, value }));
-  }
-
-  setItemChecked(id: string, value: boolean): void {
-    this.store.dispatch(Items.setChecked({ id, value }));
+  setExcludedItems(excludedItemIds: Set<string>): void {
+    this.store.dispatch(Settings.setExcludedItems({ excludedItemIds }));
   }
 
   setBelt(id: string, value: string, def: string): void {
@@ -497,14 +495,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
     this.store.dispatch(Items.setWagon({ id, value, def }));
   }
 
-  setRecipeExcluded(id: string, value: boolean, def: boolean): void {
-    this.store.dispatch(Recipes.setExcluded({ id, value, def }));
-  }
-
-  setRecipeExcludedBatch(
-    values: { id: string; value: boolean; def: boolean | undefined }[],
-  ): void {
-    this.store.dispatch(Recipes.setExcludedBatch({ values }));
+  setExcludedRecipes(value: Set<string>, def: Set<string>): void {
+    this.store.dispatch(Settings.setExcludedRecipes({ value, def }));
   }
 
   addObjective(objective: ObjectiveBase): void {
@@ -554,9 +546,16 @@ export class StepsComponent implements OnInit, AfterViewInit {
     this.store.dispatch(action({ id, value, def }));
   }
 
-  setRecipeChecked(id: string, value: boolean, objective = false): void {
-    const action = objective ? Objectives.setChecked : Recipes.setChecked;
-    this.store.dispatch(action({ id, value }));
+  setCheckedItems(checkedItemIds: Set<string>): void {
+    this.store.dispatch(Settings.setCheckedItems({ checkedItemIds }));
+  }
+
+  setCheckedRecipes(checkedRecipeIds: Set<string>): void {
+    this.store.dispatch(Settings.setCheckedRecipes({ checkedRecipeIds }));
+  }
+
+  setCheckedObjectives(checkedObjectiveIds: Set<string>): void {
+    this.store.dispatch(Settings.setCheckedObjectives({ checkedObjectiveIds }));
   }
 
   resetItem(id: string): void {
@@ -572,11 +571,11 @@ export class StepsComponent implements OnInit, AfterViewInit {
   }
 
   resetChecked(): void {
-    this.store.dispatch(Items.resetChecked());
+    this.store.dispatch(Settings.resetChecked());
   }
 
-  resetExcluded(): void {
-    this.store.dispatch(Items.resetExcluded());
+  resetExcludedItems(): void {
+    this.store.dispatch(Settings.resetExcludedItems());
   }
 
   resetBelts(): void {

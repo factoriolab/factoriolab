@@ -19,8 +19,6 @@ export const selectItemsState = createSelector(
       for (const item of data.itemIds.map((i) => data.itemEntities[i])) {
         const itemSettings: ItemSettings = { ...state[item.id] };
 
-        if (itemSettings.excluded == null) itemSettings.excluded = false;
-
         // Belt (or Pipe)
         if (!itemSettings.beltId) {
           if (item.stack) {
@@ -46,14 +44,6 @@ export const selectItemsState = createSelector(
 );
 
 export const selectItemsModified = createSelector(itemsState, (state) => ({
-  excluded: Object.keys(state).some((id) => state[id].excluded != null),
-  checked: Object.keys(state).some((id) => state[id].checked != null),
   belts: Object.keys(state).some((id) => state[id].beltId != null),
   wagons: Object.keys(state).some((id) => state[id].wagonId != null),
 }));
-
-export const selectExcludedItemIds = createSelector(
-  selectItemsState,
-  (itemsState) =>
-    Object.keys(itemsState).filter((i) => itemsState[i]?.excluded),
-);

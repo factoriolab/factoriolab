@@ -129,7 +129,6 @@ export const ObjectiveSteps = {
   ],
 };
 export const ItemSettings1: M.ItemSettings = {
-  excluded: false,
   beltId: ItemId.TransportBelt,
   wagonId: ItemId.CargoWagon,
 };
@@ -179,6 +178,7 @@ export const Step2: M.Step = {
 };
 export const Steps = [Step1, Step2];
 export const BeltSpeed: M.Entities<M.Rational> = {
+  [ItemId.ExpressTransportBelt]: M.rational(45n),
   [ItemId.TransportBelt]: M.rational(15n),
   [ItemId.Pipe]: M.rational(1500n),
 };
@@ -193,21 +193,16 @@ for (const recipe of Dataset.recipeIds.map((i) => Dataset.recipeEntities[i])) {
 export const SettingsStateInitial = Settings.selectSettings.projector(
   Settings.initialState,
   Defaults,
+  new Set(Dataset.technologyIds),
 );
-export const ItemsStateInitial = Items.selectItemsState.projector({}, Dataset, {
-  ...Settings.initialState,
-  ...{
-    beltId: ItemId.TransportBelt,
-    pipeId: ItemId.Pipe,
-    fuelRankIds: [ItemId.Coal],
-    cargoWagonId: ItemId.CargoWagon,
-    fluidWagonId: ItemId.FluidWagon,
-    excludedRecipeIds: [],
-  },
-});
+export const ItemsStateInitial = Items.selectItemsState.projector(
+  {},
+  Dataset,
+  SettingsStateInitial,
+);
 export const MachinesStateInitial = Machines.selectMachinesState.projector(
   Machines.initialState,
-  Defaults,
+  SettingsStateInitial,
   Dataset,
 );
 export function getRecipesState(): M.Entities<M.RecipeSettings> {
@@ -215,6 +210,7 @@ export function getRecipesState(): M.Entities<M.RecipeSettings> {
   return Recipes.selectRecipesState.projector(
     {},
     MachinesStateInitial,
+    SettingsStateInitial,
     Dataset,
   );
 }
@@ -224,10 +220,9 @@ export function getAdjustedDataset(): M.AdjustedDataset {
   Recipes.selectAdjustedDataset.release();
   return Recipes.selectAdjustedDataset.projector(
     RecipesStateInitial,
-    [],
     ItemsStateInitial,
     Dataset.recipeIds,
-    Settings.initialState,
+    SettingsStateInitial,
     getDataset(),
   );
 }

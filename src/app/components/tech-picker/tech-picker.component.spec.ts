@@ -32,7 +32,7 @@ describe('TechPickerComponent', () => {
 
   describe('status', () => {
     it('should filter technologies and selection', () => {
-      component.clickOpen(Mocks.AdjustedDataset.technologyIds);
+      component.clickOpen(new Set(Mocks.AdjustedDataset.technologyIds));
       component.filter.set('optics');
       const status = component.status();
       expect(status.available.length).toEqual(0);
@@ -43,19 +43,11 @@ describe('TechPickerComponent', () => {
 
   describe('clickOpen', () => {
     it('should set up lists of available, locked, and researched technologies', () => {
-      component.clickOpen([RecipeId.MiningProductivity]);
+      component.clickOpen(new Set([RecipeId.MiningProductivity]));
       const status = component.status();
       expect(status.available.length).toEqual(8);
       expect(status.researched.length).toEqual(1);
       expect(status.locked.length).toEqual(183);
-    });
-
-    it('should handle null selection', () => {
-      component.clickOpen(null);
-      const status = component.status();
-      expect(status.available.length).toEqual(0);
-      expect(status.researched.length).toEqual(192);
-      expect(status.locked.length).toEqual(0);
     });
   });
 
@@ -127,20 +119,19 @@ describe('TechPickerComponent', () => {
   });
 
   describe('onHide', () => {
-    it('should emit the selection filtered to a minimal set', () => {
-      component.selection.set([RecipeId.Electronics, RecipeId.Automation]);
+    it('should emit the selection', () => {
+      const list = [RecipeId.Electronics, RecipeId.Automation];
+      component.selection.set(list);
       spyOn(component.selectIds, 'emit');
       component.onHide();
-      expect(component.selectIds.emit).toHaveBeenCalledWith([
-        RecipeId.Electronics,
-      ]);
+      expect(component.selectIds.emit).toHaveBeenCalledWith(new Set(list));
     });
 
     it('should emit null if all technologies are selected', () => {
       component.selection.set(Mocks.AdjustedDataset.technologyIds);
       spyOn(component.selectIds, 'emit');
       component.onHide();
-      expect(component.selectIds.emit).toHaveBeenCalledWith(null);
+      expect(component.selectIds.emit).toHaveBeenCalledWith(undefined);
     });
   });
 

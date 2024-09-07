@@ -1,4 +1,4 @@
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { MainComponent } from './main.component';
 
@@ -25,5 +25,3 @@ export const routes: Routes = [
     ],
   },
 ];
-
-export const MainRoutingModule = RouterModule.forChild(routes);

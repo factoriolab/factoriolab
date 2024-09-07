@@ -637,7 +637,7 @@ describe('RecipeUtility', () => {
         ...Mocks.AdjustedDataset.recipeEntities[RecipeId.SteelChest],
         ...{
           out: { [ItemId.SteelChest]: rational.one },
-          time: rational(1n, 30n),
+          time: rational(1n, 60n),
           drain: rational(5n),
           consumption: rational(150n),
           pollution: rational(1n, 20n),
@@ -853,7 +853,6 @@ describe('RecipeUtility', () => {
       spyOn(RecipeUtility, 'adjustRecipe').and.callThrough();
       const result = RecipeUtility.adjustDataset(
         Mocks.AdjustedDataset.recipeIds,
-        [],
         Mocks.RecipesStateInitial,
         Mocks.ItemsStateInitial,
         Mocks.SettingsStateInitial,
@@ -956,10 +955,9 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle a machine with no modules', () => {
-      const machines = {
-        ...Mocks.MachinesStateInitial,
-        ...{ ids: undefined },
-      };
+      const settings = spread(Mocks.SettingsStateInitial, {
+        machineRankIds: undefined,
+      });
       const result = RecipeUtility.adjustObjective(
         {
           id: '1',
@@ -970,8 +968,8 @@ describe('RecipeUtility', () => {
         },
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
-        machines,
-        Mocks.SettingsStateInitial,
+        Mocks.MachinesStateInitial,
+        settings,
         Mocks.AdjustedDataset,
       );
       expect(result.machineId).toEqual(ItemId.StoneFurnace);
@@ -981,24 +979,18 @@ describe('RecipeUtility', () => {
       spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
       const data = Mocks.getAdjustedDataset();
       data.machineEntities[ItemId.StoneFurnace].modules = undefined;
-      const machines = {
-        ...Mocks.MachinesStateInitial,
-        ...{
-          ids: undefined,
-          entities: {
-            ...Mocks.MachinesStateInitial.entities,
-            ...{
-              [ItemId.ElectricFurnace]: spread(
-                Mocks.MachinesStateInitial.entities[ItemId.ElectricFurnace],
-                {
-                  modules: undefined,
-                  beacons: undefined,
-                },
-              ),
-            },
+      const machines = spread(Mocks.MachinesStateInitial, {
+        [ItemId.ElectricFurnace]: spread(
+          Mocks.MachinesStateInitial[ItemId.ElectricFurnace],
+          {
+            modules: undefined,
+            beacons: undefined,
           },
-        },
-      };
+        ),
+      });
+      const settings = spread(Mocks.SettingsStateInitial, {
+        machineRankIds: undefined,
+      });
       const result = RecipeUtility.adjustObjective(
         {
           id: '1',
@@ -1011,7 +1003,7 @@ describe('RecipeUtility', () => {
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         machines,
-        Mocks.SettingsStateInitial,
+        settings,
         data,
       );
       expect(result.machineId).toEqual(ItemId.StoneFurnace);

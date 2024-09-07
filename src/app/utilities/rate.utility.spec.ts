@@ -65,7 +65,7 @@ describe('RateUtility', () => {
           Mocks.DisplayRateInfo,
           Mocks.AdjustedDataset,
         ),
-      ).toEqual(rational(15n));
+      ).toEqual(rational(45n));
     });
 
     it('should normalize item objective rates based on wagons', () => {
@@ -241,9 +241,9 @@ describe('RateUtility', () => {
         [],
         {},
         {},
-        null,
         {},
         displayRateInfo[DisplayRate.PerMinute],
+        Mocks.SettingsStateInitial,
         Mocks.AdjustedDataset,
       );
       expect(RateUtility.calculateParentsOutputs).toHaveBeenCalledTimes(2);
@@ -338,7 +338,7 @@ describe('RateUtility', () => {
       const step: Step = {
         id: 'id',
         itemId: Mocks.Item1.id,
-        items: Mocks.BeltSpeed[ItemId.TransportBelt],
+        items: Mocks.BeltSpeed[ItemId.ExpressTransportBelt],
         belts: rational.zero,
       };
       RateUtility.calculateBelts(
@@ -348,7 +348,7 @@ describe('RateUtility', () => {
         Mocks.AdjustedDataset,
       );
       expect(step.belts).toEqual(rational.one);
-      expect(step.wagons).toEqual(rational(3n, 400n));
+      expect(step.wagons).toEqual(rational(9n, 400n));
     });
 
     it('should calculate required wagons for fluids', () => {
@@ -452,7 +452,7 @@ describe('RateUtility', () => {
 
     it('should do nothing if beaconReceivers is unset', () => {
       const step: Step = { id: 'id' };
-      RateUtility.calculateBeacons(step, null, Mocks.AdjustedDataset);
+      RateUtility.calculateBeacons(step, undefined, Mocks.AdjustedDataset);
       expect(step).toEqual({ id: 'id' });
     });
 
@@ -498,38 +498,25 @@ describe('RateUtility', () => {
   describe('calculateChecked', () => {
     it('should set the checked state for an item step', () => {
       const step: Step = { id: '0', itemId: ItemId.Coal };
-      RateUtility.calculateChecked(
-        step,
-        { [ItemId.Coal]: { checked: true } },
-        {},
-        {},
-      );
+      RateUtility.calculateChecked(step, {
+        checkedItemIds: new Set([ItemId.Coal]),
+      } as any);
       expect(step.checked).toBeTrue();
     });
 
     it('should set the checked state for a recipe objective step', () => {
       const step: Step = { id: '0', recipeObjectiveId: '1' };
-      RateUtility.calculateChecked(
-        step,
-        {},
-        {},
-        {
-          ['1']: {
-            checked: true,
-          } as any,
-        },
-      );
+      RateUtility.calculateChecked(step, {
+        checkedObjectiveIds: new Set(['1']),
+      } as any);
       expect(step.checked).toBeTrue();
     });
 
     it('should set the checked state for a recipe step', () => {
       const step: Step = { id: '0', recipeId: RecipeId.Coal };
-      RateUtility.calculateChecked(
-        step,
-        {},
-        { [RecipeId.Coal]: { checked: true } },
-        {},
-      );
+      RateUtility.calculateChecked(step, {
+        checkedRecipeIds: new Set([RecipeId.Coal]),
+      } as any);
       expect(step.checked).toBeTrue();
     });
   });

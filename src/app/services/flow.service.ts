@@ -12,9 +12,10 @@ import {
   MIN_LINK_VALUE,
   rational,
   Rational,
+  SettingsComplete,
   Step,
 } from '~/models';
-import { Items, Objectives, Preferences, Recipes, Settings } from '~/store';
+import { Objectives, Preferences, Recipes, Settings } from '~/store';
 import { ThemeService, ThemeValues } from './theme.service';
 import { TranslateService } from './translate.service';
 
@@ -31,20 +32,13 @@ export class FlowService {
     suffix: this.store
       .select(Settings.selectDisplayRateInfo)
       .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
-    itemsState: this.store.select(Items.selectItemsState),
+    settings: this.store.select(Settings.selectSettings),
     preferences: this.store.select(Preferences.preferencesState),
     data: this.store.select(Recipes.selectAdjustedDataset),
     themeValues: this.themeSvc.themeValues$,
   }).pipe(
-    map(({ steps, suffix, itemsState, preferences, data, themeValues }) =>
-      this.buildGraph(
-        steps,
-        suffix,
-        itemsState,
-        preferences,
-        data,
-        themeValues,
-      ),
+    map(({ steps, suffix, settings, preferences, data, themeValues }) =>
+      this.buildGraph(steps, suffix, settings, preferences, data, themeValues),
     ),
   );
 
@@ -55,7 +49,7 @@ export class FlowService {
   buildGraph(
     steps: Step[],
     suffix: string,
-    itemsState: Items.ItemsState,
+    settings: SettingsComplete,
     preferences: Preferences.PreferencesState,
     data: AdjustedDataset,
     themeValues: ThemeValues,
@@ -89,7 +83,7 @@ export class FlowService {
         step.itemId &&
         step.items &&
         (!preferences.flowSettings.hideExcluded ||
-          !itemsState[step.itemId].excluded)
+          !settings.excludedItemIds.has(step.itemId))
       ) {
         const item = data.itemEntities[step.itemId];
         const icon = data.iconEntities[item.icon ?? item.id];
@@ -217,7 +211,8 @@ export class FlowService {
         if (step.outputs) {
           for (const itemId of Object.keys(step.outputs).filter(
             (i) =>
-              !preferences.flowSettings.hideExcluded || !itemsState[i].excluded,
+              !preferences.flowSettings.hideExcluded ||
+              !settings.excludedItemIds.has(i),
           )) {
             const itemStep = stepItemMap[itemId];
             const item = data.itemEntities[itemId];

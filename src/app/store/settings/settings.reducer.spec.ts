@@ -48,14 +48,99 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('SET_RESEARCHED_TECHNOLOGIES', () => {
-    it('should set the researched technology ids', () => {
-      const researchedTechnologyIds = [RecipeId.ArtilleryShellRange];
+  describe('SET_MACHINE_RANK', () => {
+    it('should set the machine rank', () => {
       const result = settingsReducer(
         initialState,
-        Actions.setResearchedTechnologies({ researchedTechnologyIds }),
+        Actions.setMachineRank({
+          value: [ItemId.AssemblingMachine1],
+          def: undefined,
+        }),
       );
-      expect(result.researchedTechnologyIds).toEqual(researchedTechnologyIds);
+      expect(result.machineRankIds).toEqual([ItemId.AssemblingMachine1]);
+    });
+  });
+
+  describe('SET_FUEL_RANK', () => {
+    it('should set the fuel rank', () => {
+      const result = settingsReducer(
+        initialState,
+        Actions.setFuelRank({
+          value: [ItemId.Coal],
+          def: undefined,
+        }),
+      );
+      expect(result.fuelRankIds).toEqual([ItemId.Coal]);
+    });
+  });
+
+  describe('SET_MODULE_RANK', () => {
+    it('should set the module rank', () => {
+      const result = settingsReducer(
+        initialState,
+        Actions.setModuleRank({
+          value: [ItemId.SpeedModule],
+          def: undefined,
+        }),
+      );
+      expect(result.moduleRankIds).toEqual([ItemId.SpeedModule]);
+    });
+  });
+
+  describe('SET_BELT', () => {
+    it('should set the default belt', () => {
+      const id = ItemId.TransportBelt;
+      const result = settingsReducer(
+        initialState,
+        Actions.setBelt({ id, def: undefined }),
+      );
+      expect(result.beltId).toEqual(id);
+    });
+  });
+
+  describe('SET_PIPE', () => {
+    it('should set the default pipe', () => {
+      const id = ItemId.Pipe;
+      const result = settingsReducer(
+        initialState,
+        Actions.setPipe({ id, def: undefined }),
+      );
+      expect(result.pipeId).toEqual(id);
+    });
+  });
+
+  describe('SET_CARGO_WAGON', () => {
+    it('should set the default cargo wagon', () => {
+      const id = ItemId.CargoWagon;
+      const result = settingsReducer(
+        initialState,
+        Actions.setCargoWagon({ id, def: undefined }),
+      );
+      expect(result.cargoWagonId).toEqual(id);
+    });
+  });
+
+  describe('SET_FLUID_WAGON', () => {
+    it('should set the default fluid wagon', () => {
+      const id = ItemId.FluidWagon;
+      const result = settingsReducer(
+        initialState,
+        Actions.setFluidWagon({ id, def: undefined }),
+      );
+      expect(result.fluidWagonId).toEqual(id);
+    });
+  });
+
+  describe('SET_EXCLUDED_RECIPES', () => {
+    it('should set the set of excluded recipes', () => {
+      const result = settingsReducer(
+        initialState,
+        Actions.setExcludedRecipes({
+          value: new Set([RecipeId.Coal]),
+          def: new Set(),
+        }),
+      );
+      expect(result.excludedRecipeIds).toEqual(new Set([RecipeId.Coal]));
     });
   });
 
@@ -111,50 +196,6 @@ describe('Settings Reducer', () => {
         Actions.setProliferatorSpray({ proliferatorSprayId }),
       );
       expect(result.proliferatorSprayId).toEqual(proliferatorSprayId);
-    });
-  });
-
-  describe('SET_BELT', () => {
-    it('should set the default belt', () => {
-      const id = ItemId.TransportBelt;
-      const result = settingsReducer(
-        initialState,
-        Actions.setBelt({ id, def: undefined }),
-      );
-      expect(result.beltId).toEqual(id);
-    });
-  });
-
-  describe('SET_PIPE', () => {
-    it('should set the default pipe', () => {
-      const id = ItemId.Pipe;
-      const result = settingsReducer(
-        initialState,
-        Actions.setPipe({ id, def: undefined }),
-      );
-      expect(result.pipeId).toEqual(id);
-    });
-  });
-
-  describe('SET_CARGO_WAGON', () => {
-    it('should set the default cargo wagon', () => {
-      const id = ItemId.CargoWagon;
-      const result = settingsReducer(
-        initialState,
-        Actions.setCargoWagon({ id, def: undefined }),
-      );
-      expect(result.cargoWagonId).toEqual(id);
-    });
-  });
-
-  describe('SET_FlUID_WAGON', () => {
-    it('should set the default fluid wagon', () => {
-      const id = ItemId.FluidWagon;
-      const result = settingsReducer(
-        initialState,
-        Actions.setFluidWagon({ id, def: undefined }),
-      );
-      expect(result.fluidWagonId).toEqual(id);
     });
   });
 
@@ -254,7 +295,35 @@ describe('Settings Reducer', () => {
     });
   });
 
-  describe('RESET_COST', () => {
+  describe('RESET_EXCLUDED_ITEMS', () => {
+    it('should reset the excluded items', () => {
+      const result = settingsReducer(
+        {
+          excludedItemIds: new Set([ItemId.Coal]),
+        } as any,
+        Actions.resetExcludedItems(),
+      );
+      expect(result.excludedItemIds).toEqual(initialState.excludedItemIds);
+    });
+  });
+
+  describe('RESET_CHECKED', () => {
+    it('should reset all checked sets', () => {
+      const result = settingsReducer(
+        {
+          checkedItemIds: new Set([ItemId.Coal]),
+          checkedRecipeIds: new Set([RecipeId.Coal]),
+          checkedObjectiveIds: new Set(['1']),
+        } as any,
+        Actions.resetChecked(),
+      );
+      expect(result.checkedItemIds).toEqual(new Set());
+      expect(result.checkedRecipeIds).toEqual(new Set());
+      expect(result.checkedObjectiveIds).toEqual(new Set());
+    });
+  });
+
+  describe('RESET_COSTS', () => {
     it('should reset the cost fields', () => {
       const result = settingsReducer(
         {

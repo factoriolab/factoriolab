@@ -31,6 +31,7 @@ import {
   ObjectiveUnit,
   rational,
   Rational,
+  SettingsComplete,
   SimplexResultType,
 } from '~/models';
 import { IconSmClassPipe, TranslatePipe } from '~/pipes';
@@ -92,11 +93,10 @@ export class ObjectivesComponent {
   messages$ = combineLatest({
     objectives: this.store.select(Objectives.selectObjectives),
     matrixResult: this.store.select(Objectives.selectMatrixResult),
-    itemsState: this.store.select(Items.selectItemsState),
-    recipesState: this.store.select(Recipes.selectRecipesState),
+    settings: this.store.select(Settings.selectSettings),
   }).pipe(
-    switchMap(({ objectives, matrixResult, itemsState, recipesState }) =>
-      this.getMessages(objectives, matrixResult, itemsState, recipesState),
+    switchMap(({ objectives, matrixResult, settings }) =>
+      this.getMessages(objectives, matrixResult, settings),
     ),
   );
 
@@ -110,8 +110,7 @@ export class ObjectivesComponent {
   getMessages(
     objectives: Objective[],
     matrixResult: MatrixResult,
-    itemsState: Items.ItemsState,
-    recipesState: Recipes.RecipesState,
+    settings: SettingsComplete,
   ): Observable<Message[]> {
     if (matrixResult.resultType === SimplexResultType.Paused) {
       return this.translateSvc
@@ -141,8 +140,8 @@ export class ObjectivesComponent {
       if (
         maxObjectives.some((o) =>
           o.unit === ObjectiveUnit.Machines
-            ? recipesState[o.targetId].excluded
-            : itemsState[o.targetId].excluded,
+            ? settings.excludedRecipeIds.has(o.targetId)
+            : settings.excludedItemIds.has(o.targetId),
         )
       ) {
         // Found an excluded maximize objective

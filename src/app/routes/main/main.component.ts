@@ -27,6 +27,7 @@ import { ContentService, ErrorService, TranslateService } from '~/services';
 import { App, Objectives, Settings } from '~/store';
 
 @Component({
+  selector: 'lab-main',
   standalone: true,
   imports: [
     AsyncPipe,

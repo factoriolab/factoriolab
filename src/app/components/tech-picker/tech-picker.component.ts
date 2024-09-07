@@ -16,11 +16,13 @@ import { FilterService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TooltipModule } from 'primeng/tooltip';
 import { first } from 'rxjs';
 
-import { Game } from '~/models';
+import { Game, Optional } from '~/models';
 import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService, TranslateService } from '~/services';
 import { Preferences, Recipes } from '~/store';
@@ -38,6 +40,8 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
     ButtonModule,
     CheckboxModule,
     DialogModule,
+    InputTextModule,
+    InputTextareaModule,
     ScrollPanelModule,
     TooltipModule,
     IconSmClassPipe,
@@ -55,7 +59,7 @@ export class TechPickerComponent extends DialogComponent {
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 
-  @Output() selectIds = new EventEmitter<string[] | null>();
+  @Output() selectIds = new EventEmitter<Optional<Set<string>>>();
 
   data = this.store.selectSignal(Recipes.selectAdjustedDataset);
   showTechLabels = this.store.selectSignal(Preferences.selectShowTechLabels);
@@ -108,9 +112,8 @@ export class TechPickerComponent extends DialogComponent {
 
   Game = Game;
 
-  clickOpen(selection: string[] | null): void {
-    selection = [...(selection ?? this.data().technologyIds)];
-    this.selection.set(selection);
+  clickOpen(selection: Set<string>): void {
+    this.selection.set(Array.from(selection));
     this.show();
 
     if (!this.contentSvc.isMobile()) {
@@ -225,20 +228,9 @@ game.write_file("techs.txt", table.concat(list, ","))
     const selection = this.selection();
     const data = this.data();
     if (selection.length === data.technologyIds.length)
-      this.selectIds.emit(null);
+      this.selectIds.emit(undefined);
 
-    /**
-     * Filter for only technologies not listed as prerequisites for other
-     * researched technologies, to create minimal set
-     */
-    const filteredSelection = selection.filter(
-      (a) =>
-        !selection.some((b) => {
-          const techB = data.technologyEntities[b];
-          return techB.prerequisites && techB.prerequisites.indexOf(a) !== -1;
-        }),
-    );
-    this.selectIds.emit(filteredSelection);
+    this.selectIds.emit(new Set(selection));
   }
 
   /** Action Dispatch Methods */

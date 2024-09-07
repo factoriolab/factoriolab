@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 
 import { InputNumberComponent } from '~/components';
-import { coalesce } from '~/helpers';
+import { coalesce, updateSetIds } from '~/helpers';
 import { Game, Rational, Recipe, RecipeSettings } from '~/models';
 import {
   IconClassPipe,
@@ -15,7 +15,7 @@ import {
   TranslatePipe,
   UsagePipe,
 } from '~/pipes';
-import { Recipes } from '~/store';
+import { Recipes, Settings } from '~/store';
 import { DetailComponent } from '../../models';
 
 @Component({
@@ -38,6 +38,7 @@ import { DetailComponent } from '../../models';
 export class RecipeComponent extends DetailComponent {
   recipesStateRaw = this.store.selectSignal(Recipes.recipesState);
   recipesState = this.store.selectSignal(Recipes.selectRecipesState);
+  settings = this.store.selectSignal(Settings.selectSettings);
 
   obj = computed<Recipe | undefined>(
     () => this.data().recipeEntities[this.id()],
@@ -66,25 +67,26 @@ export class RecipeComponent extends DetailComponent {
 
   Game = Game;
 
-  toggleRecipe(): void {
-    const recipeSettings = this.recipeSettings();
-    if (recipeSettings == null) return;
-
-    const id = this.id();
-    const value = !recipeSettings.excluded;
-    const def = coalesce(this.data().defaults?.excludedRecipeIds, []).some(
-      (i) => i === id,
+  changeExcluded(value: boolean): void {
+    this.setExcludedRecipes(
+      updateSetIds(this.id(), value, this.settings().excludedRecipeIds),
+      new Set(coalesce(this.data().defaults?.excludedRecipeIds, [])),
     );
-    this.setRecipeExcluded(id, value, def);
+  }
+
+  changeChecked(value: boolean): void {
+    this.setCheckedRecipes(
+      updateSetIds(this.id(), value, this.settings().checkedRecipeIds),
+    );
   }
 
   /** Action dispatch methods */
-  setRecipeExcluded(id: string, value: boolean, def: boolean): void {
-    this.store.dispatch(Recipes.setExcluded({ id, value, def }));
+  setExcludedRecipes(value: Set<string>, def: Set<string>): void {
+    this.store.dispatch(Settings.setExcludedRecipes({ value, def }));
   }
 
-  setRecipeChecked(id: string, value: boolean): void {
-    this.store.dispatch(Recipes.setChecked({ id, value }));
+  setCheckedRecipes(checkedRecipeIds: Set<string>): void {
+    this.store.dispatch(Settings.setCheckedRecipes({ checkedRecipeIds }));
   }
 
   setRecipeCost(id: string, value: Rational): void {

@@ -290,11 +290,11 @@
                   ? ('settings.techsResearched'
                     | translate
                       : {
-                          count: researchedTechnologyIds()!.length
+                          count: settings().researchedTechnologyIds.size
                         })
                   : ('settings.allTechsResearched' | translate)
               "
-              (click)="techPicker.clickOpen(researchedTechnologyIds())"
+              (click)="techPicker.clickOpen(settings().researchedTechnologyIds)"
             ></button>
             <lab-tech-picker
               #techPicker
@@ -313,21 +313,21 @@
                 'settings.recipesExcluded'
                   | translate
                     : {
-                        count: excludedRecipeIds().length
+                        count: settings().excludedRecipeIds.size
                       }
               "
               (click)="
                 recipesPicker.clickOpen(
                   'recipe',
-                  recipeIds(),
-                  excludedRecipeIds()
+                  data().recipeIds,
+                  settings().excludedRecipeIds
                 )
               "
             ></button>
             <lab-picker
               #recipesPicker
               [header]="'settings.recipesHeader' | translate"
-              (selectIds)="setExcludedRecipes($event, recipesState(), data())"
+              (selectIds)="changeExcludedRecipes($event)"
             ></lab-picker>
           </div>
           <div>
@@ -342,17 +342,21 @@
                 'settings.itemsExcluded'
                   | translate
                     : {
-                        count: excludedItemIds().length
+                        count: settings().excludedItemIds.size
                       }
               "
               (click)="
-                itemsPicker.clickOpen('item', itemIds(), excludedItemIds())
+                itemsPicker.clickOpen(
+                  'item',
+                  data().itemIds,
+                  settings().excludedItemIds
+                )
               "
             ></button>
             <lab-picker
               #itemsPicker
               [header]="'settings.itemsHeader' | translate"
-              (selectIds)="setExcludedItems($event, itemsState(), data())"
+              (selectIds)="setExcludedItems($event)"
             ></lab-picker>
           </div>
         </div>
@@ -394,7 +398,7 @@
                   scrollHeight="40vh"
                   panelStyleClass="tooltip"
                   [pTooltip]="'settings.modifierRankTooltip' | translate"
-                  [ngModel]="machinesState().moduleRankIds"
+                  [ngModel]="settings().moduleRankIds"
                   [options]="options().modules"
                   (onChange)="
                     setModuleRank($event.value, data().defaults?.moduleRankIds)
@@ -419,7 +423,7 @@
                       <ng-template #tooltip>
                         <lab-tooltip
                           [id]="item.value"
-                          type="fuel"
+                          type="module"
                         ></lab-tooltip>
                       </ng-template>
                     </div>
@@ -441,7 +445,7 @@
                   scrollHeight="40vh"
                   panelStyleClass="tooltip"
                   [pTooltip]="'settings.fuelRankTooltip' | translate"
-                  [ngModel]="machinesState().fuelRankIds"
+                  [ngModel]="settings().fuelRankIds"
                   [options]="options().fuels"
                   (onChange)="
                     setFuelRank($event.value, data().defaults?.fuelRankIds)
@@ -533,7 +537,7 @@
                   [showButtons]="true"
                   inputStyleClass="text-end"
                   [pTooltip]="'settings.overclockTooltip' | translate"
-                  [ngModel]="machinesState().overclock?.toNumber()"
+                  [ngModel]="settings().overclock?.toNumber()"
                   (onBlur)="
                     setDefaultOverclock(rational(overclockInput.value ?? 100))
                   "
@@ -541,7 +545,7 @@
                 </p-inputNumber>
               }
               @if (
-                data().game === Game.Factorio && machinesState().beacons;
+                data().game === Game.Factorio && settings().beacons;
                 as beacons
               ) {
                 <button
@@ -587,7 +591,7 @@
               "
             >
               <ng-template pTemplate="item" let-machineId>
-                @if (machinesState().entities[machineId]; as settings) {
+                @if (machinesState()[machineId]; as ms) {
                   @if (data().machineEntities[machineId]; as machine) {
                     <div class="p-inputgroup flex-wrap machine-preference">
                       <button
@@ -641,19 +645,19 @@
                           </div>
                         </ng-template>
                       </p-dropdown>
-                      @if (settings.fuelId) {
+                      @if (ms.fuelId) {
                         <p-dropdown
                           labDropdownBase="icon"
                           labNoDrag
                           [pTooltip]="'settings.fuelTooltip' | translate"
-                          [ngModel]="settings.fuelId"
-                          [options]="settings.fuelOptions"
+                          [ngModel]="ms.fuelId"
+                          [options]="ms.fuelOptions"
                           (onChange)="
                             changeFuel(
                               machineId,
                               $event.value,
-                              settings,
-                              machinesState().fuelRankIds
+                              ms,
+                              settings().fuelRankIds
                             )
                           "
                         >
@@ -681,7 +685,7 @@
                           </ng-template>
                         </p-dropdown>
                       }
-                      @if (settings.modules && machine.modules) {
+                      @if (ms.modules && machine.modules) {
                         @if (
                           machine.modules !== true && machine.modules?.isOne()
                         ) {
@@ -689,8 +693,8 @@
                             labDropdownBase="icon"
                             labNoDrag
                             [pTooltip]="'settings.modifierTooltip' | translate"
-                            [ngModel]="settings.modules[0].id"
-                            [options]="settings.moduleOptions ?? []"
+                            [ngModel]="ms.modules[0].id"
+                            [options]="ms.moduleOptions ?? []"
                             (onChange)="
                               changeModules(machineId, [
                                 { id: $event.value, count: rational.one }
@@ -730,14 +734,10 @@
                             class="hover-action icons p-button-text"
                             [pTooltip]="tooltip"
                             (click)="
-                              modulesOverlay.show(
-                                $event,
-                                settings.modules,
-                                machine
-                              )
+                              modulesOverlay.show($event, ms.modules, machine)
                             "
                           >
-                            @for (module of settings.modules; track module.id) {
+                            @for (module of ms.modules; track module.id) {
                               <i
                                 class="p-button-icon"
                                 [class]="module.id | iconSmClass"
@@ -751,7 +751,7 @@
                             (setValue)="changeModules(machineId, $event)"
                           ></lab-modules-overlay>
                           <ng-template #tooltip>
-                            @for (module of settings.modules; track module.id) {
+                            @for (module of ms.modules; track module.id) {
                               @if (module.id) {
                                 <lab-tooltip
                                   [id]="module.id"
@@ -775,31 +775,27 @@
                           [showButtons]="true"
                           inputStyleClass="text-end"
                           [pTooltip]="'settings.overclockTooltip' | translate"
-                          [ngModel]="settings.overclock?.toNumber()"
+                          [ngModel]="ms.overclock?.toNumber()"
                           (onBlur)="
                             setOverclock(
                               machineId,
                               rational(overclockInput.value ?? 100),
-                              machineId
-                                ? machinesState().entities[''].overclock
-                                : rational(100)
+                              machineId ? settings().overclock : rational(100)
                             )
                           "
                         >
                         </p-inputNumber>
                       }
-                      @if (settings.beacons && settings.beacons.length) {
+                      @if (ms.beacons && ms.beacons.length) {
                         <button
                           pButton
                           pRipple
                           type="button"
                           class="hover-action icons p-button-text flex-column"
                           [pTooltip]="tooltip"
-                          (click)="
-                            beaconsOverlay.show($event, settings.beacons)
-                          "
+                          (click)="beaconsOverlay.show($event, ms.beacons)"
                         >
-                          @for (beacon of settings.beacons; track $index) {
+                          @for (beacon of ms.beacons; track $index) {
                             <div class="d-flex">
                               <i
                                 class="p-button-icon"
@@ -822,7 +818,7 @@
                           (setValue)="changeBeacons(machineId, $event)"
                         ></lab-beacons-overlay>
                         <ng-template #tooltip>
-                          @if (settings.beacons?.[0]?.id; as beaconId) {
+                          @if (ms.beacons?.[0]?.id; as beaconId) {
                             <lab-tooltip
                               [id]="beaconId"
                               type="beacon"

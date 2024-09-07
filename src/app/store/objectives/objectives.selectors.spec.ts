@@ -3,7 +3,6 @@ import {
   DisplayRate,
   displayRateInfo,
   Game,
-  MaximizeType,
   Objective,
   ObjectiveType,
   ObjectiveUnit,
@@ -16,7 +15,6 @@ import {
 import { RateUtility, RecipeUtility, SimplexUtility } from '~/utilities';
 import * as Items from '../items';
 import * as Recipes from '../recipes';
-import * as Settings from '../settings';
 import * as Selectors from './objectives.selectors';
 
 describe('Objectives Selectors', () => {
@@ -36,7 +34,7 @@ describe('Objectives Selectors', () => {
     });
   });
 
-  describe('getBaseObjectives', () => {
+  describe('selectBaseObjectives', () => {
     it('should return the array of objectives', () => {
       const result = Selectors.selectBaseObjectives.projector(
         Mocks.ObjectivesState.ids,
@@ -47,7 +45,7 @@ describe('Objectives Selectors', () => {
     });
   });
 
-  describe('getObjectives', () => {
+  describe('selectObjectives', () => {
     it('should adjust recipe objectives based on settings', () => {
       spyOn(RecipeUtility, 'adjustObjective');
       Selectors.selectObjectives.projector(
@@ -55,7 +53,7 @@ describe('Objectives Selectors', () => {
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         Mocks.MachinesStateInitial,
-        Settings.initialState,
+        Mocks.SettingsStateInitial,
         Mocks.AdjustedDataset,
       );
       expect(RecipeUtility.adjustObjective).toHaveBeenCalledWith(
@@ -63,13 +61,13 @@ describe('Objectives Selectors', () => {
         Mocks.ItemsStateInitial,
         Mocks.RecipesStateInitial,
         Mocks.MachinesStateInitial,
-        Settings.initialState,
+        Mocks.SettingsStateInitial,
         Mocks.AdjustedDataset,
       );
     });
   });
 
-  describe('getNormalizedObjectives', () => {
+  describe('selectNormalizedObjectives', () => {
     it('should map objectives to rates', () => {
       spyOn(RateUtility, 'objectiveNormalizedRate');
       Selectors.selectNormalizedObjectives.projector(
@@ -85,7 +83,7 @@ describe('Objectives Selectors', () => {
     });
   });
 
-  describe('getMatrixResult', () => {
+  describe('selectMatrixResult', () => {
     it('should calculate rates using utility method', () => {
       spyOn(SimplexUtility, 'solve').and.returnValue({
         steps: [],
@@ -93,12 +91,7 @@ describe('Objectives Selectors', () => {
       });
       Selectors.selectMatrixResult.projector(
         Mocks.Objectives,
-        Mocks.ItemsStateInitial,
-        Mocks.RecipesStateInitial,
-        [],
-        MaximizeType.Weight,
-        false,
-        Mocks.Costs,
+        Mocks.SettingsStateInitial,
         Mocks.AdjustedDataset,
         false,
       );
@@ -106,7 +99,7 @@ describe('Objectives Selectors', () => {
     });
   });
 
-  describe('getSteps', () => {
+  describe('selectSteps', () => {
     it('should calculate rates using utility method', () => {
       spyOn(RateUtility, 'normalizeSteps');
       Selectors.selectSteps.projector(
@@ -114,28 +107,33 @@ describe('Objectives Selectors', () => {
         [],
         {},
         {},
-        null,
+
         {},
         displayRateInfo[DisplayRate.PerMinute],
+        Mocks.SettingsStateInitial,
         Mocks.AdjustedDataset,
       );
       expect(RateUtility.normalizeSteps).toHaveBeenCalled();
     });
   });
 
-  describe('getZipState', () => {
+  describe('selectZipState', () => {
     it('should put together the required state parts', () => {
       const objectives = Mocks.ObjectivesState;
       const itemsState = Mocks.ItemsState;
       const recipesState = Mocks.RecipesState;
       const machinesState = Mocks.MachinesStateInitial;
-      const settings = Settings.initialState;
+      const settings = Mocks.SettingsStateInitial;
+      const data = Mocks.Dataset;
+      const hash = Mocks.Hash;
       const result = Selectors.selectZipState.projector(
         objectives,
         itemsState,
         recipesState,
         machinesState,
         settings,
+        data,
+        hash,
       );
       expect(result.objectives).toBe(objectives);
       expect(result.itemsState).toBe(itemsState);
@@ -145,7 +143,7 @@ describe('Objectives Selectors', () => {
     });
   });
 
-  describe('getStepsModified', () => {
+  describe('selectStepsModified', () => {
     it('should determine which steps have modified item or recipe settings', () => {
       const result = Selectors.selectStepsModified.projector(
         Mocks.Steps,
@@ -158,7 +156,7 @@ describe('Objectives Selectors', () => {
     });
   });
 
-  describe('getTotals', () => {
+  describe('selectTotals', () => {
     it('should get totals for columns', () => {
       const result = Selectors.selectTotals.projector(
         [
@@ -218,7 +216,7 @@ describe('Objectives Selectors', () => {
         Mocks.AdjustedDataset,
       );
       expect(result).toEqual({
-        belts: { [ItemId.TransportBelt]: rational.one },
+        belts: { [ItemId.ExpressTransportBelt]: rational.one },
         wagons: { [ItemId.CargoWagon]: rational.one },
         machines: { [ItemId.ElectricMiningDrill]: rational.one },
         modules: {
@@ -262,7 +260,7 @@ describe('Objectives Selectors', () => {
     });
   });
 
-  describe('getStepDetails', () => {
+  describe('selectStepDetails', () => {
     it('should determine detail tabs to display for steps', () => {
       const steps: Step[] = [
         {
@@ -285,7 +283,7 @@ describe('Objectives Selectors', () => {
       ];
       const result = Selectors.selectStepDetails.projector(
         steps,
-        Mocks.RecipesStateInitial,
+        Mocks.SettingsStateInitial,
         Mocks.AdjustedDataset,
       );
       expect(result).toEqual({
@@ -362,21 +360,21 @@ describe('Objectives Selectors', () => {
     });
   });
 
-  describe('getStepById', () => {
+  describe('selectStepById', () => {
     it('should create a map of step ids to steps', () => {
       const result = Selectors.selectStepById.projector(Mocks.Steps);
       expect(Object.keys(result).length).toEqual(Mocks.Steps.length);
     });
   });
 
-  describe('getStepByItemEntities', () => {
+  describe('selectStepByItemEntities', () => {
     it('should create a map of item ids to steps', () => {
       const result = Selectors.selectStepByItemEntities.projector(Mocks.Steps);
       expect(Object.keys(result).length).toEqual(Mocks.Steps.length);
     });
   });
 
-  describe('getStepTree', () => {
+  describe('selectStepTree', () => {
     it('should map steps into a hierarchical tree', () => {
       const steps: Step[] = [
         {
@@ -416,7 +414,7 @@ describe('Objectives Selectors', () => {
     });
   });
 
-  describe('getEffectivePowerUnit', () => {
+  describe('selectEffectivePowerUnit', () => {
     it('should calculate an auto power unit', () => {
       expect(
         Selectors.selectEffectivePowerUnit.projector([], PowerUnit.Auto),
@@ -445,7 +443,7 @@ describe('Objectives Selectors', () => {
     });
   });
 
-  describe('getRecipesModified', () => {
+  describe('selectRecipesModified', () => {
     it('should determine whether columns are modified', () => {
       const result = Selectors.selectRecipesModified.projector(
         {

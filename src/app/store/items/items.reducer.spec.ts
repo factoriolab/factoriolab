@@ -1,4 +1,4 @@
-import { ItemId, Mocks } from 'src/tests';
+import { Mocks } from 'src/tests';
 import { ItemSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
 import * as App from '../app.actions';
@@ -25,44 +25,6 @@ describe('Items Reducer', () => {
     it('should return the initial state', () => {
       const result = itemsReducer(undefined, App.reset());
       expect(result).toEqual(initialState);
-    });
-  });
-
-  describe('SET_EXCLUDED', () => {
-    it('should set excluded state of an item', () => {
-      const result = itemsReducer(
-        initialState,
-        Actions.setExcluded({ id: Mocks.Item1.id, value: true }),
-      );
-      expect(result[Mocks.Item1.id].excluded).toEqual(true);
-    });
-
-    it('should delete key if exclude = false is the only modification', () => {
-      let result = itemsReducer(
-        initialState,
-        Actions.setExcluded({ id: Mocks.Item1.id, value: true }),
-      );
-      result = itemsReducer(
-        result,
-        Actions.setExcluded({ id: Mocks.Item1.id, value: false }),
-      );
-      expect(result[Mocks.Item1.id]).toBeUndefined();
-    });
-  });
-
-  describe('SET_EXCLUDED_BATCH', () => {
-    it('should apply multiple changes to excluded state', () => {
-      const result = itemsReducer(
-        initialState,
-        Actions.setExcludedBatch({
-          values: [
-            { id: ItemId.Coal, value: true },
-            { id: ItemId.IronOre, value: false },
-          ],
-        }),
-      );
-      expect(result[ItemId.Coal].excluded).toBeTrue();
-      expect(result[ItemId.IronOre]).toBeUndefined();
     });
   });
 
@@ -94,19 +56,6 @@ describe('Items Reducer', () => {
     });
   });
 
-  describe('SET_CHECKED', () => {
-    it('should set the checked state', () => {
-      const result = itemsReducer(
-        initialState,
-        Actions.setChecked({
-          id: Mocks.Item1.id,
-          value: true,
-        }),
-      );
-      expect(result[Mocks.Item1.id].checked).toBeTrue();
-    });
-  });
-
   describe('RESET_ITEM', () => {
     it('should reset an item', () => {
       const result = itemsReducer(
@@ -114,17 +63,6 @@ describe('Items Reducer', () => {
         Actions.resetItem({ id: Mocks.Item1.id }),
       );
       expect(result[Mocks.Item1.id]).toBeUndefined();
-    });
-  });
-
-  describe('RESET_EXCLUDED', () => {
-    it('should call resetField', () => {
-      spyOn(StoreUtility, 'resetField');
-      itemsReducer(undefined, Actions.resetExcluded());
-      expect(StoreUtility.resetField<ItemSettings>).toHaveBeenCalledWith(
-        {},
-        'excluded',
-      );
     });
   });
 
@@ -146,17 +84,6 @@ describe('Items Reducer', () => {
       expect(StoreUtility.resetField<ItemSettings>).toHaveBeenCalledWith(
         {},
         'wagonId',
-      );
-    });
-  });
-
-  describe('RESET_CHECKED', () => {
-    it('should call resetField', () => {
-      spyOn(StoreUtility, 'resetField');
-      itemsReducer(undefined, Actions.resetChecked());
-      expect(StoreUtility.resetField<ItemSettings>).toHaveBeenCalledWith(
-        {},
-        'checked',
       );
     });
   });

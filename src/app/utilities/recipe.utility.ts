@@ -28,8 +28,9 @@ import {
   Recipe,
   RecipeJson,
   RecipeSettings,
+  SettingsComplete,
 } from '~/models';
-import { Items, Machines, Recipes, Settings } from '~/store';
+import { Items, Machines, Recipes } from '~/store';
 
 export class RecipeUtility {
   static MIN_FACTOR = rational(1n, 5n);
@@ -132,7 +133,7 @@ export class RecipeUtility {
     recipeId: string,
     recipeSettings: RecipeSettings,
     itemsState: Entities<ItemSettings>,
-    settings: Settings.SettingsState,
+    settings: SettingsComplete,
     data: Dataset,
   ): AdjustedRecipe {
     const recipe: AdjustedRecipe = {
@@ -527,10 +528,9 @@ export class RecipeUtility {
 
   static adjustDataset(
     recipeIds: string[],
-    excludedRecipeIds: string[],
     recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
-    settings: Settings.SettingsState,
+    settings: SettingsComplete,
     data: Dataset,
   ): AdjustedDataset {
     const adjustedRecipe = this.adjustRecipes(
@@ -549,7 +549,7 @@ export class RecipeUtility {
     );
     return this.finalizeData(
       recipeIds,
-      excludedRecipeIds,
+      settings.excludedRecipeIds,
       adjustedRecipe,
       data,
     );
@@ -559,7 +559,7 @@ export class RecipeUtility {
     recipeIds: string[],
     recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
-    settings: Settings.SettingsState,
+    settings: SettingsComplete,
     data: Dataset,
   ): Entities<AdjustedRecipe> {
     return this.adjustSiloRecipes(
@@ -615,11 +615,10 @@ export class RecipeUtility {
 
   static finalizeData(
     recipeIds: string[],
-    excludedRecipeIds: string[],
+    excludedRecipeIds: Set<string>,
     adjustedRecipe: Entities<AdjustedRecipe>,
     data: Dataset,
   ): AdjustedDataset {
-    const excludedSet = new Set(excludedRecipeIds);
     const itemRecipeIds: Entities<string[]> = {};
     const itemIncludedRecipeIds: Entities<string[]> = {};
     const itemIncludedIoRecipeIds: Entities<string[]> = {};
@@ -637,7 +636,7 @@ export class RecipeUtility {
           itemRecipeIds[productId].push(recipe.id),
         );
 
-        if (!excludedSet.has(recipe.id)) {
+        if (!excludedRecipeIds.has(recipe.id)) {
           recipe.produces.forEach((productId) =>
             itemIncludedRecipeIds[productId].push(recipe.id),
           );
@@ -664,7 +663,7 @@ export class RecipeUtility {
     itemsState: Items.ItemsState,
     recipesState: Recipes.RecipesState,
     machinesState: Machines.MachinesState,
-    settings: Settings.SettingsState,
+    settings: SettingsComplete,
     data: AdjustedDataset,
   ): Objective {
     if (!isRecipeObjective(objective)) return objective;
@@ -675,12 +674,12 @@ export class RecipeUtility {
     if (objective.machineId == null) {
       objective.machineId = this.bestMatch(
         recipe.producers,
-        coalesce(machinesState.ids, []),
+        coalesce(settings.machineRankIds, []),
       );
     }
 
     const machine = data.machineEntities[objective.machineId];
-    const def = machinesState.entities[objective.machineId];
+    const def = machinesState[objective.machineId];
 
     if (recipe.isBurn) {
       objective.fuelId = Object.keys(recipe.in)[0];
@@ -699,7 +698,7 @@ export class RecipeUtility {
       objective.modules = this.hydrateModules(
         objective.modules,
         objective.moduleOptions,
-        coalesce(machinesState.moduleRankIds, []),
+        coalesce(settings.moduleRankIds, []),
         machine.modules,
         def.modules,
       );

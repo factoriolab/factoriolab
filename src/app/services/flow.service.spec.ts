@@ -39,7 +39,7 @@ describe('FlowService', () => {
       const result = service.buildGraph(
         Mocks.LightOilSteps,
         '/m',
-        Mocks.ItemsStateInitial,
+        Mocks.SettingsStateInitial,
         Mocks.PreferencesState,
         Mocks.AdjustedDataset,
         Mocks.ThemeValues,
@@ -53,7 +53,7 @@ describe('FlowService', () => {
       const result = service.buildGraph(
         Mocks.LightOilSteps,
         '/m',
-        Mocks.ItemsStateInitial,
+        Mocks.SettingsStateInitial,
         spread(Mocks.PreferencesState, {
           flowSettings: spread(Mocks.FlowSettings, {
             linkText: LinkValue.None,

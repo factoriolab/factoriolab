@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -14,8 +14,10 @@ import {
   Game,
   gameInfo,
   gameOptions,
-  ObjectiveBase,
+  Objective,
+  ObjectiveType,
   ObjectiveUnit,
+  rational,
 } from '~/models';
 import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService, RouterService } from '~/services';
@@ -46,6 +48,7 @@ export class LandingComponent {
   contentSvc = inject(ContentService);
   store = inject(Store);
   routerSvc = inject(RouterService);
+  route = inject(ActivatedRoute);
 
   itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
   settings = this.store.selectSignal(Settings.selectSettings);
@@ -62,33 +65,44 @@ export class LandingComponent {
   Game = Game;
   BrowserUtility = BrowserUtility;
 
-  async selectItem(value: string): Promise<void> {
-    await this.router.navigate(['list']);
-    this.addItemObjective(value);
+  selectItem(targetId: string): void {
+    this.createObjective({
+      id: '0',
+      targetId,
+      value: rational.one,
+      unit: ObjectiveUnit.Items,
+      type: ObjectiveType.Output,
+    });
+    this.router.navigate(['list'], {
+      relativeTo: this.route,
+      queryParamsHandling: 'preserve',
+    });
   }
 
-  async selectRecipe(value: string): Promise<void> {
-    await this.router.navigate(['list']);
-    this.addRecipeObjective(value);
+  selectRecipe(targetId: string): void {
+    this.createObjective({
+      id: '0',
+      targetId,
+      value: rational.one,
+      unit: ObjectiveUnit.Machines,
+      type: ObjectiveType.Output,
+    });
+    this.router.navigate(['list'], {
+      relativeTo: this.route,
+      queryParamsHandling: 'preserve',
+    });
   }
 
   setState(query: string): void {
-    if (query) {
-      const queryParams = this.routerSvc.getParams(query);
-      this.router.navigate(['list'], { queryParams });
-    }
+    if (!query) return;
+    this.router.navigate(['list'], {
+      queryParams: this.routerSvc.toParams(query),
+      relativeTo: this.route,
+    });
   }
 
   setGame(game: Game): void {
     this.setMod(gameInfo[game].modId);
-  }
-
-  addItemObjective(targetId: string): void {
-    this.addObjective({ targetId, unit: ObjectiveUnit.Items });
-  }
-
-  addRecipeObjective(targetId: string): void {
-    this.addObjective({ targetId, unit: ObjectiveUnit.Machines });
   }
 
   /** Action Dispatch Methods */
@@ -96,8 +110,8 @@ export class LandingComponent {
     this.store.dispatch(Settings.setMod({ modId }));
   }
 
-  addObjective(objective: ObjectiveBase): void {
-    this.store.dispatch(Objectives.add({ objective }));
+  createObjective(objective: Objective): void {
+    this.store.dispatch(Objectives.create({ objective }));
   }
 
   setBypassLanding(bypassLanding: boolean): void {

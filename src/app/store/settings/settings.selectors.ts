@@ -3,7 +3,7 @@ import { MenuItem, SelectItem } from 'primeng/api';
 
 import { data } from 'src/data';
 import { environment } from 'src/environments';
-import { coalesce, fnPropsNotNullish, getIdOptions } from '~/helpers';
+import { coalesce, fnPropsNotNullish, getIdOptions, spread } from '~/helpers';
 import {
   Beacon,
   BeaconSettings,
@@ -36,10 +36,12 @@ import {
   rational,
   Rational,
   Recipe,
+  SettingsComplete,
   Technology,
   toBoolEntities,
   toEntities,
 } from '~/models';
+import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
@@ -84,14 +86,6 @@ export const selectDisplayRate = createSelector(
 export const selectMaximizeType = createSelector(
   settingsState,
   (state) => state.maximizeType,
-);
-export const selectSurplusMachinesOutput = createSelector(
-  settingsState,
-  (state) => state.surplusMachinesOutput,
-);
-export const selectCosts = createSelector(
-  settingsState,
-  (state) => state.costs,
 );
 
 /* Complex selectors */
@@ -174,7 +168,7 @@ export const selectColumnsState = createSelector(
   Preferences.selectColumns,
   (gameInfo, columnsState) => {
     return gameColumnsState(
-      { ...initialColumnsState, ...columnsState },
+      spread(initialColumnsState, columnsState),
       gameInfo,
     );
   },
@@ -183,7 +177,7 @@ export const selectColumnsState = createSelector(
 export const selectDefaults = createSelector(
   selectPreset,
   selectMod,
-  (preset, base) => {
+  (preset, base): Defaults | null => {
     if (base?.defaults == null) return null;
 
     const m = base.defaults;
@@ -227,7 +221,7 @@ export const selectDefaults = createSelector(
 
     const machineRankIds =
       preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
-    const defaults: Defaults = {
+    return {
       beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
       pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
       cargoWagonId: m.cargoWagon,
@@ -238,22 +232,7 @@ export const selectDefaults = createSelector(
       moduleRankIds: coalesce(moduleRank, []),
       beacons,
     };
-    return defaults;
   },
-);
-
-export const selectSettings = createSelector(
-  settingsState,
-  selectDefaults,
-  (s, d) => ({
-    ...s,
-    ...{
-      beltId: s.beltId ?? d?.beltId,
-      pipeId: s.pipeId ?? d?.pipeId,
-      cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
-      fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
-    },
-  }),
 );
 
 export const selectI18n = createSelector(
@@ -500,6 +479,45 @@ export const selectDataset = createSelector(
   },
 );
 
+export const selectAllResearchedTechnologyIds = createSelector(
+  selectResearchedTechnologyIds,
+  selectDataset,
+  (researchedTechnologyIds, data) => {
+    const allTechnologyIds = Object.keys(data.technologyEntities);
+    if (
+      /** No need to parse if all researched */
+      researchedTechnologyIds == null ||
+      /** Skip if data is not loaded */
+      allTechnologyIds.length === 0
+    )
+      return new Set(allTechnologyIds);
+
+    return researchedTechnologyIds;
+  },
+);
+
+export const selectSettings = createSelector(
+  settingsState,
+  selectDefaults,
+  selectAllResearchedTechnologyIds,
+  (s, d, researchedTechnologyIds): SettingsComplete => ({
+    ...s,
+    ...{
+      beltId: s.beltId ?? d?.beltId,
+      pipeId: s.pipeId ?? d?.pipeId,
+      cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
+      fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
+      excludedRecipeIds: new Set(s.excludedRecipeIds ?? d?.excludedRecipeIds),
+      machineRankIds: s.machineRankIds ?? d?.machineRankIds ?? [],
+      fuelRankIds: s.fuelRankIds ?? d?.fuelRankIds ?? [],
+      moduleRankIds: s.moduleRankIds ?? d?.moduleRankIds ?? [],
+      beacons: RecipeUtility.hydrateBeacons(s.beacons, d?.beacons),
+      overclock: s.overclock,
+      researchedTechnologyIds,
+    },
+  }),
+);
+
 export const selectOptions = createSelector(
   selectDataset,
   (data): Options => ({
@@ -558,61 +576,17 @@ export const selectInserterData = createSelector(
   (target, capacity) => InserterData[target][capacity],
 );
 
-export const selectAllResearchedTechnologyIds = createSelector(
-  selectResearchedTechnologyIds,
-  selectDataset,
-  (researchedTechnologyIds, data) => {
-    if (
-      /** No need to parse if all researched */
-      researchedTechnologyIds == null ||
-      /** Skip if data is not loaded */
-      Object.keys(data.technologyEntities).length === 0
-    )
-      return researchedTechnologyIds;
-
-    // Filter out any technology ids that are no longer valid
-    const validTechnologyIds = researchedTechnologyIds.filter(
-      (i) => data.technologyEntities[i] != null,
-    );
-
-    /**
-     * Source technology list includes only minimal set of technologies that
-     * are not required as prerequisites for other researched technologies,
-     * to reduce zip size. Need to rehydrate full list of technology ids using
-     * their prerequisites.
-     */
-    const selection = new Set(validTechnologyIds);
-
-    let addIds: Set<string>;
-    do {
-      addIds = new Set<string>();
-
-      for (const id of selection) {
-        const tech = data.technologyEntities[id];
-        tech.prerequisites
-          ?.filter((p) => !selection.has(p))
-          .forEach((p) => addIds.add(p));
-      }
-
-      addIds.forEach((i) => selection.add(i));
-    } while (addIds.size);
-
-    return Array.from(selection);
-  },
-);
-
 export const selectAvailableRecipes = createSelector(
   selectAllResearchedTechnologyIds,
   selectDataset,
-  (researchedTechnologyIds, data) => {
-    if (researchedTechnologyIds == null) return data.recipeIds;
-
-    const set = new Set(researchedTechnologyIds);
-    return data.recipeIds.filter((i) => {
+  (researchedTechnologyIds, data) =>
+    data.recipeIds.filter((i) => {
       const recipe = data.recipeEntities[i];
-      return recipe.unlockedBy == null || set.has(recipe.unlockedBy);
-    });
-  },
+      return (
+        recipe.unlockedBy == null ||
+        researchedTechnologyIds.has(recipe.unlockedBy)
+      );
+    }),
 );
 
 export const selectModMenuItem = createSelector(

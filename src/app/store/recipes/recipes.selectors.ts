@@ -1,6 +1,5 @@
 import { createSelector } from '@ngrx/store';
 
-import { coalesce } from '~/helpers';
 import { Entities, RecipeSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
@@ -17,27 +16,22 @@ export const recipesState = (state: LabState): RecipesState =>
 export const selectRecipesState = createSelector(
   recipesState,
   Machines.selectMachinesState,
+  Settings.selectSettings,
   Settings.selectDataset,
-  (state, machinesState, data) => {
+  (state, machinesState, settings, data) => {
     const value: Entities<RecipeSettings> = {};
-    const defaultExcludedRecipeIds = new Set(
-      coalesce(data.defaults?.excludedRecipeIds, []),
-    );
 
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
       const s: RecipeSettings = { ...state[recipe.id] };
 
-      if (s.excluded == null)
-        s.excluded = defaultExcludedRecipeIds.has(recipe.id);
-
       if (s.machineId == null)
         s.machineId = RecipeUtility.bestMatch(
           recipe.producers,
-          coalesce(machinesState.ids, []),
+          settings.machineRankIds,
         );
 
       const machine = data.machineEntities[s.machineId];
-      const def = machinesState.entities[s.machineId];
+      const def = machinesState[s.machineId];
 
       if (recipe.isBurn) {
         s.fuelId = Object.keys(recipe.in)[0];
@@ -52,7 +46,7 @@ export const selectRecipesState = createSelector(
         s.modules = RecipeUtility.hydrateModules(
           s.modules,
           s.moduleOptions,
-          machinesState.moduleRankIds,
+          settings.moduleRankIds,
           machine.modules,
           def.modules,
         );
@@ -83,23 +77,15 @@ export const selectRecipesState = createSelector(
   },
 );
 
-export const selectExcludedRecipeIds = createSelector(
-  selectRecipesState,
-  (recipesState) =>
-    Object.keys(recipesState).filter((i) => recipesState[i].excluded),
-);
-
 export const selectAdjustedDataset = createSelector(
   selectRecipesState,
-  selectExcludedRecipeIds,
   Items.selectItemsState,
   Settings.selectAvailableRecipes,
-  Settings.settingsState,
+  Settings.selectSettings,
   Settings.selectDataset,
-  (recipesState, excludedRecipeIds, itemsState, recipeIds, settings, data) =>
+  (recipesState, itemsState, recipeIds, settings, data) =>
     RecipeUtility.adjustDataset(
       recipeIds,
-      excludedRecipeIds,
       recipesState,
       itemsState,
       settings,
