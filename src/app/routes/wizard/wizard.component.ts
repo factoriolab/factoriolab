@@ -83,7 +83,7 @@ export class WizardComponent {
     });
     this.router.navigate(['../list'], {
       relativeTo: this.route,
-      queryParamsHandling: 'preserve',
+      queryParamsHandling: 'presrve',
     });
   }
 
