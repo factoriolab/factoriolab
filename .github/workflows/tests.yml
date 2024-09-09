@@ -30,8 +30,6 @@ jobs:
       - name: Run tests
         run: npm run test-build
 
-      - uses: codecov/codecov-action@v3
-
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()

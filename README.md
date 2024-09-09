@@ -1,6 +1,6 @@
 # FactorioLab
 
-[![prod](https://github.com/factoriolab/factoriolab/actions/workflows/prod.yml/badge.svg)](https://github.com/factoriolab/factoriolab/actions/workflows/prod.yml) [![tests](https://github.com/factoriolab/factoriolab/actions/workflows/tests.yml/badge.svg)](https://github.com/factoriolab/factoriolab/actions/workflows/tests.yml) [![codecov](https://codecov.io/gh/factoriolab/factoriolab/branch/master/graph/badge.svg)](https://codecov.io/gh/factoriolab/factoriolab) [![Known Vulnerabilities](https://snyk.io/test/github/factoriolab/factoriolab/badge.svg?targetFile=package.json)](https://snyk.io/test/github/factoriolab/factoriolab?targetFile=package.json)
+[![prod](https://github.com/factoriolab/factoriolab/actions/workflows/prod.yml/badge.svg)](https://github.com/factoriolab/factoriolab/actions/workflows/prod.yml) [![tests](https://github.com/factoriolab/factoriolab/actions/workflows/tests.yml/badge.svg)](https://github.com/factoriolab/factoriolab/actions/workflows/tests.yml)
 
 This is the repository for the [FactorioLab](https://factoriolab.github.io) project, a tool for calculating resource and factory requirements for factory games.
 
