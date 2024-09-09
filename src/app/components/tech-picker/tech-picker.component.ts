@@ -26,6 +26,7 @@ import { Game, Optional } from '~/models';
 import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService, TranslateService } from '~/services';
 import { Preferences, Recipes } from '~/store';
+
 import { DialogComponent } from '../modal';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 

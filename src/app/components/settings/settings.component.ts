@@ -56,8 +56,8 @@ import {
   PowerUnit,
   powerUnitOptions,
   Preset,
-  rational,
   Rational,
+  rational,
   researchBonusOptions,
   Theme,
   themeOptions,
@@ -74,6 +74,7 @@ import {
   Settings,
 } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
+
 import { BeaconsOverlayComponent } from '../beacons-overlay/beacons-overlay.component';
 import { CostsComponent } from '../costs/costs.component';
 import { InputNumberComponent } from '../input-number/input-number.component';

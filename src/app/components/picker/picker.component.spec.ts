@@ -1,9 +1,10 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-
 import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+
 import { LabState, Recipes } from '~/store';
+
 import { PickerComponent } from './picker.component';
 
 describe('PickerComponent', () => {

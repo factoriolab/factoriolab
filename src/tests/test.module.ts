@@ -10,6 +10,7 @@ import { provideMockStore } from '@ngrx/store/testing';
 
 import { DEFAULT_LANGUAGE, TranslateService } from '~/services';
 import { TestTranslateService } from '~/services/translate.service.spec';
+
 import { initialState } from './state';
 
 @NgModule({

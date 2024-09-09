@@ -1,4 +1,5 @@
 import { Mocks } from 'src/tests';
+
 import * as Selectors from './preferences.selectors';
 
 describe('Preferences Selectors', () => {

@@ -15,6 +15,7 @@ import {
   researchBonusValue,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
+
 import * as App from '../app.actions';
 import * as Actions from './settings.actions';
 

@@ -18,7 +18,7 @@
     "build": "ng build",
     "build-stats": "ng build --stats-json",
     "test": "ng test",
-    "test-build": "ng test --no-watch --no-progress --browsers=ChromeHeadless",
+    "test-build": "ng test --no-watch --progress=false --browsers=ChromeHeadless",
     "analyze": "webpack-bundle-analyzer dist/stats.json",
     "lint": "ng lint",
     "lint-build": "ng lint --max-warnings 0",
@@ -68,11 +68,6 @@
   "devDependencies": {
     "@angular-devkit/architect": "^0.1801.0",
     "@angular-devkit/build-angular": "~18.1.0",
-    "@angular-eslint/builder": "~18.1.0",
-    "@angular-eslint/eslint-plugin": "~18.1.0",
-    "@angular-eslint/eslint-plugin-template": "~18.1.0",
-    "@angular-eslint/schematics": "~18.1.0",
-    "@angular-eslint/template-parser": "~18.1.0",
     "@angular/cli": "^18.1.0",
     "@angular/compiler-cli": "^18.1.0",
     "@angular/language-service": "^18.1.0",
@@ -85,19 +80,19 @@
     "@types/node": "^18.14.6",
     "@types/sharp": "0.31.1",
     "@types/spritesmith": "^3.4.1",
-    "@typescript-eslint/eslint-plugin": "~7.17.0",
-    "@typescript-eslint/parser": "~7.17.0",
-    "eslint": "^8.56.0",
-    "eslint-plugin-import": "^2.29.1",
+    "angular-eslint": "18.3.0",
+    "eslint": "^9.9.0",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
     "fast-average-color-node": "^2.6.0",
     "handlebars": "^4.7.8",
-    "jasmine-core": "~5.1.0",
+    "jasmine-core": "~5.3.0",
     "jasmine-spec-reporter": "~7.0.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "^2.2.0",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
+    "karma-junit-reporter": "^2.0.1",
     "ngrx-store-freeze": "~0.2.4",
     "prettier": "^3.2.4",
     "semantic-release": "^23.0.7",
@@ -111,50 +106,13 @@
     "stylelint-order": "^6.0.4",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "~5.5.3"
+    "typescript": "~5.5.3",
+    "typescript-eslint": "8.1.0"
   },
   "sideEffects": false,
   "browser": {
     "crypto": false,
     "fs": false,
     "path": false
-  },
-  "release": {
-    "branches": [
-      "main"
-    ],
-    "plugins": [
-      [
-        "@semantic-release/commit-analyzer",
-        {
-          "preset": "angular",
-          "releaseRules": [
-            {
-              "type": "data",
-              "release": "patch"
-            }
-          ]
-        }
-      ],
-      "@semantic-release/release-notes-generator",
-      "@semantic-release/github",
-      "@semantic-release/npm",
-      [
-        "semantic-release-discord-bot",
-        {
-          "notifications": [
-            {
-              "branch": "main"
-            }
-          ]
-        }
-      ],
-      [
-        "@semantic-release/exec",
-        {
-          "successCmd": "echo \"DEPLOY=true\" >> \"$GITHUB_ENV\""
-        }
-      ]
-    ]
   }
 }

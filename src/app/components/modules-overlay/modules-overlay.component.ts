@@ -12,6 +12,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 import { Machine, ModuleSettings } from '~/models';
 import { TranslatePipe } from '~/pipes';
+
 import { OverlayComponent } from '../modal';
 import { ModulesComponent } from '../modules/modules.component';
 

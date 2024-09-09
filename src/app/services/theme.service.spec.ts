@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-
 import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+
 import { Theme } from '~/models';
 import { Preferences, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
+
 import { ThemeService } from './theme.service';
 
 describe('ThemeService', () => {

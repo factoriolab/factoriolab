@@ -1,7 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-
 import { TestModule } from 'src/tests';
+
 import { TranslatePipe } from './translate.pipe';
 
 describe('TranslatePipe', () => {

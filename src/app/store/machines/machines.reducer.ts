@@ -3,6 +3,7 @@ import { createReducer, on } from '@ngrx/store';
 import { spread } from '~/helpers';
 import { Entities, MachineSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
+
 import * as App from '../app.actions';
 import * as Settings from '../settings';
 import * as Actions from './machines.actions';

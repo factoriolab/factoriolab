@@ -20,8 +20,8 @@ import { provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import { loadModule } from 'glpk-ts';
 import { PrimeNGConfig } from 'primeng/api';
-
 import { environment } from 'src/environments';
+
 import { routes } from './app.routes';
 import {
   DEFAULT_LANGUAGE,

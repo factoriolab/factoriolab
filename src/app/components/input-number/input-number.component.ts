@@ -18,7 +18,7 @@ import { debounce, map, of, Subject, tap, timer } from 'rxjs';
 
 import { ValidateNumberDirective } from '~/directives';
 import { filterNullish } from '~/helpers';
-import { rational, Rational } from '~/models';
+import { Rational, rational } from '~/models';
 
 type EventType = 'input' | 'blur' | 'enter';
 

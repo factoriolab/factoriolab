@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
 
 import { BrowserUtility } from '~/utilities';
+
 import { LabState } from './';
 import { storageMetaReducer } from './storage.reducer';
 

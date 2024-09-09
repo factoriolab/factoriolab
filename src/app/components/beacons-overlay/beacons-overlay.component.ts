@@ -19,11 +19,12 @@ import {
   BeaconSettings,
   ItemId,
   ModuleSettings,
-  rational,
   Rational,
+  rational,
 } from '~/models';
 import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { Settings } from '~/store';
+
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { OverlayComponent } from '../modal';
 import { ModulesComponent } from '../modules/modules.component';

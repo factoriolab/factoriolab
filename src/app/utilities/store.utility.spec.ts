@@ -1,5 +1,7 @@
 import { ItemId, Mocks } from 'src/tests';
+
 import { Entities } from '~/models';
+
 import { StoreUtility } from './store.utility';
 
 describe('StoreUtility', () => {

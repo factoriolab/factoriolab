@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-
 import { DispatchTest, ItemId, TestModule, TestUtility } from 'src/tests';
+
 import { Items, LabState, Machines, Settings } from '~/store';
+
 import { ItemComponent } from './item.component';
 
 describe('ItemComponent', () => {

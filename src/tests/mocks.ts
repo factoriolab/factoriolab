@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-
 import { data } from 'src/data';
 import mod from 'src/data/1.1/data.json';
 import hash from 'src/data/1.1/hash.json';
 import i18n from 'src/data/1.1/i18n/zh.json';
+
 import { spread } from '~/helpers';
 import * as M from '~/models';
 import * as S from '~/services';
@@ -16,6 +16,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
+
 import { ItemId } from './item-id';
 import { RecipeId } from './recipe-id';
 
@@ -119,14 +120,16 @@ export const ObjectivesState: O.ObjectivesState = {
 };
 export const ObjectiveIds = ObjectivesList.map((p) => p.id);
 export const ObjectiveSteps = {
-  [Objective1.id]: <[string, M.Rational][]>[],
-  [Objective2.id]: <[string, M.Rational][]>[],
-  [Objective3.id]: <[string, M.Rational][]>[
-    [ItemId.PetroleumGas, M.rational.one],
-  ],
-  [Objective4.id]: <[string, M.Rational][]>[
-    [RecipeId.TransportBelt, M.rational.one],
-  ],
+  [Objective1.id]: [] as [string, M.Rational][],
+  [Objective2.id]: [] as [string, M.Rational][],
+  [Objective3.id]: [[ItemId.PetroleumGas, M.rational.one]] as [
+    string,
+    M.Rational,
+  ][],
+  [Objective4.id]: [[RecipeId.TransportBelt, M.rational.one]] as [
+    string,
+    M.Rational,
+  ][],
 };
 export const ItemSettings1: M.ItemSettings = {
   beltId: ItemId.TransportBelt,

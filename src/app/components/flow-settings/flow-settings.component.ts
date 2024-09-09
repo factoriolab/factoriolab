@@ -16,6 +16,7 @@ import {
 } from '~/models';
 import { TranslatePipe } from '~/pipes';
 import { Preferences, Settings } from '~/store';
+
 import { DialogComponent } from '../modal';
 
 const initialValue = Preferences.initialState.flowSettings;

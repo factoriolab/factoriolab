@@ -15,7 +15,9 @@ import { Entities } from '~/models';
 
 export const DEFAULT_LANGUAGE = new InjectionToken<string>('DEFAULT_LANGUAGE');
 
-export type LangData = { [key: string]: LangData | string };
+export interface LangData {
+  [key: string]: LangData | string;
+}
 export type InterpolateVal = string | number | null | undefined;
 
 @Injectable({
@@ -24,7 +26,7 @@ export type InterpolateVal = string | number | null | undefined;
 export class TranslateService {
   http = inject(HttpClient);
 
-  private _templateMatcher: RegExp = /{{\s?([^{}\s]*)\s?}}/g;
+  private _templateMatcher = /{{\s?([^{}\s]*)\s?}}/g;
   private _langDataCache: Entities<Observable<LangData>> = {};
   private _defaultLang$ = new BehaviorSubject(inject(DEFAULT_LANGUAGE));
   private _currentLang$ = new BehaviorSubject(inject(DEFAULT_LANGUAGE));

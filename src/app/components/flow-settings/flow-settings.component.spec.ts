@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { Mocks, TestModule } from 'src/tests';
+
 import { FlowDiagram } from '~/models';
 import { Preferences } from '~/store';
+
 import { FlowSettingsComponent } from './flow-settings.component';
 
 describe('FlowSettingsComponent', () => {

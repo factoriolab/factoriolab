@@ -16,6 +16,7 @@ import {
   UsagePipe,
 } from '~/pipes';
 import { Recipes, Settings } from '~/store';
+
 import { DetailComponent } from '../../models';
 
 @Component({

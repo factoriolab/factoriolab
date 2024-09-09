@@ -1,0 +1,89 @@
+// @ts-check
+const eslint = require('@eslint/js');
+const tseslint = require('typescript-eslint');
+const angular = require('angular-eslint');
+const ngrx = require('@ngrx/eslint-plugin/v9');
+const simpleImportSort = require('eslint-plugin-simple-import-sort');
+
+/**
+ * TODO:
+ * * Investigate currently turned 'off' tseslint rules in *.ts files
+ * * Investigate converting to strictTypeChecked / stylisticTypeChecked
+ * * Add rxjs rules, if/when they support ESLint 9.x
+ */
+
+module.exports = tseslint.config(
+  {
+    files: ['**/*.ts'],
+    extends: [
+      eslint.configs.recommended,
+      ...tseslint.configs.strict,
+      ...tseslint.configs.stylistic,
+      ...angular.configs.tsRecommended,
+      ...ngrx.configs.all,
+    ],
+    processor: angular.processInlineTemplates,
+    languageOptions: {
+      parserOptions: {
+        project: 'tsconfig.json',
+      },
+    },
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
+    rules: {
+      '@angular-eslint/directive-selector': [
+        'error',
+        {
+          type: 'attribute',
+          prefix: 'lab',
+          style: 'camelCase',
+        },
+      ],
+      '@angular-eslint/component-selector': [
+        'error',
+        {
+          type: 'element',
+          prefix: 'lab',
+          style: 'kebab-case',
+        },
+      ],
+      '@typescript-eslint/explicit-function-return-type': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' },
+      ],
+      '@typescript-eslint/prefer-enum-initializers': 'error',
+      '@typescript-eslint/no-extraneous-class': 'off',
+      '@typescript-eslint/no-dynamic-delete': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+      eqeqeq: ['error', 'smart'],
+    },
+  },
+  {
+    files: ['**/*.spec.ts'],
+    rules: {
+      '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+  {
+    files: ['**/*.html'],
+    extends: [
+      ...angular.configs.templateRecommended,
+      ...angular.configs.templateAccessibility,
+    ],
+    rules: {
+      '@angular-eslint/template/eqeqeq': [
+        'error',
+        { allowNullOrUndefined: true },
+      ],
+      '@angular-eslint/template/elements-content': [
+        'error',
+        { allowList: ['pButton'] },
+      ],
+    },
+  },
+);

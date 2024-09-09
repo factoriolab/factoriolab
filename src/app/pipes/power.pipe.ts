@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 import { PowerUnit, Rational, rational } from '~/models';
+
 import { RatePipe } from './rate.pipe';
 
 @Pipe({ name: 'power', standalone: true })

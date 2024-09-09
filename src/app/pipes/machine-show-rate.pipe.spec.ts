@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-
 import { ItemId } from 'src/tests';
+
 import { Game } from '~/models';
+
 import { MachineShowRatePipe } from './machine-show-rate.pipe';
 
 describe('MachineShowRatePipe', () => {

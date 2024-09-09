@@ -25,6 +25,7 @@ import {
 import { FilterOptionsPipe, IconSmClassPipe } from '~/pipes';
 import { Settings } from '~/store';
 import { RecipeUtility } from '~/utilities';
+
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 

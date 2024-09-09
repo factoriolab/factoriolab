@@ -1,5 +1,5 @@
 import { cloneEntities, Entities, toRationalEntities } from '../entities';
-import { rational, Rational } from '../rational';
+import { Rational, rational } from '../rational';
 
 export interface RecipeJson {
   id: string;

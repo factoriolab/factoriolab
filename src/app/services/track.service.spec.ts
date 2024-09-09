@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { rational } from '~/models';
+
 import { TrackService } from './track.service';
 
 describe('TrackService', () => {

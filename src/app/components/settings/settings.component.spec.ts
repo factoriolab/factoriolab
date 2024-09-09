@@ -6,7 +6,6 @@ import {
 } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 import { Confirmation } from 'primeng/api';
-
 import {
   DispatchTest,
   ItemId,
@@ -15,9 +14,11 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
+
 import { Game, rational } from '~/models';
 import { App, LabState, Machines, Preferences, Settings } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
+
 import { SettingsComponent } from './settings.component';
 
 describe('SettingsComponent', () => {

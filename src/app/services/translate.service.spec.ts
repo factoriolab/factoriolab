@@ -2,8 +2,8 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Observable, of } from 'rxjs';
-
 import { TestModule } from 'src/tests';
+
 import { LangData, TranslateService } from './translate.service';
 
 @Injectable({

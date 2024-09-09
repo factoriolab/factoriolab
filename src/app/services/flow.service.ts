@@ -10,12 +10,13 @@ import {
   Icon,
   LinkValue,
   MIN_LINK_VALUE,
-  rational,
   Rational,
+  rational,
   SettingsComplete,
   Step,
 } from '~/models';
 import { Objectives, Preferences, Recipes, Settings } from '~/store';
+
 import { ThemeService, ThemeValues } from './theme.service';
 import { TranslateService } from './translate.service';
 

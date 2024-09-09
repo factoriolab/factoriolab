@@ -1,5 +1,4 @@
 import { createAction, props } from '@ngrx/store';
-
 import { ModData, ModHash, ModI18n } from 'src/app/models';
 
 const key = '[Datasets]';

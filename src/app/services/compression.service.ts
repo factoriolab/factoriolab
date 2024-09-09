@@ -161,8 +161,12 @@ export class CompressionService {
   ): Promise<string> {
     const cs = new DecompressionStream(encoding);
     const writer = cs.writable.getWriter();
-    writer.write(byteArray).catch(() => {});
-    writer.close().catch(() => {});
+    writer.write(byteArray).catch(() => {
+      // Ignore error
+    });
+    writer.close().catch(() => {
+      // Ignore error
+    });
     const arrayBuffer = new Response(cs.readable).arrayBuffer();
     return new TextDecoder().decode(await arrayBuffer);
   }

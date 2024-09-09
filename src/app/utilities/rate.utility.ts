@@ -1,4 +1,8 @@
-import { sankey } from '~/d3-sankey';
+import {
+  sankey,
+  SankeyLinkExtraProperties,
+  SankeyNodeExtraProperties,
+} from '~/d3-sankey';
 import { coalesce } from '~/helpers';
 import {
   AdjustedDataset,
@@ -325,8 +329,15 @@ export class RateUtility {
 
   /** Generates a simple sankey diagram and sorts steps by their node depth */
   static sortBySankey(steps: Step[]): void {
-    type SimpleNode = { id: string; stepId: string };
-    type SimpleLink = { source: string; target: string; value: number };
+    interface SimpleNode extends SankeyNodeExtraProperties {
+      id: string;
+      stepId: string;
+    }
+    interface SimpleLink extends SankeyLinkExtraProperties {
+      source: string;
+      target: string;
+      value: number;
+    }
 
     const stepMap = steps.reduce((e: Entities<Step>, s) => {
       e[s.id] = s;
@@ -432,8 +443,7 @@ export class RateUtility {
       return [];
     }
     const group = groups[id];
-    for (let i = 0; i < group.length; i++) {
-      const s = group[i];
+    for (const s of group) {
       result.push(s);
       this.sortRecursive(groups, s.id, result);
     }

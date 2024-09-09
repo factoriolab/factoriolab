@@ -45,6 +45,7 @@ import {
 } from '~/models';
 import { App, Items, Machines, Objectives, Recipes, Settings } from '~/store';
 import { BrowserUtility } from '~/utilities';
+
 import { CompressionService } from './compression.service';
 import { DataService } from './data.service';
 import { MigrationService } from './migration.service';

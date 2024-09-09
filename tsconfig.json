@@ -19,6 +19,7 @@
     "lib": ["ES2022", "dom"],
     "baseUrl": "./",
     "paths": {
+      "@/*": ["src/*"],
       "~/*": ["src/app/*"]
     },
     "resolveJsonModule": true

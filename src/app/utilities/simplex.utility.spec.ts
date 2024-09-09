@@ -1,4 +1,5 @@
 import { ItemId, Mocks, RecipeId } from 'src/tests';
+
 import {
   Entities,
   MaximizeType,
@@ -7,6 +8,7 @@ import {
   rational,
   SimplexResultType,
 } from '~/models';
+
 import { RateUtility } from './rate.utility';
 import {
   ItemValues,

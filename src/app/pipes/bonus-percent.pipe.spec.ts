@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 
 import { rational } from '~/models';
 import { DisplayService } from '~/services';
+
 import { BonusPercentPipe } from './bonus-percent.pipe';
 
 describe('BonusPercentPipe', () => {

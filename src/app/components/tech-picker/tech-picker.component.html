@@ -11,7 +11,7 @@
   [style]="{
     minHeight: '528px',
     height: '80vh',
-    width: '50vw'
+    width: '50vw',
   }"
   [breakpoints]="{ '768px': '80vw', '576px': '100vw' }"
   (onHide)="onHide()"
@@ -64,7 +64,7 @@
       [resizable]="false"
       appendTo="body"
       [style]="{
-        width: '30vw'
+        width: '30vw',
       }"
       [breakpoints]="{ '768px': '50vw', '576px': '90vw' }"
       [header]="'techPicker.importHeader' | translate"
@@ -139,7 +139,7 @@
           context: {
             title: 'techPicker.available',
             ids: status().available,
-            class: 'p-button-text'
+            class: 'p-button-text',
           }
         "
       ></ng-container>
@@ -149,7 +149,7 @@
           context: {
             title: 'techPicker.locked',
             ids: status().locked,
-            class: 'p-button-danger'
+            class: 'p-button-danger',
           }
         "
       ></ng-container>
@@ -159,7 +159,7 @@
           context: {
             title: 'techPicker.researched',
             ids: status().researched,
-            class: 'p-button-success'
+            class: 'p-button-success',
           }
         "
       ></ng-container>

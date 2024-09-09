@@ -40,8 +40,8 @@ import {
   ModuleSettings,
   ObjectiveBase,
   ObjectiveUnit,
-  rational,
   Rational,
+  rational,
   Step,
   StepDetail,
   stepDetailIcon,
@@ -78,6 +78,7 @@ import {
   Settings,
 } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
+
 import { BeaconsOverlayComponent } from '../beacons-overlay/beacons-overlay.component';
 import { ColumnsComponent } from '../columns/columns.component';
 import { ModulesOverlayComponent } from '../modules-overlay/modules-overlay.component';

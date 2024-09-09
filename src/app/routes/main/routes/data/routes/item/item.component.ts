@@ -25,6 +25,7 @@ import {
   UsagePipe,
 } from '~/pipes';
 import { Items, Machines, Settings } from '~/store';
+
 import { DetailComponent } from '../../models';
 
 @Component({

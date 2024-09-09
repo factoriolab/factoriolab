@@ -1,4 +1,5 @@
 import { ItemId, RecipeId } from 'src/tests';
+
 import {
   CostSettings,
   DisplayRate,
@@ -9,6 +10,7 @@ import {
   rational,
   researchBonusValue,
 } from '~/models';
+
 import * as App from '../app.actions';
 import * as Actions from './settings.actions';
 import { initialState, settingsReducer } from './settings.reducer';

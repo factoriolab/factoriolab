@@ -29,8 +29,8 @@ import {
   ObjectiveType,
   objectiveTypeOptions,
   ObjectiveUnit,
-  rational,
   Rational,
+  rational,
   SettingsComplete,
   SimplexResultType,
 } from '~/models';
@@ -38,6 +38,7 @@ import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService, TrackService, TranslateService } from '~/services';
 import { Items, Objectives, Preferences, Recipes, Settings } from '~/store';
 import { RateUtility } from '~/utilities';
+
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { PickerComponent } from '../picker/picker.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';

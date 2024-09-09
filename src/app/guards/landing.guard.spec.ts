@@ -2,10 +2,11 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { MockStore } from '@ngrx/store/testing';
-
 import { Mocks, TestModule } from 'src/tests';
+
 import { Preferences } from '~/store';
 import { BrowserUtility } from '~/utilities';
+
 import { canActivateLanding } from './landing.guard';
 
 describe('canActivateLanding', () => {

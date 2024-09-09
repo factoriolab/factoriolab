@@ -8,8 +8,8 @@ import {
   VariableProperties,
 } from 'glpk-ts';
 import { StatusSimplex } from 'node_modules/glpk-ts/dist/status';
-
 import { environment } from 'src/environments';
+
 import { contains } from '~/helpers';
 import {
   AdjustedDataset,
@@ -24,14 +24,15 @@ import {
   MaximizeType,
   Objective,
   ObjectiveType,
-  rational,
   Rational,
+  rational,
   Recipe,
   RecipeObjective,
   SettingsComplete,
   SimplexResultType,
   Step,
 } from '~/models';
+
 import { RateUtility } from './rate.utility';
 
 const simplexConfig: Simplex.Options = environment.debug

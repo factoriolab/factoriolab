@@ -1,13 +1,11 @@
-export * from './data';
-export * from './enum';
-export * from './settings';
-
 export * from './app-data';
 export * from './collection-item';
 export * from './constants';
+export * from './data';
 export * from './dataset';
 export * from './defaults';
 export * from './entities';
+export * from './enum';
 export * from './flow';
 export * from './game-info';
 export * from './inserter-data';
@@ -18,7 +16,8 @@ export * from './mod';
 export * from './objective';
 export * from './optional';
 export * from './options';
-export { rational, Rational } from './rational';
-export * from './step-detail';
+export { Rational, rational } from './rational';
+export * from './settings';
 export * from './step';
+export * from './step-detail';
 export * from './zip';

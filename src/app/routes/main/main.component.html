@@ -40,6 +40,7 @@
     [hidden]="contentSvc.settingsXlHidden()"
   ></lab-settings>
   <div
+    role="none"
     class="layout-mask"
     [class.active]="contentSvc.settingsActive()"
     (click)="contentSvc.toggleSettings()"
@@ -65,7 +66,7 @@
                       | translate
                         : {
                             time: result().time,
-                            cost: result().cost?.toPrecision(2)
+                            cost: result().cost?.toPrecision(2),
                           }
                   }}
                 </div>

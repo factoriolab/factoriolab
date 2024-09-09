@@ -15,6 +15,7 @@ import {
   Theme,
 } from '~/models';
 import { StoreUtility } from '~/utilities';
+
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 

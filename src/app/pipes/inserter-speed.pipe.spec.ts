@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-
 import { Mocks } from 'src/tests';
+
 import { InserterTarget, ItemId, rational } from '~/models';
+
 import { InserterSpeedPipe } from './inserter-speed.pipe';
 
 describe('InserterSpeedPipe', () => {

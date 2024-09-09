@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ItemId, Mocks, TestModule, TestUtility } from 'src/tests';
+
 import { ModuleSettings, rational } from '~/models';
+
 import { ModulesComponent } from './modules.component';
 
 describe('ModulesComponent', () => {

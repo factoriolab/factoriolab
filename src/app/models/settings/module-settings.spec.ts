@@ -1,4 +1,5 @@
 import { Mocks } from 'src/tests';
+
 import { areModuleSettingsEqual } from './module-settings';
 
 describe('areModuleSettingsEqual', () => {

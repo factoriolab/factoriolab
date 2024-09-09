@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-
 import { Mocks, TestModule } from 'src/tests';
+
 import { spread } from '~/helpers';
 import { LinkValue, MIN_LINK_VALUE, rational, Step } from '~/models';
+
 import { FlowService } from './flow.service';
 
 describe('FlowService', () => {

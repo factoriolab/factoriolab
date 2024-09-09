@@ -528,7 +528,10 @@ export function sankey<
     for (; i < nodes.length; ++i) {
       const node = nodes[i];
       const dy = (y - node.y0!) * alpha;
-      if (dy > 1e-6) (node.y0! += dy), (node.y1! += dy);
+      if (dy > 1e-6) {
+        node.y0! += dy;
+        node.y1! += dy;
+      }
       y = node.y1! + _nodePadding;
     }
   }
@@ -543,7 +546,10 @@ export function sankey<
     for (; i >= 0; --i) {
       const node = nodes[i];
       const dy = (node.y1! - y) * alpha;
-      if (dy > 1e-6) (node.y0! -= dy), (node.y1! -= dy);
+      if (dy > 1e-6) {
+        node.y0! -= dy;
+        node.y1! -= dy;
+      }
       y = node.y0! - _nodePadding;
     }
   }

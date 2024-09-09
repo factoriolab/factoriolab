@@ -2,6 +2,7 @@ import { createSelector } from '@ngrx/store';
 
 import { EnergyType, Entities, MachineSettings } from '~/models';
 import { RecipeUtility } from '~/utilities';
+
 import { LabState } from '../';
 import * as Settings from '../settings';
 import { MachinesState } from './machines.reducer';

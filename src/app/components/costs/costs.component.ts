@@ -10,6 +10,7 @@ import { CostKey, CostSettings, rational } from '~/models';
 import { TranslatePipe } from '~/pipes';
 import { ContentService } from '~/services';
 import { Settings } from '~/store';
+
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { DialogComponent } from '../modal';
 

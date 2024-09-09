@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-
 import { ItemId } from 'src/tests';
+
 import { OptionsPipe } from './options.pipe';
 
 describe('OptionsPipe', () => {

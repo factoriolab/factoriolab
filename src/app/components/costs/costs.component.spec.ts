@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { Mocks, TestModule } from 'src/tests';
+
 import { rational } from '~/models';
 import { Settings } from '~/store';
+
 import { CostsComponent } from './costs.component';
 
 describe('CostsComponent', () => {

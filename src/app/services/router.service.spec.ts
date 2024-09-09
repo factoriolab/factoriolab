@@ -2,8 +2,8 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 import { of, Subject } from 'rxjs';
-
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+
 import { spread } from '~/helpers';
 import {
   DisplayRate,
@@ -32,6 +32,7 @@ import {
   Settings,
 } from '~/store';
 import { BrowserUtility } from '~/utilities';
+
 import { RouterService } from './router.service';
 
 const mockObjective: Objective = {

@@ -3,9 +3,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
-
 import { TestModule } from 'src/tests';
+
 import { ContentComponent } from '~/components';
+
 import { DropdownBaseDirective } from './dropdown-base.directive';
 
 @Component({

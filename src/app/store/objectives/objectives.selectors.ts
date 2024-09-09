@@ -9,14 +9,15 @@ import {
   ItemId,
   ModHash,
   PowerUnit,
-  rational,
   Rational,
+  rational,
   Step,
   StepDetail,
   StepDetailTab,
   StepOutput,
 } from '~/models';
 import { RateUtility, RecipeUtility, SimplexUtility } from '~/utilities';
+
 import { LabState } from '../';
 import * as Items from '../items';
 import * as Machines from '../machines';

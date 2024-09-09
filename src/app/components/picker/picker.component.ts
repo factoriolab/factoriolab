@@ -24,6 +24,7 @@ import { Category, Entities } from '~/models';
 import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService } from '~/services';
 import { Recipes } from '~/store';
+
 import { DialogComponent } from '../modal';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 

@@ -62,7 +62,7 @@ describe('CompressionService', () => {
   describe('inflate', () => {
     it('should attempt to mend a bad zip', async () => {
       spyOn(console, 'warn');
-      spyOn(<any>service, 'inflateMend').and.callThrough();
+      spyOn(service as any, 'inflateMend').and.callThrough();
       await expectAsync(service.inflate('abcde')).toBeRejected();
       expect(console.warn).toHaveBeenCalled();
       expect(service['inflateMend']).toHaveBeenCalledTimes(3);
@@ -78,7 +78,7 @@ describe('CompressionService', () => {
     });
 
     it('should assume failure if return is empty/null', async () => {
-      spyOn(<any>service, 'inflateStr').and.returnValue(Promise.resolve(''));
+      spyOn(service as any, 'inflateStr').and.returnValue(Promise.resolve(''));
       await expectAsync(
         service['inflateMend']('eJxLTAQAASUAww_', '_'),
       ).toBeRejected();

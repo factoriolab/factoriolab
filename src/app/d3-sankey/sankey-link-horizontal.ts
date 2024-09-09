@@ -1,4 +1,4 @@
-import { link, Link, linkHorizontal, Path } from 'd3';
+import { Link, link, linkHorizontal, Path } from 'd3';
 
 import {
   SankeyLink,
@@ -112,7 +112,8 @@ export class BumpSankeyLoop {
   }
 
   point(x: number, y: number): void {
-    (x = +x), (y = +y);
+    x = +x;
+    y = +y;
     switch (this._point) {
       case 0: {
         this._point = 1;
@@ -146,6 +147,8 @@ export class BumpSankeyLoop {
         break;
       }
     }
-    (this._x0 = x), (this._y0 = y);
+
+    this._x0 = x;
+    this._y0 = y;
   }
 }

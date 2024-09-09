@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConfirmationService } from 'primeng/api';
-
 import { TestModule } from 'src/tests';
+
 import { ContentComponent } from './content.component';
 
 describe('ContentComponent', () => {

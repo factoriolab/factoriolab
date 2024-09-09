@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ItemId, TestModule, TestUtility } from 'src/tests';
+
 import { TooltipComponent } from './tooltip.component';
 
 describe('TooltipComponent', () => {

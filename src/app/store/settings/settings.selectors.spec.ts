@@ -1,4 +1,5 @@
 import { ItemId, Mocks, RecipeId, TestUtility } from 'src/tests';
+
 import {
   EnergyType,
   Game,
@@ -12,6 +13,7 @@ import {
   rational,
   SettingsComplete,
 } from '~/models';
+
 import { initialState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
 

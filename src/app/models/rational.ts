@@ -186,7 +186,7 @@ export class Rational {
     return this.toString();
   }
 
-  constructor(p: bigint, q: bigint = 1n) {
+  constructor(p: bigint, q = 1n) {
     if (q === 1n) {
       this.p = p;
       this.q = q;

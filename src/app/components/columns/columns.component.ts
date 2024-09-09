@@ -17,6 +17,7 @@ import {
 } from '~/models';
 import { PrecisionExamplePipe, TranslatePipe } from '~/pipes';
 import { Preferences, Settings } from '~/store';
+
 import { DialogComponent } from '../modal';
 
 @Component({

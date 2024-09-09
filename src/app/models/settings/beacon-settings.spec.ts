@@ -1,4 +1,5 @@
 import { Mocks } from 'src/tests';
+
 import { areBeaconSettingsEqual } from './beacon-settings';
 
 describe('areBeaconSettingsEqual', () => {

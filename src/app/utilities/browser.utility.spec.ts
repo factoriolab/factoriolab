@@ -1,4 +1,5 @@
 import { StepDetailTab } from '~/models';
+
 import { BrowserUtility, StorageKey } from './browser.utility';
 
 describe('BrowserUtility', () => {

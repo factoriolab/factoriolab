@@ -4,8 +4,8 @@ import {
   KeysMatching,
   LabParams,
   Optional,
-  rational,
   Rational,
+  rational,
   ZARRAYSEP,
   ZEMPTY,
   ZFALSE,
@@ -13,6 +13,7 @@ import {
   Zip,
   ZTRUE,
 } from '~/models';
+
 import { CompressionService } from './compression.service';
 
 @Injectable({
@@ -218,7 +219,7 @@ export class ZipService {
     zip: Zip<LabParams>,
     state: T,
     init: T,
-  ): <V, A extends Array<unknown>>(
+  ): <V, A extends unknown[]>(
     value: (v: V, i: V, ...args: A) => string | [string, string],
   ) => (
     name: KeysMatching<LabParams, Optional<string>>,
@@ -273,7 +274,7 @@ export class ZipService {
    */
   get(
     params: LabParams,
-  ): <V, A extends Array<unknown>>(
+  ): <V, A extends unknown[]>(
     value: (s: Optional<string>, ...args: A) => V,
   ) => (
     name: KeysMatching<LabParams, Optional<string>>,

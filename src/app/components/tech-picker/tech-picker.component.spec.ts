@@ -5,9 +5,10 @@ import {
   tick,
 } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-
 import { DispatchTest, Mocks, RecipeId, TestModule } from 'src/tests';
+
 import { LabState, Preferences } from '~/store';
+
 import { TechPickerComponent } from './tech-picker.component';
 
 describe('TechPickerComponent', () => {

@@ -1,8 +1,8 @@
 import { createSelector } from '@ngrx/store';
 import { MenuItem, SelectItem } from 'primeng/api';
-
 import { data } from 'src/data';
 import { environment } from 'src/environments';
+
 import { coalesce, fnPropsNotNullish, getIdOptions, spread } from '~/helpers';
 import {
   Beacon,
@@ -33,8 +33,8 @@ import {
   parseRecipe,
   Preset,
   presetOptions,
-  rational,
   Rational,
+  rational,
   Recipe,
   SettingsComplete,
   Technology,
@@ -42,6 +42,7 @@ import {
   toEntities,
 } from '~/models';
 import { RecipeUtility } from '~/utilities';
+
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';

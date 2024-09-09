@@ -2,8 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DomHandler } from 'primeng/dom';
 import { TabView, TabViewModule } from 'primeng/tabview';
-
 import { TestModule } from 'src/tests';
+
 import { TabViewOverrideDirective } from './tabview-override.directive';
 
 @Component({

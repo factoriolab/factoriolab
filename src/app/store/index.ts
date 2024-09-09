@@ -1,7 +1,7 @@
 import { Action, ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
-
 import { environment } from 'src/environments/environment';
+
 import * as App from './app.actions';
 import * as Datasets from './datasets';
 import * as Items from './items';

@@ -12,6 +12,7 @@ import {
 
 import { Entities, ModData, ModHash, ModI18n } from '~/models';
 import { Datasets, Settings } from '~/store';
+
 import { TranslateService } from './translate.service';
 
 @Injectable({

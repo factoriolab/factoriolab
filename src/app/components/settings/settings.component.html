@@ -77,7 +77,6 @@
               #nameCtrl="ngModel"
               pInputText
               pAutoFocus
-              [autofocus]="true"
               type="text"
               [placeholder]="'settings.nameSavedState' | translate"
               [pTooltip]="'settings.nameSavedState' | translate"
@@ -202,7 +201,7 @@
           </div>
           @if (data().game === Game.Factorio) {
             <div class="position-relative">
-              <label class="p-static-label">{{
+              <label for="mod" class="p-static-label">{{
                 'settings.modSet' | translate
               }}</label>
               <small class="position-absolute end-0 top-0 me-1 mb-1">
@@ -290,7 +289,7 @@
                   ? ('settings.techsResearched'
                     | translate
                       : {
-                          count: settings().researchedTechnologyIds.size
+                          count: settings().researchedTechnologyIds.size,
                         })
                   : ('settings.allTechsResearched' | translate)
               "
@@ -313,7 +312,7 @@
                 'settings.recipesExcluded'
                   | translate
                     : {
-                        count: settings().excludedRecipeIds.size
+                        count: settings().excludedRecipeIds.size,
                       }
               "
               (click)="
@@ -342,7 +341,7 @@
                 'settings.itemsExcluded'
                   | translate
                     : {
-                        count: settings().excludedItemIds.size
+                        count: settings().excludedItemIds.size,
                       }
               "
               (click)="
@@ -697,7 +696,7 @@
                             [options]="ms.moduleOptions ?? []"
                             (onChange)="
                               changeModules(machineId, [
-                                { id: $event.value, count: rational.one }
+                                { id: $event.value, count: rational.one },
                               ])
                             "
                           >

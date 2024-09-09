@@ -3,6 +3,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map } from 'rxjs/operators';
 
 import { displayRateInfo } from '~/models';
+
 import * as Settings from '../settings';
 import * as ObjectivesActions from './objectives.actions';
 

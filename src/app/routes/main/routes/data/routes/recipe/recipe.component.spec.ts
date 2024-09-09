@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-
 import { DispatchTest, RecipeId, TestModule, TestUtility } from 'src/tests';
+
 import { LabState, Recipes, Settings } from '~/store';
+
 import { RecipeComponent } from './recipe.component';
 
 describe('RecipeComponent', () => {

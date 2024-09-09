@@ -5,8 +5,8 @@ import {
   tick,
 } from '@angular/core/testing';
 import { select } from 'd3';
-
 import { Mocks, TestModule, TestUtility } from 'src/tests';
+
 import {
   sankeyCenter,
   sankeyJustify,
@@ -16,6 +16,7 @@ import {
 import { spread } from '~/helpers';
 import { FlowDiagram, SankeyAlign } from '~/models';
 import { ThemeService } from '~/services';
+
 import { FlowComponent, SVG_ID } from './flow.component';
 
 describe('FlowComponent', () => {

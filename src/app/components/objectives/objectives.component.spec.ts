@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 import { Message } from 'primeng/api';
 import { Subject } from 'rxjs';
-
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+
 import { spread } from '~/helpers';
 import {
   Objective,
@@ -13,6 +13,7 @@ import {
   SimplexResultType,
 } from '~/models';
 import { LabState, Objectives, Preferences, Settings } from '~/store';
+
 import { ObjectivesComponent } from './objectives.component';
 
 describe('ObjectivesComponent', () => {

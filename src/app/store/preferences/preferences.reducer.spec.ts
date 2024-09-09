@@ -1,6 +1,8 @@
 import { Mocks } from 'src/tests';
+
 import { spread } from '~/helpers';
 import { FlowDiagram, Game, Language, PowerUnit, Theme } from '~/models';
+
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 import { initialState, preferencesReducer } from './preferences.reducer';

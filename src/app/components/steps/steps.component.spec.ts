@@ -6,7 +6,6 @@ import {
 } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 import { MenuItem, SortEvent } from 'primeng/api';
-
 import {
   DispatchTest,
   ItemId,
@@ -15,6 +14,7 @@ import {
   TestModule,
   TestUtility,
 } from 'src/tests';
+
 import { Entities, rational, Step, StepDetail, StepDetailTab } from '~/models';
 import { StepIdPipe } from '~/pipes';
 import {
@@ -26,6 +26,7 @@ import {
   Settings,
 } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
+
 import { StepsComponent } from './steps.component';
 
 describe('StepsComponent', () => {

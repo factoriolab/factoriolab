@@ -1,6 +1,8 @@
 import { Mocks } from 'src/tests';
+
 import { ItemSettings } from '~/models';
 import { StoreUtility } from '~/utilities';
+
 import * as App from '../app.actions';
 import * as Actions from './items.actions';
 import { initialState, itemsReducer } from './items.reducer';

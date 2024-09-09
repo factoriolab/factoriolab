@@ -2,8 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs';
-
 import { data } from 'src/data';
+
 import { coalesce, prune } from '~/helpers';
 import {
   Entities,
@@ -19,6 +19,7 @@ import {
   ZTRUE,
 } from '~/models';
 import { Settings } from '~/store';
+
 import { AnalyticsService } from './analytics.service';
 import { CompressionService } from './compression.service';
 import { ContentService } from './content.service';
@@ -587,8 +588,8 @@ export class MigrationService {
         objectives = params[ZipSectionV10.Objectives].split(V10LISTSEP);
 
       const list = params[ZipSectionV10.RecipeObjectives].split(V10LISTSEP);
-      for (let i = 0; i < list.length; i++) {
-        const o = list[i].split(ZFIELDSEP);
+      for (const s of list) {
+        const o = s.split(ZFIELDSEP);
         const n = this.zipSvc.zipFields([
           o[0],
           o[1],

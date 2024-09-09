@@ -2,10 +2,11 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 import { EMPTY, of } from 'rxjs';
-
 import { Mocks, TestModule } from 'src/tests';
+
 import { ModData, ModHash, ModI18n } from '~/models';
 import { Datasets, LabState } from '~/store';
+
 import { DataService } from './data.service';
 
 describe('DataService', () => {

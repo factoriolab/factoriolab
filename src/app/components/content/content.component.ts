@@ -32,7 +32,9 @@ ConnectedOverlayScrollHandler.prototype.bindScrollListener = function (
 
 // istanbul ignore next
 /** Allow entering spaces inside orderlist items */
-OrderList.prototype.onSpaceKey = function (): void {};
+OrderList.prototype.onSpaceKey = function (): void {
+  // Ignore space key
+};
 
 @Component({
   selector: 'lab-content',

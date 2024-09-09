@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TestModule, TestUtility } from 'src/tests';
+
 import { CollectionComponent } from './collection.component';
 
 describe('CollectionComponent', () => {

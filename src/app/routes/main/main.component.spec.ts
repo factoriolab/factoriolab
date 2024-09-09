@@ -4,9 +4,10 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-
 import { TestModule } from 'src/tests';
+
 import { App } from '~/store';
+
 import { MainComponent } from './main.component';
 
 describe('MainComponent', () => {

@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-
 import { ItemId, TestModule } from 'src/tests';
+
 import { rational } from '~/models';
+
 import { MachineRatePipe } from './machine-rate.pipe';
 import { RatePipe } from './rate.pipe';
 

@@ -5,6 +5,7 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { CollectionTableComponent } from '~/components';
 import { Category } from '~/models';
 import { IconClassPipe, TranslatePipe } from '~/pipes';
+
 import { DetailComponent } from '../../models';
 
 @Component({

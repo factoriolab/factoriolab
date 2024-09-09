@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TestModule } from 'src/tests';
+
 import { DialogComponent, ModalComponent, OverlayComponent } from './modal';
 
 class TestModalComponent extends ModalComponent {

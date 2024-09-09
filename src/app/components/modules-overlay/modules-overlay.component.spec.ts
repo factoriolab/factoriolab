@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
+
 import { rational } from '~/models';
+
 import { ModulesOverlayComponent } from './modules-overlay.component';
 
 describe('ModulesOverlayComponent', () => {

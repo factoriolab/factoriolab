@@ -4,9 +4,10 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-
 import { TestModule, TestUtility } from 'src/tests';
+
 import { rational } from '~/models';
+
 import { InputNumberComponent } from './input-number.component';
 
 describe('InputNumberComponent', () => {

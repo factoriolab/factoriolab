@@ -616,7 +616,7 @@
                     (click)="
                       addObjective({
                         targetId: step.recipeId,
-                        unit: ObjectiveUnit.Machines
+                        unit: ObjectiveUnit.Machines,
                       })
                     "
                   >
@@ -1029,7 +1029,7 @@
                     percent: output.value,
                     percentOnDest: true,
                     destId: step.itemId,
-                    inputs: output.inputs
+                    inputs: output.inputs,
                   }
                 "
               >
@@ -1074,7 +1074,7 @@
                     destRecipeObjectiveId:
                       stepById()[parent.key]?.recipeObjectiveId,
                     destIsRecipe: true,
-                    outputs: parent.key === ''
+                    outputs: parent.key === '',
                   }
                 "
               >
@@ -1099,7 +1099,7 @@
                 @if (
                   {
                     step: stepByItemEntities()[output.key],
-                    percent: step.outputs?.[output.key]
+                    percent: step.outputs?.[output.key],
                   };
                   as row
                 ) {
@@ -1111,7 +1111,7 @@
                           items: row.step.items
                             .mul(row.percent)
                             .div(step.recipe.productivity),
-                          itemId: output.key
+                          itemId: output.key,
                         }
                       "
                     >
@@ -1134,7 +1134,7 @@
                 @if (
                   {
                     step: stepByItemEntities()[input.key],
-                    percent: stepByItemEntities()[input.key].parents?.[step.id]
+                    percent: stepByItemEntities()[input.key].parents?.[step.id],
                   };
                   as row
                 ) {
@@ -1161,7 +1161,7 @@
                             percent: row.percent,
                             destId: step.recipeId,
                             destRecipeObjectiveId: step.recipeObjectiveId,
-                            destIsRecipe: true
+                            destIsRecipe: true,
                           }
                         "
                       >
@@ -1180,7 +1180,7 @@
                             percent: row.percent,
                             destId: step.recipeId,
                             destRecipeObjectiveId: step.recipeObjectiveId,
-                            destIsRecipe: true
+                            destIsRecipe: true,
                           }
                         "
                       >
@@ -1221,7 +1221,7 @@
               @if (
                 {
                   step: stepByItemEntities()[output.key],
-                  percent: step.outputs?.[output.key]
+                  percent: step.outputs?.[output.key],
                 };
                 as row
               ) {
@@ -1243,7 +1243,7 @@
                         percent: row.percent,
                         percentOnDest: true,
                         destId: output.key,
-                        destRecipeObjectiveId: step.recipeObjectiveId
+                        destRecipeObjectiveId: step.recipeObjectiveId,
                       }
                     "
                   >
@@ -1269,7 +1269,7 @@
                         {
                           step: stepByItemEntities()[input.key],
                           percent:
-                            stepByItemEntities()[input.key].parents?.[step.id]
+                            stepByItemEntities()[input.key].parents?.[step.id],
                         };
                         as row
                       ) {
@@ -1286,7 +1286,7 @@
                                           .mul(row.percent)
                                           .div(step.machines)
                                         | rate: columnsState().items.precision,
-                                      itemId: input.key
+                                      itemId: input.key,
                                     }
                                   "
                                 >
@@ -1310,7 +1310,7 @@
                                               .div(step.machines)
                                             | rate
                                               : columnsState().belts.precision,
-                                          itemId: beltId
+                                          itemId: beltId,
                                         }
                                       "
                                     >
@@ -1338,7 +1338,7 @@
                                         machineValueCell;
                                         context: {
                                           value: ins.value | rate: 1,
-                                          itemId: ins.id
+                                          itemId: ins.id,
                                         }
                                       "
                                     >
@@ -1422,7 +1422,7 @@
                                       machineValueCell;
                                       context: {
                                         value: ins.value | rate: 1,
-                                        itemId: ins.id
+                                        itemId: ins.id,
                                       }
                                     "
                                   >
@@ -1441,7 +1441,7 @@
                                       value:
                                         items.div(beltSpeed()[beltId])
                                         | rate: columnsState().belts.precision,
-                                      itemId: beltId
+                                      itemId: beltId,
                                     }
                                   "
                                 >
@@ -1457,7 +1457,7 @@
                                   value:
                                     items.mul(dispRateInfo().value)
                                     | rate: columnsState().items.precision,
-                                  itemId: output.key
+                                  itemId: output.key,
                                 }
                               "
                             >
@@ -1761,7 +1761,7 @@
             context: {
               columnSettings: columnsState().belts,
               totals: totals().belts,
-              type: 'belt'
+              type: 'belt',
             }
           "
         >
@@ -1771,7 +1771,7 @@
             totalCell;
             context: {
               columnSettings: columnsState().wagons,
-              totals: totals().wagons
+              totals: totals().wagons,
             }
           "
         >
@@ -1783,7 +1783,7 @@
               columnSettings: columnsState().machines,
               totals: totals().machines,
               modulesTotals: totals().modules,
-              type: 'machine'
+              type: 'machine',
             }
           "
         >
@@ -1795,7 +1795,7 @@
               columnSettings: columnsState().beacons,
               totals: totals().beacons,
               modulesTotals: totals().beaconModules,
-              type: 'beacon'
+              type: 'beacon',
             }
           "
         >

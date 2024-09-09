@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-
 import { TestModule } from 'src/tests';
+
 import { PowerUnit, rational } from '~/models';
+
 import { PowerPipe } from './power.pipe';
 
 describe('PowerPipe', () => {

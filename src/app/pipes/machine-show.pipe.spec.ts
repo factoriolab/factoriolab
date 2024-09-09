@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { Game, ItemId } from '~/models';
+
 import { MachineShowPipe } from './machine-show.pipe';
 
 describe('MachineShowPipe', () => {

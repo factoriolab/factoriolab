@@ -1,9 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-
 import { DispatchTest, ItemId, RecipeId, TestModule } from 'src/tests';
+
 import { Game } from '~/models';
 import { LabState, Objectives, Preferences, Settings } from '~/store';
+
 import { LandingComponent } from './landing.component';
 
 describe('LandingComponent', () => {
