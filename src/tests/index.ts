@@ -1,4 +1,4 @@
-import * as Mocks from './mocks';
+import * as Mocks from './mocks.spec';
 
 export { Mocks };
 

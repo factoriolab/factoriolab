@@ -858,17 +858,15 @@ export class RecipeUtility {
 
     if (moduleSettings?.count == null) return result;
 
-    return result.map((b) => {
+    return result.filter(fnPropsNotNullish('modules')).map((b) => {
       // Restore empty module entry
-      // Safe to assert b.modules != null because code would have returned early
-      // above; each entry's modules have already been coalesced
-      const total = b.modules!.reduce(
+      const total = b.modules.reduce(
         (a, b) => a.add(coalesce(b.count, rational.zero)),
         rational.zero,
       );
       const empty = moduleSettings?.count?.sub(total);
       if (empty?.gt(rational.zero))
-        b.modules!.push({ count: empty, id: ItemId.Module });
+        b.modules.push({ count: empty, id: ItemId.Module });
 
       return b;
     });

@@ -15,7 +15,7 @@ describe('ascendingSourceBreadth', () => {
   it('should fall back to difference in index values', () => {
     expect(
       ascendingSourceBreadth(
-        { source: { y0: 1 }, target: {}, value: 1, index: 2 },
+        { source: { y0: 1 }, target: {}, value: 1, index: 2 } as any,
         { source: { y0: 1 }, target: {}, value: 1, index: 3 },
       ),
     ).toEqual(-1);
@@ -24,7 +24,7 @@ describe('ascendingSourceBreadth', () => {
 
 describe('defaultId', () => {
   it('should default to index value', () => {
-    expect(defaultId({ index: 1 })).toEqual(1);
+    expect(defaultId({ index: 1 } as any)).toEqual(1);
   });
 });
 

@@ -56,7 +56,6 @@ module.exports = tseslint.config(
       '@typescript-eslint/prefer-enum-initializers': 'error',
       '@typescript-eslint/no-extraneous-class': 'off',
       '@typescript-eslint/no-dynamic-delete': 'off',
-      '@typescript-eslint/no-non-null-assertion': 'off',
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       eqeqeq: ['error', 'smart'],
@@ -67,6 +66,7 @@ module.exports = tseslint.config(
     rules: {
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
     },
   },
   {

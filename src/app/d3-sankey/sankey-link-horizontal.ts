@@ -1,5 +1,6 @@
 import { Link, link, linkHorizontal, Path } from 'd3';
 
+import { coalesce } from '../helpers';
 import {
   SankeyLink,
   SankeyLinkExtraProperties,
@@ -11,14 +12,14 @@ function horizontalSource<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(d: SankeyLink<N, L>): [number, number] {
-  return [(d.source as SankeyNode<N, L>).x1!, d.y0!];
+  return [(d.source as SankeyNode<N, L>).x1, d.y0];
 }
 
 function horizontalTarget<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(d: SankeyLink<N, L>): [number, number] {
-  return [(d.target as SankeyNode<N, L>).x0!, d.y1!];
+  return [(d.target as SankeyNode<N, L>).x0, d.y1];
 }
 
 export function sankeyLinkHorizontal<
@@ -68,6 +69,10 @@ function bumpSankeyLoopX(
     new BumpSankeyLoop(context, width, padding, bottom0, bottom1);
 }
 
+function num(n: number | undefined): number {
+  return coalesce(n, 0);
+}
+
 export class BumpSankeyLoop {
   _context: CanvasRenderingContext2D | Path;
   _width: number;
@@ -108,7 +113,7 @@ export class BumpSankeyLoop {
   lineEnd(): void {
     if (this._line || (this._line !== 0 && this._point === 1))
       this._context.closePath();
-    this._line = 1 - this._line!;
+    this._line = 1 - num(this._line);
   }
 
   point(x: number, y: number): void {
@@ -130,15 +135,15 @@ export class BumpSankeyLoop {
           this._width / 2 +
           this._padding;
         const minRadius = this._width + this._padding;
-        const radius0 = Math.max(minRadius, (bottom - this._y0!) * 0.75);
-        const radius1 = Math.max(minRadius, (bottom - y!) * 0.75);
+        const radius0 = Math.max(minRadius, (bottom - num(this._y0)) * 0.75);
+        const radius1 = Math.max(minRadius, (bottom - y) * 0.75);
 
         this._context.bezierCurveTo(
-          this._x0! + radius0,
-          this._y0!,
-          this._x0! + radius0,
+          num(this._x0) + radius0,
+          num(this._y0),
+          num(this._x0) + radius0,
           bottom,
-          this._x0!,
+          num(this._x0),
           bottom,
         );
         this._context.lineTo(x, bottom);

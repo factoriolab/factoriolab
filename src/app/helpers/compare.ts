@@ -16,11 +16,12 @@ export function areEntitiesEqual<T>(
   b: Entities<T> | null | undefined,
   compareFn: (a: T, b: T) => boolean = (a, b) => a === b,
 ): boolean {
-  const aKeys = a == null ? null : Object.keys(a);
-  const bKeys = b == null ? null : Object.keys(b);
-  if (!aKeys?.length) return !bKeys?.length;
-  if (!bKeys?.length) return false;
+  if (a == null) return b == null || !Object.keys(b).length;
+  if (b == null) return !Object.keys(a).length;
+
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
   return (
-    aKeys.length === bKeys.length && aKeys.every((k) => compareFn(a![k], b![k]))
+    aKeys.length === bKeys.length && aKeys.every((k) => compareFn(a[k], b[k]))
   );
 }

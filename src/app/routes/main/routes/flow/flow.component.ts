@@ -26,6 +26,7 @@ import {
   sankey,
   sankeyCenter,
   SankeyGraph,
+  SankeyGraphMinimal,
   sankeyJustify,
   SankeyLayout,
   sankeyLeft,
@@ -35,7 +36,7 @@ import {
   SankeyNode,
   sankeyRight,
 } from '~/d3-sankey';
-import { coalesce } from '~/helpers';
+import { coalesce, spread } from '~/helpers';
 import {
   FlowData,
   FlowDiagram,
@@ -82,7 +83,9 @@ export class FlowComponent implements AfterViewInit {
 
   height = window.innerHeight * 0.75;
   svg: Selection<SVGSVGElement, unknown, null, undefined> | undefined;
-  skLayout: SankeyLayout<SankeyGraph<Node, Link>, Node, Link> | undefined;
+  skLayout:
+    | SankeyLayout<SankeyGraphMinimal<Node, Link>, Node, Link>
+    | undefined;
 
   loading = signal(true);
   selectedId = signal<string | null>(null);
@@ -166,8 +169,8 @@ export class FlowComponent implements AfterViewInit {
           : sankeyLinkLoop(
               coalesce(l.width, 0),
               NODE_WIDTH,
-              (l.source as SankeyNode<Node, Link>).y1!,
-              (l.target as SankeyNode<Node, Link>).y1!,
+              (l.source as SankeyNode<Node, Link>).y1,
+              (l.target as SankeyNode<Node, Link>).y1,
             )(l),
       )
       .attr('stroke', (l) => l.color)
@@ -236,8 +239,8 @@ export class FlowComponent implements AfterViewInit {
               return sankeyLinkLoop(
                 coalesce(l.width, 0),
                 NODE_WIDTH,
-                source.y1!,
-                target.y1!,
+                source.y1,
+                target.y1,
               )(l);
             });
           }),
@@ -373,8 +376,8 @@ export class FlowComponent implements AfterViewInit {
         .filter((n) =>
           data.links.some((l) => l.source === n.id || l.target === n.id),
         )
-        .map((d) => ({ ...d })),
-      links: data.links.map((l) => ({ ...l })),
+        .map((d) => spread(d)),
+      links: data.links.map((l) => spread(l)),
     });
   }
 
