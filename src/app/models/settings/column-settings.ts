@@ -62,7 +62,7 @@ export const initialColumnsState: ColumnsState = allColumns.reduce(
 /** Get column options for passed game */
 export function columnOptions(gameInfo: GameInfo): SelectItem<ColumnKey>[] {
   return allColumns
-    .filter((c) => gameInfo.hideColumns.indexOf(c) === -1)
+    .filter((c) => !gameInfo.hideColumns.includes(c))
     .map(
       (id): SelectItem<ColumnKey> => ({
         label: `options.column.${id}`,

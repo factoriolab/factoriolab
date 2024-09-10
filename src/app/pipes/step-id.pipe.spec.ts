@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { TestModule } from 'src/tests';
+
+import { TestModule } from '~/tests';
 
 import { StepIdPipe } from './step-id.pipe';
 

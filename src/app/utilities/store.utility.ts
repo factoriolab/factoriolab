@@ -19,7 +19,7 @@ export class StoreUtility {
     id?: string,
   ): Entities<T> {
     // Spread into new state
-    let newState = { ...state };
+    let newState = spread(state);
     for (const field of fields) {
       newState = this.resetField(newState, field, id);
     }
@@ -33,7 +33,7 @@ export class StoreUtility {
     id?: string,
   ): Entities<T> {
     // Spread into new state
-    const newState = { ...state };
+    const newState = spread(state);
     for (const i of Object.keys(newState).filter(
       (j) => (!id || id === j) && newState[j][field] !== undefined,
     )) {
@@ -41,7 +41,7 @@ export class StoreUtility {
         delete newState[i];
       } else {
         // Spread into new state
-        newState[i] = { ...newState[i] };
+        newState[i] = spread(newState[i]);
         delete newState[i][field];
       }
     }
@@ -69,9 +69,9 @@ export class StoreUtility {
     // Spread into new state
     if (value === def) {
       // Resetting to null
-      const newState = { ...state };
+      const newState = spread(state);
       if (newState[id] !== undefined) {
-        newState[id] = { ...newState[id] };
+        newState[id] = spread(newState[id]);
         if (newState[id][field] !== undefined) {
           delete newState[id][field];
         }
@@ -93,9 +93,9 @@ export class StoreUtility {
     value: T[K],
   ): Entities<T> {
     if (value === undefined) {
-      state = { ...state };
+      state = spread(state);
       if (state[id] !== undefined) {
-        state[id] = { ...state[id] };
+        state[id] = spread(state[id]);
         if (state[id][field] !== undefined) delete state[id][field];
         if (Object.keys(state[id]).length === 0) delete state[id];
       }
@@ -124,7 +124,7 @@ export class StoreUtility {
   }
 
   static removeEntry<T>(entities: Entities<T>, id: string): Entities<T> {
-    entities = { ...entities };
+    entities = spread(entities);
     delete entities[id];
     return entities;
   }

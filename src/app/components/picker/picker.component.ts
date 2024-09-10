@@ -228,9 +228,9 @@ export class PickerComponent extends DialogComponent {
     for (const c of this.categoryIds) {
       // Filter each category row
       this.categoryRows[c] = [];
-      for (const r of this.allCategoryRows[c]) {
-        this.categoryRows[c].push(r.filter((i) => ids.indexOf(i) !== -1));
-      }
+      for (const r of this.allCategoryRows[c])
+        this.categoryRows[c].push(r.filter((i) => ids.includes(i)));
+
       // Filter out empty category rows
       this.categoryRows[c] = this.categoryRows[c].filter((r) => r.length > 0);
     }

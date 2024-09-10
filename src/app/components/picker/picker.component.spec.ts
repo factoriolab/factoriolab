@@ -1,9 +1,9 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 
 import { LabState, Recipes } from '~/store';
+import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { PickerComponent } from './picker.component';
 

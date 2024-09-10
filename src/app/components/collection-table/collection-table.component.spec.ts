@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Mocks, TestModule, TestUtility } from 'src/tests';
+
+import { Mocks, setInputs, TestModule } from '~/tests';
 
 import { CollectionTableComponent } from './collection-table.component';
 
@@ -14,7 +15,7 @@ describe('CollectionTableComponent', () => {
 
     fixture = TestBed.createComponent(CollectionTableComponent);
     component = fixture.componentInstance;
-    TestUtility.setInputs(fixture, {
+    setInputs(fixture, {
       ids: Mocks.AdjustedDataset.categoryIds,
       type: 'category',
     });
@@ -27,11 +28,11 @@ describe('CollectionTableComponent', () => {
   describe('route', () => {
     it('should get the correct parent route for the collection', () => {
       expect(component.route()).toContain('categories');
-      TestUtility.setInputs(fixture, { type: 'item' });
+      setInputs(fixture, { type: 'item' });
       expect(component.route()).toContain('items');
-      TestUtility.setInputs(fixture, { type: 'recipe' });
+      setInputs(fixture, { type: 'recipe' });
       expect(component.route()).toContain('recipes');
-      TestUtility.setInputs(fixture, { useRelativePath: true });
+      setInputs(fixture, { useRelativePath: true });
       expect(component.route()).toEqual('');
     });
   });
@@ -44,7 +45,7 @@ describe('CollectionTableComponent', () => {
     });
 
     it('should get an array of item collection items', () => {
-      TestUtility.setInputs(fixture, {
+      setInputs(fixture, {
         ids: Mocks.AdjustedDataset.machineIds,
         type: 'item',
       });
@@ -54,7 +55,7 @@ describe('CollectionTableComponent', () => {
     });
 
     it('should get an array of recipe collection items', () => {
-      TestUtility.setInputs(fixture, {
+      setInputs(fixture, {
         ids: Mocks.AdjustedDataset.technologyIds,
         type: 'recipe',
       });

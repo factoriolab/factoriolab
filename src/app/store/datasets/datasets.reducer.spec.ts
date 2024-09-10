@@ -1,4 +1,4 @@
-import { Mocks } from 'src/tests';
+import { Mocks } from '~/tests';
 
 import * as Actions from './datasets.actions';
 import { datasetsReducer, initialState } from './datasets.reducer';

@@ -1,6 +1,5 @@
-import { ItemId, Mocks } from 'src/tests';
-
 import { spread } from '~/helpers';
+import { ItemId, Mocks } from '~/tests';
 
 import { initialState } from './items.reducer';
 import * as Selectors from './items.selectors';

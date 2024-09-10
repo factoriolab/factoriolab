@@ -4,9 +4,9 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { TestModule, TestUtility } from 'src/tests';
 
 import { rational } from '~/models';
+import { setInputs, TestModule } from '~/tests';
 
 import { InputNumberComponent } from './input-number.component';
 
@@ -22,7 +22,7 @@ describe('InputNumberComponent', () => {
 
     fixture = TestBed.createComponent(InputNumberComponent);
     component = fixture.componentInstance;
-    TestUtility.setInputs(fixture, {
+    setInputs(fixture, {
       value: rational(10n),
       maximum: rational(100n),
     });
@@ -37,9 +37,9 @@ describe('InputNumberComponent', () => {
   describe('isMinimum', () => {
     it('should handle valid/invalid text', () => {
       expect(component.isMinimum()).toBeFalse();
-      TestUtility.setInputs(fixture, { value: 'err' });
+      setInputs(fixture, { value: 'err' });
       expect(component.isMinimum()).toBeFalse();
-      TestUtility.setInputs(fixture, { minimum: null });
+      setInputs(fixture, { minimum: null });
       expect(component.isMinimum()).toBeFalse();
     });
   });
@@ -47,9 +47,9 @@ describe('InputNumberComponent', () => {
   describe('isMaximum', () => {
     it('should handle valid/invalid text', () => {
       expect(component.isMaximum()).toBeFalse();
-      TestUtility.setInputs(fixture, { value: 'err' });
+      setInputs(fixture, { value: 'err' });
       expect(component.isMaximum()).toBeFalse();
-      TestUtility.setInputs(fixture, { maximum: null });
+      setInputs(fixture, { maximum: null });
       expect(component.isMaximum()).toBeFalse();
     });
   });
@@ -92,7 +92,7 @@ describe('InputNumberComponent', () => {
     });
 
     it('should round up a fractional value', () => {
-      TestUtility.setInputs(fixture, { value: rational(3n, 2n) });
+      setInputs(fixture, { value: rational(3n, 2n) });
       component.increase();
       expect(emit).toHaveBeenCalledWith(rational(2n));
     });
@@ -105,7 +105,7 @@ describe('InputNumberComponent', () => {
     });
 
     it('should round down a fractional value', () => {
-      TestUtility.setInputs(fixture, { value: rational(3n, 2n) });
+      setInputs(fixture, { value: rational(3n, 2n) });
       component.decrease();
       expect(emit).toHaveBeenCalledWith(rational.one);
     });

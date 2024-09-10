@@ -157,12 +157,13 @@ export class Rational {
     return this.toNumber().toString();
   }
 
+  private _decimalsRegex = new RegExp(/\d+(\.(\d+))?(e-(\d+))?/);
   toDecimals(): number {
     const num = this.toNumber();
     if (num % 1 !== 0) {
       // Pick apart complex numbers, looking for decimal and negative exponent
       // 3.33e-6 => ["3.33e-6", ".33", "33", "e-6", "6"]
-      const match = num.toString().match(/\d+(\.(\d+))?(e-(\d+))?/);
+      const match = this._decimalsRegex.exec(num.toString());
       let decimals = 0;
       // Regex pattern should match all known number toString formats
       // istanbul ignore else
@@ -277,13 +278,13 @@ export function fromString(x: string): Rational {
     // Full math support for equations
     const value = new formula.Parser(x.substring(1)).evaluate();
     result = rational(value);
-  } else if (x.indexOf('/') === -1) {
+  } else if (!x.includes('/')) {
     result = fromNumber(Number(x));
   } else {
     const f = x.split('/');
     if (f.length > 2) throw new Error('Too many /');
 
-    if (f[0].indexOf(' ') === -1) {
+    if (!f[0].includes(' ')) {
       const p = Number(f[0]);
       const q = Number(f[1]);
       result = rational(p, q);

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 
 import { rational, Step } from '~/models';
+import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { ExportService } from './export.service';
 

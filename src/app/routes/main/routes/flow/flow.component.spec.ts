@@ -5,7 +5,6 @@ import {
   tick,
 } from '@angular/core/testing';
 import { select } from 'd3';
-import { Mocks, TestModule, TestUtility } from 'src/tests';
 
 import {
   sankeyCenter,
@@ -16,6 +15,14 @@ import {
 import { spread } from '~/helpers';
 import { FlowDiagram, SankeyAlign } from '~/models';
 import { ThemeService } from '~/services';
+import {
+  altClickSelector,
+  assert,
+  dragAndDropSelector,
+  Mocks,
+  TestModule,
+  zoomSelector,
+} from '~/tests';
 
 import { FlowComponent, SVG_ID } from './flow.component';
 
@@ -90,8 +97,8 @@ describe('FlowComponent', () => {
 
     it('should handle drag and drop', () => {
       component.rebuildSankey(Mocks.Flow, Mocks.FlowSettings);
-      TestUtility.dragAndDropSelector(fixture, 'rect', 100, 200);
-      TestUtility.assert(component.svg != null);
+      dragAndDropSelector(fixture, 'rect', 100, 200);
+      assert(component.svg != null);
       expect(component.svg.select('rect').attr('transform')).toBeTruthy();
       expect(
         component.svg.select('#image-r\\|0').attr('transform'),
@@ -100,21 +107,21 @@ describe('FlowComponent', () => {
 
     it('should handle zoom', () => {
       component.rebuildSankey(Mocks.Flow, Mocks.FlowSettings);
-      TestUtility.zoomSelector(fixture, '#lab-flow-svg > svg', 500);
-      TestUtility.assert(component.svg != null);
+      zoomSelector(fixture, '#lab-flow-svg > svg', 500);
+      assert(component.svg != null);
       expect(component.svg.select('g').attr('transform')).toBeTruthy();
     });
 
     it('should set selectedId when a rect is clicked', () => {
       component.rebuildSankey(Mocks.Flow, Mocks.FlowSettings);
-      TestUtility.altClickSelector(fixture, 'rect');
+      altClickSelector(fixture, 'rect');
       expect(component.selectedId()).toEqual(Mocks.Flow.nodes[0].stepId);
     });
 
     it('should set selectedId emit when default is prevented', () => {
       component.rebuildSankey(Mocks.Flow, Mocks.FlowSettings);
       spyOn(component.selectedId, 'set');
-      TestUtility.altClickSelector(fixture, 'rect', 0, true);
+      altClickSelector(fixture, 'rect', 0, true);
       expect(component.selectedId.set).not.toHaveBeenCalled();
     });
   });

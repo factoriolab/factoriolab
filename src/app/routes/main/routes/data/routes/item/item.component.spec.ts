@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-import { DispatchTest, ItemId, TestModule, TestUtility } from 'src/tests';
 
 import { Items, LabState, Machines, Settings } from '~/store';
+import { DispatchTest, ItemId, setInputs, TestModule } from '~/tests';
 
 import { ItemComponent } from './item.component';
 
@@ -19,7 +19,7 @@ describe('ItemComponent', () => {
     fixture = TestBed.createComponent(ItemComponent);
     mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
-    TestUtility.setInputs(fixture, {
+    setInputs(fixture, {
       id: ItemId.AssemblingMachine2,
       collectionLabel: 'data.items',
     });
@@ -36,7 +36,7 @@ describe('ItemComponent', () => {
       expect(recipes.consumedBy.length).toEqual(1);
       expect(recipes.producible.length).toEqual(170);
       expect(recipes.unlocked.length).toEqual(0);
-      TestUtility.setInputs(fixture, { id: ItemId.SteelProcessing });
+      setInputs(fixture, { id: ItemId.SteelProcessing });
       recipes = component.recipes();
       expect(recipes.unlocked.length).toEqual(2);
     });

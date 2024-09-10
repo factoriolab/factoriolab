@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { EMPTY, ReplaySubject } from 'rxjs';
-import { Mocks, TestModule } from 'src/tests';
 
 import { DataService } from '~/services';
+import { Mocks, TestModule } from '~/tests';
 
 import * as App from '../app.actions';
 import * as Settings from '../settings';

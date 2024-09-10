@@ -179,6 +179,7 @@
               "src/styles.scss"
             ],
             "codeCoverage": true,
+            "codeCoverageExclude": ["src/app/tests/**/*"],
             "stylePreprocessorOptions": {
               "includePaths": ["src/styles"]
             },

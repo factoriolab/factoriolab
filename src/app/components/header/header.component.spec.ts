@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-import { Mocks, TestModule } from 'src/tests';
 
 import { Objectives } from '~/store';
+import { Mocks, TestModule } from '~/tests';
 
 import { HeaderComponent } from './header.component';
 

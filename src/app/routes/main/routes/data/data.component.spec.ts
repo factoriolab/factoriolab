@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { TestModule } from 'src/tests';
+
+import { TestModule } from '~/tests';
 
 import { DataComponent } from './data.component';
 

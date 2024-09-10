@@ -18,7 +18,7 @@ module.exports = tseslint.config(
     extends: [
       eslint.configs.recommended,
       ...tseslint.configs.strict,
-      ...tseslint.configs.stylistic,
+      ...tseslint.configs.stylisticTypeChecked,
       ...angular.configs.tsRecommended,
       ...ngrx.configs.all,
     ],
@@ -54,19 +54,31 @@ module.exports = tseslint.config(
         { argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' },
       ],
       '@typescript-eslint/prefer-enum-initializers': 'error',
+      // TODO: Convert utilities to services, then this can be enabled
       '@typescript-eslint/no-extraneous-class': 'off',
       '@typescript-eslint/no-dynamic-delete': 'off',
+      '@typescript-eslint/prefer-nullish-coalescing': [
+        'error',
+        { ignorePrimitives: true },
+      ],
       'simple-import-sort/imports': 'error',
       'simple-import-sort/exports': 'error',
       eqeqeq: ['error', 'smart'],
     },
   },
   {
-    files: ['**/*.spec.ts'],
+    files: ['**/*.spec.ts', 'src/app/tests/**/*.ts'],
     rules: {
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/dot-notation': [
+        'error',
+        {
+          allowPrivateClassPropertyAccess: true,
+          allowProtectedClassPropertyAccess: true,
+        },
+      ],
     },
   },
   {

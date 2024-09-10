@@ -1,6 +1,5 @@
-import { ItemId, Mocks, RecipeId } from 'src/tests';
-
 import { Objective, ObjectiveType, ObjectiveUnit, rational } from '~/models';
+import { ItemId, Mocks, RecipeId } from '~/tests';
 
 import { Recipes } from '../';
 import * as App from '../app.actions';

@@ -2,7 +2,6 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRoute, Params } from '@angular/router';
 import { MockStore } from '@ngrx/store/testing';
 import { of, Subject } from 'rxjs';
-import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 
 import { spread } from '~/helpers';
 import {
@@ -31,6 +30,7 @@ import {
   Recipes,
   Settings,
 } from '~/store';
+import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 import { BrowserUtility } from '~/utilities';
 
 import { RouterService } from './router.service';

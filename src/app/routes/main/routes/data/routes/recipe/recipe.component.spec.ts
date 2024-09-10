@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-import { DispatchTest, RecipeId, TestModule, TestUtility } from 'src/tests';
 
 import { LabState, Recipes, Settings } from '~/store';
+import { DispatchTest, RecipeId, setInputs, TestModule } from '~/tests';
 
 import { RecipeComponent } from './recipe.component';
 
@@ -19,7 +19,7 @@ describe('RecipeComponent', () => {
     fixture = TestBed.createComponent(RecipeComponent);
     mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
-    TestUtility.setInputs(fixture, {
+    setInputs(fixture, {
       id: RecipeId.NuclearFuelReprocessing,
       collectionLabel: 'data.recipes',
     });
@@ -33,7 +33,7 @@ describe('RecipeComponent', () => {
 
   describe('info', () => {
     it('should handle undefined recipe', () => {
-      TestUtility.setInputs(fixture, { id: 'not-found' });
+      setInputs(fixture, { id: 'not-found' });
       const info = component.info();
       expect(info.category).toBeUndefined();
       expect(info.ingredientIds).toEqual([]);

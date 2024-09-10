@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { ItemId } from 'src/tests';
+
+import { ItemId } from '~/tests';
 
 import { ModuleOptionsPipe } from './module-options.pipe';
 

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Mocks, TestModule } from 'src/tests';
 
 import { rational } from '~/models';
 import { Settings } from '~/store';
+import { Mocks, TestModule } from '~/tests';
 
 import { CostsComponent } from './costs.component';
 
@@ -28,7 +28,7 @@ describe('CostsComponent', () => {
     it('should determine whether the value matches the initial state', () => {
       component.reset();
       expect(component.modified).toBeFalse();
-      component.editValue['surplus'] = rational.one;
+      component.editValue.surplus = rational.one;
       expect(component.modified).toBeTrue();
     });
   });

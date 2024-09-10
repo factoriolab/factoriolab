@@ -1,4 +1,4 @@
-import { Mocks } from 'src/tests';
+import { Mocks } from '~/tests';
 
 import * as Selectors from './preferences.selectors';
 

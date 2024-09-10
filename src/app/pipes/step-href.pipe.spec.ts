@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { Mocks, RecipeId, TestModule } from 'src/tests';
 
 import { rational, Step } from '~/models';
+import { Mocks, RecipeId, TestModule } from '~/tests';
 
 import { StepHrefPipe } from './step-href.pipe';
 

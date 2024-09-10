@@ -328,9 +328,7 @@ export class SimplexUtility {
   static parseRecipeRecursively(recipe: Recipe, state: MatrixState): void {
     if (recipe.in) {
       const matches = this.itemMatches(recipe, state);
-      for (const itemId of matches.filter(
-        (m) => state.itemIds.indexOf(m) !== -1,
-      )) {
+      for (const itemId of matches.filter((m) => state.itemIds.includes(m))) {
         this.parseItemRecursively(itemId, state);
       }
     }
@@ -846,7 +844,7 @@ export class SimplexUtility {
       if (recipeAmt == null) return;
 
       const recipe = state.recipes[recipeId];
-      if (recipe == null || recipe.out[itemId] == null) return;
+      if (recipe?.out[itemId] == null) return;
 
       const amount = recipe.out[itemId]
         .mul(solution.recipes[recipe.id])

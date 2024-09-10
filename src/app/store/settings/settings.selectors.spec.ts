@@ -1,5 +1,3 @@
-import { ItemId, Mocks, RecipeId, TestUtility } from 'src/tests';
-
 import {
   EnergyType,
   Game,
@@ -13,6 +11,7 @@ import {
   rational,
   SettingsComplete,
 } from '~/models';
+import { assert, ItemId, Mocks, RecipeId } from '~/tests';
 
 import { initialState } from './settings.reducer';
 import * as Selectors from './settings.selectors';
@@ -103,9 +102,9 @@ describe('Settings Selectors', () => {
         gameInfo[Game.Factorio],
         initialColumnsState,
       );
-      expect(result['wagons'].show).toBeTrue();
-      expect(result['beacons'].show).toBeTrue();
-      expect(result['pollution'].show).toBeTrue();
+      expect(result.wagons.show).toBeTrue();
+      expect(result.beacons.show).toBeTrue();
+      expect(result.pollution.show).toBeTrue();
     });
 
     it('should override columns for Captain of Industry', () => {
@@ -113,10 +112,10 @@ describe('Settings Selectors', () => {
         gameInfo[Game.CaptainOfIndustry],
         initialColumnsState,
       );
-      expect(result['wagons'].show).toBeFalse();
-      expect(result['beacons'].show).toBeFalse();
-      expect(result['power'].show).toBeFalse();
-      expect(result['pollution'].show).toBeFalse();
+      expect(result.wagons.show).toBeFalse();
+      expect(result.beacons.show).toBeFalse();
+      expect(result.power.show).toBeFalse();
+      expect(result.pollution.show).toBeFalse();
     });
 
     it('should override columns for Dyson Sphere Program', () => {
@@ -124,9 +123,9 @@ describe('Settings Selectors', () => {
         gameInfo[Game.DysonSphereProgram],
         initialColumnsState,
       );
-      expect(result['wagons'].show).toBeFalse();
-      expect(result['beacons'].show).toBeFalse();
-      expect(result['pollution'].show).toBeFalse();
+      expect(result.wagons.show).toBeFalse();
+      expect(result.beacons.show).toBeFalse();
+      expect(result.pollution.show).toBeFalse();
     });
 
     it('should override columns for Satisfactory', () => {
@@ -134,9 +133,9 @@ describe('Settings Selectors', () => {
         gameInfo[Game.Satisfactory],
         initialColumnsState,
       );
-      expect(result['wagons'].show).toBeTrue();
-      expect(result['beacons'].show).toBeFalse();
-      expect(result['pollution'].show).toBeFalse();
+      expect(result.wagons.show).toBeTrue();
+      expect(result.beacons.show).toBeFalse();
+      expect(result.pollution.show).toBeFalse();
     });
   });
 
@@ -154,7 +153,7 @@ describe('Settings Selectors', () => {
         Preset.Minimum,
         Mocks.Mod,
       );
-      TestUtility.assert(result != null);
+      assert(result != null);
       expect(result.beltId).toEqual(Mocks.Mod.defaults!.minBelt!);
       expect(result.machineRankIds).toEqual(
         Mocks.Mod.defaults!.minMachineRank!,
@@ -174,7 +173,7 @@ describe('Settings Selectors', () => {
         Preset.Beacon8,
         Mocks.Mod,
       );
-      TestUtility.assert(result != null);
+      assert(result != null);
       expect(result.beacons).toEqual([
         {
           count: rational(8n),
@@ -189,7 +188,7 @@ describe('Settings Selectors', () => {
         Preset.Beacon12,
         Mocks.Mod,
       );
-      TestUtility.assert(result != null);
+      assert(result != null);
       expect(result.beacons).toEqual([
         {
           count: rational(12n),
@@ -212,7 +211,7 @@ describe('Settings Selectors', () => {
         ...Mocks.Mod,
         ...{ game: Game.DysonSphereProgram },
       });
-      TestUtility.assert(result != null);
+      assert(result != null);
       expect(result.moduleRankIds).toEqual([]);
     });
 
@@ -221,7 +220,7 @@ describe('Settings Selectors', () => {
         ...Mocks.Mod,
         ...{ game: Game.DysonSphereProgram },
       });
-      TestUtility.assert(result != null);
+      assert(result != null);
       expect(result.moduleRankIds).toEqual(Mocks.Mod.defaults!.moduleRank!);
     });
 
@@ -230,7 +229,7 @@ describe('Settings Selectors', () => {
         ...Mocks.Mod,
         ...{ game: Game.Satisfactory },
       });
-      TestUtility.assert(result != null);
+      assert(result != null);
       expect(result.moduleRankIds).toEqual(Mocks.Defaults.moduleRankIds);
     });
 
@@ -239,7 +238,7 @@ describe('Settings Selectors', () => {
         ...Mocks.Mod,
         ...{ game: Game.FinalFactory },
       });
-      TestUtility.assert(result != null);
+      assert(result != null);
       expect(result.moduleRankIds).toEqual(Mocks.Defaults.moduleRankIds);
     });
   });

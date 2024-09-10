@@ -6,17 +6,17 @@ import {
 } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 import { Confirmation } from 'primeng/api';
+
+import { Game, rational } from '~/models';
+import { App, LabState, Machines, Preferences, Settings } from '~/store';
 import {
+  assert,
   DispatchTest,
   ItemId,
   Mocks,
   RecipeId,
   TestModule,
-  TestUtility,
-} from 'src/tests';
-
-import { Game, rational } from '~/models';
-import { App, LabState, Machines, Preferences, Settings } from '~/store';
+} from '~/tests';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 
 import { SettingsComponent } from './settings.component';
@@ -66,7 +66,7 @@ describe('SettingsComponent', () => {
         (c: Confirmation) => (confirm = c),
       );
       component.clickResetSettings();
-      TestUtility.assert(confirm?.accept != null);
+      assert(confirm?.accept != null);
       spyOn(localStorage, 'clear');
       spyOn(component, 'resetSettings');
       confirm.accept();

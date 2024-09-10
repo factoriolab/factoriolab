@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConfirmationService } from 'primeng/api';
-import { TestModule } from 'src/tests';
+
+import { TestModule } from '~/tests';
 
 import { ContentComponent } from './content.component';
 
@@ -25,15 +26,15 @@ describe('ContentComponent', () => {
 
   describe('ngOnInit', () => {
     it('should watch for and open toast messages', () => {
-      spyOn(component['messageSvc'], 'add');
+      spyOn(component.messageSvc, 'add');
       component.contentSvc.showToast$.next({});
-      expect(component['messageSvc'].add).toHaveBeenCalled();
+      expect(component.messageSvc.add).toHaveBeenCalled();
     });
 
     it('should watch for and open confirmation dialogs', () => {
-      spyOn(component['confirmationSvc'], 'confirm');
+      spyOn(component.confirmationSvc, 'confirm');
       component.contentSvc.showConfirm$.next({});
-      expect(component['confirmationSvc'].confirm).toHaveBeenCalled();
+      expect(component.confirmationSvc.confirm).toHaveBeenCalled();
     });
   });
 });

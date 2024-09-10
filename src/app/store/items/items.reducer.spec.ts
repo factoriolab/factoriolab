@@ -1,6 +1,5 @@
-import { Mocks } from 'src/tests';
-
 import { ItemSettings } from '~/models';
+import { Mocks } from '~/tests';
 import { StoreUtility } from '~/utilities';
 
 import * as App from '../app.actions';

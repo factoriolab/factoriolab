@@ -1,6 +1,11 @@
 import { SelectItem } from 'primeng/api';
 
-import { areArraysEqual, coalesce, fnPropsNotNullish } from '~/helpers';
+import {
+  areArraysEqual,
+  coalesce,
+  fnPropsNotNullish,
+  notNullish,
+} from '~/helpers';
 import {
   AdjustedDataset,
   AdjustedRecipe,
@@ -8,7 +13,6 @@ import {
   areModuleSettingsEqual,
   Beacon,
   BeaconSettings,
-  Belt,
   cloneRecipe,
   CostSettings,
   Dataset,
@@ -168,10 +172,10 @@ export class RecipeUtility {
         ];
         const belts = ids
           .map((i) => itemsState[i].beltId)
-          .filter((b): b is string => b != null)
+          .filter(notNullish)
           .map((beltId) => data.beltEntities[beltId]);
         let minSpeed = rational.zero;
-        for (const b of belts.filter((b): b is Belt => b != null)) {
+        for (const b of belts.filter(notNullish)) {
           if (minSpeed.lt(b.speed)) minSpeed = b.speed;
         }
         recipe.time = recipe.time.div(minSpeed);
@@ -338,7 +342,7 @@ export class RecipeUtility {
       // Power
       recipe.drain = machine.drain;
       let usage =
-        (recipe.usage ? recipe.usage : machine.usage) || rational.zero;
+        (recipe.usage ? recipe.usage : machine.usage) ?? rational.zero;
       if (oc) {
         if (machine.usage?.gt(rational.zero)) {
           // Polynomial effect only on production buildings, not power generation
@@ -409,7 +413,7 @@ export class RecipeUtility {
 
         // If proliferator spray is applied to proliferator, add its usage to inputs
         const pModule = data.moduleEntities[proliferatorSprayId];
-        if (pModule && pModule.sprays) {
+        if (pModule?.sprays) {
           const sprays = pModule.sprays
             .mul(
               rational.one.add(coalesce(pModule.productivity, rational.zero)),
@@ -423,9 +427,7 @@ export class RecipeUtility {
           }
           const pId = pModule.proliferator;
           if (pId) {
-            if (!proliferatorUses[pId]) {
-              proliferatorUses[pId] = rational.zero;
-            }
+            if (!proliferatorUses[pId]) proliferatorUses[pId] = rational.zero;
             proliferatorUses[pId] = proliferatorUses[pId].add(usage);
           }
         }
@@ -433,11 +435,8 @@ export class RecipeUtility {
         // Add proliferator consumption to recipe inputs
         // Assume recipe already has listed inputs, otherwise it could not be proliferated
         for (const pId of Object.keys(proliferatorUses)) {
-          if (!recipe.in[pId]) {
-            recipe.in[pId] = proliferatorUses[pId];
-          } else {
-            recipe.in[pId] = recipe.in[pId].add(proliferatorUses[pId]);
-          }
+          if (!recipe.in[pId]) recipe.in[pId] = proliferatorUses[pId];
+          else recipe.in[pId] = recipe.in[pId].add(proliferatorUses[pId]);
         }
       }
     }

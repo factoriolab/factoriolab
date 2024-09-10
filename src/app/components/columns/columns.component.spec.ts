@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Mocks, TestModule } from 'src/tests';
 
 import { Preferences } from '~/store';
+import { Mocks, TestModule } from '~/tests';
 
 import { ColumnsComponent } from './columns.component';
 

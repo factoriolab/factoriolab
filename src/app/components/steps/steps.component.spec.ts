@@ -6,14 +6,6 @@ import {
 } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 import { MenuItem, SortEvent } from 'primeng/api';
-import {
-  DispatchTest,
-  ItemId,
-  Mocks,
-  RecipeId,
-  TestModule,
-  TestUtility,
-} from 'src/tests';
 
 import { Entities, rational, Step, StepDetail, StepDetailTab } from '~/models';
 import { StepIdPipe } from '~/pipes';
@@ -25,6 +17,15 @@ import {
   Recipes,
   Settings,
 } from '~/store';
+import {
+  assert,
+  DispatchTest,
+  ItemId,
+  Mocks,
+  RecipeId,
+  setInputs,
+  TestModule,
+} from '~/tests';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
 
 import { StepsComponent } from './steps.component';
@@ -68,7 +69,7 @@ describe('StepsComponent', () => {
 
   describe('steps', () => {
     it('should handle focused mode', () => {
-      TestUtility.setInputs(fixture, { focus: true });
+      setInputs(fixture, { focus: true });
       expect(component.steps()).toEqual([]);
     });
   });
@@ -76,7 +77,7 @@ describe('StepsComponent', () => {
   describe('toggleEffect', () => {
     it('should toggle and expand a row in focus mode', () => {
       spyOn(component, 'expandRow');
-      TestUtility.setInputs(fixture, {
+      setInputs(fixture, {
         focus: true,
         selectedId: Mocks.Step1.id,
       });
@@ -89,7 +90,7 @@ describe('StepsComponent', () => {
       const domEl = { scrollIntoView: (): void => {} };
       spyOn(domEl, 'scrollIntoView');
       spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
-      TestUtility.assert(component.stepsTable != null);
+      assert(component.stepsTable != null);
       spyOn(component.stepsTable(), 'toggleRow');
       component.fragmentId = 'step_' + Mocks.Step1.id;
       component.ngAfterViewInit();
@@ -102,7 +103,7 @@ describe('StepsComponent', () => {
       const domEl = { click: (): void => {} };
       spyOn(domEl, 'click');
       spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
-      TestUtility.assert(component.stepsTable != null);
+      assert(component.stepsTable != null);
       spyOn(component.stepsTable(), 'toggleRow');
       component.fragmentId = 'step_' + Mocks.Step1.id + '_item';
       component.ngAfterViewInit();
@@ -199,9 +200,9 @@ describe('StepsComponent', () => {
 
   describe('expandRow', () => {
     it('should return if the row is collapsing', () => {
-      spyOn(component as any, '_updateActiveItem');
+      spyOn(component as any, 'updateActiveItem');
       component.expandRow(Mocks.Step1, true);
-      expect(component['_updateActiveItem']).not.toHaveBeenCalled();
+      expect(component.updateActiveItem).not.toHaveBeenCalled();
     });
 
     it('should pick the last open tab to show on expand', () => {

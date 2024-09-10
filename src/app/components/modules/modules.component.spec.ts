@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ItemId, Mocks, TestModule, TestUtility } from 'src/tests';
 
 import { ModuleSettings, rational } from '~/models';
+import { ItemId, Mocks, setInputs, TestModule } from '~/tests';
 
 import { ModulesComponent } from './modules.component';
 
@@ -16,7 +16,7 @@ describe('ModulesComponent', () => {
 
     fixture = TestBed.createComponent(ModulesComponent);
     component = fixture.componentInstance;
-    TestUtility.setInputs(fixture, {
+    setInputs(fixture, {
       entity: Mocks.Dataset.machineEntities[ItemId.AssemblingMachine3],
       modules: Mocks.ModuleSettings,
     });

@@ -1,6 +1,5 @@
-import { ItemId, Mocks } from 'src/tests';
-
 import { rational } from '~/models';
+import { ItemId, Mocks } from '~/tests';
 
 import * as App from '../app.actions';
 import * as Actions from './machines.actions';

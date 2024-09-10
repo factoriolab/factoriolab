@@ -7,5 +7,5 @@ export const environment: Environment = {
   testing: false,
   debug: false,
   baseHref: '/',
-  version: `${pkg.version}`,
+  version: pkg.version,
 };

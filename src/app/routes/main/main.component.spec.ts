@@ -4,9 +4,9 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { TestModule } from 'src/tests';
 
 import { App } from '~/store';
+import { TestModule } from '~/tests';
 
 import { MainComponent } from './main.component';
 

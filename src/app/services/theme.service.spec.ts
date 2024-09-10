@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 
 import { Theme } from '~/models';
 import { Preferences, Settings } from '~/store';
+import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 import { BrowserUtility } from '~/utilities';
 
 import { ThemeService } from './theme.service';
@@ -39,14 +39,10 @@ describe('ThemeService', () => {
   it('should set the theme css href', () => {
     const themeLink = { href: '' };
     const tempLink = { href: '', onload: (): void => {} };
-    spyOn(service['head'], 'removeChild');
-    spyOn(service['head'], 'appendChild');
-    spyOn(service['document'], 'getElementById').and.returnValue(
-      themeLink as any,
-    );
-    spyOn(service['document'], 'createElement').and.returnValue(
-      tempLink as any,
-    );
+    spyOn(service.head, 'removeChild');
+    spyOn(service.head, 'appendChild');
+    spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
+    spyOn(service.document, 'createElement').and.returnValue(tempLink as any);
     mockStore.overrideSelector(Preferences.selectTheme, Theme.Light);
     mockStore.refreshState();
     expect(tempLink.href).toEqual('theme-light.css');
@@ -64,9 +60,7 @@ describe('ThemeService', () => {
   it('should update theme values on initial pass', () => {
     spyOn(service, 'updateThemeValues');
     const themeLink = { href: 'theme-black.css' };
-    spyOn(service['document'], 'getElementById').and.returnValue(
-      themeLink as any,
-    );
+    spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
     spyOn(service, 'themePath').and.returnValue('theme-black.css');
     mockStore.overrideSelector(Preferences.selectTheme, Theme.Black);
     mockStore.refreshState();

@@ -1,8 +1,6 @@
 import { Action, ActionCreator } from '@ngrx/store';
 import { MockStore } from '@ngrx/store/testing';
 
-/* Don't care about coverage on test tools */
-/* istanbul ignore next */
 export class DispatchTest<T> {
   spy: jasmine.Spy;
   type: string | undefined;

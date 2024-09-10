@@ -1,6 +1,5 @@
-import { ItemId, Mocks } from 'src/tests';
-
 import { rational, RecipeSettings } from '~/models';
+import { ItemId, Mocks } from '~/tests';
 import { StoreUtility } from '~/utilities';
 
 import * as App from '../app.actions';

@@ -31,7 +31,7 @@ export const Mod = { ...ModInfo, ...Data } as M.Mod;
 export const Defaults = Settings.selectDefaults.projector(
   M.Preset.Beacon8,
   Mod,
-) as M.Defaults;
+)!;
 export function getDataset(): M.Dataset {
   Settings.selectDataset.release();
   return Settings.selectDataset.projector(

@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { Confirmation } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
-import { TestModule } from 'src/tests';
+
+import { TestModule } from '~/tests';
 
 import { ContentService } from './content.service';
 

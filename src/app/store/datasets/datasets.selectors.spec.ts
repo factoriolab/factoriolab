@@ -1,4 +1,4 @@
-import { Mocks } from 'src/tests';
+import { Mocks } from '~/tests';
 
 import { initialState } from './datasets.reducer';
 import * as Selectors from './datasets.selectors';

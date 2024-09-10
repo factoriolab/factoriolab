@@ -1,7 +1,6 @@
-import { ItemId, Mocks } from 'src/tests';
-
 import { spread } from '~/helpers';
 import { rational } from '~/models';
+import { ItemId, Mocks } from '~/tests';
 import { RecipeUtility } from '~/utilities';
 
 import { initialState } from './recipes.reducer';

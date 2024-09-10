@@ -1,6 +1,5 @@
-import { ItemId, Mocks } from 'src/tests';
-
 import { Entities } from '~/models';
+import { ItemId, Mocks } from '~/tests';
 
 import { StoreUtility } from './store.utility';
 

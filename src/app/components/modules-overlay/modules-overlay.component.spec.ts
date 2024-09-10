@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ItemId, Mocks, RecipeId, TestModule } from 'src/tests';
 
 import { rational } from '~/models';
+import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { ModulesOverlayComponent } from './modules-overlay.component';
 

@@ -1,5 +1,3 @@
-import { ItemId, Mocks, RecipeId } from 'src/tests';
-
 import {
   DisplayRate,
   displayRateInfo,
@@ -11,6 +9,7 @@ import {
   RecipeObjective,
   Step,
 } from '~/models';
+import { ItemId, Mocks, RecipeId } from '~/tests';
 
 import { RateUtility } from './rate.utility';
 

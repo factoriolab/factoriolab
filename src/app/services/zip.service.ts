@@ -27,7 +27,7 @@ export class ZipService {
   }
 
   zipString(value: string | undefined): string {
-    return value == null ? '' : value;
+    return value ?? '';
   }
 
   zipRational(value: Rational | undefined): string {

@@ -4,7 +4,7 @@
 // import { MockStore, provideMockStore } from '@ngrx/store/testing';
 // import { ReplaySubject } from 'rxjs';
 
-// import { initialState, ItemId, Mocks, RecipeId } from 'src/tests';
+// import { initialState, ItemId, Mocks, RecipeId } from '~/tests';
 // import * as Settings from '.';
 // import { LabState } from '..';
 // import * as Recipes from '../recipes';

@@ -1,7 +1,6 @@
-import { Mocks } from 'src/tests';
-
 import { spread } from '~/helpers';
 import { FlowDiagram, Game, Language, PowerUnit, Theme } from '~/models';
+import { Mocks } from '~/tests';
 
 import * as App from '../app.actions';
 import * as Actions from './preferences.actions';

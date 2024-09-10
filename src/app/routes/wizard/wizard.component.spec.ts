@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
-import { DispatchTest, ItemId, RecipeId, TestModule } from 'src/tests';
 
 import { ObjectiveType, ObjectiveUnit, rational } from '~/models';
 import { LabState, Objectives, Settings } from '~/store';
+import { DispatchTest, ItemId, RecipeId, TestModule } from '~/tests';
 
 import { WizardComponent } from './wizard.component';
 

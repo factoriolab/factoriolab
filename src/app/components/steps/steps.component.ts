@@ -266,7 +266,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
     curr: SortEvent | null,
     steps: Step[],
   ): void {
-    if (curr == null || curr.order == null || curr.field == null) return;
+    if (curr?.order == null || curr.field == null) return;
     const order = curr.order;
     const field = curr.field as
       | 'items'
@@ -305,15 +305,15 @@ export class StepsComponent implements OnInit, AfterViewInit {
   }
 
   setActiveItems(steps: Step[], stepDetails: Entities<StepDetail>): void {
-    steps.forEach((step) => this._updateActiveItem(step, stepDetails, false));
+    steps.forEach((step) => this.updateActiveItem(step, stepDetails, false));
   }
 
   expandRow(step: Step, expanded: boolean): void {
     if (expanded) return;
-    this._updateActiveItem(step, this.stepDetails(), true);
+    this.updateActiveItem(step, this.stepDetails(), true);
   }
 
-  private _updateActiveItem(
+  updateActiveItem(
     step: Step,
     stepDetails: Entities<StepDetail>,
     force: boolean,

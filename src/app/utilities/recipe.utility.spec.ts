@@ -1,5 +1,3 @@
-import { ItemId, Mocks, RecipeId } from 'src/tests';
-
 import { spread } from '~/helpers';
 import {
   AdjustedRecipe,
@@ -12,6 +10,7 @@ import {
   rational,
   Recipe,
 } from '~/models';
+import { ItemId, Mocks, RecipeId } from '~/tests';
 
 import { RecipeUtility } from './recipe.utility';
 
