@@ -26,7 +26,9 @@ describe('PickerComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => { mockStore.resetSelectors(); });
+  afterEach(() => {
+    mockStore.resetSelectors();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

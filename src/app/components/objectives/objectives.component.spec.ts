@@ -223,7 +223,9 @@ describe('ObjectivesComponent', () => {
         selectId: new Subject<string>(),
         clickOpen: (): void => {},
       };
-      picker.clickOpen = (): void => { picker.selectId.next(id); };
+      picker.clickOpen = (): void => {
+        picker.selectId.next(id);
+      };
       return picker;
     };
 

@@ -87,7 +87,9 @@ export class InputNumberComponent implements OnInit, OnChanges {
     debounce((e) => (e.type === 'input' ? timer(300) : of({}))),
     map((e) => e.value),
     filterNullish(),
-    tap((v) => { this.setValue.emit(rational(v)); }),
+    tap((v) => {
+      this.setValue.emit(rational(v));
+    }),
   );
 
   ngOnInit(): void {
