@@ -10,7 +10,7 @@ export interface MachineSettings {
   fuelOptions?: SelectItem<string>[];
   modules?: ModuleSettings[];
   /** Calculated, not configurable */
-  moduleOptions?: SelectItem[];
+  moduleOptions?: SelectItem<string>[];
   beacons?: BeaconSettings[];
   overclock?: Rational;
 }

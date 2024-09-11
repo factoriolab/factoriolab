@@ -81,7 +81,7 @@ export function find<
   id: string | number,
 ): SankeyNode<N, L> {
   const node = nodeById.get(id);
-  if (!node) throw new Error('missing: ' + id);
+  if (!node) throw new Error('missing: ' + id.toString());
   return node;
 }
 

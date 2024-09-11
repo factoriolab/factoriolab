@@ -353,9 +353,11 @@ export class RateUtility {
         if (step.parents) {
           for (const stepId of Object.keys(step.parents)) {
             if (stepId === '') continue;
+            const recipeId = stepMap[stepId].recipeId;
+            if (recipeId == null) continue;
             links.push({
               source: id,
-              target: `r|${stepMap[stepId].recipeId}`,
+              target: `r|${recipeId}`,
               value: 1,
             });
           }
@@ -394,7 +396,7 @@ export class RateUtility {
 
   static calculateHierarchy(steps: Step[]): Step[] {
     // Determine parents
-    const parents: Entities<string> = {};
+    const parents: Entities = {};
     for (const step of steps) {
       if (
         step.parents == null ||

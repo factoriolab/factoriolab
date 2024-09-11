@@ -1,3 +1,4 @@
+export * from './as-string';
 export * from './coalesce';
 export * from './compare';
 export * from './contains';

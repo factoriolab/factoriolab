@@ -19,6 +19,7 @@ import {
   BeaconSettings,
   ItemId,
   ModuleSettings,
+  Optional,
   Rational,
   rational,
 } from '~/models';
@@ -82,7 +83,7 @@ export class BeaconsOverlayComponent extends OverlayComponent {
   setId(i: number, event: DropdownChangeEvent): void {
     event.originalEvent.stopPropagation();
     this.beacons.update((values) => {
-      values[i].id = event.value;
+      values[i].id = event.value as Optional<string>;
       return values;
     });
   }

@@ -226,7 +226,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
     // Now that component is loaded, try navigating to the fragment
     try {
       if (this.fragmentId) {
-        const [_, stepId, tabId] = this.fragmentId.split('_');
+        const fragment = this.fragmentId;
+        const [_, stepId, tabId] = fragment.split('_');
         combineLatest({
           steps: this.store.select(Objectives.selectSteps),
           stepDetails: this.store.select(Objectives.selectStepDetails),
@@ -241,13 +242,13 @@ export class StepsComponent implements OnInit, AfterViewInit {
                   this.stepsTable().toggleRow(step);
                   setTimeout(() => {
                     if (tabId) {
-                      const tab = this.document.querySelector(
-                        '#' + this.fragmentId,
-                      ) as HTMLElement | null;
+                      const tab = this.document.querySelector<HTMLElement>(
+                        `#${fragment}`,
+                      );
                       if (tab) tab.click();
                     } else {
                       this.document
-                        .querySelector('#' + this.fragmentId)
+                        .querySelector(`#${fragment}`)
                         ?.scrollIntoView();
                     }
                   }, 10);
@@ -294,7 +295,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
       this.stepsTable().sortOrder = 0;
       this.stepsTable().sortField = '';
       this.stepsTable().reset();
-      return this.sortSteps$.next(null);
+      this.sortSteps$.next(null);
+      return;
     }
 
     // Sort by numeric field
@@ -305,7 +307,9 @@ export class StepsComponent implements OnInit, AfterViewInit {
   }
 
   setActiveItems(steps: Step[], stepDetails: Entities<StepDetail>): void {
-    steps.forEach((step) => this.updateActiveItem(step, stepDetails, false));
+    steps.forEach((step) => {
+      this.updateActiveItem(step, stepDetails, false);
+    });
   }
 
   expandRow(step: Step, expanded: boolean): void {

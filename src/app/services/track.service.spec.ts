@@ -22,22 +22,6 @@ describe('TrackService', () => {
     });
   });
 
-  describe('trackByKey', () => {
-    it('should return an object key', () => {
-      expect(service.trackByKey(0, { key: 'key', value: 'value' })).toEqual(
-        'key',
-      );
-    });
-  });
-
-  describe('trackByIndex', () => {
-    it('should return a string by index only', () => {
-      expect(service.trackByIndex(0, { key: 'key', value: 'value' })).toEqual(
-        '0',
-      );
-    });
-  });
-
   describe('sortByValue', () => {
     it('should return a diff', () => {
       expect(

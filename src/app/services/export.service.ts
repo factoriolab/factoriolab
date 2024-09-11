@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { saveAs } from 'file-saver';
 
-import { fnPropsNotNullish, notNullish } from '~/helpers';
+import { coalesce, fnPropsNotNullish, notNullish } from '~/helpers';
 import { FlowData, rational, Step } from '~/models';
 import { Items, Recipes, Settings } from '~/store';
 import { BrowserUtility, RecipeUtility } from '~/utilities';
@@ -121,7 +121,7 @@ export class ExportService {
       const inputs = Object.keys(recipe.in)
         .map((i) => {
           const inStep = steps.find((s) => s.itemId === i);
-          return [i, inStep?.parents?.[step.id]?.toString()];
+          return [i, inStep?.parents?.[step.id]?.toString() ?? ''];
         })
         .filter((v) => v[1])
         .map((v) => `${v[0]}:${v[1]}`)
@@ -145,15 +145,21 @@ export class ExportService {
         }
 
         if (columns.beacons.show && allowsModules) {
-          exp.Beacons = `"${recipeSettings.beacons
-            ?.map(
-              (b) =>
-                `${b.count?.toString()} ${b.id} (${b.modules
-                  ?.filter(fnPropsNotNullish('count', 'id'))
-                  .map((m) => `${m.count.toString()} ${m.id}`)
-                  .join(',')})`,
-            )
-            .join(',')}"`;
+          exp.Beacons = `"${coalesce(
+            recipeSettings.beacons
+              ?.map(
+                (b) =>
+                  `${coalesce(b.count?.toString(), '')} ${coalesce(b.id, '')} (${coalesce(
+                    b.modules
+                      ?.filter(fnPropsNotNullish('count', 'id'))
+                      .map((m) => `${m.count.toString()} ${m.id}`)
+                      .join(','),
+                    '',
+                  )})`,
+              )
+              .join(','),
+            '',
+          )}"`;
         }
 
         if (columns.power.show && step.power != null)
@@ -178,6 +184,7 @@ export class ExportService {
       const parentsStr = Object.keys(parents)
         .map((p) => steps.find((s) => s.id === p))
         .filter(notNullish)
+        .filter(fnPropsNotNullish('recipeId'))
         .map((s) => `${s.recipeId}:${parents[s.id].toString()}`)
         .join(',');
       exp.Targets = `"${parentsStr}"`;

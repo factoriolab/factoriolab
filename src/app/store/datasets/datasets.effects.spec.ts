@@ -14,7 +14,7 @@ describe('DatasetsEffects', () => {
   let actions: ReplaySubject<any>;
   let dataSvc: DataService;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestModule],
       providers: [provideMockActions(() => actions), DatasetsEffects],

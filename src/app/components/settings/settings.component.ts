@@ -157,22 +157,30 @@ export class SettingsComponent implements OnInit {
     {
       label: 'settings.createSavedState',
       icon: 'fa-solid fa-plus',
-      command: (): void => this.openCreateState(),
+      command: (): void => {
+        this.openCreateState();
+      },
     },
     {
       label: 'settings.saveSavedState',
       icon: 'fa-solid fa-floppy-disk',
-      command: (): void => this.overwriteState(),
+      command: (): void => {
+        this.overwriteState();
+      },
     },
     {
       label: 'settings.editSavedState',
       icon: 'fa-solid fa-pencil',
-      command: (): void => this.openEditState(),
+      command: (): void => {
+        this.openEditState();
+      },
     },
     {
       label: 'settings.deleteSavedState',
       icon: 'fa-solid fa-trash',
-      command: (): void => this.clickDeleteState(),
+      command: (): void => {
+        this.clickDeleteState();
+      },
     },
   ];
   versionsVisible = false;
@@ -227,18 +235,20 @@ export class SettingsComponent implements OnInit {
     const tree = this.router.parseUrl(this.router.url);
     const params = new URLSearchParams(search);
     params.forEach((value, key) => (tree.queryParams[key] = value));
-    this.router.navigateByUrl(tree);
+    void this.router.navigateByUrl(tree);
   }
 
   copySearchToClipboard(search: string): void {
-    navigator.clipboard.writeText(search);
+    void navigator.clipboard.writeText(search);
   }
 
-  setState(id: string, states: Entities<string>): void {
+  setState(id: string, states: Entities): void {
     const query = states[id];
     if (!query) return;
     this.state = id;
-    this.router.navigate([], { queryParams: this.routerSvc.toParams(query) });
+    void this.router.navigate([], {
+      queryParams: this.routerSvc.toParams(query),
+    });
   }
 
   clickSaveState(game: Game): void {
@@ -288,7 +298,7 @@ export class SettingsComponent implements OnInit {
   }
 
   setMod(modId: string): void {
-    this.router.navigate([modId, 'list']);
+    void this.router.navigate([modId, 'list']);
   }
 
   changeExcludedRecipes(value: Set<string>): void {

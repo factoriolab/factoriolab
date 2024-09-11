@@ -8,6 +8,6 @@ import { environment } from './environments/environment';
 
 console.info(`${APP} ${environment.version}`);
 
-bootstrapApplication(AppComponent, appConfig).catch((err) =>
-  console.error(err),
-);
+bootstrapApplication(AppComponent, appConfig).catch((err: unknown) => {
+  console.error(err);
+});

@@ -11,6 +11,7 @@ import {
   switchMap,
 } from 'rxjs';
 
+import { coalesce } from '~/helpers';
 import { Entities } from '~/models';
 
 export const DEFAULT_LANGUAGE = new InjectionToken<string>('DEFAULT_LANGUAGE');
@@ -66,7 +67,7 @@ export class TranslateService {
     const keys = key.split('.');
     key = '';
     do {
-      key += keys.shift();
+      key += coalesce(keys.shift(), '');
       if (
         typeof target === 'object' &&
         target[key] != null &&

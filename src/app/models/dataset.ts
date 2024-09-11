@@ -20,11 +20,12 @@ import { Game } from './enum';
 
 export interface Dataset {
   game: Game;
-  version: Entities<string>;
+  version: Entities;
   categoryIds: string[];
   categoryEntities: Entities<Category>;
   categoryItemRows: Entities<string[][]>;
   categoryRecipeRows: Entities<string[][]>;
+  iconFile: string;
   iconIds: string[];
   iconEntities: Entities<Icon>;
   itemIds: string[];

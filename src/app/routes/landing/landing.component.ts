@@ -73,7 +73,7 @@ export class LandingComponent {
       unit: ObjectiveUnit.Items,
       type: ObjectiveType.Output,
     });
-    this.router.navigate(['list'], {
+    void this.router.navigate(['list'], {
       relativeTo: this.route,
       queryParamsHandling: 'preserve',
     });
@@ -87,7 +87,7 @@ export class LandingComponent {
       unit: ObjectiveUnit.Machines,
       type: ObjectiveType.Output,
     });
-    this.router.navigate(['list'], {
+    void this.router.navigate(['list'], {
       relativeTo: this.route,
       queryParamsHandling: 'preserve',
     });
@@ -95,7 +95,7 @@ export class LandingComponent {
 
   setState(query: string): void {
     if (!query) return;
-    this.router.navigate(['list'], {
+    void this.router.navigate(['list'], {
       queryParams: this.routerSvc.toParams(query),
       relativeTo: this.route,
     });

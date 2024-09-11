@@ -22,7 +22,7 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TooltipModule } from 'primeng/tooltip';
 import { first } from 'rxjs';
 
-import { Game, Optional } from '~/models';
+import { Game, Item, Optional } from '~/models';
 import { IconSmClassPipe, TranslatePipe } from '~/pipes';
 import { ContentService, TranslateService } from '~/services';
 import { Preferences, Recipes } from '~/store';
@@ -82,9 +82,13 @@ export class TechPickerComponent extends DialogComponent {
     let technologyIds = data.technologyIds;
     if (filter) {
       const technologies = technologyIds.map((i) => data.itemEntities[i]);
-      technologyIds = this.filterSvc
-        .filter(technologies, ['name'], filter, 'contains')
-        .map((t) => t.id);
+      const filtered = this.filterSvc.filter(
+        technologies,
+        ['name'],
+        filter,
+        'contains',
+      ) as Item[];
+      technologyIds = filtered.map((t) => t.id);
 
       selection = selection.filter((i) => technologyIds.includes(i));
     }
@@ -131,7 +135,9 @@ export class TechPickerComponent extends DialogComponent {
   openImport(input: HTMLTextAreaElement): void {
     this.importVisible = true;
     this.importValue = '';
-    setTimeout(() => input.focus());
+    setTimeout(() => {
+      input.focus();
+    });
   }
 
   copyScriptToClipboard(): void {
@@ -143,7 +149,7 @@ for _, tech in pairs(game.player.force.technologies) do
 end
 game.write_file("techs.txt", table.concat(list, ","))
 `;
-    window.navigator.clipboard.writeText(script);
+    void window.navigator.clipboard.writeText(script);
     this.translateSvc
       .get('techPicker.exportScriptCopied')
       .pipe(first())

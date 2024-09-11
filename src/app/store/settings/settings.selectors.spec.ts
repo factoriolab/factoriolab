@@ -154,7 +154,7 @@ describe('Settings Selectors', () => {
         Mocks.Mod,
       );
       assert(result != null);
-      expect(result.beltId).toEqual(Mocks.Mod.defaults!.minBelt!);
+      expect(result.beltId).toEqual(Mocks.Mod.defaults?.minBelt);
       expect(result.machineRankIds).toEqual(
         Mocks.Mod.defaults!.minMachineRank!,
       );

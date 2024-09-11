@@ -232,8 +232,6 @@ export class ZipService {
      * to pass in a reference to a `zip` method on this service.
      */
     return (value) => {
-      // Bind the method reference to this service before use.
-      value = value.bind(this);
       /**
        * Accepts a query parameter name, locator function to get the state
        * value, and any additional arguments to the value function.

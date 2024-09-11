@@ -211,13 +211,13 @@ export class ObjectivesComponent {
       if (objective.unit !== ObjectiveUnit.Machines) {
         const recipeIds = data.itemRecipeIds[objective.targetId];
         const updateFn = (recipeId: string): void =>
-          this.convertItemsToMachines(objective, recipeId, data);
+          { this.convertItemsToMachines(objective, recipeId, data); };
         if (recipeIds.length === 1) {
           updateFn(recipeIds[0]);
         } else {
           chooseRecipePicker.selectId
             .pipe(first())
-            .subscribe((targetId) => updateFn(targetId));
+            .subscribe((targetId) => { updateFn(targetId); });
           chooseRecipePicker.clickOpen('recipe', recipeIds);
         }
       }
@@ -227,14 +227,14 @@ export class ObjectivesComponent {
           data.adjustedRecipe[objective.targetId].produces,
         );
         const updateFn = (itemId: string): void =>
-          this.convertMachinesToItems(objective, itemId, unit, data);
+          { this.convertMachinesToItems(objective, itemId, unit, data); };
 
         if (itemIds.length === 1) {
           updateFn(itemIds[0]);
         } else {
           chooseItemPicker.selectId
             .pipe(first())
-            .subscribe((itemId) => updateFn(itemId));
+            .subscribe((itemId) => { updateFn(itemId); });
           chooseItemPicker.clickOpen('item', itemIds);
         }
       } else {

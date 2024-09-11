@@ -114,7 +114,7 @@ describe('StepsComponent', () => {
 
     it('should handle element not found', () => {
       component.fragmentId = Mocks.Step1.id;
-      expect(() => component.ngAfterViewInit()).not.toThrow();
+      expect(() => { component.ngAfterViewInit(); }).not.toThrow();
     });
   });
 

@@ -45,7 +45,7 @@ export class ThemeService {
           data.iconIds.forEach((i) => {
             const icon = data.iconEntities[i];
             const selector = this.escapeSelector(i);
-            css += `.${selector}::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+            css += `.${selector}::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
 
             if (icon.invertLight) {
               css += `body.light .${selector}::before { filter: invert(1); } `;
@@ -59,7 +59,7 @@ export class ThemeService {
             .forEach((item) => {
               const icon = data.iconEntities[item.icon];
               const selector = this.escapeSelector(item.id);
-              css += `.${selector}.item::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+              css += `.${selector}.item::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
 
               if (icon.invertLight) {
                 css += `body.light .${selector}.item::before { filter: invert(1); } `;
@@ -73,7 +73,7 @@ export class ThemeService {
             .forEach((recipe) => {
               const icon = data.iconEntities[recipe.icon];
               const selector = this.escapeSelector(recipe.id);
-              css += `.${selector}.recipe::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+              css += `.${selector}.recipe::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
 
               if (icon.invertLight) {
                 css += `body.light .${selector}.recipe::before { filter: invert(1); } `;
@@ -87,7 +87,7 @@ export class ThemeService {
             .forEach((category) => {
               const icon = data.iconEntities[category.icon];
               const selector = this.escapeSelector(category.id);
-              css += `.${selector}.category::before { background-image: url("${icon.file}"); background-position: ${icon.position}; } `;
+              css += `.${selector}.category::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
 
               if (icon.invertLight) {
                 css += `body.light .${selector}.category::before { filter: invert(1); } `;

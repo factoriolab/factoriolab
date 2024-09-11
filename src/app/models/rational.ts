@@ -135,10 +135,10 @@ export class Rational {
     if (mixed && abs(this.p) > abs(this.q)) {
       const whole = this.p / this.q;
       const mod = this.p % this.q;
-      return `${whole} + ${mod}/${this.q}`;
+      return `${whole.toString()} + ${mod.toString()}/${this.q.toString()}`;
     }
 
-    return `${this.p}/${this.q}`;
+    return `${this.p.toString()}/${this.q.toString()}`;
   }
 
   /**

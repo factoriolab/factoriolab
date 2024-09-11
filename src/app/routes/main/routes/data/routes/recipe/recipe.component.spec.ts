@@ -25,7 +25,9 @@ describe('RecipeComponent', () => {
     });
   });
 
-  afterEach(() => mockStore.resetSelectors());
+  afterEach(() => {
+    mockStore.resetSelectors();
+  });
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -4,7 +4,7 @@ import { SelectItem } from 'primeng/api';
 @Pipe({ name: 'filterOptions', standalone: true })
 export class FilterOptionsPipe implements PipeTransform {
   transform(
-    value: SelectItem[] | null | undefined,
+    value: SelectItem<string>[] | null | undefined,
     exclude: string[] | null | undefined,
     self?: string | null,
   ): SelectItem[] {

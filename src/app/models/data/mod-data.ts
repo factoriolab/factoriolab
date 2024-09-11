@@ -6,7 +6,7 @@ import { ItemJson } from './item';
 import { RecipeJson } from './recipe';
 
 export interface ModData {
-  version: Entities<string>;
+  version: Entities;
   expensive?: boolean;
   categories: CategoryJson[];
   icons: IconJson[];

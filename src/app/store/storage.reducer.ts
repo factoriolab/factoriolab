@@ -5,7 +5,7 @@ import { BrowserUtility } from '~/utilities';
 import { LabState } from './';
 
 export function storageMetaReducer(
-  reducer: ActionReducer<LabState, Action>,
+  reducer: ActionReducer<LabState>,
 ): (state: LabState | undefined, action: Action) => LabState {
   let onInit = true;
   return function (state: LabState | undefined, action: Action): LabState {

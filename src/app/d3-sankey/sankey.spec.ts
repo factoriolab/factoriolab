@@ -1,3 +1,4 @@
+import { Link, Node } from '~/models';
 import { Mocks } from '~/tests';
 
 import { sankeyJustify } from './align';
@@ -42,7 +43,9 @@ describe('defaultLinks', () => {
 
 describe('find', () => {
   it('should throw on failing to find a node', () => {
-    expect(() => find(new Map(), 'id')).toThrowError('missing: id');
+    expect(() =>
+      find(new Map<string, SankeyNode<object, object>>(), 'id'),
+    ).toThrowError('missing: id');
   });
 });
 
@@ -160,7 +163,7 @@ describe('sankey', () => {
         return i;
       };
 
-      fn.nodeId((d) => (d as any).id).nodeSort(sort);
+      fn.nodeId((d) => (d as SankeyNode<Node, Link>).id).nodeSort(sort);
       fn(Mocks.getFlow());
       expect(i).toBeGreaterThan(0);
     });

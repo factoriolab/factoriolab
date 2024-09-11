@@ -24,10 +24,17 @@ import { ContentService } from '~/services';
 ConnectedOverlayScrollHandler.prototype.bindScrollListener = function (
   this,
 ): void {
-  this.scrollableParents = DomHandler.getScrollableParents(this.element);
-  this.scrollableParents.push(window);
-  for (const parent of this.scrollableParents)
-    parent.addEventListener('scroll', this.listener);
+  const parents = DomHandler.getScrollableParents(this.element) as (
+    | Window
+    | HTMLElement
+  )[];
+  this.scrollableParents = parents;
+  parents.push(window);
+  for (const parent of parents)
+    parent.addEventListener(
+      'scroll',
+      this.listener as EventListenerOrEventListenerObject,
+    );
 };
 
 // istanbul ignore next
@@ -55,9 +62,9 @@ export class ContentComponent implements AfterViewInit {
   translateItem = viewChild.required<TemplateRef<unknown>>('translateItem');
 
   constructor() {
-    this.contentSvc.showToast$
-      .pipe(takeUntilDestroyed())
-      .subscribe((t) => this.messageSvc.add(t));
+    this.contentSvc.showToast$.pipe(takeUntilDestroyed()).subscribe((t) => {
+      this.messageSvc.add(t);
+    });
     this.contentSvc.showConfirm$
       .pipe(takeUntilDestroyed())
       .subscribe((c) => this.confirmationSvc.confirm(c));

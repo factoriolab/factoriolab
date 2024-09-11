@@ -81,7 +81,7 @@ export class WizardComponent {
       unit: ObjectiveUnit.Items,
       type: ObjectiveType.Output,
     });
-    this.router.navigate(['../list'], {
+    void this.router.navigate(['../list'], {
       relativeTo: this.route,
       queryParamsHandling: 'preserve',
     });
@@ -95,7 +95,7 @@ export class WizardComponent {
       unit: ObjectiveUnit.Machines,
       type: ObjectiveType.Output,
     });
-    this.router.navigate(['../list'], {
+    void this.router.navigate(['../list'], {
       relativeTo: this.route,
       queryParamsHandling: 'preserve',
     });

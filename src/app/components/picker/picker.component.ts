@@ -72,7 +72,7 @@ export class PickerComponent extends DialogComponent {
   categoryIds: string[] = [];
   categoryRows: Entities<string[][]> = {};
   // Preserve state prior to any filtering
-  allSelectItems: SelectItem[] = [];
+  allSelectItems: SelectItem<string>[] = [];
   allCategoryIds: string[] = [];
   allCategoryRows: Entities<string[][]> = {};
   activeIndex = 0;
@@ -108,7 +108,7 @@ export class PickerComponent extends DialogComponent {
       });
 
       this.allSelectItems = allIds.map(
-        (i): SelectItem => ({
+        (i): SelectItem<string> => ({
           label: data.itemEntities[i].name,
           value: i,
           title: data.itemEntities[i].category,
@@ -136,7 +136,7 @@ export class PickerComponent extends DialogComponent {
       });
 
       this.allSelectItems = allIds.map(
-        (i): SelectItem => ({
+        (i): SelectItem<string> => ({
           label: data.recipeEntities[i].name,
           value: i,
           title: data.recipeEntities[i].category,
@@ -209,12 +209,12 @@ export class PickerComponent extends DialogComponent {
     }
 
     // Filter for matching item ids
-    const filteredItems: SelectItem[] = this.filterSvc.filter(
+    const filteredItems = this.filterSvc.filter(
       this.allSelectItems,
       ['label'],
       this.search,
       'contains',
-    );
+    ) as SelectItem<string>[];
 
     // Filter for matching category ids
     // (Cache category on the SelectItem `title` field)

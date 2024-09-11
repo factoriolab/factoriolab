@@ -149,8 +149,8 @@ export class CompressionService {
     const byteArray = new TextEncoder().encode(str);
     const cs = new CompressionStream(encoding);
     const writer = cs.writable.getWriter();
-    writer.write(byteArray);
-    writer.close();
+    void writer.write(byteArray);
+    void writer.close();
     const arrayBuffer = new Response(cs.readable).arrayBuffer();
     return new Uint8Array(await arrayBuffer);
   }

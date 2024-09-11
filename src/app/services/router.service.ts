@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {
   BehaviorSubject,
@@ -16,7 +16,13 @@ import {
   withLatestFrom,
 } from 'rxjs';
 
-import { coalesce, filterPropsNullish, prune, spread } from '~/helpers';
+import {
+  asString,
+  coalesce,
+  filterPropsNullish,
+  prune,
+  spread,
+} from '~/helpers';
 import {
   BeaconSettings,
   CostSettings,
@@ -33,6 +39,7 @@ import {
   Objective,
   ObjectiveType,
   ObjectiveUnit,
+  Params,
   rational,
   RecipeSettings,
   Step,
@@ -99,7 +106,10 @@ export class RouterService {
           return { params, queryParams };
         }),
         map(({ params, queryParams }) =>
-          this.migrationSvc.migrate(params['id'], queryParams),
+          this.migrationSvc.migrate(
+            params['id'] as string | undefined,
+            queryParams,
+          ),
         ),
         switchMap(({ modId, params, isBare }) =>
           this.updateState(modId, params, isBare),
@@ -110,7 +120,9 @@ export class RouterService {
     this.ready$
       .pipe(
         first(),
-        tap(() => this.dataSvc.initialize()),
+        tap(() => {
+          this.dataSvc.initialize();
+        }),
         switchMap(() => this.store.select(Objectives.selectZipState)),
         debounceTime(0),
         filterPropsNullish('hash'),
@@ -221,16 +233,16 @@ export class RouterService {
   async getHash(zData: ZipData): Promise<LabParams> {
     const bare = spread(zData.objectives.bare, zData.config.bare, this.zipTail);
     const hash = spread(zData.objectives.hash, zData.config.hash, this.zipTail);
-    const hashStr = this.toString(hash);
+    const hashStr = this.toString(hash as Params);
     const zStr = await this.compressionSvc.deflate(hashStr);
     const zip: LabParams = {
       z: zStr,
       v: this.version,
     };
 
-    const bareStr = this.toString(bare);
+    const bareStr = this.toString(bare as Params);
     const bareLen = bareStr.length;
-    const zipStr = this.toString(zip);
+    const zipStr = this.toString(zip as Params);
     const zipLen = zipStr.length;
     return bareLen < Math.max(zipLen, MIN_ZIP) ? bare : zip;
   }
@@ -257,7 +269,8 @@ export class RouterService {
       .flatMap((k) => {
         const v = value[k];
         if (Array.isArray(v)) return v.map((e) => `${k}=${e}`);
-        return `${k}=${v}`;
+        else if (v) return `${k}=${v}`;
+        return [];
       }, '')
       .join('&');
   }
@@ -267,7 +280,7 @@ export class RouterService {
     if (zip != null) {
       try {
         // Upgrade V0 query-unsafe zipped characters
-        const zSafe = zip
+        const zSafe = asString(zip)
           .replace(/\+/g, '-')
           .replace(/\//g, '.')
           .replace(/=/g, '_');
@@ -290,7 +303,8 @@ export class RouterService {
   ): Promise<void> {
     if (modId == null && Object.keys(params).length === 0) {
       // Nothing to set up
-      return this.ready$.next();
+      this.ready$.next();
+      return;
     }
 
     const [modData, modHash] = await firstValueFrom(
@@ -314,8 +328,7 @@ export class RouterService {
       modHash,
       hash,
     );
-    prune(state);
-    this.dispatch(state);
+    this.dispatch(prune(state));
     this.ready$.next();
   }
 
@@ -463,8 +476,7 @@ export class RouterService {
         id: this.zipSvc.parseString(s[i++], hash?.modules),
       };
 
-      prune(obj);
-      return obj;
+      return prune(obj);
     });
   }
 
@@ -518,8 +530,7 @@ export class RouterService {
         total: this.zipSvc.parseRational(s[i++]),
       };
 
-      prune(obj);
-      return obj;
+      return prune(obj);
     });
   }
 
@@ -610,9 +621,8 @@ export class RouterService {
         );
       }
 
-      prune(obj);
       ids.push(id);
-      entities[id] = obj;
+      entities[id] = prune(obj);
       index++;
     }
     return { ids, index, entities };
@@ -651,12 +661,12 @@ export class RouterService {
       const s = item.split(ZFIELDSEP);
       let i = 0;
       const id = coalesce(this.zipSvc.parseString(s[i++], hash?.items), '');
-      const obj: ItemSettings = {
+      let obj: ItemSettings = {
         beltId: this.zipSvc.parseString(s[i++], hash?.belts),
         wagonId: this.zipSvc.parseString(s[i++], hash?.wagons),
       };
 
-      prune(obj);
+      obj = prune(obj);
       if (Object.keys(obj).length) entities[id] = obj;
     }
     return entities;
@@ -712,7 +722,7 @@ export class RouterService {
       const s = recipe.split(ZFIELDSEP);
       let i = 0;
       const id = coalesce(this.zipSvc.parseString(s[i++], hash?.recipes), '');
-      const obj: RecipeSettings = {
+      let obj: RecipeSettings = {
         machineId: this.zipSvc.parseString(s[i++], hash?.machines),
         modules: this.zipSvc
           .parseArray(s[i++])
@@ -725,7 +735,7 @@ export class RouterService {
         fuelId: this.zipSvc.parseString(s[i++], hash?.fuels),
       };
 
-      prune(obj);
+      obj = prune(obj);
       if (Object.keys(obj).length) entities[id] = obj;
     }
     return entities;
@@ -780,7 +790,7 @@ export class RouterService {
       const s = machine.split(ZFIELDSEP);
       let i = 0;
       const id = coalesce(this.zipSvc.parseString(s[i++], hash?.machines), '');
-      const obj: MachineSettings = {
+      let obj: MachineSettings = {
         modules: this.zipSvc
           .parseArray(s[i++])
           ?.map((i) => moduleSettings[Number(i)] ?? {}),
@@ -791,7 +801,7 @@ export class RouterService {
         overclock: this.zipSvc.parseRational(s[i++]),
       };
 
-      prune(obj);
+      obj = prune(obj);
       if (Object.keys(obj).length) entities[id] = obj;
     }
 
@@ -809,13 +819,13 @@ export class RouterService {
 
     // Set up shorthand functions to zip state
     const set = this.zipSvc.set(zData.config, state, init);
-    const sub = set(this.zipSvc.zipDiffSubset);
-    const num = set(this.zipSvc.zipDiffNumber);
-    const bln = set(this.zipSvc.zipDiffBool);
-    const str = set(this.zipSvc.zipDiffString);
-    const rat = set(this.zipSvc.zipDiffRational);
-    const rnk = set(this.zipSvc.zipDiffArray);
-    const arr = set(this.zipSvc.zipDiffIndices);
+    const sub = set(this.zipSvc.zipDiffSubset.bind(this.zipSvc));
+    const num = set(this.zipSvc.zipDiffNumber.bind(this.zipSvc));
+    const bln = set(this.zipSvc.zipDiffBool.bind(this.zipSvc));
+    const str = set(this.zipSvc.zipDiffString.bind(this.zipSvc));
+    const rat = set(this.zipSvc.zipDiffRational.bind(this.zipSvc));
+    const rnk = set(this.zipSvc.zipDiffArray.bind(this.zipSvc));
+    const arr = set(this.zipSvc.zipDiffIndices.bind(this.zipSvc));
 
     // Zip state
     sub('och', (s) => s.checkedObjectiveIds, objectiveIds);
@@ -870,15 +880,15 @@ export class RouterService {
   ): Settings.PartialSettingsState | undefined {
     // Set up shorthand functions to parse state
     const get = this.zipSvc.get(params);
-    const sub = get(this.zipSvc.parseSubset);
-    const num = get(this.zipSvc.parseNumber);
-    const bln = get(this.zipSvc.parseBool);
-    const str = get(this.zipSvc.parseString);
-    const rat = get(this.zipSvc.parseRational);
-    const rnk = get(this.zipSvc.parseArray);
-    const arr = get(this.zipSvc.parseIndices);
+    const sub = get(this.zipSvc.parseSubset.bind(this.zipSvc));
+    const num = get(this.zipSvc.parseNumber.bind(this.zipSvc));
+    const bln = get(this.zipSvc.parseBool.bind(this.zipSvc));
+    const str = get(this.zipSvc.parseString.bind(this.zipSvc));
+    const rat = get(this.zipSvc.parseRational.bind(this.zipSvc));
+    const rnk = get(this.zipSvc.parseArray.bind(this.zipSvc));
+    const arr = get(this.zipSvc.parseIndices.bind(this.zipSvc));
 
-    const obj: Settings.PartialSettingsState = {
+    let obj: Settings.PartialSettingsState = {
       modId,
       checkedObjectiveIds: sub('och', objectiveIds),
       maximizeType: num('omt'),
@@ -909,7 +919,7 @@ export class RouterService {
       researchedTechnologyIds: sub('tre', modHash.technologies),
     };
 
-    const costs: Partial<CostSettings> = {
+    let costs: Partial<CostSettings> = {
       factor: rat('cfa'),
       machine: rat('cma'),
       footprint: rat('cfp'),
@@ -934,10 +944,10 @@ export class RouterService {
         );
     }
 
-    prune(costs);
+    costs = prune(costs);
     if (Object.keys(costs).length) obj.costs = costs;
 
-    prune(obj);
+    obj = prune(obj);
     if (!Object.keys(obj).length) return;
 
     return obj;

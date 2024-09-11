@@ -273,18 +273,17 @@ describe('RouterService', () => {
   }));
 
   describe('updateUrl', () => {
-    it('should update url with products', fakeAsync(() => {
+    it('should update url with products', async () => {
       spyOn(service, 'zipState').and.returnValue(mockZipData());
       spyOn(service, 'getHash').and.returnValue(Promise.resolve({ z: 'z' }));
       spyOn(service.router, 'navigate');
       spyOnProperty(service.router, 'url').and.returnValue('list');
-      service.updateUrl(mockZipData());
-      tick();
+      await service.updateUrl(mockZipData());
       expect(service.router.navigate).toHaveBeenCalledWith([], {
         queryParams: { z: 'z' },
       });
       expect(BrowserUtility.routerState).toEqual('list');
-    }));
+    });
   });
 
   describe('zipState', () => {
@@ -410,7 +409,7 @@ describe('RouterService', () => {
     });
   });
 
-  describe('updateState', async () => {
+  describe('updateState', () => {
     let dispatch: jasmine.Spy;
 
     const mockStateV10: App.PartialState = spread(mockState, {
@@ -468,7 +467,7 @@ describe('RouterService', () => {
 
     it('should skip if loading empty, current state', async () => {
       spyOn(service.ready$, 'next');
-      service.updateState(undefined, {}, true);
+      await service.updateState(undefined, {}, true);
       expect(service.ready$.next).toHaveBeenCalled();
     });
 

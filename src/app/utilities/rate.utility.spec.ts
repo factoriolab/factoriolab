@@ -1,3 +1,4 @@
+import { spread } from '~/helpers';
 import {
   DisplayRate,
   displayRateInfo,
@@ -541,6 +542,15 @@ describe('RateUtility', () => {
       const steps: Step[] = [];
       RateUtility.sortBySankey(steps);
       expect(steps).toEqual([]);
+    });
+
+    it('should handle missing recipeId on parent', () => {
+      const steps = [...Mocks.LightOilSteps];
+      const broken = spread(steps[1], { parents: { '4': rational.one } });
+      steps[1] = broken;
+      RateUtility.sortBySankey(steps);
+      const ids = steps.map((s) => s.id);
+      expect(ids).toEqual(['0', '3', '4', '2', '1']);
     });
   });
 

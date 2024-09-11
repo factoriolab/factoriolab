@@ -21,7 +21,7 @@ export interface Node extends FlowBase {
   posX: string;
   posY: string;
   viewBox: string;
-  href: string | undefined;
+  href: string;
 }
 
 export interface Link extends FlowBase {

@@ -93,7 +93,7 @@ export class MainComponent {
     setTimeout(() => {
       this.ngZone.run(() => {
         this.errorSvc.message.set(null);
-        this.router.navigateByUrl(this.gameInfo().route);
+        void this.router.navigateByUrl(this.gameInfo().route);
         this.store.dispatch(App.reset());
         this.isResetting = false;
       });

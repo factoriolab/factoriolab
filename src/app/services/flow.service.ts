@@ -95,7 +95,7 @@ export class FlowService {
           text: `${step.items.toString(itemPrec)}${suffix}`,
           color: icon.color,
           stepId: step.id,
-          href: icon.file,
+          href: data.iconFile,
           ...this.positionProps(icon),
         });
 
@@ -104,6 +104,8 @@ export class FlowService {
             if (stepId === '') continue; // Ignore outputs
 
             const parent = stepMap[stepId];
+            if (parent.recipeId == null) continue;
+
             flow.links.push({
               source: id,
               target: `${this.recipeStepNodeType(parent)}|${parent.recipeId}`,
@@ -135,7 +137,7 @@ export class FlowService {
             text: `${step.surplus.toString(itemPrec)}${suffix}`,
             color: themeValues.dangerBackground,
             stepId: step.id,
-            href: icon.file,
+            href: data.iconFile,
             ...this.positionProps(icon),
           });
           flow.links.push({
@@ -168,7 +170,7 @@ export class FlowService {
             text: `${step.output.toString(itemPrec)}${suffix}`,
             color: themeValues.successBackground,
             stepId: step.id,
-            href: icon.file,
+            href: data.iconFile,
             ...this.positionProps(icon),
           });
           flow.links.push({
@@ -204,7 +206,7 @@ export class FlowService {
           text: `${step.machines.toString(machinePrec)} ${machine.name}`,
           color: icon.color,
           stepId: step.id,
-          href: icon.file,
+          href: data.iconFile,
           recipe,
           ...this.positionProps(icon),
         });
@@ -313,7 +315,7 @@ export class FlowService {
       case LinkValue.None:
         return '';
       case LinkValue.Percent:
-        return `${Math.round(percent.mul(rational(100n)).toNumber())}%`;
+        return `${Math.round(percent.mul(rational(100n)).toNumber()).toString()}%`;
       default: {
         const suffix = [LinkValue.Items, LinkValue.Wagons].includes(prop)
           ? rateSuffix

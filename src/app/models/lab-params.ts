@@ -1,3 +1,5 @@
+export type Params = Partial<Record<string, string | string[]>>;
+
 export interface LabParams {
   /** `object[]` Objectives */
   o?: string[];

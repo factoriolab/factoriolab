@@ -8,7 +8,6 @@ const simpleImportSort = require('eslint-plugin-simple-import-sort');
 /**
  * TODO:
  * * Investigate currently turned 'off' tseslint rules in *.ts files
- * * Investigate converting to strictTypeChecked / stylisticTypeChecked
  * * Add rxjs rules, if/when they support ESLint 9.x
  */
 
@@ -17,7 +16,7 @@ module.exports = tseslint.config(
     files: ['**/*.ts'],
     extends: [
       eslint.configs.recommended,
-      ...tseslint.configs.strict,
+      ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
       ...angular.configs.tsRecommended,
       ...ngrx.configs.all,
@@ -51,12 +50,18 @@ module.exports = tseslint.config(
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/no-unused-vars': [
         'error',
-        { argsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' },
+        {
+          argsIgnorePattern: '^_',
+          destructuredArrayIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
       ],
       '@typescript-eslint/prefer-enum-initializers': 'error',
       // TODO: Convert utilities to services, then this can be enabled
       '@typescript-eslint/no-extraneous-class': 'off',
       '@typescript-eslint/no-dynamic-delete': 'off',
+      '@typescript-eslint/no-unnecessary-condition': 'off',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
       '@typescript-eslint/prefer-nullish-coalescing': [
         'error',
         { ignorePrimitives: true },
@@ -69,9 +74,6 @@ module.exports = tseslint.config(
   {
     files: ['**/*.spec.ts', 'src/app/tests/**/*.ts'],
     rules: {
-      '@typescript-eslint/no-empty-function': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-non-null-assertion': 'off',
       '@typescript-eslint/dot-notation': [
         'error',
         {
@@ -79,6 +81,14 @@ module.exports = tseslint.config(
           allowProtectedClassPropertyAccess: true,
         },
       ],
+      '@typescript-eslint/no-empty-function': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-non-null-assertion': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/unbound-method': 'off',
     },
   },
   {

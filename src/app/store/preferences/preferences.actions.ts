@@ -21,7 +21,7 @@ export const removeState = createAction(
 );
 export const setStates = createAction(
   `${key} Set States`,
-  props<{ states: Record<Game, Entities<string>> }>(),
+  props<{ states: Record<Game, Entities> }>(),
 );
 export const setColumns = createAction(
   `${key} Set Columns`,

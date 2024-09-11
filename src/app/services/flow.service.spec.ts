@@ -67,6 +67,23 @@ describe('FlowService', () => {
       expect(result.nodes.length).toEqual(7);
       expect(result.links.length).toEqual(8);
     });
+
+    it('should handle missing recipeId on parent', () => {
+      const steps = [...Mocks.LightOilSteps];
+      const broken = spread(steps[1], { parents: { '4': rational.one } });
+      steps[1] = broken;
+      const result = service.buildGraph(
+        steps,
+        '/m',
+        Mocks.SettingsStateInitial,
+        Mocks.PreferencesState,
+        Mocks.AdjustedDataset,
+        Mocks.ThemeValues,
+      );
+
+      expect(result.nodes.length).toEqual(7);
+      expect(result.links.length).toEqual(7);
+    });
   });
 
   describe('stepLinkValue', () => {

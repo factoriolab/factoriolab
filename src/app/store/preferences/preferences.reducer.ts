@@ -20,7 +20,7 @@ import * as App from '../app.actions';
 import * as Actions from './preferences.actions';
 
 export interface PreferencesState {
-  states: Record<Game, Entities<string>>;
+  states: Record<Game, Entities>;
   columns: ColumnsState;
   language: Language;
   powerUnit: PowerUnit;

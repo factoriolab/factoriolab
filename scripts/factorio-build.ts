@@ -15,8 +15,9 @@ import {
   RecipeJson,
   TechnologyJson,
 } from '~/models';
-import * as D from './factorio-build.models';
+
 import * as M from './factorio.models';
+import * as D from './factorio-build.models';
 import {
   addEntityValue,
   coerceArray,
@@ -66,7 +67,7 @@ if (!mod) {
 // Set up paths
 const appDataPath =
   process.env['AppData'] ||
-  `${process.env['HOME']}/Library/Application Support`;
+  `${process.env['HOME'] ?? ''}/Library/Application Support`;
 const factorioPath = `${appDataPath}/Factorio`;
 const modsPath = `${factorioPath}/mods`;
 const scriptOutputPath = `${factorioPath}/script-output`;
@@ -147,7 +148,9 @@ async function processMod(): Promise<void> {
           return itemMap[result.name];
         }
       } else {
-        throw `Main product '${mainProduct}' declared by recipe '${recipe.name}' not found in results`;
+        throw new Error(
+          `Main product '${mainProduct}' declared by recipe '${recipe.name}' not found in results`,
+        );
       }
     } else {
       return undefined;
@@ -161,7 +164,9 @@ async function processMod(): Promise<void> {
 
     const product = getRecipeProduct(recipe);
     if (product == null) {
-      throw `Recipe '${recipe.name}' declares no subgroup though it is required`;
+      throw new Error(
+        `Recipe '${recipe.name}' declares no subgroup though it is required`,
+      );
     }
 
     return getSubgroup(product);
@@ -264,7 +269,7 @@ async function processMod(): Promise<void> {
 
     // If recipe still has no product icon, calculator will pick first product
     if (!M.isRecipePrototype(spec) && spec.icon == null && spec.icons == null) {
-      throw `No icons for proto ${spec.name}`;
+      throw new Error(`No icons for proto ${spec.name}`);
     }
 
     let iconId = id;
@@ -280,7 +285,8 @@ async function processMod(): Promise<void> {
         let i = 0;
         let altId: string;
         do {
-          altId = `${iconId}-${i++}`;
+          const altIdNum = i++;
+          altId = `${iconId}-${altIdNum.toString()}`;
         } while (iconSet.has(altId));
         iconId = altId;
       }
@@ -545,7 +551,7 @@ async function processMod(): Promise<void> {
   function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
     if (hash[key] == null) hash[key] = [];
 
-    if (hash[key].indexOf(id) === -1) {
+    if (!hash[key].includes(id)) {
       hash[key].push(id);
       modHashReport[key].push(id);
     }
@@ -582,7 +588,9 @@ async function processMod(): Promise<void> {
         if (i.technology) addIfMissing(oldHash, 'technologies', i.id);
       });
 
-      modData.recipes.forEach((r) => addIfMissing(oldHash, 'recipes', r.id));
+      modData.recipes.forEach((r) => {
+        addIfMissing(oldHash, 'recipes', r.id);
+      });
 
       fs.writeFileSync(modHashPath, JSON.stringify(oldHash));
       fs.writeFileSync(
@@ -596,7 +604,7 @@ async function processMod(): Promise<void> {
         belts: modData.items.filter((i) => i.belt).map((i) => i.id),
         fuels: modData.items.filter((i) => i.fuel).map((i) => i.id),
         wagons: modData.items
-          .filter((i) => i.cargoWagon || i.fluidWagon)
+          .filter((i) => i.cargoWagon ?? i.fluidWagon)
           .map((i) => i.id),
         machines: modData.items.filter((i) => i.machine).map((i) => i.id),
         modules: modData.items.filter((i) => i.module).map((i) => i.id),
@@ -1023,7 +1031,7 @@ async function processMod(): Promise<void> {
       fluidTemps[proto.name] = new Set(temps);
 
       temps.forEach((temp, i) => {
-        const id = i === 0 ? proto.name : `${proto.name}-${temp}`;
+        const id = i === 0 ? proto.name : `${proto.name}-${temp.toString()}`;
         const itemTemp: ItemJson = {
           id,
           name: fluidLocale.names[proto.name],
@@ -1036,8 +1044,8 @@ async function processMod(): Promise<void> {
         if (i > 0 && itemTemp.icon == null) itemTemp.icon = proto.name;
 
         if (temp !== proto.default_temperature) {
-          itemTemp.name += ` (${temp}°C)`;
-          itemTemp.iconText = `${temp}°`;
+          itemTemp.name += ` (${temp.toString()}°C)`;
+          itemTemp.iconText = `${temp.toString()}°`;
 
           if (temp > proto.default_temperature) {
             // Add fluid heat fuel
@@ -1170,8 +1178,8 @@ async function processMod(): Promise<void> {
         } else if (dataRaw['offshore-pump'][result]) {
           const entity = dataRaw['offshore-pump'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['reactor'][result]) {
-          const entity = dataRaw['reactor'][result];
+        } else if (dataRaw.reactor[result]) {
+          const entity = dataRaw.reactor[result];
           item.machine = getMachine(entity, proto.name);
         }
 
@@ -1207,7 +1215,7 @@ async function processMod(): Promise<void> {
         if (proto.limitation_blacklist) {
           limitation = limitation ?? Object.keys(recipesEnabled);
           limitation = limitation.filter(
-            (l) => proto.limitation_blacklist?.indexOf(l) === -1,
+            (l) => !proto.limitation_blacklist?.includes(l),
           );
         }
 
@@ -1261,8 +1269,7 @@ async function processMod(): Promise<void> {
      * ingredient temperatures
      */
     const fluidTempOptions: Record<string, number[]> = {};
-    for (let i = 0; i < fluidTempRules.length; i++) {
-      const fluidId = fluidTempRules[i];
+    for (const fluidId of fluidTempRules) {
       const [minTemp, maxTemp] = recipeInTemp[fluidId];
       const fluid = dataRaw.fluid[fluidId];
 
@@ -1300,7 +1307,7 @@ async function processMod(): Promise<void> {
             if (temp !== defaultTemp) {
               const [original, ids] = data;
               const altered = { ...original };
-              const id = `${key}-${temp}`;
+              const id = `${key}-${temp.toString()}`;
               altered[id] = altered[key];
               delete altered[key];
               return [altered, [...ids, id]] as [
@@ -1338,7 +1345,7 @@ async function processMod(): Promise<void> {
           const temp = temps[outId];
           const index = Array.from(fluidTemps[outId]).indexOf(temp);
           if (index !== 0) {
-            recipeOut[`${outId}-${temp}`] = recipeOut[outId];
+            recipeOut[`${outId}-${temp.toString()}`] = recipeOut[outId];
             delete recipeOut[outId];
           }
         }
@@ -1346,10 +1353,7 @@ async function processMod(): Promise<void> {
 
       // Check for calculated catalysts
       for (const outId of Object.keys(recipeOut)) {
-        if (
-          recipeIn[outId] &&
-          (recipeCatalyst == null || !recipeCatalyst[outId])
-        ) {
+        if (recipeIn[outId] && !recipeCatalyst?.[outId]) {
           // Need to manually calculate and add catalyst amount for this item
           if (recipeCatalyst == null) recipeCatalyst = {};
 
@@ -1505,7 +1509,7 @@ async function processMod(): Promise<void> {
           const inputProto = dataRaw.fluid[boiler.fluid_box.filter];
           let outputId = proto.name;
           if (boiler.target_temperature !== [...fluidTemps[proto.name]][0]) {
-            outputId = `${proto.name}-${boiler.target_temperature}`;
+            outputId = `${proto.name}-${boiler.target_temperature.toString()}`;
           }
 
           // Found a boiler recipe
@@ -1830,9 +1834,9 @@ async function processMod(): Promise<void> {
   let icon = 'lab';
   let lab = modData.items.find((i) => i.id === icon);
   if (lab == null) {
-    lab = modData.items.find((i) => i.id.indexOf('lab') !== -1);
+    lab = modData.items.find((i) => i.id.includes('lab'));
     if (lab == null) {
-      throw 'Technology icon not found';
+      throw new Error('Technology icon not found');
     } else {
       icon = lab.icon ?? lab.id;
     }
@@ -1858,73 +1862,85 @@ async function processMod(): Promise<void> {
 
   // Sprite sheet
   logTime('Generating sprite sheet');
-  spritesmith.run(
-    { src: Object.keys(iconFiles), padding: 2 },
-    async (_, result) => {
-      const modIconsPath = `${modPath}/icons.webp`;
-      await sharp(result.image).webp().toFile(modIconsPath);
 
-      modData.icons = await Promise.all(
-        Object.keys(result.coordinates).map(async (file) => {
-          const coords = result.coordinates[file];
-          return {
-            id: iconFiles[file],
-            position: `${-coords.x}px ${-coords.y}px`,
-            color: iconColors[file],
-          };
-        }),
+  async function finalize(
+    result: spritesmith.SpritesmithResult,
+  ): Promise<void> {
+    modData.icons = await Promise.all(
+      Object.keys(result.coordinates).map((file) => {
+        const coords = result.coordinates[file];
+        return {
+          id: iconFiles[file],
+          position: `${(-coords.x).toString()}px ${(-coords.y).toString()}px`,
+          color: iconColors[file],
+        };
+      }),
+    );
+
+    logTime('Writing data');
+    writeData();
+    logTime('Complete');
+
+    const warnings = (
+      Object.keys(modDataReport) as (keyof D.ModDataReport)[]
+    ).some((k) => modDataReport[k].length);
+
+    if (warnings) logWarn('\nWARNINGS:');
+
+    if (modDataReport.machineSpeedZero.length) {
+      logWarn(
+        `Machines with zero crafting speed: ${modDataReport.machineSpeedZero.length.toString()}`,
       );
+      console.log('These machines have been removed.');
+    }
 
-      logTime('Writing data');
-      writeData();
-      logTime('Complete');
+    if (modDataReport.noProducers.length) {
+      logWarn(
+        `Recipes with no producers: ${modDataReport.noProducers.length.toString()}`,
+      );
+      console.log('These recipes have been removed.');
+    }
 
-      const warnings = (
-        Object.keys(modDataReport) as (keyof D.ModDataReport)[]
-      ).some((k) => modDataReport[k].length);
+    if (modDataReport.noProducts.length) {
+      logWarn(
+        `Recipes with no products: ${modDataReport.noProducts.length.toString()}`,
+      );
+      console.log('These recipes have been removed.');
+    }
 
-      if (warnings) logWarn('\nWARNINGS:');
+    if (modDataReport.resourceNoMinableProducts.length) {
+      logWarn(
+        `Resources with no minable products: ${modDataReport.resourceNoMinableProducts.length.toString()}`,
+      );
+      console.log('No mining recipe is generated for these resources.');
+    }
 
-      if (modDataReport.machineSpeedZero.length) {
-        logWarn(
-          `Machines with zero crafting speed: ${modDataReport.machineSpeedZero.length}`,
-        );
-        console.log('These machines have been removed.');
-      }
+    if (modDataReport.resourceDuplicate.length) {
+      logWarn(
+        `Resource duplicates: ${modDataReport.resourceDuplicate.length.toString()}`,
+      );
+      console.log(
+        'Only one mining resource is generated for duplicate resources',
+      );
+    }
 
-      if (modDataReport.noProducers.length) {
-        logWarn(
-          `Recipes with no producers: ${modDataReport.noProducers.length}`,
-        );
-        console.log('These recipes have been removed.');
-      }
+    if (warnings) {
+      console.log('\nSee scripts/temp/data-report.json for details');
+    }
+  }
 
-      if (modDataReport.noProducts.length) {
-        logWarn(`Recipes with no products: ${modDataReport.noProducts.length}`);
-        console.log('These recipes have been removed.');
-      }
-
-      if (modDataReport.resourceNoMinableProducts.length) {
-        logWarn(
-          `Resources with no minable products: ${modDataReport.resourceNoMinableProducts.length}`,
-        );
-        console.log('No mining recipe is generated for these resources.');
-      }
-
-      if (modDataReport.resourceDuplicate.length) {
-        logWarn(
-          `Resource duplicates: ${modDataReport.resourceDuplicate.length}`,
-        );
-        console.log(
-          'Only one mining resource is generated for duplicate resources',
-        );
-      }
-
-      if (warnings) {
-        console.log('\nSee scripts/temp/data-report.json for details');
-      }
-    },
-  );
+  spritesmith.run({ src: Object.keys(iconFiles), padding: 2 }, (_, result) => {
+    const modIconsPath = `${modPath}/icons.webp`;
+    sharp(result.image)
+      .webp()
+      .toFile(modIconsPath)
+      .then(async () => {
+        await finalize(result);
+      })
+      .catch((err: unknown) => {
+        console.error(err);
+      });
+  });
 }
 
-processMod();
+void processMod();

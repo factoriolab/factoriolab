@@ -13,7 +13,7 @@ import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { DropdownBaseDirective } from '~/directives';
-import { coalesce, notNullish } from '~/helpers';
+import { coalesce, notNullish, spread } from '~/helpers';
 import {
   Beacon,
   ItemId,
@@ -91,7 +91,7 @@ export class ModulesComponent {
 
   setCount(i: number, count: Rational): void {
     const modules = this.modules().map((m, j) =>
-      i === j ? { ...m, ...{ count } } : m,
+      i === j ? spread(m, { count }) : m,
     );
     this.updateEmpty(modules);
     this.setValue.emit(modules);
@@ -99,9 +99,9 @@ export class ModulesComponent {
 
   setId(i: number, event: DropdownChangeEvent): void {
     event.originalEvent.stopPropagation();
-    const id = event.value;
+    const id = event.value as string;
     const modules = this.modules().map((m, j) =>
-      i === j ? { ...m, ...{ id } } : m,
+      i === j ? spread(m, { id }) : m,
     );
     this.setValue.emit(modules);
   }

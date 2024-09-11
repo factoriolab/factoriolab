@@ -16,7 +16,7 @@ export const canActivateId: CanActivateFn = (
   const router = inject(Router);
   const migrationSvc = inject(MigrationService);
   const routerSvc = inject(RouterService);
-  const id = route.params['id'];
+  const id = route.params['id'] as string | undefined;
 
   // Migrate old states
   switch (id) {

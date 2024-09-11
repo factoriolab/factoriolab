@@ -13,7 +13,7 @@ describe('ObjectivesEffects', () => {
   let effects: ObjectivesEffects;
   let actions: ReplaySubject<any>;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [provideMockActions(() => actions), ObjectivesEffects],
     });

@@ -449,7 +449,7 @@ export const selectStepTree = createSelector(selectSteps, (steps) => {
     if (step.parents) {
       const keys = Object.keys(step.parents);
       if (keys.length === 1 && indents[keys[0]] != null) {
-        indent = new Array(indents[keys[0]] + 1).fill(false);
+        indent = new Array<boolean>(indents[keys[0]] + 1).fill(false);
       }
     }
     indents[step.id] = indent.length;

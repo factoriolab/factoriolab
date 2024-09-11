@@ -51,7 +51,7 @@ import { Preferences } from '~/store';
 
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
-cytoscape.use(elk);
+cytoscape.use(elk as cytoscape.Ext);
 
 @Component({
   selector: 'lab-flow',
@@ -78,7 +78,7 @@ export class FlowComponent implements AfterViewInit {
 
   flowSettings = this.store.selectSignal(Preferences.selectFlowSettings);
 
-  svgElement = viewChild.required<ElementRef>('svg');
+  svgElement = viewChild.required<ElementRef<HTMLElement>>('svg');
   cy?: cytoscape.Core;
 
   height = window.innerHeight * 0.75;
@@ -101,7 +101,9 @@ export class FlowComponent implements AfterViewInit {
       this.store.select(Preferences.selectFlowSettings),
     ])
       .pipe(debounceTime(0), takeUntilDestroyed(this.destroyRef))
-      .subscribe((args) => this.rebuildChart(...args));
+      .subscribe((args) => {
+        this.rebuildChart(...args);
+      });
 
     this.resize$
       .pipe(debounceTime(100), delay(100), takeUntilDestroyed(this.destroyRef))
@@ -141,12 +143,15 @@ export class FlowComponent implements AfterViewInit {
 
     const svg = select(this.svgElement().nativeElement)
       .append('svg')
-      .attr('viewBox', `0 0 ${width} ${height}`);
+      .attr('viewBox', `0 0 ${width.toString()} ${height.toString()}`);
 
     svg.call(
-      zoom<SVGSVGElement, unknown>().on('zoom', (e): void => {
-        svg.selectAll('svg > g').attr('transform', e.transform);
-      }),
+      zoom<SVGSVGElement, unknown>().on(
+        'zoom',
+        (e: { transform: string }): void => {
+          svg.selectAll('svg > g').attr('transform', e.transform);
+        },
+      ),
     );
 
     // Draw linkages (draw first so rects are drawn over them)
@@ -162,7 +167,7 @@ export class FlowComponent implements AfterViewInit {
 
     const path = link
       .append('path')
-      .attr('id', (l) => `${l.index}`)
+      .attr('id', (l) => l.index)
       .attr('d', (l) =>
         (l as SankeyLinkExtraProperties).direction === 'forward'
           ? sankeyLinkHorizontal()(l)
@@ -185,7 +190,7 @@ export class FlowComponent implements AfterViewInit {
       .join('text')
       .append('textPath')
       .attr('startOffset', '4px')
-      .attr('href', (l) => `#${l.index}`)
+      .attr('href', (l) => `#${l.index.toString()}`)
       .text((l) => `${l.text} ${l.name}`);
 
     // For use inside drag function
@@ -203,14 +208,14 @@ export class FlowComponent implements AfterViewInit {
       .attr('height', (d) => this.nodeHeight(d))
       .attr('width', (d) => coalesce(d.x1, 0) - coalesce(d.x0, 0))
       .attr('fill', (d) => d.color)
-      .on('click', (e, d) => {
+      .on('click', (e: Event, d) => {
         if (e.defaultPrevented) return;
         this.selectedId.set(d.stepId);
       })
       .call(
         drag<SVGRectElement, SankeyNode<Node, Link>>()
-          .subject((d) => d)
-          .on('drag', function (this, event, d) {
+          .subject((d) => d as SankeyNode<Node, Link>)
+          .on('drag', function (this, event: { dy: number; dx: number }, d) {
             const rectY = parseFloat(select(this).attr('y'));
             const rectX = parseFloat(select(this).attr('x'));
             d.y0 = coalesce(d.y0, 0) + event.dy;
@@ -219,7 +224,7 @@ export class FlowComponent implements AfterViewInit {
             d.x1 = coalesce(d.x1, 0) + event.dx;
             const trX = coalesce(d.x0, 0) - rectX;
             const trY = coalesce(d.y0, 0) - rectY;
-            const transform = 'translate(' + trX + ',' + trY + ')';
+            const transform = `translate(${trX.toString()},${trY.toString()})`;
             select(this).attr('transform', transform);
 
             // also move the image
@@ -334,7 +339,7 @@ export class FlowComponent implements AfterViewInit {
         {
           selector: 'edge',
           style: {
-            width: `mapData(value, 0, ${max}, 1, 16)`,
+            width: `mapData(value, 0, ${max.toString()}, 1, 16)`,
             label: 'data(label)',
             'text-rotation': 'autorotate',
             color,
@@ -351,9 +356,11 @@ export class FlowComponent implements AfterViewInit {
       layout,
     });
 
-    this.cy
-      .nodes()
-      .on('click', (e) => this.selectedId.set(e.target.data().stepId));
+    this.cy.nodes().on('click', (e) => {
+      this.selectedId.set(
+        (e.target as { data: () => { stepId: string } }).data().stepId,
+      );
+    });
   }
 
   getLayout(

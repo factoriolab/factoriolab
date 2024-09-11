@@ -46,7 +46,7 @@ import { RecipeUtility } from '~/utilities';
 import { LabState } from '../';
 import * as Datasets from '../datasets';
 import * as Preferences from '../preferences';
-import { SettingsState } from './settings.reducer';
+import { initialState, SettingsState } from './settings.reducer';
 
 /* Base selector functions */
 export const settingsState = (state: LabState): SettingsState =>
@@ -256,12 +256,9 @@ export const selectDataset = createSelector(
       {},
       environment.debug,
     );
-    const modIconPath = `data/${mod?.id}/icons.webp`;
+    const iconFile = `data/${mod?.id ?? initialState.modId}/icons.webp`;
     const iconEntities = toEntities(
-      coalesce(mod?.icons, []).map((i) => ({
-        ...i,
-        ...{ file: i.file ?? modIconPath },
-      })),
+      coalesce(mod?.icons, []),
       {},
       environment.debug,
     );
@@ -448,6 +445,7 @@ export const selectDataset = createSelector(
       categoryEntities,
       categoryItemRows,
       categoryRecipeRows,
+      iconFile,
       iconIds,
       iconEntities,
       itemIds,
@@ -564,7 +562,7 @@ export const selectBeltSpeedTxt = createSelector(
   selectBeltSpeed,
   selectDisplayRateInfo,
   (beltSpeed, dispRateInfo) =>
-    Object.keys(beltSpeed).reduce((e: Entities<string>, beltId) => {
+    Object.keys(beltSpeed).reduce((e: Entities, beltId) => {
       const speed = beltSpeed[beltId].mul(dispRateInfo.value);
       e[beltId] = Number(speed.toNumber().toFixed(2)).toString();
       return e;
