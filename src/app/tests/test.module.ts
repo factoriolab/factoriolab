@@ -1,7 +1,4 @@
-import {
-  provideHttpClient,
-  withInterceptorsFromDi,
-} from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NgModule } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,7 +16,7 @@ import { initialState } from './state';
     { provide: DEFAULT_LANGUAGE, useValue: 'en' },
     { provide: TranslateService, useClass: TestTranslateService },
     provideMockStore({ initialState }),
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(),
     provideHttpClientTesting(),
     provideRouter([]),
   ],
