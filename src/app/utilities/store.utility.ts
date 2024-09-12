@@ -3,6 +3,7 @@ import {
   Entities,
   IdValueDefaultPayload,
   IdValuePayload,
+  Rational,
   ValueDefaultPayload,
 } from '~/models';
 
@@ -41,7 +42,9 @@ export class StoreUtility {
             payload.value as (number | string)[],
             payload.def as (number | string)[],
           )
-      : payload.value === payload.def;
+      : payload.value instanceof Rational && payload.def instanceof Rational
+        ? payload.value.eq(payload.def)
+        : payload.value === payload.def;
   }
 
   /** Resets a passed fields of the state */

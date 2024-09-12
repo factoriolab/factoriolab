@@ -23,7 +23,7 @@ export const getMachinesState = createSelector(
       state.beacons,
       defaults?.beacons,
     );
-    const overclock = state.overclock;
+    const overclock = state.overclock ?? defaults?.overclock;
     const entities: Entities<MachineSettings> = {};
 
     for (const id of data.machineIds) {
