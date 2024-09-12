@@ -5,7 +5,9 @@ import { ModData } from '~/models';
 import { data } from '../src/data';
 import { getJsonData, logTime } from './helpers';
 
-const mods = data.mods.map((m) => m.id);
+// Load mods from arguments
+let mods = process.argv.slice(2);
+if (mods.length === 0) mods = data.mods.map((m) => m.id);
 
 /** Run all scripts required to update an array of Factorio mod sets */
 async function updateMods(mods: string[]): Promise<void> {
