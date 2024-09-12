@@ -176,6 +176,7 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
   const m = base.defaults;
   let beacons: BeaconSettings[] = [];
   let moduleRank: string[] | undefined;
+  let overclock: Rational | undefined;
   switch (base.game) {
     case Game.Factorio: {
       moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
@@ -208,6 +209,7 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
     case Game.FinalFactory:
     case Game.Satisfactory: {
       moduleRank = m.moduleRank;
+      overclock = rational(100n);
       break;
     }
   }
@@ -224,6 +226,7 @@ export const getDefaults = createSelector(getPreset, getMod, (preset, base) => {
     fuelRankIds: coalesce(m.fuelRank, []),
     moduleRankIds: coalesce(moduleRank, []),
     beacons,
+    overclock,
   };
   return defaults;
 });
@@ -374,6 +377,9 @@ export const getDataset = createSelector(
       .forEach((r) => {
         const firstOutId = Object.keys(r.out)[0];
         const firstOutItem = itemData[firstOutId];
+        if (r.id === 'packaged-rocket-fuel') {
+          console.log(firstOutId, firstOutItem, r);
+        }
         r.icon = firstOutItem.icon ?? firstOutId;
       });
 
