@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 import { ModData } from '~/models';
+
 import * as D from './factorio-build.models';
 import { getJsonData } from './helpers';
 
@@ -17,7 +18,7 @@ if (!mod) {
 }
 
 // Set up paths
-const appDataPath = process.env['AppData'];
+const appDataPath = process.env['AppData'] ?? '';
 const factorioPath = `${appDataPath}/Factorio`;
 const modsPath = `${factorioPath}/mods`;
 const modListPath = `${modsPath}/mod-list.json`;
@@ -26,7 +27,7 @@ const modDataPath = `${modPath}/data.json`;
 const modSettingsSourcePath = `${modPath}/mod-settings.dat`;
 const modSettingsDestPath = `${modsPath}/mod-settings.dat`;
 
-async function dumpPrep(): Promise<void> {
+function dumpPrep(): void {
   // Read mod data
   const modList = getJsonData<D.ModList>(modListPath);
   const data = getJsonData<ModData>(modDataPath);
@@ -34,7 +35,7 @@ async function dumpPrep(): Promise<void> {
   Object.keys(data.version).forEach((key) => {
     const mod = modList.mods.find((m) => m.name === key);
     if (mod == null) {
-      throw `Mod ${key} not found, may need to be installed`;
+      throw new Error(`Mod ${key} not found, may need to be installed`);
     }
   });
 

@@ -1,4 +1,5 @@
 import { Entities } from '~/models';
+
 import * as M from './factorio.models';
 
 export interface ModList {
@@ -83,7 +84,7 @@ export interface DataRawDump {
 }
 
 export interface Locale {
-  names: Entities<string>;
+  names: Entities;
 }
 
 export type AnyItemPrototype =

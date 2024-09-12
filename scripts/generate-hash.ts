@@ -1,6 +1,7 @@
 import fs from 'fs';
 
 import { ModData } from '~/models';
+
 import { emptyModHash, getJsonData } from './helpers';
 
 const mod = process.argv[2];

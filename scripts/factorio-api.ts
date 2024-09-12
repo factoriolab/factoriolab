@@ -1,6 +1,7 @@
+import https from 'node:https';
+
 import fs from 'fs';
 import handlebars from 'handlebars';
-import https from 'node:https';
 
 import * as M from './factorio-api.models';
 
@@ -44,7 +45,7 @@ function getPrototypeApi(): Promise<M.PrototypeApi> {
       .get(API_PATH, (res) => {
         let data = '';
 
-        res.on('data', (chunk) => {
+        res.on('data', (chunk: string) => {
           data += chunk;
         });
 
@@ -53,7 +54,9 @@ function getPrototypeApi(): Promise<M.PrototypeApi> {
           resolve(api);
         });
       })
-      .on('error', (err) => reject(err));
+      .on('error', (err) => {
+        reject(err);
+      });
   });
 }
 
@@ -99,7 +102,9 @@ function parseType(type: M.DataType, structName?: string): string {
     }
     case 'struct':
       if (structName == null)
-        throw 'Unexpected struct: use properties on parent or pass a struct name to use';
+        throw new Error(
+          'Unexpected struct: use properties on parent or pass a struct name to use',
+        );
 
       return structName;
     case 'tuple':
@@ -245,7 +250,7 @@ const generate = async function (): Promise<void> {
 {{#if export}}export {{/if}}interface {{#if extends}}_{{/if}}{{name}} {
   {{#if typeName}}
   type: '{{typeName}}';
-  {{/if}}  
+  {{/if}}
   {{#props}}
   {{#if description}}
   /** {{{description}}} */
@@ -278,7 +283,7 @@ export type {{name}} = {{{value}}};
   const result = modelsTemplate(data);
 
   fs.writeFileSync('scripts/factorio.models.ts', result);
-  console.log(`Generated ${api.prototypes.length} models`);
+  console.log(`Generated ${api.prototypes.length.toString()} models`);
 };
 
-generate();
+void generate();
