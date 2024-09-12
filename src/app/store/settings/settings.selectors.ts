@@ -377,9 +377,6 @@ export const getDataset = createSelector(
       .forEach((r) => {
         const firstOutId = Object.keys(r.out)[0];
         const firstOutItem = itemData[firstOutId];
-        if (r.id === 'packaged-rocket-fuel') {
-          console.log(firstOutId, firstOutItem, r);
-        }
         r.icon = firstOutItem.icon ?? firstOutId;
       });
 
