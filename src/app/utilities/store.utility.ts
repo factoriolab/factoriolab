@@ -1,5 +1,5 @@
 import { spread } from '~/helpers';
-import { Entities } from '~/models';
+import { Entities, Rational } from '~/models';
 
 export class StoreUtility {
   static rankEquals<T extends number | string>(
@@ -10,6 +10,13 @@ export class StoreUtility {
       return false;
     }
     return a.length === b.length && a.every((v, i) => v === b[i]);
+  }
+
+  static valueEquals<T>(value: T, def: T | undefined): boolean {
+    if (value instanceof Rational && def instanceof Rational)
+      return value.eq(def);
+
+    return value === def;
   }
 
   /** Resets a passed fields of the state */
@@ -67,7 +74,7 @@ export class StoreUtility {
     def: T[K] | undefined,
   ): Entities<T> {
     // Spread into new state
-    if (value === def) {
+    if (this.valueEquals(value, def)) {
       // Resetting to null
       const newState = spread(state);
       if (newState[id] !== undefined) {
