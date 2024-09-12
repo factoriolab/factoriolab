@@ -57,11 +57,9 @@ module.exports = tseslint.config(
         },
       ],
       '@typescript-eslint/prefer-enum-initializers': 'error',
-      // TODO: Convert utilities to services, then this can be enabled
       '@typescript-eslint/no-extraneous-class': 'off',
       '@typescript-eslint/no-dynamic-delete': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
-      '@typescript-eslint/no-unsafe-enum-comparison': 'off',
       '@typescript-eslint/prefer-nullish-coalescing': [
         'error',
         { ignorePrimitives: true },

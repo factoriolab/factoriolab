@@ -328,7 +328,8 @@ export class RouterService {
       modHash,
       hash,
     );
-    this.dispatch(prune(state));
+    prune(state);
+    this.dispatch(state);
     this.ready$.next();
   }
 
@@ -476,7 +477,8 @@ export class RouterService {
         id: this.zipSvc.parseString(s[i++], hash?.modules),
       };
 
-      return prune(obj);
+      prune(obj);
+      return obj;
     });
   }
 
@@ -530,7 +532,8 @@ export class RouterService {
         total: this.zipSvc.parseRational(s[i++]),
       };
 
-      return prune(obj);
+      prune(obj);
+      return obj;
     });
   }
 
@@ -621,8 +624,9 @@ export class RouterService {
         );
       }
 
+      prune(obj);
       ids.push(id);
-      entities[id] = prune(obj);
+      entities[id] = obj;
       index++;
     }
     return { ids, index, entities };
@@ -661,12 +665,12 @@ export class RouterService {
       const s = item.split(ZFIELDSEP);
       let i = 0;
       const id = coalesce(this.zipSvc.parseString(s[i++], hash?.items), '');
-      let obj: ItemSettings = {
+      const obj: ItemSettings = {
         beltId: this.zipSvc.parseString(s[i++], hash?.belts),
         wagonId: this.zipSvc.parseString(s[i++], hash?.wagons),
       };
 
-      obj = prune(obj);
+      prune(obj);
       if (Object.keys(obj).length) entities[id] = obj;
     }
     return entities;
@@ -722,7 +726,7 @@ export class RouterService {
       const s = recipe.split(ZFIELDSEP);
       let i = 0;
       const id = coalesce(this.zipSvc.parseString(s[i++], hash?.recipes), '');
-      let obj: RecipeSettings = {
+      const obj: RecipeSettings = {
         machineId: this.zipSvc.parseString(s[i++], hash?.machines),
         modules: this.zipSvc
           .parseArray(s[i++])
@@ -735,7 +739,7 @@ export class RouterService {
         fuelId: this.zipSvc.parseString(s[i++], hash?.fuels),
       };
 
-      obj = prune(obj);
+      prune(obj);
       if (Object.keys(obj).length) entities[id] = obj;
     }
     return entities;
@@ -790,7 +794,7 @@ export class RouterService {
       const s = machine.split(ZFIELDSEP);
       let i = 0;
       const id = coalesce(this.zipSvc.parseString(s[i++], hash?.machines), '');
-      let obj: MachineSettings = {
+      const obj: MachineSettings = {
         modules: this.zipSvc
           .parseArray(s[i++])
           ?.map((i) => moduleSettings[Number(i)] ?? {}),
@@ -801,7 +805,7 @@ export class RouterService {
         overclock: this.zipSvc.parseRational(s[i++]),
       };
 
-      obj = prune(obj);
+      prune(obj);
       if (Object.keys(obj).length) entities[id] = obj;
     }
 
@@ -888,7 +892,7 @@ export class RouterService {
     const rnk = get(this.zipSvc.parseArray.bind(this.zipSvc));
     const arr = get(this.zipSvc.parseIndices.bind(this.zipSvc));
 
-    let obj: Settings.PartialSettingsState = {
+    const obj: Settings.PartialSettingsState = {
       modId,
       checkedObjectiveIds: sub('och', objectiveIds),
       maximizeType: num('omt'),
@@ -919,7 +923,7 @@ export class RouterService {
       researchedTechnologyIds: sub('tre', modHash.technologies),
     };
 
-    let costs: Partial<CostSettings> = {
+    const costs: Partial<CostSettings> = {
       factor: rat('cfa'),
       machine: rat('cma'),
       footprint: rat('cfp'),
@@ -944,10 +948,10 @@ export class RouterService {
         );
     }
 
-    costs = prune(costs);
+    prune(costs);
     if (Object.keys(costs).length) obj.costs = costs;
 
-    obj = prune(obj);
+    prune(obj);
     if (!Object.keys(obj).length) return;
 
     return obj;

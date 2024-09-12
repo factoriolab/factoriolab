@@ -806,7 +806,7 @@ export class MigrationService {
   }
 
   migrateV10(state: MigrationState): MigrationState {
-    let { params } = state;
+    const { params } = state;
 
     delete params[ZipSectionV10.RecipeObjectives];
 
@@ -993,8 +993,7 @@ export class MigrationService {
     params['b'] = newBeacons;
     params['v'] = ZipVersion.Version11;
 
-    params = prune(params);
-    state.params = params;
+    prune(params);
 
     function replaceDeprecated(v: string): string {
       return v.replaceAll(V10NULL, '').replaceAll(ZEMPTY, ZEMPTY);

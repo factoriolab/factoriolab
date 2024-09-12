@@ -1,12 +1,6 @@
 /** Deletes any keys that are undefined */
-export function prune<T extends object>(obj: T): T {
-  const keys = Object.keys(obj) as (keyof T)[];
-  keys
-    .filter((k) => obj[k] === undefined)
-    .forEach((k) => {
-      const { [k]: _, ...remain } = obj;
-      obj = remain as T;
-    });
-
-  return obj;
+export function prune(obj: object): void {
+  const cast = obj as Record<string, unknown>;
+  const keys = Object.keys(cast);
+  keys.filter((k) => cast[k] === undefined).forEach((k) => delete cast[k]);
 }

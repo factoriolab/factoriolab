@@ -2,7 +2,7 @@ import { InserterCapacity, InserterTarget, ItemId } from './enum';
 import { Rational, rational } from './rational';
 
 export interface InserterSpeed {
-  id: ItemId;
+  id: string;
   value: Rational;
 }
 
