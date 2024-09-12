@@ -184,6 +184,7 @@ export const selectDefaults = createSelector(
     const m = base.defaults;
     let beacons: BeaconSettings[] = [];
     let moduleRank: string[] | undefined;
+    let overclock: Rational | undefined;
     switch (base.game) {
       case Game.Factorio: {
         moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
@@ -216,6 +217,7 @@ export const selectDefaults = createSelector(
       case Game.FinalFactory:
       case Game.Satisfactory: {
         moduleRank = m.moduleRank;
+        overclock = rational(100n);
         break;
       }
     }
@@ -232,6 +234,7 @@ export const selectDefaults = createSelector(
       fuelRankIds: coalesce(m.fuelRank, []),
       moduleRankIds: coalesce(moduleRank, []),
       beacons,
+      overclock,
     };
   },
 );
@@ -511,7 +514,7 @@ export const selectSettings = createSelector(
       fuelRankIds: s.fuelRankIds ?? d?.fuelRankIds ?? [],
       moduleRankIds: s.moduleRankIds ?? d?.moduleRankIds ?? [],
       beacons: RecipeUtility.hydrateBeacons(s.beacons, d?.beacons),
-      overclock: s.overclock,
+      overclock: s.overclock ?? d?.overclock,
       researchedTechnologyIds,
     },
   }),
