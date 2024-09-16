@@ -109,7 +109,6 @@
     "typescript": "~5.5.3",
     "typescript-eslint": "8.1.0"
   },
-  "sideEffects": false,
   "browser": {
     "crypto": false,
     "fs": false,
