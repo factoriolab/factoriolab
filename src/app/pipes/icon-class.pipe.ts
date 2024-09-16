@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { IdType } from '~/models';
+import { IdType } from '~/models/enum/id-type';
 
 @Pipe({ name: 'iconClass', standalone: true })
 export class IconClassPipe implements PipeTransform {

@@ -7,7 +7,7 @@ import {
 } from '@angular/core/testing';
 import { FormsModule, NgForm } from '@angular/forms';
 
-import { rational } from '~/models';
+import { rational } from '~/models/rational';
 
 import { ValidateNumberDirective } from './validate-number.directive';
 

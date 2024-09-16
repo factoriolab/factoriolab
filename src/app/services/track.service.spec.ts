@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { rational } from '~/models';
+import { rational } from '~/models/rational';
 
 import { TrackService } from './track.service';
 

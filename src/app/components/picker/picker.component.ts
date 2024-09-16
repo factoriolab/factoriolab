@@ -19,11 +19,13 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TabViewModule } from 'primeng/tabview';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { TabViewOverrideDirective } from '~/directives';
-import { Category, Entities } from '~/models';
-import { IconSmClassPipe, TranslatePipe } from '~/pipes';
-import { ContentService } from '~/services';
-import { Recipes } from '~/store';
+import { TabViewOverrideDirective } from '~/directives/tabview-override.directive';
+import { Category } from '~/models/data/category';
+import { Entities } from '~/models/entities';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
 
 import { DialogComponent } from '../modal';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -59,7 +61,7 @@ export class PickerComponent extends DialogComponent {
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<Set<string>>();
 
-  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
+  data = this.store.selectSignal(selectAdjustedDataset);
 
   search = '';
   allSelected = false;

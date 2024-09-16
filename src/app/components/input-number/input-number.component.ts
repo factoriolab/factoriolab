@@ -16,9 +16,9 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { debounce, map, of, Subject, tap, timer } from 'rxjs';
 
-import { ValidateNumberDirective } from '~/directives';
+import { ValidateNumberDirective } from '~/directives/validate-number.directive';
 import { filterNullish } from '~/helpers';
-import { Rational, rational } from '~/models';
+import { Rational, rational } from '~/models/rational';
 
 type EventType = 'input' | 'blur' | 'enter';
 

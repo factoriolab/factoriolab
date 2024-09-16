@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { Objectives } from '~/store';
+import { selectBaseObjectives } from '~/store/objectives/objectives.selectors';
 import { Mocks, TestModule } from '~/tests';
 
 import { HeaderComponent } from './header.component';
@@ -29,10 +29,7 @@ describe('HeaderComponent', () => {
   describe('ngOnInit', () => {
     it('should update the page title with the first objective name', () => {
       spyOn(component.title, 'setTitle');
-      mockStore.overrideSelector(
-        Objectives.selectBaseObjectives,
-        Mocks.ObjectivesList,
-      );
+      mockStore.overrideSelector(selectBaseObjectives, Mocks.objectivesList);
       mockStore.refreshState();
       expect(component.title.setTitle).toHaveBeenCalledWith(
         'Advanced circuit | FactorioLab',

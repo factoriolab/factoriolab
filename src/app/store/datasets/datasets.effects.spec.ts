@@ -2,11 +2,12 @@ import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
 import { EMPTY, ReplaySubject } from 'rxjs';
 
-import { DataService } from '~/services';
+import { DataService } from '~/services/data.service';
 import { Mocks, TestModule } from '~/tests';
 
-import * as App from '../app.actions';
-import * as Settings from '../settings';
+import { load, reset } from '../app.actions';
+import { setMod } from '../settings/settings.actions';
+import { initialSettingsState } from '../settings/settings.reducer';
 import { DatasetsEffects } from './datasets.effects';
 
 describe('DatasetsEffects', () => {
@@ -28,10 +29,10 @@ describe('DatasetsEffects', () => {
     it('should load the default base mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(EMPTY);
       actions = new ReplaySubject(1);
-      actions.next(App.load({ partial: {} }));
+      actions.next(load({ partial: {} }));
       effects.appLoad$.subscribe();
       expect(dataSvc.requestData).toHaveBeenCalledWith(
-        Settings.initialState.modId,
+        initialSettingsState.modId,
       );
     });
   });
@@ -40,10 +41,10 @@ describe('DatasetsEffects', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(EMPTY);
       actions = new ReplaySubject(1);
-      actions.next(App.reset());
+      actions.next(reset());
       effects.appReset$.subscribe();
       expect(dataSvc.requestData).toHaveBeenCalledWith(
-        Settings.initialState.modId,
+        initialSettingsState.modId,
       );
     });
   });
@@ -52,9 +53,9 @@ describe('DatasetsEffects', () => {
     it('should reset and load mod for new mod', () => {
       spyOn(dataSvc, 'requestData').and.returnValue(EMPTY);
       actions = new ReplaySubject(1);
-      actions.next(Settings.setMod({ modId: Mocks.Mod.id }));
+      actions.next(setMod({ modId: Mocks.mod.id }));
       effects.setModId$.subscribe();
-      expect(dataSvc.requestData).toHaveBeenCalledWith(Mocks.Mod.id);
+      expect(dataSvc.requestData).toHaveBeenCalledWith(Mocks.mod.id);
     });
   });
 });

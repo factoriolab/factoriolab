@@ -13,18 +13,19 @@ import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { DropdownBaseDirective } from '~/directives';
+import { DropdownBaseDirective } from '~/directives/dropdown-base.directive';
 import { spread } from '~/helpers';
+import { ItemId } from '~/models/enum/item-id';
+import { Optional } from '~/models/optional';
+import { Rational, rational } from '~/models/rational';
+import { BeaconSettings } from '~/models/settings/beacon-settings';
+import { ModuleSettings } from '~/models/settings/module-settings';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
 import {
-  BeaconSettings,
-  ItemId,
-  ModuleSettings,
-  Optional,
-  Rational,
-  rational,
-} from '~/models';
-import { IconSmClassPipe, TranslatePipe } from '~/pipes';
-import { Settings } from '~/store';
+  selectDataset,
+  selectOptions,
+} from '~/store/settings/settings.selectors';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { OverlayComponent } from '../modal';
@@ -55,8 +56,8 @@ export class BeaconsOverlayComponent extends OverlayComponent {
 
   @Output() setValue = new EventEmitter<BeaconSettings[]>();
 
-  data = this.store.selectSignal(Settings.selectDataset);
-  options = this.store.selectSignal(Settings.selectOptions);
+  data = this.store.selectSignal(selectDataset);
+  options = this.store.selectSignal(selectOptions);
 
   beacons = signal<BeaconSettings[]>([]);
   recipeId = signal<string | undefined>(undefined);

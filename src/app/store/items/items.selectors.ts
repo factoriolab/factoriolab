@@ -1,9 +1,11 @@
 import { createSelector } from '@ngrx/store';
 
-import { Entities, ItemId, ItemSettings } from '~/models';
+import { Entities } from '~/models/entities';
+import { ItemId } from '~/models/enum/item-id';
+import { ItemSettings } from '~/models/settings/item-settings';
 
 import { LabState } from '../';
-import * as Settings from '../settings';
+import { selectDataset, selectSettings } from '../settings/settings.selectors';
 import { ItemsState } from './items.reducer';
 
 /* Base selector functions */
@@ -12,8 +14,8 @@ export const itemsState = (state: LabState): ItemsState => state.itemsState;
 /* Complex selectors */
 export const selectItemsState = createSelector(
   itemsState,
-  Settings.selectDataset,
-  Settings.selectSettings,
+  selectDataset,
+  selectSettings,
   (state, data, settings) => {
     const value: Entities<ItemSettings> = {};
     if (data?.itemIds?.length) {

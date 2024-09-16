@@ -7,19 +7,18 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { DropdownTranslateDirective } from '~/directives';
-import {
-  FlowDiagram,
-  flowDiagramOptions,
-  FlowSettings,
-  sankeyAlignOptions,
-} from '~/models';
-import { TranslatePipe } from '~/pipes';
-import { Preferences, Settings } from '~/store';
+import { DropdownTranslateDirective } from '~/directives/dropdown-translate.directive';
+import { FlowDiagram, flowDiagramOptions } from '~/models/enum/flow-diagram';
+import { sankeyAlignOptions } from '~/models/enum/sankey-align';
+import { FlowSettings } from '~/models/settings/flow-settings';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { setFlowSettings } from '~/store/preferences/preferences.actions';
+import { initialPreferencesState } from '~/store/preferences/preferences.reducer';
+import { selectLinkValueOptions } from '~/store/settings/settings.selectors';
 
 import { DialogComponent } from '../modal';
 
-const initialValue = Preferences.initialState.flowSettings;
+const initialValue = initialPreferencesState.flowSettings;
 
 @Component({
   selector: 'lab-flow-settings',
@@ -40,7 +39,7 @@ const initialValue = Preferences.initialState.flowSettings;
 export class FlowSettingsComponent extends DialogComponent {
   store = inject(Store);
 
-  linkValueOptions = this.store.selectSignal(Settings.selectLinkValueOptions);
+  linkValueOptions = this.store.selectSignal(selectLinkValueOptions);
 
   editValue = { ...initialValue };
 
@@ -70,6 +69,6 @@ export class FlowSettingsComponent extends DialogComponent {
 
   save(): void {
     const flowSettings = this.editValue;
-    this.store.dispatch(Preferences.setFlowSettings({ flowSettings }));
+    this.store.dispatch(setFlowSettings({ flowSettings }));
   }
 }

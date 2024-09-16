@@ -5,19 +5,28 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 
-import { InputNumberComponent } from '~/components';
+import { InputNumberComponent } from '~/components/input-number/input-number.component';
 import { coalesce, updateSetIds } from '~/helpers';
-import { Game, Rational, Recipe, RecipeSettings } from '~/models';
+import { Recipe } from '~/models/data/recipe';
+import { Game } from '~/models/enum/game';
+import { Rational } from '~/models/rational';
+import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { RoundPipe } from '~/pipes/round.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { UsagePipe } from '~/pipes/usage.pipe';
+import { resetRecipe, setCost } from '~/store/recipes/recipes.actions';
 import {
-  IconClassPipe,
-  IconSmClassPipe,
-  RoundPipe,
-  TranslatePipe,
-  UsagePipe,
-} from '~/pipes';
-import { Recipes, Settings } from '~/store';
+  recipesState,
+  selectRecipesState,
+} from '~/store/recipes/recipes.selectors';
+import {
+  setCheckedRecipes,
+  setExcludedRecipes,
+} from '~/store/settings/settings.actions';
+import { selectSettings } from '~/store/settings/settings.selectors';
 
-import { DetailComponent } from '../../models';
+import { DetailComponent } from '../../models/detail.component';
 
 @Component({
   standalone: true,
@@ -37,9 +46,9 @@ import { DetailComponent } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RecipeComponent extends DetailComponent {
-  recipesStateRaw = this.store.selectSignal(Recipes.recipesState);
-  recipesState = this.store.selectSignal(Recipes.selectRecipesState);
-  settings = this.store.selectSignal(Settings.selectSettings);
+  recipesStateRaw = this.store.selectSignal(recipesState);
+  recipesState = this.store.selectSignal(selectRecipesState);
+  settings = this.store.selectSignal(selectSettings);
 
   obj = computed<Recipe | undefined>(
     () => this.data().recipeEntities[this.id()],
@@ -83,18 +92,18 @@ export class RecipeComponent extends DetailComponent {
 
   /** Action dispatch methods */
   setExcludedRecipes(value: Set<string>, def: Set<string>): void {
-    this.store.dispatch(Settings.setExcludedRecipes({ value, def }));
+    this.store.dispatch(setExcludedRecipes({ value, def }));
   }
 
   setCheckedRecipes(checkedRecipeIds: Set<string>): void {
-    this.store.dispatch(Settings.setCheckedRecipes({ checkedRecipeIds }));
+    this.store.dispatch(setCheckedRecipes({ checkedRecipeIds }));
   }
 
   setRecipeCost(id: string, value: Rational): void {
-    this.store.dispatch(Recipes.setCost({ id, value }));
+    this.store.dispatch(setCost({ id, value }));
   }
 
   resetRecipe(id: string): void {
-    this.store.dispatch(Recipes.resetRecipe({ id }));
+    this.store.dispatch(resetRecipe({ id }));
   }
 }

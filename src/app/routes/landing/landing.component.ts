@@ -9,20 +9,31 @@ import { DividerModule } from 'primeng/divider';
 import { DropdownModule } from 'primeng/dropdown';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
-import { PickerComponent } from '~/components';
+import { PickerComponent } from '~/components/picker/picker.component';
+import { Game, gameOptions } from '~/models/enum/game';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { gameInfo } from '~/models/game-info';
+import { Objective } from '~/models/objective';
+import { rational } from '~/models/rational';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { RouterService } from '~/services/router.service';
+import { create } from '~/store/objectives/objectives.actions';
+import { setBypassLanding } from '~/store/preferences/preferences.actions';
+import { preferencesState } from '~/store/preferences/preferences.selectors';
+import { selectAvailableItems } from '~/store/recipes/recipes.selectors';
+import { setMod } from '~/store/settings/settings.actions';
 import {
-  Game,
-  gameInfo,
-  gameOptions,
-  Objective,
-  ObjectiveType,
-  ObjectiveUnit,
-  rational,
-} from '~/models';
-import { IconSmClassPipe, TranslatePipe } from '~/pipes';
-import { ContentService, RouterService } from '~/services';
-import { Objectives, Preferences, Recipes, Settings } from '~/store';
-import { BrowserUtility } from '~/utilities';
+  selectAvailableRecipes,
+  selectDataset,
+  selectMod,
+  selectModOptions,
+  selectSavedStates,
+  selectSettings,
+} from '~/store/settings/settings.selectors';
+import { BrowserUtility } from '~/utilities/browser.utility';
 
 @Component({
   standalone: true,
@@ -45,19 +56,19 @@ import { BrowserUtility } from '~/utilities';
 })
 export class LandingComponent {
   router = inject(Router);
-  contentSvc = inject(ContentService);
-  store = inject(Store);
-  routerSvc = inject(RouterService);
   route = inject(ActivatedRoute);
+  store = inject(Store);
+  contentSvc = inject(ContentService);
+  routerSvc = inject(RouterService);
 
-  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
-  settings = this.store.selectSignal(Settings.selectSettings);
-  modOptions = this.store.selectSignal(Settings.selectModOptions);
-  data = this.store.selectSignal(Settings.selectDataset);
-  mod = this.store.selectSignal(Settings.selectMod);
-  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
-  savedStates = this.store.selectSignal(Settings.selectSavedStates);
-  preferences = this.store.selectSignal(Preferences.preferencesState);
+  itemIds = this.store.selectSignal(selectAvailableItems);
+  settings = this.store.selectSignal(selectSettings);
+  modOptions = this.store.selectSignal(selectModOptions);
+  data = this.store.selectSignal(selectDataset);
+  mod = this.store.selectSignal(selectMod);
+  recipeIds = this.store.selectSignal(selectAvailableRecipes);
+  savedStates = this.store.selectSignal(selectSavedStates);
+  preferences = this.store.selectSignal(preferencesState);
 
   gameInfo = gameInfo;
   gameOptions = gameOptions;
@@ -107,14 +118,14 @@ export class LandingComponent {
 
   /** Action Dispatch Methods */
   setMod(modId: string): void {
-    this.store.dispatch(Settings.setMod({ modId }));
+    this.store.dispatch(setMod({ modId }));
   }
 
   createObjective(objective: Objective): void {
-    this.store.dispatch(Objectives.create({ objective }));
+    this.store.dispatch(create({ objective }));
   }
 
   setBypassLanding(bypassLanding: boolean): void {
-    this.store.dispatch(Preferences.setBypassLanding({ bypassLanding }));
+    this.store.dispatch(setBypassLanding({ bypassLanding }));
   }
 }

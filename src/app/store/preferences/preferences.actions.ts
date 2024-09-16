@@ -1,14 +1,12 @@
 import { createAction, props } from '@ngrx/store';
 
-import {
-  ColumnsState,
-  Entities,
-  FlowSettings,
-  Game,
-  Language,
-  PowerUnit,
-  Theme,
-} from '~/models';
+import { Entities } from '~/models/entities';
+import { Game } from '~/models/enum/game';
+import { Language } from '~/models/enum/language';
+import { PowerUnit } from '~/models/enum/power-unit';
+import { Theme } from '~/models/enum/theme';
+import { ColumnsState } from '~/models/settings/column-settings';
+import { FlowSettings } from '~/models/settings/flow-settings';
 
 const key = '[Preferences]';
 export const saveState = createAction(

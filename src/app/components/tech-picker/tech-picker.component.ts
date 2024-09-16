@@ -22,10 +22,16 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TooltipModule } from 'primeng/tooltip';
 import { first } from 'rxjs';
 
-import { Game, Item, Optional } from '~/models';
-import { IconSmClassPipe, TranslatePipe } from '~/pipes';
-import { ContentService, TranslateService } from '~/services';
-import { Preferences, Recipes } from '~/store';
+import { Item } from '~/models/data/item';
+import { Game } from '~/models/enum/game';
+import { Optional } from '~/models/optional';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { TranslateService } from '~/services/translate.service';
+import { setShowTechLabels } from '~/store/preferences/preferences.actions';
+import { selectShowTechLabels } from '~/store/preferences/preferences.selectors';
+import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
 
 import { DialogComponent } from '../modal';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -53,17 +59,17 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TechPickerComponent extends DialogComponent {
+  store = inject(Store);
   filterSvc = inject(FilterService);
   translateSvc = inject(TranslateService);
-  store = inject(Store);
   contentSvc = inject(ContentService);
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 
   @Output() selectIds = new EventEmitter<Optional<Set<string>>>();
 
-  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
-  showTechLabels = this.store.selectSignal(Preferences.selectShowTechLabels);
+  data = this.store.selectSignal(selectAdjustedDataset);
+  showTechLabels = this.store.selectSignal(selectShowTechLabels);
 
   filter = signal('');
   selection = signal<string[]>([]);
@@ -242,6 +248,6 @@ game.write_file("techs.txt", table.concat(list, ","))
 
   /** Action Dispatch Methods */
   setShowTechLabels(showTechLabels: boolean): void {
-    this.store.dispatch(Preferences.setShowTechLabels({ showTechLabels }));
+    this.store.dispatch(setShowTechLabels({ showTechLabels }));
   }
 }

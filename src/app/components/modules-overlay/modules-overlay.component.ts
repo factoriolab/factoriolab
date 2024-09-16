@@ -10,8 +10,9 @@ import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 
-import { Machine, ModuleSettings } from '~/models';
-import { TranslatePipe } from '~/pipes';
+import { Machine } from '~/models/data/machine';
+import { ModuleSettings } from '~/models/settings/module-settings';
+import { TranslatePipe } from '~/pipes/translate.pipe';
 
 import { OverlayComponent } from '../modal';
 import { ModulesComponent } from '../modules/modules.component';

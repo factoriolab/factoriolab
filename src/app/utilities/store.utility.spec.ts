@@ -1,4 +1,4 @@
-import { Entities } from '~/models';
+import { Entities } from '~/models/entities';
 import { ItemId, Mocks } from '~/tests';
 
 import { StoreUtility } from './store.utility';
@@ -26,7 +26,7 @@ describe('StoreUtility', () => {
     it('should reset multiple fields', () => {
       const result = StoreUtility.resetFields(
         {
-          [Mocks.Item1.id]: {
+          [Mocks.item1.id]: {
             excluded: true,
             belt: ItemId.TransportBelt,
             machine: ItemId.AssemblingMachine1,
@@ -34,7 +34,7 @@ describe('StoreUtility', () => {
         },
         ['excluded', 'belt'],
       );
-      expect(result[Mocks.Item1.id]).toEqual({
+      expect(result[Mocks.item1.id]).toEqual({
         machine: ItemId.AssemblingMachine1,
       } as any);
     });
@@ -43,29 +43,29 @@ describe('StoreUtility', () => {
   describe('resetField', () => {
     it('should reset changes to a field', () => {
       const result = StoreUtility.resetField(
-        { [Mocks.Item1.id]: { excluded: true, belt: ItemId.TransportBelt } },
+        { [Mocks.item1.id]: { excluded: true, belt: ItemId.TransportBelt } },
         'excluded',
       );
-      expect(result[Mocks.Item1.id]).toEqual({
+      expect(result[Mocks.item1.id]).toEqual({
         belt: ItemId.TransportBelt,
       } as any);
     });
 
     it('should delete an entity if no modifications remain', () => {
       const result = StoreUtility.resetField(
-        { [Mocks.Item1.id]: { excluded: true } },
+        { [Mocks.item1.id]: { excluded: true } },
         'excluded',
       );
-      expect(result[Mocks.Item1.id]).toBeUndefined();
+      expect(result[Mocks.item1.id]).toBeUndefined();
     });
 
     it('should reset a field for a specific id', () => {
       const result = StoreUtility.resetField(
-        { [Mocks.Item1.id]: { excluded: true, belt: ItemId.TransportBelt } },
+        { [Mocks.item1.id]: { excluded: true, belt: ItemId.TransportBelt } },
         'excluded',
-        Mocks.Item1.id,
+        Mocks.item1.id,
       );
-      expect(result[Mocks.Item1.id]).toEqual({
+      expect(result[Mocks.item1.id]).toEqual({
         belt: ItemId.TransportBelt,
       } as any);
     });

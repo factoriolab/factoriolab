@@ -1,12 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import {
-  InserterData,
-  InserterSpeed,
-  ItemId,
-  Rational,
-  SettingsComplete,
-} from '~/models';
+import { ItemId } from '~/models/enum/item-id';
+import { InserterData, InserterSpeed } from '~/models/inserter-data';
+import { Rational } from '~/models/rational';
+import { SettingsComplete } from '~/models/settings/settings-complete';
 
 @Pipe({ name: 'inserterSpeed', standalone: true })
 export class InserterSpeedPipe implements PipeTransform {

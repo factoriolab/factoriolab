@@ -2,10 +2,11 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map, switchMap } from 'rxjs/operators';
 
-import { DataService } from '~/services';
+import { DataService } from '~/services/data.service';
 
-import * as App from '../app.actions';
-import * as Settings from '../settings';
+import { load, reset } from '../app.actions';
+import { setMod } from '../settings/settings.actions';
+import { initialSettingsState } from '../settings/settings.reducer';
 
 @Injectable()
 export class DatasetsEffects {
@@ -15,10 +16,10 @@ export class DatasetsEffects {
   appLoad$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(App.load),
+        ofType(load),
         map(
           ({ partial }) =>
-            partial.settingsState?.modId || Settings.initialState.modId,
+            partial.settingsState?.modId || initialSettingsState.modId,
         ),
         switchMap((id) => this.dataSvc.requestData(id)),
       );
@@ -29,8 +30,8 @@ export class DatasetsEffects {
   appReset$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(App.reset),
-        switchMap(() => this.dataSvc.requestData(Settings.initialState.modId)),
+        ofType(reset),
+        switchMap(() => this.dataSvc.requestData(initialSettingsState.modId)),
       );
     },
     { dispatch: false },
@@ -39,7 +40,7 @@ export class DatasetsEffects {
   setModId$ = createEffect(
     () => {
       return this.actions$.pipe(
-        ofType(Settings.setMod),
+        ofType(setMod),
         switchMap(({ modId }) => this.dataSvc.requestData(modId)),
       );
     },

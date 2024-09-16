@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { Theme } from '~/models';
-import { Preferences, Settings } from '~/store';
+import { Theme } from '~/models/enum/theme';
+import { selectTheme } from '~/store/preferences/preferences.selectors';
+import { selectDataset } from '~/store/settings/settings.selectors';
 import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
-import { BrowserUtility } from '~/utilities';
+import { BrowserUtility } from '~/utilities/browser.utility';
 
 import { ThemeService } from './theme.service';
 
@@ -24,7 +25,7 @@ describe('ThemeService', () => {
     data.categoryEntities[CategoryId.Combat].iconText = 'test';
     data.iconEntities['coal'].invertLight = true;
     data.iconEntities['pistol'].invertLight = true;
-    mockStore.overrideSelector(Settings.selectDataset, data);
+    mockStore.overrideSelector(selectDataset, data);
     mockStore.refreshState();
     service.initialize();
     localStorage.clear();
@@ -45,13 +46,13 @@ describe('ThemeService', () => {
     spyOn(service.head, 'appendChild');
     spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
     spyOn(service.document, 'createElement').and.returnValue(tempLink as any);
-    mockStore.overrideSelector(Preferences.selectTheme, Theme.Light);
+    mockStore.overrideSelector(selectTheme, Theme.Light);
     mockStore.refreshState();
     expect(tempLink.href).toEqual('theme-light.css');
     expect(themeLink.href).toEqual('');
     tempLink.onload();
     expect(themeLink.href).toEqual('theme-light.css');
-    mockStore.overrideSelector(Preferences.selectTheme, Theme.Dark);
+    mockStore.overrideSelector(selectTheme, Theme.Dark);
     mockStore.refreshState();
     expect(tempLink.href).toEqual('theme-dark.css');
     expect(themeLink.href).toEqual('theme-light.css');
@@ -64,7 +65,7 @@ describe('ThemeService', () => {
     const themeLink = { href: 'theme-black.css' };
     spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
     spyOn(service, 'themePath').and.returnValue('theme-black.css');
-    mockStore.overrideSelector(Preferences.selectTheme, Theme.Black);
+    mockStore.overrideSelector(selectTheme, Theme.Black);
     mockStore.refreshState();
     expect(service.updateThemeValues).toHaveBeenCalled();
   });

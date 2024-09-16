@@ -15,10 +15,20 @@ import { SplitButtonModule } from 'primeng/splitbutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, Game, gameInfo, gameOptions, isRecipeObjective } from '~/models';
-import { IconSmClassPipe, TranslatePipe } from '~/pipes';
-import { ContentService, TranslateService } from '~/services';
-import { Objectives, Settings } from '~/store';
+import { APP } from '~/models/constants';
+import { Game, gameOptions } from '~/models/enum/game';
+import { gameInfo } from '~/models/game-info';
+import { isRecipeObjective } from '~/models/objective';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { TranslateService } from '~/services/translate.service';
+import { selectBaseObjectives } from '~/store/objectives/objectives.selectors';
+import {
+  selectDataset,
+  selectGame,
+  selectGameInfo,
+} from '~/store/settings/settings.selectors';
 
 interface MenuLink {
   label: string;
@@ -44,16 +54,16 @@ interface MenuLink {
 export class HeaderComponent {
   title = inject(Title);
   store = inject(Store);
-  translateSvc = inject(TranslateService);
   contentSvc = inject(ContentService);
+  translateSvc = inject(TranslateService);
 
   @HostBinding('class.sticky') @Input() sticky = false;
   @HostBinding('class.settings-xl-hidden') @Input() settingsXlHidden = false;
 
-  gameInfo = this.store.selectSignal(Settings.selectGameInfo);
+  gameInfo = this.store.selectSignal(selectGameInfo);
   gameOptions = toSignal(
     combineLatest([
-      this.store.select(Settings.selectGame),
+      this.store.select(selectGame),
       ...gameOptions.map((o) => this.translateSvc.get(gameInfo[o.value].label)),
     ]).pipe(
       map(([game, ...labels]): MenuItem[] => {
@@ -91,8 +101,8 @@ export class HeaderComponent {
 
   constructor() {
     combineLatest({
-      objectives: this.store.select(Objectives.selectBaseObjectives),
-      data: this.store.select(Settings.selectDataset),
+      objectives: this.store.select(selectBaseObjectives),
+      data: this.store.select(selectDataset),
       lang: this.translateSvc.lang$,
     })
       .pipe(takeUntilDestroyed())

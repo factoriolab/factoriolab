@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Rational, rational } from '~/models';
+import { Rational, rational } from '~/models/rational';
 
 @Injectable({ providedIn: 'root' })
 export class DisplayService {

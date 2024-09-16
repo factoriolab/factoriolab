@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FlowDiagram } from '~/models';
-import { Preferences } from '~/store';
+import { FlowDiagram } from '~/models/enum/flow-diagram';
+import { setFlowSettings } from '~/store/preferences/preferences.actions';
+import { initialPreferencesState } from '~/store/preferences/preferences.reducer';
 import { Mocks, TestModule } from '~/tests';
 
 import { FlowSettingsComponent } from './flow-settings.component';
@@ -37,9 +38,9 @@ describe('FlowSettingsComponent', () => {
     it('should set up the editValue and show the dialog', () => {
       spyOn(component, 'show');
       component.editValue = null as any;
-      component.open(Mocks.FlowSettings);
-      expect(component.editValue).toEqual(Mocks.FlowSettings);
-      expect(component.editValue).not.toBe(Mocks.FlowSettings);
+      component.open(Mocks.flowSettings);
+      expect(component.editValue).toEqual(Mocks.flowSettings);
+      expect(component.editValue).not.toBe(Mocks.flowSettings);
       expect(component.show).toHaveBeenCalled();
     });
   });
@@ -48,9 +49,7 @@ describe('FlowSettingsComponent', () => {
     it('should set the value back to the initial state', () => {
       component.editValue = null as any;
       component.reset();
-      expect(component.editValue).toEqual(
-        Preferences.initialState.flowSettings,
-      );
+      expect(component.editValue).toEqual(initialPreferencesState.flowSettings);
     });
   });
 
@@ -59,7 +58,7 @@ describe('FlowSettingsComponent', () => {
       spyOn(component.store, 'dispatch');
       component.onHide();
       expect(component.store.dispatch).toHaveBeenCalledWith(
-        Preferences.setFlowSettings({ flowSettings: component.editValue }),
+        setFlowSettings({ flowSettings: component.editValue }),
       );
     });
   });

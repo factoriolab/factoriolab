@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { rational } from '~/models';
-import { Settings } from '~/store';
+import { rational } from '~/models/rational';
+import { setCosts } from '~/store/settings/settings.actions';
+import { initialSettingsState } from '~/store/settings/settings.reducer';
 import { Mocks, TestModule } from '~/tests';
 
 import { CostsComponent } from './costs.component';
@@ -37,9 +38,9 @@ describe('CostsComponent', () => {
     it('should set up the editValue and show the dialog', () => {
       spyOn(component, 'show');
       component.editValue = null as any;
-      component.open(Mocks.Costs);
-      expect(component.editValue).toEqual(Mocks.Costs);
-      expect(component.editValue).not.toBe(Mocks.Costs);
+      component.open(Mocks.costs);
+      expect(component.editValue).toEqual(Mocks.costs);
+      expect(component.editValue).not.toBe(Mocks.costs);
       expect(component.show).toHaveBeenCalled();
     });
   });
@@ -48,7 +49,7 @@ describe('CostsComponent', () => {
     it('should set the value back to the initial state', () => {
       component.editValue = null as any;
       component.reset();
-      expect(component.editValue).toEqual(Settings.initialState.costs);
+      expect(component.editValue).toEqual(initialSettingsState.costs);
     });
   });
 
@@ -57,7 +58,7 @@ describe('CostsComponent', () => {
       spyOn(component.store, 'dispatch');
       component.save();
       expect(component.store.dispatch).toHaveBeenCalledWith(
-        Settings.setCosts({ costs: component.editValue }),
+        setCosts({ costs: component.editValue }),
       );
     });
   });

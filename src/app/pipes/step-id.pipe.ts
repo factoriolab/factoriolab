@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Step } from '~/models';
+import { Step } from '~/models/step';
 
 @Pipe({ name: 'stepId', standalone: true })
 export class StepIdPipe implements PipeTransform {

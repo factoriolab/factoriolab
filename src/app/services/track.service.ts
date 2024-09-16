@@ -2,7 +2,8 @@ import { KeyValue } from '@angular/common';
 import { Injectable } from '@angular/core';
 
 import { coalesce } from '~/helpers';
-import { Rational, Step } from '~/models';
+import { Rational } from '~/models/rational';
+import { Step } from '~/models/step';
 
 @Injectable({
   providedIn: 'root',

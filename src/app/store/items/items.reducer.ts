@@ -1,30 +1,37 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { spread } from '~/helpers';
-import { Entities, ItemSettings } from '~/models';
-import { StoreUtility } from '~/utilities';
+import { Entities } from '~/models/entities';
+import { ItemSettings } from '~/models/settings/item-settings';
+import { StoreUtility } from '~/utilities/store.utility';
 
-import * as App from '../app.actions';
-import * as Settings from '../settings';
-import * as Actions from './items.actions';
+import { load, reset } from '../app.actions';
+import { setMod } from '../settings/settings.actions';
+import {
+  resetBelts,
+  resetItem,
+  resetWagons,
+  setBelt,
+  setWagon,
+} from './items.actions';
 
 export type ItemsState = Entities<ItemSettings>;
 
-export const initialState: ItemsState = {};
+export const initialItemsState: ItemsState = {};
 
 export const itemsReducer = createReducer(
-  initialState,
-  on(App.load, (_, { partial }) =>
-    spread(initialState, partial.itemsState ?? {}),
+  initialItemsState,
+  on(load, (_, { partial }) =>
+    spread(initialItemsState, partial.itemsState ?? {}),
   ),
-  on(App.reset, Settings.setMod, (): ItemsState => initialState),
-  on(Actions.setBelt, (state, { id, value, def }) =>
+  on(reset, setMod, (): ItemsState => initialItemsState),
+  on(setBelt, (state, { id, value, def }) =>
     StoreUtility.compareReset(state, 'beltId', id, value, def),
   ),
-  on(Actions.setWagon, (state, { id, value, def }) =>
+  on(setWagon, (state, { id, value, def }) =>
     StoreUtility.compareReset(state, 'wagonId', id, value, def),
   ),
-  on(Actions.resetItem, (state, { id }) => StoreUtility.removeEntry(state, id)),
-  on(Actions.resetBelts, (state) => StoreUtility.resetField(state, 'beltId')),
-  on(Actions.resetWagons, (state) => StoreUtility.resetField(state, 'wagonId')),
+  on(resetItem, (state, { id }) => StoreUtility.removeEntry(state, id)),
+  on(resetBelts, (state) => StoreUtility.resetField(state, 'beltId')),
+  on(resetWagons, (state) => StoreUtility.resetField(state, 'wagonId')),
 );

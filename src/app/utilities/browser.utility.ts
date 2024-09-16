@@ -1,6 +1,6 @@
-import { StepDetailTab } from '~/models';
+import { StepDetailTab } from '~/models/enum/step-detail-tab';
 import { LabState } from '~/store';
-import { PreferencesState } from '~/store/preferences';
+import { PreferencesState } from '~/store/preferences/preferences.reducer';
 
 export enum StorageKey {
   Router = 'router',

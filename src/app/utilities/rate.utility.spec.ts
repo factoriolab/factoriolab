@@ -1,15 +1,12 @@
 import { spread } from '~/helpers';
-import {
-  DisplayRate,
-  displayRateInfo,
-  Entities,
-  Game,
-  ObjectiveType,
-  ObjectiveUnit,
-  rational,
-  RecipeObjective,
-  Step,
-} from '~/models';
+import { Entities } from '~/models/entities';
+import { DisplayRate, displayRateInfo } from '~/models/enum/display-rate';
+import { Game } from '~/models/enum/game';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { RecipeObjective } from '~/models/objective';
+import { rational } from '~/models/rational';
+import { Step } from '~/models/step';
 import { ItemId, Mocks, RecipeId } from '~/tests';
 
 import { RateUtility } from './rate.utility';
@@ -26,10 +23,10 @@ describe('RateUtility', () => {
             unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Maximize,
           },
-          Mocks.ItemsStateInitial,
-          Mocks.BeltSpeed,
-          Mocks.DisplayRateInfo,
-          Mocks.AdjustedDataset,
+          Mocks.itemsStateInitial,
+          Mocks.beltSpeed,
+          Mocks.drInfo,
+          Mocks.adjustedDataset,
         ),
       ).toEqual(rational.one);
     });
@@ -44,10 +41,10 @@ describe('RateUtility', () => {
             unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
-          Mocks.ItemsStateInitial,
-          Mocks.BeltSpeed,
-          Mocks.DisplayRateInfo,
-          Mocks.AdjustedDataset,
+          Mocks.itemsStateInitial,
+          Mocks.beltSpeed,
+          Mocks.drInfo,
+          Mocks.adjustedDataset,
         ),
       ).toEqual(rational(1n, 60n));
     });
@@ -62,10 +59,10 @@ describe('RateUtility', () => {
             unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
-          Mocks.ItemsStateInitial,
-          Mocks.BeltSpeed,
-          Mocks.DisplayRateInfo,
-          Mocks.AdjustedDataset,
+          Mocks.itemsStateInitial,
+          Mocks.beltSpeed,
+          Mocks.drInfo,
+          Mocks.adjustedDataset,
         ),
       ).toEqual(rational(45n));
     });
@@ -80,10 +77,10 @@ describe('RateUtility', () => {
             unit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           },
-          Mocks.ItemsStateInitial,
-          Mocks.BeltSpeed,
-          Mocks.DisplayRateInfo,
-          Mocks.AdjustedDataset,
+          Mocks.itemsStateInitial,
+          Mocks.beltSpeed,
+          Mocks.drInfo,
+          Mocks.adjustedDataset,
         ),
       ).toEqual(rational(100n, 3n));
 
@@ -96,10 +93,10 @@ describe('RateUtility', () => {
             unit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           },
-          Mocks.ItemsStateInitial,
-          Mocks.BeltSpeed,
-          Mocks.DisplayRateInfo,
-          Mocks.AdjustedDataset,
+          Mocks.itemsStateInitial,
+          Mocks.beltSpeed,
+          Mocks.drInfo,
+          Mocks.adjustedDataset,
         ),
       ).toEqual(rational(1250n, 3n));
     });
@@ -114,10 +111,10 @@ describe('RateUtility', () => {
             unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
-          Mocks.ItemsStateInitial,
-          Mocks.BeltSpeed,
-          Mocks.DisplayRateInfo,
-          Mocks.AdjustedDataset,
+          Mocks.itemsStateInitial,
+          Mocks.beltSpeed,
+          Mocks.drInfo,
+          Mocks.adjustedDataset,
         ),
       ).toEqual(rational(1n, 50n));
     });
@@ -125,14 +122,14 @@ describe('RateUtility', () => {
 
   describe('addEntityValue', () => {
     it('should add parents field to step', () => {
-      const step = { ...Mocks.Step1 };
+      const step = { ...Mocks.step1 };
       RateUtility.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: rational.one });
     });
 
     it('should add to existing parents object value', () => {
       const step = {
-        ...Mocks.Step1,
+        ...Mocks.step1,
         ...{ parents: { [ItemId.Coal]: rational.zero } },
       };
       RateUtility.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
@@ -141,7 +138,7 @@ describe('RateUtility', () => {
 
     it('should add a new key to an existing parents object', () => {
       const step = {
-        ...Mocks.Step1,
+        ...Mocks.step1,
         ...{ parents: {} },
       };
       RateUtility.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
@@ -155,7 +152,7 @@ describe('RateUtility', () => {
       const result = { ...step };
       RateUtility.adjustPowerPollution(
         result,
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.WoodenChest],
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.WoodenChest],
         Game.Factorio,
       );
       expect(result).toEqual(step);
@@ -245,8 +242,8 @@ describe('RateUtility', () => {
         {},
         {},
         displayRateInfo[DisplayRate.PerMinute],
-        Mocks.SettingsStateInitial,
-        Mocks.AdjustedDataset,
+        Mocks.settingsStateInitial,
+        Mocks.adjustedDataset,
       );
       expect(RateUtility.calculateParentsOutputs).toHaveBeenCalledTimes(2);
       expect(RateUtility.calculateSettings).toHaveBeenCalledTimes(2);
@@ -264,7 +261,7 @@ describe('RateUtility', () => {
         id: '0',
         items: rational.one,
         itemId: ItemId.IronPlate,
-        recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.IronPlate],
+        recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronPlate],
         machines: rational.one,
       };
       const stepB: Step = { id: '1', itemId: ItemId.IronOre };
@@ -290,9 +287,9 @@ describe('RateUtility', () => {
         id: '1',
         recipeId: RecipeId.Coal,
       };
-      RateUtility.calculateSettings(step, {}, Mocks.RecipesStateInitial);
+      RateUtility.calculateSettings(step, {}, Mocks.recipesStateInitial);
       expect(step.recipeSettings).toEqual(
-        Mocks.RecipesStateInitial[RecipeId.Coal],
+        Mocks.recipesStateInitial[RecipeId.Coal],
       );
     });
 
@@ -309,13 +306,13 @@ describe('RateUtility', () => {
           value: rational.one,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
-          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
+          recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
         },
       };
       RateUtility.calculateSettings(
         step,
         recipeObjectives,
-        Mocks.RecipesStateInitial,
+        Mocks.recipesStateInitial,
       );
       expect(step.recipeSettings).toEqual(recipeObjectives[0]);
     });
@@ -325,13 +322,13 @@ describe('RateUtility', () => {
     it('should skip steps with no items', () => {
       const step: Step = {
         id: 'id',
-        itemId: Mocks.Item1.id,
+        itemId: Mocks.item1.id,
       };
       RateUtility.calculateBelts(
         step,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.AdjustedDataset,
+        Mocks.itemsStateInitial,
+        Mocks.beltSpeed,
+        Mocks.adjustedDataset,
       );
       expect(step.belts).toBeUndefined();
     });
@@ -339,15 +336,15 @@ describe('RateUtility', () => {
     it('should calculate required belts & wagons for steps', () => {
       const step: Step = {
         id: 'id',
-        itemId: Mocks.Item1.id,
-        items: Mocks.BeltSpeed[ItemId.ExpressTransportBelt],
+        itemId: Mocks.item1.id,
+        items: Mocks.beltSpeed[ItemId.ExpressTransportBelt],
         belts: rational.zero,
       };
       RateUtility.calculateBelts(
         step,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.AdjustedDataset,
+        Mocks.itemsStateInitial,
+        Mocks.beltSpeed,
+        Mocks.adjustedDataset,
       );
       expect(step.belts).toEqual(rational.one);
       expect(step.wagons).toEqual(rational(9n, 400n));
@@ -362,9 +359,9 @@ describe('RateUtility', () => {
       };
       RateUtility.calculateBelts(
         step,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.AdjustedDataset,
+        Mocks.itemsStateInitial,
+        Mocks.beltSpeed,
+        Mocks.adjustedDataset,
       );
       expect(step.wagons).toEqual(rational.one);
     });
@@ -377,13 +374,13 @@ describe('RateUtility', () => {
         items: rational.one,
         belts: rational.one,
         wagons: rational.one,
-        recipeSettings: Mocks.RecipesStateInitial[RecipeId.ArtilleryShellRange],
+        recipeSettings: Mocks.recipesStateInitial[RecipeId.ArtilleryShellRange],
       };
       RateUtility.calculateBelts(
         step,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.AdjustedDataset,
+        Mocks.itemsStateInitial,
+        Mocks.beltSpeed,
+        Mocks.adjustedDataset,
       );
       expect(step.belts).toBeUndefined();
       expect(step.wagons).toBeUndefined();
@@ -397,13 +394,13 @@ describe('RateUtility', () => {
         items: rational.one,
         belts: rational.one,
         wagons: rational.one,
-        recipeSettings: Mocks.RecipesStateInitial[RecipeId.RocketPart],
+        recipeSettings: Mocks.recipesStateInitial[RecipeId.RocketPart],
       };
       RateUtility.calculateBelts(
         step,
-        Mocks.ItemsStateInitial,
-        Mocks.BeltSpeed,
-        Mocks.AdjustedDataset,
+        Mocks.itemsStateInitial,
+        Mocks.beltSpeed,
+        Mocks.adjustedDataset,
       );
       expect(step.belts).toBeUndefined();
       expect(step.wagons).toBeUndefined();
@@ -419,9 +416,9 @@ describe('RateUtility', () => {
         recipeId: RecipeId.Coal,
         machines: rational.one,
         power: rational.zero,
-        recipeSettings: Mocks.RecipesStateInitial[RecipeId.Coal],
+        recipeSettings: Mocks.recipesStateInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, rational.one, Mocks.AdjustedDataset);
+      RateUtility.calculateBeacons(step, rational.one, Mocks.adjustedDataset);
       expect(step.power).toEqual(rational(3840n));
     });
 
@@ -433,9 +430,9 @@ describe('RateUtility', () => {
         recipeId: RecipeId.Coal,
         machines: rational.one,
         power: rational.zero,
-        recipeSettings: Mocks.RecipesStateInitial[RecipeId.Coal],
+        recipeSettings: Mocks.recipesStateInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, rational(100n), Mocks.AdjustedDataset);
+      RateUtility.calculateBeacons(step, rational(100n), Mocks.adjustedDataset);
       expect(step.recipeSettings?.beacons?.[0].total).toEqual(rational(8n));
     });
 
@@ -446,15 +443,15 @@ describe('RateUtility', () => {
         items: rational.one,
         recipeId: RecipeId.Coal,
         machines: rational.one,
-        recipeSettings: Mocks.RecipesStateInitial[RecipeId.Coal],
+        recipeSettings: Mocks.recipesStateInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, rational.one, Mocks.AdjustedDataset);
+      RateUtility.calculateBeacons(step, rational.one, Mocks.adjustedDataset);
       expect(step.power).toEqual(rational(3840n));
     });
 
     it('should do nothing if beaconReceivers is unset', () => {
       const step: Step = { id: 'id' };
-      RateUtility.calculateBeacons(step, undefined, Mocks.AdjustedDataset);
+      RateUtility.calculateBeacons(step, undefined, Mocks.adjustedDataset);
       expect(step).toEqual({ id: 'id' });
     });
 
@@ -468,7 +465,7 @@ describe('RateUtility', () => {
         },
       };
       const stepExpect = { ...step };
-      RateUtility.calculateBeacons(step, rational.one, Mocks.AdjustedDataset);
+      RateUtility.calculateBeacons(step, rational.one, Mocks.adjustedDataset);
       expect(step).toEqual(stepExpect);
     });
   });
@@ -525,14 +522,14 @@ describe('RateUtility', () => {
 
   describe('sortBySankey', () => {
     it('should sort steps based on sankey node depth', () => {
-      const steps = [...Mocks.LightOilSteps];
+      const steps = [...Mocks.lightOilSteps];
       RateUtility.sortBySankey(steps);
       const ids = steps.map((s) => s.id);
       expect(ids).toEqual(['0', '3', '4', '2', '1']);
     });
 
     it('should handle invalid steps', () => {
-      const steps = [...Mocks.LightOilSteps, { id: 'a' }, { id: 'b' }];
+      const steps = [...Mocks.lightOilSteps, { id: 'a' }, { id: 'b' }];
       RateUtility.sortBySankey(steps);
       const ids = steps.map((s) => s.id);
       expect(ids).toEqual(['0', '3', '4', '2', '1', 'a', 'b']);
@@ -545,7 +542,7 @@ describe('RateUtility', () => {
     });
 
     it('should handle missing recipeId on parent', () => {
-      const steps = [...Mocks.LightOilSteps];
+      const steps = [...Mocks.lightOilSteps];
       const broken = spread(steps[1], { parents: { '4': rational.one } });
       steps[1] = broken;
       RateUtility.sortBySankey(steps);
@@ -616,7 +613,7 @@ describe('RateUtility', () => {
           id: 'id',
           itemId: ItemId.Coal,
           recipeId: RecipeId.Coal,
-          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
+          recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
           items: rational.one,
           parents: { [RecipeId.PlasticBar]: rational.one },
         },
@@ -624,7 +621,7 @@ describe('RateUtility', () => {
           id: 'id',
           itemId: ItemId.PlasticBar,
           recipeId: RecipeId.PlasticBar,
-          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.PlasticBar],
+          recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.PlasticBar],
           items: rational.one,
           parents: { [RecipeId.Coal]: rational.one },
         },

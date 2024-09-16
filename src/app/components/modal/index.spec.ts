@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestModule } from '~/tests';
 
-import { DialogComponent, ModalComponent, OverlayComponent } from './modal';
+import { DialogComponent, ModalComponent, OverlayComponent } from './index';
 
 class TestModalComponent extends ModalComponent {
   save(): void {}

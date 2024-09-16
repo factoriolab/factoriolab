@@ -1,7 +1,7 @@
 import { Mocks } from '~/tests';
 
-import * as Actions from './datasets.actions';
-import { datasetsReducer, initialState } from './datasets.reducer';
+import { loadMod } from './datasets.actions';
+import { datasetsReducer, initialDatasetsState } from './datasets.reducer';
 
 describe('Dataset Reducer', () => {
   const id = 'id';
@@ -9,8 +9,8 @@ describe('Dataset Reducer', () => {
   describe('LOAD_MOD_DATA', () => {
     it('should handle null values', () => {
       const result = datasetsReducer(
-        initialState,
-        Actions.loadMod({
+        initialDatasetsState,
+        loadMod({
           id,
           i18nId: id,
           data: undefined,
@@ -25,24 +25,24 @@ describe('Dataset Reducer', () => {
 
     it('should load mod data', () => {
       const result = datasetsReducer(
-        initialState,
-        Actions.loadMod({
+        initialDatasetsState,
+        loadMod({
           id,
           i18nId: id,
-          data: Mocks.Data,
-          hash: Mocks.Hash,
-          i18n: Mocks.I18n,
+          data: Mocks.modData,
+          hash: Mocks.modHash,
+          i18n: Mocks.modI18n,
         }),
       );
-      expect(result.data[id]).toEqual(Mocks.Data);
-      expect(result.hash[id]).toEqual(Mocks.Hash);
-      expect(result.i18n[id]).toEqual(Mocks.I18n);
+      expect(result.data[id]).toEqual(Mocks.modData);
+      expect(result.hash[id]).toEqual(Mocks.modHash);
+      expect(result.i18n[id]).toEqual(Mocks.modI18n);
     });
   });
 
   it('should return default state', () => {
     expect(datasetsReducer(undefined, { type: 'Test' } as any)).toEqual(
-      initialState,
+      initialDatasetsState,
     );
   });
 });

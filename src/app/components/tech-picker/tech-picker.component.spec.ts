@@ -6,7 +6,8 @@ import {
 } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { LabState, Preferences } from '~/store';
+import { LabState } from '~/store';
+import { setShowTechLabels } from '~/store/preferences/preferences.actions';
 import { DispatchTest, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { TechPickerComponent } from './tech-picker.component';
@@ -33,7 +34,7 @@ describe('TechPickerComponent', () => {
 
   describe('status', () => {
     it('should filter technologies and selection', () => {
-      component.clickOpen(new Set(Mocks.AdjustedDataset.technologyIds));
+      component.clickOpen(new Set(Mocks.adjustedDataset.technologyIds));
       component.filter.set('optics');
       const status = component.status();
       expect(status.available.length).toEqual(0);
@@ -57,7 +58,7 @@ describe('TechPickerComponent', () => {
       spyOn(component.selection, 'set');
       component.selectAll(true);
       expect(component.selection.set).toHaveBeenCalledWith(
-        Mocks.AdjustedDataset.technologyIds,
+        Mocks.adjustedDataset.technologyIds,
       );
     });
 
@@ -129,7 +130,7 @@ describe('TechPickerComponent', () => {
     });
 
     it('should emit null if all technologies are selected', () => {
-      component.selection.set(Mocks.AdjustedDataset.technologyIds);
+      component.selection.set(Mocks.adjustedDataset.technologyIds);
       spyOn(component.selectIds, 'emit');
       component.onHide();
       expect(component.selectIds.emit).toHaveBeenCalledWith(undefined);
@@ -138,6 +139,6 @@ describe('TechPickerComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setShowTechLabels', Preferences.setShowTechLabels);
+    dispatch.props('setShowTechLabels', setShowTechLabels);
   });
 });

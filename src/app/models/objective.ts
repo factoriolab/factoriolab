@@ -1,7 +1,8 @@
-import { AdjustedRecipe } from './data';
-import { ObjectiveType, ObjectiveUnit } from './enum';
+import { AdjustedRecipe } from './data/recipe';
+import { ObjectiveType } from './enum/objective-type';
+import { ObjectiveUnit } from './enum/objective-unit';
 import { Rational } from './rational';
-import { RecipeSettings } from './settings';
+import { RecipeSettings } from './settings/recipe-settings';
 
 export function isRecipeObjective(obj: Objective): obj is RecipeObjective {
   return obj.unit === ObjectiveUnit.Machines;

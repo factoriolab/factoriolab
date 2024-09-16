@@ -3,8 +3,9 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { map, pairwise, switchMap, withLatestFrom } from 'rxjs';
 
-import * as Recipes from '../recipes';
-import * as SettingsActions from './settings.actions';
+import { resetRecipeMachines } from '../recipes/recipes.actions';
+import { recipesState, selectRecipesState } from '../recipes/recipes.selectors';
+import { setMachineRank } from './settings.actions';
 
 @Injectable()
 export class SettingsEffects {
@@ -19,15 +20,15 @@ export class SettingsEffects {
    * the recipe's machine to implicitly change.
    */
   resetRecipeSettings$ = createEffect(() => {
-    return this.store.select(Recipes.selectRecipesState).pipe(
+    return this.store.select(selectRecipesState).pipe(
       pairwise(),
       switchMap((x) =>
         this.actions$.pipe(
-          ofType(SettingsActions.setMachineRank),
+          ofType(setMachineRank),
           map(() => x),
         ),
       ),
-      withLatestFrom(this.store.select(Recipes.recipesState)),
+      withLatestFrom(this.store.select(recipesState)),
       map(([[before, after], recipesRaw]) => {
         const ids: string[] = [];
         for (const recipeId of Object.keys(recipesRaw)) {
@@ -48,7 +49,7 @@ export class SettingsEffects {
             ids.push(recipeId);
         }
 
-        return Recipes.resetRecipeMachines({ ids });
+        return resetRecipeMachines({ ids });
       }),
     );
   });

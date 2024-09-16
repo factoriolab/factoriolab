@@ -11,27 +11,27 @@ import { StatusSimplex } from 'node_modules/glpk-ts/dist/status';
 import { environment } from 'src/environments';
 
 import { contains } from '~/helpers';
+import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
+import { AdjustedDataset } from '~/models/dataset';
+import { Entities } from '~/models/entities';
+import { Game } from '~/models/enum/game';
+import { MaximizeType } from '~/models/enum/maximize-type';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { SimplexResultType } from '~/models/enum/simplex-result-type';
+import { MatrixResult } from '~/models/matrix-result';
 import {
-  AdjustedDataset,
-  AdjustedRecipe,
+  isRecipeObjective,
+  Objective,
+  RecipeObjective,
+} from '~/models/objective';
+import { Rational, rational } from '~/models/rational';
+import {
   CostKey,
   CostSettings,
-  Entities,
   FACTORIO_FLUID_COST_RATIO,
-  Game,
-  isRecipeObjective,
-  MatrixResult,
-  MaximizeType,
-  Objective,
-  ObjectiveType,
-  Rational,
-  rational,
-  Recipe,
-  RecipeObjective,
-  SettingsComplete,
-  SimplexResultType,
-  Step,
-} from '~/models';
+} from '~/models/settings/cost-settings';
+import { SettingsComplete } from '~/models/settings/settings-complete';
+import { Step } from '~/models/step';
 
 import { RateUtility } from './rate.utility';
 

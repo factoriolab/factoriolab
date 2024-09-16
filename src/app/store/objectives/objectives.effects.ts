@@ -2,10 +2,10 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { map } from 'rxjs/operators';
 
-import { displayRateInfo } from '~/models';
+import { displayRateInfo } from '~/models/enum/display-rate';
 
-import * as Settings from '../settings';
-import * as ObjectivesActions from './objectives.actions';
+import { setDisplayRate } from '../settings/settings.actions';
+import { adjustDisplayRate } from './objectives.actions';
 
 @Injectable()
 export class ObjectivesEffects {
@@ -13,12 +13,12 @@ export class ObjectivesEffects {
 
   adjustDisplayRate$ = createEffect(() => {
     return this.actions$.pipe(
-      ofType(Settings.setDisplayRate),
+      ofType(setDisplayRate),
       map(({ displayRate, previous }) => {
         const factor = displayRateInfo[displayRate].value.div(
           displayRateInfo[previous].value,
         );
-        return ObjectivesActions.adjustDisplayRate({ factor });
+        return adjustDisplayRate({ factor });
       }),
     );
   });

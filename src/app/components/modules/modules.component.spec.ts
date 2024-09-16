@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ModuleSettings, rational } from '~/models';
+import { rational } from '~/models/rational';
+import { ModuleSettings } from '~/models/settings/module-settings';
 import { ItemId, Mocks, setInputs, TestModule } from '~/tests';
 
 import { ModulesComponent } from './modules.component';
@@ -17,8 +18,8 @@ describe('ModulesComponent', () => {
     fixture = TestBed.createComponent(ModulesComponent);
     component = fixture.componentInstance;
     setInputs(fixture, {
-      entity: Mocks.Dataset.machineEntities[ItemId.AssemblingMachine3],
-      modules: Mocks.ModuleSettings,
+      entity: Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],
+      modules: Mocks.moduleSettings,
     });
     fixture.detectChanges();
   });
@@ -30,7 +31,7 @@ describe('ModulesComponent', () => {
   describe('maximum', () => {
     it('should return null for machines with unlimited modules', () => {
       fixture.componentRef.setInput('entity', {
-        ...Mocks.Dataset.machineEntities[ItemId.AssemblingMachine3],
+        ...Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],
         ...{ modules: true },
       });
       fixture.detectChanges();
@@ -72,14 +73,14 @@ describe('ModulesComponent', () => {
 
   describe('updateEmpty', () => {
     it('should immediately return if modules are disallowed or unlimited', () => {
-      const modules = Mocks.ModuleSettings.map((m) => ({ ...m }));
+      const modules = Mocks.moduleSettings.map((m) => ({ ...m }));
       spyOn(component, 'entity').and.returnValues(
         { modules: true },
         { modules: undefined },
       );
       component.updateEmpty(modules);
       component.updateEmpty(modules);
-      expect(modules).toEqual(Mocks.ModuleSettings);
+      expect(modules).toEqual(Mocks.moduleSettings);
     });
 
     it('should increase the count of empty module slots', () => {

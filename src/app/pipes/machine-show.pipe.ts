@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Game, ItemId } from '~/models';
+import { Game } from '~/models/enum/game';
+import { ItemId } from '~/models/enum/item-id';
 
 @Pipe({ name: 'machineShow', standalone: true })
 export class MachineShowPipe implements PipeTransform {

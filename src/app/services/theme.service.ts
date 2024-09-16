@@ -4,9 +4,11 @@ import { Store } from '@ngrx/store';
 import { ReplaySubject, tap } from 'rxjs';
 
 import { fnPropsNotNullish } from '~/helpers';
-import { Theme } from '~/models';
-import { Preferences, Settings } from '~/store';
-import { BrowserUtility } from '~/utilities';
+import { Theme } from '~/models/enum/theme';
+import { initialPreferencesState } from '~/store/preferences/preferences.reducer';
+import { selectTheme } from '~/store/preferences/preferences.selectors';
+import { selectDataset } from '~/store/settings/settings.selectors';
+import { BrowserUtility } from '~/utilities/browser.utility';
 
 const LAB_ICON_STYLE_ID = 'lab-icon-css';
 const LAB_THEME_STYLE_ID = 'lab-theme-css';
@@ -31,7 +33,7 @@ export class ThemeService {
 
   initialize(): void {
     this.store
-      .select(Settings.selectDataset)
+      .select(selectDataset)
       .pipe(
         tap((data) => {
           // Generate .lab-icon::before css rules stylesheet
@@ -125,7 +127,7 @@ export class ThemeService {
       .subscribe();
 
     this.store
-      .select(Preferences.selectTheme)
+      .select(selectTheme)
       .pipe(
         tap((theme) => {
           const themeLink = this.document.getElementById(
@@ -198,7 +200,7 @@ export class ThemeService {
    */
   static appInitTheme(): void {
     const state = BrowserUtility.preferencesState;
-    const theme = state?.theme ?? Preferences.initialState.theme;
+    const theme = state?.theme ?? initialPreferencesState.theme;
 
     if (theme === Theme.Light) {
       // Need to switch to light theme before app starts

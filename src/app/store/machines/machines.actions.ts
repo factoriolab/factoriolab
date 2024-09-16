@@ -1,6 +1,8 @@
 import { createAction, props } from '@ngrx/store';
 
-import { BeaconSettings, ModuleSettings, Rational } from '~/models';
+import { Rational } from '~/models/rational';
+import { BeaconSettings } from '~/models/settings/beacon-settings';
+import { ModuleSettings } from '~/models/settings/module-settings';
 
 const key = '[Machines]';
 export const setFuel = createAction(

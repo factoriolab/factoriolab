@@ -1,19 +1,33 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { spread } from '~/helpers';
-import {
-  Entities,
-  Objective,
-  ObjectiveType,
-  ObjectiveUnit,
-  rational,
-} from '~/models';
-import { StoreUtility } from '~/utilities';
+import { Entities } from '~/models/entities';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { Objective } from '~/models/objective';
+import { rational } from '~/models/rational';
+import { StoreUtility } from '~/utilities/store.utility';
 
-import * as App from '../app.actions';
-import * as Recipes from '../recipes';
-import * as Settings from '../settings';
-import * as Actions from './objectives.actions';
+import { load, reset } from '../app.actions';
+import { resetBeacons, resetMachines } from '../recipes/recipes.actions';
+import { setMod } from '../settings/settings.actions';
+import {
+  add,
+  adjustDisplayRate,
+  create,
+  remove,
+  resetObjective,
+  setBeacons,
+  setFuel,
+  setMachine,
+  setModules,
+  setOrder,
+  setOverclock,
+  setTarget,
+  setType,
+  setUnit,
+  setValue,
+} from './objectives.actions';
 
 export interface ObjectivesState {
   ids: string[];
@@ -21,19 +35,19 @@ export interface ObjectivesState {
   index: number;
 }
 
-export const initialState: ObjectivesState = {
+export const initialObjectivesState: ObjectivesState = {
   ids: [],
   entities: {},
   index: 0,
 };
 
 export const objectivesReducer = createReducer(
-  initialState,
-  on(App.load, (_, { partial }) =>
-    spread(initialState, partial.objectivesState ?? {}),
+  initialObjectivesState,
+  on(load, (_, { partial }) =>
+    spread(initialObjectivesState, partial.objectivesState ?? {}),
   ),
-  on(App.reset, Settings.setMod, (): ObjectivesState => initialState),
-  on(Actions.add, (state, { objective }) => {
+  on(reset, setMod, (): ObjectivesState => initialObjectivesState),
+  on(add, (state, { objective }) => {
     let value = rational.one;
     if (state.ids.length)
       value = state.entities[state.ids[state.ids.length - 1]].value;
@@ -55,7 +69,7 @@ export const objectivesReducer = createReducer(
       index: state.index + 1,
     });
   }),
-  on(Actions.create, (state, { objective }) => {
+  on(create, (state, { objective }) => {
     // Use full objective, but enforce id: '0'
     objective = spread(objective, { id: '0' });
     return spread(state, {
@@ -64,14 +78,14 @@ export const objectivesReducer = createReducer(
       index: 1,
     });
   }),
-  on(Actions.remove, (state, { id }) =>
+  on(remove, (state, { id }) =>
     spread(state, {
       ids: state.ids.filter((i) => i !== id),
       entities: StoreUtility.removeEntry(state.entities, id),
     }),
   ),
-  on(Actions.setOrder, (state, { ids }) => spread(state, { ids })),
-  on(Actions.setTarget, (state, { id, value }) => {
+  on(setOrder, (state, { ids }) => spread(state, { ids })),
+  on(setTarget, (state, { id, value }) => {
     const entities = StoreUtility.assignValue(
       state.entities,
       'targetId',
@@ -86,12 +100,12 @@ export const objectivesReducer = createReducer(
       ),
     });
   }),
-  on(Actions.setValue, (state, { id, value }) =>
+  on(setValue, (state, { id, value }) =>
     spread(state, {
       entities: StoreUtility.assignValue(state.entities, 'value', id, value),
     }),
   ),
-  on(Actions.setUnit, (state, { id, objective }) => {
+  on(setUnit, (state, { id, objective }) => {
     let entities = StoreUtility.assignValue(
       state.entities,
       'targetId',
@@ -101,12 +115,12 @@ export const objectivesReducer = createReducer(
     entities = StoreUtility.assignValue(entities, 'unit', id, objective.unit);
     return spread(state, { entities });
   }),
-  on(Actions.setType, (state, { id, value }) =>
+  on(setType, (state, { id, value }) =>
     spread(state, {
       entities: StoreUtility.assignValue(state.entities, 'type', id, value),
     }),
   ),
-  on(Actions.setMachine, (state, { id, value, def }) => {
+  on(setMachine, (state, { id, value, def }) => {
     let entities = StoreUtility.compareReset(
       state.entities,
       'machineId',
@@ -117,7 +131,7 @@ export const objectivesReducer = createReducer(
     entities = StoreUtility.resetFields(entities, ['modules', 'beacons']);
     return spread(state, { entities });
   }),
-  on(Actions.setFuel, (state, { id, value, def }) =>
+  on(setFuel, (state, { id, value, def }) =>
     spread(state, {
       entities: StoreUtility.compareReset(
         state.entities,
@@ -128,17 +142,17 @@ export const objectivesReducer = createReducer(
       ),
     }),
   ),
-  on(Actions.setModules, (state, { id, value }) =>
+  on(setModules, (state, { id, value }) =>
     spread(state, {
       entities: StoreUtility.setValue(state.entities, 'modules', id, value),
     }),
   ),
-  on(Actions.setBeacons, (state, { id, value }) =>
+  on(setBeacons, (state, { id, value }) =>
     spread(state, {
       entities: StoreUtility.setValue(state.entities, 'beacons', id, value),
     }),
   ),
-  on(Actions.setOverclock, (state, { id, value, def }) =>
+  on(setOverclock, (state, { id, value, def }) =>
     spread(state, {
       entities: StoreUtility.compareReset(
         state.entities,
@@ -149,7 +163,7 @@ export const objectivesReducer = createReducer(
       ),
     }),
   ),
-  on(Actions.resetObjective, (state, { id }) =>
+  on(resetObjective, (state, { id }) =>
     spread(state, {
       entities: StoreUtility.resetFields(
         state.entities,
@@ -158,7 +172,7 @@ export const objectivesReducer = createReducer(
       ),
     }),
   ),
-  on(Actions.adjustDisplayRate, (state, { factor }) => {
+  on(adjustDisplayRate, (state, { factor }) => {
     const entities = { ...state.entities };
     for (const objective of state.ids
       .map((i) => state.entities[i])
@@ -172,7 +186,7 @@ export const objectivesReducer = createReducer(
     }
     return spread(state, { entities });
   }),
-  on(Recipes.resetMachines, (state) =>
+  on(resetMachines, (state) =>
     spread(state, {
       entities: StoreUtility.resetFields(state.entities, [
         'machineId',
@@ -182,7 +196,7 @@ export const objectivesReducer = createReducer(
       ]),
     }),
   ),
-  on(Recipes.resetBeacons, (state) =>
+  on(resetBeacons, (state) =>
     spread(state, {
       entities: StoreUtility.resetField(state.entities, 'beacons'),
     }),

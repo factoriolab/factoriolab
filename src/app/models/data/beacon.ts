@@ -1,4 +1,4 @@
-import { EnergyType } from '../enum';
+import { EnergyType } from '../enum/energy-type';
 import { Rational, rational } from '../rational';
 import { ModuleEffect } from './module';
 

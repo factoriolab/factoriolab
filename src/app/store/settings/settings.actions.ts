@@ -1,15 +1,13 @@
 import { createAction, props } from '@ngrx/store';
 
-import {
-  BeaconSettings,
-  CostSettings,
-  DisplayRate,
-  InserterCapacity,
-  InserterTarget,
-  MaximizeType,
-  Preset,
-  Rational,
-} from '~/models';
+import { DisplayRate } from '~/models/enum/display-rate';
+import { InserterCapacity } from '~/models/enum/inserter-capacity';
+import { InserterTarget } from '~/models/enum/inserter-target';
+import { MaximizeType } from '~/models/enum/maximize-type';
+import { Preset } from '~/models/enum/preset';
+import { Rational } from '~/models/rational';
+import { BeaconSettings } from '~/models/settings/beacon-settings';
+import { CostSettings } from '~/models/settings/cost-settings';
 
 const key = '[Settings]';
 export const setMod = createAction(

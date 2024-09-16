@@ -23,35 +23,42 @@ import {
   prune,
   spread,
 } from '~/helpers';
+import { MIN_ZIP, ZFIELDSEP } from '~/models/constants';
+import { ModData } from '~/models/data/mod-data';
+import { ModHash } from '~/models/data/mod-hash';
+import { Dataset } from '~/models/dataset';
+import { Entities } from '~/models/entities';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { ZipVersion } from '~/models/enum/zip-version';
+import { LabParams, Params } from '~/models/lab-params';
+import { isRecipeObjective, Objective } from '~/models/objective';
+import { rational } from '~/models/rational';
+import { BeaconSettings } from '~/models/settings/beacon-settings';
+import { CostSettings } from '~/models/settings/cost-settings';
+import { ItemSettings } from '~/models/settings/item-settings';
+import { MachineSettings } from '~/models/settings/machine-settings';
+import { ModuleSettings } from '~/models/settings/module-settings';
+import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { Step } from '~/models/step';
 import {
-  BeaconSettings,
-  CostSettings,
-  Dataset,
-  Entities,
-  isRecipeObjective,
-  ItemSettings,
-  LabParams,
-  MachineSettings,
-  MIN_ZIP,
-  ModData,
-  ModHash,
-  ModuleSettings,
-  Objective,
-  ObjectiveType,
-  ObjectiveUnit,
-  Params,
-  rational,
-  RecipeSettings,
-  Step,
-  ZFIELDSEP,
   Zip,
   ZipData,
   ZipMachineSettings,
   ZipRecipeSettingsInfo,
-  ZipVersion,
-} from '~/models';
-import { App, Items, Machines, Objectives, Recipes, Settings } from '~/store';
-import { BrowserUtility } from '~/utilities';
+} from '~/models/zip';
+import { load, PartialState } from '~/store/app.actions';
+import { ItemsState } from '~/store/items/items.reducer';
+import { MachinesState } from '~/store/machines/machines.reducer';
+import { ObjectivesState } from '~/store/objectives/objectives.reducer';
+import { selectZipState } from '~/store/objectives/objectives.selectors';
+import { RecipesState } from '~/store/recipes/recipes.reducer';
+import {
+  initialSettingsState,
+  PartialSettingsState,
+  SettingsState,
+} from '~/store/settings/settings.reducer';
+import { BrowserUtility } from '~/utilities/browser.utility';
 
 import { CompressionService } from './compression.service';
 import { DataService } from './data.service';
@@ -123,7 +130,7 @@ export class RouterService {
         tap(() => {
           this.dataSvc.initialize();
         }),
-        switchMap(() => this.store.select(Objectives.selectZipState)),
+        switchMap(() => this.store.select(selectZipState)),
         debounceTime(0),
         filterPropsNullish('hash'),
         map((s) =>
@@ -155,11 +162,11 @@ export class RouterService {
   }
 
   zipState(
-    objectives: Objectives.ObjectivesState,
-    itemsState: Items.ItemsState,
-    recipesState: Recipes.RecipesState,
-    machinesState: Machines.MachinesState,
-    settings: Settings.SettingsState,
+    objectives: ObjectivesState,
+    itemsState: ItemsState,
+    recipesState: RecipesState,
+    machinesState: MachinesState,
+    settings: SettingsState,
     data: Dataset,
     hash: ModHash,
   ): ZipData {
@@ -308,10 +315,10 @@ export class RouterService {
     }
 
     const [modData, modHash] = await firstValueFrom(
-      this.dataSvc.requestData(modId ?? Settings.initialState.modId),
+      this.dataSvc.requestData(modId ?? initialSettingsState.modId),
     );
 
-    const state: App.PartialState = {};
+    const state: PartialState = {};
     const hash = isBare ? undefined : modHash;
     const ms = this.unzipModules(params, hash);
     const bs = this.unzipBeacons(params, ms, hash);
@@ -333,16 +340,16 @@ export class RouterService {
     this.ready$.next();
   }
 
-  dispatch(partial: App.PartialState): void {
-    this.store.dispatch(App.load({ partial }));
+  dispatch(partial: PartialState): void {
+    this.store.dispatch(load({ partial }));
     this.ready$.next();
   }
 
   zipModulesBeacons(
-    objectives: Objectives.ObjectivesState,
-    recipes: Recipes.RecipesState,
-    machines: Machines.MachinesState,
-    settings: Settings.SettingsState,
+    objectives: ObjectivesState,
+    recipes: RecipesState,
+    machines: MachinesState,
+    settings: SettingsState,
     hash: ModHash,
   ): ZipData {
     const modulesInfo = this.emptyRecipeSettingsInfo;
@@ -591,7 +598,7 @@ export class RouterService {
     moduleSettings: ModuleSettings[],
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
-  ): Objectives.ObjectivesState | undefined {
+  ): ObjectivesState | undefined {
     if (params.o == null) return;
 
     const ids: string[] = [];
@@ -632,7 +639,7 @@ export class RouterService {
     return { ids, index, entities };
   }
 
-  zipItems(data: ZipData, state: Items.ItemsState, hash: ModHash): void {
+  zipItems(data: ZipData, state: ItemsState, hash: ModHash): void {
     const keys = Object.keys(state);
     if (!keys.length) return;
 
@@ -657,10 +664,10 @@ export class RouterService {
     }
   }
 
-  unzipItems(params: LabParams, hash?: ModHash): Items.ItemsState | undefined {
+  unzipItems(params: LabParams, hash?: ModHash): ItemsState | undefined {
     if (params.i == null) return;
 
-    const entities: Items.ItemsState = {};
+    const entities: ItemsState = {};
     for (const item of params.i) {
       const s = item.split(ZFIELDSEP);
       let i = 0;
@@ -676,7 +683,7 @@ export class RouterService {
     return entities;
   }
 
-  zipRecipes(data: ZipData, state: Recipes.RecipesState, hash: ModHash): void {
+  zipRecipes(data: ZipData, state: RecipesState, hash: ModHash): void {
     const keys = Object.keys(state);
     if (!keys.length) return;
 
@@ -718,10 +725,10 @@ export class RouterService {
     moduleSettings: ModuleSettings[],
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
-  ): Recipes.RecipesState | undefined {
+  ): RecipesState | undefined {
     if (params.r == null) return;
 
-    const entities: Recipes.RecipesState = {};
+    const entities: RecipesState = {};
     for (const recipe of params.r) {
       const s = recipe.split(ZFIELDSEP);
       let i = 0;
@@ -745,11 +752,7 @@ export class RouterService {
     return entities;
   }
 
-  zipMachines(
-    data: ZipData,
-    state: Machines.MachinesState,
-    hash: ModHash,
-  ): void {
+  zipMachines(data: ZipData, state: MachinesState, hash: ModHash): void {
     const keys = Object.keys(state);
     if (!keys.length) return;
 
@@ -786,10 +789,10 @@ export class RouterService {
     moduleSettings: ModuleSettings[],
     beaconSettings: BeaconSettings[],
     hash?: ModHash,
-  ): Machines.MachinesState | undefined {
+  ): MachinesState | undefined {
     if (params.m == null) return;
 
-    const entities: Machines.MachinesState = {};
+    const entities: MachinesState = {};
     for (const machine of params.m) {
       const s = machine.split(ZFIELDSEP);
       let i = 0;
@@ -814,12 +817,12 @@ export class RouterService {
 
   zipSettings(
     zData: ZipData,
-    state: Settings.SettingsState,
+    state: SettingsState,
     objectiveIds: string[],
     data: Dataset,
     hash: ModHash,
   ): void {
-    const init = Settings.initialState;
+    const init = initialSettingsState;
 
     // Set up shorthand functions to zip state
     const set = this.zipSvc.set(zData.config, state, init);
@@ -881,7 +884,7 @@ export class RouterService {
     modData: ModData,
     modHash: ModHash,
     hash?: ModHash,
-  ): Settings.PartialSettingsState | undefined {
+  ): PartialSettingsState | undefined {
     // Set up shorthand functions to parse state
     const get = this.zipSvc.get(params);
     const sub = get(this.zipSvc.parseSubset.bind(this.zipSvc));
@@ -892,7 +895,7 @@ export class RouterService {
     const rnk = get(this.zipSvc.parseArray.bind(this.zipSvc));
     const arr = get(this.zipSvc.parseIndices.bind(this.zipSvc));
 
-    const obj: Settings.PartialSettingsState = {
+    const obj: PartialSettingsState = {
       modId,
       checkedObjectiveIds: sub('och', objectiveIds),
       maximizeType: num('omt'),

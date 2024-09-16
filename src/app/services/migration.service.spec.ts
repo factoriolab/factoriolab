@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ZEMPTY } from '~/models';
+import { ZEMPTY } from '~/models/constants';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { MigrationService } from './migration.service';
@@ -213,15 +213,15 @@ describe('MigrationService', () => {
     it('should restore the old filtered style list of technologies', () => {
       const result = service.restoreV10ResearchedTechnologies(
         new Set([RecipeId.ArtilleryShellRange]),
-        Mocks.Data,
+        Mocks.modData,
       );
       expect(result?.size).toEqual(54);
     });
 
     it('should return undefined if all researched', () => {
       const result = service.restoreV10ResearchedTechnologies(
-        new Set(Mocks.Dataset.technologyIds),
-        Mocks.Data,
+        new Set(Mocks.dataset.technologyIds),
+        Mocks.modData,
       );
       expect(result).toBeUndefined();
     });

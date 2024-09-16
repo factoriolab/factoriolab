@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect } from '@ngrx/effects';
 import { tap } from 'rxjs';
 
-import { AnalyticsService } from '~/services';
+import { AnalyticsService } from '~/services/analytics.service';
 
 @Injectable()
 export class AnalyticsEffects {

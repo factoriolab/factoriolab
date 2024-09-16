@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { StepsComponent } from '~/components';
+import { StepsComponent } from '~/components/steps/steps.component';
 
 @Component({
   selector: 'lab-list',

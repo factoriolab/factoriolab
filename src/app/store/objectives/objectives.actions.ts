@@ -1,13 +1,10 @@
 import { createAction, props } from '@ngrx/store';
 
-import {
-  BeaconSettings,
-  ModuleSettings,
-  Objective,
-  ObjectiveBase,
-  ObjectiveType,
-  Rational,
-} from '~/models';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { Objective, ObjectiveBase } from '~/models/objective';
+import { Rational } from '~/models/rational';
+import { BeaconSettings } from '~/models/settings/beacon-settings';
+import { ModuleSettings } from '~/models/settings/module-settings';
 
 const key = '[Objectives]';
 export const add = createAction(

@@ -1,9 +1,15 @@
-import { rational } from '~/models';
+import { rational } from '~/models/rational';
 import { ItemId, Mocks } from '~/tests';
 
-import * as App from '../app.actions';
-import * as Actions from './machines.actions';
-import { initialState, machinesReducer } from './machines.reducer';
+import { load, reset } from '../app.actions';
+import {
+  resetMachine,
+  setBeacons,
+  setFuel,
+  setModules,
+  setOverclock,
+} from './machines.actions';
+import { initialMachinesState, machinesReducer } from './machines.reducer';
 
 describe('Machines Reducer', () => {
   const id = 'id';
@@ -13,25 +19,25 @@ describe('Machines Reducer', () => {
     it('should load machine settings', () => {
       const result = machinesReducer(
         undefined,
-        App.load({
+        load({
           partial: {
-            machinesState: Mocks.MachinesStateInitial,
+            machinesState: Mocks.machinesStateInitial,
           },
         }),
       );
-      expect(result).toEqual(Mocks.MachinesStateInitial);
+      expect(result).toEqual(Mocks.machinesStateInitial);
     });
 
     it('should handle missing partial state', () => {
-      const result = machinesReducer(undefined, App.load({ partial: {} }));
-      expect(result).toEqual(initialState);
+      const result = machinesReducer(undefined, load({ partial: {} }));
+      expect(result).toEqual(initialMachinesState);
     });
   });
 
   describe('RESET', () => {
     it('should return the initial state', () => {
-      const result = machinesReducer(undefined, App.reset());
-      expect(result).toEqual(initialState);
+      const result = machinesReducer(undefined, reset());
+      expect(result).toEqual(initialMachinesState);
     });
   });
 
@@ -39,7 +45,7 @@ describe('Machines Reducer', () => {
     it('should set the fuel for a machine', () => {
       const result = machinesReducer(
         undefined,
-        Actions.setFuel({ id, value, def: undefined }),
+        setFuel({ id, value, def: undefined }),
       );
       expect(result[id].fuelId).toEqual(value);
     });
@@ -50,7 +56,7 @@ describe('Machines Reducer', () => {
       const value = [{ count: rational(2n), id: ItemId.Module }];
       const result = machinesReducer(
         undefined,
-        Actions.setModules({
+        setModules({
           id,
           value,
         }),
@@ -70,7 +76,7 @@ describe('Machines Reducer', () => {
       ];
       const result = machinesReducer(
         undefined,
-        Actions.setBeacons({
+        setBeacons({
           id,
           value,
         }),
@@ -83,7 +89,7 @@ describe('Machines Reducer', () => {
     it('should set the overclock for a machine', () => {
       const result = machinesReducer(
         undefined,
-        Actions.setOverclock({
+        setOverclock({
           id,
           value: rational(200n),
           def: rational(100n),
@@ -96,8 +102,8 @@ describe('Machines Reducer', () => {
   describe('RESET_MACHINE', () => {
     it('should reset a machine', () => {
       const result = machinesReducer(
-        Mocks.MachinesStateInitial,
-        Actions.resetMachine({ id: ItemId.AssemblingMachine2 }),
+        Mocks.machinesStateInitial,
+        resetMachine({ id: ItemId.AssemblingMachine2 }),
       );
       expect(result[ItemId.AssemblingMachine2]).toBeUndefined();
     });
@@ -105,7 +111,7 @@ describe('Machines Reducer', () => {
 
   it('should return the default state', () => {
     expect(machinesReducer(undefined, { type: 'Test' } as any)).toEqual(
-      initialState,
+      initialMachinesState,
     );
   });
 });

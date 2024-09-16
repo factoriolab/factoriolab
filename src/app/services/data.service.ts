@@ -10,8 +10,12 @@ import {
   tap,
 } from 'rxjs';
 
-import { Entities, ModData, ModHash, ModI18n } from '~/models';
-import { Datasets, Settings } from '~/store';
+import { ModData } from '~/models/data/mod-data';
+import { ModHash } from '~/models/data/mod-hash';
+import { ModI18n } from '~/models/data/mod-i18n';
+import { Entities } from '~/models/entities';
+import { loadMod } from '~/store/datasets/datasets.actions';
+import { selectModId } from '~/store/settings/settings.selectors';
 
 import { TranslateService } from './translate.service';
 
@@ -29,7 +33,7 @@ export class DataService {
 
   initialize(): void {
     combineLatest([
-      this.store.select(Settings.selectModId),
+      this.store.select(selectModId),
       this.translateSvc.lang$,
     ]).subscribe(([id]) => {
       this.requestData(id).subscribe();
@@ -87,9 +91,7 @@ export class DataService {
     return combineLatest([data$, hash$, i18n$]).pipe(
       tap(() => {
         if (data || hash || i18n) {
-          this.store.dispatch(
-            Datasets.loadMod({ id, i18nId, data, hash, i18n }),
-          );
+          this.store.dispatch(loadMod({ id, i18nId, data, hash, i18n }));
         }
       }),
     );

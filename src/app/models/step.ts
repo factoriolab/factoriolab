@@ -1,7 +1,7 @@
-import { AdjustedRecipe } from './data';
+import { AdjustedRecipe } from './data/recipe';
 import { Entities } from './entities';
 import { Rational } from './rational';
-import { RecipeSettings } from './settings';
+import { RecipeSettings } from './settings/recipe-settings';
 
 export interface Step {
   id: string;

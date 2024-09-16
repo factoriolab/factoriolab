@@ -1,7 +1,7 @@
 import { Directive, effect, inject, input, OnInit } from '@angular/core';
 import { Dropdown } from 'primeng/dropdown';
 
-import { ContentService } from '~/services';
+import { ContentService } from '~/services/content.service';
 
 @Directive({
   selector: '[labDropdownBase]',

@@ -3,10 +3,11 @@ import { provideMockActions } from '@ngrx/effects/testing';
 import { Action } from '@ngrx/store';
 import { ReplaySubject } from 'rxjs';
 
-import { DisplayRate, rational } from '~/models';
+import { DisplayRate } from '~/models/enum/display-rate';
+import { rational } from '~/models/rational';
 
-import * as Settings from '../settings';
-import * as Actions from './objectives.actions';
+import { setDisplayRate } from '../settings/settings.actions';
+import { adjustDisplayRate } from './objectives.actions';
 import { ObjectivesEffects } from './objectives.effects';
 
 describe('ObjectivesEffects', () => {
@@ -25,7 +26,7 @@ describe('ObjectivesEffects', () => {
     it('should dispatch an action to adjust objective rates', () => {
       actions = new ReplaySubject(1);
       actions.next(
-        Settings.setDisplayRate({
+        setDisplayRate({
           displayRate: DisplayRate.PerSecond,
           previous: DisplayRate.PerMinute,
         }),
@@ -33,7 +34,7 @@ describe('ObjectivesEffects', () => {
       const results: Action[] = [];
       effects.adjustDisplayRate$.subscribe((a) => results.push(a));
       expect(results).toEqual([
-        Actions.adjustDisplayRate({ factor: rational(1n, 60n) }),
+        adjustDisplayRate({ factor: rational(1n, 60n) }),
       ]);
     });
   });

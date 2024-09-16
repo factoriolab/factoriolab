@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { rational } from '~/models';
+import { rational } from '~/models/rational';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { BeaconsOverlayComponent } from './beacons-overlay.component';
@@ -17,7 +17,7 @@ describe('BeaconsOverlayComponent', () => {
     fixture = TestBed.createComponent(BeaconsOverlayComponent);
     component = fixture.componentInstance;
     spyOn(component as any, '_show');
-    component.show({} as any, Mocks.BeaconSettings, RecipeId.AdvancedCircuit);
+    component.show({} as any, Mocks.beaconSettings, RecipeId.AdvancedCircuit);
     fixture.detectChanges();
   });
 
@@ -28,9 +28,9 @@ describe('BeaconsOverlayComponent', () => {
   describe('show', () => {
     it('should show the overlay', () => {
       const event = {} as any;
-      component.show(event, Mocks.BeaconSettings, RecipeId.AdvancedCircuit);
-      expect(component.beacons()).toEqual(Mocks.BeaconSettings);
-      expect(component.beacons()).not.toBe(Mocks.BeaconSettings);
+      component.show(event, Mocks.beaconSettings, RecipeId.AdvancedCircuit);
+      expect(component.beacons()).toEqual(Mocks.beaconSettings);
+      expect(component.beacons()).not.toBe(Mocks.beaconSettings);
       expect(component.recipeId()).toEqual(RecipeId.AdvancedCircuit);
       expect(component['_show']).toHaveBeenCalledWith(event);
     });
@@ -87,7 +87,7 @@ describe('BeaconsOverlayComponent', () => {
       spyOn(component.setValue, 'emit');
       component.save();
       expect(component.setValue.emit).toHaveBeenCalledWith(
-        Mocks.BeaconSettings,
+        Mocks.beaconSettings,
       );
     });
   });

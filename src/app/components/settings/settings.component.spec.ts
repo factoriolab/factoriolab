@@ -7,8 +7,57 @@ import {
 import { MockStore } from '@ngrx/store/testing';
 import { Confirmation } from 'primeng/api';
 
-import { Game, rational } from '~/models';
-import { App, LabState, Machines, Preferences, Settings } from '~/store';
+import { Game } from '~/models/enum/game';
+import { rational } from '~/models/rational';
+import { LabState } from '~/store';
+import { reset } from '~/store/app.actions';
+import {
+  setBeacons,
+  setFuel,
+  setModules,
+  setOverclock,
+} from '~/store/machines/machines.actions';
+import {
+  removeState,
+  saveState,
+  setBypassLanding,
+  setConvertObjectiveValues,
+  setDisablePaginator,
+  setHideDuplicateIcons,
+  setLanguage,
+  setPowerUnit,
+  setTheme,
+} from '~/store/preferences/preferences.actions';
+import {
+  setBeaconReceivers,
+  setBeacons as setDefaultBeacons,
+  setBelt,
+  setCargoWagon,
+  setDisplayRate,
+  setExcludedItems,
+  setExcludedRecipes,
+  setFlowRate,
+  setFluidWagon,
+  setFuelRank,
+  setInserterCapacity,
+  setInserterTarget,
+  setMachineRank,
+  setMaximizeType,
+  setMiningBonus,
+  setModuleRank,
+  setNetProductionOnly,
+  setOverclock as setDefaultOverclock,
+  setPipe,
+  setPreset,
+  setProliferatorSpray,
+  setResearchBonus,
+  setResearchedTechnologies,
+  setSurplusMachinesOutput,
+} from '~/store/settings/settings.actions';
+import {
+  selectGame,
+  selectGameStates,
+} from '~/store/settings/settings.selectors';
 import {
   assert,
   DispatchTest,
@@ -17,7 +66,8 @@ import {
   RecipeId,
   TestModule,
 } from '~/tests';
-import { BrowserUtility, RecipeUtility } from '~/utilities';
+import { BrowserUtility } from '~/utilities/browser.utility';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { SettingsComponent } from './settings.component';
 
@@ -36,8 +86,8 @@ describe('SettingsComponent', () => {
     fixture = TestBed.createComponent(SettingsComponent);
     mockStore = TestBed.inject(MockStore);
     mockStore.overrideSelector(
-      Settings.selectGameStates,
-      Mocks.PreferencesState.states[Game.Factorio],
+      selectGameStates,
+      Mocks.preferencesState.states[Game.Factorio],
     );
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -94,7 +144,7 @@ describe('SettingsComponent', () => {
   describe('setState', () => {
     it('should call the router to navigate', () => {
       spyOn(component.router, 'navigate');
-      component.setState('name', Mocks.PreferencesState.states[Game.Factorio]);
+      component.setState('name', Mocks.preferencesState.states[Game.Factorio]);
       expect(component.state).toEqual('name');
       expect(component.router.navigate).toHaveBeenCalledWith([], {
         queryParams: { z: 'zip' },
@@ -166,7 +216,7 @@ describe('SettingsComponent', () => {
   describe('overwriteState', () => {
     it('should re-save the state with the new value', () => {
       spyOn(component, 'saveState');
-      mockStore.overrideSelector(Settings.selectGame, Game.Factorio);
+      mockStore.overrideSelector(selectGame, Game.Factorio);
       component.state = 'id';
       spyOnProperty(BrowserUtility, 'search').and.returnValue('search');
       component.editStateMenu[1].command!({});
@@ -345,52 +395,43 @@ describe('SettingsComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.void('resetSettings', App.reset);
-    dispatch.props('saveState', Preferences.saveState);
-    dispatch.props('removeState', Preferences.removeState);
-    dispatch.props(
-      'setResearchedTechnologies',
-      Settings.setResearchedTechnologies,
-    );
-    dispatch.props('setExcludedItems', Settings.setExcludedItems);
-    dispatch.props('setExcludedRecipes', Settings.setExcludedRecipes);
-    dispatch.props('setPreset', Settings.setPreset);
-    dispatch.props('setFuelRank', Settings.setFuelRank);
-    dispatch.props('setModuleRank', Settings.setModuleRank);
-    dispatch.props('setDefaultBeacons', Settings.setBeacons);
-    dispatch.props('setDefaultOverclock', Settings.setOverclock);
-    dispatch.props('setMachineRank', Settings.setMachineRank);
-    dispatch.props('setFuel', Machines.setFuel);
-    dispatch.props('setModules', Machines.setModules);
-    dispatch.props('setBeacons', Machines.setBeacons);
-    dispatch.props('setOverclock', Machines.setOverclock);
-    dispatch.props('setBeaconReceivers', Settings.setBeaconReceivers);
-    dispatch.props('setProliferatorSpray', Settings.setProliferatorSpray);
-    dispatch.props('setBelt', Settings.setBelt);
-    dispatch.props('setPipe', Settings.setPipe);
-    dispatch.props('setCargoWagon', Settings.setCargoWagon);
-    dispatch.props('setFluidWagon', Settings.setFluidWagon);
-    dispatch.props('setFlowRate', Settings.setFlowRate);
-    dispatch.props('setInserterTarget', Settings.setInserterTarget);
-    dispatch.props('setMiningBonus', Settings.setMiningBonus);
-    dispatch.props('setResearchSpeed', Settings.setResearchBonus);
-    dispatch.props('setInserterCapacity', Settings.setInserterCapacity);
-    dispatch.props('setDisplayRate', Settings.setDisplayRate);
-    dispatch.props('setPowerUnit', Preferences.setPowerUnit);
-    dispatch.props('setLanguage', Preferences.setLanguage);
-    dispatch.props('setTheme', Preferences.setTheme);
-    dispatch.props('setBypassLanding', Preferences.setBypassLanding);
-    dispatch.props('setHideDuplicateIcons', Preferences.setHideDuplicateIcons);
-    dispatch.props('setDisablePaginator', Preferences.setDisablePaginator);
-    dispatch.props('setMaximizeType', Settings.setMaximizeType);
-    dispatch.props('setNetProductionOnly', Settings.setNetProductionOnly);
-    dispatch.props(
-      'setSurplusMachinesOutput',
-      Settings.setSurplusMachinesOutput,
-    );
-    dispatch.props(
-      'setConvertObjectiveValues',
-      Preferences.setConvertObjectiveValues,
-    );
+    dispatch.void('resetSettings', reset);
+    dispatch.props('saveState', saveState);
+    dispatch.props('removeState', removeState);
+    dispatch.props('setResearchedTechnologies', setResearchedTechnologies);
+    dispatch.props('setExcludedItems', setExcludedItems);
+    dispatch.props('setExcludedRecipes', setExcludedRecipes);
+    dispatch.props('setPreset', setPreset);
+    dispatch.props('setFuelRank', setFuelRank);
+    dispatch.props('setModuleRank', setModuleRank);
+    dispatch.props('setDefaultBeacons', setDefaultBeacons);
+    dispatch.props('setDefaultOverclock', setDefaultOverclock);
+    dispatch.props('setMachineRank', setMachineRank);
+    dispatch.props('setFuel', setFuel);
+    dispatch.props('setModules', setModules);
+    dispatch.props('setBeacons', setBeacons);
+    dispatch.props('setOverclock', setOverclock);
+    dispatch.props('setBeaconReceivers', setBeaconReceivers);
+    dispatch.props('setProliferatorSpray', setProliferatorSpray);
+    dispatch.props('setBelt', setBelt);
+    dispatch.props('setPipe', setPipe);
+    dispatch.props('setCargoWagon', setCargoWagon);
+    dispatch.props('setFluidWagon', setFluidWagon);
+    dispatch.props('setFlowRate', setFlowRate);
+    dispatch.props('setInserterTarget', setInserterTarget);
+    dispatch.props('setMiningBonus', setMiningBonus);
+    dispatch.props('setResearchSpeed', setResearchBonus);
+    dispatch.props('setInserterCapacity', setInserterCapacity);
+    dispatch.props('setDisplayRate', setDisplayRate);
+    dispatch.props('setPowerUnit', setPowerUnit);
+    dispatch.props('setLanguage', setLanguage);
+    dispatch.props('setTheme', setTheme);
+    dispatch.props('setBypassLanding', setBypassLanding);
+    dispatch.props('setHideDuplicateIcons', setHideDuplicateIcons);
+    dispatch.props('setDisablePaginator', setDisablePaginator);
+    dispatch.props('setMaximizeType', setMaximizeType);
+    dispatch.props('setNetProductionOnly', setNetProductionOnly);
+    dispatch.props('setSurplusMachinesOutput', setSurplusMachinesOutput);
+    dispatch.props('setConvertObjectiveValues', setConvertObjectiveValues);
   });
 });

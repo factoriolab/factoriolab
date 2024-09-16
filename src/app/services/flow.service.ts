@@ -2,20 +2,24 @@ import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, map, switchMap } from 'rxjs';
 
+import { MIN_LINK_VALUE } from '~/models/constants';
+import { Icon } from '~/models/data/icon';
+import { AdjustedDataset } from '~/models/dataset';
+import { Entities } from '~/models/entities';
+import { LinkValue } from '~/models/enum/link-value';
+import { FlowData } from '~/models/flow';
+import { Rational, rational } from '~/models/rational';
+import { ColumnsState } from '~/models/settings/column-settings';
+import { SettingsComplete } from '~/models/settings/settings-complete';
+import { Step } from '~/models/step';
+import { selectSteps } from '~/store/objectives/objectives.selectors';
+import { PreferencesState } from '~/store/preferences/preferences.reducer';
+import { preferencesState } from '~/store/preferences/preferences.selectors';
+import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
 import {
-  AdjustedDataset,
-  ColumnsState,
-  Entities,
-  FlowData,
-  Icon,
-  LinkValue,
-  MIN_LINK_VALUE,
-  Rational,
-  rational,
-  SettingsComplete,
-  Step,
-} from '~/models';
-import { Objectives, Preferences, Recipes, Settings } from '~/store';
+  selectDisplayRateInfo,
+  selectSettings,
+} from '~/store/settings/settings.selectors';
 
 import { ThemeService, ThemeValues } from './theme.service';
 import { TranslateService } from './translate.service';
@@ -29,13 +33,13 @@ export class FlowService {
   themeSvc = inject(ThemeService);
 
   flowData$ = combineLatest({
-    steps: this.store.select(Objectives.selectSteps),
+    steps: this.store.select(selectSteps),
     suffix: this.store
-      .select(Settings.selectDisplayRateInfo)
+      .select(selectDisplayRateInfo)
       .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
-    settings: this.store.select(Settings.selectSettings),
-    preferences: this.store.select(Preferences.preferencesState),
-    data: this.store.select(Recipes.selectAdjustedDataset),
+    settings: this.store.select(selectSettings),
+    preferences: this.store.select(preferencesState),
+    data: this.store.select(selectAdjustedDataset),
     themeValues: this.themeSvc.themeValues$,
   }).pipe(
     map(({ steps, suffix, settings, preferences, data, themeValues }) =>
@@ -51,7 +55,7 @@ export class FlowService {
     steps: Step[],
     suffix: string,
     settings: SettingsComplete,
-    preferences: Preferences.PreferencesState,
+    preferences: PreferencesState,
     data: AdjustedDataset,
     themeValues: ThemeValues,
   ): FlowData {

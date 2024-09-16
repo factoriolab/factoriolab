@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterOutlet } from '@angular/router';
 
-import { RouterService } from '~/services';
+import { RouterService } from '~/services/router.service';
 
 @Component({
   selector: 'lab-id',

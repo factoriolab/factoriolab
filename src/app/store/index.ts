@@ -2,34 +2,39 @@ import { ActionReducerMap, MetaReducer } from '@ngrx/store';
 import { storeFreeze } from 'ngrx-store-freeze';
 import { environment } from 'src/environments/environment';
 
-import * as App from './app.actions';
-import * as Datasets from './datasets';
-import * as Items from './items';
-import * as Machines from './machines';
-import * as Objectives from './objectives';
-import * as Preferences from './preferences';
-import * as Recipes from './recipes';
-import * as Settings from './settings';
+import { datasetsReducer, DatasetsState } from './datasets/datasets.reducer';
+import { itemsReducer, ItemsState } from './items/items.reducer';
+import { machinesReducer, MachinesState } from './machines/machines.reducer';
+import {
+  objectivesReducer,
+  ObjectivesState,
+} from './objectives/objectives.reducer';
+import {
+  preferencesReducer,
+  PreferencesState,
+} from './preferences/preferences.reducer';
+import { recipesReducer, RecipesState } from './recipes/recipes.reducer';
+import { settingsReducer, SettingsState } from './settings/settings.reducer';
 import { storageMetaReducer } from './storage.reducer';
 
 export interface LabState {
-  datasetsState: Datasets.DatasetsState;
-  objectivesState: Objectives.ObjectivesState;
-  itemsState: Items.ItemsState;
-  recipesState: Recipes.RecipesState;
-  machinesState: Machines.MachinesState;
-  settingsState: Settings.SettingsState;
-  preferencesState: Preferences.PreferencesState;
+  datasetsState: DatasetsState;
+  objectivesState: ObjectivesState;
+  itemsState: ItemsState;
+  recipesState: RecipesState;
+  machinesState: MachinesState;
+  settingsState: SettingsState;
+  preferencesState: PreferencesState;
 }
 
 export const reducers = {
-  datasetsState: Datasets.datasetsReducer,
-  objectivesState: Objectives.objectivesReducer,
-  itemsState: Items.itemsReducer,
-  recipesState: Recipes.recipesReducer,
-  machinesState: Machines.machinesReducer,
-  settingsState: Settings.settingsReducer,
-  preferencesState: Preferences.preferencesReducer,
+  datasetsState: datasetsReducer,
+  objectivesState: objectivesReducer,
+  itemsState: itemsReducer,
+  recipesState: recipesReducer,
+  machinesState: machinesReducer,
+  settingsState: settingsReducer,
+  preferencesState: preferencesReducer,
 } as ActionReducerMap<LabState>;
 
 /* No need to test without storeFreeze, ignore that branch here. */
@@ -39,14 +44,3 @@ export const metaReducers: MetaReducer<LabState>[] = environment.testing
     environment.production
     ? [storageMetaReducer]
     : [storeFreeze, storageMetaReducer];
-
-export {
-  App,
-  Datasets,
-  Items,
-  Machines,
-  Objectives,
-  Preferences,
-  Recipes,
-  Settings,
-};

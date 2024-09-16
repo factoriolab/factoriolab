@@ -1,7 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { LabState, Recipes, Settings } from '~/store';
+import { LabState } from '~/store';
+import { resetRecipe, setCost } from '~/store/recipes/recipes.actions';
+import {
+  setCheckedRecipes,
+  setExcludedRecipes,
+} from '~/store/settings/settings.actions';
 import { DispatchTest, RecipeId, setInputs, TestModule } from '~/tests';
 
 import { RecipeComponent } from './recipe.component';
@@ -67,9 +72,9 @@ describe('RecipeComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setExcludedRecipes', Settings.setExcludedRecipes);
-    dispatch.props('setCheckedRecipes', Settings.setCheckedRecipes);
-    dispatch.props('setRecipeCost', Recipes.setCost);
-    dispatch.props('resetRecipe', Recipes.resetRecipe);
+    dispatch.props('setExcludedRecipes', setExcludedRecipes);
+    dispatch.props('setCheckedRecipes', setCheckedRecipes);
+    dispatch.props('setRecipeCost', setCost);
+    dispatch.props('resetRecipe', resetRecipe);
   });
 });

@@ -7,16 +7,53 @@ import {
 import { MockStore } from '@ngrx/store/testing';
 import { MenuItem, SortEvent } from 'primeng/api';
 
-import { Entities, rational, Step, StepDetail, StepDetailTab } from '~/models';
-import { StepIdPipe } from '~/pipes';
+import { Entities } from '~/models/entities';
+import { StepDetailTab } from '~/models/enum/step-detail-tab';
+import { rational } from '~/models/rational';
+import { Step } from '~/models/step';
+import { StepDetail } from '~/models/step-detail';
+import { StepIdPipe } from '~/pipes/step-id.pipe';
+import { LabState } from '~/store';
 import {
-  Items,
-  LabState,
-  Objectives,
-  Preferences,
-  Recipes,
-  Settings,
-} from '~/store';
+  resetBelts,
+  resetItem,
+  resetWagons,
+  setBelt,
+  setWagon,
+} from '~/store/items/items.actions';
+import {
+  add,
+  resetObjective,
+  setBeacons as setObjectiveBeacons,
+  setFuel as setObjectiveFuel,
+  setMachine as setObjectiveMachine,
+  setModules as setObjectiveModules,
+  setOverclock as setObjectiveOverclock,
+} from '~/store/objectives/objectives.actions';
+import {
+  selectStepDetails,
+  selectSteps,
+} from '~/store/objectives/objectives.selectors';
+import { setRows } from '~/store/preferences/preferences.actions';
+import {
+  resetBeacons,
+  resetMachines,
+  resetRecipe,
+  setBeacons as setRecipeBeacons,
+  setFuel as setRecipeFuel,
+  setMachine as setRecipeMachine,
+  setModules as setRecipeModules,
+  setOverclock as setRecipeOverclock,
+} from '~/store/recipes/recipes.actions';
+import {
+  resetChecked,
+  resetExcludedItems,
+  setCheckedItems,
+  setCheckedObjectives,
+  setCheckedRecipes,
+  setExcludedItems,
+  setExcludedRecipes,
+} from '~/store/settings/settings.actions';
 import {
   assert,
   DispatchTest,
@@ -26,7 +63,8 @@ import {
   setInputs,
   TestModule,
 } from '~/tests';
-import { BrowserUtility, RecipeUtility } from '~/utilities';
+import { BrowserUtility } from '~/utilities/browser.utility';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { StepsComponent } from './steps.component';
 
@@ -42,10 +80,10 @@ describe('StepsComponent', () => {
 
     fixture = TestBed.createComponent(StepsComponent);
     mockStore = TestBed.inject(MockStore);
-    mockStore.overrideSelector(Objectives.selectSteps, Mocks.Steps);
+    mockStore.overrideSelector(selectSteps, Mocks.steps);
     mockStore.overrideSelector(
-      Objectives.selectStepDetails,
-      Mocks.Steps.reduce((e: Entities<StepDetail>, s) => {
+      selectStepDetails,
+      Mocks.steps.reduce((e: Entities<StepDetail>, s) => {
         e[s.id] = {
           tabs: [
             { id: '0', label: StepDetailTab.Item },
@@ -79,7 +117,7 @@ describe('StepsComponent', () => {
       spyOn(component, 'expandRow');
       setInputs(fixture, {
         focus: true,
-        selectedId: Mocks.Step1.id,
+        selectedId: Mocks.step1.id,
       });
       expect(component.expandRow).toHaveBeenCalled();
     });
@@ -92,7 +130,7 @@ describe('StepsComponent', () => {
       spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
       assert(component.stepsTable != null);
       spyOn(component.stepsTable(), 'toggleRow');
-      component.fragmentId = 'step_' + Mocks.Step1.id;
+      component.fragmentId = 'step_' + Mocks.step1.id;
       component.ngAfterViewInit();
       tick(100);
       expect(component.stepsTable().toggleRow).toHaveBeenCalled();
@@ -105,7 +143,7 @@ describe('StepsComponent', () => {
       spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
       assert(component.stepsTable != null);
       spyOn(component.stepsTable(), 'toggleRow');
-      component.fragmentId = 'step_' + Mocks.Step1.id + '_item';
+      component.fragmentId = 'step_' + Mocks.step1.id + '_item';
       component.ngAfterViewInit();
       tick(100);
       expect(component.stepsTable().toggleRow).toHaveBeenCalled();
@@ -113,7 +151,7 @@ describe('StepsComponent', () => {
     }));
 
     it('should handle element not found', () => {
-      component.fragmentId = Mocks.Step1.id;
+      component.fragmentId = Mocks.step1.id;
       expect(() => {
         component.ngAfterViewInit();
       }).not.toThrow();
@@ -130,30 +168,30 @@ describe('StepsComponent', () => {
     it('should skip if conditions are not met', () => {
       const curr = {
         order: -1,
-        data: [...Mocks.Steps],
+        data: [...Mocks.steps],
       } as SortEvent;
-      component.sortSteps(null, curr, Mocks.Steps);
-      expect(curr.data).toEqual(Mocks.Steps);
+      component.sortSteps(null, curr, Mocks.steps);
+      expect(curr.data).toEqual(Mocks.steps);
     });
 
     it('should sort the steps based on the passed field', () => {
       const curr = {
         order: -1,
         field: 'belts',
-        data: [...Mocks.Steps],
+        data: [...Mocks.steps],
       } as SortEvent;
-      component.sortSteps(null, curr, Mocks.Steps);
-      expect(curr.data![0]).not.toEqual(Mocks.Steps[0]);
+      component.sortSteps(null, curr, Mocks.steps);
+      expect(curr.data![0]).not.toEqual(Mocks.steps[0]);
     });
 
     it('should handle missing values', () => {
       const curr = {
         order: -1,
         field: 'fake',
-        data: [...Mocks.Steps],
+        data: [...Mocks.steps],
       } as SortEvent;
-      component.sortSteps(null, curr, Mocks.Steps);
-      expect(curr.data).toEqual(Mocks.Steps);
+      component.sortSteps(null, curr, Mocks.steps);
+      expect(curr.data).toEqual(Mocks.steps);
     });
 
     it('should reset on third column click', () => {
@@ -164,11 +202,11 @@ describe('StepsComponent', () => {
       const curr = {
         order: -1,
         field: 'items',
-        data: [...Mocks.Steps],
+        data: [...Mocks.steps],
       } as SortEvent;
       spyOn(component.stepsTable(), 'reset');
       spyOn(component.sortSteps$, 'next');
-      component.sortSteps(prev, curr, Mocks.Steps);
+      component.sortSteps(prev, curr, Mocks.steps);
       expect(component.stepsTable().reset).toHaveBeenCalled();
       expect(component.sortSteps$.next).toHaveBeenCalled();
     });
@@ -203,14 +241,14 @@ describe('StepsComponent', () => {
   describe('expandRow', () => {
     it('should return if the row is collapsing', () => {
       spyOn(component as any, 'updateActiveItem');
-      component.expandRow(Mocks.Step1, true);
+      component.expandRow(Mocks.step1, true);
       expect(component.updateActiveItem).not.toHaveBeenCalled();
     });
 
     it('should pick the last open tab to show on expand', () => {
       const tab: MenuItem = { label: 'machine' };
       const stepDetails: Entities<StepDetail> = {
-        [Mocks.Step1.id]: {
+        [Mocks.step1.id]: {
           tabs: [tab],
           outputs: [],
           recipeIds: [],
@@ -221,15 +259,15 @@ describe('StepsComponent', () => {
       spyOnProperty(BrowserUtility, 'stepDetailTab').and.returnValue(
         StepDetailTab.Machine,
       );
-      const id = StepIdPipe.transform(Mocks.Step1);
-      component.expandRow(Mocks.Step1, false);
+      const id = StepIdPipe.transform(Mocks.step1);
+      component.expandRow(Mocks.step1, false);
       expect(component.activeItem[id]).toEqual(tab);
     });
 
     it('should pick a default tab to show on expand', () => {
       const tab: MenuItem = { label: 'machine' };
       const stepDetails: Entities<StepDetail> = {
-        [Mocks.Step1.id]: {
+        [Mocks.step1.id]: {
           tabs: [tab],
           outputs: [],
           recipeIds: [],
@@ -237,8 +275,8 @@ describe('StepsComponent', () => {
         },
       };
       spyOn(component, 'stepDetails').and.returnValue(stepDetails);
-      const id = StepIdPipe.transform(Mocks.Step1);
-      component.expandRow(Mocks.Step1, false);
+      const id = StepIdPipe.transform(Mocks.step1);
+      component.expandRow(Mocks.step1, false);
       expect(component.activeItem[id]).toEqual(tab);
     });
   });
@@ -314,7 +352,7 @@ describe('StepsComponent', () => {
     const step: Step = {
       id: '0',
       recipeId: RecipeId.WoodenChest,
-      recipeSettings: Mocks.RecipesStateInitial[RecipeId.WoodenChest],
+      recipeSettings: Mocks.recipesStateInitial[RecipeId.WoodenChest],
     };
 
     it('should skip a step with no recipe', () => {
@@ -442,33 +480,33 @@ describe('StepsComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setRows', Preferences.setRows);
-    dispatch.props('setExcludedItems', Settings.setExcludedItems);
-    dispatch.props('setBelt', Items.setBelt);
-    dispatch.props('setWagon', Items.setWagon);
-    dispatch.props('setExcludedRecipes', Settings.setExcludedRecipes);
-    dispatch.props('addObjective', Objectives.add);
-    dispatch.props('setMachine', Recipes.setMachine);
-    dispatch.props('setMachine', Objectives.setMachine, ['', '', '', true]);
-    dispatch.props('setFuel', Recipes.setFuel);
-    dispatch.props('setFuel', Objectives.setFuel, ['', '', '', true]);
-    dispatch.props('setModules', Recipes.setModules);
-    dispatch.props('setModules', Objectives.setModules, ['', '', true]);
-    dispatch.props('setBeacons', Recipes.setBeacons);
-    dispatch.props('setBeacons', Objectives.setBeacons, ['', '', true]);
-    dispatch.props('setOverclock', Recipes.setOverclock);
-    dispatch.props('setOverclock', Objectives.setOverclock, ['', '', '', true]);
-    dispatch.props('setCheckedItems', Settings.setCheckedItems);
-    dispatch.props('setCheckedRecipes', Settings.setCheckedRecipes);
-    dispatch.props('setCheckedObjectives', Settings.setCheckedObjectives);
-    dispatch.props('resetItem', Items.resetItem);
-    dispatch.props('resetRecipe', Recipes.resetRecipe);
-    dispatch.props('resetRecipeObjective', Objectives.resetObjective);
-    dispatch.void('resetChecked', Settings.resetChecked);
-    dispatch.void('resetExcludedItems', Settings.resetExcludedItems);
-    dispatch.void('resetBelts', Items.resetBelts);
-    dispatch.void('resetWagons', Items.resetWagons);
-    dispatch.void('resetMachines', Recipes.resetMachines);
-    dispatch.void('resetBeacons', Recipes.resetBeacons);
+    dispatch.props('setRows', setRows);
+    dispatch.props('setExcludedItems', setExcludedItems);
+    dispatch.props('setBelt', setBelt);
+    dispatch.props('setWagon', setWagon);
+    dispatch.props('setExcludedRecipes', setExcludedRecipes);
+    dispatch.props('addObjective', add);
+    dispatch.props('setMachine', setRecipeMachine);
+    dispatch.props('setMachine', setObjectiveMachine, ['', '', '', true]);
+    dispatch.props('setFuel', setRecipeFuel);
+    dispatch.props('setFuel', setObjectiveFuel, ['', '', '', true]);
+    dispatch.props('setModules', setRecipeModules);
+    dispatch.props('setModules', setObjectiveModules, ['', '', true]);
+    dispatch.props('setBeacons', setRecipeBeacons);
+    dispatch.props('setBeacons', setObjectiveBeacons, ['', '', true]);
+    dispatch.props('setOverclock', setRecipeOverclock);
+    dispatch.props('setOverclock', setObjectiveOverclock, ['', '', '', true]);
+    dispatch.props('setCheckedItems', setCheckedItems);
+    dispatch.props('setCheckedRecipes', setCheckedRecipes);
+    dispatch.props('setCheckedObjectives', setCheckedObjectives);
+    dispatch.props('resetItem', resetItem);
+    dispatch.props('resetRecipe', resetRecipe);
+    dispatch.props('resetRecipeObjective', resetObjective);
+    dispatch.void('resetChecked', resetChecked);
+    dispatch.void('resetExcludedItems', resetExcludedItems);
+    dispatch.void('resetBelts', resetBelts);
+    dispatch.void('resetWagons', resetWagons);
+    dispatch.void('resetMachines', resetMachines);
+    dispatch.void('resetBeacons', resetBeacons);
   });
 });

@@ -1,8 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { Game } from '~/models';
-import { LabState, Objectives, Preferences, Settings } from '~/store';
+import { Game } from '~/models/enum/game';
+import { LabState } from '~/store';
+import { create } from '~/store/objectives/objectives.actions';
+import { setBypassLanding } from '~/store/preferences/preferences.actions';
+import { setMod } from '~/store/settings/settings.actions';
 import { DispatchTest, ItemId, RecipeId, TestModule } from '~/tests';
 
 import { LandingComponent } from './landing.component';
@@ -74,8 +77,8 @@ describe('LandingComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setMod', Settings.setMod);
-    dispatch.props('createObjective', Objectives.create);
-    dispatch.props('setBypassLanding', Preferences.setBypassLanding);
+    dispatch.props('setMod', setMod);
+    dispatch.props('createObjective', create);
+    dispatch.props('setBypassLanding', setBypassLanding);
   });
 });

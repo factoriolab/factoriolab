@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Rational, rational } from '~/models';
+import { Rational, rational } from '~/models/rational';
 
 @Pipe({ name: 'rate', standalone: true })
 export class RatePipe implements PipeTransform {

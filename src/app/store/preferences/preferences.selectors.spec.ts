@@ -1,19 +1,21 @@
 import { Mocks } from '~/tests';
 
-import * as Selectors from './preferences.selectors';
+import {
+  selectBypassLanding,
+  selectLanguage,
+  selectStates,
+} from './preferences.selectors';
 
 describe('Preferences Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
-      expect(Selectors.selectStates.projector(Mocks.PreferencesState)).toEqual(
-        Mocks.PreferencesState.states,
+      expect(selectStates.projector(Mocks.preferencesState)).toEqual(
+        Mocks.preferencesState.states,
       );
-      expect(
-        Selectors.selectLanguage.projector(Mocks.PreferencesState),
-      ).toEqual('en');
-      expect(
-        Selectors.selectBypassLanding.projector(Mocks.PreferencesState),
-      ).toEqual(false);
+      expect(selectLanguage.projector(Mocks.preferencesState)).toEqual('en');
+      expect(selectBypassLanding.projector(Mocks.preferencesState)).toEqual(
+        false,
+      );
     });
   });
 });

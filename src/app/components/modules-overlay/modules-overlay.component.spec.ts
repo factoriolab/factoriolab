@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { rational } from '~/models';
+import { rational } from '~/models/rational';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { ModulesOverlayComponent } from './modules-overlay.component';
@@ -29,15 +29,15 @@ describe('ModulesOverlayComponent', () => {
       spyOn(component as any, '_show');
       component.show(
         event,
-        Mocks.ModuleSettings,
-        Mocks.Dataset.machineEntities[ItemId.AssemblingMachine3],
+        Mocks.moduleSettings,
+        Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],
         RecipeId.AdvancedCircuit,
       );
       expect(component.machine()).toEqual(
-        Mocks.Dataset.machineEntities[ItemId.AssemblingMachine3],
+        Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],
       );
-      expect(component.modules()).toEqual(Mocks.ModuleSettings);
-      expect(component.modules()).not.toBe(Mocks.ModuleSettings);
+      expect(component.modules()).toEqual(Mocks.moduleSettings);
+      expect(component.modules()).not.toBe(Mocks.moduleSettings);
       expect(component.recipeId()).toEqual(RecipeId.AdvancedCircuit);
       expect(component['_show']).toHaveBeenCalledWith(event);
     });

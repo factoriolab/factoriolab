@@ -4,11 +4,16 @@ import { Store } from '@ngrx/store';
 import { tap } from 'rxjs';
 import { environment } from 'src/environments';
 
-import { Preferences, Settings } from '~/store';
-
-import { ContentComponent } from './components';
-import { AnalyticsService, ThemeService, TranslateService } from './services';
-import { BrowserUtility } from './utilities';
+import { ContentComponent } from './components/content/content.component';
+import { AnalyticsService } from './services/analytics.service';
+import { ThemeService } from './services/theme.service';
+import { TranslateService } from './services/translate.service';
+import {
+  preferencesState,
+  selectLanguage,
+} from './store/preferences/preferences.selectors';
+import { selectGame, selectModId } from './store/settings/settings.selectors';
+import { BrowserUtility } from './utilities/browser.utility';
 
 @Component({
   selector: 'lab-root',
@@ -20,10 +25,10 @@ import { BrowserUtility } from './utilities';
   `,
 })
 export class AppComponent implements OnInit {
-  analyticsSvc = inject(AnalyticsService);
   store = inject(Store);
-  translateSvc = inject(TranslateService);
+  analyticsSvc = inject(AnalyticsService);
   themeSvc = inject(ThemeService);
+  translateSvc = inject(TranslateService);
 
   ngOnInit(): void {
     this.themeSvc.initialize();
@@ -31,7 +36,7 @@ export class AppComponent implements OnInit {
     this.analyticsSvc.event('version', environment.version);
 
     this.store
-      .select(Settings.selectGame)
+      .select(selectGame)
       .pipe(
         tap((game) => {
           this.analyticsSvc.event('set_game', game);
@@ -40,7 +45,7 @@ export class AppComponent implements OnInit {
       .subscribe();
 
     this.store
-      .select(Preferences.selectLanguage)
+      .select(selectLanguage)
       .pipe(
         tap((lang) => {
           this.translateSvc.use(lang);
@@ -50,7 +55,7 @@ export class AppComponent implements OnInit {
       .subscribe();
 
     this.store
-      .select(Settings.selectModId)
+      .select(selectModId)
       .pipe(
         tap((modId) => {
           this.analyticsSvc.event('set_mod_id', modId);
@@ -59,7 +64,7 @@ export class AppComponent implements OnInit {
       .subscribe();
 
     this.store
-      .select(Preferences.preferencesState)
+      .select(preferencesState)
       .pipe(tap((s) => (BrowserUtility.preferencesState = s)))
       .subscribe();
   }

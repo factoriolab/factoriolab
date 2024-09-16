@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Preferences } from '~/store';
+import { setColumns } from '~/store/preferences/preferences.actions';
+import { initialPreferencesState } from '~/store/preferences/preferences.reducer';
 import { Mocks, TestModule } from '~/tests';
 
 import { ColumnsComponent } from './columns.component';
@@ -36,9 +37,9 @@ describe('ColumnsComponent', () => {
     it('should set up the editValue and show the dialog', () => {
       spyOn(component, 'show');
       component.editValue = null as any;
-      component.open(Mocks.PreferencesState.columns);
-      expect(component.editValue).toEqual(Mocks.PreferencesState.columns);
-      expect(component.editValue).not.toBe(Mocks.PreferencesState.columns);
+      component.open(Mocks.preferencesState.columns);
+      expect(component.editValue).toEqual(Mocks.preferencesState.columns);
+      expect(component.editValue).not.toBe(Mocks.preferencesState.columns);
       expect(component.show).toHaveBeenCalled();
     });
   });
@@ -56,7 +57,7 @@ describe('ColumnsComponent', () => {
     it('should set the value back to the initial state', () => {
       component.editValue = null as any;
       component.reset();
-      expect(component.editValue).toEqual(Preferences.initialState.columns);
+      expect(component.editValue).toEqual(initialPreferencesState.columns);
     });
   });
 
@@ -65,7 +66,7 @@ describe('ColumnsComponent', () => {
       spyOn(component.store, 'dispatch');
       component.onHide();
       expect(component.store.dispatch).toHaveBeenCalledWith(
-        Preferences.setColumns({ columns: component.editValue as any }),
+        setColumns({ columns: component.editValue as any }),
       );
     });
   });

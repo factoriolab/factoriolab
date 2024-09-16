@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { rational, ZEMPTY, ZFALSE, ZTRUE } from '~/models';
+import { ZEMPTY, ZFALSE, ZTRUE } from '~/models/constants';
+import { rational } from '~/models/rational';
 
 import { ZipService } from './zip.service';
 

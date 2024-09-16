@@ -1,36 +1,32 @@
 import {
-  sankey,
   SankeyLinkExtraProperties,
   SankeyNodeExtraProperties,
-} from '~/d3-sankey';
+} from '~/d3-sankey/models';
+import { sankey } from '~/d3-sankey/sankey';
 import { coalesce } from '~/helpers';
-import {
-  AdjustedDataset,
-  DisplayRateInfo,
-  EnergyType,
-  Entities,
-  Game,
-  ItemSettings,
-  Objective,
-  ObjectiveType,
-  ObjectiveUnit,
-  Optional,
-  Rational,
-  rational,
-  Recipe,
-  RecipeSettings,
-  SettingsComplete,
-  Step,
-  toEntities,
-} from '~/models';
-import { Items } from '~/store';
+import { Recipe } from '~/models/data/recipe';
+import { AdjustedDataset } from '~/models/dataset';
+import { Entities, toEntities } from '~/models/entities';
+import { DisplayRateInfo } from '~/models/enum/display-rate';
+import { EnergyType } from '~/models/enum/energy-type';
+import { Game } from '~/models/enum/game';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { Objective } from '~/models/objective';
+import { Optional } from '~/models/optional';
+import { Rational, rational } from '~/models/rational';
+import { ItemSettings } from '~/models/settings/item-settings';
+import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { SettingsComplete } from '~/models/settings/settings-complete';
+import { Step } from '~/models/step';
+import { ItemsState } from '~/store/items/items.reducer';
 
 const ROOT_ID = '';
 
 export class RateUtility {
   static objectiveNormalizedRate(
     objective: Objective,
-    itemsState: Items.ItemsState,
+    itemsState: ItemsState,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInfo,
     data: AdjustedDataset,

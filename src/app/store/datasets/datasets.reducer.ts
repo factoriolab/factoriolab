@@ -1,7 +1,10 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { spread } from '~/helpers';
-import { Entities, ModData, ModHash, ModI18n } from '~/models';
+import { ModData } from '~/models/data/mod-data';
+import { ModHash } from '~/models/data/mod-hash';
+import { ModI18n } from '~/models/data/mod-i18n';
+import { Entities } from '~/models/entities';
 
 import * as Actions from './datasets.actions';
 
@@ -11,14 +14,14 @@ export interface DatasetsState {
   i18n: Entities<ModI18n | undefined>;
 }
 
-export const initialState: DatasetsState = {
+export const initialDatasetsState: DatasetsState = {
   data: {},
   hash: {},
   i18n: {},
 };
 
 export const datasetsReducer = createReducer(
-  initialState,
+  initialDatasetsState,
   on(Actions.loadMod, (state, { id, i18nId, data, hash, i18n }) =>
     spread(state, {
       data: spread(state.data, { [id]: data }),

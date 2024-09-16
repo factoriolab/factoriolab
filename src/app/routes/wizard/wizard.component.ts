@@ -9,18 +9,24 @@ import { DropdownModule } from 'primeng/dropdown';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { StepsModule } from 'primeng/steps';
 
-import { InputNumberComponent, PickerComponent } from '~/components';
-import { DropdownTranslateDirective } from '~/directives';
+import { InputNumberComponent } from '~/components/input-number/input-number.component';
+import { PickerComponent } from '~/components/picker/picker.component';
+import { DropdownTranslateDirective } from '~/directives/dropdown-translate.directive';
+import { DisplayRate, displayRateOptions } from '~/models/enum/display-rate';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { Objective } from '~/models/objective';
+import { rational } from '~/models/rational';
+import { IconClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { create } from '~/store/objectives/objectives.actions';
+import { selectAvailableItems } from '~/store/recipes/recipes.selectors';
+import { setDisplayRate } from '~/store/settings/settings.actions';
 import {
-  DisplayRate,
-  displayRateOptions,
-  Objective,
-  ObjectiveType,
-  ObjectiveUnit,
-  rational,
-} from '~/models';
-import { IconClassPipe, TranslatePipe } from '~/pipes';
-import { Objectives, Recipes, Settings } from '~/store';
+  selectAvailableRecipes,
+  selectDataset,
+  selectDisplayRate,
+} from '~/store/settings/settings.selectors';
 
 export type WizardState = 'type' | 'item' | 'recipe';
 
@@ -50,10 +56,10 @@ export class WizardComponent {
   route = inject(ActivatedRoute);
   store = inject(Store);
 
-  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
-  data = this.store.selectSignal(Settings.selectDataset);
-  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
-  displayRate = this.store.selectSignal(Settings.selectDisplayRate);
+  itemIds = this.store.selectSignal(selectAvailableItems);
+  data = this.store.selectSignal(selectDataset);
+  recipeIds = this.store.selectSignal(selectAvailableRecipes);
+  displayRate = this.store.selectSignal(selectDisplayRate);
 
   id = '';
   value = rational.one;
@@ -70,7 +76,7 @@ export class WizardComponent {
 
   /** Action Dispatch Methods */
   setDisplayRate(displayRate: DisplayRate, previous: DisplayRate): void {
-    this.store.dispatch(Settings.setDisplayRate({ displayRate, previous }));
+    this.store.dispatch(setDisplayRate({ displayRate, previous }));
   }
 
   createItemObjective(targetId: string): void {
@@ -103,6 +109,6 @@ export class WizardComponent {
 
   /** Action Dispatch Methods */
   createObjective(objective: Objective): void {
-    this.store.dispatch(Objectives.create({ objective }));
+    this.store.dispatch(create({ objective }));
   }
 }

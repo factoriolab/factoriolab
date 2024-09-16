@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { DropdownModule } from 'primeng/dropdown';
 
-import { ContentComponent } from '~/components';
+import { ContentComponent } from '~/components/content/content.component';
 import { TestModule } from '~/tests';
 
 import { DropdownTranslateDirective } from './dropdown-translate.directive';

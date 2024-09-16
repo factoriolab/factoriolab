@@ -1,33 +1,32 @@
-import {
-  Datasets,
-  Items,
-  LabState,
-  Machines,
-  Objectives,
-  Preferences,
-  Recipes,
-  Settings,
-} from '~/store';
+import { LabState } from '~/store';
+import { loadMod } from '~/store/datasets/datasets.actions';
+import { datasetsReducer } from '~/store/datasets/datasets.reducer';
+import { initialItemsState } from '~/store/items/items.reducer';
+import { initialMachinesState } from '~/store/machines/machines.reducer';
+import { initialObjectivesState } from '~/store/objectives/objectives.reducer';
+import { initialPreferencesState } from '~/store/preferences/preferences.reducer';
+import { initialRecipesState } from '~/store/recipes/recipes.reducer';
+import { initialSettingsState } from '~/store/settings/settings.reducer';
 
 import { Mocks } from './';
 
-const datasetsState = Datasets.datasetsReducer(
+const datasetsState = datasetsReducer(
   undefined,
-  Datasets.loadMod({
-    id: Settings.initialState.modId,
-    i18nId: Settings.initialState.modId,
-    data: Mocks.Data,
-    hash: Mocks.Hash,
+  loadMod({
+    id: initialSettingsState.modId,
+    i18nId: initialSettingsState.modId,
+    data: Mocks.modData,
+    hash: Mocks.modHash,
     i18n: undefined,
   }),
 );
 
 export const initialState: LabState = {
   datasetsState,
-  objectivesState: Objectives.initialState,
-  itemsState: Items.initialState,
-  recipesState: Recipes.initialState,
-  machinesState: Machines.initialState,
-  settingsState: Settings.initialState,
-  preferencesState: Preferences.initialState,
+  objectivesState: initialObjectivesState,
+  itemsState: initialItemsState,
+  recipesState: initialRecipesState,
+  machinesState: initialMachinesState,
+  settingsState: initialSettingsState,
+  preferencesState: initialPreferencesState,
 };

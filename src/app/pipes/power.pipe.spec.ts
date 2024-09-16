@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PowerUnit, rational } from '~/models';
+import { PowerUnit } from '~/models/enum/power-unit';
+import { rational } from '~/models/rational';
 import { TestModule } from '~/tests';
 
 import { PowerPipe } from './power.pipe';

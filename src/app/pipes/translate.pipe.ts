@@ -9,8 +9,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { distinctUntilChanged, Subject, switchMap } from 'rxjs';
 
 import { areEntitiesEqual } from '~/helpers';
-import { Entities } from '~/models';
-import { InterpolateVal, TranslateService } from '~/services';
+import { Entities } from '~/models/entities';
+import { InterpolateVal, TranslateService } from '~/services/translate.service';
 
 @Pipe({
   name: 'translate',

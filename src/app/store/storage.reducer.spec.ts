@@ -1,8 +1,8 @@
 import { Action } from '@ngrx/store';
 
-import { BrowserUtility } from '~/utilities';
+import { BrowserUtility } from '~/utilities/browser.utility';
 
-import { LabState } from './';
+import { LabState } from './index';
 import { storageMetaReducer } from './storage.reducer';
 
 describe('Storage MetaReducer', () => {

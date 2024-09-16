@@ -1,29 +1,34 @@
 import { Mocks } from '~/tests';
 
-import { initialState } from './datasets.reducer';
-import * as Selectors from './datasets.selectors';
+import { initialDatasetsState } from './datasets.reducer';
+import {
+  selectDataEntities,
+  selectHashEntities,
+  selectI18nEntities,
+  selectModEntities,
+} from './datasets.selectors';
 
 describe('Datasets Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
-      expect(Selectors.selectData.projector(initialState)).toEqual(
-        initialState.data,
+      expect(selectDataEntities.projector(initialDatasetsState)).toEqual(
+        initialDatasetsState.data,
       );
-      expect(Selectors.selectI18n.projector(initialState)).toEqual(
-        initialState.i18n,
+      expect(selectI18nEntities.projector(initialDatasetsState)).toEqual(
+        initialDatasetsState.i18n,
       );
-      expect(Selectors.selectHash.projector(initialState)).toEqual(
-        initialState.hash,
+      expect(selectHashEntities.projector(initialDatasetsState)).toEqual(
+        initialDatasetsState.hash,
       );
     });
   });
 
   describe('selectModEntities', () => {
     it('should convert mod list to entities', () => {
-      const result = Selectors.selectModEntities.projector({
-        [Mocks.Mod.id]: Mocks.Data,
+      const result = selectModEntities.projector({
+        [Mocks.mod.id]: Mocks.modData,
       });
-      expect(result[Mocks.Mod.id]).toEqual(Mocks.Mod);
+      expect(result[Mocks.mod.id]).toEqual(Mocks.mod);
     });
   });
 });

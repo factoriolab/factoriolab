@@ -6,8 +6,11 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
-import { TranslatePipe } from '~/pipes';
-import { Settings } from '~/store';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import {
+  selectDataset,
+  selectModMenuItem,
+} from '~/store/settings/settings.selectors';
 
 @Component({
   selector: 'lab-data',
@@ -26,8 +29,8 @@ import { Settings } from '~/store';
 export class DataComponent {
   store = inject(Store);
 
-  home = this.store.selectSignal(Settings.selectModMenuItem);
-  data = this.store.selectSignal(Settings.selectDataset);
+  home = this.store.selectSignal(selectModMenuItem);
+  data = this.store.selectSignal(selectDataset);
 
   collections: MenuItem[] = [
     {

@@ -1,4 +1,5 @@
-import { AppData, Game } from '~/models';
+import { AppData } from '~/models/app-data';
+import { Game } from '~/models/enum/game';
 
 export const data: AppData = {
   mods: [

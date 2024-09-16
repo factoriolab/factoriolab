@@ -1,24 +1,37 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { spread } from '~/helpers';
-import { Entities, RecipeSettings } from '~/models';
-import { StoreUtility } from '~/utilities';
+import { Entities } from '~/models/entities';
+import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { StoreUtility } from '~/utilities/store.utility';
 
-import * as App from '../app.actions';
-import * as Settings from '../settings';
-import * as Actions from './recipes.actions';
+import { load, reset } from '../app.actions';
+import { setMod } from '../settings/settings.actions';
+import {
+  resetBeacons,
+  resetCost,
+  resetMachines,
+  resetRecipe,
+  resetRecipeMachines,
+  setBeacons,
+  setCost,
+  setFuel,
+  setMachine,
+  setModules,
+  setOverclock,
+} from './recipes.actions';
 
 export type RecipesState = Entities<RecipeSettings>;
 
-export const initialState: RecipesState = {};
+export const initialRecipesState: RecipesState = {};
 
 export const recipesReducer = createReducer(
-  initialState,
-  on(App.load, (_, { partial }) =>
-    spread(initialState, partial.recipesState ?? {}),
+  initialRecipesState,
+  on(load, (_, { partial }) =>
+    spread(initialRecipesState, partial.recipesState ?? {}),
   ),
-  on(App.reset, Settings.setMod, (): RecipesState => initialState),
-  on(Actions.setMachine, (state, { id, value, def }) => {
+  on(reset, setMod, (): RecipesState => initialRecipesState),
+  on(setMachine, (state, { id, value, def }) => {
     state = StoreUtility.compareReset(state, 'machineId', id, value, def);
     return StoreUtility.resetFields(
       state,
@@ -26,25 +39,23 @@ export const recipesReducer = createReducer(
       id,
     );
   }),
-  on(Actions.setFuel, (state, { id, value, def }) =>
+  on(setFuel, (state, { id, value, def }) =>
     StoreUtility.compareReset(state, 'fuelId', id, value, def),
   ),
-  on(Actions.setModules, (state, { id, value }) =>
+  on(setModules, (state, { id, value }) =>
     StoreUtility.setValue(state, 'modules', id, value),
   ),
-  on(Actions.setBeacons, (state, { id, value }) =>
+  on(setBeacons, (state, { id, value }) =>
     StoreUtility.setValue(state, 'beacons', id, value),
   ),
-  on(Actions.setOverclock, (state, { id, value, def }) =>
+  on(setOverclock, (state, { id, value, def }) =>
     StoreUtility.compareReset(state, 'overclock', id, value, def),
   ),
-  on(Actions.setCost, (state, { id, value }) =>
+  on(setCost, (state, { id, value }) =>
     StoreUtility.compareReset(state, 'cost', id, value, undefined),
   ),
-  on(Actions.resetRecipe, (state, { id }) =>
-    StoreUtility.removeEntry(state, id),
-  ),
-  on(Actions.resetRecipeMachines, (state, { ids }) => {
+  on(resetRecipe, (state, { id }) => StoreUtility.removeEntry(state, id)),
+  on(resetRecipeMachines, (state, { ids }) => {
     for (const id of ids)
       state = StoreUtility.resetFields(
         state,
@@ -53,7 +64,7 @@ export const recipesReducer = createReducer(
       );
     return state;
   }),
-  on(Actions.resetMachines, (state) =>
+  on(resetMachines, (state) =>
     StoreUtility.resetFields(state, [
       'machineId',
       'fuelId',
@@ -62,8 +73,6 @@ export const recipesReducer = createReducer(
       'beacons',
     ]),
   ),
-  on(Actions.resetBeacons, (state) =>
-    StoreUtility.resetField(state, 'beacons'),
-  ),
-  on(Actions.resetCost, (state) => StoreUtility.resetField(state, 'cost')),
+  on(resetBeacons, (state) => StoreUtility.resetField(state, 'beacons')),
+  on(resetCost, (state) => StoreUtility.resetField(state, 'cost')),
 );

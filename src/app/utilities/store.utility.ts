@@ -1,5 +1,6 @@
 import { spread } from '~/helpers';
-import { Entities, Rational } from '~/models';
+import { Entities } from '~/models/entities';
+import { Rational } from '~/models/rational';
 
 export class StoreUtility {
   static rankEquals<T extends number | string>(

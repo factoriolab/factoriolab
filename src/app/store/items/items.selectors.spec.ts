@@ -1,46 +1,44 @@
 import { spread } from '~/helpers';
 import { ItemId, Mocks } from '~/tests';
 
-import { initialState } from './items.reducer';
-import * as Selectors from './items.selectors';
+import { initialItemsState } from './items.reducer';
+import { selectItemsModified, selectItemsState } from './items.selectors';
 
 describe('Items Selectors', () => {
   const stringValue = 'value';
 
   describe('getItemConfigs', () => {
     it('should return the item configs', () => {
-      const settings = spread(Mocks.SettingsStateInitial, {
+      const settings = spread(Mocks.settingsStateInitial, {
         pipeId: ItemId.Pipe,
       });
-      const result = Selectors.selectItemsState.projector(
-        initialState,
-        Mocks.AdjustedDataset,
+      const result = selectItemsState.projector(
+        initialItemsState,
+        Mocks.adjustedDataset,
         settings,
       );
       expect(Object.keys(result).length).toEqual(
-        Mocks.AdjustedDataset.itemIds.length,
+        Mocks.adjustedDataset.itemIds.length,
       );
     });
 
     it('should use the passed overrides', () => {
-      const state = spread(initialState, {
-        [Mocks.Item1.id]: { beltId: stringValue, wagonId: stringValue },
+      const state = spread(initialItemsState, {
+        [Mocks.item1.id]: { beltId: stringValue, wagonId: stringValue },
       });
-      const result = Selectors.selectItemsState.projector(
+      const result = selectItemsState.projector(
         state,
-        Mocks.AdjustedDataset,
-        Mocks.SettingsStateInitial,
+        Mocks.adjustedDataset,
+        Mocks.settingsStateInitial,
       );
-      expect(result[Mocks.Item1.id].beltId).toEqual(stringValue);
-      expect(result[Mocks.Item1.id].wagonId).toEqual(stringValue);
+      expect(result[Mocks.item1.id].beltId).toEqual(stringValue);
+      expect(result[Mocks.item1.id].wagonId).toEqual(stringValue);
     });
   });
 
   describe('getItemsModified', () => {
     it('should determine whether columns are modified', () => {
-      const result = Selectors.selectItemsModified.projector(
-        Mocks.ItemsStateInitial,
-      );
+      const result = selectItemsModified.projector(Mocks.itemsStateInitial);
       expect(result.belts).toBeTrue();
       expect(result.wagons).toBeTrue();
     });

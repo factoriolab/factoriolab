@@ -1,5 +1,8 @@
 import { createAction, props } from '@ngrx/store';
-import { ModData, ModHash, ModI18n } from 'src/app/models';
+
+import { ModData } from '~/models/data/mod-data';
+import { ModHash } from '~/models/data/mod-hash';
+import { ModI18n } from '~/models/data/mod-i18n';
 
 const key = '[Datasets]';
 export const loadMod = createAction(

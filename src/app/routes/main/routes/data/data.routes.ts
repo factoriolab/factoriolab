@@ -1,4 +1,4 @@
-import { DataRoute } from './models';
+import { DataRoute } from './models/data-route';
 
 export const routes: DataRoute[] = [
   {

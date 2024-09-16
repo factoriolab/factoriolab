@@ -1,7 +1,7 @@
 import { Simplex } from 'glpk-ts';
 import { StatusSimplex } from 'node_modules/glpk-ts/dist/status';
 
-import { SimplexResultType } from './enum';
+import { SimplexResultType } from './enum/simplex-result-type';
 import { Rational } from './rational';
 import { Step } from './step';
 

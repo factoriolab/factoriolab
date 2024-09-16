@@ -1,8 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { ObjectiveType, ObjectiveUnit, rational } from '~/models';
-import { LabState, Objectives, Settings } from '~/store';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { rational } from '~/models/rational';
+import { LabState } from '~/store';
+import { create } from '~/store/objectives/objectives.actions';
+import { setDisplayRate } from '~/store/settings/settings.actions';
 import { DispatchTest, ItemId, RecipeId, TestModule } from '~/tests';
 
 import { WizardComponent } from './wizard.component';
@@ -38,11 +42,11 @@ describe('WizardComponent', () => {
   it('should dispatch actions', () => {
     spyOn(component.router, 'navigate').and.returnValue(Promise.resolve(true));
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setDisplayRate', Settings.setDisplayRate);
+    dispatch.props('setDisplayRate', setDisplayRate);
     dispatch.spy.calls.reset();
     component.createItemObjective(ItemId.IronPlate);
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-      Objectives.create({
+      create({
         objective: {
           id: '0',
           targetId: ItemId.IronPlate,
@@ -55,7 +59,7 @@ describe('WizardComponent', () => {
     dispatch.spy.calls.reset();
     component.createRecipeObjective(RecipeId.IronPlate);
     expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-      Objectives.create({
+      create({
         objective: {
           id: '0',
           targetId: ItemId.IronPlate,

@@ -5,8 +5,9 @@ import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { map, switchMap } from 'rxjs';
 
-import { TranslateService } from '~/services';
-import { Recipes, Settings } from '~/store';
+import { TranslateService } from '~/services/translate.service';
+import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
+import { selectModMenuItem } from '~/store/settings/settings.selectors';
 
 @Component({ template: '' })
 export abstract class DetailComponent {
@@ -14,8 +15,8 @@ export abstract class DetailComponent {
   translateSvc = inject(TranslateService);
   store = inject(Store);
 
-  home = this.store.selectSignal(Settings.selectModMenuItem);
-  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
+  home = this.store.selectSignal(selectModMenuItem);
+  data = this.store.selectSignal(selectAdjustedDataset);
 
   id = input.required<string>();
   collectionLabel = input.required<string>();

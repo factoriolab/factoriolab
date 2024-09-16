@@ -7,15 +7,17 @@ import {
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 
-import { Game } from '~/models';
+import { Game } from '~/models/enum/game';
+import { BonusPercentPipe } from '~/pipes/bonus-percent.pipe';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { RoundPipe } from '~/pipes/round.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { UsagePipe } from '~/pipes/usage.pipe';
+import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
 import {
-  BonusPercentPipe,
-  IconSmClassPipe,
-  RoundPipe,
-  TranslatePipe,
-  UsagePipe,
-} from '~/pipes';
-import { Recipes, Settings } from '~/store';
+  selectBeltSpeedTxt,
+  selectDisplayRateInfo,
+} from '~/store/settings/settings.selectors';
 
 type TooltipType =
   | 'item'
@@ -66,9 +68,9 @@ export class TooltipComponent {
     recipe: 'recipes',
   };
 
-  beltSpeedTxt = this.store.selectSignal(Settings.selectBeltSpeedTxt);
-  dispRateInfo = this.store.selectSignal(Settings.selectDisplayRateInfo);
-  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
+  beltSpeedTxt = this.store.selectSignal(selectBeltSpeedTxt);
+  dispRateInfo = this.store.selectSignal(selectDisplayRateInfo);
+  data = this.store.selectSignal(selectAdjustedDataset);
 
   Game = Game;
 }

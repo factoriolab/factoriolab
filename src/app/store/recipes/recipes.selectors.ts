@@ -1,12 +1,17 @@
 import { createSelector } from '@ngrx/store';
 
-import { Entities, RecipeSettings } from '~/models';
-import { RecipeUtility } from '~/utilities';
+import { Entities } from '~/models/entities';
+import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { LabState } from '../';
-import * as Items from '../items';
-import * as Machines from '../machines';
-import * as Settings from '../settings';
+import { selectItemsState } from '../items/items.selectors';
+import { selectMachinesState } from '../machines/machines.selectors';
+import {
+  selectAvailableRecipes,
+  selectDataset,
+  selectSettings,
+} from '../settings/settings.selectors';
 import { RecipesState } from './recipes.reducer';
 
 /* Base selector functions */
@@ -16,9 +21,9 @@ export const recipesState = (state: LabState): RecipesState =>
 /* Complex selectors */
 export const selectRecipesState = createSelector(
   recipesState,
-  Machines.selectMachinesState,
-  Settings.selectSettings,
-  Settings.selectDataset,
+  selectMachinesState,
+  selectSettings,
+  selectDataset,
   (state, machinesState, settings, data) => {
     const value: Entities<RecipeSettings> = {};
 
@@ -80,10 +85,10 @@ export const selectRecipesState = createSelector(
 
 export const selectAdjustedDataset = createSelector(
   selectRecipesState,
-  Items.selectItemsState,
-  Settings.selectAvailableRecipes,
-  Settings.selectSettings,
-  Settings.selectDataset,
+  selectItemsState,
+  selectAvailableRecipes,
+  selectSettings,
+  selectDataset,
   (recipesState, itemsState, recipeIds, settings, data) =>
     RecipeUtility.adjustDataset(
       recipeIds,

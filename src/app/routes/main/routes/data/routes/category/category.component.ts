@@ -2,11 +2,12 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 
-import { CollectionTableComponent } from '~/components';
-import { Category } from '~/models';
-import { IconClassPipe, TranslatePipe } from '~/pipes';
+import { CollectionTableComponent } from '~/components/collection-table/collection-table.component';
+import { Category } from '~/models/data/category';
+import { IconClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
 
-import { DetailComponent } from '../../models';
+import { DetailComponent } from '../../models/detail.component';
 
 @Component({
   standalone: true,

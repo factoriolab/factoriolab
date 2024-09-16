@@ -6,27 +6,33 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 
-import { CollectionTableComponent } from '~/components';
+import { CollectionTableComponent } from '~/components/collection-table/collection-table.component';
 import { coalesce, updateSetIds } from '~/helpers';
+import { Category } from '~/models/data/category';
+import { Item } from '~/models/data/item';
+import { Game } from '~/models/enum/game';
+import { ItemId } from '~/models/enum/item-id';
+import { ItemSettings } from '~/models/settings/item-settings';
+import { MachineSettings } from '~/models/settings/machine-settings';
+import { BonusPercentPipe } from '~/pipes/bonus-percent.pipe';
+import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { RoundPipe } from '~/pipes/round.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { UsagePipe } from '~/pipes/usage.pipe';
+import { resetItem } from '~/store/items/items.actions';
+import { itemsState, selectItemsState } from '~/store/items/items.selectors';
+import { resetMachine } from '~/store/machines/machines.actions';
 import {
-  Category,
-  Game,
-  Item,
-  ItemId,
-  ItemSettings,
-  MachineSettings,
-} from '~/models';
+  machinesState,
+  selectMachinesState,
+} from '~/store/machines/machines.selectors';
 import {
-  BonusPercentPipe,
-  IconClassPipe,
-  IconSmClassPipe,
-  RoundPipe,
-  TranslatePipe,
-  UsagePipe,
-} from '~/pipes';
-import { Items, Machines, Settings } from '~/store';
+  setCheckedItems,
+  setExcludedItems,
+} from '~/store/settings/settings.actions';
+import { selectSettings } from '~/store/settings/settings.selectors';
 
-import { DetailComponent } from '../../models';
+import { DetailComponent } from '../../models/detail.component';
 
 @Component({
   standalone: true,
@@ -48,11 +54,11 @@ import { DetailComponent } from '../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemComponent extends DetailComponent {
-  itemsStateRaw = this.store.selectSignal(Items.itemsState);
-  itemsState = this.store.selectSignal(Items.selectItemsState);
-  machinesStateRaw = this.store.selectSignal(Machines.machinesState);
-  machinesState = this.store.selectSignal(Machines.selectMachinesState);
-  settings = this.store.selectSignal(Settings.selectSettings);
+  itemsStateRaw = this.store.selectSignal(itemsState);
+  itemsState = this.store.selectSignal(selectItemsState);
+  machinesStateRaw = this.store.selectSignal(machinesState);
+  machinesState = this.store.selectSignal(selectMachinesState);
+  settings = this.store.selectSignal(selectSettings);
 
   obj = computed<Item | undefined>(() => this.data().itemEntities[this.id()]);
   breadcrumb = computed<MenuItem[]>(() => [
@@ -106,18 +112,18 @@ export class ItemComponent extends DetailComponent {
 
   /** Action dispatch methods */
   setExcludedItems(excludedItemIds: Set<string>): void {
-    this.store.dispatch(Settings.setExcludedItems({ excludedItemIds }));
+    this.store.dispatch(setExcludedItems({ excludedItemIds }));
   }
 
   setCheckedItems(checkedItemIds: Set<string>): void {
-    this.store.dispatch(Settings.setCheckedItems({ checkedItemIds }));
+    this.store.dispatch(setCheckedItems({ checkedItemIds }));
   }
 
   resetItem(id: string): void {
-    this.store.dispatch(Items.resetItem({ id }));
+    this.store.dispatch(resetItem({ id }));
   }
 
   resetMachine(id: string): void {
-    this.store.dispatch(Machines.resetMachine({ id }));
+    this.store.dispatch(resetMachine({ id }));
   }
 }

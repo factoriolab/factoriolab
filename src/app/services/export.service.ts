@@ -3,9 +3,17 @@ import { Store } from '@ngrx/store';
 import { saveAs } from 'file-saver';
 
 import { coalesce, fnPropsNotNullish, notNullish } from '~/helpers';
-import { FlowData, rational, Step } from '~/models';
-import { Items, Recipes, Settings } from '~/store';
-import { BrowserUtility, RecipeUtility } from '~/utilities';
+import { FlowData } from '~/models/flow';
+import { rational } from '~/models/rational';
+import { Step } from '~/models/step';
+import { selectItemsState } from '~/store/items/items.selectors';
+import {
+  selectAdjustedDataset,
+  selectRecipesState,
+} from '~/store/recipes/recipes.selectors';
+import { selectColumnsState } from '~/store/settings/settings.selectors';
+import { BrowserUtility } from '~/utilities/browser.utility';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
 const CSV_EXTENSION = '.csv';
@@ -57,10 +65,10 @@ export const StepKeys = [
 })
 export class ExportService {
   store = inject(Store);
-  itemsState = this.store.selectSignal(Items.selectItemsState);
-  recipesState = this.store.selectSignal(Recipes.selectRecipesState);
-  columnsState = this.store.selectSignal(Settings.selectColumnsState);
-  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
+  itemsState = this.store.selectSignal(selectItemsState);
+  recipesState = this.store.selectSignal(selectRecipesState);
+  columnsState = this.store.selectSignal(selectColumnsState);
+  data = this.store.selectSignal(selectAdjustedDataset);
 
   stepsToCsv(steps: Step[]): void {
     const json = steps.map((s) => this.stepToJson(s, steps));

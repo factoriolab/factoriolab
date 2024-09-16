@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { memoize } from '~/helpers/memoize';
-import { ZBASE64ABC, ZMAP, ZMAX } from '~/models';
+import { memoize } from '~/helpers';
+import { ZBASE64ABC, ZMAP, ZMAX } from '~/models/constants';
 
 @Injectable({
   providedIn: 'root',

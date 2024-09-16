@@ -12,10 +12,12 @@ import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { map, switchMap } from 'rxjs';
 
-import { CollectionTableComponent } from '~/components';
-import { Dataset, IdType } from '~/models';
-import { TranslateService } from '~/services';
-import { Recipes, Settings } from '~/store';
+import { CollectionTableComponent } from '~/components/collection-table/collection-table.component';
+import { Dataset } from '~/models/dataset';
+import { IdType } from '~/models/enum/id-type';
+import { TranslateService } from '~/services/translate.service';
+import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
+import { selectModMenuItem } from '~/store/settings/settings.selectors';
 
 @Component({
   standalone: true,
@@ -28,8 +30,8 @@ export class CollectionComponent {
   route = inject(ActivatedRoute);
   store = inject(Store);
 
-  home = this.store.selectSignal(Settings.selectModMenuItem);
-  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
+  home = this.store.selectSignal(selectModMenuItem);
+  data = this.store.selectSignal(selectAdjustedDataset);
 
   label = input.required<string>();
   type = input.required<IdType>();

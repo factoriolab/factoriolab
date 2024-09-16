@@ -6,35 +6,37 @@ import {
   fnPropsNotNullish,
   notNullish,
 } from '~/helpers';
+import { Beacon } from '~/models/data/beacon';
+import { Machine, MachineJson } from '~/models/data/machine';
 import {
-  AdjustedDataset,
   AdjustedRecipe,
-  areBeaconSettingsEqual,
-  areModuleSettingsEqual,
-  Beacon,
-  BeaconSettings,
   cloneRecipe,
-  CostSettings,
-  Dataset,
-  EnergyType,
-  Entities,
   finalizeRecipe,
-  Game,
-  isRecipeObjective,
-  ItemId,
-  ItemSettings,
-  Machine,
-  MachineJson,
-  ModuleSettings,
-  Objective,
-  Rational,
-  rational,
   Recipe,
   RecipeJson,
-  RecipeSettings,
-  SettingsComplete,
-} from '~/models';
-import { Items, Machines, Recipes } from '~/store';
+} from '~/models/data/recipe';
+import { AdjustedDataset, Dataset } from '~/models/dataset';
+import { Entities } from '~/models/entities';
+import { EnergyType } from '~/models/enum/energy-type';
+import { Game } from '~/models/enum/game';
+import { ItemId } from '~/models/enum/item-id';
+import { isRecipeObjective, Objective } from '~/models/objective';
+import { Rational, rational } from '~/models/rational';
+import {
+  areBeaconSettingsEqual,
+  BeaconSettings,
+} from '~/models/settings/beacon-settings';
+import { CostSettings } from '~/models/settings/cost-settings';
+import { ItemSettings } from '~/models/settings/item-settings';
+import {
+  areModuleSettingsEqual,
+  ModuleSettings,
+} from '~/models/settings/module-settings';
+import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { SettingsComplete } from '~/models/settings/settings-complete';
+import { ItemsState } from '~/store/items/items.reducer';
+import { MachinesState } from '~/store/machines/machines.reducer';
+import { RecipesState } from '~/store/recipes/recipes.reducer';
 
 export class RecipeUtility {
   static MIN_FACTOR = rational(1n, 5n);
@@ -659,9 +661,9 @@ export class RecipeUtility {
 
   static adjustObjective(
     objective: Objective,
-    itemsState: Items.ItemsState,
-    recipesState: Recipes.RecipesState,
-    machinesState: Machines.MachinesState,
+    itemsState: ItemsState,
+    recipesState: RecipesState,
+    machinesState: MachinesState,
     settings: SettingsComplete,
     data: AdjustedDataset,
   ): Objective {

@@ -1,18 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 
 import {
-  KeysMatching,
-  LabParams,
-  Optional,
-  Rational,
-  rational,
   ZARRAYSEP,
   ZEMPTY,
   ZFALSE,
   ZFIELDSEP,
-  Zip,
   ZTRUE,
-} from '~/models';
+} from '~/models/constants';
+import { KeysMatching } from '~/models/keys-matching';
+import { LabParams } from '~/models/lab-params';
+import { Optional } from '~/models/optional';
+import { Rational, rational } from '~/models/rational';
+import { Zip } from '~/models/zip';
 
 import { CompressionService } from './compression.service';
 

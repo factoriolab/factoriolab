@@ -1,24 +1,17 @@
 import { inject, Injectable } from '@angular/core';
-// import { Params } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { first } from 'rxjs';
 import { data } from 'src/data';
 
 import { asString, coalesce, prune } from '~/helpers';
-import {
-  LabParams,
-  ModData,
-  ObjectiveType,
-  Optional,
-  Params,
-  toEntities,
-  ZARRAYSEP,
-  ZEMPTY,
-  ZFIELDSEP,
-  ZipVersion,
-  ZTRUE,
-} from '~/models';
-import { Settings } from '~/store';
+import { ZARRAYSEP, ZEMPTY, ZFIELDSEP, ZTRUE } from '~/models/constants';
+import { ModData } from '~/models/data/mod-data';
+import { toEntities } from '~/models/entities';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ZipVersion } from '~/models/enum/zip-version';
+import { LabParams, Params } from '~/models/lab-params';
+import { Optional } from '~/models/optional';
+import { initialSettingsState } from '~/store/settings/settings.reducer';
 
 import { AnalyticsService } from './analytics.service';
 import { CompressionService } from './compression.service';
@@ -77,7 +70,7 @@ export class MigrationService {
   migrate(modId: string | undefined, params: Params): MigrationResult {
     if (Object.keys(params).length === 0)
       return {
-        modId: modId ?? Settings.initialState.modId,
+        modId: modId ?? initialSettingsState.modId,
         params: {},
         isBare: true,
       };

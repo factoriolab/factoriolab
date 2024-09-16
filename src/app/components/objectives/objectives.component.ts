@@ -17,27 +17,59 @@ import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
 import { combineLatest, EMPTY, first, map, Observable, switchMap } from 'rxjs';
 
-import { DropdownTranslateDirective, NoDragDirective } from '~/directives';
+import { DropdownTranslateDirective } from '~/directives/dropdown-translate.directive';
+import { NoDragDirective } from '~/directives/no-drag.directive';
+import { AdjustedDataset } from '~/models/dataset';
+import { DisplayRate, displayRateOptions } from '~/models/enum/display-rate';
+import { MaximizeType } from '~/models/enum/maximize-type';
 import {
-  AdjustedDataset,
-  DisplayRate,
-  displayRateOptions,
-  MatrixResult,
-  MaximizeType,
-  Objective,
-  ObjectiveBase,
   ObjectiveType,
   objectiveTypeOptions,
-  ObjectiveUnit,
-  Rational,
-  rational,
-  SettingsComplete,
-  SimplexResultType,
-} from '~/models';
-import { IconSmClassPipe, TranslatePipe } from '~/pipes';
-import { ContentService, TrackService, TranslateService } from '~/services';
-import { Items, Objectives, Preferences, Recipes, Settings } from '~/store';
-import { RateUtility } from '~/utilities';
+} from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { SimplexResultType } from '~/models/enum/simplex-result-type';
+import { MatrixResult } from '~/models/matrix-result';
+import { Objective, ObjectiveBase } from '~/models/objective';
+import { Rational, rational } from '~/models/rational';
+import { SettingsComplete } from '~/models/settings/settings-complete';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { TrackService } from '~/services/track.service';
+import { TranslateService } from '~/services/translate.service';
+import { selectItemsState } from '~/store/items/items.selectors';
+import {
+  add,
+  remove,
+  setOrder,
+  setTarget,
+  setType,
+  setUnit,
+  setValue,
+} from '~/store/objectives/objectives.actions';
+import {
+  selectMatrixResult,
+  selectObjectives,
+} from '~/store/objectives/objectives.selectors';
+import { setPaused } from '~/store/preferences/preferences.actions';
+import {
+  selectConvertObjectiveValues,
+  selectPaused,
+} from '~/store/preferences/preferences.selectors';
+import {
+  selectAdjustedDataset,
+  selectAvailableItems,
+} from '~/store/recipes/recipes.selectors';
+import { setDisplayRate } from '~/store/settings/settings.actions';
+import {
+  selectAvailableRecipes,
+  selectBeltSpeed,
+  selectDisplayRateInfo,
+  selectMaximizeType,
+  selectObjectiveUnitOptions,
+  selectSettings,
+} from '~/store/settings/settings.selectors';
+import { RateUtility } from '~/utilities/rate.utility';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { PickerComponent } from '../picker/picker.component';
@@ -70,31 +102,29 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 })
 export class ObjectivesComponent {
   store = inject(Store);
-  translateSvc = inject(TranslateService);
   contentSvc = inject(ContentService);
   trackSvc = inject(TrackService);
+  translateSvc = inject(TranslateService);
 
-  _objectives = this.store.selectSignal(Objectives.selectObjectives);
-  result = this.store.selectSignal(Objectives.selectMatrixResult);
-  itemsState = this.store.selectSignal(Items.selectItemsState);
-  itemIds = this.store.selectSignal(Recipes.selectAvailableItems);
-  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
-  maximizeType = this.store.selectSignal(Settings.selectMaximizeType);
-  beltSpeed = this.store.selectSignal(Settings.selectBeltSpeed);
-  dispRateInfo = this.store.selectSignal(Settings.selectDisplayRateInfo);
-  rateUnitOptions = this.store.selectSignal(
-    Settings.selectObjectiveUnitOptions,
-  );
-  recipeIds = this.store.selectSignal(Settings.selectAvailableRecipes);
-  paused = this.store.selectSignal(Preferences.selectPaused);
+  _objectives = this.store.selectSignal(selectObjectives);
+  result = this.store.selectSignal(selectMatrixResult);
+  itemsState = this.store.selectSignal(selectItemsState);
+  itemIds = this.store.selectSignal(selectAvailableItems);
+  data = this.store.selectSignal(selectAdjustedDataset);
+  maximizeType = this.store.selectSignal(selectMaximizeType);
+  beltSpeed = this.store.selectSignal(selectBeltSpeed);
+  dispRateInfo = this.store.selectSignal(selectDisplayRateInfo);
+  rateUnitOptions = this.store.selectSignal(selectObjectiveUnitOptions);
+  recipeIds = this.store.selectSignal(selectAvailableRecipes);
+  paused = this.store.selectSignal(selectPaused);
   convertObjectiveValues = this.store.selectSignal(
-    Preferences.selectConvertObjectiveValues,
+    selectConvertObjectiveValues,
   );
   objectives = computed(() => [...this._objectives()]);
   messages$ = combineLatest({
-    objectives: this.store.select(Objectives.selectObjectives),
-    matrixResult: this.store.select(Objectives.selectMatrixResult),
-    settings: this.store.select(Settings.selectSettings),
+    objectives: this.store.select(selectObjectives),
+    matrixResult: this.store.select(selectMatrixResult),
+    settings: this.store.select(selectSettings),
   }).pipe(
     switchMap(({ objectives, matrixResult, settings }) =>
       this.getMessages(objectives, matrixResult, settings),
@@ -390,38 +420,38 @@ export class ObjectivesComponent {
 
   /** Action Dispatch Methods */
   removeObjective(id: string): void {
-    this.store.dispatch(Objectives.remove({ id }));
+    this.store.dispatch(remove({ id }));
   }
 
   setOrder(ids: string[]): void {
-    this.store.dispatch(Objectives.setOrder({ ids }));
+    this.store.dispatch(setOrder({ ids }));
   }
 
   setTarget(id: string, value: string): void {
-    this.store.dispatch(Objectives.setTarget({ id, value }));
+    this.store.dispatch(setTarget({ id, value }));
   }
 
   setValue(id: string, value: Rational): void {
-    this.store.dispatch(Objectives.setValue({ id, value }));
+    this.store.dispatch(setValue({ id, value }));
   }
 
   setUnit(id: string, objective: ObjectiveBase): void {
-    this.store.dispatch(Objectives.setUnit({ id, objective }));
+    this.store.dispatch(setUnit({ id, objective }));
   }
 
   setType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(Objectives.setType({ id, value }));
+    this.store.dispatch(setType({ id, value }));
   }
 
   addObjective(objective: ObjectiveBase): void {
-    this.store.dispatch(Objectives.add({ objective }));
+    this.store.dispatch(add({ objective }));
   }
 
   setDisplayRate(displayRate: DisplayRate, previous: DisplayRate): void {
-    this.store.dispatch(Settings.setDisplayRate({ displayRate, previous }));
+    this.store.dispatch(setDisplayRate({ displayRate, previous }));
   }
 
   setPaused(paused: boolean): void {
-    this.store.dispatch(Preferences.setPaused({ paused }));
+    this.store.dispatch(setPaused({ paused }));
   }
 }

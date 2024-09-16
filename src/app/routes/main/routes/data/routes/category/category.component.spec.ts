@@ -16,7 +16,7 @@ describe('CategoryComponent', () => {
     fixture = TestBed.createComponent(CategoryComponent);
     component = fixture.componentInstance;
     setInputs(fixture, {
-      id: Mocks.CategoryId,
+      id: Mocks.categoryId,
       collectionLabel: 'data.items',
     });
   });

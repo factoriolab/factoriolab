@@ -4,49 +4,51 @@ import { data } from 'src/data';
 import { environment } from 'src/environments';
 
 import { coalesce, fnPropsNotNullish, getIdOptions, spread } from '~/helpers';
+import { Beacon } from '~/models/data/beacon';
+import { Belt } from '~/models/data/belt';
+import { CargoWagon } from '~/models/data/cargo-wagon';
+import { FluidWagon } from '~/models/data/fluid-wagon';
+import { Fuel } from '~/models/data/fuel';
+import { Item, parseItem } from '~/models/data/item';
+import { Machine } from '~/models/data/machine';
+import { Module } from '~/models/data/module';
+import { parseRecipe, Recipe } from '~/models/data/recipe';
+import { Technology } from '~/models/data/technology';
+import { Dataset } from '~/models/dataset';
+import { Defaults } from '~/models/defaults';
+import { Entities, toBoolEntities, toEntities } from '~/models/entities';
+import { displayRateInfo } from '~/models/enum/display-rate';
+import { Game } from '~/models/enum/game';
+import { ItemId } from '~/models/enum/item-id';
+import { linkValueOptions } from '~/models/enum/link-value';
+import { objectiveUnitOptions } from '~/models/enum/objective-unit';
+import { Preset, presetOptions } from '~/models/enum/preset';
+import { gameInfo } from '~/models/game-info';
+import { InserterData } from '~/models/inserter-data';
+import { Options } from '~/models/options';
+import { Rational, rational } from '~/models/rational';
+import { BeaconSettings } from '~/models/settings/beacon-settings';
 import {
-  Beacon,
-  BeaconSettings,
-  Belt,
-  CargoWagon,
   columnOptions,
-  Dataset,
-  Defaults,
-  displayRateInfo,
-  Entities,
-  FluidWagon,
-  Fuel,
-  Game,
   gameColumnsState,
-  gameInfo,
   initialColumnsState,
-  InserterData,
-  Item,
-  ItemId,
-  linkValueOptions,
-  Machine,
-  Module,
-  ModuleSettings,
-  objectiveUnitOptions,
-  Options,
-  parseItem,
-  parseRecipe,
-  Preset,
-  presetOptions,
-  Rational,
-  rational,
-  Recipe,
-  SettingsComplete,
-  Technology,
-  toBoolEntities,
-  toEntities,
-} from '~/models';
-import { RecipeUtility } from '~/utilities';
+} from '~/models/settings/column-settings';
+import { ModuleSettings } from '~/models/settings/module-settings';
+import { SettingsComplete } from '~/models/settings/settings-complete';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { LabState } from '../';
-import * as Datasets from '../datasets';
-import * as Preferences from '../preferences';
-import { initialState, SettingsState } from './settings.reducer';
+import {
+  selectHashEntities,
+  selectI18nEntities,
+  selectModEntities,
+} from '../datasets/datasets.selectors';
+import {
+  selectColumns,
+  selectLanguage,
+  selectStates,
+} from '../preferences/preferences.selectors';
+import { initialSettingsState, SettingsState } from './settings.reducer';
 
 /* Base selector functions */
 export const settingsState = (state: LabState): SettingsState =>
@@ -92,25 +94,25 @@ export const selectMaximizeType = createSelector(
 /* Complex selectors */
 export const selectMod = createSelector(
   selectModId,
-  Datasets.selectModEntities,
+  selectModEntities,
   (id, data) => data[id],
 );
 
 export const selectHash = createSelector(
   selectModId,
-  Datasets.selectHash,
+  selectHashEntities,
   (id, hashEntities) => hashEntities[id],
 );
 
 export const selectGame = createSelector(
   selectModId,
-  Datasets.selectModEntities,
+  selectModEntities,
   (id, data) => data[id]?.game ?? Game.Factorio,
 );
 
 export const selectGameStates = createSelector(
   selectGame,
-  Preferences.selectStates,
+  selectStates,
   (game, states) => states[game],
 );
 
@@ -166,7 +168,7 @@ export const selectLinkValueOptions = createSelector(selectGame, (game) =>
 
 export const selectColumnsState = createSelector(
   selectGameInfo,
-  Preferences.selectColumns,
+  selectColumns,
   (gameInfo, columnsState) => {
     return gameColumnsState(
       spread(initialColumnsState, columnsState),
@@ -241,8 +243,8 @@ export const selectDefaults = createSelector(
 
 export const selectI18n = createSelector(
   selectMod,
-  Datasets.selectI18n,
-  Preferences.selectLanguage,
+  selectI18nEntities,
+  selectLanguage,
   (base, i18n, lang) => (base ? i18n[`${base.id}-${lang}`] : null),
 );
 
@@ -259,7 +261,7 @@ export const selectDataset = createSelector(
       {},
       environment.debug,
     );
-    const iconFile = `data/${mod?.id ?? initialState.modId}/icons.webp`;
+    const iconFile = `data/${mod?.id ?? initialSettingsState.modId}/icons.webp`;
     const iconEntities = toEntities(
       coalesce(mod?.icons, []),
       {},

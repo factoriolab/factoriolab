@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { PowerUnit, Rational, rational } from '~/models';
+import { PowerUnit } from '~/models/enum/power-unit';
+import { Rational, rational } from '~/models/rational';
 
 import { RatePipe } from './rate.pipe';
 

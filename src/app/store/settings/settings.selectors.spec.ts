@@ -1,85 +1,104 @@
-import {
-  EnergyType,
-  Game,
-  gameInfo,
-  initialColumnsState,
-  InserterCapacity,
-  InserterData,
-  InserterTarget,
-  Language,
-  Preset,
-  rational,
-  SettingsComplete,
-} from '~/models';
+import { EnergyType } from '~/models/enum/energy-type';
+import { Game } from '~/models/enum/game';
+import { InserterCapacity } from '~/models/enum/inserter-capacity';
+import { InserterTarget } from '~/models/enum/inserter-target';
+import { Language } from '~/models/enum/language';
+import { Preset } from '~/models/enum/preset';
+import { gameInfo } from '~/models/game-info';
+import { InserterData } from '~/models/inserter-data';
+import { rational } from '~/models/rational';
+import { initialColumnsState } from '~/models/settings/column-settings';
+import { SettingsComplete } from '~/models/settings/settings-complete';
 import { assert, ItemId, Mocks, RecipeId } from '~/tests';
 
-import { initialState } from './settings.reducer';
-import * as Selectors from './settings.selectors';
+import { initialSettingsState } from './settings.reducer';
+import {
+  selectAllResearchedTechnologyIds,
+  selectAvailableRecipes,
+  selectBeaconReceivers,
+  selectBeltSpeed,
+  selectBeltSpeedTxt,
+  selectColumnsState,
+  selectDataset,
+  selectDefaults,
+  selectGame,
+  selectGameStates,
+  selectHash,
+  selectI18n,
+  selectInserterCapacity,
+  selectInserterData,
+  selectInserterTarget,
+  selectMaximizeType,
+  selectMod,
+  selectObjectiveUnitOptions,
+  selectSavedStates,
+  selectSettings,
+} from './settings.selectors';
 
 describe('Settings Selectors', () => {
   describe('Base selector functions', () => {
     it('should get slices of state', () => {
-      expect(Selectors.selectBeaconReceivers.projector(initialState)).toEqual(
-        initialState.beaconReceivers,
+      expect(selectBeaconReceivers.projector(initialSettingsState)).toEqual(
+        initialSettingsState.beaconReceivers,
       );
-      expect(Selectors.selectInserterTarget.projector(initialState)).toEqual(
-        initialState.inserterTarget,
+      expect(selectInserterTarget.projector(initialSettingsState)).toEqual(
+        initialSettingsState.inserterTarget,
       );
-      expect(Selectors.selectInserterCapacity.projector(initialState)).toEqual(
-        initialState.inserterCapacity,
+      expect(selectInserterCapacity.projector(initialSettingsState)).toEqual(
+        initialSettingsState.inserterCapacity,
       );
-      expect(Selectors.selectMaximizeType.projector(initialState)).toEqual(
-        initialState.maximizeType,
+      expect(selectMaximizeType.projector(initialSettingsState)).toEqual(
+        initialSettingsState.maximizeType,
       );
     });
   });
 
   describe('selectBase', () => {
     it('should get the base dataset', () => {
-      const result = Selectors.selectMod.projector('test', {
-        test: Mocks.Mod,
+      const result = selectMod.projector('test', {
+        test: Mocks.mod,
       });
-      expect(result).toEqual(Mocks.Mod);
+      expect(result).toEqual(Mocks.mod);
     });
   });
 
   describe('selectHash', () => {
     it('should get the base hash', () => {
-      const result = Selectors.selectHash.projector('test', {
-        test: Mocks.Hash,
+      const result = selectHash.projector('test', {
+        test: Mocks.modHash,
       });
-      expect(result).toEqual(Mocks.Hash);
+      expect(result).toEqual(Mocks.modHash);
     });
   });
 
   describe('selectGame', () => {
     it('should get the game', () => {
-      const result = Selectors.selectGame.projector(initialState.modId, {
-        [initialState.modId]: Mocks.Mod,
+      const result = selectGame.projector(initialSettingsState.modId, {
+        [initialSettingsState.modId]: Mocks.mod,
       });
       expect(result).toEqual(Game.Factorio);
     });
 
     it('should handle no mod info found', () => {
-      const result = Selectors.selectGame.projector(initialState.modId, {});
+      const result = selectGame.projector(initialSettingsState.modId, {});
       expect(result).toEqual(Game.Factorio);
     });
   });
 
   describe('selectGameStates', () => {
     it('should get saved states from the current game', () => {
-      const result = Selectors.selectGameStates.projector(
+      const result = selectGameStates.projector(
         Game.Factorio,
-        Mocks.PreferencesState.states,
+        Mocks.preferencesState.states,
       );
-      expect(result).toEqual(Mocks.PreferencesState.states[Game.Factorio]);
+      expect(result).toEqual(Mocks.preferencesState.states[Game.Factorio]);
     });
   });
 
   describe('selectSavedStates', () => {
     it('should map states to dropdown options', () => {
-      const result = Selectors.selectSavedStates.projector(
-        Mocks.PreferencesState.states[Game.Factorio],
+      const result = selectSavedStates.projector(
+        Mocks.preferencesState.states[Game.Factorio],
       );
       expect(result).toEqual([{ label: 'name', value: 'name' }]);
     });
@@ -88,9 +107,9 @@ describe('Settings Selectors', () => {
   describe('selectObjectiveUnitOptions', () => {
     it('should get appropriate objective unit options for the game', () => {
       expect(
-        Selectors.selectObjectiveUnitOptions.projector(
+        selectObjectiveUnitOptions.projector(
           Game.DysonSphereProgram,
-          Mocks.DisplayRateInfo,
+          Mocks.drInfo,
         ).length,
       ).toEqual(3);
     });
@@ -98,7 +117,7 @@ describe('Settings Selectors', () => {
 
   describe('selectColumnsState', () => {
     it('should override columns for Factorio', () => {
-      const result = Selectors.selectColumnsState.projector(
+      const result = selectColumnsState.projector(
         gameInfo[Game.Factorio],
         initialColumnsState,
       );
@@ -108,7 +127,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should override columns for Captain of Industry', () => {
-      const result = Selectors.selectColumnsState.projector(
+      const result = selectColumnsState.projector(
         gameInfo[Game.CaptainOfIndustry],
         initialColumnsState,
       );
@@ -119,7 +138,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should override columns for Dyson Sphere Program', () => {
-      const result = Selectors.selectColumnsState.projector(
+      const result = selectColumnsState.projector(
         gameInfo[Game.DysonSphereProgram],
         initialColumnsState,
       );
@@ -129,7 +148,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should override columns for Satisfactory', () => {
-      const result = Selectors.selectColumnsState.projector(
+      const result = selectColumnsState.projector(
         gameInfo[Game.Satisfactory],
         initialColumnsState,
       );
@@ -141,22 +160,16 @@ describe('Settings Selectors', () => {
 
   describe('selectDefaults', () => {
     it('should handle null base data', () => {
-      const result = Selectors.selectDefaults.projector(
-        Preset.Minimum,
-        undefined,
-      );
+      const result = selectDefaults.projector(Preset.Minimum, undefined);
       expect(result).toBeNull();
     });
 
     it('should use minimum values', () => {
-      const result = Selectors.selectDefaults.projector(
-        Preset.Minimum,
-        Mocks.Mod,
-      );
+      const result = selectDefaults.projector(Preset.Minimum, Mocks.mod);
       assert(result != null);
-      expect(result.beltId).toEqual(Mocks.Mod.defaults?.minBelt);
+      expect(result.beltId).toEqual(Mocks.mod.defaults?.minBelt);
       expect(result.machineRankIds).toEqual(
-        Mocks.Mod.defaults!.minMachineRank!,
+        Mocks.mod.defaults!.minMachineRank!,
       );
       expect(result.moduleRankIds).toEqual([]);
       expect(result.beacons).toEqual([
@@ -169,10 +182,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should use 8 beacons', () => {
-      const result = Selectors.selectDefaults.projector(
-        Preset.Beacon8,
-        Mocks.Mod,
-      );
+      const result = selectDefaults.projector(Preset.Beacon8, Mocks.mod);
       assert(result != null);
       expect(result.beacons).toEqual([
         {
@@ -184,10 +194,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should use 12 beacons', () => {
-      const result = Selectors.selectDefaults.projector(
-        Preset.Beacon12,
-        Mocks.Mod,
-      );
+      const result = selectDefaults.projector(Preset.Beacon12, Mocks.mod);
       assert(result != null);
       expect(result.beacons).toEqual([
         {
@@ -199,16 +206,13 @@ describe('Settings Selectors', () => {
     });
 
     it('should get the defaults from the current base mod', () => {
-      const result = Selectors.selectDefaults.projector(
-        Preset.Beacon8,
-        Mocks.Mod,
-      );
-      expect(result).toEqual(Mocks.Defaults);
+      const result = selectDefaults.projector(Preset.Beacon8, Mocks.mod);
+      expect(result).toEqual(Mocks.defaults);
     });
 
     it('should handle DSP minimum module rank', () => {
-      const result = Selectors.selectDefaults.projector(Preset.Minimum, {
-        ...Mocks.Mod,
+      const result = selectDefaults.projector(Preset.Minimum, {
+        ...Mocks.mod,
         ...{ game: Game.DysonSphereProgram },
       });
       assert(result != null);
@@ -216,46 +220,45 @@ describe('Settings Selectors', () => {
     });
 
     it('should handle DSP maximum module rank', () => {
-      const result = Selectors.selectDefaults.projector(Preset.Beacon8, {
-        ...Mocks.Mod,
+      const result = selectDefaults.projector(Preset.Beacon8, {
+        ...Mocks.mod,
         ...{ game: Game.DysonSphereProgram },
       });
       assert(result != null);
-      expect(result.moduleRankIds).toEqual(Mocks.Mod.defaults!.moduleRank!);
+      expect(result.moduleRankIds).toEqual(Mocks.mod.defaults!.moduleRank!);
     });
 
     it('should handle Satisfactory module rank', () => {
-      const result = Selectors.selectDefaults.projector(Preset.Minimum, {
-        ...Mocks.Mod,
+      const result = selectDefaults.projector(Preset.Minimum, {
+        ...Mocks.mod,
         ...{ game: Game.Satisfactory },
       });
       assert(result != null);
-      expect(result.moduleRankIds).toEqual(Mocks.Defaults.moduleRankIds);
+      expect(result.moduleRankIds).toEqual(Mocks.defaults.moduleRankIds);
     });
 
     it('should handle Final Factory module rank', () => {
-      const result = Selectors.selectDefaults.projector(Preset.Minimum, {
-        ...Mocks.Mod,
+      const result = selectDefaults.projector(Preset.Minimum, {
+        ...Mocks.mod,
         ...{ game: Game.FinalFactory },
       });
       assert(result != null);
-      expect(result.moduleRankIds).toEqual(Mocks.Defaults.moduleRankIds);
+      expect(result.moduleRankIds).toEqual(Mocks.defaults.moduleRankIds);
     });
   });
 
   describe('selectAllResearchedTechnologyIds', () => {
     it('should return all ids if empty', () => {
-      const result = Selectors.selectAllResearchedTechnologyIds.projector(
-        new Set(),
-        { technologyEntities: {} } as any,
-      );
+      const result = selectAllResearchedTechnologyIds.projector(new Set(), {
+        technologyEntities: {},
+      } as any);
       expect(result).toEqual(new Set());
     });
 
     it('should return the setting', () => {
-      const result = Selectors.selectAllResearchedTechnologyIds.projector(
+      const result = selectAllResearchedTechnologyIds.projector(
         new Set([ItemId.ArtilleryShellRange]),
-        Mocks.Dataset,
+        Mocks.dataset,
       );
       expect(result).toEqual(new Set([ItemId.ArtilleryShellRange]));
     });
@@ -273,21 +276,13 @@ describe('Settings Selectors', () => {
         fuelRankIds: 'fuelRank',
         moduleRankIds: 'moduleRank',
       };
-      const result = Selectors.selectSettings.projector(
-        value,
-        Mocks.Defaults,
-        new Set(),
-      );
+      const result = selectSettings.projector(value, Mocks.defaults, new Set());
       for (const key of Object.keys(value) as (keyof SettingsComplete)[])
         expect(result[key]).toEqual(value[key]);
     });
 
     it('should fall back if setting and defaults are undefined', () => {
-      const result = Selectors.selectSettings.projector(
-        {} as any,
-        null,
-        new Set(),
-      );
+      const result = selectSettings.projector({} as any, null, new Set());
       expect(result.machineRankIds).toEqual([]);
       expect(result.fuelRankIds).toEqual([]);
       expect(result.moduleRankIds).toEqual([]);
@@ -296,20 +291,16 @@ describe('Settings Selectors', () => {
 
   describe('selectI18n', () => {
     it('should map mods to i18n data', () => {
-      const result = Selectors.selectI18n.projector(
-        Mocks.Mod,
-        { [`${Mocks.Mod.id}-zh`]: Mocks.I18n },
+      const result = selectI18n.projector(
+        Mocks.mod,
+        { [`${Mocks.mod.id}-zh`]: Mocks.modI18n },
         Language.Chinese,
       );
-      expect(result).toEqual(Mocks.I18n);
+      expect(result).toEqual(Mocks.modI18n);
     });
 
     it('should handle data not loaded yet', () => {
-      const result = Selectors.selectI18n.projector(
-        undefined,
-        {},
-        Language.English,
-      );
+      const result = selectI18n.projector(undefined, {}, Language.English);
       expect(result).toBeNull();
     });
   });
@@ -317,10 +308,10 @@ describe('Settings Selectors', () => {
   describe('selectDataset', () => {
     it('should return a complete dataset for the base and mods', () => {
       const mod = {
-        ...Mocks.Mod,
+        ...Mocks.mod,
         ...{
           items: [
-            ...Mocks.Mod.items,
+            ...Mocks.mod.items,
             {
               id: 'proliferator',
               name: 'Proliferator',
@@ -331,11 +322,11 @@ describe('Settings Selectors', () => {
           ],
         },
       };
-      const result = Selectors.selectDataset.projector(
+      const result = selectDataset.projector(
         mod,
-        Mocks.I18n,
+        Mocks.modI18n,
         undefined,
-        Mocks.Defaults,
+        Mocks.defaults,
         Game.Factorio,
       );
       expect(result.categoryIds.length).toBeGreaterThan(0);
@@ -366,10 +357,10 @@ describe('Settings Selectors', () => {
 
     it('should sort beacons, belts, wagons, and fuels', () => {
       const mod = {
-        ...Mocks.Mod,
+        ...Mocks.mod,
         ...{
           items: [
-            ...Mocks.Mod.items,
+            ...Mocks.mod.items,
             {
               id: 'id',
               name: 'Item',
@@ -379,7 +370,7 @@ describe('Settings Selectors', () => {
                 effectivity: 1,
                 modules: 1,
                 range: 1,
-                type: EnergyType.Electric as EnergyType.Electric,
+                type: EnergyType.Electric as const,
                 usage: 1,
               },
               cargoWagon: { size: 1 },
@@ -388,11 +379,11 @@ describe('Settings Selectors', () => {
           ],
         },
       };
-      const result = Selectors.selectDataset.projector(
+      const result = selectDataset.projector(
         mod,
         null,
         undefined,
-        Mocks.Defaults,
+        Mocks.defaults,
         Game.Factorio,
       );
       expect(result.beaconIds).toEqual(['id', 'beacon']);
@@ -417,10 +408,10 @@ describe('Settings Selectors', () => {
 
     it('should not sort belts in DSP', () => {
       const mod = {
-        ...Mocks.Mod,
+        ...Mocks.mod,
         ...{
           items: [
-            ...Mocks.Mod.items,
+            ...Mocks.mod.items,
             {
               id: 'id',
               name: 'Item',
@@ -431,11 +422,11 @@ describe('Settings Selectors', () => {
           ],
         },
       };
-      const result = Selectors.selectDataset.projector(
+      const result = selectDataset.projector(
         mod,
         null,
         undefined,
-        Mocks.Defaults,
+        Mocks.defaults,
         Game.DysonSphereProgram,
       );
       expect(result.beltIds).toEqual([
@@ -447,7 +438,7 @@ describe('Settings Selectors', () => {
     });
 
     it('should handle pipes when found', () => {
-      const items = Mocks.Mod.items.map((i) => {
+      const items = Mocks.mod.items.map((i) => {
         if (i.id === ItemId.Pipe) {
           return { ...i, ...{ pipe: { speed: 100 } } };
         } else if (i.id === ItemId.CopperCable) {
@@ -457,36 +448,36 @@ describe('Settings Selectors', () => {
         }
       });
       const mod = {
-        ...Mocks.Mod,
+        ...Mocks.mod,
         ...{
           items,
         },
       };
-      const result = Selectors.selectDataset.projector(
+      const result = selectDataset.projector(
         mod,
         null,
         undefined,
-        Mocks.Defaults,
+        Mocks.defaults,
         Game.Factorio,
       );
       expect(result.pipeIds).toEqual([ItemId.CopperCable, ItemId.Pipe]);
     });
 
     it('should calculate missing recipe icons', () => {
-      const icons = Mocks.Mod.icons.filter(
+      const icons = Mocks.mod.icons.filter(
         (i) => i.id !== RecipeId.AdvancedOilProcessing,
       );
       const mod = {
-        ...Mocks.Mod,
+        ...Mocks.mod,
         ...{
           icons,
         },
       };
-      const result = Selectors.selectDataset.projector(
+      const result = selectDataset.projector(
         mod,
         null,
         undefined,
-        Mocks.Defaults,
+        Mocks.defaults,
         Game.Factorio,
       );
       expect(
@@ -495,11 +486,11 @@ describe('Settings Selectors', () => {
     });
 
     it('should handle data not loaded yet', () => {
-      const result = Selectors.selectDataset.projector(
+      const result = selectDataset.projector(
         undefined,
         null,
         undefined,
-        Mocks.Defaults,
+        Mocks.defaults,
         Game.Factorio,
       );
       expect(result.categoryIds.length).toEqual(0);
@@ -509,26 +500,23 @@ describe('Settings Selectors', () => {
   describe('selectBeltSpeed', () => {
     it('should return the map of belt speeds', () => {
       const flowRate = rational(2000n);
-      const result = Selectors.selectBeltSpeed.projector(
-        Mocks.AdjustedDataset,
-        flowRate,
-      );
+      const result = selectBeltSpeed.projector(Mocks.adjustedDataset, flowRate);
       expect(result[ItemId.TransportBelt]).toEqual(
-        Mocks.AdjustedDataset.beltEntities[ItemId.TransportBelt].speed,
+        Mocks.adjustedDataset.beltEntities[ItemId.TransportBelt].speed,
       );
       expect(result[ItemId.Pipe]).toEqual(flowRate);
     });
 
     it('should include pipe speeds', () => {
       const data = {
-        ...Mocks.AdjustedDataset,
+        ...Mocks.adjustedDataset,
         ...{
           pipeIds: [ItemId.Pipe],
           beltEntities: {
-            ...Mocks.AdjustedDataset.beltEntities,
+            ...Mocks.adjustedDataset.beltEntities,
             ...{
               [ItemId.Pipe]: {
-                ...Mocks.AdjustedDataset.beltEntities[ItemId.Pipe],
+                ...Mocks.adjustedDataset.beltEntities[ItemId.Pipe],
                 ...{
                   speed: rational(10n),
                 },
@@ -537,16 +525,16 @@ describe('Settings Selectors', () => {
           },
         },
       };
-      const result = Selectors.selectBeltSpeed.projector(data, rational.zero);
+      const result = selectBeltSpeed.projector(data, rational.zero);
       expect(result[ItemId.Pipe]).toEqual(rational(10n));
     });
   });
 
   describe('selectBeltSpeedTxt', () => {
     it('should map belt speeds to appropriate rounded values for tooltips', () => {
-      const result = Selectors.selectBeltSpeedTxt.projector(
+      const result = selectBeltSpeedTxt.projector(
         { a: rational(1n, 60n), b: rational(1n, 180n) },
-        Mocks.DisplayRateInfo,
+        Mocks.drInfo,
       );
       expect(result['a']).toEqual('1');
       expect(result['b']).toEqual('0.33');
@@ -555,7 +543,7 @@ describe('Settings Selectors', () => {
 
   describe('selectInserterData', () => {
     it('should get the appropriate set of inserter speed data', () => {
-      const result = Selectors.selectInserterData.projector(
+      const result = selectInserterData.projector(
         InserterTarget.Chest,
         InserterCapacity.Capacity0,
       );
@@ -567,9 +555,9 @@ describe('Settings Selectors', () => {
 
   describe('selectAvailableRecipes', () => {
     it('should filter for only unlocked recipes', () => {
-      const result = Selectors.selectAvailableRecipes.projector(
+      const result = selectAvailableRecipes.projector(
         new Set([RecipeId.Automation]),
-        Mocks.AdjustedDataset,
+        Mocks.adjustedDataset,
       );
       expect(result.length).toEqual(234);
     });

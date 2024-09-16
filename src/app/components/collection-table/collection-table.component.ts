@@ -12,17 +12,19 @@ import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 
-import { PagedTableDirective } from '~/directives';
+import { PagedTableDirective } from '~/directives/paged-table.directive';
+import { CollectionItem } from '~/models/collection-item';
+import { Category } from '~/models/data/category';
+import { Item } from '~/models/data/item';
+import { RecipeJson } from '~/models/data/recipe';
+import { Entities } from '~/models/entities';
+import { IdType } from '~/models/enum/id-type';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
 import {
-  Category,
-  CollectionItem,
-  Entities,
-  IdType,
-  Item,
-  RecipeJson,
-} from '~/models';
-import { IconSmClassPipe, TranslatePipe } from '~/pipes';
-import { Settings } from '~/store';
+  selectDataset,
+  selectOptions,
+} from '~/store/settings/settings.selectors';
 
 type Entity = Category | Item | RecipeJson;
 
@@ -50,8 +52,8 @@ export class CollectionTableComponent {
   type = input.required<IdType>();
   useRelativePath = input(false);
 
-  options = this.store.selectSignal(Settings.selectOptions);
-  data = this.store.selectSignal(Settings.selectDataset);
+  options = this.store.selectSignal(selectOptions);
+  data = this.store.selectSignal(selectDataset);
 
   route = computed(() => {
     const type = this.type();

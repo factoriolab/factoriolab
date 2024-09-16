@@ -13,9 +13,8 @@ import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
 import { OrderList } from 'primeng/orderlist';
 import { ToastModule } from 'primeng/toast';
 
-import { TranslatePipe } from '~/pipes';
-import { ContentService } from '~/services';
-
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
 /**
  * Workaround for https://github.com/primefaces/primeng/issues/12114.
  * Manually add the main window to the list of scrollable parents, so that when

@@ -6,7 +6,7 @@ import {
   Validator,
 } from '@angular/forms';
 
-import { Rational, rational } from '~/models';
+import { Rational, rational } from '~/models/rational';
 
 @Directive({
   selector: '[labValidateNumber][ngModel]',

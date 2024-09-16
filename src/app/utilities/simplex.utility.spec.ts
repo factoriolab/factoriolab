@@ -1,11 +1,9 @@
-import {
-  Entities,
-  MaximizeType,
-  ObjectiveType,
-  ObjectiveUnit,
-  rational,
-  SimplexResultType,
-} from '~/models';
+import { Entities } from '~/models/entities';
+import { MaximizeType } from '~/models/enum/maximize-type';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { SimplexResultType } from '~/models/enum/simplex-result-type';
+import { rational } from '~/models/rational';
 import { ItemId, Mocks, RecipeId } from '~/tests';
 
 import { RateUtility } from './rate.utility';
@@ -26,9 +24,9 @@ describe('SimplexUtility', () => {
     recipeLimits: {},
     unproduceableIds: new Set(),
     excludedIds: new Set(),
-    recipeIds: Mocks.AdjustedDataset.recipeIds,
-    itemIds: Mocks.AdjustedDataset.itemIds,
-    data: Mocks.AdjustedDataset,
+    recipeIds: Mocks.adjustedDataset.recipeIds,
+    itemIds: Mocks.adjustedDataset.itemIds,
+    data: Mocks.adjustedDataset,
     maximizeType: MaximizeType.Weight,
     surplusMachinesOutput: false,
     costs: {
@@ -74,8 +72,8 @@ describe('SimplexUtility', () => {
       expect(
         SimplexUtility.solve(
           [],
-          Mocks.SettingsStateInitial,
-          Mocks.AdjustedDataset,
+          Mocks.settingsStateInitial,
+          Mocks.adjustedDataset,
           true,
         ),
       ).toEqual({ steps: [], resultType: SimplexResultType.Paused });
@@ -85,8 +83,8 @@ describe('SimplexUtility', () => {
       expect(
         SimplexUtility.solve(
           [],
-          Mocks.SettingsStateInitial,
-          Mocks.AdjustedDataset,
+          Mocks.settingsStateInitial,
+          Mocks.adjustedDataset,
           false,
         ),
       ).toEqual({
@@ -97,20 +95,20 @@ describe('SimplexUtility', () => {
 
     it('should update steps with solution from simplex method', () => {
       spyOn(SimplexUtility, 'getState').and.returnValue({
-        steps: Mocks.Steps,
+        steps: Mocks.steps,
       } as any);
       const result = getResult(SimplexResultType.Solved);
       spyOn(SimplexUtility, 'getSolution').and.returnValue(result);
       spyOn(SimplexUtility, 'updateSteps');
       expect(
         SimplexUtility.solve(
-          Mocks.Objectives,
-          Mocks.SettingsStateInitial,
-          Mocks.AdjustedDataset,
+          Mocks.objectives,
+          Mocks.settingsStateInitial,
+          Mocks.adjustedDataset,
           false,
         ),
       ).toEqual({
-        steps: Mocks.Steps,
+        steps: Mocks.steps,
         resultType: SimplexResultType.Solved,
         returnCode: undefined,
         simplexStatus: undefined,
@@ -131,11 +129,11 @@ describe('SimplexUtility', () => {
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Maximize,
             recipe:
-              Mocks.AdjustedDataset.adjustedRecipe[RecipeId.AdvancedCircuit],
+              Mocks.adjustedDataset.adjustedRecipe[RecipeId.AdvancedCircuit],
           },
         ],
-        Mocks.SettingsStateInitial,
-        Mocks.AdjustedDataset,
+        Mocks.settingsStateInitial,
+        Mocks.adjustedDataset,
         false,
       );
       expect(result.unboundedRecipeId).toBeDefined();
@@ -146,18 +144,18 @@ describe('SimplexUtility', () => {
     it('should build full state object', () => {
       spyOn(SimplexUtility, 'parseItemRecursively');
       const objectives = [
-        ...Mocks.Objectives,
-        Mocks.Objectives[3],
-        Mocks.Objectives[7],
+        ...Mocks.objectives,
+        Mocks.objectives[3],
+        Mocks.objectives[7],
       ];
       const result = SimplexUtility.getState(
         objectives,
-        Mocks.SettingsStateInitial,
-        Mocks.AdjustedDataset,
+        Mocks.settingsStateInitial,
+        Mocks.adjustedDataset,
       );
       expect(result).toEqual({
         objectives,
-        recipeObjectives: [Mocks.Objectives[4], Mocks.Objectives[6]] as any[],
+        recipeObjectives: [Mocks.objectives[4], Mocks.objectives[6]] as any[],
         steps: [],
         recipes: {},
         itemValues: {
@@ -185,14 +183,14 @@ describe('SimplexUtility', () => {
           ItemId.CopperPlate,
         ]),
         excludedIds: new Set(),
-        recipeIds: Mocks.AdjustedDataset.recipeIds.filter(
+        recipeIds: Mocks.adjustedDataset.recipeIds.filter(
           (r) => r !== RecipeId.NuclearFuelReprocessing,
         ),
-        itemIds: Mocks.AdjustedDataset.itemIds,
-        data: Mocks.AdjustedDataset,
+        itemIds: Mocks.adjustedDataset.itemIds,
+        data: Mocks.adjustedDataset,
         maximizeType: MaximizeType.Weight,
         surplusMachinesOutput: false,
-        costs: Mocks.Costs,
+        costs: Mocks.costs,
       });
     });
   });
@@ -200,7 +198,7 @@ describe('SimplexUtility', () => {
   describe('recipeMatches', () => {
     it('should find matching recipes for an item', () => {
       const state = getState();
-      const recipe = Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal];
+      const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
       const result = SimplexUtility.recipeMatches(ItemId.Coal, state);
       expect(state.recipes).toEqual({ [RecipeId.Coal]: recipe });
       expect(result).toEqual([recipe]);
@@ -210,7 +208,7 @@ describe('SimplexUtility', () => {
   describe('itemMatches', () => {
     it('should find matching items for a recipe', () => {
       const state = getState();
-      const recipe = Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperCable];
+      const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable];
       const result = SimplexUtility.itemMatches(recipe, state);
       expect(state.itemValues[ItemId.CopperPlate].out).toEqual(rational.zero);
       expect(state.recipes).toEqual({});
@@ -222,7 +220,7 @@ describe('SimplexUtility', () => {
     it('should do nothing for recipes with no inputs', () => {
       spyOn(SimplexUtility, 'parseItemRecursively');
       SimplexUtility.parseRecipeRecursively(
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.IronOre],
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronOre],
         getState(),
       );
       expect(SimplexUtility.parseItemRecursively).not.toHaveBeenCalled();
@@ -233,7 +231,7 @@ describe('SimplexUtility', () => {
         ItemId.CopperPlate,
       ]);
       spyOn(SimplexUtility, 'parseItemRecursively');
-      const recipe = Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperCable];
+      const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable];
       const state = getState();
       SimplexUtility.parseRecipeRecursively(recipe, state);
       expect(SimplexUtility.itemMatches).toHaveBeenCalledWith(recipe, state);
@@ -249,7 +247,7 @@ describe('SimplexUtility', () => {
       spyOn(SimplexUtility, 'parseRecipeRecursively');
       const state = getState();
       state.recipes[RecipeId.CopperCable] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperCable];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable];
       SimplexUtility.parseItemRecursively(ItemId.CopperCable, state);
       expect(SimplexUtility.parseRecipeRecursively).not.toHaveBeenCalled();
     });
@@ -259,14 +257,14 @@ describe('SimplexUtility', () => {
       const state = getState();
       SimplexUtility.parseItemRecursively(ItemId.CopperCable, state);
       expect(SimplexUtility.parseRecipeRecursively).toHaveBeenCalledWith(
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperCable],
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable],
         state,
       );
     });
 
     it('should get complex recipe matches and parse them', () => {
       const recipe =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.AdvancedOilProcessing];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.AdvancedOilProcessing];
       spyOn(SimplexUtility, 'recipeMatches').and.returnValue([recipe]);
       spyOn(SimplexUtility, 'parseRecipeRecursively');
       const state = getState();
@@ -286,7 +284,7 @@ describe('SimplexUtility', () => {
     it('should add other items that only appear as recipe outputs', () => {
       const state = getState();
       state.recipes[RecipeId.Coal] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
       SimplexUtility.addSurplusVariables(state);
       expect(state.itemValues[ItemId.Coal].out).toEqual(rational.zero);
     });
@@ -298,7 +296,7 @@ describe('SimplexUtility', () => {
       state.itemValues[ItemId.Wood] = { out: rational.one };
       state.itemValues[ItemId.Coal] = { out: rational.one };
       state.recipes = {
-        [RecipeId.Coal]: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
+        [RecipeId.Coal]: Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
       };
       SimplexUtility.parseUnproduceable(state);
       expect(state.unproduceableIds).toEqual(new Set([ItemId.Wood]));
@@ -347,10 +345,10 @@ describe('SimplexUtility', () => {
       ]);
       state.excludedIds = new Set([ItemId.CopperOre]);
       state.recipes[RecipeId.CopperPlate] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperPlate];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperPlate];
       state.recipes[RecipeId.CopperPlate].cost = undefined;
       state.recipes[RecipeId.IronPlate] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.IronPlate];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronPlate];
       state.itemValues[ItemId.Wood] = {
         out: rational.one,
       };
@@ -375,7 +373,7 @@ describe('SimplexUtility', () => {
           value: rational.one,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
-          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.IronPlate],
+          recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronPlate],
         },
         {
           id: '1',
@@ -383,7 +381,7 @@ describe('SimplexUtility', () => {
           value: rational.one,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Maximize,
-          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperCable],
+          recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable],
         },
       ];
       const result = SimplexUtility.glpk(state);
@@ -404,9 +402,9 @@ describe('SimplexUtility', () => {
       ]);
       state.excludedIds = new Set([ItemId.CopperOre]);
       state.recipes[RecipeId.CopperPlate] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperPlate];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperPlate];
       state.recipes[RecipeId.IronPlate] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.IronPlate];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronPlate];
       state.itemValues[ItemId.Wood] = {
         out: rational.one,
       };
@@ -431,7 +429,7 @@ describe('SimplexUtility', () => {
           value: rational.one,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
-          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.IronPlate],
+          recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronPlate],
         },
         {
           id: '1',
@@ -439,7 +437,7 @@ describe('SimplexUtility', () => {
           value: rational.one,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Maximize,
-          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperCable],
+          recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable],
         },
       ];
       const result = SimplexUtility.glpk(state);
@@ -467,11 +465,11 @@ describe('SimplexUtility', () => {
       state.itemValues[ItemId.Coal] = { out: rational.zero };
       state.itemValues[ItemId.IronOre] = { out: rational.zero };
       state.recipes[RecipeId.Coal] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
       state.recipes[ItemId.Wood] = { id: null } as any;
       state.recipes[RecipeId.IronOre] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.IronOre];
-      state.recipeObjectives = [Mocks.Objectives[4] as any];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronOre];
+      state.recipeObjectives = [Mocks.objectives[4] as any];
       const solution: any = {
         surplus: { [ItemId.IronOre]: rational.one },
         inputs: { [ItemId.Wood]: rational.one },
@@ -504,10 +502,10 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.itemValues[ItemId.Coal] = { out: rational(3n) };
       state.recipes[RecipeId.Coal] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
       state.recipes[RecipeId.PlasticBar] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.PlasticBar];
-      state.recipeObjectives = [Mocks.Objectives[4] as any];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.PlasticBar];
+      state.recipeObjectives = [Mocks.objectives[4] as any];
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
@@ -529,7 +527,7 @@ describe('SimplexUtility', () => {
       };
       const state = getState();
       state.itemValues[ItemId.PiercingRoundsMagazine] = { out: rational.zero };
-      state.recipeObjectives = [Mocks.Objectives[4] as any];
+      state.recipeObjectives = [Mocks.objectives[4] as any];
       SimplexUtility.addItemStep(
         ItemId.PiercingRoundsMagazine,
         solution,
@@ -554,7 +552,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.itemValues[ItemId.Coal] = { out: rational.zero };
       state.recipes[RecipeId.Coal] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
@@ -578,7 +576,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.itemValues[ItemId.Coal] = { out: rational.zero };
       state.recipes[RecipeId.Coal] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
       SimplexUtility.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
@@ -646,12 +644,12 @@ describe('SimplexUtility', () => {
         },
       ];
       state.recipes[RecipeId.CopperCable] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.CopperCable];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable];
       state.recipes[RecipeId.AdvancedOilProcessing] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.AdvancedOilProcessing];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.AdvancedOilProcessing];
       state.recipes[RecipeId.BasicOilProcessing] =
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.BasicOilProcessing];
-      state.recipeObjectives = [Mocks.Objectives[4] as any];
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.BasicOilProcessing];
+      state.recipeObjectives = [Mocks.objectives[4] as any];
       SimplexUtility.assignRecipes(solution, state);
       expect(state.steps).toEqual([
         {
@@ -698,7 +696,7 @@ describe('SimplexUtility', () => {
         recipes: { [RecipeId.Coal]: rational.one },
       };
       SimplexUtility.addRecipeStep(
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
         solution,
         state,
       );
@@ -710,7 +708,7 @@ describe('SimplexUtility', () => {
           recipeId: RecipeId.Coal,
           items: rational.one,
           machines: rational.one,
-          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
+          recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
         },
       ]);
     });
@@ -724,7 +722,7 @@ describe('SimplexUtility', () => {
         recipes: { [RecipeId.Coal]: rational.one },
       };
       SimplexUtility.addRecipeStep(
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
         solution,
         state,
       );
@@ -734,7 +732,7 @@ describe('SimplexUtility', () => {
           id: '0',
           recipeId: RecipeId.Coal,
           machines: rational.one,
-          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
+          recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
         },
       ]);
     });
@@ -748,10 +746,10 @@ describe('SimplexUtility', () => {
         recipes: { [RecipeId.Coal]: rational.one },
       };
       SimplexUtility.addRecipeStep(
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
         solution,
         state,
-        Mocks.Objectives[4] as any,
+        Mocks.objectives[4] as any,
       );
       expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([
@@ -759,8 +757,8 @@ describe('SimplexUtility', () => {
           id: '0',
           recipeId: RecipeId.Coal,
           machines: rational.one,
-          recipe: Mocks.AdjustedDataset.adjustedRecipe[RecipeId.Coal],
-          recipeObjectiveId: Mocks.Objectives[4].id,
+          recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
+          recipeObjectiveId: Mocks.objectives[4].id,
         },
       ]);
     });
@@ -787,7 +785,7 @@ describe('SimplexUtility', () => {
         recipes: { [RecipeId.AdvancedOilProcessing]: rational.one },
       };
       SimplexUtility.addRecipeStep(
-        Mocks.AdjustedDataset.adjustedRecipe[RecipeId.AdvancedOilProcessing],
+        Mocks.adjustedDataset.adjustedRecipe[RecipeId.AdvancedOilProcessing],
         solution,
         state,
       );
@@ -804,7 +802,7 @@ describe('SimplexUtility', () => {
           recipeId: RecipeId.AdvancedOilProcessing,
           machines: rational.one,
           recipe:
-            Mocks.AdjustedDataset.adjustedRecipe[
+            Mocks.adjustedDataset.adjustedRecipe[
               RecipeId.AdvancedOilProcessing
             ],
         },

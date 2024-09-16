@@ -1,5 +1,5 @@
-import { Game } from './enum';
-import { ColumnKey } from './settings';
+import { Game } from './enum/game';
+import { ColumnKey } from './settings/column-settings';
 
 /** Game information, nonconfigurable */
 export interface GameInfo {

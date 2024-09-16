@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Game, ItemId } from '~/models';
+import { Game } from '~/models/enum/game';
+import { ItemId } from '~/tests';
 
 import { MachineShowPipe } from './machine-show.pipe';
 

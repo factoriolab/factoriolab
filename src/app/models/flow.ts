@@ -1,4 +1,4 @@
-import { Recipe } from './data';
+import { Recipe } from './data/recipe';
 
 export interface FlowData {
   nodes: Node[];

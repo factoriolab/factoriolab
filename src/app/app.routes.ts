@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { canActivateId, canActivateLanding } from './guards';
+import { canActivateId } from './guards/id.guard';
+import { canActivateLanding } from './guards/landing.guard';
 
 export const routes: Routes = [
   {

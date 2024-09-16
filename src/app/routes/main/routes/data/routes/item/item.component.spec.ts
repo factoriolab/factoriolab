@@ -1,7 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { Items, LabState, Machines, Settings } from '~/store';
+import { LabState } from '~/store';
+import { resetItem } from '~/store/items/items.actions';
+import { resetMachine } from '~/store/machines/machines.actions';
+import {
+  setCheckedItems,
+  setExcludedItems,
+} from '~/store/settings/settings.actions';
 import { DispatchTest, ItemId, setInputs, TestModule } from '~/tests';
 
 import { ItemComponent } from './item.component';
@@ -64,9 +70,9 @@ describe('ItemComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setExcludedItems', Settings.setExcludedItems);
-    dispatch.props('setCheckedItems', Settings.setCheckedItems);
-    dispatch.props('resetItem', Items.resetItem);
-    dispatch.props('resetMachine', Machines.resetMachine);
+    dispatch.props('setExcludedItems', setExcludedItems);
+    dispatch.props('setCheckedItems', setCheckedItems);
+    dispatch.props('resetItem', resetItem);
+    dispatch.props('resetMachine', resetMachine);
   });
 });

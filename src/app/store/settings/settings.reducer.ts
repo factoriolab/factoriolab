@@ -1,23 +1,53 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { spread } from '~/helpers';
-import {
-  BeaconSettings,
-  CostSettings,
-  DisplayRate,
-  InserterCapacity,
-  InserterTarget,
-  ItemId,
-  MaximizeType,
-  Preset,
-  Rational,
-  rational,
-  researchBonusValue,
-} from '~/models';
-import { StoreUtility } from '~/utilities';
+import { DisplayRate } from '~/models/enum/display-rate';
+import { InserterCapacity } from '~/models/enum/inserter-capacity';
+import { InserterTarget } from '~/models/enum/inserter-target';
+import { ItemId } from '~/models/enum/item-id';
+import { MaximizeType } from '~/models/enum/maximize-type';
+import { Preset } from '~/models/enum/preset';
+import { researchBonusValue } from '~/models/enum/research-bonus';
+import { Rational, rational } from '~/models/rational';
+import { BeaconSettings } from '~/models/settings/beacon-settings';
+import { CostSettings } from '~/models/settings/cost-settings';
+import { StoreUtility } from '~/utilities/store.utility';
 
-import * as App from '../app.actions';
-import * as Actions from './settings.actions';
+import { load, reset } from '../app.actions';
+import {
+  resetChecked,
+  resetCosts,
+  resetExcludedItems,
+  setBeaconReceivers,
+  setBeacons,
+  setBelt,
+  setCargoWagon,
+  setCheckedItems,
+  setCheckedObjectives,
+  setCheckedRecipes,
+  setCosts,
+  setDisplayRate,
+  setExcludedItems,
+  setExcludedRecipes,
+  setFlowRate,
+  setFluidWagon,
+  setFuelRank,
+  setInserterCapacity,
+  setInserterTarget,
+  setMachineRank,
+  setMaximizeType,
+  setMiningBonus,
+  setMod,
+  setModuleRank,
+  setNetProductionOnly,
+  setOverclock,
+  setPipe,
+  setPreset,
+  setProliferatorSpray,
+  setResearchBonus,
+  setResearchedTechnologies,
+  setSurplusMachinesOutput,
+} from './settings.actions';
 
 export interface SettingsState {
   modId: string;
@@ -55,7 +85,7 @@ export type PartialSettingsState = Partial<Omit<SettingsState, 'costs'>> & {
   costs?: Partial<CostSettings>;
 };
 
-export const initialState: SettingsState = {
+export const initialSettingsState: SettingsState = {
   modId: '1.1',
   checkedObjectiveIds: new Set(),
   preset: Preset.Minimum,
@@ -84,25 +114,28 @@ export const initialState: SettingsState = {
 };
 
 export const settingsReducer = createReducer(
-  initialState,
+  initialSettingsState,
   on(
-    App.load,
+    load,
     (_, { partial }): SettingsState =>
       spread(
-        initialState,
+        initialSettingsState,
         spread(partial.settingsState ?? {}, {
-          costs: spread(initialState.costs, partial.settingsState?.costs ?? {}),
+          costs: spread(
+            initialSettingsState.costs,
+            partial.settingsState?.costs ?? {},
+          ),
         }) as Partial<SettingsState>,
       ),
   ),
-  on(App.reset, (): SettingsState => initialState),
-  on(Actions.setMod, (state, { modId }) => {
+  on(reset, (): SettingsState => initialSettingsState),
+  on(setMod, (state, { modId }) => {
     state = spread(state, {
       modId,
-      researchedTechnologyIds: initialState.researchedTechnologyIds,
-      preset: initialState.preset,
-      miningBonus: initialState.miningBonus,
-      researchBonus: initialState.researchBonus,
+      researchedTechnologyIds: initialSettingsState.researchedTechnologyIds,
+      preset: initialSettingsState.preset,
+      miningBonus: initialSettingsState.miningBonus,
+      researchBonus: initialSettingsState.researchBonus,
     });
 
     delete state.beltId;
@@ -112,64 +145,64 @@ export const settingsReducer = createReducer(
 
     return state;
   }),
-  on(Actions.setMachineRank, (state, { value, def }) =>
+  on(setMachineRank, (state, { value, def }) =>
     spread(state, { machineRankIds: StoreUtility.compareRank(value, def) }),
   ),
-  on(Actions.setFuelRank, (state, { value, def }) =>
+  on(setFuelRank, (state, { value, def }) =>
     spread(state, { fuelRankIds: StoreUtility.compareRank(value, def) }),
   ),
-  on(Actions.setModuleRank, (state, { value, def }) =>
+  on(setModuleRank, (state, { value, def }) =>
     spread(state, { moduleRankIds: StoreUtility.compareRank(value, def) }),
   ),
-  on(Actions.setBelt, (state, { id, def }) =>
+  on(setBelt, (state, { id, def }) =>
     spread(state, { beltId: StoreUtility.compareValue(id, def) }),
   ),
-  on(Actions.setPipe, (state, { id, def }) =>
+  on(setPipe, (state, { id, def }) =>
     spread(state, { pipeId: StoreUtility.compareValue(id, def) }),
   ),
-  on(Actions.setCargoWagon, (state, { id, def }) =>
+  on(setCargoWagon, (state, { id, def }) =>
     spread(state, { cargoWagonId: StoreUtility.compareValue(id, def) }),
   ),
-  on(Actions.setFluidWagon, (state, { id, def }) =>
+  on(setFluidWagon, (state, { id, def }) =>
     spread(state, { fluidWagonId: StoreUtility.compareValue(id, def) }),
   ),
-  on(Actions.setExcludedRecipes, (state, { value, def }) =>
+  on(setExcludedRecipes, (state, { value, def }) =>
     spread(state, { excludedRecipeIds: StoreUtility.compareSet(value, def) }),
   ),
   on(
-    Actions.setCheckedObjectives,
-    Actions.setPreset,
-    Actions.setMaximizeType,
-    Actions.setSurplusMachinesOutput,
-    Actions.setDisplayRate,
-    Actions.setExcludedItems,
-    Actions.setCheckedItems,
-    Actions.setFlowRate,
-    Actions.setCheckedRecipes,
-    Actions.setNetProductionOnly,
-    Actions.setBeacons,
-    Actions.setOverclock,
-    Actions.setBeaconReceivers,
-    Actions.setProliferatorSpray,
-    Actions.setInserterTarget,
-    Actions.setMiningBonus,
-    Actions.setResearchBonus,
-    Actions.setInserterCapacity,
-    Actions.setResearchedTechnologies,
-    Actions.setCosts,
+    setCheckedObjectives,
+    setPreset,
+    setMaximizeType,
+    setSurplusMachinesOutput,
+    setDisplayRate,
+    setExcludedItems,
+    setCheckedItems,
+    setFlowRate,
+    setCheckedRecipes,
+    setNetProductionOnly,
+    setBeacons,
+    setOverclock,
+    setBeaconReceivers,
+    setProliferatorSpray,
+    setInserterTarget,
+    setMiningBonus,
+    setResearchBonus,
+    setInserterCapacity,
+    setResearchedTechnologies,
+    setCosts,
     (state, payload) => spread(state, payload),
   ),
-  on(Actions.resetExcludedItems, (state) =>
-    spread(state, { excludedItemIds: initialState.excludedItemIds }),
+  on(resetExcludedItems, (state) =>
+    spread(state, { excludedItemIds: initialSettingsState.excludedItemIds }),
   ),
-  on(Actions.resetChecked, (state) =>
+  on(resetChecked, (state) =>
     spread(state, {
-      checkedItemIds: initialState.checkedItemIds,
-      checkedRecipeIds: initialState.checkedRecipeIds,
-      checkedObjectiveIds: initialState.checkedObjectiveIds,
+      checkedItemIds: initialSettingsState.checkedItemIds,
+      checkedRecipeIds: initialSettingsState.checkedRecipeIds,
+      checkedObjectiveIds: initialSettingsState.checkedObjectiveIds,
     }),
   ),
-  on(Actions.resetCosts, (state) =>
-    spread(state, { costs: initialState.costs }),
+  on(resetCosts, (state) =>
+    spread(state, { costs: initialSettingsState.costs }),
   ),
 );

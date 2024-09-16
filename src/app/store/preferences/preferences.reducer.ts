@@ -1,23 +1,39 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { spread } from '~/helpers';
+import { Entities } from '~/models/entities';
+import { FlowDiagram } from '~/models/enum/flow-diagram';
+import { Game } from '~/models/enum/game';
+import { Language } from '~/models/enum/language';
+import { LinkValue } from '~/models/enum/link-value';
+import { PowerUnit } from '~/models/enum/power-unit';
+import { SankeyAlign } from '~/models/enum/sankey-align';
+import { Theme } from '~/models/enum/theme';
 import {
   ColumnsState,
-  Entities,
-  FlowDiagram,
-  FlowSettings,
-  Game,
   initialColumnsState,
-  Language,
-  LinkValue,
-  PowerUnit,
-  SankeyAlign,
-  Theme,
-} from '~/models';
-import { StoreUtility } from '~/utilities';
+} from '~/models/settings/column-settings';
+import { FlowSettings } from '~/models/settings/flow-settings';
+import { StoreUtility } from '~/utilities/store.utility';
 
-import * as App from '../app.actions';
-import * as Actions from './preferences.actions';
+import { reset } from '../app.actions';
+import {
+  removeState,
+  saveState,
+  setBypassLanding,
+  setColumns,
+  setConvertObjectiveValues,
+  setDisablePaginator,
+  setFlowSettings,
+  setHideDuplicateIcons,
+  setLanguage,
+  setPaused,
+  setPowerUnit,
+  setRows,
+  setShowTechLabels,
+  setStates,
+  setTheme,
+} from './preferences.actions';
 
 export interface PreferencesState {
   states: Record<Game, Entities>;
@@ -35,7 +51,7 @@ export interface PreferencesState {
   flowSettings: FlowSettings;
 }
 
-export const initialState: PreferencesState = {
+export const initialPreferencesState: PreferencesState = {
   states: {
     [Game.Factorio]: {},
     [Game.DysonSphereProgram]: {},
@@ -65,32 +81,32 @@ export const initialState: PreferencesState = {
 };
 
 export const preferencesReducer = createReducer(
-  initialState,
-  on(App.reset, (): PreferencesState => initialState),
-  on(Actions.saveState, (state, { key, id, value }) => {
+  initialPreferencesState,
+  on(reset, (): PreferencesState => initialPreferencesState),
+  on(saveState, (state, { key, id, value }) => {
     const gameStates = spread(state.states[key], { [id]: value });
     const states = spread(state.states, { [key]: gameStates });
     return spread(state, { states });
   }),
-  on(Actions.removeState, (state, { key, id }) => {
+  on(removeState, (state, { key, id }) => {
     const gameStates = StoreUtility.removeEntry(state.states[key], id);
     const states = spread(state.states, { [key]: gameStates });
     return spread(state, { states });
   }),
   on(
-    Actions.setStates,
-    Actions.setColumns,
-    Actions.setRows,
-    Actions.setDisablePaginator,
-    Actions.setLanguage,
-    Actions.setPowerUnit,
-    Actions.setTheme,
-    Actions.setBypassLanding,
-    Actions.setShowTechLabels,
-    Actions.setHideDuplicateIcons,
-    Actions.setPaused,
-    Actions.setConvertObjectiveValues,
-    Actions.setFlowSettings,
+    setStates,
+    setColumns,
+    setRows,
+    setDisablePaginator,
+    setLanguage,
+    setPowerUnit,
+    setTheme,
+    setBypassLanding,
+    setShowTechLabels,
+    setHideDuplicateIcons,
+    setPaused,
+    setConvertObjectiveValues,
+    setFlowSettings,
     (state, payload) => spread(state, payload),
   ),
 );

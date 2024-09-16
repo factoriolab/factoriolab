@@ -1,41 +1,41 @@
 import { createReducer, on } from '@ngrx/store';
 
 import { spread } from '~/helpers';
-import { Entities, MachineSettings } from '~/models';
-import { StoreUtility } from '~/utilities';
+import { Entities } from '~/models/entities';
+import { MachineSettings } from '~/models/settings/machine-settings';
+import { StoreUtility } from '~/utilities/store.utility';
 
-import * as App from '../app.actions';
-import * as Settings from '../settings';
-import * as Actions from './machines.actions';
+import { load, reset } from '../app.actions';
+import { setMod, setPreset } from '../settings/settings.actions';
+import {
+  resetMachine,
+  setBeacons,
+  setFuel,
+  setModules,
+  setOverclock,
+} from './machines.actions';
 
 export type MachinesState = Entities<MachineSettings>;
 
-export const initialState: MachinesState = {};
+export const initialMachinesState: MachinesState = {};
 
 export const machinesReducer = createReducer(
-  initialState,
-  on(App.load, (_, { partial }) =>
-    spread(initialState, partial.machinesState ?? {}),
+  initialMachinesState,
+  on(load, (_, { partial }) =>
+    spread(initialMachinesState, partial.machinesState ?? {}),
   ),
-  on(
-    App.reset,
-    Settings.setMod,
-    Settings.setPreset,
-    (): MachinesState => initialState,
-  ),
-  on(Actions.setFuel, (state, { id, value, def }) =>
+  on(reset, setMod, setPreset, (): MachinesState => initialMachinesState),
+  on(setFuel, (state, { id, value, def }) =>
     StoreUtility.compareReset(state, 'fuelId', id, value, def),
   ),
-  on(Actions.setModules, (state, { id, value }) =>
+  on(setModules, (state, { id, value }) =>
     StoreUtility.setValue(state, 'modules', id, value),
   ),
-  on(Actions.setBeacons, (state, { id, value }) =>
+  on(setBeacons, (state, { id, value }) =>
     StoreUtility.setValue(state, 'beacons', id, value),
   ),
-  on(Actions.setOverclock, (state, { id, value, def }) =>
+  on(setOverclock, (state, { id, value, def }) =>
     StoreUtility.compareReset(state, 'overclock', id, value, def),
   ),
-  on(Actions.resetMachine, (state, { id }) =>
-    StoreUtility.removeEntry(state, id),
-  ),
+  on(resetMachine, (state, { id }) => StoreUtility.removeEntry(state, id)),
 );

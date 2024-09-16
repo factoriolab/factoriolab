@@ -1,4 +1,6 @@
-import { InserterCapacity, InserterTarget, ItemId } from './enum';
+import { InserterCapacity } from './enum/inserter-capacity';
+import { InserterTarget } from './enum/inserter-target';
+import { ItemId } from './enum/item-id';
 import { Rational, rational } from './rational';
 
 export interface InserterSpeed {

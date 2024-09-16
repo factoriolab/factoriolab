@@ -16,15 +16,17 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { map } from 'rxjs';
 
-import {
-  HeaderComponent,
-  ObjectivesComponent,
-  SettingsComponent,
-} from '~/components';
-import { SimplexResultType } from '~/models';
-import { TranslatePipe } from '~/pipes';
-import { ContentService, ErrorService, TranslateService } from '~/services';
-import { App, Objectives, Settings } from '~/store';
+import { HeaderComponent } from '~/components/header/header.component';
+import { ObjectivesComponent } from '~/components/objectives/objectives.component';
+import { SettingsComponent } from '~/components/settings/settings.component';
+import { SimplexResultType } from '~/models/enum/simplex-result-type';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { ErrorService } from '~/services/error.service';
+import { TranslateService } from '~/services/translate.service';
+import { reset } from '~/store/app.actions';
+import { selectMatrixResult } from '~/store/objectives/objectives.selectors';
+import { selectGameInfo, selectMod } from '~/store/settings/settings.selectors';
 
 @Component({
   selector: 'lab-main',
@@ -46,17 +48,17 @@ import { App, Objectives, Settings } from '~/store';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent {
-  contentSvc = inject(ContentService);
   ngZone = inject(NgZone);
   ref = inject(ChangeDetectorRef);
   router = inject(Router);
   store = inject(Store);
+  contentSvc = inject(ContentService);
   errorSvc = inject(ErrorService);
   translateSvc = inject(TranslateService);
 
-  gameInfo = this.store.selectSignal(Settings.selectGameInfo);
-  mod = this.store.selectSignal(Settings.selectMod);
-  result = this.store.selectSignal(Objectives.selectMatrixResult);
+  gameInfo = this.store.selectSignal(selectGameInfo);
+  mod = this.store.selectSignal(selectMod);
+  result = this.store.selectSignal(selectMatrixResult);
 
   isResetting = false;
 
@@ -94,7 +96,7 @@ export class MainComponent {
       this.ngZone.run(() => {
         this.errorSvc.message.set(null);
         void this.router.navigateByUrl(this.gameInfo().route);
-        this.store.dispatch(App.reset());
+        this.store.dispatch(reset());
         this.isResetting = false;
       });
     }, 10);

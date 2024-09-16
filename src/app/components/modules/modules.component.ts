@@ -12,19 +12,17 @@ import { ButtonModule } from 'primeng/button';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 
-import { DropdownBaseDirective } from '~/directives';
+import { DropdownBaseDirective } from '~/directives/dropdown-base.directive';
 import { coalesce, notNullish, spread } from '~/helpers';
-import {
-  Beacon,
-  ItemId,
-  Machine,
-  ModuleSettings,
-  Rational,
-  rational,
-} from '~/models';
-import { FilterOptionsPipe, IconSmClassPipe } from '~/pipes';
-import { Settings } from '~/store';
-import { RecipeUtility } from '~/utilities';
+import { Beacon } from '~/models/data/beacon';
+import { Machine } from '~/models/data/machine';
+import { ItemId } from '~/models/enum/item-id';
+import { Rational, rational } from '~/models/rational';
+import { ModuleSettings } from '~/models/settings/module-settings';
+import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { selectDataset } from '~/store/settings/settings.selectors';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -55,7 +53,7 @@ export class ModulesComponent {
 
   setValue = output<ModuleSettings[]>();
 
-  data = this.store.selectSignal(Settings.selectDataset);
+  data = this.store.selectSignal(selectDataset);
 
   exclude = computed(() =>
     this.modules()

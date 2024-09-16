@@ -7,16 +7,19 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TableModule } from 'primeng/table';
 
+import { Entities } from '~/models/entities';
 import {
   ColumnKey,
   ColumnSettings,
   columnsInfo,
   ColumnsState,
-  Entities,
   initialColumnsState,
-} from '~/models';
-import { PrecisionExamplePipe, TranslatePipe } from '~/pipes';
-import { Preferences, Settings } from '~/store';
+} from '~/models/settings/column-settings';
+import { PrecisionExamplePipe } from '~/pipes/precision-example.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { setColumns } from '~/store/preferences/preferences.actions';
+import { initialPreferencesState } from '~/store/preferences/preferences.reducer';
+import { selectColumnOptions } from '~/store/settings/settings.selectors';
 
 import { DialogComponent } from '../modal';
 
@@ -40,7 +43,7 @@ import { DialogComponent } from '../modal';
 export class ColumnsComponent extends DialogComponent {
   store = inject(Store);
 
-  columnOptions = this.store.selectSignal(Settings.selectColumnOptions);
+  columnOptions = this.store.selectSignal(selectColumnOptions);
 
   editValue: Entities<ColumnSettings> = initialColumnsState;
   columnsInf = columnsInfo;
@@ -49,8 +52,8 @@ export class ColumnsComponent extends DialogComponent {
     return (Object.keys(this.editValue) as ColumnKey[]).some(
       (k) =>
         this.editValue[k].precision !==
-          Preferences.initialState.columns[k].precision ||
-        this.editValue[k].show !== Preferences.initialState.columns[k].show,
+          initialPreferencesState.columns[k].precision ||
+        this.editValue[k].show !== initialPreferencesState.columns[k].show,
     );
   }
 
@@ -73,11 +76,11 @@ export class ColumnsComponent extends DialogComponent {
   }
 
   reset(): void {
-    this.initEdit(Preferences.initialState.columns);
+    this.initEdit(initialPreferencesState.columns);
   }
 
   save(): void {
     const columns = this.editValue as ColumnsState;
-    this.store.dispatch(Preferences.setColumns({ columns }));
+    this.store.dispatch(setColumns({ columns }));
   }
 }

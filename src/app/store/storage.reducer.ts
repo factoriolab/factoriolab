@@ -1,6 +1,6 @@
 import { Action, ActionReducer } from '@ngrx/store';
 
-import { BrowserUtility } from '~/utilities';
+import { BrowserUtility } from '~/utilities/browser.utility';
 
 import { LabState } from './';
 

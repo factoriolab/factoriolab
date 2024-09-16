@@ -1,29 +1,48 @@
 import { createSelector } from '@ngrx/store';
 
 import { fnPropsNotNullish } from '~/helpers';
-import {
-  Dataset,
-  Entities,
-  Game,
-  isRecipeObjective,
-  ItemId,
-  ModHash,
-  PowerUnit,
-  Rational,
-  rational,
-  Step,
-  StepDetail,
-  StepDetailTab,
-  StepOutput,
-} from '~/models';
-import { RateUtility, RecipeUtility, SimplexUtility } from '~/utilities';
+import { ModHash } from '~/models/data/mod-hash';
+import { Dataset } from '~/models/dataset';
+import { Entities } from '~/models/entities';
+import { Game } from '~/models/enum/game';
+import { ItemId } from '~/models/enum/item-id';
+import { PowerUnit } from '~/models/enum/power-unit';
+import { StepDetailTab } from '~/models/enum/step-detail-tab';
+import { isRecipeObjective } from '~/models/objective';
+import { Rational, rational } from '~/models/rational';
+import { Step } from '~/models/step';
+import { StepDetail, StepOutput } from '~/models/step-detail';
+import { RateUtility } from '~/utilities/rate.utility';
+import { RecipeUtility } from '~/utilities/recipe.utility';
+import { SimplexUtility } from '~/utilities/simplex.utility';
 
-import { LabState } from '../';
-import * as Items from '../items';
-import * as Machines from '../machines';
-import * as Preferences from '../preferences';
-import * as Recipes from '../recipes';
-import * as Settings from '../settings';
+import { LabState } from '../index';
+import { ItemsState } from '../items/items.reducer';
+import { itemsState, selectItemsState } from '../items/items.selectors';
+import { MachinesState } from '../machines/machines.reducer';
+import {
+  machinesState,
+  selectMachinesState,
+} from '../machines/machines.selectors';
+import {
+  selectPaused,
+  selectPowerUnit,
+} from '../preferences/preferences.selectors';
+import { RecipesState } from '../recipes/recipes.reducer';
+import {
+  recipesState,
+  selectAdjustedDataset,
+  selectRecipesState,
+} from '../recipes/recipes.selectors';
+import { SettingsState } from '../settings/settings.reducer';
+import {
+  selectBeltSpeed,
+  selectDataset,
+  selectDisplayRateInfo,
+  selectHash,
+  selectSettings,
+  settingsState,
+} from '../settings/settings.selectors';
 import { ObjectivesState } from './objectives.reducer';
 
 /* Base selector functions */
@@ -40,7 +59,7 @@ export const selectEntities = createSelector(
 export const selectBaseObjectives = createSelector(
   selectIds,
   selectEntities,
-  Settings.selectDataset,
+  selectDataset,
   (ids, entities, data) =>
     ids
       .map((i) => entities[i])
@@ -53,11 +72,11 @@ export const selectBaseObjectives = createSelector(
 
 export const selectObjectives = createSelector(
   selectBaseObjectives,
-  Items.selectItemsState,
-  Recipes.selectRecipesState,
-  Machines.selectMachinesState,
-  Settings.selectSettings,
-  Recipes.selectAdjustedDataset,
+  selectItemsState,
+  selectRecipesState,
+  selectMachinesState,
+  selectSettings,
+  selectAdjustedDataset,
   (objectives, itemsState, recipesState, machinesState, settings, data) =>
     objectives.map((o) =>
       RecipeUtility.adjustObjective(
@@ -73,10 +92,10 @@ export const selectObjectives = createSelector(
 
 export const selectNormalizedObjectives = createSelector(
   selectObjectives,
-  Items.selectItemsState,
-  Settings.selectBeltSpeed,
-  Settings.selectDisplayRateInfo,
-  Recipes.selectAdjustedDataset,
+  selectItemsState,
+  selectBeltSpeed,
+  selectDisplayRateInfo,
+  selectAdjustedDataset,
   (objectives, itemsSettings, beltSpeed, displayRateInfo, data) =>
     objectives.map((o) => ({
       ...o,
@@ -94,9 +113,9 @@ export const selectNormalizedObjectives = createSelector(
 
 export const selectMatrixResult = createSelector(
   selectNormalizedObjectives,
-  Settings.selectSettings,
-  Recipes.selectAdjustedDataset,
-  Preferences.selectPaused,
+  selectSettings,
+  selectAdjustedDataset,
+  selectPaused,
   (objectives, settings, data, paused) =>
     SimplexUtility.solve(objectives, settings, data, paused),
 );
@@ -104,12 +123,12 @@ export const selectMatrixResult = createSelector(
 export const selectSteps = createSelector(
   selectMatrixResult,
   selectObjectives,
-  Items.selectItemsState,
-  Recipes.selectRecipesState,
-  Settings.selectBeltSpeed,
-  Settings.selectDisplayRateInfo,
-  Settings.selectSettings,
-  Recipes.selectAdjustedDataset,
+  selectItemsState,
+  selectRecipesState,
+  selectBeltSpeed,
+  selectDisplayRateInfo,
+  selectSettings,
+  selectAdjustedDataset,
   (
     result,
     objectives,
@@ -134,12 +153,12 @@ export const selectSteps = createSelector(
 
 export const selectZipState = createSelector(
   objectivesState,
-  Items.itemsState,
-  Recipes.recipesState,
-  Machines.machinesState,
-  Settings.settingsState,
-  Settings.selectDataset,
-  Settings.selectHash,
+  itemsState,
+  recipesState,
+  machinesState,
+  settingsState,
+  selectDataset,
+  selectHash,
   (
     objectives,
     itemsState,
@@ -150,10 +169,10 @@ export const selectZipState = createSelector(
     hash,
   ): {
     objectives: ObjectivesState;
-    itemsState: Items.ItemsState;
-    recipesState: Recipes.RecipesState;
-    machinesState: Machines.MachinesState;
-    settings: Settings.SettingsState;
+    itemsState: ItemsState;
+    recipesState: RecipesState;
+    machinesState: MachinesState;
+    settings: SettingsState;
     data: Dataset;
     hash?: ModHash;
   } => ({
@@ -170,8 +189,8 @@ export const selectZipState = createSelector(
 export const selectStepsModified = createSelector(
   selectSteps,
   selectBaseObjectives,
-  Items.itemsState,
-  Recipes.recipesState,
+  itemsState,
+  recipesState,
   (steps, objectives, itemsSettings, recipesSettings) => ({
     objectives: objectives.reduce((e: Entities<boolean>, p) => {
       e[p.id] =
@@ -198,8 +217,8 @@ export const selectStepsModified = createSelector(
 
 export const selectTotals = createSelector(
   selectSteps,
-  Items.selectItemsState,
-  Recipes.selectAdjustedDataset,
+  selectItemsState,
+  selectAdjustedDataset,
   (steps, itemsSettings, data) => {
     const belts: Entities<Rational> = {};
     const wagons: Entities<Rational> = {};
@@ -346,8 +365,8 @@ function addValueToRecordByIds(
 
 export const selectStepDetails = createSelector(
   selectSteps,
-  Settings.selectSettings,
-  Recipes.selectAdjustedDataset,
+  selectSettings,
+  selectAdjustedDataset,
   (steps, settings, data) =>
     steps.reduce((e: Entities<StepDetail>, s) => {
       const tabs: StepDetailTab[] = [];
@@ -483,7 +502,7 @@ export const selectStepTree = createSelector(selectSteps, (steps) => {
 
 export const selectEffectivePowerUnit = createSelector(
   selectSteps,
-  Preferences.selectPowerUnit,
+  selectPowerUnit,
   (steps, powerUnit) => {
     if (powerUnit === PowerUnit.Auto) {
       let minPower: Rational | undefined;
@@ -509,7 +528,7 @@ export const selectEffectivePowerUnit = createSelector(
 );
 
 export const selectRecipesModified = createSelector(
-  Recipes.recipesState,
+  recipesState,
   selectBaseObjectives,
   (state, objectives) => ({
     machines:

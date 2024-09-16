@@ -5,7 +5,7 @@ import {
   tick,
 } from '@angular/core/testing';
 
-import { rational } from '~/models';
+import { rational } from '~/models/rational';
 import { setInputs, TestModule } from '~/tests';
 
 import { InputNumberComponent } from './input-number.component';

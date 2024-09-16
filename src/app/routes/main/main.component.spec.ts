@@ -5,7 +5,7 @@ import {
   tick,
 } from '@angular/core/testing';
 
-import { App } from '~/store';
+import { reset } from '~/store/app.actions';
 import { TestModule } from '~/tests';
 
 import { MainComponent } from './main.component';
@@ -38,7 +38,7 @@ describe('MainComponent', () => {
       tick(100);
       expect(component.errorSvc.message.set).toHaveBeenCalledWith(null);
       expect(component.router.navigateByUrl).toHaveBeenCalledWith('/1.1');
-      expect(component.store.dispatch).toHaveBeenCalledWith(App.reset());
+      expect(component.store.dispatch).toHaveBeenCalledWith(reset());
       expect(component.isResetting).toBeFalse();
     }));
   });

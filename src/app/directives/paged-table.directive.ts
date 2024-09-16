@@ -8,7 +8,7 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Table } from 'primeng/table';
 
-import { TranslateService } from '~/services';
+import { TranslateService } from '~/services/translate.service';
 
 @Directive({
   selector: '[labPagedTable]',

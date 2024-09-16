@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { rational, Step } from '~/models';
+import { rational } from '~/models/rational';
+import { Step } from '~/models/step';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { ExportService } from './export.service';
@@ -20,7 +21,7 @@ describe('ExportService', () => {
   describe('stepsToCsv', () => {
     it('should save the csv', () => {
       spyOn(service, 'saveAsCsv');
-      service.stepsToCsv(Mocks.Steps);
+      service.stepsToCsv(Mocks.steps);
       expect(service.saveAsCsv).toHaveBeenCalled();
     });
   });
@@ -28,7 +29,7 @@ describe('ExportService', () => {
   describe('flowToJson', () => {
     it('should save the json', () => {
       spyOn(service, 'saveAsJson');
-      service.flowToJson(Mocks.Flow);
+      service.flowToJson(Mocks.flow);
       expect(service.saveAsJson).toHaveBeenCalled();
     });
   });

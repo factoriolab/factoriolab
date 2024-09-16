@@ -4,7 +4,7 @@ import { Confirmation, Message } from 'primeng/api';
 import { BehaviorSubject, fromEvent, map, Subject } from 'rxjs';
 import { environment } from 'src/environments';
 
-import { APP } from '~/models';
+import { APP } from '~/models/constants';
 
 const BREAKPOINT_SMALL = 576;
 

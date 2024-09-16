@@ -4,34 +4,41 @@ import { MockStore } from '@ngrx/store/testing';
 import { of, Subject } from 'rxjs';
 
 import { spread } from '~/helpers';
+import { MIN_ZIP } from '~/models/constants';
+import { DisplayRate } from '~/models/enum/display-rate';
+import { InserterCapacity } from '~/models/enum/inserter-capacity';
+import { InserterTarget } from '~/models/enum/inserter-target';
+import { MaximizeType } from '~/models/enum/maximize-type';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { Preset } from '~/models/enum/preset';
+import { LabParams } from '~/models/lab-params';
+import { Objective } from '~/models/objective';
+import { rational } from '~/models/rational';
+import { Zip, ZipData, ZipMachineSettings } from '~/models/zip';
+import { LabState } from '~/store';
+import { load, PartialState } from '~/store/app.actions';
+import { selectHashEntities } from '~/store/datasets/datasets.selectors';
+import { initialItemsState, ItemsState } from '~/store/items/items.reducer';
 import {
-  DisplayRate,
-  InserterCapacity,
-  InserterTarget,
-  LabParams,
-  MaximizeType,
-  MIN_ZIP,
-  Objective,
-  ObjectiveType,
-  ObjectiveUnit,
-  Preset,
-  rational,
-  Zip,
-  ZipData,
-  ZipMachineSettings,
-} from '~/models';
+  initialMachinesState,
+  MachinesState,
+} from '~/store/machines/machines.reducer';
 import {
-  App,
-  Datasets,
-  Items,
-  LabState,
-  Machines,
-  Objectives,
-  Recipes,
-  Settings,
-} from '~/store';
+  initialObjectivesState,
+  ObjectivesState,
+} from '~/store/objectives/objectives.reducer';
+import { selectZipState } from '~/store/objectives/objectives.selectors';
+import {
+  initialRecipesState,
+  RecipesState,
+} from '~/store/recipes/recipes.reducer';
+import {
+  initialSettingsState,
+  SettingsState,
+} from '~/store/settings/settings.reducer';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
-import { BrowserUtility } from '~/utilities';
+import { BrowserUtility } from '~/utilities/browser.utility';
 
 import { RouterService } from './router.service';
 
@@ -42,14 +49,14 @@ const mockObjective: Objective = {
   unit: ObjectiveUnit.Belts,
   type: ObjectiveType.Output,
 };
-const mockObjectivesState: Objectives.ObjectivesState = {
+const mockObjectivesState: ObjectivesState = {
   ids: ['1'],
   entities: {
     ['1']: mockObjective,
   },
   index: 2,
 };
-const mockMigratedObjectivesState: Objectives.ObjectivesState = {
+const mockMigratedObjectivesState: ObjectivesState = {
   ids: ['1', '2'],
   entities: {
     ['1']: mockObjective,
@@ -63,13 +70,13 @@ const mockMigratedObjectivesState: Objectives.ObjectivesState = {
   },
   index: 3,
 };
-const mockItemsState: Items.ItemsState = {
+const mockItemsState: ItemsState = {
   [ItemId.SteelChest]: {
     beltId: ItemId.TransportBelt,
     wagonId: ItemId.CargoWagon,
   },
 };
-const mockRecipesState: Recipes.RecipesState = {
+const mockRecipesState: RecipesState = {
   [RecipeId.SteelChest]: {
     machineId: ItemId.AssemblingMachine2,
     modules: [{ count: rational(2n), id: ItemId.EfficiencyModule }],
@@ -85,8 +92,8 @@ const mockRecipesState: Recipes.RecipesState = {
     cost: rational(100n),
   },
 };
-const mockMachinesState: Machines.MachinesState = {};
-const mockSettingsState: Settings.SettingsState = {
+const mockMachinesState: MachinesState = {};
+const mockSettingsState: SettingsState = {
   modId: '1.0',
   checkedObjectiveIds: new Set(['1']),
   maximizeType: MaximizeType.Weight,
@@ -246,18 +253,18 @@ describe('RouterService', () => {
     service = TestBed.inject(RouterService);
     service.route$.next(mockRoute as unknown as ActivatedRoute);
     mockStore = TestBed.inject(MockStore);
-    mockStore.overrideSelector(Datasets.selectHash, {
-      [Settings.initialState.modId]: Mocks.Hash,
-      [mockSettingsState.modId]: Mocks.Hash,
+    mockStore.overrideSelector(selectHashEntities, {
+      [initialSettingsState.modId]: Mocks.modHash,
+      [mockSettingsState.modId]: Mocks.modHash,
     });
-    mockStore.overrideSelector(Objectives.selectZipState, {
-      objectives: Objectives.initialState,
-      itemsState: Items.initialState,
-      recipesState: Recipes.initialState,
-      machinesState: Machines.initialState,
-      settings: Mocks.SettingsStateInitial,
-      data: Mocks.Dataset,
-      hash: Mocks.Hash,
+    mockStore.overrideSelector(selectZipState, {
+      objectives: initialObjectivesState,
+      itemsState: initialItemsState,
+      recipesState: initialRecipesState,
+      machinesState: initialMachinesState,
+      settings: Mocks.settingsStateInitial,
+      data: Mocks.dataset,
+      hash: Mocks.modHash,
     });
   });
 
@@ -289,13 +296,13 @@ describe('RouterService', () => {
   describe('zipState', () => {
     it('should zip state', () => {
       const result = service.zipState(
-        Objectives.initialState,
-        Items.initialState,
-        Recipes.initialState,
-        Machines.initialState,
-        Settings.initialState,
-        Mocks.Dataset,
-        Mocks.Hash,
+        initialObjectivesState,
+        initialItemsState,
+        initialRecipesState,
+        initialMachinesState,
+        initialSettingsState,
+        Mocks.dataset,
+        Mocks.modHash,
       );
       expect(result).toEqual(mockZipData());
     });
@@ -307,8 +314,8 @@ describe('RouterService', () => {
         mockRecipesState,
         mockMachinesState,
         mockSettingsState,
-        Mocks.Dataset,
-        Mocks.Hash,
+        Mocks.dataset,
+        Mocks.modHash,
       );
       expect(result?.objectives).toEqual(mockZip);
       expect(result?.config).toEqual(mockZipPartial);
@@ -329,7 +336,7 @@ describe('RouterService', () => {
       const result = await service.stepHref(
         { id: '', itemId: ItemId.Wood },
         mockEmptyZip(),
-        Mocks.Hash,
+        Mocks.modHash,
       );
       expect(result).toBeNull();
     });
@@ -338,7 +345,7 @@ describe('RouterService', () => {
       const result = await service.stepHref(
         { id: '', itemId: ItemId.Wood, items: rational.one },
         mockEmptyZip(),
-        Mocks.Hash,
+        Mocks.modHash,
       );
       expect(result).toEqual({ o: [ItemId.Wood], v: service.version });
     });
@@ -351,7 +358,7 @@ describe('RouterService', () => {
           machines: rational.one,
         },
         mockEmptyZip(),
-        Mocks.Hash,
+        Mocks.modHash,
       );
       expect(result).toEqual({
         o: ['advanced-circuit**3'],
@@ -412,7 +419,7 @@ describe('RouterService', () => {
   describe('updateState', () => {
     let dispatch: jasmine.Spy;
 
-    const mockStateV10: App.PartialState = spread(mockState, {
+    const mockStateV10: PartialState = spread(mockState, {
       settingsState: spread(mockState.settingsState, {
         costs: { ...mockState.settingsState.costs },
       }),
@@ -420,7 +427,7 @@ describe('RouterService', () => {
     delete mockStateV10.settingsState?.surplusMachinesOutput;
     delete mockStateV10.settingsState?.costs?.footprint;
 
-    const mockStateV8: App.PartialState = spread(mockStateV10, {
+    const mockStateV8: PartialState = spread(mockStateV10, {
       settingsState: { ...mockStateV10.settingsState },
     });
     delete mockStateV8.settingsState?.checkedObjectiveIds;
@@ -429,7 +436,7 @@ describe('RouterService', () => {
     delete mockStateV8.settingsState?.checkedRecipeIds;
     delete mockStateV8.settingsState?.researchedTechnologyIds;
 
-    const mockStateV6: App.PartialState = spread(mockStateV8, {
+    const mockStateV6: PartialState = spread(mockStateV8, {
       objectivesState: mockMigratedObjectivesState,
       settingsState: spread(mockStateV8.settingsState, {
         costs: { ...mockStateV8.settingsState?.costs },
@@ -440,17 +447,17 @@ describe('RouterService', () => {
     delete mockStateV6.settingsState?.costs?.surplus;
     delete mockStateV6.settingsState?.costs?.maximize;
 
-    const mockStateV3: App.PartialState = spread(mockStateV6, {
+    const mockStateV3: PartialState = spread(mockStateV6, {
       settingsState: { ...mockStateV6.settingsState },
     });
     delete mockStateV3.settingsState?.netProductionOnly;
 
-    const mockStateV1: App.PartialState = spread(mockStateV3, {
+    const mockStateV1: PartialState = spread(mockStateV3, {
       objectivesState: mockState.objectivesState,
       settingsState: { ...mockStateV3.settingsState },
     });
 
-    const mockStateV0: App.PartialState = spread(mockStateV3, {
+    const mockStateV0: PartialState = spread(mockStateV3, {
       objectivesState: mockMigratedObjectivesState,
       settingsState: { ...mockStateV1.settingsState },
     });
@@ -461,7 +468,7 @@ describe('RouterService', () => {
     beforeEach(() => {
       dispatch = spyOn(service, 'dispatch');
       spyOn(service.dataSvc, 'requestData').and.returnValue(
-        of([Mocks.Data, Mocks.Hash, null]),
+        of([Mocks.modData, Mocks.modHash, null]),
       );
     });
 
@@ -769,7 +776,7 @@ describe('RouterService', () => {
       spyOn(mockStore, 'dispatch');
       service.dispatch(mockState);
       expect(mockStore.dispatch).toHaveBeenCalledWith(
-        App.load({ partial: mockState }),
+        load({ partial: mockState }),
       );
     });
   });
@@ -779,7 +786,7 @@ describe('RouterService', () => {
       const result = service.beaconModuleMap(
         [{}],
         service.emptyRecipeSettingsInfo,
-        Mocks.Hash,
+        Mocks.modHash,
       );
       expect(result[0]).toBeUndefined();
     });
@@ -799,7 +806,7 @@ describe('RouterService', () => {
             type: ObjectiveType.Output,
           },
         ],
-        Mocks.Hash,
+        Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
         bare: { o: ['steel-chest'] },
@@ -820,7 +827,7 @@ describe('RouterService', () => {
             type: ObjectiveType.Output,
           },
         ],
-        Mocks.Hash,
+        Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
         bare: { o: ['steel-chest**1'] },
@@ -841,7 +848,7 @@ describe('RouterService', () => {
             type: ObjectiveType.Output,
           },
         ],
-        Mocks.Hash,
+        Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
         bare: { o: ['steel-chest**2'] },
@@ -862,7 +869,7 @@ describe('RouterService', () => {
             type: ObjectiveType.Output,
           },
         ],
-        Mocks.Hash,
+        Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
         bare: { o: ['steel-chest**3'] },
@@ -896,7 +903,12 @@ describe('RouterService', () => {
     });
 
     it('hash should map values to empty strings if null', () => {
-      const result = service.unzipObjectives({ o: ['*1'] }, [], [], Mocks.Hash);
+      const result = service.unzipObjectives(
+        { o: ['*1'] },
+        [],
+        [],
+        Mocks.modHash,
+      );
       expect(result).toEqual({
         ids: ['1'],
         entities: {
@@ -943,7 +955,7 @@ describe('RouterService', () => {
     });
 
     it('hash should map id to empty string if null', () => {
-      const result = service.unzipItems({ i: ['*C*'] }, Mocks.Hash);
+      const result = service.unzipItems({ i: ['*C*'] }, Mocks.modHash);
       expect(result).toEqual({
         ['']: { beltId: ItemId.TransportBelt },
       });
@@ -965,7 +977,12 @@ describe('RouterService', () => {
     });
 
     it('hash should map values to empty strings if null', () => {
-      const result = service.unzipRecipes({ r: ['*A*'] }, [], [], Mocks.Hash);
+      const result = service.unzipRecipes(
+        { r: ['*A*'] },
+        [],
+        [],
+        Mocks.modHash,
+      );
       expect(result).toEqual({
         ['']: { machineId: ItemId.AssemblingMachine1 },
       });
@@ -985,13 +1002,17 @@ describe('RouterService', () => {
   describe('zipMachines', () => {
     it('should ignore empty state', () => {
       const zip = mockZipData();
-      service.zipMachines(zip, {}, Mocks.Hash);
+      service.zipMachines(zip, {}, Mocks.modHash);
       expect(zip.config.bare.m).toBeUndefined();
     });
 
     it('should zip', () => {
       const zip = mockZipData();
-      service.zipMachines(zip, { [ItemId.AssemblingMachine1]: {} }, Mocks.Hash);
+      service.zipMachines(
+        zip,
+        { [ItemId.AssemblingMachine1]: {} },
+        Mocks.modHash,
+      );
       expect(zip.config.bare.m).toEqual(['assembling-machine-1']);
     });
   });

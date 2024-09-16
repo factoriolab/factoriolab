@@ -23,12 +23,12 @@ import { PrimeNGConfig } from 'primeng/api';
 import { environment } from 'src/environments';
 
 import { routes } from './app.routes';
+import { LabErrorHandler } from './services/error.service';
+import { ThemeService } from './services/theme.service';
 import {
   DEFAULT_LANGUAGE,
-  LabErrorHandler,
-  ThemeService,
   TranslateService,
-} from './services';
+} from './services/translate.service';
 import { metaReducers, reducers } from './store';
 import { AnalyticsEffects } from './store/analytics.effects';
 import { DatasetsEffects } from './store/datasets/datasets.effects';

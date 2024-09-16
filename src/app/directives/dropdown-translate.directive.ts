@@ -2,7 +2,7 @@ import { Directive, inject, OnInit, TemplateRef } from '@angular/core';
 import { Dropdown } from 'primeng/dropdown';
 import { combineLatest, filter, first } from 'rxjs';
 
-import { ContentService } from '~/services';
+import { ContentService } from '~/services/content.service';
 
 @Directive({
   selector: '[labDropdownTranslate]',

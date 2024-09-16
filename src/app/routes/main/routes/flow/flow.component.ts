@@ -21,33 +21,36 @@ import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { combineLatest, debounceTime, delay, Subject } from 'rxjs';
 
-import { FlowSettingsComponent, StepsComponent } from '~/components';
+import { FlowSettingsComponent } from '~/components/flow-settings/flow-settings.component';
+import { StepsComponent } from '~/components/steps/steps.component';
 import {
-  sankey,
   sankeyCenter,
+  sankeyJustify,
+  sankeyLeft,
+  sankeyRight,
+} from '~/d3-sankey/align';
+import {
   SankeyGraph,
   SankeyGraphMinimal,
-  sankeyJustify,
   SankeyLayout,
-  sankeyLeft,
   SankeyLinkExtraProperties,
+  SankeyNode,
+} from '~/d3-sankey/models';
+import { sankey } from '~/d3-sankey/sankey';
+import {
   sankeyLinkHorizontal,
   sankeyLinkLoop,
-  SankeyNode,
-  sankeyRight,
-} from '~/d3-sankey';
+} from '~/d3-sankey/sankey-link-horizontal';
 import { coalesce, spread } from '~/helpers';
-import {
-  FlowData,
-  FlowDiagram,
-  FlowSettings,
-  Link,
-  Node,
-  SankeyAlign,
-} from '~/models';
-import { TranslatePipe } from '~/pipes';
-import { DisplayService, ExportService, FlowService } from '~/services';
-import { Preferences } from '~/store';
+import { FlowDiagram } from '~/models/enum/flow-diagram';
+import { SankeyAlign } from '~/models/enum/sankey-align';
+import { FlowData, Link, Node } from '~/models/flow';
+import { FlowSettings } from '~/models/settings/flow-settings';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { DisplayService } from '~/services/display.service';
+import { ExportService } from '~/services/export.service';
+import { FlowService } from '~/services/flow.service';
+import { selectFlowSettings } from '~/store/preferences/preferences.selectors';
 
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
@@ -69,14 +72,14 @@ cytoscape.use(elk as cytoscape.Ext);
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowComponent implements AfterViewInit {
+  destroyRef = inject(DestroyRef);
   ref = inject(ChangeDetectorRef);
   store = inject(Store);
   displaySvc = inject(DisplayService);
   flowSvc = inject(FlowService);
   exportSvc = inject(ExportService);
-  destroyRef = inject(DestroyRef);
 
-  flowSettings = this.store.selectSignal(Preferences.selectFlowSettings);
+  flowSettings = this.store.selectSignal(selectFlowSettings);
 
   svgElement = viewChild.required<ElementRef<HTMLElement>>('svg');
   cy?: cytoscape.Core;
@@ -98,7 +101,7 @@ export class FlowComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     combineLatest([
       this.flowSvc.flowData$,
-      this.store.select(Preferences.selectFlowSettings),
+      this.store.select(selectFlowSettings),
     ])
       .pipe(debounceTime(0), takeUntilDestroyed(this.destroyRef))
       .subscribe((args) => {

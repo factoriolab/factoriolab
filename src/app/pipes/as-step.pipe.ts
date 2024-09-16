@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Step } from '~/models';
+import { Step } from '~/models/step';
 
 /**
  * Does not do any actual checking, mainly used to restore typing inside

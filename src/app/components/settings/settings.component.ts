@@ -27,53 +27,106 @@ import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
 import { first } from 'rxjs';
 
-import {
-  DropdownBaseDirective,
-  DropdownTranslateDirective,
-  NoDragDirective,
-} from '~/directives';
+import { DropdownBaseDirective } from '~/directives/dropdown-base.directive';
+import { DropdownTranslateDirective } from '~/directives/dropdown-translate.directive';
+import { NoDragDirective } from '~/directives/no-drag.directive';
 import { coalesce } from '~/helpers';
+import { Entities } from '~/models/entities';
+import { DisplayRate, displayRateOptions } from '~/models/enum/display-rate';
+import { Game, gameOptions } from '~/models/enum/game';
 import {
-  BeaconSettings,
-  DisplayRate,
-  displayRateOptions,
-  Entities,
-  Game,
-  gameInfo,
-  gameOptions,
   InserterCapacity,
   inserterCapacityOptions,
+} from '~/models/enum/inserter-capacity';
+import {
   InserterTarget,
   inserterTargetOptions,
-  ItemId,
-  Language,
-  languageOptions,
-  MachineSettings,
-  MaximizeType,
-  maximizeTypeOptions,
-  ModuleSettings,
-  Optional,
-  PowerUnit,
-  powerUnitOptions,
-  Preset,
-  Rational,
-  rational,
-  researchBonusOptions,
-  Theme,
-  themeOptions,
-} from '~/models';
-import { FilterOptionsPipe, IconSmClassPipe, TranslatePipe } from '~/pipes';
-import { ContentService, RouterService, TranslateService } from '~/services';
+} from '~/models/enum/inserter-target';
+import { ItemId } from '~/models/enum/item-id';
+import { Language, languageOptions } from '~/models/enum/language';
+import { MaximizeType, maximizeTypeOptions } from '~/models/enum/maximize-type';
+import { PowerUnit, powerUnitOptions } from '~/models/enum/power-unit';
+import { Preset } from '~/models/enum/preset';
+import { researchBonusOptions } from '~/models/enum/research-bonus';
+import { Theme, themeOptions } from '~/models/enum/theme';
+import { gameInfo } from '~/models/game-info';
+import { Optional } from '~/models/optional';
+import { Rational, rational } from '~/models/rational';
+import { BeaconSettings } from '~/models/settings/beacon-settings';
+import { MachineSettings } from '~/models/settings/machine-settings';
+import { ModuleSettings } from '~/models/settings/module-settings';
+import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { RouterService } from '~/services/router.service';
+import { TranslateService } from '~/services/translate.service';
+import { reset } from '~/store/app.actions';
+import { selectModEntities } from '~/store/datasets/datasets.selectors';
+import { selectItemsState } from '~/store/items/items.selectors';
 import {
-  App,
-  Datasets,
-  Items,
-  Machines,
-  Preferences,
-  Recipes,
-  Settings,
-} from '~/store';
-import { BrowserUtility, RecipeUtility } from '~/utilities';
+  setBeacons,
+  setFuel,
+  setModules,
+  setOverclock,
+} from '~/store/machines/machines.actions';
+import { selectMachinesState } from '~/store/machines/machines.selectors';
+import {
+  removeState,
+  saveState,
+  setBypassLanding,
+  setConvertObjectiveValues,
+  setDisablePaginator,
+  setHideDuplicateIcons,
+  setLanguage,
+  setPowerUnit,
+  setTheme,
+} from '~/store/preferences/preferences.actions';
+import { preferencesState } from '~/store/preferences/preferences.selectors';
+import {
+  selectAdjustedDataset,
+  selectRecipesState,
+} from '~/store/recipes/recipes.selectors';
+import {
+  setBeaconReceivers,
+  setBeacons as setDefaultBeacons,
+  setBelt,
+  setCargoWagon,
+  setDisplayRate,
+  setExcludedItems,
+  setExcludedRecipes,
+  setFlowRate,
+  setFluidWagon,
+  setFuelRank,
+  setInserterCapacity,
+  setInserterTarget,
+  setMachineRank,
+  setMaximizeType,
+  setMiningBonus,
+  setModuleRank,
+  setNetProductionOnly,
+  setOverclock as setDefaultOverclock,
+  setPipe,
+  setPreset,
+  setProliferatorSpray,
+  setResearchBonus,
+  setResearchedTechnologies,
+  setSurplusMachinesOutput,
+} from '~/store/settings/settings.actions';
+import {
+  selectAllResearchedTechnologyIds,
+  selectColumnsState,
+  selectDefaults,
+  selectGame,
+  selectGameStates,
+  selectModOptions,
+  selectOptions,
+  selectPresetOptions,
+  selectSavedStates,
+  selectSettings,
+} from '~/store/settings/settings.selectors';
+import { BrowserUtility } from '~/utilities/browser.utility';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { BeaconsOverlayComponent } from '../beacons-overlay/beacons-overlay.component';
 import { CostsComponent } from '../costs/costs.component';
@@ -122,33 +175,34 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsComponent implements OnInit {
-  contentSvc = inject(ContentService);
   router = inject(Router);
   store = inject(Store);
-  translateSvc = inject(TranslateService);
+  contentSvc = inject(ContentService);
   routerSvc = inject(RouterService);
+  translateSvc = inject(TranslateService);
 
   @HostBinding('class.active') @Input() active = false;
   @HostBinding('class.hidden') @Input() hidden = false;
 
-  itemsState = this.store.selectSignal(Items.selectItemsState);
-  recipesState = this.store.selectSignal(Recipes.selectRecipesState);
-  data = this.store.selectSignal(Recipes.selectAdjustedDataset);
-  machinesState = this.store.selectSignal(Machines.selectMachinesState);
-  settings = this.store.selectSignal(Settings.selectSettings);
-  columnsState = this.store.selectSignal(Settings.selectColumnsState);
-  options = this.store.selectSignal(Settings.selectOptions);
-  modOptions = this.store.selectSignal(Settings.selectModOptions);
-  presetOptions = this.store.selectSignal(Settings.selectPresetOptions);
+  itemsState = this.store.selectSignal(selectItemsState);
+  recipesState = this.store.selectSignal(selectRecipesState);
+  data = this.store.selectSignal(selectAdjustedDataset);
+  machinesState = this.store.selectSignal(selectMachinesState);
+  settings = this.store.selectSignal(selectSettings);
+  columnsState = this.store.selectSignal(selectColumnsState);
+  options = this.store.selectSignal(selectOptions);
+  modOptions = this.store.selectSignal(selectModOptions);
+  presetOptions = this.store.selectSignal(selectPresetOptions);
   researchedTechnologyIds = this.store.selectSignal(
-    Settings.selectAllResearchedTechnologyIds,
+    selectAllResearchedTechnologyIds,
   );
-  gameStates = this.store.selectSignal(Settings.selectGameStates);
-  savedStates = this.store.selectSignal(Settings.selectSavedStates);
-  preferences = this.store.selectSignal(Preferences.preferencesState);
-  modRecord = this.store.selectSignal(Datasets.selectModEntities);
+  gameStates = this.store.selectSignal(selectGameStates);
+  savedStates = this.store.selectSignal(selectSavedStates);
+  preferences = this.store.selectSignal(preferencesState);
+  modRecord = this.store.selectSignal(selectModEntities);
   machineIds = computed(() => [...this.settings().machineRankIds]);
-  defaults = this.store.selectSignal(Settings.selectDefaults);
+  defaults = this.store.selectSignal(selectDefaults);
+  game = this.store.selectSignal(selectGame);
 
   state = '';
   editValue = '';
@@ -202,7 +256,7 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit(): void {
     this.store
-      .select(Settings.selectGameStates)
+      .select(selectGameStates)
       .pipe(first())
       .subscribe((states) => {
         this.state = coalesce(
@@ -270,12 +324,7 @@ export class SettingsComponent implements OnInit {
   }
 
   overwriteState(): void {
-    this.store
-      .select(Settings.selectGame)
-      .pipe(first())
-      .subscribe((game) => {
-        this.saveState(game, this.state, BrowserUtility.search);
-      });
+    this.saveState(this.game(), this.state, BrowserUtility.search);
   }
 
   openEditState(): void {
@@ -284,13 +333,8 @@ export class SettingsComponent implements OnInit {
   }
 
   clickDeleteState(): void {
-    this.store
-      .select(Settings.selectGame)
-      .pipe(first())
-      .subscribe((game) => {
-        this.removeState(game, this.state);
-        this.state = '';
-      });
+    this.removeState(this.game(), this.state);
+    this.state = '';
   }
 
   setGame(game: Game): void {
@@ -370,164 +414,156 @@ export class SettingsComponent implements OnInit {
 
   /** Action Dispatch Methods */
   resetSettings(): void {
-    this.store.dispatch(App.reset());
+    this.store.dispatch(reset());
   }
 
   saveState(key: Game, id: string, value: string): void {
-    this.store.dispatch(Preferences.saveState({ key, id, value }));
+    this.store.dispatch(saveState({ key, id, value }));
   }
 
   removeState(key: Game, id: string): void {
-    this.store.dispatch(Preferences.removeState({ key, id }));
+    this.store.dispatch(removeState({ key, id }));
   }
 
   setResearchedTechnologies(
     researchedTechnologyIds: Optional<Set<string>>,
   ): void {
-    this.store.dispatch(
-      Settings.setResearchedTechnologies({ researchedTechnologyIds }),
-    );
+    this.store.dispatch(setResearchedTechnologies({ researchedTechnologyIds }));
   }
 
   setExcludedItems(excludedItemIds: Set<string>): void {
-    this.store.dispatch(Settings.setExcludedItems({ excludedItemIds }));
+    this.store.dispatch(setExcludedItems({ excludedItemIds }));
   }
 
   setExcludedRecipes(value: Set<string>, def: Set<string>): void {
-    this.store.dispatch(Settings.setExcludedRecipes({ value, def }));
+    this.store.dispatch(setExcludedRecipes({ value, def }));
   }
 
   setPreset(preset: Preset): void {
-    this.store.dispatch(Settings.setPreset({ preset }));
+    this.store.dispatch(setPreset({ preset }));
   }
 
   setFuelRank(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(Settings.setFuelRank({ value, def }));
+    this.store.dispatch(setFuelRank({ value, def }));
   }
 
   setModuleRank(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(Settings.setModuleRank({ value, def }));
+    this.store.dispatch(setModuleRank({ value, def }));
   }
 
   setDefaultBeacons(beacons: BeaconSettings[] | undefined): void {
-    this.store.dispatch(Settings.setBeacons({ beacons }));
+    this.store.dispatch(setDefaultBeacons({ beacons }));
   }
 
   setDefaultOverclock(overclock: Rational | undefined): void {
-    this.store.dispatch(Settings.setOverclock({ overclock }));
+    this.store.dispatch(setDefaultOverclock({ overclock }));
   }
 
   setMachineRank(value: string[], def: string[] | undefined): void {
-    this.store.dispatch(Settings.setMachineRank({ value, def }));
+    this.store.dispatch(setMachineRank({ value, def }));
   }
 
   setFuel(id: string, value: string, def: string | undefined): void {
-    this.store.dispatch(Machines.setFuel({ id, value, def }));
+    this.store.dispatch(setFuel({ id, value, def }));
   }
 
   setModules(id: string, value: ModuleSettings[] | undefined): void {
-    this.store.dispatch(Machines.setModules({ id, value }));
+    this.store.dispatch(setModules({ id, value }));
   }
 
   setBeacons(id: string, value: BeaconSettings[] | undefined): void {
-    this.store.dispatch(Machines.setBeacons({ id, value }));
+    this.store.dispatch(setBeacons({ id, value }));
   }
 
   setOverclock(id: string, value: Rational, def: Rational | undefined): void {
-    this.store.dispatch(Machines.setOverclock({ id, value, def }));
+    this.store.dispatch(setOverclock({ id, value, def }));
   }
 
   setBeaconReceivers(beaconReceivers: Rational | undefined): void {
-    this.store.dispatch(Settings.setBeaconReceivers({ beaconReceivers }));
+    this.store.dispatch(setBeaconReceivers({ beaconReceivers }));
   }
 
   setProliferatorSpray(proliferatorSprayId: string): void {
-    this.store.dispatch(Settings.setProliferatorSpray({ proliferatorSprayId }));
+    this.store.dispatch(setProliferatorSpray({ proliferatorSprayId }));
   }
 
   setBelt(id: string, def: string | undefined): void {
-    this.store.dispatch(Settings.setBelt({ id, def }));
+    this.store.dispatch(setBelt({ id, def }));
   }
 
   setPipe(id: string, def: string | undefined): void {
-    this.store.dispatch(Settings.setPipe({ id, def }));
+    this.store.dispatch(setPipe({ id, def }));
   }
 
   setCargoWagon(id: string, def: string | undefined): void {
-    this.store.dispatch(Settings.setCargoWagon({ id, def }));
+    this.store.dispatch(setCargoWagon({ id, def }));
   }
 
   setFluidWagon(id: string, def: string | undefined): void {
-    this.store.dispatch(Settings.setFluidWagon({ id, def }));
+    this.store.dispatch(setFluidWagon({ id, def }));
   }
 
   setFlowRate(flowRate: Rational): void {
-    this.store.dispatch(Settings.setFlowRate({ flowRate }));
+    this.store.dispatch(setFlowRate({ flowRate }));
   }
 
   setInserterTarget(inserterTarget: InserterTarget): void {
-    this.store.dispatch(Settings.setInserterTarget({ inserterTarget }));
+    this.store.dispatch(setInserterTarget({ inserterTarget }));
   }
 
   setMiningBonus(miningBonus: Rational): void {
-    this.store.dispatch(Settings.setMiningBonus({ miningBonus }));
+    this.store.dispatch(setMiningBonus({ miningBonus }));
   }
 
   setResearchSpeed(researchBonus: Rational): void {
-    this.store.dispatch(Settings.setResearchBonus({ researchBonus }));
+    this.store.dispatch(setResearchBonus({ researchBonus }));
   }
 
   setInserterCapacity(inserterCapacity: InserterCapacity): void {
-    this.store.dispatch(Settings.setInserterCapacity({ inserterCapacity }));
+    this.store.dispatch(setInserterCapacity({ inserterCapacity }));
   }
 
   setDisplayRate(displayRate: DisplayRate, previous: DisplayRate): void {
-    this.store.dispatch(Settings.setDisplayRate({ displayRate, previous }));
+    this.store.dispatch(setDisplayRate({ displayRate, previous }));
   }
 
   setPowerUnit(powerUnit: PowerUnit): void {
-    this.store.dispatch(Preferences.setPowerUnit({ powerUnit }));
+    this.store.dispatch(setPowerUnit({ powerUnit }));
   }
 
   setLanguage(language: Language): void {
-    this.store.dispatch(Preferences.setLanguage({ language }));
+    this.store.dispatch(setLanguage({ language }));
   }
 
   setTheme(theme: Theme): void {
-    this.store.dispatch(Preferences.setTheme({ theme }));
+    this.store.dispatch(setTheme({ theme }));
   }
 
   setBypassLanding(bypassLanding: boolean): void {
-    this.store.dispatch(Preferences.setBypassLanding({ bypassLanding }));
+    this.store.dispatch(setBypassLanding({ bypassLanding }));
   }
 
   setHideDuplicateIcons(hideDuplicateIcons: boolean): void {
-    this.store.dispatch(
-      Preferences.setHideDuplicateIcons({ hideDuplicateIcons }),
-    );
+    this.store.dispatch(setHideDuplicateIcons({ hideDuplicateIcons }));
   }
 
   setDisablePaginator(disablePaginator: boolean): void {
-    this.store.dispatch(Preferences.setDisablePaginator({ disablePaginator }));
+    this.store.dispatch(setDisablePaginator({ disablePaginator }));
   }
 
   setMaximizeType(maximizeType: MaximizeType): void {
-    this.store.dispatch(Settings.setMaximizeType({ maximizeType }));
+    this.store.dispatch(setMaximizeType({ maximizeType }));
   }
 
   setNetProductionOnly(netProductionOnly: boolean): void {
-    this.store.dispatch(Settings.setNetProductionOnly({ netProductionOnly }));
+    this.store.dispatch(setNetProductionOnly({ netProductionOnly }));
   }
 
   setSurplusMachinesOutput(surplusMachinesOutput: boolean): void {
-    this.store.dispatch(
-      Settings.setSurplusMachinesOutput({ surplusMachinesOutput }),
-    );
+    this.store.dispatch(setSurplusMachinesOutput({ surplusMachinesOutput }));
   }
 
   setConvertObjectiveValues(convertObjectiveValues: boolean): void {
-    this.store.dispatch(
-      Preferences.setConvertObjectiveValues({ convertObjectiveValues }),
-    );
+    this.store.dispatch(setConvertObjectiveValues({ convertObjectiveValues }));
   }
 }

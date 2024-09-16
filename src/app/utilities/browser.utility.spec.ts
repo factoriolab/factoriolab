@@ -1,4 +1,4 @@
-import { StepDetailTab } from '~/models';
+import { StepDetailTab } from '~/models/enum/step-detail-tab';
 
 import { BrowserUtility, StorageKey } from './browser.utility';
 

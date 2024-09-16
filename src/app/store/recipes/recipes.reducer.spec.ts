@@ -1,57 +1,70 @@
-import { rational, RecipeSettings } from '~/models';
+import { rational } from '~/models/rational';
+import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { ItemId, Mocks } from '~/tests';
-import { StoreUtility } from '~/utilities';
+import { StoreUtility } from '~/utilities/store.utility';
 
-import * as App from '../app.actions';
-import * as Actions from './recipes.actions';
-import { initialState, recipesReducer } from './recipes.reducer';
+import { load, reset } from '../app.actions';
+import {
+  resetBeacons,
+  resetCost,
+  resetMachines,
+  resetRecipe,
+  resetRecipeMachines,
+  setBeacons,
+  setCost,
+  setFuel,
+  setMachine,
+  setModules,
+  setOverclock,
+} from './recipes.actions';
+import { initialRecipesState, recipesReducer } from './recipes.reducer';
 
 describe('Recipes Reducer', () => {
   describe('LOAD', () => {
     it('should load recipe settings', () => {
       const result = recipesReducer(
         undefined,
-        App.load({
+        load({
           partial: {
-            recipesState: Mocks.RecipesState,
+            recipesState: Mocks.recipesState,
           },
         }),
       );
-      expect(result).toEqual(Mocks.RecipesState);
+      expect(result).toEqual(Mocks.recipesState);
     });
 
     it('should handle missing partial state', () => {
-      const result = recipesReducer(undefined, App.load({ partial: {} }));
-      expect(result).toEqual(initialState);
+      const result = recipesReducer(undefined, load({ partial: {} }));
+      expect(result).toEqual(initialRecipesState);
     });
   });
 
   describe('RESET', () => {
     it('should return the initial state', () => {
-      const result = recipesReducer(undefined, App.reset());
-      expect(result).toEqual(initialState);
+      const result = recipesReducer(undefined, reset());
+      expect(result).toEqual(initialRecipesState);
     });
   });
 
   describe('SET_MACHINE', () => {
     it('should set the machine', () => {
       const result = recipesReducer(
-        initialState,
-        Actions.setMachine({
-          id: Mocks.Recipe1.id,
-          value: Mocks.Item1.id,
+        initialRecipesState,
+        setMachine({
+          id: Mocks.recipe1.id,
+          value: Mocks.item1.id,
           def: undefined,
         }),
       );
-      expect(result[Mocks.Recipe1.id].machineId).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.recipe1.id].machineId).toEqual(Mocks.item1.id);
     });
 
     it('should reset all other recipe settings', () => {
       const result = recipesReducer(
         {
-          ...initialState,
+          ...initialRecipesState,
           ...{
-            [Mocks.Recipe1.id]: {
+            [Mocks.recipe1.id]: {
               modules: [{ count: rational.one, id: ItemId.Module }],
               beacons: [
                 {
@@ -63,27 +76,27 @@ describe('Recipes Reducer', () => {
             },
           },
         },
-        Actions.setMachine({
-          id: Mocks.Recipe1.id,
-          value: Mocks.Item1.id,
+        setMachine({
+          id: Mocks.recipe1.id,
+          value: Mocks.item1.id,
           def: undefined,
         }),
       );
-      expect(result[Mocks.Recipe1.id]).toEqual({ machineId: Mocks.Item1.id });
+      expect(result[Mocks.recipe1.id]).toEqual({ machineId: Mocks.item1.id });
     });
   });
 
   describe('SET_FUEL', () => {
     it('should set the fuel', () => {
       const result = recipesReducer(
-        initialState,
-        Actions.setFuel({
-          id: Mocks.Recipe1.id,
-          value: Mocks.Item1.id,
+        initialRecipesState,
+        setFuel({
+          id: Mocks.recipe1.id,
+          value: Mocks.item1.id,
           def: undefined,
         }),
       );
-      expect(result[Mocks.Recipe1.id].fuelId).toEqual(Mocks.Item1.id);
+      expect(result[Mocks.recipe1.id].fuelId).toEqual(Mocks.item1.id);
     });
   });
 
@@ -91,13 +104,13 @@ describe('Recipes Reducer', () => {
     it('should set the modules', () => {
       const value = [{ count: rational.one, id: ItemId.Module }];
       const result = recipesReducer(
-        initialState,
-        Actions.setModules({
-          id: Mocks.Recipe1.id,
+        initialRecipesState,
+        setModules({
+          id: Mocks.recipe1.id,
           value,
         }),
       );
-      expect(result[Mocks.Recipe1.id].modules).toEqual(value);
+      expect(result[Mocks.recipe1.id].modules).toEqual(value);
     });
   });
 
@@ -111,13 +124,13 @@ describe('Recipes Reducer', () => {
         },
       ];
       const result = recipesReducer(
-        initialState,
-        Actions.setBeacons({
-          id: Mocks.Recipe1.id,
+        initialRecipesState,
+        setBeacons({
+          id: Mocks.recipe1.id,
           value,
         }),
       );
-      expect(result[Mocks.Recipe1.id].beacons).toEqual(value);
+      expect(result[Mocks.recipe1.id].beacons).toEqual(value);
     });
   });
 
@@ -125,37 +138,37 @@ describe('Recipes Reducer', () => {
     it('should set the overclock', () => {
       const value = rational(200n);
       const result = recipesReducer(
-        initialState,
-        Actions.setOverclock({
-          id: Mocks.Recipe1.id,
+        initialRecipesState,
+        setOverclock({
+          id: Mocks.recipe1.id,
           value,
           def: rational(100n),
         }),
       );
-      expect(result[Mocks.Recipe1.id].overclock).toEqual(value);
+      expect(result[Mocks.recipe1.id].overclock).toEqual(value);
     });
   });
 
   describe('SET_COST', () => {
     it('should set the cost', () => {
       const result = recipesReducer(
-        initialState,
-        Actions.setCost({
-          id: Mocks.Recipe1.id,
+        initialRecipesState,
+        setCost({
+          id: Mocks.recipe1.id,
           value: rational(10n),
         }),
       );
-      expect(result[Mocks.Recipe1.id].cost).toEqual(rational(10n));
+      expect(result[Mocks.recipe1.id].cost).toEqual(rational(10n));
     });
   });
 
   describe('RESET_RECIPE', () => {
     it('should reset a recipe', () => {
       const result = recipesReducer(
-        initialState,
-        Actions.resetRecipe({ id: Mocks.Recipe1.id }),
+        initialRecipesState,
+        resetRecipe({ id: Mocks.recipe1.id }),
       );
-      expect(result[Mocks.Recipe1.id]).toBeUndefined();
+      expect(result[Mocks.recipe1.id]).toBeUndefined();
     });
   });
 
@@ -164,12 +177,12 @@ describe('Recipes Reducer', () => {
       spyOn(StoreUtility, 'resetFields');
       recipesReducer(
         undefined,
-        Actions.resetRecipeMachines({ ids: [Mocks.Recipe1.id] }),
+        resetRecipeMachines({ ids: [Mocks.recipe1.id] }),
       );
       expect(StoreUtility.resetFields<RecipeSettings>).toHaveBeenCalledWith(
         {},
         ['fuelId', 'modules', 'beacons'],
-        Mocks.Recipe1.id,
+        Mocks.recipe1.id,
       );
     });
   });
@@ -177,7 +190,7 @@ describe('Recipes Reducer', () => {
   describe('RESET_MACHINE', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetFields');
-      recipesReducer(undefined, Actions.resetMachines());
+      recipesReducer(undefined, resetMachines());
       expect(StoreUtility.resetFields<RecipeSettings>).toHaveBeenCalledWith(
         {},
         ['machineId', 'fuelId', 'overclock', 'modules', 'beacons'],
@@ -188,7 +201,7 @@ describe('Recipes Reducer', () => {
   describe('RESET_BEACONS', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
-      recipesReducer(undefined, Actions.resetBeacons());
+      recipesReducer(undefined, resetBeacons());
       expect(StoreUtility.resetField<RecipeSettings>).toHaveBeenCalledWith(
         {},
         'beacons',
@@ -199,7 +212,7 @@ describe('Recipes Reducer', () => {
   describe('RESET_COST', () => {
     it('should call resetField', () => {
       spyOn(StoreUtility, 'resetField');
-      recipesReducer(undefined, Actions.resetCost());
+      recipesReducer(undefined, resetCost());
       expect(StoreUtility.resetField<RecipeSettings>).toHaveBeenCalledWith(
         {},
         'cost',

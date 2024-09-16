@@ -4,14 +4,23 @@ import { Message } from 'primeng/api';
 import { Subject } from 'rxjs';
 
 import { spread } from '~/helpers';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { SimplexResultType } from '~/models/enum/simplex-result-type';
+import { Objective } from '~/models/objective';
+import { rational } from '~/models/rational';
+import { LabState } from '~/store';
 import {
-  Objective,
-  ObjectiveType,
-  ObjectiveUnit,
-  rational,
-  SimplexResultType,
-} from '~/models';
-import { LabState, Objectives, Preferences, Settings } from '~/store';
+  add,
+  remove,
+  setOrder,
+  setTarget,
+  setType,
+  setUnit,
+  setValue,
+} from '~/store/objectives/objectives.actions';
+import { setPaused } from '~/store/preferences/preferences.actions';
+import { setDisplayRate } from '~/store/settings/settings.actions';
 import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { ObjectivesComponent } from './objectives.component';
@@ -48,7 +57,7 @@ describe('ObjectivesComponent', () => {
         .getMessages(
           [],
           { steps: [], resultType: SimplexResultType.Paused },
-          Mocks.SettingsStateInitial,
+          Mocks.settingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result.length).toEqual(1);
@@ -63,7 +72,7 @@ describe('ObjectivesComponent', () => {
             steps: [],
             resultType: SimplexResultType.Skipped,
           },
-          Mocks.SettingsStateInitial,
+          Mocks.settingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result.length).toEqual(0);
@@ -77,7 +86,7 @@ describe('ObjectivesComponent', () => {
             steps: [],
             resultType: SimplexResultType.Failed,
           },
-          Mocks.SettingsStateInitial,
+          Mocks.settingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result.length).toEqual(1);
@@ -100,7 +109,7 @@ describe('ObjectivesComponent', () => {
             resultType: SimplexResultType.Failed,
             simplexStatus: 'unbounded',
           },
-          Mocks.SettingsStateInitial,
+          Mocks.settingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result[0].summary).toEqual('objectives.errorUnbounded');
@@ -131,7 +140,7 @@ describe('ObjectivesComponent', () => {
             resultType: SimplexResultType.Failed,
             simplexStatus: 'unbounded',
           },
-          spread(Mocks.SettingsStateInitial, {
+          spread(Mocks.settingsStateInitial, {
             excludedItemIds: new Set([ItemId.Coal]),
           }),
         )
@@ -164,7 +173,7 @@ describe('ObjectivesComponent', () => {
             resultType: SimplexResultType.Failed,
             simplexStatus: 'unbounded',
           },
-          spread(Mocks.SettingsStateInitial, {
+          spread(Mocks.settingsStateInitial, {
             excludedRecipeIds: new Set([RecipeId.Coal]),
           }),
         )
@@ -184,7 +193,7 @@ describe('ObjectivesComponent', () => {
             resultType: SimplexResultType.Failed,
             simplexStatus: 'unbounded',
           },
-          Mocks.SettingsStateInitial,
+          Mocks.settingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result[0].summary).toEqual('objectives.errorUnbounded');
@@ -200,7 +209,7 @@ describe('ObjectivesComponent', () => {
             resultType: SimplexResultType.Failed,
             simplexStatus: 'no_feasible',
           },
-          Mocks.SettingsStateInitial,
+          Mocks.settingsStateInitial,
         )
         .subscribe((r) => (result = r));
       expect(result[0].summary).toEqual('objectives.errorInfeasible');
@@ -210,9 +219,9 @@ describe('ObjectivesComponent', () => {
   describe('setObjectiveOrder', () => {
     it('should map objectives to ids', () => {
       spyOn(component, 'setOrder');
-      component.setObjectiveOrder(Mocks.ObjectivesList);
+      component.setObjectiveOrder(Mocks.objectivesList);
       expect(component.setOrder).toHaveBeenCalledWith(
-        Mocks.ObjectivesList.map((o) => o.id),
+        Mocks.objectivesList.map((o) => o.id),
       );
     });
   });
@@ -232,7 +241,7 @@ describe('ObjectivesComponent', () => {
     it('should do nothing if it cannot find a matching objective rational', () => {
       spyOn(component, 'setUnit');
       component.changeUnit(
-        Mocks.Objective5,
+        Mocks.objective5,
         ObjectiveUnit.Machines,
         {} as any,
         {} as any,
@@ -243,7 +252,7 @@ describe('ObjectivesComponent', () => {
     it('should do nothing if switching to and from machines', () => {
       spyOn(component, 'setUnit');
       component.changeUnit(
-        Mocks.Objective5,
+        Mocks.objective5,
         ObjectiveUnit.Machines,
         {} as any,
         {} as any,
@@ -254,12 +263,12 @@ describe('ObjectivesComponent', () => {
     it('should auto-switch from item to recipe', () => {
       spyOn(component, 'setUnit');
       component.changeUnit(
-        Mocks.Objective1,
+        Mocks.objective1,
         ObjectiveUnit.Machines,
         {} as any,
         {} as any,
       );
-      expect(component.setUnit).toHaveBeenCalledWith(Mocks.Objective1.id, {
+      expect(component.setUnit).toHaveBeenCalledWith(Mocks.objective1.id, {
         targetId: RecipeId.AdvancedCircuit,
         unit: ObjectiveUnit.Machines,
       });
@@ -289,12 +298,12 @@ describe('ObjectivesComponent', () => {
     it('should auto-switch from recipe to item', () => {
       spyOn(component, 'setUnit');
       component.changeUnit(
-        Mocks.Objective5,
+        Mocks.objective5,
         ObjectiveUnit.Items,
         {} as any,
         {} as any,
       );
-      expect(component.setUnit).toHaveBeenCalledWith(Mocks.Objective5.id, {
+      expect(component.setUnit).toHaveBeenCalledWith(Mocks.objective5.id, {
         targetId: ItemId.PiercingRoundsMagazine,
         unit: ObjectiveUnit.Items,
       });
@@ -323,13 +332,13 @@ describe('ObjectivesComponent', () => {
     it('should auto-switch between items rate units', () => {
       spyOn(component, 'setUnit');
       component.changeUnit(
-        Mocks.Objective1,
+        Mocks.objective1,
         ObjectiveUnit.Belts,
         {} as any,
         {} as any,
       );
-      expect(component.setUnit).toHaveBeenCalledWith(Mocks.Objective1.id, {
-        targetId: Mocks.Objective1.targetId,
+      expect(component.setUnit).toHaveBeenCalledWith(Mocks.objective1.id, {
+        targetId: Mocks.objective1.targetId,
         unit: ObjectiveUnit.Belts,
       });
     });
@@ -340,9 +349,9 @@ describe('ObjectivesComponent', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
       spyOn(component, 'setValue');
       component.convertItemsToMachines(
-        Mocks.Objectives[0],
+        Mocks.objectives[0],
         RecipeId.AdvancedCircuit,
-        Mocks.AdjustedDataset,
+        Mocks.adjustedDataset,
       );
       expect(component.setValue).toHaveBeenCalledWith('0', rational(1n, 77n));
     });
@@ -351,9 +360,9 @@ describe('ObjectivesComponent', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
       spyOn(component, 'setValue');
       component.convertItemsToMachines(
-        Mocks.Objectives[2],
+        Mocks.objectives[2],
         RecipeId.AdvancedCircuit,
-        Mocks.AdjustedDataset,
+        Mocks.adjustedDataset,
       );
       expect(component.setValue).not.toHaveBeenCalled();
     });
@@ -364,10 +373,10 @@ describe('ObjectivesComponent', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
       spyOn(component, 'setValue');
       component.convertMachinesToItems(
-        Mocks.Objectives[4],
+        Mocks.objectives[4],
         ItemId.PiercingRoundsMagazine,
         ObjectiveUnit.Items,
-        Mocks.AdjustedDataset,
+        Mocks.adjustedDataset,
       );
       expect(component.setValue).toHaveBeenCalledWith('4', rational(175n));
     });
@@ -376,10 +385,10 @@ describe('ObjectivesComponent', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
       spyOn(component, 'setValue');
       component.convertMachinesToItems(
-        Mocks.Objectives[2],
+        Mocks.objectives[2],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Items,
-        Mocks.AdjustedDataset,
+        Mocks.adjustedDataset,
       );
       expect(component.setValue).not.toHaveBeenCalled();
     });
@@ -390,10 +399,10 @@ describe('ObjectivesComponent', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
       spyOn(component, 'setValue');
       component.convertItemsToItems(
-        Mocks.Objectives[0],
+        Mocks.objectives[0],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Belts,
-        Mocks.AdjustedDataset,
+        Mocks.adjustedDataset,
       );
       expect(component.setValue).toHaveBeenCalledWith('0', rational(1n, 900n));
     });
@@ -402,10 +411,10 @@ describe('ObjectivesComponent', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
       spyOn(component, 'setValue');
       component.convertItemsToItems(
-        Mocks.Objectives[2],
+        Mocks.objectives[2],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Items,
-        Mocks.AdjustedDataset,
+        Mocks.adjustedDataset,
       );
       expect(component.setValue).not.toHaveBeenCalled();
     });
@@ -447,14 +456,14 @@ describe('ObjectivesComponent', () => {
 
   it('should dispatch actions', () => {
     const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('removeObjective', Objectives.remove);
-    dispatch.props('setOrder', Objectives.setOrder);
-    dispatch.props('setTarget', Objectives.setTarget);
-    dispatch.props('setValue', Objectives.setValue);
-    dispatch.props('setUnit', Objectives.setUnit);
-    dispatch.props('setType', Objectives.setType);
-    dispatch.props('addObjective', Objectives.add);
-    dispatch.props('setDisplayRate', Settings.setDisplayRate);
-    dispatch.props('setPaused', Preferences.setPaused);
+    dispatch.props('removeObjective', remove);
+    dispatch.props('setOrder', setOrder);
+    dispatch.props('setTarget', setTarget);
+    dispatch.props('setValue', setValue);
+    dispatch.props('setUnit', setUnit);
+    dispatch.props('setType', setType);
+    dispatch.props('addObjective', add);
+    dispatch.props('setDisplayRate', setDisplayRate);
+    dispatch.props('setPaused', setPaused);
   });
 });

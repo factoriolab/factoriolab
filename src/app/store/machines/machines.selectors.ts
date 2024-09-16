@@ -1,10 +1,12 @@
 import { createSelector } from '@ngrx/store';
 
-import { EnergyType, Entities, MachineSettings } from '~/models';
-import { RecipeUtility } from '~/utilities';
+import { Entities } from '~/models/entities';
+import { EnergyType } from '~/models/enum/energy-type';
+import { MachineSettings } from '~/models/settings/machine-settings';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { LabState } from '../';
-import * as Settings from '../settings';
+import { selectDataset, selectSettings } from '../settings/settings.selectors';
 import { MachinesState } from './machines.reducer';
 
 /* Base selector functions */
@@ -14,8 +16,8 @@ export const machinesState = (state: LabState): MachinesState =>
 /* Complex selectors */
 export const selectMachinesState = createSelector(
   machinesState,
-  Settings.selectSettings,
-  Settings.selectDataset,
+  selectSettings,
+  selectDataset,
   (state, settings, data) => {
     const value: Entities<MachineSettings> = {};
     for (const id of data.machineIds) {

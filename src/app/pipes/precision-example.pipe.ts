@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { rational } from '~/models';
+import { rational } from '~/models/rational';
 
 @Pipe({ name: 'precisionExample', standalone: true })
 export class PrecisionExamplePipe implements PipeTransform {

@@ -16,7 +16,7 @@ describe('CollectionTableComponent', () => {
     fixture = TestBed.createComponent(CollectionTableComponent);
     component = fixture.componentInstance;
     setInputs(fixture, {
-      ids: Mocks.AdjustedDataset.categoryIds,
+      ids: Mocks.adjustedDataset.categoryIds,
       type: 'category',
     });
   });
@@ -40,27 +40,27 @@ describe('CollectionTableComponent', () => {
   describe('balue', () => {
     it('should get an array of category collection items', () => {
       expect(component.value().length).toEqual(
-        Mocks.AdjustedDataset.categoryIds.length,
+        Mocks.adjustedDataset.categoryIds.length,
       );
     });
 
     it('should get an array of item collection items', () => {
       setInputs(fixture, {
-        ids: Mocks.AdjustedDataset.machineIds,
+        ids: Mocks.adjustedDataset.machineIds,
         type: 'item',
       });
       expect(component.value().length).toEqual(
-        Mocks.AdjustedDataset.machineIds.length,
+        Mocks.adjustedDataset.machineIds.length,
       );
     });
 
     it('should get an array of recipe collection items', () => {
       setInputs(fixture, {
-        ids: Mocks.AdjustedDataset.technologyIds,
+        ids: Mocks.adjustedDataset.technologyIds,
         type: 'recipe',
       });
       expect(component.value().length).toEqual(
-        Mocks.AdjustedDataset.technologyIds.length,
+        Mocks.adjustedDataset.technologyIds.length,
       );
     });
   });

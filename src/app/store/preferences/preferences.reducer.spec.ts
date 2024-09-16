@@ -1,10 +1,33 @@
 import { spread } from '~/helpers';
-import { FlowDiagram, Game, Language, PowerUnit, Theme } from '~/models';
+import { FlowDiagram } from '~/models/enum/flow-diagram';
+import { Game } from '~/models/enum/game';
+import { Language } from '~/models/enum/language';
+import { PowerUnit } from '~/models/enum/power-unit';
+import { Theme } from '~/models/enum/theme';
 import { Mocks } from '~/tests';
 
-import * as App from '../app.actions';
-import * as Actions from './preferences.actions';
-import { initialState, preferencesReducer } from './preferences.reducer';
+import { reset } from '../app.actions';
+import {
+  removeState,
+  saveState,
+  setBypassLanding,
+  setColumns,
+  setConvertObjectiveValues,
+  setDisablePaginator,
+  setFlowSettings,
+  setHideDuplicateIcons,
+  setLanguage,
+  setPaused,
+  setPowerUnit,
+  setRows,
+  setShowTechLabels,
+  setStates,
+  setTheme,
+} from './preferences.actions';
+import {
+  initialPreferencesState,
+  preferencesReducer,
+} from './preferences.reducer';
 
 describe('Preferences Reducer', () => {
   const id = 'id';
@@ -12,8 +35,8 @@ describe('Preferences Reducer', () => {
 
   describe('RESET', () => {
     it('should return the initial state', () => {
-      const result = preferencesReducer(undefined, App.reset());
-      expect(result).toEqual(initialState);
+      const result = preferencesReducer(undefined, reset());
+      expect(result).toEqual(initialPreferencesState);
     });
   });
 
@@ -21,7 +44,7 @@ describe('Preferences Reducer', () => {
     it('should save the specified state', () => {
       const result = preferencesReducer(
         undefined,
-        Actions.saveState({
+        saveState({
           key: Game.Factorio,
           id,
           value,
@@ -35,7 +58,7 @@ describe('Preferences Reducer', () => {
     it('should remove the specified state', () => {
       const result = preferencesReducer(
         { states: { [Game.Factorio]: { [id]: value } } } as any,
-        Actions.removeState({ key: Game.Factorio, id }),
+        removeState({ key: Game.Factorio, id }),
       );
       expect(result.states[Game.Factorio]).toEqual({});
     });
@@ -45,19 +68,16 @@ describe('Preferences Reducer', () => {
     it('should set all saved states', () => {
       const result = preferencesReducer(
         { states: { [Game.Factorio]: { [id]: value } } } as any,
-        Actions.setStates({ states: initialState.states }),
+        setStates({ states: initialPreferencesState.states }),
       );
-      expect(result.states).toEqual(initialState.states);
+      expect(result.states).toEqual(initialPreferencesState.states);
     });
   });
 
   describe('SET_COLUMNS', () => {
     it('should set the columns state', () => {
       const columns = { power: { show: true } } as any;
-      const result = preferencesReducer(
-        undefined,
-        Actions.setColumns({ columns }),
-      );
+      const result = preferencesReducer(undefined, setColumns({ columns }));
       expect(result.columns).toEqual(columns);
     });
   });
@@ -65,7 +85,7 @@ describe('Preferences Reducer', () => {
   describe('SET_ROWS', () => {
     it('should set the paging rows', () => {
       const rows = 25;
-      const result = preferencesReducer(undefined, Actions.setRows({ rows }));
+      const result = preferencesReducer(undefined, setRows({ rows }));
       expect(result.rows).toEqual(rows);
     });
   });
@@ -75,7 +95,7 @@ describe('Preferences Reducer', () => {
       const disablePaginator = true;
       const result = preferencesReducer(
         undefined,
-        Actions.setDisablePaginator({ disablePaginator }),
+        setDisablePaginator({ disablePaginator }),
       );
       expect(result.disablePaginator).toEqual(disablePaginator);
     });
@@ -84,10 +104,7 @@ describe('Preferences Reducer', () => {
   describe('SET_LANGUAGE', () => {
     it('should set the language', () => {
       const language = Language.Chinese;
-      const result = preferencesReducer(
-        undefined,
-        Actions.setLanguage({ language }),
-      );
+      const result = preferencesReducer(undefined, setLanguage({ language }));
       expect(result.language).toEqual(language);
     });
   });
@@ -95,10 +112,7 @@ describe('Preferences Reducer', () => {
   describe('SET_POWER_UNIT', () => {
     it('should set the power unit', () => {
       const powerUnit = PowerUnit.MW;
-      const result = preferencesReducer(
-        undefined,
-        Actions.setPowerUnit({ powerUnit }),
-      );
+      const result = preferencesReducer(undefined, setPowerUnit({ powerUnit }));
       expect(result.powerUnit).toEqual(powerUnit);
     });
   });
@@ -106,7 +120,7 @@ describe('Preferences Reducer', () => {
   describe('SET_THEME', () => {
     it('should set the power unit', () => {
       const theme = Theme.Dark;
-      const result = preferencesReducer(undefined, Actions.setTheme({ theme }));
+      const result = preferencesReducer(undefined, setTheme({ theme }));
       expect(result.theme).toEqual(theme);
     });
   });
@@ -116,7 +130,7 @@ describe('Preferences Reducer', () => {
       const bypassLanding = true;
       const result = preferencesReducer(
         undefined,
-        Actions.setBypassLanding({ bypassLanding }),
+        setBypassLanding({ bypassLanding }),
       );
       expect(result.bypassLanding).toEqual(bypassLanding);
     });
@@ -127,7 +141,7 @@ describe('Preferences Reducer', () => {
       const showTechLabels = true;
       const result = preferencesReducer(
         undefined,
-        Actions.setShowTechLabels({ showTechLabels }),
+        setShowTechLabels({ showTechLabels }),
       );
       expect(result.showTechLabels).toEqual(showTechLabels);
     });
@@ -138,7 +152,7 @@ describe('Preferences Reducer', () => {
       const hideDuplicateIcons = true;
       const result = preferencesReducer(
         undefined,
-        Actions.setHideDuplicateIcons({ hideDuplicateIcons }),
+        setHideDuplicateIcons({ hideDuplicateIcons }),
       );
       expect(result.hideDuplicateIcons).toEqual(true);
     });
@@ -147,10 +161,7 @@ describe('Preferences Reducer', () => {
   describe('SET_PAUSED', () => {
     it('should set the paused state', () => {
       const paused = true;
-      const result = preferencesReducer(
-        undefined,
-        Actions.setPaused({ paused }),
-      );
+      const result = preferencesReducer(undefined, setPaused({ paused }));
       expect(result.paused).toEqual(paused);
     });
   });
@@ -160,7 +171,7 @@ describe('Preferences Reducer', () => {
       const convertObjectiveValues = true;
       const result = preferencesReducer(
         undefined,
-        Actions.setConvertObjectiveValues({ convertObjectiveValues }),
+        setConvertObjectiveValues({ convertObjectiveValues }),
       );
       expect(result.convertObjectiveValues).toEqual(convertObjectiveValues);
     });
@@ -168,12 +179,12 @@ describe('Preferences Reducer', () => {
 
   describe('SET_FLOW_SETTINGS', () => {
     it('should set the flow settings', () => {
-      const flowSettings = spread(Mocks.FlowSettings, {
+      const flowSettings = spread(Mocks.flowSettings, {
         diagram: FlowDiagram.BoxLine,
       });
       const result = preferencesReducer(
         undefined,
-        Actions.setFlowSettings({ flowSettings }),
+        setFlowSettings({ flowSettings }),
       );
       expect(result.flowSettings).toEqual(flowSettings);
     });
@@ -181,7 +192,7 @@ describe('Preferences Reducer', () => {
 
   it('should return the default state', () => {
     expect(preferencesReducer(undefined, { type: 'Test' } as any)).toEqual(
-      initialState,
+      initialPreferencesState,
     );
   });
 });

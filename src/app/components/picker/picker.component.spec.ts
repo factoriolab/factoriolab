@@ -2,7 +2,8 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockStore } from '@ngrx/store/testing';
 
-import { LabState, Recipes } from '~/store';
+import { LabState } from '~/store';
+import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
 import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { PickerComponent } from './picker.component';
@@ -38,7 +39,7 @@ describe('PickerComponent', () => {
     it('should open the items dialog', () => {
       component.clickOpen(
         'item',
-        Mocks.AdjustedDataset.itemIds,
+        Mocks.adjustedDataset.itemIds,
         ItemId.IronPlate,
       );
       expect(component.visible).toBeTrue();
@@ -48,7 +49,7 @@ describe('PickerComponent', () => {
     it('should open the recipes dialog', () => {
       component.clickOpen(
         'recipe',
-        Mocks.AdjustedDataset.recipeIds,
+        Mocks.adjustedDataset.recipeIds,
         RecipeId.IronPlate,
       );
       expect(component.visible).toBeTrue();
@@ -58,7 +59,7 @@ describe('PickerComponent', () => {
     it('should handle a set', () => {
       component.clickOpen(
         'item',
-        Mocks.AdjustedDataset.itemIds,
+        Mocks.adjustedDataset.itemIds,
         new Set([ItemId.IronPlate]),
       );
       expect(component.visible).toBeTrue();
@@ -66,7 +67,7 @@ describe('PickerComponent', () => {
     });
 
     it('should open as item multiselect', () => {
-      component.clickOpen('item', Mocks.AdjustedDataset.itemIds, [
+      component.clickOpen('item', Mocks.adjustedDataset.itemIds, [
         ItemId.IronPlate,
       ]);
       expect(component.visible).toBeTrue();
@@ -75,7 +76,7 @@ describe('PickerComponent', () => {
     });
 
     it('should open as recipe multiselect', () => {
-      component.clickOpen('recipe', Mocks.AdjustedDataset.recipeIds, [
+      component.clickOpen('recipe', Mocks.adjustedDataset.recipeIds, [
         RecipeId.IronPlate,
       ]);
       expect(component.visible).toBeTrue();
@@ -85,9 +86,9 @@ describe('PickerComponent', () => {
 
     it('should open as recipe multiselect with null defaults', () => {
       const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
-      mockStore.overrideSelector(Recipes.selectAdjustedDataset, data);
+      mockStore.overrideSelector(selectAdjustedDataset, data);
       mockStore.refreshState();
-      component.clickOpen('recipe', Mocks.AdjustedDataset.recipeIds, [
+      component.clickOpen('recipe', Mocks.adjustedDataset.recipeIds, [
         RecipeId.IronPlate,
       ]);
       expect(component.visible).toBeTrue();
@@ -152,15 +153,15 @@ describe('PickerComponent', () => {
 
   describe('inputSearch', () => {
     beforeEach(() => {
-      component.clickOpen('item', Mocks.AdjustedDataset.itemIds);
+      component.clickOpen('item', Mocks.adjustedDataset.itemIds);
     });
 
     it('should skip if no search is specified', () => {
       component.search = '';
       component.inputSearch();
-      expect(component.categoryIds).toEqual(Mocks.AdjustedDataset.categoryIds);
+      expect(component.categoryIds).toEqual(Mocks.adjustedDataset.categoryIds);
       expect(component.categoryRows).toEqual(
-        Mocks.AdjustedDataset.categoryItemRows,
+        Mocks.adjustedDataset.categoryItemRows,
       );
     });
 
