@@ -7,7 +7,9 @@ import {
 } from '@angular/router';
 import { from, map } from 'rxjs';
 
+import { coalesce } from '~/helpers';
 import { MigrationService, RouterService } from '~/services';
+import { Settings } from '~/store';
 
 export const canActivateId: CanActivateFn = (
   route: ActivatedRouteSnapshot,
@@ -27,7 +29,12 @@ export const canActivateId: CanActivateFn = (
       return from(routerSvc.unzipQueryParams(route.queryParams)).pipe(
         map((queryParams) => migrationSvc.migrate(undefined, queryParams)),
         map(({ modId, params }) =>
-          router.createUrlTree([modId, id], { queryParams: params }),
+          router.createUrlTree(
+            [coalesce(modId, Settings.initialState.modId), id],
+            {
+              queryParams: params,
+            },
+          ),
         ),
       );
     }

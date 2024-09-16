@@ -936,7 +936,7 @@ export class MigrationService {
 
       // Researched technologies
       const oldResearchedTechnologies = s[0];
-      if (oldResearchedTechnologies !== V10NULL)
+      if (oldResearchedTechnologies && oldResearchedTechnologies !== V10NULL)
         appendSet(
           'v10tre',
           new Set(oldResearchedTechnologies.split(ZARRAYSEP)),
