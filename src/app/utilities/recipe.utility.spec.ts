@@ -59,6 +59,15 @@ describe('RecipeUtility', () => {
       );
       expect(result).toHaveSize(1);
     });
+
+    it('should disallow empty module in Satisfactory mining', () => {
+      const result = RecipeUtility.moduleOptions(
+        Mocks.Dataset.machineEntities[ItemId.AssemblingMachine3],
+        spread(Mocks.Dataset, { game: Game.Satisfactory }),
+        RecipeId.Coal,
+      );
+      expect(result).toHaveSize(6);
+    });
   });
 
   describe('defaultModules', () => {
@@ -650,10 +659,9 @@ describe('RecipeUtility', () => {
     it('should adjust based on number of Final Factory duplicators', () => {
       const data = Mocks.getDataset();
       data.game = Game.FinalFactory;
-      const settings = {
-        ...Mocks.RecipesState[RecipeId.SteelChest],
-        ...{ overclock: undefined },
-      };
+      const settings = spread(Mocks.RecipesState[RecipeId.SteelChest], {
+        overclock: undefined,
+      });
 
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
@@ -662,9 +670,11 @@ describe('RecipeUtility', () => {
         Mocks.SettingsStateInitial,
         data,
       );
-      const expected: AdjustedRecipe = {
-        ...Mocks.AdjustedDataset.recipeEntities[RecipeId.SteelChest],
-        ...{
+      const expected: AdjustedRecipe = spread(
+        Mocks.AdjustedDataset.recipeEntities[
+          RecipeId.SteelChest
+        ] as unknown as AdjustedRecipe,
+        {
           out: { [ItemId.SteelChest]: rational(1n) },
           time: rational(2n, 3n),
           drain: rational(5n),
@@ -674,7 +684,45 @@ describe('RecipeUtility', () => {
           produces: new Set(),
           output: {},
         },
+      );
+      expect(result).toEqual(expected);
+    });
+
+    it('should adjust based on Satisfactory Somersloop implementation', () => {
+      const data = Mocks.getDataset();
+      data.game = Game.Satisfactory;
+      data.moduleEntities[ItemId.Somersloop] = {
+        productivity: rational(1n),
+        consumption: rational(1n),
       };
+      const settings = spread(Mocks.RecipesState[RecipeId.SteelChest], {
+        overclock: rational(100n),
+        modules: [{ id: ItemId.Somersloop, count: rational(2n) }],
+      });
+
+      const result = RecipeUtility.adjustRecipe(
+        RecipeId.SteelChest,
+        settings,
+        Mocks.ItemsStateInitial,
+        Mocks.SettingsStateInitial,
+        data,
+      );
+
+      const expected: AdjustedRecipe = spread(
+        Mocks.AdjustedDataset.recipeEntities[
+          RecipeId.SteelChest
+        ] as unknown as AdjustedRecipe,
+        {
+          out: { [ItemId.SteelChest]: rational(2n) },
+          time: rational(2n, 3n),
+          drain: rational(5n),
+          consumption: rational(600n),
+          pollution: rational(1n, 5n),
+          productivity: rational(2n),
+          produces: new Set(),
+          output: {},
+        },
+      );
       expect(result).toEqual(expected);
     });
   });
