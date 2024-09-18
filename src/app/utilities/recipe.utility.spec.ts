@@ -60,8 +60,8 @@ describe('RecipeUtility', () => {
 
     it('should disallow empty module in Satisfactory mining', () => {
       const result = RecipeUtility.moduleOptions(
-        Mocks.Dataset.machineEntities[ItemId.AssemblingMachine3],
-        spread(Mocks.Dataset, { game: Game.Satisfactory }),
+        Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],
+        spread(Mocks.dataset, { game: Game.Satisfactory }),
         RecipeId.Coal,
       );
       expect(result).toHaveSize(6);
@@ -695,7 +695,7 @@ describe('RecipeUtility', () => {
         productivity: rational(1n),
         consumption: rational(1n),
       };
-      const settings = spread(Mocks.RecipesState[RecipeId.SteelChest], {
+      const settings = spread(Mocks.recipesState[RecipeId.SteelChest], {
         overclock: rational(100n),
         modules: [{ id: ItemId.Somersloop, count: rational(2n) }],
       });
@@ -703,13 +703,13 @@ describe('RecipeUtility', () => {
       const result = RecipeUtility.adjustRecipe(
         RecipeId.SteelChest,
         settings,
-        Mocks.ItemsStateInitial,
-        Mocks.SettingsStateInitial,
+        Mocks.itemsStateInitial,
+        Mocks.settingsStateInitial,
         data,
       );
 
       const expected: AdjustedRecipe = spread(
-        Mocks.AdjustedDataset.recipeEntities[
+        Mocks.adjustedDataset.recipeEntities[
           RecipeId.SteelChest
         ] as unknown as AdjustedRecipe,
         {
