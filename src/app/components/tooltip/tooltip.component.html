@@ -123,7 +123,7 @@
           <td>{{ machine.speed | round }}</td>
         </tr>
       }
-      @if (machine.modules && data().game === Game.Factorio) {
+      @if (machine.modules) {
         <tr>
           <td>{{ 'data.modules' | translate }}</td>
           <td>{{ machine.modules }}</td>
