@@ -1,15 +1,14 @@
 import { coalesce } from '~/helpers';
-import {
-  BeaconJson,
-  BeltJson,
-  CargoWagonJson,
-  FluidWagonJson,
-  ModuleEffect,
-  SiloJson,
-} from '~/models';
-import { EnergyType } from '../../src/app/models';
-import * as D from '../factorio-build.models';
+import { BeaconJson } from '~/models/data/beacon';
+import { BeltJson } from '~/models/data/belt';
+import { CargoWagonJson } from '~/models/data/cargo-wagon';
+import { FluidWagonJson } from '~/models/data/fluid-wagon';
+import { ModuleEffect } from '~/models/data/module';
+import { SiloJson } from '~/models/data/silo';
+import { EnergyType } from '~/models/enum/energy-type';
+
 import * as M from '../factorio.models';
+import * as D from '../factorio-build.models';
 import { getDisallowedEffects } from './data.helpers';
 import { getPowerInKw } from './power.helpers';
 
@@ -162,11 +161,9 @@ export function getEntitySize(
     // Add 1 for the box's {0, 0}
     tileWidth = 1 + Math.floor(-left) + Math.floor(right);
   }
-  if (heightEven) {
-    tileHeight = Math.floor(0.5 - top) + Math.floor(0.5 + bottom);
-  } else {
-    tileHeight = 1 + Math.floor(-top) + Math.floor(bottom);
-  }
+
+  if (heightEven) tileHeight = Math.floor(0.5 - top) + Math.floor(0.5 + bottom);
+  else tileHeight = 1 + Math.floor(-top) + Math.floor(bottom);
 
   return [tileWidth, tileHeight];
 }
@@ -175,17 +172,13 @@ export function getMachineSpeed(proto: D.MachineProto): number {
   if (M.isReactorPrototype(proto)) return 1;
 
   let speed: number;
-  if (M.isBoilerPrototype(proto)) {
+  if (M.isBoilerPrototype(proto))
     speed = getPowerInKw(proto.energy_consumption) ?? 1;
-  } else if (M.isLabPrototype(proto)) {
-    speed = proto.researching_speed ?? 1;
-  } else if (M.isMiningDrillPrototype(proto)) {
-    speed = proto.mining_speed;
-  } else if (M.isOffshorePumpPrototype(proto)) {
+  else if (M.isLabPrototype(proto)) speed = proto.researching_speed ?? 1;
+  else if (M.isMiningDrillPrototype(proto)) speed = proto.mining_speed;
+  else if (M.isOffshorePumpPrototype(proto))
     speed = 1; // Speed is set on recipe instead of pump
-  } else {
-    speed = proto.crafting_speed;
-  }
+  else speed = proto.crafting_speed;
 
   return speed;
 }
@@ -205,13 +198,10 @@ export function getMachineType(proto: D.MachineProto): EnergyType | undefined {
 }
 
 export function getMachineUsage(proto: D.MachineProto): number | undefined {
-  if (M.isOffshorePumpPrototype(proto)) {
-    return undefined;
-  } else if (M.isBoilerPrototype(proto)) {
+  if (M.isOffshorePumpPrototype(proto)) return undefined;
+  else if (M.isBoilerPrototype(proto))
     return getPowerInKw(proto.energy_consumption);
-  } else if (M.isReactorPrototype(proto)) {
-    return getPowerInKw(proto.consumption);
-  }
+  else if (M.isReactorPrototype(proto)) return getPowerInKw(proto.consumption);
 
   return getPowerInKw(proto.energy_usage);
 }

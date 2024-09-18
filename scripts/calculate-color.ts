@@ -1,10 +1,11 @@
 import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 
-import { ModData } from '~/models';
+import { ModData } from '~/models/data/mod-data';
 
 import { data } from '../src/data';
-import { getJsonData, logTime } from './helpers';
+import { getJsonData } from './helpers/file.helpers';
+import { logTime } from './helpers/log.helpers';
 
 // Load mods from arguments
 let mods = process.argv.slice(2);
@@ -16,7 +17,7 @@ async function updateMods(mods: string[]): Promise<void> {
     const mod = mods[i];
     const modPath = `./src/data/${mod}`;
     const modDataPath = `${modPath}/data.json`;
-    const modData = getJsonData<ModData>(modDataPath);
+    const modData = getJsonData(modDataPath) as ModData;
     const image = fs.readFileSync(`${modPath}/icons.webp`);
 
     modData.icons = await Promise.all(

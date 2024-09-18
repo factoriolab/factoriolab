@@ -1,10 +1,10 @@
 import { exec, spawn } from 'child_process';
 import fs from 'fs';
 
-import { Game } from '~/models';
+import { Game } from '~/models/enum/game';
 
 import { data } from '../src/data';
-import { logTime } from './helpers';
+import { logTime } from './helpers/log.helpers';
 
 /**
  * This script is intended to update a specific Factorio mod set or all sets

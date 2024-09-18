@@ -1,9 +1,9 @@
 import fs from 'fs';
 
-import { ModData } from '~/models';
+import { ModData } from '~/models/data/mod-data';
 
-import * as D from './factorio-build.models';
-import { getJsonData } from './helpers';
+import { ModList } from './factorio-build.models';
+import { getJsonData } from './helpers/file.helpers';
 
 /**
  * This script is intended to prep a Factorio dump for a specific mod set by
@@ -29,14 +29,13 @@ const modSettingsDestPath = `${modsPath}/mod-settings.dat`;
 
 function dumpPrep(): void {
   // Read mod data
-  const modList = getJsonData<D.ModList>(modListPath);
-  const data = getJsonData<ModData>(modDataPath);
+  const modList = getJsonData(modListPath) as ModList;
+  const data = getJsonData(modDataPath) as ModData;
 
   Object.keys(data.version).forEach((key) => {
     const mod = modList.mods.find((m) => m.name === key);
-    if (mod == null) {
+    if (mod == null)
       throw new Error(`Mod ${key} not found, may need to be installed`);
-    }
   });
 
   modList.mods.forEach((m) => {

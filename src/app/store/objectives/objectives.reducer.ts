@@ -54,18 +54,15 @@ export const objectivesReducer = createReducer(
 
     return spread(state, {
       ids: [...state.ids, state.index.toString()],
-      entities: {
-        ...state.entities,
-        ...{
-          [state.index]: {
-            id: state.index.toString(),
-            targetId: objective.targetId,
-            value,
-            unit: objective.unit,
-            type: objective.type ?? ObjectiveType.Output,
-          },
+      entities: spread(state.entities, {
+        [state.index]: {
+          id: state.index.toString(),
+          targetId: objective.targetId,
+          value,
+          unit: objective.unit,
+          type: objective.type ?? ObjectiveType.Output,
         },
-      },
+      }),
       index: state.index + 1,
     });
   }),
@@ -173,7 +170,7 @@ export const objectivesReducer = createReducer(
     }),
   ),
   on(adjustDisplayRate, (state, { factor }) => {
-    const entities = { ...state.entities };
+    const entities = spread(state.entities);
     for (const objective of state.ids
       .map((i) => state.entities[i])
       .filter(
