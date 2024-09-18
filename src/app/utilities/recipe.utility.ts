@@ -78,9 +78,13 @@ export class RecipeUtility {
       .map((i) => data.itemEntities[i])
       .filter(fnPropsNotNullish('module'));
 
+    let recipe: Recipe | undefined;
     if (recipeId != null) {
-      const recipe = data.recipeEntities[recipeId];
-      if (!recipe.isMining && !recipe.isTechnology) {
+      recipe = data.recipeEntities[recipeId];
+      if (
+        data.game === Game.Satisfactory ||
+        (!recipe.isMining && !recipe.isTechnology)
+      ) {
         // Filter for modules allowed on this recipe
         allowed = allowed.filter(
           (m) =>
@@ -100,7 +104,10 @@ export class RecipeUtility {
     const options = allowed.map(
       (m): SelectItem<string> => ({ value: m.id, label: m.name }),
     );
-    if (data.game !== Game.Satisfactory && data.game !== Game.FinalFactory) {
+    if (
+      (data.game !== Game.Satisfactory || !recipe?.isMining) &&
+      data.game !== Game.FinalFactory
+    ) {
       options.unshift({ label: 'None', value: ItemId.Module });
     }
     return options;
@@ -201,16 +208,37 @@ export class RecipeUtility {
           const module = data.moduleEntities[id];
           if (module == null) continue;
 
+          // Scale Satisfactory Somersloop bonus based on number of slots
+          let scale: Rational | undefined;
+          if (
+            data.game === Game.Satisfactory &&
+            id === ItemId.Somersloop &&
+            machine.modules instanceof Rational
+          )
+            scale = machine.modules;
+
           if (module.speed) {
             speed = speed.add(module.speed.mul(count));
           }
 
           if (module.productivity) {
-            prod = prod.add(module.productivity.mul(count));
+            let effect = module.productivity.mul(count);
+
+            if (scale) effect = effect.div(scale);
+
+            prod = prod.add(effect);
           }
 
           if (module.consumption) {
-            consumption = consumption.add(module.consumption.mul(count));
+            let effect = module.consumption.mul(count);
+
+            if (scale) {
+              // Overall effect = (1 + filled slots / total slots) ^ 2
+              effect = effect.div(scale).add(rational(1n));
+              effect = effect.mul(effect).sub(rational(1n));
+            }
+
+            consumption = consumption.add(effect);
           }
 
           if (module.pollution) {
@@ -298,7 +326,6 @@ export class RecipeUtility {
       let oc: Rational | undefined;
       if (
         recipeSettings.overclock &&
-        data.game !== Game.FinalFactory &&
         !recipeSettings.overclock.eq(rational(100n))
       ) {
         oc = recipeSettings.overclock.div(rational(100n));
@@ -346,6 +373,7 @@ export class RecipeUtility {
           usage = usage.mul(oc);
         }
       }
+
       recipe.consumption =
         machine.type === EnergyType.Electric
           ? usage.mul(consumption)
