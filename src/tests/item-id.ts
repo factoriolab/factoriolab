@@ -44,6 +44,7 @@ export enum ItemId {
   RocketPart = 'rocket-part',
   RocketSilo = 'rocket-silo',
   SolidFuel = 'solid-fuel',
+  Somersloop = 'somersloop',
   SpaceSciencePack = 'space-science-pack',
   SpeedModule = 'speed-module',
   SpeedModule2 = 'speed-module-2',
