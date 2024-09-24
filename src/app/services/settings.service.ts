@@ -18,6 +18,8 @@ import { FluidWagon } from '~/models/data/fluid-wagon';
 import { Fuel } from '~/models/data/fuel';
 import { Item, parseItem } from '~/models/data/item';
 import { Machine } from '~/models/data/machine';
+import { ModHash } from '~/models/data/mod-hash';
+import { ModI18n } from '~/models/data/mod-i18n';
 import { Module } from '~/models/data/module';
 import { parseRecipe, Recipe } from '~/models/data/recipe';
 import { Technology } from '~/models/data/technology';
@@ -34,6 +36,7 @@ import { objectiveUnitOptions } from '~/models/enum/objective-unit';
 import { Preset, presetOptions } from '~/models/enum/preset';
 import { researchBonusValue } from '~/models/enum/research-bonus';
 import { gameInfo } from '~/models/game-info';
+import { Mod } from '~/models/mod';
 import { Options } from '~/models/options';
 import { Rational, rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
@@ -208,287 +211,19 @@ export class SettingsService extends Store<SettingsState> {
     return gameColumnsState(spread(initialColumnsState, columns), gameInfo);
   });
 
-  defaults = computed((): Optional<Defaults> => {
-    const mod = this.mod();
-    if (mod?.defaults == null) return;
-    const preset = this.preset();
+  defaults = computed(() =>
+    SettingsService.computeDefaults(this.mod(), this.preset()),
+  );
 
-    const m = mod.defaults;
-    let beacons: BeaconSettings[] = [];
-    let moduleRank: string[] | undefined;
-    let overclock: Rational | undefined;
-    switch (mod.game) {
-      case Game.Factorio: {
-        moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
-        if (m.beacon) {
-          const beacon = mod.items.find((i) => i.id === m.beacon)?.beacon;
-          if (beacon) {
-            const id = m.beacon;
-            const modules: ModuleSettings[] = [
-              {
-                count: rational(beacon.modules),
-                id: coalesce(m.beaconModule, ItemId.Module),
-              },
-            ];
-
-            const count =
-              preset < Preset.Beacon8
-                ? rational.zero
-                : preset === Preset.Beacon8
-                  ? rational(8n)
-                  : rational(12n);
-            beacons = [{ count, id, modules }];
-          }
-        }
-        break;
-      }
-      case Game.DysonSphereProgram: {
-        moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
-        break;
-      }
-      case Game.FinalFactory:
-      case Game.Satisfactory: {
-        moduleRank = m.moduleRank;
-        overclock = rational(100n);
-        break;
-      }
-    }
-
-    const machineRankIds =
-      preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
-    return {
-      beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
-      pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
-      cargoWagonId: m.cargoWagon,
-      fluidWagonId: m.fluidWagon,
-      excludedRecipeIds: coalesce(m.excludedRecipes, []),
-      machineRankIds: coalesce(machineRankIds, []),
-      fuelRankIds: coalesce(m.fuelRank, []),
-      moduleRankIds: coalesce(moduleRank, []),
-      beacons,
-      overclock,
-    };
-  });
-
-  dataset = computed(() => {
-    const mod = this.mod();
-    const hash = this.hash();
-    const i18n = this.i18n();
-    const game = this.game();
-    const defaults = this.defaults();
-
-    // Map out entities with mods
-    const categoryEntities = toEntities(
-      coalesce(mod?.categories, []),
-      {},
-      environment.debug,
-    );
-    const iconFile = `data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp`;
-    const iconEntities = toEntities(
-      coalesce(mod?.icons, []),
-      {},
-      environment.debug,
-    );
-    const itemData = toEntities(
-      coalesce(mod?.items, []),
-      {},
-      environment.debug,
-    );
-    const recipeData = toEntities(
-      coalesce(mod?.recipes, []),
-      {},
-      environment.debug,
-    );
-    const limitations = reduceEntities(coalesce(mod?.limitations, {}));
-
-    // Apply localization
-    if (i18n) {
-      for (const i of Object.keys(i18n.categories).filter(
-        (i) => categoryEntities[i],
-      )) {
-        categoryEntities[i] = spread(categoryEntities[i], {
-          name: i18n.categories[i],
-        });
-      }
-      for (const i of Object.keys(i18n.items).filter((i) => itemData[i]))
-        itemData[i] = spread(itemData[i], { name: i18n.items[i] });
-
-      for (const i of Object.keys(i18n.recipes).filter((i) => recipeData[i]))
-        recipeData[i] = spread(recipeData[i], { name: i18n.recipes[i] });
-    }
-
-    // Convert to id arrays
-    const categoryIds = Object.keys(categoryEntities);
-    const iconIds = Object.keys(iconEntities);
-    const itemIds = Object.keys(itemData);
-    const recipeIds = Object.keys(recipeData);
-
-    // Generate temporary object arrays
-    const items = itemIds.map((i) => parseItem(itemData[i]));
-    const recipes = recipeIds.map((r) => parseRecipe(recipeData[r]));
-
-    // Filter for item types
-    const beaconIds = items
-      .filter(fnPropsNotNullish('beacon'))
-      .sort((a, b) => a.beacon.modules.sub(b.beacon.modules).toNumber())
-      .map((i) => i.id);
-    const beltIds = items
-      .filter(fnPropsNotNullish('belt'))
-      .sort((a, b) =>
-        /** Don't sort belts in DSP, leave based on stacks */
-        game === Game.DysonSphereProgram
-          ? 0
-          : a.belt.speed.sub(b.belt.speed).toNumber(),
-      )
-      .map((i) => i.id);
-    const pipeIds = items
-      .filter(fnPropsNotNullish('pipe'))
-      .sort((a, b) => a.pipe.speed.sub(b.pipe.speed).toNumber())
-      .map((i) => i.id);
-    const cargoWagonIds = items
-      .filter(fnPropsNotNullish('cargoWagon'))
-      .sort((a, b) => a.cargoWagon.size.sub(b.cargoWagon.size).toNumber())
-      .map((i) => i.id);
-    const fluidWagonIds = items
-      .filter(fnPropsNotNullish('fluidWagon'))
-      .sort((a, b) =>
-        a.fluidWagon.capacity.sub(b.fluidWagon.capacity).toNumber(),
-      )
-      .map((i) => i.id);
-    const machineIds = items
-      .filter(fnPropsNotNullish('machine'))
-      .map((i) => i.id);
-    const modules = items.filter(fnPropsNotNullish('module'));
-    const moduleIds = modules.map((i) => i.id);
-    const proliferatorModuleIds = modules
-      .filter((i) => i.module.sprays != null)
-      .map((i) => i.id);
-    const fuels = items
-      .filter(fnPropsNotNullish('fuel'))
-      .sort((a, b) => a.fuel.value.sub(b.fuel.value).toNumber());
-    const fuelIds = fuels.map((i) => i.id);
-    const technologyIds = items
-      .filter(fnPropsNotNullish('technology'))
-      .map((r) => r.id);
-
-    // Calculate missing implicit recipe icons
-    // For recipes with no icon, use icon of first output item
-    recipes
-      .filter((r) => !iconEntities[r.id] && !r.icon)
-      .forEach((r) => {
-        const firstOutId = Object.keys(r.out)[0];
-        const firstOutItem = itemData[firstOutId];
-        r.icon = firstOutItem.icon ?? firstOutId;
-      });
-
-    // Calculate category item rows
-    const categoryItemRows: Entities<string[][]> = {};
-    for (const id of categoryIds) {
-      const rows: string[][] = [[]];
-      const rowItems = items
-        .filter((i) => i.category === id)
-        .sort((a, b) => a.row - b.row);
-      if (rowItems.length) {
-        let index = rowItems[0].row;
-        for (const item of rowItems) {
-          if (item.row > index) {
-            rows.push([]);
-            index = item.row;
-          }
-          rows[rows.length - 1].push(item.id);
-        }
-        categoryItemRows[id] = rows;
-      }
-    }
-
-    // Calculate recipe item rows
-    const categoryRecipeRows: Entities<string[][]> = {};
-    for (const id of categoryIds) {
-      const rows: string[][] = [[]];
-      const rowRecipes = recipes
-        .filter((r) => r.category === id)
-        .sort((a, b) => a.row - b.row);
-      if (rowRecipes.length) {
-        let index = rowRecipes[0].row;
-        for (const recipe of rowRecipes) {
-          if (recipe.row > index) {
-            rows.push([]);
-            index = recipe.row;
-          }
-          rows[rows.length - 1].push(recipe.id);
-        }
-        categoryRecipeRows[id] = rows;
-      }
-    }
-
-    // Convert to rationals
-    const beaconEntities: Entities<Beacon> = {};
-    const beltEntities: Entities<Belt> = {};
-    const cargoWagonEntities: Entities<CargoWagon> = {};
-    const fluidWagonEntities: Entities<FluidWagon> = {};
-    const machineEntities: Entities<Machine> = {};
-    const moduleEntities: Entities<Module> = {};
-    const fuelEntities: Entities<Fuel> = {};
-    const technologyEntities: Entities<Technology> = {};
-    const itemEntities = items.reduce((e: Entities<Item>, i) => {
-      if (i.beacon) beaconEntities[i.id] = i.beacon;
-
-      if (i.belt) beltEntities[i.id] = i.belt;
-      else if (i.pipe) beltEntities[i.id] = i.pipe;
-
-      if (i.cargoWagon) cargoWagonEntities[i.id] = i.cargoWagon;
-      if (i.fluidWagon) fluidWagonEntities[i.id] = i.fluidWagon;
-      if (i.machine) machineEntities[i.id] = i.machine;
-      if (i.module) moduleEntities[i.id] = i.module;
-      if (i.fuel) fuelEntities[i.id] = i.fuel;
-      if (i.technology) technologyEntities[i.id] = i.technology;
-
-      e[i.id] = i;
-      return e;
-    }, {});
-    const recipeEntities = recipes.reduce((e: Entities<Recipe>, r) => {
-      e[r.id] = r;
-      return e;
-    }, {});
-
-    const dataset: Dataset = {
-      game,
-      version: coalesce(mod?.version, {}),
-      categoryIds,
-      categoryEntities,
-      categoryItemRows,
-      categoryRecipeRows,
-      iconFile,
-      iconIds,
-      iconEntities,
-      itemIds,
-      itemEntities,
-      beaconIds,
-      beaconEntities,
-      beltIds,
-      pipeIds,
-      beltEntities,
-      cargoWagonIds,
-      cargoWagonEntities,
-      fluidWagonIds,
-      fluidWagonEntities,
-      machineIds,
-      machineEntities,
-      moduleIds,
-      proliferatorModuleIds,
-      moduleEntities,
-      fuelIds,
-      fuelEntities,
-      recipeIds,
-      recipeEntities,
-      technologyIds,
-      technologyEntities,
-      limitations,
-      hash,
-      defaults,
-    };
-    return dataset;
-  });
+  dataset = computed(() =>
+    SettingsService.computeDataset(
+      this.mod(),
+      this.hash(),
+      this.i18n(),
+      this.game(),
+      this.defaults(),
+    ),
+  );
 
   allResearchedTechnologyIds = computed(() => {
     const researchedTechnologyIds = this.researchedTechnologyIds();
@@ -506,25 +241,13 @@ export class SettingsService extends Store<SettingsState> {
     return researchedTechnologyIds;
   });
 
-  settings = computed((): SettingsComplete => {
-    const s = this.state();
-    const d = this.defaults();
-    const researchedTechnologyIds = this.allResearchedTechnologyIds();
-
-    return spread(s as SettingsComplete, {
-      beltId: s.beltId ?? d?.beltId,
-      pipeId: s.pipeId ?? d?.pipeId,
-      cargoWagonId: s.cargoWagonId ?? d?.cargoWagonId,
-      fluidWagonId: s.fluidWagonId ?? d?.fluidWagonId,
-      excludedRecipeIds: new Set(s.excludedRecipeIds ?? d?.excludedRecipeIds),
-      machineRankIds: s.machineRankIds ?? d?.machineRankIds ?? [],
-      fuelRankIds: s.fuelRankIds ?? d?.fuelRankIds ?? [],
-      moduleRankIds: s.moduleRankIds ?? d?.moduleRankIds ?? [],
-      beacons: RecipeUtility.hydrateBeacons(s.beacons, d?.beacons),
-      overclock: s.overclock ?? d?.overclock,
-      researchedTechnologyIds,
-    });
-  });
+  settings = computed(() =>
+    SettingsService.computeSettings(
+      this.state(),
+      this.defaults(),
+      this.allResearchedTechnologyIds(),
+    ),
+  );
 
   options = computed((): Options => {
     const data = this.dataset();
@@ -610,6 +333,315 @@ export class SettingsService extends Store<SettingsState> {
     effect(() => {
       const mod = this.mod();
       if (mod) this.analyticsSvc.event('set_game', mod.game);
+    });
+  }
+
+  static computeDefaults(
+    mod: Optional<Mod>,
+    preset: Preset,
+  ): Optional<Defaults> {
+    if (mod?.defaults == null) return;
+
+    const m = mod.defaults;
+    let beacons: BeaconSettings[] = [];
+    let moduleRank: string[] | undefined;
+    let overclock: Rational | undefined;
+    switch (mod.game) {
+      case Game.Factorio: {
+        moduleRank = preset === Preset.Minimum ? undefined : m.moduleRank;
+        if (m.beacon) {
+          const beacon = mod.items.find((i) => i.id === m.beacon)?.beacon;
+          if (beacon) {
+            const id = m.beacon;
+            const modules: ModuleSettings[] = [
+              {
+                count: rational(beacon.modules),
+                id: coalesce(m.beaconModule, ItemId.Module),
+              },
+            ];
+
+            const count =
+              preset < Preset.Beacon8
+                ? rational.zero
+                : preset === Preset.Beacon8
+                  ? rational(8n)
+                  : rational(12n);
+            beacons = [{ count, id, modules }];
+          }
+        }
+        break;
+      }
+      case Game.DysonSphereProgram: {
+        moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
+        break;
+      }
+      case Game.FinalFactory:
+      case Game.Satisfactory: {
+        moduleRank = m.moduleRank;
+        overclock = rational(100n);
+        break;
+      }
+    }
+
+    const machineRankIds =
+      preset === Preset.Minimum ? m.minMachineRank : m.maxMachineRank;
+    return {
+      beltId: preset === Preset.Minimum ? m.minBelt : m.maxBelt,
+      pipeId: preset === Preset.Minimum ? m.minPipe : m.maxPipe,
+      cargoWagonId: m.cargoWagon,
+      fluidWagonId: m.fluidWagon,
+      excludedRecipeIds: coalesce(m.excludedRecipes, []),
+      machineRankIds: coalesce(machineRankIds, []),
+      fuelRankIds: coalesce(m.fuelRank, []),
+      moduleRankIds: coalesce(moduleRank, []),
+      beacons,
+      overclock,
+    };
+  }
+
+  static computeDataset(
+    mod: Optional<Mod>,
+    hash: Optional<ModHash>,
+    i18n: Optional<ModI18n>,
+    game: Game,
+    defaults: Optional<Defaults>,
+  ): Dataset {
+    // Map out entities with mods
+    const categoryEntities = toEntities(
+      coalesce(mod?.categories, []),
+      {},
+      environment.debug,
+    );
+    const iconFile = `data/${coalesce(mod?.id, DEFAULT_MOD)}/icons.webp`;
+    const iconEntities = toEntities(
+      coalesce(mod?.icons, []),
+      {},
+      environment.debug,
+    );
+    const itemData = toEntities(
+      coalesce(mod?.items, []),
+      {},
+      environment.debug,
+    );
+    const recipeData = toEntities(
+      coalesce(mod?.recipes, []),
+      {},
+      environment.debug,
+    );
+    const limitations = reduceEntities(coalesce(mod?.limitations, {}));
+
+    // Apply localization
+    if (i18n) {
+      for (const i of Object.keys(i18n.categories).filter(
+        (i) => categoryEntities[i],
+      )) {
+        categoryEntities[i] = spread(categoryEntities[i], {
+          name: i18n.categories[i],
+        });
+      }
+
+      for (const i of Object.keys(i18n.items).filter((i) => itemData[i]))
+        itemData[i] = spread(itemData[i], { name: i18n.items[i] });
+
+      for (const i of Object.keys(i18n.recipes).filter((i) => recipeData[i]))
+        recipeData[i] = spread(recipeData[i], { name: i18n.recipes[i] });
+    }
+
+    // Convert to id arrays
+    const categoryIds = Object.keys(categoryEntities);
+    const iconIds = Object.keys(iconEntities);
+    const itemIds = Object.keys(itemData);
+    const recipeIds = Object.keys(recipeData);
+
+    // Generate temporary object arrays
+    const items = itemIds.map((i) => parseItem(itemData[i]));
+    const recipes = recipeIds.map((r) => parseRecipe(recipeData[r]));
+
+    // Filter for item types
+    const beaconIds = items
+      .filter(fnPropsNotNullish('beacon'))
+      .sort((a, b) => a.beacon.modules.sub(b.beacon.modules).toNumber())
+      .map((i) => i.id);
+    const beltIds = items
+      .filter(fnPropsNotNullish('belt'))
+      .sort((a, b) =>
+        /** Don't sort belts in DSP, leave based on stacks */
+        game === Game.DysonSphereProgram
+          ? 0
+          : a.belt.speed.sub(b.belt.speed).toNumber(),
+      )
+      .map((i) => i.id);
+    const pipeIds = items
+      .filter(fnPropsNotNullish('pipe'))
+      .sort((a, b) => a.pipe.speed.sub(b.pipe.speed).toNumber())
+      .map((i) => i.id);
+    const cargoWagonIds = items
+      .filter(fnPropsNotNullish('cargoWagon'))
+      .sort((a, b) => a.cargoWagon.size.sub(b.cargoWagon.size).toNumber())
+      .map((i) => i.id);
+    const fluidWagonIds = items
+      .filter(fnPropsNotNullish('fluidWagon'))
+      .sort((a, b) =>
+        a.fluidWagon.capacity.sub(b.fluidWagon.capacity).toNumber(),
+      )
+      .map((i) => i.id);
+    const machineIds = items
+      .filter(fnPropsNotNullish('machine'))
+      .map((i) => i.id);
+    const modules = items.filter(fnPropsNotNullish('module'));
+    const moduleIds = modules.map((i) => i.id);
+    const proliferatorModuleIds = modules
+      .filter((i) => i.module.sprays != null)
+      .map((i) => i.id);
+    const fuels = items
+      .filter(fnPropsNotNullish('fuel'))
+      .sort((a, b) => a.fuel.value.sub(b.fuel.value).toNumber());
+    const fuelIds = fuels.map((i) => i.id);
+    const technologyIds = items
+      .filter(fnPropsNotNullish('technology'))
+      .map((r) => r.id);
+
+    // Calculate missing implicit recipe icons
+    // For recipes with no icon, use icon of first output item
+    recipes
+      .filter((r) => !iconEntities[r.id] && !r.icon)
+      .forEach((r) => {
+        const firstOutId = Object.keys(r.out)[0];
+        const firstOutItem = itemData[firstOutId];
+        r.icon = firstOutItem.icon ?? firstOutId;
+      });
+
+    // Calculate category item rows
+    const categoryItemRows: Entities<string[][]> = {};
+    for (const id of categoryIds) {
+      const rows: string[][] = [[]];
+      const rowItems = items
+        .filter((i) => i.category === id)
+        .sort((a, b) => a.row - b.row);
+      if (rowItems.length) {
+        let index = rowItems[0].row;
+        for (const item of rowItems) {
+          if (item.row > index) {
+            rows.push([]);
+            index = item.row;
+          }
+
+          rows[rows.length - 1].push(item.id);
+        }
+
+        categoryItemRows[id] = rows;
+      }
+    }
+
+    // Calculate recipe item rows
+    const categoryRecipeRows: Entities<string[][]> = {};
+    for (const id of categoryIds) {
+      const rows: string[][] = [[]];
+      const rowRecipes = recipes
+        .filter((r) => r.category === id)
+        .sort((a, b) => a.row - b.row);
+      if (rowRecipes.length) {
+        let index = rowRecipes[0].row;
+        for (const recipe of rowRecipes) {
+          if (recipe.row > index) {
+            rows.push([]);
+            index = recipe.row;
+          }
+
+          rows[rows.length - 1].push(recipe.id);
+        }
+
+        categoryRecipeRows[id] = rows;
+      }
+    }
+
+    // Convert to rationals
+    const beaconEntities: Entities<Beacon> = {};
+    const beltEntities: Entities<Belt> = {};
+    const cargoWagonEntities: Entities<CargoWagon> = {};
+    const fluidWagonEntities: Entities<FluidWagon> = {};
+    const machineEntities: Entities<Machine> = {};
+    const moduleEntities: Entities<Module> = {};
+    const fuelEntities: Entities<Fuel> = {};
+    const technologyEntities: Entities<Technology> = {};
+    const itemEntities = items.reduce((e: Entities<Item>, i) => {
+      if (i.beacon) beaconEntities[i.id] = i.beacon;
+
+      if (i.belt) beltEntities[i.id] = i.belt;
+      else if (i.pipe) beltEntities[i.id] = i.pipe;
+
+      if (i.cargoWagon) cargoWagonEntities[i.id] = i.cargoWagon;
+      if (i.fluidWagon) fluidWagonEntities[i.id] = i.fluidWagon;
+      if (i.machine) machineEntities[i.id] = i.machine;
+      if (i.module) moduleEntities[i.id] = i.module;
+      if (i.fuel) fuelEntities[i.id] = i.fuel;
+      if (i.technology) technologyEntities[i.id] = i.technology;
+
+      e[i.id] = i;
+      return e;
+    }, {});
+    const recipeEntities = recipes.reduce((e: Entities<Recipe>, r) => {
+      e[r.id] = r;
+      return e;
+    }, {});
+
+    return {
+      game,
+      version: coalesce(mod?.version, {}),
+      categoryIds,
+      categoryEntities,
+      categoryItemRows,
+      categoryRecipeRows,
+      iconFile,
+      iconIds,
+      iconEntities,
+      itemIds,
+      itemEntities,
+      beaconIds,
+      beaconEntities,
+      beltIds,
+      pipeIds,
+      beltEntities,
+      cargoWagonIds,
+      cargoWagonEntities,
+      fluidWagonIds,
+      fluidWagonEntities,
+      machineIds,
+      machineEntities,
+      moduleIds,
+      proliferatorModuleIds,
+      moduleEntities,
+      fuelIds,
+      fuelEntities,
+      recipeIds,
+      recipeEntities,
+      technologyIds,
+      technologyEntities,
+      limitations,
+      hash,
+      defaults,
+    };
+  }
+
+  static computeSettings(
+    state: SettingsState,
+    defaults: Optional<Defaults>,
+    researchedTechnologyIds: Set<string>,
+  ): SettingsComplete {
+    return spread(state as SettingsComplete, {
+      beltId: state.beltId ?? defaults?.beltId,
+      pipeId: state.pipeId ?? defaults?.pipeId,
+      cargoWagonId: state.cargoWagonId ?? defaults?.cargoWagonId,
+      fluidWagonId: state.fluidWagonId ?? defaults?.fluidWagonId,
+      excludedRecipeIds: new Set(
+        state.excludedRecipeIds ?? defaults?.excludedRecipeIds,
+      ),
+      machineRankIds: state.machineRankIds ?? defaults?.machineRankIds ?? [],
+      fuelRankIds: state.fuelRankIds ?? defaults?.fuelRankIds ?? [],
+      moduleRankIds: state.moduleRankIds ?? defaults?.moduleRankIds ?? [],
+      beacons: RecipeUtility.hydrateBeacons(state.beacons, defaults?.beacons),
+      overclock: state.overclock ?? defaults?.overclock,
+      researchedTechnologyIds,
     });
   }
 }

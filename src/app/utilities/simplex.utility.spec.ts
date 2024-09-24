@@ -1,9 +1,9 @@
-import { Entities } from '~/models/entities';
 import { MaximizeType } from '~/models/enum/maximize-type';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { rational } from '~/models/rational';
+import { Entities } from '~/models/utils';
 import { ItemId, Mocks, RecipeId } from '~/tests';
 
 import { RateUtility } from './rate.utility';

@@ -71,9 +71,8 @@ export class ThemeService {
 
       // Generate .lab-icon::before css rules stylesheet
       const old = this.document.getElementById(LAB_ICON_STYLE_ID);
-      if (old) {
-        this.head.removeChild(old);
-      }
+      if (old) this.head.removeChild(old);
+
       const style = this.document.createElement('style');
       style.id = LAB_ICON_STYLE_ID;
       let css = '';

@@ -1,7 +1,9 @@
 import { computed, inject, Injectable } from '@angular/core';
 
+import { Dataset } from '~/models/dataset';
 import { EnergyType } from '~/models/enum/energy-type';
 import { MachineSettings } from '~/models/settings/machine-settings';
+import { SettingsComplete } from '~/models/settings/settings-complete';
 import { Store } from '~/models/store';
 import { Entities, Optional } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
@@ -16,11 +18,40 @@ export type MachinesState = Entities<MachineSettings>;
 export class MachinesService extends Store<MachinesState> {
   settingsSvc = inject(SettingsService);
 
-  machinesState = computed(() => {
-    const state = this.state();
-    const settings = this.settingsSvc.settings();
-    const data = this.settingsSvc.dataset();
+  machinesState = computed(() =>
+    MachinesService.computeMachinesState(
+      this.state(),
+      this.settingsSvc.settings(),
+      this.settingsSvc.dataset(),
+    ),
+  );
 
+  constructor() {
+    super({});
+  }
+
+  updateEntity(id: string, partial: Partial<MachineSettings>): void {
+    this.reduce((state) => this._updateEntity(state, id, partial));
+  }
+
+  updateEntityField<K extends keyof MachineSettings>(
+    id: string,
+    field: K,
+    value: MachineSettings[K],
+    def: Optional<MachineSettings[K]>,
+  ): void {
+    this.reduce((state) => this._updateField(state, id, field, value, def));
+  }
+
+  resetId(id: string): void {
+    this.reduce((state) => this._removeEntry(state, id));
+  }
+
+  static computeMachinesState(
+    state: MachinesState,
+    settings: SettingsComplete,
+    data: Dataset,
+  ): MachinesState {
     const value: Entities<MachineSettings> = {};
     for (const id of data.machineIds) {
       const s: MachineSettings = { ...state[id] };
@@ -53,26 +84,5 @@ export class MachinesService extends Store<MachinesState> {
     }
 
     return value;
-  });
-
-  constructor() {
-    super({});
-  }
-
-  updateEntity(id: string, partial: Partial<MachineSettings>): void {
-    this.reduce((state) => this._updateEntity(state, id, partial));
-  }
-
-  updateEntityField<K extends keyof MachineSettings>(
-    id: string,
-    field: K,
-    value: MachineSettings[K],
-    def: Optional<MachineSettings[K]>,
-  ): void {
-    this.reduce((state) => this._updateField(state, id, field, value, def));
-  }
-
-  resetId(id: string): void {
-    this.reduce((state) => this._removeEntry(state, id));
   }
 }

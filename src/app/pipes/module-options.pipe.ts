@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 
-import { Entities } from '~/models/entities';
 import { ItemId } from '~/models/enum/item-id';
+import { Entities } from '~/models/utils';
 
 @Pipe({ name: 'moduleOptions', standalone: true })
 export class ModuleOptionsPipe implements PipeTransform {

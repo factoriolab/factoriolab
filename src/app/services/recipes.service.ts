@@ -1,12 +1,14 @@
 import { computed, inject, Injectable } from '@angular/core';
 
+import { Dataset } from '~/models/dataset';
 import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { SettingsComplete } from '~/models/settings/settings-complete';
 import { Store } from '~/models/store';
 import { Entities, Optional } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { ItemsService } from './items.service';
-import { MachinesService } from './machines.service';
+import { MachinesService, MachinesState } from './machines.service';
 import { SettingsService } from './settings.service';
 
 export type RecipesState = Entities<RecipeSettings>;
@@ -19,14 +21,64 @@ export class RecipesService extends Store<RecipesState> {
   machinesSvc = inject(MachinesService);
   settingsSvc = inject(SettingsService);
 
-  recipesState = computed(() => {
-    const state = this.state();
-    const machinesState = this.machinesSvc.machinesState();
+  recipesState = computed(() =>
+    RecipesService.computeRecipesState(
+      this.state(),
+      this.machinesSvc.machinesState(),
+      this.settingsSvc.settings(),
+      this.settingsSvc.dataset(),
+    ),
+  );
+
+  adjustedDataset = computed(() => {
+    const recipesState = this.recipesState();
+    const itemsState = this.itemsSvc.itemsState();
+    const recipeIds = this.settingsSvc.availableRecipeIds();
     const settings = this.settingsSvc.settings();
     const data = this.settingsSvc.dataset();
 
-    const value: Entities<RecipeSettings> = {};
+    return RecipeUtility.adjustDataset(
+      recipeIds,
+      recipesState,
+      itemsState,
+      settings,
+      data,
+    );
+  });
 
+  availableItemIds = computed(() => {
+    const data = this.adjustedDataset();
+    return data.itemIds.filter((i) => data.itemRecipeIds[i].length);
+  });
+
+  constructor() {
+    super({});
+  }
+
+  updateEntityField<K extends keyof RecipeSettings>(
+    id: string,
+    field: K,
+    value: RecipeSettings[K],
+    def?: Optional<RecipeSettings[K]>,
+  ): void {
+    this.reduce((state) => this._updateField(state, id, field, value, def));
+  }
+
+  resetFields(fields: (keyof RecipeSettings)[]): void {
+    this.update((state) => this._resetFields(state, fields));
+  }
+
+  resetId(id: string): void {
+    this.reduce((state) => this._removeEntry(state, id));
+  }
+
+  static computeRecipesState(
+    state: RecipesState,
+    machinesState: MachinesState,
+    settings: SettingsComplete,
+    data: Dataset,
+  ): RecipesState {
+    const value: Entities<RecipeSettings> = {};
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
       const s: RecipeSettings = { ...state[recipe.id] };
 
@@ -77,47 +129,5 @@ export class RecipesService extends Store<RecipesState> {
     }
 
     return value;
-  });
-
-  adjustedDataset = computed(() => {
-    const recipesState = this.recipesState();
-    const itemsState = this.itemsSvc.itemsState();
-    const recipeIds = this.settingsSvc.availableRecipeIds();
-    const settings = this.settingsSvc.settings();
-    const data = this.settingsSvc.dataset();
-
-    return RecipeUtility.adjustDataset(
-      recipeIds,
-      recipesState,
-      itemsState,
-      settings,
-      data,
-    );
-  });
-
-  availableItemIds = computed(() => {
-    const data = this.adjustedDataset();
-    return data.itemIds.filter((i) => data.itemRecipeIds[i].length);
-  });
-
-  constructor() {
-    super({});
-  }
-
-  updateEntityField<K extends keyof RecipeSettings>(
-    id: string,
-    field: K,
-    value: RecipeSettings[K],
-    def?: Optional<RecipeSettings[K]>,
-  ): void {
-    this.reduce((state) => this._updateField(state, id, field, value, def));
-  }
-
-  resetFields(fields: (keyof RecipeSettings)[]): void {
-    this.update((state) => this._resetFields(state, fields));
-  }
-
-  resetId(id: string): void {
-    this.reduce((state) => this._removeEntry(state, id));
   }
 }

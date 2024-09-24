@@ -4,18 +4,14 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 
-import { LabState } from '~/store';
-import { setShowTechLabels } from '~/store/preferences/preferences.actions';
-import { DispatchTest, Mocks, RecipeId, TestModule } from '~/tests';
+import { Mocks, RecipeId, TestModule } from '~/tests';
 
 import { TechPickerComponent } from './tech-picker.component';
 
 describe('TechPickerComponent', () => {
   let component: TechPickerComponent;
   let fixture: ComponentFixture<TechPickerComponent>;
-  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -23,7 +19,6 @@ describe('TechPickerComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(TechPickerComponent);
-    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -135,10 +130,5 @@ describe('TechPickerComponent', () => {
       component.onHide();
       expect(component.selectIds.emit).toHaveBeenCalledWith(undefined);
     });
-  });
-
-  it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setShowTechLabels', setShowTechLabels);
   });
 });
