@@ -65,6 +65,14 @@ interface ZipState {
   hash: ModHash;
 }
 
+export interface PartialState {
+  objectivesState?: ObjectivesState;
+  itemsState?: ItemsState;
+  recipesState?: RecipesState;
+  machinesState?: MachinesState;
+  settingsState?: PartialSettingsState;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -328,25 +336,30 @@ export class RouterService {
     const hash = isBare ? undefined : modHash;
     const ms = this.unzipModules(params, hash);
     const bs = this.unzipBeacons(params, ms, hash);
-    const objectivesState = this.unzipObjectives(params, ms, bs, hash);
-    const itemsState = this.unzipItems(params, hash);
-    const recipesState = this.unzipRecipes(params, ms, bs, hash);
-    const machinesState = this.unzipMachines(params, ms, bs, hash);
-    const settingsState = this.unzipSettings(
+    const state: PartialState = {};
+    state.objectivesState = this.unzipObjectives(params, ms, bs, hash);
+    state.itemsState = this.unzipItems(params, hash);
+    state.recipesState = this.unzipRecipes(params, ms, bs, hash);
+    state.machinesState = this.unzipMachines(params, ms, bs, hash);
+    state.settingsState = this.unzipSettings(
       modId,
       params,
       bs,
-      coalesce(objectivesState?.ids, []),
+      coalesce(state.objectivesState?.ids, []),
       modData,
       modHash,
       hash,
     );
+    // prune(state);
+    this.dispatch(state);
+  }
 
-    this.objectivesSvc.load(objectivesState);
-    this.itemsSvc.load(itemsState);
-    this.recipesSvc.load(recipesState);
-    this.machinesSvc.load(machinesState);
-    this.settingsSvc.load(settingsState);
+  dispatch(state: PartialState): void {
+    this.objectivesSvc.load(state.objectivesState);
+    this.itemsSvc.load(state.itemsState);
+    this.recipesSvc.load(state.recipesState);
+    this.machinesSvc.load(state.machinesState);
+    this.settingsSvc.load(state.settingsState);
     this.ready.set(true);
   }
 

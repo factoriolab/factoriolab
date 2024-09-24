@@ -3,8 +3,8 @@ import { computed, inject, Injectable } from '@angular/core';
 import { Dataset } from '~/models/dataset';
 import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
-import { Store } from '~/models/store';
-import { Entities, Optional } from '~/models/utils';
+import { EntityStore } from '~/models/store';
+import { Entities } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { ItemsService } from './items.service';
@@ -16,7 +16,7 @@ export type RecipesState = Entities<RecipeSettings>;
 @Injectable({
   providedIn: 'root',
 })
-export class RecipesService extends Store<RecipesState> {
+export class RecipesService extends EntityStore<RecipeSettings> {
   itemsSvc = inject(ItemsService);
   machinesSvc = inject(MachinesService);
   settingsSvc = inject(SettingsService);
@@ -53,23 +53,6 @@ export class RecipesService extends Store<RecipesState> {
 
   constructor() {
     super({});
-  }
-
-  updateEntityField<K extends keyof RecipeSettings>(
-    id: string,
-    field: K,
-    value: RecipeSettings[K],
-    def?: Optional<RecipeSettings[K]>,
-  ): void {
-    this.reduce((state) => this._updateField(state, id, field, value, def));
-  }
-
-  resetFields(fields: (keyof RecipeSettings)[]): void {
-    this.update((state) => this._resetFields(state, fields));
-  }
-
-  resetId(id: string): void {
-    this.reduce((state) => this._removeEntry(state, id));
   }
 
   static computeRecipesState(

@@ -1,5 +1,7 @@
 import { SelectItem } from 'primeng/api';
 
+import { spread } from '~/helpers';
+
 import { GameInfo } from '../game-info';
 
 export type ColumnKey =
@@ -77,10 +79,9 @@ export function gameColumnsState(
   gameInfo: GameInfo,
 ): ColumnsState {
   gameInfo.hideColumns.forEach((c) => {
-    columnsState = {
-      ...columnsState,
-      ...{ [c]: { ...columnsState[c], ...{ show: false } } },
-    };
+    columnsState = spread(columnsState, {
+      [c]: spread(columnsState[c], { show: false }),
+    });
   });
 
   return columnsState;

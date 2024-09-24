@@ -5,6 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 
 import { DEFAULT_MOD } from '~/models/constants';
+import { Preset } from '~/models/enum/preset';
 import { DatasetsService } from '~/services/datasets.service';
 import { SettingsService } from '~/services/settings.service';
 import {
@@ -32,7 +33,7 @@ import { Mocks } from '.';
       provide: SettingsService,
       useFactory: (): SettingsService => {
         const settingsSvc = new SettingsService();
-        settingsSvc.apply({ modId: DEFAULT_MOD });
+        settingsSvc.apply({ modId: DEFAULT_MOD, preset: Preset.Beacon8 });
         return settingsSvc;
       },
     },

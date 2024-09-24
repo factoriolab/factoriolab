@@ -66,15 +66,14 @@ export class RecipeComponent extends DetailComponent {
 
   Game = Game;
 
-  changeExcluded(value: boolean): void {
-    const update = updateSetIds(
+  changeExcluded(excluded: boolean): void {
+    const value = updateSetIds(
       this.id(),
-      value,
+      excluded,
       this.settings().excludedRecipeIds,
     );
     const def = new Set(coalesce(this.data().defaults?.excludedRecipeIds, []));
-    const excludedRecipeIds = compareSet(update, def);
-    this.settingsSvc.apply({ excludedRecipeIds });
+    this.settingsSvc.updateField('excludedRecipeIds', value, def);
   }
 
   changeChecked(value: boolean): void {

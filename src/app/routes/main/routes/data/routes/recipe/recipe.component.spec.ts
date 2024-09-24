@@ -36,32 +36,25 @@ describe('RecipeComponent', () => {
     });
   });
 
-  // describe('changeExcluded', () => {
-  //   it('should update the set and pass with defaults to the store dispatcher', () => {
-  //     spyOn(component, 'setExcludedRecipes');
-  //     component.changeExcluded(false);
-  //     expect(component.setExcludedRecipes).toHaveBeenCalledWith(
-  //       new Set(),
-  //       new Set([RecipeId.NuclearFuelReprocessing]),
-  //     );
-  //   });
-  // });
+  describe('changeExcluded', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component.settingsSvc, 'updateField');
+      component.changeExcluded(false);
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'excludedRecipeIds',
+        new Set(),
+        new Set([RecipeId.NuclearFuelReprocessing]),
+      );
+    });
+  });
 
-  // describe('changeChecked', () => {
-  //   it('should update the set and pass with defaults to the store dispatcher', () => {
-  //     spyOn(component, 'setCheckedRecipes');
-  //     component.changeChecked(true);
-  //     expect(component.setCheckedRecipes).toHaveBeenCalledWith(
-  //       new Set([RecipeId.NuclearFuelReprocessing]),
-  //     );
-  //   });
-  // });
-
-  // it('should dispatch actions', () => {
-  //   const dispatch = new DispatchTest(mockStore, component);
-  //   dispatch.props('setExcludedRecipes', setExcludedRecipes);
-  //   dispatch.props('setCheckedRecipes', setCheckedRecipes);
-  //   dispatch.props('setRecipeCost', setCost);
-  //   dispatch.props('resetRecipe', resetRecipe);
-  // });
+  describe('changeChecked', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.changeChecked(true);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        checkedRecipeIds: new Set([RecipeId.NuclearFuelReprocessing]),
+      });
+    });
+  });
 });

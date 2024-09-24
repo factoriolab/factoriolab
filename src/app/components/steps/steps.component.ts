@@ -481,12 +481,12 @@ export class StepsComponent implements OnInit, AfterViewInit {
   }
 
   resetBelts(event: Event): void {
-    this.itemsSvc.resetField('beltId');
+    this.itemsSvc.resetFields('beltId');
     event.stopImmediatePropagation();
   }
 
   resetWagons(event: Event): void {
-    this.itemsSvc.resetField('wagonId');
+    this.itemsSvc.resetFields('wagonId');
     event.stopImmediatePropagation();
   }
 
@@ -498,12 +498,12 @@ export class StepsComponent implements OnInit, AfterViewInit {
       'beacons',
     ];
     this.objectivesSvc.resetFields(fields);
-    this.recipesSvc.resetFields(fields);
+    this.recipesSvc.resetFields(...fields);
     event.stopImmediatePropagation();
   }
 
   resetBeacons(): void {
     this.objectivesSvc.resetFields(['beacons']);
-    this.recipesSvc.resetFields(['beacons']);
+    this.recipesSvc.resetFields('beacons');
   }
 }

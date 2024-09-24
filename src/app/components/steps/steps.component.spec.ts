@@ -319,7 +319,7 @@ describe('StepsComponent', () => {
         RecipeId.WoodenChest,
         'machineId',
         ItemId.AssemblingMachine2,
-        ItemId.AssemblingMachine1,
+        ItemId.AssemblingMachine3,
       );
     });
 
@@ -392,7 +392,7 @@ describe('StepsComponent', () => {
         '1',
         'machineId',
         ItemId.AssemblingMachine2,
-        ItemId.AssemblingMachine1,
+        ItemId.AssemblingMachine3,
       );
     });
   });
@@ -455,10 +455,10 @@ describe('StepsComponent', () => {
   describe('resetBelts', () => {
     it('should reset belts', () => {
       const event = new Event('click');
-      spyOn(component.itemsSvc, 'resetField');
+      spyOn(component.itemsSvc, 'resetFields');
       spyOn(event, 'stopImmediatePropagation');
       component.resetBelts(event);
-      expect(component.itemsSvc.resetField).toHaveBeenCalledWith('beltId');
+      expect(component.itemsSvc.resetFields).toHaveBeenCalledWith('beltId');
       expect(event.stopImmediatePropagation).toHaveBeenCalled();
     });
   });
@@ -466,10 +466,10 @@ describe('StepsComponent', () => {
   describe('resetWagons', () => {
     it('should reset wagons', () => {
       const event = new Event('click');
-      spyOn(component.itemsSvc, 'resetField');
+      spyOn(component.itemsSvc, 'resetFields');
       spyOn(event, 'stopImmediatePropagation');
       component.resetWagons(event);
-      expect(component.itemsSvc.resetField).toHaveBeenCalledWith('wagonId');
+      expect(component.itemsSvc.resetFields).toHaveBeenCalledWith('wagonId');
       expect(event.stopImmediatePropagation).toHaveBeenCalled();
     });
   });

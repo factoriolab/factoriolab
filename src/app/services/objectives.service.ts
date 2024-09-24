@@ -146,7 +146,7 @@ export class ObjectivesService extends Store<ObjectivesState> {
     const steps = this.steps();
     const objectives = this.baseObjectives();
     const itemsState = this.itemsSvc.state();
-    const recipesState = this.recipesSvc.recipesState();
+    const recipesState = this.recipesSvc.state();
 
     return {
       objectives: objectives.reduce((e: Entities<boolean>, p) => {
@@ -158,15 +158,11 @@ export class ObjectivesService extends Store<ObjectivesState> {
         return e;
       }, {}),
       items: steps.reduce((e: Entities<boolean>, s) => {
-        if (s.itemId) {
-          e[s.itemId] = itemsState[s.itemId] != null;
-        }
+        if (s.itemId) e[s.itemId] = itemsState[s.itemId] != null;
         return e;
       }, {}),
       recipes: steps.reduce((e: Entities<boolean>, s) => {
-        if (s.recipeId) {
-          e[s.recipeId] = recipesState[s.recipeId] != null;
-        }
+        if (s.recipeId) e[s.recipeId] = recipesState[s.recipeId] != null;
         return e;
       }, {}),
     };
@@ -434,20 +430,19 @@ export class ObjectivesService extends Store<ObjectivesState> {
   });
 
   effectivePowerUnit = computed(() => {
-    const steps = this.steps();
     const powerUnit = this.preferencesSvc.powerUnit();
+    if (powerUnit !== PowerUnit.Auto) return powerUnit;
 
-    if (powerUnit === PowerUnit.Auto) {
-      let minPower: Rational | undefined;
-      for (const step of steps) {
-        if (step.power != null && (minPower == null || step.power.lt(minPower)))
-          minPower = step.power;
-      }
-      minPower = minPower ?? rational.zero;
-      if (minPower.lt(rational(1000n))) return PowerUnit.kW;
-      else if (minPower.lt(rational(1000000n))) return PowerUnit.MW;
-      else return PowerUnit.GW;
-    } else return powerUnit;
+    const steps = this.steps();
+    let minPower: Rational | undefined;
+    for (const step of steps) {
+      if (step.power != null && (minPower == null || step.power.lt(minPower)))
+        minPower = step.power;
+    }
+    minPower = minPower ?? rational.zero;
+    if (minPower.lt(rational(1000n))) return PowerUnit.kW;
+    else if (minPower.lt(rational(1000000n))) return PowerUnit.MW;
+    else return PowerUnit.GW;
   });
 
   recipesModified = computed(() => {
@@ -496,8 +491,8 @@ export class ObjectivesService extends Store<ObjectivesState> {
   add(objective: ObjectiveBase): void {
     this.reduce((state) => {
       let value = rational.one;
-      if (state.ids.length)
-        value = state.entities[state.ids[state.ids.length - 1]].value;
+      const lastId = state.ids.at(-1);
+      if (lastId) value = state.entities[lastId].value;
 
       return {
         ids: [...state.ids, state.index.toString()],

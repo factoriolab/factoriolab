@@ -4,8 +4,8 @@ import { Dataset } from '~/models/dataset';
 import { EnergyType } from '~/models/enum/energy-type';
 import { MachineSettings } from '~/models/settings/machine-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
-import { Store } from '~/models/store';
-import { Entities, Optional } from '~/models/utils';
+import { EntityStore } from '~/models/store';
+import { Entities } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { SettingsService } from './settings.service';
@@ -15,7 +15,7 @@ export type MachinesState = Entities<MachineSettings>;
 @Injectable({
   providedIn: 'root',
 })
-export class MachinesService extends Store<MachinesState> {
+export class MachinesService extends EntityStore<MachineSettings> {
   settingsSvc = inject(SettingsService);
 
   machinesState = computed(() =>
@@ -32,19 +32,6 @@ export class MachinesService extends Store<MachinesState> {
 
   updateEntity(id: string, partial: Partial<MachineSettings>): void {
     this.reduce((state) => this._updateEntity(state, id, partial));
-  }
-
-  updateEntityField<K extends keyof MachineSettings>(
-    id: string,
-    field: K,
-    value: MachineSettings[K],
-    def: Optional<MachineSettings[K]>,
-  ): void {
-    this.reduce((state) => this._updateField(state, id, field, value, def));
-  }
-
-  resetId(id: string): void {
-    this.reduce((state) => this._removeEntry(state, id));
   }
 
   static computeMachinesState(

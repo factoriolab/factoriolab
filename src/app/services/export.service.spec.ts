@@ -73,14 +73,14 @@ describe('ExportService', () => {
         Outputs: '"iron-plate:8"',
         Targets: '"iron-plate:9"',
         Belts: '=3',
-        Belt: ItemId.TransportBelt,
+        Belt: ItemId.ExpressTransportBelt,
         Wagons: '=4',
         Wagon: ItemId.CargoWagon,
         Recipe: recipeId,
         Machines: '=5',
         Machine: ItemId.ElectricFurnace,
-        Modules: '"2 module"',
-        Beacons: '"0 beacon (2 speed-module-3)"',
+        Modules: `"2 ${ItemId.ProductivityModule3}"`,
+        Beacons: `"8 ${ItemId.Beacon} (2 ${ItemId.SpeedModule3})"`,
         Power: '=6',
         Pollution: '=7',
       });
@@ -90,12 +90,12 @@ describe('ExportService', () => {
       const result = service.stepToJson(minStep, [minStep]);
       expect(result).toEqual({
         Item: itemId,
-        Belt: ItemId.TransportBelt,
+        Belt: ItemId.ExpressTransportBelt,
         Wagon: ItemId.CargoWagon,
         Recipe: recipeId,
         Machine: ItemId.ElectricFurnace,
-        Modules: '"2 module"',
-        Beacons: '"0 beacon (2 speed-module-3)"',
+        Modules: `"2 ${ItemId.ProductivityModule3}"`,
+        Beacons: `"8 ${ItemId.Beacon} (2 ${ItemId.SpeedModule3})"`,
       });
     });
   });

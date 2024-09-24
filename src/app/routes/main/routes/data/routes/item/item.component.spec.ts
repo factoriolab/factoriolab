@@ -38,23 +38,23 @@ describe('ItemComponent', () => {
     });
   });
 
-  // describe('changeExcluded', () => {
-  //   it('should update the set and pass with defaults to the store dispatcher', () => {
-  //     spyOn(component, 'setExcludedItems');
-  //     component.changeExcluded(true);
-  //     expect(component.setExcludedItems).toHaveBeenCalledWith(
-  //       new Set([ItemId.AssemblingMachine2]),
-  //     );
-  //   });
-  // });
+  describe('changeExcluded', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.changeExcluded(true);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        excludedItemIds: new Set([ItemId.AssemblingMachine2]),
+      });
+    });
+  });
 
-  // describe('changeChecked', () => {
-  //   it('should update the set and pass with defaults to the store dispatcher', () => {
-  //     spyOn(component, 'setCheckedItems');
-  //     component.changeChecked(true);
-  //     expect(component.setCheckedItems).toHaveBeenCalledWith(
-  //       new Set([ItemId.AssemblingMachine2]),
-  //     );
-  //   });
-  // });
+  describe('changeChecked', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.changeChecked(true);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        checkedItemIds: new Set([ItemId.AssemblingMachine2]),
+      });
+    });
+  });
 });

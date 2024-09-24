@@ -156,3 +156,26 @@ export abstract class Store<T extends object> {
     return this._updateEntity(state, id, partial);
   }
 }
+
+export abstract class EntityStore<T extends object> extends Store<Entities<T>> {
+  constructor(initial: Entities<T>) {
+    super(initial, []);
+  }
+
+  updateEntityField<K extends keyof T>(
+    id: string,
+    field: K,
+    value: T[K],
+    def?: Optional<T[K]>,
+  ): void {
+    this.reduce((state) => this._updateField(state, id, field, value, def));
+  }
+
+  resetFields(...fields: (keyof T)[]): void {
+    this.update((state) => this._resetFields(state, fields));
+  }
+
+  resetId(id: string): void {
+    this.reduce((state) => this._removeEntry(state, id));
+  }
+}

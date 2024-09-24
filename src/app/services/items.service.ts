@@ -5,8 +5,8 @@ import { Dataset } from '~/models/dataset';
 import { ItemId } from '~/models/enum/item-id';
 import { ItemSettings } from '~/models/settings/item-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
-import { Store } from '~/models/store';
-import { Entities, Optional } from '~/models/utils';
+import { EntityStore } from '~/models/store';
+import { Entities } from '~/models/utils';
 
 import { SettingsService } from './settings.service';
 
@@ -14,7 +14,7 @@ export type ItemsState = Entities<ItemSettings>;
 @Injectable({
   providedIn: 'root',
 })
-export class ItemsService extends Store<ItemsState> {
+export class ItemsService extends EntityStore<ItemSettings> {
   settingsSvc = inject(SettingsService);
 
   itemsState = computed(() =>
@@ -36,23 +36,6 @@ export class ItemsService extends Store<ItemsState> {
 
   constructor() {
     super({});
-  }
-
-  updateEntityField<K extends keyof ItemSettings>(
-    id: string,
-    field: K,
-    value: ItemSettings[K],
-    def?: Optional<ItemSettings[K]>,
-  ): void {
-    this.reduce((state) => this._updateField(state, id, field, value, def));
-  }
-
-  resetField(field: keyof ItemSettings): void {
-    this.update((state) => this._resetField(state, field));
-  }
-
-  resetId(id: string): void {
-    this.reduce((state) => this._removeEntry(state, id));
   }
 
   static computeItemsState(

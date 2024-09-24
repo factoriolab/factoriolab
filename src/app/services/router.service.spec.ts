@@ -18,11 +18,10 @@ import { Zip, ZipData, ZipMachineSettings } from '~/models/zip';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { ItemsState } from './items.service';
-import { MachinesState } from './machines.service';
-import { ObjectivesState } from './objectives.service';
+import { initialObjectivesState, ObjectivesState } from './objectives.service';
 import { RecipesState } from './recipes.service';
-import { RouterService } from './router.service';
-import { SettingsState } from './settings.service';
+import { PartialState, RouterService } from './router.service';
+import { initialSettingsState, SettingsState } from './settings.service';
 
 const mockObjective: Objective = {
   id: '1',
@@ -74,7 +73,6 @@ const mockRecipesState: RecipesState = {
     cost: rational(100n),
   },
 };
-const mockMachinesState: MachinesState = {};
 const mockSettingsState: SettingsState = {
   modId: '1.0',
   checkedObjectiveIds: new Set(['1']),
@@ -191,6 +189,22 @@ const mockZipPartial: Zip<LabParams> = {
   },
 };
 
+const mockEmpty: PartialState = {
+  objectivesState: undefined,
+  itemsState: undefined,
+  recipesState: undefined,
+  machinesState: undefined,
+  settingsState: undefined,
+};
+
+const mockState: PartialState = {
+  objectivesState: mockObjectivesState,
+  itemsState: mockItemsState,
+  recipesState: mockRecipesState,
+  machinesState: undefined,
+  settingsState: mockSettingsState,
+};
+
 describe('RouterService', () => {
   let service: RouterService;
   const mockRoute = {
@@ -240,48 +254,59 @@ describe('RouterService', () => {
     expect(service.updateState).toHaveBeenCalled();
   }));
 
-  // describe('updateUrl', () => {
-  //   it('should update url with products', async () => {
-  //     spyOn(service, 'zipState').and.returnValue(mockZipData());
-  //     spyOn(service, 'getHash').and.returnValue(Promise.resolve({ z: 'z' }));
-  //     spyOn(service.router, 'navigate');
-  //     spyOnProperty(service.router, 'url').and.returnValue('list');
-  //     await service.updateUrl(mockZipData());
-  //     expect(service.router.navigate).toHaveBeenCalledWith([], {
-  //       queryParams: { z: 'z' },
-  //     });
-  //     expect(BrowserUtility.routerState).toEqual('list');
-  //   });
-  // });
+  describe('zipState', () => {
+    it('should be triggered via effect', fakeAsync(() => {
+      spyOn(service.objectivesSvc, 'state').and.returnValue(
+        Mocks.objectivesState,
+      );
+      spyOn(service, 'updateUrl').and.returnValue(Promise.resolve(undefined));
+      service.ready.set(true);
+      TestBed.flushEffects();
+      tick();
+      expect(service.updateUrl).toHaveBeenCalled();
+    }));
 
-  // describe('zipState', () => {
-  //   it('should zip state', () => {
-  //     const result = service.zipState(
-  //       initialObjectivesState,
-  //       initialItemsState,
-  //       initialRecipesState,
-  //       initialMachinesState,
-  //       initialSettingsState,
-  //       Mocks.dataset,
-  //       Mocks.modHash,
-  //     );
-  //     expect(result).toEqual(mockZipData());
-  //   });
+    it('should zip state', () => {
+      const result = service.zipState({
+        objectives: initialObjectivesState,
+        items: {},
+        recipes: {},
+        machines: {},
+        settings: initialSettingsState,
+        data: Mocks.dataset,
+        hash: Mocks.modHash,
+      });
+      expect(result).toEqual(mockZipData());
+    });
 
-  //   it('should zip full state', () => {
-  //     const result = service.zipState(
-  //       mockObjectivesState,
-  //       mockItemsState,
-  //       mockRecipesState,
-  //       mockMachinesState,
-  //       mockSettingsState,
-  //       Mocks.dataset,
-  //       Mocks.modHash,
-  //     );
-  //     expect(result?.objectives).toEqual(mockZip);
-  //     expect(result?.config).toEqual(mockZipPartial);
-  //   });
-  // });
+    it('should zip full state', () => {
+      const result = service.zipState({
+        objectives: mockObjectivesState,
+        items: mockItemsState,
+        recipes: mockRecipesState,
+        machines: {},
+        settings: mockSettingsState,
+        data: Mocks.dataset,
+        hash: Mocks.modHash,
+      });
+      expect(result?.objectives).toEqual(mockZip);
+      expect(result?.config).toEqual(mockZipPartial);
+    });
+  });
+
+  describe('updateUrl', () => {
+    it('should update url with products', async () => {
+      spyOn(service, 'zipState').and.returnValue(mockZipData());
+      spyOn(service, 'getHash').and.returnValue(Promise.resolve({ z: 'z' }));
+      spyOn(service.router, 'navigate');
+      spyOnProperty(service.router, 'url').and.returnValue('flow');
+      await service.updateUrl(mockZipData());
+      expect(service.router.navigate).toHaveBeenCalledWith([], {
+        queryParams: { z: 'z' },
+      });
+      expect(service.stored()).toEqual('flow');
+    });
+  });
 
   describe('stepHref', () => {
     it('should return null if hash is undefined', async () => {
@@ -377,370 +402,377 @@ describe('RouterService', () => {
     });
   });
 
-  // describe('updateState', () => {
-  //   let dispatch: jasmine.Spy;
+  describe('updateState', () => {
+    let dispatch: jasmine.Spy;
 
-  //   const mockStateV10: PartialState = spread(mockState, {
-  //     settingsState: spread(mockState.settingsState, {
-  //       costs: { ...mockState.settingsState.costs },
-  //     }),
-  //   });
-  //   delete mockStateV10.settingsState?.surplusMachinesOutput;
-  //   delete mockStateV10.settingsState?.costs?.footprint;
+    const mockStateV10 = spread(mockState, {
+      settingsState: spread(mockState.settingsState, {
+        costs: spread(mockState.settingsState!.costs),
+      }),
+    });
+    delete mockStateV10.settingsState?.surplusMachinesOutput;
+    delete mockStateV10.settingsState?.costs?.footprint;
 
-  //   const mockStateV8: PartialState = spread(mockStateV10, {
-  //     settingsState: { ...mockStateV10.settingsState },
-  //   });
-  //   delete mockStateV8.settingsState?.checkedObjectiveIds;
-  //   delete mockStateV8.settingsState?.checkedItemIds;
-  //   delete mockStateV8.settingsState?.excludedRecipeIds;
-  //   delete mockStateV8.settingsState?.checkedRecipeIds;
-  //   delete mockStateV8.settingsState?.researchedTechnologyIds;
+    const mockStateV8: PartialState = spread(mockStateV10, {
+      settingsState: { ...mockStateV10.settingsState },
+    });
+    delete mockStateV8.settingsState?.checkedObjectiveIds;
+    delete mockStateV8.settingsState?.checkedItemIds;
+    delete mockStateV8.settingsState?.excludedRecipeIds;
+    delete mockStateV8.settingsState?.checkedRecipeIds;
+    delete mockStateV8.settingsState?.researchedTechnologyIds;
 
-  //   const mockStateV6: PartialState = spread(mockStateV8, {
-  //     objectivesState: mockMigratedObjectivesState,
-  //     settingsState: spread(mockStateV8.settingsState, {
-  //       costs: { ...mockStateV8.settingsState?.costs },
-  //     }),
-  //   });
-  //   delete mockStateV6.settingsState?.maximizeType;
-  //   delete mockStateV6.settingsState?.researchedTechnologyIds;
-  //   delete mockStateV6.settingsState?.costs?.surplus;
-  //   delete mockStateV6.settingsState?.costs?.maximize;
+    const mockStateV6: PartialState = spread(mockStateV8, {
+      objectivesState: mockMigratedObjectivesState,
+      settingsState: spread(mockStateV8.settingsState, {
+        costs: { ...mockStateV8.settingsState?.costs },
+      }),
+    });
+    delete mockStateV6.settingsState?.maximizeType;
+    delete mockStateV6.settingsState?.researchedTechnologyIds;
+    delete mockStateV6.settingsState?.costs?.surplus;
+    delete mockStateV6.settingsState?.costs?.maximize;
 
-  //   const mockStateV3: PartialState = spread(mockStateV6, {
-  //     settingsState: { ...mockStateV6.settingsState },
-  //   });
-  //   delete mockStateV3.settingsState?.netProductionOnly;
+    const mockStateV3: PartialState = spread(mockStateV6, {
+      settingsState: { ...mockStateV6.settingsState },
+    });
+    delete mockStateV3.settingsState?.netProductionOnly;
 
-  //   const mockStateV1: PartialState = spread(mockStateV3, {
-  //     objectivesState: mockState.objectivesState,
-  //     settingsState: { ...mockStateV3.settingsState },
-  //   });
+    const mockStateV1: PartialState = spread(mockStateV3, {
+      objectivesState: mockState.objectivesState,
+      settingsState: { ...mockStateV3.settingsState },
+    });
 
-  //   const mockStateV0: PartialState = spread(mockStateV3, {
-  //     objectivesState: mockMigratedObjectivesState,
-  //     settingsState: { ...mockStateV1.settingsState },
-  //   });
-  //   delete mockStateV0.settingsState?.beaconReceivers;
-  //   delete mockStateV0.settingsState?.proliferatorSprayId;
-  //   delete mockStateV0.settingsState?.costs;
+    const mockStateV0: PartialState = spread(mockStateV3, {
+      objectivesState: mockMigratedObjectivesState,
+      settingsState: { ...mockStateV1.settingsState },
+    });
+    delete mockStateV0.settingsState?.beaconReceivers;
+    delete mockStateV0.settingsState?.proliferatorSprayId;
+    delete mockStateV0.settingsState?.costs;
 
-  //   beforeEach(() => {
-  //     dispatch = spyOn(service, 'dispatch');
-  //     spyOn(service.datasetsSvc, 'requestData').and.returnValue(
-  //       of([Mocks.modData, Mocks.modHash, null]),
-  //     );
-  //   });
+    beforeEach(() => {
+      dispatch = spyOn(service, 'dispatch');
+      spyOn(service.dataSvc, 'requestData').and.returnValue(
+        of([Mocks.modData, Mocks.modHash]),
+      );
+    });
 
-  //   it('should skip if loading empty, current state', async () => {
-  //     spyOn(service.ready$, 'next');
-  //     await service.updateState(undefined, {}, true);
-  //     expect(service.ready$.next).toHaveBeenCalled();
-  //   });
+    it('should skip if loading empty, current state', async () => {
+      spyOn(service.ready, 'set');
+      await service.updateState(undefined, {}, true);
+      expect(service.ready.set).toHaveBeenCalled();
+    });
 
-  //   it('should unzip empty v0', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { z: 'eJwrsAUAAR8Arg==' });
-  //   });
+    it('should unzip empty v0', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { z: 'eJwrsAUAAR8Arg==' });
+    });
 
-  //   it('should unzip v0', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV0);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         z:
-  //           'eJxtUNsKwyAM.Zr5EHDUFsZeZC.7j6E2toJVp3ZjL.v2dbSD2pUQyOXk5CSBp4xo' +
-  //           'qeoxZWDAyL2sEMkZMRtUjsKl4GOmEm0GJWLn6VN03pFYQEVKOEhrXEcHoXrjkNaA' +
-  //           'WqPK5mHyiw6-HS2-.0vTlhQQ2x9inYBEobyDuqqATX4mmjMIcWpueIupknEhue1J' +
-  //           'vM036DE6oZAkzo4VHJrrzuleWGBfIc1pUTPb6ieg7WjaJb58AJs7glk_',
-  //       },
-  //     );
-  //   });
+    it('should unzip v0', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV0);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJxtUNsKwyAM.Zr5EHDUFsZeZC.7j6E2toJVp3ZjL.v2dbSD2pUQyOXk5CSBp4xo' +
+            'qeoxZWDAyL2sEMkZMRtUjsKl4GOmEm0GJWLn6VN03pFYQEVKOEhrXEcHoXrjkNaA' +
+            'WqPK5mHyiw6-HS2-.0vTlhQQ2x9inYBEobyDuqqATX4mmjMIcWpueIupknEhue1J' +
+            'vM036DE6oZAkzo4VHJrrzuleWGBfIc1pUTPb6ieg7WjaJb58AJs7glk_',
+        },
+      );
+    });
 
-  //   it('should unzip empty v1', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { p: '', v: '1' });
-  //   });
+    it('should unzip empty v1', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { p: '', v: '1' });
+    });
 
-  //   it('should unzip v1', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV1);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         p: 'steel-chest*1*1',
-  //         i: 'steel-chest*1*transport-belt*cargo-wagon',
-  //         r:
-  //           'steel-chest*assembling-machine-2*effectivity-module~effectivity-' +
-  //           'module*1*speed-module~speed-module*beacon*200*100*8',
-  //         f:
-  //           '1*productivity-module~speed-module*1*speed-module*beacon_assembl' +
-  //           'ing-machine-2_steel-furnace',
-  //         s:
-  //           '1.0*2*1*=*transport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid' +
-  //           '-wagon*?*2*10*0*100*1*productivity-module',
-  //         v: '1',
-  //       },
-  //     );
-  //   });
+    it('should unzip v1', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV1);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          p: 'steel-chest*1*1',
+          i: 'steel-chest*1*transport-belt*cargo-wagon',
+          r:
+            'steel-chest*assembling-machine-2*effectivity-module~effectivity-' +
+            'module*1*speed-module~speed-module*beacon*200*100*8',
+          f:
+            '1*productivity-module~speed-module*1*speed-module*beacon_assembl' +
+            'ing-machine-2_steel-furnace',
+          s:
+            '1.0*2*1*=*transport-belt*coal*1200*100*0*0*0*1*cargo-wagon*fluid' +
+            '-wagon*?*2*10*0*100*1*productivity-module',
+          v: '1',
+        },
+      );
+    });
 
-  //   it('should unzip empty v2', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { z: 'eJwrUCszAgADVAE.' });
-  //   });
+    it('should unzip empty v2', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { z: 'eJwrUCszAgADVAE.' });
+    });
 
-  //   it('should unzip v2', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV1);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         z:
-  //           'eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78m' +
-  //           'mFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSM' +
-  //           'GkU_',
-  //       },
-  //     );
-  //   });
+    it('should unzip v2', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV1);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwdjLEKgDAMRP8mw01NB3ERSVpwFj-g4CCIiyjo1m.3KuGSXI6XM3VQqKwu-78m' +
+            'mFzZ4bBq7FOdYIghQKleNkXmiQGseJnljqSGxmF54QdnYCkaPYLpb9sDZHniBxSM' +
+            'GkU_',
+        },
+      );
+    });
 
-  //   it('should unzip empty v3', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { z: 'eJwrUCszBgADVQFA' });
-  //   });
+    it('should unzip empty v3', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { z: 'eJwrUCszBgADVQFA' });
+    });
 
-  //   it('should unzip v3', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV3);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         z:
-  //           'eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX' +
-  //           '5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6' +
-  //           'AbeMG5w_',
-  //       },
-  //     );
-  //   });
+    it('should unzip v3', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV3);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwdjL0KgEAMg9-mQ6brCeIi0t6Bs.gABw6CuPgDuvnsRilt-BLSLdVQqOzZeSeX' +
+            '5TcSTA5aDnuM3D89DDEEKLeRWZFpMYAVL4OckdB-PYw3fKUGjlIdHZj--D1Alqt6' +
+            'AbeMG5w_',
+        },
+      );
+    });
 
-  //   it('should unzip empty v4', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { p: '', v: '4' });
-  //   });
+    it('should unzip empty v4', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { p: '', v: '4' });
+    });
 
-  //   it('should unzip v4', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV3);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         p: 'steel-chest*1*1',
-  //         q: 'steel-chest*1',
-  //         i: 'steel-chest*1*transport-belt*cargo-wagon',
-  //         r: 'steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module~speed-module*beacon*200*100*8',
-  //         f:
-  //           '1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine' +
-  //           '-2_steel-furnace',
-  //         s:
-  //           '1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
-  //           'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
-  //         v: '4',
-  //       },
-  //     );
-  //   });
+    it('should unzip v4', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV3);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          p: 'steel-chest*1*1',
+          q: 'steel-chest*1',
+          i: 'steel-chest*1*transport-belt*cargo-wagon',
+          r: 'steel-chest*assembling-machine-2*effectivity-module~effectivity-module*1*speed-module~speed-module*beacon*200*100*8',
+          f:
+            '1*productivity-module~speed-module*1*speed-module*beacon_assembling-machine' +
+            '-2_steel-furnace',
+          s:
+            '1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*ca' +
+            'rgo-wagon*fluid-wagon**2*10*0*100*1*productivity-module',
+          v: '4',
+        },
+      );
+    });
 
-  //   it('should unzip empty v5', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { z: 'eJwrUCszBQADVwFC', v: '5' });
-  //   });
+    it('should unzip empty v5', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { z: 'eJwrUCszBQADVwFC', v: '5' });
+    });
 
-  //   it('should unzip v5', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV3);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         z:
-  //           'eJwdjDsKgDAQRG-zxVRJQLGx2E0gtXiAgIUgNn5Au5zdiSz7mTfMHrGHh5czGedi' +
-  //           'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4D' +
-  //           'ZYwbBA__',
-  //         v: '5',
-  //       },
-  //     );
-  //   });
+    it('should unzip v5', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV3);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwdjDsKgDAQRG-zxVRJQLGx2E0gtXiAgIUgNn5Au5zdiSz7mTfMHrGHh5czGedi' +
+            'sv0gQuUiMmhV6lwzFME5ePYgq0ciogEtVia5A8XYcphf2M7tWMoPoNXulmRMnu4D' +
+            'ZYwbBA__',
+          v: '5',
+        },
+      );
+    });
 
-  //   it('should unzip empty v6', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { p: '', v: '6' });
-  //   });
+    it('should unzip empty v6', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { p: '', v: '6' });
+    });
 
-  //   it('should unzip v6', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV6);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         p: 'steel-chest*1*1',
-  //         q: 'steel-chest*1',
-  //         e: '1*speed-module~speed-module*beacon*8',
-  //         i: 'steel-chest*1*transport-belt*cargo-wagon',
-  //         r:
-  //           'steel-chest*assembling-machine-2*effectivity-module~effectivity-' +
-  //           'module*0*200*100',
-  //         f:
-  //           '1*productivity-module~speed-module*1*speed-module*beacon_assembl' +
-  //           'ing-machine-2_steel-furnace',
-  //         s:
-  //           '1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*cargo-wagon*fluid' +
-  //           '-wagon**2*10*0*100*1*productivity-module*1',
-  //         v: '6',
-  //       },
-  //     );
-  //   });
+    it('should unzip v6', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV6);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          p: 'steel-chest*1*1',
+          q: 'steel-chest*1',
+          e: '1*speed-module~speed-module*beacon*8',
+          i: 'steel-chest*1*transport-belt*cargo-wagon',
+          r:
+            'steel-chest*assembling-machine-2*effectivity-module~effectivity-' +
+            'module*0*200*100',
+          f:
+            '1*productivity-module~speed-module*1*speed-module*beacon_assembl' +
+            'ing-machine-2_steel-furnace',
+          s:
+            '1.0*2*1*%3D*transport-belt*coal*1200*100*0*0*0*cargo-wagon*fluid' +
+            '-wagon**2*10*0*100*1*productivity-module*1',
+          v: '6',
+        },
+      );
+    });
 
-  //   it('should unzip empty v7', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { z: 'eJwrUCszBwADWQFE', v: '7' });
-  //   });
+    it('should unzip empty v7', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { z: 'eJwrUCszBwADWQFE', v: '7' });
+    });
 
-  //   it('should unzip v7', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV6);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         z:
-  //           'eJwdjbEKg1AMRf8mw5kSB-3ikPjAWfwAoWChdGkr6Oa3m-dyueGcS75Di2HyK5G5' +
-  //           'GuM54jzkGfK-2YDLP2ngp6M0qpiqvIySbi7wJZZJtiaPvvrMB.Gh2poZkKh2q1tK' +
-  //           'ftq7C.WaHBw_',
-  //         v: '7',
-  //       },
-  //     );
-  //   });
+    it('should unzip v7', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV6);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwdjbEKg1AMRf8mw5kSB-3ikPjAWfwAoWChdGkr6Oa3m-dyueGcS75Di2HyK5G5' +
+            'GuM54jzkGfK-2YDLP2ngp6M0qpiqvIySbi7wJZZJtiaPvvrMB.Gh2poZkKh2q1tK' +
+            'ftq7C.WaHBw_',
+          v: '7',
+        },
+      );
+    });
 
-  //   it('should unzip empty v8', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { z: 'eJwrUCuzAAADWgFF', v: '8' });
-  //   });
+    it('should unzip empty v8', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { z: 'eJwrUCuzAAADWgFF', v: '8' });
+    });
 
-  //   it('should unzip v8', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV8);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         z:
-  //           'eJwli0EKwlAMRG-TxYNC0kXpTpIWuhYPUBAUxI0o2F3P3vkayAwM772mgSDsFiz7' +
-  //           'QjLatezxWyfS3nNBkXvi9O6Eu92DWbAUcq31bJ8T.V.gslFPGu1KyWL12YC2yVd2' +
-  //           'Kp19xwOrTh0O',
-  //         v: '8',
-  //       },
-  //     );
-  //   });
+    it('should unzip v8', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV8);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwli0EKwlAMRG-TxYNC0kXpTpIWuhYPUBAUxI0o2F3P3vkayAwM772mgSDsFiz7' +
+            'QjLatezxWyfS3nNBkXvi9O6Eu92DWbAUcq31bJ8T.V.gslFPGu1KyWL12YC2yVd2' +
+            'Kp19xwOrTh0O',
+          v: '8',
+        },
+      );
+    });
 
-  //   it('should unzip empty v9', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { z: 'eJwrUCuzBAADWwFG', v: '9' });
-  //   });
+    it('should unzip empty v9', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { z: 'eJwrUCuzBAADWwFG', v: '9' });
+    });
 
-  //   it('should unzip v9', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV8);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         z:
-  //           'eJwljEEKwlAMRG-TxQMh6ULsSpIWuhYP8EGoIG5EQXc9u.N1IBMY5s1j2hOErcGy' +
-  //           'LSQHu5TdfulE2nMuKHJLnMGdcG9Jl12DWYxIslU72evI8Oc4f6g7HXK5NtTVZS.0' +
-  //           'TDPynZ5k7.ELdcIegQ__',
-  //         v: '9',
-  //       },
-  //     );
-  //   });
+    it('should unzip v9', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV8);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z:
+            'eJwljEEKwlAMRG-TxQMh6ULsSpIWuhYP8EGoIG5EQXc9u.N1IBMY5s1j2hOErcGy' +
+            'LSQHu5TdfulE2nMuKHJLnMGdcG9Jl12DWYxIslU72evI8Oc4f6g7HXK5NtTVZS.0' +
+            'TDPynZ5k7.ELdcIegQ__',
+          v: '9',
+        },
+      );
+    });
 
-  //   it('should unzip empty v10', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual({});
-  //       done();
-  //     });
-  //     mockRoute.next({}, { z: 'eJyrsjU0AAADNQEZ', v: '10' });
-  //   });
+    it('should unzip empty v10', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockEmpty);
+        done();
+      });
+      mockRoute.next({}, { z: 'eJyrsjU0AAADNQEZ', v: '10' });
+    });
 
-  //   it('should unzip v10', (done) => {
-  //     dispatch.and.callFake((v) => {
-  //       expect(v).toEqual(mockStateV10);
-  //       done();
-  //     });
-  //     mockRoute.next(
-  //       {},
-  //       {
-  //         z: 'eJwdjDsKAkEQRG.TwQOhawIx2aBnByaWPcCAsIKIIAqaeXbpKXhJ.Z7rESGmZLtwgtMQhbBLtdssrASyV6uIxCnuKLHrQvt1RIw6zvYOylxsX-qdwOdlBdGylXF6uXYO8pR95PYo9FGIQf8D4wMhKw__',
-  //         v: '9',
-  //       },
-  //     );
-  //   });
-  // });
+    it('should unzip v10', (done) => {
+      dispatch.and.callFake((v) => {
+        expect(v).toEqual(mockStateV10);
+        done();
+      });
+      mockRoute.next(
+        {},
+        {
+          z: 'eJwdjDsKAkEQRG.TwQOhawIx2aBnByaWPcCAsIKIIAqaeXbpKXhJ.Z7rESGmZLtwgtMQhbBLtdssrASyV6uIxCnuKLHrQvt1RIw6zvYOylxsX-qdwOdlBdGylXF6uXYO8pR95PYo9FGIQf8D4wMhKw__',
+          v: '9',
+        },
+      );
+    });
+  });
 
-  // describe('dispatch', () => {
-  //   it('should dispatch a state', () => {
-  //     spyOn(mockStore, 'dispatch');
-  //     service.dispatch(mockState);
-  //     expect(mockStore.dispatch).toHaveBeenCalledWith(
-  //       load({ partial: mockState }),
-  //     );
-  //   });
-  // });
+  describe('dispatch', () => {
+    it('should dispatch a state', () => {
+      const load: jasmine.Spy[] = [];
+      load.push(spyOn(service.objectivesSvc, 'load'));
+      load.push(spyOn(service.itemsSvc, 'load'));
+      load.push(spyOn(service.recipesSvc, 'load'));
+      load.push(spyOn(service.machinesSvc, 'load'));
+      load.push(spyOn(service.settingsSvc, 'load'));
+      spyOn(service.ready, 'set');
+      service.dispatch(mockEmpty);
+      load.forEach((s) => {
+        expect(s).toHaveBeenCalledWith(undefined);
+      });
+      expect(service.ready.set).toHaveBeenCalledWith(true);
+    });
+  });
 
   describe('beaconModuleMap', () => {
     it('should return undefined for beacons without modules', () => {

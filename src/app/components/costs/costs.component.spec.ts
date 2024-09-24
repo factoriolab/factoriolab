@@ -52,13 +52,13 @@ describe('CostsComponent', () => {
     });
   });
 
-  // describe('save', () => {
-  //   it('should dispatch the action', () => {
-  //     spyOn(component.store, 'dispatch');
-  //     component.save();
-  //     expect(component.store.dispatch).toHaveBeenCalledWith(
-  //       setCosts({ costs: component.editValue }),
-  //     );
-  //   });
-  // });
+  describe('save', () => {
+    it('should dispatch the action', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.save();
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        costs: component.editValue,
+      });
+    });
+  });
 });

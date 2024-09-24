@@ -52,13 +52,13 @@ describe('FlowSettingsComponent', () => {
     });
   });
 
-  // describe('save', () => {
-  //   it('should dispatch the action', () => {
-  //     spyOn(component.store, 'dispatch');
-  //     component.onHide();
-  //     expect(component.store.dispatch).toHaveBeenCalledWith(
-  //       setFlowSettings({ flowSettings: component.editValue }),
-  //     );
-  //   });
-  // });
+  describe('save', () => {
+    it('should dispatch the action', () => {
+      spyOn(component.preferencesSvc, 'apply');
+      component.onHide();
+      expect(component.preferencesSvc.apply).toHaveBeenCalledWith({
+        flowSettings: component.editValue,
+      });
+    });
+  });
 });

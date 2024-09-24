@@ -298,7 +298,7 @@ describe('SettingsComponent', () => {
       expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
         'machineRankIds',
         [
-          ItemId.AssemblingMachine1,
+          ItemId.AssemblingMachine3,
           ItemId.ElectricFurnace,
           ItemId.ElectricMiningDrill,
           ItemId.AssemblingMachine2,
@@ -312,7 +312,7 @@ describe('SettingsComponent', () => {
     it('should update the set and pass to the store action', () => {
       spyOn(component.settingsSvc, 'updateField');
       component.setMachine(
-        ItemId.AssemblingMachine1,
+        ItemId.AssemblingMachine3,
         ItemId.AssemblingMachine2,
         undefined,
       );
@@ -331,7 +331,7 @@ describe('SettingsComponent', () => {
   describe('removeMachine', () => {
     it('should update the set and pass to the store action', () => {
       spyOn(component.settingsSvc, 'updateField');
-      component.removeMachine(ItemId.AssemblingMachine1, undefined);
+      component.removeMachine(ItemId.AssemblingMachine3, undefined);
       expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
         'machineRankIds',
         [ItemId.ElectricFurnace, ItemId.ElectricMiningDrill],

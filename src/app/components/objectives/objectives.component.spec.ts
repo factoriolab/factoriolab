@@ -393,7 +393,7 @@ describe('ObjectivesComponent', () => {
         Mocks.adjustedDataset,
       );
       expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('0', {
-        value: rational(1n, 900n),
+        value: rational(1n, 2700n),
       });
     });
 
