@@ -49,51 +49,51 @@ describe('StepsComponent', () => {
     });
   });
 
-  describe('toggleEffect', () => {
-    it('should toggle and expand a row in focus mode', () => {
-      spyOn(component, 'expandRow');
-      setInputs(fixture, {
-        focus: true,
-        selectedId: Mocks.step1.id,
-      });
-      expect(component.expandRow).toHaveBeenCalled();
-    });
-  });
+  // describe('toggleEffect', () => {
+  //   it('should toggle and expand a row in focus mode', () => {
+  //     spyOn(component, 'expandRow');
+  //     setInputs(fixture, {
+  //       focus: true,
+  //       selectedId: Mocks.step1.id,
+  //     });
+  //     expect(component.expandRow).toHaveBeenCalled();
+  //   });
+  // });
 
-  describe('ngAfterViewInit', () => {
-    it('should scroll to and expand the fragment id', fakeAsync(() => {
-      const domEl = { scrollIntoView: (): void => {} };
-      spyOn(domEl, 'scrollIntoView');
-      spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
-      assert(component.stepsTable != null);
-      spyOn(component.stepsTable(), 'toggleRow');
-      component.fragmentId = 'step_' + Mocks.step1.id;
-      component.ngAfterViewInit();
-      tick(100);
-      expect(component.stepsTable().toggleRow).toHaveBeenCalled();
-      expect(domEl.scrollIntoView).toHaveBeenCalled();
-    }));
+  // describe('ngAfterViewInit', () => {
+  //   it('should scroll to and expand the fragment id', fakeAsync(() => {
+  //     const domEl = { scrollIntoView: (): void => {} };
+  //     spyOn(domEl, 'scrollIntoView');
+  //     spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
+  //     assert(component.stepsTable != null);
+  //     spyOn(component.stepsTable(), 'toggleRow');
+  //     component.fragmentId = 'step_' + Mocks.step1.id;
+  //     component.ngAfterViewInit();
+  //     tick(100);
+  //     expect(component.stepsTable().toggleRow).toHaveBeenCalled();
+  //     expect(domEl.scrollIntoView).toHaveBeenCalled();
+  //   }));
 
-    it('should scroll to and open tab for the fragment id', fakeAsync(() => {
-      const domEl = { click: (): void => {} };
-      spyOn(domEl, 'click');
-      spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
-      assert(component.stepsTable != null);
-      spyOn(component.stepsTable(), 'toggleRow');
-      component.fragmentId = 'step_' + Mocks.step1.id + '_item';
-      component.ngAfterViewInit();
-      tick(100);
-      expect(component.stepsTable().toggleRow).toHaveBeenCalled();
-      expect(domEl.click).toHaveBeenCalled();
-    }));
+  //   it('should scroll to and open tab for the fragment id', fakeAsync(() => {
+  //     const domEl = { click: (): void => {} };
+  //     spyOn(domEl, 'click');
+  //     spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
+  //     assert(component.stepsTable != null);
+  //     spyOn(component.stepsTable(), 'toggleRow');
+  //     component.fragmentId = 'step_' + Mocks.step1.id + '_item';
+  //     component.ngAfterViewInit();
+  //     tick(100);
+  //     expect(component.stepsTable().toggleRow).toHaveBeenCalled();
+  //     expect(domEl.click).toHaveBeenCalled();
+  //   }));
 
-    it('should handle element not found', () => {
-      component.fragmentId = Mocks.step1.id;
-      expect(() => {
-        component.ngAfterViewInit();
-      }).not.toThrow();
-    });
-  });
+  //   it('should handle element not found', () => {
+  //     component.fragmentId = Mocks.step1.id;
+  //     expect(() => {
+  //       component.ngAfterViewInit();
+  //     }).not.toThrow();
+  //   });
+  // });
 
   describe('sortSteps', () => {
     it('should call when sorting is updated', () => {

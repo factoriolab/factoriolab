@@ -92,16 +92,17 @@ export class FlowComponent implements AfterViewInit {
   loading = signal(true);
   selectedId = signal<string | null>(null);
   resize$ = new Subject<void>();
+  data$ = combineLatest([
+    this.flowSvc.flowData$,
+    toObservable(this.preferencesSvc.flowSettings),
+  ]);
 
   @HostListener('window:resize') onResize(): void {
     this.resize$.next();
   }
 
   ngAfterViewInit(): void {
-    combineLatest([
-      this.flowSvc.flowData$,
-      toObservable(this.preferencesSvc.flowSettings),
-    ])
+    this.data$
       .pipe(debounceTime(0), takeUntilDestroyed(this.destroyRef))
       .subscribe((args) => {
         this.rebuildChart(...args);

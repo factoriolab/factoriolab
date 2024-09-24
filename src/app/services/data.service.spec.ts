@@ -1,12 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
+import { TestModule } from '~/tests';
+
 import { DataService } from './data.service';
 
 describe('DataService', () => {
   let service: DataService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(DataService);
   });
 
