@@ -367,7 +367,7 @@
               type="button"
               class="ms-2 p-button-rounded"
               icon="fa-solid fa-rotate-left"
-              (click)="resetItem(id())"
+              (click)="itemsSvc.resetId(id())"
             ></button>
           </div>
         </th>
@@ -488,7 +488,7 @@
               type="button"
               class="p-button-rounded justify-self-end"
               icon="fa-solid fa-rotate-left"
-              (click)="resetMachine(id())"
+              (click)="machinesSvc.resetId(id())"
             ></button>
           </div>
         </th>

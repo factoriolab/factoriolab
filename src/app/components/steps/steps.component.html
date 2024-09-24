@@ -10,7 +10,7 @@
   [paginator]="!focus() && !preferences().disablePaginator"
   [rows]="preferences().rows"
   [rowsPerPageOptions]="[25, 50, 100, 1000]"
-  (rowsChange)="setRows($event)"
+  (rowsChange)="preferencesSvc.apply({ rows: $event })"
   [showCurrentPageReport]="true"
   (sortFunction)="sortSteps$.next($event)"
 >
@@ -87,7 +87,7 @@
               class="ms-2 p-button-text p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'steps.itemsUndoTooltip' | translate"
-              (click)="resetExcludedItems(); $event.stopImmediatePropagation()"
+              (click)="resetExcludedItems($event)"
             ></button>
           }
         </div>
@@ -108,7 +108,7 @@
                 class="ms-2 p-button-text p-button-rounded"
                 icon="fa-solid fa-rotate-left"
                 [pTooltip]="'steps.beltsUndoTooltip' | translate"
-                (click)="resetBelts(); $event.stopImmediatePropagation()"
+                (click)="resetBelts($event)"
               ></button>
             }
           </div>
@@ -130,7 +130,7 @@
                 class="ms-2 p-button-text p-button-rounded"
                 icon="fa-solid fa-rotate-left"
                 [pTooltip]="'steps.wagonsUndoTooltip' | translate"
-                (click)="resetWagons(); $event.stopImmediatePropagation()"
+                (click)="resetWagons($event)"
               ></button>
             }
           </div>
@@ -151,7 +151,7 @@
               class="ms-2 p-button-text p-button-rounded"
               icon="fa-solid fa-rotate-left"
               [pTooltip]="'steps.machinesUndoTooltip' | translate"
-              (click)="resetMachines(); $event.stopImmediatePropagation()"
+              (click)="resetMachines($event)"
             ></button>
           }
         </div>
@@ -379,7 +379,12 @@
                       [ngModel]="beltId"
                       [options]="options().belts"
                       (onChange)="
-                        setBelt(step.itemId, $event.value, defaultBeltId)
+                        itemsSvc.updateEntityField(
+                          step.itemId,
+                          'beltId',
+                          $event.value,
+                          defaultBeltId
+                        )
                       "
                     >
                       <ng-template pTemplate="selectedItem" let-item>
@@ -423,7 +428,12 @@
                         [ngModel]="beltId"
                         [options]="options().pipes"
                         (onChange)="
-                          setBelt(step.itemId, $event.value, defaultPipeId)
+                          itemsSvc.updateEntityField(
+                            step.itemId,
+                            'beltId',
+                            $event.value,
+                            defaultPipeId
+                          )
                         "
                       >
                         <ng-template pTemplate="selectedItem" let-item>
@@ -491,7 +501,12 @@
                       [ngModel]="wagonId"
                       [options]="options().cargoWagons"
                       (onChange)="
-                        setWagon(step.itemId, $event.value, defaultCargoWagonId)
+                        itemsSvc.updateEntityField(
+                          step.itemId,
+                          'wagonId',
+                          $event.value,
+                          defaultCargoWagonId
+                        )
                       "
                     >
                       <ng-template pTemplate="selectedItem" let-item>
@@ -538,8 +553,9 @@
                         [ngModel]="wagonId"
                         [options]="options().fluidWagons"
                         (onChange)="
-                          setWagon(
+                          itemsSvc.updateEntityField(
                             step.itemId,
+                            'wagonId',
                             $event.value,
                             defaultFluidWagonId
                           )
@@ -614,7 +630,7 @@
                     class="hover-action p-button-text"
                     [pTooltip]="tooltip"
                     (click)="
-                      addObjective({
+                      objectivesSvc.add({
                         targetId: step.recipeId,
                         unit: ObjectiveUnit.Machines,
                       })

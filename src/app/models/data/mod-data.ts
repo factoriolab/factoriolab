@@ -1,4 +1,4 @@
-import { Entities } from '../entities';
+import { Entities } from '../utils';
 import { CategoryJson } from './category';
 import { DefaultsJson } from './defaults';
 import { IconJson } from './icon';

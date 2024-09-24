@@ -220,7 +220,7 @@
             type="button"
             class="p-button-rounded"
             icon="fa-solid fa-rotate-left"
-            (click)="resetRecipe(id())"
+            (click)="recipesSvc.resetId(id())"
           ></button>
         </div>
       </th>
@@ -360,7 +360,7 @@
         <td>
           <lab-input-number
             [value]="cost"
-            (setValue)="setRecipeCost(id(), $event)"
+            (setValue)="recipesSvc.updateEntityField(id(), 'cost', $event)"
           ></lab-input-number>
         </td>
       </tr>

@@ -12,8 +12,8 @@ import { Module } from './data/module';
 import { AdjustedRecipe, Recipe } from './data/recipe';
 import { Technology } from './data/technology';
 import { Defaults } from './defaults';
-import { Entities } from './entities';
 import { Game } from './enum/game';
+import { Entities } from './utils';
 
 export interface Dataset {
   game: Game;

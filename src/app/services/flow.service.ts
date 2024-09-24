@@ -1,26 +1,22 @@
 import { inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { combineLatest, map, switchMap } from 'rxjs';
 
 import { MIN_LINK_VALUE } from '~/models/constants';
 import { Icon } from '~/models/data/icon';
 import { AdjustedDataset } from '~/models/dataset';
-import { Entities } from '~/models/entities';
 import { LinkValue } from '~/models/enum/link-value';
 import { FlowData } from '~/models/flow';
 import { Rational, rational } from '~/models/rational';
 import { ColumnsState } from '~/models/settings/column-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
 import { Step } from '~/models/step';
-import { selectSteps } from '~/store/objectives/objectives.selectors';
-import { PreferencesState } from '~/store/preferences/preferences.reducer';
-import { preferencesState } from '~/store/preferences/preferences.selectors';
-import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
-import {
-  selectDisplayRateInfo,
-  selectSettings,
-} from '~/store/settings/settings.selectors';
+import { Entities } from '~/models/utils';
 
+import { ObjectivesService } from './objectives.service';
+import { PreferencesService, PreferencesState } from './preferences.service';
+import { RecipesService } from './recipes.service';
+import { SettingsService } from './settings.service';
 import { ThemeService, ThemeValues } from './theme.service';
 import { TranslateService } from './translate.service';
 
@@ -28,18 +24,21 @@ import { TranslateService } from './translate.service';
   providedIn: 'root',
 })
 export class FlowService {
-  translateSvc = inject(TranslateService);
-  store = inject(Store);
+  objectivesSvc = inject(ObjectivesService);
+  preferencesSvc = inject(PreferencesService);
+  recipesSvc = inject(RecipesService);
+  settingsSvc = inject(SettingsService);
   themeSvc = inject(ThemeService);
+  translateSvc = inject(TranslateService);
 
   flowData$ = combineLatest({
-    steps: this.store.select(selectSteps),
-    suffix: this.store
-      .select(selectDisplayRateInfo)
-      .pipe(switchMap((dr) => this.translateSvc.get(dr.suffix))),
-    settings: this.store.select(selectSettings),
-    preferences: this.store.select(preferencesState),
-    data: this.store.select(selectAdjustedDataset),
+    steps: toObservable(this.objectivesSvc.steps),
+    suffix: toObservable(this.settingsSvc.displayRateInfo).pipe(
+      switchMap((dr) => this.translateSvc.get(dr.suffix)),
+    ),
+    settings: toObservable(this.settingsSvc.settings),
+    preferences: toObservable(this.preferencesSvc.state),
+    data: toObservable(this.recipesSvc.adjustedDataset),
     themeValues: this.themeSvc.themeValues$,
   }).pipe(
     map(({ steps, suffix, settings, preferences, data, themeValues }) =>

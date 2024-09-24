@@ -1,4 +1,4 @@
-import { Entities } from '../entities';
+import { Entities } from '../utils';
 
 export interface ModI18n {
   categories: Entities;

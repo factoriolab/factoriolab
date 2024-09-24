@@ -2,7 +2,6 @@
 const eslint = require('@eslint/js');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
-const ngrx = require('@ngrx/eslint-plugin/v9');
 const simpleImportSort = require('eslint-plugin-simple-import-sort');
 
 /**
@@ -19,7 +18,6 @@ module.exports = tseslint.config(
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
       ...angular.configs.tsRecommended,
-      ...ngrx.configs.all,
     ],
     processor: angular.processInlineTemplates,
     languageOptions: {

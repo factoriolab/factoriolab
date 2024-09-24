@@ -1,14 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   HostBinding,
   inject,
   Input,
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
 import { RouterLink } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { SplitButtonModule } from 'primeng/splitbutton';
@@ -22,13 +22,10 @@ import { isRecipeObjective } from '~/models/objective';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
+import { ObjectivesService } from '~/services/objectives.service';
+import { PreferencesService } from '~/services/preferences.service';
+import { SettingsService } from '~/services/settings.service';
 import { TranslateService } from '~/services/translate.service';
-import { selectBaseObjectives } from '~/store/objectives/objectives.selectors';
-import {
-  selectDataset,
-  selectGame,
-  selectGameInfo,
-} from '~/store/settings/settings.selectors';
 
 interface MenuLink {
   label: string;
@@ -53,17 +50,19 @@ interface MenuLink {
 })
 export class HeaderComponent {
   title = inject(Title);
-  store = inject(Store);
   contentSvc = inject(ContentService);
+  objectivesSvc = inject(ObjectivesService);
+  preferencesSvc = inject(PreferencesService);
+  settingsSvc = inject(SettingsService);
   translateSvc = inject(TranslateService);
 
   @HostBinding('class.sticky') @Input() sticky = false;
   @HostBinding('class.settings-xl-hidden') @Input() settingsXlHidden = false;
 
-  gameInfo = this.store.selectSignal(selectGameInfo);
+  gameInfo = this.settingsSvc.gameInfo;
   gameOptions = toSignal(
     combineLatest([
-      this.store.select(selectGame),
+      toObservable(this.settingsSvc.game),
       ...gameOptions.map((o) => this.translateSvc.get(gameInfo[o.value].label)),
     ]).pipe(
       map(([game, ...labels]): MenuItem[] => {
@@ -100,22 +99,19 @@ export class HeaderComponent {
   ];
 
   constructor() {
-    combineLatest({
-      objectives: this.store.select(selectBaseObjectives),
-      data: this.store.select(selectDataset),
-      lang: this.translateSvc.lang$,
-    })
-      .pipe(takeUntilDestroyed())
-      .subscribe(({ objectives, data }) => {
-        const name = objectives
-          .map((o) =>
-            isRecipeObjective(o)
-              ? data.recipeEntities[o.targetId]?.name
-              : data.itemEntities[o.targetId]?.name,
-          )
-          .find((n) => n != null);
-        this.title.setTitle(name != null ? `${name} | ${APP}` : APP);
-      });
+    effect(() => {
+      const objectives = this.objectivesSvc.baseObjectives();
+      const data = this.settingsSvc.dataset();
+
+      const name = objectives
+        .map((o) =>
+          isRecipeObjective(o)
+            ? data.recipeEntities[o.targetId]?.name
+            : data.itemEntities[o.targetId]?.name,
+        )
+        .find((n) => n != null);
+      this.title.setTitle(name != null ? `${name} | ${APP}` : APP);
+    });
   }
 
   cancelRouterLink(event: Event): void {

@@ -16,7 +16,6 @@ import {
   RecipeJson,
 } from '~/models/data/recipe';
 import { AdjustedDataset, Dataset } from '~/models/dataset';
-import { Entities } from '~/models/entities';
 import { EnergyType } from '~/models/enum/energy-type';
 import { Game } from '~/models/enum/game';
 import { ItemId } from '~/models/enum/item-id';
@@ -34,9 +33,10 @@ import {
 } from '~/models/settings/module-settings';
 import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
-import { ItemsState } from '~/store/items/items.reducer';
-import { MachinesState } from '~/store/machines/machines.reducer';
-import { RecipesState } from '~/store/recipes/recipes.reducer';
+import { Entities } from '~/models/utils';
+import { ItemsState } from '~/services/items.service';
+import { MachinesState } from '~/services/machines.service';
+import { RecipesState } from '~/services/recipes.service';
 
 export class RecipeUtility {
   static MIN_FACTOR = rational(1n, 5n);

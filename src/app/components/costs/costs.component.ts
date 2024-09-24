@@ -1,17 +1,19 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
 
+import { spread } from '~/helpers';
 import { rational } from '~/models/rational';
 import { CostKey, CostSettings } from '~/models/settings/cost-settings';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
-import { setCosts } from '~/store/settings/settings.actions';
-import { initialSettingsState } from '~/store/settings/settings.reducer';
+import {
+  initialSettingsState,
+  SettingsService,
+} from '~/services/settings.service';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { DialogComponent } from '../modal';
@@ -33,10 +35,10 @@ import { DialogComponent } from '../modal';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CostsComponent extends DialogComponent {
-  store = inject(Store);
   contentSvc = inject(ContentService);
+  settingsSvc = inject(SettingsService);
 
-  editValue = { ...initialSettingsState.costs };
+  editValue = spread(initialSettingsState.costs);
 
   rational = rational;
 
@@ -61,6 +63,6 @@ export class CostsComponent extends DialogComponent {
 
   save(): void {
     const costs = this.editValue;
-    this.store.dispatch(setCosts({ costs }));
+    this.settingsSvc.apply({ costs });
   }
 }

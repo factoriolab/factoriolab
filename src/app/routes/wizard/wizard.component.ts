@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
@@ -12,21 +11,15 @@ import { StepsModule } from 'primeng/steps';
 import { InputNumberComponent } from '~/components/input-number/input-number.component';
 import { PickerComponent } from '~/components/picker/picker.component';
 import { DropdownTranslateDirective } from '~/directives/dropdown-translate.directive';
-import { DisplayRate, displayRateOptions } from '~/models/enum/display-rate';
+import { displayRateOptions } from '~/models/enum/display-rate';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
-import { Objective } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { IconClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { create } from '~/store/objectives/objectives.actions';
-import { selectAvailableItems } from '~/store/recipes/recipes.selectors';
-import { setDisplayRate } from '~/store/settings/settings.actions';
-import {
-  selectAvailableRecipes,
-  selectDataset,
-  selectDisplayRate,
-} from '~/store/settings/settings.selectors';
+import { ObjectivesService } from '~/services/objectives.service';
+import { RecipesService } from '~/services/recipes.service';
+import { SettingsService } from '~/services/settings.service';
 
 export type WizardState = 'type' | 'item' | 'recipe';
 
@@ -54,12 +47,14 @@ export type WizardState = 'type' | 'item' | 'recipe';
 export class WizardComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
-  store = inject(Store);
+  objectiveSvc = inject(ObjectivesService);
+  recipesSvc = inject(RecipesService);
+  settingsSvc = inject(SettingsService);
 
-  itemIds = this.store.selectSignal(selectAvailableItems);
-  data = this.store.selectSignal(selectDataset);
-  recipeIds = this.store.selectSignal(selectAvailableRecipes);
-  displayRate = this.store.selectSignal(selectDisplayRate);
+  itemIds = this.recipesSvc.availableItemIds;
+  recipeIds = this.settingsSvc.availableRecipeIds;
+  data = this.settingsSvc.dataset;
+  displayRate = this.settingsSvc.displayRate;
 
   id = '';
   value = rational.one;
@@ -74,13 +69,8 @@ export class WizardComponent {
     this.state = state;
   }
 
-  /** Action Dispatch Methods */
-  setDisplayRate(displayRate: DisplayRate, previous: DisplayRate): void {
-    this.store.dispatch(setDisplayRate({ displayRate, previous }));
-  }
-
   createItemObjective(targetId: string): void {
-    this.createObjective({
+    this.objectiveSvc.create({
       id: '0',
       targetId,
       value: this.value,
@@ -94,7 +84,7 @@ export class WizardComponent {
   }
 
   createRecipeObjective(targetId: string): void {
-    this.createObjective({
+    this.objectiveSvc.create({
       id: '0',
       targetId,
       value: this.value,
@@ -105,10 +95,5 @@ export class WizardComponent {
       relativeTo: this.route,
       queryParamsHandling: 'preserve',
     });
-  }
-
-  /** Action Dispatch Methods */
-  createObjective(objective: Objective): void {
-    this.store.dispatch(create({ objective }));
   }
 }

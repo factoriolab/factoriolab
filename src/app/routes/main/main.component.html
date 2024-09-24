@@ -3,7 +3,7 @@
   [settingsXlHidden]="contentSvc.settingsXlHidden()"
 ></lab-header>
 
-@if (errorSvc.message(); as message) {
+@if (errorSvc.message$ | async; as message) {
   <p-dialog
     [visible]="true"
     [modal]="true"

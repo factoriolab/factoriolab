@@ -1,17 +1,20 @@
 import { inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { first } from 'rxjs';
 import { data } from 'src/data';
 
-import { asString, coalesce, prune } from '~/helpers';
-import { ZARRAYSEP, ZEMPTY, ZFIELDSEP, ZTRUE } from '~/models/constants';
+import { asString, coalesce, prune, toEntities } from '~/helpers';
+import {
+  DEFAULT_MOD,
+  ZARRAYSEP,
+  ZEMPTY,
+  ZFIELDSEP,
+  ZTRUE,
+} from '~/models/constants';
 import { ModData } from '~/models/data/mod-data';
-import { toEntities } from '~/models/entities';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ZipVersion } from '~/models/enum/zip-version';
 import { LabParams, Params } from '~/models/lab-params';
-import { Optional } from '~/models/optional';
-import { initialSettingsState } from '~/store/settings/settings.reducer';
+import { Optional } from '~/models/utils';
 
 import { AnalyticsService } from './analytics.service';
 import { CompressionService } from './compression.service';
@@ -59,7 +62,6 @@ enum MigrationWarning {
   providedIn: 'root',
 })
 export class MigrationService {
-  store = inject(Store);
   analyticsSvc = inject(AnalyticsService);
   compressionSvc = inject(CompressionService);
   contentSvc = inject(ContentService);
@@ -70,7 +72,7 @@ export class MigrationService {
   migrate(modId: string | undefined, params: Params): MigrationResult {
     if (Object.keys(params).length === 0)
       return {
-        modId: modId ?? initialSettingsState.modId,
+        modId: modId ?? DEFAULT_MOD,
         params: {},
         isBare: true,
       };

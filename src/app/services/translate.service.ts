@@ -12,7 +12,7 @@ import {
 } from 'rxjs';
 
 import { coalesce } from '~/helpers';
-import { Entities } from '~/models/entities';
+import { Entities } from '~/models/utils';
 
 export const DEFAULT_LANGUAGE = new InjectionToken<string>('DEFAULT_LANGUAGE');
 

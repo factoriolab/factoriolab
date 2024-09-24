@@ -7,7 +7,6 @@ import {
   NgZone,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -23,10 +22,9 @@ import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
 import { ErrorService } from '~/services/error.service';
+import { ObjectivesService } from '~/services/objectives.service';
+import { SettingsService } from '~/services/settings.service';
 import { TranslateService } from '~/services/translate.service';
-import { reset } from '~/store/app.actions';
-import { selectMatrixResult } from '~/store/objectives/objectives.selectors';
-import { selectGameInfo, selectMod } from '~/store/settings/settings.selectors';
 
 @Component({
   selector: 'lab-main',
@@ -51,14 +49,15 @@ export class MainComponent {
   ngZone = inject(NgZone);
   ref = inject(ChangeDetectorRef);
   router = inject(Router);
-  store = inject(Store);
   contentSvc = inject(ContentService);
   errorSvc = inject(ErrorService);
+  objectivesSvc = inject(ObjectivesService);
+  settingsSvc = inject(SettingsService);
   translateSvc = inject(TranslateService);
 
-  gameInfo = this.store.selectSignal(selectGameInfo);
-  mod = this.store.selectSignal(selectMod);
-  result = this.store.selectSignal(selectMatrixResult);
+  mod = this.settingsSvc.mod;
+  gameInfo = this.settingsSvc.gameInfo;
+  result = this.objectivesSvc.matrixResult;
 
   isResetting = false;
 
@@ -94,9 +93,8 @@ export class MainComponent {
     // Give button loading indicator a chance to start
     setTimeout(() => {
       this.ngZone.run(() => {
-        this.errorSvc.message.set(null);
-        void this.router.navigateByUrl(this.gameInfo().route);
-        this.store.dispatch(reset());
+        this.errorSvc.message$.next(undefined);
+        void this.router.navigate([this.gameInfo().route]);
         this.isResetting = false;
       });
     }, 10);

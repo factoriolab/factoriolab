@@ -6,7 +6,6 @@ import {
   inject,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { Message } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -15,12 +14,12 @@ import { MessagesModule } from 'primeng/messages';
 import { OrderListModule } from 'primeng/orderlist';
 import { ToggleButtonModule } from 'primeng/togglebutton';
 import { TooltipModule } from 'primeng/tooltip';
-import { combineLatest, EMPTY, first, map, Observable, switchMap } from 'rxjs';
+import { combineLatest, EMPTY, first, map, Observable } from 'rxjs';
 
 import { DropdownTranslateDirective } from '~/directives/dropdown-translate.directive';
 import { NoDragDirective } from '~/directives/no-drag.directive';
 import { AdjustedDataset } from '~/models/dataset';
-import { DisplayRate, displayRateOptions } from '~/models/enum/display-rate';
+import { displayRateOptions } from '~/models/enum/display-rate';
 import { MaximizeType } from '~/models/enum/maximize-type';
 import {
   ObjectiveType,
@@ -29,46 +28,19 @@ import {
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { MatrixResult } from '~/models/matrix-result';
-import { Objective, ObjectiveBase } from '~/models/objective';
-import { Rational, rational } from '~/models/rational';
+import { Objective } from '~/models/objective';
+import { rational } from '~/models/rational';
 import { SettingsComplete } from '~/models/settings/settings-complete';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
+import { ItemsService } from '~/services/items.service';
+import { ObjectivesService } from '~/services/objectives.service';
+import { PreferencesService } from '~/services/preferences.service';
+import { RecipesService } from '~/services/recipes.service';
+import { SettingsService } from '~/services/settings.service';
 import { TrackService } from '~/services/track.service';
 import { TranslateService } from '~/services/translate.service';
-import { selectItemsState } from '~/store/items/items.selectors';
-import {
-  add,
-  remove,
-  setOrder,
-  setTarget,
-  setType,
-  setUnit,
-  setValue,
-} from '~/store/objectives/objectives.actions';
-import {
-  selectMatrixResult,
-  selectObjectives,
-} from '~/store/objectives/objectives.selectors';
-import { setPaused } from '~/store/preferences/preferences.actions';
-import {
-  selectConvertObjectiveValues,
-  selectPaused,
-} from '~/store/preferences/preferences.selectors';
-import {
-  selectAdjustedDataset,
-  selectAvailableItems,
-} from '~/store/recipes/recipes.selectors';
-import { setDisplayRate } from '~/store/settings/settings.actions';
-import {
-  selectAvailableRecipes,
-  selectBeltSpeed,
-  selectDisplayRateInfo,
-  selectMaximizeType,
-  selectObjectiveUnitOptions,
-  selectSettings,
-} from '~/store/settings/settings.selectors';
 import { RateUtility } from '~/utilities/rate.utility';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
@@ -101,35 +73,35 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ObjectivesComponent {
-  store = inject(Store);
   contentSvc = inject(ContentService);
+  itemsSvc = inject(ItemsService);
+  objectivesSvc = inject(ObjectivesService);
+  preferencesSvc = inject(PreferencesService);
+  recipesSvc = inject(RecipesService);
+  settingsSvc = inject(SettingsService);
   trackSvc = inject(TrackService);
   translateSvc = inject(TranslateService);
 
-  _objectives = this.store.selectSignal(selectObjectives);
-  result = this.store.selectSignal(selectMatrixResult);
-  itemsState = this.store.selectSignal(selectItemsState);
-  itemIds = this.store.selectSignal(selectAvailableItems);
-  data = this.store.selectSignal(selectAdjustedDataset);
-  maximizeType = this.store.selectSignal(selectMaximizeType);
-  beltSpeed = this.store.selectSignal(selectBeltSpeed);
-  dispRateInfo = this.store.selectSignal(selectDisplayRateInfo);
-  rateUnitOptions = this.store.selectSignal(selectObjectiveUnitOptions);
-  recipeIds = this.store.selectSignal(selectAvailableRecipes);
-  paused = this.store.selectSignal(selectPaused);
-  convertObjectiveValues = this.store.selectSignal(
-    selectConvertObjectiveValues,
-  );
-  objectives = computed(() => [...this._objectives()]);
-  messages$ = combineLatest({
-    objectives: this.store.select(selectObjectives),
-    matrixResult: this.store.select(selectMatrixResult),
-    settings: this.store.select(selectSettings),
-  }).pipe(
-    switchMap(({ objectives, matrixResult, settings }) =>
-      this.getMessages(objectives, matrixResult, settings),
-    ),
-  );
+  result = this.objectivesSvc.matrixResult;
+  itemsState = this.itemsSvc.state;
+  beltSpeed = this.settingsSvc.beltSpeed;
+  dispRateInfo = this.settingsSvc.displayRateInfo;
+  maximizeType = this.settingsSvc.maximizeType;
+  unitOptions = this.settingsSvc.objectiveUnitOptions;
+  recipeIds = this.settingsSvc.availableRecipeIds;
+  itemIds = this.recipesSvc.availableItemIds;
+  data = this.recipesSvc.adjustedDataset;
+  convertObjectiveValues = this.preferencesSvc.convertObjectiveValues;
+  paused = this.preferencesSvc.paused;
+  objectives = computed(() => [...this.objectivesSvc.objectives()]);
+
+  messages = computed(() => {
+    const objectives = this.objectivesSvc.objectives();
+    const matrixResult = this.objectivesSvc.matrixResult();
+    const settings = this.settingsSvc.settings();
+
+    return this.getMessages(objectives, matrixResult, settings);
+  });
 
   objectiveTypeOptions = objectiveTypeOptions;
   displayRateOptions = displayRateOptions;
@@ -226,10 +198,6 @@ export class ObjectivesComponent {
     );
   }
 
-  setObjectiveOrder(objectives: Objective[]): void {
-    this.setOrder(objectives.map((o) => o.id));
-  }
-
   changeUnit(
     objective: Objective,
     unit: ObjectiveUnit,
@@ -285,7 +253,7 @@ export class ObjectivesComponent {
     recipeId: string,
     data: AdjustedDataset,
   ): void {
-    this.setUnit(objective.id, {
+    this.objectivesSvc.updateEntity(objective.id, {
       targetId: recipeId,
       unit: ObjectiveUnit.Machines,
     });
@@ -308,7 +276,7 @@ export class ObjectivesComponent {
     );
     const recipe = data.adjustedRecipe[recipeId];
     const newValue = oldValue.div(recipe.output[objective.targetId]);
-    this.setValue(objective.id, newValue);
+    this.objectivesSvc.updateEntity(objective.id, { value: newValue });
   }
 
   /**
@@ -321,7 +289,7 @@ export class ObjectivesComponent {
     unit: ObjectiveUnit,
     data: AdjustedDataset,
   ): void {
-    this.setUnit(objective.id, {
+    this.objectivesSvc.updateEntity(objective.id, {
       targetId: itemId,
       unit,
     });
@@ -351,7 +319,7 @@ export class ObjectivesComponent {
     );
     const oldValue = objective.value.mul(objective.recipe.output[itemId]);
     const newValue = oldValue.div(factor);
-    this.setValue(objective.id, newValue);
+    this.objectivesSvc.updateEntity(objective.id, { value: newValue });
   }
 
   /**
@@ -364,7 +332,7 @@ export class ObjectivesComponent {
     unit: ObjectiveUnit,
     data: AdjustedDataset,
   ): void {
-    this.setUnit(objective.id, {
+    this.objectivesSvc.updateEntity(objective.id, {
       targetId: itemId,
       unit,
     });
@@ -399,59 +367,6 @@ export class ObjectivesComponent {
       data,
     );
     const newValue = oldValue.div(factor);
-    this.setValue(objective.id, newValue);
-  }
-
-  addItemObjective(targetId: string): void {
-    this.addObjective({ targetId, unit: ObjectiveUnit.Items });
-  }
-
-  addRecipeObjective(targetId: string): void {
-    this.addObjective({ targetId, unit: ObjectiveUnit.Machines });
-  }
-
-  addRecipeLimit(targetId: string): void {
-    this.addObjective({
-      targetId,
-      unit: ObjectiveUnit.Machines,
-      type: ObjectiveType.Limit,
-    });
-  }
-
-  /** Action Dispatch Methods */
-  removeObjective(id: string): void {
-    this.store.dispatch(remove({ id }));
-  }
-
-  setOrder(ids: string[]): void {
-    this.store.dispatch(setOrder({ ids }));
-  }
-
-  setTarget(id: string, value: string): void {
-    this.store.dispatch(setTarget({ id, value }));
-  }
-
-  setValue(id: string, value: Rational): void {
-    this.store.dispatch(setValue({ id, value }));
-  }
-
-  setUnit(id: string, objective: ObjectiveBase): void {
-    this.store.dispatch(setUnit({ id, objective }));
-  }
-
-  setType(id: string, value: ObjectiveType): void {
-    this.store.dispatch(setType({ id, value }));
-  }
-
-  addObjective(objective: ObjectiveBase): void {
-    this.store.dispatch(add({ objective }));
-  }
-
-  setDisplayRate(displayRate: DisplayRate, previous: DisplayRate): void {
-    this.store.dispatch(setDisplayRate({ displayRate, previous }));
-  }
-
-  setPaused(paused: boolean): void {
-    this.store.dispatch(setPaused({ paused }));
+    this.objectivesSvc.updateEntity(objective.id, { value: newValue });
   }
 }

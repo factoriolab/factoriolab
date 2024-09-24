@@ -467,7 +467,7 @@ describe('RouterService', () => {
 
     beforeEach(() => {
       dispatch = spyOn(service, 'dispatch');
-      spyOn(service.dataSvc, 'requestData').and.returnValue(
+      spyOn(service.datasetsSvc, 'requestData').and.returnValue(
         of([Mocks.modData, Mocks.modHash, null]),
       );
     });

@@ -1,33 +1,23 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import {
   BehaviorSubject,
   combineLatest,
   debounceTime,
   filter,
-  first,
   firstValueFrom,
   map,
-  ReplaySubject,
   Subject,
   switchMap,
   tap,
   withLatestFrom,
 } from 'rxjs';
 
-import {
-  asString,
-  coalesce,
-  filterPropsNullish,
-  prune,
-  spread,
-} from '~/helpers';
-import { MIN_ZIP, ZFIELDSEP } from '~/models/constants';
+import { asString, coalesce, prune, spread } from '~/helpers';
+import { DEFAULT_MOD, MIN_ZIP, ZFIELDSEP } from '~/models/constants';
 import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
 import { Dataset } from '~/models/dataset';
-import { Entities } from '~/models/entities';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { ZipVersion } from '~/models/enum/zip-version';
@@ -41,48 +31,64 @@ import { MachineSettings } from '~/models/settings/machine-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { Step } from '~/models/step';
+import { storedSignal } from '~/models/stored-signal';
+import { Entities } from '~/models/utils';
 import {
   Zip,
   ZipData,
   ZipMachineSettings,
   ZipRecipeSettingsInfo,
 } from '~/models/zip';
-import { load, PartialState } from '~/store/app.actions';
-import { ItemsState } from '~/store/items/items.reducer';
-import { MachinesState } from '~/store/machines/machines.reducer';
-import { ObjectivesState } from '~/store/objectives/objectives.reducer';
-import { selectZipState } from '~/store/objectives/objectives.selectors';
-import { RecipesState } from '~/store/recipes/recipes.reducer';
-import {
-  initialSettingsState,
-  PartialSettingsState,
-  SettingsState,
-} from '~/store/settings/settings.reducer';
-import { BrowserUtility } from '~/utilities/browser.utility';
 
 import { CompressionService } from './compression.service';
 import { DataService } from './data.service';
+import { ItemsService, ItemsState } from './items.service';
+import { MachinesService, MachinesState } from './machines.service';
 import { MigrationService } from './migration.service';
+import { ObjectivesService, ObjectivesState } from './objectives.service';
+import { RecipesService, RecipesState } from './recipes.service';
+import {
+  initialSettingsState,
+  PartialSettingsState,
+  SettingsService,
+  SettingsState,
+} from './settings.service';
 import { ZipService } from './zip.service';
+
+interface ZipState {
+  objectives: ObjectivesState;
+  items: ItemsState;
+  recipes: RecipesState;
+  machines: MachinesState;
+  settings: SettingsState;
+  data: Dataset;
+  hash: ModHash;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class RouterService {
   router = inject(Router);
-  store = inject(Store);
-  dataSvc = inject(DataService);
   compressionSvc = inject(CompressionService);
-  zipSvc = inject(ZipService);
+  dataSvc = inject(DataService);
+  itemsSvc = inject(ItemsService);
+  machinesSvc = inject(MachinesService);
   migrationSvc = inject(MigrationService);
+  objectivesSvc = inject(ObjectivesService);
+  recipesSvc = inject(RecipesService);
+  settingsSvc = inject(SettingsService);
+  zipSvc = inject(ZipService);
 
+  zipState$ = new Subject<ZipState>();
   zipConfig = signal(this.empty);
   // Current hashing algorithm version
   version = ZipVersion.Version11;
   zipTail: LabParams = { v: this.version };
   route$ = new Subject<ActivatedRoute>();
-  ready$ = new ReplaySubject<void>(1);
+  ready = signal(false);
   navigating$ = new BehaviorSubject<boolean>(false);
+  stored = storedSignal('router');
 
   get empty(): Zip<LabParams> {
     return { bare: {}, hash: {} };
@@ -124,26 +130,35 @@ export class RouterService {
       )
       .subscribe();
 
-    this.ready$
+    effect(() => {
+      const ready = this.ready();
+      const hash = this.settingsSvc.hash();
+      if (!ready || !hash) return;
+      const objectives = this.objectivesSvc.state();
+      const items = this.itemsSvc.state();
+      const recipes = this.recipesSvc.state();
+      const machines = this.machinesSvc.state();
+      const settings = this.settingsSvc.state();
+      const data = this.settingsSvc.dataset();
+
+      this.zipState$.next({
+        objectives,
+        items,
+        recipes,
+        machines,
+        settings,
+        data,
+        hash,
+      });
+    });
+
+    this.zipState$
       .pipe(
-        first(),
-        tap(() => {
-          this.dataSvc.initialize();
-        }),
-        switchMap(() => this.store.select(selectZipState)),
         debounceTime(0),
-        filterPropsNullish('hash'),
-        map((s) =>
-          this.zipState(
-            s.objectives,
-            s.itemsState,
-            s.recipesState,
-            s.machinesState,
-            s.settings,
-            s.data,
-            s.hash,
-          ),
-        ),
+        map((z) => this.zipState(z)),
+        tap((z) => {
+          this.zipConfig.set(z.config);
+        }),
         switchMap((z) => this.updateUrl(z)),
       )
       .subscribe();
@@ -157,24 +172,17 @@ export class RouterService {
     const url = this.router.url;
     const path = url.split('?')[0];
     // Only cache list / flow routes
-    if (path.endsWith('list') || path.endsWith('flow'))
-      BrowserUtility.routerState = url;
+    if (path.endsWith('list') || path.endsWith('flow')) this.stored.set(url);
   }
 
-  zipState(
-    objectives: ObjectivesState,
-    itemsState: ItemsState,
-    recipesState: RecipesState,
-    machinesState: MachinesState,
-    settings: SettingsState,
-    data: Dataset,
-    hash: ModHash,
-  ): ZipData {
+  zipState(state: ZipState): ZipData {
+    const { objectives, items, recipes, machines, settings, data, hash } =
+      state;
     // Modules & Beacons
     const zData = this.zipModulesBeacons(
       objectives,
-      recipesState,
-      machinesState,
+      recipes,
+      machines,
       settings,
       hash,
     );
@@ -186,11 +194,10 @@ export class RouterService {
     this.zipObjectives(zData, o, hash);
 
     // Settings
-    this.zipItems(zData, itemsState, hash);
-    this.zipRecipes(zData, recipesState, hash);
-    this.zipMachines(zData, machinesState, hash);
+    this.zipItems(zData, items, hash);
+    this.zipRecipes(zData, recipes, hash);
+    this.zipMachines(zData, machines, hash);
     this.zipSettings(zData, settings, objectives.ids, data, hash);
-    this.zipConfig.set(zData.config);
     return zData;
   }
 
@@ -310,39 +317,37 @@ export class RouterService {
   ): Promise<void> {
     if (modId == null && Object.keys(params).length === 0) {
       // Nothing to set up
-      this.ready$.next();
+      this.ready.set(true);
       return;
     }
 
     const [modData, modHash] = await firstValueFrom(
-      this.dataSvc.requestData(modId ?? initialSettingsState.modId),
+      this.dataSvc.requestData(modId ?? DEFAULT_MOD),
     );
 
-    const state: PartialState = {};
     const hash = isBare ? undefined : modHash;
     const ms = this.unzipModules(params, hash);
     const bs = this.unzipBeacons(params, ms, hash);
-    state.objectivesState = this.unzipObjectives(params, ms, bs, hash);
-    state.itemsState = this.unzipItems(params, hash);
-    state.recipesState = this.unzipRecipes(params, ms, bs, hash);
-    state.machinesState = this.unzipMachines(params, ms, bs, hash);
-    state.settingsState = this.unzipSettings(
+    const objectivesState = this.unzipObjectives(params, ms, bs, hash);
+    const itemsState = this.unzipItems(params, hash);
+    const recipesState = this.unzipRecipes(params, ms, bs, hash);
+    const machinesState = this.unzipMachines(params, ms, bs, hash);
+    const settingsState = this.unzipSettings(
       modId,
       params,
       bs,
-      coalesce(state.objectivesState?.ids, []),
+      coalesce(objectivesState?.ids, []),
       modData,
       modHash,
       hash,
     );
-    prune(state);
-    this.dispatch(state);
-    this.ready$.next();
-  }
 
-  dispatch(partial: PartialState): void {
-    this.store.dispatch(load({ partial }));
-    this.ready$.next();
+    this.objectivesSvc.load(objectivesState);
+    this.itemsSvc.load(itemsState);
+    this.recipesSvc.load(recipesState);
+    this.machinesSvc.load(machinesState);
+    this.settingsSvc.load(settingsState);
+    this.ready.set(true);
   }
 
   zipModulesBeacons(

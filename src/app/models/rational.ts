@@ -3,6 +3,7 @@ import * as formula from '@sideway/formula';
 const MAX_DENOM = 10000000;
 const DIVIDE_BY_ZERO = 'Cannot divide by zero';
 const FLOAT_TOLERANCE = 1e-10;
+const DECIMALS_REGEX = new RegExp(/\d+(\.(\d+))?(e-(\d+))?/);
 
 export function gcd(x: bigint, y: bigint): bigint {
   x = abs(x);
@@ -157,13 +158,12 @@ export class Rational {
     return this.toNumber().toString();
   }
 
-  private _decimalsRegex = new RegExp(/\d+(\.(\d+))?(e-(\d+))?/);
   toDecimals(): number {
     const num = this.toNumber();
     if (num % 1 !== 0) {
       // Pick apart complex numbers, looking for decimal and negative exponent
       // 3.33e-6 => ["3.33e-6", ".33", "33", "e-6", "6"]
-      const match = this._decimalsRegex.exec(num.toString());
+      const match = DECIMALS_REGEX.exec(num.toString());
       let decimals = 0;
       // Regex pattern should match all known number toString formats
       // istanbul ignore else

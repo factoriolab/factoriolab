@@ -1,18 +1,17 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
-import { Store } from '@ngrx/store';
 
 import { LabParams } from '~/models/lab-params';
 import { Step } from '~/models/step';
 import { Zip } from '~/models/zip';
+import { RecipesService } from '~/services/recipes.service';
 import { RouterService } from '~/services/router.service';
-import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
 
 @Pipe({ name: 'stepHref', standalone: true })
 export class StepHrefPipe implements PipeTransform {
-  store = inject(Store);
+  recipesSvc = inject(RecipesService);
   routerSvc = inject(RouterService);
 
-  data = this.store.selectSignal(selectAdjustedDataset);
+  data = this.recipesSvc.adjustedDataset;
 
   async transform(
     value: Step,

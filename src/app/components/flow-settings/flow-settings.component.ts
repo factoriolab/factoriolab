@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
@@ -12,9 +11,11 @@ import { FlowDiagram, flowDiagramOptions } from '~/models/enum/flow-diagram';
 import { sankeyAlignOptions } from '~/models/enum/sankey-align';
 import { FlowSettings } from '~/models/settings/flow-settings';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { setFlowSettings } from '~/store/preferences/preferences.actions';
-import { initialPreferencesState } from '~/store/preferences/preferences.reducer';
-import { selectLinkValueOptions } from '~/store/settings/settings.selectors';
+import {
+  initialPreferencesState,
+  PreferencesService,
+} from '~/services/preferences.service';
+import { SettingsService } from '~/services/settings.service';
 
 import { DialogComponent } from '../modal';
 
@@ -37,9 +38,10 @@ const initialValue = initialPreferencesState.flowSettings;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FlowSettingsComponent extends DialogComponent {
-  store = inject(Store);
+  preferencesSvc = inject(PreferencesService);
+  settingsSvc = inject(SettingsService);
 
-  linkValueOptions = this.store.selectSignal(selectLinkValueOptions);
+  linkValueOptions = this.settingsSvc.linkValueOptions;
 
   editValue = { ...initialValue };
 
@@ -69,6 +71,6 @@ export class FlowSettingsComponent extends DialogComponent {
 
   save(): void {
     const flowSettings = this.editValue;
-    this.store.dispatch(setFlowSettings({ flowSettings }));
+    this.preferencesSvc.apply({ flowSettings });
   }
 }

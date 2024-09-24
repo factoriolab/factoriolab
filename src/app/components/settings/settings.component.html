@@ -45,7 +45,7 @@
             }
           </div>
         </ng-template>
-        @if (BrowserUtility.isStandalone) {
+        @if (isStandalone) {
           <div class="p-inputgroup mb-2">
             <button
               pButton
@@ -55,12 +55,7 @@
               icon="fa-solid fa-arrow-up-right-from-square"
               (click)="setSearch(search.value)"
             ></button>
-            <input
-              #search
-              pInputText
-              type="text"
-              [ngModel]="BrowserUtility.search"
-            />
+            <input #search pInputText type="text" [ngModel]="search" />
             <button
               pButton
               pRipple
@@ -83,7 +78,7 @@
               tooltipPosition="top"
               required
               [(ngModel)]="editValue"
-              (keydown.enter)="clickSaveState(data().game)"
+              (keydown.enter)="clickSaveState()"
             />
             <button
               pButton
@@ -94,7 +89,7 @@
               [pTooltip]="'settings.saveState' | translate"
               tooltipPosition="top"
               [disabled]="nameCtrl.invalid"
-              (click)="clickSaveState(data().game)"
+              (click)="clickSaveState()"
             ></button>
             <button
               pButton
@@ -174,7 +169,11 @@
             class="d-flex align-items-center justify-content-between flex-grow-1"
           >
             <div>{{ 'settings.game' | translate }}</div>
-            <div>{{ modRecord()[settings().modId]?.id }}</div>
+            <div>
+              @if (modId(); as modId) {
+                {{ modRecord()[modId]?.id }}
+              }
+            </div>
           </div>
         </ng-template>
         <div class="p-fluid">
@@ -219,7 +218,7 @@
                   [autofocusFilter]="!contentSvc.isMobile()"
                   [pTooltip]="'settings.modSetTooltip' | translate"
                   [ngModel]="settings().modId"
-                  [options]="modOptions()"
+                  [options]="modOptions"
                   (onChange)="setMod($event.value)"
                 >
                 </p-dropdown>
@@ -297,7 +296,9 @@
             ></button>
             <lab-tech-picker
               #techPicker
-              (selectIds)="setResearchedTechnologies($event)"
+              (selectIds)="
+                settingsSvc.apply({ researchedTechnologyIds: $event })
+              "
             ></lab-tech-picker>
           </div>
           <div class="pb-3">
@@ -355,7 +356,7 @@
             <lab-picker
               #itemsPicker
               [header]="'settings.itemsHeader' | translate"
-              (selectIds)="setExcludedItems($event)"
+              (selectIds)="settingsSvc.apply({ excludedItemIds: $event })"
             ></lab-picker>
           </div>
         </div>
@@ -381,7 +382,7 @@
                 [pTooltip]="'settings.presetTooltip' | translate"
                 [ngModel]="settings().preset"
                 [options]="presetOptions()"
-                (onChange)="setPreset($event.value)"
+                (onChange)="settingsSvc.apply({ preset: $event.value })"
               >
               </p-dropdown>
               <label for="preset">{{ 'settings.preset' | translate }}</label>
@@ -400,7 +401,11 @@
                   [ngModel]="settings().moduleRankIds"
                   [options]="options().modules"
                   (onChange)="
-                    setModuleRank($event.value, data().defaults?.moduleRankIds)
+                    settingsSvc.updateField(
+                      'moduleRankIds',
+                      $event.value,
+                      data().defaults?.moduleRankIds
+                    )
                   "
                 >
                   <ng-template pTemplate="selectedItems" let-items>
@@ -447,7 +452,11 @@
                   [ngModel]="settings().fuelRankIds"
                   [options]="options().fuels"
                   (onChange)="
-                    setFuelRank($event.value, data().defaults?.fuelRankIds)
+                    settingsSvc.updateField(
+                      'fuelRankIds',
+                      $event.value,
+                      data().defaults?.fuelRankIds
+                    )
                   "
                 >
                   <ng-template pTemplate="selectedItems" let-items>
@@ -540,7 +549,9 @@
                   [pTooltip]="'settings.overclockTooltip' | translate"
                   [ngModel]="settings().overclock?.toNumber()"
                   (onBlur)="
-                    setDefaultOverclock(rational(overclockInput.value ?? 100))
+                    settingsSvc.apply({
+                      overclock: overclockInput.value ?? 100,
+                    })
                   "
                 >
                 </p-inputNumber>
@@ -588,7 +599,11 @@
               [value]="machineIds()"
               [dragdrop]="true"
               (onReorder)="
-                setMachineRank(machineIds(), data().defaults?.machineRankIds)
+                settingsSvc.updateField(
+                  'machineRankIds',
+                  machineIds(),
+                  data().defaults?.machineRankIds
+                )
               "
             >
               <ng-template pTemplate="item" let-machineId>
@@ -780,10 +795,11 @@
                           [pTooltip]="'settings.overclockTooltip' | translate"
                           [ngModel]="ms.overclock?.toNumber()"
                           (onBlur)="
-                            setOverclock(
+                            machinesSvc.updateEntityField(
                               machineId,
+                              'overclock',
                               rational(overclockInput.value ?? 100),
-                              machineId ? settings().overclock : rational(100)
+                              settings().overclock
                             )
                           "
                         >
@@ -880,7 +896,7 @@
                   'settings.averageBeaconReceiversTooltip' | translate
                 "
                 [value]="beaconReceivers"
-                (setValue)="setBeaconReceivers($event)"
+                (setValue)="settingsSvc.apply({ beaconReceivers: $event })"
               ></lab-input-number>
             </div>
           }
@@ -896,7 +912,9 @@
                   "
                   [ngModel]="settings().proliferatorSprayId"
                   [options]="options().proliferatorModules"
-                  (onChange)="setProliferatorSpray($event.value)"
+                  (onChange)="
+                    settingsSvc.apply({ proliferatorSprayId: $event.value })
+                  "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
                     <div class="d-flex align-items-center h-100">
@@ -938,7 +956,13 @@
                 [pTooltip]="'settings.defaultTransportBeltTooltip' | translate"
                 [ngModel]="settings().beltId"
                 [options]="options().belts"
-                (onChange)="setBelt($event.value, data().defaults?.beltId)"
+                (onChange)="
+                  settingsSvc.updateField(
+                    'beltId',
+                    $event.value,
+                    data().defaults?.beltId
+                  )
+                "
               >
                 <ng-template pTemplate="selectedItem" let-item>
                   @if (item) {
@@ -979,7 +1003,13 @@
                   [pTooltip]="'settings.defaultPipeTooltip' | translate"
                   [ngModel]="settings().pipeId"
                   [options]="options().pipes"
-                  (onChange)="setPipe($event.value, data().defaults?.pipeId)"
+                  (onChange)="
+                    settingsSvc.updateField(
+                      'pipeId',
+                      $event.value,
+                      data().defaults?.pipeId
+                    )
+                  "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
                     <div class="d-flex align-items-center h-100">
@@ -1023,7 +1053,11 @@
                   [ngModel]="settings().cargoWagonId"
                   [options]="options().cargoWagons"
                   (onChange)="
-                    setCargoWagon($event.value, data().defaults?.cargoWagonId)
+                    settingsSvc.updateField(
+                      'cargoWagonId',
+                      $event.value,
+                      data().defaults?.cargoWagonId
+                    )
                   "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
@@ -1068,7 +1102,11 @@
                   [ngModel]="settings().fluidWagonId"
                   [options]="options().fluidWagons"
                   (onChange)="
-                    setFluidWagon($event.value, data().defaults?.fluidWagonId)
+                    settingsSvc.updateField(
+                      'fluidWagonId',
+                      $event.value,
+                      data().defaults?.fluidWagonId
+                    )
                   "
                 >
                   <ng-template pTemplate="selectedItem" let-item>
@@ -1117,7 +1155,11 @@
                   decrementButtonClass="p-button-outlined"
                   [pTooltip]="'settings.pipeFlowRateTooltip' | translate"
                   [ngModel]="settings().flowRate.toNumber()"
-                  (onBlur)="setFlowRate(rational(flowRateInput.value ?? 1500))"
+                  (onBlur)="
+                    settingsSvc.apply({
+                      flowRate: rational(flowRateInput.value ?? 1200),
+                    })
+                  "
                 ></p-inputNumber>
                 <label for="pipe-flow-rate">{{
                   'settings.pipeFlowRate' | translate
@@ -1139,7 +1181,9 @@
                   [pTooltip]="'settings.inserterTargetTooltip' | translate"
                   [ngModel]="settings().inserterTarget"
                   [options]="inserterTargetOptions"
-                  (onChange)="setInserterTarget($event.value)"
+                  (onChange)="
+                    settingsSvc.apply({ inserterTarget: $event.value })
+                  "
                 >
                 </p-dropdown>
                 <label for="inserter-target">{{
@@ -1165,9 +1209,11 @@
                     settings().miningBonus.add(rational(100)).toNumber()
                   "
                   (onBlur)="
-                    setMiningBonus(
-                      rational((miningBonusInput.value ?? 100) - 100)
-                    )
+                    settingsSvc.apply({
+                      miningBonus: rational(
+                        (miningBonusInput.value ?? 100) - 100
+                      ),
+                    })
                   "
                 ></p-inputNumber>
                 <label for="mining-speed">{{
@@ -1196,7 +1242,9 @@
                   [pTooltip]="'settings.miningProductivityTooltip' | translate"
                   [ngModel]="settings().miningBonus.toNumber()"
                   (onBlur)="
-                    setMiningBonus(rational(miningProdInput.value ?? 0))
+                    settingsSvc.apply({
+                      miningBonus: rational(miningProdInput.value ?? 0),
+                    })
                   "
                 ></p-inputNumber>
                 <label for="mining-productivity">{{
@@ -1212,7 +1260,9 @@
                   [pTooltip]="'settings.researchSpeedTooltip' | translate"
                   [ngModel]="settings().researchBonus"
                   [options]="researchSpeedOptions"
-                  (onChange)="setResearchSpeed($event.value)"
+                  (onChange)="
+                    settingsSvc.apply({ researchBonus: $event.value })
+                  "
                 >
                 </p-dropdown>
                 <label for="research-speed">{{
@@ -1228,7 +1278,9 @@
                   [pTooltip]="'settings.inserterCapacityTooltip' | translate"
                   [ngModel]="settings().inserterCapacity"
                   [options]="inserterCapacityOptions"
-                  (onChange)="setInserterCapacity($event.value)"
+                  (onChange)="
+                    settingsSvc.apply({ inserterCapacity: $event.value })
+                  "
                 >
                 </p-dropdown>
                 <label for="inserter-capacity">{{
@@ -1249,9 +1301,7 @@
                 [pTooltip]="'settings.displayRateTooltip' | translate"
                 [ngModel]="settings().displayRate"
                 [options]="displayRateOptions"
-                (onChange)="
-                  setDisplayRate($event.value, settings().displayRate)
-                "
+                (onChange)="settingsSvc.apply({ displayRate: $event.value })"
               >
               </p-dropdown>
               <label for="display-rate">{{
@@ -1268,7 +1318,7 @@
                   [pTooltip]="'settings.powerUnitTooltip' | translate"
                   [ngModel]="preferences().powerUnit"
                   [options]="powerUnitOptions"
-                  (onChange)="setPowerUnit($event.value)"
+                  (onChange)="preferencesSvc.apply({ powerUnit: $event.value })"
                 >
                 </p-dropdown>
                 <label for="power-unit">{{
@@ -1286,7 +1336,7 @@
                 [pTooltip]="'settings.languageTooltip' | translate"
                 [ngModel]="preferences().language"
                 [options]="languageOptions"
-                (onChange)="setLanguage($event.value)"
+                (onChange)="preferencesSvc.apply({ language: $event.value })"
               >
               </p-dropdown>
               <label for="language">{{
@@ -1309,7 +1359,7 @@
                 [pTooltip]="'settings.themeTooltip' | translate"
                 [ngModel]="preferences().theme"
                 [options]="themeOptions"
-                (onChange)="setTheme($event.value)"
+                (onChange)="preferencesSvc.apply({ theme: $event.value })"
               >
               </p-dropdown>
               <label for="theme">{{ 'settings.theme' | translate }}</label>
@@ -1320,7 +1370,9 @@
               [binary]="true"
               [label]="'settings.bypassLanding' | translate"
               [ngModel]="preferences().bypassLanding"
-              (onChange)="setBypassLanding($event.checked)"
+              (onChange)="
+                preferencesSvc.apply({ bypassLanding: $event.checked })
+              "
             ></p-checkbox>
           </div>
           <div class="pb-3">
@@ -1328,7 +1380,9 @@
               [ngModel]="preferences().hideDuplicateIcons"
               [binary]="true"
               [label]="'settings.hideDuplicateIcons' | translate"
-              (onChange)="setHideDuplicateIcons($event.checked)"
+              (onChange)="
+                preferencesSvc.apply({ hideDuplicateIcons: $event.checked })
+              "
             ></p-checkbox>
           </div>
           <div>
@@ -1336,7 +1390,9 @@
               [ngModel]="preferences().disablePaginator"
               [binary]="true"
               [label]="'settings.disablePaginator' | translate"
-              (onChange)="setDisablePaginator($event.checked)"
+              (onChange)="
+                preferencesSvc.apply({ disablePaginator: $event.checked })
+              "
             ></p-checkbox>
           </div>
         </div>
@@ -1351,7 +1407,7 @@
                 [pTooltip]="'settings.maximizeTypeTooltip' | translate"
                 [ngModel]="settings().maximizeType"
                 [options]="maximizeTypeOptions"
-                (onChange)="setMaximizeType($event.value)"
+                (onChange)="settingsSvc.apply({ maximizeType: $event.value })"
               >
               </p-dropdown>
               <label for="maximize-type">{{
@@ -1366,7 +1422,9 @@
               [label]="'settings.netProductionOnly' | translate"
               [pTooltip]="'settings.netProductionOnlyTooltip' | translate"
               tooltipPosition="top"
-              (onChange)="setNetProductionOnly($event.checked)"
+              (onChange)="
+                settingsSvc.apply({ netProductionOnly: $event.checked })
+              "
             ></p-checkbox>
           </div>
           <div class="pb-3">
@@ -1376,7 +1434,9 @@
               [label]="'settings.surplusMachinesOutput' | translate"
               [pTooltip]="'settings.surplusMachinesOutputTooltip' | translate"
               tooltipPosition="top"
-              (onChange)="setSurplusMachinesOutput($event.checked)"
+              (onChange)="
+                settingsSvc.apply({ surplusMachinesOutput: $event.checked })
+              "
             ></p-checkbox>
           </div>
           <div class="pb-3">
@@ -1386,7 +1446,9 @@
               [label]="'settings.convertObjectiveValues' | translate"
               [pTooltip]="'settings.convertObjectiveValuesTooltip' | translate"
               tooltipPosition="top"
-              (onChange)="setConvertObjectiveValues($event.checked)"
+              (onChange)="
+                preferencesSvc.apply({ convertObjectiveValues: $event.checked })
+              "
             ></p-checkbox>
           </div>
           <button

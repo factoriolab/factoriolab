@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { map, switchMap } from 'rxjs';
@@ -15,23 +14,25 @@ import { map, switchMap } from 'rxjs';
 import { CollectionTableComponent } from '~/components/collection-table/collection-table.component';
 import { Dataset } from '~/models/dataset';
 import { IdType } from '~/models/enum/id-type';
+import { RecipesService } from '~/services/recipes.service';
+import { SettingsService } from '~/services/settings.service';
 import { TranslateService } from '~/services/translate.service';
-import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
-import { selectModMenuItem } from '~/store/settings/settings.selectors';
 
 @Component({
+  selector: 'lab-collection',
   standalone: true,
   imports: [BreadcrumbModule, CollectionTableComponent],
   templateUrl: './collection.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionComponent {
-  translateSvc = inject(TranslateService);
   route = inject(ActivatedRoute);
-  store = inject(Store);
+  recipesSvc = inject(RecipesService);
+  settingsSvc = inject(SettingsService);
+  translateSvc = inject(TranslateService);
 
-  home = this.store.selectSignal(selectModMenuItem);
-  data = this.store.selectSignal(selectAdjustedDataset);
+  home = this.settingsSvc.modMenuItem;
+  data = this.recipesSvc.adjustedDataset;
 
   label = input.required<string>();
   type = input.required<IdType>();
