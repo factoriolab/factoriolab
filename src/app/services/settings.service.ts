@@ -1,4 +1,4 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, effect, inject, Injectable } from '@angular/core';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { environment } from 'src/environments';
 
@@ -49,6 +49,7 @@ import { Store } from '~/models/store';
 import { Entities, Optional } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
+import { AnalyticsService } from './analytics.service';
 import { DatasetsService } from './datasets.service';
 import { PreferencesService } from './preferences.service';
 
@@ -119,6 +120,7 @@ export const initialSettingsState: SettingsState = {
   providedIn: 'root',
 })
 export class SettingsService extends Store<SettingsState> {
+  analyticsSvc = inject(AnalyticsService);
   datasetsSvc = inject(DatasetsService);
   preferencesSvc = inject(PreferencesService);
 
@@ -599,5 +601,15 @@ export class SettingsService extends Store<SettingsState> {
 
   constructor() {
     super(initialSettingsState, ['costs']);
+
+    effect(() => {
+      const modId = this.modId();
+      if (modId) this.analyticsSvc.event('set_mod_id', modId);
+    });
+
+    effect(() => {
+      const mod = this.mod();
+      if (mod) this.analyticsSvc.event('set_game', mod.game);
+    });
   }
 }
