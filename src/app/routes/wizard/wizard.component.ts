@@ -47,7 +47,7 @@ export type WizardState = 'type' | 'item' | 'recipe';
 export class WizardComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
-  objectiveSvc = inject(ObjectivesService);
+  objectivesSvc = inject(ObjectivesService);
   recipesSvc = inject(RecipesService);
   settingsSvc = inject(SettingsService);
 
@@ -70,7 +70,7 @@ export class WizardComponent {
   }
 
   createItemObjective(targetId: string): void {
-    this.objectiveSvc.create({
+    this.objectivesSvc.create({
       id: '0',
       targetId,
       value: this.value,
@@ -84,7 +84,7 @@ export class WizardComponent {
   }
 
   createRecipeObjective(targetId: string): void {
-    this.objectiveSvc.create({
+    this.objectivesSvc.create({
       id: '0',
       targetId,
       value: this.value,

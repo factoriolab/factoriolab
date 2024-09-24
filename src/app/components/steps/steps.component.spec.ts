@@ -12,14 +12,7 @@ import { Step } from '~/models/step';
 import { StepDetail } from '~/models/step-detail';
 import { Entities } from '~/models/utils';
 import { StepIdPipe } from '~/pipes/step-id.pipe';
-import {
-  assert,
-  ItemId,
-  Mocks,
-  RecipeId,
-  setInputs,
-  TestModule,
-} from '~/tests';
+import { ItemId, Mocks, RecipeId, setInputs, TestModule } from '~/tests';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { StepsComponent } from './steps.component';
@@ -35,6 +28,25 @@ describe('StepsComponent', () => {
 
     fixture = TestBed.createComponent(StepsComponent);
     component = fixture.componentInstance;
+    spyOn(component, '_steps').and.returnValue(Mocks.steps);
+    spyOn(component, 'stepDetails').and.returnValue(
+      Mocks.steps.reduce((e: Entities<StepDetail>, s, i) => {
+        e[s.id] = {
+          tabs:
+            i === 0
+              ? [
+                  { id: '0', label: StepDetailTab.Item },
+                  { id: '1', label: StepDetailTab.Recipe },
+                  { id: '2', label: StepDetailTab.Machine },
+                ]
+              : [],
+          outputs: [],
+          recipeIds: [],
+          allRecipesIncluded: true,
+        };
+        return e;
+      }, {}),
+    );
     fixture.detectChanges();
   });
 
@@ -49,51 +61,56 @@ describe('StepsComponent', () => {
     });
   });
 
-  // describe('toggleEffect', () => {
-  //   it('should toggle and expand a row in focus mode', () => {
-  //     spyOn(component, 'expandRow');
-  //     setInputs(fixture, {
-  //       focus: true,
-  //       selectedId: Mocks.step1.id,
-  //     });
-  //     expect(component.expandRow).toHaveBeenCalled();
-  //   });
-  // });
+  describe('toggleEffect', () => {
+    it('should toggle and expand a row in focus mode', () => {
+      spyOn(component, 'expandRow');
+      setInputs(fixture, {
+        focus: true,
+        selectedId: Mocks.step1.id,
+      });
+      expect(component.expandRow).toHaveBeenCalled();
+    });
+  });
 
-  // describe('ngAfterViewInit', () => {
-  //   it('should scroll to and expand the fragment id', fakeAsync(() => {
-  //     const domEl = { scrollIntoView: (): void => {} };
-  //     spyOn(domEl, 'scrollIntoView');
-  //     spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
-  //     assert(component.stepsTable != null);
-  //     spyOn(component.stepsTable(), 'toggleRow');
-  //     component.fragmentId = 'step_' + Mocks.step1.id;
-  //     component.ngAfterViewInit();
-  //     tick(100);
-  //     expect(component.stepsTable().toggleRow).toHaveBeenCalled();
-  //     expect(domEl.scrollIntoView).toHaveBeenCalled();
-  //   }));
+  describe('loadFragmentId', () => {
+    it('should scroll to and expand the fragment id', fakeAsync(() => {
+      const domEl = { scrollIntoView: (): void => {} };
+      spyOn(domEl, 'scrollIntoView');
+      spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
+      spyOn(component.stepsTable(), 'toggleRow');
+      component.fragmentId = 'step_' + Mocks.step1.id;
+      component.loadFragmentId();
+      tick(100);
+      expect(component.stepsTable().toggleRow).toHaveBeenCalled();
+      expect(domEl.scrollIntoView).toHaveBeenCalled();
+    }));
 
-  //   it('should scroll to and open tab for the fragment id', fakeAsync(() => {
-  //     const domEl = { click: (): void => {} };
-  //     spyOn(domEl, 'click');
-  //     spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
-  //     assert(component.stepsTable != null);
-  //     spyOn(component.stepsTable(), 'toggleRow');
-  //     component.fragmentId = 'step_' + Mocks.step1.id + '_item';
-  //     component.ngAfterViewInit();
-  //     tick(100);
-  //     expect(component.stepsTable().toggleRow).toHaveBeenCalled();
-  //     expect(domEl.click).toHaveBeenCalled();
-  //   }));
+    it('should scroll to and open tab for the fragment id', fakeAsync(() => {
+      const domEl = { click: (): void => {} };
+      spyOn(domEl, 'click');
+      spyOn(window.document, 'querySelector').and.returnValue(domEl as any);
+      spyOn(component.stepsTable(), 'toggleRow');
+      component.fragmentId = 'step_' + Mocks.step1.id + '_item';
+      component.loadFragmentId();
+      tick(100);
+      expect(component.stepsTable().toggleRow).toHaveBeenCalled();
+      expect(domEl.click).toHaveBeenCalled();
+    }));
 
-  //   it('should handle element not found', () => {
-  //     component.fragmentId = Mocks.step1.id;
-  //     expect(() => {
-  //       component.ngAfterViewInit();
-  //     }).not.toThrow();
-  //   });
-  // });
+    it('should handle step with no tabs', () => {
+      spyOn(component.stepsTable(), 'toggleRow');
+      component.fragmentId = `step_${Mocks.step2.id}_item`;
+      component.loadFragmentId();
+      expect(component.stepsTable().toggleRow).not.toHaveBeenCalled();
+    });
+
+    it('should handle element not found', () => {
+      component.fragmentId = Mocks.step1.id;
+      expect(() => {
+        component.loadFragmentId();
+      }).not.toThrow();
+    });
+  });
 
   describe('sortSteps', () => {
     it('should call when sorting is updated', () => {
@@ -182,39 +199,23 @@ describe('StepsComponent', () => {
       expect(component.updateActiveItem).not.toHaveBeenCalled();
     });
 
-    // it('should pick the last open tab to show on expand', () => {
-    //   const tab: MenuItem = { label: 'machine' };
-    //   const stepDetails: Entities<StepDetail> = {
-    //     [Mocks.step1.id]: {
-    //       tabs: [tab],
-    //       outputs: [],
-    //       recipeIds: [],
-    //       allRecipesIncluded: false,
-    //     },
-    //   };
-    //   spyOn(component, 'stepDetails').and.returnValue(stepDetails);
-    //   spyOnProperty(BrowserUtility, 'stepDetailTab').and.returnValue(
-    //     StepDetailTab.Machine,
-    //   );
-    //   const id = StepIdPipe.transform(Mocks.step1);
-    //   component.expandRow(Mocks.step1, false);
-    //   expect(component.activeItem[id]).toEqual(tab);
-    // });
-
-    it('should pick a default tab to show on expand', () => {
-      const tab: MenuItem = { label: 'machine' };
-      const stepDetails: Entities<StepDetail> = {
-        [Mocks.step1.id]: {
-          tabs: [tab],
-          outputs: [],
-          recipeIds: [],
-          allRecipesIncluded: false,
-        },
-      };
-      spyOn(component, 'stepDetails').and.returnValue(stepDetails);
+    it('should pick the last open tab to show on expand', () => {
+      spyOn(component, 'stepDetailTab').and.returnValue(StepDetailTab.Machine);
       const id = StepIdPipe.transform(Mocks.step1);
       component.expandRow(Mocks.step1, false);
-      expect(component.activeItem[id]).toEqual(tab);
+      expect(component.activeItem[id]).toEqual({
+        id: '2',
+        label: StepDetailTab.Machine,
+      });
+    });
+
+    it('should pick a default tab to show on expand', () => {
+      const id = StepIdPipe.transform(Mocks.step1);
+      component.expandRow(Mocks.step1, false);
+      expect(component.activeItem[id]).toEqual({
+        id: '0',
+        label: StepDetailTab.Item,
+      });
     });
   });
 
@@ -231,187 +232,268 @@ describe('StepsComponent', () => {
     });
   });
 
-  // describe('resetStep', () => {
-  //   beforeEach(() => {
-  //     spyOn(component, 'resetItem');
-  //     spyOn(component, 'resetRecipe');
-  //     spyOn(component, 'resetRecipeObjective');
-  //   });
+  describe('resetStep', () => {
+    beforeEach(() => {
+      spyOn(component.itemsSvc, 'resetId');
+      spyOn(component.objectivesSvc, 'updateEntity');
+      spyOn(component.recipesSvc, 'resetId');
+    });
 
-  //   it('should reset a recipe objective step', () => {
-  //     const step: Step = {
-  //       id: '0',
-  //       itemId: ItemId.Coal,
-  //       recipeId: RecipeId.Coal,
-  //       recipeObjectiveId: '1',
-  //     };
-  //     component.resetStep(step);
-  //     expect(component.resetItem).toHaveBeenCalled();
-  //     expect(component.resetRecipe).not.toHaveBeenCalled();
-  //     expect(component.resetRecipeObjective).toHaveBeenCalled();
-  //   });
+    it('should reset a recipe objective step', () => {
+      const step: Step = {
+        id: '0',
+        itemId: ItemId.Coal,
+        recipeId: RecipeId.Coal,
+        recipeObjectiveId: '1',
+      };
+      component.resetStep(step);
+      expect(component.itemsSvc.resetId).toHaveBeenCalled();
+      expect(component.recipesSvc.resetId).not.toHaveBeenCalled();
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalled();
+    });
 
-  //   it('should reset a recipe step', () => {
-  //     const step: Step = {
-  //       id: '0',
-  //       itemId: ItemId.Coal,
-  //       recipeId: RecipeId.Coal,
-  //     };
-  //     component.resetStep(step);
-  //     expect(component.resetItem).toHaveBeenCalled();
-  //     expect(component.resetRecipe).toHaveBeenCalled();
-  //     expect(component.resetRecipeObjective).not.toHaveBeenCalled();
-  //   });
-  // });
+    it('should reset a recipe step', () => {
+      const step: Step = {
+        id: '0',
+        itemId: ItemId.Coal,
+        recipeId: RecipeId.Coal,
+      };
+      component.resetStep(step);
+      expect(component.itemsSvc.resetId).toHaveBeenCalled();
+      expect(component.recipesSvc.resetId).toHaveBeenCalled();
+      expect(component.objectivesSvc.updateEntity).not.toHaveBeenCalled();
+    });
+  });
 
-  // describe('changeItemExcluded', () => {
-  //   it('should update the set and pass with defaults to the store dispatcher', () => {
-  //     spyOn(component, 'setExcludedItems');
-  //     component.changeItemExcluded(ItemId.Coal, true);
-  //     expect(component.setExcludedItems).toHaveBeenCalledWith(
-  //       new Set([ItemId.Coal]),
-  //     );
-  //   });
-  // });
+  describe('changeItemExcluded', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.changeItemExcluded(ItemId.Coal, true);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        excludedItemIds: new Set([ItemId.Coal]),
+      });
+    });
+  });
 
-  // describe('changeRecipesExcluded', () => {
-  //   it('should update the set and pass with defaults to the store dispatcher', () => {
-  //     spyOn(component, 'setExcludedRecipes');
-  //     component.changeRecipesExcluded([RecipeId.Coal], true);
-  //     expect(component.setExcludedRecipes).toHaveBeenCalledWith(
-  //       new Set([RecipeId.NuclearFuelReprocessing, RecipeId.Coal]),
-  //       new Set([RecipeId.NuclearFuelReprocessing]),
-  //     );
-  //   });
-  // });
+  describe('changeRecipesExcluded', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component.settingsSvc, 'updateField');
+      component.changeRecipesExcluded([RecipeId.Coal], true);
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'excludedRecipeIds',
+        new Set([RecipeId.NuclearFuelReprocessing, RecipeId.Coal]),
+        new Set([RecipeId.NuclearFuelReprocessing]),
+      );
+    });
+  });
 
-  // describe('changeRecipeField', () => {
-  //   const step: Step = {
-  //     id: '0',
-  //     recipeId: RecipeId.WoodenChest,
-  //     recipeSettings: Mocks.recipesStateInitial[RecipeId.WoodenChest],
-  //   };
+  describe('changeRecipeField', () => {
+    const step: Step = {
+      id: '0',
+      recipeId: RecipeId.WoodenChest,
+      recipeSettings: Mocks.recipesStateInitial[RecipeId.WoodenChest],
+    };
 
-  //   it('should skip a step with no recipe', () => {
-  //     spyOn(component, 'setMachine');
-  //     component.changeRecipeField({ id: '0' }, '1', 'machine');
-  //     expect(component.setMachine).not.toHaveBeenCalled();
-  //   });
+    beforeEach(() => {
+      spyOn(component.recipesSvc, 'updateEntityField');
+      spyOn(component.objectivesSvc, 'updateEntityField');
+    });
 
-  //   it('should skip a step with no machine', () => {
-  //     spyOn(component, 'setMachine');
-  //     component.changeRecipeField(
-  //       { id: '0', recipeId: RecipeId.AdvancedCircuit },
-  //       '1',
-  //       'machine',
-  //     );
-  //     expect(component.setMachine).not.toHaveBeenCalled();
-  //   });
+    it('should skip a step with no recipe', () => {
+      component.changeRecipeField({ id: '0' }, '1', 'machine');
+      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
+    });
 
-  //   it('should set up default for machine', () => {
-  //     spyOn(component, 'setMachine');
-  //     component.changeRecipeField(step, ItemId.AssemblingMachine2, 'machine');
-  //     expect(component.setMachine).toHaveBeenCalledWith(
-  //       RecipeId.WoodenChest,
-  //       ItemId.AssemblingMachine2,
-  //       ItemId.AssemblingMachine1,
-  //       false,
-  //     );
-  //   });
+    it('should skip a step with no machine', () => {
+      component.changeRecipeField(
+        { id: '0', recipeId: RecipeId.AdvancedCircuit },
+        '1',
+        'machine',
+      );
+      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
+    });
 
-  //   it('should ignore invalid machine event', () => {
-  //     spyOn(component, 'setMachine');
-  //     component.changeRecipeField(step, 0, 'machine');
-  //     expect(component.setMachine).not.toHaveBeenCalled();
-  //   });
+    it('should set up default for machine', () => {
+      component.changeRecipeField(step, ItemId.AssemblingMachine2, 'machine');
+      expect(component.recipesSvc.updateEntityField).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        'machineId',
+        ItemId.AssemblingMachine2,
+        ItemId.AssemblingMachine1,
+      );
+    });
 
-  //   it('should set up default for fuel', () => {
-  //     spyOn(component, 'setFuel');
-  //     component.changeRecipeField(step, ItemId.Coal, 'fuel');
-  //     expect(component.setFuel).toHaveBeenCalledWith(
-  //       RecipeId.WoodenChest,
-  //       ItemId.Coal,
-  //       undefined,
-  //       false,
-  //     );
-  //   });
+    it('should ignore invalid machine event', () => {
+      component.changeRecipeField(step, 0, 'machine');
+      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
+    });
 
-  //   it('should ignore invalid fuel event', () => {
-  //     spyOn(component, 'setFuel');
-  //     component.changeRecipeField(step, 0, 'fuel');
-  //     expect(component.setFuel).not.toHaveBeenCalled();
-  //   });
+    it('should set up default for fuel', () => {
+      component.changeRecipeField(step, ItemId.Coal, 'fuel');
+      expect(component.recipesSvc.updateEntityField).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        'fuelId',
+        ItemId.Coal,
+        undefined,
+      );
+    });
 
-  //   it('should set up default for modules', () => {
-  //     spyOn(RecipeUtility, 'dehydrateModules');
-  //     spyOn(component, 'setModules');
-  //     component.changeRecipeField(step, [], 'modules');
-  //     expect(component.setModules).toHaveBeenCalled();
-  //   });
+    it('should ignore invalid fuel event', () => {
+      component.changeRecipeField(step, 0, 'fuel');
+      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
+    });
 
-  //   it('should ignore invalid modules event', () => {
-  //     spyOn(component, 'setModules');
-  //     component.changeRecipeField(step, ItemId.AdvancedCircuit, 'modules');
-  //     expect(component.setModules).not.toHaveBeenCalled();
-  //   });
+    it('should set up default for modules', () => {
+      spyOn(RecipeUtility, 'dehydrateModules');
+      component.changeRecipeField(step, [], 'modules');
+      expect(component.recipesSvc.updateEntityField).toHaveBeenCalled();
+    });
 
-  //   it('should set up default for beacons', () => {
-  //     spyOn(RecipeUtility, 'dehydrateBeacons');
-  //     spyOn(component, 'setBeacons');
-  //     component.changeRecipeField(step, [], 'beacons');
-  //     expect(component.setBeacons).toHaveBeenCalled();
-  //   });
+    it('should ignore invalid modules event', () => {
+      component.changeRecipeField(step, ItemId.AdvancedCircuit, 'modules');
+      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
+    });
 
-  //   it('should ignore invalid beacons event', () => {
-  //     spyOn(component, 'setBeacons');
-  //     component.changeRecipeField(step, ItemId.AdvancedCircuit, 'beacons');
-  //     expect(component.setBeacons).not.toHaveBeenCalled();
-  //   });
+    it('should set up default for beacons', () => {
+      spyOn(RecipeUtility, 'dehydrateBeacons');
+      component.changeRecipeField(step, [], 'beacons');
+      expect(component.recipesSvc.updateEntityField).toHaveBeenCalled();
+    });
 
-  //   it('should set up default for overclock', () => {
-  //     spyOn(component, 'setOverclock');
-  //     component.changeRecipeField(step, 100, 'overclock');
-  //     expect(component.setOverclock).toHaveBeenCalledWith(
-  //       RecipeId.WoodenChest,
-  //       rational(100n),
-  //       undefined,
-  //       false,
-  //     );
-  //   });
+    it('should ignore invalid beacons event', () => {
+      component.changeRecipeField(step, ItemId.AdvancedCircuit, 'beacons');
+      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
+    });
 
-  //   it('should ignore invalid overclock event', () => {
-  //     spyOn(component, 'setOverclock');
-  //     component.changeRecipeField(step, ItemId.AdvancedCircuit, 'overclock');
-  //     expect(component.setOverclock).not.toHaveBeenCalled();
-  //   });
-  // });
+    it('should set up default for overclock', () => {
+      component.changeRecipeField(step, 100, 'overclock');
+      expect(component.recipesSvc.updateEntityField).toHaveBeenCalledWith(
+        RecipeId.WoodenChest,
+        'overclock',
+        rational(100n),
+        undefined,
+      );
+    });
 
-  // describe('changeStepChecked', () => {
-  //   it('should set for an item step', () => {
-  //     spyOn(component, 'setCheckedItems');
-  //     component.changeStepChecked({ id: '0', itemId: ItemId.Coal }, true);
-  //     expect(component.setCheckedItems).toHaveBeenCalledWith(
-  //       new Set([ItemId.Coal]),
-  //     );
-  //   });
+    it('should ignore invalid overclock event', () => {
+      component.changeRecipeField(step, ItemId.AdvancedCircuit, 'overclock');
+      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
+    });
 
-  //   it('should set for a recipe objective step', () => {
-  //     spyOn(component, 'setCheckedObjectives');
-  //     component.changeStepChecked(
-  //       { id: '0', recipeObjectiveId: '1', recipeId: RecipeId.Coal },
-  //       true,
-  //     );
-  //     expect(component.setCheckedObjectives).toHaveBeenCalledWith(
-  //       new Set(['1']),
-  //     );
-  //   });
+    it('should update recipe objective', () => {
+      const step: Step = {
+        id: '0',
+        recipeId: RecipeId.WoodenChest,
+        recipeObjectiveId: '1',
+        recipeSettings: Mocks.recipesStateInitial[RecipeId.WoodenChest],
+      };
+      component.changeRecipeField(step, ItemId.AssemblingMachine2, 'machine');
+      expect(component.objectivesSvc.updateEntityField).toHaveBeenCalledWith(
+        '1',
+        'machineId',
+        ItemId.AssemblingMachine2,
+        ItemId.AssemblingMachine1,
+      );
+    });
+  });
 
-  //   it('should set for a recipe step', () => {
-  //     spyOn(component, 'setCheckedRecipes');
-  //     component.changeStepChecked({ id: '0', recipeId: RecipeId.Coal }, true);
-  //     expect(component.setCheckedRecipes).toHaveBeenCalledWith(
-  //       new Set([RecipeId.Coal]),
-  //     );
-  //   });
-  // });
+  describe('changeStepChecked', () => {
+    beforeEach(() => {
+      spyOn(component.settingsSvc, 'apply');
+    });
+
+    it('should set for an item step', () => {
+      component.changeStepChecked({ id: '0', itemId: ItemId.Coal }, true);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        checkedItemIds: new Set([ItemId.Coal]),
+      });
+    });
+
+    it('should set for a recipe objective step', () => {
+      component.changeStepChecked(
+        { id: '0', recipeObjectiveId: '1', recipeId: RecipeId.Coal },
+        true,
+      );
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        checkedObjectiveIds: new Set(['1']),
+      });
+    });
+
+    it('should set for a recipe step', () => {
+      component.changeStepChecked({ id: '0', recipeId: RecipeId.Coal }, true);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        checkedRecipeIds: new Set([RecipeId.Coal]),
+      });
+    });
+  });
+
+  describe('resetChecked', () => {
+    it('should reset all checked properties', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.resetChecked();
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        checkedItemIds: new Set(),
+        checkedObjectiveIds: new Set(),
+        checkedRecipeIds: new Set(),
+      });
+    });
+  });
+
+  describe('resetExcludedItems', () => {
+    it('should reset excluded items', () => {
+      const event = new Event('click');
+      spyOn(component.settingsSvc, 'apply');
+      spyOn(event, 'stopImmediatePropagation');
+      component.resetExcludedItems(event);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        excludedItemIds: new Set(),
+      });
+      expect(event.stopImmediatePropagation).toHaveBeenCalled();
+    });
+  });
+
+  describe('resetBelts', () => {
+    it('should reset belts', () => {
+      const event = new Event('click');
+      spyOn(component.itemsSvc, 'resetField');
+      spyOn(event, 'stopImmediatePropagation');
+      component.resetBelts(event);
+      expect(component.itemsSvc.resetField).toHaveBeenCalledWith('beltId');
+      expect(event.stopImmediatePropagation).toHaveBeenCalled();
+    });
+  });
+
+  describe('resetWagons', () => {
+    it('should reset wagons', () => {
+      const event = new Event('click');
+      spyOn(component.itemsSvc, 'resetField');
+      spyOn(event, 'stopImmediatePropagation');
+      component.resetWagons(event);
+      expect(component.itemsSvc.resetField).toHaveBeenCalledWith('wagonId');
+      expect(event.stopImmediatePropagation).toHaveBeenCalled();
+    });
+  });
+
+  describe('resetMachines', () => {
+    it('should reset machines', () => {
+      const event = new Event('click');
+      spyOn(component.objectivesSvc, 'resetFields');
+      spyOn(component.recipesSvc, 'resetFields');
+      spyOn(event, 'stopImmediatePropagation');
+      component.resetMachines(event);
+      expect(component.objectivesSvc.resetFields).toHaveBeenCalled();
+      expect(component.recipesSvc.resetFields).toHaveBeenCalled();
+      expect(event.stopImmediatePropagation).toHaveBeenCalled();
+    });
+  });
+
+  describe('resetBeacons', () => {
+    it('should reset machines', () => {
+      spyOn(component.objectivesSvc, 'resetFields');
+      spyOn(component.recipesSvc, 'resetFields');
+      component.resetBeacons();
+      expect(component.objectivesSvc.resetFields).toHaveBeenCalled();
+      expect(component.recipesSvc.resetFields).toHaveBeenCalled();
+    });
+  });
 });
