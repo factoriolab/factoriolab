@@ -83,7 +83,7 @@ export class ObjectivesComponent {
   translateSvc = inject(TranslateService);
 
   result = this.objectivesSvc.matrixResult;
-  itemsState = this.itemsSvc.state;
+  itemsState = this.itemsSvc.itemsState;
   beltSpeed = this.settingsSvc.beltSpeed;
   dispRateInfo = this.settingsSvc.displayRateInfo;
   maximizeType = this.settingsSvc.maximizeType;

@@ -111,8 +111,4 @@ export class LandingComponent {
   setMod(modId: string): void {
     void this.router.navigate([modId]);
   }
-
-  setBypassLanding(bypassLanding: boolean): void {
-    this.preferencesSvc.apply({ bypassLanding });
-  }
 }

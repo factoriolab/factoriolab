@@ -149,21 +149,23 @@ export class SettingsComponent implements OnInit {
       label: 'settings.saveSavedState',
       icon: 'fa-solid fa-floppy-disk',
       command: (): void => {
-        this.overwriteState();
+        this.preferencesSvc.saveState(this.game(), this.state, this.search);
       },
     },
     {
       label: 'settings.editSavedState',
       icon: 'fa-solid fa-pencil',
       command: (): void => {
-        this.openEditState();
+        this.editValue = this.state;
+        this.editState = 'edit';
       },
     },
     {
       label: 'settings.deleteSavedState',
       icon: 'fa-solid fa-trash',
       command: (): void => {
-        this.clickDeleteState();
+        this.preferencesSvc.removeState(this.game(), this.state);
+        this.state = '';
       },
     },
   ];
@@ -251,20 +253,6 @@ export class SettingsComponent implements OnInit {
   openCreateState(): void {
     this.editValue = '';
     this.editState = 'create';
-  }
-
-  overwriteState(): void {
-    this.preferencesSvc.saveState(this.game(), this.state, this.search);
-  }
-
-  openEditState(): void {
-    this.editValue = this.state;
-    this.editState = 'edit';
-  }
-
-  clickDeleteState(): void {
-    this.preferencesSvc.removeState(this.game(), this.state);
-    this.state = '';
   }
 
   setGame(game: Game): void {

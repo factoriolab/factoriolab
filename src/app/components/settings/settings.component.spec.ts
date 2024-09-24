@@ -33,33 +33,88 @@ describe('SettingsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('openCreateState', () => {
+    it('should start the create state from the menu', () => {
+      component.state = id;
+      component.editStateMenu[0].command!({});
+      expect(component.editValue).toEqual('');
+      expect(component.editState).toEqual('create');
+    });
+  });
+
+  describe('overwriteState', () => {
+    it('should re-save the state with the new value', () => {
+      spyOn(component.preferencesSvc, 'saveState');
+      component.state = 'id';
+      spyOnProperty(component, 'search').and.returnValue('search');
+      component.editStateMenu[1].command!({});
+      expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
+        Game.Factorio,
+        'id',
+        'search',
+      );
+    });
+  });
+
+  describe('openEditState', () => {
+    it('should start the edit state from the menu', () => {
+      component.state = id;
+      component.editStateMenu[2].command!({});
+      expect(component.editValue).toEqual(id);
+      expect(component.editState).toEqual('edit');
+    });
+  });
+
+  describe('clickDeleteState', () => {
+    it('should emit to remove the state from the menu', fakeAsync(() => {
+      spyOn(component.preferencesSvc, 'removeState');
+      component.state = id;
+      component.editStateMenu[3].command!({});
+      tick();
+      expect(component.preferencesSvc.removeState).toHaveBeenCalledWith(
+        Game.Factorio,
+        id,
+      );
+      expect(component.state).toEqual('');
+    }));
+  });
+
+  describe('search', () => {
+    it('should get the window.location property', () => {
+      expect(component.search).toEqual(window.location.search.substring(1));
+    });
+  });
+
   describe('ngOnInit', () => {
     it('should ignore if no matching state is found', () => {
       expect(component.state).toEqual('');
     });
 
-    // it('should set state to matching saved state', () => {
-    //   spyOnProperty(BrowserUtility, 'search').and.returnValue('z=zip');
-    //   component.ngOnInit();
-    //   expect(component.state).toEqual('name');
-    // });
+    it('should set state to matching saved state', () => {
+      spyOnProperty(component, 'search').and.returnValue('z=zip');
+      spyOn(component.settingsSvc, 'gameStates').and.returnValue({
+        name: 'z=zip',
+      });
+      component.ngOnInit();
+      expect(component.state).toEqual('name');
+    });
   });
 
-  // describe('clickResetSettings', () => {
-  //   it('should set up a confirmation dialog and clear settings', () => {
-  //     let confirm: Confirmation | undefined;
-  //     spyOn(component.contentSvc, 'confirm').and.callFake(
-  //       (c: Confirmation) => (confirm = c),
-  //     );
-  //     component.clickResetSettings();
-  //     assert(confirm?.accept != null);
-  //     spyOn(localStorage, 'clear');
-  //     spyOn(component, 'resetSettings');
-  //     confirm.accept();
-  //     expect(localStorage.clear).toHaveBeenCalled();
-  //     expect(component.resetSettings).toHaveBeenCalled();
-  //   });
-  // });
+  describe('clickResetSettings', () => {
+    it('should set up a confirmation dialog and clear settings', () => {
+      let confirm: Confirmation | undefined;
+      spyOn(component.contentSvc, 'confirm').and.callFake(
+        (c: Confirmation) => (confirm = c),
+      );
+      component.clickResetSettings();
+      assert(confirm?.accept != null);
+      spyOn(localStorage, 'clear');
+      spyOn(component.router, 'navigate');
+      confirm.accept();
+      expect(localStorage.clear).toHaveBeenCalled();
+      expect(component.router.navigate).toHaveBeenCalled();
+    });
+  });
 
   describe('setSearch', () => {
     it('should call the router to navigate', () => {
@@ -94,95 +149,54 @@ describe('SettingsComponent', () => {
     });
   });
 
-  // describe('clickSaveState', () => {
-  //   it('should emit to create the new saved state', () => {
-  //     spyOn(component, 'saveState');
-  //     spyOn(component, 'removeState');
-  //     component.editValue = id;
-  //     component.editState = 'create';
-  //     spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
-  //     component.clickSaveState(Game.Factorio);
-  //     expect(component.saveState).toHaveBeenCalledWith(
-  //       Game.Factorio,
-  //       id,
-  //       value,
-  //     );
-  //     expect(component.removeState).not.toHaveBeenCalled();
-  //     expect(component.editState).toBeNull();
-  //   });
+  describe('clickSaveState', () => {
+    beforeEach(() => {
+      spyOn(component.preferencesSvc, 'saveState');
+      spyOn(component.preferencesSvc, 'removeState');
+    });
 
-  //   it('should emit to edit the saved state', () => {
-  //     spyOn(component, 'saveState');
-  //     spyOn(component, 'removeState');
-  //     component.editValue = id;
-  //     component.editState = 'edit';
-  //     component.state = id;
-  //     spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
-  //     component.clickSaveState(Game.Factorio);
-  //     expect(component.saveState).toHaveBeenCalledWith(
-  //       Game.Factorio,
-  //       id,
-  //       value,
-  //     );
-  //     expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
-  //     expect(component.editState).toBeNull();
-  //   });
+    it('should emit to create the new saved state', () => {
+      component.editValue = id;
+      component.editState = 'create';
+      spyOnProperty(component, 'search').and.returnValue(value);
+      component.clickSaveState();
+      expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
+        Game.Factorio,
+        id,
+        value,
+      );
+      expect(component.preferencesSvc.removeState).not.toHaveBeenCalled();
+      expect(component.editState).toBeNull();
+    });
 
-  //   it('should skip if invalid or not editing', () => {
-  //     spyOn(component, 'saveState');
-  //     component.editValue = '';
-  //     component.editState = 'create';
-  //     component.clickSaveState(Game.Factorio);
-  //     component.editValue = 'id';
-  //     component.editState = null;
-  //     component.clickSaveState(Game.Factorio);
-  //     expect(component.saveState).not.toHaveBeenCalled();
-  //   });
-  // });
-
-  describe('openCreateState', () => {
-    it('should start the create state from the menu', () => {
+    it('should emit to edit the saved state', () => {
+      component.editValue = id;
+      component.editState = 'edit';
       component.state = id;
-      component.editStateMenu[0].command!({});
-      expect(component.editValue).toEqual('');
-      expect(component.editState).toEqual('create');
+      spyOnProperty(component, 'search').and.returnValue(value);
+      component.clickSaveState();
+      expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
+        Game.Factorio,
+        id,
+        value,
+      );
+      expect(component.preferencesSvc.removeState).toHaveBeenCalledWith(
+        Game.Factorio,
+        id,
+      );
+      expect(component.editState).toBeNull();
+    });
+
+    it('should skip if invalid or not editing', () => {
+      component.editValue = '';
+      component.editState = 'create';
+      component.clickSaveState();
+      component.editValue = 'id';
+      component.editState = null;
+      component.clickSaveState();
+      expect(component.preferencesSvc.saveState).not.toHaveBeenCalled();
     });
   });
-
-  // describe('overwriteState', () => {
-  //   it('should re-save the state with the new value', () => {
-  //     spyOn(component, 'saveState');
-  //     mockStore.overrideSelector(selectGame, Game.Factorio);
-  //     component.state = 'id';
-  //     spyOnProperty(BrowserUtility, 'search').and.returnValue('search');
-  //     component.editStateMenu[1].command!({});
-  //     expect(component.saveState).toHaveBeenCalledWith(
-  //       Game.Factorio,
-  //       'id',
-  //       'search',
-  //     );
-  //   });
-  // });
-
-  describe('openEditState', () => {
-    it('should start the edit state from the menu', () => {
-      component.state = id;
-      component.editStateMenu[2].command!({});
-      expect(component.editValue).toEqual(id);
-      expect(component.editState).toEqual('edit');
-    });
-  });
-
-  // describe('clickDeleteState', () => {
-  //   it('should emit to remove the state from the menu', fakeAsync(() => {
-  //     spyOn(component, 'removeState');
-  //     component.state = id;
-  //     component.editStateMenu[3].command!({});
-  //     tick();
-  //     expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
-  //     expect(component.state).toEqual('');
-  //   }));
-  // });
 
   describe('setGame', () => {
     it('should map a game to its default mod id', () => {
@@ -200,132 +214,129 @@ describe('SettingsComponent', () => {
     });
   });
 
-  // describe('changeExcludedRecipes', () => {
-  //   it('should set up defaults to pass to the store action', () => {
-  //     spyOn(component, 'setExcludedRecipes');
-  //     const set = new Set([RecipeId.AdvancedCircuit]);
-  //     component.changeExcludedRecipes(set);
-  //     expect(component.setExcludedRecipes).toHaveBeenCalledWith(
-  //       set,
-  //       new Set([RecipeId.NuclearFuelReprocessing]),
-  //     );
-  //   });
-  // });
+  describe('changeExcludedRecipes', () => {
+    it('should set up defaults to pass to the store action', () => {
+      spyOn(component.settingsSvc, 'apply');
+      const excludedRecipeIds = new Set([RecipeId.AdvancedCircuit]);
+      component.changeExcludedRecipes(excludedRecipeIds);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        excludedRecipeIds,
+      });
+    });
+  });
 
-  // describe('changeFuel', () => {
-  //   it('should calculate the default value for the passed machine', () => {
-  //     spyOn(component, 'setFuel');
-  //     component.changeFuel(
-  //       ItemId.StoneFurnace,
-  //       ItemId.Coal,
-  //       { fuelOptions: [{ label: '', value: ItemId.Wood }] },
-  //       [ItemId.Wood],
-  //     );
-  //     expect(component.setFuel).toHaveBeenCalledWith(
-  //       ItemId.StoneFurnace,
-  //       ItemId.Coal,
-  //       ItemId.Wood,
-  //     );
-  //   });
+  describe('changeFuel', () => {
+    it('should calculate the default value for the passed machine', () => {
+      spyOn(component.machinesSvc, 'updateEntityField');
+      component.changeFuel(
+        ItemId.StoneFurnace,
+        ItemId.Coal,
+        { fuelOptions: [{ label: '', value: ItemId.Wood }] },
+        [ItemId.Wood],
+      );
+      expect(component.machinesSvc.updateEntityField).toHaveBeenCalledWith(
+        ItemId.StoneFurnace,
+        'fuelId',
+        ItemId.Coal,
+        ItemId.Wood,
+      );
+    });
+  });
 
-  //   it('should handle no options specified in passed settings', () => {
-  //     spyOn(component, 'setFuel');
-  //     component.changeFuel(ItemId.StoneFurnace, ItemId.Coal, {}, [ItemId.Wood]);
-  //     expect(component.setFuel).toHaveBeenCalledWith(
-  //       ItemId.StoneFurnace,
-  //       ItemId.Coal,
-  //       undefined,
-  //     );
-  //   });
-  // });
+  describe('changeModules', () => {
+    it('should dehydrate the modules', () => {
+      spyOn(RecipeUtility, 'dehydrateModules');
+      spyOn(component.machinesSvc, 'updateEntity');
+      component.changeModules(ItemId.AssemblingMachine2, []);
+      expect(RecipeUtility.dehydrateModules).toHaveBeenCalled();
+      expect(component.machinesSvc.updateEntity).toHaveBeenCalled();
+    });
+  });
 
-  // describe('changeModules', () => {
-  //   it('should dehydrate the modules', () => {
-  //     spyOn(RecipeUtility, 'dehydrateModules');
-  //     spyOn(component, 'setModules');
-  //     component.changeModules(ItemId.AssemblingMachine2, []);
-  //     expect(RecipeUtility.dehydrateModules).toHaveBeenCalled();
-  //     expect(component.setModules).toHaveBeenCalled();
-  //   });
-  // });
+  describe('changeBeacons', () => {
+    it('should dehydrate the beacons', () => {
+      spyOn(RecipeUtility, 'dehydrateBeacons');
+      spyOn(component.machinesSvc, 'updateEntity');
+      component.changeBeacons(ItemId.AssemblingMachine2, []);
+      expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
+      expect(component.machinesSvc.updateEntity).toHaveBeenCalled();
+    });
+  });
 
-  // describe('changeBeacons', () => {
-  //   it('should dehydrate the beacons', () => {
-  //     spyOn(RecipeUtility, 'dehydrateBeacons');
-  //     spyOn(component, 'setBeacons');
-  //     component.changeBeacons(ItemId.AssemblingMachine2, []);
-  //     expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
-  //     expect(component.setBeacons).toHaveBeenCalled();
-  //   });
-  // });
+  describe('changeDefaultBeacons', () => {
+    it('should dehydrate the beacons', () => {
+      spyOn(RecipeUtility, 'dehydrateBeacons');
+      spyOn(component.settingsSvc, 'apply');
+      component.changeDefaultBeacons([]);
+      expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
+      expect(component.settingsSvc.apply).toHaveBeenCalled();
+    });
+  });
 
-  // describe('changeDefaultBeacons', () => {
-  //   it('should dehydrate the beacons', () => {
-  //     spyOn(RecipeUtility, 'dehydrateBeacons');
-  //     spyOn(component, 'setDefaultBeacons');
-  //     component.changeDefaultBeacons([]);
-  //     expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
-  //     expect(component.setDefaultBeacons).toHaveBeenCalled();
-  //   });
-  // });
+  describe('toggleBeaconReceivers', () => {
+    it('should turn off beacon power estimation', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.toggleBeaconReceivers(false);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        beaconReceivers: undefined,
+      });
+    });
 
-  // describe('toggleBeaconReceivers', () => {
-  //   it('should turn off beacon power estimation', () => {
-  //     spyOn(component, 'setBeaconReceivers');
-  //     component.toggleBeaconReceivers(false);
-  //     expect(component.setBeaconReceivers).toHaveBeenCalledWith(undefined);
-  //   });
+    it('should turn on beacon power estimation', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.toggleBeaconReceivers(true);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        beaconReceivers: rational.one,
+      });
+    });
+  });
 
-  //   it('should turn on beacon power estimation', () => {
-  //     spyOn(component, 'setBeaconReceivers');
-  //     component.toggleBeaconReceivers(true);
-  //     expect(component.setBeaconReceivers).toHaveBeenCalledWith(rational.one);
-  //   });
-  // });
+  describe('addMachine', () => {
+    it('should update the set and pass to the store action', () => {
+      spyOn(component.settingsSvc, 'updateField');
+      component.addMachine(ItemId.AssemblingMachine2, undefined);
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'machineRankIds',
+        [
+          ItemId.AssemblingMachine1,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+          ItemId.AssemblingMachine2,
+        ],
+        undefined,
+      );
+    });
+  });
 
-  // describe('addMachine', () => {
-  //   it('should update the set and pass to the store action', () => {
-  //     spyOn(component, 'setMachineRank');
-  //     component.addMachine(ItemId.AssemblingMachine2, undefined);
-  //     expect(component.setMachineRank).toHaveBeenCalledWith(
-  //       [
-  //         ItemId.AssemblingMachine1,
-  //         ItemId.ElectricFurnace,
-  //         ItemId.ElectricMiningDrill,
-  //         ItemId.AssemblingMachine2,
-  //       ],
-  //       undefined,
-  //     );
-  //   });
-  // });
+  describe('setMachine', () => {
+    it('should update the set and pass to the store action', () => {
+      spyOn(component.settingsSvc, 'updateField');
+      component.setMachine(
+        ItemId.AssemblingMachine1,
+        ItemId.AssemblingMachine2,
+        undefined,
+      );
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'machineRankIds',
+        [
+          ItemId.AssemblingMachine2,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+        ],
+        undefined,
+      );
+    });
+  });
 
-  // describe('setMachine', () => {
-  //   it('should update the set and pass to the store action', () => {
-  //     spyOn(component, 'setMachineRank');
-  //     component.setMachine(
-  //       ItemId.AssemblingMachine1,
-  //       ItemId.AssemblingMachine2,
-  //       undefined,
-  //     );
-  //     expect(component.setMachineRank).toHaveBeenCalledWith(
-  //       [
-  //         ItemId.AssemblingMachine2,
-  //         ItemId.ElectricFurnace,
-  //         ItemId.ElectricMiningDrill,
-  //       ],
-  //       undefined,
-  //     );
-  //   });
-  // });
-
-  // describe('removeMachine', () => {
-  //   it('should update the set and pass to the store action', () => {
-  //     spyOn(component, 'setMachineRank');
-  //     component.removeMachine(ItemId.AssemblingMachine1, undefined);
-  //     expect(component.setMachineRank).toHaveBeenCalledWith(
-  //       [ItemId.ElectricFurnace, ItemId.ElectricMiningDrill],
-  //       undefined,
-  //     );
-  //   });
-  // });
+  describe('removeMachine', () => {
+    it('should update the set and pass to the store action', () => {
+      spyOn(component.settingsSvc, 'updateField');
+      component.removeMachine(ItemId.AssemblingMachine1, undefined);
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'machineRankIds',
+        [ItemId.ElectricFurnace, ItemId.ElectricMiningDrill],
+        undefined,
+      );
+    });
+  });
 });

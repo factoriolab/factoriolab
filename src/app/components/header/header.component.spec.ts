@@ -22,16 +22,17 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('ngOnInit', () => {
-  //   it('should update the page title with the first objective name', () => {
-  //     spyOn(component.title, 'setTitle');
-  //     mockStore.overrideSelector(selectBaseObjectives, Mocks.objectivesList);
-  //     mockStore.refreshState();
-  //     expect(component.title.setTitle).toHaveBeenCalledWith(
-  //       'Advanced circuit | FactorioLab',
-  //     );
-  //   });
-  // });
+  describe('ngOnInit', () => {
+    it('should update the page title with the first objective name', () => {
+      spyOn(component.title, 'setTitle');
+
+      component.objectivesSvc.load(Mocks.objectivesState);
+      fixture.detectChanges();
+      expect(component.title.setTitle).toHaveBeenCalledWith(
+        'Advanced circuit | FactorioLab',
+      );
+    });
+  });
 
   describe('cancelRouterLink', () => {
     it('should prevent the dropdown from being treated as an anchor', () => {

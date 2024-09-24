@@ -122,7 +122,7 @@
         [binary]="true"
         [label]="'landing.bypass' | translate"
         [ngModel]="preferencesSvc.state().bypassLanding"
-        (onChange)="setBypassLanding($event.checked)"
+        (onChange)="preferencesSvc.apply({ bypassLanding: $event.checked })"
       ></p-checkbox>
     </div>
   </p-card>

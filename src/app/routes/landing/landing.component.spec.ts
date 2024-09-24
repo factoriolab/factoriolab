@@ -23,25 +23,25 @@ describe('LandingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // describe('selectItem', () => {
-  //   it('should add an item objective and navigate to the list', () => {
-  //     spyOn(component, 'createObjective');
-  //     spyOn(component.router, 'navigate');
-  //     component.selectItem(ItemId.IronPlate);
-  //     expect(component.createObjective).toHaveBeenCalled();
-  //     expect(component.router.navigate).toHaveBeenCalled();
-  //   });
-  // });
+  describe('selectItem', () => {
+    it('should add an item objective and navigate to the list', () => {
+      spyOn(component.objectivesSvc, 'create');
+      spyOn(component.router, 'navigate');
+      component.selectItem(ItemId.IronPlate);
+      expect(component.objectivesSvc.create).toHaveBeenCalled();
+      expect(component.router.navigate).toHaveBeenCalled();
+    });
+  });
 
-  // describe('selectRecipe', () => {
-  //   it('should add a recipe objective and navigate to the list', () => {
-  //     spyOn(component, 'createObjective');
-  //     spyOn(component.router, 'navigate');
-  //     component.selectRecipe(RecipeId.IronPlate);
-  //     expect(component.createObjective).toHaveBeenCalled();
-  //     expect(component.router.navigate).toHaveBeenCalled();
-  //   });
-  // });
+  describe('selectRecipe', () => {
+    it('should add a recipe objective and navigate to the list', () => {
+      spyOn(component.objectivesSvc, 'create');
+      spyOn(component.router, 'navigate');
+      component.selectRecipe(RecipeId.IronPlate);
+      expect(component.objectivesSvc.create).toHaveBeenCalled();
+      expect(component.router.navigate).toHaveBeenCalled();
+    });
+  });
 
   describe('setState', () => {
     it('should return if query is falsy', () => {
@@ -65,6 +65,14 @@ describe('LandingComponent', () => {
       spyOn(component, 'setMod');
       component.setGame(Game.Factorio);
       expect(component.setMod).toHaveBeenCalledWith('1.1');
+    });
+  });
+
+  describe('setMod', () => {
+    it('should navigate using the router', () => {
+      spyOn(component.router, 'navigate');
+      component.setMod('id');
+      expect(component.router.navigate).toHaveBeenCalledWith(['id']);
     });
   });
 });
