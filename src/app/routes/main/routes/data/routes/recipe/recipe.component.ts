@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 
 import { InputNumberComponent } from '~/components/input-number/input-number.component';
-import { coalesce, compareSet, updateSetIds } from '~/helpers';
+import { coalesce, updateSetIds } from '~/helpers';
 import { Recipe } from '~/models/data/recipe';
 import { Game } from '~/models/enum/game';
 import { RecipeSettings } from '~/models/settings/recipe-settings';

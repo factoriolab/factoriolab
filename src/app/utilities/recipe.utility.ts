@@ -39,13 +39,13 @@ import { ItemsState } from '~/services/items.service';
 import { MachinesState } from '~/services/machines.service';
 import { RecipesState } from '~/services/recipes.service';
 
-export class RecipeUtility {
-  static MIN_FACTOR = rational(1n, 5n);
-  static POLLUTION_FACTOR = rational(60n);
-  static MIN_FACTORIO_RECIPE_TIME = rational(1n, 60n);
+export const RecipeUtility = {
+  MIN_FACTOR: rational(1n, 5n),
+  POLLUTION_FACTOR: rational(60n),
+  MIN_FACTORIO_RECIPE_TIME: rational(1n, 60n),
 
   /** Determines what option to use based on preferred rank */
-  static bestMatch(options: string[], rank: string[]): string {
+  bestMatch(options: string[], rank: string[]): string {
     if (options.length > 1) {
       for (const r of rank) {
         // Return first matching option in rank list
@@ -53,9 +53,9 @@ export class RecipeUtility {
       }
     }
     return options[0];
-  }
+  },
 
-  static fuelOptions(
+  fuelOptions(
     entity: MachineJson | Machine,
     data: Dataset,
   ): SelectItem<string>[] {
@@ -74,9 +74,9 @@ export class RecipeUtility {
     return allowed.map(
       (f): SelectItem<string> => ({ value: f.id, label: f.name }),
     );
-  }
+  },
 
-  static moduleOptions(
+  moduleOptions(
     entity: Machine | Beacon,
     data: Dataset,
     recipeId?: string,
@@ -119,10 +119,10 @@ export class RecipeUtility {
       options.unshift({ label: 'None', value: ItemId.Module });
     }
     return options;
-  }
+  },
 
   /** Determines default modules for a recipe/machine */
-  static defaultModules(
+  defaultModules(
     options: SelectItem<string>[],
     moduleRankIds: string[] | undefined,
     count: Rational | true | undefined,
@@ -141,9 +141,9 @@ export class RecipeUtility {
     );
     count = count === true ? rational.zero : count;
     return [{ id, count }];
-  }
+  },
 
-  static adjustRecipe(
+  adjustRecipe(
     recipeId: string,
     recipeSettings: RecipeSettings,
     itemsState: Entities<ItemSettings>,
@@ -497,10 +497,10 @@ export class RecipeUtility {
     }
 
     return recipe;
-  }
+  },
 
   /** Adjust rocket launch objective recipes */
-  static adjustLaunchRecipeObjective(
+  adjustLaunchRecipeObjective(
     recipe: Recipe,
     settings: Entities<RecipeSettings>,
     data: AdjustedDataset,
@@ -515,10 +515,10 @@ export class RecipeUtility {
     const itemId = Object.keys(rocketRecipe.out)[0];
     const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
     recipe.time = rocketRecipe.time.mul(factor);
-  }
+  },
 
   /** Adjust rocket launch and rocket part recipes */
-  static adjustSiloRecipes(
+  adjustSiloRecipes(
     adjustedRecipe: Entities<AdjustedRecipe>,
     settings: Entities<RecipeSettings>,
     data: Dataset,
@@ -550,13 +550,13 @@ export class RecipeUtility {
     }
 
     return adjustedRecipe;
-  }
+  },
 
-  static allowsModules(recipe: RecipeJson | Recipe, machine: Machine): boolean {
+  allowsModules(recipe: RecipeJson | Recipe, machine: Machine): boolean {
     return (!machine.silo || !recipe.part) && !!machine.modules;
-  }
+  },
 
-  static adjustDataset(
+  adjustDataset(
     recipeIds: string[],
     recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
@@ -583,9 +583,9 @@ export class RecipeUtility {
       adjustedRecipe,
       data,
     );
-  }
+  },
 
-  static adjustRecipes(
+  adjustRecipes(
     recipeIds: string[],
     recipesState: Entities<RecipeSettings>,
     itemsState: Entities<ItemSettings>,
@@ -606,9 +606,9 @@ export class RecipeUtility {
       recipesState,
       data,
     );
-  }
+  },
 
-  static adjustCosts(
+  adjustCosts(
     recipeIds: string[],
     adjustedRecipe: Entities<Recipe>,
     recipesState: Entities<RecipeSettings>,
@@ -641,9 +641,9 @@ export class RecipeUtility {
           }
         }
       });
-  }
+  },
 
-  static finalizeData(
+  finalizeData(
     recipeIds: string[],
     excludedRecipeIds: Set<string>,
     adjustedRecipe: Entities<AdjustedRecipe>,
@@ -683,9 +683,9 @@ export class RecipeUtility {
       itemIncludedRecipeIds,
       itemIncludedIoRecipeIds,
     });
-  }
+  },
 
-  static adjustObjective(
+  adjustObjective(
     objective: Objective,
     itemsState: ItemsState,
     recipesState: RecipesState,
@@ -753,9 +753,9 @@ export class RecipeUtility {
     finalizeRecipe(objective.recipe);
 
     return objective;
-  }
+  },
 
-  static dehydrateModules(
+  dehydrateModules(
     value: ModuleSettings[],
     options: SelectItem<string>[],
     moduleRankIds: string[],
@@ -786,9 +786,9 @@ export class RecipeUtility {
       });
 
     return result;
-  }
+  },
 
-  static hydrateModules(
+  hydrateModules(
     value: ModuleSettings[] | undefined,
     options: SelectItem<string>[],
     moduleRankIds: string[],
@@ -817,9 +817,9 @@ export class RecipeUtility {
     }
 
     return result;
-  }
+  },
 
-  static dehydrateBeacons(
+  dehydrateBeacons(
     value: BeaconSettings[],
     def: BeaconSettings[] | undefined,
   ): BeaconSettings[] | undefined {
@@ -860,9 +860,9 @@ export class RecipeUtility {
     if (result.every((r) => Object.keys(r).length === 0)) return [];
 
     return result;
-  }
+  },
 
-  static hydrateBeacons(
+  hydrateBeacons(
     value: BeaconSettings[] | undefined,
     def: BeaconSettings[] | undefined,
   ): BeaconSettings[] | undefined {
@@ -897,5 +897,5 @@ export class RecipeUtility {
 
       return b;
     });
-  }
-}
+  },
+};

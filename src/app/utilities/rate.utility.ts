@@ -22,8 +22,8 @@ import { ItemsState } from '~/services/items.service';
 
 const ROOT_ID = '';
 
-export class RateUtility {
-  static objectiveNormalizedRate(
+export const RateUtility = {
+  objectiveNormalizedRate(
     objective: Objective,
     itemsState: ItemsState,
     beltSpeed: Entities<Rational>,
@@ -34,9 +34,8 @@ export class RateUtility {
     if (
       objective.unit === ObjectiveUnit.Machines ||
       objective.type === ObjectiveType.Maximize
-    ) {
+    )
       return objective.value;
-    }
 
     const rate = objective.value;
     let factor = rational.one;
@@ -72,30 +71,24 @@ export class RateUtility {
     // Adjust based on productivity for technology objectives
     const recipe =
       data.adjustedRecipe[data.itemRecipeIds[objective.targetId][0]];
-    if (recipe?.isTechnology) {
-      factor = factor.mul(recipe.productivity);
-    }
+    if (recipe?.isTechnology) factor = factor.mul(recipe.productivity);
 
     return rate.mul(factor);
-  }
+  },
 
-  static addEntityValue(
+  addEntityValue(
     step: Step,
     key: 'parents' | 'outputs',
     parentId: string,
     value: Rational,
   ): void {
     const obj = step[key];
-    if (!obj) {
-      step[key] = { [parentId]: value };
-    } else if (obj[parentId]) {
-      obj[parentId] = obj[parentId].add(value);
-    } else {
-      obj[parentId] = value;
-    }
-  }
+    if (!obj) step[key] = { [parentId]: value };
+    else if (obj[parentId]) obj[parentId] = obj[parentId].add(value);
+    else obj[parentId] = value;
+  },
 
-  static adjustPowerPollution(step: Step, recipe: Recipe, game: Game): void {
+  adjustPowerPollution(step: Step, recipe: Recipe, game: Game): void {
     if (step.machines?.nonzero() && !recipe.part) {
       if (recipe.drain?.nonzero() || recipe.consumption?.nonzero()) {
         // Reset power
@@ -112,19 +105,17 @@ export class RateUtility {
           step.power = step.power.add(machines.mul(recipe.drain));
         }
         // Calculate consumption
-        if (recipe.consumption?.nonzero()) {
+        if (recipe.consumption?.nonzero())
           step.power = step.power.add(step.machines.mul(recipe.consumption));
-        }
       }
 
       // Calculate pollution
-      if (recipe.pollution?.nonzero()) {
+      if (recipe.pollution?.nonzero())
         step.pollution = step.machines.mul(recipe.pollution);
-      }
     }
-  }
+  },
 
-  static normalizeSteps(
+  normalizeSteps(
     steps: Step[],
     objectives: Objective[],
     itemsState: Entities<ItemSettings>,
@@ -136,9 +127,7 @@ export class RateUtility {
   ): Step[] {
     const _steps = this.copy(steps);
 
-    for (const step of _steps) {
-      this.calculateParentsOutputs(step, _steps);
-    }
+    for (const step of _steps) this.calculateParentsOutputs(step, _steps);
 
     const objectiveEntities = toEntities(objectives);
 
@@ -152,9 +141,9 @@ export class RateUtility {
 
     this.sortBySankey(_steps);
     return this.calculateHierarchy(_steps);
-  }
+  },
 
-  static calculateParentsOutputs(step: Step, steps: Step[]): void {
+  calculateParentsOutputs(step: Step, steps: Step[]): void {
     if (step.recipe && step.machines?.nonzero()) {
       const recipe = step.recipe;
       const quantity = step.machines.div(recipe.time);
@@ -162,9 +151,8 @@ export class RateUtility {
         if (recipe.in[itemId].nonzero()) {
           const amount = recipe.in[itemId].mul(quantity);
           const itemStep = steps.find((s) => s.itemId === itemId);
-          if (itemStep != null) {
+          if (itemStep != null)
             this.addEntityValue(itemStep, 'parents', step.id, amount);
-          }
         }
       }
       for (const itemId of Object.keys(recipe.out)) {
@@ -182,23 +170,21 @@ export class RateUtility {
         }
       }
     }
-  }
+  },
 
-  static calculateSettings(
+  calculateSettings(
     step: Step,
     objectiveEntities: Entities<Objective>,
     recipesState: Entities<RecipeSettings>,
   ): void {
     if (step.recipeId) {
-      if (step.recipeObjectiveId) {
+      if (step.recipeObjectiveId)
         step.recipeSettings = objectiveEntities[step.recipeObjectiveId];
-      } else {
-        step.recipeSettings = recipesState[step.recipeId];
-      }
+      else step.recipeSettings = recipesState[step.recipeId];
     }
-  }
+  },
 
-  static calculateBelts(
+  calculateBelts(
     step: Step,
     itemsState: Entities<ItemSettings>,
     beltSpeed: Entities<Rational>,
@@ -219,9 +205,9 @@ export class RateUtility {
       delete step.wagons;
     } else if (step.itemId != null) {
       const belt = itemsState[step.itemId].beltId;
-      if (step.items != null && belt != null) {
+      if (step.items != null && belt != null)
         step.belts = step.items.div(beltSpeed[belt]);
-      }
+
       const wagon = itemsState[step.itemId].wagonId;
       if (step.items != null && wagon != null) {
         const item = data.itemEntities[step.itemId];
@@ -229,14 +215,13 @@ export class RateUtility {
           step.wagons = step.items.div(
             data.cargoWagonEntities[wagon].size.mul(item.stack),
           );
-        } else {
+        } else
           step.wagons = step.items.div(data.fluidWagonEntities[wagon].capacity);
-        }
       }
     }
-  }
+  },
 
-  static calculateBeacons(
+  calculateBeacons(
     step: Step,
     beaconReceivers: Optional<Rational>,
     data: AdjustedDataset,
@@ -247,9 +232,8 @@ export class RateUtility {
       !step.machines?.nonzero() ||
       data.recipeEntities[step.recipeId].part ||
       step.recipeSettings == null
-    ) {
+    )
       return;
-    }
 
     const machines = step.machines;
 
@@ -283,9 +267,9 @@ export class RateUtility {
         return { ...b, total };
       }),
     });
-  }
+  },
 
-  static calculateDisplayRate(step: Step, dispRateInfo: DisplayRateInfo): void {
+  calculateDisplayRate(step: Step, dispRateInfo: DisplayRateInfo): void {
     if (step.items) {
       if (step.parents) {
         for (const key of Object.keys(step.parents)) {
@@ -306,9 +290,9 @@ export class RateUtility {
     if (step.output) {
       step.output = step.output.mul(dispRateInfo.value);
     }
-  }
+  },
 
-  static calculateChecked(step: Step, settings: SettingsComplete): void {
+  calculateChecked(step: Step, settings: SettingsComplete): void {
     // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
     if (step.itemId != null) {
       step.checked = settings.checkedItemIds.has(step.itemId);
@@ -317,10 +301,10 @@ export class RateUtility {
     } else if (step.recipeId != null) {
       step.checked = settings.checkedRecipeIds.has(step.recipeId);
     }
-  }
+  },
 
   /** Generates a simple sankey diagram and sorts steps by their node depth */
-  static sortBySankey(steps: Step[]): void {
+  sortBySankey(steps: Step[]): void {
     interface SimpleNode extends SankeyNodeExtraProperties {
       id: string;
       stepId: string;
@@ -384,9 +368,9 @@ export class RateUtility {
     }
 
     steps.sort((a, b) => stepRank(b) - stepRank(a));
-  }
+  },
 
-  static calculateHierarchy(steps: Step[]): Step[] {
+  calculateHierarchy(steps: Step[]): Step[] {
     // Determine parents
     const parents: Entities = {};
     for (const step of steps) {
@@ -426,13 +410,9 @@ export class RateUtility {
     sorted.push(...steps.filter((s) => !sorted.includes(s)));
 
     return sorted;
-  }
+  },
 
-  static sortRecursive(
-    groups: Entities<Step[]>,
-    id: string,
-    result: Step[],
-  ): Step[] {
+  sortRecursive(groups: Entities<Step[]>, id: string, result: Step[]): Step[] {
     if (!groups[id]) {
       return [];
     }
@@ -443,11 +423,11 @@ export class RateUtility {
     }
 
     return result;
-  }
+  },
 
-  static copy(steps: Step[]): Step[] {
+  copy(steps: Step[]): Step[] {
     return steps.map((s) =>
       s.parents ? spread(s, { parents: spread(s.parents) }) : spread(s),
     );
-  }
-}
+  },
+};

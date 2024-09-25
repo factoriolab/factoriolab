@@ -55,7 +55,10 @@ module.exports = tseslint.config(
         },
       ],
       '@typescript-eslint/prefer-enum-initializers': 'error',
-      '@typescript-eslint/no-extraneous-class': 'off',
+      '@typescript-eslint/no-extraneous-class': [
+        'error',
+        { allowWithDecorator: true },
+      ],
       '@typescript-eslint/no-dynamic-delete': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'off',
       '@typescript-eslint/prefer-nullish-coalescing': [
