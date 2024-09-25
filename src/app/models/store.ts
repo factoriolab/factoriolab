@@ -74,7 +74,7 @@ export abstract class Store<T extends object> {
   }
 
   /** Removes an entry from an Entities object */
-  protected removeEntry<T>(entities: Entities<T>, id: string): Entities<T> {
+  protected _removeEntry<T>(entities: Entities<T>, id: string): Entities<T> {
     entities = spread(entities);
     delete entities[id];
     return entities;
@@ -175,6 +175,6 @@ export abstract class EntityStore<T extends object> extends Store<Entities<T>> {
   }
 
   resetId(id: string): void {
-    this.reduce((state) => this.removeEntry(state, id));
+    this.reduce((state) => this._removeEntry(state, id));
   }
 }

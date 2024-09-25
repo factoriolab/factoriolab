@@ -5,6 +5,7 @@ import {
   areEntitiesEqual,
   asString,
   coalesce,
+  compareRank,
   contains,
   filterPropsNullish,
   notNullish,
@@ -53,6 +54,12 @@ describe('coalesce', () => {
   it('should fall back when undefined', () => {
     expect(coalesce(1, 0)).toEqual(1);
     expect(coalesce(undefined, 0)).toEqual(0);
+  });
+});
+
+describe('compareRank', () => {
+  it('should return undefined if rank matches', () => {
+    expect(compareRank(['a', 'b', 'c'], ['a', 'b', 'c'])).toBeUndefined();
   });
 });
 

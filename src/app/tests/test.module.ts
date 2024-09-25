@@ -5,6 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 
 import { DEFAULT_MOD } from '~/models/constants';
+import { Language } from '~/models/enum/language';
 import { Preset } from '~/models/enum/preset';
 import { DatasetsService } from '~/services/datasets.service';
 import { SettingsService } from '~/services/settings.service';
@@ -26,6 +27,7 @@ import { Mocks } from '.';
       useFactory: (): DatasetsService => {
         const datasetsSvc = new DatasetsService();
         datasetsSvc.loadData(DEFAULT_MOD, Mocks.modData, Mocks.modHash);
+        datasetsSvc.loadI18n(DEFAULT_MOD, Language.Chinese, Mocks.modI18n);
         return datasetsSvc;
       },
     },

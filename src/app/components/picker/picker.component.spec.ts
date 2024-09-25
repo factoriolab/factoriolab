@@ -74,19 +74,6 @@ describe('PickerComponent', () => {
       expect(component.isMultiselect).toBeTrue();
       expect(component.selection?.length).toEqual(1);
     });
-
-    // it('should open as recipe multiselect with null defaults', () => {
-    //   const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
-    //   mockStore.overrideSelector(selectAdjustedDataset, data);
-    //   mockStore.refreshState();
-    //   component.clickOpen('recipe', Mocks.adjustedDataset.recipeIds, [
-    //     RecipeId.IronPlate,
-    //   ]);
-    //   expect(component.visible).toBeTrue();
-    //   expect(component.isMultiselect).toBeTrue();
-    //   expect(component.selection?.length).toEqual(1);
-    //   mockStore.resetSelectors();
-    // });
   });
 
   describe('selectAll', () => {

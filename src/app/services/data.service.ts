@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { computed, effect, inject, Injectable } from '@angular/core';
+import { effect, inject, Injectable } from '@angular/core';
 import {
   catchError,
   combineLatest,
@@ -31,23 +31,17 @@ export class DataService {
   cacheData: Entities<Observable<[ModData, ModHash]>> = {};
   cacheI18n: Entities<Entities<Observable<ModI18n>>> = {};
 
-  modData = computed(() => {
-    const modId = this.settingsSvc.modId();
-    if (modId == null) return undefined;
-    this.requestData(modId).subscribe();
-  });
-
   constructor() {
     effect(() => {
       const modId = this.settingsSvc.modId();
-      if (modId == null) return undefined;
+      if (modId == null) return;
       this.requestData(modId).subscribe();
     });
 
     effect(() => {
       const modId = this.settingsSvc.modId();
       const lang = this.preferencesSvc.language();
-      if (modId == null || lang === Language.English) return undefined;
+      if (modId == null || lang === Language.English) return;
       this.requestI18n(modId, lang).subscribe();
     });
   }
@@ -69,8 +63,6 @@ export class DataService {
   }
 
   requestI18n(id: string, lang: Language): Observable<ModI18n> {
-    if (lang === Language.English) return EMPTY;
-
     if (!this.cacheI18n[id]) this.cacheI18n[id] = {};
     if (!this.cacheI18n[id][lang])
       this.cacheI18n[id][lang] = this.http

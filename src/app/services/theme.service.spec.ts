@@ -26,36 +26,37 @@ describe('ThemeService', () => {
     expect(service).toBeTruthy();
   });
 
-  // it('should set the theme css href', () => {
-  //   const themeLink = { href: '' };
-  //   const tempLink = { href: '', onload: (): void => {} };
-  //   spyOn(service.head, 'removeChild');
-  //   spyOn(service.head, 'appendChild');
-  //   spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
-  //   spyOn(service.document, 'createElement').and.returnValue(tempLink as any);
-  //   mockStore.overrideSelector(selectTheme, Theme.Light);
-  //   mockStore.refreshState();
-  //   expect(tempLink.href).toEqual('theme-light.css');
-  //   expect(themeLink.href).toEqual('');
-  //   tempLink.onload();
-  //   expect(themeLink.href).toEqual('theme-light.css');
-  //   mockStore.overrideSelector(selectTheme, Theme.Dark);
-  //   mockStore.refreshState();
-  //   expect(tempLink.href).toEqual('theme-dark.css');
-  //   expect(themeLink.href).toEqual('theme-light.css');
-  //   tempLink.onload();
-  //   expect(themeLink.href).toEqual('theme-dark.css');
-  // });
+  it('should set the theme css href', () => {
+    const themeLink = { href: '' };
+    const tempLink = { href: '', onload: (): void => {} };
+    spyOn(service.head, 'removeChild');
+    spyOn(service.head, 'appendChild');
+    spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
+    spyOn(service.document, 'createElement').and.returnValue(tempLink as any);
+    service.preferencesSvc.apply({ theme: Theme.Light });
+    TestBed.flushEffects();
+    expect(tempLink.href).toEqual('theme-light.css');
+    expect(themeLink.href).toEqual('');
+    tempLink.onload();
+    expect(themeLink.href).toEqual('theme-light.css');
+    service.preferencesSvc.apply({ theme: Theme.Dark });
+    TestBed.flushEffects();
+    expect(tempLink.href).toEqual('theme-dark.css');
+    expect(themeLink.href).toEqual('theme-light.css');
+    tempLink.onload();
+    expect(themeLink.href).toEqual('theme-dark.css');
+  });
 
-  // it('should update theme values on initial pass', () => {
-  //   spyOn(service, 'updateThemeValues');
-  //   const themeLink = { href: 'theme-black.css' };
-  //   spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
-  //   spyOn(service, 'themePath').and.returnValue('theme-black.css');
-  //   mockStore.overrideSelector(selectTheme, Theme.Black);
-  //   mockStore.refreshState();
-  //   expect(service.updateThemeValues).toHaveBeenCalled();
-  // });
+  it('should update theme values on initial pass', () => {
+    spyOn(service, 'updateThemeValues');
+    const themeLink = { href: 'theme-black.css' };
+    spyOn(service.head, 'removeChild');
+    spyOn(service.document, 'getElementById').and.returnValue(themeLink as any);
+    spyOn(service, 'themePath').and.returnValue('theme-black.css');
+    service.preferencesSvc.apply({ theme: Theme.Black });
+    TestBed.flushEffects();
+    expect(service.updateThemeValues).toHaveBeenCalled();
+  });
 
   describe('themePath', () => {
     it('should handle various themes', () => {
@@ -66,26 +67,25 @@ describe('ThemeService', () => {
     });
   });
 
-  // describe('appInitTheme', () => {
-  //   it('should switch to light theme if preferred', () => {
-  //     const themeLink = { href: '' };
-  //     spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue({
-  //       theme: Theme.Light,
-  //     } as any);
-  //     spyOn(window.document, 'getElementById').and.returnValue(
-  //       themeLink as any,
-  //     );
-  //     ThemeService.appInitTheme();
-  //     expect(themeLink.href).toEqual('theme-light.css');
-  //   });
+  describe('appInitTheme', () => {
+    it('should switch to light theme if preferred', () => {
+      const themeLink = { href: '' };
+      localStorage.setItem(
+        'preferences',
+        JSON.stringify({ theme: Theme.Light }),
+      );
+      spyOn(window.document, 'getElementById').and.returnValue(
+        themeLink as any,
+      );
+      ThemeService.appInitTheme();
+      expect(themeLink.href).toEqual('theme-light.css');
+    });
 
-  //   it('should skip if specifying to use dark theme', () => {
-  //     const themeLink = { href: '' };
-  //     spyOnProperty(BrowserUtility, 'preferencesState').and.returnValue(
-  //       null as any,
-  //     );
-  //     ThemeService.appInitTheme();
-  //     expect(themeLink.href).toEqual('');
-  //   });
-  // });
+    it('should skip if specifying to use dark theme', () => {
+      const themeLink = { href: '' };
+      localStorage.setItem('preferences', JSON.stringify({}));
+      ThemeService.appInitTheme();
+      expect(themeLink.href).toEqual('');
+    });
+  });
 });

@@ -43,7 +43,7 @@
         [label]="'techPicker.showLabels' | translate"
         labelStyleClass="text-nowrap"
         [ngModel]="showTechLabels()"
-        (onChange)="setShowTechLabels($event.checked)"
+        (onChange)="preferencesSvc.apply({ showTechLabels: $event.checked })"
       ></p-checkbox>
     </span>
     <button

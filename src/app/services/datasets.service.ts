@@ -7,7 +7,7 @@ import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
 import { Language } from '~/models/enum/language';
 import { Mod } from '~/models/mod';
-import { Store } from '~/models/store';
+import { EntityStore } from '~/models/store';
 import { Entities } from '~/models/utils';
 
 export interface JsonData {
@@ -21,7 +21,7 @@ export type DatasetsState = Entities<JsonData>;
 @Injectable({
   providedIn: 'root',
 })
-export class DatasetsService extends Store<DatasetsState> {
+export class DatasetsService extends EntityStore<JsonData> {
   modEntities = computed(() => {
     const state = this._state();
     return data.mods.reduce((e: Entities<Mod | undefined>, m) => {
@@ -30,10 +30,6 @@ export class DatasetsService extends Store<DatasetsState> {
       return e;
     }, {});
   });
-
-  constructor() {
-    super({});
-  }
 
   loadData(id: string, data: ModData, hash: ModHash): void {
     this.update((state) => ({ [id]: spread(state[id], { data, hash }) }));

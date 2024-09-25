@@ -77,9 +77,8 @@ export function cloneEntities<T>(
 
 export function compareRank(
   value: string[],
-  def: Optional<string[]>,
+  def: string[],
 ): Optional<string[]> {
-  if (def == null) return value;
   if (value.length === def.length && value.every((v, i) => v === def[i]))
     return undefined;
 

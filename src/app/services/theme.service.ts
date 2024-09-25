@@ -3,6 +3,7 @@ import { effect, inject, Injectable } from '@angular/core';
 import { ReplaySubject } from 'rxjs';
 
 import { fnPropsNotNullish } from '~/helpers';
+import { IconJson } from '~/models/data/icon';
 import { Theme } from '~/models/enum/theme';
 import { getStoredValue } from '~/models/stored-signal';
 
@@ -80,11 +81,7 @@ export class ThemeService {
         const icon = data.iconEntities[i];
         const selector = this.escapeSelector(i);
         css += `.${selector}::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
-        if (icon.invertLight) {
-          css += `body.light .${selector}::before { filter: invert(1); } `;
-          css += `.invert .${selector}::before { filter: invert(1); } `;
-          css += `body.light .invert .${selector}::before { filter: none; } `;
-        }
+        css += this.appendLightStyle(icon, selector, '');
       });
       data.itemIds
         .map((i) => data.itemEntities[i])
@@ -93,11 +90,7 @@ export class ThemeService {
           const icon = data.iconEntities[item.icon];
           const selector = this.escapeSelector(item.id);
           css += `.${selector}.item::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
-          if (icon.invertLight) {
-            css += `body.light .${selector}.item::before { filter: invert(1); } `;
-            css += `.invert .${selector}::before { filter: invert(1); } `;
-            css += `body.light .invert .${selector}::before { filter: none; } `;
-          }
+          css += this.appendLightStyle(icon, selector, '.item');
         });
       data.recipeIds
         .map((r) => data.recipeEntities[r])
@@ -106,11 +99,7 @@ export class ThemeService {
           const icon = data.iconEntities[recipe.icon];
           const selector = this.escapeSelector(recipe.id);
           css += `.${selector}.recipe::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
-          if (icon.invertLight) {
-            css += `body.light .${selector}.recipe::before { filter: invert(1); } `;
-            css += `.invert .${selector}::before { filter: invert(1); } `;
-            css += `body.light .invert .${selector}::before { filter: none; } `;
-          }
+          css += this.appendLightStyle(icon, selector, '.recipe');
         });
       data.categoryIds
         .map((c) => data.categoryEntities[c])
@@ -119,11 +108,7 @@ export class ThemeService {
           const icon = data.iconEntities[category.icon];
           const selector = this.escapeSelector(category.id);
           css += `.${selector}.category::before { background-image: url("${data.iconFile}"); background-position: ${icon.position}; } `;
-          if (icon.invertLight) {
-            css += `body.light .${selector}.category::before { filter: invert(1); } `;
-            css += `.invert .${selector}::before { filter: invert(1); } `;
-            css += `body.light .invert .${selector}::before { filter: none; } `;
-          }
+          css += this.appendLightStyle(icon, selector, '.category');
         });
       data.itemIds
         .map((i) => data.itemEntities[i])
@@ -149,6 +134,13 @@ export class ThemeService {
       style.innerText = css;
       this.head.appendChild(style);
     });
+  }
+
+  appendLightStyle(icon: IconJson, selector: string, type: string): string {
+    if (!icon.invertLight) return '';
+    let css = `body.light .${selector}${type}::before { filter: invert(1); } `;
+    css += `.invert .${selector}::before { filter: invert(1); } `;
+    return (css += `body.light .invert .${selector}::before { filter: none; } `);
   }
 
   updateThemeValues(): void {

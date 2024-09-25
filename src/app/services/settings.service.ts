@@ -375,10 +375,13 @@ export class SettingsService extends Store<SettingsState> {
         moduleRank = preset === Preset.Beacon8 ? m.moduleRank : undefined;
         break;
       }
-      case Game.FinalFactory:
       case Game.Satisfactory: {
         moduleRank = m.moduleRank;
         overclock = rational(100n);
+        break;
+      }
+      case Game.FinalFactory: {
+        moduleRank = m.moduleRank;
         break;
       }
     }

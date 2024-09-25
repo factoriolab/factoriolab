@@ -33,7 +33,7 @@ describe('ObjectivesService', () => {
   describe('baseObjectives', () => {
     it('should return the array of objectives', () => {
       spyOn(service, 'state').and.returnValue(Mocks.objectivesState);
-      spyOn(service['settingsSvc'], 'dataset').and.returnValue(
+      spyOn(service.settingsSvc, 'dataset').and.returnValue(
         Mocks.adjustedDataset,
       );
       const result = service.baseObjectives();
@@ -174,7 +174,7 @@ describe('ObjectivesService', () => {
           },
         },
       ]);
-      spyOn(service['recipesSvc'], 'adjustedDataset').and.returnValue(
+      spyOn(service.recipesSvc, 'adjustedDataset').and.returnValue(
         spread(Mocks.adjustedDataset, { game: Game.DysonSphereProgram }),
       );
       const result = service.totals();
@@ -347,7 +347,7 @@ describe('ObjectivesService', () => {
 
   describe('effectivePowerUnit', () => {
     it('should calculate an auto power unit as kW', () => {
-      spyOn(service['preferencesSvc'], 'powerUnit').and.returnValue(
+      spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(
         PowerUnit.Auto,
       );
       expect(service.effectivePowerUnit()).toEqual(PowerUnit.kW);
@@ -357,7 +357,7 @@ describe('ObjectivesService', () => {
       spyOn(service, 'steps').and.returnValue([
         { id: '0', power: rational(1000n) },
       ]);
-      spyOn(service['preferencesSvc'], 'powerUnit').and.returnValue(
+      spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(
         PowerUnit.Auto,
       );
       expect(service.effectivePowerUnit()).toEqual(PowerUnit.MW);
@@ -368,23 +368,21 @@ describe('ObjectivesService', () => {
         { id: '0', power: rational(1000000n) },
         { id: '1', power: rational(1000000n) },
       ]);
-      spyOn(service['preferencesSvc'], 'powerUnit').and.returnValue(
+      spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(
         PowerUnit.Auto,
       );
       expect(service.effectivePowerUnit()).toEqual(PowerUnit.GW);
     });
 
     it('should override with specified power unit', () => {
-      spyOn(service['preferencesSvc'], 'powerUnit').and.returnValue(
-        PowerUnit.GW,
-      );
+      spyOn(service.preferencesSvc, 'powerUnit').and.returnValue(PowerUnit.GW);
       expect(service.effectivePowerUnit()).toEqual(PowerUnit.GW);
     });
   });
 
   describe('recipesModified', () => {
     it('should determine whether columns are modified', () => {
-      spyOn(service['recipesSvc'], 'state').and.returnValue({
+      spyOn(service.recipesSvc, 'state').and.returnValue({
         [RecipeId.Coal]: {
           machineId: undefined,
           modules: undefined,
@@ -422,7 +420,7 @@ describe('ObjectivesService', () => {
         ],
       };
       spyOn(service, 'baseObjectives').and.returnValue([objective]);
-      spyOn(service['recipesSvc'], 'state').and.returnValue({
+      spyOn(service.recipesSvc, 'state').and.returnValue({
         [RecipeId.Coal]: {},
       });
       const result = service.recipesModified();
@@ -436,7 +434,7 @@ describe('ObjectivesService', () => {
     it('should automatically trigger adjustDisplayRate', () => {
       spyOn(service, 'adjustDisplayRate');
       TestBed.flushEffects();
-      service['settingsSvc'].apply({ displayRate: DisplayRate.PerHour });
+      service.settingsSvc.apply({ displayRate: DisplayRate.PerHour });
       TestBed.flushEffects();
       expect(service.adjustDisplayRate).toHaveBeenCalledWith(rational(60n));
     });
@@ -469,15 +467,32 @@ describe('ObjectivesService', () => {
   });
 
   describe('remove', () => {
-    it('should remove an objective', () => {
+    it('should remove an objective and re-sort remaining objectives', () => {
       service.create({
         targetId: ItemId.Coal,
-        value: rational(60n),
+        value: rational.one,
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       });
-      service.remove('1');
-      expect(service.state()).toEqual({});
+      service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
+      service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
+      service.remove('2');
+      expect(service.state()).toEqual({
+        ['1']: {
+          id: '1',
+          targetId: ItemId.Coal,
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        },
+        ['2']: {
+          id: '2',
+          targetId: ItemId.Coal,
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
+        },
+      });
     });
   });
 

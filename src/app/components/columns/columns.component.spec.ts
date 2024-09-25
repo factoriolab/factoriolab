@@ -60,13 +60,13 @@ describe('ColumnsComponent', () => {
     });
   });
 
-  // describe('save', () => {
-  //   it('should dispatch the action', () => {
-  //     spyOn(component.store, 'dispatch');
-  //     component.onHide();
-  //     expect(component.store.dispatch).toHaveBeenCalledWith(
-  //       setColumns({ columns: component.editValue as any }),
-  //     );
-  //   });
-  // });
+  describe('save', () => {
+    it('should dispatch the action', () => {
+      spyOn(component.preferencesSvc, 'apply');
+      component.onHide();
+      expect(component.preferencesSvc.apply).toHaveBeenCalledWith({
+        columns: component.editValue as any,
+      });
+    });
+  });
 });

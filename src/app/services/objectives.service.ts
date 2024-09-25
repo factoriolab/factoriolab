@@ -41,11 +41,11 @@ export type ObjectivesState = Entities<Objective>;
   providedIn: 'root',
 })
 export class ObjectivesService extends EntityStore<Objective> {
-  private itemsSvc = inject(ItemsService);
-  private machinesSvc = inject(MachinesService);
-  private preferencesSvc = inject(PreferencesService);
-  private recipesSvc = inject(RecipesService);
-  private settingsSvc = inject(SettingsService);
+  itemsSvc = inject(ItemsService);
+  machinesSvc = inject(MachinesService);
+  preferencesSvc = inject(PreferencesService);
+  recipesSvc = inject(RecipesService);
+  settingsSvc = inject(SettingsService);
 
   baseObjectives = computed(() => {
     const state = this.state();
@@ -504,7 +504,7 @@ export class ObjectivesService extends EntityStore<Objective> {
 
   remove(id: string): void {
     this.reduce((state) => {
-      state = this.removeEntry(state, id);
+      state = this._removeEntry(state, id);
       const objectives = Object.keys(state).map((i) => state[i]);
       return this.reduceObjectives(objectives);
     });

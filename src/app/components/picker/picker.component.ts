@@ -19,6 +19,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { TabViewOverrideDirective } from '~/directives/tabview-override.directive';
+import { coalesce } from '~/helpers';
 import { Category } from '~/models/data/category';
 import { Entities } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
@@ -146,8 +147,7 @@ export class PickerComponent extends DialogComponent {
 
       if (Array.isArray(selection)) {
         this.allSelected = selection.length === 0;
-        this.default =
-          data.defaults != null ? [...data.defaults.excludedRecipeIds] : [];
+        this.default = [...coalesce(data.defaults?.excludedRecipeIds, [])];
       } else if (selection) {
         const index = data.categoryIds.indexOf(
           data.recipeEntities[selection].category,

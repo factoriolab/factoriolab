@@ -91,7 +91,7 @@ export class PreferencesService extends Store<PreferencesState> {
     if (stored) {
       try {
         const storedState = JSON.parse(stored) as PreferencesState;
-        this.apply(storedState);
+        this.load(storedState);
       } catch (ex) {
         console.warn('Failed to parse stored preferences', ex);
       }
@@ -118,7 +118,7 @@ export class PreferencesService extends Store<PreferencesState> {
 
   removeState(game: Game, id: string): void {
     this.update((state) => {
-      const gameStates = this.removeEntry(state.states[game], id);
+      const gameStates = this._removeEntry(state.states[game], id);
       const states = spread(state.states, { [game]: gameStates });
       return { states };
     });

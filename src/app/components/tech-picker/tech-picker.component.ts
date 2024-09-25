@@ -244,9 +244,4 @@ game.write_file("techs.txt", table.concat(list, ","))
 
     this.selectIds.emit(new Set(selection));
   }
-
-  /** Action Dispatch Methods */
-  setShowTechLabels(showTechLabels: boolean): void {
-    this.preferencesSvc.apply({ showTechLabels });
-  }
 }
