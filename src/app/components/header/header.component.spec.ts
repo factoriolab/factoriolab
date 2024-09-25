@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 
-import { selectBaseObjectives } from '~/store/objectives/objectives.selectors';
 import { Mocks, TestModule } from '~/tests';
 
 import { HeaderComponent } from './header.component';
@@ -9,7 +7,6 @@ import { HeaderComponent } from './header.component';
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
-  let mockStore: MockStore;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -17,7 +14,6 @@ describe('HeaderComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(HeaderComponent);
-    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -29,8 +25,9 @@ describe('HeaderComponent', () => {
   describe('ngOnInit', () => {
     it('should update the page title with the first objective name', () => {
       spyOn(component.title, 'setTitle');
-      mockStore.overrideSelector(selectBaseObjectives, Mocks.objectivesList);
-      mockStore.refreshState();
+
+      component.objectivesSvc.load(Mocks.objectivesState);
+      fixture.detectChanges();
       expect(component.title.setTitle).toHaveBeenCalledWith(
         'Advanced circuit | FactorioLab',
       );

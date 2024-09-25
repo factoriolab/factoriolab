@@ -4,12 +4,11 @@ import modJson from 'src/data/1.1/data.json';
 import hashJson from 'src/data/1.1/hash.json';
 import i18nJson from 'src/data/1.1/i18n/zh.json';
 
-import { spread } from '~/helpers';
+import { spread, toEntities } from '~/helpers';
 import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
 import { AdjustedDataset, Dataset } from '~/models/dataset';
-import { Entities, toEntities } from '~/models/entities';
 import { DisplayRate, displayRateInfo } from '~/models/enum/display-rate';
 import { FlowDiagram } from '~/models/enum/flow-diagram';
 import { Game } from '~/models/enum/game';
@@ -34,39 +33,38 @@ import { ItemSettings } from '~/models/settings/item-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { Step } from '~/models/step';
+import { Entities } from '~/models/utils';
+import { ItemsService } from '~/services/items.service';
+import { MachinesService } from '~/services/machines.service';
+import { ObjectivesState } from '~/services/objectives.service';
+import { PreferencesState } from '~/services/preferences.service';
+import { RecipesService } from '~/services/recipes.service';
+import {
+  initialSettingsState,
+  SettingsService,
+} from '~/services/settings.service';
 import { ThemeValues } from '~/services/theme.service';
-import { initialDatasetsState } from '~/store/datasets/datasets.reducer';
-import { selectItemsState } from '~/store/items/items.selectors';
-import { initialMachinesState } from '~/store/machines/machines.reducer';
-import { selectMachinesState } from '~/store/machines/machines.selectors';
-import { ObjectivesState } from '~/store/objectives/objectives.reducer';
-import { PreferencesState } from '~/store/preferences/preferences.reducer';
-import {
-  selectAdjustedDataset,
-  selectRecipesState,
-} from '~/store/recipes/recipes.selectors';
-import { initialSettingsState } from '~/store/settings/settings.reducer';
-import {
-  selectDataset,
-  selectDefaults,
-  selectSettings,
-} from '~/store/settings/settings.selectors';
+import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { ItemId } from './item-id';
 import { RecipeId } from './recipe-id';
 
 export const raw = data;
-export const dataState = initialDatasetsState;
 export const modInfo = data.mods[0];
 export const modData = modJson as unknown as ModData;
 modData.defaults!.excludedRecipes = [RecipeId.NuclearFuelReprocessing];
 export const modHash: ModHash = hashJson;
 export const modI18n: ModI18n = i18nJson;
 export const mod = { ...modInfo, ...modData } as Mod;
-export const defaults = selectDefaults.projector(Preset.Beacon8, mod)!;
+export const defaults = SettingsService.computeDefaults(mod, Preset.Beacon8)!;
 export function getDataset(): Dataset {
-  selectDataset.release();
-  return selectDataset.projector(mod, null, modHash, defaults, Game.Factorio);
+  return SettingsService.computeDataset(
+    mod,
+    modHash,
+    undefined,
+    Game.Factorio,
+    defaults,
+  );
 }
 export const dataset = getDataset();
 export const categoryId = dataset.categoryIds[0];
@@ -74,56 +72,56 @@ export const item1 = dataset.itemEntities[dataset.itemIds[0]];
 export const item2 = dataset.itemEntities[dataset.itemIds[1]];
 export const recipe1 = dataset.recipeEntities[dataset.recipeIds[0]];
 export const objective1: Objective = {
-  id: '0',
+  id: '1',
   targetId: ItemId.AdvancedCircuit,
   value: rational.one,
   unit: ObjectiveUnit.Items,
   type: ObjectiveType.Output,
 };
 export const objective2: Objective = {
-  id: '1',
+  id: '2',
   targetId: ItemId.IronPlate,
   value: rational.one,
   unit: ObjectiveUnit.Belts,
   type: ObjectiveType.Input,
 };
 export const objective3: Objective = {
-  id: '2',
+  id: '3',
   targetId: ItemId.PlasticBar,
   value: rational.one,
   unit: ObjectiveUnit.Items,
   type: ObjectiveType.Maximize,
 };
 export const objective4: Objective = {
-  id: '3',
+  id: '4',
   targetId: ItemId.PetroleumGas,
   value: rational(100n),
   unit: ObjectiveUnit.Items,
   type: ObjectiveType.Limit,
 };
 export const objective5: Objective = {
-  id: '4',
+  id: '5',
   targetId: RecipeId.PiercingRoundsMagazine,
   value: rational.one,
   unit: ObjectiveUnit.Machines,
   type: ObjectiveType.Output,
 };
 export const objective6: Objective = {
-  id: '5',
+  id: '6',
   targetId: RecipeId.CopperPlate,
   value: rational.one,
   unit: ObjectiveUnit.Machines,
   type: ObjectiveType.Input,
 };
 export const objective7: Objective = {
-  id: '6',
+  id: '7',
   targetId: RecipeId.FirearmMagazine,
   value: rational.one,
   unit: ObjectiveUnit.Machines,
   type: ObjectiveType.Maximize,
 };
 export const objective8: Objective = {
-  id: '7',
+  id: '8',
   targetId: RecipeId.IronPlate,
   value: rational(10n),
   unit: ObjectiveUnit.Machines,
@@ -139,11 +137,7 @@ export const objectivesList = [
   objective7,
   objective8,
 ];
-export const objectivesState: ObjectivesState = {
-  ids: objectivesList.map((o) => o.id),
-  entities: toEntities(objectivesList),
-  index: objectivesList.length + 1,
-};
+export const objectivesState: ObjectivesState = toEntities(objectivesList);
 export const objectiveIds = objectivesList.map((p) => p.id);
 export const objectiveSteps = {
   [objective1.id]: [] as [string, Rational][],
@@ -219,24 +213,23 @@ export const recipesState: Entities<RecipeSettings> = {};
 for (const recipe of dataset.recipeIds.map((i) => dataset.recipeEntities[i])) {
   recipesState[recipe.id] = { ...recipeSettings1 };
 }
-export const settingsStateInitial = selectSettings.projector(
+export const settingsStateInitial = SettingsService.computeSettings(
   initialSettingsState,
   defaults,
   new Set(dataset.technologyIds),
 );
-export const itemsStateInitial = selectItemsState.projector(
+export const itemsStateInitial = ItemsService.computeItemsState(
   {},
-  dataset,
   settingsStateInitial,
+  dataset,
 );
-export const machinesStateInitial = selectMachinesState.projector(
-  initialMachinesState,
+export const machinesStateInitial = MachinesService.computeMachinesState(
+  {},
   settingsStateInitial,
   dataset,
 );
 export function getRecipesState(): Entities<RecipeSettings> {
-  selectRecipesState.release();
-  return selectRecipesState.projector(
+  return RecipesService.computeRecipesState(
     {},
     machinesStateInitial,
     settingsStateInitial,
@@ -246,11 +239,10 @@ export function getRecipesState(): Entities<RecipeSettings> {
 export const recipesStateInitial = getRecipesState();
 export const costs = initialSettingsState.costs;
 export function getAdjustedDataset(): AdjustedDataset {
-  selectAdjustedDataset.release();
-  return selectAdjustedDataset.projector(
+  return RecipeUtility.adjustDataset(
+    dataset.recipeIds,
     recipesStateInitial,
     itemsStateInitial,
-    dataset.recipeIds,
     settingsStateInitial,
     getDataset(),
   );

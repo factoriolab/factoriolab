@@ -1,16 +1,12 @@
 import { KeyValuePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import {
-  selectDataset,
-  selectModMenuItem,
-} from '~/store/settings/settings.selectors';
+import { SettingsService } from '~/services/settings.service';
 
 @Component({
   selector: 'lab-data',
@@ -27,10 +23,10 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DataComponent {
-  store = inject(Store);
+  settingsSvc = inject(SettingsService);
 
-  home = this.store.selectSignal(selectModMenuItem);
-  data = this.store.selectSignal(selectDataset);
+  home = this.settingsSvc.modMenuItem;
+  data = this.settingsSvc.dataset;
 
   collections: MenuItem[] = [
     {

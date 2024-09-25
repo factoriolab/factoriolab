@@ -5,17 +5,22 @@ import {
   areEntitiesEqual,
   asString,
   coalesce,
+  compareRank,
   contains,
   filterPropsNullish,
   notNullish,
   propsNotNullish,
+  toBoolEntities,
+  toEntities,
 } from './index';
 
+const id = 'id';
+
 describe('areArraysEqual', () => {
-  it('should check array nullish and length', () => {
-    expect(areArraysEqual([], null)).toBeTrue();
-    expect(areArraysEqual(null, [])).toBeTrue();
-    expect(areArraysEqual(null, null)).toBeTrue();
+  it('should check array undefined and length', () => {
+    expect(areArraysEqual([], undefined)).toBeTrue();
+    expect(areArraysEqual(undefined, [])).toBeTrue();
+    expect(areArraysEqual(undefined, undefined)).toBeTrue();
   });
 
   it('should check each value', () => {
@@ -25,10 +30,10 @@ describe('areArraysEqual', () => {
 });
 
 describe('areEntitiesEqual', () => {
-  it('should check entities nullish and key length', () => {
-    expect(areEntitiesEqual({}, null)).toBeTrue();
-    expect(areEntitiesEqual(null, {})).toBeTrue();
-    expect(areEntitiesEqual({ a: 1 }, null)).toBeFalse();
+  it('should check entities undefined and key length', () => {
+    expect(areEntitiesEqual({}, undefined)).toBeTrue();
+    expect(areEntitiesEqual(undefined, {})).toBeTrue();
+    expect(areEntitiesEqual({ a: 1 }, undefined)).toBeFalse();
   });
 
   it('should check each value', () => {
@@ -46,9 +51,15 @@ describe('asString', () => {
 });
 
 describe('coalesce', () => {
-  it('should fall back when nullish', () => {
+  it('should fall back when undefined', () => {
     expect(coalesce(1, 0)).toEqual(1);
-    expect(coalesce(null, 0)).toEqual(0);
+    expect(coalesce(undefined, 0)).toEqual(0);
+  });
+});
+
+describe('compareRank', () => {
+  it('should return undefined if rank matches', () => {
+    expect(compareRank(['a', 'b', 'c'], ['a', 'b', 'c'])).toBeUndefined();
   });
 });
 
@@ -81,5 +92,23 @@ describe('propsNotNullish', () => {
   it('should return whether properties are nullish on an object', () => {
     expect(propsNotNullish({ a: 'a' }, 'a')).toBeTrue();
     expect(propsNotNullish({ a: null }, 'a')).toBeFalse();
+  });
+});
+
+describe('toEntities', () => {
+  it('should map id-based objects to an entities object', () => {
+    expect(toEntities([{ id }])).toEqual({ [id]: { id } });
+  });
+
+  it('should warn about duplicate ids', () => {
+    spyOn(console, 'warn');
+    toEntities([{ id }, { id }], {}, true);
+    expect(console.warn).toHaveBeenCalled();
+  });
+});
+
+describe('toBoolEntities', () => {
+  it('should map a list of strings to a boolean entities object', () => {
+    expect(toBoolEntities([id])).toEqual({ [id]: true });
   });
 });

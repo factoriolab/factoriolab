@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -14,28 +13,19 @@ import { Game, gameOptions } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { gameInfo } from '~/models/game-info';
-import { Objective } from '~/models/objective';
+import { modOptions } from '~/models/options';
 import { rational } from '~/models/rational';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
+import { ObjectivesService } from '~/services/objectives.service';
+import { PreferencesService } from '~/services/preferences.service';
+import { RecipesService } from '~/services/recipes.service';
 import { RouterService } from '~/services/router.service';
-import { create } from '~/store/objectives/objectives.actions';
-import { setBypassLanding } from '~/store/preferences/preferences.actions';
-import { preferencesState } from '~/store/preferences/preferences.selectors';
-import { selectAvailableItems } from '~/store/recipes/recipes.selectors';
-import { setMod } from '~/store/settings/settings.actions';
-import {
-  selectAvailableRecipes,
-  selectDataset,
-  selectMod,
-  selectModOptions,
-  selectSavedStates,
-  selectSettings,
-} from '~/store/settings/settings.selectors';
-import { BrowserUtility } from '~/utilities/browser.utility';
+import { SettingsService } from '~/services/settings.service';
 
 @Component({
+  selector: 'lab-landing',
   standalone: true,
   imports: [
     FormsModule,
@@ -57,28 +47,29 @@ import { BrowserUtility } from '~/utilities/browser.utility';
 export class LandingComponent {
   router = inject(Router);
   route = inject(ActivatedRoute);
-  store = inject(Store);
   contentSvc = inject(ContentService);
+  objectivesSvc = inject(ObjectivesService);
+  preferencesSvc = inject(PreferencesService);
+  recipesSvc = inject(RecipesService);
   routerSvc = inject(RouterService);
+  settingsSvc = inject(SettingsService);
 
-  itemIds = this.store.selectSignal(selectAvailableItems);
-  settings = this.store.selectSignal(selectSettings);
-  modOptions = this.store.selectSignal(selectModOptions);
-  data = this.store.selectSignal(selectDataset);
-  mod = this.store.selectSignal(selectMod);
-  recipeIds = this.store.selectSignal(selectAvailableRecipes);
-  savedStates = this.store.selectSignal(selectSavedStates);
-  preferences = this.store.selectSignal(preferencesState);
+  modId = this.settingsSvc.modId;
+  mod = this.settingsSvc.mod;
+  data = this.settingsSvc.dataset;
+  recipeIds = this.settingsSvc.availableRecipeIds;
+  itemIds = this.recipesSvc.availableItemIds;
+  states = this.settingsSvc.gameStates;
+  stateOptions = this.settingsSvc.stateOptions;
 
   gameInfo = gameInfo;
   gameOptions = gameOptions;
+  modOptions = modOptions;
 
   Game = Game;
-  BrowserUtility = BrowserUtility;
 
   selectItem(targetId: string): void {
-    this.createObjective({
-      id: '0',
+    this.objectivesSvc.create({
       targetId,
       value: rational.one,
       unit: ObjectiveUnit.Items,
@@ -91,8 +82,7 @@ export class LandingComponent {
   }
 
   selectRecipe(targetId: string): void {
-    this.createObjective({
-      id: '0',
+    this.objectivesSvc.create({
       targetId,
       value: rational.one,
       unit: ObjectiveUnit.Machines,
@@ -116,16 +106,7 @@ export class LandingComponent {
     this.setMod(gameInfo[game].modId);
   }
 
-  /** Action Dispatch Methods */
   setMod(modId: string): void {
-    this.store.dispatch(setMod({ modId }));
-  }
-
-  createObjective(objective: Objective): void {
-    this.store.dispatch(create({ objective }));
-  }
-
-  setBypassLanding(bypassLanding: boolean): void {
-    this.store.dispatch(setBypassLanding({ bypassLanding }));
+    void this.router.navigate([modId]);
   }
 }

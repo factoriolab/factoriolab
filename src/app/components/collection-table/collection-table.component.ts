@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
@@ -17,14 +16,11 @@ import { CollectionItem } from '~/models/collection-item';
 import { Category } from '~/models/data/category';
 import { Item } from '~/models/data/item';
 import { RecipeJson } from '~/models/data/recipe';
-import { Entities } from '~/models/entities';
 import { IdType } from '~/models/enum/id-type';
+import { Entities } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import {
-  selectDataset,
-  selectOptions,
-} from '~/store/settings/settings.selectors';
+import { SettingsService } from '~/services/settings.service';
 
 type Entity = Category | Item | RecipeJson;
 
@@ -46,14 +42,14 @@ type Entity = Category | Item | RecipeJson;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionTableComponent {
-  store = inject(Store);
+  settingsSvc = inject(SettingsService);
 
   ids = input.required<string[]>();
   type = input.required<IdType>();
   useRelativePath = input(false);
 
-  options = this.store.selectSignal(selectOptions);
-  data = this.store.selectSignal(selectDataset);
+  options = this.settingsSvc.options;
+  data = this.settingsSvc.dataset;
 
   route = computed(() => {
     const type = this.type();

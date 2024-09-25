@@ -1,19 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { saveAs } from 'file-saver';
 
 import { coalesce, fnPropsNotNullish, notNullish } from '~/helpers';
 import { FlowData } from '~/models/flow';
 import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
-import { selectItemsState } from '~/store/items/items.selectors';
-import {
-  selectAdjustedDataset,
-  selectRecipesState,
-} from '~/store/recipes/recipes.selectors';
-import { selectColumnsState } from '~/store/settings/settings.selectors';
-import { BrowserUtility } from '~/utilities/browser.utility';
 import { RecipeUtility } from '~/utilities/recipe.utility';
+
+import { ItemsService } from './items.service';
+import { RecipesService } from './recipes.service';
+import { SettingsService } from './settings.service';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
 const CSV_EXTENSION = '.csv';
@@ -64,18 +60,21 @@ export const StepKeys = [
   providedIn: 'root',
 })
 export class ExportService {
-  store = inject(Store);
-  itemsState = this.store.selectSignal(selectItemsState);
-  recipesState = this.store.selectSignal(selectRecipesState);
-  columnsState = this.store.selectSignal(selectColumnsState);
-  data = this.store.selectSignal(selectAdjustedDataset);
+  itemsSvc = inject(ItemsService);
+  recipesSvc = inject(RecipesService);
+  settingsSvc = inject(SettingsService);
+
+  itemsState = this.itemsSvc.itemsState;
+  recipesState = this.recipesSvc.recipesState;
+  columnsState = this.settingsSvc.columnsState;
+  data = this.recipesSvc.adjustedDataset;
 
   stepsToCsv(steps: Step[]): void {
     const json = steps.map((s) => this.stepToJson(s, steps));
     const fields = StepKeys.filter((k) => json.some((s) => s[k] != null));
     const csv = json.map((row) => fields.map((f) => row[f]).join(','));
     csv.unshift(fields.join(','));
-    csv.unshift(`"${BrowserUtility.href}"`);
+    csv.unshift(`"${window.location.href}"`);
     this.saveAsCsv(csv.join('\r\n'), 'factoriolab_list');
   }
 

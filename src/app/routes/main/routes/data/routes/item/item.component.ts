@@ -1,5 +1,10 @@
 import { KeyValuePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
 import { BreadcrumbModule } from 'primeng/breadcrumb';
@@ -19,22 +24,13 @@ import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { RoundPipe } from '~/pipes/round.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { UsagePipe } from '~/pipes/usage.pipe';
-import { resetItem } from '~/store/items/items.actions';
-import { itemsState, selectItemsState } from '~/store/items/items.selectors';
-import { resetMachine } from '~/store/machines/machines.actions';
-import {
-  machinesState,
-  selectMachinesState,
-} from '~/store/machines/machines.selectors';
-import {
-  setCheckedItems,
-  setExcludedItems,
-} from '~/store/settings/settings.actions';
-import { selectSettings } from '~/store/settings/settings.selectors';
+import { ItemsService } from '~/services/items.service';
+import { MachinesService } from '~/services/machines.service';
 
 import { DetailComponent } from '../../models/detail.component';
 
 @Component({
+  selector: 'lab-item',
   standalone: true,
   imports: [
     FormsModule,
@@ -54,11 +50,14 @@ import { DetailComponent } from '../../models/detail.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ItemComponent extends DetailComponent {
-  itemsStateRaw = this.store.selectSignal(itemsState);
-  itemsState = this.store.selectSignal(selectItemsState);
-  machinesStateRaw = this.store.selectSignal(machinesState);
-  machinesState = this.store.selectSignal(selectMachinesState);
-  settings = this.store.selectSignal(selectSettings);
+  itemsSvc = inject(ItemsService);
+  machinesSvc = inject(MachinesService);
+
+  itemsStateRaw = this.itemsSvc.state;
+  itemsState = this.itemsSvc.itemsState;
+  machinesStateRaw = this.machinesSvc.state;
+  machinesState = this.machinesSvc.machinesState;
+  settings = this.settingsSvc.settings;
 
   obj = computed<Item | undefined>(() => this.data().itemEntities[this.id()]);
   breadcrumb = computed<MenuItem[]>(() => [
@@ -77,7 +76,6 @@ export class ItemComponent extends DetailComponent {
     const consumedBy: string[] = [];
     const producible: string[] = [];
     const unlocked: string[] = [];
-
     for (const r of data.recipeIds) {
       const recipe = data.recipeEntities[r];
       if (recipe.out[id]) producedBy.push(r);
@@ -85,7 +83,6 @@ export class ItemComponent extends DetailComponent {
       if (recipe.producers.includes(id)) producible.push(r);
       if (recipe.unlockedBy === id) unlocked.push(r);
     }
-
     return { producedBy, consumedBy, producible, unlocked };
   });
   itemSettings = computed<ItemSettings | undefined>(
@@ -94,36 +91,24 @@ export class ItemComponent extends DetailComponent {
   machineSettings = computed<MachineSettings | undefined>(
     () => this.machinesState()[this.id()],
   );
-
   Game = Game;
   ItemId = ItemId;
 
   changeExcluded(value: boolean): void {
-    this.setExcludedItems(
-      updateSetIds(this.id(), value, this.settings().excludedItemIds),
+    const excludedItemIds = updateSetIds(
+      this.id(),
+      value,
+      this.settings().excludedItemIds,
     );
+    this.settingsSvc.apply({ excludedItemIds });
   }
 
   changeChecked(value: boolean): void {
-    this.setCheckedItems(
-      updateSetIds(this.id(), value, this.settings().checkedItemIds),
+    const checkedItemIds = updateSetIds(
+      this.id(),
+      value,
+      this.settings().checkedItemIds,
     );
-  }
-
-  /** Action dispatch methods */
-  setExcludedItems(excludedItemIds: Set<string>): void {
-    this.store.dispatch(setExcludedItems({ excludedItemIds }));
-  }
-
-  setCheckedItems(checkedItemIds: Set<string>): void {
-    this.store.dispatch(setCheckedItems({ checkedItemIds }));
-  }
-
-  resetItem(id: string): void {
-    this.store.dispatch(resetItem({ id }));
-  }
-
-  resetMachine(id: string): void {
-    this.store.dispatch(resetMachine({ id }));
+    this.settingsSvc.apply({ checkedItemIds });
   }
 }

@@ -1,6 +1,5 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRoute, Params } from '@angular/router';
-import { MockStore } from '@ngrx/store/testing';
 import { of, Subject } from 'rxjs';
 
 import { spread } from '~/helpers';
@@ -16,31 +15,13 @@ import { LabParams } from '~/models/lab-params';
 import { Objective } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Zip, ZipData, ZipMachineSettings } from '~/models/zip';
-import { LabState } from '~/store';
-import { load, PartialState } from '~/store/app.actions';
-import { selectHashEntities } from '~/store/datasets/datasets.selectors';
-import { initialItemsState, ItemsState } from '~/store/items/items.reducer';
-import {
-  initialMachinesState,
-  MachinesState,
-} from '~/store/machines/machines.reducer';
-import {
-  initialObjectivesState,
-  ObjectivesState,
-} from '~/store/objectives/objectives.reducer';
-import { selectZipState } from '~/store/objectives/objectives.selectors';
-import {
-  initialRecipesState,
-  RecipesState,
-} from '~/store/recipes/recipes.reducer';
-import {
-  initialSettingsState,
-  SettingsState,
-} from '~/store/settings/settings.reducer';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
-import { BrowserUtility } from '~/utilities/browser.utility';
 
-import { RouterService } from './router.service';
+import { ItemsState } from './items.service';
+import { ObjectivesState } from './objectives.service';
+import { RecipesState } from './recipes.service';
+import { PartialState, RouterService } from './router.service';
+import { initialSettingsState, SettingsState } from './settings.service';
 
 const mockObjective: Objective = {
   id: '1',
@@ -50,25 +31,17 @@ const mockObjective: Objective = {
   type: ObjectiveType.Output,
 };
 const mockObjectivesState: ObjectivesState = {
-  ids: ['1'],
-  entities: {
-    ['1']: mockObjective,
-  },
-  index: 2,
+  ['1']: mockObjective,
 };
 const mockMigratedObjectivesState: ObjectivesState = {
-  ids: ['1', '2'],
-  entities: {
-    ['1']: mockObjective,
-    ['2']: {
-      id: '2',
-      targetId: ItemId.SteelChest,
-      value: rational.one,
-      unit: ObjectiveUnit.Machines,
-      type: ObjectiveType.Output,
-    },
+  ['1']: mockObjective,
+  ['2']: {
+    id: '2',
+    targetId: ItemId.SteelChest,
+    value: rational.one,
+    unit: ObjectiveUnit.Machines,
+    type: ObjectiveType.Output,
   },
-  index: 3,
 };
 const mockItemsState: ItemsState = {
   [ItemId.SteelChest]: {
@@ -92,7 +65,6 @@ const mockRecipesState: RecipesState = {
     cost: rational(100n),
   },
 };
-const mockMachinesState: MachinesState = {};
 const mockSettingsState: SettingsState = {
   modId: '1.0',
   checkedObjectiveIds: new Set(['1']),
@@ -208,16 +180,25 @@ const mockZipPartial: Zip<LabParams> = {
     tre: 'A',
   },
 };
-const mockState: LabState = {
+
+const mockEmpty: PartialState = {
+  objectivesState: undefined,
+  itemsState: undefined,
+  recipesState: undefined,
+  machinesState: undefined,
+  settingsState: undefined,
+};
+
+const mockState: PartialState = {
   objectivesState: mockObjectivesState,
   itemsState: mockItemsState,
   recipesState: mockRecipesState,
+  machinesState: undefined,
   settingsState: mockSettingsState,
-} as any;
+};
 
 describe('RouterService', () => {
   let service: RouterService;
-  let mockStore: MockStore<LabState>;
   const mockRoute = {
     params: new Subject<Params>(),
     queryParams: new Subject<Params>(),
@@ -252,20 +233,6 @@ describe('RouterService', () => {
     });
     service = TestBed.inject(RouterService);
     service.route$.next(mockRoute as unknown as ActivatedRoute);
-    mockStore = TestBed.inject(MockStore);
-    mockStore.overrideSelector(selectHashEntities, {
-      [initialSettingsState.modId]: Mocks.modHash,
-      [mockSettingsState.modId]: Mocks.modHash,
-    });
-    mockStore.overrideSelector(selectZipState, {
-      objectives: initialObjectivesState,
-      itemsState: initialItemsState,
-      recipesState: initialRecipesState,
-      machinesState: initialMachinesState,
-      settings: Mocks.settingsStateInitial,
-      data: Mocks.dataset,
-      hash: Mocks.modHash,
-    });
   });
 
   it('should be created', () => {
@@ -279,46 +246,57 @@ describe('RouterService', () => {
     expect(service.updateState).toHaveBeenCalled();
   }));
 
+  describe('zipState', () => {
+    it('should be triggered via effect', fakeAsync(() => {
+      spyOn(service.objectivesSvc, 'state').and.returnValue(
+        Mocks.objectivesState,
+      );
+      spyOn(service, 'updateUrl').and.returnValue(Promise.resolve(undefined));
+      service.ready.set(true);
+      TestBed.flushEffects();
+      tick();
+      expect(service.updateUrl).toHaveBeenCalled();
+    }));
+
+    it('should zip state', () => {
+      const result = service.zipState({
+        objectives: {},
+        items: {},
+        recipes: {},
+        machines: {},
+        settings: initialSettingsState,
+        data: Mocks.dataset,
+        hash: Mocks.modHash,
+      });
+      expect(result).toEqual(mockZipData());
+    });
+
+    it('should zip full state', () => {
+      const result = service.zipState({
+        objectives: mockObjectivesState,
+        items: mockItemsState,
+        recipes: mockRecipesState,
+        machines: {},
+        settings: mockSettingsState,
+        data: Mocks.dataset,
+        hash: Mocks.modHash,
+      });
+      expect(result?.objectives).toEqual(mockZip);
+      expect(result?.config).toEqual(mockZipPartial);
+    });
+  });
+
   describe('updateUrl', () => {
     it('should update url with products', async () => {
       spyOn(service, 'zipState').and.returnValue(mockZipData());
       spyOn(service, 'getHash').and.returnValue(Promise.resolve({ z: 'z' }));
       spyOn(service.router, 'navigate');
-      spyOnProperty(service.router, 'url').and.returnValue('list');
+      spyOnProperty(service.router, 'url').and.returnValue('flow');
       await service.updateUrl(mockZipData());
       expect(service.router.navigate).toHaveBeenCalledWith([], {
         queryParams: { z: 'z' },
       });
-      expect(BrowserUtility.routerState).toEqual('list');
-    });
-  });
-
-  describe('zipState', () => {
-    it('should zip state', () => {
-      const result = service.zipState(
-        initialObjectivesState,
-        initialItemsState,
-        initialRecipesState,
-        initialMachinesState,
-        initialSettingsState,
-        Mocks.dataset,
-        Mocks.modHash,
-      );
-      expect(result).toEqual(mockZipData());
-    });
-
-    it('should zip full state', () => {
-      const result = service.zipState(
-        mockObjectivesState,
-        mockItemsState,
-        mockRecipesState,
-        mockMachinesState,
-        mockSettingsState,
-        Mocks.dataset,
-        Mocks.modHash,
-      );
-      expect(result?.objectives).toEqual(mockZip);
-      expect(result?.config).toEqual(mockZipPartial);
+      expect(service.stored()).toEqual('flow');
     });
   });
 
@@ -419,9 +397,9 @@ describe('RouterService', () => {
   describe('updateState', () => {
     let dispatch: jasmine.Spy;
 
-    const mockStateV10: PartialState = spread(mockState, {
+    const mockStateV10 = spread(mockState, {
       settingsState: spread(mockState.settingsState, {
-        costs: { ...mockState.settingsState.costs },
+        costs: spread(mockState.settingsState!.costs),
       }),
     });
     delete mockStateV10.settingsState?.surplusMachinesOutput;
@@ -468,19 +446,19 @@ describe('RouterService', () => {
     beforeEach(() => {
       dispatch = spyOn(service, 'dispatch');
       spyOn(service.dataSvc, 'requestData').and.returnValue(
-        of([Mocks.modData, Mocks.modHash, null]),
+        of([Mocks.modData, Mocks.modHash]),
       );
     });
 
     it('should skip if loading empty, current state', async () => {
-      spyOn(service.ready$, 'next');
+      spyOn(service.ready, 'set');
       await service.updateState(undefined, {}, true);
-      expect(service.ready$.next).toHaveBeenCalled();
+      expect(service.ready.set).toHaveBeenCalled();
     });
 
     it('should unzip empty v0', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { z: 'eJwrsAUAAR8Arg==' });
@@ -505,7 +483,7 @@ describe('RouterService', () => {
 
     it('should unzip empty v1', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { p: '', v: '1' });
@@ -537,7 +515,7 @@ describe('RouterService', () => {
 
     it('should unzip empty v2', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCszAgADVAE.' });
@@ -561,7 +539,7 @@ describe('RouterService', () => {
 
     it('should unzip empty v3', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCszBgADVQFA' });
@@ -585,7 +563,7 @@ describe('RouterService', () => {
 
     it('should unzip empty v4', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { p: '', v: '4' });
@@ -616,7 +594,7 @@ describe('RouterService', () => {
 
     it('should unzip empty v5', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCszBQADVwFC', v: '5' });
@@ -641,7 +619,7 @@ describe('RouterService', () => {
 
     it('should unzip empty v6', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { p: '', v: '6' });
@@ -675,7 +653,7 @@ describe('RouterService', () => {
 
     it('should unzip empty v7', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCszBwADWQFE', v: '7' });
@@ -700,7 +678,7 @@ describe('RouterService', () => {
 
     it('should unzip empty v8', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCuzAAADWgFF', v: '8' });
@@ -725,7 +703,7 @@ describe('RouterService', () => {
 
     it('should unzip empty v9', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { z: 'eJwrUCuzBAADWwFG', v: '9' });
@@ -750,7 +728,7 @@ describe('RouterService', () => {
 
     it('should unzip empty v10', (done) => {
       dispatch.and.callFake((v) => {
-        expect(v).toEqual({});
+        expect(v).toEqual(mockEmpty);
         done();
       });
       mockRoute.next({}, { z: 'eJyrsjU0AAADNQEZ', v: '10' });
@@ -773,11 +751,18 @@ describe('RouterService', () => {
 
   describe('dispatch', () => {
     it('should dispatch a state', () => {
-      spyOn(mockStore, 'dispatch');
-      service.dispatch(mockState);
-      expect(mockStore.dispatch).toHaveBeenCalledWith(
-        load({ partial: mockState }),
-      );
+      const load: jasmine.Spy[] = [];
+      load.push(spyOn(service.objectivesSvc, 'load'));
+      load.push(spyOn(service.itemsSvc, 'load'));
+      load.push(spyOn(service.recipesSvc, 'load'));
+      load.push(spyOn(service.machinesSvc, 'load'));
+      load.push(spyOn(service.settingsSvc, 'load'));
+      spyOn(service.ready, 'set');
+      service.dispatch(mockEmpty);
+      load.forEach((s) => {
+        expect(s).toHaveBeenCalledWith(undefined);
+      });
+      expect(service.ready.set).toHaveBeenCalledWith(true);
     });
   });
 
@@ -797,15 +782,15 @@ describe('RouterService', () => {
       const zip = mockZipData();
       service.zipObjectives(
         zip,
-        [
-          {
-            id: '0',
+        {
+          ['1']: {
+            id: '1',
             targetId: ItemId.SteelChest,
             value: rational.one,
             unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
-        ],
+        },
         Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
@@ -818,15 +803,15 @@ describe('RouterService', () => {
       const zip = mockZipData();
       service.zipObjectives(
         zip,
-        [
-          {
-            id: '0',
+        {
+          ['1']: {
+            id: '1',
             targetId: ItemId.SteelChest,
             value: rational.one,
             unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
-        ],
+        },
         Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
@@ -839,15 +824,15 @@ describe('RouterService', () => {
       const zip = mockZipData();
       service.zipObjectives(
         zip,
-        [
-          {
-            id: '0',
+        {
+          ['1']: {
+            id: '1',
             targetId: ItemId.SteelChest,
             value: rational.one,
             unit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           },
-        ],
+        },
         Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
@@ -860,15 +845,15 @@ describe('RouterService', () => {
       const zip = mockZipData();
       service.zipObjectives(
         zip,
-        [
-          {
-            id: '0',
+        {
+          ['1']: {
+            id: '1',
             targetId: RecipeId.SteelChest,
             value: rational.one,
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
           },
-        ],
+        },
         Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
@@ -888,17 +873,13 @@ describe('RouterService', () => {
         [],
       );
       expect(result).toEqual({
-        ids: ['1'],
-        entities: {
-          ['1']: {
-            id: '1',
-            targetId: ItemId.SteelChest,
-            value: rational.one,
-            unit: ObjectiveUnit.Belts,
-            type: ObjectiveType.Output,
-          },
+        ['1']: {
+          id: '1',
+          targetId: ItemId.SteelChest,
+          value: rational.one,
+          unit: ObjectiveUnit.Belts,
+          type: ObjectiveType.Output,
         },
-        index: 2,
       });
     });
 
@@ -910,36 +891,28 @@ describe('RouterService', () => {
         Mocks.modHash,
       );
       expect(result).toEqual({
-        ids: ['1'],
-        entities: {
-          ['1']: {
-            id: '1',
-            targetId: '',
-            value: rational.one,
-            unit: ObjectiveUnit.Items,
-            type: ObjectiveType.Output,
-          },
+        ['1']: {
+          id: '1',
+          targetId: '',
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
         },
-        index: 2,
       });
     });
 
     it('should map modules and beacons', () => {
       const result = service.unzipObjectives({ o: ['*1*3***0*0'] }, [], []);
       expect(result).toEqual({
-        ids: ['1'],
-        entities: {
-          ['1']: {
-            id: '1',
-            targetId: '',
-            value: rational.one,
-            unit: ObjectiveUnit.Machines,
-            type: ObjectiveType.Output,
-            modules: [{}],
-            beacons: [{}],
-          },
+        ['1']: {
+          id: '1',
+          targetId: '',
+          value: rational.one,
+          unit: ObjectiveUnit.Machines,
+          type: ObjectiveType.Output,
+          modules: [{}],
+          beacons: [{}],
         },
-        index: 2,
       });
     });
   });

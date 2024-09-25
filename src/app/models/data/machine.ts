@@ -1,6 +1,8 @@
-import { Entities, toRationalEntities } from '../entities';
+import { toRationalEntities } from '~/helpers';
+
 import { EnergyType } from '../enum/energy-type';
 import { Rational, rational } from '../rational';
+import { Entities } from '../utils';
 import { ModuleEffect } from './module';
 import { parseSilo, Silo, SiloJson } from './silo';
 

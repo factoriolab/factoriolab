@@ -1,22 +1,22 @@
 import { Component, inject, input } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
 import { MenuItem } from 'primeng/api';
 import { map, switchMap } from 'rxjs';
 
+import { RecipesService } from '~/services/recipes.service';
+import { SettingsService } from '~/services/settings.service';
 import { TranslateService } from '~/services/translate.service';
-import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
-import { selectModMenuItem } from '~/store/settings/settings.selectors';
 
 @Component({ template: '' })
 export abstract class DetailComponent {
   route = inject(ActivatedRoute);
+  recipesSvc = inject(RecipesService);
+  settingsSvc = inject(SettingsService);
   translateSvc = inject(TranslateService);
-  store = inject(Store);
 
-  home = this.store.selectSignal(selectModMenuItem);
-  data = this.store.selectSignal(selectAdjustedDataset);
+  home = this.settingsSvc.modMenuItem;
+  data = this.recipesSvc.adjustedDataset;
 
   id = input.required<string>();
   collectionLabel = input.required<string>();

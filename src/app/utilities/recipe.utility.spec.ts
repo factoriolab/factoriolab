@@ -1,12 +1,12 @@
 import { spread } from '~/helpers';
 import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
-import { Entities } from '~/models/entities';
 import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { Objective } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { ModuleSettings } from '~/models/settings/module-settings';
+import { Entities } from '~/models/utils';
 import { ItemId, Mocks, RecipeId } from '~/tests';
 
 import { RecipeUtility } from './recipe.utility';

@@ -11,7 +11,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { FilterService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -24,14 +23,13 @@ import { first } from 'rxjs';
 
 import { Item } from '~/models/data/item';
 import { Game } from '~/models/enum/game';
-import { Optional } from '~/models/optional';
+import { Optional } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
+import { PreferencesService } from '~/services/preferences.service';
+import { SettingsService } from '~/services/settings.service';
 import { TranslateService } from '~/services/translate.service';
-import { setShowTechLabels } from '~/store/preferences/preferences.actions';
-import { selectShowTechLabels } from '~/store/preferences/preferences.selectors';
-import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
 
 import { DialogComponent } from '../modal';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -59,17 +57,18 @@ export type UnlockStatus = 'available' | 'locked' | 'researched';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TechPickerComponent extends DialogComponent {
-  store = inject(Store);
   filterSvc = inject(FilterService);
-  translateSvc = inject(TranslateService);
   contentSvc = inject(ContentService);
+  preferencesSvc = inject(PreferencesService);
+  settingsSvc = inject(SettingsService);
+  translateSvc = inject(TranslateService);
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 
   @Output() selectIds = new EventEmitter<Optional<Set<string>>>();
 
-  data = this.store.selectSignal(selectAdjustedDataset);
-  showTechLabels = this.store.selectSignal(selectShowTechLabels);
+  data = this.settingsSvc.dataset;
+  showTechLabels = this.preferencesSvc.showTechLabels;
 
   filter = signal('');
   selection = signal<string[]>([]);
@@ -244,10 +243,5 @@ game.write_file("techs.txt", table.concat(list, ","))
       this.selectIds.emit(undefined);
 
     this.selectIds.emit(new Set(selection));
-  }
-
-  /** Action Dispatch Methods */
-  setShowTechLabels(showTechLabels: boolean): void {
-    this.store.dispatch(setShowTechLabels({ showTechLabels }));
   }
 }

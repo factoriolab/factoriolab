@@ -2,11 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  inject,
   Output,
   signal,
 } from '@angular/core';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 
@@ -25,8 +23,6 @@ import { ModulesComponent } from '../modules/modules.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModulesOverlayComponent extends OverlayComponent {
-  store = inject(Store);
-
   @Output() setValue = new EventEmitter<ModuleSettings[]>();
 
   machine = signal<Machine | undefined>(undefined);

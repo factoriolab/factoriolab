@@ -1,18 +1,33 @@
 import { SelectItem } from 'primeng/api';
 import { filter, OperatorFunction } from 'rxjs';
 
-import { Entities } from '~/models/entities';
 import { ItemId } from '~/models/enum/item-id';
-import { Optional } from '~/models/optional';
+import { Rational, rational } from '~/models/rational';
+import {
+  Entities,
+  Optional,
+  PickNonNullish,
+  RecursivePartial,
+} from '~/models/utils';
 
-type PickNonNullish<T, K extends keyof T> = {
-  [P in K]-?: NonNullable<T[P]>;
-};
+export function addValueToRecordByIds(
+  record: Entities<Rational>,
+  ids: string[],
+  value: Rational,
+): void {
+  ids.forEach((id) => {
+    if (!record[id]) {
+      record[id] = rational.zero;
+    }
+
+    record[id] = record[id].add(value);
+  });
+}
 
 /** Compare arrays. Empty arrays are considered equal to nullish arrays. */
 export function areArraysEqual<T>(
-  a: T[] | null | undefined,
-  b: T[] | null | undefined,
+  a: Optional<T[]>,
+  b: Optional<T[]>,
   compareFn: (a: T, b: T) => boolean = (a, b) => a === b,
 ): boolean {
   if (!a?.length) return !b?.length;
@@ -21,8 +36,8 @@ export function areArraysEqual<T>(
 }
 
 export function areEntitiesEqual<T>(
-  a: Entities<T> | null | undefined,
-  b: Entities<T> | null | undefined,
+  a: Optional<Entities<T>>,
+  b: Optional<Entities<T>>,
   compareFn: (a: T, b: T) => boolean = (a, b) => a === b,
 ): boolean {
   if (a == null) return b == null || !Object.keys(b).length;
@@ -47,6 +62,32 @@ export function asString(value: Optional<string | string[]>): string {
  */
 export function coalesce<T>(value: Optional<T>, fallback: T): T {
   return value ?? fallback;
+}
+
+export function cloneEntities<T>(value: Entities<T>): Entities<T>;
+export function cloneEntities<T>(
+  value: Optional<Entities<T>>,
+): Optional<Entities<T>>;
+export function cloneEntities<T>(
+  value: Optional<Entities<T>>,
+): Optional<Entities<T>> {
+  if (value == null) return;
+  return spread(value);
+}
+
+export function compareRank(
+  value: string[],
+  def: string[],
+): Optional<string[]> {
+  if (value.length === def.length && value.every((v, i) => v === def[i]))
+    return undefined;
+
+  return value;
+}
+
+export function compareSet<T>(value: Set<T>, def: Set<T>): Optional<Set<T>> {
+  if (value.size !== def.size) return value;
+  return Array.from(value).every((v) => def.has(v)) ? undefined : value;
 }
 
 export function contains<T>(entities: Entities<T>, value: T): boolean {
@@ -128,11 +169,66 @@ export function prune(obj: object): void {
   keys.filter((k) => cast[k] === undefined).forEach((k) => delete cast[k]);
 }
 
+export function reduceEntities(
+  value: Entities<string[]>,
+  init: Entities<Entities<boolean>> = {},
+): Entities<Entities<boolean>> {
+  return Object.keys(value).reduce((e: Entities<Entities<boolean>>, x) => {
+    e[x] = toBoolEntities(value[x], init[x]);
+    return e;
+  }, init);
+}
+
 /** Spread, but ensures type safety of the object to be applied */
-export function spread<T>(obj: T, ...apply: Partial<T>[]): T {
+export function spread<T>(obj: T, ...apply: RecursivePartial<T>[]): T {
   if (apply.length === 0) return { ...obj };
   for (const a of apply) obj = { ...obj, ...a };
   return obj;
+}
+
+export function toBoolEntities(
+  value: string[],
+  init: Entities<boolean> = {},
+): Entities<boolean> {
+  return value.reduce((e: Entities<boolean>, v) => {
+    e[v] = true;
+    return e;
+  }, init);
+}
+
+export function toEntities<T extends { id: string }>(
+  value: T[],
+  init: Entities<T> = {},
+  warn = false,
+): Entities<T> {
+  if (warn) {
+    return value.reduce((e: Entities<T>, v) => {
+      if (e[v.id]) console.warn(`Duplicate id: ${v.id}`);
+      e[v.id] = v;
+      return e;
+    }, init);
+  }
+
+  return value.reduce((e: Entities<T>, v) => {
+    e[v.id] = v;
+    return e;
+  }, init);
+}
+
+export function toRationalEntities(
+  value: Entities<string | number>,
+): Entities<Rational>;
+export function toRationalEntities(
+  value: Optional<Entities<string | number>>,
+): Optional<Entities<Rational>>;
+export function toRationalEntities(
+  value: Optional<Entities<string | number>>,
+): Optional<Entities<Rational>> {
+  if (value == null) return;
+  return Object.keys(value).reduce((e: Entities<Rational>, v) => {
+    e[v] = rational(value[v]);
+    return e;
+  }, {});
 }
 
 export function updateSetIds(

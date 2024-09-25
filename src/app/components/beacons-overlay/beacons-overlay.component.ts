@@ -7,7 +7,6 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -16,16 +15,13 @@ import { TooltipModule } from 'primeng/tooltip';
 import { DropdownBaseDirective } from '~/directives/dropdown-base.directive';
 import { spread } from '~/helpers';
 import { ItemId } from '~/models/enum/item-id';
-import { Optional } from '~/models/optional';
 import { Rational, rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
+import { Optional } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import {
-  selectDataset,
-  selectOptions,
-} from '~/store/settings/settings.selectors';
+import { SettingsService } from '~/services/settings.service';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { OverlayComponent } from '../modal';
@@ -52,12 +48,12 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BeaconsOverlayComponent extends OverlayComponent {
-  store = inject(Store);
+  settingsSvc = inject(SettingsService);
 
   @Output() setValue = new EventEmitter<BeaconSettings[]>();
 
-  data = this.store.selectSignal(selectDataset);
-  options = this.store.selectSignal(selectOptions);
+  data = this.settingsSvc.dataset;
+  options = this.settingsSvc.options;
 
   beacons = signal<BeaconSettings[]>([]);
   recipeId = signal<string | undefined>(undefined);

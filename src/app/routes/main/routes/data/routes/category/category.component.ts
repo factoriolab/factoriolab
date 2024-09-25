@@ -10,6 +10,7 @@ import { TranslatePipe } from '~/pipes/translate.pipe';
 import { DetailComponent } from '../../models/detail.component';
 
 @Component({
+  selector: 'lab-category',
   standalone: true,
   imports: [
     BreadcrumbModule,

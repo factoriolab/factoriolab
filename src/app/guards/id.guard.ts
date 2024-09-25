@@ -8,9 +8,9 @@ import {
 import { from, map } from 'rxjs';
 
 import { coalesce } from '~/helpers';
+import { DEFAULT_MOD } from '~/models/constants';
 import { MigrationService } from '~/services/migration.service';
 import { RouterService } from '~/services/router.service';
-import { initialSettingsState } from '~/store/settings/settings.reducer';
 
 export const canActivateId: CanActivateFn = (
   route: ActivatedRouteSnapshot,
@@ -30,17 +30,14 @@ export const canActivateId: CanActivateFn = (
       return from(routerSvc.unzipQueryParams(route.queryParams)).pipe(
         map((queryParams) => migrationSvc.migrate(undefined, queryParams)),
         map(({ modId, params }) =>
-          router.createUrlTree(
-            [coalesce(modId, initialSettingsState.modId), id],
-            {
-              queryParams: params,
-            },
-          ),
+          router.createUrlTree([coalesce(modId, DEFAULT_MOD), id], {
+            queryParams: params,
+          }),
         ),
       );
     }
     case 'factorio':
-      return router.createUrlTree(['1.1']);
+      return router.createUrlTree([DEFAULT_MOD]);
     case 'satisfactory':
       return router.createUrlTree(['sfy']);
     case 'techtonica':

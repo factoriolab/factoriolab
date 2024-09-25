@@ -4,7 +4,7 @@
       [value]="objectives()"
       [dragdrop]="true"
       [trackBy]="trackSvc.trackById"
-      (onReorder)="setObjectiveOrder(objectives())"
+      (onReorder)="objectivesSvc.setOrder(objectives())"
     >
       <ng-template pTemplate="item" let-objective let-i="index">
         <div class="p-inputgroup">
@@ -46,7 +46,15 @@
             <lab-picker
               #editRecipePicker
               [header]="'objectives.selectARecipe' | translate"
-              (selectId)="setTarget(objective.id, $event)"
+              (selectId)="
+                objectivesSvc.updateEntity(objective.id, {
+                  targetId: $event,
+                  machineId: undefined,
+                  modules: undefined,
+                  beacons: undefined,
+                  overclock: undefined,
+                })
+              "
             ></lab-picker>
           } @else {
             <button
@@ -70,7 +78,15 @@
             <lab-picker
               #editItemPicker
               [header]="'objectives.selectAnItem' | translate"
-              (selectId)="setTarget(objective.id, $event)"
+              (selectId)="
+                objectivesSvc.updateEntity(objective.id, {
+                  targetId: $event,
+                  machineId: undefined,
+                  modules: undefined,
+                  beacons: undefined,
+                  overclock: undefined,
+                })
+              "
             ></lab-picker>
           }
           <lab-input-number
@@ -85,7 +101,9 @@
             tooltipPosition="top"
             [hideButtons]="contentSvc.isMobile()"
             [value]="objective.value"
-            (setValue)="setValue(objective.id, $event)"
+            (setValue)="
+              objectivesSvc.updateEntity(objective.id, { value: $event })
+            "
           ></lab-input-number>
           @if (objective.type !== ObjectiveType.Maximize) {
             <p-dropdown
@@ -93,7 +111,7 @@
               labNoDrag
               [pTooltip]="'objectives.unitTooltip' | translate"
               tooltipPosition="top"
-              [options]="rateUnitOptions()"
+              [options]="unitOptions()"
               [ngModel]="objective.unit"
               (onChange)="
                 changeUnit(
@@ -112,7 +130,9 @@
             tooltipPosition="top"
             [options]="objectiveTypeOptions"
             [ngModel]="objective.type"
-            (onChange)="setType(objective.id, $event.value)"
+            (onChange)="
+              objectivesSvc.updateEntity(objective.id, { type: $event.value })
+            "
           ></p-dropdown>
           <button
             pButton
@@ -123,7 +143,7 @@
             icon="fa-solid fa-xmark"
             [pTooltip]="'objectives.removeTooltip' | translate"
             tooltipPosition="left"
-            (click)="removeObjective(objective.id)"
+            (click)="objectivesSvc.remove(objective.id)"
           ></button>
         </div>
       </ng-template>
@@ -155,7 +175,7 @@
         [pTooltip]="'objectives.selectDisplayRate' | translate"
         [ngModel]="dispRateInfo().option"
         [options]="displayRateOptions"
-        (onChange)="setDisplayRate($event.value, dispRateInfo().option)"
+        (onChange)="settingsSvc.apply({ displayRate: $event.value })"
       >
       </p-dropdown>
       <p-toggleButton
@@ -163,7 +183,7 @@
         [onIcon]="'fa-solid fa-play'"
         offIcon="fa-solid fa-pause"
         [pTooltip]="'objectives.pauseTooltip' | translate"
-        (onChange)="setPaused($event.checked ?? false)"
+        (onChange)="preferencesSvc.apply({ paused: $event.checked })"
       ></p-toggleButton>
     </div>
     @if (result().unboundedRecipeId; as recipeId) {
@@ -194,13 +214,19 @@
               [label]="
                 'objectives.errorSimplexUnboundedAddRecipeLimit' | translate
               "
-              (click)="addRecipeLimit(recipeId)"
+              (click)="
+                objectivesSvc.add({
+                  targetId: recipeId,
+                  unit: ObjectiveUnit.Machines,
+                  type: ObjectiveType.Limit,
+                })
+              "
             ></button>
           </div>
         </ng-template>
       </p-messages>
     } @else {
-      @if (messages$ | async; as messages) {
+      @if (messages() | async; as messages) {
         @if (messages.length) {
           <p-messages
             styleClass="mt-2"
@@ -215,12 +241,16 @@
   <lab-picker
     #addItemPicker
     [header]="'objectives.selectAnItem' | translate"
-    (selectId)="addItemObjective($event)"
+    (selectId)="
+      objectivesSvc.add({ targetId: $event, unit: ObjectiveUnit.Items })
+    "
   ></lab-picker>
   <lab-picker
     #addRecipePicker
     [header]="'objectives.selectARecipe' | translate"
-    (selectId)="addRecipeObjective($event)"
+    (selectId)="
+      objectivesSvc.add({ targetId: $event, unit: ObjectiveUnit.Machines })
+    "
   ></lab-picker>
   <lab-picker
     #chooseItemPicker

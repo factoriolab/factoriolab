@@ -1,3 +1,4 @@
+import { DEFAULT_MOD } from './constants';
 import { Game } from './enum/game';
 import { ColumnKey } from './settings/column-settings';
 
@@ -15,10 +16,10 @@ export interface GameInfo {
 export const gameInfo: Record<Game, GameInfo> = {
   [Game.Factorio]: {
     icon: 'factorio',
-    route: '/1.1',
+    route: `/${DEFAULT_MOD}`,
     label: 'options.game.factorio',
     meta: 'Factorio',
-    modId: '1.1',
+    modId: DEFAULT_MOD,
     hideColumns: [],
   },
   [Game.DysonSphereProgram]: {

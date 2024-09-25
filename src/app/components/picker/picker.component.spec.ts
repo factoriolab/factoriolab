@@ -1,9 +1,6 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 
-import { LabState } from '~/store';
-import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
 import { CategoryId, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { PickerComponent } from './picker.component';
@@ -11,7 +8,6 @@ import { PickerComponent } from './picker.component';
 describe('PickerComponent', () => {
   let component: PickerComponent;
   let fixture: ComponentFixture<PickerComponent>;
-  let mockStore: MockStore<LabState>;
   let markForCheck: jasmine.Spy;
 
   beforeEach(async () => {
@@ -20,15 +16,10 @@ describe('PickerComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(PickerComponent);
-    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     const ref = fixture.debugElement.injector.get(ChangeDetectorRef);
     markForCheck = spyOn(ref.constructor.prototype, 'markForCheck');
     fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    mockStore.resetSelectors();
   });
 
   it('should create', () => {
@@ -82,19 +73,6 @@ describe('PickerComponent', () => {
       expect(component.visible).toBeTrue();
       expect(component.isMultiselect).toBeTrue();
       expect(component.selection?.length).toEqual(1);
-    });
-
-    it('should open as recipe multiselect with null defaults', () => {
-      const data = { ...Mocks.getAdjustedDataset(), ...{ defaults: null } };
-      mockStore.overrideSelector(selectAdjustedDataset, data);
-      mockStore.refreshState();
-      component.clickOpen('recipe', Mocks.adjustedDataset.recipeIds, [
-        RecipeId.IronPlate,
-      ]);
-      expect(component.visible).toBeTrue();
-      expect(component.isMultiselect).toBeTrue();
-      expect(component.selection?.length).toEqual(1);
-      mockStore.resetSelectors();
     });
   });
 

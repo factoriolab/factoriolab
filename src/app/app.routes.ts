@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 
 import { canActivateId } from './guards/id.guard';
 import { canActivateLanding } from './guards/landing.guard';
+import { DEFAULT_MOD } from './models/constants';
 
 export const routes: Routes = [
   {
@@ -35,6 +36,6 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '1.1',
+    redirectTo: DEFAULT_MOD,
   },
 ];

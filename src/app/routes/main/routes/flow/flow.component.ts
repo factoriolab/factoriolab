@@ -11,8 +11,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Store } from '@ngrx/store';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import cytoscape from 'cytoscape';
 import elk from 'cytoscape-elk';
 import { drag, select, Selection, zoom } from 'd3';
@@ -50,7 +49,7 @@ import { TranslatePipe } from '~/pipes/translate.pipe';
 import { DisplayService } from '~/services/display.service';
 import { ExportService } from '~/services/export.service';
 import { FlowService } from '~/services/flow.service';
-import { selectFlowSettings } from '~/store/preferences/preferences.selectors';
+import { PreferencesService } from '~/services/preferences.service';
 
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;
@@ -74,12 +73,12 @@ cytoscape.use(elk as cytoscape.Ext);
 export class FlowComponent implements AfterViewInit {
   destroyRef = inject(DestroyRef);
   ref = inject(ChangeDetectorRef);
-  store = inject(Store);
   displaySvc = inject(DisplayService);
-  flowSvc = inject(FlowService);
   exportSvc = inject(ExportService);
+  flowSvc = inject(FlowService);
+  preferencesSvc = inject(PreferencesService);
 
-  flowSettings = this.store.selectSignal(selectFlowSettings);
+  flowSettings = this.preferencesSvc.flowSettings;
 
   svgElement = viewChild.required<ElementRef<HTMLElement>>('svg');
   cy?: cytoscape.Core;
@@ -93,16 +92,17 @@ export class FlowComponent implements AfterViewInit {
   loading = signal(true);
   selectedId = signal<string | null>(null);
   resize$ = new Subject<void>();
+  data$ = combineLatest([
+    this.flowSvc.flowData$,
+    toObservable(this.preferencesSvc.flowSettings),
+  ]);
 
   @HostListener('window:resize') onResize(): void {
     this.resize$.next();
   }
 
   ngAfterViewInit(): void {
-    combineLatest([
-      this.flowSvc.flowData$,
-      this.store.select(selectFlowSettings),
-    ])
+    this.data$
       .pipe(debounceTime(0), takeUntilDestroyed(this.destroyRef))
       .subscribe((args) => {
         this.rebuildChart(...args);

@@ -7,10 +7,9 @@ import {
   ZFIELDSEP,
   ZTRUE,
 } from '~/models/constants';
-import { KeysMatching } from '~/models/keys-matching';
 import { LabParams } from '~/models/lab-params';
-import { Optional } from '~/models/optional';
 import { Rational, rational } from '~/models/rational';
+import { KeysMatching, Optional } from '~/models/utils';
 import { Zip } from '~/models/zip';
 
 import { CompressionService } from './compression.service';

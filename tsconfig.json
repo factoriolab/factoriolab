@@ -21,7 +21,8 @@
     "paths": {
       "~/*": ["src/app/*"]
     },
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "useDefineForClassFields": false
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -1,5 +1,4 @@
 import { spread } from '~/helpers';
-import { Entities } from '~/models/entities';
 import { DisplayRate, displayRateInfo } from '~/models/enum/display-rate';
 import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
@@ -7,6 +6,7 @@ import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { RecipeObjective } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
+import { Entities } from '~/models/utils';
 import { ItemId, Mocks, RecipeId } from '~/tests';
 
 import { RateUtility } from './rate.utility';

@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 import { Message } from 'primeng/api';
 import { Subject } from 'rxjs';
 
@@ -9,26 +8,13 @@ import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { Objective } from '~/models/objective';
 import { rational } from '~/models/rational';
-import { LabState } from '~/store';
-import {
-  add,
-  remove,
-  setOrder,
-  setTarget,
-  setType,
-  setUnit,
-  setValue,
-} from '~/store/objectives/objectives.actions';
-import { setPaused } from '~/store/preferences/preferences.actions';
-import { setDisplayRate } from '~/store/settings/settings.actions';
-import { DispatchTest, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
+import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { ObjectivesComponent } from './objectives.component';
 
 describe('ObjectivesComponent', () => {
   let component: ObjectivesComponent;
   let fixture: ComponentFixture<ObjectivesComponent>;
-  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -38,7 +24,6 @@ describe('ObjectivesComponent', () => {
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ObjectivesComponent);
-    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -216,16 +201,6 @@ describe('ObjectivesComponent', () => {
     });
   });
 
-  describe('setObjectiveOrder', () => {
-    it('should map objectives to ids', () => {
-      spyOn(component, 'setOrder');
-      component.setObjectiveOrder(Mocks.objectivesList);
-      expect(component.setOrder).toHaveBeenCalledWith(
-        Mocks.objectivesList.map((o) => o.id),
-      );
-    });
-  });
-
   describe('changeUnit', () => {
     const mockPicker = (id: string): any => {
       const picker = {
@@ -239,43 +214,46 @@ describe('ObjectivesComponent', () => {
     };
 
     it('should do nothing if it cannot find a matching objective rational', () => {
-      spyOn(component, 'setUnit');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.changeUnit(
         Mocks.objective5,
         ObjectiveUnit.Machines,
         {} as any,
         {} as any,
       );
-      expect(component.setUnit).not.toHaveBeenCalled();
+      expect(component.objectivesSvc.updateEntity).not.toHaveBeenCalled();
     });
 
     it('should do nothing if switching to and from machines', () => {
-      spyOn(component, 'setUnit');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.changeUnit(
         Mocks.objective5,
         ObjectiveUnit.Machines,
         {} as any,
         {} as any,
       );
-      expect(component.setUnit).not.toHaveBeenCalled();
+      expect(component.objectivesSvc.updateEntity).not.toHaveBeenCalled();
     });
 
     it('should auto-switch from item to recipe', () => {
-      spyOn(component, 'setUnit');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.changeUnit(
         Mocks.objective1,
         ObjectiveUnit.Machines,
         {} as any,
         {} as any,
       );
-      expect(component.setUnit).toHaveBeenCalledWith(Mocks.objective1.id, {
-        targetId: RecipeId.AdvancedCircuit,
-        unit: ObjectiveUnit.Machines,
-      });
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith(
+        Mocks.objective1.id,
+        {
+          targetId: RecipeId.AdvancedCircuit,
+          unit: ObjectiveUnit.Machines,
+        },
+      );
     });
 
     it('should prompt user to switch from item to recipe', () => {
-      spyOn(component, 'setUnit');
+      spyOn(component.objectivesSvc, 'updateEntity');
       const objective: Objective = {
         id: '0',
         targetId: ItemId.PetroleumGas,
@@ -289,28 +267,31 @@ describe('ObjectivesComponent', () => {
         {} as any,
         mockPicker(RecipeId.AdvancedOilProcessing),
       );
-      expect(component.setUnit).toHaveBeenCalledWith('0', {
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('0', {
         targetId: RecipeId.AdvancedOilProcessing,
         unit: ObjectiveUnit.Machines,
       });
     });
 
     it('should auto-switch from recipe to item', () => {
-      spyOn(component, 'setUnit');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.changeUnit(
         Mocks.objective5,
         ObjectiveUnit.Items,
         {} as any,
         {} as any,
       );
-      expect(component.setUnit).toHaveBeenCalledWith(Mocks.objective5.id, {
-        targetId: ItemId.PiercingRoundsMagazine,
-        unit: ObjectiveUnit.Items,
-      });
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith(
+        Mocks.objective5.id,
+        {
+          targetId: ItemId.PiercingRoundsMagazine,
+          unit: ObjectiveUnit.Items,
+        },
+      );
     });
 
     it('should prompt user to switch from recipe to item', () => {
-      spyOn(component, 'setUnit');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.changeUnit(
         {
           id: '0',
@@ -323,147 +304,109 @@ describe('ObjectivesComponent', () => {
         mockPicker('id'),
         {} as any,
       );
-      expect(component.setUnit).toHaveBeenCalledWith('0', {
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('0', {
         targetId: 'id',
         unit: ObjectiveUnit.Items,
       });
     });
 
     it('should auto-switch between items rate units', () => {
-      spyOn(component, 'setUnit');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.changeUnit(
         Mocks.objective1,
         ObjectiveUnit.Belts,
         {} as any,
         {} as any,
       );
-      expect(component.setUnit).toHaveBeenCalledWith(Mocks.objective1.id, {
-        targetId: Mocks.objective1.targetId,
-        unit: ObjectiveUnit.Belts,
-      });
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith(
+        Mocks.objective1.id,
+        {
+          targetId: Mocks.objective1.targetId,
+          unit: ObjectiveUnit.Belts,
+        },
+      );
     });
   });
 
   describe('convertItemsToMachines', () => {
     it('should convert the objective value', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
-      spyOn(component, 'setValue');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.convertItemsToMachines(
         Mocks.objectives[0],
         RecipeId.AdvancedCircuit,
         Mocks.adjustedDataset,
       );
-      expect(component.setValue).toHaveBeenCalledWith('0', rational(1n, 77n));
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('1', {
+        value: rational(1n, 77n),
+      });
     });
 
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
-      spyOn(component, 'setValue');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.convertItemsToMachines(
         Mocks.objectives[2],
         RecipeId.AdvancedCircuit,
         Mocks.adjustedDataset,
       );
-      expect(component.setValue).not.toHaveBeenCalled();
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('convertMachinesToItems', () => {
     it('should convert the objective value', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
-      spyOn(component, 'setValue');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.convertMachinesToItems(
         Mocks.objectives[4],
         ItemId.PiercingRoundsMagazine,
         ObjectiveUnit.Items,
         Mocks.adjustedDataset,
       );
-      expect(component.setValue).toHaveBeenCalledWith('4', rational(175n));
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('5', {
+        value: rational(175n),
+      });
     });
 
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
-      spyOn(component, 'setValue');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.convertMachinesToItems(
         Mocks.objectives[2],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Items,
         Mocks.adjustedDataset,
       );
-      expect(component.setValue).not.toHaveBeenCalled();
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('convertItemsToItems', () => {
     it('should convert the objective value', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
-      spyOn(component, 'setValue');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.convertItemsToItems(
         Mocks.objectives[0],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Belts,
         Mocks.adjustedDataset,
       );
-      expect(component.setValue).toHaveBeenCalledWith('0', rational(1n, 900n));
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('1', {
+        value: rational(1n, 2700n),
+      });
     });
 
     it('should not convert the value on maximize objectives', () => {
       spyOn(component, 'convertObjectiveValues').and.returnValue(true);
-      spyOn(component, 'setValue');
+      spyOn(component.objectivesSvc, 'updateEntity');
       component.convertItemsToItems(
         Mocks.objectives[2],
         ItemId.AdvancedCircuit,
         ObjectiveUnit.Items,
         Mocks.adjustedDataset,
       );
-      expect(component.setValue).not.toHaveBeenCalled();
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledTimes(1);
     });
-  });
-
-  describe('addItemObjective', () => {
-    it('should use ObjectiveUnit.Items', () => {
-      spyOn(component, 'addObjective');
-      component.addItemObjective(ItemId.AdvancedCircuit);
-      expect(component.addObjective).toHaveBeenCalledWith({
-        targetId: ItemId.AdvancedCircuit,
-        unit: ObjectiveUnit.Items,
-      });
-    });
-  });
-
-  describe('addRecipeObjective', () => {
-    it('should use ObjectiveUnit.Machines', () => {
-      spyOn(component, 'addObjective');
-      component.addRecipeObjective(RecipeId.AdvancedCircuit);
-      expect(component.addObjective).toHaveBeenCalledWith({
-        targetId: RecipeId.AdvancedCircuit,
-        unit: ObjectiveUnit.Machines,
-      });
-    });
-  });
-
-  describe('addRecipeLimit', () => {
-    it('should use ObjectiveUnit.Machines and ObjectiveType.Limit', () => {
-      spyOn(component, 'addObjective');
-      component.addRecipeLimit(RecipeId.AdvancedCircuit);
-      expect(component.addObjective).toHaveBeenCalledWith({
-        targetId: RecipeId.AdvancedCircuit,
-        unit: ObjectiveUnit.Machines,
-        type: ObjectiveType.Limit,
-      });
-    });
-  });
-
-  it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('removeObjective', remove);
-    dispatch.props('setOrder', setOrder);
-    dispatch.props('setTarget', setTarget);
-    dispatch.props('setValue', setValue);
-    dispatch.props('setUnit', setUnit);
-    dispatch.props('setType', setType);
-    dispatch.props('addObjective', add);
-    dispatch.props('setDisplayRate', setDisplayRate);
-    dispatch.props('setPaused', setPaused);
   });
 });

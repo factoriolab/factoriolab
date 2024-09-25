@@ -1,20 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 
-import { LabState } from '~/store';
-import { resetRecipe, setCost } from '~/store/recipes/recipes.actions';
-import {
-  setCheckedRecipes,
-  setExcludedRecipes,
-} from '~/store/settings/settings.actions';
-import { DispatchTest, RecipeId, setInputs, TestModule } from '~/tests';
+import { RecipeId, setInputs, TestModule } from '~/tests';
 
 import { RecipeComponent } from './recipe.component';
 
 describe('RecipeComponent', () => {
   let component: RecipeComponent;
   let fixture: ComponentFixture<RecipeComponent>;
-  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -22,16 +14,11 @@ describe('RecipeComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(RecipeComponent);
-    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     setInputs(fixture, {
       id: RecipeId.NuclearFuelReprocessing,
       collectionLabel: 'data.recipes',
     });
-  });
-
-  afterEach(() => {
-    mockStore.resetSelectors();
   });
 
   it('should create', () => {
@@ -51,9 +38,10 @@ describe('RecipeComponent', () => {
 
   describe('changeExcluded', () => {
     it('should update the set and pass with defaults to the store dispatcher', () => {
-      spyOn(component, 'setExcludedRecipes');
+      spyOn(component.settingsSvc, 'updateField');
       component.changeExcluded(false);
-      expect(component.setExcludedRecipes).toHaveBeenCalledWith(
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'excludedRecipeIds',
         new Set(),
         new Set([RecipeId.NuclearFuelReprocessing]),
       );
@@ -62,19 +50,11 @@ describe('RecipeComponent', () => {
 
   describe('changeChecked', () => {
     it('should update the set and pass with defaults to the store dispatcher', () => {
-      spyOn(component, 'setCheckedRecipes');
+      spyOn(component.settingsSvc, 'apply');
       component.changeChecked(true);
-      expect(component.setCheckedRecipes).toHaveBeenCalledWith(
-        new Set([RecipeId.NuclearFuelReprocessing]),
-      );
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        checkedRecipeIds: new Set([RecipeId.NuclearFuelReprocessing]),
+      });
     });
-  });
-
-  it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(mockStore, component);
-    dispatch.props('setExcludedRecipes', setExcludedRecipes);
-    dispatch.props('setCheckedRecipes', setCheckedRecipes);
-    dispatch.props('setRecipeCost', setCost);
-    dispatch.props('resetRecipe', resetRecipe);
   });
 });

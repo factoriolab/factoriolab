@@ -7,7 +7,6 @@ import {
   output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
@@ -21,7 +20,7 @@ import { Rational, rational } from '~/models/rational';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
-import { selectDataset } from '~/store/settings/settings.selectors';
+import { SettingsService } from '~/services/settings.service';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
@@ -45,7 +44,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModulesComponent {
-  store = inject(Store);
+  settingsSvc = inject(SettingsService);
 
   entity = input.required<Machine | Beacon>();
   modules = input.required<ModuleSettings[]>();
@@ -53,7 +52,7 @@ export class ModulesComponent {
 
   setValue = output<ModuleSettings[]>();
 
-  data = this.store.selectSignal(selectDataset);
+  data = this.settingsSvc.dataset;
 
   exclude = computed(() =>
     this.modules()

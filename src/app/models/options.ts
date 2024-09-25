@@ -1,4 +1,11 @@
 import { SelectItem } from 'primeng/api';
+import { data } from 'src/data';
+
+import { Game } from './enum/game';
+
+export const modOptions = data.mods
+  .filter((m) => m.game === Game.Factorio)
+  .map((m): SelectItem<string> => ({ label: m.name, value: m.id }));
 
 export interface Options {
   categories: SelectItem<string>[];

@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { setColumns } from '~/store/preferences/preferences.actions';
-import { initialPreferencesState } from '~/store/preferences/preferences.reducer';
+import { initialPreferencesState } from '~/services/preferences.service';
 import { Mocks, TestModule } from '~/tests';
 
 import { ColumnsComponent } from './columns.component';
@@ -63,11 +62,11 @@ describe('ColumnsComponent', () => {
 
   describe('save', () => {
     it('should dispatch the action', () => {
-      spyOn(component.store, 'dispatch');
+      spyOn(component.preferencesSvc, 'apply');
       component.onHide();
-      expect(component.store.dispatch).toHaveBeenCalledWith(
-        setColumns({ columns: component.editValue as any }),
-      );
+      expect(component.preferencesSvc.apply).toHaveBeenCalledWith({
+        columns: component.editValue as any,
+      });
     });
   });
 });

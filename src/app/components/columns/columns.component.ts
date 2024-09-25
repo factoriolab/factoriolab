@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TableModule } from 'primeng/table';
 
-import { Entities } from '~/models/entities';
 import {
   ColumnKey,
   ColumnSettings,
@@ -15,11 +13,14 @@ import {
   ColumnsState,
   initialColumnsState,
 } from '~/models/settings/column-settings';
+import { Entities } from '~/models/utils';
 import { PrecisionExamplePipe } from '~/pipes/precision-example.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { setColumns } from '~/store/preferences/preferences.actions';
-import { initialPreferencesState } from '~/store/preferences/preferences.reducer';
-import { selectColumnOptions } from '~/store/settings/settings.selectors';
+import {
+  initialPreferencesState,
+  PreferencesService,
+} from '~/services/preferences.service';
+import { SettingsService } from '~/services/settings.service';
 
 import { DialogComponent } from '../modal';
 
@@ -41,9 +42,10 @@ import { DialogComponent } from '../modal';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColumnsComponent extends DialogComponent {
-  store = inject(Store);
+  preferencesSvc = inject(PreferencesService);
+  settingsSvc = inject(SettingsService);
 
-  columnOptions = this.store.selectSignal(selectColumnOptions);
+  columnOptions = this.settingsSvc.columnOptions;
 
   editValue: Entities<ColumnSettings> = initialColumnsState;
   columnsInf = columnsInfo;
@@ -81,6 +83,6 @@ export class ColumnsComponent extends DialogComponent {
 
   save(): void {
     const columns = this.editValue as ColumnsState;
-    this.store.dispatch(setColumns({ columns }));
+    this.preferencesSvc.apply({ columns });
   }
 }

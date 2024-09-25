@@ -9,7 +9,6 @@ import {
   viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
 import { FilterService, SelectItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -20,12 +19,13 @@ import { TabViewModule } from 'primeng/tabview';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { TabViewOverrideDirective } from '~/directives/tabview-override.directive';
+import { coalesce } from '~/helpers';
 import { Category } from '~/models/data/category';
-import { Entities } from '~/models/entities';
+import { Entities } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
-import { selectAdjustedDataset } from '~/store/recipes/recipes.selectors';
+import { SettingsService } from '~/services/settings.service';
 
 import { DialogComponent } from '../modal';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -52,8 +52,8 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 })
 export class PickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
-  store = inject(Store);
   contentSvc = inject(ContentService);
+  settingsSvc = inject(SettingsService);
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 
@@ -61,7 +61,7 @@ export class PickerComponent extends DialogComponent {
   @Output() selectId = new EventEmitter<string>();
   @Output() selectIds = new EventEmitter<Set<string>>();
 
-  data = this.store.selectSignal(selectAdjustedDataset);
+  data = this.settingsSvc.dataset;
 
   search = '';
   allSelected = false;
@@ -147,8 +147,7 @@ export class PickerComponent extends DialogComponent {
 
       if (Array.isArray(selection)) {
         this.allSelected = selection.length === 0;
-        this.default =
-          data.defaults != null ? [...data.defaults.excludedRecipeIds] : [];
+        this.default = [...coalesce(data.defaults?.excludedRecipeIds, [])];
       } else if (selection) {
         const index = data.categoryIds.indexOf(
           data.recipeEntities[selection].category,

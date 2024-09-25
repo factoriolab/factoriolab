@@ -1,33 +1,23 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import {
   BehaviorSubject,
   combineLatest,
   debounceTime,
   filter,
-  first,
   firstValueFrom,
   map,
-  ReplaySubject,
   Subject,
   switchMap,
   tap,
   withLatestFrom,
 } from 'rxjs';
 
-import {
-  asString,
-  coalesce,
-  filterPropsNullish,
-  prune,
-  spread,
-} from '~/helpers';
-import { MIN_ZIP, ZFIELDSEP } from '~/models/constants';
+import { asString, coalesce, prune, spread } from '~/helpers';
+import { DEFAULT_MOD, MIN_ZIP, ZFIELDSEP } from '~/models/constants';
 import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
 import { Dataset } from '~/models/dataset';
-import { Entities } from '~/models/entities';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { ZipVersion } from '~/models/enum/zip-version';
@@ -41,48 +31,72 @@ import { MachineSettings } from '~/models/settings/machine-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { Step } from '~/models/step';
+import { storedSignal } from '~/models/stored-signal';
+import { Entities } from '~/models/utils';
 import {
   Zip,
   ZipData,
   ZipMachineSettings,
   ZipRecipeSettingsInfo,
 } from '~/models/zip';
-import { load, PartialState } from '~/store/app.actions';
-import { ItemsState } from '~/store/items/items.reducer';
-import { MachinesState } from '~/store/machines/machines.reducer';
-import { ObjectivesState } from '~/store/objectives/objectives.reducer';
-import { selectZipState } from '~/store/objectives/objectives.selectors';
-import { RecipesState } from '~/store/recipes/recipes.reducer';
-import {
-  initialSettingsState,
-  PartialSettingsState,
-  SettingsState,
-} from '~/store/settings/settings.reducer';
-import { BrowserUtility } from '~/utilities/browser.utility';
 
 import { CompressionService } from './compression.service';
 import { DataService } from './data.service';
+import { ItemsService, ItemsState } from './items.service';
+import { MachinesService, MachinesState } from './machines.service';
 import { MigrationService } from './migration.service';
+import { ObjectivesService, ObjectivesState } from './objectives.service';
+import { RecipesService, RecipesState } from './recipes.service';
+import {
+  initialSettingsState,
+  PartialSettingsState,
+  SettingsService,
+  SettingsState,
+} from './settings.service';
 import { ZipService } from './zip.service';
+
+interface ZipState {
+  objectives: ObjectivesState;
+  items: ItemsState;
+  recipes: RecipesState;
+  machines: MachinesState;
+  settings: SettingsState;
+  data: Dataset;
+  hash: ModHash;
+}
+
+export interface PartialState {
+  objectivesState?: ObjectivesState;
+  itemsState?: ItemsState;
+  recipesState?: RecipesState;
+  machinesState?: MachinesState;
+  settingsState?: PartialSettingsState;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class RouterService {
   router = inject(Router);
-  store = inject(Store);
-  dataSvc = inject(DataService);
   compressionSvc = inject(CompressionService);
-  zipSvc = inject(ZipService);
+  dataSvc = inject(DataService);
+  itemsSvc = inject(ItemsService);
+  machinesSvc = inject(MachinesService);
   migrationSvc = inject(MigrationService);
+  objectivesSvc = inject(ObjectivesService);
+  recipesSvc = inject(RecipesService);
+  settingsSvc = inject(SettingsService);
+  zipSvc = inject(ZipService);
 
+  zipState$ = new Subject<ZipState>();
   zipConfig = signal(this.empty);
   // Current hashing algorithm version
   version = ZipVersion.Version11;
   zipTail: LabParams = { v: this.version };
   route$ = new Subject<ActivatedRoute>();
-  ready$ = new ReplaySubject<void>(1);
+  ready = signal(false);
   navigating$ = new BehaviorSubject<boolean>(false);
+  stored = storedSignal('router');
 
   get empty(): Zip<LabParams> {
     return { bare: {}, hash: {} };
@@ -124,26 +138,35 @@ export class RouterService {
       )
       .subscribe();
 
-    this.ready$
+    effect(() => {
+      const ready = this.ready();
+      const hash = this.settingsSvc.hash();
+      if (!ready || !hash) return;
+      const objectives = this.objectivesSvc.state();
+      const items = this.itemsSvc.state();
+      const recipes = this.recipesSvc.state();
+      const machines = this.machinesSvc.state();
+      const settings = this.settingsSvc.state();
+      const data = this.settingsSvc.dataset();
+
+      this.zipState$.next({
+        objectives,
+        items,
+        recipes,
+        machines,
+        settings,
+        data,
+        hash,
+      });
+    });
+
+    this.zipState$
       .pipe(
-        first(),
-        tap(() => {
-          this.dataSvc.initialize();
-        }),
-        switchMap(() => this.store.select(selectZipState)),
         debounceTime(0),
-        filterPropsNullish('hash'),
-        map((s) =>
-          this.zipState(
-            s.objectives,
-            s.itemsState,
-            s.recipesState,
-            s.machinesState,
-            s.settings,
-            s.data,
-            s.hash,
-          ),
-        ),
+        map((z) => this.zipState(z)),
+        tap((z) => {
+          this.zipConfig.set(z.config);
+        }),
         switchMap((z) => this.updateUrl(z)),
       )
       .subscribe();
@@ -157,40 +180,25 @@ export class RouterService {
     const url = this.router.url;
     const path = url.split('?')[0];
     // Only cache list / flow routes
-    if (path.endsWith('list') || path.endsWith('flow'))
-      BrowserUtility.routerState = url;
+    if (path.endsWith('list') || path.endsWith('flow')) this.stored.set(url);
   }
 
-  zipState(
-    objectives: ObjectivesState,
-    itemsState: ItemsState,
-    recipesState: RecipesState,
-    machinesState: MachinesState,
-    settings: SettingsState,
-    data: Dataset,
-    hash: ModHash,
-  ): ZipData {
-    // Modules & Beacons
+  zipState(state: ZipState): ZipData {
+    const { objectives, items, recipes, machines, settings, data, hash } =
+      state;
     const zData = this.zipModulesBeacons(
       objectives,
-      recipesState,
-      machinesState,
+      recipes,
+      machines,
       settings,
       hash,
     );
 
-    // Item Objectives
-    const o = Object.keys(objectives.entities).map(
-      (k) => objectives.entities[k],
-    );
-    this.zipObjectives(zData, o, hash);
-
-    // Settings
-    this.zipItems(zData, itemsState, hash);
-    this.zipRecipes(zData, recipesState, hash);
-    this.zipMachines(zData, machinesState, hash);
-    this.zipSettings(zData, settings, objectives.ids, data, hash);
-    this.zipConfig.set(zData.config);
+    this.zipObjectives(zData, objectives, hash);
+    this.zipItems(zData, items, hash);
+    this.zipRecipes(zData, recipes, hash);
+    this.zipMachines(zData, machines, hash);
+    this.zipSettings(zData, settings, Object.keys(objectives), data, hash);
     return zData;
   }
 
@@ -201,27 +209,27 @@ export class RouterService {
   ): Promise<LabParams | null> {
     if (hash == null) return null;
 
-    let objectives: Objective[] | undefined;
+    let objectives: ObjectivesState | undefined;
     if (step.itemId != null && step.items != null) {
-      objectives = [
-        {
-          id: '0',
+      objectives = {
+        ['1']: {
+          id: '1',
           targetId: step.itemId,
           value: step.items,
           unit: ObjectiveUnit.Items,
           type: ObjectiveType.Output,
         },
-      ];
+      };
     } else if (step.recipeId != null && step.machines != null) {
-      objectives = [
-        {
-          id: '0',
+      objectives = {
+        ['1']: {
+          id: '1',
           targetId: step.recipeId,
           value: step.machines,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
-      ];
+      };
     }
 
     if (objectives == null) return null;
@@ -310,39 +318,45 @@ export class RouterService {
   ): Promise<void> {
     if (modId == null && Object.keys(params).length === 0) {
       // Nothing to set up
-      this.ready$.next();
+      this.ready.set(true);
       return;
     }
 
     const [modData, modHash] = await firstValueFrom(
-      this.dataSvc.requestData(modId ?? initialSettingsState.modId),
+      this.dataSvc.requestData(modId ?? DEFAULT_MOD),
     );
 
-    const state: PartialState = {};
     const hash = isBare ? undefined : modHash;
     const ms = this.unzipModules(params, hash);
     const bs = this.unzipBeacons(params, ms, hash);
+    const state: PartialState = {};
     state.objectivesState = this.unzipObjectives(params, ms, bs, hash);
     state.itemsState = this.unzipItems(params, hash);
     state.recipesState = this.unzipRecipes(params, ms, bs, hash);
     state.machinesState = this.unzipMachines(params, ms, bs, hash);
+    const objectiveIds = state.objectivesState
+      ? Object.keys(state.objectivesState)
+      : [];
     state.settingsState = this.unzipSettings(
       modId,
       params,
       bs,
-      coalesce(state.objectivesState?.ids, []),
+      objectiveIds,
       modData,
       modHash,
       hash,
     );
-    prune(state);
+    // prune(state);
     this.dispatch(state);
-    this.ready$.next();
   }
 
-  dispatch(partial: PartialState): void {
-    this.store.dispatch(load({ partial }));
-    this.ready$.next();
+  dispatch(state: PartialState): void {
+    this.objectivesSvc.load(state.objectivesState);
+    this.itemsSvc.load(state.itemsState);
+    this.recipesSvc.load(state.recipesState);
+    this.machinesSvc.load(state.machinesState);
+    this.settingsSvc.load(state.settingsState);
+    this.ready.set(true);
   }
 
   zipModulesBeacons(
@@ -360,7 +374,7 @@ export class RouterService {
     ): ZipMachineSettings => {
       return this.zipMachineSettings(entities, modulesInfo, beaconsInfo, hash);
     };
-    const objectiveSettings = zip(objectives.entities);
+    const objectiveSettings = zip(objectives);
     const recipeSettings = zip(recipes);
     const machineSettings = zip(machines);
 
@@ -544,12 +558,18 @@ export class RouterService {
     });
   }
 
-  zipObjectives(data: ZipData, objectives: Objective[], hash: ModHash): void {
-    if (!objectives.length) return;
+  zipObjectives(
+    data: ZipData,
+    objectives: ObjectivesState,
+    hash: ModHash,
+  ): void {
+    const ids = Object.keys(objectives);
+    if (!ids.length) return;
 
+    const list = ids.map((i) => objectives[i]);
     data.objectives.bare.o = [];
     data.objectives.hash.o = [];
-    for (const obj of objectives) {
+    for (const obj of list) {
       const value = this.zipSvc.zipDiffRational(obj.value, rational.one);
       const unit = this.zipSvc.zipDiffNumber(obj.unit, ObjectiveUnit.Items);
       const type = this.zipSvc.zipDiffNumber(obj.type, ObjectiveType.Output);
@@ -601,7 +621,6 @@ export class RouterService {
   ): ObjectivesState | undefined {
     if (params.o == null) return;
 
-    const ids: string[] = [];
     const entities: Entities<Objective> = {};
     let index = 1;
     for (const itemObjective of params.o) {
@@ -632,11 +651,10 @@ export class RouterService {
       }
 
       prune(obj);
-      ids.push(id);
       entities[id] = obj;
       index++;
     }
-    return { ids, index, entities };
+    return entities;
   }
 
   zipItems(data: ZipData, state: ItemsState, hash: ModHash): void {

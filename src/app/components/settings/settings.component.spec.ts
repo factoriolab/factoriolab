@@ -4,69 +4,11 @@ import {
   TestBed,
   tick,
 } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 import { Confirmation } from 'primeng/api';
 
 import { Game } from '~/models/enum/game';
 import { rational } from '~/models/rational';
-import { LabState } from '~/store';
-import { reset } from '~/store/app.actions';
-import {
-  setBeacons,
-  setFuel,
-  setModules,
-  setOverclock,
-} from '~/store/machines/machines.actions';
-import {
-  removeState,
-  saveState,
-  setBypassLanding,
-  setConvertObjectiveValues,
-  setDisablePaginator,
-  setHideDuplicateIcons,
-  setLanguage,
-  setPowerUnit,
-  setTheme,
-} from '~/store/preferences/preferences.actions';
-import {
-  setBeaconReceivers,
-  setBeacons as setDefaultBeacons,
-  setBelt,
-  setCargoWagon,
-  setDisplayRate,
-  setExcludedItems,
-  setExcludedRecipes,
-  setFlowRate,
-  setFluidWagon,
-  setFuelRank,
-  setInserterCapacity,
-  setInserterTarget,
-  setMachineRank,
-  setMaximizeType,
-  setMiningBonus,
-  setModuleRank,
-  setNetProductionOnly,
-  setOverclock as setDefaultOverclock,
-  setPipe,
-  setPreset,
-  setProliferatorSpray,
-  setResearchBonus,
-  setResearchedTechnologies,
-  setSurplusMachinesOutput,
-} from '~/store/settings/settings.actions';
-import {
-  selectGame,
-  selectGameStates,
-} from '~/store/settings/settings.selectors';
-import {
-  assert,
-  DispatchTest,
-  ItemId,
-  Mocks,
-  RecipeId,
-  TestModule,
-} from '~/tests';
-import { BrowserUtility } from '~/utilities/browser.utility';
+import { assert, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { SettingsComponent } from './settings.component';
@@ -74,7 +16,6 @@ import { SettingsComponent } from './settings.component';
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
   let fixture: ComponentFixture<SettingsComponent>;
-  let mockStore: MockStore<LabState>;
   const id = 'id';
   const value = 'value';
 
@@ -84,11 +25,6 @@ describe('SettingsComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(SettingsComponent);
-    mockStore = TestBed.inject(MockStore);
-    mockStore.overrideSelector(
-      selectGameStates,
-      Mocks.preferencesState.states[Game.Factorio],
-    );
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -97,13 +33,68 @@ describe('SettingsComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('openCreateState', () => {
+    it('should start the create state from the menu', () => {
+      component.state = id;
+      component.editStateMenu[0].command!({});
+      expect(component.editValue).toEqual('');
+      expect(component.editState).toEqual('create');
+    });
+  });
+
+  describe('overwriteState', () => {
+    it('should re-save the state with the new value', () => {
+      spyOn(component.preferencesSvc, 'saveState');
+      component.state = 'id';
+      spyOnProperty(component, 'search').and.returnValue('search');
+      component.editStateMenu[1].command!({});
+      expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
+        Game.Factorio,
+        'id',
+        'search',
+      );
+    });
+  });
+
+  describe('openEditState', () => {
+    it('should start the edit state from the menu', () => {
+      component.state = id;
+      component.editStateMenu[2].command!({});
+      expect(component.editValue).toEqual(id);
+      expect(component.editState).toEqual('edit');
+    });
+  });
+
+  describe('clickDeleteState', () => {
+    it('should emit to remove the state from the menu', fakeAsync(() => {
+      spyOn(component.preferencesSvc, 'removeState');
+      component.state = id;
+      component.editStateMenu[3].command!({});
+      tick();
+      expect(component.preferencesSvc.removeState).toHaveBeenCalledWith(
+        Game.Factorio,
+        id,
+      );
+      expect(component.state).toEqual('');
+    }));
+  });
+
+  describe('search', () => {
+    it('should get the window.location property', () => {
+      expect(component.search).toEqual(window.location.search.substring(1));
+    });
+  });
+
   describe('ngOnInit', () => {
     it('should ignore if no matching state is found', () => {
       expect(component.state).toEqual('');
     });
 
     it('should set state to matching saved state', () => {
-      spyOnProperty(BrowserUtility, 'search').and.returnValue('z=zip');
+      spyOnProperty(component, 'search').and.returnValue('z=zip');
+      spyOn(component.settingsSvc, 'gameStates').and.returnValue({
+        name: 'z=zip',
+      });
       component.ngOnInit();
       expect(component.state).toEqual('name');
     });
@@ -118,10 +109,10 @@ describe('SettingsComponent', () => {
       component.clickResetSettings();
       assert(confirm?.accept != null);
       spyOn(localStorage, 'clear');
-      spyOn(component, 'resetSettings');
+      spyOn(component.router, 'navigate');
       confirm.accept();
       expect(localStorage.clear).toHaveBeenCalled();
-      expect(component.resetSettings).toHaveBeenCalled();
+      expect(component.router.navigate).toHaveBeenCalled();
     });
   });
 
@@ -159,93 +150,52 @@ describe('SettingsComponent', () => {
   });
 
   describe('clickSaveState', () => {
+    beforeEach(() => {
+      spyOn(component.preferencesSvc, 'saveState');
+      spyOn(component.preferencesSvc, 'removeState');
+    });
+
     it('should emit to create the new saved state', () => {
-      spyOn(component, 'saveState');
-      spyOn(component, 'removeState');
       component.editValue = id;
       component.editState = 'create';
-      spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
-      component.clickSaveState(Game.Factorio);
-      expect(component.saveState).toHaveBeenCalledWith(
+      spyOnProperty(component, 'search').and.returnValue(value);
+      component.clickSaveState();
+      expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
         Game.Factorio,
         id,
         value,
       );
-      expect(component.removeState).not.toHaveBeenCalled();
+      expect(component.preferencesSvc.removeState).not.toHaveBeenCalled();
       expect(component.editState).toBeNull();
     });
 
     it('should emit to edit the saved state', () => {
-      spyOn(component, 'saveState');
-      spyOn(component, 'removeState');
       component.editValue = id;
       component.editState = 'edit';
       component.state = id;
-      spyOnProperty(BrowserUtility, 'search').and.returnValue(value);
-      component.clickSaveState(Game.Factorio);
-      expect(component.saveState).toHaveBeenCalledWith(
+      spyOnProperty(component, 'search').and.returnValue(value);
+      component.clickSaveState();
+      expect(component.preferencesSvc.saveState).toHaveBeenCalledWith(
         Game.Factorio,
         id,
         value,
       );
-      expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
+      expect(component.preferencesSvc.removeState).toHaveBeenCalledWith(
+        Game.Factorio,
+        id,
+      );
       expect(component.editState).toBeNull();
     });
 
     it('should skip if invalid or not editing', () => {
-      spyOn(component, 'saveState');
       component.editValue = '';
       component.editState = 'create';
-      component.clickSaveState(Game.Factorio);
+      component.clickSaveState();
       component.editValue = 'id';
       component.editState = null;
-      component.clickSaveState(Game.Factorio);
-      expect(component.saveState).not.toHaveBeenCalled();
+      component.clickSaveState();
+      expect(component.preferencesSvc.saveState).not.toHaveBeenCalled();
     });
-  });
-
-  describe('openCreateState', () => {
-    it('should start the create state from the menu', () => {
-      component.state = id;
-      component.editStateMenu[0].command!({});
-      expect(component.editValue).toEqual('');
-      expect(component.editState).toEqual('create');
-    });
-  });
-
-  describe('overwriteState', () => {
-    it('should re-save the state with the new value', () => {
-      spyOn(component, 'saveState');
-      mockStore.overrideSelector(selectGame, Game.Factorio);
-      component.state = 'id';
-      spyOnProperty(BrowserUtility, 'search').and.returnValue('search');
-      component.editStateMenu[1].command!({});
-      expect(component.saveState).toHaveBeenCalledWith(
-        Game.Factorio,
-        'id',
-        'search',
-      );
-    });
-  });
-
-  describe('openEditState', () => {
-    it('should start the edit state from the menu', () => {
-      component.state = id;
-      component.editStateMenu[2].command!({});
-      expect(component.editValue).toEqual(id);
-      expect(component.editState).toEqual('edit');
-    });
-  });
-
-  describe('clickDeleteState', () => {
-    it('should emit to remove the state from the menu', fakeAsync(() => {
-      spyOn(component, 'removeState');
-      component.state = id;
-      component.editStateMenu[3].command!({});
-      tick();
-      expect(component.removeState).toHaveBeenCalledWith(Game.Factorio, id);
-      expect(component.state).toEqual('');
-    }));
   });
 
   describe('setGame', () => {
@@ -266,39 +216,29 @@ describe('SettingsComponent', () => {
 
   describe('changeExcludedRecipes', () => {
     it('should set up defaults to pass to the store action', () => {
-      spyOn(component, 'setExcludedRecipes');
-      const set = new Set([RecipeId.AdvancedCircuit]);
-      component.changeExcludedRecipes(set);
-      expect(component.setExcludedRecipes).toHaveBeenCalledWith(
-        set,
-        new Set([RecipeId.NuclearFuelReprocessing]),
-      );
+      spyOn(component.settingsSvc, 'apply');
+      const excludedRecipeIds = new Set([RecipeId.AdvancedCircuit]);
+      component.changeExcludedRecipes(excludedRecipeIds);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        excludedRecipeIds,
+      });
     });
   });
 
   describe('changeFuel', () => {
     it('should calculate the default value for the passed machine', () => {
-      spyOn(component, 'setFuel');
+      spyOn(component.machinesSvc, 'updateEntityField');
       component.changeFuel(
         ItemId.StoneFurnace,
         ItemId.Coal,
         { fuelOptions: [{ label: '', value: ItemId.Wood }] },
         [ItemId.Wood],
       );
-      expect(component.setFuel).toHaveBeenCalledWith(
+      expect(component.machinesSvc.updateEntityField).toHaveBeenCalledWith(
         ItemId.StoneFurnace,
+        'fuelId',
         ItemId.Coal,
         ItemId.Wood,
-      );
-    });
-
-    it('should handle no options specified in passed settings', () => {
-      spyOn(component, 'setFuel');
-      component.changeFuel(ItemId.StoneFurnace, ItemId.Coal, {}, [ItemId.Wood]);
-      expect(component.setFuel).toHaveBeenCalledWith(
-        ItemId.StoneFurnace,
-        ItemId.Coal,
-        undefined,
       );
     });
   });
@@ -306,54 +246,59 @@ describe('SettingsComponent', () => {
   describe('changeModules', () => {
     it('should dehydrate the modules', () => {
       spyOn(RecipeUtility, 'dehydrateModules');
-      spyOn(component, 'setModules');
+      spyOn(component.machinesSvc, 'updateEntity');
       component.changeModules(ItemId.AssemblingMachine2, []);
       expect(RecipeUtility.dehydrateModules).toHaveBeenCalled();
-      expect(component.setModules).toHaveBeenCalled();
+      expect(component.machinesSvc.updateEntity).toHaveBeenCalled();
     });
   });
 
   describe('changeBeacons', () => {
     it('should dehydrate the beacons', () => {
       spyOn(RecipeUtility, 'dehydrateBeacons');
-      spyOn(component, 'setBeacons');
+      spyOn(component.machinesSvc, 'updateEntity');
       component.changeBeacons(ItemId.AssemblingMachine2, []);
       expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
-      expect(component.setBeacons).toHaveBeenCalled();
+      expect(component.machinesSvc.updateEntity).toHaveBeenCalled();
     });
   });
 
   describe('changeDefaultBeacons', () => {
     it('should dehydrate the beacons', () => {
       spyOn(RecipeUtility, 'dehydrateBeacons');
-      spyOn(component, 'setDefaultBeacons');
+      spyOn(component.settingsSvc, 'apply');
       component.changeDefaultBeacons([]);
       expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
-      expect(component.setDefaultBeacons).toHaveBeenCalled();
+      expect(component.settingsSvc.apply).toHaveBeenCalled();
     });
   });
 
   describe('toggleBeaconReceivers', () => {
     it('should turn off beacon power estimation', () => {
-      spyOn(component, 'setBeaconReceivers');
+      spyOn(component.settingsSvc, 'apply');
       component.toggleBeaconReceivers(false);
-      expect(component.setBeaconReceivers).toHaveBeenCalledWith(undefined);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        beaconReceivers: undefined,
+      });
     });
 
     it('should turn on beacon power estimation', () => {
-      spyOn(component, 'setBeaconReceivers');
+      spyOn(component.settingsSvc, 'apply');
       component.toggleBeaconReceivers(true);
-      expect(component.setBeaconReceivers).toHaveBeenCalledWith(rational.one);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        beaconReceivers: rational.one,
+      });
     });
   });
 
   describe('addMachine', () => {
     it('should update the set and pass to the store action', () => {
-      spyOn(component, 'setMachineRank');
+      spyOn(component.settingsSvc, 'updateField');
       component.addMachine(ItemId.AssemblingMachine2, undefined);
-      expect(component.setMachineRank).toHaveBeenCalledWith(
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'machineRankIds',
         [
-          ItemId.AssemblingMachine1,
+          ItemId.AssemblingMachine3,
           ItemId.ElectricFurnace,
           ItemId.ElectricMiningDrill,
           ItemId.AssemblingMachine2,
@@ -365,13 +310,14 @@ describe('SettingsComponent', () => {
 
   describe('setMachine', () => {
     it('should update the set and pass to the store action', () => {
-      spyOn(component, 'setMachineRank');
+      spyOn(component.settingsSvc, 'updateField');
       component.setMachine(
-        ItemId.AssemblingMachine1,
+        ItemId.AssemblingMachine3,
         ItemId.AssemblingMachine2,
         undefined,
       );
-      expect(component.setMachineRank).toHaveBeenCalledWith(
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'machineRankIds',
         [
           ItemId.AssemblingMachine2,
           ItemId.ElectricFurnace,
@@ -384,54 +330,13 @@ describe('SettingsComponent', () => {
 
   describe('removeMachine', () => {
     it('should update the set and pass to the store action', () => {
-      spyOn(component, 'setMachineRank');
-      component.removeMachine(ItemId.AssemblingMachine1, undefined);
-      expect(component.setMachineRank).toHaveBeenCalledWith(
+      spyOn(component.settingsSvc, 'updateField');
+      component.removeMachine(ItemId.AssemblingMachine3, undefined);
+      expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
+        'machineRankIds',
         [ItemId.ElectricFurnace, ItemId.ElectricMiningDrill],
         undefined,
       );
     });
-  });
-
-  it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(mockStore, component);
-    dispatch.void('resetSettings', reset);
-    dispatch.props('saveState', saveState);
-    dispatch.props('removeState', removeState);
-    dispatch.props('setResearchedTechnologies', setResearchedTechnologies);
-    dispatch.props('setExcludedItems', setExcludedItems);
-    dispatch.props('setExcludedRecipes', setExcludedRecipes);
-    dispatch.props('setPreset', setPreset);
-    dispatch.props('setFuelRank', setFuelRank);
-    dispatch.props('setModuleRank', setModuleRank);
-    dispatch.props('setDefaultBeacons', setDefaultBeacons);
-    dispatch.props('setDefaultOverclock', setDefaultOverclock);
-    dispatch.props('setMachineRank', setMachineRank);
-    dispatch.props('setFuel', setFuel);
-    dispatch.props('setModules', setModules);
-    dispatch.props('setBeacons', setBeacons);
-    dispatch.props('setOverclock', setOverclock);
-    dispatch.props('setBeaconReceivers', setBeaconReceivers);
-    dispatch.props('setProliferatorSpray', setProliferatorSpray);
-    dispatch.props('setBelt', setBelt);
-    dispatch.props('setPipe', setPipe);
-    dispatch.props('setCargoWagon', setCargoWagon);
-    dispatch.props('setFluidWagon', setFluidWagon);
-    dispatch.props('setFlowRate', setFlowRate);
-    dispatch.props('setInserterTarget', setInserterTarget);
-    dispatch.props('setMiningBonus', setMiningBonus);
-    dispatch.props('setResearchSpeed', setResearchBonus);
-    dispatch.props('setInserterCapacity', setInserterCapacity);
-    dispatch.props('setDisplayRate', setDisplayRate);
-    dispatch.props('setPowerUnit', setPowerUnit);
-    dispatch.props('setLanguage', setLanguage);
-    dispatch.props('setTheme', setTheme);
-    dispatch.props('setBypassLanding', setBypassLanding);
-    dispatch.props('setHideDuplicateIcons', setHideDuplicateIcons);
-    dispatch.props('setDisablePaginator', setDisablePaginator);
-    dispatch.props('setMaximizeType', setMaximizeType);
-    dispatch.props('setNetProductionOnly', setNetProductionOnly);
-    dispatch.props('setSurplusMachinesOutput', setSurplusMachinesOutput);
-    dispatch.props('setConvertObjectiveValues', setConvertObjectiveValues);
   });
 });
