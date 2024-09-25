@@ -186,7 +186,6 @@ export class RouterService {
   zipState(state: ZipState): ZipData {
     const { objectives, items, recipes, machines, settings, data, hash } =
       state;
-    // Modules & Beacons
     const zData = this.zipModulesBeacons(
       objectives,
       recipes,
@@ -195,17 +194,11 @@ export class RouterService {
       hash,
     );
 
-    // Item Objectives
-    const o = Object.keys(objectives.entities).map(
-      (k) => objectives.entities[k],
-    );
-    this.zipObjectives(zData, o, hash);
-
-    // Settings
+    this.zipObjectives(zData, objectives, hash);
     this.zipItems(zData, items, hash);
     this.zipRecipes(zData, recipes, hash);
     this.zipMachines(zData, machines, hash);
-    this.zipSettings(zData, settings, objectives.ids, data, hash);
+    this.zipSettings(zData, settings, Object.keys(objectives), data, hash);
     return zData;
   }
 
@@ -216,27 +209,27 @@ export class RouterService {
   ): Promise<LabParams | null> {
     if (hash == null) return null;
 
-    let objectives: Objective[] | undefined;
+    let objectives: ObjectivesState | undefined;
     if (step.itemId != null && step.items != null) {
-      objectives = [
-        {
-          id: '0',
+      objectives = {
+        ['1']: {
+          id: '1',
           targetId: step.itemId,
           value: step.items,
           unit: ObjectiveUnit.Items,
           type: ObjectiveType.Output,
         },
-      ];
+      };
     } else if (step.recipeId != null && step.machines != null) {
-      objectives = [
-        {
-          id: '0',
+      objectives = {
+        ['1']: {
+          id: '1',
           targetId: step.recipeId,
           value: step.machines,
           unit: ObjectiveUnit.Machines,
           type: ObjectiveType.Output,
         },
-      ];
+      };
     }
 
     if (objectives == null) return null;
@@ -341,11 +334,14 @@ export class RouterService {
     state.itemsState = this.unzipItems(params, hash);
     state.recipesState = this.unzipRecipes(params, ms, bs, hash);
     state.machinesState = this.unzipMachines(params, ms, bs, hash);
+    const objectiveIds = state.objectivesState
+      ? Object.keys(state.objectivesState)
+      : [];
     state.settingsState = this.unzipSettings(
       modId,
       params,
       bs,
-      coalesce(state.objectivesState?.ids, []),
+      objectiveIds,
       modData,
       modHash,
       hash,
@@ -378,7 +374,7 @@ export class RouterService {
     ): ZipMachineSettings => {
       return this.zipMachineSettings(entities, modulesInfo, beaconsInfo, hash);
     };
-    const objectiveSettings = zip(objectives.entities);
+    const objectiveSettings = zip(objectives);
     const recipeSettings = zip(recipes);
     const machineSettings = zip(machines);
 
@@ -562,12 +558,18 @@ export class RouterService {
     });
   }
 
-  zipObjectives(data: ZipData, objectives: Objective[], hash: ModHash): void {
-    if (!objectives.length) return;
+  zipObjectives(
+    data: ZipData,
+    objectives: ObjectivesState,
+    hash: ModHash,
+  ): void {
+    const ids = Object.keys(objectives);
+    if (!ids.length) return;
 
+    const list = ids.map((i) => objectives[i]);
     data.objectives.bare.o = [];
     data.objectives.hash.o = [];
-    for (const obj of objectives) {
+    for (const obj of list) {
       const value = this.zipSvc.zipDiffRational(obj.value, rational.one);
       const unit = this.zipSvc.zipDiffNumber(obj.unit, ObjectiveUnit.Items);
       const type = this.zipSvc.zipDiffNumber(obj.type, ObjectiveType.Output);
@@ -619,7 +621,6 @@ export class RouterService {
   ): ObjectivesState | undefined {
     if (params.o == null) return;
 
-    const ids: string[] = [];
     const entities: Entities<Objective> = {};
     let index = 1;
     for (const itemObjective of params.o) {
@@ -650,11 +651,10 @@ export class RouterService {
       }
 
       prune(obj);
-      ids.push(id);
       entities[id] = obj;
       index++;
     }
-    return { ids, index, entities };
+    return entities;
   }
 
   zipItems(data: ZipData, state: ItemsState, hash: ModHash): void {

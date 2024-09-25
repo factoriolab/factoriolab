@@ -14,33 +14,31 @@ export abstract class Store<T extends object> {
     protected nestedKeys: (keyof T)[] = [],
   ) {}
 
+  /** Load recursive partial state, spreading any nested keys */
   load(partial: Optional<RecursivePartial<T>>): void {
     if (partial == null) {
       this.set(this.initial);
       return;
     }
 
-    const next = spread(this.initial, partial);
-    this.set(next);
-  }
-
-  apply(partial: RecursivePartial<T>): void {
-    const state = this.state();
-    if (partial == null) return;
-
-    let next = spread(state, partial);
+    let next = spread(this.initial, partial);
 
     // Spread any top-level nested keys (multi-level nesting not supported)
     for (const key of this.nestedKeys) {
       const apply = partial[key];
       if (typeof apply !== 'object') continue;
-      const current = state[key];
+      const initial = this.initial[key];
       const partialNested: Partial<T> = {};
-      partialNested[key] = spread(current, apply);
+      partialNested[key] = spread(initial, apply);
       next = spread(next, partialNested);
     }
 
     this.set(next);
+  }
+
+  /** Load partial state, any nested keys should be complete */
+  apply(partial: Partial<T>): void {
+    this.set(spread(this.state(), partial));
   }
 
   /**
@@ -76,7 +74,7 @@ export abstract class Store<T extends object> {
   }
 
   /** Removes an entry from an Entities object */
-  protected _removeEntry<T>(entities: Entities<T>, id: string): Entities<T> {
+  protected removeEntry<T>(entities: Entities<T>, id: string): Entities<T> {
     entities = spread(entities);
     delete entities[id];
     return entities;
@@ -86,12 +84,11 @@ export abstract class Store<T extends object> {
   protected _resetField<T extends object>(
     state: Entities<T>,
     field: keyof T,
-    id?: string,
   ): Entities<T> {
     // Spread into new state
     const newState = spread(state);
     for (const i of Object.keys(newState)) {
-      if ((id && id !== i) || newState[i][field] === undefined) continue;
+      if (newState[i][field] === undefined) continue;
 
       if (Object.keys(newState[i]).length === 1) delete newState[i];
       else {
@@ -107,12 +104,10 @@ export abstract class Store<T extends object> {
   protected _resetFields<T extends object>(
     state: Entities<T>,
     fields: (keyof T)[],
-    id?: string,
   ): Entities<T> {
     // Spread into new state
     let newState = spread(state);
-    for (const field of fields)
-      newState = this._resetField(newState, field, id);
+    for (const field of fields) newState = this._resetField(newState, field);
     return newState;
   }
 
@@ -158,8 +153,12 @@ export abstract class Store<T extends object> {
 }
 
 export abstract class EntityStore<T extends object> extends Store<Entities<T>> {
-  constructor(initial: Entities<T>) {
-    super(initial, []);
+  constructor() {
+    super({}, []);
+  }
+
+  updateEntity(id: string, partial: Partial<T>): void {
+    this.reduce((state) => this._updateEntity(state, id, partial));
   }
 
   updateEntityField<K extends keyof T>(
@@ -172,10 +171,10 @@ export abstract class EntityStore<T extends object> extends Store<Entities<T>> {
   }
 
   resetFields(...fields: (keyof T)[]): void {
-    this.update((state) => this._resetFields(state, fields));
+    this.reduce((state) => this._resetFields(state, fields));
   }
 
   resetId(id: string): void {
-    this.reduce((state) => this._removeEntry(state, id));
+    this.reduce((state) => this.removeEntry(state, id));
   }
 }

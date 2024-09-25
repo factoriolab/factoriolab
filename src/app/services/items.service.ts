@@ -11,6 +11,7 @@ import { Entities } from '~/models/utils';
 import { SettingsService } from './settings.service';
 
 export type ItemsState = Entities<ItemSettings>;
+
 @Injectable({
   providedIn: 'root',
 })
@@ -33,10 +34,6 @@ export class ItemsService extends EntityStore<ItemSettings> {
       wagons: Object.keys(state).some((i) => state[i].wagonId != null),
     };
   });
-
-  constructor() {
-    super({});
-  }
 
   static computeItemsState(
     state: ItemsState,

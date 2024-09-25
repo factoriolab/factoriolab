@@ -26,14 +26,6 @@ export class MachinesService extends EntityStore<MachineSettings> {
     ),
   );
 
-  constructor() {
-    super({});
-  }
-
-  updateEntity(id: string, partial: Partial<MachineSettings>): void {
-    this.reduce((state) => this._updateEntity(state, id, partial));
-  }
-
   static computeMachinesState(
     state: MachinesState,
     settings: SettingsComplete,

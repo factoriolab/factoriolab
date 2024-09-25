@@ -432,8 +432,8 @@ describe('ObjectivesService', () => {
     });
   });
 
-  describe('adjustDisplayRate', () => {
-    it('should be automatically triggered by changes in display rate', () => {
+  describe('effects', () => {
+    it('should automatically trigger adjustDisplayRate', () => {
       spyOn(service, 'adjustDisplayRate');
       TestBed.flushEffects();
       service['settingsSvc'].apply({ displayRate: DisplayRate.PerHour });
@@ -446,65 +446,47 @@ describe('ObjectivesService', () => {
     it('should add the objective', () => {
       service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
       expect(service.state()).toEqual({
-        ids: ['0'],
-        entities: {
-          ['0']: {
-            id: '0',
-            targetId: ItemId.Coal,
-            value: rational.one,
-            unit: ObjectiveUnit.Items,
-            type: ObjectiveType.Output,
-          },
+        ['1']: {
+          id: '1',
+          targetId: ItemId.Coal,
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
         },
-        index: 1,
       });
     });
 
     it('should use the last value', () => {
       service.create({
-        id: '0',
         targetId: ItemId.Coal,
         value: rational(60n),
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       });
       service.add({ targetId: ItemId.Coal, unit: ObjectiveUnit.Items });
-      expect(service.state().entities['1'].value).toEqual(rational(60n));
+      expect(service.state()['1'].value).toEqual(rational(60n));
     });
   });
 
   describe('remove', () => {
     it('should remove an objective', () => {
       service.create({
-        id: '0',
         targetId: ItemId.Coal,
         value: rational(60n),
         unit: ObjectiveUnit.Items,
         type: ObjectiveType.Output,
       });
-      service.remove('0');
-      expect(service.state()).toEqual({ ids: [], entities: {}, index: 1 });
+      service.remove('1');
+      expect(service.state()).toEqual({});
     });
   });
 
   describe('setOrder', () => {
     it('should map objectives to an ids array', () => {
       service.setOrder(Mocks.objectives);
-      expect(service.state().ids).toEqual(Mocks.objectives.map((o) => o.id));
-    });
-  });
-
-  describe('updateEntityField', () => {
-    it('should apply a change to an entity', () => {
-      service.updateEntity('0', { value: rational.one });
-      expect(service.state().entities['0'].value).toEqual(rational.one);
-    });
-  });
-
-  describe('updateEntityField', () => {
-    it('should update an entity field', () => {
-      service.updateEntityField('0', 'value', rational.one, undefined);
-      expect(service.state().entities['0'].value).toEqual(rational.one);
+      expect(Object.keys(service.state())).toEqual(
+        Mocks.objectives.map((o) => o.id),
+      );
     });
   });
 
@@ -513,16 +495,8 @@ describe('ObjectivesService', () => {
       service.load(Mocks.objectivesState);
       service.adjustDisplayRate(rational(2n));
       const result = service.state();
-      expect(result.entities['0'].value).toEqual(rational(2n));
-      expect(result.entities['2'].value).toEqual(rational.one);
-    });
-  });
-
-  describe('resetFields', () => {
-    it('should reset specified fields', () => {
-      service.load(Mocks.objectivesState);
-      service.resetFields(['value']);
-      expect(service.state().entities['0'].value).toBeUndefined();
+      expect(result['1'].value).toEqual(rational(2n));
+      expect(result['3'].value).toEqual(rational.one);
     });
   });
 });

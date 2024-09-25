@@ -18,7 +18,7 @@ import { Zip, ZipData, ZipMachineSettings } from '~/models/zip';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { ItemsState } from './items.service';
-import { initialObjectivesState, ObjectivesState } from './objectives.service';
+import { ObjectivesState } from './objectives.service';
 import { RecipesState } from './recipes.service';
 import { PartialState, RouterService } from './router.service';
 import { initialSettingsState, SettingsState } from './settings.service';
@@ -31,25 +31,17 @@ const mockObjective: Objective = {
   type: ObjectiveType.Output,
 };
 const mockObjectivesState: ObjectivesState = {
-  ids: ['1'],
-  entities: {
-    ['1']: mockObjective,
-  },
-  index: 2,
+  ['1']: mockObjective,
 };
 const mockMigratedObjectivesState: ObjectivesState = {
-  ids: ['1', '2'],
-  entities: {
-    ['1']: mockObjective,
-    ['2']: {
-      id: '2',
-      targetId: ItemId.SteelChest,
-      value: rational.one,
-      unit: ObjectiveUnit.Machines,
-      type: ObjectiveType.Output,
-    },
+  ['1']: mockObjective,
+  ['2']: {
+    id: '2',
+    targetId: ItemId.SteelChest,
+    value: rational.one,
+    unit: ObjectiveUnit.Machines,
+    type: ObjectiveType.Output,
   },
-  index: 3,
 };
 const mockItemsState: ItemsState = {
   [ItemId.SteelChest]: {
@@ -268,7 +260,7 @@ describe('RouterService', () => {
 
     it('should zip state', () => {
       const result = service.zipState({
-        objectives: initialObjectivesState,
+        objectives: {},
         items: {},
         recipes: {},
         machines: {},
@@ -790,15 +782,15 @@ describe('RouterService', () => {
       const zip = mockZipData();
       service.zipObjectives(
         zip,
-        [
-          {
-            id: '0',
+        {
+          ['1']: {
+            id: '1',
             targetId: ItemId.SteelChest,
             value: rational.one,
             unit: ObjectiveUnit.Items,
             type: ObjectiveType.Output,
           },
-        ],
+        },
         Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
@@ -811,15 +803,15 @@ describe('RouterService', () => {
       const zip = mockZipData();
       service.zipObjectives(
         zip,
-        [
-          {
-            id: '0',
+        {
+          ['1']: {
+            id: '1',
             targetId: ItemId.SteelChest,
             value: rational.one,
             unit: ObjectiveUnit.Belts,
             type: ObjectiveType.Output,
           },
-        ],
+        },
         Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
@@ -832,15 +824,15 @@ describe('RouterService', () => {
       const zip = mockZipData();
       service.zipObjectives(
         zip,
-        [
-          {
-            id: '0',
+        {
+          ['1']: {
+            id: '1',
             targetId: ItemId.SteelChest,
             value: rational.one,
             unit: ObjectiveUnit.Wagons,
             type: ObjectiveType.Output,
           },
-        ],
+        },
         Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
@@ -853,15 +845,15 @@ describe('RouterService', () => {
       const zip = mockZipData();
       service.zipObjectives(
         zip,
-        [
-          {
-            id: '0',
+        {
+          ['1']: {
+            id: '1',
             targetId: RecipeId.SteelChest,
             value: rational.one,
             unit: ObjectiveUnit.Machines,
             type: ObjectiveType.Output,
           },
-        ],
+        },
         Mocks.modHash,
       );
       expect(zip.objectives).toEqual({
@@ -881,17 +873,13 @@ describe('RouterService', () => {
         [],
       );
       expect(result).toEqual({
-        ids: ['1'],
-        entities: {
-          ['1']: {
-            id: '1',
-            targetId: ItemId.SteelChest,
-            value: rational.one,
-            unit: ObjectiveUnit.Belts,
-            type: ObjectiveType.Output,
-          },
+        ['1']: {
+          id: '1',
+          targetId: ItemId.SteelChest,
+          value: rational.one,
+          unit: ObjectiveUnit.Belts,
+          type: ObjectiveType.Output,
         },
-        index: 2,
       });
     });
 
@@ -903,36 +891,28 @@ describe('RouterService', () => {
         Mocks.modHash,
       );
       expect(result).toEqual({
-        ids: ['1'],
-        entities: {
-          ['1']: {
-            id: '1',
-            targetId: '',
-            value: rational.one,
-            unit: ObjectiveUnit.Items,
-            type: ObjectiveType.Output,
-          },
+        ['1']: {
+          id: '1',
+          targetId: '',
+          value: rational.one,
+          unit: ObjectiveUnit.Items,
+          type: ObjectiveType.Output,
         },
-        index: 2,
       });
     });
 
     it('should map modules and beacons', () => {
       const result = service.unzipObjectives({ o: ['*1*3***0*0'] }, [], []);
       expect(result).toEqual({
-        ids: ['1'],
-        entities: {
-          ['1']: {
-            id: '1',
-            targetId: '',
-            value: rational.one,
-            unit: ObjectiveUnit.Machines,
-            type: ObjectiveType.Output,
-            modules: [{}],
-            beacons: [{}],
-          },
+        ['1']: {
+          id: '1',
+          targetId: '',
+          value: rational.one,
+          unit: ObjectiveUnit.Machines,
+          type: ObjectiveType.Output,
+          modules: [{}],
+          beacons: [{}],
         },
-        index: 2,
       });
     });
   });

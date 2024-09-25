@@ -550,7 +550,7 @@
                   [ngModel]="settings().overclock?.toNumber()"
                   (onBlur)="
                     settingsSvc.apply({
-                      overclock: overclockInput.value ?? 100,
+                      overclock: rational(overclockInput.value ?? 100),
                     })
                   "
                 >

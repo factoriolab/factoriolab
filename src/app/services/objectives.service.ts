@@ -4,7 +4,6 @@ import { filter, pairwise } from 'rxjs';
 
 import {
   addValueToRecordByIds,
-  coalesce,
   fnPropsNotNullish,
   spread,
   toEntities,
@@ -24,8 +23,8 @@ import {
 import { Rational, rational } from '~/models/rational';
 import { Step } from '~/models/step';
 import { StepDetail, StepOutput } from '~/models/step-detail';
-import { Store } from '~/models/store';
-import { Entities, Optional } from '~/models/utils';
+import { EntityStore } from '~/models/store';
+import { Entities } from '~/models/utils';
 import { RateUtility } from '~/utilities/rate.utility';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 import { SimplexUtility } from '~/utilities/simplex.utility';
@@ -36,22 +35,12 @@ import { PreferencesService } from './preferences.service';
 import { RecipesService } from './recipes.service';
 import { SettingsService } from './settings.service';
 
-export interface ObjectivesState {
-  ids: string[];
-  entities: Entities<Objective>;
-  index: number;
-}
-
-export const initialObjectivesState: ObjectivesState = {
-  ids: [],
-  entities: {},
-  index: 0,
-};
+export type ObjectivesState = Entities<Objective>;
 
 @Injectable({
   providedIn: 'root',
 })
-export class ObjectivesService extends Store<ObjectivesState> {
+export class ObjectivesService extends EntityStore<Objective> {
   private itemsSvc = inject(ItemsService);
   private machinesSvc = inject(MachinesService);
   private preferencesSvc = inject(PreferencesService);
@@ -62,8 +51,8 @@ export class ObjectivesService extends Store<ObjectivesState> {
     const state = this.state();
     const data = this.settingsSvc.dataset();
 
-    return state.ids
-      .map((i) => state.entities[i])
+    return Object.keys(state)
+      .map((i) => state[i])
       .filter((o) =>
         isRecipeObjective(o)
           ? data.recipeEntities[o.targetId] != null
@@ -473,7 +462,7 @@ export class ObjectivesService extends Store<ObjectivesState> {
   });
 
   constructor() {
-    super(initialObjectivesState);
+    super();
 
     toObservable(this.settingsSvc.displayRate)
       .pipe(
@@ -491,86 +480,64 @@ export class ObjectivesService extends Store<ObjectivesState> {
   add(objective: ObjectiveBase): void {
     this.reduce((state) => {
       let value = rational.one;
-      const lastId = state.ids.at(-1);
-      if (lastId) value = state.entities[lastId].value;
+      const ids = Object.keys(state);
+      const lastId = ids.at(-1);
+      if (lastId) value = state[lastId].value;
 
-      return {
-        ids: [...state.ids, state.index.toString()],
-        entities: spread(state.entities, {
-          [state.index]: {
-            id: state.index.toString(),
-            targetId: objective.targetId,
-            value,
-            unit: objective.unit,
-            type: coalesce(objective.type, ObjectiveType.Output),
-          },
-        }),
-        index: state.index + 1,
-      };
+      let n = 1;
+      while (state[n.toString()] != null) n++;
+      const id = n.toString();
+
+      const base = {
+        id,
+        value,
+        type: ObjectiveType.Output,
+      } as Objective;
+      return spread(state, { [id]: spread(base, objective) });
     });
   }
 
-  create(objective: Objective): void {
-    const id = '0';
-    this.set({
-      ids: [id],
-      entities: { [id]: spread(objective, { id }) },
-      index: 1,
-    });
+  create(objective: Omit<Objective, 'id'>): void {
+    const id = '1';
+    this.set({ [id]: spread(objective as Objective, { id }) });
   }
 
   remove(id: string): void {
-    this.update((state) => ({
-      ids: state.ids.filter((i) => i !== id),
-      entities: this._removeEntry(state.entities, id),
-    }));
+    this.reduce((state) => {
+      state = this.removeEntry(state, id);
+      const objectives = Object.keys(state).map((i) => state[i]);
+      return this.reduceObjectives(objectives);
+    });
   }
 
   setOrder(objectives: Objective[]): void {
-    const ids = objectives.map((o) => o.id);
-    this.update(() => ({ ids }));
-  }
-
-  updateEntity(id: string, partial: Partial<Objective>): void {
-    this.update((state) => {
-      const entities = this._updateEntity(state.entities, id, partial);
-      return { entities };
-    });
-  }
-
-  updateEntityField<K extends keyof Objective>(
-    id: string,
-    field: K,
-    value: Objective[K],
-    def?: Optional<Objective[K]>,
-  ): void {
-    this.update((state) => {
-      const entities = this._updateField(state.entities, id, field, value, def);
-      return { entities };
-    });
+    this.set(this.reduceObjectives(objectives));
   }
 
   adjustDisplayRate(factor: Rational): void {
-    this.update((state) => {
-      const entities = spread(state.entities);
-      for (const objective of state.ids
-        .map((i) => state.entities[i])
+    this.reduce((state) => {
+      const next = spread(state);
+      const ids = Object.keys(next);
+      for (const objective of ids
+        .map((i) => state[i])
         .filter(
           (o) =>
             o.type !== ObjectiveType.Maximize &&
             (o.unit === ObjectiveUnit.Items || o.unit === ObjectiveUnit.Wagons),
         )) {
         const value = objective.value.mul(factor);
-        entities[objective.id] = spread(objective, { value });
+        next[objective.id] = spread(objective, { value });
       }
-      return { entities };
+
+      return next;
     });
   }
 
-  resetFields(fields: (keyof Objective)[]): void {
-    this.update((state) => {
-      const entities = this._resetFields(state.entities, fields);
-      return { entities };
-    });
+  private reduceObjectives(objectives: Objective[]): ObjectivesState {
+    return objectives.reduce((e: ObjectivesState, o, i) => {
+      const id = (i + 1).toString();
+      e[id] = spread(o, { id });
+      return e;
+    }, {});
   }
 }

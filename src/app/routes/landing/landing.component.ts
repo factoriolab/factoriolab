@@ -70,7 +70,6 @@ export class LandingComponent {
 
   selectItem(targetId: string): void {
     this.objectivesSvc.create({
-      id: '0',
       targetId,
       value: rational.one,
       unit: ObjectiveUnit.Items,
@@ -84,7 +83,6 @@ export class LandingComponent {
 
   selectRecipe(targetId: string): void {
     this.objectivesSvc.create({
-      id: '0',
       targetId,
       value: rational.one,
       unit: ObjectiveUnit.Machines,

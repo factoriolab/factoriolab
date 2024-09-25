@@ -497,13 +497,13 @@ export class StepsComponent implements OnInit, AfterViewInit {
       'modules',
       'beacons',
     ];
-    this.objectivesSvc.resetFields(fields);
+    this.objectivesSvc.resetFields(...fields);
     this.recipesSvc.resetFields(...fields);
     event.stopImmediatePropagation();
   }
 
   resetBeacons(): void {
-    this.objectivesSvc.resetFields(['beacons']);
+    this.objectivesSvc.resetFields('beacons');
     this.recipesSvc.resetFields('beacons');
   }
 }

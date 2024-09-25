@@ -72,56 +72,56 @@ export const item1 = dataset.itemEntities[dataset.itemIds[0]];
 export const item2 = dataset.itemEntities[dataset.itemIds[1]];
 export const recipe1 = dataset.recipeEntities[dataset.recipeIds[0]];
 export const objective1: Objective = {
-  id: '0',
+  id: '1',
   targetId: ItemId.AdvancedCircuit,
   value: rational.one,
   unit: ObjectiveUnit.Items,
   type: ObjectiveType.Output,
 };
 export const objective2: Objective = {
-  id: '1',
+  id: '2',
   targetId: ItemId.IronPlate,
   value: rational.one,
   unit: ObjectiveUnit.Belts,
   type: ObjectiveType.Input,
 };
 export const objective3: Objective = {
-  id: '2',
+  id: '3',
   targetId: ItemId.PlasticBar,
   value: rational.one,
   unit: ObjectiveUnit.Items,
   type: ObjectiveType.Maximize,
 };
 export const objective4: Objective = {
-  id: '3',
+  id: '4',
   targetId: ItemId.PetroleumGas,
   value: rational(100n),
   unit: ObjectiveUnit.Items,
   type: ObjectiveType.Limit,
 };
 export const objective5: Objective = {
-  id: '4',
+  id: '5',
   targetId: RecipeId.PiercingRoundsMagazine,
   value: rational.one,
   unit: ObjectiveUnit.Machines,
   type: ObjectiveType.Output,
 };
 export const objective6: Objective = {
-  id: '5',
+  id: '6',
   targetId: RecipeId.CopperPlate,
   value: rational.one,
   unit: ObjectiveUnit.Machines,
   type: ObjectiveType.Input,
 };
 export const objective7: Objective = {
-  id: '6',
+  id: '7',
   targetId: RecipeId.FirearmMagazine,
   value: rational.one,
   unit: ObjectiveUnit.Machines,
   type: ObjectiveType.Maximize,
 };
 export const objective8: Objective = {
-  id: '7',
+  id: '8',
   targetId: RecipeId.IronPlate,
   value: rational(10n),
   unit: ObjectiveUnit.Machines,
@@ -137,11 +137,7 @@ export const objectivesList = [
   objective7,
   objective8,
 ];
-export const objectivesState: ObjectivesState = {
-  ids: objectivesList.map((o) => o.id),
-  entities: toEntities(objectivesList),
-  index: objectivesList.length + 1,
-};
+export const objectivesState: ObjectivesState = toEntities(objectivesList);
 export const objectiveIds = objectivesList.map((p) => p.id);
 export const objectiveSteps = {
   [objective1.id]: [] as [string, Rational][],

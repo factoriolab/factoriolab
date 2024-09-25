@@ -51,10 +51,6 @@ export class RecipesService extends EntityStore<RecipeSettings> {
     return data.itemIds.filter((i) => data.itemRecipeIds[i].length);
   });
 
-  constructor() {
-    super({});
-  }
-
   static computeRecipesState(
     state: RecipesState,
     machinesState: MachinesState,

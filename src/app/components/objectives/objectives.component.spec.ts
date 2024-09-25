@@ -337,7 +337,7 @@ describe('ObjectivesComponent', () => {
         RecipeId.AdvancedCircuit,
         Mocks.adjustedDataset,
       );
-      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('0', {
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('1', {
         value: rational(1n, 77n),
       });
     });
@@ -364,7 +364,7 @@ describe('ObjectivesComponent', () => {
         ObjectiveUnit.Items,
         Mocks.adjustedDataset,
       );
-      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('4', {
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('5', {
         value: rational(175n),
       });
     });
@@ -392,7 +392,7 @@ describe('ObjectivesComponent', () => {
         ObjectiveUnit.Belts,
         Mocks.adjustedDataset,
       );
-      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('0', {
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith('1', {
         value: rational(1n, 2700n),
       });
     });

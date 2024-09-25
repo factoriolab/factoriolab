@@ -118,7 +118,7 @@ export class PreferencesService extends Store<PreferencesState> {
 
   removeState(game: Game, id: string): void {
     this.update((state) => {
-      const gameStates = this._removeEntry(state.states[game], id);
+      const gameStates = this.removeEntry(state.states[game], id);
       const states = spread(state.states, { [game]: gameStates });
       return { states };
     });

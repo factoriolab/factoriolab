@@ -71,7 +71,6 @@ export class WizardComponent {
 
   createItemObjective(targetId: string): void {
     this.objectivesSvc.create({
-      id: '0',
       targetId,
       value: this.value,
       unit: ObjectiveUnit.Items,
@@ -85,7 +84,6 @@ export class WizardComponent {
 
   createRecipeObjective(targetId: string): void {
     this.objectivesSvc.create({
-      id: '0',
       targetId,
       value: this.value,
       unit: ObjectiveUnit.Machines,
