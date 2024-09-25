@@ -3,7 +3,7 @@ import {
   SankeyNodeExtraProperties,
 } from '~/d3-sankey/models';
 import { sankey } from '~/d3-sankey/sankey';
-import { coalesce, toEntities } from '~/helpers';
+import { coalesce, spread, toEntities } from '~/helpers';
 import { Recipe } from '~/models/data/recipe';
 import { AdjustedDataset } from '~/models/dataset';
 import { DisplayRateInfo } from '~/models/enum/display-rate';
@@ -256,36 +256,33 @@ export class RateUtility {
     const settings = step.recipeSettings;
     if (settings.beacons == null) return;
 
-    step.recipeSettings = {
-      ...step.recipeSettings,
-      ...{
-        beacons: settings.beacons.map((b) => {
-          let total = b.total;
-          if (b.id != null) {
-            if (b.count != null && total == null) {
-              total = machines.ceil().mul(b.count).div(beaconReceivers);
-              if (total.lt(b.count)) {
-                // Can't be less than beacon count
-                total = b.count;
-              }
-            }
-
-            const beacon = data.beaconEntities[b.id];
-            if (
-              beacon.type === EnergyType.Electric &&
-              beacon.usage != null &&
-              total != null
-            ) {
-              step.power = (step.power ?? rational.zero).add(
-                total.mul(beacon.usage),
-              );
+    step.recipeSettings = spread(step.recipeSettings, {
+      beacons: settings.beacons.map((b) => {
+        let total = b.total;
+        if (b.id != null) {
+          if (b.count != null && total == null) {
+            total = machines.ceil().mul(b.count).div(beaconReceivers);
+            if (total.lt(b.count)) {
+              // Can't be less than beacon count
+              total = b.count;
             }
           }
 
-          return { ...b, total };
-        }),
-      },
-    };
+          const beacon = data.beaconEntities[b.id];
+          if (
+            beacon.type === EnergyType.Electric &&
+            beacon.usage != null &&
+            total != null
+          ) {
+            step.power = (step.power ?? rational.zero).add(
+              total.mul(beacon.usage),
+            );
+          }
+        }
+
+        return { ...b, total };
+      }),
+    });
   }
 
   static calculateDisplayRate(step: Step, dispRateInfo: DisplayRateInfo): void {
@@ -450,7 +447,7 @@ export class RateUtility {
 
   static copy(steps: Step[]): Step[] {
     return steps.map((s) =>
-      s.parents ? { ...s, ...{ parents: { ...s.parents } } } : { ...s },
+      s.parents ? spread(s, { parents: spread(s.parents) }) : spread(s),
     );
   }
 }

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { spread } from '~/helpers';
 import { rational } from '~/models/rational';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { ItemId, Mocks, setInputs, TestModule } from '~/tests';
@@ -30,10 +31,12 @@ describe('ModulesComponent', () => {
 
   describe('maximum', () => {
     it('should return null for machines with unlimited modules', () => {
-      fixture.componentRef.setInput('entity', {
-        ...Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],
-        ...{ modules: true },
-      });
+      fixture.componentRef.setInput(
+        'entity',
+        spread(Mocks.dataset.machineEntities[ItemId.AssemblingMachine3], {
+          modules: true,
+        }),
+      );
       fixture.detectChanges();
       expect(component.maximum()).toEqual([null, null]);
     });
@@ -73,7 +76,7 @@ describe('ModulesComponent', () => {
 
   describe('updateEmpty', () => {
     it('should immediately return if modules are disallowed or unlimited', () => {
-      const modules = Mocks.moduleSettings.map((m) => ({ ...m }));
+      const modules = Mocks.moduleSettings.map((m) => spread(m));
       spyOn(component, 'entity').and.returnValues(
         { modules: true },
         { modules: undefined },

@@ -406,7 +406,7 @@ describe('RouterService', () => {
     delete mockStateV10.settingsState?.costs?.footprint;
 
     const mockStateV8: PartialState = spread(mockStateV10, {
-      settingsState: { ...mockStateV10.settingsState },
+      settingsState: spread(mockStateV10.settingsState),
     });
     delete mockStateV8.settingsState?.checkedObjectiveIds;
     delete mockStateV8.settingsState?.checkedItemIds;
@@ -417,7 +417,7 @@ describe('RouterService', () => {
     const mockStateV6: PartialState = spread(mockStateV8, {
       objectivesState: mockMigratedObjectivesState,
       settingsState: spread(mockStateV8.settingsState, {
-        costs: { ...mockStateV8.settingsState?.costs },
+        costs: spread(mockStateV8.settingsState?.costs),
       }),
     });
     delete mockStateV6.settingsState?.maximizeType;
@@ -426,18 +426,18 @@ describe('RouterService', () => {
     delete mockStateV6.settingsState?.costs?.maximize;
 
     const mockStateV3: PartialState = spread(mockStateV6, {
-      settingsState: { ...mockStateV6.settingsState },
+      settingsState: spread(mockStateV6.settingsState),
     });
     delete mockStateV3.settingsState?.netProductionOnly;
 
     const mockStateV1: PartialState = spread(mockStateV3, {
       objectivesState: mockState.objectivesState,
-      settingsState: { ...mockStateV3.settingsState },
+      settingsState: spread(mockStateV3.settingsState),
     });
 
     const mockStateV0: PartialState = spread(mockStateV3, {
       objectivesState: mockMigratedObjectivesState,
-      settingsState: { ...mockStateV1.settingsState },
+      settingsState: spread(mockStateV1.settingsState),
     });
     delete mockStateV0.settingsState?.beaconReceivers;
     delete mockStateV0.settingsState?.proliferatorSprayId;

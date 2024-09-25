@@ -5,6 +5,7 @@ import {
   coalesce,
   fnPropsNotNullish,
   notNullish,
+  spread,
 } from '~/helpers';
 import { Beacon } from '~/models/data/beacon';
 import { Machine, MachineJson } from '~/models/data/machine';
@@ -149,10 +150,10 @@ export class RecipeUtility {
     settings: SettingsComplete,
     data: Dataset,
   ): AdjustedRecipe {
-    const recipe: AdjustedRecipe = {
-      ...cloneRecipe(data.recipeEntities[recipeId]),
-      ...{ productivity: rational.one, produces: new Set(), output: {} },
-    };
+    const recipe = spread(
+      cloneRecipe(data.recipeEntities[recipeId]) as AdjustedRecipe,
+      { productivity: rational.one, produces: new Set(), output: {} },
+    );
 
     const {
       proliferatorSprayId,
@@ -676,15 +677,12 @@ export class RecipeUtility {
         }
       });
 
-    return {
-      ...data,
-      ...{
-        adjustedRecipe,
-        itemRecipeIds,
-        itemIncludedRecipeIds,
-        itemIncludedIoRecipeIds,
-      },
-    };
+    return spread(data as AdjustedDataset, {
+      adjustedRecipe,
+      itemRecipeIds,
+      itemIncludedRecipeIds,
+      itemIncludedIoRecipeIds,
+    });
   }
 
   static adjustObjective(
@@ -697,7 +695,7 @@ export class RecipeUtility {
   ): Objective {
     if (!isRecipeObjective(objective)) return objective;
 
-    objective = { ...objective };
+    objective = spread(objective);
     const recipe = data.recipeEntities[objective.targetId];
 
     if (objective.machineId == null) {

@@ -61,10 +61,9 @@ export class BeaconsOverlayComponent extends OverlayComponent {
 
   show(event: Event, values: BeaconSettings[], recipeId?: string): void {
     this.beacons.set(
-      values.map((v) => ({
-        ...v,
-        ...{ modules: v.modules?.map((m) => ({ ...m })) },
-      })),
+      values.map((v) =>
+        spread(v, { modules: v.modules?.map((m) => spread(m)) }),
+      ),
     );
     this.recipeId.set(recipeId);
     this._show(event);

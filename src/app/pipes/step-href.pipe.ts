@@ -1,5 +1,6 @@
 import { inject, Pipe, PipeTransform } from '@angular/core';
 
+import { spread } from '~/helpers';
 import { LabParams } from '~/models/lab-params';
 import { Step } from '~/models/step';
 import { Zip } from '~/models/zip';
@@ -22,10 +23,7 @@ export class StepHrefPipe implements PipeTransform {
       const recipe = this.data().adjustedRecipe[step.recipeId];
       if (recipe.isTechnology && recipe.productivity && value.items) {
         // Adjust items to account for productivity bonus
-        step = {
-          ...value,
-          ...{ items: value.items.div(recipe.productivity) },
-        };
+        step = spread(value, { items: value.items.div(recipe.productivity) });
       }
     }
     return this.routerSvc.stepHref(step, zipPartial, this.data().hash);

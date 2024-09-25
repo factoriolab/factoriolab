@@ -1,5 +1,6 @@
 import { computed, inject, Injectable } from '@angular/core';
 
+import { spread } from '~/helpers';
 import { Dataset } from '~/models/dataset';
 import { EnergyType } from '~/models/enum/energy-type';
 import { MachineSettings } from '~/models/settings/machine-settings';
@@ -33,7 +34,7 @@ export class MachinesService extends EntityStore<MachineSettings> {
   ): MachinesState {
     const value: Entities<MachineSettings> = {};
     for (const id of data.machineIds) {
-      const s: MachineSettings = { ...state[id] };
+      const s: MachineSettings = spread(state[id]);
       const machine = data.machineEntities[id];
 
       if (machine.type === EnergyType.Burner) {

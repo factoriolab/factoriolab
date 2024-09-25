@@ -1,4 +1,4 @@
-import { cloneEntities, toRationalEntities } from '~/helpers';
+import { cloneEntities, spread, toRationalEntities } from '~/helpers';
 
 import { Rational, rational } from '../rational';
 import { Entities } from '../utils';
@@ -83,14 +83,11 @@ export function parseRecipe(json: RecipeJson): Recipe {
 }
 
 export function cloneRecipe(recipe: Recipe): Recipe {
-  return {
-    ...recipe,
-    ...{
-      in: cloneEntities(recipe.in),
-      out: cloneEntities(recipe.out),
-      catalyst: cloneEntities(recipe.catalyst),
-    },
-  };
+  return spread(recipe, {
+    in: cloneEntities(recipe.in),
+    out: cloneEntities(recipe.out),
+    catalyst: cloneEntities(recipe.catalyst),
+  });
 }
 
 export interface AdjustedRecipe extends Recipe {

@@ -8,6 +8,7 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 
+import { spread } from '~/helpers';
 import { Machine } from '~/models/data/machine';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { TranslatePipe } from '~/pipes/translate.pipe';
@@ -36,7 +37,7 @@ export class ModulesOverlayComponent extends OverlayComponent {
     recipeId?: string,
   ): void {
     this.machine.set(machine);
-    this.modules.set(modules.map((m) => ({ ...m })));
+    this.modules.set(modules.map((m) => spread(m)));
     this.recipeId.set(recipeId);
     this._show(event);
   }

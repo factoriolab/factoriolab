@@ -49,7 +49,7 @@ export class CostsComponent extends DialogComponent {
   }
 
   initEdit(costs: CostSettings): void {
-    this.editValue = { ...costs };
+    this.editValue = spread(costs);
   }
 
   open(value: CostSettings): void {
@@ -58,7 +58,7 @@ export class CostsComponent extends DialogComponent {
   }
 
   reset(): void {
-    this.editValue = { ...initialSettingsState.costs };
+    this.editValue = spread(initialSettingsState.costs);
   }
 
   save(): void {

@@ -122,25 +122,21 @@ describe('RateUtility', () => {
 
   describe('addEntityValue', () => {
     it('should add parents field to step', () => {
-      const step = { ...Mocks.step1 };
+      const step = spread(Mocks.step1);
       RateUtility.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: rational.one });
     });
 
     it('should add to existing parents object value', () => {
-      const step = {
-        ...Mocks.step1,
-        ...{ parents: { [ItemId.Coal]: rational.zero } },
-      };
+      const step = spread(Mocks.step1, {
+        parents: { [ItemId.Coal]: rational.zero },
+      });
       RateUtility.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: rational.one });
     });
 
     it('should add a new key to an existing parents object', () => {
-      const step = {
-        ...Mocks.step1,
-        ...{ parents: {} },
-      };
+      const step = spread(Mocks.step1, { parents: {} });
       RateUtility.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: rational.one });
     });
@@ -149,7 +145,7 @@ describe('RateUtility', () => {
   describe('adjustPowerPollution', () => {
     it('should handle no machines', () => {
       const step: any = { machines: null };
-      const result = { ...step };
+      const result = spread(step);
       RateUtility.adjustPowerPollution(
         result,
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.WoodenChest],
@@ -160,7 +156,7 @@ describe('RateUtility', () => {
 
     it('should handle null drain/consumption/pollution', () => {
       const step: any = { machines: rational.one };
-      const result = { ...step };
+      const result = spread(step);
       const recipe: any = { drain: null, consumption: null, pollution: null };
       RateUtility.adjustPowerPollution(result, recipe, Game.Factorio);
       expect(result).toEqual(step);
@@ -168,7 +164,7 @@ describe('RateUtility', () => {
 
     it('should handle only drain', () => {
       const step: any = { machines: rational.one };
-      const result = { ...step };
+      const result = spread(step);
       const recipe: any = {
         drain: rational(2n),
         consumption: null,
@@ -183,7 +179,7 @@ describe('RateUtility', () => {
 
     it('should handle account for non-cumulative DSP drain', () => {
       const step: any = { machines: rational(1n, 3n) };
-      const result = { ...step };
+      const result = spread(step);
       const recipe: any = {
         drain: rational(2n),
         consumption: null,
@@ -198,7 +194,7 @@ describe('RateUtility', () => {
 
     it('should handle only consumption', () => {
       const step: any = { machines: rational.one };
-      const result = { ...step };
+      const result = spread(step);
       const recipe: any = {
         drain: null,
         consumption: rational(2n),
@@ -464,7 +460,7 @@ describe('RateUtility', () => {
           beacons: undefined,
         },
       };
-      const stepExpect = { ...step };
+      const stepExpect = spread(step);
       RateUtility.calculateBeacons(step, rational.one, Mocks.adjustedDataset);
       expect(step).toEqual(stepExpect);
     });

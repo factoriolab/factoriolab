@@ -27,13 +27,13 @@ import { EntityStore } from '~/models/store';
 import { Entities } from '~/models/utils';
 import { RateUtility } from '~/utilities/rate.utility';
 import { RecipeUtility } from '~/utilities/recipe.utility';
-import { SimplexUtility } from '~/utilities/simplex.utility';
 
 import { ItemsService } from './items.service';
 import { MachinesService } from './machines.service';
 import { PreferencesService } from './preferences.service';
 import { RecipesService } from './recipes.service';
 import { SettingsService } from './settings.service';
+import { SimplexService } from './simplex.service';
 
 export type ObjectivesState = Entities<Objective>;
 
@@ -46,6 +46,7 @@ export class ObjectivesService extends EntityStore<Objective> {
   preferencesSvc = inject(PreferencesService);
   recipesSvc = inject(RecipesService);
   settingsSvc = inject(SettingsService);
+  simplexSvc = inject(SimplexService);
 
   baseObjectives = computed(() => {
     const state = this.state();
@@ -106,7 +107,7 @@ export class ObjectivesService extends EntityStore<Objective> {
     const data = this.recipesSvc.adjustedDataset();
     const paused = this.preferencesSvc.paused();
 
-    return SimplexUtility.solve(objectives, settings, data, paused);
+    return this.simplexSvc.solve(objectives, settings, data, paused);
   });
 
   steps = computed(() => {

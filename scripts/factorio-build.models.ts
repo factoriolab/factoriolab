@@ -1,4 +1,4 @@
-import { Entities } from '~/models/entities';
+import { Entities } from '~/models/utils';
 
 import * as M from './factorio.models';
 

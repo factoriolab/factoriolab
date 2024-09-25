@@ -7,6 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { TooltipModule } from 'primeng/tooltip';
 
 import { DropdownTranslateDirective } from '~/directives/dropdown-translate.directive';
+import { spread } from '~/helpers';
 import { FlowDiagram, flowDiagramOptions } from '~/models/enum/flow-diagram';
 import { sankeyAlignOptions } from '~/models/enum/sankey-align';
 import { FlowSettings } from '~/models/settings/flow-settings';
@@ -43,7 +44,7 @@ export class FlowSettingsComponent extends DialogComponent {
 
   linkValueOptions = this.settingsSvc.linkValueOptions;
 
-  editValue = { ...initialValue };
+  editValue = spread(initialValue);
 
   flowDiagramOptions = flowDiagramOptions;
   sankeyAlignOptions = sankeyAlignOptions;
@@ -57,7 +58,7 @@ export class FlowSettingsComponent extends DialogComponent {
   }
 
   initEdit(value: FlowSettings): void {
-    this.editValue = { ...value };
+    this.editValue = spread(value);
   }
 
   open(value: FlowSettings): void {

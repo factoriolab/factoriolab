@@ -55,7 +55,7 @@ export const modData = modJson as unknown as ModData;
 modData.defaults!.excludedRecipes = [RecipeId.NuclearFuelReprocessing];
 export const modHash: ModHash = hashJson;
 export const modI18n: ModI18n = i18nJson;
-export const mod = { ...modInfo, ...modData } as Mod;
+export const mod = spread(modInfo as Mod, modData);
 export const defaults = SettingsService.computeDefaults(mod, Preset.Beacon8)!;
 export function getDataset(): Dataset {
   return SettingsService.computeDataset(
@@ -207,11 +207,11 @@ export const beltSpeed: Entities<Rational> = {
 };
 export const itemsState: Entities<ItemSettings> = {};
 for (const item of dataset.itemIds.map((i) => dataset.itemEntities[i])) {
-  itemsState[item.id] = { ...itemSettings1 };
+  itemsState[item.id] = spread(itemSettings1);
 }
 export const recipesState: Entities<RecipeSettings> = {};
 for (const recipe of dataset.recipeIds.map((i) => dataset.recipeEntities[i])) {
-  recipesState[recipe.id] = { ...recipeSettings1 };
+  recipesState[recipe.id] = spread(recipeSettings1);
 }
 export const settingsStateInitial = SettingsService.computeSettings(
   initialSettingsState,
@@ -248,14 +248,13 @@ export function getAdjustedDataset(): AdjustedDataset {
   );
 }
 export const adjustedDataset = getAdjustedDataset();
-export const objectives = objectivesList.map((o) => ({
-  ...o,
-  ...{
+export const objectives = objectivesList.map((o) =>
+  spread(o, {
     recipe: isRecipeObjective(o)
       ? adjustedDataset.adjustedRecipe[o.targetId]
       : undefined,
-  },
-}));
+  }),
+);
 export const objective = objectives[0];
 export const flowSettings: FlowSettings = {
   diagram: FlowDiagram.Sankey,

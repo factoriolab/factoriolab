@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { first } from 'rxjs';
 import { data } from 'src/data';
 
-import { asString, coalesce, prune, toEntities } from '~/helpers';
+import { asString, coalesce, prune, spread, toEntities } from '~/helpers';
 import {
   DEFAULT_MOD,
   ZARRAYSEP,
@@ -77,7 +77,7 @@ export class MigrationService {
         isBare: true,
       };
 
-    params = { ...params };
+    params = spread(params);
     const v = coalesce(params['v'] as ZipVersion, ZipVersion.Version0);
     this.analyticsSvc.event('unzip_version', v);
 

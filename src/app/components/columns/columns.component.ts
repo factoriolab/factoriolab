@@ -6,6 +6,7 @@ import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TableModule } from 'primeng/table';
 
+import { spread } from '~/helpers';
 import {
   ColumnKey,
   ColumnSettings,
@@ -63,7 +64,7 @@ export class ColumnsComponent extends DialogComponent {
     this.editValue = (Object.keys(columns) as ColumnKey[])
       .filter((c) => columnsInfo[c] != null) // Filter out any obsolete keys
       .reduce((e: Entities<ColumnSettings>, c) => {
-        e[c] = { ...columns[c] };
+        e[c] = spread(columns[c]);
         return e;
       }, {});
   }

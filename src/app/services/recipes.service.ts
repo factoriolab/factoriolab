@@ -1,5 +1,6 @@
 import { computed, inject, Injectable } from '@angular/core';
 
+import { spread } from '~/helpers';
 import { Dataset } from '~/models/dataset';
 import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
@@ -59,7 +60,7 @@ export class RecipesService extends EntityStore<RecipeSettings> {
   ): RecipesState {
     const value: Entities<RecipeSettings> = {};
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
-      const s: RecipeSettings = { ...state[recipe.id] };
+      const s: RecipeSettings = spread(state[recipe.id]);
 
       if (s.machineId == null)
         s.machineId = RecipeUtility.bestMatch(

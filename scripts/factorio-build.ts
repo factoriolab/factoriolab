@@ -3,7 +3,7 @@ import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
-import { coalesce } from '~/helpers';
+import { coalesce, spread } from '~/helpers';
 import { CategoryJson } from '~/models/data/category';
 import { FuelJson } from '~/models/data/fuel';
 import { ItemJson } from '~/models/data/item';
@@ -12,7 +12,7 @@ import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
 import { RecipeJson } from '~/models/data/recipe';
 import { TechnologyJson } from '~/models/data/technology';
-import { Entities } from '~/models/entities';
+import { Entities } from '~/models/utils';
 
 import {
   FluidBox,
@@ -1266,7 +1266,7 @@ async function processMod(): Promise<void> {
           ...old.map((data) => {
             if (temp !== defaultTemp) {
               const [original, ids] = data;
-              const altered = { ...original };
+              const altered = spread(original);
               const id = `${key}-${temp.toString()}`;
               altered[id] = altered[key];
               delete altered[key];
@@ -1297,7 +1297,7 @@ async function processMod(): Promise<void> {
       let [, recipeCatalyst] = recipeResultsMap[proto.name];
 
       // Convert fluid outputs to use correct ids
-      const recipeOut = { ..._recipeOut };
+      const recipeOut = spread(_recipeOut);
       for (const outId of Object.keys(recipeOut)) {
         if (temps[outId] != null) {
           const temp = temps[outId];
