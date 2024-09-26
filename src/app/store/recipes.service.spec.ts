@@ -20,7 +20,7 @@ describe('RecipesService', () => {
 
   describe('recipesState', () => {
     it('should return the recipe settings', () => {
-      const result = service.recipesState();
+      const result = service.settings();
       expect(Object.keys(result).length).toEqual(
         Mocks.adjustedDataset.recipeIds.length,
       );
@@ -39,7 +39,7 @@ describe('RecipesService', () => {
           ],
         },
       });
-      const result = service.recipesState();
+      const result = service.settings();
       expect(result[Mocks.item1.id].beacons?.[0].total).toBeUndefined();
     });
   });

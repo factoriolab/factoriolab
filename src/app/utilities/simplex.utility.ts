@@ -20,7 +20,7 @@ import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { MatrixResult } from '~/models/matrix-result';
 import {
   isRecipeObjective,
-  Objective,
+  ObjectiveState,
   RecipeObjective,
 } from '~/models/objective';
 import { Rational, rational } from '~/models/rational';
@@ -29,7 +29,7 @@ import {
   CostSettings,
   FACTORIO_FLUID_COST_RATIO,
 } from '~/models/settings/cost-settings';
-import { SettingsComplete } from '~/models/settings/settings-complete';
+import { Settings } from '~/models/settings/settings';
 import { Step } from '~/models/step';
 import { Entities } from '~/models/utils';
 
@@ -53,7 +53,7 @@ export interface ItemValues {
 }
 
 export interface MatrixState {
-  objectives: Objective[];
+  objectives: ObjectiveState[];
   /**
    * Output & Maximize recipe objectives
    *  * Limits moved to `recipeLimits`
@@ -139,8 +139,8 @@ export const SimplexUtility = {
   },
 
   solve(
-    objectives: Objective[],
-    settings: SettingsComplete,
+    objectives: ObjectiveState[],
+    settings: Settings,
     data: AdjustedDataset,
     paused: boolean,
   ): MatrixResult {
@@ -173,8 +173,8 @@ export const SimplexUtility = {
 
   //#region Setup
   getState(
-    objectives: Objective[],
-    settings: SettingsComplete,
+    objectives: ObjectiveState[],
+    settings: Settings,
     data: AdjustedDataset,
   ): MatrixState {
     // Set up state object

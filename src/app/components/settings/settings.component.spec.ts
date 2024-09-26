@@ -8,7 +8,7 @@ import { Confirmation } from 'primeng/api';
 
 import { Game } from '~/models/enum/game';
 import { rational } from '~/models/rational';
-import { assert, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
+import { assert, ItemId, Mocks, TestModule } from '~/tests';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { SettingsComponent } from './settings.component';
@@ -214,35 +214,6 @@ describe('SettingsComponent', () => {
     });
   });
 
-  describe('changeExcludedRecipes', () => {
-    it('should set up defaults to pass to the store action', () => {
-      spyOn(component.settingsSvc, 'apply');
-      const excludedRecipeIds = new Set([RecipeId.AdvancedCircuit]);
-      component.changeExcludedRecipes(excludedRecipeIds);
-      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
-        excludedRecipeIds,
-      });
-    });
-  });
-
-  describe('changeFuel', () => {
-    it('should calculate the default value for the passed machine', () => {
-      spyOn(component.machinesSvc, 'updateEntityField');
-      component.changeFuel(
-        ItemId.StoneFurnace,
-        ItemId.Coal,
-        { fuelOptions: [{ label: '', value: ItemId.Wood }] },
-        [ItemId.Wood],
-      );
-      expect(component.machinesSvc.updateEntityField).toHaveBeenCalledWith(
-        ItemId.StoneFurnace,
-        'fuelId',
-        ItemId.Coal,
-        ItemId.Wood,
-      );
-    });
-  });
-
   describe('changeModules', () => {
     it('should dehydrate the modules', () => {
       spyOn(RecipeUtility, 'dehydrateModules');
@@ -294,7 +265,7 @@ describe('SettingsComponent', () => {
   describe('addMachine', () => {
     it('should update the set and pass to the store action', () => {
       spyOn(component.settingsSvc, 'updateField');
-      component.addMachine(ItemId.AssemblingMachine2, undefined);
+      component.addMachine(ItemId.AssemblingMachine2);
       expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
         'machineRankIds',
         [
@@ -303,7 +274,11 @@ describe('SettingsComponent', () => {
           ItemId.ElectricMiningDrill,
           ItemId.AssemblingMachine2,
         ],
-        undefined,
+        [
+          ItemId.AssemblingMachine3,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+        ],
       );
     });
   });
@@ -314,7 +289,6 @@ describe('SettingsComponent', () => {
       component.setMachine(
         ItemId.AssemblingMachine3,
         ItemId.AssemblingMachine2,
-        undefined,
       );
       expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
         'machineRankIds',
@@ -323,7 +297,11 @@ describe('SettingsComponent', () => {
           ItemId.ElectricFurnace,
           ItemId.ElectricMiningDrill,
         ],
-        undefined,
+        [
+          ItemId.AssemblingMachine3,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+        ],
       );
     });
   });
@@ -331,11 +309,15 @@ describe('SettingsComponent', () => {
   describe('removeMachine', () => {
     it('should update the set and pass to the store action', () => {
       spyOn(component.settingsSvc, 'updateField');
-      component.removeMachine(ItemId.AssemblingMachine3, undefined);
+      component.removeMachine(ItemId.AssemblingMachine3);
       expect(component.settingsSvc.updateField).toHaveBeenCalledWith(
         'machineRankIds',
         [ItemId.ElectricFurnace, ItemId.ElectricMiningDrill],
-        undefined,
+        [
+          ItemId.AssemblingMachine3,
+          ItemId.ElectricFurnace,
+          ItemId.ElectricMiningDrill,
+        ],
       );
     });
   });

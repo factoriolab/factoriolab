@@ -39,7 +39,7 @@ import { stepDetailIcon, StepDetailTab } from '~/models/enum/step-detail-tab';
 import { rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
-import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { RecipeState } from '~/models/settings/recipe-settings';
 import { Step } from '~/models/step';
 import { StepDetail } from '~/models/step-detail';
 import { storedSignal } from '~/models/stored-signal';
@@ -137,9 +137,9 @@ export class StepsComponent implements OnInit, AfterViewInit {
   selectedId = input<string | null>();
   stepsTable = viewChild.required<Table>('stepsTable');
 
-  itemsState = this.itemsSvc.itemsState;
+  itemsState = this.itemsSvc.settings;
   itemsModified = this.itemsSvc.itemsModified;
-  machinesState = this.machinesSvc.machinesState;
+  machinesState = this.machinesSvc.settings;
   recipesModified = this.objectivesSvc.recipesModified;
   stepsModified = this.objectivesSvc.stepsModified;
   stepTree = this.objectivesSvc.stepTree;
@@ -366,14 +366,17 @@ export class StepsComponent implements OnInit, AfterViewInit {
     this.settingsSvc.apply({ excludedItemIds });
   }
 
-  changeRecipesExcluded(ids: string[], value: boolean): void {
-    const excludedRecipeIds = updateSetIds(
+  changeRecipesExcluded(ids: string[], excluded: boolean): void {
+    const value = updateSetIds(
       ids,
-      value,
+      excluded,
       this.settings().excludedRecipeIds,
     );
-    const def = new Set(coalesce(this.data().defaults?.excludedRecipeIds, []));
-    this.settingsSvc.updateField('excludedRecipeIds', excludedRecipeIds, def);
+    this.settingsSvc.updateField(
+      'excludedRecipeIds',
+      value,
+      this.settings().defaultExcludedRecipeIds,
+    );
   }
 
   changeRecipeField(
@@ -491,7 +494,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
   }
 
   resetMachines(event: Event): void {
-    const fields: (keyof RecipeSettings)[] = [
+    const fields: (keyof RecipeState)[] = [
       'machineId',
       'overclock',
       'modules',

@@ -12,7 +12,7 @@ import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { Preset } from '~/models/enum/preset';
 import { LabParams } from '~/models/lab-params';
-import { Objective } from '~/models/objective';
+import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Zip, ZipData, ZipMachineSettings } from '~/models/zip';
 import { ItemsState } from '~/store/items.service';
@@ -23,7 +23,7 @@ import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { PartialState, RouterService } from './router.service';
 
-const mockObjective: Objective = {
+const mockObjective: ObjectiveState = {
   id: '1',
   targetId: ItemId.SteelChest,
   value: rational.one,

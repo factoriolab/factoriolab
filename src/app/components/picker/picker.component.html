@@ -75,9 +75,7 @@
                       class="me-1 mb-1"
                       [class.p-button-text]="id !== selection"
                       [class.hover-action]="isMultiselect"
-                      [class.hover-active]="
-                        selection && selection.indexOf(id) !== -1
-                      "
+                      [class.hover-active]="selection?.includes(id)"
                       [icon]="id | iconSmClass: type"
                       [pTooltip]="tooltip"
                       tooltipPosition="bottom"

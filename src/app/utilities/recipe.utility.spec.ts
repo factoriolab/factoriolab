@@ -3,7 +3,7 @@ import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
 import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
-import { Objective } from '~/models/objective';
+import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { Entities } from '~/models/utils';
@@ -731,7 +731,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should adjust a launch objective based on rocket part recipe', () => {
-      const objective: Objective = {
+      const objective: ObjectiveState = {
         id: '0',
         targetId: RecipeId.SpaceSciencePack,
         value: rational.one,
@@ -958,63 +958,6 @@ describe('RecipeUtility', () => {
         { count: rational(2n), id: ItemId.SpeedModule3 },
       ]);
       expect(result.overclock).toBeUndefined();
-    });
-
-    it('should handle a machine with no modules', () => {
-      const settings = spread(Mocks.settingsStateInitial, {
-        machineRankIds: undefined,
-      });
-      const result = RecipeUtility.adjustObjective(
-        {
-          id: '1',
-          targetId: RecipeId.IronPlate,
-          value: rational.one,
-          unit: ObjectiveUnit.Machines,
-          type: ObjectiveType.Output,
-        },
-        Mocks.itemsStateInitial,
-        Mocks.recipesStateInitial,
-        Mocks.machinesStateInitial,
-        settings,
-        Mocks.adjustedDataset,
-      );
-      expect(result.machineId).toEqual(ItemId.StoneFurnace);
-    });
-
-    it('should handle nullish values', () => {
-      spyOn(RecipeUtility, 'allowsModules').and.returnValue(true);
-      const data = Mocks.getAdjustedDataset();
-      data.machineEntities[ItemId.StoneFurnace].modules = undefined;
-      const machines = spread(Mocks.machinesStateInitial, {
-        [ItemId.ElectricFurnace]: spread(
-          Mocks.machinesStateInitial[ItemId.ElectricFurnace],
-          {
-            modules: undefined,
-            beacons: undefined,
-          },
-        ),
-      });
-      const settings = spread(Mocks.settingsStateInitial, {
-        machineRankIds: undefined,
-      });
-      const result = RecipeUtility.adjustObjective(
-        {
-          id: '1',
-          targetId: RecipeId.IronPlate,
-          value: rational.one,
-          unit: ObjectiveUnit.Machines,
-          type: ObjectiveType.Output,
-          beacons: [{ id: ItemId.Beacon }],
-        },
-        Mocks.itemsStateInitial,
-        Mocks.recipesStateInitial,
-        machines,
-        settings,
-        data,
-      );
-      expect(result.machineId).toEqual(ItemId.StoneFurnace);
-      expect(result.modules).toBeUndefined();
-      expect(result.beacons?.[0].modules).toBeUndefined();
     });
 
     it('should use the correct fuel for a burn recipe objective', () => {

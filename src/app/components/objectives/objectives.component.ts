@@ -28,9 +28,9 @@ import {
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { MatrixResult } from '~/models/matrix-result';
-import { Objective } from '~/models/objective';
+import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
-import { SettingsComplete } from '~/models/settings/settings-complete';
+import { Settings } from '~/models/settings/settings';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
@@ -83,7 +83,7 @@ export class ObjectivesComponent {
   translateSvc = inject(TranslateService);
 
   result = this.objectivesSvc.matrixResult;
-  itemsState = this.itemsSvc.itemsState;
+  itemsState = this.itemsSvc.settings;
   beltSpeed = this.settingsSvc.beltSpeed;
   dispRateInfo = this.settingsSvc.displayRateInfo;
   maximizeType = this.settingsSvc.maximizeType;
@@ -111,9 +111,9 @@ export class ObjectivesComponent {
   ObjectiveType = ObjectiveType;
 
   getMessages(
-    objectives: Objective[],
+    objectives: ObjectiveState[],
     matrixResult: MatrixResult,
-    settings: SettingsComplete,
+    settings: Settings,
   ): Observable<Message[]> {
     if (matrixResult.resultType === SimplexResultType.Paused) {
       return this.translateSvc
@@ -199,7 +199,7 @@ export class ObjectivesComponent {
   }
 
   changeUnit(
-    objective: Objective,
+    objective: ObjectiveState,
     unit: ObjectiveUnit,
     chooseItemPicker: PickerComponent,
     chooseRecipePicker: PickerComponent,
@@ -249,7 +249,7 @@ export class ObjectivesComponent {
    * objective value so that number of items remains constant
    */
   convertItemsToMachines(
-    objective: Objective,
+    objective: ObjectiveState,
     recipeId: string,
     data: AdjustedDataset,
   ): void {
@@ -284,7 +284,7 @@ export class ObjectivesComponent {
    * objective value so that number of items remains constant
    */
   convertMachinesToItems(
-    objective: Objective,
+    objective: ObjectiveState,
     itemId: string,
     unit: ObjectiveUnit,
     data: AdjustedDataset,
@@ -327,7 +327,7 @@ export class ObjectivesComponent {
    * objective value so that number of items remains constant
    */
   convertItemsToItems(
-    objective: Objective,
+    objective: ObjectiveState,
     itemId: string,
     unit: ObjectiveUnit,
     data: AdjustedDataset,

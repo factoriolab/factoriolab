@@ -8,7 +8,7 @@ import { Language } from '~/models/enum/language';
 import { Preset } from '~/models/enum/preset';
 import { gameInfo } from '~/models/game-info';
 import { rational } from '~/models/rational';
-import { SettingsComplete } from '~/models/settings/settings-complete';
+import { Settings } from '~/models/settings/settings';
 import { assert, ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
 import { SettingsService } from './settings.service';
@@ -394,7 +394,7 @@ describe('SettingsService', () => {
       };
       spyOn(service, 'state').and.returnValue(value);
       const result = service.settings();
-      for (const key of Object.keys(value) as (keyof SettingsComplete)[])
+      for (const key of Object.keys(value) as (keyof Settings)[])
         expect(result[key]).toEqual(value[key]);
     });
 

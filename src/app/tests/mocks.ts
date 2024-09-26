@@ -24,14 +24,14 @@ import { Theme } from '~/models/enum/theme';
 import { FlowData, Link, Node } from '~/models/flow';
 import { MatrixResult } from '~/models/matrix-result';
 import { Mod } from '~/models/mod';
-import { isRecipeObjective, Objective } from '~/models/objective';
+import { isRecipeObjective, ObjectiveState } from '~/models/objective';
 import { Rational, rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import { initialColumnsState } from '~/models/settings/column-settings';
 import { FlowSettings } from '~/models/settings/flow-settings';
-import { ItemSettings } from '~/models/settings/item-settings';
+import { ItemState } from '~/models/settings/item-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
-import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { RecipeState } from '~/models/settings/recipe-settings';
 import { Step } from '~/models/step';
 import { Entities } from '~/models/utils';
 import { ThemeValues } from '~/services/theme.service';
@@ -71,56 +71,56 @@ export const categoryId = dataset.categoryIds[0];
 export const item1 = dataset.itemEntities[dataset.itemIds[0]];
 export const item2 = dataset.itemEntities[dataset.itemIds[1]];
 export const recipe1 = dataset.recipeEntities[dataset.recipeIds[0]];
-export const objective1: Objective = {
+export const objective1: ObjectiveState = {
   id: '1',
   targetId: ItemId.AdvancedCircuit,
   value: rational.one,
   unit: ObjectiveUnit.Items,
   type: ObjectiveType.Output,
 };
-export const objective2: Objective = {
+export const objective2: ObjectiveState = {
   id: '2',
   targetId: ItemId.IronPlate,
   value: rational.one,
   unit: ObjectiveUnit.Belts,
   type: ObjectiveType.Input,
 };
-export const objective3: Objective = {
+export const objective3: ObjectiveState = {
   id: '3',
   targetId: ItemId.PlasticBar,
   value: rational.one,
   unit: ObjectiveUnit.Items,
   type: ObjectiveType.Maximize,
 };
-export const objective4: Objective = {
+export const objective4: ObjectiveState = {
   id: '4',
   targetId: ItemId.PetroleumGas,
   value: rational(100n),
   unit: ObjectiveUnit.Items,
   type: ObjectiveType.Limit,
 };
-export const objective5: Objective = {
+export const objective5: ObjectiveState = {
   id: '5',
   targetId: RecipeId.PiercingRoundsMagazine,
   value: rational.one,
   unit: ObjectiveUnit.Machines,
   type: ObjectiveType.Output,
 };
-export const objective6: Objective = {
+export const objective6: ObjectiveState = {
   id: '6',
   targetId: RecipeId.CopperPlate,
   value: rational.one,
   unit: ObjectiveUnit.Machines,
   type: ObjectiveType.Input,
 };
-export const objective7: Objective = {
+export const objective7: ObjectiveState = {
   id: '7',
   targetId: RecipeId.FirearmMagazine,
   value: rational.one,
   unit: ObjectiveUnit.Machines,
   type: ObjectiveType.Maximize,
 };
-export const objective8: Objective = {
+export const objective8: ObjectiveState = {
   id: '8',
   targetId: RecipeId.IronPlate,
   value: rational(10n),
@@ -151,11 +151,11 @@ export const objectiveSteps = {
     Rational,
   ][],
 };
-export const itemSettings1: ItemSettings = {
+export const itemSettings1: ItemState = {
   beltId: ItemId.TransportBelt,
   wagonId: ItemId.CargoWagon,
 };
-export const recipeSettings1: RecipeSettings = {
+export const recipeSettings1: RecipeState = {
   machineId: ItemId.AssemblingMachine2,
   modules: [{ count: rational(2n), id: ItemId.Module }],
   beacons: [
@@ -166,7 +166,7 @@ export const recipeSettings1: RecipeSettings = {
     },
   ],
 };
-export const recipeSettings2: RecipeSettings = {
+export const recipeSettings2: RecipeState = {
   machineId: ItemId.AssemblingMachine2,
   modules: [{ count: rational(2n), id: ItemId.Module }],
   beacons: [
@@ -205,11 +205,11 @@ export const beltSpeed: Entities<Rational> = {
   [ItemId.TransportBelt]: rational(15n),
   [ItemId.Pipe]: rational(1500n),
 };
-export const itemsState: Entities<ItemSettings> = {};
+export const itemsState: Entities<ItemState> = {};
 for (const item of dataset.itemIds.map((i) => dataset.itemEntities[i])) {
   itemsState[item.id] = spread(itemSettings1);
 }
-export const recipesState: Entities<RecipeSettings> = {};
+export const recipesState: Entities<RecipeState> = {};
 for (const recipe of dataset.recipeIds.map((i) => dataset.recipeEntities[i])) {
   recipesState[recipe.id] = spread(recipeSettings1);
 }
@@ -218,18 +218,18 @@ export const settingsStateInitial = SettingsService.computeSettings(
   defaults,
   new Set(dataset.technologyIds),
 );
-export const itemsStateInitial = ItemsService.computeItemsState(
+export const itemsStateInitial = ItemsService.computeItemsSettings(
   {},
   settingsStateInitial,
   dataset,
 );
-export const machinesStateInitial = MachinesService.computeMachinesState(
+export const machinesStateInitial = MachinesService.computeMachinesSettings(
   {},
   settingsStateInitial,
   dataset,
 );
-export function getRecipesState(): Entities<RecipeSettings> {
-  return RecipesService.computeRecipesState(
+export function getRecipesState(): Entities<RecipeState> {
+  return RecipesService.computeRecipesSettings(
     {},
     machinesStateInitial,
     settingsStateInitial,

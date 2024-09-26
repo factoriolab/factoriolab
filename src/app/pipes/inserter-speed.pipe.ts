@@ -3,13 +3,13 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ItemId } from '~/models/enum/item-id';
 import { InserterData, InserterSpeed } from '~/models/inserter-data';
 import { Rational } from '~/models/rational';
-import { SettingsComplete } from '~/models/settings/settings-complete';
+import { Settings } from '~/models/settings/settings';
 
 @Pipe({ name: 'inserterSpeed', standalone: true })
 export class InserterSpeedPipe implements PipeTransform {
   transform(
     value: Rational | undefined,
-    settings: SettingsComplete,
+    settings: Settings,
   ): InserterSpeed | null {
     if (value != null) {
       const inserter = InserterData[settings.inserterTarget][

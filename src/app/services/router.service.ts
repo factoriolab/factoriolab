@@ -22,14 +22,14 @@ import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { ZipVersion } from '~/models/enum/zip-version';
 import { LabParams, Params } from '~/models/lab-params';
-import { isRecipeObjective, Objective } from '~/models/objective';
+import { isRecipeObjective, ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
 import { CostSettings } from '~/models/settings/cost-settings';
-import { ItemSettings } from '~/models/settings/item-settings';
-import { MachineSettings } from '~/models/settings/machine-settings';
+import { ItemState } from '~/models/settings/item-settings';
+import { MachineState } from '~/models/settings/machine-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
-import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { RecipeState } from '~/models/settings/recipe-settings';
 import { Step } from '~/models/step';
 import { storedSignal } from '~/models/stored-signal';
 import { Entities } from '~/models/utils';
@@ -373,7 +373,7 @@ export class RouterService {
     const beaconsInfo = this.emptyRecipeSettingsInfo;
 
     const zip = (
-      entities: Entities<Objective | RecipeSettings | MachineSettings>,
+      entities: Entities<ObjectiveState | RecipeState | MachineState>,
     ): ZipMachineSettings => {
       return this.zipMachineSettings(entities, modulesInfo, beaconsInfo, hash);
     };
@@ -422,7 +422,7 @@ export class RouterService {
   }
 
   zipMachineSettings(
-    state: Entities<Objective | RecipeSettings | MachineSettings>,
+    state: Entities<ObjectiveState | RecipeState | MachineState>,
     modulesInfo: ZipRecipeSettingsInfo,
     beaconsInfo: ZipRecipeSettingsInfo,
     hash: ModHash,
@@ -624,13 +624,13 @@ export class RouterService {
   ): ObjectivesState | undefined {
     if (params.o == null) return;
 
-    const entities: Entities<Objective> = {};
+    const entities: Entities<ObjectiveState> = {};
     let index = 1;
     for (const itemObjective of params.o) {
       const s = itemObjective.split(ZFIELDSEP);
       let i = 0;
       const id = index.toString();
-      const obj: Objective = {
+      const obj: ObjectiveState = {
         id: index.toString(),
         targetId: s[i++], // Convert to real id after determining unit, if hashed
         value: coalesce(this.zipSvc.parseRational(s[i++]), rational.one),
@@ -693,7 +693,7 @@ export class RouterService {
       const s = item.split(ZFIELDSEP);
       let i = 0;
       const id = coalesce(this.zipSvc.parseString(s[i++], hash?.items), '');
-      const obj: ItemSettings = {
+      const obj: ItemState = {
         beltId: this.zipSvc.parseString(s[i++], hash?.belts),
         wagonId: this.zipSvc.parseString(s[i++], hash?.wagons),
       };
@@ -754,7 +754,7 @@ export class RouterService {
       const s = recipe.split(ZFIELDSEP);
       let i = 0;
       const id = coalesce(this.zipSvc.parseString(s[i++], hash?.recipes), '');
-      const obj: RecipeSettings = {
+      const obj: RecipeState = {
         machineId: this.zipSvc.parseString(s[i++], hash?.machines),
         modules: this.zipSvc
           .parseArray(s[i++])
@@ -818,7 +818,7 @@ export class RouterService {
       const s = machine.split(ZFIELDSEP);
       let i = 0;
       const id = coalesce(this.zipSvc.parseString(s[i++], hash?.machines), '');
-      const obj: MachineSettings = {
+      const obj: MachineState = {
         modules: this.zipSvc
           .parseArray(s[i++])
           ?.map((i) => moduleSettings[Number(i)] ?? {}),

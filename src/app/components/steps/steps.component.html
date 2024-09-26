@@ -368,22 +368,28 @@
               </td>
               <td class="px-0 pe-sm-2">
                 <div class="d-flex align-items-center">
-                  <!-- Belt dropdown -->
+                  <!-- Belt/Pipe dropdown -->
                   @if (
-                    data().beltIds.indexOf(beltId) !== -1 && settings().beltId;
-                    as defaultBeltId
+                    data().beltIds.includes(beltId)
+                      ? 'belt'
+                      : data().pipeIds.includes(beltId)
+                        ? 'pipe'
+                        : null;
+                    as type
                   ) {
                     <p-dropdown
                       labDropdownBase="icon"
                       [pTooltip]="tooltip"
                       [ngModel]="beltId"
-                      [options]="options().belts"
+                      [options]="
+                        type === 'belt' ? options().belts : options().pipes
+                      "
                       (onChange)="
                         itemsSvc.updateEntityField(
                           step.itemId,
                           'beltId',
                           $event.value,
-                          defaultBeltId
+                          itemsState()[step.itemId].defaultBeltId
                         )
                       "
                     >
@@ -406,70 +412,25 @@
                           <ng-template #tooltip>
                             <lab-tooltip
                               [id]="item.value"
-                              type="belt"
+                              [type]="$any(type)"
                             ></lab-tooltip>
                           </ng-template>
                         </div>
                       </ng-template>
                       <ng-template #tooltip>
-                        <lab-tooltip [id]="beltId" type="belt"></lab-tooltip>
+                        <lab-tooltip
+                          [id]="beltId"
+                          [type]="$any(type)"
+                        ></lab-tooltip>
                       </ng-template>
                     </p-dropdown>
                   } @else {
-                    @if (
-                      data().pipeIds.indexOf(beltId) !== -1 &&
-                        settings().pipeId;
-                      as defaultPipeId
-                    ) {
-                      <!-- Pipes dropdown -->
-                      <p-dropdown
-                        labDropdownBase="icon"
-                        [pTooltip]="tooltip"
-                        [ngModel]="beltId"
-                        [options]="options().pipes"
-                        (onChange)="
-                          itemsSvc.updateEntityField(
-                            step.itemId,
-                            'beltId',
-                            $event.value,
-                            defaultPipeId
-                          )
-                        "
-                      >
-                        <ng-template pTemplate="selectedItem" let-item>
-                          <div class="d-flex">
-                            <i [class]="item.value | iconSmClass"></i>
-                          </div>
-                        </ng-template>
-                        <ng-template pTemplate="item" let-item>
-                          <div
-                            class="d-flex align-items-center py-2 w-100 h-100"
-                            [pTooltip]="tooltip"
-                          >
-                            <i [class]="item.value | iconSmClass"></i>
-                            <div class="ms-3 text-truncate">
-                              {{ item.label }}
-                            </div>
-                            <ng-template #tooltip>
-                              <lab-tooltip
-                                [id]="item.value"
-                                type="pipe"
-                              ></lab-tooltip>
-                            </ng-template>
-                          </div>
-                        </ng-template>
-                        <ng-template #tooltip>
-                          <lab-tooltip [id]="beltId" type="pipe"></lab-tooltip>
-                        </ng-template>
-                      </p-dropdown>
-                    } @else {
-                      <!-- Pipe icon only -->
-                      <i [class]="beltId | iconClass" [pTooltip]="tooltip">
-                        <ng-template #tooltip>
-                          <lab-tooltip [id]="beltId" type="pipe"></lab-tooltip>
-                        </ng-template>
-                      </i>
-                    }
+                    <!-- Pipe icon only -->
+                    <i [class]="beltId | iconClass" [pTooltip]="tooltip">
+                      <ng-template #tooltip>
+                        <lab-tooltip [id]="beltId" type="pipe"></lab-tooltip>
+                      </ng-template>
+                    </i>
                   }
                 </div>
               </td>
@@ -489,23 +450,30 @@
               </td>
               <td class="px-0 pe-sm-2">
                 <div class="d-flex align-items-center">
-                  <!-- Cargo wagon dropdown -->
+                  <!-- Wagon dropdown -->
                   @if (
-                    data().cargoWagonIds.indexOf(wagonId) !== -1 &&
-                      settings().cargoWagonId;
-                    as defaultCargoWagonId
+                    data().cargoWagonIds.includes(wagonId)
+                      ? 'cargo-wagon'
+                      : data().fluidWagonIds.includes(wagonId)
+                        ? 'fluid-wagon'
+                        : null;
+                    as type
                   ) {
                     <p-dropdown
                       labDropdownBase="icon"
                       [pTooltip]="tooltip"
                       [ngModel]="wagonId"
-                      [options]="options().cargoWagons"
+                      [options]="
+                        type === 'cargo-wagon'
+                          ? options().cargoWagons
+                          : options().fluidWagons
+                      "
                       (onChange)="
                         itemsSvc.updateEntityField(
                           step.itemId,
                           'wagonId',
                           $event.value,
-                          defaultCargoWagonId
+                          itemsState()[step.itemId].defaultWagonId
                         )
                       "
                     >
@@ -528,7 +496,7 @@
                           <ng-template #tooltip>
                             <lab-tooltip
                               [id]="item.value"
-                              type="cargo-wagon"
+                              [type]="$any(type)"
                             ></lab-tooltip>
                           </ng-template>
                         </div>
@@ -536,63 +504,10 @@
                       <ng-template #tooltip>
                         <lab-tooltip
                           [id]="wagonId"
-                          type="cargo-wagon"
+                          [type]="$any(type)"
                         ></lab-tooltip>
                       </ng-template>
                     </p-dropdown>
-                  } @else {
-                    <!-- Fluid wagon dropdown -->
-                    @if (
-                      data().fluidWagonIds.indexOf(wagonId) !== -1 &&
-                        settings().fluidWagonId;
-                      as defaultFluidWagonId
-                    ) {
-                      <p-dropdown
-                        labDropdownBase="icon"
-                        [pTooltip]="tooltip"
-                        [ngModel]="wagonId"
-                        [options]="options().fluidWagons"
-                        (onChange)="
-                          itemsSvc.updateEntityField(
-                            step.itemId,
-                            'wagonId',
-                            $event.value,
-                            defaultFluidWagonId
-                          )
-                        "
-                      >
-                        <ng-template pTemplate="selectedItem" let-item>
-                          @if (item) {
-                            <div class="d-flex">
-                              <i [class]="item.value | iconSmClass"></i>
-                            </div>
-                          }
-                        </ng-template>
-                        <ng-template pTemplate="item" let-item>
-                          <div
-                            class="d-flex align-items-center py-2 w-100 h-100"
-                            [pTooltip]="tooltip"
-                          >
-                            <i [class]="item.value | iconSmClass"></i>
-                            <div class="ms-3 text-truncate">
-                              {{ item.label }}
-                            </div>
-                          </div>
-                          <ng-template #tooltip>
-                            <lab-tooltip
-                              [id]="item.value"
-                              type="fluid-wagon"
-                            ></lab-tooltip>
-                          </ng-template>
-                        </ng-template>
-                        <ng-template #tooltip>
-                          <lab-tooltip
-                            [id]="wagonId"
-                            type="fluid-wagon"
-                          ></lab-tooltip>
-                        </ng-template>
-                      </p-dropdown>
-                    }
                   }
                 </div>
               </td>
@@ -1659,7 +1574,7 @@
           </td>
           <td class="ps-0">
             <div class="d-flex">
-              @if (data().cargoWagonIds.indexOf(wagonId) !== -1) {
+              @if (data().cargoWagonIds.includes(wagonId)) {
                 <i [class]="wagonId | iconClass" [pTooltip]="tooltip">
                   <ng-template #tooltip>
                     <lab-tooltip

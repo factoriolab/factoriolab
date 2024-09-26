@@ -6,7 +6,7 @@ import { spread } from '~/helpers';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
-import { Objective } from '~/models/objective';
+import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
@@ -254,7 +254,7 @@ describe('ObjectivesComponent', () => {
 
     it('should prompt user to switch from item to recipe', () => {
       spyOn(component.objectivesSvc, 'updateEntity');
-      const objective: Objective = {
+      const objective: ObjectiveState = {
         id: '0',
         targetId: ItemId.PetroleumGas,
         value: rational.one,

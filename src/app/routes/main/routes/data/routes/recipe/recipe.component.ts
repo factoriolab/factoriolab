@@ -9,7 +9,7 @@ import { InputNumberComponent } from '~/components/input-number/input-number.com
 import { coalesce, updateSetIds } from '~/helpers';
 import { Recipe } from '~/models/data/recipe';
 import { Game } from '~/models/enum/game';
-import { RecipeSettings } from '~/models/settings/recipe-settings';
+import { RecipeState } from '~/models/settings/recipe-settings';
 import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { RoundPipe } from '~/pipes/round.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
@@ -36,7 +36,7 @@ import { DetailComponent } from '../../models/detail.component';
 })
 export class RecipeComponent extends DetailComponent {
   recipesStateRaw = this.recipesSvc.state;
-  recipesState = this.recipesSvc.recipesState;
+  recipesState = this.recipesSvc.settings;
   settings = this.settingsSvc.settings;
 
   obj = computed<Recipe | undefined>(
@@ -57,7 +57,7 @@ export class RecipeComponent extends DetailComponent {
       productIds: Object.keys(recipe?.out ?? {}),
     };
   });
-  recipeSettings = computed<RecipeSettings | undefined>(
+  recipeSettings = computed<RecipeState | undefined>(
     () => this.recipesState()[this.id()],
   );
   recipeR = computed<Recipe | undefined>(
@@ -72,8 +72,11 @@ export class RecipeComponent extends DetailComponent {
       excluded,
       this.settings().excludedRecipeIds,
     );
-    const def = new Set(coalesce(this.data().defaults?.excludedRecipeIds, []));
-    this.settingsSvc.updateField('excludedRecipeIds', value, def);
+    this.settingsSvc.updateField(
+      'excludedRecipeIds',
+      value,
+      this.settings().defaultExcludedRecipeIds,
+    );
   }
 
   changeChecked(value: boolean): void {

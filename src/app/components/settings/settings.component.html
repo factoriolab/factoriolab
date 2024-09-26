@@ -171,7 +171,7 @@
             <div>{{ 'settings.game' | translate }}</div>
             <div>
               @if (modId(); as modId) {
-                {{ modRecord()[modId]?.id }}
+                {{ modId }}
               }
             </div>
           </div>
@@ -327,7 +327,13 @@
             <lab-picker
               #recipesPicker
               [header]="'settings.recipesHeader' | translate"
-              (selectIds)="changeExcludedRecipes($event)"
+              (selectIds)="
+                settingsSvc.updateField(
+                  'excludedRecipeIds',
+                  $event,
+                  settings().defaultExcludedRecipeIds
+                )
+              "
             ></lab-picker>
           </div>
           <div>
@@ -404,7 +410,7 @@
                     settingsSvc.updateField(
                       'moduleRankIds',
                       $event.value,
-                      data().defaults?.moduleRankIds
+                      settings().defaultModuleRankIds
                     )
                   "
                 >
@@ -455,7 +461,7 @@
                     settingsSvc.updateField(
                       'fuelRankIds',
                       $event.value,
-                      data().defaults?.fuelRankIds
+                      settings().defaultFuelRankIds
                     )
                   "
                 >
@@ -504,9 +510,7 @@
                 [ngModel]="options().machines[0]?.value"
                 [pTooltip]="'settings.addMachineTooltip' | translate"
                 [options]="options().machines | filterOptions: machineIds()"
-                (onChange)="
-                  addMachine($event.value, data().defaults?.machineRankIds)
-                "
+                (onChange)="addMachine($event.value)"
               >
                 <ng-template pTemplate="selectedItem" let-item>
                   <div
@@ -602,7 +606,7 @@
                 settingsSvc.updateField(
                   'machineRankIds',
                   machineIds(),
-                  data().defaults?.machineRankIds
+                  settings().defaultMachineRankIds
                 )
               "
             >
@@ -626,13 +630,7 @@
                           options().machines
                             | filterOptions: machineIds() : machineId
                         "
-                        (onChange)="
-                          setMachine(
-                            machineId,
-                            $event.value,
-                            data().defaults?.machineRankIds
-                          )
-                        "
+                        (onChange)="setMachine(machineId, $event.value)"
                       >
                         <ng-template pTemplate="selectedItem" let-item>
                           @if (item) {
@@ -669,11 +667,11 @@
                           [ngModel]="ms.fuelId"
                           [options]="ms.fuelOptions"
                           (onChange)="
-                            changeFuel(
+                            machinesSvc.updateEntityField(
                               machineId,
+                              'fuelId',
                               $event.value,
-                              ms,
-                              settings().fuelRankIds
+                              ms.defaultFuelId
                             )
                           "
                         >
@@ -856,12 +854,7 @@
                         [pTooltip]="
                           'settings.removeMachinePreference' | translate
                         "
-                        (click)="
-                          removeMachine(
-                            machineId,
-                            data().defaults?.machineRankIds
-                          )
-                        "
+                        (click)="removeMachine(machineId)"
                       ></button>
                     </div>
                   }
@@ -960,7 +953,7 @@
                   settingsSvc.updateField(
                     'beltId',
                     $event.value,
-                    data().defaults?.beltId
+                    settings().defaultBeltId
                   )
                 "
               >
@@ -1007,7 +1000,7 @@
                     settingsSvc.updateField(
                       'pipeId',
                       $event.value,
-                      data().defaults?.pipeId
+                      settings().defaultPipeId
                     )
                   "
                 >
@@ -1056,7 +1049,7 @@
                     settingsSvc.updateField(
                       'cargoWagonId',
                       $event.value,
-                      data().defaults?.cargoWagonId
+                      settings().defaultCargoWagonId
                     )
                   "
                 >
@@ -1105,7 +1098,7 @@
                     settingsSvc.updateField(
                       'fluidWagonId',
                       $event.value,
-                      data().defaults?.fluidWagonId
+                      settings().defaultFluidWagonId
                     )
                   "
                 >

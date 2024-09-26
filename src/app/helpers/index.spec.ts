@@ -6,6 +6,7 @@ import {
   asString,
   coalesce,
   compareRank,
+  compareSet,
   contains,
   filterPropsNullish,
   notNullish,
@@ -59,7 +60,15 @@ describe('coalesce', () => {
 
 describe('compareRank', () => {
   it('should return undefined if rank matches', () => {
+    expect(compareRank(['a', 'b', 'd'], ['a', 'b', 'c'])).toBeDefined();
     expect(compareRank(['a', 'b', 'c'], ['a', 'b', 'c'])).toBeUndefined();
+  });
+});
+
+describe('compareRank', () => {
+  it('should return undefined if set matches', () => {
+    expect(compareSet(new Set([1, 2, 4]), new Set([1, 2, 3]))).toBeDefined();
+    expect(compareSet(new Set([1, 2, 3]), new Set([1, 2, 3]))).toBeUndefined();
   });
 });
 

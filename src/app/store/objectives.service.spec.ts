@@ -8,7 +8,7 @@ import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { PowerUnit } from '~/models/enum/power-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { StepDetailTab } from '~/models/enum/step-detail-tab';
-import { Objective } from '~/models/objective';
+import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
@@ -404,7 +404,7 @@ describe('ObjectivesService', () => {
     });
 
     it('should account for recipe objective settings', () => {
-      const objective: Objective = {
+      const objective: ObjectiveState = {
         id: '1',
         targetId: RecipeId.Coal,
         value: rational.one,

@@ -184,7 +184,7 @@
           class="me-1 mb-1"
           [class]="class"
           [label]="(showTechLabels() && data().itemEntities[id]?.name) || ''"
-          [class.hover-active]="selection().indexOf(id) === -1"
+          [class.hover-active]="selection().includes(id)"
           [icon]="id | iconSmClass"
           [pTooltip]="tooltip"
           tooltipPosition="bottom"

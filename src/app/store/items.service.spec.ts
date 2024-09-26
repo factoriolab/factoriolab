@@ -24,7 +24,7 @@ describe('ItemsService', () => {
           pipeId: ItemId.Pipe,
         }),
       );
-      const result = service.itemsState();
+      const result = service.settings();
       expect(Object.keys(result).length).toEqual(
         Mocks.adjustedDataset.itemIds.length,
       );

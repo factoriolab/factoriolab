@@ -11,21 +11,20 @@ import { EnergyType } from '~/models/enum/energy-type';
 import { Game } from '~/models/enum/game';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
-import { Objective } from '~/models/objective';
+import { ObjectiveSettings } from '~/models/objective';
 import { Rational, rational } from '~/models/rational';
-import { ItemSettings } from '~/models/settings/item-settings';
-import { RecipeSettings } from '~/models/settings/recipe-settings';
-import { SettingsComplete } from '~/models/settings/settings-complete';
+import { Settings } from '~/models/settings/settings';
 import { Step } from '~/models/step';
 import { Entities, Optional } from '~/models/utils';
-import { ItemsState } from '~/store/items.service';
+import { ItemsSettings } from '~/store/items.service';
+import { RecipesSettings } from '~/store/recipes.service';
 
 const ROOT_ID = '';
 
 export const RateUtility = {
   objectiveNormalizedRate(
-    objective: Objective,
-    itemsState: ItemsState,
+    objective: ObjectiveSettings,
+    items: ItemsSettings,
     beltSpeed: Entities<Rational>,
     displayRateInfo: DisplayRateInfo,
     data: AdjustedDataset,
@@ -45,14 +44,12 @@ export const RateUtility = {
         break;
       }
       case ObjectiveUnit.Belts: {
-        const beltId = itemsState[objective.targetId].beltId;
-        if (beltId) {
-          factor = beltSpeed[beltId];
-        }
+        const beltId = items[objective.targetId].beltId;
+        if (beltId) factor = beltSpeed[beltId];
         break;
       }
       case ObjectiveUnit.Wagons: {
-        const wagonId = itemsState[objective.targetId].wagonId;
+        const wagonId = items[objective.targetId].wagonId;
         if (wagonId) {
           const item = data.itemEntities[objective.targetId];
           const wagon = data.itemEntities[wagonId];
@@ -117,12 +114,12 @@ export const RateUtility = {
 
   normalizeSteps(
     steps: Step[],
-    objectives: Objective[],
-    itemsState: Entities<ItemSettings>,
-    recipesState: Entities<RecipeSettings>,
+    objectives: ObjectiveSettings[],
+    items: ItemsSettings,
+    recipes: RecipesSettings,
     beltSpeed: Entities<Rational>,
     dispRateInfo: DisplayRateInfo,
-    settings: SettingsComplete,
+    settings: Settings,
     data: AdjustedDataset,
   ): Step[] {
     const _steps = this.copy(steps);
@@ -132,8 +129,8 @@ export const RateUtility = {
     const objectiveEntities = toEntities(objectives);
 
     for (const step of _steps) {
-      this.calculateSettings(step, objectiveEntities, recipesState);
-      this.calculateBelts(step, itemsState, beltSpeed, data);
+      this.calculateSettings(step, objectiveEntities, recipes);
+      this.calculateBelts(step, items, beltSpeed, data);
       this.calculateBeacons(step, settings.beaconReceivers, data);
       this.calculateDisplayRate(step, dispRateInfo);
       this.calculateChecked(step, settings);
@@ -174,19 +171,19 @@ export const RateUtility = {
 
   calculateSettings(
     step: Step,
-    objectiveEntities: Entities<Objective>,
-    recipesState: Entities<RecipeSettings>,
+    objectiveEntities: Entities<ObjectiveSettings>,
+    recipes: RecipesSettings,
   ): void {
     if (step.recipeId) {
       if (step.recipeObjectiveId)
         step.recipeSettings = objectiveEntities[step.recipeObjectiveId];
-      else step.recipeSettings = recipesState[step.recipeId];
+      else step.recipeSettings = recipes[step.recipeId];
     }
   },
 
   calculateBelts(
     step: Step,
-    itemsState: Entities<ItemSettings>,
+    items: ItemsSettings,
     beltSpeed: Entities<Rational>,
     data: AdjustedDataset,
   ): void {
@@ -204,11 +201,11 @@ export const RateUtility = {
       delete step.belts;
       delete step.wagons;
     } else if (step.itemId != null) {
-      const belt = itemsState[step.itemId].beltId;
+      const belt = items[step.itemId].beltId;
       if (step.items != null && belt != null)
         step.belts = step.items.div(beltSpeed[belt]);
 
-      const wagon = itemsState[step.itemId].wagonId;
+      const wagon = items[step.itemId].wagonId;
       if (step.items != null && wagon != null) {
         const item = data.itemEntities[step.itemId];
         if (item.stack) {
@@ -292,8 +289,8 @@ export const RateUtility = {
     }
   },
 
-  calculateChecked(step: Step, settings: SettingsComplete): void {
-    // Priority: 1) Item state, 2) Recipe objective state, 3) Recipe state
+  calculateChecked(step: Step, settings: Settings): void {
+    // Priority: 1) Item settings, 2) Recipe objective settings, 3) Recipe settings
     if (step.itemId != null) {
       step.checked = settings.checkedItemIds.has(step.itemId);
     } else if (step.recipeObjectiveId != null) {

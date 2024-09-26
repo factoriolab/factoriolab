@@ -20,24 +20,28 @@ import { AdjustedDataset, Dataset } from '~/models/dataset';
 import { EnergyType } from '~/models/enum/energy-type';
 import { Game } from '~/models/enum/game';
 import { ItemId } from '~/models/enum/item-id';
-import { isRecipeObjective, Objective } from '~/models/objective';
+import {
+  isRecipeObjective,
+  ObjectiveSettings,
+  ObjectiveState,
+} from '~/models/objective';
 import { Rational, rational } from '~/models/rational';
 import {
   areBeaconSettingsEqual,
   BeaconSettings,
 } from '~/models/settings/beacon-settings';
 import { CostSettings } from '~/models/settings/cost-settings';
-import { ItemSettings } from '~/models/settings/item-settings';
+import { ItemState } from '~/models/settings/item-settings';
 import {
   areModuleSettingsEqual,
   ModuleSettings,
 } from '~/models/settings/module-settings';
-import { RecipeSettings } from '~/models/settings/recipe-settings';
-import { SettingsComplete } from '~/models/settings/settings-complete';
+import { RecipeState } from '~/models/settings/recipe-settings';
+import { Settings } from '~/models/settings/settings';
 import { Entities } from '~/models/utils';
-import { ItemsState } from '~/store/items.service';
-import { MachinesState } from '~/store/machines.service';
-import { RecipesState } from '~/store/recipes.service';
+import { ItemsSettings } from '~/store/items.service';
+import { MachinesSettings } from '~/store/machines.service';
+import { RecipesSettings } from '~/store/recipes.service';
 
 export const RecipeUtility = {
   MIN_FACTOR: rational(1n, 5n),
@@ -124,9 +128,9 @@ export const RecipeUtility = {
   /** Determines default modules for a recipe/machine */
   defaultModules(
     options: SelectItem<string>[],
-    moduleRankIds: string[] | undefined,
+    moduleRankIds: string[],
     count: Rational | true | undefined,
-    machineValue?: ModuleSettings[] | undefined,
+    machineValue?: ModuleSettings[],
   ): ModuleSettings[] | undefined {
     if (count == null) return undefined;
 
@@ -137,7 +141,7 @@ export const RecipeUtility = {
 
     const id = this.bestMatch(
       options.map((o) => o.value),
-      coalesce(moduleRankIds, []),
+      moduleRankIds,
     );
     count = count === true ? rational.zero : count;
     return [{ id, count }];
@@ -145,9 +149,9 @@ export const RecipeUtility = {
 
   adjustRecipe(
     recipeId: string,
-    recipeSettings: RecipeSettings,
-    itemsState: Entities<ItemSettings>,
-    settings: SettingsComplete,
+    recipeSettings: RecipeState,
+    itemsState: Entities<ItemState>,
+    settings: Settings,
     data: Dataset,
   ): AdjustedRecipe {
     const recipe = spread(
@@ -502,7 +506,7 @@ export const RecipeUtility = {
   /** Adjust rocket launch objective recipes */
   adjustLaunchRecipeObjective(
     recipe: Recipe,
-    settings: Entities<RecipeSettings>,
+    settings: Entities<RecipeState>,
     data: AdjustedDataset,
   ): void {
     if (!recipe.part) return;
@@ -520,7 +524,7 @@ export const RecipeUtility = {
   /** Adjust rocket launch and rocket part recipes */
   adjustSiloRecipes(
     adjustedRecipe: Entities<AdjustedRecipe>,
-    settings: Entities<RecipeSettings>,
+    settings: Entities<RecipeState>,
     data: Dataset,
   ): Entities<AdjustedRecipe> {
     for (const partId of Object.keys(adjustedRecipe)) {
@@ -558,9 +562,9 @@ export const RecipeUtility = {
 
   adjustDataset(
     recipeIds: string[],
-    recipesState: Entities<RecipeSettings>,
-    itemsState: Entities<ItemSettings>,
-    settings: SettingsComplete,
+    recipesState: Entities<RecipeState>,
+    itemsState: Entities<ItemState>,
+    settings: Settings,
     data: Dataset,
   ): AdjustedDataset {
     const adjustedRecipe = this.adjustRecipes(
@@ -587,9 +591,9 @@ export const RecipeUtility = {
 
   adjustRecipes(
     recipeIds: string[],
-    recipesState: Entities<RecipeSettings>,
-    itemsState: Entities<ItemSettings>,
-    settings: SettingsComplete,
+    recipesState: Entities<RecipeState>,
+    itemsState: Entities<ItemState>,
+    settings: Settings,
     data: Dataset,
   ): Entities<AdjustedRecipe> {
     return this.adjustSiloRecipes(
@@ -611,7 +615,7 @@ export const RecipeUtility = {
   adjustCosts(
     recipeIds: string[],
     adjustedRecipe: Entities<Recipe>,
-    recipesState: Entities<RecipeSettings>,
+    recipesState: Entities<RecipeState>,
     costs: CostSettings,
     data: Dataset,
   ): void {
@@ -686,73 +690,65 @@ export const RecipeUtility = {
   },
 
   adjustObjective(
-    objective: Objective,
-    itemsState: ItemsState,
-    recipesState: RecipesState,
-    machinesState: MachinesState,
-    settings: SettingsComplete,
+    objective: ObjectiveState,
+    items: ItemsSettings,
+    recipes: RecipesSettings,
+    machines: MachinesSettings,
+    settings: Settings,
     data: AdjustedDataset,
-  ): Objective {
+  ): ObjectiveSettings {
     if (!isRecipeObjective(objective)) return objective;
 
-    objective = spread(objective);
-    const recipe = data.recipeEntities[objective.targetId];
+    const result: ObjectiveSettings = spread(objective);
+    const recipe = data.recipeEntities[result.targetId];
 
-    if (objective.machineId == null) {
-      objective.machineId = this.bestMatch(
+    if (result.machineId == null) {
+      result.machineId = this.bestMatch(
         recipe.producers,
-        coalesce(settings.machineRankIds, []),
+        settings.machineRankIds,
       );
     }
 
-    const machine = data.machineEntities[objective.machineId];
-    const def = machinesState[objective.machineId];
+    const machine = data.machineEntities[result.machineId];
+    const def = machines[result.machineId];
 
     if (recipe.isBurn) {
-      objective.fuelId = Object.keys(recipe.in)[0];
+      result.fuelId = Object.keys(recipe.in)[0];
     } else {
-      objective.fuelId = objective.fuelId ?? def?.fuelId;
+      result.fuelId = result.fuelId ?? def?.fuelId;
     }
 
-    objective.fuelOptions = def?.fuelOptions;
+    result.fuelOptions = def?.fuelOptions;
 
     if (machine != null && this.allowsModules(recipe, machine)) {
-      objective.moduleOptions = this.moduleOptions(
-        machine,
-        data,
-        objective.targetId,
-      );
-      objective.modules = this.hydrateModules(
-        objective.modules,
-        objective.moduleOptions,
-        coalesce(settings.moduleRankIds, []),
+      result.moduleOptions = this.moduleOptions(machine, data, result.targetId);
+      result.modules = this.hydrateModules(
+        result.modules,
+        result.moduleOptions,
+        settings.moduleRankIds,
         machine.modules,
         def.modules,
       );
-      objective.beacons = this.hydrateBeacons(objective.beacons, def.beacons);
+      result.beacons = this.hydrateBeacons(result.beacons, def.beacons);
     } else {
       // Machine doesn't support modules, remove any
-      delete objective.modules;
-      delete objective.beacons;
+      delete result.modules;
+      delete result.beacons;
     }
 
-    objective.overclock = objective.overclock ?? def.overclock;
+    result.overclock = result.overclock ?? def.overclock;
 
-    objective.recipe = RecipeUtility.adjustRecipe(
-      objective.targetId,
-      objective,
-      itemsState,
+    result.recipe = RecipeUtility.adjustRecipe(
+      result.targetId,
+      result,
+      items,
       settings,
       data,
     );
-    RecipeUtility.adjustLaunchRecipeObjective(
-      objective.recipe,
-      recipesState,
-      data,
-    );
-    finalizeRecipe(objective.recipe);
+    RecipeUtility.adjustLaunchRecipeObjective(result.recipe, recipes, data);
+    finalizeRecipe(result.recipe);
 
-    return objective;
+    return result;
   },
 
   dehydrateModules(

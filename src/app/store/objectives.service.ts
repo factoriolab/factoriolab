@@ -17,8 +17,8 @@ import { PowerUnit } from '~/models/enum/power-unit';
 import { StepDetailTab } from '~/models/enum/step-detail-tab';
 import {
   isRecipeObjective,
-  Objective,
   ObjectiveBase,
+  ObjectiveState,
 } from '~/models/objective';
 import { Rational, rational } from '~/models/rational';
 import { Step } from '~/models/step';
@@ -35,12 +35,12 @@ import { RecipesService } from './recipes.service';
 import { SettingsService } from './settings.service';
 import { EntityStore } from './store';
 
-export type ObjectivesState = Entities<Objective>;
+export type ObjectivesState = Entities<ObjectiveState>;
 
 @Injectable({
   providedIn: 'root',
 })
-export class ObjectivesService extends EntityStore<Objective> {
+export class ObjectivesService extends EntityStore<ObjectiveState> {
   itemsSvc = inject(ItemsService);
   machinesSvc = inject(MachinesService);
   preferencesSvc = inject(PreferencesService);
@@ -62,9 +62,9 @@ export class ObjectivesService extends EntityStore<Objective> {
 
   objectives = computed(() => {
     const objectives = this.baseObjectives();
-    const itemsState = this.itemsSvc.itemsState();
-    const recipesState = this.recipesSvc.recipesState();
-    const machinesState = this.machinesSvc.machinesState();
+    const itemsState = this.itemsSvc.settings();
+    const recipesState = this.recipesSvc.settings();
+    const machinesState = this.machinesSvc.settings();
     const settings = this.settingsSvc.settings();
     const data = this.recipesSvc.adjustedDataset();
 
@@ -82,7 +82,7 @@ export class ObjectivesService extends EntityStore<Objective> {
 
   normalizedObjectives = computed(() => {
     const objectives = this.objectives();
-    const itemsState = this.itemsSvc.itemsState();
+    const itemsState = this.itemsSvc.settings();
     const beltSpeed = this.settingsSvc.beltSpeed();
     const dispRateInfo = this.settingsSvc.displayRateInfo();
     const data = this.recipesSvc.adjustedDataset();
@@ -112,8 +112,8 @@ export class ObjectivesService extends EntityStore<Objective> {
   steps = computed(() => {
     const result = this.matrixResult();
     const objectives = this.objectives();
-    const itemsState = this.itemsSvc.itemsState();
-    const recipesState = this.recipesSvc.recipesState();
+    const itemsState = this.itemsSvc.settings();
+    const recipesState = this.recipesSvc.settings();
     const beltSpeed = this.settingsSvc.beltSpeed();
     const dispRateInfo = this.settingsSvc.displayRateInfo();
     const settings = this.settingsSvc.settings();
@@ -159,7 +159,7 @@ export class ObjectivesService extends EntityStore<Objective> {
 
   totals = computed(() => {
     const steps = this.steps();
-    const itemsState = this.itemsSvc.itemsState();
+    const itemsState = this.itemsSvc.settings();
     const data = this.recipesSvc.adjustedDataset();
 
     const belts: Entities<Rational> = {};
@@ -492,14 +492,14 @@ export class ObjectivesService extends EntityStore<Objective> {
         id,
         value,
         type: ObjectiveType.Output,
-      } as Objective;
+      } as ObjectiveState;
       return spread(state, { [id]: spread(base, objective) });
     });
   }
 
-  create(objective: Omit<Objective, 'id'>): void {
+  create(objective: Omit<ObjectiveState, 'id'>): void {
     const id = '1';
-    this.set({ [id]: spread(objective as Objective, { id }) });
+    this.set({ [id]: spread(objective as ObjectiveState, { id }) });
   }
 
   remove(id: string): void {
@@ -510,7 +510,7 @@ export class ObjectivesService extends EntityStore<Objective> {
     });
   }
 
-  setOrder(objectives: Objective[]): void {
+  setOrder(objectives: ObjectiveState[]): void {
     this.set(this.reduceObjectives(objectives));
   }
 
@@ -533,7 +533,7 @@ export class ObjectivesService extends EntityStore<Objective> {
     });
   }
 
-  private reduceObjectives(objectives: Objective[]): ObjectivesState {
+  private reduceObjectives(objectives: ObjectiveState[]): ObjectivesState {
     return objectives.reduce((e: ObjectivesState, o, i) => {
       const id = (i + 1).toString();
       e[id] = spread(o, { id });

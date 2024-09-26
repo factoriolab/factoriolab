@@ -64,8 +64,8 @@ export class ExportService {
   recipesSvc = inject(RecipesService);
   settingsSvc = inject(SettingsService);
 
-  itemsState = this.itemsSvc.itemsState;
-  recipesState = this.recipesSvc.recipesState;
+  itemsState = this.itemsSvc.settings;
+  recipesState = this.recipesSvc.settings;
   columnsState = this.settingsSvc.columnsState;
   data = this.recipesSvc.adjustedDataset;
 

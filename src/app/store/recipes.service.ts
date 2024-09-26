@@ -2,38 +2,39 @@ import { computed, inject, Injectable } from '@angular/core';
 
 import { spread } from '~/helpers';
 import { Dataset } from '~/models/dataset';
-import { RecipeSettings } from '~/models/settings/recipe-settings';
-import { SettingsComplete } from '~/models/settings/settings-complete';
+import { RecipeSettings, RecipeState } from '~/models/settings/recipe-settings';
+import { Settings } from '~/models/settings/settings';
 import { Entities } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { ItemsService } from './items.service';
-import { MachinesService, MachinesState } from './machines.service';
+import { MachinesService, MachinesSettings } from './machines.service';
 import { SettingsService } from './settings.service';
 import { EntityStore } from './store';
 
-export type RecipesState = Entities<RecipeSettings>;
+export type RecipesState = Entities<RecipeState>;
+export type RecipesSettings = Entities<RecipeSettings>;
 
 @Injectable({
   providedIn: 'root',
 })
-export class RecipesService extends EntityStore<RecipeSettings> {
+export class RecipesService extends EntityStore<RecipeState> {
   itemsSvc = inject(ItemsService);
   machinesSvc = inject(MachinesService);
   settingsSvc = inject(SettingsService);
 
-  recipesState = computed(() =>
-    RecipesService.computeRecipesState(
+  settings = computed(() =>
+    RecipesService.computeRecipesSettings(
       this.state(),
-      this.machinesSvc.machinesState(),
+      this.machinesSvc.settings(),
       this.settingsSvc.settings(),
       this.settingsSvc.dataset(),
     ),
   );
 
   adjustedDataset = computed(() => {
-    const recipesState = this.recipesState();
-    const itemsState = this.itemsSvc.itemsState();
+    const recipesState = this.settings();
+    const itemsState = this.itemsSvc.settings();
     const recipeIds = this.settingsSvc.availableRecipeIds();
     const settings = this.settingsSvc.settings();
     const data = this.settingsSvc.dataset();
@@ -52,13 +53,13 @@ export class RecipesService extends EntityStore<RecipeSettings> {
     return data.itemIds.filter((i) => data.itemRecipeIds[i].length);
   });
 
-  static computeRecipesState(
+  static computeRecipesSettings(
     state: RecipesState,
-    machinesState: MachinesState,
-    settings: SettingsComplete,
+    machinesState: MachinesSettings,
+    settings: Settings,
     data: Dataset,
-  ): RecipesState {
-    const value: Entities<RecipeSettings> = {};
+  ): RecipesSettings {
+    const value: RecipesSettings = {};
     for (const recipe of data.recipeIds.map((i) => data.recipeEntities[i])) {
       const s: RecipeSettings = spread(state[recipe.id]);
 

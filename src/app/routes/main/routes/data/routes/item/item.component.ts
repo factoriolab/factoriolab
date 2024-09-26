@@ -17,8 +17,8 @@ import { Category } from '~/models/data/category';
 import { Item } from '~/models/data/item';
 import { Game } from '~/models/enum/game';
 import { ItemId } from '~/models/enum/item-id';
-import { ItemSettings } from '~/models/settings/item-settings';
-import { MachineSettings } from '~/models/settings/machine-settings';
+import { ItemState } from '~/models/settings/item-settings';
+import { MachineState } from '~/models/settings/machine-settings';
 import { BonusPercentPipe } from '~/pipes/bonus-percent.pipe';
 import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { RoundPipe } from '~/pipes/round.pipe';
@@ -54,9 +54,9 @@ export class ItemComponent extends DetailComponent {
   machinesSvc = inject(MachinesService);
 
   itemsStateRaw = this.itemsSvc.state;
-  itemsState = this.itemsSvc.itemsState;
+  itemsState = this.itemsSvc.settings;
   machinesStateRaw = this.machinesSvc.state;
-  machinesState = this.machinesSvc.machinesState;
+  machinesState = this.machinesSvc.settings;
   settings = this.settingsSvc.settings;
 
   obj = computed<Item | undefined>(() => this.data().itemEntities[this.id()]);
@@ -85,10 +85,10 @@ export class ItemComponent extends DetailComponent {
     }
     return { producedBy, consumedBy, producible, unlocked };
   });
-  itemSettings = computed<ItemSettings | undefined>(
+  itemSettings = computed<ItemState | undefined>(
     () => this.itemsState()[this.id()],
   );
-  machineSettings = computed<MachineSettings | undefined>(
+  machineSettings = computed<MachineState | undefined>(
     () => this.machinesState()[this.id()],
   );
   Game = Game;

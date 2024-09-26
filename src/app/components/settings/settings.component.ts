@@ -29,7 +29,7 @@ import { first } from 'rxjs';
 import { DropdownBaseDirective } from '~/directives/dropdown-base.directive';
 import { DropdownTranslateDirective } from '~/directives/dropdown-translate.directive';
 import { NoDragDirective } from '~/directives/no-drag.directive';
-import { coalesce, compareSet } from '~/helpers';
+import { coalesce } from '~/helpers';
 import { displayRateOptions } from '~/models/enum/display-rate';
 import { Game, gameOptions } from '~/models/enum/game';
 import { inserterCapacityOptions } from '~/models/enum/inserter-capacity';
@@ -44,7 +44,6 @@ import { gameInfo } from '~/models/game-info';
 import { modOptions } from '~/models/options';
 import { rational } from '~/models/rational';
 import { BeaconSettings } from '~/models/settings/beacon-settings';
-import { MachineSettings } from '~/models/settings/machine-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { Entities } from '~/models/utils';
 import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
@@ -123,7 +122,6 @@ export class SettingsComponent implements OnInit {
   savedStates = this.settingsSvc.stateOptions;
   gameStates = this.settingsSvc.gameStates;
   settings = this.settingsSvc.settings;
-  modRecord = this.datasetsSvc.modEntities;
   options = this.settingsSvc.options;
   game = this.settingsSvc.game;
   researchedTechnologyIds = this.settingsSvc.allResearchedTechnologyIds;
@@ -131,7 +129,7 @@ export class SettingsComponent implements OnInit {
   presetOptions = this.settingsSvc.presetOptions;
   defaults = this.settingsSvc.defaults;
   preferences = this.preferencesSvc.state;
-  machinesState = this.machinesSvc.machinesState;
+  machinesState = this.machinesSvc.settings;
   machineIds = computed(() => [...this.settings().machineRankIds]);
 
   state = '';
@@ -263,28 +261,6 @@ export class SettingsComponent implements OnInit {
     void this.router.navigate([modId, 'list']);
   }
 
-  changeExcludedRecipes(value: Set<string>): void {
-    const def = new Set(coalesce(this.data().defaults?.excludedRecipeIds, []));
-    const excludedRecipeIds = compareSet(value, def);
-    this.settingsSvc.apply({ excludedRecipeIds });
-  }
-
-  changeFuel(
-    id: string,
-    value: string,
-    settings: MachineSettings,
-    fuelRankIds: string[],
-  ): void {
-    const def = RecipeUtility.bestMatch(
-      coalesce(
-        settings.fuelOptions?.map((o) => o.value),
-        [],
-      ),
-      fuelRankIds,
-    );
-    this.machinesSvc.updateEntityField(id, 'fuelId', value, def);
-  }
-
   changeModules(id: string, value: ModuleSettings[]): void {
     const modules = RecipeUtility.dehydrateModules(
       value,
@@ -312,21 +288,32 @@ export class SettingsComponent implements OnInit {
     this.settingsSvc.apply({ beaconReceivers });
   }
 
-  addMachine(id: string, def: string[] | undefined): void {
-    const ids = [...this.settings().machineRankIds];
-    if (!ids.includes(id)) ids.push(id);
-    this.settingsSvc.updateField('machineRankIds', ids, def);
+  addMachine(id: string): void {
+    const ids = [...this.settings().machineRankIds, id];
+    this.settingsSvc.updateField(
+      'machineRankIds',
+      ids,
+      this.settings().defaultMachineRankIds,
+    );
   }
 
-  setMachine(id: string, value: string, def: string[] | undefined): void {
-    const ids = [...this.settings().machineRankIds];
-    const i = ids.indexOf(id);
-    if (i !== -1) ids[i] = value;
-    this.settingsSvc.updateField('machineRankIds', ids, def);
+  setMachine(id: string, value: string): void {
+    const ids = this.settings().machineRankIds.map((i) =>
+      i === id ? value : i,
+    );
+    this.settingsSvc.updateField(
+      'machineRankIds',
+      ids,
+      this.settings().defaultMachineRankIds,
+    );
   }
 
-  removeMachine(id: string, def: string[] | undefined): void {
+  removeMachine(id: string): void {
     const ids = this.settings().machineRankIds.filter((i) => i !== id);
-    this.settingsSvc.updateField('machineRankIds', ids, def);
+    this.settingsSvc.updateField(
+      'machineRankIds',
+      ids,
+      this.settings().defaultMachineRankIds,
+    );
   }
 }

@@ -47,7 +47,7 @@ import {
 } from '~/models/settings/column-settings';
 import { CostSettings } from '~/models/settings/cost-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
-import { SettingsComplete } from '~/models/settings/settings-complete';
+import { Settings } from '~/models/settings/settings';
 import { Entities, Optional } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
@@ -630,18 +630,47 @@ export class SettingsService extends Store<SettingsState> {
     state: SettingsState,
     defaults: Optional<Defaults>,
     researchedTechnologyIds: Set<string>,
-  ): SettingsComplete {
-    return spread(state as SettingsComplete, {
-      beltId: state.beltId ?? defaults?.beltId,
-      pipeId: state.pipeId ?? defaults?.pipeId,
-      cargoWagonId: state.cargoWagonId ?? defaults?.cargoWagonId,
-      fluidWagonId: state.fluidWagonId ?? defaults?.fluidWagonId,
-      excludedRecipeIds: new Set(
-        state.excludedRecipeIds ?? defaults?.excludedRecipeIds,
-      ),
-      machineRankIds: state.machineRankIds ?? defaults?.machineRankIds ?? [],
-      fuelRankIds: state.fuelRankIds ?? defaults?.fuelRankIds ?? [],
-      moduleRankIds: state.moduleRankIds ?? defaults?.moduleRankIds ?? [],
+  ): Settings {
+    const defaultBeltId = defaults?.beltId;
+    const beltId = coalesce(state.beltId, defaultBeltId);
+    const defaultPipeId = defaults?.pipeId;
+    const pipeId = coalesce(state.pipeId, defaultPipeId);
+    const defaultCargoWagonId = defaults?.cargoWagonId;
+    const cargoWagonId = coalesce(state.cargoWagonId, defaultCargoWagonId);
+    const defaultFluidWagonId = defaults?.fluidWagonId;
+    const fluidWagonId = coalesce(state.fluidWagonId, defaultFluidWagonId);
+    const defaultExcludedRecipeIds = new Set(defaults?.excludedRecipeIds);
+    const excludedRecipeIds = coalesce(
+      state.excludedRecipeIds,
+      defaultExcludedRecipeIds,
+    );
+    const defaultMachineRankIds = coalesce(defaults?.machineRankIds, []);
+    const machineRankIds = coalesce(
+      state.machineRankIds,
+      defaultMachineRankIds,
+    );
+    const defaultFuelRankIds = coalesce(defaults?.fuelRankIds, []);
+    const fuelRankIds = coalesce(state.fuelRankIds, defaultFuelRankIds);
+    const defaultModuleRankIds = coalesce(defaults?.moduleRankIds, []);
+    const moduleRankIds = coalesce(state.moduleRankIds, defaultModuleRankIds);
+
+    return spread(state as Settings, {
+      beltId,
+      defaultBeltId,
+      pipeId,
+      defaultPipeId,
+      cargoWagonId,
+      defaultCargoWagonId,
+      fluidWagonId,
+      defaultFluidWagonId,
+      excludedRecipeIds,
+      defaultExcludedRecipeIds,
+      machineRankIds,
+      defaultMachineRankIds,
+      fuelRankIds,
+      defaultFuelRankIds,
+      moduleRankIds,
+      defaultModuleRankIds,
       beacons: RecipeUtility.hydrateBeacons(state.beacons, defaults?.beacons),
       overclock: state.overclock ?? defaults?.overclock,
       researchedTechnologyIds,

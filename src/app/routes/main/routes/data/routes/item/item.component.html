@@ -403,9 +403,9 @@
               <a
                 [routerLink]="
                   '/data/' +
-                  (data().beltIds.indexOf(beltId) !== -1
+                  (data().beltIds.includes(beltId)
                     ? 'belts'
-                    : data().pipeIds.indexOf(beltId) !== -1
+                    : data().pipeIds.includes(beltId)
                       ? 'pipes'
                       : 'items') +
                   '/' +

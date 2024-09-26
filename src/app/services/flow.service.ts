@@ -9,7 +9,7 @@ import { LinkValue } from '~/models/enum/link-value';
 import { FlowData } from '~/models/flow';
 import { Rational, rational } from '~/models/rational';
 import { ColumnsState } from '~/models/settings/column-settings';
-import { SettingsComplete } from '~/models/settings/settings-complete';
+import { Settings } from '~/models/settings/settings';
 import { Step } from '~/models/step';
 import { Entities } from '~/models/utils';
 
@@ -56,7 +56,7 @@ export class FlowService {
   buildGraph(
     steps: Step[],
     suffix: string,
-    settings: SettingsComplete,
+    settings: Settings,
     preferences: PreferencesState,
     data: AdjustedDataset,
     themeValues: ThemeValues,

@@ -1,50 +1,53 @@
 import { computed, inject, Injectable } from '@angular/core';
 
-import { spread } from '~/helpers';
+import { coalesce, spread } from '~/helpers';
 import { Dataset } from '~/models/dataset';
 import { EnergyType } from '~/models/enum/energy-type';
-import { MachineSettings } from '~/models/settings/machine-settings';
-import { SettingsComplete } from '~/models/settings/settings-complete';
+import {
+  MachineSettings,
+  MachineState,
+} from '~/models/settings/machine-settings';
+import { Settings } from '~/models/settings/settings';
 import { Entities } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { SettingsService } from './settings.service';
 import { EntityStore } from './store';
 
-export type MachinesState = Entities<MachineSettings>;
+export type MachinesState = Entities<MachineState>;
+export type MachinesSettings = Entities<MachineSettings>;
 
 @Injectable({
   providedIn: 'root',
 })
-export class MachinesService extends EntityStore<MachineSettings> {
+export class MachinesService extends EntityStore<MachineState> {
   settingsSvc = inject(SettingsService);
 
-  machinesState = computed(() =>
-    MachinesService.computeMachinesState(
+  settings = computed(() =>
+    MachinesService.computeMachinesSettings(
       this.state(),
       this.settingsSvc.settings(),
       this.settingsSvc.dataset(),
     ),
   );
 
-  static computeMachinesState(
+  static computeMachinesSettings(
     state: MachinesState,
-    settings: SettingsComplete,
+    settings: Settings,
     data: Dataset,
-  ): MachinesState {
-    const value: Entities<MachineSettings> = {};
+  ): MachinesSettings {
+    const value: MachinesSettings = {};
     for (const id of data.machineIds) {
-      const s: MachineSettings = spread(state[id]);
       const machine = data.machineEntities[id];
+      const s: MachineSettings = spread(state[id]);
 
       if (machine.type === EnergyType.Burner) {
         s.fuelOptions = RecipeUtility.fuelOptions(machine, data);
-        s.fuelId =
-          s.fuelId ??
-          RecipeUtility.bestMatch(
-            s.fuelOptions.map((o) => o.value),
-            settings.fuelRankIds,
-          );
+        s.defaultFuelId = RecipeUtility.bestMatch(
+          s.fuelOptions.map((o) => o.value),
+          settings.fuelRankIds,
+        );
+        s.fuelId = coalesce(s?.fuelId, s.defaultFuelId);
       }
 
       if (machine.modules) {
