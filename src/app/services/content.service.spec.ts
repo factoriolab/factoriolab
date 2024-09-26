@@ -1,3 +1,4 @@
+import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { Confirmation } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
@@ -17,10 +18,12 @@ describe('ConnectedOverlayScrollHandler', () => {
 
 describe('ContentService', () => {
   let service: ContentService;
+  let http: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(ContentService);
+    http = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -62,6 +65,15 @@ describe('ContentService', () => {
       const value = service.settingsXlHidden();
       service.toggleSettingsXl();
       expect(service.settingsXlHidden()).toEqual(!value);
+    });
+  });
+
+  describe('version$', () => {
+    it('should return a version string to use in the app', () => {
+      let version: string | undefined;
+      service.version$.subscribe((v) => (version = v));
+      http.expectOne('assets/release.json').flush({ version: '0.0.0' });
+      expect(version).toEqual('FactorioLab 0.0.0 (test)');
     });
   });
 });
