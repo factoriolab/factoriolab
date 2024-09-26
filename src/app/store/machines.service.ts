@@ -5,11 +5,11 @@ import { Dataset } from '~/models/dataset';
 import { EnergyType } from '~/models/enum/energy-type';
 import { MachineSettings } from '~/models/settings/machine-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
-import { EntityStore } from '~/models/store';
 import { Entities } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { SettingsService } from './settings.service';
+import { EntityStore } from './store';
 
 export type MachinesState = Entities<MachineSettings>;
 

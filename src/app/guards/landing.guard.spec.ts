@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 
-import { PreferencesService } from '~/services/preferences.service';
 import { RouterService } from '~/services/router.service';
+import { PreferencesService } from '~/store/preferences.service';
 import { Mocks, TestModule } from '~/tests';
 
 import { canActivateLanding } from './landing.guard';

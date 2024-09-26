@@ -49,7 +49,7 @@ import { TranslatePipe } from '~/pipes/translate.pipe';
 import { DisplayService } from '~/services/display.service';
 import { ExportService } from '~/services/export.service';
 import { FlowService } from '~/services/flow.service';
-import { PreferencesService } from '~/services/preferences.service';
+import { PreferencesService } from '~/store/preferences.service';
 
 export const SVG_ID = 'lab-flow-svg';
 const NODE_WIDTH = 32;

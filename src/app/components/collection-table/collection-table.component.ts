@@ -20,7 +20,7 @@ import { IdType } from '~/models/enum/id-type';
 import { Entities } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { SettingsService } from '~/services/settings.service';
+import { SettingsService } from '~/store/settings.service';
 
 type Entity = Category | Item | RecipeJson;
 

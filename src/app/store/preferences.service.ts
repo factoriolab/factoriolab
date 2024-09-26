@@ -13,12 +13,12 @@ import {
   initialColumnsState,
 } from '~/models/settings/column-settings';
 import { FlowSettings } from '~/models/settings/flow-settings';
-import { Store } from '~/models/store';
 import { storedSignal, storeValue } from '~/models/stored-signal';
 import { Entities } from '~/models/utils';
 
-import { AnalyticsService } from './analytics.service';
-import { TranslateService } from './translate.service';
+import { AnalyticsService } from '../services/analytics.service';
+import { TranslateService } from '../services/translate.service';
+import { Store } from './store';
 
 export interface PreferencesState {
   states: Record<Game, Entities>;

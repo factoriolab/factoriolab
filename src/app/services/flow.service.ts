@@ -13,10 +13,13 @@ import { SettingsComplete } from '~/models/settings/settings-complete';
 import { Step } from '~/models/step';
 import { Entities } from '~/models/utils';
 
-import { ObjectivesService } from './objectives.service';
-import { PreferencesService, PreferencesState } from './preferences.service';
-import { RecipesService } from './recipes.service';
-import { SettingsService } from './settings.service';
+import { ObjectivesService } from '../store/objectives.service';
+import {
+  PreferencesService,
+  PreferencesState,
+} from '../store/preferences.service';
+import { RecipesService } from '../store/recipes.service';
+import { SettingsService } from '../store/settings.service';
 import { ThemeService, ThemeValues } from './theme.service';
 import { TranslateService } from './translate.service';
 

@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { SettingsService } from '~/services/settings.service';
+import { SettingsService } from '~/store/settings.service';
 
 @Component({
   selector: 'lab-data',

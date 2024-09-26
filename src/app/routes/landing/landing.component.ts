@@ -19,11 +19,11 @@ import { rational } from '~/models/rational';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
-import { ObjectivesService } from '~/services/objectives.service';
-import { PreferencesService } from '~/services/preferences.service';
-import { RecipesService } from '~/services/recipes.service';
 import { RouterService } from '~/services/router.service';
-import { SettingsService } from '~/services/settings.service';
+import { ObjectivesService } from '~/store/objectives.service';
+import { PreferencesService } from '~/store/preferences.service';
+import { RecipesService } from '~/store/recipes.service';
+import { SettingsService } from '~/store/settings.service';
 
 @Component({
   selector: 'lab-landing',

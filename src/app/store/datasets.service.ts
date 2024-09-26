@@ -7,8 +7,9 @@ import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
 import { Language } from '~/models/enum/language';
 import { Mod } from '~/models/mod';
-import { EntityStore } from '~/models/store';
 import { Entities } from '~/models/utils';
+
+import { EntityStore } from './store';
 
 export interface JsonData {
   data?: ModData;

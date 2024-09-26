@@ -35,9 +35,9 @@ import {
 import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
 import { Entities } from '~/models/utils';
-import { ItemsState } from '~/services/items.service';
-import { MachinesState } from '~/services/machines.service';
-import { RecipesState } from '~/services/recipes.service';
+import { ItemsState } from '~/store/items.service';
+import { MachinesState } from '~/store/machines.service';
+import { RecipesState } from '~/store/recipes.service';
 
 export const RecipeUtility = {
   MIN_FACTOR: rational(1n, 5n),

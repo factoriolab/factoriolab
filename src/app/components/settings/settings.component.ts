@@ -51,12 +51,12 @@ import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
-import { DatasetsService } from '~/services/datasets.service';
-import { MachinesService } from '~/services/machines.service';
-import { PreferencesService } from '~/services/preferences.service';
 import { RouterService } from '~/services/router.service';
-import { SettingsService } from '~/services/settings.service';
 import { TranslateService } from '~/services/translate.service';
+import { DatasetsService } from '~/store/datasets.service';
+import { MachinesService } from '~/store/machines.service';
+import { PreferencesService } from '~/store/preferences.service';
+import { SettingsService } from '~/store/settings.service';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { BeaconsOverlayComponent } from '../beacons-overlay/beacons-overlay.component';

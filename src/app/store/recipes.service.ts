@@ -4,13 +4,13 @@ import { spread } from '~/helpers';
 import { Dataset } from '~/models/dataset';
 import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
-import { EntityStore } from '~/models/store';
 import { Entities } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { ItemsService } from './items.service';
 import { MachinesService, MachinesState } from './machines.service';
 import { SettingsService } from './settings.service';
+import { EntityStore } from './store';
 
 export type RecipesState = Entities<RecipeSettings>;
 

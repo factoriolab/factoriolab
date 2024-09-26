@@ -11,8 +11,8 @@ import {
   initialPreferencesState,
   PreferencesService,
   PreferencesState,
-} from './preferences.service';
-import { SettingsService } from './settings.service';
+} from '../store/preferences.service';
+import { SettingsService } from '../store/settings.service';
 
 const LAB_ICON_STYLE_ID = 'lab-icon-css';
 const LAB_THEME_STYLE_ID = 'lab-theme-css';

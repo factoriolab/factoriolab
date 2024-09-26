@@ -17,9 +17,9 @@ import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { rational } from '~/models/rational';
 import { IconClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { ObjectivesService } from '~/services/objectives.service';
-import { RecipesService } from '~/services/recipes.service';
-import { SettingsService } from '~/services/settings.service';
+import { ObjectivesService } from '~/store/objectives.service';
+import { RecipesService } from '~/store/recipes.service';
+import { SettingsService } from '~/store/settings.service';
 
 export type WizardState = 'type' | 'item' | 'recipe';
 

@@ -7,13 +7,13 @@ import { provideRouter } from '@angular/router';
 import { DEFAULT_MOD } from '~/models/constants';
 import { Language } from '~/models/enum/language';
 import { Preset } from '~/models/enum/preset';
-import { DatasetsService } from '~/services/datasets.service';
-import { SettingsService } from '~/services/settings.service';
 import {
   DEFAULT_LANGUAGE,
   TranslateService,
 } from '~/services/translate.service';
 import { TestTranslateService } from '~/services/translate.service.spec';
+import { DatasetsService } from '~/store/datasets.service';
+import { SettingsService } from '~/store/settings.service';
 
 import { Mocks } from '.';
 

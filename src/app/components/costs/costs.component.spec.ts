@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { rational } from '~/models/rational';
-import { initialSettingsState } from '~/services/settings.service';
+import { initialSettingsState } from '~/store/settings.service';
 import { Mocks, TestModule } from '~/tests';
 
 import { CostsComponent } from './costs.component';

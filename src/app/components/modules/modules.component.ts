@@ -20,7 +20,7 @@ import { Rational, rational } from '~/models/rational';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
-import { SettingsService } from '~/services/settings.service';
+import { SettingsService } from '~/store/settings.service';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { InputNumberComponent } from '../input-number/input-number.component';

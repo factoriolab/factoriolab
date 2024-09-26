@@ -22,10 +22,10 @@ import { isRecipeObjective } from '~/models/objective';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
-import { ObjectivesService } from '~/services/objectives.service';
-import { PreferencesService } from '~/services/preferences.service';
-import { SettingsService } from '~/services/settings.service';
 import { TranslateService } from '~/services/translate.service';
+import { ObjectivesService } from '~/store/objectives.service';
+import { PreferencesService } from '~/store/preferences.service';
+import { SettingsService } from '~/store/settings.service';
 
 interface MenuLink {
   label: string;

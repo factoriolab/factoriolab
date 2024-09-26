@@ -2,8 +2,8 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, Router } from '@angular/router';
 
 import { DEFAULT_MOD } from '~/models/constants';
-import { PreferencesService } from '~/services/preferences.service';
 import { RouterService } from '~/services/router.service';
+import { PreferencesService } from '~/store/preferences.service';
 
 export const canActivateLanding: CanActivateFn = (
   route: ActivatedRouteSnapshot,

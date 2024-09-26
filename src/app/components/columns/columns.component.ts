@@ -20,8 +20,8 @@ import { TranslatePipe } from '~/pipes/translate.pipe';
 import {
   initialPreferencesState,
   PreferencesService,
-} from '~/services/preferences.service';
-import { SettingsService } from '~/services/settings.service';
+} from '~/store/preferences.service';
+import { SettingsService } from '~/store/settings.service';
 
 import { DialogComponent } from '../modal';
 

@@ -14,10 +14,9 @@ import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
 import { Language } from '~/models/enum/language';
 import { Entities } from '~/models/utils';
-
-import { DatasetsService } from './datasets.service';
-import { PreferencesService } from './preferences.service';
-import { SettingsService } from './settings.service';
+import { DatasetsService } from '~/store/datasets.service';
+import { PreferencesService } from '~/store/preferences.service';
+import { SettingsService } from '~/store/settings.service';
 
 @Injectable({
   providedIn: 'root',

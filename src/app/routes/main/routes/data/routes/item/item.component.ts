@@ -24,8 +24,8 @@ import { IconClassPipe, IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { RoundPipe } from '~/pipes/round.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { UsagePipe } from '~/pipes/usage.pipe';
-import { ItemsService } from '~/services/items.service';
-import { MachinesService } from '~/services/machines.service';
+import { ItemsService } from '~/store/items.service';
+import { MachinesService } from '~/store/machines.service';
 
 import { DetailComponent } from '../../models/detail.component';
 

@@ -4,8 +4,8 @@ import { spread } from '~/helpers';
 import { LabParams } from '~/models/lab-params';
 import { Step } from '~/models/step';
 import { Zip } from '~/models/zip';
-import { RecipesService } from '~/services/recipes.service';
 import { RouterService } from '~/services/router.service';
+import { RecipesService } from '~/store/recipes.service';
 
 @Pipe({ name: 'stepHref', standalone: true })
 export class StepHrefPipe implements PipeTransform {

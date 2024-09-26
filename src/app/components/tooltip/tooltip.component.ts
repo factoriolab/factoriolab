@@ -12,8 +12,8 @@ import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { RoundPipe } from '~/pipes/round.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { UsagePipe } from '~/pipes/usage.pipe';
-import { RecipesService } from '~/services/recipes.service';
-import { SettingsService } from '~/services/settings.service';
+import { RecipesService } from '~/store/recipes.service';
+import { SettingsService } from '~/store/settings.service';
 
 type TooltipType =
   | 'item'

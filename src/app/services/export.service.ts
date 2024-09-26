@@ -7,9 +7,9 @@ import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
-import { ItemsService } from './items.service';
-import { RecipesService } from './recipes.service';
-import { SettingsService } from './settings.service';
+import { ItemsService } from '../store/items.service';
+import { RecipesService } from '../store/recipes.service';
+import { SettingsService } from '../store/settings.service';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
 const CSV_EXTENSION = '.csv';

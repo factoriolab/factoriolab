@@ -1,9 +1,8 @@
 import { computed, Signal, signal } from '@angular/core';
 
 import { compareRank, compareSet, prune, spread } from '~/helpers';
-
-import { Rational } from './rational';
-import { Entities, Optional, RecursivePartial } from './utils';
+import { Rational } from '~/models/rational';
+import { Entities, Optional, RecursivePartial } from '~/models/utils';
 
 export abstract class Store<T extends object> {
   protected _state = signal(this.initial);

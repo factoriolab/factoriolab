@@ -23,7 +23,6 @@ import {
 import { Rational, rational } from '~/models/rational';
 import { Step } from '~/models/step';
 import { StepDetail, StepOutput } from '~/models/step-detail';
-import { EntityStore } from '~/models/store';
 import { Entities } from '~/models/utils';
 import { RateUtility } from '~/utilities/rate.utility';
 import { RecipeUtility } from '~/utilities/recipe.utility';
@@ -34,6 +33,7 @@ import { MachinesService } from './machines.service';
 import { PreferencesService } from './preferences.service';
 import { RecipesService } from './recipes.service';
 import { SettingsService } from './settings.service';
+import { EntityStore } from './store';
 
 export type ObjectivesState = Entities<Objective>;
 

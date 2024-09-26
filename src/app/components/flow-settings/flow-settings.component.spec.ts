@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FlowDiagram } from '~/models/enum/flow-diagram';
-import { initialPreferencesState } from '~/services/preferences.service';
+import { initialPreferencesState } from '~/store/preferences.service';
 import { Mocks, TestModule } from '~/tests';
 
 import { FlowSettingsComponent } from './flow-settings.component';

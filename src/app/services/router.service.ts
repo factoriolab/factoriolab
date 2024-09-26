@@ -40,19 +40,22 @@ import {
   ZipRecipeSettingsInfo,
 } from '~/models/zip';
 
-import { CompressionService } from './compression.service';
-import { DataService } from './data.service';
-import { ItemsService, ItemsState } from './items.service';
-import { MachinesService, MachinesState } from './machines.service';
-import { MigrationService } from './migration.service';
-import { ObjectivesService, ObjectivesState } from './objectives.service';
-import { RecipesService, RecipesState } from './recipes.service';
+import { ItemsService, ItemsState } from '../store/items.service';
+import { MachinesService, MachinesState } from '../store/machines.service';
+import {
+  ObjectivesService,
+  ObjectivesState,
+} from '../store/objectives.service';
+import { RecipesService, RecipesState } from '../store/recipes.service';
 import {
   initialSettingsState,
   PartialSettingsState,
   SettingsService,
   SettingsState,
-} from './settings.service';
+} from '../store/settings.service';
+import { CompressionService } from './compression.service';
+import { DataService } from './data.service';
+import { MigrationService } from './migration.service';
 import { ZipService } from './zip.service';
 
 interface ZipState {

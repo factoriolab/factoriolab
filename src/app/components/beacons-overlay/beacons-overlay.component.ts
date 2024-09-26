@@ -21,7 +21,7 @@ import { ModuleSettings } from '~/models/settings/module-settings';
 import { Optional } from '~/models/utils';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
-import { SettingsService } from '~/services/settings.service';
+import { SettingsService } from '~/store/settings.service';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { OverlayComponent } from '../modal';

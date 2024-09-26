@@ -48,13 +48,13 @@ import {
 import { CostSettings } from '~/models/settings/cost-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
-import { Store } from '~/models/store';
 import { Entities, Optional } from '~/models/utils';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
-import { AnalyticsService } from './analytics.service';
+import { AnalyticsService } from '../services/analytics.service';
 import { DatasetsService } from './datasets.service';
 import { PreferencesService } from './preferences.service';
+import { Store } from './store';
 
 export interface SettingsState {
   modId?: string;

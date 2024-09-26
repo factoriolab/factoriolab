@@ -15,13 +15,13 @@ import { LabParams } from '~/models/lab-params';
 import { Objective } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Zip, ZipData, ZipMachineSettings } from '~/models/zip';
+import { ItemsState } from '~/store/items.service';
+import { ObjectivesState } from '~/store/objectives.service';
+import { RecipesState } from '~/store/recipes.service';
+import { initialSettingsState, SettingsState } from '~/store/settings.service';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
-import { ItemsState } from './items.service';
-import { ObjectivesState } from './objectives.service';
-import { RecipesState } from './recipes.service';
 import { PartialState, RouterService } from './router.service';
-import { initialSettingsState, SettingsState } from './settings.service';
 
 const mockObjective: Objective = {
   id: '1',

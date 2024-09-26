@@ -34,16 +34,16 @@ import { ModuleSettings } from '~/models/settings/module-settings';
 import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { Step } from '~/models/step';
 import { Entities } from '~/models/utils';
-import { ItemsService } from '~/services/items.service';
-import { MachinesService } from '~/services/machines.service';
-import { ObjectivesState } from '~/services/objectives.service';
-import { PreferencesState } from '~/services/preferences.service';
-import { RecipesService } from '~/services/recipes.service';
+import { ThemeValues } from '~/services/theme.service';
+import { ItemsService } from '~/store/items.service';
+import { MachinesService } from '~/store/machines.service';
+import { ObjectivesState } from '~/store/objectives.service';
+import { PreferencesState } from '~/store/preferences.service';
+import { RecipesService } from '~/store/recipes.service';
 import {
   initialSettingsState,
   SettingsService,
-} from '~/services/settings.service';
-import { ThemeValues } from '~/services/theme.service';
+} from '~/store/settings.service';
 import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { ItemId } from './item-id';

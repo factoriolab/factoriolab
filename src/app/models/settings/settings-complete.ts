@@ -1,4 +1,4 @@
-import { SettingsState } from '~/services/settings.service';
+import { SettingsState } from '~/store/settings.service';
 
 export interface SettingsComplete
   extends Omit<SettingsState, 'excludedRecipeIds' | 'researchedTechnologyIds'> {

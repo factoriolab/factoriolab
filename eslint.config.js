@@ -72,6 +72,11 @@ module.exports = tseslint.config(
   },
   {
     files: ['**/*.spec.ts', 'src/app/tests/**/*.ts'],
+    languageOptions: {
+      parserOptions: {
+        project: 'tsconfig.spec.json',
+      },
+    },
     rules: {
       '@typescript-eslint/dot-notation': [
         'error',

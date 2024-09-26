@@ -5,10 +5,10 @@ import { Dataset } from '~/models/dataset';
 import { ItemId } from '~/models/enum/item-id';
 import { ItemSettings } from '~/models/settings/item-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
-import { EntityStore } from '~/models/store';
 import { Entities } from '~/models/utils';
 
 import { SettingsService } from './settings.service';
+import { EntityStore } from './store';
 
 export type ItemsState = Entities<ItemSettings>;
 

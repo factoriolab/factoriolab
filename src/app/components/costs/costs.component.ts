@@ -13,7 +13,7 @@ import { ContentService } from '~/services/content.service';
 import {
   initialSettingsState,
   SettingsService,
-} from '~/services/settings.service';
+} from '~/store/settings.service';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { DialogComponent } from '../modal';

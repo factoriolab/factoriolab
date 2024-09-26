@@ -18,7 +18,7 @@ import { RecipeSettings } from '~/models/settings/recipe-settings';
 import { SettingsComplete } from '~/models/settings/settings-complete';
 import { Step } from '~/models/step';
 import { Entities, Optional } from '~/models/utils';
-import { ItemsState } from '~/services/items.service';
+import { ItemsState } from '~/store/items.service';
 
 const ROOT_ID = '';
 

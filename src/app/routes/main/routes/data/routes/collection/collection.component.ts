@@ -14,9 +14,9 @@ import { map, switchMap } from 'rxjs';
 import { CollectionTableComponent } from '~/components/collection-table/collection-table.component';
 import { Dataset } from '~/models/dataset';
 import { IdType } from '~/models/enum/id-type';
-import { RecipesService } from '~/services/recipes.service';
-import { SettingsService } from '~/services/settings.service';
 import { TranslateService } from '~/services/translate.service';
+import { RecipesService } from '~/store/recipes.service';
+import { SettingsService } from '~/store/settings.service';
 
 @Component({
   selector: 'lab-collection',

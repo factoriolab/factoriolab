@@ -1,4 +1,5 @@
-import { rational } from './rational';
+import { rational } from '~/models/rational';
+
 import { EntityStore, Store } from './store';
 
 class TestStore extends Store<{

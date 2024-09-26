@@ -34,13 +34,13 @@ import { SettingsComplete } from '~/models/settings/settings-complete';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
-import { ItemsService } from '~/services/items.service';
-import { ObjectivesService } from '~/services/objectives.service';
-import { PreferencesService } from '~/services/preferences.service';
-import { RecipesService } from '~/services/recipes.service';
-import { SettingsService } from '~/services/settings.service';
 import { TrackService } from '~/services/track.service';
 import { TranslateService } from '~/services/translate.service';
+import { ItemsService } from '~/store/items.service';
+import { ObjectivesService } from '~/store/objectives.service';
+import { PreferencesService } from '~/store/preferences.service';
+import { RecipesService } from '~/store/recipes.service';
+import { SettingsService } from '~/store/settings.service';
 import { RateUtility } from '~/utilities/rate.utility';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
