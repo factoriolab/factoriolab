@@ -14,6 +14,7 @@ import { Step } from '~/models/step';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 import { RateUtility } from '~/utilities/rate.utility';
 import { RecipeUtility } from '~/utilities/recipe.utility';
+import { SimplexUtility } from '~/utilities/simplex.utility';
 
 import { ObjectivesService } from './objectives.service';
 
@@ -62,12 +63,12 @@ describe('ObjectivesService', () => {
 
   describe('matrixResult', () => {
     it('should calculate using utility method', () => {
-      spyOn(service.simplexSvc, 'solve').and.returnValue({
+      spyOn(SimplexUtility, 'solve').and.returnValue({
         steps: [],
         resultType: SimplexResultType.Skipped,
       });
       service.matrixResult();
-      expect(service.simplexSvc.solve).toHaveBeenCalled();
+      expect(SimplexUtility.solve).toHaveBeenCalled();
     });
   });
 
