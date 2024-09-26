@@ -15,4 +15,5 @@ export interface MachineSettings extends MachineState {
   defaultFuelId?: string;
   fuelOptions?: SelectItem<string>[];
   moduleOptions?: SelectItem<string>[];
+  defaultOverclock?: Rational;
 }

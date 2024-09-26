@@ -577,7 +577,19 @@
                     "
                     [ngModel]="machineId"
                     (onChange)="
-                      changeRecipeField(step, $event.value, 'machine')
+                      step.recipeObjectiveId
+                        ? objectivesSvc.updateEntityField(
+                            step.recipeObjectiveId,
+                            'machineId',
+                            $event.value,
+                            step.recipeSettings.defaultMachineId
+                          )
+                        : recipesSvc.updateEntityField(
+                            step.recipeId,
+                            'machineId',
+                            $event.value,
+                            step.recipeSettings.defaultMachineId
+                          )
                     "
                   >
                     <ng-template pTemplate="selectedItem" let-item>
@@ -625,11 +637,19 @@
                     [pTooltip]="'steps.overclockTooltip' | translate"
                     [ngModel]="step.recipeSettings.overclock"
                     (onBlur)="
-                      changeRecipeField(
-                        step,
-                        overclockInput.value ?? 100,
-                        'overclock'
-                      )
+                      step.recipeObjectiveId
+                        ? objectivesSvc.updateEntityField(
+                            step.recipeObjectiveId,
+                            'overclock',
+                            rational(overclockInput.value ?? 100),
+                            step.recipeSettings.defaultOverclock
+                          )
+                        : recipesSvc.updateEntityField(
+                            step.recipeId,
+                            'overclock',
+                            rational(overclockInput.value ?? 100),
+                            step.recipeSettings.defaultOverclock
+                          )
                     "
                   >
                   </p-inputNumber>
@@ -653,7 +673,21 @@
                       [pTooltip]="tooltip"
                       [ngModel]="fuelId"
                       [options]="step.recipeSettings.fuelOptions ?? []"
-                      (onChange)="changeRecipeField(step, $event.value, 'fuel')"
+                      (onChange)="
+                        step.recipeObjectiveId
+                          ? objectivesSvc.updateEntityField(
+                              step.recipeObjectiveId,
+                              'fuelId',
+                              $event.value,
+                              step.recipeSettings.fuelId
+                            )
+                          : recipesSvc.updateEntityField(
+                              step.recipeId,
+                              'fuelId',
+                              $event.value,
+                              step.recipeSettings.defaultFuelId
+                            )
+                      "
                     >
                       <ng-template pTemplate="selectedItem" let-item>
                         <div class="d-flex">
@@ -693,11 +727,11 @@
                         [ngModel]="modules[0].id"
                         [options]="step.recipeSettings.moduleOptions ?? []"
                         (onChange)="
-                          changeRecipeField(
-                            step,
-                            [{ id: $event.value, count: rational.one }],
-                            'modules'
-                          )
+                          changeModulesBeacons(step, {
+                            modules: [
+                              { id: $event.value, count: rational.one },
+                            ],
+                          })
                         "
                       >
                         <ng-template pTemplate="selectedItem" let-item>
@@ -752,7 +786,9 @@
                       </button>
                       <lab-modules-overlay
                         #modulePicker
-                        (setValue)="changeRecipeField(step, $event, 'modules')"
+                        (setValue)="
+                          changeModulesBeacons(step, { modules: $event })
+                        "
                       ></lab-modules-overlay>
                       <ng-template #tooltip>
                         @for (module of modules; track module.id) {
@@ -814,7 +850,7 @@
               </button>
               <lab-beacons-overlay
                 #beaconsOverlay
-                (setValue)="changeRecipeField(step, $event, 'beacons')"
+                (setValue)="changeModulesBeacons(step, { beacons: $event })"
               ></lab-beacons-overlay>
               <ng-template #tooltip>
                 @if (step.recipeSettings.beacons?.[0]?.id; as beaconId) {

@@ -48,6 +48,9 @@ export class MachinesService extends EntityStore<MachineState> {
           settings.fuelRankIds,
         );
         s.fuelId = coalesce(s?.fuelId, s.defaultFuelId);
+      } else {
+        // Machine doesn't support fuel, remove any
+        delete s.fuelId;
       }
 
       if (machine.modules) {
@@ -59,9 +62,14 @@ export class MachinesService extends EntityStore<MachineState> {
           machine.modules,
         );
         s.beacons = RecipeUtility.hydrateBeacons(s.beacons, settings.beacons);
+      } else {
+        // Machine doesn't support modules, remove any
+        delete s.modules;
+        delete s.beacons;
       }
 
-      s.overclock = s.overclock ?? settings.overclock;
+      s.defaultOverclock = settings.overclock;
+      s.overclock = coalesce(s.overclock, s.defaultOverclock);
 
       value[id] = s;
     }

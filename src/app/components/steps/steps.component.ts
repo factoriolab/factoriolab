@@ -379,69 +379,39 @@ export class StepsComponent implements OnInit, AfterViewInit {
     );
   }
 
-  changeRecipeField(
+  changeModulesBeacons(
     step: Step,
-    event: string | number | ModuleSettings[] | BeaconSettings[],
-    field: 'machine' | 'fuel' | 'modules' | 'beacons' | 'overclock',
+    state: { modules?: ModuleSettings[]; beacons?: BeaconSettings[] },
   ): void {
-    if (step.recipeId == null) return;
-
     const settings = step.recipeSettings;
-    if (settings?.machineId == null) return;
+    if (step.recipeId == null || settings?.machineId == null) return;
 
     const id = step.recipeObjectiveId ?? step.recipeId;
     const update =
       step.recipeObjectiveId != null
-        ? this.objectivesSvc.updateEntityField.bind(this)
-        : this.recipesSvc.updateEntityField.bind(this);
-    const machinesState = this.machinesState();
-    const settingsState = this.settings();
-    const machineSettings = machinesState[settings.machineId];
-    switch (field) {
-      case 'machine': {
-        if (typeof event !== 'string') return;
-        const data = this.data();
-        const def = RecipeUtility.bestMatch(
-          data.recipeEntities[step.recipeId].producers,
-          settingsState.machineRankIds,
-        );
-        update(id, 'machineId', event, def);
-        break;
-      }
-      case 'fuel': {
-        if (typeof event !== 'string') return;
-        update(id, 'fuelId', event, machineSettings.fuelId);
-        break;
-      }
-      case 'modules': {
-        if (!Array.isArray(event)) return;
-        event = event as ModuleSettings[];
-        const machine = this.data().machineEntities[settings.machineId];
-        const value = RecipeUtility.dehydrateModules(
-          event,
-          coalesce(settings.moduleOptions, []),
-          settingsState.moduleRankIds,
-          machine.modules,
-          machineSettings.modules,
-        );
-        update(id, 'modules', value);
-        break;
-      }
-      case 'beacons': {
-        if (!Array.isArray(event)) return;
-        event = event as BeaconSettings[];
-        const def = machineSettings.beacons;
-        const value = RecipeUtility.dehydrateBeacons(event, def);
-        update(id, 'beacons', value);
-        break;
-      }
-      case 'overclock': {
-        if (typeof event !== 'number') return;
-        const def = machineSettings.overclock;
-        update(id, 'overclock', rational(event), def);
-        break;
-      }
+        ? this.objectivesSvc.updateEntity.bind(this)
+        : this.recipesSvc.updateEntity.bind(this);
+
+    const machine = this.data().machineEntities[settings.machineId];
+    const machineSettings = this.machinesState()[settings.machineId];
+    if (state.modules) {
+      state.modules = RecipeUtility.dehydrateModules(
+        state.modules,
+        coalesce(settings.moduleOptions, []),
+        this.settings().moduleRankIds,
+        machine.modules,
+        machineSettings.modules,
+      );
     }
+
+    if (state.beacons) {
+      state.beacons = RecipeUtility.dehydrateBeacons(
+        state.beacons,
+        machineSettings.beacons,
+      );
+    }
+
+    update(id, state);
   }
 
   changeStepChecked(step: Step, value: boolean): void {

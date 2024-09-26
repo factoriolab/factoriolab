@@ -39,7 +39,7 @@ import { ItemsService } from '~/store/items.service';
 import { MachinesService } from '~/store/machines.service';
 import { ObjectivesState } from '~/store/objectives.service';
 import { PreferencesState } from '~/store/preferences.service';
-import { RecipesService } from '~/store/recipes.service';
+import { RecipesService, RecipesSettings } from '~/store/recipes.service';
 import {
   initialSettingsState,
   SettingsService,
@@ -228,7 +228,7 @@ export const machinesStateInitial = MachinesService.computeMachinesSettings(
   settingsStateInitial,
   dataset,
 );
-export function getRecipesState(): Entities<RecipeState> {
+export function getRecipesState(): RecipesSettings {
   return RecipesService.computeRecipesSettings(
     {},
     machinesStateInitial,

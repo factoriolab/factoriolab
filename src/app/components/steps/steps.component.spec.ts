@@ -295,89 +295,28 @@ describe('StepsComponent', () => {
     };
 
     beforeEach(() => {
-      spyOn(component.recipesSvc, 'updateEntityField');
-      spyOn(component.objectivesSvc, 'updateEntityField');
+      spyOn(component.recipesSvc, 'updateEntity');
+      spyOn(component.objectivesSvc, 'updateEntity');
     });
 
     it('should skip a step with no recipe', () => {
-      component.changeRecipeField({ id: '0' }, '1', 'machine');
-      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
+      component.changeModulesBeacons({ id: '0' }, {});
+      expect(component.recipesSvc.updateEntity).not.toHaveBeenCalled();
     });
 
     it('should skip a step with no machine', () => {
-      component.changeRecipeField(
+      component.changeModulesBeacons(
         { id: '0', recipeId: RecipeId.AdvancedCircuit },
-        '1',
-        'machine',
+        {},
       );
-      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
+      expect(component.recipesSvc.updateEntity).not.toHaveBeenCalled();
     });
 
-    it('should set up default for machine', () => {
-      component.changeRecipeField(step, ItemId.AssemblingMachine2, 'machine');
-      expect(component.recipesSvc.updateEntityField).toHaveBeenCalledWith(
-        RecipeId.WoodenChest,
-        'machineId',
-        ItemId.AssemblingMachine2,
-        ItemId.AssemblingMachine3,
-      );
-    });
-
-    it('should ignore invalid machine event', () => {
-      component.changeRecipeField(step, 0, 'machine');
-      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
-    });
-
-    it('should set up default for fuel', () => {
-      component.changeRecipeField(step, ItemId.Coal, 'fuel');
-      expect(component.recipesSvc.updateEntityField).toHaveBeenCalledWith(
-        RecipeId.WoodenChest,
-        'fuelId',
-        ItemId.Coal,
-        undefined,
-      );
-    });
-
-    it('should ignore invalid fuel event', () => {
-      component.changeRecipeField(step, 0, 'fuel');
-      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
-    });
-
-    it('should set up default for modules', () => {
+    it('should set up default for modules and beacons', () => {
       spyOn(RecipeUtility, 'dehydrateModules');
-      component.changeRecipeField(step, [], 'modules');
-      expect(component.recipesSvc.updateEntityField).toHaveBeenCalled();
-    });
-
-    it('should ignore invalid modules event', () => {
-      component.changeRecipeField(step, ItemId.AdvancedCircuit, 'modules');
-      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
-    });
-
-    it('should set up default for beacons', () => {
       spyOn(RecipeUtility, 'dehydrateBeacons');
-      component.changeRecipeField(step, [], 'beacons');
-      expect(component.recipesSvc.updateEntityField).toHaveBeenCalled();
-    });
-
-    it('should ignore invalid beacons event', () => {
-      component.changeRecipeField(step, ItemId.AdvancedCircuit, 'beacons');
-      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
-    });
-
-    it('should set up default for overclock', () => {
-      component.changeRecipeField(step, 100, 'overclock');
-      expect(component.recipesSvc.updateEntityField).toHaveBeenCalledWith(
-        RecipeId.WoodenChest,
-        'overclock',
-        rational(100n),
-        undefined,
-      );
-    });
-
-    it('should ignore invalid overclock event', () => {
-      component.changeRecipeField(step, ItemId.AdvancedCircuit, 'overclock');
-      expect(component.recipesSvc.updateEntityField).not.toHaveBeenCalled();
+      component.changeModulesBeacons(step, { modules: [], beacons: [] });
+      expect(component.recipesSvc.updateEntity).toHaveBeenCalled();
     });
 
     it('should update recipe objective', () => {
@@ -387,12 +326,10 @@ describe('StepsComponent', () => {
         recipeObjectiveId: '1',
         recipeSettings: Mocks.recipesStateInitial[RecipeId.WoodenChest],
       };
-      component.changeRecipeField(step, ItemId.AssemblingMachine2, 'machine');
-      expect(component.objectivesSvc.updateEntityField).toHaveBeenCalledWith(
+      component.changeModulesBeacons(step, {});
+      expect(component.objectivesSvc.updateEntity).toHaveBeenCalledWith(
         '1',
-        'machineId',
-        ItemId.AssemblingMachine2,
-        ItemId.AssemblingMachine3,
+        {},
       );
     });
   });

@@ -41,7 +41,7 @@ import { Settings } from '~/models/settings/settings';
 import { Entities } from '~/models/utils';
 import { ItemsSettings } from '~/store/items.service';
 import { MachinesSettings } from '~/store/machines.service';
-import { RecipesSettings } from '~/store/recipes.service';
+import { RecipesService, RecipesSettings } from '~/store/recipes.service';
 
 export const RecipeUtility = {
   MIN_FACTOR: rational(1n, 5n),
@@ -562,25 +562,19 @@ export const RecipeUtility = {
 
   adjustDataset(
     recipeIds: string[],
-    recipesState: Entities<RecipeState>,
-    itemsState: Entities<ItemState>,
+    recipes: RecipesSettings,
+    items: ItemsSettings,
     settings: Settings,
     data: Dataset,
   ): AdjustedDataset {
     const adjustedRecipe = this.adjustRecipes(
       recipeIds,
-      recipesState,
-      itemsState,
+      recipes,
+      items,
       settings,
       data,
     );
-    this.adjustCosts(
-      recipeIds,
-      adjustedRecipe,
-      recipesState,
-      settings.costs,
-      data,
-    );
+    this.adjustCosts(recipeIds, adjustedRecipe, recipes, settings.costs, data);
     return this.finalizeData(
       recipeIds,
       settings.excludedRecipeIds,
@@ -591,23 +585,17 @@ export const RecipeUtility = {
 
   adjustRecipes(
     recipeIds: string[],
-    recipesState: Entities<RecipeState>,
-    itemsState: Entities<ItemState>,
+    recipes: RecipesSettings,
+    items: ItemsSettings,
     settings: Settings,
     data: Dataset,
   ): Entities<AdjustedRecipe> {
     return this.adjustSiloRecipes(
       recipeIds.reduce((e: Entities<AdjustedRecipe>, i) => {
-        e[i] = this.adjustRecipe(
-          i,
-          recipesState[i],
-          itemsState,
-          settings,
-          data,
-        );
+        e[i] = this.adjustRecipe(i, recipes[i], items, settings, data);
         return e;
       }, {}),
-      recipesState,
+      recipes,
       data,
     );
   },
@@ -615,14 +603,14 @@ export const RecipeUtility = {
   adjustCosts(
     recipeIds: string[],
     adjustedRecipe: Entities<Recipe>,
-    recipesState: Entities<RecipeState>,
+    recipes: RecipesSettings,
     costs: CostSettings,
     data: Dataset,
   ): void {
     recipeIds
       .map((i) => adjustedRecipe[i])
       .forEach((recipe) => {
-        const settings = recipesState[recipe.id];
+        const settings = recipes[recipe.id];
         if (settings.cost) {
           recipe.cost = settings.cost;
         } else if (recipe.cost) {
@@ -701,42 +689,13 @@ export const RecipeUtility = {
 
     const result: ObjectiveSettings = spread(objective);
     const recipe = data.recipeEntities[result.targetId];
-
-    if (result.machineId == null) {
-      result.machineId = this.bestMatch(
-        recipe.producers,
-        settings.machineRankIds,
-      );
-    }
-
-    const machine = data.machineEntities[result.machineId];
-    const def = machines[result.machineId];
-
-    if (recipe.isBurn) {
-      result.fuelId = Object.keys(recipe.in)[0];
-    } else {
-      result.fuelId = result.fuelId ?? def?.fuelId;
-    }
-
-    result.fuelOptions = def?.fuelOptions;
-
-    if (machine != null && this.allowsModules(recipe, machine)) {
-      result.moduleOptions = this.moduleOptions(machine, data, result.targetId);
-      result.modules = this.hydrateModules(
-        result.modules,
-        result.moduleOptions,
-        settings.moduleRankIds,
-        machine.modules,
-        def.modules,
-      );
-      result.beacons = this.hydrateBeacons(result.beacons, def.beacons);
-    } else {
-      // Machine doesn't support modules, remove any
-      delete result.modules;
-      delete result.beacons;
-    }
-
-    result.overclock = result.overclock ?? def.overclock;
+    RecipesService.computeRecipeSettings(
+      result,
+      recipe,
+      machines,
+      settings,
+      data,
+    );
 
     result.recipe = RecipeUtility.adjustRecipe(
       result.targetId,
