@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -28,6 +29,7 @@ import { SettingsService } from '~/services/settings.service';
   selector: 'lab-landing',
   standalone: true,
   imports: [
+    AsyncPipe,
     FormsModule,
     RouterLink,
     ButtonModule,

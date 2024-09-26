@@ -21,7 +21,8 @@ module.exports = {
     [
       '@semantic-release/exec',
       {
-        successCmd: 'echo "DEPLOY=true" >> "$GITHUB_ENV"',
+        successCmd:
+          './scripts/write-release-info.sh ${nextRelease.version} ${branch.name} ${(new Date()).toISOString()}',
       },
     ],
   ],

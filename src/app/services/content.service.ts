@@ -1,10 +1,17 @@
-import { computed, Injectable, signal, TemplateRef } from '@angular/core';
+import {
+  computed,
+  inject,
+  Injectable,
+  signal,
+  TemplateRef,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Confirmation, Message } from 'primeng/api';
 import { BehaviorSubject, fromEvent, map, Subject } from 'rxjs';
-import { environment } from 'src/environments';
 
-import { APP } from '~/models/constants';
+import { versionStr } from '~/helpers';
+
+import { DataService } from './data.service';
 
 const BREAKPOINT_SMALL = 576;
 
@@ -12,6 +19,8 @@ const BREAKPOINT_SMALL = 576;
   providedIn: 'root',
 })
 export class ContentService {
+  dataSvc = inject(DataService);
+
   // Responsive
   windowScrollY = (): number => window.scrollY;
   windowInnerWidth = (): number => window.innerWidth;
@@ -54,5 +63,5 @@ export class ContentService {
     this.settingsXlHidden.set(!this.settingsXlHidden());
   }
 
-  version = `${APP} ${environment.version}`;
+  version$ = this.dataSvc.config$.pipe(map((c) => versionStr(c.version)));
 }

@@ -78,7 +78,7 @@
                   }}
                 </div>
               }
-              <span>{{ contentSvc.version }}</span>
+              <span>{{ contentSvc.version$ | async }}</span>
             </div>
           </ng-template>
         </p-card>

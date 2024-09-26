@@ -31,6 +31,14 @@ export class DataService {
   cacheData: Entities<Observable<[ModData, ModHash]>> = {};
   cacheI18n: Entities<Entities<Observable<ModI18n>>> = {};
 
+  config$ = this.http
+    .get<{
+      version: string;
+      branch: string;
+      date: string;
+    }>('assets/release.json')
+    .pipe(shareReplay(1));
+
   constructor() {
     effect(() => {
       const modId = this.settingsSvc.modId();

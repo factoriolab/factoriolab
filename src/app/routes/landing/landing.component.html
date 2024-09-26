@@ -130,4 +130,6 @@
   <p-progressSpinner></p-progressSpinner>
 }
 
-<span class="position-absolute bottom-0 mb-3">{{ contentSvc.version }}</span>
+<span class="position-absolute bottom-0 mb-3">{{
+  contentSvc.version$ | async
+}}</span>

@@ -24,6 +24,7 @@
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "assets": [
+              "src/assets/release.json",
               "src/assets/i18n",
               {
                 "glob": "**/*",
@@ -159,6 +160,7 @@
             "main": "src/test.ts",
             "karmaConfig": "karma.conf.js",
             "assets": [
+              "src/assets/release.json",
               "src/assets/i18n",
               {
                 "glob": "**/*",

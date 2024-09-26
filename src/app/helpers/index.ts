@@ -1,6 +1,8 @@
 import { SelectItem } from 'primeng/api';
 import { filter, OperatorFunction } from 'rxjs';
+import { environment } from 'src/environments';
 
+import { APP } from '~/models/constants';
 import { ItemId } from '~/models/enum/item-id';
 import { Rational, rational } from '~/models/rational';
 import {
@@ -243,4 +245,11 @@ export function updateSetIds(
     else set.delete(id);
   });
   return set;
+}
+
+export function versionStr(version: string): string {
+  const list = [APP];
+  if (version) list.push(version);
+  if (environment.name) list.push(`(${environment.name})`);
+  return list.join(' ');
 }
