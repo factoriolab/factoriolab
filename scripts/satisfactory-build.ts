@@ -66,7 +66,14 @@ import {
   TechnologyJson,
   toEntities,
 } from '~/models';
-import { coerceArray, coerceString, logTime, logWarn, round } from './helpers';
+import {
+  coerceArray,
+  coerceString,
+  emptyModHash,
+  logTime,
+  logWarn,
+  round,
+} from './helpers';
 import { log } from 'console';
 import { json } from 'd3';
 
@@ -269,6 +276,10 @@ function filterData<
     .filter(innerFilter as any) as F[];
 }
 
+function getId(s: string): string {
+  return s.split('.').pop()?.replace("'", '') || '';
+}
+
 const denied = [
   "/Script/Engine.BlueprintGeneratedClass'/Game/FactoryGame/Recipes/Buildings",
   "/Script/Engine.BlueprintGeneratedClass'/Game/FactoryGame/Buildable/",
@@ -297,13 +308,13 @@ const recipes: SfyRecipe[] = filterData(
   "/Script/CoreUObject.Class'/Script/FactoryGame.FGRecipe'",
   (mRecipe) =>
     typeof mRecipe.mProducedIn !== 'string' &&
-    mRecipe.mProducedIn.every(
+    // we don't want buildgun recipes except conveyors and pipes
+    (mRecipe.mProducedIn.every(
       (pi) =>
         pi !== '/Game/FactoryGame/Equipment/BuildGun/BP_BuildGun.BP_BuildGun_C',
-    ) &&
-    mRecipe.mProduct.every(
-      (p) => !denied.every((d) => p.ItemClass.includes(d)),
-    ) &&
+    ) ||
+      mRecipe.mProduct[0].ItemClass.includes('Factory/PipelineMk') ||
+      mRecipe.mProduct[0].ItemClass.includes('Factory/ConveyorBelt')) &&
     !mRecipe.mDisplayName.includes('Discontinued'),
 );
 
@@ -311,6 +322,9 @@ log(`Found ${recipes.length} recipes`);
 log(`first recipe: ${JSON.stringify(recipes[0], null, 2)}`);
 //all recipe names
 log(`all recipe names: ${recipes.map((r) => r.mDisplayName).join(', ')}`);
+
+const somersloop = [];
+const mining = [];
 
 // now, gather all items in the recipes
 const items = new Map<string, Partial<ItemJson>>();
@@ -328,6 +342,11 @@ for (const mRecipe of recipes) {
     }
   }
 }
+
+mining.push(
+  ...[...items.keys()].filter((i) => i.includes('RawResource')).map(getId),
+);
+
 // now, get all technology unlocks in /Script/CoreUObject.Class'/Script/FactoryGame.FGSchematic
 const technology: SfyResearch[] = filterData(
   data,
@@ -338,11 +357,13 @@ const technology: SfyResearch[] = filterData(
         c.Class === 'BP_UnlockRecipe_C' &&
         !c.mRecipes.every((r) => denied.some((d) => r.includes(d))),
     ) &&
-    (d.mCost == '' || !d.mCost.some((c) => c.ItemClass.includes('/Events'))) &&
+    d.mCost ==
+      '' /* ||  !d.mCost.some((c) => c.ItemClass.includes('/Events')) */ &&
     !d.mDisplayName.includes('Discontinued'),
 );
 const modPath = `./src/data/sfy`;
 const modDataPath = `${modPath}/data.json`;
+const modHashPath = `${modPath}/hash.json`;
 
 const modData: ModData = {
   version: {},
@@ -360,63 +381,66 @@ for (const tech of technology) {
   )) {
     for (const _mRecipe of tech_recipes.mRecipes) {
       const mRecipe: SfyRecipe | undefined = recipes.find(
-        (r) => r.ClassName === _mRecipe.split('.').pop()?.replace("'", ''),
+        (r) => r.ClassName === getId(_mRecipe),
       );
-      if (mRecipe === undefined || typeof mRecipe.mProducedIn === 'string') {
+      if (
+        mRecipe === undefined ||
+        typeof mRecipe.mProducedIn === 'string' ||
+        mRecipe.mProducedIn.every((pi) =>
+          pi.includes(
+            '/Game/FactoryGame/Equipment/BuildGun/BP_BuildGun.BP_BuildGun_C',
+          ),
+        )
+      ) {
         continue;
       }
       let inp;
       if (mRecipe.mIngredients !== '') {
         inp = Object.fromEntries(
-          mRecipe.mIngredients.map((i) => [
-            i.ItemClass.split('.').pop()?.replace("'", ''),
-            i.Amount,
-          ]),
+          mRecipe.mIngredients.map((i) => [getId(i.ItemClass), i.Amount]),
         );
       } else {
         inp = {};
       }
       const out = Object.fromEntries(
-        mRecipe.mProduct.map((i) => [
-          i.ItemClass.split('.').pop()?.replace("'", ''),
-          i.Amount,
-        ]),
+        mRecipe.mProduct.map((i) => [getId(i.ItemClass), i.Amount]),
       );
+      const id = getId(mRecipe.ClassName);
+      if (
+        mRecipe.mProducedIn.some(
+          (pr) =>
+            pr.includes('Buildable/Factory/') && !pr.includes('Build_Packager'),
+        )
+      ) {
+        somersloop.push(id);
+      }
       const r: RecipeJson = {
         name: mRecipe.mDisplayName,
         category: 'recipe', // TODO: fix
-        id: mRecipe.ClassName,
+        id,
         time: mRecipe.mManufactoringDuration,
         producers: mRecipe.mProducedIn
-          .map((pi) => pi.split('.').pop()?.replace("'", ''))
+          .map((pi) => getId(pi))
           .filter((pi) => pi !== undefined),
         in: inp,
         out,
         row: 0,
-        unlockedBy: tech.ClassName.split('.').pop()?.replace("'", ''),
+        unlockedBy: getId(tech.ClassName),
       };
       if (modData.recipes.some((modR) => modR.id === r.id)) {
         logWarn(`Duplicate recipe id: ${r.id}`);
-        r.id = `${r.id}-${r.unlockedBy}`;
+      } else {
+        modData.recipes.push(r);
       }
-      modData.recipes.push(r);
     }
   }
 }
 
-// modData.items.push(
-//   ...recipes.flatMap((i) => {
-//     const row = 0;
-//     const id = i.a;
-//   }),
-// );
-
 modData.items.push(
   ...technology.flatMap((u) => {
     const row = 0;
-    const id = u.ClassName;
     return {
-      id: u.ClassName + '-technology',
+      id: getId(u.ClassName) + '-technology',
       row,
       name: u.mDisplayName,
       category: 'technology',
@@ -427,7 +451,7 @@ modData.items.push(
 modData.icons.push(
   ...[...items].map((i) => {
     return {
-      id: `${i[1].id}`,
+      id: `${getId(i[1].id || '')}`,
       position: '-576px -0px',
       color: '#746255',
     };
@@ -436,7 +460,7 @@ modData.icons.push(
 modData.icons.push(
   ...[...technology].map((i) => {
     return {
-      id: `${i.ClassName}-technology`,
+      id: `${getId(i.ClassName)}-technology`,
       position: '-576px -0px',
       color: '#746255',
     };
@@ -452,4 +476,37 @@ modData.icons.push(
   }),
 );
 
-fs.writeFileSync(modDataPath, JSON.stringify(modData));
+const oldData: ModData = JSON.parse(fs.readFileSync(modDataPath, 'utf8'));
+const oldHash = JSON.parse(fs.readFileSync(modHashPath, 'utf8'));
+
+modData.defaults = oldData.defaults;
+
+modData.limitations['mining'] = mining;
+modData.limitations['somersloop'] = somersloop;
+
+const modHashReport = emptyModHash();
+function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
+  if (hash[key] == null) hash[key] = [];
+
+  if (hash[key].indexOf(id) === -1) {
+    hash[key].push(id);
+    modHashReport[key].push(id);
+  }
+}
+
+modData.items.forEach((i) => {
+  addIfMissing(oldHash, 'items', i.id);
+
+  if (i.beacon) addIfMissing(oldHash, 'beacons', i.id);
+  if (i.belt) addIfMissing(oldHash, 'belts', i.id);
+  if (i.fuel) addIfMissing(oldHash, 'fuels', i.id);
+  if (i.cargoWagon || i.fluidWagon) addIfMissing(oldHash, 'wagons', i.id);
+  if (i.machine) addIfMissing(oldHash, 'machines', i.id);
+  if (i.technology) addIfMissing(oldHash, 'technologies', i.id);
+});
+
+modData.recipes.forEach((r) => addIfMissing(oldHash, 'recipes', r.id));
+
+fs.writeFileSync(modHashPath, JSON.stringify(oldHash, null, 4));
+
+fs.writeFileSync(modDataPath, JSON.stringify(modData, null, 4));
