@@ -3114,6 +3114,1194 @@
             "row": 0,
             "name": "Equipment: Fireworks",
             "category": "technology"
+        },
+        {
+            "id": "Desc_ConveyorBeltMk1_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_IronPlate_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_IronIngot_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_IronRod_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorShockShank_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_IronPlateReinforced_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Cable_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Wire_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_OreIron_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_RocketFuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CompactedCoal_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_LiquidFuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_NitrogenGas_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Sulfur_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Coal_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_LiquidTurboFuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_NitricAcid_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PackagedRocketFuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_GasTank_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_IonizedFuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_DarkMatter_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_DarkEnergy_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SAMIngot_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_QuantumEnergy_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Diamond_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_QuantumOscillator_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CrystalOscillator_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_AluminumPlate_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_TemporalProcessor_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_TimeCrystal_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ComputerSuper_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_FicsiteMesh_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_12_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_6_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CrystalShard_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PackagedIonizedFuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_TurboFuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SAMFluctuator_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SteelPipe_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_FicsiteIngot_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SAM_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_10_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_7_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Water_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_AluminumIngot_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_GoldIngot_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_OreBauxite_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_OreGold_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_OreCopper_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_RawQuartz_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Stone_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_OreUranium_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_FluidCanister_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Wood_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_GenericBiomass_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CircuitBoard_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CopperSheet_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Plastic_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PolymerResin_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_LiquidOil_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PetroleumCoke_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_HeavyOilResidue_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Rubber_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_QuartzCrystal_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Cement_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SteelIngot_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SteelPlate_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_2_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ModularFrame_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Fuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_LiquidBiofuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Biofuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PackagedBiofuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PackagedOil_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PackagedOilResidue_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PackagedWater_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CopperIngot_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_AluminumScrap_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_AluminumCasing_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_AluminaSolution_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Silica_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PackagedAlumina_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_1_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Rotor_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_3_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Stator_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_HighSpeedConnector_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SteelPlateReinforced_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Motor_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CircuitBoardHighSpeed_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_HighSpeedWire_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ModularFrameHeavy_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_IronScrew_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Computer_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_4_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_5_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_MotorLightweight_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PressureConversionCube_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PackagedNitrogenGas_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PlutoniumCell_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PlutoniumPellet_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ModularFrameFused_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ModularFrameLightweight_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_NonFissibleUranium_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_NuclearWaste_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SulfuricAcid_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CopperDust_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PlutoniumFuelRod_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ElectromagneticControlRod_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_AluminumPlateReinforced_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PackagedNitricAcid_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_9_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_UraniumCell_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CoolingSystem_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Battery_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PackagedSulfuricAcid_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_NuclearFuelRod_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_ItemDescriptorPortableMiner_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_DissolvedSilica_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ConveyorBeltMk5_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_8_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Gunpowder_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ConveyorBeltMk6_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Ficsonium_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PlutoniumWaste_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SingularityCell_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_FicsoniumFuelRod_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevatorPart_11_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorHoverPack_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_HazmatFilter_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Filter_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorHazmatSuit_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Fabric_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PipelineMK2_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorJetPack_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ConveyorBeltMk4_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ConveyorBeltMk3_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorStunSpear_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_ConveyorBeltMk2_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Chainsaw_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_AlienProtein_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_HogParts_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpitterParts_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Mycelia_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Crystal_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_AlienPowerFuel_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorObjectScanner_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_StingerParts_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_HatcherParts_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_AlienDNACapsule_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Medkit_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Nut_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpikedRebar_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_RebarGunProjectile_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CartridgeSmartProjectile_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CartridgeStandard_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorJumpingStilts_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Rebar_Stunshot_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EqDescZipLine_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorGasmask_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_NobeliskGas_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_NobeliskExplosive_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Shroom_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Berry_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Parachute_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Crystal_mk3_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Crystal_mk2_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_NobeliskShockwave_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Rebar_Spreadshot_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CartridgeChaos_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_NobeliskNuke_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_GunpowderMK2_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Rebar_Explosive_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorRifle_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_NobeliskCluster_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorNobeliskDetonator_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SnowballProjectile_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Snow_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_XmasStar_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_XmasWreath_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_CandyCane_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_XmasBranch_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_XmasBallCluster_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_XmasBall3_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_XmasBall4_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_XmasBall1_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Gift_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_XmasBall2_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_XmasBow_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "BP_EquipmentDescriptorCandyCane_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_GolfCart_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_PipelineMK2_NoIndicator_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_GolfCartGold_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_SpaceElevator_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Leaves_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Fireworks_Projectile_01_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Fireworks_Projectile_02_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
+        },
+        {
+            "id": "Desc_Fireworks_Projectile_03_C",
+            "row": 0,
+            "name": "",
+            "category": "item"
         }
     ],
     "recipes": [
@@ -3121,7 +4309,7 @@
             "name": "Iron Ingot",
             "category": "recipe",
             "id": "Recipe_IngotIron_C",
-            "time": "2.000000",
+            "time": 2,
             "producers": [
                 "Build_SmelterMk1_C",
                 "BP_WorkBenchComponent_C",
@@ -3140,7 +4328,7 @@
             "name": "Iron Plate",
             "category": "recipe",
             "id": "Recipe_IronPlate_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_ConstructorMk1_C",
                 "BP_WorkBenchComponent_C",
@@ -3159,7 +4347,7 @@
             "name": "Iron Rod",
             "category": "recipe",
             "id": "Recipe_IronRod_C",
-            "time": "4.000000",
+            "time": 4,
             "producers": [
                 "Build_ConstructorMk1_C",
                 "BP_WorkBenchComponent_C",
@@ -3178,7 +4366,7 @@
             "name": "Xeno-Zapper",
             "category": "recipe",
             "id": "Recipe_XenoZapper_C",
-            "time": "40.000000",
+            "time": 40,
             "producers": [
                 "BP_WorkshopComponent_C"
             ],
@@ -3198,7 +4386,7 @@
             "name": "Alternate: Nitro Rocket Fuel",
             "category": "recipe",
             "id": "Recipe_Alternate_RocketFuel_Nitro_C",
-            "time": "2.400000",
+            "time": 2.4,
             "producers": [
                 "Build_Blender_C"
             ],
@@ -3219,7 +4407,7 @@
             "name": "Alternate: Dark-Ion Fuel",
             "category": "recipe",
             "id": "Recipe_Alternate_IonizedFuel_Dark_C",
-            "time": "3.000000",
+            "time": 3,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3238,7 +4426,7 @@
             "name": "Limestone (Sulfur)",
             "category": "recipe",
             "id": "Recipe_Limestone_Sulfur_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3256,7 +4444,7 @@
             "name": "Iron Ore (Limestone)",
             "category": "recipe",
             "id": "Recipe_Iron_Limestone_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3274,7 +4462,7 @@
             "name": "Coal (Iron)",
             "category": "recipe",
             "id": "Recipe_Coal_Iron_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3292,7 +4480,7 @@
             "name": "Coal (Limestone)",
             "category": "recipe",
             "id": "Recipe_Coal_Limestone_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3310,7 +4498,7 @@
             "name": "Sulfur (Coal)",
             "category": "recipe",
             "id": "Recipe_Sulfur_Coal_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3328,7 +4516,7 @@
             "name": "Sulfur (Iron)",
             "category": "recipe",
             "id": "Recipe_Sulfur_Iron_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3346,7 +4534,7 @@
             "name": "Raw Quartz (Bauxite)",
             "category": "recipe",
             "id": "Recipe_Quartz_Bauxite_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3364,7 +4552,7 @@
             "name": "Raw Quartz (Coal)",
             "category": "recipe",
             "id": "Recipe_Quartz_Coal_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3382,7 +4570,7 @@
             "name": "Copper Ore (Quartz)",
             "category": "recipe",
             "id": "Recipe_Copper_Quartz_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3400,7 +4588,7 @@
             "name": "Copper Ore (Sulfur)",
             "category": "recipe",
             "id": "Recipe_Copper_Sulfur_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3418,7 +4606,7 @@
             "name": "Caterium Ore (Copper)",
             "category": "recipe",
             "id": "Recipe_Caterium_Copper_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3436,7 +4624,7 @@
             "name": "Caterium Ore (Quartz)",
             "category": "recipe",
             "id": "Recipe_Caterium_Quartz_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3454,7 +4642,7 @@
             "name": "Bauxite (Caterium)",
             "category": "recipe",
             "id": "Recipe_Bauxite_Caterium_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3472,7 +4660,7 @@
             "name": "Bauxite (Copper)",
             "category": "recipe",
             "id": "Recipe_Bauxite_Copper_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3490,7 +4678,7 @@
             "name": "Nitrogen Gas (Bauxite)",
             "category": "recipe",
             "id": "Recipe_Nitrogen_Bauxite_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3508,7 +4696,7 @@
             "name": "Nitrogen Gas (Caterium)",
             "category": "recipe",
             "id": "Recipe_Nitrogen_Caterium_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3526,7 +4714,7 @@
             "name": "Uranium Ore (Bauxite)",
             "category": "recipe",
             "id": "Recipe_Uranium_Bauxite_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3544,7 +4732,7 @@
             "name": "Ficsite Ingot (Aluminum)",
             "category": "recipe",
             "id": "Recipe_FicsiteIngot_AL_C",
-            "time": "2.000000",
+            "time": 2,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3562,7 +4750,7 @@
             "name": "Ficsite Ingot (Caterium)",
             "category": "recipe",
             "id": "Recipe_FicsiteIngot_CAT_C",
-            "time": "4.000000",
+            "time": 4,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3580,7 +4768,7 @@
             "name": "Alternate: Compacted Coal",
             "category": "recipe",
             "id": "Recipe_Alternate_EnrichedCoal_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -3598,7 +4786,7 @@
             "name": "Alternate: Charcoal",
             "category": "recipe",
             "id": "Recipe_Alternate_Coal_1_C",
-            "time": "4.000000",
+            "time": 4,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -3615,7 +4803,7 @@
             "name": "Alternate: Biocoal",
             "category": "recipe",
             "id": "Recipe_Alternate_Coal_2_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -3632,7 +4820,7 @@
             "name": "Residual Plastic",
             "category": "recipe",
             "id": "Recipe_ResidualPlastic_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -3650,7 +4838,7 @@
             "name": "Residual Rubber",
             "category": "recipe",
             "id": "Recipe_ResidualRubber_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -3668,7 +4856,7 @@
             "name": "Residual Fuel",
             "category": "recipe",
             "id": "Recipe_ResidualFuel_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -3685,7 +4873,7 @@
             "name": "Turbofuel",
             "category": "recipe",
             "id": "Recipe_Alternate_Turbofuel_C",
-            "time": "16.000000",
+            "time": 16,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -3703,7 +4891,7 @@
             "name": "Packaged Turbofuel",
             "category": "recipe",
             "id": "Recipe_PackagedTurboFuel_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -3721,7 +4909,7 @@
             "name": "Unpackage Turbofuel",
             "category": "recipe",
             "id": "Recipe_UnpackageTurboFuel_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -3739,7 +4927,7 @@
             "name": "Alternate: Turbo Diamonds",
             "category": "recipe",
             "id": "Recipe_Alternate_Diamond_Turbo_C",
-            "time": "3.000000",
+            "time": 3,
             "producers": [
                 "Build_HadronCollider_C"
             ],
@@ -3757,7 +4945,7 @@
             "name": "Alternate: Pink Diamonds",
             "category": "recipe",
             "id": "Recipe_Alternate_Diamond_Pink_C",
-            "time": "4.000000",
+            "time": 4,
             "producers": [
                 "Build_Converter_C"
             ],
@@ -3775,7 +4963,7 @@
             "name": "Alternate: Petroleum Diamonds",
             "category": "recipe",
             "id": "Recipe_Alternate_Diamond_Petroleum_C",
-            "time": "2.000000",
+            "time": 2,
             "producers": [
                 "Build_HadronCollider_C"
             ],
@@ -3792,7 +4980,7 @@
             "name": "Alternate: Oil-Based Diamonds",
             "category": "recipe",
             "id": "Recipe_Alternate_Diamond_OilBased_C",
-            "time": "3.000000",
+            "time": 3,
             "producers": [
                 "Build_HadronCollider_C"
             ],
@@ -3809,7 +4997,7 @@
             "name": "Alternate: Cloudy Diamonds",
             "category": "recipe",
             "id": "Recipe_Alternate_Diamond_Cloudy_C",
-            "time": "3.000000",
+            "time": 3,
             "producers": [
                 "Build_HadronCollider_C"
             ],
@@ -3827,7 +5015,7 @@
             "name": "Alternate: Dark Matter Trap",
             "category": "recipe",
             "id": "Recipe_Alternate_DarkMatter_Trap_C",
-            "time": "2.000000",
+            "time": 2,
             "producers": [
                 "Build_HadronCollider_C"
             ],
@@ -3845,7 +5033,7 @@
             "name": "Alternate: Dark Matter Crystallization",
             "category": "recipe",
             "id": "Recipe_Alternate_DarkMatter_Crystallization_C",
-            "time": "3.000000",
+            "time": 3,
             "producers": [
                 "Build_HadronCollider_C"
             ],
@@ -3862,7 +5050,7 @@
             "name": "Alternate: Wet Concrete",
             "category": "recipe",
             "id": "Recipe_Alternate_WetConcrete_C",
-            "time": "3.000000",
+            "time": 3,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -3880,7 +5068,7 @@
             "name": "Alternate: Turbo Heavy Fuel",
             "category": "recipe",
             "id": "Recipe_Alternate_TurboHeavyFuel_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -3898,7 +5086,7 @@
             "name": "Alternate: Steel Rod",
             "category": "recipe",
             "id": "Recipe_Alternate_SteelRod_C",
-            "time": "5.000000",
+            "time": 5,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -3915,7 +5103,7 @@
             "name": "Unpackage Water",
             "category": "recipe",
             "id": "Recipe_UnpackageWater_C",
-            "time": "1.000000",
+            "time": 1,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -3933,7 +5121,7 @@
             "name": "Unpackage Oil",
             "category": "recipe",
             "id": "Recipe_UnpackageOil_C",
-            "time": "2.000000",
+            "time": 2,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -3951,7 +5139,7 @@
             "name": "Unpackage Fuel",
             "category": "recipe",
             "id": "Recipe_UnpackageFuel_C",
-            "time": "2.000000",
+            "time": 2,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -3969,7 +5157,7 @@
             "name": "Unpackage Heavy Oil Residue",
             "category": "recipe",
             "id": "Recipe_UnpackageOilResidue_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -3987,7 +5175,7 @@
             "name": "Unpackage Liquid Biofuel",
             "category": "recipe",
             "id": "Recipe_UnpackageBioFuel_C",
-            "time": "2.000000",
+            "time": 2,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -4005,7 +5193,7 @@
             "name": "Alternate: Steel Canister",
             "category": "recipe",
             "id": "Recipe_Alternate_SteelCanister_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -4022,7 +5210,7 @@
             "name": "Alternate: Steamed Copper Sheet",
             "category": "recipe",
             "id": "Recipe_Alternate_SteamedCopperSheet_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4040,7 +5228,7 @@
             "name": "Alternate: Rubber Concrete",
             "category": "recipe",
             "id": "Recipe_Alternate_RubberConcrete_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4058,7 +5246,7 @@
             "name": "Alternate: Recycled Rubber",
             "category": "recipe",
             "id": "Recipe_Alternate_RecycledRubber_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4076,7 +5264,7 @@
             "name": "Alternate: Pure Quartz Crystal",
             "category": "recipe",
             "id": "Recipe_Alternate_PureQuartzCrystal_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4094,7 +5282,7 @@
             "name": "Alternate: Pure Iron Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_PureIronIngot_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4112,7 +5300,7 @@
             "name": "Alternate: Pure Copper Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_PureCopperIngot_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4130,7 +5318,7 @@
             "name": "Alternate: Pure Caterium Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_PureCateriumIngot_C",
-            "time": "5.000000",
+            "time": 5,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4148,7 +5336,7 @@
             "name": "Unpackage Alumina Solution",
             "category": "recipe",
             "id": "Recipe_UnpackageAlumina_C",
-            "time": "1.000000",
+            "time": 1,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -4166,7 +5354,7 @@
             "name": "Quartz Crystal",
             "category": "recipe",
             "id": "Recipe_QuartzCrystal_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_ConstructorMk1_C",
                 "BP_WorkBenchComponent_C",
@@ -4185,7 +5373,7 @@
             "name": "Crystal Oscillator",
             "category": "recipe",
             "id": "Recipe_CrystalOscillator_C",
-            "time": "120.000000",
+            "time": 120,
             "producers": [
                 "Build_ManufacturerMk1_C",
                 "BP_WorkBenchComponent_C",
@@ -4206,7 +5394,7 @@
             "name": "Silica",
             "category": "recipe",
             "id": "Recipe_Silica_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_ConstructorMk1_C",
                 "BP_WorkBenchComponent_C",
@@ -4225,7 +5413,7 @@
             "name": "Alternate: Pure Aluminum Ingot",
             "category": "recipe",
             "id": "Recipe_PureAluminumIngot_C",
-            "time": "2.000000",
+            "time": 2,
             "producers": [
                 "Build_SmelterMk1_C"
             ],
@@ -4242,7 +5430,7 @@
             "name": "Alternate: Polymer Resin",
             "category": "recipe",
             "id": "Recipe_Alternate_PolymerResin_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4260,7 +5448,7 @@
             "name": "Alternate: Plastic Smart Plating",
             "category": "recipe",
             "id": "Recipe_Alternate_PlasticSmartPlating_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -4279,7 +5467,7 @@
             "name": "Alternate: Automated Speed Wiring",
             "category": "recipe",
             "id": "Recipe_Alternate_HighSpeedWiring_C",
-            "time": "32.000000",
+            "time": 32,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -4298,7 +5486,7 @@
             "name": "Alternate: Heavy Oil Residue",
             "category": "recipe",
             "id": "Recipe_Alternate_HeavyOilResidue_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4316,7 +5504,7 @@
             "name": "Alternate: Heavy Flexible Frame",
             "category": "recipe",
             "id": "Recipe_Alternate_HeavyFlexibleFrame_C",
-            "time": "16.000000",
+            "time": 16,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -4336,7 +5524,7 @@
             "name": "Alternate: Fused Wire",
             "category": "recipe",
             "id": "Recipe_Alternate_FusedWire_C",
-            "time": "20.000000",
+            "time": 20,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4354,7 +5542,7 @@
             "name": "Alternate: Flexible Framework",
             "category": "recipe",
             "id": "Recipe_Alternate_FlexibleFramework_C",
-            "time": "16.000000",
+            "time": 16,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -4373,7 +5561,7 @@
             "name": "Alternate: Electrode Circuit Board",
             "category": "recipe",
             "id": "Recipe_Alternate_ElectrodeCircuitBoard_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4391,7 +5579,7 @@
             "name": "Alternate: Electrode Aluminum Scrap",
             "category": "recipe",
             "id": "Recipe_Alternate_ElectroAluminumScrap_C",
-            "time": "4.000000",
+            "time": 4,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4410,7 +5598,7 @@
             "name": "Alternate: Diluted Packaged Fuel",
             "category": "recipe",
             "id": "Recipe_Alternate_DilutedPackagedFuel_C",
-            "time": "2.000000",
+            "time": 2,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4428,7 +5616,7 @@
             "name": "Alternate: Copper Rotor",
             "category": "recipe",
             "id": "Recipe_Alternate_CopperRotor_C",
-            "time": "16.000000",
+            "time": 16,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4446,7 +5634,7 @@
             "name": "Alternate: Copper Alloy Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_CopperAlloyIngot_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -4464,7 +5652,7 @@
             "name": "Alternate: Coke Steel Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_CokeSteelIngot_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -4482,7 +5670,7 @@
             "name": "Alternate: Coated Iron Plate",
             "category": "recipe",
             "id": "Recipe_Alternate_CoatedIronPlate_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4500,7 +5688,7 @@
             "name": "Alternate: Coated Iron Canister",
             "category": "recipe",
             "id": "Recipe_Alternate_CoatedIronCanister_C",
-            "time": "4.000000",
+            "time": 4,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4518,7 +5706,7 @@
             "name": "Alternate: Coated Cable",
             "category": "recipe",
             "id": "Recipe_Alternate_CoatedCable_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4536,7 +5724,7 @@
             "name": "Alternate: Bolted Frame",
             "category": "recipe",
             "id": "Recipe_Alternate_BoltedFrame_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4554,7 +5742,7 @@
             "name": "Alternate: Adhered Iron Plate",
             "category": "recipe",
             "id": "Recipe_Alternate_AdheredIronPlate_C",
-            "time": "16.000000",
+            "time": 16,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4572,7 +5760,7 @@
             "name": "Unpackage Nitric Acid",
             "category": "recipe",
             "id": "Recipe_UnpackageNitricAcid_C",
-            "time": "3.000000",
+            "time": 3,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -4590,7 +5778,7 @@
             "name": "Alternate: Turbo Pressure Motor",
             "category": "recipe",
             "id": "Recipe_Alternate_TurboPressureMotor_C",
-            "time": "32.000000",
+            "time": 32,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -4610,7 +5798,7 @@
             "name": "Unpackage Sulfuric Acid",
             "category": "recipe",
             "id": "Recipe_UnpackageSulfuricAcid_C",
-            "time": "1.000000",
+            "time": 1,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -4628,7 +5816,7 @@
             "name": "AI Limiter",
             "category": "recipe",
             "id": "Recipe_AILimiter_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_AssemblerMk1_C",
                 "BP_WorkBenchComponent_C",
@@ -4648,7 +5836,7 @@
             "name": "High-Speed Connector",
             "category": "recipe",
             "id": "Recipe_HighSpeedConnector_C",
-            "time": "16.000000",
+            "time": 16,
             "producers": [
                 "Build_ManufacturerMk1_C",
                 "BP_WorkBenchComponent_C",
@@ -4669,7 +5857,7 @@
             "name": "Alternate: Turbo Blend Fuel",
             "category": "recipe",
             "id": "Recipe_Alternate_TurboBlendFuel_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_Blender_C"
             ],
@@ -4689,7 +5877,7 @@
             "name": "Alternate: Super-State Computer",
             "category": "recipe",
             "id": "Recipe_Alternate_SuperStateComputer_C",
-            "time": "25.000000",
+            "time": 25,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -4709,7 +5897,7 @@
             "name": "Alternate: Sloppy Alumina",
             "category": "recipe",
             "id": "Recipe_Alternate_SloppyAlumina_C",
-            "time": "3.000000",
+            "time": 3,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -4727,7 +5915,7 @@
             "name": "Alternate: Radio Control System",
             "category": "recipe",
             "id": "Recipe_Alternate_RadioControlSystem_C",
-            "time": "40.000000",
+            "time": 40,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -4747,7 +5935,7 @@
             "name": "Alternate: Plutonium Fuel Unit",
             "category": "recipe",
             "id": "Recipe_Alternate_PlutoniumFuelUnit_C",
-            "time": "120.000000",
+            "time": 120,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4765,7 +5953,7 @@
             "name": "Unpackage Nitrogen Gas",
             "category": "recipe",
             "id": "Recipe_UnpackageNitrogen_C",
-            "time": "1.000000",
+            "time": 1,
             "producers": [
                 "Build_Packager_C"
             ],
@@ -4783,7 +5971,7 @@
             "name": "Alternate: OC Supercomputer",
             "category": "recipe",
             "id": "Recipe_Alternate_OCSupercomputer_C",
-            "time": "20.000000",
+            "time": 20,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4801,7 +5989,7 @@
             "name": "Alternate: Instant Scrap",
             "category": "recipe",
             "id": "Recipe_Alternate_InstantScrap_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Blender_C"
             ],
@@ -4822,7 +6010,7 @@
             "name": "Alternate: Instant Plutonium Cell",
             "category": "recipe",
             "id": "Recipe_Alternate_InstantPlutoniumCell_C",
-            "time": "120.000000",
+            "time": 120,
             "producers": [
                 "Build_HadronCollider_C"
             ],
@@ -4840,7 +6028,7 @@
             "name": "Alternate: Heat-Fused Frame",
             "category": "recipe",
             "id": "Recipe_Alternate_HeatFusedFrame_C",
-            "time": "20.000000",
+            "time": 20,
             "producers": [
                 "Build_Blender_C"
             ],
@@ -4860,7 +6048,7 @@
             "name": "Alternate: Fertile Uranium",
             "category": "recipe",
             "id": "Recipe_Alternate_FertileUranium_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_Blender_C"
             ],
@@ -4881,7 +6069,7 @@
             "name": "Alternate: Electric Motor",
             "category": "recipe",
             "id": "Recipe_Alternate_ElectricMotor_C",
-            "time": "16.000000",
+            "time": 16,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4899,7 +6087,7 @@
             "name": "Alternate: Diluted Fuel",
             "category": "recipe",
             "id": "Recipe_Alternate_DilutedFuel_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Blender_C"
             ],
@@ -4917,7 +6105,7 @@
             "name": "Alternate: Cooling Device",
             "category": "recipe",
             "id": "Recipe_Alternate_CoolingDevice_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "Build_Blender_C"
             ],
@@ -4936,7 +6124,7 @@
             "name": "Alternate: Classic Battery",
             "category": "recipe",
             "id": "Recipe_Alternate_ClassicBattery_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -4956,7 +6144,7 @@
             "name": "Alternate: Automated Miner",
             "category": "recipe",
             "id": "Recipe_Alternate_AutomatedMiner_C",
-            "time": "60.000000",
+            "time": 60,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4974,7 +6162,7 @@
             "name": "Alternate: Alclad Casing",
             "category": "recipe",
             "id": "Recipe_Alternate_AlcladCasing_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -4992,7 +6180,7 @@
             "name": "Alternate: Molded Steel Pipe",
             "category": "recipe",
             "id": "Recipe_Alternate_SteelPipe_Molded_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -5010,7 +6198,7 @@
             "name": "Alternate: Iron Pipe",
             "category": "recipe",
             "id": "Recipe_Alternate_SteelPipe_Iron_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -5027,7 +6215,7 @@
             "name": "Alternate: Steel Cast Plate",
             "category": "recipe",
             "id": "Recipe_Alternate_SteelCastedPlate_C",
-            "time": "4.000000",
+            "time": 4,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -5045,7 +6233,7 @@
             "name": "Alternate: Molded Beam",
             "category": "recipe",
             "id": "Recipe_Alternate_SteelBeam_Molded_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -5063,7 +6251,7 @@
             "name": "Alternate: Aluminum Beam",
             "category": "recipe",
             "id": "Recipe_Alternate_SteelBeam_Aluminum_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -5080,7 +6268,7 @@
             "name": "Alternate: Aluminum Rod",
             "category": "recipe",
             "id": "Recipe_Alternate_AluminumRod_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -5097,7 +6285,7 @@
             "name": "Alternate: Plastic AI Limiter",
             "category": "recipe",
             "id": "Recipe_Alternate_AILimiter_Plastic_C",
-            "time": "15.000000",
+            "time": 15,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5115,7 +6303,7 @@
             "name": "Alternate: Distilled Silica",
             "category": "recipe",
             "id": "Recipe_Alternate_Silica_Distilled_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_Blender_C"
             ],
@@ -5135,7 +6323,7 @@
             "name": "Alternate: Quartz Purification",
             "category": "recipe",
             "id": "Recipe_Alternate_Quartz_Purified_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -5154,7 +6342,7 @@
             "name": "Alternate: Fused Quartz Crystal",
             "category": "recipe",
             "id": "Recipe_Alternate_Quartz_Fused_C",
-            "time": "20.000000",
+            "time": 20,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -5172,7 +6360,7 @@
             "name": "Alternate: Leached Iron ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_IronIngot_Leached_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -5190,7 +6378,7 @@
             "name": "Alternate: Basic Iron Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_IronIngot_Basic_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -5208,7 +6396,7 @@
             "name": "Alternate: Tempered Copper Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_CopperIngot_Tempered_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -5226,7 +6414,7 @@
             "name": "Alternate: Leached Copper Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_CopperIngot_Leached_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -5244,7 +6432,7 @@
             "name": "Alternate: Tempered Caterium Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_CateriumIngot_Tempered_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -5262,7 +6450,7 @@
             "name": "Alternate: Leached Caterium Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_CateriumIngot_Leached_C",
-            "time": "10.000000",
+            "time": 10,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -5280,7 +6468,7 @@
             "name": "Alternate: Caterium Wire",
             "category": "recipe",
             "id": "Recipe_Alternate_Wire_2_C",
-            "time": "4.000000",
+            "time": 4,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -5297,7 +6485,7 @@
             "name": "Alternate: Iron Wire",
             "category": "recipe",
             "id": "Recipe_Alternate_Wire_1_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -5314,7 +6502,7 @@
             "name": "Alternate: Infused Uranium Cell",
             "category": "recipe",
             "id": "Recipe_Alternate_UraniumCell_1_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -5334,7 +6522,7 @@
             "name": "Alternate: Turbo Electric Motor",
             "category": "recipe",
             "id": "Recipe_Alternate_TurboMotor_1_C",
-            "time": "64.000000",
+            "time": 64,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -5354,7 +6542,7 @@
             "name": "Alternate: Quickwire Stator",
             "category": "recipe",
             "id": "Recipe_Alternate_Stator_C",
-            "time": "15.000000",
+            "time": 15,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5372,7 +6560,7 @@
             "name": "Alternate: Cheap Silica",
             "category": "recipe",
             "id": "Recipe_Alternate_Silica_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5390,7 +6578,7 @@
             "name": "Alternate: Steel Screw",
             "category": "recipe",
             "id": "Recipe_Alternate_Screw_2_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -5407,7 +6595,7 @@
             "name": "Alternate: Cast Screw",
             "category": "recipe",
             "id": "Recipe_Alternate_Screw_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "Build_ConstructorMk1_C"
             ],
@@ -5424,7 +6612,7 @@
             "name": "Alternate: Steel Rotor",
             "category": "recipe",
             "id": "Recipe_Alternate_Rotor_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5442,7 +6630,7 @@
             "name": "Alternate: Encased Industrial Pipe",
             "category": "recipe",
             "id": "Recipe_Alternate_EncasedIndustrialBeam_C",
-            "time": "15.000000",
+            "time": 15,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5460,7 +6648,7 @@
             "name": "Alternate: Stitched Iron Plate",
             "category": "recipe",
             "id": "Recipe_Alternate_ReinforcedIronPlate_2_C",
-            "time": "32.000000",
+            "time": 32,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5478,7 +6666,7 @@
             "name": "Alternate: Bolted Iron Plate",
             "category": "recipe",
             "id": "Recipe_Alternate_ReinforcedIronPlate_1_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5496,7 +6684,7 @@
             "name": "Alternate: Radio Connection Unit",
             "category": "recipe",
             "id": "Recipe_Alternate_RadioControlUnit_1_C",
-            "time": "16.000000",
+            "time": 16,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -5515,7 +6703,7 @@
             "name": "Alternate: Fused Quickwire",
             "category": "recipe",
             "id": "Recipe_Alternate_Quickwire_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5533,7 +6721,7 @@
             "name": "Alternate: Recycled Plastic",
             "category": "recipe",
             "id": "Recipe_Alternate_Plastic_1_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_OilRefinery_C"
             ],
@@ -5551,7 +6739,7 @@
             "name": "Alternate: Uranium Fuel Unit",
             "category": "recipe",
             "id": "Recipe_Alternate_NuclearFuelRod_1_C",
-            "time": "300.000000",
+            "time": 300,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -5571,7 +6759,7 @@
             "name": "Alternate: Rigor Motor",
             "category": "recipe",
             "id": "Recipe_Alternate_Motor_1_C",
-            "time": "48.000000",
+            "time": 48,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -5590,7 +6778,7 @@
             "name": "Alternate: Steeled Frame",
             "category": "recipe",
             "id": "Recipe_Alternate_ModularFrame_C",
-            "time": "60.000000",
+            "time": 60,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5608,7 +6796,7 @@
             "name": "Alternate: Compacted Steel Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_IngotSteel_2_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -5626,7 +6814,7 @@
             "name": "Alternate: Solid Steel Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_IngotSteel_1_C",
-            "time": "3.000000",
+            "time": 3,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -5644,7 +6832,7 @@
             "name": "Alternate: Iron Alloy Ingot",
             "category": "recipe",
             "id": "Recipe_Alternate_IngotIron_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_FoundryMk1_C"
             ],
@@ -5662,7 +6850,7 @@
             "name": "Alternate: Silicon High-Speed Connector",
             "category": "recipe",
             "id": "Recipe_Alternate_HighSpeedConnector_C",
-            "time": "40.000000",
+            "time": 40,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -5681,7 +6869,7 @@
             "name": "Alternate: Heavy Encased Frame",
             "category": "recipe",
             "id": "Recipe_Alternate_ModularFrameHeavy_C",
-            "time": "64.000000",
+            "time": 64,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -5701,7 +6889,7 @@
             "name": "Alternate: Heat Exchanger",
             "category": "recipe",
             "id": "Recipe_Alternate_HeatSink_1_C",
-            "time": "6.000000",
+            "time": 6,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5719,7 +6907,7 @@
             "name": "Alternate: Fine Black Powder",
             "category": "recipe",
             "id": "Recipe_Alternate_Gunpowder_1_C",
-            "time": "8.000000",
+            "time": 8,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5737,7 +6925,7 @@
             "name": "Alternate: Electromagnetic Connection Rod",
             "category": "recipe",
             "id": "Recipe_Alternate_ElectromagneticControlRod_1_C",
-            "time": "15.000000",
+            "time": 15,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5755,7 +6943,7 @@
             "name": "Alternate: Insulated Crystal Oscillator",
             "category": "recipe",
             "id": "Recipe_Alternate_CrystalOscillator_C",
-            "time": "32.000000",
+            "time": 32,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -5774,7 +6962,7 @@
             "name": "Alternate: Fine Concrete",
             "category": "recipe",
             "id": "Recipe_Alternate_Concrete_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5792,7 +6980,7 @@
             "name": "Alternate: Crystal Computer",
             "category": "recipe",
             "id": "Recipe_Alternate_Computer_2_C",
-            "time": "36.000000",
+            "time": 36,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5810,7 +6998,7 @@
             "name": "Alternate: Caterium Computer",
             "category": "recipe",
             "id": "Recipe_Alternate_Computer_1_C",
-            "time": "16.000000",
+            "time": 16,
             "producers": [
                 "Build_ManufacturerMk1_C"
             ],
@@ -5829,7 +7017,7 @@
             "name": "Alternate: Caterium Circuit Board",
             "category": "recipe",
             "id": "Recipe_Alternate_CircuitBoard_2_C",
-            "time": "48.000000",
+            "time": 48,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5847,7 +7035,7 @@
             "name": "Alternate: Silicon Circuit Board",
             "category": "recipe",
             "id": "Recipe_Alternate_CircuitBoard_1_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5865,7 +7053,7 @@
             "name": "Alternate: Quickwire Cable",
             "category": "recipe",
             "id": "Recipe_Alternate_Cable_2_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5883,7 +7071,7 @@
             "name": "Alternate: Insulated Cable",
             "category": "recipe",
             "id": "Recipe_Alternate_Cable_1_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_AssemblerMk1_C"
             ],
@@ -5901,7 +7089,7 @@
             "name": "Caterium Ingot",
             "category": "recipe",
             "id": "Recipe_IngotCaterium_C",
-            "time": "4.000000",
+            "time": 4,
             "producers": [
                 "Build_SmelterMk1_C",
                 "BP_WorkBenchComponent_C"
@@ -5919,7 +7107,7 @@
             "name": "Quickwire",
             "category": "recipe",
             "id": "Recipe_Quickwire_C",
-            "time": "5.000000",
+            "time": 5,
             "producers": [
                 "Build_ConstructorMk1_C",
                 "BP_WorkBenchComponent_C",
@@ -5938,7 +7126,7 @@
             "name": "Turbo Rifle Ammo",
             "category": "recipe",
             "id": "Recipe_CartridgeChaos_Packaged_C",
-            "time": "12.000000",
+            "time": 12,
             "producers": [
                 "Build_ManufacturerMk1_C",
                 "BP_WorkshopComponent_C"
@@ -5958,7 +7146,7 @@
             "name": "Sweet Fireworks",
             "category": "recipe",
             "id": "Recipe_Fireworks_01_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "BP_WorkshopComponent_C",
                 "Build_AssemblerMk1_C"
@@ -5977,7 +7165,7 @@
             "name": "Fancy Fireworks",
             "category": "recipe",
             "id": "Recipe_Fireworks_02_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "BP_WorkshopComponent_C",
                 "Build_AssemblerMk1_C"
@@ -5996,7 +7184,7 @@
             "name": "Sparkly Fireworks",
             "category": "recipe",
             "id": "Recipe_Fireworks_03_C",
-            "time": "24.000000",
+            "time": 24,
             "producers": [
                 "BP_WorkshopComponent_C",
                 "Build_AssemblerMk1_C"
