@@ -1,3 +1,4 @@
+import { Injectable } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 
 import {
@@ -36,17 +37,18 @@ import {
   areModuleSettingsEqual,
   ModuleSettings,
 } from '~/models/settings/module-settings';
-import { RecipeState } from '~/models/settings/recipe-settings';
+import { RecipeSettings, RecipeState } from '~/models/settings/recipe-settings';
 import { Settings } from '~/models/settings/settings';
 import { Entities } from '~/models/utils';
 import { ItemsSettings } from '~/store/items.service';
 import { MachinesSettings } from '~/store/machines.service';
-import { RecipesService, RecipesSettings } from '~/store/recipes.service';
+import { RecipesSettings } from '~/store/recipes.service';
 
-export const RecipeUtility = {
-  MIN_FACTOR: rational(1n, 5n),
-  POLLUTION_FACTOR: rational(60n),
-  MIN_FACTORIO_RECIPE_TIME: rational(1n, 60n),
+@Injectable({ providedIn: 'root' })
+export class RecipeService {
+  minFactor = rational(1n, 5n);
+  pollutionFactor = rational(60n);
+  minFactorioRecipeTime = rational(1n, 60n);
 
   /** Determines what option to use based on preferred rank */
   bestMatch(options: string[], rank: string[]): string {
@@ -57,7 +59,7 @@ export const RecipeUtility = {
       }
     }
     return options[0];
-  },
+  }
 
   fuelOptions(
     entity: MachineJson | Machine,
@@ -78,7 +80,7 @@ export const RecipeUtility = {
     return allowed.map(
       (f): SelectItem<string> => ({ value: f.id, label: f.name }),
     );
-  },
+  }
 
   moduleOptions(
     entity: Machine | Beacon,
@@ -123,7 +125,7 @@ export const RecipeUtility = {
       options.unshift({ label: 'None', value: ItemId.Module });
     }
     return options;
-  },
+  }
 
   /** Determines default modules for a recipe/machine */
   defaultModules(
@@ -145,7 +147,7 @@ export const RecipeUtility = {
     );
     count = count === true ? rational.zero : count;
     return [{ id, count }];
-  },
+  }
 
   adjustRecipe(
     recipeId: string,
@@ -322,16 +324,16 @@ export const RecipeUtility = {
       }
 
       // Check for speed, consumption, or pollution below minimum value (20%)
-      if (speed.lt(this.MIN_FACTOR)) {
-        speed = this.MIN_FACTOR;
+      if (speed.lt(this.minFactor)) {
+        speed = this.minFactor;
       }
 
-      if (consumption.lt(this.MIN_FACTOR)) {
-        consumption = this.MIN_FACTOR;
+      if (consumption.lt(this.minFactor)) {
+        consumption = this.minFactor;
       }
 
-      if (pollution.lt(this.MIN_FACTOR)) {
-        pollution = this.MIN_FACTOR;
+      if (pollution.lt(this.minFactor)) {
+        pollution = this.minFactor;
       }
 
       // Overclock effects
@@ -350,10 +352,10 @@ export const RecipeUtility = {
 
       // In Factorio, minimum recipe time is 1/60s (1 tick)
       if (
-        recipe.time.lt(this.MIN_FACTORIO_RECIPE_TIME) &&
+        recipe.time.lt(this.minFactorioRecipeTime) &&
         data.game === Game.Factorio
       ) {
-        recipe.time = this.MIN_FACTORIO_RECIPE_TIME;
+        recipe.time = this.minFactorioRecipeTime;
       }
 
       // Productivity
@@ -396,7 +398,7 @@ export const RecipeUtility = {
       recipe.pollution =
         machine.pollution && recipeSettings.machineId !== ItemId.Pumpjack
           ? machine.pollution
-              .div(this.POLLUTION_FACTOR)
+              .div(this.pollutionFactor)
               .mul(pollution)
               .mul(consumption)
           : rational.zero;
@@ -501,7 +503,7 @@ export const RecipeUtility = {
     }
 
     return recipe;
-  },
+  }
 
   /** Adjust rocket launch objective recipes */
   adjustLaunchRecipeObjective(
@@ -519,7 +521,7 @@ export const RecipeUtility = {
     const itemId = Object.keys(rocketRecipe.out)[0];
     const factor = rocketMachine.silo.parts.div(rocketRecipe.out[itemId]);
     recipe.time = rocketRecipe.time.mul(factor);
-  },
+  }
 
   /** Adjust rocket launch and rocket part recipes */
   adjustSiloRecipes(
@@ -554,11 +556,11 @@ export const RecipeUtility = {
     }
 
     return adjustedRecipe;
-  },
+  }
 
   allowsModules(recipe: RecipeJson | Recipe, machine: Machine): boolean {
     return (!machine.silo || !recipe.part) && !!machine.modules;
-  },
+  }
 
   adjustDataset(
     recipeIds: string[],
@@ -581,7 +583,7 @@ export const RecipeUtility = {
       adjustedRecipe,
       data,
     );
-  },
+  }
 
   adjustRecipes(
     recipeIds: string[],
@@ -598,7 +600,7 @@ export const RecipeUtility = {
       recipes,
       data,
     );
-  },
+  }
 
   adjustCosts(
     recipeIds: string[],
@@ -633,7 +635,7 @@ export const RecipeUtility = {
           }
         }
       });
-  },
+  }
 
   finalizeData(
     recipeIds: string[],
@@ -675,7 +677,66 @@ export const RecipeUtility = {
       itemIncludedRecipeIds,
       itemIncludedIoRecipeIds,
     });
-  },
+  }
+
+  computeRecipeSettings(
+    s: RecipeSettings,
+    recipe: Recipe,
+    machines: MachinesSettings,
+    settings: Settings,
+    data: Dataset,
+  ): void {
+    s.defaultMachineId = this.bestMatch(
+      recipe.producers,
+      settings.machineRankIds,
+    );
+    s.machineId = coalesce(s.machineId, s.defaultMachineId);
+
+    const machine = data.machineEntities[s.machineId];
+    const def = machines[s.machineId];
+
+    if (recipe.isBurn) {
+      s.defaultFuelId = Object.keys(recipe.in)[0];
+      s.fuelId = s.defaultFuelId;
+    } else if (machine.type === EnergyType.Burner) {
+      s.defaultFuelId = def?.fuelId;
+      s.fuelId = coalesce(s.fuelId, s.defaultFuelId);
+      s.fuelOptions = def?.fuelOptions;
+    } else {
+      // Machine doesn't support fuel, remove any
+      delete s.fuelId;
+    }
+
+    if (machine != null && this.allowsModules(recipe, machine)) {
+      s.moduleOptions = this.moduleOptions(machine, data, recipe.id);
+      s.modules = this.hydrateModules(
+        s.modules,
+        s.moduleOptions,
+        settings.moduleRankIds,
+        machine.modules,
+        def.modules,
+      );
+      s.beacons = this.hydrateBeacons(s.beacons, def.beacons);
+    } else {
+      // Machine doesn't support modules, remove any
+      delete s.modules;
+      delete s.beacons;
+    }
+
+    if (s.beacons) {
+      for (const beaconSettings of s.beacons) {
+        if (
+          beaconSettings.total != null &&
+          (beaconSettings.count == null || beaconSettings.count.isZero())
+        )
+          // No actual beacons, ignore the total beacons
+          delete beaconSettings.total;
+      }
+    }
+
+    s.defaultOverclock = def?.overclock;
+    s.overclock = coalesce(s.overclock, s.defaultOverclock);
+  }
 
   adjustObjective(
     objective: ObjectiveState,
@@ -689,26 +750,20 @@ export const RecipeUtility = {
 
     const result: ObjectiveSettings = spread(objective);
     const recipe = data.recipeEntities[result.targetId];
-    RecipesService.computeRecipeSettings(
-      result,
-      recipe,
-      machines,
-      settings,
-      data,
-    );
+    this.computeRecipeSettings(result, recipe, machines, settings, data);
 
-    result.recipe = RecipeUtility.adjustRecipe(
+    result.recipe = this.adjustRecipe(
       result.targetId,
       result,
       items,
       settings,
       data,
     );
-    RecipeUtility.adjustLaunchRecipeObjective(result.recipe, recipes, data);
+    this.adjustLaunchRecipeObjective(result.recipe, recipes, data);
     finalizeRecipe(result.recipe);
 
     return result;
-  },
+  }
 
   dehydrateModules(
     value: ModuleSettings[],
@@ -741,7 +796,7 @@ export const RecipeUtility = {
       });
 
     return result;
-  },
+  }
 
   hydrateModules(
     value: ModuleSettings[] | undefined,
@@ -772,7 +827,7 @@ export const RecipeUtility = {
     }
 
     return result;
-  },
+  }
 
   dehydrateBeacons(
     value: BeaconSettings[],
@@ -815,7 +870,7 @@ export const RecipeUtility = {
     if (result.every((r) => Object.keys(r).length === 0)) return [];
 
     return result;
-  },
+  }
 
   hydrateBeacons(
     value: BeaconSettings[] | undefined,
@@ -852,5 +907,5 @@ export const RecipeUtility = {
 
       return b;
     });
-  },
-};
+  }
+}

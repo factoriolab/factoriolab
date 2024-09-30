@@ -34,6 +34,7 @@ import { Settings } from '~/models/settings/settings';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
+import { RateService } from '~/services/rate.service';
 import { TrackService } from '~/services/track.service';
 import { TranslateService } from '~/services/translate.service';
 import { ItemsService } from '~/store/items.service';
@@ -41,7 +42,6 @@ import { ObjectivesService } from '~/store/objectives.service';
 import { PreferencesService } from '~/store/preferences.service';
 import { RecipesService } from '~/store/recipes.service';
 import { SettingsService } from '~/store/settings.service';
-import { RateUtility } from '~/utilities/rate.utility';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { PickerComponent } from '../picker/picker.component';
@@ -77,6 +77,7 @@ export class ObjectivesComponent {
   itemsSvc = inject(ItemsService);
   objectivesSvc = inject(ObjectivesService);
   preferencesSvc = inject(PreferencesService);
+  rateSvc = inject(RateService);
   recipesSvc = inject(RecipesService);
   settingsSvc = inject(SettingsService);
   trackSvc = inject(TrackService);
@@ -267,7 +268,7 @@ export class ObjectivesComponent {
     const itemsState = this.itemsState();
     const beltSpeed = this.beltSpeed();
     const dispRateInfo = this.dispRateInfo();
-    const oldValue = RateUtility.objectiveNormalizedRate(
+    const oldValue = this.rateSvc.objectiveNormalizedRate(
       objective,
       itemsState,
       beltSpeed,
@@ -304,7 +305,7 @@ export class ObjectivesComponent {
     const itemsState = this.itemsState();
     const beltSpeed = this.beltSpeed();
     const dispRateInfo = this.dispRateInfo();
-    const factor = RateUtility.objectiveNormalizedRate(
+    const factor = this.rateSvc.objectiveNormalizedRate(
       {
         id: '',
         targetId: itemId,
@@ -346,14 +347,14 @@ export class ObjectivesComponent {
     const itemsState = this.itemsState();
     const beltSpeed = this.beltSpeed();
     const dispRateInfo = this.dispRateInfo();
-    const oldValue = RateUtility.objectiveNormalizedRate(
+    const oldValue = this.rateSvc.objectiveNormalizedRate(
       objective,
       itemsState,
       beltSpeed,
       dispRateInfo,
       data,
     );
-    const factor = RateUtility.objectiveNormalizedRate(
+    const factor = this.rateSvc.objectiveNormalizedRate(
       {
         id: '',
         targetId: itemId,

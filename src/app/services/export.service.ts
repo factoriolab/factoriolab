@@ -5,11 +5,11 @@ import { coalesce, fnPropsNotNullish, notNullish } from '~/helpers';
 import { FlowData } from '~/models/flow';
 import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
-import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { ItemsService } from '../store/items.service';
 import { RecipesService } from '../store/recipes.service';
 import { SettingsService } from '../store/settings.service';
+import { RecipeService } from './recipe.service';
 
 const CSV_TYPE = 'text/csv;charset=UTF-8';
 const CSV_EXTENSION = '.csv';
@@ -61,6 +61,7 @@ export const StepKeys = [
 })
 export class ExportService {
   itemsSvc = inject(ItemsService);
+  recipeSvc = inject(RecipeService);
   recipesSvc = inject(RecipesService);
   settingsSvc = inject(SettingsService);
 
@@ -138,7 +139,7 @@ export class ExportService {
 
       if (recipeSettings.machineId != null) {
         const machine = data.machineEntities[recipeSettings.machineId];
-        const allowsModules = RecipeUtility.allowsModules(recipe, machine);
+        const allowsModules = this.recipeSvc.allowsModules(recipe, machine);
         if (columns.machines.show) {
           if (step.machines != null)
             exp.Machines = '=' + step.machines.toString();

@@ -49,7 +49,7 @@ import { CostSettings } from '~/models/settings/cost-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { Settings } from '~/models/settings/settings';
 import { Entities, Optional } from '~/models/utils';
-import { RecipeUtility } from '~/utilities/recipe.utility';
+import { RecipeService } from '~/services/recipe.service';
 
 import { AnalyticsService } from '../services/analytics.service';
 import { DatasetsService } from './datasets.service';
@@ -126,6 +126,7 @@ export class SettingsService extends Store<SettingsState> {
   analyticsSvc = inject(AnalyticsService);
   datasetsSvc = inject(DatasetsService);
   preferencesSvc = inject(PreferencesService);
+  recipeSvc = inject(RecipeService);
 
   displayRate = this.select('displayRate');
   flowRate = this.select('flowRate');
@@ -211,12 +212,10 @@ export class SettingsService extends Store<SettingsState> {
     return gameColumnsState(spread(initialColumnsState, columns), gameInfo);
   });
 
-  defaults = computed(() =>
-    SettingsService.computeDefaults(this.mod(), this.preset()),
-  );
+  defaults = computed(() => this.computeDefaults(this.mod(), this.preset()));
 
   dataset = computed(() =>
-    SettingsService.computeDataset(
+    this.computeDataset(
       this.mod(),
       this.hash(),
       this.i18n(),
@@ -242,7 +241,7 @@ export class SettingsService extends Store<SettingsState> {
   });
 
   settings = computed(() =>
-    SettingsService.computeSettings(
+    this.computeSettings(
       this.state(),
       this.defaults(),
       this.allResearchedTechnologyIds(),
@@ -336,10 +335,7 @@ export class SettingsService extends Store<SettingsState> {
     });
   }
 
-  static computeDefaults(
-    mod: Optional<Mod>,
-    preset: Preset,
-  ): Optional<Defaults> {
+  computeDefaults(mod: Optional<Mod>, preset: Preset): Optional<Defaults> {
     if (mod?.defaults == null) return;
 
     const m = mod.defaults;
@@ -402,7 +398,7 @@ export class SettingsService extends Store<SettingsState> {
     };
   }
 
-  static computeDataset(
+  computeDataset(
     mod: Optional<Mod>,
     hash: Optional<ModHash>,
     i18n: Optional<ModI18n>,
@@ -626,7 +622,7 @@ export class SettingsService extends Store<SettingsState> {
     };
   }
 
-  static computeSettings(
+  computeSettings(
     state: SettingsState,
     defaults: Optional<Defaults>,
     researchedTechnologyIds: Set<string>,
@@ -671,7 +667,7 @@ export class SettingsService extends Store<SettingsState> {
       defaultFuelRankIds,
       moduleRankIds,
       defaultModuleRankIds,
-      beacons: RecipeUtility.hydrateBeacons(state.beacons, defaults?.beacons),
+      beacons: this.recipeSvc.hydrateBeacons(state.beacons, defaults?.beacons),
       overclock: state.overclock ?? defaults?.overclock,
       researchedTechnologyIds,
     });

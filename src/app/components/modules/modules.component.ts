@@ -20,8 +20,8 @@ import { Rational, rational } from '~/models/rational';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { RecipeService } from '~/services/recipe.service';
 import { SettingsService } from '~/store/settings.service';
-import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { InputNumberComponent } from '../input-number/input-number.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
@@ -44,6 +44,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModulesComponent {
+  recipeSvc = inject(RecipeService);
   settingsSvc = inject(SettingsService);
 
   entity = input.required<Machine | Beacon>();
@@ -66,7 +67,7 @@ export class ModulesComponent {
       .reduce((s, c) => s.add(c), rational.zero),
   );
   options = computed(() => {
-    return RecipeUtility.moduleOptions(
+    return this.recipeSvc.moduleOptions(
       this.entity(),
       this.data(),
       this.recipeId(),

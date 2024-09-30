@@ -24,9 +24,9 @@ import { Rational, rational } from '~/models/rational';
 import { Step } from '~/models/step';
 import { StepDetail, StepOutput } from '~/models/step-detail';
 import { Entities } from '~/models/utils';
-import { RateUtility } from '~/utilities/rate.utility';
-import { RecipeUtility } from '~/utilities/recipe.utility';
-import { SimplexUtility } from '~/utilities/simplex.utility';
+import { RateService } from '~/services/rate.service';
+import { RecipeService } from '~/services/recipe.service';
+import { SimplexService } from '~/services/simplex.service';
 
 import { ItemsService } from './items.service';
 import { MachinesService } from './machines.service';
@@ -44,8 +44,11 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
   itemsSvc = inject(ItemsService);
   machinesSvc = inject(MachinesService);
   preferencesSvc = inject(PreferencesService);
+  rateSvc = inject(RateService);
+  recipeSvc = inject(RecipeService);
   recipesSvc = inject(RecipesService);
   settingsSvc = inject(SettingsService);
+  simplexSvc = inject(SimplexService);
 
   baseObjectives = computed(() => {
     const state = this.state();
@@ -69,7 +72,7 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
     const data = this.recipesSvc.adjustedDataset();
 
     return objectives.map((o) =>
-      RecipeUtility.adjustObjective(
+      this.recipeSvc.adjustObjective(
         o,
         itemsState,
         recipesState,
@@ -89,7 +92,7 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
 
     return objectives.map((o) =>
       spread(o, {
-        value: RateUtility.objectiveNormalizedRate(
+        value: this.rateSvc.objectiveNormalizedRate(
           o,
           itemsState,
           beltSpeed,
@@ -106,7 +109,7 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
     const data = this.recipesSvc.adjustedDataset();
     const paused = this.preferencesSvc.paused();
 
-    return SimplexUtility.solve(objectives, settings, data, paused);
+    return this.simplexSvc.solve(objectives, settings, data, paused);
   });
 
   steps = computed(() => {
@@ -119,7 +122,7 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
     const settings = this.settingsSvc.settings();
     const data = this.recipesSvc.adjustedDataset();
 
-    return RateUtility.normalizeSteps(
+    return this.rateSvc.normalizeSteps(
       result.steps,
       objectives,
       itemsState,

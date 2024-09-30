@@ -50,13 +50,13 @@ import { FilterOptionsPipe } from '~/pipes/filter-options.pipe';
 import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
+import { RecipeService } from '~/services/recipe.service';
 import { RouterService } from '~/services/router.service';
 import { TranslateService } from '~/services/translate.service';
 import { DatasetsService } from '~/store/datasets.service';
 import { MachinesService } from '~/store/machines.service';
 import { PreferencesService } from '~/store/preferences.service';
 import { SettingsService } from '~/store/settings.service';
-import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { BeaconsOverlayComponent } from '../beacons-overlay/beacons-overlay.component';
 import { CostsComponent } from '../costs/costs.component';
@@ -110,6 +110,7 @@ export class SettingsComponent implements OnInit {
   datasetsSvc = inject(DatasetsService);
   machinesSvc = inject(MachinesService);
   preferencesSvc = inject(PreferencesService);
+  recipeSvc = inject(RecipeService);
   routerSvc = inject(RouterService);
   settingsSvc = inject(SettingsService);
   translateSvc = inject(TranslateService);
@@ -262,7 +263,7 @@ export class SettingsComponent implements OnInit {
   }
 
   changeModules(id: string, value: ModuleSettings[]): void {
-    const modules = RecipeUtility.dehydrateModules(
+    const modules = this.recipeSvc.dehydrateModules(
       value,
       coalesce(this.machinesState()[id].moduleOptions, []),
       this.settings().moduleRankIds,
@@ -273,13 +274,13 @@ export class SettingsComponent implements OnInit {
 
   changeBeacons(id: string, value: BeaconSettings[]): void {
     const def = this.settings().beacons;
-    const beacons = RecipeUtility.dehydrateBeacons(value, def);
+    const beacons = this.recipeSvc.dehydrateBeacons(value, def);
     this.machinesSvc.updateEntity(id, { beacons });
   }
 
   changeDefaultBeacons(value: BeaconSettings[]): void {
     const def = this.defaults()?.beacons;
-    const beacons = RecipeUtility.dehydrateBeacons(value, def);
+    const beacons = this.recipeSvc.dehydrateBeacons(value, def);
     this.settingsSvc.apply({ beacons });
   }
 

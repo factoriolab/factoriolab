@@ -12,9 +12,6 @@ import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
 import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
-import { RateUtility } from '~/utilities/rate.utility';
-import { RecipeUtility } from '~/utilities/recipe.utility';
-import { SimplexUtility } from '~/utilities/simplex.utility';
 
 import { ObjectivesService } from './objectives.service';
 
@@ -43,19 +40,19 @@ describe('ObjectivesService', () => {
 
   describe('objectives', () => {
     it('should adjust recipe objectives based on settings', () => {
-      spyOn(RecipeUtility, 'adjustObjective');
+      spyOn(service.recipeSvc, 'adjustObjective');
       spyOn(service, 'baseObjectives').and.returnValue([Mocks.objective5]);
       service.objectives();
-      expect(RecipeUtility.adjustObjective).toHaveBeenCalledTimes(1);
+      expect(service.recipeSvc.adjustObjective).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('normalizedObjectives', () => {
     it('should map objectives to rates', () => {
-      spyOn(RateUtility, 'objectiveNormalizedRate');
+      spyOn(service.rateSvc, 'objectiveNormalizedRate');
       spyOn(service, 'objectives').and.returnValue(Mocks.objectives);
       service.normalizedObjectives();
-      expect(RateUtility.objectiveNormalizedRate).toHaveBeenCalledTimes(
+      expect(service.rateSvc.objectiveNormalizedRate).toHaveBeenCalledTimes(
         Mocks.objectives.length,
       );
     });
@@ -63,20 +60,20 @@ describe('ObjectivesService', () => {
 
   describe('matrixResult', () => {
     it('should calculate using utility method', () => {
-      spyOn(SimplexUtility, 'solve').and.returnValue({
+      spyOn(service.simplexSvc, 'solve').and.returnValue({
         steps: [],
         resultType: SimplexResultType.Skipped,
       });
       service.matrixResult();
-      expect(SimplexUtility.solve).toHaveBeenCalled();
+      expect(service.simplexSvc.solve).toHaveBeenCalled();
     });
   });
 
   describe('steps', () => {
     it('should normalize steps after solution is found', () => {
-      spyOn(RateUtility, 'normalizeSteps');
+      spyOn(service.rateSvc, 'normalizeSteps');
       service.steps();
-      expect(RateUtility.normalizeSteps).toHaveBeenCalled();
+      expect(service.rateSvc.normalizeSteps).toHaveBeenCalled();
     });
   });
 

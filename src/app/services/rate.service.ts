@@ -1,3 +1,5 @@
+import { Injectable } from '@angular/core';
+
 import {
   SankeyLinkExtraProperties,
   SankeyNodeExtraProperties,
@@ -21,7 +23,8 @@ import { RecipesSettings } from '~/store/recipes.service';
 
 const ROOT_ID = '';
 
-export const RateUtility = {
+@Injectable({ providedIn: 'root' })
+export class RateService {
   objectiveNormalizedRate(
     objective: ObjectiveSettings,
     items: ItemsSettings,
@@ -71,7 +74,7 @@ export const RateUtility = {
     if (recipe?.isTechnology) factor = factor.mul(recipe.productivity);
 
     return rate.mul(factor);
-  },
+  }
 
   addEntityValue(
     step: Step,
@@ -83,7 +86,7 @@ export const RateUtility = {
     if (!obj) step[key] = { [parentId]: value };
     else if (obj[parentId]) obj[parentId] = obj[parentId].add(value);
     else obj[parentId] = value;
-  },
+  }
 
   adjustPowerPollution(step: Step, recipe: Recipe, game: Game): void {
     if (step.machines?.nonzero() && !recipe.part) {
@@ -110,7 +113,7 @@ export const RateUtility = {
       if (recipe.pollution?.nonzero())
         step.pollution = step.machines.mul(recipe.pollution);
     }
-  },
+  }
 
   normalizeSteps(
     steps: Step[],
@@ -138,7 +141,7 @@ export const RateUtility = {
 
     this.sortBySankey(_steps);
     return this.calculateHierarchy(_steps);
-  },
+  }
 
   calculateParentsOutputs(step: Step, steps: Step[]): void {
     if (step.recipe && step.machines?.nonzero()) {
@@ -167,7 +170,7 @@ export const RateUtility = {
         }
       }
     }
-  },
+  }
 
   calculateSettings(
     step: Step,
@@ -179,7 +182,7 @@ export const RateUtility = {
         step.recipeSettings = objectiveEntities[step.recipeObjectiveId];
       else step.recipeSettings = recipes[step.recipeId];
     }
-  },
+  }
 
   calculateBelts(
     step: Step,
@@ -216,7 +219,7 @@ export const RateUtility = {
           step.wagons = step.items.div(data.fluidWagonEntities[wagon].capacity);
       }
     }
-  },
+  }
 
   calculateBeacons(
     step: Step,
@@ -264,7 +267,7 @@ export const RateUtility = {
         return { ...b, total };
       }),
     });
-  },
+  }
 
   calculateDisplayRate(step: Step, dispRateInfo: DisplayRateInfo): void {
     if (step.items) {
@@ -287,7 +290,7 @@ export const RateUtility = {
     if (step.output) {
       step.output = step.output.mul(dispRateInfo.value);
     }
-  },
+  }
 
   calculateChecked(step: Step, settings: Settings): void {
     // Priority: 1) Item settings, 2) Recipe objective settings, 3) Recipe settings
@@ -298,7 +301,7 @@ export const RateUtility = {
     } else if (step.recipeId != null) {
       step.checked = settings.checkedRecipeIds.has(step.recipeId);
     }
-  },
+  }
 
   /** Generates a simple sankey diagram and sorts steps by their node depth */
   sortBySankey(steps: Step[]): void {
@@ -365,7 +368,7 @@ export const RateUtility = {
     }
 
     steps.sort((a, b) => stepRank(b) - stepRank(a));
-  },
+  }
 
   calculateHierarchy(steps: Step[]): Step[] {
     // Determine parents
@@ -407,7 +410,7 @@ export const RateUtility = {
     sorted.push(...steps.filter((s) => !sorted.includes(s)));
 
     return sorted;
-  },
+  }
 
   sortRecursive(groups: Entities<Step[]>, id: string, result: Step[]): Step[] {
     if (!groups[id]) {
@@ -420,11 +423,11 @@ export const RateUtility = {
     }
 
     return result;
-  },
+  }
 
   copy(steps: Step[]): Step[] {
     return steps.map((s) =>
       s.parents ? spread(s, { parents: spread(s.parents) }) : spread(s),
     );
-  },
-};
+  }
+}

@@ -59,6 +59,7 @@ import { StepIdPipe } from '~/pipes/step-id.pipe';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
 import { ExportService } from '~/services/export.service';
+import { RecipeService } from '~/services/recipe.service';
 import { RouterService } from '~/services/router.service';
 import { TrackService } from '~/services/track.service';
 import { ItemsService } from '~/store/items.service';
@@ -67,7 +68,6 @@ import { ObjectivesService } from '~/store/objectives.service';
 import { PreferencesService } from '~/store/preferences.service';
 import { RecipesService } from '~/store/recipes.service';
 import { SettingsService } from '~/store/settings.service';
-import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { BeaconsOverlayComponent } from '../beacons-overlay/beacons-overlay.component';
 import { ColumnsComponent } from '../columns/columns.component';
@@ -128,6 +128,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
   machinesSvc = inject(MachinesService);
   objectivesSvc = inject(ObjectivesService);
   preferencesSvc = inject(PreferencesService);
+  recipeSvc = inject(RecipeService);
   recipesSvc = inject(RecipesService);
   routerSvc = inject(RouterService);
   settingsSvc = inject(SettingsService);
@@ -395,7 +396,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
     const machine = this.data().machineEntities[settings.machineId];
     const machineSettings = this.machinesState()[settings.machineId];
     if (state.modules) {
-      state.modules = RecipeUtility.dehydrateModules(
+      state.modules = this.recipeSvc.dehydrateModules(
         state.modules,
         coalesce(settings.moduleOptions, []),
         this.settings().moduleRankIds,
@@ -405,7 +406,7 @@ export class StepsComponent implements OnInit, AfterViewInit {
     }
 
     if (state.beacons) {
-      state.beacons = RecipeUtility.dehydrateBeacons(
+      state.beacons = this.recipeSvc.dehydrateBeacons(
         state.beacons,
         machineSettings.beacons,
       );

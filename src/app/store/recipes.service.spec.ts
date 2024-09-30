@@ -2,7 +2,6 @@ import { TestBed } from '@angular/core/testing';
 
 import { rational } from '~/models/rational';
 import { ItemId, Mocks, TestModule } from '~/tests';
-import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { RecipesService } from './recipes.service';
 
@@ -46,9 +45,9 @@ describe('RecipesService', () => {
 
   describe('adjustedDataset', () => {
     it('should call the utility method', () => {
-      spyOn(RecipeUtility, 'adjustDataset');
+      spyOn(service.recipeSvc, 'adjustDataset');
       service.adjustedDataset();
-      expect(RecipeUtility.adjustDataset).toHaveBeenCalled();
+      expect(service.recipeSvc.adjustDataset).toHaveBeenCalled();
     });
   });
 

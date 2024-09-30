@@ -1,14 +1,18 @@
 import { Component } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { data } from 'src/data';
 import modJson from 'src/data/1.1/data.json';
 import hashJson from 'src/data/1.1/hash.json';
 import i18nJson from 'src/data/1.1/i18n/zh.json';
 
 import { spread, toEntities } from '~/helpers';
+import { Item } from '~/models/data/item';
 import { ModData } from '~/models/data/mod-data';
 import { ModHash } from '~/models/data/mod-hash';
 import { ModI18n } from '~/models/data/mod-i18n';
+import { Recipe } from '~/models/data/recipe';
 import { AdjustedDataset, Dataset } from '~/models/dataset';
+import { Defaults } from '~/models/defaults';
 import { DisplayRate, displayRateInfo } from '~/models/enum/display-rate';
 import { FlowDiagram } from '~/models/enum/flow-diagram';
 import { Game } from '~/models/enum/game';
@@ -32,22 +36,28 @@ import { FlowSettings } from '~/models/settings/flow-settings';
 import { ItemState } from '~/models/settings/item-settings';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { RecipeState } from '~/models/settings/recipe-settings';
+import { Settings } from '~/models/settings/settings';
 import { Step } from '~/models/step';
 import { Entities } from '~/models/utils';
+import { RecipeService } from '~/services/recipe.service';
 import { ThemeValues } from '~/services/theme.service';
-import { ItemsService } from '~/store/items.service';
-import { MachinesService } from '~/store/machines.service';
+import { ItemsService, ItemsSettings } from '~/store/items.service';
+import { MachinesService, MachinesSettings } from '~/store/machines.service';
 import { ObjectivesState } from '~/store/objectives.service';
 import { PreferencesState } from '~/store/preferences.service';
-import { RecipesService, RecipesSettings } from '~/store/recipes.service';
+import {
+  RecipesService,
+  RecipesSettings,
+  RecipesState,
+} from '~/store/recipes.service';
 import {
   initialSettingsState,
   SettingsService,
 } from '~/store/settings.service';
-import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { ItemId } from './item-id';
 import { RecipeId } from './recipe-id';
+import { TestModule } from './test.module';
 
 export const raw = data;
 export const modInfo = data.mods[0];
@@ -56,21 +66,13 @@ modData.defaults!.excludedRecipes = [RecipeId.NuclearFuelReprocessing];
 export const modHash: ModHash = hashJson;
 export const modI18n: ModI18n = i18nJson;
 export const mod = spread(modInfo as Mod, modData);
-export const defaults = SettingsService.computeDefaults(mod, Preset.Beacon8)!;
-export function getDataset(): Dataset {
-  return SettingsService.computeDataset(
-    mod,
-    modHash,
-    undefined,
-    Game.Factorio,
-    defaults,
-  );
-}
-export const dataset = getDataset();
-export const categoryId = dataset.categoryIds[0];
-export const item1 = dataset.itemEntities[dataset.itemIds[0]];
-export const item2 = dataset.itemEntities[dataset.itemIds[1]];
-export const recipe1 = dataset.recipeEntities[dataset.recipeIds[0]];
+export let defaults: Defaults;
+export let getDataset: () => Dataset;
+export let dataset: Dataset;
+export let categoryId: string;
+export let item1: Item;
+export let item2: Item;
+export let recipe1: Recipe;
 export const objective1: ObjectiveState = {
   id: '1',
   targetId: ItemId.AdvancedCircuit,
@@ -177,85 +179,26 @@ export const recipeSettings2: RecipeState = {
     },
   ],
 };
-export const step1: Step = {
-  id: `${item1.id}.${item1.id}`,
-  itemId: item1.id,
-  recipeId: item1.id,
-  items: objective1.value,
-  belts: rational(1n, 2n),
-  wagons: rational(2n),
-  machines: rational.one,
-  power: rational.one,
-  pollution: rational.one,
-};
-export const step2: Step = {
-  id: `${item2.id}.${item2.id}`,
-  itemId: item2.id,
-  recipeId: item2.id,
-  items: objective2.value,
-  belts: rational.one,
-  wagons: rational.one,
-  machines: rational(2n),
-  power: rational.zero,
-  pollution: rational.zero,
-};
-export const steps = [step1, step2];
+export let step1: Step;
+export let step2: Step;
+export let steps: Step[];
 export const beltSpeed: Entities<Rational> = {
   [ItemId.ExpressTransportBelt]: rational(45n),
   [ItemId.TransportBelt]: rational(15n),
   [ItemId.Pipe]: rational(1500n),
 };
-export const itemsState: Entities<ItemState> = {};
-for (const item of dataset.itemIds.map((i) => dataset.itemEntities[i])) {
-  itemsState[item.id] = spread(itemSettings1);
-}
-export const recipesState: Entities<RecipeState> = {};
-for (const recipe of dataset.recipeIds.map((i) => dataset.recipeEntities[i])) {
-  recipesState[recipe.id] = spread(recipeSettings1);
-}
-export const settingsStateInitial = SettingsService.computeSettings(
-  initialSettingsState,
-  defaults,
-  new Set(dataset.technologyIds),
-);
-export const itemsStateInitial = ItemsService.computeItemsSettings(
-  {},
-  settingsStateInitial,
-  dataset,
-);
-export const machinesStateInitial = MachinesService.computeMachinesSettings(
-  {},
-  settingsStateInitial,
-  dataset,
-);
-export function getRecipesState(): RecipesSettings {
-  return RecipesService.computeRecipesSettings(
-    {},
-    machinesStateInitial,
-    settingsStateInitial,
-    dataset,
-  );
-}
-export const recipesStateInitial = getRecipesState();
+export let itemsState: Entities<ItemState>;
+export let recipesState: Entities<RecipeState>;
 export const costs = initialSettingsState.costs;
-export function getAdjustedDataset(): AdjustedDataset {
-  return RecipeUtility.adjustDataset(
-    dataset.recipeIds,
-    recipesStateInitial,
-    itemsStateInitial,
-    settingsStateInitial,
-    getDataset(),
-  );
-}
-export const adjustedDataset = getAdjustedDataset();
-export const objectives = objectivesList.map((o) =>
-  spread(o, {
-    recipe: isRecipeObjective(o)
-      ? adjustedDataset.adjustedRecipe[o.targetId]
-      : undefined,
-  }),
-);
-export const objective = objectives[0];
+export let settingsStateInitial: Settings;
+export let itemsStateInitial: ItemsSettings;
+export let machinesStateInitial: MachinesSettings;
+export let getRecipesState: () => RecipesSettings;
+export let recipesStateInitial: RecipesSettings;
+export let getAdjustedDataset: () => AdjustedDataset;
+export let adjustedDataset: AdjustedDataset;
+export let objectives: ObjectiveState[];
+export let objective: ObjectiveState;
 export const flowSettings: FlowSettings = {
   diagram: FlowDiagram.Sankey,
   linkSize: LinkValue.Items,
@@ -285,11 +228,7 @@ export const preferencesState: PreferencesState = {
   convertObjectiveValues: false,
   flowSettings: flowSettings,
 };
-export const matrixResultSolved: MatrixResult = {
-  steps: steps,
-  resultType: SimplexResultType.Solved,
-  time: 20,
-};
+export let matrixResultSolved: MatrixResult;
 
 const node = (
   id: string,
@@ -344,67 +283,10 @@ export const getFlow = (includeHref = false): FlowData => ({
     link('r|2', 's|4'),
   ],
 });
-export const flow = getFlow();
+export let flow: FlowData;
 export const drInfo = displayRateInfo[DisplayRate.PerMinute];
 
-export const lightOilSteps: Step[] = [
-  {
-    id: '0',
-    itemId: ItemId.LightOil,
-    items: rational(60n),
-    output: rational(60n),
-    machines: rational(1n, 51n),
-    recipeId: RecipeId.HeavyOilCracking,
-    recipeSettings: recipesStateInitial[RecipeId.HeavyOilCracking],
-    parents: {
-      '': rational.one,
-    },
-    outputs: { [ItemId.LightOil]: rational(5n, 17n) },
-  },
-  {
-    id: '3',
-    itemId: ItemId.HeavyOil,
-    items: rational(4000n, 17n),
-    machines: rational(4n, 51n),
-    recipeId: RecipeId.AdvancedOilProcessing,
-    recipeSettings: recipesStateInitial[RecipeId.AdvancedOilProcessing],
-    parents: { '0': rational.one },
-    outputs: {
-      [ItemId.HeavyOil]: rational.one,
-      [ItemId.LightOil]: rational(12n, 17n),
-      [ItemId.PetroleumGas]: rational.one,
-    },
-  },
-  {
-    id: '2',
-    itemId: ItemId.CrudeOil,
-    items: rational(1600n, 17n),
-    machines: rational(8n, 51n),
-    recipeId: RecipeId.CrudeOil,
-    recipeSettings: recipesStateInitial[RecipeId.CrudeOil],
-    parents: { '3': rational.one },
-    outputs: { [ItemId.CrudeOil]: rational.one },
-  },
-  {
-    id: '4',
-    itemId: ItemId.PetroleumGas,
-    items: rational(880n, 17n),
-    surplus: rational(880n, 17n),
-  },
-  {
-    id: '1',
-    itemId: ItemId.Water,
-    items: rational(1100n, 17n),
-    machines: rational(11n, 12240n),
-    recipeId: RecipeId.Water,
-    recipeSettings: recipesStateInitial[RecipeId.Water],
-    outputs: { [ItemId.Water]: rational.one },
-    parents: {
-      '0': rational(3n, 11n),
-      '1': rational(8n, 11n),
-    },
-  },
-];
+export let lightOilSteps: Step[];
 
 export const moduleSettings: ModuleSettings[] = [
   {
@@ -435,3 +317,165 @@ export const themeValues: ThemeValues = {
 
 @Component({ standalone: true, template: '' })
 export class MockComponent {}
+
+beforeAll(() => {
+  TestBed.configureTestingModule({ imports: [TestModule] });
+  const recipeSvc = TestBed.inject(RecipeService);
+  const itemsSvc = TestBed.inject(ItemsService);
+  const machinesSvc = TestBed.inject(MachinesService);
+  const recipesSvc = TestBed.inject(RecipesService);
+  const settingsSvc = TestBed.inject(SettingsService);
+
+  defaults = settingsSvc.computeDefaults(mod, Preset.Beacon8)!;
+  getDataset = (): Dataset => {
+    return settingsSvc.computeDataset(
+      mod,
+      modHash,
+      undefined,
+      Game.Factorio,
+      defaults,
+    );
+  };
+  dataset = getDataset();
+  categoryId = dataset.categoryIds[0];
+  item1 = dataset.itemEntities[dataset.itemIds[0]];
+  item2 = dataset.itemEntities[dataset.itemIds[1]];
+  recipe1 = dataset.recipeEntities[dataset.recipeIds[0]];
+  step1 = {
+    id: `${item1.id}.${item1.id}`,
+    itemId: item1.id,
+    recipeId: item1.id,
+    items: objective1.value,
+    belts: rational(1n, 2n),
+    wagons: rational(2n),
+    machines: rational.one,
+    power: rational.one,
+    pollution: rational.one,
+  };
+  step2 = {
+    id: `${item2.id}.${item2.id}`,
+    itemId: item2.id,
+    recipeId: item2.id,
+    items: objective2.value,
+    belts: rational.one,
+    wagons: rational.one,
+    machines: rational(2n),
+    power: rational.zero,
+    pollution: rational.zero,
+  };
+  steps = [step1, step2];
+  itemsState = {};
+  for (const item of dataset.itemIds.map((i) => dataset.itemEntities[i]))
+    itemsState[item.id] = spread(itemSettings1);
+
+  recipesState = {};
+  for (const recipe of dataset.recipeIds.map((i) => dataset.recipeEntities[i]))
+    recipesState[recipe.id] = spread(recipeSettings1);
+
+  settingsStateInitial = settingsSvc.computeSettings(
+    initialSettingsState,
+    defaults,
+    new Set(dataset.technologyIds),
+  );
+  itemsStateInitial = itemsSvc.computeItemsSettings(
+    {},
+    settingsStateInitial,
+    dataset,
+  );
+  machinesStateInitial = machinesSvc.computeMachinesSettings(
+    {},
+    settingsStateInitial,
+    dataset,
+  );
+  getRecipesState = (): RecipesState => {
+    return recipesSvc.computeRecipesSettings(
+      {},
+      machinesStateInitial,
+      settingsStateInitial,
+      dataset,
+    );
+  };
+  recipesStateInitial = getRecipesState();
+  getAdjustedDataset = (): AdjustedDataset => {
+    return recipeSvc.adjustDataset(
+      dataset.recipeIds,
+      recipesStateInitial,
+      itemsStateInitial,
+      settingsStateInitial,
+      getDataset(),
+    );
+  };
+  adjustedDataset = getAdjustedDataset();
+  objectives = objectivesList.map((o) =>
+    spread(o, {
+      recipe: isRecipeObjective(o)
+        ? adjustedDataset.adjustedRecipe[o.targetId]
+        : undefined,
+    }),
+  );
+  objective = objectives[0];
+  matrixResultSolved = {
+    steps: steps,
+    resultType: SimplexResultType.Solved,
+    time: 20,
+  };
+  flow = getFlow();
+  lightOilSteps = [
+    {
+      id: '0',
+      itemId: ItemId.LightOil,
+      items: rational(60n),
+      output: rational(60n),
+      machines: rational(1n, 51n),
+      recipeId: RecipeId.HeavyOilCracking,
+      recipeSettings: recipesStateInitial[RecipeId.HeavyOilCracking],
+      parents: {
+        '': rational.one,
+      },
+      outputs: { [ItemId.LightOil]: rational(5n, 17n) },
+    },
+    {
+      id: '3',
+      itemId: ItemId.HeavyOil,
+      items: rational(4000n, 17n),
+      machines: rational(4n, 51n),
+      recipeId: RecipeId.AdvancedOilProcessing,
+      recipeSettings: recipesStateInitial[RecipeId.AdvancedOilProcessing],
+      parents: { '0': rational.one },
+      outputs: {
+        [ItemId.HeavyOil]: rational.one,
+        [ItemId.LightOil]: rational(12n, 17n),
+        [ItemId.PetroleumGas]: rational.one,
+      },
+    },
+    {
+      id: '2',
+      itemId: ItemId.CrudeOil,
+      items: rational(1600n, 17n),
+      machines: rational(8n, 51n),
+      recipeId: RecipeId.CrudeOil,
+      recipeSettings: recipesStateInitial[RecipeId.CrudeOil],
+      parents: { '3': rational.one },
+      outputs: { [ItemId.CrudeOil]: rational.one },
+    },
+    {
+      id: '4',
+      itemId: ItemId.PetroleumGas,
+      items: rational(880n, 17n),
+      surplus: rational(880n, 17n),
+    },
+    {
+      id: '1',
+      itemId: ItemId.Water,
+      items: rational(1100n, 17n),
+      machines: rational(11n, 12240n),
+      recipeId: RecipeId.Water,
+      recipeSettings: recipesStateInitial[RecipeId.Water],
+      outputs: { [ItemId.Water]: rational.one },
+      parents: {
+        '0': rational(3n, 11n),
+        '1': rational(8n, 11n),
+      },
+    },
+  ];
+});

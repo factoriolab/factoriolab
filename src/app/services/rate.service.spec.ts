@@ -1,3 +1,5 @@
+import { TestBed } from '@angular/core/testing';
+
 import { spread } from '~/helpers';
 import { DisplayRate, displayRateInfo } from '~/models/enum/display-rate';
 import { Game } from '~/models/enum/game';
@@ -7,15 +9,22 @@ import { ObjectiveSettings } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
 import { Entities } from '~/models/utils';
-import { ItemId, Mocks, RecipeId } from '~/tests';
+import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
-import { RateUtility } from './rate.utility';
+import { RateService } from './rate.service';
 
-describe('RateUtility', () => {
+describe('RateService', () => {
+  let service: RateService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [TestModule] });
+    service = TestBed.inject(RateService);
+  });
+
   describe('objectiveNormalizedRate', () => {
     it('should skip on maximize objectives', () => {
       expect(
-        RateUtility.objectiveNormalizedRate(
+        service.objectiveNormalizedRate(
           {
             id: '0',
             targetId: ItemId.Coal,
@@ -33,7 +42,7 @@ describe('RateUtility', () => {
 
     it('should normalize item objective rates based on display rate', () => {
       expect(
-        RateUtility.objectiveNormalizedRate(
+        service.objectiveNormalizedRate(
           {
             id: '0',
             targetId: ItemId.Coal,
@@ -51,7 +60,7 @@ describe('RateUtility', () => {
 
     it('should normalize item objective rates based on belts', () => {
       expect(
-        RateUtility.objectiveNormalizedRate(
+        service.objectiveNormalizedRate(
           {
             id: '0',
             targetId: ItemId.Coal,
@@ -69,7 +78,7 @@ describe('RateUtility', () => {
 
     it('should normalize item objective rates based on wagons', () => {
       expect(
-        RateUtility.objectiveNormalizedRate(
+        service.objectiveNormalizedRate(
           {
             id: '0',
             targetId: ItemId.Coal,
@@ -85,7 +94,7 @@ describe('RateUtility', () => {
       ).toEqual(rational(100n, 3n));
 
       expect(
-        RateUtility.objectiveNormalizedRate(
+        service.objectiveNormalizedRate(
           {
             id: '0',
             targetId: ItemId.PetroleumGas,
@@ -103,7 +112,7 @@ describe('RateUtility', () => {
 
     it('should adjust technology objective rate by productivity', () => {
       expect(
-        RateUtility.objectiveNormalizedRate(
+        service.objectiveNormalizedRate(
           {
             id: '0',
             targetId: ItemId.ArtilleryShellRange,
@@ -123,7 +132,7 @@ describe('RateUtility', () => {
   describe('addEntityValue', () => {
     it('should add parents field to step', () => {
       const step = spread(Mocks.step1);
-      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
+      service.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: rational.one });
     });
 
@@ -131,13 +140,13 @@ describe('RateUtility', () => {
       const step = spread(Mocks.step1, {
         parents: { [ItemId.Coal]: rational.zero },
       });
-      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
+      service.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: rational.one });
     });
 
     it('should add a new key to an existing parents object', () => {
       const step = spread(Mocks.step1, { parents: {} });
-      RateUtility.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
+      service.addEntityValue(step, 'parents', ItemId.Coal, rational.one);
       expect(step.parents).toEqual({ [ItemId.Coal]: rational.one });
     });
   });
@@ -146,7 +155,7 @@ describe('RateUtility', () => {
     it('should handle no machines', () => {
       const step: any = { machines: null };
       const result = spread(step);
-      RateUtility.adjustPowerPollution(
+      service.adjustPowerPollution(
         result,
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.WoodenChest],
         Game.Factorio,
@@ -158,7 +167,7 @@ describe('RateUtility', () => {
       const step: any = { machines: rational.one };
       const result = spread(step);
       const recipe: any = { drain: null, consumption: null, pollution: null };
-      RateUtility.adjustPowerPollution(result, recipe, Game.Factorio);
+      service.adjustPowerPollution(result, recipe, Game.Factorio);
       expect(result).toEqual(step);
     });
 
@@ -170,7 +179,7 @@ describe('RateUtility', () => {
         consumption: null,
         pollution: null,
       };
-      RateUtility.adjustPowerPollution(result, recipe, Game.Factorio);
+      service.adjustPowerPollution(result, recipe, Game.Factorio);
       expect(result).toEqual({
         machines: rational.one,
         power: rational(2n),
@@ -185,7 +194,7 @@ describe('RateUtility', () => {
         consumption: null,
         pollution: null,
       };
-      RateUtility.adjustPowerPollution(result, recipe, Game.DysonSphereProgram);
+      service.adjustPowerPollution(result, recipe, Game.DysonSphereProgram);
       expect(result).toEqual({
         machines: rational(1n, 3n),
         power: rational(4n, 3n),
@@ -200,7 +209,7 @@ describe('RateUtility', () => {
         consumption: rational(2n),
         pollution: null,
       };
-      RateUtility.adjustPowerPollution(result, recipe, Game.Factorio);
+      service.adjustPowerPollution(result, recipe, Game.Factorio);
       expect(result).toEqual({
         machines: rational.one,
         power: rational(2n),
@@ -214,7 +223,7 @@ describe('RateUtility', () => {
         consumption: rational(4n),
         pollution: rational(5n),
       };
-      RateUtility.adjustPowerPollution(step, recipe, Game.Factorio);
+      service.adjustPowerPollution(step, recipe, Game.Factorio);
       expect(step).toEqual({
         machines: rational(3n, 2n),
         power: rational(12n),
@@ -225,13 +234,13 @@ describe('RateUtility', () => {
 
   describe('normalizeSteps', () => {
     it('should update update various step fields after solution is found', () => {
-      spyOn(RateUtility, 'calculateParentsOutputs');
-      spyOn(RateUtility, 'calculateSettings');
-      spyOn(RateUtility, 'calculateBelts');
-      spyOn(RateUtility, 'calculateBeacons');
-      spyOn(RateUtility, 'calculateDisplayRate');
-      spyOn(RateUtility, 'calculateHierarchy');
-      RateUtility.normalizeSteps(
+      spyOn(service, 'calculateParentsOutputs');
+      spyOn(service, 'calculateSettings');
+      spyOn(service, 'calculateBelts');
+      spyOn(service, 'calculateBeacons');
+      spyOn(service, 'calculateDisplayRate');
+      spyOn(service, 'calculateHierarchy');
+      service.normalizeSteps(
         [{ id: '0' }, { id: '1' }],
         [],
         {},
@@ -241,18 +250,18 @@ describe('RateUtility', () => {
         Mocks.settingsStateInitial,
         Mocks.adjustedDataset,
       );
-      expect(RateUtility.calculateParentsOutputs).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateSettings).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateBelts).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateBeacons).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateDisplayRate).toHaveBeenCalledTimes(2);
-      expect(RateUtility.calculateHierarchy).toHaveBeenCalledTimes(1);
+      expect(service.calculateParentsOutputs).toHaveBeenCalledTimes(2);
+      expect(service.calculateSettings).toHaveBeenCalledTimes(2);
+      expect(service.calculateBelts).toHaveBeenCalledTimes(2);
+      expect(service.calculateBeacons).toHaveBeenCalledTimes(2);
+      expect(service.calculateDisplayRate).toHaveBeenCalledTimes(2);
+      expect(service.calculateHierarchy).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('calculateParentsOutputs', () => {
     it('should add parent values for relevant steps', () => {
-      spyOn(RateUtility, 'addEntityValue');
+      spyOn(service, 'addEntityValue');
       const stepA: Step = {
         id: '0',
         items: rational.one,
@@ -261,14 +270,14 @@ describe('RateUtility', () => {
         machines: rational.one,
       };
       const stepB: Step = { id: '1', itemId: ItemId.IronOre };
-      RateUtility.calculateParentsOutputs(stepA, [stepA, stepB]);
-      expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
+      service.calculateParentsOutputs(stepA, [stepA, stepB]);
+      expect(service.addEntityValue).toHaveBeenCalledWith(
         stepB,
         'parents',
         '0',
         rational(47n, 16n),
       );
-      expect(RateUtility.addEntityValue).toHaveBeenCalledWith(
+      expect(service.addEntityValue).toHaveBeenCalledWith(
         stepA,
         'outputs',
         'iron-plate',
@@ -283,7 +292,7 @@ describe('RateUtility', () => {
         id: '1',
         recipeId: RecipeId.Coal,
       };
-      RateUtility.calculateSettings(step, {}, Mocks.recipesStateInitial);
+      service.calculateSettings(step, {}, Mocks.recipesStateInitial);
       expect(step.recipeSettings).toEqual(
         Mocks.recipesStateInitial[RecipeId.Coal],
       );
@@ -305,7 +314,7 @@ describe('RateUtility', () => {
           recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
         },
       };
-      RateUtility.calculateSettings(
+      service.calculateSettings(
         step,
         recipeObjectives,
         Mocks.recipesStateInitial,
@@ -320,7 +329,7 @@ describe('RateUtility', () => {
         id: 'id',
         itemId: Mocks.item1.id,
       };
-      RateUtility.calculateBelts(
+      service.calculateBelts(
         step,
         Mocks.itemsStateInitial,
         Mocks.beltSpeed,
@@ -336,7 +345,7 @@ describe('RateUtility', () => {
         items: Mocks.beltSpeed[ItemId.ExpressTransportBelt],
         belts: rational.zero,
       };
-      RateUtility.calculateBelts(
+      service.calculateBelts(
         step,
         Mocks.itemsStateInitial,
         Mocks.beltSpeed,
@@ -353,7 +362,7 @@ describe('RateUtility', () => {
         items: rational(25000n),
         belts: rational.zero,
       };
-      RateUtility.calculateBelts(
+      service.calculateBelts(
         step,
         Mocks.itemsStateInitial,
         Mocks.beltSpeed,
@@ -372,7 +381,7 @@ describe('RateUtility', () => {
         wagons: rational.one,
         recipeSettings: Mocks.recipesStateInitial[RecipeId.ArtilleryShellRange],
       };
-      RateUtility.calculateBelts(
+      service.calculateBelts(
         step,
         Mocks.itemsStateInitial,
         Mocks.beltSpeed,
@@ -392,7 +401,7 @@ describe('RateUtility', () => {
         wagons: rational.one,
         recipeSettings: Mocks.recipesStateInitial[RecipeId.RocketPart],
       };
-      RateUtility.calculateBelts(
+      service.calculateBelts(
         step,
         Mocks.itemsStateInitial,
         Mocks.beltSpeed,
@@ -414,7 +423,7 @@ describe('RateUtility', () => {
         power: rational.zero,
         recipeSettings: Mocks.recipesStateInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, rational.one, Mocks.adjustedDataset);
+      service.calculateBeacons(step, rational.one, Mocks.adjustedDataset);
       expect(step.power).toEqual(rational(3840n));
     });
 
@@ -428,7 +437,7 @@ describe('RateUtility', () => {
         power: rational.zero,
         recipeSettings: Mocks.recipesStateInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, rational(100n), Mocks.adjustedDataset);
+      service.calculateBeacons(step, rational(100n), Mocks.adjustedDataset);
       expect(step.recipeSettings?.beacons?.[0].total).toEqual(rational(8n));
     });
 
@@ -441,13 +450,13 @@ describe('RateUtility', () => {
         machines: rational.one,
         recipeSettings: Mocks.recipesStateInitial[RecipeId.Coal],
       };
-      RateUtility.calculateBeacons(step, rational.one, Mocks.adjustedDataset);
+      service.calculateBeacons(step, rational.one, Mocks.adjustedDataset);
       expect(step.power).toEqual(rational(3840n));
     });
 
     it('should do nothing if beaconReceivers is unset', () => {
       const step: Step = { id: 'id' };
-      RateUtility.calculateBeacons(step, undefined, Mocks.adjustedDataset);
+      service.calculateBeacons(step, undefined, Mocks.adjustedDataset);
       expect(step).toEqual({ id: 'id' });
     });
 
@@ -461,7 +470,7 @@ describe('RateUtility', () => {
         },
       };
       const stepExpect = spread(step);
-      RateUtility.calculateBeacons(step, rational.one, Mocks.adjustedDataset);
+      service.calculateBeacons(step, rational.one, Mocks.adjustedDataset);
       expect(step).toEqual(stepExpect);
     });
   });
@@ -477,7 +486,7 @@ describe('RateUtility', () => {
         output: rational(5n),
         parents: { ['id']: rational(6n) },
       };
-      RateUtility.calculateDisplayRate(
+      service.calculateDisplayRate(
         step,
         displayRateInfo[DisplayRate.PerMinute],
       );
@@ -493,7 +502,7 @@ describe('RateUtility', () => {
   describe('calculateChecked', () => {
     it('should set the checked state for an item step', () => {
       const step: Step = { id: '0', itemId: ItemId.Coal };
-      RateUtility.calculateChecked(step, {
+      service.calculateChecked(step, {
         checkedItemIds: new Set([ItemId.Coal]),
       } as any);
       expect(step.checked).toBeTrue();
@@ -501,7 +510,7 @@ describe('RateUtility', () => {
 
     it('should set the checked state for a recipe objective step', () => {
       const step: Step = { id: '0', recipeObjectiveId: '1' };
-      RateUtility.calculateChecked(step, {
+      service.calculateChecked(step, {
         checkedObjectiveIds: new Set(['1']),
       } as any);
       expect(step.checked).toBeTrue();
@@ -509,7 +518,7 @@ describe('RateUtility', () => {
 
     it('should set the checked state for a recipe step', () => {
       const step: Step = { id: '0', recipeId: RecipeId.Coal };
-      RateUtility.calculateChecked(step, {
+      service.calculateChecked(step, {
         checkedRecipeIds: new Set([RecipeId.Coal]),
       } as any);
       expect(step.checked).toBeTrue();
@@ -519,21 +528,21 @@ describe('RateUtility', () => {
   describe('sortBySankey', () => {
     it('should sort steps based on sankey node depth', () => {
       const steps = [...Mocks.lightOilSteps];
-      RateUtility.sortBySankey(steps);
+      service.sortBySankey(steps);
       const ids = steps.map((s) => s.id);
       expect(ids).toEqual(['0', '3', '4', '2', '1']);
     });
 
     it('should handle invalid steps', () => {
       const steps = [...Mocks.lightOilSteps, { id: 'a' }, { id: 'b' }];
-      RateUtility.sortBySankey(steps);
+      service.sortBySankey(steps);
       const ids = steps.map((s) => s.id);
       expect(ids).toEqual(['0', '3', '4', '2', '1', 'a', 'b']);
     });
 
     it('should handle empty steps', () => {
       const steps: Step[] = [];
-      RateUtility.sortBySankey(steps);
+      service.sortBySankey(steps);
       expect(steps).toEqual([]);
     });
 
@@ -541,7 +550,7 @@ describe('RateUtility', () => {
       const steps = [...Mocks.lightOilSteps];
       const broken = spread(steps[1], { parents: { '4': rational.one } });
       steps[1] = broken;
-      RateUtility.sortBySankey(steps);
+      service.sortBySankey(steps);
       const ids = steps.map((s) => s.id);
       expect(ids).toEqual(['0', '3', '4', '2', '1']);
     });
@@ -549,7 +558,7 @@ describe('RateUtility', () => {
 
   describe('calculateHierarchy', () => {
     it('should set up groups by parents', () => {
-      spyOn(RateUtility, 'sortRecursive').and.returnValue([]);
+      spyOn(service, 'sortRecursive').and.returnValue([]);
       const steps: Step[] = [
         {
           id: '0',
@@ -592,8 +601,8 @@ describe('RateUtility', () => {
           items: rational.one,
         },
       ];
-      RateUtility.calculateHierarchy(steps);
-      expect(RateUtility.sortRecursive).toHaveBeenCalledWith(
+      service.calculateHierarchy(steps);
+      expect(service.sortRecursive).toHaveBeenCalledWith(
         {
           ['2']: [steps[0]],
           ['']: [steps[1], steps[2], steps[3], steps[4]],
@@ -622,14 +631,14 @@ describe('RateUtility', () => {
           parents: { [RecipeId.Coal]: rational.one },
         },
       ];
-      const sorted = RateUtility.calculateHierarchy(steps);
+      const sorted = service.calculateHierarchy(steps);
       expect(sorted.length).toEqual(steps.length);
     });
   });
 
   describe('sortRecursive', () => {
     it('should return empty array if no group matches id', () => {
-      const result = RateUtility.sortRecursive({}, 'id', ['item'] as any);
+      const result = service.sortRecursive({}, 'id', ['item'] as any);
       expect(result).toEqual([]);
     });
 
@@ -659,7 +668,7 @@ describe('RateUtility', () => {
           items: rational.one,
         },
       ];
-      const result = RateUtility.sortRecursive(
+      const result = service.sortRecursive(
         {
           [`${ItemId.PlasticBar}.${RecipeId.PlasticBar}`]: [steps[0]],
           ['']: [steps[1], steps[2]],
@@ -688,7 +697,7 @@ describe('RateUtility', () => {
           },
         },
       ];
-      const result = RateUtility.copy(steps);
+      const result = service.copy(steps);
       steps[1].parents![RecipeId.CrudeOil] = rational.one;
       expect(result[1].parents?.[RecipeId.CrudeOil]).toBeUndefined();
     });

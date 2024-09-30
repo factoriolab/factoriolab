@@ -7,13 +7,11 @@ import {
 import { MenuItem, SortEvent } from 'primeng/api';
 
 import { StepDetailTab } from '~/models/enum/step-detail-tab';
-import { rational } from '~/models/rational';
 import { Step } from '~/models/step';
 import { StepDetail } from '~/models/step-detail';
 import { Entities } from '~/models/utils';
 import { StepIdPipe } from '~/pipes/step-id.pipe';
 import { ItemId, Mocks, RecipeId, setInputs, TestModule } from '~/tests';
-import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { StepsComponent } from './steps.component';
 
@@ -288,13 +286,14 @@ describe('StepsComponent', () => {
   });
 
   describe('changeRecipeField', () => {
-    const step: Step = {
-      id: '0',
-      recipeId: RecipeId.WoodenChest,
-      recipeSettings: Mocks.recipesStateInitial[RecipeId.WoodenChest],
-    };
+    let step: Step;
 
     beforeEach(() => {
+      step = {
+        id: '0',
+        recipeId: RecipeId.WoodenChest,
+        recipeSettings: Mocks.recipesStateInitial[RecipeId.WoodenChest],
+      };
       spyOn(component.recipesSvc, 'updateEntity');
       spyOn(component.objectivesSvc, 'updateEntity');
     });
@@ -313,8 +312,8 @@ describe('StepsComponent', () => {
     });
 
     it('should set up default for modules and beacons', () => {
-      spyOn(RecipeUtility, 'dehydrateModules');
-      spyOn(RecipeUtility, 'dehydrateBeacons');
+      spyOn(component.recipeSvc, 'dehydrateModules');
+      spyOn(component.recipeSvc, 'dehydrateBeacons');
       component.changeModulesBeacons(step, { modules: [], beacons: [] });
       expect(component.recipesSvc.updateEntity).toHaveBeenCalled();
     });

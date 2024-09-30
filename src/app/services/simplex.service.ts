@@ -1,3 +1,4 @@
+import { inject, Injectable } from '@angular/core';
 import {
   Constraint,
   ConstraintProperties,
@@ -33,7 +34,7 @@ import { Settings } from '~/models/settings/settings';
 import { Step } from '~/models/step';
 import { Entities } from '~/models/utils';
 
-import { RateUtility } from './rate.utility';
+import { RateService } from './rate.service';
 
 const simplexConfig: Simplex.Options = environment.debug
   ? // Don't test debug environment level
@@ -124,7 +125,10 @@ export interface GlpkResult {
   time: number;
 }
 
-export const SimplexUtility = {
+@Injectable({ providedIn: 'root' })
+export class SimplexService {
+  rateSvc = inject(RateService);
+
   addItemValue(
     obj: Entities<ItemValues>,
     id: string,
@@ -136,7 +140,7 @@ export const SimplexUtility = {
       if (current) obj[id][key] = current.add(value);
       else obj[id][key] = value;
     } else obj[id] = { ...{ out: rational.zero }, [key]: value };
-  },
+  }
 
   solve(
     objectives: ObjectiveState[],
@@ -169,7 +173,7 @@ export const SimplexUtility = {
       time: solution.time,
       cost: solution.cost,
     };
-  },
+  }
 
   //#region Setup
   getState(
@@ -292,7 +296,7 @@ export const SimplexUtility = {
     this.parseUnproduceable(state);
 
     return state;
-  },
+  }
 
   /** Find matching recipes for an item that have not yet been parsed */
   recipeMatches(itemId: string, state: MatrixState): Recipe[] {
@@ -303,7 +307,7 @@ export const SimplexUtility = {
     recipes.forEach((r) => (state.recipes[r.id] = r));
 
     return recipes;
-  },
+  }
 
   /** Find matching item inputs for a recipe that have not yet been parsed */
   itemMatches(recipe: Recipe, state: MatrixState): string[] {
@@ -314,7 +318,7 @@ export const SimplexUtility = {
       this.addItemValue(state.itemValues, itemId);
     }
     return itemIds;
-  },
+  }
 
   /** Look for item inputs for a recipe, recursively */
   parseRecipeRecursively(recipe: Recipe, state: MatrixState): void {
@@ -324,7 +328,7 @@ export const SimplexUtility = {
         this.parseItemRecursively(itemId, state);
       }
     }
-  },
+  }
 
   /** Look for recipes that output a passed item, recursively */
   parseItemRecursively(itemId: string, state: MatrixState): void {
@@ -332,7 +336,7 @@ export const SimplexUtility = {
     for (const recipe of matches) {
       this.parseRecipeRecursively(recipe, state);
     }
-  },
+  }
 
   /** Include items that only function as outputs to calculate surplus values */
   addSurplusVariables(state: MatrixState): void {
@@ -344,7 +348,7 @@ export const SimplexUtility = {
         this.addItemValue(state.itemValues, id);
       }
     }
-  },
+  }
 
   /**
    * Determines which items in the matrix are unproduceable (not produced by any
@@ -358,7 +362,7 @@ export const SimplexUtility = {
         state.data.itemIncludedRecipeIds[i].every((r) => !recipeSet.has(r)),
       ),
     );
-  },
+  }
   //#endregion
 
   //#region Simplex
@@ -404,7 +408,7 @@ export const SimplexUtility = {
       excludedIds,
       cost: glpkResult.cost,
     };
-  },
+  }
 
   itemCost(itemId: string, costKey: CostKey, state: MatrixState): number {
     const base =
@@ -414,7 +418,7 @@ export const SimplexUtility = {
         : rational.one;
     const cost = state.costs[costKey];
     return base.mul(cost).toNumber();
-  },
+  }
 
   glpk(state: MatrixState): GlpkResult {
     const itemIds = Object.keys(state.itemValues);
@@ -784,13 +788,13 @@ export const SimplexUtility = {
       cost,
       error: false,
     };
-  },
+  }
 
   /** Simplex method wrapper mainly for test mocking */
   glpkSimplex(model: Model): [Simplex.ReturnCode, Status] {
     const returnCode = model.simplex(simplexConfig);
     return [returnCode, model.status];
-  },
+  }
   //#endregion
 
   //#region Solution
@@ -815,7 +819,7 @@ export const SimplexUtility = {
     state.steps.sort(
       (a, b) => (a.output != null ? 0 : 1) - (b.output != null ? 0 : 1),
     );
-  },
+  }
 
   /** Update steps with item from matrix solution */
   addItemStep(
@@ -879,7 +883,7 @@ export const SimplexUtility = {
         step.surplus = diff.isZero() ? step.items : solution.surplus[itemId];
       }
     }
-  },
+  }
 
   /** Attempt to intelligently assign recipes to steps with no recipe */
   assignRecipes(solution: MatrixSolution, state: MatrixState): void {
@@ -922,7 +926,7 @@ export const SimplexUtility = {
         }
       }
     }
-  },
+  }
 
   /** Update steps with recipe from matrix solution */
   addRecipeStep(
@@ -973,7 +977,7 @@ export const SimplexUtility = {
       );
     }
 
-    RateUtility.adjustPowerPollution(step, recipe, state.data.game);
-  },
+    this.rateSvc.adjustPowerPollution(step, recipe, state.data.game);
+  }
   //#endregion
-};
+}

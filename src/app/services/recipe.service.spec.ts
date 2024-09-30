@@ -1,3 +1,5 @@
+import { TestBed } from '@angular/core/testing';
+
 import { spread } from '~/helpers';
 import { AdjustedRecipe, Recipe } from '~/models/data/recipe';
 import { Game } from '~/models/enum/game';
@@ -7,39 +9,40 @@ import { ObjectiveState } from '~/models/objective';
 import { rational } from '~/models/rational';
 import { ModuleSettings } from '~/models/settings/module-settings';
 import { Entities } from '~/models/utils';
-import { ItemId, Mocks, RecipeId } from '~/tests';
+import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
-import { RecipeUtility } from './recipe.utility';
+import { RecipeService } from './recipe.service';
 
-describe('RecipeUtility', () => {
+describe('RecipeService', () => {
+  let service: RecipeService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [TestModule] });
+    service = TestBed.inject(RecipeService);
+  });
+
   describe('bestMatch', () => {
     it('should pick the first option if list only contains one', () => {
       const value = 'value';
-      const result = RecipeUtility.bestMatch([value], []);
+      const result = service.bestMatch([value], []);
       expect(result).toEqual(value);
     });
 
     it('should pick the first match from rank', () => {
       const value = 'value';
-      const result = RecipeUtility.bestMatch(
-        ['test1', value],
-        ['test2', value],
-      );
+      const result = service.bestMatch(['test1', value], ['test2', value]);
       expect(result).toEqual(value);
     });
   });
 
   describe('fuelOptions', () => {
     it('should handle entities with no fuel categories', () => {
-      const result = RecipeUtility.fuelOptions(
-        {} as any,
-        Mocks.adjustedDataset,
-      );
+      const result = service.fuelOptions({} as any, Mocks.adjustedDataset);
       expect(result).toEqual([]);
     });
 
     it('should handle entity that specifies a fuel', () => {
-      const result = RecipeUtility.fuelOptions(
+      const result = service.fuelOptions(
         { fuel: ItemId.Coal } as any,
         Mocks.adjustedDataset,
       );
@@ -49,7 +52,7 @@ describe('RecipeUtility', () => {
 
   describe('moduleOptions', () => {
     it('should filter disallowed effects', () => {
-      const result = RecipeUtility.moduleOptions(
+      const result = service.moduleOptions(
         spread(Mocks.dataset.beaconEntities[ItemId.Beacon], {
           disallowedEffects: ['speed', 'consumption'],
         }),
@@ -59,7 +62,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should disallow empty module in Satisfactory mining', () => {
-      const result = RecipeUtility.moduleOptions(
+      const result = service.moduleOptions(
         Mocks.dataset.machineEntities[ItemId.AssemblingMachine3],
         spread(Mocks.dataset, { game: Game.Satisfactory }),
         RecipeId.Coal,
@@ -70,7 +73,7 @@ describe('RecipeUtility', () => {
 
   describe('defaultModules', () => {
     it('should fill in modules list for machine', () => {
-      const result = RecipeUtility.defaultModules(
+      const result = service.defaultModules(
         [{ value: ItemId.SpeedModule }],
         [ItemId.ProductivityModule, ItemId.SpeedModule],
         rational.one,
@@ -79,7 +82,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle unlimited modules', () => {
-      const result = RecipeUtility.defaultModules(
+      const result = service.defaultModules(
         [{ value: ItemId.SpeedModule }],
         [ItemId.ProductivityModule, ItemId.SpeedModule],
         true,
@@ -101,7 +104,7 @@ describe('RecipeUtility', () => {
           modules: [{ count: rational.one, id: ItemId.SpeedModule }],
         },
       ];
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         settings,
         Mocks.itemsStateInitial,
@@ -127,7 +130,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should handle recipes with declared outputs', () => {
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.CopperCable,
         Mocks.recipesState[RecipeId.CopperCable],
         Mocks.itemsStateInitial,
@@ -154,7 +157,7 @@ describe('RecipeUtility', () => {
     it('should handle research factor', () => {
       const settings = spread(Mocks.recipesState[RecipeId.MiningProductivity]);
       settings.machineId = ItemId.Lab;
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.MiningProductivity,
         settings,
         Mocks.itemsStateInitial,
@@ -182,7 +185,7 @@ describe('RecipeUtility', () => {
     it('should handle mining productivity', () => {
       const settings = spread(Mocks.recipesState[RecipeId.IronOre]);
       settings.machineId = ItemId.ElectricMiningDrill;
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.IronOre,
         settings,
         Mocks.itemsStateInitial,
@@ -239,7 +242,7 @@ describe('RecipeUtility', () => {
           ),
         }),
       });
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         settings,
         Mocks.itemsStateInitial,
@@ -292,7 +295,7 @@ describe('RecipeUtility', () => {
           modules: [{ count: rational(2n), id: ItemId.Module }],
         },
       ];
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         settings,
         Mocks.itemsStateInitial,
@@ -323,7 +326,7 @@ describe('RecipeUtility', () => {
         data.recipeEntities[RecipeId.SteelChest],
         { time: rational(1n, 10000n) },
       );
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         Mocks.recipesStateInitial[RecipeId.SteelChest],
         Mocks.itemsStateInitial,
@@ -334,7 +337,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should find matching nonchemical fuel', () => {
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.UsedUpUraniumFuelCell,
         Mocks.recipesStateInitial[RecipeId.UsedUpUraniumFuelCell],
         Mocks.itemsStateInitial,
@@ -355,7 +358,7 @@ describe('RecipeUtility', () => {
           ),
         }),
       });
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.UsedUpUraniumFuelCell,
         Mocks.recipesStateInitial[RecipeId.UsedUpUraniumFuelCell],
         Mocks.itemsStateInitial,
@@ -368,7 +371,7 @@ describe('RecipeUtility', () => {
     it('should adjust based on overclock', () => {
       const settings = spread(Mocks.recipesState[RecipeId.SteelChest]);
       settings.overclock = rational(200n);
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         settings,
         Mocks.itemsStateInitial,
@@ -398,7 +401,7 @@ describe('RecipeUtility', () => {
       settings.overclock = rational(200n);
       const data = Mocks.getDataset();
       data.machineEntities[ItemId.AssemblingMachine2].usage = rational(-10n);
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         settings,
         Mocks.itemsStateInitial,
@@ -433,7 +436,7 @@ describe('RecipeUtility', () => {
           ),
         }),
       });
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         settings,
         Mocks.itemsStateInitial,
@@ -489,7 +492,7 @@ describe('RecipeUtility', () => {
           ),
         }),
       });
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         settings,
         Mocks.itemsStateInitial,
@@ -521,7 +524,7 @@ describe('RecipeUtility', () => {
       data.machineEntities[ItemId.AssemblingMachine2].consumption = {
         [ItemId.Coal]: rational.one,
       };
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.CopperCable,
         Mocks.recipesState[RecipeId.CopperCable],
         Mocks.itemsStateInitial,
@@ -553,7 +556,7 @@ describe('RecipeUtility', () => {
         rational.one;
       data.recipeEntities[RecipeId.CoalLiquefaction].out[ItemId.HeavyOil] =
         rational(2n);
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.CoalLiquefaction,
         Mocks.recipesState[RecipeId.CoalLiquefaction],
         Mocks.itemsStateInitial,
@@ -570,7 +573,7 @@ describe('RecipeUtility', () => {
         rational(2n);
       data.recipeEntities[RecipeId.CoalLiquefaction].out[ItemId.HeavyOil] =
         rational.one;
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.CoalLiquefaction,
         Mocks.recipesState[RecipeId.CoalLiquefaction],
         Mocks.itemsStateInitial,
@@ -587,7 +590,7 @@ describe('RecipeUtility', () => {
         rational.one;
       data.recipeEntities[RecipeId.CoalLiquefaction].out[ItemId.HeavyOil] =
         rational.one;
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.CoalLiquefaction,
         Mocks.recipesState[RecipeId.CoalLiquefaction],
         Mocks.itemsStateInitial,
@@ -601,7 +604,7 @@ describe('RecipeUtility', () => {
     it('should calculate machine speed based on belt speed if undefined', () => {
       const data = Mocks.getDataset();
       data.machineEntities[ItemId.AssemblingMachine2].speed = undefined;
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         Mocks.recipesState[RecipeId.SteelChest],
         Mocks.itemsStateInitial,
@@ -633,7 +636,7 @@ describe('RecipeUtility', () => {
         overclock: undefined,
       });
 
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         settings,
         Mocks.itemsStateInitial,
@@ -670,7 +673,7 @@ describe('RecipeUtility', () => {
         modules: [{ id: ItemId.Somersloop, count: rational(2n) }],
       });
 
-      const result = RecipeUtility.adjustRecipe(
+      const result = service.adjustRecipe(
         RecipeId.SteelChest,
         settings,
         Mocks.itemsStateInitial,
@@ -703,7 +706,7 @@ describe('RecipeUtility', () => {
       const time = recipe.time;
 
       // No recipe part
-      RecipeUtility.adjustLaunchRecipeObjective(
+      service.adjustLaunchRecipeObjective(
         recipe,
         Mocks.recipesStateInitial,
         Mocks.adjustedDataset,
@@ -712,7 +715,7 @@ describe('RecipeUtility', () => {
 
       // No silo
       recipe.part = ItemId.IronPlate;
-      RecipeUtility.adjustLaunchRecipeObjective(
+      service.adjustLaunchRecipeObjective(
         recipe,
         Mocks.recipesStateInitial,
         Mocks.adjustedDataset,
@@ -722,7 +725,7 @@ describe('RecipeUtility', () => {
       // No machine id
       const settings = Mocks.getRecipesState();
       delete settings[RecipeId.IronPlate].machineId;
-      RecipeUtility.adjustLaunchRecipeObjective(
+      service.adjustLaunchRecipeObjective(
         recipe,
         settings,
         Mocks.adjustedDataset,
@@ -738,14 +741,14 @@ describe('RecipeUtility', () => {
         unit: ObjectiveUnit.Machines,
         type: ObjectiveType.Output,
       };
-      const recipe = RecipeUtility.adjustRecipe(
+      const recipe = service.adjustRecipe(
         objective.targetId,
         objective,
         Mocks.itemsStateInitial,
         Mocks.settingsStateInitial,
         Mocks.dataset,
       );
-      RecipeUtility.adjustLaunchRecipeObjective(
+      service.adjustLaunchRecipeObjective(
         recipe,
         Mocks.recipesStateInitial,
         Mocks.adjustedDataset,
@@ -760,7 +763,7 @@ describe('RecipeUtility', () => {
     beforeEach(() => {
       adjustedRecipe = Mocks.dataset.recipeIds.reduce(
         (e: Entities<AdjustedRecipe>, i) => {
-          e[i] = RecipeUtility.adjustRecipe(
+          e[i] = service.adjustRecipe(
             i,
             Mocks.recipesStateInitial[i],
             Mocks.itemsStateInitial,
@@ -774,7 +777,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should adjust recipes', () => {
-      const result = RecipeUtility.adjustSiloRecipes(
+      const result = service.adjustSiloRecipes(
         adjustedRecipe,
         Mocks.recipesStateInitial,
         Mocks.dataset,
@@ -793,7 +796,7 @@ describe('RecipeUtility', () => {
           machineId: 'id',
         },
       });
-      const result = RecipeUtility.adjustSiloRecipes(
+      const result = service.adjustSiloRecipes(
         adjustedRecipe,
         settings2,
         Mocks.dataset,
@@ -812,7 +815,7 @@ describe('RecipeUtility', () => {
           machineId: '',
         },
       });
-      const result = RecipeUtility.adjustSiloRecipes(
+      const result = service.adjustSiloRecipes(
         adjustedRecipe,
         settings2,
         Mocks.dataset,
@@ -830,26 +833,26 @@ describe('RecipeUtility', () => {
     it('should check machine and rocket recipes', () => {
       // Silo recipes
       expect(
-        RecipeUtility.allowsModules(
+        service.allowsModules(
           Mocks.adjustedDataset.recipeEntities[RecipeId.RocketPart],
           Mocks.adjustedDataset.machineEntities[ItemId.RocketSilo],
         ),
       ).toBeTrue();
       expect(
-        RecipeUtility.allowsModules(
+        service.allowsModules(
           Mocks.adjustedDataset.recipeEntities[RecipeId.SpaceSciencePack],
           Mocks.adjustedDataset.machineEntities[ItemId.RocketSilo],
         ),
       ).toBeFalse();
       // Normal recipes
       expect(
-        RecipeUtility.allowsModules(
+        service.allowsModules(
           Mocks.adjustedDataset.recipeEntities[ItemId.Coal],
           Mocks.adjustedDataset.machineEntities[ItemId.ElectricMiningDrill],
         ),
       ).toBeTrue();
       expect(
-        RecipeUtility.allowsModules(
+        service.allowsModules(
           Mocks.adjustedDataset.recipeEntities[ItemId.Coal],
           Mocks.adjustedDataset.machineEntities[ItemId.BurnerMiningDrill],
         ),
@@ -859,9 +862,9 @@ describe('RecipeUtility', () => {
 
   describe('adjustDataset', () => {
     it('should adjust recipes and silo recipes', () => {
-      spyOn(RecipeUtility, 'adjustSiloRecipes').and.callThrough();
-      spyOn(RecipeUtility, 'adjustRecipe').and.callThrough();
-      const result = RecipeUtility.adjustDataset(
+      spyOn(service, 'adjustSiloRecipes').and.callThrough();
+      spyOn(service, 'adjustRecipe').and.callThrough();
+      const result = service.adjustDataset(
         Mocks.adjustedDataset.recipeIds,
         Mocks.recipesStateInitial,
         Mocks.itemsStateInitial,
@@ -869,8 +872,8 @@ describe('RecipeUtility', () => {
         Mocks.adjustedDataset,
       );
       expect(result).toBeTruthy();
-      expect(RecipeUtility.adjustSiloRecipes).toHaveBeenCalledTimes(1);
-      expect(RecipeUtility.adjustRecipe).toHaveBeenCalledTimes(
+      expect(service.adjustSiloRecipes).toHaveBeenCalledTimes(1);
+      expect(service.adjustRecipe).toHaveBeenCalledTimes(
         Mocks.adjustedDataset.recipeIds.length,
       );
     });
@@ -880,7 +883,7 @@ describe('RecipeUtility', () => {
     let adjustedRecipe: Entities<Recipe>;
 
     beforeEach(() => {
-      adjustedRecipe = RecipeUtility.adjustRecipes(
+      adjustedRecipe = service.adjustRecipes(
         Mocks.adjustedDataset.recipeIds,
         Mocks.recipesStateInitial,
         Mocks.itemsStateInitial,
@@ -895,7 +898,7 @@ describe('RecipeUtility', () => {
           cost: rational(2n),
         }),
       });
-      RecipeUtility.adjustCosts(
+      service.adjustCosts(
         Mocks.adjustedDataset.recipeIds,
         adjustedRecipe,
         recipeSettings,
@@ -906,7 +909,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should apply normal recipe and machine costs', () => {
-      RecipeUtility.adjustCosts(
+      service.adjustCosts(
         Mocks.adjustedDataset.recipeIds,
         adjustedRecipe,
         Mocks.recipesStateInitial,
@@ -921,7 +924,7 @@ describe('RecipeUtility', () => {
   describe('adjustObjective', () => {
     it('should return an item objective unaltered', () => {
       expect(
-        RecipeUtility.adjustObjective(
+        service.adjustObjective(
           Mocks.objective1,
           Mocks.itemsStateInitial,
           Mocks.recipesStateInitial,
@@ -933,7 +936,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should adjust a recipe objective based on settings', () => {
-      const result = RecipeUtility.adjustObjective(
+      const result = service.adjustObjective(
         {
           id: '1',
           targetId: RecipeId.IronPlate,
@@ -961,7 +964,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should use the correct fuel for a burn recipe objective', () => {
-      const result = RecipeUtility.adjustObjective(
+      const result = service.adjustObjective(
         {
           id: '1',
           targetId: RecipeId.UsedUpUraniumFuelCell,
@@ -982,8 +985,8 @@ describe('RecipeUtility', () => {
 
   describe('dehydrateModules', () => {
     it('should return undefined for default modules', () => {
-      spyOn(RecipeUtility, 'defaultModules').and.returnValue([]);
-      const result = RecipeUtility.dehydrateModules([], [], [], rational.one);
+      spyOn(service, 'defaultModules').and.returnValue([]);
+      const result = service.dehydrateModules([], [], [], rational.one);
       expect(result).toBeUndefined();
     });
 
@@ -992,7 +995,7 @@ describe('RecipeUtility', () => {
         { count: rational(3n), id: ItemId.ProductivityModule },
         { count: rational.one, id: ItemId.SpeedModule },
       ];
-      const result = RecipeUtility.dehydrateModules(
+      const result = service.dehydrateModules(
         modules,
         [{ value: ItemId.ProductivityModule3 }],
         [ItemId.ProductivityModule3],
@@ -1002,7 +1005,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should default to zero module count', () => {
-      const result = RecipeUtility.dehydrateModules(
+      const result = service.dehydrateModules(
         [{ count: rational.zero, id: ItemId.SpeedModule }],
         [{ value: ItemId.ProductivityModule3 }],
         [ItemId.ProductivityModule3],
@@ -1012,7 +1015,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should filter out empty objects', () => {
-      const result = RecipeUtility.dehydrateModules(
+      const result = service.dehydrateModules(
         [{ id: ItemId.Module }],
         [{ value: ItemId.SpeedModule3 }],
         [ItemId.SpeedModule3],
@@ -1024,13 +1027,13 @@ describe('RecipeUtility', () => {
 
   describe('hydrateModules', () => {
     it('should return default modules', () => {
-      spyOn(RecipeUtility, 'defaultModules');
-      RecipeUtility.hydrateModules(undefined, [], [], undefined);
-      expect(RecipeUtility.defaultModules).toHaveBeenCalled();
+      spyOn(service, 'defaultModules');
+      service.hydrateModules(undefined, [], [], undefined);
+      expect(service.defaultModules).toHaveBeenCalled();
     });
 
     it('should restore modules and empty entry', () => {
-      const result = RecipeUtility.hydrateModules(
+      const result = service.hydrateModules(
         [{ count: rational.one }],
         [{ value: ItemId.ProductivityModule3 }],
         [ItemId.ProductivityModule3],
@@ -1043,7 +1046,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should restore modules on unlimited entity', () => {
-      const result = RecipeUtility.hydrateModules(
+      const result = service.hydrateModules(
         [{}],
         [{ value: ItemId.ProductivityModule3 }],
         [ItemId.ProductivityModule3],
@@ -1057,16 +1060,16 @@ describe('RecipeUtility', () => {
 
   describe('dehydrateBeacons', () => {
     it('should return undefined for default beacons', () => {
-      expect(RecipeUtility.dehydrateBeacons([], [])).toBeUndefined();
+      expect(service.dehydrateBeacons([], [])).toBeUndefined();
     });
 
     it('should return value if default is empty/null', () => {
-      expect(RecipeUtility.dehydrateBeacons([{}], [])).toEqual([{}]);
+      expect(service.dehydrateBeacons([{}], [])).toEqual([{}]);
     });
 
     it('should reduce to minimum settings', () => {
       expect(
-        RecipeUtility.dehydrateBeacons(
+        service.dehydrateBeacons(
           [
             {
               count: rational(8n),
@@ -1102,7 +1105,7 @@ describe('RecipeUtility', () => {
     });
 
     it('should filter out empty objects', () => {
-      const result = RecipeUtility.dehydrateBeacons(
+      const result = service.dehydrateBeacons(
         [{ count: rational(2n) }],
         [{ count: rational(2n), id: ItemId.Beacon }],
       );
@@ -1112,12 +1115,12 @@ describe('RecipeUtility', () => {
 
   describe('hydrateBeacons', () => {
     it('should return default beacons if empty', () => {
-      expect(RecipeUtility.hydrateBeacons([{}], [])).toEqual([]);
+      expect(service.hydrateBeacons([{}], [])).toEqual([]);
     });
 
     it('should restore beacons', () => {
       expect(
-        RecipeUtility.hydrateBeacons(
+        service.hydrateBeacons(
           [
             {
               modules: [{ count: rational.one }],
@@ -1146,7 +1149,7 @@ describe('RecipeUtility', () => {
 
     it('should skip restoring empty slots if defaults have no module count', () => {
       expect(
-        RecipeUtility.hydrateBeacons(
+        service.hydrateBeacons(
           [
             {
               modules: [{ count: rational.one }],

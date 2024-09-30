@@ -21,7 +21,7 @@ export class ItemsService extends EntityStore<ItemState> {
   settingsSvc = inject(SettingsService);
 
   settings = computed(() =>
-    ItemsService.computeItemsSettings(
+    this.computeItemsSettings(
       this.state(),
       this.settingsSvc.settings(),
       this.settingsSvc.dataset(),
@@ -37,7 +37,7 @@ export class ItemsService extends EntityStore<ItemState> {
     };
   });
 
-  static computeItemsSettings(
+  computeItemsSettings(
     state: ItemsState,
     settings: Settings,
     data: Dataset,
@@ -55,13 +55,13 @@ export class ItemsService extends EntityStore<ItemState> {
     return value;
   }
 
-  static defaultBelt(item: Item, settings: Settings): Optional<string> {
+  defaultBelt(item: Item, settings: Settings): Optional<string> {
     if (item.stack) return settings.beltId;
     else if (settings.pipeId) return settings.pipeId;
     else return ItemId.Pipe;
   }
 
-  static defaultWagon(item: Item, settings: Settings): Optional<string> {
+  defaultWagon(item: Item, settings: Settings): Optional<string> {
     return item.stack ? settings.cargoWagonId : settings.fluidWagonId;
   }
 }

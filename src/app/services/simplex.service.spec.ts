@@ -1,20 +1,22 @@
+import { TestBed } from '@angular/core/testing';
+
 import { MaximizeType } from '~/models/enum/maximize-type';
 import { ObjectiveType } from '~/models/enum/objective-type';
 import { ObjectiveUnit } from '~/models/enum/objective-unit';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { rational } from '~/models/rational';
 import { Entities } from '~/models/utils';
-import { ItemId, Mocks, RecipeId } from '~/tests';
+import { ItemId, Mocks, RecipeId, TestModule } from '~/tests';
 
-import { RateUtility } from './rate.utility';
 import {
   ItemValues,
   MatrixSolution,
   MatrixState,
-  SimplexUtility,
-} from './simplex.utility';
+  SimplexService,
+} from './simplex.service';
 
-describe('SimplexUtility', () => {
+describe('SimplexService', () => {
+  let service: SimplexService;
   const getState = (): MatrixState => ({
     objectives: [],
     recipeObjectives: [],
@@ -55,14 +57,19 @@ describe('SimplexUtility', () => {
     recipes: {},
   });
 
+  beforeEach(() => {
+    TestBed.configureTestingModule({ imports: [TestModule] });
+    service = TestBed.inject(SimplexService);
+  });
+
   describe('addItemValue', () => {
     it('should add a value to an entity of Rationals', () => {
       const result: Entities<ItemValues> = {};
-      SimplexUtility.addItemValue(result, 'id');
+      service.addItemValue(result, 'id');
       expect(result['id'].out).toEqual(rational.zero);
-      SimplexUtility.addItemValue(result, 'id', rational.one);
+      service.addItemValue(result, 'id', rational.one);
       expect(result['id'].out).toEqual(rational.one);
-      SimplexUtility.addItemValue(result, 'id', rational(2n), 'lim');
+      service.addItemValue(result, 'id', rational(2n), 'lim');
       expect(result['id'].lim).toEqual(rational(2n));
     });
   });
@@ -70,7 +77,7 @@ describe('SimplexUtility', () => {
   describe('solve', () => {
     it('should handle calculations paused', () => {
       expect(
-        SimplexUtility.solve(
+        service.solve(
           [],
           Mocks.settingsStateInitial,
           Mocks.adjustedDataset,
@@ -81,7 +88,7 @@ describe('SimplexUtility', () => {
 
     it('should handle empty list of objectives', () => {
       expect(
-        SimplexUtility.solve(
+        service.solve(
           [],
           Mocks.settingsStateInitial,
           Mocks.adjustedDataset,
@@ -94,14 +101,14 @@ describe('SimplexUtility', () => {
     });
 
     it('should update steps with solution from simplex method', () => {
-      spyOn(SimplexUtility, 'getState').and.returnValue({
+      spyOn(service, 'getState').and.returnValue({
         steps: Mocks.steps,
       } as any);
       const result = getResult(SimplexResultType.Solved);
-      spyOn(SimplexUtility, 'getSolution').and.returnValue(result);
-      spyOn(SimplexUtility, 'updateSteps');
+      spyOn(service, 'getSolution').and.returnValue(result);
+      spyOn(service, 'updateSteps');
       expect(
-        SimplexUtility.solve(
+        service.solve(
           Mocks.objectives,
           Mocks.settingsStateInitial,
           Mocks.adjustedDataset,
@@ -116,11 +123,11 @@ describe('SimplexUtility', () => {
         time: 2,
         cost: rational.one,
       });
-      expect(SimplexUtility.updateSteps).toHaveBeenCalled();
+      expect(service.updateSteps).toHaveBeenCalled();
     });
 
     it('should determine the unbounded ray result', () => {
-      const result = SimplexUtility.solve(
+      const result = service.solve(
         [
           {
             id: '0',
@@ -142,13 +149,13 @@ describe('SimplexUtility', () => {
 
   describe('getState', () => {
     it('should build full state object', () => {
-      spyOn(SimplexUtility, 'parseItemRecursively');
+      spyOn(service, 'parseItemRecursively');
       const objectives = [
         ...Mocks.objectives,
         Mocks.objectives[3],
         Mocks.objectives[7],
       ];
-      const result = SimplexUtility.getState(
+      const result = service.getState(
         objectives,
         Mocks.settingsStateInitial,
         Mocks.adjustedDataset,
@@ -199,7 +206,7 @@ describe('SimplexUtility', () => {
     it('should find matching recipes for an item', () => {
       const state = getState();
       const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
-      const result = SimplexUtility.recipeMatches(ItemId.Coal, state);
+      const result = service.recipeMatches(ItemId.Coal, state);
       expect(state.recipes).toEqual({ [RecipeId.Coal]: recipe });
       expect(result).toEqual([recipe]);
     });
@@ -209,7 +216,7 @@ describe('SimplexUtility', () => {
     it('should find matching items for a recipe', () => {
       const state = getState();
       const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable];
-      const result = SimplexUtility.itemMatches(recipe, state);
+      const result = service.itemMatches(recipe, state);
       expect(state.itemValues[ItemId.CopperPlate].out).toEqual(rational.zero);
       expect(state.recipes).toEqual({});
       expect(result).toEqual([ItemId.CopperPlate]);
@@ -218,24 +225,22 @@ describe('SimplexUtility', () => {
 
   describe('parseRecipeRecursively', () => {
     it('should do nothing for recipes with no inputs', () => {
-      spyOn(SimplexUtility, 'parseItemRecursively');
-      SimplexUtility.parseRecipeRecursively(
+      spyOn(service, 'parseItemRecursively');
+      service.parseRecipeRecursively(
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.IronOre],
         getState(),
       );
-      expect(SimplexUtility.parseItemRecursively).not.toHaveBeenCalled();
+      expect(service.parseItemRecursively).not.toHaveBeenCalled();
     });
 
     it('should parse recipe inputs recursively', () => {
-      spyOn(SimplexUtility, 'itemMatches').and.returnValue([
-        ItemId.CopperPlate,
-      ]);
-      spyOn(SimplexUtility, 'parseItemRecursively');
+      spyOn(service, 'itemMatches').and.returnValue([ItemId.CopperPlate]);
+      spyOn(service, 'parseItemRecursively');
       const recipe = Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable];
       const state = getState();
-      SimplexUtility.parseRecipeRecursively(recipe, state);
-      expect(SimplexUtility.itemMatches).toHaveBeenCalledWith(recipe, state);
-      expect(SimplexUtility.parseItemRecursively).toHaveBeenCalledWith(
+      service.parseRecipeRecursively(recipe, state);
+      expect(service.itemMatches).toHaveBeenCalledWith(recipe, state);
+      expect(service.parseItemRecursively).toHaveBeenCalledWith(
         ItemId.CopperPlate,
         state,
       );
@@ -244,19 +249,19 @@ describe('SimplexUtility', () => {
 
   describe('parseItemRecursively', () => {
     it('should do nothing for simple recipe that was already parsed', () => {
-      spyOn(SimplexUtility, 'parseRecipeRecursively');
+      spyOn(service, 'parseRecipeRecursively');
       const state = getState();
       state.recipes[RecipeId.CopperCable] =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable];
-      SimplexUtility.parseItemRecursively(ItemId.CopperCable, state);
-      expect(SimplexUtility.parseRecipeRecursively).not.toHaveBeenCalled();
+      service.parseItemRecursively(ItemId.CopperCable, state);
+      expect(service.parseRecipeRecursively).not.toHaveBeenCalled();
     });
 
     it('should parse a simple recipe', () => {
-      spyOn(SimplexUtility, 'parseRecipeRecursively');
+      spyOn(service, 'parseRecipeRecursively');
       const state = getState();
-      SimplexUtility.parseItemRecursively(ItemId.CopperCable, state);
-      expect(SimplexUtility.parseRecipeRecursively).toHaveBeenCalledWith(
+      service.parseItemRecursively(ItemId.CopperCable, state);
+      expect(service.parseRecipeRecursively).toHaveBeenCalledWith(
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable],
         state,
       );
@@ -265,15 +270,15 @@ describe('SimplexUtility', () => {
     it('should get complex recipe matches and parse them', () => {
       const recipe =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.AdvancedOilProcessing];
-      spyOn(SimplexUtility, 'recipeMatches').and.returnValue([recipe]);
-      spyOn(SimplexUtility, 'parseRecipeRecursively');
+      spyOn(service, 'recipeMatches').and.returnValue([recipe]);
+      spyOn(service, 'parseRecipeRecursively');
       const state = getState();
-      SimplexUtility.parseItemRecursively(ItemId.PetroleumGas, state);
-      expect(SimplexUtility.recipeMatches).toHaveBeenCalledWith(
+      service.parseItemRecursively(ItemId.PetroleumGas, state);
+      expect(service.recipeMatches).toHaveBeenCalledWith(
         ItemId.PetroleumGas,
         state,
       );
-      expect(SimplexUtility.parseRecipeRecursively).toHaveBeenCalledWith(
+      expect(service.parseRecipeRecursively).toHaveBeenCalledWith(
         recipe,
         state,
       );
@@ -285,7 +290,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.recipes[RecipeId.Coal] =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
-      SimplexUtility.addSurplusVariables(state);
+      service.addSurplusVariables(state);
       expect(state.itemValues[ItemId.Coal].out).toEqual(rational.zero);
     });
   });
@@ -298,23 +303,23 @@ describe('SimplexUtility', () => {
       state.recipes = {
         [RecipeId.Coal]: Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
       };
-      SimplexUtility.parseUnproduceable(state);
+      service.parseUnproduceable(state);
       expect(state.unproduceableIds).toEqual(new Set([ItemId.Wood]));
     });
   });
 
   describe('getSolution', () => {
     it('should parse the solution found by simplex', () => {
-      spyOn(SimplexUtility, 'glpk').and.returnValue({} as any);
+      spyOn(service, 'glpk').and.returnValue({} as any);
       const state = getState();
-      const result = SimplexUtility.getSolution(state);
+      const result = service.getSolution(state);
       expect(result.resultType).toEqual(SimplexResultType.Solved);
     });
 
     it('should handle glpk failure', () => {
-      spyOn(SimplexUtility, 'glpk').and.returnValue({ error: true } as any);
+      spyOn(service, 'glpk').and.returnValue({ error: true } as any);
       const state = getState();
-      const result = SimplexUtility.getSolution(state);
+      const result = service.getSolution(state);
       expect(result.resultType).toEqual(SimplexResultType.Failed);
     });
   });
@@ -322,7 +327,7 @@ describe('SimplexUtility', () => {
   describe('itemCost', () => {
     it('should adjust cost of fluids', () => {
       const state = getState();
-      const result = SimplexUtility.itemCost(
+      const result = service.itemCost(
         ItemId.PetroleumGas,
         'unproduceable',
         state,
@@ -384,7 +389,7 @@ describe('SimplexUtility', () => {
           recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable],
         },
       ];
-      const result = SimplexUtility.glpk(state);
+      const result = service.glpk(state);
       expect(result.returnCode).toEqual('ok');
       expect(result.status).toEqual('optimal');
     });
@@ -440,27 +445,24 @@ describe('SimplexUtility', () => {
           recipe: Mocks.adjustedDataset.adjustedRecipe[RecipeId.CopperCable],
         },
       ];
-      const result = SimplexUtility.glpk(state);
+      const result = service.glpk(state);
       expect(result.returnCode).toEqual('ok');
       expect(result.status).toEqual('optimal');
     });
 
     it('should handle glpk failure', () => {
-      spyOn(SimplexUtility, 'glpkSimplex').and.returnValue([
-        'failure',
-        'infeasible',
-      ]);
+      spyOn(service, 'glpkSimplex').and.returnValue(['failure', 'infeasible']);
       const state = getState();
-      const result = SimplexUtility.glpk(state);
+      const result = service.glpk(state);
       expect(result.returnCode).toEqual('failure');
     });
   });
 
   describe('updateSteps', () => {
     it('should walk through and update steps based on simplex result', () => {
-      spyOn(SimplexUtility, 'addItemStep');
-      spyOn(SimplexUtility, 'assignRecipes');
-      spyOn(SimplexUtility, 'addRecipeStep');
+      spyOn(service, 'addItemStep');
+      spyOn(service, 'assignRecipes');
+      spyOn(service, 'addRecipeStep');
       const state = getState();
       state.itemValues[ItemId.Coal] = { out: rational.zero };
       state.itemValues[ItemId.IronOre] = { out: rational.zero };
@@ -481,10 +483,10 @@ describe('SimplexUtility', () => {
         { id: '2' },
         { id: '3', output: rational.one },
       ];
-      SimplexUtility.updateSteps(solution, state);
-      expect(SimplexUtility.addItemStep).toHaveBeenCalledTimes(2);
-      expect(SimplexUtility.assignRecipes).toHaveBeenCalledTimes(1);
-      expect(SimplexUtility.addRecipeStep).toHaveBeenCalledTimes(2);
+      service.updateSteps(solution, state);
+      expect(service.addItemStep).toHaveBeenCalledTimes(2);
+      expect(service.assignRecipes).toHaveBeenCalledTimes(1);
+      expect(service.addRecipeStep).toHaveBeenCalledTimes(2);
     });
   });
 
@@ -506,7 +508,7 @@ describe('SimplexUtility', () => {
       state.recipes[RecipeId.PlasticBar] =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.PlasticBar];
       state.recipeObjectives = [Mocks.objectives[4] as any];
-      SimplexUtility.addItemStep(ItemId.Coal, solution, state);
+      service.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
           id: '0',
@@ -528,11 +530,7 @@ describe('SimplexUtility', () => {
       const state = getState();
       state.itemValues[ItemId.PiercingRoundsMagazine] = { out: rational.zero };
       state.recipeObjectives = [Mocks.objectives[4] as any];
-      SimplexUtility.addItemStep(
-        ItemId.PiercingRoundsMagazine,
-        solution,
-        state,
-      );
+      service.addItemStep(ItemId.PiercingRoundsMagazine, solution, state);
       expect(state.steps).toEqual([
         {
           id: '0',
@@ -553,7 +551,7 @@ describe('SimplexUtility', () => {
       state.itemValues[ItemId.Coal] = { out: rational.zero };
       state.recipes[RecipeId.Coal] =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
-      SimplexUtility.addItemStep(ItemId.Coal, solution, state);
+      service.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
           id: '0',
@@ -577,7 +575,7 @@ describe('SimplexUtility', () => {
       state.itemValues[ItemId.Coal] = { out: rational.zero };
       state.recipes[RecipeId.Coal] =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal];
-      SimplexUtility.addItemStep(ItemId.Coal, solution, state);
+      service.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
           id: '0',
@@ -597,7 +595,7 @@ describe('SimplexUtility', () => {
       };
       const state = getState();
       state.itemValues[ItemId.Coal] = { out: rational.zero, in: rational.one };
-      SimplexUtility.addItemStep(ItemId.Coal, solution, state);
+      service.addItemStep(ItemId.Coal, solution, state);
       expect(state.steps).toEqual([
         {
           id: '0',
@@ -650,7 +648,7 @@ describe('SimplexUtility', () => {
       state.recipes[RecipeId.BasicOilProcessing] =
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.BasicOilProcessing];
       state.recipeObjectives = [Mocks.objectives[4] as any];
-      SimplexUtility.assignRecipes(solution, state);
+      service.assignRecipes(solution, state);
       expect(state.steps).toEqual([
         {
           id: '0',
@@ -681,7 +679,7 @@ describe('SimplexUtility', () => {
 
   describe('addRecipeStep', () => {
     it('should update an existing step', () => {
-      spyOn(RateUtility, 'adjustPowerPollution');
+      spyOn(service.rateSvc, 'adjustPowerPollution');
       const state = getState();
       state.steps = [
         {
@@ -695,12 +693,12 @@ describe('SimplexUtility', () => {
         inputs: {},
         recipes: { [RecipeId.Coal]: rational.one },
       };
-      SimplexUtility.addRecipeStep(
+      service.addRecipeStep(
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
         solution,
         state,
       );
-      expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
+      expect(service.rateSvc.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([
         {
           id: 'id',
@@ -714,19 +712,19 @@ describe('SimplexUtility', () => {
     });
 
     it('should add a new step', () => {
-      spyOn(RateUtility, 'adjustPowerPollution');
+      spyOn(service.rateSvc, 'adjustPowerPollution');
       const state = getState();
       const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: rational.one },
       };
-      SimplexUtility.addRecipeStep(
+      service.addRecipeStep(
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
         solution,
         state,
       );
-      expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
+      expect(service.rateSvc.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([
         {
           id: '0',
@@ -738,20 +736,20 @@ describe('SimplexUtility', () => {
     });
 
     it('should add a recipe objective step', () => {
-      spyOn(RateUtility, 'adjustPowerPollution');
+      spyOn(service.rateSvc, 'adjustPowerPollution');
       const state = getState();
       const solution: any = {
         surplus: {},
         inputs: {},
         recipes: { [RecipeId.Coal]: rational.one },
       };
-      SimplexUtility.addRecipeStep(
+      service.addRecipeStep(
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.Coal],
         solution,
         state,
         Mocks.objectives[4] as any,
       );
-      expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
+      expect(service.rateSvc.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([
         {
           id: '0',
@@ -764,7 +762,7 @@ describe('SimplexUtility', () => {
     });
 
     it('should place a new step next to related steps', () => {
-      spyOn(RateUtility, 'adjustPowerPollution');
+      spyOn(service.rateSvc, 'adjustPowerPollution');
       const state = getState();
       state.steps = [
         {
@@ -784,12 +782,12 @@ describe('SimplexUtility', () => {
         inputs: {},
         recipes: { [RecipeId.AdvancedOilProcessing]: rational.one },
       };
-      SimplexUtility.addRecipeStep(
+      service.addRecipeStep(
         Mocks.adjustedDataset.adjustedRecipe[RecipeId.AdvancedOilProcessing],
         solution,
         state,
       );
-      expect(RateUtility.adjustPowerPollution).toHaveBeenCalled();
+      expect(service.rateSvc.adjustPowerPollution).toHaveBeenCalled();
       expect(state.steps).toEqual([
         {
           id: '0',

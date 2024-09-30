@@ -9,7 +9,6 @@ import { Confirmation } from 'primeng/api';
 import { Game } from '~/models/enum/game';
 import { rational } from '~/models/rational';
 import { assert, ItemId, Mocks, TestModule } from '~/tests';
-import { RecipeUtility } from '~/utilities/recipe.utility';
 
 import { SettingsComponent } from './settings.component';
 
@@ -216,30 +215,30 @@ describe('SettingsComponent', () => {
 
   describe('changeModules', () => {
     it('should dehydrate the modules', () => {
-      spyOn(RecipeUtility, 'dehydrateModules');
+      spyOn(component.recipeSvc, 'dehydrateModules');
       spyOn(component.machinesSvc, 'updateEntity');
       component.changeModules(ItemId.AssemblingMachine2, []);
-      expect(RecipeUtility.dehydrateModules).toHaveBeenCalled();
+      expect(component.recipeSvc.dehydrateModules).toHaveBeenCalled();
       expect(component.machinesSvc.updateEntity).toHaveBeenCalled();
     });
   });
 
   describe('changeBeacons', () => {
     it('should dehydrate the beacons', () => {
-      spyOn(RecipeUtility, 'dehydrateBeacons');
+      spyOn(component.recipeSvc, 'dehydrateBeacons');
       spyOn(component.machinesSvc, 'updateEntity');
       component.changeBeacons(ItemId.AssemblingMachine2, []);
-      expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
+      expect(component.recipeSvc.dehydrateBeacons).toHaveBeenCalled();
       expect(component.machinesSvc.updateEntity).toHaveBeenCalled();
     });
   });
 
   describe('changeDefaultBeacons', () => {
     it('should dehydrate the beacons', () => {
-      spyOn(RecipeUtility, 'dehydrateBeacons');
+      spyOn(component.recipeSvc, 'dehydrateBeacons');
       spyOn(component.settingsSvc, 'apply');
       component.changeDefaultBeacons([]);
-      expect(RecipeUtility.dehydrateBeacons).toHaveBeenCalled();
+      expect(component.recipeSvc.dehydrateBeacons).toHaveBeenCalled();
       expect(component.settingsSvc.apply).toHaveBeenCalled();
     });
   });

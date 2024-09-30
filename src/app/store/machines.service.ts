@@ -9,7 +9,7 @@ import {
 } from '~/models/settings/machine-settings';
 import { Settings } from '~/models/settings/settings';
 import { Entities } from '~/models/utils';
-import { RecipeUtility } from '~/utilities/recipe.utility';
+import { RecipeService } from '~/services/recipe.service';
 
 import { SettingsService } from './settings.service';
 import { EntityStore } from './store';
@@ -21,17 +21,18 @@ export type MachinesSettings = Entities<MachineSettings>;
   providedIn: 'root',
 })
 export class MachinesService extends EntityStore<MachineState> {
+  recipeSvc = inject(RecipeService);
   settingsSvc = inject(SettingsService);
 
   settings = computed(() =>
-    MachinesService.computeMachinesSettings(
+    this.computeMachinesSettings(
       this.state(),
       this.settingsSvc.settings(),
       this.settingsSvc.dataset(),
     ),
   );
 
-  static computeMachinesSettings(
+  computeMachinesSettings(
     state: MachinesState,
     settings: Settings,
     data: Dataset,
@@ -42,8 +43,8 @@ export class MachinesService extends EntityStore<MachineState> {
       const s: MachineSettings = spread(state[id]);
 
       if (machine.type === EnergyType.Burner) {
-        s.fuelOptions = RecipeUtility.fuelOptions(machine, data);
-        s.defaultFuelId = RecipeUtility.bestMatch(
+        s.fuelOptions = this.recipeSvc.fuelOptions(machine, data);
+        s.defaultFuelId = this.recipeSvc.bestMatch(
           s.fuelOptions.map((o) => o.value),
           settings.fuelRankIds,
         );
@@ -54,14 +55,14 @@ export class MachinesService extends EntityStore<MachineState> {
       }
 
       if (machine.modules) {
-        s.moduleOptions = RecipeUtility.moduleOptions(machine, data);
-        s.modules = RecipeUtility.hydrateModules(
+        s.moduleOptions = this.recipeSvc.moduleOptions(machine, data);
+        s.modules = this.recipeSvc.hydrateModules(
           s.modules,
           s.moduleOptions,
           settings.moduleRankIds,
           machine.modules,
         );
-        s.beacons = RecipeUtility.hydrateBeacons(s.beacons, settings.beacons);
+        s.beacons = this.recipeSvc.hydrateBeacons(s.beacons, settings.beacons);
       } else {
         // Machine doesn't support modules, remove any
         delete s.modules;
