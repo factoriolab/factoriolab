@@ -32,6 +32,7 @@ export const data: AppData = {
     { id: 'msc', name: 'More Science', game: Game.Factorio },
     { id: 'nls', name: 'Nullius', game: Game.Factorio },
     { id: 'omf', name: 'Omnifluid', game: Game.Factorio },
+    { id: 'ps2', name: 'Production Scrap 2', game: Game.Factorio },
     { id: 'pys', name: 'Pyanodons', game: Game.Factorio },
     { id: 'pysalf', name: 'Pyanodons + AL', game: Game.Factorio },
     { id: 'qat', name: "Qatavin's More Stuff", game: Game.Factorio },
@@ -117,5 +118,6 @@ export const data: AppData = {
     'ffy',
     'lls',
     'ulc',
+    'ps2',
   ],
 };
