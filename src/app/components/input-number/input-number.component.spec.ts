@@ -34,6 +34,14 @@ describe('InputNumberComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  describe('ngOnChanges', () => {
+    it('should handle incrementing values with invalid string', () => {
+      component._value = 'asdf';
+      TestUtility.setInputs(fixture, { value: rational(3n) });
+      expect(component._value).toEqual('3');
+    });
+  });
+
   describe('isMinimum', () => {
     it('should handle valid/invalid text', () => {
       expect(component.isMinimum()).toBeFalse();
