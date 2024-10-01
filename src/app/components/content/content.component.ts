@@ -9,32 +9,11 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
 import { OrderList } from 'primeng/orderlist';
 import { ToastModule } from 'primeng/toast';
 
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
-/**
- * Workaround for https://github.com/primefaces/primeng/issues/12114.
- * Manually add the main window to the list of scrollable parents, so that when
- * the main window is scrolled, dropdowns will be closed.
- */
-ConnectedOverlayScrollHandler.prototype.bindScrollListener = function (
-  this,
-): void {
-  const parents = DomHandler.getScrollableParents(this.element) as (
-    | Window
-    | HTMLElement
-  )[];
-  this.scrollableParents = parents;
-  parents.push(window);
-  for (const parent of parents)
-    parent.addEventListener(
-      'scroll',
-      this.listener as EventListenerOrEventListenerObject,
-    );
-};
 
 // istanbul ignore next
 /** Allow entering spaces inside orderlist items */

@@ -248,8 +248,8 @@ export class RecipeService {
 
             if (scale) {
               // Overall effect = (1 + filled slots / total slots) ^ 2
-              effect = effect.div(scale).add(rational(1n));
-              effect = effect.mul(effect).sub(rational(1n));
+              effect = effect.div(scale).add(rational.one);
+              effect = effect.mul(effect).sub(rational.one);
             }
 
             consumption = consumption.add(effect);

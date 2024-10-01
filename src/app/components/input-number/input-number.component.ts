@@ -98,8 +98,14 @@ export class InputNumberComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!changes['value']) return;
-    if (!this._value || !rational(this._value).eq(this.value()))
-      this._value = this.value().toString();
+    let old: Rational | undefined;
+    try {
+      old = rational(this._value);
+    } catch {
+      // Ignore error
+    }
+
+    if (!old?.eq(this.value())) this._value = this.value().toString();
   }
 
   changeValue(type: EventType): void {
