@@ -379,7 +379,7 @@ export class RecipeUtility {
           ? usage.mul(consumption)
           : rational(0n);
 
-      if (data.game === Game.Satisfactory) {
+      if (data.game === Game.Satisfactory && recipe.consumption?.nonzero()) {
         recipe.drain = recipe.consumption;
         delete recipe.consumption;
       }
