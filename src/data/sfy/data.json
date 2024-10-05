@@ -3440,6 +3440,13 @@
             "stack": 500
         },
         {
+            "id": "Desc_OreIron_C",
+            "row": 0,
+            "name": "Iron Ore",
+            "category": "components",
+            "stack": 100
+        },
+        {
             "id": "Desc_RocketFuel_C",
             "row": 0,
             "name": "Rocket Fuel",
@@ -3468,6 +3475,30 @@
             "fuel": {
                 "category": "chemical",
                 "value": 750
+            }
+        },
+        {
+            "id": "Desc_NitrogenGas_C",
+            "row": 0,
+            "name": "Nitrogen Gas",
+            "category": "components"
+        },
+        {
+            "id": "Desc_Sulfur_C",
+            "row": 0,
+            "name": "Sulfur",
+            "category": "components",
+            "stack": 100
+        },
+        {
+            "id": "Desc_Coal_C",
+            "row": 0,
+            "name": "Coal",
+            "category": "components",
+            "stack": 100,
+            "fuel": {
+                "category": "fluid",
+                "value": 300
             }
         },
         {
@@ -3654,6 +3685,13 @@
             "stack": 100
         },
         {
+            "id": "Desc_SAM_C",
+            "row": 0,
+            "name": "SAM",
+            "category": "components",
+            "stack": 100
+        },
+        {
             "id": "Desc_SpaceElevatorPart_10_C",
             "row": 0,
             "name": "Biochemical Sculptor",
@@ -3668,6 +3706,12 @@
             "stack": 50
         },
         {
+            "id": "Desc_Water_C",
+            "row": 0,
+            "name": "Water",
+            "category": "components"
+        },
+        {
             "id": "Desc_AluminumIngot_C",
             "row": 0,
             "name": "Aluminum Ingot",
@@ -3678,6 +3722,48 @@
             "id": "Desc_GoldIngot_C",
             "row": 0,
             "name": "Caterium Ingot",
+            "category": "components",
+            "stack": 100
+        },
+        {
+            "id": "Desc_OreBauxite_C",
+            "row": 0,
+            "name": "Bauxite",
+            "category": "components",
+            "stack": 100
+        },
+        {
+            "id": "Desc_OreGold_C",
+            "row": 0,
+            "name": "Caterium Ore",
+            "category": "components",
+            "stack": 100
+        },
+        {
+            "id": "Desc_OreCopper_C",
+            "row": 0,
+            "name": "Copper Ore",
+            "category": "components",
+            "stack": 100
+        },
+        {
+            "id": "Desc_RawQuartz_C",
+            "row": 0,
+            "name": "Raw Quartz",
+            "category": "components",
+            "stack": 100
+        },
+        {
+            "id": "Desc_Stone_C",
+            "row": 0,
+            "name": "Limestone",
+            "category": "components",
+            "stack": 100
+        },
+        {
+            "id": "Desc_OreUranium_C",
+            "row": 0,
+            "name": "Uranium",
             "category": "components",
             "stack": 100
         },
@@ -3715,6 +3801,16 @@
             "name": "Polymer Resin",
             "category": "components",
             "stack": 200
+        },
+        {
+            "id": "Desc_LiquidOil_C",
+            "row": 0,
+            "name": "Crude Oil",
+            "category": "components",
+            "fuel": {
+                "category": "chemical",
+                "value": 320
+            }
         },
         {
             "id": "Desc_PetroleumCoke_C",
@@ -7173,7 +7269,21 @@
         }
     ],
     "limitations": {
-        "mining": [],
+        "mining": [
+            "Desc_OreIron_C",
+            "Desc_NitrogenGas_C",
+            "Desc_Sulfur_C",
+            "Desc_Coal_C",
+            "Desc_SAM_C",
+            "Desc_Water_C",
+            "Desc_OreBauxite_C",
+            "Desc_OreGold_C",
+            "Desc_OreCopper_C",
+            "Desc_RawQuartz_C",
+            "Desc_Stone_C",
+            "Desc_OreUranium_C",
+            "Desc_LiquidOil_C"
+        ],
         "somersloop": [
             "Recipe_IronPlate_C",
             "Recipe_IronRod_C",

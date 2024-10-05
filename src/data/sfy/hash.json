@@ -620,7 +620,9 @@
         "Desc_Fuel_C",
         "Desc_PackagedOil_C",
         "Desc_PackagedOilResidue_C",
-        "Desc_Battery_C"
+        "Desc_Battery_C",
+        "Desc_Coal_C",
+        "Desc_LiquidOil_C"
     ],
     "wagons": [
         "freight-car",

@@ -33,7 +33,8 @@ interface SfyResearchData {
 interface SfyDescData {
   NativeClass:
     | "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptor'"
-    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGVehicleDescriptor'";
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGVehicleDescriptor'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGResourceDescriptor'";
   Classes: SfyDesc[];
 }
 interface SfyConveyorBeltData {
@@ -106,12 +107,14 @@ interface RGBA {
 }
 interface SfyDesc {
   ClassName: string;
+  // only on resources
+  mManualMiningAudioName?: string;
   mDisplayName: string;
   mDescription: string;
   mAbbreviatedDisplayName: string;
   mStackSize: string;
   // only on vehicles
-  mInventorySize: string | undefined;
+  mInventorySize?: string;
   mCanBeDiscarded: string;
   mRememberPickUp: string;
   mEnergyValue: string;
@@ -450,6 +453,7 @@ interface SfyManufacturer {
 interface SfyUnlock {
   Class: string;
   mRecipes: string[];
+  mSchematics: string[];
 }
 
 interface SfyIngredient {
@@ -626,6 +630,7 @@ function getDescriptions(data: SfyData[]): SfyDesc[] {
     [
       "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptor'",
       "/Script/CoreUObject.Class'/Script/FactoryGame.FGVehicleDescriptor'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGResourceDescriptor'",
     ],
     (_) => true,
   );
@@ -698,10 +703,6 @@ function extractItemsFromRecipes(recipes: SfyRecipe[]): Set<string> {
   return items;
 }
 
-function extractMiningItems(items: Set<string>): string[] {
-  return [...items.keys()].filter((i) => i.includes('RawResource')).map(getId);
-}
-
 function stackSize(mStackSize: string): number | undefined {
   switch (mStackSize) {
     case 'SS_SMALL':
@@ -720,7 +721,6 @@ function stackSize(mStackSize: string): number | undefined {
 function buildModData(
   recipes: SfyRecipe[],
   technologies: SfyResearch[],
-  miningItems: string[],
   items: Set<string>,
   descriptions: SfyDesc[],
   conveyors: SfyConveyorBelt[],
@@ -729,6 +729,7 @@ function buildModData(
   manufacturers: SfyManufacturer[],
 ): ModData {
   const somersloopRecipes: string[] = [];
+  const miningItems: string[] = [];
   const modData: ModData = {
     version: {},
     categories: [],
@@ -901,6 +902,9 @@ function buildModData(
         stack: stackSize(desc.mStackSize),
         fuel,
       });
+      if (desc.mManualMiningAudioName) {
+        miningItems.push(item);
+      }
     }
   }
 
@@ -974,8 +978,6 @@ function main() {
   const extractors = getResourceExtractors(data);
   const manufacturers = getManufacturers(data);
 
-  const miningItems = extractMiningItems(items);
-
   const modPath = `./src/data/sfy`;
   const modDataPath = `${modPath}/data.json`;
   const modHashPath = `${modPath}/hash.json`;
@@ -983,7 +985,6 @@ function main() {
   const modData = buildModData(
     recipes,
     technologies,
-    miningItems,
     items,
     descriptions,
     conveyors,
