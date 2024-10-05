@@ -91,7 +91,11 @@ interface SfyResearch {
   mUnlocks: SfyUnlock[];
   mSchematicIcon: string;
   mSmallSchematicIcon: string;
-  mSchematicDependencies: string;
+  mSchematicDependencies: {
+    Class: string;
+    mSchematics: string[];
+    mRequireAllSchematicsToBePurchased: 'True' | 'False';
+  }[];
   mDependenciesBlocksSchematicAccess: string;
   mHiddenUntilDependenciesMet: string;
   mRelevantEvents: string;
@@ -620,8 +624,10 @@ function getTechnologies(data: SfyData[]): SfyResearch[] {
           c.Class === 'BP_UnlockRecipe_C' &&
           !c.mRecipes.every((r) => denied.some((d) => r.includes(d))),
       ) &&
-      d.mCost === '' &&
-      !d.mDisplayName.includes('Discontinued'),
+      !d.mDisplayName.includes('Discontinued') &&
+      !['EST_Customization', 'EST_ResourceSink'].some(
+        (mType) => d.mType === mType,
+      ),
   );
 }
 function getDescriptions(data: SfyData[]): SfyDesc[] {
@@ -739,21 +745,42 @@ function buildModData(
     limitations: {},
   };
 
-  // Process Items
-  modData.items.push(
-    ...technologies.map((tech) => ({
-      id: getId(tech.ClassName) + '-technology',
+  const directUnlock: Map<string, SfyResearch> = new Map();
+
+  // Process technologies
+  for (const tech of technologies) {
+    const unlocks = tech.mUnlocks.filter(
+      (mu) => mu.Class === 'BP_UnlockSchematic_C',
+    );
+    for (const unlock of unlocks) {
+      for (const schematic of unlock.mSchematics) {
+        directUnlock.set(getId(schematic), tech);
+      }
+    }
+  }
+  for (const tech of technologies) {
+    if (directUnlock.get(getId(tech.ClassName))) {
+      continue;
+    }
+    modData.items.push({
+      id: getId(tech.ClassName),
       row: 0,
       name: tech.mDisplayName,
       category: 'technology',
-    })),
-  );
-
+      technology: {
+        prerequisites: tech.mSchematicDependencies
+          .filter((dep) => dep.Class === 'BP_SchematicPurchasedDependency_C')
+          .map((dep) => dep.mSchematics.map(getId))
+          .flat(),
+      },
+    } as ItemJson);
+  }
   // Process Recipes
-  for (const tech of technologies) {
-    for (const techUnlock of tech.mUnlocks.filter(
+  for (const _tech of technologies) {
+    for (const techUnlock of _tech.mUnlocks.filter(
       (u) => u.Class === 'BP_UnlockRecipe_C',
     )) {
+      const tech = directUnlock.get(getId(_tech.ClassName)) ?? _tech;
       for (const recipeClassName of techUnlock.mRecipes) {
         const mRecipe = recipes.find(
           (r) => r.ClassName === getId(recipeClassName),
@@ -804,11 +831,11 @@ function buildModData(
           (modR) => modR.id === recipe.id,
         );
         if (existing !== -1 && typeof recipe.unlockedBy === 'string') {
-          const unlockedby = [
+          const unlockedBy = [
             modData.recipes[existing].unlockedBy,
           ].flat() as string[];
-          unlockedby.push(recipe.unlockedBy);
-          modData.recipes[existing].unlockedBy = unlockedby;
+          unlockedBy.push(recipe.unlockedBy);
+          modData.recipes[existing].unlockedBy = unlockedBy;
         } else {
           modData.recipes.push(recipe);
         }
@@ -915,7 +942,7 @@ function buildModData(
     color: '#746255',
   }));
   const technologyIcons = technologies.map((tech) => ({
-    id: `${getId(tech.ClassName)}-technology`,
+    id: `${getId(tech.ClassName)}`,
     position: '-576px -0px',
     color: '#746255',
   }));
