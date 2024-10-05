@@ -1,15 +1,26 @@
 /**
- * This script is used to update the Satisfactory (sfy) mod set
- * in %STEAM%\steamapps\common\Satisfactory\CommunityResources\Docs there are localization files also containing recipes and unlocks.
- * We will fill the data from these files into the src/sfy/data.json file.
+ * This script updates the Satisfactory (sfy) mod set.
+ * It reads localization files containing recipes and unlocks,
+ * and fills the data into the src/sfy/data.json file.
  */
 
-import fs from 'fs';
-import { ItemJson, ModData, ModHash, RecipeJson } from '~/models';
-import { emptyModHash, logWarn } from './helpers';
 import { log } from 'console';
+import fs from 'fs';
+import { StringifyOptions } from 'querystring';
+import { find } from 'rxjs';
+import { pipeline } from 'stream';
 
-type SfyData = SfyRecipeData | SfyResearchData;
+import { EnergyType, ItemJson, ModData, ModHash, RecipeJson } from '~/models';
+import { emptyModHash, logTime, logWarn } from './helpers';
+
+type SfyData =
+  | SfyRecipeData
+  | SfyResearchData
+  | SfyDescData
+  | SfyConveyorBeltData
+  | SfyPipelineData
+  | SfyResourceExtractorData
+  | SfyManufacturerData;
 
 interface SfyRecipeData {
   NativeClass: "/Script/CoreUObject.Class'/Script/FactoryGame.FGRecipe'";
@@ -18,6 +29,33 @@ interface SfyRecipeData {
 interface SfyResearchData {
   NativeClass: "/Script/CoreUObject.Class'/Script/FactoryGame.FGSchematic'";
   Classes: SfyResearch[];
+}
+interface SfyDescData {
+  NativeClass:
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptor'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGVehicleDescriptor'";
+  Classes: SfyDesc[];
+}
+interface SfyConveyorBeltData {
+  NativeClass: "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableConveyorBelt'";
+  Classes: SfyConveyorBelt[];
+}
+interface SfyPipelineData {
+  NativeClass: "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildablePipeline'";
+  Classes: SfyPipeline[];
+}
+interface SfyResourceExtractorData {
+  NativeClass:
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableResourceExtractor'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableWaterPump'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableFrackingExtractor'";
+  Classes: SfyResourceExtractor[];
+}
+interface SfyManufacturerData {
+  NativeClass:
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableManufacturer'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableManufacturerVariablePower'";
+  Classes: SfyManufacturer[];
 }
 
 interface SfyRecipe {
@@ -60,6 +98,355 @@ interface SfyResearch {
   mIncludeInBuilds: string;
 }
 
+interface RGBA {
+  R: number;
+  G: number;
+  B: number;
+  A: number;
+}
+interface SfyDesc {
+  ClassName: string;
+  mDisplayName: string;
+  mDescription: string;
+  mAbbreviatedDisplayName: string;
+  mStackSize: string;
+  // only on vehicles
+  mInventorySize: string | undefined;
+  mCanBeDiscarded: string;
+  mRememberPickUp: string;
+  mEnergyValue: string;
+  mRadioactiveDecay: string;
+  mForm: string;
+  mGasType: string;
+  mSmallIcon: string;
+  mPersistentBigIcon: string;
+  mCrosshairMaterial: string;
+  mDescriptorStatBars: string;
+  mIsAlienItem: string;
+  mSubCategories: string;
+  mMenuPriority: string;
+  mFluidColor: RGBA;
+  mGasColor: RGBA;
+  mCompatibleItemDescriptors: string;
+  mClassToScanFor: string;
+  mScannableType: string;
+  mShouldOverrideScannerDisplayText: string;
+  mScannerDisplayText: string;
+  mScannerLightColor: RGBA;
+  mNeedsPickUpMarker: string;
+  mResourceSinkPoints: string;
+}
+
+interface SfyConveyorBelt {
+  ClassName: string;
+  mCustomSkins: string;
+  mMeshLength: string;
+  mItemMeshMap: string;
+  mSplineData: string;
+  mSpeed: string;
+  mItems: string;
+  mConveyorChainFlags: string;
+  mChainSegmentIndex: string;
+  mDisplayName: string;
+  mDescription: string;
+  MaxRenderDistance: string;
+  mAlternativeMaterialRecipes: string;
+  mContainsComponents: string;
+  mIsConsideredForBaseWeightValue: string;
+  bForceLegacyBuildEffect: string;
+  bForceBuildEffectSolo: string;
+  mBuildEffectSpeed: string;
+  mAllowColoring: string;
+  mAllowPatterning: string;
+  mInteractionRegisterPlayerWithCircuit: string;
+  mSkipBuildEffect: string;
+  mForceNetUpdateOnRegisterPlayer: string;
+  mToggleDormancyOnInteraction: string;
+  mIsMultiSpawnedBuildable: string;
+  mShouldShowAttachmentPointVisuals: string;
+  mCanContainLightweightInstances: string;
+  mManagedByLightweightBuildableSubsystem: string;
+  mRemoveBuildableFromSubsystemOnDismantle: string;
+  mHasBeenRemovedFromSubsystem: string;
+  mAffectsOcclusion: string;
+  mOcclusionShape: string;
+  mScaleCustomOffset: string;
+  mCustomScaleType: string;
+  mOcclusionBoxInfo: string;
+  mAttachmentPoints: string;
+  mReplicatedBuiltInsideBlueprintDesigner: string;
+  mInteractingPlayers: string;
+  mIsUseable: string;
+  mClearanceData: string;
+  mHideOnBuildEffectStart: string;
+  mShouldModifyWorldGrid: string;
+  mTimelapseBucketId: string;
+  mTimelapseDelay: string;
+  mAlienOverClockingZOffset: string;
+  mAlienOverClockingAttenuationScalingFactor: string;
+  mAlienOverClockingVolumeDB_RTPC: string;
+  mAlienOverClockingHighpass_RTPC: string;
+  mAlienOverClockingPitch_RTPC: string;
+  mBlueprintBuildEffectID: string;
+}
+interface SfyPipeline {
+  ClassName: string;
+  mRadius: string;
+  mFlowLimit: string;
+  mFlowIndicatorMinimumPipeLength: string;
+  mSoundSplineComponentEmitterInterval: string;
+  mPipeConnections: string;
+  mFluidBox: string;
+  mIndicatorData: string;
+  mMaxIndicatorTurnAngle: string;
+  mIgnoreActorsForIndicator: string;
+  mFluidNames: string;
+  mCurrentFluid: string;
+  mLastContentForSound: string;
+  mLastFlowForSound: string;
+  mLastElapsedTime: string;
+  mLastFlowForSoundUpdateThreshold: string;
+  mRattleLimit: string;
+  mIsRattling: string;
+  mUpdateSoundsHandle: string;
+  mUpdateSoundsTimerInterval: string;
+  mMeshLength: string;
+  mSplineData: string;
+  mSnappedPassthroughs: string;
+  mDisplayName: string;
+  mDescription: string;
+  MaxRenderDistance: string;
+  mAlternativeMaterialRecipes: string;
+  mContainsComponents: string;
+  mIsConsideredForBaseWeightValue: string;
+  bForceLegacyBuildEffect: string;
+  bForceBuildEffectSolo: string;
+  mBuildEffectSpeed: string;
+  mAllowColoring: string;
+  mAllowPatterning: string;
+  mInteractionRegisterPlayerWithCircuit: string;
+  mSkipBuildEffect: string;
+  mForceNetUpdateOnRegisterPlayer: string;
+  mToggleDormancyOnInteraction: string;
+  mIsMultiSpawnedBuildable: string;
+  mShouldShowAttachmentPointVisuals: string;
+  mCanContainLightweightInstances: string;
+  mManagedByLightweightBuildableSubsystem: string;
+  mRemoveBuildableFromSubsystemOnDismantle: string;
+  mHasBeenRemovedFromSubsystem: string;
+  mAffectsOcclusion: string;
+  mOcclusionShape: string;
+  mScaleCustomOffset: string;
+  mCustomScaleType: string;
+  mOcclusionBoxInfo: string;
+  mAttachmentPoints: string;
+  mReplicatedBuiltInsideBlueprintDesigner: string;
+  mInteractingPlayers: string;
+  mIsUseable: string;
+  mClearanceData: string;
+  mHideOnBuildEffectStart: string;
+  mShouldModifyWorldGrid: string;
+  mTimelapseBucketId: string;
+  mTimelapseDelay: string;
+  mAlienOverClockingZOffset: string;
+  mAlienOverClockingAttenuationScalingFactor: string;
+  mAlienOverClockingVolumeDB_RTPC: string;
+  mAlienOverClockingHighpass_RTPC: string;
+  mAlienOverClockingPitch_RTPC: string;
+  mBlueprintBuildEffectID: string;
+}
+
+interface SfyResourceExtractor {
+  ClassName: string;
+  mParticleMap: string;
+  mCanPlayAfterStartUpStopped: string;
+  SAMReference: string;
+  mExtractStartupTime: string;
+  mExtractStartupTimer: string;
+  mExtractCycleTime: string;
+  mItemsPerCycle: string;
+  mPipeOutputConnections: string;
+  mAllowedResourceForms: string;
+  mOnlyAllowCertainResources: string;
+  mAllowedResources: string;
+  mExtractorTypeName: string;
+  mTryFindMissingResource: string;
+  mPowerConsumption: string;
+  mPowerConsumptionExponent: string;
+  mProductionBoostPowerConsumptionExponent: string;
+  mDoesHaveShutdownAnimation: string;
+  mOnHasPowerChanged: string;
+  mOnHasProductionChanged: string;
+  mOnHasStandbyChanged: string;
+  mOnPendingPotentialChanged: string;
+  mOnPendingProductionBoostChanged: string;
+  mOnCurrentProductivityChanged: string;
+  mMinimumProducingTime: string;
+  mMinimumStoppedTime: string;
+  mCanEverMonitorProductivity: string;
+  mCanChangePotential: string;
+  mCanChangeProductionBoost: string;
+  mMinPotential: string;
+  mMaxPotential: string;
+  mBaseProductionBoost: string;
+  mPotentialShardSlots: string;
+  // Somersloops
+  mProductionShardSlotSize: string;
+  mProductionShardBoostMultiplier: string;
+  mFluidStackSizeDefault: string;
+  mFluidStackSizeMultiplier: string;
+  mHasInventoryPotential: string;
+  mIsTickRateManaged: string;
+  mEffectUpdateInterval: string;
+  mDefaultProductivityMeasurementDuration: string;
+  mLastProductivityMeasurementProduceDuration: string;
+  mLastProductivityMeasurementDuration: string;
+  mCurrentProductivityMeasurementProduceDuration: string;
+  mCurrentProductivityMeasurementDuration: string;
+  mProductivityMonitorEnabled: string;
+  mOverridePotentialShardSlots: string;
+  mOverrideProductionShardSlotSize: string;
+  mAddToSignificanceManager: string;
+  mAlienOverClockingParticleEffects: string;
+  mCachedSkeletalMeshes: string;
+  mSignificanceRange: string;
+  mTickExponent: string;
+  mDisplayName: string;
+  mDescription: string;
+  MaxRenderDistance: string;
+  mAlternativeMaterialRecipes: string;
+  mContainsComponents: string;
+  mIsConsideredForBaseWeightValue: string;
+  bForceLegacyBuildEffect: string;
+  bForceBuildEffectSolo: string;
+  mBuildEffectSpeed: string;
+  mAllowColoring: string;
+  mAllowPatterning: string;
+  mInteractionRegisterPlayerWithCircuit: string;
+  mSkipBuildEffect: string;
+  mForceNetUpdateOnRegisterPlayer: string;
+  mToggleDormancyOnInteraction: string;
+  mIsMultiSpawnedBuildable: string;
+  mShouldShowAttachmentPointVisuals: string;
+  mCanContainLightweightInstances: string;
+  mManagedByLightweightBuildableSubsystem: string;
+  mRemoveBuildableFromSubsystemOnDismantle: string;
+  mHasBeenRemovedFromSubsystem: string;
+  mAffectsOcclusion: string;
+  mOcclusionShape: string;
+  mScaleCustomOffset: string;
+  mCustomScaleType: string;
+  mOcclusionBoxInfo: string;
+  mAttachmentPoints: string;
+  mReplicatedBuiltInsideBlueprintDesigner: string;
+  mInteractingPlayers: string;
+  mIsUseable: string;
+  mClearanceData: string;
+  mHideOnBuildEffectStart: string;
+  mShouldModifyWorldGrid: string;
+  mTimelapseBucketId: string;
+  mTimelapseDelay: string;
+  mAlienOverClockingZOffset: string;
+  mAlienOverClockingAttenuationScalingFactor: string;
+  mAlienOverClockingVolumeDB_RTPC: string;
+  mAlienOverClockingHighpass_RTPC: string;
+  mAlienOverClockingPitch_RTPC: string;
+  mBlueprintBuildEffectID: string;
+}
+
+interface SfyManufacturer {
+  ClassName: string;
+  IsPowered: string;
+  mProductionEffectsRunning: string;
+  mCurrentRecipeChanged: string;
+  mManufacturingSpeed: string;
+  mFactoryInputConnections: string;
+  mPipeInputConnections: string;
+  mFactoryOutputConnections: string;
+  mPipeOutputConnections: string;
+  mPowerConsumption: string;
+  mPowerConsumptionExponent: string;
+  mProductionBoostPowerConsumptionExponent: string;
+  mDoesHaveShutdownAnimation: string;
+  mOnHasPowerChanged: string;
+  mOnHasProductionChanged: string;
+  mOnHasStandbyChanged: string;
+  mOnPendingPotentialChanged: string;
+  mOnPendingProductionBoostChanged: string;
+  mOnCurrentProductivityChanged: string;
+  mMinimumProducingTime: string;
+  mMinimumStoppedTime: string;
+  mCanEverMonitorProductivity: string;
+  mCanChangePotential: string;
+  mCanChangeProductionBoost: string;
+  mMinPotential: string;
+  mMaxPotential: string;
+  mBaseProductionBoost: string;
+  mPotentialShardSlots: string;
+  // Somersloops
+  mProductionShardSlotSize: string;
+  mProductionShardBoostMultiplier: string;
+  mFluidStackSizeDefault: string;
+  mFluidStackSizeMultiplier: string;
+  mHasInventoryPotential: string;
+  mIsTickRateManaged: string;
+  mEffectUpdateInterval: string;
+  mDefaultProductivityMeasurementDuration: string;
+  mLastProductivityMeasurementProduceDuration: string;
+  mLastProductivityMeasurementDuration: string;
+  mCurrentProductivityMeasurementProduceDuration: string;
+  mCurrentProductivityMeasurementDuration: string;
+  mProductivityMonitorEnabled: string;
+  mOverridePotentialShardSlots: string;
+  mOverrideProductionShardSlotSize: string;
+  mAddToSignificanceManager: string;
+  mAlienOverClockingParticleEffects: string;
+  mCachedSkeletalMeshes: string;
+  mSignificanceRange: string;
+  mTickExponent: string;
+  mDisplayName: string;
+  mDescription: string;
+  MaxRenderDistance: string;
+  mAlternativeMaterialRecipes: string;
+  mContainsComponents: string;
+  mIsConsideredForBaseWeightValue: string;
+  bForceLegacyBuildEffect: string;
+  bForceBuildEffectSolo: string;
+  mBuildEffectSpeed: string;
+  mAllowColoring: string;
+  mAllowPatterning: string;
+  mInteractionRegisterPlayerWithCircuit: string;
+  mSkipBuildEffect: string;
+  mForceNetUpdateOnRegisterPlayer: string;
+  mToggleDormancyOnInteraction: string;
+  mIsMultiSpawnedBuildable: string;
+  mShouldShowAttachmentPointVisuals: string;
+  mCanContainLightweightInstances: string;
+  mManagedByLightweightBuildableSubsystem: string;
+  mRemoveBuildableFromSubsystemOnDismantle: string;
+  mHasBeenRemovedFromSubsystem: string;
+  mAffectsOcclusion: string;
+  mOcclusionShape: string;
+  mScaleCustomOffset: string;
+  mCustomScaleType: string;
+  mOcclusionBoxInfo: string;
+  mAttachmentPoints: string;
+  mReplicatedBuiltInsideBlueprintDesigner: string;
+  mInteractingPlayers: string;
+  mIsUseable: string;
+  mClearanceData: string;
+  mHideOnBuildEffectStart: string;
+  mShouldModifyWorldGrid: string;
+  mTimelapseBucketId: string;
+  mTimelapseDelay: string;
+  mAlienOverClockingZOffset: string;
+  mAlienOverClockingAttenuationScalingFactor: string;
+  mAlienOverClockingVolumeDB_RTPC: string;
+  mAlienOverClockingHighpass_RTPC: string;
+  mAlienOverClockingPitch_RTPC: string;
+  mBlueprintBuildEffectID: string;
+}
+
 interface SfyUnlock {
   Class: string;
   mRecipes: string[];
@@ -77,15 +464,7 @@ const denied = [
   "/Script/Engine.BlueprintGeneratedClass'/Game/FactoryGame/Recipes/Vehicle/",
 ];
 
-function parseSimpleTupleArray(str: string): string[] {
-  const regex = /\("([^"]+)"\)/g;
-  const result = [];
-  let match;
-  while ((match = regex.exec(str)) !== null) {
-    result.push(match[1]);
-  }
-  return result;
-}
+/** Utility Functions */
 
 function parseKeyValuePairs(str: string): Record<string, any> {
   const obj: any = {};
@@ -162,7 +541,7 @@ function parseTupleArray(str: string): any[] | string {
   }
 }
 
-function reviver(key: string, value: any) {
+function reviver(key: string, value: never | string): unknown {
   if (typeof value === 'string') {
     if (/^\s*\(.*\)\s*$/.test(value)) {
       if (value.includes('=')) {
@@ -178,7 +557,18 @@ function reviver(key: string, value: any) {
 function filterData<
   K extends SfyData['NativeClass'],
   F extends Extract<SfyData, { NativeClass: K }>['Classes'][number],
->(data: SfyData[], nativeClassFilter: K, innerFilter: (d: F) => boolean): F[] {
+>(
+  data: SfyData[],
+  nativeClassFilter: K | K[],
+  innerFilter: (d: F) => boolean,
+): F[] {
+  if (Array.isArray(nativeClassFilter)) {
+    const result = [];
+    for (const f of nativeClassFilter) {
+      result.push(...filterData(data, f as K, innerFilter as any));
+    }
+    return result as any;
+  }
   return data
     .filter((d) => d.NativeClass === nativeClassFilter)
     .map((d) => d.Classes)
@@ -216,32 +606,7 @@ function processRecipes(data: SfyData[]): SfyRecipe[] {
   );
 }
 
-function extractItemsFromRecipes(
-  recipes: SfyRecipe[],
-): Map<string, Partial<ItemJson>> {
-  const items = new Map<string, Partial<ItemJson>>();
-  for (const mRecipe of recipes) {
-    for (const product of mRecipe.mProduct) {
-      items.set(product.ItemClass, {
-        id: product.ItemClass,
-      });
-    }
-    for (const ingredient of mRecipe.mIngredients) {
-      if (typeof ingredient !== 'string') {
-        items.set(ingredient.ItemClass, {
-          id: ingredient.ItemClass,
-        });
-      }
-    }
-  }
-  return items;
-}
-
-function extractMiningItems(items: Map<string, Partial<ItemJson>>): string[] {
-  return [...items.keys()].filter((i) => i.includes('RawResource')).map(getId);
-}
-
-function processTechnologies(data: SfyData[]): SfyResearch[] {
+function getTechnologies(data: SfyData[]): SfyResearch[] {
   return filterData(
     data,
     "/Script/CoreUObject.Class'/Script/FactoryGame.FGSchematic'",
@@ -251,18 +616,119 @@ function processTechnologies(data: SfyData[]): SfyResearch[] {
           c.Class === 'BP_UnlockRecipe_C' &&
           !c.mRecipes.every((r) => denied.some((d) => r.includes(d))),
       ) &&
-      d.mCost == '' &&
+      d.mCost === '' &&
       !d.mDisplayName.includes('Discontinued'),
   );
+}
+function getDescriptions(data: SfyData[]): SfyDesc[] {
+  return filterData(
+    data,
+    [
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptor'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGVehicleDescriptor'",
+    ],
+    (_) => true,
+  );
+}
+function getConveyors(data: SfyData[]): SfyConveyorBelt[] {
+  return filterData(
+    data,
+    "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableConveyorBelt'",
+    (_) => true,
+  );
+}
+function getPipelines(data: SfyData[]): SfyPipeline[] {
+  return filterData(
+    data,
+    "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildablePipeline'",
+    (_) => true,
+  );
+}
+function getResourceExtractors(data: SfyData[]): SfyResourceExtractor[] {
+  return filterData(
+    data,
+    [
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableResourceExtractor'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableWaterPump'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableFrackingExtractor'",
+    ],
+    (_) => true,
+  );
+}
+
+function getManufacturers(data: SfyData[]): SfyManufacturer[] {
+  return filterData(
+    data,
+    [
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableManufacturer'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGBuildableManufacturerVariablePower'",
+    ],
+    (_) => true,
+  );
+}
+
+function findClass<D extends { ClassName: string }>(
+  data: D[],
+  className: string,
+): D | undefined {
+  return data.find((d) => d.ClassName === className);
+}
+
+function findAllClasses<D extends { ClassName: string }>(
+  data: D[],
+  classNames: string[],
+): D[] {
+  return classNames
+    .map((className) => findClass(data, className))
+    .filter((c) => c !== undefined) as D[];
+}
+
+function extractItemsFromRecipes(recipes: SfyRecipe[]): Set<string> {
+  const items = new Set<string>();
+  for (const mRecipe of recipes) {
+    for (const product of mRecipe.mProduct) {
+      items.add(getId(product.ItemClass));
+    }
+    for (const ingredient of mRecipe.mIngredients) {
+      if (typeof ingredient !== 'string') {
+        items.add(getId(ingredient.ItemClass));
+      }
+    }
+  }
+  return items;
+}
+
+function extractMiningItems(items: Set<string>): string[] {
+  return [...items.keys()].filter((i) => i.includes('RawResource')).map(getId);
+}
+
+function stackSize(mStackSize: string): number | undefined {
+  switch (mStackSize) {
+    case 'SS_SMALL':
+      return 50;
+    case 'SS_MEDIUM':
+      return 100;
+    case 'SS_BIG':
+      return 200;
+    case 'SS_HUGE':
+      return 500;
+    default:
+      return undefined;
+  }
 }
 
 function buildModData(
   recipes: SfyRecipe[],
   technologies: SfyResearch[],
   miningItems: string[],
-  somersloopRecipes: string[],
-  items: Map<string, Partial<ItemJson>>,
+  items: Set<string>,
+  descriptions: SfyDesc[],
+  conveyors: SfyConveyorBelt[],
+  pipelines: SfyPipeline[],
+  extractors: SfyResourceExtractor[],
+  manufacturers: SfyManufacturer[],
 ): ModData {
+  const somersloopRecipes: string[] = [];
   const modData: ModData = {
     version: {},
     categories: [],
@@ -272,8 +738,7 @@ function buildModData(
     limitations: {},
   };
 
-  const itemMap = items;
-
+  // Process Items
   modData.items.push(
     ...technologies.map((tech) => ({
       id: getId(tech.ClassName) + '-technology',
@@ -281,14 +746,9 @@ function buildModData(
       name: tech.mDisplayName,
       category: 'technology',
     })),
-    ...[...itemMap.values()].map((item) => ({
-      id: getId(item.id || ''),
-      row: 0,
-      name: '',
-      category: 'item',
-    })),
   );
 
+  // Process Recipes
   for (const tech of technologies) {
     for (const techUnlock of tech.mUnlocks.filter(
       (u) => u.Class === 'BP_UnlockRecipe_C',
@@ -318,20 +778,12 @@ function buildModData(
           mRecipe.mProduct.map((i) => [getId(i.ItemClass), i.Amount]),
         );
         const id = getId(mRecipe.ClassName);
-        if (
-          mRecipe.mProducedIn.some(
-            (pr) =>
-              pr.includes('Buildable/Factory/') &&
-              !pr.includes('Build_Packager'),
-          )
-        ) {
-          somersloopRecipes.push(id);
-        }
+
         const recipe: RecipeJson = {
           name: mRecipe.mDisplayName,
           category: 'recipe',
           id,
-          time: parseFloat(mRecipe.mManufactoringDuration),
+          time: Math.round(parseFloat(mRecipe.mManufactoringDuration)),
           producers: mRecipe.mProducedIn
             .map((pi) => getId(pi))
             .filter((pi) => pi !== undefined),
@@ -340,17 +792,114 @@ function buildModData(
           row: 0,
           unlockedBy: getId(tech.ClassName),
         };
+        if (
+          findAllClasses(manufacturers, recipe.producers).some(
+            (m) => m.mProductionShardSlotSize !== '0',
+          )
+        ) {
+          somersloopRecipes.push(id);
+        }
         if (modData.recipes.some((modR) => modR.id === recipe.id)) {
-          logWarn(`Duplicate recipe id: ${recipe.id}`);
+          logWarn(`Duplicate recipe id: ${recipe.id}, skipping ${recipe.name}`);
         } else {
           modData.recipes.push(recipe);
         }
       }
     }
   }
+  for (const conveyor of conveyors) {
+    modData.items.push({
+      id: conveyor.ClassName,
+      row: 0,
+      name: conveyor.mDisplayName,
+      category: 'other',
+      belt: {
+        speed: parseFloat(conveyor.mSpeed) / 120,
+      },
+    });
+  }
+  for (const pipeline of pipelines) {
+    if (pipeline.mDisplayName.includes('Clean ')) continue;
+    modData.items.push({
+      id: pipeline.ClassName,
+      row: 0,
+      name: pipeline.mDisplayName,
+      category: 'other',
+      pipe: {
+        speed: parseFloat(pipeline.mFlowLimit),
+      },
+    });
+  }
+  for (const extractor of extractors) {
+    modData.items.push({
+      id: extractor.ClassName,
+      row: 0,
+      name: extractor.mDisplayName,
+      category: 'other',
+      machine: {
+        speed: 1 / parseFloat(extractor.mExtractCycleTime),
+        type: EnergyType.Electric,
+        usage: parseFloat(extractor.mPowerConsumption) * 1000,
+      },
+    });
+  }
+  for (const manufacturer of manufacturers) {
+    modData.items.push({
+      id: manufacturer.ClassName,
+      row: 0,
+      name: manufacturer.mDisplayName,
+      category: 'other',
+      machine: {
+        modules: parseFloat(manufacturer.mProductionShardSlotSize) ?? undefined,
+        type: EnergyType.Electric,
+        usage: parseFloat(manufacturer.mPowerConsumption) * 1000,
+        speed: parseFloat(manufacturer.mManufacturingSpeed),
+      },
+    });
+  }
+  for (const car of findAllClasses(descriptions, ['Desc_FreightWagon_C'])) {
+    if (car.ClassName === 'Desc_FreightWagon_C') {
+      const stacksize = parseFloat(car.mInventorySize ?? '0');
+      modData.items.push({
+        id: getId(car.ClassName),
+        row: 0,
+        name: car.mDisplayName,
+        category: 'other',
+        cargoWagon: {
+          size: stacksize,
+        },
+        fluidWagon: {
+          capacity: stacksize * 50,
+        },
+      });
+    }
+  }
+  for (const item of items) {
+    const desc = findClass(descriptions, item);
+    if (desc && desc.mForm !== 'RF_INVALID') {
+      let fuel;
+      if (parseFloat(desc.mEnergyValue) !== 0) {
+        fuel = {
+          category: desc.mForm !== 'RF_SOLID' ? 'chemical' : 'fluid',
+          value:
+            parseFloat(desc.mEnergyValue) *
+            (desc.mForm === 'RF_SOLID' ? 1 : 1000),
+        };
+      }
+      modData.items.push({
+        id: item,
+        row: 0,
+        name: desc.mDisplayName,
+        category: 'components',
+        stack: stackSize(desc.mStackSize),
+        fuel,
+      });
+    }
+  }
 
-  const itemIcons = [...itemMap.values()].map((item) => ({
-    id: getId(item.id || ''),
+  // Process Icons
+  const itemIcons = [...items.values()].map((item) => ({
+    id: item,
     position: '-576px -0px',
     color: '#746255',
   }));
@@ -366,6 +915,7 @@ function buildModData(
   }));
   modData.icons.push(...itemIcons, ...technologyIcons, ...recipeIcons);
 
+  // Limitations
   modData.limitations['mining'] = miningItems;
   modData.limitations['somersloop'] = somersloopRecipes;
 
@@ -394,6 +944,8 @@ function updateModHash(modData: ModData, oldHash: ModHash): ModHash {
   return oldHash;
 }
 
+/** Main */
+
 function main() {
   const satisfactoryPath = process.argv[2];
   if (!satisfactoryPath) {
@@ -406,15 +958,16 @@ function main() {
   const data: SfyData[] = readDataFile(enUsPath);
 
   const recipes = processRecipes(data);
-  log(`Found ${recipes.length} recipes`);
-  log(`First recipe: ${JSON.stringify(recipes[0], null, 2)}`);
-  log(`All recipe names: ${recipes.map((r) => r.mDisplayName).join(', ')}`);
-
   const items = extractItemsFromRecipes(recipes);
-  const miningItems = extractMiningItems(items);
-  const somersloopRecipes: string[] = [];
 
-  const technologies = processTechnologies(data);
+  const technologies = getTechnologies(data);
+  const descriptions = getDescriptions(data);
+  const conveyors = getConveyors(data);
+  const pipelines = getPipelines(data);
+  const extractors = getResourceExtractors(data);
+  const manufacturers = getManufacturers(data);
+
+  const miningItems = extractMiningItems(items);
 
   const modPath = `./src/data/sfy`;
   const modDataPath = `${modPath}/data.json`;
@@ -424,8 +977,12 @@ function main() {
     recipes,
     technologies,
     miningItems,
-    somersloopRecipes,
     items,
+    descriptions,
+    conveyors,
+    pipelines,
+    extractors,
+    manufacturers,
   );
 
   const oldData: ModData = JSON.parse(fs.readFileSync(modDataPath, 'utf8'));

@@ -3116,1192 +3116,1150 @@
             "category": "technology"
         },
         {
-            "id": "Desc_ConveyorBeltMk1_C",
+            "id": "Build_ConveyorBeltMk1_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Conveyor Belt Mk.1",
+            "category": "other",
+            "belt": {
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_ConveyorBeltMk5_C",
+            "row": 0,
+            "name": "Conveyor Belt Mk.5",
+            "category": "other",
+            "belt": {
+                "speed": 13
+            }
+        },
+        {
+            "id": "Build_ConveyorBeltMk6_C",
+            "row": 0,
+            "name": "Conveyor Belt Mk.6",
+            "category": "other",
+            "belt": {
+                "speed": 20
+            }
+        },
+        {
+            "id": "Build_ConveyorBeltMk4_C",
+            "row": 0,
+            "name": "Conveyor Belt Mk.4",
+            "category": "other",
+            "belt": {
+                "speed": 8
+            }
+        },
+        {
+            "id": "Build_ConveyorBeltMk3_C",
+            "row": 0,
+            "name": "Conveyor Belt Mk.3",
+            "category": "other",
+            "belt": {
+                "speed": 4.5
+            }
+        },
+        {
+            "id": "Build_ConveyorBeltMk2_C",
+            "row": 0,
+            "name": "Conveyor Belt Mk.2",
+            "category": "other",
+            "belt": {
+                "speed": 2
+            }
+        },
+        {
+            "id": "Build_Pipeline_C",
+            "row": 0,
+            "name": "Pipeline Mk.1",
+            "category": "other",
+            "pipe": {
+                "speed": 5
+            }
+        },
+        {
+            "id": "Build_PipelineMK2_C",
+            "row": 0,
+            "name": "Pipeline Mk.2",
+            "category": "other",
+            "pipe": {
+                "speed": 10
+            }
+        },
+        {
+            "id": "Build_OilPump_C",
+            "row": 0,
+            "name": "Oil Extractor",
+            "category": "other",
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 40000
+            }
+        },
+        {
+            "id": "Build_MinerMk2_C",
+            "row": 0,
+            "name": "Miner Mk.2",
+            "category": "other",
+            "machine": {
+                "speed": 2,
+                "type": "electric",
+                "usage": 15000
+            }
+        },
+        {
+            "id": "Build_MinerMk1_C",
+            "row": 0,
+            "name": "Miner Mk.1",
+            "category": "other",
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 5000
+            }
+        },
+        {
+            "id": "Build_MinerMk3_C",
+            "row": 0,
+            "name": "Miner Mk.3",
+            "category": "other",
+            "machine": {
+                "speed": 4,
+                "type": "electric",
+                "usage": 45000
+            }
+        },
+        {
+            "id": "Build_WaterPump_C",
+            "row": 0,
+            "name": "Water Extractor",
+            "category": "other",
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 20000
+            }
+        },
+        {
+            "id": "Build_FrackingExtractor_C",
+            "row": 0,
+            "name": "Resource Well Extractor",
+            "category": "other",
+            "machine": {
+                "speed": 1,
+                "type": "electric",
+                "usage": 0
+            }
+        },
+        {
+            "id": "Build_OilRefinery_C",
+            "row": 0,
+            "name": "Refinery",
+            "category": "other",
+            "machine": {
+                "modules": 2,
+                "type": "electric",
+                "usage": 30000,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_FoundryMk1_C",
+            "row": 0,
+            "name": "Foundry",
+            "category": "other",
+            "machine": {
+                "modules": 2,
+                "type": "electric",
+                "usage": 16000,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_Packager_C",
+            "row": 0,
+            "name": "Packager",
+            "category": "other",
+            "machine": {
+                "modules": 0,
+                "type": "electric",
+                "usage": 10000,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_ManufacturerMk1_C",
+            "row": 0,
+            "name": "Manufacturer",
+            "category": "other",
+            "machine": {
+                "modules": 4,
+                "type": "electric",
+                "usage": 55000,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_AssemblerMk1_C",
+            "row": 0,
+            "name": "Assembler",
+            "category": "other",
+            "machine": {
+                "modules": 2,
+                "type": "electric",
+                "usage": 15000,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_Blender_C",
+            "row": 0,
+            "name": "Blender",
+            "category": "other",
+            "machine": {
+                "modules": 4,
+                "type": "electric",
+                "usage": 75000,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_SmelterMk1_C",
+            "row": 0,
+            "name": "Smelter",
+            "category": "other",
+            "machine": {
+                "modules": 0,
+                "type": "electric",
+                "usage": 4000,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_ConstructorMk1_C",
+            "row": 0,
+            "name": "Constructor",
+            "category": "other",
+            "machine": {
+                "modules": 1,
+                "type": "electric",
+                "usage": 4000,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_QuantumEncoder_C",
+            "row": 0,
+            "name": "Quantum Encoder",
+            "category": "other",
+            "machine": {
+                "modules": 4,
+                "type": "electric",
+                "usage": 100,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_Converter_C",
+            "row": 0,
+            "name": "Converter",
+            "category": "other",
+            "machine": {
+                "modules": 2,
+                "type": "electric",
+                "usage": 100,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Build_HadronCollider_C",
+            "row": 0,
+            "name": "Particle Accelerator",
+            "category": "other",
+            "machine": {
+                "modules": 4,
+                "type": "electric",
+                "usage": 100,
+                "speed": 1
+            }
+        },
+        {
+            "id": "Desc_FreightWagon_C",
+            "row": 0,
+            "name": "Freight Car",
+            "category": "other",
+            "cargoWagon": {
+                "size": 32
+            },
+            "fluidWagon": {
+                "capacity": 1600
+            }
         },
         {
             "id": "Desc_IronPlate_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Iron Plate",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_IronIngot_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Iron Ingot",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_IronRod_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorShockShank_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Iron Rod",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_IronPlateReinforced_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Reinforced Iron Plate",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_Cable_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Cable",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_Wire_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_OreIron_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Wire",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_RocketFuel_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Rocket Fuel",
+            "category": "components",
+            "fuel": {
+                "category": "chemical",
+                "value": 3600
+            }
         },
         {
             "id": "Desc_CompactedCoal_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Compacted Coal",
+            "category": "components",
+            "stack": 100,
+            "fuel": {
+                "category": "fluid",
+                "value": 630
+            }
         },
         {
             "id": "Desc_LiquidFuel_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_NitrogenGas_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Sulfur_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Coal_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Fuel",
+            "category": "components",
+            "fuel": {
+                "category": "chemical",
+                "value": 750
+            }
         },
         {
             "id": "Desc_LiquidTurboFuel_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Turbofuel",
+            "category": "components",
+            "fuel": {
+                "category": "chemical",
+                "value": 2000
+            }
         },
         {
             "id": "Desc_NitricAcid_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Nitric Acid",
+            "category": "components"
         },
         {
             "id": "Desc_PackagedRocketFuel_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Packaged Rocket Fuel",
+            "category": "components",
+            "stack": 100,
+            "fuel": {
+                "category": "fluid",
+                "value": 7200
+            }
         },
         {
             "id": "Desc_GasTank_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Empty Fluid Tank",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_IonizedFuel_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Ionized Fuel",
+            "category": "components",
+            "fuel": {
+                "category": "chemical",
+                "value": 5000
+            }
         },
         {
             "id": "Desc_DarkMatter_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Dark Matter Crystal",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_DarkEnergy_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Dark Matter Residue",
+            "category": "components"
         },
         {
             "id": "Desc_SAMIngot_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Reanimated SAM",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_QuantumEnergy_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Excited Photonic Matter",
+            "category": "components"
         },
         {
             "id": "Desc_Diamond_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Diamonds",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_QuantumOscillator_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Superposition Oscillator",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_CrystalOscillator_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Crystal Oscillator",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_AluminumPlate_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Alclad Aluminum Sheet",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_TemporalProcessor_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Neural-Quantum Processor",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_TimeCrystal_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Time Crystal",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_ComputerSuper_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Supercomputer",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_FicsiteMesh_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Ficsite Trigon",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_SpaceElevatorPart_12_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "AI Expansion Server",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_SpaceElevatorPart_6_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_CrystalShard_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Magnetic Field Generator",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_PackagedIonizedFuel_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Packaged Ionized Fuel",
+            "category": "components",
+            "stack": 100,
+            "fuel": {
+                "category": "fluid",
+                "value": 10000
+            }
         },
         {
             "id": "Desc_TurboFuel_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Packaged Turbofuel",
+            "category": "components",
+            "stack": 100,
+            "fuel": {
+                "category": "fluid",
+                "value": 2000
+            }
         },
         {
             "id": "Desc_SAMFluctuator_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "SAM Fluctuator",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_SteelPipe_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Steel Pipe",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_FicsiteIngot_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_SAM_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Ficsite Ingot",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_SpaceElevatorPart_10_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Biochemical Sculptor",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_SpaceElevatorPart_7_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Water_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Assembly Director System",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_AluminumIngot_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Aluminum Ingot",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_GoldIngot_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_OreBauxite_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_OreGold_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_OreCopper_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_RawQuartz_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Stone_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_OreUranium_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Caterium Ingot",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_FluidCanister_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Wood_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_GenericBiomass_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Empty Canister",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_CircuitBoard_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Circuit Board",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_CopperSheet_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Copper Sheet",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_Plastic_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Plastic",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_PolymerResin_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_LiquidOil_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Polymer Resin",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_PetroleumCoke_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Petroleum Coke",
+            "category": "components",
+            "stack": 200,
+            "fuel": {
+                "category": "fluid",
+                "value": 180
+            }
         },
         {
             "id": "Desc_HeavyOilResidue_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Heavy Oil Residue",
+            "category": "components",
+            "fuel": {
+                "category": "chemical",
+                "value": 400
+            }
         },
         {
             "id": "Desc_Rubber_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Rubber",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_QuartzCrystal_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Quartz Crystal",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_Cement_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Concrete",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_SteelIngot_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Steel Ingot",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_SteelPlate_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Steel Beam",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_SpaceElevatorPart_2_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Versatile Framework",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_ModularFrame_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Modular Frame",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_Fuel_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_LiquidBiofuel_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Biofuel_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_PackagedBiofuel_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Packaged Fuel",
+            "category": "components",
+            "stack": 100,
+            "fuel": {
+                "category": "fluid",
+                "value": 750
+            }
         },
         {
             "id": "Desc_PackagedOil_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Packaged Oil",
+            "category": "components",
+            "stack": 100,
+            "fuel": {
+                "category": "fluid",
+                "value": 320
+            }
         },
         {
             "id": "Desc_PackagedOilResidue_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Packaged Heavy Oil Residue",
+            "category": "components",
+            "stack": 100,
+            "fuel": {
+                "category": "fluid",
+                "value": 400
+            }
         },
         {
             "id": "Desc_PackagedWater_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Packaged Water",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_CopperIngot_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Copper Ingot",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_AluminumScrap_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Aluminum Scrap",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_AluminumCasing_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Aluminum Casing",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_AluminaSolution_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Alumina Solution",
+            "category": "components"
         },
         {
             "id": "Desc_Silica_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_PackagedAlumina_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Silica",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_SpaceElevatorPart_1_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Smart Plating",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_Rotor_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Rotor",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_SpaceElevatorPart_3_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Automated Wiring",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_Stator_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Stator",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_HighSpeedConnector_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "High-Speed Connector",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_SteelPlateReinforced_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Encased Industrial Beam",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_Motor_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Motor",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_CircuitBoardHighSpeed_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "AI Limiter",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_HighSpeedWire_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Quickwire",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_ModularFrameHeavy_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Heavy Modular Frame",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_IronScrew_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Screw",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_Computer_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Computer",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_SpaceElevatorPart_4_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Modular Engine",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_SpaceElevatorPart_5_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Adaptive Control Unit",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_MotorLightweight_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Turbo Motor",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_PressureConversionCube_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_PackagedNitrogenGas_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Pressure Conversion Cube",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_PlutoniumCell_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Encased Plutonium Cell",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_PlutoniumPellet_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Plutonium Pellet",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_ModularFrameFused_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Fused Modular Frame",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_ModularFrameLightweight_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Radio Control Unit",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_NonFissibleUranium_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Non-Fissile Uranium",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_NuclearWaste_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Uranium Waste",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_SulfuricAcid_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Sulfuric Acid",
+            "category": "components"
         },
         {
             "id": "Desc_CopperDust_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_PlutoniumFuelRod_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Copper Powder",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_ElectromagneticControlRod_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Electromagnetic Control Rod",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_AluminumPlateReinforced_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_PackagedNitricAcid_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Heat Sink",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_SpaceElevatorPart_9_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Nuclear Pasta",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_UraniumCell_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Encased Uranium Cell",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_CoolingSystem_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Cooling System",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_Battery_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_PackagedSulfuricAcid_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_NuclearFuelRod_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_ItemDescriptorPortableMiner_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Battery",
+            "category": "components",
+            "stack": 200,
+            "fuel": {
+                "category": "fluid",
+                "value": 6000
+            }
         },
         {
             "id": "Desc_DissolvedSilica_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_ConveyorBeltMk5_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Dissolved Silica",
+            "category": "components"
         },
         {
             "id": "Desc_SpaceElevatorPart_8_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Thermal Propulsion Rocket",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_Gunpowder_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_ConveyorBeltMk6_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Black Powder",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_Ficsonium_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Ficsonium",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_PlutoniumWaste_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Plutonium Waste",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_SingularityCell_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_FicsoniumFuelRod_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Singularity Cell",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_SpaceElevatorPart_11_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorHoverPack_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Ballistic Warp Drive",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_HazmatFilter_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Iodine-Infused Filter",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_Filter_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorHazmatSuit_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Fabric_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_PipelineMK2_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorJetPack_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_ConveyorBeltMk4_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_ConveyorBeltMk3_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorStunSpear_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_ConveyorBeltMk2_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Chainsaw_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Gas Filter",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_AlienProtein_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_HogParts_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_SpitterParts_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Mycelia_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Alien Protein",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_Crystal_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_AlienPowerFuel_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorObjectScanner_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_StingerParts_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_HatcherParts_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Blue Power Slug",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_AlienDNACapsule_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Medkit_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Nut_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_SpikedRebar_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_RebarGunProjectile_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_CartridgeSmartProjectile_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_CartridgeStandard_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorJumpingStilts_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Rebar_Stunshot_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EqDescZipLine_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorGasmask_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_NobeliskGas_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_NobeliskExplosive_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Shroom_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Berry_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Parachute_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Alien DNA Capsule",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_Crystal_mk3_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Purple Power Slug",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_Crystal_mk2_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_NobeliskShockwave_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Rebar_Spreadshot_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_CartridgeChaos_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_NobeliskNuke_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Yellow Power Slug",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_GunpowderMK2_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Rebar_Explosive_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorRifle_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_NobeliskCluster_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorNobeliskDetonator_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_SnowballProjectile_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Smokeless Powder",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_Snow_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Actual Snow",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_XmasStar_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "FICSMAS Wonder Star",
+            "category": "components",
+            "stack": 50
         },
         {
             "id": "Desc_XmasWreath_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "FICSMAS Decoration",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_CandyCane_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Candy Cane",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_XmasBranch_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "FICSMAS Tree Branch",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_XmasBallCluster_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "FICSMAS Ornament Bundle",
+            "category": "components",
+            "stack": 100
         },
         {
             "id": "Desc_XmasBall3_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Copper FICSMAS Ornament",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_XmasBall4_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Iron FICSMAS Ornament",
+            "category": "components",
+            "stack": 200
         },
         {
             "id": "Desc_XmasBall1_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Red FICSMAS Ornament",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_Gift_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "FICSMAS Gift",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_XmasBall2_C",
             "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "Blue FICSMAS Ornament",
+            "category": "components",
+            "stack": 500
         },
         {
             "id": "Desc_XmasBow_C",
             "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "BP_EquipmentDescriptorCandyCane_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_GolfCart_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_PipelineMK2_NoIndicator_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_GolfCartGold_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_SpaceElevator_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Leaves_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Fireworks_Projectile_01_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Fireworks_Projectile_02_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
-        },
-        {
-            "id": "Desc_Fireworks_Projectile_03_C",
-            "row": 0,
-            "name": "",
-            "category": "item"
+            "name": "FICSMAS Bow",
+            "category": "components",
+            "stack": 500
         }
     ],
     "recipes": [
@@ -4386,7 +4344,7 @@
             "name": "Alternate: Nitro Rocket Fuel",
             "category": "recipe",
             "id": "Recipe_Alternate_RocketFuel_Nitro_C",
-            "time": 2.4,
+            "time": 2,
             "producers": [
                 "Build_Blender_C"
             ],
@@ -7201,25 +7159,8 @@
         }
     ],
     "limitations": {
-        "mining": [
-            "Desc_OreIron_C",
-            "Desc_NitrogenGas_C",
-            "Desc_Sulfur_C",
-            "Desc_Coal_C",
-            "Desc_SAM_C",
-            "Desc_Water_C",
-            "Desc_OreBauxite_C",
-            "Desc_OreGold_C",
-            "Desc_OreCopper_C",
-            "Desc_RawQuartz_C",
-            "Desc_Stone_C",
-            "Desc_OreUranium_C",
-            "Desc_LiquidOil_C",
-            "Desc_PackagedOil_C",
-            "Desc_PackagedWater_C"
-        ],
+        "mining": [],
         "somersloop": [
-            "Recipe_IngotIron_C",
             "Recipe_IronPlate_C",
             "Recipe_IronRod_C",
             "Recipe_Alternate_RocketFuel_Nitro_C",
@@ -7271,7 +7212,6 @@
             "Recipe_QuartzCrystal_C",
             "Recipe_CrystalOscillator_C",
             "Recipe_Silica_C",
-            "Recipe_PureAluminumIngot_C",
             "Recipe_Alternate_PolymerResin_C",
             "Recipe_Alternate_PlasticSmartPlating_C",
             "Recipe_Alternate_HighSpeedWiring_C",
@@ -7361,7 +7301,6 @@
             "Recipe_Alternate_CircuitBoard_1_C",
             "Recipe_Alternate_Cable_2_C",
             "Recipe_Alternate_Cable_1_C",
-            "Recipe_IngotCaterium_C",
             "Recipe_Quickwire_C",
             "Recipe_CartridgeChaos_Packaged_C",
             "Recipe_Fireworks_01_C",
