@@ -4755,7 +4755,10 @@
                 "Desc_Coal_C": 10
             },
             "row": 0,
-            "unlockedBy": "Schematic_Alternate_EnrichedCoal_C"
+            "unlockedBy": [
+                "Schematic_Alternate_EnrichedCoal_C",
+                "Schematic_Alternate_Coal1_C"
+            ]
         },
         {
             "name": "Alternate: Biocoal",
@@ -4772,7 +4775,10 @@
                 "Desc_Coal_C": 6
             },
             "row": 0,
-            "unlockedBy": "Schematic_Alternate_EnrichedCoal_C"
+            "unlockedBy": [
+                "Schematic_Alternate_EnrichedCoal_C",
+                "Schematic_Alternate_Coal2_C"
+            ]
         },
         {
             "name": "Residual Plastic",
@@ -4861,7 +4867,11 @@
                 "Desc_TurboFuel_C": 2
             },
             "row": 0,
-            "unlockedBy": "Schematic_Alternate_TurboFuel_C"
+            "unlockedBy": [
+                "Schematic_Alternate_TurboFuel_C",
+                "Schematic_Alternate_TurboHeavyFuel_C",
+                "Schematic_Alternate_TurboBlendFuel_C"
+            ]
         },
         {
             "name": "Unpackage Turbofuel",
@@ -4879,7 +4889,11 @@
                 "Desc_FluidCanister_C": 2
             },
             "row": 0,
-            "unlockedBy": "Schematic_Alternate_TurboFuel_C"
+            "unlockedBy": [
+                "Schematic_Alternate_TurboFuel_C",
+                "Schematic_Alternate_TurboHeavyFuel_C",
+                "Schematic_Alternate_TurboBlendFuel_C"
+            ]
         },
         {
             "name": "Alternate: Turbo Diamonds",

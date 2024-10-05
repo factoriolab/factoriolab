@@ -799,8 +799,15 @@ function buildModData(
         ) {
           somersloopRecipes.push(id);
         }
-        if (modData.recipes.some((modR) => modR.id === recipe.id)) {
-          logWarn(`Duplicate recipe id: ${recipe.id}, skipping ${recipe.name}`);
+        const existing = modData.recipes.findIndex(
+          (modR) => modR.id === recipe.id,
+        );
+        if (existing !== -1 && typeof recipe.unlockedBy === 'string') {
+          const unlockedby = [
+            modData.recipes[existing].unlockedBy,
+          ].flat() as string[];
+          unlockedby.push(recipe.unlockedBy);
+          modData.recipes[existing].unlockedBy = unlockedby;
         } else {
           modData.recipes.push(recipe);
         }
