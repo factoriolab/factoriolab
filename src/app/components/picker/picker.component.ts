@@ -207,5 +207,9 @@ export class PickerComponent extends DialogComponent {
       // Filter out empty category rows
       this.categoryRows[c] = this.categoryRows[c].filter((r) => r.length > 0);
     }
+
+    setTimeout(() => {
+      // this.ref.markForCheck();
+    });
   }
 }
