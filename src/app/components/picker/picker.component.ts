@@ -209,7 +209,7 @@ export class PickerComponent extends DialogComponent {
     }
 
     setTimeout(() => {
-      // this.ref.markForCheck();
+      this.ref.markForCheck();
     });
   }
 }
