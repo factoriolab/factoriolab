@@ -208,10 +208,8 @@ export class PickerComponent extends DialogComponent {
       this.categoryRows[c] = this.categoryRows[c].filter((r) => r.length > 0);
     }
 
-    this.ref.detectChanges();
-
     setTimeout(() => {
-      this.ref.detectChanges();
-    }, 100);
+      this.ref.markForCheck();
+    });
   }
 }
