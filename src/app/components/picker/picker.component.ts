@@ -1,6 +1,5 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -24,7 +23,6 @@ import { DialogComponent } from '../modal';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickerComponent extends DialogComponent {
-  ref = inject(ChangeDetectorRef);
   filterSvc = inject(FilterService);
   store = inject(Store<LabState>);
   contentSvc = inject(ContentService);
