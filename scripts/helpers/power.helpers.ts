@@ -1,13 +1,11 @@
 export function getEnergyInMJ(usage: string): number {
   const match = /(\d*\.?\d*)(\w*)/.exec(usage);
-  if (match == null) {
-    throw `Unrecognized energy format: '${usage}'`;
-  }
+  if (match == null) throw new Error(`Unrecognized energy format: '${usage}'`);
 
   const [_, numStr, unit] = [...match];
-  if (!unit.endsWith('J')) {
-    throw `Unrecognized energy unit: '${usage}'`;
-  }
+  if (!unit.endsWith('J'))
+    throw new Error(`Unrecognized energy unit: '${usage}'`);
+
   const multiplier = getMultiplier(unit.substring(0, unit.length - 1)) / 1000;
   const num = Number(numStr);
   const result = multiplier * num;
@@ -28,20 +26,17 @@ export function getMultiplier(letter: string): number {
     case 'T':
       return 1000000000;
     default:
-      throw `Unsupported multiplier: '${letter}'`;
+      throw new Error(`Unsupported multiplier: '${letter}'`);
   }
 }
 
 export function getPowerInKw(usage: string): number | undefined {
   const match = /(\d*\.?\d*)(\w*)/.exec(usage);
-  if (match == null) {
-    throw `Unrecognized power format: '${usage}'`;
-  }
+  if (match == null) throw new Error(`Unrecognized power format: '${usage}'`);
 
   const [_, numStr, unit] = [...match];
-  if (!unit.endsWith('W')) {
-    return undefined;
-  }
+  if (!unit.endsWith('W')) return undefined;
+
   const multiplier = getMultiplier(unit.substring(0, unit.length - 1));
   const num = Number(numStr);
   return multiplier * num;

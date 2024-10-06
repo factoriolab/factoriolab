@@ -8,32 +8,60 @@ import {
   Output,
   viewChild,
 } from '@angular/core';
-import { Store } from '@ngrx/store';
+import { FormsModule } from '@angular/forms';
 import { FilterService, SelectItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { TabViewModule } from 'primeng/tabview';
+import { TooltipModule } from 'primeng/tooltip';
 
-import { Category, Entities } from '~/models';
-import { ContentService } from '~/services';
-import { LabState, Recipes } from '~/store';
+import { TabViewOverrideDirective } from '~/directives/tabview-override.directive';
+import { coalesce } from '~/helpers';
+import { Category } from '~/models/data/category';
+import { Entities } from '~/models/utils';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { SettingsService } from '~/store/settings.service';
+
 import { DialogComponent } from '../modal';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'lab-picker',
+  standalone: true,
+  imports: [
+    FormsModule,
+    ButtonModule,
+    CheckboxModule,
+    DialogModule,
+    InputTextModule,
+    ScrollPanelModule,
+    TooltipModule,
+    TabViewModule,
+    IconSmClassPipe,
+    TabViewOverrideDirective,
+    TooltipComponent,
+    TranslatePipe,
+  ],
   templateUrl: './picker.component.html',
-  styleUrls: ['./picker.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PickerComponent extends DialogComponent {
   filterSvc = inject(FilterService);
-  store = inject(Store<LabState>);
   contentSvc = inject(ContentService);
+  settingsSvc = inject(SettingsService);
 
   filterInput = viewChild.required<ElementRef<HTMLInputElement>>('filterInput');
 
   header = input('');
   @Output() selectId = new EventEmitter<string>();
-  @Output() selectIds = new EventEmitter<string[]>();
+  @Output() selectIds = new EventEmitter<Set<string>>();
 
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  data = this.settingsSvc.dataset;
 
   search = '';
   allSelected = false;
@@ -46,7 +74,7 @@ export class PickerComponent extends DialogComponent {
   categoryIds: string[] = [];
   categoryRows: Entities<string[][]> = {};
   // Preserve state prior to any filtering
-  allSelectItems: SelectItem[] = [];
+  allSelectItems: SelectItem<string>[] = [];
   allCategoryIds: string[] = [];
   allCategoryRows: Entities<string[][]> = {};
   activeIndex = 0;
@@ -54,11 +82,12 @@ export class PickerComponent extends DialogComponent {
   clickOpen(
     type: 'item' | 'recipe',
     allIds: string[],
-    selection?: string | string[],
+    selection?: string | string[] | Set<string>,
   ): void {
     const data = this.data();
     this.type = type;
     const allIdsSet = new Set(allIds);
+    if (selection instanceof Set) selection = Array.from(selection);
     if (Array.isArray(selection)) {
       this.isMultiselect = true;
       this.selection = [...selection];
@@ -81,7 +110,7 @@ export class PickerComponent extends DialogComponent {
       });
 
       this.allSelectItems = allIds.map(
-        (i): SelectItem => ({
+        (i): SelectItem<string> => ({
           label: data.itemEntities[i].name,
           value: i,
           title: data.itemEntities[i].category,
@@ -109,7 +138,7 @@ export class PickerComponent extends DialogComponent {
       });
 
       this.allSelectItems = allIds.map(
-        (i): SelectItem => ({
+        (i): SelectItem<string> => ({
           label: data.recipeEntities[i].name,
           value: i,
           title: data.recipeEntities[i].category,
@@ -118,8 +147,7 @@ export class PickerComponent extends DialogComponent {
 
       if (Array.isArray(selection)) {
         this.allSelected = selection.length === 0;
-        this.default =
-          data.defaults != null ? [...data.defaults.excludedRecipeIds] : [];
+        this.default = [...coalesce(data.defaults?.excludedRecipeIds, [])];
       } else if (selection) {
         const index = data.categoryIds.indexOf(
           data.recipeEntities[selection].category,
@@ -170,7 +198,7 @@ export class PickerComponent extends DialogComponent {
 
   save(): void {
     if (Array.isArray(this.selection)) {
-      this.selectIds.emit(this.selection);
+      this.selectIds.emit(new Set(this.selection));
     }
   }
 
@@ -182,12 +210,12 @@ export class PickerComponent extends DialogComponent {
     }
 
     // Filter for matching item ids
-    const filteredItems: SelectItem[] = this.filterSvc.filter(
+    const filteredItems = this.filterSvc.filter(
       this.allSelectItems,
       ['label'],
       this.search,
       'contains',
-    );
+    ) as SelectItem<string>[];
 
     // Filter for matching category ids
     // (Cache category on the SelectItem `title` field)
@@ -201,9 +229,9 @@ export class PickerComponent extends DialogComponent {
     for (const c of this.categoryIds) {
       // Filter each category row
       this.categoryRows[c] = [];
-      for (const r of this.allCategoryRows[c]) {
-        this.categoryRows[c].push(r.filter((i) => ids.indexOf(i) !== -1));
-      }
+      for (const r of this.allCategoryRows[c])
+        this.categoryRows[c].push(r.filter((i) => ids.includes(i)));
+
       // Filter out empty category rows
       this.categoryRows[c] = this.categoryRows[c].filter((r) => r.length > 0);
     }

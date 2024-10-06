@@ -3,7 +3,7 @@
   [settingsXlHidden]="contentSvc.settingsXlHidden()"
 ></lab-header>
 
-@if (errorSvc.message(); as message) {
+@if (errorSvc.message$ | async; as message) {
   <p-dialog
     [visible]="true"
     [modal]="true"
@@ -40,6 +40,7 @@
     [hidden]="contentSvc.settingsXlHidden()"
   ></lab-settings>
   <div
+    role="none"
     class="layout-mask"
     [class.active]="contentSvc.settingsActive()"
     (click)="contentSvc.toggleSettings()"
@@ -65,7 +66,7 @@
                       | translate
                         : {
                             time: result().time,
-                            cost: result().cost?.toPrecision(2)
+                            cost: result().cost?.toPrecision(2),
                           }
                   }}
                 </div>
@@ -77,7 +78,7 @@
                   }}
                 </div>
               }
-              <span>{{ contentSvc.version }}</span>
+              <span>{{ contentSvc.version$ | async }}</span>
             </div>
           </ng-template>
         </p-card>

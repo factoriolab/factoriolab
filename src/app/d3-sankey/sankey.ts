@@ -1,10 +1,12 @@
-import { max, min, sum } from 'd3-array';
+import { max, min, sum } from 'd3';
 
+import { coalesce } from '../helpers';
 import { sankeyJustify } from './align';
 import { constant } from './constant';
 import { minFAS } from './min-fas';
 import {
   SankeyGraph,
+  SankeyGraphMinimal,
   SankeyLayout,
   SankeyLink,
   SankeyLinkExtraProperties,
@@ -20,7 +22,7 @@ export function ascendingSourceBreadth<
     ascendingBreadth(
       a.source as SankeyNode<N, L>,
       b.source as SankeyNode<N, L>,
-    ) || a.index! - b.index!
+    ) || a.index - b.index
   );
 }
 
@@ -32,7 +34,7 @@ function ascendingTargetBreadth<
     ascendingBreadth(
       a.target as SankeyNode<N, L>,
       b.target as SankeyNode<N, L>,
-    ) || a.index! - b.index!
+    ) || a.index - b.index
   );
 }
 
@@ -40,21 +42,21 @@ function ascendingBreadth<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(a: SankeyNode<N, L>, b: SankeyNode<N, L>): number {
-  return a.y0! - b.y0!;
+  return a.y0 - b.y0;
 }
 
 function value<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
->(d: SankeyNode<N, L>): number {
-  return d.value!;
+>(d: SankeyNode<N, L> | SankeyLink<N, L>): number {
+  return d.value;
 }
 
 export function defaultId<
   N extends SankeyNodeExtraProperties = object,
   L extends SankeyLinkExtraProperties = object,
 >(d: SankeyNode<N, L>): number | string {
-  return d.index!;
+  return d.index;
 }
 
 export function defaultNodes<
@@ -79,7 +81,7 @@ export function find<
   id: string | number,
 ): SankeyNode<N, L> {
   const node = nodeById.get(id);
-  if (!node) throw new Error('missing: ' + id);
+  if (!node) throw new Error('missing: ' + id.toString());
   return node;
 }
 
@@ -88,24 +90,28 @@ function computeLinkBreadths<
   L extends SankeyLinkExtraProperties = object,
 >({ nodes }: { nodes: SankeyNode<N, L>[] }): void {
   for (const node of nodes) {
-    let y0 = node.y0!;
+    let y0 = node.y0;
     let y1 = y0;
-    for (const link of node.sourceLinks!) {
-      link.y0 = y0 + link.width! / 2;
-      y0 += link.width!;
+    for (const link of node.sourceLinks) {
+      link.y0 = y0 + link.width / 2;
+      y0 += link.width;
     }
 
-    for (const link of node.targetLinks!) {
-      link.y1 = y1 + link.width! / 2;
-      y1 += link.width!;
+    for (const link of node.targetLinks) {
+      link.y1 = y1 + link.width / 2;
+      y1 += link.width;
     }
   }
+}
+
+function num(n: number | undefined): number {
+  return coalesce(n, 0);
 }
 
 export function sankey<
   N extends SankeyNodeExtraProperties,
   L extends SankeyLinkExtraProperties,
->(): SankeyLayout<SankeyGraph<N, L>, N, L> {
+>(): SankeyLayout<SankeyGraphMinimal<N, L>, N, L> {
   let x0 = 0,
     y0 = 0,
     x1 = 1,
@@ -139,7 +145,7 @@ export function sankey<
     return graph;
   }
 
-  type Layout = SankeyLayout<SankeyGraph<N, L>, N, L>;
+  type Layout = SankeyLayout<SankeyGraphMinimal<N, L>, N, L>;
   const sankey = sankeyFn as unknown as Layout;
 
   sankey.update = function (graph: SankeyGraph<N, L>): SankeyGraph<N, L> {
@@ -206,7 +212,7 @@ export function sankey<
   }
   sankey.nodePadding = nodePadding;
 
-  function nodes(): (data: SankeyGraph<N, L>) => SankeyNode<N, L>[];
+  function nodes(): (data: SankeyGraphMinimal<N, L>) => SankeyNode<N, L>[];
   function nodes(nodes: SankeyNode<N, L>[]): Layout;
   function nodes(
     nodes: (data: SankeyGraph<N, L>) => SankeyNode<N, L>[],
@@ -220,7 +226,7 @@ export function sankey<
   }
   sankey.nodes = nodes;
 
-  function links(): (data: SankeyGraph<N, L>) => SankeyLink<N, L>[];
+  function links(): (data: SankeyGraphMinimal<N, L>) => SankeyLink<N, L>[];
   function links(links: SankeyLink<N, L>[]): Layout;
   function links(
     links: (data: SankeyGraph<N, L>) => SankeyLink<N, L>[],
@@ -299,16 +305,16 @@ export function sankey<
         source = link.source = find(nodeById, source);
       if (typeof target !== 'object')
         target = link.target = find(nodeById, target);
-      source.sourceLinks!.push(link);
-      target.targetLinks!.push(link);
+      source.sourceLinks.push(link);
+      target.targetLinks.push(link);
     }
   }
 
   function computeNodeValues({ nodes }: SankeyGraph<N, L>): void {
     for (const node of nodes) {
       node.value = Math.max(
-        sum(node.sourceLinks!, value),
-        sum(node.targetLinks!, value),
+        sum(node.sourceLinks, value),
+        sum(node.targetLinks, value),
       );
     }
   }
@@ -325,7 +331,7 @@ export function sankey<
     while (current.size) {
       for (const node of current) {
         node.depth = x;
-        for (const { target, direction } of node.sourceLinks!) {
+        for (const { target, direction } of node.sourceLinks) {
           if (direction === 'forward') {
             next.add(target as SankeyNode<N, L>);
           }
@@ -351,7 +357,7 @@ export function sankey<
     while (current.size) {
       for (const node of current) {
         node.height = x;
-        for (const { source, direction } of node.targetLinks!) {
+        for (const { source, direction } of node.targetLinks) {
           if (direction === 'forward') {
             next.add(source as SankeyNode<N, L>);
           }
@@ -372,7 +378,7 @@ export function sankey<
   function computeNodeLayers({
     nodes,
   }: SankeyGraph<N, L>): SankeyNode<N, L>[][] {
-    const x = max(nodes, (d) => d.depth)! + 1;
+    const x = num(max(nodes, (d) => d.depth)) + 1;
     const kx = (x1 - x0 - _nodeWidth) / (x - 1);
     const columns = new Array<SankeyNode<N, L>[]>(x);
     for (const node of nodes) {
@@ -397,26 +403,27 @@ export function sankey<
   }
 
   function initializeNodeBreadths(columns: SankeyNode<N, L>[][]): number {
-    const ky = min(
+    let ky = min(
       columns,
       (c) => (y1 - y0 - (c.length - 1) * _nodePadding) / sum(c, value),
     );
+    ky = coalesce(ky, 0);
     for (const nodes of columns) {
       let y = y0;
       for (const node of nodes) {
         node.y0 = y;
-        node.y1 = y + node.value! * ky!;
+        node.y1 = y + node.value * ky;
         y = node.y1 + _nodePadding;
-        for (const link of node.sourceLinks!) {
-          link.width = link.value * ky!;
+        for (const link of node.sourceLinks) {
+          link.width = link.value * ky;
         }
       }
 
       y = (y1 - y + _nodePadding) / (nodes.length + 1);
       for (let i = 0; i < nodes.length; ++i) {
         const node = nodes[i];
-        node.y0! += y * (i + 1);
-        node.y1! += y * (i + 1);
+        node.y0 += y * (i + 1);
+        node.y1 += y * (i + 1);
       }
       reorderLinks(nodes);
     }
@@ -446,9 +453,10 @@ export function sankey<
       for (const target of column) {
         let y = 0;
         let w = 0;
-        for (const { source, value } of target.targetLinks!) {
+        for (const { source, value } of target.targetLinks) {
           const v =
-            value * (target.layer! - (source as SankeyNode<N, L>).layer!);
+            value *
+            (num(target.layer) - num((source as SankeyNode<N, L>).layer));
           y += targetTop(source as SankeyNode<N, L>, target) * v;
           w += v;
         }
@@ -456,9 +464,9 @@ export function sankey<
         // Unclear how to test this condition
         // istanbul ignore if
         if (!(w > 0)) continue;
-        const dy = (y / w - target.y0!) * alpha;
-        target.y0! += dy;
-        target.y1! += dy;
+        const dy = (y / w - target.y0) * alpha;
+        target.y0 += dy;
+        target.y1 += dy;
         reorderNodeLinks(target);
       }
       if (_nodeSort === undefined) column.sort(ascendingBreadth);
@@ -478,16 +486,17 @@ export function sankey<
       for (const source of column) {
         let y = 0;
         let w = 0;
-        for (const { target, value } of source.sourceLinks!) {
+        for (const { target, value } of source.sourceLinks) {
           const v =
-            value * ((target as SankeyNode<N, L>).layer! - source.layer!);
+            value *
+            (num((target as SankeyNode<N, L>).layer) - num(source.layer));
           y += sourceTop(source, target as SankeyNode<N, L>) * v;
           w += v;
         }
         if (!(w > 0)) continue;
-        const dy = (y / w - source.y0!) * alpha;
-        source.y0! += dy;
-        source.y1! += dy;
+        const dy = (y / w - source.y0) * alpha;
+        source.y0 += dy;
+        source.y1 += dy;
         reorderNodeLinks(source);
       }
       if (_nodeSort === undefined) column.sort(ascendingBreadth);
@@ -504,13 +513,13 @@ export function sankey<
     const subject = nodes[i];
     resolveCollisionsBottomToTop(
       nodes,
-      subject.y0! - _nodePadding,
+      subject.y0 - _nodePadding,
       i - 1,
       alpha,
     );
     resolveCollisionsTopToBottom(
       nodes,
-      subject.y1! + _nodePadding,
+      subject.y1 + _nodePadding,
       i + 1,
       alpha,
     );
@@ -527,9 +536,12 @@ export function sankey<
   ): void {
     for (; i < nodes.length; ++i) {
       const node = nodes[i];
-      const dy = (y - node.y0!) * alpha;
-      if (dy > 1e-6) (node.y0! += dy), (node.y1! += dy);
-      y = node.y1! + _nodePadding;
+      const dy = (y - node.y0) * alpha;
+      if (dy > 1e-6) {
+        node.y0 += dy;
+        node.y1 += dy;
+      }
+      y = node.y1 + _nodePadding;
     }
   }
 
@@ -542,9 +554,12 @@ export function sankey<
   ): void {
     for (; i >= 0; --i) {
       const node = nodes[i];
-      const dy = (node.y1! - y) * alpha;
-      if (dy > 1e-6) (node.y0! -= dy), (node.y1! -= dy);
-      y = node.y0! - _nodePadding;
+      const dy = (node.y1 - y) * alpha;
+      if (dy > 1e-6) {
+        node.y0 -= dy;
+        node.y1 -= dy;
+      }
+      y = node.y0 - _nodePadding;
     }
   }
 
@@ -553,14 +568,14 @@ export function sankey<
     targetLinks,
   }: SankeyNode<N, L>): void {
     if (_linkSort === undefined) {
-      for (const link of targetLinks!) {
-        (link.source as SankeyNode<N, L>).sourceLinks!.sort(
+      for (const link of targetLinks) {
+        (link.source as SankeyNode<N, L>).sourceLinks.sort(
           ascendingTargetBreadth,
         );
       }
 
-      for (const link of sourceLinks!) {
-        (link.target as SankeyNode<N, L>).targetLinks!.sort(
+      for (const link of sourceLinks) {
+        (link.target as SankeyNode<N, L>).targetLinks.sort(
           ascendingSourceBreadth,
         );
       }
@@ -570,8 +585,8 @@ export function sankey<
   function reorderLinks(nodes: SankeyNode<N, L>[]): void {
     if (_linkSort === undefined) {
       for (const { sourceLinks, targetLinks } of nodes) {
-        sourceLinks!.sort(ascendingTargetBreadth);
-        targetLinks!.sort(ascendingSourceBreadth);
+        sourceLinks.sort(ascendingTargetBreadth);
+        targetLinks.sort(ascendingSourceBreadth);
       }
     }
   }
@@ -581,14 +596,14 @@ export function sankey<
     source: SankeyNode<N, L>,
     target: SankeyNode<N, L>,
   ): number {
-    let y = source.y0! - ((source.sourceLinks!.length - 1) * _nodePadding) / 2;
-    for (const { target: node, width } of source.sourceLinks!) {
+    let y = source.y0 - ((source.sourceLinks.length - 1) * _nodePadding) / 2;
+    for (const { target: node, width } of source.sourceLinks) {
       if (node === target) break;
-      y += width! + _nodePadding;
+      y += width + _nodePadding;
     }
-    for (const { source: node, width } of target.targetLinks!) {
+    for (const { source: node, width } of target.targetLinks) {
       if (node === source) break;
-      y -= width!;
+      y -= width;
     }
     return y;
   }
@@ -598,15 +613,15 @@ export function sankey<
     source: SankeyNode<N, L>,
     target: SankeyNode<N, L>,
   ): number {
-    let y = target.y0! - ((target.targetLinks!.length - 1) * _nodePadding) / 2;
-    for (const { source: node, width } of target.targetLinks!) {
+    let y = target.y0 - ((target.targetLinks.length - 1) * _nodePadding) / 2;
+    for (const { source: node, width } of target.targetLinks) {
       if (node === source) break;
-      y += width! + _nodePadding;
+      y += width + _nodePadding;
     }
 
-    for (const { target: node, width } of source.sourceLinks!) {
+    for (const { target: node, width } of source.sourceLinks) {
       if (node === target) break;
-      y -= width!;
+      y -= width;
     }
 
     return y;

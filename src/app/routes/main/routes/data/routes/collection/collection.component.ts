@@ -5,39 +5,44 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { map, switchMap } from 'rxjs';
 
-import { AppSharedModule } from '~/app-shared.module';
-import { Dataset, IdType } from '~/models';
-import { LabState, Recipes, Settings } from '~/store';
-import { DataSharedModule } from '../../data-shared.module';
+import { CollectionTableComponent } from '~/components/collection-table/collection-table.component';
+import { Dataset } from '~/models/dataset';
+import { IdType } from '~/models/enum/id-type';
+import { TranslateService } from '~/services/translate.service';
+import { RecipesService } from '~/store/recipes.service';
+import { SettingsService } from '~/store/settings.service';
 
 @Component({
+  selector: 'lab-collection',
   standalone: true,
-  imports: [AppSharedModule, DataSharedModule],
+  imports: [BreadcrumbModule, CollectionTableComponent],
   templateUrl: './collection.component.html',
-  styleUrls: ['./collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionComponent {
   route = inject(ActivatedRoute);
+  recipesSvc = inject(RecipesService);
+  settingsSvc = inject(SettingsService);
   translateSvc = inject(TranslateService);
-  store = inject(Store<LabState>);
 
-  home = this.store.selectSignal(Settings.getModMenuItem);
-  data = this.store.selectSignal(Recipes.getAdjustedDataset);
+  home = this.settingsSvc.modMenuItem;
+  data = this.recipesSvc.adjustedDataset;
 
   label = input.required<string>();
   type = input.required<IdType>();
   key = input.required<keyof Dataset>();
 
-  breadcrumb = computed<MenuItem[]>(() => [
-    {
-      label: this.translateSvc.instant(this.label()),
-    },
-  ]);
+  breadcrumb = toSignal(
+    toObservable(this.label).pipe(
+      switchMap((label) => this.translateSvc.get(label)),
+      map((label): MenuItem[] => [{ label }]),
+    ),
+  );
   ids = computed<string[]>(() => this.data()[this.key()] as string[]);
 }

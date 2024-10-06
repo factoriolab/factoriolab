@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TestModule, TestUtility } from 'src/tests';
+import { setInputs, TestModule } from '~/tests';
+
 import { CollectionComponent } from './collection.component';
 
 describe('CollectionComponent', () => {
@@ -14,7 +15,7 @@ describe('CollectionComponent', () => {
 
     fixture = TestBed.createComponent(CollectionComponent);
     component = fixture.componentInstance;
-    TestUtility.setInputs(fixture, {
+    setInputs(fixture, {
       label: 'data.categories',
       type: 'category',
       key: 'categoryIds',

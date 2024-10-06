@@ -1,9 +1,11 @@
 import { getAverageColor } from 'fast-average-color-node';
 import fs from 'fs';
 
-import { ModData } from '~/models';
+import { ModData } from '~/models/data/mod-data';
+
 import { data } from '../src/data';
-import { getJsonData, logTime } from './helpers';
+import { getJsonData } from './helpers/file.helpers';
+import { logTime } from './helpers/log.helpers';
 
 // Load mods from arguments
 let mods = process.argv.slice(2);
@@ -15,12 +17,12 @@ async function updateMods(mods: string[]): Promise<void> {
     const mod = mods[i];
     const modPath = `./src/data/${mod}`;
     const modDataPath = `${modPath}/data.json`;
-    const modData = getJsonData<ModData>(modDataPath);
+    const modData = getJsonData(modDataPath) as ModData;
     const image = fs.readFileSync(`${modPath}/icons.webp`);
 
     modData.icons = await Promise.all(
       modData.icons.map(async (icon) => {
-        const coords = icon.position.match(/-?(\d+)px -?(\d+)px/);
+        const coords = /-?(\d+)px -?(\d+)px/.exec(icon.position);
         const left = Number(coords?.[1]);
         const top = Number(coords?.[2]);
         const color = await getAverageColor(image, {
@@ -36,11 +38,14 @@ async function updateMods(mods: string[]): Promise<void> {
     );
     fs.writeFileSync(modDataPath, JSON.stringify(modData));
 
-    logTime(`Updated mod '${mod}' (${i + 1} of ${mods.length})`);
+    logTime(
+      `Updated mod '${mod}' (${(i + 1).toString()} of ${mods.length.toString()})`,
+    );
   }
 }
 
 logTime(
-  `Starting update for ${mods.length} mod${mods.length > 1 ? 's' : ''}...`,
+  `Starting update for ${mods.length.toString()} mod${mods.length > 1 ? 's' : ''}...`,
 );
-updateMods(mods);
+
+void updateMods(mods);

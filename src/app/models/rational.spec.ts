@@ -3,8 +3,8 @@ import {
   fromNumber,
   fromString,
   gcd,
-  rational,
   Rational,
+  rational,
 } from './rational';
 
 describe('gcd', () => {

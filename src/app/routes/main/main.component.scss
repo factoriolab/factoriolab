@@ -1,21 +1,15 @@
 @import 'bootstrap/scss/functions';
 @import 'bootstrap/scss/variables';
-@import 'bootstrap/scss/mixins/_breakpoints';
+@import 'bootstrap/scss/mixins/breakpoints';
 
 :host {
   display: flex;
   flex-direction: column;
-
   height: 100%;
-}
-
-main {
-  overflow-x: hidden;
 }
 
 .layout-content {
   transition: margin 0.4s cubic-bezier(0.05, 0.74, 0.2, 0.99);
-
   margin-left: 320px;
   padding-top: 4rem;
 
@@ -34,13 +28,11 @@ main {
 @include media-breakpoint-down(xl) {
   .layout-mask.active {
     position: fixed;
-    z-index: 3;
     top: 0;
     left: 0;
-
+    z-index: 3;
+    background-color: var(--maskbg);
     width: 100%;
     height: 100%;
-
-    background-color: var(--maskbg);
   }
 }

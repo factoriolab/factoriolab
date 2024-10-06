@@ -1,5 +1,5 @@
 import { Rational } from './rational';
-import { BeaconSettings } from './settings';
+import { BeaconSettings } from './settings/beacon-settings';
 
 export interface Defaults {
   beltId?: string;

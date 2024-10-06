@@ -1,44 +1,40 @@
 .lab-icon {
+  display: inline-block;
   position: relative;
   flex-shrink: 0;
-
-  display: inline-block;
-
   margin: 1px;
   width: 32px;
   height: 32px;
 
   &::before {
-    content: '';
-
     position: absolute;
     top: 0;
     left: 0;
-
     transform: scale(0.5);
     transform-origin: 0 0;
 
+    /** Set up base app related icons sprite sheet */
+    background-image: url('../assets/icons/icons.webp');
     width: 64px;
     height: 64px;
+    content: '';
   }
 
   > span,
   &::after {
     // Styles for text overlay
     position: absolute;
-
-    font-size: 1rem;
+    text-shadow:
+      0 2px 2px black,
+      0 -2px 2px black,
+      2px 0 2px black,
+      -2px 0 2px black;
     line-height: 1rem;
+    white-space: nowrap;
+    color: white;
+    font-size: 1rem;
     font-weight: 700;
     font-style: normal;
-    color: white;
-
-    white-space: nowrap;
-    text-shadow:
-      0px 2px 2px black,
-      0px -2px 2px black,
-      2px 0px 2px black,
-      -2px 0px 2px black;
     pointer-events: none;
   }
 
@@ -47,8 +43,8 @@
    * Display in lower right.
    */
   > span {
-    bottom: -3px;
     right: -2px;
+    bottom: -3px;
   }
 
   /** E.G. Temperature of fluid. Display in upper right. */
@@ -87,13 +83,6 @@
 
   &.sum::after {
     content: 'Σ';
-  }
-}
-
-/** Set up base app related icons sprite sheet */
-.lab-icon {
-  &::before {
-    background-image: url('../assets/icons/icons.webp');
   }
 }
 

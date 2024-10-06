@@ -1,9 +1,10 @@
-import { AdjustedRecipe } from './data';
-import { ObjectiveType, ObjectiveUnit } from './enum';
+import { AdjustedRecipe } from './data/recipe';
+import { ObjectiveType } from './enum/objective-type';
+import { ObjectiveUnit } from './enum/objective-unit';
 import { Rational } from './rational';
-import { RecipeSettings } from './settings';
+import { RecipeSettings, RecipeState } from './settings/recipe-settings';
 
-export function isRecipeObjective(obj: Objective): obj is RecipeObjective {
+export function isRecipeObjective(obj: ObjectiveState): obj is RecipeObjective {
   return obj.unit === ObjectiveUnit.Machines;
 }
 
@@ -14,15 +15,16 @@ export interface ObjectiveBase {
   type?: ObjectiveType;
 }
 
-export interface Objective extends ObjectiveBase, RecipeSettings {
+interface Objective extends ObjectiveBase {
   id: string;
-  /** If unit is ObjectiveUnit.Machines, a recipe id; otherwise an item id */
-  targetId: string;
   value: Rational;
-  unit: ObjectiveUnit;
   type: ObjectiveType;
   recipe?: AdjustedRecipe;
 }
+
+export type ObjectiveState = Objective & RecipeState;
+
+export type ObjectiveSettings = Objective & RecipeSettings;
 
 export interface RecipeObjective extends Objective {
   unit: ObjectiveUnit.Machines;

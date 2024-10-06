@@ -1,4 +1,6 @@
-import { Mocks } from 'src/tests';
+import { Link, Node } from '~/models/flow';
+import { Mocks } from '~/tests';
+
 import { sankeyJustify } from './align';
 import { SankeyLink, SankeyNode } from './models';
 import {
@@ -14,7 +16,7 @@ describe('ascendingSourceBreadth', () => {
   it('should fall back to difference in index values', () => {
     expect(
       ascendingSourceBreadth(
-        { source: { y0: 1 }, target: {}, value: 1, index: 2 },
+        { source: { y0: 1 }, target: {}, value: 1, index: 2 } as any,
         { source: { y0: 1 }, target: {}, value: 1, index: 3 },
       ),
     ).toEqual(-1);
@@ -23,7 +25,7 @@ describe('ascendingSourceBreadth', () => {
 
 describe('defaultId', () => {
   it('should default to index value', () => {
-    expect(defaultId({ index: 1 })).toEqual(1);
+    expect(defaultId({ index: 1 } as any)).toEqual(1);
   });
 });
 
@@ -41,7 +43,9 @@ describe('defaultLinks', () => {
 
 describe('find', () => {
   it('should throw on failing to find a node', () => {
-    expect(() => find(new Map(), 'id')).toThrowError('missing: id');
+    expect(() =>
+      find(new Map<string, SankeyNode<object, object>>(), 'id'),
+    ).toThrowError('missing: id');
   });
 });
 
@@ -159,7 +163,7 @@ describe('sankey', () => {
         return i;
       };
 
-      fn.nodeId((d) => (d as any).id).nodeSort(sort);
+      fn.nodeId((d) => (d as SankeyNode<Node, Link>).id).nodeSort(sort);
       fn(Mocks.getFlow());
       expect(i).toBeGreaterThan(0);
     });

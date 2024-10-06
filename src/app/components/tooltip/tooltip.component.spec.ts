@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ItemId, TestModule, TestUtility } from 'src/tests';
+import { ItemId, setInputs, TestModule } from '~/tests';
+
 import { TooltipComponent } from './tooltip.component';
 
 describe('TooltipComponent', () => {
@@ -9,12 +10,11 @@ describe('TooltipComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TooltipComponent],
-      imports: [TestModule],
+      imports: [TestModule, TooltipComponent],
     });
     fixture = TestBed.createComponent(TooltipComponent);
     component = fixture.componentInstance;
-    TestUtility.setInputs(fixture, { id: ItemId.IronPlate });
+    setInputs(fixture, { id: ItemId.IronPlate });
   });
 
   it('should create', () => {

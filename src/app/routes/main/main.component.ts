@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -6,58 +7,84 @@ import {
   NgZone,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { DialogModule } from 'primeng/dialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TabMenuModule } from 'primeng/tabmenu';
 import { map } from 'rxjs';
 
-import { SimplexResultType } from '~/models';
-import { ContentService, ErrorService } from '~/services';
-import { App, LabState, Objectives, Settings } from '~/store';
+import { HeaderComponent } from '~/components/header/header.component';
+import { ObjectivesComponent } from '~/components/objectives/objectives.component';
+import { SettingsComponent } from '~/components/settings/settings.component';
+import { SimplexResultType } from '~/models/enum/simplex-result-type';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { ErrorService } from '~/services/error.service';
+import { TranslateService } from '~/services/translate.service';
+import { ObjectivesService } from '~/store/objectives.service';
+import { SettingsService } from '~/store/settings.service';
 
 @Component({
   selector: 'lab-main',
+  standalone: true,
+  imports: [
+    AsyncPipe,
+    ButtonModule,
+    CardModule,
+    DialogModule,
+    ProgressSpinnerModule,
+    TabMenuModule,
+    HeaderComponent,
+    ObjectivesComponent,
+    SettingsComponent,
+    TranslatePipe,
+  ],
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainComponent {
-  contentSvc = inject(ContentService);
   ngZone = inject(NgZone);
   ref = inject(ChangeDetectorRef);
   router = inject(Router);
-  store = inject(Store<LabState>);
+  contentSvc = inject(ContentService);
   errorSvc = inject(ErrorService);
+  objectivesSvc = inject(ObjectivesService);
+  settingsSvc = inject(SettingsService);
   translateSvc = inject(TranslateService);
 
-  gameInfo = this.store.selectSignal(Settings.getGameInfo);
-  mod = this.store.selectSignal(Settings.getMod);
-  result = this.store.selectSignal(Objectives.getMatrixResult);
+  mod = this.settingsSvc.mod;
+  gameInfo = this.settingsSvc.gameInfo;
+  result = this.objectivesSvc.matrixResult;
 
   isResetting = false;
 
-  tabItems$ = this.contentSvc.lang$.pipe(
-    map((): MenuItem[] => [
-      {
-        label: this.translateSvc.instant('app.list'),
-        icon: 'fa-solid fa-list',
-        routerLink: 'list',
-        queryParamsHandling: 'preserve',
-      },
-      {
-        label: this.translateSvc.instant('app.flow'),
-        icon: 'fa-solid fa-diagram-project',
-        routerLink: 'flow',
-        queryParamsHandling: 'preserve',
-      },
-      {
-        label: this.translateSvc.instant('app.data'),
-        icon: 'fa-solid fa-database',
-        routerLink: 'data',
-        queryParamsHandling: 'preserve',
-      },
-    ]),
-  );
+  tabItems$ = this.translateSvc
+    .multi(['app.list', 'app.flow', 'app.data'])
+    .pipe(
+      map(([list, flow, data]): MenuItem[] => [
+        {
+          label: list,
+          icon: 'fa-solid fa-list',
+          routerLink: 'list',
+          queryParamsHandling: 'preserve',
+        },
+        {
+          label: flow,
+          icon: 'fa-solid fa-diagram-project',
+          routerLink: 'flow',
+          queryParamsHandling: 'preserve',
+        },
+        {
+          label: data,
+          icon: 'fa-solid fa-database',
+          routerLink: 'data',
+          queryParamsHandling: 'preserve',
+        },
+      ]),
+    );
 
   SimplexResultType = SimplexResultType;
 
@@ -66,9 +93,8 @@ export class MainComponent {
     // Give button loading indicator a chance to start
     setTimeout(() => {
       this.ngZone.run(() => {
-        this.errorSvc.message.set(null);
-        this.router.navigateByUrl(this.gameInfo().route);
-        this.store.dispatch(new App.ResetAction());
+        this.errorSvc.message$.next(undefined);
+        void this.router.navigate([this.gameInfo().route]);
         this.isResetting = false;
       });
     }, 10);

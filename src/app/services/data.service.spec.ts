@@ -1,85 +1,77 @@
 import { HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
-import { EMPTY, of } from 'rxjs';
+import { EMPTY } from 'rxjs';
 
-import { Mocks, TestModule } from 'src/tests';
-import { ModData, ModHash, ModI18n } from '~/models';
-import { Datasets, LabState } from '~/store';
+import { Language } from '~/models/enum/language';
+import { Mocks, TestModule } from '~/tests';
+
 import { DataService } from './data.service';
 
 describe('DataService', () => {
   let service: DataService;
   let http: HttpTestingController;
-  let mockStore: MockStore<LabState>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(DataService);
     http = TestBed.inject(HttpTestingController);
-    mockStore = TestBed.inject(MockStore);
-    service.initialize();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('constructor', () => {
-    it('should watch for language changes', () => {
-      spyOn(service, 'requestData').and.returnValue(EMPTY);
-      service.translateSvc.use('test');
-      expect(service.requestData).toHaveBeenCalledWith('1.1');
+  describe('effects', () => {
+    it('should handle undefined mod id', () => {
+      spyOn(service, 'requestData');
+      service.settingsSvc.apply({ modId: undefined });
+      TestBed.flushEffects();
+      expect(service.requestData).not.toHaveBeenCalled();
+    });
+
+    it('should load i18n', () => {
+      spyOn(service, 'requestI18n').and.returnValue(EMPTY);
+      service.preferencesSvc.apply({ language: Language.Chinese });
+      TestBed.flushEffects();
+      expect(service.requestI18n).toHaveBeenCalled();
     });
   });
 
   describe('requestData', () => {
-    it('should set up http requests for data', () => {
-      spyOn(mockStore, 'dispatch');
-      http.expectOne(`data/${Mocks.Mod.id}/data.json`).flush(Mocks.Data);
-      http.expectOne(`data/${Mocks.Mod.id}/hash.json`).flush(Mocks.Hash);
-      expect(mockStore.dispatch).toHaveBeenCalledWith(
-        new Datasets.LoadModAction({
-          data: {
-            id: Mocks.Mod.id,
-            value: Mocks.Data,
-          },
-          hash: { id: Mocks.Mod.id, value: Mocks.Hash },
-          i18n: null,
-        }),
+    it('should load the data into the datasets service', () => {
+      TestBed.flushEffects();
+      spyOn(service.datasetsSvc, 'loadData');
+      http.expectOne('data/1.1/data.json').flush(Mocks.modData);
+      http.expectOne('data/1.1/hash.json').flush(Mocks.modHash);
+      expect(service.datasetsSvc.loadData).toHaveBeenCalledWith(
+        '1.1',
+        Mocks.modData,
+        Mocks.modHash,
+      );
+    });
+  });
+
+  describe('requestI18n', () => {
+    it('should load the i18n into the datasets service', () => {
+      service.preferencesSvc.apply({ language: Language.Chinese });
+      TestBed.flushEffects();
+      spyOn(service.datasetsSvc, 'loadI18n');
+      http.expectOne('data/1.1/i18n/zh.json').flush(Mocks.modI18n);
+      expect(service.datasetsSvc.loadI18n).toHaveBeenCalledWith(
+        '1.1',
+        Language.Chinese,
+        Mocks.modI18n,
       );
     });
 
-    it('should get values from cache', () => {
-      service.translateSvc.use('zh');
-      service.cacheData['id'] = of(Mocks.Data);
-      service.cacheI18n['id-zh'] = of(Mocks.I18n);
-      service.cacheHash['id'] = of(Mocks.Hash);
-      let data: [ModData, ModHash, ModI18n | null] | undefined;
-      service.requestData('id').subscribe((d) => (data = d));
-      expect(data).toEqual([Mocks.Data, Mocks.Hash, Mocks.I18n]);
-    });
-
-    it('should handle missing translations', () => {
-      spyOn(console, 'warn');
-      service.translateSvc.use('err');
-      service.cacheData['id'] = of(Mocks.Data);
-      service.cacheHash['id'] = of(Mocks.Hash);
-      let data: [ModData, ModHash, ModI18n | null] | undefined;
-      service.requestData('id').subscribe((d) => (data = d));
-      http.expectOne('data/id/i18n/err.json').error(new ProgressEvent('error'));
-      expect(data).toEqual([Mocks.Data, Mocks.Hash, null]);
-      expect(console.warn).toHaveBeenCalled();
-    });
-
-    it('should load translation data', () => {
-      service.translateSvc.use('zh');
-      service.cacheData['id'] = of(Mocks.Data);
-      service.cacheHash['id'] = of(Mocks.Hash);
-      let data: [ModData, ModHash, ModI18n | null] | undefined;
-      service.requestData('id').subscribe((d) => (data = d));
-      http.expectOne('data/id/i18n/zh.json').flush(Mocks.I18n);
-      expect(data).toEqual([Mocks.Data, Mocks.Hash, Mocks.I18n]);
+    it('should handle missing data', () => {
+      service.preferencesSvc.apply({ language: Language.Chinese });
+      TestBed.flushEffects();
+      spyOn(service.datasetsSvc, 'loadI18n');
+      http
+        .expectOne('data/1.1/i18n/zh.json')
+        .flush('', { status: 404, statusText: 'error' });
+      expect(service.datasetsSvc.loadI18n).not.toHaveBeenCalled();
     });
   });
 });

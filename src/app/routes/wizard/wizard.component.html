@@ -56,7 +56,7 @@
           [pTooltip]="'objectives.selectDisplayRate' | translate"
           [ngModel]="displayRate()"
           [options]="displayRateOptions"
-          (onChange)="setDisplayRate($event.value, displayRate())"
+          (onChange)="settingsSvc.apply({ displayRate: $event.value })"
         >
         </p-dropdown>
         <button

@@ -1,7 +1,4 @@
-import { RouterModule } from '@angular/router';
-
-import { DataComponent } from './data.component';
-import { DataRoute } from './models';
+import { DataRoute } from './models/data-route';
 
 export const routes: DataRoute[] = [
   {
@@ -249,8 +246,7 @@ export const routes: DataRoute[] = [
   {
     path: '',
     pathMatch: 'full',
-    component: DataComponent,
+    loadComponent: () =>
+      import('./data.component').then((c) => c.DataComponent),
   },
 ];
-
-export const DataRoutingModule = RouterModule.forChild(routes);

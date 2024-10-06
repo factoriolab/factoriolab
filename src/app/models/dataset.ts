@@ -1,30 +1,28 @@
-import {
-  AdjustedRecipe,
-  Beacon,
-  Belt,
-  CargoWagon,
-  Category,
-  FluidWagon,
-  Fuel,
-  Icon,
-  Item,
-  Machine,
-  ModHash,
-  Module,
-  Recipe,
-  Technology,
-} from './data';
+import { Beacon } from './data/beacon';
+import { Belt } from './data/belt';
+import { CargoWagon } from './data/cargo-wagon';
+import { Category } from './data/category';
+import { FluidWagon } from './data/fluid-wagon';
+import { Fuel } from './data/fuel';
+import { Icon } from './data/icon';
+import { Item } from './data/item';
+import { Machine } from './data/machine';
+import { ModHash } from './data/mod-hash';
+import { Module } from './data/module';
+import { AdjustedRecipe, Recipe } from './data/recipe';
+import { Technology } from './data/technology';
 import { Defaults } from './defaults';
-import { Entities } from './entities';
-import { Game } from './enum';
+import { Game } from './enum/game';
+import { Entities } from './utils';
 
 export interface Dataset {
   game: Game;
-  version: Entities<string>;
+  version: Entities;
   categoryIds: string[];
   categoryEntities: Entities<Category>;
   categoryItemRows: Entities<string[][]>;
   categoryRecipeRows: Entities<string[][]>;
+  iconFile: string;
   iconIds: string[];
   iconEntities: Entities<Icon>;
   itemIds: string[];

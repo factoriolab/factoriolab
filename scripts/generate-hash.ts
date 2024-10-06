@@ -1,7 +1,9 @@
 import fs from 'fs';
 
-import { ModData } from '~/models';
-import { emptyModHash, getJsonData } from './helpers';
+import { ModData } from '~/models/data/mod-data';
+
+import { emptyModHash } from './helpers/data.helpers';
+import { getJsonData } from './helpers/file.helpers';
 
 const mod = process.argv[2];
 
@@ -15,7 +17,7 @@ const modPath = `./src/data/${mod}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
 
-const modData = getJsonData<ModData>(modDataPath);
+const modData = getJsonData(modDataPath) as ModData;
 
 const hash = emptyModHash();
 

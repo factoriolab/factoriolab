@@ -1,7 +1,9 @@
 import fs from 'fs';
 
-import { ModData, ModHash } from '~/models';
-import { getJsonData } from './helpers';
+import { ModData } from '~/models/data/mod-data';
+import { ModHash } from '~/models/data/mod-hash';
+
+import { getJsonData } from './helpers/file.helpers';
 
 const mod = process.argv[2];
 
@@ -15,15 +17,13 @@ const modPath = `./src/data/${mod}`;
 const modDataPath = `${modPath}/data.json`;
 const modHashPath = `${modPath}/hash.json`;
 
-const modData = getJsonData<ModData>(modDataPath);
-const modHash = getJsonData<ModHash>(modHashPath);
+const modData = getJsonData(modDataPath) as ModData;
+const modHash = getJsonData(modHashPath) as ModHash;
 
 function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
   if (hash[key] == null) hash[key] = [];
 
-  if (hash[key].indexOf(id) === -1) {
-    hash[key].push(id);
-  }
+  if (!hash[key].includes(id)) hash[key].push(id);
 }
 
 if (modData.defaults?.excludedRecipes) {
@@ -45,7 +45,9 @@ modData.items.forEach((i) => {
   if (i.technology) addIfMissing(modHash, 'technologies', i.id);
 });
 
-modData.recipes.forEach((r) => addIfMissing(modHash, 'recipes', r.id));
+modData.recipes.forEach((r) => {
+  addIfMissing(modHash, 'recipes', r.id);
+});
 
 fs.writeFileSync(modHashPath, JSON.stringify(modHash));
 fs.writeFileSync(modDataPath, JSON.stringify(modData));

@@ -1,4 +1,4 @@
-import { RouterModule, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 
 import { MainComponent } from './main.component';
 
@@ -20,10 +20,8 @@ export const routes: Routes = [
       {
         path: 'data',
         loadChildren: () =>
-          import('./routes/data/data.module').then((m) => m.DataModule),
+          import('./routes/data/data.routes').then((m) => m.routes),
       },
     ],
   },
 ];
-
-export const MainRoutingModule = RouterModule.forChild(routes);

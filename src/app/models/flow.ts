@@ -1,4 +1,4 @@
-import { Recipe } from './data';
+import { Recipe } from './data/recipe';
 
 export interface FlowData {
   nodes: Node[];
@@ -18,8 +18,10 @@ export interface Node extends FlowBase {
   machineId?: string;
 
   stepId: string;
+  posX: string;
+  posY: string;
   viewBox: string;
-  href: string | undefined;
+  href: string;
 }
 
 export interface Link extends FlowBase {

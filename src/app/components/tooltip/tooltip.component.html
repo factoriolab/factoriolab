@@ -28,6 +28,8 @@
         }
       </div>
     }
+  } @else if (type() === 'module') {
+    <div>{{ 'data.moduleSlots' | translate }}</div>
   }
   @if (type() === 'beacon' && data().beaconEntities[id()]; as beacon) {
     <table>

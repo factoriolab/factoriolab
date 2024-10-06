@@ -1,15 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 
-import { DispatchTest, ItemId, RecipeId, TestModule } from 'src/tests';
-import { ObjectiveType, ObjectiveUnit, rational } from '~/models';
-import { LabState, Objectives, Settings } from '~/store';
+import { ItemId, RecipeId, TestModule } from '~/tests';
+
 import { WizardComponent } from './wizard.component';
 
 describe('WizardComponent', () => {
   let component: WizardComponent;
   let fixture: ComponentFixture<WizardComponent>;
-  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -17,7 +14,6 @@ describe('WizardComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(WizardComponent);
-    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -34,31 +30,23 @@ describe('WizardComponent', () => {
     });
   });
 
-  it('should dispatch actions', async () => {
-    spyOn(component.router, 'navigate').and.returnValue(Promise.resolve(true));
-    const dispatch = new DispatchTest(mockStore, component);
-    dispatch.valPrev('setDisplayRate', Settings.SetDisplayRateAction);
-    dispatch.spy.calls.reset();
-    await component.createItemObjective(ItemId.IronPlate);
-    expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-      new Objectives.CreateAction({
-        id: '0',
-        targetId: ItemId.IronPlate,
-        value: rational(1n),
-        unit: ObjectiveUnit.Items,
-        type: ObjectiveType.Output,
-      }),
-    );
-    dispatch.spy.calls.reset();
-    await component.createRecipeObjective(RecipeId.IronPlate);
-    expect(dispatch.mockStore.dispatch).toHaveBeenCalledWith(
-      new Objectives.CreateAction({
-        id: '0',
-        targetId: ItemId.IronPlate,
-        value: rational(1n),
-        unit: ObjectiveUnit.Machines,
-        type: ObjectiveType.Output,
-      }),
-    );
+  describe('createItemObjective', () => {
+    it('should add an item objective and navigate to the list', () => {
+      spyOn(component.objectivesSvc, 'create');
+      spyOn(component.router, 'navigate');
+      component.createItemObjective(ItemId.IronPlate);
+      expect(component.objectivesSvc.create).toHaveBeenCalled();
+      expect(component.router.navigate).toHaveBeenCalled();
+    });
+  });
+
+  describe('createRecipeObjective', () => {
+    it('should add a recipe objective and navigate to the list', () => {
+      spyOn(component.objectivesSvc, 'create');
+      spyOn(component.router, 'navigate');
+      component.createRecipeObjective(RecipeId.IronPlate);
+      expect(component.objectivesSvc.create).toHaveBeenCalled();
+      expect(component.router.navigate).toHaveBeenCalled();
+    });
   });
 });

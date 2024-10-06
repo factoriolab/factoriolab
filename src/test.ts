@@ -19,5 +19,6 @@ getTestBed().initTestEnvironment(
 );
 
 beforeEach(async () => {
+  localStorage.clear();
   await loadModule('node_modules/glpk-wasm/dist/glpk.all.wasm');
 });

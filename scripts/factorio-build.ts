@@ -3,38 +3,78 @@ import fs from 'fs';
 import sharp from 'sharp';
 import spritesmith from 'spritesmith';
 
-import { coalesce } from '~/helpers';
+import { coalesce, spread } from '~/helpers';
+import { CategoryJson } from '~/models/data/category';
+import { FuelJson } from '~/models/data/fuel';
+import { ItemJson } from '~/models/data/item';
+import { MachineJson } from '~/models/data/machine';
+import { ModData } from '~/models/data/mod-data';
+import { ModHash } from '~/models/data/mod-hash';
+import { RecipeJson } from '~/models/data/recipe';
+import { TechnologyJson } from '~/models/data/technology';
+import { Entities } from '~/models/utils';
+
 import {
-  CategoryJson,
-  Entities,
-  FuelJson,
-  ItemJson,
-  MachineJson,
-  ModData,
-  ModHash,
-  RecipeJson,
-  TechnologyJson,
-} from '~/models';
-import * as D from './factorio-build.models';
-import * as M from './factorio.models';
+  FluidBox,
+  FluidPrototype,
+  isAssemblingMachinePrototype,
+  isBeaconPrototype,
+  isBoilerPrototype,
+  isCargoWagonPrototype,
+  isFluidPrototype,
+  isFluidWagonPrototype,
+  isFurnacePrototype,
+  isItemGroup,
+  isLabPrototype,
+  isMiningDrillPrototype,
+  isModulePrototype,
+  isOffshorePumpPrototype,
+  isReactorPrototype,
+  isRecipePrototype,
+  isRocketSiloPrototype,
+  isTechnologyPrototype,
+  isTransportBeltPrototype,
+  isUnlockRecipeModifier,
+  ItemGroup,
+  ProductPrototype,
+  RecipeData,
+  RecipePrototype,
+  TechnologyData,
+  TechnologyPrototype,
+} from './factorio.models';
+import {
+  anyEntityKeys,
+  AnyEntityPrototype,
+  anyItemKeys,
+  AnyItemPrototype,
+  DataRawDump,
+  isAnyItemPrototype,
+  isFluidProduct,
+  isSimpleProduct,
+  MachineProto,
+  ModDataReport,
+} from './factorio-build.models';
 import {
   addEntityValue,
   coerceArray,
   coerceString,
   emptyModHash,
-  getBeacon,
-  getBelt,
-  getCargoWagon,
-  getEnergyInMJ,
   getEntityMap,
-  getEntitySize,
-  getFluidWagon,
   getIconText,
   getIngredients,
   getItemMap,
-  getJsonData,
   getLastIngredient,
-  getLocale,
+  getVersion,
+} from './helpers/data.helpers';
+import { getJsonData, getLocale } from './helpers/file.helpers';
+import { logTime, logWarn } from './helpers/log.helpers';
+import { getEnergyInMJ, round } from './helpers/power.helpers';
+import {
+  getBeacon,
+  getBelt,
+  getCargoWagon,
+  getEntitySize,
+  getFluidWagon,
   getMachineDisallowedEffects,
   getMachineDrain,
   getMachineModules,
@@ -43,11 +83,7 @@ import {
   getMachineSpeed,
   getMachineType,
   getMachineUsage,
-  getVersion,
-  logTime,
-  logWarn,
-  round,
-} from './helpers';
+} from './helpers/proto.helpers';
 
 /**
  * This script is intended to pull files from a dump from Factorio and build
@@ -66,7 +102,7 @@ if (!mod) {
 // Set up paths
 const appDataPath =
   process.env['AppData'] ||
-  `${process.env['HOME']}/Library/Application Support`;
+  `${process.env['HOME'] ?? ''}/Library/Application Support`;
 const factorioPath = `${appDataPath}/Factorio`;
 const modsPath = `${factorioPath}/mods`;
 const scriptOutputPath = `${factorioPath}/script-output`;
@@ -79,7 +115,7 @@ const modHashPath = `${modPath}/hash.json`;
 
 /** Check whether this is an existing mod set using expensive mode */
 if (fs.existsSync(modDataPath)) {
-  const oldData = getJsonData<ModData>(modDataPath);
+  const oldData = getJsonData(modDataPath) as ModData;
   if (oldData.expensive) {
     mode = 'expensive';
     console.log('Note: Using expensive mode data for this mod set');
@@ -107,7 +143,7 @@ async function processMod(): Promise<void> {
   const entityLocale = getLocale('entity-locale.json');
 
   // Read main data JSON
-  const dataRaw = getJsonData<D.DataRawDump>(dataRawPath);
+  const dataRaw = getJsonData(dataRawPath) as DataRawDump;
 
   // Set up collections
   // Record of limitations by hash: id
@@ -119,86 +155,70 @@ async function processMod(): Promise<void> {
   const entityMap = getEntityMap(dataRaw);
 
   function getRecipeProduct(
-    recipe: M.RecipePrototype,
-  ): D.AnyItemPrototype | M.FluidPrototype | undefined {
+    recipe: RecipePrototype,
+  ): AnyItemPrototype | FluidPrototype | undefined {
     const recipeData = getRecipeData(recipe);
-    if (recipeData.result) {
-      return itemMap[recipeData.result];
-    } else if (recipeData.results?.length === 1) {
+    if (recipeData.result) return itemMap[recipeData.result];
+    else if (recipeData.results?.length === 1) {
       const result = recipeData.results[0];
-      if (D.isSimpleProduct(result)) {
-        return itemMap[result[0]];
-      } else if (D.isFluidProduct(result)) {
-        return dataRaw.fluid[result.name];
-      } else {
-        return itemMap[result.name];
-      }
+      if (isSimpleProduct(result)) return itemMap[result[0]];
+      else if (isFluidProduct(result)) return dataRaw.fluid[result.name];
+      else return itemMap[result.name];
     } else if (recipeData.results && recipeData.main_product) {
       const mainProduct = recipeData.main_product;
       const result = recipeData.results.find((r) =>
-        D.isSimpleProduct(r) ? r[0] === mainProduct : r.name === mainProduct,
+        isSimpleProduct(r) ? r[0] === mainProduct : r.name === mainProduct,
       );
       if (result) {
-        if (D.isSimpleProduct(result)) {
-          return itemMap[result[0]];
-        } else if (D.isFluidProduct(result)) {
-          return dataRaw.fluid[result.name];
-        } else {
-          return itemMap[result.name];
-        }
+        if (isSimpleProduct(result)) return itemMap[result[0]];
+        else if (isFluidProduct(result)) return dataRaw.fluid[result.name];
+        else return itemMap[result.name];
       } else {
-        throw `Main product '${mainProduct}' declared by recipe '${recipe.name}' not found in results`;
+        throw new Error(
+          `Main product '${mainProduct}' declared by recipe '${recipe.name}' not found in results`,
+        );
       }
     } else {
       return undefined;
     }
   }
 
-  function getRecipeSubgroup(recipe: M.RecipePrototype): string {
-    if (recipe.subgroup) {
-      return recipe.subgroup;
-    }
+  function getRecipeSubgroup(recipe: RecipePrototype): string {
+    if (recipe.subgroup) return recipe.subgroup;
 
     const product = getRecipeProduct(recipe);
-    if (product == null) {
-      throw `Recipe '${recipe.name}' declares no subgroup though it is required`;
-    }
+    if (product == null)
+      throw new Error(
+        `Recipe '${recipe.name}' declares no subgroup though it is required`,
+      );
 
     return getSubgroup(product);
   }
 
   function getSubgroup(
     proto:
-      | D.AnyItemPrototype
-      | D.AnyEntityPrototype
-      | M.FluidPrototype
-      | M.RecipePrototype,
+      | AnyItemPrototype
+      | AnyEntityPrototype
+      | FluidPrototype
+      | RecipePrototype,
   ): string {
     if (proto.subgroup) return proto.subgroup;
 
-    if (M.isRecipePrototype(proto)) {
-      return getRecipeSubgroup(proto);
-    } else if (M.isFluidPrototype(proto)) {
-      return 'fluid';
-    } else {
-      return 'other';
-    }
+    if (isRecipePrototype(proto)) return getRecipeSubgroup(proto);
+    else if (isFluidPrototype(proto)) return 'fluid';
+    else return 'other';
   }
 
   let lastItemRow = 0;
   let lastItemGroup = '';
   let lastItemSubgroup = '';
   function getItemRow(
-    item: D.AnyItemPrototype | D.AnyEntityPrototype | M.FluidPrototype,
+    item: AnyItemPrototype | AnyEntityPrototype | FluidPrototype,
   ): number {
     const subgroup = dataRaw['item-subgroup'][getSubgroup(item)];
     if (subgroup.group === lastItemGroup) {
-      if (subgroup.name !== lastItemSubgroup) {
-        lastItemRow++;
-      }
-    } else {
-      lastItemRow = 0;
-    }
+      if (subgroup.name !== lastItemSubgroup) lastItemRow++;
+    } else lastItemRow = 0;
 
     lastItemGroup = subgroup.group;
     lastItemSubgroup = subgroup.name;
@@ -210,20 +230,16 @@ async function processMod(): Promise<void> {
   let lastRecipeSubgroup = '';
   function getRecipeRow(
     proto:
-      | M.RecipePrototype
-      | D.AnyItemPrototype
-      | D.AnyEntityPrototype
-      | M.FluidPrototype,
+      | RecipePrototype
+      | AnyItemPrototype
+      | AnyEntityPrototype
+      | FluidPrototype,
   ): number {
     const subgroupId = getSubgroup(proto);
     const subgroup = dataRaw['item-subgroup'][subgroupId];
     if (subgroup.group === lastRecipeGroup) {
-      if (subgroup.name !== lastRecipeSubgroup) {
-        lastRecipeRow++;
-      }
-    } else {
-      lastRecipeRow = 0;
-    }
+      if (subgroup.name !== lastRecipeSubgroup) lastRecipeRow++;
+    } else lastRecipeRow = 0;
 
     lastRecipeGroup = subgroup.group;
     lastRecipeSubgroup = subgroup.name;
@@ -247,25 +263,24 @@ async function processMod(): Promise<void> {
 
   async function getIcon(
     spec:
-      | D.AnyItemPrototype
-      | D.AnyEntityPrototype
-      | M.FluidPrototype
-      | M.ItemGroup
-      | M.RecipePrototype
-      | M.TechnologyPrototype,
+      | AnyItemPrototype
+      | AnyEntityPrototype
+      | FluidPrototype
+      | ItemGroup
+      | RecipePrototype
+      | TechnologyPrototype,
   ): Promise<string | undefined> {
-    const id = M.isTechnologyPrototype(spec) ? techId[spec.name] : spec.name;
+    const id = isTechnologyPrototype(spec) ? techId[spec.name] : spec.name;
 
     // If recipe has no declared icon, get product icon
-    if (M.isRecipePrototype(spec) && spec.icon == null && spec.icons == null) {
+    if (isRecipePrototype(spec) && spec.icon == null && spec.icons == null) {
       const product = getRecipeProduct(spec);
       if (product != null) spec = product;
     }
 
     // If recipe still has no product icon, calculator will pick first product
-    if (!M.isRecipePrototype(spec) && spec.icon == null && spec.icons == null) {
-      throw `No icons for proto ${spec.name}`;
-    }
+    if (!isRecipePrototype(spec) && spec.icon == null && spec.icons == null)
+      throw new Error(`No icons for proto ${spec.name}`);
 
     let iconId = id;
 
@@ -280,7 +295,8 @@ async function processMod(): Promise<void> {
         let i = 0;
         let altId: string;
         do {
-          altId = `${iconId}-${i++}`;
+          const altIdNum = i++;
+          altId = `${iconId}-${altIdNum.toString()}`;
         } while (iconSet.has(altId));
         iconId = altId;
       }
@@ -289,19 +305,12 @@ async function processMod(): Promise<void> {
       iconSet.add(iconId);
 
       let folder = 'item';
-      if (M.isRecipePrototype(spec)) {
-        folder = 'recipe';
-      } else if (M.isFluidPrototype(spec)) {
-        folder = 'fluid';
-      } else if (M.isTechnologyPrototype(spec)) {
-        folder = 'technology';
-      } else if (M.isItemGroup(spec)) {
-        folder = 'item-group';
-      } else if (D.isAnyItemPrototype(spec)) {
-        folder = 'item';
-      } else {
-        folder = 'entity';
-      }
+      if (isRecipePrototype(spec)) folder = 'recipe';
+      else if (isFluidPrototype(spec)) folder = 'fluid';
+      else if (isTechnologyPrototype(spec)) folder = 'technology';
+      else if (isItemGroup(spec)) folder = 'item-group';
+      else if (isAnyItemPrototype(spec)) folder = 'item';
+      else folder = 'entity';
 
       const path = `${scriptOutputPath}/${folder}/${spec.name}.png`;
       await resizeIcon(path, iconId);
@@ -310,7 +319,7 @@ async function processMod(): Promise<void> {
     return iconId === id ? undefined : iconId;
   }
 
-  const craftingFluidBoxes: Record<string, M.FluidBox[]> = {};
+  const craftingFluidBoxes: Record<string, FluidBox[]> = {};
   type EntityType = 'lab' | 'silo' | 'boiler' | 'offshorePump';
   // For each machine type, a map of item name : entity name
   const machines: Record<EntityType, Record<string, string>> = {
@@ -343,71 +352,60 @@ async function processMod(): Promise<void> {
     const record = producersMap[type];
 
     for (const category of categories) {
-      if (record[category] == null) {
-        record[category] = [];
-      }
-
+      if (record[category] == null) record[category] = [];
       record[category].push(id);
     }
   }
 
-  function processProducers(proto: D.MachineProto, name: string): void {
-    if (M.isMiningDrillPrototype(proto)) {
+  function processProducers(proto: MachineProto, name: string): void {
+    if (isMiningDrillPrototype(proto))
       addProducers(name, proto.resource_categories, 'resource');
-    }
 
-    if (!M.isOffshorePumpPrototype(proto)) {
+    if (!isOffshorePumpPrototype(proto)) {
       if (proto.energy_source.type === 'burner') {
-        if (proto.energy_source.fuel_categories) {
+        if (proto.energy_source.fuel_categories)
           addProducers(name, proto.energy_source.fuel_categories, 'burner');
-        } else if (proto.energy_source.fuel_category) {
+        else if (proto.energy_source.fuel_category)
           addProducers(name, [proto.energy_source.fuel_category], 'burner');
-        }
       }
     }
 
     if (
-      M.isAssemblingMachinePrototype(proto) ||
-      M.isRocketSiloPrototype(proto) ||
-      M.isFurnacePrototype(proto)
+      isAssemblingMachinePrototype(proto) ||
+      isRocketSiloPrototype(proto) ||
+      isFurnacePrototype(proto)
     ) {
       addProducers(name, proto.crafting_categories, 'crafting');
-      if (proto.fluid_boxes == null) {
-        craftingFluidBoxes[name] = [];
-      } else if (Array.isArray(proto.fluid_boxes)) {
+      if (proto.fluid_boxes == null) craftingFluidBoxes[name] = [];
+      else if (Array.isArray(proto.fluid_boxes))
         craftingFluidBoxes[name] = proto.fluid_boxes;
-      } else {
+      else {
         craftingFluidBoxes[name] = [];
-        for (let i = 1; proto.fluid_boxes[i] != null; i++) {
+        for (let i = 1; proto.fluid_boxes[i] != null; i++)
           craftingFluidBoxes[name].push(proto.fluid_boxes[i]);
-        }
       }
     }
 
-    if (M.isBoilerPrototype(proto)) {
+    if (isBoilerPrototype(proto)) {
       machines.boiler[name] = proto.name;
-    } else if (M.isRocketSiloPrototype(proto)) {
+    } else if (isRocketSiloPrototype(proto)) {
       machines.silo[name] = proto.name;
-    } else if (M.isLabPrototype(proto)) {
+    } else if (isLabPrototype(proto)) {
       machines.lab[name] = proto.name;
-    } else if (M.isOffshorePumpPrototype(proto)) {
+    } else if (isOffshorePumpPrototype(proto)) {
       machines.offshorePump[name] = proto.name;
     }
   }
 
   const ANY_FLUID_BURN = 'fluid';
   const ANY_FLUID_HEAT = 'fluid-heat';
-  function getMachineCategory(proto: D.MachineProto): string[] | undefined {
-    if (M.isOffshorePumpPrototype(proto)) {
-      return undefined;
-    }
+  function getMachineCategory(proto: MachineProto): string[] | undefined {
+    if (isOffshorePumpPrototype(proto)) return undefined;
 
     if (proto.energy_source.type === 'burner') {
-      if (proto.energy_source.fuel_categories) {
+      if (proto.energy_source.fuel_categories)
         return proto.energy_source.fuel_categories;
-      } else {
-        return [proto.energy_source.fuel_category ?? 'chemical'];
-      }
+      else return [proto.energy_source.fuel_category ?? 'chemical'];
     }
 
     if (proto.energy_source.type === 'fluid') {
@@ -422,16 +420,13 @@ async function processMod(): Promise<void> {
     return undefined;
   }
 
-  function getRecipeData(recipe: M.RecipePrototype): M.RecipeData {
+  function getRecipeData(recipe: RecipePrototype): RecipeData {
     const data = recipe[mode];
-    return typeof data === 'object' ? data : (recipe as M.RecipeData);
+    return typeof data === 'object' ? data : (recipe as RecipeData);
   }
 
   function getProducts(
-    results:
-      | M.ProductPrototype[]
-      | Record<string, M.ProductPrototype>
-      | undefined,
+    results: ProductPrototype[] | Record<string, ProductPrototype> | undefined,
     result?: string,
     result_count = 1,
   ): [
@@ -451,12 +446,12 @@ async function processMod(): Promise<void> {
 
     if (results != null) {
       for (const product of coerceArray(results)) {
-        if (D.isSimpleProduct(product)) {
+        if (isSimpleProduct(product)) {
           const [itemId, amount] = product;
           addEntityValue(record, itemId, amount);
           total += amount;
         } else {
-          if (D.isFluidProduct(product)) {
+          if (isFluidProduct(product)) {
             const fluid = dataRaw.fluid[product.name];
             const temp = product.temperature ?? fluid.default_temperature;
             temps[product.name] = temp;
@@ -474,9 +469,7 @@ async function processMod(): Promise<void> {
 
           if (amount == null) continue;
 
-          if (product.probability) {
-            amount = amount * product.probability;
-          }
+          if (product.probability) amount = amount * product.probability;
 
           addEntityValue(record, product.name, amount);
 
@@ -498,7 +491,7 @@ async function processMod(): Promise<void> {
   }
 
   function getMachine(
-    proto: D.MachineProto,
+    proto: MachineProto,
     name: string,
   ): MachineJson | undefined {
     const machine: MachineJson = {
@@ -533,7 +526,7 @@ async function processMod(): Promise<void> {
     limitations: {},
   };
 
-  const modDataReport: D.ModDataReport = {
+  const modDataReport: ModDataReport = {
     machineSpeedZero: [],
     noProducts: [],
     noProducers: [],
@@ -545,7 +538,7 @@ async function processMod(): Promise<void> {
   function addIfMissing(hash: ModHash, key: keyof ModHash, id: string): void {
     if (hash[key] == null) hash[key] = [];
 
-    if (hash[key].indexOf(id) === -1) {
+    if (!hash[key].includes(id)) {
       hash[key].push(id);
       modHashReport[key].push(id);
     }
@@ -553,12 +546,10 @@ async function processMod(): Promise<void> {
 
   function writeData(): void {
     if (fs.existsSync(modDataPath)) {
-      const oldData = getJsonData<ModData>(modDataPath);
-      const oldHash = getJsonData<ModHash>(modHashPath);
+      const oldData = getJsonData(modDataPath) as ModData;
+      const oldHash = getJsonData(modHashPath) as ModHash;
 
-      if (mode === 'expensive') {
-        modData.expensive = true;
-      }
+      if (mode === 'expensive') modData.expensive = true;
 
       modData.defaults = oldData.defaults;
 
@@ -582,7 +573,9 @@ async function processMod(): Promise<void> {
         if (i.technology) addIfMissing(oldHash, 'technologies', i.id);
       });
 
-      modData.recipes.forEach((r) => addIfMissing(oldHash, 'recipes', r.id));
+      modData.recipes.forEach((r) => {
+        addIfMissing(oldHash, 'recipes', r.id);
+      });
 
       fs.writeFileSync(modHashPath, JSON.stringify(oldHash));
       fs.writeFileSync(
@@ -596,7 +589,7 @@ async function processMod(): Promise<void> {
         belts: modData.items.filter((i) => i.belt).map((i) => i.id),
         fuels: modData.items.filter((i) => i.fuel).map((i) => i.id),
         wagons: modData.items
-          .filter((i) => i.cargoWagon || i.fluidWagon)
+          .filter((i) => i.cargoWagon ?? i.fluidWagon)
           .map((i) => i.id),
         machines: modData.items.filter((i) => i.machine).map((i) => i.id),
         modules: modData.items.filter((i) => i.module).map((i) => i.id),
@@ -622,10 +615,10 @@ async function processMod(): Promise<void> {
 
   // Record of recipe id : technology id
   const recipesUnlocked: Record<string, string> = {};
-  const technologySet = new Set<M.TechnologyPrototype>();
+  const technologySet = new Set<TechnologyPrototype>();
   for (const key of Object.keys(dataRaw.technology)) {
     const techRaw = dataRaw.technology[key];
-    const techData = techRaw[mode] || (techRaw as M.TechnologyData);
+    const techData = techRaw[mode] || (techRaw as TechnologyData);
 
     if (
       itemMap[techRaw.name] ||
@@ -642,7 +635,7 @@ async function processMod(): Promise<void> {
       technologySet.add(techRaw);
 
       for (const effect of coerceArray(techData.effects)) {
-        if (M.isUnlockRecipeModifier(effect)) {
+        if (isUnlockRecipeModifier(effect)) {
           recipesUnlocked[effect.recipe] = techId[techRaw.name];
           technologySet.add(techRaw);
         }
@@ -650,7 +643,7 @@ async function processMod(): Promise<void> {
     }
   }
 
-  const recipesEnabled: Entities<M.RecipePrototype> = {};
+  const recipesEnabled: Entities<RecipePrototype> = {};
   const fixedRecipe = new Set<string>();
 
   for (const key of Object.keys(dataRaw['assembling-machine'])) {
@@ -668,7 +661,7 @@ async function processMod(): Promise<void> {
   }
 
   // Cache recipe results to use later
-  const recipeDataMap: Record<string, M.RecipeData> = {};
+  const recipeDataMap: Record<string, RecipeData> = {};
   const recipeResultsMap: Record<
     string,
     [
@@ -708,14 +701,11 @@ async function processMod(): Promise<void> {
     // Always include fixed recipes that have outputs
     if (!fixedRecipe.has(key)) {
       // Skip recipes that are not unlocked / enabled
-      if (recipeData.enabled === false && !recipesUnlocked[key]) {
+      if (recipeData.enabled === false && !recipesUnlocked[key])
         include = false;
-      }
 
       // Skip recipes that are hidden
-      if (recipeData.hidden) {
-        include = false;
-      }
+      if (recipeData.hidden) include = false;
     }
 
     if (include) {
@@ -728,9 +718,8 @@ async function processMod(): Promise<void> {
       if (
         subgroup.group === 'ic-load-container' ||
         subgroup.group === 'ic-unload-container'
-      ) {
+      )
         include = false;
-      }
     }
 
     if (include) {
@@ -765,17 +754,14 @@ async function processMod(): Promise<void> {
       const ingredients = recipeIngredientsMap[r][0];
       for (const key of ingredientsKeys) {
         if (results[key]) {
-          if (matchKey == null) {
-            matchKey = r;
-          } else {
+          if (matchKey == null) matchKey = r;
+          else {
             matchMulti = true;
             break;
           }
         }
 
-        if (ingredients[key]) {
-          matchIngredients.push(key);
-        }
+        if (ingredients[key]) matchIngredients.push(key);
       }
 
       if (matchMulti) break;
@@ -819,12 +805,12 @@ async function processMod(): Promise<void> {
   // Include all modules by default
   const itemsUsed = new Set<string>(Object.keys(dataRaw.module));
 
-  const itemKeys = D.anyItemKeys.reduce((result: string[], key) => {
+  const itemKeys = anyItemKeys.reduce((result: string[], key) => {
     result.push(...Object.keys(dataRaw[key]));
     return result;
   }, []);
 
-  const entityKeys = D.anyEntityKeys.reduce((result: string[], key) => {
+  const entityKeys = anyEntityKeys.reduce((result: string[], key) => {
     result.push(...Object.keys(dataRaw[key]));
     return result;
   }, []);
@@ -833,7 +819,7 @@ async function processMod(): Promise<void> {
   for (const key of itemKeys) {
     const item = itemMap[key];
 
-    if (M.isFluidPrototype(item)) continue;
+    if (isFluidPrototype(item)) continue;
 
     if (item.fuel_value) itemsUsed.add(item.name);
 
@@ -841,20 +827,15 @@ async function processMod(): Promise<void> {
       itemsUsed.add(item.name);
 
       if (item.rocket_launch_product) {
-        if (D.isSimpleProduct(item.rocket_launch_product)) {
+        if (isSimpleProduct(item.rocket_launch_product))
           itemsUsed.add(item.rocket_launch_product[0]);
-        } else {
-          itemsUsed.add(item.rocket_launch_product.name);
-        }
+        else itemsUsed.add(item.rocket_launch_product.name);
       }
 
       if (item.rocket_launch_products) {
         for (const product of item.rocket_launch_products) {
-          if (D.isSimpleProduct(product)) {
-            itemsUsed.add(product[0]);
-          } else {
-            itemsUsed.add(product.name);
-          }
+          if (isSimpleProduct(product)) itemsUsed.add(product[0]);
+          else itemsUsed.add(product.name);
         }
       }
     }
@@ -868,40 +849,35 @@ async function processMod(): Promise<void> {
   // Add resources
   for (const name of Object.keys(dataRaw.resource)) {
     const resource = dataRaw.resource[name];
-    if (resource && resource.minable) {
+    if (resource?.minable) {
       const recipeOut = getProducts(
         resource.minable.results,
         resource.minable.result,
         resource.minable.count,
       )[0];
-      for (const outKey of Object.keys(recipeOut)) {
-        itemsUsed.add(outKey);
-      }
+      for (const outKey of Object.keys(recipeOut)) itemsUsed.add(outKey);
     }
   }
 
   // Check for use in recipe ingredients / products
   for (const key of Object.keys(recipesEnabled)) {
-    for (const ingredient of Object.keys(recipeIngredientsMap[key][0])) {
+    for (const ingredient of Object.keys(recipeIngredientsMap[key][0]))
       itemsUsed.add(ingredient);
-    }
 
-    for (const product of Object.keys(recipeResultsMap[key][0])) {
+    for (const product of Object.keys(recipeResultsMap[key][0]))
       itemsUsed.add(product);
-    }
   }
 
   // Check for use in technology ingredients
-  const techDataMap: Record<string, M.TechnologyData> = {};
+  const techDataMap: Record<string, TechnologyData> = {};
   const techIngredientsMap: Record<string, Record<string, number>> = {};
   for (const tech of technologySet) {
-    const techData = tech[mode] || (tech as M.TechnologyData);
+    const techData = tech[mode] || (tech as TechnologyData);
     const techIngredients =
       techData.unit == null ? {} : getIngredients(techData.unit.ingredients)[0];
 
-    for (const ingredient of Object.keys(techIngredients)) {
+    for (const ingredient of Object.keys(techIngredients))
       itemsUsed.add(ingredient);
-    }
 
     techDataMap[tech.name] = techData;
     techIngredientsMap[tech.name] = techIngredients;
@@ -914,9 +890,8 @@ async function processMod(): Promise<void> {
   // Exclude any entities that are placed by the added items
   const placedEntities = new Set<string>();
   for (const proto of itemsUsedProtos) {
-    if (!M.isFluidPrototype(proto) && proto.place_result != null) {
+    if (!isFluidPrototype(proto) && proto.place_result != null)
       placedEntities.add(proto.place_result);
-    }
   }
 
   const entitiesUsedProtos = entityKeys
@@ -937,10 +912,10 @@ async function processMod(): Promise<void> {
         proto,
       ): {
         proto:
-          | D.AnyItemPrototype
-          | D.AnyEntityPrototype
-          | M.FluidPrototype
-          | M.RecipePrototype;
+          | AnyItemPrototype
+          | AnyEntityPrototype
+          | FluidPrototype
+          | RecipePrototype;
         sort: [string, string, string, string, string, string];
       } => {
         const subgroupId = getSubgroup(proto);
@@ -948,9 +923,8 @@ async function processMod(): Promise<void> {
         const group = dataRaw['item-group'][subgroup.group];
 
         let order = proto.order;
-        if (order == null && M.isRecipePrototype(proto)) {
+        if (order == null && isRecipePrototype(proto))
           order = getRecipeProduct(proto)?.order;
-        }
 
         return {
           proto,
@@ -967,9 +941,7 @@ async function processMod(): Promise<void> {
     )
     .sort((a, b) => {
       for (let i = 0; i < 5; i++) {
-        if (a.sort[i] !== b.sort[i]) {
-          return a.sort[i].localeCompare(b.sort[i]);
-        }
+        if (a.sort[i] !== b.sort[i]) return a.sort[i].localeCompare(b.sort[i]);
       }
       return a.sort[5].localeCompare(b.sort[5]);
     })
@@ -980,22 +952,21 @@ async function processMod(): Promise<void> {
   // Process item protos
   for (const proto of protosSorted) {
     // Skip recipes until producers are processed
-    if (M.isRecipePrototype(proto)) continue;
+    if (isRecipePrototype(proto)) continue;
 
     const subgroup = dataRaw['item-subgroup'][getSubgroup(proto)];
     const group = dataRaw['item-group'][subgroup.group];
     groupsUsed.add(group.name);
 
-    if (M.isFluidPrototype(proto)) {
+    if (isFluidPrototype(proto)) {
       // Check for alternate temperatures from boilers
       for (const boilerName of Object.keys(dataRaw.boiler)) {
         const boiler = dataRaw.boiler[boilerName];
         if (
           boiler.output_fluid_box.filter === proto.name &&
           boiler.target_temperature !== proto.default_temperature
-        ) {
+        )
           addFluidTemp(proto.name, boiler.target_temperature);
-        }
       }
 
       let fuel: FuelJson | undefined;
@@ -1008,9 +979,7 @@ async function processMod(): Promise<void> {
 
       const icon = await getIcon(proto);
       let temps = [proto.default_temperature];
-      if (fluidTemps[proto.name] != null) {
-        temps = [...fluidTemps[proto.name]];
-      }
+      if (fluidTemps[proto.name] != null) temps = [...fluidTemps[proto.name]];
 
       // Move default temperature, if present, to index 0
       temps.sort((a, b) =>
@@ -1023,7 +992,7 @@ async function processMod(): Promise<void> {
       fluidTemps[proto.name] = new Set(temps);
 
       temps.forEach((temp, i) => {
-        const id = i === 0 ? proto.name : `${proto.name}-${temp}`;
+        const id = i === 0 ? proto.name : `${proto.name}-${temp.toString()}`;
         const itemTemp: ItemJson = {
           id,
           name: fluidLocale.names[proto.name],
@@ -1036,8 +1005,8 @@ async function processMod(): Promise<void> {
         if (i > 0 && itemTemp.icon == null) itemTemp.icon = proto.name;
 
         if (temp !== proto.default_temperature) {
-          itemTemp.name += ` (${temp}°C)`;
-          itemTemp.iconText = `${temp}°`;
+          itemTemp.name += ` (${temp.toString()}°C)`;
+          itemTemp.iconText = `${temp.toString()}°`;
 
           if (temp > proto.default_temperature) {
             // Add fluid heat fuel
@@ -1048,9 +1017,8 @@ async function processMod(): Promise<void> {
               category: ANY_FLUID_HEAT,
               value: round(energyGenerated, 10),
             };
-            if (itemTemp.fuel == null) {
-              itemTemp.fuel = heatFuel;
-            } else {
+            if (itemTemp.fuel == null) itemTemp.fuel = heatFuel;
+            else {
               // Need to add fake item for fluid heat value
               modData.items.push({
                 id: `${id}-heat-fuel`,
@@ -1066,7 +1034,7 @@ async function processMod(): Promise<void> {
 
         modData.items.push(itemTemp);
       });
-    } else if (M.isBeaconPrototype(proto)) {
+    } else if (isBeaconPrototype(proto)) {
       modData.items.push({
         id: proto.name,
         name: entityLocale.names[proto.name],
@@ -1076,14 +1044,14 @@ async function processMod(): Promise<void> {
         beacon: getBeacon(proto),
       });
     } else if (
-      M.isAssemblingMachinePrototype(proto) ||
-      M.isBoilerPrototype(proto) ||
-      M.isFurnacePrototype(proto) ||
-      M.isLabPrototype(proto) ||
-      M.isMiningDrillPrototype(proto) ||
-      M.isOffshorePumpPrototype(proto) ||
-      M.isReactorPrototype(proto) ||
-      M.isRocketSiloPrototype(proto)
+      isAssemblingMachinePrototype(proto) ||
+      isBoilerPrototype(proto) ||
+      isFurnacePrototype(proto) ||
+      isLabPrototype(proto) ||
+      isMiningDrillPrototype(proto) ||
+      isOffshorePumpPrototype(proto) ||
+      isReactorPrototype(proto) ||
+      isRocketSiloPrototype(proto)
     ) {
       modData.items.push({
         id: proto.name,
@@ -1093,7 +1061,7 @@ async function processMod(): Promise<void> {
         icon: await getIcon(proto),
         machine: getMachine(proto, proto.name),
       });
-    } else if (M.isTransportBeltPrototype(proto)) {
+    } else if (isTransportBeltPrototype(proto)) {
       modData.items.push({
         id: proto.name,
         name: entityLocale.names[proto.name],
@@ -1102,7 +1070,7 @@ async function processMod(): Promise<void> {
         icon: await getIcon(proto),
         belt: getBelt(proto),
       });
-    } else if (M.isCargoWagonPrototype(proto)) {
+    } else if (isCargoWagonPrototype(proto)) {
       modData.items.push({
         id: proto.name,
         name: entityLocale.names[proto.name],
@@ -1111,7 +1079,7 @@ async function processMod(): Promise<void> {
         icon: await getIcon(proto),
         cargoWagon: getCargoWagon(proto),
       });
-    } else if (M.isFluidWagonPrototype(proto)) {
+    } else if (isFluidWagonPrototype(proto)) {
       modData.items.push({
         id: proto.name,
         name: entityLocale.names[proto.name],
@@ -1170,8 +1138,8 @@ async function processMod(): Promise<void> {
         } else if (dataRaw['offshore-pump'][result]) {
           const entity = dataRaw['offshore-pump'][result];
           item.machine = getMachine(entity, proto.name);
-        } else if (dataRaw['reactor'][result]) {
-          const entity = dataRaw['reactor'][result];
+        } else if (dataRaw.reactor[result]) {
+          const entity = dataRaw.reactor[result];
           item.machine = getMachine(entity, proto.name);
         }
 
@@ -1195,7 +1163,7 @@ async function processMod(): Promise<void> {
       }
 
       // Parse module
-      if (M.isModulePrototype(proto)) {
+      if (isModulePrototype(proto)) {
         item.module = {
           consumption: proto.effect.consumption?.bonus || undefined,
           pollution: proto.effect.pollution?.bonus || undefined,
@@ -1207,7 +1175,7 @@ async function processMod(): Promise<void> {
         if (proto.limitation_blacklist) {
           limitation = limitation ?? Object.keys(recipesEnabled);
           limitation = limitation.filter(
-            (l) => proto.limitation_blacklist?.indexOf(l) === -1,
+            (l) => !proto.limitation_blacklist?.includes(l),
           );
         }
 
@@ -1261,8 +1229,7 @@ async function processMod(): Promise<void> {
      * ingredient temperatures
      */
     const fluidTempOptions: Record<string, number[]> = {};
-    for (let i = 0; i < fluidTempRules.length; i++) {
-      const fluidId = fluidTempRules[i];
+    for (const fluidId of fluidTempRules) {
       const [minTemp, maxTemp] = recipeInTemp[fluidId];
       const fluid = dataRaw.fluid[fluidId];
 
@@ -1299,17 +1266,15 @@ async function processMod(): Promise<void> {
           ...old.map((data) => {
             if (temp !== defaultTemp) {
               const [original, ids] = data;
-              const altered = { ...original };
-              const id = `${key}-${temp}`;
+              const altered = spread(original);
+              const id = `${key}-${temp.toString()}`;
               altered[id] = altered[key];
               delete altered[key];
               return [altered, [...ids, id]] as [
                 Record<string, number>,
                 string[],
               ];
-            } else {
-              return data;
-            }
+            } else return data;
           }),
         );
       });
@@ -1325,20 +1290,20 @@ async function processMod(): Promise<void> {
     const group = dataRaw['item-group'][subgroup.group];
     groupsUsed.add(group.name);
 
-    if (M.isRecipePrototype(proto)) {
+    if (isRecipePrototype(proto)) {
       const recipeData = recipeDataMap[proto.name];
       const [recipeIn, recipeInTemp] = recipeIngredientsMap[proto.name];
       const [_recipeOut, , , temps] = recipeResultsMap[proto.name];
       let [, recipeCatalyst] = recipeResultsMap[proto.name];
 
       // Convert fluid outputs to use correct ids
-      const recipeOut = { ..._recipeOut };
+      const recipeOut = spread(_recipeOut);
       for (const outId of Object.keys(recipeOut)) {
         if (temps[outId] != null) {
           const temp = temps[outId];
           const index = Array.from(fluidTemps[outId]).indexOf(temp);
           if (index !== 0) {
-            recipeOut[`${outId}-${temp}`] = recipeOut[outId];
+            recipeOut[`${outId}-${temp.toString()}`] = recipeOut[outId];
             delete recipeOut[outId];
           }
         }
@@ -1346,10 +1311,7 @@ async function processMod(): Promise<void> {
 
       // Check for calculated catalysts
       for (const outId of Object.keys(recipeOut)) {
-        if (
-          recipeIn[outId] &&
-          (recipeCatalyst == null || !recipeCatalyst[outId])
-        ) {
+        if (recipeIn[outId] && !recipeCatalyst?.[outId]) {
           // Need to manually calculate and add catalyst amount for this item
           if (recipeCatalyst == null) recipeCatalyst = {};
 
@@ -1363,7 +1325,7 @@ async function processMod(): Promise<void> {
         // Ensure producers have sufficient fluid boxes
         const fluidIngredients = Object.keys(recipeIn)
           .map((i) => itemMap[i])
-          .filter((i) => M.isFluidPrototype(i));
+          .filter((i) => isFluidPrototype(i));
         if (fluidIngredients.length > 0) {
           producers = producers.filter((p) => {
             const fluidBoxes = craftingFluidBoxes[p];
@@ -1395,7 +1357,7 @@ async function processMod(): Promise<void> {
         }
         const fluidProducts = Object.keys(_recipeOut)
           .map((i) => itemMap[i])
-          .filter((i) => M.isFluidPrototype(i));
+          .filter((i) => isFluidPrototype(i));
         if (fluidProducts.length > 0) {
           producers = producers.filter((p) => {
             const fluidBoxes = craftingFluidBoxes[p];
@@ -1468,7 +1430,7 @@ async function processMod(): Promise<void> {
       } else {
         modDataReport.noProducers.push(proto.name);
       }
-    } else if (M.isFluidPrototype(proto)) {
+    } else if (isFluidPrototype(proto)) {
       // Check for offshore pump recipes
       for (const pumpName of Object.keys(machines.offshorePump)) {
         const entityName = machines.offshorePump[pumpName];
@@ -1504,9 +1466,8 @@ async function processMod(): Promise<void> {
           if (boiler.fluid_box.filter == null) continue;
           const inputProto = dataRaw.fluid[boiler.fluid_box.filter];
           let outputId = proto.name;
-          if (boiler.target_temperature !== [...fluidTemps[proto.name]][0]) {
-            outputId = `${proto.name}-${boiler.target_temperature}`;
-          }
+          if (boiler.target_temperature !== [...fluidTemps[proto.name]][0])
+            outputId = `${proto.name}-${boiler.target_temperature.toString()}`;
 
           // Found a boiler recipe
           const id = getFakeRecipeId(
@@ -1539,7 +1500,7 @@ async function processMod(): Promise<void> {
       for (const launch_proto of protosSorted) {
         if (
           // Must be an item
-          !D.isAnyItemPrototype(launch_proto) ||
+          !isAnyItemPrototype(launch_proto) ||
           // Ignore if already processed
           processedLaunchProto.has(launch_proto.name) ||
           // Ignore if no launch products
@@ -1561,10 +1522,10 @@ async function processMod(): Promise<void> {
             const entityName = machines.silo[siloName];
             const silo = dataRaw['rocket-silo'][entityName];
 
-            const partRecipes: M.RecipePrototype[] = [];
-            if (silo.fixed_recipe) {
+            const partRecipes: RecipePrototype[] = [];
+            if (silo.fixed_recipe)
               partRecipes.push(dataRaw.recipe[silo.fixed_recipe]);
-            } else {
+            else {
               const categories = silo.crafting_categories;
               partRecipes.push(
                 ...Object.keys(dataRaw.recipe)
@@ -1629,7 +1590,7 @@ async function processMod(): Promise<void> {
 
       // Check for burn recipes
       if (
-        D.isAnyItemPrototype(proto) &&
+        isAnyItemPrototype(proto) &&
         proto.burnt_result &&
         proto.fuel_category
       ) {
@@ -1656,7 +1617,7 @@ async function processMod(): Promise<void> {
   const resourceHash = new Set<string>();
   for (const name of Object.keys(dataRaw.resource)) {
     const resource = dataRaw.resource[name];
-    if (resource && resource.minable) {
+    if (resource?.minable) {
       // Found mining recipe
       const minable = resource.minable;
       let miners = producersMap.resource[resource.category ?? 'basic-solid'];
@@ -1672,11 +1633,11 @@ async function processMod(): Promise<void> {
         miners = miners.filter((m) => {
           // Only allow producers with fluid boxes
           const entity = entityMap[m];
-          if (entity != null && M.isMiningDrillPrototype(entity))
+          if (entity != null && isMiningDrillPrototype(entity))
             return entity.input_fluid_box != null;
 
           const item = itemMap[m];
-          if (item != null && !M.isFluidPrototype(item) && item.place_result) {
+          if (item != null && !isFluidPrototype(item) && item.place_result) {
             const miningDrill = dataRaw['mining-drill'][item.place_result];
             return miningDrill.input_fluid_box != null;
           }
@@ -1704,7 +1665,7 @@ async function processMod(): Promise<void> {
 
           const recipe: RecipeJson = {
             id: '',
-            name: M.isFluidPrototype(proto)
+            name: isFluidPrototype(proto)
               ? fluidLocale.names[proto.name]
               : itemLocale.names[proto.name],
             category: group.name,
@@ -1737,8 +1698,8 @@ async function processMod(): Promise<void> {
 
   const technologies = Array.from(technologySet).sort((a, b) => {
     // First, sort by number of ingredients
-    const aData = a[mode] || (a as M.TechnologyData);
-    const bData = b[mode] || (b as M.TechnologyData);
+    const aData = a[mode] || (a as TechnologyData);
+    const bData = b[mode] || (b as TechnologyData);
     const aIngredients = coerceArray(aData.unit.ingredients);
     const bIngredients = coerceArray(bData.unit.ingredients);
 
@@ -1809,7 +1770,7 @@ async function processMod(): Promise<void> {
 
     if (inputs.length) {
       const firstInput = itemMap[inputs[0]];
-      if (!M.isFluidPrototype(firstInput)) {
+      if (!isFluidPrototype(firstInput)) {
         item.stack = firstInput.stack_size;
       }
     }
@@ -1830,9 +1791,9 @@ async function processMod(): Promise<void> {
   let icon = 'lab';
   let lab = modData.items.find((i) => i.id === icon);
   if (lab == null) {
-    lab = modData.items.find((i) => i.id.indexOf('lab') !== -1);
+    lab = modData.items.find((i) => i.id.includes('lab'));
     if (lab == null) {
-      throw 'Technology icon not found';
+      throw new Error('Technology icon not found');
     } else {
       icon = lab.icon ?? lab.id;
     }
@@ -1858,73 +1819,84 @@ async function processMod(): Promise<void> {
 
   // Sprite sheet
   logTime('Generating sprite sheet');
-  spritesmith.run(
-    { src: Object.keys(iconFiles), padding: 2 },
-    async (_, result) => {
-      const modIconsPath = `${modPath}/icons.webp`;
-      await sharp(result.image).webp().toFile(modIconsPath);
 
-      modData.icons = await Promise.all(
-        Object.keys(result.coordinates).map(async (file) => {
-          const coords = result.coordinates[file];
-          return {
-            id: iconFiles[file],
-            position: `${-coords.x}px ${-coords.y}px`,
-            color: iconColors[file],
-          };
-        }),
+  async function finalize(
+    result: spritesmith.SpritesmithResult,
+  ): Promise<void> {
+    modData.icons = await Promise.all(
+      Object.keys(result.coordinates).map((file) => {
+        const coords = result.coordinates[file];
+        return {
+          id: iconFiles[file],
+          position: `${(-coords.x).toString()}px ${(-coords.y).toString()}px`,
+          color: iconColors[file],
+        };
+      }),
+    );
+
+    logTime('Writing data');
+    writeData();
+    logTime('Complete');
+
+    const warnings = (
+      Object.keys(modDataReport) as (keyof ModDataReport)[]
+    ).some((k) => modDataReport[k].length);
+
+    if (warnings) logWarn('\nWARNINGS:');
+
+    if (modDataReport.machineSpeedZero.length) {
+      logWarn(
+        `Machines with zero crafting speed: ${modDataReport.machineSpeedZero.length.toString()}`,
       );
+      console.log('These machines have been removed.');
+    }
 
-      logTime('Writing data');
-      writeData();
-      logTime('Complete');
+    if (modDataReport.noProducers.length) {
+      logWarn(
+        `Recipes with no producers: ${modDataReport.noProducers.length.toString()}`,
+      );
+      console.log('These recipes have been removed.');
+    }
 
-      const warnings = (
-        Object.keys(modDataReport) as (keyof D.ModDataReport)[]
-      ).some((k) => modDataReport[k].length);
+    if (modDataReport.noProducts.length) {
+      logWarn(
+        `Recipes with no products: ${modDataReport.noProducts.length.toString()}`,
+      );
+      console.log('These recipes have been removed.');
+    }
 
-      if (warnings) logWarn('\nWARNINGS:');
+    if (modDataReport.resourceNoMinableProducts.length) {
+      logWarn(
+        `Resources with no minable products: ${modDataReport.resourceNoMinableProducts.length.toString()}`,
+      );
+      console.log('No mining recipe is generated for these resources.');
+    }
 
-      if (modDataReport.machineSpeedZero.length) {
-        logWarn(
-          `Machines with zero crafting speed: ${modDataReport.machineSpeedZero.length}`,
-        );
-        console.log('These machines have been removed.');
-      }
+    if (modDataReport.resourceDuplicate.length) {
+      logWarn(
+        `Resource duplicates: ${modDataReport.resourceDuplicate.length.toString()}`,
+      );
+      console.log(
+        'Only one mining resource is generated for duplicate resources',
+      );
+    }
 
-      if (modDataReport.noProducers.length) {
-        logWarn(
-          `Recipes with no producers: ${modDataReport.noProducers.length}`,
-        );
-        console.log('These recipes have been removed.');
-      }
+    if (warnings)
+      console.log('\nSee scripts/temp/data-report.json for details');
+  }
 
-      if (modDataReport.noProducts.length) {
-        logWarn(`Recipes with no products: ${modDataReport.noProducts.length}`);
-        console.log('These recipes have been removed.');
-      }
-
-      if (modDataReport.resourceNoMinableProducts.length) {
-        logWarn(
-          `Resources with no minable products: ${modDataReport.resourceNoMinableProducts.length}`,
-        );
-        console.log('No mining recipe is generated for these resources.');
-      }
-
-      if (modDataReport.resourceDuplicate.length) {
-        logWarn(
-          `Resource duplicates: ${modDataReport.resourceDuplicate.length}`,
-        );
-        console.log(
-          'Only one mining resource is generated for duplicate resources',
-        );
-      }
-
-      if (warnings) {
-        console.log('\nSee scripts/temp/data-report.json for details');
-      }
-    },
-  );
+  spritesmith.run({ src: Object.keys(iconFiles), padding: 2 }, (_, result) => {
+    const modIconsPath = `${modPath}/icons.webp`;
+    sharp(result.image)
+      .webp()
+      .toFile(modIconsPath)
+      .then(async () => {
+        await finalize(result);
+      })
+      .catch((err: unknown) => {
+        console.error(err);
+      });
+  });
 }
 
-processMod();
+void processMod();

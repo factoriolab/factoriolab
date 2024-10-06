@@ -1,6 +1,7 @@
-import { min } from 'd3-array';
+import { min } from 'd3';
 
 import { coalesce } from '~/helpers';
+
 import {
   SankeyLink,
   SankeyLinkExtraProperties,
@@ -71,6 +72,6 @@ export function sankeyCenter<
   return node.targetLinks?.length
     ? coalesce(node.depth, 0)
     : node.sourceLinks?.length
-      ? min(node.sourceLinks, targetDepth)! - 1
+      ? coalesce(min(node.sourceLinks, targetDepth), 0) - 1
       : 0;
 }
