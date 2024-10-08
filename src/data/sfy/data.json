@@ -3,996 +3,6 @@
     "categories": [],
     "icons": [
         {
-            "id": "Desc_ConveyorBeltMk1_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "iron-plate",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "iron-ingot",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "iron-rod",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorShockShank_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "reinforced-iron-plate",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "cable",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "wire",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "iron-ore",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "rocket-fuel",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "compacted-coal",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "fuel",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "nitrogen-gas",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "sulfur",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "coal",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "turbofuel",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "nitric-acid",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "packaged-rocket-fuel",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "empty-fluid-tank",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "ionized-fuel",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "dark-matter-crystal",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "dark-matter-residue",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "reanimated-sam",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "excited-photonic-matter",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "diamonds",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "superposition-oscillator",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "crystal-oscillator",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "alclad-aluminum-sheet",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "neural-quantum-processor",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "time-crystal",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "supercomputer",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "ficsite-trigon",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "ai-expansion-server",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "magnetic-field-generator",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_CrystalShard_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "packaged-ionized-fuel",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "packaged-turbofuel",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "sam-fluctuator",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "steel-pipe",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "ficsite-ingot",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_SAM_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "biochemical-sculptor",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "assembly-director-system",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "water",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "aluminum-ingot",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "caterium-ingot",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "bauxite",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "caterium-ore",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "copper-ore",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "raw-quartz",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "limestone",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "uranium",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "empty-canister",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Wood_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_GenericBiomass_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "circuit-board",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "copper-sheet",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "plastic",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "polymer-resin",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "crude-oil",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "petroleum-coke",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "heavy-oil-residue",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "rubber",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "quartz-crystal",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "concrete",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "steel-ingot",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "steel-beam",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "versatile-framework",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "modular-frame",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "packaged-fuel",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_LiquidBiofuel_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Biofuel_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_PackagedBiofuel_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "packaged-oil",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "packaged-heavy-oil-residue",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "packaged-water",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "copper-ingot",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "aluminum-scrap",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "aluminum-casing",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "alumina-solution",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "silica",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_PackagedAlumina_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "smart-plating",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "rotor",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "automated-wiring",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "stator",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "high-speed-connector",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "encased-industrial-beam",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "motor",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "ai-limiter",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "quickwire",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "heavy-modular-frame",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "screw",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "computer",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "modular-engine",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "adaptive-control-unit",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "turbo-motor",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "pressure-conversion-cube",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_PackagedNitrogenGas_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "encased-plutonium-cell",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "plutonium-pellet",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "fused-modular-frame",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "radio-control-unit",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "non-fissile-uranium",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "uranium-waste",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "sulfuric-acid",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "copper-powder",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_PlutoniumFuelRod_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "electromagnetic-control-rod",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "heat-sink",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_PackagedNitricAcid_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "nuclear-pasta",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "encased-uranium-cell",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "cooling-system",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "battery",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_PackagedSulfuricAcid_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_NuclearFuelRod_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_ItemDescriptorPortableMiner_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "dissolved-silica",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_ConveyorBeltMk5_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "thermal-propulsion-rocket",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "black-powder",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_ConveyorBeltMk6_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "ficsonium",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "plutonium-waste",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "singularity-cell",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_FicsoniumFuelRod_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "ballistic-warp-drive",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorHoverPack_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "iodine-infused-filter",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "gas-filter",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorHazmatSuit_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Fabric_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_PipelineMK2_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorJetPack_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_ConveyorBeltMk4_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_ConveyorBeltMk3_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorStunSpear_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_ConveyorBeltMk2_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Chainsaw_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "alien-protein",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_HogParts_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_SpitterParts_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Mycelia_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "blue-power-slug",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_AlienPowerFuel_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorObjectScanner_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_StingerParts_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_HatcherParts_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "alien-dna-capsule",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Medkit_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Nut_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_SpikedRebar_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_RebarGunProjectile_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_CartridgeSmartProjectile_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_CartridgeStandard_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorJumpingStilts_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Rebar_Stunshot_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EqDescZipLine_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorGasmask_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_NobeliskGas_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_NobeliskExplosive_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Shroom_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Berry_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Parachute_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "purple-power-slug",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "yellow-power-slug",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_NobeliskShockwave_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Rebar_Spreadshot_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_CartridgeChaos_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_NobeliskNuke_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "smokeless-powder",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Rebar_Explosive_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorRifle_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_NobeliskCluster_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorNobeliskDetonator_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_SnowballProjectile_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Snow_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_XmasStar_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_XmasWreath_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_CandyCane_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_XmasBranch_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_XmasBallCluster_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_XmasBall3_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_XmasBall4_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_XmasBall1_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Gift_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_XmasBall2_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_XmasBow_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "BP_EquipmentDescriptorCandyCane_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_GolfCart_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_PipelineMK2_NoIndicator_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_GolfCartGold_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_SpaceElevator_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Leaves_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Fireworks_Projectile_01_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Fireworks_Projectile_02_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Desc_Fireworks_Projectile_03_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
             "id": "Schematic_StartingRecipes_C",
             "position": "-576px -0px",
             "color": "#746255"
@@ -1023,32 +33,12 @@
             "color": "#746255"
         },
         {
-            "id": "Schematic_9-1-1_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
             "id": "Schematic_9-1_C",
             "position": "-576px -0px",
             "color": "#746255"
         },
         {
-            "id": "Schematic_Alternate_EnrichedCoal_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Schematic_5-1-1_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
             "id": "Schematic_5-1_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Schematic_Alternate_TurboFuel_C",
             "position": "-576px -0px",
             "color": "#746255"
         },
@@ -1113,11 +103,6 @@
             "color": "#746255"
         },
         {
-            "id": "Schematic_5-4-1_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
             "id": "Schematic_5-4_C",
             "position": "-576px -0px",
             "color": "#746255"
@@ -1164,11 +149,6 @@
         },
         {
             "id": "caterium-ingot-pure",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Schematic_7-1-1_C",
             "position": "-576px -0px",
             "color": "#746255"
         },
@@ -1293,22 +273,12 @@
             "color": "#746255"
         },
         {
-            "id": "Schematic_8-5-1_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
             "id": "Schematic_8-5_C",
             "position": "-576px -0px",
             "color": "#746255"
         },
         {
             "id": "turbo-motor-pressure",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Schematic_7-4-1_C",
             "position": "-576px -0px",
             "color": "#746255"
         },
@@ -1344,11 +314,6 @@
         },
         {
             "id": "plutonium-fuel-rod-unit",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Schematic_8-2-1_C",
             "position": "-576px -0px",
             "color": "#746255"
         },
@@ -1444,11 +409,6 @@
         },
         {
             "id": "plastic-ai-limiter",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
-            "id": "Schematic_Alternate_Silica_Distilled_C",
             "position": "-576px -0px",
             "color": "#746255"
         },
@@ -1908,11 +868,6 @@
             "color": "#746255"
         },
         {
-            "id": "Research_Sulfur_5_2_Hidden_C",
-            "position": "-576px -0px",
-            "color": "#746255"
-        },
-        {
             "id": "turbo-rifle-ammo",
             "position": "-576px -0px",
             "color": "#746255"
@@ -2019,6 +974,786 @@
         },
         {
             "id": "Ficsmas_Schematic_Fireworks_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "conveyor-belt-mk1",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "conveyor-belt-mk5",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "conveyor-belt-mk6",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "conveyor-belt-mk4",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "conveyor-belt-mk3",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "conveyor-belt-mk2",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "pipeline-mk1",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "pipeline-mk2",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "oil-extractor",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "miner-mk2",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "miner-mk1",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "miner-mk3",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "water-extractor",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "resource-well-extractor",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "refinery",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "foundry",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "packager",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "manufacturer",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "assembler",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "blender",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "smelter",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "constructor-id",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "quantum-encoder",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "converter",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "particle-accelerator",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "freight-car",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "iron-plate",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "iron-ingot",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "iron-rod",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "reinforced-iron-plate",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "cable",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "wire",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "iron-ore",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "rocket-fuel",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "compacted-coal",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "fuel",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "nitrogen-gas",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "sulfur",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "coal",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "turbofuel",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "nitric-acid",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "packaged-rocket-fuel",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "empty-fluid-tank",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "ionized-fuel",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "dark-matter-crystal",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "dark-matter-residue",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "reanimated-sam",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "excited-photonic-matter",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "diamonds",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "superposition-oscillator",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "crystal-oscillator",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "alclad-aluminum-sheet",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "neural-quantum-processor",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "time-crystal",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "supercomputer",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "ficsite-trigon",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "ai-expansion-server",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "magnetic-field-generator",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "packaged-ionized-fuel",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "packaged-turbofuel",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "sam-fluctuator",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "steel-pipe",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "ficsite-ingot",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "sam-ore",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "biochemical-sculptor",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "assembly-director-system",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "water",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "aluminum-ingot",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "caterium-ingot",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "bauxite",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "caterium-ore",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "copper-ore",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "raw-quartz",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "limestone",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "uranium",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "empty-canister",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "circuit-board",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "copper-sheet",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "plastic",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "polymer-resin",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "crude-oil",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "petroleum-coke",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "heavy-oil-residue",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "rubber",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "quartz-crystal",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "concrete",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "steel-ingot",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "steel-beam",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "versatile-framework",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "modular-frame",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "packaged-fuel",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "packaged-oil",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "packaged-heavy-oil-residue",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "packaged-water",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "copper-ingot",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "aluminum-scrap",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "aluminum-casing",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "alumina-solution",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "silica",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "smart-plating",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "rotor",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "automated-wiring",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "stator",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "high-speed-connector",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "encased-industrial-beam",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "motor",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "ai-limiter",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "quickwire",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "heavy-modular-frame",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "screw",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "computer",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "modular-engine",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "adaptive-control-unit",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "turbo-motor",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "pressure-conversion-cube",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "encased-plutonium-cell",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "plutonium-pellet",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "fused-modular-frame",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "radio-control-unit",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "non-fissile-uranium",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "uranium-waste",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "sulfuric-acid",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "copper-powder",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "electromagnetic-control-rod",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "heat-sink",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "nuclear-pasta",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "encased-uranium-cell",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "cooling-system",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "battery",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "dissolved-silica",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "thermal-propulsion-rocket",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "black-powder",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "ficsonium",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "plutonium-waste",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "singularity-cell",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "ballistic-warp-drive",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "iodine-infused-filter",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "gas-filter",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "alien-protein",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "blue-power-slug",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "alien-dna-capsule",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "purple-power-slug",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "yellow-power-slug",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "smokeless-powder",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_Snow_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_XmasStar_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_XmasWreath_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_CandyCane_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_XmasBranch_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_XmasBallCluster_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_XmasBall3_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_XmasBall4_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_XmasBall1_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_Gift_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_XmasBall2_C",
+            "position": "-576px -0px",
+            "color": "#746255"
+        },
+        {
+            "id": "Desc_XmasBow_C",
             "position": "-576px -0px",
             "color": "#746255"
         },
@@ -6050,7 +5785,7 @@
             "stack": 100
         },
         {
-            "id": "Desc_SAM_C",
+            "id": "sam-ore",
             "row": 0,
             "name": "SAM",
             "category": "components",
@@ -7477,7 +7212,7 @@
                 "constructor-id"
             ],
             "in": {
-                "Desc_SAM_C": 4
+                "sam-ore": 4
             },
             "out": {
                 "reanimated-sam": 1
@@ -7540,7 +7275,7 @@
                 "constructor-id"
             ],
             "in": {
-                "Desc_Wood_C": 1
+                "wood": 1
             },
             "out": {
                 "coal": 10
@@ -7560,7 +7295,7 @@
                 "constructor-id"
             ],
             "in": {
-                "Desc_GenericBiomass_C": 5
+                "biomass": 5
             },
             "out": {
                 "coal": 6
@@ -8106,10 +7841,10 @@
                 "packager"
             ],
             "in": {
-                "Desc_PackagedBiofuel_C": 2
+                "packaged-liquid-biofuel": 2
             },
             "out": {
-                "Desc_LiquidBiofuel_C": 2000,
+                "liquid-biofuel": 2000,
                 "empty-canister": 2
             },
             "row": 0,
@@ -8213,11 +7948,11 @@
                 "packager"
             ],
             "in": {
-                "Desc_LiquidBiofuel_C": 2000,
+                "liquid-biofuel": 2000,
                 "empty-canister": 2
             },
             "out": {
-                "Desc_PackagedBiofuel_C": 2
+                "packaged-liquid-biofuel": 2
             },
             "row": 0,
             "unlockedBy": "Schematic_5-4_C"
@@ -8235,7 +7970,7 @@
                 "water": 3000
             },
             "out": {
-                "Desc_LiquidBiofuel_C": 4000
+                "liquid-biofuel": 4000
             },
             "row": 0,
             "unlockedBy": "Schematic_5-4_C"
@@ -8412,7 +8147,7 @@
                 "packager"
             ],
             "in": {
-                "Desc_PackagedAlumina_C": 2
+                "packaged-alumina-solution": 2
             },
             "out": {
                 "alumina-solution": 2000,
@@ -8495,7 +8230,7 @@
                 "empty-canister": 2
             },
             "out": {
-                "Desc_PackagedAlumina_C": 2
+                "packaged-alumina-solution": 2
             },
             "row": 0,
             "unlockedBy": "Schematic_7-1_C"
@@ -9170,7 +8905,7 @@
                 "packager"
             ],
             "in": {
-                "Desc_PackagedNitricAcid_C": 1
+                "packaged-nitric-acid": 1
             },
             "out": {
                 "nitric-acid": 1000,
@@ -9211,7 +8946,7 @@
                 "empty-fluid-tank": 1
             },
             "out": {
-                "Desc_PackagedNitricAcid_C": 1
+                "packaged-nitric-acid": 1
             },
             "row": 0,
             "unlockedBy": "Schematic_8-5_C"
@@ -9288,7 +9023,7 @@
                 "heat-sink": 10
             },
             "out": {
-                "Desc_PlutoniumFuelRod_C": 1
+                "plutonium-fuel-rod": 1
             },
             "row": 0,
             "unlockedBy": "Schematic_8-5_C"
@@ -9357,7 +9092,7 @@
             "in": {
                 "motor": 4,
                 "pressure-conversion-cube": 1,
-                "Desc_PackagedNitrogenGas_C": 24,
+                "packaged-nitrogen-gas": 24,
                 "stator": 8
             },
             "out": {
@@ -9375,7 +9110,7 @@
                 "packager"
             ],
             "in": {
-                "Desc_PackagedSulfuricAcid_C": 1
+                "packaged-sulfuric-acid": 1
             },
             "out": {
                 "sulfuric-acid": 1000,
@@ -9437,7 +9172,7 @@
                 "empty-canister": 2
             },
             "out": {
-                "Desc_PackagedSulfuricAcid_C": 2
+                "packaged-sulfuric-acid": 2
             },
             "row": 0,
             "unlockedBy": "Schematic_7-5_C"
@@ -9591,7 +9326,7 @@
                 "electromagnetic-control-rod": 5
             },
             "out": {
-                "Desc_NuclearFuelRod_C": 1
+                "uranium-fuel-rod": 1
             },
             "row": 0,
             "unlockedBy": "Schematic_8-1_C"
@@ -9685,7 +9420,7 @@
                 "pressure-conversion-cube": 1
             },
             "out": {
-                "Desc_PlutoniumFuelRod_C": 1
+                "plutonium-fuel-rod": 1
             },
             "row": 0,
             "unlockedBy": "plutonium-fuel-rod-unit"
@@ -9699,7 +9434,7 @@
                 "packager"
             ],
             "in": {
-                "Desc_PackagedNitrogenGas_C": 1
+                "packaged-nitrogen-gas": 1
             },
             "out": {
                 "nitrogen-gas": 4000,
@@ -9738,7 +9473,7 @@
                 "empty-fluid-tank": 1
             },
             "out": {
-                "Desc_PackagedNitrogenGas_C": 1
+                "packaged-nitrogen-gas": 1
             },
             "row": 0,
             "unlockedBy": "Schematic_8-2_C"
@@ -10643,7 +10378,7 @@
                 "rotor": 10
             },
             "out": {
-                "Desc_NuclearFuelRod_C": 3
+                "uranium-fuel-rod": 3
             },
             "row": 0,
             "unlockedBy": "uranium-fuel-rod-unit"
@@ -11012,7 +10747,7 @@
                 "excited-photonic-matter": 20000
             },
             "out": {
-                "Desc_FicsoniumFuelRod_C": 1,
+                "ficsonium-fuel-rod": 1,
                 "dark-matter-residue": 20000
             },
             "row": 0,
@@ -11107,7 +10842,7 @@
                 "Build_AutomatedWorkBench_C"
             ],
             "in": {
-                "Desc_GenericBiomass_C": 8
+                "biomass": 8
             },
             "out": {
                 "Desc_Biofuel_C": 4
@@ -11124,7 +10859,7 @@
                 "constructor-id"
             ],
             "in": {
-                "Desc_HogParts_C": 1
+                "hog-remains": 1
             },
             "out": {
                 "alien-protein": 1
@@ -11141,7 +10876,7 @@
                 "constructor-id"
             ],
             "in": {
-                "Desc_SpitterParts_C": 1
+                "spitter-remains": 1
             },
             "out": {
                 "alien-protein": 1
@@ -11158,10 +10893,10 @@
                 "constructor-id"
             ],
             "in": {
-                "Desc_Mycelia_C": 1
+                "mycelia": 1
             },
             "out": {
-                "Desc_GenericBiomass_C": 10
+                "biomass": 10
             },
             "row": 0,
             "unlockedBy": "mycelia"
@@ -11210,7 +10945,7 @@
                 "constructor-id"
             ],
             "in": {
-                "Desc_StingerParts_C": 1
+                "stinger-remains": 1
             },
             "out": {
                 "alien-protein": 1
@@ -11227,7 +10962,7 @@
                 "constructor-id"
             ],
             "in": {
-                "Desc_HatcherParts_C": 1
+                "hatcher-remains": 1
             },
             "out": {
                 "alien-protein": 1
@@ -11264,7 +10999,7 @@
                 "alien-protein": 1
             },
             "out": {
-                "Desc_GenericBiomass_C": 100
+                "biomass": 100
             },
             "row": 0,
             "unlockedBy": "Research_AO_DNACapsule_C"
@@ -11281,7 +11016,7 @@
                 "iron-rod": 1
             },
             "out": {
-                "Desc_SpikedRebar_C": 1
+                "iron-rebar": 1
             },
             "row": 0,
             "unlockedBy": "Research_ACarapace_2_C"
@@ -11316,11 +11051,11 @@
                 "assembler"
             ],
             "in": {
-                "Desc_CartridgeStandard_C": 20,
+                "rifle-cartridge": 20,
                 "high-speed-connector": 1
             },
             "out": {
-                "Desc_CartridgeSmartProjectile_C": 10
+                "homing-rifle-ammo": 10
             },
             "row": 0,
             "unlockedBy": "Research_Caterium_6_3_C"
@@ -11334,11 +11069,11 @@
                 "assembler"
             ],
             "in": {
-                "Desc_SpikedRebar_C": 1,
+                "iron-rebar": 1,
                 "quickwire": 5
             },
             "out": {
-                "Desc_Rebar_Stunshot_C": 1
+                "stun-rebar": 1
             },
             "row": 0,
             "unlockedBy": "stun-rebar"
@@ -11352,7 +11087,7 @@
                 "manufacturer"
             ],
             "in": {
-                "Desc_Fabric_C": 2,
+                "fabric": 2,
                 "coal": 4,
                 "iron-plate": 2
             },
@@ -11371,11 +11106,11 @@
                 "assembler"
             ],
             "in": {
-                "Desc_NobeliskExplosive_C": 1,
-                "Desc_GenericBiomass_C": 10
+                "nobelisk": 1,
+                "biomass": 10
             },
             "out": {
-                "Desc_NobeliskGas_C": 1
+                "gas-nobelisk": 1
             },
             "row": 0,
             "unlockedBy": "Research_Mycelia_8_C"
@@ -11393,7 +11128,7 @@
                 "water": 1000
             },
             "out": {
-                "Desc_Fabric_C": 1
+                "fabric": 1
             },
             "row": 0,
             "unlockedBy": "Research_Mycelia_2_1_C"
@@ -11407,11 +11142,11 @@
                 "assembler"
             ],
             "in": {
-                "Desc_Mycelia_C": 1,
-                "Desc_GenericBiomass_C": 5
+                "mycelia": 1,
+                "biomass": 5
             },
             "out": {
-                "Desc_Fabric_C": 1
+                "fabric": 1
             },
             "row": 0,
             "unlockedBy": "fabric"
@@ -11480,11 +11215,11 @@
                 "assembler"
             ],
             "in": {
-                "Desc_NobeliskExplosive_C": 5,
+                "nobelisk": 5,
                 "crystal-oscillator": 1
             },
             "out": {
-                "Desc_NobeliskShockwave_C": 5
+                "pulse-nobelisk": 5
             },
             "row": 0,
             "unlockedBy": "Research_Quartz_3_4_C"
@@ -11498,7 +11233,7 @@
                 "assembler"
             ],
             "in": {
-                "Desc_SpikedRebar_C": 2,
+                "iron-rebar": 2,
                 "quartz-crystal": 3
             },
             "out": {
@@ -11516,12 +11251,12 @@
                 "manufacturer"
             ],
             "in": {
-                "Desc_CartridgeStandard_C": 25,
+                "rifle-cartridge": 25,
                 "aluminum-casing": 3,
                 "packaged-turbofuel": 3
             },
             "out": {
-                "Desc_CartridgeChaos_C": 50
+                "turbo-rifle-ammo": 50
             },
             "row": 0,
             "unlockedBy": "turbo-rifle-ammo"
@@ -11535,12 +11270,12 @@
                 "blender"
             ],
             "in": {
-                "Desc_CartridgeStandard_C": 25,
+                "rifle-cartridge": 25,
                 "aluminum-casing": 3,
                 "turbofuel": 3000
             },
             "out": {
-                "Desc_CartridgeChaos_C": 50
+                "turbo-rifle-ammo": 50
             },
             "row": 0,
             "unlockedBy": "turbo-rifle-ammo"
@@ -11554,13 +11289,13 @@
                 "manufacturer"
             ],
             "in": {
-                "Desc_NobeliskExplosive_C": 5,
+                "nobelisk": 5,
                 "encased-uranium-cell": 20,
                 "smokeless-powder": 10,
                 "ai-limiter": 6
             },
             "out": {
-                "Desc_NobeliskNuke_C": 1
+                "nuke-nobelisk": 1
             },
             "row": 0,
             "unlockedBy": "Research_Sulfur_5_1_C"
@@ -11574,12 +11309,12 @@
                 "manufacturer"
             ],
             "in": {
-                "Desc_SpikedRebar_C": 2,
+                "iron-rebar": 2,
                 "smokeless-powder": 2,
                 "steel-pipe": 2
             },
             "out": {
-                "Desc_Rebar_Explosive_C": 1
+                "explosive-rebar": 1
             },
             "row": 0,
             "unlockedBy": "explosive-rebar"
@@ -11597,7 +11332,7 @@
                 "smokeless-powder": 2
             },
             "out": {
-                "Desc_CartridgeStandard_C": 15
+                "rifle-cartridge": 15
             },
             "row": 0,
             "unlockedBy": "Research_Sulfur_4_1_C"
@@ -11611,11 +11346,11 @@
                 "assembler"
             ],
             "in": {
-                "Desc_NobeliskExplosive_C": 3,
+                "nobelisk": 3,
                 "smokeless-powder": 4
             },
             "out": {
-                "Desc_NobeliskCluster_C": 1
+                "cluster-nobelisk": 1
             },
             "row": 0,
             "unlockedBy": "cluster-nobelisk"
@@ -11633,7 +11368,7 @@
                 "steel-pipe": 2
             },
             "out": {
-                "Desc_NobeliskExplosive_C": 1
+                "nobelisk": 1
             },
             "row": 0,
             "unlockedBy": "Research_Sulfur_3_1_C"
@@ -11977,10 +11712,10 @@
                 "constructor-id"
             ],
             "in": {
-                "Desc_Wood_C": 4
+                "wood": 4
             },
             "out": {
-                "Desc_GenericBiomass_C": 20
+                "biomass": 20
             },
             "row": 0,
             "unlockedBy": "Schematic_Tutorial5_C"
@@ -11997,7 +11732,7 @@
                 "Desc_Leaves_C": 10
             },
             "out": {
-                "Desc_GenericBiomass_C": 5
+                "biomass": 5
             },
             "row": 0,
             "unlockedBy": "Schematic_Tutorial5_C"
@@ -12063,7 +11798,7 @@
             "nitrogen-gas",
             "sulfur",
             "coal",
-            "Desc_SAM_C",
+            "sam-ore",
             "water",
             "bauxite",
             "caterium-ore",
