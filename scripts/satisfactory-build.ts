@@ -35,7 +35,15 @@ interface SfyDescData {
   NativeClass:
     | "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptor'"
     | "/Script/CoreUObject.Class'/Script/FactoryGame.FGVehicleDescriptor'"
-    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGResourceDescriptor'";
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGResourceDescriptor'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGPowerShardDescriptor'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptorBiomass'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptorNuclearFuel'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGEquipmentDescriptor'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGAmmoTypeProjectile'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptorPowerBoosterFuel'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGAmmoTypeInstantHit'"
+    | "/Script/CoreUObject.Class'/Script/FactoryGame.FGAmmoTypeSpreadshot'";
   Classes: SfyDesc[];
 }
 interface SfyConveyorBeltData {
@@ -120,14 +128,16 @@ interface SfyPipeline {
 interface SfyResourceExtractor {
   ClassName: string;
   SAMReference: string;
+  // hacky way to get resources for miners
+  mParticleMap: Record<string, string>[];
   mExtractStartupTime: string;
   mExtractStartupTimer: string;
   mExtractCycleTime: string;
   mItemsPerCycle: string;
   mPipeOutputConnections: string;
-  mAllowedResourceForms: string;
+  mAllowedResourceForms: string[];
   mOnlyAllowCertainResources: string;
-  mAllowedResources: string;
+  mAllowedResources: string[];
   mExtractorTypeName: string;
   mTryFindMissingResource: string;
   mPowerConsumption: string;
@@ -346,6 +356,14 @@ function getDescriptions(data: SfyData[]): SfyDesc[] {
       "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptor'",
       "/Script/CoreUObject.Class'/Script/FactoryGame.FGVehicleDescriptor'",
       "/Script/CoreUObject.Class'/Script/FactoryGame.FGResourceDescriptor'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGPowerShardDescriptor'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptorBiomass'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptorNuclearFuel'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGEquipmentDescriptor'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGAmmoTypeProjectile'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGItemDescriptorPowerBoosterFuel'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGAmmoTypeInstantHit'",
+      "/Script/CoreUObject.Class'/Script/FactoryGame.FGAmmoTypeSpreadshot'",
     ],
     (_) => true,
   );
@@ -471,16 +489,18 @@ function buildModData(
     if (directUnlock.get(getId(tech.ClassName))) {
       continue;
     }
+    const prerequisites = tech.mSchematicDependencies
+      .filter((dep) => dep.Class === 'BP_SchematicPurchasedDependency_C')
+      .map((dep) => dep.mSchematics.map(getId))
+      .flat();
     modData.items.push({
       id: getId(tech.ClassName),
       row: 0,
       name: tech.mDisplayName,
       category: 'technology',
       technology: {
-        prerequisites: tech.mSchematicDependencies
-          .filter((dep) => dep.Class === 'BP_SchematicPurchasedDependency_C')
-          .map((dep) => dep.mSchematics.map(getId))
-          .flat(),
+        // undefined if prerequisites is empty
+        prerequisites: prerequisites.length > 0 ? prerequisites : undefined,
       },
     } as ItemJson);
   }
@@ -557,6 +577,17 @@ function buildModData(
       }
     }
   }
+  // clean prereqs
+  for (const tech of modData.items) {
+    if (tech.technology) {
+      const prereqs = tech.technology.prerequisites;
+      if (prereqs) {
+        tech.technology.prerequisites = prereqs.filter((p) =>
+          modData.items.some((i) => i.id === p && i.technology !== undefined),
+        ) as string[];
+      }
+    }
+  }
   for (const conveyor of conveyors) {
     modData.items.push({
       id: conveyor.ClassName,
@@ -592,6 +623,63 @@ function buildModData(
         usage: parseFloat(extractor.mPowerConsumption) * 1000,
       },
     });
+    // add resource recipes
+    if (extractor.mExtractorTypeName !== 'Miner') {
+      for (const resource of extractor.mAllowedResources) {
+        const item = findClass(descriptions, getId(resource));
+        if (!item) continue;
+        const recipe: RecipeJson = {
+          id: item.ClassName,
+          name: item.mDisplayName,
+          producers: [getId(extractor.ClassName)],
+          time: 1,
+          cost: 100, // TODO: proper cost
+          out: { [item.ClassName]: 1 },
+          in: {},
+          row: 0,
+          category: 'parts',
+          isMining: true,
+        };
+        const recipeIndex = modData.recipes.findIndex(
+          (r) => r.id === recipe.id,
+        );
+        if (recipeIndex !== -1) {
+          modData.recipes[recipeIndex].producers.push(...recipe.producers);
+        } else {
+          modData.recipes.push(recipe);
+        }
+      }
+    } else {
+      // hack to get miner resources
+      for (const particle of extractor.mParticleMap) {
+        const resource =
+          particle['ResourceNode_16_2100B5C34EE8DF7958D78A974512F3C3'];
+        const item = findClass(descriptions, getId(resource));
+        if (!item) continue;
+        if (!extractor.mAllowedResourceForms.some((ar) => ar === item.mForm))
+          continue;
+        const recipe: RecipeJson = {
+          id: item.ClassName,
+          name: item.mDisplayName,
+          producers: [getId(extractor.ClassName)],
+          time: 1,
+          cost: 100, // TODO: proper cost
+          out: { [item.ClassName]: 1 },
+          in: {},
+          row: 0,
+          category: 'parts',
+          isMining: true,
+        };
+        const recipeIndex = modData.recipes.findIndex(
+          (r) => r.id === recipe.id,
+        );
+        if (recipeIndex !== -1) {
+          modData.recipes[recipeIndex].producers.push(...recipe.producers);
+        } else {
+          modData.recipes.push(recipe);
+        }
+      }
+    }
   }
   for (const manufacturer of manufacturers) {
     modData.items.push({
@@ -630,7 +718,7 @@ function buildModData(
       let fuel;
       if (parseFloat(desc.mEnergyValue) !== 0) {
         fuel = {
-          category: desc.mForm !== 'RF_SOLID' ? 'chemical' : 'fluid',
+          category: desc.mForm === 'RF_SOLID' ? 'chemical' : 'fluid',
           value:
             parseFloat(desc.mEnergyValue) *
             (desc.mForm === 'RF_SOLID' ? 1 : 1000),
@@ -651,17 +739,23 @@ function buildModData(
   }
 
   // Process Icons
-  const itemIcons = [...modData.items].map((item) => ({
-    id: item.id,
-    position: '-576px -0px',
-    color: '#746255',
-  }));
-  const recipeIcons = modData.recipes.map((recipe) => ({
-    id: recipe.id,
-    position: '-576px -0px',
-    color: '#746255',
-  }));
-  modData.icons.push(...itemIcons, ...recipeIcons);
+  const itemIcons = modData.items
+    .filter((item) => !item.id.startsWith('Schematic_Alternate'))
+    .map((item) => ({
+      id: item.id,
+      position: '-576px -0px',
+      color: '#746255',
+    }));
+
+  // populate categories
+  modData.categories = [
+    { id: 'components', name: 'Components' },
+    { id: 'parts', name: 'Parts' },
+    { id: 'technology', name: 'Technology' },
+    { id: 'recipe', name: 'Recipes' },
+    { id: 'other', name: 'Other' },
+  ];
+  modData.icons = itemIcons;
 
   // Limitations
   modData.limitations['mining'] = miningItems;
@@ -695,7 +789,7 @@ function convertToOldIds(
       Array.isArray(obj) ? [] : ({} as Record<string, any>),
     );
   };
-  return transform(json);
+  return json;
 }
 
 function updateModHash(modData: ModData, oldHash: ModHash): ModHash {
@@ -770,6 +864,20 @@ function main() {
   const oldHash: ModHash = JSON.parse(fs.readFileSync(modHashPath, 'utf8'));
 
   modData.defaults = oldData.defaults;
+
+  // ensure all products and ingredients have item
+  for (const r of modData.recipes) {
+    for (const id of Object.keys(r.in)) {
+      if (!modData.items.some((i) => i.id === id)) {
+        logWarn(`Missing item for recipe ingredient: ${id}`);
+      }
+    }
+    for (const id of Object.keys(r.out)) {
+      if (!modData.items.some((i) => i.id === id)) {
+        logWarn(`Missing item for recipe product: ${id}`);
+      }
+    }
+  }
 
   const updatedHash = updateModHash(modData, oldHash);
 
