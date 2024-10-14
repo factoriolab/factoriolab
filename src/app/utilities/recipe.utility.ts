@@ -365,7 +365,7 @@ export class RecipeUtility {
       recipe.drain = machine.drain;
       let usage = (recipe.usage ? recipe.usage : machine.usage) || rational(0n);
       if (oc) {
-        if (machine.usage?.gt(rational(0n))) {
+        if (usage?.gt(rational(0n))) {
           // Polynomial effect only on production buildings, not power generation
           const factor = Math.pow(oc.toNumber(), 1.321928);
           usage = usage.mul(rational(factor));
@@ -378,6 +378,11 @@ export class RecipeUtility {
         machine.type === EnergyType.Electric
           ? usage.mul(consumption)
           : rational(0n);
+
+      if (data.game === Game.Satisfactory && recipe.consumption?.nonzero()) {
+        recipe.drain = recipe.consumption;
+        delete recipe.consumption;
+      }
 
       // Pollution
       recipe.pollution =
