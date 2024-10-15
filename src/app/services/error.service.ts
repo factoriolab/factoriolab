@@ -1,21 +1,19 @@
 import { ErrorHandler, inject, Injectable, NgZone } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 
-import { Optional } from '~/models/utils';
+import { ContentService } from './content.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ErrorService implements ErrorHandler {
+  contentSvc = inject(ContentService);
   ngZone = inject(NgZone);
 
-  message$ = new BehaviorSubject<Optional<string>>(undefined);
-
   handleError(error: string): void {
-    if (this.message$.value == null) {
+    if (this.contentSvc.error$.value == null) {
       this.ngZone.run(() => {
         console.error(error);
-        this.message$.next(error);
+        this.contentSvc.error$.next(error);
       });
     }
   }

@@ -29,12 +29,12 @@ describe('MainComponent', () => {
 
   describe('reset', () => {
     it('should set loading indicator and reset application', fakeAsync(() => {
-      spyOn(component.errorSvc.message$, 'next');
+      spyOn(component.contentSvc.error$, 'next');
       spyOn(component.router, 'navigate');
       component.reset();
       expect(component.isResetting).toBeTrue();
       tick(100);
-      expect(component.errorSvc.message$.next).toHaveBeenCalledWith(undefined);
+      expect(component.contentSvc.error$.next).toHaveBeenCalledWith(undefined);
       expect(component.router.navigate).toHaveBeenCalledWith(['/1.1']);
       expect(component.isResetting).toBeFalse();
     }));

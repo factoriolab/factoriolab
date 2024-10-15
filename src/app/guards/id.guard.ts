@@ -5,7 +5,7 @@ import {
   Router,
   RouterStateSnapshot,
 } from '@angular/router';
-import { from, map } from 'rxjs';
+import { from, map, switchMap } from 'rxjs';
 
 import { coalesce } from '~/helpers';
 import { DEFAULT_MOD } from '~/models/constants';
@@ -29,11 +29,12 @@ export const canActivateId: CanActivateFn = (
     case 'data': {
       return from(routerSvc.unzipQueryParams(route.queryParams)).pipe(
         map((queryParams) => migrationSvc.migrate(undefined, queryParams)),
-        map(({ modId, params }) =>
-          router.createUrlTree([coalesce(modId, DEFAULT_MOD), id], {
+        switchMap(async ({ modId, params }) => {
+          if (params.z) params = await routerSvc.getHashParams(params);
+          return router.createUrlTree([coalesce(modId, DEFAULT_MOD), id], {
             queryParams: params,
-          }),
-        ),
+          });
+        }),
       );
     }
     case 'factorio':

@@ -13,7 +13,11 @@ export const canActivateLanding: CanActivateFn = (
   if (bypassLanding) {
     const routerState = inject(RouterService).stored();
     // If navigating to root with no query params, use last known state
-    if (routerState && Object.keys(route.queryParams).length === 0)
+    if (
+      routerState &&
+      Object.keys(route.params).length === 0 &&
+      Object.keys(route.queryParams).length === 0
+    )
       return router.parseUrl(routerState);
 
     // Navigate to list, preserving query params from target route

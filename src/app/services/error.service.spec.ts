@@ -1,12 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
+import { TestModule } from '~/tests';
+
 import { ErrorService } from './error.service';
 
 describe('ErrorService', () => {
   let service: ErrorService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({ imports: [TestModule] });
     service = TestBed.inject(ErrorService);
   });
 
@@ -18,6 +20,6 @@ describe('ErrorService', () => {
     spyOn(console, 'error');
     service.handleError('test');
     expect(console.error).toHaveBeenCalledWith('test');
-    expect(service.message$.value).toEqual('test');
+    expect(service.contentSvc.error$.value).toEqual('test');
   });
 });
