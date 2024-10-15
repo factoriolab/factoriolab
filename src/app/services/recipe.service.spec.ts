@@ -688,8 +688,8 @@ describe('RecipeService', () => {
         {
           out: { [ItemId.SteelChest]: rational(2n) },
           time: rational(2n, 3n),
-          drain: rational(5n),
-          consumption: rational(600n),
+          drain: rational(600n),
+          // consumption: rational(600n),
           pollution: rational(1n, 5n),
           productivity: rational(2n),
           produces: new Set(),
