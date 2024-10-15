@@ -390,8 +390,8 @@ export class StepsComponent implements OnInit, AfterViewInit {
     const id = step.recipeObjectiveId ?? step.recipeId;
     const update =
       step.recipeObjectiveId != null
-        ? this.objectivesSvc.updateEntity.bind(this)
-        : this.recipesSvc.updateEntity.bind(this);
+        ? this.objectivesSvc.updateEntity.bind(this.objectivesSvc)
+        : this.recipesSvc.updateEntity.bind(this.recipesSvc);
 
     const machine = this.data().machineEntities[settings.machineId];
     const machineSettings = this.machinesState()[settings.machineId];
