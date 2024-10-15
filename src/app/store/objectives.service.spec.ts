@@ -429,6 +429,7 @@ describe('ObjectivesService', () => {
 
   describe('effects', () => {
     it('should automatically trigger adjustDisplayRate', () => {
+      service.settingsSvc.load$.next();
       spyOn(service, 'adjustDisplayRate');
       TestBed.flushEffects();
       service.settingsSvc.apply({ displayRate: DisplayRate.PerHour });

@@ -1,4 +1,5 @@
 import { computed, Signal, signal } from '@angular/core';
+import { Subject } from 'rxjs';
 
 import { compareRank, compareSet, prune, spread } from '~/helpers';
 import { Rational } from '~/models/rational';
@@ -6,6 +7,7 @@ import { Entities, Optional, RecursivePartial } from '~/models/utils';
 
 export abstract class Store<T extends object> {
   protected _state = signal(this.initial);
+  load$ = new Subject<void>();
   state = this._state.asReadonly();
 
   constructor(
@@ -15,6 +17,7 @@ export abstract class Store<T extends object> {
 
   /** Load recursive partial state, spreading any nested keys */
   load(partial: Optional<RecursivePartial<T>>): void {
+    this.load$.next();
     if (partial == null) {
       this.set(this.initial);
       return;
