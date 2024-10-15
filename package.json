@@ -24,6 +24,7 @@
     "lint-build": "ng lint --max-warnings 0",
     "stylelint": "stylelint **/*.{css,scss}",
     "prettier": "prettier --check .",
+    "ngsw-config": "ngsw-config ./dist/browser ./ngsw-config.json",
     "factorio-api": "ts-node -r tsconfig-paths/register scripts/factorio-api.ts",
     "postfactorio-api": "prettier --write \"scripts/factorio.models.ts\"",
     "factorio-prep": "ts-node -r tsconfig-paths/register scripts/factorio-prep.ts",
