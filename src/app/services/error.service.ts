@@ -5,7 +5,7 @@ import { ContentService } from './content.service';
 @Injectable({
   providedIn: 'root',
 })
-export class LabErrorHandler implements ErrorHandler {
+export class ErrorService implements ErrorHandler {
   contentSvc = inject(ContentService);
   ngZone = inject(NgZone);
 
