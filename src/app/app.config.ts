@@ -20,7 +20,7 @@ import { PrimeNGConfig } from 'primeng/api';
 import { environment } from 'src/environments';
 
 import { routes } from './app.routes';
-import { ErrorService } from './services/error.service';
+import { LabErrorHandler } from './services/error.service';
 import { ThemeService } from './services/theme.service';
 import {
   DEFAULT_LANGUAGE,
@@ -44,7 +44,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     { provide: APP_BASE_HREF, useValue: environment.baseHref },
     { provide: DEFAULT_LANGUAGE, useValue: 'en' },
-    { provide: ErrorHandler, useClass: ErrorService },
+    { provide: ErrorHandler, useClass: LabErrorHandler },
     {
       provide: APP_INITIALIZER,
       deps: [

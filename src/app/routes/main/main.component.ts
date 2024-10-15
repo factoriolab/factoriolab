@@ -21,7 +21,6 @@ import { SettingsComponent } from '~/components/settings/settings.component';
 import { SimplexResultType } from '~/models/enum/simplex-result-type';
 import { TranslatePipe } from '~/pipes/translate.pipe';
 import { ContentService } from '~/services/content.service';
-import { ErrorService } from '~/services/error.service';
 import { TranslateService } from '~/services/translate.service';
 import { ObjectivesService } from '~/store/objectives.service';
 import { SettingsService } from '~/store/settings.service';
@@ -50,7 +49,6 @@ export class MainComponent {
   ref = inject(ChangeDetectorRef);
   router = inject(Router);
   contentSvc = inject(ContentService);
-  errorSvc = inject(ErrorService);
   objectivesSvc = inject(ObjectivesService);
   settingsSvc = inject(SettingsService);
   translateSvc = inject(TranslateService);
@@ -93,7 +91,7 @@ export class MainComponent {
     // Give button loading indicator a chance to start
     setTimeout(() => {
       this.ngZone.run(() => {
-        this.errorSvc.message$.next(undefined);
+        this.contentSvc.error$.next(undefined);
         void this.router.navigate([this.gameInfo().route]);
         this.isResetting = false;
       });

@@ -3,7 +3,7 @@
   [settingsXlHidden]="contentSvc.settingsXlHidden()"
 ></lab-header>
 
-@if (errorSvc.message$ | async; as message) {
+@if (contentSvc.error$ | async; as error) {
   <p-dialog
     [visible]="true"
     [modal]="true"
@@ -20,7 +20,7 @@
     </ng-template>
     <div class="p-error">
       <div>{{ 'app.errorDetail' | translate }}</div>
-      <div class="mt-4">{{ message }}</div>
+      <div class="mt-4">{{ error }}</div>
       <div class="text-end mt-4">
         <button
           pButton
