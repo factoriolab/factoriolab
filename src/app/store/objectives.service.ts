@@ -1,6 +1,6 @@
-import { computed, inject, Injectable } from '@angular/core';
+import { computed, inject, Injectable, Injector } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
-import { filter, pairwise } from 'rxjs';
+import { filter, pairwise, switchMap } from 'rxjs';
 
 import {
   addValueToRecordByIds,
@@ -467,10 +467,15 @@ export class ObjectivesService extends EntityStore<ObjectiveState> {
   constructor() {
     super();
 
-    toObservable(this.settingsSvc.displayRate)
+    const injector = inject(Injector);
+    this.settingsSvc.load$
       .pipe(
-        pairwise(),
-        filter(([before, after]) => before !== after),
+        switchMap(() =>
+          toObservable(this.settingsSvc.displayRate, { injector }).pipe(
+            pairwise(),
+            filter(([before, after]) => before !== after),
+          ),
+        ),
       )
       .subscribe(([before, after]) => {
         const factor = displayRateInfo[after].value.div(
