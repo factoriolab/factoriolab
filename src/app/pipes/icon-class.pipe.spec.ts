@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ItemId } from 'src/tests';
+import { ItemId } from '~/tests';
+
 import { IconClassPipe, IconSmClassPipe } from './icon-class.pipe';
 
 describe('IconClassPipe', () => {

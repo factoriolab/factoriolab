@@ -1,86 +1,114 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { CheckboxModule } from 'primeng/checkbox';
+import { DividerModule } from 'primeng/divider';
+import { DropdownModule } from 'primeng/dropdown';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
-import { AppSharedModule } from '~/app-shared.module';
-import {
-  Game,
-  gameInfo,
-  gameOptions,
-  ObjectiveBase,
-  ObjectiveUnit,
-} from '~/models';
-import { ContentService, RouterService } from '~/services';
-import { LabState, Objectives, Preferences, Recipes, Settings } from '~/store';
-import { BrowserUtility } from '~/utilities';
+import { PickerComponent } from '~/components/picker/picker.component';
+import { Game, gameOptions } from '~/models/enum/game';
+import { ObjectiveType } from '~/models/enum/objective-type';
+import { ObjectiveUnit } from '~/models/enum/objective-unit';
+import { gameInfo } from '~/models/game-info';
+import { modOptions } from '~/models/options';
+import { rational } from '~/models/rational';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { RouterService } from '~/services/router.service';
+import { ObjectivesService } from '~/store/objectives.service';
+import { PreferencesService } from '~/store/preferences.service';
+import { RecipesService } from '~/store/recipes.service';
+import { SettingsService } from '~/store/settings.service';
 
 @Component({
+  selector: 'lab-landing',
   standalone: true,
-  imports: [AppSharedModule],
+  imports: [
+    AsyncPipe,
+    FormsModule,
+    RouterLink,
+    ButtonModule,
+    CardModule,
+    CheckboxModule,
+    DividerModule,
+    DropdownModule,
+    ProgressSpinnerModule,
+    IconSmClassPipe,
+    PickerComponent,
+    TranslatePipe,
+  ],
   templateUrl: './landing.component.html',
   styleUrls: ['./landing.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingComponent {
   router = inject(Router);
+  route = inject(ActivatedRoute);
   contentSvc = inject(ContentService);
-  store = inject(Store<LabState>);
+  objectivesSvc = inject(ObjectivesService);
+  preferencesSvc = inject(PreferencesService);
+  recipesSvc = inject(RecipesService);
   routerSvc = inject(RouterService);
+  settingsSvc = inject(SettingsService);
 
-  itemIds = this.store.selectSignal(Recipes.getAvailableItems);
-  settings = this.store.selectSignal(Settings.getSettings);
-  modOptions = this.store.selectSignal(Settings.getModOptions);
-  data = this.store.selectSignal(Settings.getDataset);
-  mod = this.store.selectSignal(Settings.getMod);
-  recipeIds = this.store.selectSignal(Settings.getAvailableRecipes);
-  savedStates = this.store.selectSignal(Settings.getSavedStates);
-  preferences = this.store.selectSignal(Preferences.preferencesState);
+  modId = this.settingsSvc.modId;
+  mod = this.settingsSvc.mod;
+  data = this.settingsSvc.dataset;
+  recipeIds = this.settingsSvc.availableRecipeIds;
+  itemIds = this.recipesSvc.availableItemIds;
+  states = this.settingsSvc.gameStates;
+  stateOptions = this.settingsSvc.stateOptions;
 
   gameInfo = gameInfo;
   gameOptions = gameOptions;
+  modOptions = modOptions;
 
   Game = Game;
-  BrowserUtility = BrowserUtility;
 
-  async selectItem(value: string): Promise<void> {
-    await this.router.navigate(['list']);
-    this.addItemObjective(value);
+  selectItem(targetId: string): void {
+    this.objectivesSvc.create({
+      targetId,
+      value: rational.one,
+      unit: ObjectiveUnit.Items,
+      type: ObjectiveType.Output,
+    });
+    void this.router.navigate(['list'], {
+      relativeTo: this.route,
+      queryParamsHandling: 'preserve',
+    });
   }
 
-  async selectRecipe(value: string): Promise<void> {
-    await this.router.navigate(['list']);
-    this.addRecipeObjective(value);
+  selectRecipe(targetId: string): void {
+    this.objectivesSvc.create({
+      targetId,
+      value: rational.one,
+      unit: ObjectiveUnit.Machines,
+      type: ObjectiveType.Output,
+    });
+    void this.router.navigate(['list'], {
+      relativeTo: this.route,
+      queryParamsHandling: 'preserve',
+    });
   }
 
   setState(query: string): void {
-    if (query) {
-      const queryParams = this.routerSvc.getParams(query);
-      this.router.navigate(['list'], { queryParams });
-    }
+    if (!query) return;
+    void this.router.navigate(['list'], {
+      queryParams: this.routerSvc.toParams(query),
+      relativeTo: this.route,
+    });
   }
 
   setGame(game: Game): void {
     this.setMod(gameInfo[game].modId);
   }
 
-  addItemObjective(targetId: string): void {
-    this.addObjective({ targetId, unit: ObjectiveUnit.Items });
-  }
-
-  addRecipeObjective(targetId: string): void {
-    this.addObjective({ targetId, unit: ObjectiveUnit.Machines });
-  }
-
-  /** Action Dispatch Methods */
-  setMod(value: string): void {
-    this.store.dispatch(new Settings.SetModAction(value));
-  }
-
-  addObjective(value: ObjectiveBase): void {
-    this.store.dispatch(new Objectives.AddAction(value));
-  }
-
-  setBypassLanding(value: boolean): void {
-    this.store.dispatch(new Preferences.SetBypassLandingAction(value));
+  setMod(modId: string): void {
+    void this.router.navigate([modId]);
   }
 }

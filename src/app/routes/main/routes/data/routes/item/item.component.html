@@ -367,7 +367,7 @@
               type="button"
               class="ms-2 p-button-rounded"
               icon="fa-solid fa-rotate-left"
-              (click)="resetItem(id())"
+              (click)="itemsSvc.resetId(id())"
             ></button>
           </div>
         </th>
@@ -376,9 +376,9 @@
         <th>{{ 'data.excluded' | translate }}</th>
         <td>
           <p-checkbox
-            [ngModel]="itemSettings.excluded"
+            [ngModel]="settings().excludedItemIds.has(id())"
             [binary]="true"
-            (onChange)="setItemExcluded(id(), $event.checked)"
+            (onChange)="changeExcluded($event.checked)"
           ></p-checkbox>
         </td>
       </tr>
@@ -386,9 +386,9 @@
         <th>{{ 'data.checked' | translate }}</th>
         <td>
           <p-checkbox
-            [ngModel]="itemSettings.checked"
+            [ngModel]="settings().checkedItemIds.has(id())"
             [binary]="true"
-            (onChange)="setItemChecked(id(), $event.checked)"
+            (onChange)="changeChecked($event.checked)"
           ></p-checkbox>
         </td>
       </tr>
@@ -403,9 +403,9 @@
               <a
                 [routerLink]="
                   '/data/' +
-                  (data().beltIds.indexOf(beltId) !== -1
+                  (data().beltIds.includes(beltId)
                     ? 'belts'
-                    : data().pipeIds.indexOf(beltId) !== -1
+                    : data().pipeIds.includes(beltId)
                       ? 'pipes'
                       : 'items') +
                   '/' +
@@ -482,13 +482,13 @@
             <h3>{{ 'data.machineSettings' | translate }}</h3>
 
             <button
-              [class.invisible]="!machinesStateRaw().entities[id()]"
+              [class.invisible]="!machinesStateRaw()[id()]"
               pButton
               pRipple
               type="button"
               class="p-button-rounded justify-self-end"
               icon="fa-solid fa-rotate-left"
-              (click)="resetMachine(id())"
+              (click)="machinesSvc.resetId(id())"
             ></button>
           </div>
         </th>

@@ -9,52 +9,70 @@ export interface SankeyLinkExtraProperties extends Record<string, any> {
 }
 
 export interface SankeyNodeMinimal<N extends object, L extends object> {
-  sourceLinks?: Array<SankeyLink<N, L>> | undefined;
-  targetLinks?: Array<SankeyLink<N, L>> | undefined;
-  value?: number | undefined;
-  fixedValue?: number | undefined;
-  index?: number | undefined;
-  depth?: number | undefined;
-  height?: number | undefined;
-  x0?: number | undefined;
-  x1?: number | undefined;
-  y0?: number | undefined;
-  y1?: number | undefined;
+  sourceLinks?: SankeyLink<N, L>[];
+  targetLinks?: SankeyLink<N, L>[];
+  value?: number;
+  fixedValue?: number;
+  index?: number;
+  depth?: number;
+  height?: number;
+  x0?: number;
+  x1?: number;
+  y0?: number;
+  y1?: number;
 }
 
+type SankeyNodeMaximal<N extends object, L extends object> = Required<
+  Omit<SankeyNodeMinimal<N, L>, 'sourceLinks' | 'targetLinks'>
+> & {
+  sourceLinks: SankeyLink<N, L>[];
+  targetLinks: SankeyLink<N, L>[];
+};
+
 export type SankeyNode<N extends object, L extends object> = N &
-  SankeyNodeMinimal<N, L>;
+  SankeyNodeMaximal<N, L>;
 
 export interface SankeyLinkMinimal<N extends object, L extends object> {
   source: number | string | SankeyNode<N, L>;
   target: number | string | SankeyNode<N, L>;
   value: number;
-  y0?: number | undefined;
-  y1?: number | undefined;
-  width?: number | undefined;
-  index?: number | undefined;
+  y0?: number;
+  y1?: number;
+  width?: number;
+  index?: number;
 }
 
+type SankeyLinkMaximal<N extends object, L extends object> = Required<
+  SankeyLinkMinimal<N, L>
+>;
+
 export type SankeyLink<N extends object, L extends object> = L &
-  SankeyLinkMinimal<N, L>;
+  SankeyLinkMaximal<N, L>;
+
+export interface SankeyGraphMinimal<N extends object, L extends object> {
+  nodes: (N & SankeyNodeMinimal<N, L>)[];
+  links: (L & SankeyLinkMinimal<N, L>)[];
+}
 
 export interface SankeyGraph<N extends object, L extends object> {
-  nodes: Array<SankeyNode<N, L>>;
-  links: Array<SankeyLink<N, L>>;
+  nodes: SankeyNode<N, L>[];
+  links: SankeyLink<N, L>[];
 }
 
 export interface SankeyLayout<Data, N extends object, L extends object> {
   (data: Data, ...args: unknown[]): SankeyGraph<N, L>;
   update(graph: SankeyGraph<N, L>): SankeyGraph<N, L>;
-  nodes(): (data: Data, ...args: unknown[]) => Array<SankeyNode<N, L>>;
-  nodes(nodes: Array<SankeyNode<N, L>>): this;
+  nodes(): (data: Data, ...args: unknown[]) => SankeyNode<N, L>[];
   nodes(
-    nodes: (data: Data, ...args: unknown[]) => Array<SankeyNode<N, L>>,
+    nodes:
+      | SankeyNode<N, L>[]
+      | ((data: Data, ...args: unknown[]) => SankeyNode<N, L>[]),
   ): this;
-  links(): (data: Data, ...args: unknown[]) => Array<SankeyLink<N, L>>;
-  links(links: Array<SankeyLink<N, L>>): this;
+  links(): (data: Data, ...args: unknown[]) => SankeyLink<N, L>[];
   links(
-    links: (data: Data, ...args: unknown[]) => Array<SankeyLink<N, L>>,
+    links:
+      | SankeyLink<N, L>[]
+      | ((data: Data, ...args: unknown[]) => SankeyLink<N, L>[]),
   ): this;
   nodeId(): (node: SankeyNode<N, L>) => string | number;
   nodeId(nodeId: (node: SankeyNode<N, L>) => string | number): this;

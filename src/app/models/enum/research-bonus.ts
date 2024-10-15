@@ -2,8 +2,8 @@ import { SelectItem } from 'primeng/api';
 
 import { Rational, rational } from '../rational';
 
-export const researchBonus = {
-  speed0: rational(0n),
+export const researchBonusValue = {
+  speed0: rational.zero,
   speed1: rational(20n),
   speed2: rational(50n),
   speed3: rational(90n),
@@ -13,11 +13,11 @@ export const researchBonus = {
 };
 
 export const researchBonusOptions: SelectItem<Rational>[] = [
-  { label: 'options.researchBonus.speed0', value: researchBonus.speed0 },
-  { label: 'options.researchBonus.speed1', value: researchBonus.speed1 },
-  { label: 'options.researchBonus.speed2', value: researchBonus.speed2 },
-  { label: 'options.researchBonus.speed3', value: researchBonus.speed3 },
-  { label: 'options.researchBonus.speed4', value: researchBonus.speed4 },
-  { label: 'options.researchBonus.speed5', value: researchBonus.speed5 },
-  { label: 'options.researchBonus.speed6', value: researchBonus.speed6 },
+  { label: 'options.researchBonus.speed0', value: researchBonusValue.speed0 },
+  { label: 'options.researchBonus.speed1', value: researchBonusValue.speed1 },
+  { label: 'options.researchBonus.speed2', value: researchBonusValue.speed2 },
+  { label: 'options.researchBonus.speed3', value: researchBonusValue.speed3 },
+  { label: 'options.researchBonus.speed4', value: researchBonusValue.speed4 },
+  { label: 'options.researchBonus.speed5', value: researchBonusValue.speed5 },
+  { label: 'options.researchBonus.speed6', value: researchBonusValue.speed6 },
 ];

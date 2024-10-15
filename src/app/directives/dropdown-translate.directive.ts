@@ -1,11 +1,13 @@
-import { Directive, inject, OnInit, TemplateRef } from '@angular/core';
+import { Directive, inject, OnInit } from '@angular/core';
 import { Dropdown } from 'primeng/dropdown';
-import { combineLatest, filter, first } from 'rxjs';
+import { combineLatest, first } from 'rxjs';
 
-import { ContentService } from '~/services';
+import { filterNullish } from '~/helpers';
+import { ContentService } from '~/services/content.service';
 
 @Directive({
   selector: '[labDropdownTranslate]',
+  standalone: true,
 })
 export class DropdownTranslateDirective implements OnInit {
   contentSvc = inject(ContentService);
@@ -14,12 +16,8 @@ export class DropdownTranslateDirective implements OnInit {
   ngOnInit(): void {
     this.pDropdown.appendTo = 'body';
     combineLatest([
-      this.contentSvc.translateSelectedItem$.pipe(
-        filter((t): t is TemplateRef<unknown> => t != null),
-      ),
-      this.contentSvc.translateItem$.pipe(
-        filter((t): t is TemplateRef<unknown> => t != null),
-      ),
+      this.contentSvc.translateSelectedItem$.pipe(filterNullish()),
+      this.contentSvc.translateItem$.pipe(filterNullish()),
     ])
       .pipe(first())
       .subscribe(([selectedItemTemplate, itemTemplate]) => {

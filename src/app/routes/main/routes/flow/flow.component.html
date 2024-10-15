@@ -14,13 +14,24 @@
       [label]="'flow.flowSettings' | translate"
       (click)="flowSettingsDlg.open(flowSettings())"
     ></button>
+    @if (cy) {
+      <button
+        pButton
+        pRipple
+        type="button"
+        class="p-button-outlined"
+        icon="fa-solid fa-file-image"
+        [label]="'flow.downloadAsPng' | translate"
+        (click)="saveCytoscapePng(cy)"
+      ></button>
+    }
     @if (flowData.nodes.length) {
       <button
         pButton
         pRipple
         type="button"
         class="p-button-outlined"
-        icon="fa-solid fa-file-arrow-down"
+        icon="fa-solid fa-file-code"
         [label]="'flow.downloadAsJson' | translate"
         (click)="exportSvc.flowToJson(flowData)"
       ></button>

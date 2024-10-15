@@ -1,9 +1,10 @@
 import { exec, spawn } from 'child_process';
 import fs from 'fs';
 
-import { Game } from '~/models';
+import { Game } from '~/models/enum/game';
+
 import { data } from '../src/data';
-import { logTime } from './helpers';
+import { logTime } from './helpers/log.helpers';
 
 /**
  * This script is intended to update a specific Factorio mod set or all sets
@@ -29,7 +30,7 @@ if (!fs.existsSync(logsPath)) fs.mkdirSync(logsPath);
 if (fs.existsSync(logPath)) fs.rmSync(logPath);
 /** Log command output to separate log file to minimize console output */
 function logDebug(msg: string): void {
-  fs.appendFileSync(logPath, `${msg}`);
+  fs.appendFileSync(logPath, msg);
 }
 
 async function runCommand(
@@ -38,10 +39,18 @@ async function runCommand(
 ): Promise<number | null> {
   return new Promise((resolve, reject) => {
     const proc = spawn(command, args);
-    proc.stdout.on('data', (data) => logDebug(data));
-    proc.stderr.on('data', (data) => logDebug(data));
-    proc.on('error', (code) => reject(code));
-    proc.on('exit', (code) => resolve(code));
+    proc.stdout.on('data', (data: string) => {
+      logDebug(data);
+    });
+    proc.stderr.on('data', (data: string) => {
+      logDebug(data);
+    });
+    proc.on('error', (code) => {
+      reject(code);
+    });
+    proc.on('exit', (code) => {
+      resolve(code);
+    });
   });
 }
 
@@ -90,7 +99,9 @@ async function waitForFactorio(
     result = await checkIfFactorioIsRunning();
     runtime = Date.now() - start;
   } while (result !== running && runtime < waitMs);
-  logDebug(`Waited ${runtime} for Factorio to ${running ? 'start' : 'exit'}\n`);
+  logDebug(
+    `Waited ${runtime.toString()} for Factorio to ${running ? 'start' : 'exit'}\n`,
+  );
 }
 
 /** Build a Factorio mod data set using the factorio-build.ts script */
@@ -110,11 +121,14 @@ async function updateMods(mods: string[]): Promise<void> {
   for (let i = 0; i < mods.length; i++) {
     const mod = mods[i];
     await updateMod(mod);
-    logTime(`Updated mod '${mod}' (${i + 1} of ${mods.length})`);
+    logTime(
+      `Updated mod '${mod}' (${(i + 1).toString()} of ${mods.length.toString()})`,
+    );
   }
 }
 
 logTime(
-  `Starting update for ${mods.length} mod${mods.length > 1 ? 's' : ''}...`,
+  `Starting update for ${mods.length.toString()} mod${mods.length > 1 ? 's' : ''}...`,
 );
-updateMods(mods);
+
+void updateMods(mods);

@@ -7,23 +7,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
+
       - name: Install dependencies
         run: npm ci
+
+      - name: Run build
+        run: npm run build -- -c=production
+
+      - name: Copy index to 404
+        run: cp dist/browser/index.html dist/browser/404.html
+
       - name: Semantic release
         run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-      - name: Run build
-        run: npm run build -- -c=production
-        if: env.DEPLOY == 'true'
-      - name: Copy index to 404
-        run: cp dist/browser/index.html dist/browser/404.html
-        if: env.DEPLOY == 'true'
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         if: env.DEPLOY == 'true'

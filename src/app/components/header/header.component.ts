@@ -1,20 +1,31 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   HostBinding,
   inject,
   Input,
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { Title } from '@angular/platform-browser';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
+import { RouterLink } from '@angular/router';
 import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { SplitButtonModule } from 'primeng/splitbutton';
+import { TooltipModule } from 'primeng/tooltip';
 import { combineLatest, map } from 'rxjs';
 
-import { APP, gameInfo, gameOptions, isRecipeObjective } from '~/models';
-import { ContentService } from '~/services';
-import { LabState, Objectives, Settings } from '~/store';
+import { APP } from '~/models/constants';
+import { Game, gameOptions } from '~/models/enum/game';
+import { gameInfo } from '~/models/game-info';
+import { isRecipeObjective } from '~/models/objective';
+import { IconSmClassPipe } from '~/pipes/icon-class.pipe';
+import { TranslatePipe } from '~/pipes/translate.pipe';
+import { ContentService } from '~/services/content.service';
+import { TranslateService } from '~/services/translate.service';
+import { ObjectivesService } from '~/store/objectives.service';
+import { PreferencesService } from '~/store/preferences.service';
+import { SettingsService } from '~/store/settings.service';
 
 interface MenuLink {
   label: string;
@@ -24,33 +35,44 @@ interface MenuLink {
 
 @Component({
   selector: 'lab-header',
+  standalone: true,
+  imports: [
+    RouterLink,
+    ButtonModule,
+    SplitButtonModule,
+    TooltipModule,
+    IconSmClassPipe,
+    TranslatePipe,
+  ],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {
   title = inject(Title);
-  store = inject(Store<LabState>);
-  translateSvc = inject(TranslateService);
   contentSvc = inject(ContentService);
+  objectivesSvc = inject(ObjectivesService);
+  preferencesSvc = inject(PreferencesService);
+  settingsSvc = inject(SettingsService);
+  translateSvc = inject(TranslateService);
 
   @HostBinding('class.sticky') @Input() sticky = false;
   @HostBinding('class.settings-xl-hidden') @Input() settingsXlHidden = false;
 
-  gameInfo = this.store.selectSignal(Settings.getGameInfo);
+  gameInfo = this.settingsSvc.gameInfo;
   gameOptions = toSignal(
     combineLatest([
-      this.store.select(Settings.getGame),
-      this.contentSvc.lang$,
+      toObservable(this.settingsSvc.game),
+      ...gameOptions.map((o) => this.translateSvc.get(gameInfo[o.value].label)),
     ]).pipe(
-      map(([game]): MenuItem[] => {
+      map(([game, ...labels]): MenuItem[] => {
         return gameOptions
-          .map((o) => o.value)
-          .filter((g) => g !== game)
+          .map((o, i): [Game, string] => [o.value, labels[i]])
+          .filter(([g]) => g !== game)
           .map(
-            (g): MenuItem => ({
+            ([g, label]): MenuItem => ({
               icon: 'lab-icon small ' + gameInfo[g].icon,
-              label: this.translateSvc.instant(gameInfo[g].label),
+              label,
               routerLink: gameInfo[g].route,
             }),
           );
@@ -77,22 +99,19 @@ export class HeaderComponent {
   ];
 
   constructor() {
-    combineLatest([
-      this.store.select(Objectives.getBaseObjectives),
-      this.store.select(Settings.getDataset),
-      this.contentSvc.lang$,
-    ])
-      .pipe(takeUntilDestroyed())
-      .subscribe(([objectives, data]) => {
-        const name = objectives
-          .map((o) =>
-            isRecipeObjective(o)
-              ? data.recipeEntities[o.targetId]?.name
-              : data.itemEntities[o.targetId]?.name,
-          )
-          .find((n) => n != null);
-        this.title.setTitle(name != null ? `${name} | ${APP}` : APP);
-      });
+    effect(() => {
+      const objectives = this.objectivesSvc.baseObjectives();
+      const data = this.settingsSvc.dataset();
+
+      const name = objectives
+        .map((o) =>
+          isRecipeObjective(o)
+            ? data.recipeEntities[o.targetId]?.name
+            : data.itemEntities[o.targetId]?.name,
+        )
+        .find((n) => n != null);
+      this.title.setTitle(name != null ? `${name} | ${APP}` : APP);
+    });
   }
 
   cancelRouterLink(event: Event): void {

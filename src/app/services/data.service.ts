@@ -1,105 +1,87 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
+import { effect, inject, Injectable } from '@angular/core';
 import {
   catchError,
   combineLatest,
+  EMPTY,
   Observable,
-  of,
   shareReplay,
-  startWith,
   tap,
 } from 'rxjs';
 
-import { Entities, ModData, ModHash, ModI18n } from '~/models';
-import { Datasets, LabState, Settings } from '~/store';
+import { ModData } from '~/models/data/mod-data';
+import { ModHash } from '~/models/data/mod-hash';
+import { ModI18n } from '~/models/data/mod-i18n';
+import { Language } from '~/models/enum/language';
+import { Entities } from '~/models/utils';
+import { DatasetsService } from '~/store/datasets.service';
+import { PreferencesService } from '~/store/preferences.service';
+import { SettingsService } from '~/store/settings.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
   http = inject(HttpClient);
-  store = inject(Store<LabState>);
-  translateSvc = inject(TranslateService);
+  datasetsSvc = inject(DatasetsService);
+  preferencesSvc = inject(PreferencesService);
+  settingsSvc = inject(SettingsService);
 
-  cacheData: Entities<Observable<ModData>> = {};
-  cacheHash: Entities<Observable<ModHash>> = {};
-  cacheI18n: Entities<Observable<ModI18n | null>> = {};
+  cacheData: Entities<Observable<[ModData, ModHash]>> = {};
+  cacheI18n: Entities<Entities<Observable<ModI18n>>> = {};
 
-  initialize(): void {
-    combineLatest([
-      this.store.select(Settings.getModId),
-      this.translateSvc.onLangChange.pipe(startWith('en')),
-    ]).subscribe(([id]) => {
-      this.requestData(id).subscribe();
+  config$ = this.http
+    .get<{
+      version: string;
+      branch: string;
+      date: string;
+    }>('assets/release.json')
+    .pipe(shareReplay(1));
+
+  constructor() {
+    effect(() => {
+      const modId = this.settingsSvc.modId();
+      if (modId == null) return;
+      this.requestData(modId).subscribe();
+    });
+
+    effect(() => {
+      const modId = this.settingsSvc.modId();
+      const lang = this.preferencesSvc.language();
+      if (modId == null || lang === Language.English) return;
+      this.requestI18n(modId, lang).subscribe();
     });
   }
 
-  requestData(id: string): Observable<[ModData, ModHash, ModI18n | null]> {
-    const payload: Datasets.DatasetPayload = {
-      data: null,
-      hash: null,
-      i18n: null,
-    };
-
+  requestData(id: string): Observable<[ModData, ModHash]> {
     /** Setup observable for data */
-    if (!this.cacheData[id]) {
-      this.cacheData[id] = this.http.get<ModData>(`data/${id}/data.json`).pipe(
-        tap((value) => {
-          payload.data = { id, value };
+    if (!this.cacheData[id])
+      this.cacheData[id] = combineLatest([
+        this.http.get<ModData>(`data/${id}/data.json`),
+        this.http.get<ModHash>(`data/${id}/hash.json`),
+      ]).pipe(
+        tap(([data, hash]) => {
+          this.datasetsSvc.loadData(id, data, hash);
         }),
         shareReplay(),
       );
-    }
 
-    const data$ = this.cacheData[id];
+    return this.cacheData[id];
+  }
 
-    /** Setup observable for hash */
-    if (!this.cacheHash[id]) {
-      this.cacheHash[id] = this.http.get<ModHash>(`data/${id}/hash.json`).pipe(
-        tap((value) => {
-          payload.hash = { id, value };
-        }),
-        shareReplay(),
-      );
-    }
+  requestI18n(id: string, lang: Language): Observable<ModI18n> {
+    if (!this.cacheI18n[id]) this.cacheI18n[id] = {};
+    if (!this.cacheI18n[id][lang])
+      this.cacheI18n[id][lang] = this.http
+        .get<ModI18n>(`data/${id}/i18n/${lang}.json`)
+        .pipe(
+          catchError(() => EMPTY),
+          tap((i18n) => {
+            this.datasetsSvc.loadI18n(id, lang, i18n);
+          }),
+          shareReplay(),
+        );
 
-    const hash$ = this.cacheHash[id];
-
-    /** Setup observable for i18n */
-    const i18nLang = this.translateSvc.currentLang ?? 'en';
-    const i18nKey = `${id}-${i18nLang}`;
-    const skipI18n = i18nLang === 'en';
-    let i18n$: Observable<ModI18n | null>;
-    if (skipI18n) {
-      i18n$ = of(null);
-    } else {
-      if (!this.cacheI18n[i18nKey]) {
-        this.cacheI18n[i18nKey] = this.http
-          .get<ModI18n>(`data/${id}/i18n/${i18nLang}.json`)
-          .pipe(
-            catchError(() => {
-              console.warn(`No localization file found for ${i18nKey}`);
-              return of(null);
-            }),
-            tap((value) => {
-              if (value) {
-                payload.i18n = { id: i18nKey, value };
-              }
-            }),
-            shareReplay(),
-          );
-      }
-      i18n$ = this.cacheI18n[i18nKey];
-    }
-
-    return combineLatest([data$, hash$, i18n$]).pipe(
-      tap(() => {
-        if (payload.data || payload.hash || payload.i18n) {
-          this.store.dispatch(new Datasets.LoadModAction(payload));
-        }
-      }),
-    );
+    return this.cacheI18n[id][lang];
   }
 }

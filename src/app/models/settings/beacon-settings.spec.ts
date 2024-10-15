@@ -1,11 +1,12 @@
-import { Mocks } from 'src/tests';
+import { Mocks } from '~/tests';
+
 import { areBeaconSettingsEqual } from './beacon-settings';
 
 describe('areBeaconSettingsEqual', () => {
   it('should validate all properties', () => {
     expect(
-      areBeaconSettingsEqual(Mocks.BeaconSettings[0], Mocks.BeaconSettings[0]),
+      areBeaconSettingsEqual(Mocks.beaconSettings[0], Mocks.beaconSettings[0]),
     ).toBeTrue();
-    expect(areBeaconSettingsEqual(Mocks.BeaconSettings[0], {})).toBeFalse();
+    expect(areBeaconSettingsEqual(Mocks.beaconSettings[0], {})).toBeFalse();
   });
 });

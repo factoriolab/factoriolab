@@ -1,14 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MockStore } from '@ngrx/store/testing';
 
-import { DispatchTest, ItemId, TestModule, TestUtility } from 'src/tests';
-import { Items, LabState, Machines } from '~/store';
+import { ItemId, setInputs, TestModule } from '~/tests';
+
 import { ItemComponent } from './item.component';
 
 describe('ItemComponent', () => {
   let component: ItemComponent;
   let fixture: ComponentFixture<ItemComponent>;
-  let mockStore: MockStore<LabState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,9 +14,8 @@ describe('ItemComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(ItemComponent);
-    mockStore = TestBed.inject(MockStore);
     component = fixture.componentInstance;
-    TestUtility.setInputs(fixture, {
+    setInputs(fixture, {
       id: ItemId.AssemblingMachine2,
       collectionLabel: 'data.items',
     });
@@ -35,17 +32,29 @@ describe('ItemComponent', () => {
       expect(recipes.consumedBy.length).toEqual(1);
       expect(recipes.producible.length).toEqual(170);
       expect(recipes.unlocked.length).toEqual(0);
-      TestUtility.setInputs(fixture, { id: ItemId.SteelProcessing });
+      setInputs(fixture, { id: ItemId.SteelProcessing });
       recipes = component.recipes();
       expect(recipes.unlocked.length).toEqual(2);
     });
   });
 
-  it('should dispatch actions', () => {
-    const dispatch = new DispatchTest(mockStore, component);
-    dispatch.idVal('setItemExcluded', Items.SetExcludedAction);
-    dispatch.idVal('setItemChecked', Items.SetCheckedAction);
-    dispatch.val('resetItem', Items.ResetItemAction);
-    dispatch.val('resetMachine', Machines.ResetMachineAction);
+  describe('changeExcluded', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.changeExcluded(true);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        excludedItemIds: new Set([ItemId.AssemblingMachine2]),
+      });
+    });
+  });
+
+  describe('changeChecked', () => {
+    it('should update the set and pass with defaults to the store dispatcher', () => {
+      spyOn(component.settingsSvc, 'apply');
+      component.changeChecked(true);
+      expect(component.settingsSvc.apply).toHaveBeenCalledWith({
+        checkedItemIds: new Set([ItemId.AssemblingMachine2]),
+      });
+    });
   });
 });

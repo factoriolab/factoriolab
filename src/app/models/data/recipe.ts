@@ -1,5 +1,7 @@
-import { cloneEntities, Entities, toRationalEntities } from '../entities';
-import { rational, Rational } from '../rational';
+import { cloneEntities, spread, toRationalEntities } from '~/helpers';
+
+import { Rational, rational } from '../rational';
+import { Entities } from '../utils';
 
 export interface RecipeJson {
   id: string;
@@ -81,14 +83,11 @@ export function parseRecipe(json: RecipeJson): Recipe {
 }
 
 export function cloneRecipe(recipe: Recipe): Recipe {
-  return {
-    ...recipe,
-    ...{
-      in: cloneEntities(recipe.in),
-      out: cloneEntities(recipe.out),
-      catalyst: cloneEntities(recipe.catalyst),
-    },
-  };
+  return spread(recipe, {
+    in: cloneEntities(recipe.in),
+    out: cloneEntities(recipe.out),
+    catalyst: cloneEntities(recipe.catalyst),
+  });
 }
 
 export interface AdjustedRecipe extends Recipe {
@@ -105,7 +104,7 @@ export function finalizeRecipe(recipe: AdjustedRecipe): void {
     }
 
     recipe.output[outId] = output
-      .sub(recipe.in[outId] ?? rational(0n))
+      .sub(recipe.in[outId] ?? rational.zero)
       .div(recipe.time);
   }
 
