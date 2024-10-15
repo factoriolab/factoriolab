@@ -248,15 +248,19 @@ export class RouterService {
     return await this.getHash(zData);
   }
 
-  async getHash(zData: ZipData): Promise<LabParams> {
-    const bare = spread(zData.objectives.bare, zData.config.bare, this.zipTail);
-    const hash = spread(zData.objectives.hash, zData.config.hash, this.zipTail);
+  async getHashParams(hash: LabParams): Promise<LabParams> {
     const hashStr = this.toString(hash as Params);
     const zStr = await this.compressionSvc.deflate(hashStr);
-    const zip: LabParams = {
+    return {
       z: zStr,
       v: this.version,
     };
+  }
+
+  async getHash(zData: ZipData): Promise<LabParams> {
+    const bare = spread(zData.objectives.bare, zData.config.bare, this.zipTail);
+    const hash = spread(zData.objectives.hash, zData.config.hash, this.zipTail);
+    const zip = await this.getHashParams(hash);
 
     const bareStr = this.toString(bare as Params);
     const bareLen = bareStr.length;
@@ -916,21 +920,27 @@ export class RouterService {
     const rnk = get(this.zipSvc.parseArray.bind(this.zipSvc));
     const arr = get(this.zipSvc.parseIndices.bind(this.zipSvc));
 
+    const itemIds = new Set(modData.items.map((i) => i.id));
+    const recipeIds = new Set(modData.recipes.map((r) => r.id));
+    const techIds = new Set(
+      modData.items.filter((i) => i.technology != null).map((i) => i.id),
+    );
+
     const obj: PartialSettingsState = {
       modId,
       checkedObjectiveIds: sub('och', objectiveIds),
       maximizeType: num('omt'),
       surplusMachinesOutput: bln('osm'),
       displayRate: num('odr'),
-      excludedItemIds: sub('iex', modHash.items),
-      checkedItemIds: sub('ich', modHash.items),
+      excludedItemIds: sub('iex', modHash.items, itemIds),
+      checkedItemIds: sub('ich', modHash.items, itemIds),
       beltId: str('ibe', hash?.belts),
       pipeId: str('ipi', hash?.belts),
       cargoWagonId: str('icw', hash?.wagons),
       fluidWagonId: str('ifw', hash?.wagons),
       flowRate: rat('ifr'),
-      excludedRecipeIds: sub('rex', modHash.recipes),
-      checkedRecipeIds: sub('rch', modHash.recipes),
+      excludedRecipeIds: sub('rex', modHash.recipes, recipeIds),
+      checkedRecipeIds: sub('rch', modHash.recipes, recipeIds),
       netProductionOnly: bln('rnp'),
       preset: num('mpr'),
       machineRankIds: rnk('mmr', hash?.machines),
@@ -944,7 +954,7 @@ export class RouterService {
       miningBonus: rat('bmi'),
       researchBonus: rat('bre'),
       inserterCapacity: num('bic'),
-      researchedTechnologyIds: sub('tre', modHash.technologies),
+      researchedTechnologyIds: sub('tre', modHash.technologies, techIds),
     };
 
     const costs: Partial<CostSettings> = {
