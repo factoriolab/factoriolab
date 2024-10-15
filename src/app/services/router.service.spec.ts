@@ -375,6 +375,10 @@ describe('RouterService', () => {
     it('should handle params with no =', () => {
       expect(service.toParams('abc')).toEqual({ a: 'bc' });
     });
+
+    it('should convert and append to an array', () => {
+      expect(service.toParams('o=a&o=b&o=c')).toEqual({ o: ['a', 'b', 'c'] });
+    });
   });
 
   describe('unzipQueryParams', () => {

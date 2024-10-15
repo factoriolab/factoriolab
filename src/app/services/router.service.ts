@@ -281,7 +281,11 @@ export class RouterService {
 
     return sections.reduce((e: Params, v) => {
       const [key, value] = v.split('=');
-      e[key] = value;
+
+      if (e[key] == null) e[key] = value;
+      else if (Array.isArray(e[key])) e[key].push(value);
+      else e[key] = [e[key], value];
+
       return e;
     }, {});
   }
